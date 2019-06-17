@@ -356,6 +356,7 @@ class KeyboardSelect extends React.Component {
       const Keymap =
         devices[this.state.selectedPortIndex].device.components.keymap;
       preview = <Keymap index={0} className={classes.preview} />;
+      console.log(this.props);
     }
 
     return (

@@ -72,7 +72,8 @@ class App extends React.Component {
       device: null,
       pages: {},
       contextBar: false,
-      cancelPendingOpen: false
+      cancelPendingOpen: false,
+      typeKeyboard: ""
     };
   }
   flashing = false;
@@ -148,10 +149,13 @@ class App extends React.Component {
     }
     console.log("Probing for Focus support...");
     let commands;
+    let typeKeyboard;
     try {
       commands = await focus.probe();
+      typeKeyboard = await focus.probe_capability();
     } catch (e) {
       commands = [];
+      typeKeyboard = "";
     }
 
     focus.setLayerSize(focus.device);
@@ -167,7 +171,8 @@ class App extends React.Component {
     this.setState({
       connected: true,
       device: null,
-      pages: pages
+      pages: pages,
+      typeKeyboard: typeKeyboard
     });
     await navigate(pages.keymap ? "/editor" : "/welcome");
     return commands;
@@ -178,7 +183,8 @@ class App extends React.Component {
     this.setState({
       connected: false,
       device: null,
-      pages: {}
+      pages: {},
+      typeKeyboard: ""
     });
     await navigate("/keyboard-select");
   };
@@ -234,6 +240,7 @@ class App extends React.Component {
                 />
                 <KeyboardSelect
                   path="/keyboard-select"
+                  typeKeyboard={this.state.typeKeyboard}
                   onConnect={this.onKeyboardConnect}
                   onDisconnect={this.onKeyboardDisconnect}
                   titleElement={() => document.querySelector("#page-title")}

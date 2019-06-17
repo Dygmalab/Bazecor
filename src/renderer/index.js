@@ -38,7 +38,7 @@ try {
     <SnackbarProvider
       action={dismissButton}
       maxSnack={4}
-      autoHideDuration={null}
+      autoHideDuration={3000}
     >
       <App />
     </SnackbarProvider>,

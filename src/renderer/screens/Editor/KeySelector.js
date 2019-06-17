@@ -77,6 +77,7 @@ const styles = theme => ({
 });
 
 import { baseKeyCodeTable } from "@chrysalis-api/keymap";
+import SearchKeyBox from "../../components/searchKeyBox";
 
 const keyGroups = baseKeyCodeTable
   .map(item => {
@@ -571,6 +572,13 @@ class KeySelector extends React.Component {
               }
             />
           </ListItem>
+          <div>
+            <SearchKeyBox
+              actualKeycode={actualKeycode}
+              onKeySelect={this.onKeySelect}
+              selectedKey={currentKeyCode}
+            />
+          </div>
         </List>
         <Menu
           disabled
