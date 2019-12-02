@@ -1,5 +1,5 @@
 // -*- mode: js-jsx -*-
-/* Bazecor -- Kaleidoscope Command Center
+/* Chrysalis -- Kaleidoscope Command Center
  * Copyright (C) 2018, 2019  Keyboardio, Inc.
  *
  * This program is free software: you can redistribute it and/or modify it under
@@ -19,33 +19,29 @@ import React from "react";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
-import updateWhite from "../../update-white.png";
-import update from "../../update.png";
+import i18n from "../../i18n";
+import support from "../../support.png";
+import supportWhite from "../../suppport-white.png";
 
-export default function KeyboardMenuItem({
-  keyboardSelectText,
-  onClick,
-  className,
-  themeDark
-}) {
+export default function SupportPage({ onClick, className, themeDark }) {
   return (
     <ListItem button onClick={onClick} className={className}>
       <ListItemIcon>
         {themeDark ? (
           <img
-            src={updateWhite}
+            src={supportWhite}
             alt="update"
             style={{ width: 24, height: 24 }}
           />
         ) : (
           <img
-            src={update}
+            src={support}
             alt="updateWhite"
             style={{ width: 24, height: 24 }}
           />
         )}
       </ListItemIcon>
-      <ListItemText primary={keyboardSelectText} />
+      <ListItemText primary={i18n.app.menu.supportPage} />
     </ListItem>
   );
 }
