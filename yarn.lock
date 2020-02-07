@@ -1092,44 +1092,58 @@
     lodash "^4.17.11"
     to-fast-properties "^2.0.0"
 
-"@bazecor-api/colormap@file:../bazecor-api/packages/bazecor-colormap":
+"@bazecor-api/colormap@^0.0.6":
   version "0.0.6"
+  resolved "https://registry.yarnpkg.com/@bazecor-api/colormap/-/colormap-0.0.6.tgz#501d75abddc6ba72aa5b47fc775dbe9c17cffba7"
+  integrity sha512-0Niy6sWtGh+aD2O9ubQXjJ8QGfhTK2pvuoHakC2a4C1uKkf8PvfxJSrI+L2I6GeA6MFx+dTb/jiahSit5gXuOA==
   dependencies:
-    "@bazecor-api/focus" "file:../../../.cache/yarn/v6/npm-@bazecor-api-colormap-0.0.6-47ff3429-bf9f-4df3-b4e6-2580f3f53399-1581108154747/node_modules/@bazecor-api/bazecor-focus"
+    "@bazecor-api/focus" "^0.0.6"
 
-"@bazecor-api/flash@file:../bazecor-api/packages/bazecor-flash":
+"@bazecor-api/flash@^0.0.7":
   version "0.0.7"
+  resolved "https://registry.yarnpkg.com/@bazecor-api/flash/-/flash-0.0.7.tgz#aa8d0e5088d8a3a6432c70ef0916154094e68337"
+  integrity sha512-W8MPAF7gXTQV2l7CkNHnNogsaGTFcCwtNbZGC9e87fnQVxKwvo3kUcuFGTr4i6zz7ROG4XG7Bm9Iju2mOT2WJA==
   dependencies:
     avrgirl-arduino "^4.2.1"
     teensy-loader "^0.1.1"
 
-"@bazecor-api/focus@file:../bazecor-api/packages/bazecor-focus":
+"@bazecor-api/focus@^0.0.6":
   version "0.0.6"
+  resolved "https://registry.yarnpkg.com/@bazecor-api/focus/-/focus-0.0.6.tgz#65ddea21e3415312f63abd413febd84fbef15ce1"
+  integrity sha512-VNimt62wdewwUrUFBz8hPyNMH4BjqN3Z63WDKTgmDZ/j+MYGGTn4/jdyqiGe8qccqvkqnLRjE5nIecSaFGEEOA==
   dependencies:
     serialport "^8.0.7"
 
-"@bazecor-api/hardware-dygma-raise-ansi@file:../bazecor-api/packages/bazecor-hardware-dygma-raise-ansi":
+"@bazecor-api/hardware-dygma-raise-ansi@^0.0.10":
   version "0.0.10"
+  resolved "https://registry.yarnpkg.com/@bazecor-api/hardware-dygma-raise-ansi/-/hardware-dygma-raise-ansi-0.0.10.tgz#d7d3f00c08a52f8601c89d7740cc6e12ef543689"
+  integrity sha512-/INQw5zqxR9hthuSLQ8cnqJD1kx6UZ0i+Y9jva1JDIP703sd57a33SAWGeAD0KoMbiBb2o6bL8TAylS0/c/Isg==
   dependencies:
-    "@bazecor-api/focus" "file:../../../.cache/yarn/v6/npm-@bazecor-api-hardware-dygma-raise-ansi-0.0.10-a4e1d6fe-a9db-43f7-8540-23a8212fd4b5-1581108154779/node_modules/@bazecor-api/bazecor-focus"
+    "@bazecor-api/focus" "^0.0.6"
     react "^16.5.2"
 
-"@bazecor-api/hardware-dygma-raise-iso@file:../bazecor-api/packages/bazecor-hardware-dygma-raise-iso":
+"@bazecor-api/hardware-dygma-raise-iso@^0.0.10":
   version "0.0.10"
+  resolved "https://registry.yarnpkg.com/@bazecor-api/hardware-dygma-raise-iso/-/hardware-dygma-raise-iso-0.0.10.tgz#c1e2f66fcd07d1a3a7520cc7eecd473e97687e3a"
+  integrity sha512-Akoo/6dcCAm0EYrzgvzHYfcVn7tFqmsOBChveCMBE1xwOyCXOARnbfA4TX0s6WTIhxqawPabzRLUCXRkZOdjQg==
   dependencies:
-    "@bazecor-api/focus" "file:../../../.cache/yarn/v6/npm-@bazecor-api-hardware-dygma-raise-iso-0.0.10-af54495c-a126-41d1-a5b2-d4456de2b17c-1581108154781/node_modules/@bazecor-api/bazecor-focus"
+    "@bazecor-api/focus" "^0.0.6"
     react "^16.5.2"
 
-"@bazecor-api/hardware@file:../bazecor-api/packages/bazecor-hardware":
+"@bazecor-api/hardware@^0.0.12":
   version "0.0.12"
+  resolved "https://registry.yarnpkg.com/@bazecor-api/hardware/-/hardware-0.0.12.tgz#b043f08f5e42e4b13ba1c0a51013103cccc10521"
+  integrity sha512-m24cF70XvvNEIbact2oTgpQz3dG9zZNqelArQti6pzuAV4+7q1rXw7glhFDydxp5kWbgHVZrAuQINY+g7/5VtA==
   dependencies:
-    "@bazecor-api/hardware-dygma-raise-ansi" "file:../../../.cache/yarn/v6/npm-@bazecor-api-hardware-0.0.12-4603333a-e2f4-4d0e-b69f-19f22e74295f-1581108154777/node_modules/@bazecor-api/bazecor-hardware-dygma-raise-ansi"
-    "@bazecor-api/hardware-dygma-raise-iso" "file:../../../.cache/yarn/v6/npm-@bazecor-api-hardware-0.0.12-4603333a-e2f4-4d0e-b69f-19f22e74295f-1581108154777/node_modules/@bazecor-api/bazecor-hardware-dygma-raise-iso"
+    "@bazecor-api/hardware-dygma-raise-ansi" "^0.0.10"
+    "@bazecor-api/hardware-dygma-raise-iso" "^0.0.10"
 
-"@bazecor-api/keymap@file:../bazecor-api/packages/bazecor-keymap":
+"@bazecor-api/keymap@^0.0.11":
   version "0.0.11"
+  resolved "https://registry.yarnpkg.com/@bazecor-api/keymap/-/keymap-0.0.11.tgz#8e274f4d9b14c424e9c5a3bc9dceafff18fd738d"
+  integrity sha512-TySb+XRTm/yG3Chm/qsVsfi+7gEyssFq+65FU2uGw0EknBgadIxeH2PJwFml4dnTWs1ctTB8UknRSftt9p+zgw==
   dependencies:
-    "@bazecor-api/focus" "file:../../../.cache/yarn/v6/npm-@bazecor-api-keymap-0.0.11-a0d8f8ff-4486-4af5-bd82-320d1b024e4d-1581108154782/node_modules/@bazecor-api/bazecor-focus"
+    "@bazecor-api/focus" "^0.0.6"
 
 "@cnakazawa/watch@^1.0.3":
   version "1.0.3"

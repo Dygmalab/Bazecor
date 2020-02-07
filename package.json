@@ -46,11 +46,11 @@
     }
   },
   "dependencies": {
-    "@bazecor-api/colormap": "file:../bazecor-api/packages/bazecor-colormap/",
-    "@bazecor-api/flash": "file:../bazecor-api/packages/bazecor-flash",
-    "@bazecor-api/focus": "file:../bazecor-api/packages/bazecor-focus",
-    "@bazecor-api/hardware": "file:../bazecor-api/packages/bazecor-hardware",
-    "@bazecor-api/keymap": "file:../bazecor-api/packages/bazecor-keymap",
+    "@bazecor-api/colormap": "^0.0.6",
+    "@bazecor-api/flash": "^0.0.7",
+    "@bazecor-api/focus": "^0.0.6",
+    "@bazecor-api/hardware": "^0.0.12",
+    "@bazecor-api/keymap": "^0.0.11",
     "@material-ui/core": "^3.9.2",
     "@material-ui/icons": "^3.0.1",
     "@material-ui/lab": "^3.0.0-alpha.30",
