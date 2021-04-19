@@ -1,0 +1,60 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 20010904//EN"
+ "http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd">
+<svg version="1.0" xmlns="http://www.w3.org/2000/svg"
+ width="267.000000pt" height="278.000000pt" viewBox="0 0 534.000000 557.000000"
+ preserveAspectRatio="xMidYMid meet">
+  <defs>
+    <linearGradient id="grad1" x1="90%" y1="100%" x2="11%" y2="0%">
+      <stop offset="0%" style="stop-color:rgb(255,0,0);stop-opacity:1" />
+      <stop offset="64%" style="stop-color:rgb(206,11,108);stop-opacity:1" />
+      <stop offset="64.2%" style="stop-color:rgb(106, 0, 119);stop-opacity:1" />
+      <stop offset="90%" style="stop-color:rgb(106,0,119);stop-opacity:1" />
+      <stop offset="100%" style="stop-color:rgb(111, 1, 114);stop-opacity:1" />
+    </linearGradient>
+        <linearGradient id="grad2" x1="40%" y1="100%" x2="67%" y2="0%">
+      <stop offset="0%" style="stop-color:rgb(238, 4, 38);stop-opacity:1" />
+      <stop offset="19%" style="stop-color:rgb(238, 4, 38);stop-opacity:1" />
+      <stop offset="19.2%" style="stop-color:rgb(198, 3, 43);stop-opacity:1" />
+      <stop offset="100%" style="stop-color:rgb(137, 3, 87);stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="grad3" x1="100%" y1="0%" x2="0%" y2="0%">
+      <stop offset="0%" style="stop-color:rgb(178, 1, 51);stop-opacity:1" />
+      <stop offset="31.0%" style="stop-color:rgb(146, 2, 79);stop-opacity:1" />
+      <stop offset="31.2%" style="stop-color:rgb(128, 2, 99);stop-opacity:1" />
+      <stop offset="100%" style="stop-color:rgb(106, 0, 119);stop-opacity:1" />
+    </linearGradient>
+  </defs>
+<g transform="translate(0.000000,557.000000) scale(0.100000,-0.100000)"
+fill="url(#grad1)" stroke="none">
+<path d="M2495 5551 c-33 -10 -564 -197 -1180 -416 -616 -218 -1162 -411
+-1212 -428 -51 -17 -93 -37 -93 -43 0 -6 23 -66 50 -133 175 -427 397 -793
+708 -1171 91 -111 479 -506 488 -497 3 2 -9 67 -26 143 -37 165 -178 819 -221
+1023 -17 79 -29 152 -27 163 3 21 3 21 453 192 83 32 184 71 225 87 41 17 116
+45 165 64 50 18 119 44 155 58 851 323 1005 369 1415 423 222 29 701 28 865
+-2 17 -3 13 1 -10 10 -84 34 -1480 524 -1522 534 -66 17 -163 14 -233 -7z"/>
+<animate attributeType="CSS" attributeName="opacity" values="0;1;0" dur="3s" repeatCount="indefinite" />
+</g>
+<g transform="translate(0.000000,557.000000) scale(0.100000,-0.100000)"
+fill="url(#grad2)" stroke="none">
+<path d="M3895 4834 c-22 -2 -96 -9 -165 -15 -206 -18 -650 -98 -650 -118 0
+-3 37 -19 83 -35 141 -49 325 -120 702 -269 105 -41 259 -101 343 -133 112
+-42 152 -62 152 -74 0 -10 -43 -219 -96 -466 -52 -247 -106 -501 -119 -564
+-152 -732 -229 -1022 -380 -1430 -99 -268 -255 -611 -379 -838 -25 -45 -43
+-82 -41 -82 1 0 74 81 160 180 86 99 162 186 169 193 6 6 43 48 81 92 39 45
+171 196 294 335 123 140 249 284 280 319 280 320 280 321 337 508 20 65 177
+586 349 1158 172 572 316 1047 319 1056 9 21 -15 31 -166 69 -142 35 -357 74
+-533 96 -122 15 -642 28 -740 18z"/>
+<animate attributeType="CSS" attributeName="opacity" values="0;1;0" dur="3s" repeatCount="indefinite" />
+</g>
+<g transform="translate(0.000000,557.000000) scale(0.100000,-0.100000)"
+fill="url(#grad3)" stroke="none">
+<path d="M270 3693 c5 -16 106 -352 225 -747 121 -404 228 -741 243 -770 28
+-51 119 -157 1312 -1516 157 -179 352 -400 432 -492 l147 -168 43 63 c433 620
+776 1347 972 2065 l25 94 -42 -35 c-185 -150 -612 -494 -737 -592 -84 -66
+-175 -139 -203 -163 -29 -23 -57 -41 -63 -40 -6 2 -28 17 -50 35 -36 29 -238
+191 -274 219 -8 7 -44 36 -80 66 -36 29 -216 175 -400 323 -543 436 -598 482
+-759 640 -293 287 -555 624 -741 953 -29 50 -54 92 -56 92 -1 0 1 -12 6 -27z"/>
+<animate attributeType="CSS" attributeName="opacity" values="0;1;0" dur="3s" repeatCount="indefinite" />
+</g>
+</svg>
