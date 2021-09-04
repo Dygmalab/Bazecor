@@ -17,6 +17,10 @@ The primary purpose of the application is to allow one to configure their keyboa
 * **Colormap editor** to edit the per-key and underglow LED colormap.
 * **Firmware upgrade** to upload new versions of the firmware that ships with the application.
 
+## Configuration
+Most of the preferences are saved to the keyboard itself, and changed in the UI, but some preferences are only available in config files. For example, if you don't want to automatically save a screenshot of the current layer before switching to a new layer, you can edit the file config.json to change "true" to "false" for that preference. This can be done while the application is running, without restart.
+
+
 ## Supported operating systems
 
 Bazecor is supported on all three major operating systems, we test our releases on Windows 10, MacOS, and Ubuntu LTS.
