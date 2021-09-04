@@ -74,6 +74,7 @@
     "electron-updater": "^4.3.8",
     "electron-window-state": "^5.0.3",
     "firebase": "^8.4.1",
+    "html-to-image": "^1.7.0",
     "i18next": "^19.9.2",
     "i18next-electron-language-detector": "^0.0.10",
     "prop-types": "^15.7.2",

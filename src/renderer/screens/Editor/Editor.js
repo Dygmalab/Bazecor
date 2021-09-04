@@ -42,6 +42,8 @@ import i18n from "../../i18n";
 import settings from "electron-settings";
 import { CopyFromDialog } from "./CopyFromDialog";
 import { undeglowDefaultColors } from "./initialUndaglowColors";
+import * as htmlToImage from "html-to-image";
+import * as fs from "fs";
 
 // Outbound function imports
 import {
@@ -172,6 +174,26 @@ class Editor extends Component {
     this.setSuperKey = this.setSuperKey.bind(this);
     this.delSuperKey = this.delSuperKey.bind(this);
   }
+
+  static TakeLayerScreenshot = async layerId => {
+    const el = document.getElementsByClassName("layer")[0];
+    if (!el) return;
+    htmlToImage
+      .toPng(el, { backgroundColor: "white" })
+      .then(function (dataUrl) {
+        Editor.WriteImageFile(`layer${layerId}-temp`, dataUrl);
+      })
+      .catch(function (error) {
+        console.error("oops, something went wrong!", error);
+      });
+  };
+
+  static WriteImageFile = async (path, image) => {
+    // strip out some stuff before writing to disk
+    var data = image.replace(/^data:image\/\w+;base64,/, "");
+    console.log("saving image to file path:", path);
+    fs.writeFile(path, data, { encoding: "base64" }, function (err) {});
+  };
 
   keymapDB = new KeymapDB();
   undeglowCount = 14;
@@ -504,6 +526,18 @@ class Editor extends Component {
 
   selectLayer = id => {
     if (id === undefined) return;
+    let rawConfigData = fs.readFileSync("config.json");
+    let parsedConfigData = JSON.parse(rawConfigData);
+    if (parsedConfigData.saveScreenshotOnLayerChange == "true") {
+      Editor.TakeLayerScreenshot(id).then(() => {
+        this.switchLayers(id);
+      });
+    } else {
+      this.switchLayers(id);
+    }
+  };
+
+  switchLayers = id => {
     const { palette, undeglowColors } = this.state;
     let newPalette = palette.slice();
     newPalette[this.undeglowCount] = undeglowColors[id];
