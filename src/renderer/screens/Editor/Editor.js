@@ -181,7 +181,7 @@ class Editor extends Component {
     htmlToImage
       .toPng(el, { backgroundColor: "white" })
       .then(function (dataUrl) {
-        Editor.WriteImageFile(`layer${layerId}-temp`, dataUrl);
+        Editor.WriteImageFile(`layer${layerId}-temp.png`, dataUrl);
       })
       .catch(function (error) {
         console.error("oops, something went wrong!", error);
