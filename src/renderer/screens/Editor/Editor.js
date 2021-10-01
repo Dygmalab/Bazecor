@@ -722,9 +722,8 @@ class Editor extends React.Component {
       }
       newColormap = state.colorMap.slice();
       if (newColormap.length > 0)
-        newColormap[state.currentLayer] = state.colorMap[
-          layer >= 0 ? layer : state.currentLayer
-        ].slice();
+        newColormap[state.currentLayer] =
+          state.colorMap[layer >= 0 ? layer : state.currentLayer].slice();
 
       this.props.startContext();
       return {
@@ -1596,8 +1595,8 @@ class Editor extends React.Component {
         code.modified + code.base < 53980 &&
         this.state.superkeys[code.base + code.modified - 53916] != undefined
       ) {
-        actions = this.state.superkeys[code.base + code.modified - 53916]
-          .actions;
+        actions =
+          this.state.superkeys[code.base + code.modified - 53916].actions;
         superName = this.state.superkeys[
           code.base + code.modified - 53916
         ].name.substr(0, 5);

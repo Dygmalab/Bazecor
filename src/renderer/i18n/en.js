@@ -152,16 +152,14 @@ const English = {
       successFlash: "Succesfully sent the macros to the Raise",
       deleteModal: {
         title: "This macro is in use",
-        body:
-          "The macro you want to delete is currently in use, select how to proceed, THIS MAKES PERMANENT CHANGES.",
+        body: "The macro you want to delete is currently in use, select how to proceed, THIS MAKES PERMANENT CHANGES.",
         cancelButton: "Cancel",
         applyButton: "Update Keyboard"
       }
     },
     oldMacroModal: {
       title: "Update your macros",
-      body:
-        "The macros in your layout need to be updated to work on this Bazecor version.",
+      body: "The macros in your layout need to be updated to work on this Bazecor version.",
       body2:
         "Please note that the updated macro codes won't work until you flash the new firmware",
       cancelButton: "Cancel",

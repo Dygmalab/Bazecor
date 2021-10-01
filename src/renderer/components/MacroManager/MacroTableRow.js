@@ -104,14 +104,8 @@ class MacroTableRow extends Component {
   }
 
   render() {
-    const {
-      provided,
-      snapshot,
-      item,
-      modifiers,
-      addModifier,
-      actionTypes
-    } = this.props;
+    const { provided, snapshot, item, modifiers, addModifier, actionTypes } =
+      this.props;
 
     return (
       <Styles>

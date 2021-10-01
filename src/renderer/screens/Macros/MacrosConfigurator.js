@@ -479,22 +479,15 @@ class MacrosConfigurator extends React.Component {
   }
 
   ActUponDelete() {
-    let {
-      selectedList,
-      listToDelete,
-      listToDeleteS,
-      keymap,
-      superkeys
-    } = this.state;
+    let { selectedList, listToDelete, listToDeleteS, keymap, superkeys } =
+      this.state;
     for (let i = 0; i < listToDelete.length; i++) {
       if (selectedList == -1) {
-        keymap[listToDelete[i].layer][
-          listToDelete[i].pos
-        ] = this.keymapDB.parse(0);
+        keymap[listToDelete[i].layer][listToDelete[i].pos] =
+          this.keymapDB.parse(0);
       } else {
-        keymap[listToDelete[i].layer][
-          listToDelete[i].pos
-        ] = this.keymapDB.parse(selectedList + 53852);
+        keymap[listToDelete[i].layer][listToDelete[i].pos] =
+          this.keymapDB.parse(selectedList + 53852);
       }
     }
     for (let i = 0; i < listToDeleteS.length; i++) {

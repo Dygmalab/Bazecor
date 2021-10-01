@@ -739,12 +739,8 @@ class KeyboardSettings extends React.Component {
       backupFolder,
       storeBackups
     } = this.state;
-    const {
-      selectDarkMode,
-      darkMode,
-      devToolsSwitch,
-      verboseSwitch
-    } = this.props;
+    const { selectDarkMode, darkMode, devToolsSwitch, verboseSwitch } =
+      this.props;
 
     const onlyCustomSwitch = (
       <Form.Check
