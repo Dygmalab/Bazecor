@@ -2781,7 +2781,7 @@ class-utils@^0.3.5:
     isobject "^3.0.0"
     static-extend "^0.1.1"
 
-classnames@^2.2.6, classnames@^2.3.1:
+classnames@^2.3.1:
   version "2.3.1"
   resolved "https://registry.yarnpkg.com/classnames/-/classnames-2.3.1.tgz#dfcfa3891e306ec1dad105d0e88f4417b8535e8e"
   integrity sha512-OlQdbZ7gLfGarSqxesMesDa5uz7KFbID8Kpq/SxIoNGDqY8lSYs0D+hhtBXhcdB3rcbXArFr7vlHheLk1voeNA==
@@ -8476,12 +8476,12 @@ react-beautiful-dnd@^13.1.0:
     redux "^4.0.4"
     use-memo-one "^1.1.1"
 
-react-bootstrap-range-slider@^2.0.2:
-  version "2.0.2"
-  resolved "https://registry.yarnpkg.com/react-bootstrap-range-slider/-/react-bootstrap-range-slider-2.0.2.tgz#7c02860d8850aaeae0c80baa9fcd7b3749b35cf4"
-  integrity sha512-GptOpQjarlf6H2OfGsAqS1jOFFw8lsfQVLCWD6tgILspr2qZxzoiyUGLPDNfFFLy/ALhzGxlnVUrYjOe34UkhA==
+react-bootstrap-range-slider@^3.0.2:
+  version "3.0.2"
+  resolved "https://registry.yarnpkg.com/react-bootstrap-range-slider/-/react-bootstrap-range-slider-3.0.2.tgz#e5c52e8296a57711d2baeefad4b7fa2c9e06a3f4"
+  integrity sha512-Fk/dbIcu/wKcDF7CdIuPUxPAc9u2JBpVJ96wgAiGkTwYxZgAB37XzoMkLgAX8RfdRkkYS12WntCXMkdyDGsHFg==
   dependencies:
-    classnames "^2.2.6"
+    classnames "^2.3.1"
     prop-types "^15.7.2"
 
 react-bootstrap@^1.5.2:
@@ -8614,11 +8614,6 @@ react-router@5.2.1:
     react-is "^16.6.0"
     tiny-invariant "^1.0.2"
     tiny-warning "^1.0.0"
-
-react-testing-library@^8.0.1:
-  version "8.0.1"
-  resolved "https://registry.yarnpkg.com/react-testing-library/-/react-testing-library-8.0.1.tgz#b3dd43bce3fa88423cf0a23292fb819023c227cc"
-  integrity sha512-Gq4JC9r3prA4hYwo7afcbHHMFckO29+5Nrh2KblAEPuK/DWaU0bJE1vtpAgLhzhY9bBirmcgjjIHljHEwGAXKw==
 
 react-toastify@^6.2.0:
   version "6.2.0"
