@@ -26,9 +26,7 @@
     "lint:all": "npm-run-all lint:js lint:css",
     "lint:js": "eslint src/**/*.js",
     "lint:css": "stylelint \"src/**/*.js src/**/*.css\"",
-    "clean:code": "npm-run-all prettier lint:all",
-    "test": "ELECTRON_RUN_AS_NODE=true ./node_modules/.bin/electron ./node_modules/.bin/jest",
-    "test:watch": "jest --watchAll"
+    "clean:code": "npm-run-all prettier lint:all"
   },
   "husky": {
     "hooks": {
@@ -105,8 +103,6 @@
     "@babel/plugin-syntax-dynamic-import": "^7.8.3",
     "@babel/preset-env": "^7.13.12",
     "@babel/preset-react": "^7.13.13",
-    "@testing-library/jest-dom": "^5.11.10",
-    "babel-jest": "^26.6.3",
     "babel-loader": "^8.2.2",
     "electron": "^13.4.0",
     "electron-builder": "^22.14.2",
@@ -117,13 +113,11 @@
     "eslint": "^7.23.0",
     "eslint-config-prettier": "^8.1.0",
     "eslint-loader": "^4.0.2",
-    "eslint-plugin-jest": "^24.3.2",
     "eslint-plugin-jsx-a11y": "^6.4.1",
     "eslint-plugin-prettier": "^3.3.1",
     "eslint-plugin-react": "^7.23.1",
     "eslint-plugin-react-hooks": "^4.2.0",
     "husky": "^5.2.0",
-    "jest": "^26.6.3",
     "jscs": "^3.0.7",
     "lint-staged": "^10.5.4",
     "npm-run-all": "^4.1.5",
