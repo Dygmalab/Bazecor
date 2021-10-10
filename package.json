@@ -9,6 +9,7 @@
   },
   "homepage": "https://github.com/Dygmalab/Bazecor",
   "scripts": {
+    "clean": "rm -rf dist && rm -rf node_modules",
     "preinstall": "node tools/preinstall.js",
     "postinstall": "electron-builder install-app-deps",
     "start": "electron-webpack dev",
