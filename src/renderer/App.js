@@ -19,7 +19,7 @@ import React from "react";
 import settings from "electron-settings";
 import { Switch, Redirect, Route, withRouter } from "react-router-dom";
 import { toast } from "react-toastify";
-import styled, { ThemeProvider, css } from "styled-components";
+import { ThemeProvider } from "styled-components";
 
 import usb from "usb";
 import i18n from "./i18n";
@@ -43,8 +43,6 @@ import Preferences from "./screens/Preferences";
 import Welcome from "./screens/Welcome";
 
 import Header from "./components/Header";
-// import ConfirmationDialog from "./components/ConfirmationDialog";
-// import { history, navigate } from "./routerHistory";
 
 const Store = window.require("electron-store");
 const store = new Store();

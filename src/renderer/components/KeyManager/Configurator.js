@@ -7,18 +7,15 @@ import PickedKey from "./PickedKey";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Card from "react-bootstrap/Card";
-import Button from "react-bootstrap/Button";
 import Dropdown from "react-bootstrap/Dropdown";
 import DropdownButton from "react-bootstrap/DropdownButton";
 import Tooltip from "react-bootstrap/Tooltip";
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import { MdInfo } from "react-icons/md";
 import Styled from "styled-components";
-import { LayerPicker } from "../KeyPicker";
 
 // Media
 import OSL from "../../../../static/OSL.png";
-import { isUnionTypeNode } from "typescript";
 
 const Style = Styled.div`
 .overflow {
