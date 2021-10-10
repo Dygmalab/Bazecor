@@ -43,12 +43,6 @@ import settings from "electron-settings";
 import { CopyFromDialog } from "./CopyFromDialog";
 import { undeglowDefaultColors } from "./initialUndaglowColors";
 
-// Outbound function imports
-import {
-  backupLayers,
-  shareLayers
-} from "../../../api/firebase/firebase.utils";
-
 const Store = window.require("electron-store");
 const store = new Store();
 
@@ -611,31 +605,7 @@ class Editor extends React.Component {
     const commands = await this.bkp.Commands();
     const backup = await this.bkp.DoBackup(commands);
     this.bkp.SaveBackup(backup);
-    // TODO: Save changes in the cloud
-    const cloudbackup = {
-      undeglowColors: this.state.undeglowColors,
-      keymap: this.state.keymap,
-      colormap: {
-        palette: this.state.palette,
-        colorMap: this.state.colorMap
-      }
-    };
-    // backupLayers(cloudbackup);
     this.props.cancelContext();
-  };
-
-  sharelayers = async () => {
-    // TODO: Share layers in the cloud
-    const Layers = {
-      undeglowColors: this.state.undeglowColors,
-      keymap: this.state.keymap,
-      colormap: {
-        palette: this.state.palette,
-        colorMap: this.state.colorMap
-      },
-      macros: this.state.macros
-    };
-    shareLayers(Layers);
   };
 
   // Callback function to set State of new Language

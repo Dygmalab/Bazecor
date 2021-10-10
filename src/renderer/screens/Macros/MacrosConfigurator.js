@@ -421,18 +421,6 @@ class MacrosConfigurator extends React.Component {
       const commands = await this.bkp.Commands();
       const backup = await this.bkp.DoBackup(commands);
       this.bkp.SaveBackup(backup);
-      // TODO: Save changes in the cloud
-      // const backup = {
-      //   undeglowColors: this.state.undeglowColors,
-      //   keymap: this.state.keymap,
-      //   colormap: {
-      //     palette: this.state.palette,
-      //     colorMap: this.state.colorMap
-      //   },
-      //   macros: newMacros
-      // };
-      // backupLayers(backup);
-
       toast.success(i18n.editor.macros.successFlash, {
         autoClose: 2000
       });
