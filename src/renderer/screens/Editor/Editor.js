@@ -706,14 +706,16 @@ class Editor extends React.Component {
   importLayer = data => {
     if (data.palette.length > 0) this.setState({ palette: data.palette });
     let layerNames = this.state.layerNames.slice();
-    for (let i = 0; i < data.layerNames.length; i++) {
-      layerNames[i] = data.layerNames[i];
-    }
     const { currentLayer } = this.state;
-    if (data.layerName && currentLayer) {
-      layerNames[currentLayer] = data.layerName;
+    if (data.layerNames != null) {
+      for (let i = 0; i < data.layerNames.length; i++) {
+        layerNames[i] = data.layerNames[i];
+      }
+      if (data.layerName && currentLayer) {
+        layerNames[currentLayer] = data.layerName;
+      }
+      this.setState({ layerNames: layerNames });
     }
-    this.setState({ layerNames: layerNames });
     if (data.keymap.length > 0 && data.colormap.length > 0) {
       if (this.state.keymap.onlyCustom) {
         if (currentLayer >= 0) {
