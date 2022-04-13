@@ -68,6 +68,7 @@
     ]
   },
   "dependencies": {
+    "@react-pdf/renderer": "^2.1.1",
     "bootstrap-css-only": "^4.4.1",
     "electron-devtools-installer": "^3.1.1",
     "electron-settings": "^4.0.2",

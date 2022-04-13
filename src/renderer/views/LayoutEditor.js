@@ -18,6 +18,7 @@
 import React from "react";
 import Styled from "styled-components";
 import { toast } from "react-toastify";
+import { Page, Text, View, Document, StyleSheet } from "@react-pdf/renderer";
 
 // Bootstrap components
 import Container from "react-bootstrap/Container";
@@ -1453,6 +1454,36 @@ class LayoutEditor extends React.Component {
   layerName(index) {
     return this.state.layerNames.length >= index ? this.state.layerNames[index].name : this.defaultLayerNames[index];
   }
+
+  exportToPDF = () => {
+    //TODO: Export to PDF
+    // Create styles
+    const styles = StyleSheet.create({
+      page: {
+        flexDirection: "row",
+        backgroundColor: "#E4E4E4"
+      },
+      section: {
+        margin: 10,
+        padding: 10,
+        flexGrow: 1
+      }
+    });
+
+    // Create Document Component
+    return (
+      <Document>
+        <Page size="A4" style={styles.page}>
+          <View style={styles.section}>
+            <Text>Section #1</Text>
+          </View>
+          <View style={styles.section}>
+            <Text>Section #2</Text>
+          </View>
+        </Page>
+      </Document>
+    );
+  };
 
   render() {
     const {
