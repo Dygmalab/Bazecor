@@ -51,6 +51,7 @@ const store = new Store();
 
 const { remote, ipcRenderer } = require("electron");
 const path = require("path");
+const fs = require("fs");
 
 let focus = new Focus();
 focus.debug = true;
@@ -79,7 +80,8 @@ class App extends React.Component {
       device: null,
       pages: {},
       contextBar: false,
-      cancelPendingOpen: false
+      cancelPendingOpen: false,
+      Hotkeys: {}
     };
     localStorage.clear();
 
@@ -154,6 +156,14 @@ class App extends React.Component {
         self.forceDarkMode(message);
       }
     });
+
+    // Loading Hotkey shortcuts file, if not, cretate
+    const HkFilePath = path.join(remote.app.getPath("home"), "Raise", "hotkeys.json");
+    if (fs.existsSync(HkFilePath)) {
+      this.setState({
+        Hotkeys: JSON.parse(fs.readFileSync(HkFilePath))
+      });
+    }
 
     usb.on("detach", async device => {
       if (!focus.device) return;
@@ -299,7 +309,7 @@ class App extends React.Component {
   };
 
   render() {
-    const { connected, pages, contextBar, darkMode } = this.state;
+    const { connected, pages, contextBar, darkMode, Hotkeys } = this.state;
 
     let focus = new Focus();
     let device =
@@ -346,6 +356,7 @@ class App extends React.Component {
               titleElement={() => document.querySelector("#page-title")}
               appBarElement={() => document.querySelector("#appbar")}
               darkMode={darkMode}
+              Hotkeys={Hotkeys}
             />
             <MacroEditor
               path="/macros"

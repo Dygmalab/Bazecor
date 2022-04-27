@@ -156,17 +156,12 @@ export default class LayerPanel extends React.Component {
     this.ActOnClick = this.ActOnClick.bind(this);
     this.ExternalClick = this.ExternalClick.bind(this);
     this.LayerSel = this.LayerSel.bind(this);
-    this.updateText = this.updateText.bind(this);
     this.spare = this.spare.bind(this);
   }
 
-  componentDidMount() {
-    document.addEventListener("keydown", this._handleKeyDown);
-  }
+  componentDidMount() {}
 
-  componentWillUnmount() {
-    document.removeEventListener("keydown", this._handleKeyDown);
-  }
+  componentWillUnmount() {}
 
   _handleKeyDown = event => {
     switch (event.keyCode) {
@@ -181,7 +176,8 @@ export default class LayerPanel extends React.Component {
         break;
       case 27:
         // ESC key
-        console.log("Esc key logged");
+        document.removeEventListener("keydown", this._handleKeyDown);
+        this.props.toggleKeydownListener();
         this.setState({
           editCurrent: -1,
           editorText: ""
@@ -226,10 +222,12 @@ export default class LayerPanel extends React.Component {
     );
   }
 
-  ActOnClick(id) {
+  ActOnClick = id => {
     let { currentLayer } = this.state;
 
     if (currentLayer == id) {
+      this.props.toggleKeydownListener();
+      document.addEventListener("keydown", this._handleKeyDown);
       this.setState({
         editCurrent: id,
         editorText: this.props.layers[id].name
@@ -237,7 +235,7 @@ export default class LayerPanel extends React.Component {
     } else {
       this.LayerSel(id);
     }
-  }
+  };
 
   ExternalClick() {
     let { currentLayer, editCurrent } = this.state;
@@ -251,9 +249,11 @@ export default class LayerPanel extends React.Component {
     }
   }
 
-  updateText(newText) {
+  updateText = newText => {
+    document.removeEventListener("keydown", this._handleKeyDown);
+    this.props.toggleKeydownListener();
     this.props.changeLayerName(newText);
-  }
+  };
 
   render() {
     const { isReadOnly, editCurrent } = this.state;
