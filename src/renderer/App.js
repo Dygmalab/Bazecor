@@ -122,6 +122,7 @@ class App extends React.Component {
 
     // Store all settings from electron settings in electron store.
     let data = {};
+    data.enableHotkeys = false;
     data.backupFolder =
       (await settings.get("backupFolder")) != undefined
         ? await settings.get("backupFolder")

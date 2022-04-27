@@ -316,6 +316,7 @@ const English = {
     },
     advanced: "Advanced",
     verboseFocus: "Verbose logging",
+    hotkeys: "Enable Hotkeys",
     darkMode: {
       label: "Appearance",
       light: "Light",

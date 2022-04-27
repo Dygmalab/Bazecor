@@ -29,7 +29,7 @@ const Style = Styled.div`
 
 export default class AdvancedSettings extends Component {
   render() {
-    const { devToolsSwitch, verboseSwitch } = this.props;
+    const { devToolsSwitch, verboseSwitch, hotkeysSwitch } = this.props;
     return (
       <Style>
         <Card className="overflowFix card-preferences mt-4 mb-4">
@@ -47,6 +47,10 @@ export default class AdvancedSettings extends Component {
                   <Form.Group controlId="Verbose" className="switchHolder">
                     <Form.Label>{i18n.preferences.verboseFocus}</Form.Label>
                     {verboseSwitch}
+                  </Form.Group>
+                  <Form.Group controlId="Hotkeys" className="switchHolder">
+                    <Form.Label>{i18n.preferences.hotkeys}</Form.Label>
+                    {hotkeysSwitch}
                   </Form.Group>
                 </div>
               </Col>
@@ -122,5 +126,6 @@ class AdvancedKeyboardSettings extends React.Component {
 AdvancedSettings.propTypes = {
   devToolsSwitch: PropTypes.object.isRequired,
   verboseSwitch: PropTypes.object.isRequired,
+  hotkeysSwitch: PropTypes.object.isRequired,
   connected: PropTypes.bool.isRequired
 };
