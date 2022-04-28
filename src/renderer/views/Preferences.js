@@ -90,7 +90,8 @@ class Preferences extends React.Component {
       selectedNeuron: 0,
       neuronID: "",
       kbData: this.kbData,
-      modified: props.inContext
+      modified: props.inContext,
+      hotkeys: store.get("settings.enableHotkeys")
     };
   }
 
@@ -357,6 +358,16 @@ class Preferences extends React.Component {
     }
   };
 
+  toggleHotkeys = event => {
+    if (event.target.checked) {
+      store.set("settings.enableHotkeys", true);
+      this.setState({ hotkeys: true });
+    } else {
+      store.set("settings.enableHotkeys", false);
+      this.setState({ hotkeys: false });
+    }
+  };
+
   // THEME MODE FUNCTIONS
   selectDarkMode = key => {
     this.setState({ darkMode: key });
@@ -403,9 +414,10 @@ class Preferences extends React.Component {
   };
 
   render() {
-    const { neurons, selectedNeuron, darkMode, neuronID, devTools, verboseFocus, kbData, modified } = this.state;
+    const { neurons, selectedNeuron, darkMode, neuronID, devTools, hotkeys, verboseFocus, kbData, modified } = this.state;
     const { inContext, connected } = this.props;
     const { defaultLayer } = this.kbData;
+    const hotkeysSwitch = <Form.Check type="switch" checked={hotkeys} onChange={this.toggleHotkeys} />;
     const devToolsSwitch = <Form.Check type="switch" checked={devTools} onChange={this.toggleDevTools} />;
     const verboseSwitch = <Form.Check type="switch" checked={verboseFocus} onChange={this.toggleVerboseFocus} />;
     // console.log("CHECKING STATUS MOD", modified);
@@ -446,7 +458,12 @@ class Preferences extends React.Component {
                     deleteNeuron={this.deleteNeuron}
                   />
                   <KeyboardSettings kbData={kbData} setKbData={this.setKbData} connected={connected} />
-                  <AdvancedSettings devToolsSwitch={devToolsSwitch} verboseSwitch={verboseSwitch} connected={connected} />
+                  <AdvancedSettings
+                    devToolsSwitch={devToolsSwitch}
+                    verboseSwitch={verboseSwitch}
+                    hotkeysSwitch={hotkeysSwitch}
+                    connected={connected}
+                  />
                 </Col>
               </Row>
             </Container>

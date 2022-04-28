@@ -278,7 +278,8 @@ class LayoutEditor extends React.Component {
       currentLanguageLayout: "",
       undeglowColors: null,
       showMacroModal: false,
-      showNeuronModal: false
+      showNeuronModal: false,
+      keydownListener: false
     };
     this.onLayerNameChange = this.onLayerNameChange.bind(this);
     this.updateMacros = this.updateMacros.bind(this);
@@ -297,6 +298,15 @@ class LayoutEditor extends React.Component {
 
   keymapDB = new KeymapDB();
   undeglowCount = 14;
+
+  _handleKeyDown = event => {
+    //TODO: Handle keydown events as app shortcuts
+    const result = this.props.Hotkeys.filter(hk => hk.keyCode == event.keyCode)[0];
+    console.log(`${event.keyCode} key logged and ${JSON.stringify(result)} obtained`);
+    if (result.message) {
+      console.log(result.message);
+    }
+  };
 
   onLayerNameChange(newName) {
     let layerNames = this.state.layerNames.slice();
@@ -748,6 +758,11 @@ class LayoutEditor extends React.Component {
   };
 
   async componentDidMount() {
+    if (store.get("settings.enableHotkeys") == true) {
+      console.log("Testing store data", store.get("settings.enableHotkeys"));
+      document.addEventListener("keydown", this._handleKeyDown);
+      this.setState({ keydownListener: true });
+    }
     await this.scanKeyboard().then(() => {
       const { keymap } = this.state;
       const defLayer = this.state.defaultLayer >= 126 ? 0 : this.state.defaultLayer;
@@ -781,6 +796,24 @@ class LayoutEditor extends React.Component {
       });
       this.scanKeyboard();
       this.setState({ modified: false });
+    }
+  };
+
+  componentWillUnmount() {
+    if (this.state.keydownListener) document.removeEventListener("keydown", this._handleKeyDown);
+  }
+
+  toggleKeydownListener = () => {
+    if (store.get("settings.enableHotkeys") == true) {
+      this.setState(state => {
+        if (state.keydownListener == true) {
+          document.removeEventListener("keydown", this._handleKeyDown);
+          return { keydownListener: false };
+        } else {
+          document.addEventListener("keydown", this._handleKeyDown);
+          return { keydownListener: true };
+        }
+      });
     }
   };
 
@@ -1649,6 +1682,7 @@ class LayoutEditor extends React.Component {
                   clearTitle={i18n.editor.layers.clearLayer}
                   clearFunc={this.confirmClear}
                   changeLayerName={this.onLayerNameChange}
+                  toggleKeydownListener={this.toggleKeydownListener}
                 />
               </Row>
             </Col>
