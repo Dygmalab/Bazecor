@@ -14,10 +14,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import ColorButton from "./ColorButton";
+import ColorPicker from "./ColorPicker";
 import NavigationButton from "./NavigationButton";
-import RegularButton from "./RegularButton";
+import RegularButton from "./regularButton";
 import ButtonConfig from "./ButtonConfig";
 import ButtonSettings from "./ButtonSettings";
 import SuperkeyPicker from "./SuperkeyPicker";
+import ButtonMouse from "./ButtonMouse";
 
-export { NavigationButton, RegularButton, ButtonConfig, ButtonSettings, SuperkeyPicker };
+export { ColorButton, ColorPicker, NavigationButton, RegularButton, ButtonConfig, ButtonSettings, SuperkeyPicker, ButtonMouse };

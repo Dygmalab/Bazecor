@@ -48,7 +48,7 @@ import { MdDeleteForever, MdSave } from "react-icons/md";
 import { BsType, BsBrightnessHigh } from "react-icons/bs";
 import { BiMouse, BiCodeAlt, BiWrench, BiChip } from "react-icons/bi";
 import { isArray } from "lodash";
-import BackupFolderConfigurator from "../../modules/BackupFolderConfigurator";
+import BackupFolderConfigurator from "../BackupFolderConfigurator";
 
 const Store = require("electron-store");
 const store = new Store();
@@ -238,8 +238,7 @@ class KeyboardSettings extends React.Component {
       this.props.setKbData(this.state)
     );
   };
-  setHoldTimeout = event => {
-    const value = event.target.value;
+  setHoldTimeout = value => {
     this.setState(
       state => ({
         qukeysHoldTimeout: value,
@@ -249,9 +248,7 @@ class KeyboardSettings extends React.Component {
     );
   };
 
-  setOverlapThreshold = event => {
-    const value = event.target.value;
-
+  setOverlapThreshold = value => {
     this.setState(
       state => ({
         qukeysOverlapThreshold: value,
@@ -261,13 +258,10 @@ class KeyboardSettings extends React.Component {
     );
   };
 
-  setSuperTimeout = event => {
-    const value = event.target.value;
-    const olt = value > 1000 ? 0 : 100 - value / 10;
+  setSuperTimeout = value => {
     this.setState(
       state => ({
         SuperTimeout: value,
-        qukeysOverlapThreshold: olt,
         modified: true
       }),
       this.props.setKbData(this.state)
@@ -292,8 +286,7 @@ class KeyboardSettings extends React.Component {
   // this.props.setKbData(this.state));
   // };
 
-  setSuperHoldstart = event => {
-    const value = event.target.value;
+  setSuperHoldstart = value => {
     this.setState(
       event => ({
         SuperHoldstart: value,
@@ -350,8 +343,8 @@ class KeyboardSettings extends React.Component {
   setSpeed = value => {
     this.setState(
       state => ({
-        mouseSpeed: parseInt(value) < 128 ? parseInt(value) : 128 - (parseInt(value) - 128),
-        mouseSpeedDelay: Math.ceil(50 / parseInt(value)),
+        mouseSpeed: parseInt(value),
+        mouseSpeedDelay: 10,
         modified: true
       }),
       this.props.setKbData(this.state)
@@ -371,8 +364,8 @@ class KeyboardSettings extends React.Component {
   setAccelSpeed = value => {
     this.setState(
       state => ({
-        mouseAccelSpeed: parseInt(value) < 128 ? parseInt(value) : 128 - (parseInt(value) - 128),
-        mouseAccelDelay: Math.ceil(50 / parseInt(value)),
+        mouseAccelSpeed: parseInt(value),
+        mouseAccelDelay: 600,
         modified: true
       }),
       this.props.setKbData(this.state)
@@ -380,7 +373,7 @@ class KeyboardSettings extends React.Component {
   };
 
   // setAccelDelay = event => {
-  //   const value = event.target.value;
+  //   const value =  ;
 
   //   this.setState(state =>{
   //     mouseAccelDelay: val(ue,
@@ -423,7 +416,7 @@ class KeyboardSettings extends React.Component {
   setSpeedLimit = value => {
     this.setState(
       state => ({
-        mouseSpeedLimit: value,
+        mouseSpeedLimit: parseInt(value),
         modified: true
       }),
       this.props.setKbData(this.state)
@@ -482,7 +475,7 @@ class KeyboardSettings extends React.Component {
           <span className="tagsfix">Slow</span>
         </Col>
         <Col xs={8} md={10} className="px-2">
-          <Slider min={0} max={254} value={mouseSpeed} onChange={this.setSpeed} />
+          <Slider min={0} max={127} value={mouseSpeed} onChange={this.setSpeed} />
         </Col>
         <Col xs={2} md={1} className="p-0 text-center align-self-center">
           <span className="tagsfix">Fast</span>
@@ -542,7 +535,7 @@ class KeyboardSettings extends React.Component {
           <span className="tagsfix">Slow</span>
         </Col>
         <Col xs={8} md={10} className="px-2">
-          <Slider min={0} max={127} value={mouseSpeedLimit} onChange={this.setSpeedLimit} />
+          <Slider min={0} max={255} value={mouseSpeedLimit} onChange={this.setSpeedLimit} />
         </Col>
         <Col xs={2} md={1} className="p-0 text-center align-self-center">
           <span className="tagsfix">Fast</span>
@@ -612,15 +605,15 @@ class KeyboardSettings extends React.Component {
                 <Title text={i18n.keyboardSettings.superkeys.title} headingLevel={3} svgICO={<IconTypo />} />
               </Card.Title>
               <Card.Body>
-                {SuperTimeout >= 0 && (
-                  <Form.Group controlId="superTimeout" className="formGroup">
+                {qukeysOverlapThreshold >= 0 && (
+                  <Form.Group controlId="QukeysOverlap" className="formGroup">
                     <Row>
                       <Col>
                         <Form.Label>
                           <Title
-                            text={i18n.keyboardSettings.superkeys.timeout}
+                            text={i18n.keyboardSettings.qukeys.overlapThreshold}
                             headingLevel={6}
-                            tooltip={`<h5 class="text-left">${i18n.keyboardSettings.superkeys.timeoutTip1}</h5><ul><li class="text-left">${i18n.keyboardSettings.superkeys.timeoutTip2}</li><li class="text-left">${i18n.keyboardSettings.superkeys.timeoutTip3}</li><li class="text-left">${i18n.keyboardSettings.superkeys.timeoutTip4}</li></ul>`}
+                            tooltip={`<h5 class="text-left">${i18n.keyboardSettings.qukeys.overlapThresholdTip1}</h5><ul><li class="text-left">${i18n.keyboardSettings.qukeys.overlapThresholdTip2}</li><li class="text-left">${i18n.keyboardSettings.qukeys.overlapThresholdTip3}</li></ul>`}
                             tooltipPlacement="bottom"
                             tooltipSize="wide"
                           />
@@ -629,13 +622,69 @@ class KeyboardSettings extends React.Component {
                     </Row>
                     <Row>
                       <Col xs={2} md={1} className="p-0 text-center align-self-center">
-                        <span className="tagsfix">Slow</span>
+                        <span className="tagsfix">Less</span>
                       </Col>
                       <Col xs={8} md={10} className="px-2">
-                        <Slider min={0} max={95} value={100 - SuperTimeout / 10} onChange={this.setTyping} />
+                        <Slider min={0} max={100} value={qukeysOverlapThreshold} onChange={this.setOverlapThreshold} />
                       </Col>
                       <Col xs={2} md={1} className="p-0 text-center align-self-center">
-                        <span className="tagsfix">Fast</span>
+                        <span className="tagsfix">More</span>
+                      </Col>
+                    </Row>
+                  </Form.Group>
+                )}
+                {qukeysHoldTimeout >= 0 && (
+                  <Form.Group controlId="QukeysOverlap" className="formGroup">
+                    <Row>
+                      <Col>
+                        <Form.Label>
+                          <Title
+                            text={i18n.keyboardSettings.qukeys.holdTimeout}
+                            headingLevel={6}
+                            tooltip={`<h5 class="text-left">${i18n.keyboardSettings.qukeys.holdTimeoutTip1}</h5><ul><li class="text-left">${i18n.keyboardSettings.qukeys.holdTimeoutTip2}</li><li class="text-left">${i18n.keyboardSettings.qukeys.holdTimeoutTip3}</li></ul>`}
+                            tooltipPlacement="bottom"
+                            tooltipSize="wide"
+                          />
+                        </Form.Label>
+                      </Col>
+                    </Row>
+                    <Row>
+                      <Col xs={2} md={1} className="p-0 text-center align-self-center">
+                        <span className="tagsfix">Less</span>
+                      </Col>
+                      <Col xs={8} md={10} className="px-2">
+                        <Slider min={1} max={255} value={qukeysHoldTimeout} onChange={this.setHoldTimeout} />
+                      </Col>
+                      <Col xs={2} md={1} className="p-0 text-center align-self-center">
+                        <span className="tagsfix">More</span>
+                      </Col>
+                    </Row>
+                  </Form.Group>
+                )}
+                {SuperTimeout >= 0 && (
+                  <Form.Group controlId="superTimeout" className="formGroup">
+                    <Row>
+                      <Col>
+                        <Form.Label>
+                          <Title
+                            text={i18n.keyboardSettings.superkeys.timeout}
+                            headingLevel={6}
+                            tooltip={`<h5 class="text-left">${i18n.keyboardSettings.superkeys.timeoutTip1}</h5><ul><li class="text-left">${i18n.keyboardSettings.superkeys.timeoutTip2}</li><li class="text-left">${i18n.keyboardSettings.superkeys.timeoutTip3}</li></ul>`}
+                            tooltipPlacement="bottom"
+                            tooltipSize="wide"
+                          />
+                        </Form.Label>
+                      </Col>
+                    </Row>
+                    <Row>
+                      <Col xs={2} md={1} className="p-0 text-center align-self-center">
+                        <span className="tagsfix">Less</span>
+                      </Col>
+                      <Col xs={8} md={10} className="px-2">
+                        <Slider min={1} max={500} value={SuperTimeout} onChange={this.setSuperTimeout} />
+                      </Col>
+                      <Col xs={2} md={1} className="p-0 text-center align-self-center">
+                        <span className="tagsfix">More</span>
                       </Col>
                     </Row>
                   </Form.Group>
@@ -648,7 +697,7 @@ class KeyboardSettings extends React.Component {
                           <Title
                             text={i18n.keyboardSettings.superkeys.holdstart}
                             headingLevel={6}
-                            tooltip={`<h5 class="text-left">${i18n.keyboardSettings.superkeys.chordingTip1}</h5><ul><li class="text-left">${i18n.keyboardSettings.superkeys.chordingTip2}</li><li class="text-left">${i18n.keyboardSettings.superkeys.chordingTip3}</li><li class="text-left">${i18n.keyboardSettings.superkeys.chordingTip4}</li></ul>`}
+                            tooltip={`<h5 class="text-left">${i18n.keyboardSettings.superkeys.chordingTip1}</h5><ul><li class="text-left">${i18n.keyboardSettings.superkeys.chordingTip2}</li><li class="text-left">${i18n.keyboardSettings.superkeys.chordingTip3}</li></ul>`}
                             tooltipPlacement="bottom"
                             tooltipSize="wide"
                           />
@@ -657,13 +706,13 @@ class KeyboardSettings extends React.Component {
                     </Row>
                     <Row>
                       <Col xs={2} md={1} className="p-0 text-center align-self-center">
-                        <span className="tagsfix">None</span>
+                        <span className="tagsfix">Less</span>
                       </Col>
                       <Col xs={8} md={10} className="px-2">
-                        <Slider min={0} max={100} value={qukeysOverlapThreshold} onChange={this.setChording} />
+                        <Slider min={1} max={500} value={SuperHoldstart} onChange={this.setSuperHoldstart} />
                       </Col>
                       <Col xs={2} md={1} className="p-0 text-center align-self-center">
-                        <span className="tagsfix">High</span>
+                        <span className="tagsfix">More</span>
                       </Col>
                     </Row>
                   </Form.Group>

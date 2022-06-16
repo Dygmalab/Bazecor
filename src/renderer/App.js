@@ -21,7 +21,8 @@ import { Switch, Redirect, Route, withRouter } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import { ThemeProvider } from "styled-components";
 
-import usb from "usb";
+import { usb } from "usb";
+
 import i18n from "./i18n";
 
 import Focus from "../api/focus";
@@ -49,6 +50,7 @@ const Store = require("electron-store");
 const store = new Store();
 
 const { remote, ipcRenderer } = require("electron");
+const path = require("path");
 
 let focus = new Focus();
 focus.debug = true;
@@ -104,14 +106,36 @@ class App extends React.Component {
       console.log("settings already upgraded, returning");
       return;
     }
+    // create locale language identifier
+    const lang = remote.app.getLocale();
+    const translator = {
+      en: "english",
+      es: "spanish",
+      fr: "french",
+      de: "german",
+      sv: "swedish",
+      da: "danish",
+      no: "norwegian",
+      is: "icelandic"
+    };
+    // console.log("languageTEST", lang, translator[lang.split("-")[0]], translator["hh"]);
 
     // Store all settings from electron settings in electron store.
     let data = {};
-    data.backupFolder = await settings.get("backupFolder");
-    data.backupFrequency = await settings.get("backupFrequency");
-    data.language = await settings.get("ui.language");
-    data.darkMode = await settings.get("ui.darkMode");
-    data.showDefaults = await settings.get("keymap.showDefaults");
+    data.backupFolder =
+      (await settings.get("backupFolder")) != undefined
+        ? await settings.get("backupFolder")
+        : path.join(remote.app.getPath("home"), "Raise", "Backups");
+    data.backupFrequency = (await settings.get("backupFrequency")) != undefined ? await settings.get("backupFrequency") : 30;
+    data.language =
+      (await settings.get("ui.language")) != undefined
+        ? await settings.get("ui.language")
+        : translator[lang.split("-")[0]] != ""
+        ? translator[lang.split("-")[0]]
+        : "english";
+    data.darkMode = (await settings.get("ui.darkMode")) != undefined ? await settings.get("ui.darkMode") : "system";
+    data.showDefaults =
+      (await settings.get("keymap.showDefaults")) != undefined ? await settings.get("keymap.showDefaults") : false;
     store.set("settings", data);
     store.set("neurons", []);
     console.log("Testing results: ", data, store.get("settings"), store.get("settings.darkMode"));
@@ -119,7 +143,12 @@ class App extends React.Component {
 
   componentDidMount() {
     // Loading font to be sure it wont blink
-    document.fonts.load("Libre Franklin");
+    //document.fonts.load("Libre Franklin");
+
+    const fontFace = new FontFace("Libre Franklin", "./theme/fonts/LibreFranklin/LibreFranklin-VariableFont_wght.ttf");
+    console.log("Font face: ", fontFace);
+    document.fonts.add(fontFace);
+
     // Setting up function to receive O.S. dark theme changes
     const self = this;
     ipcRenderer.on("darkTheme-update", function (evt, message) {

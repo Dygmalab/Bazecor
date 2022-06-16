@@ -30,7 +30,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 // Custom modules imports
-import { KeyboardSettings } from "../screens/Preferences/KeyboardSettings";
+import { KeyboardSettings } from "../modules/Settings/KeyboardSettings";
 import { BackupSettings, GeneralSettings, NeuronSettings, AdvancedSettings } from "../modules/Settings";
 
 import Focus from "../../api/focus";
@@ -408,8 +408,8 @@ class Preferences extends React.Component {
     const { defaultLayer } = this.kbData;
     const devToolsSwitch = <Form.Check type="switch" checked={devTools} onChange={this.toggleDevTools} />;
     const verboseSwitch = <Form.Check type="switch" checked={verboseFocus} onChange={this.toggleVerboseFocus} />;
-    console.log("CHECKING STATUS MOD", modified);
-    console.log("CHECKING STATUS CTX", inContext);
+    // console.log("CHECKING STATUS MOD", modified);
+    // console.log("CHECKING STATUS CTX", inContext);
 
     return (
       <Styles>

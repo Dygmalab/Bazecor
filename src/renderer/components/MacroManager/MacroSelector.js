@@ -21,9 +21,6 @@ const Styles = Styled.div`
   border: 1px solid lightgrey;
   background-color: ${({ theme }) => theme.card.background};
 }
-.list::-webkit-scrollbar {
-  display: none;
-}
 .list-group-item.selected {
   background-color: ${({ theme }) => theme.colors.button.background};
   color: ${({ theme }) => theme.colors.text};
@@ -77,10 +74,10 @@ class MacroSelector extends Component {
                       }}
                     >
                       <Row>
-                        <Col xs={1}>
+                        <Col xs={2}>
                           <span>{index}</span>
                         </Col>
-                        <Col xs={8}>
+                        <Col xs={7}>
                           <p className="extrapadding">{item.name}</p>
                         </Col>
                         {/* <Col xs={5}>

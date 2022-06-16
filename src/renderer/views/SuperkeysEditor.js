@@ -33,14 +33,14 @@ import KeyConfig from "../components/KeyManager/KeyConfig";
 import Callout from "../component/Callout";
 import { LayoutViewSelector } from "../component/ToggleButtons";
 import { SuperkeysSelector } from "../component/Select";
+import { RegularButton } from "../component/Button";
 
 import ToastMessage from "../component/ToastMessage";
 import { IconFloppyDisk } from "../component/Icon";
 
 // Modules
 import PageHeader from "../modules/PageHeader";
-import { SuperKeysFeatures } from "../modules/SuperKeys";
-import { SuperkeyActions } from "../modules/SuperKeys";
+import { SuperKeysFeatures, SuperkeyActions } from "../modules/Superkeys";
 import { KeyPickerKeyboard } from "../modules/KeyPickerKeyboard";
 
 // API's
@@ -356,7 +356,7 @@ class SuperkeysEditor extends React.Component {
       superindex = 0;
 
     if (raw === "") {
-      return [];
+      return [{ actions: [53, 2101, 1077, 41, 0], name: "Welcome to superkeys", id: superindex }];
     }
     // console.log(raw, raw.length);
     while (raw.length > iter) {
@@ -536,6 +536,10 @@ class SuperkeysEditor extends React.Component {
   }
 
   checkKBSuperkeys(newSuper, newID, SKC) {
+    if (newSuper.length == 0) {
+      newSuper = [{ actions: [53, 2101, 1077, 41, 0], name: "Welcome to superkeys", id: 0 }];
+      newID = 0;
+    }
     let LOK = this.state.keymap.custom
       .map((l, c) =>
         l
@@ -583,6 +587,16 @@ class SuperkeysEditor extends React.Component {
       });
       this.updateSuper(aux, newID);
     }
+  };
+
+  duplicateSuperkey = () => {
+    let { superkeys, selectedSuper } = this.state;
+    let aux = Object.assign({}, this.state.superkeys[selectedSuper]);
+    aux.id = this.state.superkeys.length;
+    aux.name = "Copy of " + aux.name;
+    superkeys.push(aux);
+    this.updateSuper(superkeys, -1);
+    this.changeSelected(aux.id);
   };
 
   deleteSuperkey = () => {
@@ -678,7 +692,8 @@ class SuperkeysEditor extends React.Component {
   //Manage Standard/Single view
   async configStandarView() {
     try {
-      const preferencesStandardView = JSON.parse(store.get("settings.isStandardViewSuperkeys"));
+      // const preferencesStandardView = JSON.parse(store.get("settings.isStandardViewSuperkeys"));
+      const preferencesStandardView = false;
       if (preferencesStandardView !== null) {
         this.setState({ isStandardViewSuperkeys: preferencesStandardView });
       } else {
@@ -696,11 +711,9 @@ class SuperkeysEditor extends React.Component {
   }
 
   onToogle = () => {
-    if (this.state.isStandardViewSuperkeys) {
-      this.setState({ isStandardViewSuperkeys: false });
-    } else {
-      this.setState({ isStandardViewSuperkeys: true });
-    }
+    this.setState(state => {
+      ({ isStandardViewSuperkeys: !state.isStandardViewSuperkeys });
+    });
   };
 
   render() {
@@ -748,6 +761,7 @@ class SuperkeysEditor extends React.Component {
                 addItem={this.addSuperkey}
                 deleteItem={this.deleteSuperkey}
                 updateItem={this.saveName}
+                cloneItem={this.duplicateSuperkey}
               />
             }
             saveContext={this.writeSuper}
@@ -794,25 +808,36 @@ class SuperkeysEditor extends React.Component {
           onToogle={this.onToogle}
           isStandardView={isStandardViewSuperkeys}
           tooltip={i18n.editor.superkeys.tooltip}
+          isDisabled={true}
         />
-        <Modal show={this.state.showDeleteModal} onHide={this.toggleDeleteModal} style={{ marginTop: "100px" }}>
-          <ModalStyle>
-            <Modal.Header closeButton className="modalcol">
-              <Modal.Title>{i18n.editor.superkeys.deleteModal.title}</Modal.Title>
-            </Modal.Header>
-            <Modal.Body className="modalcol">
-              <p>{i18n.editor.superkeys.deleteModal.body}</p>
-              {listOfSKK}
-            </Modal.Body>
-            <Modal.Footer className="modalcol">
-              <Button variant="secondary" onClick={this.toggleDeleteModal}>
-                {i18n.editor.superkeys.deleteModal.cancelButton}
-              </Button>
-              <Button variant="primary" onClick={this.RemoveDeletedSK}>
-                {i18n.editor.superkeys.deleteModal.applyButton}
-              </Button>
-            </Modal.Footer>
-          </ModalStyle>
+        <Modal
+          show={this.state.showDeleteModal}
+          onHide={this.toggleDeleteModal}
+          size="lg"
+          aria-labelledby="contained-modal-title-vcenter"
+          centered
+        >
+          <Modal.Header closeButton>
+            <Modal.Title>{i18n.editor.superkeys.deleteModal.title}</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <p>{i18n.editor.superkeys.deleteModal.body}</p>
+            {listOfSKK}
+          </Modal.Body>
+          <Modal.Footer>
+            <RegularButton
+              buttonText={i18n.editor.superkeys.deleteModal.cancelButton}
+              style="outline"
+              size="sm"
+              onClick={this.toggleDeleteModal}
+            />
+            <RegularButton
+              buttonText={i18n.editor.superkeys.deleteModal.applyButton}
+              style="outline gradient"
+              size="sm"
+              onClick={this.RemoveDeletedSK}
+            />
+          </Modal.Footer>
         </Modal>
       </Styles>
     );

@@ -21,6 +21,7 @@ import Card from "react-bootstrap/Card";
 import i18n from "../../i18n";
 
 import MacroForm from "./MacroForm";
+import Slider from "react-rangeslider";
 
 const Styles = Styled.div`
 .card {
@@ -35,11 +36,48 @@ const Styles = Styled.div`
 .card::-webkit-scrollbar {
   display: none;
 }
+.macroHeaderMem{
+  display: flex;
+  justify-content: space-between;
+}
+.macroHeaderTitle {
+  align-self: center;
+}
+.macroFreeMem {
+  width: 40%;
+  display: flex;
+  align-items: center;
+}
+.memSlider {
+  width: -webkit-fill-available;
+  margin-left: 8px;
+  margin-right: 8px;
+}
+.memSlider {
+  .rangeslider__fill {
+    background-color: lightgreen;
+  }
+  .rangeslider__handle {
+    display: none;
+  }
+}
+.outOfMem {
+  .rangeslider__fill {
+    background-color: red;
+  }
+  .rangeslider__handle {
+    background-color: red;
+  }
+}
 .cardcontent {
   padding: 0px;
   &:last-child {
     padding-bottom: 0px;
   }
+}
+.iconFloppy{
+  margin-right: 6px;
+  width: 27px;
 }
 .cardHeader {
   background-color: ${({ theme }) => theme.card.background};
@@ -65,13 +103,13 @@ class MacroManager extends Component {
     this.state = {
       macros: props.macros,
       selected: selected,
+      freeMemory: 0,
       open: false
     };
 
     this.close = this.close.bind(this);
     this.accept = this.accept.bind(this);
     this.deleteMacro = this.deleteMacro.bind(this);
-    this.duplicateMacro = this.duplicateMacro.bind(this);
     this.addMacro = this.addMacro.bind(this);
     this.changeSelected = this.changeSelected.bind(this);
     this.exit = this.exit.bind(this);
@@ -100,6 +138,7 @@ class MacroManager extends Component {
     this.props.updateMacro(macros, -1);
     this.props.changeSelected(this.state.selected);
     this.exit();
+    this.updateFreeMemory(macros);
   }
 
   addMacro() {
@@ -133,16 +172,6 @@ class MacroManager extends Component {
     }
   }
 
-  duplicateMacro(selected) {
-    let macros = this.state.macros;
-    let aux = Object.assign({}, this.state.macros[selected]);
-    aux.id = this.state.macros.length;
-    aux.name = "Copy of " + aux.name;
-    macros.push(aux);
-    this.props.updateMacro(macros, -1);
-    this.changeSelected(aux.id);
-  }
-
   changeSelected(selected) {
     this.setState({
       selected
@@ -158,13 +187,50 @@ class MacroManager extends Component {
     this.props.updateMacro(macros, -1);
   }
 
+  updateFreeMemory = macros => {
+    const actionMap = macros.map(macro => {
+      return macro.actions
+        .map(action => {
+          if (action.type > 1 && action.type < 6) {
+            return [[action.type], [action.keyCode >> 8], [action.keyCode & 255]];
+          } else {
+            return [[action.type], [action.keyCode]];
+          }
+        })
+        .concat([0]);
+    });
+    let mem = [].concat.apply([], actionMap.flat()).concat([0]).length;
+    console.log(mem);
+    this.setState({ freeMemory: mem });
+    if (mem > 1999) {
+      alert(
+        "You exceeded the maximum capacity of actions in your macros. Please decrease the number of actions until the top right bar is no longer red"
+      );
+    }
+  };
+
   render() {
     const { keymapDB } = this.props;
 
     return (
       <Styles>
         <Card className={"card"}>
-          <Card.Header classes={"cardHeader cardTitle"}>{i18n.editor.macros.title}</Card.Header>
+          <Card.Header classes={"cardHeader cardTitle"}>
+            <div className="macroHeaderMem">
+              <div className="macroHeaderTitle">{i18n.editor.macros.title}</div>
+              <div className="macroFreeMem">
+                <span className="tagsfix">Keyboard Memory Used - 0%</span>
+                <Slider
+                  className={`memSlider ${this.state.freeMemory > 1899 ? "outOfMem" : ""}`}
+                  min={0}
+                  max={2000}
+                  value={this.state.freeMemory}
+                  tooltip={false}
+                />
+                <span className="tagsfix">100%</span>
+              </div>
+            </div>
+          </Card.Header>
           <Card.Body classes={"cardcontent"}>
             <MacroForm
               key={this.state.macros.length + this.state.selected}
@@ -177,7 +243,6 @@ class MacroManager extends Component {
               addMacro={this.addMacro}
               disableAdd={this.state.macros.length === this.props.maxMacros}
               changeSelected={this.changeSelected}
-              duplicateMacro={this.duplicateMacro}
               macrosRestore={this.macrosRestore}
             />
           </Card.Body>

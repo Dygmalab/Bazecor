@@ -19,17 +19,13 @@ import React from "react";
 import Styled from "styled-components";
 import { toast } from "react-toastify";
 import { Page, Text, View, Document, StyleSheet } from "@react-pdf/renderer";
+import ToastMessage from "../component/ToastMessage";
 
 // Bootstrap components
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Modal from "react-bootstrap/Modal";
-import Button from "react-bootstrap/Button";
-import Card from "react-bootstrap/Card";
-import { MdKeyboard } from "react-icons/md";
-import { IoMdColorPalette } from "react-icons/io";
-import { FiSave, FiTrash2 } from "react-icons/fi";
 
 import Focus from "../../api/focus";
 import Backup from "../../api/backup";
@@ -45,36 +41,21 @@ import { undeglowDefaultColors } from "../screens/Editor/initialUndaglowColors";
 
 // Modules
 import PageHeader from "../modules/PageHeader";
+import ColorEditor from "../modules/ColorEditor";
 import { KeyPickerKeyboard } from "../modules/KeyPickerKeyboard";
+import { LayerSelector } from "../component/Select";
+
+import { RegularButton } from "../component/Button";
+import { IconArrowUpWithLine, IconArrowDownWithLine } from "../component/Icon";
+
+import customCursor from "../../../static/base/cursorBucket.png";
 
 const Store = window.require("electron-store");
 const store = new Store();
 
-const ModalStyle = Styled.div`
-background-color: ${({ theme }) => theme.card.background};
-color: ${({ theme }) => theme.card.color};
-.title {
-  font-weight: 300;
-  font-size: xx-large;
-}
-.body {
-  font-weight: 200;
-  font-size: 1.1em;
-}
-.noborder {
-  border: none;
-}
-.modal-footer {
-  justify-content: space-between;
-}
-.italic {
-  font-style: italic;
-}
-`;
-
 const Styles = Styled.div`
 max-width: 1900px;
-min-width: 1690px;
+// min-width: 1120px;
 margin: auto;
 .keyboard-editor {
   height: 100%;
@@ -106,17 +87,19 @@ margin: auto;
   height: fit-content;
   padding: 0;
   margin: 0px 15px;
-  border-radius: 10px;
   width: fit-content;
-  background-color: ${({ theme }) => theme.colors.button.background};
+  padding: 4px;
+  background: ${({ theme }) => theme.styles.toggleButton.background};
+  border-radius: 6px;
+  button.btn {
+    background: transparent;
+  } 
+  button.btn + button.btn {   
+    margin-left: 4px;
+  }
 }
 .center-self {
   place-self: flex-start;
-}
-}
-.save-button-row {
-  margin: auto;
-  place-content: flex-end;
 }
 .save-row {
   position: fixed;
@@ -127,6 +110,7 @@ margin: auto;
 }
 .full-height {
   height: 100%;
+  padding-top: 24px;
 }
 .layer-col {
   display: flex;
@@ -141,26 +125,206 @@ margin: auto;
   font-size: 2rem;
   text-align: left;
 }
-.cancel-active{
-  background-color: ${({ theme }) => theme.colors.button.cancel};
-}
-.save-active{
-  background-color: ${({ theme }) => theme.colors.button.save};
-}
-.button-large:not(:disabled):not(.disabled):hover {
-  color: ${({ theme }) => theme.colors.button.text};
-  background-color: ${({ theme }) => theme.colors.button.active};
-  border: none;
-}
-.save-span {
-  font-size: 1.5rem;
-  vertical-align: -2px;
-  padding-left: 0.3rem;
-}
+
+
+
+
 .LayerHolder {
-  width: 100%;
-  height: 100%;
-  padding: 0px 75px;
+  display: flex;
+  flex: 0 0 100%;
+  margin: 0 auto;
+  min-width: 680px;
+  max-width: 1222px;
+}
+.raiseKeyboard {
+  overflow: visible;
+  margin: 0 auto;
+  max-width: 100%;
+      max-height: 75vh;
+  * {
+    transform-box: fill-box;
+  }
+}
+.NeuronLine {
+  stroke: ${({ theme }) => theme.styles.neuronStatus.lineStrokeColor};
+}
+#neuronWrapper {
+  &.keyOnFocus .keyOpacity{
+    stroke-opacity: 0.4;
+  }
+  &.keyOnHold .keyOpacity{
+    stroke-opacity: 0.2;
+  }
+  .neuronLights:hover {
+    cursor: pointer;
+  }
+}
+
+
+.keyBase {
+  fill: ${({ theme }) => theme.styles.raiseKeyboard.keyBase};
+}
+.keyColorOpacity {
+  fill-opacity: ${({ theme }) => theme.styles.raiseKeyboard.keyColorOpacity};
+}
+.keyItem {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  .keyContentLabel {
+    height: inherit;
+    display: flex;
+    align-items: center;
+    padding: 3px;
+    flex-wrap: wrap;
+    line-height: 1.1em;
+    position: relative;
+    ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      color: ${({ theme }) => theme.styles.raiseKeyboard.contentColor};
+      li {
+        overflow-wrap: break-word;
+        word-wrap: break-word;
+        hyphens: auto;
+      }
+    }
+    .labelClass-withModifiers {
+      margin-bottom: 8px;
+    }
+    .extraLabel {
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.025em;
+    }
+    .hidden-extraLabel {
+      display: none;
+    }
+    tspan {
+      display: inline-block;
+    }
+  }
+  tspan {
+    text-anchor: start;
+  }
+  .shadowHover {
+    transition: all 300ms ease-in-out;
+    filter: blur(16px);
+    opacity: 0.2;
+  }
+  .shadowMiddle {
+    filter: blur(18px);
+    opacity: 0.4;
+  }
+  &.keyOnFocus { 
+    filter: drop-shadow(0px 4px 0px ${({ theme }) => theme.styles.raiseKeyboard.keyShadow});
+    .keyOpacityInternal {
+      stroke-opacity: 0.7;
+      stroke: ${({ theme }) => theme.styles.raiseKeyboard.keyOnFocusBorder};
+    }
+    .keyOpacity{
+      stroke-opacity: 0.2;
+      stroke: ${({ theme }) => theme.styles.raiseKeyboard.keyOnFocusBorder};
+    }
+    .shadowHover {
+      filter: blur(16px);
+      opacity: 0.6;
+    }
+    .keyAnimation {
+      display: inline-block;
+    }
+  }
+  &:hover {
+    cursor: pointer;
+    .shadowHover {
+      filter: blur(16px);
+      opacity: 0.6;
+    }
+  }
+}
+.keyContentModifiers {
+  .labelModifier {
+    display: flex;
+    flex-wrap: wrap;
+    position: absolute;
+    bottom: 6px;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    margin-left: 6px;
+    margin-right: -1px;
+    &.extraBottom { 
+      margin-left: 1px;
+      li {
+        margin-left: 1px;
+        margin-right: 0;
+      }
+    }
+    li {
+      padding: 0px 3px;
+      border-radius: 3px;
+      
+      display: inline-block;
+      margin: 1px;
+
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: -0.03em;
+      color: ${({ theme }) => theme.styles.raiseKeyboard.modifier.color};
+      background: ${({ theme }) => theme.styles.raiseKeyboard.modifier.background};
+      box-shadow: ${({ theme }) => theme.styles.raiseKeyboard.modifier.boxShadow};
+    }
+  }
+}
+.keyAnimation {
+  display: none;
+  transform: scale(1);
+  animation: pulse-black 1.2s infinite;
+  filter: blur(1px);
+}
+@keyframes pulse-black {
+  0% {
+    opacity: 0;
+  }
+  70% {
+    opacity: 0.9;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+.underGlowStrip {
+  .underGlowStripStroke {
+      stroke-opacity: 0.5;
+  }
+  .underGlowStripShadow {
+    transition: all 300ms ease-in-out;
+    filter: blur(12px);
+    opacity: 0.8;
+  }
+  &.keyOnFocus {
+    // filter: drop-shadow(0px 1px 1px white);
+    .underGlowStripShadow {
+      filter: blur(4px);
+      opacity: 1;
+    }
+    .underGlowStripStroke {
+      stroke-opacity: 0.8;
+      stroke: ${({ theme }) => theme.styles.raiseKeyboard.keyOnFocusBorder};
+    }
+  }
+  &:hover {
+    cursor: pointer;
+    .underGlowStripShadow {
+      filter: blur(4px);
+      opacity: 1;
+    }
+  }
+}
+.layoutEditor.color.colorSelected .keyItem:hover,
+.layoutEditor.color.colorSelected .underGlowStrip:hover {
+  cursor: url(${customCursor}) 12 12, auto;
 }
 `;
 
@@ -803,7 +967,7 @@ class LayoutEditor extends React.Component {
       const idx = state.keymap.onlyCustom ? state.currentLayer : state.currentLayer - state.keymap.default.length;
       newKeymap[idx] = Array(newKeymap[0].length)
         .fill()
-        .map(() => ({ keyCode: 0xffff }));
+        .map(() => ({ keyCode: 65535, label: "", extraLabel: "TRANS", verbose: "Transparent" }));
 
       let newColormap = state.colorMap.slice();
       if (newColormap.length > 0) {
@@ -1281,9 +1445,16 @@ class LayoutEditor extends React.Component {
             if (Array.isArray(layers.keymap)) {
               console.log(layers.keymap[0]);
               this.importLayer(layers);
-              toast.success(i18n.editor.importSuccessCurrentLayer, {
-                autoClose: 2000
-              });
+              toast.success(
+                <ToastMessage
+                  title={i18n.editor.importSuccessCurrentLayerTitle}
+                  content={i18n.editor.importSuccessCurrentLayer}
+                  icon={<IconArrowDownWithLine />}
+                />,
+                {
+                  autoClose: 2000
+                }
+              );
             } else {
               console.log(layers.keymap.custom[0]);
               this.setState({
@@ -1301,9 +1472,16 @@ class LayoutEditor extends React.Component {
             }
           } catch (e) {
             console.error(e);
-            toast.error(i18n.errors.invalidLayerFile, {
-              autoClose: 2000
-            });
+            toast.error(
+              <ToastMessage
+                title={i18n.errors.preferenceFailOnSave}
+                content={i18n.errors.invalidLayerFile}
+                icon={<IconArrowDownWithLine />}
+              />,
+              {
+                autoClose: 2000
+              }
+            );
             return;
           }
         } else {
@@ -1352,18 +1530,32 @@ class LayoutEditor extends React.Component {
         if (!resp.canceled) {
           console.log(resp.filePath, data);
           require("fs").writeFileSync(resp.filePath, data);
-          toast.success(i18n.editor.exportSuccessCurrentLayer, {
-            autoClose: 2000
-          });
+          toast.success(
+            <ToastMessage
+              title={i18n.editor.exportSuccessCurrentLayer}
+              content={i18n.editor.exportSuccessCurrentLayerContent}
+              icon={<IconArrowUpWithLine />}
+            />,
+            {
+              autoClose: 2000
+            }
+          );
         } else {
           console.log("user closed SaveDialog");
         }
       })
       .catch(err => {
         console.error(err);
-        toast.error(i18n.errors.exportError + err, {
-          autoClose: 2000
-        });
+        toast.error(
+          <ToastMessage
+            title={i18n.errors.exportFailed}
+            content={i18n.errors.exportError + err}
+            icon={<IconArrowUpWithLine />}
+          />,
+          {
+            autoClose: 2000
+          }
+        );
       });
   }
 
@@ -1397,9 +1589,16 @@ class LayoutEditor extends React.Component {
         if (!resp.canceled) {
           console.log(resp.filePath, data);
           require("fs").writeFileSync(resp.filePath, data);
-          toast.success(i18n.editor.exportSuccessAllLayers, {
-            autoClose: 2000
-          });
+          toast.success(
+            <ToastMessage
+              title={i18n.editor.exportSuccessAllLayers}
+              content={i18n.editor.exportSuccessAllLayers}
+              icon={<IconArrowUpWithLine />}
+            />,
+            {
+              autoClose: 2000
+            }
+          );
         } else {
           console.log("user closed SaveDialog");
         }
@@ -1454,6 +1653,24 @@ class LayoutEditor extends React.Component {
   layerName(index) {
     return this.state.layerNames.length >= index ? this.state.layerNames[index].name : this.defaultLayerNames[index];
   }
+  modeSelectToggle = data => {
+    this.setState({
+      modeselect: data
+    });
+  };
+
+  exportToPdf = () => {
+    toast.info(
+      <ToastMessage
+        title={"Feature not yet ready!"}
+        content={"The feature is not yet ready. its being worked on!"}
+        icon={<IconArrowUpWithLine />}
+      />,
+      {
+        autoClose: 2000
+      }
+    );
+  };
 
   exportToPDF = () => {
     //TODO: Export to PDF
@@ -1571,6 +1788,7 @@ class LayoutEditor extends React.Component {
           darkMode={this.props.darkMode}
           style={{ width: "50vw" }}
           showUnderglow={this.state.modeselect != "keyboard"}
+          className={`raiseKeyboard layer`}
         />
       </div>
       // </fade>
@@ -1625,30 +1843,53 @@ class LayoutEditor extends React.Component {
 
     return (
       <Styles>
-        <Container fluid className="keyboard-editor">
-          <PageHeader text={i18n.app.menu.editor} />
+        <Container
+          fluid
+          className={`keyboard-editor layoutEditor ${this.state.modeselect} ${
+            typeof this.state.selectedPaletteColor == "number" ? "colorSelected" : ""
+          }`}
+        >
+          <PageHeader
+            text={i18n.app.menu.editor}
+            showSaving={true}
+            contentSelector={
+              <LayerSelector
+                itemList={layerMenu}
+                selectedItem={currentLayer}
+                subtitle={i18n.editor.layers.title}
+                onSelect={this.selectLayer}
+                updateItem={this.onLayerNameChange}
+                exportFunc={this.toExport}
+                importFunc={this.toImport}
+                clearFunc={this.confirmClear}
+                copyFunc={this.copyFromDialog}
+                editModeActual={this.state.modeselect}
+                editModeFunc={this.modeSelectToggle}
+                exportToPdf={this.exportToPdf}
+              />
+            }
+            colorEditor={
+              <ColorEditor
+                key={palette}
+                colors={palette}
+                disabled={isReadOnly || currentLayer > this.state.colorMap.length}
+                onColorSelect={this.onColorSelect}
+                colorButtonIsSelected={this.state.colorButtonIsSelected}
+                onColorPick={this.onColorPick}
+                selected={this.state.selectedPaletteColor}
+                isColorButtonSelected={isColorButtonSelected}
+                onColorButtonSelect={this.onColorButtonSelect}
+                toChangeAllKeysColor={this.toChangeAllKeysColor}
+              />
+            }
+            isColorActive={this.state.modeselect == "keyboard" ? false : true}
+            saveContext={this.onApply}
+            destroyContext={() => {
+              this.props.cancelContext();
+            }}
+            inContext={this.state.modified}
+          />
           <Row className="full-height">
-            <Col xs={2} className="full-height layer-col">
-              <Row className="mx-2">
-                <LayerPanel
-                  layers={layerMenu}
-                  selectLayer={this.selectLayer}
-                  currentLayer={currentLayer}
-                  isReadOnly={isReadOnly}
-                  importTitle={i18n.editor.layers.importTitle}
-                  exportTitle={i18n.editor.layers.exportTitle}
-                  exportAllTitle={i18n.editor.layers.exportAllTitle}
-                  importFunc={this.toImport}
-                  exportFunc={this.toExport}
-                  exportAllFunc={this.toExportAll}
-                  copyTitle={i18n.editor.layers.copyFrom}
-                  copyFunc={this.copyFromDialog}
-                  clearTitle={i18n.editor.layers.clearLayer}
-                  clearFunc={this.confirmClear}
-                  changeLayerName={this.onLayerNameChange}
-                />
-              </Row>
-            </Col>
             {/* </Row>
           {this.state.keymap.custom.length == 0 &&
             this.state.keymap.default.length == 0 && (
@@ -1664,52 +1905,21 @@ class LayoutEditor extends React.Component {
             <Col className="raise-editor layer-col">
               <Row className="m-0">{layer}</Row>
               <Row className="full-height m-0">
-                {this.state.modeselect != "keyboard" ? (
-                  <ColorPanel
-                    key={palette}
-                    colors={palette}
-                    disabled={isReadOnly || currentLayer > this.state.colorMap.length}
-                    onColorSelect={this.onColorSelect}
-                    colorButtonIsSelected={this.state.colorButtonIsSelected}
-                    onColorPick={this.onColorPick}
-                    selected={this.state.selectedPaletteColor}
-                    isColorButtonSelected={isColorButtonSelected}
-                    onColorButtonSelect={this.onColorButtonSelect}
-                    toChangeAllKeysColor={this.toChangeAllKeysColor}
+                {this.state.modeselect == "keyboard" ? (
+                  <KeyPickerKeyboard
+                    onKeySelect={this.onKeyChange}
+                    code={code}
+                    macros={macros}
+                    superkeys={superkeys}
+                    actions={actions}
+                    action={0}
+                    superName={superName}
+                    keyIndex={currentKeyIndex}
+                    actTab={"editor"}
+                    selectedlanguage={currentLanguageLayout}
+                    kbtype={kbtype}
                   />
-                ) : (
-                  <>
-                    {/* <KeyConfig
-                      id="keyboard-fade"
-                      onKeySelect={this.onKeyChange}
-                      code={code}
-                      macros={macros}
-                      superkeys={superkeys}
-                      actions={actions}
-                      superName={superName}
-                      newSuperID={this.newSuperID}
-                      setSuperKey={this.setSuperKey}
-                      delSuperKey={this.delSuperKey}
-                      keyIndex={currentKeyIndex}
-                      actTab={"editor"}
-                      selectedlanguage={currentLanguageLayout}
-                      kbtype={kbtype}
-                    /> */}
-                    <KeyPickerKeyboard
-                      onKeySelect={this.onKeyChange}
-                      code={code}
-                      macros={macros}
-                      superkeys={superkeys}
-                      actions={actions}
-                      action={0}
-                      superName={superName}
-                      keyIndex={currentKeyIndex}
-                      actTab={"editor"}
-                      selectedlanguage={currentLanguageLayout}
-                      kbtype={kbtype}
-                    />
-                  </>
-                )}
+                ) : null}
               </Row>
             </Col>
           </Row>
@@ -1730,88 +1940,64 @@ class LayoutEditor extends React.Component {
             currentLayer={currentLayer}
           />
         </Container>
-        <Card className="buttons-row">
-          <Button
-            active={this.state.modeselect == "keyboard"}
-            onClick={() => {
-              this.setState({ modeselect: "keyboard" });
-            }}
-            className="keyboardbutton big"
-            aria-controls="keyboard-fade"
-          >
-            <MdKeyboard />
-          </Button>
-          <Button
-            active={this.state.modeselect == "color"}
-            onClick={() => {
-              this.setState({ modeselect: "color" });
-            }}
-            className="colorsbutton big"
-          >
-            <IoMdColorPalette />
-          </Button>
-        </Card>
-        <Container className="save-row">
-          <Row className="save-button-row">
-            <Button
-              disabled={!this.state.modified}
-              onClick={this.onApply}
-              className={`button-large pt-0 mt-0 mb-2 ${this.state.modified ? "save-active" : ""}`}
-              aria-controls="save-changes"
-            >
-              <FiSave />
-            </Button>
-          </Row>
-          <Row className="save-button-row">
-            <Button
-              disabled={!this.state.modified}
-              onClick={() => {
-                this.props.cancelContext();
-              }}
-              className={`button-large pt-0 mt-0 mb-2 ${this.state.modified ? "cancel-active" : ""}`}
-              aria-controls="discard-changes"
-            >
-              <FiTrash2 />
-            </Button>
-          </Row>
-        </Container>
-        <Modal show={this.state.showMacroModal} onHide={this.toggleMacroModal} style={{ marginTop: "300px" }}>
-          <ModalStyle>
-            <Modal.Header closeButton className="title noborder">
-              <Modal.Title>{i18n.editor.oldMacroModal.title}</Modal.Title>
-            </Modal.Header>
-            <Modal.Body className="body">
-              <p>{i18n.editor.oldMacroModal.body}</p>
-              <p className="italic">{i18n.editor.oldMacroModal.body2}</p>
-            </Modal.Body>
-            <Modal.Footer className="noborder">
-              <Button variant="secondary" onClick={this.toggleMacroModal}>
-                {i18n.editor.oldMacroModal.cancelButton}
-              </Button>
-              <Button variant="primary" onClick={this.updateOldMacros}>
-                {i18n.editor.oldMacroModal.applyButton}
-              </Button>
-            </Modal.Footer>
-          </ModalStyle>
+
+        <Modal
+          show={this.state.showMacroModal}
+          size="lg"
+          onHide={this.toggleMacroModal}
+          aria-labelledby="contained-modal-title-vcenter"
+          centered
+        >
+          <Modal.Header closeButton>
+            <Modal.Title>{i18n.editor.oldMacroModal.title}</Modal.Title>
+          </Modal.Header>
+          <Modal.Body className="body">
+            <p>{i18n.editor.oldMacroModal.body}</p>
+            <p className="italic">{i18n.editor.oldMacroModal.body2}</p>
+          </Modal.Body>
+          <Modal.Footer>
+            <RegularButton
+              buttonText={i18n.editor.oldMacroModal.cancelButton}
+              style="outline"
+              size="sm"
+              onClick={this.toggleMacroModal}
+            />
+            <RegularButton
+              buttonText={i18n.editor.oldMacroModal.applyButton}
+              style="outline gradient"
+              size="sm"
+              onClick={this.updateOldMacros}
+            />
+          </Modal.Footer>
         </Modal>
-        <Modal show={this.state.showNeuronModal} onHide={this.toggleNeuronModal} style={{ marginTop: "300px" }}>
-          <ModalStyle>
-            <Modal.Header closeButton className="title noborder">
-              <Modal.Title>{i18n.editor.oldNeuronModal.title}</Modal.Title>
-            </Modal.Header>
-            <Modal.Body className="body">
-              <p>{i18n.editor.oldNeuronModal.body}</p>
-              <p className="italic">{i18n.editor.oldNeuronModal.body2}</p>
-            </Modal.Body>
-            <Modal.Footer className="noborder">
-              <Button variant="secondary" onClick={this.toggleNeuronModal}>
-                {i18n.editor.oldNeuronModal.cancelButton}
-              </Button>
-              <Button variant="primary" onClick={this.CloneExistingNeuron}>
-                {i18n.editor.oldNeuronModal.applyButton}
-              </Button>
-            </Modal.Footer>
-          </ModalStyle>
+        <Modal
+          show={this.state.showNeuronModal}
+          size="lg"
+          onHide={this.toggleNeuronModal}
+          aria-labelledby="contained-modal-title-vcenter"
+          centered
+        >
+          <Modal.Header closeButton>
+            <Modal.Title>{i18n.editor.oldNeuronModal.title}</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <p>{i18n.editor.oldNeuronModal.body}</p>
+            <p className="italic">{i18n.editor.oldNeuronModal.body2}</p>
+          </Modal.Body>
+          <Modal.Footer>
+            <RegularButton
+              buttonText={i18n.editor.oldNeuronModal.cancelButton}
+              style="outline"
+              size="sm"
+              onClick={this.toggleNeuronModal}
+            />
+            <RegularButton
+              buttonText={i18n.editor.oldNeuronModal.applyButton}
+              style="outline gradient"
+              size="sm"
+              onClick={this.CloneExistingNeuron}
+            />
+          </Modal.Footer>
         </Modal>
       </Styles>
     );

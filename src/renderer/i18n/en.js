@@ -23,6 +23,7 @@ const English = {
       "Houston we have a problem! Could not connect with Neuron, configure if cables are connected and if everything is ok.",
     invalidLayerFile: "Not a valid Layer file",
     exportError: "Error at Exporting: ",
+    exportFailed: "Export failed!",
     preferenceFailOnSave: "Whoops, Something Went Wrong!",
     preferenceFailOnSaveBody: "Please try again.",
     dismiss: "Dismiss",
@@ -38,7 +39,7 @@ const English = {
       success: "Sent!",
       saveChanges: "Send changes to the Raise",
       savePreferences: "Save preferences",
-      button: "Save changes"
+      button: "Save<span> changes</span>"
     },
     pickerColorButton: "Change color",
     underglowColorButton: "Change color of all underglows",
@@ -48,7 +49,8 @@ const English = {
     ok: "Ok",
     cancel: "Cancel",
     allFiles: "All Files",
-    loading: "Loading..."
+    loading: "Loading...",
+    applyChanges: "Apply changes"
   },
   app: {
     device: "Keyboard",
@@ -73,7 +75,8 @@ const English = {
       bazecorSection: "Bazecor",
       miscSection: "Miscellaneous",
       upgradeAvailable: "An upgrade is available!",
-      badgeNew: "New"
+      badgeNew: "New",
+      changeName: "Change name"
     },
     deviceMenu: {
       Homepage: "Homepage",
@@ -81,7 +84,7 @@ const English = {
       Chat: "Chat"
     },
     cancelPending: {
-      button: "Discard Changes",
+      button: "Discard<span> changes</span>",
       title: "Cancel pending changes?",
       content: "You have unsaved changes. If you proceed, they will be lost."
     }
@@ -92,12 +95,31 @@ const English = {
     searchForKeyOrCategory: "Search for a key or category",
     keyConfig: "Key Config",
     keySelectorTitle: "Select Key",
+    keys: "Keys",
+    keysEditor: "Keys Editor",
     layers: {
       importTitle: "Load single layer",
       exportTitle: "Share selected layer",
       exportAllTitle: "Backup all layers (Excluding Macros)",
       clearLayer: "Clear layer",
-      copyFrom: "Copy from layer"
+      copyFrom: "Copy from layer",
+      title: "Layers",
+      layerLock: "Layer Lock",
+      layerLockDescription: "Tap to permanently move to another layer.",
+      exportToPdf: "Export layouts to pdf",
+      layerToCopy: "You will copy the layout of this layer"
+    },
+    color: {
+      color: "Color",
+      colorEditor: "Color Editor",
+      colorPalette: "Color Palette",
+      selectedColor: "Selected color",
+      editColor: "Edit Color",
+      applyColor: "Apply color",
+      allKeys: "All Keys",
+      underglow: "Underglow",
+      selectColorFirst: "Select a color first",
+      selectColorFirstContent: "To use the color controls select a color to enable all buttons."
     },
     groups: {
       Letters: "Letters",
@@ -128,6 +150,7 @@ const English = {
       "Unknown keycodes": "Unknown keycodes"
     },
     macros: {
+      actions: "Actions",
       add: "Add new macro",
       applyAndExit: "Apply",
       saveName: "Save name",
@@ -137,10 +160,12 @@ const English = {
       copy: "Copy",
       editMacros: "Edit macros",
       delay: "Delay",
+      delays: "Delays",
       delete: "Delete",
       errorExport: "The file is not a valid macro export",
       export: "Export",
       functions: "Functions",
+      ignoreDelays: "Ignore delays",
       import: "Import",
       inputText: "Input Text",
       inputTextBox: "Type text into Macro editor",
@@ -151,6 +176,12 @@ const English = {
       macroName: "Macro Name",
       macroShort: "Macro Short",
       mouse: "Mouse",
+      recordDelays: "Record delays",
+      recordMacro: "Record macro",
+      recordingMacro: "Recording macro...",
+      recordingDiscard: "Discard record",
+      recordingMessage:
+        "Did you make a mistake? Don't worry, you can edit the created sequence after adding the recording to the timeline.",
       restore: "Restore All",
       restoreMacros: "Restore Macros",
       restoreMacrosFile: "Restore Macros file",
@@ -162,13 +193,41 @@ const English = {
       selectKey: "Select Key",
       selectMacro: "Select a Macro",
       selectMouseFunction: "Select Mouse Function",
+      startRecord: "Start record",
       title: "Macro Editor",
+      timelineTitle: "Timeline editor",
+      successFlashTitle: "Your macros have been saved.",
       successFlash: "Succesfully sent the macros to the Raise",
+      previewMacro: "Preview macro",
       deleteModal: {
         title: "This macro is in use",
         body: "The macro you want to delete is currently in use, select how to proceed, THIS MAKES PERMANENT CHANGES.",
         cancelButton: "Cancel",
         applyButton: "Update Keyboard"
+      },
+      callout:
+        "<p>Macros are sequences of events (such as keystrokes, mouse clicks, and delays) that can be played back to help with repetitive strings of texts or tasks. </p><p>They can also be used to replay sequences that are long or difficult to run.</p>",
+      textTabs: {
+        title: "Text",
+        callout: "<p>Using text you can add an entire sequence of commands using only one key.</p>",
+        placeholder: "Enter text",
+        buttonText: "Add to timeline"
+      },
+      delayTabs: {
+        title: "Delay",
+        description: "Add mouse clicks events in your key."
+      },
+      macroTab: {
+        callout: "<p>That's right! You can add macros inside macros! 🔥</p>",
+        label: "Select macro"
+      },
+      memoryUsage: {
+        title: "Memory Usage",
+        errorTitle: "You exceeded the maximum capacity of actions in your macros.",
+        errordBody: "Please decrease the number of actions until the Memory Usage indicator is no longer red.",
+        alertTitle: "You are almost out of memory",
+        alertBody:
+          "Everything will still work perfectly but consider deleting macros you don't use to continue adding more actions to your macros."
       }
     },
     superkeys: {
@@ -264,7 +323,13 @@ const English = {
         back: "Back",
         fwd: "Fwd.",
         up: "Up",
-        down: "Down"
+        down: "Down",
+        mediaTitle: "Media",
+        mediaDescription: "Skip boring songs, turn the sound louder. Harder, better, faster, stronger!",
+        LEDTitle: "LED",
+        LEDDescrition: "Turn the RBG lighting On or Off and control the cycle throught the lights effects.",
+        othersTitle: "Others",
+        othersDescription: "Control your media, apps and brightness. Safe and sound!"
       }
     },
     oldMacroModal: {
@@ -301,9 +366,11 @@ const English = {
     copySuccess: "Copied!",
     pasteFromClipboard: "Paste from clipboard",
     pasteSuccess: "Pasted!",
-    importSuccessCurrentLayer: "Imported to current Layer succesfully",
+    importSuccessCurrentLayerTitle: "Imported successfully!",
+    importSuccessCurrentLayer: "Imported to current Layer successfully",
     importSuccessAllLayers: "Imported all Layers succesfully",
-    exportSuccessCurrentLayer: "Export Successful",
+    exportSuccessCurrentLayer: "Ready to share!",
+    exportSuccessCurrentLayerContent: "Your layer has been successfully exported.",
     exportSuccessAllLayers: "Exported all Layers succesfully"
   },
   preferences: {
@@ -378,31 +445,40 @@ const English = {
     },
     qukeys: {
       title: "DUAL FUNCTION KEY PARAMETERS",
-      holdTimeout: "Adjust time to start 'when held' action",
+      holdTimeout: "Dual-Function Keys - Hold timeout",
       holdTimeoutsub: " - From 0 to 65,534 milliseconds",
-      overlapThreshold: "Adjust overlap threshold between dual-function key and subsequent key",
-      overlapThresholdsub: " - Percentage from 0 to 100"
+      overlapThreshold: "Dual-Function Keys- Overlap Threshold",
+      overlapThresholdTip1: "This setting adjusts how much chording you are allowed without triggering the hold function.",
+      overlapThresholdTip2:
+        "High values let you press the next key before releasing the Dual-Function key without triggering the hold function.",
+      overlapThresholdTip3:
+        "Low values will mean that you’ll trigger the hold function whenever pressing a key without having totally released a Dual-Function key.",
+      overlapThresholdTip4:
+        "If you change it to Less, you will nearly always affect the subsequent pressed key with the dual function as it will be counting as double pressing instead of chording.",
+      overlapThresholdsub: " - Percentage from 0 to 100",
+      holdTimeoutTip1: "This setting determines the amount of time it takes for the “hold” function to activate.",
+      holdTimeoutTip2: "With a high value, it’ll take more time to activate the hold function.",
+      holdTimeoutTip3: "With a low value, you might trigger the hold function if you linger on the key too much while typing.",
+      holdTimeoutTip4: "If the slider is at 'High', it'll take a bit more time for the hold function to activate."
     },
     superkeys: {
       title: "Typing",
-      timeout: "Typing speed",
-      timeoutTip1: "This setting only affects Layer&Key and Superkeys.",
-      timeoutTip2:
-        "If you select a slow typing speed, some functions of Layer&Key and Superkeys will take slightly more time to trigger.",
-      timeoutTip3: "For example, holding the key to switch to a layer or activate a modifier (like Shift, Control...).",
+      timeout: "Superkeys - Next tap timeout",
+      timeoutTip1: "This setting determines how much a Superkey waits for the next tap.",
+      timeoutTip2: "With a low value, you need to be fast pressing the next tap, or the Superkey will output the previous tap.",
+      timeoutTip3: "With a high value, it will take more time for the Superkey to output the second tap.",
       timeoutTip4:
         "If you choose a fast typing speed, you might activate those actions by mistake if you 'linger' too much on the key.",
-      chordingTip1: "This setting only affects Layer&Key.",
-      chordingTip2: "Let's say you have a Layer&Key with 'Layer 1' on hold and 'Space' on tap.",
-      chordingTip3:
-        "If the slider is at 'None' and you press another key before completely releasing the Space, this will trigger the hold function.",
+      chordingTip1: "This setting determines the amount of time it takes for the “hold” function to activate.",
+      chordingTip2: "With a high value, it’ll take more time to activate the hold function.",
+      chordingTip3: "With a low value, you might trigger the hold function if you linger on the key too much while typing.",
       chordingTip4: "If the slider is at 'High', it'll take a bit more time for the hold function to activate.",
       repeat:
         "Adjust repeat time interval between the emmision of holded keys after waitfor period. (this doesn't affect all keys)",
       repeatsub: " - time from 0 to 254 milliseconds",
       waitfor: "Adjust time between first and subsequent emmisions of the hold keys",
       waitforsub: " - time from 0 to 65,534 milliseconds",
-      holdstart: "Chording while typing",
+      holdstart: "Superkeys - Hold timeout",
       holdstartsub: " - time from 0 to 65,534 milliseconds",
       overlap:
         "Adjust percentage that changes the way the hold function will trigger depending on the typing speed of the previous normal key",
@@ -542,12 +618,38 @@ You can find the LED Rainbow mode with the "LED Next" key. In the default Dygma 
       reset: `Firmware Update Process`
     }
   },
+  mouse: {
+    mouseClickTitle: "Click",
+    mouseClickDescription: "Add mouse clicks events in your key.",
+    clickLeft: "Left Click",
+    clickMiddle: "Middle Click",
+    clickRight: "Right Click",
+    clickBack: "Back Click",
+    clickForward: "Forward Click",
+    movementTitle: "Movement",
+    movementDescription: "Control move using keys.",
+    wheelTitle: "Wheel",
+    wheelDescription: "Control the wheel using keys."
+  },
   welcome: {
     title: "Welcome to Bazecor",
     contents: `Bazecor recognizes your keyboard, but needs to update its firmware before you can continue.`,
     gotoUpdate: "Update Firmware",
     reconnect: "Reconnect",
     reconnectDescription: `There's a possibility that we misdetected the capabilities of the keyboard, or that the keyboard was starting up while we connected. In this case, you can try clicking the "{0}" button to attempt a reconnect, and look for the necessary features again. Reconnecting is useful if you're sure there was a temporary failure upon previous attempts, and the problem has been resolved.`
+  },
+  general: {
+    actions: "Actions",
+    add: "Add",
+    configure: "Configure",
+    clone: "Clone",
+    delete: "Delete",
+    key: "Key",
+    new: "New",
+    noname: "No name",
+    select: "Select",
+    record: "Record",
+    resume: "Resume"
   }
 };
 

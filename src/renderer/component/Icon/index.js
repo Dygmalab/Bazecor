@@ -15,13 +15,25 @@
  */
 
 import IconAddNew from "./IconAddNew";
+import IconAddLayer from "./IconAddLayer";
+import IconArrowInBoxDown from "./IconArrowInBoxDown";
+import IconArrowsMouseMovement from "./IconArrowsMouseMovement";
+import IconArrowsMouseWheel from "./IconArrowsMouseWheel";
 import IconArrowsSmallSeparating from "./IconArrowsSmallSeparating";
+import IconArrowUpWithLine from "./IconArrowUpWithLine";
+import IconArrowDownWithLine from "./IconArrowDownWithLine";
+import IconColorPalette from "./IconColorPalette";
+import IconColorPicker from "./IconColorPicker";
 import IconCheckmarkSm from "./IconCheckmarkSm";
 import IconChip from "./IconChip";
+import IconClone from "./IconClone";
 import IconCloseXs from "./IconCloseXs";
+import IconDragAndDrop from "./IconDragAndDrop";
 import IconDelete from "./IconDelete";
 import IconEditModeSingleView from "./IconEditModeSingleView";
 import IconEditModeStandardView from "./IconEditModeStandardView";
+import IconEye from "./IconEye";
+import IconFileDownload from "./IconFileDownload";
 import IconKeysPress from "./IconKeysPress";
 import IconKeysTapHold from "./IconKeysTapHold";
 import IconKeys2Tap from "./IconKeys2Tap";
@@ -29,11 +41,15 @@ import IconKeys2TapHold from "./IconKeys2TapHold";
 import IconKeysHold from "./IconKeysHold";
 import IconKeysRelease from "./IconKeysRelease";
 import IconKeysStopWatch from "./IconKeysStopWatch";
+import IconKeyboard from "./IconKeyboard";
 import IconKeyboardSelector from "./IconKeyboardSelector";
 import IconKeyboard2Stroke from "./IconKeyboard2Stroke";
+import IconKeysLight from "./IconKeysLight";
+import IconKeysUnderglow from "./IconKeysUnderglow";
 import IconLEDNextEffect from "./IconLEDNextEffect";
 import IconLEDPreviousEffect from "./IconLEDPreviousEffect";
 import IconLEDSwitchLeft from "./IconLEDSwitchLeft";
+import IconLetterColor from "./IconLetterColor";
 import IconMemory2Stroke from "./IconMemory2Stroke";
 import IconMediaForward from "./IconMediaForward";
 import IconMediaPlayPause from "./IconMediaPlayPause";
@@ -48,8 +64,14 @@ import IconNoKey from "./IconNoKey";
 import IconNoSignal from "./IconNoSignal";
 import IconNote from "./IconNote";
 import IconOneShot from "./IconOneShot";
+import IconPauseXl from "./IconPauseXl";
+import IconPlus from "./IconPlus";
+import IconPlusXs from "./IconPlusXs";
 import IconPreferences2Stroke from "./IconPreferences2Stroke";
+import IconPressSm from "./IconPressSm";
+import IconPressAndReleaseSm from "./IconPressAndReleaseSm";
 import IconPen from "./IconPen";
+import IconReleaseSm from "./IconReleaseSm";
 import IconRobot2Stroke from "./IconRobot2Stroke";
 import IconThunder2Stroke from "./IconThunder2Stroke";
 import IconInformationBubble from "./IconInformationBubble";
@@ -62,27 +84,45 @@ import IconMoon from "./IconMoon";
 import IconMoreVertical from "./IconMoreVertical";
 import IconSun from "./IconSun";
 import IconScreen from "./IconScreen";
+import IconStopWatch from "./IconStopWatch";
+import IconStopWatchSm from "./IconStopWatchSm";
+import IconStopWatchXs from "./IconStopWatchXs";
+import IconStopWatchCrossed from "./IconStopWatchCrossed";
 import IconLayers from "./IconLayers";
+import IconRecord from "./IconRecord";
 import IconRobot from "./IconRobot";
 import IconThunder from "./IconThunder";
 import IconToolsCalculator from "./IconToolsCalculator";
-import IconToolsCamera from "./IconToolscamera";
+import IconToolsCamera from "./IconToolsCamera";
 import IconToolsEject from "./IconToolsEject";
 import IconToolsBrightnessLess from "./IconToolsBrightnessLess";
 import IconToolsBrightnessMore from "./IconToolsBrightnessMore";
-import IconPlus from "./IconPlus";
+import IconThreeDots from "./IconThreeDots";
 import IconSettings from "./IconSettings";
+import IconUndoRestart from "./IconUndoRestart";
 import IconWrench from "./IconWrench";
 
 export {
   IconAddNew,
+  IconAddLayer,
+  IconArrowInBoxDown,
   IconArrowsSmallSeparating,
+  IconArrowsMouseMovement,
+  IconArrowsMouseWheel,
+  IconArrowUpWithLine,
+  IconArrowDownWithLine,
+  IconColorPalette,
+  IconColorPicker,
   IconCheckmarkSm,
   IconChip,
+  IconClone,
   IconCloseXs,
+  IconDragAndDrop,
   IconDelete,
   IconEditModeSingleView,
   IconEditModeStandardView,
+  IconEye,
+  IconFileDownload,
   IconKeysPress,
   IconKeysTapHold,
   IconKeys2Tap,
@@ -90,11 +130,15 @@ export {
   IconKeysHold,
   IconKeysRelease,
   IconKeysStopWatch,
+  IconKeyboard,
   IconKeyboardSelector,
   IconKeyboard2Stroke,
+  IconKeysLight,
+  IconKeysUnderglow,
   IconLEDSwitchLeft,
   IconLEDNextEffect,
   IconLEDPreviousEffect,
+  IconLetterColor,
   IconMediaForward,
   IconMediaPlayPause,
   IconMediaRewind,
@@ -109,8 +153,14 @@ export {
   IconNoSignal,
   IconNote,
   IconOneShot,
+  IconPauseXl,
+  IconPlus,
+  IconPlusXs,
   IconPen,
   IconPreferences2Stroke,
+  IconPressSm,
+  IconPressAndReleaseSm,
+  IconReleaseSm,
   IconRobot2Stroke,
   IconThunder2Stroke,
   IconInformationBubble,
@@ -123,7 +173,12 @@ export {
   IconMoreVertical,
   IconSun,
   IconScreen,
+  IconStopWatch,
+  IconStopWatchSm,
+  IconStopWatchXs,
+  IconStopWatchCrossed,
   IconLayers,
+  IconRecord,
   IconRobot,
   IconThunder,
   IconToolsCalculator,
@@ -131,7 +186,8 @@ export {
   IconToolsEject,
   IconToolsBrightnessLess,
   IconToolsBrightnessMore,
-  IconPlus,
+  IconThreeDots,
   IconSettings,
+  IconUndoRestart,
   IconWrench
 };

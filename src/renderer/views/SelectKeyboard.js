@@ -36,7 +36,7 @@ import { MdKeyboard } from "react-icons/md";
 import Focus from "../../api/focus";
 import Hardware from "../../api/hardware";
 
-import usb from "usb";
+import { usb, getDeviceList } from "usb";
 
 import i18n from "../i18n";
 import NeuronConnection from "../modules/NeuronConnection";
@@ -188,7 +188,7 @@ class SelectKeyboard extends Component {
   }
 
   findNonSerialKeyboards = deviceList => {
-    const devices = usb.getDeviceList().map(device => device.deviceDescriptor);
+    const devices = getDeviceList().map(device => device.deviceDescriptor);
     devices.forEach(desc => {
       Hardware.nonSerial.forEach(device => {
         if (desc.idVendor == device.usb.vendorId && desc.idProduct == device.usb.productId) {
@@ -321,10 +321,12 @@ class SelectKeyboard extends Component {
     let port = null;
     if (devices && devices.length > 0) {
       deviceItems = devices.map((option, index) => {
-        let userName = store.get("neurons");
-        userName = userName.filter(n =>
-          n.id.toLowerCase() == option.serialNumber > 6 ? option.serialNumber.slice(0, -6).toLowerCase() : option.serialNumber
-        );
+        let neurons = store.get("neurons");
+        let userName = "Neuron";
+        if (neurons != undefined)
+          userName = neurons.filter(n =>
+            n.id.toLowerCase() == option.serialNumber > 6 ? option.serialNumber.slice(0, -6).toLowerCase() : option.serialNumber
+          );
         if (userName.length > 0) {
           userName = userName[0].name;
         } else {
@@ -368,8 +370,12 @@ class SelectKeyboard extends Component {
       });
 
       const title = devices.map(option => {
-        let userName = store.get("neurons");
-        userName = userName.filter(n => n.id.toLowerCase() == option.serialNumber.slice(0, -6).toLowerCase());
+        let neurons = store.get("neurons");
+        let userName = "Neuron";
+        if (neurons != undefined)
+          userName = neurons.filter(n =>
+            n.id.toLowerCase() == option.serialNumber > 6 ? option.serialNumber.slice(0, -6).toLowerCase() : option.serialNumber
+          );
         if (userName.length > 0) {
           userName = userName[0].name;
         } else {
@@ -446,8 +452,6 @@ class SelectKeyboard extends Component {
     let focus = new Focus();
     const selectedDevice = devices && devices[this.state.selectedPortIndex];
 
-    //TODO consider implementing fix from chrsalis
-    // https://github.com/keyboardio/Chrysalis/pull/570
     if (selectedDevice && !selectedDevice.accessible) {
       permissionWarning = <span className="selector-error">{i18n.keyboardSelect.permissionError}</span>;
     }
