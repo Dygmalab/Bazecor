@@ -103,7 +103,6 @@
     "react-range": "^1.8.12",
     "react-rangeslider": "^2.2.0",
     "react-router-dom": "^5.2.0",
-    "react-tabindex": "^1.0.3",
     "react-toastify": "^6.2.0",
     "serialport": "^9.2.1",
     "source-map-support": "^0.5.16",

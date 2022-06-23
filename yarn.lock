@@ -8382,11 +8382,6 @@ react-router@5.3.3:
     tiny-invariant "^1.0.2"
     tiny-warning "^1.0.0"
 
-react-tabindex@^1.0.3:
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/react-tabindex/-/react-tabindex-1.0.3.tgz#84908f2318d58a9191aa20648ca4883d4b5e63a1"
-  integrity sha512-fIQROQRVx6NWnyxgzpGAbm417eIkks34kHsDS6uyyfQwh0ebRz4RZotU52FzhhOFCe/NSvWhnihe7qMhv7WBRA==
-
 react-toastify@^6.2.0:
   version "6.2.0"
   resolved "https://registry.npmjs.org/react-toastify/-/react-toastify-6.2.0.tgz"
