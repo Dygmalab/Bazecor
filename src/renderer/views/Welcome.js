@@ -134,7 +134,7 @@ class Welcome extends React.Component {
     const device = this.props.device.device || focus.device;
 
     const reconnectButton = focus._port && (
-      <RegularButton onClick={this.reconnect} buttonText={i18n.welcome.reconnect} style="outline" />
+      <RegularButton onClick={this.reconnect} buttonText={i18n.welcome.reconnect} style="outline" tabIndex={0} />
     );
 
     return (
@@ -182,6 +182,7 @@ class Welcome extends React.Component {
                       onClick={async () => {
                         this.props.history.push("/firmware-update");
                       }}
+                      tabIndex={0}
                     />
                   </div>
                 </Card.Footer>

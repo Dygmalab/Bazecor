@@ -208,7 +208,7 @@ class NavigationMenu extends Component {
     return (
       <Styles>
         <Navbar className={`left-navbar sidebar`} sticky="top">
-          <NavbarBrand as={Link} to="/" className="brand-image d-lg-block">
+          <NavbarBrand as={Link} to="/" className="brand-image d-lg-block" tabIndex={-1}>
             <img alt="" src={DygmaLogo} className="d-inline-block align-top" />
           </NavbarBrand>
           <Nav>
@@ -225,7 +225,7 @@ class NavigationMenu extends Component {
                 <>
                   {pages.keymap && (
                     <React.Fragment>
-                      <Link to="/editor" className={`list-link ${fwUpdate ? "disabled" : ""}`}>
+                      <Link to="/editor" className={`list-link ${fwUpdate ? "disabled" : ""}`} tabIndex={-1}>
                         <NavigationButton
                           selected={currentPage === "/editor"}
                           drawerWidth={drawerWidth}
@@ -234,7 +234,7 @@ class NavigationMenu extends Component {
                           disabled={fwUpdate}
                         />
                       </Link>
-                      <Link to="/macros" className={`list-link ${fwUpdate ? "disabled" : ""}`}>
+                      <Link to="/macros" className={`list-link ${fwUpdate ? "disabled" : ""}`} tabIndex={-1}>
                         <NavigationButton
                           selected={currentPage === "/macros"}
                           drawerWidth={drawerWidth}
@@ -243,7 +243,7 @@ class NavigationMenu extends Component {
                           disabled={fwUpdate}
                         />
                       </Link>
-                      <Link to="/superkeys" className={`list-link ${fwUpdate ? "disabled" : ""}`}>
+                      <Link to="/superkeys" className={`list-link ${fwUpdate ? "disabled" : ""}`} tabIndex={-1}>
                         <NavigationButton
                           selected={currentPage === "/superkeys"}
                           drawerWidth={drawerWidth}
@@ -254,7 +254,7 @@ class NavigationMenu extends Component {
                       </Link>
                     </React.Fragment>
                   )}
-                  <Link to="/firmware-update" className={`list-link ${fwUpdate ? "disabled" : ""}`}>
+                  <Link to="/firmware-update" className={`list-link ${fwUpdate ? "disabled" : ""}`} tabIndex={-1}>
                     <NavigationButton
                       selected={currentPage === "/firmware-update"}
                       drawerWidth={drawerWidth}
@@ -266,7 +266,7 @@ class NavigationMenu extends Component {
                   </Link>
                 </>
               )}
-              <Link to="/keyboard-select" className={`list-link ${fwUpdate ? "disabled" : ""}`}>
+              <Link to="/keyboard-select" className={`list-link ${fwUpdate ? "disabled" : ""}`} tabIndex={-1}>
                 <NavigationButton
                   keyboardSelectText={connected ? i18n.app.menu.selectAnotherKeyboard : i18n.app.menu.selectAKeyboard}
                   drawerWidth={drawerWidth}
@@ -307,7 +307,7 @@ class NavigationMenu extends Component {
               </OverlayTrigger> */}
             </div>
             <div className="bottomMenu">
-              <Link to="/preferences" className={`list-link ${fwUpdate ? "disabled" : ""}`}>
+              <Link to="/preferences" className={`list-link ${fwUpdate ? "disabled" : ""}`} tabIndex={-1}>
                 <NavigationButton
                   drawerWidth={drawerWidth}
                   selected={currentPage === "/preferences"}
