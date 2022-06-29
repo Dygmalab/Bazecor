@@ -36,6 +36,7 @@ import { IconMemory2Stroke } from "../../component/Icon";
 import { IconRobot2Stroke } from "../../component/Icon";
 import { IconThunder2Stroke } from "../../component/Icon";
 import { IconPreferences2Stroke } from "../../component/Icon";
+import Render from "../../views/LayoutPDF.js";
 
 import DygmaLogo from "../../../../static/logo.svg";
 import { fwVersion } from "../../../../package.json";
@@ -196,6 +197,7 @@ class NavigationMenu extends Component {
     const { connected, pages, history, themeDark, fwUpdate } = this.props;
     const currentPage = history.location.pathname;
 
+    const [renderpdf] = Render;
     // const homePage = connected
     //   ? pages.keymap
     //     ? "/editor"
@@ -316,6 +318,9 @@ class NavigationMenu extends Component {
                   disabled={fwUpdate}
                 />
               </Link>
+              <div onClick={renderpdf}>
+                <NavigationButton drawerWidth={drawerWidth} selected={false} buttonText="renderPDF" disabled={false} />
+              </div>
             </div>
           </Nav>
         </Navbar>
