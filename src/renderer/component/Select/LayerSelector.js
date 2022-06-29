@@ -152,7 +152,7 @@ class LayerSelector extends React.Component {
       <Style>
         <div className="itemListelector dropdownMultipleActions">
           <Dropdown onSelect={value => onSelect(parseInt(value))} value={selectedItem} className="dropdownList">
-            <Dropdown.Toggle className="toggler neuronToggler">
+            <Dropdown.Toggle className="toggler neuronToggler" tabIndex={0}>
               <div className="dropdownListInner">
                 <div className="dropdownListNumber">{itemList.length == 0 ? "#0" : `#${parseInt(selectedItem) + 1}`}</div>
                 <div className="dropdownListItem">
@@ -183,7 +183,7 @@ class LayerSelector extends React.Component {
           </Dropdown>
           <div className="dropdownActions">
             <Dropdown drop="down" align="end" className="dropdownActionsList">
-              <Dropdown.Toggle className="button-settings">
+              <Dropdown.Toggle className="button-settings" tabIndex={0}>
                 <ButtonSettings />
               </Dropdown.Toggle>
               <Dropdown.Menu className="dropdownMenu">
