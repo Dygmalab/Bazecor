@@ -17,6 +17,7 @@
  */
 
 import React from "react";
+import rgbw2b from "../../color/RGBWtoRGB";
 import Neuron from "../../hardware/Neuron";
 import Key from "../../hardware/Key";
 import UnderGlowStrip from "../../hardware/UnderGlowStrip";
@@ -194,7 +195,7 @@ class KeymapDEFY extends React.Component {
       const colors = color.match(/\d+/g);
       if (colors == null || colors.length == 0) return "#000";
       let aux;
-      if (colors[0] < 131 && colors[1] < 131) {
+      if ((colors[0] < 131 && colors[1] < 131) || (colors.length > 2 && colors[3] < 120)) {
         aux = "#FFF";
       } else {
         aux = "#000";
@@ -237,9 +238,11 @@ class KeymapDEFY extends React.Component {
       let ledIndex = col !== undefined ? led_map[parseInt(row)][parseInt(col)] : no_key_led_map[row - UNDERGLOW];
       let colorIndex = colormap[ledIndex];
 
-      // console.log("testing colors", row, col, ledIndex, colorIndex, row - UNDERGLOW);
+      // console.log("testing colors", row, col, ledIndex, colorIndex, row - UNDERGLOW, this.props);
 
-      let color = palette[colorIndex].rgb;
+      let color = palette[colorIndex].rgb != undefined ? palette[colorIndex].rgb : palette[colorIndex].rgbw;
+      if (color == "#ffffff") return color;
+      color = color.length > 3 ? rgbw2b(color) : color;
       return color;
     };
 
