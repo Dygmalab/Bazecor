@@ -30,7 +30,7 @@ const English = {
     troubleshooting: "Troubleshooting"
   },
   success: {
-    preferencesSaved: "Your preferecens have been saved.",
+    preferencesSaved: "Your preferences have been saved.",
     preferencesSavedBody: ""
   },
   components: {
