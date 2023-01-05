@@ -16,6 +16,7 @@
  */
 
 import Focus from "../focus";
+import { rgb2w, rgbw2b } from "../color";
 
 global.colormap_instance = null;
 
@@ -45,7 +46,6 @@ export default class Colormap {
   }
 
   setLEDMode(opts) {
-    console.log("PRINTING OPTS OF LED MODE", opts);
     if (!opts || opts == undefined) return;
 
     if (typeof opts == "number") {
@@ -90,12 +90,12 @@ export default class Colormap {
               .map(k => parseInt(k)),
             4
           ).map(color => {
+            const coloraux = rgbw2b({ r: color[0], g: color[1], b: color[2], w: color[3] });
             return {
-              r: color[0],
-              g: color[1],
-              b: color[2],
-              w: color[3],
-              rgbw: `rgbw(${color[0]}, ${color[1]}, ${color[2]}, ${color[3]})`
+              r: coloraux.r,
+              g: coloraux.g,
+              b: coloraux.b,
+              rgb: coloraux.rgb
             };
           });
 
@@ -118,10 +118,17 @@ export default class Colormap {
   }
 
   async _updatePalette(s, palette) {
-    let args =
-      this._LEDMode != "RGBW"
-        ? this._flatten(palette.map(color => [color.r, color.g, color.b])).map(v => v.toString())
-        : this._flatten(palette.map(color => [color.r, color.g, color.b, color.w])).map(v => v.toString());
+    let args;
+    if (this._LEDMode != "RGBW") {
+      args = this._flatten(palette.map(color => [color.r, color.g, color.b])).map(v => v.toString());
+    } else {
+      let paletteAux = palette.map(color => {
+        let aux = rgb2w({ r: color.r, g: color.g, b: color.b });
+        return aux;
+      });
+      args = this._flatten(paletteAux.map(color => [color.r, color.g, color.b, color.w])).map(v => v.toString());
+      console.log(palette, paletteAux, args);
+    }
 
     return await s.request("palette", ...args);
   }
