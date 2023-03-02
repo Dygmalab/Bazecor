@@ -31,8 +31,6 @@ import Card from "react-bootstrap/Card";
 import Spinner from "react-bootstrap/Spinner";
 import Dropdown from "react-bootstrap/Dropdown";
 
-import { MdKeyboard } from "react-icons/md";
-
 import Focus from "../../api/focus";
 import Hardware from "../../api/hardware";
 
@@ -50,6 +48,12 @@ height: 100vh;
 .main-container {
   overflow: hidden;
   height: 100vh;
+}
+.fileTest {
+  display: block;
+  width: 53%;
+  text-align: center;
+  height: 42px;
 }
 .keyboard-select {
   height: 100%;
@@ -305,6 +309,10 @@ class SelectKeyboard extends Component {
     i18n.refreshHardware(devices[this.state.selectedPortIndex]);
   };
 
+  useAFile = async () => {
+    await this.props.onFileConnect();
+  };
+
   render() {
     const { scanFoundDevices, devices, loading, selectedPortIndex, opening, dropdownOpen } = this.state;
 
@@ -440,16 +448,6 @@ class SelectKeyboard extends Component {
       connectContent = <circularProgress color="secondary" size={16} />;
     }
 
-    const scanDevicesButton = (
-      <Button
-        color={devices && devices.length ? "secondary" : "primary"}
-        className={scanFoundDevices ? "scan-button" : "scan-button"}
-        onClick={scanFoundDevices ? null : this.scanDevices}
-      >
-        {i18n.keyboardSelect.scan}
-      </Button>
-    );
-
     let connectionButton, permissionWarning;
     let focus = new Focus();
     const selectedDevice = devices && devices[this.state.selectedPortIndex];
@@ -505,6 +503,9 @@ class SelectKeyboard extends Component {
             selectPort={this.selectPort}
             selectedPortIndex={selectedPortIndex}
           />
+          <div className="fileTest">
+            <Button onClick={this.useAFile}>Use a file</Button>
+          </div>
         </Container>
       </Styles>
     );

@@ -230,6 +230,65 @@ class App extends React.Component {
     });
   };
 
+  onFileConnect = async () => {
+    focus.close();
+    //TODO: read a file that is a backup
+    let options = {
+      title: i18n.keyboardSettings.backupFolder.title,
+      buttonLabel: i18n.keyboardSettings.backupFolder.windowButton,
+      filters: [
+        { name: "Json", extensions: ["json"] },
+        { name: i18n.dialog.allFiles, extensions: ["*"] }
+      ]
+    };
+    const remote = require("electron").remote;
+    const WIN = remote.getCurrentWindow();
+    const data = await remote.dialog.showOpenDialog(WIN, options);
+    let filePath;
+    if (!data.canceled) {
+      filePath = data.filePaths[0];
+    } else {
+      console.log("user closed file connect dialog");
+    }
+    console.log("Opening file", filePath);
+    //TODO: Open the file and load it's contents
+    let file;
+    try {
+      file = JSON.parse(require("fs").readFileSync(filePath));
+      console.log(
+        "loaded backup",
+        file.backup == undefined ? file[0].command : file.backup[0].command,
+        file.backup == undefined ? file[0].data : file.backup[0].data
+      );
+    } catch (e) {
+      console.error(e);
+      alert("The file is not a valid global backup");
+      return;
+    }
+    console.log("Exchange focus for file access");
+    //TODO: create the swap for the focus function
+    console.log("Probing for Focus support...");
+
+    this.setState({
+      connected: true,
+      device: null,
+      pages: {}
+    });
+    return [];
+  };
+
+  onFileDisconnect = async () => {
+    focus.close();
+    //TODO: create a unswap for the focus function
+    this.setState({
+      connected: false,
+      device: null,
+      pages: {}
+    });
+    localStorage.clear();
+    this.props.history.push("/keyboard-select");
+  };
+
   onKeyboardConnect = async port => {
     focus.close();
 
@@ -347,6 +406,8 @@ class App extends React.Component {
               path="/keyboard-select"
               onConnect={this.onKeyboardConnect}
               onDisconnect={this.onKeyboardDisconnect}
+              onFileConnect={this.onFileConnect}
+              onFileDisconnect={this.onFileDisconnect}
               titleElement={() => document.querySelector("#page-title")}
               darkMode={darkMode}
             />
