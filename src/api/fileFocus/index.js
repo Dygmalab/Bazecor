@@ -22,12 +22,12 @@ import { spawn } from "child_process";
 import { inspect } from "util";
 
 global.focus_instance = null;
-global.focus_instance_file = false;
+global.focus_instance_file = true;
 
 class Focus {
   constructor() {
     this.delay = ms => new Promise(res => setTimeout(res, ms));
-    if (!global.focus_instance || global.focus_instance_file) {
+    if (!global.focus_instance || !global.focus_instance_file) {
       global.focus_instance = this;
       this.commands = {
         help: this._help
