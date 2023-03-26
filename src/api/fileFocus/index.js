@@ -15,20 +15,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import SerialPort from "serialport";
-import Delimiter from "@serialport/parser-delimiter";
 import fs from "fs";
 import { spawn } from "child_process";
 import { inspect } from "util";
 
 global.focus_instance = null;
-global.focus_instance_file = true;
+global.focus_instance_file = null;
 
 class Focus {
   constructor() {
     this.delay = ms => new Promise(res => setTimeout(res, ms));
     if (!global.focus_instance || !global.focus_instance_file) {
-      global.focus_instance = this;
+      this.switchSingleton();
       this.commands = {
         help: this._help
       };
@@ -200,6 +198,13 @@ class Focus {
     this.device = null;
     this.supportedCommands = [];
     this.closed = true;
+  }
+
+  switchSingleton() {
+    if (!global.focus_instance_file) {
+      global.focus_instance = null;
+      global.focus_instance_file = this;
+    }
   }
 
   async isDeviceAccessible(port) {

@@ -28,7 +28,7 @@ class Focus {
   constructor() {
     this.delay = ms => new Promise(res => setTimeout(res, ms));
     if (!global.focus_instance || global.focus_instance_file) {
-      global.focus_instance = this;
+      this.switchSingleton();
       this.commands = {
         help: this._help
       };
@@ -200,6 +200,13 @@ class Focus {
     this.device = null;
     this.supportedCommands = [];
     this.closed = true;
+  }
+
+  switchSingleton() {
+    if (!global.focus_instance) {
+      global.focus_instance = this;
+      global.focus_instance_file = null;
+    }
   }
 
   async isDeviceAccessible(port) {
