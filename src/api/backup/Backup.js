@@ -70,13 +70,13 @@ export default class Backup {
    */
   async DoBackup(commands, neuronID) {
     let backup = {};
-    let aux = [];
+    let commandList = [];
     let versions;
     for (let i = 0; i < commands.length; i++) {
       let command = commands[i];
       console.log(command);
       let data = await this.focus.command(command);
-      aux.push({ command, data });
+      commandList.push({ command, data });
     }
     let vData = await this.focus.command("version");
     let parts = vData.split(" ");
@@ -87,8 +87,9 @@ export default class Backup {
     };
     backup.neuronID = neuronID;
     backup.neuron = this.neurons.filter(n => n.id == neuronID)[0];
+    backup.neuron.device = this.focus.device;
     backup.versions = versions;
-    backup.backup = aux;
+    backup.backup = commandList;
     return backup;
   }
 
