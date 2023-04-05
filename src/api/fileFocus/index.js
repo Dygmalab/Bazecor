@@ -18,21 +18,22 @@
 import fs from "fs";
 import { spawn } from "child_process";
 import { inspect } from "util";
+import i18n from "./i18n";
 
 global.focus_instance = null;
-global.focus_instance_file = null;
+global.focus_instance_file = false;
 
-class Focus {
-  constructor() {
+class Filefocus {
+  constructor(file) {
     this.delay = ms => new Promise(res => setTimeout(res, ms));
-    if (!global.focus_instance || !global.focus_instance_file) {
+    if (!global.focus_instance_file) {
       this.switchSingleton();
+      this.file = file === null ? this.file : file;
+      this.closed = true;
       this.commands = {
         help: this._help
       };
-      this.timeout = 5000;
-      this.debug = false;
-      this.closed = true;
+      this.debug = true;
     }
     return global.focus_instance;
   }
@@ -42,159 +43,49 @@ class Focus {
     console.log(...args);
   }
 
-  async find(...devices) {
-    let portList = await SerialPort.list();
-
-    let found_devices = [];
-
-    this.debugLog("focus.find: portList:", portList, "devices:", devices);
-
-    for (let port of portList) {
-      for (let device of devices) {
-        if (parseInt("0x" + port.productId) == device.usb.productId && parseInt("0x" + port.vendorId) == device.usb.vendorId) {
-          let newPort = Object.assign({}, port);
-          newPort.device = device;
-          found_devices.push(newPort);
-        }
-      }
-    }
-
-    this.debugLog("focus.find: found_devices:", found_devices);
-
-    return found_devices;
-  }
-
   async open(device, info) {
-    console.warn("Warning! device being opened", device.isOpen, device, info);
-    while (device._eventsCount < 5) {
-      console.log("waiting for device");
-      await this.delay(500);
-    }
-    if (typeof device == "string") {
-      if (!info) throw new Error("Device descriptor argument is mandatory");
-      this._port = new SerialPort(
-        device,
-        {
-          baudRate: 115200,
-          lock: true
-        },
-        err => {
-          if (err !== null) {
-            console.error(err);
-          }
-        }
-      );
-    } else if (typeof device == "object") {
-      if (device.hasOwnProperty("binding")) {
-        if (!info) throw new Error("Device descriptor argument is mandatory");
-        const path = device.path;
-        await device.close();
-        this._port = new SerialPort(
-          path,
-          {
-            baudRate: 115200,
-            lock: true
-          },
-          err => {
-            if (err !== null) {
-              console.error(err);
-            }
-          }
-        );
-      } else {
-        let devices = await this.find(device);
-        if (devices && devices.length >= 1) {
-          this._port = new SerialPort(
-            devices[0].path,
-            {
-              baudRate: 115200,
-              lock: true
-            },
-            err => {
-              if (err !== null) {
-                console.error(err);
-              }
-            }
-          );
-        }
-        info = device;
-      }
+    //TODO: read a file that is a backup
+    let options = {
+      title: i18n.keyboardSettings.backupFolder.title,
+      buttonLabel: i18n.keyboardSettings.backupFolder.windowButton,
+      filters: [
+        { name: "Json", extensions: ["json"] },
+        { name: i18n.dialog.allFiles, extensions: ["*"] }
+      ]
+    };
+    const remote = require("electron").remote;
+    const WIN = remote.getCurrentWindow();
+    const data = await remote.dialog.showOpenDialog(WIN, options);
+    let filePath;
+    if (!data.canceled) {
+      filePath = data.filePaths[0];
     } else {
-      throw new Error("Invalid argument");
+      console.log("user closed file connect dialog");
     }
-
-    this.device = info;
-    this.parser = this._port.pipe(new Delimiter({ delimiter: "\r\n" }));
-    this.result = "";
-    this.callbacks = [];
-    this.supportedCommands = [];
-    this.parser.on("data", data => {
-      data = data.toString("utf-8");
-      this.debugLog("focus: incoming data:", data);
-
-      if (data == "." || data.endsWith(".")) {
-        let result = this.result,
-          resolve = this.callbacks.shift();
-
-        this.result = "";
-        if (resolve) {
-          resolve(result);
-        }
-      } else {
-        if (this.result.length == 0) {
-          this.result = data;
-        } else {
-          this.result += "\r\n" + data;
-        }
-      }
-    });
-
-    if (process.platform == "darwin") {
-      await spawn("stty", ["-f", this._port.path, "clocal"]);
+    console.log("Opening file", filePath);
+    //TODO: Open the file and load it's contents
+    let file;
+    try {
+      file = JSON.parse(fs.readFileSync(filePath));
+      console.log(
+        "loaded backup",
+        file.backup == undefined ? file[0].command : file.backup[0].command,
+        file.backup == undefined ? file[0].data : file.backup[0].data
+      );
+    } catch (e) {
+      console.error(e);
+      alert("The file is not a valid global backup");
+      return;
     }
+    console.log("Exchange focus for file access");
 
-    // It's not necessary to retreive the supported commands in bootloader mode
-    if (!this.device.bootloader) {
-      try {
-        this.supportedCommands = await this.command("help");
-      } catch (e) {
-        console.warn(e);
-        // Ignore
-      }
-    }
-
-    // Setup close port alert
-    this._port.on("close", function (error) {
-      if (error !== null && error.disconnected === true) {
-        console.error("Error: device disconnected without control");
-        this.closed = true;
-      } else {
-        console.warn("Warning: device disconnected by user interaction");
-        this.closed = true;
-      }
-    });
-    // Setup error port alert
-    this._port.on("error", function (err) {
-      console.error("Error on SerialPort: " + err);
-    });
     this.closed = false;
-    return this._port;
+    this.device = info;
+    this.supportedCommands = this._help();
+    return;
   }
 
   close() {
-    // if (this._port) {
-    //   console.log("closing port data >>");
-    //   console.log(inspect(this._port));
-    //   console.log(this._port._eventsCount);
-    //   console.log(
-    //     "Port State: ",
-    //     this._port ? this._port.isOpen : "unable to open"
-    //   );
-    // }
-    if (this._port && this._port.isOpen) {
-      this._port.close();
-    }
-    this._port = null;
     this.device = null;
     this.supportedCommands = [];
     this.closed = true;
@@ -202,75 +93,37 @@ class Focus {
 
   switchSingleton() {
     if (!global.focus_instance_file) {
-      global.focus_instance = null;
-      global.focus_instance_file = this;
+      global.focus_instance = this;
+      global.focus_instance_file = true;
     }
   }
 
   async isDeviceAccessible(port) {
-    if (process.platform !== "linux") return true;
-
-    try {
-      fs.accessSync(port.path, fs.constants.R_OK | fs.constants.W_OK);
-    } catch (e) {
-      return false;
-    }
     return true;
   }
 
   async isDeviceSupported(port) {
-    if (!port.device.isDeviceSupported) {
-      return true;
-    }
-    const supported = await port.device.isDeviceSupported(port);
-    this.debugLog("focus.isDeviceSupported: port=", port, "supported=", supported);
-    return supported;
+    return true;
   }
 
   isCommandSupported(cmd) {
-    return this.supportedCommands.indexOf(cmd) != -1;
-  }
-
-  async _write_parts(parts, cb) {
-    if (!parts || parts.length == 0) {
-      cb();
-      return;
-    }
-
-    let part = parts.shift();
-    part += " ";
-    this._port.write(part);
-    this._port.drain(async () => {
-      await this._write_parts(parts, cb);
-    });
+    return this.commands.help.indexOf(cmd) != -1;
   }
 
   request(cmd, ...args) {
     this.debugLog("focus.request:", cmd, ...args);
-    return new Promise((resolve, reject) => {
-      let timer = setTimeout(() => {
-        reject("Communication timeout");
-      }, this.timeout);
-      this._request(cmd, ...args).then(data => {
-        clearTimeout(timer);
-        resolve(data);
-      });
-    });
-  }
-
-  async _request(cmd, ...args) {
-    if (!this._port) throw "Device not connected!";
-
-    let request = cmd;
-    if (args && args.length > 0) {
-      request = request + " " + args.join(" ");
+    if (cmd === "version") {
+      console.log(
+        "Checking version! ",
+        this.file.versions.bazecor + " " + this.file.versions.kaleidoscope + " " + this.file.versions.firmware
+      );
+      return this.file.versions.bazecor + " " + this.file.versions.kaleidoscope + " " + this.file.versions.firmware;
+    } else {
+      console.log("reading data");
+      console.log(this.file.backup, cmd);
+      console.log(this.file.backup[cmd]);
+      return this.file.backup[cmd];
     }
-    request += "\n";
-
-    return new Promise(resolve => {
-      this.callbacks.push(resolve);
-      this._port.write(request);
-    });
   }
 
   async command(cmd, ...args) {
@@ -301,10 +154,68 @@ class Focus {
     }
   }
 
-  async _help(s) {
-    let data = await s.request("help");
-    return data.split(/\r?\n/).filter(v => v.length > 0);
+  _help(s) {
+    let data = String.raw`version
+    keymap.custom
+    keymap.default
+    keymap.onlyCustom
+    settings.defaultLayer
+    settings.valid?
+    settings.version
+    settings.crc
+    eeprom.contents
+    eeprom.free
+    led.at
+    led.setAll
+    led.mode
+    led.brightness
+    led.theme
+    palette
+    colormap.map
+    idleleds.time_limit
+    hardware.version
+    hardware.side_power
+    hardware.side_ver
+    hardware.sled_ver
+    hardware.sled_current
+    hardware.layout
+    hardware.joint
+    hardware.keyscan
+    hardware.crc_errors
+    hardware.firmware
+    hardware.chip_id
+    qukeys.holdTimeout
+    qukeys.overlapThreshold
+    superkeys.map
+    superkeys.waitfor
+    superkeys.timeout
+    superkeys.repeat
+    superkeys.holdstart
+    superkeys.overlap
+    macros.map
+    macros.trigger
+    help
+    mouse.speed
+    mouse.speedDelay
+    mouse.accelSpeed
+    mouse.accelDelay
+    mouse.wheelSpeed
+    mouse.wheelDelay
+    mouse.speedLimit
+    layer.activate
+    layer.deactivate
+    layer.isActive
+    layer.moveTo
+    layer.state
+    
+    .`;
+    return data
+      .split(/\r?\n/)
+      .map(x => {
+        return x.trim();
+      })
+      .filter(v => v.length > 0);
   }
 }
 
-export default Focus;
+export default Filefocus;
