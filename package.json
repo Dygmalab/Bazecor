@@ -123,7 +123,7 @@
     "@svgr/webpack": "^6.2.1",
     "babel-loader": "^8.2.2",
     "electron": "^18.3.7",
-    "electron-builder": "^23.0.2",
+    "electron-builder": "^23.6.0",
     "electron-notarize": "^1.0.0",
     "electron-webpack": "^2.8.2",
     "electron-webpack-eslint": "^6.0.0",
