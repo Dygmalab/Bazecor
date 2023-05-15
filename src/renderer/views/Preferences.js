@@ -118,6 +118,9 @@ class Preferences extends React.Component {
   getNeuronData = async () => {
     let focus = new Focus();
 
+    // Checking if device is wired or wireless
+    this.setState({ wireless: focus.device.info.keyboardType === "wireless" });
+
     // EXTRACTING DATA FROM NEURON
 
     await focus.command("hardware.chip_id").then(neuronID => {
@@ -215,6 +218,64 @@ class Preferences extends React.Component {
       speedLimit = speedLimit ? parseInt(speedLimit) : 127;
       this.kbData.mouseSpeedLimit = speedLimit;
     });
+
+    if (this.state.wireless) {
+      // Use focus commands to retrieve wireless data
+      this.kbData.wireless = {};
+
+      // Battery commands
+      this.kbData.wireless.battery = {};
+      await focus.command("wireless.battery.level").then(batteryLevel => {
+        this.kbData.wireless.battery.level = batteryLevel;
+      });
+      await focus.command("wireless.battery.state").then(batteryState => {
+        this.kbData.wireless.battery.state = batteryState;
+      });
+      await focus.command("wireless.battery.mode").then(batteryMode => {
+        this.kbData.wireless.battery.mode = batteryMode;
+      });
+
+      // Energy commands
+      this.kbData.wireless.energy = {};
+      await focus.command("wireless.energy.modes").then(energyModes => {
+        this.kbData.wireless.energy.modes = energyModes;
+      });
+      await focus.command("wireless.energy.currentMode").then(energyMode => {
+        this.kbData.wireless.energy.currentMode = energyMode;
+      });
+      await focus.command("wireless.energy.disable").then(energyDisable => {
+        this.kbData.wireless.energy.disable = energyDisable;
+      });
+
+      // Bluetooth commands
+      this.kbData.wireless.bluetooth = {};
+      await focus.command("wireless.bluetooth.devices").then(bluetoothDevices => {
+        this.kbData.wireless.bluetooth.devices = bluetoothDevices;
+      });
+      await focus.command("wireless.bluetooth.state").then(bluetoothState => {
+        this.kbData.wireless.bluetooth.state = bluetoothState;
+      });
+      await focus.command("wireless.bluetooth.stability").then(bluetoothStability => {
+        this.kbData.wireless.bluetooth.stability = bluetoothStability;
+      });
+
+      // rf commands
+      this.kbData.wireless.rf = {};
+      await focus.command("wireless.rf.channelHop").then(rfChannelHop => {
+        this.kbData.wireless.rf.channelHop = rfChannelHop;
+      });
+      await focus.command("wireless.rf.state").then(rfState => {
+        this.kbData.wireless.rf.state = rfState;
+      });
+      await focus.command("wireless.rf.stability").then(rfStability => {
+        this.kbData.wireless.rf.stability = rfStability;
+      });
+
+      // Additional commands
+      await focus.command("led.brightness.underglow").then(UGBrightness => {
+        this.kbData.ledBrightnessUG = UGBrightness;
+      });
+    }
 
     //Save in state
     this.setState({ kbData: this.kbData });
