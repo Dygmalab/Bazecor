@@ -17,11 +17,12 @@
  */
 
 import React from "react";
-import Electron from "electron";
 import path from "path";
 import Styled from "styled-components";
 import { toast } from "react-toastify";
 import { fwVersion } from "../../../package.json";
+import { Octokit } from "@octokit/core";
+import SemVer from "semver";
 const { ipcRenderer } = require("electron");
 
 import Focus from "../../api/focus";
@@ -45,7 +46,7 @@ const Styles = Styled.div`
 height: inherit;
 .main-container {
   overflow: hidden;
-  height: 100vh;  
+  height: 100vh;
 }
 .firmware-update {
   height: 100%;
@@ -53,7 +54,7 @@ height: inherit;
   flex-wrap: wrap;
   justify-content: center;
   &.center-content {
-    height: 100vh;  
+    height: 100vh;
   }
 }
 .disclaimerContent {
@@ -170,11 +171,55 @@ class FirmwareUpdate extends React.Component {
     });
     const commands = await this.bkp.Commands();
     let chipID = (await focus.command("hardware.chip_id")).replace(/\s/g, "");
-    this.setState({ commands, neuronID: chipID });
+    let availableFW = await this.selectFWTypefromGitHub(focus.device.info.product);
+    this.setState({ commands, neuronID: chipID, firmwareList: availableFW });
   }
 
   componentWillUnmount() {
     document.removeEventListener("keydown", this._handleKeyDown);
+  }
+
+  async loadAvailableFirmwareVersions() {
+    // Octokit.js
+    // https://github.com/octokit/core.js#readme
+    const octokit = new Octokit();
+
+    let data = await octokit.request("GET /repos/{owner}/{repo}/releases", {
+      owner: "Dygmalab",
+      repo: "Firmware-releases",
+      headers: {
+        "X-GitHub-Api-Version": "2022-11-28"
+      }
+    });
+    let fwReleases = [];
+    data.data.forEach(release => {
+      let newRelease = {},
+        name,
+        version;
+      const releaseData = release.name.split(" ");
+      name = releaseData[0];
+      version = releaseData[1];
+      newRelease.name = name;
+      newRelease.version = version;
+      newRelease.assets = [];
+      release.assets.forEach(asset => {
+        newRelease.assets.push({ name: asset.name, url: asset.browser_download_url });
+        //console.log([asset.name, asset.browser_download_url]);
+      });
+      //console.log(newRelease);
+      fwReleases.push(newRelease);
+    });
+    console.log("Data from Firmware-releases repo!", fwReleases);
+    return fwReleases;
+  }
+
+  async selectFWTypefromGitHub(type) {
+    const fwReleases = await this.loadAvailableFirmwareVersions();
+    let DefyReleases = fwReleases.filter(release => release.name === type);
+    DefyReleases.sort((a, b) => {
+      return SemVer.ltr(SemVer.clean(a.version), SemVer.clean(b.version)) ? -1 : 1;
+    });
+    return DefyReleases;
   }
 
   async putEscKey(command) {
@@ -506,7 +551,8 @@ class FirmwareUpdate extends React.Component {
       firmwareDropdown,
       flashProgress,
       theme,
-      device
+      device,
+      firwmareList
     } = this.state;
 
     let filename = null;
@@ -538,23 +584,26 @@ class FirmwareUpdate extends React.Component {
         <Container fluid className={`firmware-update ${countdown == -1 || countdown == 0 ? "center-content" : ""}`}>
           <PageHeader text={i18n.app.menu.firmwareUpdate} />
           {countdown == -1 || countdown == 0 ? (
-            <FirmwareUpdatePanel
-              currentlyVersionRunning={currentlyVersionRunning}
-              latestVersionAvailable={latestVersionAvailable}
-              onClick={
-                device.info.product === "Raise"
-                  ? this.uploadRaise
-                  : device.info.product === "Defy"
-                  ? this.uploadDefy
-                  : this.upload
-              }
-              firmwareFilename={firmwareFilename}
-              selectFirmware={this.selectFirmware}
-              selectExperimental={this.selectExperimental}
-              disclaimerCard={countdown + 1}
-              onCancelDialog={this.cancelDialog}
-              onBackup={this.backup}
-            />
+            <div>
+              <FirmwareUpdatePanel
+                currentlyVersionRunning={currentlyVersionRunning}
+                latestVersionAvailable={latestVersionAvailable}
+                onClick={
+                  device.info.product === "Raise"
+                    ? this.uploadRaise
+                    : device.info.product === "Defy"
+                    ? this.uploadDefy
+                    : this.upload
+                }
+                firmwareFilename={firmwareFilename}
+                selectFirmware={this.selectFirmware}
+                selectExperimental={this.selectExperimental}
+                disclaimerCard={countdown + 1}
+                onCancelDialog={this.cancelDialog}
+                onBackup={this.backup}
+              />
+              {firwmareList}
+            </div>
           ) : (
             <FirmwareUpdateProcess onCancelDialog={this.cancelDialog} countdown={countdown} flashProgress={flashProgress} />
           )}
