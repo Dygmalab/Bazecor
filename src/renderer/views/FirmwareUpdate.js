@@ -31,6 +31,7 @@ import Backup from "../../api/backup";
 
 import Container from "react-bootstrap/Container";
 import Card from "react-bootstrap/Card";
+import Dropdown from "react-bootstrap/Dropdown";
 
 import { getStaticPath } from "../config";
 import i18n from "../i18n";
@@ -39,8 +40,9 @@ import PageHeader from "../modules/PageHeader";
 import FirmwareUpdatePanel from "../modules/FirmwareUpdatePanel";
 import FirmwareUpdateProcess from "../modules/FirmwareUpdateProcess";
 
+import Select from "../component/Select";
 import ToastMessage from "../component/ToastMessage";
-import { IconFloppyDisk } from "../component/Icon";
+import { IconFloppyDisk, IconChip } from "../component/Icon";
 
 const Styles = Styled.div`
 height: inherit;
@@ -172,7 +174,8 @@ class FirmwareUpdate extends React.Component {
     const commands = await this.bkp.Commands();
     let chipID = (await focus.command("hardware.chip_id")).replace(/\s/g, "");
     let availableFW = await this.selectFWTypefromGitHub(focus.device.info.product);
-    this.setState({ commands, neuronID: chipID, firmwareList: availableFW });
+    console.log("FW from Github!", availableFW);
+    this.setState({ commands, neuronID: chipID, firmwareList: availableFW, selectedFirmware: 0 });
   }
 
   componentWillUnmount() {
@@ -209,7 +212,7 @@ class FirmwareUpdate extends React.Component {
       //console.log(newRelease);
       fwReleases.push(newRelease);
     });
-    console.log("Data from Firmware-releases repo!", fwReleases);
+    // console.log("Data from Firmware-releases repo!", fwReleases);
     return fwReleases;
   }
 
@@ -220,6 +223,43 @@ class FirmwareUpdate extends React.Component {
       return SemVer.ltr(SemVer.clean(a.version), SemVer.clean(b.version)) ? -1 : 1;
     });
     return DefyReleases;
+  }
+
+  async obtainFWFiles() {
+    let availableFWs = await this.selectDefyFWfromGitHub("Defy");
+    console.log("checking available data", availableFWs[0]);
+    let assetData1 = await axios.request({
+      method: "GET",
+      url: availableFWs[0].assets[0].url,
+      responseType: "arraybuffer",
+      reponseEncoding: "binary"
+    });
+    let assetData2 = await axios.request({
+      method: "GET",
+      url: availableFWs[0].assets[1].url,
+      responseType: "arraybuffer",
+      reponseEncoding: "binary"
+    });
+    let assetData3 = await axios.request({
+      method: "GET",
+      url: availableFWs[0].assets[2].url,
+      responseType: "arraybuffer",
+      reponseEncoding: "binary"
+    });
+
+    const keyscanner = fs.readFileSync("./keyscanner.bin", "hex");
+    const fromHexString = hexString => Uint8Array.from(hexString.match(/.{1,2}/g).map(byte => parseInt(byte, 16)));
+    const fromHexString2 = hexString => Uint8Array.from(hexString);
+    const binaryFile = fromHexString(keyscanner);
+    const binaryFile2 = fromHexString2(assetData1.data);
+    console.log(binaryFile2);
+    console.log(binaryFile);
+
+    const wneu = fs.readFileSync("./Wireless_neuron.hex", "hex");
+    const binaryFile3 = fromHexString(wneu);
+    const binaryFile4 = fromHexString2(assetData2.data);
+    console.log(binaryFile3);
+    console.log(binaryFile4);
   }
 
   async putEscKey(command) {
@@ -540,6 +580,10 @@ class FirmwareUpdate extends React.Component {
     this.setState({ advanced: !this.state.advanced });
   };
 
+  changeSelectedFirmware = newSelection => {
+    this.setState({ selectedFirmware: newSelection });
+  };
+
   render() {
     const {
       firmwareFilename,
@@ -552,7 +596,8 @@ class FirmwareUpdate extends React.Component {
       flashProgress,
       theme,
       device,
-      firwmareList
+      firmwareList,
+      selectedFirmware
     } = this.state;
 
     let filename = null;
@@ -579,6 +624,18 @@ class FirmwareUpdate extends React.Component {
 
     const latestVersionAvailable = `v${fwVersion}`;
 
+    let listOfFWs;
+    if (firmwareList != undefined && firmwareList.length > 0) {
+      listOfFWs = firmwareList.map((elem, index) => {
+        let selectFormat = {};
+        console.log(elem);
+        selectFormat.text = elem.version;
+        selectFormat.value = index;
+        selectFormat.index = index;
+        return selectFormat;
+      });
+    }
+
     return (
       <Styles>
         <Container fluid className={`firmware-update ${countdown == -1 || countdown == 0 ? "center-content" : ""}`}>
@@ -602,7 +659,43 @@ class FirmwareUpdate extends React.Component {
                 onCancelDialog={this.cancelDialog}
                 onBackup={this.backup}
               />
-              {firwmareList}
+              {selectedFirmware != undefined && selectedFirmware != null && listOfFWs.length > 0 ? ( // Ternary operator checking validity of variables
+                <Dropdown onSelect={this.changeSelectedFirmware} value={selectedFirmware} className={`custom-dropdown`}>
+                  <div>
+                    <Dropdown.Toggle id="dropdown-custom">
+                      <div className="dropdownItemSelected">
+                        <div className="dropdownItem">{listOfFWs[selectedFirmware].text}</div>
+                      </div>
+                    </Dropdown.Toggle>
+                    <Dropdown.Menu>
+                      {listOfFWs.map((item, index) => (
+                        <Dropdown.Item
+                          eventKey={item.value}
+                          key={index}
+                          className={`${selectedFirmware == item.text ? "active" : ""}`}
+                          disabled={item.disabled}
+                        >
+                          <div className="dropdownInner">
+                            {selectedFirmware != undefined &&
+                            selectedFirmware != "" > 0 &&
+                            listOfFWs.length > 0 &&
+                            listOfFWs[0].icon != undefined ? (
+                              <div className="dropdownIcon">
+                                <img src={item.icon} className="dropdwonIcon" />
+                              </div>
+                            ) : (
+                              ""
+                            )}
+                            <div className="dropdownItem">{item.text}</div>
+                          </div>
+                        </Dropdown.Item>
+                      ))}
+                    </Dropdown.Menu>
+                  </div>
+                </Dropdown>
+              ) : (
+                ""
+              )}
             </div>
           ) : (
             <FirmwareUpdateProcess onCancelDialog={this.cancelDialog} countdown={countdown} flashProgress={flashProgress} />
