@@ -1035,7 +1035,7 @@ const DefyWireless = {
     },
     "wireless.energy.currentMode": {
       data: "0",
-      eraseable: false
+      eraseable: true
     },
     "wireless.bluetooth.state": {
       data: "connected",
@@ -1047,7 +1047,7 @@ const DefyWireless = {
     },
     "wireless.bluetooth.connectTo": {
       data: "",
-      eraseable: false
+      eraseable: true
     },
     "wireless.bluetooth.stability": {
       data: "80 305",
@@ -1063,7 +1063,7 @@ const DefyWireless = {
     },
     "wireless.rf.channelHop": {
       data: "false",
-      eraseable: false
+      eraseable: true
     }
   }
 };
