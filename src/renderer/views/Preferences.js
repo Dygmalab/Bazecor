@@ -331,19 +331,21 @@ class Preferences extends React.Component {
     await await focus.command("mouse.wheelDelay", mouseWheelDelay);
     await await focus.command("mouse.speedLimit", mouseSpeedLimit);
     // WIRELESS
-    await await focus.command("wireless.battery.level", wireless.battery.level);
-    await await focus.command("wireless.battery.state", wireless.battery.state);
-    await await focus.command("wireless.battery.mode", wireless.battery.mode);
-    await await focus.command("wireless.energy.modes", wireless.energy.modes);
-    await await focus.command("wireless.energy.currentMode", wireless.energy.currentMode);
-    await await focus.command("wireless.energy.disable", wireless.energy.disable);
-    await await focus.command("wireless.bluetooth.devices", wireless.bluetooth.devices);
-    await await focus.command("wireless.bluetooth.state", wireless.bluetooth.state);
-    await await focus.command("wireless.bluetooth.stability", wireless.bluetooth.stability);
-    await await focus.command("wireless.rf.channelHop", wireless.rf.channelHop);
-    await await focus.command("wireless.rf.state", wireless.rf.state);
-    await await focus.command("wireless.rf.stability", wireless.rf.stability);
-    await await focus.command("led.brightness.underglow", ledBrightnessUG);
+    if (this.state.wireless) {
+      await await focus.command("wireless.battery.level", wireless.battery.level);
+      await await focus.command("wireless.battery.state", wireless.battery.state);
+      await await focus.command("wireless.battery.mode", wireless.battery.mode);
+      await await focus.command("wireless.energy.modes", wireless.energy.modes);
+      await await focus.command("wireless.energy.currentMode", wireless.energy.currentMode);
+      await await focus.command("wireless.energy.disable", wireless.energy.disable);
+      await await focus.command("wireless.bluetooth.devices", wireless.bluetooth.devices);
+      await await focus.command("wireless.bluetooth.state", wireless.bluetooth.state);
+      await await focus.command("wireless.bluetooth.stability", wireless.bluetooth.stability);
+      await await focus.command("wireless.rf.channelHop", wireless.rf.channelHop);
+      await await focus.command("wireless.rf.state", wireless.rf.state);
+      await await focus.command("wireless.rf.stability", wireless.rf.stability);
+      await await focus.command("led.brightness.underglow", ledBrightnessUG);
+    }
 
     //TODO: Review toast popup on try/catch works well.
     try {
