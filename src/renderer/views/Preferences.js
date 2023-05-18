@@ -377,7 +377,8 @@ class Preferences extends React.Component {
           closeOnClick: true,
           pauseOnHover: true,
           draggable: true,
-          progress: undefined
+          progress: undefined,
+          icon: ""
         }
       );
     }
