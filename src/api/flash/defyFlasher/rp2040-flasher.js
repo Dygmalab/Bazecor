@@ -30,17 +30,17 @@ export default class rp2040 {
 
   delay = ms => new Promise(res => setTimeout(res, ms));
 
-  async flash(file, stateUpdate, finished) {
+  async flash(firmware, stateUpdate, finished) {
     ipcRenderer.invoke("list-drives", true).then(result => {
       let finalPath = path.join(result, "default.uf2");
       // console.log("RESULTS!!!", result, file, " to ", finalPath);
-      fs.copyFileSync(file, finalPath);
+      fs.writeFileSync(firmware, finalPath);
       stateUpdate(3, 80);
       finished(false, "");
     });
   }
 
-  async sideFlash(filenameSides, stateUpdate, wiredOrWireless, finished) {
+  async sideFlash(firmwareSides, stateUpdate, wiredOrWireless, finished) {
     // State update auxiliarly function
     let step = 0;
     const stateUpd = ratio => {
@@ -48,7 +48,7 @@ export default class rp2040 {
     };
 
     // Flashing procedure for each side
-    this.sideFlash = new sideFlaser(this.device.path, filenameSides);
+    this.sideFlash = new sideFlaser(this.device.path, firmwareSides);
     let result = await this.sideFlash.flashSide("right", stateUpd, null);
     if (result.error) finished(result.error, result.message);
     console.log("Right side flash has error? ", result.error);

@@ -145,7 +145,6 @@ class FirmwareUpdate extends React.Component {
     document.addEventListener("keydown", this._handleKeyDown);
     let versions;
 
-    console.log("BOOTLOADER", focus.device.bootloader);
     if (focus.device.bootloader) {
       await this.setState({ countdown: 1, flashProgress: 0, backupDone: true, bootloader: true });
       if (focus.device.info.product == "Defy") {
@@ -175,7 +174,7 @@ class FirmwareUpdate extends React.Component {
     const commands = await this.bkp.Commands();
     let chipID = (await focus.command("hardware.chip_id")).replace(/\s/g, "");
     let availableFW = await this.selectFWTypefromGitHub(focus.device.info.product);
-    console.log("FW from Github!", availableFW);
+    // console.log("FWs from Github!", availableFW);
     this.setState({ commands, neuronID: chipID, firmwareList: availableFW, selectedFirmware: 0 });
   }
 
@@ -229,7 +228,6 @@ class FirmwareUpdate extends React.Component {
   async obtainFWFiles(type, url) {
     let response,
       firmware = undefined;
-    const fromHxString = hexString => Uint8Array.from(hexString);
 
     if (type == "keyscanner.bin") {
       response = await axios.request({
@@ -238,15 +236,16 @@ class FirmwareUpdate extends React.Component {
         responseType: "arraybuffer",
         reponseEncoding: "binary"
       });
-      firmware = fromHxString(response);
+      firmware = new Uint8Array(response.data);
     }
     if (type == "Wired_neuron.uf2") {
-      firmware = await axios.request({
+      response = await axios.request({
         method: "GET",
         url: url,
         responseType: "arraybuffer",
         reponseEncoding: "binary"
       });
+      firmware = response.data;
     }
     if (type == "Wireless_neuron.hex") {
       response = await axios.request({
@@ -255,11 +254,11 @@ class FirmwareUpdate extends React.Component {
         responseType: "text",
         reponseEncoding: "utf8"
       });
-      response = response.replace(/(?:\r\n|\r|\n)/g, "");
+      response = response.data.replace(/(?:\r\n|\r|\n)/g, "");
       firmware = response.split(":");
       firmware.splice(0, 1);
     }
-
+    // console.log(firmware);
     return firmware;
   }
 
@@ -352,6 +351,11 @@ class FirmwareUpdate extends React.Component {
     let filenameSides;
     if (this.state.selected == "default") {
       if (this.state.device.info.product == "Defy") {
+        if (!this.state.firmwareList) {
+          let availableFW = await this.selectFWTypefromGitHub(focus.device.info.product);
+          console.log("FWs from Github!", availableFW);
+          this.setState({ firmwareList: availableFW, selectedFirmware: availableFW.length - 1 });
+        }
         if (this.state.device.info.keyboardType == "wireless") {
           filename = await this.obtainFWFiles(
             "Wireless_neuron.hex",
@@ -378,7 +382,6 @@ class FirmwareUpdate extends React.Component {
       filename = this.state.firmwareFilename;
       filenameSides = this.state.firmwareFilenameSides;
     }
-    console.log("BOOTLOADER2", focus.device.bootloader);
 
     if (this.state.device.info.keyboardType !== "wired") {
       if (!focus.device.bootloader) {
@@ -394,8 +397,15 @@ class FirmwareUpdate extends React.Component {
     }
 
     try {
-      console.log("Trying", focus.device, focus.device.bootloader, focus.device.info.product, focus.device.info.keyboardType);
-      if (focus.device.bootloader) {
+      // console.log(
+      //   "Trying to flash",
+      //   focus.device,
+      //   focus.device.bootloader,
+      //   focus.device.info.product,
+      //   focus.device.info.keyboardType
+      // );
+      const bootloader = focus.device.bootloader;
+      if (bootloader) {
         if (focus.device.info.product == "Defy") {
           if (focus.device.info.keyboardType == "wired") {
             this.FlashDefyWired.currentPort = this.props.device;
@@ -413,9 +423,14 @@ class FirmwareUpdate extends React.Component {
           console.log("done closing focus");
           return await this.state.device.flash(focus._port, filename, filenameSides, this.FlashDefyWired, this.stateUpdate);
         } else {
-          await focus.close();
-          console.log("done closing focus");
-          return await this.state.device.flash(focus._port, filename, filenameSides, this.FlashDefyWireless, this.stateUpdate);
+          return await this.state.device.flash(
+            focus._port,
+            filename,
+            filenameSides,
+            bootloader,
+            this.FlashDefyWireless,
+            this.stateUpdate
+          );
         }
       } else {
         await focus.close();
@@ -434,7 +449,7 @@ class FirmwareUpdate extends React.Component {
   upload = async () => {
     await this.props.toggleFlashing();
     this.props.toggleFwUpdate(true);
-    const backup = this.state.backup.backup;
+    const backup = this.state.backup ? this.state.backup.backup : undefined;
     try {
       await this._flash();
       if (!this.state.bootloader) {
@@ -647,7 +662,6 @@ class FirmwareUpdate extends React.Component {
     if (firmwareList != undefined && firmwareList.length > 0) {
       listOfFWs = firmwareList.map((elem, index) => {
         let selectFormat = {};
-        console.log(elem);
         selectFormat.text = elem.version;
         selectFormat.value = index;
         selectFormat.index = index;
