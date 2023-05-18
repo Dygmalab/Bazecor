@@ -23,6 +23,7 @@ import { toast } from "react-toastify";
 import { fwVersion } from "../../../package.json";
 import { Octokit } from "@octokit/core";
 import SemVer from "semver";
+import axios from "axios";
 const { ipcRenderer } = require("electron");
 
 import Focus from "../../api/focus";
