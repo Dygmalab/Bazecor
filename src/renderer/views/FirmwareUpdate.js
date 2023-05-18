@@ -226,41 +226,41 @@ class FirmwareUpdate extends React.Component {
     return DefyReleases;
   }
 
-  async obtainFWFiles() {
-    let availableFWs = await this.selectDefyFWfromGitHub("Defy");
-    console.log("checking available data", availableFWs[0]);
-    let assetData1 = await axios.request({
-      method: "GET",
-      url: availableFWs[0].assets[0].url,
-      responseType: "arraybuffer",
-      reponseEncoding: "binary"
-    });
-    let assetData2 = await axios.request({
-      method: "GET",
-      url: availableFWs[0].assets[1].url,
-      responseType: "arraybuffer",
-      reponseEncoding: "binary"
-    });
-    let assetData3 = await axios.request({
-      method: "GET",
-      url: availableFWs[0].assets[2].url,
-      responseType: "arraybuffer",
-      reponseEncoding: "binary"
-    });
+  async obtainFWFiles(type, url) {
+    let response,
+      firmware = undefined;
+    const fromHxString = hexString => Uint8Array.from(hexString);
 
-    const keyscanner = fs.readFileSync("./keyscanner.bin", "hex");
-    const fromHexString = hexString => Uint8Array.from(hexString.match(/.{1,2}/g).map(byte => parseInt(byte, 16)));
-    const fromHexString2 = hexString => Uint8Array.from(hexString);
-    const binaryFile = fromHexString(keyscanner);
-    const binaryFile2 = fromHexString2(assetData1.data);
-    console.log(binaryFile2);
-    console.log(binaryFile);
+    if (type == "keyscanner.bin") {
+      response = await axios.request({
+        method: "GET",
+        url: url,
+        responseType: "arraybuffer",
+        reponseEncoding: "binary"
+      });
+      firmware = fromHxString(response);
+    }
+    if (type == "Wired_neuron.uf2") {
+      firmware = await axios.request({
+        method: "GET",
+        url: url,
+        responseType: "arraybuffer",
+        reponseEncoding: "binary"
+      });
+    }
+    if (type == "Wireless_neuron.hex") {
+      response = await axios.request({
+        method: "GET",
+        url: url,
+        responseType: "text",
+        reponseEncoding: "utf8"
+      });
+      response = response.replace(/(?:\r\n|\r|\n)/g, "");
+      firmware = response.split(":");
+      firmware.splice(0, 1);
+    }
 
-    const wneu = fs.readFileSync("./Wireless_neuron.hex", "hex");
-    const binaryFile3 = fromHexString(wneu);
-    const binaryFile4 = fromHexString2(assetData2.data);
-    console.log(binaryFile3);
-    console.log(binaryFile4);
+    return firmware;
   }
 
   async putEscKey(command) {
@@ -351,8 +351,26 @@ class FirmwareUpdate extends React.Component {
     let filename;
     let filenameSides;
     if (this.state.selected == "default") {
-      filename = this._defaultFirmwareFilename();
-      filenameSides = this._defaultFirmwareFilenameSides();
+      if (this.state.device.info.product == "Defy") {
+        if (this.state.device.info.keyboardType == "wireless") {
+          filename = await this.obtainFWFiles(
+            "Wireless_neuron.hex",
+            this.state.firmwareList[this.state.selectedFirmware].assets[2].url
+          );
+        } else {
+          filename = await this.obtainFWFiles(
+            "Wired_neuron.uf2",
+            this.state.firmwareList[this.state.selectedFirmware].assets[1].url
+          );
+        }
+        filenameSides = await this.obtainFWFiles(
+          "keyscanner.bin",
+          this.state.firmwareList[this.state.selectedFirmware].assets[0].url
+        );
+      } else {
+        filename = this._defaultFirmwareFilename();
+        filenameSides = this._defaultFirmwareFilenameSides();
+      }
     } else if (this.state.selected == "experimental") {
       filename = this._experimentalFirmwareFilename();
       filenameSides = this._experimentalFirmwareFilenameSides();
