@@ -165,6 +165,7 @@ export default class sideFlaser {
       }
       stateUpd(step / totalsteps);
       step++;
+      if (wiredOrWireless == "wireless") await sleep(2);
       // }
     }
     serialport.write("upgrade.keyscanner.validate\n");
@@ -177,7 +178,7 @@ export default class sideFlaser {
     await readLine();
     await readLine();
 
-    if (wiredOrWireless == "wireless") {
+    if (wiredOrWireless == "wireless" && side == "left") {
       serialport.write("upgrade.neuron\n");
     }
 

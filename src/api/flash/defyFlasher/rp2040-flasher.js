@@ -34,7 +34,7 @@ export default class rp2040 {
     ipcRenderer.invoke("list-drives", true).then(result => {
       let finalPath = path.join(result, "default.uf2");
       // console.log("RESULTS!!!", result, file, " to ", finalPath);
-      fs.writeFileSync(firmware, finalPath);
+      fs.writeFileSync(finalPath, firmware);
       stateUpdate(3, 80);
       finished(false, "");
     });
@@ -49,7 +49,7 @@ export default class rp2040 {
 
     // Flashing procedure for each side
     this.sideFlash = new sideFlaser(this.device.path, firmwareSides);
-    let result = await this.sideFlash.flashSide("right", stateUpd, null);
+    let result = await this.sideFlash.flashSide("right", stateUpd, wiredOrWireless);
     if (result.error) finished(result.error, result.message);
     console.log("Right side flash has error? ", result.error);
     step = step + 25;
