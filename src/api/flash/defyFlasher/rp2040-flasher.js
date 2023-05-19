@@ -34,7 +34,7 @@ export default class rp2040 {
     ipcRenderer.invoke("list-drives", true).then(result => {
       let finalPath = path.join(result, "default.uf2");
       // console.log("RESULTS!!!", result, file, " to ", finalPath);
-      fs.writeFileSync(finalPath, firmware);
+      fs.writeFileSync(finalPath, Buffer.from(new Uint8Array(firmware)));
       stateUpdate(3, 80);
       finished(false, "");
     });
