@@ -7,6 +7,7 @@ import Styled from "styled-components";
 import Container from "react-bootstrap/Container";
 import Card from "react-bootstrap/Card";
 import Dropdown from "react-bootstrap/Dropdown";
+import Button from "react-bootstrap/Button";
 
 // Extra components
 import { getStaticPath } from "../config";
@@ -63,6 +64,11 @@ function AltFirmwareUpdate() {
     }
   };
 
+  const rerunSM = () => {
+    // cannot be done for now xDD
+    console.log("nono, not willing xD", `state right now in: ${state.context.stateblock}`);
+  };
+
   const { context } = state;
 
   return (
@@ -70,7 +76,7 @@ function AltFirmwareUpdate() {
       <Container fluid className={`firmware-update`}>
         <PageHeader text={i18n.app.menu.firmwareUpdate} />
         <div>
-          haha
+          <Button onClick={rerunSM}>rerunSM</Button>
           <Card>{JSON.stringify(context)}</Card>
           <Dropdown onSelect={() => console.log("clicked onselect")} value={context.selectedFw} className={`custom-dropdown`}>
             <div>
