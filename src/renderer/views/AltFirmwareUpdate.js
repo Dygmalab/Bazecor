@@ -41,19 +41,16 @@ height: inherit;
 `;
 
 function AltFirmwareUpdate() {
-  const [state, send] = useMachine(
-    flashingSM
-    // {
-    //   actions: {
-    //     addEscListener: () => {
-    //       document.addEventListener("keydown", _handleKeyDown);
-    //     },
-    //     removeEscListener: () => {
-    //       document.removeEventListener("keydown", _handleKeyDown);
-    //     }
-    //   }
-    // }
-  );
+  const [state, send] = useMachine(flashingSM, {
+    actions: {
+      addEscListener: () => {
+        document.addEventListener("keydown", _handleKeyDown);
+      },
+      removeEscListener: () => {
+        document.removeEventListener("keydown", _handleKeyDown);
+      }
+    }
+  });
 
   const _handleKeyDown = event => {
     switch (event.keyCode) {
@@ -66,34 +63,36 @@ function AltFirmwareUpdate() {
     }
   };
 
+  const { context } = state;
+
   return (
     <Styles>
       <Container fluid className={`firmware-update`}>
         <PageHeader text={i18n.app.menu.firmwareUpdate} />
         <div>
           haha
-          <Card>{state}</Card>
-          <Dropdown onSelect={() => console.log("clicked onselect")} value={state.selectedFw} className={`custom-dropdown`}>
+          <Card>{JSON.stringify(context)}</Card>
+          <Dropdown onSelect={() => console.log("clicked onselect")} value={context.selectedFw} className={`custom-dropdown`}>
             <div>
               <Dropdown.Toggle id="dropdown-custom">
                 <div className="dropdownItemSelected">
-                  <div className="dropdownItem">{state.firmwareList[state.selectedFw].text}</div>
+                  <div className="dropdownItem">{context.firmwareList[context.selectedFw]}</div>
                 </div>
               </Dropdown.Toggle>
               <Dropdown.Menu>
-                {state.firmwareList.map((item, index) => (
+                {context.firmwareList.map((item, index) => (
                   <Dropdown.Item
                     eventKey={item.value}
                     key={index}
-                    className={`${state.selectedFw == item.text ? "active" : ""}`}
+                    className={`${context.selectedFw == item.text ? "active" : ""}`}
                     disabled={item.disabled}
                   >
                     <div className="dropdownInner">
-                      {state.selectedFw != undefined &&
-                      state.selectedFw != "" > 0 &&
-                      state.firmwareList &&
-                      state.firmwareList.length > 0 &&
-                      state.firmwareList[0].icon != undefined ? (
+                      {context.selectedFw != undefined &&
+                      context.selectedFw != "" > 0 &&
+                      context.firmwareList &&
+                      context.firmwareList.length > 0 &&
+                      context.firmwareList[0].icon != undefined ? (
                         <div className="dropdownIcon">
                           <img src={item.icon} className="dropdwonIcon" />
                         </div>
