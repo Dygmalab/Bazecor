@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
 import React, { Component } from "react";
 import i18n from "../../i18n";
-import Slider from "react-rangeslider";
+import Slider from "@appigram/react-rangeslider";
 import Focus from "../../../api/focus";
 import Backup from "../../../api/backup";
 import { isArray } from "lodash";
