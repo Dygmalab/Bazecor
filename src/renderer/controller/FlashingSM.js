@@ -1,7 +1,6 @@
 import { createMachine, assign } from "xstate";
 import { Octokit } from "@octokit/core";
 import SemVer from "semver";
-import Focus from "../../api/focus";
 
 const sidesReady = (context, event) => {
   return context.sideLeftOk && context.sideRightOK;
@@ -9,14 +8,14 @@ const sidesReady = (context, event) => {
 
 const FocusAPIRead = async () => {
   console.log("Starting focusAPIread fn");
-  let focus = new Focus();
+  // let focus = new Focus();
   let data = {};
-  data.bootloader = focus.device.bootloader;
-  data.info = focus.device.info;
-  console.log("getting kb info!");
-  data.version = await focus.command("version").split(" ")[0];
-  console.log("retrieved version", data.version);
-  data.chipID = (await focus.command("hardware.chip_id")).replace(/\s/g, "");
+  // data.bootloader = focus.device.bootloader;
+  // data.info = focus.device.info;
+  // console.log("getting kb info!");
+  // data.version = await focus.command("version").split(" ")[0];
+  // console.log("retrieved version", data.version);
+  // data.chipID = (await focus.command("hardware.chip_id")).replace(/\s/g, "");
   console.log("Done reading data: ", data);
   return data;
 };
@@ -46,7 +45,10 @@ const loadAvailableFirmwareVersions = async () => {
     newRelease.version = version;
     newRelease.assets = [];
     release.assets.forEach(asset => {
-      newRelease.assets.push({ name: asset.name, url: asset.browser_download_url });
+      newRelease.assets.push({
+        name: asset.name,
+        url: asset.browser_download_url
+      });
       //console.log([asset.name, asset.browser_download_url]);
     });
     //console.log(newRelease);
@@ -56,9 +58,9 @@ const loadAvailableFirmwareVersions = async () => {
   return defyReleases;
 };
 
-const GitHubRead = async type => {
+const GitHubRead = async () => {
   const fwReleases = await loadAvailableFirmwareVersions();
-  let DefyReleases = fwReleases.filter(release => release.name === type);
+  let DefyReleases = fwReleases.filter(release => release.name === "Defy");
   DefyReleases.sort((a, b) => {
     return SemVer.ltr(SemVer.clean(a.version), SemVer.clean(b.version)) ? -1 : 1;
   });
@@ -114,7 +116,6 @@ const flashingSM = createMachine({
             (context, event) => {
               // This will error at .flag
               console.log("Load device data running!");
-              assign({ stateblock: (context, event) => context.stateblock + 1 });
             }
           ],
           invoke: {
@@ -122,7 +123,12 @@ const flashingSM = createMachine({
             src: FocusAPIRead,
             onDone: {
               target: "LoadGithubFW",
-              actions: assign({ device: (context, event) => event.data })
+              actions: [
+                assign({ device: (context, event) => event.data }),
+                assign({
+                  stateblock: (context, event) => context.stateblock + 1
+                })
+              ]
             },
             onError: {
               target: "failure",
@@ -132,25 +138,29 @@ const flashingSM = createMachine({
         },
         LoadGithubFW: {
           id: "LoadGitHubData",
+          entry: [
+            (context, event) => {
+              // This will error at .flag
+              console.log("Loading Github data!");
+            }
+          ],
           invoke: {
             id: "GitHubData",
             src: GitHubRead,
             onDone: {
               target: "success",
-              actions: assign({ firmwareList: (context, event) => event.data })
+              actions: [
+                assign({ firmwareList: (context, event) => event.data }),
+                assign({
+                  stateblock: (context, event) => context.stateblock + 1
+                })
+              ]
             },
             onError: {
               target: "failure",
               actions: assign({ error: (context, event) => event.data })
             }
-          },
-          entry: [
-            (context, event) => {
-              // This will error at .flag
-              console.log("Loading Github data!");
-              assign({ stateblock: (context, event) => context.stateblock + 1 });
-            }
-          ]
+          }
         },
         failure: {
           on: {
@@ -169,42 +179,49 @@ const flashingSM = createMachine({
         (context, event) => {
           // This will error at .flag
           console.log("Preparation!");
-          assign({ stateblock: (context, event) => context.stateblock + 1 });
         }
       ],
       states: {
         LSideCheck: {
           id: "LSideCheck",
-          invoke: {
-            id: "GetLSideData",
-            src: GetLSideData,
-            onDone: "RSideCheck",
-            onError: "failure"
-          },
           entry: [
             (context, event) => {
               // This will error at .flag
               console.log("Lside Check!");
-              assign({ stateblock: (context, event) => context.stateblock + 1 });
             }
-          ]
+          ],
+          invoke: {
+            id: "GetLSideData",
+            src: GetLSideData,
+            onDone: [
+              assign({
+                stateblock: (context, event) => context.stateblock + 1
+              }),
+              "RSideCheck"
+            ],
+            onError: "failure"
+          }
         },
 
         RSideCheck: {
           id: "RSideCheck",
-          invoke: {
-            id: "GetRSideData",
-            src: GetRSideData,
-            onDone: "SelectDevicesToUpdate",
-            onError: "failure"
-          },
           entry: [
             (context, event) => {
               // This will error at .flag
               console.log("Rside Check!");
-              assign({ stateblock: (context, event) => context.stateblock + 1 });
             }
-          ]
+          ],
+          invoke: {
+            id: "GetRSideData",
+            src: GetRSideData,
+            onDone: [
+              assign({
+                stateblock: (context, event) => context.stateblock + 1
+              }),
+              "SelectDevicesToUpdate"
+            ],
+            onError: "failure"
+          }
         },
         SelectDevicesToUpdate: {
           id: "SelectDevicesToUpdate",
@@ -221,7 +238,8 @@ const flashingSM = createMachine({
               actions: assign((context, event) => {
                 return {
                   sideLeftOk: event.data,
-                  sideRightOK: event.data
+                  sideRightOK: event.data,
+                  stateblock: context.stateblock + 1
                 };
               })
             }
@@ -230,7 +248,6 @@ const flashingSM = createMachine({
             (context, event) => {
               // This will error at .flag
               console.log("Loaded SelectDevicesToUpdate, waiting for UPDATE!");
-              assign({ stateblock: (context, event) => context.stateblock + 1 });
             }
           ]
         },
@@ -260,7 +277,6 @@ const flashingSM = createMachine({
           // This will error at .flag
           console.log("Start Flashing process!");
           //enable listener for esc key
-          assign({ stateblock: (context, event) => context.stateblock + 1 });
         }
       ],
       states: {
@@ -275,15 +291,13 @@ const flashingSM = createMachine({
               // This will error at .flag
               console.log("Wait for esc!");
               //enable listener for esc key
-              document.addEventListener("keydown", this._handleKeyDown);
               //if per conditions it does not have to be enabled, skip it.
-              assign({ stateblock: (context, event) => context.stateblock + 1 });
-            }
+            },
+            assign({ stateblock: (context, event) => context.stateblock + 1 })
           ],
           exit: [
             (context, event) => {
               //disable listener for esc key
-              document.removeEventListener("keydown", this._handleKeyDown);
             }
           ]
         },
@@ -292,8 +306,10 @@ const flashingSM = createMachine({
           entry: [
             (context, event) => {
               console.log(`Flashing Right Side! for ${context.retriesRight} times`);
-              context.retriesRight = context.retriesRight + 1;
-            }
+            },
+            assign({
+              retriesRight: (context, event) => context.retriesRight + 1
+            })
           ],
           on: {
             SUCCESS: "flashLeftSide",
@@ -302,6 +318,14 @@ const flashingSM = createMachine({
         },
         flashLeftSide: {
           id: "flashLeftSide",
+          entry: [
+            (context, event) => {
+              console.log(`Flashing Left Side! for ${context.retriesLeft} times`);
+            },
+            assign({
+              retriesLeft: (context, event) => context.retriesLeft + 1
+            })
+          ],
           on: {
             SUCCESS: "flashNeuron",
             ERROR: "error"
@@ -329,7 +353,6 @@ const flashingSM = createMachine({
       entry: [
         (context, event) => {
           console.log("Restoring layers");
-          context.retriesRight = context.retriesRight + 1;
         }
       ],
       on: {
