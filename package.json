@@ -85,6 +85,7 @@
   },
   "dependencies": {
     "@serialport/parser-delimiter": "^11.0.0",
+    "@xstate/react": "^3.2.2",
     "axios": "^1.4.0",
     "bootstrap-css-only": "^4.4.1",
     "drivelist": "^11.1.0",

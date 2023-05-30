@@ -8,22 +8,17 @@ const sidesReady = (context, event) => {
 };
 
 const FocusAPIRead = async () => {
+  console.log("Starting focusAPIread fn");
   let focus = new Focus();
   let data = {};
   data.bootloader = focus.device.bootloader;
   data.info = focus.device.info;
-  data.version = focus.command("version").split(" ")[0];
-  let chipID = (await focus.command("hardware.chip_id")).replace(/\s/g, "");
-  let availableFW = await this.selectFWTypefromGitHub(focus.device.info.product);
-  // console.log("FWs from Github!", availableFW);
-  return {
-    info: data.info,
-    version: data.version,
-    bootloader: data.bootloader,
-    chipID: chipID,
-    firmwareList: availableFW,
-    selectedList: 0
-  };
+  console.log("getting kb info!");
+  data.version = await focus.command("version").split(" ")[0];
+  console.log("retrieved version", data.version);
+  data.chipID = (await focus.command("hardware.chip_id")).replace(/\s/g, "");
+  console.log("Done reading data: ", data);
+  return data;
 };
 
 const loadAvailableFirmwareVersions = async () => {
@@ -119,7 +114,7 @@ const flashingSM = createMachine({
             (context, event) => {
               // This will error at .flag
               console.log("Load device data running!");
-              context.stateblock = context.stateblock + 1;
+              assign({ stateblock: (context, event) => context.stateblock + 1 });
             }
           ],
           invoke: {
@@ -153,7 +148,7 @@ const flashingSM = createMachine({
             (context, event) => {
               // This will error at .flag
               console.log("Loading Github data!");
-              context.stateblock = context.stateblock + 1;
+              assign({ stateblock: (context, event) => context.stateblock + 1 });
             }
           ]
         },
@@ -174,7 +169,7 @@ const flashingSM = createMachine({
         (context, event) => {
           // This will error at .flag
           console.log("Preparation!");
-          context.stateblock = context.stateblock + 1;
+          assign({ stateblock: (context, event) => context.stateblock + 1 });
         }
       ],
       states: {
@@ -190,7 +185,7 @@ const flashingSM = createMachine({
             (context, event) => {
               // This will error at .flag
               console.log("Lside Check!");
-              context.stateblock = context.stateblock + 1;
+              assign({ stateblock: (context, event) => context.stateblock + 1 });
             }
           ]
         },
@@ -207,7 +202,7 @@ const flashingSM = createMachine({
             (context, event) => {
               // This will error at .flag
               console.log("Rside Check!");
-              context.stateblock = context.stateblock + 1;
+              assign({ stateblock: (context, event) => context.stateblock + 1 });
             }
           ]
         },
@@ -235,7 +230,7 @@ const flashingSM = createMachine({
             (context, event) => {
               // This will error at .flag
               console.log("Loaded SelectDevicesToUpdate, waiting for UPDATE!");
-              context.stateblock = context.stateblock + 1;
+              assign({ stateblock: (context, event) => context.stateblock + 1 });
             }
           ]
         },
@@ -265,7 +260,7 @@ const flashingSM = createMachine({
           // This will error at .flag
           console.log("Start Flashing process!");
           //enable listener for esc key
-          context.stateblock = context.stateblock + 1;
+          assign({ stateblock: (context, event) => context.stateblock + 1 });
         }
       ],
       states: {
@@ -282,7 +277,7 @@ const flashingSM = createMachine({
               //enable listener for esc key
               document.addEventListener("keydown", this._handleKeyDown);
               //if per conditions it does not have to be enabled, skip it.
-              context.stateblock = context.stateblock + 1;
+              assign({ stateblock: (context, event) => context.stateblock + 1 });
             }
           ],
           exit: [
