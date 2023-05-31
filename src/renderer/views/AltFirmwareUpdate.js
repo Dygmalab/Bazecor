@@ -77,8 +77,13 @@ function AltFirmwareUpdate() {
         <PageHeader text={i18n.app.menu.firmwareUpdate} />
         <div>
           <Button onClick={rerunSM}>rerunSM</Button>
+          <Button onClick={() => send("CHECK")}>Check if sides are present, only for Defy</Button>
           <Card>{JSON.stringify(context)}</Card>
-          <Dropdown onSelect={() => console.log("clicked onselect")} value={context.selectedFw} className={`custom-dropdown`}>
+          <Dropdown
+            onSelect={value => send("CHANGEFW", { selected: parseInt(value) })}
+            value={context.selectedFw}
+            className={`custom-dropdown`}
+          >
             <div>
               <Dropdown.Toggle id="dropdown-custom">
                 <div className="dropdownItemSelected">
@@ -88,9 +93,9 @@ function AltFirmwareUpdate() {
               <Dropdown.Menu>
                 {context.firmwareList.map((item, index) => (
                   <Dropdown.Item
-                    eventKey={item.value}
+                    eventKey={index}
                     key={index}
-                    className={`${context.selectedFw == item.text ? "active" : ""}`}
+                    className={`${context.selectedFw == item.name ? "active" : ""}`}
                     disabled={item.disabled}
                   >
                     <div className="dropdownInner">
@@ -105,7 +110,9 @@ function AltFirmwareUpdate() {
                       ) : (
                         ""
                       )}
-                      <div className="dropdownItem">{item.text}</div>
+                      <div className="dropdownItem">
+                        {item.name}-{item.version}
+                      </div>
                     </div>
                   </Dropdown.Item>
                 ))}

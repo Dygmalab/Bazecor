@@ -1,4 +1,4 @@
-import { createMachine, assign } from "xstate";
+import { createMachine, assign, raise } from "xstate";
 import { Octokit } from "@octokit/core";
 import SemVer from "semver";
 import Focus from "../../api/focus";
@@ -8,30 +8,19 @@ const sidesReady = (context, event) => {
 };
 
 const FocusAPIRead = async () => {
-  console.log("Starting focusAPIread fn");
-  // let focus = new Focus();
-  // let data = {};
-  // data.bootloader = focus.device.bootloader;
-  // data.info = focus.device.info;
-  // console.log("getting kb info!");
-  // data.version = await focus.command("version").split(" ")[0];
-  // console.log("retrieved version", data.version);
-  // data.chipID = (await focus.command("hardware.chip_id")).replace(/\s/g, "");
-  // console.log("Done reading data: ", data);
-  let data = {
-    bootloader: false,
-    info: { vendor: "dygma", product: "raise", keyboardType: "ISO" },
-    version: "1.0.9beta",
-    chipID: "lkajsddlkj1230974lqajls"
-  };
+  let focus = new Focus();
+  let data = {};
+  data.bootloader = focus.device.bootloader;
+  data.info = focus.device.info;
+  data.version = await focus.command("version");
+  data.version = data.version.split(" ")[0];
+  data.chipID = (await focus.command("hardware.chip_id")).replace(/\s/g, "");
+  if (Object.keys(data).length == 0 || Object.keys(data.info).length == 0) throw new Error("data is empty!");
   return data;
 };
 
 const loadAvailableFirmwareVersions = async () => {
-  // Octokit.js
-  // https://github.com/octokit/core.js#readme
   const octokit = new Octokit();
-
   let data = await octokit.request("GET /repos/{owner}/{repo}/releases", {
     owner: "Dygmalab",
     repo: "Firmware-releases",
@@ -40,7 +29,7 @@ const loadAvailableFirmwareVersions = async () => {
     }
   });
   // console.log("Data from github!", JSON.stringify(data));
-  let defyReleases = [];
+  let Releases = [];
   data.data.forEach(release => {
     let newRelease = {},
       name,
@@ -59,19 +48,20 @@ const loadAvailableFirmwareVersions = async () => {
       //console.log([asset.name, asset.browser_download_url]);
     });
     //console.log(newRelease);
-    defyReleases.push(newRelease);
+    Releases.push(newRelease);
   });
   // console.log(defyReleases);
-  return defyReleases;
+  return Releases;
 };
 
-const GitHubRead = async () => {
+const GitHubRead = async info => {
   const fwReleases = await loadAvailableFirmwareVersions();
-  let DefyReleases = fwReleases.filter(release => release.name === "Defy");
-  DefyReleases.sort((a, b) => {
+  let finalReleases = fwReleases.filter(release => release.name === info.product);
+  finalReleases.sort((a, b) => {
     return SemVer.ltr(SemVer.clean(a.version), SemVer.clean(b.version)) ? -1 : 1;
   });
-  return DefyReleases;
+  console.log("GitHub data acquired!", finalReleases);
+  return finalReleases;
 };
 
 const CheckFWVersion = async () => {
@@ -113,7 +103,10 @@ const flashingSM = createMachine({
         (context, event) => {
           // This will error at .flag
           console.log("Initial state running!");
-        }
+        },
+        assign({
+          stateblock: (context, event) => context.stateblock + 1
+        })
       ],
 
       states: {
@@ -130,12 +123,7 @@ const flashingSM = createMachine({
             src: FocusAPIRead,
             onDone: {
               target: "LoadGithubFW",
-              actions: [
-                assign({ device: (context, event) => event.data }),
-                assign({
-                  stateblock: (context, event) => context.stateblock + 1
-                })
-              ]
+              actions: [assign({ device: (context, event) => event.data })]
             },
             onError: {
               target: "failure",
@@ -153,15 +141,10 @@ const flashingSM = createMachine({
           ],
           invoke: {
             id: "GitHubData",
-            src: GitHubRead,
+            src: (context, data) => GitHubRead(context.device.info),
             onDone: {
               target: "success",
-              actions: [
-                assign({ firmwareList: (context, event) => event.data }),
-                assign({
-                  stateblock: (context, event) => context.stateblock + 1
-                })
-              ]
+              actions: [assign({ firmwareList: (context, event) => event.data })]
             },
             onError: {
               target: "failure",
@@ -181,14 +164,35 @@ const flashingSM = createMachine({
     },
     preparation: {
       id: "preparation",
-      initial: "LSideCheck",
+      initial: "selectFirmware",
       entry: [
         (context, event) => {
           // This will error at .flag
           console.log("Preparation!");
-        }
+        },
+        assign({
+          stateblock: (context, event) => context.stateblock + 1
+        })
       ],
       states: {
+        selectFirmware: {
+          id: "selectFirmware",
+          entry: [
+            (context, event) => {
+              // This will error at .flag
+              console.log("select Firmware!");
+              if (context.device.info.product == "Raise") raise("SKIP");
+            }
+          ],
+          on: {
+            //Esc key listener will send this event
+            CHECK: "LSideCheck",
+            SKIP: "SelectDevicesToUpdate",
+            CHANGEFW: {
+              actions: [assign({ selectefirmware: (context, event) => event.selected })]
+            }
+          }
+        },
         LSideCheck: {
           id: "LSideCheck",
           entry: [
@@ -200,12 +204,7 @@ const flashingSM = createMachine({
           invoke: {
             id: "GetLSideData",
             src: GetLSideData,
-            onDone: [
-              assign({
-                stateblock: (context, event) => context.stateblock + 1
-              }),
-              "RSideCheck"
-            ],
+            onDone: ["RSideCheck"],
             onError: "failure"
           }
         },
@@ -221,12 +220,7 @@ const flashingSM = createMachine({
           invoke: {
             id: "GetRSideData",
             src: GetRSideData,
-            onDone: [
-              assign({
-                stateblock: (context, event) => context.stateblock + 1
-              }),
-              "SelectDevicesToUpdate"
-            ],
+            onDone: ["SelectDevicesToUpdate"],
             onError: "failure"
           }
         },
@@ -245,8 +239,7 @@ const flashingSM = createMachine({
               actions: assign((context, event) => {
                 return {
                   sideLeftOk: event.data,
-                  sideRightOK: event.data,
-                  stateblock: context.stateblock + 1
+                  sideRightOK: event.data
                 };
               })
             }
@@ -284,7 +277,10 @@ const flashingSM = createMachine({
           // This will error at .flag
           console.log("Start Flashing process!");
           //enable listener for esc key
-        }
+        },
+        assign({
+          stateblock: (context, event) => context.stateblock + 1
+        })
       ],
       states: {
         waitEsc: {
