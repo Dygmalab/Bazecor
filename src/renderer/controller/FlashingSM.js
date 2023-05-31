@@ -9,15 +9,21 @@ const sidesReady = (context, event) => {
 
 const FocusAPIRead = async () => {
   console.log("Starting focusAPIread fn");
-  let focus = new Focus();
-  let data = {};
-  data.bootloader = focus.device.bootloader;
-  data.info = focus.device.info;
-  console.log("getting kb info!");
-  data.version = await focus.command("version").split(" ")[0];
-  console.log("retrieved version", data.version);
-  data.chipID = (await focus.command("hardware.chip_id")).replace(/\s/g, "");
-  console.log("Done reading data: ", data);
+  // let focus = new Focus();
+  // let data = {};
+  // data.bootloader = focus.device.bootloader;
+  // data.info = focus.device.info;
+  // console.log("getting kb info!");
+  // data.version = await focus.command("version").split(" ")[0];
+  // console.log("retrieved version", data.version);
+  // data.chipID = (await focus.command("hardware.chip_id")).replace(/\s/g, "");
+  // console.log("Done reading data: ", data);
+  let data = {
+    bootloader: false,
+    info: { vendor: "dygma", product: "raise", keyboardType: "ISO" },
+    version: "1.0.9beta",
+    chipID: "lkajsddlkj1230974lqajls"
+  };
   return data;
 };
 
@@ -81,7 +87,7 @@ const GetRSideData = async () => {
 };
 
 const flashingSM = createMachine({
-  /** @xstate-layout N4IgpgJg5mDOIC5QDEA2BDAFrAlgOygAUAnAewGM5YA6ZAdQGUxUxyAXHUvagGVPQgARMADcclQejboAxBC5hq+EaQDWi5BQCusAIKEAkgCUwAgNoAGALqJQAB1K4OXWyAAeiAEwA2C9QsAHACsAJwAjADsEUEWQZ4BIUEANCAAnogAzFnUGUFhQXEALCEWEd7eEQC+lSloWLgEJBRUtIzMrM7cfALCYhJSsmDEZMTUdhhsAGakxAC2tNp6hibm1q4OTpx4rh4IPn6BoZHRsfGJKekIhQn+EYWeYdfeQYUZniHe1bUY2PhEZJRYDR6EwWOwtrx+BAAOI4NiYLQAI3ocgUSjwKnU1FhbAAEkjJNJLDYkCANnCtjtEN4HtRghUgsFPO9Xp4LtSMmFqGELPlvIU7hkAoKviA6r9GgCWiD2uCuJCBDiEci6DIhiMxhNpnNsXD8YjCehietHBSXKTdjSufTokyWW92QhOYVqFEIlkwt4QiEHmFcqLxQ1-s0ga1QR0IZN0DhUFpiGAZEYAKIAFSMAE1jaTyZ0qQgvdaMqUSt6Mr4QgFHWEQhFqD7CgKHhZ+YEKgGfkGmoDgW0wZ1qLAtORuzIs-ZTbmLYhEp5qNdPeUhUXPIzHc8MnXebFrlkAsLCu36n8uy07PG7OhiFIITwGDgIGAAMKYViqVF4RTKNSKaFgNi3+8wENMcyQnSkpwQMIV28ahGTeGlm2Fd4MkdMpa2rcoXhCQp+Wwz4ajFDtjylUMzzAC8r37ACH2fV81WGGZNSkbV5l-f87wfYC1mzMDzVAXYoKCGC4J8TxEIiZC1wsEJqGeGlnhXBJYhCQ8JWDbsxnPS9r3lIwOKfF9yDfeQP3RTEfz-PTAK4klx02Pj3EQT18hyUIMgFCwmz3ZI0kQCJgldCJAmid0AliXlVM7EiaDIiidO4KyaMMt91UY8ZmJmVjLP0myTXs7YIOcoJXJCdygq84JUKFHJ8keRDCmrMJIuIkMYq0yiIXDdhenEOAU1IABVOwICkBMTM-DFv2oWijPoAA1IZcC4ECc3A-inICMTuSCaJPAib0KlyNcvVks5HhpTxOQKZrJVazTyO0-surYHrAX6oaRrYBMBsIQRdBTJMVt4gr1r2CxqqEzxiiib0AjCR0wo3CpCiCD0AkOnabvU092vi6gRHQVB71GhhpDYHQZEIZMGAYJNBCB-K8yhrbfG8JTNtiPJvAR8HZLuVHOXR91MYIwMWo02LHsjaNY3jRNUwzBmzRBxzIK9GScJ5SI4IbFdHWuWt7liIKBWifkMixk9Q0mDBYEwcWWgAd2jNgk1gchKep2n6e4uzlaZu4-AFCpHm9YtSoRoS6RrasCm8OrPEt6LqBt9A7Yd63bcwIwcCgTA2H0mQGAGx9HyTGmlcnUGiyLOsUa54IgvkhH7lkl4dtKQIa2FJO7tT9Pbo0-vs9z-PC6TIwjAAeSMSu1tVmu-GwgpPUb5sfCrQIAldcGwk2-IG2rXuh6zjOaGHngwEmAvAKLkuy4r33QMZiCPWKvcLGDnbQoCQpHQ+DcQpvBZGKFBMI4DE6iyIoPFow8z4pyzpfa+49J4zzng5XYb86RhS-lEIUv8EZlmoJdABnIwExEgd8I8MDM5p3tjQ8+WcAByYA4xcDvqXcuDB0Eq0wSWOsiQ-T4M5E3TeUQd6CweC8BqKkoHUOxrQgeCjGF0JYWwvAMgJ7T1nk-VaGDMhuX8HDWICEvQ4T-r5BAiQYIx0KKUYBbxf74SoWpK2NB4ywDYDMMAPB0CpEWhwh+3DdHAyZrEOsbwizXB8PkaIVYYgumZKjBODUeQWzka45OHivHxl8f44gsBNGoJ0bZZ+-sIICg3FDb0OEyj8n2tzSxfowrcnKO6cBHw2b+WqARPApAHzwFJGLBheVymgwALRQ0dJMg8GSop3RlH2eeejeFeAsZcYBc59qejKKjBqCRrpzPgYsiM8puhCFEL1Q0oyq6qwkvrFGxCGQRHAXDfcsiXHzI0icuUXQoRKiRPQG589dgo1rBzeITJXggMdILNuNIMjemXjI4+0peynO4FGGMcYwDAv0QgRGWy-QNhwhWaS6zMiIv8KEBINZUkSTbEchhYZZT9kHMOKgeLVkEt5gKYlDYvRhWwmuOI2CGpvH8nBQ5nz4GSw6g5FZeYeTvFgrUn0ncOkUqdKKmscRyieTBThVFpFcZUX0jNVQXKlWlFrC8Co6qgqatQhYPwoRTgJHAfca4xq2oPXlQlc1yUrWFRRlyN48QoieShv5CIqEVWOvRi6istofX3Tik9Vlr0+qDWGqNYNoM97gO5LyHaPJQj8jZJYtCskAhlkeBkbZFZZkyuZXKvGBMiafTAKTKQOh82q2ZD4PmDYXlRobShKtLSKi-08hhUI3qmXKLTVLeUWLZa4p4i-AtcMuRa1LcpCta4i1+lKjEbCp7pWEXkW4hBdCz79t2CubI0iGq8n5PySIa50Zznji6t4LwP7NqvZkvup9mXOzhG7cgD6vCMi5C+rW76GqxssRzTcwCbWlGFJ5VNcDmXDxznnG+D4YN7GFFyBq9x3IgL3MK1D2QSg8kSHEPV5RcNgaXRfK+xGN1+1uZgz0xUCigOSckxplxf4bkePkN4rwPh7SA8MzjHGb3DzUWQFWirX4oyDgkYUMRciHssQAuk7oJXlt2c44DXzYEqeTqlYgpGG2en8DSTaJQO5+kIe-HaO5TFxFTdk7xeTFqkYFFWecxD3hQ1iNWGsHxU3su7KRnaVYY01uKGWDuZ6Ag9MqEAA */
+  /** @xstate-layout N4IgpgJg5mDOIC5QDEA2BDAFrAlgOygAUAnAewGM5YA6ZAdQGUxUxyAXHUvagGVPQgARMADcclQejboAxBC5hq+EaQDWi5BQCusAIKEAkgCUwAgNoAGALqJQAB1K4OXWyAAeiAEwA2C9QsAHACsAJzengDM3t4hEZ6eADQgAJ6IcX4WACyZniEhAfkA7IVBEQC+ZUloWLgEJBRUtIzMrM7cfALCYhJSsmDEZMTUdhhsAGakxAC2tNp6hibm1q4OTpx4rh4IPhnBYZHRsfFJqQiZBf6FOaGZIeeZpd4VVRjY+ERklLA09Ews7OtePwIABxHBsTBaABG9DkCiUeBU6moYLYAAloZJpJYbEgQKtwetNohwgBGajBbwBCxBXyk7J5E4kiLk0kWUlBAIRWlBSIs54gapvOqfRq-FoArhAgSoyEwugyfqDYajCbTFHgjFQrHoHErRyElx4rZkim06m09kMkJMhAszLUYqFbmZQoBbylEI+AVC2ofBrfJp-VqAsboHCoLTEMAyIwAUQAKkYAJp6vEEtrEhAxclcixuzLeOKhd220khQrUL0M9mlAIFD0+15++pfH7Nf5taiwLTkNsyNP2A2Z42IEK86jnUmFUmkzyZcszwq26KVzyBCKFLJeoIWCIBJs1d6txp2aN2dDEKSAngMHAQMAAYUwrFUcLwimUakUILAbFv95gDqg74sORKjggc60tQnIRCy7JXFkASJCkiBun4u6ZDSpQRK6NIHpUgrNseoqBmeYAXleXYAQ+z6voqAyTCqUhqjMv7-neD7Acs6ZgUaoBbFB3gwVy8HTlh5woac4SeFWRZBM67JUr4hSHsK-ptsM56XteUpGJxT4vuQb7yB+CJIj+f76YB3G4kOaz8e4iCkt4HLUNydyFhyOQVrahR5JcyHhDOmSblyaktqRNDkZRuncNZtFGW+SpMSMLGTGxVkGbZ+oORsEEuW5HnZK5QQ+cuqEICU5Iyd4eGkhEYT5BFJEBtF2lUYCwbsF04hwAmpAAKp2BAUgxqZn6It+1B0cZ9AAGr9LgXAgRm4ECc5yF+ByhRFmEoR3NyK7IVWUTzkhXqeIUngtSKbVaRROldt1bC9V8A3DaNbAxoNhCCLoCZxqtfH5Rt2x7gEMHhKEERZGV7JSYgAQuVWyMVnO4mFqphG+q1mkxU9gIiOgqD3mNDDSGwOgyIQ8YMAwcaCMDeVZvO67UL4VJsqF+GkrayPCfk5ZsvE071iEt0aaeHVxdQYYRlGMbxkmqY8fZhqg05kExCEk6+GExQVv5M62rufjXW6zp1bhvLlDjxF3ZpYwYLAmB440ADu4ZsHGsDkDIcYMI+tOBwzTNq6BLMQVdWGTrtVt1eE+T8-WjqW658RxD4Tz20ejuNM76Cu+7gaF67Rg4FAmBsAZMgMINj6PqHzMa1msO+FWnKFpu-muRE-NbtQ64PHEUSBBYVKSyepcu27+cz0XmAV1XNeAQHRhGAA8kYLcjmD7d+OOATd4bfdltz-ixOOpSFl6uFT1FcuzyXNBl5gPBgGMq8PnXDdN-Tu91pazgmVGCFhwEFGHldIItoKyQydFkTwHJqTI1JA-e6b8X5P0Xh-L+tc4wb23oAxyWwQEOjNoEL0iCSj8yCDVWGcRbioNwjdXO6lp6v2fvPThi8AByYAoxcF-o3ZuEc1okLSHcSGrlzjW2pJ4TkMDKpsliJffch06HZ3QU7LhUsF6u34YIvA68t47zESDNuRZyRbnwtEGSAQKqnArLJM6Ki7GsJeHnPRNBoywDYJMMAPB0DJCWsI-+DBiGay2OuIIp14h5HkW6Is3gyx0N1qVfIDjGoenHNoxovj-HRiCSE4gsATFEPMVHMGroIhD1uEfZ0kQ2SOOco1WJQQFJYSugoq4FRCJ4FIA+eAeJcbcNyq3CCABaectppmZDyYGcUnYgHiKiV4TIK5amuhCNOL0sQvJXQWe2F6N5gRvSAr0cZe8tbXVtNkWJPhdoWHXDE+cEs2GRXukskMUoOignBHKegVygFbAeJWLajDrouQnhsyqLJpG0hjlyAoHSghHKDBKLs8tIzRmBRIhA1Itkzk3FEaIuQPS2jgrrGkeQGq+HhrI9F3zJTcB7H2KgeK1kEr3HHBqCck4UsqnY6gwtsiwwal3dFBNOqOVWVmEWusypUliFcechYUlwuiEPZCoQsh7h1nuKVMtqIGVmqoTl8r8yViVQUTcOQSoatOMSikcDxwPBpI1O2nj2GP2lbLBKhlXwWoKg8ckWcdngLgmyXCflQr+AsLEPc5Z5yzi9URLxHCHqxWepi85sAPojTGsGsGpJUEiqUkgq6FZNx+WpFWCNG5yyhDRR8rBfquzE1Jl9MAFMpA6GLVreIPgOZXAUruJ5NbKr+VqfkBSeQchj2ukax6MruDYsVgOwSZa2QuUrcbSd0l5yTnVQ8Uo-ksLvO9Z8nRi8X6bq8DhGC2QFFXRpN4YoSjpIBV2lyV0SD6zNvRZg7h1Avbgl9uQe92xOTkjKtcV9tIP380ao6RNVIkFbnXDnK9WDgPeOweXSu1cDJQdyOyScMcMYOLuIjAlE5LZ7DiNGzwBEcMgbw5mt+uDv5gCgyyccUM3R1luIpT9SNcJDzpXcEIE9gjnCA7ozjs9DFkE1nKiCuELgqO2THRqCjYH+SHnVZ5sR327n3Ap29IGUrED4yUB06H9xZGyT3Wh5J5wC2TWC8I6KCkBOKUtKDroyy3GEq5Io576SG3RWytsUGFJlkJZcWkyr8zVrthUIAA */
   predictableActionArguments: true,
   id: "FlahsingProcess",
   initial: "FWSelection",
@@ -285,7 +291,7 @@ const flashingSM = createMachine({
           id: "waitEsc",
           on: {
             //Esc key listener will send this event
-            PRESSED: "#FlahsingProcess.flashingProcess.flashRightSide"
+            ESCPRESSED: "#FlahsingProcess.flashingProcess.flashRightSide"
           },
           entry: [
             (context, event) => {
