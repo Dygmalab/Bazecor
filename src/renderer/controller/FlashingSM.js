@@ -20,7 +20,7 @@ const FocusAPIRead = async () => {
   // console.log("Done reading data: ", data);
   let data = {
     bootloader: false,
-    info: { vendor: "dygma", product: "raise", keyboardType: "ISO" },
+    info: { vendor: "dygma", product: "defy", keyboardType: "ISO" },
     version: "1.0.9beta",
     chipID: "lkajsddlkj1230974lqajls"
   };
