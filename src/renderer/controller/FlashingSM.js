@@ -1,6 +1,7 @@
 import { createMachine, assign } from "xstate";
 import { Octokit } from "@octokit/core";
 import SemVer from "semver";
+import Focus from "../../api/focus";
 
 const sidesReady = (context, event) => {
   return context.sideLeftOk && context.sideRightOK;
@@ -8,14 +9,14 @@ const sidesReady = (context, event) => {
 
 const FocusAPIRead = async () => {
   console.log("Starting focusAPIread fn");
-  // let focus = new Focus();
+  let focus = new Focus();
   let data = {};
-  // data.bootloader = focus.device.bootloader;
-  // data.info = focus.device.info;
-  // console.log("getting kb info!");
-  // data.version = await focus.command("version").split(" ")[0];
-  // console.log("retrieved version", data.version);
-  // data.chipID = (await focus.command("hardware.chip_id")).replace(/\s/g, "");
+  data.bootloader = focus.device.bootloader;
+  data.info = focus.device.info;
+  console.log("getting kb info!");
+  data.version = await focus.command("version").split(" ")[0];
+  console.log("retrieved version", data.version);
+  data.chipID = (await focus.command("hardware.chip_id")).replace(/\s/g, "");
   console.log("Done reading data: ", data);
   return data;
 };

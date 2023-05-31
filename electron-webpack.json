@@ -33,6 +33,8 @@
     "react-beautiful-dnd",
     "styled-components",
     "source-map-support",
-    "react-bootstrap-range-slider"
+    "react-bootstrap-range-slider",
+    "xstate",
+    "@xstate/react"
   ]
 }
