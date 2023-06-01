@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import flashingSM from "../controller/FlashingSM";
 import { useMachine } from "@xstate/react";
 
@@ -71,11 +71,33 @@ function AltFirmwareUpdate() {
 
   const { context } = state;
 
+  const [loading, setLoading] = useState(true);
+  useEffect(() => {
+    if (context?.device?.version && context?.firmwareList[0] && context?.selectefirmware >= 0) {
+      setLoading(false);
+    }
+  }, [context]);
+
   return (
     <Styles>
       <Container fluid className={`firmware-update`}>
         <PageHeader text={i18n.app.menu.firmwareUpdate} />
         <div>
+          {loading ? (
+            "loading"
+          ) : (
+            <FirmwareUpdatePanel
+              content={context}
+              device={context.device}
+              currentlyVersionRunning={context.device.version}
+              latestVersionAvailable={context.firmwareList[0].version}
+              firmwareList={context.firmwareList}
+              firmwareFilename={null}
+              disclaimerCard={0}
+              selectedFirmware={context?.selectefirmware}
+            />
+          )}
+
           <Button onClick={rerunSM}>rerunSM</Button>
           <Button onClick={() => send("CHECK")}>Check if sides are present, only for Defy</Button>
           <Card>{JSON.stringify(context)}</Card>

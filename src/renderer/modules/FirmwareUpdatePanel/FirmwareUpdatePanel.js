@@ -15,10 +15,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import Styled from "styled-components";
 import i18n from "../../i18n";
+
+import Dropdown from "react-bootstrap/Dropdown";
 
 import Title from "../../component/Title";
 import Callout from "../../component/Callout";
@@ -170,6 +172,7 @@ width: 100%;
  */
 
 const FirmwareUpdatePanel = ({
+  device,
   currentlyVersionRunning,
   latestVersionAvailable,
   onClick,
@@ -178,7 +181,9 @@ const FirmwareUpdatePanel = ({
   firmwareFilename,
   disclaimerCard,
   onCancelDialog,
-  onBackup
+  onBackup,
+  firmwareList,
+  selectedFirmware
 }) => {
   // production
   const isUpdated = currentlyVersionRunning === latestVersionAvailable ? true : false;
@@ -247,7 +252,7 @@ const FirmwareUpdatePanel = ({
                 </div>
               </div>
               <div className="firmware-sidebar borderRightTopRadius">
-                <FirmwareNeuronStatus isUpdated={isUpdated} />
+                <FirmwareNeuronStatus isUpdated={isUpdated} deviceProduct={device?.info?.product} />
               </div>
             </div>
             <div className="firmware-row">
@@ -257,6 +262,33 @@ const FirmwareUpdatePanel = ({
                   latestVersionAvailable={latestVersionAvailable}
                   isUpdated={isUpdated}
                 />
+                <Dropdown
+                  onSelect={() => console.log("clicked onselect")}
+                  value={selectedFirmware}
+                  className={`custom-dropdown sm`}
+                >
+                  <div>
+                    <Dropdown.Toggle id="dropdown-custom">
+                      <div className="dropdownItemSelected">
+                        <div className="dropdownItem">{firmwareList[selectedFirmware].version}</div>
+                      </div>
+                    </Dropdown.Toggle>
+                    <Dropdown.Menu>
+                      {firmwareList.map((item, index) => (
+                        <Dropdown.Item
+                          eventKey={item.value}
+                          key={index}
+                          className={`${selectedFirmware == index ? "active" : ""}`}
+                          disabled={item.disabled}
+                        >
+                          <div className="dropdownInner">
+                            <div className="dropdownItem">{item.version}</div>
+                          </div>
+                        </Dropdown.Item>
+                      ))}
+                    </Dropdown.Menu>
+                  </div>
+                </Dropdown>
               </div>
               <div className="firmware-sidebar borderRightBottomRadius">
                 <div className="buttonActions">
