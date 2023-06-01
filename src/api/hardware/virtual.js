@@ -1064,6 +1064,10 @@ const DefyWireless = {
     "wireless.rf.channelHop": {
       data: "false",
       eraseable: true
+    },
+    "wireless.rf.syncPairing": {
+      data: "",
+      eraseable: false
     }
   }
 };

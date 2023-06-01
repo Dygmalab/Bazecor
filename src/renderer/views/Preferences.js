@@ -37,6 +37,7 @@ import Focus from "../../api/focus";
 import Backup from "../../api/backup";
 import PageHeader from "../modules/PageHeader";
 import ToastMessage from "../component/ToastMessage";
+import { RegularButton } from "../component/Button";
 import { IconFloppyDisk } from "../component/Icon";
 
 const Store = require("electron-store");
@@ -491,6 +492,12 @@ class Preferences extends React.Component {
     }
   };
 
+  sendRePairCommand = async () => {
+    let focus = new Focus();
+    const result = await focus.command("wireless.rf.syncPairing");
+    console.log("command returned", result);
+  };
+
   render() {
     const { neurons, selectedNeuron, darkMode, neuronID, devTools, verboseFocus, kbData, modified } = this.state;
     const { inContext, connected } = this.props;
@@ -498,6 +505,7 @@ class Preferences extends React.Component {
     const devToolsSwitch = <Form.Check type="switch" checked={devTools} onChange={this.toggleDevTools} />;
     const verboseSwitch = <Form.Check type="switch" checked={verboseFocus} onChange={this.toggleVerboseFocus} />;
     const onlyCustomSwitch = <Form.Check type="switch" checked={kbData.keymap.onlyCustom} onChange={this.toggleOnlyCustom} />;
+    const pairingButton = <RegularButton buttonText={"Re-Pair RF"} style="short warning sm" onClick={this.sendRePairCommand} />;
     // console.log("CHECKING STATUS MOD", modified);
     // console.log("CHECKING STATUS CTX", inContext);
 
@@ -540,6 +548,7 @@ class Preferences extends React.Component {
                     devToolsSwitch={devToolsSwitch}
                     verboseSwitch={verboseSwitch}
                     onlyCustomSwitch={onlyCustomSwitch}
+                    pairingButton={pairingButton}
                     connected={connected}
                   />
                 </Col>
