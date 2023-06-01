@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
-import flashingSM from "../controller/FlashingSM";
+import FWSelection from "../controller/FlashingSM/FWSelection";
+import DeviceChecks from "../controller/FlashingSM/DeviceChecks";
 import { useMachine } from "@xstate/react";
 
 // Visual components
@@ -42,7 +43,8 @@ height: inherit;
 `;
 
 function AltFirmwareUpdate() {
-  const [state, send] = useMachine(flashingSM, {
+  const [FWSelectionState, FWSelectionSend] = useMachine(FWSelection);
+  const [DeviceChecksState, DeviceChecksSend] = useMachine(DeviceChecks, {
     actions: {
       addEscListener: () => {
         document.addEventListener("keydown", _handleKeyDown);
@@ -57,19 +59,14 @@ function AltFirmwareUpdate() {
     switch (event.keyCode) {
       case 27:
         console.log("esc key logged");
-        send("ESCPRESSED");
+        FWSelectionSend("ESCPRESSED");
         break;
       default:
         break;
     }
   };
 
-  const rerunSM = () => {
-    // cannot be done for now xDD
-    console.log("nono, not willing xD", `state right now in: ${state.context.stateblock}`);
-  };
-
-  const { context } = state;
+  const { context } = FWSelectionState;
 
   const [loading, setLoading] = useState(true);
   useEffect(() => {
@@ -95,56 +92,16 @@ function AltFirmwareUpdate() {
               firmwareFilename={null}
               disclaimerCard={0}
               selectedFirmware={context.selectefirmware}
-              send={send}
+              send={FWSelectionSend}
             />
           )}
 
-          <Button onClick={rerunSM}>rerunSM</Button>
-          <Button onClick={() => send("CHECK")}>Check Defy Sides</Button>
-          <Button onClick={() => send("SKIP")}>Skip if raise</Button>
-          <Button onClick={() => send("RETRY")}>Retry when error</Button>
-          <Button onClick={() => send("NEXT")}>Next state</Button>
+          <Button onClick={() => FWSelectionSend("RETRY")}>Retry when error</Button>
+          <Button onClick={() => FWSelectionSend("NEXT")}>Next state</Button>
+          <Button onClick={() => DeviceChecksSend("START")}>Start Checks</Button>
+          <Button onClick={() => DeviceChecksSend("SKIP")}>Skip if raise</Button>
+          <Button onClick={() => DeviceChecksSend("CHECK")}>Check Defy Sides</Button>
           <Card>{JSON.stringify(context)}</Card>
-          <Dropdown
-            onSelect={value => send("CHANGEFW", { selected: parseInt(value) })}
-            value={context.selectedFw}
-            className={`custom-dropdown`}
-          >
-            <div>
-              <Dropdown.Toggle id="dropdown-custom">
-                <div className="dropdownItemSelected">
-                  <div className="dropdownItem">{context.firmwareList[context.selectedFw]}</div>
-                </div>
-              </Dropdown.Toggle>
-              <Dropdown.Menu>
-                {context.firmwareList.map((item, index) => (
-                  <Dropdown.Item
-                    eventKey={index}
-                    key={index}
-                    className={`${context.selectedFw == item.name ? "active" : ""}`}
-                    disabled={item.disabled}
-                  >
-                    <div className="dropdownInner">
-                      {context.selectedFw != undefined &&
-                      context.selectedFw != "" > 0 &&
-                      context.firmwareList &&
-                      context.firmwareList.length > 0 &&
-                      context.firmwareList[0].icon != undefined ? (
-                        <div className="dropdownIcon">
-                          <img src={item.icon} className="dropdwonIcon" />
-                        </div>
-                      ) : (
-                        ""
-                      )}
-                      <div className="dropdownItem">
-                        {item.name}-{item.version}
-                      </div>
-                    </div>
-                  </Dropdown.Item>
-                ))}
-              </Dropdown.Menu>
-            </div>
-          </Dropdown>
         </div>
       </Container>
     </Styles>

@@ -252,7 +252,7 @@ class NavigationMenu extends Component {
                       </Link>
                     </React.Fragment>
                   )}
-                  <Link to="/firmware-update" className={`list-link ${fwUpdate || this.state.virtual ? "disabled" : ""}`}>
+                  <Link to="/firmware-update" className={`list-link ${fwUpdate || this.state.virtual ? "" : ""}`}>
                     <NavigationButton
                       selected={currentPage === "/firmware-update"}
                       drawerWidth={drawerWidth}
