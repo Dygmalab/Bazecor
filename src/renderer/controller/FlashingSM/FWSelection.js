@@ -33,7 +33,7 @@ const loadAvailableFirmwareVersions = async () => {
         "X-GitHub-Api-Version": "2022-11-28"
       }
     });
-    // console.log("Data from github!", JSON.stringify(data));
+    console.log("Data from github!", JSON.stringify(data));
     data.data.forEach(release => {
       let newRelease = {},
         name,
@@ -43,6 +43,9 @@ const loadAvailableFirmwareVersions = async () => {
       version = releaseData[1];
       newRelease.name = name;
       newRelease.version = version;
+      newRelease.body = release.body;
+      newRelease.body = release.body_html;
+      newRelease.body = release.body_text;
       newRelease.assets = [];
       release.assets.forEach(asset => {
         newRelease.assets.push({
