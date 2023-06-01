@@ -44,8 +44,8 @@ const loadAvailableFirmwareVersions = async () => {
       newRelease.name = name;
       newRelease.version = version;
       newRelease.body = release.body;
-      newRelease.body = release.body_html;
-      newRelease.body = release.body_text;
+      newRelease.body_html = release.body_html;
+      newRelease.body_text = release.body_text;
       newRelease.assets = [];
       release.assets.forEach(asset => {
         newRelease.assets.push({
