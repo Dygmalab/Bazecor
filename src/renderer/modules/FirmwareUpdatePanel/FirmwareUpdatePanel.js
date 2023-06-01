@@ -210,7 +210,7 @@ const FirmwareUpdatePanel = ({
                 </div>
               </div>
               <div className="firmware-sidebar borderRightTopRadius">
-                <FirmwareNeuronStatus isUpdated={isUpdated} />
+                <FirmwareNeuronStatus isUpdated={isUpdated} deviceProduct={device.info.product} />
               </div>
             </div>
             <div className="firmware-row">
@@ -248,11 +248,18 @@ const FirmwareUpdatePanel = ({
                     headingLevel={3}
                     type={isUpdated ? "success" : "warning"}
                   />
-                  <Callout content={i18n.firmwareUpdate.texts.calloutIntroText} className="mt-lg" size="md" />
+                  <Callout
+                    content={i18n.firmwareUpdate.texts.calloutIntroText}
+                    className="mt-lg"
+                    size="md"
+                    hasVideo={device.info.product == "Raise" ? true : true}
+                    media={`https://www.youtube.com/watch?v=aVu7EL4LXMI`}
+                    videoDuration={device.info.product == "Raise" ? "2:58" : null}
+                  />
                 </div>
               </div>
               <div className="firmware-sidebar borderRightTopRadius">
-                <FirmwareNeuronStatus isUpdated={isUpdated} deviceProduct={device?.info?.product} />
+                <FirmwareNeuronStatus isUpdated={isUpdated} deviceProduct={device.info.product} />
               </div>
             </div>
             <div className="firmware-row">
@@ -293,7 +300,6 @@ const FirmwareUpdatePanel = ({
                 </div>
               </div>
             </div>
-            {!isUpdated && !isBeta && <WhatsNew />}
           </div>
         )}
       </>

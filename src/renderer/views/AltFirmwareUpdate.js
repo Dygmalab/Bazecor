@@ -70,7 +70,7 @@ function AltFirmwareUpdate() {
 
   const [loading, setLoading] = useState(true);
   useEffect(() => {
-    if (context?.device?.version && context?.firmwareList[0] && context?.selectefirmware >= 0) {
+    if (context.device.version && context.firmwareList[0] && context.selectefirmware >= 0) {
       setLoading(false);
     }
   }, [context]);
