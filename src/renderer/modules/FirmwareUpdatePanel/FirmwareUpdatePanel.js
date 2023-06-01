@@ -20,8 +20,6 @@ import PropTypes from "prop-types";
 import Styled from "styled-components";
 import i18n from "../../i18n";
 
-import Dropdown from "react-bootstrap/Dropdown";
-
 import Title from "../../component/Title";
 import Callout from "../../component/Callout";
 import { FirmwareVersionStatus, FirmwareNeuronStatus } from "../FirmwareVersionStatus";
@@ -172,6 +170,7 @@ width: 100%;
  */
 
 const FirmwareUpdatePanel = ({
+  context,
   device,
   currentlyVersionRunning,
   latestVersionAvailable,
@@ -183,7 +182,8 @@ const FirmwareUpdatePanel = ({
   onCancelDialog,
   onBackup,
   firmwareList,
-  selectedFirmware
+  selectedFirmware,
+  send
 }) => {
   // production
   const isUpdated = currentlyVersionRunning === latestVersionAvailable ? true : false;
@@ -220,7 +220,7 @@ const FirmwareUpdatePanel = ({
                     className="flashingbutton nooutlined"
                     style="outline"
                     buttonText={i18n.firmwareUpdate.texts.backwds}
-                    onClick={onCancelDialog}
+                    // onClick={onCancelDialog}
                   />
                 </div>
               </div>
@@ -230,7 +230,7 @@ const FirmwareUpdatePanel = ({
                     className="flashingbutton nooutlined"
                     style="primary"
                     buttonText={i18n.firmwareUpdate.texts.letsStart}
-                    onClick={onBackup}
+                    // onClick={onBackup}
                   />
                 </div>
               </div>
@@ -261,34 +261,10 @@ const FirmwareUpdatePanel = ({
                   currentlyVersionRunning={currentlyVersionRunning}
                   latestVersionAvailable={latestVersionAvailable}
                   isUpdated={isUpdated}
+                  firmwareList={firmwareList}
+                  selectedFirmware={selectedFirmware}
+                  send={send}
                 />
-                <Dropdown
-                  onSelect={() => console.log("clicked onselect")}
-                  value={selectedFirmware}
-                  className={`custom-dropdown sm`}
-                >
-                  <div>
-                    <Dropdown.Toggle id="dropdown-custom">
-                      <div className="dropdownItemSelected">
-                        <div className="dropdownItem">{firmwareList[selectedFirmware].version}</div>
-                      </div>
-                    </Dropdown.Toggle>
-                    <Dropdown.Menu>
-                      {firmwareList.map((item, index) => (
-                        <Dropdown.Item
-                          eventKey={item.value}
-                          key={index}
-                          className={`${selectedFirmware == index ? "active" : ""}`}
-                          disabled={item.disabled}
-                        >
-                          <div className="dropdownInner">
-                            <div className="dropdownItem">{item.version}</div>
-                          </div>
-                        </Dropdown.Item>
-                      ))}
-                    </Dropdown.Menu>
-                  </div>
-                </Dropdown>
               </div>
               <div className="firmware-sidebar borderRightBottomRadius">
                 <div className="buttonActions">
@@ -297,22 +273,22 @@ const FirmwareUpdatePanel = ({
                       className="flashingbutton nooutlined"
                       style="outline"
                       buttonText={i18n.firmwareUpdate.flashing.buttonUpdated}
-                      onClick={onClick}
+                      // onClick={onClick}
                     />
                   ) : (
                     <RegularButton
                       className="flashingbutton nooutlined"
                       style="primary"
                       buttonText={i18n.firmwareUpdate.flashing.button}
-                      onClick={onClick}
+                      // onClick={onClick}
                     />
                   )}
                   <div className="dropdownCustomFirmware">
-                    <FirmwareAdvancedOptions
+                    {/* <FirmwareAdvancedOptions
                       firmwareFilename={firmwareFilename}
                       selectFirmware={selectFirmware}
                       selectExperimental={selectExperimental}
-                    />
+                    /> */}
                   </div>
                 </div>
               </div>
@@ -325,15 +301,15 @@ const FirmwareUpdatePanel = ({
   );
 };
 
-FirmwareUpdatePanel.propTypes = {
-  currentlyVersionRunning: PropTypes.string,
-  latestVersionAvailable: PropTypes.string.isRequired,
-  onClick: PropTypes.func.isRequired,
-  selectFirmware: PropTypes.func.isRequired,
-  onCancelDialog: PropTypes.func.isRequired,
-  onBackup: PropTypes.func.isRequired,
-  firmwareFilename: PropTypes.string,
-  disclaimerCard: PropTypes.number
-};
+// FirmwareUpdatePanel.propTypes = {
+//   currentlyVersionRunning: PropTypes.string,
+//   latestVersionAvailable: PropTypes.string.isRequired,
+//   onClick: PropTypes.func.isRequired,
+//   selectFirmware: PropTypes.func.isRequired,
+//   onCancelDialog: PropTypes.func.isRequired,
+//   onBackup: PropTypes.func.isRequired,
+//   firmwareFilename: PropTypes.string,
+//   disclaimerCard: PropTypes.number
+// };
 
 export default FirmwareUpdatePanel;

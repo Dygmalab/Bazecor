@@ -15,14 +15,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Styled from "styled-components";
 import i18n from "../../i18n";
 
 import Title from "../../component/Title";
 import Badge from "../../component/Badge";
 
-import { IconCheckmarkSm } from "../../component/Icon";
+import Dropdown from "react-bootstrap/Dropdown";
 
 const Style = Styled.div`
 margin-left:32px;
@@ -32,7 +32,7 @@ margin-left:32px;
     background-color: ${({ theme }) => theme.styles.firmwareUpdatePanel.backgroundStripeColor};    
     border-bottom-left-radius: 16px;
     border-top-left-radius: 16px;
-    overflow: hidden;
+    // overflow: hidden;
 }
 .versionStatusInner {
   display: flex;
@@ -49,9 +49,12 @@ margin-left:32px;
   .versionStatusInstalled {
     flex: 1;
     background: ${({ theme }) => theme.styles.firmwareUpdatePanel.backgroundStripeGradientColor};
+    border-top-left-radius: 16px;
+    border-bottom-left-radius: 16px;
   }
   .versionStatusNext {
     position: relative;
+    flex: 1;
     .caret {
       position: absolute;
       top: 24px;
@@ -85,15 +88,40 @@ h6 {
     } 
   }
 }
-
+.badge,
+.dropdownItemSelected {
+  font-size: 0.75rem;
+}
+.badge {
+  padding: 8px 16px;
+}
+.dropdown-toggle.btn.btn-primary {
+  margin-top: 0;
+  padding: 8px 16px;
+}
 `;
-const FirmwareVersionStatus = ({ currentlyVersionRunning, latestVersionAvailable, isUpdated }) => {
+const FirmwareVersionStatus = ({
+  currentlyVersionRunning,
+  latestVersionAvailable,
+  isUpdated,
+  firmwareList,
+  selectedFirmware,
+  send
+}) => {
+  const [loading, setLoading] = useState(true);
+  useEffect(() => {
+    if (selectedFirmware) {
+      setLoading(false);
+    }
+    console.log("Context inside version status: ", selectedFirmware);
+  }, [selectedFirmware]);
+
   return (
     <Style>
       <div className={`versionsStatus ${isUpdated && "isUpdated"}`}>
         <div className="versionStatusInner">
           <div className="versionStatusInstalled">
-            <Title text={i18n.firmwareUpdate.texts.currentlyRunningCardTitle} headingLevel={6} />
+            <Title text={`Installed firmware version`} headingLevel={6} />
             <Badge content={currentlyVersionRunning} />
           </div>
           <div className="versionStatusNext">
@@ -103,17 +131,35 @@ const FirmwareVersionStatus = ({ currentlyVersionRunning, latestVersionAvailable
                 fill="currentColor"
               />
             </svg>
-            {isUpdated ? (
-              <>
-                <Title text={i18n.firmwareUpdate.texts.latestVersionInstalled} headingLevel={6} />
-                <Badge icon={<IconCheckmarkSm />} />
-              </>
-            ) : (
-              <>
-                <Title text={i18n.firmwareUpdate.texts.latestAvailableText} headingLevel={6} />
-                <Badge content={latestVersionAvailable} />
-              </>
-            )}
+
+            <Title text={`Update to the version`} headingLevel={6} />
+            <Dropdown
+              onSelect={value => send("CHANGEFW", { selected: parseInt(value) })}
+              value={selectedFirmware}
+              className={`custom-dropdown sm`}
+            >
+              <div>
+                <Dropdown.Toggle id="dropdown-custom">
+                  <div className="dropdownItemSelected">
+                    <div className="dropdownItem">{firmwareList[selectedFirmware].version}</div>
+                  </div>
+                </Dropdown.Toggle>
+                <Dropdown.Menu>
+                  {firmwareList.map((item, index) => (
+                    <Dropdown.Item
+                      eventKey={index}
+                      key={index}
+                      className={`${selectedFirmware == index ? "active" : ""}`}
+                      disabled={item.disabled}
+                    >
+                      <div className="dropdownInner">
+                        <div className="dropdownItem">{item.version}</div>
+                      </div>
+                    </Dropdown.Item>
+                  ))}
+                </Dropdown.Menu>
+              </div>
+            </Dropdown>
           </div>
         </div>
       </div>

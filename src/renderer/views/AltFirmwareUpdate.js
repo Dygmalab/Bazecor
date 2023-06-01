@@ -83,7 +83,7 @@ function AltFirmwareUpdate() {
       <Container fluid className={`firmware-update`}>
         <PageHeader text={i18n.app.menu.firmwareUpdate} />
         <div>
-          {loading ? (
+          {loading && context.stateblock < 2 ? (
             "loading"
           ) : (
             <FirmwareUpdatePanel
@@ -94,7 +94,8 @@ function AltFirmwareUpdate() {
               firmwareList={context.firmwareList}
               firmwareFilename={null}
               disclaimerCard={0}
-              selectedFirmware={context?.selectefirmware}
+              selectedFirmware={context.selectefirmware}
+              send={send}
             />
           )}
 
