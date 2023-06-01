@@ -21,8 +21,10 @@ import i18n from "../../i18n";
 
 import Title from "../../component/Title";
 import Badge from "../../component/Badge";
+import { IconEye } from "../../component/Icon";
 
 import Dropdown from "react-bootstrap/Dropdown";
+import { RegularButton } from "../../component/Button";
 
 const Style = Styled.div`
 margin-left:32px;
@@ -93,11 +95,25 @@ h6 {
   font-size: 0.75rem;
 }
 .badge {
-  padding: 8px 16px;
+  padding: 8px;
 }
 .dropdown-toggle.btn.btn-primary {
   margin-top: 0;
-  padding: 8px 16px;
+  padding: 8px 12px;
+  min-width: 142px;
+  &:after {
+    right: 8px;
+  }
+}
+.firmwareVersionContainer {
+  display: flex;
+  align-items: center;
+  grid-gap: 8px;
+  .btn-link {
+    padding: 4px;
+    border-radius: 4px;
+    color: ${({ theme }) => theme.colors.purple300}
+  }
 }
 `;
 const FirmwareVersionStatus = ({
@@ -109,6 +125,8 @@ const FirmwareVersionStatus = ({
   send
 }) => {
   const [loading, setLoading] = useState(true);
+  const [modalFirmwareDetails, setModalFirmwareDetails] = useState(false);
+
   useEffect(() => {
     if (selectedFirmware) {
       setLoading(false);
@@ -133,33 +151,44 @@ const FirmwareVersionStatus = ({
             </svg>
 
             <Title text={`Update to the version`} headingLevel={6} />
-            <Dropdown
-              onSelect={value => send("CHANGEFW", { selected: parseInt(value) })}
-              value={selectedFirmware}
-              className={`custom-dropdown sm`}
-            >
-              <div>
-                <Dropdown.Toggle id="dropdown-custom">
-                  <div className="dropdownItemSelected">
-                    <div className="dropdownItem">{firmwareList[selectedFirmware].version}</div>
-                  </div>
-                </Dropdown.Toggle>
-                <Dropdown.Menu>
-                  {firmwareList.map((item, index) => (
-                    <Dropdown.Item
-                      eventKey={index}
-                      key={index}
-                      className={`${selectedFirmware == index ? "active" : ""}`}
-                      disabled={item.disabled}
-                    >
-                      <div className="dropdownInner">
-                        <div className="dropdownItem">{item.version}</div>
-                      </div>
-                    </Dropdown.Item>
-                  ))}
-                </Dropdown.Menu>
-              </div>
-            </Dropdown>
+            <div className="firmwareVersionContainer">
+              <Dropdown
+                onSelect={value => send("CHANGEFW", { selected: parseInt(value) })}
+                value={selectedFirmware}
+                className={`custom-dropdown sm`}
+              >
+                <div>
+                  <Dropdown.Toggle id="dropdown-custom">
+                    <div className="dropdownItemSelected">
+                      <div className="dropdownItem">{firmwareList[selectedFirmware].version}</div>
+                    </div>
+                  </Dropdown.Toggle>
+                  <Dropdown.Menu>
+                    {firmwareList.map((item, index) => (
+                      <Dropdown.Item
+                        eventKey={index}
+                        key={index}
+                        className={`${selectedFirmware == index ? "active" : ""}`}
+                        disabled={item.disabled}
+                      >
+                        <div className="dropdownInner">
+                          <div className="dropdownItem">{item.version}</div>
+                        </div>
+                      </Dropdown.Item>
+                    ))}
+                  </Dropdown.Menu>
+                </div>
+              </Dropdown>
+
+              <RegularButton
+                className="flashingbutton nooutlined"
+                style="btn-link"
+                icoSVG={<IconEye />}
+                onClick={() => {
+                  console.log("Trigger");
+                }}
+              />
+            </div>
           </div>
         </div>
       </div>
