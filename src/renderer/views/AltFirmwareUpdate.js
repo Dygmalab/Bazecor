@@ -93,8 +93,10 @@ function AltFirmwareUpdate() {
               disclaimerCard={0}
               selectedFirmware={context.selectefirmware}
               send={FWSelectionSend}
+              onClick={() => FWSelectionSend("NEXT")}
             />
           )}
+          {loading && context.stateblock == 5 ? "loading" : "Ready to update"}
 
           <Button onClick={() => FWSelectionSend("RETRY")}>Retry when error</Button>
           <Button onClick={() => FWSelectionSend("NEXT")}>Next state</Button>

@@ -107,6 +107,7 @@
     "react-icons": "^4.2.0",
     "react-is": "^17.0.0",
     "react-localization": "^1.0.17",
+    "react-markdown": "^8.0.7",
     "react-range": "^1.8.12",
     "react-router-dom": "^5.2.0",
     "react-toastify": "^8.2.0",

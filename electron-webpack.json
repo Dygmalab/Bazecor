@@ -34,6 +34,7 @@
     "styled-components",
     "source-map-support",
     "react-bootstrap-range-slider",
+    "react-markdown",
     "xstate",
     "@xstate/react"
   ]

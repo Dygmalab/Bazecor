@@ -19,11 +19,16 @@ import React, { useState, useEffect } from "react";
 import Styled from "styled-components";
 import i18n from "../../i18n";
 
+import ReactMarkdown from "react-markdown";
+
 import Title from "../../component/Title";
 import Badge from "../../component/Badge";
 import { IconEye } from "../../component/Icon";
 
 import Dropdown from "react-bootstrap/Dropdown";
+import Modal from "react-bootstrap/Modal";
+import Spinner from "react-bootstrap/Spinner";
+
 import { RegularButton } from "../../component/Button";
 
 const Style = Styled.div`
@@ -115,6 +120,24 @@ h6 {
     color: ${({ theme }) => theme.colors.purple300}
   }
 }
+.firmwareModalContent {
+  color: ${({ theme }) => theme.colors.gray50}
+  h2, h3, h4, h5, h6 {
+    letter-spacing: -0.03em;
+  }
+  h2 {
+    font-size: 1.8rem;
+  }
+  h3 {
+    font-size: 1.4rem;
+  }
+  h4 {
+    font-size: 1.2rem;
+  }
+  ul, p {
+    font-size: 0.85rem;
+  }
+}
 `;
 const FirmwareVersionStatus = ({
   currentlyVersionRunning,
@@ -124,15 +147,7 @@ const FirmwareVersionStatus = ({
   selectedFirmware,
   send
 }) => {
-  const [loading, setLoading] = useState(true);
   const [modalFirmwareDetails, setModalFirmwareDetails] = useState(false);
-
-  useEffect(() => {
-    if (selectedFirmware) {
-      setLoading(false);
-    }
-    console.log("Context inside version status: ", selectedFirmware);
-  }, [selectedFirmware]);
 
   return (
     <Style>
@@ -185,13 +200,35 @@ const FirmwareVersionStatus = ({
                 style="btn-link"
                 icoSVG={<IconEye />}
                 onClick={() => {
-                  console.log("Trigger");
+                  setModalFirmwareDetails(true);
                 }}
               />
             </div>
           </div>
         </div>
       </div>
+      <Modal
+        size="lg"
+        show={modalFirmwareDetails}
+        onHide={() => setModalFirmwareDetails(false)}
+        aria-labelledby="contained-modal-title-vcenter"
+        centered
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>{firmwareList[selectedFirmware].version}</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <div className="firmwareModalContent">
+            {firmwareList[selectedFirmware].body ? (
+              <ReactMarkdown>{firmwareList[selectedFirmware].body}</ReactMarkdown>
+            ) : (
+              <div className="loading marginCenter">
+                <Spinner className="spinner-border" role="status" />
+              </div>
+            )}
+          </div>
+        </Modal.Body>
+      </Modal>
     </Style>
   );
 };

@@ -230,7 +230,7 @@ const FirmwareUpdatePanel = ({
                     className="flashingbutton nooutlined"
                     style="primary"
                     buttonText={i18n.firmwareUpdate.texts.letsStart}
-                    // onClick={onBackup}
+                    // onClick={onBackup}`
                   />
                 </div>
               </div>
@@ -280,7 +280,7 @@ const FirmwareUpdatePanel = ({
                       className="flashingbutton nooutlined"
                       style="primary"
                       buttonText={i18n.firmwareUpdate.flashing.button}
-                      // onClick={onClick}
+                      onClick={onClick}
                     />
                   )}
                   <div className="dropdownCustomFirmware">
