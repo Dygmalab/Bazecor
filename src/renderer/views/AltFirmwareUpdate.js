@@ -77,7 +77,10 @@ function AltFirmwareUpdate() {
         <PageHeader text={i18n.app.menu.firmwareUpdate} />
         <div>
           <Button onClick={rerunSM}>rerunSM</Button>
-          <Button onClick={() => send("CHECK")}>Check if sides are present, only for Defy</Button>
+          <Button onClick={() => send("CHECK")}>Check Defy Sides</Button>
+          <Button onClick={() => send("SKIP")}>Skip if raise</Button>
+          <Button onClick={() => send("RETRY")}>Retry when error</Button>
+          <Button onClick={() => send("NEXT")}>Next state</Button>
           <Card>{JSON.stringify(context)}</Card>
           <Dropdown
             onSelect={value => send("CHANGEFW", { selected: parseInt(value) })}

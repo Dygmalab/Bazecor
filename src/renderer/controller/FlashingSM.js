@@ -1,11 +1,8 @@
 import { createMachine, assign, raise } from "xstate";
 import { Octokit } from "@octokit/core";
+import axios from "axios";
 import SemVer from "semver";
 import Focus from "../../api/focus";
-
-const sidesReady = (context, event) => {
-  return context.sideLeftOk && context.sideRightOK;
-};
 
 const FocusAPIRead = async () => {
   let focus = new Focus();
@@ -64,6 +61,102 @@ const GitHubRead = async info => {
   return finalReleases;
 };
 
+const obtainFWFiles = async (type, url) => {
+  let response,
+    firmware = undefined;
+
+  if (type == "keyscanner.bin") {
+    response = await axios.request({
+      method: "GET",
+      url: url,
+      responseType: "arraybuffer",
+      reponseEncoding: "binary"
+    });
+    firmware = new Uint8Array(response.data);
+  }
+  if (type == "Wired_neuron.uf2") {
+    response = await axios.request({
+      method: "GET",
+      url: url,
+      responseType: "arraybuffer",
+      reponseEncoding: "binary"
+    });
+    firmware = response.data;
+  }
+  if (type == "Wireless_neuron.hex") {
+    response = await axios.request({
+      method: "GET",
+      url: url,
+      responseType: "text",
+      reponseEncoding: "utf8"
+    });
+    response = response.data.replace(/(?:\r\n|\r|\n)/g, "");
+    firmware = response.split(":");
+    firmware.splice(0, 1);
+  }
+  if (type == "firmware.hex") {
+    response = await axios.request({
+      method: "GET",
+      url: url,
+      responseType: "text",
+      reponseEncoding: "utf8"
+    });
+    response = response.data.replace(/(?:\r\n|\r|\n)/g, "");
+    firmware = response.split(":");
+    firmware.splice(0, 1);
+  }
+  // console.log(firmware);
+  return firmware;
+};
+
+const downloadFirmware = async (typeSelected, info, firmwareList, selectedFirmware) => {
+  let filename, filenameSides;
+  console.log(typeSelected, info, firmwareList, selectedFirmware);
+  try {
+    if (typeSelected == "default") {
+      if (info.product == "Raise") {
+        filename = await obtainFWFiles(
+          "firmware.hex",
+          firmwareList[selectedFirmware].assets.find(asset => {
+            return asset.name == "firmware.hex";
+          }).url
+        );
+      } else {
+        if (info.keyboardType == "wireless") {
+          filename = await obtainFWFiles(
+            "Wireless_neuron.hex",
+            firmwareList[selectedFirmware].assets.find(asset => {
+              return asset.name == "Wireless_neuron.hex";
+            }).url
+          );
+        } else {
+          filename = await obtainFWFiles(
+            "Wired_neuron.uf2",
+            firmwareList[selectedFirmware].assets.find(asset => {
+              return asset.name == "Wired_neuron.uf2";
+            }).url
+          );
+        }
+        filenameSides = await obtainFWFiles(
+          "keyscanner.bin",
+          firmwareList[selectedFirmware].assets.find(asset => {
+            return asset.name == "keyscanner.bin";
+          }).url
+        );
+      }
+    }
+  } catch (error) {
+    console.warn("error when retrieving data using axios!");
+    console.error(error);
+  }
+
+  return { fw: filename, fwSides: filenameSides };
+};
+
+const sidesReady = (context, event) => {
+  return context.sideLeftOk && context.sideRightOK;
+};
+
 const CheckFWVersion = async () => {
   return true;
 };
@@ -77,7 +170,7 @@ const GetRSideData = async () => {
 };
 
 const flashingSM = createMachine({
-  /** @xstate-layout N4IgpgJg5mDOIC5QDEA2BDAFrAlgOygAUAnAewGM5YA6ZAdQGUxUxyAXHUvagGVPQgARMADcclQejboAxBC5hq+EaQDWi5BQCusAIKEAkgCUwAgNoAGALqJQAB1K4OXWyAAeiAEwA2C9QsAHACsAJzengDM3t4hEZ6eADQgAJ6IcX4WACyZniEhAfkA7IVBEQC+ZUloWLgEJBRUtIzMrM7cfALCYhJSsmDEZMTUdhhsAGakxAC2tNp6hibm1q4OTpx4rh4IPhnBYZHRsfFJqQiZBf6FOaGZIeeZpd4VVRjY+ERklLA09Ews7OtePwIABxHBsTBaABG9DkCiUeBU6moYLYAAloZJpJYbEgQKtwetNohwgBGajBbwBCxBXyk7J5E4kiLk0kWUlBAIRWlBSIs54gapvOqfRq-FoArhAgSoyEwugyfqDYajCbTFHgjFQrHoHErRyElx4rZkim06m09kMkJMhAszLUYqFbmZQoBbylEI+AVC2ofBrfJp-VqAsboHCoLTEMAyIwAUQAKkYAJp6vEEtrEhAxclcixuzLeOKhd220khQrUL0M9mlAIFD0+15++pfH7Nf5taiwLTkNsyNP2A2Z42IEK86jnUmFUmkzyZcszwq26KVzyBCKFLJeoIWCIBJs1d6txp2aN2dDEKSAngMHAQMAAYUwrFUcLwimUakUILAbFv95gDqg74sORKjggc60tQnIRCy7JXFkASJCkiBun4u6ZDSpQRK6NIHpUgrNseoqBmeYAXleXYAQ+z6voqAyTCqUhqjMv7-neD7Acs6ZgUaoBbFB3gwVy8HTlh5woac4SeFWRZBM67JUr4hSHsK-ptsM56XteUpGJxT4vuQb7yB+CJIj+f76YB3G4kOaz8e4iCkt4HLUNydyFhyOQVrahR5JcyHhDOmSblyaktqRNDkZRuncNZtFGW+SpMSMLGTGxVkGbZ+oORsEEuW5HnZK5QQ+cuqEICU5Iyd4eGkhEYT5BFJEBtF2lUYCwbsF04hwAmpAAKp2BAUgxqZn6It+1B0cZ9AAGr9LgXAgRm4ECc5yF+ByhRFmEoR3NyK7IVWUTzkhXqeIUngtSKbVaRROldt1bC9V8A3DaNbAxoNhCCLoCZxqtfH5Rt2x7gEMHhKEERZGV7JSYgAQuVWyMVnO4mFqphG+q1mkxU9gIiOgqD3mNDDSGwOgyIQ8YMAwcaCMDeVZvO67UL4VJsqF+GkrayPCfk5ZsvE071iEt0aaeHVxdQYYRlGMbxkmqY8fZhqg05kExCEk6+GExQVv5M62rufjXW6zp1bhvLlDjxF3ZpYwYLAmB440ADu4ZsHGsDkDIcYMI+tOBwzTNq6BLMQVdWGTrtVt1eE+T8-WjqW658RxD4Tz20ejuNM76Cu+7gaF67Rg4FAmBsAZMgMINj6PqHzMa1msO+FWnKFpu-muRE-NbtQ64PHEUSBBYVKSyepcu27+cz0XmAV1XNeAQHRhGAA8kYLcjmD7d+OOATd4bfdltz-ixOOpSFl6uFT1FcuzyXNBl5gPBgGMq8PnXDdN-Tu91pazgmVGCFhwEFGHldIItoKyQydFkTwHJqTI1JA-e6b8X5P0Xh-L+tc4wb23oAxyWwQEOjNoEL0iCSj8yCDVWGcRbioNwjdXO6lp6v2fvPThi8AByYAoxcF-o3ZuEc1okLSHcSGrlzjW2pJ4TkMDKpsliJffch06HZ3QU7LhUsF6u34YIvA68t47zESDNuRZyRbnwtEGSAQKqnArLJM6Ki7GsJeHnPRNBoywDYJMMAPB0DJCWsI-+DBiGay2OuIIp14h5HkW6Is3gyx0N1qVfIDjGoenHNoxovj-HRiCSE4gsATFEPMVHMGroIhD1uEfZ0kQ2SOOco1WJQQFJYSugoq4FRCJ4FIA+eAeJcbcNyq3CCABaectppmZDyYGcUnYgHiKiV4TIK5amuhCNOL0sQvJXQWe2F6N5gRvSAr0cZe8tbXVtNkWJPhdoWHXDE+cEs2GRXukskMUoOignBHKegVygFbAeJWLajDrouQnhsyqLJpG0hjlyAoHSghHKDBKLs8tIzRmBRIhA1Itkzk3FEaIuQPS2jgrrGkeQGq+HhrI9F3zJTcB7H2KgeK1kEr3HHBqCck4UsqnY6gwtsiwwal3dFBNOqOVWVmEWusypUliFcechYUlwuiEPZCoQsh7h1nuKVMtqIGVmqoTl8r8yViVQUTcOQSoatOMSikcDxwPBpI1O2nj2GP2lbLBKhlXwWoKg8ckWcdngLgmyXCflQr+AsLEPc5Z5yzi9URLxHCHqxWepi85sAPojTGsGsGpJUEiqUkgq6FZNx+WpFWCNG5yyhDRR8rBfquzE1Jl9MAFMpA6GLVreIPgOZXAUruJ5NbKr+VqfkBSeQchj2ukax6MruDYsVgOwSZa2QuUrcbSd0l5yTnVQ8Uo-ksLvO9Z8nRi8X6bq8DhGC2QFFXRpN4YoSjpIBV2lyV0SD6zNvRZg7h1Avbgl9uQe92xOTkjKtcV9tIP380ao6RNVIkFbnXDnK9WDgPeOweXSu1cDJQdyOyScMcMYOLuIjAlE5LZ7DiNGzwBEcMgbw5mt+uDv5gCgyyccUM3R1luIpT9SNcJDzpXcEIE9gjnCA7ozjs9DFkE1nKiCuELgqO2THRqCjYH+SHnVZ5sR327n3Ap29IGUrED4yUB06H9xZGyT3Wh5J5wC2TWC8I6KCkBOKUtKDroyy3GEq5Io576SG3RWytsUGFJlkJZcWkyr8zVrthUIAA */
+  /** @xstate-layout N4IgpgJg5mDOIC5QDEA2BDAFrAlgOygAUAnAewGM5YA6ZAdQGUxUxyAXHUvagGVPQgARMADcclQejboAxBC5hq+EaQDWi5BQCusAIKEAkgCUwAgNoAGALqJQAB1K4OXWyAAeiAEwA2C9QsAHACsAJxBAIyengGeACwhAMwA7AA0IACeiN7eSdThSSFJngkh4SGeIRbeAL7VaWhYuAQkFFS0jMysztx8AsJiElKyYMRkxNR2GGwAZqTEALa02nqGJubWrg5OnHiuHgg+foGhEVEx8clpmQgJ4QHU3kHePrHZnvlJj7X1GNj4RGRKLAaPQmCx2DtePwIABxHBsTBaABG9DkCiUeBU6mocLYAAlkZJpJYbEgQFt4Ts9ll3tRgjkgkkAiUnt5wlcssFqEkgiVYoykrEkuFIt8QA0-s1AW1QZ0IVwoQJcYiUXQZCMxhMprMFjj4QSkUT0CTNo5KS4yftnuE6U8eUyWdl2RlEK8-N5mb4Et4ShZ3iExRKmgDWsD2mCupDYHK2MgcAsAO7oYhgGQAOQAogANAAqJrJFO61IQIW8IQeYU8gtingigWd1ySJW53li3vCQo7FiCgd+wZaQJBHXB3Wo0ZHccTydTAGE8bo0zCM-R8-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-opebU6AsVPTSYTaUiu10U7nyNeV9-Jymsj9PkbyRtj2iNwQjW6G9rPvXKk82zjnbhMJCNrG0flbxRxDi22+XbRV+YzrwLOCNgtVwTgg4KFUdkxEzYgSo7pGHLJiEEQIRaUv-rSxdTO+Mstexrb7EoNomEJzbAeeB0XQkJ3uEyd4hUfSkVCL5nB6XX79zHpPaes9ss7zZGOyKmyyzNPpqWZDFxgjbkPTUMzoL6uXXwYQr+YASFSB0ItxAkXcj5RIlUYOxXuHXhbIChjTI-SYcreZ47CSTKcbADdg4nwbRClWwUdbIUSrlF1oxqs3l0W7ePeS+JIPC3MnAe8Vk3ksJ6zWui3WzwPSFG8naZLWGJXiv-dYtgtjyAY95DacoUdsh45k8OlyHYdGFBqWpzSNZUc0-M90wZ2Ss4Y+wuA-k14tmlO9Ni+43kyblB9DWYowuoXU6hTCi5wOWvrpKUDfw-zGQPirFHcOTDymkT2+8Io9otfJP-ZKmlZB+2KpQvyYom0ihx1CExz5Ud3PbiBsUeIgpnc9PMxqOYIOIe8pbSHWOC18IihxSFYoV5qwPgfMeyNVqY3rwT5w1ZzIEHbgqoEtku8-THsU4OEHjIFLvGbD4UsS1QgVAO7UIAA */
   predictableActionArguments: true,
   id: "FlahsingProcess",
   initial: "FWSelection",
@@ -94,6 +187,8 @@ const flashingSM = createMachine({
     sideRightBL: false,
     version: {},
     firmwareList: [],
+    firmwares: [],
+    typeSelected: "default",
     selectefirmware: 0
   },
   states: {
@@ -103,10 +198,7 @@ const flashingSM = createMachine({
         (context, event) => {
           // This will error at .flag
           console.log("Initial state running!");
-        },
-        assign({
-          stateblock: (context, event) => context.stateblock + 1
-        })
+        }
       ],
 
       states: {
@@ -123,11 +215,16 @@ const flashingSM = createMachine({
             src: FocusAPIRead,
             onDone: {
               target: "LoadGithubFW",
-              actions: [assign({ device: (context, event) => event.data })]
+              actions: [
+                assign({ device: (context, event) => event.data }),
+                assign({
+                  stateblock: (context, event) => context.stateblock + 1
+                })
+              ]
             },
             onError: {
               target: "failure",
-              actions: assign({ error: (context, event) => event.data })
+              actions: assign({ error: (context, event) => event })
             }
           }
         },
@@ -143,12 +240,65 @@ const flashingSM = createMachine({
             id: "GitHubData",
             src: (context, data) => GitHubRead(context.device.info),
             onDone: {
-              target: "success",
-              actions: [assign({ firmwareList: (context, event) => event.data })]
+              target: "selectFirmware",
+              actions: [
+                assign({ firmwareList: (context, event) => event.data }),
+                assign({
+                  stateblock: (context, event) => context.stateblock + 1
+                })
+              ]
             },
             onError: {
               target: "failure",
-              actions: assign({ error: (context, event) => event.data })
+              actions: assign({ error: (context, event) => event })
+            }
+          }
+        },
+        selectFirmware: {
+          id: "selectFirmware",
+          entry: [
+            (context, event) => {
+              // This will error at .flag
+              console.log("select Firmware!");
+            },
+            assign({
+              stateblock: (context, event) => context.stateblock + 1
+            })
+          ],
+          on: {
+            NEXT: ["loadingFWFiles"],
+            CHANGEFW: {
+              actions: [assign({ selectefirmware: (context, event) => event.selected })]
+            }
+          }
+        },
+        loadingFWFiles: {
+          id: "loadingFWFiles",
+          entry: [
+            (context, event) => {
+              // This will error at .flag
+              console.log("Download Firmware!");
+            },
+            assign({
+              stateblock: (context, event) => context.stateblock + 1
+            })
+          ],
+          invoke: {
+            id: "donwloadFirmware",
+            src: (context, data) =>
+              downloadFirmware(context.typeSelected, context.device.info, context.firmwareList, context.selectefirmware),
+            onDone: {
+              target: "success",
+              actions: [
+                assign({ firmwares: (context, event) => event.data }),
+                assign({
+                  stateblock: (context, event) => context.stateblock + 1
+                })
+              ]
+            },
+            onError: {
+              target: "failure",
+              actions: assign({ error: (context, event) => event })
             }
           }
         },
@@ -158,39 +308,31 @@ const flashingSM = createMachine({
           }
         },
         success: {
-          always: "#FlahsingProcess.preparation"
+          always: "#FlahsingProcess.deviceChecks"
         }
       }
     },
-    preparation: {
-      id: "preparation",
-      initial: "selectFirmware",
+    deviceChecks: {
+      id: "deviceChecks",
+      initial: "CheckDecision",
       entry: [
         (context, event) => {
           // This will error at .flag
-          console.log("Preparation!");
-        },
-        assign({
-          stateblock: (context, event) => context.stateblock + 1
-        })
+          console.log("deviceChecks!");
+        }
       ],
       states: {
-        selectFirmware: {
-          id: "selectFirmware",
+        CheckDecision: {
+          id: "CheckDecision",
           entry: [
             (context, event) => {
               // This will error at .flag
-              console.log("select Firmware!");
-              if (context.device.info.product == "Raise") raise("SKIP");
+              console.log("Check decision!");
             }
           ],
           on: {
-            //Esc key listener will send this event
             CHECK: "LSideCheck",
-            SKIP: "SelectDevicesToUpdate",
-            CHANGEFW: {
-              actions: [assign({ selectefirmware: (context, event) => event.selected })]
-            }
+            SKIP: "SelectDevicesToUpdate"
           }
         },
         LSideCheck: {
@@ -208,7 +350,6 @@ const flashingSM = createMachine({
             onError: "failure"
           }
         },
-
         RSideCheck: {
           id: "RSideCheck",
           entry: [
@@ -264,7 +405,7 @@ const flashingSM = createMachine({
         },
         failure: {
           on: {
-            RETRY: "LSideCheck"
+            RETRY: "CheckDecision"
           }
         }
       }
@@ -296,12 +437,14 @@ const flashingSM = createMachine({
               //enable listener for esc key
               //if per conditions it does not have to be enabled, skip it.
             },
-            assign({ stateblock: (context, event) => context.stateblock + 1 })
+            assign({ stateblock: (context, event) => context.stateblock + 1 }),
+            "addEventListener"
           ],
           exit: [
             (context, event) => {
               //disable listener for esc key
-            }
+            },
+            "removeEventListener"
           ]
         },
         flashRightSide: {
