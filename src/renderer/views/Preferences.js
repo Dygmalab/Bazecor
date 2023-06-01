@@ -548,7 +548,7 @@ class Preferences extends React.Component {
                     devToolsSwitch={devToolsSwitch}
                     verboseSwitch={verboseSwitch}
                     onlyCustomSwitch={onlyCustomSwitch}
-                    pairingButton={pairingButton}
+                    pairingButton={this.state.wireless ? pairingButton : <></>}
                     connected={connected}
                   />
                 </Col>
