@@ -62,6 +62,9 @@ height: 100%;
   height: 100%;
   display: flex;
   --color: 255, 159, 67;
+  &.isUpdated {
+    --color: 0, 206, 201;
+  }
 }
 .neuronDefyContainer {
   width: 154px;
