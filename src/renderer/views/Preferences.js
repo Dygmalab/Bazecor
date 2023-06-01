@@ -58,7 +58,7 @@ class Preferences extends React.Component {
       keymap: {
         custom: [],
         default: [],
-        onlyCustom: false
+        onlyCustom: true
       },
       ledBrightness: 255,
       defaultLayer: 126,
@@ -134,6 +134,9 @@ class Preferences extends React.Component {
     });
     await focus.command("keymap").then(keymap => {
       this.kbData.keymap = keymap;
+    });
+    await focus.command("keymap.onlyCustom").then(onlyCustom => {
+      this.kbData.keymap.onlyCustom = onlyCustom;
     });
     await focus.command("led.brightness").then(brightness => {
       brightness = brightness ? parseInt(brightness) : -1;
@@ -432,6 +435,7 @@ class Preferences extends React.Component {
   toggleDevTools = async event => {
     this.setState({ devTools: event.target.checked });
     await ipcRenderer.invoke("manage-devtools", event.target.checked);
+    this.props.startContext();
   };
 
   // THEME MODE FUNCTIONS
@@ -444,6 +448,14 @@ class Preferences extends React.Component {
     this.setState({ verboseFocus: event.target.checked });
     let focus = new Focus();
     focus.debug = event.target.checked;
+  };
+
+  toggleOnlyCustom = event => {
+    let newkbData = this.kbData;
+    newkbData.keymap.onlyCustom = event.target.checked;
+    newkbData.modified = true;
+    this.setState({ modified: true });
+    this.props.startContext();
   };
 
   // NEURON FUNCTIONS
@@ -485,6 +497,7 @@ class Preferences extends React.Component {
     const { defaultLayer } = this.kbData;
     const devToolsSwitch = <Form.Check type="switch" checked={devTools} onChange={this.toggleDevTools} />;
     const verboseSwitch = <Form.Check type="switch" checked={verboseFocus} onChange={this.toggleVerboseFocus} />;
+    const onlyCustomSwitch = <Form.Check type="switch" checked={kbData.keymap.onlyCustom} onChange={this.toggleOnlyCustom} />;
     // console.log("CHECKING STATUS MOD", modified);
     // console.log("CHECKING STATUS CTX", inContext);
 
@@ -523,7 +536,12 @@ class Preferences extends React.Component {
                     deleteNeuron={this.deleteNeuron}
                   />
                   <KeyboardSettings kbData={kbData} setKbData={this.setKbData} connected={connected} />
-                  <AdvancedSettings devToolsSwitch={devToolsSwitch} verboseSwitch={verboseSwitch} connected={connected} />
+                  <AdvancedSettings
+                    devToolsSwitch={devToolsSwitch}
+                    verboseSwitch={verboseSwitch}
+                    onlyCustomSwitch={onlyCustomSwitch}
+                    connected={connected}
+                  />
                 </Col>
               </Row>
             </Container>
