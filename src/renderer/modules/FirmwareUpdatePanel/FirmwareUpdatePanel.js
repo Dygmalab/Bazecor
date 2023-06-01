@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import Styled from "styled-components";
 import i18n from "../../i18n";
@@ -170,6 +170,8 @@ width: 100%;
  */
 
 const FirmwareUpdatePanel = ({
+  context,
+  device,
   currentlyVersionRunning,
   latestVersionAvailable,
   onClick,
@@ -178,7 +180,10 @@ const FirmwareUpdatePanel = ({
   firmwareFilename,
   disclaimerCard,
   onCancelDialog,
-  onBackup
+  onBackup,
+  firmwareList,
+  selectedFirmware,
+  send
 }) => {
   // production
   const isUpdated = currentlyVersionRunning === latestVersionAvailable ? true : false;
@@ -215,7 +220,7 @@ const FirmwareUpdatePanel = ({
                     className="flashingbutton nooutlined"
                     style="outline"
                     buttonText={i18n.firmwareUpdate.texts.backwds}
-                    onClick={onCancelDialog}
+                    // onClick={onCancelDialog}
                   />
                 </div>
               </div>
@@ -225,7 +230,7 @@ const FirmwareUpdatePanel = ({
                     className="flashingbutton nooutlined"
                     style="primary"
                     buttonText={i18n.firmwareUpdate.texts.letsStart}
-                    onClick={onBackup}
+                    // onClick={onBackup}
                   />
                 </div>
               </div>
@@ -247,7 +252,7 @@ const FirmwareUpdatePanel = ({
                 </div>
               </div>
               <div className="firmware-sidebar borderRightTopRadius">
-                <FirmwareNeuronStatus isUpdated={isUpdated} />
+                <FirmwareNeuronStatus isUpdated={isUpdated} deviceProduct={device?.info?.product} />
               </div>
             </div>
             <div className="firmware-row">
@@ -256,6 +261,9 @@ const FirmwareUpdatePanel = ({
                   currentlyVersionRunning={currentlyVersionRunning}
                   latestVersionAvailable={latestVersionAvailable}
                   isUpdated={isUpdated}
+                  firmwareList={firmwareList}
+                  selectedFirmware={selectedFirmware}
+                  send={send}
                 />
               </div>
               <div className="firmware-sidebar borderRightBottomRadius">
@@ -265,22 +273,22 @@ const FirmwareUpdatePanel = ({
                       className="flashingbutton nooutlined"
                       style="outline"
                       buttonText={i18n.firmwareUpdate.flashing.buttonUpdated}
-                      onClick={onClick}
+                      // onClick={onClick}
                     />
                   ) : (
                     <RegularButton
                       className="flashingbutton nooutlined"
                       style="primary"
                       buttonText={i18n.firmwareUpdate.flashing.button}
-                      onClick={onClick}
+                      // onClick={onClick}
                     />
                   )}
                   <div className="dropdownCustomFirmware">
-                    <FirmwareAdvancedOptions
+                    {/* <FirmwareAdvancedOptions
                       firmwareFilename={firmwareFilename}
                       selectFirmware={selectFirmware}
                       selectExperimental={selectExperimental}
-                    />
+                    /> */}
                   </div>
                 </div>
               </div>
@@ -293,15 +301,15 @@ const FirmwareUpdatePanel = ({
   );
 };
 
-FirmwareUpdatePanel.propTypes = {
-  currentlyVersionRunning: PropTypes.string,
-  latestVersionAvailable: PropTypes.string.isRequired,
-  onClick: PropTypes.func.isRequired,
-  selectFirmware: PropTypes.func.isRequired,
-  onCancelDialog: PropTypes.func.isRequired,
-  onBackup: PropTypes.func.isRequired,
-  firmwareFilename: PropTypes.string,
-  disclaimerCard: PropTypes.number
-};
+// FirmwareUpdatePanel.propTypes = {
+//   currentlyVersionRunning: PropTypes.string,
+//   latestVersionAvailable: PropTypes.string.isRequired,
+//   onClick: PropTypes.func.isRequired,
+//   selectFirmware: PropTypes.func.isRequired,
+//   onCancelDialog: PropTypes.func.isRequired,
+//   onBackup: PropTypes.func.isRequired,
+//   firmwareFilename: PropTypes.string,
+//   disclaimerCard: PropTypes.number
+// };
 
 export default FirmwareUpdatePanel;
