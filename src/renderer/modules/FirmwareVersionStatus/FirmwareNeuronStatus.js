@@ -65,6 +65,9 @@ height: 100%;
   &.isUpdated {
     --color: 0, 206, 201;
   }
+  &.waiting {
+    --color: 108, 92, 231;
+  }
 }
 .neuronDefyContainer {
   width: 154px;
@@ -109,14 +112,14 @@ height: 100%;
   }
 }
 `;
-const FirmwareNeuronStatus = ({ isUpdated, deviceProduct }) => {
+const FirmwareNeuronStatus = ({ isUpdated, status, deviceProduct, keyboardType }) => {
   let connectionColorMatrixSucess = useTheme().styles.firmwareUpdatePanel.neuronLightMatrixSuccess;
   let connectionColorMatrixWarning = useTheme().styles.firmwareUpdatePanel.neuronLightMatrixWarning;
   console.log("Device name", deviceProduct);
   return (
     <Style>
-      {deviceProduct == "defy" ? (
-        <div className={`neuronDefyWrapper ${isUpdated && "isUpdated"}`}>
+      {deviceProduct == "Defy" && keyboardType == "wireless" ? (
+        <div className={`neuronDefyWrapper ${isUpdated && "isUpdated"} ${status ? status : ""}`}>
           <div className="neuronDefyContainer">
             <svg
               width="166"

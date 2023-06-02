@@ -206,11 +206,19 @@ const FirmwareUpdatePanel = ({
                     className={"disclaimerContent"}
                     dangerouslySetInnerHTML={{ __html: i18n.firmwareUpdate.texts.disclaimerContent }}
                   />
-                  <Callout content={i18n.firmwareUpdate.texts.calloutIntroText} className="mt-lg" size="md" />
+                  <Callout
+                    content={i18n.firmwareUpdate.texts.calloutIntroText}
+                    className="mt-lg"
+                    size="md"
+                    hasVideo={device.info.product == "Raise" ? true : true}
+                    media={`aVu7EL4LXMI`}
+                    videoTitle="How to update the Software & Firmware of your Dygma keyboard"
+                    videoDuration={device.info.product == "Raise" ? "2:58" : null}
+                  />
                 </div>
               </div>
               <div className="firmware-sidebar borderRightTopRadius">
-                <FirmwareNeuronStatus isUpdated={isUpdated} deviceProduct={device.info.product} />
+                <FirmwareNeuronStatus isUpdated={isUpdated} status="waiting" deviceProduct="Defy" keyboardType="wireless" />
               </div>
             </div>
             <div className="firmware-row">
@@ -260,7 +268,8 @@ const FirmwareUpdatePanel = ({
                 </div>
               </div>
               <div className="firmware-sidebar borderRightTopRadius">
-                <FirmwareNeuronStatus isUpdated={isUpdated} deviceProduct={device.info.product} />
+                {/* <FirmwareNeuronStatus isUpdated={isUpdated} deviceProduct={device.info.product} keyboardType={device.info.keyboardType} /> */}
+                <FirmwareNeuronStatus isUpdated={isUpdated} deviceProduct="Defy" keyboardType="wireless" />
               </div>
             </div>
             <div className="firmware-row">

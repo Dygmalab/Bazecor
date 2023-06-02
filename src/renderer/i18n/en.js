@@ -640,7 +640,7 @@ const English = {
       advUsersText3: ", this update will overwrite it.",
       disclaimerTitle: "Start update process",
       disclaimerContent:
-        "<strong>Before the update the Neuron will backup your layers and settings after that the update process will begin automatically.</strong> During the update, Neuron will pulse a blue pattern followed by a flash of multiple colors for a few seconds.",
+        "<strong>Before the update the Neuron will backup your layers and settings after that the update process will begin automatically.</strong>",
       disclaimerCard3: "Click Next to backup your layers and settings, and start the firmware update process.",
       flashCardTitle1: "Press and hold the top left key to start the firmware update.",
       flashCardTitle2: "Don't release the key until the process finishes.",

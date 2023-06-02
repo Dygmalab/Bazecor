@@ -8,6 +8,7 @@ import Styled from "styled-components";
 import Container from "react-bootstrap/Container";
 import Card from "react-bootstrap/Card";
 import Dropdown from "react-bootstrap/Dropdown";
+import Spinner from "react-bootstrap/Spinner";
 import Button from "react-bootstrap/Button";
 
 // Extra components
@@ -80,9 +81,14 @@ function AltFirmwareUpdate() {
       <Container fluid className={`firmware-update`}>
         <PageHeader text={i18n.app.menu.firmwareUpdate} />
         <div>
-          {loading && context.stateblock < 2 ? (
-            "loading"
+          {context.stateblock < 2 || context.stateblock == 4 ? (
+            <div className="loading marginCenter">
+              <Spinner className="spinner-border" role="status" />
+            </div>
           ) : (
+            ""
+          )}
+          {context.stateblock == 3 || context.stateblock == 5 ? (
             <FirmwareUpdatePanel
               content={context}
               device={context.device}
@@ -90,20 +96,21 @@ function AltFirmwareUpdate() {
               latestVersionAvailable={context.firmwareList[0].version}
               firmwareList={context.firmwareList}
               firmwareFilename={null}
-              disclaimerCard={0}
+              disclaimerCard={context.stateblock == 3 ? 0 : 1}
               selectedFirmware={context.selectefirmware}
               send={FWSelectionSend}
               onClick={() => FWSelectionSend("NEXT")}
             />
+          ) : (
+            ""
           )}
-          {loading && context.stateblock == 5 ? "loading" : "Ready to update"}
 
           <Button onClick={() => FWSelectionSend("RETRY")}>Retry when error</Button>
           <Button onClick={() => FWSelectionSend("NEXT")}>Next state</Button>
           <Button onClick={() => DeviceChecksSend("START")}>Start Checks</Button>
           <Button onClick={() => DeviceChecksSend("SKIP")}>Skip if raise</Button>
           <Button onClick={() => DeviceChecksSend("CHECK")}>Check Defy Sides</Button>
-          <Card>{JSON.stringify(context)}</Card>
+          <Card style={{ maxWidth: "1080px" }}>{JSON.stringify(context)}</Card>
         </div>
       </Container>
     </Styles>
