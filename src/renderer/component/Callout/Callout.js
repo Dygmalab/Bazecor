@@ -15,9 +15,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React from "react";
+import React, { useState } from "react";
 import PropTypes from "prop-types";
 import Styled from "styled-components";
+
+import Modal from "react-bootstrap/Modal";
+import Spinner from "react-bootstrap/Spinner";
 
 const Style = Styled.div`	
 &.mt-xs {
@@ -90,17 +93,38 @@ const Style = Styled.div`
     right: -18px;
 	.playCounterInner {
 		display: flex;
+		position: relative;
 		align-items: center;
 		grid-gap: 4px;
 		padding: 2px;
 		border-radius: 3px;
 		background: rgba(107, 119, 148, 0.5);
 		backdrop-filter: blur(3px);
+		overflow: hidden;
+	}
+	.playCounterInner:before {
+		content: "";
+		position: absolute;
+		width: 100%;
+		height: 100%;
+		top: 0;
+		left: 0;
+		background: ${({ theme }) => theme.colors.gradient};
+		background-size: 300%;
+		opacity: 0;
+		transition: 250ms opacity ease-in-out;
+	}
+	.playCounterInner:hover {
+		cursor: pointer;
+		&:before {
+			opacity: 1;
+		}
 	}
 	.playCounterIcon {
 		align-self: center;
 		line-height: 1;
 		padding: 0 3px 2px 6px;
+		position: relative;
 	}
 	.playCounterTimer {
 		background: rgba(107, 119, 148, 0.5);
@@ -129,15 +153,12 @@ const Style = Styled.div`
  * @returns {<Callout>} Callout component.
  */
 
-const Callout = ({ content, media, size, className, maxWidth, hasVideo, videoDuration }) => {
+const Callout = ({ content, media, size, className, maxWidth, hasVideo, videoDuration, videoTitle }) => {
   let maxStyle = { maxWidth: "auto" };
   if (maxWidth) {
     maxStyle = { maxWidth: `${maxWidth}px` };
   }
-  console.log("Content: ", content);
-  console.log("Media: ", media);
-  console.log("hasVideo: ", hasVideo);
-  console.log("videoDuration: ", videoDuration);
+  const [modalCallOut, setModalCallOut] = useState(false);
 
   return (
     <Style className={className}>
@@ -155,7 +176,7 @@ const Callout = ({ content, media, size, className, maxWidth, hasVideo, videoDur
           <span dangerouslySetInnerHTML={{ __html: content }} />
         </div>
         {hasVideo && media ? (
-          <div className="playCounter">
+          <div className="playCounter" onClick={() => setModalCallOut(true)}>
             <div className="playCounterInner">
               <div className="playCounterIcon">
                 <svg width="9" height="12" viewBox="0 0 9 12" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -172,6 +193,38 @@ const Callout = ({ content, media, size, className, maxWidth, hasVideo, videoDur
           ""
         )}
       </div>
+
+      {hasVideo && media ? (
+        <Modal
+          size="lg"
+          show={modalCallOut}
+          onHide={() => setModalCallOut(false)}
+          aria-labelledby="contained-modal-title-vcenter"
+          centered
+        >
+          <Modal.Header closeButton>
+            <Modal.Title>{videoTitle}</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <div className="modalContent">
+              <div className="embed-responsive embed-responsive-16by9">
+                <iframe
+                  className="embed-responsive-item"
+                  width="560"
+                  height="315"
+                  src={`https://www.youtube.com/embed/${media}`}
+                  title={videoTitle}
+                  frameBorder="0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                  allowFullScreen
+                ></iframe>
+              </div>
+            </div>
+          </Modal.Body>
+        </Modal>
+      ) : (
+        ""
+      )}
     </Style>
   );
 };

@@ -253,7 +253,8 @@ const FirmwareUpdatePanel = ({
                     className="mt-lg"
                     size="md"
                     hasVideo={device.info.product == "Raise" ? true : true}
-                    media={`https://www.youtube.com/watch?v=aVu7EL4LXMI`}
+                    media={`aVu7EL4LXMI`}
+                    videoTitle="How to update the Software & Firmware of your Dygma keyboard"
                     videoDuration={device.info.product == "Raise" ? "2:58" : null}
                   />
                 </div>

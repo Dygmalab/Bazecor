@@ -324,6 +324,11 @@ svg text{
   color: #fff;
   background: ${({ theme }) => theme.styles.button.primary.backgroundColor};
   position: relative;
+  background-size: 300%;
+  transition: background-position .3s ease-in-out;
+  &:hover {
+    background-position: right;
+  }
 }
 .button.primary[disabled] {
   background: ${({ theme }) => theme.styles.button.primary.disabledBackgroundColor};
@@ -401,6 +406,10 @@ svg text{
   bottom: -5px;
   filter: blur(15px);
   width: 100px;
+}
+
+.button.primary:not([disabled]) .buttonFX {
+  display: none;
 }
 .btn-primary.button-config,
 .button-config {
