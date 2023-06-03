@@ -154,6 +154,9 @@ class KeymapDB {
     this.keymapCodeTable = [];
     //create variable that get language from the local storage
     this.language = store.get("settings.language");
+    if (this.language == "finnish") {
+      this.language = "swedish";
+    }
     //Modify our baseKeyCodeTable, depending on the language selected by the static methods and by inside function newLanguageLayout
     baseKeyCodeTable = KeymapDB.updateBaseKeyCode();
     const keyCodeTableWithModifiers =
@@ -336,6 +339,9 @@ class KeymapDB {
 
   static updateBaseKeyCode() {
     this.language = store.get("settings.language") || "english";
+    if (this.language == "finnish") {
+      this.language = "swedish";
+    }
     //Checking language in the cache
     if (map.has(this.language)) {
       //Return language layout from the cache
