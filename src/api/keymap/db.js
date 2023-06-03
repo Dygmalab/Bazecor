@@ -54,6 +54,9 @@ import nordic, { nordicModifiedTables } from "./languages/nordic/nordic";
 // Swedish - is an Array of objects of values that have to be modified
 import swedish, { swedishModifiedTables } from "./languages/swedish/swedish";
 
+// Danish - is an Array of objects of values that have to be modified
+import danish, { danishModifiedTables } from "./languages/danish/danish";
+
 // Japanese - is an Array of objects of values that have to be modified
 import japanese, { japaneseModifiedTables } from "./languages/japanese/japanese";
 
@@ -105,6 +108,7 @@ const supportModifiedTables = {
   french: frenchModifiedTables,
   nordic: nordicModifiedTables,
   swedish: swedishModifiedTables,
+  danish: danishModifiedTables,
   japanese: japaneseModifiedTables,
   swissGerman: swissGermanModifiedTables
 };
@@ -131,6 +135,7 @@ const languagesDB = {
   french,
   nordic,
   swedish,
+  danish,
   japanese,
   swissGerman
 };
@@ -144,7 +149,7 @@ class KeymapDB {
     this.keymapCodeTable = [];
     //create variable that get language from the local storage
     this.language = store.get("settings.language");
-    if (this.language == "danish" || this.language == "norwegian" || this.language == "icelandic") {
+    if (this.language == "norwegian" || this.language == "icelandic") {
       this.language = "nordic";
     }
     //Modify our baseKeyCodeTable, depending on the language selected by the static methods and by inside function newLanguageLayout
@@ -329,7 +334,7 @@ class KeymapDB {
 
   static updateBaseKeyCode() {
     this.language = store.get("settings.language") || "english";
-    if (this.language == "danish" || this.language == "norwegian" || this.language == "icelandic") {
+    if (this.language == "norwegian" || this.language == "icelandic") {
       this.language = "nordic";
     }
     //Checking language in the cache
