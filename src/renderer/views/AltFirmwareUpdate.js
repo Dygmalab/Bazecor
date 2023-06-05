@@ -7,6 +7,7 @@ import Styled from "styled-components";
 import Container from "react-bootstrap/Container";
 import Card from "react-bootstrap/Card";
 import Dropdown from "react-bootstrap/Dropdown";
+import Spinner from "react-bootstrap/Spinner";
 import Button from "react-bootstrap/Button";
 
 // Extra components
@@ -73,7 +74,7 @@ function AltFirmwareUpdate() {
           <Button onClick={() => DeviceChecksSend("START")}>Start Checks</Button>
           <Button onClick={() => DeviceChecksSend("SKIP")}>Skip if raise</Button>
           <Button onClick={() => DeviceChecksSend("CHECK")}>Check Defy Sides</Button>
-          <Card>{JSON.stringify(DeviceChecksState.context)}</Card>
+          <Card style={{ maxWidth: "1080px" }}>{JSON.stringify(DeviceChecksState.context)}</Card>
         </div>
       </Container>
     </Styles>

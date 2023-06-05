@@ -29,6 +29,7 @@ import FWSelection from "../../controller/FlashingSM/FWSelection";
 import Title from "../../component/Title";
 import Callout from "../../component/Callout";
 import { RegularButton } from "../../component/Button";
+import Spinner from "react-bootstrap/Spinner";
 
 // Visual modules
 import WhatsNew from "../WhatsNew";
@@ -183,7 +184,9 @@ const FirmwareUpdatePanel = ({ disclaimerCard }) => {
   return (
     <Style>
       {loading && state.context.stateblock < 2 ? (
-        "loading"
+        <div className="loading marginCenter">
+          <Spinner className="spinner-border" role="status" />
+        </div>
       ) : (
         <>
           {disclaimerCard ? (
@@ -196,11 +199,24 @@ const FirmwareUpdatePanel = ({ disclaimerCard }) => {
                       className={"disclaimerContent"}
                       dangerouslySetInnerHTML={{ __html: i18n.firmwareUpdate.texts.disclaimerContent }}
                     />
-                    <Callout content={i18n.firmwareUpdate.texts.calloutIntroText} className="mt-lg" size="md" />
+                    <Callout
+                      content={i18n.firmwareUpdate.texts.calloutIntroText}
+                      className="mt-lg"
+                      size="md"
+                      hasVideo={state.context.device.info.product == "Raise" ? true : true}
+                      media={`aVu7EL4LXMI`}
+                      videoTitle="How to update the Software & Firmware of your Dygma keyboard"
+                      videoDuration={state.context.device.info.product == "Raise" ? "2:58" : null}
+                    />
                   </div>
                 </div>
                 <div className="firmware-sidebar borderRightTopRadius">
-                  <FirmwareNeuronStatus isUpdated={state.context.isUpdated} deviceProduct={state.context.device.info.product} />
+                  <FirmwareNeuronStatus
+                    isUpdated={state.context.isUpdated}
+                    status="waiting"
+                    deviceProduct="Defy"
+                    keyboardType="wireless"
+                  />
                 </div>
               </div>
               <div className="firmware-row">
@@ -210,7 +226,7 @@ const FirmwareUpdatePanel = ({ disclaimerCard }) => {
                       className="flashingbutton nooutlined"
                       style="outline"
                       buttonText={i18n.firmwareUpdate.texts.backwds}
-                      // onClick={onCancelDialog} No longer necessary to leave this view when on error, just retry
+                      // onClick={onCancelDialog}
                     />
                   </div>
                 </div>
@@ -245,13 +261,15 @@ const FirmwareUpdatePanel = ({ disclaimerCard }) => {
                       className="mt-lg"
                       size="md"
                       hasVideo={state.context.device.info.product == "Raise" ? true : true}
-                      media={`https://www.youtube.com/watch?v=aVu7EL4LXMI`}
+                      media={`aVu7EL4LXMI`}
+                      videoTitle="How to update the Software & Firmware of your Dygma keyboard"
                       videoDuration={state.context.device.info.product == "Raise" ? "2:58" : null}
                     />
                   </div>
                 </div>
                 <div className="firmware-sidebar borderRightTopRadius">
-                  <FirmwareNeuronStatus isUpdated={state.context.isUpdated} deviceProduct={state.context.device.info.product} />
+                  {/* <FirmwareNeuronStatus isUpdated={isUpdated} deviceProduct={device.info.product} keyboardType={device.info.keyboardType} /> */}
+                  <FirmwareNeuronStatus isUpdated={state.context.isUpdated} deviceProduct="Defy" keyboardType="wireless" />
                 </div>
               </div>
               <div className="firmware-row">
