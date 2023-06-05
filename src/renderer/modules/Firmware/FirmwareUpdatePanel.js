@@ -31,16 +31,7 @@ import Callout from "../../component/Callout";
 import { RegularButton } from "../../component/Button";
 
 // Visual modules
-import WhatsNew from "../WhatsNew";
-import {
-  FirmwareUpdateProcess,
-  FirmwareAdvancedOptions,
-  FirmwareNeuronStatus,
-  FirmwareVersionStatus,
-  FirmwareProgressStatus,
-  FirmwareImageHelp,
-  FirmwareNeuronHelp
-} from "../Firmware";
+import { FirmwareNeuronStatus, FirmwareVersionStatus } from "../Firmware";
 
 const Style = Styled.div`
 width: 100%;

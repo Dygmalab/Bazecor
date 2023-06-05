@@ -21,7 +21,8 @@ import {
   FirmwareErrorPanel,
   FirmwareCheckProcessPanel,
   FirmwareUpdatePanel,
-  FirmwareStartUpdatePanel
+  FirmwareStartUpdatePanel,
+  FirmwareUpdateProcess
 } from "../modules/Firmware";
 
 const Styles = Styled.div`
@@ -103,6 +104,7 @@ function AltFirmwareUpdate() {
           ) : (
             ""
           )}
+          <FirmwareUpdateProcess countdown={1} />
           <Button onClick={() => DeviceChecksSend("START")}>Start Checks</Button>
           <Button onClick={() => DeviceChecksSend("SKIP")}>Skip if raise</Button>
           <Button onClick={() => DeviceChecksSend("CHECK")}>Check Defy Sides</Button>

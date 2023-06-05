@@ -62,6 +62,7 @@ height: 100%;
   height: 100%;
   display: flex;
   --color: 255, 159, 67;
+  &.success,
   &.isUpdated {
     --color: 0, 206, 201;
   }
@@ -111,8 +112,29 @@ height: 100%;
     transform: translateX(120px) scale(0.8);
   }
 }
+.neuronIcon {
+  position: absolute;
+  right: 8px;
+  top: -4px;
+  transform: translate3d(0, -50%, 0);
+  z-index: 2;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  &.warning {
+    color: ${({ theme }) => theme.colors.gray700};
+    background-color: ${({ theme }) => theme.colors.brandWarning};
+  }
+  &.success {
+    color: ${({ theme }) => theme.colors.gray25};
+    background-color: ${({ theme }) => theme.colors.brandSuccess};
+  }
+}
 `;
-const FirmwareNeuronStatus = ({ isUpdated, status, deviceProduct, keyboardType }) => {
+const FirmwareNeuronStatus = ({ isUpdated, status, deviceProduct, keyboardType, icon }) => {
   let connectionColorMatrixSucess = useTheme().styles.firmwareUpdatePanel.neuronLightMatrixSuccess;
   let connectionColorMatrixWarning = useTheme().styles.firmwareUpdatePanel.neuronLightMatrixWarning;
   console.log("Device name", deviceProduct);
@@ -121,6 +143,7 @@ const FirmwareNeuronStatus = ({ isUpdated, status, deviceProduct, keyboardType }
       {deviceProduct == "Defy" && keyboardType == "wireless" ? (
         <div className={`neuronDefyWrapper ${isUpdated && "isUpdated"} ${status ? status : ""}`}>
           <div className="neuronDefyContainer">
+            {icon ? <div className={`neuronIcon ${status ? status : ""}`}>{icon}</div> : ""}
             <svg
               width="166"
               height="11"

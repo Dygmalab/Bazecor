@@ -56,7 +56,7 @@ const Style = Styled.div`
  * @param {number} countdown - Number representing the position during the update process
  * @returns {<FirmwareImageHelp>} FirmwareImageHelp component.
  */
-const FirmwareImageHelp = ({ countdown }) => {
+const FirmwareImageHelp = ({ countdown, deviceProduct, keyboardType }) => {
   const videoIntro = React.useRef(null);
   const videoRelease = React.useRef(null);
   const checkSuccess = React.useRef(null);
@@ -113,7 +113,7 @@ const FirmwareImageHelp = ({ countdown }) => {
             </div>
           ) : (
             <div className="updatingRaise">
-              <FirmwareNeuronHelp countdown={countdown} />
+              <FirmwareNeuronHelp countdown={countdown} deviceProduct={deviceProduct} keyboardType={keyboardType} />
             </div>
           )}
         </div>

@@ -380,6 +380,9 @@ const Light = {
       labelBorderSm: "none",
       bgOldToNew: oldToNew
     },
+    firmwareErrorPanel: {
+      textColor: Tokens.colors.gray400
+    },
     firmwareUpdatePanel: {
       backgroundContent: Tokens.colors.gray25,
       backgroundSidebar: "rgba(255,255,255,0.15)",

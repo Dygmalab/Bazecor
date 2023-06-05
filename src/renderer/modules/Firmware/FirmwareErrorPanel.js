@@ -33,6 +33,10 @@ import { RegularButton } from "../../component/Button";
 // Visual modules
 import { FirmwareNeuronStatus } from "../Firmware";
 
+//Assets
+import videoDefyCablesDisconnect from "../../../../static/videos/connectCablesDefy.mp4";
+import { IconWarning } from "../../component/Icon";
+
 const Style = Styled.div`
 width: 100%;
 .firmware-wrapper {
@@ -158,6 +162,30 @@ width: 100%;
     display:none;
   }
 }
+.errorListWrapper {
+    padding-top: 16px;
+    display: flex;
+    grid-gap: 16px;
+    align-items: center;
+    .errorListItem {
+        display: flex;
+        grid-gap: 24px;
+        align-items: center;
+    }
+    .errorListImage {
+        video {
+            aspect-ratio: 1 /1;
+            object-fit: cover;
+            width: 162px;
+            border-radius: 16px;
+            border: 3px solid ${({ theme }) => theme.colors.brandWarning};
+        }
+    }
+    .errorListContent {
+        max-width: 200px;
+        color: ${({ theme }) => theme.styles.firmwareErrorPanel.textColor}
+    }
+}
 `;
 
 /**
@@ -191,7 +219,11 @@ const FirmwareErrorPanel = ({ nextBlock, retryBlock }) => {
                 <Title text={i18n.firmwareUpdate.texts.errorTitle} headingLevel={3} type="warning" />
                 <div className="errorListWrapper">
                   <div className="errorListItem">
-                    <div className="errorListImage"></div>
+                    <div className="errorListImage">
+                      <video width={162} height={162} autoPlay={true} loop={true} className="img-center img-fluid">
+                        <source src={videoDefyCablesDisconnect} type="video/mp4" />
+                      </video>
+                    </div>
                     <div className="errorListContent">{i18n.firmwareUpdate.texts.errorMissingCables}</div>
                   </div>
                 </div>
@@ -199,8 +231,9 @@ const FirmwareErrorPanel = ({ nextBlock, retryBlock }) => {
             </div>
             <div className="firmware-sidebar borderRightTopRadius">
               <FirmwareNeuronStatus
-                isUpdated={state.context.isUpdated}
-                status="waiting"
+                isUpdated={false}
+                icon={<IconWarning />}
+                status="warning"
                 deviceProduct="Defy"
                 keyboardType="wireless"
               />
@@ -212,7 +245,7 @@ const FirmwareErrorPanel = ({ nextBlock, retryBlock }) => {
                 <RegularButton
                   className="flashingbutton nooutlined"
                   style="outline"
-                  buttonText={i18n.firmwareUpdate.texts.backwds}
+                  buttonText={i18n.firmwareUpdate.texts.cancelButton}
                   // onClick={onCancelDialog}
                 />
               </div>

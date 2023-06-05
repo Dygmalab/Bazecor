@@ -23,7 +23,7 @@ import i18n from "../../i18n";
 import Title from "../../component/Title";
 import { RegularButton } from "../../component/Button";
 
-import FirmwareProgressStatus from "../Firmware";
+import { FirmwareProgressStatus } from "../Firmware";
 import StepsBar from "../../component/StepsBar";
 
 import { IconInformationBubbleSm, IconCheckmarkSm, IconKeysPress, IconKeysRelease } from "../../component/Icon";
@@ -118,7 +118,12 @@ const FirmwareUpdateProcess = ({ onCancelDialog, flashProgress, countdown }) => 
       <div className="firmware-wrapper upgrade-firmware">
         <div className="firmware-row">{/* <StepsBar steps={steps} stepActive={countdown - 1} /> */}</div>
         <div className="firmware-row progress-visualizer">
-          <FirmwareProgressStatus flashProgress={flashProgress} countdown={countdown} />
+          <FirmwareProgressStatus
+            flashProgress={flashProgress}
+            countdown={countdown}
+            deviceProduct="Defy"
+            keyboardType="wireless"
+          />
         </div>
         {countdown <= 1 ? (
           <div className="firmware-footer">
@@ -127,7 +132,7 @@ const FirmwareUpdateProcess = ({ onCancelDialog, flashProgress, countdown }) => 
                 className="flashingbutton nooutlined"
                 style="outline"
                 size="sm"
-                buttonText="Cancel update process"
+                buttonText={i18n.firmwareUpdate.texts.cancelButton}
                 onClick={onCancelDialog}
               />
             </div>

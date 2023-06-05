@@ -387,6 +387,9 @@ const Dark = {
       labelBorderSm: "none",
       bgOldToNew: oldToNew
     },
+    firmwareErrorPanel: {
+      textColor: Tokens.colors.gray25
+    },
     firmwareUpdatePanel: {
       backgroundContent: Tokens.colors.gray800,
       backgroundSidebar: settingColorOpacity(Tokens.colors.gray400, 0.05),
