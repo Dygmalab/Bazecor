@@ -33,7 +33,7 @@ const loadAvailableFirmwareVersions = async () => {
         "X-GitHub-Api-Version": "2022-11-28"
       }
     });
-    console.log("Data from github!", JSON.stringify(data));
+    // console.log("Data from github!", JSON.stringify(data));
     data.data.forEach(release => {
       let newRelease = {},
         name,
@@ -66,21 +66,23 @@ const loadAvailableFirmwareVersions = async () => {
   return Releases;
 };
 
-const GitHubRead = async info => {
-  let finalReleases;
+const GitHubRead = async context => {
+  let finalReleases, isUpdated, isBeta;
   const fwReleases = await loadAvailableFirmwareVersions();
   try {
-    finalReleases = fwReleases.filter(release => release.name === info.product);
+    finalReleases = fwReleases.filter(release => release.name === context.device.info.product);
     finalReleases.sort((a, b) => {
-      return SemVer.ltr(SemVer.clean(a.version), SemVer.clean(b.version)) ? -1 : 1;
+      return SemVer.lt(SemVer.clean(a.version), SemVer.clean(b.version)) ? 1 : -1;
     });
+    isUpdated = context.device.version == finalReleases[0].version ? true : false;
+    isBeta = context.device.version.includes("beta");
   } catch (error) {
     console.warn("error when filtering data from GitHub");
     console.error(error);
     throw new Error(error);
   }
   console.log("GitHub data acquired!", finalReleases);
-  return finalReleases;
+  return { firmwareList: finalReleases, isUpdated: isUpdated, isBeta: isBeta };
 };
 
 const obtainFWFiles = async (type, url) => {
@@ -189,19 +191,13 @@ const SelectionSM = createMachine({
   context: {
     stateblock: 0,
     device: {},
-    fwStatus: {},
-    retriesRight: 0,
-    retriesLeft: 0,
-    retriesNeuron: 0,
-    sideLeftOk: false,
-    sideLeftBL: false,
-    sideRightOK: false,
-    sideRightBL: false,
     version: {},
     firmwareList: [],
     firmwares: [],
     typeSelected: "default",
-    selectefirmware: 0
+    selectedFirmware: 0,
+    isUpdated: false,
+    isBeta: false
   },
   states: {
     LoadDeviceData: {
@@ -248,11 +244,17 @@ const SelectionSM = createMachine({
       ],
       invoke: {
         id: "GitHubData",
-        src: (context, data) => GitHubRead(context.device.info),
+        src: (context, data) => GitHubRead(context),
         onDone: {
           target: "selectFirmware",
           actions: [
-            assign({ firmwareList: (context, event) => event.data }),
+            assign((context, event) => {
+              return {
+                firmwareList: event.data.firmwareList,
+                isUpdated: event.data.isUpdated,
+                isBeta: event.data.isBeta
+              };
+            }),
             assign({
               stateblock: (context, event) => context.stateblock + 1
             })
@@ -278,7 +280,7 @@ const SelectionSM = createMachine({
       on: {
         NEXT: ["loadingFWFiles"],
         CHANGEFW: {
-          actions: [assign({ selectefirmware: (context, event) => event.selected })]
+          actions: [assign({ selectedFirmware: (context, event) => event.selected })]
         }
       }
     },
@@ -296,7 +298,7 @@ const SelectionSM = createMachine({
       invoke: {
         id: "donwloadFirmware",
         src: (context, data) =>
-          downloadFirmware(context.typeSelected, context.device.info, context.firmwareList, context.selectefirmware),
+          downloadFirmware(context.typeSelected, context.device.info, context.firmwareList, context.selectedFirmware),
         onDone: {
           target: "success",
           actions: [

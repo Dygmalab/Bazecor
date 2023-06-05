@@ -18,13 +18,21 @@
 import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import Styled from "styled-components";
+import { useMachine } from "@xstate/react";
 import i18n from "../../i18n";
+import SemVer from "semver";
 
+// State machine
+import FWSelection from "../../controller/FlashingSM/FWSelection";
+
+// Visual components
 import Title from "../../component/Title";
 import Callout from "../../component/Callout";
-import { FirmwareVersionStatus, FirmwareNeuronStatus } from "../FirmwareVersionStatus";
 import { RegularButton } from "../../component/Button";
+
+// Visual modules
 import WhatsNew from "../WhatsNew";
+import { FirmwareVersionStatus, FirmwareNeuronStatus } from "../FirmwareVersionStatus";
 import FirmwareAdvancedOptions from "../FirmwareAdvancedOptions";
 
 const Style = Styled.div`
@@ -158,151 +166,142 @@ width: 100%;
  * This FirmwareUpdatePanel function returns a module that wrap all modules and components to manage the first steps of firware update.
  * The object will accept the following parameters
  *
- * @param {string} currentlyVersionRunning - The actual version installed
- * @param {string} latestVersionAvailable - The last version avaliable
- * @param {function} onClick - The function that handle the beginning of the process (Upgrade now button)
- * @param {function} selectFirmware - The function that handle with the custom software instalation
- * @param {string} firmwareFilename - Variable that stores the route of the local folder where the custom firmware is located
  * @param {number} disclaimerCard - Number that indicates the software when the installation will begin.
- * @param {function} onCancelDialog - The function that cancels the update process
- * @param {function} onBackup - The function that starts the update process (Lets start button)
  * @returns {<FirmwareUpdatePanel>} FirmwareUpdatePanel component.
  */
 
-const FirmwareUpdatePanel = ({
-  context,
-  device,
-  currentlyVersionRunning,
-  latestVersionAvailable,
-  onClick,
-  selectFirmware,
-  selectExperimental,
-  firmwareFilename,
-  disclaimerCard,
-  onCancelDialog,
-  onBackup,
-  firmwareList,
-  selectedFirmware,
-  send
-}) => {
-  // production
-  const isUpdated = currentlyVersionRunning === latestVersionAvailable ? true : false;
-  const isBeta = latestVersionAvailable.includes("beta");
+const FirmwareUpdatePanel = ({ disclaimerCard }) => {
+  const [state, send] = useMachine(FWSelection);
 
-  // development
-  //const isUpdated = true;
-  //const isUpdated = currentlyVersionRunning === "v1.0.0beta19" ? true : false;
+  const [loading, setLoading] = useState(true);
+  useEffect(() => {
+    if (state.context.device.version && state.context.firmwareList && state.context.firmwareList.length > 0) {
+      setLoading(false);
+    }
+  }, [state.context]);
 
   return (
     <Style>
-      <>
-        {disclaimerCard ? (
-          <div className="firmware-wrapper disclaimer-firmware">
-            <div className="firmware-row">
-              <div className="firmware-content borderLeftTopRadius">
-                <div className="firmware-content--inner">
-                  <Title text={i18n.firmwareUpdate.texts.disclaimerTitle} headingLevel={3} />
-                  <div
-                    className={"disclaimerContent"}
-                    dangerouslySetInnerHTML={{ __html: i18n.firmwareUpdate.texts.disclaimerContent }}
-                  />
-                  <Callout content={i18n.firmwareUpdate.texts.calloutIntroText} className="mt-lg" size="md" />
+      {loading && state.context.stateblock < 2 ? (
+        "loading"
+      ) : (
+        <>
+          {disclaimerCard ? (
+            <div className="firmware-wrapper disclaimer-firmware">
+              <div className="firmware-row">
+                <div className="firmware-content borderLeftTopRadius">
+                  <div className="firmware-content--inner">
+                    <Title text={i18n.firmwareUpdate.texts.disclaimerTitle} headingLevel={3} />
+                    <div
+                      className={"disclaimerContent"}
+                      dangerouslySetInnerHTML={{ __html: i18n.firmwareUpdate.texts.disclaimerContent }}
+                    />
+                    <Callout content={i18n.firmwareUpdate.texts.calloutIntroText} className="mt-lg" size="md" />
+                  </div>
+                </div>
+                <div className="firmware-sidebar borderRightTopRadius">
+                  <FirmwareNeuronStatus isUpdated={state.context.isUpdated} deviceProduct={state.context.device.info.product} />
                 </div>
               </div>
-              <div className="firmware-sidebar borderRightTopRadius">
-                <FirmwareNeuronStatus isUpdated={isUpdated} deviceProduct={device.info.product} />
-              </div>
-            </div>
-            <div className="firmware-row">
-              <div className="firmware-content borderLeftBottomRadius">
-                <div className="wrapperActions">
-                  <RegularButton
-                    className="flashingbutton nooutlined"
-                    style="outline"
-                    buttonText={i18n.firmwareUpdate.texts.backwds}
-                    // onClick={onCancelDialog}
-                  />
-                </div>
-              </div>
-              <div className="firmware-sidebar borderRightBottomRadius">
-                <div className="buttonActions">
-                  <RegularButton
-                    className="flashingbutton nooutlined"
-                    style="primary"
-                    buttonText={i18n.firmwareUpdate.texts.letsStart}
-                    // onClick={onBackup}`
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-        ) : (
-          <div className="firmware-wrapper home-firmware">
-            <div className="firmware-row">
-              <div className="firmware-content borderLeftTopRadius">
-                <div className="firmware-content--inner">
-                  <Title
-                    text={
-                      isUpdated ? i18n.firmwareUpdate.texts.versionUpdatedTitle : i18n.firmwareUpdate.texts.versionOutdatedTitle
-                    }
-                    headingLevel={3}
-                    type={isUpdated ? "success" : "warning"}
-                  />
-                  <Callout
-                    content={i18n.firmwareUpdate.texts.calloutIntroText}
-                    className="mt-lg"
-                    size="md"
-                    hasVideo={device.info.product == "Raise" ? true : true}
-                    media={`https://www.youtube.com/watch?v=aVu7EL4LXMI`}
-                    videoDuration={device.info.product == "Raise" ? "2:58" : null}
-                  />
-                </div>
-              </div>
-              <div className="firmware-sidebar borderRightTopRadius">
-                <FirmwareNeuronStatus isUpdated={isUpdated} deviceProduct={device.info.product} />
-              </div>
-            </div>
-            <div className="firmware-row">
-              <div className="firmware-content borderLeftBottomRadius">
-                <FirmwareVersionStatus
-                  currentlyVersionRunning={currentlyVersionRunning}
-                  latestVersionAvailable={latestVersionAvailable}
-                  isUpdated={isUpdated}
-                  firmwareList={firmwareList}
-                  selectedFirmware={selectedFirmware}
-                  send={send}
-                />
-              </div>
-              <div className="firmware-sidebar borderRightBottomRadius">
-                <div className="buttonActions">
-                  {isUpdated ? (
+              <div className="firmware-row">
+                <div className="firmware-content borderLeftBottomRadius">
+                  <div className="wrapperActions">
                     <RegularButton
                       className="flashingbutton nooutlined"
                       style="outline"
-                      buttonText={i18n.firmwareUpdate.flashing.buttonUpdated}
-                      // onClick={onClick}
+                      buttonText={i18n.firmwareUpdate.texts.backwds}
+                      // onClick={onCancelDialog} No longer necessary to leave this view when on error, just retry
                     />
-                  ) : (
+                  </div>
+                </div>
+                <div className="firmware-sidebar borderRightBottomRadius">
+                  <div className="buttonActions">
                     <RegularButton
                       className="flashingbutton nooutlined"
                       style="primary"
-                      buttonText={i18n.firmwareUpdate.flashing.button}
-                      onClick={onClick}
+                      buttonText={i18n.firmwareUpdate.texts.letsStart}
+                      // onClick={onBackup}`
                     />
-                  )}
-                  <div className="dropdownCustomFirmware">
-                    {/* <FirmwareAdvancedOptions
-                      firmwareFilename={firmwareFilename}
-                      selectFirmware={selectFirmware}
-                      selectExperimental={selectExperimental}
-                    /> */}
                   </div>
                 </div>
               </div>
             </div>
-          </div>
-        )}
-      </>
+          ) : (
+            <div className="firmware-wrapper home-firmware">
+              <div className="firmware-row">
+                <div className="firmware-content borderLeftTopRadius">
+                  <div className="firmware-content--inner">
+                    <Title
+                      text={
+                        state.context.isUpdated
+                          ? i18n.firmwareUpdate.texts.versionUpdatedTitle
+                          : i18n.firmwareUpdate.texts.versionOutdatedTitle
+                      }
+                      headingLevel={3}
+                      type={state.context.isUpdated ? "success" : "warning"}
+                    />
+                    <Callout
+                      content={i18n.firmwareUpdate.texts.calloutIntroText}
+                      className="mt-lg"
+                      size="md"
+                      hasVideo={state.context.device.info.product == "Raise" ? true : true}
+                      media={`https://www.youtube.com/watch?v=aVu7EL4LXMI`}
+                      videoDuration={state.context.device.info.product == "Raise" ? "2:58" : null}
+                    />
+                  </div>
+                </div>
+                <div className="firmware-sidebar borderRightTopRadius">
+                  <FirmwareNeuronStatus isUpdated={state.context.isUpdated} deviceProduct={state.context.device.info.product} />
+                </div>
+              </div>
+              <div className="firmware-row">
+                <div className="firmware-content borderLeftBottomRadius">
+                  {state.context.firmwareList ? (
+                    <FirmwareVersionStatus
+                      currentlyVersionRunning={state.context.device.version}
+                      latestVersionAvailable={state.context.firmwareList[state.context.selectedFirmware].version}
+                      isUpdated={state.context.isUpdated}
+                      firmwareList={state.context.firmwareList}
+                      selectedFirmware={state.context.selectedFirmware}
+                      send={send}
+                    />
+                  ) : (
+                    ""
+                  )}
+                </div>
+                <div className="firmware-sidebar borderRightBottomRadius">
+                  <div className="buttonActions">
+                    {state.context.isUpdated ? (
+                      <RegularButton
+                        className="flashingbutton nooutlined"
+                        style="outline"
+                        buttonText={i18n.firmwareUpdate.flashing.buttonUpdated}
+                        // onClick={onClick}
+                      />
+                    ) : (
+                      <RegularButton
+                        className="flashingbutton nooutlined"
+                        style="primary"
+                        buttonText={i18n.firmwareUpdate.flashing.button}
+                        onClick={() => send("NEXT")}
+                      />
+                    )}
+                    <div className="dropdownCustomFirmware">
+                      {/* <FirmwareAdvancedOptions
+                      firmwareFilename={firmwareFilename}
+                      selectFirmware={selectFirmware}
+                      selectExperimental={selectExperimental}
+                    /> */}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+        </>
+      )}
+      <RegularButton onClick={() => send("RETRY")}>Retry when error</RegularButton>
+      <div>{JSON.stringify(state.context)}</div>
     </Style>
   );
 };
