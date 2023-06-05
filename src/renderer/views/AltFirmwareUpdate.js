@@ -49,27 +49,27 @@ height: inherit;
 
 function AltFirmwareUpdate() {
   const [state, send] = useMachine(MainProcessSM);
-  const [DeviceChecksState, DeviceChecksSend] = useMachine(DeviceChecks, {
-    actions: {
-      addEscListener: () => {
-        document.addEventListener("keydown", _handleKeyDown);
-      },
-      removeEscListener: () => {
-        document.removeEventListener("keydown", _handleKeyDown);
-      }
-    }
-  });
+  // const [DeviceChecksState, DeviceChecksSend] = useMachine(DeviceChecks, {
+  //   actions: {
+  //     addEscListener: () => {
+  //       document.addEventListener("keydown", _handleKeyDown);
+  //     },
+  //     removeEscListener: () => {
+  //       document.removeEventListener("keydown", _handleKeyDown);
+  //     }
+  //   }
+  // });
 
-  const _handleKeyDown = event => {
-    switch (event.keyCode) {
-      case 27:
-        console.log("esc key logged");
-        DeviceChecksSend("ESCPRESSED");
-        break;
-      default:
-        break;
-    }
-  };
+  // const _handleKeyDown = event => {
+  //   switch (event.keyCode) {
+  //     case 27:
+  //       console.log("esc key logged");
+  //       DeviceChecksSend("ESCPRESSED");
+  //       break;
+  //     default:
+  //       break;
+  //   }
+  // };
 
   const nextBlock = context => {
     console.log("before sending NEXT", context);
@@ -93,9 +93,7 @@ function AltFirmwareUpdate() {
               <Spinner className="spinner-border" role="status" />
             </div>
           ) : state.context.Block === 1 ? (
-            <>
-              <FirmwareUpdatePanel nextBlock={nextBlock} retryBlock={retryBlock} />
-            </>
+            <FirmwareUpdatePanel nextBlock={nextBlock} retryBlock={retryBlock} />
           ) : state.context.Block === 2 ? (
             <FirmwareCheckProcessPanel nextBlock={nextBlock} retryBlock={retryBlock} />
           ) : state.context.Block === 3 ? (
@@ -103,10 +101,6 @@ function AltFirmwareUpdate() {
           ) : (
             ""
           )}
-          <Button onClick={() => DeviceChecksSend("START")}>Start Checks</Button>
-          <Button onClick={() => DeviceChecksSend("SKIP")}>Skip if raise</Button>
-          <Button onClick={() => DeviceChecksSend("CHECK")}>Check Defy Sides</Button>
-          <Card style={{ maxWidth: "1080px" }}>{JSON.stringify(DeviceChecksState.context)}</Card>
           <Card style={{ maxWidth: "1080px" }}>{JSON.stringify(state.context)}</Card>
         </div>
       </Container>

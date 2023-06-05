@@ -21,7 +21,6 @@ const MainProcessSM = createMachine({
         NEXT: {
           target: "DeviceChecksCard",
           actions: assign((context, event) => {
-            console.log("Event Data!!", event);
             return {
               firmwareList: event.data.firmwareList,
               firmwares: event.data.firmwares,

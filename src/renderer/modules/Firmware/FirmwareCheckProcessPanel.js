@@ -20,11 +20,12 @@ import PropTypes from "prop-types";
 import Styled from "styled-components";
 import { useMachine } from "@xstate/react";
 import Spinner from "react-bootstrap/Spinner";
+import Card from "react-bootstrap/Card";
 import i18n from "../../i18n";
 import SemVer from "semver";
 
 // State machine
-import FWSelection from "../../controller/FlashingSM/FWSelection";
+import DeviceChecks from "../../controller/FlashingSM/DeviceChecks";
 
 // Visual components
 import { RegularButton } from "../../component/Button";
@@ -165,7 +166,7 @@ width: 100%;
  */
 
 const FirmwareCheckProcessPanel = ({ nextBlock, retryBlock }) => {
-  const [state, send] = useMachine(FWSelection);
+  const [state, send] = useMachine(DeviceChecks);
 
   const [loading, setLoading] = useState(true);
   useEffect(() => {
@@ -178,14 +179,16 @@ const FirmwareCheckProcessPanel = ({ nextBlock, retryBlock }) => {
   return (
     <Style>
       {loading ? (
-        ""
-      ) : (
         <div className="firmware-wrapper disclaimer-firmware">
           <div className="firmware-row">
             <div className="loading marginCenter">
               <Spinner className="spinner-border" role="status" />
             </div>
           </div>
+        </div>
+      ) : (
+        <div className="firmware-wrapper disclaimer-firmware">
+          <div className="firmware-row">Checking devices</div>
         </div>
       )}
       <RegularButton
@@ -196,7 +199,10 @@ const FirmwareCheckProcessPanel = ({ nextBlock, retryBlock }) => {
       >
         Retry when error
       </RegularButton>
-      <div>{JSON.stringify(state.context)}</div>
+      <RegularButton onClick={() => send("START")}>Start Checks</RegularButton>
+      <RegularButton onClick={() => send("SKIP")}>Skip if raise</RegularButton>
+      <RegularButton onClick={() => send("CHECK")}>Check Defy Sides</RegularButton>
+      <Card style={{ maxWidth: "1080px" }}>{JSON.stringify(state.context)}</Card>
     </Style>
   );
 };
