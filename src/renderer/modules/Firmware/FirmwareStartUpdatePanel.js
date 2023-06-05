@@ -23,7 +23,7 @@ import i18n from "../../i18n";
 import SemVer from "semver";
 
 // State machine
-import FWSelection from "../../controller/FlashingSM/FWSelection";
+import FlashDevice from "../../controller/FlashingSM/FlashDevice";
 
 // Visual components
 import Title from "../../component/Title";
@@ -178,7 +178,7 @@ width: 100%;
  */
 
 const FirmwareStartUpdatePanel = ({ nextBlock, retryBlock }) => {
-  const [state, send] = useMachine(FWSelection);
+  const [state, send] = useMachine(FlashDevice);
 
   const [loading, setLoading] = useState(true);
   useEffect(() => {
