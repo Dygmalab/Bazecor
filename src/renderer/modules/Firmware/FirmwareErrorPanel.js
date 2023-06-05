@@ -184,24 +184,17 @@ const FirmwareErrorPanel = ({ nextBlock, retryBlock }) => {
       {loading && state.context.stateblock < 2 ? (
         ""
       ) : (
-        <div className="firmware-wrapper disclaimer-firmware">
+        <div className="firmware-wrapper">
           <div className="firmware-row">
             <div className="firmware-content borderLeftTopRadius">
               <div className="firmware-content--inner">
-                <Title text={i18n.firmwareUpdate.texts.disclaimerTitle} headingLevel={3} />
-                <div
-                  className={"disclaimerContent"}
-                  dangerouslySetInnerHTML={{ __html: i18n.firmwareUpdate.texts.disclaimerContent }}
-                />
-                <Callout
-                  content={i18n.firmwareUpdate.texts.calloutIntroText}
-                  className="mt-lg"
-                  size="md"
-                  hasVideo={state.context.device.info.product == "Raise" ? true : true}
-                  media={`aVu7EL4LXMI`}
-                  videoTitle="How to update the Software & Firmware of your Dygma keyboard"
-                  videoDuration={state.context.device.info.product == "Raise" ? "2:58" : null}
-                />
+                <Title text={i18n.firmwareUpdate.texts.errorTitle} headingLevel={3} type="warning" />
+                <div className="errorListWrapper">
+                  <div className="errorListItem">
+                    <div className="errorListImage"></div>
+                    <div className="errorListContent">{i18n.firmwareUpdate.text.errorMissingCables}</div>
+                  </div>
+                </div>
               </div>
             </div>
             <div className="firmware-sidebar borderRightTopRadius">
@@ -229,22 +222,18 @@ const FirmwareErrorPanel = ({ nextBlock, retryBlock }) => {
                 <RegularButton
                   className="flashingbutton nooutlined"
                   style="primary"
-                  buttonText={i18n.firmwareUpdate.texts.letsStart}
-                  // onClick={onBackup}`
+                  buttonText={i18n.general.retry}
+                  onClick={() => {
+                    send("RETRY");
+                    retryBlock();
+                  }}
                 />
               </div>
             </div>
           </div>
         </div>
       )}
-      <RegularButton
-        onClick={() => {
-          send("RETRY");
-          retryBlock();
-        }}
-      >
-        Retry when error
-      </RegularButton>
+
       <div>{JSON.stringify(state.context)}</div>
     </Style>
   );

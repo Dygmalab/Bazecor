@@ -642,6 +642,8 @@ const English = {
       disclaimerContent:
         "<strong>Before the update the Neuron will backup your layers and settings after that the update process will begin automatically.</strong>",
       disclaimerCard3: "Click Next to backup your layers and settings, and start the firmware update process.",
+      errorTitle: "Oops! Review the following before continuing",
+      errorMissingCables: "Connect both sides using cables and try again.",
       flashCardTitle1: "Press and hold the top left key to start the firmware update.",
       flashCardTitle2: "Don't release the key until the process finishes.",
       flashCardHelp: "Why do I need to press and hold a key when updating the device firmware?",
@@ -735,7 +737,8 @@ const English = {
     noname: "No name",
     select: "Select",
     record: "Record",
-    resume: "Resume"
+    resume: "Resume",
+    retry: "Retry"
   }
 };
 
