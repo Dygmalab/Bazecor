@@ -38,8 +38,7 @@ import { getStaticPath } from "../config";
 import i18n from "../i18n";
 
 import PageHeader from "../modules/PageHeader";
-import FirmwareUpdatePanel from "../modules/FirmwareUpdatePanel";
-import FirmwareUpdateProcess from "../modules/FirmwareUpdateProcess";
+import { FirmwareUpdatePanel, FirmwareUpdateProcess } from "../modules/Firmware";
 
 import Select from "../component/Select";
 import ToastMessage from "../component/ToastMessage";

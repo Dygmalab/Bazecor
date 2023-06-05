@@ -17,8 +17,16 @@ import i18n from "../i18n";
 
 // Bazecor components
 import PageHeader from "../modules/PageHeader";
-import FirmwareUpdatePanel from "../modules/FirmwareUpdatePanel";
-import FirmwareUpdateProcess from "../modules/FirmwareUpdateProcess";
+import {
+  FirmwareUpdatePanel,
+  FirmwareUpdateProcess,
+  FirmwareAdvancedOptions,
+  FirmwareNeuronStatus,
+  FirmwareVersionStatus,
+  FirmwareProgressStatus,
+  FirmwareImageHelp,
+  FirmwareNeuronHelp
+} from "../modules/Firmware";
 
 const Styles = Styled.div`
 height: inherit;
@@ -81,7 +89,21 @@ function AltFirmwareUpdate() {
       <Container fluid className={`firmware-update`}>
         <PageHeader text={i18n.app.menu.firmwareUpdate} />
         <div>
-          <FirmwareUpdatePanel disclaimerCard={state.Block} nextBlock={nextBlock} retryBlock={retryBlock} />
+          {state.Block === -1 ? (
+            "error"
+          ) : state.Block === 0 ? (
+            <div className="loading marginCenter">
+              <Spinner className="spinner-border" role="status" />
+            </div>
+          ) : state.Block === 1 ? (
+            <FirmwareUpdatePanel nextBlock={nextBlock} retryBlock={retryBlock} />
+          ) : state.Block === 2 ? (
+            ""
+          ) : state.Block === 3 ? (
+            ""
+          ) : (
+            ""
+          )}
           <Button onClick={() => DeviceChecksSend("START")}>Start Checks</Button>
           <Button onClick={() => DeviceChecksSend("SKIP")}>Skip if raise</Button>
           <Button onClick={() => DeviceChecksSend("CHECK")}>Check Defy Sides</Button>
