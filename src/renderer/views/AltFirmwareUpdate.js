@@ -17,7 +17,12 @@ import i18n from "../i18n";
 
 // Bazecor components
 import PageHeader from "../modules/PageHeader";
-import { FirmwareUpdatePanel, FirmwareStartUpdatePanel, FirmwareCheckProcessPanel } from "../modules/Firmware";
+import {
+  FirmwareErrorPanel,
+  FirmwareCheckProcessPanel,
+  FirmwareUpdatePanel,
+  FirmwareStartUpdatePanel
+} from "../modules/Firmware";
 
 const Styles = Styled.div`
 height: inherit;
@@ -80,6 +85,7 @@ function AltFirmwareUpdate() {
       <Container fluid className={`firmware-update`}>
         <PageHeader text={i18n.app.menu.firmwareUpdate} />
         <div>
+          <FirmwareErrorPanel nextBlock={nextBlock} retryBlock={retryBlock} />
           {state.context.Block === -1 ? (
             "error"
           ) : state.context.Block === 0 ? (

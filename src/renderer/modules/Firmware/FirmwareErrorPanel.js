@@ -19,7 +19,6 @@ import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import Styled from "styled-components";
 import { useMachine } from "@xstate/react";
-import Spinner from "react-bootstrap/Spinner";
 import i18n from "../../i18n";
 import SemVer from "semver";
 
@@ -27,7 +26,12 @@ import SemVer from "semver";
 import FWSelection from "../../controller/FlashingSM/FWSelection";
 
 // Visual components
+import Title from "../../component/Title";
+import Callout from "../../component/Callout";
 import { RegularButton } from "../../component/Button";
+
+// Visual modules
+import { FirmwareNeuronStatus } from "../Firmware";
 
 const Style = Styled.div`
 width: 100%;
@@ -164,7 +168,7 @@ width: 100%;
  * @returns {<FirmwareUpdatePanel>} FirmwareUpdatePanel component.
  */
 
-const FirmwareCheckProcessPanel = ({ nextBlock, retryBlock }) => {
+const FirmwareErrorPanel = ({ nextBlock, retryBlock }) => {
   const [state, send] = useMachine(FWSelection);
 
   const [loading, setLoading] = useState(true);
@@ -177,13 +181,58 @@ const FirmwareCheckProcessPanel = ({ nextBlock, retryBlock }) => {
 
   return (
     <Style>
-      {loading ? (
+      {loading && state.context.stateblock < 2 ? (
         ""
       ) : (
         <div className="firmware-wrapper disclaimer-firmware">
           <div className="firmware-row">
-            <div className="loading marginCenter">
-              <Spinner className="spinner-border" role="status" />
+            <div className="firmware-content borderLeftTopRadius">
+              <div className="firmware-content--inner">
+                <Title text={i18n.firmwareUpdate.texts.disclaimerTitle} headingLevel={3} />
+                <div
+                  className={"disclaimerContent"}
+                  dangerouslySetInnerHTML={{ __html: i18n.firmwareUpdate.texts.disclaimerContent }}
+                />
+                <Callout
+                  content={i18n.firmwareUpdate.texts.calloutIntroText}
+                  className="mt-lg"
+                  size="md"
+                  hasVideo={state.context.device.info.product == "Raise" ? true : true}
+                  media={`aVu7EL4LXMI`}
+                  videoTitle="How to update the Software & Firmware of your Dygma keyboard"
+                  videoDuration={state.context.device.info.product == "Raise" ? "2:58" : null}
+                />
+              </div>
+            </div>
+            <div className="firmware-sidebar borderRightTopRadius">
+              <FirmwareNeuronStatus
+                isUpdated={state.context.isUpdated}
+                status="waiting"
+                deviceProduct="Defy"
+                keyboardType="wireless"
+              />
+            </div>
+          </div>
+          <div className="firmware-row">
+            <div className="firmware-content borderLeftBottomRadius">
+              <div className="wrapperActions">
+                <RegularButton
+                  className="flashingbutton nooutlined"
+                  style="outline"
+                  buttonText={i18n.firmwareUpdate.texts.backwds}
+                  // onClick={onCancelDialog}
+                />
+              </div>
+            </div>
+            <div className="firmware-sidebar borderRightBottomRadius">
+              <div className="buttonActions">
+                <RegularButton
+                  className="flashingbutton nooutlined"
+                  style="primary"
+                  buttonText={i18n.firmwareUpdate.texts.letsStart}
+                  // onClick={onBackup}`
+                />
+              </div>
             </div>
           </div>
         </div>
@@ -201,4 +250,4 @@ const FirmwareCheckProcessPanel = ({ nextBlock, retryBlock }) => {
   );
 };
 
-export default FirmwareCheckProcessPanel;
+export default FirmwareErrorPanel;

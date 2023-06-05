@@ -190,7 +190,7 @@ const FirmwareStartUpdatePanel = ({ nextBlock, retryBlock }) => {
 
   return (
     <Style>
-      {loading && state.context.stateblock < 2 ? (
+      {loading ? (
         ""
       ) : (
         <div className="firmware-wrapper disclaimer-firmware">
