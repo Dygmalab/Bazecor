@@ -177,7 +177,7 @@ width: 100%;
  * @returns {<FirmwareUpdatePanel>} FirmwareUpdatePanel component.
  */
 
-const FirmwareUpdatePanel = ({ disclaimerCard, nextBlock, retryBlock }) => {
+const FirmwareUpdatePanel = ({ nextBlock, retryBlock }) => {
   const [state, send] = useMachine(FWSelection);
 
   const [loading, setLoading] = useState(true);
@@ -194,135 +194,132 @@ const FirmwareUpdatePanel = ({ disclaimerCard, nextBlock, retryBlock }) => {
         ""
       ) : (
         <>
-          {disclaimerCard ? (
-            <div className="firmware-wrapper disclaimer-firmware">
-              <div className="firmware-row">
-                <div className="firmware-content borderLeftTopRadius">
-                  <div className="firmware-content--inner">
-                    <Title text={i18n.firmwareUpdate.texts.disclaimerTitle} headingLevel={3} />
-                    <div
-                      className={"disclaimerContent"}
-                      dangerouslySetInnerHTML={{ __html: i18n.firmwareUpdate.texts.disclaimerContent }}
-                    />
-                    <Callout
-                      content={i18n.firmwareUpdate.texts.calloutIntroText}
-                      className="mt-lg"
-                      size="md"
-                      hasVideo={state.context.device.info.product == "Raise" ? true : true}
-                      media={`aVu7EL4LXMI`}
-                      videoTitle="How to update the Software & Firmware of your Dygma keyboard"
-                      videoDuration={state.context.device.info.product == "Raise" ? "2:58" : null}
-                    />
-                  </div>
-                </div>
-                <div className="firmware-sidebar borderRightTopRadius">
-                  <FirmwareNeuronStatus
-                    isUpdated={state.context.isUpdated}
-                    status="waiting"
-                    deviceProduct="Defy"
-                    keyboardType="wireless"
+          <div className="firmware-wrapper disclaimer-firmware">
+            <div className="firmware-row">
+              <div className="firmware-content borderLeftTopRadius">
+                <div className="firmware-content--inner">
+                  <Title text={i18n.firmwareUpdate.texts.disclaimerTitle} headingLevel={3} />
+                  <div
+                    className={"disclaimerContent"}
+                    dangerouslySetInnerHTML={{ __html: i18n.firmwareUpdate.texts.disclaimerContent }}
+                  />
+                  <Callout
+                    content={i18n.firmwareUpdate.texts.calloutIntroText}
+                    className="mt-lg"
+                    size="md"
+                    hasVideo={state.context.device.info.product == "Raise" ? true : true}
+                    media={`aVu7EL4LXMI`}
+                    videoTitle="How to update the Software & Firmware of your Dygma keyboard"
+                    videoDuration={state.context.device.info.product == "Raise" ? "2:58" : null}
                   />
                 </div>
               </div>
-              <div className="firmware-row">
-                <div className="firmware-content borderLeftBottomRadius">
-                  <div className="wrapperActions">
-                    <RegularButton
-                      className="flashingbutton nooutlined"
-                      style="outline"
-                      buttonText={i18n.firmwareUpdate.texts.backwds}
-                      // onClick={onCancelDialog}
-                    />
-                  </div>
+              <div className="firmware-sidebar borderRightTopRadius">
+                <FirmwareNeuronStatus
+                  isUpdated={state.context.isUpdated}
+                  status="waiting"
+                  deviceProduct="Defy"
+                  keyboardType="wireless"
+                />
+              </div>
+            </div>
+            <div className="firmware-row">
+              <div className="firmware-content borderLeftBottomRadius">
+                <div className="wrapperActions">
+                  <RegularButton
+                    className="flashingbutton nooutlined"
+                    style="outline"
+                    buttonText={i18n.firmwareUpdate.texts.backwds}
+                    // onClick={onCancelDialog}
+                  />
                 </div>
-                <div className="firmware-sidebar borderRightBottomRadius">
-                  <div className="buttonActions">
-                    <RegularButton
-                      className="flashingbutton nooutlined"
-                      style="primary"
-                      buttonText={i18n.firmwareUpdate.texts.letsStart}
-                      // onClick={onBackup}`
-                    />
-                  </div>
+              </div>
+              <div className="firmware-sidebar borderRightBottomRadius">
+                <div className="buttonActions">
+                  <RegularButton
+                    className="flashingbutton nooutlined"
+                    style="primary"
+                    buttonText={i18n.firmwareUpdate.texts.letsStart}
+                    // onClick={onBackup}`
+                  />
                 </div>
               </div>
             </div>
-          ) : (
-            <div className="firmware-wrapper home-firmware">
-              <div className="firmware-row">
-                <div className="firmware-content borderLeftTopRadius">
-                  <div className="firmware-content--inner">
-                    <Title
-                      text={
-                        state.context.isUpdated
-                          ? i18n.firmwareUpdate.texts.versionUpdatedTitle
-                          : i18n.firmwareUpdate.texts.versionOutdatedTitle
-                      }
-                      headingLevel={3}
-                      type={state.context.isUpdated ? "success" : "warning"}
-                    />
-                    <Callout
-                      content={i18n.firmwareUpdate.texts.calloutIntroText}
-                      className="mt-lg"
-                      size="md"
-                      hasVideo={state.context.device.info.product == "Raise" ? true : true}
-                      media={`aVu7EL4LXMI`}
-                      videoTitle="How to update the Software & Firmware of your Dygma keyboard"
-                      videoDuration={state.context.device.info.product == "Raise" ? "2:58" : null}
-                    />
-                  </div>
-                </div>
-                <div className="firmware-sidebar borderRightTopRadius">
-                  {/* <FirmwareNeuronStatus isUpdated={isUpdated} deviceProduct={device.info.product} keyboardType={device.info.keyboardType} /> */}
-                  <FirmwareNeuronStatus isUpdated={state.context.isUpdated} deviceProduct="Defy" keyboardType="wireless" />
+          </div>
+          <div className="firmware-wrapper home-firmware">
+            <div className="firmware-row">
+              <div className="firmware-content borderLeftTopRadius">
+                <div className="firmware-content--inner">
+                  <Title
+                    text={
+                      state.context.isUpdated
+                        ? i18n.firmwareUpdate.texts.versionUpdatedTitle
+                        : i18n.firmwareUpdate.texts.versionOutdatedTitle
+                    }
+                    headingLevel={3}
+                    type={state.context.isUpdated ? "success" : "warning"}
+                  />
+                  <Callout
+                    content={i18n.firmwareUpdate.texts.calloutIntroText}
+                    className="mt-lg"
+                    size="md"
+                    hasVideo={state.context.device.info.product == "Raise" ? true : true}
+                    media={`aVu7EL4LXMI`}
+                    videoTitle="How to update the Software & Firmware of your Dygma keyboard"
+                    videoDuration={state.context.device.info.product == "Raise" ? "2:58" : null}
+                  />
                 </div>
               </div>
-              <div className="firmware-row">
-                <div className="firmware-content borderLeftBottomRadius">
-                  {state.context.firmwareList ? (
-                    <FirmwareVersionStatus
-                      currentlyVersionRunning={state.context.device.version}
-                      latestVersionAvailable={state.context.firmwareList[state.context.selectedFirmware].version}
-                      isUpdated={state.context.isUpdated}
-                      firmwareList={state.context.firmwareList}
-                      selectedFirmware={state.context.selectedFirmware}
-                      send={send}
+              <div className="firmware-sidebar borderRightTopRadius">
+                {/* <FirmwareNeuronStatus isUpdated={isUpdated} deviceProduct={device.info.product} keyboardType={device.info.keyboardType} /> */}
+                <FirmwareNeuronStatus isUpdated={state.context.isUpdated} deviceProduct="Defy" keyboardType="wireless" />
+              </div>
+            </div>
+            <div className="firmware-row">
+              <div className="firmware-content borderLeftBottomRadius">
+                {state.context.firmwareList ? (
+                  <FirmwareVersionStatus
+                    currentlyVersionRunning={state.context.device.version}
+                    latestVersionAvailable={state.context.firmwareList[state.context.selectedFirmware].version}
+                    isUpdated={state.context.isUpdated}
+                    firmwareList={state.context.firmwareList}
+                    selectedFirmware={state.context.selectedFirmware}
+                    send={send}
+                  />
+                ) : (
+                  ""
+                )}
+              </div>
+              <div className="firmware-sidebar borderRightBottomRadius">
+                <div className="buttonActions">
+                  {state.context.isUpdated ? (
+                    <RegularButton
+                      className="flashingbutton nooutlined"
+                      style="outline"
+                      buttonText={i18n.firmwareUpdate.flashing.buttonUpdated}
+                      // onClick={onClick}
                     />
                   ) : (
-                    ""
+                    <RegularButton
+                      className="flashingbutton nooutlined"
+                      style="primary"
+                      buttonText={i18n.firmwareUpdate.flashing.button}
+                      onClick={() => {
+                        send("NEXT");
+                      }}
+                    />
                   )}
-                </div>
-                <div className="firmware-sidebar borderRightBottomRadius">
-                  <div className="buttonActions">
-                    {state.context.isUpdated ? (
-                      <RegularButton
-                        className="flashingbutton nooutlined"
-                        style="outline"
-                        buttonText={i18n.firmwareUpdate.flashing.buttonUpdated}
-                        // onClick={onClick}
-                      />
-                    ) : (
-                      <RegularButton
-                        className="flashingbutton nooutlined"
-                        style="primary"
-                        buttonText={i18n.firmwareUpdate.flashing.button}
-                        onClick={() => {
-                          send("NEXT");
-                        }}
-                      />
-                    )}
-                    <div className="dropdownCustomFirmware">
-                      {/* <FirmwareAdvancedOptions
+                  <div className="dropdownCustomFirmware">
+                    {/* <FirmwareAdvancedOptions
                       firmwareFilename={firmwareFilename}
                       selectFirmware={selectFirmware}
                       selectExperimental={selectExperimental}
                     /> */}
-                    </div>
                   </div>
                 </div>
               </div>
             </div>
-          )}
+          </div>
         </>
       )}
       <RegularButton
