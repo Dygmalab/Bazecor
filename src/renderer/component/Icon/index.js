@@ -134,6 +134,7 @@ import IconThreeDots from "./IconThreeDots";
 import IconSettings from "./IconSettings";
 import IconUndoRestart from "./IconUndoRestart";
 import IconUpload from "./IconUpload";
+import IconWarning from "./IconWarning";
 import IconWrench from "./IconWrench";
 import IconWrenchSm from "./IconWrenchSm";
 
@@ -258,6 +259,7 @@ export {
   IconSettings,
   IconUndoRestart,
   IconUpload,
+  IconWarning,
   IconWrench,
   IconWrenchSm
 };
