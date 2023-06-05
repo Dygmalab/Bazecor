@@ -16,20 +16,24 @@
 
 import FirmwareUpdatePanel from "./FirmwareUpdatePanel";
 import FirmwareAdvancedOptions from "./FirmwareAdvancedOptions";
+import FirmwareCheckProcessPanel from "./FirmwareCheckProcessPanel";
 import FirmwareUpdateProcess from "./FirmwareUpdateProcess";
 import FirmwareNeuronStatus from "./FirmwareNeuronStatus";
 import FirmwareVersionStatus from "./FirmwareVersionStatus";
 import FirmwareProgressStatus from "./FirmwareProgressStatus";
 import FirmwareImageHelp from "./FirmwareImageHelp";
 import FirmwareNeuronHelp from "./FirmwareNeuronHelp";
+import FirmwareStartUpdatePanel from "./FirmwareStartUpdatePanel";
 
 export {
   FirmwareUpdatePanel,
   FirmwareUpdateProcess,
   FirmwareAdvancedOptions,
+  FirmwareCheckProcessPanel,
   FirmwareNeuronStatus,
   FirmwareVersionStatus,
   FirmwareProgressStatus,
   FirmwareImageHelp,
-  FirmwareNeuronHelp
+  FirmwareNeuronHelp,
+  FirmwareStartUpdatePanel
 };

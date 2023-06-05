@@ -17,16 +17,7 @@ import i18n from "../i18n";
 
 // Bazecor components
 import PageHeader from "../modules/PageHeader";
-import {
-  FirmwareUpdatePanel,
-  FirmwareUpdateProcess,
-  FirmwareAdvancedOptions,
-  FirmwareNeuronStatus,
-  FirmwareVersionStatus,
-  FirmwareProgressStatus,
-  FirmwareImageHelp,
-  FirmwareNeuronHelp
-} from "../modules/Firmware";
+import { FirmwareUpdatePanel, FirmwareStartUpdatePanel, FirmwareCheckProcessPanel } from "../modules/Firmware";
 
 const Styles = Styled.div`
 height: inherit;
@@ -96,11 +87,13 @@ function AltFirmwareUpdate() {
               <Spinner className="spinner-border" role="status" />
             </div>
           ) : state.context.Block === 1 ? (
-            <FirmwareUpdatePanel nextBlock={nextBlock} retryBlock={retryBlock} />
+            <>
+              <FirmwareUpdatePanel nextBlock={nextBlock} retryBlock={retryBlock} />
+            </>
           ) : state.context.Block === 2 ? (
-            ""
+            <FirmwareCheckProcessPanel nextBlock={nextBlock} retryBlock={retryBlock} />
           ) : state.context.Block === 3 ? (
-            ""
+            <FirmwareStartUpdatePanel nextBlock={nextBlock} retryBlock={retryBlock} />
           ) : (
             ""
           )}

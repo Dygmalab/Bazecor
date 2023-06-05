@@ -177,7 +177,7 @@ width: 100%;
  * @returns {<FirmwareUpdatePanel>} FirmwareUpdatePanel component.
  */
 
-const FirmwareUpdatePanel = ({ nextBlock, retryBlock }) => {
+const FirmwareStartUpdatePanel = ({ nextBlock, retryBlock }) => {
   const [state, send] = useMachine(FWSelection);
 
   const [loading, setLoading] = useState(true);
@@ -193,18 +193,14 @@ const FirmwareUpdatePanel = ({ nextBlock, retryBlock }) => {
       {loading && state.context.stateblock < 2 ? (
         ""
       ) : (
-        <div className="firmware-wrapper home-firmware">
+        <div className="firmware-wrapper disclaimer-firmware">
           <div className="firmware-row">
             <div className="firmware-content borderLeftTopRadius">
               <div className="firmware-content--inner">
-                <Title
-                  text={
-                    state.context.isUpdated
-                      ? i18n.firmwareUpdate.texts.versionUpdatedTitle
-                      : i18n.firmwareUpdate.texts.versionOutdatedTitle
-                  }
-                  headingLevel={3}
-                  type={state.context.isUpdated ? "success" : "warning"}
+                <Title text={i18n.firmwareUpdate.texts.disclaimerTitle} headingLevel={3} />
+                <div
+                  className={"disclaimerContent"}
+                  dangerouslySetInnerHTML={{ __html: i18n.firmwareUpdate.texts.disclaimerContent }}
                 />
                 <Callout
                   content={i18n.firmwareUpdate.texts.calloutIntroText}
@@ -218,51 +214,33 @@ const FirmwareUpdatePanel = ({ nextBlock, retryBlock }) => {
               </div>
             </div>
             <div className="firmware-sidebar borderRightTopRadius">
-              {/* <FirmwareNeuronStatus isUpdated={isUpdated} deviceProduct={device.info.product} keyboardType={device.info.keyboardType} /> */}
-              <FirmwareNeuronStatus isUpdated={state.context.isUpdated} deviceProduct="Defy" keyboardType="wireless" />
+              <FirmwareNeuronStatus
+                isUpdated={state.context.isUpdated}
+                status="waiting"
+                deviceProduct="Defy"
+                keyboardType="wireless"
+              />
             </div>
           </div>
           <div className="firmware-row">
             <div className="firmware-content borderLeftBottomRadius">
-              {state.context.firmwareList ? (
-                <FirmwareVersionStatus
-                  currentlyVersionRunning={state.context.device.version}
-                  latestVersionAvailable={state.context.firmwareList[state.context.selectedFirmware].version}
-                  isUpdated={state.context.isUpdated}
-                  firmwareList={state.context.firmwareList}
-                  selectedFirmware={state.context.selectedFirmware}
-                  send={send}
+              <div className="wrapperActions">
+                <RegularButton
+                  className="flashingbutton nooutlined"
+                  style="outline"
+                  buttonText={i18n.firmwareUpdate.texts.backwds}
+                  // onClick={onCancelDialog}
                 />
-              ) : (
-                ""
-              )}
+              </div>
             </div>
             <div className="firmware-sidebar borderRightBottomRadius">
               <div className="buttonActions">
-                {state.context.isUpdated ? (
-                  <RegularButton
-                    className="flashingbutton nooutlined"
-                    style="outline"
-                    buttonText={i18n.firmwareUpdate.flashing.buttonUpdated}
-                    // onClick={onClick}
-                  />
-                ) : (
-                  <RegularButton
-                    className="flashingbutton nooutlined"
-                    style="primary"
-                    buttonText={i18n.firmwareUpdate.flashing.button}
-                    onClick={() => {
-                      send("NEXT");
-                    }}
-                  />
-                )}
-                <div className="dropdownCustomFirmware">
-                  {/* <FirmwareAdvancedOptions
-                      firmwareFilename={firmwareFilename}
-                      selectFirmware={selectFirmware}
-                      selectExperimental={selectExperimental}
-                    /> */}
-                </div>
+                <RegularButton
+                  className="flashingbutton nooutlined"
+                  style="primary"
+                  buttonText={i18n.firmwareUpdate.texts.letsStart}
+                  // onClick={onBackup}`
+                />
               </div>
             </div>
           </div>
@@ -281,15 +259,4 @@ const FirmwareUpdatePanel = ({ nextBlock, retryBlock }) => {
   );
 };
 
-// FirmwareUpdatePanel.propTypes = {
-//   currentlyVersionRunning: PropTypes.string,
-//   latestVersionAvailable: PropTypes.string.isRequired,
-//   onClick: PropTypes.func.isRequired,
-//   selectFirmware: PropTypes.func.isRequired,
-//   onCancelDialog: PropTypes.func.isRequired,
-//   onBackup: PropTypes.func.isRequired,
-//   firmwareFilename: PropTypes.string,
-//   disclaimerCard: PropTypes.number
-// };
-
-export default FirmwareUpdatePanel;
+export default FirmwareStartUpdatePanel;
