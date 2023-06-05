@@ -85,6 +85,7 @@ function AltFirmwareUpdate() {
       <Container fluid className={`firmware-update`}>
         <PageHeader text={i18n.app.menu.firmwareUpdate} />
         <div>
+          <FirmwareErrorPanel nextBlock={nextBlock} retryBlock={retryBlock} />
           {state.context.Block === -1 ? (
             "error"
           ) : state.context.Block === 0 ? (

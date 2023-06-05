@@ -192,7 +192,7 @@ const FirmwareErrorPanel = ({ nextBlock, retryBlock }) => {
                 <div className="errorListWrapper">
                   <div className="errorListItem">
                     <div className="errorListImage"></div>
-                    <div className="errorListContent">{i18n.firmwareUpdate.text.errorMissingCables}</div>
+                    <div className="errorListContent">{i18n.firmwareUpdate.texts.errorMissingCables}</div>
                   </div>
                 </div>
               </div>

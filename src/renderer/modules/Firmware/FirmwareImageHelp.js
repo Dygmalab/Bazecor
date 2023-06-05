@@ -21,8 +21,8 @@ import Styled from "styled-components";
 
 import { FirmwareNeuronHelp } from "../Firmware";
 
-import videoFirmwareUpdate from "../../../../static/base/update-firmware.mp4";
-import videoFirmwareUpdateReleaseKey from "../../../../static/base/release-key.mp4";
+import videoFirmwareUpdate from "../../../../static/videos/update-firmware.mp4";
+import videoFirmwareUpdateReleaseKey from "../../../../static/videos/release-key.mp4";
 import { IconCheckmarkSm } from "../../component/Icon";
 
 const Style = Styled.div`   
