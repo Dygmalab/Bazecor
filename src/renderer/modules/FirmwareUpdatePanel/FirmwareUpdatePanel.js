@@ -171,7 +171,7 @@ width: 100%;
  * @returns {<FirmwareUpdatePanel>} FirmwareUpdatePanel component.
  */
 
-const FirmwareUpdatePanel = ({ disclaimerCard }) => {
+const FirmwareUpdatePanel = ({ disclaimerCard, nextBlock, retryBlock }) => {
   const [state, send] = useMachine(FWSelection);
 
   const [loading, setLoading] = useState(true);
@@ -179,6 +179,7 @@ const FirmwareUpdatePanel = ({ disclaimerCard }) => {
     if (state.context.device.version && state.context.firmwareList && state.context.firmwareList.length > 0) {
       setLoading(false);
     }
+    if (state.matches("success")) nextBlock(state.context);
   }, [state.context]);
 
   return (
@@ -301,7 +302,9 @@ const FirmwareUpdatePanel = ({ disclaimerCard }) => {
                         className="flashingbutton nooutlined"
                         style="primary"
                         buttonText={i18n.firmwareUpdate.flashing.button}
-                        onClick={() => send("NEXT")}
+                        onClick={() => {
+                          send("NEXT");
+                        }}
                       />
                     )}
                     <div className="dropdownCustomFirmware">
@@ -318,7 +321,14 @@ const FirmwareUpdatePanel = ({ disclaimerCard }) => {
           )}
         </>
       )}
-      <RegularButton onClick={() => send("RETRY")}>Retry when error</RegularButton>
+      <RegularButton
+        onClick={() => {
+          send("RETRY");
+          retryBlock();
+        }}
+      >
+        Retry when error
+      </RegularButton>
       <div>{JSON.stringify(state.context)}</div>
     </Style>
   );

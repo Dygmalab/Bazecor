@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
-import DeviceChecks from "../controller/FlashingSM/DeviceChecks";
 import { useMachine } from "@xstate/react";
+import DeviceChecks from "../controller/FlashingSM/DeviceChecks";
+import MainProcessSM from "../controller/FlashingSM/MainProcess";
 
 // Visual components
 import Styled from "styled-components";
@@ -43,6 +44,7 @@ height: inherit;
 `;
 
 function AltFirmwareUpdate() {
+  const [state, send] = useMachine(MainProcessSM);
   const [DeviceChecksState, DeviceChecksSend] = useMachine(DeviceChecks, {
     actions: {
       addEscListener: () => {
@@ -65,16 +67,26 @@ function AltFirmwareUpdate() {
     }
   };
 
+  const nextBlock = context => {
+    console.log("before sending NEXT", context);
+    send("NEXT", { data: context });
+  };
+
+  const retryBlock = () => {
+    send("RETRY");
+  };
+
   return (
     <Styles>
       <Container fluid className={`firmware-update`}>
         <PageHeader text={i18n.app.menu.firmwareUpdate} />
         <div>
-          <FirmwareUpdatePanel disclaimerCard={0} />
+          <FirmwareUpdatePanel disclaimerCard={state.Block} nextBlock={nextBlock} retryBlock={retryBlock} />
           <Button onClick={() => DeviceChecksSend("START")}>Start Checks</Button>
           <Button onClick={() => DeviceChecksSend("SKIP")}>Skip if raise</Button>
           <Button onClick={() => DeviceChecksSend("CHECK")}>Check Defy Sides</Button>
           <Card style={{ maxWidth: "1080px" }}>{JSON.stringify(DeviceChecksState.context)}</Card>
+          <Card style={{ maxWidth: "1080px" }}>{JSON.stringify(state.context)}</Card>
         </div>
       </Container>
     </Styles>

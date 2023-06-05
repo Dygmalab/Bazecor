@@ -140,7 +140,7 @@ const obtainFWFiles = async (type, url) => {
 
 const downloadFirmware = async (typeSelected, info, firmwareList, selectedFirmware) => {
   let filename, filenameSides;
-  console.log(typeSelected, info, firmwareList, selectedFirmware);
+  // console.log(typeSelected, info, firmwareList, selectedFirmware);
   try {
     if (typeSelected == "default") {
       if (info.product == "Raise") {
