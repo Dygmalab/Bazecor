@@ -72,7 +72,6 @@ function AltFirmwareUpdate() {
   // };
 
   const nextBlock = context => {
-    console.log("before sending NEXT", context);
     send("NEXT", { data: context });
   };
 
@@ -94,13 +93,16 @@ function AltFirmwareUpdate() {
           ) : state.context.Block === 1 ? (
             <FirmwareUpdatePanel nextBlock={nextBlock} retryBlock={retryBlock} />
           ) : state.context.Block === 2 ? (
-            <FirmwareCheckProcessPanel nextBlock={nextBlock} retryBlock={retryBlock} />
+            <FirmwareCheckProcessPanel nextBlock={nextBlock} retryBlock={retryBlock} context={state.context} />
           ) : state.context.Block === 3 ? (
             <FirmwareStartUpdatePanel nextBlock={nextBlock} retryBlock={retryBlock} />
           ) : (
             ""
           )}
-          <Card style={{ maxWidth: "1080px" }}>{JSON.stringify(state.context)}</Card>
+          <Card style={{ maxWidth: "1080px" }}>
+            <Card.Title>MainProcessSM Context</Card.Title>
+            <Card.Body>{JSON.stringify(state.context)}</Card.Body>
+          </Card>
         </div>
       </Container>
     </Styles>

@@ -43,7 +43,18 @@ const MainProcessSM = createMachine({
         assign({ Block: (context, event) => context.Block + 1 })
       ],
       on: {
-        NEXT: ["FlashingProcedureCard"],
+        NEXT: {
+          target: "FlashingProcedureCard",
+          actions: assign((context, event) => {
+            return {
+              backup: event.data.backup,
+              sideLeftOk: event.data.sideLeftOk,
+              sideLeftBL: event.data.sideLeftBL,
+              sideRightOK: event.data.sideRightOK,
+              sideRightBL: event.data.sideRightBL
+            };
+          })
+        },
         RETRY: ["FWSelectionCard", assign({ Block: (context, event) => (context.Block = 0) })]
       }
     },

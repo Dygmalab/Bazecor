@@ -165,16 +165,24 @@ width: 100%;
  * @returns {<FirmwareUpdatePanel>} FirmwareUpdatePanel component.
  */
 
-const FirmwareCheckProcessPanel = ({ nextBlock, retryBlock }) => {
-  const [state, send] = useMachine(DeviceChecks);
+const FirmwareCheckProcessPanel = ({ nextBlock, retryBlock, context }) => {
+  const [state, send] = useMachine(DeviceChecks, { context: { device: context.device } });
 
   const [loading, setLoading] = useState(true);
   useEffect(() => {
-    if (state.context.device.version && state.context.firmwareList && state.context.firmwareList.length > 0) {
+    if (state.context.stateblock > 0) {
       setLoading(false);
     }
     if (state.matches("success")) nextBlock(state.context);
   }, [state.context]);
+
+  const listItems = [
+    { id: 0, text: "sideLeftOk", checked: state.context.sideLeftOk },
+    { id: 1, text: "sideLeftBL", checked: state.context.sideLeftBL },
+    { id: 2, text: "sideRightOK", checked: state.context.sideRightOK },
+    { id: 3, text: "sideRightBL", checked: state.context.sideRightBL },
+    { id: 4, text: "backup", checked: state.context.backup }
+  ];
 
   return (
     <Style>
@@ -189,19 +197,31 @@ const FirmwareCheckProcessPanel = ({ nextBlock, retryBlock }) => {
       ) : (
         <div className="firmware-wrapper disclaimer-firmware">
           <div className="firmware-row">Checking devices</div>
+          <div>
+            {listItems.map(li => {
+              return (
+                <div key={li.id}>
+                  <input type="checkbox" checked={li.checked} style={{ marginRight: "20px" }} />
+                  {li.text}
+                </div>
+              );
+            })}
+            <div>
+              <RegularButton
+                onClick={() => {
+                  send("RETRY");
+                  retryBlock();
+                }}
+                buttonText={"Retry when error"}
+              ></RegularButton>
+              <RegularButton onClick={() => send("PRESSED")} buttonText={"success"}></RegularButton>
+              <RegularButton onClick={() => send("SKIP")} buttonText={"Skip if raise"}></RegularButton>
+              <RegularButton onClick={() => send("CHECK")} buttonText={"Check Defy Sides"}></RegularButton>
+            </div>
+          </div>
         </div>
       )}
-      <RegularButton
-        onClick={() => {
-          send("RETRY");
-          retryBlock();
-        }}
-      >
-        Retry when error
-      </RegularButton>
-      <RegularButton onClick={() => send("START")}>Start Checks</RegularButton>
-      <RegularButton onClick={() => send("SKIP")}>Skip if raise</RegularButton>
-      <RegularButton onClick={() => send("CHECK")}>Check Defy Sides</RegularButton>
+
       <Card style={{ maxWidth: "1080px" }}>{JSON.stringify(state.context)}</Card>
     </Style>
   );

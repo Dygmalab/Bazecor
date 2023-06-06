@@ -89,6 +89,7 @@ export default class Backup {
     };
     backup.neuronID = neuronID;
     backup.neuron = this.neurons.filter(n => n.id == neuronID)[0];
+    if (backup.neuron === undefined) backup.neuron = {};
     backup.neuron.device = this.focus.device;
     backup.versions = versions;
     backup.backup = commandList;
@@ -120,6 +121,7 @@ export default class Backup {
     const d = new Date();
     const folder = store.get("settings.backupFolder");
     try {
+      if (backup.neuron.name === undefined || backup.neuron.name === "") backup.neuron.name = "NoName";
       const folderPath = path.join(folder, product, backup.neuronID);
       const fullPath = path.join(
         folder,
@@ -153,7 +155,7 @@ export default class Backup {
       return true;
     } catch (error) {
       console.warn("Error ocurred when saving backup to folder");
-      return false;
+      throw new Error(error);
     }
   }
 }
