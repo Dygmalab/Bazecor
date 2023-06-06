@@ -21,22 +21,6 @@ const keyboardSetup = async context => {
   return { RaiseBrightness: undefined };
 };
 
-const sidesReady = (context, event) => {
-  return context.sideLeftOk && context.sideRightOK;
-};
-
-const CheckFWVersion = async () => {
-  let result = false;
-  try {
-    result = SemVer.ltr(result.version, result.version);
-  } catch (error) {
-    console.warn("error when querying the device");
-    console.error(error);
-    throw new Error(error);
-  }
-  return result;
-};
-
 const GetLSideData = async () => {
   let result = {};
   try {
@@ -61,6 +45,22 @@ const GetRSideData = async () => {
     throw new Error(error);
   }
   return result;
+};
+
+const CheckFWVersion = async () => {
+  let result = false;
+  try {
+    result = SemVer.ltr(result.version, result.version);
+  } catch (error) {
+    console.warn("error when querying the device");
+    console.error(error);
+    throw new Error(error);
+  }
+  return result;
+};
+
+const sidesReady = (context, event) => {
+  return context.sideLeftOk && context.sideRightOK;
 };
 
 const CreateBackup = async context => {
