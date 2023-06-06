@@ -286,7 +286,7 @@ const FirmwareStartUpdatePanel = ({ nextBlock, retryBlock, context, toggleFlashi
           retryBlock();
         }}
       ></RegularButton>
-      <div>{JSON.stringify(state.context)}</div>
+      <div style={{ maxWidth: "1080px" }}>{JSON.stringify(state.context)}</div>
     </Style>
   );
 };
