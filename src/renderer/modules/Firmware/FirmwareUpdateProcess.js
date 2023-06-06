@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React from "react";
+import React, { useState } from "react";
 import PropTypes from "prop-types";
 import Styled from "styled-components";
 import i18n from "../../i18n";
@@ -35,7 +35,6 @@ height:inherit;
   max-width: 680px;   
   width: 100%;
   margin: auto;
-  
   .firmware-row {
     width: 100%;
     display: flex;
@@ -51,8 +50,7 @@ height:inherit;
   }
   .firmware-content--inner {
     padding: 32px;
-  }   
-
+  }
   .borderLeftTopRadius {
     border-top-left-radius: 14px;
   } 
@@ -97,6 +95,7 @@ height:inherit;
  */
 
 const FirmwareUpdateProcess = ({ onCancelDialog, flashProgress, countdown }) => {
+  const [simulateCountdown, setSimulateCountdown] = useState(1);
   // used to set the stepbar position
   // const steps = [
   //   {
@@ -120,12 +119,12 @@ const FirmwareUpdateProcess = ({ onCancelDialog, flashProgress, countdown }) => 
         <div className="firmware-row progress-visualizer">
           <FirmwareProgressStatus
             flashProgress={flashProgress}
-            countdown={countdown}
+            countdown={simulateCountdown}
             deviceProduct="Defy"
             keyboardType="wireless"
           />
         </div>
-        {countdown <= 1 ? (
+        {simulateCountdown <= 1 ? (
           <div className="firmware-footer">
             <div className="holdButton">
               <RegularButton
@@ -149,6 +148,12 @@ const FirmwareUpdateProcess = ({ onCancelDialog, flashProgress, countdown }) => 
           ""
         )}
       </div>
+      <RegularButton
+        onClick={() => setSimulateCountdown(simulateCountdown + 1)}
+        style="primary"
+        buttonText="Simulate next step"
+      />
+      {simulateCountdown}
     </Style>
   );
 };

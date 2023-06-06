@@ -5,6 +5,7 @@ import CheckedIconLight from "../../../static/dark/icon-check-animated.gif";
 import closeButton from "../../../static/light/X.svg";
 import IconPlusXS from "../../../static/light/plusIcon.svg";
 import RaiseFirmwareUpgrade from "../../../static/light/raiseFirmwareupgrade.svg";
+import DefyFirmwareUpgrade from "../../../static/light/defyFirmwareupgrade.svg";
 import mouseWheelBackground from "../../../static/light/mouseWheel.png";
 import oldToNew from "../../../static/light/oldValueToNewValue.svg";
 
@@ -407,6 +408,7 @@ const Light = {
     },
     firmwareUpdateProcess: {
       raiseSVG: RaiseFirmwareUpgrade,
+      defySVG: DefyFirmwareUpgrade,
       processFooterBackground: settingColorOpacity(Tokens.colors.gray25, 0.8),
       processImageBackground: settingColorOpacity(Tokens.colors.gray25, 0.5),
       processNeuronBackground: settingColorOpacity(Tokens.colors.gray25, 0.8),

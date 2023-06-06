@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React from "react";
+import React, { useState } from "react";
 import PropTypes from "prop-types";
 import Styled from "styled-components";
 
@@ -31,22 +31,34 @@ const Style = Styled.div`
   align-self: center;
 }
 
-.processRaise {
+.processCanvas {
   position: relative;
   canvas {
-    max-width: 100%;
-    
+    max-width: 100%; 
   }
   .status-icon {
     position: absolute;
+  }
+  &.processRaise .status-icon {
     top: 61px;
     left: 85px;
   }
+  &.processDefy .status-icon {
+    top: 73px;
+    left: 72px;
+  }
 }
-.process-raise {
+.process-raise,
+.process-Raise {
   background-position: left bottom;
   background-repeat: no-repeat;
   background-image: url(${({ theme }) => theme.styles.firmwareUpdateProcess.raiseSVG});
+}
+.process-defy,
+.process-Defy {
+  background-position: left bottom;
+  background-repeat: no-repeat;
+  background-image: url(${({ theme }) => theme.styles.firmwareUpdateProcess.defySVG});
 }
 `;
 /**
@@ -103,9 +115,9 @@ const FirmwareImageHelp = ({ countdown, deviceProduct, keyboardType }) => {
             </div>
           </div>
         </div>
-        <div className={`process-col process-neuron ${countdown === 1 ? "process-raise" : ""}`}>
+        <div className={`process-col process-neuron ${countdown === 1 ? "process-" + deviceProduct : ""}`}>
           {countdown === 1 ? (
-            <div className="processRaise">
+            <div className={`processCanvas process${deviceProduct}`}>
               <div className="status-icon">
                 <div className="blob green"></div>
               </div>
