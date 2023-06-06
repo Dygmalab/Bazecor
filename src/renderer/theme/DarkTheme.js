@@ -5,6 +5,7 @@ import NeuronLoaderDark from "../../../static/dark/neuron-loader.jpg";
 import closeButton from "../../../static/dark/X.svg";
 import IconPlusXS from "../../../static/dark/plusIcon.svg";
 import RaiseFirmwareUpgrade from "../../../static/dark/raiseFirmwareupgrade.svg";
+import DefyFirmwareUpgrade from "../../../static/dark/defyFirmwareupgrade.svg";
 import mouseWheelBackgroundDark from "../../../static/dark/mouseWheel.png";
 import oldToNew from "../../../static/dark/oldValueToNewValue.svg";
 
@@ -414,6 +415,7 @@ const Dark = {
     },
     firmwareUpdateProcess: {
       raiseSVG: RaiseFirmwareUpgrade,
+      defySVG: DefyFirmwareUpgrade,
       processFooterBackground: Tokens.colors.gray800,
       processImageBackground: settingColorOpacity(Tokens.colors.gray100, 0.05),
       processNeuronBackground: Tokens.colors.gray800,

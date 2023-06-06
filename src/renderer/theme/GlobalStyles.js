@@ -326,6 +326,7 @@ svg text{
   position: relative;
   background-size: 300%;
   transition: background-position .3s ease-in-out;
+  transform-style: preserve-3d;
   &:hover {
     background-position: right;
   }
@@ -392,7 +393,7 @@ svg text{
   height: 32px;
   bottom: 2px;
   left: 50%;
-  transform: translate3d(-50%,0, 0);
+  transform: translate3d(-50%,0, -1px);
   transition: all 200ms ease-in-out;
   opacity: 0.5;
 }
@@ -408,9 +409,6 @@ svg text{
   width: 100px;
 }
 
-.button.primary:not([disabled]) .buttonFX {
-  display: none;
-}
 .btn-primary.button-config,
 .button-config {
   font-size: 13px;
