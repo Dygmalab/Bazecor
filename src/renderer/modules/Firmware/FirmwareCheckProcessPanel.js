@@ -28,7 +28,15 @@ import SemVer from "semver";
 import DeviceChecks from "../../controller/FlashingSM/DeviceChecks";
 
 // Visual components
+import Title from "../../component/Title";
+import Callout from "../../component/Callout";
 import { RegularButton } from "../../component/Button";
+
+import { FirmwareNeuronStatus } from "../Firmware";
+
+//Assets
+import videoDefyCablesDisconnect from "../../../../static/videos/connectCablesDefy.mp4";
+import { IconWarning } from "../../component/Icon";
 
 const Style = Styled.div`
 width: 100%;
@@ -155,6 +163,30 @@ width: 100%;
     display:none;
   }
 }
+.errorListWrapper {
+  padding-top: 16px;
+  display: flex;
+  grid-gap: 16px;
+  align-items: center;
+  .errorListItem {
+      display: flex;
+      grid-gap: 24px;
+      align-items: center;
+  }
+  .errorListImage {
+      video {
+          aspect-ratio: 1 /1;
+          object-fit: cover;
+          width: 162px;
+          border-radius: 16px;
+          border: 3px solid ${({ theme }) => theme.colors.brandWarning};
+      }
+  }
+  .errorListContent {
+      max-width: 200px;
+      color: ${({ theme }) => theme.styles.firmwareErrorPanel.textColor}
+  }
+}
 `;
 
 /**
@@ -186,42 +218,147 @@ const FirmwareCheckProcessPanel = ({ nextBlock, retryBlock, context }) => {
 
   return (
     <Style>
-      {loading ? (
-        <div className="firmware-wrapper disclaimer-firmware">
+      {loading || !state.context.backup ? (
+        <div className="firmware-wrapper">
           <div className="firmware-row">
-            <div className="loading marginCenter">
+            <div className="loading marginCenter text-center">
               <Spinner className="spinner-border" role="status" />
             </div>
           </div>
         </div>
       ) : (
-        <div className="firmware-wrapper disclaimer-firmware">
-          <div className="firmware-row">Checking devices</div>
-          <div>
-            {listItems.map(li => {
-              return (
-                <div key={li.id}>
-                  <input type="checkbox" checked={li.checked} style={{ marginRight: "20px" }} />
-                  {li.text}
+        <>
+          {(state.context.device.info.product == "Raise" && state.context.backup) ||
+          (state.context.device.info.product == "Defy" &&
+            state.context.sideLeftOk &&
+            state.context.sideLeftBL &&
+            state.context.sideRightOK &&
+            state.context.sideRightBL &&
+            state.context.backup) ? (
+            <div className="firmware-wrapper disclaimer-firmware">
+              <div className="firmware-row">
+                <div className="firmware-content borderLeftTopRadius">
+                  <div className="firmware-content--inner">
+                    <Title text={i18n.firmwareUpdate.texts.disclaimerTitle} headingLevel={3} />
+                    <div
+                      className={"disclaimerContent"}
+                      dangerouslySetInnerHTML={{ __html: i18n.firmwareUpdate.texts.disclaimerContent }}
+                    />
+                    <Callout
+                      content={i18n.firmwareUpdate.texts.calloutIntroText}
+                      className="mt-lg"
+                      size="md"
+                      hasVideo={state.context.device.info.product == "Raise" ? true : true}
+                      media={`aVu7EL4LXMI`}
+                      videoTitle="How to update the Software & Firmware of your Dygma keyboard"
+                      videoDuration={state.context.device.info.product == "Raise" ? "2:58" : null}
+                    />
+                  </div>
                 </div>
-              );
-            })}
-            <div>
-              <RegularButton
-                onClick={() => {
-                  send("RETRY");
-                  retryBlock();
-                }}
-                buttonText={"Retry when error"}
-              ></RegularButton>
-              <RegularButton onClick={() => send("PRESSED")} buttonText={"success"}></RegularButton>
-              <RegularButton onClick={() => send("SKIP")} buttonText={"Skip if raise"}></RegularButton>
-              <RegularButton onClick={() => send("CHECK")} buttonText={"Check Defy Sides"}></RegularButton>
+                <div className="firmware-sidebar borderRightTopRadius">
+                  <FirmwareNeuronStatus
+                    isUpdated={state.context.isUpdated}
+                    status="waiting"
+                    deviceProduct={state.context.device.info.product}
+                    keyboardType={state.context.device.info.keyboardType}
+                  />
+                </div>
+              </div>
+              <div className="firmware-row">
+                <div className="firmware-content borderLeftBottomRadius">
+                  <div className="wrapperActions">
+                    <RegularButton
+                      className="flashingbutton nooutlined"
+                      style="outline"
+                      buttonText={i18n.firmwareUpdate.texts.backwds}
+                      // onClick={onCancelDialog}
+                    />
+                  </div>
+                </div>
+                <div className="firmware-sidebar borderRightBottomRadius">
+                  <div className="buttonActions">
+                    <RegularButton
+                      className="flashingbutton nooutlined"
+                      style="primary"
+                      buttonText={i18n.firmwareUpdate.texts.letsStart}
+                      onClick={() => send("PRESSED")}
+                    />
+                  </div>
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
+          ) : (
+            <div className="firmware-wrapper">
+              <div className="firmware-row">
+                <div className="firmware-content borderLeftTopRadius">
+                  <div className="firmware-content--inner">
+                    <Title text={i18n.firmwareUpdate.texts.errorTitle} headingLevel={3} type="warning" />
+                    <div className="errorListWrapper">
+                      {!state.context.sideLeftBL || !state.context.sideRightBL ? (
+                        <div className="errorListItem">
+                          <div className="errorListImage">
+                            <video width={162} height={162} autoPlay={true} loop={true} className="img-center img-fluid">
+                              <source src={videoDefyCablesDisconnect} type="video/mp4" />
+                            </video>
+                          </div>
+                          <div className="errorListContent">{i18n.firmwareUpdate.texts.errorMissingCables}</div>
+                        </div>
+                      ) : (
+                        ""
+                      )}
+                    </div>
+                  </div>
+                </div>
+                <div className="firmware-sidebar borderRightTopRadius">
+                  <FirmwareNeuronStatus
+                    isUpdated={false}
+                    icon={<IconWarning />}
+                    status="warning"
+                    deviceProduct={state.context.device.info.product}
+                    keyboardType={state.context.device.info.keyboardType}
+                  />
+                </div>
+              </div>
+              <div className="firmware-row">
+                <div className="firmware-content borderLeftBottomRadius">
+                  <div className="wrapperActions">
+                    <RegularButton
+                      className="flashingbutton nooutlined"
+                      style="outline"
+                      buttonText={i18n.firmwareUpdate.texts.cancelButton}
+                      // onClick={onCancelDialog}
+                    />
+                  </div>
+                </div>
+                <div className="firmware-sidebar borderRightBottomRadius">
+                  <div className="buttonActions">
+                    <RegularButton
+                      className="flashingbutton nooutlined"
+                      style="primary"
+                      buttonText={i18n.general.retry}
+                      onClick={() => {
+                        send("RETRY");
+                        retryBlock();
+                      }}
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+        </>
       )}
 
+      <RegularButton
+        onClick={() => {
+          send("RETRY");
+          retryBlock();
+        }}
+        buttonText={"Retry when error"}
+      ></RegularButton>
+      <RegularButton onClick={() => send("PRESSED")} buttonText={"success"}></RegularButton>
+      <RegularButton onClick={() => send("SKIP")} buttonText={"Skip if raise"}></RegularButton>
+      <RegularButton onClick={() => send("CHECK")} buttonText={"Check Defy Sides"}></RegularButton>
       <Card style={{ maxWidth: "1080px" }}>{JSON.stringify(state.context)}</Card>
     </Style>
   );

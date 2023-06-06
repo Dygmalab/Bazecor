@@ -85,9 +85,8 @@ function AltFirmwareUpdate() {
       <Container fluid className={`firmware-update`}>
         <PageHeader text={i18n.app.menu.firmwareUpdate} />
         <div>
-          <FirmwareErrorPanel nextBlock={nextBlock} retryBlock={retryBlock} />
           {state.context.Block === -1 ? (
-            "error"
+            <FirmwareErrorPanel nextBlock={nextBlock} retryBlock={retryBlock} />
           ) : state.context.Block === 0 ? (
             <div className="loading marginCenter">
               <Spinner className="spinner-border" role="status" />
