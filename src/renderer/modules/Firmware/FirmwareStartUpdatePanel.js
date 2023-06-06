@@ -177,12 +177,35 @@ width: 100%;
  * @returns {<FirmwareUpdatePanel>} FirmwareUpdatePanel component.
  */
 
-const FirmwareStartUpdatePanel = ({ nextBlock, retryBlock }) => {
-  const [state, send] = useMachine(FlashDevice);
+const FirmwareStartUpdatePanel = ({ nextBlock, retryBlock, context }) => {
+  const [state, send] = useMachine(FlashDevice, {
+    context: { device: context.device },
+    actions: {
+      addEscListener: () => {
+        console.log("added event listener");
+        document.addEventListener("keydown", _handleKeyDown);
+      },
+      removeEscListener: () => {
+        console.log("removed event listener");
+        document.removeEventListener("keydown", _handleKeyDown);
+      }
+    }
+  });
+
+  const _handleKeyDown = event => {
+    switch (event.keyCode) {
+      case 27:
+        console.log("esc key logged");
+        send("ESCPRESSED");
+        break;
+      default:
+        break;
+    }
+  };
 
   const [loading, setLoading] = useState(true);
   useEffect(() => {
-    if (state.context.device.version && state.context.firmwareList && state.context.firmwareList.length > 0) {
+    if (state.context.stateblock > 0) {
       setLoading(false);
     }
     if (state.matches("success")) nextBlock(state.context);

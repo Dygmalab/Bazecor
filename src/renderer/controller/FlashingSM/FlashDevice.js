@@ -1,176 +1,140 @@
 import { createMachine, assign, raise } from "xstate";
-import SemVer from "semver";
 import Focus from "../../../api/focus";
-import { version } from "react";
 
-const keyboardSetup = async () => {
-  let focus = new Focus();
-  await focus.command("upgrade.start");
-};
-
-const sidesReady = (context, event) => {
-  return context.sideLeftOk && context.sideRightOK;
-};
-
-const CheckFWVersion = async () => {
-  let result = false;
-  try {
-    result = SemVer.ltr(result.version, result.version);
-  } catch (error) {
-    console.warn("error when querying the device");
-    console.error(error);
-    throw new Error(error);
-  }
-  return result;
-};
-
-const GetLSideData = async () => {
-  let result = {};
-  try {
-    let focus = new Focus();
-    result.version = await focus.command("version");
-  } catch (error) {
-    console.warn("error when querying the device");
-    console.error(error);
-    throw new Error(error);
-  }
-  return result;
-};
-
-const GetRSideData = async () => {
-  let result = {};
-  try {
-    let focus = new Focus();
-    result.version = await focus.command("version");
-  } catch (error) {
-    console.warn("error when querying the device");
-    console.error(error);
-    throw new Error(error);
-  }
-  return result;
-};
-
-const DeviceChecks = createMachine({
-  /** @xstate-layout N4IgpgJg5mDOIC5QDEA2BDAFrAlgOygAUAnAewGM5YA6ZAdQGUxUxyAXHUvagGVPQgARMADcclQejboAxBC5hq+EaQDWi5BQCusAIKEAkgCUwAgNoAGALqJQAB1K4OXWyAAeiAEwA2C9QsAHACsAJxBAIyengGeACwhAMwA7AA0IACeiN7eSdThSSFJngkh4SGeIRbeAL7VaWhYuAQkFFS0jMysztx8AsJiElKyYMRkxNR2GGwAZqTEALa02nqGJubWrg5OnHiuHgg+foGhEVEx8clpmQgJ4QHU3kHePrHZnvlJj7X1GNj4RGRKLAaPQmCx2DtePwIABxHBsTBaABG9DkCiUeBU6mocLYAAlkZJpJYbEgQFt4Ts9ll3tRgjkgkkAiUnt5wlcssFqEkgiVYoykrEkuFIt8QA0-s1AW1QZ0IVwoQJcYiUXQZCMxhMprMFjj4QSkUT0CTNo5KS4yftnuE6U8eUyWdl2RlEK8-N5mb4Et4ShZ3iExRKmgDWsD2mCupDYHK2MgcAsAO7oYhgGQAOQAogANAAqJrJFO61IQIW8IQeYU8gtingigWd1ySJW53li3vCQo7FiCgd+wZaQJBHXB3Wo0ZHccTydTAGE8bo0zCM-R8-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-opebU6AsVPTSYTaUiu10U7nyNeV9-Jymsj9PkbyRtj2iNwQjW6G9rPvXKk82zjnbhMJCNrG0flbxRxDi22+XbRV+YzrwLOCNgtVwTgg4KFUdkxEzYgSo7pGHLJiEEQIRaUv-rSxdTO+Mstexrb7EoNomEJzbAeeB0XQkJ3uEyd4hUfSkVCL5nB6XX79zHpPaes9ss7zZGOyKmyyzNPpqWZDFxgjbkPTUMzoL6uXXwYQr+YASFSB0ItxAkXcj5RIlUYOxXuHXhbIChjTI-SYcreZ47CSTKcbADdg4nwbRClWwUdbIUSrlF1oxqs3l0W7ePeS+JIPC3MnAe8Vk3ksJ6zWui3WzwPSFG8naZLWGJXiv-dYtgtjyAY95DacoUdsh45k8OlyHYdGFBqWpzSNZUc0-M90wZ2Ss4Y+wuA-k14tmlO9Ni+43kyblB9DWYowuoXU6hTCi5wOWvrpKUDfw-zGQPirFHcOTDymkT2+8Io9otfJP-ZKmlZB+2KpQvyYom0ihx1CExz5Ud3PbiBsUeIgpnc9PMxqOYIOIe8pbSHWOC18IihxSFYoV5qwPgfMeyNVqY3rwT5w1ZzIEHbgqoEtku8-THsU4OEHjIFLvGbD4UsS1QgVAO7UIAA */
-  predictableActionArguments: true,
-  id: "FlahsingProcess",
-  initial: "flashingProcess",
-  context: {
-    stateblock: 0,
-    device: {},
-    sideLeftOk: false,
-    sideLeftBL: false,
-    sideRightOK: false,
-    sideRightBL: false
-  },
-  states: {
-    flashingProcess: {
-      id: "flashingProcess",
-      initial: "waitEsc",
-      entry: [
-        (context, event) => {
-          // This will error at .flag
-          console.log("Start Flashing process!");
-          //enable listener for esc key
+const DeviceChecks = createMachine(
+  {
+    /** @xstate-layout N4IgpgJg5mDOIC5QDEA2BDAFrAlgOygAUAnAewGM5YA6Ad3RwBcBRWcgYmYGUBhQgJW5dmAEQDaABgC6iUAAdSuRjlJ5ZIAB6IATAA4ArNQkB2bQE4zxgIzbz+gCxWANCACeiAGz7t1KxI8AzB4S+pYeZtoeAL5RLmhYuAQkFFTUAGYYsJj8OFCYjFw4EGDsXACqPDxCkjJIIApKKmp1Wgh6hibmljZ2ji7ubdoB1NrGuh66Elb6umb60-YxcRjY+ERklLA0GehZOXkFRSXM-PwA8vw16g1MTeqt7UamFta2c31uiPa6PgG6s5FdAF7KZvEsQPFVkkNqkdlkADJgNKHYqlCpVLhcK51G7KVT3TzmaihKxWMz+AzGay6fo6CT2ajGen2YKkrx+YzgyGJdYpLbpTKYRHIwqok7nS7Sa6KW74lqEszEsyk8kTfRUqw0z4IIJWaheazeMwg-QBKzRWIQlY85KbbaCgByYAArmQ8GjKtUpTiZXjmqBWhFhlYAgEJCEzcZvKTaQgyRJqCzNWb2nNSdouda1rbYY6XW7OKcLtj5L67vKEEHfKHw6arFHtDHtdp7AmIqbjKqJKHO-pMwlszD+cQ4IxSCP4ehXGBiLAPRisd7S405QHEDZzfrjN8ycaIkz7LHtCFiQEqQYph5zzZ+1DeXbqCPYGOJ1OZ3PxcWl-Uy6vNOuJCBEZ6y8cIAkbMxgVjXQ9RBZUvDCb59AkMxbxtIdtgYVBXRKQQABV+AATRLH8V39f82gMJ4uleXpnG1H4Ex+M9jSCfwLUtPBSGKeA6m5Qc+V45dZXI1oAFoPFjCS0IEh96CYVhyGlMiCQQextFjdVjGrPw5g8IZZgCPtLX46FBIFXZMEIdBGEwLgwFQMByBfZSRNU+wWSMIZ7G8cDjxBDxJO1YJg2PJlOjJTVUJMrMzIfOFslyfJRTAVy-VUmxDAcetAPDVsPG+Q9mxPcZjxDMwPBsQJzRkuLc0s4UUVSn0VIrFkEzGbt7DMAx7GBbtY01bS9CpSDlX+CCAlq+96qyJ1XT-XFyzXBBjAKkZw0q8DvCGGZBpgxlAOBKMbAkbQHGM5YBzq-kZzIYg0uWii-HVRl1PUsYgR6-RY1DXR9Uq+kurDFkLSuu8c2HUdxzASdp1nR6-1aF7tO3FtRn+AJvv2nxsvCDUrG6qZpshzCcGwkdEdE9cqK8f4r2CD61WgxtqDNExgX0U1AhMEmMOoWBnXIO0qYyoy9T0d7zumYxgSKgZ-MZGC9CGaYwyMxYYiiIA */
+    predictableActionArguments: true,
+    id: "FlahsingProcess",
+    initial: "waitEsc",
+    context: {
+      stateblock: 0,
+      firwmares: []
+    },
+    states: {
+      waitEsc: {
+        id: "waitEsc",
+        on: {
+          //Esc key listener will send this event
+          ESCPRESSED: "flashPathSelector"
         },
-        assign({
-          stateblock: (context, event) => context.stateblock + 1
-        })
-      ],
-      states: {
-        waitEsc: {
-          id: "waitEsc",
-          on: {
-            //Esc key listener will send this event
-            ESCPRESSED: "#FlahsingProcess.flashingProcess.flashRightSide"
+        entry: [
+          (context, event) => {
+            // This will error at .flag
+            console.log("Wait for esc!");
+            //enable listener for esc key
+            //if per conditions it does not have to be enabled, skip it.
           },
-          entry: [
-            (context, event) => {
-              // This will error at .flag
-              console.log("Wait for esc!");
-              //enable listener for esc key
-              //if per conditions it does not have to be enabled, skip it.
-            },
-            assign({ stateblock: (context, event) => context.stateblock + 1 }),
-            "addEventListener"
-          ],
-          exit: [
-            (context, event) => {
-              //disable listener for esc key
-            },
-            "removeEventListener"
-          ]
-        },
-        flashRightSide: {
-          id: "flashRightSide",
-          entry: [
-            (context, event) => {
-              console.log(`Flashing Right Side! for ${context.retriesRight} times`);
-            },
-            assign({
-              retriesRight: (context, event) => context.retriesRight + 1
-            })
-          ],
-          on: {
-            SUCCESS: "flashLeftSide",
-            ERROR: "error"
-          }
-        },
-        flashLeftSide: {
-          id: "flashLeftSide",
-          entry: [
-            (context, event) => {
-              console.log(`Flashing Left Side! for ${context.retriesLeft} times`);
-            },
-            assign({
-              retriesLeft: (context, event) => context.retriesLeft + 1
-            })
-          ],
-          on: {
-            SUCCESS: "flashNeuron",
-            ERROR: "error"
-          }
-        },
-        flashNeuron: {
-          id: "flashNeuron",
-          on: {
-            SUCCESS: "#FlahsingProcess.restoreLayers",
-            ERROR: "error"
-          }
-        },
-        error: {
-          id: "error",
-          entry: [
-            (context, event) => {
-              console.log("Error has occurred", event);
-            }
-          ]
+          assign({ stateblock: (context, event) => context.stateblock + 1 }),
+          "addEscListener"
+        ],
+        exit: [
+          (context, event) => {
+            //disable listener for esc key
+          },
+          "removeEscListener"
+        ]
+      },
+      flashPathSelector: {
+        id: "flashPathSelector",
+        entry: [
+          (context, event) => {
+            console.log("Selecting upgrade path");
+          },
+          assign({
+            retriesRight: (context, event) => context.retriesRight + 1
+          }),
+          raise("flashingPath")
+        ],
+        on: [
+          { event: "*", target: "flashNeuron", cond: "doNotFlashSides" },
+          { event: "*", target: "flashRightSide", cond: "flashSides" }
+        ]
+      },
+      flashRightSide: {
+        id: "flashRightSide",
+        entry: [
+          (context, event) => {
+            console.log(`Flashing Right Side! for ${context.retriesRight} times`);
+          },
+          assign({
+            retriesRight: (context, event) => context.retriesRight + 1
+          })
+        ],
+        on: {
+          SUCCESS: "flashLeftSide",
+          ERROR: "error"
         }
-      }
-    },
-    restoreLayers: {
-      id: "restoreLayers",
-      entry: [
-        (context, event) => {
-          console.log("Restoring layers");
+      },
+      flashLeftSide: {
+        id: "flashLeftSide",
+        entry: [
+          (context, event) => {
+            console.log(`Flashing Left Side! for ${context.retriesLeft} times`);
+          },
+          assign({
+            retriesLeft: (context, event) => context.retriesLeft + 1
+          })
+        ],
+        on: {
+          SUCCESS: "flashNeuron",
+          ERROR: "error"
         }
-      ],
-      on: {
-        SUCCESS: "success",
-        ERROR: {
-          actions: (context, event) => console.log("error when restoring layers")
+      },
+      flashNeuron: {
+        id: "flashNeuron",
+        entry: [
+          (context, event) => {
+            console.log("NOW FLASHING NEURON!!!!");
+          }
+        ],
+        on: {
+          SUCCESS: "#FlahsingProcess.restoreLayers",
+          ERROR: "error"
         }
+      },
+      error: {
+        id: "error",
+        entry: [
+          (context, event) => {
+            console.log("Error has occurred", event);
+          }
+        ]
+      },
+      restoreLayers: {
+        id: "restoreLayers",
+        entry: [
+          (context, event) => {
+            console.log("Restoring layers");
+          }
+        ],
+        on: {
+          SUCCESS: "success",
+          ERROR: {
+            actions: (context, event) => console.log("error when restoring layers")
+          }
+        }
+      },
+      failure: {
+        on: {
+          RETRY: "#FlahsingProcess"
+        }
+      },
+      success: {
+        type: "final"
       }
-    },
-    failure: {
-      on: {
-        RETRY: "#FlahsingProcess"
+    }
+  },
+  {
+    guards: {
+      flashSides: (context, event) => {
+        return !context.device.bootloader && context.device.info.product !== "Raise";
+      },
+      doNotFlashSides: (context, event) => {
+        return context.device.bootloader || context.device.info.product === "Raise";
       }
-    },
-    success: {
-      type: "final"
     }
   }
-});
+);
 
 export default DeviceChecks;
