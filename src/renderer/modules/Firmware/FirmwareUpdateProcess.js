@@ -15,18 +15,22 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import Styled from "styled-components";
+import { useMachine } from "@xstate/react";
 import i18n from "../../i18n";
+import SemVer from "semver";
 
+// State machine
+import FlashDevice from "../../controller/FlashingSM/FlashDevice";
+
+// Visual components
 import Title from "../../component/Title";
 import { RegularButton } from "../../component/Button";
 
+// Visual modules
 import { FirmwareProgressStatus } from "../Firmware";
-import StepsBar from "../../component/StepsBar";
-
-import { IconInformationBubbleSm, IconCheckmarkSm, IconKeysPress, IconKeysRelease } from "../../component/Icon";
 
 const Style = Styled.div`   
 width: 100%;  
@@ -85,75 +89,106 @@ height:inherit;
 `;
 
 /**
- * This FirmwareUpdateProcess function returns a card with text and images that reacts according the process update
+ * This FirmwareUpdateProcess function returns a module that wrap all modules and components to manage the first steps of firware update.
  * The object will accept the following parameters
  *
- * @param {function} onCancelDialog - The function used to cancel the update process.
- * @param {number} flashProgress - The value used to render the progress bar.
- * @param {number} countdown - A number that represents the actual step on the firmware update process.
+ * @param {number} disclaimerCard - Number that indicates the software when the installation will begin.
  * @returns {<FirmwareUpdateProcess>} FirmwareUpdateProcess component.
  */
 
-const FirmwareUpdateProcess = ({ onCancelDialog, flashProgress, countdown }) => {
+const FirmwareUpdateProcess = ({ nextBlock, retryBlock, context, toggleFlashing, toggleFwUpdate }) => {
+  const [state, send] = useMachine(FlashDevice, {
+    context: {
+      device: context.device,
+      backup: context.backup,
+      firmwares: context.firmwares,
+      isUpdated: context.isUpdated,
+      versions: context.versions
+    },
+    actions: {
+      addEscListener: () => {
+        console.log("added event listener");
+        document.addEventListener("keydown", _handleKeyDown);
+      },
+      removeEscListener: () => {
+        console.log("removed event listener");
+        document.removeEventListener("keydown", _handleKeyDown);
+      },
+      activateFlashing: async () => {
+        await toggleFlashing();
+        toggleFwUpdate(true);
+      }
+    }
+  });
+
+  const _handleKeyDown = event => {
+    switch (event.keyCode) {
+      case 27:
+        console.log("esc key logged");
+        send("ESCPRESSED");
+        break;
+      default:
+        break;
+    }
+  };
+
+  const [loading, setLoading] = useState(true);
+  useEffect(() => {
+    if (state.context.stateblock > 0) {
+      setLoading(false);
+    }
+    if (state.matches("success")) nextBlock(state.context);
+  }, [state.context]);
+
   const [simulateCountdown, setSimulateCountdown] = useState(1);
-  // used to set the stepbar position
-  // const steps = [
-  //   {
-  //     icon: <IconInformationBubbleSm />
-  //   },
-  //   {
-  //     icon: <IconKeysPress />
-  //   },
-  //   {
-  //     icon: <IconKeysRelease />
-  //   },
-  //   {
-  //     icon: <IconCheckmarkSm />
-  //   }
-  // ];
 
   return (
     <Style>
-      <div className="firmware-wrapper upgrade-firmware">
-        <div className="firmware-row">{/* <StepsBar steps={steps} stepActive={countdown - 1} /> */}</div>
-        <div className="firmware-row progress-visualizer">
-          <FirmwareProgressStatus
-            flashProgress={flashProgress}
-            countdown={simulateCountdown}
-            deviceProduct="Defy"
-            keyboardType="wireless"
-          />
-        </div>
-        {simulateCountdown <= 1 ? (
-          <div className="firmware-footer">
-            <div className="holdButton">
-              <RegularButton
-                className="flashingbutton nooutlined"
-                style="outline"
-                size="sm"
-                buttonText={i18n.firmwareUpdate.texts.cancelButton}
-                onClick={onCancelDialog}
-              />
-            </div>
-            <div className="holdTootip">
-              <Title
-                text={i18n.firmwareUpdate.texts.flashCardHelp}
-                headingLevel={6}
-                tooltip={i18n.firmwareUpdate.texts.flashCardHelpTooltip}
-                tooltipSize="wide"
-              />
-            </div>
+      {loading ? (
+        ""
+      ) : (
+        <div className="firmware-wrapper upgrade-firmware">
+          <div className="firmware-row">{/* <StepsBar steps={steps} stepActive={countdown - 1} /> */}</div>
+          <div className="firmware-row progress-visualizer">
+            <FirmwareProgressStatus
+              flashProgress={0}
+              countdown={simulateCountdown}
+              deviceProduct={state.context.device.info.product}
+              keyboardType={state.context.device.info.keyboardType}
+            />
           </div>
-        ) : (
-          ""
-        )}
-      </div>
+          {simulateCountdown <= 1 ? (
+            <div className="firmware-footer">
+              <div className="holdButton">
+                <RegularButton
+                  className="flashingbutton nooutlined"
+                  style="outline"
+                  size="sm"
+                  buttonText={i18n.firmwareUpdate.texts.cancelButton}
+                  // onClick={onCancelDialog}
+                />
+              </div>
+              <div className="holdTootip">
+                <Title
+                  text={i18n.firmwareUpdate.texts.flashCardHelp}
+                  headingLevel={6}
+                  tooltip={i18n.firmwareUpdate.texts.flashCardHelpTooltip}
+                  tooltipSize="wide"
+                />
+              </div>
+            </div>
+          ) : (
+            ""
+          )}
+        </div>
+      )}
       <RegularButton
         onClick={() => setSimulateCountdown(simulateCountdown + 1)}
         style="primary"
         buttonText="Simulate next step"
       />
       {simulateCountdown}
+      <div style={{ maxWidth: "1080px" }}>{JSON.stringify(state.context)}</div>
     </Style>
   );
 };

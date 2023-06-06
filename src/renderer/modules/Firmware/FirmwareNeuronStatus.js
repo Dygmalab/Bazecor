@@ -137,7 +137,7 @@ height: 100%;
 const FirmwareNeuronStatus = ({ isUpdated, status, deviceProduct, keyboardType, icon }) => {
   let connectionColorMatrixSucess = useTheme().styles.firmwareUpdatePanel.neuronLightMatrixSuccess;
   let connectionColorMatrixWarning = useTheme().styles.firmwareUpdatePanel.neuronLightMatrixWarning;
-  console.log("Device name", deviceProduct);
+
   return (
     <Style>
       {deviceProduct == "Defy" && keyboardType == "wireless" ? (
