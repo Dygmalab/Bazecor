@@ -146,11 +146,11 @@ width: 100%;
  * @returns {<FirmwareProgressStatus>} FirmwareProgressStatus component.
  */
 
-const FirmwareProgressStatus = ({ countdown, flashProgress }) => {
+const FirmwareProgressStatus = ({ countdown, flashProgress, deviceProduct, keyboardType }) => {
   return (
     <Style>
       <div className="mainProcessWrapper">
-        <FirmwareImageHelp countdown={countdown} />
+        <FirmwareImageHelp countdown={countdown} deviceProduct={deviceProduct} keyboardType={keyboardType} />
         <div className="process-row">
           <ProgressBar>
             <ProgressBar striped animated now={flashProgress} />

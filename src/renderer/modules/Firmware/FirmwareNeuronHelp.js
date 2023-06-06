@@ -253,7 +253,7 @@ const Style = Styled.div`
  * @param {number} countdown - Number representing the position during the update process
  * @returns {<FirmwareNeuronHelp>} FirmwareNeuronHelp component.
  */
-const FirmwareNeuronHelp = ({ countdown }) => {
+const FirmwareNeuronHelp = ({ countdown, deviceProduct, keyboardType }) => {
   let connectionColorMatrix = useTheme().styles.neuronStatus.connectionColorMatrix;
   return (
     <Style>

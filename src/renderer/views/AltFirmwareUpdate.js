@@ -21,7 +21,8 @@ import {
   FirmwareErrorPanel,
   FirmwareCheckProcessPanel,
   FirmwareUpdatePanel,
-  FirmwareStartUpdatePanel
+  FirmwareStartUpdatePanel,
+  FirmwareUpdateProcess
 } from "../modules/Firmware";
 
 const Styles = Styled.div`
@@ -84,6 +85,7 @@ function AltFirmwareUpdate() {
       <Container fluid className={`firmware-update`}>
         <PageHeader text={i18n.app.menu.firmwareUpdate} />
         <div>
+          <FirmwareErrorPanel nextBlock={nextBlock} retryBlock={retryBlock} />
           {state.context.Block === -1 ? (
             "error"
           ) : state.context.Block === 0 ? (
@@ -99,6 +101,7 @@ function AltFirmwareUpdate() {
           ) : (
             ""
           )}
+          <FirmwareUpdateProcess countdown={1} />
           <Card style={{ maxWidth: "1080px" }}>
             <Card.Title>MainProcessSM Context</Card.Title>
             <Card.Body>{JSON.stringify(state.context)}</Card.Body>

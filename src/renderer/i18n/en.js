@@ -623,6 +623,7 @@ const English = {
       cstomFW: "Custom Firmware",
       backwds: "Back",
       cancel: "Cancel",
+      cancelButton: "Cancel update process",
       letsStart: "Let's start",
       versionUpdatedTitle: "Your firmware is up to date 🤙",
       versionOutdatedTitle: "New update is available",
