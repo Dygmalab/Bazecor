@@ -48,7 +48,7 @@ height: inherit;
 }
 `;
 
-function AltFirmwareUpdate() {
+const AltFirmwareUpdate = props => {
   const [state, send] = useMachine(MainProcessSM);
 
   const nextBlock = context => {
@@ -76,7 +76,13 @@ function AltFirmwareUpdate() {
           ) : state.context.Block === 2 ? (
             <FirmwareCheckProcessPanel nextBlock={nextBlock} retryBlock={retryBlock} context={state.context} />
           ) : state.context.Block === 3 ? (
-            <FirmwareStartUpdatePanel nextBlock={nextBlock} retryBlock={retryBlock} context={state.context} />
+            <FirmwareStartUpdatePanel
+              nextBlock={nextBlock}
+              retryBlock={retryBlock}
+              context={state.context}
+              toggleFlashing={props.toggleFlashing}
+              toggleFwUpdate={props.toggleFwUpdate}
+            />
           ) : (
             ""
           )}
@@ -89,6 +95,6 @@ function AltFirmwareUpdate() {
       </Container>
     </Styles>
   );
-}
+};
 
 export default AltFirmwareUpdate;

@@ -68,6 +68,7 @@ function write_cb(buffer, cb) {
 
   //execute!
   async.series(send, (err, result) => {
+    console.log(send, err, result);
     cb(err);
     console.log(result);
   });
@@ -171,7 +172,7 @@ function ihex_decode(line) {
  * Object arduino with flash method.
  */
 export var arduino = {
-  flash: (file, stateUpdate, finished) => {
+  flash: (lines, stateUpdate, finished) => {
     var func_array = [];
 
     //CLEAR line
@@ -190,15 +191,16 @@ export var arduino = {
       read_cb(callback);
     });
 
-    let fileData = fs.readFileSync(file, { encoding: "utf8" });
-    fileData = fileData.replace(/(?:\r\n|\r|\n)/g, "");
+    // let fileData = fs.readFileSync(file, { encoding: "utf8" });
+    // fileData = fileData.replace(/(?:\r\n|\r|\n)/g, "");
 
-    var lines = fileData.split(":");
-    lines.splice(0, 1);
+    // var lines = fileData.split(":");
+    // lines.splice(0, 1);
 
     var dataObjects = [];
     var total = 0;
 
+    console.log("Lines to be written", lines.length);
     for (var i = 0; i < lines.length; i++) {
       var hex = ihex_decode(lines[i]);
 
@@ -207,6 +209,7 @@ export var arduino = {
         dataObjects.push(hex);
       }
     }
+    console.log(dataObjects);
 
     var hexCount = 0;
     var address = dataObjects[0].address;
@@ -313,6 +316,7 @@ export var arduino = {
     });
 
     //execute our functions in series!
+    console.log("checking focus", focus);
     async.series(func_array, function (err, results) {
       if (err) finished(true, results);
       else finished(false, "");

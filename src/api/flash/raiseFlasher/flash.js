@@ -33,7 +33,7 @@ const { ipcRenderer } = require("electron");
  */
 export class FlashRaise {
   constructor(device) {
-    this.device = device.device;
+    this.device = device;
     this.currentPort = null;
     this.backupFileName = null;
     this.backupFileData = {
@@ -67,6 +67,7 @@ export class FlashRaise {
   async foundDevices(hardware, message, bootloader) {
     let focus = new Focus();
     let isFindDevice = false;
+    console.log("looking at device", this.device);
     await focus.find(...hardware).then(devices => {
       for (const device of devices) {
         console.log(
@@ -207,7 +208,7 @@ export class FlashRaise {
    * @param {object} port - serial port object for the "path".
    * @returns {promise}
    */
-  async resetKeyboard(port, backup, stateUpdate) {
+  async resetKeyboard(port, stateUpdate) {
     console.log("reset start", port);
     const errorMessage =
       "The firmware update couldn't start because the Raise Bootloader wasn't found. Please check our Help Center for more details or schedule a video call with us.";
@@ -216,8 +217,6 @@ export class FlashRaise {
       waitingClose: 2000, // Time to wait for boot loader
       bootLoaderUp: 1000 // Time to wait for the boot loader to come up
     };
-    console.log("loaded backup: ", backup);
-    this.backup = backup;
     return new Promise(async (resolve, reject) => {
       await this.updatePort(port, 1200);
       console.log("resetting neuron");
@@ -263,9 +262,9 @@ export class FlashRaise {
   async updateFirmware(filename, stateUpdate) {
     let focus = new Focus();
     console.log("Begin update firmware with arduino-flasher");
-    console.log(JSON.stringify(focus));
+    // console.log(JSON.stringify(focus));
     // this.backupFileData.log.push("Begin update firmware with arduino-flasher");
-    this.backupFileData.firmwareFile = filename;
+    // this.backupFileData.firmwareFile = filename;
     return new Promise(async (resolve, reject) => {
       try {
         if (focus.closed) await focus.open(this.currentPort.path, this.currentPort.device, null);

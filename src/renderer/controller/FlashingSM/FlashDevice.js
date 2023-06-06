@@ -1,7 +1,53 @@
 import { createMachine, assign, raise } from "xstate";
 import Focus from "../../../api/focus";
+import { FlashRaise, FlashDefyWired, FlashDefyWireless } from "../../../api/flash";
+import Backup from "../../../api/backup";
 
-const DeviceChecks = createMachine(
+const delay = ms => new Promise(res => setTimeout(res, ms));
+
+const stateUpdate = data => {
+  console.log(data);
+};
+
+const uploadRaise = async context => {
+  let result = false;
+  try {
+    let focus = new Focus();
+    let flashRaise = new FlashRaise({ ...focus.device });
+    const bootloader = focus.device.bootloader;
+    if (!bootloader) {
+      try {
+        await flashRaise.resetKeyboard(focus._port, stateUpdate);
+        delay(100);
+      } catch (error) {
+        console.error("Bootloader Not found: ", error);
+        throw new Error(error);
+      }
+    } else {
+      flashRaise.currentPort = { ...focus.device };
+    }
+    result = await focus.device.flash(focus._port, context.firmwares.fw, flashRaise, stateUpdate);
+    delay(100);
+    await this.flashRaise.restoreSettings();
+    delay(600);
+    if (this.state.bootloader) {
+      return false;
+    }
+    focus = new Focus();
+    if (this.state.versions) await focus.command("led.mode 0");
+    await focus.command(`led.brightness ${this.state.brightness}`);
+    // this.props.toggleFlashing();
+    // this.props.toggleFwUpdate(false);
+    // this.props.onDisconnect();
+  } catch (error) {
+    console.warn("error when flashing Neuron");
+    console.error(error);
+    throw new Error(error);
+  }
+  return result;
+};
+
+const FlashDevice = createMachine(
   {
     /** @xstate-layout N4IgpgJg5mDOIC5QDEA2BDAFrAlgOygAUAnAewGM5YA6Ad3RwBcBRWcgYmYGUBhQgJW5dmAEQDaABgC6iUAAdSuRjlJ5ZIAB6IATAA4ArNQkB2bQE4zxgIzbz+gCxWANCACeiAGz7t1KxI8AzB4S+pYeZtoeAL5RLmhYuAQkFFTUAGYYsJj8OFCYjFw4EGDsXACqPDxCkjJIIApKKmp1Wgh6hibmljZ2ji7ubdoB1NrGuh66Elb6umb60-YxcRjY+ERklLA0GehZOXkFRSXM-PwA8vw16g1MTeqt7UamFta2c31uiPa6PgG6s5FdAF7KZvEsQPFVkkNqkdlkADJgNKHYqlCpVLhcK51G7KVT3TzmaihKxWMz+AzGay6fo6CT2ajGen2YKkrx+YzgyGJdYpLbpTKYRHIwqok7nS7Sa6KW74lqEszEsyk8kTfRUqw0z4IIJWaheazeMwg-QBKzRWIQlY85KbbaCgByYAArmQ8GjKtUpTiZXjmqBWhFhlYAgEJCEzcZvKTaQgyRJqCzNWb2nNSdouda1rbYY6XW7OKcLtj5L67vKEEHfKHw6arFHtDHtdp7AmIqbjKqJKHO-pMwlszD+cQ4IxSCP4ehXGBiLAPRisd7S405QHEDZzfrjN8ycaIkz7LHtCFiQEqQYph5zzZ+1DeXbqCPYGOJ1OZ3PxcWl-Uy6vNOuJCBEZ6y8cIAkbMxgVjXQ9RBZUvDCb59AkMxbxtIdtgYVBXRKQQABV+AATRLH8V39f82gMJ4uleXpnG1H4Ex+M9jSCfwLUtPBSGKeA6m5Qc+V45dZXI1oAFoPFjCS0IEh96CYVhyGlMiCQQextFjdVjGrPw5g8IZZgCPtLX46FBIFXZMEIdBGEwLgwFQMByBfZSRNU+wWSMIZ7G8cDjxBDxJO1YJg2PJlOjJTVUJMrMzIfOFslyfJRTAVy-VUmxDAcetAPDVsPG+Q9mxPcZjxDMwPBsQJzRkuLc0s4UUVSn0VIrFkEzGbt7DMAx7GBbtY01bS9CpSDlX+CCAlq+96qyJ1XT-XFyzXBBjAKkZw0q8DvCGGZBpgxlAOBKMbAkbQHGM5YBzq-kZzIYg0uWii-HVRl1PUsYgR6-RY1DXR9Uq+kurDFkLSuu8c2HUdxzASdp1nR6-1aF7tO3FtRn+AJvv2nxsvCDUrG6qZpshzCcGwkdEdE9cqK8f4r2CD61WgxtqDNExgX0U1AhMEmMOoWBnXIO0qYyoy9T0d7zumYxgSKgZ-MZGC9CGaYwyMxYYiiIA */
     predictableActionArguments: true,
@@ -44,10 +90,12 @@ const DeviceChecks = createMachine(
           assign({
             retriesRight: (context, event) => context.retriesRight + 1
           }),
+          "activateFlashing",
           raise("flashingPath")
         ],
         on: [
-          { event: "*", target: "flashNeuron", cond: "doNotFlashSides" },
+          { event: "*", target: "flashDefyNeuron", cond: "doNotFlashSides" },
+          { event: "*", target: "flashRaiseNeuron", cond: "flashRaise" },
           { event: "*", target: "flashRightSide", cond: "flashSides" }
         ]
       },
@@ -77,12 +125,43 @@ const DeviceChecks = createMachine(
           })
         ],
         on: {
-          SUCCESS: "flashNeuron",
+          SUCCESS: "flashDefyNeuron",
           ERROR: "error"
         }
       },
-      flashNeuron: {
-        id: "flashNeuron",
+      flashRaiseNeuron: {
+        id: "flashRaiseNeuron",
+        entry: [
+          (context, event) => {
+            console.log("NOW FLASHING RAISE!!!!");
+          }
+        ],
+        invoke: {
+          id: "uploadRaise",
+          src: (context, data) => uploadRaise(context),
+          onDone: {
+            target: "success",
+            actions: [
+              assign((context, event) => {
+                return {
+                  flashResult: event.data,
+                  stateblock: context.stateblock + 1
+                };
+              })
+            ]
+          },
+          onError: {
+            target: "failure",
+            actions: assign({ error: (context, event) => event })
+          }
+        },
+        on: {
+          SUCCESS: "#FlahsingProcess.restoreLayers",
+          ERROR: "error"
+        }
+      },
+      flashDefyNeuron: {
+        id: "flashDefyNeuron",
         entry: [
           (context, event) => {
             console.log("NOW FLASHING NEURON!!!!");
@@ -130,11 +209,14 @@ const DeviceChecks = createMachine(
       flashSides: (context, event) => {
         return !context.device.bootloader && context.device.info.product !== "Raise";
       },
+      flashRaise: (context, event) => {
+        return (context.device.bootloader && context.device.info.product === "Raise") || context.device.info.product === "Raise";
+      },
       doNotFlashSides: (context, event) => {
-        return context.device.bootloader || context.device.info.product === "Raise";
+        return context.device.bootloader && context.device.info.product !== "Raise";
       }
     }
   }
 );
 
-export default DeviceChecks;
+export default FlashDevice;

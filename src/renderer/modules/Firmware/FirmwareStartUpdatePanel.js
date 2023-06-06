@@ -177,9 +177,15 @@ width: 100%;
  * @returns {<FirmwareUpdatePanel>} FirmwareUpdatePanel component.
  */
 
-const FirmwareStartUpdatePanel = ({ nextBlock, retryBlock, context }) => {
+const FirmwareStartUpdatePanel = ({ nextBlock, retryBlock, context, toggleFlashing, toggleFwUpdate }) => {
   const [state, send] = useMachine(FlashDevice, {
-    context: { device: context.device },
+    context: {
+      device: context.device,
+      backup: context.backup,
+      firmwares: context.firmwares,
+      isUpdated: context.isUpdated,
+      versions: context.versions
+    },
     actions: {
       addEscListener: () => {
         console.log("added event listener");
@@ -188,6 +194,10 @@ const FirmwareStartUpdatePanel = ({ nextBlock, retryBlock, context }) => {
       removeEscListener: () => {
         console.log("removed event listener");
         document.removeEventListener("keydown", _handleKeyDown);
+      },
+      activateFlashing: async () => {
+        await toggleFlashing();
+        toggleFwUpdate(true);
       }
     }
   });
@@ -270,13 +280,12 @@ const FirmwareStartUpdatePanel = ({ nextBlock, retryBlock, context }) => {
         </div>
       )}
       <RegularButton
+        buttonText={"Retry when error"}
         onClick={() => {
           send("RETRY");
           retryBlock();
         }}
-      >
-        Retry when error
-      </RegularButton>
+      ></RegularButton>
       <div>{JSON.stringify(state.context)}</div>
     </Style>
   );
