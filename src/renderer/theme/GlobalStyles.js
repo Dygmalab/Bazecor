@@ -105,6 +105,12 @@ const GlobalStyles = createGlobalStyle`
   }
 .loading {
   color: ${({ theme }) => theme.colors.purple300};
+  &.text-center {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    text-align: center;
+  }
 }
   .longtooltip > .tooltip-inner {
     max-width: 100%;
