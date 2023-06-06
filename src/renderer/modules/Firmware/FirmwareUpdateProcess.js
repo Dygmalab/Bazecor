@@ -28,6 +28,8 @@ import FlashDevice from "../../controller/FlashingSM/FlashDevice";
 // Visual components
 import Title from "../../component/Title";
 import { RegularButton } from "../../component/Button";
+import { StepsBar } from "../../component/StepsBar";
+import { IconArrowRight } from "../../component/Icon";
 
 // Visual modules
 import { FirmwareProgressStatus } from "../Firmware";
@@ -141,6 +143,13 @@ const FirmwareUpdateProcess = ({ nextBlock, retryBlock, context, toggleFlashing,
   }, [state.context]);
 
   const [simulateCountdown, setSimulateCountdown] = useState(1);
+  const steps = [
+    { name: "1", icon: false },
+    { name: "2", icon: false },
+    { name: "3", icon: false },
+    { name: "4", icon: false },
+    { name: "5", icon: false }
+  ];
 
   return (
     <Style>
@@ -148,13 +157,14 @@ const FirmwareUpdateProcess = ({ nextBlock, retryBlock, context, toggleFlashing,
         ""
       ) : (
         <div className="firmware-wrapper upgrade-firmware">
-          <div className="firmware-row">{/* <StepsBar steps={steps} stepActive={countdown - 1} /> */}</div>
+          <div className="firmware-row">{/* <StepsBar steps={steps} stepActive={simulateCountdown - 1} /> */}</div>
           <div className="firmware-row progress-visualizer">
             <FirmwareProgressStatus
               flashProgress={0}
               countdown={simulateCountdown}
               deviceProduct={state.context.device.info.product}
               keyboardType={state.context.device.info.keyboardType}
+              steps={steps}
             />
           </div>
           {simulateCountdown <= 1 ? (
@@ -186,6 +196,11 @@ const FirmwareUpdateProcess = ({ nextBlock, retryBlock, context, toggleFlashing,
         onClick={() => setSimulateCountdown(simulateCountdown + 1)}
         style="primary"
         buttonText="Simulate next step"
+      />
+      <RegularButton
+        onClick={() => setSimulateCountdown(simulateCountdown - 1)}
+        style="primary"
+        buttonText="Simulate prev step"
       />
       {simulateCountdown}
       <div style={{ maxWidth: "1080px" }}>{JSON.stringify(state.context)}</div>

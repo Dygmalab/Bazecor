@@ -15,16 +15,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Styled from "styled-components";
 
 const Style = Styled.div`   
-padding-right: 12px;
 width: 100%;
-
+.stepsBarWrapperInner {
+    padding: 0 32px;
+}
 .stepsElements {
   display: grid;
   grid-auto-flow: column;
+  margin-right: 12px;
 }
 .step {
   position: relative;
@@ -60,10 +62,10 @@ width: 100%;
   height: 13px;
   border-radius: 50%;
   box-shadow: ${({ theme }) => theme.styles.stepsBar.bulletBoxShadow};
-  border: 3px solid ${({ theme }) => theme.styles.stepsBar.bulletBorder};
+  border: 3px solid ${({ theme }) => theme.styles.stepsBar.bulletBackground};
   background-color: ${({ theme }) => theme.styles.stepsBar.bulletBackground};
   z-index: 2;
-  top: -6px;    
+  top: -4px;    
   &.active {
     box-shadow: ${({ theme }) => theme.styles.stepsBar.bulletBoxShadowActive};
     border: 3px solid ${({ theme }) => theme.styles.stepsBar.bulletBorderActive};
@@ -72,16 +74,17 @@ width: 100%;
 }
 .progressBar {
   width: 100%;
-  height: 3px;
+  height: 6px;
+  margin-bottom: -6px;
   border-radius: 3px;
   background-color: ${({ theme }) => theme.styles.stepsBar.stepBarBackground};
   position: relative;
-  overflow: hidden;
+//   overflow: hidden;
   .progressBarActive {
-    left: 0;
+    left: -32px;
     top: 0;
-    width: 50%;
-    height: 3px;
+    width: 0%;
+    height: 6px;
     border-radius: 3px;
     background-color: ${({ theme }) => theme.styles.stepsBar.stepBarBackgroundActive};
     position: absolute;
@@ -105,46 +108,43 @@ width: 100%;
 }
 `;
 
-/**
- * This StepsBar function returns a progress bar with icons and its respective status
- * The object will accept the following parameters
- *
- * @param {Object} steps - A list with component icons
- * @param {number} stepActive - A number used to set the actual position
- * @returns {<StepsBar>} StepsBar component.
- */
-
-const StepsBar = ({ steps, stepActive }) => {
-  let [stepsPosition, setStepsPosition] = React.useState(parseInt(stepActive));
-  let [refreshPositionStyle, setRefreshPositionStyle] = React.useState({
-    width: `${(100 / (steps.length - 1)) * stepsPosition}%`
+const StepsProgressBar = ({ steps, stepActive }) => {
+  console.log("Steps", steps);
+  let [stepsPosition, setStepsPosition] = useState(parseInt(stepActive));
+  let [refreshPositionStyle, setRefreshPositionStyle] = useState({
+    width: `calc(${(100 / (steps.length - 1)) * stepsPosition}% + 32px)`
   });
   const constructGrid = {
     gridTemplateColumns: `repeat(${steps.length - 1}, 1fr)`
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (steps.length > stepActive) {
-      const widthPercentage = {
-        width: `${(100 / (steps.length - 1)) * stepActive}%`
-      };
+      let widthPercentage;
+      if (stepActive == steps.length - 1) {
+        widthPercentage = {
+          width: `calc(${(100 / (steps.length - 1)) * stepActive}% + 64px)`
+        };
+      } else {
+        widthPercentage = {
+          width: `calc(${(100 / (steps.length - 1)) * stepActive}% + 32px)`
+        };
+      }
       setRefreshPositionStyle(widthPercentage);
     }
   }, [stepActive, steps.length]);
-
   return (
     <Style>
       <div className="stepsBarWrapper">
         <div className="stepsBarWrapperInner">
           <div className="stepsElements" style={constructGrid}>
             {steps.map((item, index) => (
-              <div className={`step ${index <= stepActive ? "active" : ""}`} data-order={index} key={`${item.name}-${index}`}>
-                <div className="stepIcon">{item.icon}</div>
+              <div className={`step ${index <= stepActive ? "active" : ""}`} data-order={index} key={`${index}`}>
                 <div className="stepBullet"></div>
               </div>
             ))}
           </div>
-          <div className="progressBar">
+          <div className={`progressBar ${stepActive == steps.length - 1 ? "progressBarEnd" : ""}`}>
             <div className="progressBarActive" style={refreshPositionStyle}></div>
           </div>
         </div>
@@ -153,4 +153,4 @@ const StepsBar = ({ steps, stepActive }) => {
   );
 };
 
-export default StepsBar;
+export default StepsProgressBar;
