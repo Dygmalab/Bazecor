@@ -177,14 +177,16 @@ width: 100%;
  * @returns {<FirmwareUpdatePanel>} FirmwareUpdatePanel component.
  */
 
-const FirmwareStartUpdatePanel = ({ nextBlock, retryBlock, context, toggleFlashing, toggleFwUpdate }) => {
+const FirmwareStartUpdatePanel = ({ nextBlock, retryBlock, context, toggleFlashing, toggleFwUpdate, onDisconnect, device }) => {
   const [state, send] = useMachine(FlashDevice, {
     context: {
       device: context.device,
+      originalDevice: device,
       backup: context.backup,
       firmwares: context.firmwares,
       isUpdated: context.isUpdated,
-      versions: context.versions
+      versions: context.versions,
+      RaiseBrightness: context.RaiseBrightness
     },
     actions: {
       addEscListener: () => {
@@ -195,9 +197,17 @@ const FirmwareStartUpdatePanel = ({ nextBlock, retryBlock, context, toggleFlashi
         console.log("removed event listener");
         document.removeEventListener("keydown", _handleKeyDown);
       },
-      activateFlashing: async () => {
+      toggleFlashing: async () => {
+        console.log("starting flashing indicators");
         await toggleFlashing();
-        toggleFwUpdate(true);
+        toggleFwUpdate();
+        //onDisconnect();
+      },
+      finishFlashing: async () => {
+        console.log("closing flashin process");
+        await toggleFlashing();
+        toggleFwUpdate();
+        onDisconnect();
       }
     }
   });

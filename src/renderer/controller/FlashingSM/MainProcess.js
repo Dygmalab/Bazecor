@@ -51,7 +51,8 @@ const MainProcessSM = createMachine({
               sideLeftOk: event.data.sideLeftOk,
               sideLeftBL: event.data.sideLeftBL,
               sideRightOK: event.data.sideRightOK,
-              sideRightBL: event.data.sideRightBL
+              sideRightBL: event.data.sideRightBL,
+              RaiseBrightness: event.data.RaiseBrightness
             };
           })
         },

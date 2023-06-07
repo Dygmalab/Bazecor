@@ -1,18 +1,14 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { useMachine } from "@xstate/react";
-import DeviceChecks from "../controller/FlashingSM/DeviceChecks";
 import MainProcessSM from "../controller/FlashingSM/MainProcess";
 
 // Visual components
 import Styled from "styled-components";
 import Container from "react-bootstrap/Container";
 import Card from "react-bootstrap/Card";
-import Dropdown from "react-bootstrap/Dropdown";
 import Spinner from "react-bootstrap/Spinner";
-import Button from "react-bootstrap/Button";
 
 // Extra components
-import { getStaticPath } from "../config";
 import i18n from "../i18n";
 
 // Bazecor components
@@ -21,8 +17,7 @@ import {
   FirmwareErrorPanel,
   FirmwareCheckProcessPanel,
   FirmwareUpdatePanel,
-  FirmwareStartUpdatePanel,
-  FirmwareUpdateProcess
+  FirmwareStartUpdatePanel
 } from "../modules/Firmware";
 
 const Styles = Styled.div`
@@ -81,6 +76,8 @@ const AltFirmwareUpdate = props => {
               context={state.context}
               toggleFlashing={props.toggleFlashing}
               toggleFwUpdate={props.toggleFwUpdate}
+              onDisconnect={props.onDisconnect}
+              device={props.device}
             />
           ) : (
             ""

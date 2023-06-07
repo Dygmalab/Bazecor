@@ -13,12 +13,11 @@ const uploadRaise = async context => {
   let result = false;
   try {
     let focus = new Focus();
-    let flashRaise = new FlashRaise({ ...focus.device });
+    let flashRaise = new FlashRaise(context.originalDevice.device);
     const bootloader = focus.device.bootloader;
     if (!bootloader) {
       try {
         await flashRaise.resetKeyboard(focus._port, stateUpdate);
-        delay(100);
       } catch (error) {
         console.error("Bootloader Not found: ", error);
         throw new Error(error);
@@ -26,19 +25,14 @@ const uploadRaise = async context => {
     } else {
       flashRaise.currentPort = { ...focus.device };
     }
-    result = await focus.device.flash(focus._port, context.firmwares.fw, flashRaise, stateUpdate);
+    await focus.close();
+    result = await context.originalDevice.device.flash(focus._port, context.firmwares.fw, flashRaise, stateUpdate);
     delay(100);
-    await this.flashRaise.restoreSettings();
+    await flashRaise.restoreSettings(context.backup.backup);
     delay(600);
-    if (this.state.bootloader) {
+    if (bootloader) {
       return false;
     }
-    focus = new Focus();
-    if (this.state.versions) await focus.command("led.mode 0");
-    await focus.command(`led.brightness ${this.state.brightness}`);
-    // this.props.toggleFlashing();
-    // this.props.toggleFwUpdate(false);
-    // this.props.onDisconnect();
   } catch (error) {
     console.warn("error when flashing Neuron");
     console.error(error);
@@ -90,7 +84,7 @@ const FlashDevice = createMachine(
           assign({
             retriesRight: (context, event) => context.retriesRight + 1
           }),
-          "activateFlashing",
+          "toggleFlashing",
           raise("flashingPath")
         ],
         on: [
@@ -147,7 +141,8 @@ const FlashDevice = createMachine(
                   flashResult: event.data,
                   stateblock: context.stateblock + 1
                 };
-              })
+              }),
+              "finishFlashing"
             ]
           },
           onError: {

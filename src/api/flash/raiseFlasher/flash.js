@@ -337,11 +337,10 @@ export class FlashRaise {
   /**
    * Restores settings to keyboard after bootloader flashing
    */
-  async restoreSettings() {
+  async restoreSettings(backup) {
     let focus = new Focus();
     const errorMessage = "Firmware update failed, because the settings could not be restored";
-    let backup = this.backup.backup;
-    console.log(this.backup, backup);
+    console.log(backup);
     if (backup === undefined || backup.length === 0) {
       await focus.open(this.currentPort.path, this.currentPort.device.info, null);
       return true;
@@ -357,11 +356,12 @@ export class FlashRaise {
         console.log(`Going to send ${backup[i].command} to keyboard`);
         await focus.command(`${backup[i].command} ${val}`.trim());
       }
-      this.backupFileData.log.push("Restoring all settings");
-      this.backupFileData.log.push("Firmware update OK");
+      await focus.command("led.mode 0");
+      // this.backupFileData.log.push("Restoring all settings");
+      // this.backupFileData.log.push("Firmware update OK");
       return true;
     } catch (e) {
-      this.backupFileData.log.push(`Restore settings: Error: ${e.message}`);
+      // this.backupFileData.log.push(`Restore settings: Error: ${e.message}`);
       return false;
     }
   }
