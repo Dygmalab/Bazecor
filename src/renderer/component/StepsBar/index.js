@@ -15,5 +15,6 @@
  */
 
 import StepsBar from "./StepsBar";
+import StepsProgressBar from "./StepsProgressBar";
 
-export { StepsBar as default };
+export { StepsBar, StepsProgressBar };

@@ -197,7 +197,12 @@ const FlashDevice = createMachine(
           INC: {
             actions: assign((context, event) => {
               return {
-                neuronProgress: event.data
+                globalProgress: event.data.globalProgress,
+                leftProgress: event.data.leftProgress,
+                rightProgress: event.data.rightProgress,
+                resetProgress: event.data.resetProgress,
+                neuronProgress: event.data.neuronProgress,
+                restoreProgress: event.data.restoreProgress
               };
             })
           },

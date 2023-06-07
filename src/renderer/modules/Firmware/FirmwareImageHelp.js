@@ -30,6 +30,36 @@ const Style = Styled.div`
   margin:auto;
   align-self: center;
 }
+.blob {
+  background: #33d9b2;
+  box-shadow: 0 0 0 0 #33d9b2;
+  border-radius: 50%;
+  margin: 10px;
+  height: 8px;
+  width: 8px;
+  transform: scale(1);
+
+  // animation: pulse-green 2s infinite;
+  transform: scale(1);
+  box-shadow: 0 0 0 32px rgba(51, 217, 178, 0.15);
+}
+
+@keyframes pulse-green {
+  0% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(51, 217, 178, 0.7);
+  }
+
+  70% {
+    transform: scale(1);
+    box-shadow: 0 0 0 42px rgba(51, 217, 178, 0);
+  }
+
+  100% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(51, 217, 178, 0);
+  }
+}
 
 .processCanvas {
   position: relative;
@@ -40,7 +70,7 @@ const Style = Styled.div`
     position: absolute;
   }
   &.processRaise .status-icon {
-    top: 61px;
+    top: 62px;
     left: 85px;
   }
   &.processDefy .status-icon {
@@ -74,7 +104,7 @@ const FirmwareImageHelp = ({ countdown, deviceProduct, keyboardType }) => {
   const checkSuccess = React.useRef(null);
 
   React.useEffect(() => {
-    if (countdown === 1) {
+    if (countdown === 0) {
       videoIntro.current.addEventListener(
         "ended",
         function () {
@@ -85,14 +115,14 @@ const FirmwareImageHelp = ({ countdown, deviceProduct, keyboardType }) => {
       );
       videoRelease.current.pause();
     }
-    if (countdown === 2) {
+    if (countdown === 1) {
       videoIntro.current.classList.add("animOut");
       videoRelease.current.classList.add("animIn");
     }
-    if (countdown === 3) {
+    if (countdown === 2) {
       videoRelease.current.play();
     }
-    if (countdown > 3) {
+    if (countdown >= 2) {
       checkSuccess.current.classList.add("animInCheck");
     }
   }, [countdown]);
@@ -115,11 +145,11 @@ const FirmwareImageHelp = ({ countdown, deviceProduct, keyboardType }) => {
             </div>
           </div>
         </div>
-        <div className={`process-col process-neuron ${countdown === 1 ? "process-" + deviceProduct : ""}`}>
-          {countdown === 1 ? (
+        <div className={`process-col process-neuron ${countdown === 0 ? "process-" + deviceProduct : ""}`}>
+          {countdown === 0 ? (
             <div className={`processCanvas process${deviceProduct}`}>
               <div className="status-icon">
-                <div className="blob green"></div>
+                <div className="blob green pulse-green"></div>
               </div>
               <canvas className="" width={340} height={259}></canvas>
             </div>

@@ -19,17 +19,15 @@ import FirmwareAdvancedOptions from "./FirmwareAdvancedOptions";
 import FirmwareCheckProcessPanel from "./FirmwareCheckProcessPanel";
 import FirmwareDefyFlashingStatus from "./FirmwareDefyFlashingStatus";
 import FirmwareErrorPanel from "./FirmwareErrorPanel";
-import FirmwareUpdateProcess from "./FirmwareUpdateProcess";
 import FirmwareNeuronStatus from "./FirmwareNeuronStatus";
 import FirmwareVersionStatus from "./FirmwareVersionStatus";
 import FirmwareProgressStatus from "./FirmwareProgressStatus";
 import FirmwareImageHelp from "./FirmwareImageHelp";
 import FirmwareNeuronHelp from "./FirmwareNeuronHelp";
-import FirmwareStartUpdatePanel from "./FirmwareStartUpdatePanel";
+import FirmwareUpdateProcess from "./FirmwareUpdateProcess";
 
 export {
   FirmwareUpdatePanel,
-  FirmwareUpdateProcess,
   FirmwareAdvancedOptions,
   FirmwareCheckProcessPanel,
   FirmwareDefyFlashingStatus,
@@ -39,5 +37,5 @@ export {
   FirmwareProgressStatus,
   FirmwareImageHelp,
   FirmwareNeuronHelp,
-  FirmwareStartUpdatePanel
+  FirmwareUpdateProcess
 };

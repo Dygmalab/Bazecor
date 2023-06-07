@@ -13,12 +13,7 @@ import i18n from "../i18n";
 
 // Bazecor components
 import PageHeader from "../modules/PageHeader";
-import {
-  FirmwareErrorPanel,
-  FirmwareCheckProcessPanel,
-  FirmwareUpdatePanel,
-  FirmwareStartUpdatePanel
-} from "../modules/Firmware";
+import { FirmwareErrorPanel, FirmwareCheckProcessPanel, FirmwareUpdatePanel, FirmwareUpdateProcess } from "../modules/Firmware";
 
 const Styles = Styled.div`
 height: inherit;
@@ -70,7 +65,7 @@ const AltFirmwareUpdate = props => {
           ) : state.context.Block === 2 ? (
             <FirmwareCheckProcessPanel nextBlock={nextBlock} retryBlock={retryBlock} context={state.context} />
           ) : state.context.Block === 3 ? (
-            <FirmwareStartUpdatePanel
+            <FirmwareUpdateProcess
               nextBlock={nextBlock}
               retryBlock={retryBlock}
               context={state.context}
