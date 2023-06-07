@@ -142,13 +142,12 @@ const FirmwareUpdateProcess = ({ nextBlock, retryBlock, context, toggleFlashing,
     if (state.matches("success")) nextBlock(state.context);
   }, [state.context]);
 
-  const [simulateCountdown, setSimulateCountdown] = useState(1);
+  const [simulateCountdown, setSimulateCountdown] = useState(0);
   const steps = [
     { name: "1", icon: false },
     { name: "2", icon: false },
     { name: "3", icon: false },
-    { name: "4", icon: false },
-    { name: "5", icon: false }
+    { name: "4", icon: false }
   ];
 
   return (
@@ -167,7 +166,7 @@ const FirmwareUpdateProcess = ({ nextBlock, retryBlock, context, toggleFlashing,
               steps={steps}
             />
           </div>
-          {simulateCountdown <= 1 ? (
+          {simulateCountdown == 0 ? (
             <div className="firmware-footer">
               <div className="holdButton">
                 <RegularButton
@@ -192,17 +191,20 @@ const FirmwareUpdateProcess = ({ nextBlock, retryBlock, context, toggleFlashing,
           )}
         </div>
       )}
-      <RegularButton
-        onClick={() => setSimulateCountdown(simulateCountdown + 1)}
-        style="primary"
-        buttonText="Simulate next step"
-      />
-      <RegularButton
-        onClick={() => setSimulateCountdown(simulateCountdown - 1)}
-        style="primary"
-        buttonText="Simulate prev step"
-      />
-      {simulateCountdown}
+      <hr />
+      <div style={{ display: "flex", gridGap: "16px", alignItems: "center", margin: "62px 0" }}>
+        <RegularButton
+          onClick={() => setSimulateCountdown(simulateCountdown + 1)}
+          style="primary"
+          buttonText="Simulate next step"
+        />
+        <RegularButton
+          onClick={() => setSimulateCountdown(simulateCountdown - 1)}
+          style="primary"
+          buttonText="Simulate prev step"
+        />
+        {simulateCountdown}
+      </div>
       <div style={{ maxWidth: "1080px" }}>{JSON.stringify(state.context)}</div>
     </Style>
   );

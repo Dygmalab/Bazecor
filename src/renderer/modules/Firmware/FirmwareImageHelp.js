@@ -104,7 +104,7 @@ const FirmwareImageHelp = ({ countdown, deviceProduct, keyboardType }) => {
   const checkSuccess = React.useRef(null);
 
   React.useEffect(() => {
-    if (countdown === 1) {
+    if (countdown === 0) {
       videoIntro.current.addEventListener(
         "ended",
         function () {
@@ -115,14 +115,14 @@ const FirmwareImageHelp = ({ countdown, deviceProduct, keyboardType }) => {
       );
       videoRelease.current.pause();
     }
-    if (countdown === 2) {
+    if (countdown === 1) {
       videoIntro.current.classList.add("animOut");
       videoRelease.current.classList.add("animIn");
     }
-    if (countdown === 3) {
+    if (countdown === 2) {
       videoRelease.current.play();
     }
-    if (countdown > 3) {
+    if (countdown >= 2) {
       checkSuccess.current.classList.add("animInCheck");
     }
   }, [countdown]);
@@ -145,8 +145,8 @@ const FirmwareImageHelp = ({ countdown, deviceProduct, keyboardType }) => {
             </div>
           </div>
         </div>
-        <div className={`process-col process-neuron ${countdown === 1 ? "process-" + deviceProduct : ""}`}>
-          {countdown === 1 ? (
+        <div className={`process-col process-neuron ${countdown === 0 ? "process-" + deviceProduct : ""}`}>
+          {countdown === 0 ? (
             <div className={`processCanvas process${deviceProduct}`}>
               <div className="status-icon">
                 <div className="blob green pulse-green"></div>

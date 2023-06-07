@@ -124,27 +124,27 @@ const FirmwareProgressStatus = ({ countdown, flashProgress, deviceProduct, keybo
       <div className="mainProcessWrapper">
         <FirmwareImageHelp countdown={countdown} deviceProduct={deviceProduct} keyboardType={keyboardType} />
         <div className="process-row">
-          <StepsProgressBar steps={steps} stepActive={countdown - 1} />
+          <StepsProgressBar steps={steps} stepActive={countdown} />
           <ProgressBar>
             <ProgressBar striped animated now={flashProgress} />
           </ProgressBar>
         </div>
         <div className="process-row process-footer">
-          {countdown === 1 ? (
+          {countdown === 0 ? (
             <Title text={i18n.firmwareUpdate.texts.flashCardTitle1} headingLevel={3} />
-          ) : countdown === 2 ? (
+          ) : countdown === 1 ? (
             <Title text={i18n.firmwareUpdate.texts.progressCardStatus1} headingLevel={3} />
-          ) : countdown === 3 ? (
+          ) : countdown === 2 ? (
             <Title text={i18n.firmwareUpdate.texts.progressCardStatus3} headingLevel={3} />
-          ) : countdown === 4 ? (
+          ) : countdown === 3 ? (
             <Title text={i18n.firmwareUpdate.texts.firmwareUpdatedTitle} headingLevel={3} />
           ) : (
             ""
           )}
 
-          {countdown === 1 ? (
+          {countdown === 0 ? (
             <Title text={i18n.firmwareUpdate.texts.flashCardTitle2} headingLevel={6} />
-          ) : countdown === 4 ? (
+          ) : countdown === 3 ? (
             <Title text={i18n.firmwareUpdate.texts.firmwareUpdatedMessage} headingLevel={6} />
           ) : (
             <Title

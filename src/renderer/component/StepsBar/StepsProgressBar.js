@@ -44,6 +44,15 @@ width: 100%;
       animation-iteration-count: 1;
     }
   }
+  &.completed {
+    .stepBullet {
+        box-shadow: 0px 4px 12px #303949;
+        border: 3px solid ${({ theme }) => theme.colors.purple200};
+        background-color: ${({ theme }) => theme.colors.purple300};
+        animation: splashBullet 400ms normal forwards ease-in-out;
+        animation-iteration-count: 1;
+      }
+  }
 }
 .stepIcon {
   position: absolute;
@@ -83,7 +92,7 @@ width: 100%;
   .progressBarActive {
     left: -32px;
     top: 0;
-    width: 0%;
+    width: calc(100% + 64px);
     height: 6px;
     border-radius: 3px;
     background-color: ${({ theme }) => theme.styles.stepsBar.stepBarBackgroundActive};
@@ -109,42 +118,56 @@ width: 100%;
 `;
 
 const StepsProgressBar = ({ steps, stepActive }) => {
-  console.log("Steps", steps);
   let [stepsPosition, setStepsPosition] = useState(parseInt(stepActive));
   let [refreshPositionStyle, setRefreshPositionStyle] = useState({
-    width: `calc(${(100 / (steps.length - 1)) * stepsPosition}% + 32px)`
+    width: `0`
   });
   const constructGrid = {
     gridTemplateColumns: `repeat(${steps.length - 1}, 1fr)`
   };
 
   useEffect(() => {
-    if (steps.length > stepActive) {
-      let widthPercentage;
-      if (stepActive == steps.length - 1) {
+    let widthPercentage;
+    if (stepActive == 0) {
+      widthPercentage = {
+        width: `calc(0%)`
+      };
+    } else {
+      if (stepActive == 1) {
         widthPercentage = {
-          width: `calc(${(100 / (steps.length - 1)) * stepActive}% + 64px)`
+          width: `calc(0% + 32px)`
         };
       } else {
-        widthPercentage = {
-          width: `calc(${(100 / (steps.length - 1)) * stepActive}% + 32px)`
-        };
+        if (stepActive == steps.length) {
+          widthPercentage = {
+            width: `calc(100% + 64px)`
+          };
+        } else {
+          widthPercentage = {
+            width: `calc(${(100 / (steps.length - 1)) * (stepActive - 1)}% + 32px)`
+          };
+        }
       }
-      setRefreshPositionStyle(widthPercentage);
     }
-  }, [stepActive, steps.length]);
+
+    setRefreshPositionStyle(widthPercentage);
+  }, [stepActive]);
   return (
     <Style>
       <div className="stepsBarWrapper">
         <div className="stepsBarWrapperInner">
           <div className="stepsElements" style={constructGrid}>
             {steps.map((item, index) => (
-              <div className={`step ${index <= stepActive ? "active" : ""}`} data-order={index} key={`${index}`}>
+              <div
+                className={`step ${index < stepActive ? "completed" : ""} ${index + 1 == stepActive ? "active" : ""}`}
+                data-order={index}
+                key={`${index}`}
+              >
                 <div className="stepBullet"></div>
               </div>
             ))}
           </div>
-          <div className={`progressBar ${stepActive == steps.length - 1 ? "progressBarEnd" : ""}`}>
+          <div className={`progressBar progressBar-set${stepActive} ${stepActive == steps.length - 1 ? "progressBarEnd" : ""}`}>
             <div className="progressBarActive" style={refreshPositionStyle}></div>
           </div>
         </div>
