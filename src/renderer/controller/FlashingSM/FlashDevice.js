@@ -5,12 +5,14 @@ import Backup from "../../../api/backup";
 
 const delay = ms => new Promise(res => setTimeout(res, ms));
 
-const stateUpdate = data => {
-  console.log(data);
-};
-
-const uploadRaise = async context => {
+const uploadRaise = async (context, callback) => {
   let result = false;
+
+  const stateUpdate = (stage, percentage) => {
+    console.log(stage, percentage);
+    callback({ type: "INC", data: percentage });
+  };
+
   try {
     let focus = new Focus();
     let flashRaise = new FlashRaise(context.originalDevice.device);
@@ -49,6 +51,10 @@ const FlashDevice = createMachine(
     initial: "waitEsc",
     context: {
       stateblock: 0,
+      globalProgress: 0,
+      leftProgress: 0,
+      rightProgress: 0,
+      neuronProgress: 0,
       firwmares: []
     },
     states: {
@@ -132,7 +138,7 @@ const FlashDevice = createMachine(
         ],
         invoke: {
           id: "uploadRaise",
-          src: (context, data) => uploadRaise(context),
+          src: (context, event) => (callback, onReceive) => uploadRaise(context, callback),
           onDone: {
             target: "success",
             actions: [
@@ -152,6 +158,13 @@ const FlashDevice = createMachine(
         },
         on: {
           SUCCESS: "#FlahsingProcess.restoreLayers",
+          INC: {
+            actions: assign((context, event) => {
+              return {
+                neuronProgress: event.data
+              };
+            })
+          },
           ERROR: "error"
         }
       },
