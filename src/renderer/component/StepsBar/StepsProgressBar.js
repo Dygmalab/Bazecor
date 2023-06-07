@@ -86,7 +86,7 @@ width: 100%;
   height: 6px;
   margin-bottom: -6px;
   border-radius: 3px;
-  background-color: ${({ theme }) => theme.styles.stepsBar.stepBarBackground};
+//   background-color: ${({ theme }) => theme.styles.stepsBar.stepBarBackground};
   position: relative;
 //   overflow: hidden;
   .progressBarActive {
@@ -135,7 +135,7 @@ const StepsProgressBar = ({ steps, stepActive }) => {
     } else {
       if (stepActive == 1) {
         widthPercentage = {
-          width: `calc(0% + 32px)`
+          width: `calc(0% + 34px)`
         };
       } else {
         if (stepActive == steps.length) {
@@ -144,7 +144,7 @@ const StepsProgressBar = ({ steps, stepActive }) => {
           };
         } else {
           widthPercentage = {
-            width: `calc(${(100 / (steps.length - 1)) * (stepActive - 1)}% + 32px)`
+            width: `calc(${(100 / (steps.length - 1)) * (stepActive - 1)}% + 34px)`
           };
         }
       }

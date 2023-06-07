@@ -122,7 +122,7 @@ const FirmwareProgressStatus = ({ countdown, flashProgress, deviceProduct, keybo
   return (
     <Style>
       <div className="mainProcessWrapper">
-        <FirmwareImageHelp countdown={countdown} deviceProduct={deviceProduct} keyboardType={keyboardType} />
+        <FirmwareImageHelp countdown={countdown} steps={steps} deviceProduct={deviceProduct} keyboardType={keyboardType} />
         <div className="process-row">
           <StepsProgressBar steps={steps} stepActive={countdown} />
           <ProgressBar>
@@ -132,33 +132,14 @@ const FirmwareProgressStatus = ({ countdown, flashProgress, deviceProduct, keybo
         <div className="process-row process-footer">
           {countdown === 0 ? (
             <Title text={i18n.firmwareUpdate.texts.flashCardTitle1} headingLevel={3} />
-          ) : countdown === 1 ? (
-            <Title text={i18n.firmwareUpdate.texts.progressCardStatus1} headingLevel={3} />
-          ) : countdown === 2 ? (
-            <Title text={i18n.firmwareUpdate.texts.progressCardStatus3} headingLevel={3} />
-          ) : countdown === 3 ? (
-            <Title text={i18n.firmwareUpdate.texts.firmwareUpdatedTitle} headingLevel={3} />
           ) : (
-            ""
+            <Title text={steps[countdown - 1].title} headingLevel={3} />
           )}
 
           {countdown === 0 ? (
             <Title text={i18n.firmwareUpdate.texts.flashCardTitle2} headingLevel={6} />
-          ) : countdown === 3 ? (
-            <Title text={i18n.firmwareUpdate.texts.firmwareUpdatedMessage} headingLevel={6} />
           ) : (
-            <Title
-              text={
-                flashProgress <= 15
-                  ? i18n.firmwareUpdate.texts.progressCardBar1
-                  : flashProgress <= 29
-                  ? i18n.firmwareUpdate.texts.progressCardBar2
-                  : flashProgress <= 69
-                  ? i18n.firmwareUpdate.texts.progressCardBar3
-                  : i18n.firmwareUpdate.texts.progressCardBar4
-              }
-              headingLevel={6}
-            />
+            <Title text={steps[countdown - 1].description} headingLevel={6} />
           )}
         </div>
       </div>

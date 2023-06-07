@@ -234,8 +234,8 @@ const FirmwareErrorPanel = ({ nextBlock, retryBlock }) => {
                 isUpdated={false}
                 icon={<IconWarning />}
                 status="warning"
-                deviceProduct="Defy"
-                keyboardType="wireless"
+                deviceProduct={state.context.device.info.product}
+                keyboardType={state.context.device.info.keyboardType}
               />
             </div>
           </div>

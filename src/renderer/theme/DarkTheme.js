@@ -592,8 +592,8 @@ const Dark = {
     },
     progress: {
       progressBackground: Tokens.colors.gray600,
-      progressBarBackground: Tokens.colors.brandSuccess,
-      boxShadow: "0px 0px 4px rgba(50, 238, 238, 0.5)"
+      progressBarBackground: Tokens.colors.gray600,
+      boxShadow: "0px 0px 4px rgba(50, 238, 238, 0)"
     },
     slider: {
       trackColor: Tokens.colors.gray400,

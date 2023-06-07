@@ -48,12 +48,12 @@ const Style = Styled.div`
         animation-fill-mode: forwards;
     }
 }       
-.neuronUpdate-3 {
+.neuronUpdate-updating {
     .neuronBlinking {
         opacity: 1;
     }
 }
-.neuronUpdate-4 {
+.neuronUpdate-success {
     .neuronSuccess {
         opacity: 1;
     }  
@@ -253,14 +253,18 @@ const Style = Styled.div`
  * @param {number} countdown - Number representing the position during the update process
  * @returns {<FirmwareNeuronHelp>} FirmwareNeuronHelp component.
  */
-const FirmwareNeuronHelp = ({ countdown, deviceProduct, keyboardType }) => {
+const FirmwareNeuronHelp = ({ countdown, deviceProduct, keyboardType, steps }) => {
   let connectionColorMatrix = useTheme().styles.neuronStatus.connectionColorMatrix;
   return (
     <Style>
       {deviceProduct == "Defy" ? (
         "Defy"
       ) : (
-        <div className={`neuronUpdate-${countdown} neuronUpdateAnimation`}>
+        <div
+          className={`neuronUpdate-${countdown} ${countdown >= 3 ? "neuronUpdate-updating" : ""} ${
+            countdown == steps.length ? "neuronUpdate-success" : ""
+          } neuronUpdateAnimation`}
+        >
           <svg width={102} height={116} fill="none" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
             <path
               clipRule="evenodd"
