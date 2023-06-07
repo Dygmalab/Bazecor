@@ -10,7 +10,44 @@ const uploadRaise = async (context, callback) => {
 
   const stateUpdate = (stage, percentage) => {
     console.log(stage, percentage);
-    callback({ type: "INC", data: percentage });
+    let globalProgress = context.globalProgress,
+      leftProgress = context.leftProgress,
+      rightProgress = context.rightProgress,
+      resetProgress = context.resetProgress,
+      neuronProgress = context.neuronProgress,
+      restoreProgress = context.restoreProgress;
+    switch (stage) {
+      case "right":
+        rightProgress = percentage;
+        break;
+      case "left":
+        leftProgress = percentage;
+        break;
+      case "reset":
+        resetProgress = percentage;
+        break;
+      case "neuron":
+        neuronProgress = percentage;
+        break;
+      case "restore":
+        restoreProgress = percentage;
+        break;
+
+      default:
+        break;
+    }
+    globalProgress = leftProgress * 0 + rightProgress * 0 + resetProgress * 0.2 + neuronProgress * 0.6 + restoreProgress * 0.2;
+    callback({
+      type: "INC",
+      data: {
+        globalProgress: globalProgress,
+        leftProgress: leftProgress,
+        rightProgress: rightProgress,
+        resetProgress: resetProgress,
+        neuronProgress: neuronProgress,
+        restoreProgress: restoreProgress
+      }
+    });
   };
 
   try {
@@ -30,7 +67,7 @@ const uploadRaise = async (context, callback) => {
     await focus.close();
     result = await context.originalDevice.device.flash(focus._port, context.firmwares.fw, flashRaise, stateUpdate);
     delay(100);
-    await flashRaise.restoreSettings(context.backup.backup);
+    await flashRaise.restoreSettings(context.backup.backup, stateUpdate);
     delay(600);
     if (bootloader) {
       return false;
@@ -54,7 +91,9 @@ const FlashDevice = createMachine(
       globalProgress: 0,
       leftProgress: 0,
       rightProgress: 0,
+      resetProgress: 0,
       neuronProgress: 0,
+      restoreProgress: 0,
       firwmares: []
     },
     states: {
@@ -87,9 +126,6 @@ const FlashDevice = createMachine(
           (context, event) => {
             console.log("Selecting upgrade path");
           },
-          assign({
-            retriesRight: (context, event) => context.retriesRight + 1
-          }),
           "toggleFlashing",
           raise("flashingPath")
         ],

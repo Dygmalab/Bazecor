@@ -292,7 +292,7 @@ const FirmwareStartUpdatePanel = ({ nextBlock, retryBlock, context, toggleFlashi
       <div>
         <h3>percentages</h3>
         <div>
-          <div>{`Neuron Percentage: ${state.context.neuronProgress}`}</div>
+          <div>{`Neuron Percentage: ${JSON.stringify(state.context.neuronProgress)}`}</div>
         </div>
       </div>
       <RegularButton

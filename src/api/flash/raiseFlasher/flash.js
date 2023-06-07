@@ -209,6 +209,7 @@ export class FlashRaise {
    * @returns {promise}
    */
   async resetKeyboard(port, stateUpdate) {
+    stateUpdate("reset", 5);
     console.log("reset start", port);
     const errorMessage =
       "The firmware update couldn't start because the Raise Bootloader wasn't found. Please check our Help Center for more details or schedule a video call with us.";
@@ -218,36 +219,33 @@ export class FlashRaise {
       bootLoaderUp: 1000 // Time to wait for the boot loader to come up
     };
     return new Promise(async (resolve, reject) => {
+      stateUpdate("reset", 10);
       await this.updatePort(port, 1200);
       console.log("resetting neuron");
-      this.backupFileData.log.push("Resetting neuron");
       await this.setDTR(port, true);
       await this.delay(timeouts.dtrToggle);
       await this.setDTR(port, false);
+      stateUpdate("reset", 20);
       console.log("waiting for bootloader");
-      this.backupFileData.log.push("Waiting for bootloader");
-      stateUpdate(2, 20);
       try {
         await this.delay(timeouts.waitingClose);
         let bootCount = 10;
         while (bootCount > 0) {
+          stateUpdate("reset", 20 + 10 - bootCount * 8);
           if (await this.foundDevices(Hardware.bootloader, "Bootloader detected", true)) {
             resolve("Detected Bootloader mode");
             bootCount = true;
-            stateUpdate(3, 30);
+            stateUpdate("reset", 100);
             break;
           }
           await this.delay(timeouts.bootLoaderUp);
           bootCount--;
         }
         if (bootCount != true) {
-          stateUpdate(4, 100);
-          this.backupFileData.log.push("Bootloader wasn't detected");
+          stateUpdate("reset", 100);
           reject(errorMessage);
         }
       } catch (e) {
-        this.backupFileData.log.push(`Reset keyboard: Error: ${e.message}`);
-        // this.saveBackupFile();
         reject(e);
       }
     });
@@ -271,7 +269,7 @@ export class FlashRaise {
         await arduino.flash(filename, stateUpdate, async (err, result) => {
           if (err) throw new Error(`Flash error ${result}`);
           else {
-            stateUpdate(3, 70);
+            stateUpdate("neuron", 100);
             console.log("End update firmware with arduino-flasher");
             // this.backupFileData.log.push("End update firmware with arduino-flasher");
             await this.delay(1500);
@@ -280,7 +278,6 @@ export class FlashRaise {
           }
         });
       } catch (e) {
-        this.backupFileData.log.push(e);
         reject(e);
       }
     });
@@ -337,7 +334,8 @@ export class FlashRaise {
   /**
    * Restores settings to keyboard after bootloader flashing
    */
-  async restoreSettings(backup) {
+  async restoreSettings(backup, stateUpdate) {
+    stateUpdate("restore", 0);
     let focus = new Focus();
     const errorMessage = "Firmware update failed, because the settings could not be restored";
     console.log(backup);
@@ -355,10 +353,12 @@ export class FlashRaise {
         }
         console.log(`Going to send ${backup[i].command} to keyboard`);
         await focus.command(`${backup[i].command} ${val}`.trim());
+        stateUpdate("restore", (i / backup.length) * 90);
       }
       await focus.command("led.mode 0");
       // this.backupFileData.log.push("Restoring all settings");
       // this.backupFileData.log.push("Firmware update OK");
+      stateUpdate("restore", 100);
       return true;
     } catch (e) {
       // this.backupFileData.log.push(`Restore settings: Error: ${e.message}`);

@@ -286,7 +286,7 @@ export var arduino = {
 
         //copy N bytes to memory location Y.
         func_array.push(function (callback) {
-          stateUpdate(3, 30 + i + i);
+          stateUpdate("neuron", 30 + i + i);
           write_cb(
             str2ab("Y" + num2hexstr(localAddress, 8) + "," + num2hexstr(localBufferSize, 8) + "#"),
             callback,
