@@ -35,17 +35,11 @@ const loadAvailableFirmwareVersions = async () => {
     });
     // console.log("Data from github!", JSON.stringify(data));
     data.data.forEach(release => {
-      let newRelease = {},
-        name,
-        version;
+      let newRelease = {};
       const releaseData = release.name.split(" ");
-      name = releaseData[0];
-      version = releaseData[1];
-      newRelease.name = name;
-      newRelease.version = version;
+      newRelease.name = releaseData[0];
+      newRelease.version = releaseData[1];
       newRelease.body = release.body;
-      newRelease.body_html = release.body_html;
-      newRelease.body_text = release.body_text;
       newRelease.assets = [];
       release.assets.forEach(asset => {
         newRelease.assets.push({
