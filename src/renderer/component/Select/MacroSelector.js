@@ -111,7 +111,7 @@ class MacroSelector extends React.Component {
   };
 
   render() {
-    const { onSelect, itemList, selectedItem, deleteItem, addItem, cloneItem, subtitle, mem } = this.props;
+    const { onSelect, itemList, selectedItem, deleteItem, addItem, cloneItem, subtitle, mem, tMem } = this.props;
     const { show, showAdd } = this.state;
 
     return (
@@ -178,7 +178,7 @@ class MacroSelector extends React.Component {
           style="outline gradient addNew"
           onClick={this.toggleShowAdd}
         />
-        <MacrosMemoryUsage mem={mem} />
+        <MacrosMemoryUsage mem={mem} tMem={tMem} />
         {itemList == undefined || itemList.length == 0 || itemList.length <= selectedItem ? (
           ""
         ) : (

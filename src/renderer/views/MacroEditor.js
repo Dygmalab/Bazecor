@@ -135,7 +135,8 @@ class MacroEditor extends React.Component {
       listToDelete: [],
       listToDeleteS: [],
       selectedList: 0,
-      freeMemory: 0,
+      usedMemory: 0,
+      totalMemory: 0,
       currentLanguageLayout: store.get("settings.language") || "english"
     };
     this.updateMacros = this.updateMacros.bind(this);
@@ -175,6 +176,9 @@ class MacroEditor extends React.Component {
         return false;
       }
 
+      let tMem = await focus.command("macros.memory");
+      tMem = parseInt(tMem);
+      if (tMem === undefined || tMem < 100) tMem = 2048;
       const keymap = await focus.command("keymap");
       const macrosRaw = await focus.command("macros.map");
       const parsedMacros = this.macroTranslator(macrosRaw);
@@ -186,7 +190,8 @@ class MacroEditor extends React.Component {
         keymap,
         kbtype,
         modified: false,
-        freeMemory: parsedMacros.map(m => m.actions).flat().length
+        usedMemory: parsedMacros.map(m => m.actions).flat().length,
+        totalMemory: tMem
       });
     } catch (e) {
       toast.error(<ToastMessage title={e} icon={<IconFloppyDisk />} />, { icon: "" });
@@ -321,7 +326,7 @@ class MacroEditor extends React.Component {
     this.setState({
       macros: recievedMacros,
       modified: true,
-      freeMemory: recievedMacros.map(m => m.actions).flat().length
+      usedMemory: recievedMacros.map(m => m.actions).flat().length
     });
     this.props.startContext();
   }
@@ -479,7 +484,8 @@ class MacroEditor extends React.Component {
       selectedList,
       selectedMacro,
       listToDelete,
-      freeMemory,
+      usedMemory,
+      totalMemory,
       showDeleteModal,
       kbtype,
       currentLanguageLayout
@@ -528,7 +534,8 @@ class MacroEditor extends React.Component {
                 updateItem={this.saveName}
                 cloneItem={this.duplicateMacro}
                 maxMacros={maxMacros}
-                mem={freeMemory}
+                mem={usedMemory}
+                tMem={totalMemory}
               />
             }
             showSaving={true}
