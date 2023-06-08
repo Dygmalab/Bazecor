@@ -68,8 +68,11 @@ class App extends React.Component {
     }
 
     // Settings entry creation for the beta toggle, it will have a control in preferences to change the policy
-    let allowBeta = store.get("settings.allowBeta");
-    if (allowBeta === undefined) {
+
+    let allowBeta;
+    if (!store.has("settings.allowBeta")) {
+      allowBeta = store.get("settings.allowBeta");
+    } else {
       allowBeta = true;
       store.set("settings.allowBeta", true);
     }
@@ -230,7 +233,10 @@ class App extends React.Component {
     });
   };
 
-  updateAllowBeta = newValue => {
+  updateAllowBeta = event => {
+    let newValue = event.target.checked;
+    console.log("new allowBeta value: ", newValue);
+    store.set("settings.allowBeta", newValue);
     this.setState({
       allowBeta: newValue
     });
@@ -401,6 +407,7 @@ class App extends React.Component {
               startContext={this.startContext}
               cancelContext={this.cancelContext}
               updateAllowBeta={this.updateAllowBeta}
+              allowBeta={this.state.allowBeta}
               inContext={contextBar}
             />
           </Switch>

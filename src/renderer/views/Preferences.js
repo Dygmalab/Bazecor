@@ -85,7 +85,6 @@ class Preferences extends React.Component {
       devTools: false,
       advanced: false,
       verboseFocus: false,
-      allowBeta: store.get("settings.allowBeta"),
       darkMode: "system",
       neurons: store.get("neurons"),
       selectedNeuron: 0,
@@ -380,13 +379,6 @@ class Preferences extends React.Component {
     this.props.startContext();
   };
 
-  toggleAllowBeta = () => {
-    const allowBeta = store.get("settings.allowBeta");
-    store.set("settings.allowBeta", !allowBeta);
-    this.setState({ allowBeta: !allowBeta });
-    this.props.updateAllowBeta(!allowBeta);
-  };
-
   // NEURON FUNCTIONS
   selectNeuron = value => {
     this.setState({
@@ -421,13 +413,13 @@ class Preferences extends React.Component {
   };
 
   render() {
-    const { neurons, selectedNeuron, darkMode, neuronID, devTools, verboseFocus, kbData, modified, allowBeta } = this.state;
-    const { inContext, connected } = this.props;
+    const { neurons, selectedNeuron, darkMode, neuronID, devTools, verboseFocus, kbData, modified } = this.state;
+    const { inContext, connected, allowBeta, updateAllowBeta } = this.props;
     const { defaultLayer } = this.kbData;
     const devToolsSwitch = <Form.Check type="switch" checked={devTools} onChange={this.toggleDevTools} />;
     const verboseSwitch = <Form.Check type="switch" checked={verboseFocus} onChange={this.toggleVerboseFocus} />;
     const onlyCustomSwitch = <Form.Check type="switch" checked={kbData.keymap.onlyCustom} onChange={this.toggleOnlyCustom} />;
-    const allowBetas = <Form.Check type="switch" checked={allowBeta} onChange={this.toggleAllowBeta} />;
+    const allowBetas = <Form.Check type="switch" checked={allowBeta} onChange={updateAllowBeta} />;
     // console.log("CHECKING STATUS MOD", modified);
     // console.log("CHECKING STATUS CTX", inContext);
 
