@@ -390,6 +390,7 @@ class App extends React.Component {
               onDisconnect={this.onKeyboardDisconnect}
               titleElement={() => document.querySelector("#page-title")}
               darkMode={darkMode}
+              allowBeta={allowBeta}
             />
             <Preferences
               connected={connected}

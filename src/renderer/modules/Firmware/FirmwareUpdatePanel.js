@@ -168,8 +168,8 @@ width: 100%;
  * @returns {<FirmwareUpdatePanel>} FirmwareUpdatePanel component.
  */
 
-const FirmwareUpdatePanel = ({ nextBlock, retryBlock }) => {
-  const [state, send] = useMachine(FWSelection);
+const FirmwareUpdatePanel = ({ nextBlock, retryBlock, allowBeta }) => {
+  const [state, send] = useMachine(FWSelection, { context: { allowBeta: allowBeta } });
 
   const [loading, setLoading] = useState(true);
   useEffect(() => {
@@ -219,7 +219,7 @@ const FirmwareUpdatePanel = ({ nextBlock, retryBlock }) => {
           </div>
           <div className="firmware-row">
             <div className="firmware-content borderLeftBottomRadius">
-              {state.context.firmwareList ? (
+              {state.context.firmwareList && state.context.firmwareList.length > 0 ? (
                 <FirmwareVersionStatus
                   currentlyVersionRunning={state.context.device.version}
                   latestVersionAvailable={state.context.firmwareList[state.context.selectedFirmware].version}

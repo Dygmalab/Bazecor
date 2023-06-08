@@ -61,7 +61,7 @@ const AltFirmwareUpdate = props => {
               <Spinner className="spinner-border" role="status" />
             </div>
           ) : state.context.Block === 1 ? (
-            <FirmwareUpdatePanel nextBlock={nextBlock} retryBlock={retryBlock} />
+            <FirmwareUpdatePanel nextBlock={nextBlock} retryBlock={retryBlock} allowBeta={props.allowBeta} />
           ) : state.context.Block === 2 ? (
             <FirmwareCheckProcessPanel nextBlock={nextBlock} retryBlock={retryBlock} context={state.context} />
           ) : state.context.Block === 3 ? (

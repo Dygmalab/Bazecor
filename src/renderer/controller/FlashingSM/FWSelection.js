@@ -22,7 +22,7 @@ const FocusAPIRead = async () => {
   return data;
 };
 
-const loadAvailableFirmwareVersions = async () => {
+const loadAvailableFirmwareVersions = async allowBeta => {
   let Releases = [];
   try {
     const octokit = new Octokit();
@@ -49,7 +49,9 @@ const loadAvailableFirmwareVersions = async () => {
         //console.log([asset.name, asset.browser_download_url]);
       });
       //console.log(newRelease);
-      Releases.push(newRelease);
+      if (allowBeta || !newRelease.version.includes("beta")) {
+        Releases.push(newRelease);
+      }
     });
   } catch (error) {
     console.warn("error when querying GitHub with Octokit");
@@ -62,7 +64,7 @@ const loadAvailableFirmwareVersions = async () => {
 
 const GitHubRead = async context => {
   let finalReleases, isUpdated, isBeta;
-  const fwReleases = await loadAvailableFirmwareVersions();
+  const fwReleases = await loadAvailableFirmwareVersions(context.allowBeta);
   try {
     finalReleases = fwReleases.filter(release => release.name === context.device.info.product);
     finalReleases.sort((a, b) => {
@@ -191,16 +193,19 @@ const SelectionSM = createMachine({
     typeSelected: "default",
     selectedFirmware: 0,
     isUpdated: false,
-    isBeta: false
+    isBeta: false,
+    allowBeta: false
   },
   states: {
     LoadDeviceData: {
       id: "LoadDeviceData",
       entry: [
         (context, event) => {
-          // This will error at .flag
           console.log("Getting device info");
-        }
+        },
+        assign({
+          stateblock: (context, event) => 1
+        })
       ],
       invoke: {
         id: "FocusAPIRead",
@@ -209,9 +214,6 @@ const SelectionSM = createMachine({
           target: "LoadGithubFW",
           actions: [
             assign({ device: (context, event) => event.data }),
-            assign({
-              stateblock: (context, event) => context.stateblock + 1
-            }),
             (context, state) => {
               console.log("Success: ", context.device);
             }
@@ -232,9 +234,11 @@ const SelectionSM = createMachine({
       id: "LoadGitHubData",
       entry: [
         (context, event) => {
-          // This will error at .flag
           console.log("Loading Github data!");
-        }
+        },
+        assign({
+          stateblock: (context, event) => 2
+        })
       ],
       invoke: {
         id: "GitHubData",
@@ -248,9 +252,6 @@ const SelectionSM = createMachine({
                 isUpdated: event.data.isUpdated,
                 isBeta: event.data.isBeta
               };
-            }),
-            assign({
-              stateblock: (context, event) => context.stateblock + 1
             })
           ]
         },
@@ -264,11 +265,10 @@ const SelectionSM = createMachine({
       id: "selectFirmware",
       entry: [
         (context, event) => {
-          // This will error at .flag
           console.log("select Firmware!");
         },
         assign({
-          stateblock: (context, event) => context.stateblock + 1
+          stateblock: (context, event) => 3
         })
       ],
       on: {
@@ -282,11 +282,10 @@ const SelectionSM = createMachine({
       id: "loadingFWFiles",
       entry: [
         (context, event) => {
-          // This will error at .flag
           console.log("Download Firmware!");
         },
         assign({
-          stateblock: (context, event) => context.stateblock + 1
+          stateblock: (context, event) => 4
         })
       ],
       invoke: {
@@ -295,22 +294,24 @@ const SelectionSM = createMachine({
           downloadFirmware(context.typeSelected, context.device.info, context.firmwareList, context.selectedFirmware),
         onDone: {
           target: "success",
-          actions: [
-            assign({ firmwares: (context, event) => event.data }),
-            assign({
-              stateblock: (context, event) => context.stateblock + 1
-            })
-          ]
+          actions: [assign({ firmwares: (context, event) => event.data })]
         },
         onError: {
           target: "failure",
-          actions: assign({ error: (context, event) => event })
+          actions: [assign({ error: (context, event) => event })]
         }
       }
     },
     failure: {
       on: {
-        RETRY: "LoadDeviceData"
+        RETRY: {
+          target: "LoadDeviceData",
+          actions: [
+            assign({
+              stateblock: (context, event) => 0
+            })
+          ]
+        }
       }
     },
     success: { type: "final" }
