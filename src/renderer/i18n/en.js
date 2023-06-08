@@ -458,6 +458,7 @@ const English = {
     advanced: "Advanced",
     verboseFocus: "Verbose logging",
     onlyCustom: "Use only custom layers",
+    allowBeta: "Show Beta firmwares",
     darkMode: {
       label: "Appearance",
       light: "Light",

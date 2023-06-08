@@ -116,17 +116,10 @@ const Styles = Styled.div`
 class NavigationMenu extends Component {
   constructor(props) {
     super(props);
-    // Settings entry creation for the beta toggle, it will have a control in preferences to change the policy
-    let allowBeta = store.get("settings.allowBeta");
-    if (allowBeta === undefined) {
-      allowBeta = true;
-      store.set("settings.allowBeta", true);
-    }
 
     this.state = {
       versions: null,
       flashing: props.flashing,
-      allowBeta: allowBeta,
       isUpdated: true,
       isBeta: false
     };
@@ -140,7 +133,12 @@ class NavigationMenu extends Component {
     if (this.props.flashing != previousProps.flashing) {
       this.setState({ flashing: this.props.flashing });
     }
-    if (this.state.versions != null && this.state.versions.bazecor.length > 0 && this.state.flashing == previousState.flashing) {
+    if (
+      this.props.allowBeta === previousProps.allowBeta &&
+      this.state.versions !== null &&
+      this.state.versions.bazecor.length > 0 &&
+      this.state.flashing === previousState.flashing
+    ) {
       return;
     }
     await this.contextUpdater();
@@ -181,7 +179,7 @@ class NavigationMenu extends Component {
     data.data.forEach(release => {
       const releaseData = release.name.split(" ");
       const newRelease = { name: releaseData[0], version: releaseData[1] };
-      if (!releaseData[1].includes("beta") || this.state.allowBeta) Releases.push(newRelease);
+      if (!releaseData[1].includes("beta") || this.props.allowBeta) Releases.push(newRelease);
     });
     let finalReleases = Releases.filter(release => release.name === product);
     finalReleases.sort((a, b) => {
@@ -200,7 +198,7 @@ class NavigationMenu extends Component {
     const { isUpdated, isBeta, versions, fwList } = this.state;
     const currentPage = history.location.pathname;
 
-    console.log("new checker for navigation", fwList, versions, isUpdated, isBeta);
+    //console.log("new checker for navigation", fwList, versions, isUpdated, isBeta);
 
     return (
       <Styles>

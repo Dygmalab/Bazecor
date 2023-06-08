@@ -61,11 +61,17 @@ class App extends React.Component {
     super(props);
     this.updateStorageSchema();
 
-    let isDark;
     const mode = store.get("settings.darkMode");
-    isDark = mode === "dark" ? true : false;
+    let isDark = mode === "dark" ? true : false;
     if (mode === "system") {
       isDark = ipcRenderer.invoke("get-NativeTheme");
+    }
+
+    // Settings entry creation for the beta toggle, it will have a control in preferences to change the policy
+    let allowBeta = store.get("settings.allowBeta");
+    if (allowBeta === undefined) {
+      allowBeta = true;
+      store.set("settings.allowBeta", true);
     }
 
     this.state = {
@@ -224,6 +230,12 @@ class App extends React.Component {
     });
   };
 
+  updateAllowBeta = newValue => {
+    this.setState({
+      allowBeta: newValue
+    });
+  };
+
   onKeyboardConnect = async (port, file) => {
     await focus.close();
 
@@ -304,7 +316,7 @@ class App extends React.Component {
   };
 
   render() {
-    const { connected, pages, contextBar, darkMode, fwUpdate } = this.state;
+    const { connected, pages, contextBar, darkMode, fwUpdate, allowBeta } = this.state;
 
     let device =
       (focus.device && focus.device.info) ||
@@ -323,6 +335,7 @@ class App extends React.Component {
           theme={darkMode}
           flashing={!connected}
           fwUpdate={fwUpdate}
+          allowBeta={allowBeta}
         />
         <div className="main-container">
           <Switch>
@@ -386,6 +399,7 @@ class App extends React.Component {
               toggleDarkMode={this.toggleDarkMode}
               startContext={this.startContext}
               cancelContext={this.cancelContext}
+              updateAllowBeta={this.updateAllowBeta}
               inContext={contextBar}
             />
           </Switch>
