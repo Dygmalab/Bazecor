@@ -94,31 +94,27 @@ const FlashDevice = createMachine(
       resetProgress: 0,
       neuronProgress: 0,
       restoreProgress: 0,
+      retriesRight: 0,
+      retriesLeft: 0,
+      retriesNeuron: 0,
+      retriesDefyNeuron: 0,
       firwmares: []
     },
     states: {
       waitEsc: {
         id: "waitEsc",
+        entry: [
+          (context, event) => {
+            console.log("Wait for esc!");
+          },
+          assign({ stateblock: (context, event) => 1 }),
+          "addEscListener"
+        ],
         on: {
           //Esc key listener will send this event
           ESCPRESSED: "flashPathSelector"
         },
-        entry: [
-          (context, event) => {
-            // This will error at .flag
-            console.log("Wait for esc!");
-            //enable listener for esc key
-            //if per conditions it does not have to be enabled, skip it.
-          },
-          assign({ stateblock: (context, event) => context.stateblock + 1 }),
-          "addEscListener"
-        ],
-        exit: [
-          (context, event) => {
-            //disable listener for esc key
-          },
-          "removeEscListener"
-        ]
+        exit: ["removeEscListener"]
       },
       flashPathSelector: {
         id: "flashPathSelector",
@@ -126,6 +122,9 @@ const FlashDevice = createMachine(
           (context, event) => {
             console.log("Selecting upgrade path");
           },
+          assign({
+            stateblock: (context, event) => 2
+          }),
           "toggleFlashing",
           raise("flashingPath")
         ],
@@ -141,13 +140,16 @@ const FlashDevice = createMachine(
           (context, event) => {
             console.log(`Flashing Right Side! for ${context.retriesRight} times`);
           },
-          assign({
-            retriesRight: (context, event) => context.retriesRight + 1
+          assign((context, event) => {
+            return {
+              retriesRight: context.retriesRight + 1,
+              stateblock: 3
+            };
           })
         ],
         on: {
           SUCCESS: "flashLeftSide",
-          ERROR: "error"
+          ERROR: "failure"
         }
       },
       flashLeftSide: {
@@ -156,21 +158,30 @@ const FlashDevice = createMachine(
           (context, event) => {
             console.log(`Flashing Left Side! for ${context.retriesLeft} times`);
           },
-          assign({
-            retriesLeft: (context, event) => context.retriesLeft + 1
+          assign((context, event) => {
+            return {
+              retriesLeft: context.retriesLeft + 1,
+              stateblock: 4
+            };
           })
         ],
         on: {
           SUCCESS: "flashDefyNeuron",
-          ERROR: "error"
+          ERROR: "failure"
         }
       },
       flashRaiseNeuron: {
         id: "flashRaiseNeuron",
         entry: [
           (context, event) => {
-            console.log("NOW FLASHING RAISE!!!!");
-          }
+            console.log(`Flashing Neuron! for ${context.retriesNeuron} times`);
+          },
+          assign((context, event) => {
+            return {
+              retriesNeuron: context.retriesNeuron + 1,
+              stateblock: 5
+            };
+          })
         ],
         invoke: {
           id: "uploadRaise",
@@ -180,8 +191,7 @@ const FlashDevice = createMachine(
             actions: [
               assign((context, event) => {
                 return {
-                  flashResult: event.data,
-                  stateblock: context.stateblock + 1
+                  flashResult: event.data
                 };
               }),
               "finishFlashing"
@@ -206,35 +216,36 @@ const FlashDevice = createMachine(
               };
             })
           },
-          ERROR: "error"
+          ERROR: "failure"
         }
       },
       flashDefyNeuron: {
         id: "flashDefyNeuron",
         entry: [
           (context, event) => {
-            console.log("NOW FLASHING NEURON!!!!");
-          }
+            console.log(`Flashing Neuron! for ${context.retriesDefyNeuron} times`);
+          },
+          assign((context, event) => {
+            return {
+              retriesDefyNeuron: context.retriesDefyNeuron + 1,
+              stateblock: 6
+            };
+          })
         ],
         on: {
           SUCCESS: "#FlahsingProcess.restoreLayers",
-          ERROR: "error"
+          ERROR: "failure"
         }
-      },
-      error: {
-        id: "error",
-        entry: [
-          (context, event) => {
-            console.log("Error has occurred", event);
-          }
-        ]
       },
       restoreLayers: {
         id: "restoreLayers",
         entry: [
           (context, event) => {
             console.log("Restoring layers");
-          }
+          },
+          assign({
+            stateblock: (context, event) => 7
+          })
         ],
         on: {
           SUCCESS: "success",
