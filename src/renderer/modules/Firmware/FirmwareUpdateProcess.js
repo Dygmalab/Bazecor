@@ -191,7 +191,9 @@ const FirmwareUpdateProcess = ({ nextBlock, retryBlock, context, toggleFlashing,
                   style="outline"
                   size="sm"
                   buttonText={i18n.firmwareUpdate.texts.cancelButton}
-                  // onClick={onCancelDialog}
+                  onClick={() => {
+                    retryBlock();
+                  }}
                 />
               </div>
               <div className="holdTootip">

@@ -173,7 +173,7 @@ const FirmwareUpdatePanel = ({ nextBlock, retryBlock, allowBeta }) => {
 
   const [loading, setLoading] = useState(true);
   useEffect(() => {
-    if (state.context.device.version && state.context.firmwareList && state.context.firmwareList.length > 0) {
+    if (state.context.stateblock >= 3) {
       setLoading(false);
     }
     if (state.matches("success")) nextBlock(state.context);
@@ -181,7 +181,7 @@ const FirmwareUpdatePanel = ({ nextBlock, retryBlock, allowBeta }) => {
 
   return (
     <Style>
-      {loading && state.context.stateblock < 2 ? (
+      {loading ? (
         ""
       ) : (
         <div className="firmware-wrapper home-firmware">
@@ -239,7 +239,9 @@ const FirmwareUpdatePanel = ({ nextBlock, retryBlock, allowBeta }) => {
                     className="flashingbutton nooutlined"
                     style="outline"
                     buttonText={i18n.firmwareUpdate.flashing.buttonUpdated}
-                    // onClick={onClick}
+                    onClick={() => {
+                      send("NEXT");
+                    }}
                   />
                 ) : (
                   <RegularButton

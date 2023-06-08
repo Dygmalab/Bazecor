@@ -271,7 +271,9 @@ const FirmwareCheckProcessPanel = ({ nextBlock, retryBlock, context }) => {
                       className="flashingbutton nooutlined"
                       style="outline"
                       buttonText={i18n.firmwareUpdate.texts.backwds}
-                      // onClick={onCancelDialog}
+                      onClick={() => {
+                        retryBlock();
+                      }}
                     />
                   </div>
                 </div>
@@ -326,7 +328,9 @@ const FirmwareCheckProcessPanel = ({ nextBlock, retryBlock, context }) => {
                       className="flashingbutton nooutlined"
                       style="outline"
                       buttonText={i18n.firmwareUpdate.texts.cancelButton}
-                      // onClick={onCancelDialog}
+                      onClick={() => {
+                        retryBlock();
+                      }}
                     />
                   </div>
                 </div>
@@ -337,8 +341,7 @@ const FirmwareCheckProcessPanel = ({ nextBlock, retryBlock, context }) => {
                       style="primary"
                       buttonText={i18n.general.retry}
                       onClick={() => {
-                        send("RETRY");
-                        retryBlock();
+                        send("PRESSED");
                       }}
                     />
                   </div>
@@ -351,7 +354,6 @@ const FirmwareCheckProcessPanel = ({ nextBlock, retryBlock, context }) => {
 
       <RegularButton
         onClick={() => {
-          send("RETRY");
           retryBlock();
         }}
         buttonText={"Retry when error"}

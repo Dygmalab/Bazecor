@@ -15,7 +15,7 @@ const MainProcessSM = createMachine({
           // This will error at .flag
           console.log("First Block");
         },
-        assign({ Block: (context, event) => context.Block + 1 })
+        assign({ Block: (context, event) => 1 })
       ],
       on: {
         NEXT: {
@@ -40,7 +40,7 @@ const MainProcessSM = createMachine({
           // This will error at .flag
           console.log("Second Block");
         },
-        assign({ Block: (context, event) => context.Block + 1 })
+        assign({ Block: (context, event) => 2 })
       ],
       on: {
         NEXT: {
@@ -66,7 +66,7 @@ const MainProcessSM = createMachine({
           // This will error at .flag
           console.log("Third Block");
         },
-        assign({ Block: (context, event) => context.Block + 1 })
+        assign({ Block: (context, event) => 3 })
       ],
       on: {
         NEXT: ["success"],
