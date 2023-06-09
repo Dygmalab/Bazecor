@@ -98,11 +98,12 @@ const StepsProgressBar = ({ steps, stepActive }) => {
     width: `0`
   });
   const constructGrid = {
-    gridTemplateColumns: `repeat(${steps.length - 1}, 1fr)`
+    gridTemplateColumns: `repeat(${steps.length - 2}, 1fr)`
   };
 
   useEffect(() => {
     let widthPercentage;
+
     if (stepActive == 0) {
       widthPercentage = {
         width: `calc(0%)`
@@ -113,13 +114,13 @@ const StepsProgressBar = ({ steps, stepActive }) => {
           width: `calc(0% + 34px)`
         };
       } else {
-        if (stepActive == steps.length) {
+        if (stepActive == steps.length - 1) {
           widthPercentage = {
             width: `calc(100% + 64px)`
           };
         } else {
           widthPercentage = {
-            width: `calc(${(100 / (steps.length - 1)) * (stepActive - 1)}% + 34px)`
+            width: `calc(${(100 / (steps.length - 2)) * (stepActive - 1)}% + 34px)`
           };
         }
       }
@@ -132,17 +133,23 @@ const StepsProgressBar = ({ steps, stepActive }) => {
       <div className="stepsBarWrapper">
         <div className="stepsBarWrapperInner">
           <div className="stepsElements" style={constructGrid}>
-            {steps.map((item, index) => (
-              <div
-                className={`step ${index < stepActive ? "completed" : ""} ${index + 1 == stepActive ? "active" : ""}`}
-                data-order={index}
-                key={`${index}`}
-              >
-                <div className="stepBullet"></div>
-              </div>
-            ))}
+            {steps.map((item, index) =>
+              index == 0 ? (
+                ""
+              ) : (
+                <div
+                  className={`step ${index < stepActive + 1 ? "completed" : ""} ${
+                    index == stepActive && index !== steps.length - 1 ? "active" : ""
+                  }`}
+                  data-order={index}
+                  key={`${index}`}
+                >
+                  <div className="stepBullet"></div>
+                </div>
+              )
+            )}
           </div>
-          <div className={`progressBar progressBar-set${stepActive} ${stepActive == steps.length - 1 ? "progressBarEnd" : ""}`}>
+          <div className={`progressBar progressBar-set${stepActive}`}>
             <div className="progressBarActive" style={refreshPositionStyle}></div>
           </div>
         </div>

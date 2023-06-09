@@ -160,6 +160,7 @@ const FirmwareUpdateProcess = ({ nextBlock, retryBlock, context, toggleFlashing,
     { name: "4", icon: false }
   ];
   const stepsRaise = [
+    { step: 0, title: i18n.firmwareUpdate.texts.flashCardTitle1, description: i18n.firmwareUpdate.texts.flashCardTitle2 },
     { step: 1, title: "1. Hold the key", description: "Backing up you layers" },
     { step: 6, title: "2. Release the key", description: "Preparing the Keyboard" },
     { step: 7, title: "3. Updating the Firmware", description: "Gently installing..." },
@@ -183,7 +184,7 @@ const FirmwareUpdateProcess = ({ nextBlock, retryBlock, context, toggleFlashing,
               steps={state.context.device.info.product == "Defy" ? stepsDefy : stepsRaise}
             />
           </div>
-          {simulateCountdown == 0 ? (
+          {state.context.stateblock == 1 ? (
             <div className="firmware-footer">
               <div className="holdButton">
                 <RegularButton
