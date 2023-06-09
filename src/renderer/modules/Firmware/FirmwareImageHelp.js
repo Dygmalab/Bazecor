@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import Styled from "styled-components";
 
@@ -103,8 +103,8 @@ const FirmwareImageHelp = ({ countdown, deviceProduct, keyboardType, steps }) =>
   const videoRelease = React.useRef(null);
   const checkSuccess = React.useRef(null);
 
-  React.useEffect(() => {
-    if (countdown === 0) {
+  useEffect(() => {
+    if (countdown == 0) {
       videoIntro.current.addEventListener(
         "ended",
         function () {
@@ -115,11 +115,11 @@ const FirmwareImageHelp = ({ countdown, deviceProduct, keyboardType, steps }) =>
       );
       videoRelease.current.pause();
     }
-    if (countdown === 1) {
+    if (countdown == 1) {
       videoIntro.current.classList.add("animOut");
       videoRelease.current.classList.add("animIn");
     }
-    if (countdown === 2) {
+    if (countdown == 2) {
       videoRelease.current.play();
     }
     if (countdown == steps.length) {
@@ -145,8 +145,8 @@ const FirmwareImageHelp = ({ countdown, deviceProduct, keyboardType, steps }) =>
             </div>
           </div>
         </div>
-        <div className={`process-col process-neuron ${countdown === 0 ? "process-" + deviceProduct : ""}`}>
-          {countdown === 0 ? (
+        <div className={`process-col process-neuron ${countdown == 0 ? "process-" + deviceProduct : ""}`}>
+          {countdown == 0 ? (
             <div className={`processCanvas process${deviceProduct}`}>
               <div className="status-icon">
                 <div className="blob green pulse-green"></div>
