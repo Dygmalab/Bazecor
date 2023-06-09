@@ -636,6 +636,14 @@ const Light = {
       bulletBoxShadow: "0px 4px 12px rgba(107, 119, 148, 0.4)",
       bulletBoxShadowActive: "0px 4px 12px #6C5CE7"
     },
+    stepsProgressBar: {
+      stepBarBackground: settingColorOpacity(Tokens.colors.gray100, 0.5),
+      backgroundActive: Tokens.colors.purple200,
+      bulletBackground: Tokens.colors.gray200,
+      bulletBackgroundActive: Tokens.colors.purple300,
+      bulletBorderActive: Tokens.colors.purple200,
+      stepBarBackgroundActive: Tokens.colors.purple200
+    },
     superkeyAction: {
       color: Tokens.colors.gray400,
       background: settingColorOpacity(Tokens.colors.gray25, 0.7),
