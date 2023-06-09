@@ -127,7 +127,7 @@ const FlashDevice = createMachine(
     id: "FlahsingProcess",
     initial: "waitEsc",
     context: {
-      stateblock: 0,
+      stateblock: 1,
       globalProgress: 0,
       leftProgress: 0,
       rightProgress: 0,
@@ -163,7 +163,7 @@ const FlashDevice = createMachine(
             console.log("Selecting upgrade path");
           },
           assign({
-            stateblock: (context, event) => 2
+            stateblock: (context, event) => 1
           }),
           "toggleFlashing",
           raise("flashingPath")
@@ -183,7 +183,7 @@ const FlashDevice = createMachine(
           assign((context, event) => {
             return {
               retriesRight: context.retriesRight + 1,
-              stateblock: 3
+              stateblock: 2
             };
           })
         ],
@@ -201,7 +201,7 @@ const FlashDevice = createMachine(
           assign((context, event) => {
             return {
               retriesLeft: context.retriesLeft + 1,
-              stateblock: 4
+              stateblock: 3
             };
           })
         ],
@@ -234,7 +234,7 @@ const FlashDevice = createMachine(
           (context, event) => {
             console.log(`Resetting Neuron!`);
           },
-          assign({ stateblock: (context, event) => 6 })
+          assign({ stateblock: (context, event) => 2 })
         ],
         invoke: {
           id: "resetRaise",
@@ -270,7 +270,7 @@ const FlashDevice = createMachine(
           (context, event) => {
             console.log(`Flashing Neuron! for ${context.retriesNeuron} times`);
           },
-          assign({ stateblock: (context, event) => 7 }),
+          assign({ stateblock: (context, event) => 3 }),
           assign({ retriesNeuron: (context, event) => context.retriesNeuron + 1 })
         ],
         invoke: {
@@ -307,14 +307,14 @@ const FlashDevice = createMachine(
           (context, event) => {
             console.log(`Restoring Neuron!`);
           },
-          assign({ stateblock: (context, event) => 8 })
+          assign({ stateblock: (context, event) => 4 })
         ],
         invoke: {
           id: "restoreRaise",
           src: (context, event) => (callback, onReceive) => restoreRaise(context, callback),
           onDone: {
-            target: "success",
-            actions: [assign({ flashResult: (context, event) => event.data }), "finishFlashing"]
+            target: "reportSucess",
+            actions: [assign({ flashResult: (context, event) => event.data })]
           },
           onError: {
             target: "failure",
@@ -344,11 +344,11 @@ const FlashDevice = createMachine(
             console.log("Reporting Sucess");
           },
           assign({
-            stateblock: (context, event) => 9
+            stateblock: (context, event) => 7
           })
         ],
         after: {
-          2000: { target: "success" }
+          2000: { target: "success", actions: ["finishFlashing"] }
         }
       },
       failure: {
@@ -357,7 +357,7 @@ const FlashDevice = createMachine(
             console.log("Failure state");
           },
           assign({
-            stateblock: (context, event) => 10
+            stateblock: (context, event) => 8
           })
         ],
         on: {

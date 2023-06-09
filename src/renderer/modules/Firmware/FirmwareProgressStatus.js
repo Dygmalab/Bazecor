@@ -119,68 +119,24 @@ width: 100%;
  */
 
 const FirmwareProgressStatus = ({ countdown, flashProgress, deviceProduct, keyboardType, steps }) => {
-  const [adjustedCountdown, setAdjustedCountdown] = useState(0);
-
-  useEffect(() => {
-    switch (countdown) {
-      case 1:
-        setAdjustedCountdown(0);
-        break;
-      case 2:
-        setAdjustedCountdown(1);
-        break;
-      case 3:
-        setAdjustedCountdown(1);
-        break;
-      case 4:
-        setAdjustedCountdown(1);
-        break;
-      case 5:
-        setAdjustedCountdown(1);
-        break;
-      case 6:
-        setAdjustedCountdown(2);
-        break;
-      case 7:
-        setAdjustedCountdown(3);
-        break;
-      case 8:
-        setAdjustedCountdown(4);
-        break;
-      case 9:
-        setAdjustedCountdown(5);
-        break;
-      default:
-        setAdjustedCountdown(0);
-    }
-  }, [countdown]);
-
   return (
     <Style>
-      <h4>
-        stepActive/adjustedCountdown: {adjustedCountdown} Contdown: {countdown}
-      </h4>
       <div className="mainProcessWrapper">
-        <FirmwareImageHelp
-          countdown={adjustedCountdown}
-          steps={steps}
-          deviceProduct={deviceProduct}
-          keyboardType={keyboardType}
-        />
+        <FirmwareImageHelp countdown={countdown} steps={steps} deviceProduct={deviceProduct} keyboardType={keyboardType} />
         <div className="process-row">
-          <StepsProgressBar steps={steps} stepActive={adjustedCountdown} />
+          <StepsProgressBar steps={steps} stepActive={countdown} />
           <ProgressBar>
             <ProgressBar striped animated now={flashProgress} />
           </ProgressBar>
         </div>
         <div className="process-row process-footer">
-          {adjustedCountdown == 0 ? (
+          {countdown == 0 ? (
             <Title text={i18n.firmwareUpdate.texts.flashCardTitle1} headingLevel={3} />
           ) : (
             <Title text={steps.find(step => step.step == countdown).title} headingLevel={3} />
           )}
 
-          {adjustedCountdown == 0 ? (
+          {countdown == 0 ? (
             <Title text={i18n.firmwareUpdate.texts.flashCardTitle2} headingLevel={6} />
           ) : (
             <Title text={steps.find(step => step.step == countdown).description} headingLevel={6} />

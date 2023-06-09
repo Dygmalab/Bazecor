@@ -164,13 +164,12 @@ const FirmwareUpdateProcess = ({ nextBlock, retryBlock, context, toggleFlashing,
     { name: "4", icon: false }
   ];
   const stepsRaise = [
-    { step: 0, title: i18n.firmwareUpdate.texts.flashCardTitle1, description: i18n.firmwareUpdate.texts.flashCardTitle2 },
-    { step: 1, title: "1. Hold the key", description: "Backing up you layers" },
-    { step: 6, title: "2. Release the key", description: "Preparing the Keyboard" },
-    { step: 7, title: "3. Updating the Firmware", description: "Gently installing..." },
-    { step: 8, title: "4. Restoring your Layers", description: "Wrapping everything up!" },
-    { step: 9, title: "Firmware update!", description: "Solid as a rock! 💪" },
-    { step: 10, title: "Firmware update error!", description: "Errors!!!! 🫠" }
+    { step: 1, title: i18n.firmwareUpdate.texts.flashCardTitle1, description: i18n.firmwareUpdate.texts.flashCardTitle2 },
+    { step: 2, title: "1. Hold Esc Key", description: "Preparing the Keyboard" },
+    { step: 3, title: "2. Updating the Firmware", description: "Gently installing..." },
+    { step: 4, title: "3. Restoring your Layers", description: "Wrapping everything up!" },
+    { step: 7, title: "Firmware update!", description: "Solid as a rock! 💪" },
+    { step: 8, title: "Firmware update error!", description: "Errors!!!! 🫠" }
   ];
 
   return (
@@ -214,7 +213,7 @@ const FirmwareUpdateProcess = ({ nextBlock, retryBlock, context, toggleFlashing,
           ) : (
             ""
           )}
-          {state.context.stateblock == 10 ? (
+          {state.context.stateblock == 8 ? (
             <div className="firmware-footer">
               <div className="holdButton">
                 <RegularButton
