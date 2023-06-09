@@ -166,8 +166,8 @@ export class FlashDefyWired {
    * windows: C:\Users\<Your_User_Namer>\AppData\Local\Programs\bazecor,
    * linux: in directory, where the app is located.
    */
-  saveBackupFile() {
-    const userDataPath = ipcRenderer.invoke("get-userPath", "userData");
+  async saveBackupFile() {
+    const userDataPath = await ipcRenderer.invoke("get-userPath", "userData");
     const route = path.join(userDataPath, this.backupFileName + ".json");
     console.log("saving file to: " + route);
     fs.writeFile(route, JSON.stringify(this.backupFileData), err => {
@@ -511,8 +511,8 @@ export class FlashDefyWireless {
    * windows: C:\Users\<Your_User_Namer>\AppData\Local\Programs\bazecor,
    * linux: in directory, where the app is located.
    */
-  saveBackupFile() {
-    const userDataPath = ipcRenderer.invoke("get-userPath", "userData");
+  async saveBackupFile() {
+    const userDataPath = await ipcRenderer.invoke("get-userPath", "userData");
     const route = path.join(userDataPath, this.backupFileName + ".json");
     console.log("saving file to: " + route);
     fs.writeFile(route, JSON.stringify(this.backupFileData), err => {
