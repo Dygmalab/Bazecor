@@ -220,8 +220,8 @@ export var arduino = {
       return;
     }
 
-    i = 0;
-
+    var state = 1,
+      stateT = 20;
     while (total > 0) {
       var bufferSize = total < PACKET_SIZE ? total : PACKET_SIZE;
 
@@ -269,7 +269,7 @@ export var arduino = {
 
         //write our data.
         func_array.push(function (callback) {
-          write_cb(localBuffer, callback, stateUpdate, 30 + i + i);
+          write_cb(localBuffer, callback);
         });
 
         //set our read pointer
@@ -284,23 +284,17 @@ export var arduino = {
 
         //copy N bytes to memory location Y.
         func_array.push(function (callback) {
-          stateUpdate("neuron", 30 + i + i);
-          write_cb(
-            str2ab("Y" + num2hexstr(localAddress, 8) + "," + num2hexstr(localBufferSize, 8) + "#"),
-            callback,
-            stateUpdate,
-            30 + i + i
-          );
+          write_cb(str2ab("Y" + num2hexstr(localAddress, 8) + "," + num2hexstr(localBufferSize, 8) + "#"), callback);
         });
 
         //wait for ACK
         func_array.push(function (callback) {
+          stateUpdate("neuron", (state / stateT) * 100);
+          state++;
           read_cb(callback);
         });
-      })(address, bufferSize, buffer);
-
+      })(address, bufferSize, buffer, state);
       total -= bufferSize;
-      i++;
       address += bufferSize;
     }
     //CLEANUP
