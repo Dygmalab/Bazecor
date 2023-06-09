@@ -99,6 +99,7 @@ height:inherit;
  */
 
 const FirmwareUpdateProcess = ({ nextBlock, retryBlock, context, toggleFlashing, toggleFwUpdate, onDisconnect, device }) => {
+  const [toggledFlashing, sendToggledFlashing] = useState(false);
   const [state, send] = useMachine(FlashDevice, {
     context: {
       device: context.device,
@@ -119,12 +120,15 @@ const FirmwareUpdateProcess = ({ nextBlock, retryBlock, context, toggleFlashing,
         document.removeEventListener("keydown", _handleKeyDown);
       },
       toggleFlashing: async () => {
+        if (toggledFlashing) return;
         console.log("starting flashing indicators");
         await toggleFlashing();
         toggleFwUpdate();
-        //onDisconnect();
+        sendToggledFlashing(true);
       },
       finishFlashing: async () => {
+        if (!toggledFlashing) return;
+        sendToggledFlashing(false);
         console.log("closing flashin process");
         await toggleFlashing();
         toggleFwUpdate();
@@ -164,7 +168,8 @@ const FirmwareUpdateProcess = ({ nextBlock, retryBlock, context, toggleFlashing,
     { step: 6, title: "2. Release the key", description: "Preparing the Keyboard" },
     { step: 7, title: "3. Updating the Firmware", description: "Gently installing..." },
     { step: 8, title: "4. Restoring your Layers", description: "Wrapping everything up!" },
-    { step: 9, title: "Firmware update!", description: "Solid as a rock! 💪" }
+    { step: 9, title: "Firmware update!", description: "Solid as a rock! 💪" },
+    { step: 10, title: "Firmware update error!", description: "Errors!!!! 🫠" }
   ];
 
   return (
@@ -183,7 +188,7 @@ const FirmwareUpdateProcess = ({ nextBlock, retryBlock, context, toggleFlashing,
               steps={state.context.device.info.product == "Defy" ? stepsDefy : stepsRaise}
             />
           </div>
-          {simulateCountdown == 0 ? (
+          {state.context.stateblock == 1 ? (
             <div className="firmware-footer">
               <div className="holdButton">
                 <RegularButton
@@ -193,6 +198,41 @@ const FirmwareUpdateProcess = ({ nextBlock, retryBlock, context, toggleFlashing,
                   buttonText={i18n.firmwareUpdate.texts.cancelButton}
                   onClick={() => {
                     retryBlock();
+                  }}
+                />
+              </div>
+              <div className="holdTootip">
+                <Title
+                  text={i18n.firmwareUpdate.texts.flashCardHelp}
+                  headingLevel={6}
+                  tooltip={i18n.firmwareUpdate.texts.flashCardHelpTooltip}
+                  tooltipSize="wide"
+                />
+              </div>
+            </div>
+          ) : (
+            ""
+          )}
+          {state.context.stateblock == 10 ? (
+            <div className="firmware-footer">
+              <div className="holdButton">
+                <RegularButton
+                  className="flashingbutton nooutlined"
+                  style="outline"
+                  size="sm"
+                  buttonText={i18n.firmwareUpdate.texts.cancelButton}
+                  onClick={() => {
+                    send("CANCEL");
+                    retryBlock();
+                  }}
+                />
+                <RegularButton
+                  className="flashingbutton nooutlined"
+                  style="outline"
+                  size="sm"
+                  buttonText={"Retry the flashing procedure"}
+                  onClick={() => {
+                    send("RETRY");
                   }}
                 />
               </div>

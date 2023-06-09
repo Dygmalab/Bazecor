@@ -200,7 +200,6 @@ export var arduino = {
     var dataObjects = [];
     var total = 0;
 
-    console.log("Lines to be written", lines.length);
     for (var i = 0; i < lines.length; i++) {
       var hex = ihex_decode(lines[i]);
 
@@ -209,7 +208,6 @@ export var arduino = {
         dataObjects.push(hex);
       }
     }
-    console.log(dataObjects);
 
     var hexCount = 0;
     var address = dataObjects[0].address;
@@ -316,7 +314,6 @@ export var arduino = {
     });
 
     //execute our functions in series!
-    console.log("checking focus", focus);
     async.series(func_array, function (err, results) {
       if (err) finished(true, results);
       else finished(false, "");

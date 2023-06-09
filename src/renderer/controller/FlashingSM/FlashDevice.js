@@ -3,6 +3,9 @@ import Focus from "../../../api/focus";
 import { FlashRaise, FlashDefyWired, FlashDefyWireless } from "../../../api/flash";
 import Backup from "../../../api/backup";
 
+let flashRaise = undefined,
+  bootloader = undefined,
+  path = undefined;
 const delay = ms => new Promise(res => setTimeout(res, ms));
 
 const stateUpdate = (stage, percentage, context, callback) => {
@@ -49,12 +52,22 @@ const stateUpdate = (stage, percentage, context, callback) => {
 
 const resetRaise = async (context, callback) => {
   let result = false;
-  let flashRaise = context.flashRaise;
-  let bootloader = context.bootloader;
+
   try {
     let focus = new Focus();
-    if (!focus.device.bootloader) {
+    if (flashRaise == undefined) {
+      flashRaise = new FlashRaise(context.originalDevice.device);
+      path = focus._port.port.openOptions.path;
+      bootloader = focus.device.bootloader;
+    }
+    if (!bootloader) {
       try {
+        console.log("reset indicators", focus, flashRaise, context.originalDevice.device);
+        if (focus._port.closed) {
+          const info = context.originalDevice.device.info;
+          await focus.close();
+          await focus.open(path, info, null);
+        }
         result = await flashRaise.resetKeyboard(focus._port, (stage, percentage) => {
           stateUpdate(stage, percentage, context, callback);
         });
@@ -75,8 +88,6 @@ const resetRaise = async (context, callback) => {
 
 const uploadRaise = async (context, callback) => {
   let result = false;
-  let flashRaise = context.flashRaise;
-  let bootloader = context.bootloader;
   try {
     let focus = new Focus();
     await focus.close();
@@ -94,8 +105,6 @@ const uploadRaise = async (context, callback) => {
 
 const restoreRaise = async (context, callback) => {
   let result = false;
-  let flashRaise = context.flashRaise;
-  let bootloader = context.bootloader;
   if (bootloader) {
     return true;
   }
@@ -225,17 +234,7 @@ const FlashDevice = createMachine(
           (context, event) => {
             console.log(`Resetting Neuron!`);
           },
-          assign({ stateblock: (context, event) => 6 }),
-          assign((context, event) => {
-            let focus = new Focus();
-            let fr = new FlashRaise(context.originalDevice.device);
-            console.log("CHECKING EXECUTION!!!", fr);
-            return {
-              ...context,
-              flashRaise: fr,
-              bootloader: focus.device.bootloader
-            };
-          })
+          assign({ stateblock: (context, event) => 6 })
         ],
         invoke: {
           id: "resetRaise",
@@ -362,7 +361,8 @@ const FlashDevice = createMachine(
           })
         ],
         on: {
-          RETRY: "#FlahsingProcess"
+          RETRY: "#FlahsingProcess",
+          CANCEL: { target: "success", actions: ["finishFlashing"] }
         }
       },
       success: {

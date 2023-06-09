@@ -229,9 +229,9 @@ export class FlashRaise {
       console.log("waiting for bootloader");
       try {
         await this.delay(timeouts.waitingClose);
-        let bootCount = 10;
+        let bootCount = 6;
         while (bootCount > 0) {
-          stateUpdate("reset", 20 + 10 - bootCount * 8);
+          stateUpdate("reset", 20 + (10 - bootCount) * 8);
           if (await this.foundDevices(Hardware.bootloader, "Bootloader detected", true)) {
             resolve("Detected Bootloader mode");
             bootCount = true;
