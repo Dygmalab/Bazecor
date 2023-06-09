@@ -30,72 +30,47 @@ width: 100%;
 }
 .step {
   position: relative;
-  &.active {  
-    .stepIcon {
-      color: ${({ theme }) => theme.colors.purple300};
-      animation: splashBullet 400ms normal forwards ease-in-out;
-      animation-iteration-count: 1;
-    }
-    .stepBullet {
-      box-shadow: 0px 4px 12px #303949;
-      border: 3px solid ${({ theme }) => theme.colors.purple200};
-      background-color: ${({ theme }) => theme.colors.purple300};
-      animation: splashBullet 400ms normal forwards ease-in-out;
-      animation-iteration-count: 1;
-    }
-  }
-  &.completed {
-    .stepBullet {
-        box-shadow: 0px 4px 12px #303949;
-        border: 3px solid ${({ theme }) => theme.colors.purple200};
-        background-color: ${({ theme }) => theme.colors.purple300};
-        animation: splashBullet 400ms normal forwards ease-in-out;
-        animation-iteration-count: 1;
-      }
-  }
-}
-.stepIcon {
-  position: absolute;
-  left: -3px; 
-  top: -42px;
-  transition: color 300ms ease-in-out;
-  transform: scale(1) translate3d(0,0, 0);
-  color: ${({ theme }) => theme.styles.stepsBar.bulletIconColor};
 }
 .stepBullet {
-  position: absolute;
-  left: 0;
-  transform: scale(1) translate3d(0,0, 0);
-  transform-origin: center center;
-  width: 13px;
-  height: 13px;
-  border-radius: 50%;
-  box-shadow: ${({ theme }) => theme.styles.stepsBar.bulletBoxShadow};
-  border: 3px solid ${({ theme }) => theme.styles.stepsBar.bulletBackground};
-  background-color: ${({ theme }) => theme.styles.stepsBar.bulletBackground};
-  z-index: 2;
-  top: -4px;    
-  &.active {
+    position: absolute;
+    left: 0;
+    transform: scale(1) translate3d(0,0, 0);
+    transform-origin: center center;
+    width: 13px;
+    height: 13px;
+    border-radius: 50%;
+    box-shadow: ${({ theme }) => theme.styles.stepsBar.bulletBoxShadow};
+    border: 3px solid ${({ theme }) => theme.styles.stepsBar.bulletBackground};
+    background-color: ${({ theme }) => theme.styles.stepsBar.bulletBackground};
+    z-index: 2;
+    top: -4px;    
+    animation: splashBullet 400ms normal forwards ease-in-out;
+    animation-iteration-count: 1;
+}
+.active .stepBullet,
+.active.completed .stepBullet {
     box-shadow: ${({ theme }) => theme.styles.stepsBar.bulletBoxShadowActive};
-    border: 3px solid ${({ theme }) => theme.styles.stepsBar.bulletBorderActive};
-    background-color: ${({ theme }) => theme.styles.stepsBar.bulletBackgroundActive};
-  }
+    border: 3px solid ${({ theme }) => theme.styles.stepsProgressBar.bulletBorderActive};
+    background-color: ${({ theme }) => theme.styles.stepsProgressBar.bulletBackground};
+}
+.completed .stepBullet {
+    box-shadow: ${({ theme }) => theme.styles.stepsBar.bulletBoxShadowActive};
+    border: 3px solid ${({ theme }) => theme.styles.stepsProgressBar.bulletBorderActive};
+    background-color: ${({ theme }) => theme.styles.stepsProgressBar.bulletBackgroundActive};
 }
 .progressBar {
   width: 100%;
   height: 6px;
   margin-bottom: -6px;
   border-radius: 3px;
-//   background-color: ${({ theme }) => theme.styles.stepsBar.stepBarBackground};
   position: relative;
-//   overflow: hidden;
   .progressBarActive {
     left: -32px;
     top: 0;
     width: calc(100% + 64px);
     height: 6px;
     border-radius: 3px;
-    background-color: ${({ theme }) => theme.styles.stepsBar.stepBarBackgroundActive};
+    background-color: ${({ theme }) => theme.styles.stepsProgressBar.stepBarBackgroundActive};
     position: absolute;
     transition: width 1s ease-in-out;
   }

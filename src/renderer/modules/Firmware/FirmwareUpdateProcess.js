@@ -176,7 +176,7 @@ const FirmwareUpdateProcess = ({ nextBlock, retryBlock, context, toggleFlashing,
           <div className="firmware-row">{/* <StepsBar steps={steps} stepActive={simulateCountdown - 1} /> */}</div>
           <div className="firmware-row progress-visualizer">
             <FirmwareProgressStatus
-              flashProgress={80}
+              flashProgress={state.context.globalProgress}
               countdown={simulateCountdown}
               deviceProduct={state.context.device.info.product}
               keyboardType={state.context.device.info.keyboardType}
