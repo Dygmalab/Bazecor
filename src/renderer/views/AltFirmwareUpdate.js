@@ -49,6 +49,10 @@ const AltFirmwareUpdate = props => {
     send("RETRY");
   };
 
+  const errorBlock = error => {
+    send("ERROR", { data: error });
+  };
+
   return (
     <Styles>
       <Container fluid className={`firmware-update`}>
@@ -61,13 +65,24 @@ const AltFirmwareUpdate = props => {
               <Spinner className="spinner-border" role="status" />
             </div>
           ) : state.context.Block === 1 ? (
-            <FirmwareUpdatePanel nextBlock={nextBlock} retryBlock={retryBlock} allowBeta={props.allowBeta} />
+            <FirmwareUpdatePanel
+              nextBlock={nextBlock}
+              retryBlock={retryBlock}
+              errorBlock={errorBlock}
+              allowBeta={props.allowBeta}
+            />
           ) : state.context.Block === 2 ? (
-            <FirmwareCheckProcessPanel nextBlock={nextBlock} retryBlock={retryBlock} context={state.context} />
+            <FirmwareCheckProcessPanel
+              nextBlock={nextBlock}
+              retryBlock={retryBlock}
+              errorBlock={errorBlock}
+              context={state.context}
+            />
           ) : state.context.Block === 3 ? (
             <FirmwareUpdateProcess
               nextBlock={nextBlock}
               retryBlock={retryBlock}
+              errorBlock={errorBlock}
               context={state.context}
               toggleFlashing={props.toggleFlashing}
               toggleFwUpdate={props.toggleFwUpdate}
