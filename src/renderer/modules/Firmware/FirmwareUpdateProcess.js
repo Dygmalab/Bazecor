@@ -156,7 +156,6 @@ const FirmwareUpdateProcess = ({ nextBlock, retryBlock, context, toggleFlashing,
     if (state.matches("success")) nextBlock(state.context);
   }, [state.context]);
 
-  const [simulateCountdown, setSimulateCountdown] = useState(0);
   const stepsDefy = [
     { name: "1", icon: false },
     { name: "2", icon: false },
@@ -168,7 +167,7 @@ const FirmwareUpdateProcess = ({ nextBlock, retryBlock, context, toggleFlashing,
     { step: 2, title: "1. Hold Esc Key", description: "Preparing the Keyboard" },
     { step: 3, title: "2. Updating the Firmware", description: "Gently installing..." },
     { step: 4, title: "3. Restoring your Layers", description: "Wrapping everything up!" },
-    { step: 7, title: "Firmware update!", description: "Solid as a rock! 💪" },
+    { step: 7, title: "4. Firmware update!", description: "Solid as a rock! 💪" },
     { step: 8, title: "Firmware update error!", description: "Errors!!!! 🫠" }
   ];
 
@@ -262,20 +261,7 @@ const FirmwareUpdateProcess = ({ nextBlock, retryBlock, context, toggleFlashing,
           <div>{`restore Percentage: ${state.context.restoreProgress}`}</div>
         </div>
       </div>
-      <hr />
-      <div style={{ display: "flex", gridGap: "16px", alignItems: "center", margin: "62px 0" }}>
-        <RegularButton
-          onClick={() => setSimulateCountdown(simulateCountdown + 1)}
-          style="primary"
-          buttonText="Simulate next step"
-        />
-        <RegularButton
-          onClick={() => setSimulateCountdown(simulateCountdown - 1)}
-          style="primary"
-          buttonText="Simulate prev step"
-        />
-        {simulateCountdown}
-      </div>
+
       <div style={{ maxWidth: "1080px" }}>{JSON.stringify(state.context)}</div>
     </Style>
   );
