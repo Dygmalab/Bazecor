@@ -119,12 +119,43 @@ width: 100%;
  */
 
 const FirmwareProgressStatus = ({ countdown, flashProgress, deviceProduct, keyboardType, steps }) => {
+  let adjustedCountdown;
+  if (countdown == 1) {
+    adjustedCountdown = 1;
+  }
+  if (countdown == 2) {
+    adjustedCountdown = 1;
+  }
+  if (countdown == 3) {
+    adjustedCountdown = 2;
+  }
+  if (countdown == 4) {
+    adjustedCountdown = 3;
+  }
+  if (countdown == 5) {
+    adjustedCountdown = 4;
+  }
+  if (countdown == 6) {
+    adjustedCountdown = 2;
+  }
+  if (countdown == 7) {
+    adjustedCountdown = 3;
+  }
+  if (countdown == 8) {
+    adjustedCountdown = 4;
+  }
+  if (countdown == 9) {
+    adjustedCountdown = 5;
+  }
+  if (countdown == 10) {
+    adjustedCountdown = 0;
+  }
   return (
     <Style>
       <div className="mainProcessWrapper">
         <FirmwareImageHelp countdown={countdown} steps={steps} deviceProduct={deviceProduct} keyboardType={keyboardType} />
         <div className="process-row">
-          <StepsProgressBar steps={steps} stepActive={countdown} />
+          <StepsProgressBar steps={steps} stepActive={adjustedCountdown} />
           <ProgressBar>
             <ProgressBar striped animated now={flashProgress} />
           </ProgressBar>
@@ -133,13 +164,13 @@ const FirmwareProgressStatus = ({ countdown, flashProgress, deviceProduct, keybo
           {countdown === 0 ? (
             <Title text={i18n.firmwareUpdate.texts.flashCardTitle1} headingLevel={3} />
           ) : (
-            <Title text={steps[countdown - 1].title} headingLevel={3} />
+            <Title text={steps.find(step => step.step == countdown).title} headingLevel={3} />
           )}
 
           {countdown === 0 ? (
             <Title text={i18n.firmwareUpdate.texts.flashCardTitle2} headingLevel={6} />
           ) : (
-            <Title text={steps[countdown - 1].description} headingLevel={6} />
+            <Title text={steps.find(step => step.step == countdown).description} headingLevel={6} />
           )}
         </div>
       </div>

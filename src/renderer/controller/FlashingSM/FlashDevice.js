@@ -5,58 +5,59 @@ import Backup from "../../../api/backup";
 
 const delay = ms => new Promise(res => setTimeout(res, ms));
 
-const uploadRaise = async (context, callback) => {
-  let result = false;
+const stateUpdate = (stage, percentage, context, callback) => {
+  console.log(stage, percentage);
+  let globalProgress = context.globalProgress,
+    leftProgress = context.leftProgress,
+    rightProgress = context.rightProgress,
+    resetProgress = context.resetProgress,
+    neuronProgress = context.neuronProgress,
+    restoreProgress = context.restoreProgress;
+  switch (stage) {
+    case "right":
+      rightProgress = percentage;
+      break;
+    case "left":
+      leftProgress = percentage;
+      break;
+    case "reset":
+      resetProgress = percentage;
+      break;
+    case "neuron":
+      neuronProgress = percentage;
+      break;
+    case "restore":
+      restoreProgress = percentage;
+      break;
 
-  const stateUpdate = (stage, percentage) => {
-    console.log(stage, percentage);
-    let globalProgress = context.globalProgress,
-      leftProgress = context.leftProgress,
-      rightProgress = context.rightProgress,
-      resetProgress = context.resetProgress,
-      neuronProgress = context.neuronProgress,
-      restoreProgress = context.restoreProgress;
-    switch (stage) {
-      case "right":
-        rightProgress = percentage;
-        break;
-      case "left":
-        leftProgress = percentage;
-        break;
-      case "reset":
-        resetProgress = percentage;
-        break;
-      case "neuron":
-        neuronProgress = percentage;
-        break;
-      case "restore":
-        restoreProgress = percentage;
-        break;
-
-      default:
-        break;
+    default:
+      break;
+  }
+  globalProgress = leftProgress * 0 + rightProgress * 0 + resetProgress * 0.2 + neuronProgress * 0.6 + restoreProgress * 0.2;
+  callback({
+    type: "INC",
+    data: {
+      globalProgress: globalProgress,
+      leftProgress: leftProgress,
+      rightProgress: rightProgress,
+      resetProgress: resetProgress,
+      neuronProgress: neuronProgress,
+      restoreProgress: restoreProgress
     }
-    globalProgress = leftProgress * 0 + rightProgress * 0 + resetProgress * 0.2 + neuronProgress * 0.6 + restoreProgress * 0.2;
-    callback({
-      type: "INC",
-      data: {
-        globalProgress: globalProgress,
-        leftProgress: leftProgress,
-        rightProgress: rightProgress,
-        resetProgress: resetProgress,
-        neuronProgress: neuronProgress,
-        restoreProgress: restoreProgress
-      }
-    });
-  };
+  });
+};
 
+const resetRaise = async (context, callback) => {
+  let result = false;
+  let flashRaise = context.flashRaise;
+  let bootloader = context.bootloader;
   try {
     let focus = new Focus();
-    let flashRaise = new FlashRaise(context.originalDevice.device);
-    const bootloader = focus.device.bootloader;
-    if (!bootloader) {
+    if (!focus.device.bootloader) {
       try {
-        await flashRaise.resetKeyboard(focus._port, stateUpdate);
+        result = await flashRaise.resetKeyboard(focus._port, (stage, percentage) => {
+          stateUpdate(stage, percentage, context, callback);
+        });
       } catch (error) {
         console.error("Bootloader Not found: ", error);
         throw new Error(error);
@@ -64,16 +65,46 @@ const uploadRaise = async (context, callback) => {
     } else {
       flashRaise.currentPort = { ...focus.device };
     }
+  } catch (error) {
+    console.warn("error when resetting Neuron");
+    console.error(error);
+    throw new Error(error);
+  }
+  return result;
+};
+
+const uploadRaise = async (context, callback) => {
+  let result = false;
+  let flashRaise = context.flashRaise;
+  let bootloader = context.bootloader;
+  try {
+    let focus = new Focus();
     await focus.close();
-    result = await context.originalDevice.device.flash(focus._port, context.firmwares.fw, flashRaise, stateUpdate);
-    delay(100);
-    await flashRaise.restoreSettings(context.backup.backup, stateUpdate);
-    delay(600);
-    if (bootloader) {
-      return false;
-    }
+    console.log(context.originalDevice.device, focus, focus._port, flashRaise);
+    result = await context.originalDevice.device.flash(focus._port, context.firmwares.fw, flashRaise, (stage, percentage) => {
+      stateUpdate(stage, percentage, context, callback);
+    });
   } catch (error) {
     console.warn("error when flashing Neuron");
+    console.error(error);
+    throw new Error(error);
+  }
+  return result;
+};
+
+const restoreRaise = async (context, callback) => {
+  let result = false;
+  let flashRaise = context.flashRaise;
+  let bootloader = context.bootloader;
+  if (bootloader) {
+    return true;
+  }
+  try {
+    result = await flashRaise.restoreSettings(context.backup.backup, (stage, percentage) => {
+      stateUpdate(stage, percentage, context, callback);
+    });
+  } catch (error) {
+    console.warn("error when restoring Neuron");
     console.error(error);
     throw new Error(error);
   }
@@ -130,7 +161,7 @@ const FlashDevice = createMachine(
         ],
         on: [
           { event: "*", target: "flashDefyNeuron", cond: "doNotFlashSides" },
-          { event: "*", target: "flashRaiseNeuron", cond: "flashRaise" },
+          { event: "*", target: "resetRaiseNeuron", cond: "flashRaise" },
           { event: "*", target: "flashRightSide", cond: "flashSides" }
         ]
       },
@@ -170,55 +201,6 @@ const FlashDevice = createMachine(
           ERROR: "failure"
         }
       },
-      flashRaiseNeuron: {
-        id: "flashRaiseNeuron",
-        entry: [
-          (context, event) => {
-            console.log(`Flashing Neuron! for ${context.retriesNeuron} times`);
-          },
-          assign((context, event) => {
-            return {
-              retriesNeuron: context.retriesNeuron + 1,
-              stateblock: 5
-            };
-          })
-        ],
-        invoke: {
-          id: "uploadRaise",
-          src: (context, event) => (callback, onReceive) => uploadRaise(context, callback),
-          onDone: {
-            target: "success",
-            actions: [
-              assign((context, event) => {
-                return {
-                  flashResult: event.data
-                };
-              }),
-              "finishFlashing"
-            ]
-          },
-          onError: {
-            target: "failure",
-            actions: assign({ error: (context, event) => event })
-          }
-        },
-        on: {
-          SUCCESS: "#FlahsingProcess.restoreLayers",
-          INC: {
-            actions: assign((context, event) => {
-              return {
-                globalProgress: event.data.globalProgress,
-                leftProgress: event.data.leftProgress,
-                rightProgress: event.data.rightProgress,
-                resetProgress: event.data.resetProgress,
-                neuronProgress: event.data.neuronProgress,
-                restoreProgress: event.data.restoreProgress
-              };
-            })
-          },
-          ERROR: "failure"
-        }
-      },
       flashDefyNeuron: {
         id: "flashDefyNeuron",
         entry: [
@@ -228,33 +210,157 @@ const FlashDevice = createMachine(
           assign((context, event) => {
             return {
               retriesDefyNeuron: context.retriesDefyNeuron + 1,
-              stateblock: 6
+              stateblock: 5
             };
           })
         ],
         on: {
-          SUCCESS: "#FlahsingProcess.restoreLayers",
+          SUCCESS: "reportSucess",
           ERROR: "failure"
         }
       },
-      restoreLayers: {
-        id: "restoreLayers",
+      resetRaiseNeuron: {
+        id: "resetRaiseNeuron",
         entry: [
           (context, event) => {
-            console.log("Restoring layers");
+            console.log(`Resetting Neuron!`);
           },
-          assign({
-            stateblock: (context, event) => 7
+          assign({ stateblock: (context, event) => 6 }),
+          assign((context, event) => {
+            let focus = new Focus();
+            let fr = new FlashRaise(context.originalDevice.device);
+            console.log("CHECKING EXECUTION!!!", fr);
+            return {
+              ...context,
+              flashRaise: fr,
+              bootloader: focus.device.bootloader
+            };
           })
         ],
+        invoke: {
+          id: "resetRaise",
+          src: (context, event) => (callback, onReceive) => resetRaise(context, callback),
+          onDone: {
+            target: "flashRaiseNeuron",
+            actions: [assign({ resetResult: (context, event) => event.data })]
+          },
+          onError: {
+            target: "failure",
+            actions: assign({ error: (context, event) => event })
+          }
+        },
         on: {
-          SUCCESS: "success",
-          ERROR: {
-            actions: (context, event) => console.log("error when restoring layers")
+          INC: {
+            actions: assign((context, event) => {
+              return {
+                ...context,
+                globalProgress: event.data.globalProgress,
+                leftProgress: event.data.leftProgress,
+                rightProgress: event.data.rightProgress,
+                resetProgress: event.data.resetProgress,
+                neuronProgress: event.data.neuronProgress,
+                restoreProgress: event.data.restoreProgress
+              };
+            })
           }
         }
       },
+      flashRaiseNeuron: {
+        id: "flashRaiseNeuron",
+        entry: [
+          (context, event) => {
+            console.log(`Flashing Neuron! for ${context.retriesNeuron} times`);
+          },
+          assign({ stateblock: (context, event) => 7 }),
+          assign({ retriesNeuron: (context, event) => context.retriesNeuron + 1 })
+        ],
+        invoke: {
+          id: "uploadRaise",
+          src: (context, event) => (callback, onReceive) => uploadRaise(context, callback),
+          onDone: {
+            target: "restoreRaiseNeuron",
+            actions: [assign({ flashResult: (context, event) => event.data })]
+          },
+          onError: {
+            target: "failure",
+            actions: assign({ error: (context, event) => event })
+          }
+        },
+        on: {
+          INC: {
+            actions: assign((context, event) => {
+              return {
+                ...context,
+                globalProgress: event.data.globalProgress,
+                leftProgress: event.data.leftProgress,
+                rightProgress: event.data.rightProgress,
+                resetProgress: event.data.resetProgress,
+                neuronProgress: event.data.neuronProgress,
+                restoreProgress: event.data.restoreProgress
+              };
+            })
+          }
+        }
+      },
+      restoreRaiseNeuron: {
+        id: "restoreRaiseNeuron",
+        entry: [
+          (context, event) => {
+            console.log(`Restoring Neuron!`);
+          },
+          assign({ stateblock: (context, event) => 8 })
+        ],
+        invoke: {
+          id: "restoreRaise",
+          src: (context, event) => (callback, onReceive) => restoreRaise(context, callback),
+          onDone: {
+            target: "success",
+            actions: [assign({ flashResult: (context, event) => event.data }), "finishFlashing"]
+          },
+          onError: {
+            target: "failure",
+            actions: assign({ error: (context, event) => event })
+          }
+        },
+        on: {
+          INC: {
+            actions: assign((context, event) => {
+              return {
+                ...context,
+                globalProgress: event.data.globalProgress,
+                leftProgress: event.data.leftProgress,
+                rightProgress: event.data.rightProgress,
+                resetProgress: event.data.resetProgress,
+                neuronProgress: event.data.neuronProgress,
+                restoreProgress: event.data.restoreProgress
+              };
+            })
+          }
+        }
+      },
+      reportSucess: {
+        id: "reportSucess",
+        entry: [
+          (context, event) => {
+            console.log("Reporting Sucess");
+          },
+          assign({
+            stateblock: (context, event) => 9
+          })
+        ],
+        after: {
+          2000: { target: "success" }
+        }
+      },
       failure: {
+        entry: [
+          (context, event) => {
+            console.log("Failure state");
+          },
+          assign({
+            stateblock: (context, event) => 10
+          })
+        ],
         on: {
           RETRY: "#FlahsingProcess"
         }

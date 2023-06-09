@@ -161,10 +161,10 @@ const FirmwareUpdateProcess = ({ nextBlock, retryBlock, context, toggleFlashing,
   ];
   const stepsRaise = [
     { step: 1, title: "1. Hold the key", description: "Backing up you layers" },
-    { step: 2, title: "2. Release the key", description: "Preparing the Keyboard" },
-    { step: 3, title: "3. Updating the Firmware", description: "Gently installing..." },
-    { step: 4, title: "4. Restoring your Layers", description: "Wrapping everything up!" },
-    { step: 5, title: "Firmware update!", description: "Solid as a rock! 💪" }
+    { step: 6, title: "2. Release the key", description: "Preparing the Keyboard" },
+    { step: 7, title: "3. Updating the Firmware", description: "Gently installing..." },
+    { step: 8, title: "4. Restoring your Layers", description: "Wrapping everything up!" },
+    { step: 9, title: "Firmware update!", description: "Solid as a rock! 💪" }
   ];
 
   return (
@@ -176,8 +176,8 @@ const FirmwareUpdateProcess = ({ nextBlock, retryBlock, context, toggleFlashing,
           <div className="firmware-row">{/* <StepsBar steps={steps} stepActive={simulateCountdown - 1} /> */}</div>
           <div className="firmware-row progress-visualizer">
             <FirmwareProgressStatus
-              flashProgress={80}
-              countdown={simulateCountdown}
+              flashProgress={state.context.globalProgress}
+              countdown={state.context.stateblock}
               deviceProduct={state.context.device.info.product}
               keyboardType={state.context.device.info.keyboardType}
               steps={state.context.device.info.product == "Defy" ? stepsDefy : stepsRaise}
