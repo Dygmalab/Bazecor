@@ -10,6 +10,7 @@ const FocusAPIRead = async () => {
     let focus = new Focus();
     data.bootloader = focus.device.bootloader;
     data.info = focus.device.info;
+    if (data.bootloader) return data;
     data.version = await focus.command("version");
     data.version = data.version.split(" ")[0];
     data.chipID = (await focus.command("hardware.chip_id")).replace(/\s/g, "");
@@ -65,11 +66,12 @@ const loadAvailableFirmwareVersions = async allowBeta => {
 const GitHubRead = async context => {
   let finalReleases, isUpdated, isBeta;
   try {
-    const fwReleases = await loadAvailableFirmwareVersions(context.allowBeta);
+    const fwReleases = await loadAvailableFirmwareVersions(context.device.bootloader ? false : context.allowBeta);
     finalReleases = fwReleases.filter(release => release.name === context.device.info.product);
     finalReleases.sort((a, b) => {
       return SemVer.lt(SemVer.clean(a.version), SemVer.clean(b.version)) ? 1 : -1;
     });
+    if (context.device.bootloader) return { firmwareList: finalReleases, isUpdated: false, isBeta: false };
     isUpdated = context.device.version == finalReleases[0].version ? true : false;
     isBeta = context.device.version.includes("beta");
   } catch (error) {

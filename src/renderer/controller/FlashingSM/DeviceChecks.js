@@ -4,9 +4,10 @@ import Focus from "../../../api/focus";
 import Backup from "../../../api/backup";
 
 const keyboardSetup = async context => {
+  if (context.device.bootloader) return { RaiseBrightness: undefined };
   try {
     let focus = new Focus();
-    if (context.device.bootloader || context.device.info.product === "Raise") {
+    if (context.device.info.product === "Raise") {
       await focus.command("led.mode 1");
       let brightness = await focus.command("led.brightness");
       await focus.command("led.brightness 255");
@@ -126,6 +127,7 @@ const DeviceChecks = createMachine(
         },
         on: [
           { event: "*", target: "validateStatus", cond: "doNotRequireSideCheck" },
+          { event: "*", target: "success", cond: "bootloaderMode" },
           { event: "*", target: "LSideCheck", cond: "requireSideCheck" }
         ]
       },
@@ -257,7 +259,10 @@ const DeviceChecks = createMachine(
         return !context.device.bootloader && context.device.info.product !== "Raise";
       },
       doNotRequireSideCheck: (context, event) => {
-        return context.device.bootloader || context.device.info.product === "Raise";
+        return !context.device.bootloader && context.device.info.product === "Raise";
+      },
+      bootloaderMode: (context, event) => {
+        return context.device.bootloader;
       }
     }
   }

@@ -58,7 +58,7 @@ const resetRaise = async (context, callback) => {
     if (flashRaise == undefined) {
       flashRaise = new FlashRaise(context.originalDevice.device);
       path = focus._port.port.openOptions.path;
-      bootloader = focus.device.bootloader;
+      bootloader = context.device.bootloader;
     }
     if (!bootloader) {
       try {
@@ -76,7 +76,7 @@ const resetRaise = async (context, callback) => {
         throw new Error(error);
       }
     } else {
-      flashRaise.currentPort = { ...focus.device };
+      flashRaise.currentPort = { ...context.device };
     }
   } catch (error) {
     console.warn("error when resetting Neuron");
@@ -89,8 +89,10 @@ const resetRaise = async (context, callback) => {
 const uploadRaise = async (context, callback) => {
   let result = false;
   try {
-    let focus = new Focus();
-    await focus.close();
+    if (!context.device.bootloader) {
+      let focus = new Focus();
+      await focus.close();
+    }
     console.log(context.originalDevice.device, focus, focus._port, flashRaise);
     result = await context.originalDevice.device.flash(focus._port, context.firmwares.fw, flashRaise, (stage, percentage) => {
       stateUpdate(stage, percentage, context, callback);
@@ -151,7 +153,9 @@ const FlashDevice = createMachine(
           "addEscListener"
         ],
         on: {
-          //Esc key listener will send this event
+          // Go to flashPathSelector automatically when no esc key can be pressed
+          "": [{ target: "flashPathSelector", cond: "isBootloader" }],
+          // Esc key listener will send this event
           ESCPRESSED: "flashPathSelector"
         },
         exit: ["removeEscListener"]
@@ -376,10 +380,13 @@ const FlashDevice = createMachine(
         return !context.device.bootloader && context.device.info.product !== "Raise";
       },
       flashRaise: (context, event) => {
-        return (context.device.bootloader && context.device.info.product === "Raise") || context.device.info.product === "Raise";
+        return context.device.info.product === "Raise";
       },
       doNotFlashSides: (context, event) => {
         return context.device.bootloader && context.device.info.product !== "Raise";
+      },
+      isBootloader: (context, event) => {
+        return context.device.bootloader;
       }
     }
   }
