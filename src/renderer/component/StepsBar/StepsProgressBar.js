@@ -132,9 +132,6 @@ const StepsProgressBar = ({ steps, stepActive }) => {
 
   return (
     <Style>
-      <h1>
-        stepActive {stepActive} / position {stepsPosition}
-      </h1>
       <div className="stepsBarWrapper">
         <div className="stepsBarWrapperInner">
           <div className="stepsElements" style={constructGrid}>
