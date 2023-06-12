@@ -12,7 +12,7 @@ const Style = Styled.div`
 }
 .circle-loader-progress {
     fill: none;
-    stroke: ${({ theme }) => theme.colors.brandSuccess};
+    stroke: ${({ theme }) => theme.styles.circleLoader.strokeColor};
     stroke-width: 2px;
     stroke-linecap: round;
     transform: rotate(-90deg);
@@ -25,8 +25,6 @@ const CircleLoader = ({ radius, percentage, active }) => {
   console.log("percentage :", percentage);
   const circumference = 2 * Math.PI * radius;
   const strokeDashOffset = circumference - (percentage / 100) * circumference;
-  console.log("strokeDashOffeset :", strokeDashOffset);
-  console.log("circumference :", circumference);
   return (
     <Style>
       <svg className={`circle-loader ${active ? "active" : ""}`} width={radius * 2 + 2} height={radius * 2 + 2}>

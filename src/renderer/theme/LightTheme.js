@@ -284,6 +284,9 @@ const Light = {
       subTitleColor: Tokens.colors.pink200,
       groupButtonsBackground: "rgba(255,255,255,1)"
     },
+    circleLoader: {
+      strokeColor: Tokens.colors.purple300
+    },
     customCheckbox: {
       background: Tokens.colors.gray100,
       borderColor: Tokens.colors.gray100,
@@ -586,9 +589,9 @@ const Light = {
       titleColor: Tokens.colors.purple200
     },
     progress: {
-      progressBackground: Tokens.colors.gray50,
-      progressBarBackground: Tokens.colors.brandSuccess,
-      boxShadow: "0px 0px 4px rgba(50, 238, 238, 0.5)"
+      progressBackground: Tokens.colors.gray100,
+      progressBarBackground: Tokens.colors.gray100,
+      boxShadow: "0px 0px 4px rgba(50, 238, 238, 0)"
     },
     slider: {
       trackColor: Tokens.colors.gray50,
@@ -637,9 +640,9 @@ const Light = {
       bulletBoxShadowActive: "0px 4px 12px #6C5CE7"
     },
     stepsProgressBar: {
-      stepBarBackground: settingColorOpacity(Tokens.colors.gray100, 0.5),
+      stepBarBackground: Tokens.colors.gray100,
       backgroundActive: Tokens.colors.purple200,
-      bulletBackground: Tokens.colors.gray200,
+      bulletBackground: Tokens.colors.gray100,
       bulletBackgroundActive: Tokens.colors.purple300,
       bulletBorderActive: Tokens.colors.purple200,
       stepBarBackgroundActive: Tokens.colors.purple200

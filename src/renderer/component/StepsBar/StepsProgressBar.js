@@ -40,8 +40,8 @@ width: 100%;
     height: 13px;
     border-radius: 50%;
     box-shadow: ${({ theme }) => theme.styles.stepsBar.bulletBoxShadow};
-    border: 3px solid ${({ theme }) => theme.styles.stepsBar.bulletBackground};
-    background-color: ${({ theme }) => theme.styles.stepsBar.bulletBackground};
+    border: 3px solid ${({ theme }) => theme.styles.stepsProgressBar.bulletBackground};
+    background-color: ${({ theme }) => theme.styles.stepsProgressBar.bulletBackground};
     z-index: 2;
     top: -4px;    
     animation: splashBullet 400ms normal forwards ease-in-out;
@@ -63,8 +63,8 @@ width: 100%;
 .error .active.completed .stepBullet,
 .error .completed .stepBullet {
   box-shadow: ${({ theme }) => theme.styles.stepsBar.bulletBoxShadow};
-  border: 3px solid ${({ theme }) => theme.styles.stepsBar.bulletBackground};
-  background-color: ${({ theme }) => theme.styles.stepsBar.bulletBackground};
+  border: 3px solid ${({ theme }) => theme.styles.stepsProgressBar.bulletBackground};
+  background-color: ${({ theme }) => theme.styles.stepsProgressBar.bulletBackground};
 }
 .progressBar {
   width: 100%;

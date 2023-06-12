@@ -213,6 +213,7 @@ const FirmwareErrorPanel = ({ nextBlock, retryBlock }) => {
         ""
       ) : (
         <div className="firmware-wrapper">
+          <h1>Error</h1>
           <div className="firmware-row">
             <div className="firmware-content borderLeftTopRadius">
               <div className="firmware-content--inner">

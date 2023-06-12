@@ -127,7 +127,8 @@ const Style = Styled.div`
 		position: relative;
 	}
 	.playCounterTimer {
-		background: rgba(107, 119, 148, 0.5);
+		background: rgba(107, 119, 148, 0.3);
+		color: ${({ theme }) => theme.colors.gray25};
 		backdrop-filter: blur(3px);
 		font-size: 0.65rem;
 		font-weight: 600;
