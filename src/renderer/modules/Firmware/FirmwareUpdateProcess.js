@@ -168,7 +168,7 @@ const FirmwareUpdateProcess = ({ nextBlock, retryBlock, context, toggleFlashing,
     { step: 3, title: "2. Updating the Firmware", description: "Gently installing..." },
     { step: 4, title: "3. Restoring your Layers", description: "Wrapping everything up!" },
     { step: 7, title: "4. Firmware update!", description: "Solid as a rock! 💪" },
-    { step: 8, title: "Firmware update error!", description: "Something went wrong! Pleasse, retry the flashing procedure. 🫠" }
+    { step: 8, title: "Firmware update error!", description: "Something went wrong! Please, retry the flashing procedure. 🫠" }
   ];
 
   return (
@@ -181,6 +181,11 @@ const FirmwareUpdateProcess = ({ nextBlock, retryBlock, context, toggleFlashing,
           <div className="firmware-row progress-visualizer">
             <FirmwareProgressStatus
               flashProgress={state.context.globalProgress}
+              leftProgress={state.context.leftProgress}
+              rightProgress={state.context.rightProgress}
+              resetProgress={state.context.resetProgress}
+              neuronProgress={state.context.neuronProgress}
+              restoreProgress={state.context.restoreProgress}
               countdown={state.context.stateblock}
               deviceProduct={state.context.device.info.product}
               keyboardType={state.context.device.info.keyboardType}
