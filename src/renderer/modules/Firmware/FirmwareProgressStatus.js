@@ -121,7 +121,7 @@ width: 100%;
     position: absolute;
     display: block;
     transform: translate(-50%, -50%);
-    left: 0;
+    left: 0.5px;
     top: -4px;
     opacity: 0;
     transition: opacity 250ms ease-in-out;
