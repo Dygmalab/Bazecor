@@ -419,7 +419,7 @@ class Preferences extends React.Component {
     const devToolsSwitch = <Form.Check type="switch" checked={devTools} onChange={this.toggleDevTools} />;
     const verboseSwitch = <Form.Check type="switch" checked={verboseFocus} onChange={this.toggleVerboseFocus} />;
     const onlyCustomSwitch = <Form.Check type="switch" checked={kbData.keymap.onlyCustom} onChange={this.toggleOnlyCustom} />;
-    const allowBetas = <Form.Check type="switch" checked={allowBeta} onChange={updateAllowBeta} />;
+    const allowBetas = <Form.Check value={allowBeta} type="switch" checked={allowBeta} onChange={updateAllowBeta} />;
     // console.log("CHECKING STATUS MOD", modified);
     // console.log("CHECKING STATUS CTX", inContext);
 

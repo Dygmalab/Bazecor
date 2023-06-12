@@ -64,8 +64,8 @@ const loadAvailableFirmwareVersions = async allowBeta => {
 
 const GitHubRead = async context => {
   let finalReleases, isUpdated, isBeta;
-  const fwReleases = await loadAvailableFirmwareVersions(context.allowBeta);
   try {
+    const fwReleases = await loadAvailableFirmwareVersions(context.allowBeta);
     finalReleases = fwReleases.filter(release => release.name === context.device.info.product);
     finalReleases.sort((a, b) => {
       return SemVer.lt(SemVer.clean(a.version), SemVer.clean(b.version)) ? 1 : -1;
@@ -303,6 +303,12 @@ const SelectionSM = createMachine({
       }
     },
     failure: {
+      id: "failure",
+      entry: [
+        (context, event) => {
+          console.log("Failed state!");
+        }
+      ],
       on: {
         RETRY: {
           target: "LoadDeviceData",

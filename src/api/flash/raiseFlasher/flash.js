@@ -266,6 +266,7 @@ export class FlashRaise {
     return new Promise(async (resolve, reject) => {
       try {
         if (focus.closed) await focus.open(this.currentPort.path, this.currentPort.device, null);
+        stateUpdate("neuron", 0);
         await arduino.flash(filename, stateUpdate, async (err, result) => {
           if (err) throw new Error(`Flash error ${result}`);
           else {

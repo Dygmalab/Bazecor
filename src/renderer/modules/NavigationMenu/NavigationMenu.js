@@ -154,8 +154,9 @@ class NavigationMenu extends Component {
       firmware: parts[2]
     };
     let fwList = await this.getGitHubFW(focus.device.info.product);
-    let isUpdated = SemVer.compare(fwList[0].version, versions.bazecor);
     let isBeta = versions.bazecor.includes("beta");
+    if (isBeta) versions.bazecor = versions.bazecor.replace("beta", "");
+    let isUpdated = SemVer.compare(fwList[0].version, versions.bazecor);
     this.setState({
       versions: versions,
       flashing: this.props.flashing,
@@ -198,7 +199,7 @@ class NavigationMenu extends Component {
     const { isUpdated, isBeta, versions, fwList } = this.state;
     const currentPage = history.location.pathname;
 
-    //console.log("new checker for navigation", fwList, versions, isUpdated, isBeta);
+    // console.log("new checker for navigation", fwList, versions, isUpdated, isBeta);
 
     return (
       <Styles>

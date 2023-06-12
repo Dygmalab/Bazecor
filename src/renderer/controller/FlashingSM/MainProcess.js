@@ -1,3 +1,4 @@
+import context from "react-bootstrap/esm/AccordionContext";
 import { createMachine, assign, raise } from "xstate";
 
 const MainProcessSM = createMachine({
@@ -30,7 +31,8 @@ const MainProcessSM = createMachine({
             };
           })
         },
-        RETRY: { target: "FWSelectionCard", actions: assign({ Block: (context, event) => (context.Block = 0) }) }
+        RETRY: { target: "FWSelectionCard", actions: assign({ Block: (context, event) => (context.Block = 0) }) },
+        ERROR: { target: "error", actions: [assign({ errorCause: (context, event) => event.data })] }
       }
     },
     DeviceChecksCard: {
@@ -56,7 +58,8 @@ const MainProcessSM = createMachine({
             };
           })
         },
-        RETRY: ["FWSelectionCard", assign({ Block: (context, event) => (context.Block = 0) })]
+        RETRY: ["FWSelectionCard", assign({ Block: (context, event) => (context.Block = 0) })],
+        ERROR: { target: "error", actions: [assign({ errorCause: (context, event) => event.data })] }
       }
     },
     FlashingProcedureCard: {
@@ -70,6 +73,19 @@ const MainProcessSM = createMachine({
       ],
       on: {
         NEXT: ["success"],
+        RETRY: ["FWSelectionCard", assign({ Block: (context, event) => (context.Block = 0) })],
+        ERROR: { target: "error", actions: [assign({ errorCause: (context, event) => event.data })] }
+      }
+    },
+    error: {
+      id: "error",
+      entry: [
+        (context, event) => {
+          console.log("Error Card entry");
+        },
+        assign({ Block: (context, event) => -1 })
+      ],
+      on: {
         RETRY: ["FWSelectionCard", assign({ Block: (context, event) => (context.Block = 0) })]
       }
     },

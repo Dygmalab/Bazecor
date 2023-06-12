@@ -168,15 +168,16 @@ width: 100%;
  * @returns {<FirmwareUpdatePanel>} FirmwareUpdatePanel component.
  */
 
-const FirmwareUpdatePanel = ({ nextBlock, retryBlock, allowBeta }) => {
+const FirmwareUpdatePanel = ({ nextBlock, retryBlock, errorBlock, allowBeta }) => {
   const [state, send] = useMachine(FWSelection, { context: { allowBeta: allowBeta } });
 
   const [loading, setLoading] = useState(true);
   useEffect(() => {
-    if (state.context.stateblock >= 3) {
+    if (state.context.stateblock >= 3 || state.context.stateblock == -1) {
       setLoading(false);
     }
     if (state.matches("success")) nextBlock(state.context);
+    if (state.matches("failure")) errorBlock(state.context.error);
   }, [state.context]);
 
   return (
