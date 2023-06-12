@@ -210,7 +210,6 @@ const FirmwareUpdatePanel = ({ nextBlock, retryBlock, errorBlock, allowBeta }) =
               </div>
             </div>
             <div className="firmware-sidebar borderRightTopRadius">
-              {/* <FirmwareNeuronStatus isUpdated={isUpdated} deviceProduct={device.info.product} keyboardType={device.info.keyboardType} /> */}
               <FirmwareNeuronStatus
                 isUpdated={state.context.isUpdated}
                 deviceProduct={state.context.device.info.product}

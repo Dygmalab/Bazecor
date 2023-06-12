@@ -20,6 +20,8 @@ import PropTypes from "prop-types";
 import Styled from "styled-components";
 import { useTheme } from "styled-components";
 
+import { IconWarning } from "../../component/Icon";
+
 const Style = Styled.div`   
 .lineColor {
   stroke: ${({ theme }) => theme.styles.firmwareUpdateProcess.neuronLineColor};
@@ -27,6 +29,13 @@ const Style = Styled.div`
 .neuronBase {
   path {
     fill: ${({ theme }) => theme.styles.firmwareUpdateProcess.neuronSleepingMode};
+  }
+}
+.neuronWarning {
+  opacity: 0;
+  filter: drop-shadow(0 6px 6px ${({ theme }) => theme.colors.brandWarning});
+  path {
+    fill: ${({ theme }) => theme.colors.brandWarning};
   }
 }
 .neuronBlinking {
@@ -57,6 +66,36 @@ const Style = Styled.div`
     .neuronSuccess {
         opacity: 1;
     }  
+}
+.neuronUpdate-error.neuronUpdate-updating {
+  .neuronBlinking {
+      opacity: 0;
+  }
+}
+.neuronUpdate-error {
+  position: relative;
+  .neuronWarning {
+      opacity: 1;
+  }  
+  .neuronBlinking {
+    opacity: 0;
+  }
+  .neuronBase {
+    opacity: 0;
+  }
+}
+.neuronWarning--icon {
+  width: 31px;
+  height: 31px;
+  position: absolute;
+  top: -16px;
+  right: 4px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  background-color: ${({ theme }) => theme.colors.brandWarning};
+  color: ${({ theme }) => theme.colors.gray800};
 }
 @keyframes neuronBlink {
     0% {
@@ -253,7 +292,7 @@ const Style = Styled.div`
  * @param {number} countdown - Number representing the position during the update process
  * @returns {<FirmwareNeuronHelp>} FirmwareNeuronHelp component.
  */
-const FirmwareNeuronHelp = ({ countdown, deviceProduct, keyboardType, steps }) => {
+const FirmwareNeuronHelp = ({ countdown, deviceProduct, keyboardType, steps, error }) => {
   let connectionColorMatrix = useTheme().styles.neuronStatus.connectionColorMatrix;
   return (
     <Style>
@@ -262,9 +301,16 @@ const FirmwareNeuronHelp = ({ countdown, deviceProduct, keyboardType, steps }) =
       ) : (
         <div
           className={`neuronUpdate-${countdown} ${countdown >= 3 ? "neuronUpdate-updating" : ""} ${
-            countdown == steps.length ? "neuronUpdate-success" : ""
-          } neuronUpdateAnimation`}
+            countdown == steps.length - 2 ? "neuronUpdate-success" : ""
+          } ${error ? "neuronUpdate-error" : ""} neuronUpdateAnimation`}
         >
+          {error ? (
+            <div className="neuronWarning--icon">
+              <IconWarning />
+            </div>
+          ) : (
+            ""
+          )}
           <svg width={102} height={116} fill="none" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
             <path
               clipRule="evenodd"
@@ -347,6 +393,20 @@ const FirmwareNeuronHelp = ({ countdown, deviceProduct, keyboardType, steps }) =
                   strokeWidth={2}
                 />
               </g>
+            </g>
+            <g className="neuronWarning">
+              <path
+                d="M62.098 41.844H60.27c-2.537.1-4.972.598-7.306 1.295l7.712 2.79 1.827.697 1.623.598-2.74 11.758a52.259 52.259 0 01-5.58 14.647l4.972-5.58 1.725-1.893.203-.199 2.638-2.89c.406-.398.71-.896.812-1.494l.913-2.99 4.567-14.846c-2.943-1.196-6.19-1.794-9.54-1.893z"
+                fill="#FF9F43"
+              />
+              <path
+                d="M36.526 54c.406.398.71.797 1.116 1.195a29.648 29.648 0 002.537 2.491l-1.015-4.583-.405-1.993-.914-3.786 13.193-4.783a28.041 28.041 0 019.234-1.594H62.099c.71 0 1.522.1 2.232.199l-2.334-.797-1.928-.698-4.364-1.495-3.348-1.195a4.298 4.298 0 00-2.74 0l-3.755 1.295-11.873 4.185-3.653 1.196a32.545 32.545 0 006.19 10.362z"
+                fill="#FF9F43"
+              />
+              <path
+                d="M55.298 65.16l-2.13 1.694-2.233 1.793-10.047-8.17c-1.42-1.196-2.841-2.491-4.059-3.886-.406-.399-.71-.797-1.116-1.296-1.32-1.594-2.435-3.288-3.45-5.181l2.13 6.875.204.797.71 2.292.406 1.395c.203.498.406 1.096.812 1.495.406.398.913.996 1.522 1.694.406.498.913.996 1.42 1.594 4.364 4.882 11.366 12.754 11.57 12.854 3.754-5.082 6.494-10.861 8.117-17.139l-3.856 3.189z"
+                fill="#FF9F43"
+              />
             </g>
             <defs>
               <filter

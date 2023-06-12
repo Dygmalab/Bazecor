@@ -97,9 +97,6 @@ width: 100%;
   background-color: ${({ theme }) => theme.styles.firmwareUpdateProcess.processFooterBackground}; 
   border-radius: 0px 0px 16px 16px;
   text-align: center;
-  h3 {
-    color: ${({ theme }) => theme.colors.brandSuccess}; 
-  }
   h6 {
     font-weight: 395;
     letter-spacing:0;
@@ -125,7 +122,13 @@ const FirmwareProgressStatus = ({ countdown, flashProgress, deviceProduct, keybo
   return (
     <Style>
       <div className="mainProcessWrapper">
-        <FirmwareImageHelp countdown={stepsPosition} steps={steps} deviceProduct={deviceProduct} keyboardType={keyboardType} />
+        <FirmwareImageHelp
+          countdown={stepsPosition}
+          steps={steps}
+          error={stepsPosition == steps.length - 1 ? true : false}
+          deviceProduct={deviceProduct}
+          keyboardType={keyboardType}
+        />
         <div className="process-row">
           <StepsProgressBar steps={steps} stepActive={stepsPosition} />
           <ProgressBar>
@@ -134,9 +137,13 @@ const FirmwareProgressStatus = ({ countdown, flashProgress, deviceProduct, keybo
         </div>
         <div className="process-row process-footer">
           {stepsPosition == 0 ? (
-            <Title text={i18n.firmwareUpdate.texts.flashCardTitle1} headingLevel={3} />
+            <Title text={i18n.firmwareUpdate.texts.flashCardTitle1} headingLevel={3} color="success" />
           ) : (
-            <Title text={steps[stepsPosition].title} headingLevel={3} />
+            <Title
+              text={steps[stepsPosition].title}
+              headingLevel={3}
+              color={stepsPosition == steps.length - 1 ? "warning" : "success"}
+            />
           )}
 
           {stepsPosition == 0 ? (

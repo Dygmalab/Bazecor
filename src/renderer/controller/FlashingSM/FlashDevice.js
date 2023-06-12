@@ -352,7 +352,7 @@ const FlashDevice = createMachine(
           })
         ],
         after: {
-          2000: { target: "success", actions: ["finishFlashing"] }
+          4000: { target: "success", actions: ["finishFlashing"] }
         }
       },
       failure: {

@@ -168,7 +168,7 @@ const FirmwareUpdateProcess = ({ nextBlock, retryBlock, context, toggleFlashing,
     { step: 3, title: "2. Updating the Firmware", description: "Gently installing..." },
     { step: 4, title: "3. Restoring your Layers", description: "Wrapping everything up!" },
     { step: 7, title: "4. Firmware update!", description: "Solid as a rock! 💪" },
-    { step: 8, title: "Firmware update error!", description: "Errors!!!! 🫠" }
+    { step: 8, title: "Firmware update error!", description: "Something went wrong! Pleasse, retry the flashing procedure. 🫠" }
   ];
 
   return (
