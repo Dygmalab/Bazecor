@@ -118,27 +118,31 @@ width: 100%;
  */
 
 const FirmwareProgressStatus = ({ countdown, flashProgress, deviceProduct, keyboardType, steps }) => {
+  let [stepsPosition, setStepsPosition] = useState(0);
+  useEffect(() => {
+    setStepsPosition(steps.findIndex(x => x.step === countdown));
+  }, [countdown]);
   return (
     <Style>
       <div className="mainProcessWrapper">
-        <FirmwareImageHelp countdown={countdown} steps={steps} deviceProduct={deviceProduct} keyboardType={keyboardType} />
+        <FirmwareImageHelp countdown={stepsPosition} steps={steps} deviceProduct={deviceProduct} keyboardType={keyboardType} />
         <div className="process-row">
-          <StepsProgressBar steps={steps} stepActive={countdown} />
+          <StepsProgressBar steps={steps} stepActive={stepsPosition} />
           <ProgressBar>
             <ProgressBar striped animated now={flashProgress} />
           </ProgressBar>
         </div>
         <div className="process-row process-footer">
-          {countdown == 0 ? (
+          {stepsPosition == 0 ? (
             <Title text={i18n.firmwareUpdate.texts.flashCardTitle1} headingLevel={3} />
           ) : (
-            <Title text={steps.find(step => step.step == countdown).title} headingLevel={3} />
+            <Title text={steps[stepsPosition].title} headingLevel={3} />
           )}
 
-          {countdown == 0 ? (
+          {stepsPosition == 0 ? (
             <Title text={i18n.firmwareUpdate.texts.flashCardTitle2} headingLevel={6} />
           ) : (
-            <Title text={steps.find(step => step.step == countdown).description} headingLevel={6} />
+            <Title text={steps[stepsPosition].description} headingLevel={6} />
           )}
         </div>
       </div>

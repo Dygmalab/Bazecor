@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef, createRef } from "react";
 import Styled from "styled-components";
 
 const Style = Styled.div`   
@@ -93,40 +93,48 @@ width: 100%;
 `;
 
 const StepsProgressBar = ({ steps, stepActive }) => {
-  let [stepsPosition, setStepsPosition] = useState(0);
-
   let [refreshPositionStyle, setRefreshPositionStyle] = useState({
     width: `0`
   });
   const constructGrid = {
     gridTemplateColumns: `repeat(${steps.length - 3}, 1fr)`
   };
-
+  const bulletsRef = useRef(steps.map(() => createRef()));
+  let widthPercentage;
   useEffect(() => {
-    let widthPercentage;
-    setStepsPosition(steps.findIndex(x => x.step === stepActive));
-
-    if (stepsPosition == 1) {
+    //setStepsPosition(steps.findIndex(x => x.step === stepActive));
+    if (stepActive == steps.length - 1) {
+      console.log("bullets ref: ", bulletsRef.current[stepActive]);
       widthPercentage = {
         width: `calc(0%)`
       };
     } else {
-      if (stepsPosition == 2) {
+      if (stepActive == 0) {
         widthPercentage = {
-          width: `calc(0% + 34px)`
+          width: `calc(0%)`
         };
       } else {
-        if (stepsPosition == steps.length - 1) {
+        if (stepActive == 1) {
           widthPercentage = {
-            width: `calc(100% + 64px)`
+            width: `calc(0% + 34px)`
           };
         } else {
-          widthPercentage = {
-            width: `calc(${(100 / (steps.length - 3)) * stepsPosition - 1}% + 34px)`
-          };
+          if (stepActive == steps.length - 2) {
+            widthPercentage = {
+              width: `calc(100% + 64px)`
+            };
+            console.log("bullets ref: ", bulletsRef);
+            console.log("bullets ref current: ", bulletsRef.current[stepActive]);
+            // bulletsRef.current[stepActive].classList.add("success");
+          } else {
+            widthPercentage = {
+              width: `calc(${(100 / (steps.length - 3)) * (stepActive - 1)}% + 34px)`
+            };
+          }
         }
       }
     }
+
     setRefreshPositionStyle(widthPercentage);
   }, [stepActive]);
 
@@ -140,16 +148,17 @@ const StepsProgressBar = ({ steps, stepActive }) => {
                 ""
               ) : (
                 <div
-                  className={`step ${index < stepsPosition ? "completed" : ""} ${index == stepsPosition ? "active" : ""}`}
+                  className={`step ${index < stepActive ? "completed" : ""} ${index == stepActive ? "active" : ""}`}
                   data-order={index}
                   key={`${index}`}
+                  ref={bulletsRef.current[index]}
                 >
                   <div className="stepBullet"></div>
                 </div>
               )
             )}
           </div>
-          <div className={`progressBar progressBar-set${stepsPosition}`}>
+          <div className={`progressBar progressBar-set${stepActive}`}>
             <div className="progressBarActive" style={refreshPositionStyle}></div>
           </div>
         </div>
