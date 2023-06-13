@@ -6,7 +6,7 @@ const Style = Styled.div`
   --animation-state: running;
 }
 .paused {
-  --animation-state: paused;
+  --animation-state: running;
 }
 .loader-container {
     display: block;
@@ -60,10 +60,33 @@ svg {
     transform-origin: center;
     animation-play-state: var(--animation-state);
 }
+
 @keyframes loadingScale {
     to {
         transform: scale(0.9);
     }
+}
+.paused {
+  .loader-piece {
+    animation: resetOpacity 600ms linear;
+    animation-iteration-count: 1;
+    animation-direction: forwards;
+  }
+  .loader-base {
+      animation: resetScale 600ms linear;
+      animation-iteration-count: 1;
+      animation-direction: forwards;
+  }
+}
+@keyframes resetScale {
+  to {
+      transform: scale(1);
+  }
+}
+@keyframes resetOpacity {
+  to {
+      opacity: 1;
+  }
 }
 .loader-rotating {
     filter: drop-shadow(0px 4px 6px rgba(93, 235, 99, 0.5));
