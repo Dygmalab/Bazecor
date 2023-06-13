@@ -38,6 +38,9 @@ height: inherit;
   line-height: 1.5em;
   font-weight: 500;
 }
+.panel-wrapper {
+  width: 100%;
+}
 `;
 
 const AltFirmwareUpdate = props => {
@@ -57,16 +60,15 @@ const AltFirmwareUpdate = props => {
 
   return (
     <Styles>
-      <Container fluid className={`firmware-update`}>
+      <Container fluid className={`firmware-update center-content`}>
         <PageHeader text={i18n.app.menu.firmwareUpdate} />
-        <div>
+        <div className="panel-wrapper">
           {state.context.Block === -1 ? (
             <FirmwareErrorPanel nextBlock={nextBlock} retryBlock={retryBlock} />
           ) : state.context.Block === 0 ? (
             <div className="firmware-wrapper">
               <div className="firmware-row">
                 <div className="loading marginCenter text-center">
-                  State Block 0
                   <Loader />
                 </div>
               </div>
@@ -100,7 +102,7 @@ const AltFirmwareUpdate = props => {
             ""
           )}
           {/* <FirmwareUpdateProcess countdown={1} /> */}
-          <Card style={{ maxWidth: "1080px" }}>
+          <Card style={{ maxWidth: "1080px", display: "none" }}>
             <Card.Title>MainProcessSM Context</Card.Title>
             <Card.Body>{JSON.stringify(state.context)}</Card.Body>
           </Card>

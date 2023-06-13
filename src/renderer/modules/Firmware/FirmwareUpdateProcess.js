@@ -36,7 +36,7 @@ import { FirmwareProgressStatus } from "../Firmware";
 
 const Style = Styled.div`   
 width: 100%;  
-height:inherit;
+height: inherit;
 .firmware-wrapper {
   max-width: 680px;   
   width: 100%;
@@ -273,7 +273,7 @@ const FirmwareUpdateProcess = ({ nextBlock, retryBlock, context, toggleFlashing,
         </div>
       </div>
 
-      <div style={{ maxWidth: "1080px" }}>{JSON.stringify(state.context)}</div>
+      <div style={{ maxWidth: "1080px", display: "none" }}>{JSON.stringify(state.context)}</div>
     </Style>
   );
 };

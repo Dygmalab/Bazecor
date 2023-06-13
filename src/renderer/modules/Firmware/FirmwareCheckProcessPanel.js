@@ -41,6 +41,7 @@ import { IconWarning } from "../../component/Icon";
 
 const Style = Styled.div`
 width: 100%;
+height:inherit;
 .firmware-wrapper {
   max-width: 960px;
   width: 100%;
@@ -362,7 +363,7 @@ const FirmwareCheckProcessPanel = ({ nextBlock, retryBlock, context }) => {
       <RegularButton onClick={() => send("PRESSED")} buttonText={"success"}></RegularButton>
       <RegularButton onClick={() => send("SKIP")} buttonText={"Skip if raise"}></RegularButton>
       <RegularButton onClick={() => send("CHECK")} buttonText={"Check Defy Sides"}></RegularButton>
-      <Card style={{ maxWidth: "1080px" }}>{JSON.stringify(state.context)}</Card>
+      <Card style={{ maxWidth: "1080px", display: "none" }}>{JSON.stringify(state.context)}</Card>
     </Style>
   );
 };

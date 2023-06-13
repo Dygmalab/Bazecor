@@ -304,7 +304,7 @@ const FirmwareErrorPanel = ({ nextBlock, retryBlock }) => {
           </div>
         </div>
       )}
-      <div>{JSON.stringify(state.context)}</div>
+      <div style={{ display: "none" }}>{JSON.stringify(state.context)}</div>
     </Style>
   );
 };

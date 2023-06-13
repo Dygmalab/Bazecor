@@ -35,6 +35,7 @@ import { FirmwareNeuronStatus, FirmwareVersionStatus } from "../Firmware";
 
 const Style = Styled.div`
 width: 100%;
+height:inherit;
 .firmware-wrapper {
   max-width: 960px;
   width: 100%;
@@ -174,32 +175,16 @@ const FirmwareUpdatePanel = ({ nextBlock, retryBlock, errorBlock, allowBeta }) =
     if (state.matches("failure")) errorBlock(state.context.error);
   }, [state.context]);
 
-  useEffect(() => {
-    timerRef.current = setTimeout(() => {
-      console.log("checkLoaderTimeout");
-      setCheckTimeOut(true);
-    }, 10000);
-    // Clear the interval when the component unmounts
-    return () => clearTimeout(timerRef.current);
-  }, []);
-
   return (
     <Style>
-      <Loader paused={checkTimeOut} warning={checkTimeOut} />
-      {checkTimeOut ? (
-        <RegularButton
-          style="primary"
-          buttonText="Retry"
-          onClick={() => {
-            send("RETRY");
-            retryBlock();
-          }}
-        />
-      ) : (
-        ""
-      )}
       {loading ? (
-        <Loader />
+        <div className="firmware-wrapper">
+          <div className="firmware-row">
+            <div className="loading marginCenter text-center">
+              <Loader />
+            </div>
+          </div>
+        </div>
       ) : (
         <div className="firmware-wrapper home-firmware">
           <div className="firmware-row">
@@ -281,15 +266,15 @@ const FirmwareUpdatePanel = ({ nextBlock, retryBlock, errorBlock, allowBeta }) =
           </div>
         </div>
       )}
-      <RegularButton
+      {/* <RegularButton
         onClick={() => {
           send("RETRY");
           retryBlock();
         }}
       >
         Retry when error
-      </RegularButton>
-      <div>{JSON.stringify(state.context)}</div>
+      </RegularButton> */}
+      <div style={{ display: "none" }}>{JSON.stringify(state.context)}</div>
     </Style>
   );
 };
