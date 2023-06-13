@@ -1,6 +1,6 @@
 // -*- mode: js-jsx -*-
 /* Bazecor
- * Copyright (C) 2022  Dygmalab, Inc.
+ * Copyright (C) 2023  Dygmalab, Inc.
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -16,7 +16,6 @@
  */
 
 import React, { useState, useEffect } from "react";
-import PropTypes from "prop-types";
 import Styled from "styled-components";
 import { useMachine } from "@xstate/react";
 import i18n from "../../i18n";
@@ -36,7 +35,7 @@ import { FirmwareNeuronStatus } from "../Firmware";
 
 //Assets
 import videoDefyCablesDisconnect from "../../../../static/videos/connectCablesDefy.mp4";
-import { IconWarning } from "../../component/Icon";
+import { IconNoWifi, IconWarning } from "../../component/Icon";
 
 const Style = Styled.div`
 width: 100%;
@@ -183,9 +182,12 @@ width: 100%;
         }
     }
     .errorListContent {
-        max-width: 200px;
+        // max-width: 200px;
         color: ${({ theme }) => theme.styles.firmwareErrorPanel.textColor}
     }
+}
+.iconWarning {
+  color: ${({ theme }) => theme.colors.brandWarning};
 }
 `;
 
@@ -199,13 +201,21 @@ width: 100%;
 
 const FirmwareErrorPanel = ({ nextBlock, retryBlock }) => {
   const [state, send] = useMachine(FWSelection);
+  const [handleError, setHandleError] = useState(false);
 
   const [loading, setLoading] = useState(true);
   useEffect(() => {
     if (state.context.device.version && state.context.firmwareList && state.context.firmwareList.length > 0) {
       setLoading(false);
     }
-    if (state.matches("success")) nextBlock(state.context);
+    if (state.matches("success")) {
+      setHandleError(false);
+      nextBlock(state.context);
+    }
+    if (state.matches("failure")) {
+      console.log("Matches failure");
+      setHandleError(true);
+    }
   }, [state.context]);
 
   return (
@@ -220,20 +230,36 @@ const FirmwareErrorPanel = ({ nextBlock, retryBlock }) => {
         </div>
       ) : (
         <div className="firmware-wrapper">
-          <h1>Error</h1>
           <div className="firmware-row">
             <div className="firmware-content borderLeftTopRadius">
               <div className="firmware-content--inner">
                 <Title text={i18n.firmwareUpdate.texts.errorTitle} headingLevel={3} type="warning" />
                 <div className="errorListWrapper">
-                  <div className="errorListItem">
+                  {handleError ? (
+                    state.context.error == "error.platform.GitHubData" ? (
+                      <div className="errorListItem">
+                        <div className="errorListImage iconWarning">
+                          <IconNoWifi />
+                        </div>
+                        <div className="errorListContent">
+                          We were unable to download the firmware you requested. Please, check you internet connectin or try again
+                          later.
+                        </div>
+                      </div>
+                    ) : (
+                      ""
+                    )
+                  ) : (
+                    ""
+                  )}
+                  {/* <div className="errorListItem">
                     <div className="errorListImage">
                       <video width={162} height={162} autoPlay={true} loop={true} className="img-center img-fluid">
                         <source src={videoDefyCablesDisconnect} type="video/mp4" />
                       </video>
                     </div>
                     <div className="errorListContent">{i18n.firmwareUpdate.texts.errorMissingCables}</div>
-                  </div>
+                  </div> */}
                 </div>
               </div>
             </div>
@@ -250,12 +276,16 @@ const FirmwareErrorPanel = ({ nextBlock, retryBlock }) => {
           <div className="firmware-row">
             <div className="firmware-content borderLeftBottomRadius">
               <div className="wrapperActions">
-                <RegularButton
-                  className="flashingbutton nooutlined"
-                  style="outline"
-                  buttonText={i18n.firmwareUpdate.texts.cancelButton}
-                  // onClick={onCancelDialog}
-                />
+                {!handleError ? (
+                  <RegularButton
+                    className="flashingbutton nooutlined"
+                    style="outline"
+                    buttonText={i18n.firmwareUpdate.texts.cancelButton}
+                    // onClick={onCancelDialog}
+                  />
+                ) : (
+                  ""
+                )}
               </div>
             </div>
             <div className="firmware-sidebar borderRightBottomRadius">
@@ -274,7 +304,6 @@ const FirmwareErrorPanel = ({ nextBlock, retryBlock }) => {
           </div>
         </div>
       )}
-
       <div>{JSON.stringify(state.context)}</div>
     </Style>
   );

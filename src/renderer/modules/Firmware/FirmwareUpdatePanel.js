@@ -188,13 +188,13 @@ const FirmwareUpdatePanel = ({ nextBlock, retryBlock, errorBlock, allowBeta }) =
       <Loader paused={checkTimeOut} warning={checkTimeOut} />
       {checkTimeOut ? (
         <RegularButton
+          style="primary"
+          buttonText="Retry"
           onClick={() => {
             send("RETRY");
             retryBlock();
           }}
-        >
-          Retry when error
-        </RegularButton>
+        />
       ) : (
         ""
       )}

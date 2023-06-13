@@ -66,6 +66,7 @@ const AltFirmwareUpdate = props => {
             <div className="firmware-wrapper">
               <div className="firmware-row">
                 <div className="loading marginCenter text-center">
+                  State Block 0
                   <Loader />
                 </div>
               </div>

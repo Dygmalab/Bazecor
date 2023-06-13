@@ -80,6 +80,7 @@ import IconNoKey from "./IconNoKey";
 import IconNoSignal from "./IconNoSignal";
 import IconNote from "./IconNote";
 import IconNoteSm from "./IconNoteSm";
+import IconNoWifi from "./IconNoWifi";
 import IconOneShot from "./IconOneShot";
 import IconOneShotSm from "./IconOneShotSm";
 import IconPauseXl from "./IconPauseXl";
@@ -205,6 +206,7 @@ export {
   IconNoSignal,
   IconNote,
   IconNoteSm,
+  IconNoWifi,
   IconOneShot,
   IconOneShotSm,
   IconPauseXl,
