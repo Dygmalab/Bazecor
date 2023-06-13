@@ -76,6 +76,8 @@ height:inherit;
 }
 .holdButton { 
   margin-bottom: 32px;
+  display: flex;
+  grid-gap: 8px;
 }
 .holdTootip {
   h6 {
@@ -232,7 +234,7 @@ const FirmwareUpdateProcess = ({ nextBlock, retryBlock, context, toggleFlashing,
                 />
                 <RegularButton
                   className="flashingbutton nooutlined"
-                  style="outline"
+                  style="primary"
                   size="sm"
                   buttonText={"Retry the flashing procedure"}
                   onClick={() => {

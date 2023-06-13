@@ -221,7 +221,6 @@ const FirmwareProgressStatus = ({
               color={stepsPosition == steps.length - 1 ? "warning" : "success"}
             />
           )}
-
           {stepsPosition == 0 ? (
             <Title text={i18n.firmwareUpdate.texts.flashCardTitle2} headingLevel={6} />
           ) : (
