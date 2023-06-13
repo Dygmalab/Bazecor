@@ -29,6 +29,7 @@ import FWSelection from "../../controller/FlashingSM/FWSelection";
 import Title from "../../component/Title";
 import Callout from "../../component/Callout";
 import { RegularButton } from "../../component/Button";
+import { Loader } from "../../component/Loader";
 
 // Visual modules
 import { FirmwareNeuronStatus } from "../Firmware";
@@ -210,7 +211,13 @@ const FirmwareErrorPanel = ({ nextBlock, retryBlock }) => {
   return (
     <Style>
       {loading && state.context.stateblock < 2 ? (
-        ""
+        <div className="firmware-wrapper">
+          <div className="firmware-row">
+            <div className="loading marginCenter text-center">
+              <Loader />
+            </div>
+          </div>
+        </div>
       ) : (
         <div className="firmware-wrapper">
           <h1>Error</h1>

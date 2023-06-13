@@ -31,6 +31,7 @@ import DeviceChecks from "../../controller/FlashingSM/DeviceChecks";
 import Title from "../../component/Title";
 import Callout from "../../component/Callout";
 import { RegularButton } from "../../component/Button";
+import { Loader } from "../../component/Loader";
 
 import { FirmwareNeuronStatus } from "../Firmware";
 
@@ -222,7 +223,7 @@ const FirmwareCheckProcessPanel = ({ nextBlock, retryBlock, context }) => {
         <div className="firmware-wrapper">
           <div className="firmware-row">
             <div className="loading marginCenter text-center">
-              <Spinner className="spinner-border" role="status" />
+              <Loader />
             </div>
           </div>
         </div>

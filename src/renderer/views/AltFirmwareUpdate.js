@@ -60,12 +60,15 @@ const AltFirmwareUpdate = props => {
       <Container fluid className={`firmware-update`}>
         <PageHeader text={i18n.app.menu.firmwareUpdate} />
         <div>
-          <Loader />
           {state.context.Block === -1 ? (
             <FirmwareErrorPanel nextBlock={nextBlock} retryBlock={retryBlock} />
           ) : state.context.Block === 0 ? (
-            <div className="loading marginCenter">
-              <Spinner className="spinner-border" role="status" />
+            <div className="firmware-wrapper">
+              <div className="firmware-row">
+                <div className="loading marginCenter text-center">
+                  <Loader />
+                </div>
+              </div>
             </div>
           ) : state.context.Block === 1 ? (
             <FirmwareUpdatePanel

@@ -15,8 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React, { useState, useEffect } from "react";
-import PropTypes from "prop-types";
+import React, { useState, useEffect, useRef } from "react";
 import Styled from "styled-components";
 import { useMachine } from "@xstate/react";
 import i18n from "../../i18n";
@@ -29,6 +28,7 @@ import FWSelection from "../../controller/FlashingSM/FWSelection";
 import Title from "../../component/Title";
 import Callout from "../../component/Callout";
 import { RegularButton } from "../../component/Button";
+import { Loader } from "../../component/Loader";
 
 // Visual modules
 import { FirmwareNeuronStatus, FirmwareVersionStatus } from "../Firmware";
@@ -160,16 +160,10 @@ width: 100%;
 }
 `;
 
-/**
- * This FirmwareUpdatePanel function returns a module that wrap all modules and components to manage the first steps of firware update.
- * The object will accept the following parameters
- *
- * @param {number} disclaimerCard - Number that indicates the software when the installation will begin.
- * @returns {<FirmwareUpdatePanel>} FirmwareUpdatePanel component.
- */
-
 const FirmwareUpdatePanel = ({ nextBlock, retryBlock, errorBlock, allowBeta }) => {
   const [state, send] = useMachine(FWSelection, { context: { allowBeta: allowBeta } });
+  const [checkTimeOut, setCheckTimeOut] = useState(false);
+  const timerRef = useRef(null);
 
   const [loading, setLoading] = useState(true);
   useEffect(() => {
@@ -180,10 +174,32 @@ const FirmwareUpdatePanel = ({ nextBlock, retryBlock, errorBlock, allowBeta }) =
     if (state.matches("failure")) errorBlock(state.context.error);
   }, [state.context]);
 
+  useEffect(() => {
+    timerRef.current = setTimeout(() => {
+      console.log("checkLoaderTimeout");
+      setCheckTimeOut(true);
+    }, 10000);
+    // Clear the interval when the component unmounts
+    return () => clearTimeout(timerRef.current);
+  }, []);
+
   return (
     <Style>
-      {loading ? (
+      <Loader paused={checkTimeOut} warning={checkTimeOut} />
+      {checkTimeOut ? (
+        <RegularButton
+          onClick={() => {
+            send("RETRY");
+            retryBlock();
+          }}
+        >
+          Retry when error
+        </RegularButton>
+      ) : (
         ""
+      )}
+      {loading ? (
+        <Loader />
       ) : (
         <div className="firmware-wrapper home-firmware">
           <div className="firmware-row">
@@ -277,16 +293,5 @@ const FirmwareUpdatePanel = ({ nextBlock, retryBlock, errorBlock, allowBeta }) =
     </Style>
   );
 };
-
-// FirmwareUpdatePanel.propTypes = {
-//   currentlyVersionRunning: PropTypes.string,
-//   latestVersionAvailable: PropTypes.string.isRequired,
-//   onClick: PropTypes.func.isRequired,
-//   selectFirmware: PropTypes.func.isRequired,
-//   onCancelDialog: PropTypes.func.isRequired,
-//   onBackup: PropTypes.func.isRequired,
-//   firmwareFilename: PropTypes.string,
-//   disclaimerCard: PropTypes.number
-// };
 
 export default FirmwareUpdatePanel;
