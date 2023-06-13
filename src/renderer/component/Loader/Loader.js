@@ -89,7 +89,7 @@ svg {
   }
 }
 .loader-rotating {
-    filter: drop-shadow(0px 4px 6px rgba(93, 235, 99, 0.5));
+    filter: drop-shadow(0px 4px 6px rgba(100, 135, 220, 0.5));
 }
 .rotating {
     transform-origin: 320% 300%;

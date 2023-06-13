@@ -29,6 +29,7 @@ import Title from "../../component/Title";
 import Callout from "../../component/Callout";
 import { RegularButton } from "../../component/Button";
 import { Loader } from "../../component/Loader";
+import { IconLoader } from "../../component/Icon";
 
 // Visual modules
 import { FirmwareNeuronStatus, FirmwareVersionStatus } from "../Firmware";
@@ -239,7 +240,10 @@ const FirmwareUpdatePanel = ({ nextBlock, retryBlock, errorBlock, allowBeta }) =
                   <RegularButton
                     className="flashingbutton nooutlined"
                     style="outline"
-                    buttonText={i18n.firmwareUpdate.flashing.buttonUpdated}
+                    buttonText={state.context.stateblock == 4 ? "Processing..." : i18n.firmwareUpdate.flashing.buttonUpdated}
+                    icoSVG={state.context.stateblock == 4 ? <IconLoader /> : null}
+                    icoPosition={state.context.stateblock == 4 ? "right" : null}
+                    disabled={state.context.stateblock == 4 ? true : false}
                     onClick={() => {
                       send("NEXT");
                     }}
@@ -248,7 +252,10 @@ const FirmwareUpdatePanel = ({ nextBlock, retryBlock, errorBlock, allowBeta }) =
                   <RegularButton
                     className="flashingbutton nooutlined"
                     style="primary"
-                    buttonText={i18n.firmwareUpdate.flashing.button}
+                    buttonText={state.context.stateblock == 4 ? "Processing..." : i18n.firmwareUpdate.flashing.button}
+                    icoSVG={state.context.stateblock == 4 ? <IconLoader /> : null}
+                    icoPosition={state.context.stateblock == 4 ? "right" : null}
+                    disabled={state.context.stateblock == 4 ? true : false}
                     onClick={() => {
                       send("NEXT");
                     }}
