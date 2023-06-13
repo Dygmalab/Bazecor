@@ -15,5 +15,6 @@
  */
 
 import CircleLoader from "./CircleLoader";
+import Loader from "./Loader";
 
-export { CircleLoader };
+export { CircleLoader, Loader };

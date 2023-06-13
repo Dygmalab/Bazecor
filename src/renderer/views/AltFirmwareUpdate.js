@@ -15,6 +15,8 @@ import i18n from "../i18n";
 import PageHeader from "../modules/PageHeader";
 import { FirmwareErrorPanel, FirmwareCheckProcessPanel, FirmwareUpdatePanel, FirmwareUpdateProcess } from "../modules/Firmware";
 
+import { Loader } from "../component/Loader";
+
 const Styles = Styled.div`
 height: inherit;
 .main-container {
@@ -58,6 +60,7 @@ const AltFirmwareUpdate = props => {
       <Container fluid className={`firmware-update`}>
         <PageHeader text={i18n.app.menu.firmwareUpdate} />
         <div>
+          <Loader />
           {state.context.Block === -1 ? (
             <FirmwareErrorPanel nextBlock={nextBlock} retryBlock={retryBlock} />
           ) : state.context.Block === 0 ? (
