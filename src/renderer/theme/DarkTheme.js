@@ -288,6 +288,9 @@ const Dark = {
       subTitleColor: Tokens.colors.gray50,
       groupButtonsBackground: settingColorOpacity(Tokens.colors.gray900, 0.2)
     },
+    circleLoader: {
+      strokeColor: Tokens.colors.brandSuccess
+    },
     customCheckbox: {
       background: Tokens.colors.gray700,
       borderColor: Tokens.colors.gray400,

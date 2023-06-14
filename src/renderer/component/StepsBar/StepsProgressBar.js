@@ -40,8 +40,8 @@ width: 100%;
     height: 13px;
     border-radius: 50%;
     box-shadow: ${({ theme }) => theme.styles.stepsBar.bulletBoxShadow};
-    border: 3px solid ${({ theme }) => theme.styles.stepsBar.bulletBackground};
-    background-color: ${({ theme }) => theme.styles.stepsBar.bulletBackground};
+    border: 3px solid ${({ theme }) => theme.styles.stepsProgressBar.bulletBackground};
+    background-color: ${({ theme }) => theme.styles.stepsProgressBar.bulletBackground};
     z-index: 2;
     top: -4px;    
     animation: splashBullet 400ms normal forwards ease-in-out;
@@ -53,10 +53,18 @@ width: 100%;
     border: 3px solid ${({ theme }) => theme.styles.stepsProgressBar.bulletBorderActive};
     background-color: ${({ theme }) => theme.styles.stepsProgressBar.bulletBackground};
 }
+.success .stepBullet,
 .completed .stepBullet {
     box-shadow: ${({ theme }) => theme.styles.stepsBar.bulletBoxShadowActive};
     border: 3px solid ${({ theme }) => theme.styles.stepsProgressBar.bulletBorderActive};
     background-color: ${({ theme }) => theme.styles.stepsProgressBar.bulletBackgroundActive};
+}
+.error .active .stepBullet,
+.error .active.completed .stepBullet,
+.error .completed .stepBullet {
+  box-shadow: ${({ theme }) => theme.styles.stepsBar.bulletBoxShadow};
+  border: 3px solid ${({ theme }) => theme.styles.stepsProgressBar.bulletBackground};
+  background-color: ${({ theme }) => theme.styles.stepsProgressBar.bulletBackground};
 }
 .progressBar {
   width: 100%;
@@ -70,24 +78,27 @@ width: 100%;
     width: calc(100% + 64px);
     height: 6px;
     border-radius: 3px;
-    background-color: ${({ theme }) => theme.styles.stepsProgressBar.stepBarBackgroundActive};
+    background-color: transparent;
     position: absolute;
     transition: width 1s ease-in-out;
   }
 }
+:not(.error) .progressBar .progressBarActive {
+  background-color: ${({ theme }) => theme.styles.stepsProgressBar.stepBarBackgroundActive};
+}
 
 @keyframes splashBullet {
   0% {
-      transform: scale(1) translate3d(0,0, 0);
+      transform: scale(1) translate3d(0, 0, 0);
   }
   25% {
-      transform: scale(0.75) translate3d(0,0, 0);
+      transform: scale(0.75) translate3d(0, 0, 0);
   }
   80% {
-    transform: scale(1.2) translate3d(0,0, 0);
+    transform: scale(1.2) translate3d(0, 0, 0);
   }
   100% {
-    transform: scale(1) translate3d(0,0, 0);
+    transform: scale(1) translate3d(0, 0, 0);
   }
 }
 `;
@@ -99,16 +110,18 @@ const StepsProgressBar = ({ steps, stepActive }) => {
   const constructGrid = {
     gridTemplateColumns: `repeat(${steps.length - 3}, 1fr)`
   };
-  const bulletsRef = useRef(steps.map(() => createRef()));
+  const bulletsRef = useRef([]);
+  const stepsElementsRef = useRef();
   let widthPercentage;
   useEffect(() => {
     //setStepsPosition(steps.findIndex(x => x.step === stepActive));
     if (stepActive == steps.length - 1) {
-      console.log("bullets ref: ", bulletsRef.current[stepActive]);
       widthPercentage = {
         width: `calc(0%)`
       };
+      stepsElementsRef.current.classList.add("error");
     } else {
+      stepsElementsRef.current.classList.remove("error");
       if (stepActive == 0) {
         widthPercentage = {
           width: `calc(0%)`
@@ -123,9 +136,7 @@ const StepsProgressBar = ({ steps, stepActive }) => {
             widthPercentage = {
               width: `calc(100% + 64px)`
             };
-            console.log("bullets ref: ", bulletsRef);
-            console.log("bullets ref current: ", bulletsRef.current[stepActive]);
-            // bulletsRef.current[stepActive].classList.add("success");
+            bulletsRef.current[stepActive].classList.add("success");
           } else {
             widthPercentage = {
               width: `calc(${(100 / (steps.length - 3)) * (stepActive - 1)}% + 34px)`
@@ -141,7 +152,7 @@ const StepsProgressBar = ({ steps, stepActive }) => {
   return (
     <Style>
       <div className="stepsBarWrapper">
-        <div className="stepsBarWrapperInner">
+        <div className="stepsBarWrapperInner" ref={stepsElementsRef}>
           <div className="stepsElements" style={constructGrid}>
             {steps.map((item, index) =>
               index == 0 || index == steps.length - 1 ? (
@@ -151,7 +162,9 @@ const StepsProgressBar = ({ steps, stepActive }) => {
                   className={`step ${index < stepActive ? "completed" : ""} ${index == stepActive ? "active" : ""}`}
                   data-order={index}
                   key={`${index}`}
-                  ref={bulletsRef.current[index]}
+                  ref={ref => {
+                    bulletsRef.current[index] = ref;
+                  }}
                 >
                   <div className="stepBullet"></div>
                 </div>

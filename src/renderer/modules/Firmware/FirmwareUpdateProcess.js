@@ -30,13 +30,14 @@ import Title from "../../component/Title";
 import { RegularButton } from "../../component/Button";
 import { StepsBar } from "../../component/StepsBar";
 import { IconArrowRight } from "../../component/Icon";
+import { FirmwareLoader } from "../../component/Loader";
 
 // Visual modules
 import { FirmwareProgressStatus } from "../Firmware";
 
 const Style = Styled.div`   
 width: 100%;  
-height:inherit;
+height: inherit;
 .firmware-wrapper {
   max-width: 680px;   
   width: 100%;
@@ -76,6 +77,8 @@ height:inherit;
 }
 .holdButton { 
   margin-bottom: 32px;
+  display: flex;
+  grid-gap: 8px;
 }
 .holdTootip {
   h6 {
@@ -168,23 +171,31 @@ const FirmwareUpdateProcess = ({ nextBlock, retryBlock, context, toggleFlashing,
   ];
   const stepsRaise = [
     { step: 1, title: i18n.firmwareUpdate.texts.flashCardTitle1, description: i18n.firmwareUpdate.texts.flashCardTitle2 },
-    { step: 2, title: "1. Hold Esc Key", description: "Preparing the Keyboard" },
-    { step: 3, title: "2. Updating the Firmware", description: "Gently installing..." },
-    { step: 4, title: "3. Restoring your Layers", description: "Wrapping everything up!" },
-    { step: 7, title: "4. Firmware update!", description: "Solid as a rock! 💪" },
-    { step: 8, title: "Firmware update error!", description: "Errors!!!! 🫠" }
+    { step: 2, title: i18n.firmwareUpdate.texts.progressCardStatus1, description: i18n.firmwareUpdate.texts.progressCardBar1 },
+    { step: 3, title: i18n.firmwareUpdate.texts.progressCardStatus2, description: i18n.firmwareUpdate.texts.progressCardBar2 },
+    { step: 4, title: i18n.firmwareUpdate.texts.progressCardStatus3, description: i18n.firmwareUpdate.texts.progressCardBar3 },
+    { step: 7, title: i18n.firmwareUpdate.texts.progressCardStatus4, description: i18n.firmwareUpdate.texts.progressCardBar4 },
+    {
+      step: 8,
+      title: i18n.firmwareUpdate.texts.errorDuringProcessTitle,
+      description: i18n.firmwareUpdate.texts.errorDuringProcessDescription
+    }
   ];
 
   return (
     <Style>
       {loading ? (
-        ""
+        <FirmwareLoader />
       ) : (
         <div className="firmware-wrapper upgrade-firmware">
-          <div className="firmware-row">{/* <StepsBar steps={steps} stepActive={simulateCountdown - 1} /> */}</div>
           <div className="firmware-row progress-visualizer">
             <FirmwareProgressStatus
               flashProgress={state.context.globalProgress}
+              leftProgress={state.context.leftProgress}
+              rightProgress={state.context.rightProgress}
+              resetProgress={state.context.resetProgress}
+              neuronProgress={state.context.neuronProgress}
+              restoreProgress={state.context.restoreProgress}
               countdown={state.context.stateblock}
               deviceProduct={state.context.device.info.product}
               keyboardType={state.context.device.info.keyboardType}
@@ -231,7 +242,7 @@ const FirmwareUpdateProcess = ({ nextBlock, retryBlock, context, toggleFlashing,
                 />
                 <RegularButton
                   className="flashingbutton nooutlined"
-                  style="outline"
+                  style="primary"
                   size="sm"
                   buttonText={"Retry the flashing procedure"}
                   onClick={() => {
@@ -265,8 +276,6 @@ const FirmwareUpdateProcess = ({ nextBlock, retryBlock, context, toggleFlashing,
           <div>{`restore Percentage: ${state.context.restoreProgress}`}</div>
         </div>
       </div>
-
-      {/* <div style={{ maxWidth: "1080px" }}>{JSON.stringify(state.context)}</div> */}
     </Style>
   );
 };

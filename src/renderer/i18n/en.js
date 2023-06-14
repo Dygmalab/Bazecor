@@ -241,13 +241,13 @@ const English = {
         standardViewTitle: "Select a key",
         callOut: "Here you can remap ordinary keys. Say Hi or Goodbye to ordinary keyboards. 👋",
         enhanceTitle: "Enhance the selected key",
-        callOutEnhance: "You can add modifiers to your keys or putting extra action adding dual layer function.",
+        callOutEnhance: "You can add modifiers to your keys or put extra action adding dual layer function.",
         addModifiers: "Add modifiers",
         addModifier: "Add a modifier",
         descriptionModifiers: "Add any of these modifiers to selected key to create combinations such as Control, Alt or Shift.",
         addDualFunction: "Add a dual-function",
         dualFunctionDescription:
-          "Dual-function keys have two functionalities. 1. When tapped, they send a chartacter. 2. When held, they send a modifier or a layer key."
+          "Dual-function keys have two functionalities. 1. When tapped, they send a character. 2. When held, they send a modifier or a layer key."
       },
       layers: {
         title: "Layers",
@@ -604,7 +604,7 @@ const English = {
     virtualKeyboard: {
       buttonText: "Use without a keyboard",
       modaltitle: "Manage virtual keyboard",
-      newVirtualKeyboardTitle: "I want to start from stratch",
+      newVirtualKeyboardTitle: "I want to start from scratch",
       newVirtualKeyboardDescription: "I want to create a new virtual keyboard with default settings.",
       newVirtualKeyboardLabel: "Select model",
       loadVirtualKeyboardTitle: "I have a file",
@@ -643,9 +643,13 @@ const English = {
       disclaimerTitle: "Start update process",
       disclaimerContent:
         "<strong>Before the update the Neuron will backup your layers and settings after that the update process will begin automatically.</strong>",
+      disclaimerContent2:
+        "If the firmware update process isn't successful, don't worry. It won't damage your device, but you will need to repeat the process.",
       disclaimerCard3: "Click Next to backup your layers and settings, and start the firmware update process.",
       errorTitle: "Oops! Review the following before continuing",
       errorMissingCables: "Connect both sides using cables and try again.",
+      errorDuringProcessTitle: "Firmware update error!",
+      errorDuringProcessDescription: "Something went wrong! Please, retry the flashing procedure. 🫠",
       flashCardTitle1: "Press and hold the top left key to start the firmware update.",
       flashCardTitle2: "Don't release the key until the process finishes.",
       flashCardHelp: "Why do I need to press and hold a key when updating the device firmware?",
@@ -656,13 +660,16 @@ const English = {
       flashCardOverlay3: "in order for the Firmware to be loaded. This is for security reasons.",
       flashCardOverlay4: "The update process is designed so that it will never be triggered accidentally.",
       flashCardOverlay5: "This makes the keyboard secure against undesired firmware modifications.",
-      progressCardStatus1: "Hold the key",
-      progressCardStatus2: "Flashing!",
-      progressCardStatus3: "Release the key",
-      progressCardBar1: "1. Backing up your Layers",
-      progressCardBar2: "2. Preparing the Keyboard",
-      progressCardBar3: "3. Updating the Firmware",
-      progressCardBar4: "4. Restoring your Layers",
+      noInternetConncetion:
+        "We were unable to download the firmware you requested. Please, check your internet connection or try again later.",
+      progressCardStatus1: "1. Hold ESC Key",
+      progressCardStatus2: "2. Updating the Firmware",
+      progressCardStatus3: "3. Restoring your Layers",
+      progressCardStatus4: "4. Firmware update!",
+      progressCardBar1: "Preparing the Keyboard",
+      progressCardBar2: "Gently installing...",
+      progressCardBar3: "Wrapping everything up!",
+      progressCardBar4: "Solid as a rock! 💪",
       progressCardTitle1: "Press and hold the top left key to start the firmware update.",
       progressCardTitle2: "Don't release the key until the process finishes.",
       currentlyRunningCardTitle: "Your <span class='hidden-on-sm'>device's </span>firmware version",

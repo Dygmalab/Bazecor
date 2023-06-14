@@ -16,10 +16,8 @@
  */
 
 import React, { useState, useEffect } from "react";
-import PropTypes from "prop-types";
 import Styled from "styled-components";
 import { useMachine } from "@xstate/react";
-import Spinner from "react-bootstrap/Spinner";
 import Card from "react-bootstrap/Card";
 import i18n from "../../i18n";
 import SemVer from "semver";
@@ -31,6 +29,8 @@ import DeviceChecks from "../../controller/FlashingSM/DeviceChecks";
 import Title from "../../component/Title";
 import Callout from "../../component/Callout";
 import { RegularButton } from "../../component/Button";
+import { FirmwareLoader } from "../../component/Loader";
+import AccordionFirmware from "../../component/Accordion/AccordionFirmware";
 
 import { FirmwareNeuronStatus } from "../Firmware";
 
@@ -40,6 +40,7 @@ import { IconWarning } from "../../component/Icon";
 
 const Style = Styled.div`
 width: 100%;
+height:inherit;
 .firmware-wrapper {
   max-width: 960px;
   width: 100%;
@@ -60,6 +61,10 @@ width: 100%;
   }
   .firmware-content--inner {
     padding: 32px;
+    letter-spacing: -0.01em;
+    strong {
+      font-weight: 601;
+    }
   }
 
   .borderLeftTopRadius {
@@ -219,13 +224,7 @@ const FirmwareCheckProcessPanel = ({ nextBlock, retryBlock, context }) => {
   return (
     <Style>
       {loading || !state.context.backup ? (
-        <div className="firmware-wrapper">
-          <div className="firmware-row">
-            <div className="loading marginCenter text-center">
-              <Spinner className="spinner-border" role="status" />
-            </div>
-          </div>
-        </div>
+        <FirmwareLoader />
       ) : (
         <>
           {(state.context.device.info.product == "Raise" && state.context.backup) ||
@@ -244,15 +243,8 @@ const FirmwareCheckProcessPanel = ({ nextBlock, retryBlock, context }) => {
                       className={"disclaimerContent"}
                       dangerouslySetInnerHTML={{ __html: i18n.firmwareUpdate.texts.disclaimerContent }}
                     />
-                    <Callout
-                      content={i18n.firmwareUpdate.texts.calloutIntroText}
-                      className="mt-lg"
-                      size="md"
-                      hasVideo={state.context.device.info.product == "Raise" ? true : true}
-                      media={`aVu7EL4LXMI`}
-                      videoTitle="How to update the Software & Firmware of your Dygma keyboard"
-                      videoDuration={state.context.device.info.product == "Raise" ? "2:58" : null}
-                    />
+                    <Callout content={i18n.firmwareUpdate.texts.disclaimerContent2} size="sm" className="mt-lg" />
+                    {state.context.device.info.product == "Defy" ? <AccordionFirmware items={listItems} /> : ""}
                   </div>
                 </div>
                 <div className="firmware-sidebar borderRightTopRadius">
@@ -351,17 +343,6 @@ const FirmwareCheckProcessPanel = ({ nextBlock, retryBlock, context }) => {
           )}
         </>
       )}
-
-      <RegularButton
-        onClick={() => {
-          retryBlock();
-        }}
-        buttonText={"Retry when error"}
-      ></RegularButton>
-      <RegularButton onClick={() => send("PRESSED")} buttonText={"success"}></RegularButton>
-      <RegularButton onClick={() => send("SKIP")} buttonText={"Skip if raise"}></RegularButton>
-      <RegularButton onClick={() => send("CHECK")} buttonText={"Check Defy Sides"}></RegularButton>
-      <Card style={{ maxWidth: "1080px" }}>{JSON.stringify(state.context)}</Card>
     </Style>
   );
 };

@@ -98,7 +98,7 @@ const Style = Styled.div`
  * @param {number} countdown - Number representing the position during the update process
  * @returns {<FirmwareImageHelp>} FirmwareImageHelp component.
  */
-const FirmwareImageHelp = ({ countdown, deviceProduct, keyboardType, steps }) => {
+const FirmwareImageHelp = ({ countdown, deviceProduct, keyboardType, steps, error }) => {
   const videoIntro = React.useRef(null);
   const videoRelease = React.useRef(null);
   const checkSuccess = React.useRef(null);
@@ -114,15 +114,18 @@ const FirmwareImageHelp = ({ countdown, deviceProduct, keyboardType, steps }) =>
         false
       );
       videoRelease.current.pause();
+      checkSuccess.current.classList.remove("animInCheck");
     }
     if (countdown == 1) {
       videoIntro.current.classList.add("animOut");
       videoRelease.current.classList.add("animIn");
+      checkSuccess.current.classList.remove("animInCheck");
     }
     if (countdown == 2) {
       videoRelease.current.play();
+      checkSuccess.current.classList.remove("animInCheck");
     }
-    if (countdown == steps.length) {
+    if (countdown == steps.length - 2) {
       checkSuccess.current.classList.add("animInCheck");
     }
   }, [countdown]);
@@ -155,7 +158,13 @@ const FirmwareImageHelp = ({ countdown, deviceProduct, keyboardType, steps }) =>
             </div>
           ) : (
             <div className="updatingRaise">
-              <FirmwareNeuronHelp countdown={countdown} deviceProduct={deviceProduct} keyboardType={keyboardType} steps={steps} />
+              <FirmwareNeuronHelp
+                countdown={countdown}
+                deviceProduct={deviceProduct}
+                keyboardType={keyboardType}
+                steps={steps}
+                error={error}
+              />
             </div>
           )}
         </div>

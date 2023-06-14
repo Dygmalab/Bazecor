@@ -28,6 +28,7 @@ import IconColorPalette from "./IconColorPalette";
 import IconColorPicker from "./IconColorPicker";
 import IconConnected from "./IconConnected";
 import IconCheckmarkSm from "./IconCheckmarkSm";
+import IconChevronDown from "./IconChevronDown";
 import IconChip from "./IconChip";
 import IconClone from "./IconClone";
 import IconCloseXs from "./IconCloseXs";
@@ -58,6 +59,7 @@ import IconLEDPreviousEffect from "./IconLEDPreviousEffect";
 import IconLEDPreviousEffectSm from "./IconLEDPreviousEffectSm";
 import IconLEDSwitchLeft from "./IconLEDSwitchLeft";
 import IconLetterColor from "./IconLetterColor";
+import IconLoader from "./IconLoader";
 import IconMemory2Stroke from "./IconMemory2Stroke";
 import IconMediaForward from "./IconMediaForward";
 import IconMediaForwardSm from "./IconMediaForwardSm";
@@ -80,6 +82,7 @@ import IconNoKey from "./IconNoKey";
 import IconNoSignal from "./IconNoSignal";
 import IconNote from "./IconNote";
 import IconNoteSm from "./IconNoteSm";
+import IconNoWifi from "./IconNoWifi";
 import IconOneShot from "./IconOneShot";
 import IconOneShotSm from "./IconOneShotSm";
 import IconPauseXl from "./IconPauseXl";
@@ -153,6 +156,7 @@ export {
   IconColorPicker,
   IconConnected,
   IconCheckmarkSm,
+  IconChevronDown,
   IconChip,
   IconClone,
   IconCloseXs,
@@ -183,6 +187,7 @@ export {
   IconLEDPreviousEffect,
   IconLEDPreviousEffectSm,
   IconLetterColor,
+  IconLoader,
   IconMediaForward,
   IconMediaForwardSm,
   IconMediaPlayPause,
@@ -205,6 +210,7 @@ export {
   IconNoSignal,
   IconNote,
   IconNoteSm,
+  IconNoWifi,
   IconOneShot,
   IconOneShotSm,
   IconPauseXl,
