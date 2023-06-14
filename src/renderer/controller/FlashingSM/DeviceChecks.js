@@ -12,8 +12,9 @@ const keyboardSetup = async context => {
       let brightness = await focus.command("led.brightness");
       await focus.command("led.brightness 255");
       return { RaiseBrightness: brightness };
+    } else {
+      await focus.command("upgrade.start");
     }
-    await focus.command("upgrade.start");
   } catch (error) {
     console.warn("error when querying the device");
     console.error(error);
@@ -26,7 +27,8 @@ const GetLSideData = async () => {
   let result = {};
   try {
     let focus = new Focus();
-    result.version = await focus.command("version");
+    result.leftSideConn = await focus.command("upgrade.keyscanner.isConnected 1");
+    result.leftSideBoot = await focus.command("upgrade.keyscanner.isBootloader 1");
   } catch (error) {
     console.warn("error when querying the device");
     console.error(error);
@@ -39,7 +41,8 @@ const GetRSideData = async () => {
   let result = {};
   try {
     let focus = new Focus();
-    result.version = await focus.command("version");
+    result.rightSideConn = await focus.command("upgrade.keyscanner.isConnected 0");
+    result.rightSideBoot = await focus.command("upgrade.keyscanner.isBootloader 0");
   } catch (error) {
     console.warn("error when querying the device");
     console.error(error);
@@ -81,16 +84,16 @@ const CreateBackup = async context => {
 
 const DeviceChecks = createMachine(
   {
-    /** @xstate-layout N4IgpgJg5mDOIC5QDEA2BDAFrAlgOygAUAnAewGM5YA6dAd3RwBdlTiBhTMcga1gGIIpPGGr4AbqR6jpATwBGpdMQgBlMEwCuABwDaABgC6iUNtK4mOYSZAAPRAA591AIwuAnAFYA7O4BMACwAbO5eHgA0ILKILgDMQdSxvgHesfr+DkFBLgEAvrmRaFi4BCQUVLQMzKwcXLwCYMRkxNTaGEwAZmwAttRyispqGjoGxkggZhZWeDb2CEH6DtR+7t4uniGZsX4OLpHR8yuJq04LOwGxu-mFGNj4RGSUsDT0jCxsnNx8-KoAKgCCACVfqMbJNmNNZohAu5qA5POt3C4-Os-LEXEEHPtELEAgFqAi-NlPCtPF4-H5riAindSo8Kp9eAARbg4XDCfjsAASAFF2ABpUHjcGWazjObZfEItLuWKefQBfS49zYhCXFwEzwpfQooIklJ5ArU24lB7lZ7URk8FnkNnTH78gCShCFpnMELFoAlOQJcXScoVSoCKqijm81Ex8RyoQC6ziVJpprKTxoABlVDgIGArYJhKIJFJRABxDTpzNgJnoJjoV0Td2imbixzufF+EneFaYpE+byqwKeahI-QubwOFv6eUK2IJk33ZMVMtZnONZqtdpdYi9EtMRcVqs1oxg+uQpsIBwOPzHdyLILeAI7LyeVV6y8eDvXi76DuBGfFOf0i1AQzJc6h4XMRDEPBJGkahtyA8tK2rWsRRPL0YjbWJqB1Md9CVNt4SxUMEBRcNsKye9LiSMdPF-WkzRTah4JAr5+BXNg1yrDctw0Ji9yQw9hWPT07BidJYSSIkFTJJwHHiZ8SVcVYVinL8KWnI1E3-c0aHUVBuCYFlxBwJ5flIABVbQICrMBwPzKDC0tUDkAAdQANUadk8GQoTGzQhAciVOElQWRZz08c9VXiZxvDJZFxyyLVPBojTZzpbTqF0-TDOMuBTIsqymBsszCCZf5fh5bypmEuYMUyZZ0VCXCEWCCKiJRAd9RitsW0xO9vFopMAJocR0FQTNrNUastAEQhAR5VRVB5JlKo9XyROIpVML8bwggpXbgyRAI+3WAlAi6skWr6gatIYjpGFQTRiBsubfkBABNFaGyhfzYiSVw0hSdZvG8TaQwOTw-u21ItWCXwJxcfIjTwUgs3gcZNLSlMjyqta5nDFxZIWeIAxwnJVWcPwFQuXx0Qxa8IcNG4-0xipXmqD5QLRt0ce+pLXEJ4KSevMmiMlZYdXlWN3F2uVrpZi0rRtO1hJQ6rEACBFEl2pVgYxHwgiOojcXxdEyRbZrKZ1OX6IXYDs1A7HVu+1IKYxPb3CcOVcUijWCSCS5tp8PEEWSpm6PnQC7atR2vtPFxQsHfxthRCkCYcQ2DkppZYwh-wQYWOIEZS5mbYtTLyAMsAjJM8zLOsmPUPWnJwuoXX47b37eyIkdYQhy5R1wy5u364vw6G6gRrGgqwEmqtNC5usebjhw70SC5paSDXdjbVUPEvElMiyc54hi0PjRLiOaDunAHqehu1f8rfW7WduX871UIcvbsA+3-agmty+1BYCaHIFjQSS8-K6lbHEVIF5FTDiCMdfEO0LxpHPJ+Sm-9EZAA */
+    /** @xstate-layout N4IgpgJg5mDOIC5QDEA2BDAFrAlgOygAUAnAewGM5YA6QsYgMwGUwAXAVwAcBiCUvMNXwA3UgGtBEgJ4AjUumIQWHTgG0ADAF1EoTqVysc-HSAAeiAMzqArNQCcANgCMAdifqATNYAc1u74AaEClEJw9qbw87dScHABY7OPU4i2snawBfDKC0LFwCEgoqWnpmNi5uejJiak4MVgZSYgBbamk5BSVytS0TPQMjPBNzBCckhwjolxS49I8xoJCEKNsXDws7VMcnfzisnIxsfCIySlgaABkmHAgwAGFMMHIxXn5BEXFBAHE2K5uwAAi6FY6A02iQIH6OEMxghIw8CPsLmsLgcyI2LjcXkWiESdmoTnca1RHgczjS+xAuSOBVOxT+tweTxeVSatXqjRa1B+rAZgOBoN6EKhMKGcNCUQJFgc1hsaTCUXULhxCDi3nUBJskTsYRlyOse2yVMO+RORXO1AAStdGY9nq8BEI8KIJNy2Nb-kCQWC+vpoYNhohrPEImFrNYLOsEmE7CrURNSSkPMl1BZvGjMkbqabCmcaB7bczKsRquzgZzWjyC-zvULdH7RYGEMG4qGvBGozqoir3PMIjLEhY09MDQ5KdnjrniixUE9WACwMIcGcACqkACqnAgwLADvezs+1CZz2QAHUAGr0XD8H3ChsB8UIVH45xK8MeOKolIOFUOdPUBEuxlMYEhSccTUnOkLRnOcFyXVcNy3Hdi1LOpyyaVpjzEM9L2Ia88FvesBlhUARn8bxqBiFENgNWJMWsFVwycah0UHGJPHTcC8kg80aBg8h50XZc4DXTdt1YXd10IAEAEEVwAUUIyF7xIsxcW8CiqJcGjZjRZEVW8NMIgSGJ0kcFw7EzA5uNpXjqGEdBUBuHcmBBDhYD3J0XUEO5iDAHcACF0GeLglJFB9SNCHZ8VJYM7DsaYFTiX8XA1fwnHVRJSVSg0uJpM083sxznIk1zgXYDzWRqNCGgwo8-MC4KxFCutlOIsVItGDYLAiZF1G8JJIymH9gkQVE0vjdx1ESOIPzHLMINswqHKc8SwDK9zuEIS15KYJh5IBMKVI6tSus2XrZQG1NFVRAyDUoiwYwceLZVmFw8pzKCaAYdAcFQdg-O4HaV0tABNI72qbMZDJYuIEh8FE4tmlV5hcADUjcHwyQseMsiNPBSFueAIQnJaqF9SHHwAWhGpYqemagZSovUY08d6FpsgrijoRhlC4Cn-VUkYxmYx6+o07xphlD8e38FisusDxtKcNN3G8D6eMKvksIFxtH2R0aEESNGESVlXNjiMlco5-KpwtasdbvSnOqSDVMQcfrLfUGJ1UllVHFWRxNke-rZTcDWyegsBZwEuDhNgUSkIk3WItO8bqHDT8LL8bwww8OMBoAwzc4sWZ5TGCOuYtFaSvWtyKpToWJTCewQ+e03LZxgzEVitE0RTHVK7t77fv+vzG5O4XyWoNMmNldxHD9w2DXxTFS4s5xfFSiwh6+6hYHYcg8wnqHp9ntJ5+mv9lUNyWJiVWa7A-eYMvUeasiAA */
     predictableActionArguments: true,
     id: "FlahsingProcess",
     initial: "PerfSetup",
     context: {
       stateblock: 0,
       device: {},
-      sideLeftOk: false,
+      sideLeftOk: true,
       sideLeftBL: false,
-      sideRightOK: false,
+      sideRightOK: true,
       sideRightBL: false,
       backup: undefined
     },
@@ -142,11 +145,18 @@ const DeviceChecks = createMachine(
           id: "GetLSideData",
           src: GetLSideData,
           onDone: {
+            target: "RSideCheck",
             actions: [
+              assign((context, event) => {
+                console.log(event);
+                return {
+                  sideLeftOk: event.data.leftSideConn,
+                  sideLeftBL: event.data.leftSideBoot
+                };
+              }),
               assign({
                 stateblock: (context, event) => 2
-              }),
-              "RSideCheck"
+              })
             ]
           },
           onError: "failure"
@@ -163,40 +173,19 @@ const DeviceChecks = createMachine(
           id: "GetRSideData",
           src: GetRSideData,
           onDone: {
+            target: "validateStatus",
             actions: [
+              assign((context, event) => {
+                console.log(event);
+                return {
+                  sideRightOK: event.data.rightSideConn,
+                  sideRightBL: event.data.rightSideBoot
+                };
+              }),
               assign({
                 stateblock: (context, event) => 3
-              }),
-              "SelectDevicesToUpdate"
+              })
             ]
-          },
-          onError: "failure"
-        }
-      },
-      SelectDevicesToUpdate: {
-        id: "SelectDevicesToUpdate",
-        entry: [
-          (context, event) => {
-            console.log("Selecting devices that are updatable");
-          }
-        ],
-        on: {
-          UPDATE: {
-            target: "validateStatus",
-            cond: sidesReady
-          }
-        },
-        invoke: {
-          id: "CheckFWVersion",
-          src: CheckFWVersion,
-          onDone: {
-            actions: assign((context, event) => {
-              return {
-                sideLeftOk: event.data,
-                sideRightOK: event.data,
-                stateblock: 4
-              };
-            })
           },
           onError: "failure"
         }
@@ -235,6 +224,7 @@ const DeviceChecks = createMachine(
         on: {
           PRESSED: {
             target: "success",
+            cond: "allStepsClear",
             actions: [
               assign({
                 stateblock: (context, event) => context.stateblock + 1
@@ -263,6 +253,9 @@ const DeviceChecks = createMachine(
       },
       bootloaderMode: (context, event) => {
         return context.device.bootloader;
+      },
+      allStepsClear: (context, event) => {
+        return context.sideLeftOk && context.sideRightOK && context.backup !== undefined;
       }
     }
   }
