@@ -139,19 +139,16 @@ export class FlashRaise {
       for (let command of commands) {
         // Ignore the command if it's not supported
         if (!focus.isCommandSupported(command)) {
-          this.backupFileData.log.push("Unsupported command " + command);
           continue;
         }
 
         let res = await focus.command(command);
         this.backupFileData.backup[command] = typeof res === "string" ? res.trim() : res;
         if (res === undefined || res === "") {
-          this.backupFileData.log.push(`Get backup settings ${command}: Error: ${errorMessage}`);
           errorFlag = true;
         }
       }
       if (errorFlag) throw new Error(errorMessage);
-      this.backupFileData.log.push("Settings backed up OK");
     } catch (e) {
       this.saveBackupFile();
       throw e;
@@ -169,7 +166,6 @@ export class FlashRaise {
     console.log("saving file to: " + route);
     fs.writeFile(route, JSON.stringify(this.backupFileData), err => {
       if (err) throw err;
-      this.backupFileData.log.push("Backup file is created successfully");
     });
   }
 
@@ -261,8 +257,6 @@ export class FlashRaise {
     let focus = new Focus();
     console.log("Begin update firmware with arduino-flasher");
     // console.log(JSON.stringify(focus));
-    // this.backupFileData.log.push("Begin update firmware with arduino-flasher");
-    // this.backupFileData.firmwareFile = filename;
     return new Promise(async (resolve, reject) => {
       try {
         if (focus.closed) await focus.open(this.currentPort.path, this.currentPort.device, null);
@@ -272,7 +266,6 @@ export class FlashRaise {
           else {
             stateUpdate("neuron", 100);
             console.log("End update firmware with arduino-flasher");
-            // this.backupFileData.log.push("End update firmware with arduino-flasher");
             await this.delay(1500);
             await this.detectKeyboard();
             resolve();
@@ -357,12 +350,9 @@ export class FlashRaise {
         stateUpdate("restore", (i / backup.length) * 90);
       }
       await focus.command("led.mode 0");
-      // this.backupFileData.log.push("Restoring all settings");
-      // this.backupFileData.log.push("Firmware update OK");
       stateUpdate("restore", 100);
       return true;
     } catch (e) {
-      // this.backupFileData.log.push(`Restore settings: Error: ${e.message}`);
       return false;
     }
   }
