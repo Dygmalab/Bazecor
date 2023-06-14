@@ -16,10 +16,8 @@
  */
 
 import React, { useState, useEffect } from "react";
-import PropTypes from "prop-types";
 import Styled from "styled-components";
 import { useMachine } from "@xstate/react";
-import Spinner from "react-bootstrap/Spinner";
 import Card from "react-bootstrap/Card";
 import i18n from "../../i18n";
 import SemVer from "semver";
@@ -29,9 +27,9 @@ import DeviceChecks from "../../controller/FlashingSM/DeviceChecks";
 
 // Visual components
 import Title from "../../component/Title";
-import Callout from "../../component/Callout";
 import { RegularButton } from "../../component/Button";
 import { Loader } from "../../component/Loader";
+import AccordionFirmware from "../../component/Accordion/AccordionFirmware";
 
 import { FirmwareNeuronStatus } from "../Firmware";
 
@@ -246,15 +244,7 @@ const FirmwareCheckProcessPanel = ({ nextBlock, retryBlock, context }) => {
                       className={"disclaimerContent"}
                       dangerouslySetInnerHTML={{ __html: i18n.firmwareUpdate.texts.disclaimerContent }}
                     />
-                    <Callout
-                      content={i18n.firmwareUpdate.texts.calloutIntroText}
-                      className="mt-lg"
-                      size="md"
-                      hasVideo={state.context.device.info.product == "Raise" ? true : true}
-                      media={`aVu7EL4LXMI`}
-                      videoTitle="How to update the Software & Firmware of your Dygma keyboard"
-                      videoDuration={state.context.device.info.product == "Raise" ? "2:58" : null}
-                    />
+                    <AccordionFirmware items={listItems} />
                   </div>
                 </div>
                 <div className="firmware-sidebar borderRightTopRadius">

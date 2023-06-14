@@ -220,7 +220,7 @@ const FirmwareErrorPanel = ({ nextBlock, retryBlock }) => {
 
   return (
     <Style>
-      {loading && state.context.stateblock < 2 ? (
+      {loading ? (
         <div className="firmware-wrapper">
           <div className="firmware-row">
             <div className="loading marginCenter text-center">

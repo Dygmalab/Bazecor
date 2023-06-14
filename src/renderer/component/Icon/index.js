@@ -28,6 +28,7 @@ import IconColorPalette from "./IconColorPalette";
 import IconColorPicker from "./IconColorPicker";
 import IconConnected from "./IconConnected";
 import IconCheckmarkSm from "./IconCheckmarkSm";
+import IconChevronDown from "./IconChevronDown";
 import IconChip from "./IconChip";
 import IconClone from "./IconClone";
 import IconCloseXs from "./IconCloseXs";
@@ -155,6 +156,7 @@ export {
   IconColorPicker,
   IconConnected,
   IconCheckmarkSm,
+  IconChevronDown,
   IconChip,
   IconClone,
   IconCloseXs,
