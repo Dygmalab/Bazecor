@@ -137,7 +137,12 @@ const stateUpdate = (stage, percentage, context, callback) => {
     default:
       break;
   }
-  globalProgress = leftProgress * 0 + rightProgress * 0 + resetProgress * 0.2 + neuronProgress * 0.6 + restoreProgress * 0.2;
+  if (context.device.info.product == "Raise") {
+    globalProgress = leftProgress * 0 + rightProgress * 0 + resetProgress * 0.2 + neuronProgress * 0.6 + restoreProgress * 0.2;
+  } else {
+    globalProgress =
+      leftProgress * 0.3 + rightProgress * 0.3 + resetProgress * 0.1 + neuronProgress * 0.2 + restoreProgress * 0.1;
+  }
   callback({
     type: "INC",
     data: {
