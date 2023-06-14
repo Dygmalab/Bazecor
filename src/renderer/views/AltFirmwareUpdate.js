@@ -93,10 +93,10 @@ const AltFirmwareUpdate = props => {
             ""
           )}
           {/* <FirmwareUpdateProcess countdown={1} /> */}
-          <Card style={{ maxWidth: "1080px" }}>
+          {/* <Card style={{ maxWidth: "1080px" }}>
             <Card.Title>MainProcessSM Context</Card.Title>
             <Card.Body>{JSON.stringify(state.context)}</Card.Body>
-          </Card>
+          </Card> */}
         </div>
       </Container>
     </Styles>

@@ -56,9 +56,9 @@ export default class sideFlaser {
       receivedData.push(data.toString("utf-8"));
     });
     console.log("Upgrading the neuron...");
-    serialport.write("upgrade.neuron\n");
+    await serialport.write("upgrade.neuron\n");
     await sleep(10);
-    serialport.close(function (err) {
+    await serialport.close(function (err) {
       if (err) console.warn("device already disconnected!! no need to close serialport");
       else console.log("port closed successfully");
     });
@@ -94,7 +94,7 @@ export default class sideFlaser {
     console.log(this.firmwareSides);
     const seal = recoverSeal(this.firmwareSides.slice(0, 28));
     console.log("This is the seal", seal);
-    console.dir(seal);
+    // console.dir(seal);
 
     // Serial port instancing
 
@@ -156,7 +156,8 @@ export default class sideFlaser {
       blob.set(data, writeAction.length);
       blob.set(crc, data.length + writeAction.length);
       const buffer = new Buffer.from(blob);
-      console.log("write sent: ", buffer);
+      // console.log("write sent: ", buffer);
+      console.log("write sent, %", (step / totalsteps) * 100);
       serialport.write(buffer);
       if (wiredOrWireless == "wireless") await sleep(2);
       await readLine();
@@ -165,7 +166,7 @@ export default class sideFlaser {
       if (ack.trim() === "false") {
         break;
       }
-      stateUpd(step / totalsteps);
+      stateUpd(side, (step / totalsteps) * 100);
       step++;
       // }
     }
