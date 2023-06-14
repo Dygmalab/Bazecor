@@ -28,7 +28,7 @@ import FWSelection from "../../controller/FlashingSM/FWSelection";
 import Title from "../../component/Title";
 import Callout from "../../component/Callout";
 import { RegularButton } from "../../component/Button";
-import { Loader } from "../../component/Loader";
+import { FirmwareLoader } from "../../component/Loader";
 
 // Visual modules
 import { FirmwareNeuronStatus } from "../Firmware";
@@ -220,14 +220,8 @@ const FirmwareErrorPanel = ({ nextBlock, retryBlock }) => {
 
   return (
     <Style>
-      {loading ? (
-        <div className="firmware-wrapper">
-          <div className="firmware-row">
-            <div className="loading marginCenter text-center">
-              <Loader />
-            </div>
-          </div>
-        </div>
+      {loading && !handleError ? (
+        <FirmwareLoader />
       ) : (
         <div className="firmware-wrapper">
           <div className="firmware-row">
@@ -241,10 +235,7 @@ const FirmwareErrorPanel = ({ nextBlock, retryBlock }) => {
                         <div className="errorListImage iconWarning">
                           <IconNoWifi />
                         </div>
-                        <div className="errorListContent">
-                          We were unable to download the firmware you requested. Please, check you internet connectin or try again
-                          later.
-                        </div>
+                        <div className="errorListContent">{i18n.firmwareUpdate.texts.noInternetConncetion}</div>
                       </div>
                     ) : (
                       ""
@@ -252,14 +243,6 @@ const FirmwareErrorPanel = ({ nextBlock, retryBlock }) => {
                   ) : (
                     ""
                   )}
-                  {/* <div className="errorListItem">
-                    <div className="errorListImage">
-                      <video width={162} height={162} autoPlay={true} loop={true} className="img-center img-fluid">
-                        <source src={videoDefyCablesDisconnect} type="video/mp4" />
-                      </video>
-                    </div>
-                    <div className="errorListContent">{i18n.firmwareUpdate.texts.errorMissingCables}</div>
-                  </div> */}
                 </div>
               </div>
             </div>

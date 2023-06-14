@@ -15,7 +15,7 @@ import i18n from "../i18n";
 import PageHeader from "../modules/PageHeader";
 import { FirmwareErrorPanel, FirmwareCheckProcessPanel, FirmwareUpdatePanel, FirmwareUpdateProcess } from "../modules/Firmware";
 
-import { Loader } from "../component/Loader";
+import { FirmwareLoader } from "../component/Loader";
 
 const Styles = Styled.div`
 height: inherit;
@@ -66,13 +66,7 @@ const AltFirmwareUpdate = props => {
           {state.context.Block === -1 ? (
             <FirmwareErrorPanel nextBlock={nextBlock} retryBlock={retryBlock} />
           ) : state.context.Block === 0 ? (
-            <div className="firmware-wrapper">
-              <div className="firmware-row">
-                <div className="loading marginCenter text-center">
-                  <Loader />
-                </div>
-              </div>
-            </div>
+            <FirmwareLoader />
           ) : state.context.Block === 1 ? (
             <FirmwareUpdatePanel
               nextBlock={nextBlock}

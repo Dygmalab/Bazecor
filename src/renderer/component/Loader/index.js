@@ -15,6 +15,7 @@
  */
 
 import CircleLoader from "./CircleLoader";
-import Loader from "./Loader";
+import FirmwareLoader from "./FirmwareLoader";
+import LogoLoader from "./LogoLoader";
 
-export { CircleLoader, Loader };
+export { CircleLoader, FirmwareLoader, LogoLoader };

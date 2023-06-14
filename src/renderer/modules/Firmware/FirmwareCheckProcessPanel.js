@@ -27,8 +27,9 @@ import DeviceChecks from "../../controller/FlashingSM/DeviceChecks";
 
 // Visual components
 import Title from "../../component/Title";
+import Callout from "../../component/Callout";
 import { RegularButton } from "../../component/Button";
-import { Loader } from "../../component/Loader";
+import { FirmwareLoader } from "../../component/Loader";
 import AccordionFirmware from "../../component/Accordion/AccordionFirmware";
 
 import { FirmwareNeuronStatus } from "../Firmware";
@@ -60,6 +61,10 @@ height:inherit;
   }
   .firmware-content--inner {
     padding: 32px;
+    letter-spacing: -0.01em;
+    strong {
+      font-weight: 601;
+    }
   }
 
   .borderLeftTopRadius {
@@ -219,13 +224,7 @@ const FirmwareCheckProcessPanel = ({ nextBlock, retryBlock, context }) => {
   return (
     <Style>
       {loading || !state.context.backup ? (
-        <div className="firmware-wrapper">
-          <div className="firmware-row">
-            <div className="loading marginCenter text-center">
-              <Loader />
-            </div>
-          </div>
-        </div>
+        <FirmwareLoader />
       ) : (
         <>
           {(state.context.device.info.product == "Raise" && state.context.backup) ||
@@ -244,7 +243,8 @@ const FirmwareCheckProcessPanel = ({ nextBlock, retryBlock, context }) => {
                       className={"disclaimerContent"}
                       dangerouslySetInnerHTML={{ __html: i18n.firmwareUpdate.texts.disclaimerContent }}
                     />
-                    <AccordionFirmware items={listItems} />
+                    <Callout content={i18n.firmwareUpdate.texts.disclaimerContent2} size="sm" className="mt-lg" />
+                    {state.context.device.info.product == "Defy" ? <AccordionFirmware items={listItems} /> : ""}
                   </div>
                 </div>
                 <div className="firmware-sidebar borderRightTopRadius">

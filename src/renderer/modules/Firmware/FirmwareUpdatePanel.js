@@ -28,7 +28,7 @@ import FWSelection from "../../controller/FlashingSM/FWSelection";
 import Title from "../../component/Title";
 import Callout from "../../component/Callout";
 import { RegularButton } from "../../component/Button";
-import { Loader } from "../../component/Loader";
+import { FirmwareLoader } from "../../component/Loader";
 import { IconLoader } from "../../component/Icon";
 
 // Visual modules
@@ -179,13 +179,7 @@ const FirmwareUpdatePanel = ({ nextBlock, retryBlock, errorBlock, allowBeta }) =
   return (
     <Style>
       {loading ? (
-        <div className="firmware-wrapper">
-          <div className="firmware-row">
-            <div className="loading marginCenter text-center">
-              <Loader />
-            </div>
-          </div>
-        </div>
+        <FirmwareLoader />
       ) : (
         <div className="firmware-wrapper home-firmware">
           <div className="firmware-row">

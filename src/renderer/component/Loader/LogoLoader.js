@@ -106,7 +106,7 @@ svg {
 }
 `;
 
-const Loader = ({ width, warning, error, paused }) => {
+const LogoLoader = ({ width, warning, error, paused }) => {
   let neuronLoader = useTheme().styles.neuronStatus.neuronLoader;
   let maxWidth = width ? width : `52px`;
   return (
@@ -191,4 +191,4 @@ const Loader = ({ width, warning, error, paused }) => {
   );
 };
 
-export default Loader;
+export default LogoLoader;

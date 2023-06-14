@@ -30,6 +30,7 @@ import Title from "../../component/Title";
 import { RegularButton } from "../../component/Button";
 import { StepsBar } from "../../component/StepsBar";
 import { IconArrowRight } from "../../component/Icon";
+import { FirmwareLoader } from "../../component/Loader";
 
 // Visual modules
 import { FirmwareProgressStatus } from "../Firmware";
@@ -180,10 +181,9 @@ const FirmwareUpdateProcess = ({ nextBlock, retryBlock, context, toggleFlashing,
   return (
     <Style>
       {loading ? (
-        ""
+        <FirmwareLoader />
       ) : (
         <div className="firmware-wrapper upgrade-firmware">
-          <div className="firmware-row">{/* <StepsBar steps={steps} stepActive={simulateCountdown - 1} /> */}</div>
           <div className="firmware-row progress-visualizer">
             <FirmwareProgressStatus
               flashProgress={state.context.globalProgress}
