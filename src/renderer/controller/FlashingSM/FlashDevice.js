@@ -571,7 +571,7 @@ const FlashDevice = createMachine(
           (context, event) => {
             console.log(`Resetting Neuron!`);
           },
-          assign({ stateblock: (context, event) => 2 })
+          assign({ stateblock: (context, event) => 4 })
         ],
         invoke: {
           id: "resetDefyWireless",
@@ -607,7 +607,7 @@ const FlashDevice = createMachine(
           (context, event) => {
             console.log(`Flashing Neuron! for ${context.retriesNeuron} times`);
           },
-          assign({ stateblock: (context, event) => 3 }),
+          assign({ stateblock: (context, event) => 5 }),
           assign({ retriesNeuron: (context, event) => context.retriesNeuron + 1 })
         ],
         invoke: {
@@ -642,9 +642,9 @@ const FlashDevice = createMachine(
         id: "reconnectDefy",
         entry: [
           (context, event) => {
-            console.log(`Restoring Neuron!`);
+            console.log(`Reconnecting to Neuron!`);
           },
-          assign({ stateblock: (context, event) => 4 })
+          assign({ stateblock: (context, event) => 5 })
         ],
         invoke: {
           id: "reconnectDefy",
@@ -680,14 +680,14 @@ const FlashDevice = createMachine(
           (context, event) => {
             console.log(`Restoring Neuron!`);
           },
-          assign({ stateblock: (context, event) => 4 })
+          assign({ stateblock: (context, event) => 6 })
         ],
         invoke: {
           id: "restoreDefy",
           src: (context, event) => (callback, onReceive) => restoreDefies(context, callback),
           onDone: {
             target: "reportSucess",
-            actions: [assign({ flashResult: (context, event) => event.data })]
+            actions: [assign({ restoreResult: (context, event) => event.data })]
           },
           onError: {
             target: "failure",
