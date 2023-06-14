@@ -264,7 +264,7 @@ export var arduino = {
       (function (localAddress, localBufferSize, localBuffer) {
         //tell the arduino we are writing at memory 20005000, for N bytes.
         func_array.push(function (callback) {
-          write_cb(str2ab("S20005000," + num2hexstr(localBufferSize, 8) + "#"), callback, stateUpdate, 30 + i + i);
+          write_cb(str2ab("S20005000," + num2hexstr(localBufferSize, 8) + "#"), callback);
         });
 
         //write our data.
@@ -274,7 +274,7 @@ export var arduino = {
 
         //set our read pointer
         func_array.push(function (callback) {
-          write_cb(str2ab("Y20005000,0#"), callback, stateUpdate, 30 + i + i);
+          write_cb(str2ab("Y20005000,0#"), callback);
         });
 
         //wait for ACK

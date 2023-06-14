@@ -43,17 +43,14 @@ export default class rp2040 {
   async sideFlash(firmwareSides, stateUpdate, wiredOrWireless, finished) {
     // State update auxiliarly function
     let step = 0;
-    const stateUpd = ratio => {
-      stateUpdate(3, ratio * 25 + step);
-    };
 
     // Flashing procedure for each side
     this.sideFlash = new sideFlaser(this.device.path, firmwareSides);
-    let result = await this.sideFlash.flashSide("right", stateUpd, wiredOrWireless);
+    let result = await this.sideFlash.flashSide("right", stateUpdate, wiredOrWireless);
     if (result.error) finished(result.error, result.message);
     console.log("Right side flash has error? ", result.error);
     step = step + 25;
-    result = await this.sideFlash.flashSide("left", stateUpd, wiredOrWireless);
+    result = await this.sideFlash.flashSide("left", stateUpdate, wiredOrWireless);
     if (result.error) finished(result.error, result.message);
     console.log("Left side flash has error? ", result.error);
     step = step + 25;
