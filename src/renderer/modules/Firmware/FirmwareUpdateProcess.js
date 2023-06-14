@@ -157,10 +157,14 @@ const FirmwareUpdateProcess = ({ nextBlock, retryBlock, context, toggleFlashing,
   }, [state.context]);
 
   const stepsDefy = [
-    { name: "1", icon: false },
-    { name: "2", icon: false },
-    { name: "3", icon: false },
-    { name: "4", icon: false }
+    { step: 1, title: i18n.firmwareUpdate.texts.flashCardTitle1, description: i18n.firmwareUpdate.texts.flashCardTitle2 },
+    { step: 2, title: "1. Hold Esc Key", description: "Preparing the Keyboard" },
+    { step: 3, title: "2. Updating the Firmware", description: "Gently installing..." },
+    { step: 4, title: "3. Restoring your Layers", description: "Wrapping everything up!" },
+    { step: 5, title: "4. Firmware update!", description: "Solid as a rock! 💪" },
+    { step: 6, title: "4. Firmware update!", description: "Solid as a rock! 💪" },
+    { step: 7, title: "4. Firmware update!", description: "Solid as a rock! 💪" },
+    { step: 8, title: "Firmware update error!", description: "Errors!!!! 🫠" }
   ];
   const stepsRaise = [
     { step: 1, title: i18n.firmwareUpdate.texts.flashCardTitle1, description: i18n.firmwareUpdate.texts.flashCardTitle2 },
@@ -262,7 +266,7 @@ const FirmwareUpdateProcess = ({ nextBlock, retryBlock, context, toggleFlashing,
         </div>
       </div>
 
-      <div style={{ maxWidth: "1080px" }}>{JSON.stringify(state.context)}</div>
+      {/* <div style={{ maxWidth: "1080px" }}>{JSON.stringify(state.context)}</div> */}
     </Style>
   );
 };
