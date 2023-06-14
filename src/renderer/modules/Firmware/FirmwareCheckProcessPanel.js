@@ -207,7 +207,7 @@ const FirmwareCheckProcessPanel = ({ nextBlock, retryBlock, context }) => {
 
   const [loading, setLoading] = useState(true);
   useEffect(() => {
-    if (state.context.stateblock > 0) {
+    if (state.context.stateblock > 4) {
       setLoading(false);
     }
     if (state.matches("success")) nextBlock(state.context);

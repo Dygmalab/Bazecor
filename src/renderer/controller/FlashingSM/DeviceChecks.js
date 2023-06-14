@@ -209,11 +209,12 @@ const DeviceChecks = createMachine(
                 };
               }),
               assign({
-                stateblock: (context, event) => 5
+                stateblock: (context, event) => (context.device.info.product === "Raise" ? 0 : 5)
               }),
               (context, event) => {
                 console.log("Backup ready");
-              }
+              },
+              raise("AUTOPRESSED")
             ]
           },
           onError: {
@@ -230,6 +231,10 @@ const DeviceChecks = createMachine(
                 stateblock: (context, event) => context.stateblock + 1
               })
             ]
+          },
+          AUTOPRESSED: {
+            target: "success",
+            cond: "RaiseStepsClear"
           }
         }
       },
@@ -256,6 +261,9 @@ const DeviceChecks = createMachine(
       },
       allStepsClear: (context, event) => {
         return context.sideLeftOk && context.sideRightOK && context.backup !== undefined;
+      },
+      RaiseStepsClear: (context, event) => {
+        return context.device.info.product === "Raise" && context.backup !== undefined;
       }
     }
   }
