@@ -15,9 +15,7 @@
  */
 
 import async from "async";
-import fs from "fs";
 import Focus from "../../focus";
-import { crc32 } from "easy-crc";
 
 var MAX_MS = 2000;
 
@@ -239,7 +237,7 @@ var NRf52833 = {
     });
 
     var state = 1,
-      stateT = 20;
+      stateT = 50;
     while (total > 0) {
       var bufferSize = total < PACKET_SIZE ? total : PACKET_SIZE;
 

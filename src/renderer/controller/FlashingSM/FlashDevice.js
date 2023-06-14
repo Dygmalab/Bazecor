@@ -1,8 +1,8 @@
 import { createMachine, assign, raise } from "xstate";
 import { FlashRaise, FlashDefyWireless } from "../../../api/flash";
 import sideFlaser from "../../../api/flash/defyFlasher/sideFlasher";
-import Backup from "../../../api/backup";
 import Focus from "../../../api/focus";
+import Hardware from "../../../api/hardware";
 import path from "path";
 import fs from "fs";
 const { ipcRenderer } = require("electron");
@@ -19,6 +19,95 @@ let flashRaise = undefined,
  * @returns {Promise} if no error, promise resolved, if not, rejected
  */
 const delay = ms => new Promise(res => setTimeout(res, ms));
+
+const restoreSettings = async (context, backup, stateUpdate) => {
+  stateUpdate("restore", 0);
+  let focus = new Focus();
+  const errorMessage = "Firmware update failed, because the settings could not be restored";
+  console.log(backup);
+  if (backup === undefined || backup.length === 0) {
+    await focus.open(comPath, context.originalDevice.device.info, null);
+    return true;
+  }
+  try {
+    await focus.open(comPath, context.originalDevice.device.info, null);
+    for (let i = 0; i < backup.length; i++) {
+      let val = backup[i].data;
+      // Boolean values need to be sent as int
+      if (typeof val === "boolean") {
+        val = +val;
+      }
+      console.log(`Going to send ${backup[i].command} to keyboard`);
+      await focus.command(`${backup[i].command} ${val}`.trim());
+      stateUpdate("restore", (i / backup.length) * 90);
+    }
+    await focus.command("led.mode 0");
+    stateUpdate("restore", 100);
+    return true;
+  } catch (e) {
+    return false;
+  }
+};
+
+const reconnect = async (context, callback) => {
+  let result = false;
+  try {
+    const foundDevices = async (hardware, message, bootloader) => {
+      let focus = new Focus();
+      let isFindDevice = false,
+        currentPort,
+        currentPath;
+      await focus.find(...hardware).then(devices => {
+        for (const device of devices) {
+          if (
+            bootloader
+              ? device.device.bootloader != undefined &&
+                device.device.bootloader == bootloader &&
+                context.originalDevice.device.info.keyboardType == device.device.info.keyboardType
+              : context.originalDevice.device.info.keyboardType == device.device.info.keyboardType
+          ) {
+            currentPort = { ...device };
+            currentPath = device.path;
+            isFindDevice = true;
+          }
+        }
+      });
+      result = { isFindDevice, currentPort, currentPath };
+    };
+    const runnerFindKeyboard = async (findKeyboard, times, errorMessage) => {
+      if (!times) {
+        console.error("Keyboard not found!");
+        return false;
+      }
+      if (await findKeyboard()) {
+        console.log("Ready to restore");
+        return true;
+      } else {
+        console.log(`Keyboard not detected, trying again for ${times} times`);
+        stateUpdate("reconnect", 10 + 100 * (1 / (5 - times)), context, callback);
+        await runnerFindKeyboard(findKeyboard, times - 1, errorMessage);
+      }
+    };
+    const findKeyboard = async () => {
+      return new Promise(async resolve => {
+        await delay(2500);
+        if (await foundDevices(Hardware.serial, "Keyboard detected", false)) {
+          resolve(true);
+        } else {
+          resolve(false);
+        }
+      });
+    };
+    stateUpdate("reconnect", 10, context, callback);
+    await runnerFindKeyboard(findKeyboard, 5);
+    stateUpdate("reconnect", 100, context, callback);
+  } catch (error) {
+    console.warn("error when flashing Sides");
+    console.error(error);
+    throw new Error(error);
+  }
+  return result;
+};
 
 const stateUpdate = (stage, percentage, context, callback) => {
   console.log(stage, percentage);
@@ -107,7 +196,7 @@ const uploadDefyWired = async (context, callback) => {
     await ipcRenderer.invoke("list-drives", true).then(result => {
       stateUpdate("neuron", 60, context, callback);
       let finalPath = path.join(result, "default.uf2");
-      console.log("RESULTS!!!", result, context.firmwares.fw, " to ", finalPath);
+      // console.log("RESULTS!!!", result, context.firmwares.fw, " to ", finalPath);
       fs.writeFileSync(finalPath, Buffer.from(new Uint8Array(context.firmwares.fw)));
       stateUpdate("neuron", 80, context, callback);
     });
@@ -185,13 +274,13 @@ const uploadDefyWireles = async (context, callback) => {
   return result;
 };
 
-const restoreDefy = async (context, callback) => {
+const restoreDefies = async (context, callback) => {
   let result = false;
   if (bootloader) {
     return true;
   }
   try {
-    result = await flashDefyWireless.restoreSettings(context.backup.backup, (stage, percentage) => {
+    result = await restoreSettings(context, context.backup.backup, (stage, percentage) => {
       stateUpdate(stage, percentage, context, callback);
     });
   } catch (error) {
@@ -263,7 +352,7 @@ const restoreRaise = async (context, callback) => {
     return true;
   }
   try {
-    result = await flashRaise.restoreSettings(context.backup.backup, (stage, percentage) => {
+    result = await restoreSettings(context, context.backup.backup, (stage, percentage) => {
       stateUpdate(stage, percentage, context, callback);
     });
   } catch (error) {
@@ -439,7 +528,7 @@ const FlashDevice = createMachine(
           id: "flashRP2040",
           src: (context, event) => (callback, onReceive) => uploadDefyWired(context, callback),
           onDone: {
-            target: "reportSucess",
+            target: "restoreDefy",
             actions: [assign({ rightResult: (context, event) => event.data })]
           },
           onError: {
@@ -512,7 +601,7 @@ const FlashDevice = createMachine(
           id: "uploadDefyWireless",
           src: (context, event) => (callback, onReceive) => uploadDefyWireles(context, callback),
           onDone: {
-            target: "restoreDefyWireless",
+            target: "restoreDefy",
             actions: [assign({ flashResult: (context, event) => event.data })]
           },
           onError: {
@@ -536,8 +625,44 @@ const FlashDevice = createMachine(
           }
         }
       },
-      restoreDefyWireless: {
-        id: "restoreDefyWireless",
+      reconnectDefy: {
+        id: "reconnectDefy",
+        entry: [
+          (context, event) => {
+            console.log(`Restoring Neuron!`);
+          },
+          assign({ stateblock: (context, event) => 4 })
+        ],
+        invoke: {
+          id: "reconnectDefy",
+          src: (context, event) => (callback, onReceive) => reconnect(context, callback),
+          onDone: {
+            target: "restoreDefy",
+            actions: [assign({ flashResult: (context, event) => event.data })]
+          },
+          onError: {
+            target: "failure",
+            actions: assign({ error: (context, event) => event })
+          }
+        },
+        on: {
+          INC: {
+            actions: assign((context, event) => {
+              return {
+                ...context,
+                globalProgress: event.data.globalProgress,
+                leftProgress: event.data.leftProgress,
+                rightProgress: event.data.rightProgress,
+                resetProgress: event.data.resetProgress,
+                neuronProgress: event.data.neuronProgress,
+                restoreProgress: event.data.restoreProgress
+              };
+            })
+          }
+        }
+      },
+      restoreDefy: {
+        id: "restoreDefy",
         entry: [
           (context, event) => {
             console.log(`Restoring Neuron!`);
@@ -546,7 +671,7 @@ const FlashDevice = createMachine(
         ],
         invoke: {
           id: "restoreDefy",
-          src: (context, event) => (callback, onReceive) => restoreDefy(context, callback),
+          src: (context, event) => (callback, onReceive) => restoreDefies(context, callback),
           onDone: {
             target: "reportSucess",
             actions: [assign({ flashResult: (context, event) => event.data })]
