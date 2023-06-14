@@ -541,7 +541,7 @@ const FlashDevice = createMachine(
           id: "flashRP2040",
           src: (context, event) => (callback, onReceive) => uploadDefyWired(context, callback),
           onDone: {
-            target: "restoreDefy",
+            target: "reconnectDefy",
             actions: [assign({ rightResult: (context, event) => event.data })]
           },
           onError: {
