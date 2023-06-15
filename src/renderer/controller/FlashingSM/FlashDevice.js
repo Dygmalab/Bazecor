@@ -860,16 +860,16 @@ const FlashDevice = createMachine(
   {
     guards: {
       flashSides: (context, event) => {
-        return !context.device.bootloader && context.device.info.product !== "Raise";
+        return !context.device.bootloader == true && context.device.info.product !== "Raise";
       },
       flashRaise: (context, event) => {
         return context.device.info.product === "Raise";
       },
       doNotFlashSides: (context, event) => {
-        return context.device.bootloader && context.device.info.product !== "Raise";
+        return context.device.bootloader == true && context.device.info.product !== "Raise";
       },
       isBootloader: (context, event) => {
-        return context.device.bootloader;
+        return context.device.bootloader == true;
       },
       isDefywired: (context, event) => {
         return context.DefyVariant === "Defywired";

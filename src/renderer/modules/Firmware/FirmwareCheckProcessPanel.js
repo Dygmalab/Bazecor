@@ -221,10 +221,10 @@ const FirmwareCheckProcessPanel = ({ nextBlock, retryBlock, context }) => {
       if (text === "backup") {
         checked = state.context.backup !== undefined ? true : false;
       }
-      console.log(text, state.context[text], String(state.context[text]), String(state.context[text]).includes("true"), checked);
+      // console.log(text, state.context[text], String(state.context[text]), String(state.context[text]).includes("true"), checked);
       return { id: index, text: text, checked };
     });
-    console.log("checkingUseEffect", state.context.stateblock, newValue, listItems);
+    console.log("Setting checks", newValue);
     setlistItems(newValue);
   }, [
     state.context.sideLeftOk,

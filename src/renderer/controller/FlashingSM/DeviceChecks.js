@@ -251,16 +251,16 @@ const DeviceChecks = createMachine(
   {
     guards: {
       requireSideCheck: (context, event) => {
-        return !context.device.bootloader && context.device.info.product !== "Raise";
+        return !context.device.bootloader == true && context.device.info.product !== "Raise";
       },
       doNotRequireSideCheck: (context, event) => {
-        return !context.device.bootloader && context.device.info.product === "Raise";
+        return !context.device.bootloader == true && context.device.info.product === "Raise";
       },
       bootloaderMode: (context, event) => {
-        return context.device.bootloader;
+        return context.device.bootloader == true;
       },
       allStepsClear: (context, event) => {
-        return context.sideLeftOk && context.sideRightOK && context.backup !== undefined;
+        return context.sideLeftOk == true && context.sideRightOK == true && context.backup !== undefined;
       },
       RaiseStepsClear: (context, event) => {
         return context.device.info.product === "Raise" && context.backup !== undefined;
