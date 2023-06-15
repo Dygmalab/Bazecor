@@ -277,11 +277,7 @@ const FirmwareCheckProcessPanel = ({ nextBlock, retryBlock, context }) => {
                 </div>
                 <div className="firmware-sidebar borderRightBottomRadius">
                   <div className="buttonActions">
-                    {state.context.sideLeftOk &&
-                    !state.context.sideLeftBL &&
-                    state.context.sideRightOK &&
-                    !state.context.sideRightBL &&
-                    state.context.backup ? (
+                    {state.context.sideLeftOk && state.context.sideRightOK && state.context.backup ? (
                       <RegularButton
                         className="flashingbutton nooutlined"
                         style="primary"
