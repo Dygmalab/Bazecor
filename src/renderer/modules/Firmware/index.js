@@ -18,6 +18,7 @@ import FirmwareUpdatePanel from "./FirmwareUpdatePanel";
 import FirmwareAdvancedOptions from "./FirmwareAdvancedOptions";
 import FirmwareCheckProcessPanel from "./FirmwareCheckProcessPanel";
 import FirmwareDefyFlashingStatus from "./FirmwareDefyFlashingStatus";
+import FirmwareDefyUpdatingStatus from "./FirmwareDefyUpdatingStatus";
 import FirmwareErrorPanel from "./FirmwareErrorPanel";
 import FirmwareNeuronStatus from "./FirmwareNeuronStatus";
 import FirmwareVersionStatus from "./FirmwareVersionStatus";
@@ -31,6 +32,7 @@ export {
   FirmwareAdvancedOptions,
   FirmwareCheckProcessPanel,
   FirmwareDefyFlashingStatus,
+  FirmwareDefyUpdatingStatus,
   FirmwareErrorPanel,
   FirmwareNeuronStatus,
   FirmwareVersionStatus,

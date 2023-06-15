@@ -198,7 +198,7 @@ const FirmwareUpdatePanel = ({ nextBlock, retryBlock, errorBlock, allowBeta }) =
                   content={i18n.firmwareUpdate.texts.calloutIntroText}
                   className="mt-lg"
                   size="md"
-                  hasVideo={state.context.device.info.product == "Raise" ? true : true}
+                  hasVideo={state.context.device.info.product == "Raise" ? true : false}
                   media={`aVu7EL4LXMI`}
                   videoTitle="How to update the Software & Firmware of your Dygma keyboard"
                   videoDuration={state.context.device.info.product == "Raise" ? "2:58" : null}
@@ -230,31 +230,24 @@ const FirmwareUpdatePanel = ({ nextBlock, retryBlock, errorBlock, allowBeta }) =
             </div>
             <div className="firmware-sidebar borderRightBottomRadius">
               <div className="buttonActions">
-                {state.context.isUpdated ? (
-                  <RegularButton
-                    className="flashingbutton nooutlined"
-                    style="outline"
-                    buttonText={state.context.stateblock == 4 ? "Processing..." : i18n.firmwareUpdate.flashing.buttonUpdated}
-                    icoSVG={state.context.stateblock == 4 ? <IconLoader /> : null}
-                    icoPosition={state.context.stateblock == 4 ? "right" : null}
-                    disabled={state.context.stateblock == 4 ? true : false}
-                    onClick={() => {
-                      send("NEXT");
-                    }}
-                  />
-                ) : (
-                  <RegularButton
-                    className="flashingbutton nooutlined"
-                    style="primary"
-                    buttonText={state.context.stateblock == 4 ? "Processing..." : i18n.firmwareUpdate.flashing.button}
-                    icoSVG={state.context.stateblock == 4 ? <IconLoader /> : null}
-                    icoPosition={state.context.stateblock == 4 ? "right" : null}
-                    disabled={state.context.stateblock == 4 ? true : false}
-                    onClick={() => {
-                      send("NEXT");
-                    }}
-                  />
-                )}
+                <RegularButton
+                  className="flashingbutton nooutlined"
+                  style={state.context.isUpdated ? "outline" : "primary"}
+                  buttonText={
+                    state.context.stateblock == 4
+                      ? "Processing..."
+                      : state.context.isUpdated
+                      ? i18n.firmwareUpdate.flashing.buttonUpdated
+                      : i18n.firmwareUpdate.flashing.button
+                  }
+                  icoSVG={state.context.stateblock == 4 ? <IconLoader /> : null}
+                  icoPosition={state.context.stateblock == 4 ? "right" : null}
+                  disabled={state.context.stateblock == 4 ? true : false}
+                  onClick={() => {
+                    send("NEXT");
+                  }}
+                />
+
                 <div className="dropdownCustomFirmware">
                   {/* <FirmwareAdvancedOptions
                       firmwareFilename={firmwareFilename}

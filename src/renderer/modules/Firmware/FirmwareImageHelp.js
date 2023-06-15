@@ -19,7 +19,7 @@ import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import Styled from "styled-components";
 
-import { FirmwareNeuronHelp } from "../Firmware";
+import { FirmwareNeuronHelp, FirmwareDefyUpdatingStatus } from "../Firmware";
 
 import videoFirmwareUpdate from "../../../../static/videos/update-firmware.mp4";
 import videoFirmwareUpdateReleaseKey from "../../../../static/videos/release-key.mp4";
@@ -157,14 +157,24 @@ const FirmwareImageHelp = ({ countdown, deviceProduct, keyboardType, steps, erro
               <canvas className="" width={340} height={259}></canvas>
             </div>
           ) : (
-            <div className="updatingRaise">
-              <FirmwareNeuronHelp
-                countdown={countdown}
-                deviceProduct={deviceProduct}
-                keyboardType={keyboardType}
-                steps={steps}
-                error={error}
-              />
+            <div className={`${deviceProduct == "Defy" ? "updatingDefy" : ""} updatingRaise`}>
+              {deviceProduct == "Defy" ? (
+                <FirmwareDefyUpdatingStatus
+                  countdown={countdown}
+                  deviceProduct={deviceProduct}
+                  keyboardType={keyboardType}
+                  steps={steps}
+                  error={error}
+                />
+              ) : (
+                <FirmwareNeuronHelp
+                  countdown={countdown}
+                  deviceProduct={deviceProduct}
+                  keyboardType={keyboardType}
+                  steps={steps}
+                  error={error}
+                />
+              )}
             </div>
           )}
         </div>
