@@ -1,5 +1,4 @@
 import { createMachine, assign, raise } from "xstate";
-import SemVer from "semver";
 import Focus from "../../../api/focus";
 import Backup from "../../../api/backup";
 
@@ -43,18 +42,6 @@ const GetRSideData = async () => {
     let focus = new Focus();
     result.rightSideConn = String(await focus.command("upgrade.keyscanner.isConnected 0")).includes("true");
     result.rightSideBoot = String(await focus.command("upgrade.keyscanner.isBootloader 0")).includes("true");
-  } catch (error) {
-    console.warn("error when querying the device");
-    console.error(error);
-    throw new Error(error);
-  }
-  return result;
-};
-
-const CheckFWVersion = async () => {
-  let result = false;
-  try {
-    result = SemVer.ltr(result.version, result.version);
   } catch (error) {
     console.warn("error when querying the device");
     console.error(error);
