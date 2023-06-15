@@ -204,13 +204,7 @@ height:inherit;
 
 const FirmwareCheckProcessPanel = ({ nextBlock, retryBlock, context }) => {
   const [state, send] = useMachine(DeviceChecks, { context: { device: context.device } });
-  const [listItems, setlistItems] = useState([
-    { id: 0, text: "sideLeftOk", checked: state.context.sideLeftOk },
-    { id: 1, text: "sideLeftBL", checked: state.context.sideLeftBL },
-    { id: 2, text: "sideRightOK", checked: state.context.sideRightOK },
-    { id: 3, text: "sideRightBL", checked: state.context.sideRightBL },
-    { id: 4, text: "backup", checked: state.context.backup }
-  ]);
+  const [listItems, setlistItems] = useState([]);
   const [loading, setLoading] = useState(true);
   useEffect(() => {
     if (state.context.stateblock > 4) {
@@ -220,21 +214,18 @@ const FirmwareCheckProcessPanel = ({ nextBlock, retryBlock, context }) => {
   }, [state.context]);
 
   useEffect(() => {
-    let listItemsCopy = [...listItems];
-    listItemsCopy = listItemsCopy.map(i => {
-      let checked = i.text.includes("BL")
-        ? !String(state.context[i.text]).includes("true")
-        : String(state.context[i.text]).includes("true");
-      if (i.text === "backup" && state.context.backup !== undefined) {
-        checked = true;
-      } else {
-        checked = false;
+    const newValue = ["sideLeftOk", "sideLeftBL", "sideRightOK", "sideRightBL", "backup"].map((text, index) => {
+      let checked = text.includes("BL")
+        ? !String(state.context[text]).includes("true")
+        : String(state.context[text]).includes("true");
+      if (text === "backup") {
+        checked = state.context.backup !== undefined ? true : false;
       }
-      console.log(i, i.text, String(state.context[i.text]).includes("true"), checked);
-      return { id: i.id, text: i.text, checked };
+      console.log(text, state.context[text], String(state.context[text]), String(state.context[text]).includes("true"), checked);
+      return { id: index, text: text, checked };
     });
-    console.log("checkingUseEffect", state.context.stateblock, listItemsCopy, listItems);
-    setlistItems(listItemsCopy);
+    console.log("checkingUseEffect", state.context.stateblock, newValue, listItems);
+    setlistItems(newValue);
   }, [
     state.context.sideLeftOk,
     state.context.sideLeftBL,
