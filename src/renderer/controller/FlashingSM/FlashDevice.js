@@ -138,10 +138,10 @@ const stateUpdate = (stage, percentage, context, callback) => {
       break;
   }
   if (context.device.info.product == "Raise") {
-    globalProgress = leftProgress * 0 + rightProgress * 0 + resetProgress * 0.2 + neuronProgress * 0.6 + restoreProgress * 0.2;
+    globalProgress = leftProgress * 0 + rightProgress * 0 + resetProgress * 0.33 + neuronProgress * 0.33 + restoreProgress * 0.33;
   } else {
     globalProgress =
-      leftProgress * 0.3 + rightProgress * 0.3 + resetProgress * 0.1 + neuronProgress * 0.2 + restoreProgress * 0.1;
+      leftProgress * 0.2 + rightProgress * 0.2 + resetProgress * 0.2 + neuronProgress * 0.2 + restoreProgress * 0.2;
   }
   callback({
     type: "INC",
@@ -721,7 +721,7 @@ const FlashDevice = createMachine(
           (context, event) => {
             console.log(`Resetting Neuron!`);
           },
-          assign({ stateblock: (context, event) => 2 })
+          assign({ stateblock: (context, event) => 4 })
         ],
         invoke: {
           id: "resetRaise",
@@ -757,7 +757,7 @@ const FlashDevice = createMachine(
           (context, event) => {
             console.log(`Flashing Neuron! for ${context.retriesNeuron} times`);
           },
-          assign({ stateblock: (context, event) => 3 }),
+          assign({ stateblock: (context, event) => 5 }),
           assign({ retriesNeuron: (context, event) => context.retriesNeuron + 1 })
         ],
         invoke: {
@@ -794,7 +794,7 @@ const FlashDevice = createMachine(
           (context, event) => {
             console.log(`Restoring Neuron!`);
           },
-          assign({ stateblock: (context, event) => 4 })
+          assign({ stateblock: (context, event) => 6 })
         ],
         invoke: {
           id: "restoreRaise",

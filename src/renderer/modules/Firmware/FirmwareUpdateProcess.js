@@ -161,19 +161,19 @@ const FirmwareUpdateProcess = ({ nextBlock, retryBlock, context, toggleFlashing,
 
   const stepsDefy = [
     { step: 1, title: i18n.firmwareUpdate.texts.flashCardTitle1, description: i18n.firmwareUpdate.texts.flashCardTitle2 },
-    { step: 2, title: "1. Hold Esc Key", description: "Preparing the Keyboard" },
-    { step: 3, title: "2. Updating the Firmware", description: "Gently installing..." },
-    { step: 4, title: "3. Restoring your Layers", description: "Wrapping everything up!" },
-    { step: 5, title: "4. Firmware update!", description: "Solid as a rock! 💪" },
-    { step: 6, title: "4. Firmware update!", description: "Solid as a rock! 💪" },
-    { step: 7, title: "4. Firmware update!", description: "Solid as a rock! 💪" },
+    { step: 2, title: "1. Flashing rigth side", description: "Updating right side of the keyboard" },
+    { step: 3, title: "2. Flashing left side", description: "Updating left side of the keyboard" },
+    { step: 4, title: "3. Resetting the Neuron", description: "Preparing the bootloader!" },
+    { step: 5, title: "4. Firmware update!", description: "Making it better 🎂 " },
+    { step: 6, title: "5. Restoring your Layers!", description: "Giving your things back! 💪" },
+    { step: 7, title: "Finished!", description: "Solid as a rock! 💪" },
     { step: 8, title: "Firmware update error!", description: "Errors!!!! 🫠" }
   ];
   const stepsRaise = [
     { step: 1, title: i18n.firmwareUpdate.texts.flashCardTitle1, description: i18n.firmwareUpdate.texts.flashCardTitle2 },
-    { step: 2, title: i18n.firmwareUpdate.texts.progressCardStatus1, description: i18n.firmwareUpdate.texts.progressCardBar1 },
-    { step: 3, title: i18n.firmwareUpdate.texts.progressCardStatus2, description: i18n.firmwareUpdate.texts.progressCardBar2 },
-    { step: 4, title: i18n.firmwareUpdate.texts.progressCardStatus3, description: i18n.firmwareUpdate.texts.progressCardBar3 },
+    { step: 4, title: i18n.firmwareUpdate.texts.progressCardStatus1, description: i18n.firmwareUpdate.texts.progressCardBar1 },
+    { step: 5, title: i18n.firmwareUpdate.texts.progressCardStatus2, description: i18n.firmwareUpdate.texts.progressCardBar2 },
+    { step: 6, title: i18n.firmwareUpdate.texts.progressCardStatus3, description: i18n.firmwareUpdate.texts.progressCardBar3 },
     { step: 7, title: i18n.firmwareUpdate.texts.progressCardStatus4, description: i18n.firmwareUpdate.texts.progressCardBar4 },
     {
       step: 8,

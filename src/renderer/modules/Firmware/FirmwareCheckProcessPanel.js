@@ -211,7 +211,7 @@ const FirmwareCheckProcessPanel = ({ nextBlock, retryBlock, context }) => {
       setLoading(false);
     }
     if (state.matches("success")) nextBlock(state.context);
-  }, [state.context]);
+  }, [state.context, state, nextBlock]);
 
   useEffect(() => {
     const newValue = ["sideLeftOk", "sideLeftBL", "sideRightOK", "sideRightBL", "backup"].map((text, index) => {
@@ -224,13 +224,7 @@ const FirmwareCheckProcessPanel = ({ nextBlock, retryBlock, context }) => {
     });
     console.log("Setting checks", newValue);
     setlistItems(newValue);
-  }, [
-    state.context.sideLeftOk,
-    state.context.sideLeftBL,
-    state.context.sideRightOK,
-    state.context.sideRightBL,
-    state.context.backup
-  ]);
+  }, [state.context]);
 
   return (
     <Style>
