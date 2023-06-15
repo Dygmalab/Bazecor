@@ -215,9 +215,7 @@ const FirmwareCheckProcessPanel = ({ nextBlock, retryBlock, context }) => {
 
   useEffect(() => {
     const newValue = ["sideLeftOk", "sideLeftBL", "sideRightOK", "sideRightBL", "backup"].map((text, index) => {
-      let checked = text.includes("BL")
-        ? !String(state.context[text]).includes("true")
-        : String(state.context[text]).includes("true");
+      let checked = text.includes("BL") ? !state.context[text] : state.context[text];
       if (text === "backup") {
         checked = state.context.backup !== undefined ? true : false;
       }
@@ -241,12 +239,7 @@ const FirmwareCheckProcessPanel = ({ nextBlock, retryBlock, context }) => {
       ) : (
         <>
           {(state.context.device.info.product == "Raise" && state.context.backup) ||
-          (state.context.device.info.product == "Defy" &&
-            state.context.sideLeftOk &&
-            state.context.sideLeftBL &&
-            state.context.sideRightOK &&
-            state.context.sideRightBL &&
-            state.context.backup) ? (
+          state.context.device.info.product == "Defy" ? (
             <div className="firmware-wrapper disclaimer-firmware">
               <div className="firmware-row">
                 <div className="firmware-content borderLeftTopRadius">

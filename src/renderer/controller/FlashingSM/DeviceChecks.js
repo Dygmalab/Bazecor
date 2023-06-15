@@ -27,8 +27,8 @@ const GetLSideData = async () => {
   let result = {};
   try {
     let focus = new Focus();
-    result.leftSideConn = await focus.command("upgrade.keyscanner.isConnected 1");
-    result.leftSideBoot = await focus.command("upgrade.keyscanner.isBootloader 1");
+    result.leftSideConn = String(await focus.command("upgrade.keyscanner.isConnected 1")).includes("true");
+    result.leftSideBoot = String(await focus.command("upgrade.keyscanner.isBootloader 1")).includes("true");
   } catch (error) {
     console.warn("error when querying the device");
     console.error(error);
@@ -41,8 +41,8 @@ const GetRSideData = async () => {
   let result = {};
   try {
     let focus = new Focus();
-    result.rightSideConn = await focus.command("upgrade.keyscanner.isConnected 0");
-    result.rightSideBoot = await focus.command("upgrade.keyscanner.isBootloader 0");
+    result.rightSideConn = String(await focus.command("upgrade.keyscanner.isConnected 0")).includes("true");
+    result.rightSideBoot = String(await focus.command("upgrade.keyscanner.isBootloader 0")).includes("true");
   } catch (error) {
     console.warn("error when querying the device");
     console.error(error);
