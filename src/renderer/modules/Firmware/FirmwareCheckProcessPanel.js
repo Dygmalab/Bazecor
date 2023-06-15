@@ -277,12 +277,27 @@ const FirmwareCheckProcessPanel = ({ nextBlock, retryBlock, context }) => {
                 </div>
                 <div className="firmware-sidebar borderRightBottomRadius">
                   <div className="buttonActions">
-                    <RegularButton
-                      className="flashingbutton nooutlined"
-                      style="primary"
-                      buttonText={i18n.firmwareUpdate.texts.letsStart}
-                      onClick={() => send("PRESSED")}
-                    />
+                    {state.context.sideLeftOk &&
+                    !state.context.sideLeftBL &&
+                    state.context.sideRightOK &&
+                    !state.context.sideRightBL &&
+                    state.context.backup ? (
+                      <RegularButton
+                        className="flashingbutton nooutlined"
+                        style="primary"
+                        buttonText={i18n.firmwareUpdate.texts.letsStart}
+                        onClick={() => send("PRESSED")}
+                      />
+                    ) : (
+                      <RegularButton
+                        className="flashingbutton nooutlined"
+                        style="primary"
+                        buttonText={i18n.general.retry}
+                        onClick={() => {
+                          send("RETRY");
+                        }}
+                      />
+                    )}
                   </div>
                 </div>
               </div>
@@ -349,25 +364,6 @@ const FirmwareCheckProcessPanel = ({ nextBlock, retryBlock, context }) => {
           )}
         </>
       )}
-      <br></br>
-      <Card>
-        <Card.Title>State machine for checks</Card.Title>
-        <Card.Body>
-          <ul>
-            <li>{`sideLeftOk: ${state.context.sideLeftOk}`}</li>
-            <li>{`sideLeftBL: ${state.context.sideLeftBL}`}</li>
-            <li>{`sideRightOK: ${state.context.sideRightOK}`}</li>
-            <li>{`sideRightBL: ${state.context.sideRightBL}`}</li>
-            <li>{`backup: ${state.context.backup}`}</li>
-          </ul>
-          <br></br>
-          <ul>
-            {listItems.map(item => {
-              return <li key={`${item.id}-testing`}>{`${item.text}: ${item.checked}`}</li>;
-            })}
-          </ul>
-        </Card.Body>
-      </Card>
     </Style>
   );
 };

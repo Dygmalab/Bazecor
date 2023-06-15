@@ -63,10 +63,6 @@ const CheckFWVersion = async () => {
   return result;
 };
 
-const sidesReady = (context, event) => {
-  return context.sideLeftOk && context.sideRightOK;
-};
-
 const CreateBackup = async context => {
   let backup;
   try {
@@ -228,13 +224,16 @@ const DeviceChecks = createMachine(
             cond: "allStepsClear",
             actions: [
               assign({
-                stateblock: (context, event) => context.stateblock + 1
+                stateblock: (context, event) => 6
               })
             ]
           },
           AUTOPRESSED: {
             target: "success",
             cond: "RaiseStepsClear"
+          },
+          RETRY: {
+            target: "PerfSetup"
           }
         }
       },
