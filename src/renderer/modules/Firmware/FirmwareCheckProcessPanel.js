@@ -204,7 +204,13 @@ height:inherit;
 
 const FirmwareCheckProcessPanel = ({ nextBlock, retryBlock, context }) => {
   const [state, send] = useMachine(DeviceChecks, { context: { device: context.device } });
-
+  const [listItems, setlistItems] = useState([
+    { id: 0, text: "sideLeftOk", checked: state.context.sideLeftOk },
+    { id: 1, text: "sideLeftBL", checked: state.context.sideLeftBL },
+    { id: 2, text: "sideRightOK", checked: state.context.sideRightOK },
+    { id: 3, text: "sideRightBL", checked: state.context.sideRightBL },
+    { id: 4, text: "backup", checked: state.context.backup }
+  ]);
   const [loading, setLoading] = useState(true);
   useEffect(() => {
     if (state.context.stateblock > 4) {
@@ -213,13 +219,29 @@ const FirmwareCheckProcessPanel = ({ nextBlock, retryBlock, context }) => {
     if (state.matches("success")) nextBlock(state.context);
   }, [state.context]);
 
-  const listItems = [
-    { id: 0, text: "sideLeftOk", checked: state.context.sideLeftOk },
-    { id: 1, text: "sideLeftBL", checked: state.context.sideLeftBL },
-    { id: 2, text: "sideRightOK", checked: state.context.sideRightOK },
-    { id: 3, text: "sideRightBL", checked: state.context.sideRightBL },
-    { id: 4, text: "backup", checked: state.context.backup }
-  ];
+  useEffect(() => {
+    let listItemsCopy = [...listItems];
+    listItemsCopy = listItemsCopy.map(i => {
+      let checked = i.text.includes("BL")
+        ? !String(state.context[i.text]).includes("true")
+        : String(state.context[i.text]).includes("true");
+      if (i.text === "backup" && state.context.backup !== undefined) {
+        checked = true;
+      } else {
+        checked = false;
+      }
+      console.log(i, i.text, String(state.context[i.text]).includes("true"), checked);
+      return { id: i.id, text: i.text, checked };
+    });
+    console.log("checkingUseEffect", state.context.stateblock, listItemsCopy, listItems);
+    setlistItems(listItemsCopy);
+  }, [
+    state.context.sideLeftOk,
+    state.context.sideLeftBL,
+    state.context.sideRightOK,
+    state.context.sideRightBL,
+    state.context.backup
+  ]);
 
   return (
     <Style>
@@ -244,7 +266,7 @@ const FirmwareCheckProcessPanel = ({ nextBlock, retryBlock, context }) => {
                       dangerouslySetInnerHTML={{ __html: i18n.firmwareUpdate.texts.disclaimerContent }}
                     />
                     <Callout content={i18n.firmwareUpdate.texts.disclaimerContent2} size="sm" className="mt-lg" />
-                    {state.context.device.info.product == "Defy" ? <AccordionFirmware items={listItems} /> : ""}
+                    {state.context.device.info.product !== "Raise" ? <AccordionFirmware items={listItems} /> : ""}
                   </div>
                 </div>
                 <div className="firmware-sidebar borderRightTopRadius">
@@ -343,6 +365,25 @@ const FirmwareCheckProcessPanel = ({ nextBlock, retryBlock, context }) => {
           )}
         </>
       )}
+      <br></br>
+      <Card>
+        <Card.Title>State machine for checks</Card.Title>
+        <Card.Body>
+          <ul>
+            <li>{`sideLeftOk: ${state.context.sideLeftOk}`}</li>
+            <li>{`sideLeftBL: ${state.context.sideLeftBL}`}</li>
+            <li>{`sideRightOK: ${state.context.sideRightOK}`}</li>
+            <li>{`sideRightBL: ${state.context.sideRightBL}`}</li>
+            <li>{`backup: ${state.context.backup}`}</li>
+          </ul>
+          <br></br>
+          <ul>
+            {listItems.map(item => {
+              return <li key={`${item.id}-testing`}>{`${item.text}: ${item.checked}`}</li>;
+            })}
+          </ul>
+        </Card.Body>
+      </Card>
     </Style>
   );
 };
