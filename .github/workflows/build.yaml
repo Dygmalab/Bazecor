@@ -21,7 +21,7 @@ jobs:
           - os: windows-2019
             gyp: ""
           - os: ubuntu-20.04
-            gyp: use_udev=0 use_system_libusb=true
+            gyp: use_udev=0 use_system_libusb=true USE_HARD_LINKS=false
 
     steps:
       - name: Check out Git repository
