@@ -29,7 +29,7 @@ const Style = Styled.div`
 
 export default class AdvancedSettings extends Component {
   render() {
-    const { devToolsSwitch, verboseSwitch, onlyCustomSwitch, allowBetas } = this.props;
+    const { devToolsSwitch, verboseSwitch, onlyCustomSwitch, allowBetas, pairingButton } = this.props;
     return (
       <Style>
         <Card className="overflowFix card-preferences mt-4 mb-4">
@@ -70,6 +70,7 @@ export default class AdvancedSettings extends Component {
                 </Col>
                 <Col xs={12}>
                   <AdvancedKeyboardSettings />
+                  {pairingButton}
                 </Col>
               </Row>
             ) : (

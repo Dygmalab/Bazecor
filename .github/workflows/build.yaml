@@ -45,9 +45,11 @@ jobs:
         env:
           CSC_KEY_PASSWORD: ${{ secrets.CSC_KEY_PASSWORD }}
           CSC_LINK: ${{ secrets.CSC_LINK }}
+          WIN_CSC_LINK: ${{ secrets.WIN_CSC_LINK }}
+          WIN_CSC_KEY_PASSWORD: ${{ secrets.WIN_CSC_KEY_PASSWORD }}
           APPLEID: ${{ secrets.APPLEID }}
           APPLEIDPASS: ${{ secrets.APPLEIDPASS }}
-        uses: samuelmeuli/action-electron-builder@v1
+        uses: coparse-inc/action-electron-builder@v1.0.0
         with:
           # GitHub token, automatically provided to the action
           # (No need to define this secret in the repo settings)
