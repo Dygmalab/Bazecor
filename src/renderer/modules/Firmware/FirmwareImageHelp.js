@@ -120,7 +120,7 @@ const FirmwareImageHelp = ({
 
   useEffect(() => {
     if (countdown == 0) {
-      if (deviceProduct == "raise") {
+      if (deviceProduct == "Raise") {
         videoIntro.current.addEventListener(
           "ended",
           function () {
@@ -144,7 +144,7 @@ const FirmwareImageHelp = ({
       checkSuccess.current.classList.remove("animInCheck");
     }
     if (countdown == 1) {
-      if (deviceProduct == "raise") {
+      if (deviceProduct == "Raise") {
         videoIntro.current.classList.add("animOut");
         videoRelease.current.classList.add("animIn");
       } else {
@@ -154,7 +154,7 @@ const FirmwareImageHelp = ({
       checkSuccess.current.classList.remove("animInCheck");
     }
     if (countdown == 2) {
-      if (deviceProduct == "raise") {
+      if (deviceProduct == "Raise") {
         videoRelease.current.play();
       } else {
         videoReleaseDefy.current.play();
@@ -175,7 +175,7 @@ const FirmwareImageHelp = ({
               <div className="firmwareCheck animWaiting" ref={checkSuccess}>
                 <IconCheckmarkSm />
               </div>
-              {deviceProduct == "raise" ? (
+              {deviceProduct == "Raise" ? (
                 <>
                   <video ref={videoIntro} width={520} height={520} autoPlay={true} className="img-center img-fluid animIn">
                     <source src={videoFirmwareUpdate} type="video/mp4" />
