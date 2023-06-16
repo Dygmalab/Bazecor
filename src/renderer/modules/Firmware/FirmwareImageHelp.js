@@ -23,6 +23,8 @@ import { FirmwareNeuronHelp, FirmwareDefyUpdatingStatus } from "../Firmware";
 
 import videoFirmwareUpdate from "../../../../static/videos/update-firmware.mp4";
 import videoFirmwareUpdateReleaseKey from "../../../../static/videos/release-key.mp4";
+import videoFirmwareUpdateDefySRC from "../../../../static/videos/update-firmware-defy-compress.mp4";
+import videoFirmwareUpdateDefyReleaseSRC from "../../../../static/videos/update-firmware-defy-releaseKeys-compress.mp4";
 import { IconCheckmarkSm } from "../../component/Icon";
 
 const Style = Styled.div`   
@@ -111,35 +113,58 @@ const FirmwareImageHelp = ({
   retriesDefyWired
 }) => {
   const videoIntro = React.useRef(null);
+  const videoIntroDefy = React.useRef(null);
+  const videoReleaseDefy = React.useRef(null);
   const videoRelease = React.useRef(null);
   const checkSuccess = React.useRef(null);
 
   useEffect(() => {
     if (countdown == 0) {
-      videoIntro.current.addEventListener(
-        "ended",
-        function () {
-          videoIntro.current.currentTime = 3;
-          videoIntro.current.play();
-        },
-        false
-      );
-      videoRelease.current.pause();
+      if (deviceProduct == "raise") {
+        videoIntro.current.addEventListener(
+          "ended",
+          function () {
+            videoIntro.current.currentTime = 3;
+            videoIntro.current.play();
+          },
+          false
+        );
+        videoRelease.current.pause();
+      } else {
+        videoIntroDefy.current.addEventListener(
+          "ended",
+          function () {
+            videoIntroDefy.current.currentTime = 3;
+            videoIntroDefy.current.play();
+          },
+          false
+        );
+        videoIntroDefy.current.pause();
+      }
       checkSuccess.current.classList.remove("animInCheck");
     }
     if (countdown == 1) {
-      videoIntro.current.classList.add("animOut");
-      videoRelease.current.classList.add("animIn");
+      if (deviceProduct == "raise") {
+        videoIntro.current.classList.add("animOut");
+        videoRelease.current.classList.add("animIn");
+      } else {
+        videoIntroDefy.current.classList.add("animOut");
+        videoReleaseDefy.current.classList.add("animIn");
+      }
       checkSuccess.current.classList.remove("animInCheck");
     }
     if (countdown == 2) {
-      videoRelease.current.play();
+      if (deviceProduct == "raise") {
+        videoRelease.current.play();
+      } else {
+        videoReleaseDefy.current.play();
+      }
       checkSuccess.current.classList.remove("animInCheck");
     }
     if (countdown == steps.length - 2) {
       checkSuccess.current.classList.add("animInCheck");
     }
-  }, [countdown]);
+  }, [countdown, deviceProduct]);
 
   return (
     <Style>
@@ -150,12 +175,37 @@ const FirmwareImageHelp = ({
               <div className="firmwareCheck animWaiting" ref={checkSuccess}>
                 <IconCheckmarkSm />
               </div>
-              <video ref={videoIntro} width={520} height={520} autoPlay={true} className="img-center img-fluid animIn">
-                <source src={videoFirmwareUpdate} type="video/mp4" />
-              </video>
-              <video ref={videoRelease} width={520} height={520} autoPlay={false} className="img-center img-fluid animWaiting">
-                <source src={videoFirmwareUpdateReleaseKey} type="video/mp4" />
-              </video>
+              {deviceProduct == "raise" ? (
+                <>
+                  <video ref={videoIntro} width={520} height={520} autoPlay={true} className="img-center img-fluid animIn">
+                    <source src={videoFirmwareUpdate} type="video/mp4" />
+                  </video>
+                  <video
+                    ref={videoRelease}
+                    width={520}
+                    height={520}
+                    autoPlay={false}
+                    className="img-center img-fluid animWaiting"
+                  >
+                    <source src={videoFirmwareUpdateReleaseKey} type="video/mp4" />
+                  </video>
+                </>
+              ) : (
+                <>
+                  <video ref={videoIntroDefy} width={520} height={520} autoPlay={true} className="img-center img-fluid animIn">
+                    <source src={videoFirmwareUpdateDefySRC} type="video/mp4" />
+                  </video>
+                  <video
+                    ref={videoReleaseDefy}
+                    width={520}
+                    height={520}
+                    autoPlay={false}
+                    className="img-center img-fluid animWaiting"
+                  >
+                    <source src={videoFirmwareUpdateDefyReleaseSRC} type="video/mp4" />
+                  </video>
+                </>
+              )}
             </div>
           </div>
         </div>
