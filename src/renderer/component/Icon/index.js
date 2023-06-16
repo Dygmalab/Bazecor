@@ -115,6 +115,7 @@ import IconStopWatchCrossed from "./IconStopWatchCrossed";
 import IconLayers from "./IconLayers";
 import IconLayersSm from "./IconLayersSm";
 import IconRecord from "./IconRecord";
+import IconRefresh from "./IconRefresh";
 import IconRobot from "./IconRobot";
 import IconRobotSm from "./IconRobotSm";
 import IconShutdown from "./IconShutdown";
@@ -243,6 +244,7 @@ export {
   IconLayers,
   IconLayersSm,
   IconRecord,
+  IconRefresh,
   IconRobot,
   IconRobotSm,
   IconShutdown,

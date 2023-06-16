@@ -29,6 +29,7 @@ const Style = Styled.div`
 .updatingRaise {
   margin:auto;
   align-self: center;
+  justify-content: center;
 }
 .blob {
   background: #33d9b2;
@@ -98,7 +99,17 @@ const Style = Styled.div`
  * @param {number} countdown - Number representing the position during the update process
  * @returns {<FirmwareImageHelp>} FirmwareImageHelp component.
  */
-const FirmwareImageHelp = ({ countdown, deviceProduct, keyboardType, steps, error }) => {
+const FirmwareImageHelp = ({
+  countdown,
+  deviceProduct,
+  keyboardType,
+  steps,
+  error,
+  retriesLeft,
+  retriesRight,
+  retriesNeuron,
+  retriesDefyWired
+}) => {
   const videoIntro = React.useRef(null);
   const videoRelease = React.useRef(null);
   const checkSuccess = React.useRef(null);
@@ -165,6 +176,10 @@ const FirmwareImageHelp = ({ countdown, deviceProduct, keyboardType, steps, erro
                   keyboardType={keyboardType}
                   steps={steps}
                   error={error}
+                  retriesLeft={retriesLeft}
+                  retriesRight={retriesRight}
+                  retriesNeuron={retriesNeuron}
+                  retriesDefyWired={retriesDefyWired}
                 />
               ) : (
                 <FirmwareNeuronHelp

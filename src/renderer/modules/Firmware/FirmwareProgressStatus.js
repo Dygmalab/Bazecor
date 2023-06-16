@@ -114,9 +114,6 @@ width: 100%;
     position: relative;
     width: 24px;
   }
-  &.partialLoader--Raise {
-    grid-template-columns: repeat(3, 1fr);
-  }
   .circle-loader {
     position: absolute;
     display: block;
@@ -129,6 +126,9 @@ width: 100%;
       opacity: 0.4;
     }
   }
+}
+.progress {
+  margin-left: 32px;
 }
 `;
 
@@ -145,9 +145,13 @@ const FirmwareProgressStatus = ({
   countdown,
   flashProgress,
   leftProgress,
+  retriesLeft,
   rightProgress,
+  retriesRight,
   resetProgress,
   neuronProgress,
+  retriesNeuron,
+  retriesDefyWired,
   restoreProgress,
   deviceProduct,
   keyboardType,
@@ -166,49 +170,57 @@ const FirmwareProgressStatus = ({
           error={stepsPosition == steps.length - 1 ? true : false}
           deviceProduct={deviceProduct}
           keyboardType={keyboardType}
+          retriesLeft={retriesLeft}
+          retriesRight={retriesRight}
+          retriesNeuron={retriesNeuron}
+          retriesDefyWired={retriesDefyWired}
         />
         <div className="process-row">
           <StepsProgressBar steps={steps} stepActive={stepsPosition} />
           <ProgressBar>
             <ProgressBar striped animated now={flashProgress} />
           </ProgressBar>
-          <div className={`partialLoader partialLoader--${deviceProduct}`}>
+          <div
+            className={`partialLoader partialLoader--${deviceProduct}`}
+            style={{ gridTemplateColumns: `repeat(${steps.length - 3}, 1fr)` }}
+          >
             {deviceProduct == "Defy" ? (
               <>
-                <CircleLoader radius={13} percentage={leftProgress} active={stepsPosition == 1 ? true : false} />
-                <CircleLoader radius={13} percentage={rightProgress} active={stepsPosition == 2 ? true : false} />
+                <CircleLoader radius={13} percentage={rightProgress} active={stepsPosition == 1 ? true : false} />
+                <CircleLoader radius={13} percentage={leftProgress} active={stepsPosition == 2 ? true : false} />
               </>
             ) : (
-              <>
-                <CircleLoader
-                  radius={13}
-                  percentage={resetProgress}
-                  active={
-                    (deviceProduct == "Raise" && stepsPosition == 1) || (deviceProduct == "Defy" && stepsPosition == 3)
-                      ? true
-                      : false
-                  }
-                />
-                <CircleLoader
-                  radius={13}
-                  percentage={neuronProgress}
-                  active={
-                    (deviceProduct == "Raise" && stepsPosition == 2) || (deviceProduct == "Defy" && stepsPosition == 4)
-                      ? true
-                      : false
-                  }
-                />
-                <CircleLoader
-                  radius={13}
-                  percentage={restoreProgress}
-                  active={
-                    (deviceProduct == "Raise" && stepsPosition == 3) || (deviceProduct == "Defy" && stepsPosition == 5)
-                      ? true
-                      : false
-                  }
-                />
-              </>
+              ""
             )}
+            <>
+              <CircleLoader
+                radius={13}
+                percentage={resetProgress}
+                active={
+                  (deviceProduct == "Raise" && stepsPosition == 1) || (deviceProduct == "Defy" && stepsPosition == 3)
+                    ? true
+                    : false
+                }
+              />
+              <CircleLoader
+                radius={13}
+                percentage={neuronProgress}
+                active={
+                  (deviceProduct == "Raise" && stepsPosition == 2) || (deviceProduct == "Defy" && stepsPosition == 4)
+                    ? true
+                    : false
+                }
+              />
+              <CircleLoader
+                radius={13}
+                percentage={restoreProgress}
+                active={
+                  (deviceProduct == "Raise" && stepsPosition == 3) || (deviceProduct == "Defy" && stepsPosition == 5)
+                    ? true
+                    : false
+                }
+              />
+            </>
           </div>
         </div>
         <div className="process-row process-footer">
