@@ -21,7 +21,7 @@ jobs:
           - os: windows-2019
             gyp: ""
           - os: ubuntu-20.04
-            gyp: use_udev=0 use_system_libusb=true USE_HARD_LINKS=false
+            gyp: use_udev=0 use_system_libusb=true
 
     steps:
       - name: Check out Git repository
@@ -49,6 +49,7 @@ jobs:
           WIN_CSC_KEY_PASSWORD: ${{ secrets.WIN_CSC_KEY_PASSWORD }}
           APPLEID: ${{ secrets.APPLEID }}
           APPLEIDPASS: ${{ secrets.APPLEIDPASS }}
+          USE_HARD_LINKS: false
         uses: coparse-inc/action-electron-builder@v1.0.0
         with:
           # GitHub token, automatically provided to the action
