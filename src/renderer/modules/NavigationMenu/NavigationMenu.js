@@ -155,8 +155,9 @@ class NavigationMenu extends Component {
     };
     let fwList = await this.getGitHubFW(focus.device.info.product);
     let isBeta = versions.bazecor.includes("beta");
-    if (isBeta) versions.bazecor = versions.bazecor.replace("beta", "");
-    let isUpdated = SemVer.compare(fwList[0].version, versions.bazecor);
+    let cleanedVersion;
+    if (isBeta) cleanedVersion = versions.bazecor.replace("beta", "");
+    let isUpdated = SemVer.compare(fwList[0].version, cleanedVersion);
     this.setState({
       versions: versions,
       flashing: this.props.flashing,
@@ -239,7 +240,7 @@ class NavigationMenu extends Component {
                           disabled={fwUpdate}
                         />
                       </Link>
-                      <Link to="/superkeys" className={`list-link ${fwUpdate || this.state.isBeta ? "" : "disabled"}`}>
+                      <Link to="/superkeys" className={`list-link ${fwUpdate || !isBeta ? "disabled" : ""}`}>
                         <NavigationButton
                           selected={currentPage === "/superkeys"}
                           drawerWidth={drawerWidth}
