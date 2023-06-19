@@ -74,6 +74,12 @@ const Style = Styled.div`
     right: 4px;
   }
 }
+.defySidesUpdatingStatus--WirelessNeuron {
+  .sideIndicator {
+    top: -16px;
+    right: 6px;
+  }
+}
 @keyframes rotateUpdatingProcess {
   0% {
     transform: rotate(0);
@@ -115,7 +121,7 @@ const FirmwareDefyUpdatingStatus = ({
         ) : (
           <>
             <DefyNeuronStatus
-              updating={countdown >= 3 && countdown <= 5 ? true : false}
+              updating={countdown >= 3 && countdown < 5 ? true : false}
               warning={retriesDefyWired > 1 && countdown < 4 ? true : false}
               success={countdown >= 5 ? "success" : ""}
               error={retriesDefyWired >= 3}

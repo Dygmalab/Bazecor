@@ -6,6 +6,7 @@ import closeButton from "../../../static/light/X.svg";
 import IconPlusXS from "../../../static/light/plusIcon.svg";
 import RaiseFirmwareUpgrade from "../../../static/light/raiseFirmwareupgrade.svg";
 import DefyFirmwareUpgrade from "../../../static/light/defyFirmwareupgrade.svg";
+import neuronDefyWirelessImage from "../../../static/base/neuron-defy--white.png";
 import mouseWheelBackground from "../../../static/light/mouseWheel.png";
 import oldToNew from "../../../static/light/oldValueToNewValue.svg";
 
@@ -395,6 +396,7 @@ const Light = {
     firmwareUpdatePanel: {
       backgroundContent: Tokens.colors.gray25,
       backgroundSidebar: "rgba(255,255,255,0.15)",
+      neuronDefyWirelessImage: neuronDefyWirelessImage,
       neuronStatusLineColor: Tokens.colors.gray100,
       neuronStatusLineWarning: Tokens.colors.brandWarning,
       neuronStatusLineSuccess: Tokens.colors.brandSuccess,

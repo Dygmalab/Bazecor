@@ -6,6 +6,7 @@ import closeButton from "../../../static/dark/X.svg";
 import IconPlusXS from "../../../static/dark/plusIcon.svg";
 import RaiseFirmwareUpgrade from "../../../static/dark/raiseFirmwareupgrade.svg";
 import DefyFirmwareUpgrade from "../../../static/dark/defyFirmwareupgrade.svg";
+import neuronDefyWirelessImage from "../../../static/base/neuron-defy--black.png";
 import mouseWheelBackgroundDark from "../../../static/dark/mouseWheel.png";
 import oldToNew from "../../../static/dark/oldValueToNewValue.svg";
 
@@ -402,6 +403,7 @@ const Dark = {
     firmwareUpdatePanel: {
       backgroundContent: Tokens.colors.gray800,
       backgroundSidebar: settingColorOpacity(Tokens.colors.gray400, 0.05),
+      neuronDefyWirelessImage: neuronDefyWirelessImage,
       neuronStatusLineColor: Tokens.colors.gray500,
       neuronStatusLineWarning: Tokens.colors.brandWarning,
       neuronStatusLineSuccess: Tokens.colors.brandSuccess,
