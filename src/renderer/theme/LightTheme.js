@@ -6,6 +6,7 @@ import closeButton from "../../../static/light/X.svg";
 import IconPlusXS from "../../../static/light/plusIcon.svg";
 import RaiseFirmwareUpgrade from "../../../static/light/raiseFirmwareupgrade.svg";
 import DefyFirmwareUpgrade from "../../../static/light/defyFirmwareupgrade.svg";
+import neuronDefyWirelessImage from "../../../static/base/neuron-defy--white.png";
 import mouseWheelBackground from "../../../static/light/mouseWheel.png";
 import oldToNew from "../../../static/light/oldValueToNewValue.svg";
 
@@ -132,6 +133,11 @@ const Light = {
   styles: {
     accordion: {
       background: settingColorOpacity(Tokens.colors.gray25, 0.8)
+    },
+    accordionFirmware: {
+      background: "white",
+      headerBackground: "transparent",
+      colorTitle: Tokens.colors.gray500
     },
     backupConfiguratorFolder: {
       headingColor: Tokens.colors.gray500,
@@ -390,6 +396,7 @@ const Light = {
     firmwareUpdatePanel: {
       backgroundContent: Tokens.colors.gray25,
       backgroundSidebar: "rgba(255,255,255,0.15)",
+      neuronDefyWirelessImage: neuronDefyWirelessImage,
       neuronStatusLineColor: Tokens.colors.gray100,
       neuronStatusLineWarning: Tokens.colors.brandWarning,
       neuronStatusLineSuccess: Tokens.colors.brandSuccess,
@@ -579,6 +586,9 @@ const Light = {
       connectionStrokeOpacity: 0.05,
       neuronLoader: NeuronLoaderLight,
       checkedIcon: CheckedIconLight
+    },
+    neuronStatusDefy: {
+      statusWaiting: Tokens.colors.gray100
     },
     neuronTitle: {
       heading3Color: Tokens.colors.brandSecondary,

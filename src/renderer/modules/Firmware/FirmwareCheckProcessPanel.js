@@ -206,6 +206,8 @@ const FirmwareCheckProcessPanel = ({ nextBlock, retryBlock, context }) => {
   const [state, send] = useMachine(DeviceChecks, { context: { device: context.device } });
   const [listItems, setlistItems] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [isSomethingMissing, SetIsSomethingMissing] = useState(false);
+
   useEffect(() => {
     if (state.context.stateblock > 4) {
       setLoading(false);
@@ -224,16 +226,17 @@ const FirmwareCheckProcessPanel = ({ nextBlock, retryBlock, context }) => {
     });
     console.log("Setting checks", newValue);
     setlistItems(newValue);
+
+    SetIsSomethingMissing(listItems.some(item => item.checked == false));
   }, [state.context]);
 
   return (
     <Style>
-      {loading || !state.context.backup ? (
+      {loading ? (
         <FirmwareLoader />
       ) : (
         <>
-          {(state.context.device.info.product == "Raise" && state.context.backup) ||
-          state.context.device.info.product == "Defy" ? (
+          {isSomethingMissing && state.context.device.info.product !== "Raise" ? (
             <div className="firmware-wrapper disclaimer-firmware">
               <div className="firmware-row">
                 <div className="firmware-content borderLeftTopRadius">
@@ -244,6 +247,7 @@ const FirmwareCheckProcessPanel = ({ nextBlock, retryBlock, context }) => {
                       dangerouslySetInnerHTML={{ __html: i18n.firmwareUpdate.texts.disclaimerContent }}
                     />
                     <Callout content={i18n.firmwareUpdate.texts.disclaimerContent2} size="sm" className="mt-lg" />
+                    {isSomethingMissing ? "Something is missing" : "Ready!"}
                     {state.context.device.info.product !== "Raise" ? <AccordionFirmware items={listItems} /> : ""}
                   </div>
                 </div>

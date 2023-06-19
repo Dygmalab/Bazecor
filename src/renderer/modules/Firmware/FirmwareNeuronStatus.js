@@ -20,8 +20,6 @@ import Styled from "styled-components";
 import { useTheme } from "styled-components";
 import i18n from "../../i18n";
 
-import neuronImage from "../../../../static/base/neuron-defy--black.png";
-
 const Style = Styled.div`
 height: 100%;
 .versionsStatus {
@@ -137,7 +135,7 @@ height: 100%;
 const FirmwareNeuronStatus = ({ isUpdated, status, deviceProduct, keyboardType, icon }) => {
   let connectionColorMatrixSucess = useTheme().styles.firmwareUpdatePanel.neuronLightMatrixSuccess;
   let connectionColorMatrixWarning = useTheme().styles.firmwareUpdatePanel.neuronLightMatrixWarning;
-
+  let neuronImage = useTheme().styles.firmwareUpdatePanel.neuronDefyWirelessImage;
   return (
     <Style>
       {deviceProduct == "Defy" && keyboardType == "wireless" ? (

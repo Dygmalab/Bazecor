@@ -168,9 +168,9 @@ const FirmwareUpdateProcess = ({ nextBlock, retryBlock, context, toggleFlashing,
     { step: 2, title: "1. Flashing rigth side", description: "Updating right side of the keyboard" },
     { step: 3, title: "2. Flashing left side", description: "Updating left side of the keyboard" },
     { step: 4, title: "3. Resetting the Neuron", description: "Preparing the bootloader!" },
-    { step: 5, title: "4. Firmware update!", description: "Making it better 🎂 " },
+    { step: 5, title: "4. Flashing Neuron", description: "Making it better 🎂 " },
     { step: 6, title: "5. Restoring your Layers!", description: "Giving your things back! 💪" },
-    { step: 7, title: "Finished!", description: "Solid as a rock! 💪" },
+    { step: 7, title: "6. Firmware update!", description: "Solid as a rock! 💪" },
     { step: 8, title: "Firmware update error!", description: "Errors!!!! 🫠" }
   ];
   const stepsRaise = [
@@ -196,9 +196,13 @@ const FirmwareUpdateProcess = ({ nextBlock, retryBlock, context, toggleFlashing,
             <FirmwareProgressStatus
               flashProgress={state.context.globalProgress}
               leftProgress={state.context.leftProgress}
+              retriesLeft={state.context.retriesLeft}
               rightProgress={state.context.rightProgress}
+              retriesRight={state.context.retriesRight}
               resetProgress={state.context.resetProgress}
               neuronProgress={state.context.neuronProgress}
+              retriesNeuron={state.context.retriesNeuron}
+              retriesDefyWired={state.context.retriesDefyWired}
               restoreProgress={state.context.restoreProgress}
               countdown={state.context.stateblock}
               deviceProduct={state.context.device.info.product}

@@ -22,6 +22,7 @@ const Style = Styled.div`
 width: 100%;
 .stepsBarWrapperInner {
     padding: 0 32px;
+    background-color: ${({ theme }) => theme.styles.progress.progressBackground};
 }
 .stepsElements {
   display: grid;
