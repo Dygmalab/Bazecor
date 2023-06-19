@@ -413,7 +413,7 @@ const FlashDevice = createMachine(
         ],
         on: {
           // Go to flashPathSelector automatically when no esc key can be pressed
-          "": [{ target: "flashPathSelector", cond: "isBootloader" }],
+          "": [{ target: "flashPathSelector", cond: "doNotWaitForESC" }],
           // Esc key listener will send this event
           ESCPRESSED: "flashPathSelector"
         },
@@ -868,8 +868,8 @@ const FlashDevice = createMachine(
       doNotFlashSides: (context, event) => {
         return context.device.bootloader == true && context.device.info.product !== "Raise";
       },
-      isBootloader: (context, event) => {
-        return context.device.bootloader == true;
+      doNotWaitForESC: (context, event) => {
+        return context.device.bootloader == true || context.sideLeftBL == true;
       },
       isDefywired: (context, event) => {
         return context.DefyVariant === "Defywired";

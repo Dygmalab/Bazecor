@@ -111,7 +111,11 @@ const FirmwareUpdateProcess = ({ nextBlock, retryBlock, context, toggleFlashing,
       firmwares: context.firmwares,
       isUpdated: context.isUpdated,
       versions: context.versions,
-      RaiseBrightness: context.RaiseBrightness
+      RaiseBrightness: context.RaiseBrightness,
+      sideLeftOk: context.sideLeftOk,
+      sideLeftBL: context.sideLeftBL,
+      sideRightOK: context.sideRightOK,
+      sideRightBL: context.sideRightBL
     },
     actions: {
       addEscListener: () => {
@@ -264,7 +268,7 @@ const FirmwareUpdateProcess = ({ nextBlock, retryBlock, context, toggleFlashing,
           )}
         </div>
       )}
-      <hr />
+      {/* <hr />
       <div>
         <h3>percentages</h3>
         <div>
@@ -275,7 +279,7 @@ const FirmwareUpdateProcess = ({ nextBlock, retryBlock, context, toggleFlashing,
           <div>{`neuron Percentage: ${state.context.neuronProgress}`}</div>
           <div>{`restore Percentage: ${state.context.restoreProgress}`}</div>
         </div>
-      </div>
+      </div> */}
     </Style>
   );
 };
