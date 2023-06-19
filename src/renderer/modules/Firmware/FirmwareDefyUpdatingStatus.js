@@ -29,7 +29,7 @@ const Style = Styled.div`
 .defySides {
   position: relative;
   transition: 300ms color ease-in-out;
-  color: ${({ theme }) => theme.colors.gray500};
+  color: ${({ theme }) => theme.styles.neuronStatusDefy.statusWaiting};
   &.updating {
     color: ${({ theme }) => theme.colors.purple300};
     .sideIndicator--updating {

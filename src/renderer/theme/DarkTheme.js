@@ -134,6 +134,11 @@ const Dark = {
     accordion: {
       background: settingColorOpacity(Tokens.colors.gray500, 0.2)
     },
+    accordionFirmware: {
+      background: Tokens.colors.gray700,
+      headerBackground: "rgba(0, 0, 0, 0.03)",
+      colorTitle: Tokens.colors.gray100
+    },
     backupConfiguratorFolder: {
       headingColor: Tokens.colors.gray100,
       inputColor: Tokens.colors.gray50,
@@ -584,6 +589,9 @@ const Dark = {
       connectionStrokeOpacity: 0.15,
       neuronLoader: NeuronLoaderDark,
       checkedIcon: CheckedIconDark
+    },
+    neuronStatusDefy: {
+      statusWaiting: Tokens.colors.gray500
     },
     neuronTitle: {
       heading3Color: Tokens.colors.gray25,

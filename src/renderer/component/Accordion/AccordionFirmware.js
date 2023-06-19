@@ -15,7 +15,7 @@ margin-top: 32px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    color: ${({ theme }) => theme.colors.gray100};
+    color: ${({ theme }) => theme.styles.accordionFirmware.colorTitle};
     h5 {
         margin-bottom: 0;
         letter-spacing: -0.03em;
@@ -52,10 +52,11 @@ margin-top: 32px;
 }
 .card {
     border-radius: 6px;
-    background-color: ${({ theme }) => theme.colors.gray700};
+    background-color: ${({ theme }) => theme.styles.accordionFirmware.background};
 }
 .card-header {
     margin-bottom: 0;
+    background-color: ${({ theme }) => theme.styles.accordionFirmware.headerBackground};
 }
 .item-checked {
     display: flex;
