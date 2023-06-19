@@ -155,9 +155,10 @@ class NavigationMenu extends Component {
     };
     let fwList = await this.getGitHubFW(focus.device.info.product);
     let isBeta = versions.bazecor.includes("beta");
-    let cleanedVersion;
+    let cleanedVersion = versions.bazecor;
     if (isBeta) cleanedVersion = versions.bazecor.replace("beta", "");
     let isUpdated = SemVer.compare(fwList[0].version, cleanedVersion);
+    isBeta = isBeta || focus.device.info.product !== "Raise";
     this.setState({
       versions: versions,
       flashing: this.props.flashing,
