@@ -22,7 +22,6 @@ const Style = Styled.div`
 `;
 
 const CircleLoader = ({ radius, percentage, active }) => {
-  console.log("percentage :", percentage);
   const circumference = 2 * Math.PI * radius;
   const strokeDashOffset = circumference - (percentage / 100) * circumference;
   return (

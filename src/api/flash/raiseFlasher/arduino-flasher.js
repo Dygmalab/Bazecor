@@ -68,9 +68,7 @@ function write_cb(buffer, cb) {
 
   //execute!
   async.series(send, (err, result) => {
-    console.log(send, err, result);
     cb(err);
-    console.log(result);
   });
 }
 

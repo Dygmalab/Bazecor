@@ -266,8 +266,8 @@ export class FlashDefyWireless {
           else {
             stateUpdate("neuron", 100);
             console.log("End update firmware with NRf52833");
-            await this.delay(1500);
-            await this.detectKeyboard();
+            // await this.delay(1500);
+            // await this.detectKeyboard();
             resolve();
           }
         });

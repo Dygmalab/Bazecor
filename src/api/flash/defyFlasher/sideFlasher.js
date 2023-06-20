@@ -145,7 +145,7 @@ export default class sideFlaser {
     // while (validate !== "true" && retry < 3) {
     // console.log("retry count: ", retry);
     for (let i = 0; i < this.firmwareSides.length; i = i + 256) {
-      console.log(`Addres ${i} of ${this.firmwareSides.length}`);
+      // console.log(`Addres ${i} of ${this.firmwareSides.length}`);
       serialport.write("upgrade.keyscanner.sendWrite ");
       if (wiredOrWireless == "wireless") await sleep(2);
       const writeAction = new Uint8Array(new Uint32Array([info.flashStart + i, 256]).buffer);
@@ -157,12 +157,12 @@ export default class sideFlaser {
       blob.set(crc, data.length + writeAction.length);
       const buffer = new Buffer.from(blob);
       // console.log("write sent: ", buffer);
-      console.log("write sent, %", (step / totalsteps) * 100);
+      // console.log("write sent, %", (step / totalsteps) * 100);
       serialport.write(buffer);
       if (wiredOrWireless == "wireless") await sleep(2);
       await readLine();
       let ack = await readLine();
-      console.log("ack received: ", ack);
+      // console.log("ack received: ", ack);
       if (ack.trim() === "false") {
         break;
       }

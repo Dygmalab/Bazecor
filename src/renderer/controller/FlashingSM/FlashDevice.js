@@ -66,6 +66,7 @@ const reconnect = async (context, callback) => {
                 context.originalDevice.device.info.keyboardType == device.device.info.keyboardType
               : context.originalDevice.device.info.keyboardType == device.device.info.keyboardType
           ) {
+            console.log(message);
             currentPort = { ...device };
             currentPath = device.path;
             isFindDevice = true;
@@ -73,6 +74,7 @@ const reconnect = async (context, callback) => {
         }
       });
       result = { isFindDevice, currentPort, currentPath };
+      return isFindDevice;
     };
     const runnerFindKeyboard = async (findKeyboard, times, errorMessage) => {
       if (!times) {
@@ -261,7 +263,7 @@ const uploadDefyWireles = async (context, callback) => {
       let focus = new Focus();
       await focus.close();
     }
-    console.log(context.originalDevice.device, focus, focus._port, flashDefyWireless);
+    // console.log(context.originalDevice.device, focus, focus._port, flashDefyWireless);
     result = await context.originalDevice.device.flash(
       focus._port,
       context.firmwares.fw,
@@ -619,7 +621,7 @@ const FlashDevice = createMachine(
           id: "uploadDefyWireless",
           src: (context, event) => (callback, onReceive) => uploadDefyWireles(context, callback),
           onDone: {
-            target: "restoreDefy",
+            target: "reconnectDefy",
             actions: [assign({ flashResult: (context, event) => event.data })]
           },
           onError: {
