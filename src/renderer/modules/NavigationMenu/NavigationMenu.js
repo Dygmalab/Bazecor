@@ -268,7 +268,7 @@ function NavigationMenu(props) {
                     disabled={fwUpdate}
                   />
                 </Link>
-                <BatteryStatus />
+                <BatteryStatus disable={fwUpdate || virtual} />
               </>
             ) : (
               ""

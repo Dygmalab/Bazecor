@@ -6,7 +6,7 @@ import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
 import Focus from "../../../api/focus";
 
-export default function BatteryStatus() {
+export default function BatteryStatus({ disable }) {
   const [show, setShow] = useState(false);
   const [bLeft, setbLeft] = useState(100);
   const [bRight, setbRight] = useState(100);
@@ -36,6 +36,7 @@ export default function BatteryStatus() {
   }, []);
 
   const getBatteryStatus = async () => {
+    if (disable) return;
     const focus = new Focus();
     const left = await focus.command("wireless.battery.left.level");
     const right = await focus.command("wireless.battery.right.level");
@@ -44,6 +45,7 @@ export default function BatteryStatus() {
   };
 
   const forceRetrieveBattery = async () => {
+    if (disable) return;
     const focus = new Focus();
     await focus.command("wireless.battery.forceRead");
     await getBatteryStatus();
