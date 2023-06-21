@@ -32,7 +32,7 @@ if (process.platform !== "darwin") {
   app.commandLine.appendSwitch("force-device-scale-factor", 1);
 }
 
-import { app, BrowserWindow, Menu, nativeTheme, dialog, ipcMain, shell } from "electron";
+import { app, BrowserWindow, Menu, nativeTheme, dialog, ipcMain, shell, systemPreferences } from "electron";
 import { format as formatUrl } from "url";
 import * as path from "path";
 import * as fs from "fs";
@@ -257,6 +257,9 @@ async function createMainWindow() {
 
   window.once("ready-to-show", () => {
     window.show();
+    if (process.platform === "darwin") {
+      systemPreferences.isTrustedAccessibilityClient(true);
+    }
     if (process.platform === "linux") {
       if (!checkUdev()) {
         installUdev(window);
