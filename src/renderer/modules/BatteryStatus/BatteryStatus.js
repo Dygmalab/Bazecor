@@ -1,14 +1,35 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Overlay from "react-bootstrap/Overlay";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
+import Focus from "../../../api/focus";
 
 export default function BatteryStatus() {
   const [show, setShow] = useState(false);
-  const [bLeft, setbLeft] = useState(90);
-  const [bRight, setbRight] = useState(96);
+  const [bLeft, setbLeft] = useState(100);
+  const [bRight, setbRight] = useState(100);
   const target = useRef(null);
+
+  useEffect(() => {
+    getBatteryStatus();
+  }, []);
+
+  useEffect(() => {
+    const intervalID = setInterval(() => {
+      getBatteryStatus();
+    }, 60000);
+
+    return () => clearInterval(intervalID);
+  }, []);
+
+  const getBatteryStatus = async () => {
+    const focus = new Focus();
+    const left = await focus.command("wireless.battery.left.level");
+    const right = await focus.command("wireless.battery.right.level");
+    setbLeft(left);
+    setbRight(right);
+  };
 
   return (
     <>
@@ -31,8 +52,8 @@ export default function BatteryStatus() {
           >
             <Row>Battery data from keyboard!</Row>
             <Row>
-              <Col xs={6}>50%</Col>
-              <Col xs={6}>50%</Col>
+              <Col xs={6}>{bLeft}</Col>
+              <Col xs={6}>{bRight}</Col>
             </Row>
             <Row>Button for energy saving mode</Row>
           </Container>
