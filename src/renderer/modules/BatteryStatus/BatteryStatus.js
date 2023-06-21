@@ -3,6 +3,7 @@ import Overlay from "react-bootstrap/Overlay";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
+import Button from "react-bootstrap/Button";
 import Focus from "../../../api/focus";
 
 export default function BatteryStatus() {
@@ -10,6 +11,17 @@ export default function BatteryStatus() {
   const [bLeft, setbLeft] = useState(100);
   const [bRight, setbRight] = useState(100);
   const target = useRef(null);
+
+  useEffect(() => {
+    let intervalID;
+    if (show === true) {
+      intervalID = setInterval(() => {
+        setShow(false);
+        clearInterval(intervalID);
+      }, 3000);
+    }
+    return () => clearInterval(intervalID);
+  }, [show]);
 
   useEffect(() => {
     getBatteryStatus();
@@ -31,9 +43,15 @@ export default function BatteryStatus() {
     setbRight(right);
   };
 
+  const forceRetrieveBattery = async () => {
+    const focus = new Focus();
+    await focus.command("wireless.battery.forceRead");
+    await getBatteryStatus();
+  };
+
   return (
     <>
-      <div ref={target} onMouseEnter={() => setShow(!show)} onMouseLeave={() => setShow(!show)}>
+      <div ref={target} onMouseEnter={() => setShow(!show)}>
         <p style={{ fontSize: "0.9em", justifyContent: "center", margin: "0" }}>{`L:${bLeft}% R:${bRight}%`}</p>
       </div>
       <Overlay target={target.current} show={show} placement="top">
@@ -56,6 +74,15 @@ export default function BatteryStatus() {
               <Col xs={6}>{bRight}</Col>
             </Row>
             <Row>Button for energy saving mode</Row>
+            <Row>
+              <Button
+                onClick={() => {
+                  forceRetrieveBattery();
+                }}
+              >
+                Force read Battery level
+              </Button>
+            </Row>
           </Container>
         )}
       </Overlay>
