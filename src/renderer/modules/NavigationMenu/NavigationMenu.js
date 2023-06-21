@@ -16,9 +16,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React, { Component, version } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, withRouter } from "react-router-dom";
-import PropTypes from "prop-types";
 import SemVer from "semver";
 import { Octokit } from "octokit";
 import Focus from "../../../api/focus";
@@ -28,7 +27,6 @@ import i18n from "../../i18n";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import NavbarBrand from "react-bootstrap/NavbarBrand";
-import Tooltip from "react-bootstrap/Tooltip";
 import Styled from "styled-components";
 
 // Custom components
@@ -42,6 +40,7 @@ import { IconPreferences2Stroke } from "../../component/Icon";
 
 // Assets
 import DygmaLogo from "../../../../static/logo.svg";
+import BatteryStatus from "../BatteryStatus/BatteryStatus";
 
 // Store loading
 const Store = require("electron-store");
@@ -113,39 +112,26 @@ const Styles = Styled.div`
 }
 `;
 
-class NavigationMenu extends Component {
-  constructor(props) {
-    super(props);
+function NavigationMenu(props) {
+  const [versions, setVersions] = useState(null);
+  const [isUpdated, setIsUpdated] = useState(true);
+  const [isBeta, setIsBeta] = useState(false);
+  const [device, setDevice] = useState({});
+  const [virtual, setVirtual] = useState({});
+  const [fwList, setFwList] = useState({});
 
-    this.state = {
-      versions: null,
-      flashing: props.flashing,
-      isUpdated: true,
-      isBeta: false
-    };
-  }
+  useEffect(() => {
+    contextUpdater();
+  }, []);
 
-  async componentDidMount() {
-    await this.contextUpdater();
-  }
+  useEffect(() => {
+    if (props.flashing || !props.connected) return;
+    contextUpdater();
+  }, [props.connected, props.flashing, props.allowBeta]);
 
-  async componentDidUpdate(previousProps, previousState) {
-    if (this.props.flashing != previousProps.flashing) {
-      this.setState({ flashing: this.props.flashing });
-    }
-    if (
-      this.props.allowBeta === previousProps.allowBeta &&
-      this.state.versions !== null &&
-      this.state.versions.bazecor.length > 0 &&
-      this.state.flashing === previousState.flashing
-    ) {
-      return;
-    }
-    await this.contextUpdater();
-  }
-
-  contextUpdater = async () => {
+  async function contextUpdater() {
     const focus = new Focus();
+    setDevice(focus.device);
     if (focus.device.bootloader) return;
     let parts = await focus.command("version");
     parts = parts.split(" ");
@@ -154,23 +140,20 @@ class NavigationMenu extends Component {
       kaleidoscope: parts[1],
       firmware: parts[2]
     };
-    let fwList = await this.getGitHubFW(focus.device.info.product);
+    let fwList = await getGitHubFW(focus.device.info.product);
     let isBeta = versions.bazecor.includes("beta");
     let cleanedVersion = versions.bazecor;
     if (isBeta) cleanedVersion = versions.bazecor.replace("beta", "");
     let isUpdated = SemVer.compare(fwList[0].version, cleanedVersion);
     isBeta = isBeta || focus.device.info.product !== "Raise";
-    this.setState({
-      versions: versions,
-      flashing: this.props.flashing,
-      virtual: focus.file,
-      fwList: fwList,
-      isUpdated: isUpdated,
-      isBeta: isBeta
-    });
-  };
+    setVersions(versions);
+    setIsUpdated(isUpdated);
+    setIsBeta(isBeta);
+    setVirtual(focus.file);
+    setFwList(fwList);
+  }
 
-  getGitHubFW = async product => {
+  const getGitHubFW = async product => {
     let Releases = [];
     const octokit = new Octokit();
     let data = await octokit.request("GET /repos/{owner}/{repo}/releases", {
@@ -183,7 +166,7 @@ class NavigationMenu extends Component {
     data.data.forEach(release => {
       const releaseData = release.name.split(" ");
       const newRelease = { name: releaseData[0], version: releaseData[1] };
-      if (!releaseData[1].includes("beta") || this.props.allowBeta) Releases.push(newRelease);
+      if (!releaseData[1].includes("beta") || props.allowBeta) Releases.push(newRelease);
     });
     let finalReleases = Releases.filter(release => release.name === product);
     finalReleases.sort((a, b) => {
@@ -193,143 +176,108 @@ class NavigationMenu extends Component {
     return finalReleases;
   };
 
-  renderTooltip(text) {
-    return <Tooltip id="button-tooltip">{text}</Tooltip>;
-  }
+  const { connected, pages, history, fwUpdate } = props;
+  const currentPage = history.location.pathname;
 
-  render() {
-    const { connected, pages, history, fwUpdate } = this.props;
-    const { isUpdated, isBeta, versions, fwList } = this.state;
-    const currentPage = history.location.pathname;
+  // console.log("new checker for navigation", fwList, versions, isUpdated, isBeta);
 
-    // console.log("new checker for navigation", fwList, versions, isUpdated, isBeta);
-
-    return (
-      <Styles>
-        <Navbar className={`left-navbar sidebar`} sticky="top">
-          <NavbarBrand as={Link} to="/" className="brand-image d-lg-block">
-            <img alt="" src={DygmaLogo} className="d-inline-block align-top" />
-          </NavbarBrand>
-          <Nav>
-            {/* <Link to="/welcome" className={`list-link ${fwUpdate ? "disabled" : ""}`}>
-              <WelcomeMenu
-                selected={currentPage === "/welcome"}
-                userMenu={i18n.app.menu.userMenu}
+  return (
+    <Styles>
+      <Navbar className={`left-navbar sidebar`} sticky="top">
+        <NavbarBrand as={Link} to="/" className="brand-image d-lg-block">
+          <img alt="" src={DygmaLogo} className="d-inline-block align-top" />
+        </NavbarBrand>
+        <Nav>
+          <div className="topMenu">
+            {connected && (
+              <>
+                {pages.keymap && (
+                  <React.Fragment>
+                    <Link to="/editor" className={`list-link ${fwUpdate ? "disabled" : ""}`}>
+                      <NavigationButton
+                        selected={currentPage === "/editor"}
+                        drawerWidth={drawerWidth}
+                        buttonText={i18n.app.menu.editor}
+                        icoSVG={<IconKeyboard2Stroke />}
+                        disabled={fwUpdate}
+                      />
+                    </Link>
+                    <Link to="/macros" className={`list-link ${fwUpdate ? "disabled" : ""}`}>
+                      <NavigationButton
+                        selected={currentPage === "/macros"}
+                        drawerWidth={drawerWidth}
+                        buttonText={i18n.app.menu.macros}
+                        icoSVG={<IconRobot2Stroke />}
+                        disabled={fwUpdate}
+                      />
+                    </Link>
+                    <Link to="/superkeys" className={`list-link ${fwUpdate || !isBeta ? "disabled" : ""}`}>
+                      <NavigationButton
+                        selected={currentPage === "/superkeys"}
+                        drawerWidth={drawerWidth}
+                        buttonText={i18n.app.menu.superkeys}
+                        icoSVG={<IconThunder2Stroke />}
+                        showNotif={isBeta}
+                        notifText="BETA"
+                        disabled={fwUpdate || !isBeta}
+                      />
+                    </Link>
+                  </React.Fragment>
+                )}
+                <Link to="/firmware-update" className={`list-link ${fwUpdate || virtual ? "disabled" : ""}`}>
+                  <NavigationButton
+                    selected={currentPage === "/firmware-update"}
+                    drawerWidth={drawerWidth}
+                    showNotif={isUpdated != 0 ? (isUpdated > 0 ? true : false) : false}
+                    buttonText={i18n.app.menu.firmwareUpdate}
+                    icoSVG={<IconMemory2Stroke />}
+                    disabled={fwUpdate || virtual}
+                  />
+                </Link>
+              </>
+            )}
+            <Link to="/keyboard-select" className={`list-link ${fwUpdate ? "disabled" : ""}`}>
+              <NavigationButton
+                keyboardSelectText={connected ? i18n.app.menu.selectAnotherKeyboard : i18n.app.menu.selectAKeyboard}
                 drawerWidth={drawerWidth}
-                onClick={() => setCurrentPage("/welcome")}
+                selected={currentPage === "/keyboard-select"}
+                buttonText={i18n.app.menu.selectAKeyboard}
+                icoSVG={<IconKeyboardSelector />}
+                disabled={fwUpdate}
               />
-            </Link> */}
-            <div className="topMenu">
-              {connected && (
-                <>
-                  {pages.keymap && (
-                    <React.Fragment>
-                      <Link to="/editor" className={`list-link ${fwUpdate ? "disabled" : ""}`}>
-                        <NavigationButton
-                          selected={currentPage === "/editor"}
-                          drawerWidth={drawerWidth}
-                          buttonText={i18n.app.menu.editor}
-                          icoSVG={<IconKeyboard2Stroke />}
-                          disabled={fwUpdate}
-                        />
-                      </Link>
-                      <Link to="/macros" className={`list-link ${fwUpdate ? "disabled" : ""}`}>
-                        <NavigationButton
-                          selected={currentPage === "/macros"}
-                          drawerWidth={drawerWidth}
-                          buttonText={i18n.app.menu.macros}
-                          icoSVG={<IconRobot2Stroke />}
-                          disabled={fwUpdate}
-                        />
-                      </Link>
-                      <Link to="/superkeys" className={`list-link ${fwUpdate || !isBeta ? "disabled" : ""}`}>
-                        <NavigationButton
-                          selected={currentPage === "/superkeys"}
-                          drawerWidth={drawerWidth}
-                          buttonText={i18n.app.menu.superkeys}
-                          icoSVG={<IconThunder2Stroke />}
-                          showNotif={isBeta}
-                          notifText="BETA"
-                          disabled={fwUpdate || !isBeta}
-                        />
-                      </Link>
-                    </React.Fragment>
-                  )}
-                  <Link to="/firmware-update" className={`list-link ${fwUpdate || this.state.virtual ? "disabled" : ""}`}>
-                    <NavigationButton
-                      selected={currentPage === "/firmware-update"}
-                      drawerWidth={drawerWidth}
-                      showNotif={isUpdated != 0 ? (isUpdated > 0 ? true : false) : false}
-                      buttonText={i18n.app.menu.firmwareUpdate}
-                      icoSVG={<IconMemory2Stroke />}
-                      disabled={fwUpdate || this.state.virtual}
-                    />
-                  </Link>
-                </>
-              )}
-              <Link to="/keyboard-select" className={`list-link ${fwUpdate ? "disabled" : ""}`}>
-                <NavigationButton
-                  keyboardSelectText={connected ? i18n.app.menu.selectAnotherKeyboard : i18n.app.menu.selectAKeyboard}
-                  drawerWidth={drawerWidth}
-                  selected={currentPage === "/keyboard-select"}
-                  buttonText={i18n.app.menu.selectAKeyboard}
-                  icoSVG={<IconKeyboardSelector />}
-                  disabled={fwUpdate}
-                />
-              </Link>
-
-              {/* <OverlayTrigger
-                rootClose
-                placement="right"
-                delay={{ show: 250, hide: 400 }}
-                overlay={this.renderTooltip("Update Bazecor")}
-              >
-                <div className={`list-link ${fwUpdate ? "disabled" : ""}`}>
-                  <SoftwareUpdateMenuItem
-                    keyboardSelectText={i18n.app.menu.softwareUpdate}
+            </Link>
+          </div>
+          <div className="bottomMenu">
+            <Link to="/preferences" className={`list-link ${fwUpdate ? "disabled" : ""}`}>
+              <NavigationButton
+                drawerWidth={drawerWidth}
+                selected={currentPage === "/preferences"}
+                buttonText={i18n.app.menu.preferences}
+                icoSVG={<IconPreferences2Stroke />}
+                disabled={fwUpdate}
+              />
+            </Link>
+            {connected && device && device.info && device.info.keyboardType === "wireless" && versions !== null ? (
+              <>
+                <Link to="/wireless" className={`list-link ${fwUpdate ? "disabled" : ""}`}>
+                  <NavigationButton
                     drawerWidth={drawerWidth}
-                    selected={currentPage === "/software-update"}
-                    onClick={event => event.stopPropagation()}
+                    selected={currentPage === "/wireless"}
+                    buttonText={i18n.app.menu.wireless}
+                    icoSVG={<IconThunder2Stroke />}
+                    disabled={fwUpdate}
                   />
-                </div>
-              </OverlayTrigger> */}
-              {/* <OverlayTrigger
-                rootClose
-                placement="right"
-                delay={{ show: 250, hide: 400 }}
-                overlay={this.renderTooltip("Exit Bazecor")}
-              >
-                <div className={`list-link ${fwUpdate ? "disabled" : ""}`}>
-                  <ExitMenuItem
-                    drawerWidth={drawerWidth}
-                    onClick={() => return}
-                  />
-                </div>
-              </OverlayTrigger> */}
-            </div>
-            <div className="bottomMenu">
-              <Link to="/preferences" className={`list-link ${fwUpdate ? "disabled" : ""}`}>
-                <NavigationButton
-                  drawerWidth={drawerWidth}
-                  selected={currentPage === "/preferences"}
-                  buttonText={i18n.app.menu.preferences}
-                  icoSVG={<IconPreferences2Stroke />}
-                  disabled={fwUpdate}
-                />
-              </Link>
-            </div>
-          </Nav>
-        </Navbar>
-      </Styles>
-    );
-  }
+                </Link>
+                <BatteryStatus />
+              </>
+            ) : (
+              ""
+            )}
+          </div>
+        </Nav>
+      </Navbar>
+    </Styles>
+  );
 }
-NavigationMenu.propTypes = {
-  connected: PropTypes.bool.isRequired,
-  // eslint-disable-next-line react/forbid-prop-types
-  pages: PropTypes.object.isRequired,
-  // eslint-disable-next-line react/forbid-prop-types
-  history: PropTypes.object.isRequired
-};
 
 export default withRouter(NavigationMenu);

@@ -62,6 +62,7 @@ const English = {
       firmwareUpdate: "Firmware <br>Update",
       keyboardSettings: "Keyboard Settings",
       preferences: "Preferences",
+      wireless: "Wireless",
       selectAKeyboard: "Keyboard <br>Selection",
       selectAnotherKeyboard: "Select another keyboard",
       softwareUpdate: "Software update",
