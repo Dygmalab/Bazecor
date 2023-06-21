@@ -84,20 +84,35 @@ margin-top: 32px;
 `;
 
 const AccordionFirmware = ({ items }) => {
-  const [passedTasks, SetPassedTasks] = useState(0);
+  const [passedTasks, SetPassedTasks] = useState(true);
   const [counterTasks, SetCounterTasks] = useState(0);
 
-  useEffect(() => {
-    function numberOfFalseValues(obj) {
-      var counter = 0;
-      for (var index = 0; index < obj.length; index++) {
-        if (obj[index].isMarried === false) {
-          counter++;
-        }
-      }
-      return counter;
+  const textList = [
+    {
+      text: "Check left side connectivity"
+    },
+    {
+      text: "Check left side Bootloader status"
+    },
+    {
+      text: "Check right side connectivity"
+    },
+    {
+      text: "Check right side Bootloader status"
+    },
+    {
+      text: "Create a backup file"
     }
+  ];
+
+  useEffect(() => {
     items.map((item, index) => {
+      if (index == 0) {
+        SetCounterTasks(false);
+      }
+      if ((index == 0 && !item.checked) || (index == 2 && !item.checked)) {
+        SetPassedTasks(false);
+      }
       if (item.checked) {
         SetCounterTasks(previousValue => previousValue + 1);
       }
@@ -112,8 +127,8 @@ const AccordionFirmware = ({ items }) => {
           <Accordion.Toggle as={Card.Header} eventKey="0">
             <div className="stepsCompletedStatus">
               <div className="stepsCompletedHeader">
-                <IconCheckmarkSm />
-                <Title text="You are ready to start" headingLevel={5} />
+                {passedTasks ? <IconCheckmarkSm /> : ""}
+                <Title text={passedTasks ? "You are ready to start" : "Analyzed tasks"} headingLevel={5} />
               </div>
               <div className="stepsCompleted">
                 <div className={`stepsCompletedLabel ${counterTasks == items.length ? "passed" : "warning"}`}>
@@ -135,7 +150,7 @@ const AccordionFirmware = ({ items }) => {
                   key={`itemChecked-${item.id}`}
                 >
                   <div className="item-checked--icon">{item.checked ? <IconCheckmarkSm /> : <IconCloseXs />}</div>
-                  {item.text}
+                  {textList[index].text}
                 </div>
               ))}
             </Card.Body>

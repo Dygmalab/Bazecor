@@ -18,7 +18,6 @@
 import React, { useState, useEffect } from "react";
 import Styled from "styled-components";
 import { useMachine } from "@xstate/react";
-import Card from "react-bootstrap/Card";
 import i18n from "../../i18n";
 import SemVer from "semver";
 
@@ -32,11 +31,7 @@ import { RegularButton } from "../../component/Button";
 import { FirmwareLoader } from "../../component/Loader";
 import AccordionFirmware from "../../component/Accordion/AccordionFirmware";
 
-import { FirmwareNeuronStatus } from "../Firmware";
-
-//Assets
-import videoDefyCablesDisconnect from "../../../../static/videos/connectCablesDefy.mp4";
-import { IconWarning } from "../../component/Icon";
+import { FirmwareNeuronStatus, FirmwareWarningList } from "../Firmware";
 
 const Style = Styled.div`
 width: 100%;
@@ -124,9 +119,6 @@ height:inherit;
   .lineColor {
       stroke: ${({ theme }) => theme.styles.firmwareUpdatePanel.neuronStatusLineWarning};
   }
-  .firmware-content--inner h3 {
-    color: ${({ theme }) => theme.styles.firmwareUpdatePanel.disclaimerTitle};
-  }
 }
 .buttonActions .button.outline,
 .buttonActions .button.primary {
@@ -168,30 +160,6 @@ height:inherit;
     display:none;
   }
 }
-.errorListWrapper {
-  padding-top: 16px;
-  display: flex;
-  grid-gap: 16px;
-  align-items: center;
-  .errorListItem {
-      display: flex;
-      grid-gap: 24px;
-      align-items: center;
-  }
-  .errorListImage {
-      video {
-          aspect-ratio: 1 /1;
-          object-fit: cover;
-          width: 162px;
-          border-radius: 16px;
-          border: 3px solid ${({ theme }) => theme.colors.brandWarning};
-      }
-  }
-  .errorListContent {
-      max-width: 200px;
-      color: ${({ theme }) => theme.styles.firmwareErrorPanel.textColor}
-  }
-}
 `;
 
 /**
@@ -206,7 +174,6 @@ const FirmwareCheckProcessPanel = ({ nextBlock, retryBlock, context }) => {
   const [state, send] = useMachine(DeviceChecks, { context: { device: context.device } });
   const [listItems, setlistItems] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [isSomethingMissing, SetIsSomethingMissing] = useState(false);
 
   useEffect(() => {
     if (state.context.stateblock > 4) {
@@ -226,8 +193,6 @@ const FirmwareCheckProcessPanel = ({ nextBlock, retryBlock, context }) => {
     });
     console.log("Setting checks", newValue);
     setlistItems(newValue);
-
-    SetIsSomethingMissing(listItems.some(item => item.checked == false));
   }, [state.context]);
 
   return (
@@ -236,25 +201,43 @@ const FirmwareCheckProcessPanel = ({ nextBlock, retryBlock, context }) => {
         <FirmwareLoader />
       ) : (
         <>
-          {isSomethingMissing && state.context.device.info.product !== "Raise" ? (
+          {state.context.device.info.product !== "Raise" ? (
             <div className="firmware-wrapper disclaimer-firmware">
               <div className="firmware-row">
                 <div className="firmware-content borderLeftTopRadius">
                   <div className="firmware-content--inner">
-                    <Title text={i18n.firmwareUpdate.texts.disclaimerTitle} headingLevel={3} />
-                    <div
-                      className={"disclaimerContent"}
-                      dangerouslySetInnerHTML={{ __html: i18n.firmwareUpdate.texts.disclaimerContent }}
+                    <Title
+                      text={
+                        !state.context.sideLeftOk || !state.context.sideRightOK
+                          ? i18n.firmwareUpdate.texts.errorTitle
+                          : i18n.firmwareUpdate.texts.disclaimerTitle
+                      }
+                      headingLevel={3}
+                      type={!state.context.sideLeftOk || !state.context.sideRightOK ? "warning" : "default"}
                     />
-                    <Callout content={i18n.firmwareUpdate.texts.disclaimerContent2} size="sm" className="mt-lg" />
-                    {isSomethingMissing ? "Something is missing" : "Ready!"}
+                    {state.context.sideLeftOk || state.context.sideRightOK ? (
+                      <>
+                        <div
+                          className={"disclaimerContent"}
+                          dangerouslySetInnerHTML={{ __html: i18n.firmwareUpdate.texts.disclaimerContent }}
+                        />
+                        <Callout content={i18n.firmwareUpdate.texts.disclaimerContent2} size="sm" className="mt-lg" />
+                      </>
+                    ) : (
+                      ""
+                    )}
+                    <FirmwareWarningList
+                      leftSideOK={state.context.sideLeftOk}
+                      rightSideOK={state.context.sideRightOK}
+                      leftSideBL={state.context.sideLeftBL}
+                    />
                     {state.context.device.info.product !== "Raise" ? <AccordionFirmware items={listItems} /> : ""}
                   </div>
                 </div>
                 <div className="firmware-sidebar borderRightTopRadius">
                   <FirmwareNeuronStatus
                     isUpdated={state.context.isUpdated}
-                    status="waiting"
+                    status={!state.context.sideLeftOk || !state.context.sideRightOK ? "warning" : "waiting"}
                     deviceProduct={state.context.device.info.product}
                     keyboardType={state.context.device.info.keyboardType}
                   />
@@ -266,7 +249,11 @@ const FirmwareCheckProcessPanel = ({ nextBlock, retryBlock, context }) => {
                     <RegularButton
                       className="flashingbutton nooutlined"
                       style="outline"
-                      buttonText={i18n.firmwareUpdate.texts.backwds}
+                      buttonText={
+                        !state.context.sideLeftOk || !state.context.sideRightOK
+                          ? i18n.firmwareUpdate.texts.cancelButton
+                          : i18n.firmwareUpdate.texts.backwds
+                      }
                       onClick={() => {
                         retryBlock();
                       }}
@@ -297,64 +284,7 @@ const FirmwareCheckProcessPanel = ({ nextBlock, retryBlock, context }) => {
               </div>
             </div>
           ) : (
-            <div className="firmware-wrapper">
-              <div className="firmware-row">
-                <div className="firmware-content borderLeftTopRadius">
-                  <div className="firmware-content--inner">
-                    <Title text={i18n.firmwareUpdate.texts.errorTitle} headingLevel={3} type="warning" />
-                    <div className="errorListWrapper">
-                      {!state.context.sideLeftBL || !state.context.sideRightBL ? (
-                        <div className="errorListItem">
-                          <div className="errorListImage">
-                            <video width={162} height={162} autoPlay={true} loop={true} className="img-center img-fluid">
-                              <source src={videoDefyCablesDisconnect} type="video/mp4" />
-                            </video>
-                          </div>
-                          <div className="errorListContent">{i18n.firmwareUpdate.texts.errorMissingCables}</div>
-                        </div>
-                      ) : (
-                        ""
-                      )}
-                    </div>
-                  </div>
-                </div>
-                <div className="firmware-sidebar borderRightTopRadius">
-                  <FirmwareNeuronStatus
-                    isUpdated={false}
-                    icon={<IconWarning />}
-                    status="warning"
-                    deviceProduct={state.context.device.info.product}
-                    keyboardType={state.context.device.info.keyboardType}
-                  />
-                </div>
-              </div>
-              <div className="firmware-row">
-                <div className="firmware-content borderLeftBottomRadius">
-                  <div className="wrapperActions">
-                    <RegularButton
-                      className="flashingbutton nooutlined"
-                      style="outline"
-                      buttonText={i18n.firmwareUpdate.texts.cancelButton}
-                      onClick={() => {
-                        retryBlock();
-                      }}
-                    />
-                  </div>
-                </div>
-                <div className="firmware-sidebar borderRightBottomRadius">
-                  <div className="buttonActions">
-                    <RegularButton
-                      className="flashingbutton nooutlined"
-                      style="primary"
-                      buttonText={i18n.general.retry}
-                      onClick={() => {
-                        send("PRESSED");
-                      }}
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
+            ""
           )}
         </>
       )}
