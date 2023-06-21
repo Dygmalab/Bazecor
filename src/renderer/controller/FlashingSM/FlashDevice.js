@@ -426,6 +426,7 @@ const FlashDevice = createMachine(
         entry: [
           (context, event) => {
             console.log("Selecting upgrade path");
+            console.log("context of device", context.device);
           },
           assign({
             stateblock: (context, event) => 1
@@ -434,7 +435,8 @@ const FlashDevice = createMachine(
           raise("flashingPath")
         ],
         on: [
-          { event: "*", target: "flashDefyWired", cond: "doNotFlashSides" },
+          { event: "*", target: "flashDefyWired", cond: "doNotFlashSidesW" },
+          { event: "*", target: "resetDefyWireless", cond: "doNotFlashSidesWi" },
           { event: "*", target: "resetRaiseNeuron", cond: "flashRaise" },
           { event: "*", target: "flashRightSide", cond: "flashSides" }
         ]
@@ -862,13 +864,24 @@ const FlashDevice = createMachine(
   {
     guards: {
       flashSides: (context, event) => {
-        return !context.device.bootloader == true && context.device.info.product !== "Raise";
+        return context.device.bootloader !== true && context.device.info.product !== "Raise";
       },
       flashRaise: (context, event) => {
         return context.device.info.product === "Raise";
       },
-      doNotFlashSides: (context, event) => {
-        return context.device.bootloader == true && context.device.info.product !== "Raise";
+      doNotFlashSidesW: (context, event) => {
+        return (
+          context.device.bootloader === true &&
+          context.device.info.product !== "Raise" &&
+          context.device.info.keyboardType === "wired"
+        );
+      },
+      doNotFlashSidesWi: (context, event) => {
+        return (
+          context.device.bootloader === true &&
+          context.device.info.product !== "Raise" &&
+          context.device.info.keyboardType === "wireless"
+        );
       },
       doNotWaitForESC: (context, event) => {
         return context.device.bootloader == true || context.sideLeftBL == true;

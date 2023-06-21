@@ -146,6 +146,7 @@ class NavigationMenu extends Component {
 
   contextUpdater = async () => {
     const focus = new Focus();
+    if (focus.device.bootloader) return;
     let parts = await focus.command("version");
     parts = parts.split(" ");
     let versions = {
