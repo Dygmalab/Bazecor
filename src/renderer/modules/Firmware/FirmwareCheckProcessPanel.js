@@ -215,7 +215,7 @@ const FirmwareCheckProcessPanel = ({ nextBlock, retryBlock, context }) => {
                       headingLevel={3}
                       type={!state.context.sideLeftOk || !state.context.sideRightOK ? "warning" : "default"}
                     />
-                    {state.context.sideLeftOk || state.context.sideRightOK ? (
+                    {state.context.sideLeftOk && state.context.sideRightOK ? (
                       <>
                         <div
                           className={"disclaimerContent"}

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Styled from "styled-components";
+import i18n from "../../i18n";
 
 import Accordion from "react-bootstrap/Accordion";
 import Card from "react-bootstrap/Card";
@@ -89,19 +90,19 @@ const AccordionFirmware = ({ items }) => {
 
   const textList = [
     {
-      text: "Check left side connectivity"
+      text: i18n.firmwareUpdate.milestones.checkLeftSide
     },
     {
-      text: "Check left side Bootloader status"
+      text: i18n.firmwareUpdate.milestones.checkLeftSideBL
     },
     {
-      text: "Check right side connectivity"
+      text: i18n.firmwareUpdate.milestones.checkRightSide
     },
     {
-      text: "Check right side Bootloader status"
+      text: i18n.firmwareUpdate.milestones.checkRightSideBL
     },
     {
-      text: "Create a backup file"
+      text: i18n.firmwareUpdate.milestones.checkBackup
     }
   ];
 
@@ -128,11 +129,14 @@ const AccordionFirmware = ({ items }) => {
             <div className="stepsCompletedStatus">
               <div className="stepsCompletedHeader">
                 {passedTasks ? <IconCheckmarkSm /> : ""}
-                <Title text={passedTasks ? "You are ready to start" : "Analyzed tasks"} headingLevel={5} />
+                <Title
+                  text={passedTasks ? i18n.firmwareUpdate.milestones.readyToStart : i18n.firmwareUpdate.milestones.analyzedTasks}
+                  headingLevel={5}
+                />
               </div>
               <div className="stepsCompleted">
                 <div className={`stepsCompletedLabel ${counterTasks == items.length ? "passed" : "warning"}`}>
-                  {counterTasks} of {items.length} tasks passed
+                  {counterTasks} {i18n.general.of} {items.length} {i18n.firmwareUpdate.milestones.tasksPassed}
                 </div>{" "}
                 <small>
                   <IconChevronDown />

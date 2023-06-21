@@ -623,6 +623,9 @@ const English = {
       advUsers: "Advanced",
       cstomFW: "Custom Firmware",
       backwds: "Back",
+      bootloaderWarningMessage: `What this means? Nothing special, in the next step the process
+      will continue automatically and you don't need to press any key.`,
+      bootloaderWarningTitle: "Your left side is on Bootloader mode!",
       cancel: "Cancel",
       cancelButton: "Cancel update process",
       letsStart: "Let's start",
@@ -682,7 +685,15 @@ const English = {
       backup: "Next",
       esc: "Press and mantain esc",
       flash: "Uploading ...",
-      restore: "Done, Restoring ..."
+      restore: "Done, Restoring ...",
+      tasksPassed: "tasks passed",
+      readyToStart: "You are ready to start",
+      analyzedTasks: "Analyzed tasks",
+      checkLeftSide: "Check Left side connectivity",
+      checkRightSide: "Check Right side connectivity",
+      checkLeftSideBL: "Check Left side Bootloader status",
+      checkRightSideBL: "Check Right side Bootloader status",
+      checkBackup: "Create a backup file"
     },
     dialog: {
       selectFirmware: "Select a firmware",
@@ -733,6 +744,7 @@ const English = {
   },
   general: {
     actions: "Actions",
+    actionRequired: "Action required",
     add: "Add",
     configure: "Configure",
     clone: "Clone",
@@ -743,7 +755,9 @@ const English = {
     loadFile: "Load file",
     modifier: "Modifier",
     new: "New",
+    noActionRequired: "No action required",
     noname: "No name",
+    of: "of",
     select: "Select",
     record: "Record",
     resume: "Resume",
