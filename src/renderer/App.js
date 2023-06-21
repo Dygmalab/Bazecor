@@ -35,6 +35,7 @@ import Dark from "./theme/DarkTheme";
 
 import SelectKeyboard from "./views/SelectKeyboard";
 import FirmwareUpdate from "./views/FirmwareUpdate";
+import AltFirmwareUpdate from "./views/AltFirmwareUpdate";
 import LayoutEditor from "./views/LayoutEditor";
 import MacroEditor from "./views/MacroEditor";
 import SuperkeysEditor from "./views/SuperkeysEditor";
@@ -60,11 +61,20 @@ class App extends React.Component {
     super(props);
     this.updateStorageSchema();
 
-    let isDark;
     const mode = store.get("settings.darkMode");
-    isDark = mode === "dark" ? true : false;
+    let isDark = mode === "dark" ? true : false;
     if (mode === "system") {
       isDark = ipcRenderer.invoke("get-NativeTheme");
+    }
+
+    // Settings entry creation for the beta toggle, it will have a control in preferences to change the policy
+
+    let allowBeta;
+    if (store.has("settings.allowBeta")) {
+      allowBeta = store.get("settings.allowBeta");
+    } else {
+      allowBeta = true;
+      store.set("settings.allowBeta", true);
     }
 
     this.state = {
@@ -74,7 +84,8 @@ class App extends React.Component {
       pages: {},
       contextBar: false,
       cancelPendingOpen: false,
-      fwUpdate: false
+      fwUpdate: false,
+      allowBeta: allowBeta
     };
     localStorage.clear();
 
@@ -217,9 +228,18 @@ class App extends React.Component {
     }
   };
 
-  toggleFwUpdate = state => {
+  toggleFwUpdate = () => {
     this.setState({
-      fwUpdate: state
+      fwUpdate: !this.state.fwUpdate
+    });
+  };
+
+  updateAllowBeta = event => {
+    let newValue = event.target.checked;
+    // console.log("new allowBeta value: ", newValue);
+    store.set("settings.allowBeta", newValue);
+    this.setState({
+      allowBeta: newValue
     });
   };
 
@@ -303,7 +323,7 @@ class App extends React.Component {
   };
 
   render() {
-    const { connected, pages, contextBar, darkMode, fwUpdate } = this.state;
+    const { connected, pages, contextBar, darkMode, fwUpdate, allowBeta } = this.state;
 
     let device =
       (focus.device && focus.device.info) ||
@@ -322,6 +342,7 @@ class App extends React.Component {
           theme={darkMode}
           flashing={!connected}
           fwUpdate={fwUpdate}
+          allowBeta={allowBeta}
         />
         <div className="main-container">
           <Switch>
@@ -368,7 +389,7 @@ class App extends React.Component {
               inContext={contextBar}
               titleElement={() => document.querySelector("#page-title")}
             />
-            <FirmwareUpdate
+            <AltFirmwareUpdate
               path="/firmware-update"
               device={this.state.device}
               toggleFlashing={this.toggleFlashing}
@@ -376,6 +397,7 @@ class App extends React.Component {
               onDisconnect={this.onKeyboardDisconnect}
               titleElement={() => document.querySelector("#page-title")}
               darkMode={darkMode}
+              allowBeta={allowBeta}
             />
             <Preferences
               connected={connected}
@@ -385,6 +407,8 @@ class App extends React.Component {
               toggleDarkMode={this.toggleDarkMode}
               startContext={this.startContext}
               cancelContext={this.cancelContext}
+              updateAllowBeta={this.updateAllowBeta}
+              allowBeta={allowBeta}
               inContext={contextBar}
             />
           </Switch>

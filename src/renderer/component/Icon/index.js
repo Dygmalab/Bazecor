@@ -28,6 +28,7 @@ import IconColorPalette from "./IconColorPalette";
 import IconColorPicker from "./IconColorPicker";
 import IconConnected from "./IconConnected";
 import IconCheckmarkSm from "./IconCheckmarkSm";
+import IconChevronDown from "./IconChevronDown";
 import IconChip from "./IconChip";
 import IconClone from "./IconClone";
 import IconCloseXs from "./IconCloseXs";
@@ -58,6 +59,7 @@ import IconLEDPreviousEffect from "./IconLEDPreviousEffect";
 import IconLEDPreviousEffectSm from "./IconLEDPreviousEffectSm";
 import IconLEDSwitchLeft from "./IconLEDSwitchLeft";
 import IconLetterColor from "./IconLetterColor";
+import IconLoader from "./IconLoader";
 import IconMemory2Stroke from "./IconMemory2Stroke";
 import IconMediaForward from "./IconMediaForward";
 import IconMediaForwardSm from "./IconMediaForwardSm";
@@ -80,6 +82,7 @@ import IconNoKey from "./IconNoKey";
 import IconNoSignal from "./IconNoSignal";
 import IconNote from "./IconNote";
 import IconNoteSm from "./IconNoteSm";
+import IconNoWifi from "./IconNoWifi";
 import IconOneShot from "./IconOneShot";
 import IconOneShotSm from "./IconOneShotSm";
 import IconPauseXl from "./IconPauseXl";
@@ -112,6 +115,7 @@ import IconStopWatchCrossed from "./IconStopWatchCrossed";
 import IconLayers from "./IconLayers";
 import IconLayersSm from "./IconLayersSm";
 import IconRecord from "./IconRecord";
+import IconRefresh from "./IconRefresh";
 import IconRobot from "./IconRobot";
 import IconRobotSm from "./IconRobotSm";
 import IconShutdown from "./IconShutdown";
@@ -134,6 +138,7 @@ import IconThreeDots from "./IconThreeDots";
 import IconSettings from "./IconSettings";
 import IconUndoRestart from "./IconUndoRestart";
 import IconUpload from "./IconUpload";
+import IconWarning from "./IconWarning";
 import IconWrench from "./IconWrench";
 import IconWrenchSm from "./IconWrenchSm";
 
@@ -152,6 +157,7 @@ export {
   IconColorPicker,
   IconConnected,
   IconCheckmarkSm,
+  IconChevronDown,
   IconChip,
   IconClone,
   IconCloseXs,
@@ -182,6 +188,7 @@ export {
   IconLEDPreviousEffect,
   IconLEDPreviousEffectSm,
   IconLetterColor,
+  IconLoader,
   IconMediaForward,
   IconMediaForwardSm,
   IconMediaPlayPause,
@@ -204,6 +211,7 @@ export {
   IconNoSignal,
   IconNote,
   IconNoteSm,
+  IconNoWifi,
   IconOneShot,
   IconOneShotSm,
   IconPauseXl,
@@ -236,6 +244,7 @@ export {
   IconLayers,
   IconLayersSm,
   IconRecord,
+  IconRefresh,
   IconRobot,
   IconRobotSm,
   IconShutdown,
@@ -258,6 +267,7 @@ export {
   IconSettings,
   IconUndoRestart,
   IconUpload,
+  IconWarning,
   IconWrench,
   IconWrenchSm
 };

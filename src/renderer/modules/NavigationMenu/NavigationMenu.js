@@ -16,19 +16,22 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React, { Component } from "react";
+import React, { Component, version } from "react";
 import { Link, withRouter } from "react-router-dom";
 import PropTypes from "prop-types";
+import SemVer from "semver";
+import { Octokit } from "octokit";
+import Focus from "../../../api/focus";
+import i18n from "../../i18n";
 
+// Compoments
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import NavbarBrand from "react-bootstrap/NavbarBrand";
 import Tooltip from "react-bootstrap/Tooltip";
 import Styled from "styled-components";
 
-import i18n from "../../i18n";
-import Focus from "../../../api/focus";
-
+// Custom components
 import { NavigationButton } from "../../component/Button";
 import { IconKeyboardSelector } from "../../component/Icon";
 import { IconKeyboard2Stroke } from "../../component/Icon";
@@ -37,8 +40,12 @@ import { IconRobot2Stroke } from "../../component/Icon";
 import { IconThunder2Stroke } from "../../component/Icon";
 import { IconPreferences2Stroke } from "../../component/Icon";
 
+// Assets
 import DygmaLogo from "../../../../static/logo.svg";
-import { fwVersion } from "../../../../package.json";
+
+// Store loading
+const Store = require("electron-store");
+const store = new Store();
 
 const drawerWidth = 64;
 
@@ -112,94 +119,89 @@ class NavigationMenu extends Component {
 
     this.state = {
       versions: null,
-      flashing: props.flashing
+      flashing: props.flashing,
+      isUpdated: true,
+      isBeta: false
     };
   }
 
-  componentDidMount() {
-    const focus = new Focus();
-    let versions;
-
-    focus.command("version").then(v => {
-      if (!v) return;
-      let parts = v.split(" ");
-      versions = {
-        bazecor: parts[0],
-        kaleidoscope: parts[1],
-        firmware: parts[2]
-      };
-      this.setState({ versions: versions, flashing: this.props.flashing, virtual: focus.file });
-    });
+  async componentDidMount() {
+    await this.contextUpdater();
   }
 
-  componentDidUpdate(previousProps, previousState) {
+  async componentDidUpdate(previousProps, previousState) {
     if (this.props.flashing != previousProps.flashing) {
       this.setState({ flashing: this.props.flashing });
     }
-    if (this.state.versions != null && this.state.versions.bazecor.length > 0 && this.state.flashing == previousState.flashing) {
+    if (
+      this.props.allowBeta === previousProps.allowBeta &&
+      this.state.versions !== null &&
+      this.state.versions.bazecor.length > 0 &&
+      this.state.flashing === previousState.flashing
+    ) {
       return;
     }
+    await this.contextUpdater();
+  }
+
+  contextUpdater = async () => {
     const focus = new Focus();
-    let versions;
-
-    focus.command("version").then(v => {
-      if (!v) return;
-      let parts = v.split(" ");
-      versions = {
-        bazecor: parts[0],
-        kaleidoscope: parts[1],
-        firmware: parts[2]
-      };
-      this.setState({ versions: versions, flashing: this.props.flashing, virtual: focus.file });
+    let parts = await focus.command("version");
+    parts = parts.split(" ");
+    let versions = {
+      bazecor: parts[0],
+      kaleidoscope: parts[1],
+      firmware: parts[2]
+    };
+    let fwList = await this.getGitHubFW(focus.device.info.product);
+    let isBeta = versions.bazecor.includes("beta");
+    let cleanedVersion = versions.bazecor;
+    if (isBeta) cleanedVersion = versions.bazecor.replace("beta", "");
+    let isUpdated = SemVer.compare(fwList[0].version, cleanedVersion);
+    isBeta = isBeta || focus.device.info.product !== "Raise";
+    this.setState({
+      versions: versions,
+      flashing: this.props.flashing,
+      virtual: focus.file,
+      fwList: fwList,
+      isUpdated: isUpdated,
+      isBeta: isBeta
     });
-  }
+  };
 
-  cleanFWVer(version) {
-    let ver = version != null ? (version[0] != "v" ? version : version.substring(1)) : null;
-    ver = ver.split("beta");
-    let aux = ver[0].split(".").map(x => parseInt(x));
-    if (ver[1] != "") aux.push(parseInt(ver[1]));
-    else aux.push(0);
-    return aux;
-  }
-
-  compareFWVer(oldVer, newVer) {
-    // console.log("comparing versions ", oldVer, newVer);
-    if (oldVer.length != newVer.length) {
-      if (oldVer.length > newVer.length) {
-        return -1;
-      } else {
-        return 1;
+  getGitHubFW = async product => {
+    let Releases = [];
+    const octokit = new Octokit();
+    let data = await octokit.request("GET /repos/{owner}/{repo}/releases", {
+      owner: "Dygmalab",
+      repo: "Firmware-releases",
+      headers: {
+        "X-GitHub-Api-Version": "2022-11-28"
       }
-    }
-    for (var i = 0; i < oldVer.length; ++i) {
-      if (oldVer[i] == newVer[i]) {
-        continue;
-      } else if (oldVer[i] > newVer[i]) {
-        return -1;
-      } else {
-        return 1;
-      }
-    }
-    return 0;
-  }
+    });
+    data.data.forEach(release => {
+      const releaseData = release.name.split(" ");
+      const newRelease = { name: releaseData[0], version: releaseData[1] };
+      if (!releaseData[1].includes("beta") || this.props.allowBeta) Releases.push(newRelease);
+    });
+    let finalReleases = Releases.filter(release => release.name === product);
+    finalReleases.sort((a, b) => {
+      return SemVer.lt(SemVer.clean(a.version), SemVer.clean(b.version)) ? 1 : -1;
+    });
+    // console.log("data retrieved: ", finalReleases);
+    return finalReleases;
+  };
 
   renderTooltip(text) {
     return <Tooltip id="button-tooltip">{text}</Tooltip>;
   }
 
   render() {
-    const { connected, pages, history, themeDark, fwUpdate } = this.props;
+    const { connected, pages, history, fwUpdate } = this.props;
+    const { isUpdated, isBeta, versions, fwList } = this.state;
     const currentPage = history.location.pathname;
 
-    // const homePage = connected
-    //   ? pages.keymap
-    //     ? "/editor"
-    //     : "/welcome"
-    //   : "/keyboard-select";
-    let fwVer = this.state.versions != null ? this.cleanFWVer(this.state.versions.bazecor) : [];
-    let newVer = this.cleanFWVer(fwVersion);
-    let showNotif = this.compareFWVer(fwVer, newVer);
+    // console.log("new checker for navigation", fwList, versions, isUpdated, isBeta);
 
     return (
       <Styles>
@@ -239,15 +241,15 @@ class NavigationMenu extends Component {
                           disabled={fwUpdate}
                         />
                       </Link>
-                      <Link to="/superkeys" className={`list-link ${fwUpdate ? "disabled" : ""}`}>
+                      <Link to="/superkeys" className={`list-link ${fwUpdate || !isBeta ? "disabled" : ""}`}>
                         <NavigationButton
                           selected={currentPage === "/superkeys"}
                           drawerWidth={drawerWidth}
                           buttonText={i18n.app.menu.superkeys}
                           icoSVG={<IconThunder2Stroke />}
-                          showNotif={true}
+                          showNotif={isBeta}
                           notifText="BETA"
-                          disabled={fwUpdate}
+                          disabled={fwUpdate || !isBeta}
                         />
                       </Link>
                     </React.Fragment>
@@ -256,7 +258,7 @@ class NavigationMenu extends Component {
                     <NavigationButton
                       selected={currentPage === "/firmware-update"}
                       drawerWidth={drawerWidth}
-                      showNotif={showNotif != 0 ? (showNotif > 0 ? true : false) : false}
+                      showNotif={isUpdated != 0 ? (isUpdated > 0 ? true : false) : false}
                       buttonText={i18n.app.menu.firmwareUpdate}
                       icoSVG={<IconMemory2Stroke />}
                       disabled={fwUpdate || this.state.virtual}

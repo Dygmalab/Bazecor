@@ -105,6 +105,12 @@ const GlobalStyles = createGlobalStyle`
   }
 .loading {
   color: ${({ theme }) => theme.colors.purple300};
+  &.text-center {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    text-align: center;
+  }
 }
   .longtooltip > .tooltip-inner {
     max-width: 100%;
@@ -324,6 +330,12 @@ svg text{
   color: #fff;
   background: ${({ theme }) => theme.styles.button.primary.backgroundColor};
   position: relative;
+  background-size: 300%;
+  transition: background-position .3s ease-in-out;
+  transform-style: preserve-3d;
+  &:hover {
+    background-position: right;
+  }
 }
 .button.primary[disabled] {
   background: ${({ theme }) => theme.styles.button.primary.disabledBackgroundColor};
@@ -387,7 +399,7 @@ svg text{
   height: 32px;
   bottom: 2px;
   left: 50%;
-  transform: translate3d(-50%,0, 0);
+  transform: translate3d(-50%,0, -1px);
   transition: all 200ms ease-in-out;
   opacity: 0.5;
 }
@@ -402,6 +414,7 @@ svg text{
   filter: blur(15px);
   width: 100px;
 }
+
 .btn-primary.button-config,
 .button-config {
   font-size: 13px;

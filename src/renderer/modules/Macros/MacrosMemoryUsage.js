@@ -79,15 +79,16 @@ h4 {
 }
 `;
 
-const MacrosMemoryUsage = ({ mem }) => {
+const MacrosMemoryUsage = ({ mem, tMem }) => {
   const [memoryUsage, setMemoryUsage] = React.useState(mem);
   const [isLoading, setIsLoading] = React.useState(true);
 
   React.useEffect(() => {
+    if (mem < 1 || tMem < 1) return;
     //setMemoryUsage(macros.map(m => m.actions).flat().length);
-    setMemoryUsage(((mem / 2048) * 100).toFixed(1));
+    setMemoryUsage(((mem / tMem) * 100).toFixed(1));
     setIsLoading(false);
-    if (mem > 1900 && mem < 2000) {
+    if (mem > tMem * 0.95 && mem < tMem - 20) {
       toast.warn(
         <ToastMessage
           title={i18n.editor.macros.memoryUsage.alertTitle}
@@ -97,7 +98,7 @@ const MacrosMemoryUsage = ({ mem }) => {
         { icon: "" }
       );
     }
-    if (mem > 1999) {
+    if (mem > tMem - 20) {
       toast.error(
         <ToastMessage
           title={i18n.editor.macros.memoryUsage.errorTitle}
@@ -116,7 +117,7 @@ const MacrosMemoryUsage = ({ mem }) => {
         }
       );
     }
-  }, [mem]);
+  }, [mem, tMem]);
   if (isLoading) return null;
   return (
     <Styles
@@ -134,7 +135,8 @@ const MacrosMemoryUsage = ({ mem }) => {
 };
 
 MacrosMemoryUsage.propTypes = {
-  mem: PropTypes.number
+  mem: PropTypes.number,
+  tMem: PropTypes.number
 };
 
 export default MacrosMemoryUsage;

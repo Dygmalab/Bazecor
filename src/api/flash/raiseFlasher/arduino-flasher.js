@@ -69,7 +69,6 @@ function write_cb(buffer, cb) {
   //execute!
   async.series(send, (err, result) => {
     cb(err);
-    console.log(result);
   });
 }
 
@@ -171,7 +170,7 @@ function ihex_decode(line) {
  * Object arduino with flash method.
  */
 export var arduino = {
-  flash: (file, stateUpdate, finished) => {
+  flash: (lines, stateUpdate, finished) => {
     var func_array = [];
 
     //CLEAR line
@@ -190,11 +189,11 @@ export var arduino = {
       read_cb(callback);
     });
 
-    let fileData = fs.readFileSync(file, { encoding: "utf8" });
-    fileData = fileData.replace(/(?:\r\n|\r|\n)/g, "");
+    // let fileData = fs.readFileSync(file, { encoding: "utf8" });
+    // fileData = fileData.replace(/(?:\r\n|\r|\n)/g, "");
 
-    var lines = fileData.split(":");
-    lines.splice(0, 1);
+    // var lines = fileData.split(":");
+    // lines.splice(0, 1);
 
     var dataObjects = [];
     var total = 0;
@@ -219,8 +218,8 @@ export var arduino = {
       return;
     }
 
-    i = 0;
-
+    var state = 1,
+      stateT = 20;
     while (total > 0) {
       var bufferSize = total < PACKET_SIZE ? total : PACKET_SIZE;
 
@@ -263,17 +262,17 @@ export var arduino = {
       (function (localAddress, localBufferSize, localBuffer) {
         //tell the arduino we are writing at memory 20005000, for N bytes.
         func_array.push(function (callback) {
-          write_cb(str2ab("S20005000," + num2hexstr(localBufferSize, 8) + "#"), callback, stateUpdate, 30 + i + i);
+          write_cb(str2ab("S20005000," + num2hexstr(localBufferSize, 8) + "#"), callback);
         });
 
         //write our data.
         func_array.push(function (callback) {
-          write_cb(localBuffer, callback, stateUpdate, 30 + i + i);
+          write_cb(localBuffer, callback);
         });
 
         //set our read pointer
         func_array.push(function (callback) {
-          write_cb(str2ab("Y20005000,0#"), callback, stateUpdate, 30 + i + i);
+          write_cb(str2ab("Y20005000,0#"), callback);
         });
 
         //wait for ACK
@@ -283,23 +282,17 @@ export var arduino = {
 
         //copy N bytes to memory location Y.
         func_array.push(function (callback) {
-          stateUpdate(3, 30 + i + i);
-          write_cb(
-            str2ab("Y" + num2hexstr(localAddress, 8) + "," + num2hexstr(localBufferSize, 8) + "#"),
-            callback,
-            stateUpdate,
-            30 + i + i
-          );
+          write_cb(str2ab("Y" + num2hexstr(localAddress, 8) + "," + num2hexstr(localBufferSize, 8) + "#"), callback);
         });
 
         //wait for ACK
         func_array.push(function (callback) {
+          stateUpdate("neuron", (state / stateT) * 100);
+          state++;
           read_cb(callback);
         });
-      })(address, bufferSize, buffer);
-
+      })(address, bufferSize, buffer, state);
       total -= bufferSize;
-      i++;
       address += bufferSize;
     }
     //CLEANUP

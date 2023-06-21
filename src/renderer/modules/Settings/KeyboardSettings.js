@@ -30,7 +30,7 @@ import Tooltip from "react-bootstrap/Tooltip";
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import Spinner from "react-bootstrap/Spinner";
 
-import Slider from "react-rangeslider";
+import Slider from "@appigram/react-rangeslider";
 
 import Focus from "../../../api/focus";
 import Backup from "../../../api/backup";

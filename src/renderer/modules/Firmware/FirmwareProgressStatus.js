@@ -15,14 +15,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import Styled from "styled-components";
 import i18n from "../../i18n";
 import ProgressBar from "react-bootstrap/ProgressBar";
 
 import Title from "../../component/Title";
-import { FirmwareImageHelp } from "../FirmwareImageHelp";
+import { StepsProgressBar } from "../../component/StepsBar";
+import { FirmwareImageHelp } from "../Firmware";
+import { CircleLoader } from "../../component/Loader";
 
 const Style = Styled.div`     
 width: 100%;
@@ -96,44 +98,37 @@ width: 100%;
   background-color: ${({ theme }) => theme.styles.firmwareUpdateProcess.processFooterBackground}; 
   border-radius: 0px 0px 16px 16px;
   text-align: center;
-  h3 {
-    color: ${({ theme }) => theme.colors.brandSuccess}; 
-  }
   h6 {
     font-weight: 395;
     letter-spacing:0;
     font-size: 15px;
   }
 }
-.blob {
-  background: #33d9b2;
-  box-shadow: 0 0 0 0 #33d9b2;
-  border-radius: 50%;
-  margin: 10px;
-  height: 8px;
-  width: 8px;
-  transform: scale(1);
-
-  //animation: pulse-green 2s infinite;
-  transform: scale(1);
-  box-shadow: 0 0 0 32px rgba(51, 217, 178, 0.15);
+.partialLoader {
+  display: grid;
+  padding: 0 39px;
+  z-index: 2;
+  position: relative;
+  > div {
+    height: 0;
+    position: relative;
+    width: 24px;
+  }
+  .circle-loader {
+    position: absolute;
+    display: block;
+    transform: translate(-50%, -50%);
+    left: 0.5px;
+    top: -4px;
+    opacity: 0;
+    transition: opacity 250ms ease-in-out;
+    &.active {
+      opacity: 0.4;
+    }
+  }
 }
-
-@keyframes pulse-green {
-  0% {
-    transform: scale(0.95);
-    box-shadow: 0 0 0 0 rgba(51, 217, 178, 0.7);
-  }
-
-  70% {
-    transform: scale(1);
-    box-shadow: 0 0 0 42px rgba(51, 217, 178, 0);
-  }
-
-  100% {
-    transform: scale(0.95);
-    box-shadow: 0 0 0 0 rgba(51, 217, 178, 0);
-  }
+.progress {
+  margin-left: 32px;
 }
 `;
 
@@ -146,56 +141,107 @@ width: 100%;
  * @returns {<FirmwareProgressStatus>} FirmwareProgressStatus component.
  */
 
-const FirmwareProgressStatus = ({ countdown, flashProgress }) => {
+const FirmwareProgressStatus = ({
+  countdown,
+  flashProgress,
+  leftProgress,
+  retriesLeft,
+  rightProgress,
+  retriesRight,
+  resetProgress,
+  neuronProgress,
+  retriesNeuron,
+  retriesDefyWired,
+  restoreProgress,
+  deviceProduct,
+  keyboardType,
+  steps
+}) => {
+  let [stepsPosition, setStepsPosition] = useState(0);
+  useEffect(() => {
+    setStepsPosition(steps.findIndex(x => x.step === countdown));
+  }, [countdown]);
   return (
     <Style>
       <div className="mainProcessWrapper">
-        <FirmwareImageHelp countdown={countdown} />
+        <FirmwareImageHelp
+          countdown={stepsPosition}
+          steps={steps}
+          error={stepsPosition == steps.length - 1 ? true : false}
+          deviceProduct={deviceProduct}
+          keyboardType={keyboardType}
+          retriesLeft={retriesLeft}
+          retriesRight={retriesRight}
+          retriesNeuron={retriesNeuron}
+          retriesDefyWired={retriesDefyWired}
+        />
         <div className="process-row">
+          <StepsProgressBar steps={steps} stepActive={stepsPosition} />
           <ProgressBar>
             <ProgressBar striped animated now={flashProgress} />
           </ProgressBar>
+          <div
+            className={`partialLoader partialLoader--${deviceProduct}`}
+            style={{ gridTemplateColumns: `repeat(${steps.length - 3}, 1fr)` }}
+          >
+            {deviceProduct == "Defy" ? (
+              <>
+                <CircleLoader radius={13} percentage={rightProgress} active={stepsPosition == 1 ? true : false} />
+                <CircleLoader radius={13} percentage={leftProgress} active={stepsPosition == 2 ? true : false} />
+              </>
+            ) : (
+              ""
+            )}
+            <>
+              <CircleLoader
+                radius={13}
+                percentage={resetProgress}
+                active={
+                  (deviceProduct == "Raise" && stepsPosition == 1) || (deviceProduct == "Defy" && stepsPosition == 3)
+                    ? true
+                    : false
+                }
+              />
+              <CircleLoader
+                radius={13}
+                percentage={neuronProgress}
+                active={
+                  (deviceProduct == "Raise" && stepsPosition == 2) || (deviceProduct == "Defy" && stepsPosition == 4)
+                    ? true
+                    : false
+                }
+              />
+              <CircleLoader
+                radius={13}
+                percentage={restoreProgress}
+                active={
+                  (deviceProduct == "Raise" && stepsPosition == 3) || (deviceProduct == "Defy" && stepsPosition == 5)
+                    ? true
+                    : false
+                }
+              />
+            </>
+          </div>
         </div>
         <div className="process-row process-footer">
-          {countdown === 1 ? (
-            <Title text={i18n.firmwareUpdate.texts.flashCardTitle1} headingLevel={3} />
-          ) : countdown === 2 ? (
-            <Title text={i18n.firmwareUpdate.texts.progressCardStatus1} headingLevel={3} />
-          ) : countdown === 3 ? (
-            <Title text={i18n.firmwareUpdate.texts.progressCardStatus3} headingLevel={3} />
-          ) : countdown === 4 ? (
-            <Title text={i18n.firmwareUpdate.texts.firmwareUpdatedTitle} headingLevel={3} />
-          ) : (
-            ""
-          )}
-
-          {countdown === 1 ? (
-            <Title text={i18n.firmwareUpdate.texts.flashCardTitle2} headingLevel={6} />
-          ) : countdown === 4 ? (
-            <Title text={i18n.firmwareUpdate.texts.firmwareUpdatedMessage} headingLevel={6} />
+          {stepsPosition == 0 ? (
+            <Title text={i18n.firmwareUpdate.texts.flashCardTitle1} headingLevel={3} color="success" />
           ) : (
             <Title
-              text={
-                flashProgress <= 15
-                  ? i18n.firmwareUpdate.texts.progressCardBar1
-                  : flashProgress <= 29
-                  ? i18n.firmwareUpdate.texts.progressCardBar2
-                  : flashProgress <= 69
-                  ? i18n.firmwareUpdate.texts.progressCardBar3
-                  : i18n.firmwareUpdate.texts.progressCardBar4
-              }
-              headingLevel={6}
+              text={steps[stepsPosition].title}
+              headingLevel={3}
+              color={stepsPosition == steps.length - 1 ? "warning" : "success"}
             />
+          )}
+          {stepsPosition == 0 ? (
+            <Title text={i18n.firmwareUpdate.texts.flashCardTitle2} headingLevel={6} />
+          ) : (
+            <Title text={steps[stepsPosition].description} headingLevel={6} />
           )}
         </div>
       </div>
     </Style>
   );
-};
-
-FirmwareProgressStatus.propTypes = {
-  countdown: PropTypes.number.isRequired,
-  flashProgress: PropTypes.number
 };
 
 export default FirmwareProgressStatus;

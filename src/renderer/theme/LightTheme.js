@@ -5,6 +5,8 @@ import CheckedIconLight from "../../../static/dark/icon-check-animated.gif";
 import closeButton from "../../../static/light/X.svg";
 import IconPlusXS from "../../../static/light/plusIcon.svg";
 import RaiseFirmwareUpgrade from "../../../static/light/raiseFirmwareupgrade.svg";
+import DefyFirmwareUpgrade from "../../../static/light/defyFirmwareupgrade.svg";
+import neuronDefyWirelessImage from "../../../static/base/neuron-defy--white.png";
 import mouseWheelBackground from "../../../static/light/mouseWheel.png";
 import oldToNew from "../../../static/light/oldValueToNewValue.svg";
 
@@ -131,6 +133,11 @@ const Light = {
   styles: {
     accordion: {
       background: settingColorOpacity(Tokens.colors.gray25, 0.8)
+    },
+    accordionFirmware: {
+      background: "white",
+      headerBackground: "transparent",
+      colorTitle: Tokens.colors.gray500
     },
     backupConfiguratorFolder: {
       headingColor: Tokens.colors.gray500,
@@ -283,6 +290,9 @@ const Light = {
       subTitleColor: Tokens.colors.pink200,
       groupButtonsBackground: "rgba(255,255,255,1)"
     },
+    circleLoader: {
+      strokeColor: Tokens.colors.purple300
+    },
     customCheckbox: {
       background: Tokens.colors.gray100,
       borderColor: Tokens.colors.gray100,
@@ -380,9 +390,13 @@ const Light = {
       labelBorderSm: "none",
       bgOldToNew: oldToNew
     },
+    firmwareErrorPanel: {
+      textColor: Tokens.colors.gray400
+    },
     firmwareUpdatePanel: {
       backgroundContent: Tokens.colors.gray25,
       backgroundSidebar: "rgba(255,255,255,0.15)",
+      neuronDefyWirelessImage: neuronDefyWirelessImage,
       neuronStatusLineColor: Tokens.colors.gray100,
       neuronStatusLineWarning: Tokens.colors.brandWarning,
       neuronStatusLineSuccess: Tokens.colors.brandSuccess,
@@ -404,6 +418,7 @@ const Light = {
     },
     firmwareUpdateProcess: {
       raiseSVG: RaiseFirmwareUpgrade,
+      defySVG: DefyFirmwareUpgrade,
       processFooterBackground: settingColorOpacity(Tokens.colors.gray25, 0.8),
       processImageBackground: settingColorOpacity(Tokens.colors.gray25, 0.5),
       processNeuronBackground: settingColorOpacity(Tokens.colors.gray25, 0.8),
@@ -572,6 +587,9 @@ const Light = {
       neuronLoader: NeuronLoaderLight,
       checkedIcon: CheckedIconLight
     },
+    neuronStatusDefy: {
+      statusWaiting: Tokens.colors.gray100
+    },
     neuronTitle: {
       heading3Color: Tokens.colors.brandSecondary,
       heading4Color: Tokens.colors.gray200
@@ -581,9 +599,9 @@ const Light = {
       titleColor: Tokens.colors.purple200
     },
     progress: {
-      progressBackground: Tokens.colors.gray50,
-      progressBarBackground: Tokens.colors.brandSuccess,
-      boxShadow: "0px 0px 4px rgba(50, 238, 238, 0.5)"
+      progressBackground: Tokens.colors.gray100,
+      progressBarBackground: Tokens.colors.gray100,
+      boxShadow: "0px 0px 4px rgba(50, 238, 238, 0)"
     },
     slider: {
       trackColor: Tokens.colors.gray50,
@@ -630,6 +648,14 @@ const Light = {
       bulletBorderActive: Tokens.colors.purple200,
       bulletBoxShadow: "0px 4px 12px rgba(107, 119, 148, 0.4)",
       bulletBoxShadowActive: "0px 4px 12px #6C5CE7"
+    },
+    stepsProgressBar: {
+      stepBarBackground: Tokens.colors.gray100,
+      backgroundActive: Tokens.colors.purple200,
+      bulletBackground: Tokens.colors.gray100,
+      bulletBackgroundActive: Tokens.colors.purple300,
+      bulletBorderActive: Tokens.colors.purple200,
+      stepBarBackgroundActive: Tokens.colors.purple200
     },
     superkeyAction: {
       color: Tokens.colors.gray400,

@@ -32,7 +32,7 @@ class Header extends Component {
   }
 
   render() {
-    const { connected, pages, theme, flashing, fwUpdate } = this.props;
+    const { connected, pages, theme, flashing, fwUpdate, allowBeta } = this.props;
     const { NMenu } = this.state;
 
     return (
@@ -43,6 +43,7 @@ class Header extends Component {
         closeMenu={this.closeNavigationMenu}
         flashing={flashing}
         fwUpdate={fwUpdate}
+        allowBeta={allowBeta}
       />
     );
   }

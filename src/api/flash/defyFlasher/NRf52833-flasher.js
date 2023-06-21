@@ -15,9 +15,7 @@
  */
 
 import async from "async";
-import fs from "fs";
 import Focus from "../../focus";
-import { crc32 } from "easy-crc";
 
 var MAX_MS = 2000;
 
@@ -230,8 +228,6 @@ var NRf52833 = {
     var hexCount = 0;
     var address = dataObjects[0].address;
 
-    i = 0;
-
     //ERASE device
     func_array.push(function (callback) {
       write_cb(str2ab("E" + num2hexstr(dataObjects[0].address, 8) + "#"), callback);
@@ -240,6 +236,8 @@ var NRf52833 = {
       read_cb(callback);
     });
 
+    var state = 1,
+      stateT = 50;
     while (total > 0) {
       var bufferSize = total < PACKET_SIZE ? total : PACKET_SIZE;
 
@@ -268,33 +266,27 @@ var NRf52833 = {
       (function (localAddress, localBufferSize, localBuffer) {
         //tell the NRf52833 the size of data being sent.
         func_array.push(function (callback) {
-          write_cb(str2ab("U" + num2hexstr(localBufferSize, 8) + "#"), callback, stateUpdate, 30 + i + i);
+          write_cb(str2ab("U" + num2hexstr(localBufferSize, 8) + "#"), callback);
         });
 
         //write our data.
         func_array.push(function (callback) {
-          write_cb(localBuffer, callback, stateUpdate, 30 + i + i);
+          write_cb(localBuffer, callback);
         });
 
         //copy N bytes to memory location Y -> W function.
         func_array.push(function (callback) {
-          stateUpdate(3, 30 + i + i);
-          write_cb(
-            str2ab("W" + num2hexstr(localAddress, 8) + "," + num2hexstr(localBufferSize, 8) + "#"),
-            callback,
-            stateUpdate,
-            30 + i + i
-          );
+          write_cb(str2ab("W" + num2hexstr(localAddress, 8) + "," + num2hexstr(localBufferSize, 8) + "#"), callback);
         });
 
         //wait for ACK
         func_array.push(function (callback) {
+          stateUpdate("neuron", (state / stateT) * 100);
+          state++;
           read_cb(callback);
         });
-      })(address, bufferSize, buffer);
-
+      })(address, bufferSize, buffer, state);
       total -= bufferSize;
-      i++;
       address += bufferSize;
     }
     // TODO: CRC CHECK

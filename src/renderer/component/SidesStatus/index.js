@@ -1,5 +1,5 @@
 /* Bazecor
- * Copyright (C) 2022  Dygmalab, Inc.
+ * Copyright (C) 2023  Dygmalab, Inc.
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -14,6 +14,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import FirmwareAdvancedOptions from "./FirmwareAdvancedOptions";
+import DefyLeftSide from "./DefyLeftSide";
+import DefyRightSide from "./DefyRightSide";
+import DefyNeuronStatus from "./DefyNeuronStatus";
 
-export { FirmwareAdvancedOptions as default };
+export { DefyLeftSide, DefyRightSide, DefyNeuronStatus };

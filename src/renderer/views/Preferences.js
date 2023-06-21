@@ -500,11 +500,12 @@ class Preferences extends React.Component {
 
   render() {
     const { neurons, selectedNeuron, darkMode, neuronID, devTools, verboseFocus, kbData, modified } = this.state;
-    const { inContext, connected } = this.props;
+    const { inContext, connected, allowBeta, updateAllowBeta } = this.props;
     const { defaultLayer } = this.kbData;
     const devToolsSwitch = <Form.Check type="switch" checked={devTools} onChange={this.toggleDevTools} />;
     const verboseSwitch = <Form.Check type="switch" checked={verboseFocus} onChange={this.toggleVerboseFocus} />;
     const onlyCustomSwitch = <Form.Check type="switch" checked={kbData.keymap.onlyCustom} onChange={this.toggleOnlyCustom} />;
+    const allowBetas = <Form.Check value={allowBeta} type="switch" checked={allowBeta} onChange={updateAllowBeta} />;
     const pairingButton = <RegularButton buttonText={"Re-Pair RF"} style="short warning sm" onClick={this.sendRePairCommand} />;
     // console.log("CHECKING STATUS MOD", modified);
     // console.log("CHECKING STATUS CTX", inContext);
@@ -548,6 +549,7 @@ class Preferences extends React.Component {
                     devToolsSwitch={devToolsSwitch}
                     verboseSwitch={verboseSwitch}
                     onlyCustomSwitch={onlyCustomSwitch}
+                    allowBetas={allowBetas}
                     pairingButton={this.state.wireless ? pairingButton : <></>}
                     connected={connected}
                   />

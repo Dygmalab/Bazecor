@@ -99,9 +99,4 @@ const FirmwareAdvancedOptions = ({ firmwareFilename, selectFirmware, selectExper
   );
 };
 
-FirmwareAdvancedOptions.propTypes = {
-  firmwareFilename: PropTypes.string,
-  selectFirmware: PropTypes.func.isRequired
-};
-
 export default FirmwareAdvancedOptions;

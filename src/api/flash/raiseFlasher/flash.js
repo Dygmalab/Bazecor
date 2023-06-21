@@ -33,7 +33,7 @@ const { ipcRenderer } = require("electron");
  */
 export class FlashRaise {
   constructor(device) {
-    this.device = device.device;
+    this.device = device;
     this.currentPort = null;
     this.backupFileName = null;
     this.backupFileData = {
@@ -67,6 +67,7 @@ export class FlashRaise {
   async foundDevices(hardware, message, bootloader) {
     let focus = new Focus();
     let isFindDevice = false;
+    console.log("looking at device", this.device);
     await focus.find(...hardware).then(devices => {
       for (const device of devices) {
         console.log(
@@ -138,19 +139,16 @@ export class FlashRaise {
       for (let command of commands) {
         // Ignore the command if it's not supported
         if (!focus.isCommandSupported(command)) {
-          this.backupFileData.log.push("Unsupported command " + command);
           continue;
         }
 
         let res = await focus.command(command);
         this.backupFileData.backup[command] = typeof res === "string" ? res.trim() : res;
         if (res === undefined || res === "") {
-          this.backupFileData.log.push(`Get backup settings ${command}: Error: ${errorMessage}`);
           errorFlag = true;
         }
       }
       if (errorFlag) throw new Error(errorMessage);
-      this.backupFileData.log.push("Settings backed up OK");
     } catch (e) {
       this.saveBackupFile();
       throw e;
@@ -162,13 +160,12 @@ export class FlashRaise {
    * windows: C:\Users\<Your_User_Namer>\AppData\Local\Programs\bazecor,
    * linux: in directory, where the app is located.
    */
-  saveBackupFile() {
-    const userDataPath = ipcRenderer.invoke("get-userPath", "userData");
+  async saveBackupFile() {
+    const userDataPath = await ipcRenderer.invoke("get-userPath", "userData");
     const route = path.join(userDataPath, this.backupFileName + ".json");
     console.log("saving file to: " + route);
     fs.writeFile(route, JSON.stringify(this.backupFileData), err => {
       if (err) throw err;
-      this.backupFileData.log.push("Backup file is created successfully");
     });
   }
 
@@ -207,7 +204,8 @@ export class FlashRaise {
    * @param {object} port - serial port object for the "path".
    * @returns {promise}
    */
-  async resetKeyboard(port, backup, stateUpdate) {
+  async resetKeyboard(port, stateUpdate) {
+    stateUpdate("reset", 5);
     console.log("reset start", port);
     const errorMessage =
       "The firmware update couldn't start because the Raise Bootloader wasn't found. Please check our Help Center for more details or schedule a video call with us.";
@@ -216,39 +214,34 @@ export class FlashRaise {
       waitingClose: 2000, // Time to wait for boot loader
       bootLoaderUp: 1000 // Time to wait for the boot loader to come up
     };
-    console.log("loaded backup: ", backup);
-    this.backup = backup;
     return new Promise(async (resolve, reject) => {
+      stateUpdate("reset", 10);
       await this.updatePort(port, 1200);
       console.log("resetting neuron");
-      this.backupFileData.log.push("Resetting neuron");
       await this.setDTR(port, true);
       await this.delay(timeouts.dtrToggle);
       await this.setDTR(port, false);
+      stateUpdate("reset", 20);
       console.log("waiting for bootloader");
-      this.backupFileData.log.push("Waiting for bootloader");
-      stateUpdate(2, 20);
       try {
         await this.delay(timeouts.waitingClose);
-        let bootCount = 10;
+        let bootCount = 6;
         while (bootCount > 0) {
+          stateUpdate("reset", 20 + (10 - bootCount) * 8);
           if (await this.foundDevices(Hardware.bootloader, "Bootloader detected", true)) {
             resolve("Detected Bootloader mode");
             bootCount = true;
-            stateUpdate(3, 30);
+            stateUpdate("reset", 100);
             break;
           }
           await this.delay(timeouts.bootLoaderUp);
           bootCount--;
         }
         if (bootCount != true) {
-          stateUpdate(4, 100);
-          this.backupFileData.log.push("Bootloader wasn't detected");
+          stateUpdate("reset", 100);
           reject(errorMessage);
         }
       } catch (e) {
-        this.backupFileData.log.push(`Reset keyboard: Error: ${e.message}`);
-        // this.saveBackupFile();
         reject(e);
       }
     });
@@ -263,25 +256,22 @@ export class FlashRaise {
   async updateFirmware(filename, stateUpdate) {
     let focus = new Focus();
     console.log("Begin update firmware with arduino-flasher");
-    console.log(JSON.stringify(focus));
-    // this.backupFileData.log.push("Begin update firmware with arduino-flasher");
-    this.backupFileData.firmwareFile = filename;
+    // console.log(JSON.stringify(focus));
     return new Promise(async (resolve, reject) => {
       try {
         if (focus.closed) await focus.open(this.currentPort.path, this.currentPort.device, null);
+        stateUpdate("neuron", 0);
         await arduino.flash(filename, stateUpdate, async (err, result) => {
           if (err) throw new Error(`Flash error ${result}`);
           else {
-            stateUpdate(3, 70);
+            stateUpdate("neuron", 100);
             console.log("End update firmware with arduino-flasher");
-            // this.backupFileData.log.push("End update firmware with arduino-flasher");
             await this.delay(1500);
             await this.detectKeyboard();
             resolve();
           }
         });
       } catch (e) {
-        this.backupFileData.log.push(e);
         reject(e);
       }
     });
@@ -338,11 +328,11 @@ export class FlashRaise {
   /**
    * Restores settings to keyboard after bootloader flashing
    */
-  async restoreSettings() {
+  async restoreSettings(backup, stateUpdate) {
+    stateUpdate("restore", 0);
     let focus = new Focus();
     const errorMessage = "Firmware update failed, because the settings could not be restored";
-    let backup = this.backup.backup;
-    console.log(this.backup, backup);
+    console.log(backup);
     if (backup === undefined || backup.length === 0) {
       await focus.open(this.currentPort.path, this.currentPort.device.info, null);
       return true;
@@ -357,12 +347,12 @@ export class FlashRaise {
         }
         console.log(`Going to send ${backup[i].command} to keyboard`);
         await focus.command(`${backup[i].command} ${val}`.trim());
+        stateUpdate("restore", (i / backup.length) * 90);
       }
-      this.backupFileData.log.push("Restoring all settings");
-      this.backupFileData.log.push("Firmware update OK");
+      await focus.command("led.mode 0");
+      stateUpdate("restore", 100);
       return true;
     } catch (e) {
-      this.backupFileData.log.push(`Restore settings: Error: ${e.message}`);
       return false;
     }
   }

@@ -16,7 +16,6 @@
  */
 
 import React from "react";
-import PropTypes from "prop-types";
 import Styled from "styled-components";
 
 const Style = Styled.div`   
@@ -152,15 +151,6 @@ const StepsBar = ({ steps, stepActive }) => {
       </div>
     </Style>
   );
-};
-
-StepsBar.defaultProps = {
-  stepActive: 0
-};
-
-StepsBar.propTypes = {
-  steps: PropTypes.object.isRequired,
-  stepActive: PropTypes.number
 };
 
 export default StepsBar;
