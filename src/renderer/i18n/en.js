@@ -467,6 +467,9 @@ const English = {
       system: "System"
     }
   },
+  wireless: {
+    title: "Wireless"
+  },
   keyboardSettings: {
     advanced: "Advanced",
     defaultLabel: "default",

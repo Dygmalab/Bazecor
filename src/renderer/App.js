@@ -40,6 +40,7 @@ import LayoutEditor from "./views/LayoutEditor";
 import MacroEditor from "./views/MacroEditor";
 import SuperkeysEditor from "./views/SuperkeysEditor";
 import Preferences from "./views/Preferences";
+import Wireless from "./views/Wireless";
 import Welcome from "./views/Welcome";
 
 import Header from "./modules/NavigationMenu";
@@ -402,6 +403,18 @@ class App extends React.Component {
             <Preferences
               connected={connected}
               path="/preferences"
+              titleElement={() => document.querySelector("#page-title")}
+              darkMode={darkMode}
+              toggleDarkMode={this.toggleDarkMode}
+              startContext={this.startContext}
+              cancelContext={this.cancelContext}
+              updateAllowBeta={this.updateAllowBeta}
+              allowBeta={allowBeta}
+              inContext={contextBar}
+            />
+            <Wireless
+              connected={connected}
+              path="/wireless"
               titleElement={() => document.querySelector("#page-title")}
               darkMode={darkMode}
               toggleDarkMode={this.toggleDarkMode}
