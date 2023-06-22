@@ -37,6 +37,7 @@ import { IconMemory2Stroke } from "../../component/Icon";
 import { IconRobot2Stroke } from "../../component/Icon";
 import { IconThunder2Stroke } from "../../component/Icon";
 import { IconPreferences2Stroke } from "../../component/Icon";
+import { IconWireless } from "../../component/Icon";
 
 // Assets
 import DygmaLogo from "../../../../static/logo.svg";
@@ -264,7 +265,7 @@ function NavigationMenu(props) {
                     drawerWidth={drawerWidth}
                     selected={currentPage === "/wireless"}
                     buttonText={i18n.app.menu.wireless}
-                    icoSVG={<IconThunder2Stroke />}
+                    icoSVG={<IconWireless width={42} height={42} strokeWidth={2} />}
                     disabled={fwUpdate}
                   />
                 </Link>

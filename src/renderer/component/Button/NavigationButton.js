@@ -125,10 +125,20 @@ const Style = Styled.div`
     padding: 8px 6px;
     width: 96px;
     height: 96px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
     svg,
     .menuLinkText {
         position: relative;
         z-index: 2;
+    }
+    svg {
+      flex: 0 0 42px;
+    }
+    .menuLinkText {
+      margin-bottom: auto;
     }
 }
 .menuLinkInner:before {

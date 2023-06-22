@@ -1,12 +1,28 @@
 import React, { useEffect, useRef, useState } from "react";
+import Styled from "styled-components";
+import Focus from "../../../api/focus";
+
+//Bootstrap components
 import Overlay from "react-bootstrap/Overlay";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
-import Focus from "../../../api/focus";
 
-export default function BatteryStatus({ disable }) {
+//Custom components
+import { BatteryStatusSide } from "../../component/Battery";
+
+const Style = Styled.div`
+.battery-indicator--container {
+  display: flex;
+  grid-gap: 3px;
+  > div {
+    flex: 1;
+  }
+}
+`;
+
+const BatteryStatus = ({ disable }) => {
   const [show, setShow] = useState(false);
   const [bLeft, setbLeft] = useState(100);
   const [bRight, setbRight] = useState(100);
@@ -52,8 +68,12 @@ export default function BatteryStatus({ disable }) {
   };
 
   return (
-    <>
-      <div ref={target} onMouseEnter={() => setShow(!show)}>
+    <Style>
+      <div className="battery-indicator--wrapper" ref={target} onMouseEnter={() => setShow(!show)}>
+        <div className="battery-indicator--container">
+          <BatteryStatusSide side="left" level={4} size="sm" isSavingMode={false} isCharging={false} />
+          <BatteryStatusSide side="right" level={18} size="sm" isSavingMode={false} isCharging={false} />
+        </div>
         <p style={{ fontSize: "0.9em", justifyContent: "center", margin: "0" }}>{`L:${bLeft}% R:${bRight}%`}</p>
       </div>
       <Overlay target={target.current} show={show} placement="top">
@@ -88,6 +108,8 @@ export default function BatteryStatus({ disable }) {
           </Container>
         )}
       </Overlay>
-    </>
+    </Style>
   );
-}
+};
+
+export default BatteryStatus;
