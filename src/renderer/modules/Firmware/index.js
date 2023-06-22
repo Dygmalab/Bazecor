@@ -26,6 +26,7 @@ import FirmwareProgressStatus from "./FirmwareProgressStatus";
 import FirmwareImageHelp from "./FirmwareImageHelp";
 import FirmwareNeuronHelp from "./FirmwareNeuronHelp";
 import FirmwareUpdateProcess from "./FirmwareUpdateProcess";
+import FirmwareWarningList from "./FirmwareWarningList";
 
 export {
   FirmwareUpdatePanel,
@@ -39,5 +40,6 @@ export {
   FirmwareProgressStatus,
   FirmwareImageHelp,
   FirmwareNeuronHelp,
-  FirmwareUpdateProcess
+  FirmwareUpdateProcess,
+  FirmwareWarningList
 };
