@@ -146,6 +146,10 @@ const Dark = {
       inputBackground: settingColorOpacity(Tokens.colors.gray900, 0.2),
       border: Tokens.colors.gray600
     },
+    batteryIndicator: {
+      pileBackgroundColor: Tokens.colors.gray800,
+      pileBackgroundSavingMode: settingColorOpacity(Tokens.colors.brandWarning, 0.15)
+    },
     button: {
       primary: {
         backgroundColor: Tokens.colors.gradient,

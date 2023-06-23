@@ -26,6 +26,8 @@ const BatteryStatus = ({ disable }) => {
   const [show, setShow] = useState(false);
   const [bLeft, setbLeft] = useState(100);
   const [bRight, setbRight] = useState(100);
+  const [isSavingMode, setIsSavingMode] = useState(false);
+  const [isCharging, setIsCharging] = useState(false);
   const target = useRef(null);
 
   useEffect(() => {
@@ -71,10 +73,9 @@ const BatteryStatus = ({ disable }) => {
     <Style>
       <div className="battery-indicator--wrapper" ref={target} onMouseEnter={() => setShow(!show)}>
         <div className="battery-indicator--container">
-          <BatteryStatusSide side="left" level={4} size="sm" isSavingMode={false} isCharging={false} />
-          <BatteryStatusSide side="right" level={18} size="sm" isSavingMode={false} isCharging={false} />
+          <BatteryStatusSide side="left" batteryLevel={bLeft} size="sm" isSavingMode={isSavingMode} isCharging={isCharging} />
+          <BatteryStatusSide side="right" batteryLevel={bRight} size="sm" isSavingMode={isSavingMode} isCharging={isCharging} />
         </div>
-        <p style={{ fontSize: "0.9em", justifyContent: "center", margin: "0" }}>{`L:${bLeft}% R:${bRight}%`}</p>
       </div>
       <Overlay target={target.current} show={show} placement="top">
         {({ placement, arrowProps, show: _show, popper, ...props }) => (

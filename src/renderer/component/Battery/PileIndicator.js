@@ -50,18 +50,18 @@ const Style = Styled.div`
 
 `;
 
-const PileIndicator = ({ level, isCharging }) => {
-  const [batteryLevel, setBatteryLevel] = useState(0);
+const PileIndicator = ({ batteryLevel, isCharging }) => {
+  const [batteryWidth, setBatteryWidth] = useState(0);
 
   useEffect(() => {
     if (!isCharging) {
-      if (level < 5) {
-        setBatteryLevel(1);
+      if (batteryLevel < 5) {
+        setBatteryWidth(1);
       } else {
-        setBatteryLevel((16 * level) / 100);
+        setBatteryWidth((16 * batteryLevel) / 100);
       }
     }
-  }, [level]);
+  }, [batteryLevel]);
 
   return (
     <svg width="22" height="16" viewBox="0 0 22 16" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -89,7 +89,7 @@ const PileIndicator = ({ level, isCharging }) => {
       ) : (
         <>
           <rect x="0.5" y="4.5" width="19" height="7" stroke="currentColor" />
-          <rect x="2" y="6" width={batteryLevel} height="4" fill="currentColor" />
+          <rect x="2" y="6" width={batteryWidth} height="4" fill="currentColor" />
         </>
       )}
     </svg>

@@ -145,6 +145,10 @@ const Light = {
       inputBackground: "rgba(255, 255, 255, 0.4)",
       border: settingColorOpacity(Tokens.colors.gray100, 0.6)
     },
+    batteryIndicator: {
+      pileBackgroundColor: Tokens.colors.gray50,
+      pileBackgroundSavingMode: settingColorOpacity(Tokens.colors.brandWarning, 0.25)
+    },
     button: {
       primary: {
         backgroundColor: Tokens.colors.gradient,

@@ -8,7 +8,8 @@ const Style = Styled.div`
 .status--default {
     --color-status: ${({ theme }) => theme.colors.gray200};
 }
-.status--warning {
+.status--saving,
+.status--warning  {
     --color-status: ${({ theme }) => theme.colors.brandWarning};
 }
 .status--critical {
@@ -18,9 +19,9 @@ const Style = Styled.div`
     --color-status: ${({ theme }) => theme.colors.purple200};
 }
 .size--sm {
-    background-color: ${({ theme }) => theme.colors.gray800};
     padding: 4px;
     border-radius: 3px;
+    background-color: ${({ theme }) => theme.styles.batteryIndicator.pileBackgroundColor};
     .battery-item--container {
         display: flex;
         grid-gap: 5px;
@@ -33,13 +34,13 @@ const Style = Styled.div`
             text-transform: uppercase;
         }
     }
-
+    &.status--saving {
+        background-color: ${({ theme }) => theme.styles.batteryIndicator.pileBackgroundSavingMode};
+    }
 }
-
-
 `;
 
-const BatteryStatusSide = ({ side, level, size, isSavingMode, isCharging }) => {
+const BatteryStatusSide = ({ side, batteryLevel, size, isSavingMode, isCharging }) => {
   const [loading, setLoading] = useState(true);
   const [sideFirstLetter, setSideFirstLetter] = useState("");
   const [sideStatus, setSideStatus] = useState("default");
@@ -52,25 +53,25 @@ const BatteryStatusSide = ({ side, level, size, isSavingMode, isCharging }) => {
   }, []);
 
   useEffect(() => {
-    if (level > 10 && level < 20 && !isCharging) {
+    if (batteryLevel > 10 && batteryLevel < 20 && !isCharging && !isSavingMode) {
       setSideStatus("warning");
     }
-    if (level < 10 && !isCharging) {
+    if (batteryLevel < 10 && !isCharging && !isSavingMode) {
       setSideStatus("critical");
     }
-  }, [level]);
+  }, [batteryLevel]);
 
   if (loading) return <div></div>;
   return (
     <Style>
       <div
-        className={`battery-indicator--item size--${size} item--${side} status--${sideStatus} ${isSavingMode && "isSavingMode"} ${
-          isCharging && "status--charging"
-        }`}
+        className={`battery-indicator--item size--${size} item--${side} status--${sideStatus} ${
+          isSavingMode && "status--saving"
+        } ${isCharging && "status--charging"}`}
       >
         <div className="battery-item--container">
           {size == "sm" ? <div className="battery-indicator--side">{sideFirstLetter}</div> : ""}
-          {size == "sm" ? <PileIndicator level={level} isCharging={isCharging} /> : ""}
+          {size == "sm" ? <PileIndicator batteryLevel={batteryLevel} isCharging={isCharging} /> : ""}
         </div>
       </div>
     </Style>
