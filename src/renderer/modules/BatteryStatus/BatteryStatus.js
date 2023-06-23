@@ -1,18 +1,23 @@
 import React, { useEffect, useRef, useState } from "react";
+import i18n from "../../i18n";
 import Styled from "styled-components";
 import Focus from "../../../api/focus";
 
 //Bootstrap components
 import Overlay from "react-bootstrap/Overlay";
-import Container from "react-bootstrap/Container";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
 
 //Custom components
+import Title from "../../component/Title";
 import { BatteryStatusSide } from "../../component/Battery";
 
+//Assets
+import { IconBattery } from "../../component/Icon";
+
 const Style = Styled.div`
+.battery-indicator--wrapper {
+  padding-top: 8px;
+}
 .battery-indicator--container {
   display: flex;
   grid-gap: 3px;
@@ -36,7 +41,7 @@ const BatteryStatus = ({ disable }) => {
       intervalID = setInterval(() => {
         setShow(false);
         clearInterval(intervalID);
-      }, 3000);
+      }, 20000);
     }
     return () => clearInterval(intervalID);
   }, [show]);
@@ -77,27 +82,38 @@ const BatteryStatus = ({ disable }) => {
           <BatteryStatusSide side="right" batteryLevel={bRight} size="sm" isSavingMode={isSavingMode} isCharging={isCharging} />
         </div>
       </div>
-      <Overlay target={target.current} show={show} placement="top">
+      <Overlay
+        target={target.current}
+        show={show}
+        placement="top"
+        popperConfig={{
+          modifiers: {
+            name: "offset",
+            enabled: true,
+            options: {
+              offset: [0, -4]
+            }
+          }
+        }}
+      >
         {({ placement, arrowProps, show: _show, popper, ...props }) => (
-          <Container
+          <div
+            className="dropdown-menu dropdown-menu--battery"
             {...props}
             style={{
-              backgroundColor: "#25273b",
-              padding: "2px 10px",
-              color: "white",
-              width: "260px",
-              borderRadius: 3,
-              ...props.style,
-              zIndex: 2000
+              ...props.style
             }}
           >
-            <Row>Battery data from keyboard!</Row>
-            <Row>
-              <Col xs={6}>{bLeft}</Col>
-              <Col xs={6}>{bRight}</Col>
-            </Row>
-            <Row>Button for energy saving mode</Row>
-            <Row>
+            <div className="dropdown-menu__inner">
+              <Title text={i18n.wireless.batteryPreferences.battery} headingLevel={4} svgICO={<IconBattery />} />
+              <BatteryStatusSide side="left" batteryLevel={bLeft} size="sm" isSavingMode={isSavingMode} isCharging={isCharging} />
+              <BatteryStatusSide
+                side="right"
+                batteryLevel={bRight}
+                size="sm"
+                isSavingMode={isSavingMode}
+                isCharging={isCharging}
+              />
               <Button
                 onClick={() => {
                   forceRetrieveBattery();
@@ -105,8 +121,8 @@ const BatteryStatus = ({ disable }) => {
               >
                 Force read Battery level
               </Button>
-            </Row>
-          </Container>
+            </div>
+          </div>
         )}
       </Overlay>
     </Style>

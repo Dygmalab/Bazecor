@@ -53,7 +53,7 @@ const Style = Styled.div`
         position: absolute;
         right: 2px;
         top: 2px;
-        font-size: 10px;
+        font-size: 9px;
         font-weight: 700;
         padding: 4px 6px;
         z-index: 3;

@@ -24,6 +24,7 @@ import IconArrowRight from "./IconArrowRight";
 import IconArrowsSmallSeparating from "./IconArrowsSmallSeparating";
 import IconArrowUpWithLine from "./IconArrowUpWithLine";
 import IconArrowDownWithLine from "./IconArrowDownWithLine";
+import IconBattery from "./IconBattery";
 import IconColorPalette from "./IconColorPalette";
 import IconColorPicker from "./IconColorPicker";
 import IconConnected from "./IconConnected";
@@ -154,6 +155,7 @@ export {
   IconArrowsMouseWheel,
   IconArrowUpWithLine,
   IconArrowDownWithLine,
+  IconBattery,
   IconColorPalette,
   IconColorPicker,
   IconConnected,

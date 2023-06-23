@@ -624,6 +624,13 @@ svg text{
   box-shadow: ${({ theme }) => theme.styles.dropdown.dropdownMenu.boxShadow};
   border-radius: 6px;
   border: none;
+  &.dropdown-menu--battery {
+    background-color: ${({ theme }) => theme.colors.gray800};
+    padding: 24px 16px;
+    width: 260px;
+    z-index: 1101;
+    inset: auto auto 0px 6px!important;
+  }
 }
 .dropdown-item {
   padding: 8px;

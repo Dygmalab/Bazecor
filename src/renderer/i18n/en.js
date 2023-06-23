@@ -468,7 +468,10 @@ const English = {
     }
   },
   wireless: {
-    title: "Wireless"
+    title: "Wireless",
+    batteryPreferences: {
+      battery: "Battery"
+    }
   },
   keyboardSettings: {
     advanced: "Advanced",
