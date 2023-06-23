@@ -230,6 +230,15 @@ class KeyboardSettings extends React.Component {
     }));
     this.props.setKbData(this.state);
   };
+
+  setBrightnessUG = async value => {
+    await this.setState(state => ({
+      ledBrightnessUG: (value * 255) / 100,
+      modified: true
+    }));
+    this.props.setKbData(this.state);
+  };
+
   setHoldTimeout = async value => {
     await this.setState(state => ({
       qukeysHoldTimeout: value,
@@ -424,6 +433,7 @@ class KeyboardSettings extends React.Component {
       modified,
       showDefaults,
       ledBrightness,
+      ledBrightnessUG,
       ledIdleTimeLimit,
       qukeysHoldTimeout,
       qukeysOverlapThreshold,
@@ -562,6 +572,32 @@ class KeyboardSettings extends React.Component {
                           step={5}
                           value={Math.round((ledBrightness * 100) / 255)}
                           onChange={this.setBrightness}
+                        />
+                      </Col>
+                      <Col xs={2} md={1} className="p-0 text-center align-self-center">
+                        <span className="tagsfix">Max</span>
+                      </Col>
+                    </Row>
+                  </Form.Group>
+                )}
+                {ledBrightnessUG >= 0 && (
+                  <Form.Group controlId="brightnessUGControl" className="formGroup">
+                    <Row>
+                      <Col>
+                        <Form.Label>{i18n.keyboardSettings.led.brightnessUG}</Form.Label>
+                      </Col>
+                    </Row>
+                    <Row>
+                      <Col xs={2} md={1} className="p-0 text-center align-self-center">
+                        <span className="tagsfix">None</span>
+                      </Col>
+                      <Col xs={8} md={10} className="px-2">
+                        <Slider
+                          min={0}
+                          max={100}
+                          step={5}
+                          value={Math.round((ledBrightnessUG * 100) / 255)}
+                          onChange={this.setBrightnessUG}
                         />
                       </Col>
                       <Col xs={2} md={1} className="p-0 text-center align-self-center">

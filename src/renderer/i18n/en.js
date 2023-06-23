@@ -502,8 +502,9 @@ const English = {
     },
     led: {
       title: "LED",
-      brightness: "LED brightness",
+      brightness: "LED backlight brightness",
       brightnesssub: " - From 0 to 254",
+      brightnessUG: "LED underglow brightness",
       idleDisabled: "Disabled",
       idleTimeLimit: "Time before LEDs turn off",
       idle: {
