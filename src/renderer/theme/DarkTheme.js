@@ -148,7 +148,9 @@ const Dark = {
     },
     batteryIndicator: {
       pileBackgroundColor: Tokens.colors.gray800,
-      pileBackgroundSavingMode: settingColorOpacity(Tokens.colors.brandWarning, 0.15)
+      pileBackgroundSavingMode: settingColorOpacity(Tokens.colors.brandWarning, 0.15),
+      titleColor: Tokens.colors.gray25,
+      panelBackgroundColor: Tokens.colors.gray800
     },
     button: {
       primary: {

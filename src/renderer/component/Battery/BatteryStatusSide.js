@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 
 import Styled from "styled-components";
 
-import { PileIndicator } from "../Battery";
+import { PileIndicator, DefyBatteryIndicator } from "../Battery";
 
 const Style = Styled.div`
 .status--default {
@@ -72,6 +72,7 @@ const BatteryStatusSide = ({ side, batteryLevel, size, isSavingMode, isCharging 
         <div className="battery-item--container">
           {size == "sm" ? <div className="battery-indicator--side">{sideFirstLetter}</div> : ""}
           {size == "sm" ? <PileIndicator batteryLevel={batteryLevel} isCharging={isCharging} /> : ""}
+          {size == "lg" ? <DefyBatteryIndicator side={side} batteryLevel={batteryLevel} isCharging={isCharging} /> : ""}
         </div>
       </div>
     </Style>

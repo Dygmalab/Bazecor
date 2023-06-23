@@ -6,6 +6,7 @@ import Focus from "../../../api/focus";
 //Bootstrap components
 import Overlay from "react-bootstrap/Overlay";
 import Button from "react-bootstrap/Button";
+import Form from "react-bootstrap/Form";
 
 //Custom components
 import Title from "../../component/Title";
@@ -41,7 +42,7 @@ const BatteryStatus = ({ disable }) => {
       intervalID = setInterval(() => {
         setShow(false);
         clearInterval(intervalID);
-      }, 20000);
+      }, 3000);
     }
     return () => clearInterval(intervalID);
   }, [show]);
@@ -106,14 +107,34 @@ const BatteryStatus = ({ disable }) => {
           >
             <div className="dropdown-menu__inner">
               <Title text={i18n.wireless.batteryPreferences.battery} headingLevel={4} svgICO={<IconBattery />} />
-              <BatteryStatusSide side="left" batteryLevel={bLeft} size="sm" isSavingMode={isSavingMode} isCharging={isCharging} />
-              <BatteryStatusSide
-                side="right"
-                batteryLevel={bRight}
-                size="sm"
-                isSavingMode={isSavingMode}
-                isCharging={isCharging}
-              />
+              <div className="battery-defy--indicator">
+                <BatteryStatusSide
+                  side="left"
+                  batteryLevel={bLeft}
+                  size="lg"
+                  isSavingMode={isSavingMode}
+                  isCharging={isCharging}
+                />
+                <BatteryStatusSide
+                  side="right"
+                  batteryLevel={bRight}
+                  size="lg"
+                  isSavingMode={isSavingMode}
+                  isCharging={isCharging}
+                />
+              </div>
+              <div className="batterySetting">
+                <Form>
+                  <Form.Label>Enable Saving Mode</Form.Label>
+                  <Form.Check
+                    type="switch"
+                    id="settingSavingMode"
+                    checked={isSavingMode}
+                    onChange={() => setIsSavingMode(!isSavingMode)}
+                  />
+                </Form>
+              </div>
+
               <Button
                 onClick={() => {
                   forceRetrieveBattery();

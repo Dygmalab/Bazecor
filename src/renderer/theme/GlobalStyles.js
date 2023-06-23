@@ -247,6 +247,39 @@ svg text{
 // 
 // Components
 // 
+.battery-defy--indicator {
+  display: flex;
+  grid-gap: 4px;
+}
+.defy-battery-indicator .levelIndicator {
+  transform-origin: bottom left;
+  transform: rotate(180deg);
+}
+.defy-battery-indicator .batteryLevel--number {
+  width: 100%;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  text-align: center;
+  font-size: 1.5rem;
+  fill: ${({ theme }) => theme.colors.gray25};
+  text-align: center;
+}
+.batterySide {
+  position: relative;
+}
+.batterySide--percentage {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate3d(-50%, -50%, 0);
+  width: 100%;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  text-align: center;
+  font-size: 1.5rem;
+  color: ${({ theme }) => theme.colors.gray25};
+  text-align: center;
+}
 .simpleAccordion {
   background-color: ${({ theme }) => theme.styles.accordion.background};
   border-radius: 3px;
@@ -625,11 +658,17 @@ svg text{
   border-radius: 6px;
   border: none;
   &.dropdown-menu--battery {
-    background-color: ${({ theme }) => theme.colors.gray800};
-    padding: 24px 16px;
+    background-color: ${({ theme }) => theme.styles.batteryIndicator.panelBackgroundColor};
+    padding: 8px 16px 24px 16px;
     width: 260px;
     z-index: 1101;
     inset: auto auto 0px 6px!important;
+    h4 {
+      color: ${({ theme }) => theme.styles.batteryIndicator.titleColor};
+      .hasIcon svg {
+        vertical-align: -0.25em;
+      }
+    }
   }
 }
 .dropdown-item {
