@@ -38,7 +38,7 @@ import Dropdown from "react-bootstrap/Dropdown";
 
 import Focus from "../../api/focus";
 import Hardware from "../../api/hardware";
-import { RaiseISO, RaiseANSI, DefyWired, DefyWireless, enumerator } from "../../api/hardware/virtual";
+import { RaiseISO, RaiseANSI, DefyWired, DefyWireless, enumerator } from "../../api/hardware-virtual";
 
 import i18n from "../i18n";
 import NeuronConnection from "../modules/NeuronConnection";
