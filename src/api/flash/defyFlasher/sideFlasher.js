@@ -97,7 +97,7 @@ export default class sideFlaser {
     // console.dir(seal);
 
     // Serial port instancing
-
+    if (side.includes("left")) await sleep(2000);
     await SerialPort.list();
     const serialport = new SerialPort({ path: this.path, baudRate: 115200 });
     const parser = serialport.pipe(new DelimiterParser({ delimiter: "\r\n" }));
@@ -165,12 +165,12 @@ export default class sideFlaser {
       // console.log("ack received: ", ack);
       if (!ack.includes("true") || ack.includes("false")) {
         let retries = 3;
+        if (wiredOrWireless == "wireless") await sleep(100);
         while (retries > 0 && (!ack.includes("true") || ack.includes("false"))) {
-          if (wiredOrWireless == "wireless") sleep(1000);
           serialport.write("upgrade.keyscanner.sendWrite ");
-          if (wiredOrWireless == "wireless") sleep(10);
+          if (wiredOrWireless == "wireless") await sleep(10);
           serialport.write(buffer);
-          if (wiredOrWireless == "wireless") sleep(10);
+          if (wiredOrWireless == "wireless") await sleep(10);
           ack = await readLine();
           ack = ack + (await readLine());
           console.log(`received ${ack} after ${3 - retries} retires`);
