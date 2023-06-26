@@ -169,25 +169,10 @@ class Preferences extends React.Component {
       this.kbData.SuperTimeout = timeout;
     });
 
-    // await focus.command("superkeys.repeat").then(repeat => {
-    //   repeat = repeat ? parseInt(repeat) : 20;
-    //   this.kbData.SuperRepeat = repeat;
-    // });
-
-    // await focus.command("superkeys.waitfor").then(waitfor => {
-    //   waitfor = waitfor ? parseInt(waitfor) : 500;
-    //   this.kbData.SuperWaitfor = waitfor;
-    // });
-
     await focus.command("superkeys.holdstart").then(holdstart => {
       holdstart = holdstart ? parseInt(holdstart) : 200;
       this.kbData.SuperHoldstart = holdstart;
     });
-
-    // await focus.command("superkeys.overlap").then(overlapThreshold => {
-    //   overlapThreshold = overlapThreshold ? parseInt(overlapThreshold) : 20;
-    //   this.kbData.SuperOverlapThreshold =overlapThreshold;
-    // });
 
     // MOUSE variables commands
     await focus.command("mouse.speed").then(speed => {
@@ -195,30 +180,15 @@ class Preferences extends React.Component {
       this.kbData.mouseSpeed = speed;
     });
 
-    // await focus.command("mouse.speedDelay").then(speedDelay => {
-    //   speedDelay = speedDelay ? parseInt(speedDelay) : 6;
-    //   this.kbData.mouseSpeedDelay = speedDelay;
-    // });
-
     await focus.command("mouse.accelSpeed").then(accelSpeed => {
       accelSpeed = accelSpeed ? parseInt(accelSpeed) : 1;
       this.kbData.mouseAccelSpeed = accelSpeed;
     });
 
-    // await focus.command("mouse.accelDelay").then(accelDelay => {
-    //   accelDelay = accelDelay ? parseInt(accelDelay) : 64;
-    //   this.kbData.mouseAccelDelay = accelDelay;
-    // });
-
     await focus.command("mouse.wheelSpeed").then(wheelSpeed => {
       wheelSpeed = wheelSpeed ? parseInt(wheelSpeed) : 1;
       this.kbData.mouseWheelSpeed = wheelSpeed;
     });
-
-    // await focus.command("mouse.wheelDelay").then(wheelDelay => {
-    //   wheelDelay = wheelDelay ? parseInt(wheelDelay) : 128;
-    //   this.kbData.mouseWheelDelay: wheelDelay });
-    // });
 
     await focus.command("mouse.speedLimit").then(speedLimit => {
       speedLimit = speedLimit ? parseInt(speedLimit) : 127;
@@ -245,7 +215,6 @@ class Preferences extends React.Component {
       SuperRepeat,
       SuperWaitfor,
       SuperHoldstart,
-      SuperOverlapThreshold,
       mouseSpeed,
       mouseSpeedDelay,
       mouseAccelSpeed,
@@ -269,7 +238,6 @@ class Preferences extends React.Component {
     await await focus.command("superkeys.repeat", SuperRepeat);
     await await focus.command("superkeys.waitfor", SuperWaitfor);
     await await focus.command("superkeys.holdstart", SuperHoldstart);
-    // await await focus.command("superkeys.overlap", SuperOverlapThreshold);
     // MOUSE KEYS
     await await focus.command("mouse.speed", mouseSpeed);
     await await focus.command("mouse.speedDelay", mouseSpeedDelay);
