@@ -4,6 +4,7 @@ import i18n from "../../i18n";
 //Bootstrap components
 import Styled from "styled-components";
 import Card from "react-bootstrap/Card";
+import Form from "react-bootstrap/Form";
 
 //Custom components
 import Title from "../../component/Title";
@@ -19,7 +20,7 @@ const Styles = Styled.div`
 }
 `;
 
-const BatterySettings = ({ bLeft, bRight, isSavingMode, isCharging }) => {
+const BatterySettings = ({ bLeft, bRight, isSavingMode, setIsSavingMode, isCharging }) => {
   return (
     <Styles>
       <Card className="overflowFix card-preferences mt-4">
@@ -31,6 +32,16 @@ const BatterySettings = ({ bLeft, bRight, isSavingMode, isCharging }) => {
             <BatteryStatusSide side="left" batteryLevel={bLeft} size="lg" isSavingMode={isSavingMode} isCharging={isCharging} />
             <BatteryStatusSide side="right" batteryLevel={bRight} size="lg" isSavingMode={isSavingMode} isCharging={isCharging} />
           </div>
+          <Form className="batterySettingItem batterySetSavingMode">
+            <div className="batterySettingLabel">Saving Mode</div>
+            <Form.Check
+              type="switch"
+              id="settingSavingMode"
+              checked={isSavingMode}
+              onChange={() => setIsSavingMode(!isSavingMode)}
+              size="sm"
+            />
+          </Form>
         </Card.Body>
       </Card>
     </Styles>

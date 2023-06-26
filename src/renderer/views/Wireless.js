@@ -36,6 +36,10 @@ const Wireless = ({ inContext, connected, allowBeta, updateAllowBeta }) => {
     setLoading(false);
   };
 
+  useEffect(() => {
+    getBatteryStatus();
+  }, []);
+
   if (loading) <LogoLoader />;
   return (
     <Styles>
@@ -43,7 +47,13 @@ const Wireless = ({ inContext, connected, allowBeta, updateAllowBeta }) => {
         <PageHeader text={i18n.wireless.title} showSaving={false} showContentSelector={false} />
         <div className="wirelessWrapper">
           <div className="wirelessInner">
-            <BatterySettings bLeft={bLeft} bRight={bRight} isSavingMode={isSavingMode} isCharging={isCharging} />
+            <BatterySettings
+              bLeft={bLeft}
+              bRight={bRight}
+              isSavingMode={isSavingMode}
+              setIsSavingMode={setIsSavingMode}
+              isCharging={isCharging}
+            />
             <RFSettings />
           </div>
         </div>
