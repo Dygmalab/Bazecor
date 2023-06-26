@@ -106,7 +106,7 @@
     "react-range": "^1.8.12",
     "react-router-dom": "^5.2.0",
     "react-toastify": "^8.2.0",
-    "semver": "^7.5.1",
+    "semver": "^7.5.2",
     "serialport": "^10.4.0",
     "source-map-support": "^0.5.16",
     "styled-components": "^5.3.11",
