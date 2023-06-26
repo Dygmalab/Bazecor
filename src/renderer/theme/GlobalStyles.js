@@ -247,39 +247,7 @@ svg text{
 // 
 // Components
 // 
-.battery-defy--indicator {
-  display: flex;
-  grid-gap: 4px;
-}
-.defy-battery-indicator .levelIndicator {
-  transform-origin: bottom left;
-  transform: rotate(180deg);
-}
-.defy-battery-indicator .batteryLevel--number {
-  width: 100%;
-  font-weight: 700;
-  letter-spacing: -0.025em;
-  text-align: center;
-  font-size: 1.5rem;
-  fill: ${({ theme }) => theme.colors.gray25};
-  text-align: center;
-}
-.batterySide {
-  position: relative;
-}
-.batterySide--percentage {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate3d(-50%, -50%, 0);
-  width: 100%;
-  font-weight: 700;
-  letter-spacing: -0.025em;
-  text-align: center;
-  font-size: 1.5rem;
-  color: ${({ theme }) => theme.colors.gray25};
-  text-align: center;
-}
+
 .simpleAccordion {
   background-color: ${({ theme }) => theme.styles.accordion.background};
   border-radius: 3px;
@@ -530,6 +498,22 @@ svg text{
 .button-config.icon-left svg {
   margin-right: 10px;
 }
+.button-config.button-settings {
+  height: 36px;
+  width: 36px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: none;
+  border-radius: 4px;
+  color: ${({ theme }) => theme.styles.button.settings.color};
+  background: ${({ theme }) => theme.styles.button.settings.background};
+  &:hover {
+    color: ${({ theme }) => theme.styles.button.settings.colorHover};
+    background: ${({ theme }) => theme.styles.button.settings.backgroundHover};
+  }
+}
 
 
 .button.short {
@@ -657,19 +641,6 @@ svg text{
   box-shadow: ${({ theme }) => theme.styles.dropdown.dropdownMenu.boxShadow};
   border-radius: 6px;
   border: none;
-  &.dropdown-menu--battery {
-    background-color: ${({ theme }) => theme.styles.batteryIndicator.panelBackgroundColor};
-    padding: 8px 16px 24px 16px;
-    width: 260px;
-    z-index: 1101;
-    inset: auto auto 0px 6px!important;
-    h4 {
-      color: ${({ theme }) => theme.styles.batteryIndicator.titleColor};
-      .hasIcon svg {
-        vertical-align: -0.25em;
-      }
-    }
-  }
 }
 .dropdown-item {
   padding: 8px;

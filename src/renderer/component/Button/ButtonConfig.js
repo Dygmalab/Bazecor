@@ -38,7 +38,8 @@ const ButtonConfig = ({
   icoSVG,
   icoPosition,
   tooltipDelay,
-  disabled
+  disabled,
+  dataAnimate
 }) => {
   return (
     <>
@@ -73,6 +74,7 @@ const ButtonConfig = ({
             style ? style : ""
           } ${style ? style : ""} icon-${icoPosition ? icoPosition : "none"}`}
           disabled={disabled}
+          data-animate={dataAnimate}
         >
           {icoSVG && icoPosition !== "right" ? icoSVG : ""}
           {buttonText && <span className={"buttonLabel"} dangerouslySetInnerHTML={{ __html: buttonText }} />}
