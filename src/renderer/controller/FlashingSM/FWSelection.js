@@ -8,7 +8,7 @@ const FocusAPIRead = async () => {
   let data = {};
   try {
     let focus = new Focus();
-    data.bootloader = focus.device.bootloader;
+    data.bootloader = focus.device ? focus.device.bootloader : false;
     data.info = focus.device.info;
     if (data.bootloader) return data;
     data.version = await focus.command("version");

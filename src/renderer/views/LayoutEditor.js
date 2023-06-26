@@ -616,7 +616,7 @@ class LayoutEditor extends React.Component {
       }
 
       // console.log("KEYMAP TEST!!", keymap, keymap.onlyCustom, onlyC);
-      if (empty && !keymap.onlyCustom && keymap.custom.length > 0) {
+      if (empty && keymap.custom.length > 0) {
         console.log("Custom keymap is empty, copying defaults");
         for (let i = 0; i < keymap.default.length; i++) {
           keymap.custom[i] = keymap.default[i].slice();

@@ -62,6 +62,7 @@ class Preferences extends React.Component {
         onlyCustom: true
       },
       ledBrightness: 255,
+      ledBrightnessUG: 255,
       defaultLayer: 126,
       ledIdleTimeLimit: 0,
       qukeysHoldTimeout: 0,
@@ -142,6 +143,11 @@ class Preferences extends React.Component {
     await focus.command("led.brightness").then(brightness => {
       brightness = brightness ? parseInt(brightness) : -1;
       this.kbData.ledBrightness = brightness;
+    });
+
+    await focus.command("led.brightnessUG").then(brightness => {
+      brightness = brightness ? parseInt(brightness) : -1;
+      this.kbData.ledBrightnessUG = brightness;
     });
 
     await focus.command("idleleds.time_limit").then(limit => {
@@ -274,11 +280,6 @@ class Preferences extends React.Component {
       await focus.command("wireless.rf.stability").then(rfStability => {
         this.kbData.wireless.rf.stability = rfStability;
       });
-
-      // Additional commands
-      await focus.command("led.brightness.underglow").then(UGBrightness => {
-        this.kbData.ledBrightnessUG = UGBrightness;
-      });
     }
 
     //Save in state
@@ -293,6 +294,7 @@ class Preferences extends React.Component {
       defaultLayer,
       showDefaults,
       ledBrightness,
+      ledBrightnessUG,
       ledIdleTimeLimit,
       qukeysHoldTimeout,
       qukeysOverlapThreshold,
@@ -308,13 +310,13 @@ class Preferences extends React.Component {
       mouseWheelSpeed,
       mouseWheelDelay,
       mouseSpeedLimit,
-      wireless,
-      ledBrightnessUG
+      wireless
     } = this.kbData;
 
     await await focus.command("keymap.onlyCustom", keymap.onlyCustom);
     await await focus.command("settings.defaultLayer", defaultLayer);
     await await focus.command("led.brightness", ledBrightness);
+    await await focus.command("led.brightnessUG", ledBrightnessUG);
     if (ledIdleTimeLimit >= 0) await await focus.command("idleleds.time_limit", ledIdleTimeLimit);
     store.set("settings.showDefaults", showDefaults);
     // QUKEYS
@@ -348,7 +350,6 @@ class Preferences extends React.Component {
       await await focus.command("wireless.rf.channelHop", wireless.rf.channelHop);
       await await focus.command("wireless.rf.state", wireless.rf.state);
       await await focus.command("wireless.rf.stability", wireless.rf.stability);
-      await await focus.command("led.brightness.underglow", ledBrightnessUG);
     }
 
     //TODO: Review toast popup on try/catch works well.
