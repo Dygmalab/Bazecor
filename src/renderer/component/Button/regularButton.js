@@ -18,7 +18,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-const RegularButton = ({ selected, onClick, size, buttonText, style, icoSVG, icoPosition, disabled }) => {
+const RegularButton = ({ selected, onClick, size, buttonText, style, icoSVG, icoPosition, disabled, tabIndex }) => {
   return (
     <div
       onClick={disabled ? () => {} : onClick}
@@ -26,6 +26,7 @@ const RegularButton = ({ selected, onClick, size, buttonText, style, icoSVG, ico
         icoPosition ? icoPosition : "None"
       }`}
       disabled={disabled}
+      tabIndex={tabIndex}
     >
       <div className={"buttonLabel"}>
         {icoSVG && icoPosition !== "right" ? icoSVG : ""}
