@@ -120,11 +120,7 @@ class Preferences extends React.Component {
   getNeuronData = async () => {
     let focus = new Focus();
 
-    // Checking if device is wired or wireless
-    this.setState({ wireless: focus.device.info.keyboardType === "wireless" });
-
     // EXTRACTING DATA FROM NEURON
-
     await focus.command("hardware.chip_id").then(neuronID => {
       neuronID = neuronID.replace(/\s/g, "");
       this.setState({ neuronID });
@@ -229,59 +225,6 @@ class Preferences extends React.Component {
       this.kbData.mouseSpeedLimit = speedLimit;
     });
 
-    if (this.state.wireless) {
-      // Use focus commands to retrieve wireless data
-      this.kbData.wireless = {};
-
-      // Battery commands
-      this.kbData.wireless.battery = {};
-      await focus.command("wireless.battery.level").then(batteryLevel => {
-        this.kbData.wireless.battery.level = batteryLevel;
-      });
-      await focus.command("wireless.battery.state").then(batteryState => {
-        this.kbData.wireless.battery.state = batteryState;
-      });
-      await focus.command("wireless.battery.mode").then(batteryMode => {
-        this.kbData.wireless.battery.mode = batteryMode;
-      });
-
-      // Energy commands
-      this.kbData.wireless.energy = {};
-      await focus.command("wireless.energy.modes").then(energyModes => {
-        this.kbData.wireless.energy.modes = energyModes;
-      });
-      await focus.command("wireless.energy.currentMode").then(energyMode => {
-        this.kbData.wireless.energy.currentMode = energyMode;
-      });
-      await focus.command("wireless.energy.disable").then(energyDisable => {
-        this.kbData.wireless.energy.disable = energyDisable;
-      });
-
-      // Bluetooth commands
-      this.kbData.wireless.bluetooth = {};
-      await focus.command("wireless.bluetooth.devices").then(bluetoothDevices => {
-        this.kbData.wireless.bluetooth.devices = bluetoothDevices;
-      });
-      await focus.command("wireless.bluetooth.state").then(bluetoothState => {
-        this.kbData.wireless.bluetooth.state = bluetoothState;
-      });
-      await focus.command("wireless.bluetooth.stability").then(bluetoothStability => {
-        this.kbData.wireless.bluetooth.stability = bluetoothStability;
-      });
-
-      // rf commands
-      this.kbData.wireless.rf = {};
-      await focus.command("wireless.rf.channelHop").then(rfChannelHop => {
-        this.kbData.wireless.rf.channelHop = rfChannelHop;
-      });
-      await focus.command("wireless.rf.state").then(rfState => {
-        this.kbData.wireless.rf.state = rfState;
-      });
-      await focus.command("wireless.rf.stability").then(rfStability => {
-        this.kbData.wireless.rf.stability = rfStability;
-      });
-    }
-
     //Save in state
     this.setState({ kbData: this.kbData });
   };
@@ -309,8 +252,7 @@ class Preferences extends React.Component {
       mouseAccelDelay,
       mouseWheelSpeed,
       mouseWheelDelay,
-      mouseSpeedLimit,
-      wireless
+      mouseSpeedLimit
     } = this.kbData;
 
     await await focus.command("keymap.onlyCustom", keymap.onlyCustom);
@@ -336,21 +278,6 @@ class Preferences extends React.Component {
     await await focus.command("mouse.wheelSpeed", mouseWheelSpeed);
     await await focus.command("mouse.wheelDelay", mouseWheelDelay);
     await await focus.command("mouse.speedLimit", mouseSpeedLimit);
-    // WIRELESS
-    if (this.state.wireless) {
-      await await focus.command("wireless.battery.level", wireless.battery.level);
-      await await focus.command("wireless.battery.state", wireless.battery.state);
-      await await focus.command("wireless.battery.mode", wireless.battery.mode);
-      await await focus.command("wireless.energy.modes", wireless.energy.modes);
-      await await focus.command("wireless.energy.currentMode", wireless.energy.currentMode);
-      await await focus.command("wireless.energy.disable", wireless.energy.disable);
-      await await focus.command("wireless.bluetooth.devices", wireless.bluetooth.devices);
-      await await focus.command("wireless.bluetooth.state", wireless.bluetooth.state);
-      await await focus.command("wireless.bluetooth.stability", wireless.bluetooth.stability);
-      await await focus.command("wireless.rf.channelHop", wireless.rf.channelHop);
-      await await focus.command("wireless.rf.state", wireless.rf.state);
-      await await focus.command("wireless.rf.stability", wireless.rf.stability);
-    }
 
     //TODO: Review toast popup on try/catch works well.
     try {
@@ -493,12 +420,6 @@ class Preferences extends React.Component {
     }
   };
 
-  sendRePairCommand = async () => {
-    let focus = new Focus();
-    const result = await focus.command("wireless.rf.syncPairing");
-    console.log("command returned", result);
-  };
-
   render() {
     const { neurons, selectedNeuron, darkMode, neuronID, devTools, verboseFocus, kbData, modified } = this.state;
     const { inContext, connected, allowBeta, updateAllowBeta } = this.props;
@@ -551,7 +472,7 @@ class Preferences extends React.Component {
                     verboseSwitch={verboseSwitch}
                     onlyCustomSwitch={onlyCustomSwitch}
                     allowBetas={allowBetas}
-                    pairingButton={this.state.wireless ? pairingButton : <></>}
+                    pairingButton={<></>}
                     connected={connected}
                   />
                 </Col>
