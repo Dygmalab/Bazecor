@@ -470,7 +470,8 @@ const English = {
   wireless: {
     title: "Wireless",
     batteryPreferences: {
-      battery: "Battery"
+      battery: "Battery",
+      savingModeDescription: `<p><strong>Turn on automatically when the battery level reach 20%.</strong> This mode is designed to optimize and reduce the power consumption helping extend the time between charges.</p>`
     }
   },
   keyboardSettings: {

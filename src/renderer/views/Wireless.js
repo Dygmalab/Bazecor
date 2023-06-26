@@ -6,6 +6,8 @@ import Focus from "../../api/focus";
 // Bootstrap components imports
 import Styled from "styled-components";
 import Container from "react-bootstrap/Container";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
 
 // Custom component imports
 import PageHeader from "../modules/PageHeader";
@@ -13,9 +15,17 @@ import { BatterySettings, RFSettings } from "../modules/Settings";
 import { LogoLoader } from "../component/Loader";
 
 const Styles = Styled.div`
-  .toggle-button{
-    text-align: center;
-    padding-bottom: 8px;
+  height: 100%;
+  .wireless {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    height: 100%;
+  }
+  .wirelessInner {
+    max-width: 960px;
+    width: 100%;
+    margin: auto;
   }
 `;
 
@@ -47,14 +57,20 @@ const Wireless = ({ inContext, connected, allowBeta, updateAllowBeta }) => {
         <PageHeader text={i18n.wireless.title} showSaving={false} showContentSelector={false} />
         <div className="wirelessWrapper">
           <div className="wirelessInner">
-            <BatterySettings
-              bLeft={bLeft}
-              bRight={bRight}
-              isSavingMode={isSavingMode}
-              setIsSavingMode={setIsSavingMode}
-              isCharging={isCharging}
-            />
-            <RFSettings />
+            <Row>
+              <Col md={6}>
+                <BatterySettings
+                  bLeft={bLeft}
+                  bRight={bRight}
+                  isSavingMode={isSavingMode}
+                  setIsSavingMode={setIsSavingMode}
+                  isCharging={true}
+                />
+              </Col>
+              <Col md={6}>
+                <RFSettings />
+              </Col>
+            </Row>
           </div>
         </div>
       </Container>

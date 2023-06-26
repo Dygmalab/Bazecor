@@ -17,6 +17,18 @@ const Styles = Styled.div`
 .battery-defy--indicator {
   display: flex;
   grid-gap: 4px;
+  margin-bottom: 42px;
+}
+.savingModedescription {
+  margin-top: 16px;
+  font-size: 0.75rem;
+  font-weight: 401;
+  letter-spacing: -0.01em;
+  color: ${({ theme }) => theme.colors.gray300}
+  strong {
+    font-weight: 401;
+    color: ${({ theme }) => theme.colors.gray100}
+  }
 }
 `;
 
@@ -42,6 +54,10 @@ const BatterySettings = ({ bLeft, bRight, isSavingMode, setIsSavingMode, isCharg
               size="sm"
             />
           </Form>
+          <div
+            className="savingModedescription"
+            dangerouslySetInnerHTML={{ __html: i18n.wireless.batteryPreferences.savingModeDescription }}
+          />
         </Card.Body>
       </Card>
     </Styles>
