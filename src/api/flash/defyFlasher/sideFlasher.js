@@ -147,7 +147,7 @@ export default class sideFlaser {
     for (let i = 0; i < this.firmwareSides.length; i = i + 256) {
       // console.log(`Addres ${i} of ${this.firmwareSides.length}`);
       serialport.write("upgrade.keyscanner.sendWrite ");
-      if (wiredOrWireless == "wireless") await sleep(2);
+      if (wiredOrWireless == "wireless") await sleep(4);
       const writeAction = new Uint8Array(new Uint32Array([info.flashStart + i, 256]).buffer);
       const data = this.firmwareSides.slice(i, i + 256);
       const crc = new Uint8Array(new Uint32Array([crc32("CRC-32", data)]).buffer);
@@ -159,20 +159,32 @@ export default class sideFlaser {
       // console.log("write sent: ", buffer);
       // console.log("write sent, %", (step / totalsteps) * 100);
       serialport.write(buffer);
-      if (wiredOrWireless == "wireless") await sleep(2);
-      await readLine();
+      if (wiredOrWireless == "wireless") await sleep(4);
       let ack = await readLine();
+      ack = ack + (await readLine());
       // console.log("ack received: ", ack);
-      if (ack.trim() === "false") {
-        break;
+      if (!ack.includes("true") || ack.includes("false")) {
+        let retries = 3;
+        while (retries > 0 && (!ack.includes("true") || ack.includes("false"))) {
+          if (wiredOrWireless == "wireless") sleep(1000);
+          serialport.write("upgrade.keyscanner.sendWrite ");
+          if (wiredOrWireless == "wireless") sleep(10);
+          serialport.write(buffer);
+          if (wiredOrWireless == "wireless") sleep(10);
+          ack = await readLine();
+          ack = ack + (await readLine());
+          console.log(`received ${ack} after ${3 - retries} retires`);
+          retries--;
+        }
       }
       stateUpd(side, (step / totalsteps) * 100);
       step++;
       // }
     }
     serialport.write("upgrade.keyscanner.validate\n");
-    await readLine();
     validate = await readLine();
+    validate = validate + (await readLine());
+    console.log("result of validation", validate);
     // retry++;
     // }
 
