@@ -19,7 +19,7 @@ const Styles = Styled.div`
   }
 `;
 
-const Wireless = ({ inContext, connected, allowBeta, updateAllowBeta }) => {
+const Wireless = ({ inContext, connected, allowBeta, updateAllowBeta, cancelContext, startContext }) => {
   const [wireless, setWireless] = useState({});
   const [modified, setModified] = useState(false);
   const [isSavingMode, setIsSavingMode] = useState(false);
@@ -36,7 +36,17 @@ const Wireless = ({ inContext, connected, allowBeta, updateAllowBeta }) => {
     console.log("command returned", result);
   }
 
+  async function destroyContext() {
+    setWireless({});
+    setModified(false);
+    getWirelessPreferences();
+    cancelContext();
+  }
+
   async function saveWirelessChanges() {
+    const focus = new Focus();
+
+    // Commands to be sent to the keyboard
     await focus.command("wireless.battery.level", wireless.battery.level);
     await focus.command("wireless.battery.state", wireless.battery.state);
     await focus.command("wireless.battery.mode", wireless.battery.mode);
@@ -115,7 +125,14 @@ const Wireless = ({ inContext, connected, allowBeta, updateAllowBeta }) => {
   return (
     <Styles>
       <Container fluid className="wireless center-content">
-        <PageHeader text={i18n.wireless.title} showSaving={false} showContentSelector={false} />
+        <PageHeader
+          text={i18n.wireless.title}
+          showSaving={true}
+          showContentSelector={false}
+          saveContext={saveWirelessChanges}
+          destroyContext={destroyContext}
+          inContext={modified}
+        />
         <div className="wirelessWrapper">
           <div className="wirelessInner">
             <BatterySettings
@@ -124,6 +141,7 @@ const Wireless = ({ inContext, connected, allowBeta, updateAllowBeta }) => {
               isSavingMode={isSavingMode}
               setIsSavingMode={setIsSavingMode}
               isCharging={isCharging}
+              setModified={setModified}
             />
             <RFSettings />
           </div>
