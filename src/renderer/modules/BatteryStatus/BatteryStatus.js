@@ -132,6 +132,14 @@ const BatteryStatus = ({ disable }) => {
     return () => clearInterval(intervalID);
   }, []);
 
+  useEffect(() => {
+    const intervalID = setInterval(() => {
+      setAnimateIcon(0);
+    }, 1100);
+
+    return () => clearInterval(intervalID);
+  }, [animateIcon]);
+
   const getBatteryStatus = async () => {
     if (disable) return;
     const focus = new Focus();
@@ -187,7 +195,6 @@ const BatteryStatus = ({ disable }) => {
                 }}
                 icoSVG={<IconRefresh />}
                 style={"button-settings"}
-                onAnimationEnd={() => setAnimateIcon(0)}
                 dataAnimate={animateIcon}
               />
             </div>
