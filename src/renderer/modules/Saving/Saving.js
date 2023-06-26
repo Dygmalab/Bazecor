@@ -27,6 +27,7 @@ const Saving = ({ saveContext, destroyContext, inContext }) => {
   return (
     <Style className="savingButtons">
       <RegularButton
+        tabIndex={0}
         onClick={destroyContext}
         buttonText={i18n.app.cancelPending.button}
         style="outline"
@@ -34,6 +35,7 @@ const Saving = ({ saveContext, destroyContext, inContext }) => {
         disabled={!inContext}
       />
       <RegularButton
+        tabIndex={0}
         onClick={saveContext}
         buttonText={i18n.components.save.button}
         style="primary"
