@@ -42,7 +42,7 @@ padding-top: 24px;
 }
 `;
 
-const BatterySettings = ({ wireless, toggleSavingMode, changeWireless }) => {
+function BatterySettings({ wireless, toggleSavingMode, changeWireless }) {
   return (
     <Styles>
       <Card className="overflowFix card-preferences">
@@ -81,6 +81,6 @@ const BatterySettings = ({ wireless, toggleSavingMode, changeWireless }) => {
       </Card>
     </Styles>
   );
-};
+}
 
 export default BatterySettings;
