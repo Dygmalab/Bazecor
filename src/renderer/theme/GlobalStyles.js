@@ -391,6 +391,13 @@ svg text{
   border-radius: 6px;
   background: ${({ theme }) => theme.styles.button.outlineGradient.background};
   border: 2px solid transparent;
+  background-position: 308% 0;
+  background-size: 148%;
+  transition: 200ms all ease-in-out;
+}
+.button.outline.gradient:hover:before {
+  background-position: 300% 0;
+  background-size: 190%;
 }
 
 .buttonFX {
