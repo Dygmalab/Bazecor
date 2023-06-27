@@ -36,7 +36,7 @@ padding-top: 24px;
 }
 `;
 
-const RFSettings = props => {
+const RFSettings = ({ sendRePair, wireless, changeWireless }) => {
   return (
     <Styles>
       <Card className="overflowFix card-preferences">
@@ -47,7 +47,7 @@ const RFSettings = props => {
           <Title text={i18n.wireless.RFPreferences.repairChannel} headingLevel={4} />
           <RegularButton
             buttonText={i18n.wireless.RFPreferences.reconnectSides}
-            onClick={() => console.log("CLick!")}
+            onClick={sendRePair}
             style="outline gradient"
             size="sm"
           />

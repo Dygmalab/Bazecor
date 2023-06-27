@@ -32,8 +32,6 @@ const Styles = Styled.div`
 const Wireless = ({ inContext, connected, allowBeta, updateAllowBeta, cancelContext, startContext }) => {
   const [wireless, setWireless] = useState({});
   const [modified, setModified] = useState(false);
-  const [isSavingMode, setIsSavingMode] = useState(false);
-  const [isCharging, setIsCharging] = useState(false);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -46,6 +44,14 @@ const Wireless = ({ inContext, connected, allowBeta, updateAllowBeta, cancelCont
     console.log("command returned", result);
   }
 
+  async function toggleSavingMode() {
+    let focus = new Focus();
+    await focus.command("wireless.battery.savingMode", !wireless.battery.savingMode);
+    let newWireless = { ...wireless };
+    newWireless.battery.savingMode = !wireless.battery.savingMode;
+    setWireless(newWireless);
+  }
+
   async function destroyContext() {
     setWireless({});
     setModified(false);
@@ -53,13 +59,19 @@ const Wireless = ({ inContext, connected, allowBeta, updateAllowBeta, cancelCont
     cancelContext();
   }
 
+  async function changeWireless(wireless) {
+    setWireless(wireless);
+    if (!modified) {
+      setModified(true);
+      startContext();
+    }
+  }
+
   async function saveWirelessChanges() {
     const focus = new Focus();
 
     // Commands to be sent to the keyboard
-    await focus.command("wireless.battery.level", wireless.battery.level);
-    await focus.command("wireless.battery.state", wireless.battery.state);
-    await focus.command("wireless.battery.mode", wireless.battery.mode);
+    await focus.command("wireless.battery.savingMode", wireless.battery.savingMode);
     await focus.command("wireless.energy.modes", wireless.energy.modes);
     await focus.command("wireless.energy.currentMode", wireless.energy.currentMode);
     await focus.command("wireless.energy.disable", wireless.energy.disable);
@@ -84,11 +96,14 @@ const Wireless = ({ inContext, connected, allowBeta, updateAllowBeta, cancelCont
     await focus.command("wireless.battery.right.level").then(batteryLevel => {
       wireless.battery.RightLevel = batteryLevel ? parseInt(batteryLevel) : 100;
     });
-    await focus.command("wireless.battery.state").then(batteryState => {
-      wireless.battery.state = batteryState;
+    await focus.command("wireless.battery.left.state").then(state => {
+      wireless.battery.LeftState = state ? parseInt(state) : 0;
     });
-    await focus.command("wireless.battery.mode").then(batteryMode => {
-      wireless.battery.mode = batteryMode;
+    await focus.command("wireless.battery.right.state").then(state => {
+      wireless.battery.RightState = state ? parseInt(state) : 0;
+    });
+    await focus.command("wireless.battery.savingMode").then(batteryMode => {
+      wireless.battery.savingMode = batteryMode;
     });
 
     // Energy commands
@@ -147,17 +162,10 @@ const Wireless = ({ inContext, connected, allowBeta, updateAllowBeta, cancelCont
           <div className="wirelessInner">
             <Row>
               <Col md={6}>
-                <BatterySettings
-                  bLeft={wireless.battery ? wireless.battery.LeftLevel : 100}
-                  bRight={wireless.battery ? wireless.battery.RightLevel : 100}
-                  isSavingMode={isSavingMode}
-                  setIsSavingMode={setIsSavingMode}
-                  isCharging={isCharging}
-                  setModified={setModified}
-                />
+                <BatterySettings wireless={wireless} changeWireless={changeWireless} toggleSavingMode={toggleSavingMode} />
               </Col>
               <Col md={6}>
-                <RFSettings />
+                <RFSettings wireless={wireless} changeWireless={changeWireless} sendRePair={sendRePairCommand} />
               </Col>
             </Row>
           </div>

@@ -42,7 +42,7 @@ padding-top: 24px;
 }
 `;
 
-const BatterySettings = ({ bLeft, bRight, isSavingMode, setIsSavingMode, isCharging }) => {
+const BatterySettings = ({ wireless, toggleSavingMode, changeWireless }) => {
   return (
     <Styles>
       <Card className="overflowFix card-preferences">
@@ -51,16 +51,26 @@ const BatterySettings = ({ bLeft, bRight, isSavingMode, setIsSavingMode, isCharg
         </Card.Title>
         <Card.Body className="py-0">
           <div className="battery-defy--indicator">
-            <BatteryStatusSide side="left" batteryLevel={bLeft} size="lg" isSavingMode={isSavingMode} isCharging={isCharging} />
-            <BatteryStatusSide side="right" batteryLevel={bRight} size="lg" isSavingMode={isSavingMode} isCharging={isCharging} />
+            <BatteryStatusSide
+              side="left"
+              batteryLevel={wireless.battery ? wireless.battery.LeftLevel : 100}
+              isSavingMode={wireless.battery ? wireless.battery.savingMode : false}
+              size="lg"
+            />
+            <BatteryStatusSide
+              side="right"
+              batteryLevel={wireless.battery ? wireless.battery.RightLevel : 100}
+              isSavingMode={wireless.battery ? wireless.battery.savingMode : false}
+              size="lg"
+            />
           </div>
           <Form className="batterySettingItem batterySetSavingMode">
             <div className="batterySettingLabel">Saving Mode</div>
             <Form.Check
               type="switch"
               id="settingSavingMode"
-              checked={isSavingMode}
-              onChange={() => setIsSavingMode(!isSavingMode)}
+              checked={wireless.battery ? wireless.battery.savingMode : false}
+              onChange={toggleSavingMode}
             />
           </Form>
           <div
