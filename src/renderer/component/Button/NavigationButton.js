@@ -183,7 +183,7 @@ const Style = Styled.div`
         right: -18px;
     }
   }
-  @media screen and (max-height: 719px) {
+  @media screen and (max-height: 870px) {
     .menuLink,
     .menuLinkInner,
     .menuLinkInner:before {

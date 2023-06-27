@@ -38,6 +38,16 @@ const Style = Styled.div`
         background-color: ${({ theme }) => theme.styles.batteryIndicator.pileBackgroundSavingMode};
     }
 }
+@media screen and (max-height: 870px) {
+  .size--sm {
+    .battery-item--container {
+        .battery-indicator--side {
+            display: none;
+        }
+    }
+  }
+}
+
 `;
 
 const BatteryStatusSide = ({ side, batteryLevel, size, isSavingMode, isCharging }) => {

@@ -1758,7 +1758,7 @@ div.card.card-preferences .card-body {
   }
 }
 
-@media screen and (max-height: 719px) {
+@media screen and (max-height: 870px) {
   #app {
     grid-template-columns: 90px auto;
   }

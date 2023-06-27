@@ -106,7 +106,7 @@ const Styles = Styled.div`
     width: 90px;
   }
 }
-@media screen and (max-height: 719px) {
+@media screen and (max-height: 870px) {
   .left-navbar {
     width: 90px;
   }
@@ -184,7 +184,14 @@ function NavigationMenu(props) {
 
   return (
     <Styles>
-      <Navbar className={`left-navbar sidebar`} sticky="top">
+      <Navbar
+        className={`left-navbar sidebar ${
+          connected && device && device.info && device.info.keyboardType === "wireless" && versions !== null
+            ? "isWireless"
+            : "wired"
+        }`}
+        sticky="top"
+      >
         <NavbarBrand as={Link} to="/" className="brand-image d-lg-block">
           <img alt="" src={DygmaLogo} className="d-inline-block align-top" />
         </NavbarBrand>

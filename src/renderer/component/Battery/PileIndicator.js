@@ -47,7 +47,6 @@ const Style = Styled.div`
     }
 }
 
-
 `;
 
 const PileIndicator = ({ batteryLevel, isCharging }) => {
