@@ -32,6 +32,9 @@ const settingColorMatrix = (color, opacity) => {
 const Light = {
   name: "Light",
   drawerWidth: 64,
+  sidebarWidthLarge: Tokens.sizes.sidebarWidthLarge,
+  sidebarWidthMedium: Tokens.sizes.sidebarWidthMedium,
+  sidebarWidthSmall: Tokens.sizes.sidebarWidthSmall,
   body: {
     backgroundImage: BackgroundImageLight,
     backgroundImage2x: BackgroundImageLight2x

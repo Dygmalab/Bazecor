@@ -33,6 +33,9 @@ const settingColorMatrix = (color, opacity) => {
 const Dark = {
   name: "Dark",
   drawerWidth: 64,
+  sidebarWidthLarge: Tokens.sizes.sidebarWidthLarge,
+  sidebarWidthMedium: Tokens.sizes.sidebarWidthMedium,
+  sidebarWidthSmall: Tokens.sizes.sidebarWidthSmall,
   body: {
     backgroundImage: BackgroundImageDark,
     backgroundImage2x: BackgroundImageDark2x
