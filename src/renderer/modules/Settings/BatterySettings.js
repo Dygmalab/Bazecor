@@ -19,8 +19,11 @@ const Styles = Styled.div`
   grid-gap: 4px;
   margin-bottom: 42px;
 }
+.custom-switch {
+  min-height: 36px;
+}
 .savingModedescription {
-  margin-top: 16px;
+  margin-top: 24px;
   font-size: 0.75rem;
   font-weight: 401;
   letter-spacing: -0.01em;
@@ -51,7 +54,6 @@ const BatterySettings = ({ bLeft, bRight, isSavingMode, setIsSavingMode, isCharg
               id="settingSavingMode"
               checked={isSavingMode}
               onChange={() => setIsSavingMode(!isSavingMode)}
-              size="sm"
             />
           </Form>
           <div
