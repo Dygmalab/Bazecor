@@ -470,7 +470,15 @@ const English = {
   wireless: {
     title: "Wireless",
     batteryPreferences: {
-      battery: "Battery"
+      battery: "Battery",
+      savingModeDescription: `<p><strong>Turn on automatically when the battery level reach 20%.</strong> This mode is designed to optimize and reduce the power consumption helping extend the time between charges.</p>`
+    },
+    RFPreferences: {
+      RFSettings: "RF Settings",
+      repairChannel: "Repair Channel",
+      reconnectSides: "Reconnect sides",
+      repairChannelDescription:
+        "<p>Generate a new channel communication between the sides to reduce noise interference and enhance signal quality for uninterrupted and crystal-clear communication.</p>"
     }
   },
   keyboardSettings: {
