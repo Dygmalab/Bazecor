@@ -149,7 +149,14 @@ const Light = {
       pileBackgroundColor: Tokens.colors.gray50,
       pileBackgroundSavingMode: settingColorOpacity(Tokens.colors.brandWarning, 0.25),
       titleColor: Tokens.colors.gray500,
-      panelBackgroundColor: "rgb(240, 242, 244), rgb(255, 255, 255, 0.6)"
+      panelBackgroundColor: "rgb(240, 242, 244), rgb(255, 255, 255, 0.6)",
+      largeIndicatorPercentageColor: "white",
+      largeIndicatorStrokeColor: Tokens.colors.gray50,
+      largeIndicatorFillColor: Tokens.colors.gray300
+    },
+    batterySettings: {
+      descriptionColor: Tokens.colors.gray400,
+      descriptionHighlightColor: Tokens.colors.gray700
     },
     button: {
       primary: {

@@ -24,10 +24,10 @@ padding-top: 24px;
     font-size: 0.75rem;
     font-weight: 401;
     letter-spacing: -0.01em;
-    color: ${({ theme }) => theme.colors.gray200};
+    color: ${({ theme }) => theme.styles.batterySettings.descriptionColor};
     strong {
       font-weight: 401;
-      color: ${({ theme }) => theme.colors.gray100};
+      color: ${({ theme }) => theme.styles.batterySettings.descriptionHighlightColor};
     }
   } 
 }
