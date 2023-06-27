@@ -54,8 +54,8 @@ const { ipcRenderer } = require("electron");
 const path = require("path");
 
 let focus = new Focus();
-focus.debug = true;
-focus.timeout = 15000;
+focus.debug = false;
+focus.timeout = 5000;
 
 class App extends React.Component {
   constructor(props) {

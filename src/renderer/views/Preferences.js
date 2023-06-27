@@ -342,9 +342,9 @@ class Preferences extends React.Component {
   };
 
   toggleVerboseFocus = event => {
-    this.setState({ verboseFocus: event.target.checked });
     let focus = new Focus();
-    focus.debug = event.target.checked;
+    focus.debug = !this.state.verboseFocus;
+    this.setState({ verboseFocus: !this.state.verboseFocus });
   };
 
   toggleOnlyCustom = event => {
