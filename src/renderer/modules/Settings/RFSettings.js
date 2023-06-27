@@ -14,6 +14,7 @@ import { IconSignal } from "../../component/Icon";
 
 const Styles = Styled.div`
 height: 100%;
+padding-top: 24px;
 .card {
   height: inherit;
 }

@@ -17,7 +17,7 @@ const Style = Styled.div`
     font-weight: 700;
     letter-spacing: -0.025em;
     text-align: center;
-    font-size: 1.5rem;
+    font-size: 1.25rem;
     color: ${({ theme }) => theme.colors.gray25};
     text-align: center;
 }

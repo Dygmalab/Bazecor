@@ -177,16 +177,6 @@ const BatteryStatus = ({ disable }) => {
                 isCharging={isCharging}
               />
             </div>
-            <Form className="batterySettingItem batterySetSavingMode">
-              <div className="batterySettingLabel">Saving Mode</div>
-              <Form.Check
-                type="switch"
-                id="settingSavingMode"
-                checked={isSavingMode}
-                onChange={() => setIsSavingMode(!isSavingMode)}
-                size="sm"
-              />
-            </Form>
             <div className="batterySettingItem batteryUpdateStatus">
               <div className="batterySettingLabel">Force read Battery level</div>
               <ButtonConfig
