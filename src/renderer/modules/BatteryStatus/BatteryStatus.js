@@ -3,10 +3,6 @@ import i18n from "../../i18n";
 import Styled from "styled-components";
 import Focus from "../../../api/focus";
 
-//Bootstrap components
-import Overlay from "react-bootstrap/Overlay";
-import Form from "react-bootstrap/Form";
-
 //Custom components
 import Title from "../../component/Title";
 import { ButtonConfig } from "../../component/Button";
@@ -101,24 +97,12 @@ const Style = Styled.div`
 `;
 
 const BatteryStatus = ({ disable }) => {
-  const [show, setShow] = useState(false);
   const [bLeft, setbLeft] = useState(100);
   const [bRight, setbRight] = useState(100);
   const [isSavingMode, setIsSavingMode] = useState(false);
   const [isCharging, setIsCharging] = useState(false);
   const [animateIcon, setAnimateIcon] = useState(0);
   const target = useRef(null);
-
-  useEffect(() => {
-    let intervalID;
-    if (show === true) {
-      intervalID = setInterval(() => {
-        setShow(false);
-        clearInterval(intervalID);
-      }, 3000);
-    }
-    return () => clearInterval(intervalID);
-  }, [show]);
 
   useEffect(() => {
     getBatteryStatus();
@@ -159,7 +143,7 @@ const BatteryStatus = ({ disable }) => {
 
   return (
     <Style>
-      <div className="battery-indicator--wrapper" ref={target} onMouseEnter={() => setShow(!show)}>
+      <div className="battery-indicator--wrapper" ref={target}>
         <div className="battery-indicator--container">
           <BatteryStatusSide side="left" batteryLevel={bLeft} size="sm" isSavingMode={isSavingMode} isCharging={isCharging} />
           <BatteryStatusSide side="right" batteryLevel={bRight} size="sm" isSavingMode={isSavingMode} isCharging={isCharging} />
