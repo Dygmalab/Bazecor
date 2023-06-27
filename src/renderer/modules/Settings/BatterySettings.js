@@ -14,6 +14,10 @@ import { BatteryStatusSide } from "../../component/Battery";
 import { IconBattery } from "../../component/Icon";
 
 const Styles = Styled.div`
+height: 100%;
+.card {
+  height: inherit;
+}
 .battery-defy--indicator {
   display: flex;
   grid-gap: 4px;
@@ -24,13 +28,15 @@ const Styles = Styled.div`
 }
 .savingModedescription {
   margin-top: 24px;
-  font-size: 0.75rem;
-  font-weight: 401;
-  letter-spacing: -0.01em;
-  color: ${({ theme }) => theme.colors.gray300}
-  strong {
+  p {
+    font-size: 0.75rem;
     font-weight: 401;
-    color: ${({ theme }) => theme.colors.gray100}
+    letter-spacing: -0.01em;
+    color: ${({ theme }) => theme.colors.gray200};
+    strong {
+      font-weight: 401;
+      color: ${({ theme }) => theme.colors.gray50};
+    }
   }
 }
 `;
@@ -38,7 +44,7 @@ const Styles = Styled.div`
 const BatterySettings = ({ bLeft, bRight, isSavingMode, setIsSavingMode, isCharging }) => {
   return (
     <Styles>
-      <Card className="overflowFix card-preferences mt-4">
+      <Card className="overflowFix card-preferences">
         <Card.Title>
           <Title text={i18n.wireless.batteryPreferences.battery} headingLevel={3} svgICO={<IconBattery />} />
         </Card.Title>

@@ -13,23 +13,32 @@ import { RegularButton } from "../../component/Button";
 import { IconSignal } from "../../component/Icon";
 
 const Styles = Styled.div`
+height: 100%;
+.card {
+  height: inherit;
+}
 .RFdescription {
   margin-top: 24px;
-  font-size: 0.75rem;
-  font-weight: 401;
-  letter-spacing: -0.01em;
-  color: ${({ theme }) => theme.colors.gray300}
-  strong {
+  p {
+    font-size: 0.75rem;
     font-weight: 401;
-    color: ${({ theme }) => theme.colors.gray100}
-  }
+    letter-spacing: -0.01em;
+    color: ${({ theme }) => theme.colors.gray200};
+    strong {
+      font-weight: 401;
+      color: ${({ theme }) => theme.colors.gray100};
+    }
+  } 
+}
+.button.outline {
+  margin-top: 4px;
 }
 `;
 
 const RFSettings = props => {
   return (
     <Styles>
-      <Card className="overflowFix card-preferences mt-4">
+      <Card className="overflowFix card-preferences">
         <Card.Title>
           <Title text={i18n.wireless.RFPreferences.RFSettings} headingLevel={3} svgICO={<IconSignal />} />
         </Card.Title>
