@@ -36,7 +36,7 @@ padding-top: 24px;
 }
 `;
 
-const RFSettings = ({ sendRePair, wireless, changeWireless }) => {
+function RFSettings({ sendRePair, wireless, changeWireless }) {
   return (
     <Styles>
       <Card className="overflowFix card-preferences">
@@ -59,6 +59,6 @@ const RFSettings = ({ sendRePair, wireless, changeWireless }) => {
       </Card>
     </Styles>
   );
-};
+}
 
 export default RFSettings;
