@@ -10,7 +10,7 @@ import Title from "../../component/Title";
 import { RegularButton } from "../../component/Button";
 
 //Assets
-import { IconNoSignal } from "../../component/Icon";
+import { IconSignal } from "../../component/Icon";
 
 const Styles = Styled.div`
 .RFdescription {
@@ -31,7 +31,7 @@ const RFSettings = props => {
     <Styles>
       <Card className="overflowFix card-preferences mt-4">
         <Card.Title>
-          <Title text={i18n.wireless.RFPreferences.RFSettings} headingLevel={3} svgICO={<IconNoSignal />} />
+          <Title text={i18n.wireless.RFPreferences.RFSettings} headingLevel={3} svgICO={<IconSignal />} />
         </Card.Title>
         <Card.Body className="py-0">
           <Title text={i18n.wireless.RFPreferences.repairChannel} headingLevel={4} />

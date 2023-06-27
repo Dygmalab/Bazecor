@@ -478,7 +478,7 @@ const English = {
       repairChannel: "Repair Channel",
       reconnectSides: "Reconnect sides",
       repairChannelDescription:
-        "Generate a new channel communication between the sides to reduce noise interference and enhance signal quality for uninterrupted and crystal-clear communication."
+        "<p>Generate a new channel communication between the sides to reduce noise interference and enhance signal quality for uninterrupted and crystal-clear communication.</p>"
     }
   },
   keyboardSettings: {

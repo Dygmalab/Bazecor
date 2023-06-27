@@ -119,6 +119,8 @@ import IconRecord from "./IconRecord";
 import IconRefresh from "./IconRefresh";
 import IconRobot from "./IconRobot";
 import IconRobotSm from "./IconRobotSm";
+import IconSettings from "./IconSettings";
+import IconSignal from "./IconSignal";
 import IconShutdown from "./IconShutdown";
 import IconShutdownSm from "./IconShutdownSm";
 import IconSleep from "./IconSleep";
@@ -136,7 +138,6 @@ import IconToolsBrightnessLessSm from "./IconToolsBrightnessLessSm";
 import IconToolsBrightnessMore from "./IconToolsBrightnessMore";
 import IconToolsBrightnessMoreSm from "./IconToolsBrightnessMoreSm";
 import IconThreeDots from "./IconThreeDots";
-import IconSettings from "./IconSettings";
 import IconUndoRestart from "./IconUndoRestart";
 import IconUpload from "./IconUpload";
 import IconWarning from "./IconWarning";
@@ -250,6 +251,8 @@ export {
   IconRefresh,
   IconRobot,
   IconRobotSm,
+  IconSettings,
+  IconSignal,
   IconShutdown,
   IconShutdownSm,
   IconSleep,
@@ -267,7 +270,6 @@ export {
   IconToolsBrightnessMore,
   IconToolsBrightnessMoreSm,
   IconThreeDots,
-  IconSettings,
   IconUndoRestart,
   IconUpload,
   IconWarning,
