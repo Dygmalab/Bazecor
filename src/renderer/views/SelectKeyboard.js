@@ -292,9 +292,19 @@ class SelectKeyboard extends Component {
   }
 
   componentDidMount() {
+    if (this.props.connected) {
+      this.setState(state => ({
+        devices: [this.props.device],
+        selectedPortIndex: 0
+      }));
+      return;
+    }
     this.finder = () => {
       this.findKeyboards();
     };
+    this.setState({
+      usbEvents: true
+    });
     usb.on("attach", this.finder);
     usb.on("detach", this.finder);
 
@@ -316,6 +326,9 @@ class SelectKeyboard extends Component {
   }
 
   componentWillUnmount() {
+    if (this.state.usbEvents !== true) {
+      return;
+    }
     usb.off("attach", this.finder);
     usb.off("detach", this.finder);
   }
@@ -516,9 +529,14 @@ class SelectKeyboard extends Component {
     await this.props.onConnect(virtualKeyboard.device, virtualKeyboard);
   };
 
+  handleOnDisconnect = async () => {
+    await this.props.onDisconnect();
+    await this.scanDevices();
+  };
+
   render() {
     const { scanFoundDevices, devices, loading, selectedPortIndex, opening, dropdownOpen, selectedVirtualKeyboard } = this.state;
-    const { onDisconnect, connected } = this.props;
+    const { connected } = this.props;
 
     let loader = null;
     if (loading) {
@@ -545,7 +563,7 @@ class SelectKeyboard extends Component {
                 <span>{device.device.info.displayName}</span>
               </Col>
               <Col>
-                <span>{neuron.name}</span>
+                <span>{neuron ? neuron.name : ""}</span>
               </Col>
               <Col>
                 <span className="muted">{device.path || i18n.keyboardSelect.unknown}</span>
@@ -568,7 +586,7 @@ class SelectKeyboard extends Component {
         return {
           index,
           displayName: device.device.info.displayName,
-          userName: neuron.name,
+          userName: neuron ? neuron.name : "",
           path: device.path || i18n.keyboardSelect.unknown
         };
       });
@@ -608,7 +626,7 @@ class SelectKeyboard extends Component {
 
     if (focus.device && selectedDevice && selectedDevice.device == focus.device) {
       connectionButton = (
-        <Button disabled={opening || (devices && devices.length === 0)} color="secondary" onClick={onDisconnect}>
+        <Button disabled={opening || (devices && devices.length === 0)} color="secondary" onClick={this.handleOnDisconnect}>
           {i18n.keyboardSelect.disconnect}
         </Button>
       );
@@ -649,7 +667,7 @@ class SelectKeyboard extends Component {
               cantConnect={(selectedDevice ? !selectedDevice.accessible : false) || opening || (devices && devices.length === 0)}
               onKeyboardConnect={this.onKeyboardConnect}
               connected={connected}
-              onDisconnect={onDisconnect}
+              onDisconnect={this.handleOnDisconnect}
               deviceItems={devicesWData != null ? devicesWData : []}
               selectPort={this.selectPort}
               selectedPortIndex={selectedPortIndex}

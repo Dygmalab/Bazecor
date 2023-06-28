@@ -19,7 +19,6 @@ import React, { useState, useEffect, useRef } from "react";
 import Styled from "styled-components";
 import { useMachine } from "@xstate/react";
 import i18n from "../../i18n";
-import SemVer from "semver";
 
 // State machine
 import FWSelection from "../../controller/FlashingSM/FWSelection";
@@ -164,8 +163,6 @@ height:inherit;
 
 function FirmwareUpdatePanel({ nextBlock, retryBlock, errorBlock, allowBeta }) {
   const [state, send] = useMachine(FWSelection, { context: { allowBeta: allowBeta } });
-  const [checkTimeOut, setCheckTimeOut] = useState(false);
-  const timerRef = useRef(null);
 
   const [loading, setLoading] = useState(true);
   useEffect(() => {

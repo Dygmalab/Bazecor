@@ -5,8 +5,6 @@ import MainProcessSM from "../controller/FlashingSM/MainProcess";
 // Visual components
 import Styled from "styled-components";
 import Container from "react-bootstrap/Container";
-import Card from "react-bootstrap/Card";
-import Spinner from "react-bootstrap/Spinner";
 
 // Extra components
 import i18n from "../i18n";
