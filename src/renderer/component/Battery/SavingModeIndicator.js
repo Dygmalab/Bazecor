@@ -1,11 +1,12 @@
 import React from "react";
-import Tooltip from "react-bootstrap/Overlay";
+import OverlayTrigger from "react-bootstrap/OverlayTrigger";
+import Tooltip from "react-bootstrap/Tooltip";
 import { IconLeaf } from "../Icon";
 
 import Styled from "styled-components";
 const Style = Styled.div`
 &.status--default {
-    --color-status: ${({ theme }) => theme.colors.gray200};
+    --color-status: ${({ theme }) => theme.styles.batteryIndicator.strokeShapeColor};
 }
 &.status--saving{
     --color-status: ${({ theme }) => theme.colors.brandWarning};
@@ -25,7 +26,17 @@ function SavingModeIndicator({ isSavingMode }) {
     <Style
       className={`batterySavingMode ${isSavingMode ? "savingModeEnabled status--saving" : "savingModeDisabled status--default"}`}
     >
-      <IconLeaf />
+      <OverlayTrigger
+        key="keySavingModeOverlay"
+        placement="top"
+        overlay={
+          <Tooltip id={`tooltip-top-savingMode`}>
+            Saving mode <strong>{isSavingMode ? "enabled" : "disabled"}</strong>
+          </Tooltip>
+        }
+      >
+        <IconLeaf />
+      </OverlayTrigger>
     </Style>
   );
 }

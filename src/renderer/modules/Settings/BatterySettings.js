@@ -8,7 +8,7 @@ import Form from "react-bootstrap/Form";
 
 //Custom components
 import Title from "../../component/Title";
-import { BatteryStatusSide } from "../../component/Battery";
+import { BatteryStatusSide, SavingModeIndicator } from "../../component/Battery";
 
 //Assets
 import { IconBattery } from "../../component/Icon";
@@ -23,6 +23,8 @@ padding-top: 24px;
   display: flex;
   grid-gap: 4px;
   margin-bottom: 42px;
+  position: relative;
+  max-width: 202px;
 }
 .custom-switch {
   min-height: 36px;
@@ -66,6 +68,7 @@ const BatterySettings = ({ wireless, toggleSavingMode, changeWireless, isChargin
               isCharging={isCharging}
               size="lg"
             />
+            <SavingModeIndicator isSavingMode={wireless.battery ? wireless.battery.savingMode : false} />
           </div>
           <Form className="batterySettingItem batterySetSavingMode">
             <div className="batterySettingLabel">Saving Mode</div>
