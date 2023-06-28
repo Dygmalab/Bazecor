@@ -35,9 +35,12 @@ const Style = Styled.div`
 
 const DefyBatteryIndicator = ({ side, batteryLevel, isCharging }) => {
   const [batteryHeight, setBatteryHeight] = useState(0);
+  const maskHash = `${(Math.random() + 1).toString(36).substring(7)}-${side}`;
 
   useEffect(() => {
-    if (!isCharging) {
+    if (isCharging) {
+      console.log("Is charging");
+    } else {
       if (batteryLevel > 0 && batteryLevel < 5) {
         setBatteryHeight(2);
       } else {
@@ -75,7 +78,7 @@ const DefyBatteryIndicator = ({ side, batteryLevel, isCharging }) => {
               className="shapeIndicator"
             />
             <mask
-              id="mask0_4143_258857"
+              id={`mask0_4143_258857${maskHash}`}
               style={{ maskType: "alpha" }}
               maskUnits="userSpaceOnUse"
               x="5"
@@ -88,7 +91,7 @@ const DefyBatteryIndicator = ({ side, batteryLevel, isCharging }) => {
                 fill="#57617E"
               />
             </mask>
-            <g mask="url(#mask0_4143_258857)">
+            <g mask={`url(#mask0_4143_258857${maskHash})`}>
               <rect x="-94" y="132" width="89" height={batteryHeight} className="levelIndicator" />
             </g>
           </svg>
@@ -121,7 +124,7 @@ const DefyBatteryIndicator = ({ side, batteryLevel, isCharging }) => {
               className="shapeIndicator"
             />
             <mask
-              id="mask0_4143_258864"
+              id={`mask0_4143_258864${maskHash}`}
               style={{ maskType: "alpha" }}
               maskUnits="userSpaceOnUse"
               x="6"
@@ -134,7 +137,7 @@ const DefyBatteryIndicator = ({ side, batteryLevel, isCharging }) => {
                 fill="#25273B"
               />
             </mask>
-            <g mask="url(#mask0_4143_258864)">
+            <g mask={`url(#mask0_4143_258864${maskHash})`}>
               <rect x="-94" y="132" width="89" height={batteryHeight} className="levelIndicator" />
             </g>
           </svg>

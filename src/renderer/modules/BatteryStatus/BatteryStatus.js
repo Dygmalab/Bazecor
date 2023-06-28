@@ -164,20 +164,20 @@ const BatteryStatus = props => {
     <Style>
       <div className="battery-indicator--wrapper" ref={target}>
         <div className="battery-indicator--container">
-          <BatteryStatusSide side="left" batteryLevel={bLeft} size="sm" isSavingMode={isSavingMode} isCharging={isCharging} />
-          <BatteryStatusSide side="right" batteryLevel={bRight} size="sm" isSavingMode={isSavingMode} isCharging={isCharging} />
+          <BatteryStatusSide side="left" batteryLevel={bLeft} isSavingMode={isSavingMode} isCharging={isCharging} size="sm" />
+          <BatteryStatusSide side="right" batteryLevel={bRight} isSavingMode={isSavingMode} isCharging={isCharging} size="sm" />
         </div>
         <div className="dropdown-menu dropdown-menu--battery">
           <div className="dropdown-menu__inner">
             <Title text={i18n.wireless.batteryPreferences.battery} headingLevel={4} svgICO={<IconBattery />} />
             <div className="battery-defy--indicator">
-              <BatteryStatusSide side="left" batteryLevel={bLeft} size="lg" isSavingMode={isSavingMode} isCharging={isCharging} />
+              <BatteryStatusSide side="left" batteryLevel={bLeft} isSavingMode={isSavingMode} isCharging={isCharging} size="lg" />
               <BatteryStatusSide
                 side="right"
                 batteryLevel={bRight}
-                size="lg"
                 isSavingMode={isSavingMode}
                 isCharging={isCharging}
+                size="lg"
               />
             </div>
             <div className="batterySettingItem batteryUpdateStatus">
