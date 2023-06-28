@@ -131,7 +131,7 @@ const FirmwareUpdateProcess = ({ nextBlock, retryBlock, context, toggleFlashing,
         if (toggledFlashing) return;
         console.log("starting flashing indicators");
         await toggleFlashing();
-        toggleFwUpdate();
+        await toggleFwUpdate();
         sendToggledFlashing(true);
       },
       finishFlashing: async () => {
@@ -139,7 +139,7 @@ const FirmwareUpdateProcess = ({ nextBlock, retryBlock, context, toggleFlashing,
         sendToggledFlashing(false);
         console.log("closing flashin process");
         await toggleFlashing();
-        toggleFwUpdate();
+        await toggleFwUpdate();
         onDisconnect();
       }
     }

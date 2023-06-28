@@ -118,7 +118,7 @@ function NavigationMenu(props) {
   const [isUpdated, setIsUpdated] = useState(true);
   const [isBeta, setIsBeta] = useState(false);
   const [device, setDevice] = useState({});
-  const [virtual, setVirtual] = useState({});
+  const [virtual, setVirtual] = useState(false);
   const [fwList, setFwList] = useState({});
 
   useEffect(() => {

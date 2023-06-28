@@ -96,12 +96,13 @@ const Style = Styled.div`
 }
 `;
 
-const BatteryStatus = ({ disable }) => {
+const BatteryStatus = props => {
   const [bLeft, setbLeft] = useState(100);
   const [bRight, setbRight] = useState(100);
   const [isSavingMode, setIsSavingMode] = useState(false);
   const [isCharging, setIsCharging] = useState(false);
   const [animateIcon, setAnimateIcon] = useState(0);
+  const [batteryInterval, setBatteryInterval] = useState(false);
   const target = useRef(null);
 
   useEffect(() => {
@@ -109,12 +110,24 @@ const BatteryStatus = ({ disable }) => {
   }, []);
 
   useEffect(() => {
-    const intervalID = setInterval(() => {
-      getBatteryStatus();
-    }, 60000);
+    if (props.disable) {
+      clearInterval(batteryInterval);
+      setBatteryInterval(false);
+      return;
+    } else {
+      if (batteryInterval === false) {
+        const intervalID = setInterval(() => {
+          getBatteryStatus();
+        }, 60000);
+        setBatteryInterval(intervalID);
+      }
+    }
 
-    return () => clearInterval(intervalID);
-  }, []);
+    return () => {
+      clearInterval(batteryInterval);
+      setBatteryInterval(false);
+    };
+  }, [props]);
 
   useEffect(() => {
     const intervalID = setInterval(() => {
@@ -124,17 +137,16 @@ const BatteryStatus = ({ disable }) => {
     return () => clearInterval(intervalID);
   }, [animateIcon]);
 
-  const getBatteryStatus = async () => {
-    if (disable) return;
+  async function getBatteryStatus() {
     const focus = new Focus();
     const left = await focus.command("wireless.battery.left.level");
     const right = await focus.command("wireless.battery.right.level");
     setbLeft(left);
     setbRight(right);
-  };
+  }
 
   const forceRetrieveBattery = async () => {
-    if (disable) return;
+    if (props.disable) return;
     const focus = new Focus();
     await focus.command("wireless.battery.forceRead");
     await getBatteryStatus();
