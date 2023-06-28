@@ -10,7 +10,7 @@ import Form from "react-bootstrap/Form";
 //Custom components
 import Title from "../../component/Title";
 import { ButtonConfig } from "../../component/Button";
-import { BatteryStatusSide } from "../../component/Battery";
+import { BatteryStatusSide, SavingModeIndicator } from "../../component/Battery";
 
 //Assets
 import { IconBattery, IconRefresh } from "../../component/Icon";
@@ -39,6 +39,7 @@ const Style = Styled.div`
 .battery-defy--indicator {
   display: flex;
   grid-gap: 4px;
+  position: relative;
 }
 .dropdown-menu--battery {
   opacity: 0;
@@ -182,6 +183,7 @@ const BatteryStatus = ({ disable }) => {
                 isCharging={isCharging}
                 size="lg"
               />
+              <SavingModeIndicator isSavingMode={isSavingMode} />
             </div>
             <div className="batterySettingItem batteryUpdateStatus">
               <div className="batterySettingLabel">Force read Battery level</div>
