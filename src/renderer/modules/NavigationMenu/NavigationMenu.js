@@ -54,36 +54,37 @@ const Styles = Styled.div`
   pointer-events: none;
 }
 .brand-image {
+  margin: 20px 0 32px 0;
   padding: 0 !important;
-  margin-left: 0;
-  margin-top: 20px;
-  margin-bottom: 32px;
   display: block;
   width: 100%;
   text-align: center;
   -webkit-app-region: drag;
   img {
-    margin: 0;
-    height: ${({ theme }) => theme.drawerWidth - 16}px;
-    width: ${({ theme }) => theme.drawerWidth - 16}px;
+    display: block;
+    margin: 0 auto;
+    width: 42px;
+    aspect-ratio: 1;
   }
 }
 .left-navbar {
-  width: ${({ theme }) => theme.drawerWidth}px; 
-  width: 120px;
+  width: var(--sidebarWidth);
   height: 100%;
-  display: block !important;
-
   position: fixed !important;
   z-index: 1100;
   padding: 12px !important;
   background-color: ${({ theme }) => theme.styles.navbar.background};
-  
+  display: flex;
+  flex-direction: column;
   .navbar-nav {
     flex-wrap: wrap;
-    height: calc(100% - 98px);
+    height: inherit;
     .bottomMenu {
       margin-top: auto;
+    }
+    .topMenu,
+    .bottomMenu {
+      width: 100%;
     }
   }
 }
@@ -100,16 +101,6 @@ const Styles = Styled.div`
   background-color: ${({ theme }) => theme.card.backgroundActive};
   border-radius: 8px;
   width: 100%;
-}
-@media screen and (max-width: 999px) {
-  .left-navbar {
-    width: 90px;
-  }
-}
-@media screen and (max-height: 719px) {
-  .left-navbar {
-    width: 90px;
-  }
 }
 `;
 
@@ -184,7 +175,14 @@ function NavigationMenu(props) {
 
   return (
     <Styles>
-      <Navbar className={`left-navbar sidebar`} sticky="top">
+      <Navbar
+        className={`left-navbar sidebar ${
+          connected && device && device.info && device.info.keyboardType === "wireless" && versions !== null
+            ? "isWireless"
+            : "wired"
+        }`}
+        sticky="top"
+      >
         <NavbarBrand as={Link} to="/" className="brand-image d-lg-block">
           <img alt="" src={DygmaLogo} className="d-inline-block align-top" />
         </NavbarBrand>

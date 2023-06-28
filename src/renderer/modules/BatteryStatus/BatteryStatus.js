@@ -94,6 +94,13 @@ const Style = Styled.div`
     transform: scale(1) rotate(360deg);
   }
 }
+@media screen and (max-height: 870px) {
+  .battery-indicator--container {
+    > div {
+      flex: 0 0 50%;
+    }
+  }
+}
 `;
 
 const BatteryStatus = props => {

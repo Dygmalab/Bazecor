@@ -2,7 +2,7 @@ import * as React from "react";
 
 function IconThunder2Stroke(props) {
   return (
-    <svg width={42} height={42} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+    <svg width={42} height={42} viewBox="0 0 42 42" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
       <path
         fillRule="evenodd"
         clipRule="evenodd"

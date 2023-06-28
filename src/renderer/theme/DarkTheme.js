@@ -33,6 +33,9 @@ const settingColorMatrix = (color, opacity) => {
 const Dark = {
   name: "Dark",
   drawerWidth: 64,
+  sidebarWidthLarge: Tokens.sizes.sidebarWidthLarge,
+  sidebarWidthMedium: Tokens.sizes.sidebarWidthMedium,
+  sidebarWidthSmall: Tokens.sizes.sidebarWidthSmall,
   body: {
     backgroundImage: BackgroundImageDark,
     backgroundImage2x: BackgroundImageDark2x
@@ -150,7 +153,14 @@ const Dark = {
       pileBackgroundColor: Tokens.colors.gray800,
       pileBackgroundSavingMode: settingColorOpacity(Tokens.colors.brandWarning, 0.15),
       titleColor: Tokens.colors.gray25,
-      panelBackgroundColor: Tokens.colors.gray800
+      panelBackgroundColor: Tokens.colors.gray800,
+      largeIndicatorPercentageColor: Tokens.colors.gray25,
+      largeIndicatorStrokeColor: Tokens.colors.gray700,
+      largeIndicatorFillColor: Tokens.colors.gray700
+    },
+    batterySettings: {
+      descriptionColor: Tokens.colors.gray200,
+      descriptionHighlightColor: Tokens.colors.gray50
     },
     button: {
       primary: {

@@ -55,7 +55,8 @@ const GlobalStyles = createGlobalStyle`
   }
   #app {
     display: grid;
-    grid-template-columns: 90px auto;
+    --sidebarWidth: ${({ theme }) => theme.sidebarWidthMedium}px;
+    grid-template-columns: var(--sidebarWidth) auto;
   }
   div.main-container {
     padding-left: calc(90px + 8px);
@@ -1740,7 +1741,7 @@ div.card.card-preferences .card-body {
 }
 @media screen and (min-width: 1000px) {
   #app {
-    grid-template-columns: 120px auto;
+    --sidebarWidth: ${({ theme }) => theme.sidebarWidthLarge}px;
   }
   .bs-tooltip-right.tooltipMenu {
     display: none!important;
@@ -1758,17 +1759,22 @@ div.card.card-preferences .card-body {
   }
 }
 
-@media screen and (max-height: 719px) {
+@media screen and (max-height: 870px) {
   #app {
-    grid-template-columns: 90px auto;
+    --sidebarWidth: ${({ theme }) => theme.sidebarWidthMedium}px;
   }
   div.main-container {
-    padding-left: calc(90px + 8px);
     padding-left: 8px;
     padding-right: 8px;
   }
   .bs-tooltip-right.tooltipMenu {
     display: inline-block!important;
+  }
+}
+
+@media screen and (max-height: 670px) {
+  #app {
+    --sidebarWidth: ${({ theme }) => theme.sidebarWidthSmall}px;
   }
 }
 
