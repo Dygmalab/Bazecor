@@ -155,7 +155,6 @@ const BatteryStatus = ({ disable }) => {
     setbLeft(left);
     setbRight(right);
   };
-
   const forceRetrieveBattery = async () => {
     if (disable) return;
     const focus = new Focus();
