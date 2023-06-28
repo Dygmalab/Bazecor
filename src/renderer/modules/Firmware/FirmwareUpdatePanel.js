@@ -162,7 +162,7 @@ height:inherit;
 }
 `;
 
-const FirmwareUpdatePanel = ({ nextBlock, retryBlock, errorBlock, allowBeta }) => {
+function FirmwareUpdatePanel({ nextBlock, retryBlock, errorBlock, allowBeta }) {
   const [state, send] = useMachine(FWSelection, { context: { allowBeta: allowBeta } });
   const [checkTimeOut, setCheckTimeOut] = useState(false);
   const timerRef = useRef(null);
@@ -262,6 +262,6 @@ const FirmwareUpdatePanel = ({ nextBlock, retryBlock, errorBlock, allowBeta }) =
       )}
     </Style>
   );
-};
+}
 
 export default FirmwareUpdatePanel;

@@ -170,7 +170,7 @@ height:inherit;
  * @returns {<FirmwareUpdatePanel>} FirmwareUpdatePanel component.
  */
 
-const FirmwareCheckProcessPanel = ({ nextBlock, retryBlock, context }) => {
+function FirmwareCheckProcessPanel({ nextBlock, retryBlock, context }) {
   const [state, send] = useMachine(DeviceChecks, { context: { device: context.device } });
   const [listItems, setlistItems] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -290,6 +290,6 @@ const FirmwareCheckProcessPanel = ({ nextBlock, retryBlock, context }) => {
       )}
     </Style>
   );
-};
+}
 
 export default FirmwareCheckProcessPanel;

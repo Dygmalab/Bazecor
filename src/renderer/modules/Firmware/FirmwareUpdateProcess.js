@@ -102,7 +102,7 @@ height: inherit;
  * @returns {<FirmwareUpdateProcess>} FirmwareUpdateProcess component.
  */
 
-const FirmwareUpdateProcess = ({ nextBlock, retryBlock, context, toggleFlashing, toggleFwUpdate, onDisconnect, device }) => {
+function FirmwareUpdateProcess({ nextBlock, retryBlock, context, toggleFlashing, toggleFwUpdate, onDisconnect, device }) {
   const [toggledFlashing, sendToggledFlashing] = useState(false);
   const [state, send] = useMachine(FlashDevice, {
     context: {
@@ -287,6 +287,6 @@ const FirmwareUpdateProcess = ({ nextBlock, retryBlock, context, toggleFlashing,
       </div> */}
     </Style>
   );
-};
+}
 
 export default FirmwareUpdateProcess;
