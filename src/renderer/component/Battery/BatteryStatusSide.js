@@ -16,7 +16,7 @@ const Style = Styled.div`
     --color-status: ${({ theme }) => theme.colors.brandPrimary};
 }
 .status--charging {
-    --color-status: ${({ theme }) => theme.colors.purple200};
+    --color-status: ${({ theme }) => theme.styles.batteryIndicator.fillShapeColor};
 }
 .size--sm {
     padding: 4px;
@@ -40,6 +40,25 @@ const Style = Styled.div`
     .pileIndicator {
       max-width: 100%;
     }
+}
+.size--lg {
+  --color-status: ${({ theme }) => theme.styles.batteryIndicator.fillShapeColor};
+  --color-stroke: ${({ theme }) => theme.styles.batteryIndicator.strokeShapeColor};
+  .shapeIndicator {
+    opacity: 0.1;
+  }
+  &.status--default {
+    .shapeIndicator {
+      opacity: 0;
+    }
+  }
+  &.status--saving {
+    --color-status: ${({ theme }) => theme.colors.brandWarning};
+    --color-stroke: ${({ theme }) => theme.colors.brandWarning};
+    .shapeIndicator {
+      opacity: 0.25;
+    }
+  }
 }
 @media screen and (max-width: 999px) {
   .size--sm {

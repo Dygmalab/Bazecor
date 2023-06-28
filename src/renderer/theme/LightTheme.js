@@ -155,7 +155,9 @@ const Light = {
       panelBackgroundColor: "rgb(240, 242, 244), rgb(255, 255, 255, 0.6)",
       largeIndicatorPercentageColor: "white",
       largeIndicatorStrokeColor: Tokens.colors.gray50,
-      largeIndicatorFillColor: Tokens.colors.gray300
+      largeIndicatorFillColor: Tokens.colors.gray300,
+      fillShapeColor: Tokens.colors.purple200,
+      strokeShapeColor: Tokens.colors.gray50
     },
     batterySettings: {
       descriptionColor: Tokens.colors.gray400,
