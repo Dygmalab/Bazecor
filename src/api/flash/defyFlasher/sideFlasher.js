@@ -197,6 +197,7 @@ export default class sideFlaser {
     }
 
     await serialport.close();
+    if (side.includes("left")) await sleep(2000);
     console.log("after serialport close");
 
     return { error: false, message: "" };
