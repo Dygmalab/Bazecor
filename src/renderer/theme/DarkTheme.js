@@ -155,8 +155,10 @@ const Dark = {
       titleColor: Tokens.colors.gray25,
       panelBackgroundColor: Tokens.colors.gray800,
       largeIndicatorPercentageColor: Tokens.colors.gray25,
-      largeIndicatorStrokeColor: Tokens.colors.gray700,
-      largeIndicatorFillColor: Tokens.colors.gray700
+      largeIndicatorStrokeColor: settingColorOpacity(Tokens.colors.gray600, 0.8),
+      largeIndicatorFillColor: settingColorOpacity(Tokens.colors.gray600, 0.5),
+      fillShapeColor: Tokens.colors.purple200,
+      strokeShapeColor: settingColorOpacity(Tokens.colors.gray600, 0.8)
     },
     batterySettings: {
       descriptionColor: Tokens.colors.gray200,
