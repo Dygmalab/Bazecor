@@ -42,7 +42,8 @@ padding-top: 24px;
 }
 `;
 
-const BatterySettings = ({ wireless, toggleSavingMode, changeWireless }) => {
+const BatterySettings = ({ wireless, toggleSavingMode, changeWireless, isCharging }) => {
+  console.log("Wireless: ", wireless);
   return (
     <Styles>
       <Card className="overflowFix card-preferences">
@@ -55,12 +56,14 @@ const BatterySettings = ({ wireless, toggleSavingMode, changeWireless }) => {
               side="left"
               batteryLevel={wireless.battery ? wireless.battery.LeftLevel : 100}
               isSavingMode={wireless.battery ? wireless.battery.savingMode : false}
+              isCharging={isCharging}
               size="lg"
             />
             <BatteryStatusSide
               side="right"
               batteryLevel={wireless.battery ? wireless.battery.RightLevel : 100}
               isSavingMode={wireless.battery ? wireless.battery.savingMode : false}
+              isCharging={isCharging}
               size="lg"
             />
           </div>

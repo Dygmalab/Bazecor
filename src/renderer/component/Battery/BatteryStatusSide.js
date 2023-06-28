@@ -42,12 +42,12 @@ const Style = Styled.div`
     }
 }
 .size--lg {
-  --color-status: ${({ theme }) => theme.styles.batteryIndicator.fillShapeColor};
   --color-stroke: ${({ theme }) => theme.styles.batteryIndicator.strokeShapeColor};
   .shapeIndicator {
     opacity: 0.1;
   }
   &.status--default {
+    --color-status: ${({ theme }) => theme.styles.batteryIndicator.fillShapeColor};
     .shapeIndicator {
       opacity: 0;
     }
@@ -57,6 +57,11 @@ const Style = Styled.div`
     --color-stroke: ${({ theme }) => theme.colors.brandWarning};
     .shapeIndicator {
       opacity: 0.25;
+    }
+  }
+  &.status--critical:not(.status--saving) {
+    .shapeIndicator {
+      opacity: 0.2;
     }
   }
 }
@@ -81,7 +86,7 @@ const Style = Styled.div`
 
 `;
 
-const BatteryStatusSide = ({ side, batteryLevel, size, isSavingMode, isCharging }) => {
+const BatteryStatusSide = ({ side, batteryLevel, isSavingMode, isCharging, size }) => {
   const [loading, setLoading] = useState(true);
   const [sideFirstLetter, setSideFirstLetter] = useState("");
   const [sideStatus, setSideStatus] = useState("default");
@@ -100,7 +105,7 @@ const BatteryStatusSide = ({ side, batteryLevel, size, isSavingMode, isCharging 
     if (batteryLevel < 10 && !isCharging && !isSavingMode) {
       setSideStatus("critical");
     }
-  }, [batteryLevel]);
+  }, [size, batteryLevel, isCharging, isSavingMode]);
 
   if (loading) return <div></div>;
   return (

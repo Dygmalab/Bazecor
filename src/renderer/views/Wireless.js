@@ -162,7 +162,12 @@ const Wireless = ({ inContext, connected, allowBeta, updateAllowBeta, cancelCont
           <div className="wirelessInner">
             <Row>
               <Col md={6}>
-                <BatterySettings wireless={wireless} changeWireless={changeWireless} toggleSavingMode={toggleSavingMode} />
+                <BatterySettings
+                  wireless={wireless}
+                  changeWireless={changeWireless}
+                  toggleSavingMode={toggleSavingMode}
+                  isCharging={false}
+                />
               </Col>
               <Col md={6}>
                 <RFSettings wireless={wireless} changeWireless={changeWireless} sendRePair={sendRePairCommand} />
