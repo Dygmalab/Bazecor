@@ -557,7 +557,6 @@ class SelectKeyboard extends Component {
         let neuron = neurons.find(neuron => neuron.id.toLowerCase() == device.serialNumber);
         // console.log("Checking neurons", neuron);
         let label = device.path;
-        console.log("TestingVirtualError", device);
         if (device.device && device.device.info) {
           displayName = device.device.info.displayName;
           label = (
