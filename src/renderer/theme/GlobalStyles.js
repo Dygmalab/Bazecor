@@ -104,6 +104,11 @@ const GlobalStyles = createGlobalStyle`
     }
     
   }
+
+.transp-bg {
+  background-color: transparent;
+}
+
 .loading {
   color: ${({ theme }) => theme.colors.purple300};
   &.text-center {

@@ -216,7 +216,7 @@ function FirmwareUpdateProcess({ nextBlock, retryBlock, context, toggleFlashing,
               <div className="holdButton">
                 <RegularButton
                   className="flashingbutton nooutlined"
-                  style="outline"
+                  style="outline transp-bg"
                   size="sm"
                   buttonText={i18n.firmwareUpdate.texts.cancelButton}
                   onClick={() => {
@@ -241,7 +241,7 @@ function FirmwareUpdateProcess({ nextBlock, retryBlock, context, toggleFlashing,
               <div className="holdButton">
                 <RegularButton
                   className="flashingbutton nooutlined"
-                  style="outline"
+                  style="outline transp-bg"
                   size="sm"
                   buttonText={i18n.firmwareUpdate.texts.cancelButton}
                   onClick={() => {

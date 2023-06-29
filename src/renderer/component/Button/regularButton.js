@@ -18,15 +18,15 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-const RegularButton = ({ selected, onClick, size, buttonText, style, icoSVG, icoPosition, disabled, tabIndex }) => {
+const RegularButton = ({ selected, onClick, size, buttonText, style, icoSVG, icoPosition, disabled }) => {
   return (
-    <div
+    <button
       onClick={disabled ? () => {} : onClick}
       className={`${size ? size : ""} ${selected ? "active" : ""} button ${style && style} iconOn${
         icoPosition ? icoPosition : "None"
       }`}
       disabled={disabled}
-      tabIndex={tabIndex}
+      tabIndex={0}
     >
       <div className={"buttonLabel"}>
         {icoSVG && icoPosition !== "right" ? icoSVG : ""}
@@ -34,7 +34,7 @@ const RegularButton = ({ selected, onClick, size, buttonText, style, icoSVG, ico
         {icoSVG && icoPosition === "right" ? icoSVG : ""}
       </div>
       <div className="buttonFX"></div>
-    </div>
+    </button>
   );
 };
 

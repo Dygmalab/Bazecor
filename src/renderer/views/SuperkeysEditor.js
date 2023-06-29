@@ -865,7 +865,7 @@ class SuperkeysEditor extends React.Component {
           <Modal.Footer>
             <RegularButton
               buttonText={i18n.editor.superkeys.deleteModal.cancelButton}
-              style="outline"
+              style="outline transp-bg"
               size="sm"
               onClick={this.toggleDeleteModal}
             />
