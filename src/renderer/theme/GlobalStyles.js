@@ -863,9 +863,11 @@ svg text{
 }
 .tooltip .tooltip-inner{
   padding: 12px;
+  font-family: ${({ theme }) => theme.font};
   /* background-color: ${({ theme }) => theme.styles.card.background}; */
-  font-weight: 600;
+  font-weight: 601;
   font-size: 13px;
+  letter-spacing: -0.02em;
 }
 .tooltip .tooltip-inner h5{
   font-weight: 600;
@@ -886,6 +888,9 @@ svg text{
   max-width: 364px!important;
   font-weight: 500;
   font-size: 14px;
+}
+#tooltip-top-savingMode .tooltip-inner {
+  padding: 8px;
 }
 
 }
