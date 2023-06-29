@@ -548,6 +548,7 @@ class SelectKeyboard extends Component {
     }
 
     let devicesWData = null;
+    let displayName = null;
     let port = null;
     const neurons = store.get("neurons");
     // console.log("devices & neurons", neurons, devices);
@@ -556,11 +557,13 @@ class SelectKeyboard extends Component {
         let neuron = neurons.find(neuron => neuron.id.toLowerCase() == device.serialNumber);
         // console.log("Checking neurons", neuron);
         let label = device.path;
+        console.log("TestingVirtualError", device);
         if (device.device && device.device.info) {
+          displayName = device.device.info.displayName;
           label = (
             <Col xs="10" className="key-text">
               <Col>
-                <span>{device.device.info.displayName}</span>
+                <span>{displayName}</span>
               </Col>
               <Col>
                 <span>{neuron ? neuron.name : ""}</span>
@@ -571,10 +574,11 @@ class SelectKeyboard extends Component {
             </Col>
           );
         } else if (device.info) {
+          displayName = device.info.displayName;
           label = (
             <Col xs="10" className="key-text">
               <Col>
-                <span>{device.device.info.displayName}</span>
+                <span>{displayName}</span>
               </Col>
               <Col>
                 <span className="muted" />
@@ -585,7 +589,7 @@ class SelectKeyboard extends Component {
 
         return {
           index,
-          displayName: device.device.info.displayName,
+          displayName: displayName,
           userName: neuron ? neuron.name : "",
           path: device.path || i18n.keyboardSelect.unknown
         };

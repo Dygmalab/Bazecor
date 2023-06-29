@@ -287,7 +287,10 @@ class Focus {
         this.fileData.virtual[cmd].data = args.join(" ");
       }
       console.log("reading virtual data");
-      const result = this.fileData.virtual[cmd].data;
+      let result = "";
+      if (this.fileData.virtual[cmd] !== undefined) {
+        result = this.fileData.virtual[cmd].data;
+      }
       console.log(result);
       return new Promise(resolve => {
         resolve(result);
