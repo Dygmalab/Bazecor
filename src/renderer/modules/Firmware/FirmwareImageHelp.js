@@ -139,7 +139,7 @@ const FirmwareImageHelp = ({
           },
           false
         );
-        videoIntroDefy.current.pause();
+        videoReleaseDefy.current.pause();
       }
       checkSuccess.current.classList.remove("animInCheck");
     }
@@ -150,14 +150,13 @@ const FirmwareImageHelp = ({
       } else {
         videoIntroDefy.current.classList.add("animOut");
         videoReleaseDefy.current.classList.add("animIn");
+        videoReleaseDefy.current.play();
       }
       checkSuccess.current.classList.remove("animInCheck");
     }
     if (countdown == 2) {
       if (deviceProduct == "Raise") {
         videoRelease.current.play();
-      } else {
-        videoReleaseDefy.current.play();
       }
       checkSuccess.current.classList.remove("animInCheck");
     }

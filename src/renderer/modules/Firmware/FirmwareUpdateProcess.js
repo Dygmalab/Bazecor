@@ -166,20 +166,52 @@ function FirmwareUpdateProcess({ nextBlock, retryBlock, context, toggleFlashing,
 
   const stepsDefy = [
     { step: 1, title: i18n.firmwareUpdate.texts.flashCardTitle1, description: i18n.firmwareUpdate.texts.flashCardTitle2 },
-    { step: 2, title: "1. Flashing rigth side", description: "Updating right side of the keyboard" },
-    { step: 3, title: "2. Flashing left side", description: "Updating left side of the keyboard" },
-    { step: 4, title: "3. Resetting the Neuron", description: "Preparing the bootloader!" },
-    { step: 5, title: "4. Flashing Neuron", description: "Making it better 🎂 " },
-    { step: 6, title: "5. Restoring your Layers!", description: "Giving your things back! 💪" },
-    { step: 7, title: "6. Firmware update!", description: "Solid as a rock! 💪" },
-    { step: 8, title: "Firmware update error!", description: "Errors!!!! 🫠" }
+    {
+      step: 2,
+      title: i18n.firmwareUpdate.texts.progressCardStatusDefy1,
+      description: i18n.firmwareUpdate.texts.progressCardBarDefy1
+    },
+    {
+      step: 3,
+      title: i18n.firmwareUpdate.texts.progressCardStatusDefy2,
+      description: i18n.firmwareUpdate.texts.progressCardBarDefy2
+    },
+    {
+      step: 4,
+      title: i18n.firmwareUpdate.texts.progressCardStatusDefy3,
+      description: i18n.firmwareUpdate.texts.progressCardBarDefy3
+    },
+    {
+      step: 5,
+      title: i18n.firmwareUpdate.texts.progressCardStatusDefy4,
+      description: i18n.firmwareUpdate.texts.progressCardBarDefy4
+    },
+    {
+      step: 6,
+      title: i18n.firmwareUpdate.texts.progressCardStatusDefy5,
+      description: i18n.firmwareUpdate.texts.progressCardBarDefy5
+    },
+    {
+      step: 7,
+      title: i18n.firmwareUpdate.texts.progressCardStatusDefy6,
+      description: i18n.firmwareUpdate.texts.progressCardBarSuccess
+    },
+    {
+      step: 8,
+      title: i18n.firmwareUpdate.texts.errorDuringProcessTitle,
+      description: i18n.firmwareUpdate.texts.errorDuringProcessDescription
+    }
   ];
   const stepsRaise = [
     { step: 1, title: i18n.firmwareUpdate.texts.flashCardTitle1, description: i18n.firmwareUpdate.texts.flashCardTitle2 },
     { step: 4, title: i18n.firmwareUpdate.texts.progressCardStatus1, description: i18n.firmwareUpdate.texts.progressCardBar1 },
     { step: 5, title: i18n.firmwareUpdate.texts.progressCardStatus2, description: i18n.firmwareUpdate.texts.progressCardBar2 },
     { step: 6, title: i18n.firmwareUpdate.texts.progressCardStatus3, description: i18n.firmwareUpdate.texts.progressCardBar3 },
-    { step: 7, title: i18n.firmwareUpdate.texts.progressCardStatus4, description: i18n.firmwareUpdate.texts.progressCardBar4 },
+    {
+      step: 7,
+      title: i18n.firmwareUpdate.texts.progressCardStatus4,
+      description: i18n.firmwareUpdate.texts.progressCardBarSuccess
+    },
     {
       step: 8,
       title: i18n.firmwareUpdate.texts.errorDuringProcessTitle,
@@ -226,9 +258,17 @@ function FirmwareUpdateProcess({ nextBlock, retryBlock, context, toggleFlashing,
               </div>
               <div className="holdTootip">
                 <Title
-                  text={i18n.firmwareUpdate.texts.flashCardHelp}
+                  text={
+                    state.context.device.info.product == "Raise"
+                      ? i18n.firmwareUpdate.texts.flashCardHelp
+                      : i18n.firmwareUpdate.texts.flashCardHelpDefy
+                  }
                   headingLevel={6}
-                  tooltip={i18n.firmwareUpdate.texts.flashCardHelpTooltip}
+                  tooltip={
+                    state.context.device.info.product == "Raise"
+                      ? i18n.firmwareUpdate.texts.flashCardHelpTooltip
+                      : i18n.firmwareUpdate.texts.flashCardHelpTooltipDefy
+                  }
                   tooltipSize="wide"
                 />
               </div>
@@ -261,9 +301,17 @@ function FirmwareUpdateProcess({ nextBlock, retryBlock, context, toggleFlashing,
               </div>
               <div className="holdTootip">
                 <Title
-                  text={i18n.firmwareUpdate.texts.flashCardHelp}
+                  text={
+                    state.context.device.info.product == "Raise"
+                      ? i18n.firmwareUpdate.texts.flashCardHelp
+                      : i18n.firmwareUpdate.texts.flashCardHelpDefy
+                  }
                   headingLevel={6}
-                  tooltip={i18n.firmwareUpdate.texts.flashCardHelpTooltip}
+                  tooltip={
+                    state.context.device.info.product == "Raise"
+                      ? i18n.firmwareUpdate.texts.flashCardHelpTooltip
+                      : i18n.firmwareUpdate.texts.flashCardHelpTooltipDefy
+                  }
                   tooltipSize="wide"
                 />
               </div>
