@@ -91,9 +91,19 @@ const DefyBatteryIndicator = ({ side, batteryLevel, isCharging }) => {
                 fill="#57617E"
               />
             </mask>
-            <g mask={`url(#mask0_4143_258857${maskHash})`}>
-              <rect x="-94" y="132" width="89" height={batteryHeight} className="levelIndicator" />
-            </g>
+            {isCharging ? (
+              <path
+                className="lightningbattery"
+                d="M40.9893 63.989L51.6559 48.1001V60.3223H56.9893L46.3226 77.4334V63.989H40.9893Z"
+                fill="currentColor"
+                stroke="currentColor"
+                strokeWidth="1.2"
+              />
+            ) : (
+              <g mask={`url(#mask0_4143_258857${maskHash})`}>
+                <rect x="-94" y="132" width="89" height={batteryHeight} className="levelIndicator" />
+              </g>
+            )}
           </svg>
         ) : (
           ""
@@ -137,14 +147,24 @@ const DefyBatteryIndicator = ({ side, batteryLevel, isCharging }) => {
                 fill="#25273B"
               />
             </mask>
-            <g mask={`url(#mask0_4143_258864${maskHash})`}>
-              <rect x="-94" y="132" width="89" height={batteryHeight} className="levelIndicator" />
-            </g>
+            {isCharging ? (
+              <path
+                className="lightningbattery"
+                d="M40.9893 63.989L51.6559 48.1001V60.3223H56.9893L46.3226 77.4334V63.989H40.9893Z"
+                fill="currentColor"
+                stroke="currentColor"
+                strokeWidth="1.2"
+              />
+            ) : (
+              <g mask={`url(#mask0_4143_258864${maskHash})`}>
+                <rect x="-94" y="132" width="89" height={batteryHeight} className="levelIndicator" />
+              </g>
+            )}
           </svg>
         ) : (
           ""
         )}
-        <div className="batterySide--percentage">{batteryLevel}%</div>
+        {!isCharging ? <div className="batterySide--percentage">{batteryLevel}%</div> : ""}
       </div>
     </Style>
   );

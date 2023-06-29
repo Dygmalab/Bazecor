@@ -68,7 +68,7 @@ const BatterySettings = ({ wireless, toggleSavingMode, changeWireless, isChargin
               isCharging={isCharging}
               size="lg"
             />
-            <SavingModeIndicator isSavingMode={wireless.battery ? wireless.battery.savingMode : false} />
+            <SavingModeIndicator isSavingMode={wireless.battery ? wireless.battery.savingMode : false} isCharging={isCharging} />
           </div>
           <Form className="batterySettingItem batterySetSavingMode">
             <div className="batterySettingLabel">Saving Mode</div>
