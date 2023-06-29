@@ -47,7 +47,6 @@ const Style = Styled.div`
     }
 }
 
-
 `;
 
 const PileIndicator = ({ batteryLevel, isCharging }) => {
@@ -64,7 +63,7 @@ const PileIndicator = ({ batteryLevel, isCharging }) => {
   }, [batteryLevel]);
 
   return (
-    <svg width="22" height="16" viewBox="0 0 22 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <svg className="pileIndicator" width="22" height="16" viewBox="0 0 22 16" fill="none" xmlns="http://www.w3.org/2000/svg">
       {isCharging ? (
         <>
           <mask id="mask0_1956_10095" style={{ maskType: "alpha" }} maskUnits="userSpaceOnUse" x="0" y="4" width="20" height="8">

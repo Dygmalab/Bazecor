@@ -406,7 +406,7 @@ export default class StandardView extends React.Component {
                   <div className="d-flex justify-content-end">
                     <RegularButton
                       onClick={() => closeStandardView(this.state.code)}
-                      style={"outline"}
+                      style={"outline transp-bg"}
                       size="sm"
                       buttonText={i18n.app.cancelPending.button}
                     />

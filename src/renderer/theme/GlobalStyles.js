@@ -55,7 +55,8 @@ const GlobalStyles = createGlobalStyle`
   }
   #app {
     display: grid;
-    grid-template-columns: 90px auto;
+    --sidebarWidth: ${({ theme }) => theme.sidebarWidthMedium}px;
+    grid-template-columns: var(--sidebarWidth) auto;
   }
   div.main-container {
     padding-left: calc(90px + 8px);
@@ -103,6 +104,11 @@ const GlobalStyles = createGlobalStyle`
     }
     
   }
+
+.transp-bg {
+  background-color: transparent;
+}
+
 .loading {
   color: ${({ theme }) => theme.colors.purple300};
   &.text-center {
@@ -862,9 +868,11 @@ svg text{
 }
 .tooltip .tooltip-inner{
   padding: 12px;
+  font-family: ${({ theme }) => theme.font};
   /* background-color: ${({ theme }) => theme.styles.card.background}; */
-  font-weight: 600;
+  font-weight: 601;
   font-size: 13px;
+  letter-spacing: -0.02em;
 }
 .tooltip .tooltip-inner h5{
   font-weight: 600;
@@ -885,6 +893,9 @@ svg text{
   max-width: 364px!important;
   font-weight: 500;
   font-size: 14px;
+}
+#tooltip-top-savingMode .tooltip-inner {
+  padding: 8px;
 }
 
 }
@@ -1740,7 +1751,7 @@ div.card.card-preferences .card-body {
 }
 @media screen and (min-width: 1000px) {
   #app {
-    grid-template-columns: 120px auto;
+    --sidebarWidth: ${({ theme }) => theme.sidebarWidthLarge}px;
   }
   .bs-tooltip-right.tooltipMenu {
     display: none!important;
@@ -1758,17 +1769,22 @@ div.card.card-preferences .card-body {
   }
 }
 
-@media screen and (max-height: 719px) {
+@media screen and (max-height: 870px) {
   #app {
-    grid-template-columns: 90px auto;
+    --sidebarWidth: ${({ theme }) => theme.sidebarWidthMedium}px;
   }
   div.main-container {
-    padding-left: calc(90px + 8px);
     padding-left: 8px;
     padding-right: 8px;
   }
   .bs-tooltip-right.tooltipMenu {
     display: inline-block!important;
+  }
+}
+
+@media screen and (max-height: 670px) {
+  #app {
+    --sidebarWidth: ${({ theme }) => theme.sidebarWidthSmall}px;
   }
 }
 

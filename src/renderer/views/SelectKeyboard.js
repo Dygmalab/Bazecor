@@ -292,9 +292,19 @@ class SelectKeyboard extends Component {
   }
 
   componentDidMount() {
+    if (this.props.connected) {
+      this.setState(state => ({
+        devices: [this.props.device],
+        selectedPortIndex: 0
+      }));
+      return;
+    }
     this.finder = () => {
       this.findKeyboards();
     };
+    this.setState({
+      usbEvents: true
+    });
     usb.on("attach", this.finder);
     usb.on("detach", this.finder);
 
@@ -316,6 +326,9 @@ class SelectKeyboard extends Component {
   }
 
   componentWillUnmount() {
+    if (this.state.usbEvents !== true) {
+      return;
+    }
     usb.off("attach", this.finder);
     usb.off("detach", this.finder);
   }
@@ -516,9 +529,14 @@ class SelectKeyboard extends Component {
     await this.props.onConnect(virtualKeyboard.device, virtualKeyboard);
   };
 
+  handleOnDisconnect = async () => {
+    await this.props.onDisconnect();
+    await this.scanDevices();
+  };
+
   render() {
     const { scanFoundDevices, devices, loading, selectedPortIndex, opening, dropdownOpen, selectedVirtualKeyboard } = this.state;
-    const { onDisconnect, connected } = this.props;
+    const { connected } = this.props;
 
     let loader = null;
     if (loading) {
@@ -529,42 +547,34 @@ class SelectKeyboard extends Component {
       );
     }
 
-    let deviceItems = null;
+    let devicesWData = null;
     let port = null;
-    if (devices && devices.length > 0) {
-      deviceItems = devices.map((option, index) => {
-        let neurons = store.get("neurons");
-        let userName = "Neuron";
-        if (neurons != undefined && option.serialNumber != undefined)
-          userName = neurons.filter(n =>
-            n.id.toLowerCase() == option.serialNumber > 6 ? option.serialNumber.slice(0, -6).toLowerCase() : option.serialNumber
-          );
-        if (userName.length > 0) {
-          userName = userName[0].name;
-        } else {
-          userName = "";
-        }
-        // console.log("LOGGING", userName, option.serialNumber.slice(0, -6).toLowerCase());
-        let label = option.path;
-        if (option.device && option.device.info) {
+    const neurons = store.get("neurons");
+    // console.log("devices & neurons", neurons, devices);
+    if (devices && devices.length > 0 && neurons && neurons.length) {
+      devicesWData = devices.map((device, index) => {
+        let neuron = neurons.find(neuron => neuron.id.toLowerCase() == device.serialNumber);
+        // console.log("Checking neurons", neuron);
+        let label = device.path;
+        if (device.device && device.device.info) {
           label = (
             <Col xs="10" className="key-text">
               <Col>
-                <span>{option.device.info.displayName}</span>
+                <span>{device.device.info.displayName}</span>
               </Col>
               <Col>
-                <span>{userName}</span>
+                <span>{neuron ? neuron.name : ""}</span>
               </Col>
               <Col>
-                <span className="muted">{option.path || i18n.keyboardSelect.unknown}</span>
+                <span className="muted">{device.path || i18n.keyboardSelect.unknown}</span>
               </Col>
             </Col>
           );
-        } else if (option.info) {
+        } else if (device.info) {
           label = (
             <Col xs="10" className="key-text">
               <Col>
-                <span>{option.device.info.displayName}</span>
+                <span>{device.device.info.displayName}</span>
               </Col>
               <Col>
                 <span className="muted" />
@@ -575,54 +585,10 @@ class SelectKeyboard extends Component {
 
         return {
           index,
-          displayName: option.device.info.displayName,
-          userName,
-          path: option.path || i18n.keyboardSelect.unknown
+          displayName: device.device.info.displayName,
+          userName: neuron ? neuron.name : "",
+          path: device.path || i18n.keyboardSelect.unknown
         };
-      });
-
-      const title = devices.map(option => {
-        let neurons = store.get("neurons");
-        let userName = "Neuron";
-        if (neurons != undefined && option.serialNumber != undefined)
-          userName = neurons.filter(n =>
-            n.id.toLowerCase() == option.serialNumber > 6 ? option.serialNumber.slice(0, -6).toLowerCase() : option.serialNumber
-          );
-        if (userName.length > 0) {
-          userName = userName[0].name;
-        } else {
-          userName = "";
-        }
-        // console.log("LOGGING", userName, option.serialNumber.slice(0, -6).toLowerCase());
-        let label = option.path;
-        if (option.device && option.device.info) {
-          label = (
-            <Col xs="12" className="key-text">
-              <Col>
-                <span>{option.device.info.displayName}</span>
-              </Col>
-              <Col>
-                <span>{userName}</span>
-              </Col>
-              <Col>
-                <span className="muted">{option.path || i18n.keyboardSelect.unknown}</span>
-              </Col>
-            </Col>
-          );
-        } else if (option.info) {
-          label = (
-            <Col xs="12" className="key-text">
-              <Col>
-                <span>{option.device.info.displayName}</span>
-              </Col>
-              <Col>
-                <span className="muted" />
-              </Col>
-            </Col>
-          );
-        }
-
-        return <Row key={`key-${option}`}>{label}</Row>;
       });
 
       port = (
@@ -635,8 +601,8 @@ class SelectKeyboard extends Component {
             })
           }
         >
-          <Dropdown.Toggle className="toggler">{title[0]}</Dropdown.Toggle>
-          <Dropdown.Menu className="menu">{deviceItems}</Dropdown.Menu>
+          <Dropdown.Toggle className="toggler">{devicesWData[this.state.selectedPortIndex]}</Dropdown.Toggle>
+          <Dropdown.Menu className="menu">{devicesWData}</Dropdown.Menu>
         </Dropdown>
       );
     }
@@ -660,7 +626,7 @@ class SelectKeyboard extends Component {
 
     if (focus.device && selectedDevice && selectedDevice.device == focus.device) {
       connectionButton = (
-        <Button disabled={opening || (devices && devices.length === 0)} color="secondary" onClick={onDisconnect}>
+        <Button disabled={opening || (devices && devices.length === 0)} color="secondary" onClick={this.handleOnDisconnect}>
           {i18n.keyboardSelect.disconnect}
         </Button>
       );
@@ -701,8 +667,8 @@ class SelectKeyboard extends Component {
               cantConnect={(selectedDevice ? !selectedDevice.accessible : false) || opening || (devices && devices.length === 0)}
               onKeyboardConnect={this.onKeyboardConnect}
               connected={connected}
-              onDisconnect={onDisconnect}
-              deviceItems={deviceItems != null ? deviceItems : []}
+              onDisconnect={this.handleOnDisconnect}
+              deviceItems={devicesWData != null ? devicesWData : []}
               selectPort={this.selectPort}
               selectedPortIndex={selectedPortIndex}
               isVirtual={focus.file}
@@ -712,7 +678,7 @@ class SelectKeyboard extends Component {
               <div className="cardButton">
                 <RegularButton
                   buttonText={i18n.keyboardSelect.virtualKeyboard.buttonText}
-                  style="button-link"
+                  style="button-link transp-bg"
                   icoSVG={<IconArrowRight />}
                   icoPosition="right"
                   size="sm"

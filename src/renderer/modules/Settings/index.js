@@ -20,6 +20,5 @@ import BatterySettings from "./BatterySettings";
 import GeneralSettings from "./GeneralSettings";
 import NeuronSettings from "./NeuronSettings";
 import RFSettings from "./RFSettings";
-import WirelessSettings from "./WirelessSettings";
 
-export { AdvancedSettings, BackupSettings, BatterySettings, GeneralSettings, NeuronSettings, RFSettings, WirelessSettings };
+export { AdvancedSettings, BackupSettings, BatterySettings, GeneralSettings, NeuronSettings, RFSettings };

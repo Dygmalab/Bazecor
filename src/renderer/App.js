@@ -35,7 +35,6 @@ import Dark from "./theme/DarkTheme";
 
 import SelectKeyboard from "./views/SelectKeyboard";
 import FirmwareUpdate from "./views/FirmwareUpdate";
-import AltFirmwareUpdate from "./views/AltFirmwareUpdate";
 import LayoutEditor from "./views/LayoutEditor";
 import MacroEditor from "./views/MacroEditor";
 import SuperkeysEditor from "./views/SuperkeysEditor";
@@ -359,6 +358,7 @@ class App extends React.Component {
             <SelectKeyboard
               path="/keyboard-select"
               connected={connected}
+              device={this.state.device}
               onConnect={this.onKeyboardConnect}
               onDisconnect={this.onKeyboardDisconnect}
               titleElement={() => document.querySelector("#page-title")}
@@ -390,7 +390,7 @@ class App extends React.Component {
               inContext={contextBar}
               titleElement={() => document.querySelector("#page-title")}
             />
-            <AltFirmwareUpdate
+            <FirmwareUpdate
               path="/firmware-update"
               device={this.state.device}
               toggleFlashing={this.toggleFlashing}

@@ -54,6 +54,7 @@ import IconKeyboardSelector from "./IconKeyboardSelector";
 import IconKeyboard2Stroke from "./IconKeyboard2Stroke";
 import IconKeysLight from "./IconKeysLight";
 import IconKeysUnderglow from "./IconKeysUnderglow";
+import IconLeaf from "./IconLeaf";
 import IconLEDNextEffect from "./IconLEDNextEffect";
 import IconLEDNextEffectSm from "./IconLEDNextEffectSm";
 import IconLEDPreviousEffect from "./IconLEDPreviousEffect";
@@ -186,6 +187,7 @@ export {
   IconKeyboard2Stroke,
   IconKeysLight,
   IconKeysUnderglow,
+  IconLeaf,
   IconLEDSwitchLeft,
   IconLEDNextEffect,
   IconLEDNextEffectSm,

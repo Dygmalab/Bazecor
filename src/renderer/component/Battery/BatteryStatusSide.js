@@ -16,7 +16,7 @@ const Style = Styled.div`
     --color-status: ${({ theme }) => theme.colors.brandPrimary};
 }
 .status--charging {
-    --color-status: ${({ theme }) => theme.colors.purple200};
+    --color-status: ${({ theme }) => theme.styles.batteryIndicator.fillShapeColor};
 }
 .size--sm {
     padding: 4px;
@@ -37,10 +37,67 @@ const Style = Styled.div`
     &.status--saving {
         background-color: ${({ theme }) => theme.styles.batteryIndicator.pileBackgroundSavingMode};
     }
+    .pileIndicator {
+      max-width: 100%;
+    }
 }
+.size--lg {
+  --color-stroke: ${({ theme }) => theme.styles.batteryIndicator.strokeShapeColor};
+  .shapeIndicator {
+    opacity: 0.1;
+  }
+  &.status--default {
+    --color-status: ${({ theme }) => theme.styles.batteryIndicator.fillShapeColor};
+    .shapeIndicator {
+      opacity: 0;
+    }
+  }
+  &.status--saving {
+    --color-status: ${({ theme }) => theme.colors.brandWarning};
+    --color-stroke: ${({ theme }) => theme.colors.brandWarning};
+    .shapeIndicator {
+      opacity: 0.25;
+    }
+  }
+  &.status--critical:not(.status--saving) {
+    .shapeIndicator {
+      opacity: 0.2;
+    }
+  }
+  &.status--charging,
+  &.status--charging.status--saving {
+    --color-status: ${({ theme }) => theme.styles.batteryIndicator.fillShapeColor};
+    --color-stroke: ${({ theme }) => theme.styles.batteryIndicator.strokeShapeColor};
+    .lightningbattery {
+      color: ${({ theme }) => theme.styles.batteryIndicator.fillShapeColor};
+    }
+    .shapeIndicator {
+      opacity: 0.1;
+    }
+  }
+}
+@media screen and (max-width: 999px) {
+  .size--sm {
+    .battery-item--container {
+        .battery-indicator--side {
+            display: none;
+        }
+    }
+  }
+}
+@media screen and (max-height: 870px) {
+  .size--sm {
+    .battery-item--container {
+        .battery-indicator--side {
+            display: none;
+        }
+    }
+  }
+}
+
 `;
 
-const BatteryStatusSide = ({ side, batteryLevel, size, isSavingMode, isCharging }) => {
+const BatteryStatusSide = ({ side, batteryLevel, isSavingMode, isCharging, size }) => {
   const [loading, setLoading] = useState(true);
   const [sideFirstLetter, setSideFirstLetter] = useState("");
   const [sideStatus, setSideStatus] = useState("default");
@@ -59,7 +116,7 @@ const BatteryStatusSide = ({ side, batteryLevel, size, isSavingMode, isCharging 
     if (batteryLevel < 10 && !isCharging && !isSavingMode) {
       setSideStatus("critical");
     }
-  }, [batteryLevel]);
+  }, [size, batteryLevel, isCharging, isSavingMode]);
 
   if (loading) return <div></div>;
   return (

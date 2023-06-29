@@ -102,7 +102,7 @@ height: inherit;
  * @returns {<FirmwareUpdateProcess>} FirmwareUpdateProcess component.
  */
 
-const FirmwareUpdateProcess = ({ nextBlock, retryBlock, context, toggleFlashing, toggleFwUpdate, onDisconnect, device }) => {
+function FirmwareUpdateProcess({ nextBlock, retryBlock, context, toggleFlashing, toggleFwUpdate, onDisconnect, device }) {
   const [toggledFlashing, sendToggledFlashing] = useState(false);
   const [state, send] = useMachine(FlashDevice, {
     context: {
@@ -131,7 +131,7 @@ const FirmwareUpdateProcess = ({ nextBlock, retryBlock, context, toggleFlashing,
         if (toggledFlashing) return;
         console.log("starting flashing indicators");
         await toggleFlashing();
-        toggleFwUpdate();
+        await toggleFwUpdate();
         sendToggledFlashing(true);
       },
       finishFlashing: async () => {
@@ -139,7 +139,7 @@ const FirmwareUpdateProcess = ({ nextBlock, retryBlock, context, toggleFlashing,
         sendToggledFlashing(false);
         console.log("closing flashin process");
         await toggleFlashing();
-        toggleFwUpdate();
+        await toggleFwUpdate();
         onDisconnect();
       }
     }
@@ -216,7 +216,7 @@ const FirmwareUpdateProcess = ({ nextBlock, retryBlock, context, toggleFlashing,
               <div className="holdButton">
                 <RegularButton
                   className="flashingbutton nooutlined"
-                  style="outline"
+                  style="outline transp-bg"
                   size="sm"
                   buttonText={i18n.firmwareUpdate.texts.cancelButton}
                   onClick={() => {
@@ -241,7 +241,7 @@ const FirmwareUpdateProcess = ({ nextBlock, retryBlock, context, toggleFlashing,
               <div className="holdButton">
                 <RegularButton
                   className="flashingbutton nooutlined"
-                  style="outline"
+                  style="outline transp-bg"
                   size="sm"
                   buttonText={i18n.firmwareUpdate.texts.cancelButton}
                   onClick={() => {
@@ -287,6 +287,6 @@ const FirmwareUpdateProcess = ({ nextBlock, retryBlock, context, toggleFlashing,
       </div> */}
     </Style>
   );
-};
+}
 
 export default FirmwareUpdateProcess;

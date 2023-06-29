@@ -199,7 +199,7 @@ width: 100%;
  * @returns {<FirmwareUpdatePanel>} FirmwareUpdatePanel component.
  */
 
-const FirmwareErrorPanel = ({ nextBlock, retryBlock }) => {
+function FirmwareErrorPanel({ nextBlock, retryBlock }) {
   const [state, send] = useMachine(FWSelection);
   const [handleError, setHandleError] = useState(false);
 
@@ -262,7 +262,7 @@ const FirmwareErrorPanel = ({ nextBlock, retryBlock }) => {
                 {!handleError ? (
                   <RegularButton
                     className="flashingbutton nooutlined"
-                    style="outline"
+                    style="outline transp-bg"
                     buttonText={i18n.firmwareUpdate.texts.cancelButton}
                     // onClick={onCancelDialog}
                   />
@@ -290,6 +290,6 @@ const FirmwareErrorPanel = ({ nextBlock, retryBlock }) => {
       <div style={{ display: "none" }}>{JSON.stringify(state.context)}</div>
     </Style>
   );
-};
+}
 
 export default FirmwareErrorPanel;

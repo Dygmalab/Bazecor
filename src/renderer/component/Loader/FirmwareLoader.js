@@ -1,7 +1,7 @@
 import React from "react";
 import LogoLoader from "./LogoLoader";
 
-const FirmwareLoader = ({ width, warning, error, paused }) => {
+function FirmwareLoader({ width, warning, error, paused }) {
   return (
     <div className="firmware-wrapper">
       <div className="firmware-row">
@@ -11,6 +11,6 @@ const FirmwareLoader = ({ width, warning, error, paused }) => {
       </div>
     </div>
   );
-};
+}
 
 export default FirmwareLoader;

@@ -2,7 +2,7 @@ import * as React from "react";
 
 function IconRobot2Stroke(props) {
   return (
-    <svg width={42} height={42} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+    <svg width={42} height={42} viewBox="0 0 42 42" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
       <path d="M0 15.75h1.75V28H0V15.75z" fill="currentColor" />
       <path
         fillRule="evenodd"

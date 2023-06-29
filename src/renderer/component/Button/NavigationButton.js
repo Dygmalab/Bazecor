@@ -23,16 +23,17 @@ import Tooltip from "react-bootstrap/Tooltip";
 import LightAccent from "../../../../static/dark/light-accent--lg.png";
 
 const Style = Styled.div`
+width: 100%;
 .disabled{
     opacity: 0.5;
-    
 }
 .disabled.menuLink svg {
   color: ${({ theme }) => theme.styles.navbar.menuLink.color};
 }
 .menuLink {
-    width: 96px;
-    height: 96px;
+    width: 100%;
+    aspect-ratio: 1;
+
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
@@ -100,7 +101,7 @@ const Style = Styled.div`
     background-image: url(${LightAccent});
     opacity: 0;
     transition: 250ms opacity ease-in-out;
-    z-index: 2;
+    z-index: 1;
 }
 .menuLink:hover {   
     text-decoration: none;
@@ -123,8 +124,8 @@ const Style = Styled.div`
 .menuLinkInner {
     position: relative;
     padding: 8px 6px;
-    width: 96px;
-    height: 96px;
+    width: 100%;
+    aspect-ratio: 1;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -146,8 +147,8 @@ const Style = Styled.div`
     opacity: 0;
     transition: 250ms opacity ease-in-out;
     border-radius: 6px;
-    width: 96px;
-    height: 96px;
+    width: 100%;
+    aspect-ratio: 1;
     left: 0;
     top 0;
     content: '';
@@ -155,63 +156,86 @@ const Style = Styled.div`
     background: ${({ theme }) => theme.styles.navbar.menuLink.gradient};
 }
 @media screen and (max-width: 999px) {
-    .menuLink,
-    .menuLinkInner,
-    .menuLinkInner:before {
-      width: 64px;
-      height: 64px;
-    }
-    .menuLinkText {
-        display: none;
-    }
-    .menuLink:after {
-        right: -14px;
-    }
-    .menuLink:before {
-        right: -17px;
-        height: 36px;
-    }
-    .menuLinkInner {
-        align-items: center;
-        display: flex;
-        justify-content: center;
-    }
-    .menuLinkInner svg {
-        transform: scale(0.85);
-    }
-    .menuLink .badge {
-        right: -18px;
-    }
+  .menuLinkText {
+      display: none;
   }
-  @media screen and (max-height: 719px) {
-    .menuLink,
-    .menuLinkInner,
-    .menuLinkInner:before {
-      width: 64px;
-      height: 64px;
-    }
-    .menuLinkText {
-        display: none;
-    }
-    .menuLink:after {
-        right: -14px;
-    }
-    .menuLink:before {
-        right: -17px;
-        height: 36px;
-    }
-    .menuLinkInner {
-        align-items: center;
-        display: flex;
-        justify-content: center;
-    }
-    .menuLinkInner svg {
-        transform: scale(0.85);
-    }
-    .menuLink .badge {
-        right: -18px;
-    }
+  .menuLink:after {
+      right: -14px;
   }
+  .menuLink:before {
+      right: -17px;
+      height: 36px;
+  }
+  .menuLinkInner {
+      align-items: center;
+      display: flex;
+      justify-content: center;
+      padding: 0;
+  }
+  .menuLinkInner svg {
+      transform: scale(1);
+      flex: 0 0 26px;
+  }
+  .menuLink .badge {
+      right: -18px;
+  }
+}
+@media screen and (max-width: 860px) {
+  .menuLinkText {
+      display: none;
+  }
+  .menuLink:before {
+      right: -15px;
+      height: 26px;
+  }
+  .menuLinkInner {
+      align-items: center;
+      display: flex;
+      justify-content: center;
+      padding: 0;
+  }
+  .menuLinkInner svg {
+    transform: scale(1);
+    flex: 0 0 30px;
+  }
+  .menuLink .badge {
+      right: -18px;
+  }
+}
+@media screen and (max-height: 870px) {
+  .menuLinkText {
+      display: none;
+  }
+  .menuLink:before {
+      right: -15px;
+      height: 36px;
+  }
+  .menuLinkInner {
+      align-items: center;
+      display: flex;
+      justify-content: center;
+      padding: 0;
+  }
+  .menuLinkInner svg {
+    transform: scale(1);
+    flex: 0 0 30px;
+  }
+  .menuLink .badge {
+      right: -18px;
+  }
+}
+@media screen and (max-height: 670px) {
+  .menuLink:before {
+    height: 26px;
+  }
+  .menuLink:after {
+    right: -12px;
+  }
+  .menuLinkInner svg {
+    transform: scale(1);
+    flex: 0 0 24px;
+  }
+}
 `;
 //className={`icon-image ${selected ? "select" : ""}`}
 const NavigationButton = ({ selected, onClick, showNotif, notifText, buttonText, icoSVG, disabled }) => {

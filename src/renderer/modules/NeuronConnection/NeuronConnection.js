@@ -181,7 +181,7 @@ const NeuronConnection = ({
               <RegularButton
                 onClick={scanDevices}
                 buttonText={i18n.keyboardSelect.scan}
-                style={`${connected || deviceItems.length > 0 ? "outline" : "primary"}`}
+                style={`${connected || deviceItems.length > 0 ? "outline transp-bg" : "primary"}`}
                 disabled={scanFoundDevices}
               />
               {connected ? (
