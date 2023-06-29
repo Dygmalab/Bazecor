@@ -26,7 +26,6 @@ const Style = Styled.div`
 width: 100%;
 .disabled{
     opacity: 0.5;
-    
 }
 .disabled.menuLink svg {
   color: ${({ theme }) => theme.styles.navbar.menuLink.color};

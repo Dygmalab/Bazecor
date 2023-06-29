@@ -64,6 +64,17 @@ const Style = Styled.div`
       opacity: 0.2;
     }
   }
+  &.status--charging,
+  &.status--charging.status--saving {
+    --color-status: ${({ theme }) => theme.styles.batteryIndicator.fillShapeColor};
+    --color-stroke: ${({ theme }) => theme.styles.batteryIndicator.strokeShapeColor};
+    .lightningbattery {
+      color: ${({ theme }) => theme.styles.batteryIndicator.fillShapeColor};
+    }
+    .shapeIndicator {
+      opacity: 0.1;
+    }
+  }
 }
 @media screen and (max-width: 999px) {
   .size--sm {

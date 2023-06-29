@@ -180,7 +180,7 @@ const BatteryStatus = props => {
                 isCharging={isCharging}
                 size="lg"
               />
-              <SavingModeIndicator isSavingMode={isSavingMode} />
+              <SavingModeIndicator isSavingMode={isSavingMode} isCharging={isCharging} />
             </div>
             <div className="batterySettingItem batteryUpdateStatus">
               <div className="batterySettingLabel">Force read Battery level</div>
