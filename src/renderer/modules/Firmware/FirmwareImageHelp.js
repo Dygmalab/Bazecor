@@ -23,8 +23,8 @@ import { FirmwareNeuronHelp, FirmwareDefyUpdatingStatus } from "../Firmware";
 
 import videoFirmwareUpdate from "../../../../static/videos/update-firmware.mp4";
 import videoFirmwareUpdateReleaseKey from "../../../../static/videos/release-key.mp4";
-import videoFirmwareUpdateDefySRC from "../../../../static/videos/update-firmware-defy-compress.mp4";
-import videoFirmwareUpdateDefyReleaseSRC from "../../../../static/videos/update-firmware-defy-releaseKeys-compress.mp4";
+import videoFirmwareUpdateDefySRC from "../../../../static/videos/update-firmware-defy.mp4";
+import videoFirmwareUpdateDefyReleaseSRC from "../../../../static/videos/release-key-defy.mp4";
 import { IconCheckmarkSm } from "../../component/Icon";
 
 const Style = Styled.div`   
