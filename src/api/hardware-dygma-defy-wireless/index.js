@@ -67,12 +67,12 @@ const Defy_wireless = {
   },
 
   isDeviceSupported: async port => {
-    let focus = new Focus();
+    const focus = new Focus();
     focus._port && focus._port.path === port.path
       ? await focus.open(focus._port, port.device, null)
       : await focus.open(port.path, port.device, null);
     port.serialNumber = await focus.command("hardware.chip_id");
-    focus.close();
+    let result = await focus.close();
     return true;
   }
 };
