@@ -678,7 +678,7 @@ class SelectKeyboard extends Component {
               <div className="cardButton">
                 <RegularButton
                   buttonText={i18n.keyboardSelect.virtualKeyboard.buttonText}
-                  style="button-link"
+                  style="button-link transp-bg"
                   icoSVG={<IconArrowRight />}
                   icoPosition="right"
                   size="sm"

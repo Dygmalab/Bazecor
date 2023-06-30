@@ -197,7 +197,7 @@ const FirmwareVersionStatus = ({
 
               <RegularButton
                 className="flashingbutton nooutlined"
-                style="btn-link"
+                style="btn-link transp-bg"
                 icoSVG={<IconEye />}
                 onClick={() => {
                   setModalFirmwareDetails(true);

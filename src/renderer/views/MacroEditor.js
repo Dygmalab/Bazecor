@@ -585,7 +585,7 @@ class MacroEditor extends React.Component {
           <Modal.Footer>
             <RegularButton
               buttonText={i18n.editor.macros.deleteModal.cancelButton}
-              style="outline"
+              style="outline transp-bg"
               size="sm"
               onClick={this.toggleDeleteModal}
             />

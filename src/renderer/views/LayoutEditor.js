@@ -2008,7 +2008,7 @@ class LayoutEditor extends React.Component {
           <Modal.Footer>
             <RegularButton
               buttonText={i18n.editor.oldMacroModal.cancelButton}
-              style="outline"
+              style="outline transp-bg"
               size="sm"
               onClick={this.toggleMacroModal}
             />
@@ -2037,7 +2037,7 @@ class LayoutEditor extends React.Component {
           <Modal.Footer>
             <RegularButton
               buttonText={i18n.editor.oldNeuronModal.cancelButton}
-              style="outline"
+              style="outline transp-bg"
               size="sm"
               onClick={this.toggleNeuronModal}
             />

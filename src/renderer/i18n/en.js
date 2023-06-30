@@ -231,12 +231,12 @@ const English = {
     },
     standardView: {
       noKeyTransparent: "No Key/Transparent",
-      callOut: 'You can remove a functionality or inherit the functionality of the upper layer using "No key" or "Transparent"',
+      callOut: "You can remove a functionality or inherit the functionality from the previous layer",
       noKey: "No Key",
       noKeyDescription: "There's no function or character assigned to that key.",
       transparent: "Transparent",
       trans: "Trans.",
-      transparentDescription: "There's no function or character assigned to that key.",
+      transparentDescription: "The key triggers the function assigned to the same key from the previous layer.",
       keys: {
         keys: "Keys",
         standardViewTitle: "Select a key",

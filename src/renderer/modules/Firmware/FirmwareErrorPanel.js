@@ -262,7 +262,7 @@ function FirmwareErrorPanel({ nextBlock, retryBlock }) {
                 {!handleError ? (
                   <RegularButton
                     className="flashingbutton nooutlined"
-                    style="outline"
+                    style="outline transp-bg"
                     buttonText={i18n.firmwareUpdate.texts.cancelButton}
                     // onClick={onCancelDialog}
                   />

@@ -124,7 +124,7 @@ function NavigationMenu(props) {
   async function contextUpdater() {
     const focus = new Focus();
     setDevice(focus.device);
-    if (focus.device.bootloader) return;
+    if (focus.device === undefined || focus.device.bootloader) return;
     let parts = await focus.command("version");
     parts = parts.split(" ");
     let versions = {
