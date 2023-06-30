@@ -225,7 +225,15 @@ const FirmwareProgressStatus = ({
         </div>
         <div className="process-row process-footer">
           {stepsPosition == 0 ? (
-            <Title text={i18n.firmwareUpdate.texts.flashCardTitle1} headingLevel={3} color="success" />
+            <Title
+              text={
+                deviceProduct == "Raise"
+                  ? i18n.firmwareUpdate.texts.flashCardTitle1
+                  : i18n.firmwareUpdate.texts.flashCardTitleDefy1
+              }
+              headingLevel={3}
+              color="success"
+            />
           ) : (
             <Title
               text={steps[stepsPosition].title}
@@ -234,7 +242,14 @@ const FirmwareProgressStatus = ({
             />
           )}
           {stepsPosition == 0 ? (
-            <Title text={i18n.firmwareUpdate.texts.flashCardTitle2} headingLevel={6} />
+            <Title
+              text={
+                deviceProduct == "Raise"
+                  ? i18n.firmwareUpdate.texts.flashCardTitle2
+                  : i18n.firmwareUpdate.texts.progressCardTitleDefy2
+              }
+              headingLevel={6}
+            />
           ) : (
             <Title text={steps[stepsPosition].description} headingLevel={6} />
           )}

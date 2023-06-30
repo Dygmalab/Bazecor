@@ -1992,7 +1992,7 @@ div.card.card-preferences .card-body {
     height: calc(100vh - 104px);
   }
   body .singleViewMode .dygma-keyboard-editor {
-    margin-top: 40px!important;
+    margin-top: auto;
   }
   body .ordinary-keyboard-editor {
     margin-top: auto!important;
@@ -2011,6 +2011,24 @@ div.card.card-preferences .card-body {
 @media (min-width: 1980px) and (min-height: 980px) {
   body .layoutEditor .LayerHolder {
     max-width: 1580px;
+  }
+}
+@media (min-width: 2220px) and (min-height: 980px) {
+  body .layoutEditor .LayerHolder {
+    max-width: 2220px;
+  }
+  .singleViewMode.keyboard .raiseKeyboard {
+    max-height: initial;
+  }
+  body .layoutEditor .KeysWrapper {
+    max-width: 100%;
+  }
+  .svgStyle {
+      max-width: 100%!important;
+      width: 100%;
+  }
+  #standardViewCointainer-tabpane-tabKeys .svgStyle {
+    max-width: 1640px!important;
   }
 }
 
