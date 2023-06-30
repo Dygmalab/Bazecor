@@ -54,7 +54,7 @@ const path = require("path");
 
 let focus = new Focus();
 focus.debug = true;
-focus.timeout = 30000;
+focus.timeout = 5000;
 
 class App extends React.Component {
   constructor(props) {

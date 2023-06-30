@@ -335,12 +335,12 @@ class SelectKeyboard extends Component {
   }
 
   selectVirtualKeyboard = event => {
-    console.log(event);
+    // console.log(event);
     this.setState({ selectedVirtualKeyboard: event });
   };
 
   selectPort = event => {
-    console.log(event);
+    // console.log(event);
     this.setState({ selectedPortIndex: event });
   };
 

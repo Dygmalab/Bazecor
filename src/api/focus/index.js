@@ -30,7 +30,7 @@ class Focus {
       this.commands = {
         help: this._help
       };
-      this.timeout = 30000;
+      this.timeout = 5000;
       this.debug = false;
       this.closed = true;
       this.file = false;
@@ -85,67 +85,28 @@ class Focus {
     }
 
     if (this._port !== undefined && this._port.isOpen === false) {
-      delete this._port;
+      this.close();
     }
 
-    console.log("Warning! device being opened");
-    console.log("port status opened?", this._port ? this._port.isOpen : "unknown");
-    console.log("received device", device);
-    console.log("receivec info: ", info);
+    // console.log("Warning! device being opened");
+    // console.log("port status opened?", this._port ? this._port.isOpen : "unknown");
+    // console.log("received device", device);
+    // console.log("received info: ", info);
 
     try {
       let path = undefined;
       if (typeof device == "string") path = device;
+      if (typeof device == "object") path = device.settings.path;
       if (path !== undefined) {
-        this._port = new SerialPort({ path: path, baudRate: 115200, autoOpen: false });
-        this._port.open(function (err) {
-          console.log("opening port");
-          if (err) {
-            return console.log("Error opening port: ", err.message);
-          }
-        });
+        await SerialPort.list();
+        this._port = new SerialPort({ path: path, baudRate: 115200, autoOpen: true });
       } else {
-        throw Error("device not a string!");
+        throw Error("device not a string or object!");
       }
     } catch (error) {
       console.error("found this error!", error);
       throw new Error("Unable to connect");
     }
-
-    // if (typeof device == "string") {
-    //   console.log("type is string");
-    //   if (!info) throw new Error("Device descriptor argument is mandatory");
-    //   try {
-    //     this._port = new SerialPort({ path: device, baudRate: 115200 });
-    //   } catch (error) {
-    //     console.error("Error opening serial port", { error });
-    //     delete this._port;
-    //     throw new Error("Unable to connect");
-    //   }
-    // } else if (typeof device == "object") {
-    //   console.log("type is object");
-    //   if (device.hasOwnProperty("binding")) {
-    //     if (!info) throw new Error("Device descriptor argument is mandatory");
-    //     console.log("has binding: ", device);
-    //     this._port.open({
-    //       path: device.path,
-    //       baudRate: 115200
-    //     });
-    //   } else {
-    //     console.log("doesn't have binding: ", device);
-    //     let devices = await this.find(info.device);
-    //     console.log("devices found", devices);
-    //     if (devices && devices.length >= 1) {
-    //       this._port = new SerialPort({
-    //         path: devices.path,
-    //         baudRate: 115200
-    //       });
-    //     }
-    //     info = device;
-    //   }
-    // } else {
-    //   throw new Error("Invalid argument");
-    // }
 
     this.device = info;
     this.parser = this._port.pipe(new DelimiterParser({ delimiter: "\r\n" }));
@@ -191,45 +152,45 @@ class Focus {
     this._port.on("error", async function (err) {
       console.error("Error on SerialPort: " + err);
       await this._port.close();
-      delete this._port;
     });
     this.closed = false;
     return this._port;
   }
 
-  async close() {
-    if (this.file !== false) {
-      this.result = "";
-      this.callbacks = [];
-      this.device = null;
-      this.supportedCommands = [];
-      this.file = false;
-      this.fileData = null;
-      this.closed = true;
-      return true;
-    }
-    let result;
-    try {
-      console.log("Closing device port!!", this._port);
-      if (this._port) {
-        while (this._port.isOpen === true) {
-          console.log("trying to close!!", this._port.isOpen);
-          result = await this._port.close();
-          console.log("after close!!", this._port.isOpen);
-          this._port.destroy();
-        }
-        delete this._port;
-      }
-    } catch (error) {
-      console.log(error);
-    }
-
+  clearContext() {
     this.result = "";
     this.callbacks = [];
     this.device = null;
     this.supportedCommands = [];
     this.file = false;
     this.fileData = null;
+  }
+
+  async close() {
+    if (this.file !== false) {
+      this.clearContext();
+      this.closed = true;
+      return true;
+    }
+    let result;
+    try {
+      if (this._port) {
+        while (this._port.isOpen === true) {
+          // console.log("Closing device port!!", this._port);
+          result = await this._port.close();
+          // console.log("is it still open? ", this._port.isOpen, result);
+          await this._port.removeAllListeners();
+          await this._port.destroy();
+          // console.log("is it destroyed?", this._port.destroyed);
+        }
+        delete this._port;
+        this.closed = true;
+      }
+    } catch (error) {
+      console.error("error when closing", error);
+    }
+
+    this.clearContext();
     return result;
   }
 
