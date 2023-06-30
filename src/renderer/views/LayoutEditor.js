@@ -109,7 +109,7 @@ const Styles = Styled.div`
   flex: 0 0 100%;
   margin: 0 auto;
   min-width: 680px;
-  max-width: 1280px;
+  max-width: 1640px;
   svg {
     width: 100%;
   }
@@ -1940,7 +1940,7 @@ class LayoutEditor extends React.Component {
           />
           <Row className="full-height keyboardsWrapper">
             <Col className="raise-editor layer-col">
-              <Row className="dygma-keyboard-editor editor m-0">{layer}</Row>
+              <Row className="dygma-keyboard-editor editor">{layer}</Row>
               {this.state.modeselect == "keyboard" && !isStandardView ? (
                 <Row className="ordinary-keyboard-editor m-0">
                   <KeyPickerKeyboard
