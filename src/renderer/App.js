@@ -53,7 +53,7 @@ const { ipcRenderer } = require("electron");
 const path = require("path");
 
 let focus = new Focus();
-focus.debug = false;
+focus.debug = true;
 focus.timeout = 5000;
 
 class App extends React.Component {
@@ -289,7 +289,7 @@ class App extends React.Component {
   };
 
   onKeyboardDisconnect = async () => {
-    focus.close();
+    await focus.close();
     this.setState({
       connected: false,
       device: null,

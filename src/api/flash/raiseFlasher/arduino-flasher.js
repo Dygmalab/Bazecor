@@ -101,8 +101,8 @@ async function read_cb(callback) {
  * Closes the connection to the bootloader.
  * @param {function} cb - An optional callback to run once all the functions have completed.
  */
-function disconnect_cb(cb) {
-  focus.close();
+async function disconnect_cb(cb) {
+  await focus.close();
   cb(null, "");
 }
 

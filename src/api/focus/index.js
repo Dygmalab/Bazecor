@@ -25,7 +25,6 @@ global.focus_instance = null;
 
 class Focus {
   constructor() {
-    this.delay = ms => new Promise(res => setTimeout(res, ms));
     if (!global.focus_instance) {
       global.focus_instance = this;
       this.commands = {
@@ -38,6 +37,8 @@ class Focus {
     }
     return global.focus_instance;
   }
+
+  delay = ms => new Promise(res => setTimeout(res, ms));
 
   debugLog(...args) {
     if (!this.debug) return;
@@ -83,63 +84,28 @@ class Focus {
       return true;
     }
 
-    console.warn("Warning! device being opened", device.isOpen, device, info);
-    let count = 0;
-    while (device._eventsCount < 5 && count < 8) {
-      console.log("waiting for device");
-      await this.delay(250);
-      count++;
+    if (this._port !== undefined && this._port.isOpen === false) {
+      this.close();
     }
-    if (count == 8) return;
-    if (this._port) this._port.close();
-    if (typeof device == "string") {
-      if (!info) throw new Error("Device descriptor argument is mandatory");
-      this._port = new SerialPort(
-        {
-          path: device,
-          baudRate: 115200
-        },
-        err => {
-          if (err !== null) {
-            console.error(err);
-          }
-        }
-      );
-    } else if (typeof device == "object") {
-      if (device.hasOwnProperty("binding")) {
-        if (!info) throw new Error("Device descriptor argument is mandatory");
-        const path = device.path;
-        await device.close();
-        this._port = new SerialPort(
-          {
-            path: path,
-            baudRate: 115200
-          },
-          err => {
-            if (err !== null) {
-              console.error(err);
-            }
-          }
-        );
+
+    // console.log("Warning! device being opened");
+    // console.log("port status opened?", this._port ? this._port.isOpen : "unknown");
+    // console.log("received device", device);
+    // console.log("received info: ", info);
+
+    try {
+      let path = undefined;
+      if (typeof device == "string") path = device;
+      if (typeof device == "object") path = device.settings.path;
+      if (path !== undefined) {
+        await SerialPort.list();
+        this._port = new SerialPort({ path: path, baudRate: 115200, autoOpen: true });
       } else {
-        let devices = await this.find(device);
-        if (devices && devices.length >= 1) {
-          this._port = new SerialPort(
-            {
-              path: devices[0].path,
-              baudRate: 115200
-            },
-            err => {
-              if (err !== null) {
-                console.error(err);
-              }
-            }
-          );
-        }
-        info = device;
+        throw Error("device not a string or object!");
       }
-    } else {
-      throw new Error("Invalid argument");
+    } catch (error) {
+      console.error("found this error!", error);
+      throw new Error("Unable to connect");
     }
 
     this.device = info;
@@ -182,51 +148,50 @@ class Focus {
       }
     }
 
-    // Setup close port alert
-    this._port.on("close", function (error) {
-      if (error !== null && error.disconnected === true) {
-        console.error("Error: device disconnected without control");
-        this.closed = true;
-      } else {
-        console.warn("Warning: device disconnected by user interaction");
-        this.closed = true;
-      }
-    });
     // Setup error port alert
-    this._port.on("error", function (err) {
+    this._port.on("error", async function (err) {
       console.error("Error on SerialPort: " + err);
+      await this._port.close();
     });
     this.closed = false;
     return this._port;
   }
 
-  async close() {
-    // if (this._port) {
-    //   console.log("closing port data >>");
-    //   console.log(inspect(this._port));
-    //   console.log(this._port._eventsCount);
-    //   console.log(
-    //     "Port State: ",
-    //     this._port ? this._port.isOpen : "unable to open"
-    //   );
-    // }
-    try {
-      console.log("CLOSING!!", this._port);
-      if (this._port && this._port.isOpen) {
-        await this._port.close();
-      }
-    } catch (error) {
-      console.log(error);
-    }
-
+  clearContext() {
     this.result = "";
     this.callbacks = [];
-    this._port = null;
     this.device = null;
     this.supportedCommands = [];
-    this.closed = true;
     this.file = false;
     this.fileData = null;
+  }
+
+  async close() {
+    if (this.file !== false) {
+      this.clearContext();
+      this.closed = true;
+      return true;
+    }
+    let result;
+    try {
+      if (this._port) {
+        while (this._port.isOpen === true) {
+          // console.log("Closing device port!!", this._port);
+          result = await this._port.close();
+          // console.log("is it still open? ", this._port.isOpen, result);
+          await this._port.removeAllListeners();
+          await this._port.destroy();
+          // console.log("is it destroyed?", this._port.destroyed);
+        }
+        delete this._port;
+        this.closed = true;
+      }
+    } catch (error) {
+      console.error("error when closing", error);
+    }
+
+    this.clearContext();
+    return result;
   }
 
   async isDeviceAccessible(port) {
@@ -240,12 +205,12 @@ class Focus {
     return true;
   }
 
-  async isDeviceSupported(port) {
-    if (!port.device.isDeviceSupported) {
+  async isDeviceSupported(device) {
+    if (!device.device.isDeviceSupported) {
       return true;
     }
-    const supported = await port.device.isDeviceSupported(port);
-    this.debugLog("focus.isDeviceSupported: port=", port, "supported=", supported);
+    const supported = await device.device.isDeviceSupported(device);
+    this.debugLog("focus.isDeviceSupported: port=", device, "supported=", supported);
     return supported;
   }
 

@@ -255,6 +255,7 @@ class SelectKeyboard extends Component {
           let supported_devices = [];
           for (const device of devices) {
             device.accessible = await focus.isDeviceAccessible(device);
+            console.log("before checking device supported", device, focus);
             if (device.accessible && (await focus.isDeviceSupported(device))) {
               supported_devices.push(device);
             } else if (!device.accessible) {
@@ -334,12 +335,12 @@ class SelectKeyboard extends Component {
   }
 
   selectVirtualKeyboard = event => {
-    console.log(event);
+    // console.log(event);
     this.setState({ selectedVirtualKeyboard: event });
   };
 
   selectPort = event => {
-    console.log(event);
+    // console.log(event);
     this.setState({ selectedPortIndex: event });
   };
 
