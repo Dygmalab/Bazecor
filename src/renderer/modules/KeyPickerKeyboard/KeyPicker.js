@@ -96,6 +96,10 @@ import SWGR from "./SWGR.json";
 
 const Style = Styled.div`
 width: 100%;
+@media screen and (min-width: 1980px) and (min-height: 980px) {
+  max-width: 1860px;
+  margin: 0 auto;
+}
 .keyboard {
   margin: 0;
   padding: 16px;

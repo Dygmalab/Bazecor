@@ -23,8 +23,8 @@ import { FirmwareNeuronHelp, FirmwareDefyUpdatingStatus } from "../Firmware";
 
 import videoFirmwareUpdate from "../../../../static/videos/update-firmware.mp4";
 import videoFirmwareUpdateReleaseKey from "../../../../static/videos/release-key.mp4";
-import videoFirmwareUpdateDefySRC from "../../../../static/videos/update-firmware-defy-compress.mp4";
-import videoFirmwareUpdateDefyReleaseSRC from "../../../../static/videos/update-firmware-defy-releaseKeys-compress.mp4";
+import videoFirmwareUpdateDefySRC from "../../../../static/videos/update-firmware-defy.mp4";
+import videoFirmwareUpdateDefyReleaseSRC from "../../../../static/videos/release-key-defy.mp4";
 import { IconCheckmarkSm } from "../../component/Icon";
 
 const Style = Styled.div`   
@@ -139,7 +139,7 @@ const FirmwareImageHelp = ({
           },
           false
         );
-        videoIntroDefy.current.pause();
+        videoReleaseDefy.current.pause();
       }
       checkSuccess.current.classList.remove("animInCheck");
     }
@@ -150,14 +150,13 @@ const FirmwareImageHelp = ({
       } else {
         videoIntroDefy.current.classList.add("animOut");
         videoReleaseDefy.current.classList.add("animIn");
+        videoReleaseDefy.current.play();
       }
       checkSuccess.current.classList.remove("animInCheck");
     }
     if (countdown == 2) {
       if (deviceProduct == "Raise") {
         videoRelease.current.play();
-      } else {
-        videoReleaseDefy.current.play();
       }
       checkSuccess.current.classList.remove("animInCheck");
     }
