@@ -97,10 +97,10 @@ const Style = Styled.div`
 
 `;
 
-const BatteryStatusSide = ({ side, batteryLevel, isSavingMode, isCharging, size }) => {
+const BatteryStatusSide = ({ side, batteryLevel, isSavingMode, isCharging, batteryStatus, size }) => {
   const [loading, setLoading] = useState(true);
   const [sideFirstLetter, setSideFirstLetter] = useState("");
-  const [sideStatus, setSideStatus] = useState("default");
+  const [sideStatus, setSideStatus] = useState("status--default");
 
   useEffect(() => {
     if (side) {
@@ -110,26 +110,49 @@ const BatteryStatusSide = ({ side, batteryLevel, isSavingMode, isCharging, size 
   }, []);
 
   useEffect(() => {
+    switch (batteryStatus) {
+      case 0:
+        setSideStatus("status--default");
+        break;
+      case 1:
+        setSideStatus("status--charging");
+        break;
+      case 2:
+        setSideStatus("status--charging status--charging-done");
+        break;
+      case 3:
+        setSideStatus("status--fault");
+        break;
+      case 4:
+        setSideStatus("status--disconnected");
+        break;
+      default:
+        setSideStatus("status--fata-error");
+    }
     if (batteryLevel > 10 && batteryLevel < 20 && !isCharging && !isSavingMode) {
-      setSideStatus("warning");
+      setSideStatus("status--warning");
     }
     if (batteryLevel < 10 && !isCharging && !isSavingMode) {
-      setSideStatus("critical");
+      setSideStatus("status--critical");
     }
-  }, [size, batteryLevel, isCharging, isSavingMode]);
+  }, [size, batteryLevel, isCharging, batteryStatus, isSavingMode]);
 
   if (loading) return <div></div>;
   return (
     <Style>
-      <div
-        className={`battery-indicator--item size--${size} item--${side} status--${sideStatus} ${
-          isSavingMode && "status--saving"
-        } ${isCharging && "status--charging"}`}
-      >
+      <div className={`battery-indicator--item size--${size} item--${side} ${sideStatus} ${isSavingMode && "status--saving"}`}>
         <div className="battery-item--container">
           {size == "sm" ? <div className="battery-indicator--side">{sideFirstLetter}</div> : ""}
-          {size == "sm" ? <PileIndicator batteryLevel={batteryLevel} isCharging={isCharging} /> : ""}
-          {size == "lg" ? <DefyBatteryIndicator side={side} batteryLevel={batteryLevel} isCharging={isCharging} /> : ""}
+          {size == "sm" ? (
+            <PileIndicator batteryLevel={batteryLevel} isCharging={isCharging} batteryStatus={batteryStatus} />
+          ) : (
+            ""
+          )}
+          {size == "lg" ? (
+            <DefyBatteryIndicator side={side} batteryLevel={batteryLevel} batteryStatus={batteryStatus} isCharging={isCharging} />
+          ) : (
+            ""
+          )}
         </div>
       </div>
     </Style>
