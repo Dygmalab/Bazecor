@@ -18,34 +18,16 @@
 import React, { Component } from "react";
 
 import NavigationMenu from "./NavigationMenu";
+
 class Header extends Component {
   constructor(props) {
     super(props);
-
-    this.state = {
-      NMenu: true
-    };
-  }
-
-  closeNMenu() {
-    this.setState({ NMenu: false });
   }
 
   render() {
-    const { connected, pages, theme, flashing, fwUpdate, allowBeta } = this.props;
-    const { NMenu } = this.state;
+    const { connected, pages, flashing, fwUpdate, allowBeta } = this.props;
 
-    return (
-      <NavigationMenu
-        connected={connected}
-        pages={pages}
-        open={NavigationMenu}
-        closeMenu={this.closeNavigationMenu}
-        flashing={flashing}
-        fwUpdate={fwUpdate}
-        allowBeta={allowBeta}
-      />
-    );
+    return <NavigationMenu connected={connected} pages={pages} flashing={flashing} fwUpdate={fwUpdate} allowBeta={allowBeta} />;
   }
 }
 

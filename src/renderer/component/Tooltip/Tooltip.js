@@ -38,30 +38,29 @@ export default class CTooltip extends Component {
     return (
       <Tooltip id="select-tooltip" className="longtooltip">
         <TooltipStyle>
-          {texts.map((tip, i) => {
-            return (
-              <React.Fragment key={`Tip-${i}`}>
-                {tip[0] == "*" ? (
-                  <React.Fragment>
-                    {i == 0 ? "" : <br></br>}
-                    <h5 className="ttip-h">{tip.substr(1)}</h5>
-                  </React.Fragment>
-                ) : tip == "%" ? (
-                  <br />
-                ) : (
-                  <p className="ttip-p">{tip}</p>
-                )}
-              </React.Fragment>
-            );
-          })}
+          {texts.map((tip, i) => (
+            <React.Fragment key={`Tip-${i}`}>
+              {tip[0] == "*" ? (
+                <>
+                  {i == 0 ? "" : <br />}
+                  <h5 className="ttip-h">{tip.substr(1)}</h5>
+                </>
+              ) : tip == "%" ? (
+                <br />
+              ) : (
+                <p className="ttip-p">{tip}</p>
+              )}
+            </React.Fragment>
+          ))}
         </TooltipStyle>
       </Tooltip>
     );
   }
+
   RenderImgToolTip(image) {
     return (
       <Tooltip id="select-tooltip" className="longtooltip">
-        <img src={image}></img>
+        <img src={image} />
       </Tooltip>
     );
   }

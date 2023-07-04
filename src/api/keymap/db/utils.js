@@ -17,16 +17,14 @@
 
 function withModifiers(table, groupName, top, base) {
   return {
-    groupName: groupName,
-    keys: table.keys.map(key => {
-      return {
-        code: key.code + base,
-        labels: {
-          top: top,
-          primary: key.labels.primary
-        }
-      };
-    })
+    groupName,
+    keys: table.keys.map(key => ({
+      code: key.code + base,
+      labels: {
+        top,
+        primary: key.labels.primary,
+      },
+    })),
   };
 }
 

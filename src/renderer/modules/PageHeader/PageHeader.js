@@ -94,7 +94,7 @@ z-index: 300;
 }
 `;
 
-const PageHeader = ({
+function PageHeader({
   size,
   text,
   style,
@@ -104,8 +104,8 @@ const PageHeader = ({
   showSaving,
   saveContext,
   destroyContext,
-  inContext
-}) => {
+  inContext,
+}) {
   return (
     <Style className={`${style === "pageHeaderFlatBottom" ? "pageHeaderSticky" : ""}`}>
       <div className={`pageHeader ${size && size} ${style && style} ${isColorActive ? "extraPanelActive" : ""}`}>
@@ -114,13 +114,13 @@ const PageHeader = ({
         </div>
         <div className="pageTools">
           {/* //onSelect, itemList, selectedItem, deleteItem, subtitle */}
-          {contentSelector ? contentSelector : ""}
+          {contentSelector || ""}
           {showSaving ? <Saving saveContext={saveContext} destroyContext={destroyContext} inContext={inContext} /> : ""}
         </div>
       </div>
       {isColorActive ? colorEditor : ""}
     </Style>
   );
-};
+}
 
 export default PageHeader;

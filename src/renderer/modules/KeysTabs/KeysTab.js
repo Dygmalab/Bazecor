@@ -5,7 +5,7 @@ import i18n from "../../i18n";
 
 import Title from "../../component/Title";
 import CallOut from "../../component/Callout";
-import { KeyPickerReduced } from "../../modules/KeyPickerKeyboard";
+import { KeyPickerReduced } from "../KeyPickerKeyboard";
 import ModPicker from "../KeyPickerKeyboard/ModPicker";
 import DualFunctionPicker from "../KeyPickerKeyboard/DualFunctionPicker";
 import { RegularButton, ButtonConfig, ButtonMouse } from "../../component/Button";
@@ -27,7 +27,7 @@ import {
   IconToolsEject,
   IconLEDSwitchLeft,
   IconLEDPreviousEffect,
-  IconLEDNextEffect
+  IconLEDNextEffect,
 } from "../../component/Icon";
 import Callout from "../../component/Callout";
 
@@ -125,10 +125,10 @@ class KeysTab extends Component {
             keyCode={keyCode}
             disableMove={false}
             // disableMods={false}
-            disableMods={(superkeyAction == 0 || superkeyAction == 3) && actTab == "super" ? true : false}
-            //disableMove={![0, 3].includes(actions) && actTab == "super"}
+            disableMods={!!((superkeyAction == 0 || superkeyAction == 3) && actTab == "super")}
+            // disableMove={![0, 3].includes(actions) && actTab == "super"}
             actTab={actTab}
-            superName={"superName"}
+            superName="superName"
             selectedlanguage={selectedlanguage}
             kbtype={kbtype}
           />

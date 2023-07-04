@@ -6,7 +6,7 @@ function DotsProgressBar({ progressWidth }) {
       <mask
         id="prefix__maskDotsProgress"
         style={{
-          maskType: "alpha"
+          maskType: "alpha",
         }}
         maskUnits="userSpaceOnUse"
         x={0}

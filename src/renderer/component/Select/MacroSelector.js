@@ -17,8 +17,8 @@
 
 import React from "react";
 import Styled from "styled-components";
-import i18n from "../../i18n";
 import Dropdown from "react-bootstrap/Dropdown";
+import i18n from "../../i18n";
 
 import MacrosMemoryUsage from "../../modules/Macros/MacrosMemoryUsage";
 import { IconArrowsSmallSeparating, IconPen, IconAddNew, IconClone, IconDelete } from "../Icon";
@@ -88,7 +88,7 @@ class MacroSelector extends React.Component {
 
     this.state = {
       show: false,
-      showAdd: false
+      showAdd: false,
     };
   }
 
@@ -187,17 +187,17 @@ class MacroSelector extends React.Component {
             name={itemList[selectedItem].name}
             toggleShow={this.toggleShow}
             handleSave={this.handleSave}
-            modalTitle={`Change macro name`}
-            labelInput={`Macro name`}
+            modalTitle="Change macro name"
+            labelInput="Macro name"
           />
         )}
         <NameModal
           show={showAdd}
-          name={""}
+          name=""
           toggleShow={this.toggleShowAdd}
           handleSave={this.handleAdd}
-          modalTitle={`Create new macro name`}
-          labelInput={`Macro name`}
+          modalTitle="Create new macro name"
+          labelInput="Macro name"
         />
       </Style>
     );

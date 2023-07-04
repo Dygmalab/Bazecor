@@ -2,9 +2,8 @@ import React from "react";
 import Styled from "styled-components";
 import Card from "react-bootstrap/Card";
 import Accordion from "react-bootstrap/Accordion";
+import IconCheckmarkSm from "@Assets/base/icon-checkmark-green.svg";
 import i18n from "../../i18n";
-
-import IconCheckmarkSm from "../../../../static/base/icon-checkmark-green.svg";
 
 const Style = Styled.div`
 .card-header:hover {
@@ -68,7 +67,7 @@ h5 {
 }
 `;
 
-const SuperKeysFeatures = () => {
+function SuperKeysFeatures() {
   return (
     <Style>
       <Accordion className="simpleAccordion" defaultActiveKey="0">
@@ -167,6 +166,6 @@ const SuperKeysFeatures = () => {
       </Accordion>
     </Style>
   );
-};
+}
 
 export default SuperKeysFeatures;

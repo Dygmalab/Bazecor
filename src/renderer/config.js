@@ -16,9 +16,9 @@
  */
 
 // TODO: const isDevelopment = process.env.NODE_ENV !== "production";
-const isDevelopment = true;
-
 import path from "path";
+
+const isDevelopment = true;
 
 function getStaticPath() {
   if (process.env.NODE_ENV !== "production") {
@@ -26,9 +26,8 @@ function getStaticPath() {
     // Instead, it includes an unexpected `node_modules` path, specifically:
     // node_modules/electron/dist/Electron.app/Contents/Resources/static
     return path.join(path.resolve(__dirname), "..", "..", "static");
-  } else {
-    return __static;
   }
+  return __static;
 }
 
 export { isDevelopment, getStaticPath };

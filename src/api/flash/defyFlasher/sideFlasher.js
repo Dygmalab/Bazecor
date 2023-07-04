@@ -28,10 +28,10 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import fs from "fs";
 import { crc32 } from "easy-crc";
-import { SerialPort } from "serialport";
 import { DelimiterParser } from "@serialport/parser-delimiter";
+
+const { SerialPort } = eval('require("serialport")');
 
 export default class sideFlaser {
   constructor(path, firmwareSides) {
@@ -42,17 +42,16 @@ export default class sideFlaser {
   async prepareNeuron() {
     // Auxiliary Functions
 
-    const sleep = ms => {
-      return new Promise(resolve => {
+    const sleep = ms =>
+      new Promise(resolve => {
         setTimeout(resolve, ms);
       });
-    };
 
     // Serial port instancing
     const serialport = new SerialPort({ path: this.path, baudRate: 115200 });
     const parser = serialport.pipe(new DelimiterParser({ delimiter: "\r\n" }));
-    let receivedData = [];
-    parser.on("data", function (data) {
+    const receivedData = [];
+    parser.on("data", data => {
       receivedData.push(data.toString("utf-8"));
     });
     console.log("Upgrading the neuron...");
@@ -66,11 +65,10 @@ export default class sideFlaser {
 
   async flashSide(side, stateUpd, wiredOrWireless) {
     // Auxiliary Functions
-    const sleep = ms => {
-      return new Promise(resolve => {
+    const sleep = ms =>
+      new Promise(resolve => {
         setTimeout(resolve, ms);
       });
-    };
 
     const recoverSeal = bin => {
       const uint = new Uint32Array(new Uint8Array(bin).buffer);
@@ -81,7 +79,7 @@ export default class sideFlaser {
         programStart: uint[3],
         programSize: uint[4],
         programCrc: uint[5],
-        programVersion: uint[6]
+        programVersion: uint[6],
       };
     };
 
@@ -102,7 +100,7 @@ export default class sideFlaser {
     const serialport = new SerialPort({ path: this.path, baudRate: 115200 });
     const parser = serialport.pipe(new DelimiterParser({ delimiter: "\r\n" }));
     let receivedData = [];
-    parser.on("data", function (data) {
+    parser.on("data", data => {
       receivedData.push(data.toString("utf-8"));
     });
 
@@ -127,17 +125,17 @@ export default class sideFlaser {
     ans = await readLine();
     console.log("Received Info from Side: ", ans);
     ans = ans.split(" ");
-    let info = {
+    const info = {
       hardwareVersion: parseInt(ans[0]),
       flashStart: parseInt(ans[1]),
       programVersion: parseInt(ans[2]),
       programCrc: parseInt(ans[3]),
-      validation: parseInt(ans[4])
+      validation: parseInt(ans[4]),
     };
 
     // Write Firmware FOR Loop
     let step = 0;
-    let totalsteps = this.firmwareSides.length / 256;
+    const totalsteps = this.firmwareSides.length / 256;
     console.log("CRC check is ", info.programCrc !== seal.programCrc, ", info:", info.programCrc, "seal:", seal.programCrc);
     if (info.programCrc !== seal.programCrc || isItBootloader === true) {
       let validate = "false",

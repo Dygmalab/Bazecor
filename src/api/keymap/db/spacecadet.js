@@ -22,17 +22,17 @@ const SpaceCadetTable = {
       code: 53591,
       labels: {
         top: "SCadet",
-        primary: "ENABLE"
-      }
+        primary: "ENABLE",
+      },
     },
     {
       code: 53592,
       labels: {
         top: "SCadet",
-        primary: "DISABLE"
-      }
-    }
-  ]
+        primary: "DISABLE",
+      },
+    },
+  ],
 };
 
 export default SpaceCadetTable;

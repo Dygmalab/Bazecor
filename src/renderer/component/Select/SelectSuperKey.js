@@ -59,6 +59,7 @@ class SelectSuperKey extends Component {
     this.state = {};
     this.taps = ["TAP", "HOLD", "T&H", "2TAP", "2T&H"];
   }
+
   render() {
     const { action, actions, selKeys, onKeySelect, superkeys, keyCode } = this.props;
 
@@ -67,7 +68,7 @@ class SelectSuperKey extends Component {
       .fill()
       .map((_, i) => i + 53980);
 
-    let adjactions = actions;
+    const adjactions = actions;
     if (adjactions.length < 5) {
       while (adjactions.length < 5) {
         adjactions.push(0);
@@ -94,15 +95,13 @@ class SelectSuperKey extends Component {
             </div>
           </Dropdown.Toggle>
           <Dropdown.Menu>
-            {superk.map((x, id) => {
-              return (
-                <Dropdown.Item eventKey={x} key={`super-${id}`} disabled={x == -1}>
-                  <div className="dropdownInner">
-                    <div className="dropdownItem">{`${id + 1}. ${superkeys[id].name}`}</div>
-                  </div>
-                </Dropdown.Item>
-              );
-            })}
+            {superk.map((x, id) => (
+              <Dropdown.Item eventKey={x} key={`super-${id}`} disabled={x == -1}>
+                <div className="dropdownInner">
+                  <div className="dropdownItem">{`${id + 1}. ${superkeys[id].name}`}</div>
+                </div>
+              </Dropdown.Item>
+            ))}
           </Dropdown.Menu>
         </Dropdown>
       </Style>

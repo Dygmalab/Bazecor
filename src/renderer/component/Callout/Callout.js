@@ -228,7 +228,7 @@ const Callout = ({ content, media, size, className, maxWidth, hasVideo, videoDur
       )}
     </Style>
   );
-};
+}
 
 Callout.propTypes = {
   content: PropTypes.string.isRequired,

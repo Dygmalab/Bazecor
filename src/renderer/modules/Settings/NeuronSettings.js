@@ -1,17 +1,17 @@
 import PropTypes from "prop-types";
 import React, { Component } from "react";
-import i18n from "../../i18n";
 
 // React Bootstrap Components
 import Card from "react-bootstrap/Card";
 import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
+import i18n from "../../i18n";
 
 // Own Components
 import Title from "../../component/Title";
 import { NeuronSelector } from "../../component/Select";
-import NeuronData from "../../modules/NeuronData";
+import NeuronData from "../NeuronData";
 
 // Icons Imports
 import { IconNeuronManager } from "../../component/Icon";
@@ -55,5 +55,5 @@ NeuronSettings.propTypes = {
   selectedNeuron: PropTypes.number.isRequired,
   selectNeuron: PropTypes.func.isRequired,
   updateNeuronName: PropTypes.func.isRequired,
-  deleteNeuron: PropTypes.func.isRequired
+  deleteNeuron: PropTypes.func.isRequired,
 };

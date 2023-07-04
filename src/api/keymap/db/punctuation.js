@@ -23,84 +23,84 @@ const PunctuationTable = {
     {
       code: 45,
       labels: {
-        primary: "-"
-      }
+        primary: "-",
+      },
     },
     {
       code: 46,
       labels: {
-        primary: "="
-      }
+        primary: "=",
+      },
     },
     {
       code: 47,
       labels: {
-        primary: "["
-      }
+        primary: "[",
+      },
     },
     {
       code: 48,
       labels: {
-        primary: "]"
-      }
+        primary: "]",
+      },
     },
     {
       code: 49,
       labels: {
-        primary: "\\"
-      }
+        primary: "\\",
+      },
     },
     {
       code: 51,
       labels: {
-        primary: ";"
-      }
+        primary: ";",
+      },
     },
     {
       code: 52,
       labels: {
-        primary: "'"
-      }
+        primary: "'",
+      },
     },
     {
       code: 53,
       labels: {
-        primary: "`"
-      }
+        primary: "`",
+      },
     },
     {
       code: 54,
       labels: {
-        primary: ","
-      }
+        primary: ",",
+      },
     },
     {
       code: 55,
       labels: {
-        primary: "."
-      }
+        primary: ".",
+      },
     },
     {
       code: 56,
       labels: {
-        primary: "/"
-      }
+        primary: "/",
+      },
     },
     {
       code: 57,
       labels: {
         primary: "⇪",
-        verbose: "Caps Lock"
-      }
+        verbose: "Caps Lock",
+      },
     },
     {
       code: 100,
       labels: {
         primary: "<>",
-        verbose: "ISO <>"
-      }
-    }
-  ]
+        verbose: "ISO <>",
+      },
+    },
+  ],
 };
 
 const ShiftedPunctuationTable = {
@@ -109,77 +109,77 @@ const ShiftedPunctuationTable = {
     {
       code: 2093,
       labels: {
-        primary: "_"
-      }
+        primary: "_",
+      },
     },
     {
       code: 2094,
       labels: {
-        primary: "+"
-      }
+        primary: "+",
+      },
     },
     {
       code: 2095,
       labels: {
-        primary: "{"
-      }
+        primary: "{",
+      },
     },
     {
       code: 2096,
       labels: {
-        primary: "}"
-      }
+        primary: "}",
+      },
     },
     {
       code: 2097,
       labels: {
-        primary: "|"
-      }
+        primary: "|",
+      },
     },
     {
       code: 2099,
       labels: {
-        primary: ":"
-      }
+        primary: ":",
+      },
     },
     {
       code: 2100,
       labels: {
-        primary: '"'
-      }
+        primary: '"',
+      },
     },
     {
       code: 2101,
       labels: {
-        primary: "~"
-      }
+        primary: "~",
+      },
     },
     {
       code: 2102,
       labels: {
-        primary: "<"
-      }
+        primary: "<",
+      },
     },
     {
       code: 2103,
       labels: {
-        primary: ">"
-      }
+        primary: ">",
+      },
     },
     {
       code: 2104,
       labels: {
-        primary: "?"
-      }
+        primary: "?",
+      },
     },
     {
       code: 2148,
       labels: {
         primary: "Alt. |",
-        verbose: "Non-US |"
-      }
-    }
-  ]
+        verbose: "Non-US |",
+      },
+    },
+  ],
 };
 
 const ModifiedPunctuationTables = [
@@ -222,7 +222,7 @@ const ModifiedPunctuationTables = [
   withModifiers(PunctuationTable, "Alt + AltGr + Shift + Os +", "A+AGr+S+O+", 7680),
 
   // All
-  withModifiers(PunctuationTable, "Hyper + AltGr +", "H+AGr+", 7936)
+  withModifiers(PunctuationTable, "Hyper + AltGr +", "H+AGr+", 7936),
 ];
 
 export { PunctuationTable as default, ModifiedPunctuationTables };

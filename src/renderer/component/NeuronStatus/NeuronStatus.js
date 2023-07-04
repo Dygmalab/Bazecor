@@ -16,8 +16,7 @@
  */
 
 import * as React from "react";
-import Styled from "styled-components";
-import { useTheme } from "styled-components";
+import Styled, { useTheme } from "styled-components";
 import { IconChip } from "../Icon";
 
 const Style = Styled.div`
@@ -117,11 +116,11 @@ align-self: center;
 }
 
 `;
-const NeuronStatus = props => {
-  let neuronLoader = useTheme().styles.neuronStatus.neuronLoader;
-  let checkedIcon = useTheme().styles.neuronStatus.checkedIcon;
-  let connectionColorMatrix = useTheme().styles.neuronStatus.connectionColorMatrix;
-  let connectionColorMatrixOnLoading = useTheme().styles.neuronStatus.connectionColorMatrixOnLoading;
+function NeuronStatus(props) {
+  const { neuronLoader } = useTheme().styles.neuronStatus;
+  const { checkedIcon } = useTheme().styles.neuronStatus;
+  const { connectionColorMatrix } = useTheme().styles.neuronStatus;
+  const { connectionColorMatrixOnLoading } = useTheme().styles.neuronStatus;
 
   return (
     <Style>
@@ -154,7 +153,7 @@ const NeuronStatus = props => {
             strokeLinejoin="round"
           />
           {props.deviceItems && !props.connected ? (
-            <g className={"connectionLoading connectionScanning "}>
+            <g className="connectionLoading connectionScanning ">
               <g filter="url(#prefix__filter0_d_1082_145292)">
                 <path
                   d="M96.15 64.955l-.933-.016-1.868-.033c-3.894.085-7.643.784-11.241 1.791l11.754 4.486 2.783 1.118 2.474.96-4.517 17.96a80.16 80.16 0 01-8.952 22.317l7.775-8.425 2.697-2.858.317-.3 4.124-4.361c.633-.6 1.113-1.357 1.285-2.27l1.481-4.561 7.401-22.65c-4.481-1.912-9.446-2.916-14.58-3.158z"
@@ -232,7 +231,7 @@ const NeuronStatus = props => {
               <mask
                 id="prefix__a"
                 style={{
-                  maskType: "alpha"
+                  maskType: "alpha",
                 }}
                 maskUnits="userSpaceOnUse"
                 x={46}
@@ -274,7 +273,7 @@ const NeuronStatus = props => {
           )}
 
           {!props.deviceItems ? (
-            <g className={"noDeviceFounded"}>
+            <g className="noDeviceFounded">
               <path fill="#E2E4EA" d="M58 80.75h1.75V93H58z" />
               <path
                 fillRule="evenodd"
@@ -292,7 +291,7 @@ const NeuronStatus = props => {
           )}
 
           {props.connected ? (
-            <g className={"connectionSuccess"}>
+            <g className="connectionSuccess">
               <g filter="url(#prefix__filter0_d_1082_156043)">
                 <path
                   d="M95.722 64.654H92.92c-3.892.152-7.628.917-11.208 1.987l11.83 4.28 2.803 1.07 2.49.916-4.203 18.037a80.18 80.18 0 01-8.561 22.469l7.627-8.56 2.647-2.904.31-.306 4.048-4.433c.623-.61 1.09-1.375 1.246-2.292l1.401-4.586 7.005-22.774c-4.515-1.835-9.496-2.752-14.633-2.904z"
@@ -393,6 +392,6 @@ const NeuronStatus = props => {
       </div>
     </Style>
   );
-};
+}
 
 export default NeuronStatus;

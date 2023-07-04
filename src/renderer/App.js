@@ -16,12 +16,12 @@
  */
 
 import React from "react";
-import { Switch, Redirect, Route, withRouter } from "react-router-dom";
+import { Routes, Navigate, Route } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import { ThemeProvider } from "styled-components";
-
-import { usb } from "usb";
-
+import { ipcRenderer } from "electron";
+import path from "path";
+import withRouter from "./utils/withRouter";
 import i18n from "./i18n";
 
 import Focus from "../api/focus";
@@ -46,13 +46,11 @@ import Header from "./modules/NavigationMenu";
 import ToastMessage from "./component/ToastMessage";
 import { IconNoSignal } from "./component/Icon";
 
-const Store = require("electron-store");
-const store = new Store();
+import Store from "./utils/Store";
 
-const { ipcRenderer } = require("electron");
-const path = require("path");
+const store = Store.getStore();
 
-let focus = new Focus();
+const focus = new Focus();
 focus.debug = true;
 focus.timeout = 5000;
 
@@ -62,7 +60,7 @@ class App extends React.Component {
     this.updateStorageSchema();
 
     const mode = store.get("settings.darkMode");
-    let isDark = mode === "dark" ? true : false;
+    isDark = mode === "dark";
     if (mode === "system") {
       isDark = ipcRenderer.invoke("get-NativeTheme");
     }
@@ -89,23 +87,13 @@ class App extends React.Component {
     };
     localStorage.clear();
 
-    toast.configure({
-      position: "top-right",
-      autoClose: false,
-      hideProgressBar: false,
-      newestOnTop: false,
-      draggable: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      pauseOnFocusLoss: true
-    });
-
     this.forceDarkMode = this.forceDarkMode.bind(this);
   }
+
   flashing = false;
 
   async updateStorageSchema() {
-    //Update stored settings schema
+    // Update stored settings schema
     console.log("Retrieving settings: ", store.get("settings"));
     const locale = await this.getLocale();
     if (store.get("settings.language") != undefined) {
@@ -113,7 +101,6 @@ class App extends React.Component {
       i18n.setLanguage(store.get("settings.language"));
       return;
     }
-
     // create locale language identifier
     const translator = {
       en: "english",
@@ -123,13 +110,14 @@ class App extends React.Component {
       sv: "swedish",
       da: "danish",
       no: "norwegian",
-      is: "icelandic"
+      is: "icelandic",
     };
     // console.log("languageTEST", lang, translator[lang.split("-")[0]], translator["hh"]);
 
     // Store all settings from electron settings in electron store.
-    let data = {};
-    data.backupFolder = path.join(ipcRenderer.invoke("get-userPath", "home"), "Raise", "Backups");
+    const data = {};
+    const userPath = await ipcRenderer.invoke("get-userPath", "home");
+    data.backupFolder = path.join(userPath, "Raise", "Backups");
     data.backupFrequency = 30;
     data.language = translator[locale.split("-")[0]] != "" ? translator[locale.split("-")[0]] : "english";
     data.darkMode = "system";
@@ -141,77 +129,78 @@ class App extends React.Component {
   }
 
   async getLocale() {
-    await ipcRenderer.invoke("get-Locale");
+    return ipcRenderer.invoke("get-Locale");
+  }
+
+  async handleUSBDisconnection(device) {
+    console.log("Within handle USB Disconnection");
+    if (!focus.device) return;
+    if (this.flashing) return;
+
+    if (
+      focus.device.usb.vendorId != device.deviceDescriptor.idVendor ||
+      focus.device.usb.productId != device.deviceDescriptor.idProduct
+    ) {
+      return;
+    }
+
+    // Must await this to stop re-render of components reliant on `focus.device`
+    // However, it only renders a blank screen. New route is rendered below.
+    this.props.router.navigate("./");
+
+    if (!focus._port.isOpen) {
+      toast.warning(
+        <ToastMessage
+          icon={<IconNoSignal />}
+          title={i18n.errors.deviceDisconnected}
+          content={i18n.errors.deviceDisconnectedContent}
+        />,
+        { icon: "" },
+      );
+    }
+    await focus.close();
+    this.setState({
+      connected: false,
+      device: null,
+      pages: {},
+    });
+    // Second call to `navigate` will actually render the proper route
+    this.props.router.navigate("/keyboard-select");
   }
 
   componentDidMount() {
     // Loading font to be sure it wont blink
-    //document.fonts.load("Libre Franklin");
+    // document.fonts.load("Libre Franklin");
 
     const fontFace = new FontFace("Libre Franklin", "./theme/fonts/LibreFranklin/LibreFranklin-VariableFont_wght.ttf");
     console.log("Font face: ", fontFace);
     document.fonts.add(fontFace);
 
     // Setting up function to receive O.S. dark theme changes
-    const self = this;
-    ipcRenderer.on("darkTheme-update", function (evt, message) {
+    ipcRenderer.on("darkTheme-update", (evt, message) => {
       console.log("O.S. DarkTheme Settings changed to ", message);
-      let dm = store.get("settings.darkMode");
+      const dm = store.get("settings.darkMode");
       if (dm === "system") {
-        self.forceDarkMode(message);
+        this.forceDarkMode(message);
       }
     });
-
-    usb.on("detach", async device => {
-      if (!focus.device) return;
-      if (this.flashing) return;
-
-      if (
-        focus.device.usb.vendorId != device.deviceDescriptor.idVendor ||
-        focus.device.usb.productId != device.deviceDescriptor.idProduct
-      ) {
-        return;
-      }
-
-      // Must await this to stop re-render of components reliant on `focus.device`
-      // However, it only renders a blank screen. New route is rendered below.
-      this.props.history.push("./");
-
-      if (!focus._port.isOpen) {
-        toast.warning(
-          <ToastMessage
-            icon={<IconNoSignal />}
-            title={i18n.errors.deviceDisconnected}
-            content={i18n.errors.deviceDisconnectedContent}
-          />,
-          { icon: "" }
-        );
-      }
-      await focus.close();
-      await this.setState({
-        connected: false,
-        device: null,
-        pages: {}
-      });
-      // Second call to `navigate` will actually render the proper route
-      this.props.history.push("/keyboard-select");
-    });
+    ipcRenderer.on("usb-disconnected", this.handleUSBDisconnection);
   }
 
   forceDarkMode = mode => {
     this.setState({
-      darkMode: mode
+      darkMode: mode,
     });
   };
 
   toggleDarkMode = async mode => {
     console.log("Dark mode changed to: ", mode, "NativeTheme says: ", ipcRenderer.invoke("get-NativeTheme"));
-    let isDark = mode === "dark" ? true : false;
+    let isDark = mode === "dark";
     if (mode === "system") {
       isDark = ipcRenderer.invoke("get-NativeTheme");
     }
     this.setState({
-      darkMode: isDark
+      darkMode: isDark,
     });
     store.set("settings.darkMode", mode);
   };
@@ -222,9 +211,9 @@ class App extends React.Component {
       this.setState({
         connected: false,
         device: null,
-        pages: {}
+        pages: {},
       });
-      this.props.history.push("/keyboard-select");
+      this.props.router.navigate("/keyboard-select");
     }
   };
 
@@ -245,16 +234,16 @@ class App extends React.Component {
 
   onKeyboardConnect = async (port, file) => {
     await focus.close();
-
     if (!port.path) {
       port.device.device = port.device;
 
       this.setState({
         connected: true,
         pages: {},
-        device: port.device
+        device: port.device,
       });
-      this.props.history.push("/welcome");
+
+      this.props.router.navigate("/welcome");
       return [];
     }
 
@@ -265,9 +254,9 @@ class App extends React.Component {
       this.setState({
         connected: true,
         pages: {},
-        device: port
+        device: port,
       });
-      this.props.history.push("/welcome");
+      this.props.router.navigate("/welcome");
       return [];
     }
 
@@ -276,15 +265,15 @@ class App extends React.Component {
     focus.setLEDMode(focus.device);
     const pages = {
       keymap: focus.isCommandSupported("keymap.custom") || focus.isCommandSupported("keymap.map"),
-      colormap: focus.isCommandSupported("colormap.map") && focus.isCommandSupported("palette")
+      colormap: focus.isCommandSupported("colormap.map") && focus.isCommandSupported("palette"),
     };
 
     this.setState({
       connected: true,
       device: port,
-      pages: pages
+      pages,
     });
-    this.props.history.push(pages.keymap ? "/editor" : "/welcome");
+    this.props.router.navigate(pages.keymap ? "/editor" : "/welcome");
     return [];
   };
 
@@ -293,10 +282,10 @@ class App extends React.Component {
     this.setState({
       connected: false,
       device: null,
-      pages: {}
+      pages: {},
     });
     localStorage.clear();
-    this.props.history.push("/keyboard-select");
+    this.props.router.navigate("/keyboard-select");
   };
 
   cancelContext = dirty => {
@@ -306,127 +295,160 @@ class App extends React.Component {
       this.doCancelContext();
     }
   };
+
   doCancelContext = () => {
     this.setState({
       contextBar: false,
-      cancelPendingOpen: false
+      cancelPendingOpen: false,
     });
   };
+
   cancelContextCancellation = () => {
     this.setState({ cancelPendingOpen: false });
   };
+
   startContext = () => {
     this.setState({ contextBar: true });
   };
-  rgbString = color => {
-    return `rgb(${color.r},${color.g},${color.b})`;
-  };
+
+  rgbString = color => `rgb(${color.r},${color.g},${color.b})`;
 
   render() {
     const { connected, pages, contextBar, darkMode, fwUpdate, allowBeta } = this.state;
 
-    let device =
-      (focus.device && focus.device.info) ||
-      (this.state.device && this.state.device.device && this.state.device.device.info) ||
-      (this.state.device && this.state.device.info);
-
     return (
       <ThemeProvider theme={darkMode ? Dark : Light}>
         <GlobalStyles />
-        <Header
-          contextBar={contextBar}
-          connected={connected}
-          pages={pages}
-          device={device}
-          cancelContext={this.cancelContext}
-          theme={darkMode}
-          flashing={!connected}
-          fwUpdate={fwUpdate}
-          allowBeta={allowBeta}
-        />
+        <Header connected={connected} pages={pages} flashing={!connected} fwUpdate={fwUpdate} allowBeta={allowBeta} />
         <div className="main-container">
-          <Switch>
-            <Route exact path="/">
-              <Redirect to="/keyboard-select" />
-            </Route>
-            <Welcome
+          <Routes>
+            <Route exact path="/" element={<Navigate to="/keyboard-select" />} />
+            <Route
               path="/welcome"
-              device={this.state.device}
-              onConnect={this.onKeyboardConnect}
-              titleElement={() => document.querySelector("#page-title")}
+              element={
+                <Welcome
+                  path="/welcome"
+                  device={this.state.device}
+                  onConnect={this.onKeyboardConnect}
+                  titleElement={() => document.querySelector("#page-title")}
+                />
+              }
             />
-            <SelectKeyboard
+            <Route
               path="/keyboard-select"
-              connected={connected}
-              device={this.state.device}
-              onConnect={this.onKeyboardConnect}
-              onDisconnect={this.onKeyboardDisconnect}
-              titleElement={() => document.querySelector("#page-title")}
-              darkMode={darkMode}
+              element={
+                <SelectKeyboard
+                  path="/keyboard-select"
+                  connected={connected}
+                  onConnect={this.onKeyboardConnect}
+                  onDisconnect={this.onKeyboardDisconnect}
+                  titleElement={() => document.querySelector("#page-title")}
+                  darkMode={darkMode}
+                />
+              }
             />
-            <LayoutEditor
+            <Route
               path="/editor"
-              onDisconnect={this.onKeyboardDisconnect}
-              startContext={this.startContext}
-              cancelContext={this.cancelContext}
-              inContext={contextBar}
-              titleElement={() => document.querySelector("#page-title")}
-              appBarElement={() => document.querySelector("#appbar")}
-              darkMode={darkMode}
+              element={
+                <LayoutEditor
+                  path="/editor"
+                  onDisconnect={this.onKeyboardDisconnect}
+                  startContext={this.startContext}
+                  cancelContext={this.cancelContext}
+                  inContext={contextBar}
+                  titleElement={() => document.querySelector("#page-title")}
+                  appBarElement={() => document.querySelector("#appbar")}
+                  darkMode={darkMode}
+                />
+              }
             />
-            <MacroEditor
+            <Route
               path="/macros"
-              onDisconnect={this.onKeyboardDisconnect}
-              startContext={this.startContext}
-              cancelContext={this.cancelContext}
-              inContext={contextBar}
-              titleElement={() => document.querySelector("#page-title")}
+              element={
+                <MacroEditor
+                  path="/macros"
+                  onDisconnect={this.onKeyboardDisconnect}
+                  startContext={this.startContext}
+                  cancelContext={this.cancelContext}
+                  inContext={contextBar}
+                  titleElement={() => document.querySelector("#page-title")}
+                />
+              }
             />
-            <SuperkeysEditor
+            <Route
               path="/superkeys"
-              onDisconnect={this.onKeyboardDisconnect}
-              startContext={this.startContext}
-              cancelContext={this.cancelContext}
-              inContext={contextBar}
-              titleElement={() => document.querySelector("#page-title")}
+              element={
+                <SuperkeysEditor
+                  path="/superkeys"
+                  onDisconnect={this.onKeyboardDisconnect}
+                  startContext={this.startContext}
+                  cancelContext={this.cancelContext}
+                  inContext={contextBar}
+                  titleElement={() => document.querySelector("#page-title")}
+                />
+              }
             />
-            <FirmwareUpdate
+            <Route
               path="/firmware-update"
-              device={this.state.device}
-              toggleFlashing={this.toggleFlashing}
-              toggleFwUpdate={this.toggleFwUpdate}
-              onDisconnect={this.onKeyboardDisconnect}
-              titleElement={() => document.querySelector("#page-title")}
-              darkMode={darkMode}
-              allowBeta={allowBeta}
+              element={
+                <FirmwareUpdate
+                  path="/firmware-update"
+                  device={this.state.device}
+                  toggleFlashing={this.toggleFlashing}
+                  toggleFwUpdate={this.toggleFwUpdate}
+                  onDisconnect={this.onKeyboardDisconnect}
+                  titleElement={() => document.querySelector("#page-title")}
+                  darkMode={darkMode}
+                  allowBeta={allowBeta}
+                />
+              }
             />
-            <Preferences
-              connected={connected}
+            <Route
               path="/preferences"
-              titleElement={() => document.querySelector("#page-title")}
-              darkMode={darkMode}
-              toggleDarkMode={this.toggleDarkMode}
-              startContext={this.startContext}
-              cancelContext={this.cancelContext}
-              updateAllowBeta={this.updateAllowBeta}
-              allowBeta={allowBeta}
-              inContext={contextBar}
+              element={
+                <Preferences
+                  connected={connected}
+                  path="/preferences"
+                  titleElement={() => document.querySelector("#page-title")}
+                  darkMode={darkMode}
+                  toggleDarkMode={this.toggleDarkMode}
+                  startContext={this.startContext}
+                  cancelContext={this.cancelContext}
+                  updateAllowBeta={this.updateAllowBeta}
+                  allowBeta={allowBeta}
+                  inContext={contextBar}
+                />
+              }
             />
-            <Wireless
-              connected={connected}
+            <Route
               path="/wireless"
-              titleElement={() => document.querySelector("#page-title")}
-              darkMode={darkMode}
-              toggleDarkMode={this.toggleDarkMode}
-              startContext={this.startContext}
-              cancelContext={this.cancelContext}
-              updateAllowBeta={this.updateAllowBeta}
-              allowBeta={allowBeta}
-              inContext={contextBar}
+              element = {
+                <Wireless
+                connected={connected}
+                path="/wireless"
+                titleElement={() => document.querySelector("#page-title")}
+                darkMode={darkMode}
+                toggleDarkMode={this.toggleDarkMode}
+                startContext={this.startContext}
+                cancelContext={this.cancelContext}
+                updateAllowBeta={this.updateAllowBeta}
+                allowBeta={allowBeta}
+                inContext={contextBar}
+                />
+              }
             />
-          </Switch>
+          </Routes>
         </div>
-        <ToastContainer />
+        <ToastContainer
+          position="top-right"
+          autoClose={false}
+          hideProgressBar={false}
+          newestOnTop={false}
+          draggable={false}
+          closeOnClick
+          pauseOnHover
+          pauseOnFocusLoss
+        />
       </ThemeProvider>
     );
   }

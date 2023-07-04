@@ -44,24 +44,24 @@ const Style = Styled.div`
  * @returns {<Badge>} Badge component.
  */
 
-const Badge = ({ content, icon, size, style, className }) => {
+function Badge({ content, icon, size, style, className }) {
   return (
     <Style className={className}>
-      <div className={`badge ${size ? size : ""} ${style ? style : ""} ${icon ? "hasIcon" : ""} `}>
+      <div className={`badge ${size || ""} ${style || ""} ${icon ? "hasIcon" : ""} `}>
         {icon && icon}
         {content && <span dangerouslySetInnerHTML={{ __html: content }} />}
       </div>
     </Style>
   );
-};
+}
 
 Badge.defaultProps = {
-  content: ""
+  content: "",
 };
 
 Badge.propTypes = {
   content: PropTypes.string.isRequired,
-  icon: PropTypes.object
+  icon: PropTypes.object,
 };
 
 export default Badge;

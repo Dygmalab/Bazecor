@@ -20,10 +20,10 @@ import PropTypes from "prop-types";
 import Styled from "styled-components";
 import i18n from "../../i18n";
 
-import Title from "../../component/Title";
+import Title from "../Title";
 import { ButtonConfig } from "../Button";
 
-import { IconEditModeStandardViewSm, IconEditModeSingleViewSm } from "../../component/Icon";
+import { IconEditModeStandardViewSm, IconEditModeSingleViewSm } from "../Icon";
 
 const Style = Styled.div`
 &.layoutSelector {
@@ -111,10 +111,10 @@ h5 {
  * @returns {LayoutViewSelector} Badge component.
  */
 
-const LayoutViewSelector = ({ onToggle, isStandardView, tooltip, layoutSelectorPosition }) => {
+function LayoutViewSelector({ onToggle, isStandardView, tooltip, layoutSelectorPosition }) {
   return (
-    <Style className={`layoutSelector`} isStandardView={isStandardView} layoutSelectorPosition={layoutSelectorPosition}>
-      <Title text={i18n.editor.editMode.title} headingLevel={5} tooltip={tooltip ? tooltip : false} tooltipIconSize="sm" />
+    <Style className="layoutSelector" isStandardView={isStandardView} layoutSelectorPosition={layoutSelectorPosition}>
+      <Title text={i18n.editor.editMode.title} headingLevel={5} tooltip={tooltip || false} tooltipIconSize="sm" />
       <div className="toggleButtonsContainer">
         <div className="toggleButtonsInner">
           <ButtonConfig
@@ -123,7 +123,7 @@ const LayoutViewSelector = ({ onToggle, isStandardView, tooltip, layoutSelectorP
             icoPosition="left"
             selected={isStandardView}
             buttonText={i18n.editor.editMode.standardView}
-            size={"sm"}
+            size="sm"
           />
           <ButtonConfig
             onClick={onToggle}
@@ -131,18 +131,18 @@ const LayoutViewSelector = ({ onToggle, isStandardView, tooltip, layoutSelectorP
             icoSVG={<IconEditModeSingleViewSm />}
             selected={!isStandardView}
             buttonText={i18n.editor.editMode.singleView}
-            size={"sm"}
+            size="sm"
           />
         </div>
       </div>
     </Style>
   );
-};
+}
 
 LayoutViewSelector.propTypes = {
   onToggle: PropTypes.func.isRequired,
   isStandardView: PropTypes.bool.isRequired,
-  tooltip: PropTypes.string
+  tooltip: PropTypes.string,
 };
 
 export default LayoutViewSelector;

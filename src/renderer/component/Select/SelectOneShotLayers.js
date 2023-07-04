@@ -65,9 +65,10 @@ class SelectOneShotLayers extends Component {
       { name: "One Shot Layer 5", keynum: 49165 },
       { name: "One Shot Layer 6", keynum: 49166 },
       { name: "One Shot Layer 7", keynum: 49167 },
-      { name: "One Shot Layer 8", keynum: 49168 }
+      { name: "One Shot Layer 8", keynum: 49168 },
     ];
   }
+
   render() {
     const { action, keyCode, onKeySelect, activeTab } = this.props;
     const KC = keyCode.base + keyCode.modified;
@@ -99,20 +100,18 @@ class SelectOneShotLayers extends Component {
             </div>
           </Dropdown.Toggle>
           <Dropdown.Menu>
-            {this.oneShotLayers.map((item, id) => {
-              return (
-                <Dropdown.Item
-                  eventKey={item.keynum}
-                  key={`OSL-${id}`}
-                  disabled={item.keynum == -1}
-                  className={`${keyCode.modified > 0 && item.keynum == keyCode.base + keyCode.modified ? "active" : ""}`}
-                >
-                  <div className="dropdownInner">
-                    <div className="dropdownItem">{`${id + 1}. ${item.name}`}</div>
-                  </div>
-                </Dropdown.Item>
-              );
-            })}
+            {this.oneShotLayers.map((item, id) => (
+              <Dropdown.Item
+                eventKey={item.keynum}
+                key={`OSL-${id}`}
+                disabled={item.keynum == -1}
+                className={`${keyCode.modified > 0 && item.keynum == keyCode.base + keyCode.modified ? "active" : ""}`}
+              >
+                <div className="dropdownInner">
+                  <div className="dropdownItem">{`${id + 1}. ${item.name}`}</div>
+                </div>
+              </Dropdown.Item>
+            ))}
           </Dropdown.Menu>
         </Dropdown>
       </Style>

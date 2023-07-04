@@ -23,148 +23,148 @@ const FunctionKeyTable = {
     {
       code: 58,
       labels: {
-        primary: "F1"
-      }
+        primary: "F1",
+      },
     },
     {
       code: 59,
       labels: {
-        primary: "F2"
-      }
+        primary: "F2",
+      },
     },
     {
       code: 60,
       labels: {
-        primary: "F3"
-      }
+        primary: "F3",
+      },
     },
     {
       code: 61,
       labels: {
-        primary: "F4"
-      }
+        primary: "F4",
+      },
     },
     {
       code: 62,
       labels: {
-        primary: "F5"
-      }
+        primary: "F5",
+      },
     },
     {
       code: 63,
       labels: {
-        primary: "F6"
-      }
+        primary: "F6",
+      },
     },
     {
       code: 64,
       labels: {
-        primary: "F7"
-      }
+        primary: "F7",
+      },
     },
     {
       code: 65,
       labels: {
-        primary: "F8"
-      }
+        primary: "F8",
+      },
     },
     {
       code: 66,
       labels: {
-        primary: "F9"
-      }
+        primary: "F9",
+      },
     },
     {
       code: 67,
       labels: {
-        primary: "F10"
-      }
+        primary: "F10",
+      },
     },
     {
       code: 68,
       labels: {
-        primary: "F11"
-      }
+        primary: "F11",
+      },
     },
     {
       code: 69,
       labels: {
-        primary: "F12"
-      }
+        primary: "F12",
+      },
     },
     {
       code: 104,
       labels: {
-        primary: "F13"
-      }
+        primary: "F13",
+      },
     },
     {
       code: 105,
       labels: {
-        primary: "F14"
-      }
+        primary: "F14",
+      },
     },
     {
       code: 106,
       labels: {
-        primary: "F15"
-      }
+        primary: "F15",
+      },
     },
     {
       code: 107,
       labels: {
-        primary: "F16"
-      }
+        primary: "F16",
+      },
     },
     {
       code: 108,
       labels: {
-        primary: "F17"
-      }
+        primary: "F17",
+      },
     },
     {
       code: 109,
       labels: {
-        primary: "F18"
-      }
+        primary: "F18",
+      },
     },
     {
       code: 110,
       labels: {
-        primary: "F19"
-      }
+        primary: "F19",
+      },
     },
     {
       code: 111,
       labels: {
-        primary: "F20"
-      }
+        primary: "F20",
+      },
     },
     {
       code: 112,
       labels: {
-        primary: "F21"
-      }
+        primary: "F21",
+      },
     },
     {
       code: 113,
       labels: {
-        primary: "F22"
-      }
+        primary: "F22",
+      },
     },
     {
       code: 114,
       labels: {
-        primary: "F23"
-      }
+        primary: "F23",
+      },
     },
     {
       code: 115,
       labels: {
-        primary: "F24"
-      }
-    }
-  ]
+        primary: "F24",
+      },
+    },
+  ],
 };
 
 const ModifiedFunctionKeyTables = [
@@ -207,7 +207,7 @@ const ModifiedFunctionKeyTables = [
   withModifiers(FunctionKeyTable, "Alt + AltGr + Shift + Os +", "A+AGr+S+O+", 7680),
 
   // All
-  withModifiers(FunctionKeyTable, "Hyper + AltGr +", "H+AGr+", 7936)
+  withModifiers(FunctionKeyTable, "Hyper + AltGr +", "H+AGr+", 7936),
 ];
 
 export { FunctionKeyTable as default, ModifiedFunctionKeyTables };

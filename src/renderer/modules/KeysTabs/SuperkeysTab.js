@@ -2,11 +2,11 @@ import React, { Component } from "react";
 import ReactDOM from "react-dom";
 import Styled from "styled-components";
 
+import Dropdown from "react-bootstrap/Dropdown";
 import i18n from "../../i18n";
 
 import Title from "../../component/Title";
 import Callout from "../../component/Callout";
-import Dropdown from "react-bootstrap/Dropdown";
 
 import ListModifiers from "../../component/ListModifiers/ListModifiers";
 
@@ -121,7 +121,7 @@ class SuperkeysTab extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      keyContent: "Loading..."
+      keyContent: "Loading...",
     };
     this.keymapDB = new KeymapDB();
   }
@@ -145,7 +145,7 @@ class SuperkeysTab extends Component {
       }
     }
     if (aux.label) {
-      translatedAction = (aux.extraLabel != undefined ? aux.extraLabel + " " : "") + aux.label;
+      translatedAction = (aux.extraLabel != undefined ? `${aux.extraLabel} ` : "") + aux.label;
     }
     return translatedAction;
   };
@@ -158,7 +158,7 @@ class SuperkeysTab extends Component {
       .fill()
       .map((_, i) => i + 53980);
 
-    let adjactions = actions;
+    const adjactions = actions;
     if (adjactions.length < 5) {
       while (adjactions.length < 5) {
         adjactions.push(0);
@@ -168,24 +168,24 @@ class SuperkeysTab extends Component {
     const superKeysActions = [
       {
         title: i18n.editor.superkeys.actions.tapLabel,
-        description: i18n.editor.superkeys.actions.tap
+        description: i18n.editor.superkeys.actions.tap,
       },
       {
         title: i18n.editor.superkeys.actions.holdLabel,
-        description: i18n.editor.superkeys.actions.hold
+        description: i18n.editor.superkeys.actions.hold,
       },
       {
         title: i18n.editor.superkeys.actions.tapAndHoldLabel,
-        description: i18n.editor.superkeys.actions.tapAndHold
+        description: i18n.editor.superkeys.actions.tapAndHold,
       },
       {
         title: i18n.editor.superkeys.actions.doubleTapLabel,
-        description: i18n.editor.superkeys.actions.doubleTap
+        description: i18n.editor.superkeys.actions.doubleTap,
       },
       {
         title: i18n.editor.superkeys.actions.doubleTapAndHoldLabel,
-        description: i18n.editor.superkeys.actions.doubleTapAndHold
-      }
+        description: i18n.editor.superkeys.actions.doubleTapAndHold,
+      },
     ];
 
     return (
@@ -214,15 +214,13 @@ class SuperkeysTab extends Component {
                   </div>
                 </Dropdown.Toggle>
                 <Dropdown.Menu>
-                  {superk.map((x, id) => {
-                    return (
-                      <Dropdown.Item eventKey={x} key={`super-${id}`} disabled={x == -1}>
-                        <div className="dropdownInner">
-                          <div className="dropdownItem">{`${id + 1}. ${superkeys[id].name}`}</div>
-                        </div>
-                      </Dropdown.Item>
-                    );
-                  })}
+                  {superk.map((x, id) => (
+                    <Dropdown.Item eventKey={x} key={`super-${id}`} disabled={x == -1}>
+                      <div className="dropdownInner">
+                        <div className="dropdownItem">{`${id + 1}. ${superkeys[id].name}`}</div>
+                      </div>
+                    </Dropdown.Item>
+                  ))}
                 </Dropdown.Menu>
               </Dropdown>
             </div>

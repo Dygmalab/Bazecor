@@ -17,8 +17,8 @@ const macro = index => ({
   code: 53852 + index,
   labels: {
     primary: index.toString(),
-    top: "MACRO"
-  }
+    top: "MACRO",
+  },
 });
 
 const macros = Array(128)
@@ -27,7 +27,7 @@ const macros = Array(128)
 
 const MacrosTable = {
   groupName: "Macros",
-  keys: macros
+  keys: macros,
 };
 
 export default MacrosTable;

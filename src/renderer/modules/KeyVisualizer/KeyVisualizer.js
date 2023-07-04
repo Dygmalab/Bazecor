@@ -108,18 +108,18 @@ const Style = Styled.div`
 }
 
 `;
-//}= ({ oldValue, newValue, keyCode }) => {
+// }= ({ oldValue, newValue, keyCode }) => {
 class KeyVisualizer extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      //modifs: []
+      // modifs: []
     };
   }
 
   parseModifs(keycode) {
-    let modifs = [];
+    const modifs = [];
     if (keycode & 0b100000000) {
       // Ctrl Decoder
       modifs.push(1);
@@ -152,23 +152,23 @@ class KeyVisualizer extends React.Component {
     const { keyCode, oldKeyCode, newValue, oldValue, isStandardView, superkeyAction } = this.props;
     const rows = [
       {
-        title: `<strong>${i18n.editor.superkeys.actions.tapLabel}:</strong> Selected value`
+        title: `<strong>${i18n.editor.superkeys.actions.tapLabel}:</strong> Selected value`,
       },
       {
-        title: `<strong>${i18n.editor.superkeys.actions.holdLabel}:</strong> Selected value`
+        title: `<strong>${i18n.editor.superkeys.actions.holdLabel}:</strong> Selected value`,
       },
       {
-        title: `<strong>${i18n.editor.superkeys.actions.tapAndHoldLabel}:</strong> Selected value`
+        title: `<strong>${i18n.editor.superkeys.actions.tapAndHoldLabel}:</strong> Selected value`,
       },
       {
-        title: `<strong>${i18n.editor.superkeys.actions.doubleTapLabel}:</strong> Selected value`
+        title: `<strong>${i18n.editor.superkeys.actions.doubleTapLabel}:</strong> Selected value`,
       },
       {
-        title: `<strong>${i18n.editor.superkeys.actions.doubleTapAndHoldLabel}:</strong> Selected value`
+        title: `<strong>${i18n.editor.superkeys.actions.doubleTapAndHoldLabel}:</strong> Selected value`,
       },
       {
-        title: `Selected value`
-      }
+        title: `Selected value`,
+      },
     ];
 
     return (

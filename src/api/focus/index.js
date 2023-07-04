@@ -15,11 +15,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { SerialPort } from "serialport";
 import { DelimiterParser } from "@serialport/parser-delimiter";
 import fs from "fs";
 import { spawn } from "child_process";
-import { inspect } from "util";
+
+const { SerialPort } = eval('require("serialport")');
 
 global.focus_instance = null;
 
@@ -28,7 +28,7 @@ class Focus {
     if (!global.focus_instance) {
       global.focus_instance = this;
       this.commands = {
-        help: this._help
+        help: this._help,
       };
       this.timeout = 5000;
       this.debug = false;
@@ -46,16 +46,17 @@ class Focus {
   }
 
   async find(...devices) {
-    let portList = await SerialPort.list();
+    const portList = await SerialPort.list();
 
-    let found_devices = [];
+    const found_devices = [];
 
     this.debugLog("focus.find: portList:", portList, "devices:", devices);
-
-    for (let port of portList) {
-      for (let device of devices) {
-        if (parseInt("0x" + port.productId) == device.usb.productId && parseInt("0x" + port.vendorId) == device.usb.vendorId) {
-          let newPort = Object.assign({}, port);
+    console.log("Passed devices", devices);
+    console.log("Port list from where");
+    for (const port of portList) {
+      for (const device of devices) {
+        if (parseInt(`0x${port.productId}`) == device.usb.productId && parseInt(`0x${port.vendorId}`) == device.usb.vendorId) {
+          const newPort = { ...port };
           newPort.device = device;
           found_devices.push(newPort);
         }
@@ -118,24 +119,22 @@ class Focus {
       this.debugLog("focus: incoming data:", data);
 
       if (data == "." || data.endsWith(".")) {
-        let result = this.result,
-          resolve = this.callbacks.shift();
+        const { result } = this;
+        const resolve = this.callbacks.shift();
 
         this.result = "";
         if (resolve) {
           resolve(result.trim());
         }
+      } else if (this.result.length == 0) {
+        this.result = data;
       } else {
-        if (this.result.length == 0) {
-          this.result = data;
-        } else {
-          this.result += "\r\n" + data;
-        }
+        this.result += `\r\n${data}`;
       }
     });
 
     if (process.platform == "darwin") {
-      await spawn("stty", ["-f", this._port.path, "clocal"]);
+      spawn("stty", ["-f", this._port.path, "clocal"]);
     }
 
     // It's not necessary to retreive the supported commands in bootloader mode
@@ -235,13 +234,18 @@ class Focus {
   request(cmd, ...args) {
     this.debugLog("focus.request:", cmd, ...args);
     return new Promise((resolve, reject) => {
-      let timer = setTimeout(() => {
+      const timer = setTimeout(() => {
         reject("Communication timeout");
       }, this.timeout);
-      this._request(cmd, ...args).then(data => {
-        clearTimeout(timer);
-        resolve(data);
-      });
+      this._request(cmd, ...args)
+        .then(data => {
+          clearTimeout(timer);
+          resolve(data);
+        })
+        .catch(err => {
+          console.log("Error sending request from focus", err);
+          reject("Error sending request from focus");
+        });
     });
   }
 
@@ -266,7 +270,7 @@ class Focus {
 
     let request = cmd;
     if (args && args.length > 0) {
-      request = request + " " + args.join(" ");
+      request = `${request} ${args.join(" ")}`;
     }
     request += "\n";
 
@@ -277,13 +281,13 @@ class Focus {
   }
 
   async command(cmd, ...args) {
-    if (typeof this.commands[cmd] == "function") {
+    if (typeof this.commands[cmd] === "function") {
       return this.commands[cmd](this, ...args);
-    } else if (typeof this.commands[cmd] == "object") {
-      return this.commands[cmd].focus(this, ...args);
-    } else {
-      return this.request(cmd, ...args);
     }
+    if (typeof this.commands[cmd] === "object") {
+      return this.commands[cmd].focus(this, ...args);
+    }
+    return this.request(cmd, ...args);
   }
 
   addCommands(cmds) {
@@ -292,7 +296,7 @@ class Focus {
 
   addMethod(methodName, command) {
     if (this[methodName]) {
-      let tmp = this[methodName];
+      const tmp = this[methodName];
       this[methodName] = (...args) => {
         tmp(...args);
         this.commands[command][methodName](...args);
@@ -305,7 +309,7 @@ class Focus {
   }
 
   async _help(s) {
-    let data = await s.request("help");
+    const data = await s.request("help");
     return data.split(/\r?\n/).filter(v => v.length > 0);
   }
 }

@@ -1,13 +1,13 @@
 import React from "react";
 
 import Styled from "styled-components";
-import i18n from "../../i18n";
 import Tab from "react-bootstrap/Tab";
 import Nav from "react-bootstrap/Nav";
+import i18n from "../../i18n";
 
 import Keymap, { KeymapDB } from "../../../api/keymap";
 
-//component
+// component
 import { RegularButton } from "../../component/Button";
 import KeyVisualizer from "../KeyVisualizer";
 import CustomTab from "../../component/Tab";
@@ -20,7 +20,7 @@ import MediaAndLightTab from "../KeysTabs/MediaAndLightTab";
 import OneShotTab from "../KeysTabs/OneShotTab";
 import MouseTab from "../KeysTabs/MouseTab";
 
-//Icons
+// Icons
 import {
   IconKeyboard,
   IconNoKey,
@@ -29,7 +29,7 @@ import {
   IconRobot,
   IconNote,
   IconOneShot,
-  IconThunder
+  IconThunder,
 } from "../../component/Icon";
 
 const Styles = Styled.div`
@@ -226,13 +226,13 @@ export default class StandardView extends React.Component {
     this.inputText = React.createRef();
     this.state = {
       name: props.name,
-      code: 0
+      code: 0,
     };
     this.keymapDB = new KeymapDB();
   }
 
   componentDidUpdate(prevProps) {
-    //console.log("StandardView componentDidUpdate", prevProps.keyIndex, this.props.keyIndex);
+    // console.log("StandardView componentDidUpdate", prevProps.keyIndex, this.props.keyIndex);
     // if(this.props.actTab == "editor") {
 
     // }
@@ -258,11 +258,11 @@ export default class StandardView extends React.Component {
       macroName = "*NotFound*";
     }
     if (keycode >= 53852 && keycode <= 53852 + 128) {
-      if (this.props.code !== null) return this.keymapDB.parse(keycode).extraLabel + "." + macroName;
+      if (this.props.code !== null) return `${this.keymapDB.parse(keycode).extraLabel}.${macroName}`;
     }
     return this.props.code !== null
       ? this.keymapDB.parse(keycode).extraLabel != undefined
-        ? this.keymapDB.parse(keycode).extraLabel + "." + this.keymapDB.parse(keycode).label
+        ? `${this.keymapDB.parse(keycode).extraLabel}.${this.keymapDB.parse(keycode).label}`
         : this.keymapDB.parse(keycode).label
       : "";
   }
@@ -289,7 +289,7 @@ export default class StandardView extends React.Component {
       onKeySelect,
       selectedlanguage,
       showStandardView,
-      superkeys
+      superkeys,
     } = this.props;
     let keyCode;
     if (actTab == "super") {
@@ -359,7 +359,7 @@ export default class StandardView extends React.Component {
                       <LayersTab
                         onLayerPress={onKeySelect}
                         keyCode={keyCode}
-                        showLayerSwitch={actTab == "super" ? false : true}
+                        showLayerSwitch={actTab != "super"}
                         isStandardView={isStandardView}
                         actTab={actTab}
                       />
@@ -412,7 +412,7 @@ export default class StandardView extends React.Component {
                     />
                     <RegularButton
                       onClick={handleSave}
-                      style={"outline gradient"}
+                      style="outline gradient"
                       size="sm"
                       buttonText={i18n.dialog.applyChanges}
                     />

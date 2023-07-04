@@ -67,9 +67,10 @@ class SelectLayersSwitch extends Component {
       { name: "Layer Shift 7", keynum: 17456 },
       { name: "Layer Shift 8", keynum: 17457 },
       { name: "Layer Shift 9", keynum: 17458 },
-      { name: "Layer Shift 10", keynum: 17459 }
+      { name: "Layer Shift 10", keynum: 17459 },
     ];
   }
+
   render() {
     const { action, keyCode, onKeySelect, activeTab } = this.props;
     const KC = keyCode.base + keyCode.modified;
@@ -96,20 +97,18 @@ class SelectLayersSwitch extends Component {
             </div>
           </Dropdown.Toggle>
           <Dropdown.Menu>
-            {this.layerShift.map((item, id) => {
-              return (
-                <Dropdown.Item
-                  eventKey={item.keynum}
-                  key={`item-${id}`}
-                  disabled={item.keynum == -1}
-                  className={`${keyCode.modified > 0 && item.keynum == keyCode.base + keyCode.modified ? "active" : ""}`}
-                >
-                  <div className="dropdownInner">
-                    <div className="dropdownItem">{`${id + 1}. ${item.name}`}</div>
-                  </div>
-                </Dropdown.Item>
-              );
-            })}
+            {this.layerShift.map((item, id) => (
+              <Dropdown.Item
+                eventKey={item.keynum}
+                key={`item-${id}`}
+                disabled={item.keynum == -1}
+                className={`${keyCode.modified > 0 && item.keynum == keyCode.base + keyCode.modified ? "active" : ""}`}
+              >
+                <div className="dropdownInner">
+                  <div className="dropdownItem">{`${id + 1}. ${item.name}`}</div>
+                </div>
+              </Dropdown.Item>
+            ))}
           </Dropdown.Menu>
         </Dropdown>
       </Style>

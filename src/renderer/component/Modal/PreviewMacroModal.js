@@ -1,9 +1,9 @@
 import React from "react";
 import ReactDom from "react-dom";
 
+import Modal from "react-bootstrap/Modal";
 import { RegularButton } from "../Button";
 import { IconEye } from "../Icon";
-import Modal from "react-bootstrap/Modal";
 
 import i18n from "../../i18n";
 
@@ -35,6 +35,6 @@ export default function PreviewMacroModal({ children, hookref }) {
         </Modal.Body>
       </Modal>
     </>,
-    hookref.current
+    hookref.current,
   );
 }

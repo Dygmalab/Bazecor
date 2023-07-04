@@ -24,59 +24,59 @@ const NavigationTable = {
       code: 75,
       labels: {
         primary: "PAGE UP",
-        verbose: "Page Up"
-      }
+        verbose: "Page Up",
+      },
     },
     {
       code: 78,
       labels: {
         primary: "PAGE DOWN",
-        verbose: "Page Down"
-      }
+        verbose: "Page Down",
+      },
     },
     {
       code: 74,
       labels: {
-        primary: "HOME"
-      }
+        primary: "HOME",
+      },
     },
     {
       code: 77,
       labels: {
-        primary: "END"
-      }
+        primary: "END",
+      },
     },
     {
       code: 80,
       labels: {
-        primary: "←"
-      }
+        primary: "←",
+      },
     },
     {
       code: 81,
       labels: {
-        primary: "↓"
-      }
+        primary: "↓",
+      },
     },
     {
       code: 82,
       labels: {
-        primary: "↑"
-      }
+        primary: "↑",
+      },
     },
     {
       code: 79,
       labels: {
-        primary: "→"
-      }
+        primary: "→",
+      },
     },
     {
       code: 101,
       labels: {
-        primary: "MENU"
-      }
-    }
-  ]
+        primary: "MENU",
+      },
+    },
+  ],
 };
 
 const ModifiedNavigationTables = [
@@ -119,7 +119,7 @@ const ModifiedNavigationTables = [
   withModifiers(NavigationTable, "Alt + AltGr + Shift + Os +", "A+AGr+S+O+", 7680),
 
   // All
-  withModifiers(NavigationTable, "Hyper + AltGr +", "H+AGr+", 7936)
+  withModifiers(NavigationTable, "Hyper + AltGr +", "H+AGr+", 7936),
 ];
 
 export { NavigationTable as default, ModifiedNavigationTables };

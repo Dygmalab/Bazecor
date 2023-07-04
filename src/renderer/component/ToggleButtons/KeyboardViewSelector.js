@@ -16,8 +16,8 @@
  */
 
 import React from "react";
-import { ButtonConfig } from "../Button";
 import Styled from "styled-components";
+import { ButtonConfig } from "../Button";
 
 const Style = Styled.div`
 &.toggleButtonsContainer {
@@ -86,7 +86,7 @@ const Style = Styled.div`
   }
 }
 `;
-const KeyboardViewSelector = ({ editModeFunc, value, listElements, style, size }) => {
+function KeyboardViewSelector({ editModeFunc, value, listElements, style, size }) {
   return (
     // className={`button-config ${value == item.value ? "active" : ""}`}
     <Style className={`toggleButtonsContainer ${style == "flex" ? "toggleButtonsContainerFlex" : ""}`}>
@@ -95,14 +95,14 @@ const KeyboardViewSelector = ({ editModeFunc, value, listElements, style, size }
         {listElements.map((item, index) => (
           <ButtonConfig
             onClick={e => editModeFunc(item.value)}
-            selected={value === item.value ? true : false}
+            selected={value === item.value}
             icoPosition="left"
             icoSVG={item.icon}
             key={index}
             buttonText={item.name}
             size={size}
             tooltip={item.tooltip}
-            tooltipPlacement={"bottom"}
+            tooltipPlacement="bottom"
             tooltipDelay={300}
             tooltipClassName="tooltipRegular tooltipKeyboardViewSelector"
           />
@@ -110,6 +110,6 @@ const KeyboardViewSelector = ({ editModeFunc, value, listElements, style, size }
       </div>
     </Style>
   );
-};
+}
 
 export default KeyboardViewSelector;

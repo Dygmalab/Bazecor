@@ -23,7 +23,7 @@ import { RegularButton } from "../../component/Button";
 const Style = Styled.div`
 
 `;
-const Saving = ({ saveContext, destroyContext, inContext }) => {
+function Saving({ saveContext, destroyContext, inContext }) {
   return (
     <Style className="savingButtons">
       <RegularButton
@@ -42,6 +42,6 @@ const Saving = ({ saveContext, destroyContext, inContext }) => {
       />
     </Style>
   );
-};
+}
 
 export default Saving;

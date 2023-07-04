@@ -5,23 +5,28 @@ import Slider from "@appigram/react-rangeslider";
 import Focus from "../../../api/focus";
 import Backup from "../../../api/backup";
 import { isArray } from "lodash";
-const { ipcRenderer } = require("electron");
+import { ipcRenderer } from "electron";
+import fs from "fs";
 
 // React Bootstrap Components
 import Card from "react-bootstrap/Card";
 import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
+import Backup from "../../../api/backup";
+import Focus from "../../../api/focus";
+import i18n from "../../i18n";
 
 // Own Components
 import Title from "../../component/Title";
-import BackupFolderConfigurator from "../../modules/BackupFolderConfigurator";
+import BackupFolderConfigurator from "../BackupFolderConfigurator";
 
 // Icons Imports
 import { IconFloppyDisk } from "../../component/Icon";
 
-const Store = require("electron-store");
-const store = new Store();
+import Store from "../../utils/Store";
+
+const store = Store.getStore();
 
 export default class BackupSettings extends Component {
   constructor(props) {
@@ -31,25 +36,25 @@ export default class BackupSettings extends Component {
 
     this.state = {
       backupFolder: "",
-      storeBackups: 13
+      storeBackups: 13,
     };
   }
 
   componentDidMount() {
     this.setState({
-      backupFolder: store.get("settings.backupFolder")
+      backupFolder: store.get("settings.backupFolder"),
     });
 
     this.setState({
-      storeBackups: store.get("settings.backupFrequency")
+      storeBackups: store.get("settings.backupFrequency"),
     });
   }
 
   ChooseBackupFolder = async () => {
-    let options = {
+    const options = {
       title: i18n.keyboardSettings.backupFolder.title,
       buttonLabel: i18n.keyboardSettings.backupFolder.windowButton,
-      properties: ["openDirectory"]
+      properties: ["openDirectory"],
     };
 
     const resp = await ipcRenderer.invoke("open-dialog", options);
@@ -57,7 +62,7 @@ export default class BackupSettings extends Component {
     if (!resp.canceled) {
       console.log(resp.filePaths);
       this.setState({
-        backupFolder: resp.filePaths[0]
+        backupFolder: resp.filePaths[0],
       });
       store.set("settings.backupFolder", `${resp.filePaths[0]}`);
     } else {
@@ -66,14 +71,14 @@ export default class BackupSettings extends Component {
   };
 
   GetBackup = async () => {
-    let options = {
+    const options = {
       title: i18n.keyboardSettings.backupFolder.restoreTitle,
       buttonLabel: i18n.keyboardSettings.backupFolder.windowRestore,
       defaultPath: this.state.backupFolder,
       filters: [
         { name: "Json", extensions: ["json"] },
-        { name: i18n.dialog.allFiles, extensions: ["*"] }
-      ]
+        { name: i18n.dialog.allFiles, extensions: ["*"] },
+      ],
     };
 
     const resp = await ipcRenderer.invoke("open-dialog", options);
@@ -82,7 +87,7 @@ export default class BackupSettings extends Component {
       console.log(resp.filePaths);
       let loadedFile;
       try {
-        loadedFile = JSON.parse(require("fs").readFileSync(resp.filePaths[0]));
+        loadedFile = JSON.parse(fs.readFileSync(resp.filePaths[0]));
         if (loadedFile.virtual !== undefined) {
           this.restoreVirtual(loadedFile.virtual);
           console.log("Restored Virtual backup");
@@ -91,12 +96,10 @@ export default class BackupSettings extends Component {
         if (loadedFile.backup !== undefined || loadedFile[0].command !== undefined) {
           this.restoreBackup(loadedFile);
           console.log("Restored normal backup");
-          return;
         }
       } catch (e) {
         console.error(e);
         alert("The file is not a valid global backup");
-        return;
       }
     } else {
       console.log("user closed SaveDialog");
@@ -106,13 +109,13 @@ export default class BackupSettings extends Component {
   setStoreBackups = value => {
     console.log("changed backup period to: ", value);
     this.setState({
-      storeBackups: value
+      storeBackups: value,
     });
     store.set("settings.backupFrequency", value);
   };
 
   async restoreBackup(backup) {
-    let focus = new Focus();
+    const focus = new Focus();
     let data = [];
     if (isArray(backup)) {
       data = backup;
@@ -131,7 +134,7 @@ export default class BackupSettings extends Component {
         if (typeof val === "boolean") {
           val = +val;
         }
-        //TODO: remove this block when necessary
+        // TODO: remove this block when necessary
         if (focus.device.info.product == "Defy") {
           // if (data[i].command.includes("macros") || data[i].command.includes("superkeys")) continue;
         }
@@ -149,10 +152,10 @@ export default class BackupSettings extends Component {
   }
 
   async restoreVirtual(virtual) {
-    let focus = new Focus();
+    const focus = new Focus();
     try {
       console.log("Restoring all settings");
-      for (let command in virtual) {
+      for (const command in virtual) {
         if (virtual[command].eraseable === true) {
           console.log(`Going to send ${command} to keyboard`);
           await focus.command(`${command} ${virtual[command].data}`.trim());
@@ -214,5 +217,5 @@ BackupSettings.propTypes = {
   neurons: PropTypes.array.isRequired,
   selectedNeuron: PropTypes.number.isRequired,
   neuronID: PropTypes.string.isRequired,
-  connected: PropTypes.bool.isRequired
+  connected: PropTypes.bool.isRequired,
 };

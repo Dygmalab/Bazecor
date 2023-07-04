@@ -1,15 +1,15 @@
 export default function rgb2w(rgb) {
-  let Ri = rgb.r;
-  let Gi = rgb.g;
-  let Bi = rgb.b;
-  let minVal = Math.min(Ri, Math.min(Gi, Bi));
+  const Ri = rgb.r;
+  const Gi = rgb.g;
+  const Bi = rgb.b;
+  const minVal = Math.min(Ri, Math.min(Gi, Bi));
 
-  let w = minVal;
-  let b = Bi - minVal;
-  let r = Ri - minVal;
-  let g = Gi - minVal;
+  const w = minVal;
+  const b = Bi - minVal;
+  const r = Ri - minVal;
+  const g = Gi - minVal;
 
-  let result = { r, g, b, w };
+  const result = { r, g, b, w };
 
   return result;
 }

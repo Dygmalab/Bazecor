@@ -18,11 +18,11 @@
 import React from "react";
 import PropTypes from "prop-types";
 import Styled from "styled-components";
+import { toast } from "react-toastify";
 import i18n from "../../i18n";
 
-import { toast } from "react-toastify";
-import ToastMessage from "../../component/ToastMessage";
-import { IconColorPicker } from "../../component/Icon";
+import ToastMessage from "../ToastMessage";
+import { IconColorPicker } from "../Icon";
 
 const Style = Styled.div` 
 .buttonColor {
@@ -66,7 +66,7 @@ const Style = Styled.div`
 }
 `;
 
-const ColorButton = ({ selected, onClick, label, text, icoSVG, color }) => {
+function ColorButton({ selected, onClick, label, text, icoSVG, color }) {
   const [disabled, setDisabled] = React.useState(true);
 
   const colorToastMessage = () => {
@@ -76,7 +76,7 @@ const ColorButton = ({ selected, onClick, label, text, icoSVG, color }) => {
         content={i18n.editor.color.selectColorFirstContent}
         icon={<IconColorPicker />}
       />,
-      { icon: "" }
+      { icon: "" },
     );
   };
   React.useEffect(() => {
@@ -92,18 +92,18 @@ const ColorButton = ({ selected, onClick, label, text, icoSVG, color }) => {
         className={`${selected ? "active" : ""} button button-config buttonColor`}
         disabled={disabled}
       >
-        <div className={"buttonIcon"}>
-          {icoSVG ? icoSVG : null}
-          {color ? <div className="colorIndicator" style={{ background: `${color.rgb}` }}></div> : null}
+        <div className="buttonIcon">
+          {icoSVG || null}
+          {color ? <div className="colorIndicator" style={{ background: `${color.rgb}` }} /> : null}
         </div>
-        <div className={"buttonLabel"}>
+        <div className="buttonLabel">
           {label ? <div className="subtitle">{label}</div> : null}
           <div className="title">{text}</div>
         </div>
       </div>
     </Style>
   );
-};
+}
 
 ColorButton.propTypes = {
   selected: PropTypes.bool,
@@ -111,7 +111,7 @@ ColorButton.propTypes = {
   label: PropTypes.string,
   text: PropTypes.string,
   icoSVG: PropTypes.object,
-  color: PropTypes.object
+  color: PropTypes.object,
 };
 
 export default ColorButton;

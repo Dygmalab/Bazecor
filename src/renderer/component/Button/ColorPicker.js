@@ -125,7 +125,7 @@ const Style = Styled.div`
 }
 `;
 
-const ColorPicker = ({ menuKey, id, onClick, dataID, selected, buttonStyle, className }) => {
+function ColorPicker({ menuKey, id, onClick, dataID, selected, buttonStyle, className }) {
   return (
     <Style>
       <div
@@ -135,13 +135,13 @@ const ColorPicker = ({ menuKey, id, onClick, dataID, selected, buttonStyle, clas
         data-id={dataID}
       >
         <div className="button-content">
-          <div className={`colorItem`} style={buttonStyle}>
+          <div className="colorItem" style={buttonStyle}>
             {className == "addColorButton" ? <IconPlusXs /> : " "}
           </div>
         </div>
       </div>
     </Style>
   );
-};
+}
 
 export default ColorPicker;

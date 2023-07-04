@@ -7,7 +7,7 @@ function IconCloudDownload(props) {
         <mask
           id="prefix__aIconCloudDownload"
           style={{
-            maskType: "alpha"
+            maskType: "alpha",
           }}
           maskUnits="userSpaceOnUse"
           x={0}
