@@ -5,7 +5,8 @@ import Styled from "styled-components";
 import { PileIndicator, DefyBatteryIndicator } from "../Battery";
 
 const Style = Styled.div`
-.status--default {
+.status--default,
+.status--disconnected {
     --color-status: ${({ theme }) => theme.colors.gray200};
 }
 .status--saving,

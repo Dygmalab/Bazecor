@@ -140,6 +140,28 @@ const PileIndicator = ({ batteryLevel, isCharging, batteryStatus }) => {
       ) : (
         ""
       )}
+      {batteryStatus == 4 ? (
+        <>
+          <mask id="mask0_2054_10210" style={{ maskType: "alpha" }} maskUnits="userSpaceOnUse" x="0" y="3" width="20" height="8">
+            <rect x="0.5" y="-0.5" width="19" height="7" transform="matrix(-1 0 0 1 20 4)" stroke="black" />
+          </mask>
+          <g mask="url(#mask0_2054_10210)">
+            <path d="M20 3H9L17 11H20V3Z" fill="currentColor" />
+            <path d="M3 3H0V11H11L3 3Z" fill="currentColor" />
+          </g>
+          <rect x="21" y="5" width="1" height="4" fill="currentColor" />
+          <line
+            y1="-0.6"
+            x2="18"
+            y2="-0.6"
+            transform="matrix(-0.707107 -0.707107 -0.707107 0.707107 15.7275 13.7279)"
+            stroke="currentColor"
+            strokeWidth="1.2"
+          />
+        </>
+      ) : (
+        ""
+      )}
     </svg>
   );
 };

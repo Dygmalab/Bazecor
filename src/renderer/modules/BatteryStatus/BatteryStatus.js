@@ -152,7 +152,7 @@ const BatteryStatus = props => {
     const right = await focus.command("wireless.battery.right.level");
     setbLeft(left);
     setbRight(right);
-    setBatteryStatus(3);
+    setBatteryStatus(4);
   }
 
   const forceRetrieveBattery = async () => {
