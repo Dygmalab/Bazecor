@@ -87,6 +87,9 @@ const Style = Styled.div`
       color: ${({ theme }) => theme.colors.gray25};
     }
   }
+  &.status--fault {
+    --color-stroke: ${({ theme }) => theme.colors.brandWarning};
+  }
 }
 @media screen and (max-width: 999px) {
   .size--sm {

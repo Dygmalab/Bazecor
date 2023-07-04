@@ -34,7 +34,7 @@ const Style = Styled.div`
 }
 .battery-defy--indicator {
   display: flex;
-  grid-gap: 4px;
+  grid-gap: 8px;
   position: relative;
 }
 .dropdown-menu--battery {
@@ -152,7 +152,7 @@ const BatteryStatus = props => {
     const right = await focus.command("wireless.battery.right.level");
     setbLeft(left);
     setbRight(right);
-    setBatteryStatus(2);
+    setBatteryStatus(3);
   }
 
   const forceRetrieveBattery = async () => {

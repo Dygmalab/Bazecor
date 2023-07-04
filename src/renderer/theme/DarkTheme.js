@@ -159,7 +159,11 @@ const Dark = {
       largeIndicatorStrokeColor: settingColorOpacity(Tokens.colors.gray600, 0.8),
       largeIndicatorFillColor: settingColorOpacity(Tokens.colors.gray600, 0.5),
       fillShapeColor: Tokens.colors.purple200,
-      strokeShapeColor: settingColorOpacity(Tokens.colors.gray600, 0.8)
+      strokeShapeColor: settingColorOpacity(Tokens.colors.gray600, 0.8),
+      alertWarningBackground: settingColorOpacity(Tokens.colors.brandWarning, 0.2),
+      alertWarningText: Tokens.colors.brandWarning,
+      alertErrorBackground: settingColorOpacity(Tokens.colors.brandPrimary, 0.25),
+      alertErrorText: Tokens.colors.brandPrimary
     },
     batterySettings: {
       descriptionColor: Tokens.colors.gray200,

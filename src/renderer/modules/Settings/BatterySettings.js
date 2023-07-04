@@ -21,7 +21,7 @@ padding-top: 24px;
 }
 .battery-defy--indicator {
   display: flex;
-  grid-gap: 4px;
+  grid-gap: 8px;
   margin-bottom: 42px;
   position: relative;
   max-width: 202px;

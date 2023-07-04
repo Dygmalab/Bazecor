@@ -158,7 +158,11 @@ const Light = {
       largeIndicatorStrokeColor: Tokens.colors.gray50,
       largeIndicatorFillColor: Tokens.colors.gray300,
       fillShapeColor: Tokens.colors.purple200,
-      strokeShapeColor: Tokens.colors.gray50
+      strokeShapeColor: Tokens.colors.gray50,
+      alertWarningBackground: settingColorOpacity(Tokens.colors.brandWarning, 0.25),
+      alertWarningText: Tokens.colors.gray600,
+      alertErrorBackground: settingColorOpacity(Tokens.colors.brandPrimary, 0.25),
+      alertErrorText: Tokens.colors.gray600
     },
     batterySettings: {
       descriptionColor: Tokens.colors.gray400,
