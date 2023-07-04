@@ -162,7 +162,7 @@ const PileIndicator = ({ batteryLevel, isCharging, batteryStatus }) => {
       ) : (
         ""
       )}
-      {batteryStatus == 255 ? (
+      {batteryStatus == 0xff ? (
         <>
           <mask id="mask0_2054_10114" style={{ maskType: "alpha" }} maskUnits="userSpaceOnUse" x="0" y="4" width="20" height="8">
             <rect x="0.5" y="4.5" width="19" height="7" stroke="black" />

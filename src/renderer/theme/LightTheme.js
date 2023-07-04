@@ -157,12 +157,17 @@ const Light = {
       largeIndicatorPercentageColor: "white",
       largeIndicatorStrokeColor: Tokens.colors.gray50,
       largeIndicatorFillColor: Tokens.colors.gray300,
+      largeIndicatorDisconnectedColor: Tokens.colors.gray100,
       fillShapeColor: Tokens.colors.purple200,
+      fillShapeOpacity: 0.2,
       strokeShapeColor: Tokens.colors.gray50,
       alertWarningBackground: settingColorOpacity(Tokens.colors.brandWarning, 0.25),
       alertWarningText: Tokens.colors.gray600,
       alertErrorBackground: settingColorOpacity(Tokens.colors.brandPrimary, 0.25),
-      alertErrorText: Tokens.colors.gray600
+      alertErrorText: Tokens.colors.gray600,
+      alertDisconnectedBackground: Tokens.colors.gray50,
+      alertDisconnectedText: Tokens.colors.gray300,
+      shapeIndicatorOpacity: 0.1
     },
     batterySettings: {
       descriptionColor: Tokens.colors.gray400,

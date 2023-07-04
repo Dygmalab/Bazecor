@@ -53,11 +53,19 @@ const Style = Styled.div`
   .shapeIndicator {
     opacity: 0.1;
   }
+  .shapeFill {
+    opacity: ${({ theme }) => theme.styles.batteryIndicator.fillShapeOpacity};
+  }
   &.status--default {
     --color-status: ${({ theme }) => theme.styles.batteryIndicator.fillShapeColor};
     .shapeIndicator {
       opacity: 0;
     }
+  }
+  &.status--disconnected,
+  &.status--disconnected.status--saving {
+    --color-stroke: ${({ theme }) => theme.styles.batteryIndicator.largeIndicatorDisconnectedColor};
+    --color-status: ${({ theme }) => theme.styles.batteryIndicator.largeIndicatorDisconnectedColor};
   }
   &.status--saving {
     --color-status: ${({ theme }) => theme.colors.brandWarning};
@@ -89,6 +97,17 @@ const Style = Styled.div`
   }
   &.status--fault {
     --color-stroke: ${({ theme }) => theme.colors.brandWarning};
+    .shapeIndicator {
+      opacity: 0.1;
+    }
+  }
+  &.status--fatal-error,
+  &.status--fatal-error.status--saving {
+    --color-status: ${({ theme }) => theme.colors.brandPrimary};
+    --color-stroke: ${({ theme }) => theme.colors.brandPrimary};
+    .shapeIndicator {
+      opacity: ${({ theme }) => theme.styles.batteryIndicator.shapeIndicatorOpacity};
+    }
   }
 }
 @media screen and (max-width: 999px) {

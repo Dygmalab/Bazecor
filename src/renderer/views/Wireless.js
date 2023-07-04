@@ -167,7 +167,7 @@ const Wireless = ({ inContext, connected, allowBeta, updateAllowBeta, cancelCont
                   changeWireless={changeWireless}
                   toggleSavingMode={toggleSavingMode}
                   isCharging={false}
-                  batteryStatus={3}
+                  batteryStatus={4}
                 />
               </Col>
               <Col md={6}>
