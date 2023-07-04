@@ -151,6 +151,7 @@ const Light = {
     batteryIndicator: {
       pileBackgroundColor: Tokens.colors.gray50,
       pileBackgroundSavingMode: settingColorOpacity(Tokens.colors.brandWarning, 0.25),
+      pileBackgroundFatalError: settingColorOpacity(Tokens.colors.brandPrimary, 0.15),
       titleColor: Tokens.colors.gray500,
       panelBackgroundColor: "rgb(240, 242, 244), rgb(255, 255, 255, 0.6)",
       largeIndicatorPercentageColor: "white",

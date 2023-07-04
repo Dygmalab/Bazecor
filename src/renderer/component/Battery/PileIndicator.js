@@ -162,6 +162,24 @@ const PileIndicator = ({ batteryLevel, isCharging, batteryStatus }) => {
       ) : (
         ""
       )}
+      {batteryStatus == 255 ? (
+        <>
+          <mask id="mask0_2054_10114" style={{ maskType: "alpha" }} maskUnits="userSpaceOnUse" x="0" y="4" width="20" height="8">
+            <rect x="0.5" y="4.5" width="19" height="7" stroke="black" />
+          </mask>
+          <g mask="url(#mask0_2054_10114)">
+            <path d="M0 4H6.5L7 12H0V4Z" fill="currentColor" />
+            <path d="M13 4H20V12H12.5L13 4Z" fill="currentColor" />
+          </g>
+          <rect x="21" y="6" width="1" height="4" fill="currentColor" />
+          <path
+            d="M10.782 12.688C10.782 12.896 10.665 13 10.431 13H8.897C8.70633 13 8.611 12.909 8.611 12.727V11.115C8.611 10.959 8.676 10.881 8.806 10.881H10.587C10.717 10.881 10.782 10.9503 10.782 11.089V12.688ZM10.366 9.698C10.3573 9.802 10.327 9.87567 10.275 9.919C10.223 9.96233 10.1363 9.984 10.015 9.984H9.326C9.222 9.984 9.15267 9.96667 9.118 9.932C9.092 9.88867 9.07033 9.81933 9.053 9.724L8.559 3.588C8.55033 3.51 8.56333 3.45367 8.598 3.419C8.64133 3.37567 8.69333 3.354 8.754 3.354H10.665C10.8037 3.354 10.8643 3.42767 10.847 3.575L10.366 9.698Z"
+            fill="currentColor"
+          />
+        </>
+      ) : (
+        ""
+      )}
     </svg>
   );
 };

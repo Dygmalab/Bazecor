@@ -14,7 +14,8 @@ const Style = Styled.div`
 .status--warning  {
     --color-status: ${({ theme }) => theme.colors.brandWarning};
 }
-.status--critical {
+.status--critical,
+.status--fatal-error {
     --color-status: ${({ theme }) => theme.colors.brandPrimary};
 }
 .status--charging {
@@ -39,6 +40,9 @@ const Style = Styled.div`
     &.status--saving,
     &.status--fault {
         background-color: ${({ theme }) => theme.styles.batteryIndicator.pileBackgroundSavingMode};
+    }
+    &.status--fatal-error {
+      background-color: ${({ theme }) => theme.styles.batteryIndicator.pileBackgroundFatalError};
     }
     .pileIndicator {
       max-width: 100%;
@@ -113,6 +117,7 @@ const BatteryStatusSide = ({ side, batteryLevel, isSavingMode, isCharging, batte
   }, []);
 
   useEffect(() => {
+    console.log("batteryStatus", batteryStatus);
     switch (batteryStatus) {
       case 0:
         setSideStatus("status--default");
@@ -130,12 +135,12 @@ const BatteryStatusSide = ({ side, batteryLevel, isSavingMode, isCharging, batte
         setSideStatus("status--disconnected");
         break;
       default:
-        setSideStatus("status--fata-error");
+        setSideStatus("status--fatal-error");
     }
-    if (batteryLevel > 10 && batteryLevel < 20 && !isCharging && !isSavingMode && batteryStatus != 3 && batteryStatus != 4) {
+    if (batteryLevel > 10 && batteryLevel < 20 && !isSavingMode && batteryStatus == 0) {
       setSideStatus("status--warning");
     }
-    if (batteryLevel < 10 && !isCharging && !isSavingMode && batteryStatus != 3 && batteryStatus != 4) {
+    if (batteryLevel < 10 && !isSavingMode && batteryStatus == 0) {
       setSideStatus("status--critical");
     }
   }, [size, batteryLevel, isCharging, batteryStatus, isSavingMode]);
