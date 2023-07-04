@@ -58,7 +58,7 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.updateStorageSchema();
-
+    let isDark;
     const mode = store.get("settings.darkMode");
     isDark = mode === "dark";
     if (mode === "system") {
@@ -83,7 +83,7 @@ class App extends React.Component {
       contextBar: false,
       cancelPendingOpen: false,
       fwUpdate: false,
-      allowBeta: allowBeta
+      allowBeta: allowBeta,
     };
     localStorage.clear();
 
@@ -219,7 +219,7 @@ class App extends React.Component {
 
   toggleFwUpdate = () => {
     this.setState({
-      fwUpdate: !this.state.fwUpdate
+      fwUpdate: !this.state.fwUpdate,
     });
   };
 
@@ -228,7 +228,7 @@ class App extends React.Component {
     // console.log("new allowBeta value: ", newValue);
     store.set("settings.allowBeta", newValue);
     this.setState({
-      allowBeta: newValue
+      allowBeta: newValue,
     });
   };
 
@@ -422,18 +422,18 @@ class App extends React.Component {
             />
             <Route
               path="/wireless"
-              element = {
+              element={
                 <Wireless
-                connected={connected}
-                path="/wireless"
-                titleElement={() => document.querySelector("#page-title")}
-                darkMode={darkMode}
-                toggleDarkMode={this.toggleDarkMode}
-                startContext={this.startContext}
-                cancelContext={this.cancelContext}
-                updateAllowBeta={this.updateAllowBeta}
-                allowBeta={allowBeta}
-                inContext={contextBar}
+                  connected={connected}
+                  path="/wireless"
+                  titleElement={() => document.querySelector("#page-title")}
+                  darkMode={darkMode}
+                  toggleDarkMode={this.toggleDarkMode}
+                  startContext={this.startContext}
+                  cancelContext={this.cancelContext}
+                  updateAllowBeta={this.updateAllowBeta}
+                  allowBeta={allowBeta}
+                  inContext={contextBar}
                 />
               }
             />

@@ -38,10 +38,8 @@ import {
   IconRobot2Stroke,
   IconThunder2Stroke,
   IconPreferences2Stroke,
-  IconWireless
+  IconWireless,
 } from "../../component/Icon";
-
-import packageInfo from "../../../../package.json";
 
 const Styles = Styled.div`
 .disabled {
@@ -114,6 +112,8 @@ function NavigationMenu(props: NavigationMenuProps): React.JSX.Element {
   const [device, setDevice] = useState({});
   const [virtual, setVirtual] = useState(false);
   const [fwList, setFwList] = useState({});
+  const location = useLocation();
+  const currentPage = location.pathname;
 
   useEffect(() => {
     contextUpdater();
@@ -130,10 +130,10 @@ function NavigationMenu(props: NavigationMenuProps): React.JSX.Element {
     if (focus.device === undefined || focus.device.bootloader) return;
     let parts = await focus.command("version");
     parts = parts.split(" ");
-    let versions = {
+    let versions: Version = {
       bazecor: parts[0],
       kaleidoscope: parts[1],
-      firmware: parts[2]
+      firmware: parts[2],
     };
     let fwList = await getGitHubFW(focus.device.info.product);
     let isBeta = versions.bazecor.includes("beta");
@@ -155,8 +155,8 @@ function NavigationMenu(props: NavigationMenuProps): React.JSX.Element {
       owner: "Dygmalab",
       repo: "Firmware-releases",
       headers: {
-        "X-GitHub-Api-Version": "2022-11-28"
-      }
+        "X-GitHub-Api-Version": "2022-11-28",
+      },
     });
     data.data.forEach(release => {
       const releaseData = release.name.split(" ");
@@ -172,8 +172,6 @@ function NavigationMenu(props: NavigationMenuProps): React.JSX.Element {
   };
 
   const { connected, pages, history, fwUpdate } = props;
-
-  const currentPage = history.location.pathname;
 
   // console.log("new checker for navigation", fwList, versions, isUpdated, isBeta);
 
@@ -275,6 +273,5 @@ function NavigationMenu(props: NavigationMenuProps): React.JSX.Element {
     </Styles>
   );
 }
-
 
 export default NavigationMenu;

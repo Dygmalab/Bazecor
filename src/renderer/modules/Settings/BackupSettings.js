@@ -13,9 +13,6 @@ import Card from "react-bootstrap/Card";
 import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import Backup from "../../../api/backup";
-import Focus from "../../../api/focus";
-import i18n from "../../i18n";
 
 // Own Components
 import Title from "../../component/Title";
