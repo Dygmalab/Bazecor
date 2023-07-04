@@ -9,6 +9,7 @@ const Style = Styled.div`
     --color-status: ${({ theme }) => theme.colors.gray200};
 }
 .status--saving,
+.status--fault, 
 .status--warning  {
     --color-status: ${({ theme }) => theme.colors.brandWarning};
 }
@@ -34,7 +35,8 @@ const Style = Styled.div`
             text-transform: uppercase;
         }
     }
-    &.status--saving {
+    &.status--saving,
+    &.status--fault {
         background-color: ${({ theme }) => theme.styles.batteryIndicator.pileBackgroundSavingMode};
     }
     .pileIndicator {
@@ -129,10 +131,10 @@ const BatteryStatusSide = ({ side, batteryLevel, isSavingMode, isCharging, batte
       default:
         setSideStatus("status--fata-error");
     }
-    if (batteryLevel > 10 && batteryLevel < 20 && !isCharging && !isSavingMode) {
+    if (batteryLevel > 10 && batteryLevel < 20 && !isCharging && !isSavingMode && batteryStatus != 3 && batteryStatus != 4) {
       setSideStatus("status--warning");
     }
-    if (batteryLevel < 10 && !isCharging && !isSavingMode) {
+    if (batteryLevel < 10 && !isCharging && !isSavingMode && batteryStatus != 3 && batteryStatus != 4) {
       setSideStatus("status--critical");
     }
   }, [size, batteryLevel, isCharging, batteryStatus, isSavingMode]);
