@@ -343,6 +343,7 @@ class App extends React.Component {
                   onConnect={this.onKeyboardConnect}
                   onDisconnect={this.onKeyboardDisconnect}
                   titleElement={() => document.querySelector("#page-title")}
+                  device={this.state.device}
                   darkMode={darkMode}
                 />
               }
