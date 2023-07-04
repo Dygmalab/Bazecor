@@ -82,6 +82,11 @@ const Style = Styled.div`
       opacity: 0.1;
     }
   }
+  &.status--charging.status--charging-done {
+    .lightningbattery {
+      color: ${({ theme }) => theme.colors.gray25};
+    }
+  }
 }
 @media screen and (max-width: 999px) {
   .size--sm {

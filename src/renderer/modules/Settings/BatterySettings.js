@@ -44,7 +44,7 @@ padding-top: 24px;
 }
 `;
 
-const BatterySettings = ({ wireless, toggleSavingMode, changeWireless, isCharging }) => {
+const BatterySettings = ({ wireless, toggleSavingMode, changeWireless, isCharging, batteryStatus }) => {
   // console.log("Wireless: ", wireless);
   return (
     <Styles>
@@ -59,6 +59,7 @@ const BatterySettings = ({ wireless, toggleSavingMode, changeWireless, isChargin
               batteryLevel={wireless.battery ? wireless.battery.LeftLevel : 100}
               isSavingMode={wireless.battery ? wireless.battery.savingMode : false}
               isCharging={isCharging}
+              batteryStatus={batteryStatus}
               size="lg"
             />
             <BatteryStatusSide
@@ -66,6 +67,7 @@ const BatterySettings = ({ wireless, toggleSavingMode, changeWireless, isChargin
               batteryLevel={wireless.battery ? wireless.battery.RightLevel : 100}
               isSavingMode={wireless.battery ? wireless.battery.savingMode : false}
               isCharging={isCharging}
+              batteryStatus={batteryStatus}
               size="lg"
             />
             <SavingModeIndicator isSavingMode={wireless.battery ? wireless.battery.savingMode : false} isCharging={isCharging} />

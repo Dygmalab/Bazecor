@@ -16,7 +16,7 @@ const Style = Styled.div`
 }
 &.batterySavingMode {
     position: absolute;
-    bottom: 0;
+    top: 98px;
     color: var(--color-status);
     left: 50%;
     transform: translate3d(-50%, -4px, 0);
