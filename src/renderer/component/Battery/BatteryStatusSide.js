@@ -61,6 +61,9 @@ const Style = Styled.div`
     .shapeIndicator {
       opacity: 0;
     }
+    .shapeFill {
+      opacity: ${({ theme }) => theme.styles.batteryIndicator.fillShapeDefaultOpacity};
+    }
   }
   &.status--disconnected,
   &.status--disconnected.status--saving {
@@ -138,12 +141,21 @@ const Style = Styled.div`
     }
   }
 }
-
+.pulse {
+  animation: pulseAnimation 1s infinite ease-in-out;
+  transform-origin: center;
+}
+@keyframes pulseAnimation {
+    0% { transform: scale(0.9); opacity: 0.5; }
+    50% { transform: scale(1); opacity: 1; }
+    100% { transform: scale(0.9); opacity: 0.5; }
+}
 `;
 
-const BatteryStatusSide = ({ side, batteryLevel, isSavingMode, isCharging, batteryStatus, size }) => {
+const BatteryStatusSide = ({ side, batteryLevel, isSavingMode, batteryStatus, size }) => {
   const [loading, setLoading] = useState(true);
   const [sideFirstLetter, setSideFirstLetter] = useState("");
+  const [isCharging, setIsCharging] = useState(false);
   const [sideStatus, setSideStatus] = useState("status--default");
 
   useEffect(() => {
@@ -180,7 +192,10 @@ const BatteryStatusSide = ({ side, batteryLevel, isSavingMode, isCharging, batte
     if (batteryLevel < 10 && !isSavingMode && batteryStatus == 0) {
       setSideStatus("status--critical");
     }
-  }, [size, batteryLevel, isCharging, batteryStatus, isSavingMode]);
+    if (batteryStatus == 1 || batteryStatus == 2) {
+      setIsCharging(true);
+    }
+  }, [size, batteryLevel, batteryStatus, isSavingMode]);
 
   if (loading) return <div></div>;
   return (

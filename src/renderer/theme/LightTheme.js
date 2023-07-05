@@ -161,6 +161,7 @@ const Light = {
       lineDisconnectedColor: Tokens.colors.gray100,
       fillShapeColor: Tokens.colors.purple200,
       fillShapeOpacity: 0.2,
+      fillShapeDefaultOpacity: 0.5,
       strokeShapeColor: Tokens.colors.gray50,
       alertWarningBackground: settingColorOpacity(Tokens.colors.brandWarning, 0.25),
       alertWarningText: Tokens.colors.gray600,

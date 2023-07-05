@@ -111,7 +111,8 @@ const BatteryStatus = props => {
   const [isCharging, setIsCharging] = useState(false);
   const [animateIcon, setAnimateIcon] = useState(0);
   const [batteryInterval, setBatteryInterval] = useState(false);
-  const [batteryStatus, setBatteryStatus] = useState(0);
+  const [batteryStatusLeft, setBatteryStatusLeft] = useState(0);
+  const [batteryStatusRight, setBatteryStatusRight] = useState(0);
   const target = useRef(null);
 
   useEffect(() => {
@@ -152,7 +153,8 @@ const BatteryStatus = props => {
     const right = await focus.command("wireless.battery.right.level");
     setbLeft(left);
     setbRight(right);
-    setBatteryStatus(4);
+    setBatteryStatusLeft(0xff);
+    setBatteryStatusRight(0xff);
   }
 
   const forceRetrieveBattery = async () => {
@@ -171,16 +173,14 @@ const BatteryStatus = props => {
             side="left"
             batteryLevel={bLeft}
             isSavingMode={isSavingMode}
-            isCharging={batteryStatus == 1 || batteryStatus == 2 ? true : false}
-            batteryStatus={batteryStatus}
+            batteryStatus={batteryStatusLeft}
             size="sm"
           />
           <BatteryStatusSide
             side="right"
             batteryLevel={bRight}
             isSavingMode={isSavingMode}
-            isCharging={batteryStatus == 1 || batteryStatus == 2 ? true : false}
-            batteryStatus={batteryStatus}
+            batteryStatus={batteryStatusRight}
             size="sm"
           />
         </div>
@@ -192,23 +192,17 @@ const BatteryStatus = props => {
                 side="left"
                 batteryLevel={bLeft}
                 isSavingMode={isSavingMode}
-                isCharging={batteryStatus == 1 || batteryStatus == 2 ? true : false}
-                batteryStatus={batteryStatus}
+                batteryStatus={batteryStatusLeft}
                 size="lg"
               />
               <BatteryStatusSide
                 side="right"
                 batteryLevel={bRight}
                 isSavingMode={isSavingMode}
-                isCharging={batteryStatus == 1 || batteryStatus == 2 ? true : false}
-                batteryStatus={batteryStatus}
+                batteryStatus={batteryStatusRight}
                 size="lg"
               />
-              <SavingModeIndicator
-                isSavingMode={isSavingMode}
-                isCharging={batteryStatus == 1 || batteryStatus == 2 ? true : false}
-                batteryStatus={batteryStatus}
-              />
+              <SavingModeIndicator isSavingMode={isSavingMode} />
             </div>
             <div className="batterySettingItem batteryUpdateStatus">
               <div className="batterySettingLabel">Force read Battery level</div>

@@ -162,6 +162,7 @@ const Dark = {
       lineDisconnectedColor: Tokens.colors.gray600,
       fillShapeColor: Tokens.colors.purple200,
       fillShapeOpacity: 0.5,
+      fillShapeDefaultOpacity: 0.5,
       strokeShapeColor: settingColorOpacity(Tokens.colors.gray600, 0.8),
       alertWarningBackground: settingColorOpacity(Tokens.colors.brandWarning, 0.2),
       alertWarningText: Tokens.colors.brandWarning,

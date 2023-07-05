@@ -44,7 +44,7 @@ padding-top: 24px;
 }
 `;
 
-const BatterySettings = ({ wireless, toggleSavingMode, changeWireless, isCharging, batteryStatus }) => {
+const BatterySettings = ({ wireless, toggleSavingMode, changeWireless, batteryStatusLeft, batteryStatusRight }) => {
   // console.log("Wireless: ", wireless);
   return (
     <Styles>
@@ -58,19 +58,17 @@ const BatterySettings = ({ wireless, toggleSavingMode, changeWireless, isChargin
               side="left"
               batteryLevel={wireless.battery ? wireless.battery.LeftLevel : 100}
               isSavingMode={wireless.battery ? wireless.battery.savingMode : false}
-              isCharging={isCharging}
-              batteryStatus={batteryStatus}
+              batteryStatus={batteryStatusLeft}
               size="lg"
             />
             <BatteryStatusSide
               side="right"
               batteryLevel={wireless.battery ? wireless.battery.RightLevel : 100}
               isSavingMode={wireless.battery ? wireless.battery.savingMode : false}
-              isCharging={isCharging}
-              batteryStatus={batteryStatus}
+              batteryStatus={batteryStatusRight}
               size="lg"
             />
-            <SavingModeIndicator isSavingMode={wireless.battery ? wireless.battery.savingMode : false} isCharging={isCharging} />
+            <SavingModeIndicator isSavingMode={wireless.battery ? wireless.battery.savingMode : false} />
           </div>
           <Form className="batterySettingItem batterySetSavingMode">
             <div className="batterySettingLabel">Saving Mode</div>

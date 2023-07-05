@@ -24,12 +24,10 @@ const Style = Styled.div`
 }
 `;
 
-function SavingModeIndicator({ isSavingMode, isCharging }) {
+function SavingModeIndicator({ isSavingMode }) {
   return (
     <Style
-      className={`batterySavingMode ${isSavingMode ? "savingModeEnabled status--saving" : "savingModeDisabled status--default"} ${
-        isCharging ? "status--charging" : ""
-      }`}
+      className={`batterySavingMode ${isSavingMode ? "savingModeEnabled status--saving" : "savingModeDisabled status--default"}`}
     >
       <OverlayTrigger
         key="keySavingModeOverlay"
