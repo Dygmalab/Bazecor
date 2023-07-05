@@ -5,10 +5,12 @@ on:
     branches:
       - "*"
       - "!main"
+      - "!development"
   pull_request:
     branches:
       - "*"
       - "!main"
+      - "!development"
 
 jobs:
   testing:
@@ -41,4 +43,3 @@ jobs:
         run: yarn install --frozen-lockfile --network-timeout 300000 # sometimes yarn takes time, therefore, we increase the timeout
       - run: yarn run test
       # - run: yarn run lint
-      # - run: yarn run test

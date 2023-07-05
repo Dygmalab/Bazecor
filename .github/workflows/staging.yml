@@ -1,12 +1,12 @@
-name: Release
+name: Staging
 
 on:
   push:
     branches:
-      - "main"
+      - "development"
   pull_request:
     branches:
-      - "main"
+      - "development"
 
 permissions:
   contents: read
@@ -125,61 +125,3 @@ jobs:
       - name: Show build items
         run: |
           ls -R out/make
-
-  release:
-    # here we only download the previous artifacts and upload them with release name, just for clarification
-    needs: [build]
-    runs-on: ubuntu-20.04
-    permissions:
-      contents: write # to be able to publish a GitHub release
-      issues: write # to be able to comment on released issues
-      pull-requests: write # to be able to comment on released pull requests
-
-    strategy:
-      fail-fast: false
-
-    steps:
-      - name: Setup Nodejs
-        uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-        with:
-          node-version: 18
-      - name: Cache node_modules
-        id: cache-node-modules
-        uses: actions/cache@v3
-        with:
-          path: node_modules
-          key: release-${{ hashFiles('package.json', 'yarn.lock') }}
-      - name: Install node_modules
-        if: steps.cache-node-modules.outputs.cache-hit != 'true'
-        run: yarn install --frozen-lockfile --network-timeout 300000 # sometimes yarn takes time, therefore, we increase the timeout
-      - uses: actions/download-artifact@v3
-        with:
-          name: artifacts
-          path: ${{ github.workspace }}/artifacts
-      - name: Log downloaded artifacts
-        run: |
-          ls -R ${{ github.workspace }}
-      - name: Extract artifacts into dist folder
-        run: |
-          mkdir dist
-          find ${{ github.workspace }}/artifacts -name '*.exe' -exec cp -v {} ${{ github.workspace }}/dist \;
-          find ${{ github.workspace }}/artifacts -name '*.AppImage' -exec cp -v {} ${{ github.workspace }}/dist \;
-          find ${{ github.workspace }}/artifacts -name '*.dmg' -exec cp -v {} ${{ github.workspace }}/dist \;
-
-      - name: Log dist folder
-        run: |
-          ls -R ${{ github.workspace}}/dist
-      - name: Upload release
-        uses: actions/upload-artifact@v3
-        with:
-          name: release
-          path: ${{ github.workspace }}/dist
-      - name: Log workspace
-        run: |
-          ls -R ${{ github.workspace}}
-
-      - name: Run semantic-release
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: npx semantic-release
