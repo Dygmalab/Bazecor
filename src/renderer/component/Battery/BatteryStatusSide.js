@@ -66,6 +66,16 @@ const Style = Styled.div`
   &.status--disconnected.status--saving {
     --color-stroke: ${({ theme }) => theme.styles.batteryIndicator.largeIndicatorDisconnectedColor};
     --color-status: ${({ theme }) => theme.styles.batteryIndicator.largeIndicatorDisconnectedColor};
+    svg {
+      overflow: visible;
+    }
+    .fillBaseDisconnected {
+      opacity: 0.5;
+      color: ${({ theme }) => theme.styles.batteryIndicator.lineDisconnectedColor};
+    }
+    .lineDisconnected {
+      color: ${({ theme }) => theme.styles.batteryIndicator.lineDisconnectedColor};
+    }
   }
   &.status--saving {
     --color-status: ${({ theme }) => theme.colors.brandWarning};

@@ -159,6 +159,7 @@ const Dark = {
       largeIndicatorStrokeColor: settingColorOpacity(Tokens.colors.gray600, 0.8),
       largeIndicatorFillColor: settingColorOpacity(Tokens.colors.gray600, 0.5),
       largeIndicatorDisconnectedColor: Tokens.colors.gray600,
+      lineDisconnectedColor: Tokens.colors.gray600,
       fillShapeColor: Tokens.colors.purple200,
       fillShapeOpacity: 0.5,
       strokeShapeColor: settingColorOpacity(Tokens.colors.gray600, 0.8),

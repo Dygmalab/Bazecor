@@ -158,6 +158,7 @@ const Light = {
       largeIndicatorStrokeColor: Tokens.colors.gray50,
       largeIndicatorFillColor: Tokens.colors.gray300,
       largeIndicatorDisconnectedColor: Tokens.colors.gray100,
+      lineDisconnectedColor: Tokens.colors.gray100,
       fillShapeColor: Tokens.colors.purple200,
       fillShapeOpacity: 0.2,
       strokeShapeColor: Tokens.colors.gray50,
