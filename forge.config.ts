@@ -54,8 +54,7 @@ const config: ForgeConfig = {
   plugins: [
     new WebpackPlugin({
       mainConfig,
-      devContentSecurityPolicy:
-        "connect-src 'self' https://api.github.com/repos/Dygmalab/Firmware-releases/releases 'unsafe-eval'",
+      devContentSecurityPolicy: "connect-src 'self' *.github.com github.com objects.githubusercontent.com 'unsafe-eval';",
       renderer: {
         config: rendererConfig,
         entryPoints: [
