@@ -69,7 +69,7 @@ const Raise_ANSI = {
     focus._port && focus._port.path === port.path
       ? await focus.open(focus._port, port, null)
       : await focus.open(port.path, port.device, null);
-    port.serialNumber = await focus.command("hardware.chip_id");
+    focus._port.serialNumber = await focus.command("hardware.chip_id");
     let layout = await focus.command("hardware.layout");
     await focus.close();
     return layout.trim() === "ANSI";

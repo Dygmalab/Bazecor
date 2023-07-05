@@ -48,7 +48,7 @@ class Focus {
   async find(...devices) {
     const portList = await SerialPort.list();
 
-    const found_devices = [];
+    const foundDevices = [];
 
     this.debugLog("focus.find: portList:", portList, "devices:", devices);
     console.log("Passed devices", devices);
@@ -58,14 +58,14 @@ class Focus {
         if (parseInt(`0x${port.productId}`) == device.usb.productId && parseInt(`0x${port.vendorId}`) == device.usb.vendorId) {
           const newPort = { ...port };
           newPort.device = device;
-          found_devices.push(newPort);
+          foundDevices.push(newPort);
         }
       }
     }
 
-    this.debugLog("focus.find: found_devices:", found_devices);
+    this.debugLog("focus.find: foundDevices:", foundDevices);
 
-    return found_devices;
+    return foundDevices;
   }
 
   async fileOpen(info, file) {
@@ -96,8 +96,8 @@ class Focus {
 
     try {
       let path = undefined;
-      if (typeof device == "string") path = device;
-      if (typeof device == "object") path = device.settings.path;
+      if (typeof device === "string") path = device;
+      if (typeof device === "object") path = device.settings.path;
       if (path !== undefined) {
         await SerialPort.list();
         this._port = new SerialPort({ path: path, baudRate: 115200, autoOpen: true });
@@ -118,7 +118,7 @@ class Focus {
       data = data.toString("utf-8");
       this.debugLog("focus: incoming data:", data);
 
-      if (data == "." || data.endsWith(".")) {
+      if (data === "." || data.endsWith(".")) {
         const { result } = this;
         const resolve = this.callbacks.shift();
 
@@ -126,14 +126,14 @@ class Focus {
         if (resolve) {
           resolve(result.trim());
         }
-      } else if (this.result.length == 0) {
+      } else if (this.result.length === 0) {
         this.result = data;
       } else {
         this.result += `\r\n${data}`;
       }
     });
 
-    if (process.platform == "darwin") {
+    if (process.platform === "darwin") {
       spawn("stty", ["-f", this._port.path, "clocal"]);
     }
 
@@ -175,7 +175,7 @@ class Focus {
     try {
       if (this._port) {
         while (this._port.isOpen === true) {
-          // console.log("Closing device port!!", this._port);
+          console.log("Closing device port!!", this._port);
           result = await this._port.close();
           // console.log("is it still open? ", this._port.isOpen, result);
           await this._port.removeAllListeners();
@@ -214,11 +214,11 @@ class Focus {
   }
 
   isCommandSupported(cmd) {
-    return this.supportedCommands.indexOf(cmd) != -1;
+    return this.supportedCommands.indexOf(cmd) !== -1;
   }
 
   async _write_parts(parts, cb) {
-    if (!parts || parts.length == 0) {
+    if (!parts || parts.length === 0) {
       cb();
       return;
     }

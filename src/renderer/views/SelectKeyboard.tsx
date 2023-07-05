@@ -25,12 +25,8 @@ import fs from "fs";
 import path from "path";
 import { ipcRenderer } from "electron";
 import Container from "react-bootstrap/Container";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
 import Modal from "react-bootstrap/Modal";
 
-import Card from "react-bootstrap/Card";
-import Spinner from "react-bootstrap/Spinner";
 import Dropdown from "react-bootstrap/Dropdown";
 import { USBDevice, USBDeviceDescriptor, NonSerialDeviceDescriptor } from "@Renderer/types/devices";
 import PageHeader from "../modules/PageHeader";
@@ -201,14 +197,13 @@ interface SelectKeyboardProps {
   onConnect: (...args: any[]) => any;
   connected: any;
   onDisconnect: any;
-  devices: any;
+  device: any;
 }
 
 const SelectKeyboard: React.FC<SelectKeyboardProps> = (props): JSX.Element => {
   const [selectedPortIndex, setSelectedPortIndex] = useState(0);
-  const [isUSBConfigured, setIsUSBConfigured] = useState(false);
   const [opening, setOpening] = useState(false);
-  const [devices, setDevices] = useState(null);
+  const [devices, setDevices] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [showVirtualKeyboardModal, setShowVirtualKeyboardModal] = useState(false);
   const [selectedVirtualKeyboard, setSelectedVirtualKeyboard] = useState(0);
@@ -245,22 +240,24 @@ const SelectKeyboard: React.FC<SelectKeyboardProps> = (props): JSX.Element => {
     return deviceList;
   }, []);
 
-  const findKeyboards = useCallback(async (): Promise<any[]> | undefined => {
+  const findKeyboards = useCallback(async (): Promise<any[]> => {
     setIsLoading(true);
     const isIterable = devices != null && typeof devices[Symbol.iterator] === "function";
     if (focus.closed === false && isIterable) {
       setIsLoading(false);
-      return undefined;
+      return [];
     }
-    if(!focus.closed && device) {
+    if (!focus.closed && device) {
       setDevices([device]);
-      return;
+      return [];
     }
     try {
       const serialDevices = await focus.find(...Hardware.serial);
       console.log("Printing devices: ", serialDevices);
       const supportedDevices = [];
-      for (const device of serialDevices) {
+      let device;
+      for (let i = 0; i < serialDevices.length; i += 1) {
+        device = serialDevices[i];
         /* eslint-disable no-await-in-loop */
         device.accessible = await focus.isDeviceAccessible(device);
         console.log("before checking device supported", device, focus);
@@ -285,32 +282,32 @@ const SelectKeyboard: React.FC<SelectKeyboardProps> = (props): JSX.Element => {
       setDevices(list);
       return list;
     }
-  }, [findNonSerialKeyboards, focus]);
+  }, [findNonSerialKeyboards, device, focus]);
 
   useEffect(() => {
     const finder = () => findKeyboards();
-    setIsUSBConfigured(true);
     ipcRenderer.on("usb-connected", finder);
     ipcRenderer.on("usb-disconnected", finder);
-
-    findKeyboards();
+    if (!connected) {
+      findKeyboards();
+    }
     return () => {
       ipcRenderer.removeListener("usb-connected", finder);
       ipcRenderer.removeListener("usb-disconnected", finder);
     };
-  }, [findKeyboards]);
+  }, [connected, findKeyboards]);
 
   useEffect(() => {
-    if (connected) {
-      console.log("These are the DEVICES:",devices)
+    if (connected && device) {
+      console.log("These are the DEVICES:", devices);
       setSelectedPortIndex(0);
-      setDevices(devices);
+      setDevices([device]);
     }
-  }, [connected]);
+  }, [connected, device]);
 
   const scanDevices = async (): Promise<void> => {
     const keyboards = await findKeyboards();
-    setScanFoundDevices(keyboards.length > 0);
+    setScanFoundDevices(keyboards?.length > 0);
     setTimeout(() => {
       setScanFoundDevices(false);
     }, 1000);
@@ -515,22 +512,21 @@ const SelectKeyboard: React.FC<SelectKeyboardProps> = (props): JSX.Element => {
 
   const handleOnDisconnect = async () => {
     await onDisconnect();
-    await scanDevices();
   };
 
-  const getDeviceItems = () =>{
+  const getDeviceItems = () => {
     const neurons = store.get("neurons");
     const result = devices.map((device, index) => {
       let neuron = neurons.find(neuron => neuron.id.toLowerCase() == device.serialNumber);
-      
+
       return {
         index,
         displayName: device.device.info.displayName,
         userName: neuron ? neuron.name : "",
-        path: device.path || i18n.keyboardSelect.unknown
+        path: device.path || i18n.keyboardSelect.unknown,
       };
-    })
-  return result
+    });
+    return result;
   };
 
   let deviceItems = null;
@@ -543,114 +539,114 @@ const SelectKeyboard: React.FC<SelectKeyboardProps> = (props): JSX.Element => {
 
   return (
     <Styles>
-    <Container fluid className="keyboard-select center-content">
-      <PageHeader text={i18n.keyboardSelect.title} />
-      <div className="keyboardSelection-wrapper">
-        <NeuronConnection
-          loading={isLoading}
-          scanFoundDevices={scanFoundDevices !== undefined ? scanFoundDevices : false}
-          scanDevices={scanDevices}
-          cantConnect={(selectedDevice ? !selectedDevice.accessible : false) || opening || (devices && devices.length === 0)}
-          onKeyboardConnect={onKeyboardConnect}
-          connected={connected}
-          onDisconnect={handleOnDisconnect}
-          deviceItems={deviceItems != null ? deviceItems : []}
-          selectPort={selectPort}
-          selectedPortIndex={selectedPortIndex}
-          isVirtual={focus.file}
-          virtualDevice={focus.device}
-        />
-        <div className="cardButton-wrapper">
-          <div className="cardButton">
-            <RegularButton
-              buttonText={i18n.keyboardSelect.virtualKeyboard.buttonText}
-              style="button-link transp-bg"
-              icoSVG={<IconArrowRight />}
-              icoPosition="right"
-              size="sm"
-              onClick={() => {
-                toggleVirtualKeyboardModal();
-              }}
-            />
-          </div>
-          <Modal
-            show={showVirtualKeyboardModal}
-            size="lg"
-            onHide={() => toggleVirtualKeyboardModal()}
-            aria-labelledby="contained-modal-title-vcenter"
-            centered
-          >
-            <Modal.Header closeButton>
-              <Modal.Title>{i18n.keyboardSelect.virtualKeyboard.modaltitle}</Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-              <div className="virtualKeyboards-wrapper">
-                <div className="virtualKeyboards-col">
-                  <Title
-                    text={i18n.keyboardSelect.virtualKeyboard.newVirtualKeyboardTitle}
-                    headingLevel={4}
-                    svgICO={<IconCloudDownload />}
-                  />
-                  <p>{i18n.keyboardSelect.virtualKeyboard.newVirtualKeyboardDescription}</p>
-                  <label>{i18n.keyboardSelect.virtualKeyboard.newVirtualKeyboardLabel}</label>
-                  <Dropdown className="custom-dropdown" onSelect={selectVirtualKeyboard}>
-                    <Dropdown.Toggle id="dropdown-custom">
-                      <div className="dropdownItemSelected">
-                        <div className="dropdownIcon">
-                          <IconKeyboard />
-                        </div>
-                        <div className="dropdownItem">{enumerator[selectedVirtualKeyboard].device.info.displayName}</div>
-                      </div>
-                    </Dropdown.Toggle>
-                    <Dropdown.Menu className="super-colors virtualKeyboardsMenu">
-                      {enumerator.map((item, index) => (
-                        <Dropdown.Item
-                          eventKey={index}
-                          key={`${item.device.info.displayName}-dropdown`}
-                          className={`${selectedVirtualKeyboard === index ? "active" : ""}`}
-                        >
-                          <div className="dropdownInner">
-                            <div className="dropdownIcon">
-                              <IconKeyboard />
-                            </div>
-                            <div className="dropdownItem">{item.device.info.displayName}</div>
+      <Container fluid className="keyboard-select center-content">
+        <PageHeader text={i18n.keyboardSelect.title} />
+        <div className="keyboardSelection-wrapper">
+          <NeuronConnection
+            loading={isLoading}
+            scanFoundDevices={scanFoundDevices !== undefined ? scanFoundDevices : false}
+            scanDevices={scanDevices}
+            cantConnect={(selectedDevice ? !selectedDevice.accessible : false) || opening || (devices && devices.length === 0)}
+            onKeyboardConnect={onKeyboardConnect}
+            connected={connected}
+            onDisconnect={handleOnDisconnect}
+            deviceItems={deviceItems != null ? deviceItems : []}
+            selectPort={selectPort}
+            selectedPortIndex={selectedPortIndex}
+            isVirtual={focus.file}
+            virtualDevice={focus.device}
+          />
+          <div className="cardButton-wrapper">
+            <div className="cardButton">
+              <RegularButton
+                buttonText={i18n.keyboardSelect.virtualKeyboard.buttonText}
+                style="button-link transp-bg"
+                icoSVG={<IconArrowRight />}
+                icoPosition="right"
+                size="sm"
+                onClick={() => {
+                  toggleVirtualKeyboardModal();
+                }}
+              />
+            </div>
+            <Modal
+              show={showVirtualKeyboardModal}
+              size="lg"
+              onHide={() => toggleVirtualKeyboardModal()}
+              aria-labelledby="contained-modal-title-vcenter"
+              centered
+            >
+              <Modal.Header closeButton>
+                <Modal.Title>{i18n.keyboardSelect.virtualKeyboard.modaltitle}</Modal.Title>
+              </Modal.Header>
+              <Modal.Body>
+                <div className="virtualKeyboards-wrapper">
+                  <div className="virtualKeyboards-col">
+                    <Title
+                      text={i18n.keyboardSelect.virtualKeyboard.newVirtualKeyboardTitle}
+                      headingLevel={4}
+                      svgICO={<IconCloudDownload />}
+                    />
+                    <p>{i18n.keyboardSelect.virtualKeyboard.newVirtualKeyboardDescription}</p>
+                    <label>{i18n.keyboardSelect.virtualKeyboard.newVirtualKeyboardLabel}</label>
+                    <Dropdown className="custom-dropdown" onSelect={selectVirtualKeyboard}>
+                      <Dropdown.Toggle id="dropdown-custom">
+                        <div className="dropdownItemSelected">
+                          <div className="dropdownIcon">
+                            <IconKeyboard />
                           </div>
-                        </Dropdown.Item>
-                      ))}
-                    </Dropdown.Menu>
-                  </Dropdown>
-                  <RegularButton
-                    buttonText={i18n.keyboardSelect.virtualKeyboard.createButtonLabel}
-                    style="primary"
-                    onClick={() => {
-                      let fileName = enumerator[selectedVirtualKeyboard].device.info.product;
-                      fileName =
-                        fileName === "Defy"
-                        ? `Virtual${fileName}`
-                        : `Virtual${fileName}${enumerator[selectedVirtualKeyboard].device.info.keyboardType}`;
-                      newFile(enumerator[selectedVirtualKeyboard], fileName);
-                    }}
-                  />
+                          <div className="dropdownItem">{enumerator[selectedVirtualKeyboard].device.info.displayName}</div>
+                        </div>
+                      </Dropdown.Toggle>
+                      <Dropdown.Menu className="super-colors virtualKeyboardsMenu">
+                        {enumerator.map((item, index) => (
+                          <Dropdown.Item
+                            eventKey={index}
+                            key={`${item.device.info.displayName}-dropdown`}
+                            className={`${selectedVirtualKeyboard === index ? "active" : ""}`}
+                          >
+                            <div className="dropdownInner">
+                              <div className="dropdownIcon">
+                                <IconKeyboard />
+                              </div>
+                              <div className="dropdownItem">{item.device.info.displayName}</div>
+                            </div>
+                          </Dropdown.Item>
+                        ))}
+                      </Dropdown.Menu>
+                    </Dropdown>
+                    <RegularButton
+                      buttonText={i18n.keyboardSelect.virtualKeyboard.createButtonLabel}
+                      style="primary"
+                      onClick={() => {
+                        let fileName = enumerator[selectedVirtualKeyboard].device.info.product;
+                        fileName =
+                          fileName === "Defy"
+                            ? `Virtual${fileName}`
+                            : `Virtual${fileName}${enumerator[selectedVirtualKeyboard].device.info.keyboardType}`;
+                        newFile(enumerator[selectedVirtualKeyboard], fileName);
+                      }}
+                    />
+                  </div>
+                  <div className="virtualKeyboards-col virtualKeyboards-col--text">
+                    <span>OR</span>
+                  </div>
+                  <div className="virtualKeyboards-col">
+                    <Title
+                      text={i18n.keyboardSelect.virtualKeyboard.loadVirtualKeyboardTitle}
+                      headingLevel={4}
+                      svgICO={<IconUpload />}
+                    />
+                    <p>{i18n.keyboardSelect.virtualKeyboard.loadVirtualKeyboardDescription}</p>
+                    <RegularButton buttonText={i18n.general.loadFile} style="primary" onClick={() => onLoadFile()} />
+                  </div>
                 </div>
-                <div className="virtualKeyboards-col virtualKeyboards-col--text">
-                  <span>OR</span>
-                </div>
-                <div className="virtualKeyboards-col">
-                  <Title
-                    text={i18n.keyboardSelect.virtualKeyboard.loadVirtualKeyboardTitle}
-                    headingLevel={4}
-                    svgICO={<IconUpload />}
-                  />
-                  <p>{i18n.keyboardSelect.virtualKeyboard.loadVirtualKeyboardDescription}</p>
-                  <RegularButton buttonText={i18n.general.loadFile} style="primary" onClick={() => onLoadFile()} />
-                </div>
-              </div>
-            </Modal.Body>
-          </Modal>
+              </Modal.Body>
+            </Modal>
+          </div>
         </div>
-      </div>
-    </Container>
-  </Styles>
+      </Container>
+    </Styles>
   );
 };
 
