@@ -19,10 +19,10 @@ import React from "react";
 import Styled from "styled-components";
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import Tooltip from "react-bootstrap/Tooltip";
+import LightWarning from "@Assets/base/light-warning.png";
+import LightDanger from "@Assets/base/light-danger.png";
+import LightSuccess from "@Assets/base/light-success.png";
 import { IconInformationBubble, IconInformationBubbleSm } from "../Icon";
-import LightWarning from "../../../../static/base/light-warning.png";
-import LightDanger from "../../../../static/base/light-danger.png";
-import LightSuccess from "../../../../static/base/light-success.png";
 
 const Style = Styled.div`
 .lg {
@@ -157,7 +157,7 @@ h6 {
 }
 
 `;
-const Title = ({
+function Title({
   text,
   headingLevel,
   size,
@@ -168,38 +168,36 @@ const Title = ({
   tooltipSize,
   tooltipIconSize,
   tooltipPlacement,
-  svgICO
-}) => {
-  let Tag = "h" + headingLevel;
+  svgICO,
+}) {
+  const Tag = `h${headingLevel}`;
 
   return (
     <Style>
       <Tag
-        className={`${size ? size : ""} ${type && "titleAlert"} ${type ? type : ""} ${color ? color : ""} ${
-          svgICO ? "hasIcon" : ""
-        } ${className ? className : ""}`}
+        className={`${size || ""} ${type && "titleAlert"} ${type || ""} ${color || ""} ${svgICO ? "hasIcon" : ""} ${
+          className || ""
+        }`}
       >
         {svgICO && svgICO}
         <span dangerouslySetInnerHTML={{ __html: text }} />
         {tooltip && (
-          <>
-            <OverlayTrigger
-              placement={`${tooltipPlacement ? tooltipPlacement : "top"}`}
-              overlay={
-                <Tooltip id="tooltip-top" className={`${tooltipSize == "wide" ? "tooltipWide" : "tooltipRegular"}`}>
-                  <div dangerouslySetInnerHTML={{ __html: tooltip }} />
-                </Tooltip>
-              }
-            >
-              <span className="tooltipIcon">
-                {tooltipIconSize == "sm" ? <IconInformationBubbleSm /> : <IconInformationBubble />}
-              </span>
-            </OverlayTrigger>
-          </>
+          <OverlayTrigger
+            placement={`${tooltipPlacement || "top"}`}
+            overlay={
+              <Tooltip id="tooltip-top" className={`${tooltipSize == "wide" ? "tooltipWide" : "tooltipRegular"}`}>
+                <div dangerouslySetInnerHTML={{ __html: tooltip }} />
+              </Tooltip>
+            }
+          >
+            <span className="tooltipIcon">
+              {tooltipIconSize == "sm" ? <IconInformationBubbleSm /> : <IconInformationBubble />}
+            </span>
+          </OverlayTrigger>
         )}
       </Tag>
     </Style>
   );
-};
+}
 
 export default Title;

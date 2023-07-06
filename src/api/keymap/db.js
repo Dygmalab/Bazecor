@@ -69,8 +69,9 @@ import swissGerman, { swissGermanModifiedTables } from "./languages/swissGerman/
 // newLanguageLayout - is a function that modify language layout
 import newLanguageLayout from "./languages/newLanguageLayout";
 
-const Store = require("electron-store");
-const store = new Store();
+import Store from "../../renderer/utils/Store";
+
+const store = Store.getStore();
 
 const defaultBaseKeyCodeTable = [
   LetterTable,
@@ -102,7 +103,7 @@ const defaultBaseKeyCodeTable = [
   StenoTable,
   SpaceCadetTable,
 
-  BlankTable
+  BlankTable,
 ];
 
 const supportModifiedTables = {
@@ -114,7 +115,7 @@ const supportModifiedTables = {
   danish: danishModifiedTables,
   icelandic: icelandicModifiedTables,
   japanese: japaneseModifiedTables,
-  swissGerman: swissGermanModifiedTables
+  swissGerman: swissGermanModifiedTables,
 };
 
 const defaultKeyCodeTable = defaultBaseKeyCodeTable
@@ -142,39 +143,40 @@ const languagesDB = {
   danish,
   icelandic,
   japanese,
-  swissGerman
+  swissGerman,
 };
 // Create cache for language layout
 const map = new Map();
 
-let baseKeyCodeTable, keyCodeTable;
+let baseKeyCodeTable;
+let keyCodeTable;
 
 class KeymapDB {
   constructor() {
     this.keymapCodeTable = [];
-    //create variable that get language from the local storage
+    // create variable that get language from the local storage
     this.language = store.get("settings.language");
     if (this.language == "finnish") {
       this.language = "swedish";
     }
-    //Modify our baseKeyCodeTable, depending on the language selected by the static methods and by inside function newLanguageLayout
+    // Modify our baseKeyCodeTable, depending on the language selected by the static methods and by inside function newLanguageLayout
     baseKeyCodeTable = KeymapDB.updateBaseKeyCode();
     const keyCodeTableWithModifiers =
       this.language !== "english" && supportModifiedTables[this.language]
         ? defaultKeyCodeTable.concat(supportModifiedTables[this.language])
         : defaultKeyCodeTable;
-    //Modify our baseKeyCodeTable, depending on the language selected through function newLanguageLayout
+    // Modify our baseKeyCodeTable, depending on the language selected through function newLanguageLayout
     keyCodeTable = baseKeyCodeTable.concat(
       newLanguageLayout(
         keyCodeTableWithModifiers.slice(defaultBaseKeyCodeTable.length),
         this.language,
-        languagesDB[this.language]
-      )
+        languagesDB[this.language],
+      ),
     );
     this.allCodes = keyCodeTable;
 
-    for (let group of keyCodeTable) {
-      for (let key of group.keys) {
+    for (const group of keyCodeTable) {
+      for (const key of group.keys) {
         let value;
 
         if (key.labels) {
@@ -183,8 +185,8 @@ class KeymapDB {
           value = {
             code: key.code,
             labels: {
-              primary: "#" + key.code.toString()
-            }
+              primary: `#${key.code.toString()}`,
+            },
           };
         }
 
@@ -239,7 +241,7 @@ class KeymapDB {
         break;
       case keyCode < 8192:
         // Reguar key with Modifier KeyCode
-        code = { base: keyCode - modified, modified: modified };
+        code = { base: keyCode - modified, modified };
         break;
       case keyCode < 17152:
         // Yet to review
@@ -269,7 +271,7 @@ class KeymapDB {
         break;
       case keyCode < 53266:
         // Dual Function Keycode
-        code = { base: keyCode - modified, modified: modified };
+        code = { base: keyCode - modified, modified };
         break;
       case TapDanceTable.keys.map(r => r.code).includes(keyCode):
       case LeaderTable.keys.map(r => r.code).includes(keyCode):
@@ -306,8 +308,8 @@ class KeymapDB {
       key = {
         code: keyCode,
         labels: {
-          primary: "#" + keyCode.toString()
-        }
+          primary: `#${keyCode.toString()}`,
+        },
       };
     }
 
@@ -315,7 +317,7 @@ class KeymapDB {
       keyCode: key.code,
       label: key.labels.primary,
       extraLabel: key.labels.top,
-      verbose: key.labels.verbose
+      verbose: key.labels.verbose,
     };
   }
 
@@ -342,17 +344,16 @@ class KeymapDB {
     if (this.language == "finnish") {
       this.language = "swedish";
     }
-    //Checking language in the cache
+    // Checking language in the cache
     if (map.has(this.language)) {
-      //Return language layout from the cache
+      // Return language layout from the cache
       return map.get(this.language);
-    } else {
-      //Creating language layout and add it into cache
-      const newBase = newLanguageLayout(defaultBaseKeyCodeTable, this.language, languagesDB[this.language]);
-      map.set(this.language, newBase);
-      //Return new language layout
-      return newBase;
     }
+    // Creating language layout and add it into cache
+    const newBase = newLanguageLayout(defaultBaseKeyCodeTable, this.language, languagesDB[this.language]);
+    map.set(this.language, newBase);
+    // Return new language layout
+    return newBase;
   }
 }
 

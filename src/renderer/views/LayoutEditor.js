@@ -18,14 +18,16 @@
 import React from "react";
 import Styled from "styled-components";
 import { toast } from "react-toastify";
-import ToastMessage from "../component/ToastMessage";
-const { ipcRenderer } = require("electron");
-
-// Bootstrap components
+import { ipcRenderer } from "electron";
+import fs from "fs";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Modal from "react-bootstrap/Modal";
+import customCursor from "@Assets/base/cursorBucket.png";
+import ToastMessage from "../component/ToastMessage";
+
+// Bootstrap components
 
 import Focus from "../../api/focus";
 import Backup from "../../api/backup";
@@ -46,10 +48,9 @@ import { RegularButton } from "../component/Button";
 import { LayoutViewSelector } from "../component/ToggleButtons";
 import { IconArrowUpWithLine, IconArrowDownWithLine } from "../component/Icon";
 
-import customCursor from "../../../static/base/cursorBucket.png";
+import Store from "../utils/Store";
 
-const Store = window.require("electron-store");
-const store = new Store();
+const store = Store.getStore();
 
 const Styles = Styled.div`
 &.layoutEditor {
@@ -382,44 +383,44 @@ class LayoutEditor extends React.Component {
   defaultLayerNames = [
     {
       id: 0,
-      name: "L1"
+      name: "L1",
     },
     {
       id: 1,
-      name: "L2"
+      name: "L2",
     },
     {
       id: 2,
-      name: "L3"
+      name: "L3",
     },
     {
       id: 3,
-      name: "L4"
+      name: "L4",
     },
     {
       id: 4,
-      name: "L5"
+      name: "L5",
     },
     {
       id: 5,
-      name: "L6"
+      name: "L6",
     },
     {
       id: 6,
-      name: "L7"
+      name: "L7",
     },
     {
       id: 7,
-      name: "L8"
+      name: "L8",
     },
     {
       id: 8,
-      name: "L9"
+      name: "L9",
     },
     {
       id: 9,
-      name: "L10"
-    }
+      name: "L10",
+    },
   ];
 
   constructor(props) {
@@ -439,7 +440,7 @@ class LayoutEditor extends React.Component {
       keymap: {
         custom: [],
         default: [],
-        onlyCustom: false
+        onlyCustom: false,
       },
       palette: [],
       colorMap: [],
@@ -461,7 +462,7 @@ class LayoutEditor extends React.Component {
       showNeuronModal: false,
       isStandardView: store.get("settings.isStandardView") || true,
       showStandardView: false,
-      layoutSelectorPosition: { x: 0, y: 0 }
+      layoutSelectorPosition: { x: 0, y: 0 },
     };
     this.onLayerNameChange = this.onLayerNameChange.bind(this);
     this.updateMacros = this.updateMacros.bind(this);
@@ -482,16 +483,16 @@ class LayoutEditor extends React.Component {
   keymapDB = new KeymapDB();
 
   onLayerNameChange(newName) {
-    let layerNames = this.state.layerNames.slice();
+    const layerNames = this.state.layerNames.slice();
     layerNames[this.state.currentLayer] = {
       id: this.state.currentLayer,
-      name: newName
+      name: newName,
     };
     this.setState({
-      layerNames: layerNames
+      layerNames,
     });
-    let neurons = store.get("neurons");
-    console.log("changed layer " + this.state.currentLayer + " name to: " + newName, layerNames);
+    const neurons = store.get("neurons");
+    console.log(`changed layer ${this.state.currentLayer} name to: ${newName}`, layerNames);
     neurons[this.state.neuronID].layers = layerNames;
     store.set("neurons", neurons);
   }
@@ -507,35 +508,29 @@ class LayoutEditor extends React.Component {
       finalNeuron = neurons.filter(n => n.id == chipID)[0];
     }
     if (!neurons.some(n => n.id == chipID) && neurons.length == 0) {
-      let neuron = {};
+      const neuron = {};
       neuron.id = chipID;
       neuron.name = "";
       neuron.layers =
         store.get("layerNames") != undefined
-          ? store.get("layerNames").map((name, id) => {
-              return {
-                id,
-                name
-              };
-            })
+          ? store.get("layerNames").map((name, id) => ({
+              id,
+              name,
+            }))
           : this.defaultLayerNames;
       neuron.macros =
         store.get("macros") != undefined
-          ? store.get("macros").map(macro => {
-              return {
-                id: macro.id,
-                name: macro.name
-              };
-            })
+          ? store.get("macros").map(macro => ({
+              id: macro.id,
+              name: macro.name,
+            }))
           : [];
       neuron.superkeys =
         store.get("superkeys") != undefined
-          ? store.get("superkeys").map(sk => {
-              return {
-                id: sk.id,
-                name: sk.name
-              };
-            })
+          ? store.get("superkeys").map(sk => ({
+              id: sk.id,
+              name: sk.name,
+            }))
           : [];
       console.log("New neuron", neuron);
       neurons = neurons.concat(neuron);
@@ -543,21 +538,21 @@ class LayoutEditor extends React.Component {
       finalNeuron = neuron;
     }
     if (!neurons.some(n => n.id == chipID) && neurons.length > 0) {
-      let neuron = {};
+      const neuron = {};
       neuron.id = chipID;
       neuron.name = "";
       neuron.layers = this.defaultLayerNames;
       neuron.macros = [];
       neuron.superkeys = [];
-      let neuronCopy = {};
+      const neuronCopy = {};
       neuronCopy.id = chipID;
       neuronCopy.name = neurons[0].name;
       neuronCopy.layers = neurons[0].layers;
       neuronCopy.macros = neurons[0].macros;
       neuronCopy.superkeys = neurons[0].superkeys;
       console.log("Additional neuron", neuron);
-      let result = await window.confirm(
-        "A new Neuron was detected and new settings need to be created. The names of the layers, macros and Superkeys are empty. If you want to copy the names of your default Neuron (first in the list) click ‘Ok’. If you prefer to reset all names click ‘Cancel’."
+      const result = await window.confirm(
+        "A new Neuron was detected and new settings need to be created. The names of the layers, macros and Superkeys are empty. If you want to copy the names of your default Neuron (first in the list) click ‘Ok’. If you prefer to reset all names click ‘Cancel’.",
       );
       // var result = await userAction;
       console.log(result, neuron, neuronCopy);
@@ -574,26 +569,26 @@ class LayoutEditor extends React.Component {
     }
     console.log("Final neuron", finalNeuron);
     this.setState({
-      neurons: neurons,
+      neurons,
       neuronID: neurons.findIndex(n => n.id == chipID),
       layerNames: finalNeuron.layers,
       storedMacros: finalNeuron.macros,
-      storedSuper: finalNeuron.superkeys
+      storedSuper: finalNeuron.superkeys,
     });
     return finalNeuron;
   }
 
   scanKeyboard = async lang => {
-    let focus = new Focus();
+    const focus = new Focus();
     try {
       /**
        * Create property language to the object 'options', to call KeymapDB in Keymap and modify languagu layout
        */
-      let chipID = await focus.command("hardware.chip_id");
-      let registered = await this.AnalizeChipID(chipID.replace(/\s/g, ""));
+      const chipID = await focus.command("hardware.chip_id");
+      const registered = await this.AnalizeChipID(chipID.replace(/\s/g, ""));
       const device = focus.device.info.product;
       if (lang) {
-        let deviceLang = { ...focus.device, language: true };
+        const deviceLang = { ...focus.device, language: true };
         focus.commands.keymap = new Keymap(deviceLang);
         this.keymapDB = focus.commands.keymap.db;
       }
@@ -601,13 +596,13 @@ class LayoutEditor extends React.Component {
       let defLayer = await focus.command("settings.defaultLayer");
       defLayer = parseInt(defLayer) || 0;
 
-      let keymap = await focus.command("keymap");
+      const keymap = await focus.command("keymap");
       const onlyC = await focus.command("keymap.onlyCustom");
       keymap.onlyCustom = onlyC;
 
       let empty = true;
-      for (let layer of keymap.custom) {
-        for (let i of layer) {
+      for (const layer of keymap.custom) {
+        for (const i of layer) {
           if (i.keyCode != 65535) {
             empty = false;
             break;
@@ -625,8 +620,8 @@ class LayoutEditor extends React.Component {
         await focus.command("keymap", keymap);
       }
 
-      let colormap = await focus.command("colormap");
-      let palette = colormap.palette.slice();
+      const colormap = await focus.command("colormap");
+      const palette = colormap.palette.slice();
       console.log("retrieved color.map & palette", colormap, palette);
       let raw = await focus.command("macros.map");
       if (raw.search(" 0 0") !== -1) {
@@ -650,7 +645,7 @@ class LayoutEditor extends React.Component {
       this.setState({
         currentLayer: this.state.previousLayer,
         defaultLayer: defLayer,
-        keymap: keymap,
+        keymap,
         showDefaults: !keymap.onlyCustom,
         palette,
         colorMap: colormap.colorMap,
@@ -659,7 +654,7 @@ class LayoutEditor extends React.Component {
         registered,
         chipID,
         deviceName: device,
-        ledIndexStart
+        ledIndexStart,
       });
       if (keymap.custom) {
         const oldmacro = [...Array(64).keys()].map(x => x + 24576);
@@ -682,8 +677,8 @@ class LayoutEditor extends React.Component {
   getCurrentKey() {
     if (this.state.currentKeyIndex < 0) return -1;
 
-    let layer = parseInt(this.state.currentLayer),
-      keyIndex = parseInt(this.state.currentKeyIndex);
+    let layer = parseInt(this.state.currentLayer);
+    const keyIndex = parseInt(this.state.currentKeyIndex);
 
     if (keyIndex >= 80 || !this.state.keymap.custom) return 0;
 
@@ -694,49 +689,48 @@ class LayoutEditor extends React.Component {
       }
 
       return this.state.keymap.custom[layer][keyIndex].keyCode;
-    } else {
-      const offset = this.state.keymap.default.length;
-      if (layer < this.state.keymap.default.length) return this.state.keymap.default[layer][keyIndex].keyCode;
-
-      return this.state.keymap.custom[layer - offset][keyIndex].keyCode;
     }
+    const offset = this.state.keymap.default.length;
+    if (layer < this.state.keymap.default.length) return this.state.keymap.default[layer][keyIndex].keyCode;
+
+    return this.state.keymap.custom[layer - offset][keyIndex].keyCode;
   }
 
   onKeyChange = keyCode => {
     // Keys can only change on the custom layers
-    let layer = this.state.currentLayer,
-      keyIndex = this.state.currentKeyIndex;
+    const layer = this.state.currentLayer;
+    const keyIndex = this.state.currentKeyIndex;
 
     if (keyIndex === -1) {
       return;
     }
 
     this.setState(state => {
-      let keymap = state.keymap.custom.slice();
+      const keymap = state.keymap.custom.slice();
       const l = state.keymap.onlyCustom ? layer : layer - state.keymap.default.length;
       keymap[l][keyIndex] = this.keymapDB.parse(keyCode);
       return {
         keymap: {
           default: state.keymap.default,
           onlyCustom: state.keymap.onlyCustom,
-          custom: keymap
+          custom: keymap,
         },
-        modified: true
+        modified: true,
       };
     });
     this.props.startContext();
   };
 
   dualFunction = modifier => {
-    let { currentLayer, currentKeyIndex, keymap } = this.state;
+    const { currentLayer, currentKeyIndex, keymap } = this.state;
 
     if (currentKeyIndex === -1) {
       return;
     }
-    let KM = keymap.custom.slice();
+    const KM = keymap.custom.slice();
     const l = keymap.onlyCustom ? currentLayer : currentLayer - keymap.default.length;
     const code = this.keymapDB.reverse(KM[l][currentKeyIndex].label);
-    let keyCode = modifier + code;
+    const keyCode = modifier + code;
 
     this.setState(state => {
       KM[l][currentKeyIndex] = this.keymapDB.parse(keyCode);
@@ -744,9 +738,9 @@ class LayoutEditor extends React.Component {
         keymap: {
           default: state.keymap.default,
           onlyCustom: state.keymap.onlyCustom,
-          custom: KM
+          custom: KM,
         },
-        modified: true
+        modified: true,
       };
     });
     this.props.startContext();
@@ -774,7 +768,7 @@ class LayoutEditor extends React.Component {
     this.setState({
       selectedPaletteColor: this.state.colorMap[layer][ledIndex],
       isMultiSelected: true,
-      isColorButtonSelected: true
+      isColorButtonSelected: true,
     });
   };
 
@@ -788,16 +782,15 @@ class LayoutEditor extends React.Component {
     const { selectedPaletteColor, modified } = this.state;
     const isEqualColor = this.onVerificationColor(selectedPaletteColor, currentLayer, ledIndex);
     if (!modified && isEqualColor) {
-      return;
     } else {
       this.setState(state => {
-        let colormap = state.colorMap.slice();
+        const colormap = state.colorMap.slice();
         colormap[currentLayer][ledIndex] = this.state.selectedPaletteColor;
         this.props.startContext();
         return {
           selectedPaletteColor: this.state.colorMap[layer][ledIndex],
           colorMap: colormap,
-          modified: true
+          modified: true,
         };
       });
     }
@@ -811,12 +804,12 @@ class LayoutEditor extends React.Component {
       isColorButtonSelected,
       currentKeyIndex,
       isStandardView,
-      showStandardView
+      showStandardView,
     } = this.state;
-    const currentTarget = event.currentTarget;
-    let layer = parseInt(currentTarget.getAttribute("data-layer")),
-      keyIndex = parseInt(currentTarget.getAttribute("data-key-index")),
-      ledIndex = parseInt(currentTarget.getAttribute("data-led-index"));
+    const { currentTarget } = event;
+    const layer = parseInt(currentTarget.getAttribute("data-layer"));
+    const keyIndex = parseInt(currentTarget.getAttribute("data-key-index"));
+    const ledIndex = parseInt(currentTarget.getAttribute("data-led-index"));
 
     if (isStandardView) {
       this.setState({ showStandardView: true });
@@ -827,16 +820,15 @@ class LayoutEditor extends React.Component {
       if (event.ctrlKey || (event.shiftKey && !isColorButtonSelected)) {
         this.onCtrlShiftPress(layer, ledIndex);
         return;
-      } else {
-        this.setState({
-          currentKeyIndex: -1,
-          currentLedIndex: -1,
-          selectedPaletteColor: null,
-          isMultiSelected: false,
-          isColorButtonSelected: false
-        });
-        return;
       }
+      this.setState({
+        currentKeyIndex: -1,
+        currentLedIndex: -1,
+        selectedPaletteColor: null,
+        isMultiSelected: false,
+        isColorButtonSelected: false,
+      });
+      return;
     }
 
     this.setState(state => {
@@ -845,33 +837,29 @@ class LayoutEditor extends React.Component {
           currentLayer: layer,
           currentKeyIndex: keyIndex,
           currentLedIndex: ledIndex,
-          modeselect: ledIndex >= this.state.ledIndexStart ? "color" : state.modeselect
-        };
-      } else {
-        return {
-          currentLayer: layer,
-          currentKeyIndex: keyIndex
+          modeselect: ledIndex >= this.state.ledIndexStart ? "color" : state.modeselect,
         };
       }
+      return {
+        currentLayer: layer,
+        currentKeyIndex: keyIndex,
+      };
     });
 
     if (event.ctrlKey || event.shiftKey) {
       this.onCtrlShiftPress(layer, ledIndex);
-      return;
     } else {
       if (selectedPaletteColor !== null && isMultiSelected && isColorButtonSelected) {
         this.onButtonKeyboardColorChange(currentLayer, layer, ledIndex);
       }
       if (isColorButtonSelected && !isMultiSelected) {
         this.setState(
-          () => {
-            return {
-              isMultiSelected: true
-            };
-          },
+          () => ({
+            isMultiSelected: true,
+          }),
           () => {
             this.onButtonKeyboardColorChange(currentLayer, layer, ledIndex);
-          }
+          },
         );
       }
     }
@@ -880,13 +868,13 @@ class LayoutEditor extends React.Component {
   selectLayer = id => {
     if (id === undefined) return;
     this.setState({
-      currentLayer: id
+      currentLayer: id,
     });
   };
 
   onApply = async () => {
     this.setState({ saving: true });
-    let focus = new Focus();
+    const focus = new Focus();
     await focus.command("keymap", this.state.keymap);
     await focus.command("colormap", this.state.palette, this.state.colorMap);
     this.setState({
@@ -897,7 +885,7 @@ class LayoutEditor extends React.Component {
       previousLayer: this.state.currentLayer,
       isMultiSelected: false,
       selectedPaletteColor: null,
-      isColorButtonSelected: false
+      isColorButtonSelected: false,
     });
     console.log("Changes saved.");
     const commands = await this.bkp.Commands();
@@ -911,7 +899,7 @@ class LayoutEditor extends React.Component {
     const newLanguage = store.get("settings.language");
     console.log("Language automatically set to: ", newLanguage);
     this.setState({
-      currentLanguageLayout: newLanguage || "english"
+      currentLanguageLayout: newLanguage || "english",
     });
   };
 
@@ -928,14 +916,14 @@ class LayoutEditor extends React.Component {
       }
 
       this.setState({
-        currentLayer: this.state.previousLayer != 0 ? this.state.previousLayer : initialLayer
+        currentLayer: this.state.previousLayer != 0 ? this.state.previousLayer : initialLayer,
       });
     });
     this.onChangeLanguageLayout();
     await this.configStandarView();
   }
 
-  UNSAFE_componentWillReceiveProps = nextProps => {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     if (this.props.inContext && !nextProps.inContext) {
       this.setState({
         currentLayer: this.state.previousLayer != 0 ? this.state.previousLayer : 0,
@@ -944,18 +932,19 @@ class LayoutEditor extends React.Component {
         keymap: {
           custom: [],
           default: [],
-          onlyCustom: false
+          onlyCustom: false,
         },
-        palette: []
+        palette: [],
       });
       this.scanKeyboard();
       this.setState({ modified: false });
     }
-  };
+  }
 
   shareLayerDialog = () => {
     this.setState({ shareLayerOpen: true });
   };
+
   cancelShareLayer = () => {
     this.setState({ shareLayerOpen: false });
   };
@@ -963,12 +952,15 @@ class LayoutEditor extends React.Component {
   copyFromDialog = () => {
     this.setState({ copyFromOpen: true });
   };
+
   cancelCopyFrom = () => {
     this.setState({ copyFromOpen: false });
   };
+
   copyFromLayer = layer => {
     this.setState(state => {
-      let newKeymap, newColormap;
+      let newKeymap;
+      let newColormap;
 
       if (state.keymap.onlyCustom) {
         newKeymap = layer < 0 ? state.keymap.default.slice() : state.keymap.custom.slice();
@@ -991,23 +983,23 @@ class LayoutEditor extends React.Component {
         keymap: {
           default: state.keymap.default,
           onlyCustom: state.keymap.onlyCustom,
-          custom: newKeymap
+          custom: newKeymap,
         },
         copyFromOpen: false,
-        modified: true
+        modified: true,
       };
     });
   };
 
   clearLayer = () => {
     this.setState(state => {
-      let newKeymap = state.keymap.custom.slice();
+      const newKeymap = state.keymap.custom.slice();
       const idx = state.keymap.onlyCustom ? state.currentLayer : state.currentLayer - state.keymap.default.length;
       newKeymap[idx] = Array(newKeymap[0].length)
         .fill()
         .map(() => ({ keyCode: 65535, label: "", extraLabel: "TRANS", verbose: "Transparent" }));
 
-      let newColormap = state.colorMap.slice();
+      const newColormap = state.colorMap.slice();
       if (newColormap.length > 0) {
         newColormap[idx] = Array(newColormap[0].length)
           .fill()
@@ -1018,11 +1010,11 @@ class LayoutEditor extends React.Component {
         keymap: {
           default: state.keymap.default,
           onlyCustom: state.keymap.onlyCustom,
-          custom: newKeymap
+          custom: newKeymap,
         },
         colorMap: newColormap,
         modified: true,
-        clearConfirmationOpen: false
+        clearConfirmationOpen: false,
       };
     });
   };
@@ -1030,6 +1022,7 @@ class LayoutEditor extends React.Component {
   confirmClear = () => {
     this.setState({ clearConfirmationOpen: true });
   };
+
   cancelClear = () => {
     this.setState({ clearConfirmationOpen: false });
   };
@@ -1039,16 +1032,15 @@ class LayoutEditor extends React.Component {
     if (action === "one_button_click") {
       this.setState({
         isMultiSelected: false,
-        isColorButtonSelected: !isColorButtonSelected
+        isColorButtonSelected: !isColorButtonSelected,
       });
       return;
     }
     if (action === "another_button_click") {
       this.setState({
         selectedPaletteColor: colorIndex,
-        isColorButtonSelected: true
+        isColorButtonSelected: true,
       });
-      return;
     }
   };
 
@@ -1061,19 +1053,19 @@ class LayoutEditor extends React.Component {
 
     if (!isEqualColor) {
       this.setState(state => {
-        let colormap = state.colorMap.slice();
+        const colormap = state.colorMap.slice();
         colormap[currentLayer][currentLedIndex] = colorIndex;
         return {
           isMultiSelected: true,
           colorMap: colormap,
           selectedPaletteColor: colorIndex,
-          modified: true
+          modified: true,
         };
       });
       this.props.startContext();
     } else {
       this.setState({
-        selectedPaletteColor: colorIndex
+        selectedPaletteColor: colorIndex,
       });
     }
   };
@@ -1081,22 +1073,22 @@ class LayoutEditor extends React.Component {
   onBacklightColorSelect = colorIndex => {
     this.setState({
       selectedPaletteColor: colorIndex,
-      isColorButtonSelected: true
+      isColorButtonSelected: true,
     });
   };
 
   onColorPick = (colorIndex, r, g, b) => {
-    let newPalette = this.state.palette.slice();
+    const newPalette = this.state.palette.slice();
     const setColors = (r, g, b) => ({
       r,
       g,
       b,
-      rgb: `rgb(${r}, ${g}, ${b})`
+      rgb: `rgb(${r}, ${g}, ${b})`,
     });
     newPalette[colorIndex] = setColors(r, g, b);
     this.setState({
       palette: newPalette,
-      modified: true
+      modified: true,
     });
     this.props.startContext();
   };
@@ -1104,12 +1096,14 @@ class LayoutEditor extends React.Component {
   importExportDialog = () => {
     this.setState({ importExportDialogOpen: true });
   };
+
   cancelImport = () => {
     this.setState({ importExportDialogOpen: false });
   };
+
   importLayer = data => {
     if (data.palette.length > 0) this.setState({ palette: data.palette });
-    let layerNames = this.state.layerNames.slice();
+    const layerNames = this.state.layerNames.slice();
     const { currentLayer } = this.state;
     if (data.layerNames != null) {
       for (let i = 0; i < data.layerNames.length; i++) {
@@ -1118,44 +1112,42 @@ class LayoutEditor extends React.Component {
       if (data.layerName && currentLayer) {
         layerNames[currentLayer] = data.layerName;
       }
-      this.setState({ layerNames: layerNames });
+      this.setState({ layerNames });
     }
     if (data.keymap.length > 0 && data.colormap.length > 0) {
       if (this.state.keymap.onlyCustom) {
         if (currentLayer >= 0) {
           this.setState(state => {
-            let newKeymap = this.state.keymap.custom.slice();
+            const newKeymap = this.state.keymap.custom.slice();
             newKeymap[currentLayer] = data.keymap.slice();
-            let newColormap = this.state.colorMap.slice();
+            const newColormap = this.state.colorMap.slice();
             newColormap[currentLayer] = data.colormap.slice();
             return {
               keymap: {
                 default: state.keymap.default,
                 custom: newKeymap,
-                onlyCustom: state.keymap.onlyCustom
+                onlyCustom: state.keymap.onlyCustom,
               },
-              colorMap: newColormap
+              colorMap: newColormap,
             };
           });
         }
-      } else {
-        if (currentLayer >= this.state.keymap.default.length) {
-          this.setState(state => {
-            const defLength = this.state.keymap.default.length;
-            let newKeymap = this.state.keymap.custom.slice();
-            newKeymap[currentLayer - defLength] = data.keymap;
-            let newColormap = this.state.colorMap.slice();
-            newColormap[currentLayer - defLength] = data.colormap.slice();
-            return {
-              keymap: {
-                default: state.keymap.default,
-                custom: newKeymap,
-                onlyCustom: state.keymap.onlyCustom
-              },
-              colorMap: newColormap
-            };
-          });
-        }
+      } else if (currentLayer >= this.state.keymap.default.length) {
+        this.setState(state => {
+          const defLength = this.state.keymap.default.length;
+          const newKeymap = this.state.keymap.custom.slice();
+          newKeymap[currentLayer - defLength] = data.keymap;
+          const newColormap = this.state.colorMap.slice();
+          newColormap[currentLayer - defLength] = data.colormap.slice();
+          return {
+            keymap: {
+              default: state.keymap.default,
+              custom: newKeymap,
+              onlyCustom: state.keymap.onlyCustom,
+            },
+            colorMap: newColormap,
+          };
+        });
       }
     }
     this.setState({ modified: true });
@@ -1173,21 +1165,21 @@ class LayoutEditor extends React.Component {
   toChangeAllKeysColor = (colorIndex, start, end) => {
     const { currentLayer } = this.state;
     this.setState(state => {
-      let colormap = state.colorMap.slice();
+      const colormap = state.colorMap.slice();
       colormap[currentLayer] = colormap[currentLayer].fill(colorIndex, start, end);
       return {
         colorMap: colormap,
-        modified: true
+        modified: true,
       };
     });
     this.props.startContext();
   };
 
   superTranslator(raw) {
-    let superkey = [],
-      superkeys = [],
-      iter = 0,
-      superindex = 0;
+    let superkey = [];
+    const superkeys = [];
+    let iter = 0;
+    let superindex = 0;
 
     if (raw === "") {
       return [];
@@ -1205,7 +1197,7 @@ class LayoutEditor extends React.Component {
       iter++;
     }
     superkeys[superindex] = { actions: superkey, name: "", id: superindex };
-    console.log("Got Superkeys:" + JSON.stringify(superkeys) + " from " + raw);
+    console.log(`Got Superkeys:${JSON.stringify(superkeys)} from ${raw}`);
 
     if (
       superkeys[0].actions == undefined ||
@@ -1214,20 +1206,23 @@ class LayoutEditor extends React.Component {
     )
       return [];
     // TODO: Check if stored superKeys match the received ones, if they match, retrieve name and apply it to current superKeys
-    let equal = [];
+    const equal = [];
     let finalSuper = [];
-    const stored = this.state.neurons[this.state.neuronID].superkeys;
+    let stored = [];
+    console.log(this.state.neurons, this.state.neuronID, superkeys);
+    if (this.state.neurons !== undefined) {
+      stored = this.state.neurons[this.state.neuronID].superkeys;
+    }
     console.log(superkeys, stored);
     finalSuper = superkeys.map((superk, i) => {
       if (stored.length > i && stored.length > 0) {
-        let aux = superk;
-        aux.name = stored[i].name;
-        return aux;
-      } else {
-        let aux = superk;
-        aux.name = "";
+        const aux = superk;
+        aux.name = stored[i] ? stored[i]?.name : "";
         return aux;
       }
+      const aux = superk;
+      aux.name = "";
+      return aux;
     });
     console.log("final superkeys", finalSuper);
     return finalSuper;
@@ -1238,7 +1233,7 @@ class LayoutEditor extends React.Component {
   }
 
   setSuperKey(superid, actions, supername) {
-    let temp = this.state.superkeys;
+    const temp = this.state.superkeys;
     let tempactions = actions;
     let founddata = false;
     tempactions = tempactions
@@ -1257,9 +1252,9 @@ class LayoutEditor extends React.Component {
   }
 
   delSuperKey(superid) {
-    let temp = this.state.superkeys;
-    let aux = this.state.keymap.custom;
-    let result = this.state.keymap;
+    const temp = this.state.superkeys;
+    const aux = this.state.keymap.custom;
+    const result = this.state.keymap;
     temp.splice(superid, 1);
     if (temp.length > superid) {
       aux[this.state.currentLayer]
@@ -1297,22 +1292,22 @@ class LayoutEditor extends React.Component {
             { keyCode: 16, type: 8, id: 12 },
             { keyCode: 4, type: 8, id: 13 },
             { keyCode: 23, type: 8, id: 14 },
-            { keyCode: 8, type: 8, id: 15 }
+            { keyCode: 8, type: 8, id: 15 },
           ],
           id: 0,
           macro: "RIGHT SHIFT H RIGHT SHIFT E Y , SPACE RIGHT SHIFT D RIGHT SHIFT Y G M A T E",
-          name: "Hey, Dygmate!"
-        }
+          name: "Hey, Dygmate!",
+        },
       ];
     }
     // Translate received macros to human readable text
-    let i = 0,
-      iter = 0,
-      kcs = 0,
-      type = 0,
-      keyCode = [],
-      actions = [],
-      macros = [];
+    let i = 0;
+    let iter = 0;
+    let kcs = 0;
+    let type = 0;
+    let keyCode = [];
+    let actions = [];
+    let macros = [];
     actions = [];
     while (raw.length > iter) {
       if (kcs > 0) {
@@ -1323,8 +1318,8 @@ class LayoutEditor extends React.Component {
       }
       if (iter !== 0 && type !== 0) {
         actions.push({
-          type: type,
-          keyCode: keyCode
+          type,
+          keyCode,
         });
         keyCode = [];
       }
@@ -1356,8 +1351,8 @@ class LayoutEditor extends React.Component {
       iter++;
     }
     actions.push({
-      type: type,
-      keyCode: keyCode
+      type,
+      keyCode,
     });
     macros[i] = {};
     macros[i].actions = actions;
@@ -1365,12 +1360,12 @@ class LayoutEditor extends React.Component {
     macros[i].name = "";
     macros[i].macro = "";
     macros = macros.map(macro => {
-      let aux = macro.actions.map(action => {
+      const aux = macro.actions.map(action => {
         switch (action.type) {
           case 1:
             return {
               type: action.type,
-              keyCode: [(action.keyCode[0] << 8) + action.keyCode[1], (action.keyCode[2] << 8) + action.keyCode[3]]
+              keyCode: [(action.keyCode[0] << 8) + action.keyCode[1], (action.keyCode[2] << 8) + action.keyCode[3]],
             };
           case 2:
           case 3:
@@ -1378,12 +1373,12 @@ class LayoutEditor extends React.Component {
           case 5:
             return {
               type: action.type,
-              keyCode: (action.keyCode[0] << 8) + action.keyCode[1]
+              keyCode: (action.keyCode[0] << 8) + action.keyCode[1],
             };
           default:
             return {
               type: action.type,
-              keyCode: action.keyCode[0]
+              keyCode: action.keyCode[0],
             };
         }
       });
@@ -1398,13 +1393,12 @@ class LayoutEditor extends React.Component {
     }
     finalMacros = macros.map((macro, i) => {
       if (stored.length > i && stored.length > 0) {
-        let aux = macro;
+        const aux = macro;
         aux.name = stored[i].name;
         aux.macro = macro.actions.map(k => this.keymapDB.parse(k.keyCode).label).join(" ");
         return aux;
-      } else {
-        return macro;
       }
+      return macro;
     });
 
     return finalMacros;
@@ -1417,7 +1411,7 @@ class LayoutEditor extends React.Component {
   }
 
   getLayout() {
-    let focus = new Focus();
+    const focus = new Focus();
     let Layer = {};
     let kbtype = "iso";
     if (focus.device == null) return { Layer: false, kbtype: false };
@@ -1433,13 +1427,13 @@ class LayoutEditor extends React.Component {
   }
 
   async toImport() {
-    let options = {
+    const options = {
       title: "Load Layer/s file",
       buttonLabel: "Load Layer/s",
       filters: [
         { name: "Json", extensions: ["json"] },
-        { name: "All Files", extensions: ["*"] }
-      ]
+        { name: "All Files", extensions: ["*"] },
+      ],
     };
 
     const resp = await ipcRenderer.invoke("open-dialog", options);
@@ -1447,7 +1441,7 @@ class LayoutEditor extends React.Component {
       console.log(resp.filePaths);
       let layers;
       try {
-        layers = JSON.parse(require("fs").readFileSync(resp.filePaths[0]));
+        layers = JSON.parse(fs.readFileSync(resp.filePaths[0]));
         console.log(Array.isArray(layers.keymap));
         if (Array.isArray(layers.keymap)) {
           console.log(layers.keymap[0]);
@@ -1460,8 +1454,8 @@ class LayoutEditor extends React.Component {
             />,
             {
               autoClose: 2000,
-              icon: ""
-            }
+              icon: "",
+            },
           );
         } else {
           console.log(layers.keymap.custom[0]);
@@ -1471,11 +1465,11 @@ class LayoutEditor extends React.Component {
             colorMap: layers.colormap,
             palette: layers.palette,
             superkeys: layers.superkeys ? layers.superkeys : [],
-            modified: true
+            modified: true,
           });
           this.props.startContext();
           toast.success(i18n.editor.importSuccessAllLayers, {
-            autoClose: 2000
+            autoClose: 2000,
           });
         }
       } catch (e) {
@@ -1488,10 +1482,9 @@ class LayoutEditor extends React.Component {
           />,
           {
             autoClose: 2000,
-            icon: ""
-          }
+            icon: "",
+          },
         );
-        return;
       }
     } else {
       console.log("user closed SaveDialog");
@@ -1500,7 +1493,8 @@ class LayoutEditor extends React.Component {
 
   async toExport() {
     const { layerNames, keymap, currentLayer } = this.state;
-    let layerData, isReadOnly;
+    let layerData;
+    let isReadOnly;
     if (keymap.onlyCustom) {
       isReadOnly = currentLayer < 0;
       layerData = isReadOnly ? keymap.default[currentLayer + keymap.default.length] : keymap.custom[currentLayer];
@@ -1508,31 +1502,31 @@ class LayoutEditor extends React.Component {
       isReadOnly = currentLayer < keymap.default.length;
       layerData = isReadOnly ? keymap.default[currentLayer] : keymap.custom[currentLayer - keymap.default.length];
     }
-    let data = JSON.stringify(
+    const data = JSON.stringify(
       {
-        layerNames: layerNames,
+        layerNames,
         keymap: layerData,
         colormap: this.state.colorMap[currentLayer],
-        palette: this.state.palette
+        palette: this.state.palette,
       },
       null,
-      2
+      2,
     );
-    let options = {
+    const options = {
       title: "Save Layer file",
-      defaultPath: layerNames[currentLayer].name + ".json",
+      defaultPath: `${layerNames[currentLayer].name}.json`,
       buttonLabel: "Save Layer",
       filters: [
         { name: "Json", extensions: ["json"] },
-        { name: "All Files", extensions: ["*"] }
-      ]
+        { name: "All Files", extensions: ["*"] },
+      ],
     };
 
     try {
       const path = await ipcRenderer.invoke("save-dialog", options);
       if (typeof path !== "undefined") {
         console.log(path, data);
-        require("fs").writeFileSync(path, data);
+        fs.writeFileSync(path, data);
         toast.success(
           <ToastMessage
             title={i18n.editor.exportSuccessCurrentLayer}
@@ -1541,8 +1535,8 @@ class LayoutEditor extends React.Component {
           />,
           {
             autoClose: 2000,
-            icon: ""
-          }
+            icon: "",
+          },
         );
       } else {
         console.log("user closed SaveDialog");
@@ -1557,40 +1551,40 @@ class LayoutEditor extends React.Component {
         />,
         {
           autoClose: 2000,
-          icon: ""
-        }
+          icon: "",
+        },
       );
     }
   }
 
   async toExportAll() {
     const { keymap, colorMap, palette, superkeys, layerNames } = this.state;
-    let data = JSON.stringify(
+    const data = JSON.stringify(
       {
         layerNames,
         keymap,
         colormap: colorMap,
         palette,
-        superkeys
+        superkeys,
       },
       null,
-      2
+      2,
     );
-    let options = {
+    const options = {
       title: "Backup Layers file",
       defaultPath: "Layers.json",
       buttonLabel: "Backup Layers",
       filters: [
         { name: "Json", extensions: ["json"] },
-        { name: "All Files", extensions: ["*"] }
-      ]
+        { name: "All Files", extensions: ["*"] },
+      ],
     };
 
     try {
       const path = await ipcRenderer.invoke("save-dialog", options);
       if (typeof path !== "undefined") {
         console.log(path, data);
-        require("fs").writeFileSync(path, data);
+        fs.writeFileSync(path, data);
         toast.success(
           <ToastMessage
             title={i18n.editor.exportSuccessAllLayers}
@@ -1599,8 +1593,8 @@ class LayoutEditor extends React.Component {
           />,
           {
             autoClose: 2000,
-            icon: ""
-          }
+            icon: "",
+          },
         );
       } else {
         console.log("user closed SaveDialog");
@@ -1608,7 +1602,7 @@ class LayoutEditor extends React.Component {
     } catch (error) {
       console.error(error);
       toast.error(i18n.errors.exportError + error, {
-        autoClose: 2000
+        autoClose: 2000,
       });
     }
   }
@@ -1631,8 +1625,8 @@ class LayoutEditor extends React.Component {
   }
 
   updateOldMacros() {
-    let keymap = this.state.keymap;
-    let layers = [];
+    const { keymap } = this.state;
+    const layers = [];
     const oldmacro = [...Array(64).keys()].map(x => x + 24576);
     for (let index = 0; index < keymap.custom.length; index++) {
       if (keymap.custom[index].some(r => oldmacro.includes(r.keyCode))) {
@@ -1655,34 +1649,35 @@ class LayoutEditor extends React.Component {
   layerName(index) {
     return this.state.layerNames.length > index ? this.state.layerNames[index].name : this.defaultLayerNames[index];
   }
+
   modeSelectToggle = data => {
     if (this.state.isStandardView) {
       if (this.state.currentLedIndex > this.state.ledIndexStart) {
         this.setState({
-          currentKeyIndex: -1
+          currentKeyIndex: -1,
         });
       }
       this.setState({
         modeselect: data,
         showStandardView: false,
-        currentLedIndex: -1
+        currentLedIndex: -1,
       });
     } else {
       this.setState({
-        modeselect: data
+        modeselect: data,
       });
     }
   };
 
-  //Manage Standard/Single view
+  // Manage Standard/Single view
   async configStandarView() {
     try {
       const preferencesStandardView = JSON.parse(store.get("settings.isStandardView", true));
-      //const preferencesStandardView = false;
-      //console.log("Preferences StandardView", preferencesStandardViewJSON);
+      // const preferencesStandardView = false;
+      // console.log("Preferences StandardView", preferencesStandardViewJSON);
 
       console.log("preferencesStandardView: ", preferencesStandardView);
-      //const preferencesStandardView = false;
+      // const preferencesStandardView = false;
       if (preferencesStandardView !== null) {
         this.setState({ isStandardView: preferencesStandardView });
       } else {
@@ -1721,26 +1716,27 @@ class LayoutEditor extends React.Component {
       currentLedIndex: -1,
       selectedPaletteColor: null,
       isMultiSelected: false,
-      isColorButtonSelected: false
+      isColorButtonSelected: false,
     });
   };
+
   exportToPdf = () => {
     toast.info(
       <ToastMessage
-        title={"Feature not yet ready!"}
-        content={"The feature is not yet ready. its being worked on!"}
+        title="Feature not yet ready!"
+        content="The feature is not yet ready. its being worked on!"
         icon={<IconArrowUpWithLine />}
       />,
       {
         autoClose: 2000,
-        icon: ""
-      }
+        icon: "",
+      },
     );
   };
 
   refreshLayoutSelectorPosition = (x, y) => {
     this.setState({
-      layoutSelectorPosition: { x: x, y: y }
+      layoutSelectorPosition: { x, y },
     });
     // console.log("Triggered function refresh position :", this.state.layoutSelectorPosition);
   };
@@ -1758,12 +1754,12 @@ class LayoutEditor extends React.Component {
       superkeys,
       isStandardView,
       ledIndexStart,
-      layoutSelectorPosition
+      layoutSelectorPosition,
     } = this.state;
 
-    let { Layer, kbtype } = this.getLayout();
+    const { Layer, kbtype } = this.getLayout();
     if (!Layer) {
-      return <div></div>;
+      return <div />;
     }
     const showDefaults = store.get("settings.showDefaults");
     let cLayer = currentLayer;
@@ -1774,7 +1770,8 @@ class LayoutEditor extends React.Component {
       }
     }
 
-    let layerData, isReadOnly;
+    let layerData;
+    let isReadOnly;
     if (keymap.onlyCustom) {
       isReadOnly = cLayer < 0;
       layerData = isReadOnly ? keymap.default[cLayer + keymap.default.length] : keymap.custom[cLayer];
@@ -1785,7 +1782,7 @@ class LayoutEditor extends React.Component {
 
     if (layerData != undefined) {
       layerData = layerData.map(key => {
-        let newMKey = key;
+        const newMKey = key;
         if (key.extraLabel == "MACRO") {
           if (
             macros.length > parseInt(key.label) &&
@@ -1803,7 +1800,7 @@ class LayoutEditor extends React.Component {
 
     if (layerData != undefined && superkeys.length > 0) {
       layerData = layerData.map(key => {
-        let newSKey = key;
+        const newSKey = key;
         if (key.extraLabel == "SUPER") {
           if (
             superkeys.length > parseInt(key.label) - 1 &&
@@ -1820,7 +1817,7 @@ class LayoutEditor extends React.Component {
     }
 
     const layer = (
-      //TODO: restore fade effect <fade in appear key={currentLayer}>
+      // TODO: restore fade effect <fade in appear key={currentLayer}>
       <div className="LayerHolder">
         <Layer
           readOnly={isReadOnly}
@@ -1835,7 +1832,7 @@ class LayoutEditor extends React.Component {
           darkMode={this.props.darkMode}
           style={{ width: "50vw" }}
           showUnderglow={this.state.modeselect != "keyboard"}
-          className={`raiseKeyboard layer`}
+          className="raiseKeyboard layer"
           isStandardView={isStandardView}
         />
       </div>
@@ -1844,20 +1841,20 @@ class LayoutEditor extends React.Component {
 
     const copyCustomItems = this.state.keymap.custom.map((_, index) => {
       const idx = index + (keymap.onlyCustom ? 0 : keymap.default.length);
-      const label = (idx + 1).toString() + ": " + this.layerName(idx);
+      const label = `${(idx + 1).toString()}: ${this.layerName(idx)}`;
       return {
         index: idx,
-        label: label
+        label,
       };
     });
     const copyDefaultItems =
       showDefaults &&
       keymap.default.map((_, index) => {
-        const idx = index - (keymap.onlyCustom ? keymap.default.length : 0),
-          label = idx.toString();
+        const idx = index - (keymap.onlyCustom ? keymap.default.length : 0);
+        const label = idx.toString();
         return {
           index: idx,
-          label: label
+          label,
         };
       });
     const copyFromLayerOptions = (copyDefaultItems || []).concat(copyCustomItems);
@@ -1866,7 +1863,7 @@ class LayoutEditor extends React.Component {
       const idx = index + (keymap.onlyCustom ? 0 : keymap.default.length);
       return {
         name: this.layerName(idx),
-        id: idx
+        id: idx,
       };
     });
 
@@ -1894,12 +1891,12 @@ class LayoutEditor extends React.Component {
         <Container
           fluid
           className={`keyboard-editor ${this.state.modeselect} ${isStandardView ? "standarViewMode" : "singleViewMode"} ${
-            typeof this.state.selectedPaletteColor == "number" ? "colorSelected" : ""
+            typeof this.state.selectedPaletteColor === "number" ? "colorSelected" : ""
           }`}
         >
           <PageHeader
             text={i18n.app.menu.editor}
-            showSaving={true}
+            showSaving
             contentSelector={
               <LayerSelector
                 itemList={layerMenu}
@@ -1931,7 +1928,7 @@ class LayoutEditor extends React.Component {
                 deviceName={this.state.deviceName}
               />
             }
-            isColorActive={this.state.modeselect == "keyboard" ? false : true}
+            isColorActive={this.state.modeselect != "keyboard"}
             saveContext={this.onApply}
             destroyContext={() => {
               this.props.cancelContext();
@@ -1952,7 +1949,7 @@ class LayoutEditor extends React.Component {
                     action={0}
                     superName={superName}
                     keyIndex={currentKeyIndex}
-                    actTab={"editor"}
+                    actTab="editor"
                     selectedlanguage={currentLanguageLayout}
                     kbtype={kbtype}
                     layoutSelectorPosition={layoutSelectorPosition}
@@ -1963,7 +1960,7 @@ class LayoutEditor extends React.Component {
             </Col>
           </Row>
 
-          {/* WHY: We want to hide the selector when we cannot use it (e.g. when color editor is active)*/}
+          {/* WHY: We want to hide the selector when we cannot use it (e.g. when color editor is active) */}
           {this.state.modeselect === "keyboard" ? (
             <LayoutViewSelector
               onToggle={this.onToggle}

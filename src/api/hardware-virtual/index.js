@@ -1,7 +1,7 @@
-import { RaiseANSI } from "./RaiseANSI";
-import { RaiseISO } from "./RaiseISO";
-import { DefyWired } from "./DefyWired";
-import { DefyWireless } from "./DefyWireless";
+import RaiseANSI from "./RaiseANSI";
+import RaiseISO from "./RaiseISO";
+import DefyWired from "./DefyWired";
+import DefyWireless from "./DefyWireless";
 
 const enumerator = [RaiseANSI, RaiseISO, DefyWireless];
 

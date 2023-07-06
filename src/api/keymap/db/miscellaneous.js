@@ -24,36 +24,36 @@ const MiscellaneousTable = {
       code: 70,
       labels: {
         primary: "PRINT SCRN",
-        verbose: "Print Screen"
-      }
+        verbose: "Print Screen",
+      },
     },
     {
       code: 71,
       labels: {
         primary: "SCROLL LCK",
-        verbose: "Scroll Lock"
-      }
+        verbose: "Scroll Lock",
+      },
     },
     {
       code: 72,
       labels: {
-        primary: "PAUSE"
-      }
+        primary: "PAUSE",
+      },
     },
     {
       code: 20865,
       labels: {
         primary: "SHUT DWN",
-        verbose: "Shut Down"
-      }
+        verbose: "Shut Down",
+      },
     },
     {
       code: 20866,
       labels: {
         primary: "SLEEP",
-        verbose: "Sleep"
-      }
-    }
+        verbose: "Sleep",
+      },
+    },
     /* These are disabled for now, since we don't want to display them in
      * Bazecor. */
     /*
@@ -70,7 +70,7 @@ const MiscellaneousTable = {
             }
         }
         */
-  ]
+  ],
 };
 
 const ModifiedMiscellaneousTables = [
@@ -114,7 +114,7 @@ const ModifiedMiscellaneousTables = [
   withModifiers(MiscellaneousTable, "Alt + AltGr + Shift + Os +", "A+AGr+S+O+", 7680),
 
   // All
-  withModifiers(MiscellaneousTable, "Hyper + AltGr +", "H+AGr+", 7936)
+  withModifiers(MiscellaneousTable, "Hyper + AltGr +", "H+AGr+", 7936),
 ];
 
 export { MiscellaneousTable as default, ModifiedMiscellaneousTables };

@@ -6,7 +6,7 @@ function IconUndoRestart(props) {
       <mask
         id="prefixIconUndoRestart"
         style={{
-          maskType: "alpha"
+          maskType: "alpha",
         }}
         maskUnits="userSpaceOnUse"
         x={1}

@@ -18,7 +18,7 @@
 const GuiLabels = {
   linux: "Linux",
   win32: "Win",
-  darwin: "Cmd"
+  darwin: "Cmd",
 };
 
 const guiLabel = GuiLabels[process.platform] || "Gui";
@@ -31,66 +31,66 @@ const OneShotModifierTable = {
       labels: {
         top: "OSM",
         primary: "LEFT CONTROL",
-        verbose: "Left Control"
-      }
+        verbose: "Left Control",
+      },
     },
     {
       code: 49154,
       labels: {
         top: "OSM",
         primary: "LEFT SHIFT",
-        verbose: "Left Shift"
-      }
+        verbose: "Left Shift",
+      },
     },
     {
       code: 49155,
       labels: {
         top: "OSM",
         primary: "LEFT ALT",
-        verbose: "Left Alt"
-      }
+        verbose: "Left Alt",
+      },
     },
     {
       code: 49156,
       labels: {
         top: "OSM",
-        primary: "LEFT " + guiLabel.toUpperCase(),
-        verbose: "Left " + guiLabel
-      }
+        primary: `LEFT ${guiLabel.toUpperCase()}`,
+        verbose: `Left ${guiLabel}`,
+      },
     },
     {
       code: 49157,
       labels: {
         top: "OSM",
         primary: "RIGHT CTRL",
-        verbose: "Right Control"
-      }
+        verbose: "Right Control",
+      },
     },
     {
       code: 49158,
       labels: {
         top: "OSM",
         primary: "RIGHT SHIFT",
-        verbose: "Right Shift"
-      }
+        verbose: "Right Shift",
+      },
     },
     {
       code: 49159,
       labels: {
         top: "OSM",
         primary: "RIGHT ALT",
-        verbose: "AltGr"
-      }
+        verbose: "AltGr",
+      },
     },
     {
       code: 49160,
       labels: {
         top: "OSM",
-        primary: "RIGHT " + guiLabel.toUpperCase(),
-        verbose: "Right " + guiLabel
-      }
-    }
-  ]
+        primary: `RIGHT ${guiLabel.toUpperCase()}`,
+        verbose: `Right ${guiLabel}`,
+      },
+    },
+  ],
 };
 
 const OneShotLayerTable = {
@@ -100,59 +100,59 @@ const OneShotLayerTable = {
       code: 49161,
       labels: {
         top: "OSL",
-        primary: "1"
-      }
+        primary: "1",
+      },
     },
     {
       code: 49162,
       labels: {
         top: "OSL",
-        primary: "2"
-      }
+        primary: "2",
+      },
     },
     {
       code: 49163,
       labels: {
         top: "OSL",
-        primary: "3"
-      }
+        primary: "3",
+      },
     },
     {
       code: 49164,
       labels: {
         top: "OSL",
-        primary: "4"
-      }
+        primary: "4",
+      },
     },
     {
       code: 49165,
       labels: {
         top: "OSL",
-        primary: "5"
-      }
+        primary: "5",
+      },
     },
     {
       code: 49166,
       labels: {
         top: "OSL",
-        primary: "6"
-      }
+        primary: "6",
+      },
     },
     {
       code: 49167,
       labels: {
         top: "OSL",
-        primary: "7"
-      }
+        primary: "7",
+      },
     },
     {
       code: 49168,
       labels: {
         top: "OSL",
-        primary: "8"
-      }
-    }
-  ]
+        primary: "8",
+      },
+    },
+  ],
 };
 
 export { OneShotModifierTable, OneShotLayerTable };

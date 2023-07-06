@@ -66,7 +66,7 @@ const Style = Styled.div`
  * @param {function} selectFirmware - The function that allows the user select the custom software
  * @returns {<FirmwareAdvancedOptions>} FirmwareAdvancedOptions component.
  */
-const FirmwareAdvancedOptions = ({ firmwareFilename, selectFirmware, selectExperimental }) => {
+function FirmwareAdvancedOptions({ firmwareFilename, selectFirmware, selectExperimental }) {
   return (
     <Style>
       <Dropdown className="dropdownWithContent AdvancedUsers">
@@ -78,7 +78,7 @@ const FirmwareAdvancedOptions = ({ firmwareFilename, selectFirmware, selectExper
         </Dropdown.Toggle>
         <Dropdown.Menu className="dropdownMenu">
           <div className="dropdownMenuPadding">
-            <div className={"dropdownMenuContent"} dangerouslySetInnerHTML={{ __html: i18n.firmwareUpdate.texts.advUsersHTML }} />
+            <div className="dropdownMenuContent" dangerouslySetInnerHTML={{ __html: i18n.firmwareUpdate.texts.advUsersHTML }} />
             <RegularButton
               className="flashingbutton nooutlined"
               style="outline gradient btn-block"
@@ -88,7 +88,7 @@ const FirmwareAdvancedOptions = ({ firmwareFilename, selectFirmware, selectExper
             <RegularButton
               className="flashingbutton nooutlined"
               style="outline gradient btn-block"
-              buttonText={"Use Experimental"}
+              buttonText="Use Experimental"
               onClick={selectExperimental}
             />
             {firmwareFilename ? <div className="fileSelected animOpacity">{firmwareFilename}</div> : ""}
@@ -97,6 +97,6 @@ const FirmwareAdvancedOptions = ({ firmwareFilename, selectFirmware, selectExper
       </Dropdown>
     </Style>
   );
-};
+}
 
 export default FirmwareAdvancedOptions;

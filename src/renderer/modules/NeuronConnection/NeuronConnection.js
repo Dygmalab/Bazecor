@@ -17,13 +17,13 @@
 
 import React from "react";
 import Styled from "styled-components";
+import { ToastContainer, toast } from "react-toastify";
 import Title from "../../component/Title";
 import { RegularButton } from "../../component/Button";
 import NeuronStatus from "../../component/NeuronStatus";
 import { SelectKeyboardDropdown } from "../../component/Select";
 import i18n from "../../i18n";
 
-import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import ToastMessage from "../../component/ToastMessage";
 import { IconConnected } from "../../component/Icon";
@@ -106,7 +106,7 @@ const Style = Styled.div`
   }
 }
 `;
-const NeuronConnection = ({
+function NeuronConnection({
   loading,
   scanFoundDevices,
   scanDevices,
@@ -118,8 +118,8 @@ const NeuronConnection = ({
   selectedPortIndex,
   deviceItems,
   isVirtual,
-  virtualDevice
-}) => {
+  virtualDevice,
+}) {
   return (
     <Style>
       <div className="neuronConnection">
@@ -147,7 +147,7 @@ const NeuronConnection = ({
             <div className="buttons">
               <RegularButton
                 buttonText={i18n.keyboardSelect.disconnect}
-                style={"primary"}
+                style="primary"
                 onClick={onDisconnect}
                 disabled={false}
               />
@@ -157,8 +157,8 @@ const NeuronConnection = ({
           <div className="neuronInformation">
             {!deviceItems.length ? (
               <>
-                <Title text={i18n.keyboardSelect.noDevices} headingLevel={2} type={"warning"} />
-                <p className={"neuronSubtileText"}>{i18n.keyboardSelect.noDevicesSubtitle}</p>
+                <Title text={i18n.keyboardSelect.noDevices} headingLevel={2} type="warning" />
+                <p className="neuronSubtileText">{i18n.keyboardSelect.noDevicesSubtitle}</p>
               </>
             ) : (
               ""
@@ -187,7 +187,7 @@ const NeuronConnection = ({
               {connected ? (
                 <RegularButton
                   buttonText={i18n.keyboardSelect.disconnect}
-                  style={"primary"}
+                  style="primary"
                   onClick={onDisconnect}
                   disabled={false}
                 />
@@ -197,7 +197,7 @@ const NeuronConnection = ({
               {!connected && deviceItems.length > 0 ? (
                 <RegularButton
                   buttonText={i18n.keyboardSelect.connect}
-                  style={"primary"}
+                  style="primary"
                   onClick={onKeyboardConnect}
                   disabled={false}
                 />
@@ -205,11 +205,7 @@ const NeuronConnection = ({
                 ""
               )}
 
-              {!deviceItems.length ? (
-                <RegularButton buttonText={i18n.keyboardSelect.connect} style={"primary"} disabled={true} />
-              ) : (
-                ""
-              )}
+              {!deviceItems.length ? <RegularButton buttonText={i18n.keyboardSelect.connect} style="primary" disabled /> : ""}
             </div>
           </div>
         )}
@@ -218,6 +214,6 @@ const NeuronConnection = ({
       <ToastContainer />
     </Style>
   );
-};
+}
 
 export default NeuronConnection;

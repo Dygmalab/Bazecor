@@ -17,9 +17,9 @@
 
 import React from "react";
 import Styled from "styled-components";
+import Form from "react-bootstrap/Form";
 import Title from "../../component/Title";
 import { RegularButton } from "../../component/Button";
-import Form from "react-bootstrap/Form";
 import i18n from "../../i18n";
 
 const Style = Styled.div`
@@ -57,10 +57,10 @@ h6 {
   }
 }
 `;
-const BackupFolderConfigurator = ({ chooseBackupFolder, getBackup, backupFolder, connected }) => {
+function BackupFolderConfigurator({ chooseBackupFolder, getBackup, backupFolder, connected }) {
   return (
     <Style>
-      <div className={`backupFolderConfigurator`}>
+      <div className="backupFolderConfigurator">
         <Title text={i18n.keyboardSettings.backupFolder.title} headingLevel={6} />
         <div className="containerInfo">
           <div className="containerInfoInner">
@@ -81,6 +81,6 @@ const BackupFolderConfigurator = ({ chooseBackupFolder, getBackup, backupFolder,
       </div>
     </Style>
   );
-};
+}
 
 export default BackupFolderConfigurator;

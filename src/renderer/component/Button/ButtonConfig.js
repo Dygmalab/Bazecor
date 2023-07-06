@@ -26,7 +26,7 @@ const Style = Styled.div`
 }
 `;
 
-const ButtonConfig = ({
+function ButtonConfig({
   selected,
   onClick,
   size,
@@ -40,15 +40,15 @@ const ButtonConfig = ({
   tooltipDelay,
   disabled,
   dataAnimate
-}) => {
+}) {
   return (
     <>
       {tooltip ? (
         <OverlayTrigger
-          placement={tooltipPlacement ? tooltipPlacement : "top"}
-          delay={{ show: `${tooltipDelay ? tooltipDelay : "0"}`, hide: "0" }}
+          placement={tooltipPlacement || "top"}
+          delay={{ show: `${tooltipDelay || "0"}`, hide: "0" }}
           overlay={
-            <Tooltip id="tooltip-top" className={`${tooltipClassName ? tooltipClassName : "tooltipRegular"}`}>
+            <Tooltip id="tooltip-top" className={`${tooltipClassName || "tooltipRegular"}`}>
               <div dangerouslySetInnerHTML={{ __html: tooltip }} />
             </Tooltip>
           }
@@ -56,13 +56,13 @@ const ButtonConfig = ({
           <Style
             onClick={disabled ? () => {} : onClick}
             data-value={selected}
-            className={`${size ? size : ""} ${selected ? "active" : ""}  button-config ${style ? style : ""} ${
-              style ? style : ""
-            } icon-${icoPosition ? icoPosition : "none"}`}
+            className={`${size || ""} ${selected ? "active" : ""}  button-config ${style || ""} ${style || ""} icon-${
+              icoPosition || "none"
+            }`}
             disabled={disabled}
           >
             {icoSVG && icoPosition !== "right" ? icoSVG : ""}
-            {buttonText && <span className={"buttonLabel"} dangerouslySetInnerHTML={{ __html: buttonText }} />}
+            {buttonText && <span className="buttonLabel" dangerouslySetInnerHTML={{ __html: buttonText }} />}
             {icoSVG && icoPosition === "right" ? icoSVG : ""}
           </Style>
         </OverlayTrigger>
@@ -70,14 +70,14 @@ const ButtonConfig = ({
         <Style
           onClick={disabled ? () => {} : onClick}
           data-value={selected}
-          className={`${size ? size : ""} ${selected ? "active" : ""} ${disabled ? "disabled" : ""}  button-config ${
-            style ? style : ""
-          } ${style ? style : ""} icon-${icoPosition ? icoPosition : "none"}`}
+          className={`${size || ""} ${selected ? "active" : ""} ${disabled ? "disabled" : ""}  button-config ${style || ""} ${
+            style || ""
+          } icon-${icoPosition || "none"}`}
           disabled={disabled}
           data-animate={dataAnimate}
         >
           {icoSVG && icoPosition !== "right" ? icoSVG : ""}
-          {buttonText && <span className={"buttonLabel"} dangerouslySetInnerHTML={{ __html: buttonText }} />}
+          {buttonText && <span className="buttonLabel" dangerouslySetInnerHTML={{ __html: buttonText }} />}
           {icoSVG && icoPosition === "right" ? icoSVG : ""}
         </Style>
       )}

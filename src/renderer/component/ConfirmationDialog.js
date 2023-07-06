@@ -28,7 +28,7 @@ const Styles = Styled.div`
 
 `;
 
-const ConfirmationDialog = props => {
+function ConfirmationDialog(props) {
   return (
     <Modal
       backdrop="static"
@@ -50,6 +50,6 @@ const ConfirmationDialog = props => {
       </Styles>
     </Modal>
   );
-};
+}
 
 export { ConfirmationDialog as default };

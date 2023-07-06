@@ -25,12 +25,12 @@ const Style = Styled.div`
 }
 `;
 
-const ButtonSettings = props => {
+function ButtonSettings(props) {
   return (
     <Style>
       <IconSettings />
     </Style>
   );
-};
+}
 
 export default ButtonSettings;

@@ -23,335 +23,335 @@ const japaneseLetters = [
   {
     code: 53,
     labels: {
-      primary: "半角/全角 漢字"
-    }
+      primary: "半角/全角 漢字",
+    },
   },
   {
     code: 30,
     labels: {
-      primary: "ぬ"
+      primary: "ぬ",
     },
-    newGroupName: "Letters"
+    newGroupName: "Letters",
   },
   {
     code: 31,
     labels: {
-      primary: "ふ"
+      primary: "ふ",
     },
-    newGroupName: "Letters"
+    newGroupName: "Letters",
   },
   {
     code: 32,
     labels: {
-      primary: "あ"
+      primary: "あ",
     },
-    newGroupName: "Letters"
+    newGroupName: "Letters",
   },
   {
     code: 33,
     labels: {
-      primary: "う"
+      primary: "う",
     },
-    newGroupName: "Letters"
+    newGroupName: "Letters",
   },
   {
     code: 34,
     labels: {
-      primary: "え"
+      primary: "え",
     },
-    newGroupName: "Letters"
+    newGroupName: "Letters",
   },
   {
     code: 35,
     labels: {
-      primary: "お"
+      primary: "お",
     },
-    newGroupName: "Letters"
+    newGroupName: "Letters",
   },
   {
     code: 36,
     labels: {
-      primary: "や"
+      primary: "や",
     },
-    newGroupName: "Letters"
+    newGroupName: "Letters",
   },
   {
     code: 37,
     labels: {
-      primary: "ゆ"
+      primary: "ゆ",
     },
-    newGroupName: "Letters"
+    newGroupName: "Letters",
   },
   {
     code: 38,
     labels: {
-      primary: "よ"
+      primary: "よ",
     },
-    newGroupName: "Letters"
+    newGroupName: "Letters",
   },
   {
     code: 39,
     labels: {
-      primary: "わ"
+      primary: "わ",
     },
-    newGroupName: "Letters"
+    newGroupName: "Letters",
   },
   {
     code: 45,
     labels: {
-      primary: "ほ"
-    }
+      primary: "ほ",
+    },
   },
   {
     code: 46,
     labels: {
-      primary: "へ"
-    }
+      primary: "へ",
+    },
   },
   {
     code: 20,
     labels: {
-      primary: "た"
-    }
+      primary: "た",
+    },
   },
   {
     code: 26,
     labels: {
-      primary: "て"
-    }
+      primary: "て",
+    },
   },
   {
     code: 8,
     labels: {
-      primary: "い"
-    }
+      primary: "い",
+    },
   },
   {
     code: 21,
     labels: {
-      primary: "す"
-    }
+      primary: "す",
+    },
   },
   {
     code: 23,
     labels: {
-      primary: "か"
-    }
+      primary: "か",
+    },
   },
   {
     code: 28,
     labels: {
-      primary: "ん"
-    }
+      primary: "ん",
+    },
   },
   {
     code: 24,
     labels: {
-      primary: "な"
-    }
+      primary: "な",
+    },
   },
   {
     code: 12,
     labels: {
-      primary: "に"
-    }
+      primary: "に",
+    },
   },
   {
     code: 18,
     labels: {
-      primary: "ら"
-    }
+      primary: "ら",
+    },
   },
   {
     code: 19,
     labels: {
-      primary: "せ"
-    }
+      primary: "せ",
+    },
   },
   {
     code: 49,
     labels: {
-      primary: "む"
+      primary: "む",
     },
-    newGroupName: "Letters"
+    newGroupName: "Letters",
   },
   {
     code: 4,
     labels: {
-      primary: "ち"
-    }
+      primary: "ち",
+    },
   },
   {
     code: 22,
     labels: {
-      primary: "と"
-    }
+      primary: "と",
+    },
   },
   {
     code: 7,
     labels: {
-      primary: "し"
-    }
+      primary: "し",
+    },
   },
   {
     code: 9,
     labels: {
-      primary: "は"
-    }
+      primary: "は",
+    },
   },
   {
     code: 10,
     labels: {
-      primary: "き"
-    }
+      primary: "き",
+    },
   },
   {
     code: 11,
     labels: {
-      primary: "く"
-    }
+      primary: "く",
+    },
   },
   {
     code: 13,
     labels: {
-      primary: "ま"
-    }
+      primary: "ま",
+    },
   },
   {
     code: 14,
     labels: {
-      primary: "の"
-    }
+      primary: "の",
+    },
   },
   {
     code: 15,
     labels: {
-      primary: "り"
-    }
+      primary: "り",
+    },
   },
   {
     code: 51,
     labels: {
-      primary: "れ"
-    }
+      primary: "れ",
+    },
   },
   {
     code: 52,
     labels: {
-      primary: "け"
-    }
+      primary: "け",
+    },
   },
   {
     code: 29,
     labels: {
-      primary: "つ"
-    }
+      primary: "つ",
+    },
   },
   {
     code: 27,
     labels: {
-      primary: "さ"
-    }
+      primary: "さ",
+    },
   },
   {
     code: 6,
     labels: {
-      primary: "そ"
-    }
+      primary: "そ",
+    },
   },
   {
     code: 25,
     labels: {
-      primary: "ひ"
-    }
+      primary: "ひ",
+    },
   },
   {
     code: 5,
     labels: {
-      primary: "こ"
-    }
+      primary: "こ",
+    },
   },
   {
     code: 17,
     labels: {
-      primary: "み"
-    }
+      primary: "み",
+    },
   },
   {
     code: 16,
     labels: {
-      primary: "も"
-    }
+      primary: "も",
+    },
   },
   {
     code: 54,
     labels: {
-      primary: "ね"
-    }
+      primary: "ね",
+    },
   },
   {
     code: 55,
     labels: {
-      primary: "る"
-    }
+      primary: "る",
+    },
   },
   {
     code: 56,
     labels: {
-      primary: "め"
-    }
+      primary: "め",
+    },
   },
   {
     code: 135,
     labels: {
-      primary: "\\ろ"
+      primary: "\\ろ",
     },
-    newGroupName: "Punctuation"
+    newGroupName: "Punctuation",
   },
   {
     code: 136,
     labels: {
       primary: "Hiragana",
-      verbose: "カタカナ/ひらがな/ローマ字"
+      verbose: "カタカナ/ひらがな/ローマ字",
     },
-    newGroupName: "Punctuation"
+    newGroupName: "Punctuation",
   },
   {
     code: 137,
     labels: {
-      primary: "¥"
+      primary: "¥",
     },
-    newGroupName: "Punctuation"
+    newGroupName: "Punctuation",
   },
   {
     code: 138,
     labels: {
-      primary: "変換"
+      primary: "変換",
     },
-    newGroupName: "Punctuation"
+    newGroupName: "Punctuation",
   },
   {
     code: 139,
     labels: {
-      primary: "無変換"
+      primary: "無変換",
     },
-    newGroupName: "Punctuation"
-  }
+    newGroupName: "Punctuation",
+  },
 ];
 
 const japaneseModifierKeys = [
   {
     code: 47,
     labels: {
-      primary: "゛"
-    }
+      primary: "゛",
+    },
   },
   {
     code: 48,
     labels: {
-      primary: "゜"
-    }
-  }
+      primary: "゜",
+    },
+  },
 ];
 
 const altCtrlJapanese = {
@@ -360,275 +360,275 @@ const altCtrlJapanese = {
     {
       code: 821,
       labels: {
-        primary: "ロ"
-      }
+        primary: "ロ",
+      },
     },
     {
       code: 798,
       labels: {
-        primary: "ヌ"
-      }
+        primary: "ヌ",
+      },
     },
     {
       code: 799,
       labels: {
-        primary: "フ"
-      }
+        primary: "フ",
+      },
     },
     {
       code: 800,
       labels: {
-        primary: "ア"
-      }
+        primary: "ア",
+      },
     },
     {
       code: 801,
       labels: {
-        primary: "ウ"
-      }
+        primary: "ウ",
+      },
     },
     {
       code: 802,
       labels: {
-        primary: "エ"
-      }
+        primary: "エ",
+      },
     },
     {
       code: 803,
       labels: {
-        primary: "オ"
-      }
+        primary: "オ",
+      },
     },
     {
       code: 804,
       labels: {
-        primary: "ヤ"
-      }
+        primary: "ヤ",
+      },
     },
     {
       code: 805,
       labels: {
-        primary: "ユ"
-      }
+        primary: "ユ",
+      },
     },
     {
       code: 806,
       labels: {
-        primary: "ヨ"
-      }
+        primary: "ヨ",
+      },
     },
     {
       code: 807,
       labels: {
-        primary: "ワ"
-      }
+        primary: "ワ",
+      },
     },
     {
       code: 813,
       labels: {
-        primary: "ホ"
-      }
+        primary: "ホ",
+      },
     },
     {
       code: 814,
       labels: {
-        primary: "ヘ"
-      }
+        primary: "ヘ",
+      },
     },
     {
       code: 788,
       labels: {
-        primary: "タ"
-      }
+        primary: "タ",
+      },
     },
     {
       code: 794,
       labels: {
-        primary: "テ"
-      }
+        primary: "テ",
+      },
     },
     {
       code: 776,
       labels: {
-        primary: "イ"
-      }
+        primary: "イ",
+      },
     },
     {
       code: 789,
       labels: {
-        primary: "ス"
-      }
+        primary: "ス",
+      },
     },
     {
       code: 791,
       labels: {
-        primary: "カ"
-      }
+        primary: "カ",
+      },
     },
     {
       code: 796,
       labels: {
-        primary: "ン"
-      }
+        primary: "ン",
+      },
     },
     {
       code: 792,
       labels: {
-        primary: "ナ"
-      }
+        primary: "ナ",
+      },
     },
     {
       code: 780,
       labels: {
-        primary: "ニ"
-      }
+        primary: "ニ",
+      },
     },
     {
       code: 786,
       labels: {
-        primary: "ラ"
-      }
+        primary: "ラ",
+      },
     },
     {
       code: 787,
       labels: {
-        primary: "セ"
-      }
+        primary: "セ",
+      },
     },
     {
       code: 817,
       labels: {
-        primary: "ム"
+        primary: "ム",
       },
-      newGroupName: "Letters"
+      newGroupName: "Letters",
     },
     {
       code: 772,
       labels: {
-        primary: "チ"
-      }
+        primary: "チ",
+      },
     },
     {
       code: 790,
       labels: {
-        primary: "ト"
-      }
+        primary: "ト",
+      },
     },
     {
       code: 775,
       labels: {
-        primary: "シ"
-      }
+        primary: "シ",
+      },
     },
     {
       code: 777,
       labels: {
-        primary: "ハ"
-      }
+        primary: "ハ",
+      },
     },
     {
       code: 778,
       labels: {
-        primary: "キ"
-      }
+        primary: "キ",
+      },
     },
     {
       code: 779,
       labels: {
-        primary: "ク"
-      }
+        primary: "ク",
+      },
     },
     {
       code: 781,
       labels: {
-        primary: "マ"
-      }
+        primary: "マ",
+      },
     },
     {
       code: 782,
       labels: {
-        primary: "ノ"
-      }
+        primary: "ノ",
+      },
     },
     {
       code: 783,
       labels: {
-        primary: "リ"
-      }
+        primary: "リ",
+      },
     },
     {
       code: 819,
       labels: {
-        primary: "レ"
-      }
+        primary: "レ",
+      },
     },
     {
       code: 820,
       labels: {
-        primary: "ケ"
-      }
+        primary: "ケ",
+      },
     },
     {
       code: 797,
       labels: {
-        primary: "ツ"
-      }
+        primary: "ツ",
+      },
     },
     {
       code: 795,
       labels: {
-        primary: "サ"
-      }
+        primary: "サ",
+      },
     },
     {
       code: 774,
       labels: {
-        primary: "ソ"
-      }
+        primary: "ソ",
+      },
     },
     {
       code: 793,
       labels: {
-        primary: "ヒ"
-      }
+        primary: "ヒ",
+      },
     },
     {
       code: 773,
       labels: {
-        primary: "コ"
-      }
+        primary: "コ",
+      },
     },
     {
       code: 785,
       labels: {
-        primary: "ミ"
-      }
+        primary: "ミ",
+      },
     },
     {
       code: 784,
       labels: {
-        primary: "モ"
-      }
+        primary: "モ",
+      },
     },
     {
       code: 822,
       labels: {
-        primary: "ネ"
-      }
+        primary: "ネ",
+      },
     },
     {
       code: 823,
       labels: {
-        primary: "ル"
-      }
+        primary: "ル",
+      },
     },
     {
       code: 824,
       labels: {
-        primary: "メ"
-      }
-    }
-  ]
+        primary: "メ",
+      },
+    },
+  ],
 };
 
 const altGRJapanese = {
@@ -637,275 +637,275 @@ const altGRJapanese = {
     {
       code: 1077,
       labels: {
-        primary: "ロ"
-      }
+        primary: "ロ",
+      },
     },
     {
       code: 1054,
       labels: {
-        primary: "ヌ"
-      }
+        primary: "ヌ",
+      },
     },
     {
       code: 1055,
       labels: {
-        primary: "フ"
-      }
+        primary: "フ",
+      },
     },
     {
       code: 1056,
       labels: {
-        primary: "ア"
-      }
+        primary: "ア",
+      },
     },
     {
       code: 1057,
       labels: {
-        primary: "ウ"
-      }
+        primary: "ウ",
+      },
     },
     {
       code: 1058,
       labels: {
-        primary: "エ"
-      }
+        primary: "エ",
+      },
     },
     {
       code: 1059,
       labels: {
-        primary: "オ"
-      }
+        primary: "オ",
+      },
     },
     {
       code: 1060,
       labels: {
-        primary: "ヤ"
-      }
+        primary: "ヤ",
+      },
     },
     {
       code: 1061,
       labels: {
-        primary: "ユ"
-      }
+        primary: "ユ",
+      },
     },
     {
       code: 1062,
       labels: {
-        primary: "ヨ"
-      }
+        primary: "ヨ",
+      },
     },
     {
       code: 1063,
       labels: {
-        primary: "ワ"
-      }
+        primary: "ワ",
+      },
     },
     {
       code: 1069,
       labels: {
-        primary: "ホ"
-      }
+        primary: "ホ",
+      },
     },
     {
       code: 1070,
       labels: {
-        primary: "ヘ"
-      }
+        primary: "ヘ",
+      },
     },
     {
       code: 1044,
       labels: {
-        primary: "タ"
-      }
+        primary: "タ",
+      },
     },
     {
       code: 1050,
       labels: {
-        primary: "テ"
-      }
+        primary: "テ",
+      },
     },
     {
       code: 1032,
       labels: {
-        primary: "イ"
-      }
+        primary: "イ",
+      },
     },
     {
       code: 1045,
       labels: {
-        primary: "ス"
-      }
+        primary: "ス",
+      },
     },
     {
       code: 1047,
       labels: {
-        primary: "カ"
-      }
+        primary: "カ",
+      },
     },
     {
       code: 1052,
       labels: {
-        primary: "ン"
-      }
+        primary: "ン",
+      },
     },
     {
       code: 1048,
       labels: {
-        primary: "ナ"
-      }
+        primary: "ナ",
+      },
     },
     {
       code: 1036,
       labels: {
-        primary: "ニ"
-      }
+        primary: "ニ",
+      },
     },
     {
       code: 1042,
       labels: {
-        primary: "ラ"
-      }
+        primary: "ラ",
+      },
     },
     {
       code: 1043,
       labels: {
-        primary: "セ"
-      }
+        primary: "セ",
+      },
     },
     {
       code: 1073,
       labels: {
-        primary: "ム"
+        primary: "ム",
       },
-      newGroupName: "Letters"
+      newGroupName: "Letters",
     },
     {
       code: 1028,
       labels: {
-        primary: "チ"
-      }
+        primary: "チ",
+      },
     },
     {
       code: 1046,
       labels: {
-        primary: "ト"
-      }
+        primary: "ト",
+      },
     },
     {
       code: 1031,
       labels: {
-        primary: "シ"
-      }
+        primary: "シ",
+      },
     },
     {
       code: 1033,
       labels: {
-        primary: "ハ"
-      }
+        primary: "ハ",
+      },
     },
     {
       code: 1034,
       labels: {
-        primary: "キ"
-      }
+        primary: "キ",
+      },
     },
     {
       code: 1035,
       labels: {
-        primary: "ク"
-      }
+        primary: "ク",
+      },
     },
     {
       code: 1037,
       labels: {
-        primary: "マ"
-      }
+        primary: "マ",
+      },
     },
     {
       code: 1038,
       labels: {
-        primary: "ノ"
-      }
+        primary: "ノ",
+      },
     },
     {
       code: 1039,
       labels: {
-        primary: "リ"
-      }
+        primary: "リ",
+      },
     },
     {
       code: 1075,
       labels: {
-        primary: "レ"
-      }
+        primary: "レ",
+      },
     },
     {
       code: 1076,
       labels: {
-        primary: "ケ"
-      }
+        primary: "ケ",
+      },
     },
     {
       code: 1053,
       labels: {
-        primary: "ツ"
-      }
+        primary: "ツ",
+      },
     },
     {
       code: 1051,
       labels: {
-        primary: "サ"
-      }
+        primary: "サ",
+      },
     },
     {
       code: 1030,
       labels: {
-        primary: "ソ"
-      }
+        primary: "ソ",
+      },
     },
     {
       code: 1049,
       labels: {
-        primary: "ヒ"
-      }
+        primary: "ヒ",
+      },
     },
     {
       code: 1029,
       labels: {
-        primary: "コ"
-      }
+        primary: "コ",
+      },
     },
     {
       code: 1041,
       labels: {
-        primary: "ミ"
-      }
+        primary: "ミ",
+      },
     },
     {
       code: 1040,
       labels: {
-        primary: "モ"
-      }
+        primary: "モ",
+      },
     },
     {
       code: 1078,
       labels: {
-        primary: "ネ"
-      }
+        primary: "ネ",
+      },
     },
     {
       code: 1079,
       labels: {
-        primary: "ル"
-      }
+        primary: "ル",
+      },
     },
     {
       code: 1080,
       labels: {
-        primary: "メ"
-      }
-    }
-  ]
+        primary: "メ",
+      },
+    },
+  ],
 };
 
 const shiftModifierJapanese = {
@@ -914,100 +914,100 @@ const shiftModifierJapanese = {
     {
       code: 2080,
       labels: {
-        primary: "ぁ"
-      }
+        primary: "ぁ",
+      },
     },
     {
       code: 2081,
       labels: {
-        primary: "ぅ"
-      }
+        primary: "ぅ",
+      },
     },
     {
       code: 2082,
       labels: {
-        primary: "ぇ"
-      }
+        primary: "ぇ",
+      },
     },
     {
       code: 2083,
       labels: {
-        primary: "ぉ"
-      }
+        primary: "ぉ",
+      },
     },
     {
       code: 2084,
       labels: {
-        primary: "ゃ"
-      }
+        primary: "ゃ",
+      },
     },
     {
       code: 2085,
       labels: {
-        primary: "ゅ"
-      }
+        primary: "ゅ",
+      },
     },
     {
       code: 2086,
       labels: {
-        primary: "ょ"
-      }
+        primary: "ょ",
+      },
     },
     {
       code: 2087,
       labels: {
-        primary: "を"
-      }
+        primary: "を",
+      },
     },
     {
       code: 2093,
       labels: {
-        primary: "ー"
-      }
+        primary: "ー",
+      },
     },
     {
       code: 2056,
       labels: {
-        primary: "ぃ"
-      }
+        primary: "ぃ",
+      },
     },
     {
       code: 2095,
       labels: {
-        primary: "「"
-      }
+        primary: "「",
+      },
     },
     {
       code: 2096,
       labels: {
-        primary: "」"
-      }
+        primary: "」",
+      },
     },
     {
       code: 2077,
       labels: {
-        primary: "っ"
-      }
+        primary: "っ",
+      },
     },
     {
       code: 2102,
       labels: {
-        primary: "、"
-      }
+        primary: "、",
+      },
     },
     {
       code: 2103,
       labels: {
-        primary: "。"
-      }
+        primary: "。",
+      },
     },
     {
       code: 2104,
       labels: {
-        primary: "・"
-      }
-    }
-  ]
+        primary: "・",
+      },
+    },
+  ],
 };
 
 const japanese = japaneseLetters.concat(japaneseModifierKeys);
@@ -1137,7 +1137,7 @@ const japaneseModifiedTables = [
   DualUseLayer5Tables,
   DualUseLayer6Tables,
   DualUseLayer7Tables,
-  DualUseLayer8Tables
+  DualUseLayer8Tables,
 ];
 
 export { japanese as default, japaneseModifiedTables };

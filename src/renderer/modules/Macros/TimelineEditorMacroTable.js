@@ -1,11 +1,11 @@
 import React, { Component } from "react";
-import KeyMacro from "./KeyMacro";
-import { PreviewMacroModal } from "../../component/Modal";
 
 import Styled from "styled-components";
 
 import { MdUnfoldLess, MdKeyboardArrowUp, MdKeyboardArrowDown, MdTimer } from "react-icons/md";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import { PreviewMacroModal } from "../../component/Modal";
+import KeyMacro from "./KeyMacro";
 
 import { IconStopWatchXs } from "../../component/Icon";
 
@@ -85,7 +85,7 @@ class TimelineEditorMacroTable extends Component {
     this.state = {
       addText: "",
       rows: [],
-      macro: props.macro
+      macro: props.macro,
     };
     this.keymapDB = props.keymapDB;
     this.modifiers = [
@@ -96,88 +96,88 @@ class TimelineEditorMacroTable extends Component {
       { name: "LEFT ALT", keyCode: 226, color: "#faf8e1" },
       { name: "RIGHT ALT", keyCode: 230, color: "#f2e7f5" },
       { name: "LEFT OS", keyCode: 227, color: "#e6f0e4" },
-      { name: "RIGHT OS", keyCode: 231, color: "#e6f0e4" }
+      { name: "RIGHT OS", keyCode: 231, color: "#e6f0e4" },
     ];
     this.actionTypes = [
       {
         enum: "MACRO_ACTION_END",
         name: "End macro",
-        icon: <React.Fragment />,
-        smallIcon: <React.Fragment />
+        icon: <></>,
+        smallIcon: <></>,
       },
       {
         enum: "MACRO_ACTION_STEP_INTERVAL",
         name: "Delay",
         icon: <MdTimer fontSize="large" />,
-        smallIcon: <MdTimer />
+        smallIcon: <MdTimer />,
       },
       {
         enum: "MACRO_ACTION_STEP_WAIT",
         name: "Delay",
         icon: <MdTimer fontSize="large" />,
-        smallIcon: <MdTimer />
+        smallIcon: <MdTimer />,
       },
       {
         enum: "MACRO_ACTION_STEP_KEYDOWN",
         name: "Function Key Press",
         icon: <MdKeyboardArrowDown fontSize="large" />,
-        smallIcon: <MdKeyboardArrowDown />
+        smallIcon: <MdKeyboardArrowDown />,
       },
       {
         enum: "MACRO_ACTION_STEP_KEYUP",
         name: "Function Key Release",
         icon: <MdKeyboardArrowUp fontSize="large" />,
-        smallIcon: <MdKeyboardArrowUp />
+        smallIcon: <MdKeyboardArrowUp />,
       },
       {
         enum: "MACRO_ACTION_STEP_TAP",
         name: "Fn. Press & Release",
         icon: <MdUnfoldLess fontSize="large" />,
-        smallIcon: <MdUnfoldLess />
+        smallIcon: <MdUnfoldLess />,
       },
       {
         enum: "MACRO_ACTION_STEP_KEYCODEDOWN",
         name: "Key Press",
         icon: <MdKeyboardArrowDown fontSize="large" />,
-        smallIcon: <MdKeyboardArrowDown />
+        smallIcon: <MdKeyboardArrowDown />,
       },
       {
         enum: "MACRO_ACTION_STEP_KEYCODEUP",
         name: "Key Release",
         icon: <MdKeyboardArrowUp fontSize="large" />,
-        smallIcon: <MdKeyboardArrowUp />
+        smallIcon: <MdKeyboardArrowUp />,
       },
       {
         enum: "MACRO_ACTION_STEP_TAPCODE",
         name: "Key Press & Rel.",
         icon: <MdUnfoldLess fontSize="large" />,
-        smallIcon: <MdUnfoldLess />
+        smallIcon: <MdUnfoldLess />,
       },
       {
         enum: "MACRO_ACTION_STEP_EXPLICIT_REPORT",
         name: "Explicit Report",
-        icon: <React.Fragment />,
-        smallIcon: <React.Fragment />
+        icon: <></>,
+        smallIcon: <></>,
       },
       {
         enum: "MACRO_ACTION_STEP_IMPLICIT_REPORT",
         name: "Implicit Report",
-        icon: <React.Fragment />,
-        smallIcon: <React.Fragment />
+        icon: <></>,
+        smallIcon: <></>,
       },
       { enum: "MACRO_ACTION_STEP_SEND_REPORT", id: 11, name: "Send Report" },
       {
         enum: "MACRO_ACTION_STEP_TAP_SEQUENCE",
         name: "Intervaled Special Keys",
-        icon: <React.Fragment />,
-        smallIcon: <React.Fragment />
+        icon: <></>,
+        smallIcon: <></>,
       },
       {
         enum: "MACRO_ACTION_STEP_TAP_CODE_SEQUENCE",
         name: "Intervaled Key Press & Release",
-        icon: <React.Fragment />,
-        smallIcon: <React.Fragment />
-      }
+        icon: <></>,
+        smallIcon: <></>,
+      },
     ];
 
     this.onDragEnd = this.onDragEnd.bind(this);
@@ -189,16 +189,16 @@ class TimelineEditorMacroTable extends Component {
 
   componentDidMount() {
     if (this.props.macro !== null && this.props.macro.actions !== null && this.props.macro.actions.length > 0) {
-      let conv = this.createConversion(this.props.macro.actions);
-      let texted = conv.map(k => this.keymapDB.parse(k.keyCode).label).join(" ");
-      let newRows = conv.map((item, index) => {
-        let aux = item;
+      const conv = this.createConversion(this.props.macro.actions);
+      const texted = conv.map(k => this.keymapDB.parse(k.keyCode).label).join(" ");
+      const newRows = conv.map((item, index) => {
+        const aux = item;
         aux.id = index;
         return aux;
       });
       this.setState({
         rows: newRows,
-        macro: texted
+        macro: texted,
       });
     }
     if (this.state.rows.length !== 0) {
@@ -222,17 +222,17 @@ class TimelineEditorMacroTable extends Component {
       scrollContainer.scrollLeft = this.props.scrollPos;
     }
     if (this.props.macro !== prevProps.macro) {
-      let rows = this.createConversion(this.props.macro.actions);
+      const rows = this.createConversion(this.props.macro.actions);
       console.log("TiEMTa CompDidUpdate", rows);
-      let texted = rows.map(k => this.keymapDB.parse(k.keyCode).label).join(" ");
-      let newRows = rows.map((item, index) => {
-        let aux = item;
+      const texted = rows.map(k => this.keymapDB.parse(k.keyCode).label).join(" ");
+      const newRows = rows.map((item, index) => {
+        const aux = item;
         aux.id = index;
         return aux;
       });
       this.setState({
         rows: newRows,
-        macro: texted
+        macro: texted,
       });
     }
   }
@@ -252,9 +252,10 @@ class TimelineEditorMacroTable extends Component {
   };
 
   createConversion(actions) {
-    let converted = actions.map((action, i) => {
+    const converted = actions.map((action, i) => {
       const randID = new Date().getTime() + Math.floor(Math.random() * 1000);
-      let km, txt;
+      let km;
+      let txt;
       switch (action.type) {
         case 1:
           return {
@@ -264,7 +265,7 @@ class TimelineEditorMacroTable extends Component {
             id: i,
             color: "#faf0e3",
             uid: randID,
-            ucolor: "transparent"
+            ucolor: "transparent",
           };
         case 2:
           return {
@@ -274,14 +275,14 @@ class TimelineEditorMacroTable extends Component {
             id: i,
             color: "#faf0e3",
             uid: randID,
-            ucolor: "transparent"
+            ucolor: "transparent",
           };
         case 3:
         case 4:
         case 5:
           km = this.keymapDB.parse(action.keyCode);
           if (km.extraLabel !== undefined) {
-            txt = km.extraLabel + " " + km.label;
+            txt = `${km.extraLabel} ${km.label}`;
           } else {
             txt = km.label;
           }
@@ -292,7 +293,7 @@ class TimelineEditorMacroTable extends Component {
             id: i,
             color: this.assignColor(action.keyCode),
             uid: randID,
-            ucolor: "transparent"
+            ucolor: "transparent",
           };
         case 6:
         case 7:
@@ -304,7 +305,7 @@ class TimelineEditorMacroTable extends Component {
             id: i,
             color: this.assignColor(action.keyCode),
             uid: randID,
-            ucolor: "transparent"
+            ucolor: "transparent",
           };
         default:
           break;
@@ -314,13 +315,11 @@ class TimelineEditorMacroTable extends Component {
   }
 
   revertConversion(actions) {
-    let converted = actions.map(({ keyCode, action, id }) => {
-      return {
-        keyCode: keyCode,
-        type: action,
-        id: id
-      };
-    });
+    const converted = actions.map(({ keyCode, action, id }) => ({
+      keyCode,
+      type: action,
+      id,
+    }));
     return converted;
   }
 
@@ -336,17 +335,17 @@ class TimelineEditorMacroTable extends Component {
 
   updateRows(rows) {
     console.log("TiEMTa updaterows", rows);
-    let texted = rows.map(k => this.keymapDB.parse(k.keyCode).label).join(" ");
-    let newRows = rows.map((item, index) => {
-      let aux = item;
+    const texted = rows.map(k => this.keymapDB.parse(k.keyCode).label).join(" ");
+    const newRows = rows.map((item, index) => {
+      const aux = item;
       aux.id = index;
       return aux;
     });
     this.setState({
       rows: newRows,
-      macro: texted
+      macro: texted,
     });
-    let revConv = this.revertConversion(rows);
+    const revConv = this.revertConversion(rows);
     // console.log("TiEMTa revConv", revConv);
     this.props.updateActions(revConv);
   }
@@ -363,8 +362,8 @@ class TimelineEditorMacroTable extends Component {
     console.log("Called addModifier", rowID, modifierID);
     const { name, keyCode, color } = this.modifiers[modifierID];
     const randID = new Date().getTime() + Math.floor(Math.random() * 1000);
-    const randColor = "#" + Math.floor(Math.abs(Math.sin(randID) * 16777215) % 16777215).toString(16);
-    let newRows = this.state.rows;
+    const randColor = `#${Math.floor(Math.abs(Math.sin(randID) * 16777215) % 16777215).toString(16)}`;
+    const newRows = this.state.rows;
     newRows.splice(rowID + 1, 0, {
       symbol: name,
       keyCode,
@@ -372,7 +371,7 @@ class TimelineEditorMacroTable extends Component {
       id: rowID + 1,
       color,
       uid: randID,
-      ucolor: randColor
+      ucolor: randColor,
     });
     newRows.splice(rowID, 0, {
       symbol: name,
@@ -381,7 +380,7 @@ class TimelineEditorMacroTable extends Component {
       id: rowID,
       color,
       uid: randID,
-      ucolor: randColor
+      ucolor: randColor,
     });
     this.updateRows(newRows);
   }
@@ -398,21 +397,21 @@ class TimelineEditorMacroTable extends Component {
   }
 
   onDeleteRow = id => {
-    let uid = this.state.rows.filter(x => x.id === id)[0].uid;
-    let aux = this.state.rows.filter(x => x.uid !== uid);
+    const { uid } = this.state.rows.filter(x => x.id === id)[0];
+    const aux = this.state.rows.filter(x => x.uid !== uid);
     this.updateRows(aux);
   };
 
   onCloneRow = id => {
-    let uid = this.state.rows.filter(x => x.id === id)[0];
-    let preAux = this.state.rows.slice(0, id);
-    let postAux = this.state.rows.slice(id);
+    const uid = this.state.rows.filter(x => x.id === id)[0];
+    const preAux = this.state.rows.slice(0, id);
+    const postAux = this.state.rows.slice(id);
     preAux.push(uid);
     this.updateRows(preAux.concat(postAux));
   };
 
   updateAction = (id, action) => {
-    let aux = this.state.rows;
+    const aux = this.state.rows;
     aux[id].action = action;
     this.updateRows(aux);
   };
@@ -424,7 +423,7 @@ class TimelineEditorMacroTable extends Component {
   render() {
     // const {} = this.props;
     const cssObjectWidth = {
-      width: this.props.componentWidth
+      width: this.props.componentWidth,
     };
     // console.log("Timeline.ed.M.Table Rows", this.state.rows);
     if (this.state.rows.length === 0) {
@@ -436,7 +435,7 @@ class TimelineEditorMacroTable extends Component {
           <Droppable droppableId="droppable" direction="horizontal">
             {provided => (
               <div ref={provided.innerRef}>
-                <div className={"timelinetracking"}>
+                <div className="timelinetracking">
                   {this.state.rows.map((item, index) => (
                     <Draggable key={index} draggableId={String(index)} index={index}>
                       {(provided, snapshot) => (

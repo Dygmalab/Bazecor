@@ -19,19 +19,7 @@ import React from "react";
 
 import colorMatrixCalc from "../../renderer/utils/colorMatrixCalculation";
 
-const Neuron = ({
-  visibility,
-  onClick,
-  clickAble,
-  fill,
-  stroke,
-  strokeWidth,
-  dataLedIndex,
-  dataKeyIndex,
-  dataLayer,
-  translateX,
-  translateY
-}) => {
+function Neuron({ visibility, onClick, clickAble, fill, stroke, dataLedIndex, dataKeyIndex, dataLayer, translateX, translateY }) {
   const [color, setColor] = React.useState("rgb(255,255,255)");
   const [colorMatrix, setColorMatrix] = React.useState(colorMatrixCalc("rgb(255,255,255)", 0.65));
 
@@ -45,7 +33,7 @@ const Neuron = ({
     <g
       id="neuronWrapper"
       className={`${stroke === "#fff" ? "keyOnFocus" : "keyOnHold"} ${clickAble ? "clickAble" : ""}`}
-      transform={`translate(${translateX ? translateX : 0},${translateY ? translateY : 0})`}
+      transform={`translate(${translateX || 0},${translateY || 0})`}
     >
       <g className="neuronOutline">
         <path
@@ -167,5 +155,5 @@ const Neuron = ({
       </defs>
     </g>
   );
-};
+}
 export default Neuron;

@@ -65,9 +65,10 @@ class SelectOneShotModifiers extends Component {
       { name: "One Shot Right Control", keynum: 49157 },
       { name: "One Shot Right Shift", keynum: 49158 },
       { name: "One Shot AltGr", keynum: 49159 },
-      { name: "One Shot Right OS", keynum: 49160 }
+      { name: "One Shot Right OS", keynum: 49160 },
     ];
   }
+
   render() {
     const { action, keyCode, onKeySelect, activeTab } = this.props;
     const KC = keyCode.base + keyCode.modified;
@@ -99,20 +100,18 @@ class SelectOneShotModifiers extends Component {
             </div>
           </Dropdown.Toggle>
           <Dropdown.Menu>
-            {this.oneShotModifiers.map((item, id) => {
-              return (
-                <Dropdown.Item
-                  eventKey={item.keynum}
-                  key={`OSM-${id}`}
-                  disabled={item.keynum == -1}
-                  className={`${keyCode.modified > 0 && item.keynum == keyCode.base + keyCode.modified ? "active" : ""}`}
-                >
-                  <div className="dropdownInner">
-                    <div className="dropdownItem">{`${id + 1}. ${item.name}`}</div>
-                  </div>
-                </Dropdown.Item>
-              );
-            })}
+            {this.oneShotModifiers.map((item, id) => (
+              <Dropdown.Item
+                eventKey={item.keynum}
+                key={`OSM-${id}`}
+                disabled={item.keynum == -1}
+                className={`${keyCode.modified > 0 && item.keynum == keyCode.base + keyCode.modified ? "active" : ""}`}
+              >
+                <div className="dropdownInner">
+                  <div className="dropdownItem">{`${id + 1}. ${item.name}`}</div>
+                </div>
+              </Dropdown.Item>
+            ))}
           </Dropdown.Menu>
         </Dropdown>
       </Style>

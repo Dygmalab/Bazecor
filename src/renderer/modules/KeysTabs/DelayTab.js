@@ -106,7 +106,7 @@ class DelayTab extends Component {
     this.state = {
       fixedSelected: true,
       fixedValue: 0,
-      randomValue: { min: 0, max: 0 }
+      randomValue: { min: 0, max: 0 },
     };
   }
 
@@ -124,25 +124,25 @@ class DelayTab extends Component {
   };
 
   updateRandomMin = e => {
-    let randomValue = this.state.randomValue;
+    const { randomValue } = this.state;
     let valueMin = parseInt(e.target.value);
     valueMin = valueMin > 65535 ? 65535 : valueMin;
     if (valueMin > randomValue.max) {
       randomValue.max = valueMin;
     }
     randomValue.min = valueMin;
-    this.setState({ randomValue: randomValue });
+    this.setState({ randomValue });
   };
 
   updateRandomMax = e => {
-    let randomValue = this.state.randomValue;
+    const { randomValue } = this.state;
     let valueMax = parseInt(e.target.value);
     valueMax = valueMax > 65535 ? 65535 : valueMax;
     if (valueMax < randomValue.min) {
       randomValue.min = valueMax;
     }
     randomValue.max = valueMax;
-    this.setState({ randomValue: randomValue });
+    this.setState({ randomValue });
   };
 
   addDelay = () => {
@@ -156,7 +156,7 @@ class DelayTab extends Component {
     this.setState({
       fixedSelected: true,
       fixedValue: 0,
-      randomValue: { min: 0, max: 0 }
+      randomValue: { min: 0, max: 0 },
     });
   };
 

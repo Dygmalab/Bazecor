@@ -1,10 +1,9 @@
 import { createGlobalStyle } from "styled-components";
 
+import iconChevronDown from "@Assets/base/icon-arrow--chevron-down.svg";
+import iconChevronDownWhite from "@Assets/base/icon-arrow--chevron-down_white.svg";
 import LibreFranklin from "./fonts/LibreFranklin/LibreFranklin-VariableFont_wght.ttf";
 import LibreFranklinItalic from "./fonts/LibreFranklin/LibreFranklin-Italic-VariableFont_wght.ttf";
-
-import iconChevronDown from "../../../static/base/icon-arrow--chevron-down.svg";
-import iconChevronDownWhite from "../../../static/base/icon-arrow--chevron-down_white.svg";
 
 const NavWidth = "64";
 
@@ -53,11 +52,12 @@ const GlobalStyles = createGlobalStyle`
         background-image: url(${({ theme }) => theme.body.backgroundImage2x});
       }
   }
-  #app {
+  #root {
     display: grid;
     --sidebarWidth: ${({ theme }) => theme.sidebarWidthMedium}px;
     grid-template-columns: var(--sidebarWidth) auto;
   }
+
   div.main-container {
     padding-left: calc(90px + 8px);
     padding-left: 8px;

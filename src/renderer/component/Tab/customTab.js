@@ -21,7 +21,7 @@ import Styled from "styled-components";
 
 import Nav from "react-bootstrap/Nav";
 
-import lightNavImage from "../../../../static/base/light-accent--md.png";
+import lightNavImage from "@Assets/base/light-accent--md.png";
 
 const Style = Styled.div`	
 .nav-link {
@@ -96,7 +96,7 @@ const Style = Styled.div`
  * @returns {<CustomTab>} CustomTab component.
  */
 
-const CustomTab = ({ text, eventKey, icon, className, notifText }) => {
+function CustomTab({ text, eventKey, icon, className, notifText }) {
   return (
     <Style className={className}>
       <Nav.Item>
@@ -107,17 +107,17 @@ const CustomTab = ({ text, eventKey, icon, className, notifText }) => {
       </Nav.Item>
     </Style>
   );
-};
+}
 
 CustomTab.defaultProps = {
-  text: ""
+  text: "",
 };
 
 CustomTab.propTypes = {
   text: PropTypes.string,
   icon: PropTypes.object,
   eventKey: PropTypes.string,
-  className: PropTypes.string
+  className: PropTypes.string,
 };
 
 export default CustomTab;

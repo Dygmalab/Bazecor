@@ -6,7 +6,6 @@
 
 import React, { Component } from "react";
 import Styled, { withTheme } from "styled-components";
-import i18n from "../../i18n";
 
 import Tooltip from "react-bootstrap/Tooltip";
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
@@ -28,7 +27,7 @@ import {
   BiLeftArrowCircle,
   BiMouseAlt,
   BiRightArrowCircle,
-  BiUpArrowCircle
+  BiUpArrowCircle,
 } from "react-icons/bi";
 import {
   AiFillForward,
@@ -39,9 +38,10 @@ import {
   AiOutlineArrowRight,
   AiOutlineArrowUp,
   AiOutlineBackward,
-  AiOutlineForward
+  AiOutlineForward,
 } from "react-icons/ai";
 import { MdKeyboardReturn, MdSpaceBar, MdKeyboardCapslock, MdInfoOutline, MdEject } from "react-icons/md";
+import i18n from "../../i18n";
 
 import Key from "./Key";
 import ES from "./ES.json";
@@ -55,7 +55,7 @@ import NW from "./NW.json";
 import IC from "./IC.json";
 import JP from "./JP.json";
 import SWGR from "./SWGR.json";
-//import SelectSuperKeys from "../../component/Select/SelectSuperKey";
+// import SelectSuperKeys from "../../component/Select/SelectSuperKey";
 
 const Style = Styled.div`
 width: 100%;
@@ -299,10 +299,10 @@ class KeyPickerReduced extends Component {
       keyCode,
       onKeySelect,
       activeTab,
-      showSelected
+      showSelected,
     } = this.props;
 
-    //let boxShadowMatrix = useTheme().styles.keyPicker.keyMatrixShadow;
+    // let boxShadowMatrix = useTheme().styles.keyPicker.keyMatrixShadow;
 
     const liso = {
       english: ENi,
@@ -315,7 +315,7 @@ class KeyPickerReduced extends Component {
       norwegian: NW,
       icelandic: IC,
       japanese: JP,
-      swissGerman: SWGR
+      swissGerman: SWGR,
     };
     const lansi = { english: ENa };
     let Lang = ENa;
@@ -328,10 +328,8 @@ class KeyPickerReduced extends Component {
       } else {
         Lang = liso[selectedlanguage];
       }
-    } else {
-      if (selectedlanguage != "") {
-        if (liso[selectedlanguage] != undefined) Lang = liso[selectedlanguage];
-      }
+    } else if (selectedlanguage != "") {
+      if (liso[selectedlanguage] != undefined) Lang = liso[selectedlanguage];
     }
     const os = process.platform;
     const iconlist = {
@@ -355,16 +353,16 @@ class KeyPickerReduced extends Component {
       ArrLeft: <AiOutlineArrowLeft className="bigger" />,
       ArrRight: <AiOutlineArrowRight className="bigger" />,
       LDToggl: (
-        <React.Fragment>
+        <>
           <BsFillBrightnessAltLowFill className="bigger" />
           <CgToggleOff className="" />
-        </React.Fragment>
+        </>
       ),
       LDForward: (
-        <React.Fragment>
+        <>
           <BsFillBrightnessAltLowFill className="bigger" />
           <AiOutlineForward className="" />
-        </React.Fragment>
+        </>
       ),
       VolAdd: <FaVolumeUp className="bigger" />,
       VolSub: <FaVolumeDown className="bigger" />,
@@ -378,60 +376,60 @@ class KeyPickerReduced extends Component {
       Backward: <AiOutlineBackward className="bigger" />,
       Cancel: <TiCancel className="bigger" />,
       ScrlUp: (
-        <React.Fragment>
+        <>
           <BiMouseAlt className="bigger" />
           <BiArrowFromBottom className="" />
-        </React.Fragment>
+        </>
       ),
       ScrlDwn: (
-        <React.Fragment>
+        <>
           <BiMouseAlt className="bigger" />
           <BiArrowFromTop className="" />
-        </React.Fragment>
+        </>
       ),
       ScrlLeft: (
-        <React.Fragment>
+        <>
           <BiMouseAlt className="bigger" />
           <BiArrowFromRight className="" />
-        </React.Fragment>
+        </>
       ),
       ScrlRight: (
-        <React.Fragment>
+        <>
           <BiMouseAlt className="bigger" />
           <BiArrowFromLeft className="" />
-        </React.Fragment>
+        </>
       ),
       MvUp: (
-        <React.Fragment>
+        <>
           <BiMouseAlt className="bigger" />
           <BiUpArrowCircle className="" />
-        </React.Fragment>
+        </>
       ),
       MvDwn: (
-        <React.Fragment>
+        <>
           <BiMouseAlt className="bigger" />
           <BiDownArrowCircle className="" />
-        </React.Fragment>
+        </>
       ),
       MvLeft: (
-        <React.Fragment>
+        <>
           <BiMouseAlt className="bigger" />
           <BiLeftArrowCircle className="" />
-        </React.Fragment>
+        </>
       ),
       MvRight: (
-        <React.Fragment>
+        <>
           <BiMouseAlt className="bigger" />
           <BiRightArrowCircle className="" />
-        </React.Fragment>
-      )
+        </>
+      ),
     };
     const keyboard = Lang.map((key, id) => {
       if (key.tooltip) {
         return (
           <foreignObject key={`id-${key.content.first}-${id}`} x={key.x} y={key.y} width={25} height={25}>
             <OverlayTrigger rootClose placement="top" delay={{ show: 250, hide: 400 }} overlay={this.renderTooltip(key.tooltip)}>
-              <MdInfoOutline className={"info"} />
+              <MdInfoOutline className="info" />
             </OverlayTrigger>
           </foreignObject>
         );
@@ -453,9 +451,7 @@ class KeyPickerReduced extends Component {
                   (code.base + code.modified < 17450 || code.base + code.modified > 17501) &&
                   (code.base + code.modified < 49153 || code.base + code.modified > 49168)
                 ? true
-                : code.modified > 0 && code.base + code.modified === key.id
-                ? true
-                : false
+                : !!(code.modified > 0 && code.base + code.modified === key.id)
               : false
           }
           clicked={() => {
@@ -494,17 +490,17 @@ class KeyPickerReduced extends Component {
               <svg className="svgStyle" viewBox="0 0 1070 208" preserveAspectRatio="xMidYMin slice">
                 {keyboard}
                 <defs>
-                  <linearGradient id={`paint_gradient`} x1="0%" y1="0%" x2="100%" y2="0%">
+                  <linearGradient id="paint_gradient" x1="0%" y1="0%" x2="100%" y2="0%">
                     <stop offset="5%" stopColor="#fff" />
                     <stop offset="95%" stopColor="#fff" stopOpacity={0} />
                   </linearGradient>
-                  <filter id={`filter0_d_2211_181319`} x="0%" y="0%" width="200%" height="200%">
+                  <filter id="filter0_d_2211_181319" x="0%" y="0%" width="200%" height="200%">
                     <feOffset result="offOut" in="SourceGraphic" dx="0" dy="-2" />
                     <feColorMatrix
                       result="matrixOut"
                       in="offOut"
                       type="matrix"
-                      values={`0 0 0 0 0.552941 0 0 0 0 0.517647 0 0 0 0 0.737255 0 0 0 0.1 0`}
+                      values="0 0 0 0 0.552941 0 0 0 0 0.517647 0 0 0 0 0.737255 0 0 0 0.1 0"
                     />
                     <feGaussianBlur result="blurOut" in="matrixOut" stdDeviation="0" />
                     <feBlend in="SourceGraphic" in2="blurOut" mode="normal" />

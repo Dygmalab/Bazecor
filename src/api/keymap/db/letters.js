@@ -23,160 +23,160 @@ const LetterTable = {
     {
       code: 4,
       labels: {
-        primary: "A"
-      }
+        primary: "A",
+      },
     },
     {
       code: 5,
       labels: {
-        primary: "B"
-      }
+        primary: "B",
+      },
     },
     {
       code: 6,
       labels: {
-        primary: "C"
-      }
+        primary: "C",
+      },
     },
     {
       code: 7,
       labels: {
-        primary: "D"
-      }
+        primary: "D",
+      },
     },
     {
       code: 8,
       labels: {
-        primary: "E"
-      }
+        primary: "E",
+      },
     },
     {
       code: 9,
       labels: {
-        primary: "F"
-      }
+        primary: "F",
+      },
     },
     {
       code: 10,
       labels: {
-        primary: "G"
-      }
+        primary: "G",
+      },
     },
     {
       code: 11,
       labels: {
-        primary: "H"
-      }
+        primary: "H",
+      },
     },
     {
       code: 12,
       labels: {
-        primary: "I"
-      }
+        primary: "I",
+      },
     },
     {
       code: 13,
       labels: {
-        primary: "J"
-      }
+        primary: "J",
+      },
     },
     {
       code: 14,
       labels: {
-        primary: "K"
-      }
+        primary: "K",
+      },
     },
     {
       code: 15,
       labels: {
-        primary: "L"
-      }
+        primary: "L",
+      },
     },
     {
       code: 16,
       labels: {
-        primary: "M"
-      }
+        primary: "M",
+      },
     },
     {
       code: 17,
       labels: {
-        primary: "N"
-      }
+        primary: "N",
+      },
     },
     {
       code: 18,
       labels: {
-        primary: "O"
-      }
+        primary: "O",
+      },
     },
     {
       code: 19,
       labels: {
-        primary: "P"
-      }
+        primary: "P",
+      },
     },
     {
       code: 20,
       labels: {
-        primary: "Q"
-      }
+        primary: "Q",
+      },
     },
     {
       code: 21,
       labels: {
-        primary: "R"
-      }
+        primary: "R",
+      },
     },
     {
       code: 22,
       labels: {
-        primary: "S"
-      }
+        primary: "S",
+      },
     },
     {
       code: 23,
       labels: {
-        primary: "T"
-      }
+        primary: "T",
+      },
     },
     {
       code: 24,
       labels: {
-        primary: "U"
-      }
+        primary: "U",
+      },
     },
     {
       code: 25,
       labels: {
-        primary: "V"
-      }
+        primary: "V",
+      },
     },
     {
       code: 26,
       labels: {
-        primary: "W"
-      }
+        primary: "W",
+      },
     },
     {
       code: 27,
       labels: {
-        primary: "X"
-      }
+        primary: "X",
+      },
     },
     {
       code: 28,
       labels: {
-        primary: "Y"
-      }
+        primary: "Y",
+      },
     },
     {
       code: 29,
       labels: {
-        primary: "Z"
-      }
-    }
-  ]
+        primary: "Z",
+      },
+    },
+  ],
 };
 
 /* Modifier tables */
@@ -274,7 +274,7 @@ const ModifiedLetterTables = [
   withModifiers(LetterTable, "Hyper +", "Hyper+", 6912),
   CAGrSGLetterTable,
   AAGrSGLetterTable,
-  AllModLetterTable
+  AllModLetterTable,
 ];
 
 export { LetterTable as default, ModifiedLetterTables };

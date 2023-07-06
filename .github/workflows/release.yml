@@ -1,0 +1,185 @@
+name: Release
+
+on:
+  push:
+    branches:
+      - "main"
+  pull_request:
+    branches:
+      - "main"
+
+permissions:
+  contents: read
+
+jobs:
+  testing:
+    runs-on: ${{ matrix.os }}
+    permissions:
+      contents: write # to be able to publish a GitHub release
+      issues: write # to be able to comment on released issues
+      pull-requests: write # to be able to comment on released pull requests
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: macos-12
+          - os: windows-2019
+          - os: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+      - run: npm install -g yarn
+      - if: runner.os == 'Linux'
+        run: sudo apt update && sudo apt install libudev-dev
+      - name: Cache node_modules
+        id: cache-node-modules
+        uses: actions/cache@v3
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-${{ hashFiles('package.json', 'yarn.lock') }}
+      - name: Install node_modules
+        if: steps.cache-node-modules.outputs.cache-hit != 'true'
+        run: yarn install --frozen-lockfile --network-timeout 300000 # sometimes yarn takes time, therefore, we increase the timeout
+      - run: yarn run test
+
+  build:
+    runs-on: ${{ matrix.os }}
+    needs: [testing]
+    permissions:
+      contents: write # to be able to publish a GitHub release
+      issues: write # to be able to comment on released issues
+      pull-requests: write # to be able to comment on released pull requests
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: macos-12
+          - os: windows-2019
+          - os: ubuntu-20.04
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+      - run: npm install -g yarn
+      - if: runner.os == 'Linux'
+        run: sudo apt update && sudo apt install libudev-dev
+      - name: Cache node_modules
+        id: cache-node-modules
+        uses: actions/cache@v3
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-${{ hashFiles('package.json', 'yarn.lock') }}
+      - name: Install node_modules
+        if: steps.cache-node-modules.outputs.cache-hit != 'true'
+        run: yarn install --frozen-lockfile --network-timeout 300000 # sometimes yarn takes time, therefore, we increase the timeout
+      - if: runner.os == 'macOS'
+        name: Setup Apple certificates
+        env:
+          APPLE_INSTALLER_CERT_BASE64: ${{ secrets.APPLE_INSTALLER_CERT_BASE64 }}
+          APPLE_APPLICATION_CERT_BASE64: ${{ secrets.APPLE_APPLICATION_CERT_BASE64 }}
+          APPLE_CERT_PASSWORD: ${{ secrets.APPLE_CERT_PASSWORD }}
+          APPLE_KEYCHAIN_PASSWORD: ${{ secrets.APPLE_KEYCHAIN_PASSWORD }}
+        run: |
+          APPLE_INSTALLER_CERT_PATH=$RUNNER_TEMP/apple_installer.p12
+          APPLE_APPLICATION_CERT_PATH=$RUNNER_TEMP/apple_application.p12
+          KEYCHAIN_PATH=$RUNNER_TEMP/apple-signing.keychain-db
+          # create certificates from base64 
+          echo -n "$APPLE_INSTALLER_CERT_BASE64" | base64 --decode -o $APPLE_INSTALLER_CERT_PATH
+          echo -n "$APPLE_APPLICATION_CERT_BASE64" | base64 --decode -o $APPLE_APPLICATION_CERT_PATH
+          # create keychain stuff
+          security create-keychain -p "$APPLE_KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
+          security set-keychain-settings -lut 21600 $KEYCHAIN_PATH
+          security unlock-keychain -p "$APPLE_KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
+          #import certificates
+          echo "Importing installer cert"
+          security import $APPLE_INSTALLER_CERT_PATH -P "$APPLE_CERT_PASSWORD" -A -t cert -f pkcs12 -k $KEYCHAIN_PATH 
+          echo "Importing application cert"
+          security import $APPLE_APPLICATION_CERT_PATH -P "$APPLE_CERT_PASSWORD" -A -t cert -f pkcs12 -k $KEYCHAIN_PATH 
+          security list-keychain -d user -s $KEYCHAIN_PATH
+          # - run: yarn run lint
+      - if: runner.os == 'macOS'
+        name: Build for MacOS
+        env:
+          APPLE_ID: ${{ secrets.APPLEID }}
+          APPLE_ID_PASSWORD: ${{ secrets.APPLEIDPASS }}
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+        run: yarn run make
+      - if: runner.os != 'macOS'
+        name: Build for Linux/Windows
+        run: yarn run make
+      - name: Upload build
+        uses: actions/upload-artifact@v3
+        with:
+          name: artifacts
+          path: |
+            out/make/**/*.dmg
+            out/make/**/*.AppImage
+            out/make/**/*.exe
+
+      - name: Show build items
+        run: |
+          ls -R out/make
+
+  release:
+    # here we only download the previous artifacts and upload them with release name, just for clarification
+    needs: [build]
+    runs-on: ubuntu-20.04
+    permissions:
+      contents: write # to be able to publish a GitHub release
+      issues: write # to be able to comment on released issues
+      pull-requests: write # to be able to comment on released pull requests
+
+    strategy:
+      fail-fast: false
+
+    steps:
+      - name: Setup Nodejs
+        uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+      - name: Cache node_modules
+        id: cache-node-modules
+        uses: actions/cache@v3
+        with:
+          path: node_modules
+          key: release-${{ hashFiles('package.json', 'yarn.lock') }}
+      - name: Install node_modules
+        if: steps.cache-node-modules.outputs.cache-hit != 'true'
+        run: yarn install --frozen-lockfile --network-timeout 300000 # sometimes yarn takes time, therefore, we increase the timeout
+      - uses: actions/download-artifact@v3
+        with:
+          name: artifacts
+          path: ${{ github.workspace }}/artifacts
+      - name: Log downloaded artifacts
+        run: |
+          ls -R ${{ github.workspace }}
+      - name: Extract artifacts into dist folder
+        run: |
+          mkdir dist
+          find ${{ github.workspace }}/artifacts -name '*.exe' -exec cp -v {} ${{ github.workspace }}/dist \;
+          find ${{ github.workspace }}/artifacts -name '*.AppImage' -exec cp -v {} ${{ github.workspace }}/dist \;
+          find ${{ github.workspace }}/artifacts -name '*.dmg' -exec cp -v {} ${{ github.workspace }}/dist \;
+
+      - name: Log dist folder
+        run: |
+          ls -R ${{ github.workspace}}/dist
+      - name: Upload release
+        uses: actions/upload-artifact@v3
+        with:
+          name: release
+          path: ${{ github.workspace }}/dist
+      - name: Log workspace
+        run: |
+          ls -R ${{ github.workspace}}
+
+      - name: Run semantic-release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: npx semantic-release

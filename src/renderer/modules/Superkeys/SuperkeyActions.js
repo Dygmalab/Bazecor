@@ -20,7 +20,7 @@ const Style = Styled.div`
 }
 `;
 
-const SuperkeyActions = ({
+function SuperkeyActions({
   isStandardViewSuperkeys,
   superkeys,
   selected,
@@ -30,34 +30,34 @@ const SuperkeyActions = ({
   macros,
   updateAction,
   changeAction,
-  keymapDB
-}) => {
+  keymapDB,
+}) {
   const rows = [
     {
       icon: <IconKeysPress />,
       title: i18n.editor.superkeys.actions.tapLabel,
-      description: i18n.editor.superkeys.actions.tap
+      description: i18n.editor.superkeys.actions.tap,
     },
     {
       icon: <IconKeysHold />,
       title: i18n.editor.superkeys.actions.holdLabel,
-      description: i18n.editor.superkeys.actions.hold
+      description: i18n.editor.superkeys.actions.hold,
     },
     {
       icon: <IconKeysTapHold />,
       title: i18n.editor.superkeys.actions.tapAndHoldLabel,
-      description: i18n.editor.superkeys.actions.tapAndHold
+      description: i18n.editor.superkeys.actions.tapAndHold,
     },
     {
       icon: <IconKeys2Tap />,
       title: i18n.editor.superkeys.actions.doubleTapLabel,
-      description: i18n.editor.superkeys.actions.doubleTap
+      description: i18n.editor.superkeys.actions.doubleTap,
     },
     {
       icon: <IconKeys2TapHold />,
       title: i18n.editor.superkeys.actions.doubleTapAndHoldLabel,
-      description: i18n.editor.superkeys.actions.doubleTapAndHold
-    }
+      description: i18n.editor.superkeys.actions.doubleTapAndHold,
+    },
   ];
 
   return (
@@ -74,7 +74,7 @@ const SuperkeyActions = ({
                 key={`skA-${index}`}
                 title={item.title}
                 description={item.description}
-                elementActive={selectedAction == index ? true : false}
+                elementActive={selectedAction == index}
                 isStandardViewSuperkeys={isStandardViewSuperkeys}
                 changeSelected={changeSelected}
                 onClick={changeAction}
@@ -88,10 +88,10 @@ const SuperkeyActions = ({
       </div>
     </Style>
   );
-};
+}
 
 SuperkeyActions.propTypes = {
-  isStandardViewSuperkeys: PropTypes.bool.isRequired
+  isStandardViewSuperkeys: PropTypes.bool.isRequired,
 };
 
 export default SuperkeyActions;

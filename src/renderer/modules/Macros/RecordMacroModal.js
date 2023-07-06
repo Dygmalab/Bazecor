@@ -2,6 +2,7 @@ import React from "react";
 import Styled from "styled-components";
 
 import Modal from "react-bootstrap/Modal";
+import { ipcRenderer } from "electron";
 import i18n from "../../i18n";
 
 import { RegularButton, ButtonConfig } from "../../component/Button";
@@ -12,10 +13,9 @@ import {
   IconPauseXl,
   IconUndoRestart,
   IconStopWatch,
-  IconStopWatchCrossed
+  IconStopWatchCrossed,
 } from "../../component/Icon";
 import AnimatedTimelineRecording from "./AnimatedTimelineRecording";
-const { ipcRenderer } = require("electron");
 
 const Styles = Styled.div`
 
@@ -52,7 +52,7 @@ export default class RecordMacroModal extends React.Component {
       showModal: false,
       isRecording: false,
       isDelayActive: true,
-      recorded: []
+      recorded: [],
     };
     this.translator = {
       0x000e: 42,
@@ -169,23 +169,23 @@ export default class RecordMacroModal extends React.Component {
       0x002a: 225, // Left
       0x0036: 229,
       0x0e5b: 227,
-      0x0e5c: 231
+      0x0e5c: 231,
     };
   }
 
   componentDidMount() {
     ipcRenderer.on("recorded-key-down", (event, response) => {
       console.log("Check key-down", response);
-      let newRecorded = this.state.recorded;
+      const newRecorded = this.state.recorded;
       newRecorded.push({
         char: response.name,
         keycode: this.translator[response.event.keycode],
         action: 6,
         time: response.time,
-        isMod: this.translator[response.event.keycode] >= 224 && this.translator[response.event.keycode] <= 231
+        isMod: this.translator[response.event.keycode] >= 224 && this.translator[response.event.keycode] <= 231,
       });
       this.setState({
-        recorded: newRecorded
+        recorded: newRecorded,
       });
     });
     ipcRenderer.on("recorded-key-up", (event, response) => {
@@ -193,16 +193,16 @@ export default class RecordMacroModal extends React.Component {
       if (response.event.keycode === 29 && !response.event.ctrlKey) {
         return;
       }
-      let newRecorded = this.state.recorded;
+      const newRecorded = this.state.recorded;
       newRecorded.push({
         char: response.name,
         keycode: this.translator[response.event.keycode],
         action: 7,
         time: response.time,
-        isMod: this.translator[response.event.keycode] >= 224 && this.translator[response.event.keycode] <= 231
+        isMod: this.translator[response.event.keycode] >= 224 && this.translator[response.event.keycode] <= 231,
       });
       this.setState({
-        recorded: newRecorded
+        recorded: newRecorded,
       });
     });
     // ipcRenderer.on("recorded-mouse-move", (event, response) => {
@@ -227,7 +227,7 @@ export default class RecordMacroModal extends React.Component {
   toggleShow = () => {
     this.setState({
       showModal: !this.state.showModal,
-      recorded: []
+      recorded: [],
     });
   };
 
@@ -238,33 +238,34 @@ export default class RecordMacroModal extends React.Component {
       ipcRenderer.send("stop-recording", "");
     }
     this.setState({
-      isRecording: !this.state.isRecording
+      isRecording: !this.state.isRecording,
     });
   };
 
   undoRecording = () => {
     this.setState({
-      recorded: []
+      recorded: [],
     });
   };
 
   setDelayOn = () => {
     this.setState({
-      isDelayActive: true
+      isDelayActive: true,
     });
   };
+
   setDelayOff = () => {
     this.setState({
-      isDelayActive: false
+      isDelayActive: false,
     });
   };
 
   cleanRecorded = recorded => {
     console.log("Clean recorded", recorded);
-    let newRecorded = [];
-    let previous = 0;
+    const newRecorded = [];
+    const previous = 0;
     for (let i = 1; i < recorded.length; i++) {
-      let p = i - 1;
+      const p = i - 1;
       console.log(`pressed key: ${recorded[i].char}`, recorded[p], recorded[i]);
       if (recorded[p].isMod) {
         console.log(`Modifier detected: ${recorded[p].char}`);
@@ -273,7 +274,7 @@ export default class RecordMacroModal extends React.Component {
       }
       if (recorded[p].keycode === recorded[i].keycode && recorded[p].action === 6 && recorded[i].action === 7) {
         console.log(
-          `pressRelease joining ${recorded[i].char} as 1 with ${recorded[p].action} as p action and ${recorded[i].action} as i action`
+          `pressRelease joining ${recorded[i].char} as 1 with ${recorded[p].action} as p action and ${recorded[i].action} as i action`,
         );
         recorded[p].action = 8;
         newRecorded.push(recorded[p]);
@@ -365,12 +366,10 @@ export default class RecordMacroModal extends React.Component {
               ) : (
                 <div className={`timelineRecordSequence ${isRecording ? "isRecording" : "isPaused"}`}>
                   <div className="timelineRecordSequenceInner">
-                    {recorded.map((item, index) => {
-                      return item.char;
-                    })}
+                    {recorded.map((item, index) => item.char)}
                     {/* Lotem ipsum dolor aemet sit <div className="keySpecial">500 ms</div> waiting */}
                   </div>
-                  <div className="timelinePointeText"></div>
+                  <div className="timelinePointeText" />
                 </div>
               )}
 
@@ -381,7 +380,7 @@ export default class RecordMacroModal extends React.Component {
                 <ButtonConfig
                   tooltip={i18n.editor.macros.recordingDiscard}
                   icoSVG={<IconUndoRestart />}
-                  style={`undoRecording`}
+                  style="undoRecording"
                   onClick={this.undoRecording}
                 />
               ) : (
@@ -402,7 +401,7 @@ export default class RecordMacroModal extends React.Component {
                 style="outline gradient"
                 icoSVG={<IconArrowInBoxDown />}
                 icoPosition="right"
-                disabled={recorded.length === 0 || isRecording ? true : false}
+                disabled={!!(recorded.length === 0 || isRecording)}
                 onClick={this.sendMacro}
               />
             </div>

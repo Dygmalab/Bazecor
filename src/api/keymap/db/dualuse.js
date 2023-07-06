@@ -70,7 +70,7 @@ const DualUseModifierTables = [
   withModifiers(NavigationTable, "AltGr /", "ALTGR/", 50705),
   withModifiers(FunctionKeyTable, "AltGr /", "ALTGR/", 50705),
   withModifiers(NumpadTable, "AltGr /", "ALTGR/", 50705),
-  withModifiers(MiscellaneousTable, "AltGr /", "ALTGR/", 50705)
+  withModifiers(MiscellaneousTable, "AltGr /", "ALTGR/", 50705),
 ];
 
 const DualUseLayerTables = [
@@ -144,7 +144,7 @@ const DualUseLayerTables = [
   withModifiers(NavigationTable, "Layer #8 /", "L#8/", 53010),
   withModifiers(FunctionKeyTable, "Layer #8 /", "L#8/", 53010),
   withModifiers(NumpadTable, "Layer #8 /", "L#8/", 53010),
-  withModifiers(MiscellaneousTable, "Layer #8 /", "L#8/", 53010)
+  withModifiers(MiscellaneousTable, "Layer #8 /", "L#8/", 53010),
 ];
 
 export { DualUseModifierTables, DualUseLayerTables };

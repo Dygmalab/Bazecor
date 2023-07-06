@@ -277,5 +277,5 @@ export {
   IconWarning,
   IconWireless,
   IconWrench,
-  IconWrenchSm
+  IconWrenchSm,
 };

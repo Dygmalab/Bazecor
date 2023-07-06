@@ -1,62 +1,56 @@
 module.exports = {
-  extends: [
-    "prettier",
-    "eslint:recommended",
-    "plugin:react/recommended",
-    "plugin:prettier/recommended",
-    "plugin:react-hooks/recommended"
-  ],
-  plugins: ["prettier"],
-  parser: "@babel/eslint-parser",
-  parserOptions: {
-    ecmaVersion: 2017,
-    sourceType: "module"
-  },
   env: {
-    es6: true,
     browser: true,
-    node: true
+    es6: true,
+    node: true,
   },
-  globals: {
-    __static: true
-  },
-  rules: {
-    "no-console": 0,
-    "react/prop-types": 0,
-    "no-unused-vars": 0, // disabled due to false positives
-    "no-async-promise-executor": 0, // grandfathered in during eslint update; would be nice to remove
-    "no-prototype-builtins": 0, // grandfathered in during eslint update; would be nice to remove
-    // React hook settings for future use if required (helpful during some debug sessions)
-    // "react-hooks/rules-of-hooks": "error",
-    // "react-hooks/exhaustive-deps": "warn",
-    // Added to allow an update to prettier 2.x.x without actually making anything pretty
-    "prettier/prettier": [
-      "error",
-      {
-        trailingComma: "none",
-        arrowParens: "avoid",
-        tabWidth: 2,
-        endOfLine: "auto",
-        printWidth: 130
-      }
-    ]
+  plugins: ["import", "react", "prettier"],
+  extends: [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/eslint-recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:import/recommended",
+    "plugin:import/electron",
+    "plugin:import/typescript",
+    "plugin:react/recommended",
+    "plugin:react-hooks/recommended",
+    "airbnb",
+    "airbnb/hooks",
+    "airbnb-typescript",
+    "prettier",
+  ],
+  parserOptions: {
+    parser: "@typescript-eslint/parser",
+    project: "./tsconfig.json",
+    tsconfigRootDir: __dirname,
   },
   settings: {
-    react: {
-      pragma: "React", // Pragma to use, default to "React"
-      version: "detect" // React version. "detect" automatically picks the version you have installed.
-      // You can also use `16.0`, `16.3`, etc, if you want to override the detected value.
+    "import/parsers": {
+      "@typescript-eslint/parser": [".ts", ".tsx"],
     },
-    propWrapperFunctions: [
-      // The names of any function used to wrap propTypes, e.g. `forbidExtraProps`. If this isn't set, any propTypes wrapped in a function will be skipped.
-      "forbidExtraProps",
-      { property: "freeze", object: "Object" },
-      { property: "myFavoriteWrapper" }
-    ],
-    linkComponents: [
-      // Components used as alternatives to <a> for linking, eg. <Link to={ url } />
-      "Hyperlink",
-      { name: "Link", linkAttribute: "to" }
-    ]
-  }
+    react: {
+      version: "detect",
+    },
+    "import/resolver": {
+      typescript: {
+        project: ".",
+      },
+      alias: {
+        map: [
+          ["@Assets", "./src/static"],
+          ["@Renderer", "./src/renderer"],
+          ["@Types", "./src/renderer/types"],
+        ],
+        extensions: [".ts", ".js", ".jsx", ".tsx", ".json"],
+      },
+    },
+  },
+  rules: {
+    "prettier/prettier": ["error"],
+    "import/no-extraneous-dependencies": ["error", { devDependencies: true }],
+    "no-underscore-dangle": "off", // we should not use _ in variables in any case
+    "react/require-default-props": "off",
+    "react/function-component-definition": "off",
+  },
+  ignorePatterns: ["/*", "!/src"], // we only care about linting src folder
 };

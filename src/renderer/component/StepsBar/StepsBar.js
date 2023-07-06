@@ -114,19 +114,19 @@ width: 100%;
  * @returns {<StepsBar>} StepsBar component.
  */
 
-const StepsBar = ({ steps, stepActive }) => {
-  let [stepsPosition, setStepsPosition] = React.useState(parseInt(stepActive));
-  let [refreshPositionStyle, setRefreshPositionStyle] = React.useState({
-    width: `${(100 / (steps.length - 1)) * stepsPosition}%`
+function StepsBar({ steps, stepActive }) {
+  const [stepsPosition, setStepsPosition] = React.useState(parseInt(stepActive));
+  const [refreshPositionStyle, setRefreshPositionStyle] = React.useState({
+    width: `${(100 / (steps.length - 1)) * stepsPosition}%`,
   });
   const constructGrid = {
-    gridTemplateColumns: `repeat(${steps.length - 1}, 1fr)`
+    gridTemplateColumns: `repeat(${steps.length - 1}, 1fr)`,
   };
 
   React.useEffect(() => {
     if (steps.length > stepActive) {
       const widthPercentage = {
-        width: `${(100 / (steps.length - 1)) * stepActive}%`
+        width: `${(100 / (steps.length - 1)) * stepActive}%`,
       };
       setRefreshPositionStyle(widthPercentage);
     }
@@ -140,17 +140,17 @@ const StepsBar = ({ steps, stepActive }) => {
             {steps.map((item, index) => (
               <div className={`step ${index <= stepActive ? "active" : ""}`} data-order={index} key={`${item.name}-${index}`}>
                 <div className="stepIcon">{item.icon}</div>
-                <div className="stepBullet"></div>
+                <div className="stepBullet" />
               </div>
             ))}
           </div>
           <div className="progressBar">
-            <div className="progressBarActive" style={refreshPositionStyle}></div>
+            <div className="progressBarActive" style={refreshPositionStyle} />
           </div>
         </div>
       </div>
     </Style>
   );
-};
+}
 
 export default StepsBar;

@@ -37,19 +37,19 @@ h5 {
 }
 `;
 
-const WhatsNew = () => {
+function WhatsNew() {
   const [contentRelease, setContentRelease] = React.useState(null);
   const [loading, setLoading] = React.useState(true);
   const [error, setError] = React.useState(false);
   const [datePublished, setDatePublished] = React.useState(null);
-  let dateOptions = { year: "numeric", month: "long", day: "numeric" };
+  const dateOptions = { year: "numeric", month: "long", day: "numeric" };
 
   const fetchContentOnClick = () => {
     async function fetchContent(url) {
       try {
         const response = await fetch(url);
         const json = await response.json();
-        let d = new Date(json.published_at);
+        const d = new Date(json.published_at);
         setDatePublished(d.toLocaleDateString("en-US", dateOptions));
         setContentRelease(json);
       } catch (error) {
@@ -93,6 +93,6 @@ const WhatsNew = () => {
       </Accordion>
     </Style>
   );
-};
+}
 
 export default WhatsNew;

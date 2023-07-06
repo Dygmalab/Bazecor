@@ -81,7 +81,7 @@ const Style = Styled.div`
  * @param {listElements} listElements - The array of objects that hold the elements to be selected.\
  * @returns {<Select>} Dropdown object.
  */
-const SelectF13PlusKeys = ({ keyCode, onSelect, value, listElements, ksl, content, selected, disabled }) => {
+function SelectF13PlusKeys({ keyCode, onSelect, value, listElements, ksl, content, selected, disabled }) {
   const [load, setLoad] = React.useState(true);
   const keymapDB = new KeymapDB();
 
@@ -110,18 +110,18 @@ const SelectF13PlusKeys = ({ keyCode, onSelect, value, listElements, ksl, conten
         <Dropdown.Toggle id="dropdown-Fkeys">
           <div className="dropdownItemSelected">
             <svg width={65} height={26}>
-              <g filter={`url(#filter0_d_2211_181319)`}>
+              <g filter="url(#filter0_d_2211_181319)">
                 <rect x={0} y={0} width={65} height={26} rx="5" className="baseKey baseKeyDropdown" />
               </g>
-              <rect x={0} y={0} width={65} height={26} rx="5" fill={`url(#paint_gradient)`} fillOpacity={0.1} />
+              <rect x={0} y={0} width={65} height={26} rx="5" fill="url(#paint_gradient)" fillOpacity={0.1} />
               <g width="12" height="12" fill="transparent">
                 <path d="M1.5 3.5L6 8L10.5 3.5" stroke="currentColor" strokeWidth="2" transform={`translate(${44}, ${6})`} />
               </g>
-              <text x={22} y={16} fontSize={13} fill={"white"} fontWeight={600} textAnchor="middle">
+              <text x={22} y={16} fontSize={13} fill="white" fontWeight={600} textAnchor="middle">
                 {content.first}
               </text>
             </svg>
-            <div className="badge-circle"></div>
+            <div className="badge-circle" />
           </div>
         </Dropdown.Toggle>
         <Dropdown.Menu flip="false">
@@ -141,6 +141,6 @@ const SelectF13PlusKeys = ({ keyCode, onSelect, value, listElements, ksl, conten
       </Dropdown>
     </Style>
   );
-};
+}
 
 export default SelectF13PlusKeys;

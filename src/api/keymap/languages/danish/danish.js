@@ -24,24 +24,24 @@ const danishLetters = [
   {
     code: 47,
     labels: {
-      primary: "Å"
+      primary: "Å",
     },
-    newGroupName: "Letters"
+    newGroupName: "Letters",
   },
   {
     code: 51,
     labels: {
       primary: "Æ"
     },
-    newGroupName: "Letters"
+    newGroupName: "Letters",
   },
   {
     code: 52,
     labels: {
       primary: "Ø"
     },
-    newGroupName: "Letters"
-  }
+    newGroupName: "Letters",
+  },
 ];
 
 const danishModifierKeys = [
@@ -54,8 +54,8 @@ const danishModifierKeys = [
   {
     code: 45,
     labels: {
-      primary: "+"
-    }
+      primary: "+",
+    },
   },
   {
     code: 46,
@@ -66,27 +66,27 @@ const danishModifierKeys = [
   {
     code: 48,
     labels: {
-      primary: "¨"
-    }
+      primary: "¨",
+    },
   },
   {
     code: 49,
     labels: {
-      primary: "'"
-    }
+      primary: "'",
+    },
   },
   {
     code: 56,
     labels: {
-      primary: "-"
-    }
+      primary: "-",
+    },
   },
   {
     code: 100,
     labels: {
-      primary: "<"
-    }
-  }
+      primary: "<",
+    },
+  },
 ];
 
 const altCtrlDanish = {
@@ -95,50 +95,50 @@ const altCtrlDanish = {
     {
       code: 799,
       labels: {
-        primary: "@"
-      }
+        primary: "@",
+      },
     },
     {
       code: 800,
       labels: {
-        primary: "£"
-      }
+        primary: "£",
+      },
     },
     {
       code: 801,
       labels: {
-        primary: "$"
-      }
+        primary: "$",
+      },
     },
     {
       code: 802,
       labels: {
-        primary: "€"
-      }
+        primary: "€",
+      },
     },
     {
       code: 804,
       labels: {
-        primary: "{"
-      }
+        primary: "{",
+      },
     },
     {
       code: 805,
       labels: {
-        primary: "["
-      }
+        primary: "[",
+      },
     },
     {
       code: 806,
       labels: {
-        primary: "]"
-      }
+        primary: "]",
+      },
     },
     {
       code: 807,
       labels: {
-        primary: "}"
-      }
+        primary: "}",
+      },
     },
     {
       code: 814,
@@ -149,14 +149,14 @@ const altCtrlDanish = {
     {
       code: 776,
       labels: {
-        primary: "€"
-      }
+        primary: "€",
+      },
     },
     {
       code: 816,
       labels: {
-        primary: "~"
-      }
+        primary: "~",
+      },
     },
     {
       code: 784,
@@ -179,50 +179,50 @@ const altGRDanish = {
     {
       code: 1055,
       labels: {
-        primary: "@"
-      }
+        primary: "@",
+      },
     },
     {
       code: 1056,
       labels: {
-        primary: "£"
-      }
+        primary: "£",
+      },
     },
     {
       code: 1057,
       labels: {
-        primary: "$"
-      }
+        primary: "$",
+      },
     },
     {
       code: 1058,
       labels: {
-        primary: "€"
-      }
+        primary: "€",
+      },
     },
     {
       code: 1060,
       labels: {
-        primary: "{"
-      }
+        primary: "{",
+      },
     },
     {
       code: 1061,
       labels: {
-        primary: "["
-      }
+        primary: "[",
+      },
     },
     {
       code: 1062,
       labels: {
-        primary: "]"
-      }
+        primary: "]",
+      },
     },
     {
       code: 1063,
       labels: {
-        primary: "}"
-      }
+        primary: "}",
+      },
     },
     {
       code: 1070,
@@ -233,14 +233,14 @@ const altGRDanish = {
     {
       code: 1032,
       labels: {
-        primary: "€"
-      }
+        primary: "€",
+      },
     },
     {
       code: 1072,
       labels: {
-        primary: "~"
-      }
+        primary: "~",
+      },
     },
     {
       code: 1040,
@@ -263,101 +263,101 @@ const shiftModifierDanish = {
     {
       code: 2101,
       labels: {
-        primary: "§"
-      }
+        primary: "§",
+      },
     },
     {
       code: 2079,
       labels: {
-        primary: '"'
-      }
+        primary: '"',
+      },
     },
     {
       code: 2081,
       labels: {
-        primary: "¤"
-      }
+        primary: "¤",
+      },
     },
     {
       code: 2083,
       labels: {
-        primary: "&"
-      }
+        primary: "&",
+      },
     },
     {
       code: 2084,
       labels: {
-        primary: "/"
-      }
+        primary: "/",
+      },
     },
     {
       code: 2085,
       labels: {
-        primary: "("
-      }
+        primary: "(",
+      },
     },
     {
       code: 2086,
       labels: {
-        primary: ")"
-      }
+        primary: ")",
+      },
     },
     {
       code: 2087,
       labels: {
-        primary: "="
-      }
+        primary: "=",
+      },
     },
     {
       code: 2093,
       labels: {
-        primary: "?"
-      }
+        primary: "?",
+      },
     },
     {
       code: 2094,
       labels: {
-        primary: "`"
-      }
+        primary: "`",
+      },
     },
 
     {
       code: 2096,
       labels: {
-        primary: "^"
-      }
+        primary: "^",
+      },
     },
     {
       code: 2097,
       labels: {
-        primary: "*"
-      }
+        primary: "*",
+      },
     },
     {
       code: 2102,
       labels: {
-        primary: ";"
-      }
+        primary: ";",
+      },
     },
     {
       code: 2103,
       labels: {
-        primary: ":"
-      }
+        primary: ":",
+      },
     },
     {
       code: 2104,
       labels: {
-        primary: "_"
-      }
+        primary: "_",
+      },
     },
     {
       code: 2148,
       labels: {
-        primary: ">"
-      }
-    }
-  ]
+        primary: ">",
+      },
+    },
+  ],
 };
 
 const danish = danishLetters.concat(danishModifierKeys);
@@ -487,7 +487,7 @@ const danishModifiedTables = [
   DualUseLayer5Tables,
   DualUseLayer6Tables,
   DualUseLayer7Tables,
-  DualUseLayer8Tables
+  DualUseLayer8Tables,
 ];
 
 export { danish as default, danishModifiedTables };

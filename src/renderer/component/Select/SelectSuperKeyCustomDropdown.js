@@ -101,6 +101,7 @@ class SelectSuperKeyCustomDropdown extends Component {
     this.state = {};
     this.taps = ["TAP", "HOLD", "T&H", "2TAP", "2T&H"];
   }
+
   render() {
     const { action, actions, selKeys, onKeySelect, superkeys, keyCode, notifText } = this.props;
 
@@ -109,7 +110,7 @@ class SelectSuperKeyCustomDropdown extends Component {
       .fill()
       .map((_, i) => i + 53980);
 
-    let adjactions = actions;
+    const adjactions = actions;
     if (adjactions.length < 5) {
       while (adjactions.length < 5) {
         adjactions.push(0);
@@ -129,27 +130,25 @@ class SelectSuperKeyCustomDropdown extends Component {
             <div className="dropdownItem">
               Superkeys {notifText ? <div className="badge badge-primary">{notifText}</div> : ""}
             </div>
-            <div className="badge-circle"></div>
+            <div className="badge-circle" />
           </div>
         </Dropdown.Toggle>
         <Dropdown.Menu className="large-dropdown list-inside">
           <div className="large-dropdown-inner">
             <div className="dropdownHeader">Superkeys</div>
             <div className="dropdown-list">
-              {superk.map((x, id) => {
-                return (
-                  <Dropdown.Item
-                    eventKey={x}
-                    key={`super-${id}`}
-                    disabled={x == -1}
-                    className={`${superk.indexOf(KC) == id ? "active" : ""}`}
-                  >
-                    <div className="dropdownInner">
-                      <div className="dropdownItem">{`${id + 1}. ${superkeys[id].name}`}</div>
-                    </div>
-                  </Dropdown.Item>
-                );
-              })}
+              {superk.map((x, id) => (
+                <Dropdown.Item
+                  eventKey={x}
+                  key={`super-${id}`}
+                  disabled={x == -1}
+                  className={`${superk.indexOf(KC) == id ? "active" : ""}`}
+                >
+                  <div className="dropdownInner">
+                    <div className="dropdownItem">{`${id + 1}. ${superkeys[id].name}`}</div>
+                  </div>
+                </Dropdown.Item>
+              ))}
             </div>
           </div>
         </Dropdown.Menu>

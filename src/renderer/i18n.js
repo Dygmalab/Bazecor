@@ -18,14 +18,12 @@
 import LocalizedStrings from "react-localization";
 
 import English from "./i18n/en";
-import Hungarian from "./i18n/hu";
 
-let strings = {
+const strings = {
   en: English,
-  hu: Hungarian
 };
 
-let i18n = new LocalizedStrings(strings);
+const i18n = new LocalizedStrings(strings);
 i18n.refreshHardware = ({ device }) => {
   i18n.getAvailableLanguages().forEach(code => {
     strings[code].hardware = device.instructions ? device.instructions[code] : {};

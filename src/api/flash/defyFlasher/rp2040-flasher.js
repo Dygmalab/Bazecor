@@ -31,8 +31,8 @@ export default class rp2040 {
   delay = ms => new Promise(res => setTimeout(res, ms));
 
   async flash(firmware, stateUpdate, finished) {
-    ipcRenderer.invoke("list-drives", true).then(result => {
-      let finalPath = path.join(result, "default.uf2");
+    ipcRenderer.invoke("list-drives").then(result => {
+      const finalPath = path.join(result, "default.uf2");
       // console.log("RESULTS!!!", result, file, " to ", finalPath);
       fs.writeFileSync(finalPath, Buffer.from(new Uint8Array(firmware)));
       stateUpdate(3, 80);
@@ -53,10 +53,9 @@ export default class rp2040 {
     result = await this.sideFlash.flashSide("left", stateUpdate, wiredOrWireless);
     if (result.error) finished(result.error, result.message);
     console.log("Left side flash has error? ", result.error);
-    step = step + 25;
+    step += 25;
     await this.delay(20);
     finished(false, "");
-    return;
   }
 
   async prepareNeuron() {

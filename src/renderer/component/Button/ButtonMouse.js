@@ -53,18 +53,16 @@ transition: background 300ms ease-in-out;
 }
 `;
 
-const ButtonMouse = ({ selected, onClick, eventType, direction, disabled }) => {
+function ButtonMouse({ selected, onClick, eventType, direction, disabled }) {
   return (
     <Styles
       onClick={disabled ? () => {} : onClick}
-      className={`${selected ? "active" : ""} buttonMouse direction${direction ? direction : ""} eventType${
-        eventType ? eventType : ""
-      }`}
+      className={`${selected ? "active" : ""} buttonMouse direction${direction || ""} eventType${eventType || ""}`}
       disabled={disabled}
     >
-      <div className={"buttonInner"}>{eventType == "wheel" ? <IconArrowsMouseWheel /> : <IconArrowsMouseMovement />}</div>
+      <div className="buttonInner">{eventType == "wheel" ? <IconArrowsMouseWheel /> : <IconArrowsMouseMovement />}</div>
     </Styles>
   );
-};
+}
 
 export default ButtonMouse;

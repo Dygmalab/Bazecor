@@ -1,4 +1,3 @@
-/* eslint-disable react/jsx-filename-extension */
 /*
  * SVG keyboard representation for key picking
  * Made by Alejandro Parcet González From Dygma S.L.
@@ -6,7 +5,6 @@
 
 import React, { Component } from "react";
 import Styled, { withTheme } from "styled-components";
-import i18n from "../../i18n";
 
 import Tooltip from "react-bootstrap/Tooltip";
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
@@ -28,7 +26,7 @@ import {
   BiLeftArrowCircle,
   BiMouseAlt,
   BiRightArrowCircle,
-  BiUpArrowCircle
+  BiUpArrowCircle,
 } from "react-icons/bi";
 import {
   AiFillForward,
@@ -39,9 +37,10 @@ import {
   AiOutlineArrowRight,
   AiOutlineArrowUp,
   AiOutlineBackward,
-  AiOutlineForward
+  AiOutlineForward,
 } from "react-icons/ai";
 import { MdKeyboardReturn, MdSpaceBar, MdKeyboardCapslock, MdInfoOutline, MdEject } from "react-icons/md";
+import i18n from "../../i18n";
 
 import { ButtonConfig } from "../../component/Button";
 import {
@@ -49,7 +48,7 @@ import {
   SelectSuperKeyCustomDropdown,
   SelectLayersCustomDropdown,
   SelectMouseCustomDropdown,
-  SelectShotModifierCustomDropdown
+  SelectShotModifierCustomDropdown,
 } from "../../component/Select";
 
 import {
@@ -77,7 +76,7 @@ import {
   IconSleepSm,
   IconShutdownSm,
   IconRobotSm,
-  IconWrenchSm
+  IconWrenchSm,
 } from "../../component/Icon";
 
 import Key from "./Key";
@@ -92,7 +91,7 @@ import NW from "./NW.json";
 import IC from "./IC.json";
 import JP from "./JP.json";
 import SWGR from "./SWGR.json";
-//import SelectSuperKeys from "../../component/Select/SelectSuperKey";
+// import SelectSuperKeys from "../../component/Select/SelectSuperKey";
 
 const Style = Styled.div`
 width: 100%;
@@ -293,20 +292,18 @@ class KeyPicker extends Component {
     return (
       <Tooltip id="select-tooltip" className="longtooltip">
         <TooltipStyle>
-          {tooltips.map((tip, i) => {
-            return (
-              <React.Fragment key={`Tip-${i}`}>
-                {i % 2 == 1 || !isNaN(tip[0]) || tip[0] == "-" ? (
-                  <p className="ttip-p">{tip}</p>
-                ) : (
-                  <React.Fragment>
-                    {i == 0 ? "" : <br></br>}
-                    <h5 className="ttip-h">{tip}</h5>
-                  </React.Fragment>
-                )}
-              </React.Fragment>
-            );
-          })}
+          {tooltips.map((tip, i) => (
+            <React.Fragment key={`Tip-${i}`}>
+              {i % 2 == 1 || !isNaN(tip[0]) || tip[0] == "-" ? (
+                <p className="ttip-p">{tip}</p>
+              ) : (
+                <>
+                  {i == 0 ? "" : <br />}
+                  <h5 className="ttip-h">{tip}</h5>
+                </>
+              )}
+            </React.Fragment>
+          ))}
         </TooltipStyle>
       </Tooltip>
     );
@@ -327,10 +324,10 @@ class KeyPicker extends Component {
       macros,
       keyCode,
       onKeySelect,
-      activeTab
+      activeTab,
     } = this.props;
 
-    //let boxShadowMatrix = useTheme().styles.keyPicker.keyMatrixShadow;
+    // let boxShadowMatrix = useTheme().styles.keyPicker.keyMatrixShadow;
 
     const liso = {
       english: ENi,
@@ -343,7 +340,7 @@ class KeyPicker extends Component {
       norwegian: NW,
       icelandic: IC,
       japanese: JP,
-      swissGerman: SWGR
+      swissGerman: SWGR,
     };
     const lansi = { english: ENa };
     let Lang = ENa;
@@ -356,10 +353,8 @@ class KeyPicker extends Component {
       } else {
         Lang = liso[selectedlanguage];
       }
-    } else {
-      if (selectedlanguage != "") {
-        if (liso[selectedlanguage] != undefined) Lang = liso[selectedlanguage];
-      }
+    } else if (selectedlanguage != "") {
+      if (liso[selectedlanguage] != undefined) Lang = liso[selectedlanguage];
     }
     const os = process.platform;
     const iconlist = {
@@ -383,16 +378,16 @@ class KeyPicker extends Component {
       ArrLeft: <AiOutlineArrowLeft className="bigger" />,
       ArrRight: <AiOutlineArrowRight className="bigger" />,
       LDToggl: (
-        <React.Fragment>
+        <>
           <BsFillBrightnessAltLowFill className="bigger" />
           <CgToggleOff className="" />
-        </React.Fragment>
+        </>
       ),
       LDForward: (
-        <React.Fragment>
+        <>
           <BsFillBrightnessAltLowFill className="bigger" />
           <AiOutlineForward className="" />
-        </React.Fragment>
+        </>
       ),
       VolAdd: <FaVolumeUp className="bigger" />,
       VolSub: <FaVolumeDown className="bigger" />,
@@ -406,60 +401,60 @@ class KeyPicker extends Component {
       Backward: <AiOutlineBackward className="bigger" />,
       Cancel: <TiCancel className="bigger" />,
       ScrlUp: (
-        <React.Fragment>
+        <>
           <BiMouseAlt className="bigger" />
           <BiArrowFromBottom className="" />
-        </React.Fragment>
+        </>
       ),
       ScrlDwn: (
-        <React.Fragment>
+        <>
           <BiMouseAlt className="bigger" />
           <BiArrowFromTop className="" />
-        </React.Fragment>
+        </>
       ),
       ScrlLeft: (
-        <React.Fragment>
+        <>
           <BiMouseAlt className="bigger" />
           <BiArrowFromRight className="" />
-        </React.Fragment>
+        </>
       ),
       ScrlRight: (
-        <React.Fragment>
+        <>
           <BiMouseAlt className="bigger" />
           <BiArrowFromLeft className="" />
-        </React.Fragment>
+        </>
       ),
       MvUp: (
-        <React.Fragment>
+        <>
           <BiMouseAlt className="bigger" />
           <BiUpArrowCircle className="" />
-        </React.Fragment>
+        </>
       ),
       MvDwn: (
-        <React.Fragment>
+        <>
           <BiMouseAlt className="bigger" />
           <BiDownArrowCircle className="" />
-        </React.Fragment>
+        </>
       ),
       MvLeft: (
-        <React.Fragment>
+        <>
           <BiMouseAlt className="bigger" />
           <BiLeftArrowCircle className="" />
-        </React.Fragment>
+        </>
       ),
       MvRight: (
-        <React.Fragment>
+        <>
           <BiMouseAlt className="bigger" />
           <BiRightArrowCircle className="" />
-        </React.Fragment>
-      )
+        </>
+      ),
     };
     const keyboard = Lang.map((key, id) => {
       if (key.tooltip) {
         return (
           <foreignObject key={`id-${key.content.first}-${id}`} x={key.x} y={key.y} width={25} height={25}>
             <OverlayTrigger rootClose placement="top" delay={{ show: 250, hide: 400 }} overlay={this.renderTooltip(key.tooltip)}>
-              <MdInfoOutline className={"info"} />
+              <MdInfoOutline className="info" />
             </OverlayTrigger>
           </foreignObject>
         );
@@ -480,9 +475,7 @@ class KeyPicker extends Component {
                 (code.base + code.modified < 17450 || code.base + code.modified > 17501) &&
                 (code.base + code.modified < 49153 || code.base + code.modified > 49168)
               ? true
-              : code.modified > 0 && code.base + code.modified === key.id
-              ? true
-              : false
+              : !!(code.modified > 0 && code.base + code.modified === key.id)
           }
           clicked={() => {
             key.mod == disableMods || key.move == disableMove ? {} : this.onKeyPress(key.id);
@@ -519,17 +512,17 @@ class KeyPicker extends Component {
               <svg className="svgStyle" viewBox="0 0 1070 208" preserveAspectRatio="xMidYMin slice">
                 {keyboard}
                 <defs>
-                  <linearGradient id={`paint_gradient`} x1="0%" y1="0%" x2="100%" y2="0%">
+                  <linearGradient id="paint_gradient" x1="0%" y1="0%" x2="100%" y2="0%">
                     <stop offset="5%" stopColor="#fff" />
                     <stop offset="95%" stopColor="#fff" stopOpacity={0} />
                   </linearGradient>
-                  <filter id={`filter0_d_2211_181319`} x="0%" y="0%" width="200%" height="200%">
+                  <filter id="filter0_d_2211_181319" x="0%" y="0%" width="200%" height="200%">
                     <feOffset result="offOut" in="SourceGraphic" dx="0" dy="-2" />
                     <feColorMatrix
                       result="matrixOut"
                       in="offOut"
                       type="matrix"
-                      values={`0 0 0 0 0.552941 0 0 0 0 0.517647 0 0 0 0 0.737255 0 0 0 0.1 0`}
+                      values="0 0 0 0 0.552941 0 0 0 0 0.517647 0 0 0 0 0.737255 0 0 0 0.1 0"
                     />
                     <feGaussianBlur result="blurOut" in="matrixOut" stdDeviation="0" />
                     <feBlend in="SourceGraphic" in2="blurOut" mode="normal" />
@@ -618,14 +611,14 @@ class KeyPicker extends Component {
                     onClick={() => {
                       onKeySelect(0);
                     }}
-                    selected={keyCode.base + keyCode.modified == 0 ? true : false}
+                    selected={keyCode.base + keyCode.modified == 0}
                   />
                   <ButtonConfig
                     buttonText={i18n.editor.standardView.trans}
                     onClick={() => {
                       onKeySelect(65535);
                     }}
-                    selected={keyCode.base + keyCode.modified == 65535 ? true : false}
+                    selected={keyCode.base + keyCode.modified == 65535}
                   />
                 </div>
               </div>
@@ -643,7 +636,7 @@ class KeyPicker extends Component {
                   tooltipDelay={100}
                   icoSVG={<IconMediaPlayPauseSm />}
                   onclick={e => this.onKeyPress()}
-                  selected={keyCode.base + keyCode.modified == 22733 ? true : false}
+                  selected={keyCode.base + keyCode.modified == 22733}
                   onClick={() => {
                     onKeySelect(22733);
                   }}
@@ -652,7 +645,7 @@ class KeyPicker extends Component {
                   tooltip={i18n.editor.superkeys.specialKeys.stop}
                   tooltipDelay={100}
                   icoSVG={<IconMediaStopSm />}
-                  selected={keyCode.base + keyCode.modified == 22711 ? true : false}
+                  selected={keyCode.base + keyCode.modified == 22711}
                   onClick={() => {
                     onKeySelect(22711);
                   }}
@@ -661,7 +654,7 @@ class KeyPicker extends Component {
                   tooltip={i18n.editor.superkeys.specialKeys.rewind}
                   tooltipDelay={100}
                   icoSVG={<IconMediaRewindSm />}
-                  selected={keyCode.base + keyCode.modified == 22710 ? true : false}
+                  selected={keyCode.base + keyCode.modified == 22710}
                   onClick={() => {
                     onKeySelect(22710);
                   }}
@@ -670,7 +663,7 @@ class KeyPicker extends Component {
                   tooltip={i18n.editor.superkeys.specialKeys.forward}
                   tooltipDelay={100}
                   icoSVG={<IconMediaForwardSm />}
-                  selected={keyCode.base + keyCode.modified == 22709 ? true : false}
+                  selected={keyCode.base + keyCode.modified == 22709}
                   onClick={() => {
                     onKeySelect(22709);
                   }}
@@ -679,7 +672,7 @@ class KeyPicker extends Component {
                   tooltip={i18n.editor.superkeys.specialKeys.shuffle}
                   tooltipDelay={100}
                   icoSVG={<IconMediaShuffleSm />}
-                  selected={keyCode.base + keyCode.modified == 22713 ? true : false}
+                  selected={keyCode.base + keyCode.modified == 22713}
                   onClick={() => {
                     onKeySelect(22713);
                   }}
@@ -688,7 +681,7 @@ class KeyPicker extends Component {
                   tooltip={i18n.editor.superkeys.specialKeys.mute}
                   tooltipDelay={100}
                   icoSVG={<IconMediaSoundMuteSm />}
-                  selected={keyCode.base + keyCode.modified == 19682 ? true : false}
+                  selected={keyCode.base + keyCode.modified == 19682}
                   onClick={() => {
                     onKeySelect(19682);
                   }}
@@ -697,7 +690,7 @@ class KeyPicker extends Component {
                   tooltip={i18n.editor.superkeys.specialKeys.soundLess}
                   tooltipDelay={100}
                   icoSVG={<IconMediaSoundLessSm />}
-                  selected={keyCode.base + keyCode.modified == 23786 ? true : false}
+                  selected={keyCode.base + keyCode.modified == 23786}
                   onClick={() => {
                     onKeySelect(23786);
                   }}
@@ -706,7 +699,7 @@ class KeyPicker extends Component {
                   tooltip={i18n.editor.superkeys.specialKeys.soundMore}
                   tooltipDelay={100}
                   icoSVG={<IconMediaSoundMoreSm />}
-                  selected={keyCode.base + keyCode.modified == 23785 ? true : false}
+                  selected={keyCode.base + keyCode.modified == 23785}
                   onClick={() => {
                     onKeySelect(23785);
                   }}
@@ -723,7 +716,7 @@ class KeyPicker extends Component {
                   tooltip={i18n.editor.superkeys.specialKeys.eject}
                   tooltipDelay={100}
                   icoSVG={<IconToolsEjectSm />}
-                  selected={keyCode.base + keyCode.modified == 22712 ? true : false}
+                  selected={keyCode.base + keyCode.modified == 22712}
                   onClick={() => {
                     onKeySelect(22712);
                   }}
@@ -732,7 +725,7 @@ class KeyPicker extends Component {
                   tooltip={i18n.editor.superkeys.specialKeys.calculator}
                   tooltipDelay={100}
                   icoSVG={<IconToolsCalculatorSm />}
-                  selected={keyCode.base + keyCode.modified == 18834 ? true : false}
+                  selected={keyCode.base + keyCode.modified == 18834}
                   onClick={() => {
                     onKeySelect(18834);
                   }}
@@ -741,7 +734,7 @@ class KeyPicker extends Component {
                   tooltip={i18n.editor.superkeys.specialKeys.camera}
                   tooltipDelay={100}
                   icoSVG={<IconToolsCameraSm />}
-                  selected={keyCode.base + keyCode.modified == 18552 ? true : false}
+                  selected={keyCode.base + keyCode.modified == 18552}
                   onClick={() => {
                     onKeySelect(18552);
                   }}
@@ -751,7 +744,7 @@ class KeyPicker extends Component {
                   tooltip={i18n.editor.superkeys.specialKeys.brightnessLess}
                   tooltipDelay={100}
                   icoSVG={<IconToolsBrightnessLessSm />}
-                  selected={keyCode.base + keyCode.modified == 23664 ? true : false}
+                  selected={keyCode.base + keyCode.modified == 23664}
                   onClick={() => {
                     onKeySelect(23664);
                   }}
@@ -760,7 +753,7 @@ class KeyPicker extends Component {
                   tooltip={i18n.editor.superkeys.specialKeys.brightnessMore}
                   tooltipDelay={100}
                   icoSVG={<IconToolsBrightnessMoreSm />}
-                  selected={keyCode.base + keyCode.modified == 23663 ? true : false}
+                  selected={keyCode.base + keyCode.modified == 23663}
                   onClick={() => {
                     onKeySelect(23663);
                   }}
@@ -769,7 +762,7 @@ class KeyPicker extends Component {
                   tooltip={i18n.editor.superkeys.specialKeys.sleep}
                   tooltipDelay={100}
                   icoSVG={<IconSleepSm />}
-                  selected={keyCode.base + keyCode.modified == 20866 ? true : false}
+                  selected={keyCode.base + keyCode.modified == 20866}
                   onClick={() => {
                     onKeySelect(20866);
                   }}
@@ -778,7 +771,7 @@ class KeyPicker extends Component {
                   tooltip={i18n.editor.superkeys.specialKeys.shutdown}
                   tooltipDelay={100}
                   icoSVG={<IconShutdownSm />}
-                  selected={keyCode.base + keyCode.modified == 20865 ? true : false}
+                  selected={keyCode.base + keyCode.modified == 20865}
                   onClick={() => {
                     onKeySelect(20865);
                   }}
@@ -798,7 +791,7 @@ class KeyPicker extends Component {
                   onClick={() => {
                     onKeySelect(17154);
                   }}
-                  selected={keyCode.base + keyCode.modified == 17154 ? true : false}
+                  selected={keyCode.base + keyCode.modified == 17154}
                   className="buttonConfigLED"
                 />
                 <ButtonConfig
@@ -808,7 +801,7 @@ class KeyPicker extends Component {
                   onClick={() => {
                     onKeySelect(17153);
                   }}
-                  selected={keyCode.base + keyCode.modified == 17153 ? true : false}
+                  selected={keyCode.base + keyCode.modified == 17153}
                 />
                 <ButtonConfig
                   tooltip={i18n.editor.superkeys.specialKeys.ledNextEffectTootip}
@@ -817,7 +810,7 @@ class KeyPicker extends Component {
                   onClick={() => {
                     onKeySelect(17152);
                   }}
-                  selected={keyCode.base + keyCode.modified == 17152 ? true : false}
+                  selected={keyCode.base + keyCode.modified == 17152}
                 />
               </div>
             </div>

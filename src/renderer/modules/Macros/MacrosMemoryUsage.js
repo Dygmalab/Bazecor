@@ -19,8 +19,8 @@ import React from "react";
 import Styled from "styled-components";
 import PropTypes from "prop-types";
 
-import i18n from "../../i18n";
 import { toast } from "react-toastify";
+import i18n from "../../i18n";
 
 import Title from "../../component/Title";
 import DotsProgressBar from "./DotsProgressBar";
@@ -95,7 +95,7 @@ const MacrosMemoryUsage = ({ mem, tMem }) => {
           content={i18n.editor.macros.memoryUsage.alertBody}
           icon={<IconFloppyDisk />}
         />,
-        { icon: "" }
+        { icon: "" },
       );
     }
     if (mem > tMem - 20) {
@@ -113,8 +113,8 @@ const MacrosMemoryUsage = ({ mem, tMem }) => {
           pauseOnHover: true,
           draggable: true,
           progress: undefined,
-          icon: ""
-        }
+          icon: "",
+        },
       );
     }
   }, [mem, tMem]);
@@ -132,7 +132,7 @@ const MacrosMemoryUsage = ({ mem, tMem }) => {
       </div>
     </Styles>
   );
-};
+}
 
 MacrosMemoryUsage.propTypes = {
   mem: PropTypes.number,

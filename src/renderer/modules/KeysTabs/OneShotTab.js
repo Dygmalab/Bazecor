@@ -63,42 +63,42 @@ class OneShotTab extends Component {
                 <ButtonConfig
                   buttonText={i18n.editor.standardView.oneShot.leftControl}
                   onClick={() => onKeySelect(OneShotDeltaMod + 0)}
-                  selected={isStandardView ? (keyCode === OneShotDeltaMod + 0 ? true : false) : false}
+                  selected={isStandardView ? keyCode === OneShotDeltaMod + 0 : false}
                 />
                 <ButtonConfig
                   buttonText={i18n.editor.standardView.oneShot.leftShift}
                   onClick={() => onKeySelect(OneShotDeltaMod + 1)}
-                  selected={isStandardView ? (keyCode === OneShotDeltaMod + 1 ? true : false) : false}
+                  selected={isStandardView ? keyCode === OneShotDeltaMod + 1 : false}
                 />
                 <ButtonConfig
                   buttonText={i18n.editor.standardView.oneShot.leftAlt}
                   onClick={() => onKeySelect(OneShotDeltaMod + 2)}
-                  selected={isStandardView ? (keyCode === OneShotDeltaMod + 2 ? true : false) : false}
+                  selected={isStandardView ? keyCode === OneShotDeltaMod + 2 : false}
                 />
                 <ButtonConfig
                   buttonText={i18n.editor.standardView.oneShot.leftOS}
                   onClick={() => onKeySelect(OneShotDeltaMod + 3)}
-                  selected={isStandardView ? (keyCode === OneShotDeltaMod + 3 ? true : false) : false}
+                  selected={isStandardView ? keyCode === OneShotDeltaMod + 3 : false}
                 />
                 <ButtonConfig
                   buttonText={i18n.editor.standardView.oneShot.rightControl}
                   onClick={() => onKeySelect(OneShotDeltaMod + 4)}
-                  selected={isStandardView ? (keyCode === OneShotDeltaMod + 4 ? true : false) : false}
+                  selected={isStandardView ? keyCode === OneShotDeltaMod + 4 : false}
                 />
                 <ButtonConfig
                   buttonText={i18n.editor.standardView.oneShot.rightShift}
                   onClick={() => onKeySelect(OneShotDeltaMod + 5)}
-                  selected={isStandardView ? (keyCode === OneShotDeltaMod + 5 ? true : false) : false}
+                  selected={isStandardView ? keyCode === OneShotDeltaMod + 5 : false}
                 />
                 <ButtonConfig
                   buttonText={i18n.editor.standardView.oneShot.altGr}
                   onClick={() => onKeySelect(OneShotDeltaMod + 6)}
-                  selected={isStandardView ? (keyCode === OneShotDeltaMod + 6 ? true : false) : false}
+                  selected={isStandardView ? keyCode === OneShotDeltaMod + 6 : false}
                 />
                 <ButtonConfig
                   buttonText={i18n.editor.standardView.oneShot.rightOS}
                   onClick={() => onKeySelect(OneShotDeltaMod + 7)}
-                  selected={isStandardView ? (keyCode === OneShotDeltaMod + 7 ? true : false) : false}
+                  selected={isStandardView ? keyCode === OneShotDeltaMod + 7 : false}
                 />
               </div>
             </div>
@@ -110,42 +110,42 @@ class OneShotTab extends Component {
               <ButtonConfig
                 buttonText="1"
                 onClick={() => onKeySelect(OneShotDeltaLayer + 0)}
-                selected={isStandardView ? (keyCode === OneShotDeltaLayer + 0 ? true : false) : false}
+                selected={isStandardView ? keyCode === OneShotDeltaLayer + 0 : false}
               />
               <ButtonConfig
                 buttonText="2"
                 onClick={() => onKeySelect(OneShotDeltaLayer + 1)}
-                selected={isStandardView ? (keyCode === OneShotDeltaLayer + 1 ? true : false) : false}
+                selected={isStandardView ? keyCode === OneShotDeltaLayer + 1 : false}
               />
               <ButtonConfig
                 buttonText="3"
                 onClick={() => onKeySelect(OneShotDeltaLayer + 2)}
-                selected={isStandardView ? (keyCode === OneShotDeltaLayer + 2 ? true : false) : false}
+                selected={isStandardView ? keyCode === OneShotDeltaLayer + 2 : false}
               />
               <ButtonConfig
                 buttonText="4"
                 onClick={() => onKeySelect(OneShotDeltaLayer + 3)}
-                selected={isStandardView ? (keyCode === OneShotDeltaLayer + 3 ? true : false) : false}
+                selected={isStandardView ? keyCode === OneShotDeltaLayer + 3 : false}
               />
               <ButtonConfig
                 buttonText="5"
                 onClick={() => onKeySelect(OneShotDeltaLayer + 4)}
-                selected={isStandardView ? (keyCode === OneShotDeltaLayer + 4 ? true : false) : false}
+                selected={isStandardView ? keyCode === OneShotDeltaLayer + 4 : false}
               />
               <ButtonConfig
                 buttonText="6"
                 onClick={() => onKeySelect(OneShotDeltaLayer + 5)}
-                selected={isStandardView ? (keyCode === OneShotDeltaLayer + 5 ? true : false) : false}
+                selected={isStandardView ? keyCode === OneShotDeltaLayer + 5 : false}
               />
               <ButtonConfig
                 buttonText="7"
                 onClick={() => onKeySelect(OneShotDeltaLayer + 6)}
-                selected={isStandardView ? (keyCode === OneShotDeltaLayer + 6 ? true : false) : false}
+                selected={isStandardView ? keyCode === OneShotDeltaLayer + 6 : false}
               />
               <ButtonConfig
                 buttonText="8"
                 onClick={() => onKeySelect(OneShotDeltaLayer + 7)}
-                selected={isStandardView ? (keyCode === OneShotDeltaLayer + 7 ? true : false) : false}
+                selected={isStandardView ? keyCode === OneShotDeltaLayer + 7 : false}
               />
               {/* <ButtonConfig
                 buttonText="9"

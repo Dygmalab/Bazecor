@@ -15,38 +15,21 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React, { Component } from "react";
-
+import React from "react";
+import PropTypes from "prop-types";
 import NavigationMenu from "./NavigationMenu";
-class Header extends Component {
-  constructor(props) {
-    super(props);
 
-    this.state = {
-      NMenu: true
-    };
-  }
+function Header(props) {
+  const { connected, pages, flashing, fwUpdate, allowBeta } = props;
 
-  closeNMenu() {
-    this.setState({ NMenu: false });
-  }
-
-  render() {
-    const { connected, pages, theme, flashing, fwUpdate, allowBeta } = this.props;
-    const { NMenu } = this.state;
-
-    return (
-      <NavigationMenu
-        connected={connected}
-        pages={pages}
-        open={NavigationMenu}
-        closeMenu={this.closeNavigationMenu}
-        flashing={flashing}
-        fwUpdate={fwUpdate}
-        allowBeta={allowBeta}
-      />
-    );
-  }
+  return <NavigationMenu connected={connected} pages={pages} flashing={flashing} fwUpdate={fwUpdate} allowBeta={allowBeta} />;
 }
+Header.propTypes = {
+  connected: PropTypes.bool.isRequired,
+  pages: PropTypes.object.isRequired,
+  flashing: PropTypes.bool.isRequired,
+  fwUpdate: PropTypes.bool.isRequired,
+  allowBeta: PropTypes.any.isRequired,
+};
 
 export default Header;

@@ -3,6 +3,8 @@ import React, { Component } from "react";
 import Styled, { withTheme } from "styled-components";
 
 import Dropdown from "react-bootstrap/Dropdown";
+import { FaLinux } from "react-icons/fa";
+import { AiFillWindows, AiFillApple } from "react-icons/ai";
 import i18n from "../../i18n";
 
 import Title from "../../component/Title";
@@ -17,10 +19,8 @@ import {
   IconReleaseSm,
   IconPressAndReleaseSm,
   IconDelete,
-  IconStopWatchSm
+  IconStopWatchSm,
 } from "../../component/Icon";
-import { FaLinux } from "react-icons/fa";
-import { AiFillWindows, AiFillApple } from "react-icons/ai";
 
 const Styles = Styled.div`
 .chip {
@@ -69,17 +69,17 @@ class KeyMacro extends Component {
       backgroundImage: this.props.theme.styles.macroKey.backgroundDrag,
       backgroundSize: "56.57px 56.57px",
       borderRadius: "6px",
-      boxShadow: this.props.theme.styles.macroKey.boxShadowOnDrag
-    })
+      boxShadow: this.props.theme.styles.macroKey.boxShadowOnDrag,
+    }),
   });
 
   shadeColor(color, percent) {
     if (color === "transparent") {
       return color;
     }
-    var R = parseInt(color.substring(1, 3), 16);
-    var G = parseInt(color.substring(3, 5), 16);
-    var B = parseInt(color.substring(5, 7), 16);
+    let R = parseInt(color.substring(1, 3), 16);
+    let G = parseInt(color.substring(3, 5), 16);
+    let B = parseInt(color.substring(5, 7), 16);
 
     R = parseInt((R * (100 - percent)) / 100);
     G = parseInt((G * (100 - percent)) / 100);
@@ -89,11 +89,11 @@ class KeyMacro extends Component {
     G = Math.round((G * 255) / (G + 5));
     B = Math.round((B * 255) / (B + 5));
 
-    var RR = R.toString(16).length == 1 ? "0" + R.toString(16) : R.toString(16);
-    var GG = G.toString(16).length == 1 ? "0" + G.toString(16) : G.toString(16);
-    var BB = B.toString(16).length == 1 ? "0" + B.toString(16) : B.toString(16);
+    const RR = R.toString(16).length == 1 ? `0${R.toString(16)}` : R.toString(16);
+    const GG = G.toString(16).length == 1 ? `0${G.toString(16)}` : G.toString(16);
+    const BB = B.toString(16).length == 1 ? `0${B.toString(16)}` : B.toString(16);
 
-    return "#" + RR + GG + BB;
+    return `#${RR}${GG}${BB}`;
   }
 
   render() {
@@ -106,35 +106,33 @@ class KeyMacro extends Component {
         control: "Control ^",
         os: {
           icon: false,
-          text: "⌘"
+          text: "⌘",
         },
         alt: "⌥",
-        altGr: "Right ⌥"
+        altGr: "Right ⌥",
+      };
+    } else if (operationSystem === "win32") {
+      operationSystemIcons = {
+        shift: "Shift",
+        control: "Control",
+        os: {
+          icon: <AiFillWindows />,
+          text: false,
+        },
+        alt: "Alt",
+        altGr: "Alt Gr.",
       };
     } else {
-      if (operationSystem === "win32") {
-        operationSystemIcons = {
-          shift: "Shift",
-          control: "Control",
-          os: {
-            icon: <AiFillWindows />,
-            text: false
-          },
-          alt: "Alt",
-          altGr: "Alt Gr."
-        };
-      } else {
-        operationSystemIcons = {
-          shift: "Shift",
-          control: "Control",
-          os: {
-            icon: <FaLinux />,
-            text: false
-          },
-          alt: "Alt",
-          altGr: "Alt Gr."
-        };
-      }
+      operationSystemIcons = {
+        shift: "Shift",
+        control: "Control",
+        os: {
+          icon: <FaLinux />,
+          text: false,
+        },
+        alt: "Alt",
+        altGr: "Alt Gr.",
+      };
     }
     let isModifier = false;
     if (item.keyCode > 223 && item.keyCode < 232 && item.action != 2) {
@@ -160,7 +158,7 @@ class KeyMacro extends Component {
                   <IconDragAndDrop />
                 </div>
                 <div className="moreOptions">
-                  <Dropdown label={i18n.editor.macros.insertModifiers} value="" size="small" className={"keyMacroOptions"}>
+                  <Dropdown label={i18n.editor.macros.insertModifiers} value="" size="small" className="keyMacroOptions">
                     <Dropdown.Toggle variant="primary" id="dropdown-basic" drop="up" align="end">
                       <IconThreeDots />
                     </Dropdown.Toggle>
@@ -184,27 +182,27 @@ class KeyMacro extends Component {
                             <Title headingLevel={5} text="Edit function" />
                             <div className="keyFunctionsButtons">
                               <ButtonConfig
-                                buttonText={"Press"}
+                                buttonText="Press"
                                 icoPosition="left"
                                 icoSVG={<IconPressSm />}
-                                selected={actionTypes[item.action].name == "Key Press" ? true : false}
-                                disabled={item.action == 1 || item.action == 2 ? true : false}
+                                selected={actionTypes[item.action].name == "Key Press"}
+                                disabled={!!(item.action == 1 || item.action == 2)}
                                 onClick={() => updateAction(item.id, 6)}
                               />
                               <ButtonConfig
-                                buttonText={"Release"}
+                                buttonText="Release"
                                 icoPosition="left"
                                 icoSVG={<IconReleaseSm />}
-                                selected={actionTypes[item.action].name == "Key Release" ? true : false}
-                                disabled={item.action == 1 || item.action == 2 ? true : false}
+                                selected={actionTypes[item.action].name == "Key Release"}
+                                disabled={!!(item.action == 1 || item.action == 2)}
                                 onClick={() => updateAction(item.id, 7)}
                               />
                               <ButtonConfig
-                                buttonText={"Press & Release"}
+                                buttonText="Press & Release"
                                 icoPosition="left"
                                 icoSVG={<IconPressAndReleaseSm />}
-                                selected={actionTypes[item.action].name == "Key Press & Rel." ? true : false}
-                                disabled={item.action == 1 || item.action == 2 ? true : false}
+                                selected={actionTypes[item.action].name == "Key Press & Rel."}
+                                disabled={!!(item.action == 1 || item.action == 2)}
                                 onClick={() => updateAction(item.id, 8)}
                               />
                             </div>
@@ -312,7 +310,7 @@ class KeyMacro extends Component {
                           </div>
                         </div>
                         <div className="keyMacroItemOptions">
-                          <Dropdown.Item key={`item-clone`} className="compact">
+                          <Dropdown.Item key="item-clone" className="compact">
                             <div
                               onClick={() => {
                                 this.props.onCloneRow(item.id);
@@ -325,7 +323,7 @@ class KeyMacro extends Component {
                               <div className="dropdownItem">Clone</div>
                             </div>
                           </Dropdown.Item>
-                          <Dropdown.Item key={`item-delete`} className="compact">
+                          <Dropdown.Item key="item-delete" className="compact">
                             <div
                               onClick={() => {
                                 this.props.onDeleteRow(item.id);
@@ -349,11 +347,11 @@ class KeyMacro extends Component {
                   className="chip"
                   style={
                     {
-                      //backgroundColor: item.color,
-                      //borderColor: item.color,
+                      // backgroundColor: item.color,
+                      // borderColor: item.color,
                       // HACK allow the text to be visible on darkTheme
                       // without completely rewriting the code which assigns the background colors
-                      //color: "#000"
+                      // color: "#000"
                     }
                   }
                 >
@@ -374,7 +372,7 @@ class KeyMacro extends Component {
                 </div>
               </div>
             </div>
-            <div className="keyMacro keyMacroFreeSlot"></div>
+            <div className="keyMacro keyMacroFreeSlot" />
           </div>
         </div>
       </Styles>

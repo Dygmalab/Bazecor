@@ -75,7 +75,7 @@ const Style = Styled.div`
 }
 `;
 
-const CustomRadioCheckBox = ({
+function CustomRadioCheckBox({
   label,
   type,
   id,
@@ -86,18 +86,18 @@ const CustomRadioCheckBox = ({
   className,
   onClick,
   disabled,
-  checked
-}) => {
+  checked,
+}) {
   return (
     <Style className={`customCheckbox ${className}`} onClick={onClick}>
       <div className="customCheckboxInner" id={`input-${id}`}>
-        <Form.Check type={type} id={`input-${id}-${type}`} name={name} disabled={disabled ? disabled : false} checked={checked} />
+        <Form.Check type={type} id={`input-${id}-${type}`} name={name} disabled={disabled || false} checked={checked} />
         <label htmlFor={`input-${id}-${type}`}>
           <Title text={label} tooltip={tooltip} headingLevel={6} />
         </label>
       </div>
     </Style>
   );
-};
+}
 
 export default CustomRadioCheckBox;

@@ -1,0 +1,33 @@
+{
+  "compilerOptions": {
+    "target": "ES6",
+    "allowJs": true,
+    "jsx": "react-jsx",
+    "module": "commonjs",
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "noImplicitAny": true,
+    "sourceMap": true,
+    "baseUrl": ".",
+    "outDir": "dist",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "paths": {
+      "*": [
+        "node_modules/*"
+      ],
+      "@Assets/*": [
+        "src/static/*"
+      ],
+      "@Renderer/*": [
+        "src/renderer/*"
+      ],
+      "@Types/*": [
+        "src/renderer/types/*"
+      ]
+    }
+  },
+  "include": [
+    "src/**/*",
+  ]
+}
