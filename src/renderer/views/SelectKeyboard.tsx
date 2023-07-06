@@ -524,7 +524,7 @@ const SelectKeyboard: React.FC<SelectKeyboardProps> = (props): JSX.Element => {
 
       return {
         index,
-        displayName: device.device.info.displayName,
+        displayName: device?.device?.info?.displayName,
         userName: neuron ? neuron.name : "",
         path: device.path || i18n.keyboardSelect.unknown,
       };
