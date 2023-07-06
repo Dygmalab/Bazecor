@@ -106,7 +106,7 @@ class Focus {
       }
     } catch (error) {
       console.error("found this error!", error);
-      throw new Error("Unable to connect");
+      //throw new Error("Unable to connect");
     }
 
     this.device = info;

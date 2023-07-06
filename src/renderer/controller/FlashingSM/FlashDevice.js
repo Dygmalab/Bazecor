@@ -153,8 +153,8 @@ const stateUpdate = (stage, percentage, context, callback) => {
       rightProgress: rightProgress,
       resetProgress: resetProgress,
       neuronProgress: neuronProgress,
-      restoreProgress: restoreProgress
-    }
+      restoreProgress: restoreProgress,
+    },
   });
 };
 
@@ -176,7 +176,7 @@ const flashSide = async (side, context, callback) => {
       (stage, percentage) => {
         stateUpdate(stage, percentage, context, callback);
       },
-      context.device.info.keyboardType
+      context.device.info.keyboardType,
     );
     if (result.error) throw new Error(result.error);
     stateUpdate(side, 100, context, callback);
@@ -271,7 +271,7 @@ const uploadDefyWireles = async (context, callback) => {
       flashDefyWireless,
       (stage, percentage) => {
         stateUpdate(stage, percentage, context, callback);
-      }
+      },
     );
   } catch (error) {
     console.warn("error when flashing Neuron");
@@ -401,7 +401,7 @@ const FlashDevice = createMachine(
       retriesLeft: 0,
       retriesNeuron: 0,
       retriesDefyWired: 0,
-      firwmares: []
+      firwmares: [],
     },
     states: {
       waitEsc: {
@@ -411,15 +411,15 @@ const FlashDevice = createMachine(
             console.log("Wait for esc!");
           },
           assign({ stateblock: (context, event) => 1 }),
-          "addEscListener"
+          "addEscListener",
         ],
         on: {
           // Go to flashPathSelector automatically when no esc key can be pressed
           "": [{ target: "flashPathSelector", cond: "doNotWaitForESC" }],
           // Esc key listener will send this event
-          ESCPRESSED: "flashPathSelector"
+          ESCPRESSED: "flashPathSelector",
         },
-        exit: ["removeEscListener"]
+        exit: ["removeEscListener"],
       },
       flashPathSelector: {
         id: "flashPathSelector",
@@ -429,17 +429,17 @@ const FlashDevice = createMachine(
             console.log("context of device", context.device);
           },
           assign({
-            stateblock: (context, event) => 1
+            stateblock: (context, event) => 1,
           }),
           "toggleFlashing",
-          raise("flashingPath")
+          raise("flashingPath"),
         ],
         on: [
           { event: "*", target: "flashDefyWired", cond: "doNotFlashSidesW" },
           { event: "*", target: "resetDefyWireless", cond: "doNotFlashSidesWi" },
           { event: "*", target: "resetRaiseNeuron", cond: "flashRaise" },
-          { event: "*", target: "flashRightSide", cond: "flashSides" }
-        ]
+          { event: "*", target: "flashRightSide", cond: "flashSides" },
+        ],
       },
       flashRightSide: {
         id: "flashRightSide",
@@ -450,21 +450,21 @@ const FlashDevice = createMachine(
           assign((context, event) => {
             return {
               retriesRight: context.retriesRight + 1,
-              stateblock: 2
+              stateblock: 2,
             };
-          })
+          }),
         ],
         invoke: {
           id: "flashRightSide",
           src: (context, event) => (callback, onReceive) => flashSide("right", context, callback),
           onDone: {
             target: "flashLeftSide",
-            actions: [assign({ rightResult: (context, event) => event.data })]
+            actions: [assign({ rightResult: (context, event) => event.data })],
           },
           onError: {
             target: "failure",
-            actions: assign({ error: (context, event) => event })
-          }
+            actions: assign({ error: (context, event) => event }),
+          },
         },
         on: {
           INC: {
@@ -476,11 +476,11 @@ const FlashDevice = createMachine(
                 rightProgress: event.data.rightProgress,
                 resetProgress: event.data.resetProgress,
                 neuronProgress: event.data.neuronProgress,
-                restoreProgress: event.data.restoreProgress
+                restoreProgress: event.data.restoreProgress,
               };
-            })
-          }
-        }
+            }),
+          },
+        },
       },
       flashLeftSide: {
         id: "flashLeftSide",
@@ -491,9 +491,9 @@ const FlashDevice = createMachine(
           assign((context, event) => {
             return {
               retriesLeft: context.retriesLeft + 1,
-              stateblock: 3
+              stateblock: 3,
             };
-          })
+          }),
         ],
         invoke: {
           id: "flashLeftSide",
@@ -503,16 +503,16 @@ const FlashDevice = createMachine(
               assign({ leftResult: (context, event) => event.data }),
               assign((context, event) => {
                 return {
-                  DefyVariant: context.device.info.product + "" + context.device.info.keyboardType
+                  DefyVariant: context.device.info.product + "" + context.device.info.keyboardType,
                 };
               }),
-              raise("internal")
-            ]
+              raise("internal"),
+            ],
           },
           onError: {
             target: "failure",
-            actions: assign({ error: (context, event) => event })
-          }
+            actions: assign({ error: (context, event) => event }),
+          },
         },
         on: [
           {
@@ -525,13 +525,13 @@ const FlashDevice = createMachine(
                 rightProgress: event.data.rightProgress,
                 resetProgress: event.data.resetProgress,
                 neuronProgress: event.data.neuronProgress,
-                restoreProgress: event.data.restoreProgress
+                restoreProgress: event.data.restoreProgress,
               };
-            })
+            }),
           },
           { event: "*", target: "flashDefyWired", cond: "isDefywired" },
-          { event: "*", target: "resetDefyWireless", cond: "isDefywireless" }
-        ]
+          { event: "*", target: "resetDefyWireless", cond: "isDefywireless" },
+        ],
       },
       flashDefyWired: {
         id: "flashDefyWired",
@@ -542,21 +542,21 @@ const FlashDevice = createMachine(
           assign((context, event) => {
             return {
               retriesDefyWired: context.retriesDefyNeuron + 1,
-              stateblock: 5
+              stateblock: 5,
             };
-          })
+          }),
         ],
         invoke: {
           id: "flashRP2040",
           src: (context, event) => (callback, onReceive) => uploadDefyWired(context, callback),
           onDone: {
             target: "reconnectDefy",
-            actions: [assign({ rightResult: (context, event) => event.data })]
+            actions: [assign({ rightResult: (context, event) => event.data })],
           },
           onError: {
             target: "failure",
-            actions: assign({ error: (context, event) => event })
-          }
+            actions: assign({ error: (context, event) => event }),
+          },
         },
         on: {
           INC: {
@@ -568,11 +568,11 @@ const FlashDevice = createMachine(
                 rightProgress: event.data.rightProgress,
                 resetProgress: event.data.resetProgress,
                 neuronProgress: event.data.neuronProgress,
-                restoreProgress: event.data.restoreProgress
+                restoreProgress: event.data.restoreProgress,
               };
-            })
-          }
-        }
+            }),
+          },
+        },
       },
       resetDefyWireless: {
         id: "resetDefyWireless",
@@ -580,19 +580,19 @@ const FlashDevice = createMachine(
           (context, event) => {
             console.log(`Resetting Neuron!`);
           },
-          assign({ stateblock: (context, event) => 4 })
+          assign({ stateblock: (context, event) => 4 }),
         ],
         invoke: {
           id: "resetDefyWireless",
           src: (context, event) => (callback, onReceive) => resetDefy(context, callback),
           onDone: {
             target: "flashDefyWireless",
-            actions: [assign({ resetResult: (context, event) => event.data })]
+            actions: [assign({ resetResult: (context, event) => event.data })],
           },
           onError: {
             target: "failure",
-            actions: assign({ error: (context, event) => event })
-          }
+            actions: assign({ error: (context, event) => event }),
+          },
         },
         on: {
           INC: {
@@ -604,11 +604,11 @@ const FlashDevice = createMachine(
                 rightProgress: event.data.rightProgress,
                 resetProgress: event.data.resetProgress,
                 neuronProgress: event.data.neuronProgress,
-                restoreProgress: event.data.restoreProgress
+                restoreProgress: event.data.restoreProgress,
               };
-            })
-          }
-        }
+            }),
+          },
+        },
       },
       flashDefyWireless: {
         id: "flashDefyWireless",
@@ -617,19 +617,19 @@ const FlashDevice = createMachine(
             console.log(`Flashing Neuron! for ${context.retriesNeuron} times`);
           },
           assign({ stateblock: (context, event) => 5 }),
-          assign({ retriesNeuron: (context, event) => context.retriesNeuron + 1 })
+          assign({ retriesNeuron: (context, event) => context.retriesNeuron + 1 }),
         ],
         invoke: {
           id: "uploadDefyWireless",
           src: (context, event) => (callback, onReceive) => uploadDefyWireles(context, callback),
           onDone: {
             target: "reconnectDefy",
-            actions: [assign({ flashResult: (context, event) => event.data })]
+            actions: [assign({ flashResult: (context, event) => event.data })],
           },
           onError: {
             target: "failure",
-            actions: assign({ error: (context, event) => event })
-          }
+            actions: assign({ error: (context, event) => event }),
+          },
         },
         on: {
           INC: {
@@ -641,11 +641,11 @@ const FlashDevice = createMachine(
                 rightProgress: event.data.rightProgress,
                 resetProgress: event.data.resetProgress,
                 neuronProgress: event.data.neuronProgress,
-                restoreProgress: event.data.restoreProgress
+                restoreProgress: event.data.restoreProgress,
               };
-            })
-          }
-        }
+            }),
+          },
+        },
       },
       reconnectDefy: {
         id: "reconnectDefy",
@@ -653,19 +653,19 @@ const FlashDevice = createMachine(
           (context, event) => {
             console.log(`Reconnecting to Neuron!`);
           },
-          assign({ stateblock: (context, event) => 5 })
+          assign({ stateblock: (context, event) => 5 }),
         ],
         invoke: {
           id: "reconnectDefy",
           src: (context, event) => (callback, onReceive) => reconnect(context, callback),
           onDone: {
             target: "restoreDefy",
-            actions: [assign({ flashResult: (context, event) => event.data })]
+            actions: [assign({ flashResult: (context, event) => event.data })],
           },
           onError: {
             target: "failure",
-            actions: assign({ error: (context, event) => event })
-          }
+            actions: assign({ error: (context, event) => event }),
+          },
         },
         on: {
           INC: {
@@ -677,11 +677,11 @@ const FlashDevice = createMachine(
                 rightProgress: event.data.rightProgress,
                 resetProgress: event.data.resetProgress,
                 neuronProgress: event.data.neuronProgress,
-                restoreProgress: event.data.restoreProgress
+                restoreProgress: event.data.restoreProgress,
               };
-            })
-          }
-        }
+            }),
+          },
+        },
       },
       restoreDefy: {
         id: "restoreDefy",
@@ -689,19 +689,19 @@ const FlashDevice = createMachine(
           (context, event) => {
             console.log(`Restoring Neuron!`);
           },
-          assign({ stateblock: (context, event) => 6 })
+          assign({ stateblock: (context, event) => 6 }),
         ],
         invoke: {
           id: "restoreDefy",
           src: (context, event) => (callback, onReceive) => restoreDefies(context, callback),
           onDone: {
             target: "reportSucess",
-            actions: [assign({ restoreResult: (context, event) => event.data })]
+            actions: [assign({ restoreResult: (context, event) => event.data })],
           },
           onError: {
             target: "failure",
-            actions: assign({ error: (context, event) => event })
-          }
+            actions: assign({ error: (context, event) => event }),
+          },
         },
         on: {
           INC: {
@@ -713,11 +713,11 @@ const FlashDevice = createMachine(
                 rightProgress: event.data.rightProgress,
                 resetProgress: event.data.resetProgress,
                 neuronProgress: event.data.neuronProgress,
-                restoreProgress: event.data.restoreProgress
+                restoreProgress: event.data.restoreProgress,
               };
-            })
-          }
-        }
+            }),
+          },
+        },
       },
       resetRaiseNeuron: {
         id: "resetRaiseNeuron",
@@ -725,19 +725,19 @@ const FlashDevice = createMachine(
           (context, event) => {
             console.log(`Resetting Neuron!`);
           },
-          assign({ stateblock: (context, event) => 4 })
+          assign({ stateblock: (context, event) => 4 }),
         ],
         invoke: {
           id: "resetRaise",
           src: (context, event) => (callback, onReceive) => resetRaise(context, callback),
           onDone: {
             target: "flashRaiseNeuron",
-            actions: [assign({ resetResult: (context, event) => event.data })]
+            actions: [assign({ resetResult: (context, event) => event.data })],
           },
           onError: {
             target: "failure",
-            actions: assign({ error: (context, event) => event })
-          }
+            actions: assign({ error: (context, event) => event }),
+          },
         },
         on: {
           INC: {
@@ -749,11 +749,11 @@ const FlashDevice = createMachine(
                 rightProgress: event.data.rightProgress,
                 resetProgress: event.data.resetProgress,
                 neuronProgress: event.data.neuronProgress,
-                restoreProgress: event.data.restoreProgress
+                restoreProgress: event.data.restoreProgress,
               };
-            })
-          }
-        }
+            }),
+          },
+        },
       },
       flashRaiseNeuron: {
         id: "flashRaiseNeuron",
@@ -762,19 +762,19 @@ const FlashDevice = createMachine(
             console.log(`Flashing Neuron! for ${context.retriesNeuron} times`);
           },
           assign({ stateblock: (context, event) => 5 }),
-          assign({ retriesNeuron: (context, event) => context.retriesNeuron + 1 })
+          assign({ retriesNeuron: (context, event) => context.retriesNeuron + 1 }),
         ],
         invoke: {
           id: "uploadRaise",
           src: (context, event) => (callback, onReceive) => uploadRaise(context, callback),
           onDone: {
             target: "restoreRaiseNeuron",
-            actions: [assign({ flashResult: (context, event) => event.data })]
+            actions: [assign({ flashResult: (context, event) => event.data })],
           },
           onError: {
             target: "failure",
-            actions: assign({ error: (context, event) => event })
-          }
+            actions: assign({ error: (context, event) => event }),
+          },
         },
         on: {
           INC: {
@@ -786,11 +786,11 @@ const FlashDevice = createMachine(
                 rightProgress: event.data.rightProgress,
                 resetProgress: event.data.resetProgress,
                 neuronProgress: event.data.neuronProgress,
-                restoreProgress: event.data.restoreProgress
+                restoreProgress: event.data.restoreProgress,
               };
-            })
-          }
-        }
+            }),
+          },
+        },
       },
       restoreRaiseNeuron: {
         id: "restoreRaiseNeuron",
@@ -798,19 +798,19 @@ const FlashDevice = createMachine(
           (context, event) => {
             console.log(`Restoring Neuron!`);
           },
-          assign({ stateblock: (context, event) => 6 })
+          assign({ stateblock: (context, event) => 6 }),
         ],
         invoke: {
           id: "restoreRaise",
           src: (context, event) => (callback, onReceive) => restoreRaise(context, callback),
           onDone: {
             target: "reportSucess",
-            actions: [assign({ flashResult: (context, event) => event.data })]
+            actions: [assign({ flashResult: (context, event) => event.data })],
           },
           onError: {
             target: "failure",
-            actions: assign({ error: (context, event) => event })
-          }
+            actions: assign({ error: (context, event) => event }),
+          },
         },
         on: {
           INC: {
@@ -822,11 +822,11 @@ const FlashDevice = createMachine(
                 rightProgress: event.data.rightProgress,
                 resetProgress: event.data.resetProgress,
                 neuronProgress: event.data.neuronProgress,
-                restoreProgress: event.data.restoreProgress
+                restoreProgress: event.data.restoreProgress,
               };
-            })
-          }
-        }
+            }),
+          },
+        },
       },
       reportSucess: {
         id: "reportSucess",
@@ -835,12 +835,12 @@ const FlashDevice = createMachine(
             console.log("Reporting Sucess");
           },
           assign({
-            stateblock: (context, event) => 7
-          })
+            stateblock: (context, event) => 7,
+          }),
         ],
         after: {
-          3000: { target: "success", actions: [() => sendLEDMode(), "finishFlashing"] }
-        }
+          3000: { target: "success", actions: ["finishFlashing"] },
+        },
       },
       failure: {
         entry: [
@@ -848,18 +848,18 @@ const FlashDevice = createMachine(
             console.log("Failure state");
           },
           assign({
-            stateblock: (context, event) => 8
-          })
+            stateblock: (context, event) => 8,
+          }),
         ],
         on: {
           RETRY: "#FlahsingProcess",
-          CANCEL: { target: "success", actions: ["finishFlashing"] }
-        }
+          CANCEL: { target: "success", actions: ["finishFlashing"] },
+        },
       },
       success: {
-        type: "final"
-      }
-    }
+        type: "final",
+      },
+    },
   },
   {
     guards: {
@@ -891,9 +891,9 @@ const FlashDevice = createMachine(
       },
       isDefywireless: (context, event) => {
         return context.DefyVariant === "Defywireless";
-      }
-    }
-  }
+      },
+    },
+  },
 );
 
 export default FlashDevice;
