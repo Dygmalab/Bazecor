@@ -497,7 +497,7 @@ const SelectKeyboard: React.FC<SelectKeyboardProps> = (props): JSX.Element => {
     virtualKeyboard.device.path = "VIRTUAL";
     virtualKeyboard.device.bootloader = false;
     virtualKeyboard.device.filePath = newPath;
-    virtualKeyboard.virtual["hardware.chip_id"].data += this.getDateTime();
+    virtualKeyboard.virtual["hardware.chip_id"].data += getDateTime();
 
     // Retarded virtualKeyboard storage to save ti with new hardware.chipID
     // Save the virtual KB in the specified location
@@ -612,7 +612,7 @@ const SelectKeyboard: React.FC<SelectKeyboardProps> = (props): JSX.Element => {
                               <div className="dropdownIcon">
                                 <IconKeyboard />
                               </div>
-                              <div className="dropdownItem">{item.device.info.displayName}</div>
+                              <div className="dropdownItem">{item?.device?.info?.displayName}</div>
                             </div>
                           </Dropdown.Item>
                         ))}

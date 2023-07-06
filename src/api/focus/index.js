@@ -255,7 +255,7 @@ class Focus {
       if (args.length > 0 && this.fileData.virtual[cmd].eraseable) {
         this.fileData.virtual[cmd].data = args.join(" ");
       }
-      console.log("reading virtual data");
+      console.log(`reading virtual data from ${cmd}: `, this.fileData.virtual[cmd]);
       let result = "";
       if (this.fileData.virtual[cmd] !== undefined) {
         result = this.fileData.virtual[cmd].data;
