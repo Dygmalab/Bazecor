@@ -124,6 +124,9 @@ class Welcome extends React.Component {
     };
 
     try {
+      if (!device.path) {
+        device.device.device = device.device;
+      }
       await this.props.onConnect(device, null);
     } catch (err) {
       toast.error(<ToastMessage title={i18n.errors.preferenceFailOnSave} content={err.toString()} icon={<IconFloppyDisk />} />, {

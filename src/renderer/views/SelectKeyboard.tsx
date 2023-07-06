@@ -330,6 +330,9 @@ const SelectKeyboard: React.FC<SelectKeyboardProps> = (props): JSX.Element => {
   const onKeyboardConnect = async () => {
     setOpening(true);
     try {
+      if (!devices[selectedPortIndex].path) {
+        devices[selectedPortIndex].device.device = devices[selectedPortIndex].device;
+      }
       await onConnect(devices[selectedPortIndex], null);
     } catch (err) {
       setOpening(false);
@@ -517,7 +520,7 @@ const SelectKeyboard: React.FC<SelectKeyboardProps> = (props): JSX.Element => {
   const getDeviceItems = () => {
     const neurons = store.get("neurons");
     const result = devices.map((device, index) => {
-      let neuron = neurons.find(neuron => neuron.id.toLowerCase() == device.serialNumber);
+      const neuron = neurons.find(neuron => neuron.id.toLowerCase() == device.serialNumber);
 
       return {
         index,
