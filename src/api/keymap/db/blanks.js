@@ -24,8 +24,8 @@ const BlankTable = {
       labels: {
         top: "NO",
         primary: "KEY",
-        verbose: "Disabled"
-      }
+        verbose: "Disabled",
+      },
     },
     {
       // Transparent
@@ -33,10 +33,10 @@ const BlankTable = {
       labels: {
         top: "TRANS",
         primary: "",
-        verbose: "Transparent"
-      }
-    }
-  ]
+        verbose: "Transparent",
+      },
+    },
+  ],
 };
 
 export default BlankTable;

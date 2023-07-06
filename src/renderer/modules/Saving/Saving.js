@@ -23,19 +23,17 @@ import { RegularButton } from "../../component/Button";
 const Style = Styled.div`
 
 `;
-const Saving = ({ saveContext, destroyContext, inContext }) => {
+function Saving({ saveContext, destroyContext, inContext }) {
   return (
     <Style className="savingButtons">
       <RegularButton
-        tabIndex={0}
         onClick={destroyContext}
         buttonText={i18n.app.cancelPending.button}
-        style="outline"
+        style="outline transp-bg"
         size="sm"
         disabled={!inContext}
       />
       <RegularButton
-        tabIndex={0}
         onClick={saveContext}
         buttonText={i18n.components.save.button}
         style="primary"
@@ -44,6 +42,6 @@ const Saving = ({ saveContext, destroyContext, inContext }) => {
       />
     </Style>
   );
-};
+}
 
 export default Saving;

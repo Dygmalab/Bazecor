@@ -150,6 +150,60 @@ const Style = Styled.div`
     50% { transform: scale(1); opacity: 1; }
     100% { transform: scale(0.9); opacity: 0.5; }
 }
+.size--lg {
+  --color-stroke: ${({ theme }) => theme.styles.batteryIndicator.strokeShapeColor};
+  .shapeIndicator {
+    opacity: 0.1;
+  }
+  &.status--default {
+    --color-status: ${({ theme }) => theme.styles.batteryIndicator.fillShapeColor};
+    .shapeIndicator {
+      opacity: 0;
+    }
+  }
+  &.status--saving {
+    --color-status: ${({ theme }) => theme.colors.brandWarning};
+    --color-stroke: ${({ theme }) => theme.colors.brandWarning};
+    .shapeIndicator {
+      opacity: 0.25;
+    }
+  }
+  &.status--critical:not(.status--saving) {
+    .shapeIndicator {
+      opacity: 0.2;
+    }
+  }
+  &.status--charging,
+  &.status--charging.status--saving {
+    --color-status: ${({ theme }) => theme.styles.batteryIndicator.fillShapeColor};
+    --color-stroke: ${({ theme }) => theme.styles.batteryIndicator.strokeShapeColor};
+    .lightningbattery {
+      color: ${({ theme }) => theme.styles.batteryIndicator.fillShapeColor};
+    }
+    .shapeIndicator {
+      opacity: 0.1;
+    }
+  }
+}
+@media screen and (max-width: 999px) {
+  .size--sm {
+    .battery-item--container {
+        .battery-indicator--side {
+            display: none;
+        }
+    }
+  }
+}
+@media screen and (max-height: 870px) {
+  .size--sm {
+    .battery-item--container {
+        .battery-indicator--side {
+            display: none;
+        }
+    }
+  }
+}
+
 `;
 
 const BatteryStatusSide = ({ side, batteryLevel, isSavingMode, batteryStatus, size }) => {
@@ -186,29 +240,29 @@ const BatteryStatusSide = ({ side, batteryLevel, isSavingMode, batteryStatus, si
       default:
         setSideStatus("status--fatal-error");
     }
-    if (batteryLevel > 10 && batteryLevel < 20 && !isSavingMode && batteryStatus == 0) {
+    if (batteryLevel > 10 && batteryLevel < 20 && !isSavingMode && batteryStatus === 0) {
       setSideStatus("status--warning");
     }
-    if (batteryLevel < 10 && !isSavingMode && batteryStatus == 0) {
+    if (batteryLevel < 10 && !isSavingMode && batteryStatus === 0) {
       setSideStatus("status--critical");
     }
-    if (batteryStatus == 1 || batteryStatus == 2) {
+    if (batteryStatus === 1 || batteryStatus === 2) {
       setIsCharging(true);
     }
   }, [size, batteryLevel, batteryStatus, isSavingMode]);
 
-  if (loading) return <div></div>;
+  if (loading) return <div />;
   return (
     <Style>
       <div className={`battery-indicator--item size--${size} item--${side} ${sideStatus} ${isSavingMode && "status--saving"}`}>
         <div className="battery-item--container">
-          {size == "sm" ? <div className="battery-indicator--side">{sideFirstLetter}</div> : ""}
-          {size == "sm" ? (
+          {size === "sm" ? <div className="battery-indicator--side">{sideFirstLetter}</div> : ""}
+          {size === "sm" ? (
             <PileIndicator batteryLevel={batteryLevel} isCharging={isCharging} batteryStatus={batteryStatus} />
           ) : (
             ""
           )}
-          {size == "lg" ? (
+          {size === "lg" ? (
             <DefyBatteryIndicator side={side} batteryLevel={batteryLevel} batteryStatus={batteryStatus} isCharging={isCharging} />
           ) : (
             ""

@@ -17,7 +17,8 @@
 
 import React from "react";
 import colorDarkerCalculation from "../../renderer/utils/colorDarkerCalculation";
-const UnderGlowStrip = ({
+
+function UnderGlowStrip({
   id,
   onClick,
   fill,
@@ -30,8 +31,8 @@ const UnderGlowStrip = ({
   dataLedIndex,
   dataKeyIndex,
   dataLayer,
-  path
-}) => {
+  path,
+}) {
   const [color, setColor] = React.useState("rgb(255,255,255)");
   const [strokeColor, setStrokeColor] = React.useState(colorDarkerCalculation("rgb(255,255,255)"));
 
@@ -59,5 +60,5 @@ const UnderGlowStrip = ({
       <path d={path} fill="transparent" strokeWidth={1.5} stroke={strokeColor} className="underGlowStripStroke" />
     </g>
   );
-};
+}
 export default UnderGlowStrip;

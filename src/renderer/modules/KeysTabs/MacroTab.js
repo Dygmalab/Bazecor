@@ -36,7 +36,7 @@ class MacroTab extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      selected: 0 === props.selectedMacro ? 1 : 0
+      selected: props.selectedMacro === 0 ? 1 : 0,
     };
   }
 

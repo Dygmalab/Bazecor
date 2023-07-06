@@ -15,21 +15,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { SerialPort } from "serialport";
 import { DelimiterParser } from "@serialport/parser-delimiter";
 import fs from "fs";
 import { spawn } from "child_process";
-import { inspect } from "util";
+
+const { SerialPort } = eval('require("serialport")');
 
 global.focus_instance = null;
 
 class Focus {
   constructor() {
-    this.delay = ms => new Promise(res => setTimeout(res, ms));
     if (!global.focus_instance) {
       global.focus_instance = this;
       this.commands = {
-        help: this._help
+        help: this._help,
       };
       this.timeout = 5000;
       this.debug = false;
@@ -39,31 +38,34 @@ class Focus {
     return global.focus_instance;
   }
 
+  delay = ms => new Promise(res => setTimeout(res, ms));
+
   debugLog(...args) {
     if (!this.debug) return;
     console.log(...args);
   }
 
   async find(...devices) {
-    let portList = await SerialPort.list();
+    const portList = await SerialPort.list();
 
-    let found_devices = [];
+    const foundDevices = [];
 
     this.debugLog("focus.find: portList:", portList, "devices:", devices);
-
-    for (let port of portList) {
-      for (let device of devices) {
-        if (parseInt("0x" + port.productId) == device.usb.productId && parseInt("0x" + port.vendorId) == device.usb.vendorId) {
-          let newPort = Object.assign({}, port);
+    console.log("Passed devices", devices);
+    console.log("Port list from where");
+    for (const port of portList) {
+      for (const device of devices) {
+        if (parseInt(`0x${port.productId}`) == device.usb.productId && parseInt(`0x${port.vendorId}`) == device.usb.vendorId) {
+          const newPort = { ...port };
           newPort.device = device;
-          found_devices.push(newPort);
+          foundDevices.push(newPort);
         }
       }
     }
 
-    this.debugLog("focus.find: found_devices:", found_devices);
+    this.debugLog("focus.find: foundDevices:", foundDevices);
 
-    return found_devices;
+    return foundDevices;
   }
 
   async fileOpen(info, file) {
@@ -83,63 +85,28 @@ class Focus {
       return true;
     }
 
-    console.warn("Warning! device being opened", device.isOpen, device, info);
-    let count = 0;
-    while (device._eventsCount < 5 && count < 8) {
-      console.log("waiting for device");
-      await this.delay(250);
-      count++;
+    if (this._port !== undefined && this._port.isOpen === false) {
+      this.close();
     }
-    if (count == 8) return;
-    if (this._port) this._port.close();
-    if (typeof device == "string") {
-      if (!info) throw new Error("Device descriptor argument is mandatory");
-      this._port = new SerialPort(
-        {
-          path: device,
-          baudRate: 115200
-        },
-        err => {
-          if (err !== null) {
-            console.error(err);
-          }
-        }
-      );
-    } else if (typeof device == "object") {
-      if (device.hasOwnProperty("binding")) {
-        if (!info) throw new Error("Device descriptor argument is mandatory");
-        const path = device.path;
-        await device.close();
-        this._port = new SerialPort(
-          {
-            path: path,
-            baudRate: 115200
-          },
-          err => {
-            if (err !== null) {
-              console.error(err);
-            }
-          }
-        );
+
+    // console.log("Warning! device being opened");
+    // console.log("port status opened?", this._port ? this._port.isOpen : "unknown");
+    // console.log("received device", device);
+    // console.log("received info: ", info);
+
+    try {
+      let path = undefined;
+      if (typeof device === "string") path = device;
+      if (typeof device === "object") path = device.settings.path;
+      if (path !== undefined) {
+        await SerialPort.list();
+        this._port = new SerialPort({ path: path, baudRate: 115200, autoOpen: true });
       } else {
-        let devices = await this.find(device);
-        if (devices && devices.length >= 1) {
-          this._port = new SerialPort(
-            {
-              path: devices[0].path,
-              baudRate: 115200
-            },
-            err => {
-              if (err !== null) {
-                console.error(err);
-              }
-            }
-          );
-        }
-        info = device;
+        throw Error("device not a string or object!");
       }
-    } else {
-      throw new Error("Invalid argument");
+    } catch (error) {
+      console.error("found this error!", error);
+      throw new Error("Unable to connect");
     }
 
     this.device = info;
@@ -151,25 +118,23 @@ class Focus {
       data = data.toString("utf-8");
       this.debugLog("focus: incoming data:", data);
 
-      if (data == "." || data.endsWith(".")) {
-        let result = this.result,
-          resolve = this.callbacks.shift();
+      if (data === "." || data.endsWith(".")) {
+        const { result } = this;
+        const resolve = this.callbacks.shift();
 
         this.result = "";
         if (resolve) {
           resolve(result.trim());
         }
+      } else if (this.result.length === 0) {
+        this.result = data;
       } else {
-        if (this.result.length == 0) {
-          this.result = data;
-        } else {
-          this.result += "\r\n" + data;
-        }
+        this.result += `\r\n${data}`;
       }
     });
 
-    if (process.platform == "darwin") {
-      await spawn("stty", ["-f", this._port.path, "clocal"]);
+    if (process.platform === "darwin") {
+      spawn("stty", ["-f", this._port.path, "clocal"]);
     }
 
     // It's not necessary to retreive the supported commands in bootloader mode
@@ -182,51 +147,50 @@ class Focus {
       }
     }
 
-    // Setup close port alert
-    this._port.on("close", function (error) {
-      if (error !== null && error.disconnected === true) {
-        console.error("Error: device disconnected without control");
-        this.closed = true;
-      } else {
-        console.warn("Warning: device disconnected by user interaction");
-        this.closed = true;
-      }
-    });
     // Setup error port alert
-    this._port.on("error", function (err) {
+    this._port.on("error", async function (err) {
       console.error("Error on SerialPort: " + err);
+      await this._port.close();
     });
     this.closed = false;
     return this._port;
   }
 
-  async close() {
-    // if (this._port) {
-    //   console.log("closing port data >>");
-    //   console.log(inspect(this._port));
-    //   console.log(this._port._eventsCount);
-    //   console.log(
-    //     "Port State: ",
-    //     this._port ? this._port.isOpen : "unable to open"
-    //   );
-    // }
-    try {
-      console.log("CLOSING!!", this._port);
-      if (this._port && this._port.isOpen) {
-        await this._port.close();
-      }
-    } catch (error) {
-      console.log(error);
-    }
-
+  clearContext() {
     this.result = "";
     this.callbacks = [];
-    this._port = null;
     this.device = null;
     this.supportedCommands = [];
-    this.closed = true;
     this.file = false;
     this.fileData = null;
+  }
+
+  async close() {
+    if (this.file !== false) {
+      this.clearContext();
+      this.closed = true;
+      return true;
+    }
+    let result;
+    try {
+      if (this._port) {
+        while (this._port.isOpen === true) {
+          console.log("Closing device port!!", this._port);
+          result = await this._port.close();
+          // console.log("is it still open? ", this._port.isOpen, result);
+          await this._port.removeAllListeners();
+          await this._port.destroy();
+          // console.log("is it destroyed?", this._port.destroyed);
+        }
+        delete this._port;
+        this.closed = true;
+      }
+    } catch (error) {
+      console.error("error when closing", error);
+    }
+
+    this.clearContext();
+    return result;
   }
 
   async isDeviceAccessible(port) {
@@ -240,21 +204,21 @@ class Focus {
     return true;
   }
 
-  async isDeviceSupported(port) {
-    if (!port.device.isDeviceSupported) {
+  async isDeviceSupported(device) {
+    if (!device.device.isDeviceSupported) {
       return true;
     }
-    const supported = await port.device.isDeviceSupported(port);
-    this.debugLog("focus.isDeviceSupported: port=", port, "supported=", supported);
+    const supported = await device.device.isDeviceSupported(device);
+    this.debugLog("focus.isDeviceSupported: port=", device, "supported=", supported);
     return supported;
   }
 
   isCommandSupported(cmd) {
-    return this.supportedCommands.indexOf(cmd) != -1;
+    return this.supportedCommands.indexOf(cmd) !== -1;
   }
 
   async _write_parts(parts, cb) {
-    if (!parts || parts.length == 0) {
+    if (!parts || parts.length === 0) {
       cb();
       return;
     }
@@ -270,13 +234,18 @@ class Focus {
   request(cmd, ...args) {
     this.debugLog("focus.request:", cmd, ...args);
     return new Promise((resolve, reject) => {
-      let timer = setTimeout(() => {
+      const timer = setTimeout(() => {
         reject("Communication timeout");
       }, this.timeout);
-      this._request(cmd, ...args).then(data => {
-        clearTimeout(timer);
-        resolve(data);
-      });
+      this._request(cmd, ...args)
+        .then(data => {
+          clearTimeout(timer);
+          resolve(data);
+        })
+        .catch(err => {
+          console.log("Error sending request from focus", err);
+          reject("Error sending request from focus");
+        });
     });
   }
 
@@ -286,8 +255,11 @@ class Focus {
       if (args.length > 0 && this.fileData.virtual[cmd].eraseable) {
         this.fileData.virtual[cmd].data = args.join(" ");
       }
-      console.log("reading virtual data");
-      const result = this.fileData.virtual[cmd].data;
+      console.log(`reading virtual data from ${cmd}: `, this.fileData.virtual[cmd]);
+      let result = "";
+      if (this.fileData.virtual[cmd] !== undefined) {
+        result = this.fileData.virtual[cmd].data;
+      }
       console.log(result);
       return new Promise(resolve => {
         resolve(result);
@@ -298,7 +270,7 @@ class Focus {
 
     let request = cmd;
     if (args && args.length > 0) {
-      request = request + " " + args.join(" ");
+      request = `${request} ${args.join(" ")}`;
     }
     request += "\n";
 
@@ -309,13 +281,13 @@ class Focus {
   }
 
   async command(cmd, ...args) {
-    if (typeof this.commands[cmd] == "function") {
+    if (typeof this.commands[cmd] === "function") {
       return this.commands[cmd](this, ...args);
-    } else if (typeof this.commands[cmd] == "object") {
-      return this.commands[cmd].focus(this, ...args);
-    } else {
-      return this.request(cmd, ...args);
     }
+    if (typeof this.commands[cmd] === "object") {
+      return this.commands[cmd].focus(this, ...args);
+    }
+    return this.request(cmd, ...args);
   }
 
   addCommands(cmds) {
@@ -324,7 +296,7 @@ class Focus {
 
   addMethod(methodName, command) {
     if (this[methodName]) {
-      let tmp = this[methodName];
+      const tmp = this[methodName];
       this[methodName] = (...args) => {
         tmp(...args);
         this.commands[command][methodName](...args);
@@ -337,7 +309,7 @@ class Focus {
   }
 
   async _help(s) {
-    let data = await s.request("help");
+    const data = await s.request("help");
     return data.split(/\r?\n/).filter(v => v.length > 0);
   }
 }

@@ -64,47 +64,47 @@ const Style = Styled.div`
  * @param {listElements} listElements - The array of objects that hold the elements to be selected.\
  * @returns {<Select>} Dropdown object.
  */
-const Select = ({ onSelect, value, listElements, disabled }) => {
+function Select({ onSelect, value, listElements, disabled }) {
   return (
     <Style>
       <Dropdown onSelect={onSelect} value={value} className={`custom-dropdown ${disabled ? "disabled" : ""}`}>
         <Dropdown.Toggle id="dropdown-custom">
           <div className="dropdownItemSelected">
             {value != undefined && value != null && listElements.length > 0 ? ( // Ternary operator checking validity of variables
-              <React.Fragment>
-                {typeof value == "string" && value != "" ? ( // Ternary operator checking if string
-                  <React.Fragment>
+              <>
+                {typeof value === "string" && value != "" ? ( // Ternary operator checking if string
+                  <>
                     {listElements[0].icon != undefined ? ( // Ternary operator checking if icon exists
-                      <React.Fragment>
+                      <>
                         <div className="dropdownIcon">
                           <img src={listElements.filter(elem => elem.value === value)[0].icon} className="dropdwonIcon" />
                         </div>
                         <div className="dropdownItem">{value}</div>
-                      </React.Fragment>
+                      </>
                     ) : (
                       <div className="dropdownItem">{value}</div>
                     )}
-                  </React.Fragment>
+                  </>
                 ) : (
                   ""
                 )}
-                {typeof value == "number" && value > -1 ? ( // Ternary operator checking if number
-                  <React.Fragment>
+                {typeof value === "number" && value > -1 ? ( // Ternary operator checking if number
+                  <>
                     {listElements[0].icon != undefined ? ( // Ternary operator checking if icon exists
-                      <React.Fragment>
+                      <>
                         <div className="dropdownIcon">
                           <img src={listElements.filter(elem => elem.value === value)[0].icon} className="dropdwonIcon" />
                         </div>
                         <div className="dropdownItem">{listElements.filter(elem => elem.value === value)[0].text}</div>
-                      </React.Fragment>
+                      </>
                     ) : (
                       <div className="dropdownItem">{listElements.filter(elem => elem.value === value)[0].text}</div>
                     )}
-                  </React.Fragment>
+                  </>
                 ) : (
                   ""
                 )}
-              </React.Fragment>
+              </>
             ) : (
               ""
             )}
@@ -134,6 +134,6 @@ const Select = ({ onSelect, value, listElements, disabled }) => {
       </Dropdown>
     </Style>
   );
-};
+}
 
 export default Select;

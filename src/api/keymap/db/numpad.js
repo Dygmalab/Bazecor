@@ -24,122 +24,122 @@ const NumpadTable = {
       code: 89,
       labels: {
         top: "Num",
-        primary: "1"
-      }
+        primary: "1",
+      },
     },
     {
       code: 90,
       labels: {
         top: "Num",
-        primary: "2"
-      }
+        primary: "2",
+      },
     },
     {
       code: 91,
       labels: {
         top: "Num",
-        primary: "3"
-      }
+        primary: "3",
+      },
     },
     {
       code: 92,
       labels: {
         top: "Num",
-        primary: "4"
-      }
+        primary: "4",
+      },
     },
     {
       code: 93,
       labels: {
         top: "Num",
-        primary: "5"
-      }
+        primary: "5",
+      },
     },
     {
       code: 94,
       labels: {
         top: "Num",
-        primary: "6"
-      }
+        primary: "6",
+      },
     },
     {
       code: 95,
       labels: {
         top: "Num",
-        primary: "7"
-      }
+        primary: "7",
+      },
     },
     {
       code: 96,
       labels: {
         top: "Num",
-        primary: "8"
-      }
+        primary: "8",
+      },
     },
     {
       code: 97,
       labels: {
         top: "Num",
-        primary: "9"
-      }
+        primary: "9",
+      },
     },
     {
       code: 98,
       labels: {
         top: "Num",
-        primary: "0"
-      }
+        primary: "0",
+      },
     },
     {
       code: 99,
       labels: {
         top: "Num",
-        primary: "."
-      }
+        primary: ".",
+      },
     },
     {
       code: 85,
       labels: {
         top: "Num",
-        primary: "*"
-      }
+        primary: "*",
+      },
     },
     {
       code: 86,
       labels: {
         top: "Num",
-        primary: "-"
-      }
+        primary: "-",
+      },
     },
     {
       code: 87,
       labels: {
         top: "Num",
-        primary: "+"
-      }
+        primary: "+",
+      },
     },
     {
       code: 88,
       labels: {
         top: "Num",
-        primary: "Enter"
-      }
+        primary: "Enter",
+      },
     },
     {
       code: 83,
       labels: {
         primary: "NUMLOCK",
-        verbose: "Num Lock"
-      }
+        verbose: "Num Lock",
+      },
     },
     {
       code: 84,
       labels: {
         top: "Num",
-        primary: "/"
-      }
-    }
-  ]
+        primary: "/",
+      },
+    },
+  ],
 };
 
 const ModifiedNumpadTables = [
@@ -182,7 +182,7 @@ const ModifiedNumpadTables = [
   withModifiers(NumpadTable, "Alt + AltGr + Shift + Os +", "A+AGr+S+O+", 7680),
 
   // All
-  withModifiers(NumpadTable, "Hyper + AltGr +", "H+AGr+", 7936)
+  withModifiers(NumpadTable, "Hyper + AltGr +", "H+AGr+", 7936),
 ];
 
 export { NumpadTable as default, ModifiedNumpadTables };

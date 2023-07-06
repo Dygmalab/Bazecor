@@ -248,7 +248,7 @@ function FirmwareCheckProcessPanel({ nextBlock, retryBlock, context }) {
                   <div className="wrapperActions">
                     <RegularButton
                       className="flashingbutton nooutlined"
-                      style="outline"
+                      style="outline transp-bg"
                       buttonText={
                         !state.context.sideLeftOk || !state.context.sideRightOK
                           ? i18n.firmwareUpdate.texts.cancelButton

@@ -25,7 +25,7 @@ import {
   IconLEDPreviousEffectSm,
   IconLEDNextEffectSm,
   IconSleepSm,
-  IconShutdownSm
+  IconShutdownSm,
 } from "../../component/Icon";
 
 const Styles = Styled.div`
@@ -124,56 +124,56 @@ class MediaAndLightTab extends Component {
                   tooltipDelay={100}
                   icoSVG={<IconMediaPlayPauseSm />}
                   onClick={() => this.handleAddSpecial(22733)}
-                  selected={isStandardView ? (keyCode === 22733 ? true : false) : false}
+                  selected={isStandardView ? keyCode === 22733 : false}
                 />
                 <ButtonConfig
                   tooltip={i18n.editor.superkeys.specialKeys.stop}
                   tooltipDelay={100}
                   icoSVG={<IconMediaStopSm />}
                   onClick={() => this.handleAddSpecial(22711)}
-                  selected={isStandardView ? (keyCode === 22711 ? true : false) : false}
+                  selected={isStandardView ? keyCode === 22711 : false}
                 />
                 <ButtonConfig
                   tooltip={i18n.editor.superkeys.specialKeys.rewind}
                   tooltipDelay={100}
                   icoSVG={<IconMediaRewindSm />}
                   onClick={() => this.handleAddSpecial(22710)}
-                  selected={isStandardView ? (keyCode === 22710 ? true : false) : false}
+                  selected={isStandardView ? keyCode === 22710 : false}
                 />
                 <ButtonConfig
                   tooltip={i18n.editor.superkeys.specialKeys.forward}
                   tooltipDelay={100}
                   icoSVG={<IconMediaForwardSm />}
                   onClick={() => this.handleAddSpecial(22709)}
-                  selected={isStandardView ? (keyCode === 22709 ? true : false) : false}
+                  selected={isStandardView ? keyCode === 22709 : false}
                 />
                 <ButtonConfig
                   tooltip={i18n.editor.superkeys.specialKeys.shuffle}
                   tooltipDelay={100}
                   icoSVG={<IconMediaShuffleSm />}
                   onClick={() => this.handleAddSpecial(22713)}
-                  selected={isStandardView ? (keyCode === 22713 ? true : false) : false}
+                  selected={isStandardView ? keyCode === 22713 : false}
                 />
                 <ButtonConfig
                   tooltip={i18n.editor.superkeys.specialKeys.mute}
                   tooltipDelay={100}
                   icoSVG={<IconMediaSoundMuteSm />}
                   onClick={() => this.handleAddSpecial(19682)}
-                  selected={isStandardView ? (keyCode === 19682 ? true : false) : false}
+                  selected={isStandardView ? keyCode === 19682 : false}
                 />
                 <ButtonConfig
                   tooltip={i18n.editor.superkeys.specialKeys.soundLess}
                   tooltipDelay={100}
                   icoSVG={<IconMediaSoundLessSm />}
                   onClick={() => this.handleAddSpecial(23786)}
-                  selected={isStandardView ? (keyCode === 23786 ? true : false) : false}
+                  selected={isStandardView ? keyCode === 23786 : false}
                 />
                 <ButtonConfig
                   tooltip={i18n.editor.superkeys.specialKeys.soundMore}
                   tooltipDelay={100}
                   icoSVG={<IconMediaSoundMoreSm />}
                   onClick={() => this.handleAddSpecial(23785)}
-                  selected={isStandardView ? (keyCode === 23785 ? true : false) : false}
+                  selected={isStandardView ? keyCode === 23785 : false}
                 />
               </div>
             </div>
@@ -187,7 +187,7 @@ class MediaAndLightTab extends Component {
                   tooltipDelay={300}
                   className="buttonConfigLED"
                   onClick={() => this.handleAddSpecial(17154)}
-                  selected={isStandardView ? (keyCode === 17154 ? true : false) : false}
+                  selected={isStandardView ? keyCode === 17154 : false}
                 />
                 <ButtonConfig
                   tooltip={i18n.editor.superkeys.specialKeys.ledPreviousEffectTootip}
@@ -195,14 +195,14 @@ class MediaAndLightTab extends Component {
                   icoSVG={<IconLEDPreviousEffectSm />}
                   className="buttonConfigLED"
                   onClick={() => this.handleAddSpecial(17153)}
-                  selected={isStandardView ? (keyCode === 17153 ? true : false) : false}
+                  selected={isStandardView ? keyCode === 17153 : false}
                 />
                 <ButtonConfig
                   tooltip={i18n.editor.superkeys.specialKeys.ledNextEffectTootip}
                   tooltipDelay={300}
                   icoSVG={<IconLEDNextEffectSm />}
                   onClick={() => this.handleAddSpecial(17152)}
-                  selected={isStandardView ? (keyCode === 17152 ? true : false) : false}
+                  selected={isStandardView ? keyCode === 17152 : false}
                 />
               </div>
             </div>
@@ -217,7 +217,7 @@ class MediaAndLightTab extends Component {
                   tooltipDelay={100}
                   icoSVG={<IconToolsEjectSm />}
                   onClick={() => this.handleAddSpecial(22712)}
-                  selected={isStandardView ? (keyCode === 22712 ? true : false) : false}
+                  selected={isStandardView ? keyCode === 22712 : false}
                 />
 
                 <ButtonConfig
@@ -225,7 +225,7 @@ class MediaAndLightTab extends Component {
                   tooltipDelay={100}
                   icoSVG={<IconToolsCalculatorSm />}
                   onClick={() => this.handleAddSpecial(18834)}
-                  selected={isStandardView ? (keyCode === 18834 ? true : false) : false}
+                  selected={isStandardView ? keyCode === 18834 : false}
                 />
 
                 <ButtonConfig
@@ -233,7 +233,7 @@ class MediaAndLightTab extends Component {
                   tooltipDelay={100}
                   icoSVG={<IconToolsCameraSm />}
                   onClick={() => this.handleAddSpecial(18552)}
-                  selected={isStandardView ? (keyCode === 18552 ? true : false) : false}
+                  selected={isStandardView ? keyCode === 18552 : false}
                 />
 
                 <ButtonConfig
@@ -241,28 +241,28 @@ class MediaAndLightTab extends Component {
                   tooltipDelay={100}
                   icoSVG={<IconToolsBrightnessLessSm />}
                   onClick={() => this.handleAddSpecial(23664)}
-                  selected={isStandardView ? (keyCode === 23664 ? true : false) : false}
+                  selected={isStandardView ? keyCode === 23664 : false}
                 />
                 <ButtonConfig
                   tooltip={i18n.editor.superkeys.specialKeys.brightnessMore}
                   tooltipDelay={100}
                   icoSVG={<IconToolsBrightnessMoreSm />}
                   onClick={() => this.handleAddSpecial(23663)}
-                  selected={isStandardView ? (keyCode === 23663 ? true : false) : false}
+                  selected={isStandardView ? keyCode === 23663 : false}
                 />
                 <ButtonConfig
                   tooltip={i18n.editor.superkeys.specialKeys.sleep}
                   tooltipDelay={100}
                   icoSVG={<IconSleepSm />}
                   onClick={() => this.handleAddSpecial(20866)}
-                  selected={isStandardView ? (keyCode === 20866 ? true : false) : false}
+                  selected={isStandardView ? keyCode === 20866 : false}
                 />
                 <ButtonConfig
                   tooltip={i18n.editor.superkeys.specialKeys.shutdown}
                   tooltipDelay={100}
                   icoSVG={<IconShutdownSm />}
                   onClick={() => this.handleAddSpecial(20865)}
-                  selected={isStandardView ? (keyCode === 20865 ? true : false) : false}
+                  selected={isStandardView ? keyCode === 20865 : false}
                 />
               </div>
             </div>

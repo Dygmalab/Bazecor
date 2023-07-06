@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import Styled from "styled-components";
 import i18n from "../../i18n";
 
-//Components
+// Components
 import Title from "../../component/Title";
 import { ButtonConfig } from "../../component/Button";
 
@@ -38,14 +38,14 @@ class ModPicker extends Component {
     super(props);
 
     this.state = {
-      modifs: []
+      modifs: [],
     };
   }
 
   componentDidMount() {
     if (this.props.keyCode.base + this.props.keyCode.modified > 10000) return;
     this.setState({
-      modifs: this.parseModifs(this.props.keyCode.base + this.props.keyCode.modified)
+      modifs: this.parseModifs(this.props.keyCode.base + this.props.keyCode.modified),
     });
   }
 
@@ -56,18 +56,18 @@ class ModPicker extends Component {
     ) {
       if (this.props.keyCode.base + this.props.keyCode.modified > 10000) {
         this.setState({
-          modifs: []
+          modifs: [],
         });
       } else {
         this.setState({
-          modifs: this.parseModifs(this.props.keyCode.base + this.props.keyCode.modified)
+          modifs: this.parseModifs(this.props.keyCode.base + this.props.keyCode.modified),
         });
       }
     }
   }
 
   parseModifs(keycode) {
-    let modifs = [];
+    const modifs = [];
     if (keycode & 0b100000000) {
       // Ctrl Decoder
       modifs.push(1);
@@ -139,9 +139,8 @@ class ModPicker extends Component {
       this.props.keyCode.base + this.props.keyCode.modified >= 8192
     ) {
       return true;
-    } else {
-      return false;
     }
+    return false;
   }
 
   render() {

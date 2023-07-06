@@ -34,9 +34,9 @@ export default class Colormap {
   setLayerSize(opts) {
     if (!opts || opts == undefined) return;
 
-    if (typeof opts == "number") {
+    if (typeof opts === "number") {
       this._layerSize = opts;
-    } else if (typeof opts == "object") {
+    } else if (typeof opts === "object") {
       this._layerSize = opts.keyboardUnderglow
         ? opts.keyboardUnderglow.rows * opts.keyboardUnderglow.columns
         : opts.keyboard.rows * opts.keyboard.columns;
@@ -48,9 +48,9 @@ export default class Colormap {
   setLEDMode(opts) {
     if (!opts || opts == undefined) return;
 
-    if (typeof opts == "number") {
+    if (typeof opts === "number") {
       this._LEDMode = "RGB";
-    } else if (typeof opts == "object") {
+    } else if (typeof opts === "object") {
       this._LEDMode = opts.RGBWMode ? "RGBW" : "RGB";
     }
 
@@ -58,58 +58,56 @@ export default class Colormap {
   }
 
   _chunk(a, chunkSize) {
-    var R = [];
-    for (var i = 0; i < a.length; i += chunkSize) R.push(a.slice(i, i + chunkSize));
+    const R = [];
+    for (let i = 0; i < a.length; i += chunkSize) R.push(a.slice(i, i + chunkSize));
     return R;
   }
 
   async _pull(s) {
-    let paletteData = await s.request("palette");
-    let colorMapData = await s.request("colormap.map");
+    const paletteData = await s.request("palette");
+    const colorMapData = await s.request("colormap.map");
 
-    let palette =
+    const palette =
       this._LEDMode != "RGBW"
         ? this._chunk(
             paletteData
               .split(" ")
               .filter(v => v.length > 0)
               .map(k => parseInt(k)),
-            3
-          ).map(color => {
-            return {
-              r: color[0],
-              g: color[1],
-              b: color[2],
-              rgb: `rgb(${color[0]}, ${color[1]}, ${color[2]})`
-            };
-          })
+            3,
+          ).map(color => ({
+            r: color[0],
+            g: color[1],
+            b: color[2],
+            rgb: `rgb(${color[0]}, ${color[1]}, ${color[2]})`,
+          }))
         : this._chunk(
             paletteData
               .split(" ")
               .filter(v => v.length > 0)
               .map(k => parseInt(k)),
-            4
+            4,
           ).map(color => {
             const coloraux = rgbw2b({ r: color[0], g: color[1], b: color[2], w: color[3] });
             return {
               r: coloraux.r,
               g: coloraux.g,
               b: coloraux.b,
-              rgb: coloraux.rgb
+              rgb: coloraux.rgb,
             };
           });
 
-    let colorMap = this._chunk(
+    const colorMap = this._chunk(
       colorMapData
         .split(" ")
         .filter(v => v.length > 0)
         .map(k => parseInt(k)),
-      this._layerSize
+      this._layerSize,
     );
 
     return {
-      palette: palette,
-      colorMap: colorMap
+      palette,
+      colorMap,
     };
   }
 
@@ -122,8 +120,8 @@ export default class Colormap {
     if (this._LEDMode != "RGBW") {
       args = this._flatten(palette.map(color => [color.r, color.g, color.b])).map(v => v.toString());
     } else {
-      let paletteAux = palette.map(color => {
-        let aux = rgb2w({ r: color.r, g: color.g, b: color.b });
+      const paletteAux = palette.map(color => {
+        const aux = rgb2w({ r: color.r, g: color.g, b: color.b });
         return aux;
       });
       args = this._flatten(paletteAux.map(color => [color.r, color.g, color.b, color.w])).map(v => v.toString());
@@ -134,7 +132,7 @@ export default class Colormap {
   }
 
   async _updateColormap(s, colormap) {
-    let args = this._flatten(colormap).map(v => v.toString());
+    const args = this._flatten(colormap).map(v => v.toString());
     return await s.request("colormap.map", ...args);
   }
 
@@ -148,7 +146,7 @@ export default class Colormap {
   }
 }
 
-let focus = new Focus();
+const focus = new Focus();
 focus.addCommands({ colormap: new Colormap() });
 focus.addMethod("setLayerSize", "colormap");
 focus.addMethod("setLEDMode", "colormap");

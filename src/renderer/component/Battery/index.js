@@ -11,5 +11,5 @@ export {
   DefyBatteryIndicatorLeft,
   DefyBatteryIndicatorRight,
   PileIndicator,
-  SavingModeIndicator
+  SavingModeIndicator,
 };

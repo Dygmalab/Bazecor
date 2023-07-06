@@ -28,7 +28,7 @@ const Styles = Styled.div`
 
 `;
 
-const ConfirmationDialog = props => {
+function ConfirmationDialog(props) {
   return (
     <Modal
       backdrop="static"
@@ -44,12 +44,12 @@ const ConfirmationDialog = props => {
         </Modal.Header>
         <Modal.Body className="body">{props.text}</Modal.Body>
         <Modal.Footer>
-          <RegularButton buttonText={i18n.dialog.cancel} style="outline" size="sm" onClick={props.onCancel} />
+          <RegularButton buttonText={i18n.dialog.cancel} style="outline transp-bg" size="sm" onClick={props.onCancel} />
           <RegularButton buttonText={i18n.dialog.applyChanges} style="outline gradient" size="sm" onClick={props.onConfirm} />
         </Modal.Footer>
       </Styles>
     </Modal>
   );
-};
+}
 
 export { ConfirmationDialog as default };

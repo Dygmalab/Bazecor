@@ -16,13 +16,13 @@
  */
 
 import React from "react";
-import Focus from "../../api/focus";
 import Styled from "styled-components";
 import { toast } from "react-toastify";
-import { withRouter } from "react-router-dom";
 
 import Container from "react-bootstrap/Container";
 import Card from "react-bootstrap/Card";
+import withRouter from "../utils/withRouter";
+import Focus from "../../api/focus";
 import i18n from "../i18n";
 
 import PageHeader from "../modules/PageHeader";
@@ -105,38 +105,42 @@ height: inherit;
 
 class Welcome extends React.Component {
   state = {
-    factoryResetStarted: false
+    factoryResetStarted: false,
   };
 
   startFactoryReset = () => {
     this.setState({ factoryResetStarted: true });
   };
+
   cancelFactoryReset = () => {
     this.setState({ factoryResetStarted: false });
   };
 
   reconnect = async () => {
-    let focus = new Focus();
+    const focus = new Focus();
     const device = {
       path: focus._port.path,
-      device: focus.device
+      device: focus.device,
     };
 
     try {
+      if (!device.path) {
+        device.device.device = device.device;
+      }
       await this.props.onConnect(device, null);
     } catch (err) {
       toast.error(<ToastMessage title={i18n.errors.preferenceFailOnSave} content={err.toString()} icon={<IconFloppyDisk />} />, {
-        icon: ""
+        icon: "",
       });
     }
   };
 
   render() {
-    let focus = new Focus();
+    const focus = new Focus();
     const device = this.props.device.device || focus.device;
 
     const reconnectButton = focus._port && (
-      <RegularButton onClick={this.reconnect} buttonText={i18n.welcome.reconnect} style="outline" />
+      <RegularButton onClick={this.reconnect} buttonText={i18n.welcome.reconnect} style="outline transp-bg" />
     );
 
     return (
@@ -164,13 +168,12 @@ class Welcome extends React.Component {
 
                     <span className="cardsub">
                       <ul style={{ lineHeight: "2rem" }}>
-                        <li>{"This process will revert your keyboard's configuration back to factory settings."}</li>
+                        <li>This process will revert your keyboard's configuration back to factory settings.</li>
                         <li>
                           {"Before proceeding, we recommend that you "}
-                          <a href="https://support.dygma.com/hc/en-us/articles/360014262298">{"export and save your layers"}</a>
-                          {"."}
+                          <a href="https://support.dygma.com/hc/en-us/articles/360014262298">export and save your layers</a>.
                         </li>
-                        <li>{"To exit Bootloader Mode, unplug and replug the USB-C cable to your Neuron."}</li>
+                        <li>To exit Bootloader Mode, unplug and replug the USB-C cable to your Neuron.</li>
                       </ul>
                     </span>
                   </div>
@@ -180,9 +183,9 @@ class Welcome extends React.Component {
                     {reconnectButton}
                     <RegularButton
                       buttonText={i18n.formatString(i18n.welcome.gotoUpdate, i18n.app.menu.firmwareUpdate)}
-                      style={"primary"}
+                      style="primary"
                       onClick={async () => {
-                        this.props.history.push("/firmware-update");
+                        this.props.router.navigate("/firmware-update");
                       }}
                     />
                   </div>

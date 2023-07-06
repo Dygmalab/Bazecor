@@ -18,8 +18,8 @@
 import React from "react";
 import PropTypes from "prop-types";
 import Styled from "styled-components";
-import i18n from "../../i18n";
 import ProgressBar from "react-bootstrap/ProgressBar";
+import i18n from "../../i18n";
 
 import Title from "../../component/Title";
 import { FirmwareImageHelp } from "../Firmware";
@@ -191,6 +191,6 @@ const FirmwareProgressStatus = ({ countdown, flashProgress, deviceProduct, keybo
       </div>
     </Style>
   );
-};
+}
 
 export default FirmwareProgressStatus;

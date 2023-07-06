@@ -22,31 +22,31 @@ const MouseMovementTable = {
       code: 20481,
       labels: {
         top: "Mouse",
-        primary: "UP"
-      }
+        primary: "UP",
+      },
     },
     {
       code: 20482,
       labels: {
         top: "Mouse",
-        primary: "DOWN"
-      }
+        primary: "DOWN",
+      },
     },
     {
       code: 20484,
       labels: {
         top: "Mouse",
-        primary: "LEFT"
-      }
+        primary: "LEFT",
+      },
     },
     {
       code: 20488,
       labels: {
         top: "Mouse",
-        primary: "RIGHT"
-      }
-    }
-  ]
+        primary: "RIGHT",
+      },
+    },
+  ],
 };
 
 const MouseWheelTable = {
@@ -56,31 +56,31 @@ const MouseWheelTable = {
       code: 20497,
       labels: {
         top: "M.Wheel",
-        primary: "UP"
-      }
+        primary: "UP",
+      },
     },
     {
       code: 20498,
       labels: {
         top: "M.Wheel",
-        primary: "DOWN"
-      }
+        primary: "DOWN",
+      },
     },
     {
       code: 20500,
       labels: {
         top: "M.Wheel",
-        primary: "LEFT"
-      }
+        primary: "LEFT",
+      },
     },
     {
       code: 20504,
       labels: {
         top: "M.Wheel",
-        primary: "RIGHT"
-      }
-    }
-  ]
+        primary: "RIGHT",
+      },
+    },
+  ],
 };
 
 const MouseButtonTable = {
@@ -90,38 +90,38 @@ const MouseButtonTable = {
       code: 20545,
       labels: {
         top: "M.Btn",
-        primary: "LEFT"
-      }
+        primary: "LEFT",
+      },
     },
     {
       code: 20546,
       labels: {
         top: "M.Btn",
-        primary: "RIGHT"
-      }
+        primary: "RIGHT",
+      },
     },
     {
       code: 20548,
       labels: {
         top: "M.Btn",
-        primary: "MIDDLE"
-      }
+        primary: "MIDDLE",
+      },
     },
     {
       code: 20552,
       labels: {
         top: "M.Btn",
-        primary: "BACK"
-      }
+        primary: "BACK",
+      },
     },
     {
       code: 20560,
       labels: {
         top: "M.Btn",
-        primary: "FORW."
-      }
-    }
-  ]
+        primary: "FORW.",
+      },
+    },
+  ],
 };
 
 const MouseWarpTable = {
@@ -131,42 +131,42 @@ const MouseWarpTable = {
       code: 20576,
       labels: {
         top: "M.Warp",
-        primary: "END"
-      }
+        primary: "END",
+      },
     },
     {
       code: 20517,
       labels: {
         top: "M.Warp",
         primary: "NW",
-        verbose: "North-West"
-      }
+        verbose: "North-West",
+      },
     },
     {
       code: 20518,
       labels: {
         top: "M.Warp",
         primary: "SW",
-        verbose: "South-West"
-      }
+        verbose: "South-West",
+      },
     },
     {
       code: 20521,
       labels: {
         top: "M.Warp",
         primary: "NE",
-        verbose: "North-East"
-      }
+        verbose: "North-East",
+      },
     },
     {
       code: 20522,
       labels: {
         top: "M.Warp",
         primary: "SE",
-        verbose: "South-East"
-      }
-    }
-  ]
+        verbose: "South-East",
+      },
+    },
+  ],
 };
 
 export { MouseMovementTable, MouseWheelTable, MouseButtonTable, MouseWarpTable };

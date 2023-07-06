@@ -23,177 +23,177 @@ const frenchLetters = [
   {
     code: 20,
     labels: {
-      primary: "A"
-    }
+      primary: "A",
+    },
   },
   {
     code: 26,
     labels: {
-      primary: "Z"
-    }
+      primary: "Z",
+    },
   },
   {
     code: 4,
     labels: {
-      primary: "Q"
-    }
+      primary: "Q",
+    },
   },
   {
     code: 51,
     labels: {
-      primary: "M"
+      primary: "M",
     },
-    newGroupName: "Letters"
+    newGroupName: "Letters",
   },
   {
     code: 29,
     labels: {
-      primary: "W"
-    }
+      primary: "W",
+    },
   },
   {
     code: 53,
     labels: {
-      primary: "²"
+      primary: "²",
     },
-    newGroupName: "Letters"
-  }
+    newGroupName: "Letters",
+  },
 ];
 
 const frenchModifierKeys = [
   {
     code: 31,
     labels: {
-      primary: "é"
+      primary: "é",
     },
-    newGroupName: "Letters"
+    newGroupName: "Letters",
   },
   {
     code: 36,
     labels: {
-      primary: "è"
+      primary: "è",
     },
-    newGroupName: "Letters"
+    newGroupName: "Letters",
   },
   {
     code: 38,
     labels: {
-      primary: "ç"
+      primary: "ç",
     },
-    newGroupName: "Letters"
+    newGroupName: "Letters",
   },
   {
     code: 39,
     labels: {
-      primary: "à"
+      primary: "à",
     },
-    newGroupName: "Letters"
+    newGroupName: "Letters",
   },
   {
     code: 52,
     labels: {
-      primary: "ù"
+      primary: "ù",
     },
-    newGroupName: "Letters"
+    newGroupName: "Letters",
   },
   {
     code: 30,
     labels: {
-      primary: "&"
+      primary: "&",
     },
-    newGroupName: "Punctuation"
+    newGroupName: "Punctuation",
   },
   {
     code: 32,
     labels: {
-      primary: '"'
+      primary: '"',
     },
-    newGroupName: "Punctuation"
+    newGroupName: "Punctuation",
   },
   {
     code: 33,
     labels: {
-      primary: "'"
+      primary: "'",
     },
-    newGroupName: "Punctuation"
+    newGroupName: "Punctuation",
   },
   {
     code: 34,
     labels: {
-      primary: "("
+      primary: "(",
     },
-    newGroupName: "Punctuation"
+    newGroupName: "Punctuation",
   },
   {
     code: 35,
     labels: {
-      primary: "-"
+      primary: "-",
     },
-    newGroupName: "Punctuation"
+    newGroupName: "Punctuation",
   },
   {
     code: 37,
     labels: {
-      primary: "_"
+      primary: "_",
     },
-    newGroupName: "Punctuation"
+    newGroupName: "Punctuation",
   },
   {
     code: 45,
     labels: {
-      primary: ")"
-    }
+      primary: ")",
+    },
   },
 
   {
     code: 47,
     labels: {
-      primary: "^"
-    }
+      primary: "^",
+    },
   },
   {
     code: 48,
     labels: {
-      primary: "$"
-    }
+      primary: "$",
+    },
   },
   {
     code: 49,
     labels: {
-      primary: "*"
-    }
+      primary: "*",
+    },
   },
   {
     code: 16,
     labels: {
-      primary: ","
+      primary: ",",
     },
-    newGroupName: "Punctuation"
+    newGroupName: "Punctuation",
   },
   {
     code: 54,
     labels: {
-      primary: ";"
-    }
+      primary: ";",
+    },
   },
   {
     code: 55,
     labels: {
-      primary: ":"
-    }
+      primary: ":",
+    },
   },
   {
     code: 56,
     labels: {
-      primary: "!"
-    }
+      primary: "!",
+    },
   },
   {
     code: 100,
     labels: {
-      primary: "<"
-    }
-  }
+      primary: "<",
+    },
+  },
 ];
 
 const altCtrlFrench = {
@@ -202,82 +202,82 @@ const altCtrlFrench = {
     {
       code: 799,
       labels: {
-        primary: "~"
-      }
+        primary: "~",
+      },
     },
     {
       code: 800,
       labels: {
-        primary: "#"
-      }
+        primary: "#",
+      },
     },
     {
       code: 801,
       labels: {
-        primary: "{"
-      }
+        primary: "{",
+      },
     },
     {
       code: 802,
       labels: {
-        primary: "["
-      }
+        primary: "[",
+      },
     },
     {
       code: 803,
       labels: {
-        primary: "|"
-      }
+        primary: "|",
+      },
     },
     {
       code: 804,
       labels: {
-        primary: "`"
-      }
+        primary: "`",
+      },
     },
     {
       code: 805,
       labels: {
-        primary: "\\"
-      }
+        primary: "\\",
+      },
     },
     {
       code: 806,
       labels: {
-        primary: "^"
-      }
+        primary: "^",
+      },
     },
     {
       code: 807,
       labels: {
-        primary: "@"
-      }
+        primary: "@",
+      },
     },
     {
       code: 813,
       labels: {
-        primary: "]"
-      }
+        primary: "]",
+      },
     },
     {
       code: 814,
       labels: {
-        primary: "}"
-      }
+        primary: "}",
+      },
     },
     {
       code: 776,
       labels: {
-        primary: "€"
-      }
+        primary: "€",
+      },
     },
     {
       code: 816,
       labels: {
-        primary: "¤"
-      }
-    }
-  ]
+        primary: "¤",
+      },
+    },
+  ],
 };
 
 const altGRFrench = {
@@ -286,82 +286,82 @@ const altGRFrench = {
     {
       code: 1055,
       labels: {
-        primary: "~"
-      }
+        primary: "~",
+      },
     },
     {
       code: 1056,
       labels: {
-        primary: "#"
-      }
+        primary: "#",
+      },
     },
     {
       code: 1057,
       labels: {
-        primary: "{"
-      }
+        primary: "{",
+      },
     },
     {
       code: 1058,
       labels: {
-        primary: "["
-      }
+        primary: "[",
+      },
     },
     {
       code: 1059,
       labels: {
-        primary: "|"
-      }
+        primary: "|",
+      },
     },
     {
       code: 1060,
       labels: {
-        primary: "`"
-      }
+        primary: "`",
+      },
     },
     {
       code: 1061,
       labels: {
-        primary: "\\"
-      }
+        primary: "\\",
+      },
     },
     {
       code: 1062,
       labels: {
-        primary: "^"
-      }
+        primary: "^",
+      },
     },
     {
       code: 1063,
       labels: {
-        primary: "@"
-      }
+        primary: "@",
+      },
     },
     {
       code: 1069,
       labels: {
-        primary: "]"
-      }
+        primary: "]",
+      },
     },
     {
       code: 1070,
       labels: {
-        primary: "}"
-      }
+        primary: "}",
+      },
     },
     {
       code: 1032,
       labels: {
-        primary: "€"
-      }
+        primary: "€",
+      },
     },
     {
       code: 1072,
       labels: {
-        primary: "¤"
-      }
-    }
-  ]
+        primary: "¤",
+      },
+    },
+  ],
 };
 
 const shiftModifierFrench = {
@@ -370,140 +370,140 @@ const shiftModifierFrench = {
     {
       code: 2078,
       labels: {
-        primary: "1"
+        primary: "1",
       },
-      newGroupName: "Digits"
+      newGroupName: "Digits",
     },
     {
       code: 2079,
       labels: {
-        primary: "2"
+        primary: "2",
       },
-      newGroupName: "Digits"
+      newGroupName: "Digits",
     },
     {
       code: 2080,
       labels: {
-        primary: "3"
+        primary: "3",
       },
-      newGroupName: "Digits"
+      newGroupName: "Digits",
     },
     {
       code: 2081,
       labels: {
-        primary: "4"
+        primary: "4",
       },
-      newGroupName: "Digits"
+      newGroupName: "Digits",
     },
     {
       code: 2082,
       labels: {
-        primary: "5"
+        primary: "5",
       },
-      newGroupName: "Digits"
+      newGroupName: "Digits",
     },
     {
       code: 2083,
       labels: {
-        primary: "6"
+        primary: "6",
       },
-      newGroupName: "Digits"
+      newGroupName: "Digits",
     },
     {
       code: 2084,
       labels: {
-        primary: "7"
+        primary: "7",
       },
-      newGroupName: "Digits"
+      newGroupName: "Digits",
     },
     {
       code: 2085,
       labels: {
-        primary: "8"
+        primary: "8",
       },
-      newGroupName: "Digits"
+      newGroupName: "Digits",
     },
     {
       code: 2086,
       labels: {
-        primary: "9"
+        primary: "9",
       },
-      newGroupName: "Digits"
+      newGroupName: "Digits",
     },
     {
       code: 2087,
       labels: {
-        primary: "0"
+        primary: "0",
       },
-      newGroupName: "Digits"
+      newGroupName: "Digits",
     },
     {
       code: 2093,
       labels: {
-        primary: "°"
-      }
+        primary: "°",
+      },
     },
     {
       code: 2095,
       labels: {
-        primary: "¨"
-      }
+        primary: "¨",
+      },
     },
     {
       code: 2096,
       labels: {
-        primary: "£"
-      }
+        primary: "£",
+      },
     },
     {
       code: 2097,
       labels: {
-        primary: "µ"
-      }
+        primary: "µ",
+      },
     },
     {
       code: 2099,
       labels: {
-        primary: "M"
-      }
+        primary: "M",
+      },
     },
     {
       code: 2100,
       labels: {
-        primary: "%"
-      }
+        primary: "%",
+      },
     },
     {
       code: 2064,
       labels: {
-        primary: "?"
-      }
+        primary: "?",
+      },
     },
     {
       code: 2102,
       labels: {
-        primary: "."
-      }
+        primary: ".",
+      },
     },
     {
       code: 2103,
       labels: {
-        primary: "/"
-      }
+        primary: "/",
+      },
     },
     {
       code: 2104,
       labels: {
-        primary: "§"
-      }
+        primary: "§",
+      },
     },
     {
       code: 2148,
       labels: {
-        primary: ">"
-      }
-    }
-  ]
+        primary: ">",
+      },
+    },
+  ],
 };
 
 const french = frenchLetters.concat(frenchModifierKeys);
@@ -633,7 +633,7 @@ const frenchModifiedTables = [
   DualUseLayer5Tables,
   DualUseLayer6Tables,
   DualUseLayer7Tables,
-  DualUseLayer8Tables
+  DualUseLayer8Tables,
 ];
 
 export { french as default, frenchModifiedTables };

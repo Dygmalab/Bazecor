@@ -16,10 +16,10 @@
 
 import fs from "fs";
 import path from "path";
+import { ipcRenderer } from "electron";
 import Focus from "../../focus";
 import Hardware from "../../hardware";
 import { arduino } from "./arduino-flasher";
-const { ipcRenderer } = require("electron");
 
 /**
  * Create a new flash raise object.
@@ -40,7 +40,7 @@ export class FlashRaise {
       backup: {},
       log: ["Neuron detected"],
       serialNumber: device.serialNumber,
-      firmwareFile: "File has not being selected"
+      firmwareFile: "File has not being selected",
     };
     this.backup = [];
     this.delay = ms => new Promise(res => setTimeout(res, ms));
@@ -65,7 +65,7 @@ export class FlashRaise {
    * @returns {boolean} if device found - true, if no - false
    */
   async foundDevices(hardware, message, bootloader) {
-    let focus = new Focus();
+    const focus = new Focus();
     let isFindDevice = false;
     console.log("looking at device", this.device);
     await focus.find(...hardware).then(devices => {
@@ -77,7 +77,7 @@ export class FlashRaise {
           device.device.bootloader,
           bootloader,
           this.device.info.keyboardType,
-          device.device.info.keyboardType
+          device.device.info.keyboardType,
         );
         if (
           bootloader
@@ -99,7 +99,7 @@ export class FlashRaise {
    * Takes backup settings from keyboard and writes its in backupfile.
    */
   async backupSettings() {
-    let focus = new Focus();
+    const focus = new Focus();
 
     const commands = [
       "hardware.keyscan",
@@ -129,20 +129,20 @@ export class FlashRaise {
       "superkeys.waitfor",
       "superkeys.timeout",
       "superkeys.repeat",
-      "superkeys.overlap"
+      "superkeys.overlap",
     ];
     this.backupFileName = `Raise-backup-${this.formatedDate()}.json`;
 
     try {
       let errorFlag = false;
       const errorMessage = "Firmware update failed, because the settings could not be saved";
-      for (let command of commands) {
+      for (const command of commands) {
         // Ignore the command if it's not supported
         if (!focus.isCommandSupported(command)) {
           continue;
         }
 
-        let res = await focus.command(command);
+        const res = await focus.command(command);
         this.backupFileData.backup[command] = typeof res === "string" ? res.trim() : res;
         if (res === undefined || res === "") {
           errorFlag = true;
@@ -175,14 +175,13 @@ export class FlashRaise {
    * @param {*} state State of the DTR flag to be set on the port
    * @returns {promise} that will resolve when the function has successfully setted the DTR flag
    */
-  setDTR = (port, state) => {
-    return new Promise(function (resolve, reject) {
-      port.set({ dtr: state }, function () {
+  setDTR = (port, state) =>
+    new Promise((resolve, reject) => {
+      port.set({ dtr: state }, () => {
         console.log(`DTR set to ${state} at ${new Date(Date.now()).toISOString()}`);
         resolve();
       });
     });
-  };
 
   /**
    * Update the baud rate of the port with a Promise
@@ -190,14 +189,13 @@ export class FlashRaise {
    * @param {*} baud BaudRate to be set
    * @returns {promise} Promise to be returned, that will resolve when the operation is done
    */
-  updatePort = (port, baud) => {
-    return new Promise(function (resolve, reject) {
-      port.update({ baudRate: baud }, function () {
+  updatePort = (port, baud) =>
+    new Promise((resolve, reject) => {
+      port.update({ baudRate: baud }, () => {
         console.log(`Port update started at: ${new Date(Date.now()).toISOString()}`);
         resolve();
       });
     });
-  };
 
   /**
    * Resets keyboard at the baud rate of 1200bps. Keyboard is restarted with the bootloader
@@ -209,10 +207,10 @@ export class FlashRaise {
     console.log("reset start", port);
     const errorMessage =
       "The firmware update couldn't start because the Raise Bootloader wasn't found. Please check our Help Center for more details or schedule a video call with us.";
-    let timeouts = {
+    const timeouts = {
       dtrToggle: 1000, // Time to wait (ms) between toggling DTR
       waitingClose: 2000, // Time to wait for boot loader
-      bootLoaderUp: 1000 // Time to wait for the boot loader to come up
+      bootLoaderUp: 1000, // Time to wait for the boot loader to come up
     };
     return new Promise(async (resolve, reject) => {
       stateUpdate("reset", 10);
@@ -254,7 +252,7 @@ export class FlashRaise {
    * @returns {promise}
    */
   async updateFirmware(filename, stateUpdate) {
-    let focus = new Focus();
+    const focus = new Focus();
     console.log("Begin update firmware with arduino-flasher");
     // console.log(JSON.stringify(focus));
     return new Promise(async (resolve, reject) => {
@@ -281,14 +279,14 @@ export class FlashRaise {
    * Detects keyboard after firmware of bootloader
    */
   async detectKeyboard() {
-    const timeouts = 2500; //time to wait for keyboard
+    const timeouts = 2500; // time to wait for keyboard
     const findTimes = 5;
     const errorMessage =
       "The firmware update has failed during the flashing process. Please unplug and replug the keyboard and try again";
     console.log("Waiting for keyboard");
-    //wait until the bootloader serial port disconnects and the keyboard serial port reconnects
-    const findKeyboard = async () => {
-      return new Promise(async resolve => {
+    // wait until the bootloader serial port disconnects and the keyboard serial port reconnects
+    const findKeyboard = async () =>
+      new Promise(async resolve => {
         await this.delay(timeouts);
         if (await this.foundDevices(Hardware.serial, "Keyboard detected", false)) {
           resolve(true);
@@ -296,7 +294,6 @@ export class FlashRaise {
           resolve(false);
         }
       });
-    };
     try {
       await this.runnerFindKeyboard(findKeyboard, findTimes, errorMessage);
     } catch (e) {
@@ -319,10 +316,9 @@ export class FlashRaise {
     if (await findKeyboard()) {
       console.log("Ready to restore");
       return true;
-    } else {
-      console.log(`Keyboard not detected, trying again for ${times} times`);
-      await this.runnerFindKeyboard(findKeyboard, times - 1, errorMessage);
     }
+    console.log(`Keyboard not detected, trying again for ${times} times`);
+    await this.runnerFindKeyboard(findKeyboard, times - 1, errorMessage);
   }
 
   /**

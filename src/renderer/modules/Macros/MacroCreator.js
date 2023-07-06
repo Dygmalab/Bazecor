@@ -20,6 +20,7 @@ import Styled from "styled-components";
 
 import Tab from "react-bootstrap/Tab";
 import Nav from "react-bootstrap/Nav";
+import { MdUnfoldLess, MdKeyboardArrowUp, MdKeyboardArrowDown, MdTimer } from "react-icons/md";
 import i18n from "../../i18n";
 
 import Title from "../../component/Title";
@@ -41,9 +42,8 @@ import {
   IconRobot,
   IconNote,
   IconStopWatch,
-  IconMagicStick
+  IconMagicStick,
 } from "../../component/Icon";
-import { MdUnfoldLess, MdKeyboardArrowUp, MdKeyboardArrowDown, MdTimer } from "react-icons/md";
 
 const Styles = Styled.div`
 .card {
@@ -189,7 +189,7 @@ class MacroCreator extends Component {
 
     this.state = {
       addText: "",
-      rows: []
+      rows: [],
     };
     this.keymapDB = props.keymapDB;
     this.modifiers = [
@@ -200,108 +200,102 @@ class MacroCreator extends Component {
       { name: "LEFT ALT", keyCode: 226, color: "#faf8e1" },
       { name: "RIGHT ALT", keyCode: 230, color: "#f2e7f5" },
       { name: "LEFT OS", keyCode: 227, color: "#e6f0e4" },
-      { name: "RIGHT OS", keyCode: 231, color: "#e6f0e4" }
+      { name: "RIGHT OS", keyCode: 231, color: "#e6f0e4" },
     ];
     this.actionTypes = [
       {
         enum: "MACRO_ACTION_END",
         name: "End macro",
-        icon: <React.Fragment />,
-        smallIcon: <React.Fragment />
+        icon: <></>,
+        smallIcon: <></>,
       },
       {
         enum: "MACRO_ACTION_STEP_INTERVAL",
         name: "Set Interval",
         icon: <MdTimer fontSize="large" />,
-        smallIcon: <MdTimer />
+        smallIcon: <MdTimer />,
       },
       {
         enum: "MACRO_ACTION_STEP_WAIT",
         name: "Delay",
         icon: <MdTimer fontSize="large" />,
-        smallIcon: <MdTimer />
+        smallIcon: <MdTimer />,
       },
       {
         enum: "MACRO_ACTION_STEP_KEYDOWN",
         name: "Function Key Press",
         icon: <MdKeyboardArrowDown fontSize="large" />,
-        smallIcon: <MdKeyboardArrowDown />
+        smallIcon: <MdKeyboardArrowDown />,
       },
       {
         enum: "MACRO_ACTION_STEP_KEYUP",
         name: "Function Key Release",
         icon: <MdKeyboardArrowUp fontSize="large" />,
-        smallIcon: <MdKeyboardArrowUp />
+        smallIcon: <MdKeyboardArrowUp />,
       },
       {
         enum: "MACRO_ACTION_STEP_TAP",
         name: "Fn. Press & Release",
         icon: <MdUnfoldLess fontSize="large" />,
-        smallIcon: <MdUnfoldLess />
+        smallIcon: <MdUnfoldLess />,
       },
       {
         enum: "MACRO_ACTION_STEP_KEYCODEDOWN",
         name: "Key Press",
         icon: <MdKeyboardArrowDown fontSize="large" />,
-        smallIcon: <MdKeyboardArrowDown />
+        smallIcon: <MdKeyboardArrowDown />,
       },
       {
         enum: "MACRO_ACTION_STEP_KEYCODEUP",
         name: "Key Release",
         icon: <MdKeyboardArrowUp fontSize="large" />,
-        smallIcon: <MdKeyboardArrowUp />
+        smallIcon: <MdKeyboardArrowUp />,
       },
       {
         enum: "MACRO_ACTION_STEP_TAPCODE",
         name: "Key Press & Rel.",
         icon: <MdUnfoldLess fontSize="large" />,
-        smallIcon: <MdUnfoldLess />
+        smallIcon: <MdUnfoldLess />,
       },
       {
         enum: "MACRO_ACTION_STEP_EXPLICIT_REPORT",
         name: "Explicit Report",
-        icon: <React.Fragment />,
-        smallIcon: <React.Fragment />
+        icon: <></>,
+        smallIcon: <></>,
       },
       {
         enum: "MACRO_ACTION_STEP_IMPLICIT_REPORT",
         name: "Implicit Report",
-        icon: <React.Fragment />,
-        smallIcon: <React.Fragment />
+        icon: <></>,
+        smallIcon: <></>,
       },
       { enum: "MACRO_ACTION_STEP_SEND_REPORT", id: 11, name: "Send Report" },
       {
         enum: "MACRO_ACTION_STEP_TAP_SEQUENCE",
         name: "Intervaled Special Keys",
-        icon: <React.Fragment />,
-        smallIcon: <React.Fragment />
+        icon: <></>,
+        smallIcon: <></>,
       },
       {
         enum: "MACRO_ACTION_STEP_TAP_CODE_SEQUENCE",
         name: "Intervaled Key Press & Release",
-        icon: <React.Fragment />,
-        smallIcon: <React.Fragment />
-      }
+        icon: <></>,
+        smallIcon: <></>,
+      },
     ];
   }
 
   componentDidUpdate(prevProps, prevState) {
     try {
-      const prevAux = prevProps.macro.actions.map((x, id) => {
-        return { keyCode: x.keyCode, type: x.type, id: id };
-      });
-      const propAux = this.props.macro.actions.map((x, id) => {
-        return { keyCode: x.keyCode, type: x.type, id: id };
-      });
+      const prevAux = prevProps.macro.actions.map((x, id) => ({ keyCode: x.keyCode, type: x.type, id }));
+      const propAux = this.props.macro.actions.map((x, id) => ({ keyCode: x.keyCode, type: x.type, id }));
       // console.log("Testing: ", JSON.parse(JSON.stringify(prevAux)), JSON.parse(JSON.stringify(propAux)));
       if (JSON.stringify(prevAux) !== JSON.stringify(propAux)) {
         console.log("Updating");
-        let auxConv = this.createConversion(this.props.macro.actions);
-        let newRows = auxConv.map((item, index) => {
-          return { ...item, id: index };
-        });
+        const auxConv = this.createConversion(this.props.macro.actions);
+        const newRows = auxConv.map((item, index) => ({ ...item, id: index }));
         this.setState({
-          rows: newRows
+          rows: newRows,
         });
       }
     } catch (e) {
@@ -333,7 +327,7 @@ class MacroCreator extends Component {
         const randID = new Date().getTime() + Math.floor(Math.random() * 1000);
         let keyCode = this.keymapDB.reverse(item);
         if (upper) {
-          keyCode = keyCode + 2048;
+          keyCode += 2048;
         }
         let actions = [
           {
@@ -343,37 +337,37 @@ class MacroCreator extends Component {
             id: index + newRows.length,
             color: this.assignColor(keyCode),
             uid: randID,
-            ucolor: "transparent"
-          }
+            ucolor: "transparent",
+          },
         ];
         switch (true) {
           case (keyCode & 256) === 256 && (keyCode & 512) === 512:
-            //Control pressed to modify (2)
+            // Control pressed to modify (2)
             actions = this.addModToKey(actions, 5, 256);
 
             break;
           case (keyCode & 256) === 256:
-            //Control pressed to modify (2)
+            // Control pressed to modify (2)
             actions = this.addModToKey(actions, 2, 256);
 
             break;
           case (keyCode & 512) === 512:
-            //Left Alt pressed to modify (4)
+            // Left Alt pressed to modify (4)
             actions = this.addModToKey(actions, 4, 512);
 
             break;
           case (keyCode & 1024) === 1024:
-            //Right alt pressed to modify (5)
+            // Right alt pressed to modify (5)
             actions = this.addModToKey(actions, 5, 1024);
 
             break;
           case (keyCode & 2048) === 2048:
-            //Shift pressed to modify (0)
+            // Shift pressed to modify (0)
             actions = this.addModToKey(actions, 0, 2048);
 
             break;
           case (keyCode & 4096) === 4096:
-            //Gui pressed to modify (6)
+            // Gui pressed to modify (6)
             actions = this.addModToKey(actions, 6, 4096);
 
             break;
@@ -381,34 +375,33 @@ class MacroCreator extends Component {
             break;
         }
         return actions;
-      })
+      }),
     );
     // console.log("TEST", JSON.stringify(newRows), JSON.stringify(this.props.macros));
     this.setState({
-      addText: ""
+      addText: "",
     });
     this.updateRows(newRows);
   };
 
   onAddRecorded = recorded => {
     console.log("MacroCreator onAddRecorded", recorded, this.props.macro);
-    let actions = this.props.macro.actions;
+    let { actions } = this.props.macro;
     actions = actions.concat(
-      recorded.map((item, index) => {
-        return {
-          keyCode: item.keycode,
-          type: item.action
-        };
-      })
+      recorded.map((item, index) => ({
+        keyCode: item.keycode,
+        type: item.action,
+      })),
     );
-    let newRows = this.createConversion(actions);
+    const newRows = this.createConversion(actions);
     this.updateRows(newRows);
   };
 
   createConversion = actions => {
-    let converted = actions.map((action, i) => {
+    const converted = actions.map((action, i) => {
       const randID = new Date().getTime() + Math.floor(Math.random() * 1000);
-      let km, txt;
+      let km;
+      let txt;
       switch (action.type) {
         case 1:
         case 2:
@@ -419,14 +412,14 @@ class MacroCreator extends Component {
             id: i,
             color: "#faf0e3",
             uid: randID,
-            ucolor: "transparent"
+            ucolor: "transparent",
           };
         case 3:
         case 4:
         case 5:
           km = this.keymapDB.parse(action.keyCode);
           if (km.extraLabel !== undefined) {
-            txt = km.extraLabel + " " + km.label;
+            txt = `${km.extraLabel} ${km.label}`;
           } else {
             txt = km.label;
           }
@@ -437,7 +430,7 @@ class MacroCreator extends Component {
             id: i,
             color: this.assignColor(action.keyCode),
             uid: randID,
-            ucolor: "transparent"
+            ucolor: "transparent",
           };
         case 6:
         case 7:
@@ -449,7 +442,7 @@ class MacroCreator extends Component {
             id: i,
             color: this.assignColor(action.keyCode),
             uid: randID,
-            ucolor: "transparent"
+            ucolor: "transparent",
           };
         default:
           break;
@@ -459,27 +452,25 @@ class MacroCreator extends Component {
   };
 
   revertConversion = actions => {
-    let converted = actions.map(({ keyCode, action, id }) => {
-      return {
-        keyCode: keyCode,
-        type: action,
-        id: id
-      };
-    });
+    const converted = actions.map(({ keyCode, action, id }) => ({
+      keyCode,
+      type: action,
+      id,
+    }));
     return converted;
   };
 
   updateRows = rows => {
     console.log("Macro creator updaterows", rows);
-    let texted = rows.map(k => this.keymapDB.parse(k.keyCode).label).join(" ");
-    let newRows = rows.map((item, index) => {
-      let aux = item;
+    const texted = rows.map(k => this.keymapDB.parse(k.keyCode).label).join(" ");
+    const newRows = rows.map((item, index) => {
+      const aux = item;
       aux.id = index;
       return aux;
     });
     this.setState({
       rows: newRows,
-      macro: texted
+      macro: texted,
     });
 
     this.props.addToActions(this.revertConversion(rows));
@@ -487,8 +478,8 @@ class MacroCreator extends Component {
 
   onAddSymbol = (keyCode, action) => {
     const randID = new Date().getTime() + Math.floor(Math.random() * 1000);
-    let newRows = this.state.rows;
-    let symbol = this.keymapDB.parse(keyCode).label;
+    const newRows = this.state.rows;
+    const symbol = this.keymapDB.parse(keyCode).label;
     newRows.push({
       symbol,
       keyCode,
@@ -496,14 +487,14 @@ class MacroCreator extends Component {
       id: newRows.length,
       color: this.assignColor(keyCode),
       uid: randID,
-      ucolor: "transparent"
+      ucolor: "transparent",
     });
     this.updateRows(newRows);
   };
 
   onAddDelay = (delay, action) => {
     const randID = new Date().getTime() + Math.floor(Math.random() * 1000);
-    let newRows = this.state.rows;
+    const newRows = this.state.rows;
     newRows.push({
       symbol: parseInt(delay),
       keyCode: parseInt(delay),
@@ -511,32 +502,32 @@ class MacroCreator extends Component {
       id: newRows.length,
       color: "#faf0e3",
       uid: randID,
-      ucolor: "transparent"
+      ucolor: "transparent",
     });
     this.updateRows(newRows);
   };
 
   onAddDelayRnd = (delayMin, delayMax, action) => {
     const randID = new Date().getTime() + Math.floor(Math.random() * 1000);
-    let newRows = this.state.rows;
+    const newRows = this.state.rows;
     newRows.push({
       symbol: `${delayMin} - ${delayMax}`,
       keyCode: [delayMin, delayMax],
-      action: action,
+      action,
       id: newRows.length,
       color: "#faf0e3",
       uid: randID,
-      ucolor: "transparent"
+      ucolor: "transparent",
     });
     this.updateRows(newRows);
   };
 
   onAddSpecial = (keyCode, action) => {
     const randID = new Date().getTime() + Math.floor(Math.random() * 1000);
-    let newRows = this.state.rows;
+    const newRows = this.state.rows;
     let symbol = this.keymapDB.parse(keyCode);
     if (symbol.extraLabel !== undefined) {
-      symbol = symbol.extraLabel + " " + symbol.label;
+      symbol = `${symbol.extraLabel} ${symbol.label}`;
     } else {
       symbol = symbol.label;
     }
@@ -547,7 +538,7 @@ class MacroCreator extends Component {
       id: newRows.length,
       color: this.assignColor(keyCode),
       uid: randID,
-      ucolor: "transparent"
+      ucolor: "transparent",
     });
     this.updateRows(newRows);
   };
@@ -555,8 +546,8 @@ class MacroCreator extends Component {
   addModifier = (rowID, modifierID) => {
     const { name, keyCode, color } = this.modifiers[modifierID];
     const randID = new Date().getTime() + Math.floor(Math.random() * 1000);
-    const randColor = "#" + Math.floor(Math.abs(Math.sin(randID) * 16777215) % 16777215).toString(16);
-    let newRows = this.state.rows;
+    const randColor = `#${Math.floor(Math.abs(Math.sin(randID) * 16777215) % 16777215).toString(16)}`;
+    const newRows = this.state.rows;
     newRows.splice(rowID + 1, 0, {
       symbol: name,
       keyCode,
@@ -564,7 +555,7 @@ class MacroCreator extends Component {
       id: rowID + 1,
       color,
       uid: randID,
-      ucolor: randColor
+      ucolor: randColor,
     });
     newRows.splice(rowID, 0, {
       symbol: name,
@@ -573,7 +564,7 @@ class MacroCreator extends Component {
       id: rowID,
       color,
       uid: randID,
-      ucolor: randColor
+      ucolor: randColor,
     });
     this.updateRows(newRows);
   };
@@ -581,25 +572,25 @@ class MacroCreator extends Component {
   addModToKey = (rows, modID, modBit) => {
     const { name, keyCode, color } = this.modifiers[modID];
     const randID = new Date().getTime() + Math.floor(Math.random() * 1000);
-    const randColor = "#" + Math.floor(Math.abs(Math.sin(randID) * 16777215) % 16777215).toString(16);
-    let actions = rows;
+    const randColor = `#${Math.floor(Math.abs(Math.sin(randID) * 16777215) % 16777215).toString(16)}`;
+    const actions = rows;
     actions.splice(1, 0, {
       symbol: name,
-      keyCode: keyCode,
+      keyCode,
       action: 7,
       id: 2,
-      color: color,
+      color,
       uid: randID,
-      ucolor: randColor
+      ucolor: randColor,
     });
     actions.splice(0, 0, {
       symbol: name,
-      keyCode: keyCode,
+      keyCode,
       action: 6,
       id: 0,
-      color: color,
+      color,
       uid: randID,
-      ucolor: randColor
+      ucolor: randColor,
     });
     actions[1].keyCode = actions[1].keyCode ^ modBit;
     actions[1].symbol = this.keymapDB.parse(actions[1].keyCode).label;

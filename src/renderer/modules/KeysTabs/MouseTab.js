@@ -133,7 +133,7 @@ h4 {
 }
 `;
 
-const MouseTab = ({ isStandardView, keyCode, onAddSpecial }) => {
+function MouseTab({ isStandardView, keyCode, onAddSpecial }) {
   const [isHovering, setIsHovering] = React.useState(false);
   const clickLeft = React.useRef(null);
 
@@ -172,7 +172,7 @@ const MouseTab = ({ isStandardView, keyCode, onAddSpecial }) => {
                   buttonText={i18n.mouse.clickLeft}
                   tooltipDelay={100}
                   onClick={() => handleClick(20545)}
-                  selected={isStandardView ? (keyCode === 20545 ? true : false) : false}
+                  selected={isStandardView ? keyCode === 20545 : false}
                   onMouseEnter={() => handleClick(20545)}
                   onMouseLeave={() => handleLeaveAnimations("Trigger OUT - Left")}
                 />
@@ -180,7 +180,7 @@ const MouseTab = ({ isStandardView, keyCode, onAddSpecial }) => {
                   buttonText={i18n.mouse.clickMiddle}
                   tooltipDelay={100}
                   onClick={() => handleClick(20548)}
-                  selected={isStandardView ? (keyCode === 20548 ? true : false) : false}
+                  selected={isStandardView ? keyCode === 20548 : false}
                   onMouseEnter={() => handleClick(20545)}
                   onMouseLeave={() => handleLeaveAnimations("Trigger OUT - Middle")}
                 />
@@ -188,19 +188,19 @@ const MouseTab = ({ isStandardView, keyCode, onAddSpecial }) => {
                   buttonText={i18n.mouse.clickRight}
                   tooltipDelay={100}
                   onClick={() => handleClick(20546)}
-                  selected={isStandardView ? (keyCode === 20546 ? true : false) : false}
+                  selected={isStandardView ? keyCode === 20546 : false}
                 />
                 <ButtonConfig
                   buttonText={i18n.mouse.clickBack}
                   tooltipDelay={100}
                   onClick={() => handleClick(20552)}
-                  selected={isStandardView ? (keyCode === 20552 ? true : false) : false}
+                  selected={isStandardView ? keyCode === 20552 : false}
                 />
                 <ButtonConfig
                   buttonText={i18n.mouse.clickForward}
                   tooltipDelay={100}
                   onClick={() => handleClick(20560)}
-                  selected={isStandardView ? (keyCode === 20560 ? true : false) : false}
+                  selected={isStandardView ? keyCode === 20560 : false}
                 />
               </div>
             </div>
@@ -213,25 +213,25 @@ const MouseTab = ({ isStandardView, keyCode, onAddSpecial }) => {
                     eventType="movement"
                     direction="up"
                     onClick={() => handleClick(20481)}
-                    selected={isStandardView ? (keyCode === 20481 ? true : false) : false}
+                    selected={isStandardView ? keyCode === 20481 : false}
                   />
                   <ButtonMouse
                     eventType="movement"
                     direction="right"
                     onClick={() => handleClick(20488)}
-                    selected={isStandardView ? (keyCode === 20488 ? true : false) : false}
+                    selected={isStandardView ? keyCode === 20488 : false}
                   />
                   <ButtonMouse
                     eventType="movement"
                     direction="down"
                     onClick={() => handleClick(20482)}
-                    selected={isStandardView ? (keyCode === 20482 ? true : false) : false}
+                    selected={isStandardView ? keyCode === 20482 : false}
                   />
                   <ButtonMouse
                     eventType="movement"
                     direction="left"
                     onClick={() => handleClick(20484)}
-                    selected={isStandardView ? (keyCode === 20484 ? true : false) : false}
+                    selected={isStandardView ? keyCode === 20484 : false}
                   />
                 </div>
               </div>
@@ -245,25 +245,25 @@ const MouseTab = ({ isStandardView, keyCode, onAddSpecial }) => {
                     eventType="wheel"
                     direction="up"
                     onClick={() => handleClick(20497)}
-                    selected={isStandardView ? (keyCode === 20497 ? true : false) : false}
+                    selected={isStandardView ? keyCode === 20497 : false}
                   />
                   <ButtonMouse
                     eventType="wheel"
                     direction="right"
                     onClick={() => handleClick(20504)}
-                    selected={isStandardView ? (keyCode === 20504 ? true : false) : false}
+                    selected={isStandardView ? keyCode === 20504 : false}
                   />
                   <ButtonMouse
                     eventType="wheel"
                     direction="down"
                     onClick={() => handleClick(20498)}
-                    selected={isStandardView ? (keyCode === 20498 ? true : false) : false}
+                    selected={isStandardView ? keyCode === 20498 : false}
                   />
                   <ButtonMouse
                     eventType="wheel"
                     direction="left"
                     onClick={() => handleClick(20500)}
-                    selected={isStandardView ? (keyCode === 20500 ? true : false) : false}
+                    selected={isStandardView ? keyCode === 20500 : false}
                   />
                 </div>
               </div>
@@ -274,6 +274,6 @@ const MouseTab = ({ isStandardView, keyCode, onAddSpecial }) => {
       </div>
     </Styles>
   );
-};
+}
 
 export default MouseTab;

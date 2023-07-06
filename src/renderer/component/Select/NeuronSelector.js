@@ -17,14 +17,12 @@
 
 import React from "react";
 import Styled from "styled-components";
-import i18n from "../../i18n";
 import Dropdown from "react-bootstrap/Dropdown";
+import i18n from "../../i18n";
 import { ButtonSettings } from "../Button";
-import { IconArrowsSmallSeparating } from "../Icon";
-import { IconPen } from "../Icon";
-import { IconDelete } from "../Icon";
+import { IconArrowsSmallSeparating, IconPen, IconDelete } from "../Icon";
 
-import { NameModal } from "../Modal/"; // Imported custom modal component
+import { NameModal } from "../Modal"; // Imported custom modal component
 
 const Style = Styled.div`
 
@@ -34,7 +32,7 @@ class NeuronSelector extends React.Component {
     super(props);
 
     this.state = {
-      show: false
+      show: false,
     };
   }
 

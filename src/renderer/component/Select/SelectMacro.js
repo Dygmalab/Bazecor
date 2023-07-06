@@ -58,6 +58,7 @@ class SelectMacro extends Component {
     super(props);
     this.state = {};
   }
+
   render() {
     const { keyCode, onKeySelect, macros } = this.props;
     const KC = keyCode.base + keyCode.modified;
@@ -85,15 +86,13 @@ class SelectMacro extends Component {
             </div>
           </Dropdown.Toggle>
           <Dropdown.Menu>
-            {mcros.map((x, id) => {
-              return (
-                <Dropdown.Item eventKey={x} key={`macro-${id}`} disabled={x == -1}>
-                  <div className="dropdownInner">
-                    <div className="dropdownItem">{`${id + 1}. ${macros[id].name}`}</div>
-                  </div>
-                </Dropdown.Item>
-              );
-            })}
+            {mcros.map((x, id) => (
+              <Dropdown.Item eventKey={x} key={`macro-${id}`} disabled={x == -1}>
+                <div className="dropdownInner">
+                  <div className="dropdownItem">{`${id + 1}. ${macros[id].name}`}</div>
+                </div>
+              </Dropdown.Item>
+            ))}
           </Dropdown.Menu>
         </Dropdown>
       </Style>

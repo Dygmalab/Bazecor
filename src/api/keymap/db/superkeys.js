@@ -17,8 +17,8 @@ const superkey = index => ({
   code: 53980 + index,
   labels: {
     primary: (index + 1).toString(),
-    top: "SUPER"
-  }
+    top: "SUPER",
+  },
 });
 
 const superkeys = Array(128)
@@ -27,7 +27,7 @@ const superkeys = Array(128)
 
 const SuperKeyTable = {
   groupName: "SuperKeys",
-  keys: superkeys
+  keys: superkeys,
 };
 
 export default SuperKeyTable;

@@ -156,7 +156,7 @@ class SelectLayersCustomDropdown extends Component {
       { name: "Layer Lock 7", keynum: 17498 },
       { name: "Layer Lock 8", keynum: 17499 },
       { name: "Layer Lock 9", keynum: 17500 },
-      { name: "Layer Lock 10", keynum: 17501 }
+      { name: "Layer Lock 10", keynum: 17501 },
     ];
     this.layerSwitch = [
       { name: "Layer Shift 1", keynum: 17450 },
@@ -168,9 +168,10 @@ class SelectLayersCustomDropdown extends Component {
       { name: "Layer Shift 7", keynum: 17456 },
       { name: "Layer Shift 8", keynum: 17457 },
       { name: "Layer Shift 9", keynum: 17458 },
-      { name: "Layer Shift 10", keynum: 17459 }
+      { name: "Layer Shift 10", keynum: 17459 },
     ];
   }
+
   render() {
     const { action, keyCode, onKeySelect, activeTab } = this.props;
     const KC = keyCode.base + keyCode.modified;
@@ -192,7 +193,7 @@ class SelectLayersCustomDropdown extends Component {
             <div className="dropdownItemSelected">
               <div className="dropdownItem">
                 <div className="dropdownItem">Layers</div>
-                <div className="badge-circle"></div>
+                <div className="badge-circle" />
               </div>
             </div>
           </Dropdown.Toggle>
@@ -203,20 +204,18 @@ class SelectLayersCustomDropdown extends Component {
                   Layer <strong>Shift</strong>
                 </div>
                 <div className="dropdown-group-buttons">
-                  {this.layerSwitch.map((item, id) => {
-                    return (
-                      <Dropdown.Item
-                        eventKey={item.keynum}
-                        key={`layerSwitch-${id}`}
-                        disabled={activeTab == "super" ? true : item.keynum == -1 ? true : false}
-                        className={`${
-                          keyCode.modified > 0 && item.keynum == keyCode.base + keyCode.modified ? "active" : ""
-                        } dropdown-config-button`}
-                      >
-                        <div className="dropdownItem">{id + 1}</div>
-                      </Dropdown.Item>
-                    );
-                  })}
+                  {this.layerSwitch.map((item, id) => (
+                    <Dropdown.Item
+                      eventKey={item.keynum}
+                      key={`layerSwitch-${id}`}
+                      disabled={activeTab == "super" ? true : item.keynum == -1}
+                      className={`${
+                        keyCode.modified > 0 && item.keynum == keyCode.base + keyCode.modified ? "active" : ""
+                      } dropdown-config-button`}
+                    >
+                      <div className="dropdownItem">{id + 1}</div>
+                    </Dropdown.Item>
+                  ))}
                 </div>
               </div>
               <div className="dropdown-group">
@@ -224,20 +223,18 @@ class SelectLayersCustomDropdown extends Component {
                   Layer <strong>Lock</strong>
                 </div>
                 <div className="dropdown-group-buttons">
-                  {this.layerLock.map((item, id) => {
-                    return (
-                      <Dropdown.Item
-                        eventKey={item.keynum}
-                        key={`layerLock-${id}`}
-                        disabled={item.keynum == -1}
-                        className={`${
-                          keyCode.modified > 0 && item.keynum == keyCode.base + keyCode.modified ? "active" : ""
-                        } dropdown-config-button`}
-                      >
-                        <div className="dropdownItem">{id + 1}</div>
-                      </Dropdown.Item>
-                    );
-                  })}
+                  {this.layerLock.map((item, id) => (
+                    <Dropdown.Item
+                      eventKey={item.keynum}
+                      key={`layerLock-${id}`}
+                      disabled={item.keynum == -1}
+                      className={`${
+                        keyCode.modified > 0 && item.keynum == keyCode.base + keyCode.modified ? "active" : ""
+                      } dropdown-config-button`}
+                    >
+                      <div className="dropdownItem">{id + 1}</div>
+                    </Dropdown.Item>
+                  ))}
                 </div>
               </div>
             </div>

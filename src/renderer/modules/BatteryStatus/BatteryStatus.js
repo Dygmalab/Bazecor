@@ -1,14 +1,15 @@
 import React, { useEffect, useRef, useState } from "react";
-import i18n from "../../i18n";
+import PropTypes from "prop-types";
 import Styled from "styled-components";
+import i18n from "../../i18n";
 import Focus from "../../../api/focus";
 
-//Custom components
+// Custom components
 import Title from "../../component/Title";
 import { ButtonConfig } from "../../component/Button";
 import { BatteryStatusSide, SavingModeIndicator } from "../../component/Battery";
 
-//Assets
+// Assets
 import { IconBattery, IconRefresh } from "../../component/Icon";
 
 const Style = Styled.div`
@@ -211,7 +212,7 @@ const BatteryStatus = props => {
                   forceRetrieveBattery();
                 }}
                 icoSVG={<IconRefresh />}
-                style={"button-settings"}
+                style="button-settings"
                 dataAnimate={animateIcon}
               />
             </div>
@@ -220,6 +221,10 @@ const BatteryStatus = props => {
       </div>
     </Style>
   );
+};
+
+BatteryStatus.propTypes = {
+  disable: PropTypes.bool.isRequired,
 };
 
 export default BatteryStatus;

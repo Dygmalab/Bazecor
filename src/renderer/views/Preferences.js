@@ -19,14 +19,14 @@
 import React from "react";
 import { ipcRenderer } from "electron";
 import Styled from "styled-components";
-import i18n from "../i18n";
 
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
 import Spinner from "react-bootstrap/Spinner";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
+import i18n from "../i18n";
 import "react-toastify/dist/ReactToastify.css";
 
 // Custom modules imports
@@ -40,8 +40,9 @@ import ToastMessage from "../component/ToastMessage";
 import { RegularButton } from "../component/Button";
 import { IconFloppyDisk } from "../component/Icon";
 
-const Store = require("electron-store");
-const store = new Store();
+import Store from "../utils/Store";
+
+const store = Store.getStore();
 
 const Styles = Styled.div`
   .toggle-button{
@@ -59,7 +60,7 @@ class Preferences extends React.Component {
       keymap: {
         custom: [],
         default: [],
-        onlyCustom: true
+        onlyCustom: true,
       },
       ledBrightness: 255,
       ledBrightnessUG: 255,
@@ -80,7 +81,7 @@ class Preferences extends React.Component {
       mouseWheelDelay: 100,
       mouseSpeedLimit: 1,
       modified: props.inContext,
-      showDefaults: false
+      showDefaults: false,
     };
 
     this.state = {
@@ -92,11 +93,12 @@ class Preferences extends React.Component {
       selectedNeuron: 0,
       neuronID: "",
       kbData: this.kbData,
-      modified: props.inContext
+      modified: props.inContext,
     };
   }
 
   async componentDidMount() {
+    const focus = new Focus();
     const devTools = await ipcRenderer.invoke("is-devtools-opened");
     this.setState({ devTools });
     ipcRenderer.on("opened-devtool", (event, arg) => {
@@ -118,7 +120,7 @@ class Preferences extends React.Component {
   }
 
   getNeuronData = async () => {
-    let focus = new Focus();
+    const focus = new Focus();
 
     // EXTRACTING DATA FROM NEURON
     await focus.command("hardware.chip_id").then(neuronID => {
@@ -195,7 +197,7 @@ class Preferences extends React.Component {
       this.kbData.mouseSpeedLimit = speedLimit;
     });
 
-    //Save in state
+    // Save in state
     this.setState({ kbData: this.kbData });
   };
 
@@ -221,7 +223,7 @@ class Preferences extends React.Component {
       mouseAccelDelay,
       mouseWheelSpeed,
       mouseWheelDelay,
-      mouseSpeedLimit
+      mouseSpeedLimit,
     } = this.kbData;
 
     await await focus.command("keymap.onlyCustom", keymap.onlyCustom);
@@ -247,7 +249,7 @@ class Preferences extends React.Component {
     await await focus.command("mouse.wheelDelay", mouseWheelDelay);
     await await focus.command("mouse.speedLimit", mouseSpeedLimit);
 
-    //TODO: Review toast popup on try/catch works well.
+    // TODO: Review toast popup on try/catch works well.
     try {
       const commands = await this.bkp.Commands();
       const backup = await this.bkp.DoBackup(commands, this.state.neuronID);
@@ -260,7 +262,7 @@ class Preferences extends React.Component {
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
-        icon: ""
+        icon: "",
       });
     } catch (error) {
       console.error(error);
@@ -278,8 +280,8 @@ class Preferences extends React.Component {
           pauseOnHover: true,
           draggable: true,
           progress: undefined,
-          icon: ""
-        }
+          icon: "",
+        },
       );
     }
 
@@ -325,7 +327,7 @@ class Preferences extends React.Component {
   // ADVANCED FUNCTIONS
   toggleAdvanced = () => {
     this.setState(state => ({
-      advanced: !state.advanced
+      advanced: !state.advanced,
     }));
   };
 
@@ -342,13 +344,13 @@ class Preferences extends React.Component {
   };
 
   toggleVerboseFocus = event => {
-    let focus = new Focus();
+    const focus = new Focus();
     focus.debug = !this.state.verboseFocus;
     this.setState({ verboseFocus: !this.state.verboseFocus });
   };
 
   toggleOnlyCustom = event => {
-    let newkbData = this.kbData;
+    const newkbData = this.kbData;
     newkbData.keymap.onlyCustom = event.target.checked;
     newkbData.modified = true;
     this.setState({ modified: true });
@@ -358,15 +360,15 @@ class Preferences extends React.Component {
   // NEURON FUNCTIONS
   selectNeuron = value => {
     this.setState({
-      selectedNeuron: parseInt(value)
+      selectedNeuron: parseInt(value),
     });
   };
 
   updateNeuronName = data => {
-    let temp = this.state.neurons;
+    const temp = this.state.neurons;
     temp[this.state.selectedNeuron].name = data;
     this.setState({
-      neurons: temp
+      neurons: temp,
     });
     this.applyNeuronName(temp);
   };
@@ -376,13 +378,13 @@ class Preferences extends React.Component {
   };
 
   deleteNeuron = async () => {
-    let result = await window.confirm(i18n.keyboardSettings.neuronManager.deleteNeuron);
+    const result = await window.confirm(i18n.keyboardSettings.neuronManager.deleteNeuron);
     if (result) {
-      let temp = JSON.parse(JSON.stringify(this.state.neurons));
+      const temp = JSON.parse(JSON.stringify(this.state.neurons));
       temp.splice(this.state.selectedNeuron, 1);
       this.setState({
         neurons: temp,
-        selectedNeuron: temp.length - 1 > this.selectNeuron ? this.selectNeuron : temp.length - 1
+        selectedNeuron: temp.length - 1 > this.selectNeuron ? this.selectNeuron : temp.length - 1,
       });
       store.set("neurons", temp);
     }
@@ -405,8 +407,8 @@ class Preferences extends React.Component {
         <Container fluid>
           <PageHeader
             text={i18n.preferences.title}
-            style={"pageHeaderFlatBottom"}
-            showSaving={true}
+            style="pageHeaderFlatBottom"
+            showSaving
             showContentSelector={false}
             saveContext={this.saveKeymapChanges}
             destroyContext={this.destroyContext}

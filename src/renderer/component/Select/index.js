@@ -53,5 +53,5 @@ export {
   SelectMacroCustomDropdown,
   SelectMouseCustomDropdown,
   SelectShotModifierCustomDropdown,
-  SelectSuperKeyCustomDropdown
+  SelectSuperKeyCustomDropdown,
 };

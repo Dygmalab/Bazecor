@@ -17,13 +17,14 @@
 
 import React from "react";
 import Styled from "styled-components";
-import i18n from "../../i18n";
 import Dropdown from "react-bootstrap/Dropdown";
-1;
-import { NameModal } from "../Modal/"; // Imported custom modal component
+import i18n from "../../i18n";
+import { NameModal } from "../Modal"; // Imported custom modal component
 import { RegularButton, ButtonConfig, ButtonSettings } from "../Button";
 
 import { IconArrowsSmallSeparating, IconPen, IconAddNew, IconClone, IconDelete } from "../Icon";
+
+1;
 
 const Style = Styled.div` 
 display: flex;
@@ -95,7 +96,7 @@ class SuperKeysSelector extends React.Component {
 
     this.state = {
       show: false,
-      showAdd: false
+      showAdd: false,
     };
   }
 
@@ -216,13 +217,13 @@ class SuperKeysSelector extends React.Component {
             name={itemList[selectedItem].name}
             toggleShow={this.toggleShow}
             handleSave={this.handleSave}
-            modalTitle={`Change Superkey name`}
-            labelInput={`Superkey name`}
+            modalTitle="Change Superkey name"
+            labelInput="Superkey name"
           />
         )}
         <NameModal
           show={showAdd}
-          name={""}
+          name=""
           toggleShow={this.toggleShowAdd}
           handleSave={this.handleAdd}
           modalTitle={i18n.editor.superkeys.createModal.createNew}

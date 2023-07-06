@@ -18,8 +18,8 @@
 import React from "react";
 import Styled from "styled-components";
 import Dropdown from "react-bootstrap/Dropdown";
-import iconKeyboard from "../../../../static/base/icon-keyboard.svg";
-import iconConnected from "../../../../static/base/icon-connected.svg";
+import iconKeyboard from "@Assets/base/icon-keyboard.svg";
+import iconConnected from "@Assets/base/icon-connected.svg";
 
 const Style = Styled.div`
 .custom-dropdown {
@@ -76,7 +76,7 @@ const Style = Styled.div`
   }
 }
 `;
-const SelectKeyboardDropdown = ({ selectPort, selectedPortIndex, deviceItems, connected }) => {
+function SelectKeyboardDropdown({ selectPort, selectedPortIndex, deviceItems, connected }) {
   return (
     <Style>
       <Dropdown className="custom-dropdown" onSelect={selectPort}>
@@ -119,6 +119,6 @@ const SelectKeyboardDropdown = ({ selectPort, selectedPortIndex, deviceItems, co
       </Dropdown>
     </Style>
   );
-};
+}
 
 export default SelectKeyboardDropdown;

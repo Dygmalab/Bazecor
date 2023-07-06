@@ -7,7 +7,7 @@ function IconEditModeStandardViewSm(props) {
         <mask
           id="prefix_StandardViewModeSm_a"
           style={{
-            maskType: "alpha"
+            maskType: "alpha",
           }}
           maskUnits="userSpaceOnUse"
           x={0}
@@ -24,7 +24,7 @@ function IconEditModeStandardViewSm(props) {
           <mask
             id="prefix_StandardViewModeSm_b"
             style={{
-              maskType: "alpha"
+              maskType: "alpha",
             }}
             maskUnits="userSpaceOnUse"
             x={0}

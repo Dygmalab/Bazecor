@@ -10,7 +10,7 @@ export default class NameModal extends React.Component {
     super(props);
     this.inputText = React.createRef();
     this.state = {
-      name: props.name
+      name: props.name,
     };
   }
 
@@ -18,7 +18,7 @@ export default class NameModal extends React.Component {
     if (this.props != previousProps) {
       // console.log("PROBLEM", this.props.name, previousProps.name);
       this.setState({
-        name: this.props.name
+        name: this.props.name,
       });
     }
   }
@@ -40,7 +40,7 @@ export default class NameModal extends React.Component {
           />
         </Modal.Body>
         <Modal.Footer>
-          <RegularButton buttonText={i18n.app.cancelPending.button} style="outline" size="sm" onClick={toggleShow} />
+          <RegularButton buttonText={i18n.app.cancelPending.button} style="outline transp-bg" size="sm" onClick={toggleShow} />
           <RegularButton
             buttonText={i18n.components.save.button}
             style="outline gradient"

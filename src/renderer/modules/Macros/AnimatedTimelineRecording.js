@@ -75,7 +75,7 @@ const Styles = Styled.div`
 }
 `;
 
-const AnimatedTimelineRecording = ({ isRecording }) => {
+function AnimatedTimelineRecording({ isRecording }) {
   let generateBars = "";
   for (let i = 1; i < 30; i++) {
     for (let i = 1; i < 5; i++) {
@@ -89,18 +89,18 @@ const AnimatedTimelineRecording = ({ isRecording }) => {
     <Styles className={`AnimatedTimelineRecording ${isRecording ? "isRecording" : "noRecording"}`}>
       <div className="marquee">
         <div className="marqueeInner">
-          <div className={"blockRect"} dangerouslySetInnerHTML={{ __html: generateBars }} />
-          <div className={"blockRect"} dangerouslySetInnerHTML={{ __html: generateBars }} />
-          <div className={"blockRect"} dangerouslySetInnerHTML={{ __html: generateBars }} />
-          <div className={"blockRect"} dangerouslySetInnerHTML={{ __html: generateBars }} />
+          <div className="blockRect" dangerouslySetInnerHTML={{ __html: generateBars }} />
+          <div className="blockRect" dangerouslySetInnerHTML={{ __html: generateBars }} />
+          <div className="blockRect" dangerouslySetInnerHTML={{ __html: generateBars }} />
+          <div className="blockRect" dangerouslySetInnerHTML={{ __html: generateBars }} />
         </div>
       </div>
     </Styles>
   );
-};
+}
 
 AnimatedTimelineRecording.propTypes = {
-  isRecording: PropTypes.bool
+  isRecording: PropTypes.bool,
 };
 
 export default AnimatedTimelineRecording;

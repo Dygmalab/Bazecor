@@ -16,8 +16,8 @@
  */
 
 import React from "react";
-import { ButtonConfig } from "../../component/Button";
 import Styled from "styled-components";
+import { ButtonConfig } from "../Button";
 
 const Style = Styled.div`
 &.toggleButtonsContainer {
@@ -44,7 +44,7 @@ const Style = Styled.div`
   }
 }
 `;
-const ToggleButtons = ({ selectDarkMode, value, listElements, style, size }) => {
+function ToggleButtons({ selectDarkMode, value, listElements, style, size }) {
   return (
     // className={`button-config ${value == item.value ? "active" : ""}`}
     <Style className={`toggleButtonsContainer ${style == "flex" ? "toggleButtonsContainerFlex" : ""}`}>
@@ -53,7 +53,7 @@ const ToggleButtons = ({ selectDarkMode, value, listElements, style, size }) => 
         {listElements.map((item, index) => (
           <ButtonConfig
             onClick={e => selectDarkMode(item.value)}
-            selected={value === item.value ? true : false}
+            selected={value === item.value}
             icoSVG={item.icon}
             icoPosition="left"
             key={index}
@@ -64,6 +64,6 @@ const ToggleButtons = ({ selectDarkMode, value, listElements, style, size }) => 
       </div>
     </Style>
   );
-};
+}
 
 export default ToggleButtons;

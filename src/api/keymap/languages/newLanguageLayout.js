@@ -24,24 +24,23 @@
 function newLanguageLayout(baseKeyCodeTable, language = "english", newKeyCodeTable) {
   if (language === "english") {
     return baseKeyCodeTable;
-  } else {
-    return baseKeyCodeTable.map(group => {
-      const newArray = group.keys.reduce((acc, key) => {
-        const newKey = newKeyCodeTable.find(item => item.code === key.code);
-        const isDeleteNewKey = newKey && newKey.newGroupName && newKey.newGroupName !== group.groupName;
-        if (!isDeleteNewKey) {
-          newKey ? acc.push(newKey) : acc.push(key);
-        }
-        return acc;
-      }, []);
-      const arrayFromAnotherGroup = newKeyCodeTable.filter(keys => keys.newGroupName === group.groupName);
-
-      return {
-        ...group,
-        keys: [...newArray, ...arrayFromAnotherGroup]
-      };
-    });
   }
+  return baseKeyCodeTable.map(group => {
+    const newArray = group.keys.reduce((acc, key) => {
+      const newKey = newKeyCodeTable.find(item => item.code === key.code);
+      const isDeleteNewKey = newKey && newKey.newGroupName && newKey.newGroupName !== group.groupName;
+      if (!isDeleteNewKey) {
+        newKey ? acc.push(newKey) : acc.push(key);
+      }
+      return acc;
+    }, []);
+    const arrayFromAnotherGroup = newKeyCodeTable.filter(keys => keys.newGroupName === group.groupName);
+
+    return {
+      ...group,
+      keys: [...newArray, ...arrayFromAnotherGroup],
+    };
+  });
 }
 
 export default newLanguageLayout;

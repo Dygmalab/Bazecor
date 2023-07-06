@@ -20,25 +20,25 @@ import { withModifiers } from "./utils";
 const GuiLabels = {
   linux: "LINUX",
   win32: "WIN",
-  darwin: "⌘"
+  darwin: "⌘",
 };
 
 const GuiVerboses = {
   linux: "Linux",
   win32: "Windows",
-  darwin: "Command"
+  darwin: "Command",
 };
 
 const AltLabels = {
   linux: "ALT",
   win32: "ALT",
-  darwin: "⌥"
+  darwin: "⌥",
 };
 
 const AltVerboses = {
   linux: "Alt",
   win32: "Alt",
-  darwin: "Option"
+  darwin: "Option",
 };
 
 const guiLabel = GuiLabels[process.platform] || "Gui";
@@ -54,63 +54,63 @@ const ModifiersTable = {
       labels: {
         top: "LEFT",
         primary: "CTRL",
-        verbose: "Left Control"
-      }
+        verbose: "Left Control",
+      },
     },
     {
       code: 225,
       labels: {
         top: "LEFT",
         primary: "SHIFT",
-        verbose: "Left Shift"
-      }
+        verbose: "Left Shift",
+      },
     },
     {
       code: 226,
       labels: {
-        primary: "LEFT " + AltLabel,
-        verbose: "Left " + AltVerbose
-      }
+        primary: `LEFT ${AltLabel}`,
+        verbose: `Left ${AltVerbose}`,
+      },
     },
     {
       code: 227,
       labels: {
-        primary: "LEFT " + guiLabel,
-        verbose: "Left " + guiVerbose
-      }
+        primary: `LEFT ${guiLabel}`,
+        verbose: `Left ${guiVerbose}`,
+      },
     },
     {
       code: 228,
       labels: {
         top: "RIGHT",
         primary: "CTRL",
-        verbose: "Right Control"
-      }
+        verbose: "Right Control",
+      },
     },
     {
       code: 229,
       labels: {
         top: "RIGHT",
         primary: "SHIFT",
-        verbose: "Right Shift"
-      }
+        verbose: "Right Shift",
+      },
     },
     {
       code: 230,
       labels: {
         top: "",
-        primary: "RIGHT " + AltLabel,
-        verbose: "AltGr"
-      }
+        primary: `RIGHT ${AltLabel}`,
+        verbose: "AltGr",
+      },
     },
     {
       code: 231,
       labels: {
-        primary: "RIGHT " + guiLabel,
-        verbose: "Right " + guiVerbose
-      }
-    }
-  ]
+        primary: `RIGHT ${guiLabel}`,
+        verbose: `Right ${guiVerbose}`,
+      },
+    },
+  ],
 };
 
 const HyperMehTable = {
@@ -119,16 +119,16 @@ const HyperMehTable = {
     {
       code: 2530,
       labels: {
-        primary: "Meh"
-      }
+        primary: "Meh",
+      },
     },
     {
       code: 3043,
       labels: {
-        primary: "Hyper"
-      }
-    }
-  ]
+        primary: "Hyper",
+      },
+    },
+  ],
 };
 
 const ModifiedModifiersTables = [
@@ -171,7 +171,7 @@ const ModifiedModifiersTables = [
   withModifiers(ModifiersTable, "Alt + AltGr + Shift + Os +", "A+AGr+S+O+", 7680),
 
   // All
-  withModifiers(ModifiersTable, "Hyper + AltGr +", "H+AGr+", 7936)
+  withModifiers(ModifiersTable, "Hyper + AltGr +", "H+AGr+", 7936),
 ];
 
 export { ModifiersTable as default, ModifiedModifiersTables, HyperMehTable };

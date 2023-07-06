@@ -23,101 +23,101 @@ const MediaControlTable = {
       labels: {
         top: "",
         primary: "🔇",
-        verbose: "MUTE"
-      }
+        verbose: "MUTE",
+      },
     },
     {
       code: 22709,
       labels: {
         top: "",
         primary: "⏭",
-        verbose: "Next track"
-      }
+        verbose: "Next track",
+      },
     },
     {
       code: 22710,
       labels: {
         top: "",
         primary: "⏮",
-        verbose: "Prev. track"
-      }
+        verbose: "Prev. track",
+      },
     },
     {
       code: 22711,
       labels: {
         top: "",
         primary: "⏹",
-        verbose: "STOP"
-      }
+        verbose: "STOP",
+      },
     },
     {
       code: 22733,
       labels: {
         top: "",
         primary: "⏯",
-        verbose: "Play / pause"
-      }
+        verbose: "Play / pause",
+      },
     },
     {
       code: 23785,
       labels: {
         top: "",
         primary: "🔊",
-        verbose: "Volume up"
-      }
+        verbose: "Volume up",
+      },
     },
     {
       code: 23786,
       labels: {
         top: "",
         primary: "🔉",
-        verbose: "Volume down"
-      }
+        verbose: "Volume down",
+      },
     },
     {
       code: 22712,
       labels: {
         top: "",
         primary: "⏏",
-        verbose: "Eject"
-      }
+        verbose: "Eject",
+      },
     },
     {
       code: 18552,
       labels: {
         top: "",
-        primary: "Camera"
-      }
+        primary: "Camera",
+      },
     },
     {
       code: 23663,
       labels: {
         top: "Display",
-        primary: "Bright +"
-      }
+        primary: "Bright +",
+      },
     },
     {
       code: 23664,
       labels: {
         top: "Display",
-        primary: "Bright -"
-      }
+        primary: "Bright -",
+      },
     },
     {
       code: 18834,
       labels: {
         top: "Apps",
-        primary: "Calc"
-      }
+        primary: "Calc",
+      },
     },
     {
       code: 22713,
       labels: {
         top: "",
-        primary: "Shuff."
-      }
-    }
-  ]
+        primary: "Shuff.",
+      },
+    },
+  ],
 };
 
 export default MediaControlTable;

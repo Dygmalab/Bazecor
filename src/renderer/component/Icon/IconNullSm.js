@@ -6,7 +6,7 @@ function IconNullSm(props) {
       <mask
         id="prefix_NullSm_a"
         style={{
-          maskType: "alpha"
+          maskType: "alpha",
         }}
         maskUnits="userSpaceOnUse"
         x={0}

@@ -229,7 +229,7 @@ function FirmwareUpdatePanel({ nextBlock, retryBlock, errorBlock, allowBeta }) {
               <div className="buttonActions">
                 <RegularButton
                   className="flashingbutton nooutlined"
-                  style={state.context.isUpdated ? "outline" : "primary"}
+                  style={state.context.isUpdated ? "outline transp-bg" : "primary"}
                   buttonText={
                     state.context.stateblock == 4
                       ? "Processing..."

@@ -27,29 +27,29 @@ const English = {
     preferenceFailOnSave: "Whoops, Something Went Wrong!",
     preferenceFailOnSaveBody: "Please try again.",
     dismiss: "Dismiss",
-    troubleshooting: "Troubleshooting"
+    troubleshooting: "Troubleshooting",
   },
   success: {
     preferencesSaved: "Your preferences have been saved.",
-    preferencesSavedBody: ""
+    preferencesSavedBody: "",
   },
   components: {
     layer: "Layer {0}",
     save: {
       success: "Sent!",
       savePreferences: "Save preferences",
-      button: "Save<span> changes</span>"
+      button: "Save<span> changes</span>",
     },
     pickerColorButton: "Change color",
     underglowColorButton: "Change color of all underglows",
-    keysColorButton: "Change color of all keys"
+    keysColorButton: "Change color of all keys",
   },
   dialog: {
     ok: "Ok",
     cancel: "Cancel",
     allFiles: "All Files",
     loading: "Loading...",
-    applyChanges: "Apply changes"
+    applyChanges: "Apply changes",
   },
   app: {
     device: "Keyboard",
@@ -74,18 +74,18 @@ const English = {
       miscSection: "Miscellaneous",
       upgradeAvailable: "An upgrade is available!",
       badgeNew: "New",
-      changeName: "Change name"
+      changeName: "Change name",
     },
     deviceMenu: {
       Homepage: "Homepage",
       Forum: "Forum",
-      Chat: "Chat"
+      Chat: "Chat",
     },
     cancelPending: {
       button: "Discard<span> changes</span>",
       title: "Cancel pending changes?",
-      content: "You have unsaved changes. If you proceed, they will be lost."
-    }
+      content: "You have unsaved changes. If you proceed, they will be lost.",
+    },
   },
   editor: {
     keyType: "Key type",
@@ -105,7 +105,7 @@ const English = {
       layerLock: "Layer Lock",
       layerLockDescription: "Tap to permanently move to another layer.",
       exportToPdf: "Export layouts to pdf",
-      layerToCopy: "You will copy the layout of this layer"
+      layerToCopy: "You will copy the layout of this layer",
     },
     color: {
       color: "Color",
@@ -117,7 +117,7 @@ const English = {
       allKeys: "All Keys",
       underglow: "Underglow",
       selectColorFirst: "Select a color first",
-      selectColorFirstContent: "To use the color controls select a color to enable all buttons."
+      selectColorFirstContent: "To use the color controls select a color to enable all buttons.",
     },
     groups: {
       Letters: "Letters",
@@ -145,7 +145,7 @@ const English = {
       Steno: "Steno",
       SpaceCadet: "SpaceCadet",
       Blank: "Blank",
-      "Unknown keycodes": "Unknown keycodes"
+      "Unknown keycodes": "Unknown keycodes",
     },
     macros: {
       actions: "Actions",
@@ -202,7 +202,7 @@ const English = {
         title: "This macro is in use",
         body: "The macro you want to delete is currently in use, select how to proceed, THIS MAKES PERMANENT CHANGES.",
         cancelButton: "Cancel",
-        applyButton: "Update Keyboard"
+        applyButton: "Update Keyboard",
       },
       callout:
         "<p>Macros are sequences of events (such as keystrokes, mouse clicks, and delays) that can be played back to help with repetitive strings of texts or tasks. </p><p>They can also be used to replay sequences that are long or difficult to run.</p>",
@@ -210,15 +210,15 @@ const English = {
         title: "Text",
         callout: "<p>Using text you can add an entire sequence of commands using only one key.</p>",
         placeholder: "Enter text",
-        buttonText: "Add to timeline"
+        buttonText: "Add to timeline",
       },
       delayTabs: {
         title: "Delay",
-        description: "Add mouse clicks events in your key."
+        description: "Add mouse clicks events in your key.",
       },
       macroTab: {
         callout: "<p>That's right! You can add macros inside macros! 🔥</p>",
-        label: "Select macro"
+        label: "Select macro",
       },
       memoryUsage: {
         title: "Memory Usage",
@@ -226,17 +226,17 @@ const English = {
         errordBody: "Please decrease the number of actions until the Memory Usage indicator is no longer red.",
         alertTitle: "You are almost out of memory",
         alertBody:
-          "Everything will still work perfectly but consider deleting macros you don't use to continue adding more actions to your macros."
-      }
+          "Everything will still work perfectly but consider deleting macros you don't use to continue adding more actions to your macros.",
+      },
     },
     standardView: {
       noKeyTransparent: "No Key/Transparent",
-      callOut: 'You can remove a functionality or inherit the functionality of the upper layer using "No key" or "Transparent"',
+      callOut: "You can remove a functionality or inherit the functionality from the previous layer",
       noKey: "No Key",
       noKeyDescription: "There's no function or character assigned to that key.",
       transparent: "Transparent",
       trans: "Trans.",
-      transparentDescription: "There's no function or character assigned to that key.",
+      transparentDescription: "The key triggers the function assigned to the same key from the previous layer.",
       keys: {
         keys: "Keys",
         standardViewTitle: "Select a key",
@@ -258,20 +258,20 @@ const English = {
           "Move to another layer while holding the key, then release the key to go back to the  previous layer.",
         layerLock: "Layer Lock",
         layerLockDescription:
-          "Tap to permanently move to another layer. To return to the previous layer set  a layer lock key on the destination that targets it."
+          "Tap to permanently move to another layer. To return to the previous layer set  a layer lock key on the destination that targets it.",
       },
       macros: {
         title: "Macro",
         callOut:
-          "<p>Oh Yeah!! More superpowers! Here you can add macros to your keys! 🔥</p><p>Not so clear what is macros? Macros are sequences of events (such as keystrokes, mouse clicks, and delays) that can be played back to help with repetitive strings of texts or tasks.</p><p>They can also be used to replay sequences that are long or difficult to run.</p>"
+          "<p>Oh Yeah!! More superpowers! Here you can add macros to your keys! 🔥</p><p>Not so clear what is macros? Macros are sequences of events (such as keystrokes, mouse clicks, and delays) that can be played back to help with repetitive strings of texts or tasks.</p><p>They can also be used to replay sequences that are long or difficult to run.</p>",
       },
       mediaAndLED: {
         title: "Media & LED",
-        callOut: "Put your hands up! Control the media and RGB lighting behaviour using keys shortcuts."
+        callOut: "Put your hands up! Control the media and RGB lighting behaviour using keys shortcuts.",
       },
       mouse: {
         title: "Mouse",
-        callOut: "Add mouse events in your keys. You can assign any mouse events, such as clicks, moves and mouse wheel actions."
+        callOut: "Add mouse events in your keys. You can assign any mouse events, such as clicks, moves and mouse wheel actions.",
       },
       oneShot: {
         title: "OneShot",
@@ -289,14 +289,14 @@ const English = {
         rightControl: "Right Control",
         rightShift: "Right Shift",
         altGr: "Alt Gr.",
-        rightOS: "Right OS"
+        rightOS: "Right OS",
       },
       superkeys: {
         title: "Superkeys",
         callOut:
           "<p>You are about to create crazy combinations to boost your workflow! 🔥</p><p>Superkeys allow up to 5 different functions in a single key. You activate each function with a tap, hold, tap and hold, double-tap or double-tap and hold.</p>",
-        label: "Select Superkey"
-      }
+        label: "Select Superkey",
+      },
     },
     superkeys: {
       add: "Add new superkey",
@@ -338,14 +338,14 @@ const English = {
       successFlash: "Successfully sent the superkeys to the device",
       createModal: {
         createNew: "Create new Superkey name",
-        inputLabel: "Superkey name"
+        inputLabel: "Superkey name",
       },
       deleteModal: {
         title: "This superkey is in use",
         // prettier-ignore
         body:"The superkey you want to delete is currently in use, by pressing remove you will replace those superkeys with NO KEY on the keyboard layout. Select how to proceed.",
         cancelButton: "Cancel",
-        applyButton: "Remove"
+        applyButton: "Remove",
       },
       actions: {
         tapLabel: "Tap",
@@ -357,7 +357,7 @@ const English = {
         doubleTapLabel: "2Tap",
         doubleTap: "Tap twice fast and trigger another key.",
         doubleTapAndHoldLabel: "2Tap & hold",
-        doubleTapAndHold: "Tap twice fast and hold to see others keyboards crying."
+        doubleTapAndHold: "Tap twice fast and hold to see others keyboards crying.",
       },
       callout:
         "<p>Wow! Superpowers, my friend!</p><p>Superkeys allow up to 5 different functions in a single key. You activate each function with a tap, hold, tap and hold, double-tap or double-tap and hold. This allows you to create crazy combinations to boost your workflow.</p>",
@@ -365,7 +365,7 @@ const English = {
         "You can edit keys in two different ways. Advanced users may prefer Single View which is designed for quick key editing.",
       collapse: {
         title: "See what you are able to do",
-        content: ""
+        content: "",
       },
       specialKeys: {
         noKey: "No Key",
@@ -404,27 +404,27 @@ const English = {
         LEDTitle: "LED",
         LEDDescription: "Turn the RGB lighting On or Off and control the cycle through the lights effects.",
         othersTitle: "Others",
-        othersDescription: "Control your media, apps and brightness. Safe and sound!"
-      }
+        othersDescription: "Control your media, apps and brightness. Safe and sound!",
+      },
     },
     oldMacroModal: {
       title: "Update your macros",
       body: "The macros in your layout need to be updated to work on this Bazecor version.",
       body2: "Please note that the updated macro codes won't work until you flash the new firmware",
       cancelButton: "Cancel",
-      applyButton: "Update Macros"
+      applyButton: "Update Macros",
     },
     oldNeuronModal: {
       title: "New Neuron detected",
       body: "A new Neuron was plugged in for the first time using this Bazecor installation",
       body2: "Do you want to clone the names of your existing neuron or use empty names",
       cancelButton: "Cancel",
-      applyButton: "Use existing names"
+      applyButton: "Use existing names",
     },
     editMode: {
       title: "Edit mode",
       standardView: "Standard View",
-      singleView: "Single View"
+      singleView: "Single View",
     },
     clearLayerQuestion: "Clear layer?",
     clearLayerPrompt: "This will reset the layer to its default state.",
@@ -446,7 +446,7 @@ const English = {
     importSuccessAllLayers: "Imported all Layers successfully",
     exportSuccessCurrentLayer: "Ready to share!",
     exportSuccessCurrentLayerContent: "Your layer has been successfully exported.",
-    exportSuccessAllLayers: "Exported all Layers successfully"
+    exportSuccessAllLayers: "Exported all Layers successfully",
   },
   preferences: {
     title: "Preferences",
@@ -454,7 +454,7 @@ const English = {
     language: "Select language",
     interface: "Interface",
     tooltips: {
-      language: ""
+      language: "",
     },
     advanced: "Advanced",
     verboseFocus: "Verbose logging",
@@ -464,8 +464,8 @@ const English = {
       label: "Appearance",
       light: "Light",
       dark: "Dark",
-      system: "System"
-    }
+      system: "System",
+    },
   },
   wireless: {
     title: "Wireless",
@@ -497,7 +497,7 @@ const English = {
       selectButtonText: "Change",
       restoreButtonText: "Restore backup",
       storeTime: "Backup storage period",
-      storeTimeTip: "Determines how long a backup is stored before being deleted"
+      storeTimeTip: "Determines how long a backup is stored before being deleted",
     },
     neuronManager: {
       header: "Neuron Manager",
@@ -509,14 +509,14 @@ const English = {
       descriptionTitle: "Selected neuron parameters",
       deleteNeuron: "Deleting the Neuron will erase the names of your layers, macros and superkeys from the local storage",
       changeLayerTitle: "Change Neuron name",
-      inputLabel: "Neuron name"
+      inputLabel: "Neuron name",
     },
     keymap: {
       title: "General",
       noDefault: "No default",
       showHardcoded: "Show hardcoded layers",
       onlyCustom: "Use custom layers only",
-      defaultLayer: "Default layer"
+      defaultLayer: "Default layer",
     },
     led: {
       title: "LED",
@@ -535,8 +535,8 @@ const English = {
         fifteenMinutes: "15 minutes",
         twentyMinutes: "20 minutes",
         thirtyMinutes: "30 minutes",
-        oneHour: "1 hour"
-      }
+        oneHour: "1 hour",
+      },
     },
     qukeys: {
       title: "DUAL FUNCTION KEY PARAMETERS",
@@ -554,7 +554,7 @@ const English = {
       holdTimeoutTip1: "This setting determines the amount of time it takes for the “hold” function to activate.",
       holdTimeoutTip2: "With a high value, it’ll take more time to activate the hold function.",
       holdTimeoutTip3: "With a low value, you might trigger the hold function if you linger on the key too much while typing.",
-      holdTimeoutTip4: "If the slider is at 'High', it'll take a bit more time for the hold function to activate."
+      holdTimeoutTip4: "If the slider is at 'High', it'll take a bit more time for the hold function to activate.",
     },
     superkeys: {
       title: "Typing",
@@ -577,7 +577,7 @@ const English = {
       holdstartsub: " - time from 0 to 65,534 milliseconds",
       overlap:
         "Adjust percentage that changes the way the hold function will trigger depending on the typing speed of the previous normal key",
-      overlapsub: " - Percentage from 0 to 100"
+      overlapsub: " - Percentage from 0 to 100",
     },
     mouse: {
       title: "Mouse keys",
@@ -597,7 +597,7 @@ const English = {
       wheelSpeed: "Wheel speed",
       wheelSpeedsub: " - From 0 to 254 pixels",
       wheelDelay: "Wheel delay between steps (the higher the number, the slower the mouse movement)",
-      wheelDelaysub: " - From 0 to 65,534 milliseconds"
+      wheelDelaysub: " - From 0 to 65,534 milliseconds",
     },
     advancedOps: "Advanced keyboard settings & operations",
     resetEEPROM: {
@@ -605,8 +605,8 @@ const English = {
       button: "Restore",
       dialogTitle: "Reset EEPROM to factory defaults?",
       dialogContents: `This will reset the EEPROM to factory defaults.
- You will lose all customizations made.`
-    }
+ You will lose all customizations made.`,
+    },
   },
   keyboardSelect: {
     title: "Keyboard Selection",
@@ -634,8 +634,8 @@ const English = {
       buttonLabel: "Select",
       buttonLabelSave: "Save",
       errorLoadingFile: "The file is not a valid virtual keyboard nor Backup",
-      backupTransform: "The selected file is a Backup, do you want to transform it into a virtual keyboard"
-    }
+      backupTransform: "The selected file is a Backup, do you want to transform it into a virtual keyboard",
+    },
   },
   firmwareUpdate: {
     texts: {
@@ -714,7 +714,7 @@ const English = {
       latestAvailableText: "Latest version <span class='hidden-on-sm'>available</span>",
       latestVersionInstalled: "You are using the latest version",
       firmwareUpdatedTitle: "Firmware update!",
-      firmwareUpdatedMessage: "Solid as a rock! 💪"
+      firmwareUpdatedMessage: "Solid as a rock! 💪",
     },
     milestones: {
       backup: "Next",
@@ -733,7 +733,7 @@ const English = {
     dialog: {
       selectFirmware: "Select a firmware",
       firmwareFiles: "Firmware files",
-      allFiles: "All files"
+      allFiles: "All files",
     },
     flashing: {
       error: "Error flashing the firmware",
@@ -741,7 +741,7 @@ const English = {
       success: "Firmware flashed successfully!",
       button: "Update now",
       buttonUpdated: "Reflash",
-      buttonSuccess: "Updated!"
+      buttonSuccess: "Updated!",
     },
     backupSuccessful: "Backup created successfully!",
     defaultFirmware: "Bazecor {0} default",
@@ -752,8 +752,8 @@ const English = {
     custom: "Load custom FW",
     rcustom: "Remove custom FW",
     raise: {
-      reset: `Firmware Update Process`
-    }
+      reset: `Firmware Update Process`,
+    },
   },
   mouse: {
     mouseClickTitle: "Click",
@@ -766,7 +766,7 @@ const English = {
     movementTitle: "Movement",
     movementDescription: "Control move using keys.",
     wheelTitle: "Wheel",
-    wheelDescription: "Control the wheel using keys."
+    wheelDescription: "Control the wheel using keys.",
   },
   welcome: {
     bootloaderTitle: "Your device is currently on Bootloader Mode",
@@ -775,7 +775,7 @@ const English = {
     contents: `Bazecor recognizes your keyboard, but needs to update its firmware before you can continue.`,
     gotoUpdate: "Update Firmware",
     reconnect: "Reconnect",
-    reconnectDescription: `There's a possibility that we misdetected the capabilities of the keyboard, or that the keyboard was starting up while we connected. In this case, you can try clicking the "{0}" button to attempt a reconnect, and look for the necessary features again. Reconnecting is useful if you're sure there was a temporary failure upon previous attempts, and the problem has been resolved.`
+    reconnectDescription: `There's a possibility that we misdetected the capabilities of the keyboard, or that the keyboard was starting up while we connected. In this case, you can try clicking the "{0}" button to attempt a reconnect, and look for the necessary features again. Reconnecting is useful if you're sure there was a temporary failure upon previous attempts, and the problem has been resolved.`,
   },
   general: {
     actions: "Actions",

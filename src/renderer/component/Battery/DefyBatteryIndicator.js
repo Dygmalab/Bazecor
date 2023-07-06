@@ -62,9 +62,10 @@ const Style = Styled.div`
 
 const DefyBatteryIndicator = ({ side, batteryLevel, isCharging, batteryStatus }) => {
   const [batteryHeight, setBatteryHeight] = useState(0);
+  const maskHash = `${(Math.random() + 1).toString(36).substring(7)}-${side}`;
 
   useEffect(() => {
-    if (!isCharging && batteryStatus == 0) {
+    if (!isCharging && batteryStatus === 0) {
       if (batteryLevel > 0 && batteryLevel < 5) {
         setBatteryHeight(2);
       } else {
@@ -77,29 +78,29 @@ const DefyBatteryIndicator = ({ side, batteryLevel, isCharging, batteryStatus })
     <Style>
       <div className="batterySideWrapper">
         <div className="batterySide">
-          {side == "left" ? (
+          {side === "left" ? (
             <DefyBatteryIndicatorLeft isCharging={isCharging} batteryStatus={batteryStatus} batteryHeight={batteryHeight} />
           ) : (
             ""
           )}
-          {side == "right" ? (
+          {side === "right" ? (
             <DefyBatteryIndicatorRight isCharging={isCharging} batteryStatus={batteryStatus} batteryHeight={batteryHeight} />
           ) : (
             ""
           )}
-          {!isCharging && batteryStatus == 0 ? <div className="batterySide--percentage">{batteryLevel}%</div> : ""}
+          {!isCharging && batteryStatus === 0 ? <div className="batterySide--percentage">{batteryLevel}%</div> : ""}
         </div>
-        {batteryStatus == 3 ? (
+        {batteryStatus === 3 ? (
           <div className="alertMessage alert-warning">{i18n.wireless.batteryPreferences.batteryErrorReading}</div>
         ) : (
           ""
         )}
-        {batteryStatus == 4 ? (
+        {batteryStatus === 4 ? (
           <div className="alertMessage alert-disconnected">{i18n.wireless.batteryPreferences.batteryDisconnected}</div>
         ) : (
           ""
         )}
-        {batteryStatus == 0xff ? (
+        {batteryStatus === 0xff ? (
           <div className="alertMessage alert-fatal-error">{i18n.wireless.batteryPreferences.batteryFatalError}</div>
         ) : (
           ""

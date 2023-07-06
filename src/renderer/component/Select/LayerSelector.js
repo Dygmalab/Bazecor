@@ -17,8 +17,8 @@
 
 import React from "react";
 import Styled from "styled-components";
-import i18n from "../../i18n";
 import Dropdown from "react-bootstrap/Dropdown";
+import i18n from "../../i18n";
 
 import {
   IconArrowsSmallSeparating,
@@ -29,7 +29,7 @@ import {
   IconArrowDownWithLine,
   IconFileDownload,
   IconKeyboard,
-  IconFlashlight
+  IconFlashlight,
 } from "../Icon";
 
 import { NameModal } from "../Modal"; // Imported custom modal component
@@ -95,7 +95,7 @@ class LayerSelector extends React.Component {
 
     this.state = {
       show: false,
-      showAdd: false
+      showAdd: false,
     };
   }
 
@@ -129,7 +129,7 @@ class LayerSelector extends React.Component {
       clearFunc,
       editModeActual,
       editModeFunc,
-      exportToPdf
+      exportToPdf,
     } = this.props;
     const { show, showAdd } = this.state;
     const layoutsMode = [
@@ -137,14 +137,14 @@ class LayerSelector extends React.Component {
         name: i18n.editor.keys,
         tooltip: i18n.editor.keysEditor,
         value: "keyboard",
-        icon: <IconKeyboard />
+        icon: <IconKeyboard />,
       },
       {
         name: i18n.editor.color.color,
         tooltip: i18n.editor.color.colorEditor,
         value: "color",
-        icon: <IconFlashlight />
-      }
+        icon: <IconFlashlight />,
+      },
     ];
     return (
       <Style>
@@ -249,8 +249,8 @@ class LayerSelector extends React.Component {
             name={itemList[selectedItem].name}
             toggleShow={this.toggleShow}
             handleSave={this.handleSave}
-            modalTitle={`Change layer name`}
-            labelInput={`Layer name`}
+            modalTitle="Change layer name"
+            labelInput="Layer name"
           />
         )}
       </Style>
