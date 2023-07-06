@@ -1208,12 +1208,16 @@ class LayoutEditor extends React.Component {
     // TODO: Check if stored superKeys match the received ones, if they match, retrieve name and apply it to current superKeys
     const equal = [];
     let finalSuper = [];
-    const stored = this.state.neurons[this.state.neuronID].superkeys;
+    let stored = [];
+    console.log(this.state.neurons, this.state.neuronID, superkeys);
+    if (this.state.neurons !== undefined) {
+      stored = this.state.neurons[this.state.neuronID].superkeys;
+    }
     console.log(superkeys, stored);
     finalSuper = superkeys.map((superk, i) => {
       if (stored.length > i && stored.length > 0) {
         const aux = superk;
-        aux.name = stored[i].name;
+        aux.name = stored[i] ? stored[i]?.name : "";
         return aux;
       }
       const aux = superk;
