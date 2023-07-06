@@ -45,10 +45,10 @@ const Wireless = ({ inContext, connected, allowBeta, updateAllowBeta, cancelCont
     await focus.command("wireless.battery.right.level").then(batteryLevel => {
       wireless.battery.RightLevel = batteryLevel ? parseInt(batteryLevel, 10) : 100;
     });
-    await focus.command("wireless.battery.left.state").then(state => {
+    await focus.command("wireless.battery.left.status").then(state => {
       wireless.battery.LeftState = state ? parseInt(state, 10) : 0;
     });
-    await focus.command("wireless.battery.right.state").then(state => {
+    await focus.command("wireless.battery.right.status").then(state => {
       wireless.battery.RightState = state ? parseInt(state, 10) : 0;
     });
     await focus.command("wireless.battery.savingMode").then(batteryMode => {

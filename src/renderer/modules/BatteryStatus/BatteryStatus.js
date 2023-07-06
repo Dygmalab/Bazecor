@@ -35,7 +35,7 @@ const Style = Styled.div`
 }
 .battery-defy--indicator {
   display: flex;
-  grid-gap: 4px;
+  grid-gap: 8px;
   position: relative;
 }
 .dropdown-menu--battery {
@@ -108,11 +108,24 @@ const Style = Styled.div`
 const BatteryStatus = ({ disable }) => {
   const [bLeft, setbLeft] = useState(100);
   const [bRight, setbRight] = useState(100);
+  const [sLeft, setsLeft] = useState(100);
+  const [sRight, setsRight] = useState(100);
   const [isSavingMode, setIsSavingMode] = useState(false);
-  const [isCharging, setIsCharging] = useState(false);
   const [animateIcon, setAnimateIcon] = useState(0);
   const [batteryInterval, setBatteryInterval] = useState(false);
   const target = useRef(null);
+
+  async function getBatteryStatus() {
+    const focus = new Focus();
+    const left = await focus.command("wireless.battery.left.level");
+    const right = await focus.command("wireless.battery.right.level");
+    const leftStatus = await focus.command("wireless.battery.left.status");
+    const rightStatus = await focus.command("wireless.battery.right.status");
+    setbLeft(parseInt(left, 10));
+    setbRight(parseInt(right, 10));
+    setsLeft(leftStatus.includes("0x") ? 255 : parseInt(leftStatus, 10));
+    setsRight(rightStatus.includes("0x") ? 255 : parseInt(rightStatus, 10));
+  }
 
   useEffect(() => {
     getBatteryStatus();
@@ -145,14 +158,6 @@ const BatteryStatus = ({ disable }) => {
     return () => clearInterval(intervalID);
   }, [animateIcon]);
 
-  async function getBatteryStatus() {
-    const focus = new Focus();
-    const left = await focus.command("wireless.battery.left.level");
-    const right = await focus.command("wireless.battery.right.level");
-    setbLeft(left);
-    setbRight(right);
-  }
-
   const forceRetrieveBattery = async () => {
     if (disable) return;
     const focus = new Focus();
@@ -165,22 +170,22 @@ const BatteryStatus = ({ disable }) => {
     <Style>
       <div className="battery-indicator--wrapper" ref={target}>
         <div className="battery-indicator--container">
-          <BatteryStatusSide side="left" batteryLevel={bLeft} isSavingMode={isSavingMode} isCharging={isCharging} size="sm" />
-          <BatteryStatusSide side="right" batteryLevel={bRight} isSavingMode={isSavingMode} isCharging={isCharging} size="sm" />
+          <BatteryStatusSide side="left" batteryLevel={bLeft} isSavingMode={isSavingMode} batteryStatus={sLeft} size="sm" />
+          <BatteryStatusSide side="right" batteryLevel={bRight} isSavingMode={isSavingMode} batteryStatus={sRight} size="sm" />
         </div>
         <div className="dropdown-menu dropdown-menu--battery">
           <div className="dropdown-menu__inner">
             <Title text={i18n.wireless.batteryPreferences.battery} headingLevel={4} svgICO={<IconBattery />} />
             <div className="battery-defy--indicator">
-              <BatteryStatusSide side="left" batteryLevel={bLeft} isSavingMode={isSavingMode} isCharging={isCharging} size="lg" />
+              <BatteryStatusSide side="left" batteryLevel={bLeft} isSavingMode={isSavingMode} batteryStatus={sLeft} size="lg" />
               <BatteryStatusSide
                 side="right"
                 batteryLevel={bRight}
                 isSavingMode={isSavingMode}
-                isCharging={isCharging}
+                batteryStatus={sRight}
                 size="lg"
               />
-              <SavingModeIndicator isSavingMode={isSavingMode} isCharging={isCharging} />
+              <SavingModeIndicator isSavingMode={isSavingMode} />
             </div>
             <div className="batterySettingItem batteryUpdateStatus">
               <div className="batterySettingLabel">Force read Battery level</div>

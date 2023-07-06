@@ -141,7 +141,7 @@ const Dark = {
     accordionFirmware: {
       background: Tokens.colors.gray700,
       headerBackground: "rgba(0, 0, 0, 0.03)",
-      colorTitle: Tokens.colors.gray100
+      colorTitle: Tokens.colors.gray100,
     },
     backupConfiguratorFolder: {
       headingColor: Tokens.colors.gray100,
@@ -152,17 +152,29 @@ const Dark = {
     batteryIndicator: {
       pileBackgroundColor: Tokens.colors.gray800,
       pileBackgroundSavingMode: settingColorOpacity(Tokens.colors.brandWarning, 0.15),
+      pileBackgroundFatalError: settingColorOpacity(Tokens.colors.brandPrimary, 0.15),
       titleColor: Tokens.colors.gray25,
       panelBackgroundColor: Tokens.colors.gray800,
       largeIndicatorPercentageColor: Tokens.colors.gray25,
       largeIndicatorStrokeColor: settingColorOpacity(Tokens.colors.gray600, 0.8),
       largeIndicatorFillColor: settingColorOpacity(Tokens.colors.gray600, 0.5),
+      largeIndicatorDisconnectedColor: Tokens.colors.gray600,
+      lineDisconnectedColor: Tokens.colors.gray600,
       fillShapeColor: Tokens.colors.purple200,
-      strokeShapeColor: settingColorOpacity(Tokens.colors.gray600, 0.8)
+      fillShapeOpacity: 0.5,
+      fillShapeDefaultOpacity: 0.5,
+      strokeShapeColor: settingColorOpacity(Tokens.colors.gray600, 0.8),
+      alertWarningBackground: settingColorOpacity(Tokens.colors.brandWarning, 0.2),
+      alertWarningText: Tokens.colors.brandWarning,
+      alertErrorBackground: settingColorOpacity(Tokens.colors.brandPrimary, 0.25),
+      alertErrorText: Tokens.colors.brandPrimary,
+      alertDisconnectedBackground: Tokens.colors.gray600,
+      alertDisconnectedText: Tokens.colors.gray100,
+      shapeIndicatorOpacity: 0.2,
     },
     batterySettings: {
       descriptionColor: Tokens.colors.gray200,
-      descriptionHighlightColor: Tokens.colors.gray50
+      descriptionHighlightColor: Tokens.colors.gray50,
     },
     button: {
       primary: {
@@ -313,7 +325,7 @@ const Dark = {
       groupButtonsBackground: settingColorOpacity(Tokens.colors.gray900, 0.2),
     },
     circleLoader: {
-      strokeColor: Tokens.colors.brandSuccess
+      strokeColor: Tokens.colors.brandSuccess,
     },
     customCheckbox: {
       background: Tokens.colors.gray700,
@@ -416,12 +428,12 @@ const Dark = {
       bgOldToNew: oldToNew,
     },
     firmwareErrorPanel: {
-      textColor: Tokens.colors.gray25
+      textColor: Tokens.colors.gray25,
     },
     firmwareUpdatePanel: {
       backgroundContent: Tokens.colors.gray800,
       backgroundSidebar: settingColorOpacity(Tokens.colors.gray400, 0.05),
-      neuronDefyWirelessImage: neuronDefyWirelessImage,
+      neuronDefyWirelessImage,
       neuronStatusLineColor: Tokens.colors.gray500,
       neuronStatusLineWarning: Tokens.colors.brandWarning,
       neuronStatusLineSuccess: Tokens.colors.brandSuccess,
@@ -611,7 +623,7 @@ const Dark = {
       checkedIcon: CheckedIconDark,
     },
     neuronStatusDefy: {
-      statusWaiting: Tokens.colors.gray500
+      statusWaiting: Tokens.colors.gray500,
     },
     neuronTitle: {
       heading3Color: Tokens.colors.gray25,
@@ -624,7 +636,7 @@ const Dark = {
     progress: {
       progressBackground: Tokens.colors.gray600,
       progressBarBackground: Tokens.colors.gray600,
-      boxShadow: "0px 0px 4px rgba(50, 238, 238, 0)"
+      boxShadow: "0px 0px 4px rgba(50, 238, 238, 0)",
     },
     slider: {
       trackColor: Tokens.colors.gray400,
@@ -678,7 +690,7 @@ const Dark = {
       bulletBackground: Tokens.colors.gray600,
       bulletBackgroundActive: Tokens.colors.brandSuccess,
       bulletBorderActive: Tokens.colors.brandSuccessLighter,
-      stepBarBackgroundActive: Tokens.colors.brandSuccess
+      stepBarBackgroundActive: Tokens.colors.brandSuccess,
     },
     superkeyAction: {
       color: Tokens.colors.gray500,

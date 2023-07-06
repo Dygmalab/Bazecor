@@ -16,7 +16,7 @@ const Style = Styled.div`
 }
 &.batterySavingMode {
     position: absolute;
-    bottom: 0;
+    top: 98px;
     color: var(--color-status);
     left: 50%;
     transform: translate3d(-50%, -4px, 0);
@@ -24,12 +24,10 @@ const Style = Styled.div`
 }
 `;
 
-function SavingModeIndicator({ isSavingMode, isCharging }) {
+function SavingModeIndicator({ isSavingMode }) {
   return (
     <Style
-      className={`batterySavingMode ${isSavingMode ? "savingModeEnabled status--saving" : "savingModeDisabled status--default"} ${
-        isCharging ? "status--charging" : ""
-      }`}
+      className={`batterySavingMode ${isSavingMode ? "savingModeEnabled status--saving" : "savingModeDisabled status--default"}`}
     >
       <OverlayTrigger
         key="keySavingModeOverlay"

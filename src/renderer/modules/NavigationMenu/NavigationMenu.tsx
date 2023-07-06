@@ -46,8 +46,8 @@ const Styles = Styled.div`
   pointer-events: none;
 }
 .brand-image {
-  padding: 0 !important;
   margin: 20px 0 32px 0;
+  padding: 0 !important;
   display: block;
   width: 100%;
   text-align: center;
@@ -66,9 +66,8 @@ const Styles = Styled.div`
   z-index: 1100;
   padding: 12px !important;
   background-color: ${({ theme }) => theme.styles.navbar.background};
-  display:flex;
+  display: flex;
   flex-direction: column;
-
   .navbar-nav {
     flex-wrap: wrap;
     height: inherit;
@@ -94,7 +93,6 @@ const Styles = Styled.div`
   background-color: ${({ theme }) => theme.card.backgroundActive};
   border-radius: 8px;
   width: 100%;
-}
 }
 `;
 
