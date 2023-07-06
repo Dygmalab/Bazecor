@@ -98,13 +98,8 @@ const PileIndicator = ({ batteryLevel, isCharging, batteryStatus }) => {
       )}
       {batteryStatus == 2 ? (
         <>
-          <mask id="mask2_2054_10394" style={{ maskType: "alpha" }} maskUnits="userSpaceOnUse" x="2" y="6" width="16" height="4">
-            <rect x="2" y="6" width="16" height="4" fill="#7879F1" />
-          </mask>
-          <g mask="url(#mask2_2054_10394)">
-            <path d="M16.75 6H13.75V3.5H23.75V14H11.75L16.75 6Z" fill="currentColor" />
-            <path d="M2.75 10.5L7.75 3H-2.25V14H5.75V10.5H2.75Z" fill="currentColor" />
-          </g>
+          <rect x="0.5" y="4.5" width="19" height="7" stroke="currentColor" />
+          <rect x="2" y="6" width={16} height="4" fill="currentColor" />
         </>
       ) : (
         ""
@@ -162,7 +157,7 @@ const PileIndicator = ({ batteryLevel, isCharging, batteryStatus }) => {
       ) : (
         ""
       )}
-      {batteryStatus == 0xff ? (
+      {batteryStatus === 255 ? (
         <>
           <mask id="mask0_2054_10114" style={{ maskType: "alpha" }} maskUnits="userSpaceOnUse" x="0" y="4" width="20" height="8">
             <rect x="0.5" y="4.5" width="19" height="7" stroke="black" />

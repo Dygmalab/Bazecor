@@ -78,17 +78,10 @@ const DefyBatteryIndicator = ({ side, batteryLevel, isCharging, batteryStatus })
     <Style>
       <div className="batterySideWrapper">
         <div className="batterySide">
-          {side === "left" ? (
-            <DefyBatteryIndicatorLeft isCharging={isCharging} batteryStatus={batteryStatus} batteryHeight={batteryHeight} />
-          ) : (
-            ""
-          )}
-          {side === "right" ? (
-            <DefyBatteryIndicatorRight isCharging={isCharging} batteryStatus={batteryStatus} batteryHeight={batteryHeight} />
-          ) : (
-            ""
-          )}
-          {!isCharging && batteryStatus === 0 ? <div className="batterySide--percentage">{batteryLevel}%</div> : ""}
+          {side === "left" ? <DefyBatteryIndicatorLeft batteryStatus={batteryStatus} batteryHeight={batteryHeight} /> : ""}
+          {side === "right" ? <DefyBatteryIndicatorRight batteryStatus={batteryStatus} batteryHeight={batteryHeight} /> : ""}
+          {batteryStatus === 0 ? <div className="batterySide--percentage">{batteryLevel}%</div> : ""}
+          {batteryStatus === 2 ? <div className="batterySide--percentage">100%</div> : ""}
         </div>
         {batteryStatus === 3 ? (
           <div className="alertMessage alert-warning">{i18n.wireless.batteryPreferences.batteryErrorReading}</div>
@@ -100,7 +93,7 @@ const DefyBatteryIndicator = ({ side, batteryLevel, isCharging, batteryStatus })
         ) : (
           ""
         )}
-        {batteryStatus === 0xff ? (
+        {batteryStatus === 255 ? (
           <div className="alertMessage alert-fatal-error">{i18n.wireless.batteryPreferences.batteryFatalError}</div>
         ) : (
           ""
