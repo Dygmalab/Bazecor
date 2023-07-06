@@ -44,49 +44,49 @@ padding-top: 24px;
 }
 `;
 
-const BatterySettings = ({ wireless, toggleSavingMode, changeWireless, isCharging }) => (
+function BatterySettings({ wireless, toggleSavingMode, changeWireless, isCharging }) {
   // console.log("Wireless: ", wireless);
-  <Styles>
-    <Card className="overflowFix card-preferences">
-      <Card.Title>
-        <Title text={i18n.wireless.batteryPreferences.battery} headingLevel={3} svgICO={<IconBattery />} />
-      </Card.Title>
-      <Card.Body className="py-0">
-        <div className="battery-defy--indicator">
-          <BatteryStatusSide
-            side="left"
-            batteryLevel={wireless.battery ? wireless.battery.LeftLevel : 100}
-            isSavingMode={wireless.battery ? String(wireless.battery.savingMode).includes("true") : false}
-            isCharging={isCharging}
-            size="lg"
+  return (
+    <Styles>
+      <Card className="overflowFix card-preferences">
+        <Card.Title>
+          <Title text={i18n.wireless.batteryPreferences.battery} headingLevel={3} svgICO={<IconBattery />} />
+        </Card.Title>
+        <Card.Body className="py-0">
+          <div className="battery-defy--indicator">
+            <BatteryStatusSide
+              side="left"
+              batteryLevel={wireless.battery ? wireless.battery.LeftLevel : 100}
+              isSavingMode={wireless.battery ? String(wireless.battery.savingMode).includes("true") : false}
+              batteryStatus={wireless.battery ? wireless.battery.LeftState : 0}
+              size="lg"
+            />
+            <BatteryStatusSide
+              side="right"
+              batteryLevel={wireless.battery ? wireless.battery.RightLevel : 100}
+              isSavingMode={wireless.battery ? String(wireless.battery.savingMode).includes("true") : false}
+              batteryStatus={wireless.battery ? wireless.battery.RightState : 0}
+              size="lg"
+            />
+            <SavingModeIndicator isSavingMode={wireless.battery ? String(wireless.battery.savingMode).includes("true") : false} />
+          </div>
+          <Form className="batterySettingItem batterySetSavingMode">
+            <div className="batterySettingLabel">Saving Mode</div>
+            <Form.Check
+              type="switch"
+              id="settingSavingMode"
+              checked={wireless.battery ? String(wireless.battery.savingMode).includes("true") : false}
+              onChange={toggleSavingMode}
+            />
+          </Form>
+          <div
+            className="savingModedescription"
+            dangerouslySetInnerHTML={{ __html: i18n.wireless.batteryPreferences.savingModeDescription }}
           />
-          <BatteryStatusSide
-            side="right"
-            batteryLevel={wireless.battery ? wireless.battery.RightLevel : 100}
-            isSavingMode={wireless.battery ? String(wireless.battery.savingMode).includes("true") : false}
-            isCharging={isCharging}
-            size="lg"
-          />
-          <SavingModeIndicator
-            isSavingMode={wireless.battery ? String(wireless.battery.savingMode).includes("true") : false}
-            isCharging={isCharging}
-          />
-        </div>
-        <Form className="batterySettingItem batterySetSavingMode">
-          <div className="batterySettingLabel">Saving Mode</div>
-          <Form.Check
-            type="switch"
-            id="settingSavingMode"
-            checked={wireless.battery ? String(wireless.battery.savingMode).includes("true") : false}
-            onChange={toggleSavingMode}
-          />
-        </Form>
-        <div
-          className="savingModedescription"
-          dangerouslySetInnerHTML={{ __html: i18n.wireless.batteryPreferences.savingModeDescription }}
-        />
-      </Card.Body>
-    </Card>
-  </Styles>
-);
+        </Card.Body>
+      </Card>
+    </Styles>
+  );
+}
+
 export default BatterySettings;

@@ -105,40 +105,50 @@ const Style = Styled.div`
 }
 `;
 
-const BatteryStatus = props => {
+const BatteryStatus = ({ disable }) => {
   const [bLeft, setbLeft] = useState(100);
   const [bRight, setbRight] = useState(100);
+  const [sLeft, setsLeft] = useState(100);
+  const [sRight, setsRight] = useState(100);
   const [isSavingMode, setIsSavingMode] = useState(false);
-  const [isCharging, setIsCharging] = useState(false);
   const [animateIcon, setAnimateIcon] = useState(0);
   const [batteryInterval, setBatteryInterval] = useState(false);
-  const [batteryStatusLeft, setBatteryStatusLeft] = useState(0);
-  const [batteryStatusRight, setBatteryStatusRight] = useState(0);
   const target = useRef(null);
+
+  async function getBatteryStatus() {
+    const focus = new Focus();
+    const left = await focus.command("wireless.battery.left.level");
+    const right = await focus.command("wireless.battery.right.level");
+    const leftStatus = await focus.command("wireless.battery.left.status");
+    const rightStatus = await focus.command("wireless.battery.right.status");
+    setbLeft(parseInt(left, 10));
+    setbRight(parseInt(right, 10));
+    setsLeft(leftStatus.includes("0x") ? 255 : parseInt(leftStatus, 10));
+    setsRight(rightStatus.includes("0x") ? 255 : parseInt(rightStatus, 10));
+  }
 
   useEffect(() => {
     getBatteryStatus();
   }, []);
 
   useEffect(() => {
-    if (props.disable) {
+    if (disable) {
       clearInterval(batteryInterval);
       setBatteryInterval(false);
       return;
-    } else {
-      if (batteryInterval === false) {
-        const intervalID = setInterval(() => {
-          getBatteryStatus();
-        }, 60000);
-        setBatteryInterval(intervalID);
-      }
+    }
+    if (batteryInterval === false) {
+      const intervalID = setInterval(() => {
+        getBatteryStatus();
+      }, 60000);
+      setBatteryInterval(intervalID);
     }
 
     return () => {
       clearInterval(batteryInterval);
       setBatteryInterval(false);
     };
-  }, [props]);
+  }, [disable]);
 
   useEffect(() => {
     const intervalID = setInterval(() => {
@@ -148,18 +158,8 @@ const BatteryStatus = props => {
     return () => clearInterval(intervalID);
   }, [animateIcon]);
 
-  async function getBatteryStatus() {
-    const focus = new Focus();
-    const left = await focus.command("wireless.battery.left.level");
-    const right = await focus.command("wireless.battery.right.level");
-    setbLeft(left);
-    setbRight(right);
-    setBatteryStatusLeft(0xff);
-    setBatteryStatusRight(0xff);
-  }
-
   const forceRetrieveBattery = async () => {
-    if (props.disable) return;
+    if (disable) return;
     const focus = new Focus();
     await focus.command("wireless.battery.forceRead");
     await getBatteryStatus();
@@ -170,37 +170,19 @@ const BatteryStatus = props => {
     <Style>
       <div className="battery-indicator--wrapper" ref={target}>
         <div className="battery-indicator--container">
-          <BatteryStatusSide
-            side="left"
-            batteryLevel={bLeft}
-            isSavingMode={isSavingMode}
-            batteryStatus={batteryStatusLeft}
-            size="sm"
-          />
-          <BatteryStatusSide
-            side="right"
-            batteryLevel={bRight}
-            isSavingMode={isSavingMode}
-            batteryStatus={batteryStatusRight}
-            size="sm"
-          />
+          <BatteryStatusSide side="left" batteryLevel={bLeft} isSavingMode={isSavingMode} batteryStatus={sLeft} size="sm" />
+          <BatteryStatusSide side="right" batteryLevel={bRight} isSavingMode={isSavingMode} batteryStatus={sRight} size="sm" />
         </div>
         <div className="dropdown-menu dropdown-menu--battery">
           <div className="dropdown-menu__inner">
             <Title text={i18n.wireless.batteryPreferences.battery} headingLevel={4} svgICO={<IconBattery />} />
             <div className="battery-defy--indicator">
-              <BatteryStatusSide
-                side="left"
-                batteryLevel={bLeft}
-                isSavingMode={isSavingMode}
-                batteryStatus={batteryStatusLeft}
-                size="lg"
-              />
+              <BatteryStatusSide side="left" batteryLevel={bLeft} isSavingMode={isSavingMode} batteryStatus={sLeft} size="lg" />
               <BatteryStatusSide
                 side="right"
                 batteryLevel={bRight}
                 isSavingMode={isSavingMode}
-                batteryStatus={batteryStatusRight}
+                batteryStatus={sRight}
                 size="lg"
               />
               <SavingModeIndicator isSavingMode={isSavingMode} />
