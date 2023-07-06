@@ -34,73 +34,22 @@ const Wireless = ({ inContext, connected, allowBeta, updateAllowBeta, cancelCont
   const [modified, setModified] = useState(false);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    getWirelessPreferences();
-  }, []);
-
-  async function sendRePairCommand() {
-    let focus = new Focus();
-    const result = await focus.command("wireless.rf.syncPairing");
-    console.log("command returned", result);
-  }
-
-  async function toggleSavingMode() {
-    let focus = new Focus();
-    await focus.command("wireless.battery.savingMode", !wireless.battery.savingMode);
-    let newWireless = { ...wireless };
-    newWireless.battery.savingMode = !wireless.battery.savingMode;
-    setWireless(newWireless);
-  }
-
-  async function destroyContext() {
-    setWireless({});
-    setModified(false);
-    getWirelessPreferences();
-    cancelContext();
-  }
-
-  async function changeWireless(wireless) {
-    setWireless(wireless);
-    if (!modified) {
-      setModified(true);
-      startContext();
-    }
-  }
-
-  async function saveWirelessChanges() {
-    const focus = new Focus();
-
-    // Commands to be sent to the keyboard
-    await focus.command("wireless.battery.savingMode", wireless.battery.savingMode);
-    await focus.command("wireless.energy.modes", wireless.energy.modes);
-    await focus.command("wireless.energy.currentMode", wireless.energy.currentMode);
-    await focus.command("wireless.energy.disable", wireless.energy.disable);
-    await focus.command("wireless.bluetooth.devices", wireless.bluetooth.devices);
-    await focus.command("wireless.bluetooth.state", wireless.bluetooth.state);
-    await focus.command("wireless.bluetooth.stability", wireless.bluetooth.stability);
-    await focus.command("wireless.rf.channelHop", wireless.rf.channelHop);
-    await focus.command("wireless.rf.state", wireless.rf.state);
-    await focus.command("wireless.rf.stability", wireless.rf.stability);
-  }
-
   async function getWirelessPreferences() {
     const focus = new Focus();
     // Use focus commands to retrieve wireless data
-    let wireless = {};
-
     // Battery commands
     wireless.battery = {};
     await focus.command("wireless.battery.left.level").then(batteryLevel => {
-      wireless.battery.LeftLevel = batteryLevel ? parseInt(batteryLevel) : 100;
+      wireless.battery.LeftLevel = batteryLevel ? parseInt(batteryLevel, 10) : 100;
     });
     await focus.command("wireless.battery.right.level").then(batteryLevel => {
-      wireless.battery.RightLevel = batteryLevel ? parseInt(batteryLevel) : 100;
+      wireless.battery.RightLevel = batteryLevel ? parseInt(batteryLevel, 10) : 100;
     });
     await focus.command("wireless.battery.left.state").then(state => {
-      wireless.battery.LeftState = state ? parseInt(state) : 0;
+      wireless.battery.LeftState = state ? parseInt(state, 10) : 0;
     });
     await focus.command("wireless.battery.right.state").then(state => {
-      wireless.battery.RightState = state ? parseInt(state) : 0;
+      wireless.battery.RightState = state ? parseInt(state, 10) : 0;
     });
     await focus.command("wireless.battery.savingMode").then(batteryMode => {
       wireless.battery.savingMode = batteryMode;
@@ -146,13 +95,62 @@ const Wireless = ({ inContext, connected, allowBeta, updateAllowBeta, cancelCont
     setLoading(false);
   }
 
+  useEffect(() => {
+    getWirelessPreferences();
+  }, []);
+
+  async function sendRePairCommand() {
+    const focus = new Focus();
+    const result = await focus.command("wireless.rf.syncPairing");
+    console.log("command returned", result);
+  }
+
+  async function toggleSavingMode() {
+    const focus = new Focus();
+    await focus.command("wireless.battery.savingMode", !String(wireless.battery.savingMode).includes("true"));
+    const newWireless = { ...wireless };
+    newWireless.battery.savingMode = !String(wireless.battery.savingMode).includes("true");
+    setWireless(newWireless);
+  }
+
+  async function destroyContext() {
+    setWireless({});
+    setModified(false);
+    getWirelessPreferences();
+    cancelContext();
+  }
+
+  async function changeWireless(wless) {
+    setWireless(wless);
+    if (!modified) {
+      setModified(true);
+      startContext();
+    }
+  }
+
+  async function saveWirelessChanges() {
+    const focus = new Focus();
+
+    // Commands to be sent to the keyboard
+    await focus.command("wireless.battery.savingMode", wireless.battery.savingMode);
+    await focus.command("wireless.energy.modes", wireless.energy.modes);
+    await focus.command("wireless.energy.currentMode", wireless.energy.currentMode);
+    await focus.command("wireless.energy.disable", wireless.energy.disable);
+    await focus.command("wireless.bluetooth.devices", wireless.bluetooth.devices);
+    await focus.command("wireless.bluetooth.state", wireless.bluetooth.state);
+    await focus.command("wireless.bluetooth.stability", wireless.bluetooth.stability);
+    await focus.command("wireless.rf.channelHop", wireless.rf.channelHop);
+    await focus.command("wireless.rf.state", wireless.rf.state);
+    await focus.command("wireless.rf.stability", wireless.rf.stability);
+  }
+
   if (loading) <LogoLoader />;
   return (
     <Styles>
       <Container fluid className="wireless center-content">
         <PageHeader
           text={i18n.wireless.title}
-          showSaving={true}
+          showSaving
           showContentSelector={false}
           saveContext={saveWirelessChanges}
           destroyContext={destroyContext}
