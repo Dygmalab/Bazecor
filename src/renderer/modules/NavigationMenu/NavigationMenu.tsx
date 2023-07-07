@@ -120,9 +120,9 @@ function NavigationMenu(props: NavigationMenuProps): React.JSX.Element {
   const [virtual, setVirtual] = useState(false);
   const location = useLocation();
   const currentPage = location.pathname;
+  const { connected, pages, fwUpdate, flashing, allowBeta } = props;
 
   const getGitHubFW = async (product: any) => {
-    const { allowBeta } = props;
     const releases: any[] = [];
     const octokit = new Octokit();
     const data = await octokit.request("GET /repos/{owner}/{repo}/releases", {
@@ -143,7 +143,7 @@ function NavigationMenu(props: NavigationMenuProps): React.JSX.Element {
     return finalReleases;
   };
 
-  async function contextUpdater() {
+  async function checkKeyboardMetadata() {
     const focus = new Focus();
     setDevice(focus.device);
     if (focus.device === undefined || focus.device.bootloader) return;
@@ -167,18 +167,10 @@ function NavigationMenu(props: NavigationMenuProps): React.JSX.Element {
   }
 
   useEffect(() => {
-    contextUpdater();
-  }, []);
-
-  useEffect(() => {
-    const { flashing, connected } = props;
-    if (flashing || !connected) return;
-    contextUpdater();
-  }, [props]);
-
-  const { connected, pages, fwUpdate } = props;
-
-  // console.log("new checker for navigation", fwList, versions, isUpdated, isBeta);
+    if (!flashing && connected) {
+      checkKeyboardMetadata();
+    }
+  }, [flashing, connected]);
 
   return (
     <Styles>
@@ -269,7 +261,7 @@ function NavigationMenu(props: NavigationMenuProps): React.JSX.Element {
                 <BatteryStatus disable={fwUpdate || virtual} />
               </>
             ) : (
-              ""
+              <></>
             )}
           </div>
         </Nav>
