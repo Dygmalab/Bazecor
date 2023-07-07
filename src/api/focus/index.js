@@ -80,80 +80,80 @@ class Focus {
   }
 
   async open(device, info, file) {
-    if (file !== null) {
-      await this.fileOpen(info, file);
-      return true;
-    }
-
-    if (this._port !== undefined && this._port.isOpen === false) {
-      this.close();
-    }
-
-    // console.log("Warning! device being opened");
-    // console.log("port status opened?", this._port ? this._port.isOpen : "unknown");
-    // console.log("received device", device);
-    // console.log("received info: ", info);
-
     try {
-      let path = undefined;
+      if (file !== null) {
+        await this.fileOpen(info, file);
+        return true;
+      }
+
+      if (this._port !== undefined && this._port.isOpen === false) {
+        this.close();
+      }
+
+      // console.log("Warning! device being opened");
+      // console.log("port status opened?", this._port ? this._port.isOpen : "unknown");
+      // console.log("received device", device);
+      // console.log("received info: ", info);
+
+      let path;
       if (typeof device === "string") path = device;
       if (typeof device === "object") path = device.settings.path;
       if (path !== undefined) {
         await SerialPort.list();
-        this._port = new SerialPort({ path: path, baudRate: 115200, autoOpen: true });
+        this._port = new SerialPort({ path, baudRate: 115200, autoOpen: true });
       } else {
         throw Error("device not a string or object!");
       }
-    } catch (error) {
-      console.error("found this error!", error);
-      throw new Error("Unable to connect");
-    }
 
-    this.device = info;
-    this.parser = this._port.pipe(new DelimiterParser({ delimiter: "\r\n" }));
-    this.result = "";
-    this.callbacks = [];
-    this.supportedCommands = [];
-    this.parser.on("data", data => {
-      data = data.toString("utf-8");
-      this.debugLog("focus: incoming data:", data);
+      this.device = info;
+      this.parser = this._port.pipe(new DelimiterParser({ delimiter: "\r\n" }));
+      this.result = "";
+      this.callbacks = [];
+      this.supportedCommands = [];
+      this.parser.on("data", data => {
+        data = data.toString("utf-8");
+        this.debugLog("focus: incoming data:", data);
 
-      if (data === "." || data.endsWith(".")) {
-        const { result } = this;
-        const resolve = this.callbacks.shift();
+        if (data === "." || data.endsWith(".")) {
+          const { result } = this;
+          const resolve = this.callbacks.shift();
 
-        this.result = "";
-        if (resolve) {
-          resolve(result.trim());
+          this.result = "";
+          if (resolve) {
+            resolve(result.trim());
+          }
+        } else if (this.result.length === 0) {
+          this.result = data;
+        } else {
+          this.result += `\r\n${data}`;
         }
-      } else if (this.result.length === 0) {
-        this.result = data;
-      } else {
-        this.result += `\r\n${data}`;
+      });
+
+      if (process.platform === "darwin") {
+        spawn("stty", ["-f", this._port.path, "clocal"]);
       }
-    });
 
-    if (process.platform === "darwin") {
-      spawn("stty", ["-f", this._port.path, "clocal"]);
-    }
-
-    // It's not necessary to retreive the supported commands in bootloader mode
-    if (!this.device.bootloader) {
-      try {
-        this.supportedCommands = await this.command("help");
-      } catch (e) {
-        console.warn(e);
-        // Ignore
+      // It's not necessary to retreive the supported commands in bootloader mode
+      if (!this.device.bootloader) {
+        try {
+          this.supportedCommands = await this.command("help");
+        } catch (e) {
+          console.warn(e);
+          // Ignore
+        }
       }
-    }
 
-    // Setup error port alert
-    this._port.on("error", async function (err) {
-      console.error("Error on SerialPort: " + err);
-      await this._port.close();
-    });
-    this.closed = false;
-    return this._port;
+      // Setup error port alert
+      this._port.on("error", async function (err) {
+        console.error(`Error on SerialPort: ${err}`);
+        await this._port.close();
+      });
+      this.closed = false;
+      return this._port;
+    } catch (error) {
+      console.error("found this error while opening!", error);
+      // throw new Error("Unable to connect");
+    }
   }
 
   clearContext() {

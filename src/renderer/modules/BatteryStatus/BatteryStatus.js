@@ -105,14 +105,13 @@ const Style = Styled.div`
 }
 `;
 
-const BatteryStatus = ({ disable }) => {
+const BatteryStatus = props => {
   const [bLeft, setbLeft] = useState(100);
   const [bRight, setbRight] = useState(100);
   const [sLeft, setsLeft] = useState(100);
   const [sRight, setsRight] = useState(100);
   const [isSavingMode, setIsSavingMode] = useState(false);
   const [animateIcon, setAnimateIcon] = useState(0);
-  const [batteryInterval, setBatteryInterval] = useState(false);
   const target = useRef(null);
 
   async function getBatteryStatus() {
@@ -121,10 +120,12 @@ const BatteryStatus = ({ disable }) => {
     const right = await focus.command("wireless.battery.right.level");
     const leftStatus = await focus.command("wireless.battery.left.status");
     const rightStatus = await focus.command("wireless.battery.right.status");
+    const savingMode = await focus.command("wireless.battery.savingMode");
     setbLeft(parseInt(left, 10));
     setbRight(parseInt(right, 10));
     setsLeft(leftStatus.includes("0x") ? 255 : parseInt(leftStatus, 10));
     setsRight(rightStatus.includes("0x") ? 255 : parseInt(rightStatus, 10));
+    setIsSavingMode(savingMode);
   }
 
   useEffect(() => {
@@ -132,23 +133,22 @@ const BatteryStatus = ({ disable }) => {
   }, []);
 
   useEffect(() => {
+    const { disable } = props;
+    let intervalID = false;
     if (disable) {
-      clearInterval(batteryInterval);
-      setBatteryInterval(false);
-      return;
+      clearInterval(intervalID);
+      intervalID = false;
     }
-    if (batteryInterval === false) {
-      const intervalID = setInterval(() => {
+    if (intervalID === false && !disable) {
+      intervalID = setInterval(() => {
         getBatteryStatus();
       }, 60000);
-      setBatteryInterval(intervalID);
     }
 
     return () => {
-      clearInterval(batteryInterval);
-      setBatteryInterval(false);
+      clearInterval(intervalID);
     };
-  }, [disable]);
+  }, [props]);
 
   useEffect(() => {
     const intervalID = setInterval(() => {
@@ -159,6 +159,7 @@ const BatteryStatus = ({ disable }) => {
   }, [animateIcon]);
 
   const forceRetrieveBattery = async () => {
+    const { disable } = props;
     if (disable) return;
     const focus = new Focus();
     await focus.command("wireless.battery.forceRead");

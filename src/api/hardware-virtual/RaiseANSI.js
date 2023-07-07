@@ -91,6 +91,10 @@ const RaiseANSI = {
       data: "255",
       eraseable: true,
     },
+    "led.brightnessUG": {
+      data: "255",
+      eraseable: true,
+    },
     "led.theme": {
       data: "",
       eraseable: false,

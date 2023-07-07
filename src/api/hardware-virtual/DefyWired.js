@@ -92,6 +92,10 @@ const DefyWired = {
       data: "153",
       eraseable: true,
     },
+    "led.brightnessUG": {
+      data: "153",
+      eraseable: true,
+    },
     "led.theme": {
       data: "",
       eraseable: false,

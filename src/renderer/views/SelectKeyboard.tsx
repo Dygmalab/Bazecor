@@ -342,34 +342,34 @@ const SelectKeyboard: React.FC<SelectKeyboardProps> = (props): JSX.Element => {
     (i18n as any).refreshHardware(devices[selectedPortIndex]); // we use any because i18n indeed has that function defined
   };
 
-  const convertBackupToVK = async (backup: any) => {
+  const convertBackupToVK = async (backup: any): any => {
     let vk;
     let fileName;
 
-    Hardware.serial.forEach(device => {
+    Hardware.serial.forEach(hardwareDevice => {
       if (
-        backup.neuron.device.usb.productId === device.usb.productId &&
-        backup.neuron.device.usb.vendorId === device.usb.vendorId &&
-        backup.neuron.device.info.keyboardType === device.info.keyboardType
+        backup.neuron.device.usb.productId === hardwareDevice.usb.productId &&
+        backup.neuron.device.usb.vendorId === hardwareDevice.usb.vendorId &&
+        backup.neuron.device.info.keyboardType === hardwareDevice.info.keyboardType
       ) {
-        if (device.info.keyboardType === "ANSI") {
+        if (hardwareDevice.info.keyboardType === "ANSI") {
           vk = { ...RaiseANSI };
           fileName = "VirtualRaiseANSI";
         }
-        if (device.info.keyboardType === "ISO") {
+        if (hardwareDevice.info.keyboardType === "ISO") {
           vk = { ...RaiseISO };
           fileName = "VirtualRaiseISO";
         }
-        if (device.info.keyboardType === "wired") {
+        if (hardwareDevice.info.keyboardType === "wired") {
           vk = { ...DefyWired };
           fileName = "VirtualDefy";
         }
         // TODO: replace this DEFY with the wireless version
-        if (device.info.keyboardType === "wireless") {
+        if (hardwareDevice.info.keyboardType === "wireless") {
           vk = { ...DefyWireless };
           fileName = "VirtualDefy";
         }
-        vk.device.components = device.components;
+        vk.device.components = hardwareDevice.components;
       }
     });
 
@@ -387,7 +387,13 @@ const SelectKeyboard: React.FC<SelectKeyboardProps> = (props): JSX.Element => {
     };
     const newPath = await ipcRenderer.invoke("save-dialog", options);
     console.log("Save file to", newPath);
-
+    if (newPath === undefined) {
+      toast.warning("Path not defined! aborting...", {
+        autoClose: 2000,
+        icon: "",
+      });
+      return;
+    }
     // Save the virtual KB in the specified location
     const json = JSON.stringify(vk, null, 2);
     fs.writeFileSync(newPath, json, err => {
@@ -450,7 +456,7 @@ const SelectKeyboard: React.FC<SelectKeyboardProps> = (props): JSX.Element => {
       if (!window.confirm(i18n.keyboardSelect.virtualKeyboard.backupTransform)) {
         return;
       }
-      file = convertBackupToVK(file);
+      file = await convertBackupToVK(file);
       file.virtual["hardware.chip_id"].data += getDateTime();
       await onConnect(file.device, file);
       return;
@@ -482,7 +488,10 @@ const SelectKeyboard: React.FC<SelectKeyboardProps> = (props): JSX.Element => {
     };
     const newPath = await ipcRenderer.invoke("save-dialog", options);
     console.log("Save file to", newPath);
-
+    if (newPath === undefined) {
+      toast.warning("Path not defined! aborting...");
+      return;
+    }
     console.log("Exchange focus for file access");
     Hardware.serial.forEach(device => {
       if (
@@ -520,7 +529,7 @@ const SelectKeyboard: React.FC<SelectKeyboardProps> = (props): JSX.Element => {
   const getDeviceItems = () => {
     const neurons = store.get("neurons");
     const result = devices.map((device, index) => {
-      const neuron = neurons.find(neuron => neuron.id.toLowerCase() == device.serialNumber);
+      const neuron = neurons.find(neuron => neuron.id.toLowerCase() === device.serialNumber);
 
       return {
         index,

@@ -92,8 +92,8 @@ const DefyWireless = {
       data: "153 ",
       eraseable: true,
     },
-    "led.brightness.underglow": {
-      data: "100 ",
+    "led.brightnessUG": {
+      data: "153 ",
       eraseable: true,
     },
     "led.theme": {
@@ -265,11 +265,11 @@ const DefyWireless = {
       data: "80",
       eraseable: false,
     },
-    "wireless.battery.left.state": {
+    "wireless.battery.left.status": {
       data: "1",
       eraseable: false,
     },
-    "wireless.battery.right.state": {
+    "wireless.battery.right.status": {
       data: "1",
       eraseable: false,
     },
