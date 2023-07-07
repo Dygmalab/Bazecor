@@ -15,11 +15,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { DelimiterParser } from "@serialport/parser-delimiter";
 import fs from "fs";
 import { spawn } from "child_process";
 
 const { SerialPort } = eval('require("serialport")');
+const { DelimiterParser } = eval('require("@serialport/parser-delimiter")');
 
 global.focus_instance = null;
 
@@ -98,7 +98,8 @@ class Focus {
       if (typeof device === "string") path = device;
       if (typeof device === "object") path = device.settings.path;
       if (path !== undefined) {
-        await SerialPort.list();
+        const testingDevices = await SerialPort.list();
+        console.log(testingDevices);
         this._port = new SerialPort({ path, baudRate: 115200, autoOpen: false });
         await this._port.open(err => {
           if (err) console.error("error when opening port: ", err);

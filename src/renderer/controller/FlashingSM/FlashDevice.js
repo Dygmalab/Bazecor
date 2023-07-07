@@ -5,7 +5,7 @@ import Focus from "../../../api/focus";
 import Hardware from "../../../api/hardware";
 import path from "path";
 import fs from "fs";
-const { ipcRenderer } = require("electron");
+import { ipcRenderer } from "electron";
 
 let flashRaise = undefined,
   flashDefyWireless = undefined,

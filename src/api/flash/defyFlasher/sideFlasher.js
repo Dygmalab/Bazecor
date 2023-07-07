@@ -29,9 +29,9 @@
  */
 
 import { crc32 } from "easy-crc";
-import { DelimiterParser } from "@serialport/parser-delimiter";
 
 const { SerialPort } = eval('require("serialport")');
+const { DelimiterParser } = eval('require("@serialport/parser-delimiter")');
 
 export default class sideFlaser {
   constructor(path, firmwareSides) {
