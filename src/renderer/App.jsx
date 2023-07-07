@@ -442,8 +442,4 @@ class App extends React.Component {
   }
 }
 
-App.propTypes = {
-  router: Routes.PropTypes,
-};
-
 export default withRouter(App);
