@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React, { useState, useEffect } from "react";
+import React, { useRef, useEffect } from "react";
 import PropTypes from "prop-types";
 import Styled from "styled-components";
 
@@ -110,35 +110,31 @@ const FirmwareImageHelp = ({
   retriesLeft,
   retriesRight,
   retriesNeuron,
-  retriesDefyWired
+  retriesDefyWired,
 }) => {
-  const videoIntro = React.useRef(null);
-  const videoIntroDefy = React.useRef(null);
-  const videoReleaseDefy = React.useRef(null);
-  const videoRelease = React.useRef(null);
-  const checkSuccess = React.useRef(null);
+  const videoIntro = useRef(null);
+  const videoIntroDefy = useRef(null);
+  const videoReleaseDefy = useRef(null);
+  const videoRelease = useRef(null);
+  const checkSuccess = useRef(null);
+
+  const playVideo = () => {
+    if (deviceProduct == "Raise" && videoIntro.current) {
+      videoIntro.current.currentTime = 3;
+      videoIntro.current.play();
+    } else if (deviceProduct == "Defy" && videoIntroDefy.current) {
+      videoIntroDefy.current.currentTime = 3;
+      videoIntroDefy.current.play();
+    }
+  };
 
   useEffect(() => {
     if (countdown == 0) {
       if (deviceProduct == "Raise") {
-        videoIntro.current.addEventListener(
-          "ended",
-          function () {
-            videoIntro.current.currentTime = 3;
-            videoIntro.current.play();
-          },
-          false
-        );
+        videoIntro.current.addEventListener("ended", playVideo, false);
         videoRelease.current.pause();
       } else {
-        videoIntroDefy.current.addEventListener(
-          "ended",
-          function () {
-            videoIntroDefy.current.currentTime = 3;
-            videoIntroDefy.current.play();
-          },
-          false
-        );
+        videoIntroDefy.current.addEventListener("ended", playVideo, false);
         videoReleaseDefy.current.pause();
       }
       checkSuccess.current.classList.remove("animInCheck");
@@ -163,6 +159,13 @@ const FirmwareImageHelp = ({
     if (countdown == steps.length - 2) {
       checkSuccess.current.classList.add("animInCheck");
     }
+    return () => {
+      if (countdown == 0 && deviceProduct == "Raise") {
+        videoIntro.current.removeEventListener("ended", playVideo, false);
+      } else if (countdown == 0 && deviceProduct == "Defy") {
+        videoIntroDefy.current.removeEventListener("ended", playVideo, false);
+      }
+    };
   }, [countdown, deviceProduct]);
 
   return (
