@@ -125,7 +125,7 @@ const BatteryStatus = props => {
     setbRight(parseInt(right, 10));
     setsLeft(leftStatus.includes("0x") ? 255 : parseInt(leftStatus, 10));
     setsRight(rightStatus.includes("0x") ? 255 : parseInt(rightStatus, 10));
-    setIsSavingMode(savingMode);
+    setIsSavingMode(parseInt(savingMode, 10) > 0);
   }
 
   useEffect(() => {

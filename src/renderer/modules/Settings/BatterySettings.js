@@ -57,25 +57,25 @@ function BatterySettings({ wireless, toggleSavingMode, changeWireless, isChargin
             <BatteryStatusSide
               side="left"
               batteryLevel={wireless.battery ? wireless.battery.LeftLevel : 100}
-              isSavingMode={wireless.battery ? String(wireless.battery.savingMode).includes("true") : false}
+              isSavingMode={wireless.battery ? wireless.battery.savingMode : false}
               batteryStatus={wireless.battery ? wireless.battery.LeftState : 0}
               size="lg"
             />
             <BatteryStatusSide
               side="right"
               batteryLevel={wireless.battery ? wireless.battery.RightLevel : 100}
-              isSavingMode={wireless.battery ? String(wireless.battery.savingMode).includes("true") : false}
+              isSavingMode={wireless.battery ? wireless.battery.savingMode : false}
               batteryStatus={wireless.battery ? wireless.battery.RightState : 0}
               size="lg"
             />
-            <SavingModeIndicator isSavingMode={wireless.battery ? String(wireless.battery.savingMode).includes("true") : false} />
+            <SavingModeIndicator isSavingMode={wireless.battery ? wireless.battery.savingMode : false} />
           </div>
           <Form className="batterySettingItem batterySetSavingMode">
             <div className="batterySettingLabel">Saving Mode</div>
             <Form.Check
               type="switch"
               id="settingSavingMode"
-              checked={wireless.battery ? String(wireless.battery.savingMode).includes("true") : false}
+              checked={wireless.battery ? wireless.battery.savingMode : false}
               onChange={toggleSavingMode}
             />
           </Form>

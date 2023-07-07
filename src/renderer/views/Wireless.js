@@ -1,13 +1,13 @@
 // General imports
 import React, { useState, useEffect } from "react";
-import i18n from "../i18n";
-import Focus from "../../api/focus";
 
 // Bootstrap components imports
 import Styled from "styled-components";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
+import Focus from "../../api/focus";
+import i18n from "../i18n";
 
 // Custom component imports
 import PageHeader from "../modules/PageHeader";
@@ -52,7 +52,7 @@ const Wireless = ({ inContext, connected, allowBeta, updateAllowBeta, cancelCont
       wireless.battery.RightState = state ? parseInt(state, 10) : 0;
     });
     await focus.command("wireless.battery.savingMode").then(batteryMode => {
-      wireless.battery.savingMode = batteryMode;
+      wireless.battery.savingMode = parseInt(batteryMode, 10) > 0;
     });
 
     // Energy commands
@@ -107,9 +107,9 @@ const Wireless = ({ inContext, connected, allowBeta, updateAllowBeta, cancelCont
 
   async function toggleSavingMode() {
     const focus = new Focus();
-    await focus.command("wireless.battery.savingMode", !String(wireless.battery.savingMode).includes("true"));
+    await focus.command("wireless.battery.savingMode", !wireless.battery.savingMode ? 1 : 0);
     const newWireless = { ...wireless };
-    newWireless.battery.savingMode = !String(wireless.battery.savingMode).includes("true");
+    newWireless.battery.savingMode = !wireless.battery.savingMode;
     setWireless(newWireless);
   }
 
@@ -132,7 +132,7 @@ const Wireless = ({ inContext, connected, allowBeta, updateAllowBeta, cancelCont
     const focus = new Focus();
 
     // Commands to be sent to the keyboard
-    await focus.command("wireless.battery.savingMode", wireless.battery.savingMode);
+    await focus.command("wireless.battery.savingMode", wireless.battery.savingMode ? 1 : 0);
     await focus.command("wireless.energy.modes", wireless.energy.modes);
     await focus.command("wireless.energy.currentMode", wireless.energy.currentMode);
     await focus.command("wireless.energy.disable", wireless.energy.disable);
