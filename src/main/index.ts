@@ -8,12 +8,6 @@ import { addUSBListeners, removeUSBListeners } from "./setup/configureUSB";
 
 electronUpdater();
 
-
-// This is a workaround for the lack of context-awareness in two native modules
-// we use, serialport (serialport/node-serialport#2051) and usb
-// (tessel/node-usb#380). See electron/electron#18397 for more context.
-app.allowRendererProcessReuse = false;
-
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require("electron-squirrel-startup")) {
   app.quit();

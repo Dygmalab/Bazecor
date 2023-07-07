@@ -118,42 +118,8 @@ function NavigationMenu(props: NavigationMenuProps): React.JSX.Element {
   const [isBeta, setIsBeta] = useState(false);
   const [device, setDevice] = useState<Record<string, Device>>({});
   const [virtual, setVirtual] = useState(false);
-  const [fwList, setFwList] = useState({});
   const location = useLocation();
   const currentPage = location.pathname;
-
-  useEffect(() => {
-    contextUpdater();
-  }, []);
-
-  useEffect(() => {
-    if (props.flashing || !props.connected) return;
-    contextUpdater();
-  }, [props.connected, props.flashing, props.allowBeta]);
-
-  async function contextUpdater() {
-    const focus = new Focus();
-    setDevice(focus.device);
-    if (focus.device === undefined || focus.device.bootloader) return;
-    let parts = await focus.command("version");
-    parts = parts.split(" ");
-    const versions: Version = {
-      bazecor: parts[0],
-      kaleidoscope: parts[1],
-      firmware: parts[2],
-    };
-    const fwList = await getGitHubFW(focus.device.info.product);
-    let isBeta = versions.bazecor.includes("beta");
-    let cleanedVersion = versions.bazecor;
-    if (isBeta) cleanedVersion = versions.bazecor.replace("beta", "");
-    const semVerCheck = SemVer.compare(fwList[0].version, cleanedVersion);
-    isBeta = isBeta || focus.device.info.product !== "Raise";
-    setVersions(versions);
-    setIsUpdated(semVerCheck > 0);
-    setIsBeta(isBeta);
-    setVirtual(focus.file);
-    setFwList(fwList);
-  }
 
   const getGitHubFW = async (product: any) => {
     const { allowBeta } = props;
@@ -176,6 +142,39 @@ function NavigationMenu(props: NavigationMenuProps): React.JSX.Element {
     // console.log("data retrieved: ", finalReleases);
     return finalReleases;
   };
+
+  async function contextUpdater() {
+    const focus = new Focus();
+    setDevice(focus.device);
+    if (focus.device === undefined || focus.device.bootloader) return;
+    let parts = await focus.command("version");
+    parts = parts.split(" ");
+    const getVersions: Version = {
+      bazecor: parts[0],
+      kaleidoscope: parts[1],
+      firmware: parts[2],
+    };
+    const fwList = await getGitHubFW(focus.device.info.product);
+    let Beta = getVersions.bazecor.includes("beta");
+    let cleanedVersion = getVersions.bazecor;
+    if (Beta) cleanedVersion = getVersions.bazecor.replace("beta", "");
+    const semVerCheck = SemVer.compare(fwList[0].version, cleanedVersion);
+    Beta = Beta || focus.device.info.product !== "Raise";
+    setVersions(getVersions);
+    setIsUpdated(semVerCheck > 0);
+    setIsBeta(Beta);
+    setVirtual(focus.file);
+  }
+
+  useEffect(() => {
+    contextUpdater();
+  }, []);
+
+  useEffect(() => {
+    const { flashing, connected } = props;
+    if (flashing || !connected) return;
+    contextUpdater();
+  }, [props]);
 
   const { connected, pages, fwUpdate } = props;
 
@@ -241,7 +240,6 @@ function NavigationMenu(props: NavigationMenuProps): React.JSX.Element {
             )}
             <Link to="/keyboard-select" className={`list-link ${fwUpdate ? "disabled" : ""}`}>
               <NavigationButton
-                keyboardSelectText={connected ? i18n.app.menu.selectAnotherKeyboard : i18n.app.menu.selectAKeyboard}
                 selected={currentPage === "/keyboard-select"}
                 buttonText={i18n.app.menu.selectAKeyboard}
                 icoSVG={<IconKeyboardSelector />}
