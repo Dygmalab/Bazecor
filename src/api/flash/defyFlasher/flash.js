@@ -163,8 +163,8 @@ export class FlashDefyWireless {
    */
   async saveBackupFile() {
     const userDataPath = await ipcRenderer.invoke("get-userPath", "userData");
-    const route = path.join(userDataPath, this.backupFileName + ".json");
-    console.log("saving file to: " + route);
+    const route = path.join(userDataPath, `${this.backupFileName}.json`);
+    console.log(`saving file to: ${route}`);
     fs.writeFile(route, JSON.stringify(this.backupFileData), err => {
       if (err) throw err;
     });
@@ -212,7 +212,9 @@ export class FlashDefyWireless {
     this.backup = backup;
     return new Promise(async (resolve, reject) => {
       stateUpdate("reset", 10);
-      focus.command("upgrade.neuron");
+      focus.command("upgrade.neuron").catch(err => {
+        if (err) console.log("answer after shutdown not received");
+      });
       console.log("waiting for bootloader");
       await this.delay(1000);
       stateUpdate("reset", 30);
