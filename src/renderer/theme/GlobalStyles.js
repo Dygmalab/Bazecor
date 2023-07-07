@@ -1750,7 +1750,7 @@ div.card.card-preferences .card-body {
   }
 }
 @media screen and (min-width: 1000px) {
-  #app {
+  #root {
     --sidebarWidth: ${({ theme }) => theme.sidebarWidthLarge}px;
   }
   .bs-tooltip-right.tooltipMenu {
@@ -1770,7 +1770,7 @@ div.card.card-preferences .card-body {
 }
 
 @media screen and (max-height: 870px) {
-  #app {
+  #root {
     --sidebarWidth: ${({ theme }) => theme.sidebarWidthMedium}px;
   }
   div.main-container {
@@ -1783,7 +1783,7 @@ div.card.card-preferences .card-body {
 }
 
 @media screen and (max-height: 670px) {
-  #app {
+  #root {
     --sidebarWidth: ${({ theme }) => theme.sidebarWidthSmall}px;
   }
 }

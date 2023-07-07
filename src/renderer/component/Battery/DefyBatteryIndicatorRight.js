@@ -1,6 +1,6 @@
 import React from "react";
 
-const DefyBatteryIndicatorRight = ({ isCharging, batteryStatus, batteryHeight }) => {
+const DefyBatteryIndicatorRight = ({ batteryStatus, batteryHeight }) => {
   const maskHash = `${(Math.random() + 1).toString(36).substring(7)}-right`;
   return (
     <svg
@@ -83,7 +83,7 @@ const DefyBatteryIndicatorRight = ({ isCharging, batteryStatus, batteryHeight })
       ) : (
         ""
       )}
-      {isCharging ? (
+      {batteryStatus == 1 ? (
         <path
           className="lightningbattery"
           d="M40.9893 63.989L51.6559 48.1001V60.3223H56.9893L46.3226 77.4334V63.989H40.9893Z"
@@ -103,7 +103,7 @@ const DefyBatteryIndicatorRight = ({ isCharging, batteryStatus, batteryHeight })
         ""
       )}
       {batteryStatus == 4 ? <path d="M106 130L2 1" stroke="currentColor" className="lineDisconnected" strokeWidth="3" /> : ""}
-      {batteryStatus == 0xff ? (
+      {batteryStatus === 255 ? (
         <path
           d="M50.1789 67.6962C50.1789 68.0322 49.9869 68.2002 49.6029 68.2002H47.1549C46.8509 68.2002 46.6989 68.0562 46.6989 67.7682V65.1042C46.6989 64.8482 46.8029 64.7202 47.0109 64.7202H49.8669C50.0749 64.7202 50.1789 64.8322 50.1789 65.0562V67.6962ZM49.4829 62.5842C49.4829 62.7602 49.4349 62.8882 49.3389 62.9682C49.2589 63.0322 49.1229 63.0642 48.9309 63.0642H47.8749C47.6989 63.0642 47.5869 63.0322 47.5389 62.9682C47.4909 62.9042 47.4509 62.7922 47.4189 62.6322L46.6509 50.7762C46.6349 50.6482 46.6589 50.5522 46.7229 50.4882C46.7869 50.4242 46.8669 50.3922 46.9629 50.3922H49.9389C50.1629 50.3922 50.2669 50.5042 50.2509 50.7282L49.4829 62.5842Z"
           fill="#FF6B6B"

@@ -246,7 +246,7 @@ const BatteryStatusSide = ({ side, batteryLevel, isSavingMode, batteryStatus, si
     if (batteryLevel < 10 && !isSavingMode && batteryStatus === 0) {
       setSideStatus("status--critical");
     }
-    if (batteryStatus === 1 || batteryStatus === 2) {
+    if (batteryStatus === 1) {
       setIsCharging(true);
     }
   }, [size, batteryLevel, batteryStatus, isSavingMode]);
