@@ -101,13 +101,22 @@ interface NavigationMenuProps {
   flashing: boolean;
   pages: Pages;
   fwUpdate: boolean;
+  allowBeta: boolean;
+}
+
+interface Device {
+  vendor: any;
+  product: any;
+  keyboardType: any;
+  displayName: any;
+  urls: any;
 }
 
 function NavigationMenu(props: NavigationMenuProps): React.JSX.Element {
   const [versions, setVersions] = useState(null);
   const [isUpdated, setIsUpdated] = useState(true);
   const [isBeta, setIsBeta] = useState(false);
-  const [device, setDevice] = useState({});
+  const [device, setDevice] = useState<Record<string, Device>>({});
   const [virtual, setVirtual] = useState(false);
   const [fwList, setFwList] = useState({});
   const location = useLocation();
@@ -128,28 +137,29 @@ function NavigationMenu(props: NavigationMenuProps): React.JSX.Element {
     if (focus.device === undefined || focus.device.bootloader) return;
     let parts = await focus.command("version");
     parts = parts.split(" ");
-    let versions: Version = {
+    const versions: Version = {
       bazecor: parts[0],
       kaleidoscope: parts[1],
       firmware: parts[2],
     };
-    let fwList = await getGitHubFW(focus.device.info.product);
+    const fwList = await getGitHubFW(focus.device.info.product);
     let isBeta = versions.bazecor.includes("beta");
     let cleanedVersion = versions.bazecor;
     if (isBeta) cleanedVersion = versions.bazecor.replace("beta", "");
-    let isUpdated = SemVer.compare(fwList[0].version, cleanedVersion);
+    const semVerCheck = SemVer.compare(fwList[0].version, cleanedVersion);
     isBeta = isBeta || focus.device.info.product !== "Raise";
     setVersions(versions);
-    setIsUpdated(isUpdated);
+    setIsUpdated(semVerCheck > 0);
     setIsBeta(isBeta);
     setVirtual(focus.file);
     setFwList(fwList);
   }
 
-  const getGitHubFW = async product => {
-    let Releases = [];
+  const getGitHubFW = async (product: any) => {
+    const { allowBeta } = props;
+    const releases: any[] = [];
     const octokit = new Octokit();
-    let data = await octokit.request("GET /repos/{owner}/{repo}/releases", {
+    const data = await octokit.request("GET /repos/{owner}/{repo}/releases", {
       owner: "Dygmalab",
       repo: "Firmware-releases",
       headers: {
@@ -159,17 +169,15 @@ function NavigationMenu(props: NavigationMenuProps): React.JSX.Element {
     data.data.forEach(release => {
       const releaseData = release.name.split(" ");
       const newRelease = { name: releaseData[0], version: releaseData[1] };
-      if (!releaseData[1].includes("beta") || props.allowBeta) Releases.push(newRelease);
+      if (!releaseData[1].includes("beta") || allowBeta) releases.push(newRelease);
     });
-    let finalReleases = Releases.filter(release => release.name === product);
-    finalReleases.sort((a, b) => {
-      return SemVer.lt(SemVer.clean(a.version), SemVer.clean(b.version)) ? 1 : -1;
-    });
+    const finalReleases = releases.filter(release => release.name === product);
+    finalReleases.sort((a, b) => (SemVer.lt(SemVer.clean(a.version), SemVer.clean(b.version)) ? 1 : -1));
     // console.log("data retrieved: ", finalReleases);
     return finalReleases;
   };
 
-  const { connected, pages, history, fwUpdate } = props;
+  const { connected, pages, fwUpdate } = props;
 
   // console.log("new checker for navigation", fwList, versions, isUpdated, isBeta);
 
@@ -191,7 +199,7 @@ function NavigationMenu(props: NavigationMenuProps): React.JSX.Element {
             {connected && (
               <>
                 {pages.keymap && (
-                  <React.Fragment>
+                  <>
                     <Link to="/editor" className={`list-link ${fwUpdate ? "disabled" : ""}`}>
                       <NavigationButton
                         selected={currentPage === "/editor"}
@@ -218,12 +226,12 @@ function NavigationMenu(props: NavigationMenuProps): React.JSX.Element {
                         disabled={fwUpdate || !isBeta}
                       />
                     </Link>
-                  </React.Fragment>
+                  </>
                 )}
                 <Link to="/firmware-update" className={`list-link ${fwUpdate || virtual ? "disabled" : ""}`}>
                   <NavigationButton
                     selected={currentPage === "/firmware-update"}
-                    showNotif={isUpdated != 0 ? (isUpdated > 0 ? true : false) : false}
+                    showNotif={isUpdated}
                     buttonText={i18n.app.menu.firmwareUpdate}
                     icoSVG={<IconMemory2Stroke />}
                     disabled={fwUpdate || virtual}

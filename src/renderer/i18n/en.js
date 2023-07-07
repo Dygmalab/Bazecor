@@ -248,7 +248,7 @@ const English = {
         descriptionModifiers: "Add any of these modifiers to selected key to create combinations such as Control, Alt or Shift.",
         addDualFunction: "Add a dual-function",
         dualFunctionDescription:
-          "Dual-function keys have two functionalities. 1. When tapped, they send a character. 2. When held, they send a modifier or a layer key."
+          "Dual-function keys have two functionalities. 1. When tapped, they send a character. 2. When held, they send a modifier or a layer key.",
       },
       layers: {
         title: "Layers",
@@ -474,15 +474,15 @@ const English = {
       batteryErrorReading: "Error reading battery level",
       batteryDisconnected: "Battery physically disconnected!",
       batteryFatalError: "Error!",
-      savingModeDescription: `<p><strong>Turn on automatically when the battery level reach 20%.</strong> This mode is designed to optimize and reduce the power consumption helping extend the time between charges.</p>`
+      savingModeDescription: `<p><strong>Turn on automatically when the battery level reach 20%.</strong> This mode is designed to optimize and reduce the power consumption helping extend the time between charges.</p>`,
     },
     RFPreferences: {
       RFSettings: "RF Settings",
       repairChannel: "Repair Channel",
       reconnectSides: "Reconnect sides",
       repairChannelDescription:
-        "<p>Generate a new channel communication between the sides to reduce noise interference and enhance signal quality for uninterrupted and crystal-clear communication.</p>"
-    }
+        "<p>Generate a new channel communication between the sides to reduce noise interference and enhance signal quality for uninterrupted and crystal-clear communication.</p>",
+    },
   },
   keyboardSettings: {
     advanced: "Advanced",
@@ -728,7 +728,7 @@ const English = {
       checkRightSide: "Check Right side connectivity",
       checkLeftSideBL: "Check Left side Bootloader status",
       checkRightSideBL: "Check Right side Bootloader status",
-      checkBackup: "Create a backup file"
+      checkBackup: "Create a backup file",
     },
     dialog: {
       selectFirmware: "Select a firmware",
@@ -796,8 +796,8 @@ const English = {
     select: "Select",
     record: "Record",
     resume: "Resume",
-    retry: "Retry"
-  }
+    retry: "Retry",
+  },
 };
 
-export { English as default };
+export default English;

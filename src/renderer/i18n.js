@@ -34,4 +34,4 @@ i18n.refreshHardware = ({ device }) => {
   i18n.setLanguage(language);
 };
 
-export { i18n as default };
+export default i18n;
