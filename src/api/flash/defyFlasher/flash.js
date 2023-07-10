@@ -31,7 +31,7 @@ import NRf52833 from "./NRf52833-flasher";
  * @emits resetKeyboard
  * @emits updateFirmware
  */
-export class FlashDefyWireless {
+class FlashDefyWireless {
   constructor(device) {
     this.device = device;
     this.currentPort = null;
@@ -81,10 +81,10 @@ export class FlashDefyWireless {
         );
         if (
           bootloader
-            ? device.device.bootloader != undefined &&
-              device.device.bootloader == bootloader &&
-              this.device.info.keyboardType == device.device.info.keyboardType
-            : this.device.info.keyboardType == device.device.info.keyboardType
+            ? device.device.bootloader !== undefined &&
+              device.device.bootloader === bootloader &&
+              this.device.info.keyboardType === device.device.info.keyboardType
+            : this.device.info.keyboardType === device.device.info.keyboardType
         ) {
           console.log(message);
           this.currentPort = { ...device };
@@ -355,3 +355,5 @@ export class FlashDefyWireless {
     }
   }
 }
+
+export default FlashDefyWireless;
