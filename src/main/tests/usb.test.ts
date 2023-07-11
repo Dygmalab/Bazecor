@@ -14,5 +14,7 @@ test("get list of USB devices", async () => {
   const devices = getDevices();
   if (!process.env.GITHUB_ACTIONS) {
     expect(devices.length).toBeGreaterThan(0);
+  } else {
+    expect(devices.length).toBe(0);
   }
 });
