@@ -64,6 +64,11 @@ export const removeUSBListeners = () => {
   webusb.removeEventListener("disconnect", onUSBDisconnect);
 };
 
+export const getDevices = event => {
+  const devices = getDeviceList();
+  return devices;
+};
+
 export const configureUSB = async () => {
   // We're relying on webusb to send us notifications about device
   // connect/disconnect events, but it only sends disconnect events for devices
@@ -71,8 +76,5 @@ export const configureUSB = async () => {
   // them first to notice disconnects. We do that here.
   await webusb.getDevices();
 
-  ipcMain.handle("usb-devices", event => {
-    const devices = getDeviceList();
-    return devices;
-  });
+  ipcMain.handle("usb-devices", getDevices);
 };
