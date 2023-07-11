@@ -18,6 +18,7 @@
 import { ipcMain } from "electron";
 import { getDeviceList, WebUSB } from "usb";
 import sendToRenderer from "../utils/sendToRenderer";
+import Focus from "../../api/focus";
 
 const dygmaVendorIDs = [0x35ef, 0x1209];
 
@@ -27,7 +28,7 @@ const webusb = new WebUSB({
 
 type USBEvent = Event & { device: unknown };
 
-export const onUSBDisconnect = (event: USBEvent) => {
+export const onUSBDisconnect = async (event: USBEvent) => {
   const { device } = event;
   if (device) {
     const vendorID = (device as any).vendorId;
@@ -37,6 +38,8 @@ export const onUSBDisconnect = (event: USBEvent) => {
       console.log("VendorID", vendorID);
       console.log("ProductID", productID);
       sendToRenderer("usb-disconnected", vendorID, productID);
+      const focus = new Focus();
+      await focus.close();
     }
   }
 };
