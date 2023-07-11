@@ -1,10 +1,8 @@
-import { test, vi } from "vitest";
+import { test, vi, expect } from "vitest";
 import { configureUSB, getDevices } from "../setup/configureUSB";
-import { ipcRenderer, ipcMain } from "electron";
 
 test("get list of USB devices", async () => {
   vi.mock("electron", async () => {
-    const realStuff = await vi.importActual("electron");
     const mockIpcMain = {
       handle: vi.fn().mockReturnThis(),
     };
@@ -13,6 +11,8 @@ test("get list of USB devices", async () => {
     };
   });
   await configureUSB();
-  const devices = getDevices({});
-  console.log(devices);
+  const devices = getDevices();
+  if (!process.env.GITHUB_ACTIONS) {
+    expect(devices.length).toBeGreaterThan(0);
+  }
 });

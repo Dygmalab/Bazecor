@@ -64,7 +64,7 @@ export const removeUSBListeners = () => {
   webusb.removeEventListener("disconnect", onUSBDisconnect);
 };
 
-export const getDevices = event => {
+export const getDevices = () => {
   const devices = getDeviceList();
   return devices;
 };
