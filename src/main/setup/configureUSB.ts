@@ -39,7 +39,9 @@ export const onUSBDisconnect = async (event: USBEvent) => {
       console.log("ProductID", productID);
       sendToRenderer("usb-disconnected", vendorID, productID);
       const focus = new Focus();
-      await focus.close();
+      if (focus.device.usb.vendorId === vendorID && focus.device.usb.productId === productID) {
+        await focus.close();
+      }
     }
   }
 };
