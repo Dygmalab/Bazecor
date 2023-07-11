@@ -188,6 +188,7 @@ class Focus {
         }
         delete this._port;
         this.closed = true;
+        await this.delay(200);
       }
     } catch (error) {
       console.error("error when closing", error);

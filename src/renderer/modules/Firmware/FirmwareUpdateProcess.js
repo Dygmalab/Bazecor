@@ -19,8 +19,8 @@ import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import Styled from "styled-components";
 import { useMachine } from "@xstate/react";
-import i18n from "../../i18n";
 import SemVer from "semver";
+import i18n from "../../i18n";
 
 // State machine
 import FlashDevice from "../../controller/FlashingSM/FlashDevice";
@@ -33,7 +33,7 @@ import { IconArrowRight } from "../../component/Icon";
 import { FirmwareLoader } from "../../component/Loader";
 
 // Visual modules
-import { FirmwareProgressStatus } from "../Firmware";
+import { FirmwareProgressStatus } from ".";
 
 const Style = Styled.div`   
 width: 100%;  
@@ -116,7 +116,7 @@ function FirmwareUpdateProcess({ nextBlock, retryBlock, context, toggleFlashing,
       sideLeftOk: context.sideLeftOk,
       sideLeftBL: context.sideLeftBL,
       sideRightOK: context.sideRightOK,
-      sideRightBL: context.sideRightBL
+      sideRightBL: context.sideRightBL,
     },
     actions: {
       addEscListener: () => {
@@ -141,8 +141,8 @@ function FirmwareUpdateProcess({ nextBlock, retryBlock, context, toggleFlashing,
         await toggleFlashing();
         await toggleFwUpdate();
         onDisconnect();
-      }
-    }
+      },
+    },
   });
 
   const _handleKeyDown = event => {
@@ -169,38 +169,38 @@ function FirmwareUpdateProcess({ nextBlock, retryBlock, context, toggleFlashing,
     {
       step: 2,
       title: i18n.firmwareUpdate.texts.progressCardStatusDefy1,
-      description: i18n.firmwareUpdate.texts.progressCardBarDefy1
+      description: i18n.firmwareUpdate.texts.progressCardBarDefy1,
     },
     {
       step: 3,
       title: i18n.firmwareUpdate.texts.progressCardStatusDefy2,
-      description: i18n.firmwareUpdate.texts.progressCardBarDefy2
+      description: i18n.firmwareUpdate.texts.progressCardBarDefy2,
     },
     {
       step: 4,
       title: i18n.firmwareUpdate.texts.progressCardStatusDefy3,
-      description: i18n.firmwareUpdate.texts.progressCardBarDefy3
+      description: i18n.firmwareUpdate.texts.progressCardBarDefy3,
     },
     {
       step: 5,
       title: i18n.firmwareUpdate.texts.progressCardStatusDefy4,
-      description: i18n.firmwareUpdate.texts.progressCardBarDefy4
+      description: i18n.firmwareUpdate.texts.progressCardBarDefy4,
     },
     {
       step: 6,
       title: i18n.firmwareUpdate.texts.progressCardStatusDefy5,
-      description: i18n.firmwareUpdate.texts.progressCardBarDefy5
+      description: i18n.firmwareUpdate.texts.progressCardBarDefy5,
     },
     {
       step: 7,
       title: i18n.firmwareUpdate.texts.progressCardStatusDefy6,
-      description: i18n.firmwareUpdate.texts.progressCardBarSuccess
+      description: i18n.firmwareUpdate.texts.progressCardBarSuccess,
     },
     {
       step: 8,
       title: i18n.firmwareUpdate.texts.errorDuringProcessTitle,
-      description: i18n.firmwareUpdate.texts.errorDuringProcessDescription
-    }
+      description: i18n.firmwareUpdate.texts.errorDuringProcessDescription,
+    },
   ];
   const stepsRaise = [
     { step: 1, title: i18n.firmwareUpdate.texts.flashCardTitle1, description: i18n.firmwareUpdate.texts.flashCardTitle2 },
@@ -210,13 +210,13 @@ function FirmwareUpdateProcess({ nextBlock, retryBlock, context, toggleFlashing,
     {
       step: 7,
       title: i18n.firmwareUpdate.texts.progressCardStatus4,
-      description: i18n.firmwareUpdate.texts.progressCardBarSuccess
+      description: i18n.firmwareUpdate.texts.progressCardBarSuccess,
     },
     {
       step: 8,
       title: i18n.firmwareUpdate.texts.errorDuringProcessTitle,
-      description: i18n.firmwareUpdate.texts.errorDuringProcessDescription
-    }
+      description: i18n.firmwareUpdate.texts.errorDuringProcessDescription,
+    },
   ];
 
   return (
@@ -293,7 +293,7 @@ function FirmwareUpdateProcess({ nextBlock, retryBlock, context, toggleFlashing,
                   className="flashingbutton nooutlined"
                   style="primary"
                   size="sm"
-                  buttonText={"Retry the flashing procedure"}
+                  buttonText="Retry the flashing procedure"
                   onClick={() => {
                     send("RETRY");
                   }}
