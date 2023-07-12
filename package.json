@@ -20,7 +20,7 @@
     "make-lin": "electron-forge make --platform linux",
     "lint": "eslint --ext .ts,.tsx,.js,.jsx .",
     "prettier": "prettier --write \"./**/*.{js,json,css,scss,md}\"",
-    "test": "vitest run",
+    "test": "vitest run src/renderer/tests src/main/tests",
     "commit": "cz",
     "prepare": "husky install"
   },
@@ -55,6 +55,7 @@
     "@electron-forge/maker-rpm": "^6.1.1",
     "@electron-forge/maker-squirrel": "^6.1.1",
     "@electron-forge/plugin-webpack": "^6.1.1",
+    "@playwright/test": "^1.36.0",
     "@reforged/maker-appimage": "^3.3.0",
     "@semantic-release/changelog": "^6.0.3",
     "@semantic-release/commit-analyzer": "^10.0.1",

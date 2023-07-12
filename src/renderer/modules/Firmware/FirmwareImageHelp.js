@@ -21,10 +21,10 @@ import Styled from "styled-components";
 
 import { FirmwareNeuronHelp, FirmwareDefyUpdatingStatus } from "../Firmware";
 
-import videoFirmwareUpdate from "../../../../static/videos/update-firmware.mp4";
-import videoFirmwareUpdateReleaseKey from "../../../../static/videos/release-key.mp4";
-import videoFirmwareUpdateDefySRC from "../../../../static/videos/update-firmware-defy.mp4";
-import videoFirmwareUpdateDefyReleaseSRC from "../../../../static/videos/release-key-defy.mp4";
+import videoFirmwareUpdate from "@Assets/videos/update-firmware.mp4";
+import videoFirmwareUpdateReleaseKey from "@Assets/videos/release-key.mp4";
+import videoFirmwareUpdateDefySRC from "@Assets/videos/update-firmware-defy.mp4";
+import videoFirmwareUpdateDefyReleaseSRC from "@Assets/videos/release-key-defy.mp4";
 import { IconCheckmarkSm } from "../../component/Icon";
 
 const Style = Styled.div`   
