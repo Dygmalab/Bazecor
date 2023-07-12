@@ -1358,7 +1358,7 @@
     xterm-addon-fit "^0.5.0"
     xterm-addon-search "^0.8.0"
 
-"@electron/asar@^3.2.1":
+"@electron/asar@^3.2.1", "@electron/asar@^3.2.4":
   version "3.2.4"
   resolved "https://registry.yarnpkg.com/@electron/asar/-/asar-3.2.4.tgz#7e8635a3c4f6d8b3f8ae6efaf5ecb9fbf3bd9864"
   integrity sha512-lykfY3TJRRWFeTxccEKdf1I6BLl2Plw81H0bbp4Fc5iEc67foDCa5pjJQULVgo0wF+Dli75f3xVcdb/67FFZ/g==
@@ -5069,6 +5069,13 @@ electron-packager@^17.1.1:
     resolve "^1.1.6"
     semver "^7.1.3"
     yargs-parser "^21.1.1"
+
+electron-playwright-helpers@^1.6.0:
+  version "1.6.0"
+  resolved "https://registry.yarnpkg.com/electron-playwright-helpers/-/electron-playwright-helpers-1.6.0.tgz#74d17d3e1a4f738afc51e93c0912d2e1e16d496a"
+  integrity sha512-0csyp77xRAi8m5g1ApcYdTMJ8n0+Geyb4huyMAsIYTInk4wsuUTHmIy2gMfgF3I130ogfpX6ZfEGeffS93FaUA==
+  dependencies:
+    "@electron/asar" "^3.2.4"
 
 electron-publish@24.5.0:
   version "24.5.0"

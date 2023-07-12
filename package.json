@@ -12,7 +12,8 @@
   "main": ".webpack/main",
   "scripts": {
     "clean": "rm -rf dist && rm -rf out && rm -rf node_modules",
-    "start": "electron-forge start",
+    "start": "NODE_ENV=development electron-forge start",
+    "make-dev": "NODE_ENV=development electron-forge make",
     "package": "electron-forge package",
     "make": "electron-forge make",
     "make-win": "electron-forge make --platform win32",
@@ -21,6 +22,7 @@
     "lint": "eslint --ext .ts,.tsx,.js,.jsx .",
     "prettier": "prettier --write \"./**/*.{js,json,css,scss,md}\"",
     "test": "vitest run src/renderer/tests src/main/tests",
+    "e2e": "yarn playwright test",
     "commit": "cz",
     "prepare": "husky install"
   },
@@ -76,6 +78,7 @@
     "electron": "^25.2.0",
     "electron-devtools-installer": "^3.2.0",
     "electron-forge-maker-appimage": "^24.5.2",
+    "electron-playwright-helpers": "^1.6.0",
     "eslint": "^8.0.1",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-config-airbnb-typescript": "^17.0.0",
