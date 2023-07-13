@@ -160,9 +160,9 @@ const FirmwareImageHelp = ({
       checkSuccess.current.classList.add("animInCheck");
     }
     return () => {
-      if (countdown == 0 && deviceProduct == "Raise") {
+      if (videoIntro.current && countdown == 0 && deviceProduct == "Raise") {
         videoIntro.current.removeEventListener("ended", playVideo, false);
-      } else if (countdown == 0 && deviceProduct == "Defy") {
+      } else if (videoIntroDefy.current && countdown == 0 && deviceProduct == "Defy") {
         videoIntroDefy.current.removeEventListener("ended", playVideo, false);
       }
     };
