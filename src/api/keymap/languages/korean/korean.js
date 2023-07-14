@@ -25,15 +25,17 @@ const koreanLetters = [
     code: 144,
     labels: {
       primary: "한/영",
+      verbose: "한/영",
     },
-    newGroupName: "Miscellaneous",
+    newGroupName: "Punctuation",
   },
   {
     code: 145,
     labels: {
       primary: "한자",
+      verbose: "한자",
     },
-    newGroupName: "Miscellaneous",
+    newGroupName: "Punctuation",
   },
 ];
 

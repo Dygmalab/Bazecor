@@ -1710,5 +1710,21 @@
       "third": "",
       "fourth": ""
     }
+  },
+  {
+    "id": 136,
+    "x": 794,
+    "y": 0,
+    "centered": true,
+    "icon": false,
+    "idArray": [144, 145],
+    "iconname": "",
+    "content": {
+      "type": "genericBlockDropdown",
+      "first": "한글/한자",
+      "second": "",
+      "third": "",
+      "fourth": ""
+    }
   }
 ]
