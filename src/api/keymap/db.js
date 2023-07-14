@@ -63,6 +63,9 @@ import icelandic, { icelandicModifiedTables } from "./languages/icelandic/icelan
 // Japanese - is an Array of objects of values that have to be modified
 import japanese, { japaneseModifiedTables } from "./languages/japanese/japanese";
 
+// Korean - is an Array of objects of values that have to be modified
+import korean, { koreanModifiedTables } from "./languages/korean/korean";
+
 // Swiss German - is an Array of objects of values that have to be modified
 import swissGerman, { swissGermanModifiedTables } from "./languages/swissGerman/swissGerman";
 
@@ -115,6 +118,7 @@ const supportModifiedTables = {
   danish: danishModifiedTables,
   icelandic: icelandicModifiedTables,
   japanese: japaneseModifiedTables,
+  korean: koreanModifiedTables,
   swissGerman: swissGermanModifiedTables,
 };
 
@@ -143,6 +147,7 @@ const languagesDB = {
   danish,
   icelandic,
   japanese,
+  korean,
   swissGerman,
 };
 // Create cache for language layout
