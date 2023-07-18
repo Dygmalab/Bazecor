@@ -33,14 +33,14 @@ const Bluetooth = {
       code: 54109,
       labels: {
         top: "BLUET.",
-        primary: "DISCONNECT",
+        primary: "STAT.",
       },
     },
     {
       code: 54110,
       labels: {
         top: "BLUET.",
-        primary: "STATUS",
+        primary: "DISC.",
       },
     },
   ],
