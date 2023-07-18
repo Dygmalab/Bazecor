@@ -3,12 +3,13 @@ import React from "react";
 // Bootstrap components
 import Styled from "styled-components";
 import Card from "react-bootstrap/Card";
+import i18n from "../../i18n"
 
 // Modules
-import { AdvancedBatterySettings, SavingMode } from "../Battery";
+import { AdvancedBatterySettings, SavingMode } from "@Renderer/modules/Battery";
 // Internal components
-import Title from "../../component/Title";
-import { IconFlashlight } from "../../component/Icon";
+import Title from "@Renderer/component/Title";
+import { IconThunder } from "@Renderer/component/Icon";
 
 const Styles = Styled.div`
 padding-top: 24px;
@@ -58,7 +59,7 @@ function EnergyManagement({ wireless, toggleSavingMode }: EnergyManagementProps)
     <Styles>
       <Card className="overflowFix card-preferences">
         <Card.Title>
-          <Title text="Energy management" headingLevel={3} svgICO={<IconFlashlight />} />
+          <Title text={i18n.wireless.energyManagement.title} headingLevel={3} svgICO={<IconThunder />} />
         </Card.Title>
         <Card.Body className="py-0">
           <AdvancedBatterySettings />

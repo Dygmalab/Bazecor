@@ -6,13 +6,15 @@ import Styled from "styled-components";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import Focus from "../../api/focus";
-import i18n from "../i18n";
 
 // Custom component imports
-import PageHeader from "../modules/PageHeader";
-import { BatterySettings, EnergyManagement, RFSettings } from "../modules/Settings";
-import { LogoLoader } from "../component/Loader";
+import { LogoLoader } from "@Renderer/component/Loader";
+import ConnectionStatus from "@Renderer/component/ConnectionStatus";
+import PageHeader from "@Renderer/modules/PageHeader";
+import { BatterySettings, EnergyManagement, RFSettings } from "@Renderer/modules/Settings";
+
+import Focus from "../../api/focus";
+import i18n from "../i18n";
 
 const Styles = Styled.div`
   height: 100%;
@@ -158,6 +160,11 @@ const Wireless = ({ inContext, connected, allowBeta, updateAllowBeta, cancelCont
         />
         <div className="wirelessWrapper">
           <div className="wirelessInner">
+            <Row>
+              <Col md={12}>
+                <ConnectionStatus connection={1} />
+              </Col>
+            </Row>
             <Row>
               <Col md={6}>
                 <BatterySettings

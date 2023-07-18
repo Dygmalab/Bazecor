@@ -14,6 +14,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import ConnectionType from "./ConnectionType";
+import ConnectionStatus from "./ConnectionStatus";
 
-export { ConnectionType as default };
+export { ConnectionStatus as default };

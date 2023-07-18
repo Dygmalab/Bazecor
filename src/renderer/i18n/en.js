@@ -469,6 +469,15 @@ const English = {
   },
   wireless: {
     title: "Wireless",
+    energyManagement: {
+      title: "Energy management",
+      advancedSettings: "Advanced settings",
+      advancedSettingsDesc: "Settings applied when the low-power mode is off",
+      savingMode: "Energy saving mode",
+      savingModeDesc: "Easy way to extend battery life",
+      savingModeInfo: "Consider that the battery has a safety policy that is activated when it reaches 10%.",
+      lowPowerMode: "Low-power mode",
+    },
     batteryPreferences: {
       battery: "Battery",
       batteryErrorReading: "Error reading battery level",

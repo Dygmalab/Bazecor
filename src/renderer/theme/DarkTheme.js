@@ -374,6 +374,13 @@ const Dark = {
         arrowsColor: Tokens.colors.gray300,
       },
     },
+    energyManagement: {
+      borderColor: Tokens.colors.gray700,
+      titleColor: Tokens.colors.gray25,
+      descriptionColor: Tokens.colors.gray200,
+      lowPowerModeTitleColor: Tokens.colors.gray300,
+      shortButtonColor: Tokens.colors.gray25,
+    },
     raiseKeyboard: {
       keyBase: "#303949",
       keyShadow: Tokens.colors.gray25,
