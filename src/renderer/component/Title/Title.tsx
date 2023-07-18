@@ -122,7 +122,7 @@ h6 {
 .danger {
 	color: ${({ theme }) => theme.colors.textDanger};
 	&:before {
-		background-image: url(${LightSuccess});
+		background-image: url(${LightDanger});
 	}
 	&:after {
 		background: ${({ theme }) => theme.colors.gradientDanger};
@@ -155,8 +155,21 @@ h6 {
 .counter2:before {
 	content: "02";
 }
-
 `;
+
+interface TitleProps {
+  text: string;
+  headingLevel: number;
+  size?: "md" | "lg";
+  className?: string;
+  color?: "danger" | "error" | "success" | "warning";
+  type?: "danger" | "error" | "success" | "warning";
+  tooltip?: string | HTMLElement;
+  tooltipSize?: "wide" | "narrow";
+  tooltipIconSize?: "sm" | "md" | "lg";
+  tooltipPlacement?: "left" | "top" | "right" | "bottom";
+  svgICO?: any;
+}
 function Title({
   text,
   headingLevel,
@@ -165,13 +178,12 @@ function Title({
   color,
   type,
   tooltip,
-  tooltipSize,
-  tooltipIconSize,
-  tooltipPlacement,
+  tooltipSize = "narrow",
+  tooltipIconSize = "md",
+  tooltipPlacement = "top",
   svgICO,
-}) {
-  const Tag = `h${headingLevel}`;
-
+}: TitleProps) {
+  const Tag = `h${headingLevel}` as keyof JSX.IntrinsicElements;
   return (
     <Style>
       <Tag
@@ -183,15 +195,15 @@ function Title({
         <span dangerouslySetInnerHTML={{ __html: text }} />
         {tooltip && (
           <OverlayTrigger
-            placement={`${tooltipPlacement || "top"}`}
+            placement={tooltipPlacement}
             overlay={
-              <Tooltip id="tooltip-top" className={`${tooltipSize == "wide" ? "tooltipWide" : "tooltipRegular"}`}>
+              <Tooltip id="tooltip-top" className={`${tooltipSize === "wide" ? "tooltipWide" : "tooltipRegular"}`}>
                 <div dangerouslySetInnerHTML={{ __html: tooltip }} />
               </Tooltip>
             }
           >
             <span className="tooltipIcon">
-              {tooltipIconSize == "sm" ? <IconInformationBubbleSm /> : <IconInformationBubble />}
+              {tooltipIconSize === "sm" ? <IconInformationBubbleSm /> : <IconInformationBubble />}
             </span>
           </OverlayTrigger>
         )}

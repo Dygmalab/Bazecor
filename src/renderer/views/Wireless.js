@@ -11,7 +11,7 @@ import i18n from "../i18n";
 
 // Custom component imports
 import PageHeader from "../modules/PageHeader";
-import { BatterySettings, RFSettings } from "../modules/Settings";
+import { BatterySettings, EnergyManagement, RFSettings } from "../modules/Settings";
 import { LogoLoader } from "../component/Loader";
 
 const Styles = Styled.div`
@@ -166,6 +166,7 @@ const Wireless = ({ inContext, connected, allowBeta, updateAllowBeta, cancelCont
                   toggleSavingMode={toggleSavingMode}
                   isCharging={false}
                 />
+                <EnergyManagement wireless={wireless} toggleSavingMode={toggleSavingMode} />
               </Col>
               <Col md={6}>
                 <RFSettings wireless={wireless} changeWireless={changeWireless} sendRePair={sendRePairCommand} />

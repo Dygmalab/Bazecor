@@ -3,7 +3,6 @@ import React from "react";
 // Bootstrap components
 import Styled from "styled-components";
 import Card from "react-bootstrap/Card";
-import Form from "react-bootstrap/Form";
 import i18n from "../../i18n";
 
 // Custom components
@@ -14,7 +13,6 @@ import { BatteryStatusSide, SavingModeIndicator } from "../../component/Battery"
 import { IconBattery } from "../../component/Icon";
 
 const Styles = Styled.div`
-height: 100%;
 padding-top: 24px;
 .card {
   height: inherit;
@@ -26,25 +24,22 @@ padding-top: 24px;
   position: relative;
   max-width: 202px;
 }
-.custom-switch {
-  min-height: 36px;
-}
-.savingModedescription {
-  margin-top: 24px;
-  p {
-    font-size: 0.75rem;
-    font-weight: 401;
-    letter-spacing: -0.01em;
-    color: ${({ theme }) => theme.styles.batterySettings.descriptionColor};
-    strong {
-      font-weight: 401;
-      color: ${({ theme }) => theme.styles.batterySettings.descriptionHighlightColor};
-    }
-  }
-}
 `;
 
-function BatterySettings({ wireless, toggleSavingMode, changeWireless, isCharging }) {
+interface BatterySettingsProps {
+  wireless: {
+    battery: {
+      LeftLevel?: number;
+      LeftState?: number;
+      RightLevel?: number;
+      RightState?: number;
+      savingMode?: boolean;
+    };
+  };
+  toggleSavingMode: boolean;
+}
+
+function BatterySettings({ wireless }: BatterySettingsProps) {
   // console.log("Wireless: ", wireless);
   return (
     <Styles>
@@ -70,19 +65,6 @@ function BatterySettings({ wireless, toggleSavingMode, changeWireless, isChargin
             />
             <SavingModeIndicator isSavingMode={wireless.battery ? wireless.battery.savingMode : false} />
           </div>
-          <Form className="batterySettingItem batterySetSavingMode">
-            <div className="batterySettingLabel">Saving Mode</div>
-            <Form.Check
-              type="switch"
-              id="settingSavingMode"
-              checked={wireless.battery ? wireless.battery.savingMode : false}
-              onChange={toggleSavingMode}
-            />
-          </Form>
-          <div
-            className="savingModedescription"
-            dangerouslySetInnerHTML={{ __html: i18n.wireless.batteryPreferences.savingModeDescription }}
-          />
         </Card.Body>
       </Card>
     </Styles>
