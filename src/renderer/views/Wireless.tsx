@@ -9,6 +9,9 @@ import Col from "react-bootstrap/Col";
 import Focus from "../../api/focus";
 import i18n from "../i18n";
 
+// Import Types for wireless
+import { PropsInterface, WirelessInterface } from "../types/wireless";
+
 // Custom component imports
 import PageHeader from "../modules/PageHeader";
 import { BatterySettings, EnergyManagement, RFSettings } from "../modules/Settings";
@@ -29,8 +32,8 @@ const Styles = Styled.div`
   }
 `;
 
-const Wireless = ({ inContext, connected, allowBeta, updateAllowBeta, cancelContext, startContext }) => {
-  const [wireless, setWireless] = useState({});
+const Wireless = ({ cancelContext, startContext }: PropsInterface) => {
+  const [wireless, setWireless] = useState<WirelessInterface>();
   const [modified, setModified] = useState(false);
   const [loading, setLoading] = useState(true);
 
@@ -38,7 +41,6 @@ const Wireless = ({ inContext, connected, allowBeta, updateAllowBeta, cancelCont
     const focus = new Focus();
     // Use focus commands to retrieve wireless data
     // Battery commands
-    wireless.battery = {};
     await focus.command("wireless.battery.left.level").then(batteryLevel => {
       wireless.battery.LeftLevel = batteryLevel ? parseInt(batteryLevel, 10) : 100;
     });
@@ -56,7 +58,6 @@ const Wireless = ({ inContext, connected, allowBeta, updateAllowBeta, cancelCont
     });
 
     // Energy commands
-    wireless.energy = {};
     await focus.command("wireless.energy.modes").then(energyModes => {
       wireless.energy.modes = energyModes;
     });
@@ -68,7 +69,6 @@ const Wireless = ({ inContext, connected, allowBeta, updateAllowBeta, cancelCont
     });
 
     // Bluetooth commands
-    wireless.bluetooth = {};
     await focus.command("wireless.bluetooth.devices").then(bluetoothDevices => {
       wireless.bluetooth.devices = bluetoothDevices;
     });
@@ -80,7 +80,6 @@ const Wireless = ({ inContext, connected, allowBeta, updateAllowBeta, cancelCont
     });
 
     // rf commands
-    wireless.rf = {};
     await focus.command("wireless.rf.channelHop").then(rfChannelHop => {
       wireless.rf.channelHop = rfChannelHop;
     });
@@ -120,7 +119,7 @@ const Wireless = ({ inContext, connected, allowBeta, updateAllowBeta, cancelCont
     cancelContext();
   }
 
-  async function changeWireless(wless) {
+  async function changeWireless(wless: WirelessInterface) {
     setWireless(wless);
     if (!modified) {
       setModified(true);
@@ -144,14 +143,13 @@ const Wireless = ({ inContext, connected, allowBeta, updateAllowBeta, cancelCont
     await focus.command("wireless.rf.stability", wireless.rf.stability);
   }
 
-  if (loading) <LogoLoader />;
+  if (loading) <LogoLoader width={undefined} error={undefined} paused={undefined} warning={undefined} key={undefined} />;
   return (
     <Styles>
       <Container fluid className="wireless center-content">
         <PageHeader
           text={i18n.wireless.title}
           showSaving
-          showContentSelector={false}
           saveContext={saveWirelessChanges}
           destroyContext={destroyContext}
           inContext={modified}

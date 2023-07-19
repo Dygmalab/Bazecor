@@ -36,7 +36,7 @@ interface BatterySettingsProps {
       savingMode?: boolean;
     };
   };
-  toggleSavingMode: boolean;
+  toggleSavingMode: any;
 }
 
 function BatterySettings({ wireless }: BatterySettingsProps) {
