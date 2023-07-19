@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import Styled from "styled-components";
 
 import Title from "@Renderer/component/Title";
 import { IconSettings } from "@Renderer/component/Icon";
 import { RegularButton } from "@Renderer/component/Button";
+import { AdvancedBatterySettingsModal } from "@Renderer/component/Modal";
 import i18n from "../../i18n";
 
 const Styles = Styled.div`
@@ -41,6 +42,7 @@ const Styles = Styled.div`
 `;
 
 function AdvancedBatterySettings() {
+  const [showModal, setShowModal] = useState(false);
   return (
     <Styles>
       <div className="settingsWrapper">
@@ -52,10 +54,11 @@ function AdvancedBatterySettings() {
           <RegularButton
             icoSVG={<IconSettings />}
             style="short"
-            onClick={() => {console.log("clicked")}}
+            onClick={() => setShowModal(true)}
           />
         </div>
       </div>
+      <AdvancedBatterySettingsModal showModal={showModal} setShowModal={setShowModal} />
     </Styles>
   );
 }

@@ -3,13 +3,14 @@ import React from "react";
 // Bootstrap components
 import Styled from "styled-components";
 import Card from "react-bootstrap/Card";
-import i18n from "../../i18n"
 
 // Modules
 import { AdvancedBatterySettings, SavingMode } from "@Renderer/modules/Battery";
 // Internal components
 import Title from "@Renderer/component/Title";
 import { IconThunder } from "@Renderer/component/Icon";
+
+import i18n from "../../i18n"
 
 const Styles = Styled.div`
 padding-top: 24px;

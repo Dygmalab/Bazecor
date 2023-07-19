@@ -37,9 +37,9 @@ type ConnectionProps = {
 
 function ConnectionStatus({ connection }: ConnectionProps) {
   const connectionTypes = [
-    { id: 0, text: "Wired connected", icon: <IconSignal /> },
+    { id: 0, text: "Wired connected", icon: <IconPlug /> },
     { id: 1, text: "Bluetooh connected", icon: <IconBluetooth /> },
-    { id: 2, text: "RF connected", icon: <IconPlug /> },
+    { id: 2, text: "RF connected", icon: <IconSignal /> },
   ];
   return (
     <Styles>

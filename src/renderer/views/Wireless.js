@@ -163,7 +163,7 @@ const Wireless = ({ inContext, connected, allowBeta, updateAllowBeta, cancelCont
           <div className="wirelessInner">
             <Row>
               <Col md={12}>
-                <ConnectionStatus connection={1} />
+                <ConnectionStatus connection={0} />
               </Col>
             </Row>
             <Row>

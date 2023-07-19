@@ -148,6 +148,13 @@ const Light = {
       inputBackground: "rgba(255, 255, 255, 0.4)",
       border: settingColorOpacity(Tokens.colors.gray100, 0.6),
     },
+    badge: {
+      textColor: Tokens.colors.gray500,
+      dangerLowBG: settingColorOpacity(Tokens.colors.brandPrimary, 0.35),
+      dangerLowText: Tokens.colors.gray50,
+      subtleColor: Tokens.colors.gray100,
+      subtleBGColor: Tokens.colors.gray700,
+    },
     batteryIndicator: {
       pileBackgroundColor: Tokens.colors.gray50,
       pileBackgroundSavingMode: settingColorOpacity(Tokens.colors.brandWarning, 0.25),
@@ -312,6 +319,9 @@ const Light = {
       altIcon: "#DDD",
       radius: "10",
       boxShadow: "0 0 0.5rem 0.3rem rgba(0,0,0,0.1)",
+      cardBattery: {
+        backgroundColor: settingColorOpacity(Tokens.colors.gray25, 0.9),
+      },
     },
     cardButtons: {
       background: "rgba(255, 255, 255, 0.6)",
