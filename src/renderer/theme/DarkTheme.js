@@ -375,6 +375,8 @@ const Dark = {
       },
     },
     energyManagement: {
+      connectionBGColor: settingColorOpacity(Tokens.colors.gray600, 0.25),
+      connectionColor: Tokens.colors.gray25,
       borderColor: Tokens.colors.gray700,
       titleColor: Tokens.colors.gray25,
       descriptionColor: Tokens.colors.gray200,

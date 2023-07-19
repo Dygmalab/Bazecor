@@ -9,6 +9,15 @@ const Styles = Styled.div`
   display: flex;
   grid-gap: 16px;
   align-items: center;
+  background-color: ${({ theme }) => theme.styles.energyManagement.connectionBGColor};
+  padding: 0.75rem 1rem;
+  border-radius: 14px;
+  margin-bottom: -0.5rem;
+  h4 {
+    margin-bottom: 0;
+    font-size: 0.915rem;
+    color: ${({ theme }) => theme.styles.energyManagement.connectionColor};
+  }
 }
 .cardConnectionIcon {
   display: flex;
@@ -16,6 +25,9 @@ const Styles = Styled.div`
   justify-content: center;
   border-radius: 50%;
   color: white;
+  width: 42px;
+  aspect-ratio: 1;
+  background-color: ${({ theme }) => theme.colors.purple300};
 }
 `;
 

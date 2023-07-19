@@ -368,6 +368,8 @@ const Light = {
       },
     },
     energyManagement: {
+      connectionBGColor: "rgba(255, 255, 255, 0.4)",
+      connectionColor: Tokens.colors.gray600,
       borderColor: Tokens.colors.gray50,
       titleColor: Tokens.colors.gray700,
       descriptionColor: Tokens.colors.gray400,

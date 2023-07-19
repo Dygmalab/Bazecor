@@ -28,6 +28,7 @@ const Styles = Styled.div`
     max-width: 960px;
     width: 100%;
     margin: auto;
+    padding: 2rem 0;
   }
 `;
 
@@ -166,7 +167,7 @@ const Wireless = ({ inContext, connected, allowBeta, updateAllowBeta, cancelCont
               </Col>
             </Row>
             <Row>
-              <Col md={6}>
+              <Col lg={6}>
                 <BatterySettings
                   wireless={wireless}
                   changeWireless={changeWireless}
@@ -175,7 +176,7 @@ const Wireless = ({ inContext, connected, allowBeta, updateAllowBeta, cancelCont
                 />
                 <EnergyManagement wireless={wireless} toggleSavingMode={toggleSavingMode} />
               </Col>
-              <Col md={6}>
+              <Col lg={6}>
                 <RFSettings wireless={wireless} changeWireless={changeWireless} sendRePair={sendRePairCommand} />
               </Col>
             </Row>
