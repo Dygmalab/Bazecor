@@ -150,10 +150,10 @@ const Light = {
     },
     badge: {
       textColor: Tokens.colors.gray500,
-      dangerLowBG: settingColorOpacity(Tokens.colors.brandPrimary, 0.35),
-      dangerLowText: Tokens.colors.gray50,
-      subtleColor: Tokens.colors.gray100,
-      subtleBGColor: Tokens.colors.gray700,
+      dangerLowBG: settingColorOpacity(Tokens.colors.brandPrimary, 0.15),
+      dangerLowText: settingColorOpacity(Tokens.colors.brandPrimary, 0.75),
+      subtleColor: Tokens.colors.gray400,
+      subtleBGColor: Tokens.colors.gray50,
     },
     batteryIndicator: {
       pileBackgroundColor: Tokens.colors.gray50,
@@ -320,7 +320,7 @@ const Light = {
       radius: "10",
       boxShadow: "0 0 0.5rem 0.3rem rgba(0,0,0,0.1)",
       cardBattery: {
-        backgroundColor: settingColorOpacity(Tokens.colors.gray25, 0.9),
+        backgroundColor: "rgba(255, 255, 255, 0.6)",
       },
     },
     cardButtons: {
