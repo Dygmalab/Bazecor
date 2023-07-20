@@ -50,6 +50,6 @@ export interface EnergyManagementProps {
 
 export interface RFSettingsProps {
   wireless: WirelessInterface;
-  changeWireless: () => void;
+  changeWireless: (wireless: WirelessInterface) => void;
   sendRePair: () => void;
 }
