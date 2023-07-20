@@ -1,10 +1,14 @@
-export interface PropsInterface {
-  inContext: boolean;
+export interface WirelessPropsInterface {
   connected: boolean;
+  path: string;
+  titleElement: () => void;
+  darkMode: () => void;
+  toggleDarkMode: () => void;
+  startContext: () => void;
+  cancelContext: () => void;
+  updateAllowBeta: () => void;
   allowBeta: boolean;
-  updateAllowBeta: any;
-  cancelContext: any;
-  startContext: any;
+  inContext: boolean;
 }
 
 export interface WirelessInterface {
@@ -30,4 +34,16 @@ export interface WirelessInterface {
     state: number;
     stability: number;
   };
+}
+
+export interface BatterySettingsProps {
+  wireless: WirelessInterface;
+  changeWireless: (wireless: WirelessInterface) => void;
+  toggleSavingMode: () => void;
+  isCharging: boolean;
+}
+
+export interface EnergyManagementProps {
+  wireless: WirelessInterface;
+  toggleSavingMode: () => void;
 }

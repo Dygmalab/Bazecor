@@ -3,6 +3,10 @@ import React from "react";
 // Bootstrap components
 import Styled from "styled-components";
 import Card from "react-bootstrap/Card";
+
+// Import Types for wireless
+import { BatterySettingsProps } from "../../types/wireless";
+
 import i18n from "../../i18n";
 
 // Custom components
@@ -26,20 +30,8 @@ padding-top: 24px;
 }
 `;
 
-interface BatterySettingsProps {
-  wireless: {
-    battery: {
-      LeftLevel?: number;
-      LeftState?: number;
-      RightLevel?: number;
-      RightState?: number;
-      savingMode?: boolean;
-    };
-  };
-  toggleSavingMode: any;
-}
-
-function BatterySettings({ wireless }: BatterySettingsProps) {
+function BatterySettings(props: BatterySettingsProps) {
+  const { wireless } = props;
   // console.log("Wireless: ", wireless);
   return (
     <Styles>

@@ -6,6 +6,7 @@ import Form from "react-bootstrap/Form";
 // Internal components
 import Title from "@Renderer/component/Title";
 
+import { EnergyManagementProps } from "@Renderer/types/wireless";
 import i18n from "../../i18n";
 
 const Styles = Styled.div`
@@ -52,20 +53,7 @@ h5 {
 }
 `;
 
-interface SavingModeProps {
-  wireless: {
-    battery: {
-      LeftLevel?: number;
-      LeftState?: number;
-      RightLevel?: number;
-      RightState?: number;
-      savingMode?: boolean;
-    };
-  };
-  toggleSavingMode: Promise<void>;
-}
-
-function SavingMode({ wireless, toggleSavingMode }: SavingModeProps) {
+function SavingMode({ wireless, toggleSavingMode }: EnergyManagementProps) {
   return (
     <Styles>
       <Title text={i18n.wireless.energyManagement.lowPowerMode} headingLevel={5} />
@@ -73,7 +61,9 @@ function SavingMode({ wireless, toggleSavingMode }: SavingModeProps) {
         <div className="settingsContent">
           <Title text={i18n.wireless.energyManagement.savingMode} headingLevel={4} />
           <p>{i18n.wireless.energyManagement.savingModeDesc}</p>
-          <p><small>{i18n.wireless.energyManagement.savingModeInfo}</small></p>
+          <p>
+            <small>{i18n.wireless.energyManagement.savingModeInfo}</small>
+          </p>
         </div>
         <div className="settingsActions">
           <Form className="batterySettingItem batterySetSavingMode">

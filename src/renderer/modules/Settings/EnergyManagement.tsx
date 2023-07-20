@@ -9,8 +9,10 @@ import { AdvancedBatterySettings, SavingMode } from "@Renderer/modules/Battery";
 // Internal components
 import Title from "@Renderer/component/Title";
 import { IconThunder } from "@Renderer/component/Icon";
+import i18n from "@Renderer/i18n";
 
-import i18n from "../../i18n"
+// Import Types for wireless
+import { EnergyManagementProps } from "@Renderer/types/wireless";
 
 const Styles = Styled.div`
 padding-top: 24px;
@@ -42,20 +44,8 @@ padding-top: 24px;
 }
 `;
 
-interface EnergyManagementProps {
-  wireless: {
-    battery: {
-      LeftLevel?: number;
-      LeftState?: number;
-      RightLevel?: number;
-      RightState?: number;
-      savingMode?: boolean;
-    };
-  };
-  toggleSavingMode: Promise<void>;
-}
-
-function EnergyManagement({ wireless, toggleSavingMode }: EnergyManagementProps) {
+function EnergyManagement(props: EnergyManagementProps) {
+  const { wireless, toggleSavingMode } = props;
   return (
     <Styles>
       <Card className="overflowFix card-preferences">

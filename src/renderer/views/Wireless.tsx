@@ -7,14 +7,14 @@ import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 
-// Import Types for wireless
-import { PropsInterface, WirelessInterface } from "../types/wireless";
-
 // Custom component imports
 import { LogoLoader } from "@Renderer/component/Loader";
 import ConnectionStatus from "@Renderer/component/ConnectionStatus";
 import PageHeader from "@Renderer/modules/PageHeader";
 import { BatterySettings, EnergyManagement, RFSettings } from "@Renderer/modules/Settings";
+
+// Import Types for wireless
+import { WirelessPropsInterface, WirelessInterface } from "../types/wireless";
 
 import Focus from "../../api/focus";
 import i18n from "../i18n";
@@ -35,8 +35,34 @@ const Styles = Styled.div`
   }
 `;
 
-const Wireless = ({ cancelContext, startContext }: PropsInterface) => {
-  const [wireless, setWireless] = useState<WirelessInterface>();
+const initialWireless = {
+  battery: {
+    LeftLevel: 0,
+    RightLevel: 0,
+    LeftState: 0,
+    RightState: 0,
+    savingMode: false,
+  },
+  energy: {
+    modes: 0,
+    currentMode: 0,
+    disable: 0,
+  },
+  bluetooth: {
+    devices: 0,
+    state: 0,
+    stability: 0,
+  },
+  rf: {
+    channelHop: 0,
+    state: 0,
+    stability: 0,
+  },
+};
+
+function Wireless(props: WirelessPropsInterface) {
+  const { startContext, cancelContext } = props;
+  const [wireless, setWireless] = useState<WirelessInterface>(initialWireless);
   const [modified, setModified] = useState(false);
   const [loading, setLoading] = useState(true);
 
@@ -44,6 +70,7 @@ const Wireless = ({ cancelContext, startContext }: PropsInterface) => {
     const focus = new Focus();
     // Use focus commands to retrieve wireless data
     // Battery commands
+
     await focus.command("wireless.battery.left.level").then(batteryLevel => {
       wireless.battery.LeftLevel = batteryLevel ? parseInt(batteryLevel, 10) : 100;
     });
@@ -61,6 +88,7 @@ const Wireless = ({ cancelContext, startContext }: PropsInterface) => {
     });
 
     // Energy commands
+
     await focus.command("wireless.energy.modes").then(energyModes => {
       wireless.energy.modes = energyModes;
     });
@@ -72,6 +100,7 @@ const Wireless = ({ cancelContext, startContext }: PropsInterface) => {
     });
 
     // Bluetooth commands
+
     await focus.command("wireless.bluetooth.devices").then(bluetoothDevices => {
       wireless.bluetooth.devices = bluetoothDevices;
     });
@@ -83,6 +112,7 @@ const Wireless = ({ cancelContext, startContext }: PropsInterface) => {
     });
 
     // rf commands
+
     await focus.command("wireless.rf.channelHop").then(rfChannelHop => {
       wireless.rf.channelHop = rfChannelHop;
     });
@@ -99,6 +129,7 @@ const Wireless = ({ cancelContext, startContext }: PropsInterface) => {
 
   useEffect(() => {
     getWirelessPreferences();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   async function sendRePairCommand() {
@@ -116,7 +147,7 @@ const Wireless = ({ cancelContext, startContext }: PropsInterface) => {
   }
 
   async function destroyContext() {
-    setWireless({});
+    setWireless(initialWireless);
     setModified(false);
     getWirelessPreferences();
     cancelContext();
@@ -183,6 +214,6 @@ const Wireless = ({ cancelContext, startContext }: PropsInterface) => {
       </Container>
     </Styles>
   );
-};
+}
 
 export default Wireless;
