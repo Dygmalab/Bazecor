@@ -14,7 +14,7 @@ import PageHeader from "@Renderer/modules/PageHeader";
 import { BatterySettings, EnergyManagement, RFSettings } from "@Renderer/modules/Settings";
 
 // Import Types for wireless
-import { WirelessPropsInterface, WirelessInterface } from "../types/wireless";
+import { WirelessPropsInterface, WirelessInterface } from "@Renderer/types/wireless";
 
 import Focus from "../../api/focus";
 import i18n from "../i18n";

@@ -5,7 +5,6 @@ import i18n from "../../i18n";
 
 import Title from "../../component/Title";
 import Callout from "../../component/Callout";
-import { RegularButton, ButtonConfig } from "../../component/Button";
 
 import {
   IconMediaPlayPauseSm,

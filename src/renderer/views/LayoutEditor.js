@@ -2005,13 +2005,13 @@ class LayoutEditor extends React.Component {
           <Modal.Footer>
             <RegularButton
               buttonText={i18n.editor.oldMacroModal.cancelButton}
-              style="outline transp-bg"
+              styles="outline transp-bg"
               size="sm"
               onClick={this.toggleMacroModal}
             />
             <RegularButton
               buttonText={i18n.editor.oldMacroModal.applyButton}
-              style="outline gradient"
+              styles="outline gradient"
               size="sm"
               onClick={this.updateOldMacros}
             />
@@ -2034,13 +2034,13 @@ class LayoutEditor extends React.Component {
           <Modal.Footer>
             <RegularButton
               buttonText={i18n.editor.oldNeuronModal.cancelButton}
-              style="outline transp-bg"
+              styles="outline transp-bg"
               size="sm"
               onClick={this.toggleNeuronModal}
             />
             <RegularButton
               buttonText={i18n.editor.oldNeuronModal.applyButton}
-              style="outline gradient"
+              styles="outline gradient"
               size="sm"
               onClick={this.CloneExistingNeuron}
             />

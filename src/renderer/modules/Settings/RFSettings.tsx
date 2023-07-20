@@ -1,16 +1,17 @@
 import React from "react";
-import i18n from "../../i18n";
+import i18n from "@Renderer/i18n";
 
-//Bootstrap components
+// Bootstrap components
 import Styled from "styled-components";
 import Card from "react-bootstrap/Card";
 
-//Custom components
-import Title from "../../component/Title";
-import { RegularButton } from "../../component/Button";
+// Custom components
+import Title from "@Renderer/component/Title";
+import { RegularButton } from "@Renderer/component/Button";
 
-//Assets
-import { IconSignal } from "../../component/Icon";
+// Assets
+import { IconSignal } from "@Renderer/component/Icon";
+import { RFSettingsProps } from "@Renderer/types/wireless";
 
 const Styles = Styled.div`
 height: 100%;
@@ -35,7 +36,8 @@ padding-top: 24px;
 }
 `;
 
-function RFSettings({ sendRePair, wireless, changeWireless }) {
+function RFSettings(props: RFSettingsProps) {
+  const { sendRePair } = props;
   return (
     <Styles>
       <Card className="overflowFix card-preferences">
@@ -47,13 +49,12 @@ function RFSettings({ sendRePair, wireless, changeWireless }) {
           <RegularButton
             buttonText={i18n.wireless.RFPreferences.reconnectSides}
             onClick={sendRePair}
-            style="outline gradient"
+            styles="outline gradient"
             size="sm"
           />
-          <div
-            className="RFdescription"
-            dangerouslySetInnerHTML={{ __html: i18n.wireless.RFPreferences.repairChannelDescription }}
-          />
+          <div className="RFdescription">
+            <p>{i18n.wireless.RFPreferences.repairChannelDescription}</p>
+          </div>
         </Card.Body>
       </Card>
     </Styles>

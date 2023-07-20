@@ -22,7 +22,7 @@ export default function PreviewMacroModal({ children, hookref }) {
         buttonText="Preview macro"
         size="sm"
         icoSVG={<IconEye />}
-        style="outline-sm transp-bg"
+        styles="outline-sm transp-bg"
         icoPosition="right"
         onClick={() => setShow(!show)}
       />

@@ -47,3 +47,9 @@ export interface EnergyManagementProps {
   wireless: WirelessInterface;
   toggleSavingMode: () => void;
 }
+
+export interface RFSettingsProps {
+  wireless: WirelessInterface;
+  changeWireless: () => void;
+  sendRePair: () => void;
+}

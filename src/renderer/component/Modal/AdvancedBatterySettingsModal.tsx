@@ -39,7 +39,7 @@ function AdvancedBatterySettingsModal({ showModal, setShowModal }: AdvancedBatte
     },
   ];
   return (
-    <Modal size="xl" show={showModal} onHide={() => setShowModal(false)} aria-labelledby="contained-modal-title-vcenter" centered >
+    <Modal size="xl" show={showModal} onHide={() => setShowModal(false)} aria-labelledby="contained-modal-title-vcenter" centered>
       <Modal.Header closeButton>
         <Modal.Title>{i18n.wireless.energyManagement.advancedSettings}</Modal.Title>
       </Modal.Header>
@@ -84,14 +84,12 @@ function AdvancedBatterySettingsModal({ showModal, setShowModal }: AdvancedBatte
           <Card.Body>
             <Row className="card-preferences--option justify-between">
               <Col lg={5}>
-                <Title text="Adjust underglow and backlight intensity as you switch layers. The maximum intensity smoothly fades to a lower level." headingLevel={6} />
+                <Title
+                  text="Adjust underglow and backlight intensity as you switch layers. The maximum intensity smoothly fades to a lower level."
+                  headingLevel={6}
+                />
               </Col>
-              <Form.Check
-                type="switch"
-                id="toggleLayerHighlight"
-                checked={false}
-                onChange={() => {}}
-              />
+              <Form.Check type="switch" id="toggleLayerHighlight" checked={false} onChange={() => {}} />
             </Row>
           </Card.Body>
         </Card>
@@ -103,35 +101,33 @@ function AdvancedBatterySettingsModal({ showModal, setShowModal }: AdvancedBatte
           <Card.Body>
             <Row className="card-preferences--option justify-between">
               <Col lg={5}>
-                <Title text="Manage the power of the radio signal" tooltip={i18n.wireless.energyManagement.settings.tooltipRF} headingLevel={6} />
+                <Title
+                  text="Manage the power of the radio signal"
+                  tooltip={i18n.wireless.energyManagement.settings.tooltipRF}
+                  headingLevel={6}
+                />
               </Col>
-              <ToggleButtons
-                selectDarkMode={() => {}}
-                value={"medium"}
-                listElements={RFModes}
-                style="flex"
-                size="sm"
-              />
+              <ToggleButtons selectDarkMode={() => {}} value={"medium"} listElements={RFModes} style="flex" size="sm" />
             </Row>
             <Row className="card-preferences--option justify-between">
               <Col lg={5}>
                 <Title text="Reduce the frequency of data exchange in RF" headingLevel={6} />
               </Col>
-              <Form.Check
-                type="switch"
-                id="toggleLayerHighlight"
-                checked={false}
-                onChange={() => {}}
-              />
+              <Form.Check type="switch" id="toggleLayerHighlight" checked={false} onChange={() => {}} />
             </Row>
           </Card.Body>
         </Card>
       </Modal.Body>
       <Modal.Footer>
-        <RegularButton buttonText={i18n.app.cancelPending.button} style="outline transp-bg" size="sm" onClick={() => setShowModal(false)} />
+        <RegularButton
+          buttonText={i18n.app.cancelPending.button}
+          styles="outline transp-bg"
+          size="sm"
+          onClick={() => setShowModal(false)}
+        />
         <RegularButton
           buttonText={i18n.components.save.button}
-          style="outline gradient"
+          styles="outline gradient"
           size="sm"
           onClick={() => setShowModal(false)}
         />

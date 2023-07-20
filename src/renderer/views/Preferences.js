@@ -398,7 +398,7 @@ class Preferences extends React.Component {
     const verboseSwitch = <Form.Check type="switch" checked={verboseFocus} onChange={this.toggleVerboseFocus} />;
     const onlyCustomSwitch = <Form.Check type="switch" checked={kbData.keymap.onlyCustom} onChange={this.toggleOnlyCustom} />;
     const allowBetas = <Form.Check value={allowBeta} type="switch" checked={allowBeta} onChange={updateAllowBeta} />;
-    const pairingButton = <RegularButton buttonText={"Re-Pair RF"} style="short warning sm" onClick={this.sendRePairCommand} />;
+    const pairingButton = <RegularButton buttonText={"Re-Pair RF"} styles="short warning sm" onClick={this.sendRePairCommand} />;
     // console.log("CHECKING STATUS MOD", modified);
     // console.log("CHECKING STATUS CTX", inContext);
 

@@ -262,7 +262,7 @@ function FirmwareErrorPanel({ nextBlock, retryBlock }) {
                 {!handleError ? (
                   <RegularButton
                     className="flashingbutton nooutlined"
-                    style="outline transp-bg"
+                    styles="outline transp-bg"
                     buttonText={i18n.firmwareUpdate.texts.cancelButton}
                     // onClick={onCancelDialog}
                   />
@@ -275,7 +275,7 @@ function FirmwareErrorPanel({ nextBlock, retryBlock }) {
               <div className="buttonActions">
                 <RegularButton
                   className="flashingbutton nooutlined"
-                  style="primary"
+                  styles="primary"
                   buttonText={i18n.general.retry}
                   onClick={() => {
                     send("RETRY");

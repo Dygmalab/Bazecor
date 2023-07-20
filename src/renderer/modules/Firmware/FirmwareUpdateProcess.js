@@ -16,24 +16,20 @@
  */
 
 import React, { useState, useEffect } from "react";
-import PropTypes from "prop-types";
 import Styled from "styled-components";
 import { useMachine } from "@xstate/react";
-import SemVer from "semver";
-import i18n from "../../i18n";
+import i18n from "@Renderer/i18n";
 
 // State machine
-import FlashDevice from "../../controller/FlashingSM/FlashDevice";
+import FlashDevice from "@Renderer/controller/FlashingSM/FlashDevice";
 
 // Visual components
-import Title from "../../component/Title";
-import { RegularButton } from "../../component/Button";
-import { StepsBar } from "../../component/StepsBar";
-import { IconArrowRight } from "../../component/Icon";
-import { FirmwareLoader } from "../../component/Loader";
+import Title from "@Renderer/component/Title";
+import { RegularButton } from "@Renderer/component/Button";
+import { FirmwareLoader } from "@Renderer/component/Loader";
 
 // Visual modules
-import { FirmwareProgressStatus } from ".";
+import { FirmwareProgressStatus } from "@Renderer/modules/Firmware";
 
 const Style = Styled.div`   
 width: 100%;  
@@ -102,7 +98,8 @@ height: inherit;
  * @returns {<FirmwareUpdateProcess>} FirmwareUpdateProcess component.
  */
 
-function FirmwareUpdateProcess({ nextBlock, retryBlock, context, toggleFlashing, toggleFwUpdate, onDisconnect, device }) {
+function FirmwareUpdateProcess(props) {
+  const { nextBlock, retryBlock, context, toggleFlashing, toggleFwUpdate, onDisconnect, device } = props;
   const [toggledFlashing, sendToggledFlashing] = useState(false);
   const [state, send] = useMachine(FlashDevice, {
     context: {
@@ -121,11 +118,11 @@ function FirmwareUpdateProcess({ nextBlock, retryBlock, context, toggleFlashing,
     actions: {
       addEscListener: () => {
         console.log("added event listener");
-        document.addEventListener("keydown", _handleKeyDown);
+        document.addEventListener("keydown", handleKeyDown);
       },
       removeEscListener: () => {
         console.log("removed event listener");
-        document.removeEventListener("keydown", _handleKeyDown);
+        document.removeEventListener("keydown", handleKeyDown);
       },
       toggleFlashing: async () => {
         if (toggledFlashing) return;
@@ -145,7 +142,7 @@ function FirmwareUpdateProcess({ nextBlock, retryBlock, context, toggleFlashing,
     },
   });
 
-  const _handleKeyDown = event => {
+  const handleKeyDown = event => {
     switch (event.keyCode) {
       case 27:
         console.log("esc key logged");
@@ -162,7 +159,7 @@ function FirmwareUpdateProcess({ nextBlock, retryBlock, context, toggleFlashing,
       setLoading(false);
     }
     if (state.matches("success")) nextBlock(state.context);
-  }, [state.context]);
+  }, [state]);
 
   const stepsDefy = [
     { step: 1, title: i18n.firmwareUpdate.texts.flashCardTitle1, description: i18n.firmwareUpdate.texts.flashCardTitle2 },
@@ -240,15 +237,15 @@ function FirmwareUpdateProcess({ nextBlock, retryBlock, context, toggleFlashing,
               countdown={state.context.stateblock}
               deviceProduct={state.context.device.info.product}
               keyboardType={state.context.device.info.keyboardType}
-              steps={state.context.device.info.product == "Defy" ? stepsDefy : stepsRaise}
+              steps={state.context.device.info.product === "Defy" ? stepsDefy : stepsRaise}
             />
           </div>
-          {state.context.stateblock == 1 ? (
+          {state.context.stateblock === 1 ? (
             <div className="firmware-footer">
               <div className="holdButton">
                 <RegularButton
                   className="flashingbutton nooutlined"
-                  style="outline transp-bg"
+                  styles="outline transp-bg"
                   size="sm"
                   buttonText={i18n.firmwareUpdate.texts.cancelButton}
                   onClick={() => {
@@ -259,13 +256,13 @@ function FirmwareUpdateProcess({ nextBlock, retryBlock, context, toggleFlashing,
               <div className="holdTootip">
                 <Title
                   text={
-                    state.context.device.info.product == "Raise"
+                    state.context.device.info.product === "Raise"
                       ? i18n.firmwareUpdate.texts.flashCardHelp
                       : i18n.firmwareUpdate.texts.flashCardHelpDefy
                   }
                   headingLevel={6}
                   tooltip={
-                    state.context.device.info.product == "Raise"
+                    state.context.device.info.product === "Raise"
                       ? i18n.firmwareUpdate.texts.flashCardHelpTooltip
                       : i18n.firmwareUpdate.texts.flashCardHelpTooltipDefy
                   }
@@ -276,12 +273,12 @@ function FirmwareUpdateProcess({ nextBlock, retryBlock, context, toggleFlashing,
           ) : (
             ""
           )}
-          {state.context.stateblock == 8 ? (
+          {state.context.stateblock === 8 ? (
             <div className="firmware-footer">
               <div className="holdButton">
                 <RegularButton
                   className="flashingbutton nooutlined"
-                  style="outline transp-bg"
+                  styles="outline transp-bg"
                   size="sm"
                   buttonText={i18n.firmwareUpdate.texts.cancelButton}
                   onClick={() => {
@@ -291,7 +288,7 @@ function FirmwareUpdateProcess({ nextBlock, retryBlock, context, toggleFlashing,
                 />
                 <RegularButton
                   className="flashingbutton nooutlined"
-                  style="primary"
+                  styles="primary"
                   size="sm"
                   buttonText="Retry the flashing procedure"
                   onClick={() => {
@@ -302,13 +299,13 @@ function FirmwareUpdateProcess({ nextBlock, retryBlock, context, toggleFlashing,
               <div className="holdTootip">
                 <Title
                   text={
-                    state.context.device.info.product == "Raise"
+                    state.context.device.info.product === "Raise"
                       ? i18n.firmwareUpdate.texts.flashCardHelp
                       : i18n.firmwareUpdate.texts.flashCardHelpDefy
                   }
                   headingLevel={6}
                   tooltip={
-                    state.context.device.info.product == "Raise"
+                    state.context.device.info.product === "Raise"
                       ? i18n.firmwareUpdate.texts.flashCardHelpTooltip
                       : i18n.firmwareUpdate.texts.flashCardHelpTooltipDefy
                   }
@@ -321,18 +318,6 @@ function FirmwareUpdateProcess({ nextBlock, retryBlock, context, toggleFlashing,
           )}
         </div>
       )}
-      {/* <hr />
-      <div>
-        <h3>percentages</h3>
-        <div>
-          <div>{`global Percentage: ${state.context.globalProgress}`}</div>
-          <div>{`left Percentage: ${state.context.leftProgress}`}</div>
-          <div>{`right Percentage: ${state.context.rightProgress}`}</div>
-          <div>{`reset Percentage: ${state.context.resetProgress}`}</div>
-          <div>{`neuron Percentage: ${state.context.neuronProgress}`}</div>
-          <div>{`restore Percentage: ${state.context.restoreProgress}`}</div>
-        </div>
-      </div> */}
     </Style>
   );
 }

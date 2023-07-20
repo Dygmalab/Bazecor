@@ -138,7 +138,7 @@ class MacroEditor extends React.Component {
       selectedList: 0,
       usedMemory: 0,
       totalMemory: 0,
-      currentLanguageLayout: store.get("settings.language") || "english"
+      currentLanguageLayout: store.get("settings.language") || "english",
     };
     this.updateMacros = this.updateMacros.bind(this);
     this.changeSelected = this.changeSelected.bind(this);
@@ -192,7 +192,7 @@ class MacroEditor extends React.Component {
         kbtype,
         modified: false,
         usedMemory: parsedMacros.map(m => m.actions).flat().length,
-        totalMemory: tMem
+        totalMemory: tMem,
       });
     } catch (e) {
       toast.error(<ToastMessage title={e} icon={<IconFloppyDisk />} />, { icon: "" });
@@ -327,7 +327,7 @@ class MacroEditor extends React.Component {
     this.setState({
       macros: recievedMacros,
       modified: true,
-      usedMemory: recievedMacros.map(m => m.actions).flat().length
+      usedMemory: recievedMacros.map(m => m.actions).flat().length,
     });
     this.props.startContext();
   }
@@ -582,13 +582,13 @@ class MacroEditor extends React.Component {
           <Modal.Footer>
             <RegularButton
               buttonText={i18n.editor.macros.deleteModal.cancelButton}
-              style="outline transp-bg"
+              styles="outline transp-bg"
               size="sm"
               onClick={this.toggleDeleteModal}
             />
             <RegularButton
               buttonText={i18n.editor.macros.deleteModal.applyButton}
-              style="outline gradient"
+              styles="outline gradient"
               size="sm"
               onClick={this.ActUponDelete}
             />

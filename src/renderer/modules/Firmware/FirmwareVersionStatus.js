@@ -15,21 +15,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Styled from "styled-components";
-import i18n from "../../i18n";
 
 import ReactMarkdown from "react-markdown";
 
-import Title from "../../component/Title";
-import Badge from "../../component/Badge";
-import { IconEye } from "../../component/Icon";
+import Title from "@Renderer/component/Title";
+import Badge from "@Renderer/component/Badge";
+import { IconEye } from "@Renderer/component/Icon";
 
 import Dropdown from "react-bootstrap/Dropdown";
 import Modal from "react-bootstrap/Modal";
 import Spinner from "react-bootstrap/Spinner";
 
-import { RegularButton } from "../../component/Button";
+import { RegularButton } from "@Renderer/component/Button";
 
 const Style = Styled.div`
 margin-left:32px;
@@ -145,7 +144,7 @@ const FirmwareVersionStatus = ({
   isUpdated,
   firmwareList,
   selectedFirmware,
-  send
+  send,
 }) => {
   const [modalFirmwareDetails, setModalFirmwareDetails] = useState(false);
 
@@ -154,7 +153,7 @@ const FirmwareVersionStatus = ({
       <div className={`versionsStatus ${isUpdated && "isUpdated"}`}>
         <div className="versionStatusInner">
           <div className="versionStatusInstalled">
-            <Title text={`Installed firmware version`} headingLevel={6} />
+            <Title text="Installed firmware version" headingLevel={6} />
             <Badge content={currentlyVersionRunning} />
           </div>
           <div className="versionStatusNext">
@@ -165,12 +164,12 @@ const FirmwareVersionStatus = ({
               />
             </svg>
 
-            <Title text={`Update to the version`} headingLevel={6} />
+            <Title text="Update to the version" headingLevel={6} />
             <div className="firmwareVersionContainer">
               <Dropdown
-                onSelect={value => send("CHANGEFW", { selected: parseInt(value) })}
+                onSelect={value => send("CHANGEFW", { selected: parseInt(value, 10) })}
                 value={selectedFirmware}
-                className={`custom-dropdown sm`}
+                className="custom-dropdown sm"
               >
                 <div>
                   <Dropdown.Toggle id="dropdown-custom">
@@ -182,8 +181,8 @@ const FirmwareVersionStatus = ({
                     {firmwareList.map((item, index) => (
                       <Dropdown.Item
                         eventKey={index}
-                        key={index}
-                        className={`${selectedFirmware == index ? "active" : ""}`}
+                        key={`id-${index}`}
+                        className={`${selectedFirmware === index ? "active" : ""}`}
                         disabled={item.disabled}
                       >
                         <div className="dropdownInner">
@@ -197,7 +196,7 @@ const FirmwareVersionStatus = ({
 
               <RegularButton
                 className="flashingbutton nooutlined"
-                style="btn-link transp-bg"
+                styles="btn-link transp-bg"
                 icoSVG={<IconEye />}
                 onClick={() => {
                   setModalFirmwareDetails(true);

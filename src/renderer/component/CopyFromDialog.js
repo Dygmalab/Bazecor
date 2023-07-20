@@ -115,7 +115,7 @@ export function CopyFromDialog(props) {
         <Modal.Footer>
           <RegularButton
             buttonText={i18n.dialog.cancel}
-            style="outline transp-bg"
+            styles="outline transp-bg"
             size="sm"
             onClick={() => {
               setSelectedLayer(-1);
@@ -124,7 +124,7 @@ export function CopyFromDialog(props) {
           />
           <RegularButton
             buttonText={i18n.dialog.ok}
-            style="outline gradient"
+            styles="outline gradient"
             size="sm"
             onClick={() => {
               const layer = selectedLayer;

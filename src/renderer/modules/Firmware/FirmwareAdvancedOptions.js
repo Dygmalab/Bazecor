@@ -81,13 +81,13 @@ function FirmwareAdvancedOptions({ firmwareFilename, selectFirmware, selectExper
             <div className="dropdownMenuContent" dangerouslySetInnerHTML={{ __html: i18n.firmwareUpdate.texts.advUsersHTML }} />
             <RegularButton
               className="flashingbutton nooutlined"
-              style="outline gradient btn-block"
-              buttonText={firmwareFilename == "" ? i18n.firmwareUpdate.custom : i18n.firmwareUpdate.rcustom}
+              styles="outline gradient btn-block"
+              buttonText={firmwareFilename === "" ? i18n.firmwareUpdate.custom : i18n.firmwareUpdate.rcustom}
               onClick={selectFirmware}
             />
             <RegularButton
               className="flashingbutton nooutlined"
-              style="outline gradient btn-block"
+              styles="outline gradient btn-block"
               buttonText="Use Experimental"
               onClick={selectExperimental}
             />

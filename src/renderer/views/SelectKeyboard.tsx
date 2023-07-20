@@ -572,7 +572,7 @@ const SelectKeyboard: React.FC<SelectKeyboardProps> = (props): JSX.Element => {
             <div className="cardButton">
               <RegularButton
                 buttonText={i18n.keyboardSelect.virtualKeyboard.buttonText}
-                style="button-link transp-bg"
+                styles="button-link transp-bg"
                 icoSVG={<IconArrowRight />}
                 icoPosition="right"
                 size="sm"
@@ -629,7 +629,7 @@ const SelectKeyboard: React.FC<SelectKeyboardProps> = (props): JSX.Element => {
                     </Dropdown>
                     <RegularButton
                       buttonText={i18n.keyboardSelect.virtualKeyboard.createButtonLabel}
-                      style="primary"
+                      styles="primary"
                       onClick={() => {
                         let fileName = enumerator[selectedVirtualKeyboard].device.info.product;
                         fileName =
@@ -650,7 +650,7 @@ const SelectKeyboard: React.FC<SelectKeyboardProps> = (props): JSX.Element => {
                       svgICO={<IconUpload />}
                     />
                     <p>{i18n.keyboardSelect.virtualKeyboard.loadVirtualKeyboardDescription}</p>
-                    <RegularButton buttonText={i18n.general.loadFile} style="primary" onClick={() => onLoadFile()} />
+                    <RegularButton buttonText={i18n.general.loadFile} styles="primary" onClick={() => onLoadFile()} />
                   </div>
                 </div>
               </Modal.Body>

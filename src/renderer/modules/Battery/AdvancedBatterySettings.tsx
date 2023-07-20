@@ -51,11 +51,7 @@ function AdvancedBatterySettings() {
           <p>{i18n.wireless.energyManagement.advancedSettingsDesc}</p>
         </div>
         <div className="settingsActions">
-          <RegularButton
-            icoSVG={<IconSettings />}
-            style="short"
-            onClick={() => setShowModal(true)}
-          />
+          <RegularButton icoSVG={<IconSettings />} styles="short" onClick={() => setShowModal(true)} />
         </div>
       </div>
       <AdvancedBatterySettingsModal showModal={showModal} setShowModal={setShowModal} />
