@@ -35,9 +35,9 @@ export const onUSBDisconnect = async (event: USBConnectionEvent) => {
       console.log("Dygma Device USB Disconnection detected");
       console.log("VendorID", vendorID);
       console.log("ProductID", productID);
-      sendToRenderer("usb-disconnected", vendorID, productID);
+      sendToRenderer("usb-disconnected", device);
       const focus = new Focus();
-      if (focus.device.usb.vendorId === vendorID && focus.device.usb.productId === productID) {
+      if (focus.device?.usb?.productId === productID) {
         await focus.close();
       }
     }
