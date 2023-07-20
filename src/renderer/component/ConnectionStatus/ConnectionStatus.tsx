@@ -3,6 +3,7 @@ import Styled from "styled-components";
 
 import { IconBluetooth, IconPlug, IconSignal } from "@Renderer/component/Icon";
 import Title from "@Renderer/component/Title";
+import { ConnectionProps } from "@Renderer/types/wireless";
 
 const Styles = Styled.div`
 .cardConnection {
@@ -31,11 +32,8 @@ const Styles = Styled.div`
 }
 `;
 
-type ConnectionProps = {
-  connection?: number | null | undefined;
-};
-
-function ConnectionStatus({ connection }: ConnectionProps) {
+function ConnectionStatus(props: ConnectionProps) {
+  const { connection } = props;
   const connectionTypes = [
     { id: 0, text: "Wired connected", icon: <IconPlug /> },
     { id: 1, text: "Bluetooh connected", icon: <IconBluetooth /> },

@@ -53,3 +53,7 @@ export interface RFSettingsProps {
   changeWireless: (wireless: WirelessInterface) => void;
   sendRePair: () => void;
 }
+
+export interface ConnectionProps {
+  connection: number;
+}
