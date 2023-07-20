@@ -121,6 +121,7 @@ jobs:
           java-version: "17"
       - if: runner.os == 'Windows'
         name: Get JSign
+        shell: bash
         run: |
           JAR_URL="https://github.com/ebourg/jsign/releases/download/5.0/jsign-5.0.jar"
           wget $JAR_URL -O jsign.jar
@@ -135,6 +136,7 @@ jobs:
         name: "Set up Cloud SDK"
         uses: "google-github-actions/setup-gcloud@v1"
       - if: runner.os == 'Windows'
+        shell: bash
         name: Get executable into signing folder
         run: |
           find out/make/ -name '*.exe' -exec cp -v {} windows_signing \;
@@ -142,6 +144,7 @@ jobs:
           echo "Found .exe file: $EXE_FILE"
       - if: runner.os == 'Windows'
         name: Sign executable
+        shell: bash
         run: |
           cd windows_signing
           echo "${{ secrets.DIGICERT_CERT_BASE64}}" | base64 --decode > dygma_cert.pem
