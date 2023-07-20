@@ -9,6 +9,7 @@ import { addUSBListeners, removeUSBListeners } from "./setup/configureUSB";
 electronUpdater();
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
+// eslint-disable-next-line global-require
 if (require("electron-squirrel-startup")) {
   app.quit();
 }
@@ -49,7 +50,7 @@ app.on("activate", () => {
 });
 
 app.on("web-contents-created", (_, wc) => {
-  wc.on("before-input-event", (_, input) => {
+  wc.on("before-input-event", (__, input) => {
     const globalRecording = GlobalRecording.getInstance();
     if (!globalRecording.getRecording() && input.type === "keyDown" && input.control) {
       if (input.shift && input.code === "KeyI") {
