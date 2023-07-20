@@ -479,6 +479,16 @@ const English = {
       lowPowerMode: "Low-power mode",
       settings: {
         maximumLED: "Maximum LED intensity",
+        maximumLEDBackLight: "Maximum Per-key LED intensity while the device is NOT connected by cable",
+        maximumLEDUnderglow: "Maximum Underglow intensity while the device is NOT connected by cable",
+        highBatteryImpact: "High battery impact",
+        lowBatteryImpact: "Low battery impact",
+        highlightLayerChanging: "Highlight layer changing",
+        highlightLayerChangingDesc:
+          "Adjust underglow and backlight intensity as you switch layers. The maximum intensity smoothly fades to a lower level.",
+        RFSettingTitle: "RF energy saving settings",
+        manageRFSignal: "Manage the power of the radio signal",
+        reduceRFFrequency: "Reduce the frequency of data exchange in RF",
         tooltipRF: `<div style="text-align: left"><strong>High</strong><p>Maximum coverage at the cost of higher energy consumption.</p><strong>Medium</strong><p>Reduced coverage and medium energy consumption</p><strong>Low</strong><p>Designed to conserves battery energy reducing at minimum levels the coverage.</p></div>`,
       },
     },

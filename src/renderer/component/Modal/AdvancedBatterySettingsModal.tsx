@@ -47,12 +47,12 @@ function AdvancedBatterySettingsModal({ showModal, setShowModal }: AdvancedBatte
         <Card className="overflowFix card-preferences card-preferences--battery">
           <Card.Title>
             <Title text={i18n.wireless.energyManagement.settings.maximumLED} headingLevel={4} />
-            <Badge content="High battery impact" variation="danger-low" size="sm" />
+            <Badge content={i18n.wireless.energyManagement.settings.highBatteryImpact} variation="danger-low" size="sm" />
           </Card.Title>
           <Card.Body>
             <Row className="card-preferences--option justify-between">
               <Col lg={5}>
-                <Title text="Maximum Per-key LED intensity while the device is NOT connected by cable" headingLevel={6} />
+                <Title text={i18n.wireless.energyManagement.settings.maximumLEDBackLight} headingLevel={6} />
               </Col>
               <Col lg={5}>
                 <div className="slider-wrapper">
@@ -64,7 +64,7 @@ function AdvancedBatterySettingsModal({ showModal, setShowModal }: AdvancedBatte
             </Row>
             <Row className="card-preferences--option justify-between">
               <Col lg={5}>
-                <Title text="Maximum Underglow intensity while the device is NOT connected by cable" headingLevel={6} />
+                <Title text={i18n.wireless.energyManagement.settings.maximumLEDUnderglow} headingLevel={6} />
               </Col>
               <Col lg={5}>
                 <div className="slider-wrapper">
@@ -78,16 +78,13 @@ function AdvancedBatterySettingsModal({ showModal, setShowModal }: AdvancedBatte
         </Card>
         <Card className="overflowFix card-preferences card-preferences--battery mt-4">
           <Card.Title>
-            <Title text="Highlight layer changing" headingLevel={4} />
-            <Badge content="Low battery impact" variation="subtle" size="sm" />
+            <Title text={i18n.wireless.energyManagement.settings.highlightLayerChanging} headingLevel={4} />
+            <Badge content={i18n.wireless.energyManagement.settings.lowBatteryImpact} variation="subtle" size="sm" />
           </Card.Title>
           <Card.Body>
             <Row className="card-preferences--option justify-between">
               <Col lg={5}>
-                <Title
-                  text="Adjust underglow and backlight intensity as you switch layers. The maximum intensity smoothly fades to a lower level."
-                  headingLevel={6}
-                />
+                <Title text={i18n.wireless.energyManagement.settings.highlightLayerChangingDesc} headingLevel={6} />
               </Col>
               <Form.Check type="switch" id="toggleLayerHighlight" checked={false} onChange={() => {}} />
             </Row>
@@ -95,23 +92,23 @@ function AdvancedBatterySettingsModal({ showModal, setShowModal }: AdvancedBatte
         </Card>
         <Card className="overflowFix card-preferences card-preferences--battery mt-4">
           <Card.Title>
-            <Title text="Highlight layer changing" headingLevel={4} />
+            <Title text={i18n.wireless.energyManagement.settings.RFSettingTitle} headingLevel={4} />
             <Badge content="Low battery impact" variation="subtle" size="sm" />
           </Card.Title>
           <Card.Body>
             <Row className="card-preferences--option justify-between">
               <Col lg={5}>
                 <Title
-                  text="Manage the power of the radio signal"
+                  text={i18n.wireless.energyManagement.settings.manageRFSignal}
                   tooltip={i18n.wireless.energyManagement.settings.tooltipRF}
                   headingLevel={6}
                 />
               </Col>
-              <ToggleButtons selectDarkMode={() => {}} value={"medium"} listElements={RFModes} style="flex" size="sm" />
+              <ToggleButtons selectDarkMode={() => {}} value="medium" listElements={RFModes} style="flex" size="sm" />
             </Row>
             <Row className="card-preferences--option justify-between">
               <Col lg={5}>
-                <Title text="Reduce the frequency of data exchange in RF" headingLevel={6} />
+                <Title text={i18n.wireless.energyManagement.settings.reduceRFFrequency} headingLevel={6} />
               </Col>
               <Form.Check type="switch" id="toggleLayerHighlight" checked={false} onChange={() => {}} />
             </Row>
