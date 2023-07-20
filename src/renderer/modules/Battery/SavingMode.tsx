@@ -71,7 +71,7 @@ function SavingMode({ wireless, toggleSavingMode }: EnergyManagementProps) {
               type="switch"
               id="settingSavingMode"
               checked={wireless.battery ? wireless.battery.savingMode : false}
-              onChange={() => toggleSavingMode}
+              onChange={toggleSavingMode}
             />
           </Form>
         </div>
