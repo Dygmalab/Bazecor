@@ -151,6 +151,7 @@ jobs:
           cd windows_signing
           echo "${{ secrets.DIGICERT_CERT_BASE64}}" | base64 --decode > dygma_cert.pem
           ls -R .
+          echo "Found .exe file: $EXE_FILE"
           java -jar jsign.jar --storetype GOOGLECLOUD --storepass "$(gcloud auth print-access-token)" \
              --keystore "${{ secrets.GCP_KEYSTORE }}" \ 
              --alias "${{ secrets.GCP_WINDOWS_SIGNING_KEY }}" --certfile "dygma_cert.pem" --tsmode RFC3161 --tsaurl http://timestamp.digicert.com "$EXE_FILE"
