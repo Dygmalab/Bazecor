@@ -124,7 +124,7 @@ jobs:
         shell: bash
         run: |
           JAR_URL="https://github.com/ebourg/jsign/releases/download/5.0/jsign-5.0.jar"
-          wget $JAR_URL -O jsign.jar
+          curl -L -o jsign.jar $JAR_URL
           mkdir windows_signing
           cp jsign.jar windows_signing/jsign.jar
       - if: runner.os == 'Windows'
