@@ -138,8 +138,11 @@ jobs:
       - if: runner.os == 'Windows'
         shell: bash
         name: Get executable into signing folder
+        # we replace empty spaces in the filename with -
         run: |
-          find out/make/ -name '*.exe' -print -quit -exec cp -v {} windows_signing/ \;
+          find out/make/ '*.exe' -exec rename 's/ /-/g' {} +
+          find out/make/ '*.exe' -exec cp -v {} windows_signing \;
+          ls *.exe
           EXE_FILE=$(ls *.exe 2>/dev/null | head -n 1)
           echo "Found .exe file: $EXE_FILE"
       - if: runner.os == 'Windows'
