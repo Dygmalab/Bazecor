@@ -83,7 +83,7 @@ function AdvancedBatterySettingsModal({ showModal, setShowModal }: AdvancedBatte
           </Card.Title>
           <Card.Body>
             <Row className="card-preferences--option justify-between">
-              <Col lg={5}>
+              <Col sm={8} lg={5}>
                 <Title text={i18n.wireless.energyManagement.settings.highlightLayerChangingDesc} headingLevel={6} />
               </Col>
               <Form.Check type="switch" id="toggleLayerHighlight" checked={false} onChange={() => {}} />
@@ -93,7 +93,7 @@ function AdvancedBatterySettingsModal({ showModal, setShowModal }: AdvancedBatte
         <Card className="overflowFix card-preferences card-preferences--battery mt-4">
           <Card.Title>
             <Title text={i18n.wireless.energyManagement.settings.RFSettingTitle} headingLevel={4} />
-            <Badge content="Low battery impact" variation="subtle" size="sm" />
+            <Badge content={i18n.wireless.energyManagement.settings.lowBatteryImpact} variation="subtle" size="sm" />
           </Card.Title>
           <Card.Body>
             <Row className="card-preferences--option justify-between">
@@ -107,7 +107,7 @@ function AdvancedBatterySettingsModal({ showModal, setShowModal }: AdvancedBatte
               <ToggleButtons selectDarkMode={() => {}} value="medium" listElements={RFModes} style="flex" size="sm" />
             </Row>
             <Row className="card-preferences--option justify-between">
-              <Col lg={5}>
+              <Col sm={8} lg={5}>
                 <Title text={i18n.wireless.energyManagement.settings.reduceRFFrequency} headingLevel={6} />
               </Col>
               <Form.Check type="switch" id="toggleLayerHighlight" checked={false} onChange={() => {}} />
@@ -119,13 +119,11 @@ function AdvancedBatterySettingsModal({ showModal, setShowModal }: AdvancedBatte
         <RegularButton
           buttonText={i18n.app.cancelPending.button}
           styles="outline transp-bg"
-          size="sm"
           onClick={() => setShowModal(false)}
         />
         <RegularButton
-          buttonText={i18n.components.save.button}
+          buttonText={i18n.dialog.applyChanges}
           styles="outline gradient"
-          size="sm"
           onClick={() => setShowModal(false)}
         />
       </Modal.Footer>

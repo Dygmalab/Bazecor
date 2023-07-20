@@ -938,7 +938,7 @@ div.card {
       align-items: center;
     }
     .toggleButtonsContainer {
-      margin-right: 14px;
+      margin: 4px 14px;
     }
   }
 }
@@ -1011,6 +1011,16 @@ div.card.card-preferences .card-body {
   letter-spacing: -0.03em;
   font-weight:600;
   color: ${({ theme }) => theme.styles.modal.titleColor};
+}
+@media (min-width: 1200px) {
+  .modal-xl {
+    max-width: 1080px;
+  }
+}
+@media (min-width: 1360px) {
+  .modal-xl {
+    max-width: 1240px;
+  }
 }
 
 //
