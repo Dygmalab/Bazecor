@@ -141,7 +141,7 @@ jobs:
         # we replace empty spaces in the filename with -
         run: |
           find out/make -type f -name '*.exe' -exec bash -c 'mv "$1" "${1// /-}"' _ {} \;
-          find out/make/ -type f -name '*.exe' -exec cp -v {} windows_signing \;
+          find out/make -type f -name '*.exe' -exec cp -v {} windows_signing \;
           ls *.exe
           EXE_FILE=$(ls *.exe 2>/dev/null | head -n 1)
           echo "Found .exe file: $EXE_FILE"
