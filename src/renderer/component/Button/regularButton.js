@@ -43,7 +43,7 @@ RegularButton.propTypes = {
   size: PropTypes.string,
   buttonText: PropTypes.string,
   styles: PropTypes.string,
-  icoSVG: (PropTypes.object = {}),
+  icoSVG: PropTypes.object,
   icoPosition: PropTypes.string,
   disabled: PropTypes.bool,
 };
