@@ -242,15 +242,15 @@ const SelectKeyboard: React.FC<SelectKeyboardProps> = (props): JSX.Element => {
 
   const findKeyboards = useCallback(async (): Promise<any[]> => {
     setIsLoading(true);
-    const isIterable = devices != null && typeof devices[Symbol.iterator] === "function";
+    const isIterable = devices.length > 0 && typeof devices[Symbol.iterator] === "function";
     if (focus.closed === false && isIterable) {
       setIsLoading(false);
       return [];
     }
-    if (!focus.closed && device) {
-      setDevices([device]);
-      return [];
-    }
+    // if (!focus.closed && device) {
+    //   setDevices([device]);
+    //   return [];
+    // }
     try {
       const serialDevices = await focus.find(...Hardware.serial);
       console.log("Printing devices: ", serialDevices);
@@ -299,11 +299,9 @@ const SelectKeyboard: React.FC<SelectKeyboardProps> = (props): JSX.Element => {
 
   useEffect(() => {
     if (connected && device) {
-      console.log("These are the DEVICES:", devices);
-      setSelectedPortIndex(0);
-      setDevices([device]);
+      findKeyboards();
     }
-  }, [connected, device]);
+  }, [connected, device, findKeyboards]);
 
   const scanDevices = async (): Promise<void> => {
     const keyboards = await findKeyboards();
@@ -529,7 +527,8 @@ const SelectKeyboard: React.FC<SelectKeyboardProps> = (props): JSX.Element => {
   const getDeviceItems = () => {
     const neurons = store.get("neurons");
     const result = devices.map((device, index) => {
-      const neuron = neurons.find(neuron => neuron.id.toLowerCase() === device.serialNumber);
+      const preparedSN = device.productId === "2201" ? device.serialNumber.slice(0, 32) : device.serialNumber;
+      const neuron = neurons.find(neuron => neuron.id.toLowerCase() === preparedSN.toLowerCase());
 
       return {
         index,

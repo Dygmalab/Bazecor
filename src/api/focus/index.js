@@ -100,7 +100,7 @@ class Focus {
       if (path !== undefined) {
         const testingDevices = await SerialPort.list();
         console.log(testingDevices);
-        this._port = new SerialPort({ path, baudRate: 115200, autoOpen: false });
+        this._port = new SerialPort({ path, baudRate: 115200, autoOpen: false, endOnClose: true });
         await this._port.open(err => {
           if (err) console.error("error when opening port: ", err);
           else console.log("connected");

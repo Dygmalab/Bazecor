@@ -53,8 +53,8 @@ const Raise_ISO = {
     },
   },
 
-  flash: async (_, filename, flashRaise, stateUpdate) =>
-    new Promise(async (resolve, reject) => {
+  flash: async (_, filename, flashRaise, stateUpdate) => {
+    return new Promise(async (resolve, reject) => {
       try {
         await flashRaise.updateFirmware(filename, stateUpdate);
         resolve();
@@ -62,16 +62,20 @@ const Raise_ISO = {
         reject(e);
       }
       flashRaise.saveBackupFile();
-    }),
+    });
+  },
 
   isDeviceSupported: async port => {
     const focus = new Focus();
-    focus._port && focus._port.path === port.path
-      ? await focus.open(focus._port, port.device, null)
-      : await focus.open(port.path, port.device, null);
-    port.serialNumber = await focus.command("hardware.chip_id");
-    let layout = await focus.command("hardware.layout");
-    await focus.close();
+    let layout = localStorage.getItem(port.serialNumber);
+    if (!layout) {
+      focus._port && focus._port.path === port.path
+        ? await focus.open(focus._port, port.device, null)
+        : await focus.open(port.path, port.device, null);
+      layout = await focus.command("hardware.layout");
+      focus.close();
+      localStorage.setItem(port.serialNumber, layout);
+    }
     return layout.trim() === "ISO";
   },
 };
@@ -99,15 +103,16 @@ const Raise_ISOBootloader = {
       updateInstructions: `To update the firmware, press the button at the bottom. You must not hold any key on the keyboard while the countdown is in progress, nor afterwards, until the flashing is finished. When the countdown reaches zero, the Neuron's light should start a blue pulsing pattern, and flashing will then proceed. `,
     },
   },
-  flash: async (_, filename, flashRaise, stateUpdate) =>
-    new Promise(async (resolve, reject) => {
+  flash: async (_, filename, flashRaise, stateUpdate) => {
+    return new Promise(async (resolve, reject) => {
       try {
         await flashRaise.updateFirmware(filename, stateUpdate);
         resolve();
       } catch (e) {
         reject(e);
       }
-    }),
+    });
+  },
 };
 
 export { Raise_ISO, Raise_ISOBootloader };
