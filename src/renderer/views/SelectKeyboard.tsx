@@ -546,7 +546,9 @@ const SelectKeyboard: React.FC<SelectKeyboardProps> = (props): JSX.Element => {
   }
 
   const selectedDevice = devices && devices[selectedPortIndex];
-  console.log("Focus device: ", focus.device);
+  const connectedDevice = devices && devices.findIndex(dev => focus._port?.serialNumber?.includes(dev.serialNumber));
+  console.log("Focus device: ", focus);
+  console.log("CONNECTED DEVICE: ", connectedDevice, selectedDevice);
 
   return (
     <Styles>
@@ -566,6 +568,7 @@ const SelectKeyboard: React.FC<SelectKeyboardProps> = (props): JSX.Element => {
             selectedPortIndex={selectedPortIndex}
             isVirtual={focus.file}
             virtualDevice={focus.device}
+            connectedDevice={connectedDevice}
           />
           <div className="cardButton-wrapper">
             <div className="cardButton">

@@ -76,7 +76,7 @@ const Style = Styled.div`
   }
 }
 `;
-function SelectKeyboardDropdown({ selectPort, selectedPortIndex, deviceItems, connected }) {
+function SelectKeyboardDropdown({ selectPort, selectedPortIndex, deviceItems, connected, connectedDevice }) {
   return (
     <Style>
       <Dropdown className="custom-dropdown" onSelect={selectPort}>
@@ -104,7 +104,7 @@ function SelectKeyboardDropdown({ selectPort, selectedPortIndex, deviceItems, co
             >
               <div className="dropdownInner">
                 <div className="dropdownIcon">
-                  {selectedPortIndex == item.index && connected ? <img src={iconConnected} /> : <img src={iconKeyboard} />}
+                  {connectedDevice === item.index && connected ? <img src={iconConnected} /> : <img src={iconKeyboard} />}
                 </div>
                 <div className="dropdownItem">
                   <h3>{item.userName}</h3>
