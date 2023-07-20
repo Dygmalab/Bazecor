@@ -25,6 +25,7 @@ import IconArrowsSmallSeparating from "./IconArrowsSmallSeparating";
 import IconArrowUpWithLine from "./IconArrowUpWithLine";
 import IconArrowDownWithLine from "./IconArrowDownWithLine";
 import IconBattery from "./IconBattery";
+import IconBluetooth from "./IconBluetooth";
 import IconColorPalette from "./IconColorPalette";
 import IconColorPicker from "./IconColorPicker";
 import IconConnected from "./IconConnected";
@@ -88,6 +89,7 @@ import IconNoWifi from "./IconNoWifi";
 import IconOneShot from "./IconOneShot";
 import IconOneShotSm from "./IconOneShotSm";
 import IconPauseXl from "./IconPauseXl";
+import IconPlug from "./IconPlug";
 import IconPlus from "./IconPlus";
 import IconPlusXs from "./IconPlusXs";
 import IconPreferences2Stroke from "./IconPreferences2Stroke";
@@ -158,6 +160,7 @@ export {
   IconArrowUpWithLine,
   IconArrowDownWithLine,
   IconBattery,
+  IconBluetooth,
   IconColorPalette,
   IconColorPicker,
   IconConnected,
@@ -221,6 +224,7 @@ export {
   IconOneShot,
   IconOneShotSm,
   IconPauseXl,
+  IconPlug,
   IconPlus,
   IconPlusXs,
   IconPen,

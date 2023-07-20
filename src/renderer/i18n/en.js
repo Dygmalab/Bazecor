@@ -469,6 +469,19 @@ const English = {
   },
   wireless: {
     title: "Wireless",
+    energyManagement: {
+      title: "Energy management",
+      advancedSettings: "Advanced settings",
+      advancedSettingsDesc: "Settings applied when the low-power mode is off",
+      savingMode: "Energy saving mode",
+      savingModeDesc: "Easy way to extend battery life",
+      savingModeInfo: "Consider that the battery has a safety policy that is activated when it reaches 10%.",
+      lowPowerMode: "Low-power mode",
+      settings: {
+        maximumLED: "Maximum LED intensity",
+        tooltipRF: `<div style="text-align: left"><strong>High</strong><p>Maximum coverage at the cost of higher energy consumption.</p><strong>Medium</strong><p>Reduced coverage and medium energy consumption</p><strong>Low</strong><p>Designed to conserves battery energy reducing at minimum levels the coverage.</p></div>`,
+      },
+    },
     batteryPreferences: {
       battery: "Battery",
       batteryErrorReading: "Error reading battery level",

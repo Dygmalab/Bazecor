@@ -6,16 +6,18 @@ import Styled from "styled-components";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import Focus from "../../api/focus";
-import i18n from "../i18n";
 
 // Import Types for wireless
 import { PropsInterface, WirelessInterface } from "../types/wireless";
 
 // Custom component imports
-import PageHeader from "../modules/PageHeader";
-import { BatterySettings, EnergyManagement, RFSettings } from "../modules/Settings";
-import { LogoLoader } from "../component/Loader";
+import { LogoLoader } from "@Renderer/component/Loader";
+import ConnectionStatus from "@Renderer/component/ConnectionStatus";
+import PageHeader from "@Renderer/modules/PageHeader";
+import { BatterySettings, EnergyManagement, RFSettings } from "@Renderer/modules/Settings";
+
+import Focus from "../../api/focus";
+import i18n from "../i18n";
 
 const Styles = Styled.div`
   height: 100%;
@@ -29,6 +31,7 @@ const Styles = Styled.div`
     max-width: 960px;
     width: 100%;
     margin: auto;
+    padding: 2rem 0;
   }
 `;
 
@@ -157,7 +160,12 @@ const Wireless = ({ cancelContext, startContext }: PropsInterface) => {
         <div className="wirelessWrapper">
           <div className="wirelessInner">
             <Row>
-              <Col md={6}>
+              <Col md={12}>
+                <ConnectionStatus connection={0} />
+              </Col>
+            </Row>
+            <Row>
+              <Col lg={6}>
                 <BatterySettings
                   wireless={wireless}
                   changeWireless={changeWireless}
@@ -166,7 +174,7 @@ const Wireless = ({ cancelContext, startContext }: PropsInterface) => {
                 />
                 <EnergyManagement wireless={wireless} toggleSavingMode={toggleSavingMode} />
               </Col>
-              <Col md={6}>
+              <Col lg={6}>
                 <RFSettings wireless={wireless} changeWireless={changeWireless} sendRePair={sendRePairCommand} />
               </Col>
             </Row>
