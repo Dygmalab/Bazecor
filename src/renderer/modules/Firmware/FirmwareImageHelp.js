@@ -21,10 +21,10 @@ import Styled from "styled-components";
 
 import { FirmwareNeuronHelp, FirmwareDefyUpdatingStatus } from "../Firmware";
 
-import videoFirmwareUpdate from "../../../../static/videos/update-firmware.mp4";
-import videoFirmwareUpdateReleaseKey from "../../../../static/videos/release-key.mp4";
-import videoFirmwareUpdateDefySRC from "../../../../static/videos/update-firmware-defy.mp4";
-import videoFirmwareUpdateDefyReleaseSRC from "../../../../static/videos/release-key-defy.mp4";
+import videoFirmwareUpdate from "@Assets/videos/update-firmware.mp4";
+import videoFirmwareUpdateReleaseKey from "@Assets/videos/release-key.mp4";
+import videoFirmwareUpdateDefySRC from "@Assets/videos/update-firmware-defy.mp4";
+import videoFirmwareUpdateDefyReleaseSRC from "@Assets/videos/release-key-defy.mp4";
 import { IconCheckmarkSm } from "../../component/Icon";
 
 const Style = Styled.div`   
@@ -160,9 +160,9 @@ const FirmwareImageHelp = ({
       checkSuccess.current.classList.add("animInCheck");
     }
     return () => {
-      if (countdown == 0 && deviceProduct == "Raise") {
+      if (videoIntro.current && countdown == 0 && deviceProduct == "Raise") {
         videoIntro.current.removeEventListener("ended", playVideo, false);
-      } else if (countdown == 0 && deviceProduct == "Defy") {
+      } else if (videoIntroDefy.current && countdown == 0 && deviceProduct == "Defy") {
         videoIntroDefy.current.removeEventListener("ended", playVideo, false);
       }
     };

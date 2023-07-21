@@ -34,7 +34,7 @@ import { FirmwareLoader } from "../../component/Loader";
 import { FirmwareNeuronStatus } from "../Firmware";
 
 //Assets
-import videoDefyCablesDisconnect from "../../../../static/videos/connectCablesDefy.mp4";
+import videoDefyCablesDisconnect from "@Assets/videos/connectCablesDefy.mp4";
 import { IconNoWifi, IconWarning } from "../../component/Icon";
 
 const Style = Styled.div`
