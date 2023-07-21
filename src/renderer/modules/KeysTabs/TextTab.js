@@ -64,7 +64,7 @@ class TextTab extends Component {
         <div className="tabSaveButton">
           <RegularButton
             buttonText={i18n.editor.macros.textTabs.buttonText}
-            style="outline gradient"
+            styles="outline gradient"
             onClick={this.props.onAddText}
             icoSVG={<IconArrowInBoxUp />}
             icoPosition="right"

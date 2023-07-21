@@ -852,13 +852,13 @@ class SuperkeysEditor extends React.Component {
           <Modal.Footer>
             <RegularButton
               buttonText={i18n.editor.superkeys.deleteModal.cancelButton}
-              style="outline transp-bg"
+              styles="outline transp-bg"
               size="sm"
               onClick={this.toggleDeleteModal}
             />
             <RegularButton
               buttonText={i18n.editor.superkeys.deleteModal.applyButton}
-              style="outline gradient"
+              styles="outline gradient"
               size="sm"
               onClick={this.RemoveDeletedSK}
             />

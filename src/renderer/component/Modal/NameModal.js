@@ -40,10 +40,10 @@ export default class NameModal extends React.Component {
           />
         </Modal.Body>
         <Modal.Footer>
-          <RegularButton buttonText={i18n.app.cancelPending.button} style="outline transp-bg" size="sm" onClick={toggleShow} />
+          <RegularButton buttonText={i18n.app.cancelPending.button} styles="outline transp-bg" size="sm" onClick={toggleShow} />
           <RegularButton
             buttonText={i18n.components.save.button}
-            style="outline gradient"
+            styles="outline gradient"
             size="sm"
             onClick={event => handleSave(this.state.name)}
           />

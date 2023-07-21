@@ -29,14 +29,14 @@ function Saving({ saveContext, destroyContext, inContext }) {
       <RegularButton
         onClick={destroyContext}
         buttonText={i18n.app.cancelPending.button}
-        style="outline transp-bg"
+        styles="outline transp-bg"
         size="sm"
         disabled={!inContext}
       />
       <RegularButton
         onClick={saveContext}
         buttonText={i18n.components.save.button}
-        style="primary"
+        styles="primary"
         size="sm"
         disabled={!inContext}
       />

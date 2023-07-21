@@ -319,7 +319,7 @@ export default class RecordMacroModal extends React.Component {
       <Styles>
         <RegularButton
           buttonText={i18n.editor.macros.recordMacro}
-          style="tabButton"
+          styles="tabButton"
           icoSVG={<IconRecord />}
           icoPosition="left"
           onClick={this.toggleShow}
@@ -389,7 +389,7 @@ export default class RecordMacroModal extends React.Component {
               <RegularButton
                 buttonText={recorded.length === 0 ? i18n.editor.macros.startRecord : isRecording ? "Pause icon" : "Resume"}
                 icoSVG={<IconPauseXl />}
-                style={`recordButton ${isRecording ? "isRecording" : ""} ${
+                styles={`recordButton ${isRecording ? "isRecording" : ""} ${
                   recorded.length > 0 && !isRecording ? "isResume" : ""
                 }`}
                 onClick={this.toggleIsRecording}
@@ -398,7 +398,7 @@ export default class RecordMacroModal extends React.Component {
             <div className="tabSaveButton">
               <RegularButton
                 buttonText={i18n.editor.macros.textTabs.buttonText}
-                style="outline gradient"
+                styles="outline gradient"
                 icoSVG={<IconArrowInBoxDown />}
                 icoPosition="right"
                 disabled={!!(recorded.length === 0 || isRecording)}

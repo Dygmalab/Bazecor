@@ -44,8 +44,8 @@ function ConfirmationDialog(props) {
         </Modal.Header>
         <Modal.Body className="body">{props.text}</Modal.Body>
         <Modal.Footer>
-          <RegularButton buttonText={i18n.dialog.cancel} style="outline transp-bg" size="sm" onClick={props.onCancel} />
-          <RegularButton buttonText={i18n.dialog.applyChanges} style="outline gradient" size="sm" onClick={props.onConfirm} />
+          <RegularButton buttonText={i18n.dialog.cancel} styles="outline transp-bg" size="sm" onClick={props.onCancel} />
+          <RegularButton buttonText={i18n.dialog.applyChanges} styles="outline gradient" size="sm" onClick={props.onConfirm} />
         </Modal.Footer>
       </Styles>
     </Modal>

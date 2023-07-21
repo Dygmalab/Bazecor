@@ -19,36 +19,21 @@
 import React from "react";
 import Styled from "styled-components";
 
-import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
-import Dropdown from "react-bootstrap/Dropdown";
 import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import Container from "react-bootstrap/Container";
 import Tooltip from "react-bootstrap/Tooltip";
-import OverlayTrigger from "react-bootstrap/OverlayTrigger";
-import Spinner from "react-bootstrap/Spinner";
 
 import Slider from "@appigram/react-rangeslider";
 
-import { MdDeleteForever, MdSave } from "react-icons/md";
-import { BsType, BsBrightnessHigh } from "react-icons/bs";
-import { BiMouse, BiCodeAlt, BiWrench, BiChip } from "react-icons/bi";
 import { isArray } from "lodash";
-import Focus from "../../../api/focus";
-import Backup from "../../../api/backup";
 
 import i18n from "../../i18n";
 
 import Title from "../../component/Title";
-import { Select } from "../../component/Select";
-import { RegularButton } from "../../component/Button";
-import ToggleButtons from "../../component/ToggleButtons";
 
-import { IconFlashlight, IconTypo, IconChip, IconMouse } from "../../component/Icon";
-
-import BackupFolderConfigurator from "../BackupFolderConfigurator";
+import { IconFlashlight, IconTypo, IconMouse } from "../../component/Icon";
 
 const Styles = Styled.div`
   
@@ -232,7 +217,7 @@ class KeyboardSettings extends React.Component {
   setBrightnessUG = async value => {
     await this.setState(state => ({
       ledBrightnessUG: (value * 255) / 100,
-      modified: true
+      modified: true,
     }));
     this.props.setKbData(this.state);
   };

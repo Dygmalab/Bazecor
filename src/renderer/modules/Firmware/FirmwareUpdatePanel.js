@@ -15,23 +15,23 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import Styled from "styled-components";
 import { useMachine } from "@xstate/react";
-import i18n from "../../i18n";
+import i18n from "@Renderer/i18n";
 
 // State machine
-import FWSelection from "../../controller/FlashingSM/FWSelection";
+import FWSelection from "@Renderer/controller/FlashingSM/FWSelection";
 
 // Visual components
-import Title from "../../component/Title";
-import Callout from "../../component/Callout";
-import { RegularButton } from "../../component/Button";
-import { FirmwareLoader } from "../../component/Loader";
-import { IconLoader } from "../../component/Icon";
+import Title from "@Renderer/component/Title";
+import Callout from "@Renderer/component/Callout";
+import { RegularButton } from "@Renderer/component/Button";
+import { FirmwareLoader } from "@Renderer/component/Loader";
+import { IconLoader } from "@Renderer/component/Icon";
 
 // Visual modules
-import { FirmwareNeuronStatus, FirmwareVersionStatus } from "../Firmware";
+import { FirmwareNeuronStatus, FirmwareVersionStatus } from "@Renderer/modules/Firmware";
 
 const Style = Styled.div`
 width: 100%;
@@ -161,17 +161,18 @@ height:inherit;
 }
 `;
 
-function FirmwareUpdatePanel({ nextBlock, retryBlock, errorBlock, allowBeta }) {
-  const [state, send] = useMachine(FWSelection, { context: { allowBeta: allowBeta } });
+function FirmwareUpdatePanel(props) {
+  const { nextBlock, retryBlock, errorBlock, allowBeta } = props;
+  const [state, send] = useMachine(FWSelection, { context: { allowBeta } });
 
   const [loading, setLoading] = useState(true);
   useEffect(() => {
-    if (state.context.stateblock >= 3 || state.context.stateblock == -1) {
+    if (state.context.stateblock >= 3 || state.context.stateblock === -1) {
       setLoading(false);
     }
     if (state.matches("success")) nextBlock(state.context);
     if (state.matches("failure")) errorBlock(state.context.error);
-  }, [state.context]);
+  }, [state]);
 
   return (
     <Style>
@@ -195,10 +196,10 @@ function FirmwareUpdatePanel({ nextBlock, retryBlock, errorBlock, allowBeta }) {
                   content={i18n.firmwareUpdate.texts.calloutIntroText}
                   className="mt-lg"
                   size="md"
-                  hasVideo={state.context.device.info.product == "Raise" ? true : false}
-                  media={`aVu7EL4LXMI`}
+                  hasVideo={state.context.device.info.product === "Raise"}
+                  media="aVu7EL4LXMI"
                   videoTitle="How to update the Software & Firmware of your Dygma keyboard"
-                  videoDuration={state.context.device.info.product == "Raise" ? "2:58" : null}
+                  videoDuration={state.context.device.info.product === "Raise" ? "2:58" : null}
                 />
               </div>
             </div>
@@ -228,17 +229,17 @@ function FirmwareUpdatePanel({ nextBlock, retryBlock, errorBlock, allowBeta }) {
               <div className="buttonActions">
                 <RegularButton
                   className="flashingbutton nooutlined"
-                  style={state.context.isUpdated ? "outline transp-bg" : "primary"}
+                  styles={state.context.isUpdated ? "outline transp-bg" : "primary"}
                   buttonText={
-                    state.context.stateblock == 4
+                    state.context.stateblock === 4
                       ? "Processing..."
                       : state.context.isUpdated
                       ? i18n.firmwareUpdate.flashing.buttonUpdated
                       : i18n.firmwareUpdate.flashing.button
                   }
-                  icoSVG={state.context.stateblock == 4 ? <IconLoader /> : null}
-                  icoPosition={state.context.stateblock == 4 ? "right" : null}
-                  disabled={state.context.stateblock == 4 ? true : false}
+                  icoSVG={state.context.stateblock === 4 ? <IconLoader /> : null}
+                  icoPosition={state.context.stateblock === 4 ? "right" : null}
+                  disabled={state.context.stateblock === 4}
                   onClick={() => {
                     send("NEXT");
                   }}

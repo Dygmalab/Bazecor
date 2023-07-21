@@ -148,7 +148,7 @@ function NeuronConnection({
             <div className="buttons">
               <RegularButton
                 buttonText={i18n.keyboardSelect.disconnect}
-                style="primary"
+                styles="primary"
                 onClick={onDisconnect}
                 disabled={false}
               />
@@ -183,13 +183,13 @@ function NeuronConnection({
               <RegularButton
                 onClick={scanDevices}
                 buttonText={i18n.keyboardSelect.scan}
-                style={`${connected || deviceItems.length > 0 ? "outline transp-bg" : "primary"}`}
+                styles={`${connected || deviceItems.length > 0 ? "outline transp-bg" : "primary"}`}
                 disabled={scanFoundDevices}
               />
               {connected && connectedDevice === selectedPortIndex ? (
                 <RegularButton
                   buttonText={i18n.keyboardSelect.disconnect}
-                  style="primary"
+                  styles="primary"
                   onClick={onDisconnect}
                   disabled={false}
                 />
@@ -199,7 +199,7 @@ function NeuronConnection({
               {connected && connectedDevice !== selectedPortIndex ? (
                 <RegularButton
                   buttonText={i18n.keyboardSelect.connect}
-                  style="primary"
+                  styles="primary"
                   onClick={onDisconnectConnect}
                   disabled={false}
                 />
@@ -209,7 +209,7 @@ function NeuronConnection({
               {!connected && deviceItems.length > 0 ? (
                 <RegularButton
                   buttonText={i18n.keyboardSelect.connect}
-                  style="primary"
+                  styles="primary"
                   onClick={onKeyboardConnect}
                   disabled={false}
                 />
@@ -217,7 +217,7 @@ function NeuronConnection({
                 ""
               )}
 
-              {!deviceItems.length ? <RegularButton buttonText={i18n.keyboardSelect.connect} style="primary" disabled /> : ""}
+              {!deviceItems.length ? <RegularButton buttonText={i18n.keyboardSelect.connect} styles="primary" disabled /> : ""}
             </div>
           </div>
         )}

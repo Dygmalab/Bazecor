@@ -469,6 +469,29 @@ const English = {
   },
   wireless: {
     title: "Wireless",
+    energyManagement: {
+      title: "Energy management",
+      advancedSettings: "Advanced settings",
+      advancedSettingsDesc: "Settings applied when the low-power mode is off",
+      savingMode: "Energy saving mode",
+      savingModeDesc: "Easy way to extend battery life",
+      savingModeInfo: "Consider that the battery has a safety policy that is activated when it reaches 10%.",
+      lowPowerMode: "Low-power mode",
+      settings: {
+        maximumLED: "Maximum LED intensity",
+        maximumLEDBackLight: "Maximum Per-key LED intensity while the device is NOT connected by cable",
+        maximumLEDUnderglow: "Maximum Underglow intensity while the device is NOT connected by cable",
+        highBatteryImpact: "High battery impact",
+        lowBatteryImpact: "Low battery impact",
+        highlightLayerChanging: "Highlight layer changing",
+        highlightLayerChangingDesc:
+          "Adjust underglow and backlight intensity as you switch layers. The maximum intensity smoothly fades to a lower level.",
+        RFSettingTitle: "RF energy saving settings",
+        manageRFSignal: "Manage the power of the radio signal",
+        reduceRFFrequency: "Reduce the frequency of data exchange in RF",
+        tooltipRF: `<div style="text-align: left"><strong>High</strong><p>Maximum coverage at the cost of higher energy consumption.</p><strong>Medium</strong><p>Reduced coverage and medium energy consumption</p><strong>Low</strong><p>Designed to conserves battery energy reducing at minimum levels the coverage.</p></div>`,
+      },
+    },
     batteryPreferences: {
       battery: "Battery",
       batteryErrorReading: "Error reading battery level",
@@ -481,7 +504,7 @@ const English = {
       repairChannel: "Repair Channel",
       reconnectSides: "Reconnect sides",
       repairChannelDescription:
-        "<p>Generate a new channel communication between the sides to reduce noise interference and enhance signal quality for uninterrupted and crystal-clear communication.</p>",
+        "Generate a new channel communication between the sides to reduce noise interference and enhance signal quality for uninterrupted and crystal-clear communication.",
     },
   },
   keyboardSettings: {
@@ -689,7 +712,7 @@ const English = {
       noInternetConncetion:
         "We were unable to download the firmware you requested. Please, check your internet connection or try again later.",
       progressCardStatus1: "1. Hold ESC Key",
-      progressCardStatus2: "2. Updating the Firmware",
+      progressCardStatus2: "2. Release ESC Key. Updating the Firmware",
       progressCardStatus3: "3. Restoring your Layers",
       progressCardStatus4: "4. Firmware update!",
       progressCardStatusDefy1: "1. Flashing right side",

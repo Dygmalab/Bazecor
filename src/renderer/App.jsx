@@ -113,7 +113,10 @@ class App extends React.Component {
   async handleUSBDisconnection(device) {
     const { connected } = this.state;
     console.log("Handling device disconnect");
-    if (this.flashing) return;
+    if (this.flashing) {
+      console.log("no action due to flashing active");
+      return;
+    }
 
     if (focus.device?.usb?.productId !== device.device.deviceDescriptor?.idProduct) {
       return;

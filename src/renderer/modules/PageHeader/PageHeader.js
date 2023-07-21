@@ -16,6 +16,7 @@
  */
 
 import React from "react";
+import PropTypes from "prop-types";
 import Styled from "styled-components";
 import Title from "../../component/Title";
 import Saving from "../Saving";
@@ -122,5 +123,17 @@ function PageHeader({
     </Style>
   );
 }
+PageHeader.propTypes = {
+  size: PropTypes.number,
+  text: PropTypes.string,
+  style: PropTypes.string,
+  contentSelector: PropTypes.any,
+  colorEditor: PropTypes.any,
+  isColorActive: PropTypes.bool,
+  showSaving: PropTypes.bool,
+  saveContext: PropTypes.any,
+  destroyContext: PropTypes.any,
+  inContext: PropTypes.bool,
+};
 
 export default PageHeader;

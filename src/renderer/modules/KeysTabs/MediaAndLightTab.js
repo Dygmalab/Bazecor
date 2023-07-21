@@ -1,11 +1,10 @@
 import React, { Component } from "react";
 import Styled from "styled-components";
+import i18n from "@Renderer/i18n";
 
-import i18n from "../../i18n";
-
-import Title from "../../component/Title";
-import Callout from "../../component/Callout";
-import { RegularButton, ButtonConfig } from "../../component/Button";
+import Title from "@Renderer/component/Title";
+import Callout from "@Renderer/component/Callout";
+import { ButtonConfig } from "@Renderer/component/Button";
 
 import {
   IconMediaPlayPauseSm,
@@ -16,7 +15,6 @@ import {
   IconMediaSoundMuteSm,
   IconMediaSoundLessSm,
   IconMediaSoundMoreSm,
-  IconArrowInBoxUp,
   IconToolsBrightnessMoreSm,
   IconToolsBrightnessLessSm,
   IconToolsCameraSm,
@@ -26,7 +24,7 @@ import {
   IconLEDNextEffectSm,
   IconSleepSm,
   IconShutdownSm,
-} from "../../component/Icon";
+} from "@Renderer/component/Icon";
 
 const Styles = Styled.div`
 display: flex;
@@ -91,13 +89,10 @@ h4 {
 `;
 
 class MediaAndLightTab extends Component {
-  constructor(props) {
-    super(props);
-  }
-
   // function to handle button click with integer parameter and call to props.onAddSpecial
   handleAddSpecial = special => {
-    this.props.onAddSpecial(special, 5);
+    const { onAddSpecial } = this.props;
+    onAddSpecial(special, 5);
   };
 
   render() {

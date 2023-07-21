@@ -33,7 +33,7 @@ import {
 } from "../Icon";
 
 import { NameModal } from "../Modal"; // Imported custom modal component
-import { RegularButton, ButtonSettings } from "../Button";
+import { ButtonSettings } from "../Button";
 import { KeyboardViewSelector } from "../ToggleButtons";
 
 const Style = Styled.div` 

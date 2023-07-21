@@ -67,12 +67,12 @@ function BackupFolderConfigurator({ chooseBackupFolder, getBackup, backupFolder,
             <Form.Control type="text" value={backupFolder} readOnly />
             <RegularButton
               onClick={chooseBackupFolder}
-              style="short"
+              styles="short"
               buttonText={i18n.keyboardSettings.backupFolder.selectButtonText}
             />
             <RegularButton
               onClick={getBackup}
-              style="short"
+              styles="short"
               buttonText={i18n.keyboardSettings.backupFolder.restoreButtonText}
               disabled={!connected}
             />

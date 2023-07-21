@@ -77,7 +77,7 @@ function Select({ onSelect, value, listElements, disabled }) {
                     {listElements[0].icon != undefined ? ( // Ternary operator checking if icon exists
                       <>
                         <div className="dropdownIcon">
-                          <img src={listElements.filter(elem => elem.value === value)[0].icon} className="dropdwonIcon" />
+                          <img src={listElements.find(elem => elem.value === value)?.icon} className="dropdwonIcon" />
                         </div>
                         <div className="dropdownItem">{value}</div>
                       </>
@@ -88,17 +88,17 @@ function Select({ onSelect, value, listElements, disabled }) {
                 ) : (
                   ""
                 )}
-                {typeof value === "number" && value > -1 ? ( // Ternary operator checking if number
+                {typeof value === "number" && value > -1 && listElements.length > 0 ? ( // Ternary operator checking if number
                   <>
                     {listElements[0].icon != undefined ? ( // Ternary operator checking if icon exists
                       <>
                         <div className="dropdownIcon">
-                          <img src={listElements.filter(elem => elem.value === value)[0].icon} className="dropdwonIcon" />
+                          <img src={listElements.find(elem => elem.value === value)?.icon} className="dropdwonIcon" />
                         </div>
-                        <div className="dropdownItem">{listElements.filter(elem => elem.value === value)[0].text}</div>
+                        <div className="dropdownItem">{listElements.find(elem => elem.value === value)?.text}</div>
                       </>
                     ) : (
-                      <div className="dropdownItem">{listElements.filter(elem => elem.value === value)[0].text}</div>
+                      <div className="dropdownItem">{listElements.find(elem => elem.value === value)?.text}</div>
                     )}
                   </>
                 ) : (
@@ -111,25 +111,27 @@ function Select({ onSelect, value, listElements, disabled }) {
           </div>
         </Dropdown.Toggle>
         <Dropdown.Menu>
-          {listElements.map((item, index) => (
-            <Dropdown.Item
-              eventKey={item.value}
-              key={index}
-              className={`${value == item.text ? "active" : ""}`}
-              disabled={item.disabled}
-            >
-              <div className="dropdownInner">
-                {value != undefined && value != "" > 0 && listElements.length > 0 && listElements[0].icon != undefined ? (
-                  <div className="dropdownIcon">
-                    <img src={item.icon} className="dropdwonIcon" />
+          {listElements.length > 0
+            ? listElements.map((item, index) => (
+                <Dropdown.Item
+                  eventKey={item.value}
+                  key={index}
+                  className={`${value == item.text ? "active" : ""}`}
+                  disabled={item.disabled}
+                >
+                  <div className="dropdownInner">
+                    {value != undefined && value != "" > 0 && listElements.length > 0 && listElements[0].icon != undefined ? (
+                      <div className="dropdownIcon">
+                        <img src={item.icon} className="dropdwonIcon" />
+                      </div>
+                    ) : (
+                      ""
+                    )}
+                    <div className="dropdownItem">{item.text}</div>
                   </div>
-                ) : (
-                  ""
-                )}
-                <div className="dropdownItem">{item.text}</div>
-              </div>
-            </Dropdown.Item>
-          ))}
+                </Dropdown.Item>
+              ))
+            : ""}
         </Dropdown.Menu>
       </Dropdown>
     </Style>

@@ -16,4 +16,4 @@
 
 import Title from "./Title";
 
-export { Title as default };
+export default Title;

@@ -149,6 +149,13 @@ const Dark = {
       inputBackground: settingColorOpacity(Tokens.colors.gray900, 0.2),
       border: Tokens.colors.gray600,
     },
+    badge: {
+      textColor: Tokens.colors.gray25,
+      dangerLowBG: settingColorOpacity(Tokens.colors.brandPrimary, 0.35),
+      dangerLowText: Tokens.colors.gray50,
+      subtleColor: Tokens.colors.gray100,
+      subtleBGColor: Tokens.colors.gray700,
+    },
     batteryIndicator: {
       pileBackgroundColor: Tokens.colors.gray800,
       pileBackgroundSavingMode: settingColorOpacity(Tokens.colors.brandWarning, 0.15),
@@ -316,6 +323,9 @@ const Dark = {
       altIcon: "#DDD",
       radius: "10",
       boxShadow: "0 0 0.5rem 0.3rem rgba(0,0,0,0.1)",
+      cardBattery: {
+        backgroundColor: settingColorOpacity(Tokens.colors.gray900, 0.25),
+      },
     },
     cardButtons: {
       background: settingColorOpacity(Tokens.colors.gray700, 0.5),
@@ -373,6 +383,15 @@ const Dark = {
         color: Tokens.colors.gray100,
         arrowsColor: Tokens.colors.gray300,
       },
+    },
+    energyManagement: {
+      connectionBGColor: settingColorOpacity(Tokens.colors.gray600, 0.25),
+      connectionColor: Tokens.colors.gray25,
+      borderColor: Tokens.colors.gray700,
+      titleColor: Tokens.colors.gray25,
+      descriptionColor: Tokens.colors.gray200,
+      lowPowerModeTitleColor: Tokens.colors.gray300,
+      shortButtonColor: Tokens.colors.gray25,
     },
     raiseKeyboard: {
       keyBase: "#303949",

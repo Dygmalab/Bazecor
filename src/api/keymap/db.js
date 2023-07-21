@@ -1,3 +1,4 @@
+/* eslint-disable no-bitwise */
 /* bazecor-keymap -- Bazecor keymap library
  * Copyright (C) 2018, 2019  Keyboardio, Inc.
  * Copyright (C) 2019, 2020  DygmaLab SE
@@ -26,6 +27,7 @@ import LEDEffectsTable from "./db/ledeffects";
 import MacrosTable from "./db/macros";
 import SuperKeyTable from "./db/superkeys";
 import TapDanceTable from "./db/tapdance";
+import { Battery, Bluetooth, Energy, RF } from "./db/wireless";
 import NumpadTable, { ModifiedNumpadTables } from "./db/numpad";
 import FunctionKeyTable, { ModifiedFunctionKeyTables } from "./db/fxs";
 
@@ -105,6 +107,10 @@ const defaultBaseKeyCodeTable = [
   LeaderTable,
   StenoTable,
   SpaceCadetTable,
+  Battery,
+  Bluetooth,
+  Energy,
+  RF,
 
   BlankTable,
 ];
@@ -161,7 +167,7 @@ class KeymapDB {
     this.keymapCodeTable = [];
     // create variable that get language from the local storage
     this.language = store.get("settings.language");
-    if (this.language == "finnish") {
+    if (this.language === "finnish") {
       this.language = "swedish";
     }
     // Modify our baseKeyCodeTable, depending on the language selected by the static methods and by inside function newLanguageLayout
@@ -346,7 +352,7 @@ class KeymapDB {
 
   static updateBaseKeyCode() {
     this.language = store.get("settings.language") || "english";
-    if (this.language == "finnish") {
+    if (this.language === "finnish") {
       this.language = "swedish";
     }
     // Checking language in the cache

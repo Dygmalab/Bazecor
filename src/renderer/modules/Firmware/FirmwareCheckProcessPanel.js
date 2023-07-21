@@ -248,7 +248,7 @@ function FirmwareCheckProcessPanel({ nextBlock, retryBlock, context }) {
                   <div className="wrapperActions">
                     <RegularButton
                       className="flashingbutton nooutlined"
-                      style="outline transp-bg"
+                      styles="outline transp-bg"
                       buttonText={
                         !state.context.sideLeftOk || !state.context.sideRightOK
                           ? i18n.firmwareUpdate.texts.cancelButton
@@ -265,14 +265,14 @@ function FirmwareCheckProcessPanel({ nextBlock, retryBlock, context }) {
                     {state.context.sideLeftOk && state.context.sideRightOK && state.context.backup ? (
                       <RegularButton
                         className="flashingbutton nooutlined"
-                        style="primary"
+                        styles="primary"
                         buttonText={i18n.firmwareUpdate.texts.letsStart}
                         onClick={() => send("PRESSED")}
                       />
                     ) : (
                       <RegularButton
                         className="flashingbutton nooutlined"
-                        style="primary"
+                        styles="primary"
                         buttonText={i18n.general.retry}
                         onClick={() => {
                           send("RETRY");

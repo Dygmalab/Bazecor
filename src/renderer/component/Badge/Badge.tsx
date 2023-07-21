@@ -16,7 +16,6 @@
  */
 
 import React from "react";
-import PropTypes from "prop-types";
 import Styled from "styled-components";
 
 const Style = Styled.div`	
@@ -26,42 +25,44 @@ const Style = Styled.div`
 	font-weight: 600;
 	padding: 8px 12px;
 	border: 1px solid ${({ theme }) => theme.colors.gray500};
+  color: ${({ theme }) => theme.styles.badge.textColor};
   &.success {
     color: ${({ theme }) => theme.colors.brandSuccess};
     border: 1px solid ${({ theme }) => theme.colors.brandSuccess};
   }
+  &.danger-low {
+    border: 1px solid ${({ theme }) => theme.styles.badge.dangerLowBG};
+    background-color: ${({ theme }) => theme.styles.badge.dangerLowBG};
+    color: ${({ theme }) => theme.styles.badge.dangerLowText};
+  }
+  &.subtle {
+    border:1px solid ${({ theme }) => theme.styles.badge.subtleBGColor};
+    background-color: ${({ theme }) => theme.styles.badge.subtleBGColor};
+    color: ${({ theme }) => theme.styles.badge.subtleColor};
+  }
+  &.sm {
+    font-size: 0.6875rem;
+    padding: 0.25rem 0.5rem;
+  }
 }
 `;
-/**
- * This Badge function returns a component that render a badge element, similar to badge on Bootstrap framework
- * The object will accept the following parameters
- *
- * @param {string} content - The content rendered inside the component
- * @param {string} icon - [Optional] SVG component
- * @param {string} size - Not implemented
- * @param {string} style - Not implemented
- * @param {string} className - Not implemented
- * @returns {<Badge>} Badge component.
- */
+interface BadgeProps {
+  content?: string;
+  icon?: any;
+  size?: "sm" | "md" | "lg";
+  variation?: "primary" | "secondary" | "tertiary" | "info" | "warning" | "success" | "danger" | "danger-low" | "subtle";
+  className?: string;
+}
 
-function Badge({ content, icon, size, style, className }) {
+function Badge({ content, icon, size, variation, className }: BadgeProps) {
   return (
     <Style className={className}>
-      <div className={`badge ${size || ""} ${style || ""} ${icon ? "hasIcon" : ""} `}>
+      <div className={`badge ${size || ""} ${variation || ""} ${icon ? "hasIcon" : ""} `}>
         {icon && icon}
         {content && <span dangerouslySetInnerHTML={{ __html: content }} />}
       </div>
     </Style>
   );
 }
-
-Badge.defaultProps = {
-  content: "",
-};
-
-Badge.propTypes = {
-  content: PropTypes.string.isRequired,
-  icon: PropTypes.object,
-};
 
 export default Badge;

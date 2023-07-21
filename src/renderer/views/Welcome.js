@@ -140,7 +140,7 @@ class Welcome extends React.Component {
     const device = this.props.device.device || focus.device;
 
     const reconnectButton = focus._port && (
-      <RegularButton onClick={this.reconnect} buttonText={i18n.welcome.reconnect} style="outline transp-bg" />
+      <RegularButton onClick={this.reconnect} buttonText={i18n.welcome.reconnect} styles="outline transp-bg" />
     );
 
     return (
@@ -183,7 +183,7 @@ class Welcome extends React.Component {
                     {reconnectButton}
                     <RegularButton
                       buttonText={i18n.formatString(i18n.welcome.gotoUpdate, i18n.app.menu.firmwareUpdate)}
-                      style="primary"
+                      styles="primary"
                       onClick={async () => {
                         this.props.router.navigate("/firmware-update");
                       }}

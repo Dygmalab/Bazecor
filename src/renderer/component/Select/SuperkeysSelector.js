@@ -20,7 +20,7 @@ import Styled from "styled-components";
 import Dropdown from "react-bootstrap/Dropdown";
 import i18n from "../../i18n";
 import { NameModal } from "../Modal"; // Imported custom modal component
-import { RegularButton, ButtonConfig, ButtonSettings } from "../Button";
+import { RegularButton, ButtonConfig } from "../Button";
 
 import { IconArrowsSmallSeparating, IconPen, IconAddNew, IconClone, IconDelete } from "../Icon";
 
@@ -206,7 +206,7 @@ class SuperKeysSelector extends React.Component {
           icoSVG={<IconAddNew />}
           icoPosition="left"
           buttonText={i18n.general.new}
-          style="outline gradient addNew"
+          styles="outline gradient addNew"
           onClick={this.toggleShowAdd}
         />
         {itemList == undefined || itemList.length == 0 || itemList.length <= selectedItem ? (

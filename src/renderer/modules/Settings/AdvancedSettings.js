@@ -117,7 +117,7 @@ class AdvancedKeyboardSettings extends React.Component {
       <>
         <RegularButton
           buttonText={i18n.keyboardSettings.resetEEPROM.button}
-          style="short danger"
+          styles="short danger"
           onClick={this.openEEPROMClearConfirmation}
           disabled={this.state.working}
         />

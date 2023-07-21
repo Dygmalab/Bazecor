@@ -65,7 +65,7 @@ export default class GeneralSettings extends Component {
   render() {
     const { selectDarkMode, darkMode, neurons, selectedNeuron, connected, defaultLayer, selectDefaultLayer } = this.props;
     const { selectedLanguage } = this.state;
-    let layersNames = neurons[selectedNeuron].layers;
+    let layersNames = neurons[selectedNeuron] ? neurons[selectedNeuron].layers : [];
     let flags = [
       englishUSUKF,
       spanishF,
@@ -97,7 +97,7 @@ export default class GeneralSettings extends Component {
     language = language.map((item, index) => ({ text: item, value: item, icon: flags[index], index }));
 
     layersNames = layersNames.map((item, index) => ({
-      text: item.name != "" ? item.name : `Layer ${index + 1}`,
+      text: item.name !== "" ? item.name : `Layer ${index + 1}`,
       value: index,
       index,
     }));

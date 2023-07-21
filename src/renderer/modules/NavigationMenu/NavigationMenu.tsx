@@ -26,7 +26,7 @@ import Styled from "styled-components";
 import Version from "@Types/version";
 import Pages from "@Types/pages";
 import DygmaLogo from "@Assets/logo.svg";
-import BatteryStatus from "../BatteryStatus/BatteryStatus";
+import { BatteryStatus}  from "../Battery";
 import i18n from "../../i18n";
 import Focus from "../../../api/focus";
 import { NavigationButton } from "../../component/Button";

@@ -908,6 +908,39 @@ div.card {
   box-shadow: none;
   border-radius: 14px;
   background-color: ${({ theme }) => theme.styles.card.background};
+  &.card-preferences--battery {
+    padding: 1rem 1.5rem;
+    background-color: ${({ theme }) => theme.styles.card.cardBattery.backgroundColor};
+    border-radius: 0.375rem;
+    .card-title {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      h4 {
+        margin-bottom: 0;
+      }
+    }
+    .card-body h6 {
+      line-height: 1.5em;
+      margin-bottom: 0;
+      font-weight: 401;
+      color: ${({ theme }) => theme.styles.form.formLabelTextcolor};
+    }
+    .custom-switch {
+      width: 60px;
+      padding-left: 1.4rem;
+    }
+    .card-preferences--option + .card-preferences--option {
+      margin-top: 1rem;
+    }
+    .justify-between {
+      justify-content: space-between;
+      align-items: center;
+    }
+    .toggleButtonsContainer {
+      margin: 4px 14px;
+    }
+  }
 }
 div.card-body {
   padding-left: 0;
@@ -978,6 +1011,16 @@ div.card.card-preferences .card-body {
   letter-spacing: -0.03em;
   font-weight:600;
   color: ${({ theme }) => theme.styles.modal.titleColor};
+}
+@media (min-width: 1200px) {
+  .modal-xl {
+    max-width: 1080px;
+  }
+}
+@media (min-width: 1360px) {
+  .modal-xl {
+    max-width: 1240px;
+  }
 }
 
 //
@@ -1720,6 +1763,14 @@ div.card.card-preferences .card-body {
   font-weight: 600;
   font-size: 13px;
   letter-spacing; -0.03em;
+}
+.slider-wrapper {
+  display: grid;
+  align-items: center;
+  grid-template-columns: 52px 1fr 52px;
+  .slider-label {
+    text-align: center;
+  }
 }
 .tagsfix {
   color: ${({ theme }) => theme.styles.slider.labelColor};
