@@ -153,7 +153,7 @@ jobs:
           echo "Found .exe file: $EXE_FILE"
           java -jar jsign.jar --storetype GOOGLECLOUD --storepass "$(gcloud auth print-access-token)" \
              --keystore "${{ secrets.GCP_KEYSTORE }}" \ 
-             --alias "${{ secrets.GCP_WINDOWS_SIGNING_KEY }}" --certfile "dygma_cert.pem" --tsmode RFC3161 --tsaurl http://timestamp.digicert.com $EXE_FILE
+             --alias "${{ secrets.GCP_WINDOWS_SIGNING_KEY }}" --certfile "dygma_cert.pem" --tsmode RFC3161 --tsaurl http://timestamp.digicert.com "$EXE_FILE"
           cd ..
       - name: Upload build
         uses: actions/upload-artifact@v3
