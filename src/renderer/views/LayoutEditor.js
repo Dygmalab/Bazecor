@@ -539,6 +539,7 @@ class LayoutEditor extends React.Component {
       finalNeuron = neuron;
     }
     const existingDefy = neurons.some(n => n.id.length < 32);
+    const existingRaise = neurons.some(n => n.id.length === 32);
     if (!neurons.some(n => n.id === chipID) && neurons.length > 0) {
       const neuron = {};
       neuron.id = chipID;
@@ -555,7 +556,7 @@ class LayoutEditor extends React.Component {
       const focus = new Focus();
       console.log("Additional neuron", neuron);
       let result;
-      if (focus.device.info.product === "Defy" && !existingDefy) {
+      if ((focus.device.info.product === "Defy" && !existingDefy) || (focus.device.info.product === "Raise" && !existingRaise)) {
         result = false;
       } else {
         result = await window.confirm(
