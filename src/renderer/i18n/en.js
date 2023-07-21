@@ -712,7 +712,7 @@ const English = {
       noInternetConncetion:
         "We were unable to download the firmware you requested. Please, check your internet connection or try again later.",
       progressCardStatus1: "1. Hold ESC Key",
-      progressCardStatus2: "2. Updating the Firmware",
+      progressCardStatus2: "2. Release ESC Key. Updating the Firmware",
       progressCardStatus3: "3. Restoring your Layers",
       progressCardStatus4: "4. Firmware update!",
       progressCardStatusDefy1: "1. Flashing right side",
