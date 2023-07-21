@@ -18,6 +18,7 @@
 import { ipcMain } from "electron";
 import { getDeviceList, WebUSB } from "usb";
 import sendToRenderer from "../utils/sendToRenderer";
+import Focus from "../../api/focus";
 
 const dygmaVendorIDs = [0x35ef, 0x1209];
 
@@ -25,27 +26,29 @@ const webusb = new WebUSB({
   allowAllDevices: true,
 });
 
-type USBEvent = Event & { device: unknown };
-
-export const onUSBDisconnect = (event: USBEvent) => {
+export const onUSBDisconnect = async (event: USBConnectionEvent) => {
   const { device } = event;
   if (device) {
-    const vendorID = (device as any).vendorId;
-    const productID = (device as any).productId;
-    if (vendorID in dygmaVendorIDs) {
+    const vendorID = device.vendorId;
+    const productID = device.productId;
+    if (dygmaVendorIDs.includes(vendorID)) {
       console.log("Dygma Device USB Disconnection detected");
       console.log("VendorID", vendorID);
       console.log("ProductID", productID);
-      sendToRenderer("usb-disconnected", vendorID, productID);
+      sendToRenderer("usb-disconnected", device);
+      const focus = new Focus();
+      if (focus.device?.usb?.productId === productID) {
+        await focus.close();
+      }
     }
   }
 };
-export const onUSBConnect = (event: USBEvent) => {
+export const onUSBConnect = (event: USBConnectionEvent) => {
   const { device } = event;
   if (device) {
-    const vendorID = (device as any).vendorId;
-    const productID = (device as any).productId;
-    if (vendorID in dygmaVendorIDs) {
+    const vendorID = device.vendorId;
+    const productID = device.productId;
+    if (dygmaVendorIDs.includes(vendorID)) {
       console.log("Dygma Device USB Connection detected");
       console.log("VendorID", vendorID);
       console.log("ProductID", productID);
@@ -76,5 +79,9 @@ export const configureUSB = async () => {
   // them first to notice disconnects. We do that here.
   await webusb.getDevices();
 
-  ipcMain.handle("usb-devices", getDevices);
+  ipcMain.handle("usb-devices", () => {
+    const devices = getDeviceList();
+    return devices;
+  });
+
 };

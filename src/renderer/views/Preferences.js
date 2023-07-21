@@ -41,6 +41,7 @@ import { RegularButton } from "../component/Button";
 import { IconFloppyDisk } from "../component/Icon";
 
 import Store from "../utils/Store";
+import Version from "@Renderer/component/Version/Version";
 
 const store = Store.getStore();
 
@@ -445,6 +446,7 @@ class Preferences extends React.Component {
                     pairingButton={<></>}
                     connected={connected}
                   />
+                  <Version />
                 </Col>
               </Row>
             </Container>

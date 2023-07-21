@@ -25,7 +25,10 @@ const configureIPCs = () => {
     uIOhook.stop();
   });
 
-  ipcMain.handle("list-drives", listDrivesHandler);
+  ipcMain.handle("list-drives", async (event, options) => {
+    const data = listDrivesHandler(event, options);
+    return data;
+  });
   ipcMain.handle("open-dialog", async (event, options) => {
     const data = await dialog.showOpenDialog(window, options);
     return data;

@@ -15,11 +15,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { DelimiterParser } from "@serialport/parser-delimiter";
 import fs from "fs";
 import { spawn } from "child_process";
 
 const { SerialPort } = eval('require("serialport")');
+const { DelimiterParser } = eval('require("@serialport/parser-delimiter")');
 
 global.focus_instance = null;
 
@@ -80,27 +80,31 @@ class Focus {
   }
 
   async open(device, info, file) {
+    if (file !== null) {
+      await this.fileOpen(info, file);
+      return true;
+    }
+
+    if (this._port !== undefined && this._port.isOpen === false) {
+      this.close();
+    }
+
+    // console.log("Warning! device being opened");
+    // console.log("port status opened?", this._port ? this._port.isOpen : "unknown");
+    // console.log("received device", device);
+    // console.log("received info: ", info);
     try {
-      if (file !== null) {
-        await this.fileOpen(info, file);
-        return true;
-      }
-
-      if (this._port !== undefined && this._port.isOpen === false) {
-        this.close();
-      }
-
-      // console.log("Warning! device being opened");
-      // console.log("port status opened?", this._port ? this._port.isOpen : "unknown");
-      // console.log("received device", device);
-      // console.log("received info: ", info);
-
       let path;
       if (typeof device === "string") path = device;
       if (typeof device === "object") path = device.settings.path;
       if (path !== undefined) {
-        await SerialPort.list();
-        this._port = new SerialPort({ path, baudRate: 115200, autoOpen: true });
+        const testingDevices = await SerialPort.list();
+        console.log(testingDevices);
+        this._port = new SerialPort({ path, baudRate: 115200, autoOpen: false, endOnClose: true });
+        await this._port.open(err => {
+          if (err) console.error("error when opening port: ", err);
+          else console.log("connected");
+        });
       } else {
         throw Error("device not a string or object!");
       }
@@ -142,18 +146,18 @@ class Focus {
           // Ignore
         }
       }
-
-      // Setup error port alert
-      this._port.on("error", async function (err) {
-        console.error(`Error on SerialPort: ${err}`);
-        await this._port.close();
-      });
-      this.closed = false;
-      return this._port;
     } catch (error) {
       console.error("found this error while opening!", error);
       // throw new Error("Unable to connect");
     }
+
+    // Setup error port alert
+    this._port.on("error", async function (err) {
+      console.error(`Error on SerialPort: ${err}`);
+      await this._port.close();
+    });
+    this.closed = false;
+    return this._port;
   }
 
   clearContext() {
@@ -184,6 +188,7 @@ class Focus {
         }
         delete this._port;
         this.closed = true;
+        await this.delay(200);
       }
     } catch (error) {
       console.error("error when closing", error);

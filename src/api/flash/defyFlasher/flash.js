@@ -31,7 +31,7 @@ import NRf52833 from "./NRf52833-flasher";
  * @emits resetKeyboard
  * @emits updateFirmware
  */
-export class FlashDefyWireless {
+class FlashDefyWireless {
   constructor(device) {
     this.device = device;
     this.currentPort = null;
@@ -81,10 +81,10 @@ export class FlashDefyWireless {
         );
         if (
           bootloader
-            ? device.device.bootloader != undefined &&
-              device.device.bootloader == bootloader &&
-              this.device.info.keyboardType == device.device.info.keyboardType
-            : this.device.info.keyboardType == device.device.info.keyboardType
+            ? device.device.bootloader !== undefined &&
+              device.device.bootloader === bootloader &&
+              this.device.info.keyboardType === device.device.info.keyboardType
+            : this.device.info.keyboardType === device.device.info.keyboardType
         ) {
           console.log(message);
           this.currentPort = { ...device };
@@ -163,8 +163,8 @@ export class FlashDefyWireless {
    */
   async saveBackupFile() {
     const userDataPath = await ipcRenderer.invoke("get-userPath", "userData");
-    const route = path.join(userDataPath, this.backupFileName + ".json");
-    console.log("saving file to: " + route);
+    const route = path.join(userDataPath, `${this.backupFileName}.json`);
+    console.log(`saving file to: ${route}`);
     fs.writeFile(route, JSON.stringify(this.backupFileData), err => {
       if (err) throw err;
     });
@@ -212,7 +212,9 @@ export class FlashDefyWireless {
     this.backup = backup;
     return new Promise(async (resolve, reject) => {
       stateUpdate("reset", 10);
-      focus.command("upgrade.neuron");
+      focus.command("upgrade.neuron").catch(err => {
+        if (err) console.log("answer after shutdown not received");
+      });
       console.log("waiting for bootloader");
       await this.delay(1000);
       stateUpdate("reset", 30);
@@ -353,3 +355,5 @@ export class FlashDefyWireless {
     }
   }
 }
+
+export default FlashDefyWireless;
