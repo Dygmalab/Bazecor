@@ -84,13 +84,16 @@ jobs:
           mkdir windows_signing
           cp jsign.jar windows_signing/jsign.jar
       - if: runner.os == 'Windows'
-        name: Setup GCloud
+        name: Setup GCloud Auth
         uses: "google-github-actions/auth@v1"
         with:
+          version: ">= 416.0.0"
           credentials_json: "${{ secrets.GCP_SIGNER_SERVICE_ACCOUNT }}"
       - if: runner.os == 'Windows'
-        name: "Set up Cloud SDK"
+        name: "Set up GCloud SDK"
         uses: "google-github-actions/setup-gcloud@v1"
+        with:
+          version: ">= 416.0.0"
       - name: Cache node_modules
         id: cache-node-modules
         uses: actions/cache@v3
