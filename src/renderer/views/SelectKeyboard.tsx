@@ -253,14 +253,14 @@ const SelectKeyboard: React.FC<SelectKeyboardProps> = (props): JSX.Element => {
     // }
     try {
       const serialDevices = await focus.find(...Hardware.serial);
-      console.log("Printing devices: ", serialDevices);
+      // console.log("Printing devices: ", serialDevices);
       const supportedDevices = [];
       let device;
       for (let i = 0; i < serialDevices.length; i += 1) {
         device = serialDevices[i];
         /* eslint-disable no-await-in-loop */
         device.accessible = await focus.isDeviceAccessible(device);
-        console.log("before checking device supported", device, focus);
+        // console.log("before checking device supported", device, focus);
         if (device.accessible && (await focus.isDeviceSupported(device))) {
           supportedDevices.push(device);
         } else if (!device.accessible) {
@@ -273,9 +273,9 @@ const SelectKeyboard: React.FC<SelectKeyboardProps> = (props): JSX.Element => {
       console.log("Non serial keyboards", list);
       setIsLoading(false);
       setDevices(list);
-      if(connected){
+      if (connected) {
         const connectedDev = list.findIndex(dev => focus.serialNumber?.includes(dev.serialNumber));
-        console.log("check connected", connectedDev);
+        // console.log("check connected", connectedDev);
         setSelectedPortIndex(connectedDev);
       }
       return list;
@@ -565,7 +565,7 @@ const SelectKeyboard: React.FC<SelectKeyboardProps> = (props): JSX.Element => {
 
   const selectedDevice = devices && devices[selectedPortIndex];
   const connectedDevice = devices && devices.findIndex(dev => focus.serialNumber?.includes(dev.serialNumber));
-  console.log("Checking connected Data: ", connectedDevice, selectedPortIndex);
+  // console.log("Checking connected Data: ", connectedDevice, selectedPortIndex);
   return (
     <Styles>
       <Container fluid className="keyboard-select center-content">
