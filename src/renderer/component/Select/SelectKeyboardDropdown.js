@@ -83,7 +83,11 @@ function SelectKeyboardDropdown({ selectPort, selectedPortIndex, deviceItems, co
         <Dropdown.Toggle id="dropdown-custom">
           <div className="dropdownItemSelected">
             <div className="dropdownIcon">
-              {deviceItems[selectedPortIndex] && connected ? <img src={iconConnected} /> : <img src={iconKeyboard} />}
+              {deviceItems[connectedDevice] && connectedDevice === selectedPortIndex && connected ? (
+                <img src={iconConnected} />
+              ) : (
+                <img src={iconKeyboard} />
+              )}
             </div>
             <div className="dropdownItem">
               <h3>{deviceItems[selectedPortIndex] != null ? deviceItems[selectedPortIndex].userName : "Keyboard not found"}</h3>

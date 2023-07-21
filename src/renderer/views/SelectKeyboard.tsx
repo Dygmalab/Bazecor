@@ -322,7 +322,7 @@ const SelectKeyboard: React.FC<SelectKeyboardProps> = (props): JSX.Element => {
 
   const selectPort = (event: any) => {
     // console.log(event);
-    setSelectedPortIndex(event);
+    setSelectedPortIndex(parseInt(event, 10));
   };
 
   const onKeyboardConnect = async () => {
@@ -331,6 +331,8 @@ const SelectKeyboard: React.FC<SelectKeyboardProps> = (props): JSX.Element => {
       if (!devices[selectedPortIndex].path) {
         devices[selectedPortIndex].device.device = devices[selectedPortIndex].device;
       }
+      const focus = new Focus();
+      focus.serialNumber = devices[selectedPortIndex].serialNumber;
       await onConnect(devices[selectedPortIndex], null);
     } catch (err) {
       setOpening(false);
@@ -546,10 +548,8 @@ const SelectKeyboard: React.FC<SelectKeyboardProps> = (props): JSX.Element => {
   }
 
   const selectedDevice = devices && devices[selectedPortIndex];
-  const connectedDevice = devices && devices.findIndex(dev => focus._port?.serialNumber?.includes(dev.serialNumber));
-  console.log("Focus device: ", focus);
-  console.log("CONNECTED DEVICE: ", connectedDevice, selectedDevice);
-
+  const connectedDevice = devices && devices.findIndex(dev => focus.serialNumber?.includes(dev.serialNumber));
+  console.log("Checking connected Data: ", connectedDevice, selectedPortIndex);
   return (
     <Styles>
       <Container fluid className="keyboard-select center-content">
