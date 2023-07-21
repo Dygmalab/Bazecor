@@ -32,7 +32,7 @@ import {
   IconNote,
   IconOneShot,
   IconThunder,
-  IconWireless,
+  IconWirelessMd,
 } from "@Renderer/component/Icon";
 
 const Styles = Styled.div`
@@ -293,6 +293,7 @@ export default class StandardView extends React.Component {
       selectedlanguage,
       showStandardView,
       superkeys,
+      isWireless,
     } = this.props;
     let keyCode;
     if (actTab == "super") {
@@ -338,11 +339,9 @@ export default class StandardView extends React.Component {
                   )}
                   <CustomTab eventKey="tabMedia" text={i18n.editor.standardView.mediaAndLED.title} icon={<IconNote />} />
                   <CustomTab eventKey="tabMouse" text={i18n.editor.standardView.mouse.title} icon={<IconMouse />} />
-                  <CustomTab
-                    eventKey="tabWireless"
-                    text={i18n.app.menu.wireless}
-                    icon={<IconWireless width={24} height={24} strokeWidth={1.2} />}
-                  />
+                  {isWireless && (
+                    <CustomTab eventKey="tabWireless" text={i18n.app.menu.wireless} icon={<IconWirelessMd strokeWidth={1.2} />} />
+                  )}
                 </Nav>
               </div>
               <div className="colContentTabs">
@@ -408,9 +407,11 @@ export default class StandardView extends React.Component {
                     <Tab.Pane eventKey="tabMouse">
                       <MouseTab onAddSpecial={this.onAddSpecial} keyCode={keyCode} isStandardView={isStandardView} />
                     </Tab.Pane>
-                    <Tab.Pane eventKey="tabWireless">
-                      <WirelessTab onAddSpecial={this.onAddSpecial} keyCode={keyCode} isStandardView={isStandardView} />
-                    </Tab.Pane>
+                    {isWireless && (
+                      <Tab.Pane eventKey="tabWireless">
+                        <WirelessTab keyCode={keyCode} onKeySelect={onKeySelect} isStandardView={isStandardView} />
+                      </Tab.Pane>
+                    )}
                   </Tab.Content>
                 </div>
                 <div className="contentFooter">

@@ -1,5 +1,7 @@
-import React, { Component } from "react";
+import React from "react";
 import Styled from "styled-components";
+
+import { TabLayoutEditorProps } from "@Renderer/types/pages";
 
 import i18n from "../../i18n";
 
@@ -32,33 +34,44 @@ h4 {
 }
 `;
 
-function WirelessTab({ keyCode, onKeySelect, isStandardView }) {
+function WirelessTab({ keyCode, onKeySelect, isStandardView }: TabLayoutEditorProps) {
   return (
     <Styles className={`${isStandardView ? "standardViewTab" : ""} tabsWireless`}>
       <div className="tabContentWrapper">
         <div className="buttonsRow">
-          <Title text={i18n.editor.standardView.noKeyTransparent} headingLevel={3} />
-          <CallOut content={i18n.editor.standardView.callOut} size="sm" />
+          <Title text={i18n.app.menu.wireless} headingLevel={3} />
+          <CallOut content={i18n.editor.standardView.wireless.callOut} size="sm" />
           <div className="keysButtonsList">
-            <Title text={i18n.editor.standardView.noKey} headingLevel={4} />
-            <p className="description">{i18n.editor.standardView.noKeyDescription}</p>
+            <Title text={i18n.editor.standardView.wireless.batteryPowerStatus} headingLevel={4} />
+            <p className="description">{i18n.editor.standardView.wireless.batteryLevelDescription}</p>
             <ButtonConfig
-              buttonText={i18n.editor.standardView.noKey}
+              buttonText={i18n.editor.standardView.wireless.batteryLevel}
               onClick={() => {
-                onKeySelect(0);
+                onKeySelect(54108);
               }}
-              selected={keyCode !== undefined && keyCode.base ? keyCode.base + keyCode.modified == 0 : keyCode == 0}
+              selected={isStandardView ? keyCode === 54108 : false}
             />
           </div>
           <div className="keysButtonsList">
-            <Title text={i18n.editor.standardView.transparent} headingLevel={4} />
-            <p className="description">{i18n.editor.standardView.transparentDescription}</p>
+            <Title text={i18n.wireless.energyManagement.savingMode} headingLevel={4} />
+            <p className="description">{i18n.editor.standardView.wireless.savingModeDescription}</p>
             <ButtonConfig
-              buttonText={i18n.editor.standardView.transparent}
+              buttonText={i18n.general.onOff}
               onClick={() => {
-                onKeySelect(65535);
+                onKeySelect(54109);
               }}
-              selected={keyCode !== undefined && keyCode.base ? keyCode.base + keyCode.modified == 65535 : keyCode == 65535}
+              selected={isStandardView ? keyCode === 54109 : false}
+            />
+          </div>
+          <div className="keysButtonsList">
+            <Title text={i18n.wireless.energyManagement.pairingMode} headingLevel={4} />
+            <p className="description">{i18n.editor.standardView.wireless.pairingModeDescription}</p>
+            <ButtonConfig
+              buttonText={i18n.editor.standardView.wireless.pair}
+              onClick={() => {
+                onKeySelect(54110);
+              }}
+              selected={isStandardView ? keyCode === 54110 : false}
             />
           </div>
         </div>

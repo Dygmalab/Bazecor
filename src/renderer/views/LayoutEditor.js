@@ -463,6 +463,7 @@ class LayoutEditor extends React.Component {
       isStandardView: store.get("settings.isStandardView") || true,
       showStandardView: false,
       layoutSelectorPosition: { x: 0, y: 0 },
+      isWireless: false,
     };
     this.onLayerNameChange = this.onLayerNameChange.bind(this);
     this.updateMacros = this.updateMacros.bind(this);
@@ -587,6 +588,7 @@ class LayoutEditor extends React.Component {
       const chipID = await focus.command("hardware.chip_id");
       const registered = await this.AnalizeChipID(chipID.replace(/\s/g, ""));
       const device = focus.device.info.product;
+      const wirelessChecker = focus.device.info.keyboardType === "wireless" ? true : false;
       if (lang) {
         const deviceLang = { ...focus.device, language: true };
         focus.commands.keymap = new Keymap(deviceLang);
@@ -654,6 +656,7 @@ class LayoutEditor extends React.Component {
         registered,
         chipID,
         deviceName: device,
+        isWireless: wirelessChecker,
         ledIndexStart,
       });
       if (keymap.custom) {
@@ -1755,6 +1758,7 @@ class LayoutEditor extends React.Component {
       isStandardView,
       ledIndexStart,
       layoutSelectorPosition,
+      isWireless,
     } = this.state;
 
     const { Layer, kbtype } = this.getLayout();
@@ -2065,6 +2069,7 @@ class LayoutEditor extends React.Component {
             selectedlanguage={currentLanguageLayout}
             kbtype={kbtype}
             isStandardView={isStandardView}
+            isWireless={isWireless}
           />
         ) : (
           ""
