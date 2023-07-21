@@ -40,16 +40,16 @@ import {
   AiOutlineForward,
 } from "react-icons/ai";
 import { MdKeyboardReturn, MdSpaceBar, MdKeyboardCapslock, MdInfoOutline, MdEject } from "react-icons/md";
-import i18n from "../../i18n";
 
-import { ButtonConfig } from "../../component/Button";
+import { ButtonConfig } from "@Renderer/component/Button";
 import {
   SelectMacroCustomDropdown,
   SelectSuperKeyCustomDropdown,
   SelectLayersCustomDropdown,
   SelectMouseCustomDropdown,
   SelectShotModifierCustomDropdown,
-} from "../../component/Select";
+  SelectWirelessDropdown,
+} from "@Renderer/component/Select";
 
 import {
   IconLayersSm,
@@ -77,21 +77,23 @@ import {
   IconShutdownSm,
   IconRobotSm,
   IconWrenchSm,
-  IconWirelessMd,
-} from "../../component/Icon";
+  IconWirelessSm,
+} from "@Renderer/component/Icon";
 
-import Key from "./Key";
-import ES from "./ES.json";
-import ENi from "./ENi.json";
-import ENa from "./ENa.json";
-import GR from "./GR.json";
-import FR from "./FR.json";
-import SW from "./SW.json";
-import DN from "./DN.json";
-import NW from "./NW.json";
-import IC from "./IC.json";
-import JP from "./JP.json";
-import SWGR from "./SWGR.json";
+import i18n from "@Renderer/i18n";
+
+import Key from "@Renderer/modules/KeyPickerKeyboard/Key";
+import ES from "@Renderer/modules/KeyPickerKeyboard/ES.json";
+import ENi from "@Renderer/modules/KeyPickerKeyboard/ENi.json";
+import ENa from "@Renderer/modules/KeyPickerKeyboard/ENa.json";
+import GR from "@Renderer/modules/KeyPickerKeyboard/GR.json";
+import FR from "@Renderer/modules/KeyPickerKeyboard/FR.json";
+import SW from "@Renderer/modules/KeyPickerKeyboard/SW.json";
+import DN from "@Renderer/modules/KeyPickerKeyboard/DN.json";
+import NW from "@Renderer/modules/KeyPickerKeyboard/NW.json";
+import IC from "@Renderer/modules/KeyPickerKeyboard/IC.json";
+import JP from "@Renderer/modules/KeyPickerKeyboard/JP.json";
+import SWGR from "@Renderer/modules/KeyPickerKeyboard/SWGR.json";
 // import SelectSuperKeys from "../../component/Select/SelectSuperKey";
 
 const Style = Styled.div`
@@ -231,15 +233,61 @@ width: 100%;
 
 .keysContainerGrid {
   display: grid; 
-  grid-template-columns: repeat(6, auto); 
-  gap: 2px 4px; 
-}
-.keysContainerGrid2 {
-  display: grid; 
-  grid-template-columns: repeat(3, auto); 
+  grid-template-columns: repeat(12, 1fr); 
+  grid-template-rows: repeat(2, 1fr);
   gap: 2px 4px; 
 }
 
+.KeysWrapper.notWireless {
+  .keysSuperkeys { grid-area: 1 / 1 / 2 / 3; }
+  .keysMacros { grid-area: 1 / 3 / 2 / 5; }
+  .keysLayerLock { grid-area: 1 / 5 / 2 / 7; }
+  .keysOSM { grid-area: 1 / 7 / 2 / 9; }
+  .keysMouseEvents { grid-area: 1 / 9 / 2 / 11; }
+  .keysNoKey { grid-area: 1 / 11 / 2 / 13; }
+  .keysMedia { grid-area: 2 / 1 / 3 / 6; }
+  .keysTools { grid-area: 2 / 6 / 3 / 10; }
+  .keysLED { grid-area: 2 / 10 / 3 / 13; }
+}
+.KeysWrapper.super.notWireless {
+  .keysContainerGrid {
+    grid-template-columns: repeat(12, 1fr); 
+  }
+  .keysMacros { grid-area:  1 / 1 / 2 / 5; }
+  .keysLayerLock { grid-area: 1 / 5 / 2 / 9; }
+  .keysMouseEvents { grid-area: 1 / 9 / 2 / 13; }
+  .keysMedia { grid-area: 2 / 1 / 3 / 6; }
+  .keysTools { grid-area: 2 / 6 / 3 / 10; }
+  .keysLED { grid-area: 2 / 10 / 3 / 13; }
+}
+
+.KeysWrapper.isWireless {
+  .keysContainerGrid {
+    grid-template-rows: repeat(3, 1fr);
+  }
+  .keysSuperkeys { grid-area: 1 / 1 / 2 / 4; }
+  .keysMacros { grid-area: 1 / 4 / 2 / 7; }
+  .keysLayerLock { grid-area: 1 / 7 / 2 / 10; }
+  .keysWireless { grid-area: 1 / 10 / 2 / 13; }
+  .keysOSM { grid-area: 2 / 1 / 3 / 4; }
+  .keysMouseEvents { grid-area: 2 / 4 / 3 / 7; }
+  .keysNoKey { grid-area: 2 / 7 / 3 / 10; }
+  .keysLED { grid-area: 2 / 10 / 3 / 13; }
+  .keysMedia { grid-area: 3 / 1 / 4 / 7; }
+  .keysTools { grid-area: 3 / 7 / 4 / 13; }
+}
+.KeysWrapper.super.isWireless {
+  .keysContainerGrid {
+    grid-template-columns: repeat(12, 1fr); 
+    grid-template-rows: repeat(2, 1fr);
+  }
+  .keysMacros { grid-area:  1 / 1 / 2 / 5; }
+  .keysLayerLock { grid-area: 1 / 5 / 2 / 9; }
+  .keysMouseEvents { grid-area: 1 / 9 / 2 / 13; }
+  .keysMedia { grid-area: 2 / 1 / 3 / 6; }
+  .keysTools { grid-area: 2 / 6 / 3 / 10; }
+  .keysLED { grid-area: 2 / 10 / 3 / 13; }
+}
 
 .editor {
   .dropdownLayerShift .dropdown-toggle.btn.btn-primary,
@@ -534,7 +582,7 @@ class KeyPicker extends Component {
             </div>
           </div>
         </div>
-        <div className={`KeysWrapper KeysWrapperSpecialKeys ${activeTab}`}>
+        <div className={`KeysWrapper KeysWrapperSpecialKeys ${activeTab} ${isWireless ? "isWireless" : "notWireless"}`}>
           <div className="keysContainer keysContainerGrid">
             {activeTab === "super" ? (
               <></>
@@ -577,10 +625,10 @@ class KeyPicker extends Component {
             {isWireless && (
               <div className="keysRow keysWireless keyRowsDropdowns">
                 <div className="keyIcon">
-                  <IconWirelessMd />
+                  <IconWirelessSm />
                 </div>
                 <div className="keysButtonsList">
-                  <SelectLayersCustomDropdown action={action} activeTab={activeTab} keyCode={code} onKeySelect={onKeySelect} />
+                  <SelectWirelessDropdown action={action} activeTab={activeTab} keyCode={code} onKeySelect={onKeySelect} />
                 </div>
               </div>
             )}
@@ -634,9 +682,7 @@ class KeyPicker extends Component {
                 </div>
               </div>
             )}
-          </div>
 
-          <div className="keysContainer keysContainerGrid2">
             <div className="keysRow keysMedia">
               <div className="keyIcon">
                 <IconNoteSm />

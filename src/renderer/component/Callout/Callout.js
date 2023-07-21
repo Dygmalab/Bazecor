@@ -20,7 +20,6 @@ import PropTypes from "prop-types";
 import Styled from "styled-components";
 
 import Modal from "react-bootstrap/Modal";
-import Spinner from "react-bootstrap/Spinner";
 
 const Style = Styled.div`	
 &.mt-xs {
@@ -228,7 +227,7 @@ const Callout = ({ content, media, size, className, maxWidth, hasVideo, videoDur
       )}
     </Style>
   );
-}
+};
 
 Callout.propTypes = {
   content: PropTypes.string.isRequired,
@@ -237,7 +236,7 @@ Callout.propTypes = {
   className: PropTypes.string,
   maxWidth: PropTypes.number,
   hasVideo: PropTypes.bool,
-  videoDuration: PropTypes.string
+  videoDuration: PropTypes.string,
 };
 
 export default Callout;

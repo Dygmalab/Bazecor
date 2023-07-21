@@ -64,7 +64,7 @@ function WirelessTab({ keyCode, onKeySelect, isStandardView }: TabLayoutEditorPr
             />
           </div>
           <div className="keysButtonsList">
-            <Title text={i18n.wireless.energyManagement.pairingMode} headingLevel={4} />
+            <Title text={i18n.editor.standardView.wireless.pairingMode} headingLevel={4} />
             <p className="description">{i18n.editor.standardView.wireless.pairingModeDescription}</p>
             <ButtonConfig
               buttonText={i18n.editor.standardView.wireless.pair}
