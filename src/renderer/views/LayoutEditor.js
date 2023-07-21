@@ -25,28 +25,29 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Modal from "react-bootstrap/Modal";
 import customCursor from "@Assets/base/cursorBucket.png";
-import ToastMessage from "../component/ToastMessage";
+import { LogoLoaderCentered } from "@Renderer/component/Loader";
+import ToastMessage from "@Renderer/component/ToastMessage";
 
-// Bootstrap components
+import ConfirmationDialog from "@Renderer/component/ConfirmationDialog";
+import { CopyFromDialog } from "@Renderer/component/CopyFromDialog";
+
+// Modules
+import PageHeader from "@Renderer/modules/PageHeader";
+import ColorEditor from "@Renderer/modules/ColorEditor";
+import { KeyPickerKeyboard } from "@Renderer/modules/KeyPickerKeyboard";
+import StandardView from "@Renderer/modules/StandardView";
+
+// Components
+import { LayerSelector } from "@Renderer/component/Select";
+import { RegularButton } from "@Renderer/component/Button";
+import { LayoutViewSelector } from "@Renderer/component/ToggleButtons";
+import { IconArrowUpWithLine, IconArrowDownWithLine } from "@Renderer/component/Icon";
+
+import Keymap, { KeymapDB } from "../../api/keymap";
 
 import Focus from "../../api/focus";
 import Backup from "../../api/backup";
-import Keymap, { KeymapDB } from "../../api/keymap";
-import ConfirmationDialog from "../component/ConfirmationDialog";
 import i18n from "../i18n";
-import { CopyFromDialog } from "../component/CopyFromDialog";
-
-// Modules
-import PageHeader from "../modules/PageHeader";
-import ColorEditor from "../modules/ColorEditor";
-import { KeyPickerKeyboard } from "../modules/KeyPickerKeyboard";
-import StandardView from "../modules/StandardView";
-
-// Components
-import { LayerSelector } from "../component/Select";
-import { RegularButton } from "../component/Button";
-import { LayoutViewSelector } from "../component/ToggleButtons";
-import { IconArrowUpWithLine, IconArrowDownWithLine } from "../component/Icon";
 
 import Store from "../utils/Store";
 
@@ -1889,7 +1890,7 @@ class LayoutEditor extends React.Component {
         superName = superkeys[code.base + code.modified - 53980].name;
       }
     }
-
+    if (!layerData) return <LogoLoaderCentered />;
     return (
       <Styles className="layoutEditor">
         <Container
@@ -1958,6 +1959,7 @@ class LayoutEditor extends React.Component {
                     kbtype={kbtype}
                     layoutSelectorPosition={layoutSelectorPosition}
                     refreshLayoutSelectorPosition={this.refreshLayoutSelectorPosition}
+                    isWireless={isWireless}
                   />
                 </Row>
               ) : null}

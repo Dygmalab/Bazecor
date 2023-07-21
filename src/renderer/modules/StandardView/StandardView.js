@@ -317,14 +317,14 @@ export default class StandardView extends React.Component {
                   oldValue={oldKey}
                   newValue={selKey}
                   isStandardView={isStandardView}
-                  superkeyAction={`${actTab == "super" ? keyIndex : 5}`}
+                  superkeyAction={`${actTab === "super" ? keyIndex : 5}`}
                 />
                 <Nav className="flex-column tabsWrapper">
                   <CustomTab eventKey="tabKeys" text="Keys" icon={<IconKeyboard />} />
                   <CustomTab eventKey="tabNoKeys" text={i18n.editor.standardView.noKeyTransparent} icon={<IconNoKey />} />
                   <CustomTab eventKey="tabLayers" text={i18n.editor.standardView.layers.title} icon={<IconLayers />} />
                   <CustomTab eventKey="tabMacro" text={i18n.editor.standardView.macros.title} icon={<IconRobot />} />
-                  {actTab != "super" ? (
+                  {actTab !== "super" ? (
                     <>
                       <CustomTab
                         eventKey="tabSuperKeys"

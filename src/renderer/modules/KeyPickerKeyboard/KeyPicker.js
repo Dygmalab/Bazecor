@@ -77,6 +77,7 @@ import {
   IconShutdownSm,
   IconRobotSm,
   IconWrenchSm,
+  IconWirelessMd,
 } from "../../component/Icon";
 
 import Key from "./Key";
@@ -325,6 +326,7 @@ class KeyPicker extends Component {
       keyCode,
       onKeySelect,
       activeTab,
+      isWireless,
     } = this.props;
 
     // let boxShadowMatrix = useTheme().styles.keyPicker.keyMatrixShadow;
@@ -534,7 +536,7 @@ class KeyPicker extends Component {
         </div>
         <div className={`KeysWrapper KeysWrapperSpecialKeys ${activeTab}`}>
           <div className="keysContainer keysContainerGrid">
-            {activeTab == "super" ? (
+            {activeTab === "super" ? (
               <></>
             ) : (
               <div className="keysRow keysSuperkeys keyRowsDropdowns">
@@ -572,7 +574,16 @@ class KeyPicker extends Component {
                 <SelectLayersCustomDropdown action={action} activeTab={activeTab} keyCode={code} onKeySelect={onKeySelect} />
               </div>
             </div>
-
+            {isWireless && (
+              <div className="keysRow keysWireless keyRowsDropdowns">
+                <div className="keyIcon">
+                  <IconWirelessMd />
+                </div>
+                <div className="keysButtonsList">
+                  <SelectLayersCustomDropdown action={action} activeTab={activeTab} keyCode={code} onKeySelect={onKeySelect} />
+                </div>
+              </div>
+            )}
             {activeTab == "super" ? (
               <></>
             ) : (
