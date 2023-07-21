@@ -3,10 +3,10 @@ name: Release
 on:
   push:
     branches:
-      - "signing_windows"
+      - "main"
   pull_request:
     branches:
-      - "signing_windows"
+      - "main"
 
 permissions:
   contents: read
@@ -87,7 +87,6 @@ jobs:
         name: Setup GCloud Auth
         uses: "google-github-actions/auth@v1"
         with:
-          version: ">= 416.0.0"
           credentials_json: "${{ secrets.GCP_SIGNER_SERVICE_ACCOUNT }}"
       - if: runner.os == 'Windows'
         name: "Set up GCloud SDK"
@@ -230,7 +229,7 @@ jobs:
         run: |
           ls -R ${{ github.workspace}}
 
-      # - name: Run semantic-release
-      #   env:
-      #     GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      #   run: npx semantic-release
+      - name: Run semantic-release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: npx semantic-release
