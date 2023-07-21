@@ -277,7 +277,14 @@ const SelectKeyboard: React.FC<SelectKeyboardProps> = (props): JSX.Element => {
         const connectedDev = list.findIndex(dev => focus.serialNumber?.includes(dev.serialNumber));
         // console.log("check connected", connectedDev);
         setSelectedPortIndex(connectedDev);
+      } else {
+        if (list.length > 0) {
+          setSelectedPortIndex(0);
+        } else {
+          setSelectedPortIndex(-1);
+        }
       }
+
       return list;
     } catch (err) {
       console.log("Error while finding keyboards", err);
