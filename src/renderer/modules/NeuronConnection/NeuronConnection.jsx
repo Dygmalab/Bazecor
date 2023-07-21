@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 // -*- mode: js-jsx -*-
 /* Bazecor
  * Copyright (C) 2022  Dygmalab, Inc.
@@ -17,7 +18,7 @@
 
 import React from "react";
 import Styled from "styled-components";
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import Title from "../../component/Title";
 import { RegularButton } from "../../component/Button";
 import NeuronStatus from "../../component/NeuronStatus";
@@ -25,7 +26,6 @@ import { SelectKeyboardDropdown } from "../../component/Select";
 import i18n from "../../i18n";
 
 import "react-toastify/dist/ReactToastify.css";
-import ToastMessage from "../../component/ToastMessage";
 import { IconConnected } from "../../component/Icon";
 
 const Style = Styled.div`
@@ -111,14 +111,15 @@ function NeuronConnection({
   scanFoundDevices,
   scanDevices,
   onKeyboardConnect,
-  cantConnect,
   connected,
   onDisconnect,
+  onDisconnectConnect,
   selectPort,
   selectedPortIndex,
   deviceItems,
   isVirtual,
   virtualDevice,
+  connectedDevice,
 }) {
   return (
     <Style>
@@ -172,6 +173,7 @@ function NeuronConnection({
                   selectPort={selectPort}
                   selectedPortIndex={selectedPortIndex}
                   connected={connected}
+                  connectedDevice={connectedDevice}
                 />
               </>
             ) : (
@@ -184,11 +186,21 @@ function NeuronConnection({
                 style={`${connected || deviceItems.length > 0 ? "outline transp-bg" : "primary"}`}
                 disabled={scanFoundDevices}
               />
-              {connected ? (
+              {connected && connectedDevice === selectedPortIndex ? (
                 <RegularButton
                   buttonText={i18n.keyboardSelect.disconnect}
                   style="primary"
                   onClick={onDisconnect}
+                  disabled={false}
+                />
+              ) : (
+                ""
+              )}
+              {connected && connectedDevice !== selectedPortIndex ? (
+                <RegularButton
+                  buttonText={i18n.keyboardSelect.connect}
+                  style="primary"
+                  onClick={onDisconnectConnect}
                   disabled={false}
                 />
               ) : (

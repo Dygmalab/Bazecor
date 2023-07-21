@@ -242,15 +242,15 @@ const SelectKeyboard: React.FC<SelectKeyboardProps> = (props): JSX.Element => {
 
   const findKeyboards = useCallback(async (): Promise<any[]> => {
     setIsLoading(true);
-    const isIterable = devices != null && typeof devices[Symbol.iterator] === "function";
+    const isIterable = devices.length > 0 && typeof devices[Symbol.iterator] === "function";
     if (focus.closed === false && isIterable) {
       setIsLoading(false);
       return [];
     }
-    if (!focus.closed && device) {
-      setDevices([device]);
-      return [];
-    }
+    // if (!focus.closed && device) {
+    //   setDevices([device]);
+    //   return [];
+    // }
     try {
       const serialDevices = await focus.find(...Hardware.serial);
       console.log("Printing devices: ", serialDevices);
@@ -273,6 +273,11 @@ const SelectKeyboard: React.FC<SelectKeyboardProps> = (props): JSX.Element => {
       console.log("Non serial keyboards", list);
       setIsLoading(false);
       setDevices(list);
+      if(connected){
+        const connectedDev = list.findIndex(dev => focus.serialNumber?.includes(dev.serialNumber));
+        console.log("check connected", connectedDev);
+        setSelectedPortIndex(connectedDev);
+      }
       return list;
     } catch (err) {
       console.log("Error while finding keyboards", err);
@@ -286,24 +291,26 @@ const SelectKeyboard: React.FC<SelectKeyboardProps> = (props): JSX.Element => {
 
   useEffect(() => {
     const finder = () => findKeyboards();
+    const disconnectedfinder = () => {
+      setSelectedPortIndex(0);
+      findKeyboards();
+    };
     ipcRenderer.on("usb-connected", finder);
-    ipcRenderer.on("usb-disconnected", finder);
+    ipcRenderer.on("usb-disconnected", disconnectedfinder);
     if (!connected) {
       findKeyboards();
     }
     return () => {
       ipcRenderer.removeListener("usb-connected", finder);
-      ipcRenderer.removeListener("usb-disconnected", finder);
+      ipcRenderer.removeListener("usb-disconnected", disconnectedfinder);
     };
   }, [connected, findKeyboards]);
 
   useEffect(() => {
     if (connected && device) {
-      console.log("These are the DEVICES:", devices);
-      setSelectedPortIndex(0);
-      setDevices([device]);
+      findKeyboards();
     }
-  }, [connected, device]);
+  }, [connected, device, findKeyboards]);
 
   const scanDevices = async (): Promise<void> => {
     const keyboards = await findKeyboards();
@@ -324,7 +331,7 @@ const SelectKeyboard: React.FC<SelectKeyboardProps> = (props): JSX.Element => {
 
   const selectPort = (event: any) => {
     // console.log(event);
-    setSelectedPortIndex(event);
+    setSelectedPortIndex(parseInt(event, 10));
   };
 
   const onKeyboardConnect = async () => {
@@ -333,6 +340,8 @@ const SelectKeyboard: React.FC<SelectKeyboardProps> = (props): JSX.Element => {
       if (!devices[selectedPortIndex].path) {
         devices[selectedPortIndex].device.device = devices[selectedPortIndex].device;
       }
+      const focus = new Focus();
+      focus.serialNumber = devices[selectedPortIndex].serialNumber;
       await onConnect(devices[selectedPortIndex], null);
     } catch (err) {
       setOpening(false);
@@ -526,10 +535,18 @@ const SelectKeyboard: React.FC<SelectKeyboardProps> = (props): JSX.Element => {
     await onDisconnect();
   };
 
+  const handleOnDisconnectConnect = async () => {
+    await onDisconnect();
+    const delay = ms => new Promise(res => setTimeout(res, ms));
+    await delay(500);
+    await onKeyboardConnect();
+  };
+
   const getDeviceItems = () => {
     const neurons = store.get("neurons");
     const result = devices.map((device, index) => {
-      const neuron = neurons.find(neuron => neuron.id.toLowerCase() === device.serialNumber);
+      const preparedSN = device.productId === "2201" ? device.serialNumber.slice(0, 32) : device.serialNumber;
+      const neuron = neurons.find(neuron => neuron.id.toLowerCase() === preparedSN.toLowerCase());
 
       return {
         index,
@@ -547,8 +564,8 @@ const SelectKeyboard: React.FC<SelectKeyboardProps> = (props): JSX.Element => {
   }
 
   const selectedDevice = devices && devices[selectedPortIndex];
-  console.log("Focus device: ", focus.device);
-
+  const connectedDevice = devices && devices.findIndex(dev => focus.serialNumber?.includes(dev.serialNumber));
+  console.log("Checking connected Data: ", connectedDevice, selectedPortIndex);
   return (
     <Styles>
       <Container fluid className="keyboard-select center-content">
@@ -562,11 +579,13 @@ const SelectKeyboard: React.FC<SelectKeyboardProps> = (props): JSX.Element => {
             onKeyboardConnect={onKeyboardConnect}
             connected={connected}
             onDisconnect={handleOnDisconnect}
+            onDisconnectConnect={handleOnDisconnectConnect}
             deviceItems={deviceItems != null ? deviceItems : []}
             selectPort={selectPort}
             selectedPortIndex={selectedPortIndex}
             isVirtual={focus.file}
             virtualDevice={focus.device}
+            connectedDevice={connectedDevice}
           />
           <div className="cardButton-wrapper">
             <div className="cardButton">
