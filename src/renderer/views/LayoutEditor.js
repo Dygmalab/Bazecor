@@ -499,6 +499,7 @@ class LayoutEditor extends React.Component {
   }
 
   async AnalizeChipID(chipID) {
+    const focus = new Focus();
     let neurons = store.get("neurons");
     let finalNeuron;
     console.log("Neuron ID", chipID, neurons);
@@ -511,7 +512,7 @@ class LayoutEditor extends React.Component {
     if (!neurons.some(n => n.id === chipID) && neurons.length === 0) {
       const neuron = {};
       neuron.id = chipID;
-      neuron.name = "";
+      neuron.name = focus.device.info.product;
       neuron.layers =
         store.get("layerNames") !== undefined
           ? store.get("layerNames").map((name, id) => ({
@@ -543,7 +544,7 @@ class LayoutEditor extends React.Component {
     if (!neurons.some(n => n.id === chipID) && neurons.length > 0) {
       const neuron = {};
       neuron.id = chipID;
-      neuron.name = "";
+      neuron.name = focus.device.info.product;
       neuron.layers = this.defaultLayerNames;
       neuron.macros = [];
       neuron.superkeys = [];
@@ -553,7 +554,6 @@ class LayoutEditor extends React.Component {
       neuronCopy.layers = neurons[0].layers;
       neuronCopy.macros = neurons[0].macros;
       neuronCopy.superkeys = neurons[0].superkeys;
-      const focus = new Focus();
       console.log("Additional neuron", neuron);
       let result;
       if ((focus.device.info.product === "Defy" && !existingDefy) || (focus.device.info.product === "Raise" && !existingRaise)) {
