@@ -15,12 +15,7 @@ import { ToggleButtons } from "@Renderer/component/ToggleButtons";
 
 import i18n from "../../i18n";
 
-interface AdvancedBatterySettingsProps {
-  showModal: boolean;
-  setShowModal: React.Dispatch<React.SetStateAction<boolean>>;
-}
-
-function AdvancedBatterySettingsModal({ showModal, setShowModal }: AdvancedBatterySettingsProps) {
+function AdvancedBatterySettingsModal({ showModal, setShowModal }) {
   const RFModes = [
     {
       name: "Low",
@@ -121,11 +116,7 @@ function AdvancedBatterySettingsModal({ showModal, setShowModal }: AdvancedBatte
           styles="outline transp-bg"
           onClick={() => setShowModal(false)}
         />
-        <RegularButton
-          buttonText={i18n.dialog.applyChanges}
-          styles="outline gradient"
-          onClick={() => setShowModal(false)}
-        />
+        <RegularButton buttonText={i18n.dialog.applyChanges} styles="outline gradient" onClick={() => setShowModal(false)} />
       </Modal.Footer>
     </Modal>
   );
