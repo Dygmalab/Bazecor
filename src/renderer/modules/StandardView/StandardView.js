@@ -3,22 +3,24 @@ import React from "react";
 import Styled from "styled-components";
 import Tab from "react-bootstrap/Tab";
 import Nav from "react-bootstrap/Nav";
-import i18n from "../../i18n";
 
 import Keymap, { KeymapDB } from "../../../api/keymap";
 
 // component
-import { RegularButton } from "../../component/Button";
-import KeyVisualizer from "../KeyVisualizer";
-import CustomTab from "../../component/Tab";
-import KeysTab from "../KeysTabs/KeysTab";
-import NoKeyTransparentTab from "../KeysTabs/NoKeyTransparentTab";
-import LayersTab from "../KeysTabs/LayersTab";
-import MacroTab from "../KeysTabs/MacroTab";
-import SuperkeysTab from "../KeysTabs/SuperkeysTab";
-import MediaAndLightTab from "../KeysTabs/MediaAndLightTab";
-import OneShotTab from "../KeysTabs/OneShotTab";
-import MouseTab from "../KeysTabs/MouseTab";
+import { RegularButton } from "@Renderer/component/Button";
+import KeyVisualizer from "@Renderer/modules/KeyVisualizer";
+import CustomTab from "@Renderer/component/Tab";
+import KeysTab from "@Renderer/modules/KeysTabs/KeysTab";
+import NoKeyTransparentTab from "@Renderer/modules/KeysTabs/NoKeyTransparentTab";
+import LayersTab from "@Renderer/modules/KeysTabs/LayersTab";
+import MacroTab from "@Renderer/modules/KeysTabs/MacroTab";
+import SuperkeysTab from "@Renderer/modules/KeysTabs/SuperkeysTab";
+import MediaAndLightTab from "@Renderer/modules/KeysTabs/MediaAndLightTab";
+import OneShotTab from "@Renderer/modules/KeysTabs/OneShotTab";
+import MouseTab from "@Renderer/modules/KeysTabs/MouseTab";
+import WirelessTab from "@Renderer/modules/KeysTabs/WirelessTab";
+
+import i18n from "@Renderer/i18n";
 
 // Icons
 import {
@@ -30,7 +32,8 @@ import {
   IconNote,
   IconOneShot,
   IconThunder,
-} from "../../component/Icon";
+  IconWireless,
+} from "@Renderer/component/Icon";
 
 const Styles = Styled.div`
 .standardView {
@@ -335,6 +338,11 @@ export default class StandardView extends React.Component {
                   )}
                   <CustomTab eventKey="tabMedia" text={i18n.editor.standardView.mediaAndLED.title} icon={<IconNote />} />
                   <CustomTab eventKey="tabMouse" text={i18n.editor.standardView.mouse.title} icon={<IconMouse />} />
+                  <CustomTab
+                    eventKey="tabWireless"
+                    text={i18n.app.menu.wireless}
+                    icon={<IconWireless width={24} height={24} strokeWidth={1.2} />}
+                  />
                 </Nav>
               </div>
               <div className="colContentTabs">
@@ -373,7 +381,7 @@ export default class StandardView extends React.Component {
                         isStandardView={isStandardView}
                       />
                     </Tab.Pane>
-                    {actTab != "super" ? (
+                    {actTab !== "super" ? (
                       <Tab.Pane eventKey="tabSuperKeys">
                         <SuperkeysTab
                           actions={actions}
@@ -387,7 +395,7 @@ export default class StandardView extends React.Component {
                     ) : (
                       ""
                     )}
-                    {actTab != "super" ? (
+                    {actTab !== "super" ? (
                       <Tab.Pane eventKey="tabOneShot">
                         <OneShotTab keyCode={keyCode} onKeySelect={onKeySelect} isStandardView={isStandardView} />
                       </Tab.Pane>
@@ -400,13 +408,16 @@ export default class StandardView extends React.Component {
                     <Tab.Pane eventKey="tabMouse">
                       <MouseTab onAddSpecial={this.onAddSpecial} keyCode={keyCode} isStandardView={isStandardView} />
                     </Tab.Pane>
+                    <Tab.Pane eventKey="tabWireless">
+                      <WirelessTab onAddSpecial={this.onAddSpecial} keyCode={keyCode} isStandardView={isStandardView} />
+                    </Tab.Pane>
                   </Tab.Content>
                 </div>
                 <div className="contentFooter">
                   <div className="d-flex justify-content-end">
                     <RegularButton
                       onClick={() => closeStandardView(this.state.code)}
-                      styles={"outline transp-bg"}
+                      styles="outline transp-bg"
                       size="sm"
                       buttonText={i18n.app.cancelPending.button}
                     />
