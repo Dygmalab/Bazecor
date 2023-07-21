@@ -14,7 +14,7 @@ const packagerConfig: ForgePackagerOptions = {
   icon: "./build/logo.png",
   name: "Bazecor",
   extraResource: ["NEWS.md"],
-  appCopyright: "Copyright © 2018, 2023 Keyboardio Inc.; Copyright © 2018, 2023 DygmaLab SE; distributed under the GPLv3",
+  appCopyright: "Copyright © 2018, 2023 DygmaLab SL; distributed under the GPLv3",
 };
 
 if (process.env.NODE_ENV !== "development") {

@@ -25,10 +25,10 @@ app.on("ready", async () => {
   addUSBListeners();
   setBackup();
   setTheme();
-  // we do not want a menu on top of the window
-  Menu.setApplicationMenu(null);
   // await setDevTools(); devtools do not work with latest electron
   createWindow();
+  // we do not want a menu on top of the window
+  Menu.setApplicationMenu(null);
 });
 
 // Quit when all windows are closed, except on macOS. There, it's common
