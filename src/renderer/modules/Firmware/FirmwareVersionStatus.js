@@ -138,14 +138,7 @@ h6 {
   }
 }
 `;
-const FirmwareVersionStatus = ({
-  currentlyVersionRunning,
-  latestVersionAvailable,
-  isUpdated,
-  firmwareList,
-  selectedFirmware,
-  send,
-}) => {
+const FirmwareVersionStatus = ({ currentlyVersionRunning, isUpdated, firmwareList, selectedFirmware, send }) => {
   const [modalFirmwareDetails, setModalFirmwareDetails] = useState(false);
 
   return (

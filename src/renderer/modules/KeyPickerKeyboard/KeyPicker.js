@@ -90,6 +90,7 @@ import DN from "./DN.json";
 import NW from "./NW.json";
 import IC from "./IC.json";
 import JP from "./JP.json";
+import KR from "./KR.json";
 import SWGR from "./SWGR.json";
 // import SelectSuperKeys from "../../component/Select/SelectSuperKey";
 
@@ -340,12 +341,13 @@ class KeyPicker extends Component {
       norwegian: NW,
       icelandic: IC,
       japanese: JP,
+      korean: KR,
       swissGerman: SWGR,
     };
-    const lansi = { english: ENa };
+    const lansi = { english: ENa, korean: KR };
     let Lang = ENa;
 
-    if (selectedlanguage == "english") {
+    if (selectedlanguage == "english" || selectedlanguage == "korean") {
       if (kbtype == "ansi") {
         if (lansi[selectedlanguage] != undefined) {
           Lang = lansi[selectedlanguage];

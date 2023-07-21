@@ -329,9 +329,9 @@
     "iconname": "",
     "content": {
       "type": "1U",
-      "first": "°",
-      "second": "¨",
-      "third": "°",
+      "first": "`",
+      "second": "~",
+      "third": "",
       "fourth": ""
     }
   },
@@ -362,7 +362,7 @@
     "content": {
       "type": "1U",
       "first": "2",
-      "second": "\"",
+      "second": "@",
       "third": "",
       "fourth": ""
     }
@@ -411,7 +411,7 @@
       "type": "1U",
       "first": "5",
       "second": "%",
-      "third": "€",
+      "third": "",
       "fourth": ""
     }
   },
@@ -426,7 +426,7 @@
     "content": {
       "type": "1U",
       "first": "6",
-      "second": "&",
+      "second": "^",
       "third": "",
       "fourth": ""
     }
@@ -442,8 +442,8 @@
     "content": {
       "type": "1U",
       "first": "7",
-      "second": "/",
-      "third": "{",
+      "second": "&",
+      "third": "",
       "fourth": ""
     }
   },
@@ -458,8 +458,8 @@
     "content": {
       "type": "1U",
       "first": "8",
-      "second": "(",
-      "third": "[",
+      "second": "*",
+      "third": "",
       "fourth": ""
     }
   },
@@ -474,8 +474,8 @@
     "content": {
       "type": "1U",
       "first": "9",
-      "second": ")",
-      "third": "]",
+      "second": "(",
+      "third": "",
       "fourth": ""
     }
   },
@@ -490,8 +490,8 @@
     "content": {
       "type": "1U",
       "first": "0",
-      "second": "=",
-      "third": "}",
+      "second": ")",
+      "third": "",
       "fourth": ""
     }
   },
@@ -499,14 +499,14 @@
     "id": 45,
     "x": 539,
     "y": 38,
-    "centered": true,
+    "centered": false,
     "icon": false,
     "idArray": "",
     "iconname": "",
     "content": {
       "type": "1U",
-      "first": "Ö",
-      "second": "\\",
+      "first": "-",
+      "second": "_",
       "third": "",
       "fourth": ""
     }
@@ -521,8 +521,8 @@
     "iconname": "",
     "content": {
       "type": "1U",
-      "first": "-",
-      "second": "_",
+      "first": "=",
+      "second": "+",
       "third": "",
       "fourth": ""
     }
@@ -681,14 +681,14 @@
     "id": 20,
     "x": 62,
     "y": 73,
-    "centered": true,
+    "centered": false,
     "icon": false,
     "idArray": "",
     "iconname": "",
     "content": {
       "type": "1U",
       "first": "Q",
-      "second": "@",
+      "second": "ㅂ",
       "third": "",
       "fourth": ""
     }
@@ -697,14 +697,14 @@
     "id": 26,
     "x": 111,
     "y": 73,
-    "centered": true,
+    "centered": false,
     "icon": false,
     "idArray": "",
     "iconname": "",
     "content": {
       "type": "1U",
       "first": "W",
-      "second": "",
+      "second": "ㅈ",
       "third": "",
       "fourth": ""
     }
@@ -713,14 +713,14 @@
     "id": 8,
     "x": 160,
     "y": 73,
-    "centered": true,
+    "centered": false,
     "icon": false,
     "idArray": "",
     "iconname": "",
     "content": {
       "type": "1U",
       "first": "E",
-      "second": "€",
+      "second": "ㄷ",
       "third": "",
       "fourth": ""
     }
@@ -729,14 +729,14 @@
     "id": 21,
     "x": 209,
     "y": 73,
-    "centered": true,
+    "centered": false,
     "icon": false,
     "idArray": "",
     "iconname": "",
     "content": {
       "type": "1U",
       "first": "R",
-      "second": "",
+      "second": "ㄱ",
       "third": "",
       "fourth": ""
     }
@@ -745,14 +745,14 @@
     "id": 23,
     "x": 258,
     "y": 73,
-    "centered": true,
+    "centered": false,
     "icon": false,
     "idArray": "",
     "iconname": "",
     "content": {
       "type": "1U",
       "first": "T",
-      "second": "",
+      "second": "ㅅ",
       "third": "",
       "fourth": ""
     }
@@ -761,14 +761,14 @@
     "id": 28,
     "x": 307,
     "y": 73,
-    "centered": true,
+    "centered": false,
     "icon": false,
     "idArray": "",
     "iconname": "",
     "content": {
       "type": "1U",
       "first": "Y",
-      "second": "",
+      "second": "ㅛ",
       "third": "",
       "fourth": ""
     }
@@ -777,14 +777,14 @@
     "id": 24,
     "x": 356,
     "y": 73,
-    "centered": true,
+    "centered": false,
     "icon": false,
     "idArray": "",
     "iconname": "",
     "content": {
       "type": "1U",
       "first": "U",
-      "second": "",
+      "second": "ㅕ",
       "third": "",
       "fourth": ""
     }
@@ -793,14 +793,14 @@
     "id": 12,
     "x": 405,
     "y": 73,
-    "centered": true,
+    "centered": false,
     "icon": false,
     "idArray": "",
     "iconname": "",
     "content": {
       "type": "1U",
       "first": "I",
-      "second": "",
+      "second": "ㅑ",
       "third": "",
       "fourth": ""
     }
@@ -809,14 +809,14 @@
     "id": 18,
     "x": 454,
     "y": 73,
-    "centered": true,
+    "centered": false,
     "icon": false,
     "idArray": "",
     "iconname": "",
     "content": {
       "type": "1U",
       "first": "O",
-      "second": "",
+      "second": "ㅐ",
       "third": "",
       "fourth": ""
     }
@@ -825,14 +825,14 @@
     "id": 19,
     "x": 503,
     "y": 73,
-    "centered": true,
+    "centered": false,
     "icon": false,
     "idArray": "",
     "iconname": "",
     "content": {
       "type": "1U",
       "first": "P",
-      "second": "",
+      "second": "ㅔ",
       "third": "",
       "fourth": ""
     }
@@ -841,14 +841,14 @@
     "id": 47,
     "x": 552,
     "y": 73,
-    "centered": true,
+    "centered": false,
     "icon": false,
     "idArray": "",
     "iconname": "",
     "content": {
       "type": "1U",
-      "first": "Ð",
-      "second": "",
+      "first": "[",
+      "second": "{",
       "third": "",
       "fourth": ""
     }
@@ -863,27 +863,24 @@
     "iconname": "",
     "content": {
       "type": "1U",
-      "first": "'",
-      "second": "?",
-      "third": "~",
+      "first": "]",
+      "second": "}",
+      "third": "",
       "fourth": ""
     }
   },
   {
-    "id": 40,
-    "x": 653,
+    "id": 49,
+    "x": 650,
     "y": 73,
-    "centered": true,
-    "icon": true,
-    "iconsize": 20,
-    "iconx": 660,
-    "icony": 73,
+    "centered": false,
+    "icon": false,
     "idArray": "",
-    "iconname": "Enter",
+    "iconname": "",
     "content": {
-      "type": "enter",
-      "first": "",
-      "second": "",
+      "type": "1U",
+      "first": "\\",
+      "second": "|",
       "third": "",
       "fourth": ""
     }
@@ -959,14 +956,14 @@
     "id": 4,
     "x": 70,
     "y": 108,
-    "centered": true,
+    "centered": false,
     "icon": false,
     "idArray": "",
     "iconname": "",
     "content": {
       "type": "1U",
       "first": "A",
-      "second": "",
+      "second": "ㅁ",
       "third": "",
       "fourth": ""
     }
@@ -975,14 +972,14 @@
     "id": 22,
     "x": 119,
     "y": 108,
-    "centered": true,
+    "centered": false,
     "icon": false,
     "idArray": "",
     "iconname": "",
     "content": {
       "type": "1U",
       "first": "S",
-      "second": "",
+      "second": "ㄴ",
       "third": "",
       "fourth": ""
     }
@@ -991,14 +988,14 @@
     "id": 7,
     "x": 168,
     "y": 108,
-    "centered": true,
+    "centered": false,
     "icon": false,
     "idArray": "",
     "iconname": "",
     "content": {
       "type": "1U",
       "first": "D",
-      "second": "",
+      "second": "ㅇ",
       "third": "",
       "fourth": ""
     }
@@ -1007,14 +1004,14 @@
     "id": 9,
     "x": 218,
     "y": 108,
-    "centered": true,
+    "centered": false,
     "icon": false,
     "idArray": "",
     "iconname": "",
     "content": {
       "type": "1U",
       "first": "F",
-      "second": "",
+      "second": "ㄹ",
       "third": "",
       "fourth": ""
     }
@@ -1023,14 +1020,14 @@
     "id": 10,
     "x": 267,
     "y": 108,
-    "centered": true,
+    "centered": false,
     "icon": false,
     "idArray": "",
     "iconname": "",
     "content": {
       "type": "1U",
       "first": "G",
-      "second": "",
+      "second": "ㅎ",
       "third": "",
       "fourth": ""
     }
@@ -1039,30 +1036,30 @@
     "id": 11,
     "x": 316,
     "y": 108,
-    "centered": true,
+    "centered": false,
     "icon": false,
     "idArray": "",
     "iconname": "",
     "content": {
       "type": "1U",
       "first": "H",
-      "second": "",
+      "second": "ㅗ",
       "third": "",
       "fourth": ""
     }
   },
   {
     "id": 13,
-    "x": 365,
+    "x": 366,
     "y": 108,
-    "centered": true,
+    "centered": false,
     "icon": false,
     "idArray": "",
     "iconname": "",
     "content": {
       "type": "1U",
       "first": "J",
-      "second": "",
+      "second": "ㅓ",
       "third": "",
       "fourth": ""
     }
@@ -1071,14 +1068,14 @@
     "id": 14,
     "x": 414,
     "y": 108,
-    "centered": true,
+    "centered": false,
     "icon": false,
     "idArray": "",
     "iconname": "",
     "content": {
       "type": "1U",
       "first": "K",
-      "second": "",
+      "second": "ㅏ",
       "third": "",
       "fourth": ""
     }
@@ -1087,14 +1084,14 @@
     "id": 15,
     "x": 464,
     "y": 108,
-    "centered": true,
+    "centered": false,
     "icon": false,
     "idArray": "",
     "iconname": "",
     "content": {
       "type": "1U",
       "first": "L",
-      "second": "",
+      "second": "ㅣ",
       "third": "",
       "fourth": ""
     }
@@ -1103,14 +1100,14 @@
     "id": 51,
     "x": 514,
     "y": 108,
-    "centered": true,
+    "centered": false,
     "icon": false,
     "idArray": "",
     "iconname": "",
     "content": {
       "type": "1U",
-      "first": "Æ",
-      "second": "",
+      "first": ";",
+      "second": ":",
       "third": "",
       "fourth": ""
     }
@@ -1125,25 +1122,28 @@
     "iconname": "",
     "content": {
       "type": "1U",
-      "first": "´",
-      "second": "'",
-      "third": "^",
+      "first": "'",
+      "second": "\"",
+      "third": "",
       "fourth": ""
     }
   },
   {
-    "id": 49,
+    "id": 40,
     "x": 612,
     "y": 108,
-    "centered": false,
-    "icon": false,
+    "centered": true,
+    "icon": true,
+    "iconsize": 20,
+    "iconx": 640,
+    "icony": 106,
     "idArray": "",
-    "iconname": "",
+    "iconname": "Enter",
     "content": {
-      "type": "1U",
-      "first": "+",
-      "second": "*",
-      "third": "`",
+      "type": "1U6",
+      "first": "",
+      "second": "",
+      "third": "",
       "fourth": ""
     }
   },
@@ -1202,12 +1202,12 @@
     "centered": true,
     "icon": true,
     "iconsize": 18,
-    "iconx": 12,
+    "iconx": 42,
     "icony": 142,
     "idArray": "",
     "iconname": "Shift",
     "content": {
-      "type": "1U",
+      "type": "1U8",
       "first": "",
       "second": "",
       "third": "",
@@ -1216,8 +1216,8 @@
     "mod": true
   },
   {
-    "id": 100,
-    "x": 49,
+    "id": 29,
+    "x": 103,
     "y": 143,
     "centered": false,
     "icon": false,
@@ -1225,127 +1225,111 @@
     "iconname": "",
     "content": {
       "type": "1U",
-      "first": "<",
-      "second": ">",
-      "third": "|",
-      "fourth": ""
-    }
-  },
-  {
-    "id": 29,
-    "x": 98,
-    "y": 143,
-    "centered": true,
-    "icon": false,
-    "idArray": "",
-    "iconname": "",
-    "content": {
-      "type": "1U",
       "first": "Z",
-      "second": "",
+      "second": "ㅋ",
       "third": "",
       "fourth": ""
     }
   },
   {
     "id": 27,
-    "x": 147,
+    "x": 152,
     "y": 143,
-    "centered": true,
+    "centered": false,
     "icon": false,
     "idArray": "",
     "iconname": "",
     "content": {
       "type": "1U",
       "first": "X",
-      "second": "",
+      "second": "ㅌ",
       "third": "",
       "fourth": ""
     }
   },
   {
     "id": 6,
-    "x": 196,
+    "x": 201,
     "y": 143,
-    "centered": true,
+    "centered": false,
     "icon": false,
     "idArray": "",
     "iconname": "",
     "content": {
       "type": "1U",
       "first": "C",
-      "second": "",
+      "second": "ㅊ",
       "third": "",
       "fourth": ""
     }
   },
   {
     "id": 25,
-    "x": 246,
+    "x": 250,
     "y": 143,
-    "centered": true,
+    "centered": false,
     "icon": false,
     "idArray": "",
     "iconname": "",
     "content": {
       "type": "1U",
       "first": "V",
-      "second": "",
+      "second": "ㅍ",
       "third": "",
       "fourth": ""
     }
   },
   {
     "id": 5,
-    "x": 296,
+    "x": 300,
     "y": 143,
-    "centered": true,
+    "centered": false,
     "icon": false,
     "idArray": "",
     "iconname": "",
     "content": {
       "type": "1U",
       "first": "B",
-      "second": "",
+      "second": "ㅠ",
       "third": "",
       "fourth": ""
     }
   },
   {
     "id": 17,
-    "x": 345,
+    "x": 349,
     "y": 143,
-    "centered": true,
+    "centered": false,
     "icon": false,
     "idArray": "",
     "iconname": "",
     "content": {
       "type": "1U",
       "first": "N",
-      "second": "",
+      "second": "ㅜ",
       "third": "",
       "fourth": ""
     }
   },
   {
     "id": 16,
-    "x": 394,
+    "x": 397,
     "y": 143,
-    "centered": true,
+    "centered": false,
     "icon": false,
     "idArray": "",
     "iconname": "",
     "content": {
       "type": "1U",
       "first": "M",
-      "second": "μ",
+      "second": "ㅡ",
       "third": "",
       "fourth": ""
     }
   },
   {
     "id": 54,
-    "x": 443,
+    "x": 446,
     "y": 143,
     "centered": false,
     "icon": false,
@@ -1354,14 +1338,14 @@
     "content": {
       "type": "1U",
       "first": ",",
-      "second": ";",
+      "second": "<",
       "third": "",
       "fourth": ""
     }
   },
   {
     "id": 55,
-    "x": 492,
+    "x": 495,
     "y": 143,
     "centered": false,
     "icon": false,
@@ -1370,35 +1354,35 @@
     "content": {
       "type": "1U",
       "first": ".",
-      "second": ":",
+      "second": ">",
       "third": "",
       "fourth": ""
     }
   },
   {
     "id": 56,
-    "x": 542,
+    "x": 544,
     "y": 143,
-    "centered": true,
+    "centered": false,
     "icon": false,
     "idArray": "",
     "iconname": "",
     "content": {
       "type": "1U",
-      "first": "Þ",
-      "second": "",
+      "first": "/",
+      "second": "?",
       "third": "",
       "fourth": ""
     }
   },
   {
     "id": 229,
-    "x": 592,
+    "x": 593,
     "y": 143,
     "centered": true,
     "icon": true,
     "iconsize": 18,
-    "iconx": 630,
+    "iconx": 632,
     "icony": 142,
     "idArray": "",
     "iconname": "Shift",
@@ -1485,7 +1469,7 @@
     "iconname": "",
     "content": {
       "type": "longBlock",
-      "first": "Enter",
+      "first": "Intro",
       "second": "",
       "third": "",
       "fourth": ""
@@ -1550,7 +1534,7 @@
     "icon": true,
     "iconsize": 20,
     "iconx": 310,
-    "icony": 173,
+    "icony": 177,
     "idArray": "",
     "iconname": "Space",
     "content": {
@@ -1571,7 +1555,7 @@
     "iconname": "",
     "content": {
       "type": "2U2",
-      "first": "Alt Gr",
+      "first": "Alt",
       "second": "",
       "third": "",
       "fourth": ""
@@ -1580,7 +1564,7 @@
   },
   {
     "id": 231,
-    "x": 521,
+    "x": 522,
     "y": 178,
     "centered": true,
     "icon": true,
@@ -1597,13 +1581,13 @@
   },
   {
     "id": 101,
-    "x": 580,
+    "x": 581,
     "y": 178,
     "centered": true,
     "icon": true,
     "iconsize": 19,
-    "iconx": 584,
-    "icony": 176,
+    "iconx": 587,
+    "icony": 177,
     "idArray": "",
     "iconname": "App",
     "content": {
@@ -1616,7 +1600,7 @@
   },
   {
     "id": 228,
-    "x": 639,
+    "x": 640,
     "y": 178,
     "centered": true,
     "icon": false,
@@ -1722,6 +1706,22 @@
     "content": {
       "type": "specialBlockDropdown",
       "first": "F13+",
+      "second": "",
+      "third": "",
+      "fourth": ""
+    }
+  },
+  {
+    "id": 136,
+    "x": 794,
+    "y": 0,
+    "centered": true,
+    "icon": false,
+    "idArray": [144, 145],
+    "iconname": "",
+    "content": {
+      "type": "genericBlockDropdown",
+      "first": "한글/한자",
       "second": "",
       "third": "",
       "fourth": ""

@@ -483,17 +483,18 @@ class LayoutEditor extends React.Component {
   keymapDB = new KeymapDB();
 
   onLayerNameChange(newName) {
-    const layerNames = this.state.layerNames.slice();
-    layerNames[this.state.currentLayer] = {
-      id: this.state.currentLayer,
+    const { layerNames, currentLayer, neuronID } = this.state;
+    const slicedLayerNames = layerNames.slice();
+    slicedLayerNames[currentLayer] = {
+      id: currentLayer,
       name: newName,
     };
     this.setState({
-      layerNames,
+      layerNames: slicedLayerNames,
     });
     const neurons = store.get("neurons");
-    console.log(`changed layer ${this.state.currentLayer} name to: ${newName}`, layerNames);
-    neurons[this.state.neuronID].layers = layerNames;
+    console.log(`changed layer ${currentLayer} name to: ${newName}`, slicedLayerNames);
+    neurons[neuronID].layers = slicedLayerNames;
     store.set("neurons", neurons);
   }
 
@@ -504,29 +505,29 @@ class LayoutEditor extends React.Component {
     if (neurons === undefined) {
       neurons = [];
     }
-    if (neurons.some(n => n.id == chipID)) {
-      finalNeuron = neurons.filter(n => n.id == chipID)[0];
+    if (neurons.some(n => n.id === chipID)) {
+      finalNeuron = neurons.find(n => n.id === chipID);
     }
-    if (!neurons.some(n => n.id == chipID) && neurons.length == 0) {
+    if (!neurons.some(n => n.id === chipID) && neurons.length === 0) {
       const neuron = {};
       neuron.id = chipID;
       neuron.name = "";
       neuron.layers =
-        store.get("layerNames") != undefined
+        store.get("layerNames") !== undefined
           ? store.get("layerNames").map((name, id) => ({
               id,
               name,
             }))
           : this.defaultLayerNames;
       neuron.macros =
-        store.get("macros") != undefined
+        store.get("macros") !== undefined
           ? store.get("macros").map(macro => ({
               id: macro.id,
               name: macro.name,
             }))
           : [];
       neuron.superkeys =
-        store.get("superkeys") != undefined
+        store.get("superkeys") !== undefined
           ? store.get("superkeys").map(sk => ({
               id: sk.id,
               name: sk.name,
@@ -537,7 +538,8 @@ class LayoutEditor extends React.Component {
       store.set("neurons", neurons);
       finalNeuron = neuron;
     }
-    if (!neurons.some(n => n.id == chipID) && neurons.length > 0) {
+    const existingDefy = neurons.some(n => n.id.length < 32);
+    if (!neurons.some(n => n.id === chipID) && neurons.length > 0) {
       const neuron = {};
       neuron.id = chipID;
       neuron.name = "";
@@ -550,10 +552,16 @@ class LayoutEditor extends React.Component {
       neuronCopy.layers = neurons[0].layers;
       neuronCopy.macros = neurons[0].macros;
       neuronCopy.superkeys = neurons[0].superkeys;
+      const focus = new Focus();
       console.log("Additional neuron", neuron);
-      const result = await window.confirm(
-        "A new Neuron was detected and new settings need to be created. The names of the layers, macros and Superkeys are empty. If you want to copy the names of your default Neuron (first in the list) click ‘Ok’. If you prefer to reset all names click ‘Cancel’.",
-      );
+      let result;
+      if (focus.device.info.product === "Defy" && !existingDefy) {
+        result = false;
+      } else {
+        result = await window.confirm(
+          "A new Neuron was detected and new settings need to be created. The names of the layers, macros and Superkeys are empty. If you want to copy the names of your default Neuron (first in the list) click ‘Ok’. If you prefer to reset all names click ‘Cancel’.",
+        );
+      }
       // var result = await userAction;
       console.log(result, neuron, neuronCopy);
       if (result === false) {
@@ -570,7 +578,7 @@ class LayoutEditor extends React.Component {
     console.log("Final neuron", finalNeuron);
     this.setState({
       neurons,
-      neuronID: neurons.findIndex(n => n.id == chipID),
+      neuronID: neurons.findIndex(n => n.id === chipID),
       layerNames: finalNeuron.layers,
       storedMacros: finalNeuron.macros,
       storedSuper: finalNeuron.superkeys,
