@@ -273,6 +273,11 @@ const SelectKeyboard: React.FC<SelectKeyboardProps> = (props): JSX.Element => {
       console.log("Non serial keyboards", list);
       setIsLoading(false);
       setDevices(list);
+      if(connected){
+        const connectedDev = list.findIndex(dev => focus.serialNumber?.includes(dev.serialNumber));
+        console.log("check connected", connectedDev);
+        setSelectedPortIndex(connectedDev);
+      }
       return list;
     } catch (err) {
       console.log("Error while finding keyboards", err);
@@ -530,6 +535,13 @@ const SelectKeyboard: React.FC<SelectKeyboardProps> = (props): JSX.Element => {
     await onDisconnect();
   };
 
+  const handleOnDisconnectConnect = async () => {
+    await onDisconnect();
+    const delay = ms => new Promise(res => setTimeout(res, ms));
+    await delay(500);
+    await onKeyboardConnect();
+  };
+
   const getDeviceItems = () => {
     const neurons = store.get("neurons");
     const result = devices.map((device, index) => {
@@ -567,6 +579,7 @@ const SelectKeyboard: React.FC<SelectKeyboardProps> = (props): JSX.Element => {
             onKeyboardConnect={onKeyboardConnect}
             connected={connected}
             onDisconnect={handleOnDisconnect}
+            onDisconnectConnect={handleOnDisconnectConnect}
             deviceItems={deviceItems != null ? deviceItems : []}
             selectPort={selectPort}
             selectedPortIndex={selectedPortIndex}

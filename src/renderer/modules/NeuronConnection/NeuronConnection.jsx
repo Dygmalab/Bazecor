@@ -113,6 +113,7 @@ function NeuronConnection({
   onKeyboardConnect,
   connected,
   onDisconnect,
+  onDisconnectConnect,
   selectPort,
   selectedPortIndex,
   deviceItems,
@@ -185,11 +186,21 @@ function NeuronConnection({
                 style={`${connected || deviceItems.length > 0 ? "outline transp-bg" : "primary"}`}
                 disabled={scanFoundDevices}
               />
-              {connected ? (
+              {connected && connectedDevice === selectedPortIndex ? (
                 <RegularButton
                   buttonText={i18n.keyboardSelect.disconnect}
                   style="primary"
                   onClick={onDisconnect}
+                  disabled={false}
+                />
+              ) : (
+                ""
+              )}
+              {connected && connectedDevice !== selectedPortIndex ? (
+                <RegularButton
+                  buttonText={i18n.keyboardSelect.connect}
+                  style="primary"
+                  onClick={onDisconnectConnect}
                   disabled={false}
                 />
               ) : (
