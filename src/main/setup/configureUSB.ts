@@ -26,31 +26,29 @@ const webusb = new WebUSB({
   allowAllDevices: true,
 });
 
-type USBEvent = Event & { device: unknown };
-
-export const onUSBDisconnect = async (event: USBEvent) => {
+export const onUSBDisconnect = async (event: USBConnectionEvent) => {
   const { device } = event;
   if (device) {
-    const vendorID = (device as any).vendorId;
-    const productID = (device as any).productId;
-    if (vendorID in dygmaVendorIDs) {
+    const vendorID = device.vendorId;
+    const productID = device.productId;
+    if (dygmaVendorIDs.includes(vendorID)) {
       console.log("Dygma Device USB Disconnection detected");
       console.log("VendorID", vendorID);
       console.log("ProductID", productID);
-      sendToRenderer("usb-disconnected", vendorID, productID);
+      sendToRenderer("usb-disconnected", device);
       const focus = new Focus();
-      if (focus.device.usb.vendorId === vendorID && focus.device.usb.productId === productID) {
+      if (focus.device?.usb?.productId === productID) {
         await focus.close();
       }
     }
   }
 };
-export const onUSBConnect = (event: USBEvent) => {
+export const onUSBConnect = (event: USBConnectionEvent) => {
   const { device } = event;
   if (device) {
-    const vendorID = (device as any).vendorId;
-    const productID = (device as any).productId;
-    if (vendorID in dygmaVendorIDs) {
+    const vendorID = device.vendorId;
+    const productID = device.productId;
+    if (dygmaVendorIDs.includes(vendorID)) {
       console.log("Dygma Device USB Connection detected");
       console.log("VendorID", vendorID);
       console.log("ProductID", productID);
@@ -69,6 +67,11 @@ export const removeUSBListeners = () => {
   webusb.removeEventListener("disconnect", onUSBDisconnect);
 };
 
+export const getDevices = () => {
+  const devices = getDeviceList();
+  return devices;
+};
+
 export const configureUSB = async () => {
   // We're relying on webusb to send us notifications about device
   // connect/disconnect events, but it only sends disconnect events for devices
@@ -76,8 +79,9 @@ export const configureUSB = async () => {
   // them first to notice disconnects. We do that here.
   await webusb.getDevices();
 
-  ipcMain.handle("usb-devices", event => {
+  ipcMain.handle("usb-devices", () => {
     const devices = getDeviceList();
     return devices;
   });
+
 };

@@ -107,27 +107,24 @@ class App extends React.Component {
         this.forceDarkMode(message);
       }
     });
-    ipcRenderer.on("usb-disconnected", this.handleUSBDisconnection);
+    ipcRenderer.on("usb-disconnected", (event, response) => this.handleUSBDisconnection(response));
   }
 
   async handleUSBDisconnection(device) {
-    const { router } = this.props;
-    console.log("Within handle USB Disconnection");
-    if (!focus.device) return;
-    if (this.flashing) return;
+    const { connected } = this.state;
+    console.log("Handling device disconnect");
+    if (this.flashing) {
+      console.log("no action due to flashing active");
+      return;
+    }
 
-    if (
-      focus.device.usb.vendorId !== device.deviceDescriptor.idVendor ||
-      focus.device.usb.productId !== device.deviceDescriptor.idProduct
-    ) {
+    if (focus.device?.usb?.productId !== device.device.deviceDescriptor?.idProduct) {
       return;
     }
 
     // Must await this to stop re-render of components reliant on `focus.device`
     // However, it only renders a blank screen. New route is rendered below.
-    router.navigate("./");
-
-    if (!focus._port.isOpen) {
+    if (connected) {
       toast.warning(
         <ToastMessage
           icon={<IconNoSignal />}
@@ -137,14 +134,7 @@ class App extends React.Component {
         { icon: "" },
       );
     }
-    await focus.close();
-    this.setState({
-      connected: false,
-      device: null,
-      pages: {},
-    });
-    // Second call to `navigate` will actually render the proper route
-    router.navigate("/keyboard-select");
+    this.onKeyboardDisconnect();
   }
 
   startContext = () => {

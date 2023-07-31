@@ -69,6 +69,30 @@ jobs:
       - run: npm install -g yarn
       - if: runner.os == 'Linux'
         run: sudo apt update && sudo apt install libudev-dev
+      - if: runner.os == 'Windows'
+        name: Set up Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: "temurin"
+          java-version: "17"
+      - if: runner.os == 'Windows'
+        name: Get JSign
+        shell: bash
+        run: |
+          JAR_URL="https://github.com/ebourg/jsign/releases/download/5.0/jsign-5.0.jar"
+          curl -L -o jsign.jar $JAR_URL
+          mkdir windows_signing
+          cp jsign.jar windows_signing/jsign.jar
+      - if: runner.os == 'Windows'
+        name: Setup GCloud Auth
+        uses: "google-github-actions/auth@v1"
+        with:
+          credentials_json: "${{ secrets.GCP_SIGNER_SERVICE_ACCOUNT }}"
+      - if: runner.os == 'Windows'
+        name: "Set up GCloud SDK"
+        uses: "google-github-actions/setup-gcloud@v1"
+        with:
+          version: ">= 416.0.0"
       - name: Cache node_modules
         id: cache-node-modules
         uses: actions/cache@v3
@@ -113,6 +137,30 @@ jobs:
       - if: runner.os != 'macOS'
         name: Build for Linux/Windows
         run: yarn run make
+      - if: runner.os != 'macOS'
+        name: Build for Linux/Windows
+        run: yarn run make
+      - if: runner.os == 'Windows'
+        shell: bash
+        name: Get executable into signing folder
+        # we replace empty spaces in the filename with -
+        run: |
+          find out/make -type f -name '*.exe' -exec bash -c 'mv "$1" "${1// /-}"' _ {} \;
+          find out/make -type f -name '*.exe' -exec cp -v {} windows_signing \;
+      - if: runner.os == 'Windows'
+        name: Sign executable
+        shell: bash
+        run: |
+          cd windows_signing
+          echo "${{ secrets.DIGICERT_CERT_BASE64}}" | base64 --decode > dygma_cert.pem
+          ls -R .
+          EXE_FILE=$(find .  -type f -name '*.exe' -exec basename {} \; 2>/dev/null | head -n 1)
+          echo "Found .exe file:"
+          echo $EXE_FILE
+          java -jar jsign.jar --storetype GOOGLECLOUD --storepass "$(gcloud auth print-access-token)" \
+            --keystore "${{ secrets.GCP_KEYSTORE }}" --alias "${{ secrets.GCP_WINDOWS_SIGNING_KEY }}" \
+            --certfile "dygma_cert.pem" --tsmode RFC3161 --tsaurl http://timestamp.digicert.com $EXE_FILE
+          cd ..
       - name: Upload build
         uses: actions/upload-artifact@v3
         with:
@@ -120,7 +168,7 @@ jobs:
           path: |
             out/make/**/*.dmg
             out/make/**/*.AppImage
-            out/make/**/*.exe
+            windows_signing/**/*.exe
 
       - name: Show build items
         run: |

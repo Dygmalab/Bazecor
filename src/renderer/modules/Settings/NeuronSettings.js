@@ -40,7 +40,11 @@ export default class NeuronSettings extends Component {
             />
             <Row className="mb-4 mt-4">
               <Col>
-                <NeuronData neurons={neurons} selectedNeuron={selectedNeuron} />
+                {Array.isArray(neurons) && neurons.length > 0 ? (
+                  <NeuronData neurons={neurons} selectedNeuron={selectedNeuron} />
+                ) : (
+                  ""
+                )}
               </Col>
             </Row>
           </Form.Group>

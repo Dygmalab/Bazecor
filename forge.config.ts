@@ -1,4 +1,4 @@
-import type { ForgeConfig } from "@electron-forge/shared-types";
+import type { ForgeConfig, ForgePackagerOptions } from "@electron-forge/shared-types";
 import { MakerSquirrel } from "@electron-forge/maker-squirrel";
 import { WebpackPlugin } from "@electron-forge/plugin-webpack";
 import fs from "fs";
@@ -8,27 +8,32 @@ import { spawnSync } from "child_process";
 import rendererConfig from "./webpack.renderer.config";
 import mainConfig from "./webpack.main.config";
 
+const packagerConfig: ForgePackagerOptions = {
+  appBundleId: "com.dygmalab.bazecor",
+  darwinDarkModeSupport: true,
+  icon: "./build/logo.png",
+  name: "Bazecor",
+  extraResource: ["NEWS.md"],
+  appCopyright: "Copyright © 2018, 2023 DygmaLab SL; distributed under the GPLv3",
+};
+
+if (process.env.NODE_ENV !== "development") {
+  packagerConfig.osxNotarize = {
+    tool: "notarytool",
+    appleId: process.env.APPLE_ID || "",
+    appleIdPassword: process.env.APPLE_ID_PASSWORD || "",
+    teamId: process.env.APPLE_TEAM_ID || "",
+  };
+  packagerConfig.osxSign = {
+    optionsForFile: () => ({
+      entitlements: "./build/entitlements.plist",
+      hardenedRuntime: true,
+    }),
+  };
+}
+
 const config: ForgeConfig = {
-  packagerConfig: {
-    appBundleId: "com.dygmalab.bazecor",
-    darwinDarkModeSupport: true,
-    icon: "./build/logo.png",
-    name: "Bazecor",
-    extraResource: ["NEWS.md"],
-    appCopyright: "Copyright © 2018, 2023 Keyboardio Inc.; Copyright © 2018, 2023 DygmaLab SE; distributed under the GPLv3",
-    osxNotarize: {
-      tool: "notarytool",
-      appleId: process.env.APPLE_ID || "",
-      appleIdPassword: process.env.APPLE_ID_PASSWORD || "",
-      teamId: process.env.APPLE_TEAM_ID || "",
-    },
-    osxSign: {
-      optionsForFile: () => ({
-        entitlements: "./build/entitlements.plist",
-        hardenedRuntime: true,
-      }),
-    },
-  },
+  packagerConfig,
   rebuildConfig: {},
   makers: [
     new MakerSquirrel({

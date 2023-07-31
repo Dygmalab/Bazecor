@@ -9,6 +9,7 @@ import { addUSBListeners, removeUSBListeners } from "./setup/configureUSB";
 electronUpdater();
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
+// eslint-disable-next-line global-require
 if (require("electron-squirrel-startup")) {
   app.quit();
 }
@@ -24,10 +25,10 @@ app.on("ready", async () => {
   addUSBListeners();
   setBackup();
   setTheme();
-  // we do not want a menu on top of the window
-  Menu.setApplicationMenu(null);
   // await setDevTools(); devtools do not work with latest electron
   createWindow();
+  // we do not want a menu on top of the window
+  Menu.setApplicationMenu(null);
 });
 
 // Quit when all windows are closed, except on macOS. There, it's common
@@ -49,7 +50,7 @@ app.on("activate", () => {
 });
 
 app.on("web-contents-created", (_, wc) => {
-  wc.on("before-input-event", (_, input) => {
+  wc.on("before-input-event", (__, input) => {
     const globalRecording = GlobalRecording.getInstance();
     if (!globalRecording.getRecording() && input.type === "keyDown" && input.control) {
       if (input.shift && input.code === "KeyI") {

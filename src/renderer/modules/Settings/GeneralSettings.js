@@ -15,6 +15,7 @@ import Col from "react-bootstrap/Col";
 import frenchF from "@Assets/flags/france.png";
 import germanF from "@Assets/flags/germany.png";
 import japaneseF from "@Assets/flags/japan.png";
+import koreanF from "@Assets/flags/korean.png";
 import spanishF from "@Assets/flags/spain.png";
 import englishUSUKF from "@Assets/flags/english.png";
 import danishF from "@Assets/flags/denmark.png";
@@ -64,7 +65,7 @@ export default class GeneralSettings extends Component {
   render() {
     const { selectDarkMode, darkMode, neurons, selectedNeuron, connected, defaultLayer, selectDefaultLayer } = this.props;
     const { selectedLanguage } = this.state;
-    let layersNames = neurons[selectedNeuron].layers;
+    let layersNames = neurons[selectedNeuron] ? neurons[selectedNeuron].layers : [];
     let flags = [
       englishUSUKF,
       spanishF,
@@ -76,7 +77,8 @@ export default class GeneralSettings extends Component {
       norwegianF,
       icelandicF,
       japaneseF,
-      swissF
+      koreanF,
+      swissF,
     ];
     let language = [
       "english",
@@ -89,12 +91,13 @@ export default class GeneralSettings extends Component {
       "norwegian",
       "icelandic",
       "japanese",
+      "korean",
       "swissGerman",
     ];
     language = language.map((item, index) => ({ text: item, value: item, icon: flags[index], index }));
 
     layersNames = layersNames.map((item, index) => ({
-      text: item.name != "" ? item.name : `Layer ${index + 1}`,
+      text: item.name !== "" ? item.name : `Layer ${index + 1}`,
       value: index,
       index,
     }));

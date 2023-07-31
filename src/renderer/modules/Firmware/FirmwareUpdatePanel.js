@@ -216,7 +216,6 @@ function FirmwareUpdatePanel(props) {
               {state.context.firmwareList && state.context.firmwareList.length > 0 ? (
                 <FirmwareVersionStatus
                   currentlyVersionRunning={state.context.device.version}
-                  latestVersionAvailable={state.context.firmwareList[state.context.selectedFirmware].version}
                   isUpdated={state.context.isUpdated}
                   firmwareList={state.context.firmwareList}
                   selectedFirmware={state.context.selectedFirmware}

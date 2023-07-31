@@ -129,10 +129,6 @@ const BatteryStatus = props => {
   }
 
   useEffect(() => {
-    getBatteryStatus();
-  }, []);
-
-  useEffect(() => {
     const { disable } = props;
     let intervalID = false;
     if (disable) {

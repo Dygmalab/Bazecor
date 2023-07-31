@@ -21,7 +21,7 @@ import i18n from "../../i18n";
 
 import Title from "../../component/Title";
 
-import videoDefyCablesDisconnect from "../../../../static/videos/connectCablesDefy.mp4";
+import videoDefyCablesDisconnect from "@Assets/videos/connectCablesDefy.mp4";
 
 const Style = Styled.div`
 .errorListWrapper {
