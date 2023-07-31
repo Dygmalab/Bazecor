@@ -97,7 +97,27 @@ export default class GeneralSettings extends Component {
       "swissGerman",
       "eurkey",
     ];
-    language = language.map((item, index) => ({ text: item, value: item, icon: flags[index], index }));
+    let languageNames = [
+      "English",
+      "Spanish",
+      "German",
+      "French",
+      "Swedish",
+      "Finnish",
+      "Danish",
+      "Norwegian",
+      "Icelandic",
+      "Japanese",
+      "Korean",
+      "Swiss (German)",
+      "EurKEY",
+    ];
+    language = language.map((item, index) => ({
+      text: languageNames[index],
+      value: item,
+      icon: flags[index],
+      index
+    }));
 
     layersNames = layersNames.map((item, index) => ({
       text: item.name !== "" ? item.name : `Layer ${index + 1}`,
