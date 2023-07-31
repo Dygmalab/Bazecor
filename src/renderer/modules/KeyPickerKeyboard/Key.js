@@ -10,7 +10,6 @@ const Style = Styled.g`
     // will-change: fill, fill-opacity;
     transition-property: fill, fill-opacity;
     transition: 100ms ease-in-out;
-    
   }
   .shapeKey {
     stroke: ${({ theme }) => theme.styles.keyPicker.keyStrokeColor}
@@ -91,6 +90,18 @@ const ksl = {
       c: { dx: 28, dy: 16, fs: 14 },
       d: { dx: 38, dy: 16, fs: 14 },
       letter: { dx: 47, dy: 16, ddx: 47, ddy: 16, fs: 13, fss: 13 },
+    },
+  },
+  "1US": {
+    outb: { x: keyCapRegularSize.width, y: keyCapRegularSize.height, dx: 0, dy: 0 },
+    out: { x: 42, y: 24, dx: 1, dy: 1 },
+    icon: { x: 12, y: -1, w: 30, h: 26 },
+    text: {
+      a: { dx: 8, dy: 26, fs: 12 },
+      b: { dx: 8, dy: 13, fs: 12 },
+      c: { dx: 24, dy: 26, fs: 12 },
+      d: { dx: 24, dy: 13, fs: 12 },
+      letter: { dx: 22, dy: 19, ddx: 34, ddy: 7, fs: 13, fss: 13 },
     },
   },
   specialBlockDropdown: {

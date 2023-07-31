@@ -24,6 +24,7 @@ import finnishF from "@Assets/flags/finland.png";
 import icelandicF from "@Assets/flags/iceland.png";
 import norwegianF from "@Assets/flags/norway.png";
 import swissF from "@Assets/flags/switzerland.png";
+import eurkeyF from "@Assets/flags/eurkey.png";
 import { IconWrench, IconSun, IconMoon, IconScreen } from "../../component/Icon";
 import { ToggleButtons } from "../../component/ToggleButtons";
 import { Select } from "../../component/Select";
@@ -79,6 +80,7 @@ export default class GeneralSettings extends Component {
       japaneseF,
       koreanF,
       swissF,
+      eurkeyF,
     ];
     let language = [
       "english",
@@ -93,6 +95,7 @@ export default class GeneralSettings extends Component {
       "japanese",
       "korean",
       "swissGerman",
+      "eurkey",
     ];
     language = language.map((item, index) => ({ text: item, value: item, icon: flags[index], index }));
 

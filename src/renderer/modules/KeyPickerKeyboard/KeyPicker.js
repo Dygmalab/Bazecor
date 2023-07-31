@@ -92,6 +92,7 @@ import IC from "./IC.json";
 import JP from "./JP.json";
 import KR from "./KR.json";
 import SWGR from "./SWGR.json";
+import EU from "./EU.json";
 // import SelectSuperKeys from "../../component/Select/SelectSuperKey";
 
 const Style = Styled.div`
@@ -123,7 +124,7 @@ width: 100%;
 }
 .svgStyle {
     overflow: visible;
-    max-width: 1170px; 
+    max-width: 1170px;
     margin: 6px auto;
 }
 .keysOrdinaryKeyboard {
@@ -204,7 +205,7 @@ width: 100%;
 .dropdown-toggle.btn.btn-primary {
   padding-right: 24px;
   padding-left: 12px;
-} 
+}
 .dropdown-toggle::after {
   right: 6px;
 }
@@ -224,20 +225,20 @@ width: 100%;
   justify-content: center;
   align-items: center;
   font-size: 12px;
-} 
+}
 .keysMouseEvents .button-config {
   width: 58px;
 }
 
 .keysContainerGrid {
-  display: grid; 
-  grid-template-columns: repeat(6, auto); 
-  gap: 2px 4px; 
+  display: grid;
+  grid-template-columns: repeat(6, auto);
+  gap: 2px 4px;
 }
 .keysContainerGrid2 {
-  display: grid; 
-  grid-template-columns: repeat(3, auto); 
-  gap: 2px 4px; 
+  display: grid;
+  grid-template-columns: repeat(3, auto);
+  gap: 2px 4px;
 }
 
 
@@ -255,10 +256,10 @@ width: 100%;
 }
 .super {
   .keysContainerGrid {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr); 
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr);
   }
   .keysContainerGrid2 {
-    grid-template-columns: auto auto auto; 
+    grid-template-columns: auto auto auto;
   }
 }
 `;
@@ -344,10 +345,14 @@ class KeyPicker extends Component {
       korean: KR,
       swissGerman: SWGR,
     };
-    const lansi = { english: ENa, korean: KR };
+    const lansi = {
+      english: ENa,
+      korean: KR,
+      eurkey: EU,
+    };
     let Lang = ENa;
 
-    if (selectedlanguage == "english" || selectedlanguage == "korean") {
+    if (selectedlanguage == "english") {
       if (kbtype == "ansi") {
         if (lansi[selectedlanguage] != undefined) {
           Lang = lansi[selectedlanguage];
@@ -356,8 +361,13 @@ class KeyPicker extends Component {
         Lang = liso[selectedlanguage];
       }
     } else if (selectedlanguage != "") {
-      if (liso[selectedlanguage] != undefined) Lang = liso[selectedlanguage];
+      if (liso[selectedlanguage] != undefined) {
+        Lang = liso[selectedlanguage];
+      } else if (lansi[selectedlanguage] != undefined) {
+        Lang = lansi[selectedlanguage];
+      }
     }
+
     const os = process.platform;
     const iconlist = {
       Backspace: <BsBackspace />,
