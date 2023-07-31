@@ -24,15 +24,19 @@ const eurkeyLetters = [];
 
 const eurkeyModifierKeys = [];
 
-const altCtrlEurkeyCode = 768;
+// Control + Alt +
+const CACode = 768;
 
-const altGREurkeyCode = 1024;
+// AltGr +
+const RAltCode = 1024;
 
-const altGRShiftEurkeyCode = 3072;
+// AltGr + Shift +
+const AGrSCode = 3072;
 
-const mehEurkeyCode = 2816;
+// Meh +
+const CASCode = 2816;
 
-function eurkeyGRLetters(baseCode) {
+function RAltLetters(baseCode) {
   return [
     {
       code: baseCode + 4,
@@ -187,7 +191,7 @@ function eurkeyGRLetters(baseCode) {
   ];
 };
 
-function eurkeyGRSymbols(baseCode) {
+function RAltSymbols(baseCode) {
   return [
     {
       code: baseCode + 16,
@@ -198,7 +202,7 @@ function eurkeyGRSymbols(baseCode) {
   ];
 };
 
-function eurkeyGRShiftSymbols(baseCode) {
+function AGrSSymbols(baseCode) {
   return [
     {
       code: baseCode + 16,
@@ -209,24 +213,24 @@ function eurkeyGRShiftSymbols(baseCode) {
   ];
 };
 
-const altCtrlEurkey = {
-  groupName: "AltCtrl Eurkey",
-  keys: eurkeyGRLetters(altCtrlEurkeyCode).concat(eurkeyGRSymbols(altCtrlEurkeyCode)),
+const eurkeyCATableMod = {
+  groupName: "CtrlAlt Eurkey",
+  keys: RAltLetters(CACode).concat(RAltSymbols(CACode)),
 };
 
-const altGREurkey = {
-  groupName: "AltCtrl Eurkey",
-  keys: eurkeyGRLetters(altGREurkeyCode).concat(eurkeyGRSymbols(altGREurkeyCode)),
+const eurkeyRAltTableMod = {
+  groupName: "AltGr Eurkey",
+  keys: RAltLetters(RAltCode).concat(RAltSymbols(RAltCode)),
 };
 
-const altGRShiftEurkey = {
-  groupName: "AltCtrlShift Eurkey",
-  keys: eurkeyGRLetters(altGRShiftEurkeyCode).concat(eurkeyGRShiftSymbols(altGRShiftEurkeyCode)),
+const eurkeyAGrSTableMod = {
+  groupName: "AltGrShift Eurkey",
+  keys: RAltLetters(AGrSCode).concat(AGrSSymbols(AGrSCode)),
 };
 
-const mehEurkey = {
+const eurkeyCASTableMod = {
   groupName: "Meh Eurkey",
-  keys: eurkeyGRLetters(mehEurkeyCode).concat(eurkeyGRShiftSymbols(mehEurkeyCode)),
+  keys: RAltLetters(CASCode).concat(AGrSSymbols(CASCode)),
 }
 
 const eurkey = eurkeyLetters.concat(eurkeyModifierKeys);
@@ -236,20 +240,20 @@ const tableWithoutModifier = { keys: eurkeyLetters };
 
 const eurkeyCtrlTable = withModifiers(table, "Control +", "C+", 256);
 const eurkeyLAltTable = withModifiers(table, "Alt +", "A+", 512);
-const eurkeyRAltTable = withModifiers(table, "AltGr +", "AGr+", 1024); // AltGR (altGREurkey)
+const eurkeyRAltTable = withModifiers(table, "AltGr +", "AGr+", 1024);
 const eurkeyShiftTable = withModifiers(tableWithoutModifier, "Shift +", "S+", 2048);
 const eurkeyGuiTable = withModifiers(table, "Os+", "O+", 4096);
 
 // Double
 
-const eurkeyCATable = withModifiers(table, "Control + Alt +", "C+A+", 768); // AltGR (altCtrlEurkey)
-const eurkeyCAGrTable = withModifiers(table, "Control + AltGr +", "C+AGr+", 1280); // AltGR?
+const eurkeyCATable = withModifiers(table, "Control + Alt +", "C+A+", 768);
+const eurkeyCAGrTable = withModifiers(table, "Control + AltGr +", "C+AGr+", 1280);
 const eurkeyCSTable = withModifiers(table, "Control + Shift +", "C+S+", 2304);
 const eurkeyCGTable = withModifiers(table, "Control + Os +", "C+O+", 4352);
-const eurkeyAAGrTable = withModifiers(table, "Alt + AltGr +", "A+AGr+", 1536); // AltGR?
+const eurkeyAAGrTable = withModifiers(table, "Alt + AltGr +", "A+AGr+", 1536);
 const eurkeyASTable = withModifiers(table, "Alt + Shift +", "A+S+", 2560);
 const eurkeyAGTable = withModifiers(table, "Alt + Os +", "A+O+", 4608);
-const eurkeyAGrSTable = withModifiers(table, "AltGr + Shift +", "AGr+S+", 3072); // AltGR+Shift
+const eurkeyAGrSTable = withModifiers(table, "AltGr + Shift +", "AGr+S+", 3072);
 const eurkeyAGrGTable = withModifiers(table, "AltGr + Os +", "AGr+O+", 5120);
 const eurkeySGTable = withModifiers(table, "Shift + Os +", "S+O+", 6144);
 
@@ -292,11 +296,11 @@ const eurkeyModifiedTables = [
   eurkeyCtrlTable,
   eurkeyLAltTable,
   eurkeyRAltTable,
-  altGREurkey,
+  eurkeyRAltTableMod,
   eurkeyShiftTable,
   eurkeyGuiTable,
   eurkeyCATable,
-  altCtrlEurkey,
+  eurkeyCATableMod,
   eurkeyCAGrTable,
   eurkeyCSTable,
   eurkeyCGTable,
@@ -304,12 +308,12 @@ const eurkeyModifiedTables = [
   eurkeyASTable,
   eurkeyAGTable,
   eurkeyAGrSTable,
-  altGRShiftEurkey,
+  eurkeyAGrSTableMod,
   eurkeyAGrGTable,
   eurkeySGTable,
   eurkeyCAAGTable,
   eurkeyCASTable,
-  mehEurkey,
+  eurkeyCASTableMod,
   eurkeyCAGTable,
   eurkeyCAGSTable,
   eurkeyCAGGTable,
