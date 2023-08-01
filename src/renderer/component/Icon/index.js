@@ -145,6 +145,8 @@ import IconUndoRestart from "./IconUndoRestart";
 import IconUpload from "./IconUpload";
 import IconWarning from "./IconWarning";
 import IconWireless from "./IconWireless";
+import IconWirelessMd from "./IconWirelessMd";
+import IconWirelessSm from "./IconWirelessSm";
 import IconWrench from "./IconWrench";
 import IconWrenchSm from "./IconWrenchSm";
 
@@ -280,6 +282,8 @@ export {
   IconUpload,
   IconWarning,
   IconWireless,
+  IconWirelessMd,
+  IconWirelessSm,
   IconWrench,
   IconWrenchSm,
 };
