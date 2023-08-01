@@ -439,8 +439,8 @@ class KeyPickerKeyboard extends Component {
 
   render() {
     const { action, actions, showKB, modifs, superName, disable, Keymap, layoutSelectorPosition } = this.state;
-    const { selectedlanguage, kbtype, macros, actTab, superkeys, code, onKeySelect } = this.props;
-    const activeTab = actTab != undefined ? actTab : this.state.activeTab;
+    const { selectedlanguage, kbtype, macros, actTab, superkeys, code, onKeySelect, isWireless } = this.props;
+    const activeTab = actTab !== undefined ? actTab : this.state.activeTab;
     const selKey = this.parseKey(code.base + code.modified);
     const selKeys = actions.map((a, i) => this.parseAction(i));
 
@@ -539,6 +539,7 @@ class KeyPickerKeyboard extends Component {
               kbtype={kbtype}
               keyCode={code}
               macros={macros}
+              isWireless={isWireless}
             />
           </div>
         </div>

@@ -297,6 +297,14 @@ const English = {
           "<p>You are about to create crazy combinations to boost your workflow! 🔥</p><p>Superkeys allow up to 5 different functions in a single key. You activate each function with a tap, hold, tap and hold, double-tap or double-tap and hold.</p>",
         label: "Select Superkey",
       },
+      wireless: {
+        callOut:
+          "With battery and wireless features at your fingertips, you're in complete control of your device's performance and connectivity.",
+        batteryPowerStatus: "Battery power status",
+        batteryLevel: "Battery level",
+        batteryLevelDescription: "Check your power status in real time turning your device into a visual battery monitor.",
+        savingModeDescription: "Faster and convenient way to toggle Energy saving mode on and off.",
+      },
     },
     superkeys: {
       add: "Add new superkey",
@@ -469,6 +477,14 @@ const English = {
   },
   wireless: {
     title: "Wireless",
+    bluetooth: {
+      StatusTitle: "Status",
+      StatusButton: "Bluetooth Status",
+      pairingMode: "Pairing mode",
+      pairingModeButton: "Bluetooth Pairing Mode",
+      pairingModeDescription: "Activate Pairing Mode for easy device connection.",
+      pair: "Pair",
+    },
     energyManagement: {
       title: "Energy management",
       advancedSettings: "Advanced settings",
@@ -816,6 +832,7 @@ const English = {
     noActionRequired: "No action required",
     noname: "No name",
     of: "of",
+    onOff: "On/Off",
     select: "Select",
     record: "Record",
     resume: "Resume",

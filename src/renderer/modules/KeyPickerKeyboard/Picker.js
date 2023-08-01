@@ -28,6 +28,7 @@ class Picker extends Component {
       macros,
       superkeys,
       keyCode,
+      isWireless,
     } = this.props;
 
     return (
@@ -49,6 +50,7 @@ class Picker extends Component {
           activeTab={activeTab}
           action={action}
           actions={actions}
+          isWireless={isWireless}
         />
       </Style>
     );

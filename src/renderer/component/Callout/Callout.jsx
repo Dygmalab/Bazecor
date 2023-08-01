@@ -20,7 +20,6 @@ import PropTypes from "prop-types";
 import Styled from "styled-components";
 
 import Modal from "react-bootstrap/Modal";
-import Spinner from "react-bootstrap/Spinner";
 
 const Style = Styled.div`	
 &.mt-xs {
@@ -151,10 +150,10 @@ const Style = Styled.div`
  * @param {number} maxWidth - The max with of the element.
  * @param {string} videoDuration - The video length
  * @param {boolean} hasVideo - Check if video exists
- * @returns {<Callout>} Callout component.
  */
 
-const Callout = ({ content, media, size, className, maxWidth, hasVideo, videoDuration, videoTitle }) => {
+function Callout(props) {
+  const { content, media, size, className, maxWidth, hasVideo, videoDuration, videoTitle } = props;
   let maxStyle = { maxWidth: "auto" };
   if (maxWidth) {
     maxStyle = { maxWidth: `${maxWidth}px` };
@@ -177,7 +176,7 @@ const Callout = ({ content, media, size, className, maxWidth, hasVideo, videoDur
           <span dangerouslySetInnerHTML={{ __html: content }} />
         </div>
         {hasVideo && media ? (
-          <div className="playCounter" onClick={() => setModalCallOut(true)}>
+          <div className="playCounter" onClick={() => setModalCallOut(true)} aria-hidden="true">
             <div className="playCounterInner">
               <div className="playCounterIcon">
                 <svg width="9" height="12" viewBox="0 0 9 12" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -218,7 +217,7 @@ const Callout = ({ content, media, size, className, maxWidth, hasVideo, videoDur
                   frameBorder="0"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                   allowFullScreen
-                ></iframe>
+                />
               </div>
             </div>
           </Modal.Body>
@@ -231,13 +230,14 @@ const Callout = ({ content, media, size, className, maxWidth, hasVideo, videoDur
 }
 
 Callout.propTypes = {
-  content: PropTypes.string.isRequired,
+  content: PropTypes.string,
   media: PropTypes.string,
   size: PropTypes.string,
   className: PropTypes.string,
   maxWidth: PropTypes.number,
   hasVideo: PropTypes.bool,
-  videoDuration: PropTypes.string
+  videoDuration: PropTypes.string,
+  videoTitle: PropTypes.string,
 };
 
 export default Callout;
