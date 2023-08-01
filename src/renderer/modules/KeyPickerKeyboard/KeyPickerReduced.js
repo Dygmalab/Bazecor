@@ -318,7 +318,6 @@ class KeyPickerReduced extends Component {
       icelandic: IC,
       japanese: JP,
       swissGerman: SWGR,
-      eurkey: EU,
     };
     const lansi = {
       english: ENa,

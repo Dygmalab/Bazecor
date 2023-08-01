@@ -342,7 +342,6 @@ class KeyPicker extends Component {
       norwegian: NW,
       icelandic: IC,
       japanese: JP,
-      korean: KR,
       swissGerman: SWGR,
     };
     const lansi = {
