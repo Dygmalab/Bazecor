@@ -57,3 +57,15 @@ export interface RFSettingsProps {
 export interface ConnectionProps {
   connection: number;
 }
+
+export interface SelectWirelessDropdownProps {
+  // action: number;
+  // activeTab: number;
+  keyCode: { base: number; modified: number };
+  onKeySelect: (event: number) => void;
+}
+
+export interface WirelessButton {
+  name: string;
+  keynum: number;
+}

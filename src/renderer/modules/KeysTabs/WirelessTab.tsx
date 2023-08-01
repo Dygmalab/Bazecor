@@ -3,11 +3,11 @@ import Styled from "styled-components";
 
 import { TabLayoutEditorProps } from "@Renderer/types/pages";
 
-import i18n from "../../i18n";
+import i18n from "@Renderer/i18n";
 
-import Title from "../../component/Title";
-import CallOut from "../../component/Callout";
-import { ButtonConfig } from "../../component/Button";
+import Title from "@Renderer/component/Title";
+import Callout from "@Renderer/component/Callout";
+import { ButtonConfig } from "@Renderer/component/Button";
 
 const Styles = Styled.div`
 width: 100%;
@@ -34,13 +34,14 @@ h4 {
 }
 `;
 
-function WirelessTab({ keyCode, onKeySelect, isStandardView }: TabLayoutEditorProps) {
+function WirelessTab(props: TabLayoutEditorProps) {
+  const { keyCode, onKeySelect, isStandardView } = props;
   return (
     <Styles className={`${isStandardView ? "standardViewTab" : ""} tabsWireless`}>
       <div className="tabContentWrapper">
         <div className="buttonsRow">
           <Title text={i18n.app.menu.wireless} headingLevel={3} />
-          <CallOut content={i18n.editor.standardView.wireless.callOut} size="sm" />
+          <Callout content={i18n.editor.standardView.wireless.callOut} size="sm" />
           <div className="keysButtonsList">
             <Title text={i18n.editor.standardView.wireless.batteryPowerStatus} headingLevel={4} />
             <p className="description">{i18n.editor.standardView.wireless.batteryLevelDescription}</p>
@@ -50,6 +51,16 @@ function WirelessTab({ keyCode, onKeySelect, isStandardView }: TabLayoutEditorPr
                 onKeySelect(54108);
               }}
               selected={isStandardView ? keyCode === 54108 : false}
+              size={undefined}
+              tooltip={undefined}
+              tooltipPlacement={undefined}
+              tooltipClassName={undefined}
+              style={undefined}
+              icoSVG={undefined}
+              icoPosition={undefined}
+              tooltipDelay={undefined}
+              disabled={undefined}
+              dataAnimate={undefined}
             />
           </div>
           <div className="keysButtonsList">
@@ -61,6 +72,16 @@ function WirelessTab({ keyCode, onKeySelect, isStandardView }: TabLayoutEditorPr
                 onKeySelect(54109);
               }}
               selected={isStandardView ? keyCode === 54109 : false}
+              size={undefined}
+              tooltip={undefined}
+              tooltipPlacement={undefined}
+              tooltipClassName={undefined}
+              style={undefined}
+              icoSVG={undefined}
+              icoPosition={undefined}
+              tooltipDelay={undefined}
+              disabled={undefined}
+              dataAnimate={undefined}
             />
           </div>
           <div className="keysButtonsList">
@@ -72,6 +93,16 @@ function WirelessTab({ keyCode, onKeySelect, isStandardView }: TabLayoutEditorPr
                 onKeySelect(54110);
               }}
               selected={isStandardView ? keyCode === 54110 : false}
+              size={undefined}
+              tooltip={undefined}
+              tooltipPlacement={undefined}
+              tooltipClassName={undefined}
+              style={undefined}
+              icoSVG={undefined}
+              icoPosition={undefined}
+              tooltipDelay={undefined}
+              disabled={undefined}
+              dataAnimate={undefined}
             />
           </div>
         </div>

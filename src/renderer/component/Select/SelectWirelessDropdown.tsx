@@ -3,6 +3,7 @@ import Styled from "styled-components";
 import Dropdown from "react-bootstrap/Dropdown";
 
 import i18n from "@Renderer/i18n";
+import { SelectWirelessDropdownProps, WirelessButton } from "@Renderer/types/wireless";
 
 const Style = Styled.div`
 width: 100%;
@@ -136,21 +137,21 @@ width: 100%;
   }
 `;
 
-function SelectWirelessDropdown({action, activeTab, keyCode, onKeySelect}) {
-  const wirelessButtons = [
+function SelectWirelessDropdown(props: SelectWirelessDropdownProps) {
+  const { keyCode, onKeySelect } = props;
+  const WirelessButtons: Array<WirelessButton> = [
     { name: i18n.editor.standardView.wireless.batteryLevel, keynum: 54108 },
     { name: i18n.wireless.energyManagement.savingMode, keynum: 54109 },
     { name: i18n.editor.standardView.wireless.pairingMode, keynum: 54110 },
   ];
-  const KC = keyCode.base + keyCode.modified;
+  const KC: number = keyCode.base + keyCode.modified;
+  // const verifiedKC = WirelessButtons.findIndex((param: WirelessButton) => param.keynum === KC);
+
   return (
     <Style>
       <Dropdown
-        value={KC !== 0 ? wirelessButtons.map(i => i.keynum).includes(KC) : KC}
-        onSelect={value => onKeySelect(parseInt(value))}
-        className={`custom-dropdown  ${
-          wirelessButtons.map(i => i.keynum).includes(keyCode.base + keyCode.modified) ? "active" : ""
-        }`}
+        onSelect={value => onKeySelect(parseInt(value, 10))}
+        className={`custom-dropdown  ${WirelessButtons.map(i => i.keynum).includes(KC) ? "active" : ""}`}
       >
         <Dropdown.Toggle id="dropdown-custom" className="button-config-style">
           <div className="dropdownItemSelected">
@@ -168,13 +169,13 @@ function SelectWirelessDropdown({action, activeTab, keyCode, onKeySelect}) {
               </div>
               <div className="dropdown-group-buttons">
                 <Dropdown.Item
-                  eventKey={wirelessButtons[0].keynum}
+                  eventKey={String(WirelessButtons[0].keynum)}
                   key={`wirelessButtons-${0}`}
-                  disabled={wirelessButtons[0].keynum === -1}
+                  disabled={WirelessButtons[0].keynum === -1}
                   className={`
-                    ${wirelessButtons[0].keynum === keyCode.base + keyCode.modified ? "active" : ""} dropdown-config-button`}
+                    ${WirelessButtons[0].keynum === keyCode.base + keyCode.modified ? "active" : ""} dropdown-config-button`}
                 >
-                  <div className="dropdownItem">{wirelessButtons[0].name}</div>
+                  <div className="dropdownItem">{WirelessButtons[0].name}</div>
                 </Dropdown.Item>
               </div>
             </div>
@@ -184,13 +185,13 @@ function SelectWirelessDropdown({action, activeTab, keyCode, onKeySelect}) {
               </div>
               <div className="dropdown-group-buttons">
                 <Dropdown.Item
-                  eventKey={wirelessButtons[1].keynum}
+                  eventKey={String(WirelessButtons[1].keynum)}
                   key={`wirelessButtons-${1}`}
-                  disabled={wirelessButtons[1].keynum === -1}
+                  disabled={WirelessButtons[1].keynum === -1}
                   className={`
-                    ${wirelessButtons[1].keynum === keyCode.base + keyCode.modified ? "active" : ""} dropdown-config-button`}
+                    ${WirelessButtons[1].keynum === keyCode.base + keyCode.modified ? "active" : ""} dropdown-config-button`}
                 >
-                  <div className="dropdownItem">{wirelessButtons[1].name}</div>
+                  <div className="dropdownItem">{WirelessButtons[1].name}</div>
                 </Dropdown.Item>
               </div>
             </div>
@@ -200,13 +201,13 @@ function SelectWirelessDropdown({action, activeTab, keyCode, onKeySelect}) {
               </div>
               <div className="dropdown-group-buttons">
                 <Dropdown.Item
-                  eventKey={wirelessButtons[2].keynum}
+                  eventKey={String(WirelessButtons[2].keynum)}
                   key={`wirelessButtons-${2}`}
-                  disabled={wirelessButtons[2].keynum === -1}
+                  disabled={WirelessButtons[2].keynum === -1}
                   className={`
-                    ${wirelessButtons[2].keynum === keyCode.base + keyCode.modified ? "active" : ""} dropdown-config-button`}
+                    ${WirelessButtons[2].keynum === keyCode.base + keyCode.modified ? "active" : ""} dropdown-config-button`}
                 >
-                  <div className="dropdownItem">{wirelessButtons[2].name}</div>
+                  <div className="dropdownItem">{WirelessButtons[2].name}</div>
                 </Dropdown.Item>
               </div>
             </div>

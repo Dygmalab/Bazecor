@@ -4,6 +4,6 @@ export default interface Pages {
 }
 export interface TabLayoutEditorProps {
   keyCode: number;
-  onKeySelect: () => void;
+  onKeySelect: (key: number) => void;
   isStandardView: boolean;
 }
