@@ -110,7 +110,7 @@ export default class GeneralSettings extends Component {
       "Japanese",
       "Korean",
       "Swiss (German)",
-      "EurKEY",
+      "EurKEY (1.3)",
     ];
     language = language.map((item, index) => ({
       text: languageNames[index],
