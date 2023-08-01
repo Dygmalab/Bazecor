@@ -85,10 +85,10 @@ function WirelessTab(props: TabLayoutEditorProps) {
             />
           </div>
           <div className="keysButtonsList">
-            <Title text={i18n.editor.standardView.wireless.pairingMode} headingLevel={4} />
-            <p className="description">{i18n.editor.standardView.wireless.pairingModeDescription}</p>
+            <Title text={i18n.wireless.bluetooth.pairingMode} headingLevel={4} />
+            <p className="description">{i18n.wireless.bluetooth.pairingModeDescription}</p>
             <ButtonConfig
-              buttonText={i18n.editor.standardView.wireless.pair}
+              buttonText={i18n.wireless.bluetooth.pair}
               onClick={() => {
                 onKeySelect(54110);
               }}
