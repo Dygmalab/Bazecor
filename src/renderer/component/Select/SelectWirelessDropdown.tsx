@@ -141,8 +141,8 @@ function SelectWirelessDropdown(props: SelectWirelessDropdownProps) {
   const { keyCode, onKeySelect } = props;
   const WirelessButtons: Array<WirelessButton> = [
     { name: i18n.editor.standardView.wireless.batteryLevel, keynum: 54108 },
-    { name: i18n.wireless.energyManagement.savingMode, keynum: 54109 },
-    { name: i18n.editor.standardView.wireless.pairingMode, keynum: 54110 },
+    { name: i18n.wireless.bluetooth.StatusButton, keynum: 54109 },
+    { name: i18n.wireless.bluetooth.pairingModeButton, keynum: 54110 },
   ];
   const KC: number = keyCode.base + keyCode.modified;
   // const verifiedKC = WirelessButtons.findIndex((param: WirelessButton) => param.keynum === KC);
@@ -181,7 +181,7 @@ function SelectWirelessDropdown(props: SelectWirelessDropdownProps) {
             </div>
             <div className="dropdown-group wirelessSaving">
               <div className="dropdownHeader">
-                Wireless <span>Saving mode</span>
+                Bluetooth <span>{i18n.wireless.bluetooth.StatusTitle}</span>
               </div>
               <div className="dropdown-group-buttons">
                 <Dropdown.Item
@@ -197,7 +197,7 @@ function SelectWirelessDropdown(props: SelectWirelessDropdownProps) {
             </div>
             <div className="dropdown-group wirelessPairing">
               <div className="dropdownHeader">
-                Wireless <span>Pairing mode</span>
+                Bluetooth <span>{i18n.wireless.bluetooth.pairingMode}</span>
               </div>
               <div className="dropdown-group-buttons">
                 <Dropdown.Item

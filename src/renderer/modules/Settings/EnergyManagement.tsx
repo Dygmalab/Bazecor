@@ -5,7 +5,7 @@ import Styled from "styled-components";
 import Card from "react-bootstrap/Card";
 
 // Modules
-import { AdvancedBatterySettings, SavingMode } from "@Renderer/modules/Battery";
+import { SavingMode } from "@Renderer/modules/Battery";
 // Internal components
 import Title from "@Renderer/component/Title";
 import { IconThunder } from "@Renderer/component/Icon";
@@ -53,7 +53,7 @@ function EnergyManagement(props: EnergyManagementProps) {
           <Title text={i18n.wireless.energyManagement.title} headingLevel={3} svgICO={<IconThunder />} />
         </Card.Title>
         <Card.Body className="py-0">
-          <AdvancedBatterySettings />
+          {/* <AdvancedBatterySettings /> */}
           <SavingMode wireless={wireless} toggleSavingMode={toggleSavingMode} />
         </Card.Body>
       </Card>

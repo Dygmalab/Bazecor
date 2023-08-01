@@ -304,9 +304,6 @@ const English = {
         batteryLevel: "Battery level",
         batteryLevelDescription: "Check your power status in real time turning your device into a visual battery monitor.",
         savingModeDescription: "Faster and convenient way to toggle Energy saving mode on and off.",
-        pairingMode: "Pairing mode",
-        pairingModeDescription: "Activate Pairing Mode for easy device connection.",
-        pair: "Pair",
       },
     },
     superkeys: {
@@ -480,6 +477,14 @@ const English = {
   },
   wireless: {
     title: "Wireless",
+    bluetooth: {
+      StatusTitle: "Status",
+      StatusButton: "Bluetooth Status",
+      pairingMode: "Pairing mode",
+      pairingModeButton: "Bluetooth Pairing Mode",
+      pairingModeDescription: "Activate Pairing Mode for easy device connection.",
+      pair: "Pair",
+    },
     energyManagement: {
       title: "Energy management",
       advancedSettings: "Advanced settings",
