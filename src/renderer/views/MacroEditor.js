@@ -264,7 +264,7 @@ class MacroEditor extends React.Component {
 
       return {
         ...macro,
-        name: stored[i].name,
+        name: stored[i]?.name,
         macro: macro.actions.map(k => this.keymapDB.parse(k.keyCode).label).join(" "),
       };
     });
@@ -401,15 +401,15 @@ class MacroEditor extends React.Component {
 
   ActUponDelete() {
     const { selectedList, listToDelete, listToDeleteS, keymap, superkeys } = this.state;
-    for (let i = 0; i < listToDelete.length; i++) {
-      if (selectedList == -1) {
+    for (let i = 0; i < listToDelete.length; i += 1) {
+      if (selectedList === -1) {
         keymap[listToDelete[i].layer][listToDelete[i].pos] = this.keymapDB.parse(0);
       } else {
         keymap[listToDelete[i].layer][listToDelete[i].pos] = this.keymapDB.parse(selectedList + 53852);
       }
     }
-    for (let i = 0; i < listToDeleteS.length; i++) {
-      if (selectedList == -1) {
+    for (let i = 0; i < listToDeleteS.length; i += 1) {
+      if (selectedList === -1) {
         superkeys[listToDeleteS[i].i][listToDeleteS[i].pos] = 1;
       } else {
         superkeys[listToDeleteS[i].i][listToDeleteS[i].pos] = selectedList + 53852;
@@ -424,10 +424,11 @@ class MacroEditor extends React.Component {
   }
 
   addMacro = name => {
-    if (this.state.macros.length >= this.state.maxMacros) {
+    const { macros, maxMacros } = this.state;
+    if (macros.length >= maxMacros) {
       return;
     }
-    const aux = this.state.macros;
+    const aux = macros;
     const newID = aux.length;
     aux.push({
       actions: [],
@@ -440,38 +441,44 @@ class MacroEditor extends React.Component {
   };
 
   deleteMacro = () => {
-    if (this.state.macros.length === 0) {
+    const { macros, selectedMacro } = this.state;
+    if (macros.length === 0) {
       return;
     }
-    const aux = JSON.parse(JSON.stringify(this.state.macros));
-    const selected = this.state.selectedMacro;
+    const aux = JSON.parse(JSON.stringify(macros));
+    const selected = selectedMacro;
     aux.splice(selected, 1);
     aux.forEach((item, idx) => {
       aux.id = idx;
     });
-    if (selected >= this.state.macros.length - 1) {
-      this.changeSelected(this.state.macros.length - 2);
+    if (selected >= macros.length - 1) {
+      this.changeSelected(macros.length - 2);
     }
     this.updateMacros(aux);
     this.updateKeyboard(selected);
   };
 
   saveName = data => {
-    const macros = JSON.parse(JSON.stringify(this.state.macros));
-    macros[this.state.selectedMacro].name = data;
-    this.setState({ macros, modified: true });
+    const { macros, selectedMacro } = this.state;
+    const localMacros = JSON.parse(JSON.stringify(macros));
+    localMacros[selectedMacro].name = data;
+    this.setState({ macros: localMacros, modified: true });
   };
 
   // Define updateActions function to update the actions of the selected macro
   updateActions = actions => {
-    const macrosList = this.state.macros;
-    macrosList[this.state.selectedMacro].actions = actions;
+    const { macros, selectedMacro } = this.state;
+
+    const macrosList = macros;
+    macrosList[selectedMacro].actions = actions;
     this.setState({ macros: macrosList, modified: true });
   };
 
   addToActions = actions => {
-    const macrosList = JSON.parse(JSON.stringify(this.state.macros));
-    macrosList[this.state.selectedMacro].actions = actions;
+    const { macros, selectedMacro } = this.state;
+
+    const macrosList = JSON.parse(JSON.stringify(macros));
+    macrosList[selectedMacro].actions = actions;
     this.setState({ macros: macrosList, modified: true });
   };
 
@@ -501,7 +508,7 @@ class MacroEditor extends React.Component {
         id="Selectlayers"
         className="selectButton"
         // drop={"up"}
-        title={macros.length > 0 && selectedList > -1 ? macros[selectedList].name : "No Key"}
+        title={macros.length > 0 && selectedList > -1 ? macros[selectedList]?.name : "No Key"}
         value={selectedList}
         onSelect={this.UpdateList}
       >
@@ -509,8 +516,8 @@ class MacroEditor extends React.Component {
           No Key
         </Dropdown.Item>
         {macros.map((macro, id) => (
-          <Dropdown.Item eventKey={macro.id} key={`macro-${id}`} disabled={macro.id == -1}>
-            {macro.name}
+          <Dropdown.Item eventKey={macro.id} key={`macro-${id}`} disabled={macro.id === -1}>
+            {macro?.name}
           </Dropdown.Item>
         ))}
       </DropdownButton>
