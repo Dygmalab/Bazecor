@@ -96,7 +96,7 @@ import JP from "@Renderer/modules/KeyPickerKeyboard/JP.json";
 import KR from "@Renderer/modules/KeyPickerKeyboard/KR.json";
 import SWGR from "@Renderer/modules/KeyPickerKeyboard/SWGR.json";
 import EU from "@Renderer/modules/KeyPickerKeyboard/EU.json";
-// import SelectSuperKeys from "../../component/Select/SelectSuperKey";
+
 
 const Style = Styled.div`
 width: 100%;
@@ -253,7 +253,7 @@ width: 100%;
 }
 .KeysWrapper.super.notWireless {
   .keysContainerGrid {
-    grid-template-columns: repeat(12, 1fr);
+    grid-template-columns: repeat(12, 1fr); 
   }
   .keysMacros { grid-area:  1 / 1 / 2 / 5; }
   .keysLayerLock { grid-area: 1 / 5 / 2 / 9; }
