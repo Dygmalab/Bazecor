@@ -97,6 +97,7 @@ import KR from "@Renderer/modules/KeyPickerKeyboard/KR.json";
 import SWGR from "@Renderer/modules/KeyPickerKeyboard/SWGR.json";
 import EU from "@Renderer/modules/KeyPickerKeyboard/EU.json";
 
+
 const Style = Styled.div`
 width: 100%;
 @media screen and (min-width: 1980px) and (min-height: 980px) {
@@ -233,10 +234,10 @@ width: 100%;
 }
 
 .keysContainerGrid {
-  display: grid; 
-  grid-template-columns: repeat(12, 1fr); 
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
   grid-template-rows: repeat(2, 1fr);
-  gap: 2px 4px; 
+  gap: 2px 4px;
 }
 
 .KeysWrapper.notWireless {
@@ -279,7 +280,7 @@ width: 100%;
 }
 .KeysWrapper.super.isWireless {
   .keysContainerGrid {
-    grid-template-columns: repeat(12, 1fr); 
+    grid-template-columns: repeat(12, 1fr);
     grid-template-rows: repeat(2, 1fr);
   }
   .keysMacros { grid-area:  1 / 1 / 2 / 5; }

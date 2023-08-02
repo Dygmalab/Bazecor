@@ -41,22 +41,23 @@ import {
   AiOutlineForward,
 } from "react-icons/ai";
 import { MdKeyboardReturn, MdSpaceBar, MdKeyboardCapslock, MdInfoOutline, MdEject } from "react-icons/md";
-import i18n from "../../i18n";
 
-import Key from "./Key";
-import ES from "./ES.json";
-import ENi from "./ENi.json";
-import ENa from "./ENa.json";
-import GR from "./GR.json";
-import FR from "./FR.json";
-import SW from "./SW.json";
-import DN from "./DN.json";
-import NW from "./NW.json";
-import IC from "./IC.json";
-import JP from "./JP.json";
-import KR from "./KR.json";
-import SWGR from "./SWGR.json";
-import EU from "./EU.json";
+import i18n from "@Renderer/i18n";
+
+import Key from "@Renderer/modules/KeyPickerKeyboard/Key";
+import ES from "@Renderer/modules/KeyPickerKeyboard/ES.json";
+import ENi from "@Renderer/modules/KeyPickerKeyboard/ENi.json";
+import ENa from "@Renderer/modules/KeyPickerKeyboard/ENa.json";
+import GR from "@Renderer/modules/KeyPickerKeyboard/GR.json";
+import FR from "@Renderer/modules/KeyPickerKeyboard/FR.json";
+import SW from "@Renderer/modules/KeyPickerKeyboard/SW.json";
+import DN from "@Renderer/modules/KeyPickerKeyboard/DN.json";
+import NW from "@Renderer/modules/KeyPickerKeyboard/NW.json";
+import IC from "@Renderer/modules/KeyPickerKeyboard/IC.json";
+import JP from "@Renderer/modules/KeyPickerKeyboard/JP.json";
+import KR from "@Renderer/modules/KeyPickerKeyboard/KR.json";
+import SWGR from "@Renderer/modules/KeyPickerKeyboard/SWGR.json";
+import EU from "@Renderer/modules/KeyPickerKeyboard/EU.json";
 // import SelectSuperKeys from "../../component/Select/SelectSuperKey";
 
 const Style = Styled.div`
