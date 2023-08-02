@@ -79,10 +79,10 @@ function Select({ onSelect, value, listElements, disabled }) {
                         <div className="dropdownIcon">
                           <img src={listElements.find(elem => elem.value === value)?.icon} className="dropdwonIcon" />
                         </div>
-                        <div className="dropdownItem">{value}</div>
+                        <div className="dropdownItem">{listElements.find(elem => elem.value === value)?.text}</div>
                       </>
                     ) : (
-                      <div className="dropdownItem">{value}</div>
+                      <div className="dropdownItem">{listElements.find(elem => elem.value === value)?.text}</div>
                     )}
                   </>
                 ) : (
