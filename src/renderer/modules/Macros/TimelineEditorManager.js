@@ -151,7 +151,7 @@ class MacroManager extends Component {
     const macro = this.props.macros[parseInt(this.keymapDB.parse(keycode).label)];
     let macroName;
     try {
-      macroName = this.props.macros[parseInt(this.keymapDB.parse(keycode).label)].name.substr(0, 5);
+      macroName = this.props.macros[parseInt(this.keymapDB.parse(keycode).label)]?.name.substr(0, 5);
     } catch (error) {
       macroName = "*NotFound*";
     }
