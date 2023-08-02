@@ -95,7 +95,7 @@ import IC from "@Renderer/modules/KeyPickerKeyboard/IC.json";
 import JP from "@Renderer/modules/KeyPickerKeyboard/JP.json";
 import KR from "@Renderer/modules/KeyPickerKeyboard/KR.json";
 import SWGR from "@Renderer/modules/KeyPickerKeyboard/SWGR.json";
-// import SelectSuperKeys from "../../component/Select/SelectSuperKey";
+import EU from "@Renderer/modules/KeyPickerKeyboard/EU.json";
 
 const Style = Styled.div`
 width: 100%;
@@ -126,7 +126,7 @@ width: 100%;
 }
 .svgStyle {
     overflow: visible;
-    max-width: 1170px; 
+    max-width: 1170px;
     margin: 6px auto;
 }
 .keysOrdinaryKeyboard {
@@ -207,7 +207,7 @@ width: 100%;
 .dropdown-toggle.btn.btn-primary {
   padding-right: 24px;
   padding-left: 12px;
-} 
+}
 .dropdown-toggle::after {
   right: 6px;
 }
@@ -227,7 +227,7 @@ width: 100%;
   justify-content: center;
   align-items: center;
   font-size: 12px;
-} 
+}
 .keysMouseEvents .button-config {
   width: 58px;
 }
@@ -304,10 +304,10 @@ width: 100%;
 }
 .super {
   .keysContainerGrid {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr); 
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr);
   }
   .keysContainerGrid2 {
-    grid-template-columns: auto auto auto; 
+    grid-template-columns: auto auto auto;
   }
 }
 `;
@@ -392,13 +392,16 @@ class KeyPicker extends Component {
       norwegian: NW,
       icelandic: IC,
       japanese: JP,
-      korean: KR,
       swissGerman: SWGR,
     };
-    const lansi = { english: ENa, korean: KR };
+    const lansi = {
+      english: ENa,
+      korean: KR,
+      eurkey: EU,
+    };
     let Lang = ENa;
 
-    if (selectedlanguage === "english" || selectedlanguage === "korean") {
+    if (selectedlanguage === "english") {
       if (kbtype === "ansi") {
         if (lansi[selectedlanguage] !== undefined) {
           Lang = lansi[selectedlanguage];
@@ -407,8 +410,13 @@ class KeyPicker extends Component {
         Lang = liso[selectedlanguage];
       }
     } else if (selectedlanguage !== "") {
-      if (liso[selectedlanguage] !== undefined) Lang = liso[selectedlanguage];
+      if (liso[selectedlanguage] !== undefined) {
+        Lang = liso[selectedlanguage];
+      } else if (lansi[selectedlanguage] !== undefined) {
+        Lang = lansi[selectedlanguage];
+      }
     }
+
     const os = process.platform;
     const iconlist = {
       Backspace: <BsBackspace />,

@@ -54,7 +54,9 @@ import DN from "./DN.json";
 import NW from "./NW.json";
 import IC from "./IC.json";
 import JP from "./JP.json";
+import KR from "./KR.json";
 import SWGR from "./SWGR.json";
+import EU from "./EU.json";
 // import SelectSuperKeys from "../../component/Select/SelectSuperKey";
 
 const Style = Styled.div`
@@ -82,7 +84,7 @@ width: 100%;
 }
 .svgStyle {
     overflow: visible;
-    max-width: 1170px; 
+    max-width: 1170px;
     margin: 6px auto;
 }
 .keysOrdinaryKeyboard {
@@ -104,7 +106,7 @@ width: 100%;
 .keysRow {
   display: flex;
   flex-wrap: nowrap;
-  
+
   border-radius: 6px;
   padding: 5px;
   &.keysOrdinaryKeyboard {
@@ -161,7 +163,7 @@ width: 100%;
 .dropdown-toggle.btn.btn-primary {
   padding-right: 24px;
   padding-left: 8px;
-} 
+}
 .dropdown-toggle::after {
   right: 12px;
 }
@@ -184,7 +186,7 @@ width: 100%;
   padding: 5px 3px;
   justify-content: center;
   font-size: 14px;
-} 
+}
 .keysMouseEvents .button-config {
   width: 58px;
 }
@@ -202,7 +204,7 @@ width: 100%;
   height: 190px;
 }
 
-.editor { 
+.editor {
   .keysLED .button-config {
     svg {
       margin-right: 0;
@@ -212,31 +214,31 @@ width: 100%;
     }
   }
   .keysContainerGrid {
-    display: grid; 
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr); 
-    grid-template-rows: 1fr 1fr 1fr; 
-    gap: 8px 16px; 
-    grid-template-areas: 
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-rows: 1fr 1fr 1fr;
+    gap: 8px 16px;
+    grid-template-areas:
       "colSuperKeysMacros colSuperKeysMacros colLayers colLayers"
       "colNoKeyLED colNoKeyLED colOneShotModifiers colOneShotModifiers"
-      "colMedia colMedia colTools colTools"; 
-    
-    .colSuperKeysMacros { 
-      display: grid; 
-      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); 
-      grid-template-rows: 1fr; 
-      gap: 0px 16px; 
-      grid-area: colSuperKeysMacros; 
+      "colMedia colMedia colTools colTools";
+
+    .colSuperKeysMacros {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      grid-template-rows: 1fr;
+      gap: 0px 16px;
+      grid-area: colSuperKeysMacros;
     }
-    .colLayers { 
-      grid-area: colLayers; 
+    .colLayers {
+      grid-area: colLayers;
     }
-    .colNoKeyLED { 
-      display: grid; 
-      grid-template-columns: 1fr 1fr; 
-      grid-template-rows: 1fr; 
-      gap: 0px 16px; 
-      grid-area: colNoKeyLED; 
+    .colNoKeyLED {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: 1fr;
+      gap: 0px 16px;
+      grid-area: colNoKeyLED;
     }
     .colOneShotModifiers { grid-area: colOneShotModifiers; }
     .colMedia { grid-area: colMedia; }
@@ -255,14 +257,14 @@ width: 100%;
 }
 .super {
   .keysContainerGrid {
-    display: grid; 
-    grid-template-columns:  0.8fr 1fr 1fr 1fr 1.2fr 0.25fr 1.75fr 1fr; 
-    
-    grid-template-rows: 1fr 1fr; 
-    gap: 8px 16px; 
-    grid-template-areas: 
+    display: grid;
+    grid-template-columns:  0.8fr 1fr 1fr 1fr 1.2fr 0.25fr 1.75fr 1fr;
+
+    grid-template-rows: 1fr 1fr;
+    gap: 8px 16px;
+    grid-template-areas:
       "colSuperKeysMacros colSuperKeysMacros colSuperKeysMacros colLayers colLayers colLayers colNoKeyLED colNoKeyLED"
-      "colMedia colMedia colMedia colMedia colTools colTools colTools colTools"; 
+      "colMedia colMedia colMedia colMedia colTools colTools colTools colTools";
   }
   .keysRow {
     height: 100%;
@@ -317,20 +319,29 @@ class KeyPickerReduced extends Component {
       japanese: JP,
       swissGerman: SWGR,
     };
-    const lansi = { english: ENa };
+    const lansi = {
+      english: ENa,
+      korean: KR,
+      eurkey: EU,
+    };
     let Lang = ENa;
 
-    if (selectedlanguage == "english") {
-      if (kbtype == "ansi") {
-        if (lansi[selectedlanguage] != undefined) {
+    if (selectedlanguage === "english") {
+      if (kbtype === "ansi") {
+        if (lansi[selectedlanguage] !== undefined) {
           Lang = lansi[selectedlanguage];
         }
       } else {
         Lang = liso[selectedlanguage];
       }
-    } else if (selectedlanguage != "") {
-      if (liso[selectedlanguage] != undefined) Lang = liso[selectedlanguage];
+    } else if (selectedlanguage !== "") {
+      if (liso[selectedlanguage] !== undefined) {
+        Lang = liso[selectedlanguage];
+      } else if (lansi[selectedlanguage] !== undefined) {
+        Lang = lansi[selectedlanguage];
+      }
     }
+
     const os = process.platform;
     const iconlist = {
       Backspace: <BsBackspace />,

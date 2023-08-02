@@ -71,6 +71,9 @@ import korean, { koreanModifiedTables } from "./languages/korean/korean";
 // Swiss German - is an Array of objects of values that have to be modified
 import swissGerman, { swissGermanModifiedTables } from "./languages/swissGerman/swissGerman";
 
+// EurKEY - is an Array of objects of values that have to be modified
+import eurkey, { eurkeyModifiedTables } from "./languages/eurkey/eurkey";
+
 // newLanguageLayout - is a function that modify language layout
 import newLanguageLayout from "./languages/newLanguageLayout";
 
@@ -126,6 +129,7 @@ const supportModifiedTables = {
   japanese: japaneseModifiedTables,
   korean: koreanModifiedTables,
   swissGerman: swissGermanModifiedTables,
+  eurkey: eurkeyModifiedTables,
 };
 
 const defaultKeyCodeTable = defaultBaseKeyCodeTable
@@ -155,6 +159,7 @@ const languagesDB = {
   japanese,
   korean,
   swissGerman,
+  eurkey,
 };
 // Create cache for language layout
 const map = new Map();
