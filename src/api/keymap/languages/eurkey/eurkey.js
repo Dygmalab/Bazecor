@@ -812,10 +812,10 @@ const eurkeyAAGrSGTable = withModifiers(tableAGrS, "Alt + AltGr + Shift + Os +",
 const eurkeyAllModTable = withModifiers(tableAGrS, "Hyper + AltGr +", "H+AGr+", 7936);
 
 const DualUseCtrlTable = withModifiers(table, "Control /", "CTRL/", 49169);
-const DualUseShiftTable = withModifiers(tableS, "Shift /", "SHIFT/", 49425);
+const DualUseShiftTable = withModifiers(table, "Shift /", "SHIFT/", 49425);
 const DualUseAltTable = withModifiers(table, "Alt /", "ALT/", 49681);
 const DualUseGuiTable = withModifiers(table, "Os /", "OS/", 49937);
-const DualUseAltGrTable = withModifiers(tableAGr, "AltGr /", "ALTGR/", 50705);
+const DualUseAltGrTable = withModifiers(table, "AltGr /", "ALTGR/", 50705);
 const DualUseLayer1Tables = withModifiers(table, "Layer #1 /", "L#1/", 51218);
 const DualUseLayer2Tables = withModifiers(table, "Layer #2 /", "L#2/", 51474);
 const DualUseLayer3Tables = withModifiers(table, "Layer #3 /", "L#3/", 51730);
