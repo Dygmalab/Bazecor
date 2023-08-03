@@ -277,12 +277,10 @@ const SelectKeyboard: React.FC<SelectKeyboardProps> = (props): JSX.Element => {
         const connectedDev = list.findIndex(dev => focus.serialNumber?.includes(dev.serialNumber));
         // console.log("check connected", connectedDev);
         setSelectedPortIndex(connectedDev);
+      } else if (list.length > 0) {
+        setSelectedPortIndex(0);
       } else {
-        if (list.length > 0) {
-          setSelectedPortIndex(0);
-        } else {
-          setSelectedPortIndex(-1);
-        }
+        setSelectedPortIndex(-1);
       }
 
       return list;
@@ -552,6 +550,14 @@ const SelectKeyboard: React.FC<SelectKeyboardProps> = (props): JSX.Element => {
   const getDeviceItems = () => {
     const neurons = store.get("neurons");
     const result = devices.map((device, index) => {
+      console.log("checking device :", device);
+      if (device.device.bootloader)
+        return {
+          index,
+          displayName: device?.device?.info?.displayName,
+          userName: "",
+          path: device.path || i18n.keyboardSelect.unknown,
+        };
       const preparedSN = device.productId === "2201" ? device.serialNumber.slice(0, 32) : device.serialNumber;
       const neuron = neurons.find(neuron => neuron.id.toLowerCase() === preparedSN.toLowerCase());
 
