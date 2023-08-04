@@ -17,7 +17,7 @@
     "package": "electron-forge package",
     "make": "electron-forge make",
     "make-win": "electron-forge make --platform win32",
-    "make-mac": "electron-forge make --platform darwin",
+    "make-mac": "electron-forge make --platform darwin --arch=universal",
     "make-lin": "electron-forge make --platform linux",
     "lint": "eslint --ext .ts,.tsx,.js,.jsx .",
     "prettier": "prettier --write \"./**/*.{js,json,css,scss,md}\"",
