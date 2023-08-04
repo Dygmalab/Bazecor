@@ -2,7 +2,6 @@
   "name": "Bazecor",
   "productName": "Bazecor",
   "version": "1.3.1",
-  "fwVersion": "1.0.9beta",
   "description": "Bazecor desktop app",
   "private": true,
   "repository": {

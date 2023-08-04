@@ -26,7 +26,7 @@ import Styled from "styled-components";
 import Version from "@Types/version";
 import Pages from "@Types/pages";
 import DygmaLogo from "@Assets/logo.svg";
-import { BatteryStatus}  from "../Battery";
+import { BatteryStatus } from "../Battery";
 import i18n from "../../i18n";
 import Focus from "../../../api/focus";
 import { NavigationButton } from "../../component/Button";
@@ -157,7 +157,7 @@ function NavigationMenu(props: NavigationMenuProps): React.JSX.Element {
     const fwList = await getGitHubFW(focus.device.info.product);
     let Beta = getVersions.bazecor.includes("beta");
     let cleanedVersion = getVersions.bazecor;
-    if (Beta) cleanedVersion = getVersions.bazecor.replace("beta", "");
+    if (Beta && !getVersions.bazecor.includes("-beta")) cleanedVersion = getVersions.bazecor.replace("beta", "");
     const semVerCheck = SemVer.compare(fwList[0].version, cleanedVersion);
     Beta = Beta || focus.device.info.product !== "Raise";
     setVersions(getVersions);
