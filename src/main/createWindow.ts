@@ -16,7 +16,7 @@ import { configureUSB } from "./setup/configureUSB";
 declare const MAIN_WINDOW_WEBPACK_ENTRY: string;
 declare const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: string;
 
-const createWindow = (): void => {
+const createWindow = async (): Promise<void> => {
   // Create the browser window.
   const mainWindowState = windowStateKeeper({
     defaultWidth: 1200,
@@ -46,7 +46,7 @@ const createWindow = (): void => {
   mainWindowState.manage(mainWindow);
 
   // and load the index.html of the app.
-  mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
+  await mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
 
   Window.getInstance(); // init Windows manager
   Window.setWindow(mainWindow);
@@ -61,7 +61,7 @@ const createWindow = (): void => {
   onReadyToShow();
   onDevTools();
   onClose();
-  configureUSB();
+  await configureUSB();
 };
 
 export default createWindow;

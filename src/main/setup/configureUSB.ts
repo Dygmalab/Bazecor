@@ -83,5 +83,4 @@ export const configureUSB = async () => {
     const devices = getDeviceList();
     return devices;
   });
-
 };
