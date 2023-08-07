@@ -13,6 +13,9 @@ const packagerConfig: ForgePackagerOptions = {
   darwinDarkModeSupport: true,
   icon: "./build/logo",
   name: "Bazecor",
+  osxUniversal: {
+    x64ArchFiles: "*",
+  },
   extraResource: ["NEWS.md"],
   appCopyright: "Copyright © 2018, 2023 DygmaLab SL; distributed under the GPLv3",
 };
