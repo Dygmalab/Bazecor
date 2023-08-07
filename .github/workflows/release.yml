@@ -163,7 +163,7 @@ jobs:
         with:
           name: artifacts
           path: |
-            out/make/**/*.dmg
+            out/make/**/*universal.dmg
             out/make/**/*.AppImage
             windows_signing/**/*.exe
 
