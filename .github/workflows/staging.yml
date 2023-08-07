@@ -133,7 +133,7 @@ jobs:
           APPLE_ID: ${{ secrets.APPLEID }}
           APPLE_ID_PASSWORD: ${{ secrets.APPLEIDPASS }}
           APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
-        run: yarn run make
+        run: yarn run make-mac
       - if: runner.os != 'macOS'
         name: Build for Linux/Windows
         run: yarn run make
@@ -166,7 +166,7 @@ jobs:
         with:
           name: artifacts
           path: |
-            out/make/**/*.dmg
+            out/make/**/*universal.dmg
             out/make/**/*.AppImage
             windows_signing/**/*.exe
 
