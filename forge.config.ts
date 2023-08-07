@@ -41,7 +41,6 @@ const config: ForgeConfig = {
   makers: [
     new MakerSquirrel({
       setupIcon: "./build/logo.ico",
-      iconUrl: "https://github.com/Dygmalab/Bazecor/blob/development/build/logo.ico",
     }),
     {
       name: "@electron-forge/maker-dmg",
