@@ -1,7 +1,7 @@
 import delay from "./delay";
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-// const drivelist = require("drivelist");
+/* const drivelist = require("drivelist");*/
 
 const listDrivesHandler = async (_event: any, _someArgument: any) => {
   /* let drives;
