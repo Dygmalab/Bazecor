@@ -1,10 +1,10 @@
 import delay from "./delay";
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const drivelist = require("drivelist");
+// const drivelist = require("drivelist");
 
 const listDrivesHandler = async (_event: any, _someArgument: any) => {
-  let drives;
+  /* let drives;
   let result: undefined | any;
   while (result === undefined) {
     drives = await drivelist.list();
@@ -24,7 +24,7 @@ const listDrivesHandler = async (_event: any, _someArgument: any) => {
       }
     });
   }
-  return result.path;
+  return result.path;*/
 };
 
 export default listDrivesHandler;
