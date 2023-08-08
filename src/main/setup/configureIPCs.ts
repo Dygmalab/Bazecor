@@ -5,11 +5,23 @@ import listDrivesHandler from "../utils/listDrivesHandler";
 import GlobalRecording from "../managers/GlobalRecording";
 import Window from "../managers/Window";
 
+const removeIPCs = () => {
+  ipcMain.removeHandler("start-recording");
+  ipcMain.removeHandler("stop-recording");
+  ipcMain.removeHandler("list-drives");
+  ipcMain.removeHandler("open-dialog");
+  ipcMain.removeHandler("is-devtools-opened");
+  ipcMain.removeHandler("save-dialog");
+  ipcMain.removeHandler("manage-devtools");
+  ipcMain.removeHandler("get-userPath");
+  ipcMain.removeHandler("get-Locale");
+  ipcMain.removeHandler("openExternal");
+  ipcMain.removeHandler("get-NativeTheme");
+};
+
 const configureIPCs = () => {
   const globalRecording = GlobalRecording.getInstance();
-  const window = Window.getWindow();
 
-  ipcMain.removeHandler("start-recording");
   ipcMain.on("start-recording", () => {
     console.log("start-recording");
     globalRecording.setRecording(true);
@@ -18,7 +30,6 @@ const configureIPCs = () => {
     uIOhook.start();
   });
 
-  ipcMain.removeHandler("stop-recording");
   ipcMain.on("stop-recording", () => {
     console.log("stop-recording");
     globalRecording.setRecording(false);
@@ -27,32 +38,31 @@ const configureIPCs = () => {
     uIOhook.stop();
   });
 
-  ipcMain.removeHandler("list-drives");
   ipcMain.handle("list-drives", async (event, options) => {
     const data = listDrivesHandler(event, options);
     return data;
   });
 
-  ipcMain.removeHandler("open-dialog");
   ipcMain.handle("open-dialog", async (event, options) => {
+    const window = Window.getWindow();
     const data = await dialog.showOpenDialog(window, options);
     return data;
   });
 
-  ipcMain.removeHandler("save-dialog");
   ipcMain.handle("save-dialog", async (event, options) => {
+    const window = Window.getWindow();
     const data = dialog.showSaveDialogSync(window, options);
     return data;
   });
 
-  ipcMain.removeHandler("is-devtools-opened");
   ipcMain.handle("is-devtools-opened", async () => {
+    const window = Window.getWindow();
     const data = window.webContents.isDevToolsOpened();
     return data;
   });
 
-  ipcMain.removeHandler("manage-devtools");
   ipcMain.handle("manage-devtools", (event, action) => {
+    const window = Window.getWindow();
     if (action === true) {
       window.webContents.openDevTools();
     } else {
@@ -60,20 +70,16 @@ const configureIPCs = () => {
     }
   });
 
-  ipcMain.removeHandler("get-userPath");
   ipcMain.handle("get-userPath", (event, path) => app.getPath(path));
 
-  ipcMain.removeHandler("openExternal");
   ipcMain.handle("openExternal", (event, URI) => shell.openExternal(URI));
 
-  ipcMain.removeHandler("get-Locale");
   ipcMain.handle("get-Locale", () => {
     const locale = app.getLocale();
     return locale;
   });
 
-  ipcMain.removeHandler("get-NativeTheme");
   ipcMain.handle("get-NativeTheme", () => nativeTheme.shouldUseDarkColors);
 };
 
-export default configureIPCs;
+export { configureIPCs, removeIPCs };

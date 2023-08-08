@@ -73,14 +73,13 @@ export const getDevices = () => {
 };
 
 export const configureUSB = async () => {
+  ipcMain.handle("usb-devices", () => {
+    const devices = getDeviceList();
+    return devices;
+  });
   // We're relying on webusb to send us notifications about device
   // connect/disconnect events, but it only sends disconnect events for devices
   // it knows. If there are devices connected when we start up, we need to scan
   // them first to notice disconnects. We do that here.
   await webusb.getDevices();
-
-  ipcMain.handle("usb-devices", () => {
-    const devices = getDeviceList();
-    return devices;
-  });
 };
