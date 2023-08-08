@@ -13,11 +13,11 @@
   "scripts": {
     "clean": "rm -rf dist && rm -rf out && rm -rf node_modules",
     "start": "NODE_ENV=development electron-forge start",
-    "make-dev": "NODE_ENV=development electron-forge make --arch=universal",
+    "make-dev": "NODE_ENV=development electron-forge make",
     "package": "electron-forge package",
     "make": "electron-forge make",
     "make-win": "electron-forge make --platform=win32",
-    "make-mac": "electron-forge make --platform=darwin --arch=universal",
+    "make-mac": "electron-forge make --platform=darwin",
     "make-lin": "electron-forge make --platform=linux",
     "lint": "eslint --ext .ts,.tsx,.js,.jsx .",
     "prettier": "prettier --write \"./**/*.{js,json,css,scss,md}\"",
