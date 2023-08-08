@@ -2,7 +2,7 @@ import { BrowserWindow, app } from "electron";
 import windowStateKeeper from "electron-window-state";
 import path from "path";
 import { configureNativeTheme } from "./setup/theme";
-import configureIPCs from "./setup/configureIPCs";
+import { configureIPCs, removeIPCs } from "./setup/configureIPCs";
 import configureRedirect from "./setup/configureRedirect";
 import onDevTools from "./setup/onDevTools";
 import onReadyToShow from "./setup/onReadyToShow";
@@ -43,6 +43,8 @@ const createWindow = async (): Promise<void> => {
     },
   });
 
+  removeIPCs();
+  configureIPCs();
   mainWindowState.manage(mainWindow);
 
   // and load the index.html of the app.
@@ -56,7 +58,6 @@ const createWindow = async (): Promise<void> => {
   }
 
   configureNativeTheme();
-  configureIPCs();
   configureRedirect();
   onReadyToShow();
   onDevTools();
