@@ -16,7 +16,7 @@ import { configureUSB } from "./setup/configureUSB";
 declare const MAIN_WINDOW_WEBPACK_ENTRY: string;
 declare const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: string;
 
-const createWindow = async (): Promise<void> => {
+const createWindow = () => {
   // Create the browser window.
   const mainWindowState = windowStateKeeper({
     defaultWidth: 1200,
@@ -62,7 +62,7 @@ const createWindow = async (): Promise<void> => {
   onReadyToShow();
   onDevTools();
   onClose();
-  await configureUSB();
+  configureUSB();
 };
 
 export default createWindow;
