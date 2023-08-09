@@ -65,6 +65,7 @@ export const addUSBListeners = () => {
 export const removeUSBListeners = () => {
   webusb.removeEventListener("connect", onUSBConnect);
   webusb.removeEventListener("disconnect", onUSBDisconnect);
+  ipcMain.removeHandler("usb-devices");
 };
 
 export const getDevices = () => {
