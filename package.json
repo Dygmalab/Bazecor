@@ -12,7 +12,7 @@
   "scripts": {
     "clean": "rm -rf dist && rm -rf out && rm -rf node_modules",
     "start": "NODE_ENV=development electron-forge start",
-    "make-dev": "NODE_ENV=development electron-forge make --platform=darwin --arch=universal",
+    "make-dev": "NODE_ENV=development electron-forge make --platform=darwin",
     "package": "electron-forge package",
     "make": "electron-forge make",
     "make-win": "electron-forge make --platform=win32",
