@@ -5,6 +5,7 @@ import { setTheme } from "./setup/theme";
 import setBackup from "./setup/setBackup";
 import GlobalRecording from "./managers/GlobalRecording";
 import { addUSBListeners, removeUSBListeners } from "./setup/configureUSB";
+import { removeIPCs } from "./setup/configureIPCs";
 
 electronUpdater();
 
@@ -38,6 +39,8 @@ app.on("window-all-closed", () => {
   removeUSBListeners();
   if (process.platform !== "darwin") {
     app.quit();
+  } else {
+    removeIPCs();
   }
 });
 

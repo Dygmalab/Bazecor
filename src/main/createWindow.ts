@@ -2,7 +2,7 @@ import { BrowserWindow, app } from "electron";
 import windowStateKeeper from "electron-window-state";
 import path from "path";
 import { configureNativeTheme } from "./setup/theme";
-import { configureIPCs, removeIPCs } from "./setup/configureIPCs";
+import { configureIPCs } from "./setup/configureIPCs";
 import configureRedirect from "./setup/configureRedirect";
 import onDevTools from "./setup/onDevTools";
 import onReadyToShow from "./setup/onReadyToShow";
@@ -43,7 +43,6 @@ const createWindow = () => {
     },
   });
 
-  removeIPCs();
   configureIPCs();
   mainWindowState.manage(mainWindow);
 
