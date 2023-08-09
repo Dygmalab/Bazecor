@@ -48,7 +48,7 @@ const createWindow = async (): Promise<void> => {
   mainWindowState.manage(mainWindow);
 
   // and load the index.html of the app.
-  await mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
+  mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
 
   Window.getInstance(); // init Windows manager
   Window.setWindow(mainWindow);
