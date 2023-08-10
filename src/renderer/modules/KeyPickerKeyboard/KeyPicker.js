@@ -88,6 +88,7 @@ import ENi from "@Renderer/modules/KeyPickerKeyboard/ENi.json";
 import ENa from "@Renderer/modules/KeyPickerKeyboard/ENa.json";
 import GR from "@Renderer/modules/KeyPickerKeyboard/GR.json";
 import FR from "@Renderer/modules/KeyPickerKeyboard/FR.json";
+import FRBEPO from "@Renderer/modules/KeyPickerKeyboard/FR-BEPO.json";
 import SW from "@Renderer/modules/KeyPickerKeyboard/SW.json";
 import DN from "@Renderer/modules/KeyPickerKeyboard/DN.json";
 import NW from "@Renderer/modules/KeyPickerKeyboard/NW.json";
@@ -253,7 +254,7 @@ width: 100%;
 }
 .KeysWrapper.super.notWireless {
   .keysContainerGrid {
-    grid-template-columns: repeat(12, 1fr); 
+    grid-template-columns: repeat(12, 1fr);
   }
   .keysMacros { grid-area:  1 / 1 / 2 / 5; }
   .keysLayerLock { grid-area: 1 / 5 / 2 / 9; }
@@ -387,6 +388,7 @@ class KeyPicker extends Component {
       spanish: ES,
       german: GR,
       french: FR,
+      frenchBepo: FRBEPO,
       swedish: SW,
       finnish: SW,
       danish: DN,
