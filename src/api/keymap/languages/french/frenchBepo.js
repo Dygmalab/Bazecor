@@ -63,6 +63,7 @@ const frenchLetters = [
     labels: {
       primary: "^",
     },
+    newGroupName: "Punctuation",
   },
   {
     code: 24,
@@ -210,6 +211,7 @@ const frenchLetters = [
     labels: {
       primary: ".",
     },
+    newGroupName: "Punctuation",
   },
   {
     code: 5,
