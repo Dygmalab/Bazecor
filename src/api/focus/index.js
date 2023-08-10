@@ -17,6 +17,7 @@
 
 import fs from "fs";
 import { spawn } from "child_process";
+import BluetoothTerminal from "./BluetoothSerial";
 
 const { SerialPort } = eval('require("serialport")');
 const { DelimiterParser } = eval('require("@serialport/parser-delimiter")');
@@ -37,6 +38,27 @@ class Focus {
     }
     return global.focus_instance;
   }
+
+  testBTSerial = async () => {
+    // *********  TESTING BT TERMINAL  ********* //
+    // Obtain configured instance.
+    const terminal = new BluetoothTerminal();
+
+    // Override `receive` method to handle incoming data as you want.
+    terminal.receive = function (data) {
+      alert(data);
+    };
+    // Request the device for connection and get its name after successful connection.
+    await terminal.connect();
+    console.log(terminal.getDeviceName());
+    alert(`${terminal.getDeviceName()} is connected!`);
+
+    // Send something to the connected device.
+    terminal.send("help");
+
+    // Disconnect from the connected device.
+    terminal.disconnect();
+  };
 
   delay = ms => new Promise(res => setTimeout(res, ms));
 

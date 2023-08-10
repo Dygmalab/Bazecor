@@ -576,6 +576,11 @@ const SelectKeyboard: React.FC<SelectKeyboardProps> = (props): JSX.Element => {
     deviceItems = getDeviceItems();
   }
 
+  const testBT = () => {
+    const focus = new Focus();
+    focus.testBTSerial();
+  };
+
   const selectedDevice = devices && devices[selectedPortIndex];
   const connectedDevice = devices && devices.findIndex(dev => focus.serialNumber?.includes(dev.serialNumber));
   // console.log("Checking connected Data: ", connectedDevice, selectedPortIndex);
@@ -600,6 +605,9 @@ const SelectKeyboard: React.FC<SelectKeyboardProps> = (props): JSX.Element => {
             virtualDevice={focus.device}
             connectedDevice={connectedDevice}
           />
+          <button type="button" onClick={testBT}>
+            TEST BT SERIAL
+          </button>
           <div className="cardButton-wrapper">
             <div className="cardButton">
               <RegularButton
