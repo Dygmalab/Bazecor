@@ -19,42 +19,235 @@
  */
 import { withModifiers } from "../../db/utils";
 
+const OFFSET_CONTROL = 256;
+const OFFSET_ALT = 512;
+const OFFSET_CONTROL_ALT = 768;
+const OFFSET_ALTGR = 1024;
+const OFFSET_SHIFT = 2048;
+const OFFSET_OS = 4096;
+
 const frenchLetters = [
+  // First row
   {
     code: 20,
     labels: {
-      primary: "A",
+      primary: "b",
     },
   },
   {
     code: 26,
     labels: {
-      primary: "Z",
+      primary: "é",
     },
   },
   {
+    code: 8,
+    labels: {
+      primary: "p",
+    },
+  },
+  {
+    code: 21,
+    labels: {
+      primary: "o",
+    },
+  },
+  {
+    code: 23,
+    labels: {
+      primary: "è",
+    },
+  },
+  {
+    code: 28,
+    labels: {
+      primary: "^",
+    },
+  },
+  {
+    code: 24,
+    labels: {
+      primary: "v",
+    },
+  },
+  {
+    code: 12,
+    labels: {
+      primary: "d",
+    },
+  },
+  {
+    code: 18,
+    labels: {
+      primary: "l",
+    },
+  },
+  {
+    code: 19,
+    labels: {
+      primary: "j",
+    },
+  },
+  {
+    code: 47,
+    labels: {
+      primary: "z",
+    },
+    newGroupName: "Letters",
+  },
+  {
+    code: 48,
+    labels: {
+      primary: "w",
+    },
+    newGroupName: "Letters",
+  },
+  // Second row
+  {
     code: 4,
     labels: {
-      primary: "Q",
+      primary: "a",
+    },
+  },
+  {
+    code: 22,
+    labels: {
+      primary: "u",
+    },
+  },
+  {
+    code: 7,
+    labels: {
+      primary: "i",
+    },
+  },
+  {
+    code: 9,
+    labels: {
+      primary: "e",
+    },
+  },
+  {
+    code: 10,
+    labels: {
+      primary: ",",
+    },
+    newGroupName: "Punctuation",
+  },
+  {
+    code: 11,
+    labels: {
+      primary: "c",
+    },
+  },
+  {
+    code: 13,
+    labels: {
+      primary: "t",
+    },
+  },
+  {
+    code: 14,
+    labels: {
+      primary: "s",
+    },
+  },
+  {
+    code: 15,
+    labels: {
+      primary: "r",
     },
   },
   {
     code: 51,
     labels: {
-      primary: "M",
+      primary: "n",
+    },
+    newGroupName: "Letters",
+  },
+  {
+    code: 52,
+    labels: {
+      primary: "m",
+    },
+    newGroupName: "Letters",
+  },
+  {
+    code: 49,
+    labels: {
+      primary: "ç",
+    },
+    newGroupName: "Letters",
+  },
+  // Third row
+  {
+    code: 100,
+    labels: {
+      primary: "ê",
     },
     newGroupName: "Letters",
   },
   {
     code: 29,
     labels: {
-      primary: "W",
+      primary: "à",
     },
   },
   {
-    code: 53,
+    code: 27,
     labels: {
-      primary: "²",
+      primary: "y",
+    },
+  },
+  {
+    code: 6,
+    labels: {
+      primary: "x",
+    },
+  },
+  {
+    code: 25,
+    labels: {
+      primary: ".",
+    },
+  },
+  {
+    code: 5,
+    labels: {
+      primary: "k",
+    },
+  },
+  {
+    code: 17,
+    labels: {
+      primary: "’",
+    },
+    newGroupName: "Punctuation",
+  },
+  {
+    code: 16,
+    labels: {
+      primary: "q",
+    },
+  },
+  {
+    code: 54,
+    labels: {
+      primary: "g",
+    },
+    newGroupName: "Letters",
+  },
+  {
+    code: 55,
+    labels: {
+      primary: "h",
+    },
+    newGroupName: "Letters",
+  },
+  {
+    code: 56,
+    labels: {
+      primary: "f",
     },
     newGroupName: "Letters",
   },
@@ -62,136 +255,63 @@ const frenchLetters = [
 
 const frenchModifierKeys = [
   {
-    code: 31,
-    labels: {
-      primary: "é",
-    },
-    newGroupName: "Letters",
-  },
-  {
-    code: 36,
-    labels: {
-      primary: "è",
-    },
-    newGroupName: "Letters",
-  },
-  {
-    code: 38,
-    labels: {
-      primary: "ç",
-    },
-    newGroupName: "Letters",
-  },
-  {
-    code: 39,
-    labels: {
-      primary: "à",
-    },
-    newGroupName: "Letters",
-  },
-  {
-    code: 52,
-    labels: {
-      primary: "ù",
-    },
-    newGroupName: "Letters",
-  },
-  {
     code: 30,
     labels: {
-      primary: "&",
+      primary: "\"",
     },
-    newGroupName: "Punctuation",
+  },
+  {
+    code: 31,
+    labels: {
+      primary: "«",
+    },
   },
   {
     code: 32,
     labels: {
-      primary: '"',
+      primary: '»',
     },
-    newGroupName: "Punctuation",
   },
   {
     code: 33,
     labels: {
-      primary: "'",
+      primary: "(",
     },
-    newGroupName: "Punctuation",
   },
   {
     code: 34,
     labels: {
-      primary: "(",
+      primary: ")",
     },
-    newGroupName: "Punctuation",
   },
   {
     code: 35,
     labels: {
-      primary: "-",
+      primary: "@",
     },
-    newGroupName: "Punctuation",
+  },
+  {
+    code: 36,
+    labels: {
+      primary: "+",
+    },
   },
   {
     code: 37,
     labels: {
-      primary: "_",
+      primary: "-",
     },
-    newGroupName: "Punctuation",
   },
   {
-    code: 45,
+    code: 38,
     labels: {
-      primary: ")",
-    },
-  },
-
-  {
-    code: 47,
-    labels: {
-      primary: "^",
+      primary: "/",
     },
   },
   {
-    code: 48,
-    labels: {
-      primary: "$",
-    },
-  },
-  {
-    code: 49,
+    code: 39,
     labels: {
       primary: "*",
-    },
-  },
-  {
-    code: 16,
-    labels: {
-      primary: ",",
-    },
-    newGroupName: "Punctuation",
-  },
-  {
-    code: 54,
-    labels: {
-      primary: ";",
-    },
-  },
-  {
-    code: 55,
-    labels: {
-      primary: ":",
-    },
-  },
-  {
-    code: 56,
-    labels: {
-      primary: "!",
-    },
-  },
-  {
-    code: 100,
-    labels: {
-      primary: "<",
     },
   },
 ];
@@ -200,61 +320,61 @@ const altCtrlFrench = {
   groupName: "AltCtrl French",
   keys: [
     {
-      code: 799,
+      code: OFFSET_CONTROL_ALT + 31,
       labels: {
         primary: "~",
       },
     },
     {
-      code: 800,
+      code: OFFSET_CONTROL_ALT + 32,
       labels: {
         primary: "#",
       },
     },
     {
-      code: 801,
+      code: OFFSET_CONTROL_ALT + 33,
       labels: {
         primary: "{",
       },
     },
     {
-      code: 802,
+      code: OFFSET_CONTROL_ALT + 34,
       labels: {
         primary: "[",
       },
     },
     {
-      code: 803,
+      code: OFFSET_CONTROL_ALT + 35,
       labels: {
         primary: "|",
       },
     },
     {
-      code: 804,
+      code: OFFSET_CONTROL_ALT + 36,
       labels: {
         primary: "`",
       },
     },
     {
-      code: 805,
+      code: OFFSET_CONTROL_ALT + 37,
       labels: {
         primary: "\\",
       },
     },
     {
-      code: 806,
+      code: OFFSET_CONTROL_ALT + 38,
       labels: {
         primary: "^",
       },
     },
     {
-      code: 807,
+      code: OFFSET_CONTROL_ALT + 39,
       labels: {
         primary: "@",
       },
     },
     {
-      code: 813,
+      code: OFFSET_CONTROL_ALT + 45,
       labels: {
         primary: "]",
       },
@@ -284,9 +404,9 @@ const altGRFrench = {
   groupName: "AltCtrl French",
   keys: [
     {
-      code: 1055,
+      code: OFFSET_ALTGR + 20,
       labels: {
-        primary: "~",
+        primary: "<",
       },
     },
     {
@@ -511,65 +631,41 @@ const frenchBepo = frenchLetters.concat(frenchModifierKeys);
 const table = { keys: frenchBepo };
 const tableWithoutModifier = { keys: frenchLetters };
 
-const frenchCtrlTable = withModifiers(table, "Control +", "C+", 256);
-const frenchLAltTable = withModifiers(table, "Alt +", "A+", 512);
-const frenchRAltTable = withModifiers(table, "AltGr +", "AGr+", 1024);
-const frenchShiftTable = withModifiers(tableWithoutModifier, "Shift +", "S+", 2048);
-const frenchGuiTable = withModifiers(table, "Os+", "O+", 4096);
+const frenchCtrlTable = withModifiers(table, "Control +", "C+", OFFSET_CONTROL);
+const frenchLAltTable = withModifiers(table, "Alt +", "A+", OFFSET_ALT);
+const frenchRAltTable = withModifiers(table, "AltGr +", "AGr+", OFFSET_ALTGR);
+const frenchShiftTable = withModifiers(tableWithoutModifier, "Shift +", "S+", OFFSET_SHIFT);
+const frenchGuiTable = withModifiers(table, "Os+", "O+", OFFSET_OS);
+
 // Double
-
-const frenchCATable = withModifiers(table, "Control + Alt +", "C+A+", 768);
-
+const frenchCATable = withModifiers(table, "Control + Alt +", "C+A+", OFFSET_CONTROL_ALT);
 const frenchCAGrTable = withModifiers(table, "Control + AltGr +", "C+AGr+", 1280);
-
 const frenchCSTable = withModifiers(table, "Control + Shift +", "C+S+", 2304);
-
 const frenchCGTable = withModifiers(table, "Control + Os +", "C+O+", 4352);
-
 const frenchAAGrTable = withModifiers(table, "Alt + AltGr +", "A+AGr+", 1536);
-
 const frenchASTable = withModifiers(table, "Alt + Shift +", "A+S+", 2560);
-
 const frenchAGTable = withModifiers(table, "Alt + Os +", "A+O+", 4608);
-
 const frenchAGrSTable = withModifiers(table, "AltGr + Shift +", "AGr+S+", 3072);
-
 const frenchAGrGTable = withModifiers(table, "AltGr + Os +", "AGr+O+", 5120);
-
 const frenchSGTable = withModifiers(table, "Shift + Os +", "S+O+", 6144);
 
 // Triple
-
 const frenchCAAGTable = withModifiers(table, "Control + Alt + AltGr +", "C+A+AGr+", 1792);
-
 const frenchCASTable = withModifiers(table, "Meh +", "Meh+", 2816);
-
 const frenchCAGTable = withModifiers(table, "Control + Alt + Os +", "C+A+O+", 4864);
-
 const frenchCAGSTable = withModifiers(table, "Control + AltGr + Shift +", "C+AGr+S+", 3328);
-
 const frenchCAGGTable = withModifiers(table, "Control + AltGr + Os +", "C+AGr+O+", 5376);
-
 const frenchCSGTable = withModifiers(table, "Control + Shift + Os +", "C+S+O+", 6400);
-
 const frenchAAGSTable = withModifiers(table, "Alt + AltGr + Shift +", "A+AGr+S+", 3584);
-
 const frenchAAGGTable = withModifiers(table, "Alt + AltGr + Os +", "A+AGr+O+", 5632);
-
 const frenchASGTable = withModifiers(table, "Alt + Shift + Os +", "A+S+O+", 6656);
-
 const frenchAGSGTable = withModifiers(table, "AltGr + Shift + Os +", "AGr+S+O+", 7168);
 
 // Quad
-
 const frenchCAAGrSTable = withModifiers(table, "Meh + AltGr +", "M+AGr+", 3840);
-
 const frenchCAAGrGTable = withModifiers(table, "Control + Alt + AltGr + Os +", "C+A+AGr+O+", 5888);
-
 const frenchCAGrSGTable = withModifiers(table, "Control + AltGr + Shift + Os +", "C+AGr+S+O+", 7424);
-
 const frenchAAGrSGTable = withModifiers(table, "Alt + AltGr + Shift + Os +", "A+AGr+S+O+", 7680);
-
 const frenchAllModTable = withModifiers(table, "Hyper + AltGr +", "H+AGr+", 7936);
 
 const DualUseCtrlTable = withModifiers(table, "Control /", "CTRL/", 49169);
