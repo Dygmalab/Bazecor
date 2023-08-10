@@ -257,7 +257,7 @@ const frenchModifierKeys = [
   {
     code: 30,
     labels: {
-      primary: "\"",
+      primary: '"',
     },
   },
   {
@@ -269,7 +269,7 @@ const frenchModifierKeys = [
   {
     code: 32,
     labels: {
-      primary: '»',
+      primary: "»",
     },
   },
   {
@@ -312,6 +312,18 @@ const frenchModifierKeys = [
     code: 39,
     labels: {
       primary: "*",
+    },
+  },
+  {
+    code: 45,
+    labels: {
+      primary: "=",
+    },
+  },
+  {
+    code: 46,
+    labels: {
+      primary: "%",
     },
   },
 ];
@@ -403,83 +415,302 @@ const altCtrlFrench = {
 const altGRFrench = {
   groupName: "AltCtrl French",
   keys: [
+    // Numbers row + AltGr
     {
-      code: OFFSET_ALTGR + 20,
+      code: OFFSET_ALTGR + 53,
+      labels: {
+        primary: "–",
+      },
+    },
+    {
+      code: OFFSET_ALTGR + 30,
+      labels: {
+        primary: "—",
+      },
+    },
+    {
+      code: OFFSET_ALTGR + 31,
       labels: {
         primary: "<",
       },
     },
     {
-      code: 1056,
+      code: OFFSET_ALTGR + 32,
       labels: {
-        primary: "#",
+        primary: ">",
       },
     },
     {
-      code: 1057,
-      labels: {
-        primary: "{",
-      },
-    },
-    {
-      code: 1058,
+      code: OFFSET_ALTGR + 33,
       labels: {
         primary: "[",
       },
     },
     {
-      code: 1059,
-      labels: {
-        primary: "|",
-      },
-    },
-    {
-      code: 1060,
-      labels: {
-        primary: "`",
-      },
-    },
-    {
-      code: 1061,
-      labels: {
-        primary: "\\",
-      },
-    },
-    {
-      code: 1062,
-      labels: {
-        primary: "^",
-      },
-    },
-    {
-      code: 1063,
-      labels: {
-        primary: "@",
-      },
-    },
-    {
-      code: 1069,
+      code: OFFSET_ALTGR + 34,
       labels: {
         primary: "]",
       },
     },
     {
-      code: 1070,
+      code: OFFSET_ALTGR + 35,
       labels: {
-        primary: "}",
+        primary: "^",
       },
     },
     {
-      code: 1032,
+      code: OFFSET_ALTGR + 36,
+      labels: {
+        primary: "±",
+      },
+    },
+    {
+      code: OFFSET_ALTGR + 37,
+      labels: {
+        primary: "−",
+      },
+    },
+    {
+      code: OFFSET_ALTGR + 38,
+      labels: {
+        primary: "÷",
+      },
+    },
+    {
+      code: OFFSET_ALTGR + 39,
+      labels: {
+        primary: "×",
+      },
+    },
+    {
+      code: OFFSET_ALTGR + 45,
+      labels: {
+        primary: "≠",
+      },
+    },
+    // First row
+    {
+      code: OFFSET_ALTGR + 20,
+      labels: {
+        primary: "|",
+      },
+    },
+    {
+      code: OFFSET_ALTGR + 26,
+      labels: {
+        primary: "´",
+      },
+    },
+    {
+      code: OFFSET_ALTGR + 8,
+      labels: {
+        primary: "&",
+      },
+    },
+    {
+      code: OFFSET_ALTGR + 21,
+      labels: {
+        primary: "œ",
+      },
+    },
+    {
+      code: OFFSET_ALTGR + 23,
+      labels: {
+        primary: "`",
+      },
+    },
+    {
+      code: OFFSET_ALTGR + 28,
+      labels: {
+        primary: "¡",
+      },
+    },
+    {
+      code: OFFSET_ALTGR + 24,
+      labels: {
+        primary: "ˇ",
+      },
+    },
+    {
+      code: OFFSET_ALTGR + 12,
+      labels: {
+        primary: "∞",
+      },
+    },
+    {
+      code: OFFSET_ALTGR + 18,
+      labels: {
+        primary: "/",
+      },
+    },
+    {
+      code: OFFSET_ALTGR + 19,
+      labels: {
+        primary: "☮",
+      },
+    },
+    {
+      code: OFFSET_ALTGR + 47,
+      labels: {
+        primary: "–",
+      },
+      newGroupName: "Letters",
+    },
+    {
+      code: OFFSET_ALTGR + 48,
+      labels: {
+        primary: "⚜",
+      },
+      newGroupName: "Letters",
+    },
+    // Second row
+    {
+      code: OFFSET_ALTGR + 4,
+      labels: {
+        primary: "æ",
+      },
+    },
+    {
+      code: OFFSET_ALTGR + 22,
+      labels: {
+        primary: "ù",
+      },
+    },
+    {
+      code: OFFSET_ALTGR + 7,
+      labels: {
+        primary: "¨",
+      },
+    },
+    {
+      code: OFFSET_ALTGR + 9,
       labels: {
         primary: "€",
       },
     },
     {
-      code: 1072,
+      code: OFFSET_ALTGR + 10,
       labels: {
-        primary: "¤",
+        primary: "'",
       },
+      newGroupName: "Punctuation",
+    },
+    {
+      code: OFFSET_ALTGR + 11,
+      labels: {
+        primary: "¸",
+      },
+    },
+    {
+      code: OFFSET_ALTGR + 13,
+      labels: {
+        primary: "ᵉ",
+      },
+    },
+    {
+      code: OFFSET_ALTGR + 14,
+      labels: {
+        primary: "ß",
+      },
+    },
+    {
+      code: OFFSET_ALTGR + 15,
+      labels: {
+        primary: "˘",
+      },
+    },
+    {
+      code: OFFSET_ALTGR + 51,
+      labels: {
+        primary: "~",
+      },
+      newGroupName: "Letters",
+    },
+    {
+      code: OFFSET_ALTGR + 52,
+      labels: {
+        primary: "¯",
+      },
+      newGroupName: "Letters",
+    },
+    {
+      code: OFFSET_ALTGR + 49,
+      labels: {
+        primary: "✈",
+      },
+      newGroupName: "Letters",
+    },
+    // Third row
+    {
+      code: OFFSET_ALTGR + 100,
+      labels: {
+        primary: "/",
+      },
+      newGroupName: "Letters",
+    },
+    {
+      code: OFFSET_ALTGR + 29,
+      labels: {
+        primary: "\\",
+      },
+    },
+    {
+      code: OFFSET_ALTGR + 27,
+      labels: {
+        primary: "{",
+      },
+    },
+    {
+      code: OFFSET_ALTGR + 6,
+      labels: {
+        primary: "}",
+      },
+    },
+    {
+      code: OFFSET_ALTGR + 25,
+      labels: {
+        primary: "…",
+      },
+    },
+    {
+      code: OFFSET_ALTGR + 5,
+      labels: {
+        primary: "~",
+      },
+    },
+    {
+      code: OFFSET_ALTGR + 17,
+      labels: {
+        primary: "¿",
+      },
+      newGroupName: "Punctuation",
+    },
+    {
+      code: OFFSET_ALTGR + 16,
+      labels: {
+        primary: "°",
+      },
+    },
+    {
+      code: OFFSET_ALTGR + 54,
+      labels: {
+        primary: "µ",
+      },
+      newGroupName: "Letters",
+    },
+    {
+      code: OFFSET_ALTGR + 55,
+      labels: {
+        primary: ".",
+      },
+      newGroupName: "Letters",
+    },
+    {
+      code: OFFSET_ALTGR + 56,
+      labels: {
+        primary: "˛",
+      },
+      newGroupName: "Letters",
     },
   ],
 };
