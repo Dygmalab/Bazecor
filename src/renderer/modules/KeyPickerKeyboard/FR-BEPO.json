@@ -9,7 +9,7 @@
     "iconname": "",
     "content": {
       "type": "1UT",
-      "first": "Echap",
+      "first": "Échap",
       "second": "",
       "third": "",
       "fourth": ""
@@ -217,8 +217,8 @@
     "iconname": "",
     "content": {
       "type": "specialBlock",
-      "first": "Impr",
-      "second": "ecran",
+      "first": "Impr.",
+      "second": "écran",
       "third": "",
       "fourth": ""
     }
@@ -233,8 +233,8 @@
     "iconname": "",
     "content": {
       "type": "specialBlock",
-      "first": "Arret",
-      "second": "defil",
+      "first": "Arrêt",
+      "second": "défil.",
       "third": "",
       "fourth": ""
     }
@@ -330,9 +330,9 @@
     "content": {
       "type": "1US",
       "first": "$",
-      "second": "€",
-      "third": "¤",
-      "fourth": "©"
+      "second": "#",
+      "third": "–",
+      "fourth": "¶"
     }
   },
   {
@@ -345,10 +345,10 @@
     "iconname": "",
     "content": {
       "type": "1US",
-      "first": "« ",
+      "first": "\"",
       "second": "1",
-      "third": "“",
-      "fourth": "¼"
+      "third": "—",
+      "fourth": "„"
     }
   },
   {
@@ -361,10 +361,10 @@
     "iconname": "",
     "content": {
       "type": "1US",
-      "first": " »",
+      "first": "«",
       "second": "2",
-      "third": "”",
-      "fourth": "½"
+      "third": "<",
+      "fourth": "“"
     }
   },
   {
@@ -377,10 +377,10 @@
     "iconname": "",
     "content": {
       "type": "1US",
-      "first": "\"",
+      "first": "»",
       "second": "3",
-      "third": "„",
-      "fourth": "¾"
+      "third": ">",
+      "fourth": "”"
     }
   },
   {
@@ -393,10 +393,10 @@
     "iconname": "",
     "content": {
       "type": "1US",
-      "first": "-",
+      "first": "(",
       "second": "4",
-      "third": "‑",
-      "fourth": "⅓"
+      "third": "[",
+      "fourth": "⩽"
     }
   },
   {
@@ -409,10 +409,10 @@
     "iconname": "",
     "content": {
       "type": "1US",
-      "first": "+",
+      "first": ")",
       "second": "5",
-      "third": "±",
-      "fourth": "⅔"
+      "third": "]",
+      "fourth": "⩾"
     }
   },
   {
@@ -425,10 +425,10 @@
     "iconname": "",
     "content": {
       "type": "1US",
-      "first": "*",
+      "first": "@",
       "second": "6",
-      "third": "×",
-      "fourth": "✻"
+      "third": "^",
+      "fourth": "⚠"
     }
   },
   {
@@ -441,10 +441,10 @@
     "iconname": "",
     "content": {
       "type": "1US",
-      "first": "/",
+      "first": "+",
       "second": "7",
-      "third": "\\",
-      "fourth": "÷"
+      "third": "±",
+      "fourth": "¬"
     }
   },
   {
@@ -457,10 +457,10 @@
     "iconname": "",
     "content": {
       "type": "1US",
-      "first": "=",
+      "first": "-",
       "second": "8",
-      "third": "≠",
-      "fourth": "≈"
+      "third": "−",
+      "fourth": "¼"
     }
   },
   {
@@ -473,10 +473,10 @@
     "iconname": "",
     "content": {
       "type": "1US",
-      "first": "(",
+      "first": "/",
       "second": "9",
-      "third": "[",
-      "fourth": "′"
+      "third": "÷",
+      "fourth": "½"
     }
   },
   {
@@ -489,10 +489,10 @@
     "iconname": "",
     "content": {
       "type": "1US",
-      "first": ")",
+      "first": "*",
       "second": "0",
-      "third": "]",
-      "fourth": "″"
+      "third": "×",
+      "fourth": "¾"
     }
   },
   {
@@ -505,10 +505,10 @@
     "iconname": "",
     "content": {
       "type": "1US",
-      "first": "@",
-      "second": "º",
-      "third": "−",
-      "fourth": "‒"
+      "first": "=",
+      "second": "°",
+      "third": "≠",
+      "fourth": "′"
     }
   },
   {
@@ -521,10 +521,10 @@
     "iconname": "",
     "content": {
       "type": "1US",
-      "first": "#",
-      "second": "+",
-      "third": "°",
-      "fourth": "º"
+      "first": "%",
+      "second": "`",
+      "third": "‰",
+      "fourth": "″"
     }
   },
   {
