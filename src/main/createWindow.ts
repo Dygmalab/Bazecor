@@ -2,7 +2,7 @@ import { BrowserWindow, app } from "electron";
 import windowStateKeeper from "electron-window-state";
 import path from "path";
 import { configureNativeTheme } from "./setup/theme";
-import configureIPCs from "./setup/configureIPCs";
+import { configureIPCs } from "./setup/configureIPCs";
 import configureRedirect from "./setup/configureRedirect";
 import onDevTools from "./setup/onDevTools";
 import onReadyToShow from "./setup/onReadyToShow";
@@ -17,7 +17,7 @@ import configureBluetooth from "./setup/configureBluetooth";
 declare const MAIN_WINDOW_WEBPACK_ENTRY: string;
 declare const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: string;
 
-const createWindow = (): void => {
+const createWindow = () => {
   // Create the browser window.
   const mainWindowState = windowStateKeeper({
     defaultWidth: 1200,
@@ -44,6 +44,7 @@ const createWindow = (): void => {
     },
   });
 
+  configureIPCs();
   mainWindowState.manage(mainWindow);
 
   // and load the index.html of the app.

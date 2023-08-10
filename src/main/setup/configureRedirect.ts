@@ -4,7 +4,7 @@ import Window from "../managers/Window";
 const configureRedirect = () => {
   const window = Window.getWindow();
   const handleRedirect = (e: any, url: string) => {
-    if (url != window.webContents.getURL()) {
+    if (url !== window.webContents.getURL()) {
       e.preventDefault();
       shell.openExternal(url);
     }
@@ -12,7 +12,7 @@ const configureRedirect = () => {
 
   window.webContents.on("will-navigate", handleRedirect);
 
-  window.webContents.setWindowOpenHandler(details =>
+  window.webContents.setWindowOpenHandler(() =>
     // new-window handler removed in Electron 22
     ({ action: "deny" }),
   );
