@@ -25,7 +25,88 @@ const OFFSET_CONTROL_ALT = 768;
 const OFFSET_ALTGR = 1024;
 const OFFSET_SHIFT = 2048;
 const OFFSET_OS = 4096;
+const OFFSET_SHIFT_ALTGR = 3072;
 
+const symbols = [
+  {
+    code: 53,
+    labels: {
+      primary: "$",
+    },
+  },
+  {
+    code: 30,
+    labels: {
+      primary: '"',
+    },
+  },
+  {
+    code: 31,
+    labels: {
+      primary: "«",
+    },
+  },
+  {
+    code: 32,
+    labels: {
+      primary: "»",
+    },
+  },
+  {
+    code: 33,
+    labels: {
+      primary: "(",
+    },
+  },
+  {
+    code: 34,
+    labels: {
+      primary: ")",
+    },
+  },
+  {
+    code: 35,
+    labels: {
+      primary: "@",
+    },
+  },
+  {
+    code: 36,
+    labels: {
+      primary: "+",
+    },
+  },
+  {
+    code: 37,
+    labels: {
+      primary: "-",
+    },
+  },
+  {
+    code: 38,
+    labels: {
+      primary: "/",
+    },
+  },
+  {
+    code: 39,
+    labels: {
+      primary: "*",
+    },
+  },
+  {
+    code: 45,
+    labels: {
+      primary: "=",
+    },
+  },
+  {
+    code: 46,
+    labels: {
+      primary: "%",
+    },
+  },
+];
 const frenchLetters = [
   // First row
   {
@@ -254,165 +335,6 @@ const frenchLetters = [
     newGroupName: "Letters",
   },
 ];
-
-const frenchModifierKeys = [
-  {
-    code: 30,
-    labels: {
-      primary: '"',
-    },
-  },
-  {
-    code: 31,
-    labels: {
-      primary: "«",
-    },
-  },
-  {
-    code: 32,
-    labels: {
-      primary: "»",
-    },
-  },
-  {
-    code: 33,
-    labels: {
-      primary: "(",
-    },
-  },
-  {
-    code: 34,
-    labels: {
-      primary: ")",
-    },
-  },
-  {
-    code: 35,
-    labels: {
-      primary: "@",
-    },
-  },
-  {
-    code: 36,
-    labels: {
-      primary: "+",
-    },
-  },
-  {
-    code: 37,
-    labels: {
-      primary: "-",
-    },
-  },
-  {
-    code: 38,
-    labels: {
-      primary: "/",
-    },
-  },
-  {
-    code: 39,
-    labels: {
-      primary: "*",
-    },
-  },
-  {
-    code: 45,
-    labels: {
-      primary: "=",
-    },
-  },
-  {
-    code: 46,
-    labels: {
-      primary: "%",
-    },
-  },
-];
-
-const altCtrlFrench = {
-  groupName: "AltCtrl French",
-  keys: [
-    {
-      code: OFFSET_CONTROL_ALT + 31,
-      labels: {
-        primary: "~",
-      },
-    },
-    {
-      code: OFFSET_CONTROL_ALT + 32,
-      labels: {
-        primary: "#",
-      },
-    },
-    {
-      code: OFFSET_CONTROL_ALT + 33,
-      labels: {
-        primary: "{",
-      },
-    },
-    {
-      code: OFFSET_CONTROL_ALT + 34,
-      labels: {
-        primary: "[",
-      },
-    },
-    {
-      code: OFFSET_CONTROL_ALT + 35,
-      labels: {
-        primary: "|",
-      },
-    },
-    {
-      code: OFFSET_CONTROL_ALT + 36,
-      labels: {
-        primary: "`",
-      },
-    },
-    {
-      code: OFFSET_CONTROL_ALT + 37,
-      labels: {
-        primary: "\\",
-      },
-    },
-    {
-      code: OFFSET_CONTROL_ALT + 38,
-      labels: {
-        primary: "^",
-      },
-    },
-    {
-      code: OFFSET_CONTROL_ALT + 39,
-      labels: {
-        primary: "@",
-      },
-    },
-    {
-      code: OFFSET_CONTROL_ALT + 45,
-      labels: {
-        primary: "]",
-      },
-    },
-    {
-      code: 814,
-      labels: {
-        primary: "}",
-      },
-    },
-    {
-      code: 776,
-      labels: {
-        primary: "€",
-      },
-    },
-    {
-      code: 816,
-      labels: {
-        primary: "¤",
-      },
-    },
-  ],
-};
 
 const altGRFrench = {
   groupName: "AltCtrl French",
@@ -717,7 +639,7 @@ const altGRFrench = {
   ],
 };
 
-const shiftModifierFrench = {
+const shiftedSymbols = {
   groupName: "Shifted French",
   keys: [
     {
@@ -859,7 +781,401 @@ const shiftModifierFrench = {
   ],
 };
 
-const frenchBepo = frenchLetters.concat(frenchModifierKeys);
+const altCtrlFrench = {
+  groupName: "AltCtrl French",
+  keys: [
+    {
+      code: OFFSET_CONTROL_ALT + 31,
+      labels: {
+        primary: "~",
+      },
+    },
+    {
+      code: OFFSET_CONTROL_ALT + 32,
+      labels: {
+        primary: "#",
+      },
+    },
+    {
+      code: OFFSET_CONTROL_ALT + 33,
+      labels: {
+        primary: "{",
+      },
+    },
+    {
+      code: OFFSET_CONTROL_ALT + 34,
+      labels: {
+        primary: "[",
+      },
+    },
+    {
+      code: OFFSET_CONTROL_ALT + 35,
+      labels: {
+        primary: "|",
+      },
+    },
+    {
+      code: OFFSET_CONTROL_ALT + 36,
+      labels: {
+        primary: "`",
+      },
+    },
+    {
+      code: OFFSET_CONTROL_ALT + 37,
+      labels: {
+        primary: "\\",
+      },
+    },
+    {
+      code: OFFSET_CONTROL_ALT + 38,
+      labels: {
+        primary: "^",
+      },
+    },
+    {
+      code: OFFSET_CONTROL_ALT + 39,
+      labels: {
+        primary: "@",
+      },
+    },
+    {
+      code: OFFSET_CONTROL_ALT + 45,
+      labels: {
+        primary: "]",
+      },
+    },
+    {
+      code: 814,
+      labels: {
+        primary: "}",
+      },
+    },
+    {
+      code: 776,
+      labels: {
+        primary: "€",
+      },
+    },
+    {
+      code: 816,
+      labels: {
+        primary: "¤",
+      },
+    },
+  ],
+};
+
+const tableAGrS = {
+  groupName: "AltGrShift French",
+  keys: [
+    {
+      code: OFFSET_SHIFT_ALTGR + 53,
+      labels: {
+        primary: "",
+      },
+    },
+    {
+      code: OFFSET_SHIFT_ALTGR + 30,
+      labels: {
+        primary: "„",
+      },
+    },
+    {
+      code: OFFSET_SHIFT_ALTGR + 31,
+      labels: {
+        primary: "“",
+      },
+    },
+    {
+      code: OFFSET_SHIFT_ALTGR + 32,
+      labels: {
+        primary: "”",
+      },
+    },
+    {
+      code: OFFSET_SHIFT_ALTGR + 33,
+      labels: {
+        primary: "⩽",
+      },
+    },
+    {
+      code: OFFSET_SHIFT_ALTGR + 34,
+      labels: {
+        primary: "⩾",
+      },
+    },
+    {
+      code: OFFSET_SHIFT_ALTGR + 35,
+      labels: {
+        primary: "⚠",
+      },
+    },
+    {
+      code: OFFSET_SHIFT_ALTGR + 36,
+      labels: {
+        primary: "¬",
+      },
+    },
+    {
+      code: OFFSET_SHIFT_ALTGR + 37,
+      labels: {
+        primary: "¼",
+      },
+    },
+    {
+      code: OFFSET_SHIFT_ALTGR + 38,
+      labels: {
+        primary: "½",
+      },
+    },
+    {
+      code: OFFSET_SHIFT_ALTGR + 39,
+      labels: {
+        primary: "¾",
+      },
+    },
+    {
+      code: OFFSET_SHIFT_ALTGR + 45,
+      labels: {
+        primary: "′",
+      },
+    },
+    {
+      code: OFFSET_SHIFT_ALTGR + 46,
+      labels: {
+        primary: "″",
+      },
+    },
+    // First row
+    {
+      code: OFFSET_SHIFT_ALTGR + 20,
+      labels: {
+        primary: "_",
+      },
+    },
+    {
+      code: OFFSET_SHIFT_ALTGR + 26,
+      labels: {
+        primary: "♥",
+      },
+    },
+    {
+      code: OFFSET_SHIFT_ALTGR + 8,
+      labels: {
+        primary: "§",
+      },
+    },
+    {
+      code: OFFSET_SHIFT_ALTGR + 21,
+      labels: {
+        primary: "Œ",
+      },
+    },
+    {
+      code: OFFSET_SHIFT_ALTGR + 23,
+      labels: {
+        primary: "`",
+      },
+    },
+    {
+      code: OFFSET_SHIFT_ALTGR + 28,
+      labels: {
+        primary: "☠",
+      },
+      newGroupName: "Punctuation",
+    },
+    {
+      code: OFFSET_SHIFT_ALTGR + 24,
+      labels: {
+        primary: "☢",
+      },
+    },
+    {
+      code: OFFSET_SHIFT_ALTGR + 12,
+      labels: {
+        primary: "☣",
+      },
+    },
+    {
+      code: OFFSET_SHIFT_ALTGR + 18,
+      labels: {
+        primary: "£",
+      },
+    },
+    {
+      code: OFFSET_SHIFT_ALTGR + 19,
+      labels: {
+        primary: "☯",
+      },
+    },
+    {
+      code: OFFSET_SHIFT_ALTGR + 47,
+      labels: {
+        primary: "☙",
+      },
+      newGroupName: "Letters",
+    },
+    {
+      code: OFFSET_SHIFT_ALTGR + 48,
+      labels: {
+        primary: "♿",
+      },
+      newGroupName: "Letters",
+    },
+    // Second row
+    {
+      code: OFFSET_SHIFT_ALTGR + 4,
+      labels: {
+        primary: "Æ",
+      },
+    },
+    {
+      code: OFFSET_SHIFT_ALTGR + 22,
+      labels: {
+        primary: "Ù",
+      },
+    },
+    {
+      code: OFFSET_SHIFT_ALTGR + 7,
+      labels: {
+        primary: "˙",
+      },
+    },
+    {
+      code: OFFSET_SHIFT_ALTGR + 9,
+      labels: {
+        primary: "¤",
+      },
+    },
+    {
+      code: OFFSET_SHIFT_ALTGR + 10,
+      labels: {
+        primary: ",",
+      },
+      newGroupName: "Punctuation",
+    },
+    {
+      code: OFFSET_SHIFT_ALTGR + 11,
+      labels: {
+        primary: "©",
+      },
+    },
+    {
+      code: OFFSET_SHIFT_ALTGR + 13,
+      labels: {
+        primary: "™",
+      },
+    },
+    {
+      code: OFFSET_SHIFT_ALTGR + 14,
+      labels: {
+        primary: "ſ",
+      },
+    },
+    {
+      code: OFFSET_SHIFT_ALTGR + 15,
+      labels: {
+        primary: "",
+      },
+    },
+    {
+      code: OFFSET_SHIFT_ALTGR + 51,
+      labels: {
+        primary: "⚓",
+      },
+      newGroupName: "Letters",
+    },
+    {
+      code: OFFSET_SHIFT_ALTGR + 52,
+      labels: {
+        primary: "⛽",
+      },
+      newGroupName: "Letters",
+    },
+    {
+      code: OFFSET_SHIFT_ALTGR + 49,
+      labels: {
+        primary: "🄯",
+      },
+      newGroupName: "Letters",
+    },
+    // Third row
+    // {
+    // code: OFFSET_SHIFT_ALTGR + 100,
+    // labels: {
+    // primary: "ê",
+    // },
+    // newGroupName: "Letters",
+    // },
+    {
+      code: OFFSET_SHIFT_ALTGR + 29,
+      labels: {
+        primary: "‚",
+      },
+    },
+    {
+      code: OFFSET_SHIFT_ALTGR + 27,
+      labels: {
+        primary: "‘",
+      },
+    },
+    {
+      code: OFFSET_SHIFT_ALTGR + 6,
+      labels: {
+        primary: "’",
+      },
+    },
+    {
+      code: OFFSET_SHIFT_ALTGR + 25,
+      labels: {
+        primary: "·",
+      },
+      newGroupName: "Punctuation",
+    },
+    {
+      code: OFFSET_SHIFT_ALTGR + 5,
+      labels: {
+        primary: "‑",
+      },
+    },
+    {
+      code: OFFSET_SHIFT_ALTGR + 17,
+      labels: {
+        primary: "̉",
+      },
+      newGroupName: "Punctuation",
+    },
+    {
+      code: OFFSET_SHIFT_ALTGR + 16,
+      labels: {
+        primary: "̛",
+      },
+    },
+    {
+      code: OFFSET_SHIFT_ALTGR + 54,
+      labels: {
+        primary: "†",
+      },
+      newGroupName: "Letters",
+    },
+    {
+      code: OFFSET_SHIFT_ALTGR + 55,
+      labels: {
+        primary: "‡",
+      },
+      newGroupName: "Letters",
+    },
+    {
+      code: OFFSET_SHIFT_ALTGR + 56,
+      labels: {
+        primary: "⛄",
+      },
+      newGroupName: "Letters",
+    },
+  ],
+};
+
+const frenchBepo = frenchLetters.concat(symbols);
 
 const table = { keys: frenchBepo };
 const tableWithoutModifier = { keys: frenchLetters };
@@ -878,28 +1194,28 @@ const frenchCGTable = withModifiers(table, "Control + Os +", "C+O+", 4352);
 const frenchAAGrTable = withModifiers(table, "Alt + AltGr +", "A+AGr+", 1536);
 const frenchASTable = withModifiers(table, "Alt + Shift +", "A+S+", 2560);
 const frenchAGTable = withModifiers(table, "Alt + Os +", "A+O+", 4608);
-const frenchAGrSTable = withModifiers(table, "AltGr + Shift +", "AGr+S+", 3072);
+const frenchAGrSTable = withModifiers(tableAGrS, "AltGr + Shift +", "AGr+S+", 3072);
 const frenchAGrGTable = withModifiers(table, "AltGr + Os +", "AGr+O+", 5120);
 const frenchSGTable = withModifiers(table, "Shift + Os +", "S+O+", 6144);
 
 // Triple
 const frenchCAAGTable = withModifiers(table, "Control + Alt + AltGr +", "C+A+AGr+", 1792);
-const frenchCASTable = withModifiers(table, "Meh +", "Meh+", 2816);
+const frenchCASTable = withModifiers(tableAGrS, "Meh +", "Meh+", 2816);
 const frenchCAGTable = withModifiers(table, "Control + Alt + Os +", "C+A+O+", 4864);
-const frenchCAGSTable = withModifiers(table, "Control + AltGr + Shift +", "C+AGr+S+", 3328);
+const frenchCAGSTable = withModifiers(tableAGrS, "Control + AltGr + Shift +", "C+AGr+S+", 3328);
 const frenchCAGGTable = withModifiers(table, "Control + AltGr + Os +", "C+AGr+O+", 5376);
 const frenchCSGTable = withModifiers(table, "Control + Shift + Os +", "C+S+O+", 6400);
-const frenchAAGSTable = withModifiers(table, "Alt + AltGr + Shift +", "A+AGr+S+", 3584);
+const frenchAAGSTable = withModifiers(tableAGrS, "Alt + AltGr + Shift +", "A+AGr+S+", 3584);
 const frenchAAGGTable = withModifiers(table, "Alt + AltGr + Os +", "A+AGr+O+", 5632);
 const frenchASGTable = withModifiers(table, "Alt + Shift + Os +", "A+S+O+", 6656);
-const frenchAGSGTable = withModifiers(table, "AltGr + Shift + Os +", "AGr+S+O+", 7168);
+const frenchAGSGTable = withModifiers(tableAGrS, "AltGr + Shift + Os +", "AGr+S+O+", 7168);
 
 // Quad
-const frenchCAAGrSTable = withModifiers(table, "Meh + AltGr +", "M+AGr+", 3840);
+const frenchCAAGrSTable = withModifiers(tableAGrS, "Meh + AltGr +", "M+AGr+", 3840);
 const frenchCAAGrGTable = withModifiers(table, "Control + Alt + AltGr + Os +", "C+A+AGr+O+", 5888);
-const frenchCAGrSGTable = withModifiers(table, "Control + AltGr + Shift + Os +", "C+AGr+S+O+", 7424);
-const frenchAAGrSGTable = withModifiers(table, "Alt + AltGr + Shift + Os +", "A+AGr+S+O+", 7680);
-const frenchAllModTable = withModifiers(table, "Hyper + AltGr +", "H+AGr+", 7936);
+const frenchCAGrSGTable = withModifiers(tableAGrS, "Control + AltGr + Shift + Os +", "C+AGr+S+O+", 7424);
+const frenchAAGrSGTable = withModifiers(tableAGrS, "Alt + AltGr + Shift + Os +", "A+AGr+S+O+", 7680);
+const frenchAllModTable = withModifiers(tableAGrS, "Hyper + AltGr +", "H+AGr+", 7936);
 
 const DualUseCtrlTable = withModifiers(table, "Control /", "CTRL/", 49169);
 const DualUseShiftTable = withModifiers(table, "Shift /", "SHIFT/", 49425);
@@ -916,7 +1232,7 @@ const DualUseLayer7Tables = withModifiers(table, "Layer #7 /", "L#7/", 52754);
 const DualUseLayer8Tables = withModifiers(table, "Layer #8 /", "L#8/", 53010);
 
 const frenchBepoModifiedTables = [
-  shiftModifierFrench,
+  shiftedSymbols,
   frenchCtrlTable,
   frenchLAltTable,
   frenchRAltTable,
