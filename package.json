@@ -22,7 +22,7 @@
     "prettier": "prettier --write \"./**/*.{js,json,css,scss,md}\"",
     "test": "vitest run src/renderer/tests src/main/tests",
     "e2e": "yarn playwright test",
-    "commit": "cz",
+    "commit": "cz -S",
     "prepare": "husky install"
   },
   "keywords": [
