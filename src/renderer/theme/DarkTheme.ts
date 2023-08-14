@@ -1,3 +1,5 @@
+import { DefaultTheme } from "styled-components";
+
 import BackgroundImageDark from "@Assets/dark/darkBackground.png";
 import BackgroundImageDark2x from "@Assets/dark/darkBackground-2x.png";
 import CheckedIconDark from "@Assets/dark/icon-check-animated.gif";
@@ -12,22 +14,22 @@ import oldToNew from "@Assets/dark/oldValueToNewValue.svg";
 
 import Tokens from "./Tokens";
 
-const settingColorOpacity = (color, opacity) => {
-  let newColorArray = color;
-  newColorArray = newColorArray.replace(/[^\d,]/g, "").split(",");
+const settingColorOpacity = (color: string, opacity: number) => {
+  // let newColorArray = color;
+  const newColorArray = color.replace(/[^\d,]/g, "").split(",");
   const newColor = `rgba(${newColorArray[0]}, ${newColorArray[1]}, ${newColorArray[2]},  ${opacity})`;
   return newColor;
 };
-const settingColorMatrix = (color, opacity) => {
-  let newColorArray = color;
-  newColorArray = newColorArray.replace(/[^\d,]/g, "").split(",");
-  const newColor = `0 0 0 0 ${(newColorArray[0] / 255).toFixed(2)} 0 0 0 0 ${(newColorArray[1] / 255).toFixed(2)} 0 0 0 0 ${(
-    newColorArray[2] / 255
-  ).toFixed(2)} 0 0 0 ${opacity} 0`;
+const settingColorMatrix = (color: string, opacity: number) => {
+  // let newColorArray = color;
+  const newColorArray = color.replace(/[^\d,]/g, "").split(",");
+  const newColor = `0 0 0 0 ${(parseInt(newColorArray[0], 10) / 255).toFixed(2)} 0 0 0 0 ${(
+    parseInt(newColorArray[1], 10) / 255
+  ).toFixed(2)} 0 0 0 0 ${(parseInt(newColorArray[2], 10) / 255).toFixed(2)} 0 0 0 ${opacity} 0`;
   return newColor;
 };
 
-const Dark = {
+const Dark: DefaultTheme = {
   name: "Dark",
   drawerWidth: 64,
   sidebarWidthLarge: Tokens.sizes.sidebarWidthLarge,
@@ -558,6 +560,9 @@ const Dark = {
       dropdownIconColor: Tokens.colors.purple100,
       dropdownIconColorModifier: Tokens.colors.gray25,
       alt: {
+        background: Tokens.colors.pink200,
+      },
+      altGr: {
         background: Tokens.colors.pink200,
       },
       control: {

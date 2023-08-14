@@ -125,7 +125,7 @@ interface NeuronStatusProps {
   selectedPortIndex: number;
   isVirtual: boolean;
 }
-function NeuronStatus({
+const NeuronStatus: React.FC<NeuronStatusProps> = ({
   loading,
   connected,
   connectedDevice,
@@ -133,15 +133,7 @@ function NeuronStatus({
   deviceItems,
   selectedPortIndex,
   isVirtual,
-}: NeuronStatusProps) {
-  console.log("Loading", loading);
-  console.log("Connected", connected);
-  console.log("connectedDevice", connectedDevice);
-  console.log("scanFoundDevices", scanFoundDevices);
-  console.log("deviceItems", deviceItems);
-  console.log("selectedPortIndex", selectedPortIndex);
-  console.log("isVirtual", isVirtual);
-
+}) => {
   const { neuronLoader } = useTheme().styles.neuronStatus;
   const { checkedIcon } = useTheme().styles.neuronStatus;
   const { connectionColorMatrix } = useTheme().styles.neuronStatus;
@@ -419,6 +411,6 @@ function NeuronStatus({
       </div>
     </Style>
   );
-}
+};
 
 export default NeuronStatus;

@@ -13,21 +13,12 @@
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "paths": {
-      "*": [
-        "node_modules/*"
-      ],
-      "@Assets/*": [
-        "src/static/*"
-      ],
-      "@Renderer/*": [
-        "src/renderer/*"
-      ],
-      "@Types/*": [
-        "src/renderer/types/*"
-      ]
+      "*": ["node_modules/*"],
+      "@Assets/*": ["src/static/*"],
+      "@Renderer/*": ["src/renderer/*"],
+      "@Types/*": ["src/renderer/types/*"]
     }
   },
-  "include": [
-    "src/**/*",
-  ]
+  "include": ["src/**/*"],
+  "files": ["src/renderer/theme/styled.d.ts"]
 }

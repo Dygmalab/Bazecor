@@ -1,12 +1,11 @@
-import { createGlobalStyle } from "styled-components";
+import { DefaultTheme, createGlobalStyle } from "styled-components";
 
 import iconChevronDown from "@Assets/base/icon-arrow--chevron-down.svg";
 import iconChevronDownWhite from "@Assets/base/icon-arrow--chevron-down_white.svg";
 import LibreFranklin from "./fonts/LibreFranklin/LibreFranklin-VariableFont_wght.ttf";
 import LibreFranklinItalic from "./fonts/LibreFranklin/LibreFranklin-Italic-VariableFont_wght.ttf";
 
-const GlobalStyles = createGlobalStyle`
-
+const GlobalStyles = createGlobalStyle<{ theme: DefaultTheme }>`
   @font-face {
     font-family: "Libre Franklin";
     font-weight: 100 900;
@@ -70,7 +69,7 @@ const GlobalStyles = createGlobalStyle`
     padding-right: 17px;
   }
   .wrapperBackground {
-    background-color: ${({ theme }) => theme.styles.wrapper.background};
+    background: ${({ theme }) => theme.styles.wrapper.background};
     padding-bottom: 8px;
     margin-bottom: 32px;
     border-radius: 0 0 16px 16px;
@@ -1223,7 +1222,7 @@ div.card.card-preferences .card-body {
     font-size: 14px;
     border-radius: 3px;
     color: ${({ theme }) => theme.styles.macro.previewColor};
-    border: 1px solid ${({ theme }) => theme.colors.previewColor};
+    border: 1px solid ${({ theme }) => theme.styles.macro.previewColor};
     padding: 0 6px;
     margin: 2px;
   }
@@ -1291,7 +1290,7 @@ div.card.card-preferences .card-body {
     &.keyCode-113,
     &.keyCode-114,
     &.keyCode-115 {
-      border: 1px solid ${({ theme }) => theme.colors.previewColor};
+      border: 1px solid ${({ theme }) => theme.styles.macro.previewColor};
       padding: 0 6px;
       margin: 2px;
     }
