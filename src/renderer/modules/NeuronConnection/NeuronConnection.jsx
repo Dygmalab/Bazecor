@@ -127,8 +127,10 @@ function NeuronConnection({
         <NeuronStatus
           loading={loading ? "loading" : undefined}
           connected={connected}
+          connectedDevice={connectedDevice}
           scanFoundDevices={scanFoundDevices}
           deviceItems={deviceItems.length}
+          selectedPortIndex={selectedPortIndex}
           isVirtual={isVirtual}
         />
         {isVirtual ? (

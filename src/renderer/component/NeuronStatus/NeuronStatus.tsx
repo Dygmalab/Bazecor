@@ -116,8 +116,24 @@ align-self: center;
 }
 
 `;
-
-function NeuronStatus({ loading, connected, connectedDevice, scanFoundDevices, deviceItems, selectedPortIndex, isVirtual }) {
+interface NeuronStatusProps {
+  loading: "loading" | undefined;
+  connected: boolean | undefined;
+  connectedDevice: number | undefined;
+  scanFoundDevices: boolean;
+  deviceItems: number;
+  selectedPortIndex: number;
+  isVirtual: boolean;
+}
+function NeuronStatus({
+  loading,
+  connected,
+  connectedDevice,
+  scanFoundDevices,
+  deviceItems,
+  selectedPortIndex,
+  isVirtual,
+}: NeuronStatusProps) {
   console.log("Loading", loading);
   console.log("Connected", connected);
   console.log("connectedDevice", connectedDevice);
