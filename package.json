@@ -12,11 +12,13 @@
   "scripts": {
     "clean": "rm -rf dist && rm -rf out && rm -rf node_modules",
     "start": "cross-env NODE_ENV=development electron-forge start",
-    "make-dev": "cross-env NODE_ENV=development electron-forge make --platform=darwin",
+    "make-dev": "cross-env NODE_ENV=development electron-forge make",
     "package": "electron-forge package",
     "make": "electron-forge make",
     "make-win": "electron-forge make --platform=win32",
     "make-mac": "electron-forge make --platform=darwin",
+    "make-mac-intel": "electron-forge make --platform=darwin --arch=x64",
+    "make-mac-arm": "electron-forge make --platform=darwin --arch=arm64",
     "make-lin": "electron-forge make --platform=linux",
     "lint": "eslint --ext .ts,.tsx,.js,.jsx .",
     "prettier": "prettier --write \"./**/*.{js,json,css,scss,md}\"",
@@ -155,10 +157,7 @@
       "category": "public.app-category.utilities",
       "target": [
         {
-          "target": "dmg",
-          "arch": [
-            "universal"
-          ]
+          "target": "dmg"
         }
       ]
     }
