@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React, { useState, useEffect } from "react";
+import React from "react";
 import Styled, { useTheme } from "styled-components";
 import { IconChip } from "../Icon";
 
