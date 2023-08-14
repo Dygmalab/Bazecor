@@ -14,16 +14,14 @@ import Tokens from "./Tokens";
 
 const settingColorOpacity = (color, opacity) => {
   let newColorArray = color;
-  let newColor;
   newColorArray = newColorArray.replace(/[^\d,]/g, "").split(",");
-  newColor = `rgba(${newColorArray[0]}, ${newColorArray[1]}, ${newColorArray[2]},  ${opacity})`;
+  const newColor = `rgba(${newColorArray[0]}, ${newColorArray[1]}, ${newColorArray[2]},  ${opacity})`;
   return newColor;
 };
 const settingColorMatrix = (color, opacity) => {
   let newColorArray = color;
-  let newColor;
   newColorArray = newColorArray.replace(/[^\d,]/g, "").split(",");
-  newColor = `0 0 0 0 ${(newColorArray[0] / 255).toFixed(2)} 0 0 0 0 ${(newColorArray[1] / 255).toFixed(2)} 0 0 0 0 ${(
+  const newColor = `0 0 0 0 ${(newColorArray[0] / 255).toFixed(2)} 0 0 0 0 ${(newColorArray[1] / 255).toFixed(2)} 0 0 0 0 ${(
     newColorArray[2] / 255
   ).toFixed(2)} 0 0 0 ${opacity} 0`;
   return newColor;
@@ -133,6 +131,9 @@ const Light = {
     color: "#2AD2C9",
   },
   font: "Libre Franklin",
+  accessibility: {
+    focusWithinColor: Tokens.colors.purple300,
+  },
   styles: {
     accordion: {
       background: settingColorOpacity(Tokens.colors.gray25, 0.8),
