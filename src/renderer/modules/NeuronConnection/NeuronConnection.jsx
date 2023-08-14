@@ -148,7 +148,7 @@ function NeuronConnection({
             <div className="buttons">
               <RegularButton
                 buttonText={i18n.keyboardSelect.disconnect}
-                styles="primary"
+                styles="secondary"
                 onClick={onDisconnect}
                 disabled={false}
               />
@@ -189,7 +189,7 @@ function NeuronConnection({
               {connected && connectedDevice === selectedPortIndex ? (
                 <RegularButton
                   buttonText={i18n.keyboardSelect.disconnect}
-                  styles="primary"
+                  styles="secondary"
                   onClick={onDisconnect}
                   disabled={false}
                 />

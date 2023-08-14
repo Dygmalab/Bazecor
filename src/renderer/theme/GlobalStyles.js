@@ -5,8 +5,6 @@ import iconChevronDownWhite from "@Assets/base/icon-arrow--chevron-down_white.sv
 import LibreFranklin from "./fonts/LibreFranklin/LibreFranklin-VariableFont_wght.ttf";
 import LibreFranklinItalic from "./fonts/LibreFranklin/LibreFranklin-Italic-VariableFont_wght.ttf";
 
-const NavWidth = "64";
-
 const GlobalStyles = createGlobalStyle`
 
   @font-face {
@@ -350,7 +348,16 @@ svg text{
     background-position: right;
   }
 }
-.button.primary[disabled] {
+.button.secondary {
+  color: #fff;
+  background: ${({ theme }) => theme.colors.purple300};
+  transition: 300ms background ease-in-out;
+  &:hover {
+    background: ${({ theme }) => theme.colors.purple200};
+  }
+}
+.button.primary[disabled],
+.button.secondary[disabled] {
   background: ${({ theme }) => theme.styles.button.primary.disabledBackgroundColor};
   color: ${({ theme }) => theme.styles.button.primary.disabledTextColor};
 }
