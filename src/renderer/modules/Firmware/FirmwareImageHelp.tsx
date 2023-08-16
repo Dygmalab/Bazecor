@@ -16,15 +16,15 @@
  */
 
 import React, { useRef, useEffect } from "react";
-import PropTypes from "prop-types";
 import Styled from "styled-components";
-
-import { FirmwareNeuronHelp, FirmwareDefyUpdatingStatus } from "../Firmware";
 
 import videoFirmwareUpdate from "@Assets/videos/update-firmware.mp4";
 import videoFirmwareUpdateReleaseKey from "@Assets/videos/release-key.mp4";
 import videoFirmwareUpdateDefySRC from "@Assets/videos/update-firmware-defy.mp4";
 import videoFirmwareUpdateDefyReleaseSRC from "@Assets/videos/release-key-defy.mp4";
+
+import { FirmwareNeuronHelp, FirmwareDefyUpdatingStatus } from "@Renderer/modules/Firmware";
+
 import { IconCheckmarkSm } from "../../component/Icon";
 
 const Style = Styled.div`   
@@ -101,7 +101,18 @@ const Style = Styled.div`
  * @param {number} countdown - Number representing the position during the update process
  * @returns {<FirmwareImageHelp>} FirmwareImageHelp component.
  */
-const FirmwareImageHelp = ({
+interface FirmwareImageHelpProps {
+  countdown: number;
+  deviceProduct: string;
+  keyboardType: string;
+  steps: Array<string | number>;
+  error: boolean;
+  retriesLeft: number | undefined;
+  retriesRight: number | undefined;
+  retriesDefyWired: number | undefined;
+}
+
+const FirmwareImageHelp: React.FC<FirmwareImageHelpProps> = ({
   countdown,
   deviceProduct,
   keyboardType,
@@ -109,7 +120,6 @@ const FirmwareImageHelp = ({
   error,
   retriesLeft,
   retriesRight,
-  retriesNeuron,
   retriesDefyWired,
 }) => {
   const videoIntro = useRef(null);
@@ -119,18 +129,18 @@ const FirmwareImageHelp = ({
   const checkSuccess = useRef(null);
 
   const playVideo = () => {
-    if (deviceProduct == "Raise" && videoIntro.current) {
+    if (deviceProduct === "Raise" && videoIntro.current) {
       videoIntro.current.currentTime = 3;
       videoIntro.current.play();
-    } else if (deviceProduct == "Defy" && videoIntroDefy.current) {
+    } else if (deviceProduct === "Defy" && videoIntroDefy.current) {
       videoIntroDefy.current.currentTime = 3;
       videoIntroDefy.current.play();
     }
   };
 
   useEffect(() => {
-    if (countdown == 0) {
-      if (deviceProduct == "Raise") {
+    if (countdown === 0) {
+      if (deviceProduct === "Raise") {
         videoIntro.current.addEventListener("ended", playVideo, false);
         videoRelease.current.pause();
       } else {
@@ -139,8 +149,8 @@ const FirmwareImageHelp = ({
       }
       checkSuccess.current.classList.remove("animInCheck");
     }
-    if (countdown == 1) {
-      if (deviceProduct == "Raise") {
+    if (countdown === 1) {
+      if (deviceProduct === "Raise") {
         videoIntro.current.classList.add("animOut");
         videoRelease.current.classList.add("animIn");
       } else {
@@ -150,19 +160,19 @@ const FirmwareImageHelp = ({
       }
       checkSuccess.current.classList.remove("animInCheck");
     }
-    if (countdown == 2) {
-      if (deviceProduct == "Raise") {
+    if (countdown === 2) {
+      if (deviceProduct === "Raise") {
         videoRelease.current.play();
       }
       checkSuccess.current.classList.remove("animInCheck");
     }
-    if (countdown == steps.length - 2) {
+    if (countdown === steps.length - 2) {
       checkSuccess.current.classList.add("animInCheck");
     }
     return () => {
-      if (videoIntro.current && countdown == 0 && deviceProduct == "Raise") {
+      if (videoIntro.current && countdown === 0 && deviceProduct === "Raise") {
         videoIntro.current.removeEventListener("ended", playVideo, false);
-      } else if (videoIntroDefy.current && countdown == 0 && deviceProduct == "Defy") {
+      } else if (videoIntroDefy.current && countdown === 0 && deviceProduct === "Defy") {
         videoIntroDefy.current.removeEventListener("ended", playVideo, false);
       }
     };
@@ -177,7 +187,7 @@ const FirmwareImageHelp = ({
               <div className="firmwareCheck animWaiting" ref={checkSuccess}>
                 <IconCheckmarkSm />
               </div>
-              {deviceProduct == "Raise" ? (
+              {deviceProduct === "Raise" ? (
                 <>
                   <video ref={videoIntro} width={520} height={520} autoPlay={true} className="img-center img-fluid animIn">
                     <source src={videoFirmwareUpdate} type="video/mp4" />
@@ -211,36 +221,26 @@ const FirmwareImageHelp = ({
             </div>
           </div>
         </div>
-        <div className={`process-col process-neuron ${countdown == 0 ? "process-" + deviceProduct : ""}`}>
-          {countdown == 0 ? (
+        <div className={`process-col process-neuron ${countdown === 0 ? `process-${deviceProduct}` : ""}`}>
+          {countdown === 0 ? (
             <div className={`processCanvas process${deviceProduct}`}>
               <div className="status-icon">
-                <div className="blob green pulse-green"></div>
+                <div className="blob green pulse-green" />
               </div>
-              <canvas className="" width={340} height={259}></canvas>
+              <canvas className="" width={340} height={259} />
             </div>
           ) : (
-            <div className={`${deviceProduct == "Defy" ? "updatingDefy" : ""} updatingRaise`}>
-              {deviceProduct == "Defy" ? (
+            <div className={`${deviceProduct === "Defy" ? "updatingDefy" : ""} updatingRaise`}>
+              {deviceProduct === "Defy" ? (
                 <FirmwareDefyUpdatingStatus
                   countdown={countdown}
-                  deviceProduct={deviceProduct}
                   keyboardType={keyboardType}
-                  steps={steps}
-                  error={error}
                   retriesLeft={retriesLeft}
                   retriesRight={retriesRight}
-                  retriesNeuron={retriesNeuron}
                   retriesDefyWired={retriesDefyWired}
                 />
               ) : (
-                <FirmwareNeuronHelp
-                  countdown={countdown}
-                  deviceProduct={deviceProduct}
-                  keyboardType={keyboardType}
-                  steps={steps}
-                  error={error}
-                />
+                <FirmwareNeuronHelp countdown={countdown} deviceProduct={deviceProduct} steps={steps} error={error} />
               )}
             </div>
           )}

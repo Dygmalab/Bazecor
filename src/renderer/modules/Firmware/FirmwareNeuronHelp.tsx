@@ -16,9 +16,7 @@
  */
 
 import React from "react";
-import PropTypes from "prop-types";
-import Styled from "styled-components";
-import { useTheme } from "styled-components";
+import Styled, { useTheme } from "styled-components";
 
 import { IconWarning } from "../../component/Icon";
 
@@ -292,16 +290,23 @@ const Style = Styled.div`
  * @param {number} countdown - Number representing the position during the update process
  * @returns {<FirmwareNeuronHelp>} FirmwareNeuronHelp component.
  */
-const FirmwareNeuronHelp = ({ countdown, deviceProduct, keyboardType, steps, error }) => {
-  let connectionColorMatrix = useTheme().styles.neuronStatus.connectionColorMatrix;
+interface FirmwareNeuronHelpProps {
+  countdown: number;
+  deviceProduct: string;
+  steps: Array<string | number>;
+  error: boolean;
+}
+
+const FirmwareNeuronHelp: React.FC<FirmwareNeuronHelpProps> = ({ countdown, deviceProduct, steps, error }) => {
+  const { connectionColorMatrix } = useTheme().styles.neuronStatus;
   return (
     <Style>
-      {deviceProduct == "Defy" ? (
+      {deviceProduct === "Defy" ? (
         "Defy"
       ) : (
         <div
           className={`neuronUpdate-${countdown} ${countdown >= 3 ? "neuronUpdate-updating" : ""} ${
-            countdown == steps.length - 2 ? "neuronUpdate-success" : ""
+            countdown === steps.length - 2 ? "neuronUpdate-success" : ""
           } ${error ? "neuronUpdate-error" : ""} neuronUpdateAnimation`}
         >
           {error ? (
