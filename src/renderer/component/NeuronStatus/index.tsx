@@ -16,4 +16,4 @@
 
 import NeuronStatus from "./NeuronStatus";
 
-export { NeuronStatus as default };
+export default { NeuronStatus };
