@@ -713,7 +713,7 @@ const English = {
       errorDuringProcessDescription: "Something went wrong! Please, retry the flashing procedure. 🫠",
       flashCardTitle1: "Press and hold the top left key to start the firmware update.",
       flashCardTitleDefy1: "Press the top left key to start the firmware update.",
-      flashCardTitle2: "Don't release the key until the process finishes.",
+      flashCardTitle2: "Release the key when the software prompts",
       flashCardHelp: "Why do I need to press and hold a key when updating the device firmware?",
       flashCardHelpDefy: "Why do I need to press a key when updating the device firmware?",
       flashCardHelpTooltip:
