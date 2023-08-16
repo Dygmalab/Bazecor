@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/media-has-caption */
 // -*- mode: js-jsx -*-
 /* Bazecor
  * Copyright (C) 2022  Dygmalab, Inc.
@@ -47,6 +48,36 @@ const Style = Styled.div`
   box-shadow: 0 0 0 32px rgba(51, 217, 178, 0.15);
 }
 
+.key-badge {
+  position: absolute;
+  z-index: 2;
+  color: ${({ theme }) => theme.colors.gray700};
+  background-color: rgb(0,205,200);
+  padding: 2px 4px;
+  bottom: -12px;
+  left: 50%;
+  margin-left: -63px;
+  white-space: nowrap;
+  width: 126px;
+  border-radius: 18px;
+  text-align: center;
+  font-size: 0.825rem;
+  transition: 300ms color ease-in-out, 300ms background-color ease-in-out, 300ms opacity ease-in-out;
+  transform-origin: center center;
+  opacity: 0;
+  &.key-badge__add {
+    opacity: 1;
+  }
+  &.key-badge__release {
+    color: ${({ theme }) => theme.colors.gray25};
+    background-color: ${({ theme }) => theme.colors.brandDangerLighter};
+    animation: pulse-orange 0.3s alternate infinite;
+  }
+  &.key-badge__add.key-badge__remove {
+    opacity: 0;
+  }
+}
+
 @keyframes pulse-green {
   0% {
     transform: scale(0.95);
@@ -61,6 +92,22 @@ const Style = Styled.div`
   100% {
     transform: scale(0.95);
     box-shadow: 0 0 0 0 rgba(51, 217, 178, 0);
+  }
+}
+@keyframes pulse- {
+  0% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(255,107,107, 0.7);
+  }
+
+  70% {
+    transform: scale(1);
+    box-shadow: 0 0 0 42px rgba(255,107,107, 0);
+  }
+
+  100% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(255,107,107, 0);
   }
 }
 
@@ -93,6 +140,7 @@ const Style = Styled.div`
   background-repeat: no-repeat;
   background-image: url(${({ theme }) => theme.styles.firmwareUpdateProcess.defySVG});
 }
+
 `;
 /**
  * This FirmwareImageHelp function returns a video that reacts according the firmware update status
@@ -122,10 +170,10 @@ const FirmwareImageHelp: React.FC<FirmwareImageHelpProps> = ({
   retriesRight,
   retriesDefyWired,
 }) => {
-  const videoIntro = useRef(null);
-  const videoIntroDefy = useRef(null);
-  const videoReleaseDefy = useRef(null);
-  const videoRelease = useRef(null);
+  const videoIntro = useRef<HTMLVideoElement | null>(null);
+  const videoIntroDefy = useRef<HTMLVideoElement | null>(null);
+  const videoReleaseDefy = useRef<HTMLVideoElement | null>(null);
+  const videoRelease = useRef<HTMLVideoElement | null>(null);
   const checkSuccess = useRef(null);
 
   const playVideo = () => {
@@ -152,7 +200,7 @@ const FirmwareImageHelp: React.FC<FirmwareImageHelpProps> = ({
     if (countdown === 1) {
       if (deviceProduct === "Raise") {
         videoIntro.current.classList.add("animOut");
-        videoRelease.current.classList.add("animIn");
+        videoRelease.current.classList.add("animPressDown");
       } else {
         videoIntroDefy.current.classList.add("animOut");
         videoReleaseDefy.current.classList.add("animIn");
@@ -176,7 +224,7 @@ const FirmwareImageHelp: React.FC<FirmwareImageHelpProps> = ({
         videoIntroDefy.current.removeEventListener("ended", playVideo, false);
       }
     };
-  }, [countdown, deviceProduct]);
+  }, [countdown, deviceProduct, steps]);
 
   return (
     <Style>
@@ -189,7 +237,7 @@ const FirmwareImageHelp: React.FC<FirmwareImageHelpProps> = ({
               </div>
               {deviceProduct === "Raise" ? (
                 <>
-                  <video ref={videoIntro} width={520} height={520} autoPlay={true} className="img-center img-fluid animIn">
+                  <video ref={videoIntro} width={520} height={520} autoPlay className="img-center img-fluid">
                     <source src={videoFirmwareUpdate} type="video/mp4" />
                   </video>
                   <video
@@ -197,14 +245,21 @@ const FirmwareImageHelp: React.FC<FirmwareImageHelpProps> = ({
                     width={520}
                     height={520}
                     autoPlay={false}
-                    className="img-center img-fluid animWaiting"
+                    className={`img-center img-fluid animWaiting ${countdown >= 2 ? "animaReleaseKey" : null}`}
                   >
                     <source src={videoFirmwareUpdateReleaseKey} type="video/mp4" />
                   </video>
+                  <div
+                    className={`key-badge ${countdown >= 1 ? "key-badge__add" : null} ${
+                      countdown === 2 || countdown === 3 ? "key-badge__release" : null
+                    } ${countdown > 4 ? "key-badge__remove" : null}`}
+                  >
+                    {countdown === 1 ? "Keep holding" : null} {countdown === 2 || countdown === 3 ? "Release key" : null}
+                  </div>
                 </>
               ) : (
                 <>
-                  <video ref={videoIntroDefy} width={520} height={520} autoPlay={true} className="img-center img-fluid animIn">
+                  <video ref={videoIntroDefy} width={520} height={520} autoPlay className="img-center img-fluid animIn">
                     <source src={videoFirmwareUpdateDefySRC} type="video/mp4" />
                   </video>
                   <video

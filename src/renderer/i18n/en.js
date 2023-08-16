@@ -727,8 +727,8 @@ const English = {
       flashCardOverlay5: "This makes the keyboard secure against undesired firmware modifications.",
       noInternetConncetion:
         "We were unable to download the firmware you requested. Please, check your internet connection or try again later.",
-      progressCardStatus1: "1. Hold ESC Key",
-      progressCardStatus2: "2. Release ESC Key. Updating the Firmware",
+      progressCardStatus1: "1. Hold the Key",
+      progressCardStatus2: "2. Release the Key. Updating the Firmware",
       progressCardStatus3: "3. Restoring your Layers",
       progressCardStatus4: "4. Firmware update!",
       progressCardStatusDefy1: "1. Flashing right side",

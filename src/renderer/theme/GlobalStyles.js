@@ -1900,6 +1900,26 @@ div.card.card-preferences .card-body {
     opacity: 0;
   }
 }
+.animPressDown {
+  animation: animaPressDown  0.3s forwards;
+  animation-timing-function: cubic-bezier(0.75, -1.27, 0.3, 2.33);
+}
+@keyframes animaPressDown {
+  to {
+    transform: scale(0.9);
+    opacity: 1;
+  }
+}
+.animaReleaseKey {
+  animation: animaReleaseKey 0.6s forwards;
+  animation-timing-function: ease-in-out;
+}
+@keyframes animaReleaseKey {
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
 
 .animInCheck {
   animation: animInCheck 0.3s forwards;
