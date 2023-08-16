@@ -30,6 +30,21 @@ align-self: center;
   justify-content: center;
   align-items: center;
   position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  &.isConnected {
+    border: 1px solid rgba(0, 205, 200, 0.2);
+    &:after {
+      position: absolute;
+      top: 0; 
+      left: 0;
+      height: 100%;
+      width: 100%;
+      content: '';
+      background-color: rgba(0, 205, 200, 0.05); 
+      z-index: -1;
+    }
+  }
 }
 .neuronConnectAnimation {
   position: absolute;
@@ -143,7 +158,11 @@ const NeuronStatus: React.FC<NeuronStatusProps> = ({
 
   return (
     <Style>
-      <div className="neuronStatusInner">
+      <div
+        className={`neuronStatusInner ${
+          (isDeviceConnected && !isVirtual) || (connected && isVirtual) ? "isConnected" : "notConnected"
+        }`}
+      >
         {isDeviceConnected && !isVirtual ? (
           <div className="neuronConnectAnimation">
             <img src={checkedIcon} alt="Device Connected" />
