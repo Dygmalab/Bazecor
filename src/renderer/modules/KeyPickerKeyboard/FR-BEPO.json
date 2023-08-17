@@ -706,7 +706,7 @@
       "first": "é",
       "second": "É",
       "third": "´",
-      "fourth": "♥"
+      "fourth": ""
     }
   },
   {
@@ -770,7 +770,7 @@
       "first": "^",
       "second": "!",
       "third": "¡",
-      "fourth": "☠"
+      "fourth": ""
     }
   },
   {
@@ -786,7 +786,7 @@
       "first": "v",
       "second": "V",
       "third": "ˇ",
-      "fourth": "☢"
+      "fourth": ""
     }
   },
   {
@@ -802,7 +802,7 @@
       "first": "d",
       "second": "D",
       "third": "∞",
-      "fourth": "☣"
+      "fourth": ""
     }
   },
   {
@@ -833,8 +833,8 @@
       "type": "1US",
       "first": "j",
       "second": "J",
-      "third": "☮",
-      "fourth": "☯"
+      "third": "",
+      "fourth": ""
     }
   },
   {
@@ -850,7 +850,7 @@
       "first": "z",
       "second": "Z",
       "third": "-",
-      "fourth": "☙"
+      "fourth": ""
     }
   },
   {
@@ -865,8 +865,8 @@
       "type": "1US",
       "first": "w",
       "second": "W",
-      "third": "⚜",
-      "fourth": "♿"
+      "third": "",
+      "fourth": ""
     }
   },
   {
@@ -1112,7 +1112,7 @@
       "first": "n",
       "second": "N",
       "third": "~",
-      "fourth": "⚓"
+      "fourth": ""
     }
   },
   {
@@ -1143,8 +1143,8 @@
       "type": "1US",
       "first": "ç",
       "second": "Ç",
-      "third": "✈",
-      "fourth": "🄯"
+      "third": "",
+      "fourth": ""
     }
   },
   {
@@ -1324,7 +1324,7 @@
       "first": "’",
       "second": "?",
       "third": "¿",
-      "fourth": ""
+      "fourth": " ̉"
     }
   },
   {
@@ -1340,7 +1340,7 @@
       "first": "q",
       "second": "Q",
       "third": "°",
-      "fourth": "̛"
+      "fourth": " ̛"
     }
   },
   {
