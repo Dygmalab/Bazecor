@@ -59,10 +59,14 @@ const Style = Styled.div`
   }
 }
 `;
-
-const DefyBatteryIndicator = ({ side, batteryLevel, isCharging, batteryStatus }) => {
+interface DefyBatteryIndicator {
+  side: "left" | "right";
+  batteryLevel: number;
+  batteryStatus: number;
+  isCharging: boolean;
+}
+const DefyBatteryIndicator = ({ side, batteryLevel, isCharging, batteryStatus }: DefyBatteryIndicator) => {
   const [batteryHeight, setBatteryHeight] = useState(0);
-  const maskHash = `${(Math.random() + 1).toString(36).substring(7)}-${side}`;
 
   useEffect(() => {
     if (!isCharging && batteryStatus === 0) {
