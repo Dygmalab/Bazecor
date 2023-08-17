@@ -26,7 +26,8 @@ import videoFirmwareUpdateDefyReleaseSRC from "@Assets/videos/release-key-defy.m
 
 import { FirmwareNeuronHelp, FirmwareDefyUpdatingStatus } from "@Renderer/modules/Firmware";
 
-import { IconCheckmarkSm } from "../../component/Icon";
+import { IconCheckmarkSm } from "@Renderer/component/Icon";
+import { BadgeFirmware } from "@Renderer/component/Badge";
 
 const Style = Styled.div`   
 .updatingRaise {
@@ -47,70 +48,6 @@ const Style = Styled.div`
   transform: scale(1);
   box-shadow: 0 0 0 32px rgba(51, 217, 178, 0.15);
 }
-
-.key-badge {
-  position: absolute;
-  z-index: 2;
-  color: ${({ theme }) => theme.colors.gray700};
-  background-color: rgb(0,205,200);
-  padding: 2px 4px;
-  bottom: -12px;
-  left: 50%;
-  margin-left: -63px;
-  white-space: nowrap;
-  width: 126px;
-  border-radius: 18px;
-  text-align: center;
-  font-size: 0.825rem;
-  transition: 300ms color ease-in-out, 300ms background-color ease-in-out, 300ms opacity ease-in-out;
-  transform-origin: center center;
-  opacity: 0;
-  &.key-badge__add {
-    opacity: 1;
-  }
-  &.key-badge__release {
-    color: ${({ theme }) => theme.colors.gray25};
-    background-color: ${({ theme }) => theme.colors.brandDangerLighter};
-    animation: pulse-orange 0.3s alternate infinite;
-  }
-  &.key-badge__add.key-badge__remove {
-    opacity: 0;
-  }
-}
-
-@keyframes pulse-green {
-  0% {
-    transform: scale(0.95);
-    box-shadow: 0 0 0 0 rgba(51, 217, 178, 0.7);
-  }
-
-  70% {
-    transform: scale(1);
-    box-shadow: 0 0 0 42px rgba(51, 217, 178, 0);
-  }
-
-  100% {
-    transform: scale(0.95);
-    box-shadow: 0 0 0 0 rgba(51, 217, 178, 0);
-  }
-}
-@keyframes pulse- {
-  0% {
-    transform: scale(0.95);
-    box-shadow: 0 0 0 0 rgba(255,107,107, 0.7);
-  }
-
-  70% {
-    transform: scale(1);
-    box-shadow: 0 0 0 42px rgba(255,107,107, 0);
-  }
-
-  100% {
-    transform: scale(0.95);
-    box-shadow: 0 0 0 0 rgba(255,107,107, 0);
-  }
-}
-
 .processCanvas {
   position: relative;
   canvas {
@@ -139,6 +76,16 @@ const Style = Styled.div`
   background-position: left bottom;
   background-repeat: no-repeat;
   background-image: url(${({ theme }) => theme.styles.firmwareUpdateProcess.defySVG});
+}
+.animPressDown {
+  animation: animaPressDown  0.3s forwards;
+  animation-timing-function: cubic-bezier(0.75, -1.27, 0.3, 2.33);
+}
+@keyframes animaPressDown {
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
 }
 
 `;
@@ -245,17 +192,11 @@ const FirmwareImageHelp: React.FC<FirmwareImageHelpProps> = ({
                     width={520}
                     height={520}
                     autoPlay={false}
-                    className={`img-center img-fluid animWaiting ${countdown >= 2 ? "animaReleaseKey" : null}`}
+                    className="img-center img-fluid animWaiting"
                   >
                     <source src={videoFirmwareUpdateReleaseKey} type="video/mp4" />
                   </video>
-                  <div
-                    className={`key-badge ${countdown >= 1 ? "key-badge__add" : null} ${
-                      countdown === 2 || countdown === 3 ? "key-badge__release" : null
-                    } ${countdown > 4 ? "key-badge__remove" : null}`}
-                  >
-                    {countdown === 1 ? "Keep holding" : null} {countdown === 2 || countdown === 3 ? "Release key" : null}
-                  </div>
+                  <BadgeFirmware countdown={countdown} />
                 </>
               ) : (
                 <>
