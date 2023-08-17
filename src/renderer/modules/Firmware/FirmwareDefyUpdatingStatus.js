@@ -18,8 +18,7 @@
 import React from "react";
 import Styled from "styled-components";
 
-import { IconWarning, IconCheckmarkSm, IconRefresh } from "../../component/Icon";
-import { DefyLeftSide, DefyRightSide, DefyNeuronStatus } from "../../component/SidesStatus";
+import { DefyLeftSide, DefyRightSide, DefyNeuronStatus } from "@Renderer/component/SidesStatus";
 
 const Style = Styled.div`
 .defySidesUpdatingStatus {

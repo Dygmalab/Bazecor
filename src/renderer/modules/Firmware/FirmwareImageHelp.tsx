@@ -24,7 +24,8 @@ import videoFirmwareUpdateReleaseKey from "@Assets/videos/release-key.mp4";
 import videoFirmwareUpdateDefySRC from "@Assets/videos/update-firmware-defy.mp4";
 import videoFirmwareUpdateDefyReleaseSRC from "@Assets/videos/release-key-defy.mp4";
 
-import { FirmwareNeuronHelp, FirmwareDefyUpdatingStatus } from "@Renderer/modules/Firmware";
+import FirmwareNeuronHelp from "@Renderer/modules/Firmware/FirmwareNeuronHelp";
+import FirmwareDefyUpdatingStatus from "@Renderer/modules/Firmware/FirmwareDefyUpdatingStatus";
 
 import { IconCheckmarkSm } from "@Renderer/component/Icon";
 import { BadgeFirmware } from "@Renderer/component/Badge";
@@ -123,6 +124,9 @@ const FirmwareImageHelp: React.FC<FirmwareImageHelpProps> = ({
   const videoRelease = useRef<HTMLVideoElement | null>(null);
   const checkSuccess = useRef(null);
 
+  const isEndProcess = steps.length - 2;
+  const productName = deviceProduct;
+
   const playVideo = () => {
     if (deviceProduct === "Raise" && videoIntro.current) {
       videoIntro.current.currentTime = 3;
@@ -134,44 +138,51 @@ const FirmwareImageHelp: React.FC<FirmwareImageHelpProps> = ({
   };
 
   useEffect(() => {
+    const internalVideoIntro = videoIntro.current;
+    const internalVideoRelease = videoRelease.current;
+    const internalVideoIntroDefy = videoIntroDefy.current;
+    const internalVideoReleaseDefy = videoReleaseDefy.current;
+
     if (countdown === 0) {
-      if (deviceProduct === "Raise") {
-        videoIntro.current.addEventListener("ended", playVideo, false);
-        videoRelease.current.pause();
-      } else {
-        videoIntroDefy.current.addEventListener("ended", playVideo, false);
-        videoReleaseDefy.current.pause();
+      if (productName === "Raise") {
+        internalVideoIntro.addEventListener("ended", playVideo, false);
+        internalVideoRelease.pause();
+      } else if (productName === "Defy") {
+        internalVideoIntroDefy.addEventListener("ended", playVideo, false);
+        internalVideoReleaseDefy.pause();
       }
-      checkSuccess.current.classList.remove("animInCheck");
     }
+    checkSuccess.current.classList.remove("animInCheck");
     if (countdown === 1) {
-      if (deviceProduct === "Raise") {
-        videoIntro.current.classList.add("animOut");
-        videoRelease.current.classList.add("animPressDown");
-      } else {
-        videoIntroDefy.current.classList.add("animOut");
-        videoReleaseDefy.current.classList.add("animIn");
-        videoReleaseDefy.current.play();
+      if (productName === "Raise") {
+        internalVideoIntro.classList.add("animOut");
+        internalVideoRelease.classList.add("animPressDown");
+      } else if (productName === "Defy") {
+        internalVideoIntroDefy.classList.add("animOut");
+        internalVideoReleaseDefy.classList.add("animIn");
+        internalVideoReleaseDefy.play();
       }
       checkSuccess.current.classList.remove("animInCheck");
     }
     if (countdown === 2) {
-      if (deviceProduct === "Raise") {
-        videoRelease.current.play();
+      if (productName === "Raise") {
+        internalVideoRelease.play();
       }
       checkSuccess.current.classList.remove("animInCheck");
     }
-    if (countdown === steps.length - 2) {
+    if (countdown === isEndProcess) {
       checkSuccess.current.classList.add("animInCheck");
     }
+
     return () => {
-      if (videoIntro.current && countdown === 0 && deviceProduct === "Raise") {
-        videoIntro.current.removeEventListener("ended", playVideo, false);
-      } else if (videoIntroDefy.current && countdown === 0 && deviceProduct === "Defy") {
-        videoIntroDefy.current.removeEventListener("ended", playVideo, false);
+      if (internalVideoIntro && countdown === 0 && productName === "Raise") {
+        internalVideoIntro.removeEventListener("ended", playVideo, false);
+      } else if (internalVideoIntroDefy && countdown === 0 && productName === "Defy") {
+        internalVideoIntroDefy.removeEventListener("ended", playVideo, false);
       }
     };
-  }, [countdown, deviceProduct, steps]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [countdown]);
 
   return (
     <Style>

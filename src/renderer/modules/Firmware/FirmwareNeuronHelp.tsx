@@ -18,7 +18,7 @@
 import React from "react";
 import Styled, { useTheme } from "styled-components";
 
-import { IconWarning } from "../../component/Icon";
+import { IconWarning } from "@Renderer/component/Icon";
 
 const Style = Styled.div`   
 .lineColor {
