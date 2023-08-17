@@ -22,7 +22,7 @@ import ProgressBar from "react-bootstrap/ProgressBar";
 import i18n from "../../i18n";
 
 import Title from "../../component/Title";
-import { FirmwareImageHelp } from "../Firmware";
+import { FirmwareImageHelp } from ".";
 
 const Style = Styled.div`     
 width: 100%;
@@ -146,51 +146,49 @@ width: 100%;
  * @returns {<FirmwareProgressStatus>} FirmwareProgressStatus component.
  */
 
-const FirmwareProgressStatus = ({ countdown, flashProgress, deviceProduct, keyboardType }) => {
-  return (
-    <Style>
-      <div className="mainProcessWrapper">
-        <FirmwareImageHelp countdown={countdown} deviceProduct={deviceProduct} keyboardType={keyboardType} />
-        <div className="process-row">
-          <ProgressBar>
-            <ProgressBar striped animated now={flashProgress} />
-          </ProgressBar>
-        </div>
-        <div className="process-row process-footer">
-          {countdown === 1 ? (
-            <Title text={i18n.firmwareUpdate.texts.flashCardTitle1} headingLevel={3} />
-          ) : countdown === 2 ? (
-            <Title text={i18n.firmwareUpdate.texts.progressCardStatus1} headingLevel={3} />
-          ) : countdown === 3 ? (
-            <Title text={i18n.firmwareUpdate.texts.progressCardStatus3} headingLevel={3} />
-          ) : countdown === 4 ? (
-            <Title text={i18n.firmwareUpdate.texts.firmwareUpdatedTitle} headingLevel={3} />
-          ) : (
-            ""
-          )}
-
-          {countdown === 1 ? (
-            <Title text={i18n.firmwareUpdate.texts.flashCardTitle2} headingLevel={6} />
-          ) : countdown === 4 ? (
-            <Title text={i18n.firmwareUpdate.texts.firmwareUpdatedMessage} headingLevel={6} />
-          ) : (
-            <Title
-              text={
-                flashProgress <= 15
-                  ? i18n.firmwareUpdate.texts.progressCardBar1
-                  : flashProgress <= 29
-                  ? i18n.firmwareUpdate.texts.progressCardBar2
-                  : flashProgress <= 69
-                  ? i18n.firmwareUpdate.texts.progressCardBar3
-                  : i18n.firmwareUpdate.texts.progressCardBar4
-              }
-              headingLevel={6}
-            />
-          )}
-        </div>
+const FirmwareProgressStatus = ({ countdown, flashProgress, deviceProduct, keyboardType }) => (
+  <Style>
+    <div className="mainProcessWrapper">
+      <FirmwareImageHelp countdown={countdown} deviceProduct={deviceProduct} keyboardType={keyboardType} />
+      <div className="process-row">
+        <ProgressBar>
+          <ProgressBar striped animated now={flashProgress} />
+        </ProgressBar>
       </div>
-    </Style>
-  );
-}
+      <div className="process-row process-footer">
+        {countdown === 1 ? (
+          <Title text={i18n.firmwareUpdate.texts.flashCardTitle1} headingLevel={3} />
+        ) : countdown === 2 ? (
+          <Title text={i18n.firmwareUpdate.texts.progressCardStatus1} headingLevel={3} />
+        ) : countdown === 3 ? (
+          <Title text={i18n.firmwareUpdate.texts.progressCardStatus3} headingLevel={3} />
+        ) : countdown === 4 ? (
+          <Title text={i18n.firmwareUpdate.texts.firmwareUpdatedTitle} headingLevel={3} />
+        ) : (
+          ""
+        )}
+
+        {countdown === 1 ? (
+          <Title text={i18n.firmwareUpdate.texts.flashCardTitle2} headingLevel={6} />
+        ) : countdown === 4 ? (
+          <Title text={i18n.firmwareUpdate.texts.firmwareUpdatedMessage} headingLevel={6} />
+        ) : (
+          <Title
+            text={
+              flashProgress <= 15
+                ? i18n.firmwareUpdate.texts.progressCardBar1
+                : flashProgress <= 29
+                ? i18n.firmwareUpdate.texts.progressCardBar2
+                : flashProgress <= 69
+                ? i18n.firmwareUpdate.texts.progressCardBar3
+                : i18n.firmwareUpdate.texts.progressCardBar4
+            }
+            headingLevel={6}
+          />
+        )}
+      </div>
+    </div>
+  </Style>
+);
 
 export default FirmwareProgressStatus;
