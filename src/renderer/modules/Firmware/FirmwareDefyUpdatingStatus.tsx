@@ -88,7 +88,21 @@ const Style = Styled.div`
   }
 }
 `;
-const FirmwareDefyUpdatingStatus = ({ countdown, keyboardType, retriesLeft, retriesRight, retriesDefyWired }) => (
+interface FirmwareDefyUpdatingStatusProps {
+  countdown: number;
+  keyboardType: string;
+  retriesLeft: number;
+  retriesRight: number;
+  retriesDefyWired: number;
+}
+
+const FirmwareDefyUpdatingStatus = ({
+  countdown,
+  keyboardType,
+  retriesLeft,
+  retriesRight,
+  retriesDefyWired,
+}: FirmwareDefyUpdatingStatusProps) => (
   <Style>
     <div className={`defySidesUpdatingStatus defySidesUpdatingStatus-${countdown}`}>
       {countdown <= 2 ? (
