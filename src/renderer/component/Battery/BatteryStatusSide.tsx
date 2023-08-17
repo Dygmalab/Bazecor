@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 
 import Styled from "styled-components";
 
-import { PileIndicator, DefyBatteryIndicator } from "../Battery";
+import { PileIndicator, DefyBatteryIndicator } from "@Renderer/component/Battery";
 
 const Style = Styled.div`
 .status--default,
@@ -206,7 +206,15 @@ const Style = Styled.div`
 
 `;
 
-const BatteryStatusSide = ({ side, batteryLevel, isSavingMode, batteryStatus, size }) => {
+interface BatteryStatusSideProps {
+  side: "left" | "right";
+  batteryLevel: number;
+  batteryStatus: number;
+  isSavingMode: boolean;
+  size: "sm" | "lg";
+}
+
+const BatteryStatusSide: React.FC<BatteryStatusSideProps> = ({ side, batteryLevel, isSavingMode, batteryStatus, size }) => {
   const [loading, setLoading] = useState(true);
   const [sideFirstLetter, setSideFirstLetter] = useState("");
   const [isCharging, setIsCharging] = useState(false);
@@ -217,10 +225,10 @@ const BatteryStatusSide = ({ side, batteryLevel, isSavingMode, batteryStatus, si
       setLoading(false);
       setSideFirstLetter(side.charAt(0));
     }
-  }, []);
+  }, [side]);
 
   useEffect(() => {
-    console.log("batteryStatus", batteryStatus);
+    // console.log("batteryStatus", batteryStatus);
     switch (batteryStatus) {
       case 0:
         setSideStatus("status--default");
@@ -251,7 +259,7 @@ const BatteryStatusSide = ({ side, batteryLevel, isSavingMode, batteryStatus, si
     }
   }, [size, batteryLevel, batteryStatus, isSavingMode]);
 
-  if (loading) return <div />;
+  if (loading) return null;
   return (
     <Style>
       <div className={`battery-indicator--item size--${size} item--${side} ${sideStatus} ${isSavingMode && "status--saving"}`}>
