@@ -105,8 +105,10 @@ const Style = Styled.div`
   }
 }
 `;
-
-const BatteryStatus = (props: { disable: boolean }) => {
+interface BatteryStatusProps {
+  disable: boolean;
+}
+const BatteryStatus = ({ disable }: BatteryStatusProps) => {
   const [bLeft, setbLeft] = useState(100);
   const [bRight, setbRight] = useState(100);
   const [sLeft, setsLeft] = useState(100);
@@ -129,15 +131,12 @@ const BatteryStatus = (props: { disable: boolean }) => {
     setIsSavingMode(parseInt(savingMode, 10) > 0);
   }
 
-  useEffect(() => {
-    const { disable } = props;
-    if (!disable) {
-      getBatteryStatus();
-    }
-  }, []);
+  if (!disable) {
+    getBatteryStatus();
+  }
 
   useEffect(() => {
-    const { disable } = props;
+    // const { disable } = props;
     // let intervalID = 0;
     // if (disable) {
     //   clearInterval(intervalID);
@@ -152,7 +151,6 @@ const BatteryStatus = (props: { disable: boolean }) => {
     if (!disable) {
       intervalID = setInterval(() => {
         // Your interval logic here
-        console.log("Interval event occurred");
         getBatteryStatus();
       }, 60 * 1000); // Interval of 60 seconds
     }
@@ -163,7 +161,7 @@ const BatteryStatus = (props: { disable: boolean }) => {
     // return () => {
     //   clearInterval(intervalID);
     // };
-  }, [props]);
+  }, [disable]);
 
   useEffect(() => {
     const intervalID = setInterval(() => {
@@ -174,7 +172,7 @@ const BatteryStatus = (props: { disable: boolean }) => {
   }, [animateIcon]);
 
   const forceRetrieveBattery = async () => {
-    const { disable } = props;
+    // const { disable } = props;
     if (disable) return;
     const focus = new Focus();
     await focus.command("wireless.battery.forceRead");

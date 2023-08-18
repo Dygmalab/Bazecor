@@ -7,8 +7,8 @@ interface PileIndicatorProps {
 }
 const PileIndicator = ({ batteryLevel, isCharging, batteryStatus }: PileIndicatorProps) => {
   const [batteryWidth, setBatteryWidth] = useState(0);
-  console.log("isCharging", isCharging);
-  console.log("batteryStatus", batteryStatus);
+  // console.log("isCharging", isCharging);
+  // console.log("batteryStatus", batteryStatus);
 
   const maskHash = `${Date.now()}-${(Math.random() + 1).toString(36).substring(7)}-level`;
 

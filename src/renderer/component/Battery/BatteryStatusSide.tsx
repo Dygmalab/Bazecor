@@ -7,7 +7,8 @@ import DefyBatteryIndicator from "@Renderer/component/Battery/DefyBatteryIndicat
 
 const Style = Styled.div`
 .status--default,
-.status--disconnected {
+.status--disconnected,
+.status--disconnected.status--saving {
     --color-status: ${({ theme }) => theme.colors.gray200};
 }
 .status--saving,
@@ -44,6 +45,10 @@ const Style = Styled.div`
     }
     &.status--fatal-error {
       background-color: ${({ theme }) => theme.styles.batteryIndicator.pileBackgroundFatalError};
+    }
+    &.status--disconnected,
+    &.status--disconnected.status--saving {
+      background-color: ${({ theme }) => theme.styles.batteryIndicator.pileBackgroundColor};
     }
     .pileIndicator {
       max-width: 100%;
