@@ -2,7 +2,8 @@ import React, { useState, useEffect } from "react";
 
 import Styled from "styled-components";
 
-import { PileIndicator, DefyBatteryIndicator } from "@Renderer/component/Battery";
+import PileIndicator from "@Renderer/component/Battery/PileIndicator";
+import DefyBatteryIndicator from "@Renderer/component/Battery/DefyBatteryIndicator";
 
 const Style = Styled.div`
 .status--default,
