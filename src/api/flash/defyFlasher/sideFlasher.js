@@ -1,3 +1,4 @@
+/* eslint-disable no-await-in-loop */
 /* bazecor-side-flasher -- Dygma keyboards keyscanner updater module for Bazecor
  * Supported Commands in order of execution -->
  *
@@ -30,10 +31,10 @@
 
 import { crc32 } from "easy-crc";
 
-const { SerialPort } = eval('require("serialport")');
-const { DelimiterParser } = eval('require("@serialport/parser-delimiter")');
+const SerialPort = eval('require("serialport")');
+const Delimiter = eval('require("@serialport/parser-delimiter")');
 
-export default class sideFlaser {
+export default class SideFlaser {
   constructor(path, firmwareSides) {
     this.path = path;
     this.firmwareSides = firmwareSides;
@@ -48,8 +49,12 @@ export default class sideFlaser {
       });
 
     // Serial port instancing
-    const serialport = new SerialPort({ path: this.path, baudRate: 115200 });
-    const parser = serialport.pipe(new DelimiterParser({ delimiter: "\r\n" }));
+    const serialport = new SerialPort(this.path, { baudRate: 115200, lock: true });
+    await serialport.open(err => {
+      if (err) console.error("error when opening port: ", err);
+      else console.log("connected");
+    });
+    const parser = serialport.pipe(new Delimiter({ delimiter: "\r\n" }));
     const receivedData = [];
     parser.on("data", data => {
       receivedData.push(data.toString("utf-8"));
@@ -57,7 +62,7 @@ export default class sideFlaser {
     console.log("Upgrading the neuron...");
     await serialport.write("upgrade.neuron\n");
     await sleep(10);
-    await serialport.close(function (err) {
+    await serialport.close(err => {
       if (err) console.warn("device already disconnected!! no need to close serialport");
       else console.log("port closed successfully");
     });
@@ -83,6 +88,7 @@ export default class sideFlaser {
       };
     };
 
+    const receivedData = [];
     async function readLine() {
       while (receivedData.length === 0) await sleep(1);
       return receivedData.pop();
@@ -97,9 +103,12 @@ export default class sideFlaser {
     // Serial port instancing
     if (side.includes("left")) await sleep(2000);
     await SerialPort.list();
-    const serialport = new SerialPort({ path: this.path, baudRate: 115200 });
-    const parser = serialport.pipe(new DelimiterParser({ delimiter: "\r\n" }));
-    let receivedData = [];
+    const serialport = new SerialPort(this.path, { baudRate: 115200, lock: true });
+    await serialport.open(err => {
+      if (err) console.error("error when opening port: ", err);
+      else console.log("connected");
+    });
+    const parser = serialport.pipe(new Delimiter({ delimiter: "\r\n" }));
     parser.on("data", data => {
       receivedData.push(data.toString("utf-8"));
     });
@@ -126,26 +135,23 @@ export default class sideFlaser {
     console.log("Received Info from Side: ", ans);
     ans = ans.split(" ");
     const info = {
-      hardwareVersion: parseInt(ans[0]),
-      flashStart: parseInt(ans[1]),
-      programVersion: parseInt(ans[2]),
-      programCrc: parseInt(ans[3]),
-      validation: parseInt(ans[4]),
+      hardwareVersion: parseInt(ans[0], 10),
+      flashStart: parseInt(ans[1], 10),
+      programVersion: parseInt(ans[2], 10),
+      programCrc: parseInt(ans[3], 10),
+      validation: parseInt(ans[4], 10),
     };
 
     // Write Firmware FOR Loop
     let step = 0;
     const totalsteps = this.firmwareSides.length / 256;
     console.log("CRC check is ", info.programCrc !== seal.programCrc, ", info:", info.programCrc, "seal:", seal.programCrc);
-    if (info.programCrc !== seal.programCrc || isItBootloader === true) {
-      let validate = "false",
-        retry = 0;
-      // while (validate !== "true" && retry < 3) {
-      // console.log("retry count: ", retry);
-      for (let i = 0; i < this.firmwareSides.length; i = i + 256) {
+    if ((info.programCrc !== seal.programCrc || isItBootloader === true) && isConnected) {
+      let validate = "false";
+      for (let i = 0; i < this.firmwareSides.length; i += 256) {
         // console.log(`Addres ${i} of ${this.firmwareSides.length}`);
         serialport.write("upgrade.keyscanner.sendWrite ");
-        if (wiredOrWireless == "wireless") await sleep(4);
+        if (wiredOrWireless === "wireless") await sleep(4);
         const writeAction = new Uint8Array(new Uint32Array([info.flashStart + i, 256]).buffer);
         const data = this.firmwareSides.slice(i, i + 256);
         const crc = new Uint8Array(new Uint32Array([crc32("CRC-32", data)]).buffer);
@@ -157,31 +163,31 @@ export default class sideFlaser {
         // console.log("write sent: ", buffer);
         // console.log("write sent, %", (step / totalsteps) * 100);
         serialport.write(buffer);
-        if (wiredOrWireless == "wireless") await sleep(4);
+        if (wiredOrWireless === "wireless") await sleep(4);
         let ack = await readLine();
-        ack = ack + (await readLine());
+        ack += await readLine();
         // console.log("ack received: ", ack);
         if (!ack.includes("true") || ack.includes("false")) {
           let retries = 3;
-          if (wiredOrWireless == "wireless") await sleep(100);
+          if (wiredOrWireless === "wireless") await sleep(100);
           while (retries > 0 && (!ack.includes("true") || ack.includes("false"))) {
             serialport.write("upgrade.keyscanner.sendWrite ");
-            if (wiredOrWireless == "wireless") await sleep(10);
+            if (wiredOrWireless === "wireless") await sleep(10);
             serialport.write(buffer);
-            if (wiredOrWireless == "wireless") await sleep(10);
+            if (wiredOrWireless === "wireless") await sleep(10);
             ack = await readLine();
-            ack = ack + (await readLine());
+            ack += await readLine();
             console.log(`received ${ack} after ${3 - retries} retires`);
-            retries--;
+            retries -= 1;
           }
         }
         stateUpd(side, (step / totalsteps) * 100);
-        step++;
+        step += 1;
         // }
       }
       serialport.write("upgrade.keyscanner.validate\n");
       validate = await readLine();
-      validate = validate + (await readLine());
+      validate += await readLine();
       console.log("result of validation", validate);
       // retry++;
     }
@@ -190,7 +196,7 @@ export default class sideFlaser {
     await readLine();
     await readLine();
 
-    if (wiredOrWireless == "wireless" && side == "left") {
+    if (wiredOrWireless === "wireless" && side === "left") {
       serialport.write("upgrade.neuron\n");
     }
 

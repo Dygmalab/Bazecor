@@ -2,7 +2,7 @@ import { createMachine, assign, raise } from "xstate";
 import fs from "fs";
 import path from "path";
 import { ipcRenderer } from "electron";
-import sideFlaser from "../../../api/flash/defyFlasher/sideFlasher";
+import SideFlaser from "../../../api/flash/defyFlasher/sideFlasher";
 import Focus from "../../../api/focus";
 import Hardware from "../../../api/hardware";
 import { FlashRaise, FlashDefyWireless } from "../../../api/flash";
@@ -161,8 +161,8 @@ const flashSide = async (side, context, callback) => {
     const focus = new Focus();
     if (flashSides === undefined) {
       bootloader = context.device.bootloader;
-      comPath = focus._port.port.openOptions.path;
-      flashSides = new sideFlaser(comPath, context.firmwares.fwSides);
+      comPath = focus._port.path;
+      flashSides = new SideFlaser(comPath, context.firmwares.fwSides);
     }
     // Flashing procedure for each side
     await focus.close();
@@ -191,8 +191,8 @@ const uploadDefyWired = async (context, callback) => {
     const focus = new Focus();
     if (flashSides == undefined) {
       bootloader = context.device.bootloader;
-      comPath = focus._port.port.openOptions.path;
-      flashSides = new sideFlaser(comPath, context.firmwares.fwSides);
+      comPath = focus._port.path;
+      flashSides = new SideFlaser(comPath, context.firmwares.fwSides);
     }
     stateUpdate("neuron", 10, context, callback);
     await flashSides.prepareNeuron();
@@ -223,7 +223,7 @@ const resetDefy = async (context, callback) => {
       console.log("when creating FDW", context.originalDevice.device);
       flashDefyWireless = new FlashDefyWireless(context.originalDevice.device);
       if (flashSides === undefined) {
-        comPath = focus._port.port.openOptions.path;
+        comPath = focus._port.path;
         bootloader = context.device.bootloader;
       }
     }
@@ -302,7 +302,7 @@ const resetRaise = async (context, callback) => {
     const focus = new Focus();
     if (flashRaise == undefined) {
       flashRaise = new FlashRaise(context.originalDevice.device);
-      comPath = focus._port.port.openOptions.path;
+      comPath = focus._port.path;
       bootloader = context.device.bootloader;
     }
     if (!bootloader) {

@@ -18,8 +18,8 @@
 import fs from "fs";
 import { spawn } from "child_process";
 
-const { SerialPort } = eval('require("serialport")');
-const { DelimiterParser } = eval('require("@serialport/parser-delimiter")');
+const SerialPort = eval('require("serialport")');
+const Delimiter = eval('require("@serialport/parser-delimiter")');
 
 global.focus_instance = null;
 
@@ -100,7 +100,7 @@ class Focus {
       if (path !== undefined) {
         const testingDevices = await SerialPort.list();
         console.log(testingDevices);
-        this._port = new SerialPort({ path, baudRate: 115200, autoOpen: false, endOnClose: true });
+        this._port = new SerialPort(path, { baudRate: 115200, lock: true });
         await this._port.open(err => {
           if (err) console.error("error when opening port: ", err);
           else console.log("connected");
@@ -110,7 +110,7 @@ class Focus {
       }
 
       this.device = info;
-      this.parser = this._port.pipe(new DelimiterParser({ delimiter: "\r\n" }));
+      this.parser = this._port.pipe(new Delimiter({ delimiter: "\r\n" }));
       this.result = "";
       this.callbacks = [];
       this.supportedCommands = [];

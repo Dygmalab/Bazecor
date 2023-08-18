@@ -17,7 +17,7 @@
 import { ipcRenderer } from "electron";
 import fs from "fs";
 import * as path from "path";
-import sideFlaser from "./sideFlasher";
+import SideFlaser from "./sideFlasher";
 
 /**
  * Object rp2040 with flash method.
@@ -45,7 +45,7 @@ export default class rp2040 {
     let step = 0;
 
     // Flashing procedure for each side
-    this.sideFlash = new sideFlaser(this.device.path, firmwareSides);
+    this.sideFlash = new SideFlaser(this.device.path, firmwareSides);
     let result = await this.sideFlash.flashSide("right", stateUpdate, wiredOrWireless);
     if (result.error) finished(result.error, result.message);
     console.log("Right side flash has error? ", result.error);

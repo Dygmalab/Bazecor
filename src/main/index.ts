@@ -18,6 +18,7 @@ if (require("electron-squirrel-startup")) {
 if (process.platform === "linux") {
   app.commandLine.appendSwitch("no-sandbox");
 }
+app.allowRendererProcessReuse = false;
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
