@@ -1,54 +1,11 @@
 import React, { useState, useEffect } from "react";
 
-import Styled from "styled-components";
-
-const Style = Styled.div`
-.status--default {
-    --color-status: ${({ theme }) => theme.colors.gray200};
+interface PileIndicatorProps {
+  batteryLevel: number;
+  isCharging: boolean;
+  batteryStatus: number;
 }
-.size--sm {
-    background-color: ${({ theme }) => theme.colors.gray800};
-    padding: 4px;
-    border-radius: 3px;
-    .battery-item--container {
-        display: flex;
-        grid-gap: 3px;
-        align-items: center;
-        .battery-indicator--side {
-            color: ${({ theme }) => theme.colors.gray400};
-            font-size: 0.5rem;
-            font-weight: 700;
-            text-transform: uppercase;
-        }
-    }
-    .battery-indicator--shape {
-        position: relative;
-        border-width: 1px;
-        border-style: solid;
-        border-color: var(--color-status);
-        width: 20px;
-        height: 8px;
-        padding: 1px; 
-        display: block;
-        &:after {
-            content: "";
-            position: absolute;
-            width: 1px;
-            height: 4px;
-            background-color: var(--color-status);
-            right: -3px;
-            top: 50%;
-            transform: translate3D(0, -50%, 0);
-        }
-    }
-    .battery-indicator--level {
-        background-color: var(--color-status);
-        height: 100%;
-    }
-}
-`;
-
-const PileIndicator = ({ batteryLevel, isCharging, batteryStatus }) => {
+const PileIndicator = ({ batteryLevel, isCharging, batteryStatus }: PileIndicatorProps) => {
   const [batteryWidth, setBatteryWidth] = useState(0);
   console.log("isCharging", isCharging);
   console.log("batteryStatus", batteryStatus);
@@ -63,7 +20,7 @@ const PileIndicator = ({ batteryLevel, isCharging, batteryStatus }) => {
         setBatteryWidth((16 * batteryLevel) / 100);
       }
     }
-    if (batteryStatus == 2) {
+    if (batteryStatus === 2) {
       setBatteryWidth(16);
     }
   }, [batteryLevel, isCharging, batteryStatus]);
@@ -106,7 +63,7 @@ const PileIndicator = ({ batteryLevel, isCharging, batteryStatus }) => {
       )}
       <rect x="21" y="6" width="1" height="4" fill="currentColor" />
       {isCharging ? <path d="M7 8.45833L11 2.5V7.08333H13L9 13.5V8.45833H7Z" fill="currentColor" stroke="currentColor" /> : ""}
-      {batteryStatus == 0 ? (
+      {batteryStatus === 0 ? (
         <>
           <rect x="0.5" y="4.5" width="19" height="7" stroke="currentColor" />
           <rect x="2" y="6" width={batteryWidth} height="4" fill="currentColor" />
@@ -114,7 +71,7 @@ const PileIndicator = ({ batteryLevel, isCharging, batteryStatus }) => {
       ) : (
         ""
       )}
-      {batteryStatus == 2 ? (
+      {batteryStatus === 2 ? (
         <>
           <rect x="0.5" y="4.5" width="19" height="7" stroke="currentColor" />
           <rect x="2" y="6" width={16} height="4" fill="currentColor" />
@@ -122,7 +79,7 @@ const PileIndicator = ({ batteryLevel, isCharging, batteryStatus }) => {
       ) : (
         ""
       )}
-      {batteryStatus == 3 ? (
+      {batteryStatus === 3 ? (
         <>
           <mask
             id={`mask_battery3-${maskHash}`}
@@ -153,7 +110,7 @@ const PileIndicator = ({ batteryLevel, isCharging, batteryStatus }) => {
       ) : (
         ""
       )}
-      {batteryStatus == 4 ? (
+      {batteryStatus === 4 ? (
         <>
           <mask
             id={`mask_battery4-${maskHash}`}
