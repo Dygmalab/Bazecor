@@ -346,7 +346,7 @@ export default class RecordMacroModal extends React.Component {
                   icoSVG={<IconStopWatch />}
                   icoPosition="left"
                   buttonText={i18n.editor.macros.recordDelays}
-                  style={`buttonConfigMinimal ${isDelayActive ? "config-active" : ""}`}
+                  variation={`buttonConfigMinimal ${isDelayActive ? "config-active" : ""}`}
                   onClick={this.setDelayOn}
                   disabled={isRecording}
                 />
@@ -354,7 +354,7 @@ export default class RecordMacroModal extends React.Component {
                   icoSVG={<IconStopWatchCrossed />}
                   icoPosition="left"
                   buttonText={i18n.editor.macros.ignoreDelays}
-                  style={`buttonConfigMinimal ${!isDelayActive ? "config-active" : ""}`}
+                  variation={`buttonConfigMinimal ${!isDelayActive ? "config-active" : ""}`}
                   onClick={this.setDelayOff}
                   disabled={isRecording}
                 />
@@ -380,7 +380,7 @@ export default class RecordMacroModal extends React.Component {
                 <ButtonConfig
                   tooltip={i18n.editor.macros.recordingDiscard}
                   icoSVG={<IconUndoRestart />}
-                  style="undoRecording"
+                  variation="undoRecording"
                   onClick={this.undoRecording}
                 />
               ) : (

@@ -55,7 +55,7 @@ function WirelessTab(props: TabLayoutEditorProps) {
               tooltip={undefined}
               tooltipPlacement={undefined}
               tooltipClassName={undefined}
-              style={undefined}
+              variation={undefined}
               icoSVG={undefined}
               icoPosition={undefined}
               tooltipDelay={undefined}
@@ -76,7 +76,7 @@ function WirelessTab(props: TabLayoutEditorProps) {
               tooltip={undefined}
               tooltipPlacement={undefined}
               tooltipClassName={undefined}
-              style={undefined}
+              variation={undefined}
               icoSVG={undefined}
               icoPosition={undefined}
               tooltipDelay={undefined}
@@ -97,7 +97,7 @@ function WirelessTab(props: TabLayoutEditorProps) {
               tooltip={undefined}
               tooltipPlacement={undefined}
               tooltipClassName={undefined}
-              style={undefined}
+              variation={undefined}
               icoSVG={undefined}
               icoPosition={undefined}
               tooltipDelay={undefined}
