@@ -53,6 +53,8 @@ const PileIndicator = ({ batteryLevel, isCharging, batteryStatus }) => {
   console.log("isCharging", isCharging);
   console.log("batteryStatus", batteryStatus);
 
+  const maskHash = `${Date.now()}-${(Math.random() + 1).toString(36).substring(7)}-level`;
+
   useEffect(() => {
     if (!isCharging) {
       if (batteryLevel < 5) {
@@ -70,16 +72,32 @@ const PileIndicator = ({ batteryLevel, isCharging, batteryStatus }) => {
     <svg className="pileIndicator" width="22" height="16" viewBox="0 0 22 16" fill="none" xmlns="http://www.w3.org/2000/svg">
       {isCharging ? (
         <>
-          <mask id="mask0_1956_10095" style={{ maskType: "alpha" }} maskUnits="userSpaceOnUse" x="0" y="4" width="20" height="8">
+          <mask
+            id={`mask0_1956_10095-${maskHash}`}
+            style={{ maskType: "alpha" }}
+            maskUnits="userSpaceOnUse"
+            x="0"
+            y="4"
+            width="20"
+            height="8"
+          >
             <rect x="0.5" y="4.5" width="19" height="7" stroke="currentColor" />
           </mask>
-          <g mask="url(#mask0_1956_10095)">
+          <g mask={`url(#mask0_1956_10095-${maskHash})`}>
             <path d="M17 5H14V2.5H24V13H12L17 5Z" fill="currentColor" />
           </g>
-          <mask id="mask1_1956_10095" style={{ maskType: "alpha" }} maskUnits="userSpaceOnUse" x="0" y="4" width="20" height="8">
+          <mask
+            id={`mask1_1956_10095-${maskHash}`}
+            style={{ maskType: "alpha" }}
+            maskUnits="userSpaceOnUse"
+            x="0"
+            y="4"
+            width="20"
+            height="8"
+          >
             <rect x="0.5" y="4.5" width="19" height="7" stroke="currentColor" />
           </mask>
-          <g mask="url(#mask1_1956_10095)">
+          <g mask={`url(#mask1_1956_10095-${maskHash})`}>
             <path d="M3 9.5L8 2H-2V13H6V9.5H3Z" fill="currentColor" />
           </g>
         </>
@@ -107,7 +125,7 @@ const PileIndicator = ({ batteryLevel, isCharging, batteryStatus }) => {
       {batteryStatus == 3 ? (
         <>
           <mask
-            id="mask0_2054_10065"
+            id={`mask_battery3-${maskHash}`}
             style={{ maskType: "alpha" }}
             maskUnits="userSpaceOnUse"
             x="-2"
@@ -122,7 +140,7 @@ const PileIndicator = ({ batteryLevel, isCharging, batteryStatus }) => {
               fill="black"
             />
           </mask>
-          <g mask="url(#mask0_2054_10065)">
+          <g mask={`url(#mask_battery3-${maskHash})`}>
             <rect x="0.5" y="4.5" width="19" height="7" stroke="currentColor" />
           </g>
           <rect x="22" y="6" width="1" height="4" fill="currentColor" />
@@ -137,10 +155,18 @@ const PileIndicator = ({ batteryLevel, isCharging, batteryStatus }) => {
       )}
       {batteryStatus == 4 ? (
         <>
-          <mask id="mask0_2054_10210" style={{ maskType: "alpha" }} maskUnits="userSpaceOnUse" x="0" y="3" width="20" height="8">
+          <mask
+            id={`mask_battery4-${maskHash}`}
+            style={{ maskType: "alpha" }}
+            maskUnits="userSpaceOnUse"
+            x="0"
+            y="3"
+            width="20"
+            height="8"
+          >
             <rect x="0.5" y="-0.5" width="19" height="7" transform="matrix(-1 0 0 1 20 4)" stroke="black" />
           </mask>
-          <g mask="url(#mask0_2054_10210)">
+          <g mask={`url(#mask_battery4-${maskHash})`}>
             <path d="M20 3H9L17 11H20V3Z" fill="currentColor" />
             <path d="M3 3H0V11H11L3 3Z" fill="currentColor" />
           </g>
@@ -159,10 +185,18 @@ const PileIndicator = ({ batteryLevel, isCharging, batteryStatus }) => {
       )}
       {batteryStatus === 255 ? (
         <>
-          <mask id="mask0_2054_10114" style={{ maskType: "alpha" }} maskUnits="userSpaceOnUse" x="0" y="4" width="20" height="8">
+          <mask
+            id={`mask_battery_error_${maskHash}`}
+            style={{ maskType: "alpha" }}
+            maskUnits="userSpaceOnUse"
+            x="0"
+            y="4"
+            width="20"
+            height="8"
+          >
             <rect x="0.5" y="4.5" width="19" height="7" stroke="black" />
           </mask>
-          <g mask="url(#mask0_2054_10114)">
+          <g mask={`url(#mask_battery_error_${maskHash})`}>
             <path d="M0 4H6.5L7 12H0V4Z" fill="currentColor" />
             <path d="M13 4H20V12H12.5L13 4Z" fill="currentColor" />
           </g>
