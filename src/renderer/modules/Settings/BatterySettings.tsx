@@ -33,7 +33,6 @@ padding-top: 24px;
 function BatterySettings(props: BatterySettingsProps) {
   const { wireless } = props;
   // console.log("Wireless: ", wireless);
-  const maskHash = `${Date.now()}-${(Math.random() + 1).toString(36).substring(7)}-left`;
   return (
     <Styles>
       <Card className="overflowFix card-preferences">
@@ -41,7 +40,6 @@ function BatterySettings(props: BatterySettingsProps) {
           <Title text={i18n.wireless.batteryPreferences.battery} headingLevel={3} svgICO={<IconBattery />} />
         </Card.Title>
         <Card.Body className="py-0">
-          <Title text={maskHash} headingLevel={1} />
           <div className="battery-defy--indicator">
             <BatteryStatusSide
               side="left"
