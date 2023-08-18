@@ -1912,7 +1912,6 @@ div.card.card-preferences .card-body {
     opacity: 0;
   }
 }
-
 .animInCheck {
   animation: animInCheck 0.3s forwards;
   animation-timing-function: cubic-bezier(0.75, -1.27, 0.3, 2.33);

@@ -18,8 +18,7 @@
 import React from "react";
 import Styled from "styled-components";
 
-import { IconWarning, IconCheckmarkSm, IconRefresh } from "../../component/Icon";
-import { DefyLeftSide, DefyRightSide, DefyNeuronStatus } from "../../component/SidesStatus";
+import { DefyLeftSide, DefyRightSide, DefyNeuronStatus } from "@Renderer/component/SidesStatus";
 
 const Style = Styled.div`
 .defySidesUpdatingStatus {
@@ -89,49 +88,49 @@ const Style = Styled.div`
   }
 }
 `;
+interface FirmwareDefyUpdatingStatusProps {
+  countdown: number;
+  keyboardType: string;
+  retriesLeft: number;
+  retriesRight: number;
+  retriesDefyWired: number;
+}
+
 const FirmwareDefyUpdatingStatus = ({
   countdown,
-  status,
-  deviceProduct,
   keyboardType,
-  icon,
   retriesLeft,
   retriesRight,
-  retriesNeuron,
-  retriesDefyWired
-}) => {
-  return (
-    <Style>
-      <div className={`defySidesUpdatingStatus defySidesUpdatingStatus-${countdown}`}>
-        {countdown <= 2 ? (
-          <>
-            <DefyLeftSide
-              updating={countdown == 2 && retriesLeft == 1 ? true : false}
-              warning={retriesLeft > 1 && countdown < 3 ? true : false}
-              success={countdown > 2 ? "success" : ""}
-              error={retriesLeft >= 3}
-            />
-            <DefyRightSide
-              updating={countdown == 1 && retriesRight == 1 ? true : false}
-              warning={retriesRight > 1 && countdown < 2 ? true : false}
-              success={countdown > 1 ? "success" : ""}
-              error={retriesRight >= 3}
-            />
-          </>
-        ) : (
-          <>
-            <DefyNeuronStatus
-              updating={countdown >= 3 && countdown < 5 ? true : false}
-              warning={retriesDefyWired > 1 && countdown < 4 ? true : false}
-              success={countdown >= 5 ? "success" : ""}
-              error={retriesDefyWired >= 3}
-              keyboardType={keyboardType}
-            />
-          </>
-        )}
-      </div>
-    </Style>
-  );
-};
+  retriesDefyWired,
+}: FirmwareDefyUpdatingStatusProps) => (
+  <Style>
+    <div className={`defySidesUpdatingStatus defySidesUpdatingStatus-${countdown}`}>
+      {countdown <= 2 ? (
+        <>
+          <DefyLeftSide
+            updating={!!(countdown === 2 && retriesLeft === 1)}
+            warning={!!(retriesLeft > 1 && countdown < 3)}
+            success={countdown > 2 ? "success" : ""}
+            error={retriesLeft >= 3}
+          />
+          <DefyRightSide
+            updating={!!(countdown === 1 && retriesRight === 1)}
+            warning={!!(retriesRight > 1 && countdown < 2)}
+            success={countdown > 1 ? "success" : ""}
+            error={retriesRight >= 3}
+          />
+        </>
+      ) : (
+        <DefyNeuronStatus
+          updating={!!(countdown >= 3 && countdown < 5)}
+          warning={!!(retriesDefyWired > 1 && countdown < 4)}
+          success={countdown >= 5 ? "success" : ""}
+          error={retriesDefyWired >= 3}
+          keyboardType={keyboardType}
+        />
+      )}
+    </div>
+  </Style>
+);
 
 export default FirmwareDefyUpdatingStatus;

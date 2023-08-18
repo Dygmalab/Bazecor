@@ -15,5 +15,6 @@
  */
 
 import Badge from "./Badge";
+import BadgeFirmware from "./BadgeFirmware";
 
-export { Badge as default };
+export { Badge, BadgeFirmware };
