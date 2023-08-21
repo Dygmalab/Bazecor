@@ -34,12 +34,12 @@ function ButtonConfig({
   tooltip,
   tooltipPlacement,
   tooltipClassName,
-  style,
+  variation,
   icoSVG,
   icoPosition,
   tooltipDelay,
   disabled,
-  dataAnimate
+  dataAnimate,
 }) {
   return (
     <>
@@ -56,7 +56,7 @@ function ButtonConfig({
           <Style
             onClick={disabled ? () => {} : onClick}
             data-value={selected}
-            className={`${size || ""} ${selected ? "active" : ""}  button-config ${style || ""} ${style || ""} icon-${
+            className={`${size || ""} ${selected ? "active" : ""}  button-config ${variation || ""} ${variation || ""} icon-${
               icoPosition || "none"
             }`}
             disabled={disabled}
@@ -70,8 +70,8 @@ function ButtonConfig({
         <Style
           onClick={disabled ? () => {} : onClick}
           data-value={selected}
-          className={`${size || ""} ${selected ? "active" : ""} ${disabled ? "disabled" : ""}  button-config ${style || ""} ${
-            style || ""
+          className={`${size || ""} ${selected ? "active" : ""} ${disabled ? "disabled" : ""}  button-config ${variation || ""} ${
+            variation || ""
           } icon-${icoPosition || "none"}`}
           disabled={disabled}
           data-animate={dataAnimate}
@@ -83,6 +83,6 @@ function ButtonConfig({
       )}
     </>
   );
-};
+}
 
 export default ButtonConfig;

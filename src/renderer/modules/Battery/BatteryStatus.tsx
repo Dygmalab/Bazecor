@@ -1,16 +1,17 @@
 import React, { useEffect, useRef, useState } from "react";
-import PropTypes from "prop-types";
+
 import Styled from "styled-components";
-import i18n from "../../i18n";
-import Focus from "../../../api/focus";
 
 // Custom components
-import Title from "../../component/Title";
-import { ButtonConfig } from "../../component/Button";
-import { BatteryStatusSide, SavingModeIndicator } from "../../component/Battery";
+import Title from "@Renderer/component/Title";
+import { ButtonConfig } from "@Renderer/component/Button";
+import { BatteryStatusSide, SavingModeIndicator } from "@Renderer/component/Battery";
 
 // Assets
-import { IconBattery, IconRefresh } from "../../component/Icon";
+import { IconBattery, IconRefresh } from "@Renderer/component/Icon";
+
+import Focus from "../../../api/focus";
+import i18n from "../../i18n";
 
 const Style = Styled.div`
 .battery-indicator--wrapper {
@@ -104,8 +105,10 @@ const Style = Styled.div`
   }
 }
 `;
-
-const BatteryStatus = props => {
+interface BatteryStatusProps {
+  disable: boolean;
+}
+const BatteryStatus = ({ disable }: BatteryStatusProps) => {
   const [bLeft, setbLeft] = useState(100);
   const [bRight, setbRight] = useState(100);
   const [sLeft, setsLeft] = useState(100);
@@ -128,23 +131,22 @@ const BatteryStatus = props => {
     setIsSavingMode(parseInt(savingMode, 10) > 0);
   }
 
+  if (!disable) {
+    getBatteryStatus();
+  }
+
   useEffect(() => {
-    const { disable } = props;
-    let intervalID = false;
-    if (disable) {
-      clearInterval(intervalID);
-      intervalID = false;
-    }
-    if (intervalID === false && !disable) {
+    let intervalID: NodeJS.Timeout;
+    if (!disable) {
       intervalID = setInterval(() => {
         getBatteryStatus();
-      }, 60000);
+      }, 60 * 1000);
     }
-
+    // Return a cleanup function to clear the interval
     return () => {
       clearInterval(intervalID);
     };
-  }, [props]);
+  }, [disable]);
 
   useEffect(() => {
     const intervalID = setInterval(() => {
@@ -155,7 +157,7 @@ const BatteryStatus = props => {
   }, [animateIcon]);
 
   const forceRetrieveBattery = async () => {
-    const { disable } = props;
+    // const { disable } = props;
     if (disable) return;
     const focus = new Focus();
     await focus.command("wireless.battery.forceRead");
@@ -191,8 +193,17 @@ const BatteryStatus = props => {
                   forceRetrieveBattery();
                 }}
                 icoSVG={<IconRefresh />}
-                style="button-settings"
+                variation="button-settings"
                 dataAnimate={animateIcon}
+                selected={null}
+                size={null}
+                buttonText={null}
+                tooltip={null}
+                tooltipPlacement={null}
+                tooltipClassName={null}
+                icoPosition={null}
+                tooltipDelay={null}
+                disabled={null}
               />
             </div>
           </div>
@@ -200,10 +211,6 @@ const BatteryStatus = props => {
       </div>
     </Style>
   );
-};
-
-BatteryStatus.propTypes = {
-  disable: PropTypes.bool.isRequired,
 };
 
 export default BatteryStatus;

@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
 import Styled from "styled-components";
 
-import i18n from "../../i18n";
+import DefyBatteryIndicatorLeft from "@Renderer/component/Battery/DefyBatteryIndicatorLeft";
+import DefyBatteryIndicatorRight from "@Renderer/component/Battery/DefyBatteryIndicatorRight";
 
-import { DefyBatteryIndicatorLeft, DefyBatteryIndicatorRight } from "../Battery";
+import i18n from "../../i18n";
 
 const Style = Styled.div`
 .levelIndicator {
@@ -59,10 +60,14 @@ const Style = Styled.div`
   }
 }
 `;
-
-const DefyBatteryIndicator = ({ side, batteryLevel, isCharging, batteryStatus }) => {
+interface DefyBatteryIndicatorProps {
+  side: "left" | "right";
+  batteryLevel: number;
+  batteryStatus: number;
+  isCharging: boolean;
+}
+const DefyBatteryIndicator = ({ side, batteryLevel, isCharging, batteryStatus }: DefyBatteryIndicatorProps) => {
   const [batteryHeight, setBatteryHeight] = useState(0);
-  const maskHash = `${(Math.random() + 1).toString(36).substring(7)}-${side}`;
 
   useEffect(() => {
     if (!isCharging && batteryStatus === 0) {
@@ -72,7 +77,7 @@ const DefyBatteryIndicator = ({ side, batteryLevel, isCharging, batteryStatus })
         setBatteryHeight((115 * batteryLevel) / 100);
       }
     }
-  }, [batteryLevel, isCharging]);
+  }, [batteryLevel, batteryStatus, isCharging]);
 
   return (
     <Style>

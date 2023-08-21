@@ -1,57 +1,16 @@
 import React, { useState, useEffect } from "react";
 
-import Styled from "styled-components";
-
-const Style = Styled.div`
-.status--default {
-    --color-status: ${({ theme }) => theme.colors.gray200};
+interface PileIndicatorProps {
+  batteryLevel: number;
+  isCharging: boolean;
+  batteryStatus: number;
 }
-.size--sm {
-    background-color: ${({ theme }) => theme.colors.gray800};
-    padding: 4px;
-    border-radius: 3px;
-    .battery-item--container {
-        display: flex;
-        grid-gap: 3px;
-        align-items: center;
-        .battery-indicator--side {
-            color: ${({ theme }) => theme.colors.gray400};
-            font-size: 0.5rem;
-            font-weight: 700;
-            text-transform: uppercase;
-        }
-    }
-    .battery-indicator--shape {
-        position: relative;
-        border-width: 1px;
-        border-style: solid;
-        border-color: var(--color-status);
-        width: 20px;
-        height: 8px;
-        padding: 1px; 
-        display: block;
-        &:after {
-            content: "";
-            position: absolute;
-            width: 1px;
-            height: 4px;
-            background-color: var(--color-status);
-            right: -3px;
-            top: 50%;
-            transform: translate3D(0, -50%, 0);
-        }
-    }
-    .battery-indicator--level {
-        background-color: var(--color-status);
-        height: 100%;
-    }
-}
-`;
-
-const PileIndicator = ({ batteryLevel, isCharging, batteryStatus }) => {
+const PileIndicator = ({ batteryLevel, isCharging, batteryStatus }: PileIndicatorProps) => {
   const [batteryWidth, setBatteryWidth] = useState(0);
-  console.log("isCharging", isCharging);
-  console.log("batteryStatus", batteryStatus);
+  // console.log("isCharging", isCharging);
+  // console.log("batteryStatus", batteryStatus);
+
+  const maskHash = `${Date.now()}-${(Math.random() + 1).toString(36).substring(7)}-level`;
 
   useEffect(() => {
     if (!isCharging) {
@@ -61,7 +20,7 @@ const PileIndicator = ({ batteryLevel, isCharging, batteryStatus }) => {
         setBatteryWidth((16 * batteryLevel) / 100);
       }
     }
-    if (batteryStatus == 2) {
+    if (batteryStatus === 2) {
       setBatteryWidth(16);
     }
   }, [batteryLevel, isCharging, batteryStatus]);
@@ -70,16 +29,32 @@ const PileIndicator = ({ batteryLevel, isCharging, batteryStatus }) => {
     <svg className="pileIndicator" width="22" height="16" viewBox="0 0 22 16" fill="none" xmlns="http://www.w3.org/2000/svg">
       {isCharging ? (
         <>
-          <mask id="mask0_1956_10095" style={{ maskType: "alpha" }} maskUnits="userSpaceOnUse" x="0" y="4" width="20" height="8">
+          <mask
+            id={`mask0_1956_10095-${maskHash}`}
+            style={{ maskType: "alpha" }}
+            maskUnits="userSpaceOnUse"
+            x="0"
+            y="4"
+            width="20"
+            height="8"
+          >
             <rect x="0.5" y="4.5" width="19" height="7" stroke="currentColor" />
           </mask>
-          <g mask="url(#mask0_1956_10095)">
+          <g mask={`url(#mask0_1956_10095-${maskHash})`}>
             <path d="M17 5H14V2.5H24V13H12L17 5Z" fill="currentColor" />
           </g>
-          <mask id="mask1_1956_10095" style={{ maskType: "alpha" }} maskUnits="userSpaceOnUse" x="0" y="4" width="20" height="8">
+          <mask
+            id={`mask1_1956_10095-${maskHash}`}
+            style={{ maskType: "alpha" }}
+            maskUnits="userSpaceOnUse"
+            x="0"
+            y="4"
+            width="20"
+            height="8"
+          >
             <rect x="0.5" y="4.5" width="19" height="7" stroke="currentColor" />
           </mask>
-          <g mask="url(#mask1_1956_10095)">
+          <g mask={`url(#mask1_1956_10095-${maskHash})`}>
             <path d="M3 9.5L8 2H-2V13H6V9.5H3Z" fill="currentColor" />
           </g>
         </>
@@ -88,7 +63,7 @@ const PileIndicator = ({ batteryLevel, isCharging, batteryStatus }) => {
       )}
       <rect x="21" y="6" width="1" height="4" fill="currentColor" />
       {isCharging ? <path d="M7 8.45833L11 2.5V7.08333H13L9 13.5V8.45833H7Z" fill="currentColor" stroke="currentColor" /> : ""}
-      {batteryStatus == 0 ? (
+      {batteryStatus === 0 ? (
         <>
           <rect x="0.5" y="4.5" width="19" height="7" stroke="currentColor" />
           <rect x="2" y="6" width={batteryWidth} height="4" fill="currentColor" />
@@ -96,7 +71,7 @@ const PileIndicator = ({ batteryLevel, isCharging, batteryStatus }) => {
       ) : (
         ""
       )}
-      {batteryStatus == 2 ? (
+      {batteryStatus === 2 ? (
         <>
           <rect x="0.5" y="4.5" width="19" height="7" stroke="currentColor" />
           <rect x="2" y="6" width={16} height="4" fill="currentColor" />
@@ -104,10 +79,10 @@ const PileIndicator = ({ batteryLevel, isCharging, batteryStatus }) => {
       ) : (
         ""
       )}
-      {batteryStatus == 3 ? (
+      {batteryStatus === 3 ? (
         <>
           <mask
-            id="mask0_2054_10065"
+            id={`mask_battery3-${maskHash}`}
             style={{ maskType: "alpha" }}
             maskUnits="userSpaceOnUse"
             x="-2"
@@ -122,7 +97,7 @@ const PileIndicator = ({ batteryLevel, isCharging, batteryStatus }) => {
               fill="black"
             />
           </mask>
-          <g mask="url(#mask0_2054_10065)">
+          <g mask={`url(#mask_battery3-${maskHash})`}>
             <rect x="0.5" y="4.5" width="19" height="7" stroke="currentColor" />
           </g>
           <rect x="22" y="6" width="1" height="4" fill="currentColor" />
@@ -135,12 +110,20 @@ const PileIndicator = ({ batteryLevel, isCharging, batteryStatus }) => {
       ) : (
         ""
       )}
-      {batteryStatus == 4 ? (
+      {batteryStatus === 4 ? (
         <>
-          <mask id="mask0_2054_10210" style={{ maskType: "alpha" }} maskUnits="userSpaceOnUse" x="0" y="3" width="20" height="8">
+          <mask
+            id={`mask_battery4-${maskHash}`}
+            style={{ maskType: "alpha" }}
+            maskUnits="userSpaceOnUse"
+            x="0"
+            y="3"
+            width="20"
+            height="8"
+          >
             <rect x="0.5" y="-0.5" width="19" height="7" transform="matrix(-1 0 0 1 20 4)" stroke="black" />
           </mask>
-          <g mask="url(#mask0_2054_10210)">
+          <g mask={`url(#mask_battery4-${maskHash})`}>
             <path d="M20 3H9L17 11H20V3Z" fill="currentColor" />
             <path d="M3 3H0V11H11L3 3Z" fill="currentColor" />
           </g>
@@ -159,10 +142,18 @@ const PileIndicator = ({ batteryLevel, isCharging, batteryStatus }) => {
       )}
       {batteryStatus === 255 ? (
         <>
-          <mask id="mask0_2054_10114" style={{ maskType: "alpha" }} maskUnits="userSpaceOnUse" x="0" y="4" width="20" height="8">
+          <mask
+            id={`mask_battery_error_${maskHash}`}
+            style={{ maskType: "alpha" }}
+            maskUnits="userSpaceOnUse"
+            x="0"
+            y="4"
+            width="20"
+            height="8"
+          >
             <rect x="0.5" y="4.5" width="19" height="7" stroke="black" />
           </mask>
-          <g mask="url(#mask0_2054_10114)">
+          <g mask={`url(#mask_battery_error_${maskHash})`}>
             <path d="M0 4H6.5L7 12H0V4Z" fill="currentColor" />
             <path d="M13 4H20V12H12.5L13 4Z" fill="currentColor" />
           </g>

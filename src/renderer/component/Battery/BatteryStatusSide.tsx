@@ -2,11 +2,13 @@ import React, { useState, useEffect } from "react";
 
 import Styled from "styled-components";
 
-import { PileIndicator, DefyBatteryIndicator } from "../Battery";
+import PileIndicator from "@Renderer/component/Battery/PileIndicator";
+import DefyBatteryIndicator from "@Renderer/component/Battery/DefyBatteryIndicator";
 
 const Style = Styled.div`
 .status--default,
-.status--disconnected {
+.status--disconnected,
+.status--disconnected.status--saving {
     --color-status: ${({ theme }) => theme.colors.gray200};
 }
 .status--saving,
@@ -43,6 +45,10 @@ const Style = Styled.div`
     }
     &.status--fatal-error {
       background-color: ${({ theme }) => theme.styles.batteryIndicator.pileBackgroundFatalError};
+    }
+    &.status--disconnected,
+    &.status--disconnected.status--saving {
+      background-color: ${({ theme }) => theme.styles.batteryIndicator.pileBackgroundColor};
     }
     .pileIndicator {
       max-width: 100%;
@@ -206,7 +212,15 @@ const Style = Styled.div`
 
 `;
 
-const BatteryStatusSide = ({ side, batteryLevel, isSavingMode, batteryStatus, size }) => {
+interface BatteryStatusSideProps {
+  side: "left" | "right";
+  batteryLevel: number;
+  batteryStatus: number;
+  isSavingMode: boolean;
+  size: "sm" | "lg";
+}
+
+const BatteryStatusSide: React.FC<BatteryStatusSideProps> = ({ side, batteryLevel, isSavingMode, batteryStatus, size }) => {
   const [loading, setLoading] = useState(true);
   const [sideFirstLetter, setSideFirstLetter] = useState("");
   const [isCharging, setIsCharging] = useState(false);
@@ -217,10 +231,10 @@ const BatteryStatusSide = ({ side, batteryLevel, isSavingMode, batteryStatus, si
       setLoading(false);
       setSideFirstLetter(side.charAt(0));
     }
-  }, []);
+  }, [side]);
 
   useEffect(() => {
-    console.log("batteryStatus", batteryStatus);
+    // console.log("batteryStatus", batteryStatus);
     switch (batteryStatus) {
       case 0:
         setSideStatus("status--default");
@@ -251,7 +265,7 @@ const BatteryStatusSide = ({ side, batteryLevel, isSavingMode, batteryStatus, si
     }
   }, [size, batteryLevel, batteryStatus, isSavingMode]);
 
-  if (loading) return <div />;
+  if (loading) return null;
   return (
     <Style>
       <div className={`battery-indicator--item size--${size} item--${side} ${sideStatus} ${isSavingMode && "status--saving"}`}>
