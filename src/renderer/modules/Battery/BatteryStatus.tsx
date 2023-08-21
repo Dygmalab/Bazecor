@@ -136,31 +136,16 @@ const BatteryStatus = ({ disable }: BatteryStatusProps) => {
   }
 
   useEffect(() => {
-    // const { disable } = props;
-    // let intervalID = 0;
-    // if (disable) {
-    //   clearInterval(intervalID);
-    //   intervalID = 0;
-    // }
-    // if (intervalID === 0 && !disable) {
-    //   intervalID = setInterval(() => {
-    //     getBatteryStatus();
-    //   }, 60000);
-    // }
     let intervalID: NodeJS.Timeout;
     if (!disable) {
       intervalID = setInterval(() => {
-        // Your interval logic here
         getBatteryStatus();
-      }, 60 * 1000); // Interval of 60 seconds
+      }, 60 * 1000);
     }
     // Return a cleanup function to clear the interval
     return () => {
       clearInterval(intervalID);
     };
-    // return () => {
-    //   clearInterval(intervalID);
-    // };
   }, [disable]);
 
   useEffect(() => {
