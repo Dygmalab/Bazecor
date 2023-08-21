@@ -192,7 +192,14 @@ class SuperkeysTab extends Component {
       <Styles className={`${isStandardView ? "standardViewTab" : ""} tabsSuperkeys`}>
         <div className="tabContentWrapper">
           <Title text={i18n.editor.standardView.superkeys.title} headingLevel={3} />
-          <Callout content={i18n.editor.standardView.superkeys.callOut} size="sm" />
+          <Callout
+            content={i18n.editor.standardView.superkeys.callOut}
+            size="sm"
+            hasVideo
+            media="6Az05_Yl6AU"
+            videoTitle="The Greatest Keyboard Feature Of All Time: SUPERKEYS! 🦹‍♀️"
+            videoDuration="5:34"
+          />
 
           <Title text={i18n.editor.standardView.superkeys.label} headingLevel={4} />
           <div className="superKeyGroup">
