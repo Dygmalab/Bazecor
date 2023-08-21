@@ -906,12 +906,6 @@ const tableAGrS = {
       },
     },
     {
-      code: OFFSET_SHIFT_ALTGR + 35,
-      labels: {
-        primary: "⚠",
-      },
-    },
-    {
       code: OFFSET_SHIFT_ALTGR + 36,
       labels: {
         primary: "¬",
