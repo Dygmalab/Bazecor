@@ -979,49 +979,10 @@ const tableAGrS = {
       },
     },
     {
-      code: OFFSET_SHIFT_ALTGR + 28,
-      labels: {
-        primary: "☠",
-      },
-      newGroupName: "Punctuation",
-    },
-    {
-      code: OFFSET_SHIFT_ALTGR + 24,
-      labels: {
-        primary: "☢",
-      },
-    },
-    {
-      code: OFFSET_SHIFT_ALTGR + 12,
-      labels: {
-        primary: "☣",
-      },
-    },
-    {
       code: OFFSET_SHIFT_ALTGR + 18,
       labels: {
         primary: "£",
       },
-    },
-    {
-      code: OFFSET_SHIFT_ALTGR + 19,
-      labels: {
-        primary: "☯",
-      },
-    },
-    {
-      code: OFFSET_SHIFT_ALTGR + 47,
-      labels: {
-        primary: "☙",
-      },
-      newGroupName: "Letters",
-    },
-    {
-      code: OFFSET_SHIFT_ALTGR + 48,
-      labels: {
-        primary: "♿",
-      },
-      newGroupName: "Letters",
     },
     // Second row
     {
@@ -1083,13 +1044,6 @@ const tableAGrS = {
       code: OFFSET_SHIFT_ALTGR + 51,
       labels: {
         primary: "⚓",
-      },
-      newGroupName: "Letters",
-    },
-    {
-      code: OFFSET_SHIFT_ALTGR + 52,
-      labels: {
-        primary: "⛽",
       },
       newGroupName: "Letters",
     },
