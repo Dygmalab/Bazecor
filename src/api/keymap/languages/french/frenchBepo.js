@@ -107,6 +107,7 @@ const symbols = [
     },
   },
 ];
+
 const frenchLetters = [
   // First row
   {
@@ -1100,13 +1101,6 @@ const tableAGrS = {
       newGroupName: "Letters",
     },
     // Third row
-    // {
-    // code: OFFSET_SHIFT_ALTGR + 100,
-    // labels: {
-    // primary: "ê",
-    // },
-    // newGroupName: "Letters",
-    // },
     {
       code: OFFSET_SHIFT_ALTGR + 29,
       labels: {
@@ -1162,13 +1156,6 @@ const tableAGrS = {
       code: OFFSET_SHIFT_ALTGR + 55,
       labels: {
         primary: "‡",
-      },
-      newGroupName: "Letters",
-    },
-    {
-      code: OFFSET_SHIFT_ALTGR + 56,
-      labels: {
-        primary: "⛄",
       },
       newGroupName: "Letters",
     },
