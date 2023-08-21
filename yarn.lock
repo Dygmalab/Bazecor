@@ -11724,10 +11724,10 @@ uglify-js@^3.1.4:
   resolved "https://registry.yarnpkg.com/uglify-js/-/uglify-js-3.17.4.tgz#61678cf5fa3f5b7eb789bb345df29afb8257c22c"
   integrity sha512-T9q82TJI9e/C1TAxYvfb16xO120tMVFZrGA3f9/P4424DNu6ypK103y0GPFVa17yotwSyZW5iYXgjYHkGrJW/g==
 
-uiohook-napi@^1.5.0:
-  version "1.5.1"
-  resolved "https://registry.yarnpkg.com/uiohook-napi/-/uiohook-napi-1.5.1.tgz#dede782f23fbd07b148976fa774dd5f07c310734"
-  integrity sha512-wSBd0LRzomlCQcB09CLk70lobx+UyGmWgNiL5wfoEHkPdDR/5Byivp1uS0NyO61waNFc+KOtcV+As+I3DjS0TA==
+uiohook-napi@^1.5.2:
+  version "1.5.2"
+  resolved "https://registry.yarnpkg.com/uiohook-napi/-/uiohook-napi-1.5.2.tgz#88c14fd95276b8f547329ccd5a4a6937fdf077c7"
+  integrity sha512-XmxEQpgWZerYwrhRk5oBbHSO9pjeEKF7cMG6e+Ak1j5MW7xQUvl/P+qaPAYDfbJ1JsT/E6ontbClBBSy5Z3C0g==
   dependencies:
     node-gyp-build "4.x.x"
 

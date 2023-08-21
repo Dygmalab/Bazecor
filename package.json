@@ -138,7 +138,7 @@
     "serialport": "^10.0.0",
     "styled-components": "5.3.11",
     "sudo-prompt": "^9.2.1",
-    "uiohook-napi": "^1.5.0",
+    "uiohook-napi": "^1.5.2",
     "update-electron-app": "^2.0.1",
     "usb": "^2.9.0",
     "xstate": "^4.37.2"
