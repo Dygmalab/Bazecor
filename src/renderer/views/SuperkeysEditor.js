@@ -767,7 +767,17 @@ class SuperkeysEditor extends React.Component {
             destroyContext={this.loadSuperkeys}
             inContext={this.state.modified}
           />
-          <Callout content={i18n.editor.superkeys.callout} className="mt-md" size="sm" />
+
+          <Callout
+            content={i18n.editor.superkeys.callout}
+            className="mt-md"
+            size="sm"
+            hasVideo
+            media="6Az05_Yl6AU"
+            videoTitle="The Greatest Keyboard Feature Of All Time: SUPERKEYS! 🦹‍♀️"
+            videoDuration="5:34"
+          />
+
           {superkeys.length == 0 || !Array.isArray(superkeys) ? (
             <div className="loading marginCenter mt-md">
               <Spinner className="spinner-border" role="status" />
