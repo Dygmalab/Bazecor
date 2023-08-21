@@ -156,7 +156,7 @@ const languagesDB = {
   spanish,
   german,
   french,
-  frenchBepo: frenchBepo,
+  frenchBepo,
   norwegian,
   swedish,
   danish,
