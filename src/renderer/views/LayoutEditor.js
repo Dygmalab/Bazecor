@@ -1515,8 +1515,11 @@ class LayoutEditor extends React.Component {
       isReadOnly = currentLayer < keymap.default.length;
       layerData = isReadOnly ? keymap.default[currentLayer] : keymap.custom[currentLayer - keymap.default.length];
     }
+    const focus = new Focus();
+    const { info } = focus.device;
     const data = JSON.stringify(
       {
+        device: info,
         layerNames,
         keymap: layerData,
         colormap: this.state.colorMap[currentLayer],
