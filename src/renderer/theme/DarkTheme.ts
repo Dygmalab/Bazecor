@@ -206,7 +206,7 @@ const Dark: DefaultTheme = {
       outlineGradient: {
         color: "#fff",
         background: `linear-gradient(98.12deg, #555769 0%, #303349 56.24%) padding-box,
-        ${Tokens.colors.gradient} border-box`,
+        linear-gradient(90deg,#FE007C,#6B14F6,#6B14F9,#FE007c) border-box`,
       },
       previewButton: {
         color: Tokens.colors.gray300,

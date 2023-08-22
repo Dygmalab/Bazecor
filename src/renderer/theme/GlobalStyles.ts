@@ -1344,6 +1344,10 @@ div.card.card-preferences .card-body {
 .Toastify__toast-container {
   padding: 0;
   width: 368px;
+  .Toastify__toast-icon {
+    display: none;
+    visibility: hidden;
+  }
 }
 .Toastify__toast--default,
 .Toastify__toast {
@@ -1419,6 +1423,7 @@ div.card.card-preferences .card-body {
 
 .Toastify__progress-bar {
   margin: 8px 24px;
+  width: calc(100% - 42px);
   height: 3px;
   border-radius: 3px;
   background: ${({ theme }) => theme.styles.toast.backgroundNoStatus};

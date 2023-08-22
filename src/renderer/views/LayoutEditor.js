@@ -598,7 +598,7 @@ class LayoutEditor extends React.Component {
       const chipID = await focus.command("hardware.chip_id");
       const registered = await this.AnalizeChipID(chipID.replace(/\s/g, ""));
       const device = focus.device.info.product;
-      const wirelessChecker = focus.device.info.keyboardType === "wireless" ? true : false;
+      const wirelessChecker = focus.device.info.keyboardType === "wireless";
       if (lang) {
         const deviceLang = { ...focus.device, language: true };
         focus.commands.keymap = new Keymap(deviceLang);
