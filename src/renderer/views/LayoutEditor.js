@@ -1520,6 +1520,7 @@ class LayoutEditor extends React.Component {
     const data = JSON.stringify(
       {
         device: info,
+        language: this.state.currentLanguageLayout,
         layerNames,
         keymap: layerData,
         colormap: this.state.colorMap[currentLayer],
