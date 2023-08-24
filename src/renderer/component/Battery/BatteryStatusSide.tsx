@@ -223,7 +223,6 @@ interface BatteryStatusSideProps {
 const BatteryStatusSide: React.FC<BatteryStatusSideProps> = ({ side, batteryLevel, isSavingMode, batteryStatus, size }) => {
   const [loading, setLoading] = useState(true);
   const [sideFirstLetter, setSideFirstLetter] = useState("");
-  const [isCharging, setIsCharging] = useState(false);
   const [sideStatus, setSideStatus] = useState("status--default");
 
   useEffect(() => {
@@ -260,9 +259,6 @@ const BatteryStatusSide: React.FC<BatteryStatusSideProps> = ({ side, batteryLeve
     if (batteryLevel < 10 && !isSavingMode && batteryStatus === 0) {
       setSideStatus("status--critical");
     }
-    if (batteryStatus === 1) {
-      setIsCharging(true);
-    }
   }, [size, batteryLevel, batteryStatus, isSavingMode]);
 
   if (loading) return null;
@@ -271,16 +267,8 @@ const BatteryStatusSide: React.FC<BatteryStatusSideProps> = ({ side, batteryLeve
       <div className={`battery-indicator--item size--${size} item--${side} ${sideStatus} ${isSavingMode && "status--saving"}`}>
         <div className="battery-item--container">
           {size === "sm" ? <div className="battery-indicator--side">{sideFirstLetter}</div> : ""}
-          {size === "sm" ? (
-            <PileIndicator batteryLevel={batteryLevel} isCharging={isCharging} batteryStatus={batteryStatus} />
-          ) : (
-            ""
-          )}
-          {size === "lg" ? (
-            <DefyBatteryIndicator side={side} batteryLevel={batteryLevel} batteryStatus={batteryStatus} isCharging={isCharging} />
-          ) : (
-            ""
-          )}
+          {size === "sm" ? <PileIndicator batteryLevel={batteryLevel} batteryStatus={batteryStatus} /> : ""}
+          {size === "lg" ? <DefyBatteryIndicator side={side} batteryLevel={batteryLevel} batteryStatus={batteryStatus} /> : ""}
         </div>
       </div>
     </Style>

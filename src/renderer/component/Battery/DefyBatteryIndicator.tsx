@@ -64,20 +64,35 @@ interface DefyBatteryIndicatorProps {
   side: "left" | "right";
   batteryLevel: number;
   batteryStatus: number;
-  isCharging: boolean;
 }
-const DefyBatteryIndicator = ({ side, batteryLevel, isCharging, batteryStatus }: DefyBatteryIndicatorProps) => {
+const DefyBatteryIndicator = ({ side, batteryLevel, batteryStatus }: DefyBatteryIndicatorProps) => {
   const [batteryHeight, setBatteryHeight] = useState(0);
 
   useEffect(() => {
-    if (!isCharging && batteryStatus === 0) {
-      if (batteryLevel > 0 && batteryLevel < 5) {
-        setBatteryHeight(2);
-      } else {
-        setBatteryHeight((115 * batteryLevel) / 100);
-      }
+    switch (batteryStatus) {
+      case 0:
+        if (batteryLevel > 0 && batteryLevel < 5) {
+          setBatteryHeight(2);
+        } else {
+          setBatteryHeight((115 * batteryLevel) / 100);
+        }
+        break;
+      case 1:
+        setBatteryHeight(0);
+        break;
+      case 2:
+        setBatteryHeight(115);
+        break;
+      case 3:
+        setBatteryHeight(0);
+        break;
+      case 4:
+        setBatteryHeight(0);
+        break;
+      default:
+        setBatteryHeight(0);
     }
-  }, [batteryLevel, batteryStatus, isCharging]);
+  }, [batteryLevel, batteryStatus]);
 
   return (
     <Style>

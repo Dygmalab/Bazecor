@@ -13,21 +13,34 @@ const PileIndicator = ({ batteryLevel, isCharging, batteryStatus }: PileIndicato
   const maskHash = `${Date.now()}-${(Math.random() + 1).toString(36).substring(7)}-level`;
 
   useEffect(() => {
-    if (!isCharging) {
-      if (batteryLevel < 5) {
-        setBatteryWidth(1);
-      } else {
-        setBatteryWidth((16 * batteryLevel) / 100);
-      }
-    }
-    if (batteryStatus === 2) {
-      setBatteryWidth(16);
+    switch (batteryStatus) {
+      case 0:
+        if (batteryLevel < 5) {
+          setBatteryWidth(1);
+        } else {
+          setBatteryWidth((16 * batteryLevel) / 100);
+        }
+        break;
+      case 1:
+        setBatteryWidth(0);
+        break;
+      case 2:
+        setBatteryWidth(16);
+        break;
+      case 3:
+        setBatteryWidth(0);
+        break;
+      case 4:
+        setBatteryWidth(0);
+        break;
+      default:
+        setBatteryWidth(0);
     }
   }, [batteryLevel, isCharging, batteryStatus]);
 
   return (
     <svg className="pileIndicator" width="22" height="16" viewBox="0 0 22 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-      {isCharging ? (
+      {batteryStatus === 1 ? (
         <>
           <mask
             id={`mask0_1956_10095-${maskHash}`}
@@ -62,7 +75,11 @@ const PileIndicator = ({ batteryLevel, isCharging, batteryStatus }: PileIndicato
         ""
       )}
       <rect x="21" y="6" width="1" height="4" fill="currentColor" />
-      {isCharging ? <path d="M7 8.45833L11 2.5V7.08333H13L9 13.5V8.45833H7Z" fill="currentColor" stroke="currentColor" /> : ""}
+      {batteryStatus === 1 ? (
+        <path d="M7 8.45833L11 2.5V7.08333H13L9 13.5V8.45833H7Z" fill="currentColor" stroke="currentColor" />
+      ) : (
+        ""
+      )}
       {batteryStatus === 0 ? (
         <>
           <rect x="0.5" y="4.5" width="19" height="7" stroke="currentColor" />
