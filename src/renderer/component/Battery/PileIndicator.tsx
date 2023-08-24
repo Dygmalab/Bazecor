@@ -2,10 +2,9 @@ import React, { useState, useEffect } from "react";
 
 interface PileIndicatorProps {
   batteryLevel: number;
-  isCharging: boolean;
   batteryStatus: number;
 }
-const PileIndicator = ({ batteryLevel, isCharging, batteryStatus }: PileIndicatorProps) => {
+const PileIndicator = ({ batteryLevel, batteryStatus }: PileIndicatorProps) => {
   const [batteryWidth, setBatteryWidth] = useState(0);
   // console.log("isCharging", isCharging);
   // console.log("batteryStatus", batteryStatus);
@@ -36,7 +35,7 @@ const PileIndicator = ({ batteryLevel, isCharging, batteryStatus }: PileIndicato
       default:
         setBatteryWidth(0);
     }
-  }, [batteryLevel, isCharging, batteryStatus]);
+  }, [batteryLevel, batteryStatus]);
 
   return (
     <svg className="pileIndicator" width="22" height="16" viewBox="0 0 22 16" fill="none" xmlns="http://www.w3.org/2000/svg">
