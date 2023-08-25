@@ -97,7 +97,6 @@ import KR from "@Renderer/modules/KeyPickerKeyboard/KR.json";
 import SWGR from "@Renderer/modules/KeyPickerKeyboard/SWGR.json";
 import EU from "@Renderer/modules/KeyPickerKeyboard/EU.json";
 
-
 const Style = Styled.div`
 width: 100%;
 @media screen and (min-width: 1980px) and (min-height: 980px) {
@@ -384,6 +383,7 @@ class KeyPicker extends Component {
 
     const liso = {
       english: ENi,
+      british: ENi,
       spanish: ES,
       german: GR,
       french: FR,

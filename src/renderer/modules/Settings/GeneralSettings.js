@@ -67,7 +67,8 @@ export default class GeneralSettings extends Component {
     const { selectDarkMode, darkMode, neurons, selectedNeuron, connected, defaultLayer, selectDefaultLayer } = this.props;
     const { selectedLanguage } = this.state;
     let layersNames = neurons[selectedNeuron] ? neurons[selectedNeuron].layers : [];
-    let flags = [
+    const flags = [
+      englishUSUKF,
       englishUSUKF,
       spanishF,
       germanF,
@@ -84,6 +85,7 @@ export default class GeneralSettings extends Component {
     ];
     let language = [
       "english",
+      "british",
       "spanish",
       "german",
       "french",
@@ -97,8 +99,9 @@ export default class GeneralSettings extends Component {
       "swissGerman",
       "eurkey",
     ];
-    let languageNames = [
+    const languageNames = [
       "English",
+      "British",
       "Spanish",
       "German",
       "French",
@@ -116,7 +119,7 @@ export default class GeneralSettings extends Component {
       text: languageNames[index],
       value: item,
       icon: flags[index],
-      index
+      index,
     }));
 
     layersNames = layersNames.map((item, index) => ({
