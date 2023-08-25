@@ -317,9 +317,11 @@ svg text{
 .button:hover {
   cursor: pointer;
 }
+button:focus, button:focus-within,
 .button:focus,.button:focus-within {
   outline: none;
 }
+button:focus-visible,
 .button:focus-visible {
   outline: 2px solid ${({ theme }) => theme.accessibility.focusWithinColor};
 }
