@@ -93,6 +93,20 @@ width: 100%;
   height: 142px;
   overflow-y: auto;
 }
+@media (max-width: 980px) {
+  .custom-dropdown {
+    .dropdownItem {
+      overflow: initial;
+      position: relative;
+    }
+    .badge.badge-primary {
+      font-size: 7px;
+      position: absolute;
+      top: -6px;
+      margin-left: -3px;
+    }
+  }
+}
 `;
 
 class SelectSuperKeyCustomDropdown extends Component {

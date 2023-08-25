@@ -14,7 +14,7 @@ const PileIndicator = ({ batteryLevel, batteryStatus }: PileIndicatorProps) => {
   useEffect(() => {
     switch (batteryStatus) {
       case 0:
-        if (batteryLevel < 5) {
+        if (batteryLevel <= 5) {
           setBatteryWidth(1);
         } else {
           setBatteryWidth((16 * batteryLevel) / 100);
