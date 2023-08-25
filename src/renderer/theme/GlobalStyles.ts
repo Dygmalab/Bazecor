@@ -317,10 +317,10 @@ svg text{
 .button:hover {
   cursor: pointer;
 }
-.button:focus {
+.button:focus,.button:focus-within {
   outline: none;
 }
-.button:focus-within {
+.button:focus-visible {
   outline: 2px solid ${({ theme }) => theme.accessibility.focusWithinColor};
 }
 .button[disabled]:hover {
