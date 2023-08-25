@@ -20,7 +20,7 @@
 
 import { withModifiers } from "../../db/utils";
 
-const swedishLetters = [
+const svSELetters = [
   {
     code: 47,
     labels: {
@@ -44,7 +44,7 @@ const swedishLetters = [
   }
 ];
 
-const swedishModifierKeys = [
+const svSEModifierKeys = [
   {
     code: 53,
     labels: {
@@ -360,71 +360,71 @@ const shiftModifierSwedish = {
   ]
 };
 
-const swedish = swedishLetters.concat(swedishModifierKeys);
+const svSE = svSELetters.concat(svSEModifierKeys);
 
-const table = { keys: swedish };
-const tableWithoutModifier = { keys: swedishLetters };
+const table = { keys: svSE };
+const tableWithoutModifier = { keys: svSELetters };
 
-const swedishCtrlTable = withModifiers(table, "Control +", "C+", 256);
-const swedishLAltTable = withModifiers(table, "Alt +", "A+", 512);
-const swedishRAltTable = withModifiers(table, "AltGr +", "AGr+", 1024);
-const swedishShiftTable = withModifiers(tableWithoutModifier, "Shift +", "S+", 2048);
-const swedishGuiTable = withModifiers(table, "Os+", "O+", 4096);
+const svSECtrlTable = withModifiers(table, "Control +", "C+", 256);
+const svSELAltTable = withModifiers(table, "Alt +", "A+", 512);
+const svSERAltTable = withModifiers(table, "AltGr +", "AGr+", 1024);
+const svSEShiftTable = withModifiers(tableWithoutModifier, "Shift +", "S+", 2048);
+const svSEGuiTable = withModifiers(table, "Os+", "O+", 4096);
 // Double
 
-const swedishCATable = withModifiers(table, "Control + Alt +", "C+A+", 768);
+const svSECATable = withModifiers(table, "Control + Alt +", "C+A+", 768);
 
-const swedishCAGrTable = withModifiers(table, "Control + AltGr +", "C+AGr+", 1280);
+const svSECAGrTable = withModifiers(table, "Control + AltGr +", "C+AGr+", 1280);
 
-const swedishCSTable = withModifiers(table, "Control + Shift +", "C+S+", 2304);
+const svSECSTable = withModifiers(table, "Control + Shift +", "C+S+", 2304);
 
-const swedishCGTable = withModifiers(table, "Control + Os +", "C+O+", 4352);
+const svSECGTable = withModifiers(table, "Control + Os +", "C+O+", 4352);
 
-const swedishAAGrTable = withModifiers(table, "Alt + AltGr +", "A+AGr+", 1536);
+const svSEAAGrTable = withModifiers(table, "Alt + AltGr +", "A+AGr+", 1536);
 
-const swedishASTable = withModifiers(table, "Alt + Shift +", "A+S+", 2560);
+const svSEASTable = withModifiers(table, "Alt + Shift +", "A+S+", 2560);
 
-const swedishAGTable = withModifiers(table, "Alt + Os +", "A+O+", 4608);
+const svSEAGTable = withModifiers(table, "Alt + Os +", "A+O+", 4608);
 
-const swedishAGrSTable = withModifiers(table, "AltGr + Shift +", "AGr+S+", 3072);
+const svSEAGrSTable = withModifiers(table, "AltGr + Shift +", "AGr+S+", 3072);
 
-const swedishAGrGTable = withModifiers(table, "AltGr + Os +", "AGr+O+", 5120);
+const svSEAGrGTable = withModifiers(table, "AltGr + Os +", "AGr+O+", 5120);
 
-const swedishSGTable = withModifiers(table, "Shift + Os +", "S+O+", 6144);
+const svSESGTable = withModifiers(table, "Shift + Os +", "S+O+", 6144);
 
 // Triple
 
-const swedishCAAGTable = withModifiers(table, "Control + Alt + AltGr +", "C+A+AGr+", 1792);
+const svSECAAGTable = withModifiers(table, "Control + Alt + AltGr +", "C+A+AGr+", 1792);
 
-const swedishCASTable = withModifiers(table, "Meh +", "Meh+", 2816);
+const svSECASTable = withModifiers(table, "Meh +", "Meh+", 2816);
 
-const swedishCAGTable = withModifiers(table, "Control + Alt + Os +", "C+A+O+", 4864);
+const svSECAGTable = withModifiers(table, "Control + Alt + Os +", "C+A+O+", 4864);
 
-const swedishCAGSTable = withModifiers(table, "Control + AltGr + Shift +", "C+AGr+S+", 3328);
+const svSECAGSTable = withModifiers(table, "Control + AltGr + Shift +", "C+AGr+S+", 3328);
 
-const swedishCAGGTable = withModifiers(table, "Control + AltGr + Os +", "C+AGr+O+", 5376);
+const svSECAGGTable = withModifiers(table, "Control + AltGr + Os +", "C+AGr+O+", 5376);
 
-const swedishCSGTable = withModifiers(table, "Control + Shift + Os +", "C+S+O+", 6400);
+const svSECSGTable = withModifiers(table, "Control + Shift + Os +", "C+S+O+", 6400);
 
-const swedishAAGSTable = withModifiers(table, "Alt + AltGr + Shift +", "A+AGr+S+", 3584);
+const svSEAAGSTable = withModifiers(table, "Alt + AltGr + Shift +", "A+AGr+S+", 3584);
 
-const swedishAAGGTable = withModifiers(table, "Alt + AltGr + Os +", "A+AGr+O+", 5632);
+const svSEAAGGTable = withModifiers(table, "Alt + AltGr + Os +", "A+AGr+O+", 5632);
 
-const swedishASGTable = withModifiers(table, "Alt + Shift + Os +", "A+S+O+", 6656);
+const svSEASGTable = withModifiers(table, "Alt + Shift + Os +", "A+S+O+", 6656);
 
-const swedishAGSGTable = withModifiers(table, "AltGr + Shift + Os +", "AGr+S+O+", 7168);
+const svSEAGSGTable = withModifiers(table, "AltGr + Shift + Os +", "AGr+S+O+", 7168);
 
 // Quad
 
-const swedishCAAGrSTable = withModifiers(table, "Meh + AltGr +", "M+AGr+", 3840);
+const svSECAAGrSTable = withModifiers(table, "Meh + AltGr +", "M+AGr+", 3840);
 
-const swedishCAAGrGTable = withModifiers(table, "Control + Alt + AltGr + Os +", "C+A+AGr+O+", 5888);
+const svSECAAGrGTable = withModifiers(table, "Control + Alt + AltGr + Os +", "C+A+AGr+O+", 5888);
 
-const swedishCAGrSGTable = withModifiers(table, "Control + AltGr + Shift + Os +", "C+AGr+S+O+", 7424);
+const svSECAGrSGTable = withModifiers(table, "Control + AltGr + Shift + Os +", "C+AGr+S+O+", 7424);
 
-const swedishAAGrSGTable = withModifiers(table, "Alt + AltGr + Shift + Os +", "A+AGr+S+O+", 7680);
+const svSEAAGrSGTable = withModifiers(table, "Alt + AltGr + Shift + Os +", "A+AGr+S+O+", 7680);
 
-const swedishAllModTable = withModifiers(table, "Hyper + AltGr +", "H+AGr+", 7936);
+const svSEAllModTable = withModifiers(table, "Hyper + AltGr +", "H+AGr+", 7936);
 
 const DualUseCtrlTable = withModifiers(table, "Control /", "CTRL/", 49169);
 const DualUseShiftTable = withModifiers(table, "Shift /", "SHIFT/", 49425);
@@ -440,41 +440,41 @@ const DualUseLayer6Tables = withModifiers(table, "Layer #6 /", "L#6/", 52498);
 const DualUseLayer7Tables = withModifiers(table, "Layer #7 /", "L#7/", 52754);
 const DualUseLayer8Tables = withModifiers(table, "Layer #8 /", "L#8/", 53010);
 
-const swedishModifiedTables = [
+const svSEModifiedTables = [
   shiftModifierSwedish,
-  swedishCtrlTable,
-  swedishLAltTable,
-  swedishRAltTable,
-  swedishShiftTable,
-  swedishGuiTable,
-  swedishCATable,
+  svSECtrlTable,
+  svSELAltTable,
+  svSERAltTable,
+  svSEShiftTable,
+  svSEGuiTable,
+  svSECATable,
   altCtrlSwedish,
   altGRSwedish,
-  swedishCAGrTable,
-  swedishCSTable,
-  swedishCGTable,
-  swedishAAGrTable,
-  swedishASTable,
-  swedishAGTable,
-  swedishAGrSTable,
-  swedishAGrGTable,
-  swedishSGTable,
-  swedishCAAGTable,
-  swedishCASTable,
-  swedishCAGTable,
-  swedishCAGSTable,
-  swedishCAGGTable,
-  swedishCSGTable,
-  swedishAAGSTable,
-  swedishAAGGTable,
-  swedishASGTable,
-  swedishAGSGTable,
-  swedishCAAGrSTable,
-  swedishCAAGrGTable,
+  svSECAGrTable,
+  svSECSTable,
+  svSECGTable,
+  svSEAAGrTable,
+  svSEASTable,
+  svSEAGTable,
+  svSEAGrSTable,
+  svSEAGrGTable,
+  svSESGTable,
+  svSECAAGTable,
+  svSECASTable,
+  svSECAGTable,
+  svSECAGSTable,
+  svSECAGGTable,
+  svSECSGTable,
+  svSEAAGSTable,
+  svSEAAGGTable,
+  svSEASGTable,
+  svSEAGSGTable,
+  svSECAAGrSTable,
+  svSECAAGrGTable,
   withModifiers(table, "Hyper +", "Hyper+", 6912),
-  swedishCAGrSGTable,
-  swedishAAGrSGTable,
-  swedishAllModTable,
+  svSECAGrSGTable,
+  svSEAAGrSGTable,
+  svSEAllModTable,
   DualUseCtrlTable,
   DualUseShiftTable,
   DualUseAltTable,
@@ -490,5 +490,5 @@ const swedishModifiedTables = [
   DualUseLayer8Tables
 ];
 
-export { swedish as default, swedishModifiedTables };
-// export default swedish;
+export { svSE as default, svSEModifiedTables };
+// export default svSE;

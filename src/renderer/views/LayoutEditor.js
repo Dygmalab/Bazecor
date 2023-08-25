@@ -50,6 +50,7 @@ import Backup from "../../api/backup";
 import i18n from "../i18n";
 
 import Store from "../utils/Store";
+import getLanguage from "../utils/language";
 
 const store = Store.getStore();
 
@@ -93,8 +94,8 @@ const Styles = Styled.div`
   border-radius: 6px;
   button.btn {
     background: transparent;
-  } 
-  button.btn + button.btn {   
+  }
+  button.btn + button.btn {
     margin-left: 4px;
   }
 }
@@ -228,7 +229,7 @@ const Styles = Styled.div`
     filter: blur(18px);
     opacity: 0.4;
   }
-  &.keyOnFocus { 
+  &.keyOnFocus {
     .baseShape {
       filter: drop-shadow(0px 4px 0px ${({ theme }) => theme.styles.raiseKeyboard.keyShadow});
     }
@@ -267,7 +268,7 @@ const Styles = Styled.div`
     margin: 0;
     margin-left: 6px;
     margin-right: -1px;
-    &.extraBottom { 
+    &.extraBottom {
       margin-left: 1px;
       li {
         margin-left: 1px;
@@ -277,7 +278,7 @@ const Styles = Styled.div`
     li {
       padding: 0px 3px;
       border-radius: 3px;
-      
+
       display: inline-block;
       margin: 1px;
 
@@ -909,10 +910,10 @@ class LayoutEditor extends React.Component {
 
   // Callback function to set State of new Language
   onChangeLanguageLayout = () => {
-    const newLanguage = store.get("settings.language");
+    const newLanguage = getLanguage(store.get("settings.language"));
     console.log("Language automatically set to: ", newLanguage);
     this.setState({
-      currentLanguageLayout: newLanguage || "english",
+      currentLanguageLayout: newLanguage,
     });
   };
 

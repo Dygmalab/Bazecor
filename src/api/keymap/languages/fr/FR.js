@@ -19,7 +19,7 @@
  */
 import { withModifiers } from "../../db/utils";
 
-const frenchLetters = [
+const frFRLetters = [
   {
     code: 20,
     labels: {
@@ -60,7 +60,7 @@ const frenchLetters = [
   },
 ];
 
-const frenchModifierKeys = [
+const frFRModifierKeys = [
   {
     code: 31,
     labels: {
@@ -506,71 +506,71 @@ const shiftModifierFrench = {
   ],
 };
 
-const french = frenchLetters.concat(frenchModifierKeys);
+const frFR = frFRLetters.concat(frFRModifierKeys);
 
-const table = { keys: french };
-const tableWithoutModifier = { keys: frenchLetters };
+const table = { keys: frFR };
+const tableWithoutModifier = { keys: frFRLetters };
 
-const frenchCtrlTable = withModifiers(table, "Control +", "C+", 256);
-const frenchLAltTable = withModifiers(table, "Alt +", "A+", 512);
-const frenchRAltTable = withModifiers(table, "AltGr +", "AGr+", 1024);
-const frenchShiftTable = withModifiers(tableWithoutModifier, "Shift +", "S+", 2048);
-const frenchGuiTable = withModifiers(table, "Os+", "O+", 4096);
+const frFRCtrlTable = withModifiers(table, "Control +", "C+", 256);
+const frFRLAltTable = withModifiers(table, "Alt +", "A+", 512);
+const frFRRAltTable = withModifiers(table, "AltGr +", "AGr+", 1024);
+const frFRShiftTable = withModifiers(tableWithoutModifier, "Shift +", "S+", 2048);
+const frFRGuiTable = withModifiers(table, "Os+", "O+", 4096);
 // Double
 
-const frenchCATable = withModifiers(table, "Control + Alt +", "C+A+", 768);
+const frFRCATable = withModifiers(table, "Control + Alt +", "C+A+", 768);
 
-const frenchCAGrTable = withModifiers(table, "Control + AltGr +", "C+AGr+", 1280);
+const frFRCAGrTable = withModifiers(table, "Control + AltGr +", "C+AGr+", 1280);
 
-const frenchCSTable = withModifiers(table, "Control + Shift +", "C+S+", 2304);
+const frFRCSTable = withModifiers(table, "Control + Shift +", "C+S+", 2304);
 
-const frenchCGTable = withModifiers(table, "Control + Os +", "C+O+", 4352);
+const frFRCGTable = withModifiers(table, "Control + Os +", "C+O+", 4352);
 
-const frenchAAGrTable = withModifiers(table, "Alt + AltGr +", "A+AGr+", 1536);
+const frFRAAGrTable = withModifiers(table, "Alt + AltGr +", "A+AGr+", 1536);
 
-const frenchASTable = withModifiers(table, "Alt + Shift +", "A+S+", 2560);
+const frFRASTable = withModifiers(table, "Alt + Shift +", "A+S+", 2560);
 
-const frenchAGTable = withModifiers(table, "Alt + Os +", "A+O+", 4608);
+const frFRAGTable = withModifiers(table, "Alt + Os +", "A+O+", 4608);
 
-const frenchAGrSTable = withModifiers(table, "AltGr + Shift +", "AGr+S+", 3072);
+const frFRAGrSTable = withModifiers(table, "AltGr + Shift +", "AGr+S+", 3072);
 
-const frenchAGrGTable = withModifiers(table, "AltGr + Os +", "AGr+O+", 5120);
+const frFRAGrGTable = withModifiers(table, "AltGr + Os +", "AGr+O+", 5120);
 
-const frenchSGTable = withModifiers(table, "Shift + Os +", "S+O+", 6144);
+const frFRSGTable = withModifiers(table, "Shift + Os +", "S+O+", 6144);
 
 // Triple
 
-const frenchCAAGTable = withModifiers(table, "Control + Alt + AltGr +", "C+A+AGr+", 1792);
+const frFRCAAGTable = withModifiers(table, "Control + Alt + AltGr +", "C+A+AGr+", 1792);
 
-const frenchCASTable = withModifiers(table, "Meh +", "Meh+", 2816);
+const frFRCASTable = withModifiers(table, "Meh +", "Meh+", 2816);
 
-const frenchCAGTable = withModifiers(table, "Control + Alt + Os +", "C+A+O+", 4864);
+const frFRCAGTable = withModifiers(table, "Control + Alt + Os +", "C+A+O+", 4864);
 
-const frenchCAGSTable = withModifiers(table, "Control + AltGr + Shift +", "C+AGr+S+", 3328);
+const frFRCAGSTable = withModifiers(table, "Control + AltGr + Shift +", "C+AGr+S+", 3328);
 
-const frenchCAGGTable = withModifiers(table, "Control + AltGr + Os +", "C+AGr+O+", 5376);
+const frFRCAGGTable = withModifiers(table, "Control + AltGr + Os +", "C+AGr+O+", 5376);
 
-const frenchCSGTable = withModifiers(table, "Control + Shift + Os +", "C+S+O+", 6400);
+const frFRCSGTable = withModifiers(table, "Control + Shift + Os +", "C+S+O+", 6400);
 
-const frenchAAGSTable = withModifiers(table, "Alt + AltGr + Shift +", "A+AGr+S+", 3584);
+const frFRAAGSTable = withModifiers(table, "Alt + AltGr + Shift +", "A+AGr+S+", 3584);
 
-const frenchAAGGTable = withModifiers(table, "Alt + AltGr + Os +", "A+AGr+O+", 5632);
+const frFRAAGGTable = withModifiers(table, "Alt + AltGr + Os +", "A+AGr+O+", 5632);
 
-const frenchASGTable = withModifiers(table, "Alt + Shift + Os +", "A+S+O+", 6656);
+const frFRASGTable = withModifiers(table, "Alt + Shift + Os +", "A+S+O+", 6656);
 
-const frenchAGSGTable = withModifiers(table, "AltGr + Shift + Os +", "AGr+S+O+", 7168);
+const frFRAGSGTable = withModifiers(table, "AltGr + Shift + Os +", "AGr+S+O+", 7168);
 
 // Quad
 
-const frenchCAAGrSTable = withModifiers(table, "Meh + AltGr +", "M+AGr+", 3840);
+const frFRCAAGrSTable = withModifiers(table, "Meh + AltGr +", "M+AGr+", 3840);
 
-const frenchCAAGrGTable = withModifiers(table, "Control + Alt + AltGr + Os +", "C+A+AGr+O+", 5888);
+const frFRCAAGrGTable = withModifiers(table, "Control + Alt + AltGr + Os +", "C+A+AGr+O+", 5888);
 
-const frenchCAGrSGTable = withModifiers(table, "Control + AltGr + Shift + Os +", "C+AGr+S+O+", 7424);
+const frFRCAGrSGTable = withModifiers(table, "Control + AltGr + Shift + Os +", "C+AGr+S+O+", 7424);
 
-const frenchAAGrSGTable = withModifiers(table, "Alt + AltGr + Shift + Os +", "A+AGr+S+O+", 7680);
+const frFRAAGrSGTable = withModifiers(table, "Alt + AltGr + Shift + Os +", "A+AGr+S+O+", 7680);
 
-const frenchAllModTable = withModifiers(table, "Hyper + AltGr +", "H+AGr+", 7936);
+const frFRAllModTable = withModifiers(table, "Hyper + AltGr +", "H+AGr+", 7936);
 
 const DualUseCtrlTable = withModifiers(table, "Control /", "CTRL/", 49169);
 const DualUseShiftTable = withModifiers(table, "Shift /", "SHIFT/", 49425);
@@ -586,41 +586,41 @@ const DualUseLayer6Tables = withModifiers(table, "Layer #6 /", "L#6/", 52498);
 const DualUseLayer7Tables = withModifiers(table, "Layer #7 /", "L#7/", 52754);
 const DualUseLayer8Tables = withModifiers(table, "Layer #8 /", "L#8/", 53010);
 
-const frenchModifiedTables = [
+const frFRModifiedTables = [
   shiftModifierFrench,
-  frenchCtrlTable,
-  frenchLAltTable,
-  frenchRAltTable,
-  frenchShiftTable,
-  frenchGuiTable,
-  frenchCATable,
+  frFRCtrlTable,
+  frFRLAltTable,
+  frFRRAltTable,
+  frFRShiftTable,
+  frFRGuiTable,
+  frFRCATable,
   altCtrlFrench,
   altGRFrench,
-  frenchCAGrTable,
-  frenchCSTable,
-  frenchCGTable,
-  frenchASTable,
-  frenchAGTable,
-  frenchAAGrTable,
-  frenchSGTable,
-  frenchAGrSTable,
-  frenchAGrGTable,
-  frenchCAAGTable,
-  frenchCASTable,
-  frenchCAGTable,
-  frenchCAGSTable,
-  frenchCAGGTable,
-  frenchCSGTable,
-  frenchAAGSTable,
-  frenchAAGGTable,
-  frenchASGTable,
-  frenchAGSGTable,
-  frenchCAAGrSTable,
-  frenchCAAGrGTable,
+  frFRCAGrTable,
+  frFRCSTable,
+  frFRCGTable,
+  frFRASTable,
+  frFRAGTable,
+  frFRAAGrTable,
+  frFRSGTable,
+  frFRAGrSTable,
+  frFRAGrGTable,
+  frFRCAAGTable,
+  frFRCASTable,
+  frFRCAGTable,
+  frFRCAGSTable,
+  frFRCAGGTable,
+  frFRCSGTable,
+  frFRAAGSTable,
+  frFRAAGGTable,
+  frFRASGTable,
+  frFRAGSGTable,
+  frFRCAAGrSTable,
+  frFRCAAGrGTable,
   withModifiers(table, "Hyper +", "Hyper+", 6912),
-  frenchCAGrSGTable,
-  frenchAAGrSGTable,
-  frenchAllModTable,
+  frFRCAGrSGTable,
+  frFRAAGrSGTable,
+  frFRAllModTable,
   DualUseCtrlTable,
   DualUseShiftTable,
   DualUseAltTable,
@@ -636,4 +636,4 @@ const frenchModifiedTables = [
   DualUseLayer8Tables,
 ];
 
-export { french as default, frenchModifiedTables };
+export { frFR as default, frFRModifiedTables };

@@ -17,12 +17,12 @@
 
 /**
  * Is a JavaScript function that changes language layout
- * @param {Array} baseKeyCodeTable Default language layout (english)
+ * @param {Array} baseKeyCodeTable Default language layout (en-US)
  * @param {string} language Select language
  * @param {newKeyCodeTable} newKeyCodeTable Key codes for new language
  */
-function newLanguageLayout(baseKeyCodeTable, language = "english", newKeyCodeTable) {
-  if (language === "english") {
+function newLanguageLayout(baseKeyCodeTable, language = "en-US", newKeyCodeTable) {
+  if (language === "en-US") {
     return baseKeyCodeTable;
   }
   return baseKeyCodeTable.map(group => {

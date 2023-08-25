@@ -20,7 +20,7 @@
 
 import { withModifiers } from "../../db/utils";
 
-const icelandicLetters = [
+const isISLetters = [
   {
     code: 45,
     labels: {
@@ -51,7 +51,7 @@ const icelandicLetters = [
   }
 ];
 
-const icelandicModifierKeys = [
+const isISModifierKeys = [
   {
     code: 46,
     labels: {
@@ -367,71 +367,71 @@ const shiftModifierIcelandic = {
   ]
 };
 
-const icelandic = icelandicLetters.concat(icelandicModifierKeys);
+const isIS = isISLetters.concat(isISModifierKeys);
 
-const table = { keys: icelandic };
-const tableWithoutModifier = { keys: icelandicLetters };
+const table = { keys: isIS };
+const tableWithoutModifier = { keys: isISLetters };
 
-const icelandicCtrlTable = withModifiers(table, "Control +", "C+", 256);
-const icelandicLAltTable = withModifiers(table, "Alt +", "A+", 512);
-const icelandicRAltTable = withModifiers(table, "AltGr +", "AGr+", 1024);
-const icelandicShiftTable = withModifiers(tableWithoutModifier, "Shift +", "S+", 2048);
-const icelandicGuiTable = withModifiers(table, "Os+", "O+", 4096);
+const isISCtrlTable = withModifiers(table, "Control +", "C+", 256);
+const isISLAltTable = withModifiers(table, "Alt +", "A+", 512);
+const isISRAltTable = withModifiers(table, "AltGr +", "AGr+", 1024);
+const isISShiftTable = withModifiers(tableWithoutModifier, "Shift +", "S+", 2048);
+const isISGuiTable = withModifiers(table, "Os+", "O+", 4096);
 // Double
 
-const icelandicCATable = withModifiers(table, "Control + Alt +", "C+A+", 768);
+const isISCATable = withModifiers(table, "Control + Alt +", "C+A+", 768);
 
-const icelandicCAGrTable = withModifiers(table, "Control + AltGr +", "C+AGr+", 1280);
+const isISCAGrTable = withModifiers(table, "Control + AltGr +", "C+AGr+", 1280);
 
-const icelandicCSTable = withModifiers(table, "Control + Shift +", "C+S+", 2304);
+const isISCSTable = withModifiers(table, "Control + Shift +", "C+S+", 2304);
 
-const icelandicCGTable = withModifiers(table, "Control + Os +", "C+O+", 4352);
+const isISCGTable = withModifiers(table, "Control + Os +", "C+O+", 4352);
 
-const icelandicAAGrTable = withModifiers(table, "Alt + AltGr +", "A+AGr+", 1536);
+const isISAAGrTable = withModifiers(table, "Alt + AltGr +", "A+AGr+", 1536);
 
-const icelandicASTable = withModifiers(table, "Alt + Shift +", "A+S+", 2560);
+const isISASTable = withModifiers(table, "Alt + Shift +", "A+S+", 2560);
 
-const icelandicAGTable = withModifiers(table, "Alt + Os +", "A+O+", 4608);
+const isISAGTable = withModifiers(table, "Alt + Os +", "A+O+", 4608);
 
-const icelandicAGrSTable = withModifiers(table, "AltGr + Shift +", "AGr+S+", 3072);
+const isISAGrSTable = withModifiers(table, "AltGr + Shift +", "AGr+S+", 3072);
 
-const icelandicAGrGTable = withModifiers(table, "AltGr + Os +", "AGr+O+", 5120);
+const isISAGrGTable = withModifiers(table, "AltGr + Os +", "AGr+O+", 5120);
 
-const icelandicSGTable = withModifiers(table, "Shift + Os +", "S+O+", 6144);
+const isISSGTable = withModifiers(table, "Shift + Os +", "S+O+", 6144);
 
 // Triple
 
-const icelandicCAAGTable = withModifiers(table, "Control + Alt + AltGr +", "C+A+AGr+", 1792);
+const isISCAAGTable = withModifiers(table, "Control + Alt + AltGr +", "C+A+AGr+", 1792);
 
-const icelandicCASTable = withModifiers(table, "Meh +", "Meh+", 2816);
+const isISCASTable = withModifiers(table, "Meh +", "Meh+", 2816);
 
-const icelandicCAGTable = withModifiers(table, "Control + Alt + Os +", "C+A+O+", 4864);
+const isISCAGTable = withModifiers(table, "Control + Alt + Os +", "C+A+O+", 4864);
 
-const icelandicCAGSTable = withModifiers(table, "Control + AltGr + Shift +", "C+AGr+S+", 3328);
+const isISCAGSTable = withModifiers(table, "Control + AltGr + Shift +", "C+AGr+S+", 3328);
 
-const icelandicCAGGTable = withModifiers(table, "Control + AltGr + Os +", "C+AGr+O+", 5376);
+const isISCAGGTable = withModifiers(table, "Control + AltGr + Os +", "C+AGr+O+", 5376);
 
-const icelandicCSGTable = withModifiers(table, "Control + Shift + Os +", "C+S+O+", 6400);
+const isISCSGTable = withModifiers(table, "Control + Shift + Os +", "C+S+O+", 6400);
 
-const icelandicAAGSTable = withModifiers(table, "Alt + AltGr + Shift +", "A+AGr+S+", 3584);
+const isISAAGSTable = withModifiers(table, "Alt + AltGr + Shift +", "A+AGr+S+", 3584);
 
-const icelandicAAGGTable = withModifiers(table, "Alt + AltGr + Os +", "A+AGr+O+", 5632);
+const isISAAGGTable = withModifiers(table, "Alt + AltGr + Os +", "A+AGr+O+", 5632);
 
-const icelandicASGTable = withModifiers(table, "Alt + Shift + Os +", "A+S+O+", 6656);
+const isISASGTable = withModifiers(table, "Alt + Shift + Os +", "A+S+O+", 6656);
 
-const icelandicAGSGTable = withModifiers(table, "AltGr + Shift + Os +", "AGr+S+O+", 7168);
+const isISAGSGTable = withModifiers(table, "AltGr + Shift + Os +", "AGr+S+O+", 7168);
 
 // Quad
 
-const icelandicCAAGrSTable = withModifiers(table, "Meh + AltGr +", "M+AGr+", 3840);
+const isISCAAGrSTable = withModifiers(table, "Meh + AltGr +", "M+AGr+", 3840);
 
-const icelandicCAAGrGTable = withModifiers(table, "Control + Alt + AltGr + Os +", "C+A+AGr+O+", 5888);
+const isISCAAGrGTable = withModifiers(table, "Control + Alt + AltGr + Os +", "C+A+AGr+O+", 5888);
 
-const icelandicCAGrSGTable = withModifiers(table, "Control + AltGr + Shift + Os +", "C+AGr+S+O+", 7424);
+const isISCAGrSGTable = withModifiers(table, "Control + AltGr + Shift + Os +", "C+AGr+S+O+", 7424);
 
-const icelandicAAGrSGTable = withModifiers(table, "Alt + AltGr + Shift + Os +", "A+AGr+S+O+", 7680);
+const isISAAGrSGTable = withModifiers(table, "Alt + AltGr + Shift + Os +", "A+AGr+S+O+", 7680);
 
-const icelandicAllModTable = withModifiers(table, "Hyper + AltGr +", "H+AGr+", 7936);
+const isISAllModTable = withModifiers(table, "Hyper + AltGr +", "H+AGr+", 7936);
 
 const DualUseCtrlTable = withModifiers(table, "Control /", "CTRL/", 49169);
 const DualUseShiftTable = withModifiers(table, "Shift /", "SHIFT/", 49425);
@@ -447,41 +447,41 @@ const DualUseLayer6Tables = withModifiers(table, "Layer #6 /", "L#6/", 52498);
 const DualUseLayer7Tables = withModifiers(table, "Layer #7 /", "L#7/", 52754);
 const DualUseLayer8Tables = withModifiers(table, "Layer #8 /", "L#8/", 53010);
 
-const icelandicModifiedTables = [
+const isISModifiedTables = [
   shiftModifierIcelandic,
-  icelandicCtrlTable,
-  icelandicLAltTable,
-  icelandicRAltTable,
-  icelandicShiftTable,
-  icelandicGuiTable,
-  icelandicCATable,
+  isISCtrlTable,
+  isISLAltTable,
+  isISRAltTable,
+  isISShiftTable,
+  isISGuiTable,
+  isISCATable,
   altCtrlIcelandic,
   altGRIcelandic,
-  icelandicCAGrTable,
-  icelandicCSTable,
-  icelandicCGTable,
-  icelandicAAGrTable,
-  icelandicASTable,
-  icelandicAGTable,
-  icelandicAGrSTable,
-  icelandicAGrGTable,
-  icelandicSGTable,
-  icelandicCAAGTable,
-  icelandicCASTable,
-  icelandicCAGTable,
-  icelandicCAGSTable,
-  icelandicCAGGTable,
-  icelandicCSGTable,
-  icelandicAAGSTable,
-  icelandicAAGGTable,
-  icelandicASGTable,
-  icelandicAGSGTable,
-  icelandicCAAGrSTable,
-  icelandicCAAGrGTable,
+  isISCAGrTable,
+  isISCSTable,
+  isISCGTable,
+  isISAAGrTable,
+  isISASTable,
+  isISAGTable,
+  isISAGrSTable,
+  isISAGrGTable,
+  isISSGTable,
+  isISCAAGTable,
+  isISCASTable,
+  isISCAGTable,
+  isISCAGSTable,
+  isISCAGGTable,
+  isISCSGTable,
+  isISAAGSTable,
+  isISAAGGTable,
+  isISASGTable,
+  isISAGSGTable,
+  isISCAAGrSTable,
+  isISCAAGrGTable,
   withModifiers(table, "Hyper +", "Hyper+", 6912),
-  icelandicCAGrSGTable,
-  icelandicAAGrSGTable,
-  icelandicAllModTable,
+  isISCAGrSGTable,
+  isISAAGrSGTable,
+  isISAllModTable,
   DualUseCtrlTable,
   DualUseShiftTable,
   DualUseAltTable,
@@ -497,5 +497,5 @@ const icelandicModifiedTables = [
   DualUseLayer8Tables
 ];
 
-export { icelandic as default, icelandicModifiedTables };
-// export default icelandic;
+export { isIS as default, isISModifiedTables };
+// export default isIS;

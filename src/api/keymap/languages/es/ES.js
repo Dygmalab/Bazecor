@@ -19,7 +19,7 @@
  */
 import { withModifiers } from "../../db/utils";
 
-const spanishLetters = [
+const esESLetters = [
   {
     code: 49,
     labels: {
@@ -36,7 +36,7 @@ const spanishLetters = [
   },
 ];
 
-const spanishModifierKeys = [
+const esESModifierKeys = [
   {
     code: 45,
     labels: {
@@ -379,71 +379,71 @@ const altGrSpanish = {
   ],
 };
 
-const spanish = spanishLetters.concat(spanishModifierKeys);
+const esES = esESLetters.concat(esESModifierKeys);
 
-const table = { keys: spanish };
-const tableWithoutModifier = { keys: spanishLetters };
+const table = { keys: esES };
+const tableWithoutModifier = { keys: esESLetters };
 
-const spanishCtrlTable = withModifiers(table, "Control +", "C+", 256);
-const spanishLAltTable = withModifiers(table, "Alt +", "A+", 512);
-const spanishRAltTable = withModifiers(table, "AltGr +", "AGr+", 1024);
-const spanishShiftTable = withModifiers(tableWithoutModifier, "Shift +", "S+", 2048);
-const spanishGuiTable = withModifiers(table, "Os+", "O+", 4096);
+const esESCtrlTable = withModifiers(table, "Control +", "C+", 256);
+const esESLAltTable = withModifiers(table, "Alt +", "A+", 512);
+const esESRAltTable = withModifiers(table, "AltGr +", "AGr+", 1024);
+const esESShiftTable = withModifiers(tableWithoutModifier, "Shift +", "S+", 2048);
+const esESGuiTable = withModifiers(table, "Os+", "O+", 4096);
 // Double
 
-const spanishCATable = withModifiers(table, "Control + Alt +", "C+A+", 768);
+const esESCATable = withModifiers(table, "Control + Alt +", "C+A+", 768);
 
-const spanishCAGrTable = withModifiers(table, "Control + AltGr +", "C+AGr+", 1280);
+const esESCAGrTable = withModifiers(table, "Control + AltGr +", "C+AGr+", 1280);
 
-const spanishCSTable = withModifiers(table, "Control + Shift +", "C+S+", 2304);
+const esESCSTable = withModifiers(table, "Control + Shift +", "C+S+", 2304);
 
-const spanishCGTable = withModifiers(table, "Control + Os +", "C+O+", 4352);
+const esESCGTable = withModifiers(table, "Control + Os +", "C+O+", 4352);
 
-const spanishAAGrTable = withModifiers(table, "Alt + AltGr +", "A+AGr+", 1536);
+const esESAAGrTable = withModifiers(table, "Alt + AltGr +", "A+AGr+", 1536);
 
-const spanishASTable = withModifiers(table, "Alt + Shift +", "A+S+", 2560);
+const esESASTable = withModifiers(table, "Alt + Shift +", "A+S+", 2560);
 
-const spanishAGTable = withModifiers(table, "Alt + Os +", "A+O+", 4608);
+const esESAGTable = withModifiers(table, "Alt + Os +", "A+O+", 4608);
 
-const spanishAGrSTable = withModifiers(table, "AltGr + Shift +", "AGr+S+", 3072);
+const esESAGrSTable = withModifiers(table, "AltGr + Shift +", "AGr+S+", 3072);
 
-const spanishAGrGTable = withModifiers(table, "AltGr + Os +", "AGr+O+", 5120);
+const esESAGrGTable = withModifiers(table, "AltGr + Os +", "AGr+O+", 5120);
 
-const spanishSGTable = withModifiers(table, "Shift + Os +", "S+O+", 6144);
+const esESSGTable = withModifiers(table, "Shift + Os +", "S+O+", 6144);
 
 // Triple
 
-const spanishCAAGTable = withModifiers(table, "Control + Alt + AltGr +", "C+A+AGr+", 1792);
+const esESCAAGTable = withModifiers(table, "Control + Alt + AltGr +", "C+A+AGr+", 1792);
 
-const spanishCASTable = withModifiers(table, "Meh +", "Meh+", 2816);
+const esESCASTable = withModifiers(table, "Meh +", "Meh+", 2816);
 
-const spanishCAGTable = withModifiers(table, "Control + Alt + Os +", "C+A+O+", 4864);
+const esESCAGTable = withModifiers(table, "Control + Alt + Os +", "C+A+O+", 4864);
 
-const spanishCAGSTable = withModifiers(table, "Control + AltGr + Shift +", "C+AGr+S+", 3328);
+const esESCAGSTable = withModifiers(table, "Control + AltGr + Shift +", "C+AGr+S+", 3328);
 
-const spanishCAGGTable = withModifiers(table, "Control + AltGr + Os +", "C+AGr+O+", 5376);
+const esESCAGGTable = withModifiers(table, "Control + AltGr + Os +", "C+AGr+O+", 5376);
 
-const spanishCSGTable = withModifiers(table, "Control + Shift + Os +", "C+S+O+", 6400);
+const esESCSGTable = withModifiers(table, "Control + Shift + Os +", "C+S+O+", 6400);
 
-const spanishAAGSTable = withModifiers(table, "Alt + AltGr + Shift +", "A+AGr+S+", 3584);
+const esESAAGSTable = withModifiers(table, "Alt + AltGr + Shift +", "A+AGr+S+", 3584);
 
-const spanishAAGGTable = withModifiers(table, "Alt + AltGr + Os +", "A+AGr+O+", 5632);
+const esESAAGGTable = withModifiers(table, "Alt + AltGr + Os +", "A+AGr+O+", 5632);
 
-const spanishASGTable = withModifiers(table, "Alt + Shift + Os +", "A+S+O+", 6656);
+const esESASGTable = withModifiers(table, "Alt + Shift + Os +", "A+S+O+", 6656);
 
-const spanishAGSGTable = withModifiers(table, "AltGr + Shift + Os +", "AGr+S+O+", 7168);
+const esESAGSGTable = withModifiers(table, "AltGr + Shift + Os +", "AGr+S+O+", 7168);
 
 // Quad
 
-const spanishCAAGrSTable = withModifiers(table, "Meh + AltGr +", "M+AGr+", 3840);
+const esESCAAGrSTable = withModifiers(table, "Meh + AltGr +", "M+AGr+", 3840);
 
-const spanishCAAGrGTable = withModifiers(table, "Control + Alt + AltGr + Os +", "C+A+AGr+O+", 5888);
+const esESCAAGrGTable = withModifiers(table, "Control + Alt + AltGr + Os +", "C+A+AGr+O+", 5888);
 
-const spanishCAGrSGTable = withModifiers(table, "Control + AltGr + Shift + Os +", "C+AGr+S+O+", 7424);
+const esESCAGrSGTable = withModifiers(table, "Control + AltGr + Shift + Os +", "C+AGr+S+O+", 7424);
 
-const spanishAAGrSGTable = withModifiers(table, "Alt + AltGr + Shift + Os +", "A+AGr+S+O+", 7680);
+const esESAAGrSGTable = withModifiers(table, "Alt + AltGr + Shift + Os +", "A+AGr+S+O+", 7680);
 
-const spanishAllModTable = withModifiers(table, "Hyper + AltGr +", "H+AGr+", 7936);
+const esESAllModTable = withModifiers(table, "Hyper + AltGr +", "H+AGr+", 7936);
 
 const DualUseCtrlTable = withModifiers(table, "Control /", "CTRL/", 49169);
 const DualUseShiftTable = withModifiers(table, "Shift /", "SHIFT/", 49425);
@@ -459,41 +459,41 @@ const DualUseLayer6Tables = withModifiers(table, "Layer #6 /", "L#6/", 52498);
 const DualUseLayer7Tables = withModifiers(table, "Layer #7 /", "L#7/", 52754);
 const DualUseLayer8Tables = withModifiers(table, "Layer #8 /", "L#8/", 53010);
 
-const spanishModifiedTables = [
+const esESModifiedTables = [
   shiftModifierSpanish,
-  spanishCtrlTable,
-  spanishLAltTable,
-  spanishRAltTable,
+  esESCtrlTable,
+  esESLAltTable,
+  esESRAltTable,
   altGrSpanish,
-  spanishShiftTable,
-  spanishGuiTable,
-  spanishCATable,
+  esESShiftTable,
+  esESGuiTable,
+  esESCATable,
   altCtrlSpanish,
-  spanishCAGrTable,
-  spanishCSTable,
-  spanishCGTable,
-  spanishASTable,
-  spanishAGTable,
-  spanishAAGrTable,
-  spanishSGTable,
-  spanishAGrSTable,
-  spanishAGrGTable,
-  spanishCAAGTable,
-  spanishCASTable,
-  spanishCAGTable,
-  spanishCAGSTable,
-  spanishCAGGTable,
-  spanishCSGTable,
-  spanishAAGSTable,
-  spanishAAGGTable,
-  spanishASGTable,
-  spanishAGSGTable,
-  spanishCAAGrSTable,
-  spanishCAAGrGTable,
+  esESCAGrTable,
+  esESCSTable,
+  esESCGTable,
+  esESASTable,
+  esESAGTable,
+  esESAAGrTable,
+  esESSGTable,
+  esESAGrSTable,
+  esESAGrGTable,
+  esESCAAGTable,
+  esESCASTable,
+  esESCAGTable,
+  esESCAGSTable,
+  esESCAGGTable,
+  esESCSGTable,
+  esESAAGSTable,
+  esESAAGGTable,
+  esESASGTable,
+  esESAGSGTable,
+  esESCAAGrSTable,
+  esESCAAGrGTable,
   withModifiers(table, "Hyper +", "Hyper+", 6912),
-  spanishCAGrSGTable,
-  spanishAAGrSGTable,
-  spanishAllModTable,
+  esESCAGrSGTable,
+  esESAAGrSGTable,
+  esESAllModTable,
   DualUseCtrlTable,
   DualUseShiftTable,
   DualUseAltTable,
@@ -509,4 +509,4 @@ const spanishModifiedTables = [
   DualUseLayer8Tables,
 ];
 
-export { spanish as default, spanishModifiedTables };
+export { esES as default, esESModifiedTables };

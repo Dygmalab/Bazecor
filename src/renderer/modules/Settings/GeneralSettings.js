@@ -34,6 +34,7 @@ import Focus from "../../../api/focus";
 import i18n from "../../i18n";
 
 import Store from "../../utils/Store";
+import getLanguage from "../../utils/language";
 
 const store = Store.getStore();
 
@@ -48,7 +49,7 @@ export default class GeneralSettings extends Component {
 
   async componentDidMount() {
     this.setState({
-      selectedLanguage: store.get("settings.language"),
+      selectedLanguage: getLanguage(store.get("settings.language")),
     });
   }
 
@@ -66,8 +67,11 @@ export default class GeneralSettings extends Component {
   render() {
     const { selectDarkMode, darkMode, neurons, selectedNeuron, connected, defaultLayer, selectDefaultLayer } = this.props;
     const { selectedLanguage } = this.state;
+
     let layersNames = neurons[selectedNeuron] ? neurons[selectedNeuron].layers : [];
+
     let flags = [
+      englishUSUKF,
       englishUSUKF,
       spanishF,
       germanF,
@@ -82,23 +86,27 @@ export default class GeneralSettings extends Component {
       swissF,
       eurkeyF,
     ];
-    let language = [
-      "english",
-      "spanish",
-      "german",
-      "french",
-      "swedish",
-      "finnish",
-      "danish",
-      "norwegian",
-      "icelandic",
-      "japanese",
-      "korean",
-      "swissGerman",
-      "eurkey",
+
+    let languages = [
+      "en-US",
+      "en-GB",
+      "es-ES",
+      "de-DE",
+      "fr-FR",
+      "sv-SE",
+      "fi-FI",
+      "da-DK",
+      "no-NO",
+      "is-IS",
+      "ja-JP",
+      "ko-KR",
+      "gsw-CH",
+      "xx-EU",
     ];
+
     let languageNames = [
-      "English",
+      "English (US)",
+      "English (UK)",
       "Spanish",
       "German",
       "French",
@@ -109,10 +117,11 @@ export default class GeneralSettings extends Component {
       "Icelandic",
       "Japanese",
       "Korean",
-      "Swiss (German)",
+      "Swiss German",
       "EurKEY (1.3)",
     ];
-    language = language.map((item, index) => ({
+
+    languages = languages.map((item, index) => ({
       text: languageNames[index],
       value: item,
       icon: flags[index],
@@ -158,7 +167,7 @@ export default class GeneralSettings extends Component {
               <Col lg={6} md={12}>
                 <Form.Group controlId="selectLanguage" className="mb-3">
                   <Form.Label>{i18n.preferences.language}</Form.Label>
-                  <Select onSelect={this.changeLanguage} value={selectedLanguage} listElements={language} />
+                  <Select onSelect={this.changeLanguage} value={selectedLanguage} listElements={languages} />
                 </Form.Group>
               </Col>
               <Col lg={6} md={12}>

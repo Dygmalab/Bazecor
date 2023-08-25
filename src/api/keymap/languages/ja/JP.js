@@ -19,7 +19,7 @@
  */
 import { withModifiers } from "../../db/utils";
 
-const japaneseLetters = [
+const jaJPLetters = [
   {
     code: 53,
     labels: {
@@ -339,7 +339,7 @@ const japaneseLetters = [
   },
 ];
 
-const japaneseModifierKeys = [
+const jaJPModifierKeys = [
   {
     code: 47,
     labels: {
@@ -1010,71 +1010,71 @@ const shiftModifierJapanese = {
   ],
 };
 
-const japanese = japaneseLetters.concat(japaneseModifierKeys);
+const jaJP = jaJPLetters.concat(jaJPModifierKeys);
 
-const table = { keys: japanese };
-const tableWithoutModifier = { keys: japaneseLetters };
+const table = { keys: jaJP };
+const tableWithoutModifier = { keys: jaJPLetters };
 
-const japaneseCtrlTable = withModifiers(table, "Control +", "C+", 256);
-const japaneseLAltTable = withModifiers(table, "Alt +", "A+", 512);
-const japaneseRAltTable = withModifiers(table, "AltGr +", "AGr+", 1024);
-const japaneseShiftTable = withModifiers(tableWithoutModifier, "Shift +", "S+", 2048);
-const japaneseGuiTable = withModifiers(table, "Os+", "O+", 4096);
+const jaJPCtrlTable = withModifiers(table, "Control +", "C+", 256);
+const jaJPLAltTable = withModifiers(table, "Alt +", "A+", 512);
+const jaJPRAltTable = withModifiers(table, "AltGr +", "AGr+", 1024);
+const jaJPShiftTable = withModifiers(tableWithoutModifier, "Shift +", "S+", 2048);
+const jaJPGuiTable = withModifiers(table, "Os+", "O+", 4096);
 // Double
 
-const japaneseCATable = withModifiers(table, "Control + Alt +", "C+A+", 768);
+const jaJPCATable = withModifiers(table, "Control + Alt +", "C+A+", 768);
 
-const japaneseCAGrTable = withModifiers(table, "Control + AltGr +", "C+AGr+", 1280);
+const jaJPCAGrTable = withModifiers(table, "Control + AltGr +", "C+AGr+", 1280);
 
-const japaneseCSTable = withModifiers(table, "Control + Shift +", "C+S+", 2304);
+const jaJPCSTable = withModifiers(table, "Control + Shift +", "C+S+", 2304);
 
-const japaneseCGTable = withModifiers(table, "Control + Os +", "C+O+", 4352);
+const jaJPCGTable = withModifiers(table, "Control + Os +", "C+O+", 4352);
 
-const japaneseAAGrTable = withModifiers(table, "Alt + AltGr +", "A+AGr+", 1536);
+const jaJPAAGrTable = withModifiers(table, "Alt + AltGr +", "A+AGr+", 1536);
 
-const japaneseASTable = withModifiers(table, "Alt + Shift +", "A+S+", 2560);
+const jaJPASTable = withModifiers(table, "Alt + Shift +", "A+S+", 2560);
 
-const japaneseAGTable = withModifiers(table, "Alt + Os +", "A+O+", 4608);
+const jaJPAGTable = withModifiers(table, "Alt + Os +", "A+O+", 4608);
 
-const japaneseAGrSTable = withModifiers(table, "AltGr + Shift +", "AGr+S+", 3072);
+const jaJPAGrSTable = withModifiers(table, "AltGr + Shift +", "AGr+S+", 3072);
 
-const japaneseAGrGTable = withModifiers(table, "AltGr + Os +", "AGr+O+", 5120);
+const jaJPAGrGTable = withModifiers(table, "AltGr + Os +", "AGr+O+", 5120);
 
-const japaneseSGTable = withModifiers(table, "Shift + Os +", "S+O+", 6144);
+const jaJPSGTable = withModifiers(table, "Shift + Os +", "S+O+", 6144);
 
 // Triple
 
-const japaneseCAAGTable = withModifiers(table, "Control + Alt + AltGr +", "C+A+AGr+", 1792);
+const jaJPCAAGTable = withModifiers(table, "Control + Alt + AltGr +", "C+A+AGr+", 1792);
 
-const japaneseCASTable = withModifiers(table, "Meh +", "Meh+", 2816);
+const jaJPCASTable = withModifiers(table, "Meh +", "Meh+", 2816);
 
-const japaneseCAGTable = withModifiers(table, "Control + Alt + Os +", "C+A+O+", 4864);
+const jaJPCAGTable = withModifiers(table, "Control + Alt + Os +", "C+A+O+", 4864);
 
-const japaneseCAGSTable = withModifiers(table, "Control + AltGr + Shift +", "C+AGr+S+", 3328);
+const jaJPCAGSTable = withModifiers(table, "Control + AltGr + Shift +", "C+AGr+S+", 3328);
 
-const japaneseCAGGTable = withModifiers(table, "Control + AltGr + Os +", "C+AGr+O+", 5376);
+const jaJPCAGGTable = withModifiers(table, "Control + AltGr + Os +", "C+AGr+O+", 5376);
 
-const japaneseCSGTable = withModifiers(table, "Control + Shift + Os +", "C+S+O+", 6400);
+const jaJPCSGTable = withModifiers(table, "Control + Shift + Os +", "C+S+O+", 6400);
 
-const japaneseAAGSTable = withModifiers(table, "Alt + AltGr + Shift +", "A+AGr+S+", 3584);
+const jaJPAAGSTable = withModifiers(table, "Alt + AltGr + Shift +", "A+AGr+S+", 3584);
 
-const japaneseAAGGTable = withModifiers(table, "Alt + AltGr + Os +", "A+AGr+O+", 5632);
+const jaJPAAGGTable = withModifiers(table, "Alt + AltGr + Os +", "A+AGr+O+", 5632);
 
-const japaneseASGTable = withModifiers(table, "Alt + Shift + Os +", "A+S+O+", 6656);
+const jaJPASGTable = withModifiers(table, "Alt + Shift + Os +", "A+S+O+", 6656);
 
-const japaneseAGSGTable = withModifiers(table, "AltGr + Shift + Os +", "AGr+S+O+", 7168);
+const jaJPAGSGTable = withModifiers(table, "AltGr + Shift + Os +", "AGr+S+O+", 7168);
 
 // Quad
 
-const japaneseCAAGrSTable = withModifiers(table, "Meh + AltGr +", "M+AGr+", 3840);
+const jaJPCAAGrSTable = withModifiers(table, "Meh + AltGr +", "M+AGr+", 3840);
 
-const japaneseCAAGrGTable = withModifiers(table, "Control + Alt + AltGr + Os +", "C+A+AGr+O+", 5888);
+const jaJPCAAGrGTable = withModifiers(table, "Control + Alt + AltGr + Os +", "C+A+AGr+O+", 5888);
 
-const japaneseAAGrSGTable = withModifiers(table, "Control + AltGr + Shift + Os +", "C+AGr+S+O+", 7424);
+const jaJPAAGrSGTable = withModifiers(table, "Control + AltGr + Shift + Os +", "C+AGr+S+O+", 7424);
 
-const japaneseCAGrSGTable = withModifiers(table, "Alt + AltGr + Shift + Os +", "A+AGr+S+O+", 7680);
+const jaJPCAGrSGTable = withModifiers(table, "Alt + AltGr + Shift + Os +", "A+AGr+S+O+", 7680);
 
-const japaneseAllModTable = withModifiers(table, "Hyper + AltGr +", "H+AGr+", 7936);
+const jaJPAllModTable = withModifiers(table, "Hyper + AltGr +", "H+AGr+", 7936);
 
 const DualUseCtrlTable = withModifiers(table, "Control /", "CTRL/", 49169);
 const DualUseShiftTable = withModifiers(table, "Shift /", "SHIFT/", 49425);
@@ -1090,41 +1090,41 @@ const DualUseLayer6Tables = withModifiers(table, "Layer #6 /", "L#6/", 52498);
 const DualUseLayer7Tables = withModifiers(table, "Layer #7 /", "L#7/", 52754);
 const DualUseLayer8Tables = withModifiers(table, "Layer #8 /", "L#8/", 53010);
 
-const japaneseModifiedTables = [
-  japaneseCtrlTable,
-  japaneseLAltTable,
-  japaneseRAltTable,
-  japaneseShiftTable,
-  japaneseGuiTable,
-  japaneseCATable,
+const jaJPModifiedTables = [
+  jaJPCtrlTable,
+  jaJPLAltTable,
+  jaJPRAltTable,
+  jaJPShiftTable,
+  jaJPGuiTable,
+  jaJPCATable,
   shiftModifierJapanese,
   altCtrlJapanese,
   altGRJapanese,
-  japaneseCAGrTable,
-  japaneseCSTable,
-  japaneseCGTable,
-  japaneseAAGrTable,
-  japaneseASTable,
-  japaneseAGTable,
-  japaneseSGTable,
-  japaneseAGrSTable,
-  japaneseAGrGTable,
-  japaneseCAAGTable,
-  japaneseCASTable,
-  japaneseCAGTable,
-  japaneseCAGSTable,
-  japaneseCAGGTable,
-  japaneseCSGTable,
-  japaneseAAGSTable,
-  japaneseAAGGTable,
-  japaneseASGTable,
-  japaneseAGSGTable,
-  japaneseCAAGrSTable,
-  japaneseCAAGrGTable,
+  jaJPCAGrTable,
+  jaJPCSTable,
+  jaJPCGTable,
+  jaJPAAGrTable,
+  jaJPASTable,
+  jaJPAGTable,
+  jaJPSGTable,
+  jaJPAGrSTable,
+  jaJPAGrGTable,
+  jaJPCAAGTable,
+  jaJPCASTable,
+  jaJPCAGTable,
+  jaJPCAGSTable,
+  jaJPCAGGTable,
+  jaJPCSGTable,
+  jaJPAAGSTable,
+  jaJPAAGGTable,
+  jaJPASGTable,
+  jaJPAGSGTable,
+  jaJPCAAGrSTable,
+  jaJPCAAGrGTable,
   withModifiers(table, "Hyper +", "Hyper+", 6912),
-  japaneseCAGrSGTable,
-  japaneseAAGrSGTable,
-  japaneseAllModTable,
+  jaJPCAGrSGTable,
+  jaJPAAGrSGTable,
+  jaJPAllModTable,
   DualUseCtrlTable,
   DualUseShiftTable,
   DualUseAltTable,
@@ -1140,4 +1140,4 @@ const japaneseModifiedTables = [
   DualUseLayer8Tables,
 ];
 
-export { japanese as default, japaneseModifiedTables };
+export { jaJP as default, jaJPModifiedTables };

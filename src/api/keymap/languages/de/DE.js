@@ -20,59 +20,72 @@
 
 import { withModifiers } from "../../db/utils";
 
-const danishLetters = [
+const deDELetters = [
+  {
+    code: 28,
+    labels: {
+      primary: "Z",
+    },
+  },
   {
     code: 47,
     labels: {
-      primary: "Å",
+      primary: "Ü",
     },
     newGroupName: "Letters",
   },
   {
     code: 51,
     labels: {
-      primary: "Æ"
+      primary: "Ö",
     },
     newGroupName: "Letters",
   },
   {
     code: 52,
     labels: {
-      primary: "Ø"
+      primary: "Ä",
     },
     newGroupName: "Letters",
   },
+  {
+    code: 29,
+    labels: {
+      primary: "Y",
+    },
+  },
 ];
 
-const danishModifierKeys = [
+const deDEModifierKeys = [
   {
     code: 53,
     labels: {
-      primary: "½"
-    }
+      primary: "^",
+    },
   },
   {
     code: 45,
+    labels: {
+      primary: "ß",
+    },
+    newGroupName: "Letters",
+  },
+  {
+    code: 46,
+    labels: {
+      primary: "´",
+    },
+  },
+  {
+    code: 48,
     labels: {
       primary: "+",
     },
   },
   {
-    code: 46,
-    labels: {
-      primary: "´"
-    }
-  },
-  {
-    code: 48,
-    labels: {
-      primary: "¨",
-    },
-  },
-  {
     code: 49,
     labels: {
-      primary: "'",
+      primary: "#",
     },
   },
   {
@@ -89,31 +102,29 @@ const danishModifierKeys = [
   },
 ];
 
-const altCtrlDanish = {
-  groupName: "AltCtrl Danish",
+const deDENumpad = [
+  {
+    code: 99,
+    labels: {
+      top: "Num",
+      primary: ",",
+    },
+  },
+];
+
+const altCtrlGerman = {
+  groupName: "AltCtrl German",
   keys: [
     {
       code: 799,
       labels: {
-        primary: "@",
+        primary: "²",
       },
     },
     {
       code: 800,
       labels: {
-        primary: "£",
-      },
-    },
-    {
-      code: 801,
-      labels: {
-        primary: "$",
-      },
-    },
-    {
-      code: 802,
-      labels: {
-        primary: "€",
+        primary: "³",
       },
     },
     {
@@ -141,10 +152,16 @@ const altCtrlDanish = {
       },
     },
     {
-      code: 814,
+      code: 813,
       labels: {
-        primary: "|"
-      }
+        primary: "\\",
+      },
+    },
+    {
+      code: 788,
+      labels: {
+        primary: "@",
+      },
     },
     {
       code: 776,
@@ -159,45 +176,39 @@ const altCtrlDanish = {
       },
     },
     {
+      code: 817,
+      labels: {
+        primary: "|",
+      },
+    },
+    {
       code: 784,
       labels: {
-        primary: "µ"
-      }
+        primary: "µ",
+      },
     },
     {
       code: 868,
       labels: {
-        primary: "\\"
-      }
-    }
-  ]
+        primary: "|",
+      },
+    },
+  ],
 };
 
-const altGRDanish = {
-  groupName: "AltCtrl Danish",
+const altGrGerman = {
+  groupName: "AltCtrl German",
   keys: [
     {
       code: 1055,
       labels: {
-        primary: "@",
+        primary: "²",
       },
     },
     {
       code: 1056,
       labels: {
-        primary: "£",
-      },
-    },
-    {
-      code: 1057,
-      labels: {
-        primary: "$",
-      },
-    },
-    {
-      code: 1058,
-      labels: {
-        primary: "€",
+        primary: "³",
       },
     },
     {
@@ -225,10 +236,16 @@ const altGRDanish = {
       },
     },
     {
-      code: 1070,
+      code: 1069,
       labels: {
-        primary: "|"
-      }
+        primary: "\\",
+      },
+    },
+    {
+      code: 1044,
+      labels: {
+        primary: "@",
+      },
     },
     {
       code: 1032,
@@ -243,27 +260,33 @@ const altGRDanish = {
       },
     },
     {
+      code: 1073,
+      labels: {
+        primary: "|",
+      },
+    },
+    {
       code: 1040,
       labels: {
-        primary: "µ"
-      }
+        primary: "µ",
+      },
     },
     {
       code: 1124,
       labels: {
-        primary: "\\"
-      }
-    }
-  ]
+        primary: "|",
+      },
+    },
+  ],
 };
 
-const shiftModifierDanish = {
-  groupName: "Shifted Danish",
+const shiftModifierGerman = {
+  groupName: "Shifted German",
   keys: [
     {
       code: 2101,
       labels: {
-        primary: "§",
+        primary: "°",
       },
     },
     {
@@ -273,9 +296,9 @@ const shiftModifierDanish = {
       },
     },
     {
-      code: 2081,
+      code: 2080,
       labels: {
-        primary: "¤",
+        primary: "§",
       },
     },
     {
@@ -320,17 +343,16 @@ const shiftModifierDanish = {
         primary: "`",
       },
     },
-
     {
       code: 2096,
       labels: {
-        primary: "^",
+        primary: "*",
       },
     },
     {
       code: 2097,
       labels: {
-        primary: "*",
+        primary: "'",
       },
     },
     {
@@ -360,71 +382,71 @@ const shiftModifierDanish = {
   ],
 };
 
-const danish = danishLetters.concat(danishModifierKeys);
+const deDE = deDELetters.concat(deDEModifierKeys, deDENumpad);
 
-const table = { keys: danish };
-const tableWithoutModifier = { keys: danishLetters };
+const table = { keys: deDE };
+const tableWithoutModifier = { keys: deDELetters };
 
-const danishCtrlTable = withModifiers(table, "Control +", "C+", 256);
-const danishLAltTable = withModifiers(table, "Alt +", "A+", 512);
-const danishRAltTable = withModifiers(table, "AltGr +", "AGr+", 1024);
-const danishShiftTable = withModifiers(tableWithoutModifier, "Shift +", "S+", 2048);
-const danishGuiTable = withModifiers(table, "Os+", "O+", 4096);
+const deDECtrlTable = withModifiers(table, "Control +", "C+", 256);
+const deDELAltTable = withModifiers(table, "Alt +", "A+", 512);
+const deDERAltTable = withModifiers(table, "AltGr +", "AGr+", 1024);
+const deDEShiftTable = withModifiers(tableWithoutModifier, "Shift +", "S+", 2048);
+const deDEGuiTable = withModifiers(table, "Os+", "O+", 4096);
 // Double
 
-const danishCATable = withModifiers(table, "Control + Alt +", "C+A+", 768);
+const deDECATable = withModifiers(table, "Control + Alt +", "C+A+", 768);
 
-const danishCAGrTable = withModifiers(table, "Control + AltGr +", "C+AGr+", 1280);
+const deDECAGrTable = withModifiers(table, "Control + AltGr +", "C+AGr+", 1280);
 
-const danishCSTable = withModifiers(table, "Control + Shift +", "C+S+", 2304);
+const deDECSTable = withModifiers(table, "Control + Shift +", "C+S+", 2304);
 
-const danishCGTable = withModifiers(table, "Control + Os +", "C+O+", 4352);
+const deDECGTable = withModifiers(table, "Control + Os +", "C+O+", 4352);
 
-const danishAAGrTable = withModifiers(table, "Alt + AltGr +", "A+AGr+", 1536);
+const deDEAAGrTable = withModifiers(table, "Alt + AltGr +", "A+AGr+", 1536);
 
-const danishASTable = withModifiers(table, "Alt + Shift +", "A+S+", 2560);
+const deDEASTable = withModifiers(table, "Alt + Shift +", "A+S+", 2560);
 
-const danishAGTable = withModifiers(table, "Alt + Os +", "A+O+", 4608);
+const deDEAGTable = withModifiers(table, "Alt + Os +", "A+O+", 4608);
 
-const danishAGrSTable = withModifiers(table, "AltGr + Shift +", "AGr+S+", 3072);
+const deDEAGrSTable = withModifiers(table, "AltGr + Shift +", "AGr+S+", 3072);
 
-const danishAGrGTable = withModifiers(table, "AltGr + Os +", "AGr+O+", 5120);
+const deDEAGrGTable = withModifiers(table, "AltGr + Os +", "AGr+O+", 5120);
 
-const danishSGTable = withModifiers(table, "Shift + Os +", "S+O+", 6144);
+const deDESGTable = withModifiers(table, "Shift + Os +", "S+O+", 6144);
 
 // Triple
 
-const danishCAAGTable = withModifiers(table, "Control + Alt + AltGr +", "C+A+AGr+", 1792);
+const deDECAAGTable = withModifiers(table, "Control + Alt + AltGr +", "C+A+AGr+", 1792);
 
-const danishCASTable = withModifiers(table, "Meh +", "Meh+", 2816);
+const deDECASTable = withModifiers(table, "Meh +", "Meh+", 2816);
 
-const danishCAGTable = withModifiers(table, "Control + Alt + Os +", "C+A+O+", 4864);
+const deDECAGTable = withModifiers(table, "Control + Alt + Os +", "C+A+O+", 4864);
 
-const danishCAGSTable = withModifiers(table, "Control + AltGr + Shift +", "C+AGr+S+", 3328);
+const deDECAGSTable = withModifiers(table, "Control + AltGr + Shift +", "C+AGr+S+", 3328);
 
-const danishCAGGTable = withModifiers(table, "Control + AltGr + Os +", "C+AGr+O+", 5376);
+const deDECAGGTable = withModifiers(table, "Control + AltGr + Os +", "C+AGr+O+", 5376);
 
-const danishCSGTable = withModifiers(table, "Control + Shift + Os +", "C+S+O+", 6400);
+const deDECSGTable = withModifiers(table, "Control + Shift + Os +", "C+S+O+", 6400);
 
-const danishAAGSTable = withModifiers(table, "Alt + AltGr + Shift +", "A+AGr+S+", 3584);
+const deDEAAGSTable = withModifiers(table, "Alt + AltGr + Shift +", "A+AGr+S+", 3584);
 
-const danishAAGGTable = withModifiers(table, "Alt + AltGr + Os +", "A+AGr+O+", 5632);
+const deDEAAGGTable = withModifiers(table, "Alt + AltGr + Os +", "A+AGr+O+", 5632);
 
-const danishASGTable = withModifiers(table, "Alt + Shift + Os +", "A+S+O+", 6656);
+const deDEASGTable = withModifiers(table, "Alt + Shift + Os +", "A+S+O+", 6656);
 
-const danishAGSGTable = withModifiers(table, "AltGr + Shift + Os +", "AGr+S+O+", 7168);
+const deDEAGSGTable = withModifiers(table, "AltGr + Shift + Os +", "AGr+S+O+", 7168);
 
 // Quad
 
-const danishCAAGrSTable = withModifiers(table, "Meh + AltGr +", "M+AGr+", 3840);
+const deDECAAGrSTable = withModifiers(table, "Meh + AltGr +", "M+AGr+", 3840);
 
-const danishCAAGrGTable = withModifiers(table, "Control + Alt + AltGr + Os +", "C+A+AGr+O+", 5888);
+const deDECAAGrGTable = withModifiers(table, "Control + Alt + AltGr + Os +", "C+A+AGr+O+", 5888);
 
-const danishCAGrSGTable = withModifiers(table, "Control + AltGr + Shift + Os +", "C+AGr+S+O+", 7424);
+const deDECAGrSGTable = withModifiers(table, "Control + AltGr + Shift + Os +", "C+AGr+S+O+", 7424);
 
-const danishAAGrSGTable = withModifiers(table, "Alt + AltGr + Shift + Os +", "A+AGr+S+O+", 7680);
+const deDEAAGrSGTable = withModifiers(table, "Alt + AltGr + Shift + Os +", "A+AGr+S+O+", 7680);
 
-const danishAllModTable = withModifiers(table, "Hyper + AltGr +", "H+AGr+", 7936);
+const deDEAllModTable = withModifiers(table, "Hyper + AltGr +", "H+AGr+", 7936);
 
 const DualUseCtrlTable = withModifiers(table, "Control /", "CTRL/", 49169);
 const DualUseShiftTable = withModifiers(table, "Shift /", "SHIFT/", 49425);
@@ -440,41 +462,41 @@ const DualUseLayer6Tables = withModifiers(table, "Layer #6 /", "L#6/", 52498);
 const DualUseLayer7Tables = withModifiers(table, "Layer #7 /", "L#7/", 52754);
 const DualUseLayer8Tables = withModifiers(table, "Layer #8 /", "L#8/", 53010);
 
-const danishModifiedTables = [
-  shiftModifierDanish,
-  danishCtrlTable,
-  danishLAltTable,
-  danishRAltTable,
-  danishShiftTable,
-  danishGuiTable,
-  danishCATable,
-  altCtrlDanish,
-  altGRDanish,
-  danishCAGrTable,
-  danishCSTable,
-  danishCGTable,
-  danishAAGrTable,
-  danishASTable,
-  danishAGTable,
-  danishAGrSTable,
-  danishAGrGTable,
-  danishSGTable,
-  danishCAAGTable,
-  danishCASTable,
-  danishCAGTable,
-  danishCAGSTable,
-  danishCAGGTable,
-  danishCSGTable,
-  danishAAGSTable,
-  danishAAGGTable,
-  danishASGTable,
-  danishAGSGTable,
-  danishCAAGrSTable,
-  danishCAAGrGTable,
+const deDEModifiedTables = [
+  shiftModifierGerman,
+  deDECtrlTable,
+  deDELAltTable,
+  deDERAltTable,
+  deDEShiftTable,
+  deDEGuiTable,
+  deDECATable,
+  altCtrlGerman,
+  altGrGerman,
+  deDECAGrTable,
+  deDECSTable,
+  deDECGTable,
+  deDEAAGrTable,
+  deDEASTable,
+  deDEAGTable,
+  deDEAGrSTable,
+  deDEAGrGTable,
+  deDESGTable,
+  deDECAAGTable,
+  deDECASTable,
+  deDECAGTable,
+  deDECAGSTable,
+  deDECAGGTable,
+  deDECSGTable,
+  deDEAAGSTable,
+  deDEAAGGTable,
+  deDEASGTable,
+  deDEAGSGTable,
+  deDECAAGrSTable,
+  deDECAAGrGTable,
   withModifiers(table, "Hyper +", "Hyper+", 6912),
-  danishCAGrSGTable,
-  danishAAGrSGTable,
-  danishAllModTable,
+  deDECAGrSGTable,
+  deDEAAGrSGTable,
+  deDEAllModTable,
   DualUseCtrlTable,
   DualUseShiftTable,
   DualUseAltTable,
@@ -490,5 +512,5 @@ const danishModifiedTables = [
   DualUseLayer8Tables,
 ];
 
-export { danish as default, danishModifiedTables };
-// export default danish;
+export { deDE as default, deDEModifiedTables };
+// export default deDE;
