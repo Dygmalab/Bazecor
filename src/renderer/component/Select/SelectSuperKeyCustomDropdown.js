@@ -29,6 +29,8 @@ width: 100%;
     text-transform: capitalize;
     font-size: inherit;
     line-height: 1em;
+    overflow: initial;
+    position: relative;
     
   }
   .dropdownItemSelected {
@@ -50,9 +52,12 @@ width: 100%;
   }
   .badge.badge-primary {
     font-weight: 700;
-    font-size: 9px;
     padding: 2px 5px;
     line-height: 1em;
+    font-size: 7px;
+    position: absolute;
+    top: -6px;
+    margin-left: -3px;
   }
 }
 .active .dropdownItemSelected .badge-circle {
@@ -92,20 +97,6 @@ width: 100%;
   border-radius: 6px;
   height: 142px;
   overflow-y: auto;
-}
-@media (max-width: 980px) {
-  .custom-dropdown {
-    .dropdownItem {
-      overflow: initial;
-      position: relative;
-    }
-    .badge.badge-primary {
-      font-size: 7px;
-      position: absolute;
-      top: -6px;
-      margin-left: -3px;
-    }
-  }
 }
 `;
 
