@@ -88,11 +88,11 @@ const DefyBatteryIndicatorRight = ({ batteryStatus, batteryHeight }: DefyBattery
       ) : (
         ""
       )}
-      {batteryStatus === 1 ? (
+      {batteryStatus === 1 || batteryStatus === 2 ? (
         <path
           className="lightningbattery"
           d="M40.9893 63.989L51.6559 48.1001V60.3223H56.9893L46.3226 77.4334V63.989H40.9893Z"
-          fill="currentColor"
+          fill={batteryStatus === 1 ? "currentColor" : "white"}
           stroke="currentColor"
           strokeWidth="1.2"
         />

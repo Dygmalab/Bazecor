@@ -111,8 +111,8 @@ interface BatteryStatusProps {
 const BatteryStatus = ({ disable }: BatteryStatusProps) => {
   const [bLeft, setbLeft] = useState(100);
   const [bRight, setbRight] = useState(100);
-  const [sLeft, setsLeft] = useState(100);
-  const [sRight, setsRight] = useState(100);
+  const [sLeft, setsLeft] = useState(0);
+  const [sRight, setsRight] = useState(0);
   const [isSavingMode, setIsSavingMode] = useState(false);
   const [animateIcon, setAnimateIcon] = useState(0);
   const target = useRef(null);
@@ -129,6 +129,13 @@ const BatteryStatus = ({ disable }: BatteryStatusProps) => {
     setsLeft(leftStatus.includes("0x") ? 255 : parseInt(leftStatus, 10));
     setsRight(rightStatus.includes("0x") ? 255 : parseInt(rightStatus, 10));
     setIsSavingMode(parseInt(savingMode, 10) > 0);
+
+    console.log("L Status internal: ", sLeft);
+    console.log("L Status focus: ", leftStatus);
+    console.log("L Level internal: ", bLeft);
+
+    console.log("R Status: ", sRight);
+    console.log("R Status focus: ", rightStatus);
   }
 
   if (!disable) {
