@@ -1,5 +1,6 @@
 import PropTypes from "prop-types";
 import React, { Component } from "react";
+import Styled from "styled-components";
 
 // React Bootstrap Components
 import Card from "react-bootstrap/Card";
@@ -24,6 +25,12 @@ import i18n from "../../i18n";
 
 import Store from "../../utils/Store";
 import getLanguage from "../../utils/language";
+
+const GeneraslSettihngsWrapper = Styled.div`
+.dropdown-menu {
+  min-width: 13rem;
+}
+`;
 
 const store = Store.getStore();
 
@@ -95,43 +102,45 @@ export default class GeneralSettings extends Component {
     ];
 
     return (
-      <Card className="overflowFix card-preferences mt-4">
-        <Card.Title>
-          <Title text={i18n.keyboardSettings.keymap.title} headingLevel={3} svgICO={<IconWrench />} />
-        </Card.Title>
-        <Card.Body>
-          <Form>
-            <Row>
-              <Col lg={6} md={12}>
-                <Form.Group controlId="selectLanguage" className="mb-3">
-                  <Form.Label>{i18n.preferences.language}</Form.Label>
-                  <Select onSelect={this.changeLanguage} value={selectedLanguage} listElements={languageElements} />
-                </Form.Group>
-              </Col>
-              <Col lg={6} md={12}>
-                <Form.Group controlId="defaultLayer" className="mb-3">
-                  <Form.Label>{i18n.keyboardSettings.keymap.defaultLayer}</Form.Label>
-                  <Select onSelect={selectDefaultLayer} value={defaultLayer} listElements={layersNames} disabled={!connected} />
-                </Form.Group>
-              </Col>
-            </Row>
-            <Row>
-              <Col md={12}>
-                <Form.Group controlId="DarkMode" className="m-0">
-                  <Form.Label>{i18n.preferences.darkMode.label}</Form.Label>
-                  <ToggleButtons
-                    selectDarkMode={selectDarkMode}
-                    value={darkMode}
-                    listElements={layoutsModes}
-                    style="flex"
-                    size="sm"
-                  />
-                </Form.Group>
-              </Col>
-            </Row>
-          </Form>
-        </Card.Body>
-      </Card>
+      <GeneraslSettihngsWrapper>
+        <Card className="overflowFix card-preferences mt-4">
+          <Card.Title>
+            <Title text={i18n.keyboardSettings.keymap.title} headingLevel={3} svgICO={<IconWrench />} />
+          </Card.Title>
+          <Card.Body>
+            <Form>
+              <Row>
+                <Col lg={6} md={12}>
+                  <Form.Group controlId="selectLanguage" className="mb-3">
+                    <Form.Label>{i18n.preferences.language}</Form.Label>
+                    <Select onSelect={this.changeLanguage} value={selectedLanguage} listElements={languageElements} />
+                  </Form.Group>
+                </Col>
+                <Col lg={6} md={12}>
+                  <Form.Group controlId="defaultLayer" className="mb-3">
+                    <Form.Label>{i18n.keyboardSettings.keymap.defaultLayer}</Form.Label>
+                    <Select onSelect={selectDefaultLayer} value={defaultLayer} listElements={layersNames} disabled={!connected} />
+                  </Form.Group>
+                </Col>
+              </Row>
+              <Row>
+                <Col md={12}>
+                  <Form.Group controlId="DarkMode" className="m-0">
+                    <Form.Label>{i18n.preferences.darkMode.label}</Form.Label>
+                    <ToggleButtons
+                      selectDarkMode={selectDarkMode}
+                      value={darkMode}
+                      listElements={layoutsModes}
+                      style="flex"
+                      size="sm"
+                    />
+                  </Form.Group>
+                </Col>
+              </Row>
+            </Form>
+          </Card.Body>
+        </Card>
+      </GeneraslSettihngsWrapper>
     );
   }
 }
