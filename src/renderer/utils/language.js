@@ -15,7 +15,7 @@ const legacyLanguage = {
 };
 
 /**
- * Helper function to convert legacy languages stored config.js
+ * Helper function to convert legacy languages stored in config.js
  * @param {string} storedLanguage Stored language
  * @param {string} defaultLanguage Default language
  */
