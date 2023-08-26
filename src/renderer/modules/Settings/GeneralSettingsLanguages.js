@@ -1,5 +1,6 @@
 // Dygma - Layouts (keycaps)
-import en from "@Assets/flags/en.png";
+import enUS from "@Assets/flags/enUS.png";
+import enGB from "@Assets/flags/enGB.png";
 import esES from "@Assets/flags/esES.png";
 import deDE from "@Assets/flags/deDE.png";
 import frFR from "@Assets/flags/frFR.png";
@@ -16,8 +17,8 @@ import gswCH from "@Assets/flags/gswCH.png";
 import xxEU from "@Assets/flags/xxEU.png";
 
 const flags = [
-  en,
-  en,
+  enUS,
+  enGB,
   esES,
   deDE,
   frFR,
