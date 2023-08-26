@@ -8,27 +8,16 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 
 // Own Components
-
-// Icons Imports
-
-// Flags imports
-import frenchF from "@Assets/flags/france.png";
-import germanF from "@Assets/flags/germany.png";
-import japaneseF from "@Assets/flags/japan.png";
-import koreanF from "@Assets/flags/korean.png";
-import spanishF from "@Assets/flags/spain.png";
-import englishUSUKF from "@Assets/flags/english.png";
-import danishF from "@Assets/flags/denmark.png";
-import swedishF from "@Assets/flags/sweden.png";
-import finnishF from "@Assets/flags/finland.png";
-import icelandicF from "@Assets/flags/iceland.png";
-import norwegianF from "@Assets/flags/norway.png";
-import swissF from "@Assets/flags/switzerland.png";
-import eurkeyF from "@Assets/flags/eurkey.png";
-import { IconWrench, IconSun, IconMoon, IconScreen } from "../../component/Icon";
 import { ToggleButtons } from "../../component/ToggleButtons";
 import { Select } from "../../component/Select";
 import Title from "../../component/Title";
+
+// Icons Imports
+import { IconWrench, IconSun, IconMoon, IconScreen } from "../../component/Icon";
+
+// Langues Imports
+import { flags, languages, languageNames} from "./GeneralSettingsLanguages";
+
 import Keymap from "../../../api/keymap";
 import Focus from "../../../api/focus";
 import i18n from "../../i18n";
@@ -70,58 +59,7 @@ export default class GeneralSettings extends Component {
 
     let layersNames = neurons[selectedNeuron] ? neurons[selectedNeuron].layers : [];
 
-    let flags = [
-      englishUSUKF,
-      englishUSUKF,
-      spanishF,
-      germanF,
-      frenchF,
-      swedishF,
-      finnishF,
-      danishF,
-      norwegianF,
-      icelandicF,
-      japaneseF,
-      koreanF,
-      swissF,
-      eurkeyF,
-    ];
-
-    let languages = [
-      "en-US",
-      "en-GB",
-      "es-ES",
-      "de-DE",
-      "fr-FR",
-      "sv-SE",
-      "fi-FI",
-      "da-DK",
-      "no-NO",
-      "is-IS",
-      "ja-JP",
-      "ko-KR",
-      "gsw-CH",
-      "xx-EU",
-    ];
-
-    let languageNames = [
-      "English (US)",
-      "English (UK)",
-      "Spanish",
-      "German",
-      "French",
-      "Swedish",
-      "Finnish",
-      "Danish",
-      "Norwegian",
-      "Icelandic",
-      "Japanese",
-      "Korean",
-      "Swiss German",
-      "EurKEY (1.3)",
-    ];
-
-    languages = languages.map((item, index) => ({
+    let languageElements = languages.map((item, index) => ({
       text: languageNames[index],
       value: item,
       icon: flags[index],
@@ -167,7 +105,7 @@ export default class GeneralSettings extends Component {
               <Col lg={6} md={12}>
                 <Form.Group controlId="selectLanguage" className="mb-3">
                   <Form.Label>{i18n.preferences.language}</Form.Label>
-                  <Select onSelect={this.changeLanguage} value={selectedLanguage} listElements={languages} />
+                  <Select onSelect={this.changeLanguage} value={selectedLanguage} listElements={languageElements} />
                 </Form.Group>
               </Col>
               <Col lg={6} md={12}>
