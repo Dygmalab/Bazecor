@@ -114,9 +114,6 @@ class KeymapDB {
     this.keymapCodeTable = [];
     // create variable that get language from the local storage
     this.language = getLanguage(store.get("settings.language"));
-    if (this.language === "fi-FI") {
-      this.language = "sv-SE";
-    }
     if (languagesDB[this.language] === undefined) {
       this.language = "en-US";
     }
@@ -302,9 +299,6 @@ class KeymapDB {
 
   static updateBaseKeyCode() {
     this.language = getLanguage(store.get("settings.language"));
-    if (this.language === "fi-FI") {
-      this.language = "sv-SE";
-    }
     if (languagesDB[this.language] === undefined) {
       this.language = "en-US";
     }

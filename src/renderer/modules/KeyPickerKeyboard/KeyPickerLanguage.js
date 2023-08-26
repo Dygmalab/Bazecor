@@ -21,14 +21,14 @@ const languages = {
   "es-ES": esES,
   "de-DE": deDE,
   "fr-FR": frFR,
-  "sv-SE": svSE,
-  "fi-FI": svSE,
   "da-DK": daDK,
+  "fi-FI": svSE,
   "no-NO": noNO,
+  "sv-SE": svSE,
   "is-IS": isIS,
   "ja-JP": jaJP,
-  "gsw-CH": gswCH,
   "ko-KR": koKR,
+  "gsw-CH": gswCH,
   "xx-EU": xxEU,
 }
 
