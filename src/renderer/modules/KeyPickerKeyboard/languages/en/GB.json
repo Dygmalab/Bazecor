@@ -330,8 +330,8 @@
     "content": {
       "type": "1U",
       "first": "`",
-      "second": "~",
-      "third": "",
+      "second": "¬",
+      "third": "¦",
       "fourth": ""
     }
   },

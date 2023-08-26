@@ -1,4 +1,5 @@
 // Dygma - Layouts (keycaps)
+import enGB, { enGBModifiedTables } from "./en/GB";
 import esES, { esESModifiedTables } from "./es/ES";
 import deDE, { deDEModifiedTables } from "./de/DE";
 import frFR, { frFRModifiedTables } from "./fr/FR";
@@ -14,6 +15,7 @@ import gswCH, { gswCHModifiedTables } from "./gsw/CH";
 import xxEU, { xxEUModifiedTables } from "./xx/EU";
 
 const supportModifiedTables = {
+  "en-GB": enGBModifiedTables,
   "es-ES": esESModifiedTables,
   "de-DE": deDEModifiedTables,
   "fr-FR": frFRModifiedTables,
@@ -30,6 +32,7 @@ const supportModifiedTables = {
 
 const languages = {
   "en-US": "en-US",
+  "en-GB": enGB,
   "es-ES": esES,
   "de-DE": deDE,
   "fr-FR": frFR,
