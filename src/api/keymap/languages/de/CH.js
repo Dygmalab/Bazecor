@@ -20,7 +20,7 @@
 
 import { withModifiers } from "../../db/utils";
 
-const gswCHLetters = [
+const deCHLetters = [
   {
     code: 28,
     labels: {
@@ -35,7 +35,7 @@ const gswCHLetters = [
   },
 ];
 
-const gswCHModifierKeys = [
+const deCHModifierKeys = [
   {
     code: 53,
     labels: {
@@ -414,71 +414,71 @@ const shiftModifierSwissGerman = {
   ],
 };
 
-const gswCH = gswCHLetters.concat(gswCHModifierKeys);
+const deCH = deCHLetters.concat(deCHModifierKeys);
 
-const table = { keys: gswCH };
-const tableWithoutModifier = { keys: gswCHLetters };
+const table = { keys: deCH };
+const tableWithoutModifier = { keys: deCHLetters };
 
-const gswCHCtrlTable = withModifiers(table, "Control +", "C+", 256);
-const gswCHLAltTable = withModifiers(table, "Alt +", "A+", 512);
-const gswCHRAltTable = withModifiers(table, "AltGr +", "AGr+", 1024);
-const gswCHShiftTable = withModifiers(tableWithoutModifier, "Shift +", "S+", 2048);
-const gswCHGuiTable = withModifiers(table, "Os+", "O+", 4096);
+const deCHCtrlTable = withModifiers(table, "Control +", "C+", 256);
+const deCHLAltTable = withModifiers(table, "Alt +", "A+", 512);
+const deCHRAltTable = withModifiers(table, "AltGr +", "AGr+", 1024);
+const deCHShiftTable = withModifiers(tableWithoutModifier, "Shift +", "S+", 2048);
+const deCHGuiTable = withModifiers(table, "Os+", "O+", 4096);
 // Double
 
-const gswCHCATable = withModifiers(table, "Control + Alt +", "C+A+", 768);
+const deCHCATable = withModifiers(table, "Control + Alt +", "C+A+", 768);
 
-const gswCHCAGrTable = withModifiers(table, "Control + AltGr +", "C+AGr+", 1280);
+const deCHCAGrTable = withModifiers(table, "Control + AltGr +", "C+AGr+", 1280);
 
-const gswCHCSTable = withModifiers(table, "Control + Shift +", "C+S+", 2304);
+const deCHCSTable = withModifiers(table, "Control + Shift +", "C+S+", 2304);
 
-const gswCHCGTable = withModifiers(table, "Control + Os +", "C+O+", 4352);
+const deCHCGTable = withModifiers(table, "Control + Os +", "C+O+", 4352);
 
-const gswCHAAGrTable = withModifiers(table, "Alt + AltGr +", "A+AGr+", 1536);
+const deCHAAGrTable = withModifiers(table, "Alt + AltGr +", "A+AGr+", 1536);
 
-const gswCHASTable = withModifiers(table, "Alt + Shift +", "A+S+", 2560);
+const deCHASTable = withModifiers(table, "Alt + Shift +", "A+S+", 2560);
 
-const gswCHAGTable = withModifiers(table, "Alt + Os +", "A+O+", 4608);
+const deCHAGTable = withModifiers(table, "Alt + Os +", "A+O+", 4608);
 
-const gswCHAGrSTable = withModifiers(table, "AltGr + Shift +", "AGr+S+", 3072);
+const deCHAGrSTable = withModifiers(table, "AltGr + Shift +", "AGr+S+", 3072);
 
-const gswCHAGrGTable = withModifiers(table, "AltGr + Os +", "AGr+O+", 5120);
+const deCHAGrGTable = withModifiers(table, "AltGr + Os +", "AGr+O+", 5120);
 
-const gswCHSGTable = withModifiers(table, "Shift + Os +", "S+O+", 6144);
+const deCHSGTable = withModifiers(table, "Shift + Os +", "S+O+", 6144);
 
 // Triple
 
-const gswCHCAAGTable = withModifiers(table, "Control + Alt + AltGr +", "C+A+AGr+", 1792);
+const deCHCAAGTable = withModifiers(table, "Control + Alt + AltGr +", "C+A+AGr+", 1792);
 
-const gswCHCASTable = withModifiers(table, "Meh +", "Meh+", 2816);
+const deCHCASTable = withModifiers(table, "Meh +", "Meh+", 2816);
 
-const gswCHCAGTable = withModifiers(table, "Control + Alt + Os +", "C+A+O+", 4864);
+const deCHCAGTable = withModifiers(table, "Control + Alt + Os +", "C+A+O+", 4864);
 
-const gswCHCAGSTable = withModifiers(table, "Control + AltGr + Shift +", "C+AGr+S+", 3328);
+const deCHCAGSTable = withModifiers(table, "Control + AltGr + Shift +", "C+AGr+S+", 3328);
 
-const gswCHCAGGTable = withModifiers(table, "Control + AltGr + Os +", "C+AGr+O+", 5376);
+const deCHCAGGTable = withModifiers(table, "Control + AltGr + Os +", "C+AGr+O+", 5376);
 
-const gswCHCSGTable = withModifiers(table, "Control + Shift + Os +", "C+S+O+", 6400);
+const deCHCSGTable = withModifiers(table, "Control + Shift + Os +", "C+S+O+", 6400);
 
-const gswCHAAGSTable = withModifiers(table, "Alt + AltGr + Shift +", "A+AGr+S+", 3584);
+const deCHAAGSTable = withModifiers(table, "Alt + AltGr + Shift +", "A+AGr+S+", 3584);
 
-const gswCHAAGGTable = withModifiers(table, "Alt + AltGr + Os +", "A+AGr+O+", 5632);
+const deCHAAGGTable = withModifiers(table, "Alt + AltGr + Os +", "A+AGr+O+", 5632);
 
-const gswCHASGTable = withModifiers(table, "Alt + Shift + Os +", "A+S+O+", 6656);
+const deCHASGTable = withModifiers(table, "Alt + Shift + Os +", "A+S+O+", 6656);
 
-const gswCHAGSGTable = withModifiers(table, "AltGr + Shift + Os +", "AGr+S+O+", 7168);
+const deCHAGSGTable = withModifiers(table, "AltGr + Shift + Os +", "AGr+S+O+", 7168);
 
 // Quad
 
-const gswCHCAAGrSTable = withModifiers(table, "Meh + AltGr +", "M+AGr+", 3840);
+const deCHCAAGrSTable = withModifiers(table, "Meh + AltGr +", "M+AGr+", 3840);
 
-const gswCHCAAGrGTable = withModifiers(table, "Control + Alt + AltGr + Os +", "C+A+AGr+O+", 5888);
+const deCHCAAGrGTable = withModifiers(table, "Control + Alt + AltGr + Os +", "C+A+AGr+O+", 5888);
 
-const gswCHCAGrSGTable = withModifiers(table, "Control + AltGr + Shift + Os +", "C+AGr+S+O+", 7424);
+const deCHCAGrSGTable = withModifiers(table, "Control + AltGr + Shift + Os +", "C+AGr+S+O+", 7424);
 
-const gswCHAAGrSGTable = withModifiers(table, "Alt + AltGr + Shift + Os +", "A+AGr+S+O+", 7680);
+const deCHAAGrSGTable = withModifiers(table, "Alt + AltGr + Shift + Os +", "A+AGr+S+O+", 7680);
 
-const gswCHAllModTable = withModifiers(table, "Hyper + AltGr +", "H+AGr+", 7936);
+const deCHAllModTable = withModifiers(table, "Hyper + AltGr +", "H+AGr+", 7936);
 
 const DualUseCtrlTable = withModifiers(table, "Control /", "CTRL/", 49169);
 const DualUseShiftTable = withModifiers(table, "Shift /", "SHIFT/", 49425);
@@ -494,41 +494,41 @@ const DualUseLayer6Tables = withModifiers(table, "Layer #6 /", "L#6/", 52498);
 const DualUseLayer7Tables = withModifiers(table, "Layer #7 /", "L#7/", 52754);
 const DualUseLayer8Tables = withModifiers(table, "Layer #8 /", "L#8/", 53010);
 
-const gswCHModifiedTables = [
+const deCHModifiedTables = [
   shiftModifierSwissGerman,
-  gswCHCtrlTable,
-  gswCHLAltTable,
-  gswCHRAltTable,
-  gswCHShiftTable,
-  gswCHGuiTable,
-  gswCHCATable,
+  deCHCtrlTable,
+  deCHLAltTable,
+  deCHRAltTable,
+  deCHShiftTable,
+  deCHGuiTable,
+  deCHCATable,
   altCtrlSwissGerman,
   altGrSwissGerman,
-  gswCHCAGrTable,
-  gswCHCSTable,
-  gswCHCGTable,
-  gswCHAAGrTable,
-  gswCHASTable,
-  gswCHAGTable,
-  gswCHAGrSTable,
-  gswCHAGrGTable,
-  gswCHSGTable,
-  gswCHCAAGTable,
-  gswCHCASTable,
-  gswCHCAGTable,
-  gswCHCAGSTable,
-  gswCHCAGGTable,
-  gswCHCSGTable,
-  gswCHAAGSTable,
-  gswCHAAGGTable,
-  gswCHASGTable,
-  gswCHAGSGTable,
-  gswCHCAAGrSTable,
-  gswCHCAAGrGTable,
+  deCHCAGrTable,
+  deCHCSTable,
+  deCHCGTable,
+  deCHAAGrTable,
+  deCHASTable,
+  deCHAGTable,
+  deCHAGrSTable,
+  deCHAGrGTable,
+  deCHSGTable,
+  deCHCAAGTable,
+  deCHCASTable,
+  deCHCAGTable,
+  deCHCAGSTable,
+  deCHCAGGTable,
+  deCHCSGTable,
+  deCHAAGSTable,
+  deCHAAGGTable,
+  deCHASGTable,
+  deCHAGSGTable,
+  deCHCAAGrSTable,
+  deCHCAAGrGTable,
   withModifiers(table, "Hyper +", "Hyper+", 6912),
-  gswCHCAGrSGTable,
-  gswCHAAGrSGTable,
-  gswCHAllModTable,
+  deCHCAGrSGTable,
+  deCHAAGrSGTable,
+  deCHAllModTable,
   DualUseCtrlTable,
   DualUseShiftTable,
   DualUseAltTable,
@@ -544,4 +544,4 @@ const gswCHModifiedTables = [
   DualUseLayer8Tables,
 ];
 
-export { gswCH as default, gswCHModifiedTables };
+export { deCH as default, deCHModifiedTables };

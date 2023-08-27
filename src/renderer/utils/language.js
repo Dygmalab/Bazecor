@@ -11,7 +11,7 @@ const legacyLanguage = {
   icelandic: "is-IS",
   japanese: "ja-JP",
   korean: "ko-KR",
-  swissGerman: "gsw-CH",
+  swissGerman: "de-CH",
   eurkey: "en-EU",
 };
 

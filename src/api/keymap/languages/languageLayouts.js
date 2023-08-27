@@ -87,7 +87,7 @@ import svSE, { svSEModifiedTables } from "./sv/SE";
 import isIS, { isISModifiedTables } from "./is/IS";
 import jaJP, { jaJPModifiedTables } from "./ja/JP";
 import koKR, { koKRModifiedTables } from "./ko/KR";
-import gswCH, { gswCHModifiedTables } from "./gsw/CH";
+import deCH, { deCHModifiedTables } from "./de/CH";
 import enEU, { enEUModifiedTables } from "./en/EU";
 
 const supportModifiedTables = {
@@ -102,7 +102,7 @@ const supportModifiedTables = {
   "is-IS": isISModifiedTables,
   "ja-JP": jaJPModifiedTables,
   "ko-KR": koKRModifiedTables,
-  "gsw-CH": gswCHModifiedTables,
+  "de-CH": deCHModifiedTables,
   "en-EU": enEUModifiedTables,
 };
 
@@ -119,7 +119,7 @@ const languages = {
   "is-IS": isIS,
   "ja-JP": jaJP,
   "ko-KR": koKR,
-  "gsw-CH": gswCH,
+  "de-CH": deCH,
   "en-EU": enEU,
 };
 

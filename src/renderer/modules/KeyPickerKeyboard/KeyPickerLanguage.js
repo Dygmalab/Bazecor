@@ -63,7 +63,7 @@ import svSE from "@Renderer/modules/KeyPickerKeyboard/languages/sv/SE.json";
 import isIS from "@Renderer/modules/KeyPickerKeyboard/languages/is/IS.json";
 import jaJP from "@Renderer/modules/KeyPickerKeyboard/languages/ja/JP.json"
 import koKR from "@Renderer/modules/KeyPickerKeyboard/languages/ko/KR.json";
-import gswCH from "@Renderer/modules/KeyPickerKeyboard/languages/gsw/CH.json";
+import deCH from "@Renderer/modules/KeyPickerKeyboard/languages/de/CH.json";
 import enEU from "@Renderer/modules/KeyPickerKeyboard/languages/en/EU.json";
 
 const languages = {
@@ -79,7 +79,7 @@ const languages = {
   "is-IS": isIS,
   "ja-JP": jaJP,
   "ko-KR": koKR,
-  "gsw-CH": gswCH,
+  "de-CH": deCH,
   "en-EU": enEU,
 }
 
