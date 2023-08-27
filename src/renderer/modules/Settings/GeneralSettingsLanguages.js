@@ -1,3 +1,28 @@
+/**
+ * Please use The Unicode Consortium Langugage-Territory Information database
+ * for finding your unique language and territory code.
+ * http://www.unicode.org/cldr/charts/latest/supplemental/language_territory_information.html
+ *
+ * | Language | Code | Territory   | Code |
+ * | -------- | ---- | ----------- | ---- |
+ * | German   | de   | Germany {O} | DE   |
+ *
+ * After you have found your unique language and territory code you will need
+ * to combine them. Start with language code (de), add a separator (-) and at
+ * last your territory code (DE); "de-DE".
+ *
+ * In case your keyboard layout aren't an officall language e.g. EurKEY you
+ * select the language code that it's based off (en), add a seperator (-) and
+ * you create a custom territory code that matches the given name of the
+ * layout (EU); "en-EU".
+ *
+ * All flags MUST be a circle with the dimensions of 512x512 pixels, you can
+ * find all offical language flags on https://flagpedia.net/download/vector.
+ *
+ * You can always request help from Dygma or our community, in case you need
+ * help with adding your language to Bazecor or creating graphics (flags).
+ */
+
 // Dygma - Layouts (keycaps)
 import enUS from "@Assets/flags/enUS.png";
 import enGB from "@Assets/flags/enGB.png";

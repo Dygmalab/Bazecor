@@ -1,3 +1,4 @@
+// Do NOT modify this object - languages available in 1.3.2 and before
 const legacyLanguage = {
   english: "en-US",
   spanish: "es-ES",
