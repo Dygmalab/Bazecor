@@ -25,7 +25,7 @@ import deDE from "@Assets/flags/deDE.png";
 import frFR from "@Assets/flags/frFR.png";
 import daDK from "@Assets/flags/daDK.png";
 import fiFI from "@Assets/flags/fiFI.png";
-import noNO from "@Assets/flags/noNO.png";
+import nbNO from "@Assets/flags/nbNO.png";
 import svSE from "@Assets/flags/svSE.png";
 
 // Dygma - Layouts
@@ -43,7 +43,7 @@ const flags = [
   frFR,
   daDK,
   fiFI,
-  noNO,
+  nbNO,
   svSE,
   isIS,
   jaJP,
@@ -60,7 +60,7 @@ const languages = [
   "fr-FR",
   "da-DK",
   "fi-FI",
-  "no-NO",
+  "nb-NO",
   "sv-SE",
   "is-IS",
   "ja-JP",

@@ -56,7 +56,7 @@ import esES from "@Renderer/modules/KeyPickerKeyboard/languages/es/ES.json";
 import deDE from "@Renderer/modules/KeyPickerKeyboard/languages/de/DE.json";
 import frFR from "@Renderer/modules/KeyPickerKeyboard/languages/fr/FR.json";
 import daDK from "@Renderer/modules/KeyPickerKeyboard/languages/da/DK.json";
-import noNO from "@Renderer/modules/KeyPickerKeyboard/languages/no/NO.json";
+import nbNO from "@Renderer/modules/KeyPickerKeyboard/languages/nb/NO.json";
 import svSE from "@Renderer/modules/KeyPickerKeyboard/languages/sv/SE.json";
 
 // Dygma - Layouts
@@ -74,7 +74,7 @@ const languages = {
   "fr-FR": frFR,
   "da-DK": daDK,
   "fi-FI": svSE,
-  "no-NO": noNO,
+  "nb-NO": nbNO,
   "sv-SE": svSE,
   "is-IS": isIS,
   "ja-JP": jaJP,

@@ -80,7 +80,7 @@ import esES, { esESModifiedTables } from "./es/ES";
 import deDE, { deDEModifiedTables } from "./de/DE";
 import frFR, { frFRModifiedTables } from "./fr/FR";
 import daDK, { daDKModifiedTables } from "./da/DK";
-import noNO, { noNOModifiedTables } from "./no/NO";
+import nbNO, { nbNOModifiedTables } from "./nb/NO";
 import svSE, { svSEModifiedTables } from "./sv/SE";
 
 // Dygma - Layouts
@@ -97,7 +97,7 @@ const supportModifiedTables = {
   "fr-FR": frFRModifiedTables,
   "da-DK": daDKModifiedTables,
   "fi-FI": svSEModifiedTables,
-  "no-NO": noNOModifiedTables,
+  "nb-NO": nbNOModifiedTables,
   "sv-SE": svSEModifiedTables,
   "is-IS": isISModifiedTables,
   "ja-JP": jaJPModifiedTables,
@@ -114,7 +114,7 @@ const languages = {
   "fr-FR": frFR,
   "da-DK": daDK,
   "fi-FI": svSE,
-  "no-NO": noNO,
+  "nb-NO": nbNO,
   "sv-SE": svSE,
   "is-IS": isIS,
   "ja-JP": jaJP,

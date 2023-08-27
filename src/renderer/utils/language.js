@@ -7,7 +7,7 @@ const legacyLanguage = {
   swedish: "sv-SE",
   finnish: "fi-FI",
   danish: "da-DK",
-  norwegian: "no-NO",
+  norwegian: "nb-NO",
   icelandic: "is-IS",
   japanese: "ja-JP",
   korean: "ko-KR",

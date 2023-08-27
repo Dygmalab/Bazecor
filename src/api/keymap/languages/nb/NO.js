@@ -20,7 +20,7 @@
 
 import { withModifiers } from "../../db/utils";
 
-const noNOLetters = [
+const nbNOLetters = [
   {
     code: 47,
     labels: {
@@ -44,7 +44,7 @@ const noNOLetters = [
   }
 ];
 
-const noNOModifierKeys = [
+const nbNOModifierKeys = [
   {
     code: 53,
     labels: {
@@ -348,71 +348,71 @@ const shiftModifierNorwegian = {
   ]
 };
 
-const noNO = noNOLetters.concat(noNOModifierKeys);
+const nbNO = nbNOLetters.concat(nbNOModifierKeys);
 
-const table = { keys: noNO };
-const tableWithoutModifier = { keys: noNOLetters };
+const table = { keys: nbNO };
+const tableWithoutModifier = { keys: nbNOLetters };
 
-const noNOCtrlTable = withModifiers(table, "Control +", "C+", 256);
-const noNOLAltTable = withModifiers(table, "Alt +", "A+", 512);
-const noNORAltTable = withModifiers(table, "AltGr +", "AGr+", 1024);
-const noNOShiftTable = withModifiers(tableWithoutModifier, "Shift +", "S+", 2048);
-const noNOGuiTable = withModifiers(table, "Os+", "O+", 4096);
+const nbNOCtrlTable = withModifiers(table, "Control +", "C+", 256);
+const nbNOLAltTable = withModifiers(table, "Alt +", "A+", 512);
+const nbNORAltTable = withModifiers(table, "AltGr +", "AGr+", 1024);
+const nbNOShiftTable = withModifiers(tableWithoutModifier, "Shift +", "S+", 2048);
+const nbNOGuiTable = withModifiers(table, "Os+", "O+", 4096);
 // Double
 
-const noNOCATable = withModifiers(table, "Control + Alt +", "C+A+", 768);
+const nbNOCATable = withModifiers(table, "Control + Alt +", "C+A+", 768);
 
-const noNOCAGrTable = withModifiers(table, "Control + AltGr +", "C+AGr+", 1280);
+const nbNOCAGrTable = withModifiers(table, "Control + AltGr +", "C+AGr+", 1280);
 
-const noNOCSTable = withModifiers(table, "Control + Shift +", "C+S+", 2304);
+const nbNOCSTable = withModifiers(table, "Control + Shift +", "C+S+", 2304);
 
-const noNOCGTable = withModifiers(table, "Control + Os +", "C+O+", 4352);
+const nbNOCGTable = withModifiers(table, "Control + Os +", "C+O+", 4352);
 
-const noNOAAGrTable = withModifiers(table, "Alt + AltGr +", "A+AGr+", 1536);
+const nbNOAAGrTable = withModifiers(table, "Alt + AltGr +", "A+AGr+", 1536);
 
-const noNOASTable = withModifiers(table, "Alt + Shift +", "A+S+", 2560);
+const nbNOASTable = withModifiers(table, "Alt + Shift +", "A+S+", 2560);
 
-const noNOAGTable = withModifiers(table, "Alt + Os +", "A+O+", 4608);
+const nbNOAGTable = withModifiers(table, "Alt + Os +", "A+O+", 4608);
 
-const noNOAGrSTable = withModifiers(table, "AltGr + Shift +", "AGr+S+", 3072);
+const nbNOAGrSTable = withModifiers(table, "AltGr + Shift +", "AGr+S+", 3072);
 
-const noNOAGrGTable = withModifiers(table, "AltGr + Os +", "AGr+O+", 5120);
+const nbNOAGrGTable = withModifiers(table, "AltGr + Os +", "AGr+O+", 5120);
 
-const noNOSGTable = withModifiers(table, "Shift + Os +", "S+O+", 6144);
+const nbNOSGTable = withModifiers(table, "Shift + Os +", "S+O+", 6144);
 
 // Triple
 
-const noNOCAAGTable = withModifiers(table, "Control + Alt + AltGr +", "C+A+AGr+", 1792);
+const nbNOCAAGTable = withModifiers(table, "Control + Alt + AltGr +", "C+A+AGr+", 1792);
 
-const noNOCASTable = withModifiers(table, "Meh +", "Meh+", 2816);
+const nbNOCASTable = withModifiers(table, "Meh +", "Meh+", 2816);
 
-const noNOCAGTable = withModifiers(table, "Control + Alt + Os +", "C+A+O+", 4864);
+const nbNOCAGTable = withModifiers(table, "Control + Alt + Os +", "C+A+O+", 4864);
 
-const noNOCAGSTable = withModifiers(table, "Control + AltGr + Shift +", "C+AGr+S+", 3328);
+const nbNOCAGSTable = withModifiers(table, "Control + AltGr + Shift +", "C+AGr+S+", 3328);
 
-const noNOCAGGTable = withModifiers(table, "Control + AltGr + Os +", "C+AGr+O+", 5376);
+const nbNOCAGGTable = withModifiers(table, "Control + AltGr + Os +", "C+AGr+O+", 5376);
 
-const noNOCSGTable = withModifiers(table, "Control + Shift + Os +", "C+S+O+", 6400);
+const nbNOCSGTable = withModifiers(table, "Control + Shift + Os +", "C+S+O+", 6400);
 
-const noNOAAGSTable = withModifiers(table, "Alt + AltGr + Shift +", "A+AGr+S+", 3584);
+const nbNOAAGSTable = withModifiers(table, "Alt + AltGr + Shift +", "A+AGr+S+", 3584);
 
-const noNOAAGGTable = withModifiers(table, "Alt + AltGr + Os +", "A+AGr+O+", 5632);
+const nbNOAAGGTable = withModifiers(table, "Alt + AltGr + Os +", "A+AGr+O+", 5632);
 
-const noNOASGTable = withModifiers(table, "Alt + Shift + Os +", "A+S+O+", 6656);
+const nbNOASGTable = withModifiers(table, "Alt + Shift + Os +", "A+S+O+", 6656);
 
-const noNOAGSGTable = withModifiers(table, "AltGr + Shift + Os +", "AGr+S+O+", 7168);
+const nbNOAGSGTable = withModifiers(table, "AltGr + Shift + Os +", "AGr+S+O+", 7168);
 
 // Quad
 
-const noNOCAAGrSTable = withModifiers(table, "Meh + AltGr +", "M+AGr+", 3840);
+const nbNOCAAGrSTable = withModifiers(table, "Meh + AltGr +", "M+AGr+", 3840);
 
-const noNOCAAGrGTable = withModifiers(table, "Control + Alt + AltGr + Os +", "C+A+AGr+O+", 5888);
+const nbNOCAAGrGTable = withModifiers(table, "Control + Alt + AltGr + Os +", "C+A+AGr+O+", 5888);
 
-const noNOCAGrSGTable = withModifiers(table, "Control + AltGr + Shift + Os +", "C+AGr+S+O+", 7424);
+const nbNOCAGrSGTable = withModifiers(table, "Control + AltGr + Shift + Os +", "C+AGr+S+O+", 7424);
 
-const noNOAAGrSGTable = withModifiers(table, "Alt + AltGr + Shift + Os +", "A+AGr+S+O+", 7680);
+const nbNOAAGrSGTable = withModifiers(table, "Alt + AltGr + Shift + Os +", "A+AGr+S+O+", 7680);
 
-const noNOAllModTable = withModifiers(table, "Hyper + AltGr +", "H+AGr+", 7936);
+const nbNOAllModTable = withModifiers(table, "Hyper + AltGr +", "H+AGr+", 7936);
 
 const DualUseCtrlTable = withModifiers(table, "Control /", "CTRL/", 49169);
 const DualUseShiftTable = withModifiers(table, "Shift /", "SHIFT/", 49425);
@@ -428,41 +428,41 @@ const DualUseLayer6Tables = withModifiers(table, "Layer #6 /", "L#6/", 52498);
 const DualUseLayer7Tables = withModifiers(table, "Layer #7 /", "L#7/", 52754);
 const DualUseLayer8Tables = withModifiers(table, "Layer #8 /", "L#8/", 53010);
 
-const noNOModifiedTables = [
+const nbNOModifiedTables = [
   shiftModifierNorwegian,
-  noNOCtrlTable,
-  noNOLAltTable,
-  noNORAltTable,
-  noNOShiftTable,
-  noNOGuiTable,
-  noNOCATable,
+  nbNOCtrlTable,
+  nbNOLAltTable,
+  nbNORAltTable,
+  nbNOShiftTable,
+  nbNOGuiTable,
+  nbNOCATable,
   altCtrlNorwegian,
   altGRNorwegian,
-  noNOCAGrTable,
-  noNOCSTable,
-  noNOCGTable,
-  noNOAAGrTable,
-  noNOASTable,
-  noNOAGTable,
-  noNOAGrSTable,
-  noNOAGrGTable,
-  noNOSGTable,
-  noNOCAAGTable,
-  noNOCASTable,
-  noNOCAGTable,
-  noNOCAGSTable,
-  noNOCAGGTable,
-  noNOCSGTable,
-  noNOAAGSTable,
-  noNOAAGGTable,
-  noNOASGTable,
-  noNOAGSGTable,
-  noNOCAAGrSTable,
-  noNOCAAGrGTable,
+  nbNOCAGrTable,
+  nbNOCSTable,
+  nbNOCGTable,
+  nbNOAAGrTable,
+  nbNOASTable,
+  nbNOAGTable,
+  nbNOAGrSTable,
+  nbNOAGrGTable,
+  nbNOSGTable,
+  nbNOCAAGTable,
+  nbNOCASTable,
+  nbNOCAGTable,
+  nbNOCAGSTable,
+  nbNOCAGGTable,
+  nbNOCSGTable,
+  nbNOAAGSTable,
+  nbNOAAGGTable,
+  nbNOASGTable,
+  nbNOAGSGTable,
+  nbNOCAAGrSTable,
+  nbNOCAAGrGTable,
   withModifiers(table, "Hyper +", "Hyper+", 6912),
-  noNOCAGrSGTable,
-  noNOAAGrSGTable,
-  noNOAllModTable,
+  nbNOCAGrSGTable,
+  nbNOAAGrSGTable,
+  nbNOAllModTable,
   DualUseCtrlTable,
   DualUseShiftTable,
   DualUseAltTable,
@@ -478,5 +478,5 @@ const noNOModifiedTables = [
   DualUseLayer8Tables
 ];
 
-export { noNO as default, noNOModifiedTables };
-// export default noNO;
+export { nbNO as default, nbNOModifiedTables };
+// export default nbNO;
