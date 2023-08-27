@@ -77,7 +77,7 @@ const languages = [
 
 const languageNames = [
   "English (US)",
-  "English (UK)",
+  "English (GB)",
   "Spanish",
   "German",
   "French",
