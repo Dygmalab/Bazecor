@@ -20,8 +20,9 @@
 
 import { withModifiers } from "../../db/utils";
 
-const altGrTableBase = 1024;
-const shiftTableBase = 2048;
+const altCtrlBase = 768;
+const altGrBase = 1024;
+const shiftBase = 2048;
 
 const enGBLetters = [];
 
@@ -42,44 +43,44 @@ const enGBModifierKeys = [
   },
 ];
 
-const shiftModifierEnglish = {
+const shiftModifier = {
   groupName: "Shifted British English",
   keys: [
     // R4
     {
-      code: shiftTableBase + 53,
+      code: shiftBase + 53,
       labels: {
         primary: "¬"
       }
     },
     {
-      code: shiftTableBase + 31,
+      code: shiftBase + 31,
       labels: {
         primary: '"'
       }
     },
     {
-      code: shiftTableBase + 32,
+      code: shiftBase + 32,
       labels: {
         primary: "£"
       }
     },
     // R2
     {
-      code: shiftTableBase + 52,
+      code: shiftBase + 52,
       labels: {
         primary: "@"
       }
     },
     {
-      code: shiftTableBase + 49,
+      code: shiftBase + 49,
       labels: {
         primary: "~"
       }
     },
     // R1
     {
-      code: shiftTableBase + 100,
+      code: shiftBase + 100,
       labels: {
         primary: "|",
       },
@@ -87,50 +88,101 @@ const shiftModifierEnglish = {
   ]
 };
 
-const altGrModifierEnglish = {
-  groupName: "AltGr British English",
+const altCtrlModifier = {
+  groupName: "AltCtrl British English",
   keys: [
     // R4
     {
-      code: altGrTableBase + 53,
+      code: altCtrlBase + 53,
       labels: {
         primary: "¦"
       }
     },
     {
-      code: altGrTableBase + 33,
+      code: altCtrlBase + 33,
       labels: {
         primary: "€"
       }
     },
     // R3
     {
-      code: altGrTableBase + 8,
+      code: altCtrlBase + 8,
       labels: {
         primary: "É"
       }
     },
     {
-      code: altGrTableBase + 24,
+      code: altCtrlBase + 24,
       labels: {
         primary: "Ú"
       }
     },
     {
-      code: altGrTableBase + 12,
+      code: altCtrlBase + 12,
       labels: {
         primary: "Í",
       },
     },
     {
-      code: altGrTableBase + 18,
+      code: altCtrlBase + 18,
       labels: {
         primary: "Ó",
       },
     },
     // R2
     {
-      code: altGrTableBase + 4,
+      code: altCtrlBase + 4,
+      labels: {
+        primary: "Á",
+      },
+    },
+  ]
+};
+
+const altGrModifier = {
+  groupName: "AltGr British English",
+  keys: [
+    // R4
+    {
+      code: altGrBase + 53,
+      labels: {
+        primary: "¦"
+      }
+    },
+    {
+      code: altGrBase + 33,
+      labels: {
+        primary: "€"
+      }
+    },
+    // R3
+    {
+      code: altGrBase + 8,
+      labels: {
+        primary: "É"
+      }
+    },
+    {
+      code: altGrBase + 24,
+      labels: {
+        primary: "Ú"
+      }
+    },
+    {
+      code: altGrBase + 12,
+      labels: {
+        primary: "Í",
+      },
+    },
+    {
+      code: altGrBase + 18,
+      labels: {
+        primary: "Ó",
+      },
+    },
+    // R2
+    {
+      code: altGrBase + 4,
       labels: {
         primary: "Á",
       },
@@ -219,14 +271,15 @@ const DualUseLayer7Tables = withModifiers(table, "Layer #7 /", "L#7/", 52754);
 const DualUseLayer8Tables = withModifiers(table, "Layer #8 /", "L#8/", 53010);
 
 const enGBModifiedTables = [
-  shiftModifierEnglish,
+  shiftModifier,
   enGBCtrlTable,
   enGBLAltTable,
   enGBRAltTable,
   enGBShiftTable,
   enGBGuiTable,
   enGBCATable,
-  altGrModifierEnglish,
+  altCtrlModifier,
+  altGrModifier,
   enGBCAGrTable,
   enGBCSTable,
   enGBCGTable,
