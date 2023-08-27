@@ -39,7 +39,7 @@ import isIS from "@Assets/flags/isIS.png";
 import jaJP from "@Assets/flags/jaJP.png";
 import koKR from "@Assets/flags/koKR.png";
 import gswCH from "@Assets/flags/gswCH.png";
-import xxEU from "@Assets/flags/xxEU.png";
+import enEU from "@Assets/flags/enEU.png";
 
 const flags = [
   enUS,
@@ -55,7 +55,7 @@ const flags = [
   jaJP,
   koKR,
   gswCH,
-  xxEU,
+  enEU,
 ];
 
 const languages = [
@@ -72,7 +72,7 @@ const languages = [
   "ja-JP",
   "ko-KR",
   "gsw-CH",
-  "xx-EU",
+  "en-EU",
 ];
 
 const languageNames = [

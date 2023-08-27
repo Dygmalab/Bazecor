@@ -64,7 +64,7 @@ import isIS from "@Renderer/modules/KeyPickerKeyboard/languages/is/IS.json";
 import jaJP from "@Renderer/modules/KeyPickerKeyboard/languages/ja/JP.json"
 import koKR from "@Renderer/modules/KeyPickerKeyboard/languages/ko/KR.json";
 import gswCH from "@Renderer/modules/KeyPickerKeyboard/languages/gsw/CH.json";
-import xxEU from "@Renderer/modules/KeyPickerKeyboard/languages/xx/EU.json";
+import enEU from "@Renderer/modules/KeyPickerKeyboard/languages/en/EU.json";
 
 const languages = {
   "en-US": enUS,
@@ -80,7 +80,7 @@ const languages = {
   "ja-JP": jaJP,
   "ko-KR": koKR,
   "gsw-CH": gswCH,
-  "xx-EU": xxEU,
+  "en-EU": enEU,
 }
 
 /**

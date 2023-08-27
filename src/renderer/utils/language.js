@@ -12,7 +12,7 @@ const legacyLanguage = {
   japanese: "ja-JP",
   korean: "ko-KR",
   swissGerman: "gsw-CH",
-  eurkey: "xx-EU",
+  eurkey: "en-EU",
 };
 
 /**
