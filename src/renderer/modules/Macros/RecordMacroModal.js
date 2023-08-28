@@ -31,6 +31,7 @@ const Styles = Styled.div`
   align-items: center;
   margin-bottom: 2px;
   white-space: nowrap;
+  width: 100%;
   svg {
     color: ${({ theme }) => theme.styles.tabButton.svgColor};
   }
