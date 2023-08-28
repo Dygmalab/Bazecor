@@ -21,7 +21,7 @@ import Styled from "styled-components";
 import ReactMarkdown from "react-markdown";
 
 import Title from "@Renderer/component/Title";
-import Badge from "@Renderer/component/Badge";
+import { Badge } from "@Renderer/component/Badge";
 import { IconEye } from "@Renderer/component/Icon";
 
 import Dropdown from "react-bootstrap/Dropdown";
