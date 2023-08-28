@@ -13,13 +13,13 @@ const Style = Styled.div`
 `;
 
 interface LogoLoaderProps {
-  width?: number;
+  width?: string;
   warning?: boolean;
   error?: boolean;
   paused?: boolean;
 }
 
-function LogoLoaderCentered({ width = 52, warning = false, error = false, paused = false }: LogoLoaderProps) {
+function LogoLoaderCentered({ width = "52px", warning = false, error = false, paused = false }: LogoLoaderProps) {
   return (
     <Style className="centererd-wrapper">
       <div className="centererd-inner">
