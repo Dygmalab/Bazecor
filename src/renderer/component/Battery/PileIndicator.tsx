@@ -14,7 +14,7 @@ const PileIndicator = ({ batteryLevel, batteryStatus }: PileIndicatorProps) => {
   useEffect(() => {
     switch (batteryStatus) {
       case 0:
-        if (batteryLevel < 5) {
+        if (batteryLevel <= 5) {
           setBatteryWidth(1);
         } else {
           setBatteryWidth((16 * batteryLevel) / 100);
@@ -39,7 +39,7 @@ const PileIndicator = ({ batteryLevel, batteryStatus }: PileIndicatorProps) => {
 
   return (
     <svg className="pileIndicator" width="22" height="16" viewBox="0 0 22 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-      {batteryStatus === 1 ? (
+      {batteryStatus === 1 || batteryStatus === 2 ? (
         <>
           <mask
             id={`mask0_1956_10095-${maskHash}`}
@@ -74,7 +74,7 @@ const PileIndicator = ({ batteryLevel, batteryStatus }: PileIndicatorProps) => {
         ""
       )}
       <rect x="21" y="6" width="1" height="4" fill="currentColor" />
-      {batteryStatus === 1 ? (
+      {batteryStatus === 1 || batteryStatus === 2 ? (
         <path d="M7 8.45833L11 2.5V7.08333H13L9 13.5V8.45833H7Z" fill="currentColor" stroke="currentColor" />
       ) : (
         ""
@@ -89,8 +89,21 @@ const PileIndicator = ({ batteryLevel, batteryStatus }: PileIndicatorProps) => {
       )}
       {batteryStatus === 2 ? (
         <>
-          <rect x="0.5" y="4.5" width="19" height="7" stroke="currentColor" />
-          <rect x="2" y="6" width={16} height="4" fill="currentColor" />
+          <mask
+            id={`mask2_2054_10381-${maskHash}`}
+            style={{ maskType: "alpha" }}
+            maskUnits="userSpaceOnUse"
+            x="2"
+            y="6"
+            width="16"
+            height="4"
+          >
+            <rect x="2" y="6" width="16" height="4" fill="currentColor" />
+          </mask>
+          <g mask={`url(#mask2_2054_10381-${maskHash})`}>
+            <path d="M16.75 6H13.75V3.5H23.75V14H11.75L16.75 6Z" fill="currentColor" />
+            <path d="M2.75 10.5L7.75 3H-2.25V14H5.75V10.5H2.75Z" fill="currentColor" />
+          </g>
         </>
       ) : (
         ""

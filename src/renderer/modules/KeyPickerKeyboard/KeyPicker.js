@@ -261,6 +261,22 @@ width: 100%;
   .keysTools { grid-area: 2 / 6 / 3 / 10; }
   .keysLED { grid-area: 2 / 10 / 3 / 13; }
 }
+@media (max-width: 1460px) {
+  .KeysWrapper.notWireless {
+    .keysContainerGrid {
+      grid-template-rows: repeat(3, 1fr);
+    }
+    .keysSuperkeys { grid-area: 1 / 1 / 2 / 5; }
+    .keysMacros { grid-area: 1 / 5 / 2 / 9; }
+    .keysLayerLock { grid-area: 1 / 9 / 2 / 13; }
+    .keysOSM { grid-area: 2 / 1 / 3 / 4; }
+    .keysMouseEvents { grid-area: 2 / 4 / 3 / 7; }
+    .keysNoKey { grid-area: 2 / 7 / 3 / 10; }
+    .keysLED { grid-area: 2 / 10 / 3 / 13; }
+    .keysMedia { grid-area: 3 / 1 / 4 / 7; }
+    .keysTools { grid-area: 3 / 7 / 4 / 13; }
+  }
+}
 
 .KeysWrapper.isWireless {
   .keysContainerGrid {

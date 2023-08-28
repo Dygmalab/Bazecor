@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useCallback, useRef, useState } from "react";
 
 import Styled from "styled-components";
 
@@ -111,13 +111,16 @@ interface BatteryStatusProps {
 const BatteryStatus = ({ disable }: BatteryStatusProps) => {
   const [bLeft, setbLeft] = useState(100);
   const [bRight, setbRight] = useState(100);
-  const [sLeft, setsLeft] = useState(100);
-  const [sRight, setsRight] = useState(100);
+  const [sLeft, setsLeft] = useState(0);
+  const [sRight, setsRight] = useState(0);
   const [isSavingMode, setIsSavingMode] = useState(false);
   const [animateIcon, setAnimateIcon] = useState(0);
   const target = useRef(null);
 
-  async function getBatteryStatus() {
+  const intervalIdRef = useRef<NodeJS.Timeout | null>(null);
+  const intervalIdAnimateRef = useRef<NodeJS.Timeout | null>(null);
+
+  const getBatteryStatus = useCallback(async () => {
     const focus = new Focus();
     const left = await focus.command("wireless.battery.left.level");
     const right = await focus.command("wireless.battery.right.level");
@@ -129,31 +132,64 @@ const BatteryStatus = ({ disable }: BatteryStatusProps) => {
     setsLeft(leftStatus.includes("0x") ? 255 : parseInt(leftStatus, 10));
     setsRight(rightStatus.includes("0x") ? 255 : parseInt(rightStatus, 10));
     setIsSavingMode(parseInt(savingMode, 10) > 0);
-  }
+
+    // console.log("L Status internal: ", sLeft);
+    // console.log("L Status focus: ", leftStatus);
+    // console.log("L Level internal: ", bLeft);
+
+    // console.log("R Status: ", sRight);
+    // console.log("R Status focus: ", rightStatus);
+  }, []);
+
+  // async function getBatteryStatus() {
+  //   const focus = new Focus();
+  //   const left = await focus.command("wireless.battery.left.level");
+  //   const right = await focus.command("wireless.battery.right.level");
+  //   const leftStatus = await focus.command("wireless.battery.left.status");
+  //   const rightStatus = await focus.command("wireless.battery.right.status");
+  //   const savingMode = await focus.command("wireless.battery.savingMode");
+  //   setbLeft(parseInt(left, 10));
+  //   setbRight(parseInt(right, 10));
+  //   setsLeft(leftStatus.includes("0x") ? 255 : parseInt(leftStatus, 10));
+  //   setsRight(rightStatus.includes("0x") ? 255 : parseInt(rightStatus, 10));
+  //   setIsSavingMode(parseInt(savingMode, 10) > 0);
+
+  //   console.log("L Status internal: ", sLeft);
+  //   console.log("L Status focus: ", leftStatus);
+  //   console.log("L Level internal: ", bLeft);
+
+  //   console.log("R Status: ", sRight);
+  //   console.log("R Status focus: ", rightStatus);
+  // }
 
   if (!disable) {
     getBatteryStatus();
   }
 
   useEffect(() => {
-    let intervalID: NodeJS.Timeout;
     if (!disable) {
-      intervalID = setInterval(() => {
+      intervalIdRef.current = setInterval(() => {
         getBatteryStatus();
       }, 60 * 1000);
     }
     // Return a cleanup function to clear the interval
     return () => {
-      clearInterval(intervalID);
+      if (intervalIdRef.current) {
+        clearInterval(intervalIdRef.current);
+      }
     };
-  }, [disable]);
+  }, [disable, getBatteryStatus]);
 
   useEffect(() => {
-    const intervalID = setInterval(() => {
+    intervalIdAnimateRef.current = setInterval(() => {
       setAnimateIcon(0);
     }, 1100);
 
-    return () => clearInterval(intervalID);
+    return () => {
+      if (intervalIdAnimateRef.current) {
+        clearInterval(intervalIdAnimateRef.current);
+      }
+    };
   }, [animateIcon]);
 
   const forceRetrieveBattery = async () => {

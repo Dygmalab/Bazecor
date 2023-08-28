@@ -236,7 +236,13 @@ const BatteryStatusSide: React.FC<BatteryStatusSideProps> = ({ side, batteryLeve
     // console.log("batteryStatus", batteryStatus);
     switch (batteryStatus) {
       case 0:
-        setSideStatus("status--default");
+        if (batteryLevel > 10 && batteryLevel < 20 && !isSavingMode) {
+          setSideStatus("status--warning");
+        } else if (batteryLevel <= 10 && !isSavingMode) {
+          setSideStatus("status--critical");
+        } else {
+          setSideStatus("status--default");
+        }
         break;
       case 1:
         setSideStatus("status--charging");
@@ -253,13 +259,7 @@ const BatteryStatusSide: React.FC<BatteryStatusSideProps> = ({ side, batteryLeve
       default:
         setSideStatus("status--fatal-error");
     }
-    if (batteryLevel > 10 && batteryLevel < 20 && !isSavingMode && batteryStatus === 0) {
-      setSideStatus("status--warning");
-    }
-    if (batteryLevel < 10 && !isSavingMode && batteryStatus === 0) {
-      setSideStatus("status--critical");
-    }
-  }, [size, batteryLevel, batteryStatus, isSavingMode]);
+  }, [batteryLevel, batteryStatus, isSavingMode]);
 
   if (loading) return null;
   return (
