@@ -5,7 +5,7 @@ import Modal from "react-bootstrap/Modal";
 import { ipcRenderer } from "electron";
 import i18n from "../../i18n";
 
-import { RegularButton, ButtonConfig } from "../../component/Button";
+import { RegularButton, RegularButtonFwRef, ButtonConfig } from "../../component/Button";
 import Title from "../../component/Title";
 import {
   IconRecord,
@@ -49,6 +49,7 @@ const Styles = Styled.div`
 export default class RecordMacroModal extends React.Component {
   constructor(props) {
     super(props);
+    this.buttonRecord = React.createRef();
     this.state = {
       showModal: false,
       isRecording: false,
@@ -233,6 +234,9 @@ export default class RecordMacroModal extends React.Component {
   };
 
   toggleIsRecording = () => {
+    if (this.buttonRecord.current && this.buttonRecord.current instanceof HTMLButtonElement) {
+      this.buttonRecord.current.blur();
+    }
     if (!this.state.isRecording) {
       ipcRenderer.send("start-recording", "");
     } else {
@@ -387,14 +391,16 @@ export default class RecordMacroModal extends React.Component {
               ) : (
                 ""
               )}
-              <RegularButton
-                buttonText={recorded.length === 0 ? i18n.editor.macros.startRecord : isRecording ? "Pause icon" : "Resume"}
+              <RegularButtonFwRef
                 icoSVG={<IconPauseXl />}
-                styles={`recordButton ${isRecording ? "isRecording" : ""} ${
+                variation={`recordButton ${isRecording ? "isRecording" : ""} ${
                   recorded.length > 0 && !isRecording ? "isResume" : ""
                 }`}
                 onClick={this.toggleIsRecording}
-              />
+                ref={this.buttonRecord}
+              >
+                {recorded.length === 0 ? i18n.editor.macros.startRecord : isRecording ? "Pause icon" : "Resume"}
+              </RegularButtonFwRef>
             </div>
             <div className="tabSaveButton">
               <RegularButton
