@@ -38,20 +38,24 @@ const installUdev = (mainWindow: BrowserWindow) => {
   };
   dialog.showMessageBox(mainWindow, dialogOpts).then(response => {
     if (response.response === 1) {
-      sudo.exec(`echo ${udevRulesToWrite} > ${filename} && udevadm control --reload-rules && udevadm trigger`, options, error => {
-        if (error !== null) {
-          console.log(`stdout: ${error.message}`);
-          const errorOpts: MessageBoxOptions = {
-            type: "error",
-            buttons: ["Ok"],
-            defaultId: 0,
-            title: "Error when launching sudo prompt",
-            message: "An error happened when launching a sudo prompt window",
-            detail: `Your linux distribution lacks a polkit agent, installing polkit-1-auth-agent, policykit-1-gnome, or polkit-kde-1 (depending on your desktop manager) will solve this problem\n\n${error.message}`,
-          };
-          dialog.showMessageBox(mainWindow, errorOpts);
-        }
-      });
+      sudo.exec(
+        `echo '${udevRulesToWrite}' > ${filename} && udevadm control --reload-rules && udevadm trigger`,
+        options,
+        error => {
+          if (error !== null) {
+            console.log(`stdout: ${error.message}`);
+            const errorOpts: MessageBoxOptions = {
+              type: "error",
+              buttons: ["Ok"],
+              defaultId: 0,
+              title: "Error when launching sudo prompt",
+              message: "An error happened when launching a sudo prompt window",
+              detail: `Your linux distribution lacks a polkit agent, installing polkit-1-auth-agent, policykit-1-gnome, or polkit-kde-1 (depending on your desktop manager) will solve this problem\n\n${error.message}`,
+            };
+            dialog.showMessageBox(mainWindow, errorOpts);
+          }
+        },
+      );
     }
   });
 };
