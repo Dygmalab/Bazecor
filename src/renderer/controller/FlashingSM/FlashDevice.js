@@ -227,12 +227,12 @@ const resetDefy = async (context, callback) => {
         if (!focus._port.port) {
           console.log("JAVIER: PORT IS UNDEFINED VISTEE???");
         }
+        comPath = focus._port.port?.openOptions.path;
       }
     }
     if (!bootloader) {
       try {
         console.log("reset indicators", focus, flashDefyWireless, context.originalDevice.device);
-        comPath = focus._port.port?.openOptions.path;
         if (focus._port == null || focus._port.closed) {
           const { info } = context.originalDevice.device;
           await focus.close();
@@ -305,12 +305,12 @@ const resetRaise = async (context, callback) => {
     const focus = new Focus();
     if (flashRaise == undefined) {
       flashRaise = new FlashRaise(context.originalDevice.device);
+      comPath = focus._port.port.openOptions.path;
       bootloader = context.device.bootloader;
     }
     if (!bootloader) {
       try {
         console.log("reset indicators", focus, flashRaise, context.originalDevice.device);
-        comPath = focus._port.port.openOptions.path;
         if (focus._port.closed) {
           const { info } = context.originalDevice.device;
           await focus.close();
