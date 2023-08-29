@@ -178,7 +178,7 @@ class KeymapDB {
     // Modify our baseKeyCodeTable, depending on the language selected by the static methods and by inside function newLanguageLayout
     baseKeyCodeTable = KeymapDB.updateBaseKeyCode();
     const keyCodeTableWithModifiers =
-      this.language !== "english" && supportModifiedTables[this.language]
+      this.language !== "english" && this.language !== "british" && supportModifiedTables[this.language]
         ? defaultKeyCodeTable.concat(supportModifiedTables[this.language])
         : defaultKeyCodeTable;
     // Modify our baseKeyCodeTable, depending on the language selected through function newLanguageLayout

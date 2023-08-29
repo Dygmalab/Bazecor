@@ -1,5 +1,6 @@
 import PropTypes from "prop-types";
 import React, { Component } from "react";
+import Styled from "styled-components";
 
 // React Bootstrap Components
 import Card from "react-bootstrap/Card";
@@ -17,7 +18,8 @@ import germanF from "@Assets/flags/germany.png";
 import japaneseF from "@Assets/flags/japan.png";
 import koreanF from "@Assets/flags/korean.png";
 import spanishF from "@Assets/flags/spain.png";
-import englishUSUKF from "@Assets/flags/english.png";
+import englishUSF from "@Assets/flags/englishUS.png";
+import englishUKF from "@Assets/flags/englishUK.png";
 import danishF from "@Assets/flags/denmark.png";
 import swedishF from "@Assets/flags/sweden.png";
 import finnishF from "@Assets/flags/finland.png";
@@ -34,6 +36,12 @@ import Focus from "../../../api/focus";
 import i18n from "../../i18n";
 
 import Store from "../../utils/Store";
+
+const GeneraslSettihngsWrapper = Styled.div`
+.dropdown-menu {
+  min-width: 13rem;
+}
+`;
 
 const store = Store.getStore();
 
@@ -67,8 +75,9 @@ export default class GeneralSettings extends Component {
     const { selectDarkMode, darkMode, neurons, selectedNeuron, connected, defaultLayer, selectDefaultLayer } = this.props;
     const { selectedLanguage } = this.state;
     let layersNames = neurons[selectedNeuron] ? neurons[selectedNeuron].layers : [];
-    let flags = [
-      englishUSUKF,
+    const flags = [
+      englishUSF,
+      englishUKF,
       spanishF,
       germanF,
       frenchF,
@@ -84,6 +93,7 @@ export default class GeneralSettings extends Component {
     ];
     let language = [
       "english",
+      "british",
       "spanish",
       "german",
       "french",
@@ -97,8 +107,9 @@ export default class GeneralSettings extends Component {
       "swissGerman",
       "eurkey",
     ];
-    let languageNames = [
-      "English",
+    const languageNames = [
+      "English US",
+      "English UK",
       "Spanish",
       "German",
       "French",
@@ -116,7 +127,7 @@ export default class GeneralSettings extends Component {
       text: languageNames[index],
       value: item,
       icon: flags[index],
-      index
+      index,
     }));
 
     layersNames = layersNames.map((item, index) => ({
@@ -148,43 +159,45 @@ export default class GeneralSettings extends Component {
     ];
 
     return (
-      <Card className="overflowFix card-preferences mt-4">
-        <Card.Title>
-          <Title text={i18n.keyboardSettings.keymap.title} headingLevel={3} svgICO={<IconWrench />} />
-        </Card.Title>
-        <Card.Body>
-          <Form>
-            <Row>
-              <Col lg={6} md={12}>
-                <Form.Group controlId="selectLanguage" className="mb-3">
-                  <Form.Label>{i18n.preferences.language}</Form.Label>
-                  <Select onSelect={this.changeLanguage} value={selectedLanguage} listElements={language} />
-                </Form.Group>
-              </Col>
-              <Col lg={6} md={12}>
-                <Form.Group controlId="defaultLayer" className="mb-3">
-                  <Form.Label>{i18n.keyboardSettings.keymap.defaultLayer}</Form.Label>
-                  <Select onSelect={selectDefaultLayer} value={defaultLayer} listElements={layersNames} disabled={!connected} />
-                </Form.Group>
-              </Col>
-            </Row>
-            <Row>
-              <Col md={12}>
-                <Form.Group controlId="DarkMode" className="m-0">
-                  <Form.Label>{i18n.preferences.darkMode.label}</Form.Label>
-                  <ToggleButtons
-                    selectDarkMode={selectDarkMode}
-                    value={darkMode}
-                    listElements={layoutsModes}
-                    style="flex"
-                    size="sm"
-                  />
-                </Form.Group>
-              </Col>
-            </Row>
-          </Form>
-        </Card.Body>
-      </Card>
+      <GeneraslSettihngsWrapper>
+        <Card className="overflowFix card-preferences mt-4">
+          <Card.Title>
+            <Title text={i18n.keyboardSettings.keymap.title} headingLevel={3} svgICO={<IconWrench />} />
+          </Card.Title>
+          <Card.Body>
+            <Form>
+              <Row>
+                <Col lg={6} md={12}>
+                  <Form.Group controlId="selectLanguage" className="mb-3">
+                    <Form.Label>{i18n.preferences.language}</Form.Label>
+                    <Select onSelect={this.changeLanguage} value={selectedLanguage} listElements={language} />
+                  </Form.Group>
+                </Col>
+                <Col lg={6} md={12}>
+                  <Form.Group controlId="defaultLayer" className="mb-3">
+                    <Form.Label>{i18n.keyboardSettings.keymap.defaultLayer}</Form.Label>
+                    <Select onSelect={selectDefaultLayer} value={defaultLayer} listElements={layersNames} disabled={!connected} />
+                  </Form.Group>
+                </Col>
+              </Row>
+              <Row>
+                <Col md={12}>
+                  <Form.Group controlId="DarkMode" className="m-0">
+                    <Form.Label>{i18n.preferences.darkMode.label}</Form.Label>
+                    <ToggleButtons
+                      selectDarkMode={selectDarkMode}
+                      value={darkMode}
+                      listElements={layoutsModes}
+                      style="flex"
+                      size="sm"
+                    />
+                  </Form.Group>
+                </Col>
+              </Row>
+            </Form>
+          </Card.Body>
+        </Card>
+      </GeneraslSettihngsWrapper>
     );
   }
 }

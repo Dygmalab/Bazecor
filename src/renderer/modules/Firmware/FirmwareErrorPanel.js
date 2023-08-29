@@ -220,30 +220,40 @@ function FirmwareErrorPanel({ nextBlock, retryBlock }) {
 
   return (
     <Style>
-      {loading && !handleError ? (
+      {!handleError ? (
         <FirmwareLoader />
       ) : (
         <div className="firmware-wrapper">
           <div className="firmware-row">
             <div className="firmware-content borderLeftTopRadius">
               <div className="firmware-content--inner">
-                <Title text={i18n.firmwareUpdate.texts.errorTitle} headingLevel={3} type="warning" />
-                <div className="errorListWrapper">
-                  {handleError ? (
-                    state.context.error == "error.platform.GitHubData" ? (
+                {state.context.error === "error.platform.GitHubData" ? (
+                  <>
+                    <Title text={i18n.firmwareUpdate.texts.errorTitle} headingLevel={3} type="warning" />
+                    <div className="errorListWrapper">
                       <div className="errorListItem">
                         <div className="errorListImage iconWarning">
                           <IconNoWifi />
                         </div>
                         <div className="errorListContent">{i18n.firmwareUpdate.texts.noInternetConncetion}</div>
                       </div>
-                    ) : (
-                      ""
-                    )
-                  ) : (
-                    ""
-                  )}
-                </div>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <Title text="Something went wrong" headingLevel={3} type="warning" />
+                    <div className="errorListWrapper">
+                      <div className="errorListItem">
+                        <div className="errorListImage iconWarning">
+                          <IconNoWifi />
+                        </div>
+                        <div className="errorListContent">
+                          {state.context?.error ? state.context.error : "Contact our customer for more details"}
+                        </div>
+                      </div>
+                    </div>
+                  </>
+                )}
               </div>
             </div>
             <div className="firmware-sidebar borderRightTopRadius">
@@ -251,8 +261,8 @@ function FirmwareErrorPanel({ nextBlock, retryBlock }) {
                 isUpdated={false}
                 icon={<IconWarning />}
                 status="warning"
-                deviceProduct={state.context.device.info.product}
-                keyboardType={state.context.device.info.keyboardType}
+                deviceProduct={state.context.device.info?.product ? state.context.device.info.product : "Raise"}
+                keyboardType={state.context.device.info?.keyboardType ? state.context.device.info.keyboardType : "Wired"}
               />
             </div>
           </div>
