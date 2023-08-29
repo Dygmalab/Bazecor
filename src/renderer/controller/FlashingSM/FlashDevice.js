@@ -223,8 +223,11 @@ const resetDefy = async (context, callback) => {
       console.log("when creating FDW", context.originalDevice.device);
       flashDefyWireless = new FlashDefyWireless(context.originalDevice.device);
       if (flashSides === undefined) {
-        comPath = focus._port.port.openOptions.path;
         bootloader = context.device.bootloader;
+        if (!focus._port.port) {
+          console.log("JAVIER: PORT IS UNDEFINED VISTEE???");
+        }
+        comPath = focus._port.port?.openOptions.path;
       }
     }
     if (!bootloader) {
@@ -256,8 +259,8 @@ const resetDefy = async (context, callback) => {
 const uploadDefyWireles = async (context, callback) => {
   let result = false;
   try {
+    const focus = new Focus();
     if (!context.device.bootloader) {
-      const focus = new Focus();
       await focus.close();
     }
     // console.log(context.originalDevice.device, focus, focus._port, flashDefyWireless);
@@ -393,6 +396,7 @@ const FlashDevice = createMachine(
         entry: [
           (context, event) => {
             console.log("Wait for esc!");
+            console.log("JAVIER: WAITING FOR ESCAPE");
           },
           assign({ stateblock: (context, event) => 1 }),
           "addEscListener",
@@ -410,7 +414,8 @@ const FlashDevice = createMachine(
         entry: [
           (context, event) => {
             console.log("Selecting upgrade path");
-            console.log("context of device", context.device);
+            console.log("context of device %o", context.device);
+            console.log("JAVIER: PATH SELECTOR, JUST FLASHING LEDS AROUND DISCO TIME");
           },
           assign({
             stateblock: (context, event) => 1,
