@@ -11,6 +11,8 @@ const checkUdev = () => {
   try {
     if (fs.existsSync(filename)) {
       const currentUdevRules = fs.readFileSync(filename, "utf-8");
+      console.log(currentUdevRules);
+      console.log(udevRulesToWrite);
       if (currentUdevRules !== udevRulesToWrite) {
         return false;
       }
