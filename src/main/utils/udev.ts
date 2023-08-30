@@ -11,17 +11,15 @@ const checkUdev = () => {
   try {
     if (fs.existsSync(filename)) {
       const currentUdevRules = fs.readFileSync(filename, "utf-8");
-      console.log(currentUdevRules);
-      console.log(udevRulesToWrite);
-      if (currentUdevRules !== udevRulesToWrite) {
+      if (currentUdevRules.trim() !== udevRulesToWrite.trim()) {
         return false;
       }
       return true;
     }
   } catch (err) {
     console.error(err);
-    return false;
   }
+  return false;
 };
 
 const installUdev = (mainWindow: BrowserWindow) => {
