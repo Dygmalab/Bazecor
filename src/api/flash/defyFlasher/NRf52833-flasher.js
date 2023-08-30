@@ -230,7 +230,12 @@ const NRf52833 = {
 
     //ERASE device
     func_array.push(function (callback) {
-      write_cb(str2ab("E" + num2hexstr(dataObjects[0].address, 8) + "#"), callback);
+      const lastAddres = dataObjects[dataObjects.length-1].address;
+      const sizeHex = lastAddres - (lastAddres%1024)+1024;
+      write_cb(
+          str2ab(`E${num2hexstr(dataObjects[0].address, 8)},${num2hexstr(sizeHex, 8)}#`),
+          callback
+      );
     });
     func_array.push(callback => {
       read_cb(callback);
