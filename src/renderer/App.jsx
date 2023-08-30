@@ -45,7 +45,7 @@ import Welcome from "./views/Welcome";
 import Header from "./modules/NavigationMenu";
 import ToastMessage from "./component/ToastMessage";
 import { IconNoSignal } from "./component/Icon";
-
+import { initSentry } from "./utils/analytics";
 import Store from "./utils/Store";
 
 const store = Store.getStore();
@@ -60,6 +60,7 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.updateStorageSchema();
+    initSentry();
 
     let isDark;
     const mode = store.get("settings.darkMode");

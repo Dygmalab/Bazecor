@@ -62,7 +62,8 @@ const config: ForgeConfig = {
   plugins: [
     new WebpackPlugin({
       mainConfig,
-      devContentSecurityPolicy: "connect-src 'self' *.github.com github.com objects.githubusercontent.com 'unsafe-eval';",
+      devContentSecurityPolicy:
+        "connect-src 'self' *.github.com github.com objects.githubusercontent.com sentry-ipc: 'unsafe-eval';",
       renderer: {
         config: rendererConfig,
         entryPoints: [

@@ -111,6 +111,8 @@
   "dependencies": {
     "@appigram/react-rangeslider": "2.2.10",
     "@octokit/core": "^4.2.1",
+    "@sentry/cli": "^2.20.5",
+    "@sentry/electron": "^4.10.0",
     "@serialport/parser-delimiter": "^10.0.0",
     "@xstate/react": "^3.2.2",
     "async": "^3.2.4",
