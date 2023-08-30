@@ -1,4 +1,5 @@
 import type { Configuration } from "webpack";
+import { sentryWebpackPlugin } from "@sentry/webpack-plugin";
 
 import rules from "./webpack.rules";
 
@@ -12,6 +13,7 @@ const mainConfig: Configuration = {
   module: {
     rules,
   },
+  devtool: process.env.NODE_ENV === "production" ? "source-map" : "eval-cheap-source-map",
   resolve: {
     extensions: [".js", ".ts", ".jsx", ".tsx", ".css", ".json"],
   },
@@ -22,6 +24,16 @@ const mainConfig: Configuration = {
     "@serialport": "@serialport",
     usb: "usb",
   },
+  plugins:
+    process.env.NODE_ENV === "production"
+      ? [
+          sentryWebpackPlugin({
+            org: process.env.SENTRY_ORG,
+            project: process.env.SENTRY_PROJECT,
+            authToken: process.env.SENTRY_AUTH_TOKEN,
+          }),
+        ]
+      : [],
 };
 
 export default mainConfig;

@@ -13,6 +13,7 @@ const rendererConfig: Configuration = {
   module: {
     rules,
   },
+  devtool: process.env.NODE_ENV === "production" ? "source-map" : "eval-cheap-source-map",
   plugins,
   resolve: {
     extensions: [".js", ".ts", ".jsx", ".tsx", ".css"],
