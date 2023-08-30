@@ -399,6 +399,7 @@ class KeyPicker extends Component {
 
     const liso = {
       english: ENi,
+      british: ENi,
       spanish: ES,
       german: GR,
       french: FR,
