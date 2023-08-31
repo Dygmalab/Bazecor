@@ -8,6 +8,8 @@ import i18n from "@Renderer/i18n";
 import Title from "@Renderer/component/Title";
 import Callout from "@Renderer/component/Callout";
 import { ButtonConfig } from "@Renderer/component/Button";
+import { BatteryCodes } from "@Renderer/../hw/battery";
+import { BluetoothCodes } from "@Renderer/../hw/bluetooth";
 
 const Styles = Styled.div`
 width: 100%;
@@ -48,30 +50,9 @@ function WirelessTab(props: TabLayoutEditorProps) {
             <ButtonConfig
               buttonText={i18n.editor.standardView.wireless.batteryLevel}
               onClick={() => {
-                onKeySelect(54108);
+                onKeySelect(BatteryCodes.STATUS);
               }}
-              selected={isStandardView ? keyCode === 54108 : false}
-              size={undefined}
-              tooltip={undefined}
-              tooltipPlacement={undefined}
-              tooltipClassName={undefined}
-              variation={undefined}
-              icoSVG={undefined}
-              icoPosition={undefined}
-              tooltipDelay={undefined}
-              disabled={undefined}
-              dataAnimate={undefined}
-            />
-          </div>
-          <div className="keysButtonsList">
-            <Title text={i18n.wireless.energyManagement.savingMode} headingLevel={4} />
-            <p className="description">{i18n.editor.standardView.wireless.savingModeDescription}</p>
-            <ButtonConfig
-              buttonText={i18n.general.onOff}
-              onClick={() => {
-                onKeySelect(54109);
-              }}
-              selected={isStandardView ? keyCode === 54109 : false}
+              selected={isStandardView ? keyCode === BatteryCodes.STATUS : false}
               size={undefined}
               tooltip={undefined}
               tooltipPlacement={undefined}
@@ -90,9 +71,9 @@ function WirelessTab(props: TabLayoutEditorProps) {
             <ButtonConfig
               buttonText={i18n.wireless.bluetooth.pair}
               onClick={() => {
-                onKeySelect(54110);
+                onKeySelect(BluetoothCodes.PAIRING);
               }}
-              selected={isStandardView ? keyCode === 54110 : false}
+              selected={isStandardView ? keyCode === BluetoothCodes.PAIRING : false}
               size={undefined}
               tooltip={undefined}
               tooltipPlacement={undefined}
