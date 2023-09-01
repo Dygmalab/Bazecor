@@ -111,6 +111,7 @@
   },
   "dependencies": {
     "@appigram/react-rangeslider": "2.2.10",
+    "@fullstory/browser": "^1.7.1",
     "@octokit/core": "^4.2.1",
     "@sentry/cli": "^2.20.5",
     "@sentry/electron": "^4.10.0",

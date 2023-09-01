@@ -1,6 +1,7 @@
 import { ipcRenderer } from "electron";
 import Store from "./Store";
 import { initSentry } from "./sentry";
+import { initFullstory } from "./fullstory";
 
 const setConsent = async (consentGiven: boolean) => {
   const store = Store.getStore();
@@ -12,6 +13,7 @@ const setConsent = async (consentGiven: boolean) => {
   } else if (currentConsent === false && consentGiven && process.env.NODE_ENV === "production") {
     console.log("Starting analytics");
     initSentry();
+    initFullstory();
   }
 };
 
