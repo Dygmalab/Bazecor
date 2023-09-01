@@ -478,8 +478,6 @@ const English = {
   wireless: {
     title: "Wireless",
     bluetooth: {
-      StatusTitle: "Status",
-      StatusButton: "Bluetooth Status",
       pairingMode: "Pairing mode",
       pairingModeButton: "Bluetooth Pairing Mode",
       pairingModeDescription: "Activate Pairing Mode for easy device connection.",
