@@ -19,11 +19,8 @@ if (process.platform === "linux") {
   app.commandLine.appendSwitch("no-sandbox");
 }
 
-if (process.platform === "linux") {
-  app.commandLine.appendSwitch("enable-experimental-web-platform-features", "true");
-} else {
-  app.commandLine.appendSwitch("enable-web-bluetooth", "true");
-}
+app.commandLine.appendSwitch("enable-experimental-web-platform-features");
+app.commandLine.appendSwitch("enable-web-bluetooth");
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.

@@ -257,6 +257,12 @@ export default class BluetoothTerminal {
         this._log(error);
         return Promise.reject(error);
       });
+    // return this._connectDeviceAndCacheCharacteristic("D7:2C:E2:1B:7D:37"))
+    //   .then(characteristic => this._startNotifications(characteristic))
+    //   .catch(error => {
+    //     this._log(error);
+    //     return Promise.reject(error);
+    //   });
   }
 
   /**
@@ -291,22 +297,59 @@ export default class BluetoothTerminal {
    * @returns {Promise} Promise.
    * @private
    */
-  _requestBluetoothDevice() {
+  async _requestBluetoothDevice() {
     this._log("Requesting bluetooth device...");
+    // const options = {
+    //   filters: [
+    //     // { services: ["heart_rate"] },
+    //     // { services: [0x1802, 0x1803] },
+    //     // { services: ["c48e6067-5295-48d3-8d5c-0395f61792b1"] },
+    //     { name: "Defy BLE" },
+    //     // { namePrefix: "Prefix" },
+    //   ],
+    //   optionalServices: ["battery_service"],
+    // };
+    // return navigator.bluetooth.requestDevice(options).then(device => {
+    //   this._log(`"${device.name}" bluetooth device selected`);
 
-    return navigator.bluetooth
-      .requestDevice({
+    //   this._device = device; // Remember device.
+    //   this._device.addEventListener("gattserverdisconnected", this._boundHandleDisconnection);
+
+    //   return this._device;
+    // });
+    let finalDevice;
+    try {
+      finalDevice = await navigator.bluetooth.requestDevice({
+        // filters: [...] <- Prefer filters to save energy & show relevant devices.
         acceptAllDevices: true,
-        // filters: [{ services: [this._serviceUuid] }],
-      })
-      .then(device => {
-        this._log(`"${device.name}" bluetooth device selected`);
-
-        this._device = device; // Remember device.
-        this._device.addEventListener("gattserverdisconnected", this._boundHandleDisconnection);
-
-        return this._device;
       });
+      this._log(`> Requested ${finalDevice.name} (${finalDevice.id})`);
+    } catch (error) {
+      console.log("error when requesting devices", error);
+    }
+    const otherDevices = await this.populateBluetoothDevices();
+    console.log(otherDevices);
+    return finalDevice;
+  }
+
+  async populateBluetoothDevices() {
+    const devicesSelect = [];
+    try {
+      this._log("Getting existing permitted Bluetooth devices...");
+      const devices = await navigator.bluetooth.getDevices();
+
+      this._log(`> Got ${devices.length} Bluetooth devices.`);
+      for (const device of devices) {
+        const option = document.createElement("option");
+        option.value = device.id;
+        option.textContent = device.name;
+        devicesSelect.push(option);
+      }
+      this._log("Resulting Devices: ", devicesSelect);
+    } catch (error) {
+      this._log(`Argh! ${error}`);
+    }
+    return devicesSelect;
   }
 
   /**
