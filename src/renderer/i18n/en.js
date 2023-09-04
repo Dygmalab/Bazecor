@@ -478,8 +478,6 @@ const English = {
   wireless: {
     title: "Wireless",
     bluetooth: {
-      StatusTitle: "Status",
-      StatusButton: "Bluetooth Status",
       pairingMode: "Pairing mode",
       pairingModeButton: "Bluetooth Pairing Mode",
       pairingModeDescription: "Activate Pairing Mode for easy device connection.",
@@ -713,7 +711,7 @@ const English = {
       errorDuringProcessDescription: "Something went wrong! Please, retry the flashing procedure. 🫠",
       flashCardTitle1: "Press and hold the top left key to start the firmware update.",
       flashCardTitleDefy1: "Press the top left key to start the firmware update.",
-      flashCardTitle2: "Don't release the key until the process finishes.",
+      flashCardTitle2: "Release the key when the software prompts",
       flashCardHelp: "Why do I need to press and hold a key when updating the device firmware?",
       flashCardHelpDefy: "Why do I need to press a key when updating the device firmware?",
       flashCardHelpTooltip:
@@ -727,8 +725,8 @@ const English = {
       flashCardOverlay5: "This makes the keyboard secure against undesired firmware modifications.",
       noInternetConncetion:
         "We were unable to download the firmware you requested. Please, check your internet connection or try again later.",
-      progressCardStatus1: "1. Hold ESC Key",
-      progressCardStatus2: "2. Release ESC Key. Updating the Firmware",
+      progressCardStatus1: "1. Hold the Key",
+      progressCardStatus2: "2. Release the Key. Updating the Firmware",
       progressCardStatus3: "3. Restoring your Layers",
       progressCardStatus4: "4. Firmware update!",
       progressCardStatusDefy1: "1. Flashing right side",

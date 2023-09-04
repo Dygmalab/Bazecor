@@ -1,7 +1,12 @@
 import React from "react";
 
-const DefyBatteryIndicatorRight = ({ batteryStatus, batteryHeight }) => {
-  const maskHash = `${(Math.random() + 1).toString(36).substring(7)}-right`;
+interface DefyBatteryIndicatorRightProps {
+  batteryStatus: number;
+  batteryHeight: number;
+}
+
+const DefyBatteryIndicatorRight = ({ batteryStatus, batteryHeight }: DefyBatteryIndicatorRightProps) => {
+  const maskHash = `${Date.now()}-${(Math.random() + 1).toString(36).substring(7)}-right`;
   return (
     <svg
       className="defy-battery-indicator"
@@ -11,7 +16,7 @@ const DefyBatteryIndicatorRight = ({ batteryStatus, batteryHeight }) => {
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
     >
-      {batteryStatus == 4 ? (
+      {batteryStatus === 4 ? (
         <>
           <mask
             id={`mask-disconnected-${maskHash}`}
@@ -76,25 +81,25 @@ const DefyBatteryIndicatorRight = ({ batteryStatus, batteryHeight }) => {
         />
       </mask>
 
-      {batteryStatus == 0 || batteryStatus == 2 ? (
+      {batteryStatus === 0 || batteryStatus === 2 ? (
         <g mask={`url(#mask0_4143_258864${maskHash})`}>
-          <rect x="-94" y="132" width="89" height={batteryStatus == 0 ? batteryHeight : 115} className="levelIndicator" />
+          <rect x="-94" y="132" width="89" height={batteryStatus === 0 ? batteryHeight : 115} className="levelIndicator" />
         </g>
       ) : (
         ""
       )}
-      {batteryStatus == 1 ? (
+      {batteryStatus === 1 || batteryStatus === 2 ? (
         <path
           className="lightningbattery"
           d="M40.9893 63.989L51.6559 48.1001V60.3223H56.9893L46.3226 77.4334V63.989H40.9893Z"
-          fill="currentColor"
+          fill={batteryStatus === 1 ? "currentColor" : "white"}
           stroke="currentColor"
           strokeWidth="1.2"
         />
       ) : (
         ""
       )}
-      {batteryStatus == 3 ? (
+      {batteryStatus === 3 ? (
         <path
           d="M54.4267 68.496C54.4267 68.832 54.2347 69 53.8507 69H51.4027C51.2267 69 51.1067 68.968 51.0427 68.904C50.9787 68.824 50.9467 68.712 50.9467 68.568V65.904C50.9467 65.648 51.0587 65.52 51.2827 65.52H54.1147C54.3227 65.52 54.4267 65.632 54.4267 65.856V68.496ZM47.2747 54.912C47.1627 54.88 47.0987 54.816 47.0827 54.72C47.0667 54.624 47.0747 54.536 47.1067 54.456C47.6187 53.352 48.3867 52.496 49.4107 51.888C50.4507 51.264 51.6667 50.952 53.0587 50.952C54.2267 50.952 55.2347 51.144 56.0827 51.528C56.9307 51.896 57.5867 52.4 58.0507 53.04C58.5307 53.664 58.7707 54.376 58.7707 55.176C58.7707 55.96 58.6027 56.632 58.2667 57.192C57.9467 57.736 57.5547 58.232 57.0907 58.68C56.6267 59.128 56.1547 59.576 55.6747 60.024C55.1947 60.456 54.7867 60.936 54.4507 61.464C54.1307 61.992 53.9707 62.632 53.9707 63.384C53.9707 63.496 53.9307 63.592 53.8507 63.672C53.7867 63.752 53.6907 63.792 53.5627 63.792H51.8587C51.5707 63.792 51.4267 63.632 51.4267 63.312C51.4267 62.448 51.5707 61.704 51.8587 61.08C52.1467 60.44 52.4987 59.88 52.9147 59.4C53.3307 58.92 53.7467 58.472 54.1627 58.056C54.5787 57.624 54.9307 57.2 55.2187 56.784C55.5067 56.352 55.6507 55.872 55.6507 55.344C55.6507 54.672 55.4027 54.136 54.9067 53.736C54.4267 53.336 53.8027 53.136 53.0347 53.136C52.5867 53.136 52.1387 53.224 51.6907 53.4C51.2587 53.576 50.8667 53.824 50.5147 54.144C50.1787 54.464 49.9227 54.832 49.7467 55.248C49.6987 55.344 49.6427 55.408 49.5787 55.44C49.5307 55.456 49.4427 55.456 49.3147 55.44L47.2747 54.912Z"
           fill="#FF6B6B"
@@ -102,7 +107,7 @@ const DefyBatteryIndicatorRight = ({ batteryStatus, batteryHeight }) => {
       ) : (
         ""
       )}
-      {batteryStatus == 4 ? <path d="M106 130L2 1" stroke="currentColor" className="lineDisconnected" strokeWidth="3" /> : ""}
+      {batteryStatus === 4 ? <path d="M106 130L2 1" stroke="currentColor" className="lineDisconnected" strokeWidth="3" /> : ""}
       {batteryStatus === 255 ? (
         <path
           d="M50.1789 67.6962C50.1789 68.0322 49.9869 68.2002 49.6029 68.2002H47.1549C46.8509 68.2002 46.6989 68.0562 46.6989 67.7682V65.1042C46.6989 64.8482 46.8029 64.7202 47.0109 64.7202H49.8669C50.0749 64.7202 50.1789 64.8322 50.1789 65.0562V67.6962ZM49.4829 62.5842C49.4829 62.7602 49.4349 62.8882 49.3389 62.9682C49.2589 63.0322 49.1229 63.0642 48.9309 63.0642H47.8749C47.6989 63.0642 47.5869 63.0322 47.5389 62.9682C47.4909 62.9042 47.4509 62.7922 47.4189 62.6322L46.6509 50.7762C46.6349 50.6482 46.6589 50.5522 46.7229 50.4882C46.7869 50.4242 46.8669 50.3922 46.9629 50.3922H49.9389C50.1629 50.3922 50.2669 50.5042 50.2509 50.7282L49.4829 62.5842Z"

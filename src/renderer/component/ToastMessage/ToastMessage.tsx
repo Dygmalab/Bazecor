@@ -104,7 +104,7 @@ const ToastMessage: React.FC<ToasMessageProps> = ({
     </div>
     {onClickAction || onClickDismiss ? (
       <div className="toastFooter">
-        <ButtonConfig onClick={onClickDismiss} buttonText={clickDismissText} style="link" size="sm" />
+        <ButtonConfig onClick={onClickDismiss} buttonText={clickDismissText} variation="link" size="sm" />
         <ButtonConfig onClick={onClickAction} buttonText={clickActionText} size="sm" />
       </div>
     ) : (

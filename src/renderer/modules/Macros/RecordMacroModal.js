@@ -5,7 +5,7 @@ import Modal from "react-bootstrap/Modal";
 import { ipcRenderer } from "electron";
 import i18n from "../../i18n";
 
-import { RegularButton, ButtonConfig } from "../../component/Button";
+import { RegularButton, RegularButtonFwRef, ButtonConfig } from "../../component/Button";
 import Title from "../../component/Title";
 import {
   IconRecord,
@@ -31,6 +31,7 @@ const Styles = Styled.div`
   align-items: center;
   margin-bottom: 2px;
   white-space: nowrap;
+  width: 100%;
   svg {
     color: ${({ theme }) => theme.styles.tabButton.svgColor};
   }
@@ -48,6 +49,7 @@ const Styles = Styled.div`
 export default class RecordMacroModal extends React.Component {
   constructor(props) {
     super(props);
+    this.buttonRecord = React.createRef();
     this.state = {
       showModal: false,
       isRecording: false,
@@ -232,6 +234,9 @@ export default class RecordMacroModal extends React.Component {
   };
 
   toggleIsRecording = () => {
+    if (this.buttonRecord.current && this.buttonRecord.current instanceof HTMLButtonElement) {
+      this.buttonRecord.current.blur();
+    }
     if (!this.state.isRecording) {
       ipcRenderer.send("start-recording", "");
     } else {
@@ -346,7 +351,7 @@ export default class RecordMacroModal extends React.Component {
                   icoSVG={<IconStopWatch />}
                   icoPosition="left"
                   buttonText={i18n.editor.macros.recordDelays}
-                  style={`buttonConfigMinimal ${isDelayActive ? "config-active" : ""}`}
+                  variation={`buttonConfigMinimal ${isDelayActive ? "config-active" : ""}`}
                   onClick={this.setDelayOn}
                   disabled={isRecording}
                 />
@@ -354,7 +359,7 @@ export default class RecordMacroModal extends React.Component {
                   icoSVG={<IconStopWatchCrossed />}
                   icoPosition="left"
                   buttonText={i18n.editor.macros.ignoreDelays}
-                  style={`buttonConfigMinimal ${!isDelayActive ? "config-active" : ""}`}
+                  variation={`buttonConfigMinimal ${!isDelayActive ? "config-active" : ""}`}
                   onClick={this.setDelayOff}
                   disabled={isRecording}
                 />
@@ -380,20 +385,22 @@ export default class RecordMacroModal extends React.Component {
                 <ButtonConfig
                   tooltip={i18n.editor.macros.recordingDiscard}
                   icoSVG={<IconUndoRestart />}
-                  style="undoRecording"
+                  variation="undoRecording"
                   onClick={this.undoRecording}
                 />
               ) : (
                 ""
               )}
-              <RegularButton
-                buttonText={recorded.length === 0 ? i18n.editor.macros.startRecord : isRecording ? "Pause icon" : "Resume"}
+              <RegularButtonFwRef
                 icoSVG={<IconPauseXl />}
-                styles={`recordButton ${isRecording ? "isRecording" : ""} ${
+                variation={`recordButton ${isRecording ? "isRecording" : ""} ${
                   recorded.length > 0 && !isRecording ? "isResume" : ""
                 }`}
                 onClick={this.toggleIsRecording}
-              />
+                ref={this.buttonRecord}
+              >
+                {recorded.length === 0 ? i18n.editor.macros.startRecord : isRecording ? "Pause icon" : "Resume"}
+              </RegularButtonFwRef>
             </div>
             <div className="tabSaveButton">
               <RegularButton

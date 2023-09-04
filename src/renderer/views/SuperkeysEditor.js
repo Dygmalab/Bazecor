@@ -28,19 +28,20 @@ import Spinner from "react-bootstrap/Spinner";
 import Modal from "react-bootstrap/Modal";
 
 // Components
-import Callout from "../component/Callout";
-import { LayoutViewSelector } from "../component/ToggleButtons";
-import { SuperkeysSelector } from "../component/Select";
-import { RegularButton } from "../component/Button";
+import Callout from "@Renderer/component/Callout";
+import { LayoutViewSelector } from "@Renderer/component/ToggleButtons";
+import { SuperkeysSelector } from "@Renderer/component/Select";
+import { RegularButton } from "@Renderer/component/Button";
+import { LogoLoaderCentered } from "@Renderer/component/Loader";
 
-import ToastMessage from "../component/ToastMessage";
-import { IconFloppyDisk } from "../component/Icon";
+import ToastMessage from "@Renderer/component/ToastMessage";
+import { IconFloppyDisk } from "@Renderer/component/Icon";
 
 // Modules
-import PageHeader from "../modules/PageHeader";
-import { SuperKeysFeatures, SuperkeyActions } from "../modules/Superkeys";
-import { KeyPickerKeyboard } from "../modules/KeyPickerKeyboard";
-import StandardView from "../modules/StandardView";
+import PageHeader from "@Renderer/modules/PageHeader";
+import { SuperKeysFeatures, SuperkeyActions } from "@Renderer/modules/Superkeys";
+import { KeyPickerKeyboard } from "@Renderer/modules/KeyPickerKeyboard";
+import StandardView from "@Renderer/modules/StandardView";
 
 // API's
 import i18n from "../i18n";
@@ -745,6 +746,7 @@ class SuperkeysEditor extends React.Component {
         </Col>
       </Row>
     ));
+    if (superkeys.length === 0 || !Array.isArray(superkeys)) return <LogoLoaderCentered />;
     return (
       <Styles className="superkeys">
         <Container fluid className={`${isStandardViewSuperkeys ? "standarViewMode" : "singleViewMode"}`}>
@@ -767,25 +769,30 @@ class SuperkeysEditor extends React.Component {
             destroyContext={this.loadSuperkeys}
             inContext={this.state.modified}
           />
-          <Callout content={i18n.editor.superkeys.callout} className="mt-md" size="sm" />
-          {superkeys.length == 0 || !Array.isArray(superkeys) ? (
-            <div className="loading marginCenter mt-md">
-              <Spinner className="spinner-border" role="status" />
-            </div>
-          ) : (
-            <SuperkeyActions
-              isStandardViewSuperkeys={isStandardViewSuperkeys}
-              superkeys={superkeys}
-              selected={selectedSuper}
-              selectedAction={selectedAction}
-              macros={macros}
-              changeSelected={this.changeSelected}
-              updateSuper={this.updateSuper}
-              updateAction={this.updateAction}
-              changeAction={this.changeAction}
-              keymapDB={this.keymapDB}
-            />
-          )}
+
+          <Callout
+            content={i18n.editor.superkeys.callout}
+            className="mt-md"
+            size="sm"
+            hasVideo
+            media="6Az05_Yl6AU"
+            videoTitle="The Greatest Keyboard Feature Of All Time: SUPERKEYS! 🦹‍♀️"
+            videoDuration="5:34"
+          />
+
+          <SuperkeyActions
+            isStandardViewSuperkeys={isStandardViewSuperkeys}
+            superkeys={superkeys}
+            selected={selectedSuper}
+            selectedAction={selectedAction}
+            macros={macros}
+            changeSelected={this.changeSelected}
+            updateSuper={this.updateSuper}
+            updateAction={this.updateAction}
+            changeAction={this.changeAction}
+            keymapDB={this.keymapDB}
+          />
+
           {isStandardViewSuperkeys && <SuperKeysFeatures />}
         </Container>
         {!isStandardViewSuperkeys ? (

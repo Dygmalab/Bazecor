@@ -1,7 +1,12 @@
 import React from "react";
 
-const DefyBatteryIndicatorLeft = ({ batteryStatus, batteryHeight }) => {
-  const maskHash = `${(Math.random() + 1).toString(36).substring(7)}-left`;
+interface DefyBatteryIndicatorLeftProps {
+  batteryStatus: number;
+  batteryHeight: number;
+}
+
+const DefyBatteryIndicatorLeft = ({ batteryStatus, batteryHeight }: DefyBatteryIndicatorLeftProps) => {
+  const maskHash = `${Date.now()}-${(Math.random() + 1).toString(36).substring(7)}-left`;
   return (
     <svg
       className="defy-battery-indicator"
@@ -11,7 +16,7 @@ const DefyBatteryIndicatorLeft = ({ batteryStatus, batteryHeight }) => {
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
     >
-      {batteryStatus == 4 ? (
+      {batteryStatus === 4 ? (
         <>
           <mask
             id={`mask-disconnected-${maskHash}`}
@@ -75,25 +80,25 @@ const DefyBatteryIndicatorLeft = ({ batteryStatus, batteryHeight }) => {
         </>
       )}
 
-      {batteryStatus == 0 || batteryStatus == 2 ? (
+      {batteryStatus === 0 || batteryStatus === 2 ? (
         <g mask={`url(#mask0_4143_258857${maskHash})`}>
-          <rect x="-94" y="132" width="89" height={batteryStatus == 0 ? batteryHeight : 115} className="levelIndicator" />
+          <rect x="-94" y="132" width="89" height={batteryStatus === 0 ? batteryHeight : 115} className="levelIndicator" />
         </g>
       ) : (
         ""
       )}
-      {batteryStatus === 1 ? (
+      {batteryStatus === 1 || batteryStatus === 2 ? (
         <path
           className="lightningbattery"
           d="M40.9893 63.989L51.6559 48.1001V60.3223H56.9893L46.3226 77.4334V63.989H40.9893Z"
-          fill="currentColor"
+          fill={batteryStatus === 1 ? "currentColor" : "white"}
           stroke="currentColor"
           strokeWidth="1.2"
         />
       ) : (
         ""
       )}
-      {batteryStatus == 3 ? (
+      {batteryStatus === 3 ? (
         <path
           d="M49.7782 67.6962C49.7782 68.0322 49.5862 68.2002 49.2022 68.2002H46.7542C46.5782 68.2002 46.4582 68.1682 46.3942 68.1042C46.3302 68.0242 46.2982 67.9122 46.2982 67.7682V65.1042C46.2982 64.8482 46.4102 64.7202 46.6342 64.7202H49.4662C49.6742 64.7202 49.7782 64.8322 49.7782 65.0562V67.6962ZM42.6262 54.1122C42.5142 54.0802 42.4502 54.0162 42.4342 53.9202C42.4182 53.8242 42.4262 53.7362 42.4582 53.6562C42.9702 52.5522 43.7382 51.6962 44.7622 51.0882C45.8022 50.4642 47.0182 50.1522 48.4102 50.1522C49.5782 50.1522 50.5862 50.3442 51.4342 50.7282C52.2822 51.0962 52.9382 51.6002 53.4022 52.2402C53.8822 52.8642 54.1222 53.5762 54.1222 54.3762C54.1222 55.1602 53.9542 55.8322 53.6182 56.3922C53.2982 56.9362 52.9062 57.4322 52.4422 57.8802C51.9782 58.3282 51.5062 58.7762 51.0262 59.2242C50.5462 59.6562 50.1382 60.1362 49.8022 60.6642C49.4822 61.1922 49.3222 61.8322 49.3222 62.5842C49.3222 62.6962 49.2822 62.7922 49.2022 62.8722C49.1382 62.9522 49.0422 62.9922 48.9142 62.9922H47.2102C46.9222 62.9922 46.7782 62.8322 46.7782 62.5122C46.7782 61.6482 46.9222 60.9042 47.2102 60.2802C47.4982 59.6402 47.8502 59.0802 48.2662 58.6002C48.6822 58.1202 49.0982 57.6722 49.5142 57.2562C49.9302 56.8242 50.2822 56.4002 50.5702 55.9842C50.8582 55.5522 51.0022 55.0722 51.0022 54.5442C51.0022 53.8722 50.7542 53.3362 50.2582 52.9362C49.7782 52.5362 49.1542 52.3362 48.3862 52.3362C47.9382 52.3362 47.4902 52.4242 47.0422 52.6002C46.6102 52.7762 46.2182 53.0242 45.8662 53.3442C45.5302 53.6642 45.2742 54.0322 45.0982 54.4482C45.0502 54.5442 44.9942 54.6082 44.9302 54.6402C44.8822 54.6562 44.7942 54.6562 44.6662 54.6402L42.6262 54.1122Z"
           fill="#FF6B6B"
@@ -101,7 +106,7 @@ const DefyBatteryIndicatorLeft = ({ batteryStatus, batteryHeight }) => {
       ) : (
         ""
       )}
-      {batteryStatus == 4 ? (
+      {batteryStatus === 4 ? (
         <path
           d="M106 130L2 1"
           stroke="currentColor"

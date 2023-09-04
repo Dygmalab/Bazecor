@@ -1,3 +1,5 @@
+import { DefaultTheme } from "styled-components";
+
 import BackgroundImageDark from "@Assets/dark/darkBackground.png";
 import BackgroundImageDark2x from "@Assets/dark/darkBackground-2x.png";
 import CheckedIconDark from "@Assets/dark/icon-check-animated.gif";
@@ -10,27 +12,24 @@ import neuronDefyWirelessImage from "@Assets/base/neuron-defy--black.png";
 import mouseWheelBackgroundDark from "@Assets/dark/mouseWheel.png";
 import oldToNew from "@Assets/dark/oldValueToNewValue.svg";
 
-import { RiGitBranchFill } from "react-icons/ri";
 import Tokens from "./Tokens";
 
-const settingColorOpacity = (color, opacity) => {
-  let newColorArray = color;
-  let newColor;
-  newColorArray = newColorArray.replace(/[^\d,]/g, "").split(",");
-  newColor = `rgba(${newColorArray[0]}, ${newColorArray[1]}, ${newColorArray[2]},  ${opacity})`;
+const settingColorOpacity = (color: string, opacity: number) => {
+  // let newColorArray = color;
+  const newColorArray = color.replace(/[^\d,]/g, "").split(",");
+  const newColor = `rgba(${newColorArray[0]}, ${newColorArray[1]}, ${newColorArray[2]},  ${opacity})`;
   return newColor;
 };
-const settingColorMatrix = (color, opacity) => {
-  let newColorArray = color;
-  let newColor;
-  newColorArray = newColorArray.replace(/[^\d,]/g, "").split(",");
-  newColor = `0 0 0 0 ${(newColorArray[0] / 255).toFixed(2)} 0 0 0 0 ${(newColorArray[1] / 255).toFixed(2)} 0 0 0 0 ${(
-    newColorArray[2] / 255
-  ).toFixed(2)} 0 0 0 ${opacity} 0`;
+const settingColorMatrix = (color: string, opacity: number) => {
+  // let newColorArray = color;
+  const newColorArray = color.replace(/[^\d,]/g, "").split(",");
+  const newColor = `0 0 0 0 ${(parseInt(newColorArray[0], 10) / 255).toFixed(2)} 0 0 0 0 ${(
+    parseInt(newColorArray[1], 10) / 255
+  ).toFixed(2)} 0 0 0 0 ${(parseInt(newColorArray[2], 10) / 255).toFixed(2)} 0 0 0 ${opacity} 0`;
   return newColor;
 };
 
-const Dark = {
+const Dark: DefaultTheme = {
   name: "Dark",
   drawerWidth: 64,
   sidebarWidthLarge: Tokens.sizes.sidebarWidthLarge,
@@ -134,6 +133,9 @@ const Dark = {
     color: "#30b1b1",
   },
   font: "Libre Franklin",
+  accessibility: {
+    focusWithinColor: Tokens.colors.gray25,
+  },
   styles: {
     accordion: {
       background: settingColorOpacity(Tokens.colors.gray500, 0.2),
@@ -204,7 +206,7 @@ const Dark = {
       outlineGradient: {
         color: "#fff",
         background: `linear-gradient(98.12deg, #555769 0%, #303349 56.24%) padding-box,
-        ${Tokens.colors.gradient} border-box`,
+        linear-gradient(90deg,#FE007C,#6B14F6,#6B14F9,#FE007c) border-box`,
       },
       previewButton: {
         color: Tokens.colors.gray300,
@@ -558,6 +560,9 @@ const Dark = {
       dropdownIconColor: Tokens.colors.purple100,
       dropdownIconColorModifier: Tokens.colors.gray25,
       alt: {
+        background: Tokens.colors.pink200,
+      },
+      altGr: {
         background: Tokens.colors.pink200,
       },
       control: {

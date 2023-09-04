@@ -11,18 +11,20 @@
   "main": ".webpack/main",
   "scripts": {
     "clean": "rm -rf dist && rm -rf out && rm -rf node_modules",
-    "start": "NODE_ENV=development electron-forge start",
-    "make-dev": "NODE_ENV=development electron-forge make --platform=darwin",
+    "start": "cross-env NODE_ENV=development electron-forge start",
+    "make-dev": "cross-env NODE_ENV=development electron-forge make",
     "package": "electron-forge package",
     "make": "electron-forge make",
     "make-win": "electron-forge make --platform=win32",
     "make-mac": "electron-forge make --platform=darwin",
+    "make-mac-intel": "electron-forge make --platform=darwin --arch=x64",
+    "make-mac-arm": "electron-forge make --platform=darwin --arch=arm64",
     "make-lin": "electron-forge make --platform=linux",
     "lint": "eslint --ext .ts,.tsx,.js,.jsx .",
     "prettier": "prettier --write \"./**/*.{js,json,css,scss,md}\"",
     "test": "vitest run src/renderer/tests src/main/tests",
     "e2e": "yarn playwright test",
-    "commit": "cz",
+    "commit": "cz -s",
     "prepare": "husky install"
   },
   "keywords": [
@@ -73,6 +75,7 @@
     "@vercel/webpack-asset-relocator-loader": "1.7.3",
     "babel-loader": "^9.1.2",
     "copy-webpack-plugin": "^11.0.0",
+    "cross-env": "^7.0.3",
     "css-loader": "^6.0.0",
     "cz-conventional-changelog": "^3.3.0",
     "electron": "^25.2.0",
@@ -135,7 +138,7 @@
     "serialport": "^10.0.0",
     "styled-components": "5.3.11",
     "sudo-prompt": "^9.2.1",
-    "uiohook-napi": "^1.5.0",
+    "uiohook-napi": "^1.5.2",
     "update-electron-app": "^2.0.1",
     "usb": "^2.9.0",
     "xstate": "^4.37.2"
@@ -154,10 +157,7 @@
       "category": "public.app-category.utilities",
       "target": [
         {
-          "target": "dmg",
-          "arch": [
-            "universal"
-          ]
+          "target": "dmg"
         }
       ]
     }

@@ -120,7 +120,14 @@ class KeysTab extends Component {
                 headingLevel={3}
                 className="counterIndicator counter2 mt-2"
               />
-              <CallOut content={i18n.editor.standardView.keys.callOutEnhance} size="sm" />
+              <CallOut
+                content={i18n.editor.standardView.keys.callOutEnhance}
+                size="sm"
+                hasVideo
+                media="Yk8S0TJuZ8A"
+                videoTitle="These keys have a SECRET function"
+                videoDuration="3:57"
+              />
               <div className="cardButtons cardButtonsModifier">
                 <Title text={i18n.editor.standardView.keys.addModifiers} headingLevel={4} />
                 <p>{i18n.editor.standardView.keys.descriptionModifiers}</p>

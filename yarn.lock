@@ -4465,6 +4465,13 @@ create-require@^1.1.0:
   resolved "https://registry.yarnpkg.com/create-require/-/create-require-1.1.1.tgz#c1d7e8f1e5f6cfc9ff65f9cd352d37348756c333"
   integrity sha512-dcKFX3jn0MpIaXjisoRvexIJVEKzaq7z2rZKxf+MSr9TkdmHmsU4m2lcLojrj/FHl8mk5VxMmYA+ftRkP/3oKQ==
 
+cross-env@^7.0.3:
+  version "7.0.3"
+  resolved "https://registry.yarnpkg.com/cross-env/-/cross-env-7.0.3.tgz#865264b29677dc015ba8418918965dd232fc54cf"
+  integrity sha512-+/HKd6EgcQCJGh2PSjZuUitQBQynKor4wrFbRg4DtAgS1aWO+gU52xpH7M9ScGgXSYmAVS9bIJ8EzuaGw0oNAw==
+  dependencies:
+    cross-spawn "^7.0.1"
+
 cross-spawn-windows-exe@^1.1.0, cross-spawn-windows-exe@^1.2.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/cross-spawn-windows-exe/-/cross-spawn-windows-exe-1.2.0.tgz#46253b0f497676e766faf4a7061004618b5ac5ec"
@@ -11717,10 +11724,10 @@ uglify-js@^3.1.4:
   resolved "https://registry.yarnpkg.com/uglify-js/-/uglify-js-3.17.4.tgz#61678cf5fa3f5b7eb789bb345df29afb8257c22c"
   integrity sha512-T9q82TJI9e/C1TAxYvfb16xO120tMVFZrGA3f9/P4424DNu6ypK103y0GPFVa17yotwSyZW5iYXgjYHkGrJW/g==
 
-uiohook-napi@^1.5.0:
-  version "1.5.1"
-  resolved "https://registry.yarnpkg.com/uiohook-napi/-/uiohook-napi-1.5.1.tgz#dede782f23fbd07b148976fa774dd5f07c310734"
-  integrity sha512-wSBd0LRzomlCQcB09CLk70lobx+UyGmWgNiL5wfoEHkPdDR/5Byivp1uS0NyO61waNFc+KOtcV+As+I3DjS0TA==
+uiohook-napi@^1.5.2:
+  version "1.5.2"
+  resolved "https://registry.yarnpkg.com/uiohook-napi/-/uiohook-napi-1.5.2.tgz#88c14fd95276b8f547329ccd5a4a6937fdf077c7"
+  integrity sha512-XmxEQpgWZerYwrhRk5oBbHSO9pjeEKF7cMG6e+Ak1j5MW7xQUvl/P+qaPAYDfbJ1JsT/E6ontbClBBSy5Z3C0g==
   dependencies:
     node-gyp-build "4.x.x"
 

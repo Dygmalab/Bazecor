@@ -9,7 +9,7 @@ import Card from "react-bootstrap/Card";
 import Slider from "@appigram/react-rangeslider";
 
 import Title from "@Renderer/component/Title";
-import Badge from "@Renderer/component/Badge";
+import { Badge } from "@Renderer/component/Badge";
 import { RegularButton } from "@Renderer/component/Button";
 import { ToggleButtons } from "@Renderer/component/ToggleButtons";
 

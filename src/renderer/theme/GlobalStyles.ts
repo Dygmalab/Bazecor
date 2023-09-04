@@ -1,14 +1,11 @@
-import { createGlobalStyle } from "styled-components";
+import { DefaultTheme, createGlobalStyle } from "styled-components";
 
 import iconChevronDown from "@Assets/base/icon-arrow--chevron-down.svg";
 import iconChevronDownWhite from "@Assets/base/icon-arrow--chevron-down_white.svg";
 import LibreFranklin from "./fonts/LibreFranklin/LibreFranklin-VariableFont_wght.ttf";
 import LibreFranklinItalic from "./fonts/LibreFranklin/LibreFranklin-Italic-VariableFont_wght.ttf";
 
-const NavWidth = "64";
-
-const GlobalStyles = createGlobalStyle`
-
+const GlobalStyles = createGlobalStyle<{ theme: DefaultTheme }>`
   @font-face {
     font-family: "Libre Franklin";
     font-weight: 100 900;
@@ -72,7 +69,7 @@ const GlobalStyles = createGlobalStyle`
     padding-right: 17px;
   }
   .wrapperBackground {
-    background-color: ${({ theme }) => theme.styles.wrapper.background};
+    background: ${({ theme }) => theme.styles.wrapper.background};
     padding-bottom: 8px;
     margin-bottom: 32px;
     border-radius: 0 0 16px 16px;
@@ -320,6 +317,14 @@ svg text{
 .button:hover {
   cursor: pointer;
 }
+button:focus, button:focus-within,
+.button:focus,.button:focus-within {
+  outline: none;
+}
+button:focus-visible,
+.button:focus-visible {
+  outline: 2px solid ${({ theme }) => theme.accessibility.focusWithinColor};
+}
 .button[disabled]:hover {
   cursor: not-allowed;
 }
@@ -344,7 +349,16 @@ svg text{
     background-position: right;
   }
 }
-.button.primary[disabled] {
+.button.secondary {
+  color: #fff;
+  background: ${({ theme }) => theme.colors.purple300};
+  transition: 300ms background ease-in-out;
+  &:hover {
+    background: ${({ theme }) => theme.colors.purple200};
+  }
+}
+.button.primary[disabled],
+.button.secondary[disabled] {
   background: ${({ theme }) => theme.styles.button.primary.disabledBackgroundColor};
   color: ${({ theme }) => theme.styles.button.primary.disabledTextColor};
 }
@@ -1210,7 +1224,7 @@ div.card.card-preferences .card-body {
     font-size: 14px;
     border-radius: 3px;
     color: ${({ theme }) => theme.styles.macro.previewColor};
-    border: 1px solid ${({ theme }) => theme.colors.previewColor};
+    border: 1px solid ${({ theme }) => theme.styles.macro.previewColor};
     padding: 0 6px;
     margin: 2px;
   }
@@ -1278,7 +1292,7 @@ div.card.card-preferences .card-body {
     &.keyCode-113,
     &.keyCode-114,
     &.keyCode-115 {
-      border: 1px solid ${({ theme }) => theme.colors.previewColor};
+      border: 1px solid ${({ theme }) => theme.styles.macro.previewColor};
       padding: 0 6px;
       margin: 2px;
     }
@@ -1332,6 +1346,10 @@ div.card.card-preferences .card-body {
 .Toastify__toast-container {
   padding: 0;
   width: 368px;
+  .Toastify__toast-icon {
+    display: none;
+    visibility: hidden;
+  }
 }
 .Toastify__toast--default,
 .Toastify__toast {
@@ -1407,6 +1425,7 @@ div.card.card-preferences .card-body {
 
 .Toastify__progress-bar {
   margin: 8px 24px;
+  width: calc(100% - 42px);
   height: 3px;
   border-radius: 3px;
   background: ${({ theme }) => theme.styles.toast.backgroundNoStatus};
@@ -1900,7 +1919,6 @@ div.card.card-preferences .card-body {
     opacity: 0;
   }
 }
-
 .animInCheck {
   animation: animInCheck 0.3s forwards;
   animation-timing-function: cubic-bezier(0.75, -1.27, 0.3, 2.33);

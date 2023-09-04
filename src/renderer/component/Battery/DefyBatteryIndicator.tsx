@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
 import Styled from "styled-components";
 
-import i18n from "../../i18n";
+import DefyBatteryIndicatorLeft from "@Renderer/component/Battery/DefyBatteryIndicatorLeft";
+import DefyBatteryIndicatorRight from "@Renderer/component/Battery/DefyBatteryIndicatorRight";
 
-import { DefyBatteryIndicatorLeft, DefyBatteryIndicatorRight } from "../Battery";
+import i18n from "../../i18n";
 
 const Style = Styled.div`
 .levelIndicator {
@@ -59,20 +60,39 @@ const Style = Styled.div`
   }
 }
 `;
-
-const DefyBatteryIndicator = ({ side, batteryLevel, isCharging, batteryStatus }) => {
+interface DefyBatteryIndicatorProps {
+  side: "left" | "right";
+  batteryLevel: number;
+  batteryStatus: number;
+}
+const DefyBatteryIndicator = ({ side, batteryLevel, batteryStatus }: DefyBatteryIndicatorProps) => {
   const [batteryHeight, setBatteryHeight] = useState(0);
-  const maskHash = `${(Math.random() + 1).toString(36).substring(7)}-${side}`;
 
   useEffect(() => {
-    if (!isCharging && batteryStatus === 0) {
-      if (batteryLevel > 0 && batteryLevel < 5) {
-        setBatteryHeight(2);
-      } else {
-        setBatteryHeight((115 * batteryLevel) / 100);
-      }
+    switch (batteryStatus) {
+      case 0:
+        if (batteryLevel > 0 && batteryLevel < 5) {
+          setBatteryHeight(2);
+        } else {
+          setBatteryHeight((115 * batteryLevel) / 100);
+        }
+        break;
+      case 1:
+        setBatteryHeight(0);
+        break;
+      case 2:
+        setBatteryHeight(115);
+        break;
+      case 3:
+        setBatteryHeight(0);
+        break;
+      case 4:
+        setBatteryHeight(0);
+        break;
+      default:
+        setBatteryHeight(0);
     }
-  }, [batteryLevel, isCharging]);
+  }, [batteryLevel, batteryStatus]);
 
   return (
     <Style>
@@ -81,7 +101,6 @@ const DefyBatteryIndicator = ({ side, batteryLevel, isCharging, batteryStatus })
           {side === "left" ? <DefyBatteryIndicatorLeft batteryStatus={batteryStatus} batteryHeight={batteryHeight} /> : ""}
           {side === "right" ? <DefyBatteryIndicatorRight batteryStatus={batteryStatus} batteryHeight={batteryHeight} /> : ""}
           {batteryStatus === 0 ? <div className="batterySide--percentage">{batteryLevel}%</div> : ""}
-          {batteryStatus === 2 ? <div className="batterySide--percentage">100%</div> : ""}
         </div>
         {batteryStatus === 3 ? (
           <div className="alertMessage alert-warning">{i18n.wireless.batteryPreferences.batteryErrorReading}</div>

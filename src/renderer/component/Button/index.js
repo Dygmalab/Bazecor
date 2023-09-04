@@ -18,9 +18,20 @@ import ColorButton from "./ColorButton";
 import ColorPicker from "./ColorPicker";
 import NavigationButton from "./NavigationButton";
 import RegularButton from "./regularButton";
+import RegularButtonFwRef from "./RegularButtonFwRef";
 import ButtonConfig from "./ButtonConfig";
 import ButtonSettings from "./ButtonSettings";
 import SuperkeyPicker from "./SuperkeyPicker";
 import ButtonMouse from "./ButtonMouse";
 
-export { ColorButton, ColorPicker, NavigationButton, RegularButton, ButtonConfig, ButtonSettings, SuperkeyPicker, ButtonMouse };
+export {
+  ColorButton,
+  ColorPicker,
+  NavigationButton,
+  RegularButton,
+  RegularButtonFwRef,
+  ButtonConfig,
+  ButtonSettings,
+  SuperkeyPicker,
+  ButtonMouse,
+};

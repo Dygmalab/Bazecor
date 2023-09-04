@@ -177,7 +177,7 @@ function Wireless(props: WirelessPropsInterface) {
     await focus.command("wireless.rf.stability", wireless.rf.stability);
   }
 
-  if (loading) <LogoLoader width={undefined} error={undefined} paused={undefined} warning={undefined} key={undefined} />;
+  if (loading) <LogoLoader />;
   return (
     <Styles>
       <Container fluid className="wireless center-content">

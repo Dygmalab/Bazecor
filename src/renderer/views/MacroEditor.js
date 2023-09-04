@@ -27,20 +27,22 @@ import DropdownButton from "react-bootstrap/DropdownButton";
 import Modal from "react-bootstrap/Modal";
 import Row from "react-bootstrap/Row";
 
+import { LogoLoaderCentered } from "@Renderer/component/Loader";
+
+import { RegularButton } from "@Renderer/component/Button";
+import Callout from "@Renderer/component/Callout";
+import { IconFloppyDisk } from "@Renderer/component/Icon";
+import { MacroSelector } from "@Renderer/component/Select";
+import ToastMessage from "@Renderer/component/ToastMessage";
+import PageHeader from "@Renderer/modules/PageHeader";
+
+import MacroCreator from "@Renderer/modules/Macros/MacroCreator";
+import TimelineEditorManager from "@Renderer/modules/Macros/TimelineEditorManager";
+
 import Backup from "../../api/backup";
 import Focus from "../../api/focus";
 import Keymap, { KeymapDB } from "../../api/keymap";
 import i18n from "../i18n";
-
-import { RegularButton } from "../component/Button";
-import Callout from "../component/Callout";
-import { IconFloppyDisk } from "../component/Icon";
-import { MacroSelector } from "../component/Select";
-import ToastMessage from "../component/ToastMessage";
-import PageHeader from "../modules/PageHeader";
-
-import MacroCreator from "../modules/Macros/MacroCreator";
-import TimelineEditorManager from "../modules/Macros/TimelineEditorManager";
 
 import Store from "../utils/Store";
 
@@ -138,6 +140,7 @@ class MacroEditor extends React.Component {
       selectedList: 0,
       usedMemory: 0,
       totalMemory: 0,
+      loading: true,
       currentLanguageLayout: store.get("settings.language") || "english",
     };
     this.updateMacros = this.updateMacros.bind(this);
@@ -193,6 +196,7 @@ class MacroEditor extends React.Component {
         modified: false,
         usedMemory: parsedMacros.map(m => m.actions).flat().length,
         totalMemory: tMem,
+        loading: false,
       });
     } catch (e) {
       toast.error(<ToastMessage title={e} icon={<IconFloppyDisk />} />, { icon: "" });
@@ -495,6 +499,7 @@ class MacroEditor extends React.Component {
       showDeleteModal,
       kbtype,
       currentLanguageLayout,
+      loading,
     } = this.state;
     const ListOfMacros = listToDelete.map(({ layer, pos, key }, id) => (
       <Row key={id}>
@@ -522,6 +527,7 @@ class MacroEditor extends React.Component {
         ))}
       </DropdownButton>
     );
+    if (loading) return <LogoLoaderCentered />;
     return (
       <Styles className="macroEditor">
         <Container fluid>
@@ -547,7 +553,15 @@ class MacroEditor extends React.Component {
             destroyContext={this.loadMacros}
             inContext={modified}
           />
-          <Callout content={i18n.editor.macros.callout} className="mt-md" size="sm" />
+          <Callout
+            content={i18n.editor.macros.callout}
+            className="mt-md"
+            size="sm"
+            hasVideo
+            media="MfTUvFrHLsE"
+            videoTitle="13 Time-saving MACROS For Your Keyboard"
+            videoDuration="5:24"
+          />
           {macros[selectedMacro] === undefined || macros[selectedMacro].actions === undefined ? (
             <div />
           ) : (

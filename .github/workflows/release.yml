@@ -128,12 +128,19 @@ jobs:
           security list-keychain -d user -s $KEYCHAIN_PATH
           # - run: yarn run lint
       - if: runner.os == 'macOS'
-        name: Build for MacOS
+        name: Build for MacOS Intel
         env:
           APPLE_ID: ${{ secrets.APPLEID }}
           APPLE_ID_PASSWORD: ${{ secrets.APPLEIDPASS }}
           APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
-        run: yarn run make-mac
+        run: yarn run make-mac-intel
+      - if: runner.os == 'macOS'
+        name: Build for MacOS Arm
+        env:
+          APPLE_ID: ${{ secrets.APPLEID }}
+          APPLE_ID_PASSWORD: ${{ secrets.APPLEIDPASS }}
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+        run: yarn run make-mac-arm
       - if: runner.os != 'macOS'
         name: Build for Linux/Windows
         run: yarn run make
@@ -163,7 +170,7 @@ jobs:
         with:
           name: artifacts
           path: |
-            out/make/**/*universal.dmg
+            out/make/**/*.dmg
             out/make/**/*.AppImage
             windows_signing/**/*.exe
 

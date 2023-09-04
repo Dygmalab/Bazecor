@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import * as React from "react";
+import React from "react";
 import Styled, { useTheme } from "styled-components";
 import { IconChip } from "../Icon";
 
@@ -30,6 +30,21 @@ align-self: center;
   justify-content: center;
   align-items: center;
   position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  &.isConnected {
+    border: 1px solid rgba(0, 205, 200, 0.2);
+    &:after {
+      position: absolute;
+      top: 0; 
+      left: 0;
+      height: 100%;
+      width: 100%;
+      content: '';
+      background-color: rgba(0, 205, 200, 0.05); 
+      z-index: -1;
+    }
+  }
 }
 .neuronConnectAnimation {
   position: absolute;
@@ -116,23 +131,46 @@ align-self: center;
 }
 
 `;
-function NeuronStatus(props) {
+interface NeuronStatusProps {
+  loading: "loading" | undefined;
+  connected: boolean | undefined;
+  connectedDevice: number | undefined;
+  scanFoundDevices: boolean;
+  deviceItems: number;
+  selectedPortIndex: number;
+  isVirtual: boolean;
+}
+const NeuronStatus: React.FC<NeuronStatusProps> = ({
+  loading,
+  connected,
+  connectedDevice,
+  scanFoundDevices,
+  deviceItems,
+  selectedPortIndex,
+  isVirtual,
+}) => {
   const { neuronLoader } = useTheme().styles.neuronStatus;
   const { checkedIcon } = useTheme().styles.neuronStatus;
   const { connectionColorMatrix } = useTheme().styles.neuronStatus;
   const { connectionColorMatrixOnLoading } = useTheme().styles.neuronStatus;
 
+  const isDeviceConnected = !!(connected && connectedDevice === selectedPortIndex);
+
   return (
     <Style>
-      <div className="neuronStatusInner">
-        {props.connected && !props.isVirtual ? (
+      <div
+        className={`neuronStatusInner ${
+          (isDeviceConnected && !isVirtual) || (connected && isVirtual) ? "isConnected" : "notConnected"
+        }`}
+      >
+        {isDeviceConnected && !isVirtual ? (
           <div className="neuronConnectAnimation">
-            <img src={checkedIcon} />
+            <img src={checkedIcon} alt="Device Connected" />
           </div>
         ) : (
           ""
         )}
-        {props.connected && props.isVirtual ? (
+        {connected && isVirtual ? (
           <div className="neuronConnectAnimation isVirtual">
             <IconChip />
           </div>
@@ -141,9 +179,9 @@ function NeuronStatus(props) {
         )}
         <svg width={157} height={179} fill="none" xmlns="http://www.w3.org/2000/svg">
           <path
-            className={`lineColor ${props.loading && props.deviceItems ? "loading" : ""} ${
-              props.scanFoundDevices ? "scanFoundDevices" : ""
-            } ${props.connected ? "connected" : ""} `}
+            className={`lineColor ${loading && deviceItems ? "loading" : ""} ${scanFoundDevices ? "scanFoundDevices" : ""} ${
+              isDeviceConnected ? "connected" : ""
+            } `}
             clipRule="evenodd"
             d="M68.219 173.573c-1.048 2.516-3.983 3.773-6.498 2.62-.105 0-.105-.104-.21-.104l-50.833-24.107c-7.546-3.563-10.795-12.577-7.231-20.228l30.814-66.24c2.934-6.288 4.402-13.1 4.402-20.018V13.005C38.663 6.926 43.589 2 49.668 2h58.064c6.079 0 11.005 4.926 11.005 11.005v32.49c0 6.918 1.467 13.731 4.402 20.02l30.814 66.239c3.564 7.546.315 16.56-7.232 20.228l-50.832 24.107c-2.516 1.152-5.45.104-6.603-2.411 0-.105-.105-.105-.105-.21-2.41-5.764-9.014-8.489-14.778-6.079-2.935 1.258-5.031 3.459-6.184 6.184z"
             stroke="#3F425A"
@@ -152,7 +190,7 @@ function NeuronStatus(props) {
             strokeLinecap="round"
             strokeLinejoin="round"
           />
-          {props.deviceItems && !props.connected ? (
+          {deviceItems && !isDeviceConnected ? (
             <g className="connectionLoading connectionScanning ">
               <g filter="url(#prefix__filter0_d_1082_145292)">
                 <path
@@ -260,7 +298,7 @@ function NeuronStatus(props) {
                   <use xlinkHref="#prefix__image0_1082_145292" transform="scale(.00357)" />
                 </pattern>
                 <image
-                  className={`rotating ${props.loading || props.scanFoundDevices ? "loading" : ""}`}
+                  className={`rotating ${loading || scanFoundDevices ? "loading" : ""}`}
                   id="prefix__image0_1082_145292"
                   width={270}
                   height={270}
@@ -272,7 +310,7 @@ function NeuronStatus(props) {
             ""
           )}
 
-          {!props.deviceItems ? (
+          {!deviceItems ? (
             <g className="noDeviceFounded">
               <path fill="#E2E4EA" d="M58 80.75h1.75V93H58z" />
               <path
@@ -290,7 +328,7 @@ function NeuronStatus(props) {
             ""
           )}
 
-          {props.connected ? (
+          {isDeviceConnected ? (
             <g className="connectionSuccess">
               <g filter="url(#prefix__filter0_d_1082_156043)">
                 <path
@@ -392,6 +430,6 @@ function NeuronStatus(props) {
       </div>
     </Style>
   );
-}
+};
 
 export default NeuronStatus;

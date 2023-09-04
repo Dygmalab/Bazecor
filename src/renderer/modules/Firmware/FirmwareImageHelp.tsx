@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/media-has-caption */
 // -*- mode: js-jsx -*-
 /* Bazecor
  * Copyright (C) 2022  Dygmalab, Inc.
@@ -16,16 +17,18 @@
  */
 
 import React, { useRef, useEffect } from "react";
-import PropTypes from "prop-types";
 import Styled from "styled-components";
-
-import { FirmwareNeuronHelp, FirmwareDefyUpdatingStatus } from "../Firmware";
 
 import videoFirmwareUpdate from "@Assets/videos/update-firmware.mp4";
 import videoFirmwareUpdateReleaseKey from "@Assets/videos/release-key.mp4";
 import videoFirmwareUpdateDefySRC from "@Assets/videos/update-firmware-defy.mp4";
 import videoFirmwareUpdateDefyReleaseSRC from "@Assets/videos/release-key-defy.mp4";
-import { IconCheckmarkSm } from "../../component/Icon";
+
+import FirmwareNeuronHelp from "@Renderer/modules/Firmware/FirmwareNeuronHelp";
+import FirmwareDefyUpdatingStatus from "@Renderer/modules/Firmware/FirmwareDefyUpdatingStatus";
+
+import { IconCheckmarkSm } from "@Renderer/component/Icon";
+import { BadgeFirmware } from "@Renderer/component/Badge";
 
 const Style = Styled.div`   
 .updatingRaise {
@@ -46,24 +49,6 @@ const Style = Styled.div`
   transform: scale(1);
   box-shadow: 0 0 0 32px rgba(51, 217, 178, 0.15);
 }
-
-@keyframes pulse-green {
-  0% {
-    transform: scale(0.95);
-    box-shadow: 0 0 0 0 rgba(51, 217, 178, 0.7);
-  }
-
-  70% {
-    transform: scale(1);
-    box-shadow: 0 0 0 42px rgba(51, 217, 178, 0);
-  }
-
-  100% {
-    transform: scale(0.95);
-    box-shadow: 0 0 0 0 rgba(51, 217, 178, 0);
-  }
-}
-
 .processCanvas {
   position: relative;
   canvas {
@@ -93,6 +78,17 @@ const Style = Styled.div`
   background-repeat: no-repeat;
   background-image: url(${({ theme }) => theme.styles.firmwareUpdateProcess.defySVG});
 }
+.animPressDown {
+  animation: animaPressDown  0.3s forwards;
+  animation-timing-function: cubic-bezier(0.75, -1.27, 0.3, 2.33);
+}
+@keyframes animaPressDown {
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
 `;
 /**
  * This FirmwareImageHelp function returns a video that reacts according the firmware update status
@@ -101,7 +97,18 @@ const Style = Styled.div`
  * @param {number} countdown - Number representing the position during the update process
  * @returns {<FirmwareImageHelp>} FirmwareImageHelp component.
  */
-const FirmwareImageHelp = ({
+interface FirmwareImageHelpProps {
+  countdown: number;
+  deviceProduct: string;
+  keyboardType: string;
+  steps: Array<string | number>;
+  error: boolean;
+  retriesLeft: number | undefined;
+  retriesRight: number | undefined;
+  retriesDefyWired: number | undefined;
+}
+
+const FirmwareImageHelp: React.FC<FirmwareImageHelpProps> = ({
   countdown,
   deviceProduct,
   keyboardType,
@@ -109,64 +116,73 @@ const FirmwareImageHelp = ({
   error,
   retriesLeft,
   retriesRight,
-  retriesNeuron,
   retriesDefyWired,
 }) => {
-  const videoIntro = useRef(null);
-  const videoIntroDefy = useRef(null);
-  const videoReleaseDefy = useRef(null);
-  const videoRelease = useRef(null);
+  const videoIntro = useRef<HTMLVideoElement | null>(null);
+  const videoIntroDefy = useRef<HTMLVideoElement | null>(null);
+  const videoReleaseDefy = useRef<HTMLVideoElement | null>(null);
+  const videoRelease = useRef<HTMLVideoElement | null>(null);
   const checkSuccess = useRef(null);
 
+  const isEndProcess = steps.length - 2;
+  const productName = deviceProduct;
+
   const playVideo = () => {
-    if (deviceProduct == "Raise" && videoIntro.current) {
+    if (deviceProduct === "Raise" && videoIntro.current) {
       videoIntro.current.currentTime = 3;
       videoIntro.current.play();
-    } else if (deviceProduct == "Defy" && videoIntroDefy.current) {
+    } else if (deviceProduct === "Defy" && videoIntroDefy.current) {
       videoIntroDefy.current.currentTime = 3;
       videoIntroDefy.current.play();
     }
   };
 
   useEffect(() => {
-    if (countdown == 0) {
-      if (deviceProduct == "Raise") {
-        videoIntro.current.addEventListener("ended", playVideo, false);
-        videoRelease.current.pause();
-      } else {
-        videoIntroDefy.current.addEventListener("ended", playVideo, false);
-        videoReleaseDefy.current.pause();
+    const internalVideoIntro = videoIntro.current;
+    const internalVideoRelease = videoRelease.current;
+    const internalVideoIntroDefy = videoIntroDefy.current;
+    const internalVideoReleaseDefy = videoReleaseDefy.current;
+
+    if (countdown === 0) {
+      if (productName === "Raise") {
+        internalVideoIntro.addEventListener("ended", playVideo, false);
+        internalVideoRelease.pause();
+      } else if (productName === "Defy") {
+        internalVideoIntroDefy.addEventListener("ended", playVideo, false);
+        internalVideoReleaseDefy.pause();
+      }
+    }
+    checkSuccess.current.classList.remove("animInCheck");
+    if (countdown === 1) {
+      if (productName === "Raise") {
+        internalVideoIntro.classList.add("animOut");
+        internalVideoRelease.classList.add("animPressDown");
+      } else if (productName === "Defy") {
+        internalVideoIntroDefy.classList.add("animOut");
+        internalVideoReleaseDefy.classList.add("animIn");
+        internalVideoReleaseDefy.play();
       }
       checkSuccess.current.classList.remove("animInCheck");
     }
-    if (countdown == 1) {
-      if (deviceProduct == "Raise") {
-        videoIntro.current.classList.add("animOut");
-        videoRelease.current.classList.add("animIn");
-      } else {
-        videoIntroDefy.current.classList.add("animOut");
-        videoReleaseDefy.current.classList.add("animIn");
-        videoReleaseDefy.current.play();
+    if (countdown === 2) {
+      if (productName === "Raise") {
+        internalVideoRelease.play();
       }
       checkSuccess.current.classList.remove("animInCheck");
     }
-    if (countdown == 2) {
-      if (deviceProduct == "Raise") {
-        videoRelease.current.play();
-      }
-      checkSuccess.current.classList.remove("animInCheck");
-    }
-    if (countdown == steps.length - 2) {
+    if (countdown === isEndProcess) {
       checkSuccess.current.classList.add("animInCheck");
     }
+
     return () => {
-      if (videoIntro.current && countdown == 0 && deviceProduct == "Raise") {
-        videoIntro.current.removeEventListener("ended", playVideo, false);
-      } else if (videoIntroDefy.current && countdown == 0 && deviceProduct == "Defy") {
-        videoIntroDefy.current.removeEventListener("ended", playVideo, false);
+      if (internalVideoIntro && countdown === 0 && productName === "Raise") {
+        internalVideoIntro.removeEventListener("ended", playVideo, false);
+      } else if (internalVideoIntroDefy && countdown === 0 && productName === "Defy") {
+        internalVideoIntroDefy.removeEventListener("ended", playVideo, false);
       }
     };
-  }, [countdown, deviceProduct]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [countdown]);
 
   return (
     <Style>
@@ -177,9 +193,9 @@ const FirmwareImageHelp = ({
               <div className="firmwareCheck animWaiting" ref={checkSuccess}>
                 <IconCheckmarkSm />
               </div>
-              {deviceProduct == "Raise" ? (
+              {deviceProduct === "Raise" ? (
                 <>
-                  <video ref={videoIntro} width={520} height={520} autoPlay={true} className="img-center img-fluid animIn">
+                  <video ref={videoIntro} width={520} height={520} autoPlay className="img-center img-fluid">
                     <source src={videoFirmwareUpdate} type="video/mp4" />
                   </video>
                   <video
@@ -191,10 +207,11 @@ const FirmwareImageHelp = ({
                   >
                     <source src={videoFirmwareUpdateReleaseKey} type="video/mp4" />
                   </video>
+                  <BadgeFirmware countdown={countdown} />
                 </>
               ) : (
                 <>
-                  <video ref={videoIntroDefy} width={520} height={520} autoPlay={true} className="img-center img-fluid animIn">
+                  <video ref={videoIntroDefy} width={520} height={520} autoPlay className="img-center img-fluid animIn">
                     <source src={videoFirmwareUpdateDefySRC} type="video/mp4" />
                   </video>
                   <video
@@ -211,36 +228,26 @@ const FirmwareImageHelp = ({
             </div>
           </div>
         </div>
-        <div className={`process-col process-neuron ${countdown == 0 ? "process-" + deviceProduct : ""}`}>
-          {countdown == 0 ? (
+        <div className={`process-col process-neuron ${countdown === 0 ? `process-${deviceProduct}` : ""}`}>
+          {countdown === 0 ? (
             <div className={`processCanvas process${deviceProduct}`}>
               <div className="status-icon">
-                <div className="blob green pulse-green"></div>
+                <div className="blob green pulse-green" />
               </div>
-              <canvas className="" width={340} height={259}></canvas>
+              <canvas className="" width={340} height={259} />
             </div>
           ) : (
-            <div className={`${deviceProduct == "Defy" ? "updatingDefy" : ""} updatingRaise`}>
-              {deviceProduct == "Defy" ? (
+            <div className={`${deviceProduct === "Defy" ? "updatingDefy" : ""} updatingRaise`}>
+              {deviceProduct === "Defy" ? (
                 <FirmwareDefyUpdatingStatus
                   countdown={countdown}
-                  deviceProduct={deviceProduct}
                   keyboardType={keyboardType}
-                  steps={steps}
-                  error={error}
                   retriesLeft={retriesLeft}
                   retriesRight={retriesRight}
-                  retriesNeuron={retriesNeuron}
                   retriesDefyWired={retriesDefyWired}
                 />
               ) : (
-                <FirmwareNeuronHelp
-                  countdown={countdown}
-                  deviceProduct={deviceProduct}
-                  keyboardType={keyboardType}
-                  steps={steps}
-                  error={error}
-                />
+                <FirmwareNeuronHelp countdown={countdown} deviceProduct={deviceProduct} steps={steps} error={error} />
               )}
             </div>
           )}

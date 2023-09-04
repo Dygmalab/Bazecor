@@ -75,7 +75,16 @@ class MacroTab extends Component {
           {isStandardView ? (
             <>
               <Title text={i18n.editor.standardView.macros.title} headingLevel={3} />
-              <Callout content={i18n.editor.standardView.macros.callOut} size="sm" className="w100" />
+
+              <Callout
+                content={i18n.editor.standardView.macros.callOut}
+                size="sm"
+                className="w100"
+                hasVideo
+                media="MfTUvFrHLsE"
+                videoTitle="13 Time-saving MACROS For Your Keyboard"
+                videoDuration="5:24"
+              />
             </>
           ) : (
             <Callout content={i18n.editor.macros.macroTab.callout} className="w100" size="sm" />
