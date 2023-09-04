@@ -577,8 +577,7 @@ const SelectKeyboard: React.FC<SelectKeyboardProps> = (props): JSX.Element => {
   }
 
   const testBT = () => {
-    const focus = new Focus();
-    focus.testBTSerial();
+    ipcRenderer.invoke("bluetooth-devices");
   };
 
   const selectedDevice = devices && devices[selectedPortIndex];

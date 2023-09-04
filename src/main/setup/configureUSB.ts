@@ -84,3 +84,10 @@ export const configureUSB = () => {
   // them first to notice disconnects. We do that here.
   webusb.getDevices();
 };
+
+export const configureBT = () => {
+  ipcMain.handle("bluetooth-devices", () => {
+    const focus = new Focus();
+    focus.testBTSerial();
+  });
+};
