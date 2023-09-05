@@ -20,9 +20,9 @@ if (process.platform === "linux") {
 }
 
 if (process.platform === "linux") {
-  app.commandLine.appendSwitch("enable-experimental-web-platform-features", "true");
+  app.commandLine.appendSwitch("enable-experimental-web-platform-features");
 } else {
-  app.commandLine.appendSwitch("enable-web-bluetooth", "true");
+  app.commandLine.appendSwitch("enable-web-bluetooth");
 }
 
 // This method will be called when Electron has finished

@@ -11,7 +11,7 @@
   "main": ".webpack/main",
   "scripts": {
     "clean": "rm -rf dist && rm -rf out && rm -rf node_modules",
-    "start": "NODE_ENV=development electron-forge start",
+    "start": "electron-forge start",
     "make-dev": "NODE_ENV=development electron-forge make --platform=darwin",
     "package": "electron-forge package",
     "make": "electron-forge make",
