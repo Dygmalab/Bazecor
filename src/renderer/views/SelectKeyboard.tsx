@@ -29,6 +29,7 @@ import Modal from "react-bootstrap/Modal";
 
 import Dropdown from "react-bootstrap/Dropdown";
 import { USBDevice, USBDeviceDescriptor, NonSerialDeviceDescriptor } from "@Renderer/types/devices";
+import TestArea from "@Renderer/component/TestArea";
 import PageHeader from "../modules/PageHeader";
 import { RegularButton } from "../component/Button";
 
@@ -600,6 +601,7 @@ const SelectKeyboard: React.FC<SelectKeyboardProps> = (props): JSX.Element => {
             virtualDevice={focus.device}
             connectedDevice={connectedDevice}
           />
+          <TestArea />
           <div className="cardButton-wrapper">
             <div className="cardButton">
               <RegularButton
