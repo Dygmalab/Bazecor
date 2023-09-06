@@ -21,32 +21,32 @@ import { ToastContainer, toast } from "react-toastify";
 import { ThemeProvider } from "styled-components";
 import { ipcRenderer } from "electron";
 import path from "path";
-import withRouter from "./utils/withRouter";
-import i18n from "./i18n";
+import withRouter from "@Renderer/utils/withRouter";
+import i18n from "@Renderer/i18n";
 
+import "react-toastify/dist/ReactToastify.css";
+
+import GlobalStyles from "@Renderer/theme/GlobalStyles";
+import Light from "@Renderer/theme/LightTheme";
+import Dark from "@Renderer/theme/DarkTheme";
+
+import SelectKeyboard from "@Renderer/views/SelectKeyboard";
+import FirmwareUpdate from "@Renderer/views/FirmwareUpdate";
+import LayoutEditor from "@Renderer/views/LayoutEditor";
+import MacroEditor from "@Renderer/views/MacroEditor";
+import SuperkeysEditor from "@Renderer/views/SuperkeysEditor";
+import Preferences from "@Renderer/views/Preferences";
+import Wireless from "@Renderer/views/Wireless";
+import Welcome from "@Renderer/views/Welcome";
+
+import Header from "@Renderer/modules/NavigationMenu";
+import ToastMessage from "@Renderer/component/ToastMessage";
+import { IconNoSignal } from "@Renderer/component/Icon";
+
+import Store from "@Renderer/utils/Store";
 import Focus from "../api/focus";
 import "../api/keymap";
 import "../api/colormap";
-import "react-toastify/dist/ReactToastify.css";
-
-import GlobalStyles from "./theme/GlobalStyles";
-import Light from "./theme/LightTheme";
-import Dark from "./theme/DarkTheme";
-
-import SelectKeyboard from "./views/SelectKeyboard";
-import FirmwareUpdate from "./views/FirmwareUpdate";
-import LayoutEditor from "./views/LayoutEditor";
-import MacroEditor from "./views/MacroEditor";
-import SuperkeysEditor from "./views/SuperkeysEditor";
-import Preferences from "./views/Preferences";
-import Wireless from "./views/Wireless";
-import Welcome from "./views/Welcome";
-
-import Header from "./modules/NavigationMenu";
-import ToastMessage from "./component/ToastMessage";
-import { IconNoSignal } from "./component/Icon";
-
-import Store from "./utils/Store";
 
 const store = Store.getStore();
 
@@ -95,7 +95,7 @@ class App extends React.Component {
     // Loading font to be sure it wont blink
     // document.fonts.load("Libre Franklin");
 
-    const fontFace = new FontFace("Libre Franklin", "./theme/fonts/LibreFranklin/LibreFranklin-VariableFont_wght.ttf");
+    const fontFace = new FontFace("Libre Franklin", "@Renderer/theme/fonts/LibreFranklin/LibreFranklin-VariableFont_wght.ttf");
     console.log("Font face: ", fontFace);
     document.fonts.add(fontFace);
 
