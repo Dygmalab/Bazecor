@@ -64,11 +64,17 @@ Commands to help you with the testing and settings of the raise's leds
 
 [led.at](#ledat)
 
+[led.getMultiple](#ledgetmultiple)
+
+[led.setMultiple](#ledsetmultiple)
+
 [led.setAll](#ledsetall)
 
 [led.mode](#ledmode)
 
 [led.brightness](#ledbrightness)
+
+[led.brightnessUG](#ledbrightnessUG)
 
 [led.theme](#ledtheme)
 
@@ -366,17 +372,85 @@ This command returns the color that an individual led has right now in RGB code,
 
 To retrieve:
 
-- JavaScript: `focus.command("led.at 21")`
-- Serial Command (Unix): `echo 'led.at 21' > /dev/ttyACM0`
+- JavaScript: 
+  ```js 
+  focus.command("led.at 21")
+  ```
+- Serial Command (Unix): 
+  ```shell
+  echo 'led.at 21' > /dev/ttyACM0
+  ```
 
 To set:
 
-- JavaScript: `focus.command("led.at 21 3")`
-- Serial Command (Unix): `echo 'led.at 21 3' > /dev/ttyACM0`
-
+- JavaScript: 
+  ```js 
+  focus.command("led.at 21 255 255 0")
+  ```
+- Serial Command (Unix): 
+  ```shell
+  echo 'led.at 21 255 255 0' > /dev/ttyACM0
+  ```
 #### Expected output
 
 With this function you can change, based on external events, a led color depending on code outside raise's firmware.
+
+if sent only with the LED number, it will return its color
+```js
+80 227 194 
+```
+
+if sent with the color coded (ex: 255 255 0 or yellow) it will change that numbered LEDs color to yellow.
+
+### led.getMultiple
+
+This command returns the colors of each of the numbered LED's that are listed in RGB code.
+
+#### Commands
+
+To retrieve:
+
+- JavaScript: 
+  ```js 
+  focus.command("led.getMultiple 1 2 3 4 5")
+  ```
+- Serial Command (Unix): 
+  ```shell
+  echo 'led.getMultiple 1 2 3 4 5' > /dev/ttyACM0
+  ```
+
+#### Expected output
+
+With this function you can read the color of a given set of LED's and will return the following:
+
+  ``` js
+  1 # 80 227 194
+  2 # 80 227 194 
+  3 # 80 227 194 
+  4 # 80 227 194 
+  5 # 80 227 194
+  ```
+
+### led.setMultiple
+
+This command applies the defined color to all of the numbered LEDs listed afterwards
+
+#### Commands
+
+To set:
+
+- JavaScript: 
+  ```js 
+  focus.command("led.setMultiple 255 0 0 1 2 3 4 5")
+  ```
+- Serial Command (Unix): 
+  ```shell
+  echo 'led.setMultiple 255 0 0 1 2 3 4 5' > /dev/ttyACM0
+  ```
+
+#### Expected output
+
+After execution, listed LEDs should physically change their color to the selected one (255 0 0 or RED) on the keyboard, will return newline, period.
 
 ### led.setAll
 
@@ -386,8 +460,14 @@ This command sets all leds to a certain color transmitted by RGB.
 
 To set:
 
-- JavaScript: `focus.command("led.setAll 255 255 255")`
-- Serial Command (Unix): `echo 'led.setAll 255 255 255' > /dev/ttyACM0`
+- JavaScript: 
+  ```js 
+  focus.command("led.setAll 255 255 255")
+  ```
+- Serial Command (Unix): 
+  ```shell
+  echo 'led.setAll 255 255 255' > /dev/ttyACM0
+  ```
 
 #### Expected output
 
@@ -401,58 +481,151 @@ This command reads/writes the current led mode, which changes the type of led la
 
 To retrieve:
 
-- JavaScript: `focus.command("led.mode")`
-- Serial Command (Unix): `echo 'led.mode' > /dev/ttyACM0`
+- JavaScript: 
+  ```js 
+  focus.command("led.mode")
+  ```
+- Serial Command (Unix): 
+  ```shell
+  echo 'led.mode' > /dev/ttyACM0
+  ```
 
 To set:
 
-- JavaScript: `focus.command("led.mode 2")`
-- Serial Command (Unix): `echo 'led.mode 2' > /dev/ttyACM0`
-
+- JavaScript: 
+  ```js 
+  focus.command("led.mode 2")
+  ```
+- Serial Command (Unix): 
+  ```shell
+  echo 'led.mode 2' > /dev/ttyACM0
+  ```
 #### Expected output
 
-The keyboard will change it's effect or send the code of the current effect being shown.
+The keyboard will either return the current effect being displayed following it's coding, or it will change the current efect following that coding also.
+
+| Effect encoding | Effect description |
+| :---:        |     :---       |
+| 0 | Per Layer colors, change when you switch between layers |
+| 1     | Rainbow Wave effect      |
+| 2     | Rainbow effect (single color)      |
+| 3     | Stalker effect (keys lit when pressed and then fade out)      |
+| 4     | Heatmap effect (keys lit when pressed following a  gardient between red and faint blue based on the most pressed key order [explanation](https://kaleidoscope.readthedocs.io/en/latest/plugins/Kaleidoscope-Heatmap.html) [code](https://github.com/Dygmalab/KaleidoscopeTest/blob/main/libraries/Kaleidoscope-Heatmap/src/kaleidoscope/plugin/Heatmap.cpp) )      |
+| 5     | Digital Rain effect |
+| 6     | Sprinkling water effect when pressed |
+
+\* The only FW that supports effects 4, 5 and 6 is the Raise stable FW, but it will be implemented on the rest of the FW's in the near future
 
 ### led.brightness
 
-This command reads/writes the brightness setting stored in the EEPROM
+This command reads/writes the brightness setting for the Backlight LEDs stored in the EEPROM
+
+When applied to the Defy keyboard, additional commands are available to modify the behavior when in wireless mode, this one remains and only affects wired mode.
 
 #### Commands
 
 To retrieve:
 
-- JavaScript: `focus.command("led.brightness")`
-- Serial Command (Unix): `echo 'led.brightness' > /dev/ttyACM0`
+- JavaScript: 
+  ```js 
+  focus.command("led.brightness")
+  ```
+- Serial Command (Unix): 
+  ```shell
+  echo 'led.brightness' > /dev/ttyACM0
+  ```
 
 To set:
 
-- JavaScript: `focus.command("led.brightness 210")`
-- Serial Command (Unix): `echo 'led.brightness 210' > /dev/ttyACM0`
+- JavaScript: 
+  ```js 
+  focus.command("led.brightness 210")
+  ```
+- Serial Command (Unix): 
+  ```shell
+  echo 'led.brightness 210' > /dev/ttyACM0
+  ```
 
 #### Expected output
 
-With this function you can change, based on external events, the overall led brightness using code outside raise\'s firmware.
+This function allows you to get/set the current brightness of the backlight LEDs of your keyboard.
+
+the return value will be the same as the sent one, a 8 bit integer (number between 0 and 255)
+### led.brightnessUG
+
+This command reads/writes the brightness setting for the Underglow stored in the EEPROM
+
+When applied to the Defy keyboard, additional commands are available to modify the behavior when in wireless mode, these one remain and only affect wired mode.
+
+#### Commands
+
+To retrieve:
+
+- JavaScript: 
+  ```js 
+  focus.command("led.brightnessUG")
+  ```
+- Serial Command (Unix): 
+  ```shell
+  echo 'led.brightnessUG' > /dev/ttyACM0
+  ```
+
+To set:
+
+- JavaScript: 
+  ```js 
+  focus.command("led.brightnessUG 210")
+  ```
+- Serial Command (Unix): 
+  ```shell
+  echo 'led.brightnessUG 210' > /dev/ttyACM0
+  ```
+
+#### Expected output
+
+This function allows you to get/set the current brightness of the Underglow LEDs of your keyboard.
+
+the return value will be the same as the sent one, a 8 bit integer (number between 0 and 255)
 
 ### led.theme
 
-This command reads/writes the whole LED color assignment currently in use by using RGB codes.
+This command reads/writes the whole LED color assignment currently in use on the keyboard, its encoded using RGB values.
 
 #### Commands
 
 To retrieve:
 
-- JavaScript: `focus.command("led.theme")`
-- Serial Command (Unix): `echo 'led.theme' > /dev/ttyACM0`
+- JavaScript: 
+  ```js 
+  focus.command("led.theme")
+  ```
+- Serial Command (Unix): 
+  ```shell
+  echo 'led.theme' > /dev/ttyACM0
+  ```
 
 To set:
 
-- JavaScript: `focus.command("led.theme NNN NNN NNN NNN NNN NNN")`
-- Serial Command (Unix): `echo 'led.theme NNN NNN NNN NNN NNN NNN' > /dev/ttyACM0`
+- JavaScript: 
+  ```js 
+  focus.command("led.theme NNN NNN NNN NNN NNN NNN")
+  ```
+- Serial Command (Unix): 
+  ```shell
+  echo 'led.theme NNN NNN NNN NNN NNN NNN' > /dev/ttyACM0
+  ```
 
 #### Expected output
 
-With this function you can change, based on external events, the overall led colors using code outside raise\'s firmware independently of the current palette stored in the keyboard.
+With this function you can get/set, whole LED lighting theme using a single command independently of the palette data stored in the keyboard's EEPROM.
 
+when you ask for the values using `led.theme` you are expected to receive:
+```js
+248 231 28 80 227 194 80 227 194 80 227 194 80 227 194 80 227 194 80 227 194 248 231 28 80 227 194 80 227 194 80 227 194 80 227 194 80 227 194 80 227 194 80 227 194 80 227 194 80 227 194 80 227 194 80 227 194 248 231 28 80 227 194 80 227 194 80 227 194 80 227 194 80 227 194 80 227 194 248 231 28 248 231 28 248 231 28 248 231 28 80 227 194 248 231 28 255 107 0 248 231 28 80 227 194 80 227 194 80 227 194 80 227 194 80 227 194 80 227 194 248 231 28 80 227 194 80 227 194 80 227 194 80 227 194 80 227 194 80 227 194 80 227 194 80 227 194 80 227 194 80 227 194 80 227 194 80 227 194 80 227 194 80 227 194 248 231 28 80 227 194 80 227 194 80 227 194 80 227 194 80 227 194 248 231 28 248 231 28 248 231 28 248 231 28 248 231 28 80 227 194 248 231 28 255 107 0 255 107 0 255 107 0 255 107 0 255 107 0 255 107 0 255 107 0 255 107 0 255 107 0 255 107 0 255 107 0 255 107 0 255 107 0 255 107 0 255 107 0 255 107 0 255 107 0 255 107 0 255 107 0 255 107 0 255 107 0 255 107 0 255 107 0 255 107 0 255 107 0 255 107 0 255 107 0 255 107 0 255 107 0 255 107 0 255 107 0 255 107 0 255 107 0 255 107 0 255 107 0 255 107 0 255 107 0 255 107 0 255 107 0 255 107 0 255 107 0 255 107 0 255 107 0 255 107 0 255 107 0 255 107 0 255 107 0 255 107 0 255 107 0 255 107 0 255 107 0 255 107 0 255 107 0 255 107 0 255 107 0 255 107 0 255 107 0 255 107 0 255 107 0 255 107 0 255 107 0 255 107 0 255 107 0 0 0 0
+```
+Which is the full RGB map of the values currently being represented by each LED, its encoding is RGB so each 3 values represent a single LED.
+
+The command will expect you to send back the same quantity of LEDs, if any is lacking, they will not get reassigned.
 ### palette
 
 This command reads/writes the color palette that is used by the color map to establish each color that can be assigned to the keyboard.
