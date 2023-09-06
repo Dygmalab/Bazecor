@@ -53,6 +53,7 @@ module.exports = {
     "react/function-component-definition": "off",
     "import/prefer-default-export": "off",
     "react/jsx-no-useless-fragment": "off",
+    "no-restricted-syntax": "off",
   },
   ignorePatterns: ["/*", "!/src"], // we only care about linting src folder
 };
