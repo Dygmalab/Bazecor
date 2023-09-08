@@ -26,6 +26,7 @@ import Styled from "styled-components";
 import Version from "@Types/version";
 import Pages from "@Types/pages";
 import DygmaLogo from "@Assets/logo.svg";
+import { showDevtools } from "@Renderer/devMode";
 import { BatteryStatus } from "../Battery";
 import i18n from "../../i18n";
 import Focus from "../../../api/focus";
@@ -38,6 +39,7 @@ import {
   IconRobot2Stroke,
   IconThunder2Stroke,
   IconPreferences2Stroke,
+  IconBazecordevtools,
   IconWireless,
 } from "../../component/Icon";
 
@@ -240,6 +242,16 @@ function NavigationMenu(props: NavigationMenuProps): React.JSX.Element {
             </Link>
           </div>
           <div className="bottomMenu">
+            {showDevtools && (
+              <Link to="/bazecordevtools" className={`list-link ${fwUpdate ? "disabled" : ""}`}>
+                <NavigationButton
+                  selected={currentPage === "/bazecordevtools"}
+                  buttonText="Dev tools"
+                  icoSVG={<IconBazecordevtools width={32} height={32} strokeWidth={2} />}
+                  disabled={fwUpdate}
+                />
+              </Link>
+            )}
             <Link to="/preferences" className={`list-link ${fwUpdate ? "disabled" : ""}`}>
               <NavigationButton
                 selected={currentPage === "/preferences"}

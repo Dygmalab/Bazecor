@@ -1,9 +1,11 @@
 import React from "react";
 import { ipcRenderer } from "electron";
-import { RegularButton } from "./Button";
+import Container from "react-bootstrap/Container";
+import Row from "react-bootstrap/Row";
+import PageHeader from "@Renderer/modules/PageHeader";
+import { RegularButton } from "../component/Button";
 
-const TestArea = () => {
-  const testingMode = true;
+const BazecorDevtools = () => {
   let connectedDevice: undefined | HIDDevice;
   const onGetHIDDevices = async () => {
     const grantedDevices = await navigator.hid.getDevices();
@@ -14,8 +16,8 @@ const TestArea = () => {
     const devices = await navigator.hid.requestDevice({
       filters: [
         {
-          vendorId: 1133,
-          productId: 49951,
+          vendorId: 13807,
+          productId: 18,
         },
       ],
     });
@@ -26,18 +28,23 @@ const TestArea = () => {
     console.log(connectedDevice);
   };
 
+  const inputReportHandler = (event: Event) => {
+    const { data, device, reportId } = event;
+
+    if (device.productId !== 18 && reportId !== 6) return;
+    console.log("inputreport event");
+
+    console.log("Data received");
+    const dataReceived = new TextDecoder().decode(data);
+    console.log(dataReceived);
+  };
+
   const onHIDOpen = async () => {
     if (connectedDevice) {
       await connectedDevice.open();
       console.log("Device open");
       console.log(connectedDevice);
-      connectedDevice.addEventListener("inputreport", event => {
-        const { data, device, reportId } = event;
-        console.log("inputreport event");
-
-        const value = data.getUint8(0);
-        if (value === 0) return;
-      });
+      connectedDevice.addEventListener("inputreport", inputReportHandler);
     }
   };
 
@@ -70,29 +77,28 @@ const TestArea = () => {
 
   const onHIDSendReport = async () => {
     if (connectedDevice) {
-      const report = new Uint8Array(8);
-      report[0] = 2;
+      const report = new TextEncoder().encode("help\n");
       try {
-        await connectedDevice.sendFeatureReport(5, report);
+        await connectedDevice.sendReport(5, report);
+        console.log("Report sent", report);
       } catch (err) {
         console.log(err);
       }
-      console.log("Report sent");
     }
   };
 
-  if (testingMode) {
-    return (
-      <>
+  return (
+    <Container fluid className="center-content">
+      <PageHeader text="Bazecor dev tools" />
+      <Row>
         <RegularButton buttonText="List of HID Devices" styles="primary" onClick={onGetHIDDevices} />
         <RegularButton buttonText="Connect by HID" styles="primary" onClick={onHIDConnect} />
         <RegularButton buttonText="Open device" styles="primary" onClick={onHIDOpen} />
         <RegularButton buttonText="List reports" styles="primary" onClick={onHIDReports} />
         <RegularButton buttonText="Send report" styles="primary" onClick={onHIDSendReport} />
-      </>
-    );
-  }
-  return <></>;
+      </Row>
+    </Container>
+  );
 };
 
-export default TestArea;
+export default BazecorDevtools;

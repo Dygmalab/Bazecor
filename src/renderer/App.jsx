@@ -41,12 +41,14 @@ import SuperkeysEditor from "./views/SuperkeysEditor";
 import Preferences from "./views/Preferences";
 import Wireless from "./views/Wireless";
 import Welcome from "./views/Welcome";
+import BazecorDevtools from "./views/BazecorDevtools";
 
 import Header from "./modules/NavigationMenu";
 import ToastMessage from "./component/ToastMessage";
 import { IconNoSignal } from "./component/Icon";
 
 import Store from "./utils/Store";
+import { showDevtools } from "./devMode";
 
 const store = Store.getStore();
 
@@ -381,6 +383,25 @@ class App extends React.Component {
                 />
               }
             />
+            {showDevtools && (
+              <Route
+                path="/bazecordevtools"
+                element={
+                  <BazecorDevtools
+                    connected={connected}
+                    path="/bazecordevtools"
+                    titleElement={() => document.querySelector("#page-title")}
+                    darkMode={darkMode}
+                    toggleDarkMode={this.toggleDarkMode}
+                    startContext={this.startContext}
+                    cancelContext={this.cancelContext}
+                    updateAllowBeta={this.updateAllowBeta}
+                    allowBeta={allowBeta}
+                    inContext={contextBar}
+                  />
+                }
+              />
+            )}
             <Route
               path="/preferences"
               element={

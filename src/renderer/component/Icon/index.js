@@ -25,6 +25,7 @@ import IconArrowsSmallSeparating from "./IconArrowsSmallSeparating";
 import IconArrowUpWithLine from "./IconArrowUpWithLine";
 import IconArrowDownWithLine from "./IconArrowDownWithLine";
 import IconBattery from "./IconBattery";
+import IconBazecordevtools from "./IconBazecordevtools";
 import IconBluetooth from "./IconBluetooth";
 import IconColorPalette from "./IconColorPalette";
 import IconColorPicker from "./IconColorPicker";
@@ -162,6 +163,7 @@ export {
   IconArrowUpWithLine,
   IconArrowDownWithLine,
   IconBattery,
+  IconBazecordevtools,
   IconBluetooth,
   IconColorPalette,
   IconColorPicker,
