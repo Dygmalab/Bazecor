@@ -21,7 +21,7 @@ import { toast } from "react-toastify";
 
 import Container from "react-bootstrap/Container";
 import Card from "react-bootstrap/Card";
-import withRouter from "../utils/withRouter";
+import { useNavigate } from "react-router-dom";
 import Focus from "../../api/focus";
 import i18n from "../i18n";
 
@@ -103,31 +103,22 @@ height: inherit;
 }
 `;
 
-class Welcome extends React.Component {
-  state = {
-    factoryResetStarted: false,
-  };
+function Welcome(props: any) {
+  const navigate = useNavigate();
+  const { onConnect, device } = props;
 
-  startFactoryReset = () => {
-    this.setState({ factoryResetStarted: true });
-  };
-
-  cancelFactoryReset = () => {
-    this.setState({ factoryResetStarted: false });
-  };
-
-  reconnect = async () => {
+  const reconnect = async () => {
     const focus = new Focus();
-    const device = {
+    const dev = {
       path: focus._port.path,
       device: focus.device,
     };
 
     try {
-      if (!device.path) {
-        device.device.device = device.device;
+      if (!dev.path) {
+        dev.device.device = dev.device;
       }
-      await this.props.onConnect(device, null);
+      await onConnect(dev, null);
     } catch (err) {
       toast.error(<ToastMessage title={i18n.errors.preferenceFailOnSave} content={err.toString()} icon={<IconFloppyDisk />} />, {
         icon: "",
@@ -135,68 +126,66 @@ class Welcome extends React.Component {
     }
   };
 
-  render() {
-    const focus = new Focus();
-    const device = this.props.device.device || focus.device;
+  const focus = new Focus();
+  const dev = device.device || focus.device;
 
-    const reconnectButton = focus._port && (
-      <RegularButton onClick={this.reconnect} buttonText={i18n.welcome.reconnect} styles="outline transp-bg" />
-    );
+  const reconnectButton = focus._port && (
+    <RegularButton onClick={reconnect} buttonText={i18n.welcome.reconnect} styles="outline transp-bg" />
+  );
 
-    return (
-      <Styles>
-        <Container fluid className="welcome center-content">
-          <PageHeader text={i18n.welcome.title} />
-          <div className="welcomeWrapper">
-            <div className="welcomeInner">
-              <Card className="welcomeCard">
-                <Card.Header>
-                  <div className="keyboardSelected">
-                    <div className="content">
-                      <Title text={device.info.displayName} headingLevel={4} />
-                      {focus._port ? <Title text={focus._port.path} headingLevel={6} /> : ""}
-                    </div>
-                    <div className="icon">
-                      <IconKeyboard />
-                    </div>
+  return (
+    <Styles>
+      <Container fluid className="welcome center-content">
+        <PageHeader text={i18n.welcome.title} />
+        <div className="welcomeWrapper">
+          <div className="welcomeInner">
+            <Card className="welcomeCard">
+              <Card.Header>
+                <div className="keyboardSelected">
+                  <div className="content">
+                    <Title text={dev.info.displayName} headingLevel={4} />
+                    {focus._port ? <Title text={focus._port.path} headingLevel={6} /> : ""}
                   </div>
-                </Card.Header>
-                <Card.Body>
-                  <div>
-                    <Title type="warning" text={i18n.welcome.bootloaderTitle} headingLevel={3} />
-                    <p>{i18n.welcome.description}</p>
+                  <div className="icon">
+                    <IconKeyboard />
+                  </div>
+                </div>
+              </Card.Header>
+              <Card.Body>
+                <div>
+                  <Title type="warning" text={i18n.welcome.bootloaderTitle} headingLevel={3} />
+                  <p>{i18n.welcome.description}</p>
 
-                    <span className="cardsub">
-                      <ul style={{ lineHeight: "2rem" }}>
-                        <li>This process will revert your keyboard's configuration back to factory settings.</li>
-                        <li>
-                          {"Before proceeding, we recommend that you "}
-                          <a href="https://support.dygma.com/hc/en-us/articles/360014262298">export and save your layers</a>.
-                        </li>
-                        <li>To exit Bootloader Mode, unplug and replug the USB-C cable to your Neuron.</li>
-                      </ul>
-                    </span>
-                  </div>
-                </Card.Body>
-                <Card.Footer>
-                  <div className="firmwareButton">
-                    {reconnectButton}
-                    <RegularButton
-                      buttonText={i18n.formatString(i18n.welcome.gotoUpdate, i18n.app.menu.firmwareUpdate)}
-                      styles="primary"
-                      onClick={async () => {
-                        this.props.router.navigate("/firmware-update");
-                      }}
-                    />
-                  </div>
-                </Card.Footer>
-              </Card>
-            </div>
+                  <span className="cardsub">
+                    <ul style={{ lineHeight: "2rem" }}>
+                      <li>This process will revert your keyboard&apos;s configuration back to factory settings.</li>
+                      <li>
+                        {"Before proceeding, we recommend that you "}
+                        <a href="https://support.dygma.com/hc/en-us/articles/360014262298">export and save your layers</a>.
+                      </li>
+                      <li>To exit Bootloader Mode, unplug and replug the USB-C cable to your Neuron.</li>
+                    </ul>
+                  </span>
+                </div>
+              </Card.Body>
+              <Card.Footer>
+                <div className="firmwareButton">
+                  {reconnectButton}
+                  <RegularButton
+                    buttonText={i18n.welcome.gotoUpdate}
+                    styles="primary"
+                    onClick={async () => {
+                      navigate("/firmware-update");
+                    }}
+                  />
+                </div>
+              </Card.Footer>
+            </Card>
           </div>
-        </Container>
-      </Styles>
-    );
-  }
+        </div>
+      </Container>
+    </Styles>
+  );
 }
 
-export default withRouter(Welcome);
+export default Welcome;
