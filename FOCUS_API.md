@@ -176,19 +176,31 @@ Returns the version of the Raise firmware stored in the keyboard's EEPROM
 
 #### Commands
 
-JavaScript: `focus.command("version")`
-Serial Command (Unix): `echo 'version' > /dev/ttyACM0`
+- JavaScript: 
+  ```js 
+  focus.command("version")
+  ```
+- Serial Command (Unix): 
+  ```shell
+  echo 'version' > /dev/ttyACM0
+  ```
 
 #### Expected output
 
 it should give back 3 strings,
 
 - Bazecor Version:
-- `v0.2.5`
+  ```shell
+  '0.2.5'
+  ```
 - Kaleidoscope's newest Git commit incorporated
-- `6bd1f81e`
+  ```shell
+  '6bd1f81e'
+  ```
 - Raise's Firmware newest Git commit
-- `fe423ce-dirty`
+  ```shell
+  'fe423ce-dirty'
+  ```
 - Dirty here means it was custom-built with the makefile, not built automatically by Travis.
 
 ### keymap.custom
@@ -201,15 +213,31 @@ To know the actual correlation between the position of the map sent and the actu
 
 To retrieve:
 
-- JavaScript: `focus.command("keymap.custom")`
-- Serial Command (Unix): `echo 'keymap.custom' > /dev/ttyACM0`
+- JavaScript: 
+  ```js 
+  focus.command("keymap.custom")
+  ```
+- Serial Command (Unix): 
+  ```shell
+  echo 'keymap.custom' > /dev/ttyACM0
+  ```
 
 To set:
 
-- JavaScript: `focus.command("keymap.custom N N N N N N N N N N N N N N N")`
-- Serial Command (Unix): `echo 'keymap.custom N N N N N N N N N N N N N N N' > /dev/ttyACM0`
+- JavaScript: 
+  ```js 
+  focus.command("keymap.custom N N N N N N N N N N N N N N N")
+  ```
+- Serial Command (Unix): 
+  ```shell
+  echo 'keymap.custom N N N N N N N N N N N N N N N' > /dev/ttyACM0
+  ```
 
-Being `N N N...` the 16bit numbers that represent each key assigned to that position of the keymap the numbers amount 80(keys per layer)x10(custom layers)
+Being 
+```shell 
+ 'N N N...'
+``` 
+the 16bit numbers that represent each key assigned to that position of the keymap the numbers amount 80(keys per layer)x10(custom layers)
 
 #### Expected output
 
@@ -225,15 +253,31 @@ To know the actual correlation between the position of the map sent and the actu
 
 To retrieve:
 
-- JavaScript: `focus.command("keymap.default")`
-- Serial Command (Unix): `echo 'keymap.default' > /dev/ttyACM0`
+- JavaScript: 
+  ```js 
+  focus.command("keymap.default")
+  ```
+- Serial Command (Unix): 
+  ```shell
+  echo 'keymap.default' > /dev/ttyACM0
+  ```
 
 To set:
 
-- JavaScript: `focus.command("keymap.default N N N N N N N N N N N N N N N")`
-- Serial Command (Unix): `echo 'keymap.default N N N N N N N N N N N N N N N' > /dev/ttyACM0`
+- JavaScript: 
+  ```js 
+  focus.command("keymap.default N N N N N N N N N N N N N N N")
+  ```
+- Serial Command (Unix): 
+  ```shell
+  echo 'keymap.default N N N N N N N N N N N N N N N' > /dev/ttyACM0
+  ```
 
-Being `N N N...` the 16bit numbers that represent each key assigned to that position of the keymap the numbers amount 80(keys per layer)x2(default layers)
+Being 
+```shell 
+ 'N N N...'
+``` 
+the 16bit numbers that represent each key assigned to that position of the keymap the numbers amount 80(keys per layer)x2(default layers)
 
 #### Expected output
 
@@ -247,13 +291,25 @@ This command returns true or false depending on the user setting of hiding the d
 
 To retrieve:
 
-- JavaScript: `focus.command("keymap.onlyCustom")`
-- Serial Command (Unix): `echo 'keymap.onlyCustom' > /dev/ttyACM0`
+- JavaScript: 
+  ```js 
+  focus.command("keymap.onlyCustom")
+  ```
+- Serial Command (Unix): 
+  ```shell
+  echo 'keymap.onlyCustom' > /dev/ttyACM0
+  ```
 
 To set:
 
-- JavaScript: `focus.command("keymap.onlyCustom true")`
-- Serial Command (Unix): `echo 'keymap.onlyCustom trure' > /dev/ttyACM0`
+- JavaScript: 
+  ```js 
+  focus.command("keymap.onlyCustom true")
+  ```
+- Serial Command (Unix): 
+  ```shell
+  echo 'keymap.onlyCustom trure' > /dev/ttyACM0
+  ```
 
 #### Expected output
 
@@ -267,13 +323,25 @@ This command returns the default layer the keyboard will boot in, with this you 
 
 To retrieve:
 
-- JavaScript: `focus.command("keymap.defaultLayer")`
-- Serial Command (Unix): `echo 'keymap.defaultLayer' > /dev/ttyACM0`
+- JavaScript: 
+  ```js 
+  focus.command("keymap.defaultLayer")
+  ```
+- Serial Command (Unix): 
+  ```shell
+  echo 'keymap.defaultLayer' > /dev/ttyACM0
+  ```
 
 To set:
 
-- JavaScript: `focus.command("keymap.defaultLayer 1")`
-- Serial Command (Unix): `echo 'keymap.defaultLayer 1' > /dev/ttyACM0`
+- JavaScript: 
+  ```js 
+  focus.command("keymap.defaultLayer 1")
+  ```
+- Serial Command (Unix): 
+  ```shell
+  echo 'keymap.defaultLayer 1' > /dev/ttyACM0
+  ```
 
 #### Expected output
 
@@ -287,8 +355,14 @@ This command returns a boolean value that states true if all checks have been pe
 
 To retrieve:
 
-- JavaScript: `focus.command("settings.valid")`
-- Serial Command (Unix): `echo 'settings.valid' > /dev/ttyACM0`
+- JavaScript: 
+  ```js 
+  focus.command("settings.valid")
+  ```
+- Serial Command (Unix): 
+  ```shell
+  echo 'settings.valid' > /dev/ttyACM0
+  ```
 
 #### Expected output
 
@@ -302,13 +376,25 @@ This command returns the current settings version, it allows Bazecor to identify
 
 To retrieve:
 
-- JavaScript: `focus.command("settings.version")`
-- Serial Command (Unix): `echo 'settings.version' > /dev/ttyACM0`
+- JavaScript: 
+  ```js 
+  focus.command("settings.version")
+  ```
+- Serial Command (Unix): 
+  ```shell
+  echo 'settings.version' > /dev/ttyACM0
+  ```
 
 To set:
 
-- JavaScript: `focus.command("settings.version 1")`
-- Serial Command (Unix): `echo 'settings.version 1' > /dev/ttyACM0`
+- JavaScript: 
+  ```js 
+  focus.command("settings.version 1")
+  ```
+- Serial Command (Unix): 
+  ```shell
+  echo 'settings.version 1' > /dev/ttyACM0
+  ```
 
 #### Expected output
 
@@ -322,8 +408,14 @@ Returns the CRC checksum of the layout.
 
 To retrieve:
 
-- JavaScript: `focus.command("settings.crc")`
-- Serial Command (Unix): `echo 'settings.crc' > /dev/ttyACM0`
+- JavaScript: 
+  ```js 
+  focus.command("settings.crc")
+  ```
+- Serial Command (Unix): 
+  ```shell
+  echo 'settings.crc' > /dev/ttyACM0
+  ```
 
 #### Expected output
 
@@ -337,13 +429,25 @@ This command returns the whole EEPROM contents. and allows you to send them in o
 
 To retrieve:
 
-- JavaScript: `focus.command("eeprom.contents")`
-- Serial Command (Unix): `echo 'eeprom.contents' > /dev/ttyACM0`
+- JavaScript: 
+  ```js 
+  focus.command("eeprom.contents")
+  ```
+- Serial Command (Unix): 
+  ```shell
+  echo 'eeprom.contents' > /dev/ttyACM0
+  ```
 
 To set:
 
-- JavaScript: `focus.command("eeprom.contents NNNNNNNNNNNNN")`
-- Serial Command (Unix): `echo 'eeprom.contents NNNNNNNNNNNN' > /dev/ttyACM0`
+- JavaScript: 
+  ```js 
+  focus.command("eeprom.contents NNNNNNNNNNNNN")
+  ```
+- Serial Command (Unix): 
+  ```shell
+  echo 'eeprom.contents NNNNNNNNNNNN' > /dev/ttyACM0
+  ```
 
 #### Expected output
 
@@ -357,8 +461,14 @@ This command returns the remaining EEPROM bytes left.
 
 To retrieve:
 
-- JavaScript: `focus.command("eeprom.free")`
-- Serial Command (Unix): `echo 'eeprom.free' > /dev/ttyACM0`
+- JavaScript: 
+  ```js 
+  focus.command("eeprom.free")
+  ```
+- Serial Command (Unix): 
+  ```shell
+  echo 'eeprom.free' > /dev/ttyACM0
+  ```
 
 #### Expected output
 
@@ -506,7 +616,7 @@ The keyboard will either return the current effect being displayed following it'
 
 | Effect encoding | Effect description |
 | :---:        |     :---       |
-| 0 | Per Layer colors, change when you switch between layers |
+| 0 | Per Layer colors, they change when you switch between layers |
 | 1     | Rainbow Wave effect      |
 | 2     | Rainbow effect (single color)      |
 | 3     | Stalker effect (keys lit when pressed and then fade out)      |
@@ -634,13 +744,25 @@ This command reads/writes the color palette that is used by the color map to est
 
 To retrieve:
 
-- JavaScript: `focus.command("palette")`
-- Serial Command (Unix): `echo 'palette' > /dev/ttyACM0`
+- JavaScript: 
+  ```js 
+  focus.command("palette")
+  ```
+- Serial Command (Unix): 
+  ```shell
+  echo 'palette' > /dev/ttyACM0
+  ```
 
 To set:
 
-- JavaScript: `focus.command("led.palete NNN NNN NNN NNN NNN NNN")`
-- Serial Command (Unix): `echo 'palette NNN NNN NNN NNN NNN NNN' > /dev/ttyACM0`
+- JavaScript: 
+  ```js 
+  focus.command("led.palete NNN NNN NNN NNN NNN NNN")
+  ```
+- Serial Command (Unix): 
+  ```shell
+  echo 'palette NNN NNN NNN NNN NNN NNN' > /dev/ttyACM0
+  ```
 
 #### Expected output
 
@@ -656,13 +778,25 @@ To know the actual correlation between the position of the map sent and the actu
 
 To retrieve:
 
-- JavaScript: `focus.command("colormap.map")`
-- Serial Command (Unix): `echo 'colormap.map' > /dev/ttyACM0`
+- JavaScript: 
+  ```js 
+  focus.command("colormap.map")
+  ```
+- Serial Command (Unix): 
+  ```shell
+  echo 'colormap.map' > /dev/ttyACM0
+  ```
 
 To set:
 
-- JavaScript: `focus.command("colormap.map N N N N N N N N N N N N N N N N N N")`
-- Serial Command (Unix): `echo 'colormap.map N N N N N N N N N N N N N N N N N N' > /dev/ttyACM0`
+- JavaScript: 
+  ```js 
+  focus.command("colormap.map N N N N N N N N N N N N N N N N N N")
+  ```
+- Serial Command (Unix): 
+  ```shell
+  echo 'colormap.map N N N N N N N N N N N N N N N N N N' > /dev/ttyACM0
+  ```
 
 #### Expected output
 
@@ -676,13 +810,25 @@ This command reads/writes the idle led time to be turned off in seconds.
 
 To retrieve:
 
-- JavaScript: `focus.command("idleleds.time_limit")`
-- Serial Command (Unix): `echo 'idleleds.time_limit' > /dev/ttyACM0`
+- JavaScript: 
+  ```js 
+  focus.command("idleleds.time_limit")
+  ```
+- Serial Command (Unix): 
+  ```shell
+  echo 'idleleds.time_limit' > /dev/ttyACM0
+  ```
 
 To set:
 
-- JavaScript: `focus.command("idleleds.time_limit 600")`
-- Serial Command (Unix): `echo 'idleleds.time_limit 600' > /dev/ttyACM0`
+- JavaScript: 
+  ```js 
+  focus.command("idleleds.time_limit 600")
+  ```
+- Serial Command (Unix): 
+  ```shell
+  echo 'idleleds.time_limit 600' > /dev/ttyACM0
+  ```
 
 #### Expected output
 
@@ -736,61 +882,23 @@ This empty command has no support as of today, or is disabled / not working prop
 
 This command reads/writes the macros map (2048 bytes of max lenght), each action in a macro is composed of an action type and a key attached to it.
 
-- MACRO_ACTION_END = 0
-  - Ends the current macro play sequence, it's used at the end of a macro to separate it from the second
-  - Example: " 0 "
-  - Total cost = 1
-- MACRO_ACTION_STEP_INTERVAL = 1
-  - Changes the reproduction interval between each key of the sequence when a tap sequence or a tap code sequence (12 or 13) are used
-  - The step uses a 16bit integer splitted into two 8bit numbers to send it to the keyboard, first comes the higher weight
-  - Example: " 1 1 44 " for a 300ms delay
-  - Total cost = 3
-- MACRO_ACTION_STEP_WAIT = 2
-  - Custom delay that lets the macro wait for any event before continuing the sequence.
-  - The step uses a 16bit integer splitted into two 8bit numbers to send it to the keyboard, first comes the higher weight
-  - Example: " 2 1 44 " for a 300ms delay
-  - Total cost = 3
-- MACRO_ACTION_STEP_KEYDOWN = 3
-  - Activates the keydown event for a KeyCode defined by two 8bit numbers, the higher weight carries the flags, the lower weight carries the code.
-  - The step uses a 16bit integer that identifies any key, splitted into two 8bit numbers to send it to the keyboard. First comes the higher weight.
-  - Example: " 3 76 226 " for the keyCode 19682, which activates the keydown action for the Media.Mute button.
-  - Total cost = 3
-- MACRO_ACTION_STEP_KEYUP = 4
-  - Activates the keyup event for a KeyCode defined by two 8bit numbers, the higher weight carries the flags, the lower weight carries the code.
-  - The step uses a 16bit integer that identifies any key, splitted into two 8bit numbers to send it to the keyboard. First comes the higher weight.
-  - Example: " 4 76 226 " for the keyCode 19682, which activates the keyup action for the Media.Mute button.
-  - Total cost = 3
-- MACRO_ACTION_STEP_TAP = 5
-  - Activates the tap event for a KeyCode defined by two 8bit numbers, the higher weight carries the flags, the lower weight carries the code.
-  - The step uses a 16bit integer that identifies any key, splitted into two 8bit numbers to send it to the keyboard. First comes the higher weight.
-  - Example: " 5 76 226 " for the keyCode 19682, which activates the tap action for the Media.Mute button.
-  - Total cost = 3
-- MACRO_ACTION_STEP_KEYCODEDOWN = 6
-  - Activates the keydown event for a KeyCode defined by one 8bit number, it only carries the code up to 255, which means only normal keys can be sent this way.
-  - The step uses a lone 8bit number to identify any key < 256, as no flags are sent, 0 is used for the flag identifier instead.
-  - Example: " 6 225 " for the keyCode 225, which activates the keydown action for the Right Shift button.
-  - Total cost = 2
-- MACRO_ACTION_STEP_KEYCODEUP = 7
-  - Activates the keyup event for a KeyCode defined by one 8bit number, it only carries the code up to 255, which means only normal keys can be sent this way.
-  - The step uses a lone 8bit number to identify any key < 256, as no flags are sent, 0 is used for the flag identifier instead.
-  - Example: " 7 225 " for the keyCode 225, which activates the keyup action for the Right Shift button.
-  - Total cost = 2
-- MACRO_ACTION_STEP_TAPCODE = 8
-  - Activates the tap event for a KeyCode defined by one 8bit number, it only carries the code up to 255, which means only normal keys can be sent this way.
-  - The step uses a lone 8bit number to identify any key < 256, as no flags are sent, 0 is used for the flag identifier instead.
-  - Example: " 8 225 " for the keyCode 225, which activates the tap action for the Right Shift button.
-  - Total cost = 2
-- MACRO_ACTION_STEP_EXPLICIT_REPORT = 9
-- MACRO_ACTION_STEP_IMPLICIT_REPORT = 10
-- MACRO_ACTION_STEP_SEND_REPORT = 11
-  - The functions 9,10,11 are not implemented in the newer versions of the keyboard, they are no longer needed as there is no reason to change the way the report is sent to the host PC.
-- MACRO_ACTION_STEP_TAP_SEQUENCE = 12
-- MACRO_ACTION_STEP_TAP_CODE_SEQUENCE = 13
-  - The functions 12 & 13 behave in the same way, 13 should allow the flag sending for the block, but this introduces a double zero which will make the whole macro sequence unreadable, so this has to change to be able to work.
-  - Activates the tap event for a sequence of KeyCodes (which will be reproduced as a number of taps) defined by one 8bit number each, it only carries the code up to 255, which means only normal keys can be sent this way.
-  - The step uses a sequence of 8bit numbers to identify any key < 256, as no flags are sent, 0 is used for the flag identifier instead.
-  - Example: " 12 14 7 18 18 26 0" for the keyCode 225, which activates the tap action for the Right Shift button.
-  - Total cost = N + 1, being N the number of actions to be performed in a closed while loop
+| Macro Action                      | Description                                                                                                                                                                                                               | Example                                                                                               | Total Cost                                                                     |   |
+|-----------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------|---|
+| MACRO_ACTION_END                  | Ends the current macro play sequence, it's used at the end of a macro to separate it from the second                                                                                                                      | " 0 "                                                                                                 | 1                                                                              |   |
+| MACRO_ACTION_STEP_INTERVAL        | Changes the reproduction interval between each key of the sequence when a tap sequence or a tap code sequence (12 or 13) are used                                                                                         | " 1 1 44 " for a 300ms delay                                                                          | 3                                                                              |   |
+| MACRO_ACTION_STEP_WAIT            | Custom delay that lets the macro wait for any event before continuing the sequence.                                                                                                                                       | " 2 1 44 " for a 300ms delay                                                                          | 3                                                                              |   |
+| MACRO_ACTION_STEP_KEYDOWN         | Activates the keydown event for a KeyCode defined by two 8bit numbers, the higher weight carries the flags, the lower weight carries the code.                                                                            | " 3 76 226 " for the keyCode 19682, which activates the keydown action for the Media.Mute button.     | 3                                                                              |   |
+| MACRO_ACTION_STEP_KEYUP           | Activates the keyup event for a KeyCode defined by two 8bit numbers, the higher weight carries the flags, the lower weight carries the code.                                                                              | " 4 76 226 " for the keyCode 19682, which activates the keyup action for the Media.Mute button.       | 3                                                                              |   |
+| MACRO_ACTION_STEP_TAP             | Activates the tap event for a KeyCode defined by two 8bit numbers, the higher weight carries the flags, the lower weight carries the code.                                                                                | " 5 76 226 " for the keyCode 19682, which activates the tap action for the Media.Mute button.         | 3                                                                              |   |
+| MACRO_ACTION_STEP_KEYCODEDOWN     | Activates the keydown event for a KeyCode defined by one 8bit number, it only carries the code up to 255, which means only normal keys can be sent this way.                                                              | " 6 225 " for the keyCode 225, which activates the keydown action for the Right Shift button.         | 2                                                                              |   |
+| MACRO_ACTION_STEP_KEYCODEUP       | Activates the keyup event for a KeyCode defined by one 8bit number, it only carries the code up to 255, which means only normal keys can be sent this way.                                                                | " 7 225 " for the keyCode 225, which activates the keyup action for the Right Shift button.           | 2                                                                              |   |
+| MACRO_ACTION_STEP_TAPCODE         | Activates the tap event for a KeyCode defined by one 8bit number, it only carries the code up to 255, which means only normal keys can be sent this way.                                                                  | " 8 225 " for the keyCode 225, which activates the tap action for the Right Shift button.             | 2                                                                              |   |
+| MACRO_ACTION_STEP_EXPLICIT_REPORT | Not implemented in newer versions of the keyboard.                                                                                                                                                                        | -                                                                                                     | -                                                                              |   |
+| MACRO_ACTION_STEP_IMPLICIT_REPORT | Not implemented in newer versions of the keyboard.                                                                                                                                                                        | -                                                                                                     | -                                                                              |   |
+| MACRO_ACTION_STEP_SEND_REPORT     | Not implemented in newer versions of the keyboard.                                                                                                                                                                        | -                                                                                                     | -                                                                              |   |
+| MACRO_ACTION_STEP_TAP_SEQUENCE    | Activates the tap event for a sequence of KeyCodes (which will be reproduced as a number of taps) defined by one 8bit number each, it only carries the code up to 255, which means only normal keys can be sent this way. | " 12 14 7 18 18 26 0" for the keyCode 225, which activates the tap action for the Right Shift button. | N + 1, where N is the number of actions to be performed in a closed while loop |   |
+
+Please note that the last three macro actions (MACRO_ACTION_STEP_EXPLICIT_REPORT, MACRO_ACTION_STEP_IMPLICIT_REPORT, and MACRO_ACTION_STEP_SEND_REPORT) are not implemented in newer versions of the keyboard, so the corresponding cells in the table are left empty.
 
 then we send the actual keyCode that we can find in the [keymap database](https://github.com/Dygmalab/Bazecor/tree/development/src/api/keymap/db)
 
@@ -947,13 +1055,25 @@ the holdstart value specifies the minimum time that has to pass between the firs
 
 To retrieve:
 
-- JavaScript: `focus.command("superkeys.holdstart")`
-- Serial Command (Unix): `echo 'superkeys.holdstart' > /dev/ttyACM0`
+- JavaScript: 
+  ```js 
+  focus.command("superkeys.holdstart")
+  ```
+- Serial Command (Unix): 
+  ```shell
+  echo 'superkeys.holdstart' > /dev/ttyACM0
+  ```
 
 To set:
 
-- JavaScript: `focus.command("superkeys.holdstart 200")`
-- Serial Command (Unix): `echo 'superkeys.holdstart 200' > /dev/ttyACM0`
+- JavaScript: 
+  ```js 
+  focus.command("superkeys.holdstart 200")
+  ```
+- Serial Command (Unix): 
+  ```shell
+  echo 'superkeys.holdstart 200' > /dev/ttyACM0
+  ```
 
 #### Expected output
 
@@ -969,13 +1089,25 @@ the overlap value specifies the percentage of overlap when fast typing that is a
 
 To retrieve:
 
-- JavaScript: `focus.command("superkeys.overlap")`
-- Serial Command (Unix): `echo 'superkeys.overlap' > /dev/ttyACM0`
+- JavaScript: 
+  ```js 
+  focus.command("superkeys.overlap")
+  ```
+- Serial Command (Unix): 
+  ```shell
+  echo 'superkeys.overlap' > /dev/ttyACM0
+  ```
 
 To set:
 
-- JavaScript: `focus.command("superkeys.overlap 80")`
-- Serial Command (Unix): `echo 'superkeys.overlap 80' > /dev/ttyACM0`
+- JavaScript: 
+  ```js 
+  focus.command("superkeys.overlap 80")
+  ```
+- Serial Command (Unix): 
+  ```shell
+  echo 'superkeys.overlap 80' > /dev/ttyACM0
+  ```
 
 #### Expected output
 
@@ -995,8 +1127,14 @@ The help command returns all the available commands in the current version of th
 
 #### Commands
 
-JavaScript: `focus.command("help")`
-Serial Command (Unix): `echo 'help' > /dev/ttyACM0`
+- JavaScript: 
+  ```js 
+  focus.command("help")
+  ```
+- Serial Command (Unix): 
+  ```shell
+  echo 'help' > /dev/ttyACM0
+  ```
 
 #### Expected output
 
@@ -1010,8 +1148,14 @@ This command allows the host PC to activate a certain layer remotely just by sen
 
 To use:
 
-- JavaScript: `focus.command("layer.activate 1")`
-- Serial Command (Unix): `echo 'layer.activate 1' > /dev/ttyACM0`
+- JavaScript: 
+  ```js 
+  focus.command("layer.activate 1")
+  ```
+- Serial Command (Unix): 
+  ```shell
+  echo 'layer.activate 1' > /dev/ttyACM0
+  ```
 
 #### Expected output
 
@@ -1025,8 +1169,14 @@ This command allows the host PC to deactivate the last layer that the keyboard s
 
 To use:
 
-- JavaScript: `focus.command("layer.deactivate")`
-- Serial Command (Unix): `echo 'layer.deactivate' > /dev/ttyACM0`
+- JavaScript: 
+  ```js 
+  focus.command("layer.deactivate")
+  ```
+- Serial Command (Unix): 
+  ```shell
+  echo 'layer.deactivate' > /dev/ttyACM0
+  ```
 
 #### Expected output
 
@@ -1040,8 +1190,14 @@ This command allows the host PC to ask the keyboard which layer is in use right 
 
 To use:
 
-- JavaScript: `focus.command("layer.isActive")`
-- Serial Command (Unix): `echo 'layer.isActive' > /dev/ttyACM0`
+- JavaScript: 
+  ```js 
+  focus.command("layer.isActive")
+  ```
+- Serial Command (Unix): 
+  ```shell
+  echo 'layer.isActive' > /dev/ttyACM0
+  ```
 
 #### Expected output
 
@@ -1059,8 +1215,14 @@ This command does not affect the memory usage as the value is stored in RAM.
 
 To use:
 
-- JavaScript: `focus.command("layer.moveTo 1")`
-- Serial Command (Unix): `echo 'layer.moveTo 1' > /dev/ttyACM0`
+- JavaScript: 
+  ```js 
+  focus.command("layer.moveTo 1")
+  ```
+- Serial Command (Unix): 
+  ```shell
+  echo 'layer.moveTo 1' > /dev/ttyACM0
+  ```
 
 #### Expected output
 
@@ -1074,9 +1236,18 @@ This command returns the isActive status for up to 32 layers. It will return a 3
 
 To use:
 
-- JavaScript: `focus.command("layer.state")`
-- Serial Command (Unix): `echo 'layer.state' > /dev/ttyACM0`
+- JavaScript: 
+  ```js 
+  focus.command("layer.state")
+  ```
+- Serial Command (Unix): 
+  ```shell
+  echo 'layer.state' > /dev/ttyACM0
+  ```
 
 #### Expected output
 
-This is the typical answer when the first layer is active: "1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 "
+This is the typical answer when the first layer is active: 
+```shell
+'1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 '
+``````
