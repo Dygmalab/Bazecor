@@ -1,19 +1,24 @@
 import React from "react";
 import { useMachine } from "@xstate/react";
-import MainProcessSM from "../controller/FlashingSM/MainProcess";
+import MainProcessSM from "@Renderer/controller/FlashingSM/MainProcess";
 
 // Visual components
 import Styled from "styled-components";
 import Container from "react-bootstrap/Container";
 
 // Extra components
-import i18n from "../i18n";
+import i18n from "@Renderer/i18n";
 
 // Bazecor components
-import PageHeader from "../modules/PageHeader";
-import { FirmwareErrorPanel, FirmwareCheckProcessPanel, FirmwareUpdatePanel, FirmwareUpdateProcess } from "../modules/Firmware";
+import PageHeader from "@Renderer/modules/PageHeader";
+import {
+  FirmwareErrorPanel,
+  FirmwareCheckProcessPanel,
+  FirmwareUpdatePanel,
+  FirmwareUpdateProcess,
+} from "@Renderer/modules/Firmware";
 
-import { FirmwareLoader } from "../component/Loader";
+import { FirmwareLoader } from "@Renderer/component/Loader";
 
 const Styles = Styled.div`
 height: inherit;
