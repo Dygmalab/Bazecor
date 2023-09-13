@@ -1,50 +1,33 @@
 import React from "react";
-import { ipcRenderer } from "electron";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import PageHeader from "@Renderer/modules/PageHeader";
 import { RegularButton } from "../component/Button";
+import HID from "../../api/hid/hid";
 
 const BazecorDevtools = () => {
   let connectedDevice: undefined | HIDDevice;
+  const hid = new HID();
   const onGetHIDDevices = async () => {
-    const grantedDevices = await navigator.hid.getDevices();
+    const grantedDevices = await HID.getDevices();
     console.log(grantedDevices);
   };
 
   const onHIDConnect = async () => {
-    const devices = await navigator.hid.requestDevice({
-      filters: [
-        {
-          vendorId: 13807,
-          productId: 18,
-        },
-      ],
-    });
-    console.log("Devices to connect");
-    console.log(devices);
-    [connectedDevice] = devices;
-    console.log("Connected to");
-    console.log(connectedDevice);
-  };
-
-  const inputReportHandler = (event: Event) => {
-    const { data, device, reportId } = event;
-
-    if (device.productId !== 18 && reportId !== 6) return;
-    console.log("inputreport event");
-
-    console.log("Data received");
-    const dataReceived = new TextDecoder().decode(data);
-    console.log(dataReceived);
+    try {
+      connectedDevice = await hid.connectDevice(0);
+      console.log("Connected to");
+      console.log(connectedDevice);
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   const onHIDOpen = async () => {
-    if (connectedDevice) {
-      await connectedDevice.open();
-      console.log("Device open");
-      console.log(connectedDevice);
-      connectedDevice.addEventListener("inputreport", inputReportHandler);
+    try {
+      await hid.open();
+    } catch (err) {
+      console.log(err);
     }
   };
 
@@ -76,14 +59,20 @@ const BazecorDevtools = () => {
   };
 
   const onHIDSendReport = async () => {
-    if (connectedDevice) {
-      const report = new TextEncoder().encode("help\n");
-      try {
-        await connectedDevice.sendReport(5, report);
-        console.log("Report sent", report);
-      } catch (err) {
-        console.log(err);
-      }
+    try {
+      console.log("Sending report...");
+      await hid.sendData(
+        "help",
+        rxData => {
+          console.log("All data received");
+          console.log(rxData);
+        },
+        err => {
+          console.log(err);
+        },
+      );
+    } catch (err) {
+      console.log(err);
     }
   };
 

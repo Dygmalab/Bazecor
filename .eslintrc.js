@@ -54,6 +54,8 @@ module.exports = {
     "import/prefer-default-export": "off",
     "react/jsx-no-useless-fragment": "off",
     "no-restricted-syntax": "off",
+    "@typescript-eslint/lines-between-class-members": "off",
+    "max-classes-per-file": ["warn", 2],
   },
   ignorePatterns: ["/*", "!/src"], // we only care about linting src folder
 };
