@@ -344,7 +344,7 @@ class KeyMacro extends Component {
               </div>
               <div className="bodyDrag">
                 <p
-                  className="chip"
+                  className="chip fs-mask"
                   style={
                     {
                       // backgroundColor: item.color,
