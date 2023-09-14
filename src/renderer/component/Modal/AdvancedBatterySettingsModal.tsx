@@ -51,6 +51,7 @@ function AdvancedBatterySettingsModal(props: AdvancedEnergyManagementProps) {
   const setIdleleds = async (value: number) => {
     const newWireless = { ...wireless };
     newWireless.idleleds = value * 60;
+    console.log("idleleds new value", value, newWireless.idleleds);
     changeWireless(newWireless);
   };
 
@@ -108,9 +109,9 @@ function AdvancedBatterySettingsModal(props: AdvancedEnergyManagementProps) {
               </Col>
               <Col lg={5}>
                 <div className="slider-wrapper">
-                  <span className="tagsfix slider-label">0%</span>
-                  <Slider min={1} max={60} value={Math.round(wireless.idleleds / 60)} onChange={setIdleleds} />
-                  <span className="tagsfix slider-label">100%</span>
+                  <span className="tagsfix slider-label">off </span>
+                  <Slider min={0} max={60} value={Math.round(wireless.idleleds / 60)} onChange={setIdleleds} />
+                  <span className="tagsfix slider-label">60 min</span>
                 </div>
               </Col>
             </Row>

@@ -62,7 +62,7 @@ const initialWireless = {
   },
   brightness: 0,
   brightnessUG: 0,
-  fade: false,
+  fade: 0,
   idleleds: 0,
 };
 
@@ -102,7 +102,7 @@ function Wireless(props: WirelessPropsInterface) {
       wireless.brightnessUG = brightnessUG ? parseInt(brightnessUG, 10) : 0;
     });
     await focus.command("led.fade").then(fade => {
-      wireless.fade = fade ? parseInt(fade, 10) > 0 : false;
+      wireless.fade = fade ? parseInt(fade, 10) : 0;
     });
     await focus.command("idleleds.wireless").then(idleleds => {
       wireless.idleleds = idleleds ? parseInt(idleleds, 10) : 0;
@@ -188,7 +188,9 @@ function Wireless(props: WirelessPropsInterface) {
     await focus.command("led.brightness.wireless", wireless.brightness);
     await focus.command("led.brightnessUG.wireless", wireless.brightnessUG);
     await focus.command("led.fade", wireless.fade);
-    await focus.command("idleleds.wireless", wireless.idleleds * 60);
+    await focus.command("idleleds.wireless", wireless.idleleds);
+
+    destroyContext();
   }
 
   if (loading) <LogoLoader />;
