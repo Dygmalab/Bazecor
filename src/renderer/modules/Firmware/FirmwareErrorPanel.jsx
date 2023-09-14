@@ -191,14 +191,6 @@ width: 100%;
 }
 `;
 
-/**
- * This FirmwareUpdatePanel function returns a module that wrap all modules and components to manage the first steps of firware update.
- * The object will accept the following parameters
- *
- * @param {number} disclaimerCard - Number that indicates the software when the installation will begin.
- * @returns {<FirmwareUpdatePanel>} FirmwareUpdatePanel component.
- */
-
 function FirmwareErrorPanel({ nextBlock, retryBlock }) {
   const [state, send] = useMachine(FWSelection);
   const [handleError, setHandleError] = useState(false);
