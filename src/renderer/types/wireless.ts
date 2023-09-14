@@ -45,20 +45,17 @@ export interface WirelessInterface {
 export interface BatterySettingsProps {
   wireless: WirelessInterface;
   changeWireless: (wireless: WirelessInterface) => void;
-  toggleSavingMode: () => void;
   isCharging: boolean;
 }
 
 export interface EnergyManagementProps {
   wireless: WirelessInterface;
   changeWireless: (wireless: WirelessInterface) => void;
-  toggleSavingMode: () => void;
 }
 
 export interface AdvancedEnergyManagementProps {
   wireless: WirelessInterface;
   changeWireless: (wireless: WirelessInterface) => void;
-  toggleSavingMode: () => void;
   showModal: boolean;
   setShowModal: (show: boolean) => void;
 }

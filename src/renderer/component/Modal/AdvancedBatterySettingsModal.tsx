@@ -51,7 +51,6 @@ function AdvancedBatterySettingsModal(props: AdvancedEnergyManagementProps) {
   const setIdleleds = async (value: number) => {
     const newWireless = { ...wireless };
     newWireless.idleleds = value * 60;
-    console.log("idleleds new value", value, newWireless.idleleds);
     changeWireless(newWireless);
   };
 

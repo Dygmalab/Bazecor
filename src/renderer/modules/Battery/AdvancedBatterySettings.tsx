@@ -43,7 +43,7 @@ const Styles = Styled.div`
 `;
 
 function AdvancedBatterySettings(props: EnergyManagementProps) {
-  const { wireless, changeWireless, toggleSavingMode } = props;
+  const { wireless, changeWireless } = props;
   const [showModal, setShowModal] = useState(false);
   return (
     <Styles>
@@ -61,7 +61,6 @@ function AdvancedBatterySettings(props: EnergyManagementProps) {
         setShowModal={setShowModal}
         wireless={wireless}
         changeWireless={changeWireless}
-        toggleSavingMode={toggleSavingMode}
       />
     </Styles>
   );

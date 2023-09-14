@@ -153,14 +153,6 @@ function Wireless(props: WirelessPropsInterface) {
     console.log("command returned", result);
   }
 
-  async function toggleSavingMode() {
-    const focus = new Focus();
-    await focus.command("wireless.battery.savingMode", !wireless.battery.savingMode ? 1 : 0);
-    const newWireless = { ...wireless };
-    newWireless.battery.savingMode = !wireless.battery.savingMode;
-    setWireless(newWireless);
-  }
-
   async function destroyContext() {
     setWireless(initialWireless);
     setModified(false);
@@ -213,13 +205,8 @@ function Wireless(props: WirelessPropsInterface) {
             </Row>
             <Row>
               <Col lg={6}>
-                <BatterySettings
-                  wireless={wireless}
-                  changeWireless={changeWireless}
-                  toggleSavingMode={toggleSavingMode}
-                  isCharging={false}
-                />
-                <EnergyManagement wireless={wireless} changeWireless={changeWireless} toggleSavingMode={toggleSavingMode} />
+                <BatterySettings wireless={wireless} changeWireless={changeWireless} isCharging={false} />
+                <EnergyManagement wireless={wireless} changeWireless={changeWireless} />
               </Col>
               <Col lg={6}>
                 <RFSettings wireless={wireless} changeWireless={changeWireless} sendRePair={sendRePairCommand} />

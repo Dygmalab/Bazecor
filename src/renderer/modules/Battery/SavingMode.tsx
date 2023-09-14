@@ -53,7 +53,12 @@ h5 {
 }
 `;
 
-function SavingMode({ wireless, toggleSavingMode }: EnergyManagementProps) {
+function SavingMode({ wireless, changeWireless }: EnergyManagementProps) {
+  const toggleSavingBatteryMode = () => {
+    const newWireless = { ...wireless };
+    newWireless.battery.savingMode = !wireless.battery.savingMode;
+    changeWireless(newWireless);
+  };
   return (
     <Styles>
       <Title text={i18n.wireless.energyManagement.lowPowerMode} headingLevel={5} />
@@ -71,7 +76,7 @@ function SavingMode({ wireless, toggleSavingMode }: EnergyManagementProps) {
               type="switch"
               id="settingSavingMode"
               checked={wireless.battery ? wireless.battery.savingMode : false}
-              onChange={toggleSavingMode}
+              onChange={toggleSavingBatteryMode}
             />
           </Form>
         </div>
