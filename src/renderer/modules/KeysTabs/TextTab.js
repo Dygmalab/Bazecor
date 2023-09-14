@@ -59,6 +59,7 @@ class TextTab extends Component {
             onChange={this.props.onTextChange}
             as="textarea"
             rows={3}
+            className="fs-exclude"
           />
         </div>
         <div className="tabSaveButton">
