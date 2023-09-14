@@ -1,0 +1,1 @@
+export type ConnectedDevice = unknown;
