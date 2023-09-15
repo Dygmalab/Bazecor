@@ -29,7 +29,7 @@ import Modal from "react-bootstrap/Modal";
 
 import Dropdown from "react-bootstrap/Dropdown";
 import { USBDevice, USBDeviceDescriptor, NonSerialDeviceDescriptor } from "@Renderer/types/devices";
-import PageHeader from "../modules/PageHeader";
+import { PageHeader } from "../modules/PageHeader";
 import { RegularButton } from "../component/Button";
 
 import Focus from "../../api/focus";
@@ -255,16 +255,16 @@ const SelectKeyboard: React.FC<SelectKeyboardProps> = (props): JSX.Element => {
       const serialDevices = await focus.find(...Hardware.serial);
       // console.log("Printing devices: ", serialDevices);
       const supportedDevices = [];
-      let device;
+      let localDevice;
       for (let i = 0; i < serialDevices.length; i += 1) {
-        device = serialDevices[i];
+        localDevice = serialDevices[i];
         /* eslint-disable no-await-in-loop */
-        device.accessible = await focus.isDeviceAccessible(device);
+        localDevice.accessible = await focus.isDeviceAccessible(localDevice);
         // console.log("before checking device supported", device, focus);
-        if (device.accessible && (await focus.isDeviceSupported(device))) {
-          supportedDevices.push(device);
-        } else if (!device.accessible) {
-          supportedDevices.push(device);
+        if (localDevice.accessible && (await focus.isDeviceSupported(localDevice))) {
+          supportedDevices.push(localDevice);
+        } else if (!localDevice.accessible) {
+          supportedDevices.push(localDevice);
         }
         /* eslint-disable no-await-in-loop */
       }
@@ -292,7 +292,7 @@ const SelectKeyboard: React.FC<SelectKeyboardProps> = (props): JSX.Element => {
       setDevices(list);
       return list;
     }
-  }, [findNonSerialKeyboards, device, focus]);
+  }, [devices, focus, findNonSerialKeyboards, connected]);
 
   useEffect(() => {
     const finder = () => findKeyboards();
@@ -476,13 +476,13 @@ const SelectKeyboard: React.FC<SelectKeyboardProps> = (props): JSX.Element => {
       return;
     }
 
-    Hardware.serial.forEach(device => {
+    Hardware.serial.forEach(dev => {
       if (
-        file.device.usb.productId === device.usb.productId &&
-        file.device.usb.vendorId === device.usb.vendorId &&
-        file.device.info.keyboardType === device.info.keyboardType
+        file.device.usb.productId === dev.usb.productId &&
+        file.device.usb.vendorId === dev.usb.vendorId &&
+        file.device.info.keyboardType === dev.info.keyboardType
       ) {
-        file.device.components = device.components;
+        file.device.components = dev.components;
       }
     });
 
@@ -507,13 +507,13 @@ const SelectKeyboard: React.FC<SelectKeyboardProps> = (props): JSX.Element => {
       return;
     }
     console.log("Exchange focus for file access");
-    Hardware.serial.forEach(device => {
+    Hardware.serial.forEach(dev => {
       if (
-        virtualKeyboard.device.usb.productId === device.usb.productId &&
-        virtualKeyboard.device.usb.vendorId === device.usb.vendorId &&
-        virtualKeyboard.device.info.keyboardType === device.info.keyboardType
+        virtualKeyboard.device.usb.productId === dev.usb.productId &&
+        virtualKeyboard.device.usb.vendorId === dev.usb.vendorId &&
+        virtualKeyboard.device.info.keyboardType === dev.info.keyboardType
       ) {
-        virtualKeyboard.device.components = device.components;
+        virtualKeyboard.device.components = dev.components;
       }
     });
 
@@ -549,23 +549,23 @@ const SelectKeyboard: React.FC<SelectKeyboardProps> = (props): JSX.Element => {
 
   const getDeviceItems = () => {
     const neurons = store.get("neurons");
-    const result = devices.map((device, index) => {
-      console.log("checking device :", device);
-      if (device.device.bootloader)
+    const result = devices.map((dev, index) => {
+      console.log("checking device :", dev);
+      if (dev.device.bootloader)
         return {
           index,
-          displayName: device?.device?.info?.displayName,
+          displayName: dev?.device?.info?.displayName,
           userName: "",
-          path: device.path || i18n.keyboardSelect.unknown,
+          path: dev.path || i18n.keyboardSelect.unknown,
         };
-      const preparedSN = device.productId === "2201" ? device.serialNumber.slice(0, 32) : device.serialNumber;
-      const neuron = neurons.find(neuron => neuron.id.toLowerCase() === preparedSN.toLowerCase());
+      const preparedSN = dev.productId === "2201" ? dev.serialNumber.slice(0, 32) : dev.serialNumber;
+      const neuron = neurons.find(n => n.id.toLowerCase() === preparedSN.toLowerCase());
 
       return {
         index,
-        displayName: device?.device?.info?.displayName,
+        displayName: dev?.device?.info?.displayName,
         userName: neuron ? neuron.name : "",
-        path: device.path || i18n.keyboardSelect.unknown,
+        path: dev.path || i18n.keyboardSelect.unknown,
       };
     });
     return result;

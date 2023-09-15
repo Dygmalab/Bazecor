@@ -10,7 +10,7 @@ import Container from "react-bootstrap/Container";
 import i18n from "@Renderer/i18n";
 
 // Bazecor components
-import PageHeader from "@Renderer/modules/PageHeader";
+import { PageHeader } from "@Renderer/modules/PageHeader";
 import {
   FirmwareErrorPanel,
   FirmwareCheckProcessPanel,

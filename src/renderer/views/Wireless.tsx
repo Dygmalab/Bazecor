@@ -10,7 +10,7 @@ import Col from "react-bootstrap/Col";
 // Custom component imports
 import { LogoLoader } from "@Renderer/component/Loader";
 import ConnectionStatus from "@Renderer/component/ConnectionStatus";
-import PageHeader from "@Renderer/modules/PageHeader";
+import { PageHeader } from "@Renderer/modules/PageHeader";
 import { BatterySettings, EnergyManagement, RFSettings } from "@Renderer/modules/Settings";
 
 // Import Types for wireless

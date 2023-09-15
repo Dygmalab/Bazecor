@@ -34,7 +34,7 @@ import Callout from "@Renderer/component/Callout";
 import { IconFloppyDisk } from "@Renderer/component/Icon";
 import { MacroSelector } from "@Renderer/component/Select";
 import ToastMessage from "@Renderer/component/ToastMessage";
-import PageHeader from "@Renderer/modules/PageHeader";
+import { PageHeader } from "@Renderer/modules/PageHeader";
 
 import MacroCreator from "@Renderer/modules/Macros/MacroCreator";
 import TimelineEditorManager from "@Renderer/modules/Macros/TimelineEditorManager";

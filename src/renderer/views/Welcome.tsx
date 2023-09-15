@@ -25,7 +25,7 @@ import { useNavigate } from "react-router-dom";
 import Focus from "../../api/focus";
 import i18n from "../i18n";
 
-import PageHeader from "../modules/PageHeader";
+import { PageHeader } from "../modules/PageHeader";
 import Title from "../component/Title";
 import ToastMessage from "../component/ToastMessage";
 import { RegularButton } from "../component/Button";
