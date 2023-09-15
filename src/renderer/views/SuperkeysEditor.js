@@ -343,7 +343,7 @@ class SuperkeysEditor extends React.Component {
     let type = 0;
     let keyCode = [];
     let actions = [];
-    let macros = [];
+    let localMacros = [];
     actions = [];
     while (raw.length > iter) {
       if (kcs > 0) {
@@ -367,11 +367,11 @@ class SuperkeysEditor extends React.Component {
       }
       if (type === 0) {
         kcs = 0;
-        macros[i] = {};
-        macros[i].actions = actions;
-        macros[i].id = i;
-        macros[i].name = "";
-        macros[i].macro = "";
+        localMacros[i] = {};
+        localMacros[i].actions = actions;
+        localMacros[i].id = i;
+        localMacros[i].name = "";
+        localMacros[i].macro = "";
         i += 1;
         actions = [];
         iter += 1;
@@ -383,12 +383,12 @@ class SuperkeysEditor extends React.Component {
       type,
       keyCode,
     });
-    macros[i] = {};
-    macros[i].actions = actions;
-    macros[i].id = i;
-    macros[i].name = "";
-    macros[i].macro = "";
-    macros = macros.map(macro => {
+    localMacros[i] = {};
+    localMacros[i].actions = actions;
+    localMacros[i].id = i;
+    localMacros[i].name = "";
+    localMacros[i].macro = "";
+    localMacros = localMacros.map(macro => {
       const aux = macro.actions.map(action => {
         let act = 0;
         if (action.keyCode.length > 1) {
@@ -407,11 +407,11 @@ class SuperkeysEditor extends React.Component {
     const equal = [];
     let finalMacros = [];
     const stored = storedMacros;
-    console.log(macros, stored);
+    console.log(localMacros, stored);
     if (stored === undefined) {
-      return macros;
+      return localMacros;
     }
-    finalMacros = macros.map((macro, idx) => {
+    finalMacros = localMacros.map((macro, idx) => {
       if (stored.length > idx && stored.length > 0) {
         console.log("compare between: ", macro.actions, stored[idx].actions);
         const aux = macro;
