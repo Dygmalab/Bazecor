@@ -18,7 +18,7 @@
 import KeymapANSI from "./components/Keymap-ANSI";
 import Focus from "../focus";
 
-const Raise_ANSI = {
+const RaiseANSI = {
   info: {
     vendor: "Dygma",
     product: "Raise",
@@ -54,33 +54,34 @@ const Raise_ANSI = {
   },
 
   flash: async (_, filename, flashRaise, stateUpdate) => {
-    return new Promise(async (resolve, reject) => {
-      try {
-        await flashRaise.updateFirmware(filename, stateUpdate);
-        resolve();
-      } catch (e) {
-        reject(e);
-      }
-      flashRaise.saveBackupFile();
-    });
+    try {
+      await flashRaise.updateFirmware(filename, stateUpdate);
+      return true;
+    } catch (e) {
+      console.log(e);
+      return false;
+    }
   },
 
   isDeviceSupported: async port => {
     const focus = new Focus();
     let layout = localStorage.getItem(port.serialNumber);
     if (!layout) {
-      focus._port && focus._port.path === port.path
-        ? await focus.open(focus._port, port.device, null)
-        : await focus.open(port.path, port.device, null);
+      if (focus._port && focus._port.path === port.path) {
+        await focus.open(focus._port, port.device, null);
+      } else {
+        await focus.open(port.path, port.device, null);
+      }
       layout = await focus.command("hardware.layout");
       focus.close();
       localStorage.setItem(port.serialNumber, layout);
     }
-    return layout.trim() === "ANSI";
+    const result = layout.trim() === "ANSI";
+    return result;
   },
 };
 
-const Raise_ANSIBootloader = {
+const RaiseANSIBootloader = {
   info: {
     vendor: "Dygma",
     product: "Raise",
@@ -104,15 +105,14 @@ const Raise_ANSIBootloader = {
     },
   },
   flash: async (_, filename, flashRaise, stateUpdate) => {
-    return new Promise(async (resolve, reject) => {
-      try {
-        await flashRaise.updateFirmware(filename, stateUpdate);
-        resolve();
-      } catch (e) {
-        reject(e);
-      }
-    });
+    try {
+      await flashRaise.updateFirmware(filename, stateUpdate);
+      return true;
+    } catch (e) {
+      console.log(e);
+      return false;
+    }
   },
 };
 
-export { Raise_ANSI, Raise_ANSIBootloader };
+export { RaiseANSI, RaiseANSIBootloader };

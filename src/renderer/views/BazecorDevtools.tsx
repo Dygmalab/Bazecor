@@ -1,9 +1,18 @@
 import React from "react";
+import Styled from "styled-components";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
 import { PageHeader } from "@Renderer/modules/PageHeader";
+import DeviceTalker from "../../api/comms";
 import { RegularButton } from "../component/Button";
 import HID from "../../api/hid/hid";
+
+const Styles = Styled.div`
+.button-container {
+
+}
+`;
 
 const BazecorDevtools = () => {
   let connectedDevice: undefined | HIDDevice;
@@ -76,17 +85,31 @@ const BazecorDevtools = () => {
     }
   };
 
+  const onListSerialDevices = async () => {
+    const devList = await DeviceTalker.list();
+    console.log("Listing Serial Devices", devList);
+  };
+
   return (
-    <Container fluid className="center-content">
-      <PageHeader text="Bazecor dev tools" />
-      <Row>
-        <RegularButton buttonText="List of HID Devices" styles="primary" onClick={onGetHIDDevices} />
-        <RegularButton buttonText="Connect by HID" styles="primary" onClick={onHIDConnect} />
-        <RegularButton buttonText="Open device" styles="primary" onClick={onHIDOpen} />
-        <RegularButton buttonText="List reports" styles="primary" onClick={onHIDReports} />
-        <RegularButton buttonText="Send report" styles="primary" onClick={onHIDSendReport} />
-      </Row>
-    </Container>
+    <Styles>
+      <Container fluid className="center-content">
+        <PageHeader text="Bazecor dev tools" />
+        <Row className="button-container">
+          <Col className="my-4 col-3">
+            <h4>HID Testing Buttons</h4>
+            <RegularButton buttonText="List of HID Devices" styles="primary" onClick={onGetHIDDevices} />
+            <RegularButton buttonText="Connect by HID" styles="primary" onClick={onHIDConnect} />
+            <RegularButton buttonText="Open device" styles="primary" onClick={onHIDOpen} />
+            <RegularButton buttonText="List reports" styles="primary" onClick={onHIDReports} />
+            <RegularButton buttonText="Send report" styles="primary" onClick={onHIDSendReport} />
+          </Col>
+          <Col className="my-4 col-3">
+            <h4>Serial Testing Buttons</h4>
+            <RegularButton buttonText="List of Serial Devices" styles="primary" onClick={onListSerialDevices} />
+          </Col>
+        </Row>
+      </Container>
+    </Styles>
   );
 };
 

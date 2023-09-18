@@ -15,10 +15,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Raise_ANSI, Raise_ANSIBootloader } from "../hardware-dygma-raise-ansi";
-import { Raise_ISO, Raise_ISOBootloader } from "../hardware-dygma-raise-iso";
-import { Defy_wired, Defy_wiredBootloader } from "../hardware-dygma-defy-wired";
-import { Defy_wireless, Defy_wirelessBootloader } from "../hardware-dygma-defy-wireless";
+import { RaiseANSI, RaiseANSIBootloader } from "../hardware-dygma-raise-ansi";
+import { RaiseISO, RaiseISOBootloader } from "../hardware-dygma-raise-iso";
+import { DefyWired, DefyWiredBootloader } from "../hardware-dygma-defy-wired";
+import { DefyWireless, DefyWirelessBootloader } from "../hardware-dygma-defy-wireless";
 
 // const Hardware = {
 //   serial: [Raise_ANSI, Raise_ISO, Raise_ANSIBootloader, Raise_ISOBootloader],
@@ -26,10 +26,10 @@ import { Defy_wireless, Defy_wirelessBootloader } from "../hardware-dygma-defy-w
 //   bootloader: [Raise_ANSIBootloader, Raise_ISOBootloader]
 // };
 
-const Hardware = {
-  serial: [Raise_ISO, Raise_ANSI, Defy_wired, Defy_wireless, Raise_ANSIBootloader, Raise_ISOBootloader, Defy_wirelessBootloader],
-  nonSerial: [Defy_wiredBootloader],
-  bootloader: [Raise_ANSIBootloader, Raise_ISOBootloader, Defy_wiredBootloader, Defy_wirelessBootloader],
+const Hardware: any = {
+  serial: [RaiseISO, RaiseANSI, DefyWired, DefyWireless, RaiseANSIBootloader, RaiseISOBootloader, DefyWirelessBootloader],
+  nonSerial: [DefyWiredBootloader],
+  bootloader: [RaiseANSIBootloader, RaiseISOBootloader, DefyWiredBootloader, DefyWirelessBootloader],
 };
 
-export { Hardware as default };
+export default Hardware;

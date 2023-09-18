@@ -15,9 +15,8 @@
  */
 
 import KeymapDEFY from "./components/Keymap";
-import Focus from "../focus";
 
-const Defy_wired = {
+const DefyWired = {
   info: {
     vendor: "Dygma",
     product: "Defy",
@@ -53,29 +52,27 @@ const Defy_wired = {
     },
   },
 
-  flash: async (_, filename, filenameSides, flashDefy, stateUpdate) =>
-    new Promise(async (resolve, reject) => {
-      try {
-        await flashDefy.updateFirmware(filename, filenameSides, stateUpdate);
-        resolve();
-      } catch (e) {
-        reject(e);
-      }
-      flashDefy.saveBackupFile();
-    }),
+  flash: async (_, filename, filenameSides, flashDefy, stateUpdate) => {
+    try {
+      await flashDefy.updateFirmware(filename, filenameSides, stateUpdate);
+      return true;
+    } catch (e) {
+      console.log(e);
+      return false;
+    }
+  },
 
-  isDeviceSupported: async port => {
+  isDeviceSupported: async port =>
     // const focus = new Focus();
     // focus._port && focus._port.path === port.path
     //   ? await focus.open(focus._port, port.device, null)
     //   : await focus.open(port.path, port.device, null);
     // port.serialNumber = await focus.command("hardware.chip_id");
     // let result = await focus.close();
-    return true;
-  },
+    port,
 };
 
-const Defy_wiredBootloader = {
+const DefyWiredBootloader = {
   info: {
     vendor: "Dygma",
     product: "Defy",
@@ -98,15 +95,15 @@ const Defy_wiredBootloader = {
       updateInstructions: `To update the firmware, press the button at the bottom. You must not hold any key on the keyboard while the countdown is in progress, nor afterwards, until the flashing is finished. When the countdown reaches zero, the Neuron's light should start a blue pulsing pattern, and flashing will then proceed. `,
     },
   },
-  flash: async (_, filename, filenameSides, flashDefy, stateUpdate) =>
-    new Promise(async (resolve, reject) => {
-      try {
-        await flashDefy.updateFirmware(filename, filenameSides, stateUpdate);
-        resolve();
-      } catch (e) {
-        reject(e);
-      }
-    }),
+  flash: async (_, filename, filenameSides, flashDefy, stateUpdate) => {
+    try {
+      await flashDefy.updateFirmware(filename, filenameSides, stateUpdate);
+      return true;
+    } catch (e) {
+      console.log(e);
+      return false;
+    }
+  },
 };
 
-export { Defy_wired, Defy_wiredBootloader };
+export { DefyWired, DefyWiredBootloader };

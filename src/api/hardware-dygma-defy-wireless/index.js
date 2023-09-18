@@ -16,9 +16,8 @@
  */
 
 import KeymapDEFY from "./components/Keymap";
-import Focus from "../focus";
 
-const Defy_wireless = {
+const DefyWireless = {
   info: {
     vendor: "Dygma",
     product: "Defy",
@@ -55,28 +54,25 @@ const Defy_wireless = {
   },
 
   flash: async (_, filename, bootloader, flashDefyWireless, stateUpdate) => {
-    return new Promise(async (resolve, reject) => {
-      try {
-        await flashDefyWireless.updateFirmware(filename, bootloader, stateUpdate);
-        resolve();
-      } catch (e) {
-        reject(e);
-      }
-      flashDefyWireless.saveBackupFile();
-    });
+    try {
+      await flashDefyWireless.updateFirmware(filename, bootloader, stateUpdate);
+      return true;
+    } catch (e) {
+      console.error(e);
+      return false;
+    }
   },
-  isDeviceSupported: async port => {
+  isDeviceSupported: async port =>
     // const focus = new Focus();
     // focus._port && focus._port.path === port.path
     //   ? await focus.open(focus._port, port.device, null)
     //   : await focus.open(port.path, port.device, null);
     // port.serialNumber = await focus.command("hardware.chip_id");
     // let result = await focus.close();
-    return true;
-  },
+    port,
 };
 
-const Defy_wirelessBootloader = {
+const DefyWirelessBootloader = {
   info: {
     vendor: "Dygma",
     product: "Defy",
@@ -100,15 +96,13 @@ const Defy_wirelessBootloader = {
     },
   },
   flash: async (_, filename, bootloader, flashDefyWireless, stateUpdate) => {
-    return new Promise(async (resolve, reject) => {
-      try {
-        await flashDefyWireless.updateFirmware(filename, bootloader, stateUpdate);
-        resolve();
-      } catch (e) {
-        reject(e);
-      }
-    });
+    try {
+      await flashDefyWireless.updateFirmware(filename, bootloader, stateUpdate);
+      return true;
+    } catch (e) {
+      return false;
+    }
   },
 };
 
-export { Defy_wireless, Defy_wirelessBootloader };
+export { DefyWireless, DefyWirelessBootloader };
