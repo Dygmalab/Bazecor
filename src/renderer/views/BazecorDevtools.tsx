@@ -1,7 +1,7 @@
 import React from "react";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
-import PageHeader from "@Renderer/modules/PageHeader";
+import { PageHeader } from "@Renderer/modules/PageHeader";
 import { RegularButton } from "../component/Button";
 import HID from "../../api/hid/hid";
 

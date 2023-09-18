@@ -42,6 +42,8 @@ import Welcome from "@Renderer/views/Welcome";
 import Header from "@Renderer/modules/NavigationMenu";
 import ToastMessage from "@Renderer/component/ToastMessage";
 import { IconNoSignal } from "@Renderer/component/Icon";
+import BazecorDevtools from "@Renderer/views/BazecorDevtools";
+import { showDevtools } from "@Renderer/devMode";
 
 import Store from "@Renderer/utils/Store";
 import Focus from "../api/focus";
