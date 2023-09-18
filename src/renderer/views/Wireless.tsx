@@ -10,7 +10,7 @@ import Col from "react-bootstrap/Col";
 // Custom component imports
 import { LogoLoader } from "@Renderer/component/Loader";
 import ConnectionStatus from "@Renderer/component/ConnectionStatus";
-import PageHeader from "@Renderer/modules/PageHeader";
+import { PageHeader } from "@Renderer/modules/PageHeader";
 import { BatterySettings, EnergyManagement, RFSettings } from "@Renderer/modules/Settings";
 
 // Import Types for wireless
@@ -49,15 +49,21 @@ const initialWireless = {
     disable: 0,
   },
   bluetooth: {
-    devices: 0,
-    state: 0,
-    stability: 0,
+    infoChannel1: "",
+    infoChannel2: "",
+    infoChannel3: "",
+    infoChannel4: "",
+    infoChannel5: "",
+    deviceName: "",
   },
   rf: {
     channelHop: 0,
-    state: 0,
-    stability: 0,
+    power: 0,
   },
+  brightness: 0,
+  brightnessUG: 0,
+  fade: 0,
+  idleleds: 0,
 };
 
 function Wireless(props: WirelessPropsInterface) {
@@ -87,28 +93,40 @@ function Wireless(props: WirelessPropsInterface) {
       wireless.battery.savingMode = parseInt(batteryMode, 10) > 0;
     });
 
-    // Energy commands
+    // Energy saving commands
 
-    await focus.command("wireless.energy.modes").then(energyModes => {
-      wireless.energy.modes = energyModes;
+    await focus.command("led.brightness.wireless").then(brightness => {
+      wireless.brightness = brightness ? parseInt(brightness, 10) : 0;
     });
-    await focus.command("wireless.energy.currentMode").then(energyMode => {
-      wireless.energy.currentMode = energyMode;
+    await focus.command("led.brightnessUG.wireless").then(brightnessUG => {
+      wireless.brightnessUG = brightnessUG ? parseInt(brightnessUG, 10) : 0;
     });
-    await focus.command("wireless.energy.disable").then(energyDisable => {
-      wireless.energy.disable = energyDisable;
+    await focus.command("led.fade").then(fade => {
+      wireless.fade = fade ? parseInt(fade, 10) : 0;
+    });
+    await focus.command("idleleds.wireless").then(idleleds => {
+      wireless.idleleds = idleleds ? parseInt(idleleds, 10) : 0;
     });
 
     // Bluetooth commands
 
-    await focus.command("wireless.bluetooth.devices").then(bluetoothDevices => {
-      wireless.bluetooth.devices = bluetoothDevices;
+    await focus.command("wireless.bluetooth.infoChannel 1").then(infoChannel1 => {
+      wireless.bluetooth.infoChannel1 = infoChannel1;
     });
-    await focus.command("wireless.bluetooth.state").then(bluetoothState => {
-      wireless.bluetooth.state = bluetoothState;
+    await focus.command("wireless.bluetooth.infoChannel 2").then(infoChannel2 => {
+      wireless.bluetooth.infoChannel2 = infoChannel2;
     });
-    await focus.command("wireless.bluetooth.stability").then(bluetoothStability => {
-      wireless.bluetooth.stability = bluetoothStability;
+    await focus.command("wireless.bluetooth.infoChannel 3").then(infoChannel3 => {
+      wireless.bluetooth.infoChannel3 = infoChannel3;
+    });
+    await focus.command("wireless.bluetooth.infoChannel 4").then(infoChannel4 => {
+      wireless.bluetooth.infoChannel4 = infoChannel4;
+    });
+    await focus.command("wireless.bluetooth.infoChannel 5").then(infoChannel5 => {
+      wireless.bluetooth.infoChannel5 = infoChannel5;
+    });
+    await focus.command("wireless.bluetooth.deviceName").then(bluetoothState => {
+      wireless.bluetooth.deviceName = bluetoothState;
     });
 
     // rf commands
@@ -116,11 +134,8 @@ function Wireless(props: WirelessPropsInterface) {
     await focus.command("wireless.rf.channelHop").then(rfChannelHop => {
       wireless.rf.channelHop = rfChannelHop;
     });
-    await focus.command("wireless.rf.state").then(rfState => {
-      wireless.rf.state = rfState;
-    });
-    await focus.command("wireless.rf.stability").then(rfStability => {
-      wireless.rf.stability = rfStability;
+    await focus.command("wireless.rf.power").then(rfPower => {
+      wireless.rf.power = rfPower ? parseInt(rfPower, 10) : 0;
     });
 
     setWireless(wireless);
@@ -136,14 +151,6 @@ function Wireless(props: WirelessPropsInterface) {
     const focus = new Focus();
     const result = await focus.command("wireless.rf.syncPairing");
     console.log("command returned", result);
-  }
-
-  async function toggleSavingMode() {
-    const focus = new Focus();
-    await focus.command("wireless.battery.savingMode", !wireless.battery.savingMode ? 1 : 0);
-    const newWireless = { ...wireless };
-    newWireless.battery.savingMode = !wireless.battery.savingMode;
-    setWireless(newWireless);
   }
 
   async function destroyContext() {
@@ -166,15 +173,16 @@ function Wireless(props: WirelessPropsInterface) {
 
     // Commands to be sent to the keyboard
     await focus.command("wireless.battery.savingMode", wireless.battery.savingMode ? 1 : 0);
-    await focus.command("wireless.energy.modes", wireless.energy.modes);
-    await focus.command("wireless.energy.currentMode", wireless.energy.currentMode);
-    await focus.command("wireless.energy.disable", wireless.energy.disable);
-    await focus.command("wireless.bluetooth.devices", wireless.bluetooth.devices);
-    await focus.command("wireless.bluetooth.state", wireless.bluetooth.state);
-    await focus.command("wireless.bluetooth.stability", wireless.bluetooth.stability);
+    await focus.command("wireless.bluetooth.deviceName", wireless.bluetooth.deviceName);
     await focus.command("wireless.rf.channelHop", wireless.rf.channelHop);
-    await focus.command("wireless.rf.state", wireless.rf.state);
-    await focus.command("wireless.rf.stability", wireless.rf.stability);
+    await focus.command("wireless.rf.power", wireless.rf.power);
+
+    await focus.command("led.brightness.wireless", wireless.brightness);
+    await focus.command("led.brightnessUG.wireless", wireless.brightnessUG);
+    await focus.command("led.fade", wireless.fade);
+    await focus.command("idleleds.wireless", wireless.idleleds);
+
+    destroyContext();
   }
 
   if (loading) <LogoLoader />;
@@ -197,13 +205,8 @@ function Wireless(props: WirelessPropsInterface) {
             </Row>
             <Row>
               <Col lg={6}>
-                <BatterySettings
-                  wireless={wireless}
-                  changeWireless={changeWireless}
-                  toggleSavingMode={toggleSavingMode}
-                  isCharging={false}
-                />
-                <EnergyManagement wireless={wireless} toggleSavingMode={toggleSavingMode} />
+                <BatterySettings wireless={wireless} changeWireless={changeWireless} isCharging={false} />
+                <EnergyManagement wireless={wireless} changeWireless={changeWireless} />
               </Col>
               <Col lg={6}>
                 <RFSettings wireless={wireless} changeWireless={changeWireless} sendRePair={sendRePairCommand} />

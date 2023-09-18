@@ -113,6 +113,7 @@
     "@octokit/core": "^4.2.1",
     "@serialport/parser-delimiter": "^10.0.0",
     "@types/w3c-web-hid": "^1.0.3",
+    "@types/react-rangeslider": "^2.2.4",
     "@xstate/react": "^3.2.2",
     "async": "^3.2.4",
     "axios": "^1.4.0",

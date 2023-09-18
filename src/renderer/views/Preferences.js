@@ -26,22 +26,22 @@ import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
 import Spinner from "react-bootstrap/Spinner";
 import { toast } from "react-toastify";
-import i18n from "../i18n";
+import i18n from "@Renderer/i18n";
 import "react-toastify/dist/ReactToastify.css";
 
 // Custom modules imports
-import { KeyboardSettings } from "../modules/Settings/KeyboardSettings";
-import { BackupSettings, GeneralSettings, NeuronSettings, AdvancedSettings } from "../modules/Settings";
+import { KeyboardSettings } from "@Renderer/modules/Settings/KeyboardSettings";
+import { BackupSettings, GeneralSettings, NeuronSettings, AdvancedSettings } from "@Renderer/modules/Settings";
 
+import { PageHeader } from "@Renderer/modules/PageHeader";
+import ToastMessage from "@Renderer/component/ToastMessage";
+import { RegularButton } from "@Renderer/component/Button";
+import { IconFloppyDisk } from "@Renderer/component/Icon";
+import Version from "@Renderer/component/Version/Version";
+
+import Store from "@Renderer/utils/Store";
 import Focus from "../../api/focus";
 import Backup from "../../api/backup";
-import PageHeader from "../modules/PageHeader";
-import ToastMessage from "../component/ToastMessage";
-import { RegularButton } from "../component/Button";
-import { IconFloppyDisk } from "../component/Icon";
-
-import Store from "../utils/Store";
-import Version from "@Renderer/component/Version/Version";
 
 const store = Store.getStore();
 

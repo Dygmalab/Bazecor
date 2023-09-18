@@ -495,6 +495,7 @@ const English = {
         maximumLED: "Maximum LED intensity",
         maximumLEDBackLight: "Maximum Per-key LED intensity while the device is NOT connected by cable",
         maximumLEDUnderglow: "Maximum Underglow intensity while the device is NOT connected by cable",
+        idleLedsTime: "time to turn off LEDs when waiting while the device is NOT connected by cable",
         highBatteryImpact: "High battery impact",
         lowBatteryImpact: "Low battery impact",
         highlightLayerChanging: "Highlight layer changing",

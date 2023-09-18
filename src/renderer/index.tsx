@@ -15,14 +15,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import React from "react";
 import { MemoryRouter } from "react-router-dom";
 import { createRoot } from "react-dom/client";
+import { I18nextProvider } from "react-i18next";
 import App from "./App";
 import Error from "./Error";
 import "bootstrap-css-only/css/bootstrap.min.css";
 import "@appigram/react-rangeslider/lib/index.css";
 import i18n from "./i18n";
-import { I18nextProvider } from "react-i18next";
 
 const container = document.getElementById("root");
 const root = createRoot(container);

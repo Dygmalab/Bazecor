@@ -2628,6 +2628,13 @@
   dependencies:
     "@types/react" "*"
 
+"@types/react-rangeslider@^2.2.4":
+  version "2.2.4"
+  resolved "https://registry.yarnpkg.com/@types/react-rangeslider/-/react-rangeslider-2.2.4.tgz#191e3d3418d35ea2ef65b3795531cba1d0e37a0d"
+  integrity sha512-WUgIfk7pCvat5QbTpJDh/0m3e8NZvqzVy3RXTaU8UaDliNM+SBz8hFsIfVXhwN/ruOvILOvCdh2+D6sKvzr+Ng==
+  dependencies:
+    "@types/react" "*"
+
 "@types/react-redux@^7.1.20":
   version "7.1.25"
   resolved "https://registry.yarnpkg.com/@types/react-redux/-/react-redux-7.1.25.tgz#de841631205b24f9dfb4967dd4a7901e048f9a88"

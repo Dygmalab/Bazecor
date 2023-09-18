@@ -32,7 +32,6 @@ padding-top: 24px;
 
 function BatterySettings(props: BatterySettingsProps) {
   const { wireless } = props;
-  // console.log("Wireless: ", wireless);
   return (
     <Styles>
       <Card className="overflowFix card-preferences">
