@@ -96,8 +96,8 @@ class HID {
   sendData = async (dataToSend: string, receiverHandler: ReceiverHandler, errorHandler: ErrorHandler) => {
     const maxData = 200;
     this.dataReceived = "";
-    const dataWithDelimiter = `${dataToSend}`;
-    const encodedData = HID.encoder.encode(dataWithDelimiter);
+    // const dataWithDelimiter = `${dataToSend}`;
+    const encodedData = HID.encoder.encode(dataToSend);
     const chunks = Math.ceil(encodedData.length / maxData);
     let startIndex;
     let endIndex;
@@ -108,7 +108,10 @@ class HID {
     let receiveDataHandler: (event: HIDInputReportEvent) => void;
     const allDataReceived = new Promise((resolve, reject) => {
       const timeout = setTimeout(() => {
-        this.connectedDevice.removeEventListener("inputreport", receiveDataHandler);
+        console.log("HID send timeout triggered");
+        if (this.connectedDevice) {
+          this.connectedDevice.removeEventListener("inputreport", receiveDataHandler);
+        }
         reject(new HIDError("HID send data took too much time"));
       }, 5000);
       receiveDataHandler = (event: HIDInputReportEvent) => {
@@ -119,31 +122,53 @@ class HID {
 
         const decodedData = HID.decoder.decode(data);
         if (decodedData.includes("\r\n.\r\n")) {
+          console.log("Last data received");
           const lastChunk = decodedData.replace("\r\n.\r\n", "");
           this.dataReceived += lastChunk;
           clearTimeout(timeout);
           resolve(this.dataReceived);
         } else {
           this.dataReceived += decodedData;
+          console.log("Data received");
         }
       };
-      this.connectedDevice.addEventListener("inputreport", receiveDataHandler);
+      console.log("We add receiver data listener");
+      if (this.connectedDevice) {
+        this.connectedDevice.addEventListener("inputreport", receiveDataHandler);
+      }
     });
+    console.log("We send data");
     for (let i = 0; i < chunks; i += 1) {
       startIndex = maxData * i;
       endIndex = maxData * i + maxData;
+      if (i === chunks - 1) {
+        console.log("Last chunk being sent");
+        console.log("Data sent raw");
+        console.log(dataToSend);
+        console.log("Data sent encoded ");
+        console.log(encodedData);
+      }
       this.sendChunkData(encodedData.slice(startIndex, endIndex));
     }
     return allDataReceived
       .then((totalDataReceived: string) => {
-        this.connectedDevice.removeEventListener("inputreport", receiveDataHandler);
+        if (this.connectedDevice) {
+          this.connectedDevice.removeEventListener("inputreport", receiveDataHandler);
+        } else {
+          console.log("Connected device is null, bu");
+        }
         receiverHandler(totalDataReceived);
       })
       .catch(err => errorHandler(err));
   };
 
   private sendChunkData = async (data: Uint8Array) => {
-    await this.connectedDevice.sendReport(HIDReportID, data);
+    console.log("Sending chunk");
+    console.log(HID.decoder.decode(data));
+    if (this.connectedDevice) {
+      await this.connectedDevice.sendReport(HIDReportID, data);
+      await new Promise(resolve => setTimeout(resolve, 250));
+    }
   };
 }
 
