@@ -1,3 +1,4 @@
+/* eslint-disable no-bitwise */
 // -*- mode: js-jsx -*-
 /* Bazecor -- Kaleidoscope Command Center
  * Copyright (C) 2018, 2019  Keyboardio, Inc.
@@ -130,7 +131,6 @@ class MacroEditor extends React.Component {
       macros: [],
       superkeys: [],
       storedMacros: [],
-      storedSuper: [],
       maxMacros: 128,
       modified: false,
       selectedMacro: 0,
@@ -156,139 +156,7 @@ class MacroEditor extends React.Component {
     await this.loadMacros();
   }
 
-  async loadMacros() {
-    const focus = new Focus();
-    try {
-      /**
-       * Create property language to the object 'options', to call KeymapDB in Keymap and modify languagu layout
-       */
-      const chipID = (await focus.command("hardware.chip_id")).replace(/\s/g, "");
-      const neurons = store.get("neurons");
-      const neuron = neurons.find(n => n.id === chipID) || {};
-      this.setState({
-        neurons,
-        neuronID: neurons.findIndex(n => n.id === chipID),
-        storedMacros: neuron.macros,
-        storedSuper: neuron.superkeys,
-      });
-      focus.commands.keymap = new Keymap({ ...focus.device, language: true });
-      this.keymapDB = focus.commands.keymap.db;
-      let kbtype = "iso";
-      try {
-        kbtype = focus.device && focus.device.info.keyboardType === "ISO" ? "iso" : "ansi";
-      } catch (error) {
-        return false;
-      }
-
-      let tMem = await focus.command("macros.memory");
-      tMem = parseInt(tMem);
-      if (tMem === undefined || tMem < 100) tMem = 2048;
-      const keymap = await focus.command("keymap");
-      const macrosRaw = await focus.command("macros.map");
-      const parsedMacros = this.macroTranslator(macrosRaw);
-      const supersRaw = await focus.command("superkeys.map");
-      const parsedSuper = this.superTranslator(supersRaw);
-      this.setState({
-        macros: parsedMacros,
-        superkeys: parsedSuper,
-        keymap,
-        kbtype,
-        modified: false,
-        usedMemory: parsedMacros.map(m => m.actions).flat().length,
-        totalMemory: tMem,
-        loading: false,
-      });
-    } catch (e) {
-      toast.error(<ToastMessage title={e} icon={<IconFloppyDisk />} />, { icon: "" });
-      this.props.onDisconnect();
-    }
-  }
-
-  macroTranslator(raw) {
-    if (raw.search(" 0 0") === -1) {
-      return defaultMacro;
-    }
-    const macrosArray = raw.split(" 0 0")[0].split(" ").map(Number);
-
-    // Translate received macros to human readable text
-    const macros = [];
-    let iter = 0;
-    // macros are `0` terminated or when end of macrosArray has been reached, the outer loop
-    // must cycle once more than the inner
-    while (iter <= macrosArray.length) {
-      const actions = [];
-      while (iter < macrosArray.length) {
-        const type = macrosArray[iter];
-        if (type === 0) {
-          break;
-        }
-
-        switch (type) {
-          case 1:
-            actions.push({
-              type,
-              keyCode: [(macrosArray[++iter] << 8) + macrosArray[++iter], (macrosArray[++iter] << 8) + macrosArray[++iter]],
-            });
-            break;
-          case 2:
-          case 3:
-          case 4:
-          case 5:
-            actions.push({ type, keyCode: (macrosArray[++iter] << 8) + macrosArray[++iter] });
-            break;
-          case 6:
-          case 7:
-          case 8:
-            actions.push({ type, keyCode: macrosArray[++iter] });
-            break;
-          default:
-            break;
-        }
-
-        iter++;
-      }
-      macros.push({
-        actions,
-        name: "",
-        macro: "",
-      });
-      iter++;
-    }
-    macros.forEach((m, idx) => (m.id = idx));
-
-    // TODO: Check if stored macros match the received ones, if they match, retrieve name and apply it to current macros
-    const stored = this.state.storedMacros;
-    if (stored === undefined || stored.length === 0) {
-      return macros;
-    }
-    return macros.map((macro, i) => {
-      if (stored.length < i) {
-        return macro;
-      }
-
-      return {
-        ...macro,
-        name: stored[i]?.name,
-        macro: macro.actions.map(k => this.keymapDB.parse(k.keyCode).label).join(" "),
-      };
-    });
-  }
-
-  duplicateMacro = () => {
-    if (this.state.macros.length >= this.state.maxMacros) {
-      return;
-    }
-    const { macros } = this.state;
-    const selected = this.state.selectedMacro;
-    const aux = { ...this.state.macros[selected] };
-    aux.id = this.state.macros.length;
-    aux.name = `Copy of ${aux.name}`;
-    macros.push(aux);
-    this.updateMacros(macros);
-    this.changeSelected(aux.id);
-  };
-
-  superTranslator(raw) {
+  static superTranslator(raw) {
     if (raw.search(" 0 0 ") === -1) {
       return [];
     }
@@ -296,7 +164,7 @@ class MacroEditor extends React.Component {
 
     const superkeys = [];
     let superkey = [];
-    for (let iter = 0; iter < supersArray.length; iter++) {
+    for (let iter = 0; iter < supersArray.length; iter += 1) {
       if (supersArray[iter] === 0) {
         superkeys.push(superkey);
         superkey = [];
@@ -306,52 +174,53 @@ class MacroEditor extends React.Component {
     }
     superkeys.push(superkey);
 
-    if (superkeys[0] == [0] || superkeys[0].filter(v => v === 0).length == superkeys[0].length - 1) return [];
+    if (superkeys[0] === [0] || superkeys[0].filter(v => v === 0).length === superkeys[0].length - 1) return [];
     return superkeys;
   }
 
-  updateKeyboard(keyboardIdx) {
-    const macroID = this.state.macros[keyboardIdx].id + 53852;
-    const customKeymapList = this.state.keymap.custom
-      .map((layer, layerIdx) =>
-        layer.map((key, pos) => ({ layer: layerIdx, key, pos })).filter(elem => elem.key.keyCode === macroID),
-      )
-      .flat();
-    const superkeyList = this.state.superkey
-      .map((supers, i) => supers.map((action, pos) => ({ i, pos, action })).filter(elem => elem.action === macroID))
-      .flat();
-    this.setState({
-      listToDelete: customKeymapList,
-      listToDeleteS: superkeyList,
-      showDeleteModal: true,
-    });
-  }
+  // Define updateActions function to update the actions of the selected macro
+  updateActions = actions => {
+    const { macros, selectedMacro } = this.state;
+
+    const macrosList = macros;
+    macrosList[selectedMacro].actions = actions;
+    this.setState({ macros: macrosList, modified: true });
+  };
 
   updateMacros(recievedMacros) {
+    const { startContext } = this.props;
     this.setState({
       macros: recievedMacros,
       modified: true,
       usedMemory: recievedMacros.map(m => m.actions).flat().length,
     });
-    this.props.startContext();
+    startContext();
   }
 
+  saveName = data => {
+    const { macros, selectedMacro } = this.state;
+    const localMacros = JSON.parse(JSON.stringify(macros));
+    localMacros[selectedMacro].name = data;
+    this.setState({ macros: localMacros, modified: true });
+  };
+
   async writeMacros() {
+    const { macros, neurons, neuronID, keymap } = this.state;
     const focus = new Focus();
-    const newMacros = this.state.macros;
+    const newMacros = macros;
     this.setState({
       modified: false,
       macros: newMacros,
       storedMacros: newMacros,
     });
-    const neurons = JSON.parse(JSON.stringify(this.state.neurons));
-    neurons[this.state.neuronID].macros = newMacros;
-    store.set("neurons", neurons);
+    const localNeurons = JSON.parse(JSON.stringify(neurons));
+    localNeurons[neuronID].macros = newMacros;
+    store.set("neurons", localNeurons);
     try {
-      await focus.command("macros.map", this.macrosMap(newMacros));
-      await focus.command("keymap", this.state.keymap);
+      await focus.command("macros.map", MacroEditor.macrosMap(newMacros));
+      await focus.command("keymap", keymap);
       const commands = await this.bkp.Commands();
-      const backup = await this.bkp.DoBackup(commands, this.state.neurons[this.state.neuronID].id);
+      const backup = await this.bkp.DoBackup(commands, neurons[neuronID].id);
       this.bkp.SaveBackup(backup);
       toast.success(<ToastMessage title={i18n.editor.macros.successFlashTitle} content="" icon={<IconFloppyDisk />} />, {
         autoClose: 2000,
@@ -362,7 +231,7 @@ class MacroEditor extends React.Component {
     }
   }
 
-  macrosMap(macros) {
+  static macrosMap(macros) {
     if (macros.length === 0 || (macros.length === 1 && macros[0].actions === [])) {
       return defaultMacroString;
     }
@@ -393,11 +262,33 @@ class MacroEditor extends React.Component {
       .replaceAll(",", " ");
   }
 
+  duplicateMacro = () => {
+    const { macros, maxMacros, selectedMacro } = this.state;
+    if (macros.length >= maxMacros) {
+      return;
+    }
+    const selected = selectedMacro;
+    const aux = { ...macros[selected] };
+    aux.id = macros.length;
+    aux.name = `Copy of ${aux.name}`;
+    macros.push(aux);
+    this.updateMacros(macros);
+    this.changeSelected(aux.id);
+  };
+
   changeSelected(id) {
     this.setState({
       selectedMacro: id < 0 ? 0 : id,
     });
   }
+
+  addToActions = actions => {
+    const { macros, selectedMacro } = this.state;
+
+    const macrosList = JSON.parse(JSON.stringify(macros));
+    macrosList[selectedMacro].actions = actions;
+    this.setState({ macros: macrosList, modified: true });
+  };
 
   toggleDeleteModal() {
     this.setState({ showDeleteModal: false });
@@ -462,29 +353,151 @@ class MacroEditor extends React.Component {
     this.updateKeyboard(selected);
   };
 
-  saveName = data => {
-    const { macros, selectedMacro } = this.state;
-    const localMacros = JSON.parse(JSON.stringify(macros));
-    localMacros[selectedMacro].name = data;
-    this.setState({ macros: localMacros, modified: true });
-  };
+  updateKeyboard(keyboardIdx) {
+    const { macros, superkey, keymap } = this.state;
+    const macroID = macros[keyboardIdx].id + 53852;
+    const customKeymapList = keymap.custom
+      .map((layer, layerIdx) =>
+        layer.map((key, pos) => ({ layer: layerIdx, key, pos })).filter(elem => elem.key.keyCode === macroID),
+      )
+      .flat();
+    const superkeyList = superkey
+      .map((supers, i) => supers.map((action, pos) => ({ i, pos, action })).filter(elem => elem.action === macroID))
+      .flat();
+    this.setState({
+      listToDelete: customKeymapList,
+      listToDeleteS: superkeyList,
+      showDeleteModal: true,
+    });
+  }
 
-  // Define updateActions function to update the actions of the selected macro
-  updateActions = actions => {
-    const { macros, selectedMacro } = this.state;
+  macroTranslator(raw) {
+    const { storedMacros } = this.state;
+    if (raw.search(" 0 0") === -1) {
+      return defaultMacro;
+    }
+    const macrosArray = raw.split(" 0 0")[0].split(" ").map(Number);
 
-    const macrosList = macros;
-    macrosList[selectedMacro].actions = actions;
-    this.setState({ macros: macrosList, modified: true });
-  };
+    // Translate received macros to human readable text
+    const macros = [];
+    let iter = 0;
+    // macros are `0` terminated or when end of macrosArray has been reached, the outer loop
+    // must cycle once more than the inner
+    while (iter <= macrosArray.length) {
+      const actions = [];
+      while (iter < macrosArray.length) {
+        const type = macrosArray[iter];
+        if (type === 0) {
+          break;
+        }
 
-  addToActions = actions => {
-    const { macros, selectedMacro } = this.state;
+        switch (type) {
+          case 1:
+            actions.push({
+              type,
+              keyCode: [
+                (macrosArray[(iter += 1)] << 8) + macrosArray[(iter += 1)],
+                (macrosArray[(iter += 1)] << 8) + macrosArray[(iter += 1)],
+              ],
+            });
+            break;
+          case 2:
+          case 3:
+          case 4:
+          case 5:
+            actions.push({ type, keyCode: (macrosArray[(iter += 1)] << 8) + macrosArray[(iter += 1)] });
+            break;
+          case 6:
+          case 7:
+          case 8:
+            actions.push({ type, keyCode: macrosArray[(iter += 1)] });
+            break;
+          default:
+            break;
+        }
 
-    const macrosList = JSON.parse(JSON.stringify(macros));
-    macrosList[selectedMacro].actions = actions;
-    this.setState({ macros: macrosList, modified: true });
-  };
+        iter += 1;
+      }
+      macros.push({
+        actions,
+        name: "",
+        macro: "",
+      });
+      iter += 1;
+    }
+    macros.forEach((m, idx) => {
+      const aux = { ...m };
+      aux.id = idx;
+      return aux;
+    });
+
+    // TODO: Check if stored macros match the received ones, if they match, retrieve name and apply it to current macros
+    const stored = storedMacros;
+    if (stored === undefined || stored.length === 0) {
+      return macros;
+    }
+    return macros.map((macro, i) => {
+      if (stored.length < i) {
+        return macro;
+      }
+
+      return {
+        ...macro,
+        name: stored[i]?.name,
+        macro: macro.actions.map(k => this.keymapDB.parse(k.keyCode).label).join(" "),
+      };
+    });
+  }
+
+  async loadMacros() {
+    const { onDisconnect } = this.props;
+    const focus = new Focus();
+    try {
+      /**
+       * Create property language to the object 'options', to call KeymapDB in Keymap and modify languagu layout
+       */
+      const chipID = (await focus.command("hardware.chip_id")).replace(/\s/g, "");
+      const neurons = store.get("neurons");
+      const neuron = neurons.find(n => n.id === chipID) || {};
+      this.setState({
+        neurons,
+        neuronID: neurons.findIndex(n => n.id === chipID),
+        storedMacros: neuron.macros,
+      });
+      focus.commands.keymap = new Keymap({ ...focus.device, language: true });
+      this.keymapDB = focus.commands.keymap.db;
+      let kbtype = "iso";
+      try {
+        kbtype = focus.device && focus.device.info.keyboardType === "ISO" ? "iso" : "ansi";
+      } catch (error) {
+        return false;
+      }
+
+      let tMem = await focus.command("macros.memory");
+      tMem = parseInt(tMem, 10);
+      if (tMem === undefined || tMem < 100) tMem = 2048;
+      const keymap = await focus.command("keymap");
+      const macrosRaw = await focus.command("macros.map");
+      const parsedMacros = this.macroTranslator(macrosRaw);
+      const supersRaw = await focus.command("superkeys.map");
+      const parsedSuper = MacroEditor.superTranslator(supersRaw);
+      this.setState({
+        macros: parsedMacros,
+        superkeys: parsedSuper,
+        keymap,
+        kbtype,
+        modified: false,
+        usedMemory: parsedMacros.map(m => m.actions).flat().length,
+        totalMemory: tMem,
+        loading: false,
+      });
+      return true;
+    } catch (e) {
+      toast.error(<ToastMessage title={e} icon={<IconFloppyDisk />} />, { icon: "" });
+      onDisconnect();
+      return false;
+    }
+  }
 
   render() {
     const {
