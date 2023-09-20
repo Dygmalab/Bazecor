@@ -195,7 +195,7 @@ class MacroEditor extends React.Component {
       showDeleteModal: false,
       listToDelete: [],
       listToDeleteS: [],
-      selectedList: 0,
+      selectedList: -1,
       usedMemory: 0,
       totalMemory: 0,
       loading: true,
@@ -219,16 +219,18 @@ class MacroEditor extends React.Component {
     if (macros.length === 0) {
       return;
     }
-    const aux = JSON.parse(JSON.stringify(macros));
     const selected = selectedMacro;
-    aux.splice(selected, 1);
-    aux.forEach((item, idx) => {
-      aux.id = idx;
+    let localMacros = [...macros];
+    localMacros.splice(selected, 1);
+    localMacros = localMacros.map((macro, idx) => {
+      const item = { ...macro };
+      item.id = idx;
+      return item;
     });
     if (selected >= macros.length - 1) {
       this.changeSelected(macros.length - 2);
     }
-    this.updateMacros(aux);
+    this.updateMacros(localMacros);
     this.updateKeyboard(selected);
   };
 
@@ -337,10 +339,10 @@ class MacroEditor extends React.Component {
   ActUponDelete() {
     const { selectedList, listToDelete, listToDeleteS, keymap, superkeys } = this.state;
     for (let i = 0; i < listToDelete.length; i += 1) {
-      if (selectedList === -1) {
-        keymap[listToDelete[i].layer][listToDelete[i].pos] = this.keymapDB.parse(0);
+      if (listToDelete[i].newKey === -1) {
+        keymap.custom[listToDelete[i].layer][listToDelete[i].pos] = this.keymapDB.parse(0);
       } else {
-        keymap[listToDelete[i].layer][listToDelete[i].pos] = this.keymapDB.parse(selectedList + 53852);
+        keymap.custom[listToDelete[i].layer][listToDelete[i].pos] = this.keymapDB.parse(listToDelete[i].newKey + 53852);
       }
     }
     for (let i = 0; i < listToDeleteS.length; i += 1) {
@@ -359,19 +361,28 @@ class MacroEditor extends React.Component {
   }
 
   updateKeyboard(keyboardIdx) {
-    const { macros, superkey, keymap } = this.state;
-    const macroID = macros[keyboardIdx].id + 53852;
-    const customKeymapList = keymap.custom
-      .map((layer, layerIdx) =>
-        layer.map((key, pos) => ({ layer: layerIdx, key, pos })).filter(elem => elem.key.keyCode === macroID),
-      )
-      .flat();
-    const superkeyList = superkey
-      .map((supers, i) => supers.map((action, pos) => ({ i, pos, action })).filter(elem => elem.action === macroID))
-      .flat();
+    const { macros, keymap, selectedList } = this.state;
+    let customKeymapList = [];
+    for (let i = keyboardIdx; i < macros.length; i += 1) {
+      const macroID = macros[i].id + 53852;
+      const newKey = i === keyboardIdx ? selectedList : i - 1;
+      const filteredKeys = keymap.custom
+        ? keymap.custom
+            .map((layer, layerIdx) =>
+              layer.map((key, pos) => ({ layer: layerIdx, key, pos, newKey })).filter(elem => elem.key.keyCode === macroID),
+            )
+            .flat()
+        : [];
+      customKeymapList = customKeymapList.concat(filteredKeys);
+    }
+    // const superkeyList = superkey
+    //   ? superkey
+    //       .map((supers, i) => supers.map((action, pos) => ({ i, pos, action })).filter(elem => elem.action === macroID))
+    //       .flat()
+    //   : [];
     this.setState({
       listToDelete: customKeymapList,
-      listToDeleteS: superkeyList,
+      listToDeleteS: [],
       showDeleteModal: true,
     });
   }
@@ -431,9 +442,9 @@ class MacroEditor extends React.Component {
       iter += 1;
     }
     macros.forEach((m, idx) => {
-      const aux = { ...m };
+      const aux = m;
       aux.id = idx;
-      return aux;
+      macros[idx] = aux;
     });
 
     // TODO: Check if stored macros match the received ones, if they match, retrieve name and apply it to current macros
@@ -519,8 +530,8 @@ class MacroEditor extends React.Component {
       currentLanguageLayout,
       loading,
     } = this.state;
-    const ListOfMacros = listToDelete.map(({ layer, pos, key }) => (
-      <Row key={`${key}-${pos}`}>
+    const ListOfMacros = listToDelete.map(({ layer, pos, key, newKey }) => (
+      <Row key={`${key.keyCode}-${layer}-${pos}-${newKey}`}>
         <Col xs={12} className="px-0 text-center gridded">
           <p className="titles alignvert">{`Key in layer ${layer} and pos ${pos}`}</p>
         </Col>
