@@ -20,6 +20,7 @@
 import React from "react";
 import { toast } from "react-toastify";
 import Styled from "styled-components";
+import PropTypes from "prop-types";
 
 import Col from "react-bootstrap/Col";
 import Container from "react-bootstrap/Container";
@@ -120,6 +121,63 @@ const defaultMacroString =
   "255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255";
 
 class MacroEditor extends React.Component {
+  static superTranslator(raw) {
+    if (raw.search(" 0 0 ") === -1) {
+      return [];
+    }
+    const supersArray = raw.split(" 0 0")[0].split(" ").map(Number);
+
+    const superkeys = [];
+    let superkey = [];
+    for (let iter = 0; iter < supersArray.length; iter += 1) {
+      if (supersArray[iter] === 0) {
+        superkeys.push(superkey);
+        superkey = [];
+      } else {
+        superkey.push(supersArray[iter]);
+      }
+    }
+    superkeys.push(superkey);
+
+    if (
+      (Array.isArray(superkeys[0]) && superkeys[0][0] === 0) ||
+      superkeys[0].filter(v => v === 0).length === superkeys[0].length - 1
+    )
+      return [];
+    return superkeys;
+  }
+
+  static macrosMap(macros) {
+    if (macros.length === 0 || (macros.length === 1 && Array.isArray(macros[0].actions))) {
+      return defaultMacroString;
+    }
+    const mapAction = action => {
+      switch (action.type) {
+        case 1:
+          return [
+            [action.type],
+            [action.keyCode[0] >> 8],
+            [action.keyCode[0] & 255],
+            [action.keyCode[1] >> 8],
+            [action.keyCode[1] & 255],
+          ];
+        case 2:
+        case 3:
+        case 4:
+        case 5:
+          return [[action.type], [action.keyCode >> 8], [action.keyCode & 255]];
+        default:
+          return [[action.type], [action.keyCode]];
+      }
+    };
+    return macros
+      .map(macro => macro.actions.map(action => mapAction(action)).concat([0]))
+      .concat([0])
+      .flat()
+      .join(" ")
+      .replaceAll(",", " ");
+  }
+
   constructor(props) {
     super(props);
 
@@ -156,27 +214,62 @@ class MacroEditor extends React.Component {
     await this.loadMacros();
   }
 
-  static superTranslator(raw) {
-    if (raw.search(" 0 0 ") === -1) {
-      return [];
+  deleteMacro = () => {
+    const { macros, selectedMacro } = this.state;
+    if (macros.length === 0) {
+      return;
     }
-    const supersArray = raw.split(" 0 0")[0].split(" ").map(Number);
-
-    const superkeys = [];
-    let superkey = [];
-    for (let iter = 0; iter < supersArray.length; iter += 1) {
-      if (supersArray[iter] === 0) {
-        superkeys.push(superkey);
-        superkey = [];
-      } else {
-        superkey.push(supersArray[iter]);
-      }
+    const aux = JSON.parse(JSON.stringify(macros));
+    const selected = selectedMacro;
+    aux.splice(selected, 1);
+    aux.forEach((item, idx) => {
+      aux.id = idx;
+    });
+    if (selected >= macros.length - 1) {
+      this.changeSelected(macros.length - 2);
     }
-    superkeys.push(superkey);
+    this.updateMacros(aux);
+    this.updateKeyboard(selected);
+  };
 
-    if (superkeys[0] === [0] || superkeys[0].filter(v => v === 0).length === superkeys[0].length - 1) return [];
-    return superkeys;
-  }
+  addMacro = name => {
+    const { macros, maxMacros } = this.state;
+    if (macros.length >= maxMacros) {
+      return;
+    }
+    const aux = macros;
+    const newID = aux.length;
+    aux.push({
+      actions: [],
+      name,
+      id: newID,
+      macro: "",
+    });
+    this.updateMacros(aux);
+    this.changeSelected(newID);
+  };
+
+  addToActions = actions => {
+    const { macros, selectedMacro } = this.state;
+
+    const macrosList = JSON.parse(JSON.stringify(macros));
+    macrosList[selectedMacro].actions = actions;
+    this.setState({ macros: macrosList, modified: true });
+  };
+
+  duplicateMacro = () => {
+    const { macros, maxMacros, selectedMacro } = this.state;
+    if (macros.length >= maxMacros) {
+      return;
+    }
+    const selected = selectedMacro;
+    const aux = { ...macros[selected] };
+    aux.id = macros.length;
+    aux.name = `Copy of ${aux.name}`;
+    macros.push(aux);
+    this.updateMacros(macros);
+    this.changeSelected(aux.id);
+  };
 
   // Define updateActions function to update the actions of the selected macro
   updateActions = actions => {
@@ -185,6 +278,13 @@ class MacroEditor extends React.Component {
     const macrosList = macros;
     macrosList[selectedMacro].actions = actions;
     this.setState({ macros: macrosList, modified: true });
+  };
+
+  saveName = data => {
+    const { macros, selectedMacro } = this.state;
+    const localMacros = JSON.parse(JSON.stringify(macros));
+    localMacros[selectedMacro].name = data;
+    this.setState({ macros: localMacros, modified: true });
   };
 
   updateMacros(recievedMacros) {
@@ -196,13 +296,6 @@ class MacroEditor extends React.Component {
     });
     startContext();
   }
-
-  saveName = data => {
-    const { macros, selectedMacro } = this.state;
-    const localMacros = JSON.parse(JSON.stringify(macros));
-    localMacros[selectedMacro].name = data;
-    this.setState({ macros: localMacros, modified: true });
-  };
 
   async writeMacros() {
     const { macros, neurons, neuronID, keymap } = this.state;
@@ -231,64 +324,11 @@ class MacroEditor extends React.Component {
     }
   }
 
-  static macrosMap(macros) {
-    if (macros.length === 0 || (macros.length === 1 && macros[0].actions === [])) {
-      return defaultMacroString;
-    }
-    const mapAction = action => {
-      switch (action.type) {
-        case 1:
-          return [
-            [action.type],
-            [action.keyCode[0] >> 8],
-            [action.keyCode[0] & 255],
-            [action.keyCode[1] >> 8],
-            [action.keyCode[1] & 255],
-          ];
-        case 2:
-        case 3:
-        case 4:
-        case 5:
-          return [[action.type], [action.keyCode >> 8], [action.keyCode & 255]];
-        default:
-          return [[action.type], [action.keyCode]];
-      }
-    };
-    return macros
-      .map(macro => macro.actions.map(action => mapAction(action)).concat([0]))
-      .concat([0])
-      .flat()
-      .join(" ")
-      .replaceAll(",", " ");
-  }
-
-  duplicateMacro = () => {
-    const { macros, maxMacros, selectedMacro } = this.state;
-    if (macros.length >= maxMacros) {
-      return;
-    }
-    const selected = selectedMacro;
-    const aux = { ...macros[selected] };
-    aux.id = macros.length;
-    aux.name = `Copy of ${aux.name}`;
-    macros.push(aux);
-    this.updateMacros(macros);
-    this.changeSelected(aux.id);
-  };
-
   changeSelected(id) {
     this.setState({
       selectedMacro: id < 0 ? 0 : id,
     });
   }
-
-  addToActions = actions => {
-    const { macros, selectedMacro } = this.state;
-
-    const macrosList = JSON.parse(JSON.stringify(macros));
-    macrosList[selectedMacro].actions = actions;
-    this.setState({ macros: macrosList, modified: true });
-  };
 
   toggleDeleteModal() {
     this.setState({ showDeleteModal: false });
@@ -317,41 +357,6 @@ class MacroEditor extends React.Component {
   UpdateList(data) {
     this.setState({ selectedList: data });
   }
-
-  addMacro = name => {
-    const { macros, maxMacros } = this.state;
-    if (macros.length >= maxMacros) {
-      return;
-    }
-    const aux = macros;
-    const newID = aux.length;
-    aux.push({
-      actions: [],
-      name,
-      id: newID,
-      macro: "",
-    });
-    this.updateMacros(aux);
-    this.changeSelected(newID);
-  };
-
-  deleteMacro = () => {
-    const { macros, selectedMacro } = this.state;
-    if (macros.length === 0) {
-      return;
-    }
-    const aux = JSON.parse(JSON.stringify(macros));
-    const selected = selectedMacro;
-    aux.splice(selected, 1);
-    aux.forEach((item, idx) => {
-      aux.id = idx;
-    });
-    if (selected >= macros.length - 1) {
-      this.changeSelected(macros.length - 2);
-    }
-    this.updateMacros(aux);
-    this.updateKeyboard(selected);
-  };
 
   updateKeyboard(keyboardIdx) {
     const { macros, superkey, keymap } = this.state;
@@ -514,8 +519,8 @@ class MacroEditor extends React.Component {
       currentLanguageLayout,
       loading,
     } = this.state;
-    const ListOfMacros = listToDelete.map(({ layer, pos, key }, id) => (
-      <Row key={id}>
+    const ListOfMacros = listToDelete.map(({ layer, pos, key }) => (
+      <Row key={`${key}-${pos}`}>
         <Col xs={12} className="px-0 text-center gridded">
           <p className="titles alignvert">{`Key in layer ${layer} and pos ${pos}`}</p>
         </Col>
@@ -533,8 +538,8 @@ class MacroEditor extends React.Component {
         <Dropdown.Item eventKey={-1} key={`macro-${-1}`} disabled={false}>
           No Key
         </Dropdown.Item>
-        {macros.map((macro, id) => (
-          <Dropdown.Item eventKey={macro.id} key={`macro-${id}`} disabled={macro.id === -1}>
+        {macros.map(macro => (
+          <Dropdown.Item eventKey={macro.id} key={`macro-${macro.id}`} disabled={macro.id === -1}>
             {macro?.name}
           </Dropdown.Item>
         ))}
@@ -632,5 +637,10 @@ class MacroEditor extends React.Component {
     );
   }
 }
+
+MacroEditor.propTypes = {
+  startContext: PropTypes.func,
+  onDisconnect: PropTypes.func,
+};
 
 export default MacroEditor;
