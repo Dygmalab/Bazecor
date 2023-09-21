@@ -32,7 +32,7 @@ import ConfirmationDialog from "@Renderer/component/ConfirmationDialog";
 import { CopyFromDialog } from "@Renderer/component/CopyFromDialog";
 
 // Modules
-import PageHeader from "@Renderer/modules/PageHeader";
+import { PageHeader } from "@Renderer/modules/PageHeader";
 import ColorEditor from "@Renderer/modules/ColorEditor";
 import { KeyPickerKeyboard } from "@Renderer/modules/KeyPickerKeyboard";
 import StandardView from "@Renderer/modules/StandardView";

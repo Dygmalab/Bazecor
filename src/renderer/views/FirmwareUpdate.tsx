@@ -1,19 +1,24 @@
 import React from "react";
 import { useMachine } from "@xstate/react";
-import MainProcessSM from "../controller/FlashingSM/MainProcess";
+import MainProcessSM from "@Renderer/controller/FlashingSM/MainProcess";
 
 // Visual components
 import Styled from "styled-components";
 import Container from "react-bootstrap/Container";
 
 // Extra components
-import i18n from "../i18n";
+import i18n from "@Renderer/i18n";
 
 // Bazecor components
-import PageHeader from "../modules/PageHeader";
-import { FirmwareErrorPanel, FirmwareCheckProcessPanel, FirmwareUpdatePanel, FirmwareUpdateProcess } from "../modules/Firmware";
+import { PageHeader } from "@Renderer/modules/PageHeader";
+import {
+  FirmwareErrorPanel,
+  FirmwareCheckProcessPanel,
+  FirmwareUpdatePanel,
+  FirmwareUpdateProcess,
+} from "@Renderer/modules/Firmware";
 
-import { FirmwareLoader } from "../component/Loader";
+import { FirmwareLoader } from "@Renderer/component/Loader";
 
 const Styles = Styled.div`
 height: inherit;
@@ -41,10 +46,11 @@ height: inherit;
 }
 `;
 
-function FirmwareUpdate(props) {
+function FirmwareUpdate(props: any) {
+  const { allowBeta, toggleFlashing, toggleFwUpdate, onDisconnect, device } = props;
   const [state, send] = useMachine(MainProcessSM);
 
-  const nextBlock = context => {
+  const nextBlock = (context: any) => {
     send("NEXT", { data: context });
   };
 
@@ -52,43 +58,46 @@ function FirmwareUpdate(props) {
     send("RETRY");
   };
 
-  const errorBlock = error => {
+  const errorBlock = (error: any) => {
     send("ERROR", { data: error });
   };
 
   return (
     <Styles>
-      <Container fluid className={`firmware-update center-content`}>
+      <Container fluid className="firmware-update center-content">
         <PageHeader text={i18n.app.menu.firmwareUpdate} />
         <div className="panel-wrapper">
-          {state.context.Block === -1 ? (
-            <FirmwareErrorPanel nextBlock={nextBlock} retryBlock={retryBlock} />
-          ) : state.context.Block === 0 ? (
-            <FirmwareLoader />
-          ) : state.context.Block === 1 ? (
-            <FirmwareUpdatePanel
-              nextBlock={nextBlock}
-              retryBlock={retryBlock}
-              errorBlock={errorBlock}
-              allowBeta={props.allowBeta}
-            />
-          ) : state.context.Block === 2 ? (
+          {state.context.Block === -1 ? <FirmwareErrorPanel nextBlock={nextBlock} retryBlock={retryBlock} /> : ""}
+          {state.context.Block === 0 ? (
+            <FirmwareLoader width={undefined} warning={undefined} error={undefined} paused={undefined} />
+          ) : (
+            ""
+          )}
+          {state.context.Block === 1 ? (
+            <FirmwareUpdatePanel nextBlock={nextBlock} retryBlock={retryBlock} errorBlock={errorBlock} allowBeta={allowBeta} />
+          ) : (
+            ""
+          )}
+          {state.context.Block === 2 ? (
             <FirmwareCheckProcessPanel
               nextBlock={nextBlock}
               retryBlock={retryBlock}
               errorBlock={errorBlock}
               context={state.context}
             />
-          ) : state.context.Block === 3 ? (
+          ) : (
+            ""
+          )}
+          {state.context.Block === 3 ? (
             <FirmwareUpdateProcess
               nextBlock={nextBlock}
               retryBlock={retryBlock}
               errorBlock={errorBlock}
               context={state.context}
-              toggleFlashing={props.toggleFlashing}
-              toggleFwUpdate={props.toggleFwUpdate}
-              onDisconnect={props.onDisconnect}
-              device={props.device}
+              toggleFlashing={toggleFlashing}
+              toggleFwUpdate={toggleFwUpdate}
+              onDisconnect={onDisconnect}
+              device={device}
             />
           ) : (
             ""

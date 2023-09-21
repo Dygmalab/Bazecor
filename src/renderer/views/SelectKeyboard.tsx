@@ -29,7 +29,7 @@ import Modal from "react-bootstrap/Modal";
 
 import Dropdown from "react-bootstrap/Dropdown";
 import { USBDevice, USBDeviceDescriptor, NonSerialDeviceDescriptor } from "@Renderer/types/devices";
-import PageHeader from "../modules/PageHeader";
+import { PageHeader } from "../modules/PageHeader";
 import { RegularButton } from "../component/Button";
 
 import Focus from "../../api/focus";
