@@ -2,11 +2,11 @@
 /* eslint-disable no-eval */
 /* eslint-disable no-bitwise */
 import fs from "fs";
+// import { SerialPort } from "serialport";
 import Hardware from "../../hardware";
 
 const { SerialPort } = eval('require("serialport")');
 const { DelimiterParser } = eval('require("@serialport/parser-delimiter")');
-
 interface DeviceType {
   path: string;
   manufacturer: string | undefined;
@@ -43,7 +43,29 @@ const find = async () => {
   return foundDevices;
 };
 
-const connect = () => {};
+const open = async (device: any) => {
+  const serialport = new SerialPort({
+    path: device.path,
+    baudRate: 115200,
+    autoOpen: false,
+    endOnClose: true,
+  });
+  serialport.open(err => {
+    if (err) console.error("error when opening port: ", err);
+    else console.log("connected");
+  });
+  const parser = serialport.pipe(new DelimiterParser({ delimiter: "\r\n" }));
+  const receivedData = [];
+  parser.on("data", (data: any) => {
+    receivedData.push(data.toString("utf-8"));
+  });
+  return serialport;
+};
+
+const connect = async (device: any) => {
+  const dev = await open(device);
+  return dev;
+};
 
 const isDeviceConnected = (device: DeviceType) => {
   if (process.platform !== "linux") return true;

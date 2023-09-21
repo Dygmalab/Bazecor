@@ -1,16 +1,16 @@
-import serial, { isSerialType } from "./serial";
+import serial, { isSerialType, DeviceType } from "./serial";
 import hid from "./hid";
 
 class DeviceTalker {
   static list = async () => {
-    const devices: any = [];
+    const devices: Array<DeviceType> = [];
 
     // working with serial
     const serialDevs = await serial.find();
-    console.log(serialDevs);
     for (const dev of serialDevs) {
-      const isConnected = DeviceTalker.isDeviceConnected(dev);
-      const isSupported = DeviceTalker.isDeviceSupported(dev);
+      const isConnected = await DeviceTalker.isDeviceConnected(dev);
+      const isSupported = await DeviceTalker.isDeviceSupported(dev);
+      // console.log(`checking if ${dev} is connected ${isConnected} and is supported ${isSupported}`);
       if (isConnected && isSupported) {
         devices.push(dev);
       }
@@ -32,7 +32,8 @@ class DeviceTalker {
 
   static connect = async (device: any) => {
     if (isSerialType(device)) {
-      const result = serial.connect(device);
+      const result = await serial.connect(device);
+      console.log("the device is serial type: ", device, " and connected as: ", result);
       return result;
     }
     const result = hid.connect(device);
@@ -56,3 +57,4 @@ class DeviceTalker {
 }
 
 export default DeviceTalker;
+export { DeviceType };

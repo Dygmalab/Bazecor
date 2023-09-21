@@ -4,7 +4,7 @@ import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import { PageHeader } from "@Renderer/modules/PageHeader";
-import DeviceTalker from "../../api/comms";
+import DeviceTalker, { DeviceType } from "../../api/comms";
 import { RegularButton } from "../component/Button";
 import HID from "../../api/hid/hid";
 
@@ -16,6 +16,8 @@ const Styles = Styled.div`
 
 const BazecorDevtools = () => {
   let connectedDevice: undefined | HIDDevice;
+  let serialDevices: undefined | Array<DeviceType>;
+  let serialDevice: undefined | DeviceType;
   const hid = new HID();
   const onGetHIDDevices = async () => {
     const grantedDevices = await HID.getDevices();
@@ -86,8 +88,18 @@ const BazecorDevtools = () => {
   };
 
   const onListSerialDevices = async () => {
-    const devList = await DeviceTalker.list();
-    console.log("Listing Serial Devices", devList);
+    serialDevices = await DeviceTalker.list();
+    console.log("Listing Serial Devices", serialDevices);
+  };
+
+  const onSerialConnect = async () => {
+    try {
+      serialDevice = await DeviceTalker.connect(serialDevices[0]);
+      console.log("Connected to 0", serialDevices[0]);
+      console.log(serialDevice);
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   return (
@@ -106,6 +118,7 @@ const BazecorDevtools = () => {
           <Col className="my-4 col-3">
             <h4>Serial Testing Buttons</h4>
             <RegularButton buttonText="List of Serial Devices" styles="primary" onClick={onListSerialDevices} />
+            <RegularButton buttonText="Connect to Serial Device" styles="primary" onClick={onSerialConnect} />
           </Col>
         </Row>
       </Container>
