@@ -50,6 +50,7 @@ import ENi from "@Renderer/modules/KeyPickerKeyboard/ENi.json";
 import ENa from "@Renderer/modules/KeyPickerKeyboard/ENa.json";
 import GR from "@Renderer/modules/KeyPickerKeyboard/GR.json";
 import FR from "@Renderer/modules/KeyPickerKeyboard/FR.json";
+import FRBEPO from "@Renderer/modules/KeyPickerKeyboard/FR-BEPO.json";
 import SW from "@Renderer/modules/KeyPickerKeyboard/SW.json";
 import DN from "@Renderer/modules/KeyPickerKeyboard/DN.json";
 import NW from "@Renderer/modules/KeyPickerKeyboard/NW.json";
@@ -312,6 +313,7 @@ class KeyPickerReduced extends Component {
       spanish: ES,
       german: GR,
       french: FR,
+      frenchBepo: FRBEPO,
       swedish: SW,
       finnish: SW,
       danish: DN,
