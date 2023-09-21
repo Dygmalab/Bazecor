@@ -199,8 +199,8 @@ const English = {
       successFlash: "Successfully sent the macros to the device",
       previewMacro: "Preview macro",
       deleteModal: {
-        title: "This macro is in use",
-        body: "The macro you want to delete is currently in use, select how to proceed, THIS MAKES PERMANENT CHANGES.",
+        title: "This macro is in use on your layout",
+        body: "Pick the action to replace it:",
         cancelButton: "Cancel",
         applyButton: "Update Keyboard",
       },

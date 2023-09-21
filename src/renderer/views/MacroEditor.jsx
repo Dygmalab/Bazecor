@@ -530,13 +530,18 @@ class MacroEditor extends React.Component {
       currentLanguageLayout,
       loading,
     } = this.state;
-    const ListOfMacros = listToDelete.map(({ layer, pos, key, newKey }) => (
-      <Row key={`${key.keyCode}-${layer}-${pos}-${newKey}`}>
-        <Col xs={12} className="px-0 text-center gridded">
-          <p className="titles alignvert">{`Key in layer ${layer} and pos ${pos}`}</p>
-        </Col>
-      </Row>
-    ));
+    const ListOfMacros = listToDelete.map(({ layer, pos, key, newKey }) => {
+      if (newKey === -1) {
+        return (
+          <Row key={`${key.keyCode}-${layer}-${pos}-${newKey}`}>
+            <Col xs={12} className="px-0 text-center gridded">
+              <p className="titles alignvert">{`Key in layer ${layer} and pos ${pos}`}</p>
+            </Col>
+          </Row>
+        );
+      }
+      return "";
+    });
     const ListCombo = (
       <DropdownButton
         id="Selectlayers"
@@ -625,8 +630,8 @@ class MacroEditor extends React.Component {
             <Modal.Title>{i18n.editor.macros.deleteModal.title}</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            <p>{i18n.editor.macros.deleteModal.body}</p>
             {ListOfMacros}
+            <p>{i18n.editor.macros.deleteModal.body}</p>
             {ListCombo}
           </Modal.Body>
           <Modal.Footer>
