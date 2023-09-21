@@ -198,11 +198,11 @@ function Wireless(props: WirelessPropsInterface) {
         />
         <div className="wirelessWrapper">
           <div className="wirelessInner">
-            <Row>
+            {/* <Row>
               <Col md={12}>
                 <ConnectionStatus connection={0} />
               </Col>
-            </Row>
+            </Row> */}
             <Row>
               <Col lg={6}>
                 <BatterySettings wireless={wireless} changeWireless={changeWireless} isCharging={false} />

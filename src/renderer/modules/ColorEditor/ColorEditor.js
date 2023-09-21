@@ -171,7 +171,7 @@ export default class ColorEditor extends Component {
   }
 
   render() {
-    const { colors, selected, toChangeAllKeysColor, onBacklightColorSelect, onColorButtonSelect } = this.props;
+    const { colors, selected, toChangeAllKeysColor, deviceName } = this.props;
     const { displayColorPicker, internalColors } = this.state;
 
     const layerButtons = internalColors.map((data, idx) => {
@@ -222,6 +222,8 @@ export default class ColorEditor extends Component {
       left: "0px",
     };
 
+    const underglowStart = deviceName === "Defy" ? 70 : 69;
+
     return (
       <Styles className="extraPanel">
         <div className="panelTitle">
@@ -260,7 +262,7 @@ export default class ColorEditor extends Component {
             <div className="buttonsApplyAll">
               <ColorButton
                 onClick={() => {
-                  toChangeAllKeysColor(selected, 0, 70);
+                  toChangeAllKeysColor(selected, 0, underglowStart);
                 }}
                 label={i18n.editor.color.applyColor}
                 text={i18n.editor.color.allKeys}
@@ -269,7 +271,7 @@ export default class ColorEditor extends Component {
               />
               <ColorButton
                 onClick={() => {
-                  toChangeAllKeysColor(selected, 70, 177);
+                  toChangeAllKeysColor(selected, underglowStart, 177);
                 }}
                 label={i18n.editor.color.applyColor}
                 text={i18n.editor.color.underglow}
