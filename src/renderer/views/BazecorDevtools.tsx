@@ -17,7 +17,7 @@ const Styles = Styled.div`
 const BazecorDevtools = () => {
   let connectedDevice: undefined | HIDDevice;
   let serialDevices: undefined | Array<DeviceType>;
-  let serialDevice: undefined | DeviceType;
+  let serialDevice: undefined | any;
   const hid = new HID();
   const onGetHIDDevices = async () => {
     const grantedDevices = await HID.getDevices();
@@ -92,13 +92,29 @@ const BazecorDevtools = () => {
     console.log("Listing Serial Devices", serialDevices);
   };
 
+  const onMessageSend = async () => {
+    // const message = await serialDevice.command("help");
+    // console.log("retrieving message help: ", message);
+  };
+
   const onSerialConnect = async () => {
     try {
+      console.log("going to connect to SerialDevice[0]", serialDevices[0]);
       serialDevice = await DeviceTalker.connect(serialDevices[0]);
-      console.log("Connected to 0", serialDevices[0]);
-      console.log(serialDevice);
+      console.log("Connected!", serialDevice);
     } catch (err) {
-      console.log(err);
+      console.log("error when connecting");
+      console.error(err);
+    }
+  };
+
+  const onSerialDisconnect = async () => {
+    try {
+      await serialDevice.close();
+      console.log("Disconnected!", serialDevice);
+    } catch (err) {
+      console.log("error when disconnecting");
+      console.error(err);
     }
   };
 
@@ -119,6 +135,8 @@ const BazecorDevtools = () => {
             <h4>Serial Testing Buttons</h4>
             <RegularButton buttonText="List of Serial Devices" styles="primary" onClick={onListSerialDevices} />
             <RegularButton buttonText="Connect to Serial Device" styles="primary" onClick={onSerialConnect} />
+            <RegularButton buttonText="Send message" styles="primary" onClick={onMessageSend} />
+            <RegularButton buttonText="Disconnect" styles="primary" onClick={onSerialDisconnect} />
           </Col>
         </Row>
       </Container>

@@ -4,19 +4,10 @@
 import fs from "fs";
 // import { SerialPort } from "serialport";
 import Hardware from "../../hardware";
+import { DeviceType } from "../../../renderer/types/devices";
 
 const { SerialPort } = eval('require("serialport")');
 const { DelimiterParser } = eval('require("@serialport/parser-delimiter")');
-interface DeviceType {
-  path: string;
-  manufacturer: string | undefined;
-  serialNumber: string | undefined;
-  pnpId: string | undefined;
-  locationId: string | undefined;
-  productId: string | undefined;
-  vendorId: string | undefined;
-  device?: any | undefined;
-}
 
 // const delay = (ms: number) => new Promise(res => setTimeout(res, ms));
 
@@ -50,7 +41,7 @@ const open = async (device: any) => {
     autoOpen: false,
     endOnClose: true,
   });
-  serialport.open(err => {
+  serialport.open((err: Error) => {
     if (err) console.error("error when opening port: ", err);
     else console.log("connected");
   });
