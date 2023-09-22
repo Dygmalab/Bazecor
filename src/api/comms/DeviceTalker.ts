@@ -3,18 +3,11 @@ import hid from "./hid";
 
 class DeviceTalker {
   static list = async () => {
-    const devices: Array<DeviceType> = [];
-
     // working with serial
     const serialDevs = await serial.find();
-    for (const dev of serialDevs) {
-      const isConnected = await DeviceTalker.isDeviceConnected(dev);
-      const isSupported = await DeviceTalker.isDeviceSupported(dev);
-      // console.log(`checking if ${dev} is connected ${isConnected} and is supported ${isSupported}`);
-      if (isConnected && isSupported) {
-        devices.push(dev);
-      }
-    }
+    const sDevices = serialDevs.filter(
+      async (dev: DeviceType) => (await DeviceTalker.isDeviceConnected(dev)) && (await DeviceTalker.isDeviceSupported(dev)),
+    );
 
     // working with hid
     // const hidDevs = hid.find();
@@ -27,7 +20,7 @@ class DeviceTalker {
     //   }
     // }
 
-    return devices;
+    return sDevices;
   };
 
   static connect = async (device: any) => {
