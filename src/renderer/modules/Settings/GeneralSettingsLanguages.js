@@ -6,9 +6,9 @@
  * https://kbdlayout.info
  *
  * In case your keyboard layout aren't an officall language e.g. EurKEY you
- * select the language code that it's based off (en), add a seperator (-) and
- * you create a custom code that matches the given name of the layout (EU);
- * "en-EU"
+ * select the keyboard language that it's based off (en-US), add a seperator (-)
+ * and add the layouts name, in lowercase, resulting with;
+ * "en-US-eurkey"
  *
  * All flags MUST be a circle with the dimensions of 512x512 pixels, you can
  * find all offical language flags on https://flagpedia.net/download/vector.
@@ -28,14 +28,22 @@ import fiFI from "@Assets/flags/fiFI.png";
 import nbNO from "@Assets/flags/nbNO.png";
 import svSE from "@Assets/flags/svSE.png";
 
-// Dygma - Layouts
+// Dygma - Layouts (official/native)
 import isIS from "@Assets/flags/isIS.png";
 import jaJP from "@Assets/flags/jaJP.png";
 import koKR from "@Assets/flags/koKR.png";
 import deCH from "@Assets/flags/deCH.png";
-import enEU from "@Assets/flags/enEU.png";
+
+// Dygma - Layouts (community/third-party)
+import enUSeurkey from "@Assets/flags/enUSeurkey.png";
+
+// !!!
+// Sorting order in this file is based off display language (languageNames)
+// rather than natural sorting order of (A-Z) in their respective category.
+// !!!
 
 const flags = [
+  // Keycaps
   enUS,
   enGB,
   esES,
@@ -45,15 +53,18 @@ const flags = [
   fiFI,
   nbNO,
   svSE,
+  // Official
   isIS,
   jaJP,
   koKR,
   deCH,
-  enEU,
-  frFR,
+  // Community
+  frFR, // BÉPO (French)
+  enUSeurkey,
 ];
 
 const languages = [
+  // Keycaps
   "en-US",
   "en-GB",
   "es-ES",
@@ -63,15 +74,18 @@ const languages = [
   "fi-FI",
   "nb-NO",
   "sv-SE",
+  // Official
   "is-IS",
   "ja-JP",
   "ko-KR",
   "de-CH",
-  "en-EU",
-  "fr-FR-bepo"
+  // Community
+  "fr-FR-bepo",
+  "en-US-eurkey",
 ];
 
 const languageNames = [
+  // Keycaps
   "English (US)",
   "English (GB)",
   "Spanish",
@@ -81,12 +95,14 @@ const languageNames = [
   "Finnish",
   "Norwegian",
   "Swedish",
+  // Official
   "Icelandic",
   "Japanese",
   "Korean",
   "Swiss German",
-  "EurKEY (1.3)",
+  // Community
   "BÉPO (French)",
+  "EurKEY (1.3)",
 ];
 
 export {flags, languages, languageNames};

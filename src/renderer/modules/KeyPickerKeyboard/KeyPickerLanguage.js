@@ -59,15 +59,18 @@ import daDK from "@Renderer/modules/KeyPickerKeyboard/languages/da/DK.json";
 import nbNO from "@Renderer/modules/KeyPickerKeyboard/languages/nb/NO.json";
 import svSE from "@Renderer/modules/KeyPickerKeyboard/languages/sv/SE.json";
 
-// Dygma - Layouts
+// Dygma - Layouts (official/native)
 import isIS from "@Renderer/modules/KeyPickerKeyboard/languages/is/IS.json";
 import jaJP from "@Renderer/modules/KeyPickerKeyboard/languages/ja/JP.json"
 import koKR from "@Renderer/modules/KeyPickerKeyboard/languages/ko/KR.json";
 import deCH from "@Renderer/modules/KeyPickerKeyboard/languages/de/CH.json";
-import enEU from "@Renderer/modules/KeyPickerKeyboard/languages/en/EU.json";
+
+// Dygma - Layouts (community/third-party)
+import enUSeurkey from "@Renderer/modules/KeyPickerKeyboard/languages/en/US-eurkey.json";
 import frFRbepo from "@Renderer/modules/KeyPickerKeyboard/languages/fr/FR-bepo.json";
 
 const languages = {
+  // Keycaps
   "en-US": enUS,
   "en-GB": enGB,
   "es-ES": esES,
@@ -77,11 +80,13 @@ const languages = {
   "fi-FI": svSE,
   "nb-NO": nbNO,
   "sv-SE": svSE,
+  // Official
   "is-IS": isIS,
   "ja-JP": jaJP,
   "ko-KR": koKR,
   "de-CH": deCH,
-  "en-EU": enEU,
+  // Community
+  "en-US-eurkey": enUSeurkey,
   "fr-FR-bepo": frFRbepo,
 }
 

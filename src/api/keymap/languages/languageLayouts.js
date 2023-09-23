@@ -83,15 +83,18 @@ import daDK, { daDKModifiedTables } from "./da/DK";
 import nbNO, { nbNOModifiedTables } from "./nb/NO";
 import svSE, { svSEModifiedTables } from "./sv/SE";
 
-// Dygma - Layouts
+// Dygma - Layouts (official/native)
 import isIS, { isISModifiedTables } from "./is/IS";
 import jaJP, { jaJPModifiedTables } from "./ja/JP";
 import koKR, { koKRModifiedTables } from "./ko/KR";
 import deCH, { deCHModifiedTables } from "./de/CH";
-import enEU, { enEUModifiedTables } from "./en/EU";
+
+// Dygma - Layouts (community/third-party)
+import enUSeurkey, { enUSeurkeyModifiedTables } from "./en/US-eurkey";
 import frFRbepo, { frFRbepoModifiedTables } from "./fr/FR-bepo";
 
 const supportModifiedTables = {
+  // Keycaps
   "en-GB": enGBModifiedTables,
   "es-ES": esESModifiedTables,
   "de-DE": deDEModifiedTables,
@@ -100,15 +103,18 @@ const supportModifiedTables = {
   "fi-FI": svSEModifiedTables,
   "nb-NO": nbNOModifiedTables,
   "sv-SE": svSEModifiedTables,
+  // Official
   "is-IS": isISModifiedTables,
   "ja-JP": jaJPModifiedTables,
   "ko-KR": koKRModifiedTables,
   "de-CH": deCHModifiedTables,
-  "en-EU": enEUModifiedTables,
+  // Community
+  "en-US-eurkey": enUSeurkeyModifiedTables,
   "fr-FR-bepo": frFRbepoModifiedTables,
 };
 
 const languages = {
+  // Keycaps
   "en-US": "en-US",
   "en-GB": enGB,
   "es-ES": esES,
@@ -118,11 +124,13 @@ const languages = {
   "fi-FI": svSE,
   "nb-NO": nbNO,
   "sv-SE": svSE,
+  // Offical
   "is-IS": isIS,
   "ja-JP": jaJP,
   "ko-KR": koKR,
   "de-CH": deCH,
-  "en-EU": enEU,
+  // Community
+  "en-US-eurkey": enUSeurkey,
   "fr-FR-bepo": frFRbepo,
 };
 
