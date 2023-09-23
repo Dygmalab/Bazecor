@@ -89,6 +89,7 @@ import jaJP, { jaJPModifiedTables } from "./ja/JP";
 import koKR, { koKRModifiedTables } from "./ko/KR";
 import deCH, { deCHModifiedTables } from "./de/CH";
 import enEU, { enEUModifiedTables } from "./en/EU";
+import frFRbepo, { frFRbepoModifiedTables } from "./fr/FR-bepo";
 
 const supportModifiedTables = {
   "en-GB": enGBModifiedTables,
@@ -104,6 +105,7 @@ const supportModifiedTables = {
   "ko-KR": koKRModifiedTables,
   "de-CH": deCHModifiedTables,
   "en-EU": enEUModifiedTables,
+  "fr-FR-bepo": frFRbepoModifiedTables,
 };
 
 const languages = {
@@ -121,6 +123,7 @@ const languages = {
   "ko-KR": koKR,
   "de-CH": deCH,
   "en-EU": enEU,
+  "fr-FR-bepo": frFRbepo,
 };
 
 export { languages as default, supportModifiedTables };

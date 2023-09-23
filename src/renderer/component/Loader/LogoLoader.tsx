@@ -106,23 +106,30 @@ svg {
 }
 `;
 
-const LogoLoader = ({ width, warning, error, paused }) => {
-  let neuronLoader = useTheme().styles.neuronStatus.neuronLoader;
-  let maxWidth = width ? width : `52px`;
+interface LogoLoaderProps {
+  width?: string;
+  warning?: boolean;
+  error?: boolean;
+  paused?: boolean;
+}
+
+const LogoLoader = ({ width = "52px", warning = false, error = false, paused = false }: LogoLoaderProps) => {
+  const { neuronLoader } = useTheme().styles.neuronStatus;
+
   return (
     <Style>
       <div
         className={`loader-container ${warning ? "loader-warning" : ""} ${error ? "loader-error" : ""} ${
           paused ? "paused" : "running"
         }`}
-        style={{ width: maxWidth }}
+        style={{ width: `${width}` }}
       >
         <svg width="50" height="52" viewBox="0 0 50 52" fill="none" xmlns="http://www.w3.org/2000/svg">
           <g className="loader-rotating">
             <mask
               id="mask0_3994_257195"
               style={{
-                maskType: "alpha"
+                maskType: "alpha",
               }}
               maskUnits="userSpaceOnUse"
               x="0"
@@ -183,7 +190,7 @@ const LogoLoader = ({ width, warning, error, paused }) => {
             <pattern id="prefix__pattern0" patternContentUnits="objectBoundingBox" width={1} height={1}>
               <use xlinkHref="#prefix__image0_1082_145292" transform="scale(.00357)" />
             </pattern>
-            <image className={`rotating`} id="prefix__image0_1082_145292" width={280} height={280} xlinkHref={neuronLoader} />
+            <image className="rotating" id="prefix__image0_1082_145292" width={280} height={280} xlinkHref={neuronLoader} />
           </defs>
         </svg>
       </div>

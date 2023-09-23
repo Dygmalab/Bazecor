@@ -50,6 +50,7 @@ const flags = [
   koKR,
   deCH,
   enEU,
+  frFR,
 ];
 
 const languages = [
@@ -67,6 +68,7 @@ const languages = [
   "ko-KR",
   "de-CH",
   "en-EU",
+  "fr-FR-bepo"
 ];
 
 const languageNames = [
@@ -84,6 +86,7 @@ const languageNames = [
   "Korean",
   "Swiss German",
   "EurKEY (1.3)",
+  "BÉPO (French)",
 ];
 
 export {flags, languages, languageNames};

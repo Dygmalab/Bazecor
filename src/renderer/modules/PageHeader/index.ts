@@ -15,5 +15,6 @@
  */
 
 import PageHeader from "./PageHeader";
+import { PageHeaderType } from "./Types";
 
-export { PageHeader as default };
+export { PageHeader, PageHeaderType };

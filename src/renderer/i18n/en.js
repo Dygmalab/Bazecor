@@ -199,8 +199,8 @@ const English = {
       successFlash: "Successfully sent the macros to the device",
       previewMacro: "Preview macro",
       deleteModal: {
-        title: "This macro is in use",
-        body: "The macro you want to delete is currently in use, select how to proceed, THIS MAKES PERMANENT CHANGES.",
+        title: "This macro is in use on your layout",
+        body: "Pick the action to replace it:",
         cancelButton: "Cancel",
         applyButton: "Update Keyboard",
       },
@@ -478,8 +478,6 @@ const English = {
   wireless: {
     title: "Wireless",
     bluetooth: {
-      StatusTitle: "Status",
-      StatusButton: "Bluetooth Status",
       pairingMode: "Pairing mode",
       pairingModeButton: "Bluetooth Pairing Mode",
       pairingModeDescription: "Activate Pairing Mode for easy device connection.",
@@ -497,6 +495,7 @@ const English = {
         maximumLED: "Maximum LED intensity",
         maximumLEDBackLight: "Maximum Per-key LED intensity while the device is NOT connected by cable",
         maximumLEDUnderglow: "Maximum Underglow intensity while the device is NOT connected by cable",
+        idleLedsTime: "time to turn off LEDs when waiting while the device is NOT connected by cable",
         highBatteryImpact: "High battery impact",
         lowBatteryImpact: "Low battery impact",
         highlightLayerChanging: "Highlight layer changing",

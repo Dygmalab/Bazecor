@@ -65,6 +65,7 @@ import jaJP from "@Renderer/modules/KeyPickerKeyboard/languages/ja/JP.json"
 import koKR from "@Renderer/modules/KeyPickerKeyboard/languages/ko/KR.json";
 import deCH from "@Renderer/modules/KeyPickerKeyboard/languages/de/CH.json";
 import enEU from "@Renderer/modules/KeyPickerKeyboard/languages/en/EU.json";
+import frFRbepo from "@Renderer/modules/KeyPickerKeyboard/languages/fr/FR-bepo.json";
 
 const languages = {
   "en-US": enUS,
@@ -81,6 +82,7 @@ const languages = {
   "ko-KR": koKR,
   "de-CH": deCH,
   "en-EU": enEU,
+  "fr-FR-bepo": frFRbepo,
 }
 
 /**

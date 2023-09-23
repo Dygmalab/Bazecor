@@ -18,8 +18,8 @@
 import React, { useState, useEffect } from "react";
 import Styled from "styled-components";
 import { useMachine } from "@xstate/react";
-import i18n from "../../i18n";
 import SemVer from "semver";
+import i18n from "../../i18n";
 
 // State machine
 import DeviceChecks from "../../controller/FlashingSM/DeviceChecks";
@@ -162,15 +162,8 @@ height:inherit;
 }
 `;
 
-/**
- * This FirmwareUpdatePanel function returns a module that wrap all modules and components to manage the first steps of firware update.
- * The object will accept the following parameters
- *
- * @param {number} disclaimerCard - Number that indicates the software when the installation will begin.
- * @returns {<FirmwareUpdatePanel>} FirmwareUpdatePanel component.
- */
-
-function FirmwareCheckProcessPanel({ nextBlock, retryBlock, context }) {
+function FirmwareCheckProcessPanel(props) {
+  const { nextBlock, retryBlock, context } = props;
   const [state, send] = useMachine(DeviceChecks, { context: { device: context.device } });
   const [listItems, setlistItems] = useState([]);
   const [loading, setLoading] = useState(true);

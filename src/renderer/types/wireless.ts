@@ -25,27 +25,39 @@ export interface WirelessInterface {
     disable: number;
   };
   bluetooth: {
-    devices: number;
-    state: number;
-    stability: number;
+    infoChannel1: string;
+    infoChannel2: string;
+    infoChannel3: string;
+    infoChannel4: string;
+    infoChannel5: string;
+    deviceName: string;
   };
   rf: {
     channelHop: number;
-    state: number;
-    stability: number;
+    power: number;
   };
+  brightness: number;
+  brightnessUG: number;
+  fade: number;
+  idleleds: number;
 }
 
 export interface BatterySettingsProps {
   wireless: WirelessInterface;
   changeWireless: (wireless: WirelessInterface) => void;
-  toggleSavingMode: () => void;
   isCharging: boolean;
 }
 
 export interface EnergyManagementProps {
   wireless: WirelessInterface;
-  toggleSavingMode: () => void;
+  changeWireless: (wireless: WirelessInterface) => void;
+}
+
+export interface AdvancedEnergyManagementProps {
+  wireless: WirelessInterface;
+  changeWireless: (wireless: WirelessInterface) => void;
+  showModal: boolean;
+  setShowModal: (show: boolean) => void;
 }
 
 export interface RFSettingsProps {

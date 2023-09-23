@@ -16,8 +16,8 @@
  */
 
 import React from "react";
-import PropTypes from "prop-types";
 import Styled from "styled-components";
+import { PageHeaderType } from "./Types";
 import Title from "../../component/Title";
 import Saving from "../Saving";
 
@@ -95,18 +95,9 @@ z-index: 300;
 }
 `;
 
-function PageHeader({
-  size,
-  text,
-  style,
-  contentSelector,
-  colorEditor,
-  isColorActive,
-  showSaving,
-  saveContext,
-  destroyContext,
-  inContext,
-}) {
+function PageHeader(props: PageHeaderType) {
+  const { size, text, style, contentSelector, colorEditor, isColorActive, showSaving, saveContext, destroyContext, inContext } =
+    props;
   return (
     <Style className={`${style === "pageHeaderFlatBottom" ? "pageHeaderSticky" : ""}`}>
       <div className={`pageHeader ${size && size} ${style && style} ${isColorActive ? "extraPanelActive" : ""}`}>
@@ -114,7 +105,6 @@ function PageHeader({
           <Title text={text} headingLevel={2} />
         </div>
         <div className="pageTools">
-          {/* //onSelect, itemList, selectedItem, deleteItem, subtitle */}
           {contentSelector || ""}
           {showSaving ? <Saving saveContext={saveContext} destroyContext={destroyContext} inContext={inContext} /> : ""}
         </div>
@@ -123,17 +113,5 @@ function PageHeader({
     </Style>
   );
 }
-PageHeader.propTypes = {
-  size: PropTypes.number,
-  text: PropTypes.string,
-  style: PropTypes.string,
-  contentSelector: PropTypes.any,
-  colorEditor: PropTypes.any,
-  isColorActive: PropTypes.bool,
-  showSaving: PropTypes.bool,
-  saveContext: PropTypes.any,
-  destroyContext: PropTypes.any,
-  inContext: PropTypes.bool,
-};
 
 export default PageHeader;

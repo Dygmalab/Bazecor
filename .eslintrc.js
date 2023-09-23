@@ -51,6 +51,7 @@ module.exports = {
     "no-underscore-dangle": "off", // we should not use _ in variables in any case
     "react/require-default-props": "off",
     "react/function-component-definition": "off",
+    "import/prefer-default-export": "off",
   },
   ignorePatterns: ["/*", "!/src"], // we only care about linting src folder
 };

@@ -90,14 +90,6 @@ height: inherit;
 }
 `;
 
-/**
- * This FirmwareUpdateProcess function returns a module that wrap all modules and components to manage the first steps of firware update.
- * The object will accept the following parameters
- *
- * @param {number} disclaimerCard - Number that indicates the software when the installation will begin.
- * @returns {<FirmwareUpdateProcess>} FirmwareUpdateProcess component.
- */
-
 function FirmwareUpdateProcess(props) {
   const { nextBlock, retryBlock, context, toggleFlashing, toggleFwUpdate, onDisconnect, device } = props;
   const [toggledFlashing, sendToggledFlashing] = useState(false);

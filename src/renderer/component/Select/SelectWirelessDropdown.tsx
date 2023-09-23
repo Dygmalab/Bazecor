@@ -4,6 +4,8 @@ import Dropdown from "react-bootstrap/Dropdown";
 
 import i18n from "@Renderer/i18n";
 import { SelectWirelessDropdownProps, WirelessButton } from "@Renderer/types/wireless";
+import { BluetoothCodes } from "@Renderer/../hw/bluetooth";
+import { BatteryCodes } from "@Renderer/../hw/battery";
 
 const Style = Styled.div`
 width: 100%;
@@ -137,12 +139,16 @@ width: 100%;
   }
 `;
 
+enum WirelessButtonOrder {
+  BATTERY_LEVEL = 0,
+  PAIRING_MODE = 1,
+}
+
 function SelectWirelessDropdown(props: SelectWirelessDropdownProps) {
   const { keyCode, onKeySelect } = props;
   const WirelessButtons: Array<WirelessButton> = [
-    { name: i18n.editor.standardView.wireless.batteryLevel, keynum: 54108 },
-    { name: i18n.wireless.bluetooth.StatusButton, keynum: 54109 },
-    { name: i18n.wireless.bluetooth.pairingModeButton, keynum: 54110 },
+    { name: i18n.editor.standardView.wireless.batteryLevel, keynum: BatteryCodes.STATUS },
+    { name: i18n.wireless.bluetooth.pairingModeButton, keynum: BluetoothCodes.PAIRING },
   ];
   const KC: number = keyCode.base + keyCode.modified;
   // const verifiedKC = WirelessButtons.findIndex((param: WirelessButton) => param.keynum === KC);
@@ -169,29 +175,17 @@ function SelectWirelessDropdown(props: SelectWirelessDropdownProps) {
               </div>
               <div className="dropdown-group-buttons">
                 <Dropdown.Item
-                  eventKey={String(WirelessButtons[0].keynum)}
-                  key={`wirelessButtons-${0}`}
-                  disabled={WirelessButtons[0].keynum === -1}
+                  eventKey={String(WirelessButtons[WirelessButtonOrder.BATTERY_LEVEL].keynum)}
+                  key={`wirelessButtons-${WirelessButtonOrder.BATTERY_LEVEL}`}
+                  disabled={WirelessButtons[WirelessButtonOrder.BATTERY_LEVEL].keynum === -1}
                   className={`
-                    ${WirelessButtons[0].keynum === keyCode.base + keyCode.modified ? "active" : ""} dropdown-config-button`}
+                    ${
+                      WirelessButtons[WirelessButtonOrder.BATTERY_LEVEL].keynum === keyCode.base + keyCode.modified
+                        ? "active"
+                        : ""
+                    } dropdown-config-button`}
                 >
-                  <div className="dropdownItem">{WirelessButtons[0].name}</div>
-                </Dropdown.Item>
-              </div>
-            </div>
-            <div className="dropdown-group wirelessSaving">
-              <div className="dropdownHeader">
-                Bluetooth <span>{i18n.wireless.bluetooth.StatusTitle}</span>
-              </div>
-              <div className="dropdown-group-buttons">
-                <Dropdown.Item
-                  eventKey={String(WirelessButtons[1].keynum)}
-                  key={`wirelessButtons-${1}`}
-                  disabled={WirelessButtons[1].keynum === -1}
-                  className={`
-                    ${WirelessButtons[1].keynum === keyCode.base + keyCode.modified ? "active" : ""} dropdown-config-button`}
-                >
-                  <div className="dropdownItem">{WirelessButtons[1].name}</div>
+                  <div className="dropdownItem">{WirelessButtons[WirelessButtonOrder.BATTERY_LEVEL].name}</div>
                 </Dropdown.Item>
               </div>
             </div>
@@ -201,13 +195,15 @@ function SelectWirelessDropdown(props: SelectWirelessDropdownProps) {
               </div>
               <div className="dropdown-group-buttons">
                 <Dropdown.Item
-                  eventKey={String(WirelessButtons[2].keynum)}
-                  key={`wirelessButtons-${2}`}
-                  disabled={WirelessButtons[2].keynum === -1}
+                  eventKey={String(WirelessButtons[WirelessButtonOrder.PAIRING_MODE].keynum)}
+                  key={`wirelessButtons-${WirelessButtonOrder.PAIRING_MODE}`}
+                  disabled={WirelessButtons[WirelessButtonOrder.PAIRING_MODE].keynum === -1}
                   className={`
-                    ${WirelessButtons[2].keynum === keyCode.base + keyCode.modified ? "active" : ""} dropdown-config-button`}
+                    ${
+                      WirelessButtons[WirelessButtonOrder.PAIRING_MODE].keynum === keyCode.base + keyCode.modified ? "active" : ""
+                    } dropdown-config-button`}
                 >
-                  <div className="dropdownItem">{WirelessButtons[2].name}</div>
+                  <div className="dropdownItem">{WirelessButtons[WirelessButtonOrder.PAIRING_MODE].name}</div>
                 </Dropdown.Item>
               </div>
             </div>

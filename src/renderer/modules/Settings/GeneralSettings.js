@@ -70,7 +70,7 @@ export default class GeneralSettings extends Component {
       text: languageNames[index],
       value: item,
       icon: flags[index],
-      index
+      index,
     }));
 
     layersNames = layersNames.map((item, index) => ({
