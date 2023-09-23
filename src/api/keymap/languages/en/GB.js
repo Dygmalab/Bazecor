@@ -200,60 +200,39 @@ const enGBLAltTable = withModifiers(table, "Alt +", "A+", 512);
 const enGBRAltTable = withModifiers(table, "AltGr +", "AGr+", 1024);
 const enGBShiftTable = withModifiers(tableWithoutModifier, "Shift +", "S+", 2048);
 const enGBGuiTable = withModifiers(table, "Os+", "O+", 4096);
+
 // Double
 
 const enGBCATable = withModifiers(table, "Control + Alt +", "C+A+", 768);
-
 const enGBCAGrTable = withModifiers(table, "Control + AltGr +", "C+AGr+", 1280);
-
 const enGBCSTable = withModifiers(table, "Control + Shift +", "C+S+", 2304);
-
 const enGBCGTable = withModifiers(table, "Control + Os +", "C+O+", 4352);
-
 const enGBAAGrTable = withModifiers(table, "Alt + AltGr +", "A+AGr+", 1536);
-
 const enGBASTable = withModifiers(table, "Alt + Shift +", "A+S+", 2560);
-
 const enGBAGTable = withModifiers(table, "Alt + Os +", "A+O+", 4608);
-
 const enGBAGrSTable = withModifiers(table, "AltGr + Shift +", "AGr+S+", 3072);
-
 const enGBAGrGTable = withModifiers(table, "AltGr + Os +", "AGr+O+", 5120);
-
 const enGBSGTable = withModifiers(table, "Shift + Os +", "S+O+", 6144);
 
 // Triple
 
 const enGBCAAGTable = withModifiers(table, "Control + Alt + AltGr +", "C+A+AGr+", 1792);
-
 const enGBCASTable = withModifiers(table, "Meh +", "Meh+", 2816);
-
 const enGBCAGTable = withModifiers(table, "Control + Alt + Os +", "C+A+O+", 4864);
-
 const enGBCAGSTable = withModifiers(table, "Control + AltGr + Shift +", "C+AGr+S+", 3328);
-
 const enGBCAGGTable = withModifiers(table, "Control + AltGr + Os +", "C+AGr+O+", 5376);
-
 const enGBCSGTable = withModifiers(table, "Control + Shift + Os +", "C+S+O+", 6400);
-
 const enGBAAGSTable = withModifiers(table, "Alt + AltGr + Shift +", "A+AGr+S+", 3584);
-
 const enGBAAGGTable = withModifiers(table, "Alt + AltGr + Os +", "A+AGr+O+", 5632);
-
 const enGBASGTable = withModifiers(table, "Alt + Shift + Os +", "A+S+O+", 6656);
-
 const enGBAGSGTable = withModifiers(table, "AltGr + Shift + Os +", "AGr+S+O+", 7168);
 
 // Quad
 
 const enGBCAAGrSTable = withModifiers(table, "Meh + AltGr +", "M+AGr+", 3840);
-
 const enGBCAAGrGTable = withModifiers(table, "Control + Alt + AltGr + Os +", "C+A+AGr+O+", 5888);
-
 const enGBCAGrSGTable = withModifiers(table, "Control + AltGr + Shift + Os +", "C+AGr+S+O+", 7424);
-
 const enGBAAGrSGTable = withModifiers(table, "Alt + AltGr + Shift + Os +", "A+AGr+S+O+", 7680);
-
 const enGBAllModTable = withModifiers(table, "Hyper + AltGr +", "H+AGr+", 7936);
 
 const DualUseCtrlTable = withModifiers(table, "Control /", "CTRL/", 49169);
