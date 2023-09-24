@@ -39,71 +39,61 @@ import deCH from "@Assets/flags/deCH.png";
 import enXXeurkey from "@Assets/flags/enXXeurkey.png";
 
 // !!!
-// Sorting order in this file is based off display language (languageNames)
-// rather than natural sorting order of (A-Z) in their respective category.
+// Sorting order below is based off display language (languageNames).
 // !!!
 
 const flags = [
-  // Keycaps
+  daDK,
   enUS,
   enGB,
-  esES,
-  deDE,
-  frFR,
-  daDK,
+  enXXeurkey,
   fiFI,
-  nbNO,
-  svSE,
-  // Official
+  frFR,
+  frFR, // BÉPO (French)
+  deDE,
   isIS,
   jaJP,
   koKR,
+  nbNO,
+  esES,
+  svSE,
   deCH,
-  // Community
-  frFR, // BÉPO (French)
-  enXXeurkey,
 ];
 
 const languages = [
-  // Keycaps
+  "da-DK",
   "en-US",
   "en-GB",
-  "es-ES",
-  "de-DE",
-  "fr-FR",
-  "da-DK",
+  "en-XX-eurkey",
   "fi-FI",
-  "nb-NO",
-  "sv-SE",
-  // Official
+  "fr-FR",
+  "fr-XX-bepo",
+  "de-DE",
   "is-IS",
   "ja-JP",
   "ko-KR",
+  "nb-NO",
+  "es-ES",
+  "sv-SE",
   "de-CH",
-  // Community
-  "fr-XX-bepo",
-  "en-XX-eurkey",
 ];
 
 const languageNames = [
-  // Keycaps
+  "Danish",
   "English (US)",
   "English (GB)",
-  "Spanish",
-  "German",
-  "French",
-  "Danish",
+  "EurKEY (1.3)",
   "Finnish",
-  "Norwegian",
-  "Swedish",
-  // Official
+  "French",
+  "French (BÉPO)",
+  "German",
   "Icelandic",
   "Japanese",
   "Korean",
+  "Norwegian",
+  "Spanish",
+  "Swedish",
   "Swiss German",
-  // Community
-  "BÉPO (French)",
-  "EurKEY (1.3)",
 ];
 
 export {flags, languages, languageNames};
