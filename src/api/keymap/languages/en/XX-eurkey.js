@@ -756,9 +756,9 @@ const AGrSSymbols = [
   },
 ];
 
-const enUSeurkey = Letters;
+const enXXeurkey = Letters;
 
-const table = { keys: enUSeurkey };
+const table = { keys: enXXeurkey };
 const tableS = { keys: LetterTable.keys };
 
 const tableAGr = {
@@ -771,45 +771,45 @@ const tableAGrS = {
   keys: AGrSLetters.concat(AGrSSymbols),
 };
 
-const enUSeurkeyCtrlTable = withModifiers(table, "Control +", "C+", 256);
-const enUSeurkeyLAltTable = withModifiers(table, "Alt +", "A+", 512);
-const enUSeurkeyRAltTable = withModifiers(tableAGr, "AltGr +", "AGr+", 1024);
-const enUSeurkeyShiftTable = withModifiers(tableS, "Shift +", "S+", 2048);
-const enUSeurkeyGuiTable = withModifiers(table, "Os+", "O+", 4096);
+const enXXeurkeyCtrlTable = withModifiers(table, "Control +", "C+", 256);
+const enXXeurkeyLAltTable = withModifiers(table, "Alt +", "A+", 512);
+const enXXeurkeyRAltTable = withModifiers(tableAGr, "AltGr +", "AGr+", 1024);
+const enXXeurkeyShiftTable = withModifiers(tableS, "Shift +", "S+", 2048);
+const enXXeurkeyGuiTable = withModifiers(table, "Os+", "O+", 4096);
 
 // Double
 
-const enUSeurkeyCATable = withModifiers(tableAGr, "Control + Alt +", "C+A+", 768);
-const enUSeurkeyCAGrTable = withModifiers(tableAGr, "Control + AltGr +", "C+AGr+", 1280);
-const enUSeurkeyCSTable = withModifiers(tableS, "Control + Shift +", "C+S+", 2304);
-const enUSeurkeyCGTable = withModifiers(table, "Control + Os +", "C+O+", 4352);
-const enUSeurkeyAAGrTable = withModifiers(tableAGr, "Alt + AltGr +", "A+AGr+", 1536);
-const enUSeurkeyASTable = withModifiers(tableS, "Alt + Shift +", "A+S+", 2560);
-const enUSeurkeyAGTable = withModifiers(table, "Alt + Os +", "A+O+", 4608);
-const enUSeurkeyAGrSTable = withModifiers(tableAGrS, "AltGr + Shift +", "AGr+S+", 3072);
-const enUSeurkeyAGrGTable = withModifiers(tableAGr, "AltGr + Os +", "AGr+O+", 5120);
-const enUSeurkeySGTable = withModifiers(tableS, "Shift + Os +", "S+O+", 6144);
+const enXXeurkeyCATable = withModifiers(tableAGr, "Control + Alt +", "C+A+", 768);
+const enXXeurkeyCAGrTable = withModifiers(tableAGr, "Control + AltGr +", "C+AGr+", 1280);
+const enXXeurkeyCSTable = withModifiers(tableS, "Control + Shift +", "C+S+", 2304);
+const enXXeurkeyCGTable = withModifiers(table, "Control + Os +", "C+O+", 4352);
+const enXXeurkeyAAGrTable = withModifiers(tableAGr, "Alt + AltGr +", "A+AGr+", 1536);
+const enXXeurkeyASTable = withModifiers(tableS, "Alt + Shift +", "A+S+", 2560);
+const enXXeurkeyAGTable = withModifiers(table, "Alt + Os +", "A+O+", 4608);
+const enXXeurkeyAGrSTable = withModifiers(tableAGrS, "AltGr + Shift +", "AGr+S+", 3072);
+const enXXeurkeyAGrGTable = withModifiers(tableAGr, "AltGr + Os +", "AGr+O+", 5120);
+const enXXeurkeySGTable = withModifiers(tableS, "Shift + Os +", "S+O+", 6144);
 
 // Triple
 
-const enUSeurkeyCAAGTable = withModifiers(tableAGr, "Control + Alt + AltGr +", "C+A+AGr+", 1792);
-const enUSeurkeyCASTable = withModifiers(tableAGrS, "Meh +", "Meh+", 2816);
-const enUSeurkeyCAGTable = withModifiers(tableAGr, "Control + Alt + Os +", "C+A+O+", 4864);
-const enUSeurkeyCAGSTable = withModifiers(tableAGrS, "Control + AltGr + Shift +", "C+AGr+S+", 3328);
-const enUSeurkeyCAGGTable = withModifiers(tableAGr, "Control + AltGr + Os +", "C+AGr+O+", 5376);
-const enUSeurkeyCSGTable = withModifiers(tableS, "Control + Shift + Os +", "C+S+O+", 6400);
-const enUSeurkeyAAGSTable = withModifiers(tableAGrS, "Alt + AltGr + Shift +", "A+AGr+S+", 3584);
-const enUSeurkeyAAGGTable = withModifiers(tableAGr, "Alt + AltGr + Os +", "A+AGr+O+", 5632);
-const enUSeurkeyASGTable = withModifiers(tableS, "Alt + Shift + Os +", "A+S+O+", 6656);
-const enUSeurkeyAGSGTable = withModifiers(tableAGrS, "AltGr + Shift + Os +", "AGr+S+O+", 7168);
+const enXXeurkeyCAAGTable = withModifiers(tableAGr, "Control + Alt + AltGr +", "C+A+AGr+", 1792);
+const enXXeurkeyCASTable = withModifiers(tableAGrS, "Meh +", "Meh+", 2816);
+const enXXeurkeyCAGTable = withModifiers(tableAGr, "Control + Alt + Os +", "C+A+O+", 4864);
+const enXXeurkeyCAGSTable = withModifiers(tableAGrS, "Control + AltGr + Shift +", "C+AGr+S+", 3328);
+const enXXeurkeyCAGGTable = withModifiers(tableAGr, "Control + AltGr + Os +", "C+AGr+O+", 5376);
+const enXXeurkeyCSGTable = withModifiers(tableS, "Control + Shift + Os +", "C+S+O+", 6400);
+const enXXeurkeyAAGSTable = withModifiers(tableAGrS, "Alt + AltGr + Shift +", "A+AGr+S+", 3584);
+const enXXeurkeyAAGGTable = withModifiers(tableAGr, "Alt + AltGr + Os +", "A+AGr+O+", 5632);
+const enXXeurkeyASGTable = withModifiers(tableS, "Alt + Shift + Os +", "A+S+O+", 6656);
+const enXXeurkeyAGSGTable = withModifiers(tableAGrS, "AltGr + Shift + Os +", "AGr+S+O+", 7168);
 
 // Quad
 
-const enUSeurkeyCAAGrSTable = withModifiers(tableAGrS, "Meh + AltGr +", "M+AGr+", 3840);
-const enUSeurkeyCAAGrGTable = withModifiers(tableAGr, "Control + Alt + AltGr + Os +", "C+A+AGr+O+", 5888);
-const enUSeurkeyCAGrSGTable = withModifiers(tableAGrS, "Control + AltGr + Shift + Os +", "C+AGr+S+O+", 7424);
-const enUSeurkeyAAGrSGTable = withModifiers(tableAGrS, "Alt + AltGr + Shift + Os +", "A+AGr+S+O+", 7680);
-const enUSeurkeyAllModTable = withModifiers(tableAGrS, "Hyper + AltGr +", "H+AGr+", 7936);
+const enXXeurkeyCAAGrSTable = withModifiers(tableAGrS, "Meh + AltGr +", "M+AGr+", 3840);
+const enXXeurkeyCAAGrGTable = withModifiers(tableAGr, "Control + Alt + AltGr + Os +", "C+A+AGr+O+", 5888);
+const enXXeurkeyCAGrSGTable = withModifiers(tableAGrS, "Control + AltGr + Shift + Os +", "C+AGr+S+O+", 7424);
+const enXXeurkeyAAGrSGTable = withModifiers(tableAGrS, "Alt + AltGr + Shift + Os +", "A+AGr+S+O+", 7680);
+const enXXeurkeyAllModTable = withModifiers(tableAGrS, "Hyper + AltGr +", "H+AGr+", 7936);
 
 const DualUseCtrlTable = withModifiers(table, "Control /", "CTRL/", 49169);
 const DualUseShiftTable = withModifiers(table, "Shift /", "SHIFT/", 49425);
@@ -825,38 +825,38 @@ const DualUseLayer6Tables = withModifiers(table, "Layer #6 /", "L#6/", 52498);
 const DualUseLayer7Tables = withModifiers(table, "Layer #7 /", "L#7/", 52754);
 const DualUseLayer8Tables = withModifiers(table, "Layer #8 /", "L#8/", 53010);
 
-const enUSeurkeyModifiedTables = [
-  enUSeurkeyCtrlTable,
-  enUSeurkeyLAltTable,
-  enUSeurkeyRAltTable,
-  enUSeurkeyShiftTable,
-  enUSeurkeyGuiTable,
-  enUSeurkeyCATable,
-  enUSeurkeyCAGrTable,
-  enUSeurkeyCSTable,
-  enUSeurkeyCGTable,
-  enUSeurkeyAAGrTable,
-  enUSeurkeyASTable,
-  enUSeurkeyAGTable,
-  enUSeurkeyAGrSTable,
-  enUSeurkeyAGrGTable,
-  enUSeurkeySGTable,
-  enUSeurkeyCAAGTable,
-  enUSeurkeyCASTable,
-  enUSeurkeyCAGTable,
-  enUSeurkeyCAGSTable,
-  enUSeurkeyCAGGTable,
-  enUSeurkeyCSGTable,
-  enUSeurkeyAAGSTable,
-  enUSeurkeyAAGGTable,
-  enUSeurkeyASGTable,
-  enUSeurkeyAGSGTable,
-  enUSeurkeyCAAGrSTable,
-  enUSeurkeyCAAGrGTable,
+const enXXeurkeyModifiedTables = [
+  enXXeurkeyCtrlTable,
+  enXXeurkeyLAltTable,
+  enXXeurkeyRAltTable,
+  enXXeurkeyShiftTable,
+  enXXeurkeyGuiTable,
+  enXXeurkeyCATable,
+  enXXeurkeyCAGrTable,
+  enXXeurkeyCSTable,
+  enXXeurkeyCGTable,
+  enXXeurkeyAAGrTable,
+  enXXeurkeyASTable,
+  enXXeurkeyAGTable,
+  enXXeurkeyAGrSTable,
+  enXXeurkeyAGrGTable,
+  enXXeurkeySGTable,
+  enXXeurkeyCAAGTable,
+  enXXeurkeyCASTable,
+  enXXeurkeyCAGTable,
+  enXXeurkeyCAGSTable,
+  enXXeurkeyCAGGTable,
+  enXXeurkeyCSGTable,
+  enXXeurkeyAAGSTable,
+  enXXeurkeyAAGGTable,
+  enXXeurkeyASGTable,
+  enXXeurkeyAGSGTable,
+  enXXeurkeyCAAGrSTable,
+  enXXeurkeyCAAGrGTable,
   withModifiers(tableAGrS, "Hyper +", "Hyper+", 6912),
-  enUSeurkeyCAGrSGTable,
-  enUSeurkeyAAGrSGTable,
-  enUSeurkeyAllModTable,
+  enXXeurkeyCAGrSGTable,
+  enXXeurkeyAAGrSGTable,
+  enXXeurkeyAllModTable,
   DualUseCtrlTable,
   DualUseShiftTable,
   DualUseAltTable,
@@ -872,5 +872,5 @@ const enUSeurkeyModifiedTables = [
   DualUseLayer8Tables
 ];
 
-export { enUSeurkey as default, enUSeurkeyModifiedTables };
-// export default enUSeurkey;
+export { enXXeurkey as default, enXXeurkeyModifiedTables };
+// export default enXXeurkey;

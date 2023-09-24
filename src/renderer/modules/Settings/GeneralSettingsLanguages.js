@@ -6,9 +6,10 @@
  * https://kbdlayout.info
  *
  * In case your keyboard layout aren't an officall language e.g. EurKEY you
- * select the keyboard language that it's based off (en-US), add a seperator (-)
- * and add the layouts name, in lowercase, resulting with;
- * "en-US-eurkey"
+ * select the keyboard language that it's based off (en), add a seperator (-),
+ * add XX (en-XX) to indicate all regions, add a seperator (-), and append
+ * the layouts name, in lowercase, resulting with;
+ * "en-XX-eurkey"
  *
  * All flags MUST be a circle with the dimensions of 512x512 pixels, you can
  * find all offical language flags on https://flagpedia.net/download/vector.
@@ -35,7 +36,7 @@ import koKR from "@Assets/flags/koKR.png";
 import deCH from "@Assets/flags/deCH.png";
 
 // Dygma - Layouts (community/third-party)
-import enUSeurkey from "@Assets/flags/enUSeurkey.png";
+import enXXeurkey from "@Assets/flags/enXXeurkey.png";
 
 // !!!
 // Sorting order in this file is based off display language (languageNames)
@@ -60,7 +61,7 @@ const flags = [
   deCH,
   // Community
   frFR, // BÉPO (French)
-  enUSeurkey,
+  enXXeurkey,
 ];
 
 const languages = [
@@ -80,8 +81,8 @@ const languages = [
   "ko-KR",
   "de-CH",
   // Community
-  "fr-FR-bepo",
-  "en-US-eurkey",
+  "fr-XX-bepo",
+  "en-XX-eurkey",
 ];
 
 const languageNames = [

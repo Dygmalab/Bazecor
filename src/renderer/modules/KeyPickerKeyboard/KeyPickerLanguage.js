@@ -66,8 +66,8 @@ import koKR from "@Renderer/modules/KeyPickerKeyboard/languages/ko/KR.json";
 import deCH from "@Renderer/modules/KeyPickerKeyboard/languages/de/CH.json";
 
 // Dygma - Layouts (community/third-party)
-import enUSeurkey from "@Renderer/modules/KeyPickerKeyboard/languages/en/US-eurkey.json";
-import frFRbepo from "@Renderer/modules/KeyPickerKeyboard/languages/fr/FR-bepo.json";
+import enXXeurkey from "@Renderer/modules/KeyPickerKeyboard/languages/en/XX-eurkey.json";
+import frXXbepo from "@Renderer/modules/KeyPickerKeyboard/languages/fr/XX-bepo.json";
 
 const languages = {
   // Keycaps
@@ -86,8 +86,8 @@ const languages = {
   "ko-KR": koKR,
   "de-CH": deCH,
   // Community
-  "en-US-eurkey": enUSeurkey,
-  "fr-FR-bepo": frFRbepo,
+  "en-XX-eurkey": enXXeurkey,
+  "fr-XX-bepo": frXXbepo,
 }
 
 /**

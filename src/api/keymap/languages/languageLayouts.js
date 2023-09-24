@@ -90,8 +90,8 @@ import koKR, { koKRModifiedTables } from "./ko/KR";
 import deCH, { deCHModifiedTables } from "./de/CH";
 
 // Dygma - Layouts (community/third-party)
-import enUSeurkey, { enUSeurkeyModifiedTables } from "./en/US-eurkey";
-import frFRbepo, { frFRbepoModifiedTables } from "./fr/FR-bepo";
+import enXXeurkey, { enXXeurkeyModifiedTables } from "./en/XX-eurkey";
+import frXXbepo, { frXXbepoModifiedTables } from "./fr/XX-bepo";
 
 const supportModifiedTables = {
   // Keycaps
@@ -109,8 +109,8 @@ const supportModifiedTables = {
   "ko-KR": koKRModifiedTables,
   "de-CH": deCHModifiedTables,
   // Community
-  "en-US-eurkey": enUSeurkeyModifiedTables,
-  "fr-FR-bepo": frFRbepoModifiedTables,
+  "en-XX-eurkey": enXXeurkeyModifiedTables,
+  "fr-XX-bepo": frXXbepoModifiedTables,
 };
 
 const languages = {
@@ -130,8 +130,8 @@ const languages = {
   "ko-KR": koKR,
   "de-CH": deCH,
   // Community
-  "en-US-eurkey": enUSeurkey,
-  "fr-FR-bepo": frFRbepo,
+  "en-XX-eurkey": enXXeurkey,
+  "fr-XX-bepo": frXXbepo,
 };
 
 export { languages as default, supportModifiedTables };
