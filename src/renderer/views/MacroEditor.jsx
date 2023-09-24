@@ -200,7 +200,7 @@ class MacroEditor extends React.Component {
       usedMemory: 0,
       totalMemory: 0,
       loading: true,
-      currentLanguageLayout: store.get("settings.language") || "english",
+      currentLanguageLayout: getLanguage(store.get("settings.language")),
     };
     this.updateMacros = this.updateMacros.bind(this);
     this.changeSelected = this.changeSelected.bind(this);
