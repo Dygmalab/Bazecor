@@ -38,7 +38,7 @@ class HID {
 
   connectDevice = async (index: number) => {
     // if we are already connected, we do not care and connect again
-    console.log("Trying to connect");
+    console.log("Trying to connect HID");
     if (this.connectedDevice) {
       throw new HIDError("Device already connected");
     }
@@ -93,10 +93,23 @@ class HID {
 
   isOpen = () => this.isConnected() && this.connectedDevice.opened;
 
+  static purgeUselessCharsEnd = (str: string) => {
+    // we remove null char and whitespaces from the end of the data received
+    const nullCharacterRegex = new RegExp("\u0000", "g");
+    const strWithoutNull = str.replace(nullCharacterRegex, "").trimEnd();
+    const dataArray = strWithoutNull.split(" ");
+    const lastItem = dataArray[dataArray.length - 1];
+    const lastItemChar = lastItem.charCodeAt(0);
+    if (lastItemChar === 0 || Number.isNaN(lastItemChar)) {
+      dataArray.pop();
+    }
+    const rejoined = dataArray.join(" ");
+    return rejoined;
+  };
+
   sendData = async (dataToSend: string, receiverHandler: ReceiverHandler, errorHandler: ErrorHandler) => {
     const maxData = 200;
     this.dataReceived = "";
-    // const dataWithDelimiter = `${dataToSend}`;
     const encodedData = HID.encoder.encode(dataToSend);
     const chunks = Math.ceil(encodedData.length / maxData);
     let startIndex;
@@ -108,7 +121,6 @@ class HID {
     let receiveDataHandler: (event: HIDInputReportEvent) => void;
     const allDataReceived = new Promise((resolve, reject) => {
       const timeout = setTimeout(() => {
-        console.log("HID send timeout triggered");
         if (this.connectedDevice) {
           this.connectedDevice.removeEventListener("inputreport", receiveDataHandler);
         }
@@ -122,53 +134,37 @@ class HID {
 
         const decodedData = HID.decoder.decode(data);
         if (decodedData.includes("\r\n.\r\n")) {
-          console.log("Last data received");
           const lastChunk = decodedData.replace("\r\n.\r\n", "");
           this.dataReceived += lastChunk;
+          this.dataReceived = HID.purgeUselessCharsEnd(this.dataReceived);
           clearTimeout(timeout);
           resolve(this.dataReceived);
         } else {
           this.dataReceived += decodedData;
-          console.log("Data received");
         }
       };
-      console.log("We add receiver data listener");
-      if (this.connectedDevice) {
-        this.connectedDevice.addEventListener("inputreport", receiveDataHandler);
-      }
+      this.connectedDevice.addEventListener("inputreport", receiveDataHandler);
     });
-    console.log("We send data");
+    const buffer = new ArrayBuffer(maxData);
+    let bufferView;
     for (let i = 0; i < chunks; i += 1) {
       startIndex = maxData * i;
       endIndex = maxData * i + maxData;
-      if (i === chunks - 1) {
-        console.log("Last chunk being sent");
-        console.log("Data sent raw");
-        console.log(dataToSend);
-        console.log("Data sent encoded ");
-        console.log(encodedData);
-      }
-      this.sendChunkData(encodedData.slice(startIndex, endIndex));
+      bufferView = new Uint8Array(buffer);
+      bufferView.fill(0);
+      bufferView.set(encodedData.slice(startIndex, endIndex), 0);
+      this.sendChunkData(bufferView);
     }
     return allDataReceived
       .then((totalDataReceived: string) => {
-        if (this.connectedDevice) {
-          this.connectedDevice.removeEventListener("inputreport", receiveDataHandler);
-        } else {
-          console.log("Connected device is null, bu");
-        }
+        this.connectedDevice.removeEventListener("inputreport", receiveDataHandler);
         receiverHandler(totalDataReceived);
       })
       .catch(err => errorHandler(err));
   };
 
   private sendChunkData = async (data: Uint8Array) => {
-    console.log("Sending chunk");
-    console.log(HID.decoder.decode(data));
-    if (this.connectedDevice) {
-      await this.connectedDevice.sendReport(HIDReportID, data);
-      await new Promise(resolve => setTimeout(resolve, 250));
-    }
+    await this.connectedDevice.sendReport(HIDReportID, data);
   };
 }
 
