@@ -24,6 +24,8 @@ import IconArrowRight from "./IconArrowRight";
 import IconArrowsSmallSeparating from "./IconArrowsSmallSeparating";
 import IconArrowUpWithLine from "./IconArrowUpWithLine";
 import IconArrowDownWithLine from "./IconArrowDownWithLine";
+import IconBattery from "./IconBattery";
+import IconBluetooth from "./IconBluetooth";
 import IconColorPalette from "./IconColorPalette";
 import IconColorPicker from "./IconColorPicker";
 import IconConnected from "./IconConnected";
@@ -53,6 +55,7 @@ import IconKeyboardSelector from "./IconKeyboardSelector";
 import IconKeyboard2Stroke from "./IconKeyboard2Stroke";
 import IconKeysLight from "./IconKeysLight";
 import IconKeysUnderglow from "./IconKeysUnderglow";
+import IconLeaf from "./IconLeaf";
 import IconLEDNextEffect from "./IconLEDNextEffect";
 import IconLEDNextEffectSm from "./IconLEDNextEffectSm";
 import IconLEDPreviousEffect from "./IconLEDPreviousEffect";
@@ -86,6 +89,7 @@ import IconNoWifi from "./IconNoWifi";
 import IconOneShot from "./IconOneShot";
 import IconOneShotSm from "./IconOneShotSm";
 import IconPauseXl from "./IconPauseXl";
+import IconPlug from "./IconPlug";
 import IconPlus from "./IconPlus";
 import IconPlusXs from "./IconPlusXs";
 import IconPreferences2Stroke from "./IconPreferences2Stroke";
@@ -118,6 +122,8 @@ import IconRecord from "./IconRecord";
 import IconRefresh from "./IconRefresh";
 import IconRobot from "./IconRobot";
 import IconRobotSm from "./IconRobotSm";
+import IconSettings from "./IconSettings";
+import IconSignal from "./IconSignal";
 import IconShutdown from "./IconShutdown";
 import IconShutdownSm from "./IconShutdownSm";
 import IconSleep from "./IconSleep";
@@ -135,10 +141,12 @@ import IconToolsBrightnessLessSm from "./IconToolsBrightnessLessSm";
 import IconToolsBrightnessMore from "./IconToolsBrightnessMore";
 import IconToolsBrightnessMoreSm from "./IconToolsBrightnessMoreSm";
 import IconThreeDots from "./IconThreeDots";
-import IconSettings from "./IconSettings";
 import IconUndoRestart from "./IconUndoRestart";
 import IconUpload from "./IconUpload";
 import IconWarning from "./IconWarning";
+import IconWireless from "./IconWireless";
+import IconWirelessMd from "./IconWirelessMd";
+import IconWirelessSm from "./IconWirelessSm";
 import IconWrench from "./IconWrench";
 import IconWrenchSm from "./IconWrenchSm";
 
@@ -153,6 +161,8 @@ export {
   IconArrowsMouseWheel,
   IconArrowUpWithLine,
   IconArrowDownWithLine,
+  IconBattery,
+  IconBluetooth,
   IconColorPalette,
   IconColorPicker,
   IconConnected,
@@ -182,6 +192,7 @@ export {
   IconKeyboard2Stroke,
   IconKeysLight,
   IconKeysUnderglow,
+  IconLeaf,
   IconLEDSwitchLeft,
   IconLEDNextEffect,
   IconLEDNextEffectSm,
@@ -215,6 +226,7 @@ export {
   IconOneShot,
   IconOneShotSm,
   IconPauseXl,
+  IconPlug,
   IconPlus,
   IconPlusXs,
   IconPen,
@@ -247,6 +259,8 @@ export {
   IconRefresh,
   IconRobot,
   IconRobotSm,
+  IconSettings,
+  IconSignal,
   IconShutdown,
   IconShutdownSm,
   IconSleep,
@@ -264,10 +278,12 @@ export {
   IconToolsBrightnessMore,
   IconToolsBrightnessMoreSm,
   IconThreeDots,
-  IconSettings,
   IconUndoRestart,
   IconUpload,
   IconWarning,
+  IconWireless,
+  IconWirelessMd,
+  IconWirelessSm,
   IconWrench,
-  IconWrenchSm
+  IconWrenchSm,
 };

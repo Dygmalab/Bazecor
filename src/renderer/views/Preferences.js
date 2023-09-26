@@ -19,29 +19,31 @@
 import React from "react";
 import { ipcRenderer } from "electron";
 import Styled from "styled-components";
-import i18n from "../i18n";
 
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
 import Spinner from "react-bootstrap/Spinner";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
+import i18n from "@Renderer/i18n";
 import "react-toastify/dist/ReactToastify.css";
 
 // Custom modules imports
-import { KeyboardSettings } from "../modules/Settings/KeyboardSettings";
-import { BackupSettings, GeneralSettings, NeuronSettings, AdvancedSettings } from "../modules/Settings";
+import { KeyboardSettings } from "@Renderer/modules/Settings/KeyboardSettings";
+import { BackupSettings, GeneralSettings, NeuronSettings, AdvancedSettings } from "@Renderer/modules/Settings";
 
+import { PageHeader } from "@Renderer/modules/PageHeader";
+import ToastMessage from "@Renderer/component/ToastMessage";
+import { RegularButton } from "@Renderer/component/Button";
+import { IconFloppyDisk } from "@Renderer/component/Icon";
+import Version from "@Renderer/component/Version/Version";
+
+import Store from "@Renderer/utils/Store";
 import Focus from "../../api/focus";
 import Backup from "../../api/backup";
-import PageHeader from "../modules/PageHeader";
-import ToastMessage from "../component/ToastMessage";
-import { RegularButton } from "../component/Button";
-import { IconFloppyDisk } from "../component/Icon";
 
-const Store = require("electron-store");
-const store = new Store();
+const store = Store.getStore();
 
 const Styles = Styled.div`
   .toggle-button{
@@ -59,9 +61,10 @@ class Preferences extends React.Component {
       keymap: {
         custom: [],
         default: [],
-        onlyCustom: true
+        onlyCustom: true,
       },
       ledBrightness: 255,
+      ledBrightnessUG: 255,
       defaultLayer: 126,
       ledIdleTimeLimit: 0,
       qukeysHoldTimeout: 0,
@@ -79,7 +82,7 @@ class Preferences extends React.Component {
       mouseWheelDelay: 100,
       mouseSpeedLimit: 1,
       modified: props.inContext,
-      showDefaults: false
+      showDefaults: false,
     };
 
     this.state = {
@@ -91,11 +94,12 @@ class Preferences extends React.Component {
       selectedNeuron: 0,
       neuronID: "",
       kbData: this.kbData,
-      modified: props.inContext
+      modified: props.inContext,
     };
   }
 
   async componentDidMount() {
+    const focus = new Focus();
     const devTools = await ipcRenderer.invoke("is-devtools-opened");
     this.setState({ devTools });
     ipcRenderer.on("opened-devtool", (event, arg) => {
@@ -117,13 +121,9 @@ class Preferences extends React.Component {
   }
 
   getNeuronData = async () => {
-    let focus = new Focus();
-
-    // Checking if device is wired or wireless
-    this.setState({ wireless: focus.device.info.keyboardType === "wireless" });
+    const focus = new Focus();
 
     // EXTRACTING DATA FROM NEURON
-
     await focus.command("hardware.chip_id").then(neuronID => {
       neuronID = neuronID.replace(/\s/g, "");
       this.setState({ neuronID });
@@ -142,6 +142,11 @@ class Preferences extends React.Component {
     await focus.command("led.brightness").then(brightness => {
       brightness = brightness ? parseInt(brightness) : -1;
       this.kbData.ledBrightness = brightness;
+    });
+
+    await focus.command("led.brightnessUG").then(brightness => {
+      brightness = brightness ? parseInt(brightness) : -1;
+      this.kbData.ledBrightnessUG = brightness;
     });
 
     await focus.command("idleleds.time_limit").then(limit => {
@@ -167,25 +172,10 @@ class Preferences extends React.Component {
       this.kbData.SuperTimeout = timeout;
     });
 
-    // await focus.command("superkeys.repeat").then(repeat => {
-    //   repeat = repeat ? parseInt(repeat) : 20;
-    //   this.kbData.SuperRepeat = repeat;
-    // });
-
-    // await focus.command("superkeys.waitfor").then(waitfor => {
-    //   waitfor = waitfor ? parseInt(waitfor) : 500;
-    //   this.kbData.SuperWaitfor = waitfor;
-    // });
-
     await focus.command("superkeys.holdstart").then(holdstart => {
       holdstart = holdstart ? parseInt(holdstart) : 200;
       this.kbData.SuperHoldstart = holdstart;
     });
-
-    // await focus.command("superkeys.overlap").then(overlapThreshold => {
-    //   overlapThreshold = overlapThreshold ? parseInt(overlapThreshold) : 20;
-    //   this.kbData.SuperOverlapThreshold =overlapThreshold;
-    // });
 
     // MOUSE variables commands
     await focus.command("mouse.speed").then(speed => {
@@ -193,95 +183,22 @@ class Preferences extends React.Component {
       this.kbData.mouseSpeed = speed;
     });
 
-    // await focus.command("mouse.speedDelay").then(speedDelay => {
-    //   speedDelay = speedDelay ? parseInt(speedDelay) : 6;
-    //   this.kbData.mouseSpeedDelay = speedDelay;
-    // });
-
     await focus.command("mouse.accelSpeed").then(accelSpeed => {
       accelSpeed = accelSpeed ? parseInt(accelSpeed) : 1;
       this.kbData.mouseAccelSpeed = accelSpeed;
     });
-
-    // await focus.command("mouse.accelDelay").then(accelDelay => {
-    //   accelDelay = accelDelay ? parseInt(accelDelay) : 64;
-    //   this.kbData.mouseAccelDelay = accelDelay;
-    // });
 
     await focus.command("mouse.wheelSpeed").then(wheelSpeed => {
       wheelSpeed = wheelSpeed ? parseInt(wheelSpeed) : 1;
       this.kbData.mouseWheelSpeed = wheelSpeed;
     });
 
-    // await focus.command("mouse.wheelDelay").then(wheelDelay => {
-    //   wheelDelay = wheelDelay ? parseInt(wheelDelay) : 128;
-    //   this.kbData.mouseWheelDelay: wheelDelay });
-    // });
-
     await focus.command("mouse.speedLimit").then(speedLimit => {
       speedLimit = speedLimit ? parseInt(speedLimit) : 127;
       this.kbData.mouseSpeedLimit = speedLimit;
     });
 
-    if (this.state.wireless) {
-      // Use focus commands to retrieve wireless data
-      this.kbData.wireless = {};
-
-      // Battery commands
-      this.kbData.wireless.battery = {};
-      await focus.command("wireless.battery.level").then(batteryLevel => {
-        this.kbData.wireless.battery.level = batteryLevel;
-      });
-      await focus.command("wireless.battery.state").then(batteryState => {
-        this.kbData.wireless.battery.state = batteryState;
-      });
-      await focus.command("wireless.battery.mode").then(batteryMode => {
-        this.kbData.wireless.battery.mode = batteryMode;
-      });
-
-      // Energy commands
-      this.kbData.wireless.energy = {};
-      await focus.command("wireless.energy.modes").then(energyModes => {
-        this.kbData.wireless.energy.modes = energyModes;
-      });
-      await focus.command("wireless.energy.currentMode").then(energyMode => {
-        this.kbData.wireless.energy.currentMode = energyMode;
-      });
-      await focus.command("wireless.energy.disable").then(energyDisable => {
-        this.kbData.wireless.energy.disable = energyDisable;
-      });
-
-      // Bluetooth commands
-      this.kbData.wireless.bluetooth = {};
-      await focus.command("wireless.bluetooth.devices").then(bluetoothDevices => {
-        this.kbData.wireless.bluetooth.devices = bluetoothDevices;
-      });
-      await focus.command("wireless.bluetooth.state").then(bluetoothState => {
-        this.kbData.wireless.bluetooth.state = bluetoothState;
-      });
-      await focus.command("wireless.bluetooth.stability").then(bluetoothStability => {
-        this.kbData.wireless.bluetooth.stability = bluetoothStability;
-      });
-
-      // rf commands
-      this.kbData.wireless.rf = {};
-      await focus.command("wireless.rf.channelHop").then(rfChannelHop => {
-        this.kbData.wireless.rf.channelHop = rfChannelHop;
-      });
-      await focus.command("wireless.rf.state").then(rfState => {
-        this.kbData.wireless.rf.state = rfState;
-      });
-      await focus.command("wireless.rf.stability").then(rfStability => {
-        this.kbData.wireless.rf.stability = rfStability;
-      });
-
-      // Additional commands
-      await focus.command("led.brightness.underglow").then(UGBrightness => {
-        this.kbData.ledBrightnessUG = UGBrightness;
-      });
-    }
-
-    //Save in state
+    // Save in state
     this.setState({ kbData: this.kbData });
   };
 
@@ -293,6 +210,7 @@ class Preferences extends React.Component {
       defaultLayer,
       showDefaults,
       ledBrightness,
+      ledBrightnessUG,
       ledIdleTimeLimit,
       qukeysHoldTimeout,
       qukeysOverlapThreshold,
@@ -300,7 +218,6 @@ class Preferences extends React.Component {
       SuperRepeat,
       SuperWaitfor,
       SuperHoldstart,
-      SuperOverlapThreshold,
       mouseSpeed,
       mouseSpeedDelay,
       mouseAccelSpeed,
@@ -308,13 +225,12 @@ class Preferences extends React.Component {
       mouseWheelSpeed,
       mouseWheelDelay,
       mouseSpeedLimit,
-      wireless,
-      ledBrightnessUG
     } = this.kbData;
 
     await await focus.command("keymap.onlyCustom", keymap.onlyCustom);
     await await focus.command("settings.defaultLayer", defaultLayer);
     await await focus.command("led.brightness", ledBrightness);
+    await await focus.command("led.brightnessUG", ledBrightnessUG);
     if (ledIdleTimeLimit >= 0) await await focus.command("idleleds.time_limit", ledIdleTimeLimit);
     store.set("settings.showDefaults", showDefaults);
     // QUKEYS
@@ -325,7 +241,6 @@ class Preferences extends React.Component {
     await await focus.command("superkeys.repeat", SuperRepeat);
     await await focus.command("superkeys.waitfor", SuperWaitfor);
     await await focus.command("superkeys.holdstart", SuperHoldstart);
-    // await await focus.command("superkeys.overlap", SuperOverlapThreshold);
     // MOUSE KEYS
     await await focus.command("mouse.speed", mouseSpeed);
     await await focus.command("mouse.speedDelay", mouseSpeedDelay);
@@ -334,24 +249,8 @@ class Preferences extends React.Component {
     await await focus.command("mouse.wheelSpeed", mouseWheelSpeed);
     await await focus.command("mouse.wheelDelay", mouseWheelDelay);
     await await focus.command("mouse.speedLimit", mouseSpeedLimit);
-    // WIRELESS
-    if (this.state.wireless) {
-      await await focus.command("wireless.battery.level", wireless.battery.level);
-      await await focus.command("wireless.battery.state", wireless.battery.state);
-      await await focus.command("wireless.battery.mode", wireless.battery.mode);
-      await await focus.command("wireless.energy.modes", wireless.energy.modes);
-      await await focus.command("wireless.energy.currentMode", wireless.energy.currentMode);
-      await await focus.command("wireless.energy.disable", wireless.energy.disable);
-      await await focus.command("wireless.bluetooth.devices", wireless.bluetooth.devices);
-      await await focus.command("wireless.bluetooth.state", wireless.bluetooth.state);
-      await await focus.command("wireless.bluetooth.stability", wireless.bluetooth.stability);
-      await await focus.command("wireless.rf.channelHop", wireless.rf.channelHop);
-      await await focus.command("wireless.rf.state", wireless.rf.state);
-      await await focus.command("wireless.rf.stability", wireless.rf.stability);
-      await await focus.command("led.brightness.underglow", ledBrightnessUG);
-    }
 
-    //TODO: Review toast popup on try/catch works well.
+    // TODO: Review toast popup on try/catch works well.
     try {
       const commands = await this.bkp.Commands();
       const backup = await this.bkp.DoBackup(commands, this.state.neuronID);
@@ -364,7 +263,7 @@ class Preferences extends React.Component {
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
-        icon: ""
+        icon: "",
       });
     } catch (error) {
       console.error(error);
@@ -382,8 +281,8 @@ class Preferences extends React.Component {
           pauseOnHover: true,
           draggable: true,
           progress: undefined,
-          icon: ""
-        }
+          icon: "",
+        },
       );
     }
 
@@ -429,7 +328,7 @@ class Preferences extends React.Component {
   // ADVANCED FUNCTIONS
   toggleAdvanced = () => {
     this.setState(state => ({
-      advanced: !state.advanced
+      advanced: !state.advanced,
     }));
   };
 
@@ -446,13 +345,13 @@ class Preferences extends React.Component {
   };
 
   toggleVerboseFocus = event => {
-    this.setState({ verboseFocus: event.target.checked });
-    let focus = new Focus();
-    focus.debug = event.target.checked;
+    const focus = new Focus();
+    focus.debug = !this.state.verboseFocus;
+    this.setState({ verboseFocus: !this.state.verboseFocus });
   };
 
   toggleOnlyCustom = event => {
-    let newkbData = this.kbData;
+    const newkbData = this.kbData;
     newkbData.keymap.onlyCustom = event.target.checked;
     newkbData.modified = true;
     this.setState({ modified: true });
@@ -462,15 +361,15 @@ class Preferences extends React.Component {
   // NEURON FUNCTIONS
   selectNeuron = value => {
     this.setState({
-      selectedNeuron: parseInt(value)
+      selectedNeuron: parseInt(value),
     });
   };
 
   updateNeuronName = data => {
-    let temp = this.state.neurons;
+    const temp = this.state.neurons;
     temp[this.state.selectedNeuron].name = data;
     this.setState({
-      neurons: temp
+      neurons: temp,
     });
     this.applyNeuronName(temp);
   };
@@ -480,22 +379,16 @@ class Preferences extends React.Component {
   };
 
   deleteNeuron = async () => {
-    let result = await window.confirm(i18n.keyboardSettings.neuronManager.deleteNeuron);
+    const result = await window.confirm(i18n.keyboardSettings.neuronManager.deleteNeuron);
     if (result) {
-      let temp = JSON.parse(JSON.stringify(this.state.neurons));
+      const temp = JSON.parse(JSON.stringify(this.state.neurons));
       temp.splice(this.state.selectedNeuron, 1);
       this.setState({
         neurons: temp,
-        selectedNeuron: temp.length - 1 > this.selectNeuron ? this.selectNeuron : temp.length - 1
+        selectedNeuron: temp.length - 1 > this.selectNeuron ? this.selectNeuron : temp.length - 1,
       });
       store.set("neurons", temp);
     }
-  };
-
-  sendRePairCommand = async () => {
-    let focus = new Focus();
-    const result = await focus.command("wireless.rf.syncPairing");
-    console.log("command returned", result);
   };
 
   render() {
@@ -506,7 +399,7 @@ class Preferences extends React.Component {
     const verboseSwitch = <Form.Check type="switch" checked={verboseFocus} onChange={this.toggleVerboseFocus} />;
     const onlyCustomSwitch = <Form.Check type="switch" checked={kbData.keymap.onlyCustom} onChange={this.toggleOnlyCustom} />;
     const allowBetas = <Form.Check value={allowBeta} type="switch" checked={allowBeta} onChange={updateAllowBeta} />;
-    const pairingButton = <RegularButton buttonText={"Re-Pair RF"} style="short warning sm" onClick={this.sendRePairCommand} />;
+    const pairingButton = <RegularButton buttonText={"Re-Pair RF"} styles="short warning sm" onClick={this.sendRePairCommand} />;
     // console.log("CHECKING STATUS MOD", modified);
     // console.log("CHECKING STATUS CTX", inContext);
 
@@ -515,8 +408,8 @@ class Preferences extends React.Component {
         <Container fluid>
           <PageHeader
             text={i18n.preferences.title}
-            style={"pageHeaderFlatBottom"}
-            showSaving={true}
+            style="pageHeaderFlatBottom"
+            showSaving
             showContentSelector={false}
             saveContext={this.saveKeymapChanges}
             destroyContext={this.destroyContext}
@@ -550,9 +443,10 @@ class Preferences extends React.Component {
                     verboseSwitch={verboseSwitch}
                     onlyCustomSwitch={onlyCustomSwitch}
                     allowBetas={allowBetas}
-                    pairingButton={this.state.wireless ? pairingButton : <></>}
+                    pairingButton={<></>}
                     connected={connected}
                   />
+                  <Version />
                 </Col>
               </Row>
             </Container>

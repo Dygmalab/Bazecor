@@ -77,18 +77,18 @@ const Style = Styled.div`
     display: none;
 }
 `;
-//}= ({ oldValue, newValue, keyCode }) => {
+// }= ({ oldValue, newValue, keyCode }) => {
 class ListModifiers extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      //modifs: []
+      // modifs: []
     };
   }
 
   parseModifs(keycode) {
-    let modifs = [];
+    const modifs = [];
     if (keycode & 0b100000000) {
       // Ctrl Decoder
       modifs.push(1);

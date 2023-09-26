@@ -106,7 +106,7 @@ class DelayTab extends Component {
     this.state = {
       fixedSelected: true,
       fixedValue: 0,
-      randomValue: { min: 0, max: 0 }
+      randomValue: { min: 0, max: 0 },
     };
   }
 
@@ -119,44 +119,46 @@ class DelayTab extends Component {
   };
 
   updateFixed = e => {
-    const value = parseInt(e.target.value);
+    const value = parseInt(e.target.value, 10);
     this.setState({ fixedValue: value > 65535 ? 65535 : value });
   };
 
   updateRandomMin = e => {
-    let randomValue = this.state.randomValue;
-    let valueMin = parseInt(e.target.value);
+    const { randomValue } = this.state;
+    let valueMin = parseInt(e.target.value, 10);
     valueMin = valueMin > 65535 ? 65535 : valueMin;
     if (valueMin > randomValue.max) {
       randomValue.max = valueMin;
     }
     randomValue.min = valueMin;
-    this.setState({ randomValue: randomValue });
+    this.setState({ randomValue });
   };
 
   updateRandomMax = e => {
-    let randomValue = this.state.randomValue;
-    let valueMax = parseInt(e.target.value);
+    const { randomValue } = this.state;
+    let valueMax = parseInt(e.target.value, 10);
     valueMax = valueMax > 65535 ? 65535 : valueMax;
     if (valueMax < randomValue.min) {
       randomValue.min = valueMax;
     }
     randomValue.max = valueMax;
-    this.setState({ randomValue: randomValue });
+    this.setState({ randomValue });
   };
 
   addDelay = () => {
-    console.log("add delay", this.state.fixedSelected, this.state.fixedValue, this.state.randomValue);
-    if (this.state.fixedSelected) {
-      this.props.onAddDelay(this.state.fixedValue, 2);
+    const { fixedSelected, fixedValue, randomValue } = this.state;
+    const { onAddDelay, onAddDelayRnd } = this.props;
+    console.log("add delay", fixedSelected, fixedValue, randomValue);
+    if (fixedSelected) {
+      onAddDelay(fixedValue, 2);
     } else {
-      this.props.onAddDelayRnd(this.state.randomValue.min, this.state.randomValue.max, 1);
+      onAddDelayRnd(randomValue.min, randomValue.max, 1);
     }
     // clean state
     this.setState({
       fixedSelected: true,
       fixedValue: 0,
-      randomValue: { min: 0, max: 0 }
+      randomValue: { min: 0, max: 0 },
     });
   };
 
@@ -188,7 +190,7 @@ class DelayTab extends Component {
             />
           </div>
           <div className="inputsWrapper mt-3">
-            {this.state.fixedSelected ? (
+            {fixedSelected ? (
               <div className="inputGroupFixed">
                 <InputGroup>
                   <Form.Control
@@ -233,7 +235,7 @@ class DelayTab extends Component {
         <div className="tabSaveButton">
           <RegularButton
             buttonText={i18n.editor.macros.textTabs.buttonText}
-            style="outline gradient"
+            styles="outline gradient"
             onClick={this.addDelay}
             icoSVG={<IconArrowInBoxUp />}
             icoPosition="right"

@@ -23,7 +23,7 @@ export const setButtonSizeTemplate = value => ({
   minWidth: value,
   minHeight: value,
   maxWidth: value,
-  maxHeight: value
+  maxHeight: value,
 });
 
 /**
@@ -34,5 +34,5 @@ export const setColorTemplate = color => ({
   r: color.r,
   g: color.g,
   b: color.b,
-  rgb: `rgb(${color.r}, ${color.g}, ${color.b})`
+  rgb: `rgb(${color.r}, ${color.g}, ${color.b})`,
 });

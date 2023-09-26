@@ -17,8 +17,8 @@ const tapdance = index => ({
   code: 53267 + index,
   labels: {
     primary: index.toString(),
-    top: "TAPD"
-  }
+    top: "TAPD",
+  },
 });
 
 const tapdances = Array(64)
@@ -27,7 +27,7 @@ const tapdances = Array(64)
 
 const TapDanceTable = {
   groupName: "TapDance",
-  keys: tapdances
+  keys: tapdances,
 };
 
 export default TapDanceTable;

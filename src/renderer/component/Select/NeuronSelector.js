@@ -17,14 +17,12 @@
 
 import React from "react";
 import Styled from "styled-components";
-import i18n from "../../i18n";
 import Dropdown from "react-bootstrap/Dropdown";
+import i18n from "../../i18n";
 import { ButtonSettings } from "../Button";
-import { IconArrowsSmallSeparating } from "../Icon";
-import { IconPen } from "../Icon";
-import { IconDelete } from "../Icon";
+import { IconArrowsSmallSeparating, IconPen, IconDelete } from "../Icon";
 
-import { NameModal } from "../Modal/"; // Imported custom modal component
+import { NameModal } from "../Modal"; // Imported custom modal component
 
 const Style = Styled.div`
 
@@ -34,7 +32,7 @@ class NeuronSelector extends React.Component {
     super(props);
 
     this.state = {
-      show: false
+      show: false,
     };
   }
 
@@ -51,12 +49,15 @@ class NeuronSelector extends React.Component {
     const { onSelect, itemList, selectedItem, deleteItem, subtitle } = this.props;
     const { show } = this.state;
 
+    let localItemList = itemList;
+    if (!Array.isArray(localItemList) || localItemList.length <= 0) localItemList = [];
+
     return (
       <Style>
         <div className="itemListelector dropdownMultipleActions">
           <Dropdown onSelect={onSelect} value={selectedItem} className="dropdownList">
             <Dropdown.Toggle className="toggler neuronToggler">
-              {itemList.length == 0 ? (
+              {localItemList.length == 0 ? (
                 i18n.keyboardSettings.neuronManager.defaultNeuron
               ) : (
                 <div className="dropdownListInner">
@@ -65,7 +66,7 @@ class NeuronSelector extends React.Component {
                     <div className="dropdownListItemInner">
                       <div className="dropdownListItemLabel">{subtitle}</div>
                       <div className="dropdownListItemSelected">
-                        {itemList[selectedItem].name == "" ? i18n.general.noname : itemList[selectedItem].name}
+                        {localItemList[selectedItem].name == "" ? i18n.general.noname : localItemList[selectedItem].name}
                       </div>
                       <span className="caret">
                         <IconArrowsSmallSeparating />
@@ -76,7 +77,7 @@ class NeuronSelector extends React.Component {
               )}
             </Dropdown.Toggle>
             <Dropdown.Menu className="dropdownMenu">
-              {itemList.map((item, iter) => (
+              {localItemList?.map((item, iter) => (
                 <Dropdown.Item eventKey={iter} key={`item-${iter}`} className={iter === selectedItem ? "active" : ""}>
                   {item.name == "" ? i18n.general.noname : item.name}
                 </Dropdown.Item>
@@ -111,7 +112,7 @@ class NeuronSelector extends React.Component {
         </div>
         <NameModal
           show={show}
-          name={itemList[selectedItem].name}
+          name={localItemList[selectedItem]?.name}
           toggleShow={this.toggleShow}
           handleSave={this.handleSave}
           modalTitle={i18n.keyboardSettings.neuronManager.changeLayerTitle}

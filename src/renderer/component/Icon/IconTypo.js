@@ -7,7 +7,7 @@ function IconTypo(props) {
       <mask
         id="prefix__a"
         style={{
-          maskType: "alpha"
+          maskType: "alpha",
         }}
         maskUnits="userSpaceOnUse"
         x={0}

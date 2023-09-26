@@ -6,7 +6,7 @@ function IconNoKey(props) {
       <mask
         id="prefix__IconNoKey"
         style={{
-          maskType: "alpha"
+          maskType: "alpha",
         }}
         maskUnits="userSpaceOnUse"
         x={0}

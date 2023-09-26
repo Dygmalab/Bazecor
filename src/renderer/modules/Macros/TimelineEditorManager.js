@@ -17,8 +17,8 @@
 import React, { Component } from "react";
 
 import Styled from "styled-components";
-import i18n from "../../i18n";
 import Spinner from "react-bootstrap/Spinner";
+import i18n from "../../i18n";
 
 import Keymap, { KeymapDB } from "../../../api/keymap";
 
@@ -140,7 +140,7 @@ class MacroManager extends Component {
       open: false,
       componentWidth: 0,
       rows: [],
-      scrollPos: 0
+      scrollPos: 0,
     };
     this.keymapDB = new KeymapDB();
 
@@ -151,26 +151,26 @@ class MacroManager extends Component {
     const macro = this.props.macros[parseInt(this.keymapDB.parse(keycode).label)];
     let macroName;
     try {
-      macroName = this.props.macros[parseInt(this.keymapDB.parse(keycode).label)].name.substr(0, 5);
+      macroName = this.props.macros[parseInt(this.keymapDB.parse(keycode).label)]?.name.substr(0, 5);
     } catch (error) {
       macroName = "*NotFound*";
     }
     if (keycode >= 53852 && keycode <= 53852 + 128) {
-      if (this.props.code !== null) return this.keymapDB.parse(keycode).extraLabel + "." + macroName;
+      if (this.props.code !== null) return `${this.keymapDB.parse(keycode).extraLabel}.${macroName}`;
     }
     return this.props.code !== null
       ? this.keymapDB.parse(keycode).extraLabel != undefined
-        ? this.keymapDB.parse(keycode).extraLabel + "." + this.keymapDB.parse(keycode).label
+        ? `${this.keymapDB.parse(keycode).extraLabel}.${this.keymapDB.parse(keycode).label}`
         : this.keymapDB.parse(keycode).label
       : "";
   }
 
   updateWidth = () => {
     this.setState({
-      componentWidth: 50
+      componentWidth: 50,
     });
     this.setState({
-      componentWidth: this.trackingWidth.current.clientWidth
+      componentWidth: this.trackingWidth.current.clientWidth,
     });
   };
 
@@ -190,14 +190,14 @@ class MacroManager extends Component {
 
   render() {
     const { keymapDB, macro, macros, updateActions } = this.props;
-    //console.log("Macro on TimelineEditorManager", macro);
+    // console.log("Macro on TimelineEditorManager", macro);
     return (
       <Styles className="timelineWrapper">
         <div className="timelineHeaderWrapper">
           <div className="timelineHeader">
             <div className="timelineHeaderContent">
               <Title text={i18n.editor.macros.timelineTitle} headingLevel={4} />
-              <div id="portalPreviewMacroModal" ref={this.portal}></div>
+              <div id="portalPreviewMacroModal" ref={this.portal} />
               {this.portal.current !== null ? (
                 <PreviewMacroModal hookref={this.portal}>
                   {macro.actions.length > 0
@@ -242,7 +242,7 @@ class MacroManager extends Component {
               scrollPos={this.state.scrollPos}
             />
           )}
-          <div id="portalMacro"></div>
+          <div id="portalMacro" />
         </div>
       </Styles>
     );

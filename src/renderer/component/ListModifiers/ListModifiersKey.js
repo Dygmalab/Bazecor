@@ -20,9 +20,9 @@ import React from "react";
 // import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 // import Tooltip from "react-bootstrap/Tooltip";
 
-const ListModifiersKey = ({ altApplied, altGrApplied, osApplied, shiftApplied, ctrlApplied, mehApplied, hyperApplied }) => {
+function ListModifiersKey({ altApplied, altGrApplied, osApplied, shiftApplied, ctrlApplied, mehApplied, hyperApplied }) {
   return (
-    <div xmlns="http://www.w3.org/1999/xhtml" className={`keyContentModifiers`}>
+    <div xmlns="http://www.w3.org/1999/xhtml" className="keyContentModifiers">
       <ul
         className={`labelModifier ${
           (altApplied && altGrApplied && osApplied && shiftApplied) || (ctrlApplied && altGrApplied && osApplied && shiftApplied)
@@ -40,6 +40,6 @@ const ListModifiersKey = ({ altApplied, altGrApplied, osApplied, shiftApplied, c
       </ul>
     </div>
   );
-};
+}
 
 export default ListModifiersKey;

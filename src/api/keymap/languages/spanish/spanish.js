@@ -23,74 +23,74 @@ const spanishLetters = [
   {
     code: 49,
     labels: {
-      primary: "Ç"
+      primary: "Ç",
     },
-    newGroupName: "Letters"
+    newGroupName: "Letters",
   },
   {
     code: 51,
     labels: {
-      primary: "Ñ"
+      primary: "Ñ",
     },
-    newGroupName: "Letters"
-  }
+    newGroupName: "Letters",
+  },
 ];
 
 const spanishModifierKeys = [
   {
     code: 45,
     labels: {
-      primary: "'"
+      primary: "'",
     },
-    newGroupName: "Punctuation"
+    newGroupName: "Punctuation",
   },
   {
     code: 46,
     labels: {
-      primary: "¡"
+      primary: "¡",
     },
-    newGroupName: "Punctuation"
+    newGroupName: "Punctuation",
   },
   {
     code: 47,
     labels: {
-      primary: "`"
+      primary: "`",
     },
-    newGroupName: "Punctuation"
+    newGroupName: "Punctuation",
   },
   {
     code: 48,
     labels: {
-      primary: "+"
-    }
+      primary: "+",
+    },
   },
   {
     code: 52,
     labels: {
-      primary: "´"
+      primary: "´",
     },
-    newGroupName: "Punctuation"
+    newGroupName: "Punctuation",
   },
   {
     code: 53,
     labels: {
-      primary: "º"
+      primary: "º",
     },
-    newGroupName: "Punctuation"
+    newGroupName: "Punctuation",
   },
   {
     code: 56,
     labels: {
-      primary: "-"
+      primary: "-",
     },
-    newGroupName: "Punctuation"
+    newGroupName: "Punctuation",
   },
   {
     code: 100,
     labels: {
-      primary: "<"
-    }
-  }
+      primary: "<",
+    },
+  },
 ];
 const shiftModifierSpanish = {
   groupName: "AltCtrl Spanish",
@@ -98,129 +98,129 @@ const shiftModifierSpanish = {
     {
       code: 2079,
       labels: {
-        primary: '"'
+        primary: '"',
       },
-      newGroupName: "Shifted Digits"
+      newGroupName: "Shifted Digits",
     },
     {
       code: 2080,
       labels: {
-        primary: "·"
+        primary: "·",
       },
-      newGroupName: "Shifted Digits"
+      newGroupName: "Shifted Digits",
     },
     {
       code: 2083,
       labels: {
-        primary: "&"
+        primary: "&",
       },
-      newGroupName: "Shifted Digits"
+      newGroupName: "Shifted Digits",
     },
     {
       code: 2084,
       labels: {
-        primary: "/"
+        primary: "/",
       },
-      newGroupName: "Shifted Digits"
+      newGroupName: "Shifted Digits",
     },
     {
       code: 2085,
       labels: {
-        primary: "("
+        primary: "(",
       },
-      newGroupName: "Shifted Digits"
+      newGroupName: "Shifted Digits",
     },
     {
       code: 2086,
       labels: {
-        primary: ")"
+        primary: ")",
       },
-      newGroupName: "Shifted Digits"
+      newGroupName: "Shifted Digits",
     },
     {
       code: 2087,
       labels: {
-        primary: "="
+        primary: "=",
       },
-      newGroupName: "Shifted Digits"
+      newGroupName: "Shifted Digits",
     },
     {
       code: 2093,
       labels: {
-        primary: "?"
+        primary: "?",
       },
-      newGroupName: "Shifted Digits"
+      newGroupName: "Shifted Digits",
     },
     {
       code: 2094,
       labels: {
-        primary: "¿"
+        primary: "¿",
       },
-      newGroupName: "Shifted Digits"
+      newGroupName: "Shifted Digits",
     },
     {
       code: 2095,
       labels: {
-        primary: "^"
-      }
+        primary: "^",
+      },
     },
     {
       code: 2096,
       labels: {
-        primary: "*"
-      }
+        primary: "*",
+      },
     },
     {
       code: 2097,
       labels: {
         primary: "Ç",
-        top: "S+"
-      }
+        top: "S+",
+      },
     },
     {
       code: 2099,
       labels: {
         primary: "Ñ",
-        top: "S+"
-      }
+        top: "S+",
+      },
     },
     {
       code: 2100,
       labels: {
-        primary: "¨"
-      }
+        primary: "¨",
+      },
     },
     {
       code: 2101,
       labels: {
-        primary: "ª"
-      }
+        primary: "ª",
+      },
     },
     {
       code: 2102,
       labels: {
-        primary: ";"
-      }
+        primary: ";",
+      },
     },
     {
       code: 2103,
       labels: {
-        primary: ":"
-      }
+        primary: ":",
+      },
     },
     {
       code: 2104,
       labels: {
-        primary: "_"
-      }
+        primary: "_",
+      },
     },
     {
       code: 2148,
       labels: {
-        primary: ">"
-      }
-    }
-  ]
+        primary: ">",
+      },
+    },
+  ],
 };
 
 const altCtrlSpanish = {
@@ -229,76 +229,76 @@ const altCtrlSpanish = {
     {
       code: 798,
       labels: {
-        primary: "|"
-      }
+        primary: "|",
+      },
     },
     {
       code: 799,
       labels: {
-        primary: "@"
-      }
+        primary: "@",
+      },
     },
     {
       code: 800,
       labels: {
-        primary: "#"
-      }
+        primary: "#",
+      },
     },
     {
       code: 801,
       labels: {
-        primary: "~"
-      }
+        primary: "~",
+      },
     },
     {
       code: 802,
       labels: {
-        primary: "€"
-      }
+        primary: "€",
+      },
     },
     {
       code: 803,
       labels: {
-        primary: "¬"
-      }
+        primary: "¬",
+      },
     },
     {
       code: 776,
       labels: {
-        primary: "€"
-      }
+        primary: "€",
+      },
     },
     {
       code: 815,
       labels: {
-        primary: "["
-      }
+        primary: "[",
+      },
     },
     {
       code: 816,
       labels: {
-        primary: "]"
-      }
+        primary: "]",
+      },
     },
     {
       code: 817,
       labels: {
-        primary: "}"
-      }
+        primary: "}",
+      },
     },
     {
       code: 820,
       labels: {
-        primary: "{"
-      }
+        primary: "{",
+      },
     },
     {
       code: 821,
       labels: {
-        primary: "\\"
-      }
-    }
-  ]
+        primary: "\\",
+      },
+    },
+  ],
 };
 
 const altGrSpanish = {
@@ -307,76 +307,76 @@ const altGrSpanish = {
     {
       code: 1054,
       labels: {
-        primary: "|"
-      }
+        primary: "|",
+      },
     },
     {
       code: 1055,
       labels: {
-        primary: "@"
-      }
+        primary: "@",
+      },
     },
     {
       code: 1056,
       labels: {
-        primary: "#"
-      }
+        primary: "#",
+      },
     },
     {
       code: 1057,
       labels: {
-        primary: "~"
-      }
+        primary: "~",
+      },
     },
     {
       code: 1058,
       labels: {
-        primary: "€"
-      }
+        primary: "€",
+      },
     },
     {
       code: 1059,
       labels: {
-        primary: "¬"
-      }
+        primary: "¬",
+      },
     },
     {
       code: 1032,
       labels: {
-        primary: "€"
-      }
+        primary: "€",
+      },
     },
     {
       code: 1071,
       labels: {
-        primary: "["
-      }
+        primary: "[",
+      },
     },
     {
       code: 1072,
       labels: {
-        primary: "]"
-      }
+        primary: "]",
+      },
     },
     {
       code: 1073,
       labels: {
-        primary: "}"
-      }
+        primary: "}",
+      },
     },
     {
       code: 1076,
       labels: {
-        primary: "{"
-      }
+        primary: "{",
+      },
     },
     {
       code: 1077,
       labels: {
-        primary: "\\"
-      }
-    }
-  ]
+        primary: "\\",
+      },
+    },
+  ],
 };
 
 const spanish = spanishLetters.concat(spanishModifierKeys);
@@ -506,7 +506,7 @@ const spanishModifiedTables = [
   DualUseLayer5Tables,
   DualUseLayer6Tables,
   DualUseLayer7Tables,
-  DualUseLayer8Tables
+  DualUseLayer8Tables,
 ];
 
 export { spanish as default, spanishModifiedTables };

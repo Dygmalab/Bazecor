@@ -1,8 +1,6 @@
 import PropTypes from "prop-types";
 import React, { Component } from "react";
-import i18n from "../../i18n";
-import Focus from "../../../api/focus";
-import Keymap from "../../../api/keymap";
+import Styled from "styled-components";
 
 // React Bootstrap Components
 import Card from "react-bootstrap/Card";
@@ -11,41 +9,54 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 
 // Own Components
-import Title from "../../component/Title";
-import { Select } from "../../component/Select";
-import { ToggleButtons } from "../../component/ToggleButtons";
 
 // Icons Imports
-import { IconWrench, IconSun, IconMoon, IconScreen } from "../../component/Icon";
 
 // Flags imports
-import frenchF from "../../../../static/flags/france.png";
-import germanF from "../../../../static/flags/germany.png";
-import japaneseF from "../../../../static/flags/japan.png";
-import spanishF from "../../../../static/flags/spain.png";
-import englishUSUKF from "../../../../static/flags/english.png";
-import danishF from "../../../../static/flags/denmark.png";
-import swedishF from "../../../../static/flags/sweden.png";
-import finnishF from "../../../../static/flags/finland.png";
-import icelandicF from "../../../../static/flags/iceland.png";
-import norwegianF from "../../../../static/flags/norway.png";
-import swissF from "../../../../static/flags/switzerland.png";
+import frenchF from "@Assets/flags/france.png";
+import germanF from "@Assets/flags/germany.png";
+import japaneseF from "@Assets/flags/japan.png";
+import koreanF from "@Assets/flags/korean.png";
+import spanishF from "@Assets/flags/spain.png";
+import englishUSF from "@Assets/flags/englishUS.png";
+import englishUKF from "@Assets/flags/englishUK.png";
+import danishF from "@Assets/flags/denmark.png";
+import swedishF from "@Assets/flags/sweden.png";
+import finnishF from "@Assets/flags/finland.png";
+import icelandicF from "@Assets/flags/iceland.png";
+import norwegianF from "@Assets/flags/norway.png";
+import swissF from "@Assets/flags/switzerland.png";
+import eurkeyF from "@Assets/flags/eurkey.png";
+import { IconWrench, IconSun, IconMoon, IconScreen } from "../../component/Icon";
+import { ToggleButtons } from "../../component/ToggleButtons";
+import { Select } from "../../component/Select";
+import Title from "../../component/Title";
+import Keymap from "../../../api/keymap";
+import Focus from "../../../api/focus";
+import i18n from "../../i18n";
 
-const Store = require("electron-store");
-const store = new Store();
+import Store from "../../utils/Store";
+
+const GeneraslSettihngsWrapper = Styled.div`
+.dropdown-menu {
+  min-width: 13rem;
+}
+`;
+
+const store = Store.getStore();
 
 export default class GeneralSettings extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      selectedLanguage: ""
+      selectedLanguage: "",
     };
   }
 
   async componentDidMount() {
     this.setState({
-      selectedLanguage: store.get("settings.language")
+      selectedLanguage: store.get("settings.language"),
     });
   }
 
@@ -53,9 +64,9 @@ export default class GeneralSettings extends Component {
     this.setState({ selectedLanguage: language });
     store.set("settings.language", `${language}`);
 
-    let focus = new Focus();
+    const focus = new Focus();
     if (!focus.closed) {
-      let deviceLang = { ...focus.device, language: true };
+      const deviceLang = { ...focus.device, language: true };
       focus.commands.keymap = new Keymap(deviceLang);
     }
   };
@@ -63,11 +74,13 @@ export default class GeneralSettings extends Component {
   render() {
     const { selectDarkMode, darkMode, neurons, selectedNeuron, connected, defaultLayer, selectDefaultLayer } = this.props;
     const { selectedLanguage } = this.state;
-    let layersNames = neurons[selectedNeuron].layers;
-    let flags = [
-      englishUSUKF,
+    let layersNames = neurons[selectedNeuron] ? neurons[selectedNeuron].layers : [];
+    const flags = [
+      englishUSF,
+      englishUKF,
       spanishF,
       germanF,
+      frenchF,
       frenchF,
       swedishF,
       finnishF,
@@ -75,89 +88,119 @@ export default class GeneralSettings extends Component {
       norwegianF,
       icelandicF,
       japaneseF,
-      swissF
+      koreanF,
+      swissF,
+      eurkeyF,
     ];
     let language = [
       "english",
+      "british",
       "spanish",
       "german",
       "french",
+      "frenchBepo",
       "swedish",
       "finnish",
       "danish",
       "norwegian",
       "icelandic",
       "japanese",
-      "swissGerman"
+      "korean",
+      "swissGerman",
+      "eurkey",
     ];
-    language = language.map((item, index) => {
-      return { text: item, value: item, icon: flags[index], index };
-    });
+    const languageNames = [
+      "English US",
+      "English UK",
+      "Spanish",
+      "German",
+      "French",
+      "French Bépo",
+      "Swedish",
+      "Finnish",
+      "Danish",
+      "Norwegian",
+      "Icelandic",
+      "Japanese",
+      "Korean",
+      "Swiss (German)",
+      "EurKEY (1.3)",
+    ];
+    language = language.map((item, index) => ({
+      text: languageNames[index],
+      value: item,
+      icon: flags[index],
+      index,
+    }));
 
-    layersNames = layersNames.map((item, index) => {
-      return { text: item.name != "" ? item.name : `Layer ${index + 1}`, value: index, index };
-    });
+    layersNames = layersNames.map((item, index) => ({
+      text: item.name !== "" ? item.name : `Layer ${index + 1}`,
+      value: index,
+      index,
+    }));
     layersNames.push({ text: i18n.keyboardSettings.keymap.noDefault, value: 126, index: 126 });
 
-    let layoutsModes = [
+    const layoutsModes = [
       {
         name: "System",
         value: "system",
         icon: <IconScreen />,
-        index: 0
+        index: 0,
       },
       {
         name: "Dark",
         value: "dark",
         icon: <IconMoon />,
-        index: 1
+        index: 1,
       },
       {
         name: "Light",
         value: "light",
         icon: <IconSun />,
-        index: 2
-      }
+        index: 2,
+      },
     ];
 
     return (
-      <Card className="overflowFix card-preferences mt-4">
-        <Card.Title>
-          <Title text={i18n.keyboardSettings.keymap.title} headingLevel={3} svgICO={<IconWrench />} />
-        </Card.Title>
-        <Card.Body>
-          <Form>
-            <Row>
-              <Col lg={6} md={12}>
-                <Form.Group controlId="selectLanguage" className="mb-3">
-                  <Form.Label>{i18n.preferences.language}</Form.Label>
-                  <Select onSelect={this.changeLanguage} value={selectedLanguage} listElements={language} />
-                </Form.Group>
-              </Col>
-              <Col lg={6} md={12}>
-                <Form.Group controlId="defaultLayer" className="mb-3">
-                  <Form.Label>{i18n.keyboardSettings.keymap.defaultLayer}</Form.Label>
-                  <Select onSelect={selectDefaultLayer} value={defaultLayer} listElements={layersNames} disabled={!connected} />
-                </Form.Group>
-              </Col>
-            </Row>
-            <Row>
-              <Col md={12}>
-                <Form.Group controlId="DarkMode" className="m-0">
-                  <Form.Label>{i18n.preferences.darkMode.label}</Form.Label>
-                  <ToggleButtons
-                    selectDarkMode={selectDarkMode}
-                    value={darkMode}
-                    listElements={layoutsModes}
-                    style={"flex"}
-                    size={"sm"}
-                  />
-                </Form.Group>
-              </Col>
-            </Row>
-          </Form>
-        </Card.Body>
-      </Card>
+      <GeneraslSettihngsWrapper>
+        <Card className="overflowFix card-preferences mt-4">
+          <Card.Title>
+            <Title text={i18n.keyboardSettings.keymap.title} headingLevel={3} svgICO={<IconWrench />} />
+          </Card.Title>
+          <Card.Body>
+            <Form>
+              <Row>
+                <Col lg={6} md={12}>
+                  <Form.Group controlId="selectLanguage" className="mb-3">
+                    <Form.Label>{i18n.preferences.language}</Form.Label>
+                    <Select onSelect={this.changeLanguage} value={selectedLanguage} listElements={language} />
+                  </Form.Group>
+                </Col>
+                <Col lg={6} md={12}>
+                  <Form.Group controlId="defaultLayer" className="mb-3">
+                    <Form.Label>{i18n.keyboardSettings.keymap.defaultLayer}</Form.Label>
+                    <Select onSelect={selectDefaultLayer} value={defaultLayer} listElements={layersNames} disabled={!connected} />
+                  </Form.Group>
+                </Col>
+              </Row>
+              <Row>
+                <Col md={12}>
+                  <Form.Group controlId="DarkMode" className="m-0">
+                    <Form.Label>{i18n.preferences.darkMode.label}</Form.Label>
+                    <ToggleButtons
+                      selectDarkMode={selectDarkMode}
+                      value={darkMode}
+                      listElements={layoutsModes}
+                      style="flex"
+                      size="sm"
+                    />
+                  </Form.Group>
+                </Col>
+              </Row>
+            </Form>
+          </Card.Body>
+        </Card>
+      </GeneraslSettihngsWrapper>
     );
   }
 }
@@ -167,5 +210,5 @@ GeneralSettings.propTypes = {
   darkMode: PropTypes.string.isRequired,
   neurons: PropTypes.array.isRequired,
   selectedNeuron: PropTypes.number.isRequired,
-  connected: PropTypes.bool.isRequired
+  connected: PropTypes.bool.isRequired,
 };

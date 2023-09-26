@@ -18,14 +18,14 @@ import async from "async";
 import fs from "fs";
 import Focus from "../../focus";
 
-var MAX_MS = 2000;
+const MAX_MS = 2000;
 
 const PACKET_SIZE = 4096;
 
 const TYPE_DAT = 0x00;
 const TYPE_ELA = 0x04;
 
-var focus = new Focus();
+const focus = new Focus();
 
 /**
  * Writes data to the given bootloader serial port.
@@ -38,22 +38,22 @@ var focus = new Focus();
  * @param {function} cb - An optional callback to run once all the functions have completed.
  */
 function write_cb(buffer, cb) {
-  var buf = new Uint8Array(buffer);
+  const buf = new Uint8Array(buffer);
 
-  //the MAX transmission of a serial write is 200 bytes, we therefore
-  //marshall the given buffer into 200 byte chunks, and serialise their execution.
-  var send = [];
+  // the MAX transmission of a serial write is 200 bytes, we therefore
+  // marshall the given buffer into 200 byte chunks, and serialise their execution.
+  const send = [];
 
-  var total = buf.length;
+  let total = buf.length;
 
-  var bufferTotal = 0;
+  let bufferTotal = 0;
 
   while (bufferTotal < buf.length) {
-    var bufferSize = total < 200 ? total : 200;
+    const bufferSize = total < 200 ? total : 200;
 
-    //closure to ensure our buffer is local.
+    // closure to ensure our buffer is local.
     (buf2send => {
-      send.push(function (callback) {
+      send.push(callback => {
         if (focus._port.write(Buffer.from(buf2send))) {
           callback(null);
         } else {
@@ -66,7 +66,7 @@ function write_cb(buffer, cb) {
     total -= bufferSize;
   }
 
-  //execute!
+  // execute!
   async.series(send, (err, result) => {
     cb(err);
   });
@@ -77,10 +77,10 @@ function write_cb(buffer, cb) {
  * @param {function} callback - An optional callback to run once all the functions have completed.
  */
 async function read_cb(callback) {
-  var time = 0;
+  let time = 0;
 
-  var timeout = function () {
-    setTimeout(function () {
+  const timeout = function () {
+    setTimeout(() => {
       time += 50;
       focus._port.drain(err => {
         if (err) {
@@ -101,15 +101,15 @@ async function read_cb(callback) {
  * Closes the connection to the bootloader.
  * @param {function} cb - An optional callback to run once all the functions have completed.
  */
-function disconnect_cb(cb) {
-  focus.close();
+async function disconnect_cb(cb) {
+  await focus.close();
   cb(null, "");
 }
 
 function padToN(number, numberToPad) {
-  var str = "";
+  let str = "";
 
-  for (var i = 0; i < numberToPad; i++) str = str + "0";
+  for (let i = 0; i < numberToPad; i++) str += "0";
 
   return (str + number).slice(-numberToPad);
 }
@@ -119,17 +119,17 @@ function num2hexstr(number, paddedTo) {
 }
 
 function hex2byte(hex) {
-  var bytes = [];
+  const bytes = [];
 
-  for (var i = 0; i < hex.length; i += 2) bytes.push(parseInt(hex.substr(i, 2), 16));
+  for (let i = 0; i < hex.length; i += 2) bytes.push(parseInt(hex.substr(i, 2), 16));
 
   return bytes;
 }
 
 function str2ab(str) {
-  var buf = new ArrayBuffer(str.length); // 2 bytes for each char
-  var bufView = new Uint8Array(buf);
-  for (var i = 0, strLen = str.length; i < strLen; i++) {
+  const buf = new ArrayBuffer(str.length); // 2 bytes for each char
+  const bufView = new Uint8Array(buf);
+  for (let i = 0, strLen = str.length; i < strLen; i++) {
     bufView[i] = str.charCodeAt(i) & 0xff;
   }
   return buf;
@@ -141,28 +141,28 @@ function str2ab(str) {
  * @returns {object} Щbject for use in firmware.
  */
 function ihex_decode(line) {
-  var offset = 0;
+  let offset = 0;
 
-  var byteCount = parseInt(line.substr(offset, 2), 16);
+  const byteCount = parseInt(line.substr(offset, 2), 16);
   offset += 2;
-  var address = parseInt(line.substr(offset, 4), 16);
+  const address = parseInt(line.substr(offset, 4), 16);
   offset += 4;
-  var recordtype = parseInt(line.substr(offset, 2), 16);
+  const recordtype = parseInt(line.substr(offset, 2), 16);
   offset += 2;
 
-  var byteData = hex2byte(line.substr(offset, byteCount * 2));
+  const byteData = hex2byte(line.substr(offset, byteCount * 2));
 
-  var bytes = new ArrayBuffer(byteData.length);
-  var bytesView = new Uint8Array(bytes, 0, byteData.length);
+  const bytes = new ArrayBuffer(byteData.length);
+  const bytesView = new Uint8Array(bytes, 0, byteData.length);
 
-  for (var i = 0; i < byteData.length; i++) bytesView[i] = byteData[i];
+  for (let i = 0; i < byteData.length; i++) bytesView[i] = byteData[i];
 
   return {
     str: line,
     len: byteCount,
-    address: address,
+    address,
     type: recordtype,
-    data: bytesView
+    data: bytesView,
   };
 }
 
@@ -171,35 +171,29 @@ function ihex_decode(line) {
  */
 export var arduino = {
   flash: (lines, stateUpdate, finished) => {
-    var func_array = [];
+    const func_array = [];
 
-    //CLEAR line
-    func_array.push(function (callback) {
+    // CLEAR line
+    func_array.push(callback => {
       write_cb(str2ab("N#"), callback);
     });
-    func_array.push(function (callback) {
+    func_array.push(callback => {
       read_cb(callback);
     });
 
-    //ERASE device
-    func_array.push(function (callback) {
+    // ERASE device
+    func_array.push(callback => {
       write_cb(str2ab("X00002000#"), callback);
     });
-    func_array.push(function (callback) {
+    func_array.push(callback => {
       read_cb(callback);
     });
 
-    // let fileData = fs.readFileSync(file, { encoding: "utf8" });
-    // fileData = fileData.replace(/(?:\r\n|\r|\n)/g, "");
-
-    // var lines = fileData.split(":");
-    // lines.splice(0, 1);
-
-    var dataObjects = [];
-    var total = 0;
+    const dataObjects = [];
+    let total = 0;
 
     for (var i = 0; i < lines.length; i++) {
-      var hex = ihex_decode(lines[i]);
+      const hex = ihex_decode(lines[i]);
 
       if (hex.type == TYPE_DAT || hex.type == TYPE_ELA) {
         total += hex.len;
@@ -207,48 +201,45 @@ export var arduino = {
       }
     }
 
-    var hexCount = 0;
-    var address = dataObjects[0].address;
+    let hexCount = 0;
+    let { address } = dataObjects[0];
 
     if (address < 2000) {
-      finished(
-        true,
-        "You're attempting to overwrite the bootloader... (0x" + padToN(num2hexstr(dataObjects[0].address), 8) + ")"
-      );
+      finished(true, `You're attempting to overwrite the bootloader... (0x${padToN(num2hexstr(dataObjects[0].address), 8)})`);
       return;
     }
 
     var state = 1,
       stateT = 20;
     while (total > 0) {
-      var bufferSize = total < PACKET_SIZE ? total : PACKET_SIZE;
+      let bufferSize = total < PACKET_SIZE ? total : PACKET_SIZE;
 
-      var buffer = new ArrayBuffer(bufferSize);
+      let buffer = new ArrayBuffer(bufferSize);
 
-      var bufferTotal = 0;
+      let bufferTotal = 0;
 
       while (bufferTotal < bufferSize) {
-        var currentHex = dataObjects[hexCount];
+        const currentHex = dataObjects[hexCount];
 
         if (bufferSize - currentHex.len < bufferTotal) {
-          //break early, we cannot completely fill the buffer.
+          // break early, we cannot completely fill the buffer.
           bufferSize = bufferTotal;
           var t = buffer.slice(0, bufferTotal);
           buffer = t;
           break;
         }
 
-        //check for Extended linear addressing...
+        // check for Extended linear addressing...
         if (currentHex.type == TYPE_ELA) {
           if (bufferTotal > 0) {
-            //break early, we're going to move to a different memory vector.
+            // break early, we're going to move to a different memory vector.
             bufferSize = bufferTotal;
             t = buffer.slice(0, bufferTotal);
             buffer = t;
             break;
           }
 
-          //set the address if applicable...
+          // set the address if applicable...
           address = currentHex.address << 16;
         }
 
@@ -258,7 +249,7 @@ export var arduino = {
         bufferTotal += currentHex.len;
       }
 
-      //Closure to make sure we localise variables
+      // Closure to make sure we localise variables
       (function (localAddress, localBufferSize, localBuffer) {
         //tell the arduino we are writing at memory 20005000, for N bytes.
         func_array.push(function (callback) {
@@ -275,8 +266,8 @@ export var arduino = {
           write_cb(str2ab("Y20005000,0#"), callback);
         });
 
-        //wait for ACK
-        func_array.push(function (callback) {
+        // wait for ACK
+        func_array.push(callback => {
           read_cb(callback);
         });
 
@@ -295,20 +286,20 @@ export var arduino = {
       total -= bufferSize;
       address += bufferSize;
     }
-    //CLEANUP
-    func_array.push(function (callback) {
+    // CLEANUP
+    func_array.push(callback => {
       write_cb(str2ab("WE000ED0C,05FA0004#"), callback);
     });
 
-    //DISCONNECT
-    func_array.push(function (callback) {
+    // DISCONNECT
+    func_array.push(callback => {
       disconnect_cb(callback);
     });
 
-    //execute our functions in series!
-    async.series(func_array, function (err, results) {
+    // execute our functions in series!
+    async.series(func_array, (err, results) => {
       if (err) finished(true, results);
       else finished(false, "");
     });
-  }
+  },
 };

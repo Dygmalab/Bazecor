@@ -17,8 +17,8 @@
 
 import React, { Component } from "react";
 import Styled from "styled-components";
-import i18n from "../../i18n";
 import Dropdown from "react-bootstrap/Dropdown";
+import i18n from "../../i18n";
 
 const Style = Styled.div`
 width: 100%;
@@ -164,7 +164,7 @@ class SelectShotModifierCustomDropdown extends Component {
       { name: "5", keynum: 49165 },
       { name: "6", keynum: 49166 },
       { name: "7", keynum: 49167 },
-      { name: "8", keynum: 49168 }
+      { name: "8", keynum: 49168 },
     ];
     this.oneShotModifiers = [
       { name: i18n.editor.standardView.oneShot.leftControl, keynum: 49153 },
@@ -174,9 +174,10 @@ class SelectShotModifierCustomDropdown extends Component {
       { name: i18n.editor.standardView.oneShot.rightControl, keynum: 49157 },
       { name: i18n.editor.standardView.oneShot.rightShift, keynum: 49158 },
       { name: i18n.editor.standardView.oneShot.altGr, keynum: 49159 },
-      { name: i18n.editor.standardView.oneShot.rightOS, keynum: 49160 }
+      { name: i18n.editor.standardView.oneShot.rightOS, keynum: 49160 },
     ];
   }
+
   render() {
     const { keyCode, onKeySelect } = this.props;
     const KC = keyCode.base + keyCode.modified;
@@ -197,7 +198,7 @@ class SelectShotModifierCustomDropdown extends Component {
             <div className="dropdownItemSelected">
               <div className="dropdownItem">
                 <div className="dropdownItem">OneShot</div>
-                <div className="badge-circle"></div>
+                <div className="badge-circle" />
               </div>
             </div>
           </Dropdown.Toggle>
@@ -208,18 +209,16 @@ class SelectShotModifierCustomDropdown extends Component {
                   OneShot <span>Layer</span>
                 </div>
                 <div className="dropdown-group-buttons">
-                  {this.oneShotLayers.map((item, id) => {
-                    return (
-                      <Dropdown.Item
-                        eventKey={item.keynum}
-                        key={`mouseClick-${id}`}
-                        disabled={item.keynum == -1}
-                        className={`${item.keynum == keyCode.base + keyCode.modified ? "active" : ""} dropdown-config-button`}
-                      >
-                        <div className="dropdownItem">{item.name}</div>
-                      </Dropdown.Item>
-                    );
-                  })}
+                  {this.oneShotLayers.map((item, id) => (
+                    <Dropdown.Item
+                      eventKey={item.keynum}
+                      key={`mouseClick-${id}`}
+                      disabled={item.keynum == -1}
+                      className={`${item.keynum == keyCode.base + keyCode.modified ? "active" : ""} dropdown-config-button`}
+                    >
+                      <div className="dropdownItem">{item.name}</div>
+                    </Dropdown.Item>
+                  ))}
                 </div>
               </div>
               <div className="dropdown-group oneShotModifiers">
@@ -227,18 +226,16 @@ class SelectShotModifierCustomDropdown extends Component {
                   OneShot <span>Modifiers</span>
                 </div>
                 <div className="dropdown-group-buttons">
-                  {this.oneShotModifiers.map((item, id) => {
-                    return (
-                      <Dropdown.Item
-                        eventKey={item.keynum}
-                        key={`mouseClick-${id}`}
-                        disabled={item.keynum == -1}
-                        className={`${item.keynum == keyCode.base + keyCode.modified ? "active" : ""} dropdown-config-button`}
-                      >
-                        <div className="dropdownItem">{item.name}</div>
-                      </Dropdown.Item>
-                    );
-                  })}
+                  {this.oneShotModifiers.map((item, id) => (
+                    <Dropdown.Item
+                      eventKey={item.keynum}
+                      key={`mouseClick-${id}`}
+                      disabled={item.keynum == -1}
+                      className={`${item.keynum == keyCode.base + keyCode.modified ? "active" : ""} dropdown-config-button`}
+                    >
+                      <div className="dropdownItem">{item.name}</div>
+                    </Dropdown.Item>
+                  ))}
                 </div>
               </div>
             </div>

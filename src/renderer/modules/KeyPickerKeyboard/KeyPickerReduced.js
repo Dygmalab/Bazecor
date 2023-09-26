@@ -6,7 +6,6 @@
 
 import React, { Component } from "react";
 import Styled, { withTheme } from "styled-components";
-import i18n from "../../i18n";
 
 import Tooltip from "react-bootstrap/Tooltip";
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
@@ -28,7 +27,7 @@ import {
   BiLeftArrowCircle,
   BiMouseAlt,
   BiRightArrowCircle,
-  BiUpArrowCircle
+  BiUpArrowCircle,
 } from "react-icons/bi";
 import {
   AiFillForward,
@@ -39,23 +38,28 @@ import {
   AiOutlineArrowRight,
   AiOutlineArrowUp,
   AiOutlineBackward,
-  AiOutlineForward
+  AiOutlineForward,
 } from "react-icons/ai";
 import { MdKeyboardReturn, MdSpaceBar, MdKeyboardCapslock, MdInfoOutline, MdEject } from "react-icons/md";
 
-import Key from "./Key";
-import ES from "./ES.json";
-import ENi from "./ENi.json";
-import ENa from "./ENa.json";
-import GR from "./GR.json";
-import FR from "./FR.json";
-import SW from "./SW.json";
-import DN from "./DN.json";
-import NW from "./NW.json";
-import IC from "./IC.json";
-import JP from "./JP.json";
-import SWGR from "./SWGR.json";
-//import SelectSuperKeys from "../../component/Select/SelectSuperKey";
+import i18n from "@Renderer/i18n";
+
+import Key from "@Renderer/modules/KeyPickerKeyboard/Key";
+import ES from "@Renderer/modules/KeyPickerKeyboard/ES.json";
+import ENi from "@Renderer/modules/KeyPickerKeyboard/ENi.json";
+import ENa from "@Renderer/modules/KeyPickerKeyboard/ENa.json";
+import GR from "@Renderer/modules/KeyPickerKeyboard/GR.json";
+import FR from "@Renderer/modules/KeyPickerKeyboard/FR.json";
+import FRBEPO from "@Renderer/modules/KeyPickerKeyboard/FR-BEPO.json";
+import SW from "@Renderer/modules/KeyPickerKeyboard/SW.json";
+import DN from "@Renderer/modules/KeyPickerKeyboard/DN.json";
+import NW from "@Renderer/modules/KeyPickerKeyboard/NW.json";
+import IC from "@Renderer/modules/KeyPickerKeyboard/IC.json";
+import JP from "@Renderer/modules/KeyPickerKeyboard/JP.json";
+import KR from "@Renderer/modules/KeyPickerKeyboard/KR.json";
+import SWGR from "@Renderer/modules/KeyPickerKeyboard/SWGR.json";
+import EU from "@Renderer/modules/KeyPickerKeyboard/EU.json";
+// import SelectSuperKeys from "../../component/Select/SelectSuperKey";
 
 const Style = Styled.div`
 width: 100%;
@@ -82,7 +86,7 @@ width: 100%;
 }
 .svgStyle {
     overflow: visible;
-    max-width: 1170px; 
+    max-width: 1170px;
     margin: 6px auto;
 }
 .keysOrdinaryKeyboard {
@@ -104,7 +108,7 @@ width: 100%;
 .keysRow {
   display: flex;
   flex-wrap: nowrap;
-  
+
   border-radius: 6px;
   padding: 5px;
   &.keysOrdinaryKeyboard {
@@ -161,7 +165,7 @@ width: 100%;
 .dropdown-toggle.btn.btn-primary {
   padding-right: 24px;
   padding-left: 8px;
-} 
+}
 .dropdown-toggle::after {
   right: 12px;
 }
@@ -184,7 +188,7 @@ width: 100%;
   padding: 5px 3px;
   justify-content: center;
   font-size: 14px;
-} 
+}
 .keysMouseEvents .button-config {
   width: 58px;
 }
@@ -202,7 +206,7 @@ width: 100%;
   height: 190px;
 }
 
-.editor { 
+.editor {
   .keysLED .button-config {
     svg {
       margin-right: 0;
@@ -212,31 +216,31 @@ width: 100%;
     }
   }
   .keysContainerGrid {
-    display: grid; 
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr); 
-    grid-template-rows: 1fr 1fr 1fr; 
-    gap: 8px 16px; 
-    grid-template-areas: 
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-rows: 1fr 1fr 1fr;
+    gap: 8px 16px;
+    grid-template-areas:
       "colSuperKeysMacros colSuperKeysMacros colLayers colLayers"
       "colNoKeyLED colNoKeyLED colOneShotModifiers colOneShotModifiers"
-      "colMedia colMedia colTools colTools"; 
-    
-    .colSuperKeysMacros { 
-      display: grid; 
-      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); 
-      grid-template-rows: 1fr; 
-      gap: 0px 16px; 
-      grid-area: colSuperKeysMacros; 
+      "colMedia colMedia colTools colTools";
+
+    .colSuperKeysMacros {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      grid-template-rows: 1fr;
+      gap: 0px 16px;
+      grid-area: colSuperKeysMacros;
     }
-    .colLayers { 
-      grid-area: colLayers; 
+    .colLayers {
+      grid-area: colLayers;
     }
-    .colNoKeyLED { 
-      display: grid; 
-      grid-template-columns: 1fr 1fr; 
-      grid-template-rows: 1fr; 
-      gap: 0px 16px; 
-      grid-area: colNoKeyLED; 
+    .colNoKeyLED {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: 1fr;
+      gap: 0px 16px;
+      grid-area: colNoKeyLED;
     }
     .colOneShotModifiers { grid-area: colOneShotModifiers; }
     .colMedia { grid-area: colMedia; }
@@ -255,14 +259,14 @@ width: 100%;
 }
 .super {
   .keysContainerGrid {
-    display: grid; 
-    grid-template-columns:  0.8fr 1fr 1fr 1fr 1.2fr 0.25fr 1.75fr 1fr; 
-    
-    grid-template-rows: 1fr 1fr; 
-    gap: 8px 16px; 
-    grid-template-areas: 
+    display: grid;
+    grid-template-columns:  0.8fr 1fr 1fr 1fr 1.2fr 0.25fr 1.75fr 1fr;
+
+    grid-template-rows: 1fr 1fr;
+    gap: 8px 16px;
+    grid-template-areas:
       "colSuperKeysMacros colSuperKeysMacros colSuperKeysMacros colLayers colLayers colLayers colNoKeyLED colNoKeyLED"
-      "colMedia colMedia colMedia colMedia colTools colTools colTools colTools"; 
+      "colMedia colMedia colMedia colMedia colTools colTools colTools colTools";
   }
   .keysRow {
     height: 100%;
@@ -299,40 +303,48 @@ class KeyPickerReduced extends Component {
       keyCode,
       onKeySelect,
       activeTab,
-      showSelected
+      showSelected,
     } = this.props;
 
-    //let boxShadowMatrix = useTheme().styles.keyPicker.keyMatrixShadow;
+    // let boxShadowMatrix = useTheme().styles.keyPicker.keyMatrixShadow;
 
     const liso = {
       english: ENi,
       spanish: ES,
       german: GR,
       french: FR,
+      frenchBepo: FRBEPO,
       swedish: SW,
       finnish: SW,
       danish: DN,
       norwegian: NW,
       icelandic: IC,
       japanese: JP,
-      swissGerman: SWGR
+      swissGerman: SWGR,
     };
-    const lansi = { english: ENa };
+    const lansi = {
+      english: ENa,
+      korean: KR,
+      eurkey: EU,
+    };
     let Lang = ENa;
 
-    if (selectedlanguage == "english") {
-      if (kbtype == "ansi") {
-        if (lansi[selectedlanguage] != undefined) {
+    if (selectedlanguage === "english") {
+      if (kbtype === "ansi") {
+        if (lansi[selectedlanguage] !== undefined) {
           Lang = lansi[selectedlanguage];
         }
       } else {
         Lang = liso[selectedlanguage];
       }
-    } else {
-      if (selectedlanguage != "") {
-        if (liso[selectedlanguage] != undefined) Lang = liso[selectedlanguage];
+    } else if (selectedlanguage !== "") {
+      if (liso[selectedlanguage] !== undefined) {
+        Lang = liso[selectedlanguage];
+      } else if (lansi[selectedlanguage] !== undefined) {
+        Lang = lansi[selectedlanguage];
       }
     }
+
     const os = process.platform;
     const iconlist = {
       Backspace: <BsBackspace />,
@@ -355,16 +367,16 @@ class KeyPickerReduced extends Component {
       ArrLeft: <AiOutlineArrowLeft className="bigger" />,
       ArrRight: <AiOutlineArrowRight className="bigger" />,
       LDToggl: (
-        <React.Fragment>
+        <>
           <BsFillBrightnessAltLowFill className="bigger" />
           <CgToggleOff className="" />
-        </React.Fragment>
+        </>
       ),
       LDForward: (
-        <React.Fragment>
+        <>
           <BsFillBrightnessAltLowFill className="bigger" />
           <AiOutlineForward className="" />
-        </React.Fragment>
+        </>
       ),
       VolAdd: <FaVolumeUp className="bigger" />,
       VolSub: <FaVolumeDown className="bigger" />,
@@ -378,60 +390,60 @@ class KeyPickerReduced extends Component {
       Backward: <AiOutlineBackward className="bigger" />,
       Cancel: <TiCancel className="bigger" />,
       ScrlUp: (
-        <React.Fragment>
+        <>
           <BiMouseAlt className="bigger" />
           <BiArrowFromBottom className="" />
-        </React.Fragment>
+        </>
       ),
       ScrlDwn: (
-        <React.Fragment>
+        <>
           <BiMouseAlt className="bigger" />
           <BiArrowFromTop className="" />
-        </React.Fragment>
+        </>
       ),
       ScrlLeft: (
-        <React.Fragment>
+        <>
           <BiMouseAlt className="bigger" />
           <BiArrowFromRight className="" />
-        </React.Fragment>
+        </>
       ),
       ScrlRight: (
-        <React.Fragment>
+        <>
           <BiMouseAlt className="bigger" />
           <BiArrowFromLeft className="" />
-        </React.Fragment>
+        </>
       ),
       MvUp: (
-        <React.Fragment>
+        <>
           <BiMouseAlt className="bigger" />
           <BiUpArrowCircle className="" />
-        </React.Fragment>
+        </>
       ),
       MvDwn: (
-        <React.Fragment>
+        <>
           <BiMouseAlt className="bigger" />
           <BiDownArrowCircle className="" />
-        </React.Fragment>
+        </>
       ),
       MvLeft: (
-        <React.Fragment>
+        <>
           <BiMouseAlt className="bigger" />
           <BiLeftArrowCircle className="" />
-        </React.Fragment>
+        </>
       ),
       MvRight: (
-        <React.Fragment>
+        <>
           <BiMouseAlt className="bigger" />
           <BiRightArrowCircle className="" />
-        </React.Fragment>
-      )
+        </>
+      ),
     };
     const keyboard = Lang.map((key, id) => {
       if (key.tooltip) {
         return (
           <foreignObject key={`id-${key.content.first}-${id}`} x={key.x} y={key.y} width={25} height={25}>
             <OverlayTrigger rootClose placement="top" delay={{ show: 250, hide: 400 }} overlay={this.renderTooltip(key.tooltip)}>
-              <MdInfoOutline className={"info"} />
+              <MdInfoOutline className="info" />
             </OverlayTrigger>
           </foreignObject>
         );
@@ -453,9 +465,7 @@ class KeyPickerReduced extends Component {
                   (code.base + code.modified < 17450 || code.base + code.modified > 17501) &&
                   (code.base + code.modified < 49153 || code.base + code.modified > 49168)
                 ? true
-                : code.modified > 0 && code.base + code.modified === key.id
-                ? true
-                : false
+                : !!(code.modified > 0 && code.base + code.modified === key.id)
               : false
           }
           clicked={() => {
@@ -480,7 +490,7 @@ class KeyPickerReduced extends Component {
           icony={key.icony}
           iconsize={key.iconsize}
           disabled={key.mod == disableMods || key.move == disableMove || disableAll}
-          // disabled={false}
+          tabIndex={-1}
           idArray={key.idArray}
           keyCode={code}
         />
@@ -494,17 +504,17 @@ class KeyPickerReduced extends Component {
               <svg className="svgStyle" viewBox="0 0 1070 208" preserveAspectRatio="xMidYMin slice">
                 {keyboard}
                 <defs>
-                  <linearGradient id={`paint_gradient`} x1="0%" y1="0%" x2="100%" y2="0%">
+                  <linearGradient id="paint_gradient" x1="0%" y1="0%" x2="100%" y2="0%">
                     <stop offset="5%" stopColor="#fff" />
                     <stop offset="95%" stopColor="#fff" stopOpacity={0} />
                   </linearGradient>
-                  <filter id={`filter0_d_2211_181319`} x="0%" y="0%" width="200%" height="200%">
+                  <filter id="filter0_d_2211_181319" x="0%" y="0%" width="200%" height="200%">
                     <feOffset result="offOut" in="SourceGraphic" dx="0" dy="-2" />
                     <feColorMatrix
                       result="matrixOut"
                       in="offOut"
                       type="matrix"
-                      values={`0 0 0 0 0.552941 0 0 0 0 0.517647 0 0 0 0 0.737255 0 0 0 0.1 0`}
+                      values="0 0 0 0 0.552941 0 0 0 0 0.517647 0 0 0 0 0.737255 0 0 0 0.1 0"
                     />
                     <feGaussianBlur result="blurOut" in="matrixOut" stdDeviation="0" />
                     <feBlend in="SourceGraphic" in2="blurOut" mode="normal" />

@@ -23,64 +23,64 @@ const DigitTable = {
     {
       code: 30,
       labels: {
-        primary: "1"
-      }
+        primary: "1",
+      },
     },
     {
       code: 31,
       labels: {
-        primary: "2"
-      }
+        primary: "2",
+      },
     },
     {
       code: 32,
       labels: {
-        primary: "3"
-      }
+        primary: "3",
+      },
     },
     {
       code: 33,
       labels: {
-        primary: "4"
-      }
+        primary: "4",
+      },
     },
     {
       code: 34,
       labels: {
-        primary: "5"
-      }
+        primary: "5",
+      },
     },
     {
       code: 35,
       labels: {
-        primary: "6"
-      }
+        primary: "6",
+      },
     },
     {
       code: 36,
       labels: {
-        primary: "7"
-      }
+        primary: "7",
+      },
     },
     {
       code: 37,
       labels: {
-        primary: "8"
-      }
+        primary: "8",
+      },
     },
     {
       code: 38,
       labels: {
-        primary: "9"
-      }
+        primary: "9",
+      },
     },
     {
       code: 39,
       labels: {
-        primary: "0"
-      }
-    }
-  ]
+        primary: "0",
+      },
+    },
+  ],
 };
 
 const ShiftedDigitTable = {
@@ -89,64 +89,64 @@ const ShiftedDigitTable = {
     {
       code: 2078,
       labels: {
-        primary: "!"
-      }
+        primary: "!",
+      },
     },
     {
       code: 2079,
       labels: {
-        primary: "@"
-      }
+        primary: "@",
+      },
     },
     {
       code: 2080,
       labels: {
-        primary: "#"
-      }
+        primary: "#",
+      },
     },
     {
       code: 2081,
       labels: {
-        primary: "$"
-      }
+        primary: "$",
+      },
     },
     {
       code: 2082,
       labels: {
-        primary: "%"
-      }
+        primary: "%",
+      },
     },
     {
       code: 2083,
       labels: {
-        primary: "^"
-      }
+        primary: "^",
+      },
     },
     {
       code: 2084,
       labels: {
-        primary: "&"
-      }
+        primary: "&",
+      },
     },
     {
       code: 2085,
       labels: {
-        primary: "*"
-      }
+        primary: "*",
+      },
     },
     {
       code: 2086,
       labels: {
-        primary: "("
-      }
+        primary: "(",
+      },
     },
     {
       code: 2087,
       labels: {
-        primary: ")"
-      }
-    }
-  ]
+        primary: ")",
+      },
+    },
+  ],
 };
 
 const ModifiedDigitTables = [
@@ -189,7 +189,7 @@ const ModifiedDigitTables = [
   withModifiers(DigitTable, "Alt + AltGr + Shift + Os +", "A+AGr+S+O+", 7680),
 
   // All
-  withModifiers(DigitTable, "Hyper + AltGr +", "H+AGr", 7936)
+  withModifiers(DigitTable, "Hyper + AltGr +", "H+AGr", 7936),
 ];
 
 export { DigitTable as default, ModifiedDigitTables };

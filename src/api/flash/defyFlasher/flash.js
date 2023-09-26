@@ -16,10 +16,10 @@
 
 import fs from "fs";
 import path from "path";
+import { ipcRenderer } from "electron";
 import Focus from "../../focus";
 import Hardware from "../../hardware";
 import NRf52833 from "./NRf52833-flasher";
-const { ipcRenderer } = require("electron");
 
 /**
  * Create a new flash raise object.
@@ -31,7 +31,7 @@ const { ipcRenderer } = require("electron");
  * @emits resetKeyboard
  * @emits updateFirmware
  */
-export class FlashDefyWireless {
+class FlashDefyWireless {
   constructor(device) {
     this.device = device;
     this.currentPort = null;
@@ -41,7 +41,7 @@ export class FlashDefyWireless {
       backup: {},
       log: ["Neuron detected"],
       serialNumber: device.serialNumber,
-      firmwareFile: "File has not being selected"
+      firmwareFile: "File has not being selected",
     };
     this.backup = [];
     this.delay = ms => new Promise(res => setTimeout(res, ms));
@@ -66,7 +66,7 @@ export class FlashDefyWireless {
    * @returns {boolean} if device found - true, if no - false
    */
   async foundDevices(hardware, message, bootloader) {
-    let focus = new Focus();
+    const focus = new Focus();
     let isFindDevice = false;
     await focus.find(...hardware).then(devices => {
       for (const device of devices) {
@@ -77,14 +77,14 @@ export class FlashDefyWireless {
           device.device.bootloader,
           bootloader,
           this.device.info.keyboardType,
-          device.device.info.keyboardType
+          device.device.info.keyboardType,
         );
         if (
           bootloader
-            ? device.device.bootloader != undefined &&
-              device.device.bootloader == bootloader &&
-              this.device.info.keyboardType == device.device.info.keyboardType
-            : this.device.info.keyboardType == device.device.info.keyboardType
+            ? device.device.bootloader !== undefined &&
+              device.device.bootloader === bootloader &&
+              this.device.info.keyboardType === device.device.info.keyboardType
+            : this.device.info.keyboardType === device.device.info.keyboardType
         ) {
           console.log(message);
           this.currentPort = { ...device };
@@ -100,7 +100,7 @@ export class FlashDefyWireless {
    * Takes backup settings from keyboard and writes its in backupfile.
    */
   async backupSettings() {
-    let focus = new Focus();
+    const focus = new Focus();
 
     const commands = [
       "hardware.keyscan",
@@ -130,20 +130,20 @@ export class FlashDefyWireless {
       "superkeys.waitfor",
       "superkeys.timeout",
       "superkeys.repeat",
-      "superkeys.overlap"
+      "superkeys.overlap",
     ];
     this.backupFileName = `defy-backup-${this.formatedDate()}.json`;
 
     try {
       let errorFlag = false;
       const errorMessage = "Firmware update failed, because the settings could not be saved";
-      for (let command of commands) {
+      for (const command of commands) {
         // Ignore the command if it's not supported
         if (!focus.isCommandSupported(command)) {
           continue;
         }
 
-        let res = await focus.command(command);
+        const res = await focus.command(command);
         this.backupFileData.backup[command] = typeof res === "string" ? res.trim() : res;
         if (res === undefined || res === "") {
           errorFlag = true;
@@ -163,8 +163,8 @@ export class FlashDefyWireless {
    */
   async saveBackupFile() {
     const userDataPath = await ipcRenderer.invoke("get-userPath", "userData");
-    const route = path.join(userDataPath, this.backupFileName + ".json");
-    console.log("saving file to: " + route);
+    const route = path.join(userDataPath, `${this.backupFileName}.json`);
+    console.log(`saving file to: ${route}`);
     fs.writeFile(route, JSON.stringify(this.backupFileData), err => {
       if (err) throw err;
     });
@@ -176,14 +176,13 @@ export class FlashDefyWireless {
    * @param {*} state State of the DTR flag to be set on the port
    * @returns {promise} that will resolve when the function has successfully setted the DTR flag
    */
-  setDTR = (port, state) => {
-    return new Promise(function (resolve, reject) {
-      port.set({ dtr: state }, function () {
+  setDTR = (port, state) =>
+    new Promise((resolve, reject) => {
+      port.set({ dtr: state }, () => {
         console.log(`DTR set to ${state} at ${new Date(Date.now()).toISOString()}`);
         resolve();
       });
     });
-  };
 
   /**
    * Update the baud rate of the port with a Promise
@@ -191,14 +190,13 @@ export class FlashDefyWireless {
    * @param {*} baud BaudRate to be set
    * @returns {promise} Promise to be returned, that will resolve when the operation is done
    */
-  updatePort = (port, baud) => {
-    return new Promise(function (resolve, reject) {
-      port.update({ baudRate: baud }, function () {
+  updatePort = (port, baud) =>
+    new Promise((resolve, reject) => {
+      port.update({ baudRate: baud }, () => {
         console.log(`Port update started at: ${new Date(Date.now()).toISOString()}`);
         resolve();
       });
     });
-  };
 
   /**
    * Resets keyboard at the baud rate of 1200bps. Keyboard is restarted with the bootloader
@@ -206,7 +204,7 @@ export class FlashDefyWireless {
    * @returns {promise}
    */
   async resetKeyboard(backup, stateUpdate) {
-    let focus = new Focus();
+    const focus = new Focus();
     console.log("reset start");
     const errorMessage =
       "The firmware update couldn't start because the Defy Bootloader wasn't found. Please check our Help Center for more details or schedule a video call with us.";
@@ -214,7 +212,9 @@ export class FlashDefyWireless {
     this.backup = backup;
     return new Promise(async (resolve, reject) => {
       stateUpdate("reset", 10);
-      focus.command("upgrade.neuron");
+      focus.command("upgrade.neuron").catch(err => {
+        if (err) console.log("answer after shutdown not received");
+      });
       console.log("waiting for bootloader");
       await this.delay(1000);
       stateUpdate("reset", 30);
@@ -248,14 +248,14 @@ export class FlashDefyWireless {
    */
   async updateFirmware(firmware, bootloader, stateUpdate) {
     if (!bootloader) {
-      let focus = new Focus();
+      const focus = new Focus();
       await focus.close();
     }
     console.log("Begin update firmware with NRf52833", bootloader);
     return new Promise(async (resolve, reject) => {
       try {
         if (!bootloader) {
-          let focus = new Focus();
+          const focus = new Focus();
           if (focus.closed) {
             await focus.open(this.currentPath, this.currentPort.device, null);
           }
@@ -282,14 +282,14 @@ export class FlashDefyWireless {
    * Detects keyboard after firmware of bootloader
    */
   async detectKeyboard() {
-    const timeouts = 2500; //time to wait for keyboard
+    const timeouts = 2500; // time to wait for keyboard
     const findTimes = 5;
     const errorMessage =
       "The firmware update has failed during the flashing process. Please unplug and replug the keyboard and try again";
     console.log("Waiting for keyboard");
-    //wait until the bootloader serial port disconnects and the keyboard serial port reconnects
-    const findKeyboard = async () => {
-      return new Promise(async resolve => {
+    // wait until the bootloader serial port disconnects and the keyboard serial port reconnects
+    const findKeyboard = async () =>
+      new Promise(async resolve => {
         await this.delay(timeouts);
         if (await this.foundDevices(Hardware.serial, "Keyboard detected", false)) {
           resolve(true);
@@ -297,7 +297,6 @@ export class FlashDefyWireless {
           resolve(false);
         }
       });
-    };
     try {
       await this.runnerFindKeyboard(findKeyboard, findTimes, errorMessage);
     } catch (e) {
@@ -320,10 +319,9 @@ export class FlashDefyWireless {
     if (await findKeyboard()) {
       console.log("Ready to restore");
       return true;
-    } else {
-      console.log(`Keyboard not detected, trying again for ${times} times`);
-      await this.runnerFindKeyboard(findKeyboard, times - 1, errorMessage);
     }
+    console.log(`Keyboard not detected, trying again for ${times} times`);
+    await this.runnerFindKeyboard(findKeyboard, times - 1, errorMessage);
   }
 
   /**
@@ -331,7 +329,7 @@ export class FlashDefyWireless {
    */
   async restoreSettings(backup, stateUpdate) {
     stateUpdate("restore", 0);
-    let focus = new Focus();
+    const focus = new Focus();
     const errorMessage = "Firmware update failed, because the settings could not be restored";
     console.log(backup);
     if (backup === undefined || backup.length === 0) {
@@ -357,3 +355,5 @@ export class FlashDefyWireless {
     }
   }
 }
+
+export default FlashDefyWireless;

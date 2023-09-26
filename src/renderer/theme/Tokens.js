@@ -37,8 +37,13 @@ const tokens = {
     pastelShadesMint100: "rgba(181,203,129,1)",
     pink300: "rgba(239, 93, 168, 1)",
     pink200: "rgba(241, 120, 182, 1)",
-    pink100: "rgba(252, 221, 236, 1)"
-  }
+    pink100: "rgba(252, 221, 236, 1)",
+  },
+  sizes: {
+    sidebarWidthLarge: 120,
+    sidebarWidthMedium: 90,
+    sidebarWidthSmall: 64,
+  },
 };
 
 export default tokens;

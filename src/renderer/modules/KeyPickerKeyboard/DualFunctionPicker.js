@@ -83,7 +83,7 @@ class DualFunctionPicker extends Component {
       { name: "Dual Shift   ", nameStd: "Shift", keynum: 49425 },
       { name: "Dual Alt     ", nameStd: "Alt", keynum: 49681 },
       { name: "Dual OS  ", nameStd: "OS", keynum: 49937 },
-      { name: "Dual Alt Gr  ", nameStd: "Alt Gr.", keynum: 50705 }
+      { name: "Dual Alt Gr  ", nameStd: "Alt Gr.", keynum: 50705 },
     ];
     this.layerKey = [
       { name: "None ", keynum: 0 },
@@ -94,7 +94,7 @@ class DualFunctionPicker extends Component {
       { name: "Dual Layer 5  ", nameStd: "5", keynum: 52242 },
       { name: "Dual Layer 6  ", nameStd: "6", keynum: 52498 },
       { name: "Dual Layer 7  ", nameStd: "7", keynum: 52754 },
-      { name: "Dual Layer 8  ", nameStd: "8", keynum: 53010 }
+      { name: "Dual Layer 8  ", nameStd: "8", keynum: 53010 },
     ];
   }
 
@@ -106,7 +106,7 @@ class DualFunctionPicker extends Component {
     const disabled = isMod || (isNotNK && isNotDF);
     // console.log("CHECKING", isMod, isNotNK, isNotDF, keyCode);
 
-    //if (disabled && !isStandardView) return <></>;
+    // if (disabled && !isStandardView) return <></>;
     const layers = (
       <div className="dualFunctionPickerInner">
         <Title text="Add Dual-function" headingLevel={4} />
@@ -118,31 +118,25 @@ class DualFunctionPicker extends Component {
               keyCode.modified > 0 && this.layerKey.map(i => i.keynum).includes(keyCode.modified) ? "active" : ""
             }`}
           >
-            <Dropdown.Toggle
-              id="dropdown-custom"
-              className="button-config-style"
-              disabled={disabled || activeTab == "super" ? true : false}
-            >
+            <Dropdown.Toggle id="dropdown-custom" className="button-config-style" disabled={!!(disabled || activeTab == "super")}>
               <div className="dropdownItemSelected">
                 <div className="dropdownItem">Layer</div>
-                <div className="badge-circle"></div>
+                <div className="badge-circle" />
               </div>
             </Dropdown.Toggle>
             <Dropdown.Menu>
-              {this.layerKey.map((item, id) => {
-                return (
-                  <Dropdown.Item
-                    eventKey={item.keynum}
-                    key={`itemDualFunctionLayer-${id}`}
-                    disabled={item.keynum == -1 || isMod}
-                    className={`${keyCode.modified > 0 && item.keynum == keyCode.modified ? "active" : ""}`}
-                  >
-                    <div className="dropdownInner">
-                      <div className="dropdownItem">{item.name}</div>
-                    </div>
-                  </Dropdown.Item>
-                );
-              })}
+              {this.layerKey.map((item, id) => (
+                <Dropdown.Item
+                  eventKey={item.keynum}
+                  key={`itemDualFunctionLayer-${id}`}
+                  disabled={item.keynum == -1 || isMod}
+                  className={`${keyCode.modified > 0 && item.keynum == keyCode.modified ? "active" : ""}`}
+                >
+                  <div className="dropdownInner">
+                    <div className="dropdownItem">{item.name}</div>
+                  </div>
+                </Dropdown.Item>
+              ))}
             </Dropdown.Menu>
           </Dropdown>
 
@@ -154,32 +148,26 @@ class DualFunctionPicker extends Component {
             }`}
             disabled={disabled || activeTab == "super"}
           >
-            <Dropdown.Toggle
-              id="dropdown-custom"
-              className="button-config-style"
-              disabled={disabled || activeTab == "super" ? true : false}
-            >
+            <Dropdown.Toggle id="dropdown-custom" className="button-config-style" disabled={!!(disabled || activeTab == "super")}>
               <div className="dropdownItemSelected">
                 <div className="dropdownItem">Modifier</div>
-                <div className="badge-circle"></div>
+                <div className="badge-circle" />
               </div>
             </Dropdown.Toggle>
             <Dropdown.Menu>
-              {this.modKey.map((item, id) => {
-                return (
-                  <Dropdown.Item
-                    eventKey={item.keynum}
-                    key={`itemDualFunctionMod-${id}`}
-                    disabled={item.keynum == -1 || isMod}
-                    className={`${keyCode.modified > 0 && item.keynum == keyCode.modified ? "active" : ""}
+              {this.modKey.map((item, id) => (
+                <Dropdown.Item
+                  eventKey={item.keynum}
+                  key={`itemDualFunctionMod-${id}`}
+                  disabled={item.keynum == -1 || isMod}
+                  className={`${keyCode.modified > 0 && item.keynum == keyCode.modified ? "active" : ""}
                     }`}
-                  >
-                    <div className="dropdownInner">
-                      <div className="dropdownItem">{item.name}</div>
-                    </div>
-                  </Dropdown.Item>
-                );
-              })}
+                >
+                  <div className="dropdownInner">
+                    <div className="dropdownItem">{item.name}</div>
+                  </div>
+                </Dropdown.Item>
+              ))}
             </Dropdown.Menu>
           </Dropdown>
         </div>
@@ -198,7 +186,7 @@ class DualFunctionPicker extends Component {
                   key={`itemDualFunctionLayers-${id}`}
                   buttonText={item.nameStd}
                   onClick={e => onKeySelect(parseInt(item.keynum) + keyCode.base)}
-                  selected={keyCode.modified > 0 && item.keynum == keyCode.modified ? true : false}
+                  selected={!!(keyCode.modified > 0 && item.keynum == keyCode.modified)}
                   disabled={disabled || activeTab == "super"}
                 />
               );
@@ -215,7 +203,7 @@ class DualFunctionPicker extends Component {
                   key={`itemDualFunctionMod-${id}`}
                   buttonText={item.nameStd}
                   onClick={e => onKeySelect(parseInt(item.keynum) + keyCode.base)}
-                  selected={keyCode.modified > 0 && item.keynum == keyCode.modified ? true : false}
+                  selected={!!(keyCode.modified > 0 && item.keynum == keyCode.modified)}
                   disabled={disabled || activeTab == "super"}
                 />
               );

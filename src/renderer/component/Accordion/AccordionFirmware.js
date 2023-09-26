@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Styled from "styled-components";
+import i18n from "../../i18n";
 
 import Accordion from "react-bootstrap/Accordion";
 import Card from "react-bootstrap/Card";
@@ -84,20 +85,35 @@ margin-top: 32px;
 `;
 
 const AccordionFirmware = ({ items }) => {
-  const [passedTasks, SetPassedTasks] = useState(0);
+  const [passedTasks, SetPassedTasks] = useState(true);
   const [counterTasks, SetCounterTasks] = useState(0);
 
-  useEffect(() => {
-    function numberOfFalseValues(obj) {
-      var counter = 0;
-      for (var index = 0; index < obj.length; index++) {
-        if (obj[index].isMarried === false) {
-          counter++;
-        }
-      }
-      return counter;
+  const textList = [
+    {
+      text: i18n.firmwareUpdate.milestones.checkLeftSide
+    },
+    {
+      text: i18n.firmwareUpdate.milestones.checkLeftSideBL
+    },
+    {
+      text: i18n.firmwareUpdate.milestones.checkRightSide
+    },
+    {
+      text: i18n.firmwareUpdate.milestones.checkRightSideBL
+    },
+    {
+      text: i18n.firmwareUpdate.milestones.checkBackup
     }
+  ];
+
+  useEffect(() => {
     items.map((item, index) => {
+      if (index == 0) {
+        SetCounterTasks(false);
+      }
+      if ((index == 0 && !item.checked) || (index == 2 && !item.checked)) {
+        SetPassedTasks(false);
+      }
       if (item.checked) {
         SetCounterTasks(previousValue => previousValue + 1);
       }
@@ -112,12 +128,15 @@ const AccordionFirmware = ({ items }) => {
           <Accordion.Toggle as={Card.Header} eventKey="0">
             <div className="stepsCompletedStatus">
               <div className="stepsCompletedHeader">
-                <IconCheckmarkSm />
-                <Title text="You are ready to start" headingLevel={5} />
+                {passedTasks ? <IconCheckmarkSm /> : ""}
+                <Title
+                  text={passedTasks ? i18n.firmwareUpdate.milestones.readyToStart : i18n.firmwareUpdate.milestones.analyzedTasks}
+                  headingLevel={5}
+                />
               </div>
               <div className="stepsCompleted">
                 <div className={`stepsCompletedLabel ${counterTasks == items.length ? "passed" : "warning"}`}>
-                  {counterTasks} of {items.length} tasks passed
+                  {counterTasks} {i18n.general.of} {items.length} {i18n.firmwareUpdate.milestones.tasksPassed}
                 </div>{" "}
                 <small>
                   <IconChevronDown />
@@ -135,7 +154,7 @@ const AccordionFirmware = ({ items }) => {
                   key={`itemChecked-${item.id}`}
                 >
                   <div className="item-checked--icon">{item.checked ? <IconCheckmarkSm /> : <IconCloseXs />}</div>
-                  {item.text}
+                  {textList[index].text}
                 </div>
               ))}
             </Card.Body>

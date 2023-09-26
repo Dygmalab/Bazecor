@@ -1,0 +1,182 @@
+name: Staging
+
+on:
+  push:
+    branches:
+      - "development"
+  pull_request:
+    branches:
+      - "development"
+
+permissions:
+  contents: read
+
+jobs:
+  testing:
+    runs-on: ${{ matrix.os }}
+    permissions:
+      contents: write # to be able to publish a GitHub release
+      issues: write # to be able to comment on released issues
+      pull-requests: write # to be able to comment on released pull requests
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: macos-12
+          - os: windows-2019
+          - os: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+      - run: npm install -g yarn
+      - if: runner.os == 'Linux'
+        run: sudo apt update && sudo apt install libudev-dev
+      - name: Cache node_modules
+        id: cache-node-modules
+        uses: actions/cache@v3
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-${{ hashFiles('package.json', 'yarn.lock') }}
+      - name: Install node_modules
+        if: steps.cache-node-modules.outputs.cache-hit != 'true'
+        run: yarn install --frozen-lockfile --network-timeout 300000 # sometimes yarn takes time, therefore, we increase the timeout
+      - run: yarn run test
+
+  build:
+    runs-on: ${{ matrix.os }}
+    needs: [testing]
+    permissions:
+      contents: write # to be able to publish a GitHub release
+      issues: write # to be able to comment on released issues
+      pull-requests: write # to be able to comment on released pull requests
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: macos-12
+          - os: windows-2019
+          - os: ubuntu-20.04
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+      - run: npm install -g yarn
+      - if: runner.os == 'Linux'
+        run: sudo apt update && sudo apt install libudev-dev
+      - if: runner.os == 'Windows'
+        name: Set up Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: "temurin"
+          java-version: "17"
+      - if: runner.os == 'Windows'
+        name: Get JSign
+        shell: bash
+        run: |
+          JAR_URL="https://github.com/ebourg/jsign/releases/download/5.0/jsign-5.0.jar"
+          curl -L -o jsign.jar $JAR_URL
+          mkdir windows_signing
+          cp jsign.jar windows_signing/jsign.jar
+      - if: runner.os == 'Windows'
+        name: Setup GCloud Auth
+        uses: "google-github-actions/auth@v1"
+        with:
+          credentials_json: "${{ secrets.GCP_SIGNER_SERVICE_ACCOUNT }}"
+      - if: runner.os == 'Windows'
+        name: "Set up GCloud SDK"
+        uses: "google-github-actions/setup-gcloud@v1"
+        with:
+          version: ">= 416.0.0"
+      - name: Cache node_modules
+        id: cache-node-modules
+        uses: actions/cache@v3
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-${{ hashFiles('package.json', 'yarn.lock') }}
+      - name: Install node_modules
+        if: steps.cache-node-modules.outputs.cache-hit != 'true'
+        run: yarn install --frozen-lockfile --network-timeout 300000 # sometimes yarn takes time, therefore, we increase the timeout
+      - if: runner.os == 'macOS'
+        name: Setup Apple certificates
+        env:
+          APPLE_INSTALLER_CERT_BASE64: ${{ secrets.APPLE_INSTALLER_CERT_BASE64 }}
+          APPLE_APPLICATION_CERT_BASE64: ${{ secrets.APPLE_APPLICATION_CERT_BASE64 }}
+          APPLE_CERT_PASSWORD: ${{ secrets.APPLE_CERT_PASSWORD }}
+          APPLE_KEYCHAIN_PASSWORD: ${{ secrets.APPLE_KEYCHAIN_PASSWORD }}
+        run: |
+          APPLE_INSTALLER_CERT_PATH=$RUNNER_TEMP/apple_installer.p12
+          APPLE_APPLICATION_CERT_PATH=$RUNNER_TEMP/apple_application.p12
+          KEYCHAIN_PATH=$RUNNER_TEMP/apple-signing.keychain-db
+          # create certificates from base64 
+          echo -n "$APPLE_INSTALLER_CERT_BASE64" | base64 --decode -o $APPLE_INSTALLER_CERT_PATH
+          echo -n "$APPLE_APPLICATION_CERT_BASE64" | base64 --decode -o $APPLE_APPLICATION_CERT_PATH
+          # create keychain stuff
+          security create-keychain -p "$APPLE_KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
+          security set-keychain-settings -lut 21600 $KEYCHAIN_PATH
+          security unlock-keychain -p "$APPLE_KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
+          #import certificates
+          echo "Importing installer cert"
+          security import $APPLE_INSTALLER_CERT_PATH -P "$APPLE_CERT_PASSWORD" -A -t cert -f pkcs12 -k $KEYCHAIN_PATH 
+          echo "Importing application cert"
+          security import $APPLE_APPLICATION_CERT_PATH -P "$APPLE_CERT_PASSWORD" -A -t cert -f pkcs12 -k $KEYCHAIN_PATH 
+          security list-keychain -d user -s $KEYCHAIN_PATH
+          # - run: yarn run lint
+      - if: runner.os == 'macOS'
+        name: Build for MacOS Intel
+        env:
+          APPLE_ID: ${{ secrets.APPLEID }}
+          APPLE_ID_PASSWORD: ${{ secrets.APPLEIDPASS }}
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+        run: yarn run make-mac-intel
+      - if: runner.os == 'macOS'
+        name: Build for MacOS Arm
+        env:
+          APPLE_ID: ${{ secrets.APPLEID }}
+          APPLE_ID_PASSWORD: ${{ secrets.APPLEIDPASS }}
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+        run: yarn run make-mac-arm
+      - if: runner.os != 'macOS'
+        name: Build for Linux/Windows
+        run: yarn run make
+      - if: runner.os != 'macOS'
+        name: Build for Linux/Windows
+        run: yarn run make
+      - if: runner.os == 'Windows'
+        shell: bash
+        name: Get executable into signing folder
+        # we replace empty spaces in the filename with -
+        run: |
+          find out/make -type f -name '*.exe' -exec bash -c 'mv "$1" "${1// /-}"' _ {} \;
+          find out/make -type f -name '*.exe' -exec cp -v {} windows_signing \;
+      - if: runner.os == 'Windows'
+        name: Sign executable
+        shell: bash
+        run: |
+          cd windows_signing
+          echo "${{ secrets.DIGICERT_CERT_BASE64}}" | base64 --decode > dygma_cert.pem
+          ls -R .
+          EXE_FILE=$(find .  -type f -name '*.exe' -exec basename {} \; 2>/dev/null | head -n 1)
+          echo "Found .exe file:"
+          echo $EXE_FILE
+          java -jar jsign.jar --storetype GOOGLECLOUD --storepass "$(gcloud auth print-access-token)" \
+            --keystore "${{ secrets.GCP_KEYSTORE }}" --alias "${{ secrets.GCP_WINDOWS_SIGNING_KEY }}" \
+            --certfile "dygma_cert.pem" --tsmode RFC3161 --tsaurl http://timestamp.digicert.com $EXE_FILE
+          cd ..
+      - name: Upload build
+        uses: actions/upload-artifact@v3
+        with:
+          name: artifacts
+          path: |
+            out/make/**/*.dmg
+            out/make/**/*.AppImage
+            windows_signing/**/*.exe
+
+      - name: Show build items
+        run: |
+          ls -R out/make

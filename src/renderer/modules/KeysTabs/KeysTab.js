@@ -1,35 +1,13 @@
 import React, { Component } from "react";
 import Styled from "styled-components";
 
-import i18n from "../../i18n";
+import i18n from "@Renderer/i18n";
 
-import Title from "../../component/Title";
-import CallOut from "../../component/Callout";
-import { KeyPickerReduced } from "../../modules/KeyPickerKeyboard";
-import ModPicker from "../KeyPickerKeyboard/ModPicker";
-import DualFunctionPicker from "../KeyPickerKeyboard/DualFunctionPicker";
-import { RegularButton, ButtonConfig, ButtonMouse } from "../../component/Button";
-
-import {
-  IconMediaPlayPause,
-  IconMediaStop,
-  IconMediaRewind,
-  IconMediaForward,
-  IconMediaShuffle,
-  IconMediaSoundMute,
-  IconMediaSoundLess,
-  IconMediaSoundMore,
-  IconArrowInBoxUp,
-  IconToolsBrightnessMore,
-  IconToolsBrightnessLess,
-  IconToolsCamera,
-  IconToolsCalculator,
-  IconToolsEject,
-  IconLEDSwitchLeft,
-  IconLEDPreviousEffect,
-  IconLEDNextEffect
-} from "../../component/Icon";
-import Callout from "../../component/Callout";
+import Title from "@Renderer/component/Title";
+import CallOut from "@Renderer/component/Callout";
+import { KeyPickerReduced } from "@Renderer/modules/KeyPickerKeyboard";
+import ModPicker from "@Renderer/modules/KeyPickerKeyboard/ModPicker";
+import DualFunctionPicker from "@Renderer/modules/KeyPickerKeyboard/DualFunctionPicker";
 
 const Styles = Styled.div`
 display: flex;
@@ -100,7 +78,8 @@ class KeysTab extends Component {
   }
 
   render() {
-    const { action, actions, keyCode, code, isStandardView, actTab, superkeyAction, selectedlanguage, kbtype } = this.props;
+    const { action, actions, keyCode, code, isStandardView, actTab, superkeyAction, selectedlanguage, kbtype, onKeyPress } =
+      this.props;
     return (
       <Styles className={`${isStandardView ? "standardViewTab" : ""} tabsKey`}>
         <div className="tabContentWrapper">
@@ -119,39 +98,48 @@ class KeysTab extends Component {
           <KeyPickerReduced
             actions={actions}
             action={action}
-            onKeySelect={this.props.onKeyPress}
+            onKeySelect={onKeyPress}
             code={isStandardView ? code : { base: 4, modified: 0 }}
             showSelected={isStandardView}
             keyCode={keyCode}
             disableMove={false}
             // disableMods={false}
-            disableMods={(superkeyAction == 0 || superkeyAction == 3) && actTab == "super" ? true : false}
-            //disableMove={![0, 3].includes(actions) && actTab == "super"}
+            disableMods={!!((superkeyAction === 0 || superkeyAction === 3) && actTab === "super")}
+            // disableMove={![0, 3].includes(actions) && actTab == "super"}
             actTab={actTab}
-            superName={"superName"}
+            superName="superName"
             selectedlanguage={selectedlanguage}
             kbtype={kbtype}
           />
           {isStandardView ? (
-            <div className={`enhanceKeys ${(superkeyAction == 0 || superkeyAction == 3) && actTab == "super" ? "disabled" : ""}`}>
+            <div
+              className={`enhanceKeys ${(superkeyAction === 0 || superkeyAction === 3) && actTab === "super" ? "disabled" : ""}`}
+            >
               <Title
                 text={i18n.editor.standardView.keys.enhanceTitle}
                 headingLevel={3}
                 className="counterIndicator counter2 mt-2"
               />
-              <CallOut content={i18n.editor.standardView.keys.callOutEnhance} size="sm" />
+              <CallOut
+                content={i18n.editor.standardView.keys.callOutEnhance}
+                size="sm"
+                hasVideo
+                media="Yk8S0TJuZ8A"
+                videoTitle="These keys have a SECRET function"
+                videoDuration="3:57"
+              />
               <div className="cardButtons cardButtonsModifier">
                 <Title text={i18n.editor.standardView.keys.addModifiers} headingLevel={4} />
                 <p>{i18n.editor.standardView.keys.descriptionModifiers}</p>
-                <ModPicker keyCode={code} onKeySelect={this.props.onKeyPress} isStandardView={isStandardView} />
+                <ModPicker keyCode={code} onKeySelect={onKeyPress} isStandardView={isStandardView} />
               </div>
-              {actTab != "super" ? (
+              {actTab !== "super" ? (
                 <div className="cardButtons cardButtonsDual">
                   <Title text={i18n.editor.standardView.keys.addDualFunction} headingLevel={4} />
                   <p>{i18n.editor.standardView.keys.dualFunctionDescription}</p>
                   <DualFunctionPicker
                     keyCode={code}
-                    onKeySelect={this.props.onKeyPress}
+                    onKeySelect={onKeyPress}
                     activeTab={actTab}
                     isStandardView={isStandardView}
                   />

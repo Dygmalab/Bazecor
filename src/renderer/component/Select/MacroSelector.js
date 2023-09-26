@@ -17,8 +17,8 @@
 
 import React from "react";
 import Styled from "styled-components";
-import i18n from "../../i18n";
 import Dropdown from "react-bootstrap/Dropdown";
+import i18n from "../../i18n";
 
 import MacrosMemoryUsage from "../../modules/Macros/MacrosMemoryUsage";
 import { IconArrowsSmallSeparating, IconPen, IconAddNew, IconClone, IconDelete } from "../Icon";
@@ -88,7 +88,7 @@ class MacroSelector extends React.Component {
 
     this.state = {
       show: false,
-      showAdd: false
+      showAdd: false,
     };
   }
 
@@ -127,9 +127,9 @@ class MacroSelector extends React.Component {
                     <div className="dropdownListItemSelected">
                       {itemList == undefined || itemList.length == 0 || itemList.length <= selectedItem
                         ? i18n.dialog.loading
-                        : itemList[selectedItem].name == ""
+                        : itemList[selectedItem]?.name == ""
                         ? i18n.general.noname
-                        : itemList[selectedItem].name}
+                        : itemList[selectedItem]?.name}
                     </div>
                     <span className="caret">
                       <IconArrowsSmallSeparating />
@@ -142,7 +142,7 @@ class MacroSelector extends React.Component {
               {itemList.map((item, iter) => (
                 <Dropdown.Item eventKey={iter} key={`item-${iter}`} className={iter === selectedItem ? "active" : ""}>
                   <span className="itemIndex">#{iter + 1}.</span>
-                  {item.name == "" ? i18n.general.noname : item.name}
+                  {item?.name == "" ? i18n.general.noname : item.name}
                 </Dropdown.Item>
               ))}
             </Dropdown.Menu>
@@ -175,7 +175,7 @@ class MacroSelector extends React.Component {
           icoSVG={<IconAddNew />}
           icoPosition="left"
           buttonText={i18n.general.new}
-          style="outline gradient addNew"
+          styles="outline gradient addNew"
           onClick={this.toggleShowAdd}
         />
         <MacrosMemoryUsage mem={mem} tMem={tMem} />
@@ -184,20 +184,20 @@ class MacroSelector extends React.Component {
         ) : (
           <NameModal
             show={show}
-            name={itemList[selectedItem].name}
+            name={itemList[selectedItem]?.name}
             toggleShow={this.toggleShow}
             handleSave={this.handleSave}
-            modalTitle={`Change macro name`}
-            labelInput={`Macro name`}
+            modalTitle="Change macro name"
+            labelInput="Macro name"
           />
         )}
         <NameModal
           show={showAdd}
-          name={""}
+          name=""
           toggleShow={this.toggleShowAdd}
           handleSave={this.handleAdd}
-          modalTitle={`Create new macro name`}
-          labelInput={`Macro name`}
+          modalTitle="Create new macro name"
+          labelInput="Macro name"
         />
       </Style>
     );

@@ -7,7 +7,7 @@ function IconLetterColor(props) {
       <mask
         id="prefix_maskLetter_a"
         style={{
-          maskType: "alpha"
+          maskType: "alpha",
         }}
         maskUnits="userSpaceOnUse"
         x={0}

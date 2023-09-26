@@ -24,82 +24,82 @@ const germanLetters = [
   {
     code: 28,
     labels: {
-      primary: "Z"
-    }
+      primary: "Z",
+    },
   },
   {
     code: 47,
     labels: {
-      primary: "Ü"
+      primary: "Ü",
     },
-    newGroupName: "Letters"
+    newGroupName: "Letters",
   },
   {
     code: 51,
     labels: {
-      primary: "Ö"
+      primary: "Ö",
     },
-    newGroupName: "Letters"
+    newGroupName: "Letters",
   },
   {
     code: 52,
     labels: {
-      primary: "Ä"
+      primary: "Ä",
     },
-    newGroupName: "Letters"
+    newGroupName: "Letters",
   },
   {
     code: 29,
     labels: {
-      primary: "Y"
-    }
-  }
+      primary: "Y",
+    },
+  },
 ];
 
 const germanModifierKeys = [
   {
     code: 53,
     labels: {
-      primary: "^"
-    }
+      primary: "^",
+    },
   },
   {
     code: 45,
     labels: {
-      primary: "ß"
+      primary: "ß",
     },
-    newGroupName: "Letters"
+    newGroupName: "Letters",
   },
   {
     code: 46,
     labels: {
-      primary: "´"
-    }
+      primary: "´",
+    },
   },
   {
     code: 48,
     labels: {
-      primary: "+"
-    }
+      primary: "+",
+    },
   },
   {
     code: 49,
     labels: {
-      primary: "#"
-    }
+      primary: "#",
+    },
   },
   {
     code: 56,
     labels: {
-      primary: "-"
-    }
+      primary: "-",
+    },
   },
   {
     code: 100,
     labels: {
-      primary: "<"
-    }
-  }
+      primary: "<",
+    },
+  },
 ];
 
 const germanNumpad = [
@@ -107,9 +107,9 @@ const germanNumpad = [
     code: 99,
     labels: {
       top: "Num",
-      primary: ","
-    }
-  }
+      primary: ",",
+    },
+  },
 ];
 
 const altCtrlGerman = {
@@ -118,82 +118,82 @@ const altCtrlGerman = {
     {
       code: 799,
       labels: {
-        primary: "²"
-      }
+        primary: "²",
+      },
     },
     {
       code: 800,
       labels: {
-        primary: "³"
-      }
+        primary: "³",
+      },
     },
     {
       code: 804,
       labels: {
-        primary: "{"
-      }
+        primary: "{",
+      },
     },
     {
       code: 805,
       labels: {
-        primary: "["
-      }
+        primary: "[",
+      },
     },
     {
       code: 806,
       labels: {
-        primary: "]"
-      }
+        primary: "]",
+      },
     },
     {
       code: 807,
       labels: {
-        primary: "}"
-      }
+        primary: "}",
+      },
     },
     {
       code: 813,
       labels: {
-        primary: "\\"
-      }
+        primary: "\\",
+      },
     },
     {
       code: 788,
       labels: {
-        primary: "@"
-      }
+        primary: "@",
+      },
     },
     {
       code: 776,
       labels: {
-        primary: "€"
-      }
+        primary: "€",
+      },
     },
     {
       code: 816,
       labels: {
-        primary: "~"
-      }
+        primary: "~",
+      },
     },
     {
       code: 817,
       labels: {
-        primary: "|"
-      }
+        primary: "|",
+      },
     },
     {
       code: 784,
       labels: {
-        primary: "µ"
-      }
+        primary: "µ",
+      },
     },
     {
       code: 868,
       labels: {
-        primary: "|"
-      }
-    }
-  ]
+        primary: "|",
+      },
+    },
+  ],
 };
 
 const altGrGerman = {
@@ -202,82 +202,82 @@ const altGrGerman = {
     {
       code: 1055,
       labels: {
-        primary: "²"
-      }
+        primary: "²",
+      },
     },
     {
       code: 1056,
       labels: {
-        primary: "³"
-      }
+        primary: "³",
+      },
     },
     {
       code: 1060,
       labels: {
-        primary: "{"
-      }
+        primary: "{",
+      },
     },
     {
       code: 1061,
       labels: {
-        primary: "["
-      }
+        primary: "[",
+      },
     },
     {
       code: 1062,
       labels: {
-        primary: "]"
-      }
+        primary: "]",
+      },
     },
     {
       code: 1063,
       labels: {
-        primary: "}"
-      }
+        primary: "}",
+      },
     },
     {
       code: 1069,
       labels: {
-        primary: "\\"
-      }
+        primary: "\\",
+      },
     },
     {
       code: 1044,
       labels: {
-        primary: "@"
-      }
+        primary: "@",
+      },
     },
     {
       code: 1032,
       labels: {
-        primary: "€"
-      }
+        primary: "€",
+      },
     },
     {
       code: 1072,
       labels: {
-        primary: "~"
-      }
+        primary: "~",
+      },
     },
     {
       code: 1073,
       labels: {
-        primary: "|"
-      }
+        primary: "|",
+      },
     },
     {
       code: 1040,
       labels: {
-        primary: "µ"
-      }
+        primary: "µ",
+      },
     },
     {
       code: 1124,
       labels: {
-        primary: "|"
-      }
-    }
-  ]
+        primary: "|",
+      },
+    },
+  ],
 };
 
 const shiftModifierGerman = {
@@ -286,100 +286,100 @@ const shiftModifierGerman = {
     {
       code: 2101,
       labels: {
-        primary: "°"
-      }
+        primary: "°",
+      },
     },
     {
       code: 2079,
       labels: {
-        primary: '"'
-      }
+        primary: '"',
+      },
     },
     {
       code: 2080,
       labels: {
-        primary: "§"
-      }
+        primary: "§",
+      },
     },
     {
       code: 2083,
       labels: {
-        primary: "&"
-      }
+        primary: "&",
+      },
     },
     {
       code: 2084,
       labels: {
-        primary: "/"
-      }
+        primary: "/",
+      },
     },
     {
       code: 2085,
       labels: {
-        primary: "("
-      }
+        primary: "(",
+      },
     },
     {
       code: 2086,
       labels: {
-        primary: ")"
-      }
+        primary: ")",
+      },
     },
     {
       code: 2087,
       labels: {
-        primary: "="
-      }
+        primary: "=",
+      },
     },
     {
       code: 2093,
       labels: {
-        primary: "?"
-      }
+        primary: "?",
+      },
     },
     {
       code: 2094,
       labels: {
-        primary: "`"
-      }
+        primary: "`",
+      },
     },
     {
       code: 2096,
       labels: {
-        primary: "*"
-      }
+        primary: "*",
+      },
     },
     {
       code: 2097,
       labels: {
-        primary: "'"
-      }
+        primary: "'",
+      },
     },
     {
       code: 2102,
       labels: {
-        primary: ";"
-      }
+        primary: ";",
+      },
     },
     {
       code: 2103,
       labels: {
-        primary: ":"
-      }
+        primary: ":",
+      },
     },
     {
       code: 2104,
       labels: {
-        primary: "_"
-      }
+        primary: "_",
+      },
     },
     {
       code: 2148,
       labels: {
-        primary: ">"
-      }
-    }
-  ]
+        primary: ">",
+      },
+    },
+  ],
 };
 
 const german = germanLetters.concat(germanModifierKeys, germanNumpad);
@@ -509,7 +509,7 @@ const germanModifiedTables = [
   DualUseLayer5Tables,
   DualUseLayer6Tables,
   DualUseLayer7Tables,
-  DualUseLayer8Tables
+  DualUseLayer8Tables,
 ];
 
 export { german as default, germanModifiedTables };

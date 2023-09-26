@@ -16,12 +16,12 @@
  */
 document.onkeyup = keyup;
 document.onkeydown = keydown;
-var inputs = [];
-var timer = 0;
-var timercap = null;
-var on = 0;
-var playing = 0;
-var order = 0;
+let inputs = [];
+let timer = 0;
+let timercap = null;
+let on = 0;
+let playing = 0;
+let order = 0;
 function keydown(event) {
   event = event || window.event;
   if (event.keyCode === 191) {
@@ -60,14 +60,14 @@ function play() {
     order = 0;
   }
 }
-var maintime = setInterval(function () {
+const maintime = setInterval(() => {
   timer++;
   if (playing == 1) {
     while (inputs[order][2] < timer) {
-      var evnt = new KeyboardEvent(inputs[order][1], { keyCode: inputs[order][0], which: inputs[order][0] });
-      //for (var x = 0; x < document.all.length; x++) {
-      //document.all[x].dispatchEvent(evnt);
-      //}
+      const evnt = new KeyboardEvent(inputs[order][1], { keyCode: inputs[order][0], which: inputs[order][0] });
+      // for (var x = 0; x < document.all.length; x++) {
+      // document.all[x].dispatchEvent(evnt);
+      // }
       window.dispatchEvent(evnt);
       order++;
     }

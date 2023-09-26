@@ -6,7 +6,7 @@ function IconLayersSm(props) {
       <mask
         id="prefix_LayersSm_a"
         style={{
-          maskType: "alpha"
+          maskType: "alpha",
         }}
         maskUnits="userSpaceOnUse"
         x={0}

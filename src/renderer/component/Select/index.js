@@ -33,6 +33,7 @@ import SelectMacroCustomDropdown from "./SelectMacroCustomDropdown";
 import SelectMouseCustomDropdown from "./SelectMouseCustomDropdown";
 import SelectShotModifierCustomDropdown from "./SelectShotModifierCustomDropdown";
 import SelectSuperKeyCustomDropdown from "./SelectSuperKeyCustomDropdown";
+import SelectWirelessDropdown from "./SelectWirelessDropdown";
 
 export {
   LayerSelector,
@@ -53,5 +54,6 @@ export {
   SelectMacroCustomDropdown,
   SelectMouseCustomDropdown,
   SelectShotModifierCustomDropdown,
-  SelectSuperKeyCustomDropdown
+  SelectSuperKeyCustomDropdown,
+  SelectWirelessDropdown,
 };

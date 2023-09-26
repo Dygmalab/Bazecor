@@ -67,9 +67,10 @@ class SelectLayersLock extends Component {
       { name: "Layer Lock 7", keynum: 17498 },
       { name: "Layer Lock 8", keynum: 17499 },
       { name: "Layer Lock 9", keynum: 17500 },
-      { name: "Layer Lock 10", keynum: 17501 }
+      { name: "Layer Lock 10", keynum: 17501 },
     ];
   }
+
   render() {
     const { action, keyCode, onKeySelect, activeTab } = this.props;
     const KC = keyCode.base + keyCode.modified;
@@ -97,20 +98,18 @@ class SelectLayersLock extends Component {
             </div>
           </Dropdown.Toggle>
           <Dropdown.Menu>
-            {this.layerLock.map((item, id) => {
-              return (
-                <Dropdown.Item
-                  eventKey={item.keynum}
-                  key={`item-${id}`}
-                  disabled={item.keynum == -1}
-                  className={`${keyCode.modified > 0 && item.keynum == keyCode.base + keyCode.modified ? "active" : ""}`}
-                >
-                  <div className="dropdownInner">
-                    <div className="dropdownItem">{`${id + 1}. ${item.name}`}</div>
-                  </div>
-                </Dropdown.Item>
-              );
-            })}
+            {this.layerLock.map((item, id) => (
+              <Dropdown.Item
+                eventKey={item.keynum}
+                key={`item-${id}`}
+                disabled={item.keynum == -1}
+                className={`${keyCode.modified > 0 && item.keynum == keyCode.base + keyCode.modified ? "active" : ""}`}
+              >
+                <div className="dropdownInner">
+                  <div className="dropdownItem">{`${id + 1}. ${item.name}`}</div>
+                </div>
+              </Dropdown.Item>
+            ))}
           </Dropdown.Menu>
         </Dropdown>
       </Style>

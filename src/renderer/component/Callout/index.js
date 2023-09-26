@@ -16,4 +16,4 @@
 
 import Callout from "./Callout";
 
-export { Callout as default };
+export default Callout;

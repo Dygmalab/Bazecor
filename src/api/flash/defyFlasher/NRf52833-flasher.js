@@ -17,7 +17,7 @@
 import async from "async";
 import Focus from "../../focus";
 
-var MAX_MS = 2000;
+const MAX_MS = 2000;
 
 const PACKET_SIZE = 4096;
 
@@ -25,7 +25,7 @@ const TYPE_DAT = 0x00;
 const TYPE_ESA = 0x02;
 const TYPE_ELA = 0x04;
 
-var focus = new Focus();
+const focus = new Focus();
 
 /**
  * Writes data to the given bootloader serial port.
@@ -38,22 +38,22 @@ var focus = new Focus();
  * @param {function} cb - An optional callback to run once all the functions have completed.
  */
 function write_cb(buffer, cb) {
-  var buf = new Uint8Array(buffer);
+  const buf = new Uint8Array(buffer);
 
-  //the MAX transmission of a serial write is 200 bytes, we therefore
-  //marshall the given buffer into 200 byte chunks, and serialise their execution.
-  var send = [];
+  // the MAX transmission of a serial write is 200 bytes, we therefore
+  // marshall the given buffer into 200 byte chunks, and serialise their execution.
+  const send = [];
 
-  var total = buf.length;
+  let total = buf.length;
 
-  var bufferTotal = 0;
+  let bufferTotal = 0;
 
   while (bufferTotal < buf.length) {
-    var bufferSize = total < 200 ? total : 200;
+    const bufferSize = total < 200 ? total : 200;
 
-    //closure to ensure our buffer is local.
+    // closure to ensure our buffer is local.
     (buf2send => {
-      send.push(function (callback) {
+      send.push(callback => {
         if (focus._port.write(Buffer.from(buf2send))) {
           callback(null);
         } else {
@@ -66,7 +66,7 @@ function write_cb(buffer, cb) {
     total -= bufferSize;
   }
 
-  //execute!
+  // execute!
   async.series(send, (err, result) => {
     cb(err);
     console.log(result);
@@ -78,10 +78,10 @@ function write_cb(buffer, cb) {
  * @param {function} callback - An optional callback to run once all the functions have completed.
  */
 async function read_cb(callback) {
-  var time = 0;
+  let time = 0;
 
-  var timeout = function () {
-    setTimeout(function () {
+  const timeout = function () {
+    setTimeout(() => {
       time += 50;
       focus._port.drain(err => {
         if (err) {
@@ -102,15 +102,15 @@ async function read_cb(callback) {
  * Closes the connection to the bootloader.
  * @param {function} cb - An optional callback to run once all the functions have completed.
  */
-function disconnect_cb(cb) {
-  focus.close();
+async function disconnect_cb(cb) {
+  await focus.close();
   cb(null, "");
 }
 
 function padToN(number, numberToPad) {
-  var str = "";
+  let str = "";
 
-  for (var i = 0; i < numberToPad; i++) str = str + "0";
+  for (let i = 0; i < numberToPad; i++) str += "0";
 
   return (str + number).slice(-numberToPad);
 }
@@ -120,17 +120,17 @@ function num2hexstr(number, paddedTo) {
 }
 
 function hex2byte(hex) {
-  var bytes = [];
+  const bytes = [];
 
-  for (var i = 0; i < hex.length; i += 2) bytes.push(parseInt(hex.substr(i, 2), 16));
+  for (let i = 0; i < hex.length; i += 2) bytes.push(parseInt(hex.substr(i, 2), 16));
 
   return bytes;
 }
 
 function str2ab(str) {
-  var buf = new ArrayBuffer(str.length); // 2 bytes for each char
-  var bufView = new Uint8Array(buf);
-  for (var i = 0, strLen = str.length; i < strLen; i++) {
+  const buf = new ArrayBuffer(str.length); // 2 bytes for each char
+  const bufView = new Uint8Array(buf);
+  for (let i = 0, strLen = str.length; i < strLen; i++) {
     bufView[i] = str.charCodeAt(i) & 0xff;
   }
   return buf;
@@ -142,28 +142,28 @@ function str2ab(str) {
  * @returns {object} Щbject for use in firmware.
  */
 function ihex_decode(line) {
-  var offset = 0;
+  let offset = 0;
 
-  var byteCount = parseInt(line.substr(offset, 2), 16);
+  const byteCount = parseInt(line.substr(offset, 2), 16);
   offset += 2;
-  var address = parseInt(line.substr(offset, 4), 16);
+  const address = parseInt(line.substr(offset, 4), 16);
   offset += 4;
-  var recordtype = parseInt(line.substr(offset, 2), 16);
+  const recordtype = parseInt(line.substr(offset, 2), 16);
   offset += 2;
 
-  var byteData = hex2byte(line.substr(offset, byteCount * 2));
+  const byteData = hex2byte(line.substr(offset, byteCount * 2));
 
-  var bytes = new ArrayBuffer(byteData.length);
-  var bytesView = new Uint8Array(bytes, 0, byteData.length);
+  const bytes = new ArrayBuffer(byteData.length);
+  const bytesView = new Uint8Array(bytes, 0, byteData.length);
 
-  for (var i = 0; i < byteData.length; i++) bytesView[i] = byteData[i];
+  for (let i = 0; i < byteData.length; i++) bytesView[i] = byteData[i];
 
   return {
     str: line,
     len: byteCount,
-    address: address,
+    address,
     type: recordtype,
-    data: bytesView
+    data: bytesView,
   };
 }
 
@@ -182,9 +182,9 @@ function ihex_decode(line) {
  * Start app:       S#                       - Start the application
  *
  */
-var NRf52833 = {
+const NRf52833 = {
   flash: (lines, stateUpdate, finished) => {
-    var func_array = [];
+    const func_array = [];
 
     // let fileData = fs.readFileSync(firmware, { encoding: "utf8" });
     // fileData = fileData.replace(/(?:\r\n|\r|\n)/g, "");
@@ -192,14 +192,14 @@ var NRf52833 = {
     // var lines = fileData.split(":");
     // lines.splice(0, 1);
 
-    var dataObjects = [];
-    var total = 0;
-    var segment = 0;
-    var linear = 0;
-    var auxData = [];
+    const dataObjects = [];
+    let total = 0;
+    let segment = 0;
+    let linear = 0;
+    const auxData = [];
 
     for (var i = 0; i < lines.length; i++) {
-      var hex = ihex_decode(lines[i]);
+      const hex = ihex_decode(lines[i]);
 
       if (hex.type == TYPE_ESA) {
         segment = parseInt(hex.str.substr(8, hex.len * 2), 16) * 16;
@@ -217,41 +217,41 @@ var NRf52833 = {
 
       if (hex.type == TYPE_DAT) {
         total += hex.len;
-        if (segment > 0) hex.address = hex.address + segment;
-        if (linear > 0) hex.address = hex.address + linear;
+        if (segment > 0) hex.address += segment;
+        if (linear > 0) hex.address += linear;
         auxData.push(hex.data);
         dataObjects.push(hex);
       }
       //   console.log(num2hexstr(segment, 8), linear, num2hexstr(aux), num2hexstr(hex.address));
     }
     const totalSaved = total;
-    var hexCount = 0;
-    var address = dataObjects[0].address;
+    let hexCount = 0;
+    let { address } = dataObjects[0];
 
     //ERASE device
     func_array.push(function (callback) {
       write_cb(str2ab("E" + num2hexstr(dataObjects[0].address, 8) + "#"), callback);
     });
-    func_array.push(function (callback) {
+    func_array.push(callback => {
       read_cb(callback);
     });
 
     var state = 1,
       stateT = 50;
     while (total > 0) {
-      var bufferSize = total < PACKET_SIZE ? total : PACKET_SIZE;
+      let bufferSize = total < PACKET_SIZE ? total : PACKET_SIZE;
 
-      var buffer = new ArrayBuffer(bufferSize);
+      let buffer = new ArrayBuffer(bufferSize);
 
-      var bufferTotal = 0;
+      let bufferTotal = 0;
 
       while (bufferTotal < bufferSize) {
-        var currentHex = dataObjects[hexCount];
+        const currentHex = dataObjects[hexCount];
 
         if (bufferSize - currentHex.len < bufferTotal) {
-          //break early, we cannot completely fill the buffer.
+          // break early, we cannot completely fill the buffer.
           bufferSize = bufferTotal;
-          var t = buffer.slice(0, bufferTotal);
+          const t = buffer.slice(0, bufferTotal);
           buffer = t;
           break;
         }
@@ -262,7 +262,7 @@ var NRf52833 = {
         bufferTotal += currentHex.len;
       }
 
-      //Closure to make sure we localise variables
+      // Closure to make sure we localise variables
       (function (localAddress, localBufferSize, localBuffer) {
         //tell the NRf52833 the size of data being sent.
         func_array.push(function (callback) {
@@ -301,26 +301,26 @@ var NRf52833 = {
     // });
 
     // START APPLICATION
-    func_array.push(function (callback) {
+    func_array.push(callback => {
       write_cb(str2ab("S#"), callback);
     });
 
-    //wait for ACK
-    func_array.push(function (callback) {
+    // wait for ACK
+    func_array.push(callback => {
       read_cb(callback);
     });
 
-    //DISCONNECT
-    func_array.push(function (callback) {
+    // DISCONNECT
+    func_array.push(callback => {
       disconnect_cb(callback);
     });
 
-    //execute our functions in series!
-    async.series(func_array, function (err, results) {
+    // execute our functions in series!
+    async.series(func_array, (err, results) => {
       if (err) finished(true, results);
       else finished(false, "");
     });
-  }
+  },
 };
 
 export default NRf52833;

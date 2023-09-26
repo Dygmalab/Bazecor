@@ -14,9 +14,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import GeneralSettings from "./GeneralSettings";
-import BackupSettings from "./BackupSettings";
-import NeuronSettings from "./NeuronSettings";
 import AdvancedSettings from "./AdvancedSettings";
+import BackupSettings from "./BackupSettings";
+import BatterySettings from "./BatterySettings";
+import EnergyManagement from "./EnergyManagement";
+import GeneralSettings from "./GeneralSettings";
+import NeuronSettings from "./NeuronSettings";
+import RFSettings from "./RFSettings";
 
-export { GeneralSettings, BackupSettings, NeuronSettings, AdvancedSettings };
+export { AdvancedSettings, BackupSettings, BatterySettings, EnergyManagement, GeneralSettings, NeuronSettings, RFSettings };

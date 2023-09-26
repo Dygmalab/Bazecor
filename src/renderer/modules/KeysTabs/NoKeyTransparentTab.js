@@ -54,15 +54,7 @@ class NoKeyTransparentTab extends Component {
                 onClick={() => {
                   onKeySelect(0);
                 }}
-                selected={
-                  keyCode !== undefined && keyCode.base
-                    ? keyCode.base + keyCode.modified == 0
-                      ? true
-                      : false
-                    : keyCode == 0
-                    ? true
-                    : false
-                }
+                selected={keyCode !== undefined && keyCode.base ? keyCode.base + keyCode.modified == 0 : keyCode == 0}
               />
             </div>
             <div className="keysButtonsList">
@@ -73,15 +65,7 @@ class NoKeyTransparentTab extends Component {
                 onClick={() => {
                   onKeySelect(65535);
                 }}
-                selected={
-                  keyCode !== undefined && keyCode.base
-                    ? keyCode.base + keyCode.modified == 65535
-                      ? true
-                      : false
-                    : keyCode == 65535
-                    ? true
-                    : false
-                }
+                selected={keyCode !== undefined && keyCode.base ? keyCode.base + keyCode.modified == 65535 : keyCode == 65535}
               />
             </div>
           </div>

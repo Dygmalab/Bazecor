@@ -1,0 +1,45 @@
+name: Testing
+
+on:
+  push:
+    branches:
+      - "*"
+      - "!main"
+      - "!development"
+  pull_request:
+    branches:
+      - "*"
+      - "!main"
+      - "!development"
+
+jobs:
+  testing:
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: macos-12
+          - os: windows-2019
+          - os: ubuntu-20.04
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+      - run: npm install -g yarn
+      - if: runner.os == 'Linux'
+        run: sudo apt update && sudo apt install libudev-dev
+      - name: Cache node_modules
+        id: cache-node-modules
+        uses: actions/cache@v3
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-${{ hashFiles('package.json', 'yarn.lock') }}
+      - name: Install node_modules
+        if: steps.cache-node-modules.outputs.cache-hit != 'true'
+        run: yarn install --frozen-lockfile --network-timeout 300000 # sometimes yarn takes time, therefore, we increase the timeout
+      - run: yarn run test
+      # - run: yarn run lint

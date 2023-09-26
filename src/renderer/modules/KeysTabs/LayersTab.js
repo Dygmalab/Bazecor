@@ -55,7 +55,17 @@ class LayersTab extends Component {
       <Styles className={`${isStandardView ? "standardViewTab" : ""} tabsLayer`}>
         <div className="tabContentWrapper">
           <Title text={i18n.editor.layers.title} headingLevel={isStandardView ? 3 : 4} />
-          {isStandardView ? <Callout content={i18n.editor.standardView.layers.callOut} size="sm" /> : null}
+
+          {isStandardView ? (
+            <Callout
+              content={i18n.editor.standardView.layers.callOut}
+              size="sm"
+              hasVideo
+              media="wsx0OtkKXXg"
+              videoTitle="This 60% keyboard can have +2500 keys!"
+              videoDuration="6:50"
+            />
+          ) : null}
           {showLayerSwitch ? (
             <div className="cardButtons">
               <Title text={i18n.editor.standardView.layers.layerSwitch} headingLevel={4} />
@@ -66,70 +76,70 @@ class LayersTab extends Component {
                   onClick={() => {
                     this.props.onLayerPress(layerDeltaSwitch + 0);
                   }}
-                  selected={layerDeltaSwitch + 0 == keyCode ? true : false}
+                  selected={layerDeltaSwitch + 0 == keyCode}
                 />
                 <ButtonConfig
                   buttonText="2"
                   onClick={() => {
                     this.props.onLayerPress(layerDeltaSwitch + 1);
                   }}
-                  selected={layerDeltaSwitch + 1 == keyCode ? true : false}
+                  selected={layerDeltaSwitch + 1 == keyCode}
                 />
                 <ButtonConfig
                   buttonText="3"
                   onClick={() => {
                     this.props.onLayerPress(layerDeltaSwitch + 2);
                   }}
-                  selected={layerDeltaSwitch + 2 == keyCode ? true : false}
+                  selected={layerDeltaSwitch + 2 == keyCode}
                 />
                 <ButtonConfig
                   buttonText="4"
                   onClick={() => {
                     this.props.onLayerPress(layerDeltaSwitch + 3);
                   }}
-                  selected={layerDeltaSwitch + 3 == keyCode ? true : false}
+                  selected={layerDeltaSwitch + 3 == keyCode}
                 />
                 <ButtonConfig
                   buttonText="5"
                   onClick={() => {
                     this.props.onLayerPress(layerDeltaSwitch + 4);
                   }}
-                  selected={layerDeltaSwitch + 4 == keyCode ? true : false}
+                  selected={layerDeltaSwitch + 4 == keyCode}
                 />
                 <ButtonConfig
                   buttonText="6"
                   onClick={() => {
                     this.props.onLayerPress(layerDeltaSwitch + 5);
                   }}
-                  selected={layerDeltaSwitch + 5 == keyCode ? true : false}
+                  selected={layerDeltaSwitch + 5 == keyCode}
                 />
                 <ButtonConfig
                   buttonText="7"
                   onClick={() => {
                     this.props.onLayerPress(layerDeltaSwitch + 6);
                   }}
-                  selected={layerDeltaSwitch + 6 == keyCode ? true : false}
+                  selected={layerDeltaSwitch + 6 == keyCode}
                 />
                 <ButtonConfig
                   buttonText="8"
                   onClick={() => {
                     this.props.onLayerPress(layerDeltaSwitch + 7);
                   }}
-                  selected={layerDeltaSwitch + 7 == keyCode ? true : false}
+                  selected={layerDeltaSwitch + 7 == keyCode}
                 />
                 <ButtonConfig
                   buttonText="9"
                   onClick={() => {
                     this.props.onLayerPress(layerDeltaSwitch + 8);
                   }}
-                  selected={layerDeltaSwitch + 8 == keyCode ? true : false}
+                  selected={layerDeltaSwitch + 8 == keyCode}
                 />
                 <ButtonConfig
                   buttonText="10"
                   onClick={() => {
                     this.props.onLayerPress(layerDeltaSwitch + 9);
                   }}
-                  selected={layerDeltaSwitch + 9 == keyCode ? true : false}
+                  selected={layerDeltaSwitch + 9 == keyCode}
                 />
               </div>
             </div>
@@ -145,70 +155,70 @@ class LayersTab extends Component {
                 onClick={() => {
                   this.props.onLayerPress(layerDelta + 0);
                 }}
-                selected={layerDelta + 0 == keyCode ? true : false}
+                selected={layerDelta + 0 == keyCode}
               />
               <ButtonConfig
                 buttonText="2"
                 onClick={() => {
                   this.props.onLayerPress(layerDelta + 1);
                 }}
-                selected={layerDelta + 1 == keyCode ? true : false}
+                selected={layerDelta + 1 == keyCode}
               />
               <ButtonConfig
                 buttonText="3"
                 onClick={() => {
                   this.props.onLayerPress(layerDelta + 2);
                 }}
-                selected={layerDelta + 2 == keyCode ? true : false}
+                selected={layerDelta + 2 == keyCode}
               />
               <ButtonConfig
                 buttonText="4"
                 onClick={() => {
                   this.props.onLayerPress(layerDelta + 3);
                 }}
-                selected={layerDelta + 3 == keyCode ? true : false}
+                selected={layerDelta + 3 == keyCode}
               />
               <ButtonConfig
                 buttonText="5"
                 onClick={() => {
                   this.props.onLayerPress(layerDelta + 4);
                 }}
-                selected={layerDelta + 4 == keyCode ? true : false}
+                selected={layerDelta + 4 == keyCode}
               />
               <ButtonConfig
                 buttonText="6"
                 onClick={() => {
                   this.props.onLayerPress(layerDelta + 5);
                 }}
-                selected={layerDelta + 5 == keyCode ? true : false}
+                selected={layerDelta + 5 == keyCode}
               />
               <ButtonConfig
                 buttonText="7"
                 onClick={() => {
                   this.props.onLayerPress(layerDelta + 6);
                 }}
-                selected={layerDelta + 6 == keyCode ? true : false}
+                selected={layerDelta + 6 == keyCode}
               />
               <ButtonConfig
                 buttonText="8"
                 onClick={() => {
                   this.props.onLayerPress(layerDelta + 7);
                 }}
-                selected={layerDelta + 7 == keyCode ? true : false}
+                selected={layerDelta + 7 == keyCode}
               />
               <ButtonConfig
                 buttonText="9"
                 onClick={() => {
                   this.props.onLayerPress(layerDelta + 8);
                 }}
-                selected={layerDelta + 8 == keyCode ? true : false}
+                selected={layerDelta + 8 == keyCode}
               />
               <ButtonConfig
                 buttonText="10"
                 onClick={() => {
                   this.props.onLayerPress(layerDelta + 9);
                 }}
-                selected={layerDelta + 9 == keyCode ? true : false}
+                selected={layerDelta + 9 == keyCode}
               />
             </div>
           </div>

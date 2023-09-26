@@ -157,7 +157,7 @@ const Style = Styled.div`
 
 `;
 
-const SuperkeyPicker = ({
+function SuperkeyPicker({
   selected,
   selectedAction,
   onClick,
@@ -173,11 +173,11 @@ const SuperkeyPicker = ({
   keymapDB,
   changeSelected,
   updateSuper,
-  updateAction
-}) => {
+  updateAction,
+}) {
   const [controlDeleteButton, setControlDeleteButton] = React.useState(false);
   const [keyContent, setKeyContent] = React.useState("Loading...");
-  let action = superkeys[selected] == undefined ? 0 : superkeys[selected].actions[index];
+  const action = superkeys[selected] == undefined ? 0 : superkeys[selected].actions[index];
 
   React.useEffect(() => {
     if (superkeys[selected] == undefined) {
@@ -191,7 +191,7 @@ const SuperkeyPicker = ({
     } else {
       aux = keymapDB.parse(superkeys[selected].actions[index]);
     }
-    //setKeyContent(aux.label);
+    // setKeyContent(aux.label);
     if (superkeys[selected].actions[index]) {
       setControlDeleteButton(true);
     } else {
@@ -204,7 +204,7 @@ const SuperkeyPicker = ({
       }
     }
     if (aux.label) {
-      setKeyContent((aux.extraLabel != undefined ? aux.extraLabel + " " : "") + aux.label);
+      setKeyContent((aux.extraLabel != undefined ? `${aux.extraLabel} ` : "") + aux.label);
     }
   }, [index, keymapDB, macros, selected, superkeys, action]);
 
@@ -231,6 +231,6 @@ const SuperkeyPicker = ({
       </div>
     </Style>
   );
-};
+}
 
 export default SuperkeyPicker;

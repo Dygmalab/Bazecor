@@ -2,7 +2,7 @@ import * as React from "react";
 
 function IconKeyboardSelector(props) {
   return (
-    <svg width={42} height={42} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+    <svg width={42} height={42} viewBox="0 0 42 42" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
       <g clipPath="url(#prefix__clip0_1914_216318)" fill="currentColor">
         <path d="M14.054 9.5H6.25a2 2 0 00-2 2v19a2 2 0 002 2h29.5c.477 0 .916-.167 1.26-.447L35.429 30.5H6.25v-19h9.84l-2.036-2z" />
         <path d="M19.397 14.75h-.147v2h2.183l-2.036-2zM24.741 20H24.5v2h2.277l-2.036-2zM8.75 16.75h3.5v-2h-3.5v2zM14 16.75h3.5v-2H14v2zM8.75 22h3.5v-2h-3.5v2zM14 22h3.5v-2H14v2zM19.25 22h3.5v-2h-3.5v2zM14 27.25h14v-2H14v2z" />

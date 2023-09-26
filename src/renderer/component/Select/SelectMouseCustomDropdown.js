@@ -17,8 +17,8 @@
 
 import React, { Component } from "react";
 import Styled from "styled-components";
-import i18n from "../../i18n";
 import Dropdown from "react-bootstrap/Dropdown";
+import i18n from "../../i18n";
 
 const Style = Styled.div`
 width: 100%;
@@ -161,21 +161,22 @@ class SelectMouseCustomDropdown extends Component {
       { name: i18n.editor.superkeys.specialKeys.middle, keynum: 20548 },
       { name: i18n.editor.superkeys.specialKeys.right, keynum: 20546 },
       { name: i18n.editor.superkeys.specialKeys.back, keynum: 20552 },
-      { name: i18n.editor.superkeys.specialKeys.fwd, keynum: 20560 }
+      { name: i18n.editor.superkeys.specialKeys.fwd, keynum: 20560 },
     ];
     this.mouseMovement = [
       { name: i18n.editor.superkeys.specialKeys.left, keynum: 20484 },
       { name: i18n.editor.superkeys.specialKeys.right, keynum: 20488 },
       { name: i18n.editor.superkeys.specialKeys.up, keynum: 20481 },
-      { name: i18n.editor.superkeys.specialKeys.down, keynum: 20482 }
+      { name: i18n.editor.superkeys.specialKeys.down, keynum: 20482 },
     ];
     this.mouseWheel = [
       { name: i18n.editor.superkeys.specialKeys.left, keynum: 20500 },
       { name: i18n.editor.superkeys.specialKeys.right, keynum: 20504 },
       { name: i18n.editor.superkeys.specialKeys.up, keynum: 20497 },
-      { name: i18n.editor.superkeys.specialKeys.down, keynum: 20498 }
+      { name: i18n.editor.superkeys.specialKeys.down, keynum: 20498 },
     ];
   }
+
   render() {
     const { keyCode, onKeySelect } = this.props;
     const KC = keyCode.base + keyCode.modified;
@@ -197,7 +198,7 @@ class SelectMouseCustomDropdown extends Component {
             <div className="dropdownItemSelected">
               <div className="dropdownItem">
                 <div className="dropdownItem">Mouse events</div>
-                <div className="badge-circle"></div>
+                <div className="badge-circle" />
               </div>
             </div>
           </Dropdown.Toggle>
@@ -209,18 +210,16 @@ class SelectMouseCustomDropdown extends Component {
                   dangerouslySetInnerHTML={{ __html: i18n.editor.superkeys.specialKeys.mouseClick }}
                 />
                 <div className="dropdown-group-buttons">
-                  {this.mouseClick.map((item, id) => {
-                    return (
-                      <Dropdown.Item
-                        eventKey={item.keynum}
-                        key={`mouseClick-${id}`}
-                        disabled={item.keynum == -1}
-                        className={`${item.keynum == keyCode.base + keyCode.modified ? "active" : ""} dropdown-config-button`}
-                      >
-                        <div className="dropdownItem">{item.name}</div>
-                      </Dropdown.Item>
-                    );
-                  })}
+                  {this.mouseClick.map((item, id) => (
+                    <Dropdown.Item
+                      eventKey={item.keynum}
+                      key={`mouseClick-${id}`}
+                      disabled={item.keynum == -1}
+                      className={`${item.keynum == keyCode.base + keyCode.modified ? "active" : ""} dropdown-config-button`}
+                    >
+                      <div className="dropdownItem">{item.name}</div>
+                    </Dropdown.Item>
+                  ))}
                 </div>
               </div>
               <div className="dropdown-group mouseMovement">
@@ -229,18 +228,16 @@ class SelectMouseCustomDropdown extends Component {
                   dangerouslySetInnerHTML={{ __html: i18n.editor.superkeys.specialKeys.mouseMovement }}
                 />
                 <div className="dropdown-group-buttons">
-                  {this.mouseMovement.map((item, id) => {
-                    return (
-                      <Dropdown.Item
-                        eventKey={item.keynum}
-                        key={`mouseMovement-${id}`}
-                        disabled={item.keynum == -1}
-                        className={`${item.keynum == keyCode.base + keyCode.modified ? "active" : ""} dropdown-config-button`}
-                      >
-                        <div className="dropdownItem">{item.name}</div>
-                      </Dropdown.Item>
-                    );
-                  })}
+                  {this.mouseMovement.map((item, id) => (
+                    <Dropdown.Item
+                      eventKey={item.keynum}
+                      key={`mouseMovement-${id}`}
+                      disabled={item.keynum == -1}
+                      className={`${item.keynum == keyCode.base + keyCode.modified ? "active" : ""} dropdown-config-button`}
+                    >
+                      <div className="dropdownItem">{item.name}</div>
+                    </Dropdown.Item>
+                  ))}
                 </div>
               </div>
               <div className="dropdown-group mouseWheel">
@@ -249,18 +246,16 @@ class SelectMouseCustomDropdown extends Component {
                   dangerouslySetInnerHTML={{ __html: i18n.editor.superkeys.specialKeys.mouseWheel }}
                 />
                 <div className="dropdown-group-buttons">
-                  {this.mouseWheel.map((item, id) => {
-                    return (
-                      <Dropdown.Item
-                        eventKey={item.keynum}
-                        key={`mouseWheel-${id}`}
-                        disabled={item.keynum == -1}
-                        className={`${item.keynum == keyCode.base + keyCode.modified ? "active" : ""} dropdown-config-button`}
-                      >
-                        <div className="dropdownItem">{item.name}</div>
-                      </Dropdown.Item>
-                    );
-                  })}
+                  {this.mouseWheel.map((item, id) => (
+                    <Dropdown.Item
+                      eventKey={item.keynum}
+                      key={`mouseWheel-${id}`}
+                      disabled={item.keynum == -1}
+                      className={`${item.keynum == keyCode.base + keyCode.modified ? "active" : ""} dropdown-config-button`}
+                    >
+                      <div className="dropdownItem">{item.name}</div>
+                    </Dropdown.Item>
+                  ))}
                 </div>
               </div>
             </div>

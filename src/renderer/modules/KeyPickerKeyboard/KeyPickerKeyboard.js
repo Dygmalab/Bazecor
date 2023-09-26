@@ -4,7 +4,7 @@ import i18n from "../../i18n";
 
 // Internal components
 import { KeymapDB } from "../../../api/keymap";
-import { Picker } from "./../KeyPickerKeyboard";
+import { Picker } from ".";
 import ListModifiers from "../../component/ListModifiers/ListModifiers";
 
 import ModPicker from "./ModPicker";
@@ -264,7 +264,7 @@ class KeyPickerKeyboard extends Component {
 
     this.keymapDB = new KeymapDB();
 
-    let tempModifs = Array(5);
+    const tempModifs = Array(5);
     let tempActions = props.actions;
     if (props.actions === undefined) {
       tempActions = [[0], [0], [0], [0], [0]];
@@ -290,16 +290,18 @@ class KeyPickerKeyboard extends Component {
       layerData: 0,
       showKB: false,
       pastkeyindex: props.keyIndex,
-      superName: props.superName
+      superName: props.superName,
     };
 
     this.parseAction = this.parseAction.bind(this);
     this.changeTab = this.changeTab.bind(this);
   }
+
   componentDidMount() {
     this.updateSelectorPosition();
     window.addEventListener("resize", this.updateSelectorPosition);
   }
+
   componentDidUpdate() {
     let selectdual = 0;
     const disable = this.props.code === 0;
@@ -321,7 +323,7 @@ class KeyPickerKeyboard extends Component {
       layerData = 0;
     }
 
-    let tempModifs = Array(5);
+    const tempModifs = Array(5);
     let tempActions;
     if (this.props.actions === undefined) {
       tempActions = [0, 0, 0, 0, 0];
@@ -359,10 +361,11 @@ class KeyPickerKeyboard extends Component {
         modifs: tempModifs,
         pastkeyindex: this.props.keyIndex,
         activeTab,
-        superName: this.props.superName
+        superName: this.props.superName,
       });
     }
   }
+
   componentWillUnmount() {
     window.removeEventListener("resize", this.updateSelectorPosition);
   }
@@ -391,7 +394,7 @@ class KeyPickerKeyboard extends Component {
     }
     return this.props.code !== null
       ? this.keymapDB.parse(keycode).extraLabel != undefined
-        ? this.keymapDB.parse(keycode).extraLabel + "." + this.keymapDB.parse(keycode).label
+        ? `${this.keymapDB.parse(keycode).extraLabel}.${this.keymapDB.parse(keycode).label}`
         : this.keymapDB.parse(keycode).label
       : "";
   }
@@ -429,15 +432,15 @@ class KeyPickerKeyboard extends Component {
       }
     }
     if (aux.label) {
-      translatedAction = (aux.extraLabel != undefined ? aux.extraLabel + " " : "") + aux.label;
+      translatedAction = (aux.extraLabel != undefined ? `${aux.extraLabel} ` : "") + aux.label;
     }
     return translatedAction;
   };
 
   render() {
     const { action, actions, showKB, modifs, superName, disable, Keymap, layoutSelectorPosition } = this.state;
-    const { selectedlanguage, kbtype, macros, actTab, superkeys, code, onKeySelect } = this.props;
-    const activeTab = actTab != undefined ? actTab : this.state.activeTab;
+    const { selectedlanguage, kbtype, macros, actTab, superkeys, code, onKeySelect, isWireless } = this.props;
+    const activeTab = actTab !== undefined ? actTab : this.state.activeTab;
     const selKey = this.parseKey(code.base + code.modified);
     const selKeys = actions.map((a, i) => this.parseAction(i));
 
@@ -446,7 +449,7 @@ class KeyPickerKeyboard extends Component {
       .fill()
       .map((_, i) => i + 53980);
 
-    let adjactions = actions;
+    const adjactions = actions;
     if (adjactions.length < 5) {
       while (adjactions.length < 5) {
         adjactions.push(0);
@@ -456,24 +459,24 @@ class KeyPickerKeyboard extends Component {
     const superKeysActions = [
       {
         title: "TAP",
-        icon: <IconKeysPress />
+        icon: <IconKeysPress />,
       },
       {
         title: "HOLD",
-        icon: <IconKeysTapHold />
+        icon: <IconKeysTapHold />,
       },
       {
         title: "TAP & HOLD",
-        icon: <IconKeysHold />
+        icon: <IconKeysHold />,
       },
       {
         title: "2TAP",
-        icon: <IconKeys2Tap />
+        icon: <IconKeys2Tap />,
       },
       {
         title: "2TAP & HOLD",
-        icon: <IconKeys2TapHold />
-      }
+        icon: <IconKeys2TapHold />,
+      },
     ];
 
     return (
@@ -501,20 +504,18 @@ class KeyPickerKeyboard extends Component {
                   <div className="ball-container">
                     <h5 className="ball-title">Preview macro</h5>
                     <div className="ball-inner">
-                      {this.props.macros[KC - 53852].macro.split(" ").map((data, index) => {
-                        return (
-                          <div className="ball" key={`LtrIdx-${index}`}>
-                            {data}
-                          </div>
-                        );
-                      })}
+                      {this.props.macros[KC - 53852].macro.split(" ").map((data, index) => (
+                        <div className="ball" key={`LtrIdx-${index}`}>
+                          {data}
+                        </div>
+                      ))}
                     </div>
                   </div>
                 ) : (
                   <>
-                    <ModPicker key={code} keyCode={code} onKeySelect={onKeySelect}></ModPicker>
+                    <ModPicker key={code} keyCode={code} onKeySelect={onKeySelect} />
                     {actTab == "editor" ? (
-                      <DualFunctionPicker keyCode={code} onKeySelect={onKeySelect} activeTab={activeTab}></DualFunctionPicker>
+                      <DualFunctionPicker keyCode={code} onKeySelect={onKeySelect} activeTab={activeTab} />
                     ) : (
                       <></>
                     )}
@@ -538,6 +539,7 @@ class KeyPickerKeyboard extends Component {
               kbtype={kbtype}
               keyCode={code}
               macros={macros}
+              isWireless={isWireless}
             />
           </div>
         </div>

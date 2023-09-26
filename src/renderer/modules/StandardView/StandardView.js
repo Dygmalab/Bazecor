@@ -1,26 +1,28 @@
 import React from "react";
 
 import Styled from "styled-components";
-import i18n from "../../i18n";
 import Tab from "react-bootstrap/Tab";
 import Nav from "react-bootstrap/Nav";
 
 import Keymap, { KeymapDB } from "../../../api/keymap";
 
-//component
-import { RegularButton } from "../../component/Button";
-import KeyVisualizer from "../KeyVisualizer";
-import CustomTab from "../../component/Tab";
-import KeysTab from "../KeysTabs/KeysTab";
-import NoKeyTransparentTab from "../KeysTabs/NoKeyTransparentTab";
-import LayersTab from "../KeysTabs/LayersTab";
-import MacroTab from "../KeysTabs/MacroTab";
-import SuperkeysTab from "../KeysTabs/SuperkeysTab";
-import MediaAndLightTab from "../KeysTabs/MediaAndLightTab";
-import OneShotTab from "../KeysTabs/OneShotTab";
-import MouseTab from "../KeysTabs/MouseTab";
+// component
+import { RegularButton } from "@Renderer/component/Button";
+import KeyVisualizer from "@Renderer/modules/KeyVisualizer";
+import CustomTab from "@Renderer/component/Tab";
+import KeysTab from "@Renderer/modules/KeysTabs/KeysTab";
+import NoKeyTransparentTab from "@Renderer/modules/KeysTabs/NoKeyTransparentTab";
+import LayersTab from "@Renderer/modules/KeysTabs/LayersTab";
+import MacroTab from "@Renderer/modules/KeysTabs/MacroTab";
+import SuperkeysTab from "@Renderer/modules/KeysTabs/SuperkeysTab";
+import MediaAndLightTab from "@Renderer/modules/KeysTabs/MediaAndLightTab";
+import OneShotTab from "@Renderer/modules/KeysTabs/OneShotTab";
+import MouseTab from "@Renderer/modules/KeysTabs/MouseTab";
+import WirelessTab from "@Renderer/modules/KeysTabs/WirelessTab";
 
-//Icons
+import i18n from "@Renderer/i18n";
+
+// Icons
 import {
   IconKeyboard,
   IconNoKey,
@@ -29,8 +31,9 @@ import {
   IconRobot,
   IconNote,
   IconOneShot,
-  IconThunder
-} from "../../component/Icon";
+  IconThunder,
+  IconWirelessMd,
+} from "@Renderer/component/Icon";
 
 const Styles = Styled.div`
 .standardView {
@@ -226,13 +229,13 @@ export default class StandardView extends React.Component {
     this.inputText = React.createRef();
     this.state = {
       name: props.name,
-      code: 0
+      code: 0,
     };
     this.keymapDB = new KeymapDB();
   }
 
   componentDidUpdate(prevProps) {
-    //console.log("StandardView componentDidUpdate", prevProps.keyIndex, this.props.keyIndex);
+    // console.log("StandardView componentDidUpdate", prevProps.keyIndex, this.props.keyIndex);
     // if(this.props.actTab == "editor") {
 
     // }
@@ -258,11 +261,11 @@ export default class StandardView extends React.Component {
       macroName = "*NotFound*";
     }
     if (keycode >= 53852 && keycode <= 53852 + 128) {
-      if (this.props.code !== null) return this.keymapDB.parse(keycode).extraLabel + "." + macroName;
+      if (this.props.code !== null) return `${this.keymapDB.parse(keycode).extraLabel}.${macroName}`;
     }
     return this.props.code !== null
       ? this.keymapDB.parse(keycode).extraLabel != undefined
-        ? this.keymapDB.parse(keycode).extraLabel + "." + this.keymapDB.parse(keycode).label
+        ? `${this.keymapDB.parse(keycode).extraLabel}.${this.keymapDB.parse(keycode).label}`
         : this.keymapDB.parse(keycode).label
       : "";
   }
@@ -289,7 +292,8 @@ export default class StandardView extends React.Component {
       onKeySelect,
       selectedlanguage,
       showStandardView,
-      superkeys
+      superkeys,
+      isWireless,
     } = this.props;
     let keyCode;
     if (actTab == "super") {
@@ -313,14 +317,14 @@ export default class StandardView extends React.Component {
                   oldValue={oldKey}
                   newValue={selKey}
                   isStandardView={isStandardView}
-                  superkeyAction={`${actTab == "super" ? keyIndex : 5}`}
+                  superkeyAction={`${actTab === "super" ? keyIndex : 5}`}
                 />
                 <Nav className="flex-column tabsWrapper">
                   <CustomTab eventKey="tabKeys" text="Keys" icon={<IconKeyboard />} />
                   <CustomTab eventKey="tabNoKeys" text={i18n.editor.standardView.noKeyTransparent} icon={<IconNoKey />} />
                   <CustomTab eventKey="tabLayers" text={i18n.editor.standardView.layers.title} icon={<IconLayers />} />
                   <CustomTab eventKey="tabMacro" text={i18n.editor.standardView.macros.title} icon={<IconRobot />} />
-                  {actTab != "super" ? (
+                  {actTab !== "super" ? (
                     <>
                       <CustomTab
                         eventKey="tabSuperKeys"
@@ -335,6 +339,9 @@ export default class StandardView extends React.Component {
                   )}
                   <CustomTab eventKey="tabMedia" text={i18n.editor.standardView.mediaAndLED.title} icon={<IconNote />} />
                   <CustomTab eventKey="tabMouse" text={i18n.editor.standardView.mouse.title} icon={<IconMouse />} />
+                  {isWireless && (
+                    <CustomTab eventKey="tabWireless" text={i18n.app.menu.wireless} icon={<IconWirelessMd strokeWidth={1.2} />} />
+                  )}
                 </Nav>
               </div>
               <div className="colContentTabs">
@@ -359,7 +366,7 @@ export default class StandardView extends React.Component {
                       <LayersTab
                         onLayerPress={onKeySelect}
                         keyCode={keyCode}
-                        showLayerSwitch={actTab == "super" ? false : true}
+                        showLayerSwitch={actTab !== "super"}
                         isStandardView={isStandardView}
                         actTab={actTab}
                       />
@@ -373,7 +380,7 @@ export default class StandardView extends React.Component {
                         isStandardView={isStandardView}
                       />
                     </Tab.Pane>
-                    {actTab != "super" ? (
+                    {actTab !== "super" ? (
                       <Tab.Pane eventKey="tabSuperKeys">
                         <SuperkeysTab
                           actions={actions}
@@ -387,7 +394,7 @@ export default class StandardView extends React.Component {
                     ) : (
                       ""
                     )}
-                    {actTab != "super" ? (
+                    {actTab !== "super" ? (
                       <Tab.Pane eventKey="tabOneShot">
                         <OneShotTab keyCode={keyCode} onKeySelect={onKeySelect} isStandardView={isStandardView} />
                       </Tab.Pane>
@@ -400,19 +407,24 @@ export default class StandardView extends React.Component {
                     <Tab.Pane eventKey="tabMouse">
                       <MouseTab onAddSpecial={this.onAddSpecial} keyCode={keyCode} isStandardView={isStandardView} />
                     </Tab.Pane>
+                    {isWireless && (
+                      <Tab.Pane eventKey="tabWireless">
+                        <WirelessTab keyCode={keyCode} onKeySelect={onKeySelect} isStandardView={isStandardView} />
+                      </Tab.Pane>
+                    )}
                   </Tab.Content>
                 </div>
                 <div className="contentFooter">
                   <div className="d-flex justify-content-end">
                     <RegularButton
                       onClick={() => closeStandardView(this.state.code)}
-                      style={"outline"}
+                      styles="outline transp-bg"
                       size="sm"
                       buttonText={i18n.app.cancelPending.button}
                     />
                     <RegularButton
                       onClick={handleSave}
-                      style={"outline gradient"}
+                      styles="outline gradient"
                       size="sm"
                       buttonText={i18n.dialog.applyChanges}
                     />

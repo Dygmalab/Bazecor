@@ -27,31 +27,31 @@ const Defy_wireless = {
     urls: [
       {
         name: "Homepage",
-        url: "https://www.dygma.com/defy/"
-      }
-    ]
+        url: "https://www.dygma.com/defy/",
+      },
+    ],
   },
   usb: {
     vendorId: 0x35ef,
-    productId: 0x0012
+    productId: 0x0012,
   },
   keyboard: {
     rows: 5,
-    columns: 16
+    columns: 16,
   },
   keyboardUnderglow: {
     rows: 2,
-    columns: 89
+    columns: 89,
   },
   RGBWMode: true,
   components: {
-    keymap: KeymapDEFY
+    keymap: KeymapDEFY,
   },
 
   instructions: {
     en: {
-      updateInstructions: `To update the firmware, the keyboard needs a special reset. When the countdown starts, press and hold the Escape key. Soon after the countdown finished, the Neuron's light should start a blue pulsing pattern, and the flashing will proceed. At this point, you should release the Escape key.`
-    }
+      updateInstructions: `To update the firmware, the keyboard needs a special reset. When the countdown starts, press and hold the Escape key. Soon after the countdown finished, the Neuron's light should start a blue pulsing pattern, and the flashing will proceed. At this point, you should release the Escape key.`,
+    },
   },
 
   flash: async (_, filename, bootloader, flashDefyWireless, stateUpdate) => {
@@ -65,21 +65,15 @@ const Defy_wireless = {
       flashDefyWireless.saveBackupFile();
     });
   },
-
   isDeviceSupported: async port => {
-    // let focus = new Focus();
-    // let layout = localStorage.getItem(port.serialNumber);
-    // if (!layout) {
-    //   focus._port && focus._port.path === port.path
-    //     ? await focus.open(focus._port, port.device, null)
-    //     : await focus.open(port.path, port.device, null);
-    //   layout = await focus.command("hardware.layout");
-    //   focus.close();
-    //   localStorage.setItem(port.serialNumber, layout);
-    // }
-    // return layout.trim() === "ANSI";
-    return 1;
-  }
+    // const focus = new Focus();
+    // focus._port && focus._port.path === port.path
+    //   ? await focus.open(focus._port, port.device, null)
+    //   : await focus.open(port.path, port.device, null);
+    // port.serialNumber = await focus.command("hardware.chip_id");
+    // let result = await focus.close();
+    return true;
+  },
 };
 
 const Defy_wirelessBootloader = {
@@ -91,19 +85,19 @@ const Defy_wirelessBootloader = {
     urls: [
       {
         name: "Homepage",
-        url: "https://www.dygma.com/defy/"
-      }
-    ]
+        url: "https://www.dygma.com/defy/",
+      },
+    ],
   },
   usb: {
     vendorId: 0x35ef,
-    productId: 0x0013
+    productId: 0x0013,
   },
   bootloader: true,
   instructions: {
     en: {
-      updateInstructions: `To update the firmware, press the button at the bottom. You must not hold any key on the keyboard while the countdown is in progress, nor afterwards, until the flashing is finished. When the countdown reaches zero, the Neuron's light should start a blue pulsing pattern, and flashing will then proceed. `
-    }
+      updateInstructions: `To update the firmware, press the button at the bottom. You must not hold any key on the keyboard while the countdown is in progress, nor afterwards, until the flashing is finished. When the countdown reaches zero, the Neuron's light should start a blue pulsing pattern, and flashing will then proceed. `,
+    },
   },
   flash: async (_, filename, bootloader, flashDefyWireless, stateUpdate) => {
     return new Promise(async (resolve, reject) => {
@@ -114,7 +108,7 @@ const Defy_wirelessBootloader = {
         reject(e);
       }
     });
-  }
+  },
 };
 
 export { Defy_wireless, Defy_wirelessBootloader };

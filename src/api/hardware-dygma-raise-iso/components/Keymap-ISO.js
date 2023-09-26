@@ -42,7 +42,7 @@ const led_map = [
     3 + LEDS_LEFT_KEYS,
     2 + LEDS_LEFT_KEYS,
     1 + LEDS_LEFT_KEYS,
-    0 + LEDS_LEFT_KEYS
+    0 + LEDS_LEFT_KEYS,
   ],
   [
     7,
@@ -60,7 +60,7 @@ const led_map = [
     10 + LEDS_LEFT_KEYS,
     9 + LEDS_LEFT_KEYS,
     8 + LEDS_LEFT_KEYS,
-    7 + LEDS_LEFT_KEYS
+    7 + LEDS_LEFT_KEYS,
   ],
   [
     13,
@@ -78,7 +78,7 @@ const led_map = [
     18 + LEDS_LEFT_KEYS,
     17 + LEDS_LEFT_KEYS,
     16 + LEDS_LEFT_KEYS,
-    15 + LEDS_LEFT_KEYS
+    15 + LEDS_LEFT_KEYS,
   ],
   [
     19,
@@ -96,7 +96,7 @@ const led_map = [
     25 + LEDS_LEFT_KEYS,
     24 + LEDS_LEFT_KEYS,
     23 + LEDS_LEFT_KEYS,
-    22 + LEDS_LEFT_KEYS
+    22 + LEDS_LEFT_KEYS,
   ],
   [
     26,
@@ -114,8 +114,8 @@ const led_map = [
     31 + LEDS_LEFT_KEYS,
     30 + LEDS_LEFT_KEYS,
     29 + LEDS_LEFT_KEYS,
-    28 + LEDS_LEFT_KEYS
-  ]
+    28 + LEDS_LEFT_KEYS,
+  ],
 ];
 
 const no_key_led_map = [...Array.apply(0, Array(63)).map((_, i) => i + UNDERGLOW)];
@@ -126,14 +126,14 @@ const keysRowsPosition = {
   row3: 169,
   row4: 236,
   row5: 303,
-  row6: 370
+  row6: 370,
 };
 
 class KeymapISO extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      underglowIndex: null
+      underglowIndex: null,
     };
   }
 
@@ -159,22 +159,18 @@ class KeymapISO extends React.Component {
       }
       return aux;
     };
-    let keyIndex = (row, col) => {
-      return col !== undefined ? row * 16 + col : row + 11;
-    };
+    const keyIndex = (row, col) => (col !== undefined ? row * 16 + col : row + 11);
 
-    let getLabel = (row, col) => {
-      return keymap[keyIndex(row, col)];
-    };
+    const getLabel = (row, col) => keymap[keyIndex(row, col)];
 
-    let isSelected = (row, col) => {
+    const isSelected = (row, col) => {
       const selectIndex = keyIndex(row, col);
       return underglowIndex ? underglowIndex == selectIndex : this.props.selectedKey == selectIndex;
     };
 
-    let stroke = (row, col) => (isSelected(row, col) ? (this.props.darkMode ? "#fff" : "#000") : "#b3b3b3");
+    const stroke = (row, col) => (isSelected(row, col) ? (this.props.darkMode ? "#fff" : "#000") : "#b3b3b3");
 
-    let getStrokeWidth = (row, col) => (isSelected(row, col) ? "3.0" : "1.5");
+    const getStrokeWidth = (row, col) => (isSelected(row, col) ? "3.0" : "1.5");
 
     const colormap =
       this.props.colormap ||
@@ -187,21 +183,20 @@ class KeymapISO extends React.Component {
         : Array(16)
             .fill()
             .map(() => ({
-              rgb: "#ffffff"
+              rgb: "#ffffff",
             }));
 
     // console.log("showing BARS", colormap, palette, led_map, no_key_led_map);
-    let getColor = (row, col) => {
-      let ledIndex = col !== undefined ? led_map[parseInt(row)][parseInt(col)] : no_key_led_map[row - UNDERGLOW];
-      let colorIndex = colormap[ledIndex];
+    const getColor = (row, col) => {
+      const ledIndex = col !== undefined ? led_map[parseInt(row)][parseInt(col)] : no_key_led_map[row - UNDERGLOW];
+      const colorIndex = colormap[ledIndex];
       // console.log("testing colors", row, col, ledIndex, colorIndex, row - UNDERGLOW);
-      let color = palette[colorIndex].rgb;
+      const color = palette[colorIndex].rgb;
       return color;
     };
 
-    let getLEDIndex = (row, col) => {
-      return col !== undefined ? led_map[parseInt(row)][parseInt(col)] : no_key_led_map[row - UNDERGLOW];
-    };
+    const getLEDIndex = (row, col) =>
+      col !== undefined ? led_map[parseInt(row)][parseInt(col)] : no_key_led_map[row - UNDERGLOW];
 
     const onClick = e => {
       this.setState({ underglowIndex: null });
@@ -222,7 +217,7 @@ class KeymapISO extends React.Component {
      * @props {string} class - className of the button
      * @props {string} textLength length of the text if the button is small and additional text is longer then button
      */
-    const GetCurrentKeyElement = props => {
+    function GetCurrentKeyElement(props) {
       return (
         <span
           className={props.class}
@@ -236,7 +231,7 @@ class KeymapISO extends React.Component {
           {props.word}{" "}
         </span>
       );
-    };
+    }
     /**
      * getDivideKeys - divides words on keyboard keys
      * @param {string} str Name of key
@@ -256,24 +251,24 @@ class KeymapISO extends React.Component {
         return (
           <GetCurrentKeyElement key={new Date() + Math.random()} x={xCord} y={String(+yCord - 5)} word={str} class="key-config" />
         );
-      } else if (str.length === 1) {
+      }
+      if (str.length === 1) {
         return shortWords.map((word, index) => (
           <GetCurrentKeyElement key={index} x={xCord} y={String(+yCord - 5)} word={word} class="letter-config" />
         ));
-      } else if (str.toLowerCase().endsWith("to")) {
+      }
+      if (str.toLowerCase().endsWith("to")) {
         return longWords.map((word, index) => (
           <span key={index}>
             <GetCurrentKeyElement x={xCord} y={String(+yCord + 9)} dy={0} word={word.slice(0, word.indexOf("to") - 1)} />
             <GetCurrentKeyElement x={String(+xCord - 5)} y={String(+yCord + 9)} dy={interval} word={word.slice(-2)} />
           </span>
         ));
-      } else if (
-        str.length > 8 &&
-        smallKey === true &&
-        (str.startsWith("C+") || str.startsWith("A+") || str.startsWith("AGr+"))
-      ) {
+      }
+      if (str.length > 8 && smallKey === true && (str.startsWith("C+") || str.startsWith("A+") || str.startsWith("AGr+"))) {
         return <GetCurrentKeyElement key={new Date() + Math.random()} x={xCord} y={yCord} word={str} textLength="50" />;
-      } else if (
+      }
+      if (
         longWords.length === 1 &&
         shortWords.length > 7 &&
         !str.startsWith("C+") &&
@@ -283,21 +278,23 @@ class KeymapISO extends React.Component {
       ) {
         return longWords.map((word, index) => (
           <span key={index}>
-            <GetCurrentKeyElement x={xCord} y={String(+yCord - 10)} word={word.slice(0, 4)} dy={"0"} />
+            <GetCurrentKeyElement x={xCord} y={String(+yCord - 10)} word={word.slice(0, 4)} dy="0" />
             <GetCurrentKeyElement x={xCord} y={String(+yCord - 10)} word={word.slice(4)} dy={interval} />
           </span>
         ));
-      } else if (longWords.length === 1) {
+      }
+      if (longWords.length === 1) {
         return longWords.map((word, index) => <GetCurrentKeyElement key={index} x={xCord} y={yCord} word={word} />);
-      } else if (longWords.length > 1 && smallKey === true) {
+      }
+      if (longWords.length > 1 && smallKey === true) {
         return longWords.map((word, index) => (
           <GetCurrentKeyElement key={index} x={xCord} y={String(+yCord - 10)} word={word} dy={index ? interval : index} />
         ));
-      } else if (longWords.length > 1) {
-        return <GetCurrentKeyElement key={new Date() + Math.random()} x={xCord} y={yCord} word={str} />;
-      } else {
+      }
+      if (longWords.length > 1) {
         return <GetCurrentKeyElement key={new Date() + Math.random()} x={xCord} y={yCord} word={str} />;
       }
+      return <GetCurrentKeyElement key={new Date() + Math.random()} x={xCord} y={yCord} word={str} />;
     };
     const topsArr = ["LEDEFF.", "SCadet", "Steno", "M.Btn", "Leader", "Numpad", "Media", "OSL", "Mouse", "M.Wheel", "M.Warp"];
     const topsArrTransfer = ["SHIFTTO", "LockTo"];
@@ -338,8 +335,8 @@ class KeymapISO extends React.Component {
       >
         <Neuron
           selectedLED={this.props.selectedLED}
-          visibility={this.props.showUnderglow || this.props.isStandardView ? true : false}
-          clickAble={this.props.isStandardView && !this.props.showUnderglow ? false : true}
+          visibility={!!(this.props.showUnderglow || this.props.isStandardView)}
+          clickAble={!(this.props.isStandardView && !this.props.showUnderglow)}
           color="#b4b4b4"
           id="neuron_led"
           onClick={e => {
@@ -1678,8 +1675,8 @@ class KeymapISO extends React.Component {
               setUndeglowIndex(71, e);
             }}
             selectedLED={this.props.selectedLED}
-            visibility={this.props.showUnderglow || this.props.isStandardView ? true : false}
-            clickAble={this.props.isStandardView && !this.props.showUnderglow ? false : true}
+            visibility={!!(this.props.showUnderglow || this.props.isStandardView)}
+            clickAble={!(this.props.isStandardView && !this.props.showUnderglow)}
             fill={getColor(71)}
             stroke={stroke(71)}
             strokeWidth={getStrokeWidth(71)}
@@ -1696,8 +1693,8 @@ class KeymapISO extends React.Component {
               setUndeglowIndex(72, e);
             }}
             selectedLED={this.props.selectedLED}
-            visibility={this.props.showUnderglow || this.props.isStandardView ? true : false}
-            clickAble={this.props.isStandardView && !this.props.showUnderglow ? false : true}
+            visibility={!!(this.props.showUnderglow || this.props.isStandardView)}
+            clickAble={!(this.props.isStandardView && !this.props.showUnderglow)}
             fill={getColor(72)}
             stroke={stroke(72)}
             strokeWidth={getStrokeWidth(72)}
@@ -1714,8 +1711,8 @@ class KeymapISO extends React.Component {
               setUndeglowIndex(73, e);
             }}
             selectedLED={this.props.selectedLED}
-            visibility={this.props.showUnderglow || this.props.isStandardView ? true : false}
-            clickAble={this.props.isStandardView && !this.props.showUnderglow ? false : true}
+            visibility={!!(this.props.showUnderglow || this.props.isStandardView)}
+            clickAble={!(this.props.isStandardView && !this.props.showUnderglow)}
             fill={getColor(73)}
             stroke={stroke(73)}
             strokeWidth={getStrokeWidth(73)}
@@ -1732,8 +1729,8 @@ class KeymapISO extends React.Component {
               setUndeglowIndex(74, e);
             }}
             selectedLED={this.props.selectedLED}
-            visibility={this.props.showUnderglow || this.props.isStandardView ? true : false}
-            clickAble={this.props.isStandardView && !this.props.showUnderglow ? false : true}
+            visibility={!!(this.props.showUnderglow || this.props.isStandardView)}
+            clickAble={!(this.props.isStandardView && !this.props.showUnderglow)}
             fill={getColor(74)}
             stroke={stroke(74)}
             strokeWidth={getStrokeWidth(74)}
@@ -1750,8 +1747,8 @@ class KeymapISO extends React.Component {
               setUndeglowIndex(75, e);
             }}
             selectedLED={this.props.selectedLED}
-            visibility={this.props.showUnderglow || this.props.isStandardView ? true : false}
-            clickAble={this.props.isStandardView && !this.props.showUnderglow ? false : true}
+            visibility={!!(this.props.showUnderglow || this.props.isStandardView)}
+            clickAble={!(this.props.isStandardView && !this.props.showUnderglow)}
             fill={getColor(75)}
             stroke={stroke(75)}
             strokeWidth={getStrokeWidth(75)}
@@ -1768,8 +1765,8 @@ class KeymapISO extends React.Component {
               setUndeglowIndex(76, e);
             }}
             selectedLED={this.props.selectedLED}
-            visibility={this.props.showUnderglow || this.props.isStandardView ? true : false}
-            clickAble={this.props.isStandardView && !this.props.showUnderglow ? false : true}
+            visibility={!!(this.props.showUnderglow || this.props.isStandardView)}
+            clickAble={!(this.props.isStandardView && !this.props.showUnderglow)}
             fill={getColor(76)}
             stroke={stroke(76)}
             strokeWidth={getStrokeWidth(76)}
@@ -1786,8 +1783,8 @@ class KeymapISO extends React.Component {
               setUndeglowIndex(77, e);
             }}
             selectedLED={this.props.selectedLED}
-            visibility={this.props.showUnderglow || this.props.isStandardView ? true : false}
-            clickAble={this.props.isStandardView && !this.props.showUnderglow ? false : true}
+            visibility={!!(this.props.showUnderglow || this.props.isStandardView)}
+            clickAble={!(this.props.isStandardView && !this.props.showUnderglow)}
             fill={getColor(77)}
             stroke={stroke(77)}
             strokeWidth={getStrokeWidth(77)}
@@ -1804,8 +1801,8 @@ class KeymapISO extends React.Component {
               setUndeglowIndex(78, e);
             }}
             selectedLED={this.props.selectedLED}
-            visibility={this.props.showUnderglow || this.props.isStandardView ? true : false}
-            clickAble={this.props.isStandardView && !this.props.showUnderglow ? false : true}
+            visibility={!!(this.props.showUnderglow || this.props.isStandardView)}
+            clickAble={!(this.props.isStandardView && !this.props.showUnderglow)}
             fill={getColor(78)}
             stroke={stroke(78)}
             strokeWidth={getStrokeWidth(78)}
@@ -1822,8 +1819,8 @@ class KeymapISO extends React.Component {
               setUndeglowIndex(79, e);
             }}
             selectedLED={this.props.selectedLED}
-            visibility={this.props.showUnderglow || this.props.isStandardView ? true : false}
-            clickAble={this.props.isStandardView && !this.props.showUnderglow ? false : true}
+            visibility={!!(this.props.showUnderglow || this.props.isStandardView)}
+            clickAble={!(this.props.isStandardView && !this.props.showUnderglow)}
             fill={getColor(79)}
             stroke={stroke(79)}
             strokeWidth={getStrokeWidth(79)}
@@ -1840,8 +1837,8 @@ class KeymapISO extends React.Component {
               setUndeglowIndex(80, e);
             }}
             selectedLED={this.props.selectedLED}
-            visibility={this.props.showUnderglow || this.props.isStandardView ? true : false}
-            clickAble={this.props.isStandardView && !this.props.showUnderglow ? false : true}
+            visibility={!!(this.props.showUnderglow || this.props.isStandardView)}
+            clickAble={!(this.props.isStandardView && !this.props.showUnderglow)}
             fill={getColor(80)}
             stroke={stroke(80)}
             strokeWidth={getStrokeWidth(80)}
@@ -1858,8 +1855,8 @@ class KeymapISO extends React.Component {
               setUndeglowIndex(81, e);
             }}
             selectedLED={this.props.selectedLED}
-            visibility={this.props.showUnderglow || this.props.isStandardView ? true : false}
-            clickAble={this.props.isStandardView && !this.props.showUnderglow ? false : true}
+            visibility={!!(this.props.showUnderglow || this.props.isStandardView)}
+            clickAble={!(this.props.isStandardView && !this.props.showUnderglow)}
             fill={getColor(81)}
             stroke={stroke(81)}
             strokeWidth={getStrokeWidth(81)}
@@ -1876,8 +1873,8 @@ class KeymapISO extends React.Component {
               setUndeglowIndex(82, e);
             }}
             selectedLED={this.props.selectedLED}
-            visibility={this.props.showUnderglow || this.props.isStandardView ? true : false}
-            clickAble={this.props.isStandardView && !this.props.showUnderglow ? false : true}
+            visibility={!!(this.props.showUnderglow || this.props.isStandardView)}
+            clickAble={!(this.props.isStandardView && !this.props.showUnderglow)}
             fill={getColor(82)}
             stroke={stroke(82)}
             strokeWidth={getStrokeWidth(82)}
@@ -1894,8 +1891,8 @@ class KeymapISO extends React.Component {
               setUndeglowIndex(83, e);
             }}
             selectedLED={this.props.selectedLED}
-            visibility={this.props.showUnderglow || this.props.isStandardView ? true : false}
-            clickAble={this.props.isStandardView && !this.props.showUnderglow ? false : true}
+            visibility={!!(this.props.showUnderglow || this.props.isStandardView)}
+            clickAble={!(this.props.isStandardView && !this.props.showUnderglow)}
             fill={getColor(83)}
             stroke={stroke(83)}
             strokeWidth={getStrokeWidth(83)}
@@ -1912,8 +1909,8 @@ class KeymapISO extends React.Component {
               setUndeglowIndex(84, e);
             }}
             selectedLED={this.props.selectedLED}
-            visibility={this.props.showUnderglow || this.props.isStandardView ? true : false}
-            clickAble={this.props.isStandardView && !this.props.showUnderglow ? false : true}
+            visibility={!!(this.props.showUnderglow || this.props.isStandardView)}
+            clickAble={!(this.props.isStandardView && !this.props.showUnderglow)}
             fill={getColor(84)}
             stroke={stroke(84)}
             strokeWidth={getStrokeWidth(84)}
@@ -1930,8 +1927,8 @@ class KeymapISO extends React.Component {
               setUndeglowIndex(85, e);
             }}
             selectedLED={this.props.selectedLED}
-            visibility={this.props.showUnderglow || this.props.isStandardView ? true : false}
-            clickAble={this.props.isStandardView && !this.props.showUnderglow ? false : true}
+            visibility={!!(this.props.showUnderglow || this.props.isStandardView)}
+            clickAble={!(this.props.isStandardView && !this.props.showUnderglow)}
             fill={getColor(85)}
             stroke={stroke(85)}
             strokeWidth={getStrokeWidth(85)}
@@ -1948,8 +1945,8 @@ class KeymapISO extends React.Component {
               setUndeglowIndex(86, e);
             }}
             selectedLED={this.props.selectedLED}
-            visibility={this.props.showUnderglow || this.props.isStandardView ? true : false}
-            clickAble={this.props.isStandardView && !this.props.showUnderglow ? false : true}
+            visibility={!!(this.props.showUnderglow || this.props.isStandardView)}
+            clickAble={!(this.props.isStandardView && !this.props.showUnderglow)}
             fill={getColor(86)}
             stroke={stroke(86)}
             strokeWidth={getStrokeWidth(86)}
@@ -1967,8 +1964,8 @@ class KeymapISO extends React.Component {
               setUndeglowIndex(87, e);
             }}
             selectedLED={this.props.selectedLED}
-            visibility={this.props.showUnderglow || this.props.isStandardView ? true : false}
-            clickAble={this.props.isStandardView && !this.props.showUnderglow ? false : true}
+            visibility={!!(this.props.showUnderglow || this.props.isStandardView)}
+            clickAble={!(this.props.isStandardView && !this.props.showUnderglow)}
             fill={getColor(87)}
             stroke={stroke(87)}
             strokeWidth={getStrokeWidth(87)}
@@ -1985,8 +1982,8 @@ class KeymapISO extends React.Component {
               setUndeglowIndex(88, e);
             }}
             selectedLED={this.props.selectedLED}
-            visibility={this.props.showUnderglow || this.props.isStandardView ? true : false}
-            clickAble={this.props.isStandardView && !this.props.showUnderglow ? false : true}
+            visibility={!!(this.props.showUnderglow || this.props.isStandardView)}
+            clickAble={!(this.props.isStandardView && !this.props.showUnderglow)}
             fill={getColor(88)}
             stroke={stroke(88)}
             strokeWidth={getStrokeWidth(88)}
@@ -2003,8 +2000,8 @@ class KeymapISO extends React.Component {
               setUndeglowIndex(89, e);
             }}
             selectedLED={this.props.selectedLED}
-            visibility={this.props.showUnderglow || this.props.isStandardView ? true : false}
-            clickAble={this.props.isStandardView && !this.props.showUnderglow ? false : true}
+            visibility={!!(this.props.showUnderglow || this.props.isStandardView)}
+            clickAble={!(this.props.isStandardView && !this.props.showUnderglow)}
             fill={getColor(89)}
             stroke={stroke(89)}
             strokeWidth={getStrokeWidth(89)}
@@ -2022,8 +2019,8 @@ class KeymapISO extends React.Component {
               setUndeglowIndex(90, e);
             }}
             selectedLED={this.props.selectedLED}
-            visibility={this.props.showUnderglow || this.props.isStandardView ? true : false}
-            clickAble={this.props.isStandardView && !this.props.showUnderglow ? false : true}
+            visibility={!!(this.props.showUnderglow || this.props.isStandardView)}
+            clickAble={!(this.props.isStandardView && !this.props.showUnderglow)}
             fill={getColor(90)}
             stroke={stroke(90)}
             strokeWidth={getStrokeWidth(90)}
@@ -2040,8 +2037,8 @@ class KeymapISO extends React.Component {
               setUndeglowIndex(91, e);
             }}
             selectedLED={this.props.selectedLED}
-            visibility={this.props.showUnderglow || this.props.isStandardView ? true : false}
-            clickAble={this.props.isStandardView && !this.props.showUnderglow ? false : true}
+            visibility={!!(this.props.showUnderglow || this.props.isStandardView)}
+            clickAble={!(this.props.isStandardView && !this.props.showUnderglow)}
             fill={getColor(91)}
             stroke={stroke(91)}
             strokeWidth={getStrokeWidth(91)}
@@ -2058,8 +2055,8 @@ class KeymapISO extends React.Component {
               setUndeglowIndex(92, e);
             }}
             selectedLED={this.props.selectedLED}
-            visibility={this.props.showUnderglow || this.props.isStandardView ? true : false}
-            clickAble={this.props.isStandardView && !this.props.showUnderglow ? false : true}
+            visibility={!!(this.props.showUnderglow || this.props.isStandardView)}
+            clickAble={!(this.props.isStandardView && !this.props.showUnderglow)}
             fill={getColor(92)}
             stroke={stroke(92)}
             strokeWidth={getStrokeWidth(92)}
@@ -2076,8 +2073,8 @@ class KeymapISO extends React.Component {
               setUndeglowIndex(93, e);
             }}
             selectedLED={this.props.selectedLED}
-            visibility={this.props.showUnderglow || this.props.isStandardView ? true : false}
-            clickAble={this.props.isStandardView && !this.props.showUnderglow ? false : true}
+            visibility={!!(this.props.showUnderglow || this.props.isStandardView)}
+            clickAble={!(this.props.isStandardView && !this.props.showUnderglow)}
             fill={getColor(93)}
             stroke={stroke(93)}
             strokeWidth={getStrokeWidth(93)}
@@ -2094,8 +2091,8 @@ class KeymapISO extends React.Component {
               setUndeglowIndex(94, e);
             }}
             selectedLED={this.props.selectedLED}
-            visibility={this.props.showUnderglow || this.props.isStandardView ? true : false}
-            clickAble={this.props.isStandardView && !this.props.showUnderglow ? false : true}
+            visibility={!!(this.props.showUnderglow || this.props.isStandardView)}
+            clickAble={!(this.props.isStandardView && !this.props.showUnderglow)}
             fill={getColor(94)}
             stroke={stroke(94)}
             strokeWidth={getStrokeWidth(94)}
@@ -2112,8 +2109,8 @@ class KeymapISO extends React.Component {
               setUndeglowIndex(95, e);
             }}
             selectedLED={this.props.selectedLED}
-            visibility={this.props.showUnderglow || this.props.isStandardView ? true : false}
-            clickAble={this.props.isStandardView && !this.props.showUnderglow ? false : true}
+            visibility={!!(this.props.showUnderglow || this.props.isStandardView)}
+            clickAble={!(this.props.isStandardView && !this.props.showUnderglow)}
             fill={getColor(95)}
             stroke={stroke(95)}
             strokeWidth={getStrokeWidth(95)}
@@ -2131,8 +2128,8 @@ class KeymapISO extends React.Component {
               setUndeglowIndex(96, e);
             }}
             selectedLED={this.props.selectedLED}
-            visibility={this.props.showUnderglow || this.props.isStandardView ? true : false}
-            clickAble={this.props.isStandardView && !this.props.showUnderglow ? false : true}
+            visibility={!!(this.props.showUnderglow || this.props.isStandardView)}
+            clickAble={!(this.props.isStandardView && !this.props.showUnderglow)}
             fill={getColor(96)}
             stroke={stroke(96)}
             strokeWidth={getStrokeWidth(96)}
@@ -2149,8 +2146,8 @@ class KeymapISO extends React.Component {
               setUndeglowIndex(97, e);
             }}
             selectedLED={this.props.selectedLED}
-            visibility={this.props.showUnderglow || this.props.isStandardView ? true : false}
-            clickAble={this.props.isStandardView && !this.props.showUnderglow ? false : true}
+            visibility={!!(this.props.showUnderglow || this.props.isStandardView)}
+            clickAble={!(this.props.isStandardView && !this.props.showUnderglow)}
             fill={getColor(97)}
             stroke={stroke(97)}
             strokeWidth={getStrokeWidth(97)}
@@ -2167,8 +2164,8 @@ class KeymapISO extends React.Component {
               setUndeglowIndex(98, e);
             }}
             selectedLED={this.props.selectedLED}
-            visibility={this.props.showUnderglow || this.props.isStandardView ? true : false}
-            clickAble={this.props.isStandardView && !this.props.showUnderglow ? false : true}
+            visibility={!!(this.props.showUnderglow || this.props.isStandardView)}
+            clickAble={!(this.props.isStandardView && !this.props.showUnderglow)}
             fill={getColor(98)}
             stroke={stroke(98)}
             strokeWidth={getStrokeWidth(98)}
@@ -2185,8 +2182,8 @@ class KeymapISO extends React.Component {
               setUndeglowIndex(69, e);
             }}
             selectedLED={this.props.selectedLED}
-            visibility={this.props.showUnderglow || this.props.isStandardView ? true : false}
-            clickAble={this.props.isStandardView && !this.props.showUnderglow ? false : true}
+            visibility={!!(this.props.showUnderglow || this.props.isStandardView)}
+            clickAble={!(this.props.isStandardView && !this.props.showUnderglow)}
             fill={getColor(69)}
             stroke={stroke(69)}
             strokeWidth={getStrokeWidth(69)}
@@ -2203,8 +2200,8 @@ class KeymapISO extends React.Component {
               setUndeglowIndex(70, e);
             }}
             selectedLED={this.props.selectedLED}
-            visibility={this.props.showUnderglow || this.props.isStandardView ? true : false}
-            clickAble={this.props.isStandardView && !this.props.showUnderglow ? false : true}
+            visibility={!!(this.props.showUnderglow || this.props.isStandardView)}
+            clickAble={!(this.props.isStandardView && !this.props.showUnderglow)}
             fill={getColor(70)}
             stroke={stroke(70)}
             strokeWidth={getStrokeWidth(70)}
@@ -2223,8 +2220,8 @@ class KeymapISO extends React.Component {
               setUndeglowIndex(107, e);
             }}
             selectedLED={this.props.selectedLED}
-            visibility={this.props.showUnderglow || this.props.isStandardView ? true : false}
-            clickAble={this.props.isStandardView && !this.props.showUnderglow ? false : true}
+            visibility={!!(this.props.showUnderglow || this.props.isStandardView)}
+            clickAble={!(this.props.isStandardView && !this.props.showUnderglow)}
             fill={getColor(107)}
             stroke={stroke(107)}
             strokeWidth={getStrokeWidth(107)}
@@ -2241,8 +2238,8 @@ class KeymapISO extends React.Component {
               setUndeglowIndex(106, e);
             }}
             selectedLED={this.props.selectedLED}
-            visibility={this.props.showUnderglow || this.props.isStandardView ? true : false}
-            clickAble={this.props.isStandardView && !this.props.showUnderglow ? false : true}
+            visibility={!!(this.props.showUnderglow || this.props.isStandardView)}
+            clickAble={!(this.props.isStandardView && !this.props.showUnderglow)}
             fill={getColor(106)}
             stroke={stroke(106)}
             strokeWidth={getStrokeWidth(106)}
@@ -2259,8 +2256,8 @@ class KeymapISO extends React.Component {
               setUndeglowIndex(105, e);
             }}
             selectedLED={this.props.selectedLED}
-            visibility={this.props.showUnderglow || this.props.isStandardView ? true : false}
-            clickAble={this.props.isStandardView && !this.props.showUnderglow ? false : true}
+            visibility={!!(this.props.showUnderglow || this.props.isStandardView)}
+            clickAble={!(this.props.isStandardView && !this.props.showUnderglow)}
             fill={getColor(105)}
             stroke={stroke(105)}
             strokeWidth={getStrokeWidth(105)}
@@ -2277,8 +2274,8 @@ class KeymapISO extends React.Component {
               setUndeglowIndex(104, e);
             }}
             selectedLED={this.props.selectedLED}
-            visibility={this.props.showUnderglow || this.props.isStandardView ? true : false}
-            clickAble={this.props.isStandardView && !this.props.showUnderglow ? false : true}
+            visibility={!!(this.props.showUnderglow || this.props.isStandardView)}
+            clickAble={!(this.props.isStandardView && !this.props.showUnderglow)}
             fill={getColor(104)}
             stroke={stroke(104)}
             strokeWidth={getStrokeWidth(104)}
@@ -2295,8 +2292,8 @@ class KeymapISO extends React.Component {
               setUndeglowIndex(103, e);
             }}
             selectedLED={this.props.selectedLED}
-            visibility={this.props.showUnderglow || this.props.isStandardView ? true : false}
-            clickAble={this.props.isStandardView && !this.props.showUnderglow ? false : true}
+            visibility={!!(this.props.showUnderglow || this.props.isStandardView)}
+            clickAble={!(this.props.isStandardView && !this.props.showUnderglow)}
             fill={getColor(103)}
             stroke={stroke(103)}
             strokeWidth={getStrokeWidth(103)}
@@ -2313,8 +2310,8 @@ class KeymapISO extends React.Component {
               setUndeglowIndex(102, e);
             }}
             selectedLED={this.props.selectedLED}
-            visibility={this.props.showUnderglow || this.props.isStandardView ? true : false}
-            clickAble={this.props.isStandardView && !this.props.showUnderglow ? false : true}
+            visibility={!!(this.props.showUnderglow || this.props.isStandardView)}
+            clickAble={!(this.props.isStandardView && !this.props.showUnderglow)}
             fill={getColor(102)}
             stroke={stroke(102)}
             strokeWidth={getStrokeWidth(102)}
@@ -2331,8 +2328,8 @@ class KeymapISO extends React.Component {
               setUndeglowIndex(101, e);
             }}
             selectedLED={this.props.selectedLED}
-            visibility={this.props.showUnderglow || this.props.isStandardView ? true : false}
-            clickAble={this.props.isStandardView && !this.props.showUnderglow ? false : true}
+            visibility={!!(this.props.showUnderglow || this.props.isStandardView)}
+            clickAble={!(this.props.isStandardView && !this.props.showUnderglow)}
             fill={getColor(101)}
             stroke={stroke(101)}
             strokeWidth={getStrokeWidth(101)}
@@ -2349,8 +2346,8 @@ class KeymapISO extends React.Component {
               setUndeglowIndex(100, e);
             }}
             selectedLED={this.props.selectedLED}
-            visibility={this.props.showUnderglow || this.props.isStandardView ? true : false}
-            clickAble={this.props.isStandardView && !this.props.showUnderglow ? false : true}
+            visibility={!!(this.props.showUnderglow || this.props.isStandardView)}
+            clickAble={!(this.props.isStandardView && !this.props.showUnderglow)}
             fill={getColor(100)}
             stroke={stroke(100)}
             strokeWidth={getStrokeWidth(100)}
@@ -2367,8 +2364,8 @@ class KeymapISO extends React.Component {
               setUndeglowIndex(99, e);
             }}
             selectedLED={this.props.selectedLED}
-            visibility={this.props.showUnderglow || this.props.isStandardView ? true : false}
-            clickAble={this.props.isStandardView && !this.props.showUnderglow ? false : true}
+            visibility={!!(this.props.showUnderglow || this.props.isStandardView)}
+            clickAble={!(this.props.isStandardView && !this.props.showUnderglow)}
             fill={getColor(99)}
             stroke={stroke(99)}
             strokeWidth={getStrokeWidth(99)}
@@ -2385,8 +2382,8 @@ class KeymapISO extends React.Component {
               setUndeglowIndex(130, e);
             }}
             selectedLED={this.props.selectedLED}
-            visibility={this.props.showUnderglow || this.props.isStandardView ? true : false}
-            clickAble={this.props.isStandardView && !this.props.showUnderglow ? false : true}
+            visibility={!!(this.props.showUnderglow || this.props.isStandardView)}
+            clickAble={!(this.props.isStandardView && !this.props.showUnderglow)}
             fill={getColor(130)}
             stroke={stroke(130)}
             strokeWidth={getStrokeWidth(130)}
@@ -2403,8 +2400,8 @@ class KeymapISO extends React.Component {
               setUndeglowIndex(129, e);
             }}
             selectedLED={this.props.selectedLED}
-            visibility={this.props.showUnderglow || this.props.isStandardView ? true : false}
-            clickAble={this.props.isStandardView && !this.props.showUnderglow ? false : true}
+            visibility={!!(this.props.showUnderglow || this.props.isStandardView)}
+            clickAble={!(this.props.isStandardView && !this.props.showUnderglow)}
             fill={getColor(129)}
             stroke={stroke(129)}
             strokeWidth={getStrokeWidth(129)}
@@ -2421,8 +2418,8 @@ class KeymapISO extends React.Component {
               setUndeglowIndex(128, e);
             }}
             selectedLED={this.props.selectedLED}
-            visibility={this.props.showUnderglow || this.props.isStandardView ? true : false}
-            clickAble={this.props.isStandardView && !this.props.showUnderglow ? false : true}
+            visibility={!!(this.props.showUnderglow || this.props.isStandardView)}
+            clickAble={!(this.props.isStandardView && !this.props.showUnderglow)}
             fill={getColor(128)}
             stroke={stroke(128)}
             strokeWidth={getStrokeWidth(128)}
@@ -2439,8 +2436,8 @@ class KeymapISO extends React.Component {
               setUndeglowIndex(127, e);
             }}
             selectedLED={this.props.selectedLED}
-            visibility={this.props.showUnderglow || this.props.isStandardView ? true : false}
-            clickAble={this.props.isStandardView && !this.props.showUnderglow ? false : true}
+            visibility={!!(this.props.showUnderglow || this.props.isStandardView)}
+            clickAble={!(this.props.isStandardView && !this.props.showUnderglow)}
             fill={getColor(127)}
             stroke={stroke(127)}
             strokeWidth={getStrokeWidth(127)}
@@ -2457,8 +2454,8 @@ class KeymapISO extends React.Component {
               setUndeglowIndex(126, e);
             }}
             selectedLED={this.props.selectedLED}
-            visibility={this.props.showUnderglow || this.props.isStandardView ? true : false}
-            clickAble={this.props.isStandardView && !this.props.showUnderglow ? false : true}
+            visibility={!!(this.props.showUnderglow || this.props.isStandardView)}
+            clickAble={!(this.props.isStandardView && !this.props.showUnderglow)}
             fill={getColor(126)}
             stroke={stroke(126)}
             strokeWidth={getStrokeWidth(126)}
@@ -2475,8 +2472,8 @@ class KeymapISO extends React.Component {
               setUndeglowIndex(125, e);
             }}
             selectedLED={this.props.selectedLED}
-            visibility={this.props.showUnderglow || this.props.isStandardView ? true : false}
-            clickAble={this.props.isStandardView && !this.props.showUnderglow ? false : true}
+            visibility={!!(this.props.showUnderglow || this.props.isStandardView)}
+            clickAble={!(this.props.isStandardView && !this.props.showUnderglow)}
             fill={getColor(125)}
             stroke={stroke(125)}
             strokeWidth={getStrokeWidth(125)}
@@ -2493,8 +2490,8 @@ class KeymapISO extends React.Component {
               setUndeglowIndex(124, e);
             }}
             selectedLED={this.props.selectedLED}
-            visibility={this.props.showUnderglow || this.props.isStandardView ? true : false}
-            clickAble={this.props.isStandardView && !this.props.showUnderglow ? false : true}
+            visibility={!!(this.props.showUnderglow || this.props.isStandardView)}
+            clickAble={!(this.props.isStandardView && !this.props.showUnderglow)}
             fill={getColor(124)}
             stroke={stroke(124)}
             strokeWidth={getStrokeWidth(124)}
@@ -2511,8 +2508,8 @@ class KeymapISO extends React.Component {
               setUndeglowIndex(123, e);
             }}
             selectedLED={this.props.selectedLED}
-            visibility={this.props.showUnderglow || this.props.isStandardView ? true : false}
-            clickAble={this.props.isStandardView && !this.props.showUnderglow ? false : true}
+            visibility={!!(this.props.showUnderglow || this.props.isStandardView)}
+            clickAble={!(this.props.isStandardView && !this.props.showUnderglow)}
             fill={getColor(123)}
             stroke={stroke(123)}
             strokeWidth={getStrokeWidth(123)}
@@ -2529,8 +2526,8 @@ class KeymapISO extends React.Component {
               setUndeglowIndex(122, e);
             }}
             selectedLED={this.props.selectedLED}
-            visibility={this.props.showUnderglow || this.props.isStandardView ? true : false}
-            clickAble={this.props.isStandardView && !this.props.showUnderglow ? false : true}
+            visibility={!!(this.props.showUnderglow || this.props.isStandardView)}
+            clickAble={!(this.props.isStandardView && !this.props.showUnderglow)}
             fill={getColor(122)}
             stroke={stroke(122)}
             strokeWidth={getStrokeWidth(122)}
@@ -2547,8 +2544,8 @@ class KeymapISO extends React.Component {
               setUndeglowIndex(121, e);
             }}
             selectedLED={this.props.selectedLED}
-            visibility={this.props.showUnderglow || this.props.isStandardView ? true : false}
-            clickAble={this.props.isStandardView && !this.props.showUnderglow ? false : true}
+            visibility={!!(this.props.showUnderglow || this.props.isStandardView)}
+            clickAble={!(this.props.isStandardView && !this.props.showUnderglow)}
             fill={getColor(121)}
             stroke={stroke(121)}
             strokeWidth={getStrokeWidth(121)}
@@ -2566,8 +2563,8 @@ class KeymapISO extends React.Component {
               setUndeglowIndex(120, e);
             }}
             selectedLED={this.props.selectedLED}
-            visibility={this.props.showUnderglow || this.props.isStandardView ? true : false}
-            clickAble={this.props.isStandardView && !this.props.showUnderglow ? false : true}
+            visibility={!!(this.props.showUnderglow || this.props.isStandardView)}
+            clickAble={!(this.props.isStandardView && !this.props.showUnderglow)}
             fill={getColor(120)}
             stroke={stroke(120)}
             strokeWidth={getStrokeWidth(120)}
@@ -2584,8 +2581,8 @@ class KeymapISO extends React.Component {
               setUndeglowIndex(119, e);
             }}
             selectedLED={this.props.selectedLED}
-            visibility={this.props.showUnderglow || this.props.isStandardView ? true : false}
-            clickAble={this.props.isStandardView && !this.props.showUnderglow ? false : true}
+            visibility={!!(this.props.showUnderglow || this.props.isStandardView)}
+            clickAble={!(this.props.isStandardView && !this.props.showUnderglow)}
             fill={getColor(119)}
             stroke={stroke(119)}
             strokeWidth={getStrokeWidth(119)}
@@ -2602,8 +2599,8 @@ class KeymapISO extends React.Component {
               setUndeglowIndex(118, e);
             }}
             selectedLED={this.props.selectedLED}
-            visibility={this.props.showUnderglow || this.props.isStandardView ? true : false}
-            clickAble={this.props.isStandardView && !this.props.showUnderglow ? false : true}
+            visibility={!!(this.props.showUnderglow || this.props.isStandardView)}
+            clickAble={!(this.props.isStandardView && !this.props.showUnderglow)}
             fill={getColor(118)}
             stroke={stroke(118)}
             strokeWidth={getStrokeWidth(118)}
@@ -2620,8 +2617,8 @@ class KeymapISO extends React.Component {
               setUndeglowIndex(117, e);
             }}
             selectedLED={this.props.selectedLED}
-            visibility={this.props.showUnderglow || this.props.isStandardView ? true : false}
-            clickAble={this.props.isStandardView && !this.props.showUnderglow ? false : true}
+            visibility={!!(this.props.showUnderglow || this.props.isStandardView)}
+            clickAble={!(this.props.isStandardView && !this.props.showUnderglow)}
             fill={getColor(117)}
             stroke={stroke(117)}
             strokeWidth={getStrokeWidth(117)}
@@ -2638,8 +2635,8 @@ class KeymapISO extends React.Component {
               setUndeglowIndex(116, e);
             }}
             selectedLED={this.props.selectedLED}
-            visibility={this.props.showUnderglow || this.props.isStandardView ? true : false}
-            clickAble={this.props.isStandardView && !this.props.showUnderglow ? false : true}
+            visibility={!!(this.props.showUnderglow || this.props.isStandardView)}
+            clickAble={!(this.props.isStandardView && !this.props.showUnderglow)}
             fill={getColor(116)}
             stroke={stroke(116)}
             strokeWidth={getStrokeWidth(116)}
@@ -2656,8 +2653,8 @@ class KeymapISO extends React.Component {
               setUndeglowIndex(115, e);
             }}
             selectedLED={this.props.selectedLED}
-            visibility={this.props.showUnderglow || this.props.isStandardView ? true : false}
-            clickAble={this.props.isStandardView && !this.props.showUnderglow ? false : true}
+            visibility={!!(this.props.showUnderglow || this.props.isStandardView)}
+            clickAble={!(this.props.isStandardView && !this.props.showUnderglow)}
             fill={getColor(115)}
             stroke={stroke(115)}
             strokeWidth={getStrokeWidth(115)}
@@ -2674,8 +2671,8 @@ class KeymapISO extends React.Component {
               setUndeglowIndex(114, e);
             }}
             selectedLED={this.props.selectedLED}
-            visibility={this.props.showUnderglow || this.props.isStandardView ? true : false}
-            clickAble={this.props.isStandardView && !this.props.showUnderglow ? false : true}
+            visibility={!!(this.props.showUnderglow || this.props.isStandardView)}
+            clickAble={!(this.props.isStandardView && !this.props.showUnderglow)}
             fill={getColor(114)}
             stroke={stroke(114)}
             strokeWidth={getStrokeWidth(114)}
@@ -2692,8 +2689,8 @@ class KeymapISO extends React.Component {
               setUndeglowIndex(113, e);
             }}
             selectedLED={this.props.selectedLED}
-            visibility={this.props.showUnderglow || this.props.isStandardView ? true : false}
-            clickAble={this.props.isStandardView && !this.props.showUnderglow ? false : true}
+            visibility={!!(this.props.showUnderglow || this.props.isStandardView)}
+            clickAble={!(this.props.isStandardView && !this.props.showUnderglow)}
             fill={getColor(113)}
             stroke={stroke(113)}
             strokeWidth={getStrokeWidth(113)}
@@ -2710,8 +2707,8 @@ class KeymapISO extends React.Component {
               setUndeglowIndex(112, e);
             }}
             selectedLED={this.props.selectedLED}
-            visibility={this.props.showUnderglow || this.props.isStandardView ? true : false}
-            clickAble={this.props.isStandardView && !this.props.showUnderglow ? false : true}
+            visibility={!!(this.props.showUnderglow || this.props.isStandardView)}
+            clickAble={!(this.props.isStandardView && !this.props.showUnderglow)}
             fill={getColor(112)}
             stroke={stroke(112)}
             strokeWidth={getStrokeWidth(112)}
@@ -2728,8 +2725,8 @@ class KeymapISO extends React.Component {
               setUndeglowIndex(111, e);
             }}
             selectedLED={this.props.selectedLED}
-            visibility={this.props.showUnderglow || this.props.isStandardView ? true : false}
-            clickAble={this.props.isStandardView && !this.props.showUnderglow ? false : true}
+            visibility={!!(this.props.showUnderglow || this.props.isStandardView)}
+            clickAble={!(this.props.isStandardView && !this.props.showUnderglow)}
             fill={getColor(111)}
             stroke={stroke(111)}
             strokeWidth={getStrokeWidth(111)}
@@ -2746,8 +2743,8 @@ class KeymapISO extends React.Component {
               setUndeglowIndex(110, e);
             }}
             selectedLED={this.props.selectedLED}
-            visibility={this.props.showUnderglow || this.props.isStandardView ? true : false}
-            clickAble={this.props.isStandardView && !this.props.showUnderglow ? false : true}
+            visibility={!!(this.props.showUnderglow || this.props.isStandardView)}
+            clickAble={!(this.props.isStandardView && !this.props.showUnderglow)}
             fill={getColor(110)}
             stroke={stroke(110)}
             strokeWidth={getStrokeWidth(110)}
@@ -2764,8 +2761,8 @@ class KeymapISO extends React.Component {
               setUndeglowIndex(109, e);
             }}
             selectedLED={this.props.selectedLED}
-            visibility={this.props.showUnderglow || this.props.isStandardView ? true : false}
-            clickAble={this.props.isStandardView && !this.props.showUnderglow ? false : true}
+            visibility={!!(this.props.showUnderglow || this.props.isStandardView)}
+            clickAble={!(this.props.isStandardView && !this.props.showUnderglow)}
             fill={getColor(109)}
             stroke={stroke(109)}
             strokeWidth={getStrokeWidth(109)}
@@ -2782,8 +2779,8 @@ class KeymapISO extends React.Component {
               setUndeglowIndex(108, e);
             }}
             selectedLED={this.props.selectedLED}
-            visibility={this.props.showUnderglow || this.props.isStandardView ? true : false}
-            clickAble={this.props.isStandardView && !this.props.showUnderglow ? false : true}
+            visibility={!!(this.props.showUnderglow || this.props.isStandardView)}
+            clickAble={!(this.props.isStandardView && !this.props.showUnderglow)}
             fill={getColor(108)}
             stroke={stroke(108)}
             strokeWidth={getStrokeWidth(108)}

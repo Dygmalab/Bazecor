@@ -81,7 +81,7 @@ const Style = Styled.div`
  * @param {listElements} listElements - The array of objects that hold the elements to be selected.\
  * @returns {<Select>} Dropdown object.
  */
-const SelectGenericKeys = ({ keyCode, onSelect, value, listElements, ksl, content, selected, disabled }) => {
+function SelectGenericKeys({ keyCode, onSelect, value, listElements, ksl, content, selected, disabled }) {
   const [load, setLoad] = React.useState(true);
   const contentWidth = 200;
   const keymapDB = new KeymapDB();
@@ -111,10 +111,10 @@ const SelectGenericKeys = ({ keyCode, onSelect, value, listElements, ksl, conten
         <Dropdown.Toggle id="dropdown-generic">
           <div className="dropdownItemSelected">
             <svg width={contentWidth} height={26}>
-              <g filter={`url(#filter0_d_2211_181319)`}>
+              <g filter="url(#filter0_d_2211_181319)">
                 <rect x={0} y={0} width={contentWidth} height={26} rx="5" className="baseKey baseKeyDropdown" />
               </g>
-              <rect x={0} y={0} width={contentWidth} height={26} rx="5" fill={`url(#paint_gradient)`} fillOpacity={0.1} />
+              <rect x={0} y={0} width={contentWidth} height={26} rx="5" fill="url(#paint_gradient)" fillOpacity={0.1} />
               <g width="12" height="12" fill="transparent">
                 <path
                   d="M1.5 3.5L6 8L10.5 3.5"
@@ -123,11 +123,11 @@ const SelectGenericKeys = ({ keyCode, onSelect, value, listElements, ksl, conten
                   transform={`translate(${contentWidth - 22}, ${6})`}
                 />
               </g>
-              <text x={4} y={16} fontSize={13} fill={"white"} fontWeight={600} textAnchor="left">
+              <text x={4} y={16} fontSize={13} fill="white" fontWeight={600} textAnchor="left">
                 {content.first}
               </text>
             </svg>
-            <div className="badge-circle"></div>
+            <div className="badge-circle" />
           </div>
         </Dropdown.Toggle>
         <Dropdown.Menu flip="false">
@@ -147,6 +147,6 @@ const SelectGenericKeys = ({ keyCode, onSelect, value, listElements, ksl, conten
       </Dropdown>
     </Style>
   );
-};
+}
 
 export default SelectGenericKeys;

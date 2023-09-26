@@ -18,7 +18,6 @@
 import React, { Component, Fragment } from "react";
 import { SketchPicker } from "react-color";
 import Styled from "styled-components";
-import i18n from "../../i18n";
 
 // Bootstrap components
 
@@ -26,11 +25,12 @@ import Button from "react-bootstrap/Button";
 import Tooltip from "react-bootstrap/Tooltip";
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 
+import { CgSmartHomeLight, CgColorPicker } from "react-icons/cg";
 import Title from "../../component/Title";
 import { ColorButton, ColorPicker } from "../../component/Button";
 
 // Icons
-import { CgSmartHomeLight, CgColorPicker } from "react-icons/cg";
+import i18n from "../../i18n";
 
 import { IconColorPalette, IconKeysLight, IconKeysUnderglow } from "../../component/Icon";
 
@@ -104,7 +104,7 @@ export default class ColorEditor extends Component {
 
     this.state = {
       displayColorPicker: false,
-      internalColors: props.colors
+      internalColors: props.colors,
     };
 
     this.showColorPicker = this.showColorPicker.bind(this);
@@ -149,14 +149,12 @@ export default class ColorEditor extends Component {
   }
 
   showColorPicker(event) {
-    this.setState(state => {
-      return { displayColorPicker: !state.displayColorPicker };
-    });
+    this.setState(state => ({ displayColorPicker: !state.displayColorPicker }));
   }
 
   removeColorPalette(idx) {
-    let arrayColorPalette = [...this.state.internalColors];
-    let index = idx;
+    const arrayColorPalette = [...this.state.internalColors];
+    const index = idx;
     if (index !== -1) {
       arrayColorPalette.splice(index, 1);
       this.setState({ internalColors: arrayColorPalette });
@@ -164,7 +162,7 @@ export default class ColorEditor extends Component {
   }
 
   addNewColorPalette() {
-    let arrayColorPalette = [...this.state.internalColors];
+    const arrayColorPalette = [...this.state.internalColors];
     arrayColorPalette.push({ r: 122, g: 121, b: 241, rgb: "(122, 121, 241)" });
     this.setState({ internalColors: arrayColorPalette });
 
@@ -173,14 +171,14 @@ export default class ColorEditor extends Component {
   }
 
   render() {
-    const { colors, selected, toChangeAllKeysColor, onBacklightColorSelect, onColorButtonSelect } = this.props;
+    const { colors, selected, toChangeAllKeysColor, deviceName } = this.props;
     const { displayColorPicker, internalColors } = this.state;
 
     const layerButtons = internalColors.map((data, idx) => {
       const menuKey = `color-${idx.toString()}-${colors[idx].rgb.toString()}`;
       const buttonStyle = {
-        //backgroundColor: data.rgb
-        backgroundColor: colors[idx].rgb
+        // backgroundColor: data.rgb
+        backgroundColor: colors[idx].rgb,
       };
       if (
         idx > 0 &&
@@ -188,7 +186,7 @@ export default class ColorEditor extends Component {
         internalColors[idx - 1].rgb == "rgb(0, 0, 0)" &&
         data.rgb == internalColors[idx - 1].rgb
       ) {
-        //internalColors.slice(idx, 1);
+        // internalColors.slice(idx, 1);
         this.removeColorPalette(idx);
       } else {
         return (
@@ -214,15 +212,17 @@ export default class ColorEditor extends Component {
 
     const popover = {
       position: "absolute",
-      top: "42px"
+      top: "42px",
     };
     const cover = {
       position: "fixed",
       top: "0px",
       right: "0px",
       bottom: "0px",
-      left: "0px"
+      left: "0px",
     };
+
+    const underglowStart = deviceName === "Defy" ? 70 : 69;
 
     return (
       <Styles className="extraPanel">
@@ -236,7 +236,7 @@ export default class ColorEditor extends Component {
               <ColorPicker
                 onClick={this.addNewColorPalette}
                 menuKey="menuKeyAddNewColor"
-                key={`buttonAddNewColor`}
+                key="buttonAddNewColor"
                 className="addColorButton"
               />
             ) : (
@@ -262,7 +262,7 @@ export default class ColorEditor extends Component {
             <div className="buttonsApplyAll">
               <ColorButton
                 onClick={() => {
-                  toChangeAllKeysColor(selected, 0, 70);
+                  toChangeAllKeysColor(selected, 0, underglowStart);
                 }}
                 label={i18n.editor.color.applyColor}
                 text={i18n.editor.color.allKeys}
@@ -271,7 +271,7 @@ export default class ColorEditor extends Component {
               />
               <ColorButton
                 onClick={() => {
-                  toChangeAllKeysColor(selected, 70, 177);
+                  toChangeAllKeysColor(selected, underglowStart, 177);
                 }}
                 label={i18n.editor.color.applyColor}
                 text={i18n.editor.color.underglow}

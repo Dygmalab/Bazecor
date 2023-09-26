@@ -6,7 +6,7 @@ function IconStopWatchCrossed(props) {
       <mask
         id="prefixIconStopWatchCrossed"
         style={{
-          maskType: "alpha"
+          maskType: "alpha",
         }}
         maskUnits="userSpaceOnUse"
         x={0}

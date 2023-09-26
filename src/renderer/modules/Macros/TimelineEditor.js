@@ -59,7 +59,7 @@ class TimelineEditor extends Component {
     this.state = {
       addText: "",
       rows: [],
-      macro: props.macro === undefined ? "" : props.macro.macro
+      macro: props.macro === undefined ? "" : props.macro.macro,
     };
     this.keymapDB = props.keymapDB;
     this.modifiers = [
@@ -70,88 +70,88 @@ class TimelineEditor extends Component {
       { name: "LEFT ALT", keyCode: 226, color: "#faf8e1" },
       { name: "RIGHT ALT", keyCode: 230, color: "#f2e7f5" },
       { name: "LEFT OS", keyCode: 227, color: "#e6f0e4" },
-      { name: "RIGHT OS", keyCode: 231, color: "#e6f0e4" }
+      { name: "RIGHT OS", keyCode: 231, color: "#e6f0e4" },
     ];
     this.actionTypes = [
       {
         enum: "MACRO_ACTION_END",
         name: "End macro",
-        icon: <React.Fragment />,
-        smallIcon: <React.Fragment />
+        icon: <></>,
+        smallIcon: <></>,
       },
       {
         enum: "MACRO_ACTION_STEP_INTERVAL",
         name: "Set Interval",
         icon: <MdTimer fontSize="large" />,
-        smallIcon: <MdTimer />
+        smallIcon: <MdTimer />,
       },
       {
         enum: "MACRO_ACTION_STEP_WAIT",
         name: "Delay",
         icon: <MdTimer fontSize="large" />,
-        smallIcon: <MdTimer />
+        smallIcon: <MdTimer />,
       },
       {
         enum: "MACRO_ACTION_STEP_KEYDOWN",
         name: "Function Key Press",
         icon: <MdKeyboardArrowDown fontSize="large" />,
-        smallIcon: <MdKeyboardArrowDown />
+        smallIcon: <MdKeyboardArrowDown />,
       },
       {
         enum: "MACRO_ACTION_STEP_KEYUP",
         name: "Function Key Release",
         icon: <MdKeyboardArrowUp fontSize="large" />,
-        smallIcon: <MdKeyboardArrowUp />
+        smallIcon: <MdKeyboardArrowUp />,
       },
       {
         enum: "MACRO_ACTION_STEP_TAP",
         name: "Fn. Press & Release",
         icon: <MdUnfoldLess fontSize="large" />,
-        smallIcon: <MdUnfoldLess />
+        smallIcon: <MdUnfoldLess />,
       },
       {
         enum: "MACRO_ACTION_STEP_KEYCODEDOWN",
         name: "Key Press",
         icon: <MdKeyboardArrowDown fontSize="large" />,
-        smallIcon: <MdKeyboardArrowDown />
+        smallIcon: <MdKeyboardArrowDown />,
       },
       {
         enum: "MACRO_ACTION_STEP_KEYCODEUP",
         name: "Key Release",
         icon: <MdKeyboardArrowUp fontSize="large" />,
-        smallIcon: <MdKeyboardArrowUp />
+        smallIcon: <MdKeyboardArrowUp />,
       },
       {
         enum: "MACRO_ACTION_STEP_TAPCODE",
         name: "Key Press & Rel.",
         icon: <MdUnfoldLess fontSize="large" />,
-        smallIcon: <MdUnfoldLess />
+        smallIcon: <MdUnfoldLess />,
       },
       {
         enum: "MACRO_ACTION_STEP_EXPLICIT_REPORT",
         name: "Explicit Report",
-        icon: <React.Fragment />,
-        smallIcon: <React.Fragment />
+        icon: <></>,
+        smallIcon: <></>,
       },
       {
         enum: "MACRO_ACTION_STEP_IMPLICIT_REPORT",
         name: "Implicit Report",
-        icon: <React.Fragment />,
-        smallIcon: <React.Fragment />
+        icon: <></>,
+        smallIcon: <></>,
       },
       { enum: "MACRO_ACTION_STEP_SEND_REPORT", id: 11, name: "Send Report" },
       {
         enum: "MACRO_ACTION_STEP_TAP_SEQUENCE",
         name: "Intervaled Special Keys",
-        icon: <React.Fragment />,
-        smallIcon: <React.Fragment />
+        icon: <></>,
+        smallIcon: <></>,
       },
       {
         enum: "MACRO_ACTION_STEP_TAP_CODE_SEQUENCE",
         name: "Intervaled Key Press & Release",
-        icon: <React.Fragment />,
-        smallIcon: <React.Fragment />
-      }
+        icon: <></>,
+        smallIcon: <></>,
+      },
     ];
 
     this.onDragEnd = this.onDragEnd.bind(this);
@@ -174,9 +174,10 @@ class TimelineEditor extends Component {
   }
 
   createConversion(actions) {
-    let converted = actions.map((action, i) => {
+    const converted = actions.map((action, i) => {
       const randID = new Date().getTime() + Math.floor(Math.random() * 1000);
-      let km, txt;
+      let km;
+      let txt;
       switch (action.type) {
         case 1:
         case 2:
@@ -187,14 +188,14 @@ class TimelineEditor extends Component {
             id: i,
             color: "#faf0e3",
             uid: randID,
-            ucolor: "transparent"
+            ucolor: "transparent",
           };
         case 3:
         case 4:
         case 5:
           km = this.keymapDB.parse(action.keyCode);
           if (km.extraLabel !== undefined) {
-            txt = km.extraLabel + " " + km.label;
+            txt = `${km.extraLabel} ${km.label}`;
           } else {
             txt = km.label;
           }
@@ -205,7 +206,7 @@ class TimelineEditor extends Component {
             id: i,
             color: this.assignColor(action.keyCode),
             uid: randID,
-            ucolor: "transparent"
+            ucolor: "transparent",
           };
         case 6:
         case 7:
@@ -217,7 +218,7 @@ class TimelineEditor extends Component {
             id: i,
             color: this.assignColor(action.keyCode),
             uid: randID,
-            ucolor: "transparent"
+            ucolor: "transparent",
           };
         default:
           break;
@@ -227,13 +228,11 @@ class TimelineEditor extends Component {
   }
 
   revertConversion(actions) {
-    let converted = actions.map(({ keyCode, action, id }) => {
-      return {
-        keyCode: keyCode,
-        type: action,
-        id: id
-      };
-    });
+    const converted = actions.map(({ keyCode, action, id }) => ({
+      keyCode,
+      type: action,
+      id,
+    }));
     return converted;
   }
 
@@ -249,28 +248,28 @@ class TimelineEditor extends Component {
 
   assignSymbol(macro) {
     // TODO: redo the function as assignColor to replace keycodes that are not represented (space, enter, tab, etc.. per icons or altcodes to be shown in their stead)
-    let action = [];
+    const action = [];
     for (const char of macro.split("")) {
       let keyCode = this.keymapDB.reverse(char.toUpperCase());
       if (char === " ") {
         keyCode = 44;
       }
-      action.push({ keyCode: keyCode, type: 8 });
+      action.push({ keyCode, type: 8 });
     }
     return action;
   }
 
   updateRows(rows) {
     console.log("TimelineEditor updaterows", rows);
-    let texted = rows.map(k => this.keymapDB.parse(k.keyCode).label).join(" ");
-    let newRows = rows.map((item, index) => {
-      let aux = item;
+    const texted = rows.map(k => this.keymapDB.parse(k.keyCode).label).join(" ");
+    const newRows = rows.map((item, index) => {
+      const aux = item;
       aux.id = index;
       return aux;
     });
     this.setState({
       rows: newRows,
-      macro: texted
+      macro: texted,
     });
 
     this.props.updateActions(this.revertConversion(rows), texted);
@@ -287,8 +286,8 @@ class TimelineEditor extends Component {
   addModifier(rowID, modifierID) {
     const { name, keyCode, color } = this.modifiers[modifierID];
     const randID = new Date().getTime() + Math.floor(Math.random() * 1000);
-    const randColor = "#" + Math.floor(Math.abs(Math.sin(randID) * 16777215) % 16777215).toString(16);
-    let newRows = this.state.rows;
+    const randColor = `#${Math.floor(Math.abs(Math.sin(randID) * 16777215) % 16777215).toString(16)}`;
+    const newRows = this.state.rows;
     newRows.splice(rowID + 1, 0, {
       symbol: name,
       keyCode,
@@ -296,7 +295,7 @@ class TimelineEditor extends Component {
       id: rowID + 1,
       color,
       uid: randID,
-      ucolor: randColor
+      ucolor: randColor,
     });
     newRows.splice(rowID, 0, {
       symbol: name,
@@ -305,7 +304,7 @@ class TimelineEditor extends Component {
       id: rowID,
       color,
       uid: randID,
-      ucolor: randColor
+      ucolor: randColor,
     });
     this.updateRows(newRows);
   }
@@ -313,25 +312,25 @@ class TimelineEditor extends Component {
   addModToKey(rows, modID, modBit) {
     const { name, keyCode, color } = this.modifiers[modID];
     const randID = new Date().getTime() + Math.floor(Math.random() * 1000);
-    const randColor = "#" + Math.floor(Math.abs(Math.sin(randID) * 16777215) % 16777215).toString(16);
-    let actions = rows;
+    const randColor = `#${Math.floor(Math.abs(Math.sin(randID) * 16777215) % 16777215).toString(16)}`;
+    const actions = rows;
     actions.splice(1, 0, {
       symbol: name,
-      keyCode: keyCode,
+      keyCode,
       action: 7,
       id: 2,
-      color: color,
+      color,
       uid: randID,
-      ucolor: randColor
+      ucolor: randColor,
     });
     actions.splice(0, 0, {
       symbol: name,
-      keyCode: keyCode,
+      keyCode,
       action: 6,
       id: 0,
-      color: color,
+      color,
       uid: randID,
-      ucolor: randColor
+      ucolor: randColor,
     });
     actions[1].keyCode = actions[1].keyCode ^ modBit;
     actions[1].symbol = this.keymapDB.parse(actions[1].keyCode).label;
@@ -350,8 +349,8 @@ class TimelineEditor extends Component {
   }
 
   onDeleteRow(id) {
-    let uid = this.state.rows.filter(x => x.id === id)[0].uid;
-    let aux = this.state.rows.filter(x => x.uid !== uid);
+    const { uid } = this.state.rows.filter(x => x.id === id)[0];
+    const aux = this.state.rows.filter(x => x.uid !== uid);
     this.updateRows(aux);
   }
 
@@ -378,7 +377,7 @@ class TimelineEditor extends Component {
         const randID = new Date().getTime() + Math.floor(Math.random() * 1000);
         let keyCode = this.keymapDB.reverse(item);
         if (upper) {
-          keyCode = keyCode + 2048;
+          keyCode += 2048;
         }
         let actions = [
           {
@@ -388,37 +387,37 @@ class TimelineEditor extends Component {
             id: index + newRows.length,
             color: this.assignColor(keyCode),
             uid: randID,
-            ucolor: "transparent"
-          }
+            ucolor: "transparent",
+          },
         ];
         switch (true) {
           case (keyCode & 256) === 256 && (keyCode & 512) === 512:
-            //Control pressed to modify (2)
+            // Control pressed to modify (2)
             actions = this.addModToKey(actions, 5, 256);
 
             break;
           case (keyCode & 256) === 256:
-            //Control pressed to modify (2)
+            // Control pressed to modify (2)
             actions = this.addModToKey(actions, 2, 256);
 
             break;
           case (keyCode & 512) === 512:
-            //Left Alt pressed to modify (4)
+            // Left Alt pressed to modify (4)
             actions = this.addModToKey(actions, 4, 512);
 
             break;
           case (keyCode & 1024) === 1024:
-            //Right alt pressed to modify (5)
+            // Right alt pressed to modify (5)
             actions = this.addModToKey(actions, 5, 1024);
 
             break;
           case (keyCode & 2048) === 2048:
-            //Shift pressed to modify (0)
+            // Shift pressed to modify (0)
             actions = this.addModToKey(actions, 0, 2048);
 
             break;
           case (keyCode & 4096) === 4096:
-            //Gui pressed to modify (6)
+            // Gui pressed to modify (6)
             actions = this.addModToKey(actions, 6, 4096);
 
             break;
@@ -426,18 +425,18 @@ class TimelineEditor extends Component {
             break;
         }
         return actions;
-      })
+      }),
     );
     this.setState({
-      addText: ""
+      addText: "",
     });
     this.updateRows(newRows);
   }
 
   onAddSymbol(keyCode, action) {
     const randID = new Date().getTime() + Math.floor(Math.random() * 1000);
-    let newRows = this.state.rows;
-    let symbol = this.keymapDB.parse(keyCode).label;
+    const newRows = this.state.rows;
+    const symbol = this.keymapDB.parse(keyCode).label;
     newRows.push({
       symbol,
       keyCode,
@@ -445,14 +444,14 @@ class TimelineEditor extends Component {
       id: newRows.length,
       color: this.assignColor(keyCode),
       uid: randID,
-      ucolor: "transparent"
+      ucolor: "transparent",
     });
     this.updateRows(newRows);
   }
 
   onAddDelay(delay, action) {
     const randID = new Date().getTime() + Math.floor(Math.random() * 1000);
-    let newRows = this.state.rows;
+    const newRows = this.state.rows;
     newRows.push({
       symbol: delay,
       keyCode: delay,
@@ -460,17 +459,17 @@ class TimelineEditor extends Component {
       id: newRows.length,
       color: "#faf0e3",
       uid: randID,
-      ucolor: "transparent"
+      ucolor: "transparent",
     });
     this.updateRows(newRows);
   }
 
   onAddSpecial(keyCode, action) {
     const randID = new Date().getTime() + Math.floor(Math.random() * 1000);
-    let newRows = this.state.rows;
+    const newRows = this.state.rows;
     let symbol = this.keymapDB.parse(keyCode);
     if (symbol.extraLabel !== undefined) {
-      symbol = symbol.extraLabel + " " + symbol.label;
+      symbol = `${symbol.extraLabel} ${symbol.label}`;
     } else {
       symbol = symbol.label;
     }
@@ -481,7 +480,7 @@ class TimelineEditor extends Component {
       id: newRows.length,
       color: this.assignColor(keyCode),
       uid: randID,
-      ucolor: "transparent"
+      ucolor: "transparent",
     });
     this.updateRows(newRows);
   }
@@ -495,7 +494,7 @@ class TimelineEditor extends Component {
           <Droppable droppableId="droppable">
             {provided => (
               <div ref={provided.innerRef}>
-                <ListGroup className={"list margin padding border whitebg"}>
+                <ListGroup className="list margin padding border whitebg">
                   {this.state.rows.map((item, index) => (
                     <Draggable key={index} draggableId={String(index)} index={index}>
                       {(provided, snapshot) => (

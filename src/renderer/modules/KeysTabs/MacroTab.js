@@ -36,18 +36,18 @@ class MacroTab extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      selected: 0 === props.selectedMacro ? 1 : 0
+      selected: 0,
     };
   }
 
   // update value when dropdown is changed
   changeSelected = selected => {
-    this.setState({ selected });
+    this.setState({ selected: parseInt(selected, 10) });
   };
 
   changeSelectedStd = selected => {
-    this.setState({ selected });
-    this.props.onMacrosPress(parseInt(selected) + 53852);
+    this.setState({ selected: parseInt(selected, 10) });
+    this.props.onMacrosPress(parseInt(selected, 10) + 53852);
   };
 
   // sendMacro function to props onMacrosPress function to send macro to MacroCreator
@@ -57,9 +57,10 @@ class MacroTab extends Component {
 
   render() {
     const { macros, selectedMacro, keyCode, isStandardView } = this.props;
+    const { selected } = this.state;
     const macrosAux = macros.map((item, index) => {
       const macrosContainer = {};
-      if (item.name == "") {
+      if (item.name === "") {
         macrosContainer.text = i18n.general.noname;
       } else {
         macrosContainer.text = item.name;
@@ -75,7 +76,16 @@ class MacroTab extends Component {
           {isStandardView ? (
             <>
               <Title text={i18n.editor.standardView.macros.title} headingLevel={3} />
-              <Callout content={i18n.editor.standardView.macros.callOut} size="sm" className="w100" />
+
+              <Callout
+                content={i18n.editor.standardView.macros.callOut}
+                size="sm"
+                className="w100"
+                hasVideo
+                media="MfTUvFrHLsE"
+                videoTitle="13 Time-saving MACROS For Your Keyboard"
+                videoDuration="5:24"
+              />
             </>
           ) : (
             <Callout content={i18n.editor.macros.macroTab.callout} className="w100" size="sm" />
@@ -85,7 +95,7 @@ class MacroTab extends Component {
             <Select
               value={
                 macrosAux.length > 0 && macrosAux[this.state.selected] !== undefined && macrosAux[this.state.selected].text
-                  ? macrosAux[this.state.selected].text
+                  ? macrosAux[this.state.selected].value
                   : "Loading"
               }
               listElements={macrosAux}
@@ -97,7 +107,7 @@ class MacroTab extends Component {
           <div className="tabSaveButton">
             <RegularButton
               buttonText={i18n.editor.macros.textTabs.buttonText}
-              style="outline gradient"
+              styles="outline gradient"
               onClick={this.sendMacro}
               icoSVG={<IconArrowInBoxUp />}
               icoPosition="right"

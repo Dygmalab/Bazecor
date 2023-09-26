@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import Styled from "styled-components";
-import { KeyPicker } from "../KeyPickerKeyboard";
+import { KeyPicker } from ".";
 
 const Style = Styled.div`
 
@@ -27,7 +27,8 @@ class Picker extends Component {
       disable,
       macros,
       superkeys,
-      keyCode
+      keyCode,
+      isWireless,
     } = this.props;
 
     return (
@@ -36,7 +37,7 @@ class Picker extends Component {
           onKeySelect={e => onKeySelect(e)}
           code={{
             base: actions[action] > 255 ? baseCode : actions[action],
-            modified: modCode
+            modified: modCode,
           }}
           disableMods={[0, 3].includes(action) && activeTab == "super"}
           disableMove={![0, 3].includes(action) && activeTab == "super"}
@@ -49,6 +50,7 @@ class Picker extends Component {
           activeTab={activeTab}
           action={action}
           actions={actions}
+          isWireless={isWireless}
         />
       </Style>
     );

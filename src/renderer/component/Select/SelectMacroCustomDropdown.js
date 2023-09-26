@@ -93,6 +93,7 @@ class SelectMacroCustomDropdown extends Component {
     super(props);
     this.state = {};
   }
+
   render() {
     const { keyCode, onKeySelect, macros } = this.props;
     const KC = keyCode.base + keyCode.modified;
@@ -113,7 +114,7 @@ class SelectMacroCustomDropdown extends Component {
             <div className="dropdownItemSelected">
               <div className="dropdownItem">
                 <div className="dropdownItem">Macros</div>
-                <div className="badge-circle"></div>
+                <div className="badge-circle" />
               </div>
             </div>
           </Dropdown.Toggle>
@@ -121,20 +122,18 @@ class SelectMacroCustomDropdown extends Component {
             <div className="large-dropdown-inner">
               <div className="dropdownHeader">Macros</div>
               <div className="dropdown-list">
-                {mcros.map((x, id) => {
-                  return (
-                    <Dropdown.Item
-                      eventKey={x}
-                      key={`macro-${id}`}
-                      disabled={x == -1}
-                      className={`${mcros.indexOf(KC) == id ? "active" : ""}`}
-                    >
-                      <div className="dropdownInner">
-                        <div className="dropdownItem">{`${id + 1}. ${macros[id].name}`}</div>
-                      </div>
-                    </Dropdown.Item>
-                  );
-                })}
+                {mcros.map((x, id) => (
+                  <Dropdown.Item
+                    eventKey={x}
+                    key={`macro-${id}`}
+                    disabled={x == -1}
+                    className={`${mcros.indexOf(KC) == id ? "active" : ""}`}
+                  >
+                    <div className="dropdownInner">
+                      <div className="dropdownItem">{`${id + 1}. ${macros[id].name}`}</div>
+                    </div>
+                  </Dropdown.Item>
+                ))}
               </div>
             </div>
           </Dropdown.Menu>

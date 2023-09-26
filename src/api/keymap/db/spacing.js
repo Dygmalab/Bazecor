@@ -23,47 +23,47 @@ const SpacingTable = {
     {
       code: 44,
       labels: {
-        primary: "SPACE"
-      }
+        primary: "SPACE",
+      },
     },
     {
       code: 40,
       labels: {
-        primary: "ENTER"
-      }
+        primary: "ENTER",
+      },
     },
     {
       code: 43,
       labels: {
-        primary: "TAB"
-      }
+        primary: "TAB",
+      },
     },
     {
       code: 41,
       labels: {
-        primary: "ESC"
-      }
+        primary: "ESC",
+      },
     },
     {
       code: 42,
       labels: {
         primary: "BACKSPACE",
-        verbose: "Backspace"
-      }
+        verbose: "Backspace",
+      },
     },
     {
       code: 76,
       labels: {
-        primary: "DEL"
-      }
+        primary: "DEL",
+      },
     },
     {
       code: 73,
       labels: {
-        primary: "INSERT"
-      }
-    }
-  ]
+        primary: "INSERT",
+      },
+    },
+  ],
 };
 
 const ModifiedSpacingTables = [
@@ -106,7 +106,7 @@ const ModifiedSpacingTables = [
   withModifiers(SpacingTable, "Alt + AltGr + Shift + Os +", "A+AGr+S+O+", 7680),
 
   // All
-  withModifiers(SpacingTable, "Hyper + AltGr +", "H+AGr+", 7936)
+  withModifiers(SpacingTable, "Hyper + AltGr +", "H+AGr+", 7936),
 ];
 
 export { SpacingTable as default, ModifiedSpacingTables };

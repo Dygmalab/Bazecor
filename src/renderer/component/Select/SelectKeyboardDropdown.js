@@ -18,8 +18,8 @@
 import React from "react";
 import Styled from "styled-components";
 import Dropdown from "react-bootstrap/Dropdown";
-import iconKeyboard from "../../../../static/base/icon-keyboard.svg";
-import iconConnected from "../../../../static/base/icon-connected.svg";
+import iconKeyboard from "@Assets/base/icon-keyboard.svg";
+import iconConnected from "@Assets/base/icon-connected.svg";
 
 const Style = Styled.div`
 .custom-dropdown {
@@ -76,14 +76,18 @@ const Style = Styled.div`
   }
 }
 `;
-const SelectKeyboardDropdown = ({ selectPort, selectedPortIndex, deviceItems, connected }) => {
+function SelectKeyboardDropdown({ selectPort, selectedPortIndex, deviceItems, connected, connectedDevice }) {
   return (
     <Style>
       <Dropdown className="custom-dropdown" onSelect={selectPort}>
         <Dropdown.Toggle id="dropdown-custom">
           <div className="dropdownItemSelected">
             <div className="dropdownIcon">
-              {deviceItems[selectedPortIndex] && connected ? <img src={iconConnected} /> : <img src={iconKeyboard} />}
+              {deviceItems[connectedDevice] && connectedDevice === selectedPortIndex && connected ? (
+                <img src={iconConnected} />
+              ) : (
+                <img src={iconKeyboard} />
+              )}
             </div>
             <div className="dropdownItem">
               <h3>{deviceItems[selectedPortIndex] != null ? deviceItems[selectedPortIndex].userName : "Keyboard not found"}</h3>
@@ -104,7 +108,7 @@ const SelectKeyboardDropdown = ({ selectPort, selectedPortIndex, deviceItems, co
             >
               <div className="dropdownInner">
                 <div className="dropdownIcon">
-                  {selectedPortIndex == item.index && connected ? <img src={iconConnected} /> : <img src={iconKeyboard} />}
+                  {connectedDevice === item.index && connected ? <img src={iconConnected} /> : <img src={iconKeyboard} />}
                 </div>
                 <div className="dropdownItem">
                   <h3>{item.userName}</h3>
@@ -119,6 +123,6 @@ const SelectKeyboardDropdown = ({ selectPort, selectedPortIndex, deviceItems, co
       </Dropdown>
     </Style>
   );
-};
+}
 
 export default SelectKeyboardDropdown;

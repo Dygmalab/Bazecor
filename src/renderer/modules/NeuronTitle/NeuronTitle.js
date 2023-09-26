@@ -31,15 +31,15 @@ h4 {
   color: ${({ theme }) => theme.styles.neuronTitle.heading4Color};
 }
 `;
-const NeuronTitle = ({ neuronName, neuronID }) => {
+function NeuronTitle({ neuronName, neuronID }) {
   return (
     <Style>
-      <div className={`backupFolderConfigurator`}>
+      <div className="backupFolderConfigurator">
         <Title text={`${i18n.keyboardSettings.neuronManager.nameTitle}: ${neuronName}`} headingLevel={3} />
         <Title text={`ID: ${neuronID}`} headingLevel={4} />
       </div>
     </Style>
   );
-};
+}
 
 export default NeuronTitle;

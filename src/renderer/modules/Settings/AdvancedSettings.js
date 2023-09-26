@@ -1,14 +1,14 @@
 import PropTypes from "prop-types";
 import React, { Component } from "react";
 import Styled from "styled-components";
-import i18n from "../../i18n";
-import Focus from "../../../api/focus";
 
 // React Bootstrap Components
 import Card from "react-bootstrap/Card";
 import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
+import Focus from "../../../api/focus";
+import i18n from "../../i18n";
 
 // Own Components
 import Title from "../../component/Title";
@@ -85,7 +85,7 @@ export default class AdvancedSettings extends Component {
 
 class AdvancedKeyboardSettings extends React.Component {
   state = {
-    EEPROMClearConfirmationOpen: false
+    EEPROMClearConfirmationOpen: false,
   };
 
   clearEEPROM = async () => {
@@ -103,19 +103,21 @@ class AdvancedKeyboardSettings extends React.Component {
     await focus.command("eeprom.contents", eeprom);
     this.setState({ working: false });
   };
+
   openEEPROMClearConfirmation = () => {
     this.setState({ EEPROMClearConfirmationOpen: true });
   };
+
   closeEEPROMClearConfirmation = () => {
     this.setState({ EEPROMClearConfirmationOpen: false });
   };
 
   render() {
     return (
-      <React.Fragment>
+      <>
         <RegularButton
           buttonText={i18n.keyboardSettings.resetEEPROM.button}
-          style="short danger"
+          styles="short danger"
           onClick={this.openEEPROMClearConfirmation}
           disabled={this.state.working}
         />
@@ -127,7 +129,7 @@ class AdvancedKeyboardSettings extends React.Component {
         >
           {i18n.keyboardSettings.resetEEPROM.dialogContents}
         </ConfirmationDialog>
-      </React.Fragment>
+      </>
     );
   }
 }
@@ -135,5 +137,5 @@ class AdvancedKeyboardSettings extends React.Component {
 AdvancedSettings.propTypes = {
   devToolsSwitch: PropTypes.object.isRequired,
   verboseSwitch: PropTypes.object.isRequired,
-  connected: PropTypes.bool.isRequired
+  connected: PropTypes.bool.isRequired,
 };
