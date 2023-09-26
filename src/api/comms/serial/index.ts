@@ -1,7 +1,7 @@
 import { find, connect, isDeviceConnected, isDeviceSupported, DeviceType, isSerialType } from "./SerialAPI";
 
 interface SerialType {
-  find: () => void;
+  find: () => Array<DeviceType>;
   connect: () => void;
   isDeviceConnected: (device: DeviceType) => boolean;
   isDeviceSupported: (device: DeviceType) => Promise<boolean>;

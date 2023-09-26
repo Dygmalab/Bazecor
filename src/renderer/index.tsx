@@ -24,15 +24,18 @@ import Error from "./Error";
 import "bootstrap-css-only/css/bootstrap.min.css";
 import "@appigram/react-rangeslider/lib/index.css";
 import i18n from "./i18n";
+import { DeviceProvider } from "./DeviceContext";
 
 const container = document.getElementById("root");
 const root = createRoot(container);
 try {
   root.render(
     <MemoryRouter>
-      <I18nextProvider i18n={i18n}>
-        <App />
-      </I18nextProvider>
+      <DeviceProvider>
+        <I18nextProvider i18n={i18n}>
+          <App />
+        </I18nextProvider>
+      </DeviceProvider>
     </MemoryRouter>,
   );
 } catch (e) {

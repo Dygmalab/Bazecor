@@ -4,9 +4,10 @@ import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import { PageHeader } from "@Renderer/modules/PageHeader";
-import DeviceTalker, { DeviceType } from "../../api/comms";
+import { useDevice, DeviceTools } from "@Renderer/DeviceContext";
 import { RegularButton } from "../component/Button";
 import HID from "../../api/hid/hid";
+import Device from "../../api/comms/Device";
 
 const Styles = Styled.div`
 .button-container {
@@ -15,9 +16,10 @@ const Styles = Styled.div`
 `;
 
 const BazecorDevtools = () => {
+  const [state, dispatch] = useDevice();
+
+  // HID devices connectiont tools
   let connectedDevice: undefined | HIDDevice;
-  let serialDevices: undefined | Array<DeviceType>;
-  let serialDevice: undefined | any;
   const hid = new HID();
   const onGetHIDDevices = async () => {
     const grantedDevices = await HID.getDevices();
@@ -88,20 +90,24 @@ const BazecorDevtools = () => {
   };
 
   const onListSerialDevices = async () => {
-    serialDevices = await DeviceTalker.list();
-    console.log("Listing Serial Devices", serialDevices);
+    const response = await DeviceTools.list();
+    console.log("Listing Serial Devices", response);
+    dispatch({ type: "addDevicesList", payload: response });
   };
 
   const onMessageSend = async () => {
-    // const message = await serialDevice.command("help");
+    const dev = state.deviceList[state.currentDevice];
+    console.log(dev);
+    // const message = await dev.write("help");
     // console.log("retrieving message help: ", message);
   };
 
-  const onSerialConnect = async () => {
+  const onSerialConnect = async (selected: number) => {
     try {
-      console.log("going to connect to SerialDevice[0]", serialDevices[0]);
-      serialDevice = await DeviceTalker.connect(serialDevices[0]);
-      console.log("Connected!", serialDevice);
+      console.log("going to connect to device: ");
+      const response = await DeviceTools.connect(state.deviceList[selected]);
+      dispatch({ type: "changeCurrent", payload: selected });
+      console.log("Connected!", response);
     } catch (err) {
       console.log("error when connecting");
       console.error(err);
@@ -110,8 +116,8 @@ const BazecorDevtools = () => {
 
   const onSerialDisconnect = async () => {
     try {
-      await serialDevice.close();
-      console.log("Disconnected!", serialDevice);
+      const response = await state.deviceList[state.currentDevice].port.close();
+      console.log("Disconnected!", response);
     } catch (err) {
       console.log("error when disconnecting");
       console.error(err);
@@ -134,9 +140,21 @@ const BazecorDevtools = () => {
           <Col className="my-4 col-3">
             <h4>Serial Testing Buttons</h4>
             <RegularButton buttonText="List of Serial Devices" styles="primary" onClick={onListSerialDevices} />
-            <RegularButton buttonText="Connect to Serial Device" styles="primary" onClick={onSerialConnect} />
+            <RegularButton buttonText="Connect to Serial Device" styles="primary" onClick={() => onSerialConnect(0)} />
             <RegularButton buttonText="Send message" styles="primary" onClick={onMessageSend} />
             <RegularButton buttonText="Disconnect" styles="primary" onClick={onSerialDisconnect} />
+          </Col>
+        </Row>
+        <Row>
+          <Col>
+            <div>
+              <h4>Connection data</h4>
+              <ul>
+                {state.deviceList.map((dev: Device) => (
+                  <li key={`${dev.productId}-${dev.vendorId}: ${dev.path}`}>{`${dev.productId}-${dev.vendorId}: ${dev.path}`}</li>
+                ))}
+              </ul>
+            </div>
           </Col>
         </Row>
       </Container>

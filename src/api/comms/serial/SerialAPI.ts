@@ -7,8 +7,6 @@ import Hardware from "../../hardware";
 import { DeviceType } from "../../../renderer/types/devices";
 
 const { SerialPort } = eval('require("serialport")');
-const { DelimiterParser } = eval('require("@serialport/parser-delimiter")');
-
 // const delay = (ms: number) => new Promise(res => setTimeout(res, ms));
 
 const find = async () => {
@@ -45,11 +43,6 @@ const open = async (device: any) => {
     if (err) console.error("error when opening port: ", err);
     else console.log("connected");
   });
-  const parser = serialport.pipe(new DelimiterParser({ delimiter: "\r\n" }));
-  const receivedData = [];
-  parser.on("data", (data: any) => {
-    receivedData.push(data.toString("utf-8"));
-  });
   return serialport;
 };
 
@@ -74,7 +67,7 @@ const isDeviceSupported = async (device: DeviceType) => {
     return true;
   }
   const supported = await device.device.isDeviceSupported(device);
-  console.log("focus.isDeviceSupported: port=", device, "supported=", supported);
+  // console.log("focus.isDeviceSupported: port=", device, "supported=", supported);
   return supported;
 };
 
