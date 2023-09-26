@@ -21,6 +21,7 @@ import { ToastContainer, toast } from "react-toastify";
 import { ThemeProvider } from "styled-components";
 import { ipcRenderer } from "electron";
 import path from "path";
+import * as FullStory from "@fullstory/browser";
 import withRouter from "./utils/withRouter";
 import i18n from "./i18n";
 
@@ -61,6 +62,14 @@ class App extends React.Component {
     super(props);
     this.updateStorageSchema();
     initSentry();
+
+    // FullStory.init({ orgId: "o-1PYPRZ-na1" }, ({ sessionUrl }) => {
+    //   FullStory.event("Subscribed", {
+    //     uid_str: "750948353",
+    //     plan_name_str: "Professional",
+    //   });
+    //   console.log(`Started session: ${sessionUrl}`);
+    // });
 
     let isDark;
     const mode = store.get("settings.darkMode");
