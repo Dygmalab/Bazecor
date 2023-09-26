@@ -34,10 +34,19 @@ better, please feel free to [open issues][issues] liberally!
 
 ## Development
 
-To launch the development environment, simply install nodejs and yarn (check node version in package.json engine.node) then type `yarn && yarn start`. To do a
-production build, use `yarn run build:all`, or limit it to a particular OS:
-`yarn run build:linux`, `yarn run build:mac` or `yarn run build:win`. See the
-`scripts` section of `package.json` for more scripts.
+To launch the development environment, simply install nodejs and yarn (check node version in package.json engine.node) then type `yarn && yarn start`.
+
+To do a production build, use `yarn run make`, or limit it to a particular OS:
+
+| OS      | Architecture | Command                   |
+|---------|--------------|---------------------------|
+| Windows |              | `yarn run make-win`       |
+| macOS   |              | `yarn run make-mac`       |
+| macOS   | x64          | `yarn run make-mac-intel` |
+| macOS   | arm64        | `yarn run make-mac-arm`   |
+| Linux   |              | `yarn run make-lin`       |
+
+See the `scripts` section of `package.json` for more scripts.
 
 ## Additional Information
 To get more information about our efforts, how Bazecor communicates with the Raise and the latest development news, please check the links below
