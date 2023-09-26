@@ -280,7 +280,7 @@ class App extends React.Component {
     // Store all settings from electron settings in electron store.
     const data = {};
     const userPath = await ipcRenderer.invoke("get-userPath", "home");
-    data.backupFolder = path.join(userPath, "Raise", "Backups");
+    data.backupFolder = path.join(userPath, "Dygma", "Backups");
     data.backupFrequency = 30;
     data.language = translator[locale.split("-")[0]] !== "" ? translator[locale.split("-")[0]] : "english";
     data.darkMode = "system";
