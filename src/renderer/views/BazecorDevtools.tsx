@@ -96,18 +96,17 @@ const BazecorDevtools = () => {
   };
 
   const onMessageSend = async () => {
-    const dev = state.deviceList[state.currentDevice];
-    console.log(dev);
-    // const message = await dev.write("help");
-    // console.log("retrieving message help: ", message);
+    const dev = state.currentDevice;
+    const message = await dev.command("palette");
+    console.log("retrieving message help: ", message);
   };
 
   const onSerialConnect = async (selected: number) => {
     try {
       console.log("going to connect to device: ");
       const response = await DeviceTools.connect(state.deviceList[selected]);
-      dispatch({ type: "changeCurrent", payload: selected });
-      console.log("Connected!", response);
+      dispatch({ type: "changeCurrent", payload: { selected, device: response } });
+      console.log("Connected!", state);
     } catch (err) {
       console.log("error when connecting");
       console.error(err);
@@ -116,7 +115,7 @@ const BazecorDevtools = () => {
 
   const onSerialDisconnect = async () => {
     try {
-      const response = await state.deviceList[state.currentDevice].port.close();
+      const response = await state.currentDevice.close();
       console.log("Disconnected!", response);
     } catch (err) {
       console.log("error when disconnecting");
@@ -146,13 +145,33 @@ const BazecorDevtools = () => {
           </Col>
         </Row>
         <Row>
-          <Col>
+          <Col md={6}>
             <div>
               <h4>Connection data</h4>
               <ul>
                 {state.deviceList.map((dev: Device) => (
                   <li key={`${dev.productId}-${dev.vendorId}: ${dev.path}`}>{`${dev.productId}-${dev.vendorId}: ${dev.path}`}</li>
                 ))}
+              </ul>
+            </div>
+          </Col>
+          <Col md={6}>
+            <div>
+              <h4>Connected device</h4>
+              <ul>
+                <li>{`product ID: ${state.currentDevice?.productId}`}</li>
+                <li>{`vendor ID: ${state.currentDevice?.vendorId}`}</li>
+                <li>{`COM path: ${state.currentDevice?.path}`}</li>
+                <li>{`SerialNumber: ${state.currentDevice?.serialNumber}`}</li>
+                <li>{`Connected?: ${state.currentDevice?.port?.isConnected}`}</li>
+                <li style={{ overflowWrap: "anywhere" }}>{`Commands?: ${JSON.stringify(
+                  state.currentDevice?.commands?.help,
+                )}`}</li>
+              </ul>
+              <ul>
+                {state.currentDevice !== undefined && Array.isArray(state.currentDevice.commands)
+                  ? state.currentDevice.commands?.map((command: string) => <li key={`${command}`}>{`${command}`}</li>)
+                  : ""}
               </ul>
             </div>
           </Col>

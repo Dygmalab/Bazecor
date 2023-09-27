@@ -11,8 +11,11 @@ function deviceReducer(state: State, action: Action) {
   console.log("Entering DeviceREDUCER!!!", state, action);
   switch (action.type) {
     case "changeCurrent": {
-      if (action.payload < state.deviceList.length && action.payload >= 0)
-        return { ...state, selected: action.payload, currentDevice: state.deviceList[action.payload] };
+      if (action.payload.selected < state.deviceList.length && action.payload.selected >= 0) {
+        const deviceList = [...state.deviceList];
+        deviceList[action.payload.selected] = action.payload.device;
+        return { ...state, selected: action.payload.selected, currentDevice: action.payload.device, deviceList };
+      }
       return { ...state, selected: -1, currentDevice: undefined };
     }
     case "addDevice": {
@@ -24,11 +27,6 @@ function deviceReducer(state: State, action: Action) {
       const newDevices = action.payload;
       return { ...state, deviceList: newDevices };
     }
-    // case "command": {
-    //   state.deviceList[0].device.;
-    //   newDevices.push(action.payload);
-    //   return { ...state, deviceList: newDevices };
-    // }
     default: {
       throw new Error(`Unhandled action type: ${action.type}`);
     }
