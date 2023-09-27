@@ -38,7 +38,7 @@ class HID {
 
   connectDevice = async (index: number) => {
     // if we are already connected, we do not care and connect again
-    console.log("Trying to connect");
+    console.log("Trying to connect HID");
     if (this.connectedDevice) {
       throw new HIDError("Device already connected");
     }
@@ -93,11 +93,24 @@ class HID {
 
   isOpen = () => this.isConnected() && this.connectedDevice.opened;
 
+  static purgeUselessCharsEnd = (str: string) => {
+    // we remove null char and whitespaces from the end of the data received
+    const nullCharacterRegex = new RegExp("\u0000", "g");
+    const strWithoutNull = str.replace(nullCharacterRegex, "").trimEnd();
+    const dataArray = strWithoutNull.split(" ");
+    const lastItem = dataArray[dataArray.length - 1];
+    const lastItemChar = lastItem.charCodeAt(0);
+    if (lastItemChar === 0 || Number.isNaN(lastItemChar)) {
+      dataArray.pop();
+    }
+    const rejoined = dataArray.join(" ");
+    return rejoined;
+  };
+
   sendData = async (dataToSend: string, receiverHandler: ReceiverHandler, errorHandler: ErrorHandler) => {
     const maxData = 200;
     this.dataReceived = "";
-    const dataWithDelimiter = `${dataToSend}`;
-    const encodedData = HID.encoder.encode(dataWithDelimiter);
+    const encodedData = HID.encoder.encode(dataToSend);
     const chunks = Math.ceil(encodedData.length / maxData);
     let startIndex;
     let endIndex;
@@ -108,7 +121,9 @@ class HID {
     let receiveDataHandler: (event: HIDInputReportEvent) => void;
     const allDataReceived = new Promise((resolve, reject) => {
       const timeout = setTimeout(() => {
-        this.connectedDevice.removeEventListener("inputreport", receiveDataHandler);
+        if (this.connectedDevice) {
+          this.connectedDevice.removeEventListener("inputreport", receiveDataHandler);
+        }
         reject(new HIDError("HID send data took too much time"));
       }, 5000);
       receiveDataHandler = (event: HIDInputReportEvent) => {
@@ -121,6 +136,7 @@ class HID {
         if (decodedData.includes("\r\n.\r\n")) {
           const lastChunk = decodedData.replace("\r\n.\r\n", "");
           this.dataReceived += lastChunk;
+          this.dataReceived = HID.purgeUselessCharsEnd(this.dataReceived);
           clearTimeout(timeout);
           resolve(this.dataReceived);
         } else {
@@ -129,10 +145,15 @@ class HID {
       };
       this.connectedDevice.addEventListener("inputreport", receiveDataHandler);
     });
+    const buffer = new ArrayBuffer(maxData);
+    let bufferView;
     for (let i = 0; i < chunks; i += 1) {
       startIndex = maxData * i;
       endIndex = maxData * i + maxData;
-      this.sendChunkData(encodedData.slice(startIndex, endIndex));
+      bufferView = new Uint8Array(buffer);
+      bufferView.fill(0);
+      bufferView.set(encodedData.slice(startIndex, endIndex), 0);
+      this.sendChunkData(bufferView);
     }
     return allDataReceived
       .then((totalDataReceived: string) => {

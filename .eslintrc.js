@@ -56,6 +56,8 @@ module.exports = {
     "no-restricted-syntax": "off",
     "@typescript-eslint/lines-between-class-members": "off",
     "max-classes-per-file": ["warn", 2],
+    "prefer-regex-literals": "off",
+    "no-control-regex": "off",
   },
   ignorePatterns: ["/*", "!/src"], // we only care about linting src folder
 };

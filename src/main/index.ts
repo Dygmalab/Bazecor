@@ -5,6 +5,7 @@ import { setTheme } from "./setup/theme";
 import setBackup from "./setup/setBackup";
 import GlobalRecording from "./managers/GlobalRecording";
 import { addUSBListeners, removeUSBListeners } from "./setup/configureUSB";
+import { removeHIDListeners } from "./setup/configureHID";
 import { removeIPCs } from "./setup/configureIPCs";
 
 electronUpdater();
@@ -37,6 +38,7 @@ app.on("ready", async () => {
 // explicitly with Cmd + Q.
 app.on("window-all-closed", () => {
   removeUSBListeners();
+  removeHIDListeners();
   if (process.platform !== "darwin") {
     app.quit();
   } else {
