@@ -44,10 +44,42 @@ jobs:
         if: steps.cache-node-modules.outputs.cache-hit != 'true'
         run: yarn install --frozen-lockfile --network-timeout 300000 # sometimes yarn takes time, therefore, we increase the timeout
       - run: yarn run test
+  bump-version:
+    needs: [testing]
+    runs-on: ubuntu-20.04
+    permissions:
+      contents: write # to be able to publish a GitHub release
+      issues: write # to be able to comment on released issues
+      pull-requests: write # to be able to comment on released pull requests
+
+    strategy:
+      fail-fast: false
+
+    steps:
+      - name: Setup Nodejs
+        uses: actions/checkout@v3
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+      - name: Cache node_modules
+        id: cache-node-modules
+        uses: actions/cache@v3
+        with:
+          path: node_modules
+          key: release-${{ hashFiles('package.json', 'yarn.lock') }}
+      - name: Install node_modules # we do this so we can use semantic-release
+        if: steps.cache-node-modules.outputs.cache-hit != 'true'
+        run: yarn install --frozen-lockfile --network-timeout 300000 # sometimes yarn takes time, therefore, we increase the timeout
+      - name: Run semantic-release to bump version
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_ACCESS_TOKEN }}
+        run: npx semantic-release
 
   build:
     runs-on: ${{ matrix.os }}
-    needs: [testing]
+    needs: [bump-version]
     permissions:
       contents: write # to be able to publish a GitHub release
       issues: write # to be able to comment on released issues
@@ -63,8 +95,6 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
-        with:
-          persist-credentials: false
       - uses: actions/setup-node@v3
         with:
           node-version: 18
@@ -104,10 +134,6 @@ jobs:
       - name: Install node_modules
         if: steps.cache-node-modules.outputs.cache-hit != 'true'
         run: yarn install --frozen-lockfile --network-timeout 300000 # sometimes yarn takes time, therefore, we increase the timeout
-      - name: Run semantic-release to bump version
-        env:
-          GITHUB_TOKEN: ${{ secrets.GH_ACCESS_TOKEN }}
-        run: npx semantic-release
       - if: runner.os == 'macOS'
         name: Setup Apple certificates
         env:
