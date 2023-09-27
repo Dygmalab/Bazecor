@@ -36,6 +36,8 @@ better, please feel free to [open issues][issues] liberally!
 
 To launch the development environment, simply install nodejs and yarn (check node version in package.json engine.node) then type `yarn && yarn start`.
 
+To do a local production build without signing the executable use `yarn run make-dev`.
+
 To do a production build, use `yarn run make`, or limit it to a particular OS:
 
 | OS      | Architecture | Command                   |
