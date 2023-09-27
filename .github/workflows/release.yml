@@ -63,6 +63,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
+        with:
+          persist-credentials: false
       - uses: actions/setup-node@v3
         with:
           node-version: 18
@@ -102,6 +104,10 @@ jobs:
       - name: Install node_modules
         if: steps.cache-node-modules.outputs.cache-hit != 'true'
         run: yarn install --frozen-lockfile --network-timeout 300000 # sometimes yarn takes time, therefore, we increase the timeout
+      - name: Run semantic-release to bump version
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_ACCESS_TOKEN }}
+        run: npx semantic-release
       - if: runner.os == 'macOS'
         name: Setup Apple certificates
         env:
