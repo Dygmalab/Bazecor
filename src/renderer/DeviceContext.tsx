@@ -56,7 +56,7 @@ const isDeviceConnected = async (device: any) => {
     const result = await serial.isDeviceConnected(device);
     return result;
   }
-  const result = await hid.isDeviceConnected(device);
+  const result = await HID.isDeviceConnected(device);
   return result;
 };
 
@@ -65,7 +65,7 @@ const isDeviceSupported = async (device: any) => {
     const result = await serial.isDeviceSupported(device);
     return result;
   }
-  const result = await hid.isDeviceSupported(device);
+  const result = await HID.isDeviceSupported(device);
   return result;
 };
 
@@ -82,13 +82,13 @@ const list = async () => {
   // .map((sDevice: DeviceType) => new Device(sDevice));
 
   // working with hid
-  const hidDevs = HID.getDevices();
+  const hidDevs = await HID.getDevices();
   console.log(hidDevs);
-  // for (const dev of hidDevs) {
-  //   const connected = await isDeviceConnected(dev);
-  //   const supported = await isDeviceSupported(dev);
-  //   if (connected && supported) finalDevices.push(new Device(dev, "serial"));
-  // }
+  for (const dev of hidDevs) {
+    const connected = await isDeviceConnected(dev);
+    const supported = await isDeviceSupported(dev);
+    if (connected && supported) finalDevices.push(new Device(dev, "serial"));
+  }
 
   // const finalDevices: Array<Device> = sDevices;
   return finalDevices;

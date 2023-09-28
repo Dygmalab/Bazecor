@@ -1,3 +1,5 @@
+import Hardware from "../hardware";
+
 const DygmavendorID = 13807;
 const DygmaproductID = 18;
 const HIDReportID = 5;
@@ -16,12 +18,14 @@ class HIDError extends Error {
 
 class HID {
   private connectedDevice: HIDDevice;
+  private devices: Array<HIDDevice>;
   private dataReceived: string;
   private static encoder: TextEncoder;
   private static decoder: TextDecoder;
 
   constructor() {
     this.connectedDevice = null;
+    this.devices = [];
     this.dataReceived = "";
     if (!HID.encoder || !HID.decoder) {
       HID.encoder = new TextEncoder();
@@ -32,34 +36,72 @@ class HID {
   static getDevices = async (): Promise<HIDDevice[]> => {
     const grantedDevices = await navigator.hid.getDevices();
     const filteredDevices = grantedDevices.filter(dev => dev.vendorId === DygmavendorID && dev.productId === DygmaproductID);
-    console.log(filteredDevices);
-    return filteredDevices;
+    const foundDevices = [];
+
+    for (const device of filteredDevices) {
+      for (const Hdevice of Hardware.serial) {
+        if (device.productId === Hdevice.usb.productId && device.vendorId === Hdevice.usb.vendorId) {
+          const newHID: any = device;
+          newHID.device = Hdevice;
+          foundDevices.push(newHID);
+        }
+      }
+    }
+    console.log("Usable found devices:", foundDevices);
+    return foundDevices;
   };
 
-  connectDevice = async (index: number) => {
+  connectDevice = (device: HIDDevice) => {
     // if we are already connected, we do not care and connect again
     console.log("Trying to connect HID");
     if (this.connectedDevice) {
       throw new HIDError("Device already connected");
     }
-    const devices = await navigator.hid.requestDevice({
-      filters: [
-        {
-          vendorId: DygmavendorID,
-          productId: DygmaproductID,
-          usage: DygmaUsage,
-          usagePage: DygmaUsagePage,
-        },
-      ],
-    });
-    console.log("Devices to connect");
-    console.log(devices);
-    if (devices.length > 0) {
-      const connectedDevice = devices[index];
+    if (device) {
+      const connectedDevice = device;
       this.connectedDevice = connectedDevice;
       return connectedDevice;
     }
     throw new HIDError("No HID Devices to connect");
+  };
+
+  static isDeviceConnected = (device: any) => {
+    // if (process.platform !== "linux") return true;
+    // try {
+    //   fs.accessSync(device.path, fs.constants.R_OK | fs.constants.W_OK);
+    // } catch (e) {
+    //   return false;
+    // }
+    console.log("checking if device is connected: ", device);
+    return true;
+  };
+
+  static isDeviceSupported = async (device: any) => {
+    // if (!device.device.isDeviceSupported) {
+    console.log("checking if device is supported: ", device);
+    const hid = new HID();
+    hid.connectDevice(device);
+    await hid.open();
+    let chipid = "";
+    await hid.sendData(
+      "hardware.chip_id\n",
+      rxData => {
+        console.log("All data received", rxData);
+        chipid = rxData;
+      },
+      err => {
+        console.log(err);
+      },
+    );
+    console.log("after send Data");
+    await hid.close();
+    console.log("after hid close");
+    device.serialNumber = chipid;
+    return true;
+    // }
+    // const supported = await device.device.isDeviceSupported(device);
+    // console.log("focus.isDeviceSupported: port=", device, "supported=", supported);
+    // return supported;
   };
 
   open = async () => {

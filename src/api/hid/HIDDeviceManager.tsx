@@ -12,7 +12,7 @@ class HIDDeviceManager implements DeviceManager {
   };
 
   open = async (index: number) => {
-    await this.HIDDevices[index].connectDevice(index);
+    // await this.HIDDevices[index].connectDevice(index);
     await this.HIDDevices[index].open();
     return this.HIDDevices[index] as ConnectedDevice;
   };

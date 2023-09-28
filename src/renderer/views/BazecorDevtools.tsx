@@ -22,14 +22,17 @@ const BazecorDevtools = () => {
   let connectedDevice: undefined | HIDDevice;
   const [hid] = useState(new HID());
   const [keymap, setKeymap] = useState("");
+  const [grantedDevices, setGrantedDevices] = useState({});
+
   const onGetHIDDevices = async () => {
-    const grantedDevices = await HID.getDevices();
-    console.log(grantedDevices);
+    const gDevices = await HID.getDevices();
+    setGrantedDevices(gDevices);
+    console.log(gDevices);
   };
 
   const onHIDConnect = async () => {
     try {
-      connectedDevice = await hid.connectDevice(0);
+      connectedDevice = await hid.connectDevice(grantedDevices[0]);
       console.log("Connected to");
       console.log(connectedDevice);
     } catch (err) {
