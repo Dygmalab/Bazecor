@@ -18,6 +18,7 @@ interface Device {
   device: any;
   port?: any;
   commands?: any;
+  file?: boolean;
 }
 
 class Device {
@@ -37,6 +38,7 @@ class Device {
     this.callbacks = [];
     this.result = "";
     this.commands = undefined;
+    this.file = false;
   }
 
   static delay = (ms: number) =>

@@ -4,6 +4,7 @@ import { CountProviderProps, Action, State } from "./types/devices";
 import serial, { isSerialType } from "../api/comms/serial";
 import Device from "../api/comms/Device";
 import hid from "../api/comms/hid";
+import HID from "../api/hid/hid";
 
 const DeviceContext = createContext(undefined);
 
@@ -34,7 +35,7 @@ function deviceReducer(state: State, action: Action) {
 }
 
 function DeviceProvider({ children }: CountProviderProps) {
-  const [state, dispatch] = useReducer(deviceReducer, { currentDevice: undefined, selected: 0, deviceList: [] });
+  const [state, dispatch] = useReducer(deviceReducer, { currentDevice: undefined, selected: -1, deviceList: [] });
   // NOTE: you *might* need to memoize this value
   // Learn more in http://kcd.im/optimize-context
   // const value = { state, dispatch };
@@ -81,14 +82,12 @@ const list = async () => {
   // .map((sDevice: DeviceType) => new Device(sDevice));
 
   // working with hid
-  // const hidDevs = hid.find();
-  // console.log(hidDevs);
+  const hidDevs = HID.getDevices();
+  console.log(hidDevs);
   // for (const dev of hidDevs) {
-  //   const isConnected = DeviceTalker.isDeviceConnected(dev);
-  //   const isSupported = DeviceTalker.isDeviceSupported(dev);
-  //   if (isConnected && isSupported) {
-  //     devices.push(dev);
-  //   }
+  //   const connected = await isDeviceConnected(dev);
+  //   const supported = await isDeviceSupported(dev);
+  //   if (connected && supported) finalDevices.push(new Device(dev, "serial"));
   // }
 
   // const finalDevices: Array<Device> = sDevices;

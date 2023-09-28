@@ -27,9 +27,9 @@ import Version from "@Types/version";
 import Pages from "@Types/pages";
 import DygmaLogo from "@Assets/logo.svg";
 import { showDevtools } from "@Renderer/devMode";
+import { useDevice } from "@Renderer/DeviceContext";
 import { BatteryStatus } from "../Battery";
 import i18n from "../../i18n";
-import Focus from "../../../api/focus";
 import { NavigationButton } from "../../component/Button";
 
 import {
@@ -115,6 +115,7 @@ interface Device {
 }
 
 function NavigationMenu(props: NavigationMenuProps): React.JSX.Element {
+  const [state, dispatch] = useDevice();
   const [versions, setVersions] = useState(null);
   const [isUpdated, setIsUpdated] = useState(true);
   const [isBeta, setIsBeta] = useState(false);
@@ -146,26 +147,26 @@ function NavigationMenu(props: NavigationMenuProps): React.JSX.Element {
   };
 
   async function checkKeyboardMetadata() {
-    const focus = new Focus();
-    setDevice(focus.device);
-    if (focus.device === undefined || focus.device.bootloader) return;
-    let parts = await focus.command("version");
+    const { currentDevice } = state;
+    setDevice(currentDevice.device);
+    if (currentDevice.device === undefined || currentDevice.device.bootloader) return;
+    let parts = await currentDevice.command("version");
     parts = parts.split(" ");
     const getVersions: Version = {
       bazecor: parts[0],
       kaleidoscope: parts[1],
       firmware: parts[2],
     };
-    const fwList = await getGitHubFW(focus.device.info.product);
+    const fwList = await getGitHubFW(currentDevice.device.info.product);
     let Beta = getVersions.bazecor.includes("beta");
     let cleanedVersion = getVersions.bazecor;
     if (Beta && !getVersions.bazecor.includes("-beta")) cleanedVersion = getVersions.bazecor.replace("beta", "");
     const semVerCheck = SemVer.compare(fwList[0].version, cleanedVersion);
-    Beta = Beta || focus.device.info.product !== "Raise";
+    Beta = Beta || currentDevice.device.info.product !== "Raise";
     setVersions(getVersions);
     setIsUpdated(semVerCheck > 0);
     setIsBeta(Beta);
-    setVirtual(focus.file);
+    setVirtual(currentDevice.file);
   }
 
   useEffect(() => {

@@ -30,7 +30,7 @@ import GlobalStyles from "@Renderer/theme/GlobalStyles";
 import Light from "@Renderer/theme/LightTheme";
 import Dark from "@Renderer/theme/DarkTheme";
 
-import SelectKeyboard from "@Renderer/views/SelectKeyboard";
+import SelectKeyboard from "@Renderer/views/NewSelectKeyboard";
 import FirmwareUpdate from "@Renderer/views/FirmwareUpdate";
 import LayoutEditor from "@Renderer/views/LayoutEditor";
 import MacroEditor from "@Renderer/views/MacroEditor";
@@ -155,7 +155,7 @@ class App extends React.Component {
 
   onKeyboardDisconnect = async () => {
     const { router } = this.props;
-    await focus.close();
+    // await focus.close();
     this.setState({
       connected: false,
       device: null,
@@ -165,47 +165,47 @@ class App extends React.Component {
     router.navigate("/keyboard-select");
   };
 
-  onKeyboardConnect = async (port, file) => {
+  onKeyboardConnect = async device => {
     const { router } = this.props;
-    await focus.close();
-    if (!port.path) {
-      this.setState({
-        connected: true,
-        pages: {},
-        device: port.device,
-      });
+    // await focus.close();
+    // if (!port.path) {
+    //   this.setState({
+    //     connected: true,
+    //     pages: {},
+    //     device: undefined,
+    //   });
 
-      router.navigate("/welcome");
-      return [];
-    }
+    //   router.navigate("/welcome");
+    //   return [];
+    // }
 
-    console.log("Connecting to", port.path);
-    await focus.open(port.path, port.device, file);
-    console.log("After focus.open");
-    if (focus.device.bootloader) {
-      this.setState({
-        connected: true,
-        pages: {},
-        device: port,
-      });
-      router.navigate("/welcome");
-      return [];
-    }
+    // console.log("Connecting to", port.path);
+    // await focus.open(port.path, port.device, file);
+    // console.log("After focus.open");
+    // if (focus.device.bootloader) {
+    //   this.setState({
+    //     connected: true,
+    //     pages: {},
+    //     device: port,
+    //   });
+    //   router.navigate("/welcome");
+    //   return [];
+    // }
 
-    console.log("Probing for Focus support...");
-    focus.setLayerSize(focus.device);
-    focus.setLEDMode(focus.device);
-    const pages = {
-      keymap: focus.isCommandSupported("keymap.custom") || focus.isCommandSupported("keymap.map"),
-      colormap: focus.isCommandSupported("colormap.map") && focus.isCommandSupported("palette"),
-    };
+    // console.log("Probing for Focus support...");
+    // focus.setLayerSize(device);
+    // focus.setLEDMode(device);
+    // const pages = {
+    //   keymap: focus.isCommandSupported("keymap.custom") || focus.isCommandSupported("keymap.map"),
+    //   colormap: focus.isCommandSupported("colormap.map") && focus.isCommandSupported("palette"),
+    // };
 
     this.setState({
       connected: true,
-      device: port,
-      pages,
+      device,
+      pages: { keymap: true },
     });
-    router.navigate(pages.keymap ? "/editor" : "/welcome");
+    router.navigate("/editor");
     return [];
   };
 

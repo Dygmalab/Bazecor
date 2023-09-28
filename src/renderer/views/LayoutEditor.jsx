@@ -1,3 +1,5 @@
+/* eslint-disable no-continue */
+/* eslint-disable no-bitwise */
 // -*- mode: js-jsx -*-
 /* Bazecor -- Kaleidoscope Command Center
  * Copyright (C) 2018, 2019  Keyboardio, Inc.
@@ -15,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Styled from "styled-components";
 import { toast } from "react-toastify";
 import { ipcRenderer } from "electron";
@@ -30,6 +32,7 @@ import ToastMessage from "@Renderer/component/ToastMessage";
 
 import ConfirmationDialog from "@Renderer/component/ConfirmationDialog";
 import { CopyFromDialog } from "@Renderer/component/CopyFromDialog";
+import { useDevice } from "@Renderer/DeviceContext";
 
 // Modules
 import { PageHeader } from "@Renderer/modules/PageHeader";
@@ -42,10 +45,10 @@ import { LayerSelector } from "@Renderer/component/Select";
 import { RegularButton } from "@Renderer/component/Button";
 import { LayoutViewSelector } from "@Renderer/component/ToggleButtons";
 import { IconArrowUpWithLine, IconArrowDownWithLine } from "@Renderer/component/Icon";
+import { rgb2w, rgbw2b } from "../../api/color";
 
 import Keymap, { KeymapDB } from "../../api/keymap";
 
-import Focus from "../../api/focus";
 import Backup from "../../api/backup";
 import i18n from "../i18n";
 
@@ -93,8 +96,8 @@ const Styles = Styled.div`
   border-radius: 6px;
   button.btn {
     background: transparent;
-  } 
-  button.btn + button.btn {   
+  }
+  button.btn + button.btn {
     margin-left: 4px;
   }
 }
@@ -228,7 +231,7 @@ const Styles = Styled.div`
     filter: blur(18px);
     opacity: 0.4;
   }
-  &.keyOnFocus { 
+  &.keyOnFocus {
     .baseShape {
       filter: drop-shadow(0px 4px 0px ${({ theme }) => theme.styles.raiseKeyboard.keyShadow});
     }
@@ -267,7 +270,7 @@ const Styles = Styled.div`
     margin: 0;
     margin-left: 6px;
     margin-right: -1px;
-    &.extraBottom { 
+    &.extraBottom {
       margin-left: 1px;
       li {
         margin-left: 1px;
@@ -277,7 +280,7 @@ const Styles = Styled.div`
     li {
       padding: 0px 3px;
       border-radius: 3px;
-      
+
       display: inline-block;
       margin: 1px;
 
@@ -379,9 +382,8 @@ const Styles = Styled.div`
 }
 
 `;
-
-class LayoutEditor extends React.Component {
-  defaultLayerNames = [
+function LayoutEditor(props) {
+  const defaultLayerNames = [
     {
       id: 0,
       name: "L1",
@@ -424,771 +426,68 @@ class LayoutEditor extends React.Component {
     },
   ];
 
-  constructor(props) {
-    super(props);
-    this.bkp = new Backup();
+  const bkp = new Backup();
 
-    this.state = {
-      currentLayer: 0,
-      previousLayer: 0,
-      layerNames: [],
-      currentKeyIndex: -1,
-      currentLedIndex: -1,
-      previousKeyIndex: 0,
-      previousLedIndex: 0,
-      modified: false,
-      saving: false,
-      keymap: {
-        custom: [],
-        default: [],
-        onlyCustom: false,
-      },
-      palette: [],
-      colorMap: [],
-      macros: [],
-      superkeys: [],
-      storedMacros: [],
-      storedSuper: [],
-      registered: false,
-      chipID: "",
-      modeselect: "keyboard",
-      clearConfirmationOpen: false,
-      copyFromOpen: false,
-      shareLayerOpen: false,
-      importExportDialogOpen: false,
-      isMultiSelected: false,
-      isColorButtonSelected: false,
-      currentLanguageLayout: "",
-      showMacroModal: false,
-      showNeuronModal: false,
-      isStandardView: store.get("settings.isStandardView") || true,
-      showStandardView: false,
-      layoutSelectorPosition: { x: 0, y: 0 },
-      isWireless: false,
-    };
-    this.onLayerNameChange = this.onLayerNameChange.bind(this);
-    this.updateMacros = this.updateMacros.bind(this);
-    this.toExport = this.toExport.bind(this);
-    this.toImport = this.toImport.bind(this);
-    this.toExportAll = this.toExportAll.bind(this);
-    this.getLayout = this.getLayout.bind(this);
-    this.newSuperID = this.newSuperID.bind(this);
-    this.setSuperKey = this.setSuperKey.bind(this);
-    this.delSuperKey = this.delSuperKey.bind(this);
-    this.toggleMacroModal = this.toggleMacroModal.bind(this);
-    this.toggleNeuronModal = this.toggleNeuronModal.bind(this);
-    this.CloneExistingNeuron = this.CloneExistingNeuron.bind(this);
-    this.updateOldMacros = this.updateOldMacros.bind(this);
-    this.onToggle = this.onToggle.bind(this);
-  }
+  const initialState = {
+    currentLayer: 0,
+    previousLayer: 0,
+    layerNames: [],
+    currentKeyIndex: -1,
+    currentLedIndex: -1,
+    previousKeyIndex: 0,
+    previousLedIndex: 0,
+    modified: false,
+    saving: false,
+    keymap: {
+      custom: [],
+      default: [],
+      onlyCustom: false,
+    },
+    palette: [],
+    colorMap: [],
+    macros: [],
+    superkeys: [],
+    storedMacros: [],
+    storedSuper: [],
+    registered: false,
+    chipID: "",
+    modeselect: "keyboard",
+    clearConfirmationOpen: false,
+    copyFromOpen: false,
+    shareLayerOpen: false,
+    importExportDialogOpen: false,
+    isMultiSelected: false,
+    isColorButtonSelected: false,
+    currentLanguageLayout: "",
+    showMacroModal: false,
+    showNeuronModal: false,
+    isStandardView: store.get("settings.isStandardView") || true,
+    showStandardView: false,
+    layoutSelectorPosition: { x: 0, y: 0 },
+    isWireless: false,
+    inContext: false,
+  };
 
-  keymapDB = new KeymapDB();
+  const [state, setState] = useState(initialState);
+  const [deviceState, deviceDispatcher] = useDevice();
 
-  onLayerNameChange(newName) {
-    const { layerNames, currentLayer, neuronID } = this.state;
+  let keymapDB = new KeymapDB();
+
+  const onLayerNameChange = newName => {
+    const { layerNames, currentLayer, neuronID } = state;
     const slicedLayerNames = layerNames.slice();
     slicedLayerNames[currentLayer] = {
       id: currentLayer,
       name: newName,
     };
-    this.setState({
-      layerNames: slicedLayerNames,
-    });
+    state.layerNames = slicedLayerNames;
     const neurons = store.get("neurons");
     console.log(`changed layer ${currentLayer} name to: ${newName}`, slicedLayerNames);
     neurons[neuronID].layers = slicedLayerNames;
     store.set("neurons", neurons);
-  }
-
-  async AnalizeChipID(chipID) {
-    const focus = new Focus();
-    let neurons = store.get("neurons");
-    let finalNeuron;
-    console.log("Neuron ID", chipID, neurons);
-    if (neurons === undefined) {
-      neurons = [];
-    }
-    if (neurons.some(n => n.id === chipID)) {
-      finalNeuron = neurons.find(n => n.id === chipID);
-    }
-    if (!neurons.some(n => n.id === chipID) && neurons.length === 0) {
-      const neuron = {};
-      neuron.id = chipID;
-      neuron.name = focus.device.info.product;
-      neuron.layers =
-        store.get("layerNames") !== undefined
-          ? store.get("layerNames").map((name, id) => ({
-              id,
-              name,
-            }))
-          : this.defaultLayerNames;
-      neuron.macros =
-        store.get("macros") !== undefined
-          ? store.get("macros").map(macro => ({
-              id: macro.id,
-              name: macro.name,
-            }))
-          : [];
-      neuron.superkeys =
-        store.get("superkeys") !== undefined
-          ? store.get("superkeys").map(sk => ({
-              id: sk.id,
-              name: sk.name,
-            }))
-          : [];
-      console.log("New neuron", neuron);
-      neurons = neurons.concat(neuron);
-      store.set("neurons", neurons);
-      finalNeuron = neuron;
-    }
-    const existingDefy = neurons.some(n => n.id.length < 32);
-    const existingRaise = neurons.some(n => n.id.length === 32);
-    if (!neurons.some(n => n.id === chipID) && neurons.length > 0) {
-      const neuron = {};
-      neuron.id = chipID;
-      neuron.name = focus.device.info.product;
-      neuron.layers = this.defaultLayerNames;
-      neuron.macros = [];
-      neuron.superkeys = [];
-      const neuronCopy = {};
-      neuronCopy.id = chipID;
-      neuronCopy.name = neurons[0].name;
-      neuronCopy.layers = neurons[0].layers;
-      neuronCopy.macros = neurons[0].macros;
-      neuronCopy.superkeys = neurons[0].superkeys;
-      console.log("Additional neuron", neuron);
-      let result;
-      if ((focus.device.info.product === "Defy" && !existingDefy) || (focus.device.info.product === "Raise" && !existingRaise)) {
-        result = false;
-      } else {
-        result = await window.confirm(
-          "A new Neuron was detected and new settings need to be created. The names of the layers, macros and Superkeys are empty. If you want to copy the names of your default Neuron (first in the list) click ‘Ok’. If you prefer to reset all names click ‘Cancel’.",
-        );
-      }
-      // var result = await userAction;
-      console.log(result, neuron, neuronCopy);
-      if (result === false) {
-        neurons = neurons.concat(neuron);
-        store.set("neurons", neurons);
-        finalNeuron = neuron;
-      }
-      if (result === true) {
-        neurons = neurons.concat(neuronCopy);
-        store.set("neurons", neurons);
-        finalNeuron = neuronCopy;
-      }
-    }
-    console.log("Final neuron", finalNeuron);
-    this.setState({
-      neurons,
-      neuronID: neurons.findIndex(n => n.id === chipID),
-      layerNames: finalNeuron.layers,
-      storedMacros: finalNeuron.macros,
-      storedSuper: finalNeuron.superkeys,
-    });
-    return finalNeuron;
-  }
-
-  scanKeyboard = async lang => {
-    const focus = new Focus();
-    try {
-      /**
-       * Create property language to the object 'options', to call KeymapDB in Keymap and modify languagu layout
-       */
-      const chipID = await focus.command("hardware.chip_id");
-      const registered = await this.AnalizeChipID(chipID.replace(/\s/g, ""));
-      const device = focus.device.info.product;
-      const wirelessChecker = focus.device.info.keyboardType === "wireless";
-      if (lang) {
-        const deviceLang = { ...focus.device, language: true };
-        focus.commands.keymap = new Keymap(deviceLang);
-        this.keymapDB = focus.commands.keymap.db;
-      }
-
-      let defLayer = await focus.command("settings.defaultLayer");
-      defLayer = parseInt(defLayer) || 0;
-
-      const keymap = await focus.command("keymap");
-      const onlyC = await focus.command("keymap.onlyCustom");
-      keymap.onlyCustom = onlyC;
-
-      let empty = true;
-      for (const layer of keymap.custom) {
-        for (const i of layer) {
-          if (i.keyCode != 65535) {
-            empty = false;
-            break;
-          }
-        }
-      }
-
-      console.log("KEYMAP TEST!!", keymap, keymap.onlyCustom, onlyC);
-      if (empty && keymap.custom.length > 0) {
-        console.log("Custom keymap is empty, copying defaults");
-        for (let i = 0; i < keymap.default.length; i++) {
-          keymap.custom[i] = keymap.default[i].slice();
-        }
-        keymap.onlyCustom = true;
-        await focus.command("keymap", keymap);
-      }
-
-      const colormap = await focus.command("colormap");
-      const palette = colormap.palette.slice();
-      console.log("retrieved color.map & palette", colormap, palette);
-      let raw = await focus.command("macros.map");
-      if (raw.search(" 0 0") !== -1) {
-        raw = raw.split(" 0 0")[0].split(" ").map(Number);
-      } else {
-        raw = "";
-      }
-      const parsedMacros = this.macroTranslator(raw);
-      let raw2 = await focus.command("superkeys.map");
-      if (raw2.search(" 0 0") !== -1) {
-        raw2 = raw2.split(" 0 0")[0].split(" ").map(Number);
-      } else {
-        raw2 = "";
-      }
-      const parsedSuper = this.superTranslator(raw2);
-
-      let ledIndexStart = 69;
-      if (device === "Defy") {
-        ledIndexStart = 70;
-      }
-      this.setState({
-        currentLayer: this.state.previousLayer,
-        defaultLayer: defLayer,
-        keymap,
-        showDefaults: !keymap.onlyCustom,
-        palette,
-        colorMap: colormap.colorMap,
-        macros: parsedMacros,
-        superkeys: parsedSuper,
-        registered,
-        chipID,
-        deviceName: device,
-        isWireless: wirelessChecker,
-        ledIndexStart,
-      });
-      if (keymap.custom) {
-        const oldmacro = [...Array(64).keys()].map(x => x + 24576);
-        // console.log("testing", oldmacro);
-        for (let index = 0; index < keymap.custom.length; index++) {
-          // console.log(keymap.custom[index]);
-          if (keymap.custom[index].some(r => oldmacro.includes(r.keyCode))) {
-            this.setState({ showMacroModal: true });
-            break;
-          }
-        }
-      }
-    } catch (e) {
-      console.error(e);
-      toast.error(e);
-      this.props.onDisconnect();
-    }
   };
 
-  getCurrentKey() {
-    if (this.state.currentKeyIndex < 0) return -1;
-
-    let layer = parseInt(this.state.currentLayer);
-    const keyIndex = parseInt(this.state.currentKeyIndex);
-
-    if (keyIndex >= 80 || !this.state.keymap.custom) return 0;
-
-    if (this.state.keymap.onlyCustom) {
-      if (layer < 0) {
-        layer += this.state.keymap.default.length;
-        return this.state.keymap.default[layer][keyIndex].keyCode;
-      }
-
-      return this.state.keymap.custom[layer][keyIndex].keyCode;
-    }
-    const offset = this.state.keymap.default.length;
-    if (layer < this.state.keymap.default.length) return this.state.keymap.default[layer][keyIndex].keyCode;
-
-    return this.state.keymap.custom[layer - offset][keyIndex].keyCode;
-  }
-
-  onKeyChange = keyCode => {
-    // Keys can only change on the custom layers
-    const layer = this.state.currentLayer;
-    const keyIndex = this.state.currentKeyIndex;
-
-    if (keyIndex === -1) {
-      return;
-    }
-
-    this.setState(state => {
-      const keymap = state.keymap.custom.slice();
-      const l = state.keymap.onlyCustom ? layer : layer - state.keymap.default.length;
-      keymap[l][keyIndex] = this.keymapDB.parse(keyCode);
-      return {
-        keymap: {
-          default: state.keymap.default,
-          onlyCustom: state.keymap.onlyCustom,
-          custom: keymap,
-        },
-        modified: true,
-      };
-    });
-    this.props.startContext();
-  };
-
-  dualFunction = modifier => {
-    const { currentLayer, currentKeyIndex, keymap } = this.state;
-
-    if (currentKeyIndex === -1) {
-      return;
-    }
-    const KM = keymap.custom.slice();
-    const l = keymap.onlyCustom ? currentLayer : currentLayer - keymap.default.length;
-    const code = this.keymapDB.reverse(KM[l][currentKeyIndex].label);
-    const keyCode = modifier + code;
-
-    this.setState(state => {
-      KM[l][currentKeyIndex] = this.keymapDB.parse(keyCode);
-      return {
-        keymap: {
-          default: state.keymap.default,
-          onlyCustom: state.keymap.onlyCustom,
-          custom: KM,
-        },
-        modified: true,
-      };
-    });
-    this.props.startContext();
-  };
-
-  /**
-   * Verificate that colors in keyboard button and in color palette is equal
-   * @param {number} colorIndex Number of palette index
-   * @param {number} currentLayer Number of current layer
-   * @param {number} currentLedIndex Number of current selected keyboard button
-   */
-
-  onVerificationColor = (colorIndex, currentLayer, currentLedIndex) => {
-    const { colorMap } = this.state;
-    const currentIndexKeyButton = colorMap[currentLayer][currentLedIndex];
-    return currentIndexKeyButton === colorIndex;
-  };
-
-  /**
-   * Change state if click control or shift button
-   * @param {number} layer Number of current layer
-   * @param {number} ledIndex Number of current selected keyboard button
-   */
-  onCtrlShiftPress = (layer, ledIndex) => {
-    this.setState({
-      selectedPaletteColor: this.state.colorMap[layer][ledIndex],
-      isMultiSelected: true,
-      isColorButtonSelected: true,
-    });
-  };
-
-  /**
-   * Change state if color buton selected
-   * @param {number} layer Number of layer in attribute of keyboard button
-   * @param {number} currentLayer Number of current layer from state
-   * @param {number} ledIndex Number of current selected keyboard button
-   */
-  onButtonKeyboardColorChange = (currentLayer, layer, ledIndex) => {
-    const { selectedPaletteColor, modified } = this.state;
-    const isEqualColor = this.onVerificationColor(selectedPaletteColor, currentLayer, ledIndex);
-    if (!modified && isEqualColor) {
-    } else {
-      this.setState(state => {
-        const colormap = state.colorMap.slice();
-        colormap[currentLayer][ledIndex] = this.state.selectedPaletteColor;
-        this.props.startContext();
-        return {
-          selectedPaletteColor: this.state.colorMap[layer][ledIndex],
-          colorMap: colormap,
-          modified: true,
-        };
-      });
-    }
-  };
-
-  onKeySelect = event => {
-    const {
-      selectedPaletteColor,
-      currentLayer,
-      isMultiSelected,
-      isColorButtonSelected,
-      currentKeyIndex,
-      isStandardView,
-      showStandardView,
-    } = this.state;
-    const { currentTarget } = event;
-    const layer = parseInt(currentTarget.getAttribute("data-layer"));
-    const keyIndex = parseInt(currentTarget.getAttribute("data-key-index"));
-    const ledIndex = parseInt(currentTarget.getAttribute("data-led-index"));
-
-    if (isStandardView) {
-      this.setState({ showStandardView: true });
-      console.log("Show Standard View IF: ", showStandardView);
-    }
-
-    if (keyIndex == currentKeyIndex && !isStandardView) {
-      if (event.ctrlKey || (event.shiftKey && !isColorButtonSelected)) {
-        this.onCtrlShiftPress(layer, ledIndex);
-        return;
-      }
-      this.setState({
-        currentKeyIndex: -1,
-        currentLedIndex: -1,
-        selectedPaletteColor: null,
-        isMultiSelected: false,
-        isColorButtonSelected: false,
-      });
-      return;
-    }
-
-    this.setState(state => {
-      if (state.colorMap.length > 0 && layer >= 0 && layer < state.colorMap.length) {
-        return {
-          currentLayer: layer,
-          currentKeyIndex: keyIndex,
-          currentLedIndex: ledIndex,
-          modeselect: ledIndex >= this.state.ledIndexStart ? "color" : state.modeselect,
-        };
-      }
-      return {
-        currentLayer: layer,
-        currentKeyIndex: keyIndex,
-      };
-    });
-
-    if (event.ctrlKey || event.shiftKey) {
-      this.onCtrlShiftPress(layer, ledIndex);
-    } else {
-      if (selectedPaletteColor !== null && isMultiSelected && isColorButtonSelected) {
-        this.onButtonKeyboardColorChange(currentLayer, layer, ledIndex);
-      }
-      if (isColorButtonSelected && !isMultiSelected) {
-        this.setState(
-          () => ({
-            isMultiSelected: true,
-          }),
-          () => {
-            this.onButtonKeyboardColorChange(currentLayer, layer, ledIndex);
-          },
-        );
-      }
-    }
-  };
-
-  selectLayer = id => {
-    if (id === undefined) return;
-    this.setState({
-      currentLayer: id,
-    });
-  };
-
-  onApply = async () => {
-    this.setState({ saving: true });
-    const focus = new Focus();
-    await focus.command("keymap", this.state.keymap);
-    await focus.command("colormap", this.state.palette, this.state.colorMap);
-    this.setState({
-      modified: false,
-      saving: false,
-      previousKeyIndex: this.state.currentKeyIndex,
-      previousLedIndex: this.state.currentLedIndex,
-      previousLayer: this.state.currentLayer,
-      isMultiSelected: false,
-      selectedPaletteColor: null,
-      isColorButtonSelected: false,
-    });
-    console.log("Changes saved.");
-    const commands = await this.bkp.Commands();
-    const backup = await this.bkp.DoBackup(commands, this.state.neurons[this.state.neuronID].id);
-    this.bkp.SaveBackup(backup);
-    this.props.cancelContext();
-  };
-
-  // Callback function to set State of new Language
-  onChangeLanguageLayout = () => {
-    const newLanguage = store.get("settings.language");
-    console.log("Language automatically set to: ", newLanguage);
-    this.setState({
-      currentLanguageLayout: newLanguage || "english",
-    });
-  };
-
-  async componentDidMount() {
-    await this.scanKeyboard().then(() => {
-      const { keymap } = this.state;
-      const defLayer = this.state.defaultLayer >= 126 ? 0 : this.state.defaultLayer;
-      let initialLayer = 0;
-
-      if (!store.get("settings.showDefaults")) {
-        if (defLayer < keymap.default.length) {
-          initialLayer = keymap.onlyCustom ? 0 : keymap.default.length;
-        }
-      }
-
-      this.setState({
-        currentLayer: this.state.previousLayer != 0 ? this.state.previousLayer : initialLayer,
-      });
-    });
-    this.onChangeLanguageLayout();
-    await this.configStandarView();
-  }
-
-  UNSAFE_componentWillReceiveProps(nextProps) {
-    if (this.props.inContext && !nextProps.inContext) {
-      this.setState({
-        currentLayer: this.state.previousLayer != 0 ? this.state.previousLayer : 0,
-        currentKeyIndex: -1,
-        currentLedIndex: -1,
-        keymap: {
-          custom: [],
-          default: [],
-          onlyCustom: false,
-        },
-        palette: [],
-      });
-      this.scanKeyboard();
-      this.setState({ modified: false });
-    }
-  }
-
-  shareLayerDialog = () => {
-    this.setState({ shareLayerOpen: true });
-  };
-
-  cancelShareLayer = () => {
-    this.setState({ shareLayerOpen: false });
-  };
-
-  copyFromDialog = () => {
-    this.setState({ copyFromOpen: true });
-  };
-
-  cancelCopyFrom = () => {
-    this.setState({ copyFromOpen: false });
-  };
-
-  copyFromLayer = layer => {
-    this.setState(state => {
-      let newKeymap;
-      let newColormap;
-
-      if (state.keymap.onlyCustom) {
-        newKeymap = layer < 0 ? state.keymap.default.slice() : state.keymap.custom.slice();
-        newKeymap[state.currentLayer] =
-          layer < 0 ? state.keymap.default[layer + state.keymap.default.length].slice() : state.keymap.custom[layer].slice();
-      } else {
-        newKeymap = layer < state.keymap.default.length ? state.keymap.default.slice() : state.keymap.custom.slice();
-        newKeymap[state.currentLayer] =
-          layer < state.keymap.default.length
-            ? state.keymap.default[layer].slice()
-            : state.keymap.custom[layer - state.keymap.default.length].slice();
-      }
-      newColormap = state.colorMap.slice();
-      if (newColormap.length > 0)
-        newColormap[state.currentLayer] = state.colorMap[layer >= 0 ? layer : state.currentLayer].slice();
-
-      this.props.startContext();
-      return {
-        colorMap: newColormap,
-        keymap: {
-          default: state.keymap.default,
-          onlyCustom: state.keymap.onlyCustom,
-          custom: newKeymap,
-        },
-        copyFromOpen: false,
-        modified: true,
-      };
-    });
-  };
-
-  clearLayer = () => {
-    this.setState(state => {
-      const newKeymap = state.keymap.custom.slice();
-      const idx = state.keymap.onlyCustom ? state.currentLayer : state.currentLayer - state.keymap.default.length;
-      newKeymap[idx] = Array(newKeymap[0].length)
-        .fill()
-        .map(() => ({ keyCode: 65535, label: "", extraLabel: "TRANS", verbose: "Transparent" }));
-
-      const newColormap = state.colorMap.slice();
-      if (newColormap.length > 0) {
-        newColormap[idx] = Array(newColormap[0].length)
-          .fill()
-          .map(() => 15);
-      }
-      this.props.startContext();
-      return {
-        keymap: {
-          default: state.keymap.default,
-          onlyCustom: state.keymap.onlyCustom,
-          custom: newKeymap,
-        },
-        colorMap: newColormap,
-        modified: true,
-        clearConfirmationOpen: false,
-      };
-    });
-  };
-
-  confirmClear = () => {
-    this.setState({ clearConfirmationOpen: true });
-  };
-
-  cancelClear = () => {
-    this.setState({ clearConfirmationOpen: false });
-  };
-
-  onColorButtonSelect = (action, colorIndex) => {
-    const { isColorButtonSelected } = this.state;
-    if (action === "one_button_click") {
-      this.setState({
-        isMultiSelected: false,
-        isColorButtonSelected: !isColorButtonSelected,
-      });
-      return;
-    }
-    if (action === "another_button_click") {
-      this.setState({
-        selectedPaletteColor: colorIndex,
-        isColorButtonSelected: true,
-      });
-    }
-  };
-
-  onColorSelect = colorIndex => {
-    const { currentLayer, currentLedIndex, colorMap } = this.state;
-
-    const isEqualColor = this.onVerificationColor(colorIndex, currentLayer, currentLedIndex);
-
-    if (currentLayer < 0 || currentLayer >= colorMap.length) return;
-
-    if (!isEqualColor) {
-      this.setState(state => {
-        const colormap = state.colorMap.slice();
-        colormap[currentLayer][currentLedIndex] = colorIndex;
-        return {
-          isMultiSelected: true,
-          colorMap: colormap,
-          selectedPaletteColor: colorIndex,
-          modified: true,
-        };
-      });
-      this.props.startContext();
-    } else {
-      this.setState({
-        selectedPaletteColor: colorIndex,
-      });
-    }
-  };
-
-  onBacklightColorSelect = colorIndex => {
-    this.setState({
-      selectedPaletteColor: colorIndex,
-      isColorButtonSelected: true,
-    });
-  };
-
-  onColorPick = (colorIndex, r, g, b) => {
-    const newPalette = this.state.palette.slice();
-    const setColors = (r, g, b) => ({
-      r,
-      g,
-      b,
-      rgb: `rgb(${r}, ${g}, ${b})`,
-    });
-    newPalette[colorIndex] = setColors(r, g, b);
-    this.setState({
-      palette: newPalette,
-      modified: true,
-    });
-    this.props.startContext();
-  };
-
-  importExportDialog = () => {
-    this.setState({ importExportDialogOpen: true });
-  };
-
-  cancelImport = () => {
-    this.setState({ importExportDialogOpen: false });
-  };
-
-  importLayer = data => {
-    if (data.palette.length > 0) this.setState({ palette: data.palette });
-    const layerNames = this.state.layerNames.slice();
-    const { currentLayer } = this.state;
-    if (data.layerNames != null) {
-      for (let i = 0; i < data.layerNames.length; i++) {
-        layerNames[i] = data.layerNames[i];
-      }
-      if (data.layerName && currentLayer) {
-        layerNames[currentLayer] = data.layerName;
-      }
-      this.setState({ layerNames });
-    }
-    if (data.keymap.length > 0 && data.colormap.length > 0) {
-      if (this.state.keymap.onlyCustom) {
-        if (currentLayer >= 0) {
-          this.setState(state => {
-            const newKeymap = this.state.keymap.custom.slice();
-            newKeymap[currentLayer] = data.keymap.slice();
-            const newColormap = this.state.colorMap.slice();
-            newColormap[currentLayer] = data.colormap.slice();
-            return {
-              keymap: {
-                default: state.keymap.default,
-                custom: newKeymap,
-                onlyCustom: state.keymap.onlyCustom,
-              },
-              colorMap: newColormap,
-            };
-          });
-        }
-      } else if (currentLayer >= this.state.keymap.default.length) {
-        this.setState(state => {
-          const defLength = this.state.keymap.default.length;
-          const newKeymap = this.state.keymap.custom.slice();
-          newKeymap[currentLayer - defLength] = data.keymap;
-          const newColormap = this.state.colorMap.slice();
-          newColormap[currentLayer - defLength] = data.colormap.slice();
-          return {
-            keymap: {
-              default: state.keymap.default,
-              custom: newKeymap,
-              onlyCustom: state.keymap.onlyCustom,
-            },
-            colorMap: newColormap,
-          };
-        });
-      }
-    }
-    this.setState({ modified: true });
-    this.props.startContext();
-    this.toCloseImportExportDialog();
-  };
-
-  /**
-   * Close ImportExportDialog component
-   */
-  toCloseImportExportDialog = () => {
-    this.setState({ importExportDialogOpen: false });
-  };
-
-  toChangeAllKeysColor = (colorIndex, start, end) => {
-    const { currentLayer } = this.state;
-    this.setState(state => {
-      const colormap = state.colorMap.slice();
-      colormap[currentLayer] = colormap[currentLayer].fill(colorIndex, start, end);
-      return {
-        colorMap: colormap,
-        modified: true,
-      };
-    });
-    this.props.startContext();
-  };
-
-  superTranslator(raw) {
+  const superTranslator = raw => {
     let superkey = [];
     const superkeys = [];
     let iter = 0;
@@ -1202,29 +501,28 @@ class LayoutEditor extends React.Component {
       // console.log(iter, raw[iter], superkey);
       if (raw[iter] === 0) {
         superkeys[superindex] = { actions: superkey, name: "", id: superindex };
-        superindex++;
+        superindex += 1;
         superkey = [];
       } else {
         superkey.push(raw[iter]);
       }
-      iter++;
+      iter += 1;
     }
     superkeys[superindex] = { actions: superkey, name: "", id: superindex };
     console.log(`Got Superkeys:${JSON.stringify(superkeys)} from ${raw}`);
 
     if (
-      superkeys[0].actions == undefined ||
-      superkeys[0].actions == [0] ||
-      superkeys[0].actions.filter(v => v === 0).length == superkeys[0].length - 1
+      superkeys[0].actions === undefined ||
+      (superkeys[0].actions.length === 1 && superkeys[0].actions[0] === 0) ||
+      superkeys[0].actions.filter(v => v === 0).length === superkeys[0].length - 1
     )
       return [];
     // TODO: Check if stored superKeys match the received ones, if they match, retrieve name and apply it to current superKeys
-    const equal = [];
     let finalSuper = [];
     let stored = [];
-    console.log(this.state.neurons, this.state.neuronID, superkeys);
-    if (this.state.neurons !== undefined) {
-      stored = this.state.neurons[this.state.neuronID].superkeys;
+    console.log(state.neurons, state.neuronID, superkeys);
+    if (state.neurons !== undefined) {
+      stored = state.neurons[state.neuronID].superkeys;
     }
     console.log(superkeys, stored);
     finalSuper = superkeys.map((superk, i) => {
@@ -1239,53 +537,9 @@ class LayoutEditor extends React.Component {
     });
     console.log("final superkeys", finalSuper);
     return finalSuper;
-  }
+  };
 
-  newSuperID() {
-    return this.state.superkeys.length;
-  }
-
-  setSuperKey(superid, actions, supername) {
-    const temp = this.state.superkeys;
-    let tempactions = actions;
-    let founddata = false;
-    tempactions = tempactions
-      .reverse()
-      .map((elem, index, array) => {
-        if (elem != 0) return elem;
-        if ((index > 0 && array[index - 1] != 0) || founddata) {
-          founddata = true;
-          return 1;
-        }
-        return elem;
-      })
-      .reverse();
-    temp[superid] = { actions: tempactions, name: supername };
-    this.setState({ superkeys: temp });
-  }
-
-  delSuperKey(superid) {
-    const temp = this.state.superkeys;
-    const aux = this.state.keymap.custom;
-    const result = this.state.keymap;
-    temp.splice(superid, 1);
-    if (temp.length > superid) {
-      aux[this.state.currentLayer]
-        .filter(key => key.keyCode > superid + 53980)
-        .forEach(key => {
-          const auxkey = this.keymapDB.parse(key.keyCode - 1);
-          key.label = auxkey.label;
-          key.extraLabel = auxkey.extraLabel;
-          key.verbose = auxkey.verbose;
-          key.keyCode = auxkey.keyCode;
-        });
-      result.custom = aux;
-      this.setState({ keymap: result });
-    }
-    this.setState({ superkeys: temp });
-  }
-
-  macroTranslator(raw) {
+  const macroTranslator = raw => {
     if (raw === "") {
       return [
         {
@@ -1325,8 +579,8 @@ class LayoutEditor extends React.Component {
     while (raw.length > iter) {
       if (kcs > 0) {
         keyCode.push(raw[iter]);
-        kcs--;
-        iter++;
+        kcs -= 1;
+        iter += 1;
         continue;
       }
       if (iter !== 0 && type !== 0) {
@@ -1345,9 +599,9 @@ class LayoutEditor extends React.Component {
           macros[i].id = i;
           macros[i].name = "";
           macros[i].macro = "";
-          i++;
+          i += 1;
           actions = [];
-          iter++;
+          iter += 1;
           continue;
         case 1:
           kcs = 4;
@@ -1361,7 +615,7 @@ class LayoutEditor extends React.Component {
         default:
           kcs = 1;
       }
-      iter++;
+      iter += 1;
     }
     actions.push({
       type,
@@ -1399,47 +653,664 @@ class LayoutEditor extends React.Component {
     });
     // TODO: Check if stored macros match the received ones, if they match, retrieve name and apply it to current macros
     let finalMacros = [];
-    const stored = this.state.storedMacros;
+    const stored = state.storedMacros;
     console.log(macros, stored);
     if (stored === undefined) {
       return macros;
     }
-    finalMacros = macros.map((macro, i) => {
-      if (stored.length > i && stored.length > 0) {
+    finalMacros = macros.map((macro, idx) => {
+      if (stored.length > idx && stored.length > 0) {
         const aux = macro;
-        aux.name = stored[i].name;
-        aux.macro = macro.actions.map(k => this.keymapDB.parse(k.keyCode).label).join(" ");
+        aux.name = stored[idx].name;
+        aux.macro = macro.actions.map(k => keymapDB.parse(k.keyCode).label).join(" ");
         return aux;
       }
       return macro;
     });
 
     return finalMacros;
-  }
+  };
 
-  updateMacros(recievedMacros) {
-    console.log("Updating Macros", recievedMacros);
-    this.setState({ macros: recievedMacros, modified: true });
-    this.props.startContext();
-  }
+  const getColormap = async () => {
+    const { currentDevice } = deviceState;
+    const layerSize = currentDevice.device.keyboardUnderglow.rows * currentDevice.device.keyboardUnderglow.columns;
 
-  getLayout() {
-    const focus = new Focus();
+    const chunk = (a, chunkSize) => {
+      const R = [];
+      for (let i = 0; i < a.length; i += chunkSize) R.push(a.slice(i, i + chunkSize));
+      return R;
+    };
+
+    const paletteData = await currentDevice.command("palette");
+    const colorMapData = await currentDevice.command("colormap.map");
+
+    const palette =
+      currentDevice.device.RGBWMode !== true
+        ? chunk(
+            paletteData
+              .split(" ")
+              .filter(v => v.length > 0)
+              .map(k => parseInt(k, 10)),
+            3,
+          ).map(color => ({
+            r: color[0],
+            g: color[1],
+            b: color[2],
+            rgb: `rgb(${color[0]}, ${color[1]}, ${color[2]})`,
+          }))
+        : chunk(
+            paletteData
+              .split(" ")
+              .filter(v => v.length > 0)
+              .map(k => parseInt(k, 10)),
+            4,
+          ).map(color => {
+            const coloraux = rgbw2b({ r: color[0], g: color[1], b: color[2], w: color[3] });
+            return {
+              r: coloraux.r,
+              g: coloraux.g,
+              b: coloraux.b,
+              rgb: coloraux.rgb,
+            };
+          });
+
+    const colorMap = chunk(
+      colorMapData
+        .split(" ")
+        .filter(v => v.length > 0)
+        .map(k => parseInt(k, 10)),
+      layerSize,
+    );
+
+    return {
+      palette,
+      colorMap,
+    };
+  };
+
+  const AnalizeChipID = async chipID => {
+    const { currentDevice } = deviceState;
+    let neurons = store.get("neurons");
+    let finalNeuron;
+    console.log("Neuron ID", chipID, neurons);
+    if (neurons === undefined) {
+      neurons = [];
+    }
+    if (neurons.some(n => n.id === chipID)) {
+      finalNeuron = neurons.find(n => n.id === chipID);
+    }
+    if (!neurons.some(n => n.id === chipID) && neurons.length === 0) {
+      const neuron = {};
+      neuron.id = chipID;
+      neuron.name = currentDevice.device.info.product;
+      neuron.layers =
+        store.get("layerNames") !== undefined
+          ? store.get("layerNames").map((name, id) => ({
+              id,
+              name,
+            }))
+          : defaultLayerNames;
+      neuron.macros =
+        store.get("macros") !== undefined
+          ? store.get("macros").map(macro => ({
+              id: macro.id,
+              name: macro.name,
+            }))
+          : [];
+      neuron.superkeys =
+        store.get("superkeys") !== undefined
+          ? store.get("superkeys").map(sk => ({
+              id: sk.id,
+              name: sk.name,
+            }))
+          : [];
+      console.log("New neuron", neuron);
+      neurons = neurons.concat(neuron);
+      store.set("neurons", neurons);
+      finalNeuron = neuron;
+    }
+    const existingDefy = neurons.some(n => n.id.length < 32);
+    const existingRaise = neurons.some(n => n.id.length === 32);
+    if (!neurons.some(n => n.id === chipID) && neurons.length > 0) {
+      const neuron = {};
+      neuron.id = chipID;
+      neuron.name = currentDevice.device.info.product;
+      neuron.layers = defaultLayerNames;
+      neuron.macros = [];
+      neuron.superkeys = [];
+      const neuronCopy = {};
+      neuronCopy.id = chipID;
+      neuronCopy.name = neurons[0].name;
+      neuronCopy.layers = neurons[0].layers;
+      neuronCopy.macros = neurons[0].macros;
+      neuronCopy.superkeys = neurons[0].superkeys;
+      console.log("Additional neuron", neuron);
+      let result;
+      if (
+        (currentDevice.device.info.product === "Defy" && !existingDefy) ||
+        (currentDevice.device.info.product === "Raise" && !existingRaise)
+      ) {
+        result = false;
+      } else {
+        result = await window.confirm(
+          "A new Neuron was detected and new settings need to be created. The names of the layers, macros and Superkeys are empty. If you want to copy the names of your default Neuron (first in the list) click ‘Ok’. If you prefer to reset all names click ‘Cancel’.",
+        );
+      }
+      // var result = await userAction;
+      console.log(result, neuron, neuronCopy);
+      if (result === false) {
+        neurons = neurons.concat(neuron);
+        store.set("neurons", neurons);
+        finalNeuron = neuron;
+      }
+      if (result === true) {
+        neurons = neurons.concat(neuronCopy);
+        store.set("neurons", neurons);
+        finalNeuron = neuronCopy;
+      }
+    }
+    console.log("Final neuron", finalNeuron);
+    state.neurons = neurons;
+    state.neuronID = neurons.findIndex(n => n.id === chipID);
+    state.layerNames = finalNeuron.layers;
+    state.storedMacros = finalNeuron.macros;
+    state.storedSuper = finalNeuron.superkeys;
+    setState({ ...state });
+    return finalNeuron;
+  };
+
+  const scanKeyboard = async lang => {
+    const { currentDevice } = deviceState;
+    try {
+      /**
+       * Create property language to the object 'options', to call KeymapDB in Keymap and modify languagu layout
+       */
+      const chipID = await currentDevice.command("hardware.chip_id");
+      const registered = await AnalizeChipID(chipID.replace(/\s/g, ""));
+      const device = currentDevice.device.info.product;
+      const wirelessChecker = currentDevice.device.info.keyboardType === "wireless";
+      if (lang) {
+        const deviceLang = { ...currentDevice.device, language: true };
+        currentDevice.commands.keymap = new Keymap(deviceLang);
+        keymapDB = currentDevice.commands.keymap.db;
+      }
+
+      let defLayer = await currentDevice.command("settings.defaultLayer");
+      defLayer = parseInt(defLayer, 10) || 0;
+
+      const defaults = await currentDevice.command("keymap.default");
+      const custom = await currentDevice.command("keymap.custom");
+      const onlyCustom = Boolean(parseInt(await currentDevice.command("keymap.onlyCustom"), 10));
+      const keymap = { custom: undefined, default: undefined, onlyCustom: false };
+
+      const layerSize = currentDevice.device.keyboard.rows * currentDevice.device.keyboard.columns;
+      keymap.custom = custom
+        .split(" ")
+        .filter(v => v.length > 0)
+        .map(k => keymapDB.parse(parseInt(k, 10)))
+        .reduce((resultArray, item, index) => {
+          const chunkIndex = Math.floor(index / layerSize);
+
+          if (!resultArray[chunkIndex]) {
+            resultArray[chunkIndex] = []; // start a new chunk
+          }
+          resultArray[chunkIndex].push(item);
+          return resultArray;
+        }, []);
+      keymap.default = defaults
+        .split(" ")
+        .filter(v => v.length > 0)
+        .map(k => keymapDB.parse(parseInt(k, 10)))
+        .reduce((resultArray, item, index) => {
+          const chunkIndex = Math.floor(index / layerSize);
+
+          if (!resultArray[chunkIndex]) {
+            resultArray[chunkIndex] = []; // start a new chunk
+          }
+          resultArray[chunkIndex].push(item);
+          return resultArray;
+        }, []);
+      keymap.onlyCustom = onlyCustom;
+
+      let empty = true;
+      for (const layer of keymap.custom) {
+        for (const i of layer) {
+          if (i.keyCode !== 65535) {
+            empty = false;
+            break;
+          }
+        }
+      }
+
+      console.log("KEYMAP TEST!!", keymap, keymap.onlyCustom, onlyCustom);
+      if (empty && keymap.custom.length > 0) {
+        console.log("Custom keymap is empty, copying defaults");
+        for (let i = 0; i < keymap.default.length; i += 1) {
+          keymap.custom[i] = keymap.default[i].slice();
+        }
+        keymap.onlyCustom = true;
+        await currentDevice.command("keymap", keymap);
+      }
+
+      const colormap = await getColormap(layerSize);
+      const palette = colormap.palette.slice();
+      console.log("retrieved color.map & palette", colormap, palette);
+      let raw = await currentDevice.command("macros.map");
+      if (raw.search(" 0 0") !== -1) {
+        raw = raw.split(" 0 0")[0].split(" ").map(Number);
+      } else {
+        raw = "";
+      }
+      const parsedMacros = macroTranslator(raw);
+      let raw2 = await currentDevice.command("superkeys.map");
+      if (raw2.search(" 0 0") !== -1) {
+        raw2 = raw2.split(" 0 0")[0].split(" ").map(Number);
+      } else {
+        raw2 = "";
+      }
+      const parsedSuper = superTranslator(raw2);
+
+      let ledIndexStart = 69;
+      if (device === "Defy") {
+        ledIndexStart = 70;
+      }
+      state.currentLayer = state.previousLayer;
+      state.defaultLayer = defLayer;
+      state.keymap = keymap;
+      state.showDefaults = !keymap.onlyCustom;
+      state.palette = palette;
+      state.colorMap = colormap.colorMap;
+      state.macros = parsedMacros;
+      state.superkeys = parsedSuper;
+      state.registered = registered;
+      state.chipID = chipID;
+      state.deviceName = device;
+      state.isWireless = wirelessChecker;
+      state.ledIndexStart = ledIndexStart;
+      if (keymap.custom) {
+        const oldmacro = [...Array(64).keys()].map(x => x + 24576);
+        // console.log("testing", oldmacro);
+        for (let index = 0; index < keymap.custom.length; index += 1) {
+          // console.log(keymap.custom[index]);
+          if (keymap.custom[index].some(r => oldmacro.includes(r.keyCode))) {
+            state.showMacroModal = true;
+            break;
+          }
+        }
+      }
+      console.log("sending State");
+      setState({ ...state });
+    } catch (e) {
+      console.error(e);
+      toast.error(e);
+      props.onDisconnect();
+    }
+  };
+
+  const onKeyChange = keyCode => {
+    // Keys can only change on the custom layers
+    const layer = state.currentLayer;
+    const keyIndex = state.currentKeyIndex;
+
+    if (keyIndex === -1) {
+      return;
+    }
+
+    const keymap = state.keymap.custom.slice();
+    const l = state.keymap.onlyCustom ? layer : layer - state.keymap.default.length;
+    keymap[l][keyIndex] = keymapDB.parse(keyCode);
+    state.keymap = {
+      default: state.keymap.default,
+      onlyCustom: state.keymap.onlyCustom,
+      custom: keymap,
+    };
+    state.modified = true;
+    setState({ ...state });
+    props.startContext();
+  };
+
+  /**
+   * Verificate that colors in keyboard button and in color palette is equal
+   * @param {number} colorIndex Number of palette index
+   * @param {number} currentLayer Number of current layer
+   * @param {number} currentLedIndex Number of current selected keyboard button
+   */
+
+  const onVerificationColor = (colorIndex, currentLayer, currentLedIndex) => {
+    const { colorMap } = state;
+    const currentIndexKeyButton = colorMap[currentLayer][currentLedIndex];
+    return currentIndexKeyButton === colorIndex;
+  };
+
+  /**
+   * Change state if click control or shift button
+   * @param {number} layer Number of current layer
+   * @param {number} ledIndex Number of current selected keyboard button
+   */
+  const onCtrlShiftPress = (layer, ledIndex) => {
+    state.selectedPaletteColor = state.colorMap[layer][ledIndex];
+    state.isMultiSelected = true;
+    state.isColorButtonSelected = true;
+    setState({ ...state });
+  };
+
+  /**
+   * Change state if color buton selected
+   * @param {number} layer Number of layer in attribute of keyboard button
+   * @param {number} currentLayer Number of current layer from state
+   * @param {number} ledIndex Number of current selected keyboard button
+   */
+  const onButtonKeyboardColorChange = (currentLayer, layer, ledIndex) => {
+    const { selectedPaletteColor, modified } = state;
+    const isEqualColor = onVerificationColor(selectedPaletteColor, currentLayer, ledIndex);
+    if (!(!modified && isEqualColor)) {
+      const colormap = state.colorMap.slice();
+      colormap[currentLayer][ledIndex] = state.selectedPaletteColor;
+      props.startContext();
+      state.selectedPaletteColor = state.colorMap[layer][ledIndex];
+      state.colorMap = colormap;
+      state.modified = true;
+      setState({ ...state });
+    }
+  };
+
+  const onKeySelect = event => {
+    const {
+      selectedPaletteColor,
+      currentLayer,
+      isMultiSelected,
+      isColorButtonSelected,
+      currentKeyIndex,
+      isStandardView,
+      showStandardView,
+    } = state;
+    const { currentTarget } = event;
+    const layer = parseInt(currentTarget.getAttribute("data-layer"), 10);
+    const keyIndex = parseInt(currentTarget.getAttribute("data-key-index"), 10);
+    const ledIndex = parseInt(currentTarget.getAttribute("data-led-index"), 10);
+
+    if (isStandardView) {
+      state.showStandardView = true;
+      console.log("Show Standard View IF: ", showStandardView);
+    }
+
+    if (keyIndex === currentKeyIndex && !isStandardView) {
+      if (event.ctrlKey || (event.shiftKey && !isColorButtonSelected)) {
+        onCtrlShiftPress(layer, ledIndex);
+        return;
+      }
+      state.currentKeyIndex = -1;
+      state.currentLedIndex = -1;
+      state.selectedPaletteColor = null;
+      state.isMultiSelected = false;
+      state.isColorButtonSelected = false;
+      setState({ ...state });
+      return;
+    }
+
+    if (state.colorMap.length > 0 && layer >= 0 && layer < state.colorMap.length) {
+      state.currentLayer = layer;
+      state.currentKeyIndex = keyIndex;
+      state.currentLedIndex = ledIndex;
+      state.modeselect = ledIndex >= state.ledIndexStart ? "color" : state.modeselect;
+    }
+    state.currentLayer = layer;
+    state.currentKeyIndex = keyIndex;
+    setState({ ...state });
+
+    if (event.ctrlKey || event.shiftKey) {
+      onCtrlShiftPress(layer, ledIndex);
+    } else {
+      if (selectedPaletteColor !== null && isMultiSelected && isColorButtonSelected) {
+        onButtonKeyboardColorChange(currentLayer, layer, ledIndex);
+      }
+      if (isColorButtonSelected && !isMultiSelected) {
+        state.isMultiSelected = true;
+        setState({ ...state });
+        onButtonKeyboardColorChange(currentLayer, layer, ledIndex);
+      }
+    }
+  };
+
+  const selectLayer = id => {
+    if (id === undefined) return;
+    state.currentLayer = id;
+    setState({ ...state });
+  };
+
+  const onApply = async () => {
+    const { currentDevice } = deviceState;
+    state.saving = true;
+    await currentDevice.command("keymap", state.keymap);
+    await currentDevice.command("colormap", state.palette, state.colorMap);
+    state.modified = false;
+    state.saving = false;
+    state.previousKeyIndex = state.currentKeyIndex;
+    state.previousLedIndex = state.currentLedIndex;
+    state.previousLayer = state.currentLayer;
+    state.isMultiSelected = false;
+    state.selectedPaletteColor = null;
+    state.isColorButtonSelected = false;
+    console.log("Changes saved.");
+    const commands = await bkp.Commands();
+    const backup = await bkp.DoBackup(commands, state.neurons[state.neuronID].id);
+    bkp.SaveBackup(backup);
+    setState({ ...state });
+    props.cancelContext();
+  };
+
+  const copyFromDialog = () => {
+    state.copyFromOpen = true;
+    setState({ ...state });
+  };
+
+  const cancelCopyFrom = () => {
+    state.copyFromOpen = false;
+    setState({ ...state });
+  };
+
+  const copyFromLayer = layer => {
+    let newKeymap;
+
+    if (state.keymap.onlyCustom) {
+      newKeymap = layer < 0 ? state.keymap.default.slice() : state.keymap.custom.slice();
+      newKeymap[state.currentLayer] =
+        layer < 0 ? state.keymap.default[layer + state.keymap.default.length].slice() : state.keymap.custom[layer].slice();
+    } else {
+      newKeymap = layer < state.keymap.default.length ? state.keymap.default.slice() : state.keymap.custom.slice();
+      newKeymap[state.currentLayer] =
+        layer < state.keymap.default.length
+          ? state.keymap.default[layer].slice()
+          : state.keymap.custom[layer - state.keymap.default.length].slice();
+    }
+    const newColormap = state.colorMap.slice();
+    if (newColormap.length > 0) newColormap[state.currentLayer] = state.colorMap[layer >= 0 ? layer : state.currentLayer].slice();
+
+    props.startContext();
+    state.colorMap = newColormap;
+    state.keymap = {
+      default: state.keymap.default,
+      onlyCustom: state.keymap.onlyCustom,
+      custom: newKeymap,
+    };
+    state.copyFromOpen = false;
+    state.modified = true;
+    setState({ ...state });
+  };
+
+  const clearLayer = () => {
+    const newKeymap = state.keymap.custom.slice();
+    const idx = state.keymap.onlyCustom ? state.currentLayer : state.currentLayer - state.keymap.default.length;
+    newKeymap[idx] = Array(newKeymap[0].length)
+      .fill()
+      .map(() => ({ keyCode: 65535, label: "", extraLabel: "TRANS", verbose: "Transparent" }));
+
+    const newColormap = state.colorMap.slice();
+    if (newColormap.length > 0) {
+      newColormap[idx] = Array(newColormap[0].length)
+        .fill()
+        .map(() => 15);
+    }
+    props.startContext();
+    state.keymap = {
+      default: state.keymap.default,
+      onlyCustom: state.keymap.onlyCustom,
+      custom: newKeymap,
+    };
+    state.colorMap = newColormap;
+    state.modified = true;
+    state.clearConfirmationOpen = false;
+    setState({ ...state });
+  };
+
+  const confirmClear = () => {
+    state.clearConfirmationOpen = true;
+    setState({ ...state });
+  };
+
+  const cancelClear = () => {
+    state.clearConfirmationOpen = false;
+    setState({ ...state });
+  };
+
+  const onColorButtonSelect = (action, colorIndex) => {
+    const { isColorButtonSelected } = state;
+    if (action === "one_button_click") {
+      state.isMultiSelected = false;
+      state.isColorButtonSelected = !isColorButtonSelected;
+      setState({ ...state });
+      return;
+    }
+    if (action === "another_button_click") {
+      state.selectedPaletteColor = colorIndex;
+      state.isColorButtonSelected = true;
+      setState({ ...state });
+    }
+  };
+
+  const onColorSelect = colorIndex => {
+    const { currentLayer, currentLedIndex, colorMap } = state;
+
+    const isEqualColor = onVerificationColor(colorIndex, currentLayer, currentLedIndex);
+
+    if (currentLayer < 0 || currentLayer >= colorMap.length) return;
+
+    if (!isEqualColor) {
+      const colormap = state.colorMap.slice();
+      colormap[currentLayer][currentLedIndex] = colorIndex;
+      state.isMultiSelected = true;
+      state.colorMap = colormap;
+      state.selectedPaletteColor = colorIndex;
+      state.modified = true;
+      setState({ ...state });
+      props.startContext();
+    } else {
+      state.selectedPaletteColor = colorIndex;
+      setState({ ...state });
+    }
+  };
+
+  const onColorPick = (colorIndex, r, g, b) => {
+    const newPalette = state.palette.slice();
+    const setColors = (red, green, blue) => ({
+      r: red,
+      g: green,
+      b: blue,
+      rgb: `rgb(${red}, ${green}, ${blue})`,
+    });
+    newPalette[colorIndex] = setColors(r, g, b);
+    state.palette = newPalette;
+    state.modified = true;
+    setState({ ...state });
+    props.startContext();
+  };
+
+  const importLayer = data => {
+    if (data.palette.length > 0) state.palette = data.palette;
+    setState({ ...state });
+    const layerNames = state.layerNames.slice();
+    const { currentLayer } = state;
+    if (data.layerNames !== null) {
+      for (let i = 0; i < data.layerNames.length; i += 1) {
+        layerNames[i] = data.layerNames[i];
+      }
+      if (data.layerName && currentLayer) {
+        layerNames[currentLayer] = data.layerName;
+      }
+      state.layerNames = layerNames;
+      setState({ ...state });
+    }
+    if (data.keymap.length > 0 && data.colormap.length > 0) {
+      if (state.keymap.onlyCustom) {
+        if (currentLayer >= 0) {
+          const newKeymap = state.keymap.custom.slice();
+          newKeymap[currentLayer] = data.keymap.slice();
+          const newColormap = state.colorMap.slice();
+          newColormap[currentLayer] = data.colormap.slice();
+          state.keymap = {
+            default: state.keymap.default,
+            custom: newKeymap,
+            onlyCustom: state.keymap.onlyCustom,
+          };
+          state.colorMap = newColormap;
+          setState({ ...state });
+        }
+      } else if (currentLayer >= state.keymap.default.length) {
+        const defLength = state.keymap.default.length;
+        const newKeymap = state.keymap.custom.slice();
+        newKeymap[currentLayer - defLength] = data.keymap;
+        const newColormap = state.colorMap.slice();
+        newColormap[currentLayer - defLength] = data.colormap.slice();
+        state.keymap = {
+          default: state.keymap.default,
+          custom: newKeymap,
+          onlyCustom: state.keymap.onlyCustom,
+        };
+        state.colorMap = newColormap;
+        setState({ ...state });
+      }
+    }
+    state.modified = true;
+    setState({ ...state });
+    props.startContext();
+    toCloseImportExportDialog();
+  };
+
+  /**
+   * Close ImportExportDialog component
+   */
+  const toCloseImportExportDialog = () => {
+    state.importExportDialogOpen = false;
+    setState({ ...state });
+  };
+
+  const toChangeAllKeysColor = (colorIndex, start, end) => {
+    const { currentLayer } = state;
+    const colormap = state.colorMap.slice();
+    colormap[currentLayer] = colormap[currentLayer].fill(colorIndex, start, end);
+    state.colorMap = colormap;
+    state.modified = true;
+    setState({ ...state });
+    props.startContext();
+  };
+
+  const getLayout = () => {
+    const { currentDevice } = deviceState;
     let Layer = {};
     let kbtype = "iso";
-    if (focus.device == null) return { Layer: false, kbtype: false };
+    if (currentDevice.device === null) return { Layer: false, kbtype: false };
     try {
-      Layer = focus.device.components.keymap;
-      kbtype = focus.device && focus.device.info.keyboardType === "ISO" ? "iso" : "ansi";
+      Layer = currentDevice.device.components.keymap;
+      kbtype = currentDevice.device && currentDevice.device.info.keyboardType === "ISO" ? "iso" : "ansi";
     } catch (error) {
       console.error("Focus lost connection to Raise: ", error);
       return { Layer: false, kbtype: false };
     }
 
     return { Layer, kbtype };
-  }
+  };
 
-  async toImport() {
+  const toImport = async () => {
     const options = {
       title: "Load Layer/s file",
       buttonLabel: "Load Layer/s",
@@ -1458,7 +1329,7 @@ class LayoutEditor extends React.Component {
         console.log(Array.isArray(layers.keymap));
         if (Array.isArray(layers.keymap)) {
           console.log(layers.keymap[0]);
-          this.importLayer(layers);
+          importLayer(layers);
           toast.success(
             <ToastMessage
               title={i18n.editor.importSuccessCurrentLayerTitle}
@@ -1472,15 +1343,14 @@ class LayoutEditor extends React.Component {
           );
         } else {
           console.log(layers.keymap.custom[0]);
-          this.setState({
-            layerNames: layers.layerNames,
-            keymap: layers.keymap,
-            colorMap: layers.colormap,
-            palette: layers.palette,
-            superkeys: layers.superkeys ? layers.superkeys : [],
-            modified: true,
-          });
-          this.props.startContext();
+          state.layerNames = layers.layerNames;
+          state.keymap = layers.keymap;
+          state.colorMap = layers.colormap;
+          state.palette = layers.palette;
+          state.superkeys = layers.superkeys ? layers.superkeys : [];
+          state.modified = true;
+          setState({ ...state });
+          props.startContext();
           toast.success(i18n.editor.importSuccessAllLayers, {
             autoClose: 2000,
           });
@@ -1502,10 +1372,10 @@ class LayoutEditor extends React.Component {
     } else {
       console.log("user closed SaveDialog");
     }
-  }
+  };
 
-  async toExport() {
-    const { layerNames, keymap, currentLayer } = this.state;
+  const toExport = async () => {
+    const { layerNames, keymap, currentLayer } = state;
     let layerData;
     let isReadOnly;
     if (keymap.onlyCustom) {
@@ -1515,16 +1385,16 @@ class LayoutEditor extends React.Component {
       isReadOnly = currentLayer < keymap.default.length;
       layerData = isReadOnly ? keymap.default[currentLayer] : keymap.custom[currentLayer - keymap.default.length];
     }
-    const focus = new Focus();
-    const { info } = focus.device;
+    const { currentDevice } = deviceState;
+    const { info } = currentDevice.device;
     const data = JSON.stringify(
       {
         device: info,
-        language: this.state.currentLanguageLayout,
+        language: state.currentLanguageLayout,
         layerNames,
         keymap: layerData,
-        colormap: this.state.colorMap[currentLayer],
-        palette: this.state.palette,
+        colormap: state.colorMap[currentLayer],
+        palette: state.palette,
       },
       null,
       2,
@@ -1572,10 +1442,10 @@ class LayoutEditor extends React.Component {
         },
       );
     }
-  }
+  };
 
-  async toExportAll() {
-    const { keymap, colorMap, palette, superkeys, layerNames } = this.state;
+  const toExportAll = async () => {
+    const { keymap, colorMap, palette, superkeys, layerNames } = state;
     const data = JSON.stringify(
       {
         layerNames,
@@ -1622,122 +1492,91 @@ class LayoutEditor extends React.Component {
         autoClose: 2000,
       });
     }
-  }
+  };
 
-  toggleNeuronModal() {
-    if (this.state.showNeuronModal) {
-      this.state.savedReject.reject("cancelled");
+  const toggleNeuronModal = () => {
+    if (state.showNeuronModal) {
+      state.savedReject.reject("cancelled");
     }
-    this.setState({ showNeuronModal: !this.state.showNeuronModal });
-  }
+    state.showNeuronModal = !state.showNeuronModal;
+    setState({ ...state });
+  };
 
-  CloneExistingNeuron() {
-    this.state.savedResolve.resolve("resolved");
+  const CloneExistingNeuron = () => {
+    state.savedResolve.resolve("resolved");
     toast.success("added additional neuron to this Bazecor installation");
-    this.setState({ showNeuornModal: false });
-  }
+    state.showNeuornModal = false;
+    setState({ ...state });
+  };
 
-  toggleMacroModal() {
-    this.setState({ showMacroModal: !this.state.showMacroModal });
-  }
+  const toggleMacroModal = () => {
+    state.showMacroModal = !state.showMacroModal;
+    setState({ ...state });
+  };
 
-  updateOldMacros() {
-    const { keymap } = this.state;
+  const updateOldMacros = () => {
+    const { keymap } = state;
     const layers = [];
     const oldmacro = [...Array(64).keys()].map(x => x + 24576);
-    for (let index = 0; index < keymap.custom.length; index++) {
+    for (let index = 0; index < keymap.custom.length; index += 1) {
       if (keymap.custom[index].some(r => oldmacro.includes(r.keyCode))) {
         layers.push(index);
         continue;
       }
     }
-    for (let index = 0; index < layers.length; index++) {
-      for (let idx = 0; idx < keymap.custom[layers[index]].length; idx++) {
+    for (let index = 0; index < layers.length; index += 1) {
+      for (let idx = 0; idx < keymap.custom[layers[index]].length; idx += 1) {
         if (oldmacro.includes(keymap.custom[layers[index]][idx].keyCode)) {
-          keymap.custom[layers[index]][idx] = this.keymapDB.parse(keymap.custom[layers[index]][idx].keyCode + 29276);
+          keymap.custom[layers[index]][idx] = keymapDB.parse(keymap.custom[layers[index]][idx].keyCode + 29276);
         }
       }
     }
-    this.setState({ showMacroModal: false, modified: true, keymap });
-    this.props.startContext();
-    this.onApply();
-  }
+    state.showMacroModal = false;
+    state.modified = true;
+    state.keymap = keymap;
+    setState({ ...state });
+    props.startContext();
+    onApply();
+  };
 
-  layerName(index) {
-    return this.state.layerNames.length > index ? this.state.layerNames[index].name : this.defaultLayerNames[index];
-  }
+  const layerName = index => (state.layerNames.length > index ? state.layerNames[index].name : defaultLayerNames[index]);
 
-  modeSelectToggle = data => {
-    if (this.state.isStandardView) {
-      if (this.state.currentLedIndex > this.state.ledIndexStart) {
-        this.setState({
-          currentKeyIndex: -1,
-        });
+  const modeSelectToggle = data => {
+    if (state.isStandardView) {
+      if (state.currentLedIndex > state.ledIndexStart) {
+        state.currentKeyIndex = -1;
       }
-      this.setState({
-        modeselect: data,
-        showStandardView: false,
-        currentLedIndex: -1,
-      });
+      state.modeselect = data;
+      state.showStandardView = false;
+      state.currentLedIndex = -1;
     } else {
-      this.setState({
-        modeselect: data,
-      });
+      state.modeselect = data;
     }
+    setState({ ...state });
   };
 
-  // Manage Standard/Single view
-  async configStandarView() {
-    try {
-      const preferencesStandardView = JSON.parse(store.get("settings.isStandardView", true));
-      // const preferencesStandardView = false;
-      // console.log("Preferences StandardView", preferencesStandardViewJSON);
-
-      console.log("preferencesStandardView: ", preferencesStandardView);
-      // const preferencesStandardView = false;
-      if (preferencesStandardView !== null) {
-        this.setState({ isStandardView: preferencesStandardView });
-      } else {
-        this.setState({ isStandardView: true });
-      }
-    } catch (e) {
-      console.log(e);
-      this.setState({ isStandardView: true });
-    }
-  }
-
-  componentDidUpdate(prevProps, prevState) {
-    if (prevState.isStandardView !== this.state.isStandardView) {
-      store.set("settings.isStandardView", this.state.isStandardView);
-      console.log("Did update: ", this.state.isStandardView);
-    }
-  }
-
-  onToggle = () => {
-    if (this.state.isStandardView) {
-      this.setState({ isStandardView: false });
-    } else {
-      this.setState({ isStandardView: true });
-    }
+  const onToggle = () => {
+    state.isStandardView = !state.isStandardView;
+    setState({ ...state });
   };
 
-  closeStandardViewModal = code => {
-    this.onKeyChange(code);
-    this.setState({ showStandardView: false });
+  const closeStandardViewModal = code => {
+    onKeyChange(code);
+    state.showStandardView = false;
+    setState({ ...state });
   };
 
-  handleSaveStandardView = () => {
-    this.setState({
-      showStandardView: false,
-      currentKeyIndex: -1,
-      currentLedIndex: -1,
-      selectedPaletteColor: null,
-      isMultiSelected: false,
-      isColorButtonSelected: false,
-    });
+  const handleSaveStandardView = () => {
+    state.showStandardView = false;
+    state.currentKeyIndex = -1;
+    state.currentLedIndex = -1;
+    state.selectedPaletteColor = null;
+    state.isMultiSelected = false;
+    state.isColorButtonSelected = false;
+    setState({ ...state });
   };
 
-  exportToPdf = () => {
+  const exportToPdf = () => {
     toast.info(
       <ToastMessage
         title="Feature not yet ready!"
@@ -1751,347 +1590,415 @@ class LayoutEditor extends React.Component {
     );
   };
 
-  refreshLayoutSelectorPosition = (x, y) => {
-    this.setState({
-      layoutSelectorPosition: { x, y },
-    });
-    // console.log("Triggered function refresh position :", this.state.layoutSelectorPosition);
+  const refreshLayoutSelectorPosition = (x, y) => {
+    state.layoutSelectorPosition = { x, y };
+    setState({ ...state });
+    // console.log("Triggered function refresh position :", state.layoutSelectorPosition);
   };
 
-  render() {
-    const {
-      keymap,
-      palette,
-      isColorButtonSelected,
-      currentLayer,
-      currentKeyIndex,
-      currentLedIndex,
-      currentLanguageLayout,
-      macros,
-      superkeys,
-      isStandardView,
-      ledIndexStart,
-      layoutSelectorPosition,
-      isWireless,
-    } = this.state;
-
-    const { Layer, kbtype } = this.getLayout();
-    if (!Layer) {
-      return <div />;
-    }
-    const showDefaults = store.get("settings.showDefaults");
-    let cLayer = currentLayer;
-
-    if (!showDefaults) {
-      if (currentLayer < keymap.default.length && !keymap.onlyCustom) {
-        cLayer = 0;
+  useEffect(() => {
+    const configStandarView = async () => {
+      try {
+        const preferencesStandardView = JSON.parse(store.get("settings.isStandardView", true));
+        // const preferencesStandardView = false;
+        // console.log("Preferences StandardView", preferencesStandardViewJSON);
+        console.log("preferencesStandardView: ", preferencesStandardView);
+        // const preferencesStandardView = false;
+        if (preferencesStandardView !== null) {
+          state.isStandardView = preferencesStandardView;
+        } else {
+          state.isStandardView = true;
+        }
+        setState({ ...state });
+      } catch (e) {
+        console.log(e);
+        state.isStandardView = true;
+        setState({ ...state });
       }
-    }
+    };
+    const scanner = async () => {
+      await scanKeyboard().then(() => {
+        const { keymap } = state;
+        const defLayer = state.defaultLayer >= 126 ? 0 : state.defaultLayer;
+        let initialLayer = 0;
 
-    let layerData;
-    let isReadOnly;
-    if (keymap.onlyCustom) {
-      isReadOnly = cLayer < 0;
-      layerData = isReadOnly ? keymap.default[cLayer + keymap.default.length] : keymap.custom[cLayer];
-    } else {
-      isReadOnly = cLayer < keymap.default.length;
-      layerData = isReadOnly ? keymap.default[cLayer] : keymap.custom[cLayer - keymap.default.length];
-    }
-
-    if (layerData != undefined) {
-      layerData = layerData.map(key => {
-        const newMKey = key;
-        if (key.extraLabel == "MACRO") {
-          if (
-            macros.length > parseInt(key.label) &&
-            macros[parseInt(key.label)] != undefined &&
-            macros[parseInt(key.label)].name != undefined &&
-            macros[parseInt(key.label)].name.substr(0, 5) != "" &&
-            !/\p{L}/u.test(key.label)
-          ) {
-            newMKey.label = macros[parseInt(key.label)].name.substr(0, 5);
+        if (!store.get("settings.showDefaults")) {
+          if (defLayer < keymap.default.length) {
+            initialLayer = keymap.onlyCustom ? 0 : keymap.default.length;
           }
         }
-        return newMKey;
-      });
-    }
 
-    if (layerData != undefined && superkeys.length > 0) {
-      layerData = layerData.map(key => {
-        const newSKey = key;
-        if (key.extraLabel == "SUPER") {
-          if (
-            superkeys.length > parseInt(key.label) - 1 &&
-            superkeys[parseInt(key.label) - 1] != undefined &&
-            superkeys[parseInt(key.label) - 1].name != undefined &&
-            superkeys[parseInt(key.label) - 1].name != "" &&
-            !/\p{L}/u.test(key.label)
-          ) {
-            newSKey.label = superkeys[parseInt(key.label) - 1].name.substr(0, 5);
-          }
+        state.currentLayer = state.previousLayer !== 0 ? state.previousLayer : initialLayer;
+        setState({ ...state });
+      });
+      const newLanguage = store.get("settings.language");
+      console.log("Language automatically set to: ", newLanguage);
+      state.currentLanguageLayout = newLanguage || "english";
+      setState({ ...state });
+      await configStandarView();
+    };
+    scanner();
+  }, []);
+
+  useEffect(() => {
+    if (state.inContext === false && props.inContext === true) {
+      state.currentLayer = state.previousLayer !== 0 ? state.previousLayer : 0;
+      state.currentKeyIndex = -1;
+      state.currentLedIndex = -1;
+      state.keymap = {
+        custom: [],
+        default: [],
+        onlyCustom: false,
+      };
+      state.palette = [];
+      state.modified = false;
+      state.inContext = true;
+      setState({ ...state });
+      scanKeyboard();
+    }
+    if (state.inContext === true && props.inContext === false) {
+      state.inContext = false;
+      setState({ ...state });
+    }
+  }, [props.inContext]);
+
+  useEffect(() => {
+    store.set("settings.isStandardView", state.isStandardView);
+    console.log("Did update: ", state.isStandardView);
+  }, [state.isStandardView]);
+
+  const {
+    keymap,
+    palette,
+    isColorButtonSelected,
+    currentLayer,
+    currentKeyIndex,
+    currentLedIndex,
+    currentLanguageLayout,
+    macros,
+    superkeys,
+    isStandardView,
+    ledIndexStart,
+    layoutSelectorPosition,
+    isWireless,
+  } = state;
+
+  const { Layer, kbtype } = getLayout();
+  if (!Layer) {
+    return <div />;
+  }
+  const showDefaults = store.get("settings.showDefaults");
+  let cLayer = currentLayer;
+
+  if (!showDefaults) {
+    if (currentLayer < keymap.default.length && !keymap.onlyCustom) {
+      cLayer = 0;
+    }
+  }
+
+  let layerData;
+  let isReadOnly;
+  if (keymap.onlyCustom) {
+    isReadOnly = cLayer < 0;
+    layerData = isReadOnly ? keymap.default[cLayer + keymap.default.length] : keymap.custom[cLayer];
+  } else {
+    isReadOnly = cLayer < keymap.default.length;
+    layerData = isReadOnly ? keymap.default[cLayer] : keymap.custom[cLayer - keymap.default.length];
+  }
+
+  if (layerData !== undefined) {
+    layerData = layerData.map(key => {
+      const newMKey = key;
+      if (key.extraLabel === "MACRO") {
+        if (
+          macros.length > parseInt(key.label, 10) &&
+          macros[parseInt(key.label, 10)] !== undefined &&
+          macros[parseInt(key.label, 10)].name !== undefined &&
+          macros[parseInt(key.label, 10)].name.substr(0, 5) !== "" &&
+          !/\p{L}/u.test(key.label)
+        ) {
+          newMKey.label = macros[parseInt(key.label, 10)].name.substr(0, 5);
         }
-        return newSKey;
-      });
-    }
+      }
+      return newMKey;
+    });
+  }
 
-    const layer = (
-      // TODO: restore fade effect <fade in appear key={currentLayer}>
-      <div className="LayerHolder">
-        <Layer
-          readOnly={isReadOnly}
-          index={cLayer}
-          keymap={layerData}
-          onKeySelect={this.onKeySelect}
-          selectedKey={this.state.currentKeyIndex}
-          selectedLED={this.state.currentLedIndex}
-          palette={this.state.palette}
-          colormap={this.state.colorMap[this.state.currentLayer]}
-          theme={this.props.theme}
-          darkMode={this.props.darkMode}
-          style={{ width: "50vw" }}
-          showUnderglow={this.state.modeselect != "keyboard"}
-          className="raiseKeyboard layer"
-          isStandardView={isStandardView}
-        />
-      </div>
-      // </fade>
-    );
+  if (layerData !== undefined && superkeys.length > 0) {
+    layerData = layerData.map(key => {
+      const newSKey = key;
+      if (key.extraLabel === "SUPER") {
+        if (
+          superkeys.length > parseInt(key.label, 10) - 1 &&
+          superkeys[parseInt(key.label, 10) - 1] !== undefined &&
+          superkeys[parseInt(key.label, 10) - 1].name !== undefined &&
+          superkeys[parseInt(key.label, 10) - 1].name !== "" &&
+          !/\p{L}/u.test(key.label)
+        ) {
+          newSKey.label = superkeys[parseInt(key.label, 10) - 1].name.substr(0, 5);
+        }
+      }
+      return newSKey;
+    });
+  }
 
-    const copyCustomItems = this.state.keymap.custom.map((_, index) => {
-      const idx = index + (keymap.onlyCustom ? 0 : keymap.default.length);
-      const label = `${(idx + 1).toString()}: ${this.layerName(idx)}`;
+  const layer = (
+    // TODO: restore fade effect <fade in appear key={currentLayer}>
+    <div className="LayerHolder">
+      <Layer
+        readOnly={isReadOnly}
+        index={cLayer}
+        keymap={layerData}
+        onKeySelect={onKeySelect}
+        selectedKey={state.currentKeyIndex}
+        selectedLED={state.currentLedIndex}
+        palette={state.palette}
+        colormap={state.colorMap[state.currentLayer]}
+        theme={props.theme}
+        darkMode={props.darkMode}
+        style={{ width: "50vw" }}
+        showUnderglow={state.modeselect !== "keyboard"}
+        className="raiseKeyboard layer"
+        isStandardView={isStandardView}
+      />
+    </div>
+    // </fade>
+  );
+
+  const copyCustomItems = state.keymap.custom.map((_, index) => {
+    const idx = index + (keymap.onlyCustom ? 0 : keymap.default.length);
+    const label = `${(idx + 1).toString()}: ${layerName(idx)}`;
+    return {
+      index: idx,
+      label,
+    };
+  });
+  const copyDefaultItems =
+    showDefaults &&
+    keymap.default.map((_, index) => {
+      const idx = index - (keymap.onlyCustom ? keymap.default.length : 0);
+      const label = idx.toString();
       return {
         index: idx,
         label,
       };
     });
-    const copyDefaultItems =
-      showDefaults &&
-      keymap.default.map((_, index) => {
-        const idx = index - (keymap.onlyCustom ? keymap.default.length : 0);
-        const label = idx.toString();
-        return {
-          index: idx,
-          label,
-        };
-      });
-    const copyFromLayerOptions = (copyDefaultItems || []).concat(copyCustomItems);
+  const copyFromLayerOptions = (copyDefaultItems || []).concat(copyCustomItems);
 
-    const layerMenu = keymap.custom.map((_, index) => {
-      const idx = index + (keymap.onlyCustom ? 0 : keymap.default.length);
-      return {
-        name: this.layerName(idx),
-        id: idx,
-      };
-    });
+  const layerMenu = keymap.custom.map((_, index) => {
+    const idx = index + (keymap.onlyCustom ? 0 : keymap.default.length);
+    return {
+      name: layerName(idx),
+      id: idx,
+    };
+  });
 
-    let code = 0;
-    if (currentKeyIndex !== -1 && currentLedIndex < ledIndexStart) {
-      const tempkey = this.keymapDB.parse(layerData[currentKeyIndex].keyCode);
-      // console.log("Key to be used in render", tempkey);
-      code = this.keymapDB.keySegmentator(tempkey.keyCode);
-    }
-    let actions = [code !== null ? code.base + code.modified : 0, 0, 0, 0, 0];
-    let superName = "";
-    if (code !== null) {
-      if (
-        code.modified + code.base > 53980 &&
-        code.modified + code.base < 54108 &&
-        superkeys[code.base + code.modified - 53980] != undefined
-      ) {
-        actions = superkeys[code.base + code.modified - 53980].actions;
-        superName = superkeys[code.base + code.modified - 53980].name;
-      }
-    }
-    if (!layerData) return <LogoLoaderCentered />;
-    return (
-      <Styles className="layoutEditor">
-        <Container
-          fluid
-          className={`keyboard-editor ${this.state.modeselect} ${isStandardView ? "standarViewMode" : "singleViewMode"} ${
-            typeof this.state.selectedPaletteColor === "number" ? "colorSelected" : ""
-          }`}
-        >
-          <PageHeader
-            text={i18n.app.menu.editor}
-            showSaving
-            contentSelector={
-              <LayerSelector
-                itemList={layerMenu}
-                selectedItem={currentLayer}
-                subtitle={i18n.editor.layers.title}
-                onSelect={this.selectLayer}
-                updateItem={this.onLayerNameChange}
-                exportFunc={this.toExport}
-                importFunc={this.toImport}
-                clearFunc={this.confirmClear}
-                copyFunc={this.copyFromDialog}
-                editModeActual={this.state.modeselect}
-                editModeFunc={this.modeSelectToggle}
-                exportToPdf={this.exportToPdf}
-              />
-            }
-            colorEditor={
-              <ColorEditor
-                key={palette}
-                colors={palette}
-                disabled={isReadOnly || currentLayer > this.state.colorMap.length}
-                onColorSelect={this.onColorSelect}
-                colorButtonIsSelected={this.state.colorButtonIsSelected}
-                onColorPick={this.onColorPick}
-                selected={this.state.selectedPaletteColor}
-                isColorButtonSelected={isColorButtonSelected}
-                onColorButtonSelect={this.onColorButtonSelect}
-                toChangeAllKeysColor={this.toChangeAllKeysColor}
-                deviceName={this.state.deviceName}
-              />
-            }
-            isColorActive={this.state.modeselect != "keyboard"}
-            saveContext={this.onApply}
-            destroyContext={() => {
-              this.props.cancelContext();
-            }}
-            inContext={this.state.modified}
-          />
-          <Row className="full-height keyboardsWrapper">
-            <Col className="raise-editor layer-col">
-              <Row className="dygma-keyboard-editor editor">{layer}</Row>
-              {this.state.modeselect == "keyboard" && !isStandardView ? (
-                <Row className="ordinary-keyboard-editor m-0">
-                  <KeyPickerKeyboard
-                    onKeySelect={this.onKeyChange}
-                    code={code}
-                    macros={macros}
-                    superkeys={superkeys}
-                    actions={actions}
-                    action={0}
-                    superName={superName}
-                    keyIndex={currentKeyIndex}
-                    actTab="editor"
-                    selectedlanguage={currentLanguageLayout}
-                    kbtype={kbtype}
-                    layoutSelectorPosition={layoutSelectorPosition}
-                    refreshLayoutSelectorPosition={this.refreshLayoutSelectorPosition}
-                    isWireless={isWireless}
-                  />
-                </Row>
-              ) : null}
-            </Col>
-          </Row>
-
-          {/* WHY: We want to hide the selector when we cannot use it (e.g. when color editor is active) */}
-          {this.state.modeselect === "keyboard" ? (
-            <LayoutViewSelector
-              onToggle={this.onToggle}
-              isStandardView={isStandardView}
-              tooltip={i18n.editor.superkeys.tooltip}
-              layoutSelectorPosition={layoutSelectorPosition}
-            />
-          ) : null}
-
-          <ConfirmationDialog
-            title={i18n.editor.clearLayerQuestion}
-            text={i18n.editor.clearLayerPrompt}
-            open={this.state.clearConfirmationOpen}
-            onConfirm={this.clearLayer}
-            onCancel={this.cancelClear}
-          >
-            {i18n.editor.clearLayerPrompt}
-          </ConfirmationDialog>
-          <CopyFromDialog
-            open={this.state.copyFromOpen}
-            onCopy={this.copyFromLayer}
-            onCancel={this.cancelCopyFrom}
-            layers={copyFromLayerOptions}
-            currentLayer={currentLayer}
-          />
-        </Container>
-
-        <Modal
-          show={this.state.showMacroModal}
-          size="lg"
-          onHide={this.toggleMacroModal}
-          aria-labelledby="contained-modal-title-vcenter"
-          centered
-        >
-          <Modal.Header closeButton>
-            <Modal.Title>{i18n.editor.oldMacroModal.title}</Modal.Title>
-          </Modal.Header>
-          <Modal.Body className="body">
-            <p>{i18n.editor.oldMacroModal.body}</p>
-            <p className="italic">{i18n.editor.oldMacroModal.body2}</p>
-          </Modal.Body>
-          <Modal.Footer>
-            <RegularButton
-              buttonText={i18n.editor.oldMacroModal.cancelButton}
-              styles="outline transp-bg"
-              size="sm"
-              onClick={this.toggleMacroModal}
-            />
-            <RegularButton
-              buttonText={i18n.editor.oldMacroModal.applyButton}
-              styles="outline gradient"
-              size="sm"
-              onClick={this.updateOldMacros}
-            />
-          </Modal.Footer>
-        </Modal>
-        <Modal
-          show={this.state.showNeuronModal}
-          size="lg"
-          onHide={this.toggleNeuronModal}
-          aria-labelledby="contained-modal-title-vcenter"
-          centered
-        >
-          <Modal.Header closeButton>
-            <Modal.Title>{i18n.editor.oldNeuronModal.title}</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            <p>{i18n.editor.oldNeuronModal.body}</p>
-            <p className="italic">{i18n.editor.oldNeuronModal.body2}</p>
-          </Modal.Body>
-          <Modal.Footer>
-            <RegularButton
-              buttonText={i18n.editor.oldNeuronModal.cancelButton}
-              styles="outline transp-bg"
-              size="sm"
-              onClick={this.toggleNeuronModal}
-            />
-            <RegularButton
-              buttonText={i18n.editor.oldNeuronModal.applyButton}
-              styles="outline gradient"
-              size="sm"
-              onClick={this.CloneExistingNeuron}
-            />
-          </Modal.Footer>
-        </Modal>
-
-        {this.state.modeselect == "keyboard" && isStandardView ? (
-          <StandardView
-            showStandardView={this.state.showStandardView}
-            closeStandardView={this.closeStandardViewModal}
-            handleSave={this.handleSaveStandardView}
-            onKeySelect={this.onKeyChange}
-            macros={macros}
-            superkeys={superkeys}
-            actions={actions}
-            action={0}
-            superName={superName}
-            keyIndex={currentKeyIndex}
-            code={code}
-            layerData={layerData}
-            actTab="editor"
-            selectedlanguage={currentLanguageLayout}
-            kbtype={kbtype}
-            isStandardView={isStandardView}
-            isWireless={isWireless}
-          />
-        ) : (
-          ""
-        )}
-      </Styles>
-    );
+  let code = 0;
+  if (currentKeyIndex !== -1 && currentLedIndex < ledIndexStart) {
+    const tempkey = keymapDB.parse(layerData[currentKeyIndex].keyCode);
+    // console.log("Key to be used in render", tempkey);
+    code = keymapDB.keySegmentator(tempkey.keyCode);
   }
+  let actions = [code !== null ? code.base + code.modified : 0, 0, 0, 0, 0];
+  let superName = "";
+  if (code !== null) {
+    if (
+      code.modified + code.base > 53980 &&
+      code.modified + code.base < 54108 &&
+      superkeys[code.base + code.modified - 53980] !== undefined
+    ) {
+      actions = superkeys[code.base + code.modified - 53980].actions;
+      superName = superkeys[code.base + code.modified - 53980].name;
+    }
+  }
+  if (!layerData) return <LogoLoaderCentered />;
+  return (
+    <Styles className="layoutEditor">
+      <Container
+        fluid
+        className={`keyboard-editor ${state.modeselect} ${isStandardView ? "standarViewMode" : "singleViewMode"} ${
+          typeof state.selectedPaletteColor === "number" ? "colorSelected" : ""
+        }`}
+      >
+        <PageHeader
+          text={i18n.app.menu.editor}
+          showSaving
+          contentSelector={
+            <LayerSelector
+              itemList={layerMenu}
+              selectedItem={currentLayer}
+              subtitle={i18n.editor.layers.title}
+              onSelect={selectLayer}
+              updateItem={onLayerNameChange}
+              exportFunc={toExport}
+              importFunc={toImport}
+              clearFunc={confirmClear}
+              copyFunc={copyFromDialog}
+              editModeActual={state.modeselect}
+              editModeFunc={modeSelectToggle}
+              exportToPdf={exportToPdf}
+            />
+          }
+          colorEditor={
+            <ColorEditor
+              key={palette}
+              colors={palette}
+              disabled={isReadOnly || currentLayer > state.colorMap.length}
+              onColorSelect={onColorSelect}
+              colorButtonIsSelected={state.colorButtonIsSelected}
+              onColorPick={onColorPick}
+              selected={state.selectedPaletteColor}
+              isColorButtonSelected={isColorButtonSelected}
+              onColorButtonSelect={onColorButtonSelect}
+              toChangeAllKeysColor={toChangeAllKeysColor}
+              deviceName={state.deviceName}
+            />
+          }
+          isColorActive={state.modeselect !== "keyboard"}
+          saveContext={onApply}
+          destroyContext={() => {
+            props.cancelContext();
+          }}
+          inContext={state.modified}
+        />
+        <Row className="full-height keyboardsWrapper">
+          <Col className="raise-editor layer-col">
+            <Row className="dygma-keyboard-editor editor">{layer}</Row>
+            {state.modeselect === "keyboard" && !isStandardView ? (
+              <Row className="ordinary-keyboard-editor m-0">
+                <KeyPickerKeyboard
+                  onKeySelect={onKeyChange}
+                  code={code}
+                  macros={macros}
+                  superkeys={superkeys}
+                  actions={actions}
+                  action={0}
+                  superName={superName}
+                  keyIndex={currentKeyIndex}
+                  actTab="editor"
+                  selectedlanguage={currentLanguageLayout}
+                  kbtype={kbtype}
+                  layoutSelectorPosition={layoutSelectorPosition}
+                  refreshLayoutSelectorPosition={refreshLayoutSelectorPosition}
+                  isWireless={isWireless}
+                />
+              </Row>
+            ) : null}
+          </Col>
+        </Row>
+
+        {/* WHY: We want to hide the selector when we cannot use it (e.g. when color editor is active) */}
+        {state.modeselect === "keyboard" ? (
+          <LayoutViewSelector
+            onToggle={onToggle}
+            isStandardView={isStandardView}
+            tooltip={i18n.editor.superkeys.tooltip}
+            layoutSelectorPosition={layoutSelectorPosition}
+          />
+        ) : null}
+
+        <ConfirmationDialog
+          title={i18n.editor.clearLayerQuestion}
+          text={i18n.editor.clearLayerPrompt}
+          open={state.clearConfirmationOpen}
+          onConfirm={clearLayer}
+          onCancel={cancelClear}
+        >
+          {i18n.editor.clearLayerPrompt}
+        </ConfirmationDialog>
+        <CopyFromDialog
+          open={state.copyFromOpen}
+          onCopy={copyFromLayer}
+          onCancel={cancelCopyFrom}
+          layers={copyFromLayerOptions}
+          currentLayer={currentLayer}
+        />
+      </Container>
+
+      <Modal
+        show={state.showMacroModal}
+        size="lg"
+        onHide={toggleMacroModal}
+        aria-labelledby="contained-modal-title-vcenter"
+        centered
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>{i18n.editor.oldMacroModal.title}</Modal.Title>
+        </Modal.Header>
+        <Modal.Body className="body">
+          <p>{i18n.editor.oldMacroModal.body}</p>
+          <p className="italic">{i18n.editor.oldMacroModal.body2}</p>
+        </Modal.Body>
+        <Modal.Footer>
+          <RegularButton
+            buttonText={i18n.editor.oldMacroModal.cancelButton}
+            styles="outline transp-bg"
+            size="sm"
+            onClick={toggleMacroModal}
+          />
+          <RegularButton
+            buttonText={i18n.editor.oldMacroModal.applyButton}
+            styles="outline gradient"
+            size="sm"
+            onClick={updateOldMacros}
+          />
+        </Modal.Footer>
+      </Modal>
+      <Modal
+        show={state.showNeuronModal}
+        size="lg"
+        onHide={toggleNeuronModal}
+        aria-labelledby="contained-modal-title-vcenter"
+        centered
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>{i18n.editor.oldNeuronModal.title}</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <p>{i18n.editor.oldNeuronModal.body}</p>
+          <p className="italic">{i18n.editor.oldNeuronModal.body2}</p>
+        </Modal.Body>
+        <Modal.Footer>
+          <RegularButton
+            buttonText={i18n.editor.oldNeuronModal.cancelButton}
+            styles="outline transp-bg"
+            size="sm"
+            onClick={toggleNeuronModal}
+          />
+          <RegularButton
+            buttonText={i18n.editor.oldNeuronModal.applyButton}
+            styles="outline gradient"
+            size="sm"
+            onClick={CloneExistingNeuron}
+          />
+        </Modal.Footer>
+      </Modal>
+
+      {state.modeselect === "keyboard" && isStandardView ? (
+        <StandardView
+          showStandardView={state.showStandardView}
+          closeStandardView={closeStandardViewModal}
+          handleSave={handleSaveStandardView}
+          onKeySelect={onKeyChange}
+          macros={macros}
+          superkeys={superkeys}
+          actions={actions}
+          action={0}
+          superName={superName}
+          keyIndex={currentKeyIndex}
+          code={code}
+          layerData={layerData}
+          actTab="editor"
+          selectedlanguage={currentLanguageLayout}
+          kbtype={kbtype}
+          isStandardView={isStandardView}
+          isWireless={isWireless}
+        />
+      ) : (
+        ""
+      )}
+    </Styles>
+  );
 }
 
 export default LayoutEditor;
