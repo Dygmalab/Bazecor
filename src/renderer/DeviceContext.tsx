@@ -3,7 +3,6 @@ import React, { useReducer, createContext, useContext, useMemo } from "react";
 import { CountProviderProps, Action, State } from "./types/devices";
 import serial, { isSerialType } from "../api/comms/serial";
 import Device from "../api/comms/Device";
-import hid from "../api/comms/hid";
 import HID from "../api/hid/hid";
 
 const DeviceContext = createContext(undefined);
@@ -56,8 +55,9 @@ const isDeviceConnected = async (device: any) => {
     const result = await serial.isDeviceConnected(device);
     return result;
   }
-  const result = await HID.isDeviceConnected(device);
-  return result;
+  // const result = await HID.isDeviceConnected(device);
+  // return result;
+  return false;
 };
 
 const isDeviceSupported = async (device: any) => {
@@ -65,8 +65,9 @@ const isDeviceSupported = async (device: any) => {
     const result = await serial.isDeviceSupported(device);
     return result;
   }
-  const result = await HID.isDeviceSupported(device);
-  return result;
+  // const result = await HID.isDeviceSupported(device);
+  // return result;
+  return false;
 };
 
 const list = async () => {
@@ -79,18 +80,17 @@ const list = async () => {
     if (connected && supported) finalDevices.push(new Device(dev, "serial"));
   }
 
-  // .map((sDevice: DeviceType) => new Device(sDevice));
-
   // working with hid
-  const hidDevs = await HID.getDevices();
-  console.log(hidDevs);
-  for (const dev of hidDevs) {
-    const connected = await isDeviceConnected(dev);
-    const supported = await isDeviceSupported(dev);
-    if (connected && supported) finalDevices.push(new Device(dev, "serial"));
-  }
+  // const hidDevs = await HID.getDevices();
+  // const hid = new HID();
+  // console.log(hidDevs);
+  // for (const [index, device] of hidDevs.entries()) {
+  //   console.log("Checking: ", device);
+  //   const connected = await hid.isDeviceConnected(index);
+  //   const supported = await hid.isDeviceSupported(index);
+  //   if (connected && supported) finalDevices.push(new Device(hid, "hid"));
+  // }
 
-  // const finalDevices: Array<Device> = sDevices;
   return finalDevices;
 };
 
@@ -102,7 +102,7 @@ const connect = async (device: Device) => {
       console.log("the device is serial type: ", device, " and connected as: ", result);
       return device;
     }
-    const result = hid.connect(device);
+    const result = device.device.connect();
     console.log("the device is hid type: ", device, " and connected as: ", result);
     return result;
   } catch (error) {

@@ -1,5 +1,5 @@
 import { DeviceType } from "../../renderer/types/devices";
-
+import HID from "../hid/hid";
 // eslint-disable-next-line no-eval
 const { DelimiterParser } = eval('require("@serialport/parser-delimiter")');
 
@@ -22,23 +22,40 @@ interface Device {
 }
 
 class Device {
-  constructor(parameters: DeviceType, type: string) {
+  constructor(parameters: DeviceType | HID, type: string) {
     // constructor for Device
     this.type = type;
-    this.path = parameters.path;
-    this.manufacturer = parameters.manufacturer;
-    this.serialNumber = parameters.serialNumber;
-    this.pnpId = parameters.pnpId;
-    this.locationId = parameters.locationId;
-    this.productId = parameters.productId;
-    this.vendorId = parameters.vendorId;
     this.timeout = 5000;
-    this.device = parameters.device;
     this.port = undefined;
     this.callbacks = [];
     this.result = "";
     this.commands = undefined;
     this.file = false;
+
+    // Handling differences between object types
+    let params;
+    if (type === "serial") {
+      params = parameters as DeviceType;
+      this.path = params.path;
+      this.manufacturer = params.manufacturer;
+      this.serialNumber = params.serialNumber;
+      this.pnpId = params.pnpId;
+      this.locationId = params.locationId;
+      this.productId = params.productId;
+      this.vendorId = params.vendorId;
+      this.device = params.device;
+    }
+    if (type === "hid") {
+      params = parameters as HID;
+      this.path = "";
+      this.manufacturer = "Dygma";
+      this.serialNumber = params.serialNumber;
+      this.pnpId = "";
+      this.locationId = "";
+      this.productId = String(params.connectedDevice.productId);
+      this.vendorId = String(params.connectedDevice.vendorId);
+      this.device = params.connectedDevice;
+    }
   }
 
   static delay = (ms: number) =>
