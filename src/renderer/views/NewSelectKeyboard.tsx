@@ -217,22 +217,22 @@ const SelectKeyboard: React.FC<SelectKeyboardProps> = (props): JSX.Element => {
     }
   }, [dispatch]);
 
-  useEffect(() => {
-    const finder = () => findKeyboards();
-    const disconnectedfinder = () => {
-      setSelectedPortIndex(0);
-      findKeyboards();
-    };
-    ipcRenderer.on("usb-connected", finder);
-    ipcRenderer.on("usb-disconnected", disconnectedfinder);
-    if (!connected) {
-      findKeyboards();
-    }
-    return () => {
-      ipcRenderer.removeListener("usb-connected", finder);
-      ipcRenderer.removeListener("usb-disconnected", disconnectedfinder);
-    };
-  }, [connected, findKeyboards]);
+  // useEffect(() => {
+  //   const finder = () => findKeyboards();
+  //   const disconnectedfinder = () => {
+  //     setSelectedPortIndex(0);
+  //     findKeyboards();
+  //   };
+  //   ipcRenderer.on("usb-connected", finder);
+  //   ipcRenderer.on("usb-disconnected", disconnectedfinder);
+  //   if (!connected) {
+  //     findKeyboards();
+  //   }
+  //   return () => {
+  //     ipcRenderer.removeListener("usb-connected", finder);
+  //     ipcRenderer.removeListener("usb-disconnected", disconnectedfinder);
+  //   };
+  // }, [connected, findKeyboards]);
 
   useEffect(() => {
     if (connected && state.currentDevice) {
