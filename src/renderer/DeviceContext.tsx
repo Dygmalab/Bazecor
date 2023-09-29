@@ -8,7 +8,7 @@ import HID from "../api/hid/hid";
 const DeviceContext = createContext(undefined);
 
 function deviceReducer(state: State, action: Action) {
-  console.log("Entering DeviceREDUCER!!!", state, action);
+  // console.log("Entering DeviceREDUCER!!!", state, action);
   switch (action.type) {
     case "changeCurrent": {
       if (action.payload.selected < state.deviceList.length && action.payload.selected >= 0) {
@@ -81,15 +81,14 @@ const list = async () => {
   }
 
   // working with hid
-  // const hidDevs = await HID.getDevices();
-  // const hid = new HID();
-  // console.log(hidDevs);
-  // for (const [index, device] of hidDevs.entries()) {
-  //   console.log("Checking: ", device);
-  //   const connected = await hid.isDeviceConnected(index);
-  //   const supported = await hid.isDeviceSupported(index);
-  //   if (connected && supported) finalDevices.push(new Device(hid, "hid"));
-  // }
+  const hidDevs = await HID.getDevices();
+  for (const [index, device] of hidDevs.entries()) {
+    // console.log("Checking: ", device);
+    const hid = new HID();
+    const connected = await hid.isDeviceConnected(index);
+    const supported = await hid.isDeviceSupported(index);
+    if (connected && supported) finalDevices.push(new Device(hid, "hid"));
+  }
 
   return finalDevices;
 };
@@ -102,9 +101,11 @@ const connect = async (device: Device) => {
       console.log("the device is serial type: ", device, " and connected as: ", result);
       return device;
     }
-    const result = device.device.connect();
+    console.log(device.port);
+    const result = await device.port.connect();
+    await device.addHID(result);
     console.log("the device is hid type: ", device, " and connected as: ", result);
-    return result;
+    return device;
   } catch (error) {
     console.error(error);
     return false;

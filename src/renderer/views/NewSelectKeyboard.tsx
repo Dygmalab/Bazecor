@@ -217,22 +217,22 @@ const SelectKeyboard: React.FC<SelectKeyboardProps> = (props): JSX.Element => {
     }
   }, [dispatch]);
 
-  // useEffect(() => {
-  //   const finder = () => findKeyboards();
-  //   const disconnectedfinder = () => {
-  //     setSelectedPortIndex(0);
-  //     findKeyboards();
-  //   };
-  //   ipcRenderer.on("usb-connected", finder);
-  //   ipcRenderer.on("usb-disconnected", disconnectedfinder);
-  //   if (!connected) {
-  //     findKeyboards();
-  //   }
-  //   return () => {
-  //     ipcRenderer.removeListener("usb-connected", finder);
-  //     ipcRenderer.removeListener("usb-disconnected", disconnectedfinder);
-  //   };
-  // }, [connected, findKeyboards]);
+  useEffect(() => {
+    const finder = () => findKeyboards();
+    const disconnectedfinder = () => {
+      setSelectedPortIndex(0);
+      findKeyboards();
+    };
+    ipcRenderer.on("usb-connected", finder);
+    ipcRenderer.on("usb-disconnected", disconnectedfinder);
+    if (!connected) {
+      findKeyboards();
+    }
+    return () => {
+      ipcRenderer.removeListener("usb-connected", finder);
+      ipcRenderer.removeListener("usb-disconnected", disconnectedfinder);
+    };
+  }, [connected, findKeyboards]);
 
   useEffect(() => {
     if (connected && state.currentDevice) {
@@ -260,6 +260,7 @@ const SelectKeyboard: React.FC<SelectKeyboardProps> = (props): JSX.Element => {
     setOpening(true);
     try {
       const response = await DeviceTools.connect(deviceList[selectedPortIndex]);
+      console.log("GOING TO CONNECT TO!!", selectedPortIndex, response);
       dispatch({ type: "changeCurrent", payload: { selected: selectedPortIndex, device: response } });
       await onConnect();
     } catch (err) {
@@ -289,7 +290,7 @@ const SelectKeyboard: React.FC<SelectKeyboardProps> = (props): JSX.Element => {
   const getDeviceItems = () => {
     const neurons = store.get("neurons");
     const result = devices.map((device, index) => {
-      console.log("checking device :", device);
+      // console.log("checking device :", device);
       if (device.device.bootloader)
         return {
           index,
@@ -317,7 +318,7 @@ const SelectKeyboard: React.FC<SelectKeyboardProps> = (props): JSX.Element => {
 
   const selectedDevice = devices && devices[selectedPortIndex];
   const connectedDevice = state.selected;
-  console.log("Checking connected Data: ", connectedDevice, selectedPortIndex, connected, scanFoundDevices);
+  // console.log("Checking connected Data: ", connectedDevice, selectedPortIndex, connected, scanFoundDevices);
   return (
     <Styles>
       <Container fluid className="keyboard-select center-content">

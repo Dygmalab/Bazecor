@@ -98,22 +98,28 @@ class HID {
     await this.sendData(
       "hardware.chip_id\n",
       rxData => {
-        console.log("All data received", rxData);
         chipid = rxData;
       },
       err => {
         console.log(err);
       },
     );
-    console.log("after send Data");
-    await this.close();
-    console.log("after hid close");
+    // await this.close();
+    // console.log("after hid close");
     this.serialNumber = chipid;
     return true;
     // }
     // const supported = await device.device.isDeviceSupported(device);
     // console.log("focus.isDeviceSupported: port=", device, "supported=", supported);
     // return supported;
+  };
+
+  connect = async () => {
+    try {
+      await this.open();
+    } catch (error) {
+      console.log("Not able to connect to device", error);
+    }
   };
 
   open = async () => {
@@ -125,9 +131,6 @@ class HID {
     }
     if (!this.isConnected()) {
       throw new HIDError("No connected device to open");
-    }
-    if (this.isOpen()) {
-      throw new HIDError("Device already open");
     }
   };
 

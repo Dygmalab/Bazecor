@@ -32,7 +32,7 @@ const BazecorDevtools = () => {
 
   const onHIDConnect = async () => {
     try {
-      connectedDevice = await hid.connectDevice(grantedDevices[0]);
+      connectedDevice = await hid.connectDevice(0);
       console.log("Connected to");
       console.log(connectedDevice);
     } catch (err) {

@@ -54,7 +54,8 @@ class Device {
       this.locationId = "";
       this.productId = String(params.connectedDevice.productId);
       this.vendorId = String(params.connectedDevice.vendorId);
-      this.device = params.connectedDevice;
+      this.device = params.connectedDevice.device;
+      this.port = params;
     }
   }
 
@@ -65,6 +66,13 @@ class Device {
 
   static help = async (dev: any) => {
     const data = await dev.request("help");
+    const result = data.split(/\r?\n/).filter((v: any) => v.length > 0);
+    // console.log("requesting to fill help: ", dev, result);
+    return result;
+  };
+
+  static HIDhelp = async (dev: any) => {
+    const data = await dev.hidRequest("help");
     const result = data.split(/\r?\n/).filter((v: any) => v.length > 0);
     // console.log("requesting to fill help: ", dev, result);
     return result;
@@ -95,6 +103,14 @@ class Device {
     });
     const kbCommands = await Device.help(this);
     console.log("these are the commands", kbCommands);
+    this.commands = {
+      help: kbCommands,
+    };
+  };
+
+  addHID = async (device: any) => {
+    const kbCommands = await Device.HIDhelp(this);
+    console.log("these are the commands", kbCommands, device);
     this.commands = {
       help: kbCommands,
     };
@@ -142,6 +158,30 @@ class Device {
     });
   }
 
+  hidRequest = async (cmd: string, ...args: Array<string>) => {
+    if (this.port === undefined) throw new Error("Device not connected!");
+    console.log("focus.request:", cmd, ...args, this.port);
+
+    let request = cmd;
+    if (args && args.length > 0) {
+      request = `${request} ${args.join(" ")}`;
+    }
+    request += "\n";
+
+    let returnValue = "";
+    await this.port.sendData(
+      request,
+      (rxData: any) => {
+        returnValue = rxData;
+      },
+      (err: Error) => {
+        console.log(err);
+      },
+    );
+    console.log("return value of request: ", returnValue);
+    return returnValue;
+  };
+
   command = async (command: string, ...args: Array<string>) => {
     if (this.port === undefined) return false;
     // if (typeof this.commands[command] === "function") {
@@ -150,7 +190,8 @@ class Device {
     // if (typeof this.commands[command] === "object") {
     //   return this.commands[command].focus(this, ...args);
     // }
-    return this.request(command, ...args);
+    if (this.type === "serial") return this.request(command, ...args);
+    return this.hidRequest(command, ...args);
   };
 
   write_parts = async (parts: Array<any>, cb: () => void) => {
