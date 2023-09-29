@@ -1641,7 +1641,9 @@ function LayoutEditor(props) {
   }, []);
 
   useEffect(() => {
-    if (state.inContext === false && props.inContext === true) {
+    const { inContext } = props;
+    console.log("props", inContext, state.inContext);
+    if (state.inContext === false && inContext === true) {
       state.currentLayer = state.previousLayer !== 0 ? state.previousLayer : 0;
       state.currentKeyIndex = -1;
       state.currentLedIndex = -1;
@@ -1656,11 +1658,13 @@ function LayoutEditor(props) {
       setState({ ...state });
       scanKeyboard();
     }
-    if (state.inContext === true && props.inContext === false) {
+    if (state.inContext === true && inContext === false) {
       state.inContext = false;
+      state.modified = false;
+      scanKeyboard();
       setState({ ...state });
     }
-  }, [props.inContext]);
+  }, [props]);
 
   useEffect(() => {
     store.set("settings.isStandardView", state.isStandardView);
@@ -1857,6 +1861,7 @@ function LayoutEditor(props) {
           isColorActive={state.modeselect !== "keyboard"}
           saveContext={onApply}
           destroyContext={() => {
+            console.log("cancelling context: ", props);
             props.cancelContext();
           }}
           inContext={state.modified}
