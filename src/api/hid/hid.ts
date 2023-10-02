@@ -92,26 +92,24 @@ class HID {
   isDeviceSupported = async (index: number) => {
     // if (!device.device.isDeviceSupported) {
     console.log("checking if device is supported: ", index);
-    await this.connectDevice(index);
-    await this.open();
-    let chipid = "";
-    await this.sendData(
-      "hardware.chip_id\n",
-      rxData => {
-        chipid = rxData;
-      },
-      err => {
-        console.log(err);
-      },
-    );
-    // await this.close();
-    // console.log("after hid close");
-    this.serialNumber = chipid;
+    try {
+      await this.connectDevice(index);
+      await this.open();
+      let chipid = "";
+      await this.sendData(
+        "hardware.chip_id\n",
+        rxData => {
+          chipid = rxData;
+        },
+        err => {
+          console.log(err);
+        },
+      );
+      this.serialNumber = chipid;
+    } catch (error) {
+      return false;
+    }
     return true;
-    // }
-    // const supported = await device.device.isDeviceSupported(device);
-    // console.log("focus.isDeviceSupported: port=", device, "supported=", supported);
-    // return supported;
   };
 
   connect = async () => {
