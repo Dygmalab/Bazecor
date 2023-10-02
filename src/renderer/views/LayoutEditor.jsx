@@ -520,7 +520,7 @@ function LayoutEditor(props) {
     // TODO: Check if stored superKeys match the received ones, if they match, retrieve name and apply it to current superKeys
     let finalSuper = [];
     let stored = [];
-    console.log(state.neurons, state.neuronID, superkeys);
+    // console.log(state.neurons, state.neuronID, superkeys);
     if (state.neurons !== undefined) {
       stored = state.neurons[state.neuronID].superkeys;
     }
@@ -732,7 +732,7 @@ function LayoutEditor(props) {
 
   const updatePalette = async (device, palette) => {
     let args;
-    if (deviceState.currentDevice.device.RGBWMode !== "RGBW") {
+    if (deviceState.currentDevice.device.RGBWMode !== true) {
       args = flatten(palette.map(color => [color.r, color.g, color.b])).map(v => v.toString());
     } else {
       const paletteAux = palette.map(color => {
