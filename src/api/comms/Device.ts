@@ -54,7 +54,8 @@ class Device {
       this.locationId = "";
       this.productId = String(params.connectedDevice.productId);
       this.vendorId = String(params.connectedDevice.vendorId);
-      this.device = params.connectedDevice.device;
+      const newDevice = params.connectedDevice as any;
+      this.device = newDevice.device;
       this.port = params;
     }
   }
@@ -212,20 +213,20 @@ class Device {
     Object.assign(this.commands, cmds);
   };
 
-  addMethod = (methodName: string, command: string) => {
-    const keyedMethodName = methodName as keyof Device;
-    if (this[keyedMethodName]) {
-      const tmp = this[keyedMethodName];
-      this[keyedMethodName] = (...args: Array<any>) => {
-        tmp(...args);
-        this.commands[command][methodName](...args);
-      };
-    } else {
-      this[keyedMethodName] = (...args: Array<any>) => {
-        this.commands[command][methodName](...args);
-      };
-    }
-  };
+  // addMethod = (methodName: string, command: string) => {
+  //   const keyedMethodName = methodName as keyof Device;
+  //   if (this[keyedMethodName]) {
+  //     const tmp = this[keyedMethodName];
+  //     this[keyedMethodName as any] = (...args: Array<any>) => {
+  //       tmp(...args);
+  //       this.commands[command][methodName](...args);
+  //     };
+  //   } else {
+  //     this[keyedMethodName as never] = (...args: Array<any>) => {
+  //       this.commands[command][methodName](...args);
+  //     };
+  //   }
+  // };
 }
 
 export default Device;
