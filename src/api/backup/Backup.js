@@ -1,25 +1,20 @@
-import React from "react";
 import path from "path";
 import fs from "fs";
 import Store from "electron-store";
-import Focus from "../focus";
 
 const store = new Store();
 
 export default class Backup {
   constructor() {
-    this.focus = new Focus();
     this.neurons = store.get("neurons");
-    this.Commands = this.Commands.bind(this);
     this.DoBackup = this.DoBackup.bind(this);
-    this.SaveBackup = this.SaveBackup.bind(this);
   }
 
   /**
    * Function that returns the list of available commands excluding the ones that do not return usefull information for the backup
    * @returns An array with strings that contain the serial commands that are capable of returing the keyboard configuration
    */
-  async Commands() {
+  static async Commands(device) {
     const notRequired = [
       "eeprom",
       "hardware",
@@ -47,8 +42,8 @@ export default class Backup {
       "settings.underGlow",
       "settings.ledDriver",
     ];
-    const commands = await this.focus.command("help");
-    return commands.filter(c => !notRequired.some(v => c.includes(v)));
+    const commands = await device.command("help");
+    return commands.split(/\r?\n/).filter(c => !notRequired.some(v => c.includes(v)));
   }
 
   /**
@@ -70,28 +65,27 @@ export default class Backup {
    * @param {string} neuronID This parameter contains the neuronID obtained from the Raise, so the corresponding local settings can be retrieved.
    * @returns {Backup} Backup The function returns the full made backup, so it can be stored wherever is needed, and changed if the module requires it.
    */
-  async DoBackup(commands, neuronID) {
-    if (this.focus.file !== false) return;
+  async DoBackup(commands, neuronID, device) {
+    if (device.file !== false) return;
     const backup = {};
     const commandList = [];
-    let versions;
-    for (let i = 0; i < commands.length; i++) {
+    for (let i = 0; i < commands.length; i += 1) {
       const command = commands[i];
       console.log(command);
-      const data = await this.focus.command(command);
+      const data = await device.command(command);
       commandList.push({ command, data });
     }
-    const vData = await this.focus.command("version");
+    const vData = await device.command("version");
     const parts = vData.split(" ");
-    versions = {
+    const versions = {
       bazecor: parts[0],
       kaleidoscope: parts[1],
       firmware: parts[2],
     };
     backup.neuronID = neuronID;
-    backup.neuron = this.neurons.filter(n => n.id == neuronID)[0];
+    backup.neuron = this.neurons.filter(n => n.id === neuronID)[0];
     if (backup.neuron === undefined) backup.neuron = {};
-    backup.neuron.device = this.focus.device;
+    backup.neuron.device = device.device;
     backup.versions = versions;
     backup.backup = commandList;
     return backup;
@@ -104,13 +98,12 @@ export default class Backup {
    * @param {*} backup The backup data object to be stored locally
    * @returns True when the function has successfully stored the backup locally, and false if something fails, an error log will be also pushed to the console
    */
-  SaveBackup(backup) {
-    const focus = new Focus();
-    if (focus.file !== false) {
-      const file = JSON.parse(fs.readFileSync(focus.fileData.device.filePath));
-      file.virtual = focus.fileData.virtual;
+  static SaveBackup(backup, device) {
+    if (device.file !== false) {
+      const file = JSON.parse(fs.readFileSync(device.fileData.device.filePath));
+      file.virtual = device.fileData.virtual;
       const json = JSON.stringify(file, null, 2);
-      fs.writeFileSync(focus.fileData.device.filePath, json, err => {
+      fs.writeFileSync(device.fileData.device.filePath, json, err => {
         if (err) {
           console.error(err);
           throw err;
@@ -118,7 +111,7 @@ export default class Backup {
       });
       return;
     }
-    const { product } = focus.device.info;
+    const { product } = device.device.info;
     const d = new Date();
     const folder = store.get("settings.backupFolder");
     try {
@@ -158,5 +151,6 @@ export default class Backup {
       console.warn("Error ocurred when saving backup to folder");
       throw new Error(error);
     }
+    return false;
   }
 }

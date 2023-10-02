@@ -461,7 +461,7 @@ function LayoutEditor(props) {
     currentLanguageLayout: "",
     showMacroModal: false,
     showNeuronModal: false,
-    isStandardView: store.get("settings.isStandardView") || true,
+    isStandardView: store.get("settings.isStandardView"),
     showStandardView: false,
     layoutSelectorPosition: { x: 0, y: 0 },
     isWireless: false,
@@ -728,6 +728,31 @@ function LayoutEditor(props) {
     };
   };
 
+  const flatten = arr => [].concat(...arr);
+
+  const updatePalette = async (device, palette) => {
+    let args;
+    if (deviceState.currentDevice.device.RGBWMode !== "RGBW") {
+      args = flatten(palette.map(color => [color.r, color.g, color.b])).map(v => v.toString());
+    } else {
+      const paletteAux = palette.map(color => {
+        const aux = rgb2w({ r: color.r, g: color.g, b: color.b });
+        return aux;
+      });
+      args = flatten(paletteAux.map(color => [color.r, color.g, color.b, color.w])).map(v => v.toString());
+      console.log(palette, paletteAux, args);
+    }
+
+    const result = await device.command("palette", ...args);
+    return result;
+  };
+
+  const updateColormap = async (device, colormap) => {
+    const args = flatten(colormap).map(v => v.toString());
+    const result = await device.command("colormap.map", ...args);
+    return result;
+  };
+
   const AnalizeChipID = async chipID => {
     const { currentDevice } = deviceState;
     let neurons = store.get("neurons");
@@ -797,7 +822,7 @@ function LayoutEditor(props) {
         );
       }
       // var result = await userAction;
-      console.log(result, neuron, neuronCopy);
+      // console.log(result, neuron, neuronCopy);
       if (result === false) {
         neurons = neurons.concat(neuron);
         store.set("neurons", neurons);
@@ -882,7 +907,7 @@ function LayoutEditor(props) {
         }
       }
 
-      console.log("KEYMAP TEST!!", keymap, keymap.onlyCustom, onlyCustom);
+      // console.log("KEYMAP TEST!!", keymap, keymap.onlyCustom, onlyCustom);
       if (empty && keymap.custom.length > 0) {
         console.log("Custom keymap is empty, copying defaults");
         for (let i = 0; i < keymap.default.length; i += 1) {
@@ -894,7 +919,7 @@ function LayoutEditor(props) {
 
       const colormap = await getColormap(layerSize);
       const palette = colormap.palette.slice();
-      console.log("retrieved color.map & palette", colormap, palette);
+      // console.log("retrieved color.map & palette", colormap, palette);
       let raw = await currentDevice.command("macros.map");
       if (raw.search(" 0 0") !== -1) {
         raw = raw.split(" 0 0")[0].split(" ").map(Number);
@@ -1031,7 +1056,8 @@ function LayoutEditor(props) {
 
     if (isStandardView) {
       state.showStandardView = true;
-      console.log("Show Standard View IF: ", showStandardView);
+      setState({ ...state });
+      // console.log("Show Standard View IF: ", showStandardView);
     }
 
     if (keyIndex === currentKeyIndex && !isStandardView) {
@@ -1079,10 +1105,14 @@ function LayoutEditor(props) {
   };
 
   const onApply = async () => {
+    const { keymap, colorMap, palette } = state;
     const { currentDevice } = deviceState;
     state.saving = true;
-    await currentDevice.command("keymap", state.keymap);
-    await currentDevice.command("colormap", state.palette, state.colorMap);
+    const args = flatten(keymap.custom).map(k => keymapDB.serialize(k));
+    await currentDevice.command("keymap.custom", ...args);
+    await currentDevice.command("keymap.onlyCustom", keymap.onlyCustom ? 1 : 0);
+    await updateColormap(currentDevice, colorMap);
+    await updatePalette(currentDevice, palette);
     state.modified = false;
     state.saving = false;
     state.previousKeyIndex = state.currentKeyIndex;
@@ -1091,12 +1121,12 @@ function LayoutEditor(props) {
     state.isMultiSelected = false;
     state.selectedPaletteColor = null;
     state.isColorButtonSelected = false;
-    console.log("Changes saved.");
-    const commands = await bkp.Commands();
-    const backup = await bkp.DoBackup(commands, state.neurons[state.neuronID].id);
-    bkp.SaveBackup(backup);
+    const commands = await Backup.Commands(currentDevice);
+    const backup = await bkp.DoBackup(commands, state.neurons[state.neuronID].id, currentDevice);
+    Backup.SaveBackup(backup, currentDevice);
     setState({ ...state });
     props.cancelContext();
+    console.log("Changes saved.");
   };
 
   const copyFromDialog = () => {
@@ -1642,8 +1672,8 @@ function LayoutEditor(props) {
 
   useEffect(() => {
     const { inContext } = props;
-    console.log("props", inContext, state.inContext);
-    if (state.inContext === false && inContext === true) {
+    // console.log("props", inContext, state.inContext);
+    if (state.inContext === true && inContext === false) {
       state.currentLayer = state.previousLayer !== 0 ? state.previousLayer : 0;
       state.currentKeyIndex = -1;
       state.currentLedIndex = -1;
@@ -1655,12 +1685,6 @@ function LayoutEditor(props) {
       state.palette = [];
       state.modified = false;
       state.inContext = true;
-      setState({ ...state });
-      scanKeyboard();
-    }
-    if (state.inContext === true && inContext === false) {
-      state.inContext = false;
-      state.modified = false;
       scanKeyboard();
       setState({ ...state });
     }
