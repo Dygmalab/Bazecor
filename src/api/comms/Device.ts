@@ -1,3 +1,4 @@
+// eslint-disable-next-line import/no-cycle
 import { DeviceType } from "../../renderer/types/devices";
 import HID from "../hid/hid";
 // eslint-disable-next-line no-eval

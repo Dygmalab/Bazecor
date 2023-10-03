@@ -29,6 +29,7 @@ import Modal from "react-bootstrap/Modal";
 import customCursor from "@Assets/base/cursorBucket.png";
 import { LogoLoaderCentered } from "@Renderer/component/Loader";
 import ToastMessage from "@Renderer/component/ToastMessage";
+import PropTypes from "prop-types";
 
 import ConfirmationDialog from "@Renderer/component/ConfirmationDialog";
 import { CopyFromDialog } from "@Renderer/component/CopyFromDialog";
@@ -469,7 +470,7 @@ function LayoutEditor(props) {
   };
 
   const [state, setState] = useState(initialState);
-  const [deviceState, deviceDispatcher] = useDevice();
+  const [deviceState] = useDevice();
 
   let keymapDB = new KeymapDB();
 
@@ -845,6 +846,7 @@ function LayoutEditor(props) {
   };
 
   const scanKeyboard = async lang => {
+    const { onDisconnect } = props;
     const { currentDevice } = deviceState;
     try {
       /**
@@ -968,12 +970,13 @@ function LayoutEditor(props) {
     } catch (e) {
       console.error(e);
       toast.error(e);
-      props.onDisconnect();
+      onDisconnect();
     }
   };
 
   const onKeyChange = keyCode => {
     // Keys can only change on the custom layers
+    const { startContext } = props;
     const layer = state.currentLayer;
     const keyIndex = state.currentKeyIndex;
 
@@ -991,7 +994,7 @@ function LayoutEditor(props) {
     };
     state.modified = true;
     setState({ ...state });
-    props.startContext();
+    startContext();
   };
 
   /**
@@ -1026,12 +1029,13 @@ function LayoutEditor(props) {
    * @param {number} ledIndex Number of current selected keyboard button
    */
   const onButtonKeyboardColorChange = (currentLayer, layer, ledIndex) => {
+    const { startContext } = props;
     const { selectedPaletteColor, modified } = state;
     const isEqualColor = onVerificationColor(selectedPaletteColor, currentLayer, ledIndex);
     if (!(!modified && isEqualColor)) {
       const colormap = state.colorMap.slice();
       colormap[currentLayer][ledIndex] = state.selectedPaletteColor;
-      props.startContext();
+      startContext();
       state.selectedPaletteColor = state.colorMap[layer][ledIndex];
       state.colorMap = colormap;
       state.modified = true;
@@ -1040,15 +1044,7 @@ function LayoutEditor(props) {
   };
 
   const onKeySelect = event => {
-    const {
-      selectedPaletteColor,
-      currentLayer,
-      isMultiSelected,
-      isColorButtonSelected,
-      currentKeyIndex,
-      isStandardView,
-      showStandardView,
-    } = state;
+    const { selectedPaletteColor, currentLayer, isMultiSelected, isColorButtonSelected, currentKeyIndex, isStandardView } = state;
     const { currentTarget } = event;
     const layer = parseInt(currentTarget.getAttribute("data-layer"), 10);
     const keyIndex = parseInt(currentTarget.getAttribute("data-key-index"), 10);
@@ -1105,6 +1101,7 @@ function LayoutEditor(props) {
   };
 
   const onApply = async () => {
+    const { cancelContext } = props;
     const { keymap, colorMap, palette } = state;
     const { currentDevice } = deviceState;
     state.saving = true;
@@ -1125,7 +1122,7 @@ function LayoutEditor(props) {
     const backup = await bkp.DoBackup(commands, state.neurons[state.neuronID].id, currentDevice);
     Backup.SaveBackup(backup, currentDevice);
     setState({ ...state });
-    props.cancelContext();
+    cancelContext();
     console.log("Changes saved.");
   };
 
@@ -1140,6 +1137,7 @@ function LayoutEditor(props) {
   };
 
   const copyFromLayer = layer => {
+    const { startContext } = props;
     let newKeymap;
 
     if (state.keymap.onlyCustom) {
@@ -1156,7 +1154,7 @@ function LayoutEditor(props) {
     const newColormap = state.colorMap.slice();
     if (newColormap.length > 0) newColormap[state.currentLayer] = state.colorMap[layer >= 0 ? layer : state.currentLayer].slice();
 
-    props.startContext();
+    startContext();
     state.colorMap = newColormap;
     state.keymap = {
       default: state.keymap.default,
@@ -1169,6 +1167,7 @@ function LayoutEditor(props) {
   };
 
   const clearLayer = () => {
+    const { startContext } = props;
     const newKeymap = state.keymap.custom.slice();
     const idx = state.keymap.onlyCustom ? state.currentLayer : state.currentLayer - state.keymap.default.length;
     newKeymap[idx] = Array(newKeymap[0].length)
@@ -1181,7 +1180,7 @@ function LayoutEditor(props) {
         .fill()
         .map(() => 15);
     }
-    props.startContext();
+    startContext();
     state.keymap = {
       default: state.keymap.default,
       onlyCustom: state.keymap.onlyCustom,
@@ -1219,6 +1218,7 @@ function LayoutEditor(props) {
   };
 
   const onColorSelect = colorIndex => {
+    const { startContext } = props;
     const { currentLayer, currentLedIndex, colorMap } = state;
 
     const isEqualColor = onVerificationColor(colorIndex, currentLayer, currentLedIndex);
@@ -1233,7 +1233,7 @@ function LayoutEditor(props) {
       state.selectedPaletteColor = colorIndex;
       state.modified = true;
       setState({ ...state });
-      props.startContext();
+      startContext();
     } else {
       state.selectedPaletteColor = colorIndex;
       setState({ ...state });
@@ -1241,6 +1241,7 @@ function LayoutEditor(props) {
   };
 
   const onColorPick = (colorIndex, r, g, b) => {
+    const { startContext } = props;
     const newPalette = state.palette.slice();
     const setColors = (red, green, blue) => ({
       r: red,
@@ -1252,10 +1253,19 @@ function LayoutEditor(props) {
     state.palette = newPalette;
     state.modified = true;
     setState({ ...state });
-    props.startContext();
+    startContext();
+  };
+
+  /**
+   * Close ImportExportDialog component
+   */
+  const toCloseImportExportDialog = () => {
+    state.importExportDialogOpen = false;
+    setState({ ...state });
   };
 
   const importLayer = data => {
+    const { startContext } = props;
     if (data.palette.length > 0) state.palette = data.palette;
     setState({ ...state });
     const layerNames = state.layerNames.slice();
@@ -1302,26 +1312,19 @@ function LayoutEditor(props) {
     }
     state.modified = true;
     setState({ ...state });
-    props.startContext();
+    startContext();
     toCloseImportExportDialog();
   };
 
-  /**
-   * Close ImportExportDialog component
-   */
-  const toCloseImportExportDialog = () => {
-    state.importExportDialogOpen = false;
-    setState({ ...state });
-  };
-
   const toChangeAllKeysColor = (colorIndex, start, end) => {
+    const { startContext } = props;
     const { currentLayer } = state;
     const colormap = state.colorMap.slice();
     colormap[currentLayer] = colormap[currentLayer].fill(colorIndex, start, end);
     state.colorMap = colormap;
     state.modified = true;
     setState({ ...state });
-    props.startContext();
+    startContext();
   };
 
   const getLayout = () => {
@@ -1341,6 +1344,7 @@ function LayoutEditor(props) {
   };
 
   const toImport = async () => {
+    const { startContext } = props;
     const options = {
       title: "Load Layer/s file",
       buttonLabel: "Load Layer/s",
@@ -1380,7 +1384,7 @@ function LayoutEditor(props) {
           state.superkeys = layers.superkeys ? layers.superkeys : [];
           state.modified = true;
           setState({ ...state });
-          props.startContext();
+          startContext();
           toast.success(i18n.editor.importSuccessAllLayers, {
             autoClose: 2000,
           });
@@ -1474,55 +1478,59 @@ function LayoutEditor(props) {
     }
   };
 
-  const toExportAll = async () => {
-    const { keymap, colorMap, palette, superkeys, layerNames } = state;
-    const data = JSON.stringify(
-      {
-        layerNames,
-        keymap,
-        colormap: colorMap,
-        palette,
-        superkeys,
-      },
-      null,
-      2,
-    );
-    const options = {
-      title: "Backup Layers file",
-      defaultPath: "Layers.json",
-      buttonLabel: "Backup Layers",
-      filters: [
-        { name: "Json", extensions: ["json"] },
-        { name: "All Files", extensions: ["*"] },
-      ],
-    };
+  /*
+   * Temporarily disabled this function until it becomes useful again
+   */
 
-    try {
-      const path = await ipcRenderer.invoke("save-dialog", options);
-      if (typeof path !== "undefined") {
-        console.log(path, data);
-        fs.writeFileSync(path, data);
-        toast.success(
-          <ToastMessage
-            title={i18n.editor.exportSuccessAllLayers}
-            content={i18n.editor.exportSuccessAllLayers}
-            icon={<IconArrowUpWithLine />}
-          />,
-          {
-            autoClose: 2000,
-            icon: "",
-          },
-        );
-      } else {
-        console.log("user closed SaveDialog");
-      }
-    } catch (error) {
-      console.error(error);
-      toast.error(i18n.errors.exportError + error, {
-        autoClose: 2000,
-      });
-    }
-  };
+  // const toExportAll = async () => {
+  //   const { keymap, colorMap, palette, superkeys, layerNames } = state;
+  //   const data = JSON.stringify(
+  //     {
+  //       layerNames,
+  //       keymap,
+  //       colormap: colorMap,
+  //       palette,
+  //       superkeys,
+  //     },
+  //     null,
+  //     2,
+  //   );
+  //   const options = {
+  //     title: "Backup Layers file",
+  //     defaultPath: "Layers.json",
+  //     buttonLabel: "Backup Layers",
+  //     filters: [
+  //       { name: "Json", extensions: ["json"] },
+  //       { name: "All Files", extensions: ["*"] },
+  //     ],
+  //   };
+
+  //   try {
+  //     const path = await ipcRenderer.invoke("save-dialog", options);
+  //     if (typeof path !== "undefined") {
+  //       console.log(path, data);
+  //       fs.writeFileSync(path, data);
+  //       toast.success(
+  //         <ToastMessage
+  //           title={i18n.editor.exportSuccessAllLayers}
+  //           content={i18n.editor.exportSuccessAllLayers}
+  //           icon={<IconArrowUpWithLine />}
+  //         />,
+  //         {
+  //           autoClose: 2000,
+  //           icon: "",
+  //         },
+  //       );
+  //     } else {
+  //       console.log("user closed SaveDialog");
+  //     }
+  //   } catch (error) {
+  //     console.error(error);
+  //     toast.error(i18n.errors.exportError + error, {
+  //       autoClose: 2000,
+  //     });
+  //   }
+  // };
 
   const toggleNeuronModal = () => {
     if (state.showNeuronModal) {
@@ -1545,6 +1553,7 @@ function LayoutEditor(props) {
   };
 
   const updateOldMacros = () => {
+    const { startContext } = props;
     const { keymap } = state;
     const layers = [];
     const oldmacro = [...Array(64).keys()].map(x => x + 24576);
@@ -1565,7 +1574,7 @@ function LayoutEditor(props) {
     state.modified = true;
     state.keymap = keymap;
     setState({ ...state });
-    props.startContext();
+    startContext();
     onApply();
   };
 
@@ -1711,6 +1720,8 @@ function LayoutEditor(props) {
     isWireless,
   } = state;
 
+  const { theme, darkMode, cancelContext } = props;
+
   const { Layer, kbtype } = getLayout();
   if (!Layer) {
     return <div />;
@@ -1782,8 +1793,8 @@ function LayoutEditor(props) {
         selectedLED={state.currentLedIndex}
         palette={state.palette}
         colormap={state.colorMap[state.currentLayer]}
-        theme={props.theme}
-        darkMode={props.darkMode}
+        theme={theme}
+        darkMode={darkMode}
         style={{ width: "50vw" }}
         showUnderglow={state.modeselect !== "keyboard"}
         className="raiseKeyboard layer"
@@ -1886,7 +1897,7 @@ function LayoutEditor(props) {
           saveContext={onApply}
           destroyContext={() => {
             console.log("cancelling context: ", props);
-            props.cancelContext();
+            cancelContext();
           }}
           inContext={state.modified}
         />
@@ -2029,5 +2040,14 @@ function LayoutEditor(props) {
     </Styles>
   );
 }
+
+LayoutEditor.propTypes = {
+  onDisconnect: PropTypes.func,
+  startContext: PropTypes.func,
+  cancelContext: PropTypes.func,
+  inContext: PropTypes.bool,
+  theme: PropTypes.objectOf(PropTypes.object()),
+  darkMode: PropTypes.bool,
+};
 
 export default LayoutEditor;
