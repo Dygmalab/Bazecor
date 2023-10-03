@@ -60,12 +60,12 @@ interface PreferencesProps {
   allowBeta: boolean;
   connected: boolean;
   startContext: () => void;
-  toggleDarkMode: () => void;
+  toggleDarkMode: (mode: string) => void;
 }
 
 const Preferences = (props: PreferencesProps) => {
   const [state] = useDevice();
-  const [bkp, setBkp] = useState(new Backup());
+  const [bkp] = useState(new Backup());
   const { inContext, connected, allowBeta, updateAllowBeta, startContext, cancelContext, toggleDarkMode } = props;
   const [kbData, setKbData] = useState({
     keymap: {
@@ -99,7 +99,7 @@ const Preferences = (props: PreferencesProps) => {
     advanced: false,
     verboseFocus: false,
     darkMode: "system",
-    neurons: store.get("neurons"),
+    neurons: store.get("neurons") as any,
     selectedNeuron: 0,
     selectNeuron: 0,
     neuronID: "",
@@ -231,6 +231,19 @@ const Preferences = (props: PreferencesProps) => {
     init();
   }, []);
 
+  const destroyContext = async () => {
+    setKbData({
+      ...kbData,
+      modified: false,
+    });
+    setPreferencesState({
+      ...preferencesState,
+      modified: false,
+    });
+    await getNeuronData();
+    cancelContext();
+  };
+
   const saveKeymapChanges = async () => {
     const {
       keymap,
@@ -279,9 +292,9 @@ const Preferences = (props: PreferencesProps) => {
 
       // TODO: Review toast popup on try/catch works well.
       try {
-        const commands = await bkp.Commands();
-        const backup = await bkp.DoBackup(commands, preferencesState.neuronID);
-        bkp.SaveBackup(backup);
+        const commands = await Backup.Commands();
+        const backup = await bkp.DoBackup(commands, preferencesState.neuronID, state.currentDevice);
+        Backup.SaveBackup(backup, state.currentDevice);
         toast.success(<ToastMessage title={i18n.success.preferencesSaved} icon={<IconFloppyDisk />} />, {
           position: "top-right",
           autoClose: 5000,
@@ -316,25 +329,13 @@ const Preferences = (props: PreferencesProps) => {
     }
   };
 
-  const destroyContext = async () => {
-    setKbData({
-      ...kbData,
-      modified: false,
-    });
-    setPreferencesState({
-      ...preferencesState,
-      modified: false,
-    });
-    await getNeuronData();
-    cancelContext();
-  };
-  const setLanguage = async event => {
+  const setLanguage = async (event: any) => {
     i18n.setLanguage(event.target.value);
     // await this.setState({}); // what is the meaning of this?
     await store.set("settings.language", event.target.value);
   };
 
-  const setKbDataHandler = newKbData => {
+  const setKbDataHandler = (newKbData: any) => {
     if (kbData.modified === false && newKbData.modified === true) {
       setKbData(newKbData);
       startContext();
@@ -347,7 +348,7 @@ const Preferences = (props: PreferencesProps) => {
     }
   };
 
-  const selectDefaultLayer = value => {
+  const selectDefaultLayer = (value: string) => {
     if (kbData.modified === false) {
       setKbData({
         ...kbData,
@@ -376,7 +377,7 @@ const Preferences = (props: PreferencesProps) => {
     }));
   };
 
-  const toggleDevTools = async event => {
+  const toggleDevTools = async (event: any) => {
     setPreferencesState({
       ...preferencesState,
       devTools: event.target.checked,
@@ -386,7 +387,7 @@ const Preferences = (props: PreferencesProps) => {
   };
 
   // THEME MODE FUNCTIONS
-  const selectDarkMode = key => {
+  const selectDarkMode = (key: string) => {
     setPreferencesState({
       ...preferencesState,
       darkMode: key,
@@ -394,7 +395,7 @@ const Preferences = (props: PreferencesProps) => {
     toggleDarkMode(key);
   };
 
-  const toggleVerboseFocus = event => {
+  const toggleVerboseFocus = () => {
     //focus.debug = !this.state.verboseFocus;
     setPreferencesState(prevState => ({
       ...preferencesState,
@@ -402,7 +403,7 @@ const Preferences = (props: PreferencesProps) => {
     }));
   };
 
-  const toggleOnlyCustom = event => {
+  const toggleOnlyCustom = (event: any) => {
     setKbData({
       ...kbData,
       keymap: {
@@ -419,18 +420,18 @@ const Preferences = (props: PreferencesProps) => {
   };
 
   // NEURON FUNCTIONS
-  const selectNeuron = value => {
+  const selectNeuron = (value: string) => {
     setPreferencesState({
       ...preferencesState,
       selectedNeuron: parseInt(value, 10),
     });
   };
 
-  const applyNeuronName = neurons => {
+  const applyNeuronName = (neurons: any) => {
     store.set("neurons", neurons);
   };
 
-  const updateNeuronName = data => {
+  const updateNeuronName = (data: string) => {
     const temp = preferencesState.neurons;
     temp[preferencesState.selectedNeuron].name = data;
     setPreferencesState({
@@ -459,7 +460,7 @@ const Preferences = (props: PreferencesProps) => {
   const devToolsSwitch = <Form.Check type="switch" checked={devTools} onChange={toggleDevTools} />;
   const verboseSwitch = <Form.Check type="switch" checked={verboseFocus} onChange={toggleVerboseFocus} />;
   const onlyCustomSwitch = <Form.Check type="switch" checked={kbData.keymap.onlyCustom} onChange={toggleOnlyCustom} />;
-  const allowBetas = <Form.Check value={allowBeta} type="switch" checked={allowBeta} onChange={updateAllowBeta} />;
+  const allowBetas = <Form.Check value={allowBeta as any} type="switch" checked={allowBeta} onChange={updateAllowBeta} />;
   /// const pairingButton = <RegularButton buttonText={"Re-Pair RF"} styles="short warning sm" onClick={sendRePairCommand} />;
   // console.log("CHECKING STATUS MOD", modified);
   // console.log("CHECKING STATUS CTX", inContext);
@@ -471,7 +472,7 @@ const Preferences = (props: PreferencesProps) => {
           text={i18n.preferences.title}
           style="pageHeaderFlatBottom"
           showSaving
-          showContentSelector={false}
+          contentSelector={false}
           saveContext={saveKeymapChanges}
           destroyContext={destroyContext}
           inContext={modified}
@@ -499,7 +500,7 @@ const Preferences = (props: PreferencesProps) => {
                 />
                 <KeyboardSettings kbData={kbData} setKbData={setKbDataHandler} connected={connected} />
                 <AdvancedSettings
-                  devToolsSwitch={devToolsSwitch}
+                  devToolsSwitch={devToolsSwitch as any}
                   verboseSwitch={verboseSwitch}
                   onlyCustomSwitch={onlyCustomSwitch}
                   allowBetas={allowBetas}
