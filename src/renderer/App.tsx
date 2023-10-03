@@ -16,7 +16,7 @@
  */
 
 import React, { useState, useEffect } from "react";
-import { Routes, Navigate, Route } from "react-router-dom";
+import { Routes, Navigate, Route, useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import { ThemeProvider } from "styled-components";
 import { ipcRenderer } from "electron";
@@ -37,7 +37,6 @@ import SuperkeysEditor from "@Renderer/views/SuperkeysEditor";
 import Preferences from "@Renderer/views/Preferences";
 import Wireless from "@Renderer/views/Wireless";
 import Welcome from "@Renderer/views/Welcome";
-import { useNavigate } from "react-router-dom";
 
 import Header from "@Renderer/modules/NavigationMenu";
 import ToastMessage from "@Renderer/component/ToastMessage";
@@ -69,6 +68,7 @@ const App = () => {
     contextBar: false,
     fwUpdate: false,
     allowBeta: false,
+    loading: true,
   });
 
   const updateStorageSchema = async () => {
@@ -77,7 +77,7 @@ const App = () => {
     const locale = await ipcRenderer.invoke("get-Locale");
     if (store.get("settings.language") !== undefined) {
       console.log("settings already upgraded, returning");
-      i18n.setLanguage(store.get("settings.language"));
+      i18n.setLanguage(store.get("settings.language").toString());
       return;
     }
     // create locale language identifier
@@ -134,13 +134,14 @@ const App = () => {
         contextBar: false,
         fwUpdate: false,
         allowBeta,
+        loading: true,
       });
       localStorage.clear();
     };
     init();
   }, []);
 
-  const forceDarkMode = mode => {
+  const forceDarkMode = (mode: any) => {
     setAppState({
       ...appState,
       darkMode: mode,
@@ -155,7 +156,7 @@ const App = () => {
     }
   };
 
-  const handleUSBDisconnection = async device => {
+  const handleUSBDisconnection = async (device: any) => {
     const { connected } = appState;
     console.log("Handling device disconnect");
     if (flashing) {
@@ -274,6 +275,13 @@ const App = () => {
     }));
   };
 
+  const setLoadingData = (loading: boolean) => {
+    setAppState(prev => ({
+      ...prev,
+      loading,
+    }));
+  };
+
   const updateAllowBeta = (event: any) => {
     const newValue = event.target.checked;
     // console.log("new allowBeta value: ", newValue);
@@ -284,12 +292,12 @@ const App = () => {
     });
   };
 
-  const { connected, pages, contextBar, darkMode, fwUpdate, allowBeta, device } = appState;
+  const { connected, pages, contextBar, darkMode, fwUpdate, allowBeta, device, loading } = appState;
 
   return (
     <ThemeProvider theme={darkMode ? Dark : Light}>
       <GlobalStyles />
-      <Header connected={connected} pages={pages} flashing={!connected} fwUpdate={fwUpdate} allowBeta={allowBeta} />
+      <Header connected={connected} pages={pages} flashing={!connected} fwUpdate={fwUpdate || loading} allowBeta={allowBeta} />
       <div className="main-container">
         <Routes>
           <Route exact path="/" element={<Navigate to="/keyboard-select" />} />
@@ -326,6 +334,7 @@ const App = () => {
                 onDisconnect={onKeyboardDisconnect}
                 startContext={startContext}
                 cancelContext={cancelContext}
+                setLoadingData={setLoadingData}
                 inContext={contextBar}
                 titleElement={() => document.querySelector("#page-title")}
                 appBarElement={() => document.querySelector("#appbar")}
@@ -341,6 +350,7 @@ const App = () => {
                 onDisconnect={onKeyboardDisconnect}
                 startContext={startContext}
                 cancelContext={cancelContext}
+                setLoadingData={setLoadingData}
                 inContext={contextBar}
                 titleElement={() => document.querySelector("#page-title")}
               />
@@ -354,6 +364,7 @@ const App = () => {
                 onDisconnect={onKeyboardDisconnect}
                 startContext={startContext}
                 cancelContext={cancelContext}
+                setLoadingData={setLoadingData}
                 inContext={contextBar}
                 titleElement={() => document.querySelector("#page-title")}
               />

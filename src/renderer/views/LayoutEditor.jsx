@@ -439,6 +439,7 @@ function LayoutEditor(props) {
     previousLedIndex: 0,
     modified: false,
     saving: false,
+    loading: true,
     keymap: {
       custom: [],
       default: [],
@@ -1657,6 +1658,7 @@ function LayoutEditor(props) {
     };
     const scanner = async () => {
       await scanKeyboard().then(() => {
+        const { setLoadingData } = props;
         const { keymap } = state;
         const defLayer = state.defaultLayer >= 126 ? 0 : state.defaultLayer;
         let initialLayer = 0;
@@ -1668,6 +1670,8 @@ function LayoutEditor(props) {
         }
 
         state.currentLayer = state.previousLayer !== 0 ? state.previousLayer : initialLayer;
+        state.loading = false;
+        setLoadingData(state.loading);
         setState({ ...state });
       });
       const newLanguage = store.get("settings.language");
@@ -1680,23 +1684,31 @@ function LayoutEditor(props) {
   }, []);
 
   useEffect(() => {
-    const { inContext } = props;
-    // console.log("props", inContext, state.inContext);
-    if (state.inContext === true && inContext === false) {
-      state.currentLayer = state.previousLayer !== 0 ? state.previousLayer : 0;
-      state.currentKeyIndex = -1;
-      state.currentLedIndex = -1;
-      state.keymap = {
-        custom: [],
-        default: [],
-        onlyCustom: false,
-      };
-      state.palette = [];
-      state.modified = false;
-      state.inContext = true;
-      scanKeyboard();
-      setState({ ...state });
-    }
+    const scanner = async () => {
+      const { inContext, setLoadingData } = props;
+      // console.log("props", inContext, state.inContext);
+      if (state.inContext === true && inContext === false) {
+        state.currentLayer = state.previousLayer !== 0 ? state.previousLayer : 0;
+        state.currentKeyIndex = -1;
+        state.currentLedIndex = -1;
+        state.keymap = {
+          custom: [],
+          default: [],
+          onlyCustom: false,
+        };
+        state.palette = [];
+        state.modified = false;
+        state.inContext = true;
+        state.loading = true;
+        setState({ ...state });
+        setLoadingData(state.loading);
+        await scanKeyboard();
+        state.loading = false;
+        setState({ ...state });
+        setLoadingData(state.loading);
+      }
+    };
+    scanner();
   }, [props]);
 
   useEffect(() => {
@@ -2045,6 +2057,7 @@ LayoutEditor.propTypes = {
   onDisconnect: PropTypes.func,
   startContext: PropTypes.func,
   cancelContext: PropTypes.func,
+  setLoadingData: PropTypes.func,
   inContext: PropTypes.bool,
   theme: PropTypes.shape({}),
   darkMode: PropTypes.bool,

@@ -366,7 +366,11 @@ function MacroEditor(props) {
 
   useEffect(() => {
     const macrosLoader = async () => {
+      const { setLoadingData } = props;
       await loadMacros();
+      state.loading = false;
+      setState({ ...state });
+      setLoadingData(state.loading);
     };
     macrosLoader();
   }, []);
@@ -545,6 +549,16 @@ function MacroEditor(props) {
     setState({ ...state });
   };
 
+  const destroyThisContext = async () => {
+    const { setLoadingData } = props;
+    state.loading = true;
+    setState({ ...state });
+    await loadMacros();
+    state.loading = false;
+    setState({ ...state });
+    setLoadingData(state.loading);
+  };
+
   const {
     macros,
     maxMacros,
@@ -613,7 +627,7 @@ function MacroEditor(props) {
           }
           showSaving
           saveContext={writeMacros}
-          destroyContext={loadMacros}
+          destroyContext={destroyThisContext}
           inContext={modified}
         />
         <Callout
@@ -679,6 +693,7 @@ function MacroEditor(props) {
 MacroEditor.propTypes = {
   startContext: PropTypes.func,
   onDisconnect: PropTypes.func,
+  setLoadingData: PropTypes.func,
 };
 
 export default MacroEditor;

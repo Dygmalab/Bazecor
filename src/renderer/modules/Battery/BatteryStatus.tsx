@@ -122,7 +122,7 @@ const BatteryStatus = ({ disable }: BatteryStatusProps) => {
   const intervalIdAnimateRef = useRef<NodeJS.Timeout | null>(null);
 
   const getBatteryStatus = useCallback(async () => {
-    if (state.currentDevice) {
+    if (state.currentDevice && !disable) {
       const left = await state.currentDevice.command("wireless.battery.left.level");
       const right = await state.currentDevice.command("wireless.battery.right.level");
       const leftStatus = await state.currentDevice.command("wireless.battery.left.status");

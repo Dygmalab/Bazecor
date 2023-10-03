@@ -678,11 +678,26 @@ function SuperkeysEditor(props) {
 
   useEffect(() => {
     const getInitialData = async () => {
+      const { setLoadingData } = props;
       await loadSuperkeys();
       await configStandarView();
+      state.loading = false;
+      setState({ ...state });
+      setLoadingData(state.loading);
     };
     getInitialData();
   }, []);
+
+  const destroyThisContext = async () => {
+    const { setLoadingData } = props;
+    state.loading = true;
+    setState({ ...state });
+    await loadSuperkeys();
+    await configStandarView();
+    state.loading = false;
+    setState({ ...state });
+    setLoadingData(state.loading);
+  };
 
   const {
     currentLanguageLayout,
@@ -732,7 +747,7 @@ function SuperkeysEditor(props) {
             />
           }
           saveContext={writeSuper}
-          destroyContext={loadSuperkeys}
+          destroyContext={destroyThisContext}
           inContext={modified}
         />
 
@@ -833,6 +848,7 @@ function SuperkeysEditor(props) {
 
 SuperkeysEditor.propTypes = {
   onDisconnect: PropTypes.func,
+  setLoadingData: PropTypes.func,
 };
 
 export default SuperkeysEditor;
