@@ -148,7 +148,7 @@ function AdvancedBatterySettingsModal(props: AdvancedEnergyManagementProps) {
                 selectDarkMode={setRfPower}
                 value={wireless.rf.power}
                 listElements={RFModes}
-                style="flex"
+                styles="flex"
                 size="sm"
               />
             </Row>

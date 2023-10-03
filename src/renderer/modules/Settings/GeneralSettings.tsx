@@ -71,7 +71,7 @@ const GeneralSettings = (props: GeneralSettingsProps) => {
     }
   };
 
-  let layersNames = neurons[selectedNeuron] ? neurons[selectedNeuron].layers : [];
+  let layersNames: any = neurons[selectedNeuron] ? neurons[selectedNeuron].layers : [];
   const flags = [
     englishUSF,
     englishUKF,
@@ -89,7 +89,7 @@ const GeneralSettings = (props: GeneralSettingsProps) => {
     swissF,
     eurkeyF,
   ];
-  let language = [
+  let language: any = [
     "english",
     "british",
     "spanish",
@@ -123,14 +123,14 @@ const GeneralSettings = (props: GeneralSettingsProps) => {
     "Swiss (German)",
     "EurKEY (1.3)",
   ];
-  language = language.map((item, index) => ({
+  language = language.map((item: any, index: any) => ({
     text: languageNames[index],
     value: item,
     icon: flags[index],
     index,
   }));
 
-  layersNames = layersNames.map((item, index) => ({
+  layersNames = layersNames.map((item: any, index: any) => ({
     text: item.name !== "" ? item.name : `Layer ${index + 1}`,
     value: index,
     index,
@@ -170,7 +170,7 @@ const GeneralSettings = (props: GeneralSettingsProps) => {
               <Col lg={6} md={12}>
                 <Form.Group controlId="selectLanguage" className="mb-3">
                   <Form.Label>{i18n.preferences.language}</Form.Label>
-                  <Select onSelect={changeLanguage} value={selectedLanguage} listElements={language} />
+                  <Select onSelect={changeLanguage} value={selectedLanguage} listElements={language} disabled={false} />
                 </Form.Group>
               </Col>
               <Col lg={6} md={12}>
@@ -188,7 +188,7 @@ const GeneralSettings = (props: GeneralSettingsProps) => {
                     selectDarkMode={selectDarkMode}
                     value={darkMode}
                     listElements={layoutsModes}
-                    style={"flex"}
+                    styles={"flex"}
                     size="sm"
                   />
                 </Form.Group>
