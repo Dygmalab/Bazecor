@@ -117,6 +117,7 @@ const Preferences = (props: PreferencesProps) => {
 
   const getNeuronData = async () => {
     const neuronData: any = {
+      neuronID: "",
       kbData: {
         keymap: {},
       },
@@ -131,11 +132,9 @@ const Preferences = (props: PreferencesProps) => {
         const layerParsed = layer ? parseInt(layer, 10) : 126;
         neuronData.kbData.defaultLayer = layerParsed <= 126 ? layerParsed : 126;
       });
-      await state.currentDevice.command("keymap").then((keymap: string) => {
-        neuronData.kbData.keymap = keymap;
-      });
-      await state.currentDevice.command("keymap.onlyCustom").then((onlyCustom: number) => {
-        neuronData.kbData.keymap.onlyCustom = onlyCustom === 1;
+      await state.currentDevice.command("keymap.onlyCustom").then((onlyCustom: string) => {
+        const isOnlyCustom = onlyCustom === "1";
+        neuronData.kbData.keymap.onlyCustom = isOnlyCustom;
       });
       await state.currentDevice.command("led.brightness").then((brightness: string) => {
         const brightnessParsed = brightness ? parseInt(brightness, 10) : -1;
