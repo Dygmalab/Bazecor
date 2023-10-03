@@ -200,7 +200,7 @@ class Device {
     let result: any;
     try {
       if (this.type === "serial") result = this.request(command, ...args);
-      result = this.hidRequest(command, ...args);
+      else result = this.hidRequest(command, ...args);
     } catch (error) {
       console.log("Error when handling request", error);
       result = error;
