@@ -67,7 +67,7 @@ const initialWireless = {
 
 const Wireless = (props: WirelessPropsInterface) => {
   const { startContext, cancelContext } = props;
-  const [state, dispatch] = useDevice();
+  const [state] = useDevice();
   const [wireless, setWireless] = useState<WirelessInterface>(initialWireless);
   const [modified, setModified] = useState(false);
   const [loading, setLoading] = useState(true);

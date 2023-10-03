@@ -24,7 +24,6 @@ import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
-import Spinner from "react-bootstrap/Spinner";
 import { toast } from "react-toastify";
 import i18n from "@Renderer/i18n";
 import "react-toastify/dist/ReactToastify.css";
@@ -35,14 +34,12 @@ import { BackupSettings, GeneralSettings, NeuronSettings, AdvancedSettings } fro
 
 import { PageHeader } from "@Renderer/modules/PageHeader";
 import ToastMessage from "@Renderer/component/ToastMessage";
-import { RegularButton } from "@Renderer/component/Button";
 import { IconFloppyDisk } from "@Renderer/component/Icon";
 import Version from "@Renderer/component/Version/Version";
 
 import Store from "@Renderer/utils/Store";
-import Focus from "../../api/focus";
-import Backup from "../../api/backup";
 import { useDevice } from "@Renderer/DeviceContext";
+import Backup from "../../api/backup";
 
 const store = Store.getStore();
 
@@ -56,7 +53,7 @@ const Styles = Styled.div`
 interface PreferencesProps {
   inContext: boolean;
   cancelContext: () => void;
-  updateAllowBeta: () => void;
+  updateAllowBeta: (event: any) => void;
   allowBeta: boolean;
   connected: boolean;
   startContext: () => void;
