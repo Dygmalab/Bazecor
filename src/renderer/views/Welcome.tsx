@@ -22,7 +22,7 @@ import { toast } from "react-toastify";
 import Container from "react-bootstrap/Container";
 import Card from "react-bootstrap/Card";
 import { useNavigate } from "react-router-dom";
-import Focus from "../../api/focus";
+import { useDevice } from "@Renderer/DeviceContext";
 import i18n from "../i18n";
 
 import { PageHeader } from "../modules/PageHeader";
@@ -105,20 +105,14 @@ height: inherit;
 
 function Welcome(props: any) {
   const navigate = useNavigate();
+  const [state, dispatch] = useDevice();
   const { onConnect, device } = props;
 
   const reconnect = async () => {
-    const focus = new Focus();
-    const dev = {
-      path: focus._port.path,
-      device: focus.device,
-    };
-
     try {
-      if (!dev.path) {
-        dev.device.device = dev.device;
+      if (state.currentDevice) {
+        await onConnect(state.currentDevice, null);
       }
-      await onConnect(dev, null);
     } catch (err) {
       toast.error(<ToastMessage title={i18n.errors.preferenceFailOnSave} content={err.toString()} icon={<IconFloppyDisk />} />, {
         icon: "",
@@ -126,12 +120,19 @@ function Welcome(props: any) {
     }
   };
 
-  const focus = new Focus();
-  const dev = device.device || focus.device;
-
-  const reconnectButton = focus._port && (
+  const reconnectButton = state.currentDevice && (
     <RegularButton onClick={reconnect} buttonText={i18n.welcome.reconnect} styles="outline transp-bg" />
   );
+
+  const showDeviceName = () => {
+    const name = state.currentDevice?.device?.info?.displayName || "";
+    return (
+      <div className="content">
+        <Title text={name} headingLevel={4} />
+        {state.currentDevice ? <Title text={state.currentDevice?.path} headingLevel={6} /> : ""}
+      </div>
+    );
+  };
 
   return (
     <Styles>
@@ -142,10 +143,7 @@ function Welcome(props: any) {
             <Card className="welcomeCard">
               <Card.Header>
                 <div className="keyboardSelected">
-                  <div className="content">
-                    <Title text={dev.info.displayName} headingLevel={4} />
-                    {focus._port ? <Title text={focus._port.path} headingLevel={6} /> : ""}
-                  </div>
+                  {showDeviceName()}
                   <div className="icon">
                     <IconKeyboard />
                   </div>
