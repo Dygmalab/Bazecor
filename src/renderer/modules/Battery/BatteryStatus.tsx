@@ -177,7 +177,7 @@ const BatteryStatus = ({ disable }: BatteryStatusProps) => {
     // const { disable } = props;
     if (disable) return;
     if (state.currentDevice) {
-      await state.cururentDevice.command("wireless.battery.forceRead");
+      await state.currentDevice.command("wireless.battery.forceRead");
     }
     await getBatteryStatus();
     setAnimateIcon(1);
