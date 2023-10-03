@@ -196,8 +196,15 @@ class Device {
     // if (typeof this.commands[command] === "object") {
     //   return this.commands[command].focus(this, ...args);
     // }
-    if (this.type === "serial") return this.request(command, ...args);
-    return this.hidRequest(command, ...args);
+    let result: any;
+    try {
+      if (this.type === "serial") result = this.request(command, ...args);
+      result = this.hidRequest(command, ...args);
+    } catch (error) {
+      console.log("Error when handling request", error);
+      result = error;
+    }
+    return result;
   };
 
   write_parts = async (parts: Array<any>, cb: () => void) => {
