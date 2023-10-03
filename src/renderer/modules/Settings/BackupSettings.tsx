@@ -1,5 +1,5 @@
-import PropTypes from "prop-types";
-import React, { Component, useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
+import { useDevice } from "@Renderer/DeviceContext";
 import i18n from "../../i18n";
 import Slider from "@appigram/react-rangeslider";
 import Focus from "../../../api/focus";
@@ -22,7 +22,6 @@ import BackupFolderConfigurator from "../BackupFolderConfigurator";
 import { IconFloppyDisk } from "../../component/Icon";
 
 import Store from "../../utils/Store";
-import { useDevice } from "@Renderer/DeviceContext";
 
 const store = Store.getStore();
 
@@ -68,9 +67,9 @@ const BackupSettings = (props: BackupSettingsProps) => {
         { name: i18n.dialog.allFiles, extensions: ["*"] },
       ],
     };
-  
+
     const resp = await ipcRenderer.invoke("open-dialog", options);
-  
+
     if (!resp.canceled) {
       console.log(resp.filePaths);
       let loadedFile;
@@ -100,7 +99,7 @@ const BackupSettings = (props: BackupSettingsProps) => {
     store.set("settings.backupFrequency", value);
   };
 
-  const restoreBackup = async (backup) {
+  const restoreBackup = async backup => {
     let data = [];
     if (isArray(backup)) {
       data = backup;
@@ -132,10 +131,10 @@ const BackupSettings = (props: BackupSettingsProps) => {
       }
     }
     return false;
-  }
+  };
 
-  const restoreVirtual = async (virtual) => {
-    if (state.currentDevice) {      
+  const restoreVirtual = async virtual => {
+    if (state.currentDevice) {
       try {
         console.log("Restoring all settings");
         for (const command in virtual) {
@@ -151,9 +150,9 @@ const BackupSettings = (props: BackupSettingsProps) => {
         console.log(`Restore settings: Error: ${e.message}`);
         return false;
       }
-    }  
+    }
     return false;
-  }
+  };
 
   return (
     <Card className="overflowFix card-preferences mt-4">
@@ -192,7 +191,6 @@ const BackupSettings = (props: BackupSettingsProps) => {
       </Card.Body>
     </Card>
   );
-
 };
 
 export default BackupSettings;
