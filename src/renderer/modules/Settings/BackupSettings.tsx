@@ -1,11 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useDevice } from "@Renderer/DeviceContext";
-import i18n from "../../i18n";
-import Slider from "@appigram/react-rangeslider";
-import Focus from "../../../api/focus";
-import Backup from "../../../api/backup";
-import { isArray } from "lodash";
 import { ipcRenderer } from "electron";
+import Slider from "@appigram/react-rangeslider";
 import fs from "fs";
 
 // React Bootstrap Components
@@ -15,6 +11,7 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 
 // Own Components
+import i18n from "../../i18n";
 import Title from "../../component/Title";
 import BackupFolderConfigurator from "../BackupFolderConfigurator";
 
@@ -57,6 +54,63 @@ const BackupSettings = (props: BackupSettingsProps) => {
     }
   };
 
+  const restoreBackup = async (backup: any) => {
+    let data = [];
+    if (Array.isArray(backup)) {
+      data = backup;
+    } else {
+      data = backup.backup;
+    }
+    if (state.currentDevice) {
+      try {
+        for (let i = 0; i < data.length; i += 1) {
+          let val = data[i].data;
+          // Boolean values needs to be sent as int
+          if (typeof val === "boolean") {
+            val = +val;
+          }
+          // TODO: remove this block when necessary
+          if (state.currentDevice.device.info.product === "Defy") {
+            // if (data[i].command.includes("macros") || data[i].command.includes("superkeys")) continue;
+          }
+          console.log(`Going to send ${data[i].command} to keyboard`);
+          // eslint-disable-next-line no-await-in-loop
+          await state.currentDevice.command(`${data[i].command} ${val}`.trim());
+        }
+        await state.currentDevice.command("led.mode 0");
+        console.log("Restoring all settings");
+        console.log("Firmware update OK");
+        return true;
+      } catch (e) {
+        console.log(`Restore settings: Error: ${e.message}`);
+        return false;
+      }
+    }
+    return false;
+  };
+
+  const restoreVirtual = async (virtual: any) => {
+    if (state.currentDevice) {
+      try {
+        console.log("Restoring all settings");
+        for (const command in virtual) {
+          if (virtual[command].eraseable === true) {
+            console.log(`Going to send ${command} to keyboard`);
+            // eslint-disable-next-line no-await-in-loop
+            await state.currentDevice.command(`${command} ${virtual[command].data}`.trim());
+          }
+        }
+        await state.currentDevice.command("led.mode 0");
+        console.log("Settings restored OK");
+        return true;
+      } catch (e) {
+        console.log(`Restore settings: Error: ${e.message}`);
+        return false;
+      }
+    }
+    return false;
+  };
+
   const GetBackup = async () => {
     const options = {
       title: i18n.keyboardSettings.backupFolder.restoreTitle,
@@ -74,7 +128,7 @@ const BackupSettings = (props: BackupSettingsProps) => {
       console.log(resp.filePaths);
       let loadedFile;
       try {
-        loadedFile = JSON.parse(fs.readFileSync(resp.filePaths[0]));
+        loadedFile = JSON.parse(fs.readFileSync(resp.filePaths[0], "utf-8"));
         if (loadedFile.virtual !== undefined) {
           restoreVirtual(loadedFile.virtual);
           console.log("Restored Virtual backup");
@@ -93,65 +147,10 @@ const BackupSettings = (props: BackupSettingsProps) => {
     }
   };
 
-  const onSetStoreBackups = value => {
+  const onSetStoreBackups = (value: any) => {
     console.log("changed backup period to: ", value);
     setStoreBackups(value);
     store.set("settings.backupFrequency", value);
-  };
-
-  const restoreBackup = async backup => {
-    let data = [];
-    if (isArray(backup)) {
-      data = backup;
-    } else {
-      data = backup.backup;
-    }
-    if (state.currentDevice) {
-      try {
-        for (let i = 0; i < data.length; i++) {
-          let val = data[i].data;
-          // Boolean values needs to be sent as int
-          if (typeof val === "boolean") {
-            val = +val;
-          }
-          // TODO: remove this block when necessary
-          if (state.currentDevice.device.info.product == "Defy") {
-            // if (data[i].command.includes("macros") || data[i].command.includes("superkeys")) continue;
-          }
-          console.log(`Going to send ${data[i].command} to keyboard`);
-          await state.currentDevice.command(`${data[i].command} ${val}`.trim());
-        }
-        await state.currentDevice.command("led.mode 0");
-        console.log("Restoring all settings");
-        console.log("Firmware update OK");
-        return true;
-      } catch (e) {
-        console.log(`Restore settings: Error: ${e.message}`);
-        return false;
-      }
-    }
-    return false;
-  };
-
-  const restoreVirtual = async virtual => {
-    if (state.currentDevice) {
-      try {
-        console.log("Restoring all settings");
-        for (const command in virtual) {
-          if (virtual[command].eraseable === true) {
-            console.log(`Going to send ${command} to keyboard`);
-            await state.currentDevice.command(`${command} ${virtual[command].data}`.trim());
-          }
-        }
-        await state.currentDevice.command("led.mode 0");
-        console.log("Settings restored OK");
-        return true;
-      } catch (e) {
-        console.log(`Restore settings: Error: ${e.message}`);
-        return false;
-      }
-    }
-    return false;
   };
 
   return (
