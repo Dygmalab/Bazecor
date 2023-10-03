@@ -159,7 +159,7 @@ function SuperkeysEditor(props) {
 
   const macroTranslator = raw => {
     const { storedMacros } = state;
-    if (raw.search(" 0 0") === -1) {
+    if (typeof raw === "string" && raw.search(" 0 0") === -1) {
       return defaultMacro;
     }
     const macrosArray = raw.split(" 0 0")[0].split(" ").map(Number);
@@ -262,10 +262,11 @@ function SuperkeysEditor(props) {
 
     if (
       superkeys[0].actions === undefined ||
-      Array.isArray(superkeys[0].actions) ||
+      !Array.isArray(superkeys[0].actions) ||
       superkeys[0].actions.filter(v => v === 0).length === superkeys[0].length - 1
-    )
+    ) {
       return [];
+    }
     // TODO: Check if stored superKeys match the received ones, if they match, retrieve name and apply it to current superKeys
     let finalSuper = [];
     const stored = neurons[neuronID].superkeys;
@@ -294,6 +295,7 @@ function SuperkeysEditor(props) {
     console.log("keyCode: ", keyCode);
     state.superkeys = newData;
     state.modified = true;
+    setState({ ...state });
   };
 
   const loadSuperkeys = async () => {
@@ -358,14 +360,10 @@ function SuperkeysEditor(props) {
         }, []);
       keymap.onlyCustom = onlyCustom;
       // Macros
-      let raw = await currentDevice.command("macros.map");
-      if (raw.search(" 0 0") !== -1) {
-        raw = raw.split(" 0 0")[0].split(" ").map(Number);
-      } else {
-        raw = "";
-      }
+      const raw = await currentDevice.command("macros.map");
       const parsedMacros = macroTranslator(raw);
       let raw2 = await currentDevice.command("superkeys.map");
+      raw2 = String(raw2);
       if (raw2.search(" 0 0") !== -1) {
         raw2 = raw2.split(" 0 0")[0].split(" ").map(Number);
       } else {
