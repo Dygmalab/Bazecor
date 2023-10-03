@@ -10,7 +10,7 @@ import { BatteryStatusSide, SavingModeIndicator } from "@Renderer/component/Batt
 // Assets
 import { IconBattery, IconRefresh } from "@Renderer/component/Icon";
 
-import Focus from "../../../api/focus";
+import { useDevice } from "@Renderer/DeviceContext";
 import i18n from "../../i18n";
 
 const Style = Styled.div`
@@ -116,22 +116,24 @@ const BatteryStatus = ({ disable }: BatteryStatusProps) => {
   const [isSavingMode, setIsSavingMode] = useState(false);
   const [animateIcon, setAnimateIcon] = useState(0);
   const target = useRef(null);
+  const [state] = useDevice();
 
   const intervalIdRef = useRef<NodeJS.Timeout | null>(null);
   const intervalIdAnimateRef = useRef<NodeJS.Timeout | null>(null);
 
   const getBatteryStatus = useCallback(async () => {
-    const focus = new Focus();
-    const left = await focus.command("wireless.battery.left.level");
-    const right = await focus.command("wireless.battery.right.level");
-    const leftStatus = await focus.command("wireless.battery.left.status");
-    const rightStatus = await focus.command("wireless.battery.right.status");
-    const savingMode = await focus.command("wireless.battery.savingMode");
-    setbLeft(parseInt(left, 10));
-    setbRight(parseInt(right, 10));
-    setsLeft(leftStatus.includes("0x") ? 255 : parseInt(leftStatus, 10));
-    setsRight(rightStatus.includes("0x") ? 255 : parseInt(rightStatus, 10));
-    setIsSavingMode(parseInt(savingMode, 10) > 0);
+    if (state.currentDevice) {
+      const left = await state.currentDevice.command("wireless.battery.left.level");
+      const right = await state.currentDevice.command("wireless.battery.right.level");
+      const leftStatus = await state.currentDevice.command("wireless.battery.left.status");
+      const rightStatus = await state.currentDevice.command("wireless.battery.right.status");
+      const savingMode = await state.currentDevice.command("wireless.battery.savingMode");
+      setbLeft(parseInt(left, 10));
+      setbRight(parseInt(right, 10));
+      setsLeft(leftStatus.includes("0x") ? 255 : parseInt(leftStatus, 10));
+      setsRight(rightStatus.includes("0x") ? 255 : parseInt(rightStatus, 10));
+      setIsSavingMode(parseInt(savingMode, 10) > 0);
+    }
 
     // console.log("L Status internal: ", sLeft);
     // console.log("L Status focus: ", leftStatus);
@@ -195,8 +197,9 @@ const BatteryStatus = ({ disable }: BatteryStatusProps) => {
   const forceRetrieveBattery = async () => {
     // const { disable } = props;
     if (disable) return;
-    const focus = new Focus();
-    await focus.command("wireless.battery.forceRead");
+    if (state.currentDevice) {
+      await state.cururentDevice.command("wireless.battery.forceRead");
+    }
     await getBatteryStatus();
     setAnimateIcon(1);
   };
