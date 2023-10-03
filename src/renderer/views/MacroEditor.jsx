@@ -124,6 +124,8 @@ function MacroEditor(props) {
   let keymapDB = new KeymapDB();
   const bkp = new Backup();
 
+  const flatten = arr => [].concat(...arr);
+
   const initialState = {
     keymap: [],
     macros: [],
@@ -497,7 +499,8 @@ function MacroEditor(props) {
     store.set("neurons", localNeurons);
     try {
       await currentDevice.command("macros.map", macrosMap(newMacros));
-      await currentDevice.command("keymap", keymap);
+      const args = flatten(keymap.custom).map(k => keymapDB.serialize(k));
+      await currentDevice.command("keymap.custom", ...args);
       const commands = await Backup.Commands(currentDevice);
       const backup = await bkp.DoBackup(commands, neurons[neuronID].id, currentDevice);
       Backup.SaveBackup(backup, currentDevice);
