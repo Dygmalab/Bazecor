@@ -222,6 +222,9 @@ const SelectKeyboard: React.FC<SelectKeyboardProps> = (props): JSX.Element => {
     const disconnectedfinder = () => {
       setSelectedPortIndex(0);
       findKeyboards();
+      if (state.currentDevice) {
+        state.currentDevice.close();
+      }
     };
     ipcRenderer.on("usb-connected", finder);
     ipcRenderer.on("usb-disconnected", disconnectedfinder);

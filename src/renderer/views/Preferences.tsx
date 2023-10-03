@@ -395,7 +395,6 @@ const Preferences = (props: PreferencesProps) => {
   };
 
   const toggleVerboseFocus = event => {
-    // const focus = new Focus();
     //focus.debug = !this.state.verboseFocus;
     setPreferencesState(prevState => ({
       ...preferencesState,
@@ -490,7 +489,7 @@ const Preferences = (props: PreferencesProps) => {
                   selectDefaultLayer={selectDefaultLayer}
                   connected={connected}
                 />
-                <BackupSettings neurons={neurons} selectedNeuron={selectedNeuron} neuronID={neuronID} connected={connected} />
+                <BackupSettings connected={connected} />
                 <NeuronSettings
                   neurons={neurons}
                   selectedNeuron={selectedNeuron}

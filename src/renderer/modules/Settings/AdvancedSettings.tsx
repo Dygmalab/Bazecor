@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import React, { Component } from "react";
+import React, { Component, useState } from "react";
 import Styled from "styled-components";
 
 // React Bootstrap Components
@@ -17,6 +17,7 @@ import ConfirmationDialog from "../../component/ConfirmationDialog";
 
 // Icons Imports
 import { IconChip } from "../../component/Icon";
+import { useDevice } from "@Renderer/DeviceContext";
 
 const Style = Styled.div`
 .advancedToggles {
@@ -83,56 +84,53 @@ export default class AdvancedSettings extends Component {
   }
 }
 
-class AdvancedKeyboardSettings extends React.Component {
-  state = {
-    EEPROMClearConfirmationOpen: false,
+const AdvancedKeyboardSettings = () => {
+  const [EEPROMClearConfirmationOpen, setEEPROMClearConfirmationOpen] = useState(false);
+  const [working, setWorking] = useState(false);
+  const [state] = useDevice();
+
+  const openEEPROMClearConfirmation = () => {
+    setEEPROMClearConfirmationOpen(true);
   };
 
-  clearEEPROM = async () => {
-    const focus = new Focus();
-
-    await this.setState({ working: true });
-    this.closeEEPROMClearConfirmation();
-
-    let eeprom = await focus.command("eeprom.contents");
-    eeprom = eeprom
-      .split(" ")
-      .filter(v => v.length > 0)
-      .map(() => 255)
-      .join(" ");
-    await focus.command("eeprom.contents", eeprom);
-    this.setState({ working: false });
+  const closeEEPROMClearConfirmation = () => {
+    setEEPROMClearConfirmationOpen(false);
   };
 
-  openEEPROMClearConfirmation = () => {
-    this.setState({ EEPROMClearConfirmationOpen: true });
+  const clearEEPROM = async () => {
+    setWorking(true);
+    closeEEPROMClearConfirmation();
+    if (state.currentDevice) {
+      let eeprom = await state.currentDevice.command("eeprom.contents");
+      eeprom = eeprom
+        .split(" ")
+        .filter(v => v.length > 0)
+        .map(() => 255)
+        .join(" ");
+      await state.currentDevice.command("eeprom.contents", eeprom);
+    }
+    setWorking(false);
   };
 
-  closeEEPROMClearConfirmation = () => {
-    this.setState({ EEPROMClearConfirmationOpen: false });
-  };
-
-  render() {
-    return (
-      <>
-        <RegularButton
-          buttonText={i18n.keyboardSettings.resetEEPROM.button}
-          styles="short danger"
-          onClick={this.openEEPROMClearConfirmation}
-          disabled={this.state.working}
-        />
-        <ConfirmationDialog
-          title={i18n.keyboardSettings.resetEEPROM.dialogTitle}
-          open={this.state.EEPROMClearConfirmationOpen}
-          onConfirm={this.clearEEPROM}
-          onCancel={this.closeEEPROMClearConfirmation}
-        >
-          {i18n.keyboardSettings.resetEEPROM.dialogContents}
-        </ConfirmationDialog>
-      </>
-    );
-  }
-}
+  return (
+    <>
+      <RegularButton
+        buttonText={i18n.keyboardSettings.resetEEPROM.button}
+        styles="short danger"
+        onClick={openEEPROMClearConfirmation}
+        disabled={working}
+      />
+      <ConfirmationDialog
+        title={i18n.keyboardSettings.resetEEPROM.dialogTitle}
+        open={EEPROMClearConfirmationOpen}
+        onConfirm={clearEEPROM}
+        onCancel={closeEEPROMClearConfirmation}
+      >
+        {i18n.keyboardSettings.resetEEPROM.dialogContents}
+      </ConfirmationDialog>
+    </>
+  );
+};
 
 AdvancedSettings.propTypes = {
   devToolsSwitch: PropTypes.object.isRequired,

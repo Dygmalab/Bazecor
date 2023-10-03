@@ -19,6 +19,7 @@ interface Device {
   port?: any;
   commands?: any;
   file?: boolean;
+  isClosed: boolean;
 }
 
 class Device {
@@ -31,6 +32,7 @@ class Device {
     this.result = "";
     this.commands = undefined;
     this.file = false;
+    this.isClosed = true;
 
     // Handling differences between object types
     let params;
@@ -82,6 +84,7 @@ class Device {
   addPort = async (serialport: any) => {
     this.port = serialport;
     this.type = "serial";
+    this.isClosed = false;
     // Port is loaded, creating message handler
     const parser = this.port.pipe(new DelimiterParser({ delimiter: "\r\n" }));
     parser.on("data", (data: any) => {
@@ -111,6 +114,7 @@ class Device {
 
   addHID = async (device: any) => {
     const kbCommands = await Device.HIDhelp(this);
+    this.isClosed = false;
     console.log("these are the commands", kbCommands, device);
     this.commands = {
       help: kbCommands,
@@ -120,6 +124,7 @@ class Device {
   close = async () => {
     try {
       await this.port.close();
+      this.isClosed = true;
     } catch (error) {
       console.error(error);
     }
