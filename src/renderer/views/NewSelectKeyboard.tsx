@@ -237,7 +237,7 @@ const SelectKeyboard: React.FC<SelectKeyboardProps> = (props): JSX.Element => {
       ipcRenderer.removeListener("usb-connected", finder);
       ipcRenderer.removeListener("usb-disconnected", disconnectedfinder);
     };
-  }, [connected, findKeyboards]);
+  }, [connected, findKeyboards, state.currentDevice, state.selected]);
 
   useEffect(() => {
     if (connected && state.currentDevice) {
@@ -304,7 +304,7 @@ const SelectKeyboard: React.FC<SelectKeyboardProps> = (props): JSX.Element => {
           path: device.path || i18n.keyboardSelect.unknown,
         };
       const preparedSN = device.productId === "2201" ? device.serialNumber.slice(0, 32) : device.serialNumber;
-      const neuron = neurons.find(neuron => neuron.id.toLowerCase() === preparedSN.toLowerCase());
+      const neuron = neurons.find(n => n.id.toLowerCase() === preparedSN.toLowerCase());
 
       return {
         index,
