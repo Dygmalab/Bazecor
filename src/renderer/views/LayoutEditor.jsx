@@ -2046,7 +2046,7 @@ LayoutEditor.propTypes = {
   startContext: PropTypes.func,
   cancelContext: PropTypes.func,
   inContext: PropTypes.bool,
-  theme: PropTypes.objectOf(PropTypes.object()),
+  theme: PropTypes.shape({}),
   darkMode: PropTypes.bool,
 };
 
