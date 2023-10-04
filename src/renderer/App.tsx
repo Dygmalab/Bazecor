@@ -246,7 +246,7 @@ const App = () => {
     console.log("Dark mode changed to: ", mode, "NativeTheme says: ", ipcRenderer.invoke("get-NativeTheme"));
     let isDark = mode === "dark";
     if (mode === "system") {
-      isDark = ipcRenderer.invoke("get-NativeTheme");
+      isDark = await ipcRenderer.invoke("get-NativeTheme");
     }
     setAppState({
       ...appState,
