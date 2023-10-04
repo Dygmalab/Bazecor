@@ -90,7 +90,7 @@ class Device {
     const parser = this.port.pipe(new DelimiterParser({ delimiter: "\r\n" }));
     parser.on("data", (data: any) => {
       const utfData = data.toString("utf-8");
-      console.log("focus: incoming data:", utfData);
+      console.log("addport: incoming data:", utfData);
 
       if (utfData === "." || utfData.endsWith(".")) {
         const { result } = this;
@@ -132,7 +132,7 @@ class Device {
   };
 
   request(command: string, ...args: Array<any>) {
-    console.log("focus.request:", command, ...args);
+    console.log("device.request:", command, ...args);
     return new Promise((resolve, reject) => {
       const timer = setTimeout(() => {
         reject(new Error("Communication timeout"));
@@ -167,7 +167,7 @@ class Device {
 
   hidRequest = async (cmd: string, ...args: Array<string>) => {
     if (this.port === undefined) throw new Error("Device not connected!");
-    console.log("focus.request:", cmd, ...args, this.port);
+    console.log("device.hid.request:", cmd, ...args, this.port);
 
     let request = cmd;
     if (args && args.length > 0) {
