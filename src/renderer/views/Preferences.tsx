@@ -63,12 +63,13 @@ interface PreferencesProps {
 const Preferences = (props: PreferencesProps) => {
   const [state] = useDevice();
   const [bkp] = useState(new Backup());
+  const [isSaved, setIsSaved] = useState(false);
   const { inContext, connected, allowBeta, updateAllowBeta, startContext, cancelContext, toggleDarkMode } = props;
   const [kbData, setKbData] = useState({
     keymap: {
       custom: [],
       default: [],
-      onlyCustom: true,
+      onlyCustom: "1",
     },
     ledBrightness: 255,
     ledBrightnessUG: 255,
@@ -127,11 +128,11 @@ const Preferences = (props: PreferencesProps) => {
 
       await state.currentDevice.command("settings.defaultLayer").then((layer: string) => {
         const layerParsed = layer ? parseInt(layer, 10) : 126;
-        neuronData.kbData.defaultLayer = layerParsed <= 126 ? layerParsed : 126;
+        neuronData.kbData.defaultLayer = layerParsed <= 126 ? layerParsed : 0;
       });
+
       await state.currentDevice.command("keymap.onlyCustom").then((onlyCustom: string) => {
-        const isOnlyCustom = onlyCustom === "1";
-        neuronData.kbData.keymap.onlyCustom = isOnlyCustom;
+        neuronData.kbData.keymap.onlyCustom = onlyCustom;
       });
       await state.currentDevice.command("led.brightness").then((brightness: string) => {
         const brightnessParsed = brightness ? parseInt(brightness, 10) : -1;
@@ -228,6 +229,16 @@ const Preferences = (props: PreferencesProps) => {
     init();
   }, []);
 
+  useEffect(() => {
+    const fetchNewData = async () => {
+      if (isSaved) {
+        await getNeuronData();
+        setIsSaved(false);
+      }
+    };
+    fetchNewData();
+  }, [isSaved]);
+
   const destroyContext = async () => {
     setKbData({
       ...kbData,
@@ -237,7 +248,7 @@ const Preferences = (props: PreferencesProps) => {
       ...preferencesState,
       modified: false,
     });
-    await getNeuronData();
+    setIsSaved(true);
     cancelContext();
   };
 
@@ -262,7 +273,7 @@ const Preferences = (props: PreferencesProps) => {
       mouseWheelSpeed,
       mouseWheelDelay,
       mouseSpeedLimit,
-    } = preferencesState.kbData;
+    } = kbData;
     if (state.currentDevice) {
       await state.currentDevice.command("keymap.onlyCustom", keymap.onlyCustom);
       await state.currentDevice.command("settings.defaultLayer", defaultLayer);
@@ -289,7 +300,7 @@ const Preferences = (props: PreferencesProps) => {
 
       // TODO: Review toast popup on try/catch works well.
       try {
-        const commands = await Backup.Commands();
+        const commands = await Backup.Commands(state.currentDevice);
         const backup = await bkp.DoBackup(commands, preferencesState.neuronID, state.currentDevice);
         Backup.SaveBackup(backup, state.currentDevice);
         toast.success(<ToastMessage title={i18n.success.preferencesSaved} icon={<IconFloppyDisk />} />, {
@@ -456,7 +467,7 @@ const Preferences = (props: PreferencesProps) => {
   const { defaultLayer } = kbData;
   const devToolsSwitch = <Form.Check type="switch" checked={devTools} onChange={toggleDevTools} />;
   const verboseSwitch = <Form.Check type="switch" checked={verboseFocus} onChange={toggleVerboseFocus} />;
-  const onlyCustomSwitch = <Form.Check type="switch" checked={kbData.keymap.onlyCustom} onChange={toggleOnlyCustom} />;
+  const onlyCustomSwitch = <Form.Check type="switch" checked={kbData.keymap.onlyCustom as any} onChange={toggleOnlyCustom} />;
   const allowBetas = <Form.Check value={allowBeta as any} type="switch" checked={allowBeta} onChange={updateAllowBeta} />;
   /// const pairingButton = <RegularButton buttonText={"Re-Pair RF"} styles="short warning sm" onClick={sendRePairCommand} />;
   // console.log("CHECKING STATUS MOD", modified);
