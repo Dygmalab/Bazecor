@@ -134,14 +134,7 @@ const BatteryStatus = ({ disable }: BatteryStatusProps) => {
       setsRight(rightStatus.includes("0x") ? 255 : parseInt(rightStatus, 10));
       setIsSavingMode(parseInt(savingMode, 10) > 0);
     }
-
-    // console.log("L Status internal: ", sLeft);
-    // console.log("L Status focus: ", leftStatus);
-    // console.log("L Level internal: ", bLeft);
-
-    // console.log("R Status: ", sRight);
-    // console.log("R Status focus: ", rightStatus);
-  }, []);
+  }, [disable, state.currentDevice]);
 
   if (!disable) {
     getBatteryStatus();
@@ -174,7 +167,6 @@ const BatteryStatus = ({ disable }: BatteryStatusProps) => {
   }, [animateIcon]);
 
   const forceRetrieveBattery = async () => {
-    // const { disable } = props;
     if (disable) return;
     if (state.currentDevice) {
       await state.currentDevice.command("wireless.battery.forceRead");
