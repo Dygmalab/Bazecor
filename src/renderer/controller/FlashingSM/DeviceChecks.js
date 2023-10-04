@@ -1,18 +1,17 @@
 import { createMachine, assign, raise } from "xstate";
-import Focus from "../../../api/focus";
 import Backup from "../../../api/backup";
 
 const keyboardSetup = async context => {
   if (context.device.bootloader) return { RaiseBrightness: undefined };
   try {
-    const focus = new Focus();
+    const { currentDevice } = context.deviceState;
     if (context.device.info.product === "Raise") {
-      await focus.command("led.mode 1");
-      const brightness = await focus.command("led.brightness");
-      await focus.command("led.brightness 255");
+      await currentDevice.command("led.mode 1");
+      const brightness = await currentDevice.command("led.brightness");
+      await currentDevice.command("led.brightness 255");
       return { RaiseBrightness: brightness };
     }
-    await focus.command("upgrade.start");
+    await currentDevice.command("upgrade.start");
   } catch (error) {
     console.warn("error when querying the device");
     console.error(error);
@@ -21,12 +20,12 @@ const keyboardSetup = async context => {
   return { RaiseBrightness: undefined };
 };
 
-const GetLSideData = async () => {
+const GetLSideData = async context => {
   const result = {};
   try {
-    const focus = new Focus();
-    result.leftSideConn = String(await focus.command("upgrade.keyscanner.isConnected 1")).includes("true");
-    result.leftSideBoot = String(await focus.command("upgrade.keyscanner.isBootloader 1")).includes("true");
+    const { currentDevice } = context.deviceState;
+    result.leftSideConn = String(await currentDevice.command("upgrade.keyscanner.isConnected 1")).includes("true");
+    result.leftSideBoot = String(await currentDevice.command("upgrade.keyscanner.isBootloader 1")).includes("true");
   } catch (error) {
     console.warn("error when querying the device");
     console.error(error);
@@ -35,12 +34,12 @@ const GetLSideData = async () => {
   return result;
 };
 
-const GetRSideData = async () => {
+const GetRSideData = async context => {
   const result = {};
   try {
-    const focus = new Focus();
-    result.rightSideConn = String(await focus.command("upgrade.keyscanner.isConnected 0")).includes("true");
-    result.rightSideBoot = String(await focus.command("upgrade.keyscanner.isBootloader 0")).includes("true");
+    const { currentDevice } = context.deviceState;
+    result.rightSideConn = String(await currentDevice.command("upgrade.keyscanner.isConnected 0")).includes("true");
+    result.rightSideBoot = String(await currentDevice.command("upgrade.keyscanner.isBootloader 0")).includes("true");
   } catch (error) {
     console.warn("error when querying the device");
     console.error(error);
@@ -52,15 +51,15 @@ const GetRSideData = async () => {
 const CreateBackup = async context => {
   let backup;
   try {
+    const { currentDevice } = context.deviceState;
     const bkp = new Backup();
-    const commands = await bkp.Commands();
-    backup = await bkp.DoBackup(commands, context.device.chipID);
-    await bkp.SaveBackup(backup);
-    const focus = new Focus();
-    let keymap = await focus.command("keymap.custom");
+    const commands = await Backup.Commands(currentDevice);
+    backup = await bkp.DoBackup(commands, context.device.chipID, currentDevice);
+    await Backup.SaveBackup(backup, currentDevice);
+    let keymap = await currentDevice.command("keymap.custom");
     keymap = keymap.split(" ");
     keymap[0] = "41";
-    await focus.command(`keymap.custom ${keymap.join(" ")}`);
+    await currentDevice.command(`keymap.custom ${keymap.join(" ")}`);
   } catch (error) {
     console.warn("error when creating Backup of the device");
     console.error(error);
@@ -130,7 +129,7 @@ const DeviceChecks = createMachine(
         ],
         invoke: {
           id: "GetLSideData",
-          src: GetLSideData,
+          src: context => GetLSideData(context),
           onDone: {
             target: "RSideCheck",
             actions: [
@@ -158,7 +157,7 @@ const DeviceChecks = createMachine(
         ],
         invoke: {
           id: "GetRSideData",
-          src: GetRSideData,
+          src: context => GetRSideData(context),
           onDone: {
             target: "validateStatus",
             actions: [

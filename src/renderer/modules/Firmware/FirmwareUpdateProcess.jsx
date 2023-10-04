@@ -19,6 +19,7 @@ import React, { useState, useEffect } from "react";
 import Styled from "styled-components";
 import { useMachine } from "@xstate/react";
 import i18n from "@Renderer/i18n";
+import { useDevice } from "@Renderer/DeviceContext";
 
 // State machine
 import FlashDevice from "@Renderer/controller/FlashingSM/FlashDevice";
@@ -31,11 +32,11 @@ import { FirmwareLoader } from "@Renderer/component/Loader";
 // Visual modules
 import { FirmwareProgressStatus } from "@Renderer/modules/Firmware";
 
-const Style = Styled.div`   
-width: 100%;  
+const Style = Styled.div`
+width: 100%;
 height: inherit;
 .firmware-wrapper {
-  max-width: 680px;   
+  max-width: 680px;
   width: 100%;
   margin: auto;
   .firmware-row {
@@ -45,24 +46,24 @@ height: inherit;
   }
   .firmware-content {
     flex: 0 0 66%;
-    background: ${({ theme }) => theme.styles.firmwareUpdatePanel.backgroundContent}; 
+    background: ${({ theme }) => theme.styles.firmwareUpdatePanel.backgroundContent};
   }
   .firmware-sidebar {
     flex: 0 0 34%;
-    background: ${({ theme }) => theme.styles.firmwareUpdatePanel.backgroundSidebar}; 
+    background: ${({ theme }) => theme.styles.firmwareUpdatePanel.backgroundSidebar};
   }
   .firmware-content--inner {
     padding: 32px;
   }
   .borderLeftTopRadius {
     border-top-left-radius: 14px;
-  } 
+  }
   .borderRightTopRadius {
     border-top-right-radius: 14px;
   }
   .borderLeftBottomRadius {
     border-bottom-left-radius: 14px;
-  } 
+  }
   .borderRightBottomRadius {
     border-bottom-right-radius: 14px;
   }
@@ -71,17 +72,17 @@ height: inherit;
   width: 100%;
   margin-top: 62px;
 }
-.holdButton { 
+.holdButton {
   margin-bottom: 32px;
   display: flex;
   grid-gap: 8px;
 }
 .holdTootip {
   h6 {
-    font-size: 13px;  
+    font-size: 13px;
     font-weight: 395;
     letter-spacing: 0;
-    color:  ${({ theme }) => theme.colors.gray300}; 
+    color:  ${({ theme }) => theme.colors.gray300};
   }
 }
 .progress-visualizer {
@@ -92,9 +93,11 @@ height: inherit;
 
 function FirmwareUpdateProcess(props) {
   const { nextBlock, retryBlock, context, toggleFlashing, toggleFwUpdate, onDisconnect, device } = props;
+  const [deviceState] = useDevice();
   const [toggledFlashing, sendToggledFlashing] = useState(false);
   const [state, send] = useMachine(FlashDevice, {
     context: {
+      deviceState,
       device: context.device,
       originalDevice: device,
       backup: context.backup,

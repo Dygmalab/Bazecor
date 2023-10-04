@@ -2,21 +2,20 @@ import { createMachine, assign } from "xstate";
 import { Octokit } from "@octokit/core";
 import axios from "axios";
 import SemVer from "semver";
-import Focus from "../../../api/focus";
 
 const FWMAJORVERSION = "1.x";
 
-const FocusAPIRead = async () => {
+const FocusAPIRead = async context => {
   const data = {};
   try {
-    const focus = new Focus();
-    data.bootloader = focus.device ? focus.device.bootloader : false;
-    data.info = focus.device.info;
+    const { currentDevice } = context.deviceState;
+    data.bootloader = currentDevice.device?.bootloader !== undefined ? currentDevice.device.bootloader : false;
+    data.info = currentDevice.device.info;
     if (data.bootloader) return data;
-    data.version = await focus.command("version");
+    data.version = await currentDevice.command("version");
     // eslint-disable-next-line prefer-destructuring
     data.version = data.version.split(" ")[0];
-    data.chipID = (await focus.command("hardware.chip_id")).replace(/\s/g, "");
+    data.chipID = (await currentDevice.command("hardware.chip_id")).replace(/\s/g, "");
     if (Object.keys(data).length === 0 || Object.keys(data.info).length === 0) throw new Error("data is empty!");
   } catch (error) {
     console.warn("error when querying the device");
@@ -53,10 +52,8 @@ const loadAvailableFirmwareVersions = async allowBeta => {
         // console.log([asset.name, asset.browser_download_url]);
       });
       // console.log(newRelease);
-      if (SemVer.satisfies(newRelease.version, FWMAJORVERSION)) {
-        if (allowBeta || !newRelease.version.includes("beta")) {
-          Releases.push(newRelease);
-        }
+      if (allowBeta || !newRelease.version.includes("beta")) {
+        Releases.push(newRelease);
       }
     });
   } catch (error) {
@@ -74,8 +71,15 @@ const GitHubRead = async context => {
   let isBeta;
   try {
     const fwReleases = await loadAvailableFirmwareVersions(context.device.bootloader ? false : context.allowBeta);
-    finalReleases = fwReleases.filter(release => release.name === context.device.info.product);
-    finalReleases.sort((a, b) => (SemVer.lt(SemVer.clean(a.version), SemVer.clean(b.version)) ? 1 : -1));
+    console.log("final releases: ", fwReleases, context.device.info);
+    finalReleases = fwReleases.filter(
+      release =>
+        release.name === context.device.info.product &&
+        (context.device.info.product === "Defy" ? SemVer.satisfies(release.version, FWMAJORVERSION) : true),
+    );
+    if (finalReleases.length > 1) {
+      finalReleases.sort((a, b) => (SemVer.lt(SemVer.clean(a.version), SemVer.clean(b.version)) ? 1 : -1));
+    }
     if (context.device.bootloader) return { firmwareList: finalReleases, isUpdated: false, isBeta: false };
     isUpdated = context.device.version === finalReleases[0].version;
     isBeta = context.device.version.includes("beta");
@@ -195,6 +199,7 @@ const SelectionSM = createMachine({
     isUpdated: false,
     isBeta: false,
     allowBeta: false,
+    deviceState: {},
   },
   states: {
     LoadDeviceData: {
@@ -209,7 +214,7 @@ const SelectionSM = createMachine({
       ],
       invoke: {
         id: "FocusAPIRead",
-        src: FocusAPIRead,
+        src: context => FocusAPIRead(context),
         onDone: {
           target: "LoadGithubFW",
           actions: [

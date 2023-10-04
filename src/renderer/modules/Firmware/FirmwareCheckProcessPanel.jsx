@@ -18,18 +18,18 @@
 import React, { useState, useEffect } from "react";
 import Styled from "styled-components";
 import { useMachine } from "@xstate/react";
-import SemVer from "semver";
-import i18n from "../../i18n";
+import { useDevice } from "@Renderer/DeviceContext";
+import i18n from "@Renderer/i18n";
 
 // State machine
-import DeviceChecks from "../../controller/FlashingSM/DeviceChecks";
+import DeviceChecks from "@Renderer/controller/FlashingSM/DeviceChecks";
 
 // Visual components
-import Title from "../../component/Title";
-import Callout from "../../component/Callout";
-import { RegularButton } from "../../component/Button";
-import { FirmwareLoader } from "../../component/Loader";
-import AccordionFirmware from "../../component/Accordion/AccordionFirmware";
+import Title from "@Renderer/component/Title";
+import Callout from "@Renderer/component/Callout";
+import { RegularButton } from "@Renderer/component/Button";
+import { FirmwareLoader } from "@Renderer/component/Loader";
+import AccordionFirmware from "@Renderer/component/Accordion/AccordionFirmware";
 
 import { FirmwareNeuronStatus, FirmwareWarningList } from "../Firmware";
 
@@ -164,7 +164,8 @@ height:inherit;
 
 function FirmwareCheckProcessPanel(props) {
   const { nextBlock, retryBlock, context } = props;
-  const [state, send] = useMachine(DeviceChecks, { context: { device: context.device } });
+  const [deviceState] = useDevice();
+  const [state, send] = useMachine(DeviceChecks, { context: { device: context.device, deviceState } });
   const [listItems, setlistItems] = useState([]);
   const [loading, setLoading] = useState(true);
 
