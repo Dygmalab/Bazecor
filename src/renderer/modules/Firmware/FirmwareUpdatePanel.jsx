@@ -32,6 +32,7 @@ import { IconLoader } from "@Renderer/component/Icon";
 
 // Visual modules
 import { FirmwareNeuronStatus, FirmwareVersionStatus } from "@Renderer/modules/Firmware";
+import { useDevice } from "@Renderer/DeviceContext";
 
 const Style = Styled.div`
 width: 100%;
@@ -163,7 +164,8 @@ height:inherit;
 
 function FirmwareUpdatePanel(props) {
   const { nextBlock, retryBlock, errorBlock, allowBeta } = props;
-  const [state, send] = useMachine(FWSelection, { context: { allowBeta } });
+  cons [deviceState] = useDevice();
+  const [state, send] = useMachine(FWSelection, { context: { allowBeta, deviceState } });
 
   const [loading, setLoading] = useState(true);
   useEffect(() => {
