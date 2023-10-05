@@ -71,22 +71,15 @@ const GitHubRead = async context => {
   let isBeta;
   try {
     const fwReleases = await loadAvailableFirmwareVersions(context.device.bootloader ? false : context.allowBeta);
-<<<<<<< HEAD
     console.log("final releases: ", fwReleases, context.device.info);
-=======
->>>>>>> development
     finalReleases = fwReleases.filter(
       release =>
         release.name === context.device.info.product &&
         (context.device.info.product === "Defy" ? SemVer.satisfies(release.version, FWMAJORVERSION) : true),
     );
-<<<<<<< HEAD
     if (finalReleases.length > 1) {
       finalReleases.sort((a, b) => (SemVer.lt(SemVer.clean(a.version), SemVer.clean(b.version)) ? 1 : -1));
     }
-=======
-    finalReleases.sort((a, b) => (SemVer.lt(SemVer.clean(a.version), SemVer.clean(b.version)) ? 1 : -1));
->>>>>>> development
     if (context.device.bootloader) return { firmwareList: finalReleases, isUpdated: false, isBeta: false };
     isUpdated = context.device.version === finalReleases[0].version;
     isBeta = context.device.version.includes("beta");
