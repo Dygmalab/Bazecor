@@ -136,10 +136,6 @@ const BatteryStatus = ({ disable }: BatteryStatusProps) => {
     }
   }, [disable, state.currentDevice]);
 
-  if (!disable) {
-    getBatteryStatus();
-  }
-
   useEffect(() => {
     if (!disable) {
       intervalIdRef.current = setInterval(() => {
