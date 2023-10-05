@@ -338,8 +338,8 @@ const resetRaise = async (context, callback) => {
 const uploadRaise = async (context, callback) => {
   let result = false;
   try {
+    const focus = new Focus();
     if (!context.device.bootloader) {
-      const focus = new Focus();
       await focus.close();
     }
     console.log(context.originalDevice.device, focus, focus._port, flashRaise);
