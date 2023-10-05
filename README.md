@@ -51,6 +51,7 @@ To do a production build, use `yarn run make`, or limit it to a particular OS:
 See the `scripts` section of `package.json` for more scripts.
 
 ## Additional Information
+
 To get more information about our efforts, how Bazecor communicates with the Raise and the latest development news, please check the links below
 
 * [News](https://github.com/Dygmalab/Bazecor/blob/development/NEWS.md)
