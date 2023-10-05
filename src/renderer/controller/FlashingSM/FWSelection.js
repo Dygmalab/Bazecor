@@ -53,10 +53,8 @@ const loadAvailableFirmwareVersions = async allowBeta => {
         // console.log([asset.name, asset.browser_download_url]);
       });
       // console.log(newRelease);
-      if (SemVer.satisfies(newRelease.version, FWMAJORVERSION)) {
-        if (allowBeta || !newRelease.version.includes("beta")) {
-          Releases.push(newRelease);
-        }
+      if (allowBeta || !newRelease.version.includes("beta")) {
+        Releases.push(newRelease);
       }
     });
   } catch (error) {
@@ -74,7 +72,11 @@ const GitHubRead = async context => {
   let isBeta;
   try {
     const fwReleases = await loadAvailableFirmwareVersions(context.device.bootloader ? false : context.allowBeta);
-    finalReleases = fwReleases.filter(release => release.name === context.device.info.product);
+    finalReleases = fwReleases.filter(
+      release =>
+        release.name === context.device.info.product &&
+        (context.device.info.product === "Defy" ? SemVer.satisfies(release.version, FWMAJORVERSION) : true),
+    );
     finalReleases.sort((a, b) => (SemVer.lt(SemVer.clean(a.version), SemVer.clean(b.version)) ? 1 : -1));
     if (context.device.bootloader) return { firmwareList: finalReleases, isUpdated: false, isBeta: false };
     isUpdated = context.device.version === finalReleases[0].version;
