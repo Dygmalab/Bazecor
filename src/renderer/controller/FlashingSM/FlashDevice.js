@@ -411,10 +411,10 @@ const FlashDevice = createMachine(
       waitEsc: {
         id: "waitEsc",
         entry: [
-          (context, event) => {
+          () => {
             console.log("Wait for esc!");
           },
-          assign({ stateblock: (context, event) => 1 }),
+          assign({ stateblock: () => 1 }),
           context => integrateCommsToFocus(context),
           "addEscListener",
         ],
@@ -429,12 +429,12 @@ const FlashDevice = createMachine(
       flashPathSelector: {
         id: "flashPathSelector",
         entry: [
-          (context, event) => {
+          context => {
             console.log("Selecting upgrade path");
             console.log("context of device", context.device);
           },
           assign({
-            stateblock: (context, event) => 1,
+            stateblock: () => 1,
           }),
           "toggleFlashing",
           raise("flashingPath"),
@@ -449,17 +449,17 @@ const FlashDevice = createMachine(
       flashRightSide: {
         id: "flashRightSide",
         entry: [
-          (context, event) => {
+          context => {
             console.log(`Flashing Right Side! for ${context.retriesRight} times`);
           },
-          assign((context, event) => ({
+          assign(context => ({
             retriesRight: context.retriesRight + 1,
             stateblock: 2,
           })),
         ],
         invoke: {
           id: "flashRightSide",
-          src: (context, event) => (callback, onReceive) => flashSide("right", context, callback),
+          src: context => callback => flashSide("right", context, callback),
           onDone: {
             target: "flashLeftSide",
             actions: [assign({ rightResult: (context, event) => event.data })],
@@ -486,21 +486,21 @@ const FlashDevice = createMachine(
       flashLeftSide: {
         id: "flashLeftSide",
         entry: [
-          (context, event) => {
+          context => {
             console.log(`Flashing Left Side! for ${context.retriesLeft} times`);
           },
-          assign((context, event) => ({
+          assign(context => ({
             retriesLeft: context.retriesLeft + 1,
             stateblock: 3,
           })),
         ],
         invoke: {
           id: "flashLeftSide",
-          src: (context, event) => (callback, onReceive) => flashSide("left", context, callback),
+          src: context => callback => flashSide("left", context, callback),
           onDone: {
             actions: [
               assign({ leftResult: (context, event) => event.data }),
-              assign((context, event) => ({
+              assign(context => ({
                 DefyVariant: `${context.device.info.product}${context.device.info.keyboardType}`,
               })),
               raise("internal"),
@@ -531,17 +531,17 @@ const FlashDevice = createMachine(
       flashDefyWired: {
         id: "flashDefyWired",
         entry: [
-          (context, event) => {
+          context => {
             console.log(`Flashing Neuron! for ${context.retriesDefyWired} times`);
           },
-          assign((context, event) => ({
+          assign(context => ({
             retriesDefyWired: context.retriesDefyNeuron + 1,
             stateblock: 5,
           })),
         ],
         invoke: {
           id: "flashRP2040",
-          src: (context, event) => (callback, onReceive) => uploadDefyWired(context, callback),
+          src: context => callback => uploadDefyWired(context, callback),
           onDone: {
             target: "reconnectDefy",
             actions: [assign({ rightResult: (context, event) => event.data })],
@@ -568,14 +568,14 @@ const FlashDevice = createMachine(
       resetDefyWireless: {
         id: "resetDefyWireless",
         entry: [
-          (context, event) => {
+          () => {
             console.log(`Resetting Neuron!`);
           },
-          assign({ stateblock: (context, event) => 4 }),
+          assign({ stateblock: () => 4 }),
         ],
         invoke: {
           id: "resetDefyWireless",
-          src: (context, event) => (callback, onReceive) => resetDefy(context, callback),
+          src: context => callback => resetDefy(context, callback),
           onDone: {
             target: "flashDefyWireless",
             actions: [assign({ resetResult: (context, event) => event.data })],
@@ -602,15 +602,15 @@ const FlashDevice = createMachine(
       flashDefyWireless: {
         id: "flashDefyWireless",
         entry: [
-          (context, event) => {
+          context => {
             console.log(`Flashing Neuron! for ${context.retriesNeuron} times`);
           },
-          assign({ stateblock: (context, event) => 5 }),
-          assign({ retriesNeuron: (context, event) => context.retriesNeuron + 1 }),
+          assign({ stateblock: () => 5 }),
+          assign({ retriesNeuron: context => context.retriesNeuron + 1 }),
         ],
         invoke: {
           id: "uploadDefyWireless",
-          src: (context, event) => (callback, onReceive) => uploadDefyWireles(context, callback),
+          src: context => callback => uploadDefyWireles(context, callback),
           onDone: {
             target: "reconnectDefy",
             actions: [assign({ flashResult: (context, event) => event.data })],
@@ -637,14 +637,14 @@ const FlashDevice = createMachine(
       reconnectDefy: {
         id: "reconnectDefy",
         entry: [
-          (context, event) => {
+          () => {
             console.log(`Reconnecting to Neuron!`);
           },
-          assign({ stateblock: (context, event) => 5 }),
+          assign({ stateblock: () => 5 }),
         ],
         invoke: {
           id: "reconnectDefy",
-          src: (context, event) => (callback, onReceive) => reconnect(context, callback),
+          src: context => callback => reconnect(context, callback),
           onDone: {
             target: "restoreDefy",
             actions: [assign({ flashResult: (context, event) => event.data })],
@@ -671,14 +671,14 @@ const FlashDevice = createMachine(
       restoreDefy: {
         id: "restoreDefy",
         entry: [
-          (context, event) => {
+          () => {
             console.log(`Restoring Neuron!`);
           },
-          assign({ stateblock: (context, event) => 6 }),
+          assign({ stateblock: () => 6 }),
         ],
         invoke: {
           id: "restoreDefy",
-          src: (context, event) => (callback, onReceive) => restoreDefies(context, callback),
+          src: context => callback => restoreDefies(context, callback),
           onDone: {
             target: "reportSucess",
             actions: [assign({ restoreResult: (context, event) => event.data })],
@@ -705,14 +705,14 @@ const FlashDevice = createMachine(
       resetRaiseNeuron: {
         id: "resetRaiseNeuron",
         entry: [
-          (context, event) => {
+          () => {
             console.log(`Resetting Neuron!`);
           },
-          assign({ stateblock: (context, event) => 4 }),
+          assign({ stateblock: () => 4 }),
         ],
         invoke: {
           id: "resetRaise",
-          src: (context, event) => (callback, onReceive) => resetRaise(context, callback),
+          src: context => callback => resetRaise(context, callback),
           onDone: {
             target: "flashRaiseNeuron",
             actions: [assign({ resetResult: (context, event) => event.data })],
@@ -739,15 +739,15 @@ const FlashDevice = createMachine(
       flashRaiseNeuron: {
         id: "flashRaiseNeuron",
         entry: [
-          (context, event) => {
+          context => {
             console.log(`Flashing Neuron! for ${context.retriesNeuron} times`);
           },
-          assign({ stateblock: (context, event) => 5 }),
-          assign({ retriesNeuron: (context, event) => context.retriesNeuron + 1 }),
+          assign({ stateblock: () => 5 }),
+          assign({ retriesNeuron: context => context.retriesNeuron + 1 }),
         ],
         invoke: {
           id: "uploadRaise",
-          src: (context, event) => (callback, onReceive) => uploadRaise(context, callback),
+          src: context => callback => uploadRaise(context, callback),
           onDone: {
             target: "restoreRaiseNeuron",
             actions: [assign({ flashResult: (context, event) => event.data })],
@@ -774,14 +774,14 @@ const FlashDevice = createMachine(
       restoreRaiseNeuron: {
         id: "restoreRaiseNeuron",
         entry: [
-          (context, event) => {
+          () => {
             console.log(`Restoring Neuron!`);
           },
-          assign({ stateblock: (context, event) => 6 }),
+          assign({ stateblock: () => 6 }),
         ],
         invoke: {
           id: "restoreRaise",
-          src: (context, event) => (callback, onReceive) => restoreRaise(context, callback),
+          src: context => callback => restoreRaise(context, callback),
           onDone: {
             target: "reportSucess",
             actions: [assign({ flashResult: (context, event) => event.data })],
@@ -808,11 +808,11 @@ const FlashDevice = createMachine(
       reportSucess: {
         id: "reportSucess",
         entry: [
-          (context, event) => {
+          () => {
             console.log("Reporting Sucess");
           },
           assign({
-            stateblock: (context, event) => 7,
+            stateblock: () => 7,
           }),
         ],
         after: {
@@ -821,11 +821,11 @@ const FlashDevice = createMachine(
       },
       failure: {
         entry: [
-          (context, event) => {
+          () => {
             console.log("Failure state");
           },
           assign({
-            stateblock: (context, event) => 8,
+            stateblock: () => 8,
           }),
         ],
         on: {
@@ -840,19 +840,19 @@ const FlashDevice = createMachine(
   },
   {
     guards: {
-      flashSides: (context, event) => context.device.bootloader !== true && context.device.info.product !== "Raise",
-      flashRaise: (context, event) => context.device.info.product === "Raise",
-      doNotFlashSidesW: (context, event) =>
+      flashSides: context => context.device.bootloader !== true && context.device.info.product !== "Raise",
+      flashRaise: context => context.device.info.product === "Raise",
+      doNotFlashSidesW: context =>
         context.device.bootloader === true &&
         context.device.info.product !== "Raise" &&
         context.device.info.keyboardType === "wired",
-      doNotFlashSidesWi: (context, event) =>
+      doNotFlashSidesWi: context =>
         context.device.bootloader === true &&
         context.device.info.product !== "Raise" &&
         context.device.info.keyboardType === "wireless",
-      doNotWaitForESC: (context, event) => context.device.bootloader === true || context.sideLeftBL === true,
-      isDefywired: (context, event) => context.DefyVariant === "Defywired",
-      isDefywireless: (context, event) => context.DefyVariant === "Defywireless",
+      doNotWaitForESC: context => context.device.bootloader === true || context.sideLeftBL === true,
+      isDefywired: context => context.DefyVariant === "Defywired",
+      isDefywireless: context => context.DefyVariant === "Defywireless",
     },
   },
 );
