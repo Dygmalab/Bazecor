@@ -18,7 +18,10 @@ let comPath;
  * @param {Number} ms - time to delay in miliseconds.
  * @returns {Promise} if no error, promise resolved, if not, rejected
  */
-const delay = ms => new Promise(res => setTimeout(res, ms));
+const delay = ms =>
+  new Promise(res => {
+    setTimeout(res, ms);
+  });
 
 const stateUpdate = (stage, percentage, context, callback) => {
   console.log(stage, percentage);
