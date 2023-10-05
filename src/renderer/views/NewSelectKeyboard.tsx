@@ -267,7 +267,7 @@ const SelectKeyboard: React.FC<SelectKeyboardProps> = (props): JSX.Element => {
       const response = await DeviceTools.connect(deviceList[selectedPortIndex]);
       console.log("GOING TO CONNECT TO!!", selectedPortIndex, response);
       dispatch({ type: "changeCurrent", payload: { selected: selectedPortIndex, device: response } });
-      await onConnect();
+      await onConnect(response);
     } catch (err) {
       setOpening(false);
       const errorMessage = err.toString();

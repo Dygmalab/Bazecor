@@ -233,13 +233,31 @@ const App = () => {
     navigate("/keyboard-select");
   };
 
-  const onKeyboardConnect = async device => {
-    setAppState({
-      ...appState,
-      connected: true,
-      device,
-      pages: { keymap: true },
-    });
+  const onKeyboardConnect = async currentDevice => {
+    console.log("Connecting to", currentDevice);
+
+    if (currentDevice.device.bootloader) {
+      appState.connected = true;
+      appState.pages = {};
+      appState.device = currentDevice.device;
+      setAppState({ ...appState });
+      navigate("/welcome");
+      return [];
+    }
+
+    // console.log("Probing for Focus support...");
+    // focus.setLayerSize(focus.device);
+    // focus.setLEDMode(focus.device);
+    // const pages = {
+    //   keymap: focus.isCommandSupported("keymap.custom") || focus.isCommandSupported("keymap.map"),
+    //   colormap: focus.isCommandSupported("colormap.map") && focus.isCommandSupported("palette"),
+    // };
+
+    appState.connected = true;
+    appState.pages = {};
+    appState.device = currentDevice;
+    setAppState({ ...appState });
+    // navigate(pages.keymap ? "/editor" : "/welcome");
     navigate("/editor");
     return [];
   };

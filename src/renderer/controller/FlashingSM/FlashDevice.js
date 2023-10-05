@@ -220,24 +220,25 @@ const uploadDefyWired = async (context, callback) => {
 };
 
 const resetDefy = async (context, callback) => {
+  const { currentDevice } = context.deviceState;
   let result = false;
   try {
     const focus = new Focus();
     if (flashDefyWireless === undefined) {
       console.log("when creating FDW", context.originalDevice.device);
       flashDefyWireless = new FlashDefyWireless(context.originalDevice.device);
-      if (flashSides === undefined) {
+      if (flashSides === undefined && bootloader === false) {
         comPath = focus._port.port.openOptions.path;
-        bootloader = context.device.bootloader;
+        bootloader = currentDevice.bootloader;
       }
     }
     if (!bootloader) {
       try {
         console.log("reset indicators", focus, flashDefyWireless, context.originalDevice.device);
-        if (focus._port === null || focus._port.closed) {
+        if (focus._port === null || focus.closed) {
           const { info } = context.originalDevice.device;
           await focus.close();
-          await focus.open(comPath, info, null);
+          await focus.open(currentDevice.path, info, null);
         }
         result = await flashDefyWireless.resetKeyboard(focus._port, (stage, percentage) => {
           stateUpdate(stage, percentage, context, callback);
@@ -372,19 +373,27 @@ const restoreRaise = async (context, callback) => {
 };
 
 const integrateCommsToFocus = async context => {
-  const { currentDevice } = context.deviceState;
-  const focus = new Focus();
+  let result = false;
+  try {
+    const { currentDevice } = context.deviceState;
+    bootloader = currentDevice.bootloader;
+    const { path } = currentDevice;
+    const { device } = currentDevice;
 
-  const { path } = currentDevice;
-  const { device } = currentDevice;
+    await currentDevice.close();
+    console.log("closed currentDevice", currentDevice);
 
-  await currentDevice.close();
-  console.log("closed currentDevice", currentDevice);
+    await delay(100);
 
-  await delay(100);
+    const focus = new Focus();
+    await focus.open(path, device, null);
+    console.log("opened using focus currentDevice", focus);
+    result = true;
+  } catch (error) {
+    console.log("error detected on comms integration: ", error);
+  }
 
-  await focus.open(path, device, null);
-  console.log("opened using focus currentDevice", focus);
+  return result;
 };
 
 const FlashDevice = createMachine(
@@ -394,6 +403,7 @@ const FlashDevice = createMachine(
     id: "FlahsingProcess",
     initial: "waitEsc",
     context: {
+      loadedComms: false,
       stateblock: 1,
       globalProgress: 0,
       leftProgress: 0,
@@ -415,9 +425,18 @@ const FlashDevice = createMachine(
             console.log("Wait for esc!");
           },
           assign({ stateblock: () => 1 }),
-          context => integrateCommsToFocus(context),
           "addEscListener",
         ],
+        invoke: {
+          id: "integrateComms",
+          src: context => integrateCommsToFocus(context),
+          onDone: {
+            actions: [assign({ loadedComms: (context, event) => event.data })],
+          },
+          onError: {
+            actions: assign({ error: (context, event) => event }),
+          },
+        },
         on: {
           // Go to flashPathSelector automatically when no esc key can be pressed
           "": [{ target: "flashPathSelector", cond: "doNotWaitForESC" }],
@@ -850,7 +869,8 @@ const FlashDevice = createMachine(
         context.device.bootloader === true &&
         context.device.info.product !== "Raise" &&
         context.device.info.keyboardType === "wireless",
-      doNotWaitForESC: context => context.device.bootloader === true || context.sideLeftBL === true,
+      doNotWaitForESC: context =>
+        (context.device.bootloader === true || context.sideLeftBL === true) && context.loadedComms === true,
       isDefywired: context => context.DefyVariant === "Defywired",
       isDefywireless: context => context.DefyVariant === "Defywireless",
     },

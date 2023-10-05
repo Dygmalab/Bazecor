@@ -98,7 +98,7 @@ function FirmwareUpdateProcess(props) {
   const [state, send] = useMachine(FlashDevice, {
     context: {
       deviceState,
-      device: context.device,
+      device: deviceState.currentDevice.device,
       originalDevice: deviceState.currentDevice,
       backup: context.backup,
       firmwares: context.firmwares,
