@@ -92,14 +92,14 @@ height: inherit;
 `;
 
 function FirmwareUpdateProcess(props) {
-  const { nextBlock, retryBlock, context, toggleFlashing, toggleFwUpdate, onDisconnect, device } = props;
+  const { nextBlock, retryBlock, context, toggleFlashing, toggleFwUpdate, onDisconnect } = props;
   const [deviceState] = useDevice();
   const [toggledFlashing, sendToggledFlashing] = useState(false);
   const [state, send] = useMachine(FlashDevice, {
     context: {
       deviceState,
       device: context.device,
-      originalDevice: device,
+      originalDevice: deviceState.currentDevice,
       backup: context.backup,
       firmwares: context.firmwares,
       isUpdated: context.isUpdated,

@@ -2,7 +2,7 @@ import { createMachine, assign, raise } from "xstate";
 import fs from "fs";
 import path from "path";
 import { ipcRenderer } from "electron";
-import sideFlaser from "../../../api/flash/defyFlasher/sideFlasher";
+import SideFlaser from "../../../api/flash/defyFlasher/sideFlasher";
 import Focus from "../../../api/focus";
 import Hardware from "../../../api/hardware";
 import { FlashRaise, FlashDefyWireless } from "../../../api/flash";
@@ -89,6 +89,7 @@ const restoreSettings = async (context, backup, stateUpd) => {
     }
     await focus.command("led.mode 0");
     stateUpd("restore", 100);
+    await focus.close();
     return true;
   } catch (e) {
     return false;
@@ -162,7 +163,7 @@ const flashSide = async (side, context, callback) => {
     if (flashSides === undefined) {
       bootloader = context.device.bootloader;
       comPath = focus._port.port.openOptions.path;
-      flashSides = new sideFlaser(comPath, context.firmwares.fwSides);
+      flashSides = new SideFlaser(comPath, context.firmwares.fwSides);
     }
     // Flashing procedure for each side
     await focus.close();
@@ -189,18 +190,18 @@ const uploadDefyWired = async (context, callback) => {
   const result = false;
   try {
     const focus = new Focus();
-    if (flashSides == undefined) {
+    if (flashSides === undefined) {
       bootloader = context.device.bootloader;
       comPath = focus._port.port.openOptions.path;
-      flashSides = new sideFlaser(comPath, context.firmwares.fwSides);
+      flashSides = new SideFlaser(comPath, context.firmwares.fwSides);
     }
     stateUpdate("neuron", 10, context, callback);
     await flashSides.prepareNeuron();
     stateUpdate("neuron", 30, context, callback);
-    await ipcRenderer.invoke("list-drives", true).then(result => {
+    await ipcRenderer.invoke("list-drives", true).then(rsl => {
       stateUpdate("neuron", 60, context, callback);
-      const finalPath = path.join(result, "default.uf2");
-      // console.log("RESULTS!!!", result, context.firmwares.fw, " to ", finalPath);
+      const finalPath = path.join(rsl, "default.uf2");
+      // console.log("RESULTS!!!", rsl, context.firmwares.fw, " to ", finalPath);
       fs.writeFileSync(finalPath, Buffer.from(new Uint8Array(context.firmwares.fw)));
       stateUpdate("neuron", 80, context, callback);
     });
@@ -230,7 +231,7 @@ const resetDefy = async (context, callback) => {
     if (!bootloader) {
       try {
         console.log("reset indicators", focus, flashDefyWireless, context.originalDevice.device);
-        if (focus._port == null || focus._port.closed) {
+        if (focus._port === null || focus._port.closed) {
           const { info } = context.originalDevice.device;
           await focus.close();
           await focus.open(comPath, info, null);
@@ -256,8 +257,8 @@ const resetDefy = async (context, callback) => {
 const uploadDefyWireles = async (context, callback) => {
   let result = false;
   try {
+    const focus = new Focus();
     if (!context.device.bootloader) {
-      const focus = new Focus();
       await focus.close();
     }
     // console.log(context.originalDevice.device, focus, focus._port, flashDefyWireless);
@@ -300,7 +301,7 @@ const resetRaise = async (context, callback) => {
 
   try {
     const focus = new Focus();
-    if (flashRaise == undefined) {
+    if (flashRaise === undefined) {
       flashRaise = new FlashRaise(context.originalDevice.device);
       comPath = focus._port.port.openOptions.path;
       bootloader = context.device.bootloader;
@@ -367,6 +368,22 @@ const restoreRaise = async (context, callback) => {
   return result;
 };
 
+const integrateCommsToFocus = async context => {
+  const { currentDevice } = context.deviceState;
+  const focus = new Focus();
+
+  const { path } = currentDevice;
+  const { device } = currentDevice;
+
+  await currentDevice.close();
+  console.log("closed currentDevice", currentDevice);
+
+  await delay(100);
+
+  await focus.open(path, device, null);
+  console.log("opened using focus currentDevice", focus);
+};
+
 const FlashDevice = createMachine(
   {
     /** @xstate-layout N4IgpgJg5mDOIC5QDEA2BDAFrAlgOygAUAnAewGM5YA6Ad3RwBcBRWcgYmYGUBhQgJW5dmAEQDaABgC6iUAAdSuRjlJ5ZIAB6IATAA4ArNQkB2bQE4zxgIzbz+gCxWANCACeiAGz7t1KxI8AzB4S+pYeZtoeAL5RLmhYuAQkFFTUAGYYsJj8OFCYjFw4EGDsXACqPDxCkjJIIApKKmp1Wgh6hibmljZ2ji7ubdoB1NrGuh66Elb6umb60-YxcRjY+ERklLA0GehZOXkFRSXM-PwA8vw16g1MTeqt7UamFta2c31uiPa6PgG6s5FdAF7KZvEsQPFVkkNqkdlkADJgNKHYqlCpVLhcK51G7KVT3TzmaihKxWMz+AzGay6fo6CT2ajGen2YKkrx+YzgyGJdYpLbpTKYRHIwqok7nS7Sa6KW74lqEszEsyk8kTfRUqw0z4IIJWaheazeMwg-QBKzRWIQlY85KbbaCgByYAArmQ8GjKtUpTiZXjmqBWhFhlYAgEJCEzcZvKTaQgyRJqCzNWb2nNSdouda1rbYY6XW7OKcLtj5L67vKEEHfKHw6arFHtDHtdp7AmIqbjKqJKHO-pMwlszD+cQ4IxSCP4ehXGBiLAPRisd7S405QHEDZzfrjN8ycaIkz7LHtCFiQEqQYph5zzZ+1DeXbqCPYGOJ1OZ3PxcWl-Uy6vNOuJCBEZ6y8cIAkbMxgVjXQ9RBZUvDCb59AkMxbxtIdtgYVBXRKQQABV+AATRLH8V39f82gMJ4uleXpnG1H4Ex+M9jSCfwLUtPBSGKeA6m5Qc+V45dZXI1oAFoPFjCS0IEh96CYVhyGlMiCQQextFjdVjGrPw5g8IZZgCPtLX46FBIFXZMEIdBGEwLgwFQMByBfZSRNU+wWSMIZ7G8cDjxBDxJO1YJg2PJlOjJTVUJMrMzIfOFslyfJRTAVy-VUmxDAcetAPDVsPG+Q9mxPcZjxDMwPBsQJzRkuLc0s4UUVSn0VIrFkEzGbt7DMAx7GBbtY01bS9CpSDlX+CCAlq+96qyJ1XT-XFyzXBBjAKkZw0q8DvCGGZBpgxlAOBKMbAkbQHGM5YBzq-kZzIYg0uWii-HVRl1PUsYgR6-RY1DXR9Uq+kurDFkLSuu8c2HUdxzASdp1nR6-1aF7tO3FtRn+AJvv2nxsvCDUrG6qZpshzCcGwkdEdE9cqK8f4r2CD61WgxtqDNExgX0U1AhMEmMOoWBnXIO0qYyoy9T0d7zumYxgSKgZ-MZGC9CGaYwyMxYYiiIA */
@@ -395,6 +412,7 @@ const FlashDevice = createMachine(
             console.log("Wait for esc!");
           },
           assign({ stateblock: (context, event) => 1 }),
+          context => integrateCommsToFocus(context),
           "addEscListener",
         ],
         on: {

@@ -58,6 +58,7 @@ focus.timeout = 5000;
 
 const App = () => {
   const [flashing, setFlashing] = useState(false);
+  const varFlashing = React.useRef(false);
   const navigate = useNavigate();
   const [state] = useDevice();
   const [appState, setAppState] = useState({
@@ -158,8 +159,9 @@ const App = () => {
 
   const handleUSBDisconnection = async (device: any) => {
     const { connected } = appState;
-    console.log("Handling device disconnect");
-    if (flashing) {
+    const isFlashing = varFlashing.current;
+    console.log("Handling device disconnect", isFlashing);
+    if (isFlashing) {
       console.log("no action due to flashing active");
       return;
     }
@@ -256,8 +258,10 @@ const App = () => {
   };
 
   const toggleFlashing = async () => {
-    setFlashing(prev => !prev);
-    if (!flashing) {
+    setFlashing(!flashing);
+    varFlashing.current = !flashing;
+    console.log("toggled flashing to", varFlashing.current);
+    if (flashing) {
       setAppState({
         ...appState,
         connected: false,
