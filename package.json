@@ -79,7 +79,7 @@
     "cross-env": "^7.0.3",
     "css-loader": "^6.0.0",
     "cz-conventional-changelog": "^3.3.0",
-    "electron": "^25.2.0",
+    "electron": "^25.8.4",
     "electron-devtools-installer": "^3.2.0",
     "electron-forge-maker-appimage": "^24.5.2",
     "electron-playwright-helpers": "^1.6.0",
