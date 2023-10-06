@@ -467,7 +467,6 @@ function LayoutEditor(props) {
     showStandardView: false,
     layoutSelectorPosition: { x: 0, y: 0 },
     isWireless: false,
-    inContext: false,
   };
 
   const [state, setState] = useState(initialState);
@@ -1689,8 +1688,8 @@ function LayoutEditor(props) {
   useEffect(() => {
     const scanner = async () => {
       const { inContext, setLoadingData } = props;
-      // console.log("props", inContext, state.inContext);
-      if (state.inContext === true && inContext === false) {
+      console.log("props", inContext, state.modified);
+      if (state.modified === true && inContext === false) {
         state.currentLayer = state.previousLayer !== 0 ? state.previousLayer : 0;
         state.currentKeyIndex = -1;
         state.currentLedIndex = -1;
@@ -1701,7 +1700,6 @@ function LayoutEditor(props) {
         };
         state.palette = [];
         state.modified = false;
-        state.inContext = true;
         state.loading = true;
         setState({ ...state });
         setLoadingData(state.loading);
@@ -1712,7 +1710,7 @@ function LayoutEditor(props) {
       }
     };
     scanner();
-  }, [props]);
+  }, [props.inContext, props.setLoadingData]);
 
   useEffect(() => {
     store.set("settings.isStandardView", state.isStandardView);
@@ -1866,6 +1864,9 @@ function LayoutEditor(props) {
     }
   }
   if (!layerData) return <LogoLoaderCentered />;
+
+  console.log("RENDERING LAYOUT EDITOR", props);
+
   return (
     <Styles className="layoutEditor">
       <Container

@@ -57,7 +57,7 @@ const focus = new Focus();
 focus.debug = true;
 focus.timeout = 5000;
 
-const App = () => {
+function App() {
   const [flashing, setFlashing] = useState(false);
   const [fwUpdate, setFwUpdate] = useState(false);
   const [darkMode, setDarkMode] = useState(false);
@@ -118,11 +118,11 @@ const App = () => {
       }
 
       // Settings entry creation for the beta toggle, it will have a control in preferences to change the policy
-      let allowBeta: boolean;
+      let getAllowBeta: boolean;
       if (store.has("settings.allowBeta")) {
-        allowBeta = store.get("settings.allowBeta") as boolean;
+        getAllowBeta = store.get("settings.allowBeta") as boolean;
       } else {
-        allowBeta = true;
+        getAllowBeta = true;
         store.set("settings.allowBeta", true);
       }
 
@@ -131,7 +131,7 @@ const App = () => {
       setDevice(null);
       setPages({});
       setContextBar(false);
-      setAllowBeta(allowBeta);
+      setAllowBeta(getAllowBeta);
       setLoading(true);
       setFwUpdate(false);
       localStorage.clear();
@@ -151,30 +151,12 @@ const App = () => {
     }
   };
 
-  useEffect(() => {
-    const fontFace = new FontFace("Libre Franklin", "@Renderer/theme/fonts/LibreFranklin/LibreFranklin-VariableFont_wght.ttf");
-    console.log("Font face: ", fontFace);
-    document.fonts.add(fontFace);
-
-    // Setting up function to receive O.S. dark theme changes
-    ipcRenderer.on("darkTheme-update", darkThemeListener);
-    ipcRenderer.on("usb-disconnected", usbListener);
-    return () => {
-      ipcRenderer.off("darkTheme-update", darkThemeListener);
-      ipcRenderer.off("usb-disconnected", usbListener);
-    };
-  }, []);
-
   const startContext = () => {
     setContextBar(true);
   };
 
-  const doCancelContext = () => {
-    setContextBar(false);
-  };
-
   const cancelContext = () => {
-    doCancelContext();
+    setContextBar(false);
   };
 
   const onKeyboardDisconnect = () => {
@@ -266,6 +248,20 @@ const App = () => {
 
   const usbListener = (event: any, response: any) => handleUSBDisconnection(response);
 
+  useEffect(() => {
+    const fontFace = new FontFace("Libre Franklin", "@Renderer/theme/fonts/LibreFranklin/LibreFranklin-VariableFont_wght.ttf");
+    console.log("Font face: ", fontFace);
+    document.fonts.add(fontFace);
+
+    // Setting up function to receive O.S. dark theme changes
+    ipcRenderer.on("darkTheme-update", darkThemeListener);
+    ipcRenderer.on("usb-disconnected", usbListener);
+    return () => {
+      ipcRenderer.off("darkTheme-update", darkThemeListener);
+      ipcRenderer.off("usb-disconnected", usbListener);
+    };
+  }, []);
+
   const toggleFwUpdate = () => {
     console.log("toggling fwUpdate to: ", !fwUpdate);
     setFwUpdate(!fwUpdate);
@@ -281,6 +277,9 @@ const App = () => {
     store.set("settings.allowBeta", newValue);
     setAllowBeta(newValue);
   };
+
+  console.log("NOT RENDERING");
+  console.log(flashing, fwUpdate, darkMode, connected, device, pages, contextBar, allowBeta, loading, varFlashing, state);
 
   return (
     <ThemeProvider theme={darkMode ? Dark : Light}>
@@ -426,6 +425,6 @@ const App = () => {
       />
     </ThemeProvider>
   );
-};
+}
 
 export default App;
