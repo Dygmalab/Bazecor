@@ -72,6 +72,10 @@ const stateUpdate = (stage, percentage, context, callback) => {
 
 const restoreSettings = async (context, backup, stateUpd) => {
   stateUpd("restore", 0);
+  if (bootloader) {
+    stateUpd("restore", 100);
+    return true;
+  }
   const focus = new Focus();
   console.log(backup);
   if (backup === undefined || backup.length === 0) {
