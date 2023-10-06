@@ -289,7 +289,7 @@ const uploadDefyWireles = async (context, callback) => {
 
 const restoreDefies = async (context, callback) => {
   let result = false;
-  if (bootloader) {
+  if (bootloader || context.backup === undefined) {
     return true;
   }
   try {
@@ -361,7 +361,7 @@ const uploadRaise = async (context, callback) => {
 
 const restoreRaise = async (context, callback) => {
   let result = false;
-  if (bootloader) {
+  if (bootloader || context.backup === undefined) {
     return true;
   }
   try {

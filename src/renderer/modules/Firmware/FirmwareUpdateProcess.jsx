@@ -100,7 +100,7 @@ function FirmwareUpdateProcess(props) {
       deviceState,
       device: deviceState.currentDevice.device,
       originalDevice: deviceState.currentDevice,
-      backup: context.backup,
+      backup: context.backup ? context.backup : undefined,
       firmwares: context.firmwares,
       isUpdated: context.isUpdated,
       versions: context.versions,
@@ -130,8 +130,8 @@ function FirmwareUpdateProcess(props) {
         if (!toggledFlashing) return;
         sendToggledFlashing(false);
         console.log("closing flashin process");
-        await toggleFlashing();
         await toggleFwUpdate();
+        await toggleFlashing();
         onDisconnect();
       },
     },

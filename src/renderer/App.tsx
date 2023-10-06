@@ -291,6 +291,7 @@ const App = () => {
   };
 
   const toggleFwUpdate = () => {
+    console.log("toggling fwUpdate to: ", !appState.fwUpdate);
     setAppState(prev => ({
       ...prev,
       fwUpdate: !prev.fwUpdate,
