@@ -11,4 +11,5 @@ export interface PageHeaderType {
   saveContext?: unknown | undefined;
   destroyContext?: unknown | undefined;
   inContext?: boolean;
+  isSaving?: boolean;
 }

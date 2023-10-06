@@ -23,7 +23,7 @@ import { RegularButton } from "../../component/Button";
 const Style = Styled.div`
 
 `;
-function Saving({ saveContext, destroyContext, inContext }) {
+function Saving({ saveContext, destroyContext, inContext, isSaving }) {
   return (
     <Style className="savingButtons">
       <RegularButton
@@ -35,10 +35,10 @@ function Saving({ saveContext, destroyContext, inContext }) {
       />
       <RegularButton
         onClick={saveContext}
-        buttonText={i18n.components.save.button}
+        buttonText={isSaving ? i18n.components.save.saving : i18n.components.save.button}
         styles="primary"
         size="sm"
-        disabled={!inContext}
+        disabled={!inContext || isSaving}
       />
     </Style>
   );

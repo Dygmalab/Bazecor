@@ -123,6 +123,7 @@ const defaultMacroString =
 function MacroEditor(props) {
   let keymapDB = new KeymapDB();
   const bkp = new Backup();
+  const [isSaving, setIsSaving] = useState(false);
 
   const flatten = arr => [].concat(...arr);
 
@@ -494,6 +495,7 @@ function MacroEditor(props) {
   const writeMacros = async () => {
     const { macros, neurons, neuronID, keymap } = state;
     const { currentDevice } = deviceState;
+    setIsSaving(true);
     const newMacros = macros;
     state.modified = false;
     state.macros = newMacros;
@@ -515,6 +517,7 @@ function MacroEditor(props) {
     } catch (error) {
       toast.error(<ToastMessage title={error} icon={<IconFloppyDisk />} />, { icon: "" });
     }
+    setIsSaving(false);
   };
 
   const toggleDeleteModal = () => {
@@ -626,6 +629,7 @@ function MacroEditor(props) {
             />
           }
           showSaving
+          isSaving={isSaving}
           saveContext={writeMacros}
           destroyContext={destroyThisContext}
           inContext={modified}

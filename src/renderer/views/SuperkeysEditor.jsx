@@ -88,6 +88,7 @@ flex-direction: column;
 function SuperkeysEditor(props) {
   let keymapDB = new KeymapDB();
   const bkp = new Backup();
+  const [isSaving, setIsSaving] = useState(false);
 
   const flatten = arr => [].concat(...arr);
 
@@ -475,6 +476,7 @@ function SuperkeysEditor(props) {
 
   const writeSuper = async () => {
     const { superkeys, modifiedKeymap, keymap, neurons, neuronID } = state;
+    setIsSaving(true);
     const { currentDevice } = deviceState;
     const localNeurons = [...neurons];
     localNeurons[neuronID].superkeys = superkeys;
@@ -500,6 +502,7 @@ function SuperkeysEditor(props) {
     } catch (error) {
       toast.error(error);
     }
+    setIsSaving(false);
   };
 
   const toggleDeleteModal = () => {
@@ -749,6 +752,7 @@ function SuperkeysEditor(props) {
           saveContext={writeSuper}
           destroyContext={destroyThisContext}
           inContext={modified}
+          isSaving={isSaving}
         />
 
         <Callout

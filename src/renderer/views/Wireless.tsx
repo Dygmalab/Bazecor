@@ -67,6 +67,7 @@ const initialWireless = {
 
 const Wireless = (props: WirelessPropsInterface) => {
   const { startContext, cancelContext } = props;
+  const [isSaving, setIsSaving] = useState(false);
   const [state] = useDevice();
   const [wireless, setWireless] = useState<WirelessInterface>(initialWireless);
   const [modified, setModified] = useState(false);
@@ -169,6 +170,7 @@ const Wireless = (props: WirelessPropsInterface) => {
   }
 
   async function saveWirelessChanges() {
+    setIsSaving(true);
     if (state.currentDevice) {
       // Commands to be sent to the keyboard
       await state.currentDevice.command("wireless.battery.savingMode", wireless.battery.savingMode ? 1 : 0);
@@ -183,6 +185,7 @@ const Wireless = (props: WirelessPropsInterface) => {
 
       destroyContext();
     }
+    setIsSaving(false);
   }
 
   if (loading) <LogoLoader />;
@@ -195,6 +198,7 @@ const Wireless = (props: WirelessPropsInterface) => {
           saveContext={saveWirelessChanges}
           destroyContext={destroyContext}
           inContext={modified}
+          isSaving={isSaving}
         />
         <div className="wirelessWrapper">
           <div className="wirelessInner">

@@ -64,6 +64,7 @@ const Preferences = (props: PreferencesProps) => {
   const [state] = useDevice();
   const [bkp] = useState(new Backup());
   const [isSaved, setIsSaved] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
   const { inContext, connected, allowBeta, updateAllowBeta, startContext, cancelContext, toggleDarkMode } = props;
   const [kbData, setKbData] = useState({
     keymap: {
@@ -274,6 +275,7 @@ const Preferences = (props: PreferencesProps) => {
       mouseWheelDelay,
       mouseSpeedLimit,
     } = kbData;
+    setIsSaving(true);
     if (state.currentDevice) {
       await state.currentDevice.command("keymap.onlyCustom", keymap.onlyCustom);
       await state.currentDevice.command("settings.defaultLayer", defaultLayer);
@@ -334,6 +336,7 @@ const Preferences = (props: PreferencesProps) => {
         );
       }
       await destroyContext();
+      setIsSaving(false);
     }
   };
 
@@ -484,6 +487,7 @@ const Preferences = (props: PreferencesProps) => {
           saveContext={saveKeymapChanges}
           destroyContext={destroyContext}
           inContext={modified}
+          isSaving={isSaving}
         />
         <div className="wrapper wrapperBackground">
           <Container fluid>

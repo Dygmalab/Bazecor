@@ -39,6 +39,7 @@ const English = {
       success: "Sent!",
       savePreferences: "Save preferences",
       button: "Save<span> changes</span>",
+      saving: "Saving...",
     },
     pickerColorButton: "Change color",
     underglowColorButton: "Change color of all underglows",

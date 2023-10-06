@@ -96,8 +96,19 @@ z-index: 300;
 `;
 
 function PageHeader(props: PageHeaderType) {
-  const { size, text, style, contentSelector, colorEditor, isColorActive, showSaving, saveContext, destroyContext, inContext } =
-    props;
+  const {
+    size,
+    text,
+    style,
+    contentSelector,
+    colorEditor,
+    isColorActive,
+    showSaving,
+    saveContext,
+    destroyContext,
+    inContext,
+    isSaving,
+  } = props;
   return (
     <Style className={`${style === "pageHeaderFlatBottom" ? "pageHeaderSticky" : ""}`}>
       <div className={`pageHeader ${size && size} ${style && style} ${isColorActive ? "extraPanelActive" : ""}`}>
@@ -106,7 +117,11 @@ function PageHeader(props: PageHeaderType) {
         </div>
         <div className="pageTools">
           {contentSelector || ""}
-          {showSaving ? <Saving saveContext={saveContext} destroyContext={destroyContext} inContext={inContext} /> : ""}
+          {showSaving ? (
+            <Saving saveContext={saveContext} destroyContext={destroyContext} inContext={inContext} isSaving={isSaving} />
+          ) : (
+            ""
+          )}
         </div>
       </div>
       {isColorActive ? colorEditor : ""}

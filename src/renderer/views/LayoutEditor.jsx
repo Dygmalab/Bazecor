@@ -472,6 +472,7 @@ function LayoutEditor(props) {
 
   const [state, setState] = useState(initialState);
   const [deviceState] = useDevice();
+  const [isSaving, setIsSaving] = useState(false);
 
   let keymapDB = new KeymapDB();
 
@@ -1103,6 +1104,7 @@ function LayoutEditor(props) {
 
   const onApply = async () => {
     const { cancelContext } = props;
+    setIsSaving(true);
     const { keymap, colorMap, palette } = state;
     const { currentDevice } = deviceState;
     state.saving = true;
@@ -1124,6 +1126,7 @@ function LayoutEditor(props) {
     Backup.SaveBackup(backup, currentDevice);
     setState({ ...state });
     cancelContext();
+    setIsSaving(false);
     console.log("Changes saved.");
   };
 
@@ -1874,6 +1877,7 @@ function LayoutEditor(props) {
         <PageHeader
           text={i18n.app.menu.editor}
           showSaving
+          isSaving={isSaving}
           contentSelector={
             <LayerSelector
               itemList={layerMenu}
