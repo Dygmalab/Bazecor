@@ -1877,13 +1877,11 @@ function LayoutEditor(props) {
         <PageHeader
           text={i18n.app.menu.editor}
           showSaving
-          isSaving={isSaving}
           contentSelector={
             <LayerSelector
               itemList={layerMenu}
               selectedItem={currentLayer}
               subtitle={i18n.editor.layers.title}
-              onSelect={selectLayer}
               updateItem={onLayerNameChange}
               exportFunc={toExport}
               importFunc={toImport}

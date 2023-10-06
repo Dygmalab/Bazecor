@@ -60,18 +60,16 @@ focus.timeout = 5000;
 const App = () => {
   const [flashing, setFlashing] = useState(false);
   const [fwUpdate, setFwUpdate] = useState(false);
+  const [darkMode, setDarkMode] = useState(false);
+  const [connected, setConnected] = useState(false);
+  const [device, setDevice] = useState(null);
+  const [pages, setPages] = useState({});
+  const [contextBar, setContextBar] = useState(false);
+  const [allowBeta, setAllowBeta] = useState(false);
+  const [loading, setLoading] = useState(true);
   const varFlashing = React.useRef(false);
   const navigate = useNavigate();
   const [state] = useDevice();
-  const [appState, setAppState] = useState({
-    darkMode: false,
-    connected: false,
-    device: null,
-    pages: {},
-    contextBar: false,
-    allowBeta: false,
-    loading: true,
-  });
 
   const updateStorageSchema = async () => {
     // Update stored settings schema
@@ -128,15 +126,13 @@ const App = () => {
         store.set("settings.allowBeta", true);
       }
 
-      setAppState({
-        darkMode: isDark,
-        connected: false,
-        device: null,
-        pages: {},
-        contextBar: false,
-        allowBeta,
-        loading: true,
-      });
+      setDarkMode(isDark);
+      setConnected(false);
+      setDevice(null);
+      setPages({});
+      setContextBar(false);
+      setAllowBeta(allowBeta);
+      setLoading(true);
       setFwUpdate(false);
       localStorage.clear();
     };
@@ -144,10 +140,7 @@ const App = () => {
   }, []);
 
   const forceDarkMode = (mode: any) => {
-    setAppState({
-      ...appState,
-      darkMode: mode,
-    });
+    setDarkMode(mode);
   };
 
   const darkThemeListener = (event: any, message: any) => {
@@ -157,8 +150,6 @@ const App = () => {
       forceDarkMode(message);
     }
   };
-
-  const usbListener = (event: any, response: any) => handleUSBDisconnection(response);
 
   useEffect(() => {
     const fontFace = new FontFace("Libre Franklin", "@Renderer/theme/fonts/LibreFranklin/LibreFranklin-VariableFont_wght.ttf");
@@ -175,17 +166,11 @@ const App = () => {
   }, []);
 
   const startContext = () => {
-    setAppState({
-      ...appState,
-      contextBar: true,
-    });
+    setContextBar(true);
   };
 
   const doCancelContext = () => {
-    setAppState({
-      ...appState,
-      contextBar: false,
-    });
+    setContextBar(false);
   };
 
   const cancelContext = () => {
@@ -193,12 +178,9 @@ const App = () => {
   };
 
   const onKeyboardDisconnect = () => {
-    setAppState({
-      ...appState,
-      connected: false,
-      device: null,
-      pages: {},
-    });
+    setConnected(false);
+    setDevice(null);
+    setPages({});
     if (!state.currentDevice.isClosed) {
       state.currentDevice.close();
     }
@@ -210,10 +192,9 @@ const App = () => {
     console.log("Connecting to", currentDevice);
 
     if (currentDevice.device.bootloader) {
-      appState.connected = true;
-      appState.pages = {};
-      appState.device = currentDevice.device;
-      setAppState({ ...appState });
+      setConnected(true);
+      setDevice(currentDevice.device);
+      setPages({});
       navigate("/welcome");
       return;
     }
@@ -226,10 +207,9 @@ const App = () => {
     //   colormap: focus.isCommandSupported("colormap.map") && focus.isCommandSupported("palette"),
     // };
 
-    appState.connected = true;
-    appState.pages = { keymap: true };
-    appState.device = currentDevice;
-    setAppState({ ...appState });
+    setConnected(true);
+    setDevice(currentDevice);
+    setPages({ keymap: true });
     // navigate(pages.keymap ? "/editor" : "/welcome");
     navigate("/editor");
   };
@@ -240,10 +220,7 @@ const App = () => {
     if (mode === "system") {
       isDark = await ipcRenderer.invoke("get-NativeTheme");
     }
-    setAppState({
-      ...appState,
-      darkMode: isDark,
-    });
+    setDarkMode(isDark);
     store.set("settings.darkMode", mode);
   };
 
@@ -253,18 +230,14 @@ const App = () => {
     console.log("toggled flashing to", !flashing);
 
     if (flashing) {
-      setAppState({
-        ...appState,
-        connected: false,
-        device: null,
-        pages: {},
-      });
+      setConnected(false);
+      setDevice(null);
+      setPages({});
       navigate("/keyboard-select");
     }
   };
 
   const handleUSBDisconnection = async (device: any) => {
-    const { connected } = appState;
     const isFlashing = varFlashing.current;
     console.log("Handling device disconnect", isFlashing, device);
     if (isFlashing) {
@@ -291,29 +264,23 @@ const App = () => {
     onKeyboardDisconnect();
   };
 
+  const usbListener = (event: any, response: any) => handleUSBDisconnection(response);
+
   const toggleFwUpdate = () => {
     console.log("toggling fwUpdate to: ", !fwUpdate);
     setFwUpdate(!fwUpdate);
   };
 
-  const setLoadingData = (loading: boolean) => {
-    setAppState(prev => ({
-      ...prev,
-      loading,
-    }));
+  const setLoadingData = (lding: boolean) => {
+    setLoading(lding);
   };
 
   const updateAllowBeta = (event: any) => {
     const newValue = event.target.checked;
     // console.log("new allowBeta value: ", newValue);
     store.set("settings.allowBeta", newValue);
-    setAppState({
-      ...appState,
-      allowBeta: newValue,
-    });
+    setAllowBeta(newValue);
   };
-
-  const { connected, pages, contextBar, darkMode, allowBeta, device, loading } = appState;
 
   return (
     <ThemeProvider theme={darkMode ? Dark : Light}>
