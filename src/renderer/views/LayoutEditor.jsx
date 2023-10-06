@@ -1878,6 +1878,7 @@ function LayoutEditor(props) {
         <PageHeader
           text={i18n.app.menu.editor}
           showSaving
+          isSaving={isSaving}
           contentSelector={
             <LayerSelector
               itemList={layerMenu}
