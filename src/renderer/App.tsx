@@ -38,7 +38,6 @@ import Preferences from "@Renderer/views/Preferences";
 import Wireless from "@Renderer/views/Wireless";
 import Welcome from "@Renderer/views/Welcome";
 
-import Header from "@Renderer/modules/NavigationMenu";
 import ToastMessage from "@Renderer/component/ToastMessage";
 import { IconNoSignal } from "@Renderer/component/Icon";
 import BazecorDevtools from "@Renderer/views/BazecorDevtools";
@@ -49,7 +48,8 @@ import Focus from "../api/focus";
 import "../api/keymap";
 import "../api/colormap";
 import { useDevice } from "./DeviceContext";
-import Device from "../../src/api/comms/Device";
+import Device from "../api/comms/Device";
+import Header from "./modules/NavigationMenu";
 
 const store = Store.getStore();
 
@@ -59,6 +59,7 @@ focus.timeout = 5000;
 
 const App = () => {
   const [flashing, setFlashing] = useState(false);
+  const [fwUpdate, setFwUpdate] = useState(false);
   const varFlashing = React.useRef(false);
   const navigate = useNavigate();
   const [state] = useDevice();
@@ -68,7 +69,6 @@ const App = () => {
     device: null,
     pages: {},
     contextBar: false,
-    fwUpdate: false,
     allowBeta: false,
     loading: true,
   });
@@ -134,10 +134,10 @@ const App = () => {
         device: null,
         pages: {},
         contextBar: false,
-        fwUpdate: false,
         allowBeta,
         loading: true,
       });
+      setFwUpdate(false);
       localStorage.clear();
     };
     init();
@@ -192,7 +192,7 @@ const App = () => {
     doCancelContext();
   };
 
-  const onKeyboardDisconnect = async () => {
+  const onKeyboardDisconnect = () => {
     setAppState({
       ...appState,
       connected: false,
@@ -247,10 +247,11 @@ const App = () => {
     store.set("settings.darkMode", mode);
   };
 
-  const toggleFlashing = async () => {
+  const toggleFlashing = () => {
     setFlashing(!flashing);
     varFlashing.current = !flashing;
-    console.log("toggled flashing to", varFlashing.current);
+    console.log("toggled flashing to", !flashing);
+
     if (flashing) {
       setAppState({
         ...appState,
@@ -291,11 +292,8 @@ const App = () => {
   };
 
   const toggleFwUpdate = () => {
-    console.log("toggling fwUpdate to: ", !appState.fwUpdate);
-    setAppState(prev => ({
-      ...prev,
-      fwUpdate: !prev.fwUpdate,
-    }));
+    console.log("toggling fwUpdate to: ", !fwUpdate);
+    setFwUpdate(!fwUpdate);
   };
 
   const setLoadingData = (loading: boolean) => {
@@ -315,7 +313,7 @@ const App = () => {
     });
   };
 
-  const { connected, pages, contextBar, darkMode, fwUpdate, allowBeta, device, loading } = appState;
+  const { connected, pages, contextBar, darkMode, allowBeta, device, loading } = appState;
 
   return (
     <ThemeProvider theme={darkMode ? Dark : Light}>

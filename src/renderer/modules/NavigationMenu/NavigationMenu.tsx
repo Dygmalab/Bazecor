@@ -115,7 +115,7 @@ interface Device {
   urls: any;
 }
 
-function NavigationMenu(props: NavigationMenuProps): React.JSX.Element {
+function NavigationMenu(props: NavigationMenuProps) {
   const [state] = useDevice();
   const [versions, setVersions] = useState(null);
   const [isUpdated, setIsUpdated] = useState(true);
