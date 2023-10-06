@@ -254,7 +254,7 @@ const App = () => {
     // };
 
     appState.connected = true;
-    appState.pages = {};
+    appState.pages = { keymap: true };
     appState.device = currentDevice;
     setAppState({ ...appState });
     // navigate(pages.keymap ? "/editor" : "/welcome");
@@ -319,7 +319,14 @@ const App = () => {
   return (
     <ThemeProvider theme={darkMode ? Dark : Light}>
       <GlobalStyles />
-      <Header connected={connected} pages={pages} flashing={!connected} fwUpdate={fwUpdate || loading} allowBeta={allowBeta} />
+      <Header
+        connected={connected}
+        pages={pages}
+        flashing={!connected}
+        fwUpdate={fwUpdate}
+        loading={loading}
+        allowBeta={allowBeta}
+      />
       <div className="main-container">
         <Routes>
           <Route exact path="/" element={<Navigate to="/keyboard-select" />} />

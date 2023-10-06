@@ -104,6 +104,7 @@ interface NavigationMenuProps {
   pages: Pages;
   fwUpdate: boolean;
   allowBeta: boolean;
+  loading: boolean;
 }
 
 interface Device {
@@ -115,7 +116,7 @@ interface Device {
 }
 
 function NavigationMenu(props: NavigationMenuProps): React.JSX.Element {
-  const [state, dispatch] = useDevice();
+  const [state] = useDevice();
   const [versions, setVersions] = useState(null);
   const [isUpdated, setIsUpdated] = useState(true);
   const [isBeta, setIsBeta] = useState(false);
@@ -123,7 +124,7 @@ function NavigationMenu(props: NavigationMenuProps): React.JSX.Element {
   const [virtual, setVirtual] = useState(false);
   const location = useLocation();
   const currentPage = location.pathname;
-  const { connected, pages, fwUpdate, flashing, allowBeta } = props;
+  const { connected, pages, fwUpdate, flashing, allowBeta, loading } = props;
 
   const getGitHubFW = async (product: any) => {
     const releases: any[] = [];
@@ -271,7 +272,7 @@ function NavigationMenu(props: NavigationMenuProps): React.JSX.Element {
                     disabled={fwUpdate}
                   />
                 </Link>
-                <BatteryStatus disable={fwUpdate || virtual} />
+                <BatteryStatus disable={fwUpdate || virtual || loading} />
               </>
             ) : (
               <></>
