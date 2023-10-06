@@ -49,6 +49,7 @@ import Focus from "../api/focus";
 import "../api/keymap";
 import "../api/colormap";
 import { useDevice } from "./DeviceContext";
+import Device from "../../src/api/comms/Device";
 
 const store = Store.getStore();
 
@@ -149,7 +150,7 @@ const App = () => {
     });
   };
 
-  const darkThemeListener = (evt, message) => {
+  const darkThemeListener = (event: any, message: any) => {
     console.log("O.S. DarkTheme Settings changed to ", message);
     const dm = store.get("settings.darkMode");
     if (dm === "system") {
@@ -157,35 +158,7 @@ const App = () => {
     }
   };
 
-  const handleUSBDisconnection = async (device: any) => {
-    const { connected } = appState;
-    const isFlashing = varFlashing.current;
-    console.log("Handling device disconnect", isFlashing);
-    if (isFlashing) {
-      console.log("no action due to flashing active");
-      return;
-    }
-
-    if (state.currentDevice.device?.usb?.productId !== state.currentDevice.device.deviceDescriptor?.idProduct) {
-      return;
-    }
-
-    // Must await this to stop re-render of components reliant on `focus.device`
-    // However, it only renders a blank screen. New route is rendered below.
-    if (connected) {
-      toast.warning(
-        <ToastMessage
-          icon={<IconNoSignal />}
-          title={i18n.errors.deviceDisconnected}
-          content={i18n.errors.deviceDisconnectedContent}
-        />,
-        { icon: "" },
-      );
-    }
-    onKeyboardDisconnect();
-  };
-
-  const usbListener = (event, response) => handleUSBDisconnection(response);
+  const usbListener = (event: any, response: any) => handleUSBDisconnection(response);
 
   useEffect(() => {
     const fontFace = new FontFace("Libre Franklin", "@Renderer/theme/fonts/LibreFranklin/LibreFranklin-VariableFont_wght.ttf");
@@ -226,14 +199,14 @@ const App = () => {
       device: null,
       pages: {},
     });
-    if (state.currentDevice) {
+    if (!state.currentDevice.isClosed) {
       state.currentDevice.close();
     }
     localStorage.clear();
     navigate("/keyboard-select");
   };
 
-  const onKeyboardConnect = async currentDevice => {
+  const onKeyboardConnect = async (currentDevice: Device) => {
     console.log("Connecting to", currentDevice);
 
     if (currentDevice.device.bootloader) {
@@ -242,7 +215,7 @@ const App = () => {
       appState.device = currentDevice.device;
       setAppState({ ...appState });
       navigate("/welcome");
-      return [];
+      return;
     }
 
     // console.log("Probing for Focus support...");
@@ -259,10 +232,9 @@ const App = () => {
     setAppState({ ...appState });
     // navigate(pages.keymap ? "/editor" : "/welcome");
     navigate("/editor");
-    return [];
   };
 
-  const toggleDarkMode = async mode => {
+  const toggleDarkMode = async (mode: string) => {
     console.log("Dark mode changed to: ", mode, "NativeTheme says: ", ipcRenderer.invoke("get-NativeTheme"));
     let isDark = mode === "dark";
     if (mode === "system") {
@@ -288,6 +260,34 @@ const App = () => {
       });
       navigate("/keyboard-select");
     }
+  };
+
+  const handleUSBDisconnection = async (device: any) => {
+    const { connected } = appState;
+    const isFlashing = varFlashing.current;
+    console.log("Handling device disconnect", isFlashing, device);
+    if (isFlashing) {
+      console.log("no action due to flashing active");
+      return;
+    }
+
+    if (state.currentDevice.device?.usb?.productId !== state.currentDevice.device.deviceDescriptor?.idProduct) {
+      return;
+    }
+
+    // Must await this to stop re-render of components reliant on `focus.device`
+    // However, it only renders a blank screen. New route is rendered below.
+    if (connected) {
+      toast.warning(
+        <ToastMessage
+          icon={<IconNoSignal />}
+          title={i18n.errors.deviceDisconnected}
+          content={i18n.errors.deviceDisconnectedContent}
+        />,
+        { icon: "" },
+      );
+    }
+    onKeyboardDisconnect();
   };
 
   const toggleFwUpdate = () => {
