@@ -150,8 +150,9 @@ class HID {
   close = async () => {
     if (this.isOpen()) {
       await this.connectedDevice.close();
+    } else {
+      throw new HIDError("Device is not open, no need to close");
     }
-    throw new HIDError("Device is not open, no need to close");
   };
 
   isConnected = () => {
