@@ -31,7 +31,7 @@ function Saving({ saveContext, destroyContext, inContext, isSaving }) {
         buttonText={i18n.app.cancelPending.button}
         styles="outline transp-bg"
         size="sm"
-        disabled={!inContext}
+        disabled={!inContext || isSaving}
       />
       <RegularButton
         onClick={saveContext}
