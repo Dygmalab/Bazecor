@@ -21,6 +21,7 @@ interface Device {
   commands?: any;
   file?: boolean;
   isClosed: boolean;
+  isSending: boolean;
 }
 
 class Device {
@@ -34,6 +35,7 @@ class Device {
     this.commands = undefined;
     this.file = false;
     this.isClosed = true;
+    this.isSending = false;
 
     // Handling differences between object types
     let params;
@@ -198,13 +200,15 @@ class Device {
     //   return this.commands[command].focus(this, ...args);
     // }
     let result: any;
+    this.isSending = true;
     try {
-      if (this.type === "serial") result = this.request(command, ...args);
+      if (this.type === "serial") result = await this.request(command, ...args);
       if (this.type === "hid") result = await this.hidRequest(command, ...args);
     } catch (error) {
       console.log("Error when handling request", error);
       result = error;
     }
+    this.isSending = false;
     return result;
   };
 
