@@ -1881,6 +1881,7 @@ function LayoutEditor(props) {
           isSaving={isSaving}
           contentSelector={
             <LayerSelector
+              onSelect={selectLayer}
               itemList={layerMenu}
               selectedItem={currentLayer}
               subtitle={i18n.editor.layers.title}
