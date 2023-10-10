@@ -108,7 +108,7 @@ const Preferences = (props: PreferencesProps) => {
 
   const openDevTool = useCallback(() => {
     setPreferencesState({ ...preferencesState, devTools: true });
-  }, [preferencesState]);
+  }, []);
 
   const closeDevTool = useCallback(() => {
     setPreferencesState({ ...preferencesState, devTools: false });
@@ -194,18 +194,18 @@ const Preferences = (props: PreferencesProps) => {
         const speedLimitParsed = speedLimit ? parseInt(speedLimit, 10) : 127;
         neuronData.kbData.mouseSpeedLimit = speedLimitParsed;
       });
-      setKbData({
-        ...kbData,
+      setKbData(prevKbData => ({
+        ...prevKbData,
         ...neuronData.kbData,
-      });
-      setPreferencesState({
-        ...preferencesState,
+      }));
+      setPreferencesState(prevPreferencesState => ({
+        ...prevPreferencesState,
         neuronID: neuronData.neuronID,
         kbData: {
-          ...kbData,
+          ...prevPreferencesState.kbData,
           ...neuronData.kbData,
         },
-      });
+      }));
     }
   };
 
@@ -216,7 +216,12 @@ const Preferences = (props: PreferencesProps) => {
       if (!darkModeSetting) {
         darkModeSetting = "system";
       }
-      setPreferencesState({ ...preferencesState, devTools, verboseFocus: true, darkMode: darkModeSetting });
+      setPreferencesState(prevPreferencesState => ({
+        ...prevPreferencesState,
+        devTools,
+        verboseFocus: true,
+        darkMode: darkModeSetting,
+      }));
 
       ipcRenderer.on("opened-devtool", openDevTool);
       ipcRenderer.on("closed-devtool", closeDevTool);
@@ -241,14 +246,14 @@ const Preferences = (props: PreferencesProps) => {
   }, [isSaved]);
 
   const destroyContext = async () => {
-    setKbData({
-      ...kbData,
+    setKbData(prevKbData => ({
+      ...prevKbData,
       modified: false,
-    });
-    setPreferencesState({
-      ...preferencesState,
+    }));
+    setPreferencesState(prevState => ({
+      ...prevState,
       modified: false,
-    });
+    }));
     setIsSaved(true);
     cancelContext();
   };
@@ -361,21 +366,21 @@ const Preferences = (props: PreferencesProps) => {
 
   const selectDefaultLayer = (value: string) => {
     if (kbData.modified === false) {
-      setKbData({
-        ...kbData,
+      setKbData(prevKbData => ({
+        ...prevKbData,
         modified: true,
         defaultLayer: parseInt(value, 10),
-      });
-      setPreferencesState({
-        ...preferencesState,
+      }));
+      setPreferencesState(prevState => ({
+        ...prevState,
         modified: true,
-      });
+      }));
       startContext();
     } else {
-      setKbData({
-        ...kbData,
+      setKbData(prevKbData => ({
+        ...prevKbData,
         defaultLayer: parseInt(value, 10),
-      });
+      }));
       // this.forceUpdate(); what??
     }
   };
@@ -389,53 +394,52 @@ const Preferences = (props: PreferencesProps) => {
   };
 
   const toggleDevTools = async (event: any) => {
-    setPreferencesState({
-      ...preferencesState,
+    setPreferencesState(prevState => ({
+      ...prevState,
       devTools: event.target.checked,
-    });
+    }));
     await ipcRenderer.invoke("manage-devtools", event.target.checked);
     startContext();
   };
 
   // THEME MODE FUNCTIONS
   const selectDarkMode = (key: string) => {
-    setPreferencesState({
-      ...preferencesState,
+    setPreferencesState(prevState => ({
+      ...prevState,
       darkMode: key,
-    });
+    }));
     toggleDarkMode(key);
   };
 
   const toggleVerboseFocus = () => {
-    //focus.debug = !this.state.verboseFocus;
     setPreferencesState(prevState => ({
-      ...preferencesState,
+      ...prevState,
       verboseFocus: !prevState.verboseFocus,
     }));
   };
 
   const toggleOnlyCustom = (event: any) => {
-    setKbData({
-      ...kbData,
+    setKbData(prevKbData => ({
+      ...prevKbData,
       keymap: {
-        ...kbData.keymap,
+        ...prevKbData.keymap,
         onlyCustom: event.target.checked,
       },
       modified: true,
-    });
-    setPreferencesState({
-      ...preferencesState,
+    }));
+    setPreferencesState(prevState => ({
+      ...prevState,
       modified: true,
-    });
+    }));
     startContext();
   };
 
   // NEURON FUNCTIONS
   const selectNeuron = (value: string) => {
-    setPreferencesState({
-      ...preferencesState,
+    setPreferencesState(prevState => ({
+      ...prevState,
       selectedNeuron: parseInt(value, 10),
-    });
+    }));
   };
 
   const applyNeuronName = (neurons: any) => {
@@ -445,23 +449,23 @@ const Preferences = (props: PreferencesProps) => {
   const updateNeuronName = (data: string) => {
     const temp = preferencesState.neurons;
     temp[preferencesState.selectedNeuron].name = data;
-    setPreferencesState({
-      ...preferencesState,
+    setPreferencesState(prevState => ({
+      ...prevState,
       neurons: temp,
-    });
+    }));
     applyNeuronName(temp);
   };
 
   const deleteNeuron = async () => {
     const result = await window.confirm(i18n.keyboardSettings.neuronManager.deleteNeuron);
     if (result) {
-      const temp = JSON.parse(JSON.stringify(preferencesState.neurons));
+      const temp = JSON.parse(w.stringify(preferencesState.neurons));
       temp.splice(preferencesState.selectedNeuron, 1);
-      setPreferencesState({
-        ...preferencesState,
+      setPreferencesState(prevState => ({
+        ...prevState,
         neurons: temp,
         selectedNeuron: temp.length - 1 > preferencesState.selectNeuron ? preferencesState.selectNeuron : temp.length - 1,
-      });
+      }));
       store.set("neurons", temp);
     }
   };
@@ -472,9 +476,6 @@ const Preferences = (props: PreferencesProps) => {
   const verboseSwitch = <Form.Check type="switch" checked={verboseFocus} onChange={toggleVerboseFocus} />;
   const onlyCustomSwitch = <Form.Check type="switch" checked={kbData.keymap.onlyCustom as any} onChange={toggleOnlyCustom} />;
   const allowBetas = <Form.Check value={allowBeta as any} type="switch" checked={allowBeta} onChange={updateAllowBeta} />;
-  /// const pairingButton = <RegularButton buttonText={"Re-Pair RF"} styles="short warning sm" onClick={sendRePairCommand} />;
-  // console.log("CHECKING STATUS MOD", modified);
-  // console.log("CHECKING STATUS CTX", inContext);
 
   return (
     <Styles>
