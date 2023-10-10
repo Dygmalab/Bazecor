@@ -131,7 +131,7 @@ function NavigationMenu(props: NavigationMenuProps) {
     const octokit = new Octokit();
     const data = await octokit.request("GET /repos/{owner}/{repo}/releases", {
       owner: "Dygmalab",
-      repo: "Firmware-releases",
+      repo: "Firmware-release",
       headers: {
         "X-GitHub-Api-Version": "2022-11-28",
       },
