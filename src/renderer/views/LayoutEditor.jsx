@@ -463,7 +463,7 @@ function LayoutEditor(props) {
     currentLanguageLayout: "",
     showMacroModal: false,
     showNeuronModal: false,
-    isStandardView: store.get("settings.isStandardView"),
+    isStandardView: store.get("settings.isStandardView") !== undefined ? store.get("settings.isStandardView") : false,
     showStandardView: false,
     layoutSelectorPosition: { x: 0, y: 0 },
     isWireless: false,
