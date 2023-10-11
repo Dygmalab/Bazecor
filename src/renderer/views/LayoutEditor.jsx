@@ -474,6 +474,9 @@ function LayoutEditor(props) {
   const [isInit, setIsInit] = useState(false);
   const [deviceState] = useDevice();
   const [isSaving, setIsSaving] = useState(false);
+  const [layerData, setLayerData] = useState(false);
+  const [isReadOnly, setIsReadOnly] = useState(false);
+  const [showDefaults, setShowDefaults] = useState(false);
   const { theme, darkMode, cancelContext, isSending, setIsSending } = props;
 
   let keymapDB = new KeymapDB();
@@ -493,7 +496,7 @@ function LayoutEditor(props) {
     setState({ ...state });
   };
 
-  const superTranslator = raw => {
+  const superTranslator = (raw, storedSuper) => {
     let superkey = [];
     const superkeys = [];
     let iter = 0;
@@ -525,16 +528,11 @@ function LayoutEditor(props) {
       return [];
     // TODO: Check if stored superKeys match the received ones, if they match, retrieve name and apply it to current superKeys
     let finalSuper = [];
-    let stored = [];
-    // console.log(state.neurons, state.neuronID, superkeys);
-    if (state.neurons !== undefined) {
-      stored = state.neurons[state.neuronID].superkeys;
-    }
-    console.log(superkeys, stored);
+    console.log("Checking superkeys and stored superkeys", superkeys, storedSuper);
     finalSuper = superkeys.map((superk, i) => {
-      if (stored.length > i && stored.length > 0) {
+      if (storedSuper !== undefined && storedSuper.length > i && storedSuper.length > 0) {
         const aux = superk;
-        aux.name = stored[i] ? stored[i]?.name : "";
+        aux.name = storedSuper[i] ? storedSuper[i]?.name : "";
         return aux;
       }
       const aux = superk;
@@ -545,7 +543,7 @@ function LayoutEditor(props) {
     return finalSuper;
   };
 
-  const macroTranslator = raw => {
+  const macroTranslator = (raw, storedMacros) => {
     if (raw === "") {
       return [
         {
@@ -659,15 +657,14 @@ function LayoutEditor(props) {
     });
     // TODO: Check if stored macros match the received ones, if they match, retrieve name and apply it to current macros
     let finalMacros = [];
-    const stored = state.storedMacros;
-    console.log(macros, stored);
-    if (stored === undefined) {
+    console.log(macros, storedMacros);
+    if (storedMacros === undefined) {
       return macros;
     }
     finalMacros = macros.map((macro, idx) => {
-      if (stored.length > idx && stored.length > 0) {
+      if (storedMacros.length > idx && storedMacros.length > 0) {
         const aux = macro;
-        aux.name = stored[idx].name;
+        aux.name = storedMacros[idx].name;
         aux.macro = macro.actions.map(k => keymapDB.parse(k.keyCode).label).join(" ");
         return aux;
       }
@@ -938,14 +935,14 @@ function LayoutEditor(props) {
       } else {
         raw = "";
       }
-      const parsedMacros = macroTranslator(raw);
+      const parsedMacros = macroTranslator(raw, neuronData.storedMacros);
       let raw2 = await currentDevice.command("superkeys.map");
       if (raw2.search(" 0 0") !== -1) {
         raw2 = raw2.split(" 0 0")[0].split(" ").map(Number);
       } else {
         raw2 = "";
       }
-      const parsedSuper = superTranslator(raw2);
+      const parsedSuper = superTranslator(raw2, neuronData.storedSuper);
 
       let ledIndexStart = 69;
       if (device === "Defy") {
@@ -1131,7 +1128,6 @@ function LayoutEditor(props) {
   };
 
   const onApply = async () => {
-    const { cancelContext } = props;
     setIsSaving(true);
     setIsSending(true);
     const { keymap, colorMap, palette } = state;
@@ -1454,14 +1450,14 @@ function LayoutEditor(props) {
 
   const toExport = async () => {
     const { layerNames, keymap, currentLayer } = state;
-    let layerData;
-    let isReadOnly;
+    let localLayerData;
+    let localIsReadOnly;
     if (keymap.onlyCustom) {
-      isReadOnly = currentLayer < 0;
-      layerData = isReadOnly ? keymap.default[currentLayer + keymap.default.length] : keymap.custom[currentLayer];
+      localIsReadOnly = currentLayer < 0;
+      localLayerData = localIsReadOnly ? keymap.default[currentLayer + keymap.default.length] : keymap.custom[currentLayer];
     } else {
-      isReadOnly = currentLayer < keymap.default.length;
-      layerData = isReadOnly ? keymap.default[currentLayer] : keymap.custom[currentLayer - keymap.default.length];
+      localIsReadOnly = currentLayer < keymap.default.length;
+      localLayerData = localIsReadOnly ? keymap.default[currentLayer] : keymap.custom[currentLayer - keymap.default.length];
     }
     const { currentDevice } = deviceState;
     const { info } = currentDevice.device;
@@ -1470,7 +1466,7 @@ function LayoutEditor(props) {
         device: info,
         language: state.currentLanguageLayout,
         layerNames,
-        keymap: layerData,
+        keymap: localLayerData,
         colormap: state.colorMap[currentLayer],
         palette: state.palette,
       },
@@ -1718,6 +1714,72 @@ function LayoutEditor(props) {
     console.log("Did update: ", state.isStandardView);
   }, [state.isStandardView]);
 
+  useEffect(() => {
+    const { keymap, currentLayer, macros, superkeys } = state;
+
+    const localShowDefaults = store.get("settings.showDefaults");
+    let cLayer = currentLayer;
+
+    if (!localShowDefaults) {
+      if (currentLayer < keymap.default.length && !keymap.onlyCustom) {
+        cLayer = 0;
+      }
+    }
+
+    let localLayerData;
+    let localIsReadOnly;
+    if (keymap.onlyCustom) {
+      localIsReadOnly = cLayer < 0;
+      localLayerData = localIsReadOnly ? keymap.default[cLayer + keymap.default.length] : keymap.custom[cLayer];
+    } else {
+      localIsReadOnly = cLayer < keymap.default.length;
+      localLayerData = localIsReadOnly ? keymap.default[cLayer] : keymap.custom[cLayer - keymap.default.length];
+    }
+
+    if (localLayerData !== undefined) {
+      localLayerData = localLayerData.map(key => {
+        const newMKey = key;
+        if (key.extraLabel === "MACRO") {
+          console.log("macro detected", macros, key);
+          if (
+            macros.length > parseInt(key.label, 10) &&
+            macros[parseInt(key.label, 10)] !== undefined &&
+            macros[parseInt(key.label, 10)].name !== undefined &&
+            macros[parseInt(key.label, 10)].name.substr(0, 5) !== "" &&
+            !/\p{L}/u.test(key.label)
+          ) {
+            console.log("macros:", macros);
+            newMKey.label = macros[parseInt(key.label, 10)].name.substr(0, 5);
+          }
+        }
+        return newMKey;
+      });
+    }
+
+    if (localLayerData !== undefined && superkeys.length > 0) {
+      localLayerData = localLayerData.map(key => {
+        const newSKey = key;
+        if (key.extraLabel === "SUPER") {
+          if (
+            superkeys.length > parseInt(key.label, 10) - 1 &&
+            superkeys[parseInt(key.label, 10) - 1] !== undefined &&
+            superkeys[parseInt(key.label, 10) - 1].name !== undefined &&
+            superkeys[parseInt(key.label, 10) - 1].name !== "" &&
+            !/\p{L}/u.test(key.label)
+          ) {
+            newSKey.label = superkeys[parseInt(key.label, 10) - 1].name.substr(0, 5);
+          }
+        }
+        return newSKey;
+      });
+    }
+    console.log("SAVING USEFFECT!!:", localLayerData, localIsReadOnly, localShowDefaults, cLayer);
+    setLayerData(localLayerData);
+    setIsReadOnly(localIsReadOnly);
+    setShowDefaults(localShowDefaults);
+    setState({ ...state, currentLayer: cLayer });
+  }, [state.keymap, state.currentLayer, state.macros, state.superkeys]);
+
   const {
     keymap,
     palette,
@@ -1738,67 +1800,13 @@ function LayoutEditor(props) {
   if (!Layer) {
     return <div />;
   }
-  const showDefaults = store.get("settings.showDefaults");
-  let cLayer = currentLayer;
-
-  if (!showDefaults) {
-    if (currentLayer < keymap.default.length && !keymap.onlyCustom) {
-      cLayer = 0;
-    }
-  }
-
-  let layerData;
-  let isReadOnly;
-  if (keymap.onlyCustom) {
-    isReadOnly = cLayer < 0;
-    layerData = isReadOnly ? keymap.default[cLayer + keymap.default.length] : keymap.custom[cLayer];
-  } else {
-    isReadOnly = cLayer < keymap.default.length;
-    layerData = isReadOnly ? keymap.default[cLayer] : keymap.custom[cLayer - keymap.default.length];
-  }
-
-  if (layerData !== undefined) {
-    layerData = layerData.map(key => {
-      const newMKey = key;
-      if (key.extraLabel === "MACRO") {
-        if (
-          macros.length > parseInt(key.label, 10) &&
-          macros[parseInt(key.label, 10)] !== undefined &&
-          macros[parseInt(key.label, 10)].name !== undefined &&
-          macros[parseInt(key.label, 10)].name.substr(0, 5) !== "" &&
-          !/\p{L}/u.test(key.label)
-        ) {
-          newMKey.label = macros[parseInt(key.label, 10)].name.substr(0, 5);
-        }
-      }
-      return newMKey;
-    });
-  }
-
-  if (layerData !== undefined && superkeys.length > 0) {
-    layerData = layerData.map(key => {
-      const newSKey = key;
-      if (key.extraLabel === "SUPER") {
-        if (
-          superkeys.length > parseInt(key.label, 10) - 1 &&
-          superkeys[parseInt(key.label, 10) - 1] !== undefined &&
-          superkeys[parseInt(key.label, 10) - 1].name !== undefined &&
-          superkeys[parseInt(key.label, 10) - 1].name !== "" &&
-          !/\p{L}/u.test(key.label)
-        ) {
-          newSKey.label = superkeys[parseInt(key.label, 10) - 1].name.substr(0, 5);
-        }
-      }
-      return newSKey;
-    });
-  }
 
   const layer = (
     // TODO: restore fade effect <fade in appear key={currentLayer}>
     <div className="LayerHolder">
       <Layer
         readOnly={isReadOnly}
-        index={cLayer}
+        index={currentLayer}
         keymap={layerData}
         onKeySelect={onKeySelect}
         selectedKey={state.currentKeyIndex}
