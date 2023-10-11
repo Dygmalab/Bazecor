@@ -72,6 +72,7 @@ function App() {
   const varFlashing = React.useRef(false);
   const navigate = useNavigate();
   const [state] = useDevice();
+  const [isSending, setIsSending] = useState(false);
 
   const updateStorageSchema = async () => {
     // Update stored settings schema
@@ -183,17 +184,10 @@ function App() {
       return;
     }
 
-    // console.log("Probing for Focus support...");
-    // focus.setLayerSize(focus.device);
-    // focus.setLEDMode(focus.device);
-    // const pages = {
-    //   keymap: focus.isCommandSupported("keymap.custom") || focus.isCommandSupported("keymap.map"),
-    //   colormap: focus.isCommandSupported("colormap.map") && focus.isCommandSupported("palette"),
-    // };
-
     setConnected(true);
     setDevice(currentDevice);
     setPages({ keymap: true });
+    setIsSending(true);
     // navigate(pages.keymap ? "/editor" : "/welcome");
     navigate("/editor");
   };
@@ -280,9 +274,6 @@ function App() {
     setAllowBeta(newValue);
   };
 
-  console.log("NOT RENDERING");
-  console.log(flashing, fwUpdate, darkMode, connected, device, pages, contextBar, allowBeta, loading, varFlashing, state);
-
   return (
     <ThemeProvider theme={darkMode ? Dark : Light}>
       <GlobalStyles />
@@ -293,6 +284,8 @@ function App() {
         fwUpdate={fwUpdate}
         loading={loading}
         allowBeta={allowBeta}
+        setIsSending={setIsSending}
+        isSending={isSending}
       />
       <div className="main-container">
         <Routes>
@@ -335,6 +328,8 @@ function App() {
                 titleElement={() => document.querySelector("#page-title")}
                 appBarElement={() => document.querySelector("#appbar")}
                 darkMode={darkMode}
+                isSending={isSending}
+                setIsSending={setIsSending}
               />
             }
           />

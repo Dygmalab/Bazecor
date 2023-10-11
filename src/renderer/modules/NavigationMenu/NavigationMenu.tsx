@@ -105,6 +105,8 @@ interface NavigationMenuProps {
   fwUpdate: boolean;
   allowBeta: boolean;
   loading: boolean;
+  isSending: boolean;
+  setIsSending: () => void;
 }
 
 interface Device {
@@ -124,7 +126,7 @@ function NavigationMenu(props: NavigationMenuProps) {
   const [virtual, setVirtual] = useState(false);
   const location = useLocation();
   const currentPage = location.pathname;
-  const { connected, pages, fwUpdate, flashing, allowBeta, loading } = props;
+  const { connected, pages, fwUpdate, flashing, allowBeta, loading, setIsSending, isSending } = props;
 
   const getGitHubFW = async (product: any) => {
     const releases: any[] = [];
@@ -168,10 +170,12 @@ function NavigationMenu(props: NavigationMenuProps) {
     setIsUpdated(semVerCheck > 0);
     setIsBeta(Beta);
     setVirtual(currentDevice.file);
+    setIsSending(false);
   }
 
   useEffect(() => {
     if (!flashing && connected) {
+      console.log("I AM GONNA SEND VERSION");
       checkKeyboardMetadata();
     }
   }, [flashing, connected]);
@@ -195,84 +199,86 @@ function NavigationMenu(props: NavigationMenuProps) {
               <>
                 {pages.keymap && (
                   <>
-                    <Link to="/editor" className={`list-link ${fwUpdate ? "disabled" : ""}`}>
+                    <Link to="/editor" className={`list-link ${fwUpdate || isSending ? "disabled" : ""}`}>
                       <NavigationButton
                         selected={currentPage === "/editor"}
                         buttonText={i18n.app.menu.editor}
                         icoSVG={<IconKeyboard2Stroke />}
-                        disabled={fwUpdate}
+                        disabled={fwUpdate || isSending}
                       />
                     </Link>
-                    <Link to="/macros" className={`list-link ${fwUpdate ? "disabled" : ""}`}>
+                    <Link to="/macros" className={`list-link ${fwUpdate || isSending ? "disabled" : ""}`}>
                       <NavigationButton
                         selected={currentPage === "/macros"}
                         buttonText={i18n.app.menu.macros}
                         icoSVG={<IconRobot2Stroke />}
-                        disabled={fwUpdate}
+                        disabled={fwUpdate || isSending}
                       />
                     </Link>
-                    <Link to="/superkeys" className={`list-link ${fwUpdate || !isBeta ? "disabled" : ""}`}>
+                    <Link to="/superkeys" className={`list-link ${fwUpdate || !isBeta || isSending ? "disabled" : ""}`}>
                       <NavigationButton
                         selected={currentPage === "/superkeys"}
                         buttonText={i18n.app.menu.superkeys}
                         icoSVG={<IconThunder2Stroke />}
                         showNotif={isBeta}
                         notifText="BETA"
-                        disabled={fwUpdate || !isBeta}
+                        disabled={fwUpdate || !isBeta || isSending}
                       />
                     </Link>
                   </>
                 )}
                 <Link
                   to="/firmware-update"
-                  className={`list-link ${fwUpdate || virtual || state.currentDevice.type === "hid" ? "disabled" : ""}`}
+                  className={`list-link ${
+                    fwUpdate || virtual || state.currentDevice.type === "hid" || isSending ? "disabled" : ""
+                  }`}
                 >
                   <NavigationButton
                     selected={currentPage === "/firmware-update"}
                     showNotif={isUpdated}
                     buttonText={i18n.app.menu.firmwareUpdate}
                     icoSVG={<IconMemory2Stroke />}
-                    disabled={fwUpdate || virtual || state.currentDevice.type === "hid"}
+                    disabled={fwUpdate || virtual || state.currentDevice.type === "hid" || isSending}
                   />
                 </Link>
               </>
             )}
-            <Link to="/keyboard-select" className={`list-link ${fwUpdate ? "disabled" : ""}`}>
+            <Link to="/keyboard-select" className={`list-link ${fwUpdate || isSending ? "disabled" : ""}`}>
               <NavigationButton
                 selected={currentPage === "/keyboard-select"}
                 buttonText={i18n.app.menu.selectAKeyboard}
                 icoSVG={<IconKeyboardSelector />}
-                disabled={fwUpdate}
+                disabled={fwUpdate || isSending}
               />
             </Link>
           </div>
           <div className="bottomMenu">
             {showDevtools && (
-              <Link to="/bazecordevtools" className={`list-link ${fwUpdate ? "disabled" : ""}`}>
+              <Link to="/bazecordevtools" className={`list-link ${fwUpdate || isSending ? "disabled" : ""}`}>
                 <NavigationButton
                   selected={currentPage === "/bazecordevtools"}
                   buttonText="Dev tools"
                   icoSVG={<IconBazecordevtools width={32} height={32} strokeWidth={2} />}
-                  disabled={fwUpdate}
+                  disabled={fwUpdate || isSending}
                 />
               </Link>
             )}
-            <Link to="/preferences" className={`list-link ${fwUpdate ? "disabled" : ""}`}>
+            <Link to="/preferences" className={`list-link ${fwUpdate || isSending ? "disabled" : ""}`}>
               <NavigationButton
                 selected={currentPage === "/preferences"}
                 buttonText={i18n.app.menu.preferences}
                 icoSVG={<IconPreferences2Stroke />}
-                disabled={fwUpdate}
+                disabled={fwUpdate || isSending}
               />
             </Link>
             {connected && device && device.info && device.info.keyboardType === "wireless" && versions !== null ? (
               <>
-                <Link to="/wireless" className={`list-link ${fwUpdate ? "disabled" : ""}`}>
+                <Link to="/wireless" className={`list-link ${fwUpdate || isSending ? "disabled" : ""}`}>
                   <NavigationButton
                     selected={currentPage === "/wireless"}
                     buttonText={i18n.app.menu.wireless}
                     icoSVG={<IconWireless width={42} height={42} strokeWidth={2} />}
-                    disabled={fwUpdate}
+                    disabled={fwUpdate || isSending}
                   />
                 </Link>
                 <BatteryStatus disable={fwUpdate || virtual || loading} />

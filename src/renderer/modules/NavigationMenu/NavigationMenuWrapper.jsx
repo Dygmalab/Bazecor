@@ -20,7 +20,7 @@ import PropTypes from "prop-types";
 import NavigationMenu from "./NavigationMenu";
 
 function Header(props) {
-  const { connected, pages, flashing, fwUpdate, allowBeta, loading } = props;
+  const { connected, pages, flashing, fwUpdate, allowBeta, loading, setIsSending, isSending } = props;
 
   return (
     <NavigationMenu
@@ -30,6 +30,8 @@ function Header(props) {
       fwUpdate={fwUpdate}
       allowBeta={allowBeta}
       loading={loading}
+      setIsSending={setIsSending}
+      isSending={isSending}
     />
   );
 }
@@ -40,6 +42,8 @@ Header.propTypes = {
   fwUpdate: PropTypes.bool.isRequired,
   allowBeta: PropTypes.bool.isRequired,
   loading: PropTypes.bool.isRequired,
+  setIsSending: PropTypes.func.isRequired,
+  isSending: PropTypes.bool.isRequired,
 };
 
 export default Header;

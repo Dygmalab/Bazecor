@@ -470,8 +470,11 @@ function LayoutEditor(props) {
   };
 
   const [state, setState] = useState(initialState);
+  const [scanned, setScanned] = useState(false);
+  const [isInit, setIsInit] = useState(false);
   const [deviceState] = useDevice();
   const [isSaving, setIsSaving] = useState(false);
+  const { theme, darkMode, cancelContext, isSending, setIsSending } = props;
 
   let keymapDB = new KeymapDB();
 
@@ -838,12 +841,17 @@ function LayoutEditor(props) {
       }
     }
     console.log("Final neuron", finalNeuron);
-    state.neurons = neurons;
-    state.neuronID = neurons.findIndex(n => n.id === chipID);
-    state.layerNames = finalNeuron.layers;
-    state.storedMacros = finalNeuron.macros;
-    state.storedSuper = finalNeuron.superkeys;
-    setState({ ...state });
+    if (finalNeuron) {
+      const neuronData = {
+        neurons,
+        neuronID: neurons.findIndex(n => n.id === chipID),
+        layerNames: finalNeuron.layers,
+        storedMacros: finalNeuron.macros,
+        storedSuper: finalNeuron.storedSuper,
+      };
+      console.log(neuronData);
+      return neuronData;
+    }
     return finalNeuron;
   };
 
@@ -855,7 +863,7 @@ function LayoutEditor(props) {
        * Create property language to the object 'options', to call KeymapDB in Keymap and modify languagu layout
        */
       const chipID = await currentDevice.command("hardware.chip_id");
-      const registered = await AnalizeChipID(chipID.replace(/\s/g, ""));
+      const neuronData = await AnalizeChipID(chipID.replace(/\s/g, ""));
       const device = currentDevice.device.info.product;
       const wirelessChecker = currentDevice.device.info.keyboardType === "wireless";
       if (lang) {
@@ -943,32 +951,39 @@ function LayoutEditor(props) {
       if (device === "Defy") {
         ledIndexStart = 70;
       }
-      state.currentLayer = state.previousLayer;
-      state.defaultLayer = defLayer;
-      state.keymap = keymap;
-      state.showDefaults = !keymap.onlyCustom;
-      state.palette = palette;
-      state.colorMap = colormap.colorMap;
-      state.macros = parsedMacros;
-      state.superkeys = parsedSuper;
-      state.registered = registered;
-      state.chipID = chipID;
-      state.deviceName = device;
-      state.isWireless = wirelessChecker;
-      state.ledIndexStart = ledIndexStart;
+      let showMacroModal = false;
       if (keymap.custom) {
         const oldmacro = [...Array(64).keys()].map(x => x + 24576);
         // console.log("testing", oldmacro);
         for (let index = 0; index < keymap.custom.length; index += 1) {
           // console.log(keymap.custom[index]);
           if (keymap.custom[index].some(r => oldmacro.includes(r.keyCode))) {
-            state.showMacroModal = true;
+            showMacroModal = true;
             break;
           }
         }
       }
-      console.log("sending State");
-      setState({ ...state });
+      setState(prevState => {
+        console.log("Setting state from scanKeyboard");
+        return {
+          ...prevState,
+          ...(neuronData || {}),
+          currentLayer: prevState.previousLayer,
+          defaultLayer: defLayer,
+          keymap,
+          showDefaults: !keymap.onlyCustom,
+          palette,
+          colorMap: colormap.colorMap,
+          macros: parsedMacros,
+          superkeys: parsedSuper,
+          registered: !!neuronData,
+          chipID,
+          deviceName: device,
+          isWireless: wirelessChecker,
+          ledIndexStart,
+          showMacroModal,
+        };
+      });
     } catch (e) {
       console.error(e);
       toast.error(e);
@@ -986,16 +1001,20 @@ function LayoutEditor(props) {
       return;
     }
 
-    const keymap = state.keymap.custom.slice();
-    const l = state.keymap.onlyCustom ? layer : layer - state.keymap.default.length;
-    keymap[l][keyIndex] = keymapDB.parse(keyCode);
-    state.keymap = {
-      default: state.keymap.default,
-      onlyCustom: state.keymap.onlyCustom,
-      custom: keymap,
-    };
-    state.modified = true;
-    setState({ ...state });
+    setState(prevState => {
+      const keymap = prevState.keymap.custom.slice();
+      const l = prevState.keymap.onlyCustom ? layer : layer - prevState.keymap.default.length;
+      keymap[l][keyIndex] = keymapDB.parse(keyCode);
+      return {
+        ...prevState,
+        modified: true,
+        keymap: {
+          default: prevState.keymap.default,
+          onlyCustom: prevState.keymap.onlyCustom,
+          custom: keymap,
+        },
+      };
+    });
     startContext();
   };
 
@@ -1018,10 +1037,12 @@ function LayoutEditor(props) {
    * @param {number} ledIndex Number of current selected keyboard button
    */
   const onCtrlShiftPress = (layer, ledIndex) => {
-    state.selectedPaletteColor = state.colorMap[layer][ledIndex];
-    state.isMultiSelected = true;
-    state.isColorButtonSelected = true;
-    setState({ ...state });
+    setState(prevState => ({
+      ...prevState,
+      selectedPaletteColor: prevState.colorMap[layer][ledIndex],
+      isMultiSelected: true,
+      isColorButtonSelected: true,
+    }));
   };
 
   /**
@@ -1035,13 +1056,18 @@ function LayoutEditor(props) {
     const { selectedPaletteColor, modified } = state;
     const isEqualColor = onVerificationColor(selectedPaletteColor, currentLayer, ledIndex);
     if (!(!modified && isEqualColor)) {
-      const colormap = state.colorMap.slice();
-      colormap[currentLayer][ledIndex] = state.selectedPaletteColor;
       startContext();
-      state.selectedPaletteColor = state.colorMap[layer][ledIndex];
-      state.colorMap = colormap;
-      state.modified = true;
-      setState({ ...state });
+      setState(prevState => {
+        const colormap = prevState.colorMap.slice();
+        colormap[currentLayer][ledIndex] = prevState.selectedPaletteColor;
+
+        return {
+          ...prevState,
+          selectedPaletteColor: prevState.colorMap[layer][ledIndex],
+          colorMap: colormap,
+          modified: true,
+        };
+      });
     }
   };
 
@@ -1053,8 +1079,7 @@ function LayoutEditor(props) {
     const ledIndex = parseInt(currentTarget.getAttribute("data-led-index"), 10);
 
     if (isStandardView) {
-      state.showStandardView = true;
-      setState({ ...state });
+      setState(prevState => ({ ...prevState, showStandardView: true }));
       // console.log("Show Standard View IF: ", showStandardView);
     }
 
@@ -1063,24 +1088,29 @@ function LayoutEditor(props) {
         onCtrlShiftPress(layer, ledIndex);
         return;
       }
-      state.currentKeyIndex = -1;
-      state.currentLedIndex = -1;
-      state.selectedPaletteColor = null;
-      state.isMultiSelected = false;
-      state.isColorButtonSelected = false;
-      setState({ ...state });
+      setState(prevState => ({
+        ...prevState,
+        currentKeyIndex: -1,
+        currentLedIndex: -1,
+        selectedPaletteColor: null,
+        isMultiSelected: false,
+        isColorButtonSelected: false,
+      }));
       return;
     }
 
-    if (state.colorMap.length > 0 && layer >= 0 && layer < state.colorMap.length) {
-      state.currentLayer = layer;
-      state.currentKeyIndex = keyIndex;
-      state.currentLedIndex = ledIndex;
-      state.modeselect = ledIndex >= state.ledIndexStart ? "color" : state.modeselect;
-    }
-    state.currentLayer = layer;
-    state.currentKeyIndex = keyIndex;
-    setState({ ...state });
+    setState(prevState => {
+      if (prevState.colorMap.length > 0 && layer >= 0 && layer < prevState.colorMap.length) {
+        return {
+          ...prevState,
+          currentKeyIndex: keyIndex,
+          currentLedIndex: ledIndex,
+          modeselect: ledIndex >= prevState.ledIndexStart ? "color" : prevState.modeselect,
+          currentLayer: layer,
+        };
+      }
+      return { ...prevState, currentLayer: layer, currentKeyIndex: keyIndex };
+    });
 
     if (event.ctrlKey || event.shiftKey) {
       onCtrlShiftPress(layer, ledIndex);
@@ -1089,8 +1119,7 @@ function LayoutEditor(props) {
         onButtonKeyboardColorChange(currentLayer, layer, ledIndex);
       }
       if (isColorButtonSelected && !isMultiSelected) {
-        state.isMultiSelected = true;
-        setState({ ...state });
+        setState(prevState => ({ ...prevState, isMultiSelected: true }));
         onButtonKeyboardColorChange(currentLayer, layer, ledIndex);
       }
     }
@@ -1098,46 +1127,48 @@ function LayoutEditor(props) {
 
   const selectLayer = id => {
     if (id === undefined) return;
-    state.currentLayer = id;
-    setState({ ...state });
+    setState({ ...state, currentLayer: id });
   };
 
   const onApply = async () => {
     const { cancelContext } = props;
     setIsSaving(true);
+    setIsSending(true);
     const { keymap, colorMap, palette } = state;
     const { currentDevice } = deviceState;
     state.saving = true;
+    setState({ ...state, saving: true });
     const args = flatten(keymap.custom).map(k => keymapDB.serialize(k));
     await currentDevice.command("keymap.custom", ...args);
     await currentDevice.command("keymap.onlyCustom", keymap.onlyCustom ? 1 : 0);
     await updateColormap(currentDevice, colorMap);
     await updatePalette(currentDevice, palette);
-    state.modified = false;
-    state.saving = false;
-    state.previousKeyIndex = state.currentKeyIndex;
-    state.previousLedIndex = state.currentLedIndex;
-    state.previousLayer = state.currentLayer;
-    state.isMultiSelected = false;
-    state.selectedPaletteColor = null;
-    state.isColorButtonSelected = false;
+    setState(prevState => ({
+      ...prevState,
+      modified: false,
+      saving: false,
+      previousKeyIndex: prevState.currentKeyIndex,
+      currentLedIndex: prevState.currentLedIndex,
+      previousLayer: prevState.currentLayer,
+      isMultiSelected: false,
+      selectedPaletteColor: null,
+      isColorButtonSelected: false,
+    }));
     const commands = await Backup.Commands(currentDevice);
     const backup = await bkp.DoBackup(commands, state.neurons[state.neuronID].id, currentDevice);
     Backup.SaveBackup(backup, currentDevice);
-    setState({ ...state });
     cancelContext();
     setIsSaving(false);
+    setIsSending(false);
     console.log("Changes saved.");
   };
 
   const copyFromDialog = () => {
-    state.copyFromOpen = true;
-    setState({ ...state });
+    setState({ ...state, copyFromOpen: true });
   };
 
   const cancelCopyFrom = () => {
-    state.copyFromOpen = false;
-    setState({ ...state });
+    setState({ ...state, copyFromOpen: false });
   };
 
   const copyFromLayer = layer => {
@@ -1159,15 +1190,17 @@ function LayoutEditor(props) {
     if (newColormap.length > 0) newColormap[state.currentLayer] = state.colorMap[layer >= 0 ? layer : state.currentLayer].slice();
 
     startContext();
-    state.colorMap = newColormap;
-    state.keymap = {
-      default: state.keymap.default,
-      onlyCustom: state.keymap.onlyCustom,
-      custom: newKeymap,
-    };
-    state.copyFromOpen = false;
-    state.modified = true;
-    setState({ ...state });
+    setState(prevState => ({
+      ...state,
+      colorMap: newColormap,
+      copyFromOpen: false,
+      modified: true,
+      keymap: {
+        default: prevState.keymap.default,
+        onlyCustom: prevState.keymap.onlyCustom,
+        custom: newKeymap,
+      },
+    }));
   };
 
   const clearLayer = () => {
@@ -1185,39 +1218,42 @@ function LayoutEditor(props) {
         .map(() => 15);
     }
     startContext();
-    state.keymap = {
-      default: state.keymap.default,
-      onlyCustom: state.keymap.onlyCustom,
-      custom: newKeymap,
-    };
-    state.colorMap = newColormap;
-    state.modified = true;
-    state.clearConfirmationOpen = false;
-    setState({ ...state });
+    setState(prevState => ({
+      ...state,
+      modified: true,
+      clearConfirmationOpen: false,
+      colorMap: newColormap,
+      keymap: {
+        default: prevState.keymap.default,
+        onlyCustom: prevState.keymap.onlyCustom,
+        custom: newKeymap,
+      },
+    }));
   };
 
   const confirmClear = () => {
-    state.clearConfirmationOpen = true;
-    setState({ ...state });
+    setState({ ...state, clearConfirmationOpen: true });
   };
 
   const cancelClear = () => {
-    state.clearConfirmationOpen = false;
-    setState({ ...state });
+    setState({ ...state, clearConfirmationOpen: false });
   };
 
   const onColorButtonSelect = (action, colorIndex) => {
-    const { isColorButtonSelected } = state;
     if (action === "one_button_click") {
-      state.isMultiSelected = false;
-      state.isColorButtonSelected = !isColorButtonSelected;
-      setState({ ...state });
+      setState(prevState => ({
+        ...state,
+        isMultiSelected: false,
+        isColorButtonSelected: !prevState.isColorButtonSelected,
+      }));
       return;
     }
     if (action === "another_button_click") {
-      state.selectedPaletteColor = colorIndex;
-      state.isColorButtonSelected = true;
-      setState({ ...state });
+      setState({
+        ...state,
+        selectedPaletteColor: colorIndex,
+        isColorButtonSelected: true,
+      });
     }
   };
 
@@ -1232,15 +1268,16 @@ function LayoutEditor(props) {
     if (!isEqualColor) {
       const colormap = state.colorMap.slice();
       colormap[currentLayer][currentLedIndex] = colorIndex;
-      state.isMultiSelected = true;
-      state.colorMap = colormap;
-      state.selectedPaletteColor = colorIndex;
-      state.modified = true;
-      setState({ ...state });
+      setState({
+        ...state,
+        isMultiSelected: true,
+        colorMap,
+        selectedPaletteColor: colorIndex,
+        modified: true,
+      });
       startContext();
     } else {
-      state.selectedPaletteColor = colorIndex;
-      setState({ ...state });
+      setState({ ...state, selectedPaletteColor: colorIndex });
     }
   };
 
@@ -1254,9 +1291,11 @@ function LayoutEditor(props) {
       rgb: `rgb(${red}, ${green}, ${blue})`,
     });
     newPalette[colorIndex] = setColors(r, g, b);
-    state.palette = newPalette;
-    state.modified = true;
-    setState({ ...state });
+    setState({
+      ...state,
+      palette: newPalette,
+      modified: true,
+    });
     startContext();
   };
 
@@ -1264,8 +1303,7 @@ function LayoutEditor(props) {
    * Close ImportExportDialog component
    */
   const toCloseImportExportDialog = () => {
-    state.importExportDialogOpen = false;
-    setState({ ...state });
+    setState({ ...state, importExportDialogOpen: false });
   };
 
   const importLayer = data => {
@@ -1325,9 +1363,11 @@ function LayoutEditor(props) {
     const { currentLayer } = state;
     const colormap = state.colorMap.slice();
     colormap[currentLayer] = colormap[currentLayer].fill(colorIndex, start, end);
-    state.colorMap = colormap;
-    state.modified = true;
-    setState({ ...state });
+    setState({
+      ...state,
+      colorMap: colormap,
+      modified: true,
+    });
     startContext();
   };
 
@@ -1482,78 +1522,21 @@ function LayoutEditor(props) {
     }
   };
 
-  /*
-   * Temporarily disabled this function until it becomes useful again
-   */
-
-  // const toExportAll = async () => {
-  //   const { keymap, colorMap, palette, superkeys, layerNames } = state;
-  //   const data = JSON.stringify(
-  //     {
-  //       layerNames,
-  //       keymap,
-  //       colormap: colorMap,
-  //       palette,
-  //       superkeys,
-  //     },
-  //     null,
-  //     2,
-  //   );
-  //   const options = {
-  //     title: "Backup Layers file",
-  //     defaultPath: "Layers.json",
-  //     buttonLabel: "Backup Layers",
-  //     filters: [
-  //       { name: "Json", extensions: ["json"] },
-  //       { name: "All Files", extensions: ["*"] },
-  //     ],
-  //   };
-
-  //   try {
-  //     const path = await ipcRenderer.invoke("save-dialog", options);
-  //     if (typeof path !== "undefined") {
-  //       console.log(path, data);
-  //       fs.writeFileSync(path, data);
-  //       toast.success(
-  //         <ToastMessage
-  //           title={i18n.editor.exportSuccessAllLayers}
-  //           content={i18n.editor.exportSuccessAllLayers}
-  //           icon={<IconArrowUpWithLine />}
-  //         />,
-  //         {
-  //           autoClose: 2000,
-  //           icon: "",
-  //         },
-  //       );
-  //     } else {
-  //       console.log("user closed SaveDialog");
-  //     }
-  //   } catch (error) {
-  //     console.error(error);
-  //     toast.error(i18n.errors.exportError + error, {
-  //       autoClose: 2000,
-  //     });
-  //   }
-  // };
-
   const toggleNeuronModal = () => {
     if (state.showNeuronModal) {
       state.savedReject.reject("cancelled");
     }
-    state.showNeuronModal = !state.showNeuronModal;
-    setState({ ...state });
+    setState(prevState => ({ ...prevState, showNeuronModal: !prevState.showNeuronModal }));
   };
 
   const CloneExistingNeuron = () => {
     state.savedResolve.resolve("resolved");
     toast.success("added additional neuron to this Bazecor installation");
-    state.showNeuornModal = false;
-    setState({ ...state });
+    setState({ ...state, showNeuronModal: false });
   };
 
   const toggleMacroModal = () => {
-    state.showMacroModal = !state.showMacroModal;
-    setState({ ...state });
+    setState(prevState => ({ ...prevState, showMacroModal: !prevState.showMacroModal }));
   };
 
   const updateOldMacros = () => {
@@ -1585,38 +1568,39 @@ function LayoutEditor(props) {
   const layerName = index => (state.layerNames.length > index ? state.layerNames[index].name : defaultLayerNames[index]);
 
   const modeSelectToggle = data => {
-    if (state.isStandardView) {
-      if (state.currentLedIndex > state.ledIndexStart) {
-        state.currentKeyIndex = -1;
+    const newState = { ...state };
+    if (newState.isStandardView) {
+      if (newState.currentLedIndex > newState.ledIndexStart) {
+        newState.currentKeyIndex = -1;
       }
-      state.modeselect = data;
-      state.showStandardView = false;
-      state.currentLedIndex = -1;
+      newState.modeselect = data;
+      newState.showStandardView = false;
+      newState.currentLedIndex = -1;
     } else {
-      state.modeselect = data;
+      newState.modeselect = data;
     }
-    setState({ ...state });
+    setState({ ...newState });
   };
 
   const onToggle = () => {
-    state.isStandardView = !state.isStandardView;
-    setState({ ...state });
+    setState(prevState => ({ ...state, isStandardView: !prevState.isStandardView }));
   };
 
   const closeStandardViewModal = code => {
     onKeyChange(code);
-    state.showStandardView = false;
-    setState({ ...state });
+    setState({ ...state, showStandardView: false });
   };
 
   const handleSaveStandardView = () => {
-    state.showStandardView = false;
-    state.currentKeyIndex = -1;
-    state.currentLedIndex = -1;
-    state.selectedPaletteColor = null;
-    state.isMultiSelected = false;
-    state.isColorButtonSelected = false;
-    setState({ ...state });
+    setState({
+      ...state,
+      showStandardView: false,
+      currentKeyIndex: -1,
+      currentLedIndex: -1,
+      selectedPaletteColor: null,
+      isMultiSelected: false,
+      isColorButtonSelected: false,
+    });
   };
 
   const exportToPdf = () => {
@@ -1634,36 +1618,45 @@ function LayoutEditor(props) {
   };
 
   const refreshLayoutSelectorPosition = (x, y) => {
-    state.layoutSelectorPosition = { x, y };
-    setState({ ...state });
-    // console.log("Triggered function refresh position :", state.layoutSelectorPosition);
+    setState({ ...state, layoutSelectorPosition: { x, y } });
+  };
+
+  const configStandardView = () => {
+    try {
+      const preferencesStandardView = JSON.parse(store.get("settings.isStandardView", true));
+      console.log("preferencesStandardView: ", preferencesStandardView);
+      if (preferencesStandardView !== null) {
+        return preferencesStandardView;
+      }
+      return true;
+    } catch (e) {
+      console.log(e);
+      return true;
+    }
   };
 
   useEffect(() => {
-    const configStandarView = async () => {
-      try {
-        const preferencesStandardView = JSON.parse(store.get("settings.isStandardView", true));
-        // const preferencesStandardView = false;
-        // console.log("Preferences StandardView", preferencesStandardViewJSON);
-        console.log("preferencesStandardView: ", preferencesStandardView);
-        // const preferencesStandardView = false;
-        if (preferencesStandardView !== null) {
-          state.isStandardView = preferencesStandardView;
-        } else {
-          state.isStandardView = true;
-        }
-        setState({ ...state });
-      } catch (e) {
-        console.log(e);
-        state.isStandardView = true;
-        setState({ ...state });
-      }
-    };
     const scanner = async () => {
-      await scanKeyboard().then(() => {
-        const { setLoadingData } = props;
-        const { keymap } = state;
-        const defLayer = state.defaultLayer >= 126 ? 0 : state.defaultLayer;
+      const { setLoadingData } = props;
+      await scanKeyboard();
+      setScanned(true);
+      setLoadingData(false);
+      setIsInit(true);
+    };
+    if (!isInit && !isSending) {
+      scanner();
+    }
+  }, [isInit, isSending]);
+
+  useEffect(() => {
+    const processAfterScan = () => {
+      const standardView = configStandardView();
+      const newLanguage = store.get("settings.language");
+      console.log("Language automatically set to: ", newLanguage);
+      setState(prevState => {
+        const { keymap } = prevState;
+
+        const defLayer = prevState.defaultLayer >= 126 ? 0 : prevState.defaultLayer;
         let initialLayer = 0;
 
         if (!store.get("settings.showDefaults")) {
@@ -1672,46 +1665,53 @@ function LayoutEditor(props) {
           }
         }
 
-        state.currentLayer = state.previousLayer !== 0 ? state.previousLayer : initialLayer;
-        state.loading = false;
-        setLoadingData(state.loading);
-        setState({ ...state });
+        const currentLayer = prevState.previousLayer !== 0 ? prevState.previousLayer : initialLayer;
+
+        return {
+          ...prevState,
+          currentLayer,
+          currentLanguageLayout: newLanguage || "english",
+          isStandardView: standardView,
+          loading: false,
+        };
       });
-      const newLanguage = store.get("settings.language");
-      console.log("Language automatically set to: ", newLanguage);
-      state.currentLanguageLayout = newLanguage || "english";
-      setState({ ...state });
-      await configStandarView();
     };
-    scanner();
-  }, []);
+    if (scanned) {
+      processAfterScan();
+      setScanned(false);
+    }
+  }, [scanned]);
 
   useEffect(() => {
     const scanner = async () => {
       const { inContext, setLoadingData } = props;
       console.log("props", inContext, state.modified);
       if (state.modified === true && inContext === false) {
-        state.currentLayer = state.previousLayer !== 0 ? state.previousLayer : 0;
-        state.currentKeyIndex = -1;
-        state.currentLedIndex = -1;
-        state.keymap = {
-          custom: [],
-          default: [],
-          onlyCustom: false,
-        };
-        state.palette = [];
-        state.modified = false;
-        state.loading = true;
-        setState({ ...state });
-        setLoadingData(state.loading);
+        console.log("Setting default");
+        setIsSending(true);
+        setState(prevState => ({
+          ...prevState,
+          currentLayer: prevState.previousLayer !== 0 ? prevState.previousLayer : 0,
+          currentKeyIndex: -1,
+          currentLedIndex: -1,
+          keymap: {
+            custom: [],
+            default: [],
+            onlyCustom: false,
+          },
+          palette: [],
+          modified: false,
+          loading: true,
+        }));
+        setLoadingData(true);
         await scanKeyboard();
-        state.loading = false;
-        setState({ ...state });
-        setLoadingData(state.loading);
+        setState(prevState => ({ ...prevState, loading: false }));
+        setLoadingData(false);
+        setIsSending(false);
       }
     };
     scanner();
-  }, [props.inContext, props.setLoadingData]);
+  }, [props.inContext, props.setLoadingData, state.modified]);
 
   useEffect(() => {
     store.set("settings.isStandardView", state.isStandardView);
@@ -1733,8 +1733,6 @@ function LayoutEditor(props) {
     layoutSelectorPosition,
     isWireless,
   } = state;
-
-  const { theme, darkMode, cancelContext } = props;
 
   const { Layer, kbtype } = getLayout();
   if (!Layer) {
@@ -1865,8 +1863,6 @@ function LayoutEditor(props) {
     }
   }
   if (!layerData) return <LogoLoaderCentered />;
-
-  console.log("RENDERING LAYOUT EDITOR", props);
 
   return (
     <Styles className="layoutEditor">
@@ -2067,6 +2063,8 @@ LayoutEditor.propTypes = {
   inContext: PropTypes.bool,
   theme: PropTypes.shape({}),
   darkMode: PropTypes.bool,
+  isSending: PropTypes.bool,
+  setIsSending: PropTypes.func,
 };
 
 export default LayoutEditor;
