@@ -20,7 +20,7 @@ const onDeviceSelect = (event: Event, details: any, callback: any) => {
   window.webContents.session.on("hid-device-removed", onDeviceRemove);
 
   if (details.deviceList && details.deviceList.length > 0) {
-    const filteredDevices = details.deviceList.filter((device: any) => device.name.includes("Defy"));
+    const filteredDevices = details.deviceList.filter((device: any) => device.productId === 18 && device.vendorId === 13807);
     console.log("Filtered list");
     console.log(filteredDevices);
     if (filteredDevices.length > 0) {
