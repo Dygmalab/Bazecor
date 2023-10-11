@@ -458,10 +458,10 @@ const Preferences = (props: PreferencesProps) => {
     applyNeuronName(temp);
   };
 
-  const deleteNeuron = async () => {
-    const result = await window.confirm(i18n.keyboardSettings.neuronManager.deleteNeuron);
+  const deleteNeuron = () => {
+    const result = window.confirm(i18n.keyboardSettings.neuronManager.deleteNeuron);
     if (result) {
-      const temp = JSON.parse(w.stringify(preferencesState.neurons));
+      const temp = JSON.parse(JSON.stringify(preferencesState.neurons));
       temp.splice(preferencesState.selectedNeuron, 1);
       setPreferencesState(prevState => ({
         ...prevState,
