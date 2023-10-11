@@ -844,7 +844,7 @@ function LayoutEditor(props) {
         neuronID: neurons.findIndex(n => n.id === chipID),
         layerNames: finalNeuron.layers,
         storedMacros: finalNeuron.macros,
-        storedSuper: finalNeuron.storedSuper,
+        storedSuper: finalNeuron.superkeys,
       };
       console.log(neuronData);
       return neuronData;
