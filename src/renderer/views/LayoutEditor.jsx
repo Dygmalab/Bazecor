@@ -487,6 +487,7 @@ function LayoutEditor(props) {
     console.log(`changed layer ${currentLayer} name to: ${newName}`, slicedLayerNames);
     neurons[neuronID].layers = slicedLayerNames;
     store.set("neurons", neurons);
+    setState({ ...state });
   };
 
   const superTranslator = raw => {
