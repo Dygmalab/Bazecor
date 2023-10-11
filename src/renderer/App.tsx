@@ -64,12 +64,12 @@ function App() {
   const [fwUpdate, setFwUpdate] = useState(false);
   const [darkMode, setDarkMode] = useState(false);
   const [connected, setConnected] = useState(false);
-  const [device, setDevice] = useState(null);
   const [pages, setPages] = useState({});
   const [contextBar, setContextBar] = useState(false);
   const [allowBeta, setAllowBeta] = useState(false);
   const [loading, setLoading] = useState(true);
   const varFlashing = React.useRef(false);
+  const device = React.useRef();
   const navigate = useNavigate();
   const [state] = useDevice();
   const [isSending, setIsSending] = useState(false);
@@ -131,7 +131,7 @@ function App() {
 
       setDarkMode(isDark);
       setConnected(false);
-      setDevice(null);
+      device.current = null;
       setPages({});
       setContextBar(false);
       setAllowBeta(getAllowBeta);
@@ -163,10 +163,12 @@ function App() {
   };
 
   const onKeyboardDisconnect = () => {
+    console.log("disconnecting Keyboard!");
+    console.log(state);
     setConnected(false);
-    setDevice(null);
+    device.current = null;
     setPages({});
-    if (!state.currentDevice.isClosed) {
+    if (!state.currentDevice?.isClosed) {
       state.currentDevice.close();
     }
     localStorage.clear();
@@ -178,14 +180,14 @@ function App() {
 
     if (currentDevice.device.bootloader) {
       setConnected(true);
-      setDevice(currentDevice.device);
+      device.current = currentDevice.device;
       setPages({});
       navigate("/welcome");
       return;
     }
 
     setConnected(true);
-    setDevice(currentDevice);
+    device.current = currentDevice;
     setPages({ keymap: true });
     setIsSending(true);
     // navigate(pages.keymap ? "/editor" : "/welcome");
@@ -209,23 +211,23 @@ function App() {
 
     if (flashing) {
       setConnected(false);
-      setDevice(null);
+      device.current = null;
       setPages({});
       navigate("/keyboard-select");
     }
   };
 
-  const handleUSBDisconnection = async (device: any) => {
+  const handleUSBDisconnection = async (dev: any) => {
     const isFlashing = varFlashing.current;
-    console.log("Handling device disconnect", isFlashing, device);
+    console.log("Handling device disconnect", isFlashing, dev, device);
     if (isFlashing) {
       console.log("no action due to flashing active");
       return;
     }
 
-    if (state.currentDevice.device?.usb?.productId !== state.currentDevice.device.deviceDescriptor?.idProduct) {
-      return;
-    }
+    // if (state.currentDevice?.device?.usb?.productId !== state.currentDevice?.device?.deviceDescriptor?.idProduct) {
+    //   return;
+    // }
 
     // Must await this to stop re-render of components reliant on `focus.device`
     // However, it only renders a blank screen. New route is rendered below.
@@ -242,12 +244,12 @@ function App() {
     onKeyboardDisconnect();
   };
 
-  const usbListener = (event: any, response: any) => handleUSBDisconnection(response);
-
   useEffect(() => {
     const fontFace = new FontFace("Libre Franklin", "@Renderer/theme/fonts/LibreFranklin/LibreFranklin-VariableFont_wght.ttf");
     console.log("Font face: ", fontFace);
     document.fonts.add(fontFace);
+
+    const usbListener = (event: any, response: any) => handleUSBDisconnection(response);
 
     // Setting up function to receive O.S. dark theme changes
     ipcRenderer.on("darkTheme-update", darkThemeListener);
