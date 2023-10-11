@@ -13,11 +13,6 @@ const onDeviceSelect = (event: Event, details: any, callback: any) => {
   // Add events to handle devices being added or removed before the callback on
   // `select-hid-device` is called.
   event.preventDefault();
-  const window = Window.getWindow();
-
-  window.webContents.session.on("hid-device-added", onDeviceAdded);
-
-  window.webContents.session.on("hid-device-removed", onDeviceRemove);
 
   if (details.deviceList && details.deviceList.length > 0) {
     const filteredDevices = details.deviceList.filter((device: any) => device.productId === 18 && device.vendorId === 13807);
@@ -47,6 +42,10 @@ export const configureHID = () => {
     return false;
   });
   window.webContents.session.on("select-hid-device", onDeviceSelect);
+
+  window.webContents.session.on("hid-device-added", onDeviceAdded);
+
+  window.webContents.session.on("hid-device-removed", onDeviceRemove);
 };
 
 export const removeHIDListeners = () => {
