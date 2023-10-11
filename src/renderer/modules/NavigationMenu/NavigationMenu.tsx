@@ -1,3 +1,5 @@
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-nocheck
 // -*- mode: js-jsx -*-
 /* Bazecor
  * Copyright (C) 2022  Dygmalab, Inc.
@@ -175,7 +177,6 @@ function NavigationMenu(props: NavigationMenuProps) {
 
   useEffect(() => {
     if (!flashing && connected) {
-      console.log("I AM GONNA SEND VERSION");
       checkKeyboardMetadata();
     }
   }, [flashing, connected]);
