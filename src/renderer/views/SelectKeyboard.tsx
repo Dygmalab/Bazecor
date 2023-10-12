@@ -559,7 +559,7 @@ const SelectKeyboard: React.FC<SelectKeyboardProps> = (props): JSX.Element => {
           path: device.path || i18n.keyboardSelect.unknown,
         };
       const preparedSN = device.productId === "2201" ? device.serialNumber.slice(0, 32) : device.serialNumber;
-      const neuron = neurons.find(neuron => neuron.id.toLowerCase() === preparedSN.toLowerCase());
+      const neuron = Array.isArray(neurons) ? neurons.find(n => n.id.toLowerCase() === preparedSN.toLowerCase()) : { name: "" };
 
       return {
         index,
