@@ -27,6 +27,7 @@ import IconArrowDownWithLine from "./IconArrowDownWithLine";
 import IconBattery from "./IconBattery";
 import IconBazecordevtools from "./IconBazecordevtools";
 import IconBluetooth from "./IconBluetooth";
+import IconBugWarning from "./IconBugWarning";
 import IconColorPalette from "./IconColorPalette";
 import IconColorPicker from "./IconColorPicker";
 import IconConnected from "./IconConnected";
@@ -37,6 +38,7 @@ import IconClone from "./IconClone";
 import IconCloseXs from "./IconCloseXs";
 import IconCloudDownload from "./IconCloudDownload";
 import IconDragAndDrop from "./IconDragAndDrop";
+import IconDragDots from "./IconDragDots";
 import IconDelete from "./IconDelete";
 import IconEditModeSingleView from "./IconEditModeSingleView";
 import IconEditModeSingleViewSm from "./IconEditModeSingleViewSm";
@@ -44,6 +46,7 @@ import IconEditModeStandardView from "./IconEditModeStandardView";
 import IconEditModeStandardViewSm from "./IconEditModeStandardViewSm";
 import IconEye from "./IconEye";
 import IconFileDownload from "./IconFileDownload";
+import IconHome from "./IconHome";
 import IconKeysPress from "./IconKeysPress";
 import IconKeysTapHold from "./IconKeysTapHold";
 import IconKeys2Tap from "./IconKeys2Tap";
@@ -165,6 +168,7 @@ export {
   IconBattery,
   IconBazecordevtools,
   IconBluetooth,
+  IconBugWarning,
   IconColorPalette,
   IconColorPicker,
   IconConnected,
@@ -175,6 +179,7 @@ export {
   IconCloseXs,
   IconCloudDownload,
   IconDragAndDrop,
+  IconDragDots,
   IconDelete,
   IconEditModeSingleView,
   IconEditModeSingleViewSm,
@@ -182,6 +187,7 @@ export {
   IconEditModeStandardViewSm,
   IconEye,
   IconFileDownload,
+  IconHome,
   IconKeysPress,
   IconKeysTapHold,
   IconKeys2Tap,

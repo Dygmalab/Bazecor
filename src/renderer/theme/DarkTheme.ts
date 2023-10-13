@@ -12,6 +12,11 @@ import neuronDefyWirelessImage from "@Assets/base/neuron-defy--black.png";
 import mouseWheelBackgroundDark from "@Assets/dark/mouseWheel.png";
 import oldToNew from "@Assets/dark/oldValueToNewValue.svg";
 
+import RaiseOff from "@Assets/base/devices/raise-ansi-black-offline.png";
+import RaiseOn from "@Assets/base/devices/raise-ansi-black-on.png";
+import DefyOff from "@Assets/base/devices/defy-black-offline.png";
+import DefyOn from "@Assets/base/devices/defy-black-on.png";
+
 import Tokens from "./Tokens";
 
 const settingColorOpacity = (color: string, opacity: number) => {
@@ -344,6 +349,12 @@ const Dark: DefaultTheme = {
       borderColor: Tokens.colors.gray400,
       backgroundActive: Tokens.colors.brandSuccess,
       borderColorActive: Tokens.colors.brandSuccess,
+    },
+    devicePreview: {
+      raiseOn: RaiseOn,
+      raiseOff: RaiseOff,
+      defyOn: DefyOn,
+      defyOff: DefyOff,
     },
     dropdown: {
       backgroundButtonColor: settingColorOpacity(Tokens.colors.gray900, 0.2),

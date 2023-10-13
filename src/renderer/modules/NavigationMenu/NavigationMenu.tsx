@@ -41,6 +41,7 @@ import {
   IconPreferences2Stroke,
   IconBazecordevtools,
   IconWireless,
+  IconHome,
 } from "../../component/Icon";
 
 const Styles = Styled.div`
@@ -259,6 +260,15 @@ function NavigationMenu(props: NavigationMenuProps): React.JSX.Element {
                 buttonText={i18n.app.menu.preferences}
                 icoSVG={<IconPreferences2Stroke />}
                 disabled={fwUpdate}
+              />
+            </Link>
+            <Link to="/device-manager" className="list-link">
+              <NavigationButton
+                selected={false}
+                showNotif={false}
+                buttonText="Device Manager"
+                icoSVG={<IconHome />}
+                disabled={false}
               />
             </Link>
             {connected && device && device.info && device.info.keyboardType === "wireless" && versions !== null ? (

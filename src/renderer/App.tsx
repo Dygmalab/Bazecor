@@ -49,6 +49,7 @@ import Focus from "../api/focus";
 import "../api/keymap";
 import "../api/colormap";
 import { useDevice } from "./DeviceContext";
+import DeviceManager from "./views/DeviceManager";
 
 const store = Store.getStore();
 
@@ -332,6 +333,12 @@ const App = () => {
                 onConnect={onKeyboardConnect}
                 titleElement={() => document.querySelector("#page-title")}
               />
+            }
+          />
+          <Route
+            path="/device-manager"
+            element={
+              <DeviceManager path="/device-manager" titleElement={() => document.querySelector("#page-title")} device={device} />
             }
           />
           <Route

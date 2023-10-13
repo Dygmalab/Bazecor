@@ -308,6 +308,12 @@ declare module "styled-components" {
         backgroundActive: string;
         borderColorActive: string;
       };
+      devicePreview: {
+        raiseOn: string;
+        raiseOff: string;
+        defyOn: string;
+        defyOff: string;
+      };
       dropdown: {
         backgroundButtonColor: string;
         backgroundButtonHover: string;
