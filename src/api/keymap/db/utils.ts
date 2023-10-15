@@ -15,7 +15,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-function withModifiers(table, groupName, top, base) {
+function withModifiers(
+  table: {
+    keys: Array<{ code: number; labels: { primary: string } }>;
+    groupName: string;
+  },
+  groupName: string,
+  top: string,
+  base: number,
+) {
   return {
     groupName,
     keys: table.keys.map(key => ({
@@ -28,4 +36,14 @@ function withModifiers(table, groupName, top, base) {
   };
 }
 
-export { withModifiers };
+enum ModifierCodes {
+  CONTROL = 256,
+  ALT = 512,
+  CONTROL_ALT = 768,
+  ALTGR = 1024,
+  SHIFT = 2048,
+  ALTGR_SHIFT = 3072,
+  OS = 4096,
+}
+
+export { withModifiers, ModifierCodes };
