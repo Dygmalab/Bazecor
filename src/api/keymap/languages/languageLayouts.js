@@ -29,6 +29,8 @@
  *
  * (... more modifiers ...)
  *
+ * For your convinience you can do; ModifierCodes.SHIFT + 53, please see usage in en-GB (British English).
+ *
  * ANSI
  * .------┬------┬------┬------┬------┬------┬------┬------┬------┬------┬------┬------┬------┬--------.
  * |  53  |  30  |  31  |  32  |  33  |  34  |  35  |  36  |  37  |  38  |  39  |  45  |  46  |   42   |
