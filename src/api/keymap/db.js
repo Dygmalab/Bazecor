@@ -53,6 +53,9 @@ import french, { frenchModifiedTables } from "./languages/french/french";
 // French - is an Array of objects of values that have to be modified
 import frenchBepo, { frenchBepoModifiedTables } from "./languages/french/frenchBepo";
 
+// French - is an Array of objects of values that have to be modified
+import frenchOptimot, { frenchOptimotModifiedTables } from "./languages/french/frenchOptimot";
+
 // Norwegian - is an Array of objects of values that have to be modified
 import norwegian, { norwegianModifiedTables } from "./languages/norwegian/norwegian";
 
@@ -126,6 +129,7 @@ const supportModifiedTables = {
   german: germanModifiedTables,
   french: frenchModifiedTables,
   frenchBepo: frenchBepoModifiedTables,
+  frenchOptimot: frenchOptimotModifiedTables,
   norwegian: norwegianModifiedTables,
   swedish: swedishModifiedTables,
   danish: danishModifiedTables,
@@ -157,6 +161,7 @@ const languagesDB = {
   german,
   french,
   frenchBepo,
+  frenchOptimot,
   norwegian,
   swedish,
   danish,
