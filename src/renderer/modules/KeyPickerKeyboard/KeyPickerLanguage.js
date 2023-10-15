@@ -88,7 +88,7 @@ const languages = {
   // Community
   "en-XX-eurkey": enXXeurkey,
   "fr-XX-bepo": frXXbepo,
-}
+};
 
 /**
  * Is a JavaScript function that changes key picker layout

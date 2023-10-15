@@ -17,7 +17,7 @@ import Title from "../../component/Title";
 import { IconWrench, IconSun, IconMoon, IconScreen } from "../../component/Icon";
 
 // Langues Imports
-import { flags, languages, languageNames} from "./GeneralSettingsLanguages";
+import { flags, languages, languageNames } from "./GeneralSettingsLanguages";
 
 import Keymap from "../../../api/keymap";
 import Focus from "../../../api/focus";
@@ -66,7 +66,7 @@ export default class GeneralSettings extends Component {
 
     let layersNames = neurons[selectedNeuron] ? neurons[selectedNeuron].layers : [];
 
-    let languageElements = languages.map((item, index) => ({
+    const languageElements = languages.map((item, index) => ({
       text: languageNames[index],
       value: item,
       icon: flags[index],

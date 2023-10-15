@@ -75,23 +75,23 @@
  */
 
 // Dygma - Layouts (keycaps)
-import enGB, { enGBModifiedTables } from "./en/GB";
-import esES, { esESModifiedTables } from "./es/ES";
-import deDE, { deDEModifiedTables } from "./de/DE";
-import frFR, { frFRModifiedTables } from "./fr/FR";
-import daDK, { daDKModifiedTables } from "./da/DK";
-import nbNO, { nbNOModifiedTables } from "./nb/NO";
-import svSE, { svSEModifiedTables } from "./sv/SE";
+import { enGB, enGBModifiedTables } from "./en/GB";
+import { esES, esESModifiedTables } from "./es/ES";
+import { deDE, deDEModifiedTables } from "./de/DE";
+import { frFR, frFRModifiedTables } from "./fr/FR";
+import { daDK, daDKModifiedTables } from "./da/DK";
+import { nbNO, nbNOModifiedTables } from "./nb/NO";
+import { svSE, svSEModifiedTables } from "./sv/SE";
 
 // Dygma - Layouts (official/native)
-import isIS, { isISModifiedTables } from "./is/IS";
-import jaJP, { jaJPModifiedTables } from "./ja/JP";
-import koKR, { koKRModifiedTables } from "./ko/KR";
-import deCH, { deCHModifiedTables } from "./de/CH";
+import { isIS, isISModifiedTables } from "./is/IS";
+import { jaJP, jaJPModifiedTables } from "./ja/JP";
+import { koKR, koKRModifiedTables } from "./ko/KR";
+import { deCH, deCHModifiedTables } from "./de/CH";
 
 // Dygma - Layouts (community/third-party)
-import enXXeurkey, { enXXeurkeyModifiedTables } from "./en/XX-eurkey";
-import frXXbepo, { frXXbepoModifiedTables } from "./fr/XX-bepo";
+import { enXXeurkey, enXXeurkeyModifiedTables } from "./en/XX-eurkey";
+import { frXXbepo, frXXbepoModifiedTables } from "./fr/XX-bepo";
 
 const supportModifiedTables = {
   // Keycaps
@@ -134,4 +134,4 @@ const languages = {
   "fr-XX-bepo": frXXbepo,
 };
 
-export { languages as default, supportModifiedTables };
+export { languages as languagesDB, supportModifiedTables };

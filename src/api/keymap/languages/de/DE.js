@@ -512,5 +512,4 @@ const deDEModifiedTables = [
   DualUseLayer8Tables,
 ];
 
-export { deDE as default, deDEModifiedTables };
-// export default deDE;
+export { deDE, deDEModifiedTables };

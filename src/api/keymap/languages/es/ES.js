@@ -509,4 +509,4 @@ const esESModifiedTables = [
   DualUseLayer8Tables,
 ];
 
-export { esES as default, esESModifiedTables };
+export { esES, esESModifiedTables };

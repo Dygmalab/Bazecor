@@ -1176,4 +1176,4 @@ const frXXbepoModifiedTables = [
   DualUseLayer8Tables,
 ];
 
-export { frXXbepo as default, frXXbepoModifiedTables };
+export { frXXbepo, frXXbepoModifiedTables };

@@ -96,4 +96,4 @@ const languageNames = [
   "Swiss German",
 ];
 
-export {flags, languages, languageNames};
+export { flags, languages, languageNames };

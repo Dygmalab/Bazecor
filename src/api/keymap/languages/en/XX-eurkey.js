@@ -490,8 +490,8 @@ const AGSymbols = [
   {
     code: 53,
     labels: {
-      primary: "`"
-    }
+      primary: "`",
+    },
   },
   {
     code: 30,
@@ -556,44 +556,44 @@ const AGSymbols = [
   {
     code: 45,
     labels: {
-      primary: "✓"
-    }
+      primary: "✓",
+    },
   },
   {
     code: 46,
     labels: {
-      primary: "×"
-    }
+      primary: "×",
+    },
   },
   {
     code: 47,
     labels: {
-      primary: "«"
-    }
+      primary: "«",
+    },
   },
   {
     code: 48,
     labels: {
-      primary: "»"
-    }
+      primary: "»",
+    },
   },
   {
     code: 49,
     labels: {
-      primary: "¬"
-    }
+      primary: "¬",
+    },
   },
   {
     code: 51,
     labels: {
-      primary: "°"
-    }
+      primary: "°",
+    },
   },
   {
     code: 52,
     labels: {
-      primary: "´"
-    }
+      primary: "´",
+    },
   },
   {
     code: 16,
@@ -604,20 +604,20 @@ const AGSymbols = [
   {
     code: 54,
     labels: {
-      primary: "ò"
-    }
+      primary: "ò",
+    },
   },
   {
     code: 55,
     labels: {
-      primary: "ó"
-    }
+      primary: "ó",
+    },
   },
   {
     code: 56,
     labels: {
-      primary: "¿"
-    }
+      primary: "¿",
+    },
   },
 ];
 
@@ -625,8 +625,8 @@ const AGrSSymbols = [
   {
     code: 53,
     labels: {
-      primary: "~"
-    }
+      primary: "~",
+    },
   },
   {
     code: 30,
@@ -691,44 +691,44 @@ const AGrSSymbols = [
   {
     code: 45,
     labels: {
-      primary: "✗"
-    }
+      primary: "✗",
+    },
   },
   {
     code: 46,
     labels: {
-      primary: "÷"
-    }
+      primary: "÷",
+    },
   },
   {
     code: 47,
     labels: {
-      primary: "‹"
-    }
+      primary: "‹",
+    },
   },
   {
     code: 48,
     labels: {
-      primary: "›"
-    }
+      primary: "›",
+    },
   },
   {
     code: 49,
     labels: {
-      primary: "¦"
-    }
+      primary: "¦",
+    },
   },
   {
     code: 51,
     labels: {
-      primary: "·"
-    }
+      primary: "·",
+    },
   },
   {
     code: 52,
     labels: {
-      primary: "¨"
-    }
+      primary: "¨",
+    },
   },
   {
     code: 16,
@@ -739,20 +739,20 @@ const AGrSSymbols = [
   {
     code: 54,
     labels: {
-      primary: "Ò"
-    }
+      primary: "Ò",
+    },
   },
   {
     code: 55,
     labels: {
-      primary: "Ó"
-    }
+      primary: "Ó",
+    },
   },
   {
     code: 56,
     labels: {
-      primary: "…"
-    }
+      primary: "…",
+    },
   },
 ];
 
@@ -869,8 +869,7 @@ const enXXeurkeyModifiedTables = [
   DualUseLayer5Tables,
   DualUseLayer6Tables,
   DualUseLayer7Tables,
-  DualUseLayer8Tables
+  DualUseLayer8Tables,
 ];
 
-export { enXXeurkey as default, enXXeurkeyModifiedTables };
-// export default enXXeurkey;
+export { enXXeurkey, enXXeurkeyModifiedTables };

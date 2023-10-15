@@ -544,4 +544,4 @@ const deCHModifiedTables = [
   DualUseLayer8Tables,
 ];
 
-export { deCH as default, deCHModifiedTables };
+export { deCH, deCHModifiedTables };

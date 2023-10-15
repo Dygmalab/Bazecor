@@ -1,27 +1,27 @@
 const translator = {
-  "da": "da-DK",
+  da: "da-DK",
   "da-DK": "da-DK",
-  "de": "de-DE",
+  de: "de-DE",
   "de-CH": "de-CH",
   "de-DE": "de-DE",
-  "en": "en-US",
+  en: "en-US",
   "en-GB": "en-GB",
   "en-US": "en-US",
-  "es": "es-ES",
+  es: "es-ES",
   "es-ES": "es-ES",
-  "fi": "fi-FI",
+  fi: "fi-FI",
   "fi-FI": "fi-FI",
-  "fr": "fr-FR",
+  fr: "fr-FR",
   "fr-FR": "fr-FR",
-  "is": "is-IS",
+  is: "is-IS",
   "is-IS": "is-IS",
-  "ja": "ja-JP",
+  ja: "ja-JP",
   "ja-JP": "ja-JP",
-  "ko": "ko-KR",
+  ko: "ko-KR",
   "ko-KR": "ko-KR",
-  "nb": "nb-NO",
+  nb: "nb-NO",
   "nb-NO": "nb-NO",
-  "sv": "sv-SE",
+  sv: "sv-SE",
   "sv-SE": "sv-SE",
 };
 
@@ -31,11 +31,13 @@ const translator = {
  * @param {string} defaultLanguage Default language
  */
 function getTranslator(localLanguage, defaultLanguage = "en-US") {
-  let language = localLanguage || defaultLanguage;
+  const language = localLanguage || defaultLanguage;
 
   if (translator[language] !== undefined) {
     return translator[language];
-  } else if (translator[language.split("-")[0]] !== undefined) {
+  }
+
+  if (translator[language.split("-")[0]] !== undefined) {
     return translator[language.split("-")[0]];
   }
 

@@ -186,4 +186,4 @@ const koKRModifiedTables = [
   DualUseLayer8Tables,
 ];
 
-export { koKR as default, koKRModifiedTables };
+export { koKR, koKRModifiedTables };

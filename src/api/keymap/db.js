@@ -42,7 +42,7 @@ import StenoTable from "./db/steno";
 import SpaceCadetTable from "./db/spacecadet";
 
 // languageLayouts - all available languages for layouts
-import languagesDB, { supportModifiedTables } from "./languages/languageLayouts"
+import { languagesDB, supportModifiedTables } from "./languages/languageLayouts";
 
 // newLanguageLayout - is a function that modify language layout
 import newLanguageLayout from "./languages/newLanguageLayout";

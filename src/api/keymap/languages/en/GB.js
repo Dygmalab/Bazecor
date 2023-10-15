@@ -31,8 +31,8 @@ const enGBModifierKeys = [
   {
     code: 49,
     labels: {
-      primary: "#"
-    }
+      primary: "#",
+    },
   },
   // R1
   {
@@ -50,33 +50,33 @@ const shiftModifier = {
     {
       code: shiftBase + 53,
       labels: {
-        primary: "¬"
-      }
+        primary: "¬",
+      },
     },
     {
       code: shiftBase + 31,
       labels: {
-        primary: '"'
-      }
+        primary: '"',
+      },
     },
     {
       code: shiftBase + 32,
       labels: {
-        primary: "£"
-      }
+        primary: "£",
+      },
     },
     // R2
     {
       code: shiftBase + 52,
       labels: {
-        primary: "@"
-      }
+        primary: "@",
+      },
     },
     {
       code: shiftBase + 49,
       labels: {
-        primary: "~"
-      }
+        primary: "~",
+      },
     },
     // R1
     {
@@ -85,7 +85,7 @@ const shiftModifier = {
         primary: "|",
       },
     },
-  ]
+  ],
 };
 
 const altCtrlModifier = {
@@ -95,27 +95,27 @@ const altCtrlModifier = {
     {
       code: altCtrlBase + 53,
       labels: {
-        primary: "¦"
-      }
+        primary: "¦",
+      },
     },
     {
       code: altCtrlBase + 33,
       labels: {
-        primary: "€"
-      }
+        primary: "€",
+      },
     },
     // R3
     {
       code: altCtrlBase + 8,
       labels: {
-        primary: "É"
-      }
+        primary: "É",
+      },
     },
     {
       code: altCtrlBase + 24,
       labels: {
-        primary: "Ú"
-      }
+        primary: "Ú",
+      },
     },
     {
       code: altCtrlBase + 12,
@@ -136,7 +136,7 @@ const altCtrlModifier = {
         primary: "Á",
       },
     },
-  ]
+  ],
 };
 
 const altGrModifier = {
@@ -146,27 +146,27 @@ const altGrModifier = {
     {
       code: altGrBase + 53,
       labels: {
-        primary: "¦"
-      }
+        primary: "¦",
+      },
     },
     {
       code: altGrBase + 33,
       labels: {
-        primary: "€"
-      }
+        primary: "€",
+      },
     },
     // R3
     {
       code: altGrBase + 8,
       labels: {
-        primary: "É"
-      }
+        primary: "É",
+      },
     },
     {
       code: altGrBase + 24,
       labels: {
-        primary: "Ú"
-      }
+        primary: "Ú",
+      },
     },
     {
       code: altGrBase + 12,
@@ -187,7 +187,7 @@ const altGrModifier = {
         primary: "Á",
       },
     },
-  ]
+  ],
 };
 
 const enGB = enGBLetters.concat(enGBModifierKeys);
@@ -296,8 +296,7 @@ const enGBModifiedTables = [
   DualUseLayer5Tables,
   DualUseLayer6Tables,
   DualUseLayer7Tables,
-  DualUseLayer8Tables
+  DualUseLayer8Tables,
 ];
 
-export { enGB as default, enGBModifiedTables };
-// export default enGB;
+export { enGB, enGBModifiedTables };

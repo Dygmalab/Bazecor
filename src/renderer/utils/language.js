@@ -23,7 +23,7 @@ const legacyLanguage = {
  * @param {string} defaultLanguage Default language
  */
 function getLanguage(storedLanguage, defaultLanguage = "en-US") {
-  let language = storedLanguage || defaultLanguage;
+  const language = storedLanguage || defaultLanguage;
 
   if (legacyLanguage[language] !== undefined) {
     return legacyLanguage[language];

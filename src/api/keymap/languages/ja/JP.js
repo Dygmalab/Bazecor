@@ -1140,4 +1140,4 @@ const jaJPModifiedTables = [
   DualUseLayer8Tables,
 ];
 
-export { jaJP as default, jaJPModifiedTables };
+export { jaJP, jaJPModifiedTables };

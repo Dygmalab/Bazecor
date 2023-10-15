@@ -385,7 +385,7 @@ class KeyPicker extends Component {
 
     // let boxShadowMatrix = useTheme().styles.keyPicker.keyMatrixShadow;
 
-    let Lang = getLanguage(selectedlanguage);
+    const Lang = getLanguage(selectedlanguage);
 
     const os = process.platform;
     const iconlist = {

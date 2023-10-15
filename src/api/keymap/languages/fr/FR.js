@@ -636,4 +636,4 @@ const frFRModifiedTables = [
   DualUseLayer8Tables,
 ];
 
-export { frFR as default, frFRModifiedTables };
+export { frFR, frFRModifiedTables };
