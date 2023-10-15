@@ -1020,60 +1020,39 @@ const jaJPLAltTable = withModifiers(table, "Alt +", "A+", 512);
 const jaJPRAltTable = withModifiers(table, "AltGr +", "AGr+", 1024);
 const jaJPShiftTable = withModifiers(tableWithoutModifier, "Shift +", "S+", 2048);
 const jaJPGuiTable = withModifiers(table, "Os+", "O+", 4096);
+
 // Double
 
 const jaJPCATable = withModifiers(table, "Control + Alt +", "C+A+", 768);
-
 const jaJPCAGrTable = withModifiers(table, "Control + AltGr +", "C+AGr+", 1280);
-
 const jaJPCSTable = withModifiers(table, "Control + Shift +", "C+S+", 2304);
-
 const jaJPCGTable = withModifiers(table, "Control + Os +", "C+O+", 4352);
-
 const jaJPAAGrTable = withModifiers(table, "Alt + AltGr +", "A+AGr+", 1536);
-
 const jaJPASTable = withModifiers(table, "Alt + Shift +", "A+S+", 2560);
-
 const jaJPAGTable = withModifiers(table, "Alt + Os +", "A+O+", 4608);
-
 const jaJPAGrSTable = withModifiers(table, "AltGr + Shift +", "AGr+S+", 3072);
-
 const jaJPAGrGTable = withModifiers(table, "AltGr + Os +", "AGr+O+", 5120);
-
 const jaJPSGTable = withModifiers(table, "Shift + Os +", "S+O+", 6144);
 
 // Triple
 
 const jaJPCAAGTable = withModifiers(table, "Control + Alt + AltGr +", "C+A+AGr+", 1792);
-
 const jaJPCASTable = withModifiers(table, "Meh +", "Meh+", 2816);
-
 const jaJPCAGTable = withModifiers(table, "Control + Alt + Os +", "C+A+O+", 4864);
-
 const jaJPCAGSTable = withModifiers(table, "Control + AltGr + Shift +", "C+AGr+S+", 3328);
-
 const jaJPCAGGTable = withModifiers(table, "Control + AltGr + Os +", "C+AGr+O+", 5376);
-
 const jaJPCSGTable = withModifiers(table, "Control + Shift + Os +", "C+S+O+", 6400);
-
 const jaJPAAGSTable = withModifiers(table, "Alt + AltGr + Shift +", "A+AGr+S+", 3584);
-
 const jaJPAAGGTable = withModifiers(table, "Alt + AltGr + Os +", "A+AGr+O+", 5632);
-
 const jaJPASGTable = withModifiers(table, "Alt + Shift + Os +", "A+S+O+", 6656);
-
 const jaJPAGSGTable = withModifiers(table, "AltGr + Shift + Os +", "AGr+S+O+", 7168);
 
 // Quad
 
 const jaJPCAAGrSTable = withModifiers(table, "Meh + AltGr +", "M+AGr+", 3840);
-
 const jaJPCAAGrGTable = withModifiers(table, "Control + Alt + AltGr + Os +", "C+A+AGr+O+", 5888);
-
 const jaJPAAGrSGTable = withModifiers(table, "Control + AltGr + Shift + Os +", "C+AGr+S+O+", 7424);
-
 const jaJPCAGrSGTable = withModifiers(table, "Alt + AltGr + Shift + Os +", "A+AGr+S+O+", 7680);
-
 const jaJPAllModTable = withModifiers(table, "Hyper + AltGr +", "H+AGr+", 7936);
 
 const DualUseCtrlTable = withModifiers(table, "Control /", "CTRL/", 49169);

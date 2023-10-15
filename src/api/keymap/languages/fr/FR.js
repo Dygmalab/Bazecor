@@ -516,60 +516,39 @@ const frFRLAltTable = withModifiers(table, "Alt +", "A+", 512);
 const frFRRAltTable = withModifiers(table, "AltGr +", "AGr+", 1024);
 const frFRShiftTable = withModifiers(tableWithoutModifier, "Shift +", "S+", 2048);
 const frFRGuiTable = withModifiers(table, "Os+", "O+", 4096);
+
 // Double
 
 const frFRCATable = withModifiers(table, "Control + Alt +", "C+A+", 768);
-
 const frFRCAGrTable = withModifiers(table, "Control + AltGr +", "C+AGr+", 1280);
-
 const frFRCSTable = withModifiers(table, "Control + Shift +", "C+S+", 2304);
-
 const frFRCGTable = withModifiers(table, "Control + Os +", "C+O+", 4352);
-
 const frFRAAGrTable = withModifiers(table, "Alt + AltGr +", "A+AGr+", 1536);
-
 const frFRASTable = withModifiers(table, "Alt + Shift +", "A+S+", 2560);
-
 const frFRAGTable = withModifiers(table, "Alt + Os +", "A+O+", 4608);
-
 const frFRAGrSTable = withModifiers(table, "AltGr + Shift +", "AGr+S+", 3072);
-
 const frFRAGrGTable = withModifiers(table, "AltGr + Os +", "AGr+O+", 5120);
-
 const frFRSGTable = withModifiers(table, "Shift + Os +", "S+O+", 6144);
 
 // Triple
 
 const frFRCAAGTable = withModifiers(table, "Control + Alt + AltGr +", "C+A+AGr+", 1792);
-
 const frFRCASTable = withModifiers(table, "Meh +", "Meh+", 2816);
-
 const frFRCAGTable = withModifiers(table, "Control + Alt + Os +", "C+A+O+", 4864);
-
 const frFRCAGSTable = withModifiers(table, "Control + AltGr + Shift +", "C+AGr+S+", 3328);
-
 const frFRCAGGTable = withModifiers(table, "Control + AltGr + Os +", "C+AGr+O+", 5376);
-
 const frFRCSGTable = withModifiers(table, "Control + Shift + Os +", "C+S+O+", 6400);
-
 const frFRAAGSTable = withModifiers(table, "Alt + AltGr + Shift +", "A+AGr+S+", 3584);
-
 const frFRAAGGTable = withModifiers(table, "Alt + AltGr + Os +", "A+AGr+O+", 5632);
-
 const frFRASGTable = withModifiers(table, "Alt + Shift + Os +", "A+S+O+", 6656);
-
 const frFRAGSGTable = withModifiers(table, "AltGr + Shift + Os +", "AGr+S+O+", 7168);
 
 // Quad
 
 const frFRCAAGrSTable = withModifiers(table, "Meh + AltGr +", "M+AGr+", 3840);
-
 const frFRCAAGrGTable = withModifiers(table, "Control + Alt + AltGr + Os +", "C+A+AGr+O+", 5888);
-
 const frFRCAGrSGTable = withModifiers(table, "Control + AltGr + Shift + Os +", "C+AGr+S+O+", 7424);
-
 const frFRAAGrSGTable = withModifiers(table, "Alt + AltGr + Shift + Os +", "A+AGr+S+O+", 7680);
-
 const frFRAllModTable = withModifiers(table, "Hyper + AltGr +", "H+AGr+", 7936);
 
 const DualUseCtrlTable = withModifiers(table, "Control /", "CTRL/", 49169);
