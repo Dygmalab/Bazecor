@@ -29,7 +29,7 @@
  *
  * (... more modifiers ...)
  *
- * For your convinience you can do; ModifierCodes.SHIFT + 53, please see usage in en-GB (British English).
+ * For your convenience you can do; ModifierCodes.SHIFT + 53, please see usage in en-GB (British English).
  *
  * ANSI
  * .------┬------┬------┬------┬------┬------┬------┬------┬------┬------┬------┬------┬------┬--------.
