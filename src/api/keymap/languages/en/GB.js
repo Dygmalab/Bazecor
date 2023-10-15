@@ -18,11 +18,7 @@
  * Is an Array of objects of values that have to be modified.
  */
 
-import { withModifiers } from "../../db/utils";
-
-const altCtrlBase = 768;
-const altGrBase = 1024;
-const shiftBase = 2048;
+import { withModifiers, ModifierCodes } from "../../db/utils";
 
 const enGBLetters = [];
 
@@ -48,39 +44,39 @@ const shiftModifier = {
   keys: [
     // R4
     {
-      code: shiftBase + 53,
+      code: ModifierCodes.SHIFT + 53,
       labels: {
         primary: "¬",
       },
     },
     {
-      code: shiftBase + 31,
+      code: ModifierCodes.SHIFT + 31,
       labels: {
         primary: '"',
       },
     },
     {
-      code: shiftBase + 32,
+      code: ModifierCodes.SHIFT + 32,
       labels: {
         primary: "£",
       },
     },
     // R2
     {
-      code: shiftBase + 52,
+      code: ModifierCodes.SHIFT + 52,
       labels: {
         primary: "@",
       },
     },
     {
-      code: shiftBase + 49,
+      code: ModifierCodes.SHIFT + 49,
       labels: {
         primary: "~",
       },
     },
     // R1
     {
-      code: shiftBase + 100,
+      code: ModifierCodes.SHIFT + 100,
       labels: {
         primary: "|",
       },
@@ -93,45 +89,45 @@ const altCtrlModifier = {
   keys: [
     // R4
     {
-      code: altCtrlBase + 53,
+      code: ModifierCodes.CONTROL_ALT + 53,
       labels: {
         primary: "¦",
       },
     },
     {
-      code: altCtrlBase + 33,
+      code: ModifierCodes.CONTROL_ALT + 33,
       labels: {
         primary: "€",
       },
     },
     // R3
     {
-      code: altCtrlBase + 8,
+      code: ModifierCodes.CONTROL_ALT + 8,
       labels: {
         primary: "É",
       },
     },
     {
-      code: altCtrlBase + 24,
+      code: ModifierCodes.CONTROL_ALT + 24,
       labels: {
         primary: "Ú",
       },
     },
     {
-      code: altCtrlBase + 12,
+      code: ModifierCodes.CONTROL_ALT + 12,
       labels: {
         primary: "Í",
       },
     },
     {
-      code: altCtrlBase + 18,
+      code: ModifierCodes.CONTROL_ALT + 18,
       labels: {
         primary: "Ó",
       },
     },
     // R2
     {
-      code: altCtrlBase + 4,
+      code: ModifierCodes.CONTROL_ALT + 4,
       labels: {
         primary: "Á",
       },
@@ -144,45 +140,45 @@ const altGrModifier = {
   keys: [
     // R4
     {
-      code: altGrBase + 53,
+      code: ModifierCodes.ALTGR + 53,
       labels: {
         primary: "¦",
       },
     },
     {
-      code: altGrBase + 33,
+      code: ModifierCodes.ALTGR + 33,
       labels: {
         primary: "€",
       },
     },
     // R3
     {
-      code: altGrBase + 8,
+      code: ModifierCodes.ALTGR + 8,
       labels: {
         primary: "É",
       },
     },
     {
-      code: altGrBase + 24,
+      code: ModifierCodes.ALTGR + 24,
       labels: {
         primary: "Ú",
       },
     },
     {
-      code: altGrBase + 12,
+      code: ModifierCodes.ALTGR + 12,
       labels: {
         primary: "Í",
       },
     },
     {
-      code: altGrBase + 18,
+      code: ModifierCodes.ALTGR + 18,
       labels: {
         primary: "Ó",
       },
     },
     // R2
     {
-      code: altGrBase + 4,
+      code: ModifierCodes.ALTGR + 4,
       labels: {
         primary: "Á",
       },
