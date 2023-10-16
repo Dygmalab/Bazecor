@@ -12,7 +12,7 @@ import { useNavigate } from "react-router-dom";
 
 const CardWrapper = Styled.div`
   display: flex;
-  width: clamp(320px, 40%, 520px);
+  //width: clamp(340px, 60%, 520px);
   &.card {
     padding: 0;
     border-radius: 24px;
@@ -27,11 +27,31 @@ const CardWrapper = Styled.div`
   &.card-connected {
     border: 2px solid ${({ theme }) => theme.colors.brandSuccess};
   }
+  &.card-offline {
+    position: relative;
+    isolation: isolate;
+    &:before {
+      position: absolute;
+      content: "";
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(180deg, rgba(48, 49, 73, 0.60) 1.33%, rgba(48, 57, 73, 0.00) 51.04%, rgba(48, 57, 73, 0.35) 100%), rgba(48, 51, 73, 0.60);
+    }
+    .device-preview {
+      position: relative;
+      z-index: -1;
+    }
+    .device-status {
+      color: ${({ theme }) => theme.colors.brandDangerLighter};
+      font-size: 0.8em;
+    }
+  }
   .card-header {
     position: relative;
     background: transparent;
     border: none;
     padding-top: 32px;
+    min-height: 140px;
     h3 {
       font-size: 1.5em;
       margin: 0 0 0.5em 0;
@@ -70,7 +90,7 @@ const CardWrapper = Styled.div`
   }
   .button {
     margin: 0;
-    height: 58px;
+    height: 52px;
     &:focus, &:focus-within {
       box-shadow: none;
     }
@@ -79,6 +99,7 @@ const CardWrapper = Styled.div`
     background: transparent;
     border: none;
     padding: 2px;
+    margin-top: auto;
     .card-footer--inner {
       display: flex;
       justify-content: space-between;
@@ -90,8 +111,8 @@ const CardWrapper = Styled.div`
     }
   }
   .buttonToggler.dropdown-toggle.btn.btn-primary {
-    width: 58px;
-    height: 58px;
+    width: 52px;
+    height: 52px;
     &:hover {
       background-color: rgba(240, 242, 244, 0.05);
     }
@@ -108,23 +129,41 @@ const CardDevice = ({ device }) => {
     }
   };
   return (
-    <CardWrapper className={`card card-device ${isConnected ? "card-connected" : "card-disconnected"}`}>
+    <CardWrapper
+      className={`card card-device ${isConnected ? "card-connected" : "card-disconnected"} ${
+        device.available ? "card-online" : "card-offline"
+      }`}
+    >
       <div className="card-header">
-        <Heading headingLevel={3}>Captain Pinky Killer</Heading>
-        <Heading headingLevel={4}>Dygma Raise ANSI</Heading>
-        <Heading headingLevel={5}>/dev/tty.usbmodem11301</Heading>
+        {device.name ? (
+          <>
+            <Heading headingLevel={3}>{device.name}</Heading>
+            <Heading headingLevel={4}>
+              {device.device.info.displayName} {device.device.info.product === "Raise" ? device.device.info.keyboardType : null}
+            </Heading>
+          </>
+        ) : (
+          <Heading headingLevel={3}>
+            {device.device.info.displayName} {device.device.info.product === "Raise" ? device.device.info.keyboardType : null}
+          </Heading>
+        )}
+        <Heading headingLevel={5}>{device.path}</Heading>
         <span className={`bullet-connect ${isConnected ? "connected" : "disconnected"}`}>&nbsp;</span>
       </div>
-      <DevicePreview deviceName="Raise" isConnected={isConnected} />
+      <DevicePreview deviceName={device.device.info.displayName} isConnected={isConnected} />
       <div className="card-footer">
         <div className="card-footer--inner">
-          <button
-            type="button"
-            onClick={() => setIsConnected(!isConnected)}
-            className={`button ${isConnected ? "outline transp-bg" : "primary"}`}
-          >
-            {isConnected ? "Disconnect from Bazecor" : "Connect"}
-          </button>
+          {device.available ? (
+            <button
+              type="button"
+              onClick={() => setIsConnected(!isConnected)}
+              className={`button ${isConnected ? "outline transp-bg" : "primary"}`}
+            >
+              {isConnected ? "Disconnect from Bazecor" : "Connect"}
+            </button>
+          ) : (
+            <span className="device-status">Offline</span>
+          )}
           <Dropdown>
             <Dropdown.Toggle className="buttonToggler">
               <div className="buttonTogglerInner">

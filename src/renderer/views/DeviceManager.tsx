@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Styled from "styled-components";
 
 import { IconDragDots, IconBugWarning } from "@Renderer/component/Icon";
@@ -7,8 +7,22 @@ import { CardDevice } from "@Renderer/component/Card";
 import Title from "@Renderer/component/Title";
 import { Container } from "react-bootstrap";
 
-const DeviceManagerWrapper = Styled.div`
+import { ReOrderDevicesModal } from "@Renderer/component/Modal";
 
+const DeviceManagerWrapper = Styled.div`
+  height: 100%;
+  .container-fluid {
+    height: 100%;
+  }
+  .view-wrapper {
+    display: flex;
+    flex-direction: column;
+    height: inherit;
+    > div {
+      width: 100%;
+      flex: initial;
+    }
+  }
 `;
 
 const FilterHeaderWrapper = Styled.div`
@@ -73,77 +87,213 @@ const FilterHeaderWrapper = Styled.div`
 
 const DevicesWrapper = Styled.div`
   display: flex;
-  flex-wrap: nowrap;
+  grid-gap: 16px;
+  position: relative;
+  .devices-scroll {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(340px, 1fr));
+    grid-gap: 16px; 
+  }
 `;
-
-const HelpWrapper = Styled.div`
+const HelpMessage = Styled.div`
+  width: 100%; 
   display: flex;
-  flex-wrap: nowrap;
-  grid-gap: 8px;
-  max-width: 224px;
-  margin-top: auto;
   justify-content: flex-end;
-  svg {
-    flex: 0 0 24px;
-  }
-  h4 {
-    font-size: 1em;
-  }
-  p {
-    color: ${({ theme }) => theme.colors.gray200};
-    font-size: 0.825em;
+  margin-top: auto;
+  .help-wrapper {
+    display: flex;
+    flex-wrap: nowrap;
+    grid-gap: 8px;
+    max-width: 224px;
+    h4, svg, p {
+      transition: 300ms ease-in-out color;
+    }
+    svg {
+      flex: 0 0 24px;
+      color: ${({ theme }) => theme.colors.gray25};
+    }
+    h4 {
+      font-size: 1em;
+      color: ${({ theme }) => theme.colors.gray25};
+    }
+    p {
+      color: ${({ theme }) => theme.colors.gray200};
+      font-size: 0.825em;
+    }
+    &:hover {
+      text-decoration: none;
+      h4, svg {
+        color: ${({ theme }) => theme.colors.purple100};
+      }
+      p {
+        color: ${({ theme }) => theme.colors.gray50};
+      }
+    }
   }
 `;
 
+const devices = [
+  {
+    name: "Captain Pinky Killer",
+    available: true,
+    path: "/dev/tty.usbmodem1301",
+    file: false,
+    device: {
+      info: {
+        displayName: "Dygma Raise ANSI",
+        keyboardType: "ANSI",
+        product: "Raise",
+      },
+    },
+    serialNumber: "BDAA4DC750535254352E3120FF15122ARaise",
+  },
+  {
+    name: "Keeb/Office",
+    available: true,
+    path: "/dev/tty.usbmodem2201",
+    file: false,
+    device: {
+      info: {
+        displayName: "Dygma Defy",
+        keyboardType: "Wireless",
+        product: "Defy",
+      },
+    },
+    serialNumber: "BDAA4DC750535254352E3120FF15122ADefyA",
+  },
+  {
+    name: "Keeb/Home",
+    available: false,
+    path: "/dev/tty.usbmodem2201",
+    file: false,
+    device: {
+      info: {
+        displayName: "Dygma Defy",
+        keyboardType: "Wireless",
+        product: "Defy",
+      },
+    },
+    serialNumber: "BDAA4DC750535254352E3120FF15122ADefyB",
+  },
+  {
+    path: "/backup/Defy",
+    available: true,
+    file: true,
+    device: {
+      info: {
+        displayName: "Dygma Defy",
+        keyboardType: "Wireless",
+        product: "Defy",
+      },
+    },
+    serialNumber: "BDAA4DC750535254352E3120FF15122ADefyVirtual",
+  },
+];
 const DeviceManager = ({ titleElement, device }) => {
-  console.log("Inside Device Manager", device);
+  const [listDevices, setListDevices] = useState(devices);
+  const [activeTab, setActiveTab] = useState<"all" | boolean>("all");
+  const [showModal, setShowModal] = useState(false);
+
+  const applyFilters = term => {
+    setActiveTab(term);
+    switch (term) {
+      case true:
+        setListDevices(devices.filter(deviceItem => deviceItem.available === true));
+        break;
+      case false:
+        setListDevices(devices.filter(deviceItem => deviceItem.available === false));
+        break;
+      default:
+        setListDevices(devices);
+    }
+  };
+
+  const addVirtualDevices = (
+    <button className="sm button outline transp-bg iconOnNone" type="button" onClick={() => console.log("Add virtual device")}>
+      Add virtual device
+    </button>
+  );
+  const scanDevices = (
+    <button className="sm button primary iconOnNone" type="button" onClick={() => console.log("Scan devices")}>
+      Scan devices
+    </button>
+  );
+
   return (
     <DeviceManagerWrapper>
       <Container fluid>
-        <PageHeader text="Device Manager" />
-        <FilterHeaderWrapper>
-          <div className="filter-header">
-            <h3 className="filter-title">
-              My devices <sup>4</sup>
-            </h3>
-            <div className="filter-header--tabs">
-              <ul>
-                <li>
-                  <button type="button" className="tab tab-active">
-                    All
-                  </button>
-                </li>
-                <li>
-                  <button type="button" className="tab">
-                    Online
-                  </button>
-                </li>
-                <li>
-                  <button type="button" className="tab">
-                    Offline
-                  </button>
-                </li>
-              </ul>
+        <div className="view-wrapper">
+          <PageHeader text="Device Manager" primaryButton={scanDevices} secondaryButton={addVirtualDevices} />
+          <FilterHeaderWrapper>
+            <div className="filter-header">
+              <h3 className="filter-title">
+                My devices <sup>{devices.length}</sup>
+              </h3>
+              <div className="filter-header--tabs">
+                <ul>
+                  <li>
+                    <button
+                      type="button"
+                      className={`tab ${activeTab === "all" ? "tab-active" : ""}`}
+                      onClick={() => applyFilters("all")}
+                    >
+                      All
+                    </button>
+                  </li>
+                  <li>
+                    <button
+                      type="button"
+                      className={`tab ${activeTab === true ? "tab-active" : ""}`}
+                      onClick={() => applyFilters(true)}
+                    >
+                      Online
+                    </button>
+                  </li>
+                  <li>
+                    <button
+                      type="button"
+                      className={`tab ${activeTab === false ? "tab-active" : ""}`}
+                      onClick={() => applyFilters(false)}
+                    >
+                      Offline
+                    </button>
+                  </li>
+                </ul>
+              </div>
             </div>
-          </div>
-          <div className="filter-header--actions">
-            <a href="#" className="modal-button--trigger">
-              <IconDragDots />
-              Re-order list
+            <div className="filter-header--actions">
+              <button type="button" onClick={() => setShowModal(true)} className="modal-button--trigger">
+                <IconDragDots />
+                Re-order list
+              </button>
+            </div>
+          </FilterHeaderWrapper>
+          <DevicesWrapper>
+            <div className="devices-container">
+              <div className="devices-scroll">
+                {listDevices.map(item => (
+                  <CardDevice key={item.serialNumber} device={item} />
+                ))}
+              </div>
+            </div>
+          </DevicesWrapper>
+          <HelpMessage>
+            <a href="https://support.dygma.com/hc/en-us/requests/new" className="help-wrapper">
+              <IconBugWarning />
+              <div className="help-warning--content">
+                <Title text="Need help?" headingLevel={4} />
+                <p>Whether it&#39;s a bug or any other issue, we are here to help you!</p>
+              </div>
             </a>
-          </div>
-        </FilterHeaderWrapper>
-        <DevicesWrapper>
-          <CardDevice device={device} />
-        </DevicesWrapper>
-        <HelpWrapper>
-          <IconBugWarning />
-          <div className="help-warning--content">
-            <Title text="Need help?" headingLevel={4} />
-            <p>Whether it&#39;s a bug or any other issue, we are here to help you!</p>
-          </div>
-        </HelpWrapper>
+          </HelpMessage>
+        </div>
       </Container>
+      <ReOrderDevicesModal
+        show={showModal}
+        toggleShow={() => setShowModal(false)}
+        devices={devices}
+        handleSave={() => console.log("Save new order!")}
+      />
     </DeviceManagerWrapper>
   );
 };

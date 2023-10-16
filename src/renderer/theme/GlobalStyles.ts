@@ -1985,7 +1985,9 @@ div.card.card-preferences .card-body {
 .pageHeader .savingButtons {
   display: flex;
   flex-wrap: nowrap;
-  
+  button {
+    margin-top: 0;
+  }
 }
 .pageHeader .itemListelector .dropdown-menu {
   max-height: 80vh;

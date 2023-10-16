@@ -12,4 +12,6 @@ export interface PageHeaderType {
   destroyContext?: unknown | undefined;
   inContext?: boolean;
   isSaving?: boolean;
+  primaryButton?: React.ReactNode;
+  secondaryButton?: React.ReactNode;
 }

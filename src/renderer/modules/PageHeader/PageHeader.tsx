@@ -108,6 +108,8 @@ function PageHeader(props: PageHeaderType) {
     destroyContext,
     inContext,
     isSaving,
+    primaryButton,
+    secondaryButton,
   } = props;
   return (
     <Style className={`${style === "pageHeaderFlatBottom" ? "pageHeaderSticky" : ""}`}>
@@ -122,6 +124,12 @@ function PageHeader(props: PageHeaderType) {
           ) : (
             ""
           )}
+          {secondaryButton || primaryButton ? (
+            <div className="savingButtons">
+              {secondaryButton || ""}
+              {primaryButton || ""}
+            </div>
+          ) : null}
         </div>
       </div>
       {isColorActive ? colorEditor : ""}
