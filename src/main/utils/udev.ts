@@ -3,7 +3,7 @@ import fs from "fs";
 import * as sudo from "sudo-prompt";
 
 const udevRulesToWrite =
-  'SUBSYSTEMS=="usb", ATTRS{idVendor}=="1209", ATTRS{idProduct}=="2201", GROUP="users", MODE="0666"\nSUBSYSTEMS=="usb", ATTRS{idVendor}=="1209", ATTRS{idProduct}=="2200", GROUP="users", MODE="0666"\nSUBSYSTEMS=="usb", ATTRS{idVendor}=="35EF", MODE="0666"';
+  'SUBSYSTEMS=="usb", ATTRS{idVendor}=="1209", ATTRS{idProduct}=="2201", MODE="0666"\nSUBSYSTEMS=="usb", ATTRS{idVendor}=="1209", ATTRS{idProduct}=="2200", MODE="0666"\nSUBSYSTEMS=="usb", ATTRS{idVendor}=="35EF", MODE="0666"\nKERNEL=="hidraw*", ATTRS{idVendor}=="35EF", MODE="0666"';
 
 const filename = "/etc/udev/rules.d/10-dygma.rules";
 
