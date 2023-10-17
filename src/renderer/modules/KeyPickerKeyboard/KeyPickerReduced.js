@@ -49,6 +49,7 @@ import ES from "@Renderer/modules/KeyPickerKeyboard/ES.json";
 import ENi from "@Renderer/modules/KeyPickerKeyboard/ENi.json";
 import ENa from "@Renderer/modules/KeyPickerKeyboard/ENa.json";
 import GR from "@Renderer/modules/KeyPickerKeyboard/GR.json";
+import UK from "@Renderer/modules/KeyPickerKeyboard/UK.json";
 import FR from "@Renderer/modules/KeyPickerKeyboard/FR.json";
 import FRBEPO from "@Renderer/modules/KeyPickerKeyboard/FR-BEPO.json";
 import SW from "@Renderer/modules/KeyPickerKeyboard/SW.json";
@@ -310,6 +311,7 @@ class KeyPickerReduced extends Component {
 
     const liso = {
       english: ENi,
+      british: UK,
       spanish: ES,
       german: GR,
       french: FR,
