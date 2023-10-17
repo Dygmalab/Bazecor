@@ -242,13 +242,13 @@ const DualUseLayer8Tables = withModifiers(table, "Layer #8 /", "L#8/", 53010);
 
 const britishModifiedTables = [
   shiftModifierBritish,
-  altGRBritish,
   britishCtrlTable,
   britishLAltTable,
   britishRAltTable,
   britishShiftTable,
   britishGuiTable,
   britishCATable,
+  altGRBritish,
   britishCAGrTable,
   britishCSTable,
   britishCGTable,
