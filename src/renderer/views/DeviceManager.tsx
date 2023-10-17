@@ -188,6 +188,19 @@ const devices = [
     },
     serialNumber: "BDAA4DC750535254352E3120FF15122ADefyVirtual",
   },
+  {
+    path: "/backup/Defy",
+    available: true,
+    file: true,
+    device: {
+      info: {
+        displayName: "Dygma Defy",
+        keyboardType: "Wireless",
+        product: "Defy",
+      },
+    },
+    serialNumber: "BDAA4DC750535254352E3120FF15122ADefyVirtual2",
+  },
 ];
 const DeviceManager = ({ titleElement, device }) => {
   const [listDevices, setListDevices] = useState(devices);
@@ -288,6 +301,7 @@ const DeviceManager = ({ titleElement, device }) => {
           </HelpMessage>
         </div>
       </Container>
+
       <ReOrderDevicesModal
         show={showModal}
         toggleShow={() => setShowModal(false)}

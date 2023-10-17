@@ -981,6 +981,10 @@ div.card.card-preferences .card-body {
   border-radius: 6px;
   background-color: ${({ theme }) => theme.styles.modal.background};
 }
+.modal.with-drag .modal-content {
+  transform: none; //Fix drap position in chrome
+  margin-left: 64px;
+}
 .modal .modal-header {
   border: none;
   padding: 32px 32px 0 32px;

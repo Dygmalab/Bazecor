@@ -11,19 +11,17 @@ const DragListWrapper = Styled.div`
   position: relative;
   .droppable-area {
     display: flex;
+    grid-gap: 8px;
     padding: 8px;
     overflow: auto;
     position: relative;
     .draggable-item {
-      position: relative;
-      width: 35%;
+      width: 175px;
       padding: 16px;
       border-radius: 8px;
       background-color: yellow;
-      left: auto !important; top: auto !important;
     }
   }
-  [data-rbd-draggable-id] {  }
 `;
 
 const ReOrderDevicesModal = ({ show, toggleShow, handleSave, devices }) => {
@@ -36,9 +34,17 @@ const ReOrderDevicesModal = ({ show, toggleShow, handleSave, devices }) => {
     setDevicesList(items);
   };
   console.log(devices);
+
   return (
-    <div>
-      <Modal size="lg" show={show} onHide={toggleShow} aria-labelledby="contained-modal-title-vcenter" centered>
+    <>
+      <Modal
+        size="lg"
+        show={show}
+        onHide={toggleShow}
+        aria-labelledby="contained-modal-title-vcenter"
+        className="with-drag with-scroll"
+        centered
+      >
         <Modal.Header closeButton>
           <Modal.Title>Re-order list</Modal.Title>
         </Modal.Header>
@@ -50,12 +56,12 @@ const ReOrderDevicesModal = ({ show, toggleShow, handleSave, devices }) => {
                   <div className="droppable-area" {...provided.droppableProps} ref={provided.innerRef}>
                     {devicesList.map((device, index) => (
                       <Draggable key={device.serialNumber} draggableId={device.serialNumber} index={index}>
-                        {provided => (
+                        {(dragProvided, dragSnapshot) => (
                           <div
-                            className="draggable-item"
-                            {...provided.draggableProps}
-                            {...provided.dragHandleProps}
-                            ref={provided.innerRef}
+                            className={`draggable-item ${dragSnapshot.isDragging ? "dragging" : ""}`}
+                            {...dragProvided.draggableProps}
+                            {...dragProvided.dragHandleProps}
+                            ref={dragProvided.innerRef}
                           >
                             {device.name ? (
                               <>
@@ -87,7 +93,7 @@ const ReOrderDevicesModal = ({ show, toggleShow, handleSave, devices }) => {
           <RegularButton buttonText="Apply changes" styles="outline gradient" size="sm" onClick={handleSave} />
         </Modal.Footer>
       </Modal>
-    </div>
+    </>
   );
 };
 
