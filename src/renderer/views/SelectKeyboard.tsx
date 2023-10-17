@@ -29,6 +29,7 @@ import Modal from "react-bootstrap/Modal";
 
 import Dropdown from "react-bootstrap/Dropdown";
 import { USBDevice, USBDeviceDescriptor, NonSerialDeviceDescriptor } from "@Renderer/types/devices";
+import { Banner } from "@Renderer/component/Banner";
 import { PageHeader } from "../modules/PageHeader";
 import { RegularButton } from "../component/Button";
 
@@ -40,7 +41,7 @@ import i18n from "../i18n";
 import NeuronConnection from "../modules/NeuronConnection";
 import ToastMessage from "../component/ToastMessage";
 
-import { IconArrowRight, IconCloudDownload, IconUpload, IconKeyboard } from "../component/Icon";
+import { IconArrowRight, IconCloudDownload, IconUpload, IconKeyboard, IconBluetooth } from "../component/Icon";
 import Title from "../component/Title";
 import Store from "../utils/Store";
 
@@ -600,6 +601,16 @@ const SelectKeyboard: React.FC<SelectKeyboardProps> = (props): JSX.Element => {
             virtualDevice={focus.device}
             connectedDevice={connectedDevice}
           />
+          <div className="card-alert" style={{ marginTop: "16px" }}>
+            <Banner icon={<IconBluetooth />} variant="warning">
+              <Title text="Defy owners!" headingLevel={5} />
+              <p style={{ maxWidth: "610px" }}>
+                To configure your keyboard using Bazecor, you must connect your keyboard either{" "}
+                <strong>through cables or RF (Radio Frequency).</strong> This is necessary to establish the initial connection and
+                settings.
+              </p>
+            </Banner>
+          </div>
           <div className="cardButton-wrapper">
             <div className="cardButton">
               <RegularButton
