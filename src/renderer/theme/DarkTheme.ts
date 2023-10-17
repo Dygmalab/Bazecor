@@ -158,6 +158,12 @@ const Dark: DefaultTheme = {
       subtleColor: Tokens.colors.gray100,
       subtleBGColor: Tokens.colors.gray700,
     },
+    banner: {
+      backgroundWarning:
+        "linear-gradient(0deg, rgba(254, 202, 87, 0.08) 0%, rgba(254, 202, 87, 0.08) 100%), rgba(63, 66, 90, 0.02)",
+      textWarning: Tokens.colors.gray100,
+      svgBackgroundWarning: "rgba(254, 202, 87, 0.15)",
+    },
     batteryIndicator: {
       pileBackgroundColor: Tokens.colors.gray800,
       pileBackgroundSavingMode: settingColorOpacity(Tokens.colors.brandWarning, 0.15),
