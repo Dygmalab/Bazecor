@@ -59,14 +59,6 @@ const createWindow = () => {
     // You can take further actions as needed, such as restarting the renderer process or closing the window.
   });
 
-  app.on("render-process-gone", (event, webContents, details) => {
-    dialog.showErrorBox("Render process gone; %o", details.reason);
-  });
-
-  app.on("child-process-gone", (event, details) => {
-    dialog.showErrorBox("Child process gone; %o", details.reason);
-  });
-
   Window.getInstance(); // init Windows manager
   Window.setWindow(mainWindow);
   if (!app.isPackaged) {

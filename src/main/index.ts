@@ -1,4 +1,4 @@
-import { app, BrowserWindow, Menu } from "electron";
+import { app, BrowserWindow, Menu, dialog } from "electron";
 // import electronUpdater from "update-electron-app";
 import createWindow from "./createWindow";
 import { setTheme } from "./setup/theme";
@@ -11,13 +11,32 @@ import { removeIPCs } from "./setup/configureIPCs";
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 // eslint-disable-next-line global-require
-if (require("electron-squirrel-startup")) {
+/*if (require("electron-squirrel-startup")) {
   app.quit();
-}
+}*/
 
 if (process.platform === "linux") {
   app.commandLine.appendSwitch("no-sandbox");
 }
+app.on("will-quit", event => {
+  event.preventDefault();
+  dialog.showErrorBox("Will quit", "will quit");
+});
+
+app.on("before-quit", event => {
+  event.preventDefault();
+  dialog.showErrorBox("Before quit", "Before quit");
+});
+
+app.on("render-process-gone", (event, webContents, details) => {
+  event.preventDefault();
+  dialog.showErrorBox("Render process gone; %o", details.reason);
+});
+
+app.on("child-process-gone", (event, details) => {
+  event.preventDefault();
+  dialog.showErrorBox("Child process gone; %o", details.reason);
+});
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
@@ -35,7 +54,9 @@ app.on("ready", async () => {
 // Quit when all windows are closed, except on macOS. There, it's common
 // for applications and their menu bar to stay active until the user quits
 // explicitly with Cmd + Q.
-app.on("window-all-closed", () => {
+app.on("window-all-closed", (event: any) => {
+  event.preventDefault();
+  dialog.showErrorBox("Windows all closed", "windows all closed");
   removeUSBListeners();
   if (process.platform !== "darwin") {
     app.quit();
