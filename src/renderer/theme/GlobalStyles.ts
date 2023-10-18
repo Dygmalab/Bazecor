@@ -133,6 +133,8 @@ const GlobalStyles = createGlobalStyle<{ theme: DefaultTheme }>`
     cursor: pointer;
     background-color: ${({ theme }) => theme.colors.button.background};
     color: #FFFFFF;
+    font-family: ${({ theme }) => theme.font};
+    font-weight: 600;
   }
 
 
@@ -984,6 +986,9 @@ div.card.card-preferences .card-body {
 .modal.with-drag .modal-content {
   transform: none; //Fix drap position in chrome
   margin-left: 64px;
+}
+.modal.with-drag .modal-body {
+  padding: 24px 0;
 }
 .modal .modal-header {
   border: none;

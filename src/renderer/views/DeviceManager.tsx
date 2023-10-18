@@ -55,8 +55,10 @@ const FilterHeaderWrapper = Styled.div`
   grid-gap: 8px;
   font-size: 0.8em;
   transition: 300ms ease-in-out color;
+  padding: 0;
+  background-color: transparent;
   &:hover {
-    color: ${({ theme }) => theme.colors.purple300};
+    color: ${({ theme }) => theme.colors.purple100};
   }
 }
  .filter-header--tabs ul {
@@ -132,7 +134,7 @@ const HelpMessage = Styled.div`
   }
 `;
 
-const devices = [
+const savedDevicesList = [
   {
     name: "Captain Pinky Killer",
     available: true,
@@ -203,11 +205,11 @@ const devices = [
   },
 ];
 const DeviceManager = ({ titleElement, device }) => {
-  const [listDevices, setListDevices] = useState(devices);
+  const [listDevices, setListDevices] = useState(savedDevicesList);
   const [activeTab, setActiveTab] = useState<"all" | boolean>("all");
   const [showModal, setShowModal] = useState(false);
 
-  const applyFilters = term => {
+  const applyFilters = (term, devices) => {
     setActiveTab(term);
     switch (term) {
       case true:
@@ -232,6 +234,14 @@ const DeviceManager = ({ titleElement, device }) => {
     </button>
   );
 
+  const reOrderList = newList => {
+    console.log("Updated");
+    console.log("Newlist", newList);
+    setListDevices(newList);
+    applyFilters("all", newList);
+    setShowModal(false);
+  };
+
   return (
     <DeviceManagerWrapper>
       <Container fluid>
@@ -240,7 +250,7 @@ const DeviceManager = ({ titleElement, device }) => {
           <FilterHeaderWrapper>
             <div className="filter-header">
               <h3 className="filter-title">
-                My devices <sup>{devices.length}</sup>
+                My devices <sup>{listDevices.length}</sup>
               </h3>
               <div className="filter-header--tabs">
                 <ul>
@@ -248,7 +258,7 @@ const DeviceManager = ({ titleElement, device }) => {
                     <button
                       type="button"
                       className={`tab ${activeTab === "all" ? "tab-active" : ""}`}
-                      onClick={() => applyFilters("all")}
+                      onClick={() => applyFilters("all", listDevices)}
                     >
                       All
                     </button>
@@ -257,7 +267,7 @@ const DeviceManager = ({ titleElement, device }) => {
                     <button
                       type="button"
                       className={`tab ${activeTab === true ? "tab-active" : ""}`}
-                      onClick={() => applyFilters(true)}
+                      onClick={() => applyFilters(true, listDevices)}
                     >
                       Online
                     </button>
@@ -266,7 +276,7 @@ const DeviceManager = ({ titleElement, device }) => {
                     <button
                       type="button"
                       className={`tab ${activeTab === false ? "tab-active" : ""}`}
-                      onClick={() => applyFilters(false)}
+                      onClick={() => applyFilters(false, listDevices)}
                     >
                       Offline
                     </button>
@@ -305,8 +315,8 @@ const DeviceManager = ({ titleElement, device }) => {
       <ReOrderDevicesModal
         show={showModal}
         toggleShow={() => setShowModal(false)}
-        devices={devices}
-        handleSave={() => console.log("Save new order!")}
+        devices={listDevices}
+        handleSave={reOrderList}
       />
     </DeviceManagerWrapper>
   );
