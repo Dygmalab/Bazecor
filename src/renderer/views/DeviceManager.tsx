@@ -209,20 +209,6 @@ const DeviceManager = ({ titleElement, device }) => {
   const [activeTab, setActiveTab] = useState<"all" | boolean>("all");
   const [showModal, setShowModal] = useState(false);
 
-  const applyFilters = (term, devices) => {
-    setActiveTab(term);
-    switch (term) {
-      case true:
-        setListDevices(devices.filter(deviceItem => deviceItem.available === true));
-        break;
-      case false:
-        setListDevices(devices.filter(deviceItem => deviceItem.available === false));
-        break;
-      default:
-        setListDevices(devices);
-    }
-  };
-
   const addVirtualDevices = (
     <button className="sm button outline transp-bg iconOnNone" type="button" onClick={() => console.log("Add virtual device")}>
       Add virtual device
@@ -235,10 +221,8 @@ const DeviceManager = ({ titleElement, device }) => {
   );
 
   const reOrderList = newList => {
-    console.log("Updated");
-    console.log("Newlist", newList);
     setListDevices(newList);
-    applyFilters("all", newList);
+    setActiveTab("all");
     setShowModal(false);
   };
 
@@ -258,7 +242,7 @@ const DeviceManager = ({ titleElement, device }) => {
                     <button
                       type="button"
                       className={`tab ${activeTab === "all" ? "tab-active" : ""}`}
-                      onClick={() => applyFilters("all", listDevices)}
+                      onClick={() => setActiveTab("all")}
                     >
                       All
                     </button>
@@ -267,7 +251,7 @@ const DeviceManager = ({ titleElement, device }) => {
                     <button
                       type="button"
                       className={`tab ${activeTab === true ? "tab-active" : ""}`}
-                      onClick={() => applyFilters(true, listDevices)}
+                      onClick={() => setActiveTab(true)}
                     >
                       Online
                     </button>
@@ -276,7 +260,7 @@ const DeviceManager = ({ titleElement, device }) => {
                     <button
                       type="button"
                       className={`tab ${activeTab === false ? "tab-active" : ""}`}
-                      onClick={() => applyFilters(false, listDevices)}
+                      onClick={() => setActiveTab(false)}
                     >
                       Offline
                     </button>
@@ -295,7 +279,7 @@ const DeviceManager = ({ titleElement, device }) => {
             <div className="devices-container">
               <div className="devices-scroll">
                 {listDevices.map(item => (
-                  <CardDevice key={item.serialNumber} device={item} />
+                  <CardDevice key={item.serialNumber} device={item} filterBy={activeTab} />
                 ))}
               </div>
             </div>

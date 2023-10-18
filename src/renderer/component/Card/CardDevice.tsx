@@ -117,10 +117,22 @@ const CardWrapper = Styled.div`
       background-color: rgba(240, 242, 244, 0.05);
     }
   }
+  &.card-filter-on,
+  &.card-filter-on.card-offline.show-online,
+  &.card-filter-on.card-online.show-offline {
+    display: none;
+  }
+  &.card-filter-on.card-online {
+    display: flex;
+  }
+  &.card-filter-on.card-offline {
+    display: flex;
+  }
 `;
 
-const CardDevice = ({ device }) => {
+const CardDevice = ({ device, filterBy }) => {
   const [isConnected, setIsConnected] = useState(false);
+
   const navigate = useNavigate();
 
   const handlePreferences = () => {
@@ -128,11 +140,24 @@ const CardDevice = ({ device }) => {
       navigate("/preferences");
     }
   };
+
+  const filterAttribute = filter => {
+    switch (filter) {
+      case true:
+        return "show-online";
+        break;
+      case false:
+        return "show-offline";
+        break;
+      default:
+        return "all";
+    }
+  };
   return (
     <CardWrapper
       className={`card card-device ${isConnected ? "card-connected" : "card-disconnected"} ${
         device.available ? "card-online" : "card-offline"
-      }`}
+      } ${filterBy !== "all" ? `card-filter-on ${filterAttribute(filterBy)}` : "card-all"}`}
     >
       <div className="card-header">
         {device.name ? (
