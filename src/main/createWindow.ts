@@ -1,4 +1,4 @@
-import { BrowserWindow, app } from "electron";
+import { BrowserWindow, app, dialog } from "electron";
 import windowStateKeeper from "electron-window-state";
 import path from "path";
 import { configureNativeTheme } from "./setup/theme";
@@ -48,6 +48,24 @@ const createWindow = () => {
 
   // and load the index.html of the app.
   mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
+
+  mainWindow.webContents.on("render-process-gone", (event, details) => {
+    console.log("Renderer process crashed or was terminated:");
+    console.log(details);
+
+    // Show an alert dialog with the error message
+    dialog.showErrorBox("Renderer Process Error", `The renderer process has  crashed or was terminated. ${details.reason}`);
+
+    // You can take further actions as needed, such as restarting the renderer process or closing the window.
+  });
+
+  app.on("render-process-gone", (event, webContents, details) => {
+    dialog.showErrorBox("Render process gone; %o", details.reason);
+  });
+
+  app.on("child-process-gone", (event, details) => {
+    dialog.showErrorBox("Child process gone; %o", details.reason);
+  });
 
   Window.getInstance(); // init Windows manager
   Window.setWindow(mainWindow);
