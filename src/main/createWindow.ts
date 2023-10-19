@@ -18,11 +18,12 @@ declare const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: string;
 
 const createWindow = () => {
   // Create the browser window.
+  console.log("BEFORE windowos state keeper");
   const mainWindowState = windowStateKeeper({
     defaultWidth: 1200,
     defaultHeight: 900,
   });
-
+  console.log("BEFORE windowos new browser window");
   const mainWindow = new BrowserWindow({
     x: mainWindowState.x,
     y: mainWindowState.y,
@@ -43,11 +44,16 @@ const createWindow = () => {
     },
   });
 
+  console.log("BEFORE configure ipcs");
+
   configureIPCs();
   mainWindowState.manage(mainWindow);
 
   // and load the index.html of the app.
+  console.log("BEFORE CREATING WINDOWWW");
+  console.log(MAIN_WINDOW_WEBPACK_ENTRY);
   mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
+  console.log("AFTER CREATING WINDOWWW");
 
   mainWindow.webContents.on("render-process-gone", (event, details) => {
     console.log("Renderer process crashed or was terminated:");
@@ -59,18 +65,27 @@ const createWindow = () => {
     // You can take further actions as needed, such as restarting the renderer process or closing the window.
   });
 
+  console.log("1");
+
   Window.getInstance(); // init Windows manager
+  console.log("2");
   Window.setWindow(mainWindow);
   if (!app.isPackaged) {
     // Open the DevTools if we are in development mode
     mainWindow.webContents.openDevTools();
   }
 
+  console.log("3");
   configureNativeTheme();
+  console.log("4");
   configureRedirect();
+  console.log("5");
   onReadyToShow();
+  console.log("6");
   onDevTools();
+  console.log("7");
   onClose();
+  console.log("8");
   configureUSB();
 };
 
