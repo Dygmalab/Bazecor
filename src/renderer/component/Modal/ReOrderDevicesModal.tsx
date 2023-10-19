@@ -15,16 +15,16 @@ const DragListWrapper = Styled.div`
     padding: 16px;
     overflow: auto;
     position: relative;
-    background-color: ${({ theme }) => theme.colors.gray700};
+    background-color: ${({ theme }) => theme.styles.modal.modalDevices.bodyBackground};
     .draggable-item {
       width: 224px;
       flex: 0 0 224px;
       margin: 0 4px;
       padding: 16px;
       border-radius: 8px;
-      color: ${({ theme }) => theme.colors.gray25};
-      background-color: ${({ theme }) => theme.colors.gray600};
-      border: 1px dotted ${({ theme }) => theme.colors.purple100};
+      color: ${({ theme }) => theme.styles.modal.modalDevices.titleColor};
+      background-color: ${({ theme }) => theme.styles.modal.modalDevices.cardBackground};
+      border: 1px dashed ${({ theme }) => theme.styles.modal.modalDevices.cardBorderColor};
     }
   }
   .drag-icon {
@@ -36,31 +36,25 @@ const DragListWrapper = Styled.div`
     justify-content: center;
     align-items: center;
     border-radius: 0.1875rem;
-    background: ${({ theme }) => theme.colors.gray500};
+    background: ${({ theme }) => theme.styles.modal.modalDevices.dragBackground};
+    color: ${({ theme }) => theme.styles.modal.modalDevices.dragIconColor};
     margin-bottom: 16px;
   }
   .drag-content {
     width: 100%;
     h3 {
-      color: ${({ theme }) => theme.colors.gray25};
+      color: ${({ theme }) => theme.styles.modal.modalDevices.titleColor};
       font-size: 1em;
     }
     h4 {
-      color: ${({ theme }) => theme.colors.gray50};
+      color: ${({ theme }) => theme.styles.modal.modalDevices.subTitleColor};
       font-size: 0.8em;
     }
     p {
-      color: ${({ theme }) => theme.colors.gray100};
+      color: ${({ theme }) => theme.styles.modal.modalDevices.contentColor};
       font-size: 0.75em;
       margin-top: 1rem;
     }
-  }
-  [data-rbd-placeholder-context-id] {
-      background-color: ${({ theme }) => theme.styles.macroKey.backgroundColorDrag};
-      background-image: ${({ theme }) => theme.styles.macroKey.backgroundDrag}
-      background-size: 56.57px 56.57px;
-      border-radius: 6px;
-      box-shadow: ${({ theme }) => theme.styles.macroKey.boxShadowOnDrag};
   }
 `;
 
@@ -73,9 +67,6 @@ const ReOrderDevicesModal = ({ show, toggleShow, handleSave, devices }) => {
     items.splice(result.destination.index, 0, reorderedItem);
     setDevicesList(items);
   };
-
-  useEffect(() => console.log(devicesList), [devicesList]);
-  console.log(devices);
 
   return (
     <>
@@ -109,11 +100,8 @@ const ReOrderDevicesModal = ({ show, toggleShow, handleSave, devices }) => {
                               <IconDragAndDrop />
                             </div>
                             <div className="drag-content">
-                              {device.name ? (
-                                <Heading headingLevel={3}>{device.name}</Heading>
-                              ) : (
-                                <Heading headingLevel={device.name ? 3 : 4}>{device.device.info.displayName}</Heading>
-                              )}
+                              {device.name ? <Heading headingLevel={3}>{device.name}</Heading> : null}
+                              <Heading headingLevel={device.name ? 4 : 3}>{device.device.info.displayName}</Heading>
                               <p>{device.path}</p>
                             </div>
                           </div>

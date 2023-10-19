@@ -32,7 +32,7 @@ const FilterHeaderWrapper = Styled.div`
  padding-top: 32px;
  padding-bottom: 16px;
  margin-bottom: 32px;
- border-bottom: 1px solid ${({ theme }) => theme.colors.gray600};  
+ border-bottom: 1px solid ${({ theme }) => theme.styles.filterHeader.borderColor};
  .filter-header {
   display: flex;
   align-items: center;
@@ -44,6 +44,7 @@ const FilterHeaderWrapper = Styled.div`
   letter-spacing: -0.03em;
   margin: 0;
   padding-left: 2px;
+  color: ${({ theme }) => theme.styles.filterHeader.titleColor};
   sup {
     color: ${({ theme }) => theme.colors.purple300};
   } 
@@ -51,14 +52,14 @@ const FilterHeaderWrapper = Styled.div`
  .modal-button--trigger {
   display: flex;
   align-items: center;
-  color: ${({ theme }) => theme.colors.gray25};
+  color: ${({ theme }) => theme.styles.filterHeader.triggerModalColor};
   grid-gap: 8px;
   font-size: 0.8em;
   transition: 300ms ease-in-out color;
   padding: 0;
   background-color: transparent;
   &:hover {
-    color: ${({ theme }) => theme.colors.purple100};
+    color: ${({ theme }) => theme.styles.filterHeader.triggerModalHover};
   }
 }
  .filter-header--tabs ul {
@@ -70,7 +71,7 @@ const FilterHeaderWrapper = Styled.div`
   .tab {
     border-radius: 16px;
     color: ${({ theme }) => theme.colors.gray25};
-    background-color: ${({ theme }) => theme.colors.gray600};
+    background-color: ${({ theme }) => theme.styles.filterHeader.tabBackgroundColor};
     padding: 4px 16px;
     margin: 0;
     font-family: "Libre Franklin";
@@ -78,10 +79,10 @@ const FilterHeaderWrapper = Styled.div`
     font-size: 0.8em;
     transition: 300ms background-color ease-in-out;
     &:hover {
-      background-color: ${({ theme }) => theme.colors.gray500};
+      background-color: ${({ theme }) => theme.styles.filterHeader.tabBackgroundHover};
     }
     &.tab-active {
-      background-color: ${({ theme }) => theme.colors.purple300};
+      background-color: ${({ theme }) => theme.styles.filterHeader.tabBackgroundActive};
     }
   }
  }
@@ -112,23 +113,23 @@ const HelpMessage = Styled.div`
     }
     svg {
       flex: 0 0 24px;
-      color: ${({ theme }) => theme.colors.gray25};
+      color: ${({ theme }) => theme.styles.helpMessage.titleColor};
     }
     h4 {
       font-size: 1em;
-      color: ${({ theme }) => theme.colors.gray25};
+      color: ${({ theme }) => theme.styles.helpMessage.titleColor};
     }
     p {
-      color: ${({ theme }) => theme.colors.gray200};
+      color: ${({ theme }) => theme.styles.helpMessage.textColor};
       font-size: 0.825em;
     }
     &:hover {
       text-decoration: none;
       h4, svg {
-        color: ${({ theme }) => theme.colors.purple100};
+        color: ${({ theme }) => theme.styles.helpMessage.titleHoverColor};
       }
       p {
-        color: ${({ theme }) => theme.colors.gray50};
+        color: ${({ theme }) => theme.styles.helpMessage.textHoverColor};
       }
     }
   }

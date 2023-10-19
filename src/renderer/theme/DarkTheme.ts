@@ -17,6 +17,8 @@ import RaiseOn from "@Assets/base/devices/raise-ansi-black-on.png";
 import DefyOff from "@Assets/base/devices/defy-black-offline.png";
 import DefyOn from "@Assets/base/devices/defy-black-on.png";
 
+import bgTextures from "@Assets/dark/bg-texture-with-lines.jpg";
+
 import Tokens from "./Tokens";
 
 const settingColorOpacity = (color: string, opacity: number) => {
@@ -333,6 +335,19 @@ const Dark: DefaultTheme = {
       cardBattery: {
         backgroundColor: settingColorOpacity(Tokens.colors.gray900, 0.25),
       },
+      cardDevice: {
+        cardBackground: bgTextures,
+        cardBorder: Tokens.colors.gray600,
+        cardBorderConnected: Tokens.colors.brandSuccess,
+        cardOverlayOffline: `linear-gradient(180deg, rgba(48, 49, 73, 0.60) 1.33%, rgba(48, 57, 73, 0.00) 51.04%, rgba(48, 57, 73, 0.35) 100%), rgba(48, 51, 73, 0.60)`,
+        canvasOpacity: 1,
+        cardFooterBg: settingColorOpacity(Tokens.colors.gray700, 0.7),
+        dropdownBgColor: settingColorOpacity(Tokens.colors.gray25, 0.05),
+        dropdownDisabledColor: Tokens.colors.gray300,
+        cardTitleColor: Tokens.colors.gray50,
+        cardSubTitleColor: Tokens.colors.gray50,
+        cardPathColor: Tokens.colors.gray100,
+      },
     },
     cardButtons: {
       background: settingColorOpacity(Tokens.colors.gray700, 0.5),
@@ -459,6 +474,15 @@ const Dark: DefaultTheme = {
       labelBorderSm: "none",
       bgOldToNew: oldToNew,
     },
+    filterHeader: {
+      titleColor: Tokens.colors.gray25,
+      borderColor: Tokens.colors.gray600,
+      tabBackgroundColor: Tokens.colors.gray600,
+      tabBackgroundActive: Tokens.colors.purple300,
+      tabBackgroundHover: Tokens.colors.gray500,
+      triggerModalColor: Tokens.colors.gray25,
+      triggerModalHover: Tokens.colors.purple100,
+    },
     firmwareErrorPanel: {
       textColor: Tokens.colors.gray25,
     },
@@ -507,6 +531,12 @@ const Dark: DefaultTheme = {
       inputGroup: {
         background: "#202033",
       },
+    },
+    helpMessage: {
+      titleColor: Tokens.colors.gray25,
+      titleHoverColor: Tokens.colors.purple100,
+      textColor: Tokens.colors.gray200,
+      textHoverColor: Tokens.colors.gray50,
     },
     listGroup: {
       listItem: {
@@ -610,6 +640,16 @@ const Dark: DefaultTheme = {
       backgroundInner: "#2B2C43",
       titleColor: Tokens.colors.gray25,
       footerBackground: settingColorOpacity(Tokens.colors.gray900, 0.1),
+      modalDevices: {
+        bodyBackground: Tokens.colors.gray700,
+        cardBackground: Tokens.colors.gray600,
+        cardBorderColor: Tokens.colors.purple100,
+        titleColor: Tokens.colors.gray25,
+        subTitleColor: Tokens.colors.gray50,
+        contentColor: Tokens.colors.gray100,
+        dragBackground: Tokens.colors.gray500,
+        dragIconColor: Tokens.colors.gray25,
+      },
     },
     mouseButtons: {
       background: "#2B2B42",

@@ -16,16 +16,16 @@ const CardWrapper = Styled.div`
   &.card {
     padding: 0;
     border-radius: 24px;
-    border: 2px solid ${({ theme }) => theme.colors.gray600};
+    border: 2px solid ${({ theme }) => theme.styles.card.cardDevice.cardBorder};
     background-position: right top;
     background-repeat: no-repeat;
-    background-image: ${`url(${bgTexture})`};
+    background-image: url(${({ theme }) => theme.styles.card.cardDevice.cardBackground});
     background-size: cover;
     overflow: hidden;
     transition: 300ms ease-in-out border-color;
   }
   &.card-connected {
-    border: 2px solid ${({ theme }) => theme.colors.brandSuccess};
+    border: 2px solid ${({ theme }) => theme.styles.card.cardDevice.cardBorderConnected};
   }
   &.card-offline {
     position: relative;
@@ -35,11 +35,14 @@ const CardWrapper = Styled.div`
       content: "";
       width: 100%;
       height: 100%;
-      background: linear-gradient(180deg, rgba(48, 49, 73, 0.60) 1.33%, rgba(48, 57, 73, 0.00) 51.04%, rgba(48, 57, 73, 0.35) 100%), rgba(48, 51, 73, 0.60);
+      background: ${({ theme }) => theme.styles.card.cardDevice.cardOverlayOffline};
     }
     .device-preview {
       position: relative;
       z-index: -1;
+      canvas {
+        opacity: ${({ theme }) => theme.styles.card.cardDevice.canvasOpacity};
+      }
     }
     .device-status {
       color: ${({ theme }) => theme.colors.brandDangerLighter};
@@ -55,14 +58,15 @@ const CardWrapper = Styled.div`
     h3 {
       font-size: 1.5em;
       margin: 0 0 0.5em 0;
+      color: ${({ theme }) => theme.styles.card.cardDevice.cardTitleColor};
     }
     h4 {
       font-size: 1em;
-      color: ${({ theme }) => theme.colors.gray50};
+      color: ${({ theme }) => theme.styles.card.cardDevice.cardSubTitleColor};
     }
     h5 {
       font-size: 0.685em;
-      color: ${({ theme }) => theme.colors.gray100};
+      color: ${({ theme }) => theme.styles.card.cardDevice.cardPathColor};
       text-transform: none;
       letter-spacing: 0;
     }
@@ -75,7 +79,7 @@ const CardWrapper = Styled.div`
       border-radius: 50%;
       background-color: ${({ theme }) => theme.colors.gray200};
       &.connected {
-        background-color: ${({ theme }) => theme.colors.brandSuccess};
+        background-color: ${({ theme }) => theme.styles.card.cardDevice.cardBorderConnected};
       }
     }
   }
@@ -86,6 +90,7 @@ const CardWrapper = Styled.div`
     justify-content: flex-end;
     canvas {
       transform: translateX(24%);
+      transition: 300ms ease-in-out opacity;
     }
   }
   .button {
@@ -106,7 +111,7 @@ const CardWrapper = Styled.div`
       align-items: center;
       border-radius: 18px;
       padding: 16px;
-      background: rgba(48, 51, 73, 0.60);
+      background: ${({ theme }) => theme.styles.card.cardDevice.cardFooterBg};
       backdrop-filter: blur(3px);
     }
   }
@@ -114,8 +119,11 @@ const CardWrapper = Styled.div`
     width: 52px;
     height: 52px;
     &:hover {
-      background-color: rgba(240, 242, 244, 0.05);
+      background-color: ${({ theme }) => theme.styles.card.cardDevice.dropdownBgColor};
     }
+  }
+  .dropdown-item.disabled {
+    color: ${({ theme }) => theme.styles.card.cardDevice.dropdownDisabledColor};
   }
   &.card-filter-on,
   &.card-filter-on.card-offline.show-online,
