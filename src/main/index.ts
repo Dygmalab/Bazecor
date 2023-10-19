@@ -11,9 +11,9 @@ import { removeIPCs } from "./setup/configureIPCs";
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 // eslint-disable-next-line global-require
-/*if (require("electron-squirrel-startup")) {
+if (require("electron-squirrel-startup")) {
   app.quit();
-}*/
+}
 
 if (process.platform === "linux") {
   app.commandLine.appendSwitch("no-sandbox");
