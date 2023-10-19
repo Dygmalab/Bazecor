@@ -100,8 +100,6 @@ import IconPreferences2Stroke from "./IconPreferences2Stroke";
 import IconPressSm from "./IconPressSm";
 import IconPressAndReleaseSm from "./IconPressAndReleaseSm";
 import IconPen from "./IconPen";
-import IconReleaseSm from "./IconReleaseSm";
-import IconRobot2Stroke from "./IconRobot2Stroke";
 import IconThunder2Stroke from "./IconThunder2Stroke";
 import IconInformationBubble from "./IconInformationBubble";
 import IconInformationBubbleSm from "./IconInformationBubbleSm";
@@ -124,8 +122,11 @@ import IconLayers from "./IconLayers";
 import IconLayersSm from "./IconLayersSm";
 import IconRecord from "./IconRecord";
 import IconRefresh from "./IconRefresh";
+import IconReleaseSm from "./IconReleaseSm";
+import IconRobot2Stroke from "./IconRobot2Stroke";
 import IconRobot from "./IconRobot";
 import IconRobotSm from "./IconRobotSm";
+import IconRobotOffline from "./IconRobotOffline";
 import IconSettings from "./IconSettings";
 import IconSignal from "./IconSignal";
 import IconShutdown from "./IconShutdown";
@@ -241,8 +242,6 @@ export {
   IconPreferences2Stroke,
   IconPressSm,
   IconPressAndReleaseSm,
-  IconReleaseSm,
-  IconRobot2Stroke,
   IconThunder2Stroke,
   IconInformationBubble,
   IconInformationBubbleSm,
@@ -267,6 +266,9 @@ export {
   IconRefresh,
   IconRobot,
   IconRobotSm,
+  IconReleaseSm,
+  IconRobot2Stroke,
+  IconRobotOffline,
   IconSettings,
   IconSignal,
   IconShutdown,

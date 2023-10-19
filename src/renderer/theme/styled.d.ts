@@ -239,6 +239,12 @@ declare module "styled-components" {
           colorHover: string;
           colorActive: string;
         };
+        buttonLarge: {
+          borderColor: string;
+          backgroundColor: string;
+          titleColor: string;
+          contentColor: string;
+        };
         recordButton: {
           background: string;
           backgroundHover: string;

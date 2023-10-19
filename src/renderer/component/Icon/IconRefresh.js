@@ -3,7 +3,7 @@ import * as React from "react";
 function IconRefresh(props) {
   const maskHash = `${(Math.random() + 1).toString(36).substring(7)}-Refresh`;
   return (
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
       <mask
         id={`mask0_4032_256833${maskHash}`}
         style={{ maskType: "alpha" }}

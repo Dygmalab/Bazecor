@@ -283,6 +283,12 @@ const Dark: DefaultTheme = {
         colorHover: "#fff",
         colorActive: "#fff",
       },
+      buttonLarge: {
+        borderColor: Tokens.colors.gray600,
+        backgroundColor: settingColorOpacity(Tokens.colors.gray600, 0.5),
+        titleColor: Tokens.colors.gray25,
+        contentColor: Tokens.colors.gray100,
+      },
       recordButton: {
         background: settingColorOpacity(Tokens.colors.gray700, 0.3),
         backgroundHover: "linear-gradient(0deg, rgba(254, 0, 124, 0.05), rgba(254, 0, 124, 0.05)), rgba(48, 51, 73, 0.5)",

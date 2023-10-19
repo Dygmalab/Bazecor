@@ -1,13 +1,15 @@
 import React, { useState } from "react";
 import Styled from "styled-components";
 
-import { IconDragDots, IconBugWarning } from "@Renderer/component/Icon";
+import { IconDragDots, IconBugWarning, IconRobotOffline, IconPlus, IconRefresh } from "@Renderer/component/Icon";
 import { PageHeader } from "@Renderer/modules/PageHeader";
 import { CardDevice } from "@Renderer/component/Card";
 import Title from "@Renderer/component/Title";
 import { Container } from "react-bootstrap";
 
 import { ReOrderDevicesModal } from "@Renderer/component/Modal";
+import Heading from "@Renderer/component/Heading";
+import { LargeButton } from "@Renderer/component/Button";
 
 const DeviceManagerWrapper = Styled.div`
   height: 100%;
@@ -97,6 +99,47 @@ const DevicesWrapper = Styled.div`
     grid-template-columns: repeat(3, minmax(340px, 1fr));
     grid-gap: 16px; 
   }
+  .devices-container--no-devices {
+    border-radius: 6px;
+    background-color: rgba(48, 51, 73, 0.5);
+    padding: 32px 24px;
+    width: 100%;
+    .devices-inner {
+      display: flex;
+      justify-content: center;
+      flex-direction: column;
+      text-align: center;
+      width: 100%;
+      .devices-title-group {
+        h3 {
+          width: 100%;
+          &:after, &:before {
+            content: none;
+          } 
+        }
+        h4 {
+          width: 100%;
+          font-size: 1em;
+          color: ${({ theme }) => theme.styles.neuronConnection.subTitleColor};
+        }
+      }
+    }
+    .devices-icon {
+      margin: 0 auto 16px auto;
+    }
+    .devices-buttons-group {
+      display: flex;
+      align-items: center;
+      grid-gap: 16px;
+      margin-top: 24px;
+      padding-bottom: 24px;
+      justify-content: center;
+      .button {
+        min-width: 280px;
+      }
+    }
+  }
+
 `;
 const HelpMessage = Styled.div`
   width: 100%; 
@@ -206,7 +249,8 @@ const savedDevicesList = [
   },
 ];
 const DeviceManager = ({ titleElement, device }) => {
-  const [listDevices, setListDevices] = useState(savedDevicesList);
+  // const [listDevices, setListDevices] = useState(savedDevicesList);
+  const [listDevices, setListDevices] = useState([]);
   const [activeTab, setActiveTab] = useState<"all" | boolean>("all");
   const [showModal, setShowModal] = useState(false);
 
@@ -237,53 +281,83 @@ const DeviceManager = ({ titleElement, device }) => {
               <h3 className="filter-title">
                 My devices <sup>{listDevices.length}</sup>
               </h3>
-              <div className="filter-header--tabs">
-                <ul>
-                  <li>
-                    <button
-                      type="button"
-                      className={`tab ${activeTab === "all" ? "tab-active" : ""}`}
-                      onClick={() => setActiveTab("all")}
-                    >
-                      All
-                    </button>
-                  </li>
-                  <li>
-                    <button
-                      type="button"
-                      className={`tab ${activeTab === true ? "tab-active" : ""}`}
-                      onClick={() => setActiveTab(true)}
-                    >
-                      Online
-                    </button>
-                  </li>
-                  <li>
-                    <button
-                      type="button"
-                      className={`tab ${activeTab === false ? "tab-active" : ""}`}
-                      onClick={() => setActiveTab(false)}
-                    >
-                      Offline
-                    </button>
-                  </li>
-                </ul>
+              {listDevices.length > 0 ? (
+                <div className="filter-header--tabs">
+                  <ul>
+                    <li>
+                      <button
+                        type="button"
+                        className={`tab ${activeTab === "all" ? "tab-active" : ""}`}
+                        onClick={() => setActiveTab("all")}
+                      >
+                        All
+                      </button>
+                    </li>
+                    <li>
+                      <button
+                        type="button"
+                        className={`tab ${activeTab === true ? "tab-active" : ""}`}
+                        onClick={() => setActiveTab(true)}
+                      >
+                        Online
+                      </button>
+                    </li>
+                    <li>
+                      <button
+                        type="button"
+                        className={`tab ${activeTab === false ? "tab-active" : ""}`}
+                        onClick={() => setActiveTab(false)}
+                      >
+                        Offline
+                      </button>
+                    </li>
+                  </ul>
+                </div>
+              ) : null}
+            </div>
+            {listDevices.length > 0 ? (
+              <div className="filter-header--actions">
+                <button type="button" onClick={() => setShowModal(true)} className="modal-button--trigger">
+                  <IconDragDots />
+                  Re-order list
+                </button>
               </div>
-            </div>
-            <div className="filter-header--actions">
-              <button type="button" onClick={() => setShowModal(true)} className="modal-button--trigger">
-                <IconDragDots />
-                Re-order list
-              </button>
-            </div>
+            ) : null}
           </FilterHeaderWrapper>
           <DevicesWrapper>
-            <div className="devices-container">
-              <div className="devices-scroll">
-                {listDevices.map(item => (
-                  <CardDevice key={item.serialNumber} device={item} filterBy={activeTab} />
-                ))}
+            {listDevices.length > 0 ? (
+              <div className="devices-container">
+                <div className="devices-scroll">
+                  {listDevices.map(item => (
+                    <CardDevice key={item.serialNumber} device={item} filterBy={activeTab} />
+                  ))}
+                </div>
               </div>
-            </div>
+            ) : (
+              <div className="devices-container devices-container--no-devices">
+                <div className="devices-inner">
+                  <div className="devices-icon">
+                    <IconRobotOffline />
+                  </div>
+                  <div className="devices-title-group">
+                    <Heading headingLevel={3} variant="warning">
+                      No devices found!
+                    </Heading>
+                    <Heading headingLevel={4}>[Black metal plays in background]</Heading>
+                  </div>
+                  <div className="devices-buttons-group">
+                    <LargeButton onClick={() => console.log("Add virtual keyboard")} icon={<IconPlus />}>
+                      <Heading headingLevel={4}>Add virtual device</Heading>
+                      <p>Use without a keyboard</p>
+                    </LargeButton>
+                    <LargeButton onClick={() => console.log("Scan devices")} icon={<IconRefresh />}>
+                      <Heading headingLevel={4}>Scan devices</Heading>
+                      <p>Check for nearby devices</p>
+                    </LargeButton>
+                  </div>
+                </div>
+              </div>
+            )}
           </DevicesWrapper>
           <HelpMessage>
             <a href="https://support.dygma.com/hc/en-us/requests/new" className="help-wrapper">
