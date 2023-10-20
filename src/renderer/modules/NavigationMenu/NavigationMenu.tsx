@@ -102,13 +102,15 @@ interface NavigationMenuProps {
   pages: Pages;
   fwUpdate: boolean;
   allowBeta: boolean;
+  loading: boolean;
+  setLoading: (loading) => unknown;
 }
 
 interface Device {
   vendor: any;
   product: any;
-  keyboardType: any;
-  displayName: any;
+  keyboardType: string;
+  displayName: string;
   urls: any;
 }
 
@@ -120,7 +122,7 @@ function NavigationMenu(props: NavigationMenuProps): React.JSX.Element {
   const [virtual, setVirtual] = useState(false);
   const location = useLocation();
   const currentPage = location.pathname;
-  const { connected, pages, fwUpdate, flashing, allowBeta } = props;
+  const { connected, pages, fwUpdate, flashing, allowBeta, loading, setLoading } = props;
 
   const getGitHubFW = async (product: any) => {
     const releases: any[] = [];
@@ -258,7 +260,7 @@ function NavigationMenu(props: NavigationMenuProps): React.JSX.Element {
                     disabled={fwUpdate}
                   />
                 </Link>
-                <BatteryStatus disable={fwUpdate || virtual} />
+                <BatteryStatus disable={fwUpdate || virtual || loading} setLoading={setLoading} />
               </>
             ) : (
               <></>

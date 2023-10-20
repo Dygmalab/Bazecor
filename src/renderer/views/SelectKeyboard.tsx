@@ -199,6 +199,8 @@ interface SelectKeyboardProps {
   connected: any;
   onDisconnect: any;
   device: any;
+  loading: boolean;
+  setLoading: (loading) => unknown;
 }
 
 const SelectKeyboard: React.FC<SelectKeyboardProps> = (props): JSX.Element => {
@@ -210,7 +212,7 @@ const SelectKeyboard: React.FC<SelectKeyboardProps> = (props): JSX.Element => {
   const [selectedVirtualKeyboard, setSelectedVirtualKeyboard] = useState(0);
   const [scanFoundDevices, setScanFoundDevices] = useState(false);
   const focus = useMemo(() => new Focus(), []);
-  const { onConnect, connected, device, onDisconnect } = props;
+  const { onConnect, connected, device, onDisconnect, loading, setLoading } = props;
 
   const findNonSerialKeyboards = useCallback(async (deviceList: any[]) => {
     const connectedDevices: USBDevice[] = await ipcRenderer.invoke("usb-devices");
@@ -242,10 +244,12 @@ const SelectKeyboard: React.FC<SelectKeyboardProps> = (props): JSX.Element => {
   }, []);
 
   const findKeyboards = useCallback(async (): Promise<any[]> => {
+    setLoading(true);
     setIsLoading(true);
     const isIterable = devices.length > 0 && typeof devices[Symbol.iterator] === "function";
     if (focus.closed === false && isIterable) {
       setIsLoading(false);
+      setLoading(false);
       return [];
     }
     // if (!focus.closed && device) {
@@ -273,6 +277,7 @@ const SelectKeyboard: React.FC<SelectKeyboardProps> = (props): JSX.Element => {
       const list = await findNonSerialKeyboards(supportedDevices);
       console.log("Non serial keyboards", list);
       setIsLoading(false);
+      setLoading(false);
       setDevices(list);
       if (connected) {
         const connectedDev = list.findIndex(dev => focus.serialNumber?.includes(dev.serialNumber));
@@ -290,6 +295,7 @@ const SelectKeyboard: React.FC<SelectKeyboardProps> = (props): JSX.Element => {
       const list = await findNonSerialKeyboards([]);
       console.log("Non serial keyboards", list);
       setIsLoading(false);
+      setLoading(false);
       setDevices(list);
       return list;
     }
@@ -341,6 +347,7 @@ const SelectKeyboard: React.FC<SelectKeyboardProps> = (props): JSX.Element => {
   };
 
   const onKeyboardConnect = async () => {
+    setLoading(true);
     setOpening(true);
     try {
       if (!devices[selectedPortIndex].path) {
@@ -349,7 +356,9 @@ const SelectKeyboard: React.FC<SelectKeyboardProps> = (props): JSX.Element => {
       const focus = new Focus();
       focus.serialNumber = devices[selectedPortIndex].serialNumber;
       await onConnect(devices[selectedPortIndex], null);
+      setLoading(false);
     } catch (err) {
+      setLoading(false);
       setOpening(false);
       const errorMessage = err.toString();
       toast.error(<ToastMessage title={errorMessage} />, { icon: "" });
@@ -477,13 +486,13 @@ const SelectKeyboard: React.FC<SelectKeyboardProps> = (props): JSX.Element => {
       return;
     }
 
-    Hardware.serial.forEach(device => {
+    Hardware.serial.forEach(localDevice => {
       if (
-        file.device.usb.productId === device.usb.productId &&
-        file.device.usb.vendorId === device.usb.vendorId &&
-        file.device.info.keyboardType === device.info.keyboardType
+        file.device.usb.productId === localDevice.usb.productId &&
+        file.device.usb.vendorId === localDevice.usb.vendorId &&
+        file.device.info.keyboardType === localDevice.info.keyboardType
       ) {
-        file.device.components = device.components;
+        file.device.components = localDevice.components;
       }
     });
 
@@ -508,13 +517,13 @@ const SelectKeyboard: React.FC<SelectKeyboardProps> = (props): JSX.Element => {
       return;
     }
     console.log("Exchange focus for file access");
-    Hardware.serial.forEach(device => {
+    Hardware.serial.forEach(localDevice => {
       if (
-        virtualKeyboard.device.usb.productId === device.usb.productId &&
-        virtualKeyboard.device.usb.vendorId === device.usb.vendorId &&
-        virtualKeyboard.device.info.keyboardType === device.info.keyboardType
+        virtualKeyboard.device.usb.productId === localDevice.usb.productId &&
+        virtualKeyboard.device.usb.vendorId === localDevice.usb.vendorId &&
+        virtualKeyboard.device.info.keyboardType === localDevice.info.keyboardType
       ) {
-        virtualKeyboard.device.components = device.components;
+        virtualKeyboard.device.components = localDevice.components;
       }
     });
 
@@ -550,23 +559,23 @@ const SelectKeyboard: React.FC<SelectKeyboardProps> = (props): JSX.Element => {
 
   const getDeviceItems = () => {
     const neurons = store.get("neurons");
-    const result = devices.map((device, index) => {
-      console.log("checking device :", device);
-      if (device.device.bootloader)
+    const result = devices.map((localDevice, index) => {
+      console.log("checking device :", localDevice);
+      if (localDevice.device.bootloader)
         return {
           index,
-          displayName: device?.device?.info?.displayName,
+          displayName: localDevice?.device?.info?.displayName,
           userName: "",
-          path: device.path || i18n.keyboardSelect.unknown,
+          path: localDevice.path || i18n.keyboardSelect.unknown,
         };
-      const preparedSN = device.productId === "2201" ? device.serialNumber.slice(0, 32) : device.serialNumber;
+      const preparedSN = localDevice.productId === "2201" ? localDevice.serialNumber.slice(0, 32) : localDevice.serialNumber;
       const neuron = Array.isArray(neurons) ? neurons.find(n => n.id.toLowerCase() === preparedSN.toLowerCase()) : { name: "" };
 
       return {
         index,
-        displayName: device?.device?.info?.displayName,
+        displayName: localDevice?.device?.info?.displayName,
         userName: neuron ? neuron.name : "",
-        path: device.path || i18n.keyboardSelect.unknown,
+        path: localDevice.path || i18n.keyboardSelect.unknown,
       };
     });
     return result;

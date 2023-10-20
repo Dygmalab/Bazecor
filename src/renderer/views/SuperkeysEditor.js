@@ -235,8 +235,9 @@ class SuperkeysEditor extends React.Component {
   }
 
   async loadSuperkeys() {
+    const { onDisconnect, setLoading } = this.props;
+    setLoading(true);
     const focus = new Focus();
-    const { onDisconnect } = this.props;
     try {
       /**
        * Create property language to the object 'options', to call KeymapDB in Keymap and modify languagu layout
@@ -298,10 +299,12 @@ class SuperkeysEditor extends React.Component {
         keymap,
         kbtype,
       });
+      setLoading(false);
     } catch (e) {
       console.log("error when loading SuperKeys");
       console.error(e);
       toast.error(e);
+      setLoading(false);
       onDisconnect();
     }
     return true;
@@ -577,8 +580,10 @@ class SuperkeysEditor extends React.Component {
   }
 
   async writeSuper() {
-    const focus = new Focus();
     const { superkeys, modifiedKeymap, keymap, neurons, neuronID } = this.state;
+    const { setLoading } = this.props;
+    setLoading(true);
+    const focus = new Focus();
     this.setState({
       modified: false,
       modifiedKeymap: false,
@@ -600,8 +605,10 @@ class SuperkeysEditor extends React.Component {
         autoClose: 2000,
         icon: "",
       });
+      setLoading(false);
     } catch (error) {
       toast.error(error);
+      setLoading(false);
     }
   }
 
