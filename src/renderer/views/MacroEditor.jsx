@@ -301,6 +301,8 @@ class MacroEditor extends React.Component {
 
   async writeMacros() {
     const { macros, neurons, neuronID, keymap } = this.state;
+    const { setLoading } = this.props;
+    setLoading(true);
     const focus = new Focus();
     const newMacros = macros;
     this.setState({
@@ -321,8 +323,10 @@ class MacroEditor extends React.Component {
         autoClose: 2000,
         icon: "",
       });
+      setLoading(false);
     } catch (error) {
       toast.error(<ToastMessage title={error} icon={<IconFloppyDisk />} />, { icon: "" });
+      setLoading(false);
     }
   }
 
@@ -466,7 +470,8 @@ class MacroEditor extends React.Component {
   }
 
   async loadMacros() {
-    const { onDisconnect } = this.props;
+    const { onDisconnect, setLoading } = this.props;
+    setLoading(true);
     const focus = new Focus();
     try {
       /**
@@ -507,9 +512,11 @@ class MacroEditor extends React.Component {
         totalMemory: tMem,
         loading: false,
       });
+      setLoading(false);
       return true;
     } catch (e) {
       toast.error(<ToastMessage title={e} icon={<IconFloppyDisk />} />, { icon: "" });
+      setLoading(false);
       onDisconnect();
       return false;
     }

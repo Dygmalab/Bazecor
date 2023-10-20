@@ -20,9 +20,19 @@ import PropTypes from "prop-types";
 import NavigationMenu from "./NavigationMenu";
 
 function Header(props) {
-  const { connected, pages, flashing, fwUpdate, allowBeta } = props;
+  const { connected, pages, flashing, fwUpdate, allowBeta, loading, setLoading } = props;
 
-  return <NavigationMenu connected={connected} pages={pages} flashing={flashing} fwUpdate={fwUpdate} allowBeta={allowBeta} />;
+  return (
+    <NavigationMenu
+      connected={connected}
+      pages={pages}
+      flashing={flashing}
+      fwUpdate={fwUpdate}
+      allowBeta={allowBeta}
+      loading={loading}
+      setLoading={setLoading}
+    />
+  );
 }
 Header.propTypes = {
   connected: PropTypes.bool.isRequired,
@@ -30,6 +40,8 @@ Header.propTypes = {
   flashing: PropTypes.bool.isRequired,
   fwUpdate: PropTypes.bool.isRequired,
   allowBeta: PropTypes.any.isRequired,
+  loading: PropTypes.bool.isRequired,
+  setLoading: PropTypes.func.isRequired,
 };
 
 export default Header;

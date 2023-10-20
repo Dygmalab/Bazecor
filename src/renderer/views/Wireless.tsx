@@ -67,12 +67,13 @@ const initialWireless = {
 };
 
 function Wireless(props: WirelessPropsInterface) {
-  const { startContext, cancelContext } = props;
+  const { startContext, cancelContext, setLoading } = props;
   const [wireless, setWireless] = useState<WirelessInterface>(initialWireless);
   const [modified, setModified] = useState(false);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLocalLoading] = useState(true);
 
   async function getWirelessPreferences() {
+    setLoading(true);
     const focus = new Focus();
     // Use focus commands to retrieve wireless data
     // Battery commands
@@ -139,6 +140,7 @@ function Wireless(props: WirelessPropsInterface) {
     });
 
     setWireless(wireless);
+    setLocalLoading(false);
     setLoading(false);
   }
 
@@ -169,6 +171,7 @@ function Wireless(props: WirelessPropsInterface) {
   }
 
   async function saveWirelessChanges() {
+    setLoading(true);
     const focus = new Focus();
 
     // Commands to be sent to the keyboard
@@ -182,6 +185,7 @@ function Wireless(props: WirelessPropsInterface) {
     await focus.command("led.fade", wireless.fade);
     await focus.command("idleleds.wireless", wireless.idleleds);
 
+    setLoading(false);
     destroyContext();
   }
 
