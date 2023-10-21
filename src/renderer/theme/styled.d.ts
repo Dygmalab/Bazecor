@@ -132,6 +132,11 @@ declare module "styled-components" {
         subtleColor: string;
         subtleBGColor: string;
       };
+      banner: {
+        backgroundWarning: string;
+        textWarning: string;
+        svgBackgroundWarning: string;
+      };
       batteryIndicator: {
         pileBackgroundColor: string;
         pileBackgroundSavingMode: string;

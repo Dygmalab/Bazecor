@@ -93,8 +93,8 @@ const Styles = Styled.div`
   border-radius: 6px;
   button.btn {
     background: transparent;
-  } 
-  button.btn + button.btn {   
+  }
+  button.btn + button.btn {
     margin-left: 4px;
   }
 }
@@ -228,7 +228,7 @@ const Styles = Styled.div`
     filter: blur(18px);
     opacity: 0.4;
   }
-  &.keyOnFocus { 
+  &.keyOnFocus {
     .baseShape {
       filter: drop-shadow(0px 4px 0px ${({ theme }) => theme.styles.raiseKeyboard.keyShadow});
     }
@@ -267,7 +267,7 @@ const Styles = Styled.div`
     margin: 0;
     margin-left: 6px;
     margin-right: -1px;
-    &.extraBottom { 
+    &.extraBottom {
       margin-left: 1px;
       li {
         margin-left: 1px;
@@ -277,7 +277,7 @@ const Styles = Styled.div`
     li {
       padding: 0px 3px;
       border-radius: 3px;
-      
+
       display: inline-block;
       margin: 1px;
 
@@ -590,6 +590,8 @@ class LayoutEditor extends React.Component {
   }
 
   scanKeyboard = async lang => {
+    const { setLoading, onDisconnect } = this.props;
+    setLoading(true);
     const focus = new Focus();
     try {
       /**
@@ -606,7 +608,7 @@ class LayoutEditor extends React.Component {
       }
 
       let defLayer = await focus.command("settings.defaultLayer");
-      defLayer = parseInt(defLayer) || 0;
+      defLayer = parseInt(defLayer, 10) || 0;
 
       const keymap = await focus.command("keymap");
       const onlyC = await focus.command("keymap.onlyCustom");
@@ -680,10 +682,12 @@ class LayoutEditor extends React.Component {
           }
         }
       }
+      setLoading(false);
     } catch (e) {
       console.error(e);
       toast.error(e);
-      this.props.onDisconnect();
+      setLoading(false);
+      onDisconnect();
     }
   };
 
@@ -886,6 +890,8 @@ class LayoutEditor extends React.Component {
   };
 
   onApply = async () => {
+    const { setLoading } = this.props;
+    setLoading(true);
     this.setState({ saving: true });
     const focus = new Focus();
     await focus.command("keymap", this.state.keymap);
@@ -903,6 +909,7 @@ class LayoutEditor extends React.Component {
     console.log("Changes saved.");
     const commands = await this.bkp.Commands();
     const backup = await this.bkp.DoBackup(commands, this.state.neurons[this.state.neuronID].id);
+    setLoading(false);
     this.bkp.SaveBackup(backup);
     this.props.cancelContext();
   };

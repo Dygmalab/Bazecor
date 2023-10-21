@@ -44,6 +44,8 @@ import SpaceCadetTable from "./db/spacecadet";
 // Spanish - is an Array of objects of values that have to be modified
 import spanish, { spanishModifiedTables } from "./languages/spanish/spanish";
 
+import british, { britishModifiedTables } from "./languages/british/british";
+
 // German - is an Array of objects of values that have to be modified
 import german, { germanModifiedTables } from "./languages/german/german";
 
@@ -126,6 +128,7 @@ const defaultBaseKeyCodeTable = [
 
 const supportModifiedTables = {
   spanish: spanishModifiedTables,
+  british: britishModifiedTables,
   german: germanModifiedTables,
   french: frenchModifiedTables,
   frenchBepo: frenchBepoModifiedTables,
@@ -158,6 +161,7 @@ const defaultKeyCodeTable = defaultBaseKeyCodeTable
 const languagesDB = {
   english: "english",
   spanish,
+  british,
   german,
   french,
   frenchBepo,
@@ -185,10 +189,11 @@ class KeymapDB {
     if (this.language === "finnish") {
       this.language = "swedish";
     }
+
     // Modify our baseKeyCodeTable, depending on the language selected by the static methods and by inside function newLanguageLayout
     baseKeyCodeTable = KeymapDB.updateBaseKeyCode();
     const keyCodeTableWithModifiers =
-      this.language !== "english" && this.language !== "british" && supportModifiedTables[this.language]
+      this.language !== "english" && supportModifiedTables[this.language]
         ? defaultKeyCodeTable.concat(supportModifiedTables[this.language])
         : defaultKeyCodeTable;
     // Modify our baseKeyCodeTable, depending on the language selected through function newLanguageLayout

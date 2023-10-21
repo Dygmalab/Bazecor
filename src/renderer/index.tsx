@@ -24,16 +24,19 @@ import Error from "./Error";
 import "bootstrap-css-only/css/bootstrap.min.css";
 import "@appigram/react-rangeslider/lib/index.css";
 import i18n from "./i18n";
+import ErrorBoundary from "./ErrorBoundary";
 
 const container = document.getElementById("root");
 const root = createRoot(container);
 try {
   root.render(
-    <MemoryRouter>
-      <I18nextProvider i18n={i18n}>
-        <App />
-      </I18nextProvider>
-    </MemoryRouter>,
+    <ErrorBoundary>
+      <MemoryRouter>
+        <I18nextProvider i18n={i18n}>
+          <App />
+        </I18nextProvider>
+      </MemoryRouter>
+    </ErrorBoundary>,
   );
 } catch (e) {
   root.render(<Error error={e} />);
