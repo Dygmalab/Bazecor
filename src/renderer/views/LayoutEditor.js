@@ -686,8 +686,8 @@ class LayoutEditor extends React.Component {
     } catch (e) {
       console.error(e);
       toast.error(e);
-      setLoading(false);
       onDisconnect();
+      setLoading(false);
     }
   };
 
@@ -909,9 +909,20 @@ class LayoutEditor extends React.Component {
     console.log("Changes saved.");
     const commands = await this.bkp.Commands();
     const backup = await this.bkp.DoBackup(commands, this.state.neurons[this.state.neuronID].id);
-    setLoading(false);
     this.bkp.SaveBackup(backup);
     this.props.cancelContext();
+    toast.success(
+      <ToastMessage
+        title="Changes saved sucessfully"
+        content="Your changes where saved sucessfully on the keyboard!"
+        icon={<IconArrowDownWithLine />}
+      />,
+      {
+        autoClose: 2000,
+        icon: "",
+      },
+    );
+    setLoading(false);
   };
 
   // Callback function to set State of new Language
