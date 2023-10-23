@@ -1700,6 +1700,8 @@ class LayoutEditor extends React.Component {
     } else {
       this.setState({
         modeselect: data,
+        currentLedIndex: -1,
+        selectedPaletteColor: null,
       });
     }
   };
@@ -1867,7 +1869,7 @@ class LayoutEditor extends React.Component {
           theme={this.props.theme}
           darkMode={this.props.darkMode}
           style={{ width: "50vw" }}
-          showUnderglow={this.state.modeselect != "keyboard"}
+          showUnderglow={this.state.modeselect !== "keyboard"}
           className="raiseKeyboard layer"
           isStandardView={isStandardView}
         />
@@ -1964,7 +1966,7 @@ class LayoutEditor extends React.Component {
                 deviceName={this.state.deviceName}
               />
             }
-            isColorActive={this.state.modeselect != "keyboard"}
+            isColorActive={this.state.modeselect !== "keyboard"}
             saveContext={this.onApply}
             destroyContext={() => {
               this.props.cancelContext();
