@@ -686,8 +686,8 @@ class LayoutEditor extends React.Component {
     } catch (e) {
       console.error(e);
       toast.error(e);
-      setLoading(false);
       onDisconnect();
+      setLoading(false);
     }
   };
 
@@ -909,9 +909,20 @@ class LayoutEditor extends React.Component {
     console.log("Changes saved.");
     const commands = await this.bkp.Commands();
     const backup = await this.bkp.DoBackup(commands, this.state.neurons[this.state.neuronID].id);
-    setLoading(false);
     this.bkp.SaveBackup(backup);
     this.props.cancelContext();
+    toast.success(
+      <ToastMessage
+        title="Changes saved sucessfully"
+        content="Your changes where saved sucessfully on the keyboard!"
+        icon={<IconArrowDownWithLine />}
+      />,
+      {
+        autoClose: 2000,
+        icon: "",
+      },
+    );
+    setLoading(false);
   };
 
   // Callback function to set State of new Language
@@ -1689,6 +1700,8 @@ class LayoutEditor extends React.Component {
     } else {
       this.setState({
         modeselect: data,
+        currentLedIndex: -1,
+        selectedPaletteColor: null,
       });
     }
   };
@@ -1856,7 +1869,7 @@ class LayoutEditor extends React.Component {
           theme={this.props.theme}
           darkMode={this.props.darkMode}
           style={{ width: "50vw" }}
-          showUnderglow={this.state.modeselect != "keyboard"}
+          showUnderglow={this.state.modeselect !== "keyboard"}
           className="raiseKeyboard layer"
           isStandardView={isStandardView}
         />
@@ -1953,7 +1966,7 @@ class LayoutEditor extends React.Component {
                 deviceName={this.state.deviceName}
               />
             }
-            isColorActive={this.state.modeselect != "keyboard"}
+            isColorActive={this.state.modeselect !== "keyboard"}
             saveContext={this.onApply}
             destroyContext={() => {
               this.props.cancelContext();
