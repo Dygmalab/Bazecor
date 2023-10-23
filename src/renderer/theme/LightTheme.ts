@@ -280,10 +280,12 @@ const Light: DefaultTheme = {
         colorActive: "#fff",
       },
       buttonLarge: {
-        borderColor: Tokens.colors.gray600,
-        backgroundColor: settingColorOpacity(Tokens.colors.gray600, 0.5),
-        titleColor: Tokens.colors.gray25,
-        contentColor: Tokens.colors.gray100,
+        borderColor: Tokens.colors.gray100,
+        borderHoverColor: Tokens.colors.gray100,
+        backgroundColor: settingColorOpacity(Tokens.colors.gray100, 0.25),
+        backgroundHoverColor: settingColorOpacity(Tokens.colors.gray50, 0.8),
+        titleColor: Tokens.colors.gray500,
+        contentColor: Tokens.colors.gray300,
       },
       recordButton: {
         background: settingColorOpacity(Tokens.colors.gray25, 0.5),
@@ -367,6 +369,9 @@ const Light: DefaultTheme = {
       borderColor: Tokens.colors.gray100,
       backgroundActive: Tokens.colors.brandSuccess,
       borderColorActive: Tokens.colors.brandSuccess,
+    },
+    deviceManager: {
+      noDevicesBackground: settingColorOpacity(Tokens.colors.gray25, 0.25),
     },
     devicePreview: {
       raiseOn: RaiseOn,

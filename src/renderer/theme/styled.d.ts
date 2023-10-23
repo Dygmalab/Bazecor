@@ -241,7 +241,9 @@ declare module "styled-components" {
         };
         buttonLarge: {
           borderColor: string;
+          borderHoverColor: string;
           backgroundColor: string;
+          backgroundHoverColor: string;
           titleColor: string;
           contentColor: string;
         };
@@ -326,6 +328,9 @@ declare module "styled-components" {
         borderColor: string;
         backgroundActive: string;
         borderColorActive: string;
+      };
+      deviceManager: {
+        noDevicesBackground: string;
       };
       devicePreview: {
         raiseOn: string;

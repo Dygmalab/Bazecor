@@ -13,6 +13,11 @@ const LargeButtonWrapper = Styled.button`
   align-items: center;
   text-align: left;
   min-width: 162px;
+  transition: 300ms ease-in-out background-color, 300ms ease-in-out border-color;
+  &:hover {
+    border-color: ${({ theme }) => theme.styles.button.buttonLarge.borderHoverColor};
+    background-color: ${({ theme }) => theme.styles.button.buttonLarge.backgroundHoverColor};
+  }
   p {
     color: ${({ theme }) => theme.styles.button.buttonLarge.contentColor};
     margin-bottom: 0;

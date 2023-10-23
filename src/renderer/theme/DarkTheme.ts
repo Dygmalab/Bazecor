@@ -285,7 +285,9 @@ const Dark: DefaultTheme = {
       },
       buttonLarge: {
         borderColor: Tokens.colors.gray600,
+        borderHoverColor: Tokens.colors.gray400,
         backgroundColor: settingColorOpacity(Tokens.colors.gray600, 0.5),
+        backgroundHoverColor: settingColorOpacity(Tokens.colors.gray600, 0.8),
         titleColor: Tokens.colors.gray25,
         contentColor: Tokens.colors.gray100,
       },
@@ -370,6 +372,9 @@ const Dark: DefaultTheme = {
       borderColor: Tokens.colors.gray400,
       backgroundActive: Tokens.colors.brandSuccess,
       borderColorActive: Tokens.colors.brandSuccess,
+    },
+    deviceManager: {
+      noDevicesBackground: settingColorOpacity(Tokens.colors.gray700, 0.5),
     },
     devicePreview: {
       raiseOn: RaiseOn,

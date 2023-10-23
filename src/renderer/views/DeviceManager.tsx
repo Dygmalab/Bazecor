@@ -101,7 +101,7 @@ const DevicesWrapper = Styled.div`
   }
   .devices-container--no-devices {
     border-radius: 6px;
-    background-color: rgba(48, 51, 73, 0.5);
+    background-color: ${({ theme }) => theme.styles.deviceManager.noDevicesBackground};
     padding: 32px 24px;
     width: 100%;
     .devices-inner {
