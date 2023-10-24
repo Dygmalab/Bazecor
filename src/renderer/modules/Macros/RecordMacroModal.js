@@ -192,9 +192,6 @@ export default class RecordMacroModal extends React.Component {
     });
     ipcRenderer.on("recorded-key-up", (event, response) => {
       console.log("Check key-up", response);
-      if (response.event.keycode === 29 && !response.event.ctrlKey) {
-        return;
-      }
       const newRecorded = this.state.recorded;
       newRecorded.push({
         char: response.name,
