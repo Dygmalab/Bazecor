@@ -1836,18 +1836,19 @@ class LayoutEditor extends React.Component {
       });
     }
 
-    if (layerData != undefined && superkeys.length > 0) {
+    if (layerData !== undefined && superkeys.length > 0) {
       layerData = layerData.map(key => {
         const newSKey = key;
-        if (key.extraLabel == "SUPER") {
+        if (key.extraLabel === "SUPER") {
+          const SKNumber = key.keyCode - 53980;
           if (
-            superkeys.length > parseInt(key.label) - 1 &&
-            superkeys[parseInt(key.label) - 1] != undefined &&
-            superkeys[parseInt(key.label) - 1].name != undefined &&
-            superkeys[parseInt(key.label) - 1].name != "" &&
+            superkeys.length > SKNumber &&
+            superkeys[SKNumber] !== undefined &&
+            superkeys[SKNumber].name !== undefined &&
+            superkeys[SKNumber].name !== "" &&
             !/\p{L}/u.test(key.label)
           ) {
-            newSKey.label = superkeys[parseInt(key.label) - 1].name.substr(0, 5);
+            newSKey.label = superkeys[SKNumber].name.substr(0, 5);
           }
         }
         return newSKey;
