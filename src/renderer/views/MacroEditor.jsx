@@ -199,6 +199,7 @@ class MacroEditor extends React.Component {
       usedMemory: 0,
       totalMemory: 0,
       loading: true,
+      scrollPos: 0,
       currentLanguageLayout: store.get("settings.language") || "english",
     };
     this.updateMacros = this.updateMacros.bind(this);
@@ -287,6 +288,10 @@ class MacroEditor extends React.Component {
     const localMacros = JSON.parse(JSON.stringify(macros));
     localMacros[selectedMacro].name = data;
     this.setState({ macros: localMacros, modified: true });
+  };
+
+  updateScroll = scrollPos => {
+    this.setState({ scrollPos });
   };
 
   updateMacros(recievedMacros) {
@@ -536,6 +541,7 @@ class MacroEditor extends React.Component {
       kbtype,
       currentLanguageLayout,
       loading,
+      scrollPos,
     } = this.state;
     const ListOfMacros = listToDelete.map(({ layer, pos, key, newKey }) => {
       if (newKey === -1) {
@@ -612,6 +618,8 @@ class MacroEditor extends React.Component {
                 macros={macros}
                 keymapDB={this.keymapDB}
                 updateActions={this.updateActions}
+                updateScroll={this.updateScroll}
+                scrollPos={scrollPos}
               />
               <MacroCreator
                 macro={JSON.parse(JSON.stringify(macros[selectedMacro]))}
@@ -664,6 +672,7 @@ class MacroEditor extends React.Component {
 MacroEditor.propTypes = {
   startContext: PropTypes.func,
   onDisconnect: PropTypes.func,
+  setLoading: PropTypes.func,
 };
 
 export default MacroEditor;
