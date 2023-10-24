@@ -311,6 +311,14 @@ export default class RecordMacroModal extends React.Component {
         }
         continue;
       }
+      if (recorded[p].action === 7 && recorded[i].action === 6 && this.state.isDelayActive) {
+        console.log(`Inserted Delay with ${recorded[i].time - recorded[p].time} ms`);
+        newRecorded.push(JSON.parse(JSON.stringify(recorded[p])));
+        recorded[p].action = 2;
+        recorded[p].keycode = recorded[i].time - recorded[p].time;
+        newRecorded.push(recorded[p]);
+        continue;
+      }
       console.log(`Added as end of interaction ${recorded[p].char} to the rest of the elems`);
       newRecorded.push(recorded[p]);
       if (i === recorded.length - 1) {
@@ -332,7 +340,7 @@ export default class RecordMacroModal extends React.Component {
 
   render() {
     const { showModal, isRecording, isDelayActive, recorded } = this.state;
-    console.log("rendering");
+    console.log("rendering", recorded);
     return (
       <Styles>
         <RegularButton
@@ -384,8 +392,13 @@ export default class RecordMacroModal extends React.Component {
               ) : (
                 <div className={`timelineRecordSequence ${isRecording ? "isRecording" : "isPaused"}`}>
                   <div className="timelineRecordSequenceInner">
-                    {recorded.map((item, index) => item.char)}
-                    {/* Lotem ipsum dolor aemet sit <div className="keySpecial">500 ms</div> waiting */}
+                    {recorded.map((item, index) => {
+                      let newItem = item.char;
+                      if (item.action === 2) return "";
+                      if (item.action === 6) newItem += "↓";
+                      if (item.action === 7) newItem += "↑";
+                      return newItem;
+                    })}
                   </div>
                   <div className="timelinePointeText" />
                 </div>
