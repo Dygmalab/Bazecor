@@ -36,7 +36,7 @@ import Title from "../../component/Title";
 import { IconFlashlight, IconTypo, IconMouse } from "../../component/Icon";
 
 const Styles = Styled.div`
-  
+
   .slider{
     width: 100%;
   }
@@ -550,7 +550,7 @@ class KeyboardSettings extends React.Component {
                         <Slider
                           min={0}
                           max={100}
-                          step={5}
+                          step={1}
                           value={Math.round((ledBrightness * 100) / 255)}
                           onChange={this.setBrightness}
                         />
@@ -576,7 +576,7 @@ class KeyboardSettings extends React.Component {
                         <Slider
                           min={0}
                           max={100}
-                          step={5}
+                          step={1}
                           value={Math.round((ledBrightnessUG * 100) / 255)}
                           onChange={this.setBrightnessUG}
                         />
