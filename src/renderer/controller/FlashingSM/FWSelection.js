@@ -52,7 +52,7 @@ const loadAvailableFirmwareVersions = async allowBeta => {
         });
         // console.log([asset.name, asset.browser_download_url]);
       });
-      console.log(newRelease);
+      // console.log(newRelease);
       if (allowBeta || !newRelease.version.includes("beta")) {
         Releases.push(newRelease);
       }
@@ -79,7 +79,6 @@ const GitHubRead = async context => {
           ? SemVer.satisfies(release.version, FWMAJORVERSION, { includePrerelease: true })
           : true),
     );
-    console.log("FINAL RELEASES", finalReleases);
     finalReleases.sort((a, b) => (SemVer.lt(SemVer.clean(a.version), SemVer.clean(b.version)) ? 1 : -1));
     if (context.device.bootloader) return { firmwareList: finalReleases, isUpdated: false, isBeta: false };
     isUpdated = context.device.version === finalReleases[0].version;
