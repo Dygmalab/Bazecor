@@ -177,8 +177,20 @@ export default class RecordMacroModal extends React.Component {
 
   componentDidMount() {
     ipcRenderer.on("recorded-key-down", (event, response) => {
+      const { isDelayActive, recorded } = this.state;
       console.log("Check key-down", response);
-      const newRecorded = this.state.recorded;
+      const newRecorded = recorded;
+      if (isDelayActive && recorded.length > 0) {
+        const timePast = response.time - recorded[recorded.length - 1].time;
+        if (timePast !== undefined && timePast > 1)
+          newRecorded.push({
+            char: response.name,
+            keycode: timePast,
+            action: 2,
+            time: response.time,
+            isMod: this.translator[response.event.keycode] >= 224 && this.translator[response.event.keycode] <= 231,
+          });
+      }
       newRecorded.push({
         char: response.name,
         keycode: this.translator[response.event.keycode],
@@ -191,8 +203,20 @@ export default class RecordMacroModal extends React.Component {
       });
     });
     ipcRenderer.on("recorded-key-up", (event, response) => {
+      const { isDelayActive, recorded } = this.state;
       console.log("Check key-up", response);
-      const newRecorded = this.state.recorded;
+      const newRecorded = recorded;
+      if (isDelayActive) {
+        const timePast = response.time - recorded[recorded.length - 1].time;
+        if (timePast !== undefined && timePast > 1)
+          newRecorded.push({
+            char: response.name,
+            keycode: timePast,
+            action: 2,
+            time: response.time,
+            isMod: this.translator[response.event.keycode] >= 224 && this.translator[response.event.keycode] <= 231,
+          });
+      }
       newRecorded.push({
         char: response.name,
         keycode: this.translator[response.event.keycode],
@@ -285,14 +309,6 @@ export default class RecordMacroModal extends React.Component {
         if (i >= recorded.length - 1) {
           newRecorded.push(recorded[recorded.length - 1]);
         }
-        continue;
-      }
-      if (recorded[p].action === 7 && recorded[i].action === 6 && this.state.isDelayActive) {
-        console.log(`Inserted Delay with ${recorded[i].time - recorded[p].time} ms`);
-        newRecorded.push(JSON.parse(JSON.stringify(recorded[p])));
-        recorded[p].action = 2;
-        recorded[p].keycode = recorded[i].time - recorded[p].time;
-        newRecorded.push(recorded[p]);
         continue;
       }
       console.log(`Added as end of interaction ${recorded[p].char} to the rest of the elems`);
