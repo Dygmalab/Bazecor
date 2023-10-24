@@ -664,6 +664,7 @@ class MacroEditor extends React.Component {
 MacroEditor.propTypes = {
   startContext: PropTypes.func,
   onDisconnect: PropTypes.func,
+  setLoading: PropTypes.func,
 };
 
 export default MacroEditor;
