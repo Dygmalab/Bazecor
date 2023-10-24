@@ -1818,18 +1818,18 @@ class LayoutEditor extends React.Component {
       layerData = isReadOnly ? keymap.default[cLayer] : keymap.custom[cLayer - keymap.default.length];
     }
 
-    if (layerData != undefined) {
+    if (layerData !== undefined) {
       layerData = layerData.map(key => {
         const newMKey = key;
-        if (key.extraLabel == "MACRO") {
+        const MNumber = key.keyCode - 53852;
+        if (key.extraLabel === "MACRO") {
           if (
-            macros.length > parseInt(key.label) &&
-            macros[parseInt(key.label)] != undefined &&
-            macros[parseInt(key.label)].name != undefined &&
-            macros[parseInt(key.label)].name.substr(0, 5) != "" &&
+            macros[MNumber] !== undefined &&
+            macros[MNumber].name !== undefined &&
+            macros[MNumber].name.substr(0, 5) !== "" &&
             !/\p{L}/u.test(key.label)
           ) {
-            newMKey.label = macros[parseInt(key.label)].name.substr(0, 5);
+            newMKey.label = macros[MNumber].name.substr(0, 5);
           }
         }
         return newMKey;
