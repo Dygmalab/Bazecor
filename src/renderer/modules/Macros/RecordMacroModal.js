@@ -311,14 +311,6 @@ export default class RecordMacroModal extends React.Component {
         }
         continue;
       }
-      if (recorded[p].action === 7 && recorded[i].action === 6 && this.state.isDelayActive) {
-        console.log(`Inserted Delay with ${recorded[i].time - recorded[p].time} ms`);
-        newRecorded.push(JSON.parse(JSON.stringify(recorded[p])));
-        recorded[p].action = 2;
-        recorded[p].keycode = recorded[i].time - recorded[p].time;
-        newRecorded.push(recorded[p]);
-        continue;
-      }
       console.log(`Added as end of interaction ${recorded[p].char} to the rest of the elems`);
       newRecorded.push(recorded[p]);
       if (i === recorded.length - 1) {
@@ -340,7 +332,7 @@ export default class RecordMacroModal extends React.Component {
 
   render() {
     const { showModal, isRecording, isDelayActive, recorded } = this.state;
-    console.log("rendering", recorded);
+    console.log("rendering");
     return (
       <Styles>
         <RegularButton
