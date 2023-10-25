@@ -16,6 +16,7 @@
  */
 
 import React, { useState, useEffect } from "react";
+import PropTypes from "prop-types";
 import Styled from "styled-components";
 import { useMachine } from "@xstate/react";
 import i18n from "@Renderer/i18n";
@@ -31,7 +32,8 @@ import { FirmwareLoader } from "@Renderer/component/Loader";
 import { IconLoader } from "@Renderer/component/Icon";
 
 // Visual modules
-import { FirmwareNeuronStatus, FirmwareVersionStatus } from "@Renderer/modules/Firmware";
+import FirmwareNeuronStatus from "./FirmwareNeuronStatus";
+import FirmwareVersionStatus from "./FirmwareVersionStatus";
 
 const Style = Styled.div`
 width: 100%;
@@ -162,17 +164,21 @@ height:inherit;
 `;
 
 function FirmwareUpdatePanel(props) {
-  const { nextBlock, retryBlock, errorBlock, allowBeta } = props;
+  const { nextBlock, errorBlock, allowBeta } = props;
   const [state, send] = useMachine(FWSelection, { context: { allowBeta } });
-
   const [loading, setLoading] = useState(true);
+
+  let flashButtonText = state.context.stateblock === 4 ? "Processing..." : "";
+  if (flashButtonText === "")
+    flashButtonText = state.context.isUpdated ? i18n.firmwareUpdate.flashing.buttonUpdated : i18n.firmwareUpdate.flashing.button;
+
   useEffect(() => {
     if (state.context.stateblock >= 3 || state.context.stateblock === -1) {
       setLoading(false);
     }
     if (state.matches("success")) nextBlock(state.context);
     if (state.matches("failure")) errorBlock(state.context.error);
-  }, [state]);
+  }, [errorBlock, nextBlock, state]);
 
   return (
     <Style>
@@ -230,13 +236,7 @@ function FirmwareUpdatePanel(props) {
                 <RegularButton
                   className="flashingbutton nooutlined"
                   styles={state.context.isUpdated ? "outline transp-bg" : "primary"}
-                  buttonText={
-                    state.context.stateblock === 4
-                      ? "Processing..."
-                      : state.context.isUpdated
-                      ? i18n.firmwareUpdate.flashing.buttonUpdated
-                      : i18n.firmwareUpdate.flashing.button
-                  }
+                  buttonText={flashButtonText}
                   icoSVG={state.context.stateblock === 4 ? <IconLoader /> : null}
                   icoPosition={state.context.stateblock === 4 ? "right" : null}
                   disabled={state.context.stateblock === 4}
@@ -260,5 +260,11 @@ function FirmwareUpdatePanel(props) {
     </Style>
   );
 }
+
+FirmwareUpdatePanel.propTypes = {
+  nextBlock: PropTypes.func,
+  errorBlock: PropTypes.func,
+  allowBeta: PropTypes.bool,
+};
 
 export default FirmwareUpdatePanel;

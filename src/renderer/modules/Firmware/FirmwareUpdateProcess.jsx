@@ -16,6 +16,7 @@
  */
 
 import React, { useState, useEffect } from "react";
+import PropTypes from "prop-types";
 import Styled from "styled-components";
 import { useMachine } from "@xstate/react";
 import i18n from "@Renderer/i18n";
@@ -29,13 +30,13 @@ import { RegularButton } from "@Renderer/component/Button";
 import { FirmwareLoader } from "@Renderer/component/Loader";
 
 // Visual modules
-import { FirmwareProgressStatus } from "@Renderer/modules/Firmware";
+import FirmwareProgressStatus from "./FirmwareProgressStatus";
 
-const Style = Styled.div`   
-width: 100%;  
+const Style = Styled.div`
+width: 100%;
 height: inherit;
 .firmware-wrapper {
-  max-width: 680px;   
+  max-width: 680px;
   width: 100%;
   margin: auto;
   .firmware-row {
@@ -45,24 +46,24 @@ height: inherit;
   }
   .firmware-content {
     flex: 0 0 66%;
-    background: ${({ theme }) => theme.styles.firmwareUpdatePanel.backgroundContent}; 
+    background: ${({ theme }) => theme.styles.firmwareUpdatePanel.backgroundContent};
   }
   .firmware-sidebar {
     flex: 0 0 34%;
-    background: ${({ theme }) => theme.styles.firmwareUpdatePanel.backgroundSidebar}; 
+    background: ${({ theme }) => theme.styles.firmwareUpdatePanel.backgroundSidebar};
   }
   .firmware-content--inner {
     padding: 32px;
   }
   .borderLeftTopRadius {
     border-top-left-radius: 14px;
-  } 
+  }
   .borderRightTopRadius {
     border-top-right-radius: 14px;
   }
   .borderLeftBottomRadius {
     border-bottom-left-radius: 14px;
-  } 
+  }
   .borderRightBottomRadius {
     border-bottom-right-radius: 14px;
   }
@@ -71,17 +72,17 @@ height: inherit;
   width: 100%;
   margin-top: 62px;
 }
-.holdButton { 
+.holdButton {
   margin-bottom: 32px;
   display: flex;
   grid-gap: 8px;
 }
 .holdTootip {
   h6 {
-    font-size: 13px;  
+    font-size: 13px;
     font-weight: 395;
     letter-spacing: 0;
-    color:  ${({ theme }) => theme.colors.gray300}; 
+    color:  ${({ theme }) => theme.colors.gray300};
   }
 }
 .progress-visualizer {
@@ -93,6 +94,16 @@ height: inherit;
 function FirmwareUpdateProcess(props) {
   const { nextBlock, retryBlock, context, toggleFlashing, toggleFwUpdate, onDisconnect, device } = props;
   const [toggledFlashing, sendToggledFlashing] = useState(false);
+  const handleKeyDown = event => {
+    switch (event.keyCode) {
+      case 27:
+        console.log("esc key logged");
+        send("ESCPRESSED");
+        break;
+      default:
+        break;
+    }
+  };
   const [state, send] = useMachine(FlashDevice, {
     context: {
       device: context.device,
@@ -134,24 +145,13 @@ function FirmwareUpdateProcess(props) {
     },
   });
 
-  const handleKeyDown = event => {
-    switch (event.keyCode) {
-      case 27:
-        console.log("esc key logged");
-        send("ESCPRESSED");
-        break;
-      default:
-        break;
-    }
-  };
-
   const [loading, setLoading] = useState(true);
   useEffect(() => {
     if (state.context.stateblock > 0) {
       setLoading(false);
     }
     if (state.matches("success")) nextBlock(state.context);
-  }, [state]);
+  }, [nextBlock, state]);
 
   const stepsDefy = [
     { step: 1, title: i18n.firmwareUpdate.texts.flashCardTitle1, description: i18n.firmwareUpdate.texts.flashCardTitle2 },
@@ -313,5 +313,15 @@ function FirmwareUpdateProcess(props) {
     </Style>
   );
 }
+
+FirmwareUpdateProcess.propTypes = {
+  nextBlock: PropTypes.func,
+  retryBlock: PropTypes.func,
+  context: PropTypes.any,
+  toggleFlashing: PropTypes.func,
+  toggleFwUpdate: PropTypes.func,
+  onDisconnect: PropTypes.func,
+  device: PropTypes.any,
+};
 
 export default FirmwareUpdateProcess;
