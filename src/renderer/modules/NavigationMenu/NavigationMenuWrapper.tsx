@@ -16,16 +16,27 @@
  */
 
 import React from "react";
-import PropTypes from "prop-types";
+import Pages from "@Types/pages";
 import NavigationMenu from "./NavigationMenu";
 
-function Header(props) {
-  const { connected, pages, flashing, fwUpdate, allowBeta, loading } = props;
+interface HeaderInterface {
+  connected: boolean;
+  flashing: boolean;
+  fwUpdate: boolean;
+  allowBeta: boolean;
+  loading: boolean;
+  inContext: boolean;
+  pages: Pages;
+}
+
+function Header(props: HeaderInterface) {
+  const { connected, pages, flashing, fwUpdate, allowBeta, loading, inContext } = props;
 
   return (
     <NavigationMenu
       connected={connected}
       pages={pages}
+      inContext={inContext}
       flashing={flashing}
       fwUpdate={fwUpdate}
       allowBeta={allowBeta}
@@ -33,13 +44,5 @@ function Header(props) {
     />
   );
 }
-Header.propTypes = {
-  connected: PropTypes.bool.isRequired,
-  pages: PropTypes.object.isRequired,
-  flashing: PropTypes.bool.isRequired,
-  fwUpdate: PropTypes.bool.isRequired,
-  allowBeta: PropTypes.any.isRequired,
-  loading: PropTypes.bool.isRequired,
-};
 
 export default Header;

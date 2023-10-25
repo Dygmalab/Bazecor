@@ -28,6 +28,9 @@ const English = {
     preferenceFailOnSaveBody: "Please try again.",
     dismiss: "Dismiss",
     troubleshooting: "Troubleshooting",
+    alertUnsavedTitle: "Unsaved changes",
+    alertUnsavedDescription:
+      "<p style='font-weight:401;'>You have made changes that haven't been saved yet.</p><p>Save or discard them before leaving.</p>",
   },
   success: {
     preferencesSaved: "Your preferences have been saved.",
