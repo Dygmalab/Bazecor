@@ -11,14 +11,14 @@ interface AlertModalProps {
 
 const AlertModal = ({ showModal, setShowModal, title, description }: AlertModalProps) => (
   <Modal size="lg" show={showModal} onHide={() => setShowModal(false)} aria-labelledby="contained-modal-title-vcenter" centered>
-    <Modal.Header closeButton>
+    <Modal.Header>
       <Modal.Title>{title}</Modal.Title>
     </Modal.Header>
     <Modal.Body>
       <div dangerouslySetInnerHTML={{ __html: description }} />
     </Modal.Body>
     <Modal.Footer>
-      <RegularButton buttonText="Ok" styles="outline gradient" onClick={() => setShowModal(false)} />
+      <RegularButton buttonText="Go Back" styles="outline gradient" onClick={() => setShowModal(false)} />
     </Modal.Footer>
   </Modal>
 );
