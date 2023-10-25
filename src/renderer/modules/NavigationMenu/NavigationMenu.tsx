@@ -26,6 +26,7 @@ import Styled from "styled-components";
 import Version from "@Types/version";
 import Pages from "@Types/pages";
 import DygmaLogo from "@Assets/logo.svg";
+import { AlertModal } from "@Renderer/component/Modal";
 import { BatteryStatus } from "../Battery";
 import i18n from "../../i18n";
 import Focus from "../../../api/focus";
@@ -168,19 +169,21 @@ function NavigationMenu(props: NavigationMenuProps): React.JSX.Element {
     setVirtual(focus.file);
   }
 
-  function linkHandler(event: React.MouseEvent<HTMLElement>) {
-    if (inContext) {
-      event.preventDefault();
-      alert("you have pending changes! save or discard them before leaving.");
-    }
-  }
-
   useEffect(() => {
     if (!flashing && connected) {
       checkKeyboardMetadata();
     }
   }, [flashing, connected]);
 
+  const [showAlertModal, setShowAlertModal] = useState(false);
+
+  function linkHandler(event: React.MouseEvent<HTMLElement>) {
+    if (inContext) {
+      event.preventDefault();
+      setShowAlertModal(true);
+      // alert("you have pending changes! save or discard them before leaving.");
+    }
+  }
   return (
     <Styles>
       <Navbar
@@ -279,6 +282,12 @@ function NavigationMenu(props: NavigationMenuProps): React.JSX.Element {
           </div>
         </Nav>
       </Navbar>
+      <AlertModal
+        showModal={showAlertModal}
+        setShowModal={setShowAlertModal}
+        title={i18n.errors.alertUnsavedTitle}
+        description={i18n.errors.alertUnsavedDescription}
+      />
     </Styles>
   );
 }
