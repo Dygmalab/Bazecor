@@ -253,11 +253,13 @@ class MacroEditor extends React.Component {
   };
 
   addToActions = actions => {
+    const { startContext } = this.props;
     const { macros, selectedMacro } = this.state;
 
     const macrosList = JSON.parse(JSON.stringify(macros));
     macrosList[selectedMacro].actions = actions;
     this.setState({ macros: macrosList, modified: true });
+    startContext();
   };
 
   duplicateMacro = () => {
@@ -276,18 +278,22 @@ class MacroEditor extends React.Component {
 
   // Define updateActions function to update the actions of the selected macro
   updateActions = actions => {
+    const { startContext } = this.props;
     const { macros, selectedMacro } = this.state;
 
     const macrosList = macros;
     macrosList[selectedMacro].actions = actions;
     this.setState({ macros: macrosList, modified: true });
+    startContext();
   };
 
   saveName = data => {
+    const { startContext } = this.props;
     const { macros, selectedMacro } = this.state;
     const localMacros = JSON.parse(JSON.stringify(macros));
     localMacros[selectedMacro].name = data;
     this.setState({ macros: localMacros, modified: true });
+    startContext();
   };
 
   updateScroll = scrollPos => {
@@ -306,15 +312,10 @@ class MacroEditor extends React.Component {
 
   async writeMacros() {
     const { macros, neurons, neuronID, keymap } = this.state;
-    const { setLoading } = this.props;
+    const { setLoading, cancelContext } = this.props;
     setLoading(true);
     const focus = new Focus();
     const newMacros = macros;
-    this.setState({
-      modified: false,
-      macros: newMacros,
-      storedMacros: newMacros,
-    });
     const localNeurons = JSON.parse(JSON.stringify(neurons));
     localNeurons[neuronID].macros = newMacros;
     store.set("neurons", localNeurons);
@@ -328,9 +329,16 @@ class MacroEditor extends React.Component {
         autoClose: 2000,
         icon: "",
       });
+      this.setState({
+        modified: false,
+        macros: newMacros,
+        storedMacros: newMacros,
+      });
+      cancelContext();
       setLoading(false);
     } catch (error) {
       toast.error(<ToastMessage title={error} icon={<IconFloppyDisk />} />, { icon: "" });
+      cancelContext();
       setLoading(false);
     }
   }
@@ -475,7 +483,7 @@ class MacroEditor extends React.Component {
   }
 
   async loadMacros() {
-    const { onDisconnect, setLoading } = this.props;
+    const { onDisconnect, setLoading, cancelContext } = this.props;
     setLoading(true);
     const focus = new Focus();
     try {
@@ -517,10 +525,12 @@ class MacroEditor extends React.Component {
         totalMemory: tMem,
         loading: false,
       });
+      cancelContext();
       setLoading(false);
       return true;
     } catch (e) {
       toast.error(<ToastMessage title={e} icon={<IconFloppyDisk />} />, { icon: "" });
+      cancelContext();
       setLoading(false);
       onDisconnect();
       return false;
@@ -673,6 +683,7 @@ MacroEditor.propTypes = {
   startContext: PropTypes.func,
   onDisconnect: PropTypes.func,
   setLoading: PropTypes.func,
+  cancelContext: PropTypes.func,
 };
 
 export default MacroEditor;
