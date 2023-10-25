@@ -164,8 +164,8 @@ height:inherit;
 `;
 
 function FirmwareCheckProcessPanel(props) {
-  const { nextBlock, retryBlock, context } = props;
-  const [state, send] = useMachine(DeviceChecks, { context: { device: context.device } });
+  const { nextBlock, retryBlock, errorBlock, context } = props;
+  const [state, send] = useMachine(DeviceChecks, { context: { device: context.device, firmwares: context.firmwares } });
   const [listItems, setlistItems] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -174,7 +174,7 @@ function FirmwareCheckProcessPanel(props) {
       setLoading(false);
     }
     if (state.matches("success")) nextBlock(state.context);
-  }, [state.context, state, nextBlock]);
+  }, [state.context, state, nextBlock, errorBlock]);
 
   useEffect(() => {
     const newValue = ["sideLeftOk", "sideLeftBL", "sideRightOK", "sideRightBL", "backup"].map((text, index) => {
@@ -289,7 +289,8 @@ function FirmwareCheckProcessPanel(props) {
 FirmwareCheckProcessPanel.propTypes = {
   nextBlock: PropTypes.func,
   retryBlock: PropTypes.func,
-  context: PropTypes.any,
+  errorBlock: PropTypes.func,
+  context: PropTypes.object,
 };
 
 export default FirmwareCheckProcessPanel;

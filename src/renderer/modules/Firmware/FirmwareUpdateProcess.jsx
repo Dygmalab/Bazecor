@@ -92,7 +92,7 @@ height: inherit;
 `;
 
 function FirmwareUpdateProcess(props) {
-  const { nextBlock, retryBlock, context, toggleFlashing, toggleFwUpdate, onDisconnect, device } = props;
+  const { nextBlock, retryBlock, errorBlock, context, toggleFlashing, toggleFwUpdate, onDisconnect, device } = props;
   const [toggledFlashing, sendToggledFlashing] = useState(false);
   const handleKeyDown = event => {
     switch (event.keyCode) {
@@ -151,7 +151,7 @@ function FirmwareUpdateProcess(props) {
       setLoading(false);
     }
     if (state.matches("success")) nextBlock(state.context);
-  }, [nextBlock, state]);
+  }, [nextBlock, errorBlock, state]);
 
   const stepsDefy = [
     { step: 1, title: i18n.firmwareUpdate.texts.flashCardTitle1, description: i18n.firmwareUpdate.texts.flashCardTitle2 },
@@ -317,6 +317,7 @@ function FirmwareUpdateProcess(props) {
 FirmwareUpdateProcess.propTypes = {
   nextBlock: PropTypes.func,
   retryBlock: PropTypes.func,
+  errorBlock: PropTypes.func,
   context: PropTypes.any,
   toggleFlashing: PropTypes.func,
   toggleFwUpdate: PropTypes.func,

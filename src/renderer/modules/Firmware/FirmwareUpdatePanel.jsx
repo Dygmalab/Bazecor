@@ -164,7 +164,7 @@ height:inherit;
 `;
 
 function FirmwareUpdatePanel(props) {
-  const { nextBlock, errorBlock, allowBeta } = props;
+  const { nextBlock, retryBlock, errorBlock, allowBeta } = props;
   const [state, send] = useMachine(FWSelection, { context: { allowBeta } });
   const [loading, setLoading] = useState(true);
 
@@ -178,7 +178,7 @@ function FirmwareUpdatePanel(props) {
     }
     if (state.matches("success")) nextBlock(state.context);
     if (state.matches("failure")) errorBlock(state.context.error);
-  }, [errorBlock, nextBlock, state]);
+  }, [errorBlock, nextBlock, retryBlock, state]);
 
   return (
     <Style>
@@ -264,6 +264,7 @@ function FirmwareUpdatePanel(props) {
 FirmwareUpdatePanel.propTypes = {
   nextBlock: PropTypes.func,
   errorBlock: PropTypes.func,
+  retryBlock: PropTypes.func,
   allowBeta: PropTypes.bool,
 };
 

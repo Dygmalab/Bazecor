@@ -296,7 +296,12 @@ const SelectionSM = createMachine({
           downloadFirmware(context.typeSelected, context.device.info, context.firmwareList, context.selectedFirmware),
         onDone: {
           target: "success",
-          actions: [assign({ firmwares: (context, event) => event.data })],
+          actions: [
+            assign({ firmwares: (context, event) => event.data }),
+            (context, event) => {
+              console.log("DOWNLOADED FW", event.data);
+            },
+          ],
         },
         onError: {
           target: "failure",
