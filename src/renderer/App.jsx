@@ -309,6 +309,7 @@ class App extends React.Component {
           flashing={!connected}
           fwUpdate={fwUpdate}
           allowBeta={allowBeta}
+          inContext={contextBar}
           loading={loading}
         />
         <div className="main-container">

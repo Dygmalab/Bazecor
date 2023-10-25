@@ -99,10 +99,11 @@ const Styles = Styled.div`
 interface NavigationMenuProps {
   connected: boolean;
   flashing: boolean;
-  pages: Pages;
   fwUpdate: boolean;
   allowBeta: boolean;
   loading: boolean;
+  inContext: boolean;
+  pages: Pages;
 }
 
 interface Device {
@@ -121,7 +122,7 @@ function NavigationMenu(props: NavigationMenuProps): React.JSX.Element {
   const [virtual, setVirtual] = useState(false);
   const location = useLocation();
   const currentPage = location.pathname;
-  const { connected, pages, fwUpdate, flashing, allowBeta, loading } = props;
+  const { connected, pages, fwUpdate, flashing, allowBeta, loading, inContext } = props;
 
   const getGitHubFW = async (product: any) => {
     const releases: any[] = [];
@@ -167,6 +168,13 @@ function NavigationMenu(props: NavigationMenuProps): React.JSX.Element {
     setVirtual(focus.file);
   }
 
+  function linkHandler(event: React.MouseEvent<HTMLElement>) {
+    if (inContext) {
+      event.preventDefault();
+      alert("you have pending changes! save or discard them before leaving.");
+    }
+  }
+
   useEffect(() => {
     if (!flashing && connected) {
       checkKeyboardMetadata();
@@ -183,7 +191,7 @@ function NavigationMenu(props: NavigationMenuProps): React.JSX.Element {
         }`}
         sticky="top"
       >
-        <NavbarBrand as={Link} to="/" className="brand-image d-lg-block">
+        <NavbarBrand as={Link} onClick={linkHandler} to="/" className="brand-image d-lg-block">
           <img alt="" src={DygmaLogo} className="d-inline-block align-top" />
         </NavbarBrand>
         <Nav>
@@ -192,7 +200,7 @@ function NavigationMenu(props: NavigationMenuProps): React.JSX.Element {
               <>
                 {pages.keymap && (
                   <>
-                    <Link to="/editor" className={`list-link ${fwUpdate ? "disabled" : ""}`}>
+                    <Link to="/editor" onClick={linkHandler} className={`list-link ${fwUpdate ? "disabled" : ""}`}>
                       <NavigationButton
                         selected={currentPage === "/editor"}
                         buttonText={i18n.app.menu.editor}
@@ -200,7 +208,7 @@ function NavigationMenu(props: NavigationMenuProps): React.JSX.Element {
                         disabled={fwUpdate}
                       />
                     </Link>
-                    <Link to="/macros" className={`list-link ${fwUpdate ? "disabled" : ""}`}>
+                    <Link to="/macros" onClick={linkHandler} className={`list-link ${fwUpdate ? "disabled" : ""}`}>
                       <NavigationButton
                         selected={currentPage === "/macros"}
                         buttonText={i18n.app.menu.macros}
@@ -208,7 +216,7 @@ function NavigationMenu(props: NavigationMenuProps): React.JSX.Element {
                         disabled={fwUpdate}
                       />
                     </Link>
-                    <Link to="/superkeys" className={`list-link ${fwUpdate || !isBeta ? "disabled" : ""}`}>
+                    <Link to="/superkeys" onClick={linkHandler} className={`list-link ${fwUpdate || !isBeta ? "disabled" : ""}`}>
                       <NavigationButton
                         selected={currentPage === "/superkeys"}
                         buttonText={i18n.app.menu.superkeys}
@@ -220,7 +228,11 @@ function NavigationMenu(props: NavigationMenuProps): React.JSX.Element {
                     </Link>
                   </>
                 )}
-                <Link to="/firmware-update" className={`list-link ${fwUpdate || virtual ? "disabled" : ""}`}>
+                <Link
+                  to="/firmware-update"
+                  onClick={linkHandler}
+                  className={`list-link ${fwUpdate || virtual ? "disabled" : ""}`}
+                >
                   <NavigationButton
                     selected={currentPage === "/firmware-update"}
                     showNotif={isUpdated}
@@ -231,7 +243,7 @@ function NavigationMenu(props: NavigationMenuProps): React.JSX.Element {
                 </Link>
               </>
             )}
-            <Link to="/keyboard-select" className={`list-link ${fwUpdate ? "disabled" : ""}`}>
+            <Link to="/keyboard-select" onClick={linkHandler} className={`list-link ${fwUpdate ? "disabled" : ""}`}>
               <NavigationButton
                 selected={currentPage === "/keyboard-select"}
                 buttonText={i18n.app.menu.selectAKeyboard}
@@ -241,7 +253,7 @@ function NavigationMenu(props: NavigationMenuProps): React.JSX.Element {
             </Link>
           </div>
           <div className="bottomMenu">
-            <Link to="/preferences" className={`list-link ${fwUpdate ? "disabled" : ""}`}>
+            <Link to="/preferences" onClick={linkHandler} className={`list-link ${fwUpdate ? "disabled" : ""}`}>
               <NavigationButton
                 selected={currentPage === "/preferences"}
                 buttonText={i18n.app.menu.preferences}
@@ -251,7 +263,7 @@ function NavigationMenu(props: NavigationMenuProps): React.JSX.Element {
             </Link>
             {connected && device && device.info && device.info.keyboardType === "wireless" && versions !== null ? (
               <>
-                <Link to="/wireless" className={`list-link ${fwUpdate ? "disabled" : ""}`}>
+                <Link to="/wireless" onClick={linkHandler} className={`list-link ${fwUpdate ? "disabled" : ""}`}>
                   <NavigationButton
                     selected={currentPage === "/wireless"}
                     buttonText={i18n.app.menu.wireless}
@@ -262,7 +274,7 @@ function NavigationMenu(props: NavigationMenuProps): React.JSX.Element {
                 <BatteryStatus disable={fwUpdate || virtual || loading} />
               </>
             ) : (
-              <></>
+              ""
             )}
           </div>
         </Nav>
