@@ -2,6 +2,7 @@ import { createMachine, assign, raise } from "xstate";
 import fs from "fs";
 import path from "path";
 import { ipcRenderer } from "electron";
+import { RestoringError } from "@Renderer/Errors";
 import SideFlaser from "../../../api/flash/defyFlasher/sideFlasher";
 import Focus from "../../../api/focus";
 import Hardware from "../../../api/hardware";
@@ -94,7 +95,8 @@ const restoreSettings = async (context, backup, stateUpd) => {
     stateUpd("restore", 100);
     return true;
   } catch (e) {
-    return false;
+    console.log(e);
+    throw new RestoringError("Could not restore layers", e, comPath, context.originalDevice.device.info);
   }
 };
 
@@ -293,9 +295,8 @@ const restoreDefies = async (context, callback) => {
       stateUpdate(stage, percentage, context, callback);
     });
   } catch (error) {
-    console.warn("error when restoring Neuron");
-    console.error(error);
-    throw new Error(error);
+    console.warn(`Could not restore Defy ${context.DefyVariant} backup`);
+    throw error;
   }
   return result;
 };
@@ -365,9 +366,8 @@ const restoreRaise = async (context, callback) => {
       stateUpdate(stage, percentage, context, callback);
     });
   } catch (error) {
-    console.warn("error when restoring Neuron");
-    console.error(error);
-    throw new Error(error);
+    console.warning("Could not restore Raise backup");
+    throw error;
   }
   return result;
 };
@@ -455,7 +455,7 @@ const FlashDevice = createMachine(
           },
           onError: {
             target: "failure",
-            actions: assign({ error: (context, event) => event }),
+            actions: assign({ error: (context, event) => event.data }),
           },
         },
         on: {
@@ -497,7 +497,7 @@ const FlashDevice = createMachine(
           },
           onError: {
             target: "failure",
-            actions: assign({ error: (context, event) => event }),
+            actions: assign({ error: (context, event) => event.data }),
           },
         },
         on: [
@@ -537,7 +537,7 @@ const FlashDevice = createMachine(
           },
           onError: {
             target: "failure",
-            actions: assign({ error: (context, event) => event }),
+            actions: assign({ error: (context, event) => event.data }),
           },
         },
         on: {
@@ -571,7 +571,7 @@ const FlashDevice = createMachine(
           },
           onError: {
             target: "failure",
-            actions: assign({ error: (context, event) => event }),
+            actions: assign({ error: (context, event) => event.data }),
           },
         },
         on: {
@@ -606,7 +606,7 @@ const FlashDevice = createMachine(
           },
           onError: {
             target: "failure",
-            actions: assign({ error: (context, event) => event }),
+            actions: assign({ error: (context, event) => event.data }),
           },
         },
         on: {
@@ -640,7 +640,7 @@ const FlashDevice = createMachine(
           },
           onError: {
             target: "failure",
-            actions: assign({ error: (context, event) => event }),
+            actions: assign({ error: (context, event) => event.data }),
           },
         },
         on: {
@@ -674,7 +674,7 @@ const FlashDevice = createMachine(
           },
           onError: {
             target: "failure",
-            actions: assign({ error: (context, event) => event }),
+            actions: assign({ error: (context, event) => event.data }),
           },
         },
         on: {
@@ -708,7 +708,7 @@ const FlashDevice = createMachine(
           },
           onError: {
             target: "failure",
-            actions: assign({ error: (context, event) => event }),
+            actions: assign({ error: (context, event) => event.data }),
           },
         },
         on: {
@@ -743,7 +743,7 @@ const FlashDevice = createMachine(
           },
           onError: {
             target: "failure",
-            actions: assign({ error: (context, event) => event }),
+            actions: assign({ error: (context, event) => event.data }),
           },
         },
         on: {
@@ -777,7 +777,7 @@ const FlashDevice = createMachine(
           },
           onError: {
             target: "failure",
-            actions: assign({ error: (context, event) => event }),
+            actions: assign({ error: (context, event) => event.data }),
           },
         },
         on: {
