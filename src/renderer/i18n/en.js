@@ -708,6 +708,8 @@ const English = {
         "<strong>Before the update the Neuron will backup your layers and settings after that the update process will begin automatically.</strong>",
       disclaimerContent2:
         "If the firmware update process isn't successful, don't worry. It won't damage your device, but you will need to repeat the process.",
+      disclaimerContent3:
+        "⚠️ If your layers are not automatically restored, don't worry, you can restore a backup from the preference menu.",
       disclaimerCard3: "Click Next to backup your layers and settings, and start the firmware update process.",
       errorTitle: "Oops! Review the following before continuing",
       errorMissingCables: "Connect both sides using cables and try again.",
