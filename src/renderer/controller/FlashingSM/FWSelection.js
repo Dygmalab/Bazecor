@@ -75,7 +75,9 @@ const GitHubRead = async context => {
     finalReleases = fwReleases.filter(
       release =>
         release.name === context.device.info.product &&
-        (context.device.info.product === "Defy" ? SemVer.satisfies(release.version, FWMAJORVERSION) : true),
+        (context.device.info.product === "Defy"
+          ? SemVer.satisfies(release.version, FWMAJORVERSION, { includePrerelease: true })
+          : true),
     );
     finalReleases.sort((a, b) => (SemVer.lt(SemVer.clean(a.version), SemVer.clean(b.version)) ? 1 : -1));
     if (context.device.bootloader) return { firmwareList: finalReleases, isUpdated: false, isBeta: false };
@@ -294,7 +296,12 @@ const SelectionSM = createMachine({
           downloadFirmware(context.typeSelected, context.device.info, context.firmwareList, context.selectedFirmware),
         onDone: {
           target: "success",
-          actions: [assign({ firmwares: (context, event) => event.data })],
+          actions: [
+            assign({ firmwares: (context, event) => event.data }),
+            (context, event) => {
+              console.log("DOWNLOADED FW", event.data);
+            },
+          ],
         },
         onError: {
           target: "failure",

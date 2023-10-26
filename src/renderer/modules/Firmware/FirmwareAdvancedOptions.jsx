@@ -43,7 +43,7 @@ const Style = Styled.div`
 }
 .buttonToggler.dropdown-toggle.btn {
   border: 1px solid transparent;
-} 
+}
 .dropdown-menu {
   min-width: 14rem;
   max-width: 14rem;
@@ -66,7 +66,8 @@ const Style = Styled.div`
  * @param {function} selectFirmware - The function that allows the user select the custom software
  * @returns {<FirmwareAdvancedOptions>} FirmwareAdvancedOptions component.
  */
-function FirmwareAdvancedOptions({ firmwareFilename, selectFirmware, selectExperimental }) {
+function FirmwareAdvancedOptions(props) {
+  const { firmwareFilename, selectFirmware, selectExperimental } = props;
   return (
     <Style>
       <Dropdown className="dropdownWithContent AdvancedUsers">
@@ -98,5 +99,11 @@ function FirmwareAdvancedOptions({ firmwareFilename, selectFirmware, selectExper
     </Style>
   );
 }
+
+FirmwareAdvancedOptions.propTypes = {
+  firmwareFilename: PropTypes.string,
+  selectFirmware: PropTypes.func,
+  selectExperimental: PropTypes.func,
+};
 
 export default FirmwareAdvancedOptions;

@@ -16,8 +16,8 @@
  */
 
 import React from "react";
-import Styled from "styled-components";
-import { useTheme } from "styled-components";
+import PropTypes from "prop-types";
+import Styled, { useTheme } from "styled-components";
 import i18n from "../../i18n";
 
 const Style = Styled.div`
@@ -36,7 +36,7 @@ height: 100%;
     }
     .versionNeuronText {
         margin-top: 16px;
-        color: ${({ theme }) => theme.colors.gray200}; 
+        color: ${({ theme }) => theme.colors.gray200};
         font-size: 14px;
         font-weight: 500;
     }
@@ -45,16 +45,16 @@ height: 100%;
         margin-right: auto;
     }
     .fillNeuron {
-        fill: ${({ theme }) => theme.styles.firmwareUpdatePanel.neuronStatusLineWarning}; 
+        fill: ${({ theme }) => theme.styles.firmwareUpdatePanel.neuronStatusLineWarning};
     }
     &.isUpdated {
         .fillNeuron {
-            fill: ${({ theme }) => theme.styles.firmwareUpdatePanel.neuronStatusLineSuccess}; 
+            fill: ${({ theme }) => theme.styles.firmwareUpdatePanel.neuronStatusLineSuccess};
         }
     }
 }
 .lineColor {
-    stroke: ${({ theme }) => theme.styles.firmwareUpdatePanel.neuronStatusLineColor}; 
+    stroke: ${({ theme }) => theme.styles.firmwareUpdatePanel.neuronStatusLineColor};
 }
 .neuronDefyWrapper {
   height: 100%;
@@ -76,7 +76,7 @@ height: 100%;
   color: rgb(var(--color));
 }
 .neuronDefyLight {
-  position: absolute;  
+  position: absolute;
   z-index: 2;
   left: -40px;
   top: -6px;
@@ -84,7 +84,7 @@ height: 100%;
   opacity: 0.5;
 }
 .neuronDefyLightAnimate {
-  position: absolute;  
+  position: absolute;
   z-index: -1;
   filter: blur(18px);
   left: -15px;
@@ -132,16 +132,17 @@ height: 100%;
   }
 }
 `;
-const FirmwareNeuronStatus = ({ isUpdated, status, deviceProduct, keyboardType, icon }) => {
-  let connectionColorMatrixSucess = useTheme().styles.firmwareUpdatePanel.neuronLightMatrixSuccess;
-  let connectionColorMatrixWarning = useTheme().styles.firmwareUpdatePanel.neuronLightMatrixWarning;
-  let neuronImage = useTheme().styles.firmwareUpdatePanel.neuronDefyWirelessImage;
+const FirmwareNeuronStatus = props => {
+  const { isUpdated, status, deviceProduct, keyboardType, icon } = props;
+  const connectionColorMatrixSucess = useTheme().styles.firmwareUpdatePanel.neuronLightMatrixSuccess;
+  const connectionColorMatrixWarning = useTheme().styles.firmwareUpdatePanel.neuronLightMatrixWarning;
+  const neuronImage = useTheme().styles.firmwareUpdatePanel.neuronDefyWirelessImage;
   return (
     <Style>
-      {deviceProduct == "Defy" && keyboardType == "wireless" ? (
-        <div className={`neuronDefyWrapper ${isUpdated && "isUpdated"} ${status ? status : ""}`}>
+      {deviceProduct === "Defy" && keyboardType === "wireless" ? (
+        <div className={`neuronDefyWrapper ${isUpdated && "isUpdated"} ${status || ""}`}>
           <div className="neuronDefyContainer">
-            {icon ? <div className={`neuronIcon ${status ? status : ""}`}>{icon}</div> : ""}
+            {icon ? <div className={`neuronIcon ${status || ""}`}>{icon}</div> : ""}
             <svg
               width="166"
               height="11"
@@ -164,7 +165,7 @@ const FirmwareNeuronStatus = ({ isUpdated, status, deviceProduct, keyboardType, 
                 <path d="M0.148477 57.4629L33.3145 0.0177244L66.4805 57.4629L0.148477 57.4629Z" fill="currentColor" />
               </g>
             </svg>
-            <img src={neuronImage} className="img-fluid image-neuron-defy" />
+            <img alt="Defy-Neuron" src={neuronImage} className="img-fluid image-neuron-defy" />
             <svg
               width="159"
               height="68"
@@ -300,6 +301,14 @@ const FirmwareNeuronStatus = ({ isUpdated, status, deviceProduct, keyboardType, 
       )}
     </Style>
   );
+};
+
+FirmwareNeuronStatus.propTypes = {
+  icon: PropTypes.string,
+  isUpdated: PropTypes.bool,
+  status: PropTypes.string,
+  deviceProduct: PropTypes.string,
+  keyboardType: PropTypes.string,
 };
 
 export default FirmwareNeuronStatus;

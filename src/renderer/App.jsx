@@ -309,8 +309,8 @@ class App extends React.Component {
           flashing={!connected}
           fwUpdate={fwUpdate}
           allowBeta={allowBeta}
+          inContext={contextBar}
           loading={loading}
-          setLoading={this.setLoading}
         />
         <div className="main-container">
           <Routes>
@@ -337,7 +337,6 @@ class App extends React.Component {
                   titleElement={() => document.querySelector("#page-title")}
                   device={device}
                   darkMode={darkMode}
-                  loading={loading}
                   setLoading={this.setLoading}
                 />
               }
@@ -354,7 +353,6 @@ class App extends React.Component {
                   titleElement={() => document.querySelector("#page-title")}
                   appBarElement={() => document.querySelector("#appbar")}
                   darkMode={darkMode}
-                  loading={loading}
                   setLoading={this.setLoading}
                 />
               }
@@ -369,7 +367,6 @@ class App extends React.Component {
                   cancelContext={this.cancelContext}
                   inContext={contextBar}
                   titleElement={() => document.querySelector("#page-title")}
-                  loading={loading}
                   setLoading={this.setLoading}
                 />
               }
@@ -384,7 +381,6 @@ class App extends React.Component {
                   cancelContext={this.cancelContext}
                   inContext={contextBar}
                   titleElement={() => document.querySelector("#page-title")}
-                  loading={loading}
                   setLoading={this.setLoading}
                 />
               }
@@ -418,7 +414,6 @@ class App extends React.Component {
                   updateAllowBeta={this.updateAllowBeta}
                   allowBeta={allowBeta}
                   inContext={contextBar}
-                  loading={loading}
                   setLoading={this.setLoading}
                 />
               }
@@ -437,7 +432,6 @@ class App extends React.Component {
                   updateAllowBeta={this.updateAllowBeta}
                   allowBeta={allowBeta}
                   inContext={contextBar}
-                  loading={loading}
                   setLoading={this.setLoading}
                 />
               }

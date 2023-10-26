@@ -15,12 +15,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import React, { Component } from "react";
+import PropTypes from "prop-types";
 
 import Styled from "styled-components";
 import Spinner from "react-bootstrap/Spinner";
 import i18n from "../../i18n";
 
-import Keymap, { KeymapDB } from "../../../api/keymap";
+import { KeymapDB } from "../../../api/keymap";
 
 import TimelineEditorForm from "./TimelineEditorForm";
 import Title from "../../component/Title";
@@ -29,7 +30,7 @@ import { PreviewMacroModal } from "../../component/Modal";
 
 const Styles = Styled.div`
 background-color: ${({ theme }) => theme.styles.macro.timelineBackground};
-border-radius: 0px; 
+border-radius: 0px;
 margin-top: 0px;
 padding-bottom: 5px;
 .timelineHeader {
@@ -37,7 +38,7 @@ padding-bottom: 5px;
     display: flex;
     align-items: baseline;
     h4 {
-        font-size: 21px; 
+        font-size: 21px;
         color: ${({ theme }) => theme.styles.macro.colorTitle};
         margin: 0;
     }
@@ -137,46 +138,12 @@ class MacroManager extends Component {
     this.portal = React.createRef();
 
     this.state = {
-      open: false,
       componentWidth: 0,
-      rows: [],
-      scrollPos: 0,
     };
     this.keymapDB = new KeymapDB();
 
     this.parseKey = this.parseKey.bind(this);
   }
-
-  parseKey(keycode) {
-    const macro = this.props.macros[parseInt(this.keymapDB.parse(keycode).label)];
-    let macroName;
-    try {
-      macroName = this.props.macros[parseInt(this.keymapDB.parse(keycode).label)]?.name.substr(0, 5);
-    } catch (error) {
-      macroName = "*NotFound*";
-    }
-    if (keycode >= 53852 && keycode <= 53852 + 128) {
-      if (this.props.code !== null) return `${this.keymapDB.parse(keycode).extraLabel}.${macroName}`;
-    }
-    return this.props.code !== null
-      ? this.keymapDB.parse(keycode).extraLabel != undefined
-        ? `${this.keymapDB.parse(keycode).extraLabel}.${this.keymapDB.parse(keycode).label}`
-        : this.keymapDB.parse(keycode).label
-      : "";
-  }
-
-  updateWidth = () => {
-    this.setState({
-      componentWidth: 50,
-    });
-    this.setState({
-      componentWidth: this.trackingWidth.current.clientWidth,
-    });
-  };
-
-  updateScroll = scrollPos => {
-    this.setState({ scrollPos });
-  };
 
   componentDidMount() {
     // Additionally I could have just used an arrow function for the binding `this` to the component...
@@ -188,8 +155,34 @@ class MacroManager extends Component {
     window.removeEventListener("resize", this.updateWidth);
   }
 
+  updateWidth = () => {
+    this.setState({
+      componentWidth: 50,
+    });
+    this.setState({
+      componentWidth: this.trackingWidth.current.clientWidth,
+    });
+  };
+
+  parseKey(keycode) {
+    const { macros, code } = this.props;
+    let macroName;
+    try {
+      macroName = macros[parseInt(this.keymapDB.parse(keycode).label, 10)]?.name.substr(0, 5);
+    } catch (error) {
+      macroName = "*NotFound*";
+    }
+    if (keycode >= 53852 && keycode <= 53852 + 128) {
+      if (code !== null) return `${this.keymapDB.parse(keycode).extraLabel}.${macroName}`;
+    }
+    if (code === null) return "";
+    if (this.keymapDB.parse(keycode).extraLabel !== undefined)
+      return `${this.keymapDB.parse(keycode).extraLabel}.${this.keymapDB.parse(keycode).label}`;
+    return this.keymapDB.parse(keycode).label;
+  }
+
   render() {
-    const { keymapDB, macro, macros, updateActions } = this.props;
+    const { keymapDB, macro, updateActions } = this.props;
     // console.log("Macro on TimelineEditorManager", macro);
     return (
       <Styles className="timelineWrapper">
@@ -205,14 +198,14 @@ class MacroManager extends Component {
                         <span
                           key={`literal-${index}`}
                           className={`previewKey action-${item.actions} keyCode-${item.keyCode} ${
-                            item.keyCode > 223 && item.keyCode < 232 && item.action != 2 ? "isModifier" : ""
+                            item.keyCode > 223 && item.keyCode < 232 && item.action !== 2 ? "isModifier" : ""
                           }`}
                         >
                           {item.type == 2 ? (
                             <>
                               <IconStopWatchXs /> {item.keyCode}
                             </>
-                          ) : this.parseKey(item.keyCode) == "SPACE" ? (
+                          ) : this.parseKey(item.keyCode) === "SPACE" ? (
                             " "
                           ) : (
                             this.parseKey(item.keyCode)
@@ -238,8 +231,8 @@ class MacroManager extends Component {
               updateActions={updateActions}
               keymapDB={keymapDB}
               componentWidth={this.state.componentWidth}
-              updateScroll={this.updateScroll}
-              scrollPos={this.state.scrollPos}
+              updateScroll={this.props.updateScroll}
+              scrollPos={this.props.scrollPos}
             />
           )}
           <div id="portalMacro" />
@@ -248,5 +241,15 @@ class MacroManager extends Component {
     );
   }
 }
+
+MacroManager.propTypes = {
+  macro: PropTypes.object,
+  macros: PropTypes.array,
+  code: PropTypes.object,
+  keymapDB: PropTypes.object,
+  updateActions: PropTypes.func,
+  updateScroll: PropTypes.func,
+  scrollPos: PropTypes.number,
+};
 
 export default MacroManager;

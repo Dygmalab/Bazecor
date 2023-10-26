@@ -1,3 +1,4 @@
+/* eslint-disable no-bitwise */
 // -*- mode: js-jsx -*-
 /* Bazecor -- Kaleidoscope Command Center
  * Copyright (C) 2019  Keyboardio, Inc.
@@ -118,22 +119,22 @@ const Styles = Styled.div`
     margin-bottom: 16px;
     color: ${({ theme }) => theme.styles.macro.tabTile};
   }
- 
+
   .tabCategories {
     padding: 32px 14px 32px 32px;
     border-bottom-left-radius: 16px;
     background-color: ${({ theme }) => theme.styles.macro.tabCategoriesBackground};
     h5 {
-      font-size: 11px; 
+      font-size: 11px;
       line-height: 32px;
-      font-weight: 600; 
+      font-weight: 600;
       margin-bottom: 0;
       letter-spacing: 0.21em;
       text-transform: uppercase;
       color: ${({ theme }) => theme.styles.macro.tabSubTitle};
     }
   }
-  .tabContent { 
+  .tabContent {
     padding: 32px ;
     border-bottom-right-radius: 16px;
     background-color: ${({ theme }) => theme.styles.macro.tabContentBackground};
@@ -304,9 +305,11 @@ class MacroCreator extends Component {
   }
 
   onAddText = () => {
+    const { addText } = this.state;
+    const { macro } = this.props;
     // console.log("MacroCreator onAddText", this.state.rows, this.props.macro);
-    const aux = this.state.addText;
-    let newRows = this.createConversion(this.props.macro.actions);
+    const aux = addText;
+    let newRows = this.createConversion(macro.actions);
     newRows = newRows.concat(
       aux.split("").flatMap((symbol, index) => {
         let item = symbol.toUpperCase();
@@ -385,10 +388,11 @@ class MacroCreator extends Component {
   };
 
   onAddRecorded = recorded => {
-    console.log("MacroCreator onAddRecorded", recorded, this.props.macro);
-    let { actions } = this.props.macro;
+    const { macro } = this.props;
+    console.log("MacroCreator onAddRecorded", recorded, macro);
+    let { actions } = macro;
     actions = actions.concat(
-      recorded.map((item, index) => ({
+      recorded.map(item => ({
         keyCode: item.keycode,
         type: item.action,
       })),

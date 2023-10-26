@@ -16,7 +16,7 @@
 const macro = index => ({
   code: 53852 + index,
   labels: {
-    primary: index.toString(),
+    primary: (index + 1).toString(),
     top: "MACRO",
   },
 });
