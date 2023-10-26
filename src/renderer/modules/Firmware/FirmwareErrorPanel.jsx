@@ -16,25 +16,24 @@
  */
 
 import React, { useState, useEffect } from "react";
+import PropTypes from "prop-types";
 import Styled from "styled-components";
 import { useMachine } from "@xstate/react";
-import i18n from "../../i18n";
-import SemVer from "semver";
 
 // State machine
 import FWSelection from "../../controller/FlashingSM/FWSelection";
 
 // Visual components
 import Title from "../../component/Title";
-import Callout from "../../component/Callout";
 import { RegularButton } from "../../component/Button";
 import { FirmwareLoader } from "../../component/Loader";
+import i18n from "../../i18n";
 
 // Visual modules
-import { FirmwareNeuronStatus } from "../Firmware";
+import FirmwareNeuronStatus from "./FirmwareNeuronStatus";
 
-//Assets
-import videoDefyCablesDisconnect from "@Assets/videos/connectCablesDefy.mp4";
+// Assets
+// import videoDefyCablesDisconnect from "@Assets/videos/connectCablesDefy.mp4";
 import { IconNoWifi, IconWarning } from "../../component/Icon";
 
 const Style = Styled.div`
@@ -191,7 +190,8 @@ width: 100%;
 }
 `;
 
-function FirmwareErrorPanel({ nextBlock, retryBlock }) {
+function FirmwareErrorPanel(props) {
+  const { nextBlock, retryBlock } = props;
   const [state, send] = useMachine(FWSelection);
   const [handleError, setHandleError] = useState(false);
 
@@ -202,17 +202,19 @@ function FirmwareErrorPanel({ nextBlock, retryBlock }) {
     }
     if (state.matches("success")) {
       setHandleError(false);
+      setLoading(false);
       nextBlock(state.context);
     }
     if (state.matches("failure")) {
       console.log("Matches failure");
       setHandleError(true);
+      setLoading(false);
     }
-  }, [state.context]);
+  }, [nextBlock, state, state.context]);
 
   return (
     <Style>
-      {!handleError ? (
+      {!handleError || loading ? (
         <FirmwareLoader />
       ) : (
         <div className="firmware-wrapper">
@@ -293,5 +295,10 @@ function FirmwareErrorPanel({ nextBlock, retryBlock }) {
     </Style>
   );
 }
+
+FirmwareErrorPanel.propTypes = {
+  nextBlock: PropTypes.func,
+  retryBlock: PropTypes.func,
+};
 
 export default FirmwareErrorPanel;

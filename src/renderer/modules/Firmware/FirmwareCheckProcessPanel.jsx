@@ -16,9 +16,9 @@
  */
 
 import React, { useState, useEffect } from "react";
+import PropTypes from "prop-types";
 import Styled from "styled-components";
 import { useMachine } from "@xstate/react";
-import SemVer from "semver";
 import i18n from "../../i18n";
 
 // State machine
@@ -31,7 +31,8 @@ import { RegularButton } from "../../component/Button";
 import { FirmwareLoader } from "../../component/Loader";
 import AccordionFirmware from "../../component/Accordion/AccordionFirmware";
 
-import { FirmwareNeuronStatus, FirmwareWarningList } from "../Firmware";
+import FirmwareNeuronStatus from "./FirmwareNeuronStatus";
+import FirmwareWarningList from "./FirmwareWarningList";
 
 const Style = Styled.div`
 width: 100%;
@@ -163,8 +164,8 @@ height:inherit;
 `;
 
 function FirmwareCheckProcessPanel(props) {
-  const { nextBlock, retryBlock, context } = props;
-  const [state, send] = useMachine(DeviceChecks, { context: { device: context.device } });
+  const { nextBlock, retryBlock, errorBlock, context } = props;
+  const [state, send] = useMachine(DeviceChecks, { context: { device: context.device, firmwares: context.firmwares } });
   const [listItems, setlistItems] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -173,18 +174,18 @@ function FirmwareCheckProcessPanel(props) {
       setLoading(false);
     }
     if (state.matches("success")) nextBlock(state.context);
-  }, [state.context, state, nextBlock]);
+  }, [state.context, state, nextBlock, errorBlock]);
 
   useEffect(() => {
     const newValue = ["sideLeftOk", "sideLeftBL", "sideRightOK", "sideRightBL", "backup"].map((text, index) => {
       let checked = text.includes("BL") ? !state.context[text] : state.context[text];
       if (text === "backup") {
-        checked = state.context.backup !== undefined ? true : false;
+        checked = state.context.backup !== undefined;
       }
       // console.log(text, state.context[text], String(state.context[text]), String(state.context[text]).includes("true"), checked);
-      return { id: index, text: text, checked };
+      return { id: index, text, checked };
     });
-    console.log("Setting checks", newValue);
+    // console.log("Setting checks", newValue);
     setlistItems(newValue);
   }, [state.context]);
 
@@ -193,7 +194,7 @@ function FirmwareCheckProcessPanel(props) {
       {loading ? (
         <FirmwareLoader />
       ) : (
-        <>
+        <div>
           {state.context.device.info.product !== "Raise" ? (
             <div className="firmware-wrapper disclaimer-firmware">
               <div className="firmware-row">
@@ -211,7 +212,7 @@ function FirmwareCheckProcessPanel(props) {
                     {state.context.sideLeftOk && state.context.sideRightOK ? (
                       <>
                         <div
-                          className={"disclaimerContent"}
+                          className="disclaimerContent"
                           dangerouslySetInnerHTML={{ __html: i18n.firmwareUpdate.texts.disclaimerContent }}
                         />
                         <Callout content={i18n.firmwareUpdate.texts.disclaimerContent2} size="sm" className="mt-lg" />
@@ -279,10 +280,17 @@ function FirmwareCheckProcessPanel(props) {
           ) : (
             ""
           )}
-        </>
+        </div>
       )}
     </Style>
   );
 }
+
+FirmwareCheckProcessPanel.propTypes = {
+  nextBlock: PropTypes.func,
+  retryBlock: PropTypes.func,
+  errorBlock: PropTypes.func,
+  context: PropTypes.object,
+};
 
 export default FirmwareCheckProcessPanel;
