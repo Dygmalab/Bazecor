@@ -1,6 +1,6 @@
-import React from "react";
-import Konva from "konva";
+import React, { useState, useEffect, useRef } from "react";
 import { Path, Group, Rect, Text } from "react-konva";
+import colorDarkerCalculation from "../../renderer/utils/colorDarkerCalculation";
 
 const NewKey = ({
   keyType,
@@ -20,10 +20,115 @@ const NewKey = ({
   centerPrimary,
   centerExtra,
 }) => {
-  console.log("centerPrimary :", centerPrimary);
-  console.log("centerPrimary :", centerExtra);
+  const actualKey = useRef(null);
+  const blurShadow = useRef(null);
+  const shapeShadow = useRef(null);
+  const shapeStroke = useRef(null);
+  const highlightStroke = useRef(null);
+  const [active, setActive] = useState(false);
+  const [strokeColor, setStrokeColor] = useState(colorDarkerCalculation(fill));
+
+  const animateClick = led => {
+    // use Konva methods to animate a shape
+    led.to({
+      scaleX: 1.5,
+      scaleY: 1.5,
+      onFinish: () => {
+        led.to({
+          scaleX: 1,
+          scaleY: 1,
+        });
+      },
+    });
+  };
+
+  const handleClick = e => {
+    console.log(e.target);
+    console.log(e.target.parent.attrs);
+    // animateClick(actualKey.current);
+    setActive(prev => !prev);
+  };
+
+  useEffect(() => {
+    if (active) {
+      shapeShadow.current.to({
+        shadowColor: "#fff",
+        shadowBlur: 0,
+        shadowOffsetX: 0,
+        shadowOffsetY: 3,
+        duration: 0.2,
+      });
+      shapeStroke.current.to({
+        stroke: "#fff",
+        duration: 0.2,
+      });
+      highlightStroke.current.to({
+        stroke: "rgba(255,255,255,1)",
+        duration: 0.2,
+      });
+    } else {
+      shapeShadow.current.to({
+        shadowColor: "#fff",
+        shadowBlur: 0,
+        shadowOffsetX: 0,
+        shadowOffsetY: 0,
+        duration: 0.2,
+      });
+      shapeStroke.current.to({
+        stroke: fill,
+        duration: 0.2,
+      });
+      highlightStroke.current.to({
+        stroke: "rgba(255,255,255,0)",
+        duration: 0.2,
+      });
+    }
+  }, [active]);
+
+  const handleLeave = () => {
+    if (!active) {
+      shapeShadow.current.to({
+        shadowColor: "rgba(255, 255, 255, 0)",
+        shadowBlur: 0,
+        shadowOffsetX: 0,
+        shadowOffsetY: 0,
+        duration: 0.2,
+      });
+      highlightStroke.current.to({
+        stroke: "rgba(255,255,255,0)",
+        duration: 0.2,
+      });
+    }
+  };
+
+  const handleEnter = () => {
+    if (!active) {
+      shapeShadow.current.to({
+        shadowColor: "rgba(255, 255, 255, 0.25)",
+        shadowBlur: 0,
+        shadowOffsetX: 0,
+        shadowOffsetY: 3,
+        duration: 0.2,
+      });
+      highlightStroke.current.to({
+        stroke: "rgba(255,255,255,1)",
+        duration: 0.2,
+      });
+    }
+  };
+
   return (
-    <Group x={x} y={y} onClick={onClick} data-led-index={dataLedIndex} data-key-index={dataKeyIndex} data-layer={dataLayer}>
+    <Group
+      x={x}
+      y={y}
+      onClick={handleClick}
+      onMouseEnter={handleEnter}
+      onMouseLeave={handleLeave}
+      ref={actualKey}
+      data-led-index={dataLedIndex}
+      data-key-index={dataKeyIndex}
+      data-layer={dataLayer}
+    >
       {keyType === "regularKey" ? (
         <>
           <Rect
@@ -36,17 +141,45 @@ const NewKey = ({
             shadowOffsetY={10}
             shadowOpacity={0.5}
             cornerRadius={10}
+            ref={blurShadow}
           />
-          <Rect width={width} height={height} fill={fill} stroke="rgba(0, 0, 0, 0.15)" strokeWidth={2} cornerRadius={4} />
+          <Rect width={width} height={height} fill="#303349" stroke={fill} strokeWidth={2} cornerRadius={4} ref={shapeShadow} />
+          <Rect
+            width={width}
+            height={height}
+            stroke={fill}
+            strokeWidth={2}
+            fillLinearGradientStartPoint={{ x: 0 }}
+            fillLinearGradientEndPoint={{ x: width }}
+            fillLinearGradientColorStops={[0.1, "rgba(255, 255, 255, 1)", 1, "rgba(255, 255, 255, 0)"]}
+            opacity={0.2}
+            cornerRadius={4}
+          />
+          <Rect
+            width={width}
+            height={height}
+            fill={fill}
+            stroke={fill}
+            strokeWidth={2}
+            opacity={0.6}
+            cornerRadius={4}
+            ref={shapeStroke}
+          />
+          {/*  */}
+          <Rect width={width - 6} height={height - 9} x={3} y={2} fill="#303349" cornerRadius={3} />
+          <Rect width={width - 6} height={height - 9} x={3} y={2} fill={fill} opacity={0.3} cornerRadius={3} />
           <Rect
             width={width - 6}
-            height={height - 7}
+            height={height - 9}
             x={3}
             y={2}
-            fill="#303349"
-            stroke="#25273B"
-            strokeWidth={2}
+            opacity={0.3}
+            stroke="rgba(255,255,255,0)"
             cornerRadius={3}
+            fillLinearGradientStartPoint={{ x: 0 }}
+            fillLinearGradientEndPoint={{ x: width }}
+            fillLinearGradientColorStops={[0, "rgba(255, 255, 255, 1)", 0.8, "rgba(255, 255, 255, 0)"]}
+            ref={highlightStroke}
           />
           <Text
             text={centerPrimary.label}
