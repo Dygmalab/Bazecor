@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Path, Group, Rect, Text } from "react-konva";
 import { Spring, animated, useSpring } from "@react-spring/konva";
-import colorDarkerCalculation from "../../renderer/utils/colorDarkerCalculation";
+import { settingColorOpacity } from "../../renderer/utils/colorOpacityCalculation";
 
 const NewKeyCompressed = ({
   keyType,
@@ -23,9 +23,18 @@ const NewKeyCompressed = ({
 }) => {
   const actualKey = useRef(null);
   const [active, setActive] = useState(false);
-  const [strokeColor, setStrokeColor] = useState(colorDarkerCalculation(fill));
+  const [hovered, setHovered] = useState(false);
+  const [colorOpacity, setColorOpacity] = useState(settingColorOpacity("#ffffff", 0.6));
 
-  console.log("strokeColor: ", strokeColor);
+  const animationActive = useSpring({
+    shadowOpacity: active ? 0.8 : 0.5,
+    shadowColor: active ? "rgba(255,255,255,1)" : "rgba(255,255,255,0)",
+    shadowOffsetY: active ? 4 : 0,
+    stroke: active || hovered ? "#ffffff" : fill,
+    config: {
+      duration: 150,
+    },
+  });
 
   const handleClick = e => {
     console.log(e.target);
@@ -34,27 +43,24 @@ const NewKeyCompressed = ({
     setActive(prev => !prev);
   };
 
-  const animationActive = useSpring({
-    shadowColor: active ? "rgba(255,255,255,1)" : "rgba(255,255,255,0)",
-    shadowOffsetY: active ? 3 : 0,
-    stroke: active ? "rgb(255, 255, 240 )" : String(strokeColor),
-    config: {
-      duration: 150,
-    },
-  });
+  useEffect(() => {
+    setColorOpacity(settingColorOpacity(fill, 0.6));
+  }, [fill]);
 
   return (
     <Group
       x={x}
       y={y}
       onClick={handleClick}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
       ref={actualKey}
       data-led-index={dataLedIndex}
       data-key-index={dataKeyIndex}
       data-layer={dataLayer}
     >
       <>
-        <Rect
+        <animated.Rect
           width={width}
           height={height}
           fill={fill}
@@ -62,20 +68,29 @@ const NewKeyCompressed = ({
           shadowBlur={20}
           shadowOffsetX={0}
           shadowOffsetY={10}
-          shadowOpacity={0.5}
+          shadowOpacity={animationActive.shadowOpacity}
           cornerRadius={10}
+          perfectDrawEnabled={false}
+        />
+        <animated.Rect
+          width={width + 2}
+          height={height}
+          x={-1}
+          y={animationActive.shadowOffsetY}
+          fill="rgba(255, 255, 255, 1)"
+          cornerRadius={4}
         />
         <animated.Rect
           width={width}
           height={height}
-          fill={fill}
-          shadowBlur={0}
-          shadowOffsetX={0}
-          shadowColor={animationActive.shadowColor}
-          shadowOffsetY={animationActive.shadowOffsetY}
+          stroke={animationActive.stroke}
           cornerRadius={4}
+          fillLinearGradientStartPoint={{ x: 0, y: 0 }}
+          fillLinearGradientEndPoint={{ x: width, y: height }}
+          fillLinearGradientColorStops={[0, "#5A616E", 0.8, "#323B4B"]}
         />
-        <animated.Rect width={width} height={height} fill={fill} stroke={animationActive.stroke} cornerRadius={4} />
+        <animated.Rect width={width} height={height} fill={colorOpacity} stroke={animationActive.stroke} cornerRadius={4} />
+
         {/*  */}
         <Rect width={width - 6} height={height - 9} x={3} y={2} fill="#303349" cornerRadius={3} perfectDrawEnabled={false} />
         <Rect

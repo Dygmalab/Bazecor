@@ -85,6 +85,10 @@ const NewKey = ({
     }
   }, [active]);
 
+  useEffect(() => {
+    setStrokeColor(fill);
+  }, [fill]);
+
   const handleLeave = () => {
     if (!active) {
       shapeShadow.current.to({
