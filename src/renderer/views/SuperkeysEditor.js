@@ -195,6 +195,7 @@ class SuperkeysEditor extends React.Component {
     const aux = { ...superkeys[selectedSuper] };
     aux.id = superkeys.length;
     aux.name = `Copy of ${aux.name}`;
+    aux.actions = [...aux.actions];
     superkeys.push(aux);
     this.updateSuper(superkeys, -1);
     this.changeSelected(aux.id);
