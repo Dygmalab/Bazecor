@@ -57,18 +57,25 @@ const Styles = Styled.div`
 &.trackingWrapper {
     position: relative;
     z-index: 1;
-    
+
     background-color: ${({ theme }) => theme.styles.macro.trackingBackground};
     overflow-x: hidden;
     position: relative;
     > div {
       width: inherit;
-      overflow-x: auto; 
+      overflow-x: auto;
       padding-left: 32px;
+      ::-webkit-scrollbar-track {
+        -webkit-box-shadow: transparent;
+        background-color: white;
+      }
+      ::-webkit-scrollbar-thumb {
+        background-color: grey;
+      }
     }
 }
 .timelinetracking {
-    display: flex; 
+    display: flex;
     flex-wrap: nowrap;
     flex-direction: row;
     width: fit-content;
