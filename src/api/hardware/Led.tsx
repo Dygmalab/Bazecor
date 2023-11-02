@@ -1,6 +1,7 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useMemo } from "react";
 import Konva from "konva";
-import { Path, Group, Rect, Text } from "react-konva";
+import { Path, Group } from "react-konva";
+import { animated, useSpring } from "@react-spring/konva";
 import colorDarkerCalculation from "../../renderer/utils/colorDarkerCalculation";
 
 const Led = ({
@@ -18,41 +19,58 @@ const Led = ({
   dataLayer,
   path,
 }) => {
-  const [active, setActive] = useState(false);
-  const [color, setColor] = useState("rgb(255,255,255)");
-  const [strokeColor, setStrokeColor] = useState(colorDarkerCalculation("rgb(255,255,255)"));
+  const actualLed = useRef(null);
+  // const [active, setActive] = useState(false);
+  const [hovered, setHovered] = useState(false);
+  // const [color, setColor] = useState("rgb(255,255,255)");
+  // const [strokeColor, setStrokeColor] = useState(colorDarkerCalculation("rgb(255,255,255)"));
 
-  useEffect(() => {
-    setColor(fill);
-    setStrokeColor(colorDarkerCalculation(fill));
-  }, [fill]);
+  // useEffect(() => {
+  //   setColor(fill);
+  //   setStrokeColor(colorDarkerCalculation(fill));
+  // }, [fill]);
 
-  const animateClick = led => {
-    // use Konva methods to animate a shape
-    led.to({
-      scaleX: 1.5,
-      scaleY: 1.5,
-      onFinish: () => {
-        led.to({
-          scaleX: 1,
-          scaleY: 1,
-        });
-      },
-    });
-  };
+  const strokeColor = useMemo(() => colorDarkerCalculation(fill), [fill]);
 
-  const handleClick = e => {
-    console.log(e.target);
-    console.log(e.target.parent.attrs);
-    animateClick(e.target);
-    setActive(prev => !prev);
-  };
+  const active = useMemo(() => {
+    if (selectedLED === dataLedIndex) {
+      return true;
+    }
+    return false;
+  }, [selectedLED, dataLedIndex]);
+
+  const animationActive = useSpring({
+    shadowOpacity: active || hovered ? 1 : 0.7,
+    blur: active || hovered ? 4 : 16,
+    strokeColor: active || hovered ? "rgb(255, 255, 255 )" : strokeColor,
+    config: {
+      duration: 150,
+    },
+  });
 
   if (!visibility) return null;
   return (
-    <Group x={x} y={y} onClick={handleClick} data-led-index={dataLedIndex} data-key-index={dataKeyIndex} data-layer={dataLayer}>
-      <Path data={path} fill={color} shadowColor={color} shadowBlur={5} shadowOffsetX={0} shadowOffsetY={0} shadowOpacity={0.5} />
-      <Path data={path} fill={color} stroke={strokeColor} strokeWidth={1.5} />
+    <Group
+      x={x}
+      y={y}
+      onClick={clickAble ? onClick : () => {}}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      ledIndex={dataLedIndex}
+      keyIndex={dataKeyIndex}
+      layer={dataLayer}
+      ref={actualLed}
+    >
+      <animated.Path
+        data={path}
+        fill={fill}
+        shadowColor={fill}
+        shadowBlur={animationActive.blur}
+        shadowOffsetX={0}
+        shadowOffsetY={0}
+        shadowOpacity={animationActive.shadowOpacity}
+      />
+      <animated.Path data={path} fill={fill} stroke={animationActive.strokeColor} strokeWidth={1.5} />
     </Group>
   );
 };

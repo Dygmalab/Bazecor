@@ -204,12 +204,18 @@ class KeymapANSI extends React.Component {
 
     const onClick = e => {
       this.setState({ underglowIndex: null });
+
+      console.log(e.target.parent.attrs);
+      console.log("Click");
       this.props.onKeySelect(e);
     };
     const layer = this.props.index;
 
     const setUndeglowIndex = (index, e) => {
       this.setState({ underglowIndex: keyIndex(index) });
+      console.log("Click");
+      console.log("Index: ", index);
+      console.log("e: ", e);
       this.props.onKeySelect(e);
     };
     /**
@@ -221,6 +227,7 @@ class KeymapANSI extends React.Component {
      * @props {string} class - className of the button
      * @props {string} textLength length of the text if the button is small and additional text is longer then button
      */
+
     function GetCurrentKeyElement(props) {
       return (
         <span className={props.class} textAnchor="middle" x={props.x} y={props.y} dy={props.dy} textLength={props.textLength}>
@@ -320,45 +327,13 @@ class KeymapANSI extends React.Component {
     // console.log("Selected Key: ", this.props.selectedKey);
     // console.log("Selected LED: ", this.props.selectedLED);
 
-    const matrixKeysAllKeys = [];
     const matrixLED1 = [];
     const matrixLED2 = [];
-
-    for (let row = 0; row < 5; row++) {
-      for (let col = 0; col < 14; col++) {
-        const x = col * 70;
-        const y = row * 70;
-
-        matrixKeysAllKeys.push(
-          <NewKeyCompressed
-            key={`matrixAllKeys-${row}-${col}`}
-            keyType="regularKey"
-            id="R0C0_keyshape"
-            onClick={onClick}
-            className="key"
-            width={55}
-            height={55}
-            x={x}
-            y={y}
-            selectedKey={this.props.selectedKey}
-            fill={getColor(0, 0)}
-            stroke={stroke(0, 0)}
-            strokeWidth={getStrokeWidth(0, 0)}
-            dataLedIndex={getLEDIndex(0, 0)}
-            dataKeyIndex={keyIndex(0, 0)}
-            dataLayer={layer}
-            contrastText={getContrastText(getColor(0, 0))}
-            centerPrimary={getLabel(0, 0)}
-            centerExtra={getCenterExtra(0, 0, 0, 0, true)}
-          />,
-        );
-      }
-    }
 
     for (let row = 0; row < 8; row++) {
       for (let col = 0; col < 4; col++) {
         const x = col * 124; // Adjust spacing here
-        const y = row * 24 + 380; // Adjust spacing here
+        const y = row * 24 + 480; // Adjust spacing here
 
         matrixLED1.push(
           <Led
@@ -386,7 +361,7 @@ class KeymapANSI extends React.Component {
     for (let row = 0; row < 8; row++) {
       for (let col = 0; col < 4; col++) {
         const x = col * 124 + 500; // Adjust spacing here
-        const y = row * 24 + 380; // Adjust spacing here
+        const y = row * 24 + 480; // Adjust spacing here
 
         matrixLED2.push(
           <Led
@@ -416,27 +391,1307 @@ class KeymapANSI extends React.Component {
       <Stage width={1200} height={680}>
         <Layer>{matrixLED1}</Layer>
         <Layer>{matrixLED2}</Layer>
-        <Layer>{matrixKeysAllKeys}</Layer>
         <Layer>
-          <NewKeyMotion
+          {/* Row 1  */}
+          <NewKeyCompressed
+            key="matrixKeysCols1-0"
+            keyType="regularKey"
+            id="R0C0_keyshape"
+            onClick={onClick}
+            className="key"
+            width={55}
+            height={55}
+            x={0 * 70}
+            y={keysRowsPosition.row1}
+            selectedKey={this.props.selectedKey}
+            fill={getColor(0, 0)}
+            dataLedIndex={getLEDIndex(0, 0)}
+            dataKeyIndex={keyIndex(0, 0)}
+            dataLayer={layer}
+            contrastText={getContrastText(getColor(0, 0))}
+            centerPrimary={getLabel(0, 0)}
+            centerExtra={getCenterExtra(0, 0, 0, 0, true)}
+          />
+          <NewKeyCompressed
+            key="matrixKeysCols1-1"
+            keyType="regularKey"
+            id="R0C1_keyshape"
+            onClick={onClick}
+            className="key"
+            width={55}
+            height={55}
+            x={1 * 70}
+            y={keysRowsPosition.row1}
+            selectedKey={this.props.selectedKey}
+            fill={getColor(0, 1)}
+            dataLedIndex={getLEDIndex(0, 1)}
+            dataKeyIndex={keyIndex(0, 1)}
+            dataLayer={layer}
+            contrastText={getContrastText(getColor(0, 1))}
+            centerPrimary={getLabel(0, 1)}
+            centerExtra={getCenterExtra(0, 1, 0, 0, true)}
+          />
+          <NewKeyCompressed
+            key="matrixKeysCols1-2"
+            keyType="regularKey"
+            id="R0C2_keyshape"
+            onClick={onClick}
+            className="key"
+            width={55}
+            height={55}
+            x={2 * 70}
+            y={keysRowsPosition.row1}
+            selectedKey={this.props.selectedKey}
+            fill={getColor(0, 2)}
+            dataLedIndex={getLEDIndex(0, 2)}
+            dataKeyIndex={keyIndex(0, 2)}
+            dataLayer={layer}
+            contrastText={getContrastText(getColor(0, 2))}
+            centerPrimary={getLabel(0, 2)}
+            centerExtra={getCenterExtra(0, 2, 0, 0, true)}
+          />
+          <NewKeyCompressed
+            key="matrixKeysCols1-3"
+            keyType="regularKey"
+            id="R0C3_keyshape"
+            onClick={onClick}
+            className="key"
+            width={55}
+            height={55}
+            x={3 * 70}
+            y={keysRowsPosition.row1}
+            selectedKey={this.props.selectedKey}
+            fill={getColor(0, 3)}
+            dataLedIndex={getLEDIndex(0, 3)}
+            dataKeyIndex={keyIndex(0, 3)}
+            dataLayer={layer}
+            contrastText={getContrastText(getColor(0, 3))}
+            centerPrimary={getLabel(0, 3)}
+            centerExtra={getCenterExtra(0, 3, 0, 0, true)}
+          />
+          <NewKeyCompressed
+            key="matrixKeysCols1-4"
+            keyType="regularKey"
+            id="R0C4_keyshape"
+            onClick={onClick}
+            className="key"
+            width={55}
+            height={55}
+            x={4 * 70}
+            y={keysRowsPosition.row1}
+            selectedKey={this.props.selectedKey}
+            fill={getColor(0, 4)}
+            dataLedIndex={getLEDIndex(0, 4)}
+            dataKeyIndex={keyIndex(0, 4)}
+            dataLayer={layer}
+            contrastText={getContrastText(getColor(0, 4))}
+            centerPrimary={getLabel(0, 4)}
+            centerExtra={getCenterExtra(0, 4, 0, 0, true)}
+          />
+          <NewKeyCompressed
+            key="matrixKeysCols1-5"
+            keyType="regularKey"
+            id="R0C5_keyshape"
+            onClick={onClick}
+            className="key"
+            width={55}
+            height={55}
+            x={5 * 70}
+            y={keysRowsPosition.row1}
+            selectedKey={this.props.selectedKey}
+            fill={getColor(0, 5)}
+            dataLedIndex={getLEDIndex(0, 5)}
+            dataKeyIndex={keyIndex(0, 5)}
+            dataLayer={layer}
+            contrastText={getContrastText(getColor(0, 5))}
+            centerPrimary={getLabel(0, 5)}
+            centerExtra={getCenterExtra(0, 5, 0, 0, true)}
+          />
+          <NewKeyCompressed
+            key="matrixKeysCols1-6"
+            keyType="regularKey"
+            id="R0C6_keyshape"
+            onClick={onClick}
+            className="key"
+            width={55}
+            height={55}
+            x={6 * 70}
+            y={keysRowsPosition.row1}
+            selectedKey={this.props.selectedKey}
+            fill={getColor(0, 6)}
+            dataLedIndex={getLEDIndex(0, 6)}
+            dataKeyIndex={keyIndex(0, 6)}
+            dataLayer={layer}
+            contrastText={getContrastText(getColor(0, 6))}
+            centerPrimary={getLabel(0, 6)}
+            centerExtra={getCenterExtra(0, 6, 0, 0, true)}
+          />
+          <NewKeyCompressed
+            key="matrixKeysCols1-9"
+            keyType="regularKey"
+            id="R0C9_keyshape"
+            onClick={onClick}
+            className="key"
+            width={55}
+            height={55}
+            x={9 * 70}
+            y={keysRowsPosition.row1}
+            selectedKey={this.props.selectedKey}
+            fill={getColor(0, 9)}
+            dataLedIndex={getLEDIndex(0, 9)}
+            dataKeyIndex={keyIndex(0, 9)}
+            dataLayer={layer}
+            contrastText={getContrastText(getColor(0, 9))}
+            centerPrimary={getLabel(0, 9)}
+            centerExtra={getCenterExtra(0, 9, 0, 0, true)}
+          />
+          <NewKeyCompressed
+            key="matrixKeysCols1-10"
+            keyType="regularKey"
+            id="R0C10_keyshape"
+            onClick={onClick}
+            className="key"
+            width={55}
+            height={55}
+            x={10 * 70}
+            y={keysRowsPosition.row1}
+            selectedKey={this.props.selectedKey}
+            fill={getColor(0, 10)}
+            dataLedIndex={getLEDIndex(0, 10)}
+            dataKeyIndex={keyIndex(0, 10)}
+            dataLayer={layer}
+            contrastText={getContrastText(getColor(0, 10))}
+            centerPrimary={getLabel(0, 10)}
+            centerExtra={getCenterExtra(0, 10, 0, 0, true)}
+          />
+          <NewKeyCompressed
+            key="matrixKeysCols1-11"
+            keyType="regularKey"
+            id="R0C11_keyshape"
+            onClick={onClick}
+            className="key"
+            width={55}
+            height={55}
+            x={11 * 70}
+            y={keysRowsPosition.row1}
+            selectedKey={this.props.selectedKey}
+            fill={getColor(0, 11)}
+            dataLedIndex={getLEDIndex(0, 11)}
+            dataKeyIndex={keyIndex(0, 11)}
+            dataLayer={layer}
+            contrastText={getContrastText(getColor(0, 11))}
+            centerPrimary={getLabel(0, 11)}
+            centerExtra={getCenterExtra(0, 11, 0, 0, true)}
+          />
+          <NewKeyCompressed
+            key="matrixKeysCols1-12"
             keyType="regularKey"
             id="R0C12_keyshape"
             onClick={onClick}
             className="key"
             width={55}
             height={55}
-            x={829}
+            x={12 * 70}
             y={keysRowsPosition.row1}
             selectedKey={this.props.selectedKey}
             fill={getColor(0, 12)}
-            stroke={stroke(0, 12)}
-            strokeWidth={getStrokeWidth(0, 12)}
             dataLedIndex={getLEDIndex(0, 12)}
             dataKeyIndex={keyIndex(0, 12)}
             dataLayer={layer}
             contrastText={getContrastText(getColor(0, 12))}
             centerPrimary={getLabel(0, 12)}
             centerExtra={getCenterExtra(0, 12, 0, 0, true)}
+          />
+          <NewKeyCompressed
+            key="matrixKeysCols1-13"
+            keyType="regularKey"
+            id="R0C13_keyshape"
+            onClick={onClick}
+            className="key"
+            width={55}
+            height={55}
+            x={13 * 70}
+            y={keysRowsPosition.row1}
+            selectedKey={this.props.selectedKey}
+            fill={getColor(0, 13)}
+            dataLedIndex={getLEDIndex(0, 13)}
+            dataKeyIndex={keyIndex(0, 13)}
+            dataLayer={layer}
+            contrastText={getContrastText(getColor(0, 13))}
+            centerPrimary={getLabel(0, 13)}
+            centerExtra={getCenterExtra(0, 13, 0, 0, true)}
+          />
+          <NewKeyCompressed
+            key="matrixKeysCols1-14"
+            keyType="regularKey"
+            id="R0C14_keyshape"
+            onClick={onClick}
+            className="key"
+            width={55}
+            height={55}
+            x={14 * 70}
+            y={keysRowsPosition.row1}
+            selectedKey={this.props.selectedKey}
+            fill={getColor(0, 14)}
+            dataLedIndex={getLEDIndex(0, 14)}
+            dataKeyIndex={keyIndex(0, 14)}
+            dataLayer={layer}
+            contrastText={getContrastText(getColor(0, 14))}
+            centerPrimary={getLabel(0, 14)}
+            centerExtra={getCenterExtra(0, 14, 0, 0, true)}
+          />
+          <NewKeyCompressed
+            key="matrixKeysCols1-15"
+            keyType="regularKey"
+            id="R0C15_keyshape"
+            onClick={onClick}
+            className="key"
+            width={55}
+            height={55}
+            x={15 * 70}
+            y={keysRowsPosition.row1}
+            selectedKey={this.props.selectedKey}
+            fill={getColor(0, 15)}
+            strokeWidth={getStrokeWidth(0, 15)}
+            dataLedIndex={getLEDIndex(0, 15)}
+            dataKeyIndex={keyIndex(0, 15)}
+            dataLayer={layer}
+            contrastText={getContrastText(getColor(0, 15))}
+            centerPrimary={getLabel(0, 15)}
+            centerExtra={getCenterExtra(0, 15, 0, 0, true)}
+          />
+          {/* Row 2 */}
+          <NewKeyCompressed
+            key="matrixKeysCols2-0"
+            keyType="regularKey"
+            id="R1C0_keyshape"
+            onClick={onClick}
+            className="key"
+            width={55}
+            height={55}
+            x={0 * 70}
+            y={keysRowsPosition.row2}
+            selectedKey={this.props.selectedKey}
+            fill={getColor(1, 0)}
+            dataLedIndex={getLEDIndex(1, 0)}
+            dataKeyIndex={keyIndex(1, 0)}
+            dataLayer={layer}
+            contrastText={getContrastText(getColor(1, 0))}
+            centerPrimary={getLabel(1, 0)}
+            centerExtra={getCenterExtra(1, 0, 0, 0, true)}
+          />
+          <NewKeyCompressed
+            key="matrixKeysCols2-1"
+            keyType="regularKey"
+            id="R1C1_keyshape"
+            onClick={onClick}
+            className="key"
+            width={55}
+            height={55}
+            x={1 * 70}
+            y={keysRowsPosition.row2}
+            selectedKey={this.props.selectedKey}
+            fill={getColor(1, 1)}
+            dataLedIndex={getLEDIndex(1, 1)}
+            dataKeyIndex={keyIndex(1, 1)}
+            dataLayer={layer}
+            contrastText={getContrastText(getColor(1, 1))}
+            centerPrimary={getLabel(1, 1)}
+            centerExtra={getCenterExtra(1, 1, 0, 0, true)}
+          />
+          <NewKeyCompressed
+            key="matrixKeysCols2-2"
+            keyType="regularKey"
+            id="R1C2_keyshape"
+            onClick={onClick}
+            className="key"
+            width={55}
+            height={55}
+            x={2 * 70}
+            y={keysRowsPosition.row2}
+            selectedKey={this.props.selectedKey}
+            fill={getColor(1, 2)}
+            dataLedIndex={getLEDIndex(1, 2)}
+            dataKeyIndex={keyIndex(1, 2)}
+            dataLayer={layer}
+            contrastText={getContrastText(getColor(1, 2))}
+            centerPrimary={getLabel(1, 2)}
+            centerExtra={getCenterExtra(1, 2, 0, 0, true)}
+          />
+          <NewKeyCompressed
+            key="matrixKeysCol2-3"
+            keyType="regularKey"
+            id="R1C1_keyshape"
+            onClick={onClick}
+            className="key"
+            width={55}
+            height={55}
+            x={3 * 70}
+            y={keysRowsPosition.row2}
+            selectedKey={this.props.selectedKey}
+            fill={getColor(1, 3)}
+            dataLedIndex={getLEDIndex(1, 3)}
+            dataKeyIndex={keyIndex(1, 3)}
+            dataLayer={layer}
+            contrastText={getContrastText(getColor(1, 3))}
+            centerPrimary={getLabel(1, 3)}
+            centerExtra={getCenterExtra(1, 3, 0, 0, true)}
+          />
+          <NewKeyCompressed
+            key="matrixKeysCols2-4"
+            keyType="regularKey"
+            id="R1C4_keyshape"
+            onClick={onClick}
+            className="key"
+            width={55}
+            height={55}
+            x={4 * 70}
+            y={keysRowsPosition.row2}
+            selectedKey={this.props.selectedKey}
+            fill={getColor(1, 4)}
+            dataLedIndex={getLEDIndex(1, 4)}
+            dataKeyIndex={keyIndex(1, 4)}
+            dataLayer={layer}
+            contrastText={getContrastText(getColor(1, 4))}
+            centerPrimary={getLabel(1, 4)}
+            centerExtra={getCenterExtra(1, 4, 0, 0, true)}
+          />
+          <NewKeyCompressed
+            key="matrixKeysCols2-5"
+            keyType="regularKey"
+            id="R1C4_keyshape"
+            onClick={onClick}
+            className="key"
+            width={55}
+            height={55}
+            x={5 * 70}
+            y={keysRowsPosition.row2}
+            selectedKey={this.props.selectedKey}
+            fill={getColor(1, 5)}
+            dataLedIndex={getLEDIndex(1, 5)}
+            dataKeyIndex={keyIndex(1, 5)}
+            dataLayer={layer}
+            contrastText={getContrastText(getColor(1, 5))}
+            centerPrimary={getLabel(1, 5)}
+            centerExtra={getCenterExtra(1, 5, 0, 0, true)}
+          />
+          <NewKeyCompressed
+            key="matrixKeysCols2-8"
+            keyType="regularKey"
+            id="R1C8_keyshape"
+            onClick={onClick}
+            className="key"
+            width={55}
+            height={55}
+            x={8 * 70}
+            y={keysRowsPosition.row2}
+            selectedKey={this.props.selectedKey}
+            fill={getColor(1, 8)}
+            dataLedIndex={getLEDIndex(1, 8)}
+            dataKeyIndex={keyIndex(1, 8)}
+            dataLayer={layer}
+            contrastText={getContrastText(getColor(1, 8))}
+            centerPrimary={getLabel(1, 8)}
+            centerExtra={getCenterExtra(1, 8, 0, 0, true)}
+          />
+          <NewKeyCompressed
+            key="matrixKeysCols2-9"
+            keyType="regularKey"
+            id="R1C9_keyshape"
+            onClick={onClick}
+            className="key"
+            width={55}
+            height={55}
+            x={9 * 70}
+            y={keysRowsPosition.row2}
+            selectedKey={this.props.selectedKey}
+            fill={getColor(1, 9)}
+            dataLedIndex={getLEDIndex(1, 9)}
+            dataKeyIndex={keyIndex(1, 9)}
+            dataLayer={layer}
+            contrastText={getContrastText(getColor(1, 9))}
+            centerPrimary={getLabel(1, 9)}
+            centerExtra={getCenterExtra(1, 9, 0, 0, true)}
+          />
+          <NewKeyCompressed
+            key="matrixKeysCols2-10"
+            keyType="regularKey"
+            id="R1C10_keyshape"
+            onClick={onClick}
+            className="key"
+            width={55}
+            height={55}
+            x={10 * 70}
+            y={keysRowsPosition.row2}
+            selectedKey={this.props.selectedKey}
+            fill={getColor(1, 10)}
+            dataLedIndex={getLEDIndex(1, 10)}
+            dataKeyIndex={keyIndex(1, 10)}
+            dataLayer={layer}
+            contrastText={getContrastText(getColor(1, 10))}
+            centerPrimary={getLabel(1, 10)}
+            centerExtra={getCenterExtra(1, 10, 0, 0, true)}
+          />
+          <NewKeyCompressed
+            key="matrixKeysCols2-11"
+            keyType="regularKey"
+            id="R1C11_keyshape"
+            onClick={onClick}
+            className="key"
+            width={55}
+            height={55}
+            x={11 * 70}
+            y={keysRowsPosition.row2}
+            selectedKey={this.props.selectedKey}
+            fill={getColor(1, 11)}
+            dataLedIndex={getLEDIndex(1, 11)}
+            dataKeyIndex={keyIndex(1, 11)}
+            dataLayer={layer}
+            contrastText={getContrastText(getColor(1, 11))}
+            centerPrimary={getLabel(1, 11)}
+            centerExtra={getCenterExtra(1, 11, 0, 0, true)}
+          />
+          <NewKeyCompressed
+            key="matrixKeysCols2-12"
+            keyType="regularKey"
+            id="R1C12_keyshape"
+            onClick={onClick}
+            className="key"
+            width={55}
+            height={55}
+            x={12 * 70}
+            y={keysRowsPosition.row2}
+            selectedKey={this.props.selectedKey}
+            fill={getColor(1, 12)}
+            dataLedIndex={getLEDIndex(1, 12)}
+            dataKeyIndex={keyIndex(1, 12)}
+            dataLayer={layer}
+            contrastText={getContrastText(getColor(1, 12))}
+            centerPrimary={getLabel(1, 12)}
+            centerExtra={getCenterExtra(1, 12, 0, 0, true)}
+          />
+        </Layer>
+        <Layer>
+          <NewKeyCompressed
+            key="matrixKeysCols2-13"
+            keyType="regularKey"
+            id="R1C13_keyshape"
+            onClick={onClick}
+            className="key"
+            width={55}
+            height={55}
+            x={13 * 70}
+            y={keysRowsPosition.row2}
+            selectedKey={this.props.selectedKey}
+            fill={getColor(1, 13)}
+            dataLedIndex={getLEDIndex(1, 13)}
+            dataKeyIndex={keyIndex(1, 13)}
+            dataLayer={layer}
+            contrastText={getContrastText(getColor(1, 13))}
+            centerPrimary={getLabel(1, 13)}
+            centerExtra={getCenterExtra(1, 13, 0, 0, true)}
+          />
+          <NewKeyCompressed
+            key="matrixKeysCols2-14"
+            keyType="regularKey"
+            id="R1C14_keyshape"
+            onClick={onClick}
+            className="key"
+            width={55}
+            height={55}
+            x={14 * 70}
+            y={keysRowsPosition.row2}
+            selectedKey={this.props.selectedKey}
+            fill={getColor(1, 14)}
+            dataLedIndex={getLEDIndex(1, 14)}
+            dataKeyIndex={keyIndex(1, 14)}
+            dataLayer={layer}
+            contrastText={getContrastText(getColor(1, 14))}
+            centerPrimary={getLabel(1, 14)}
+            centerExtra={getCenterExtra(1, 14, 0, 0, true)}
+          />
+          <NewKeyCompressed
+            key="matrixKeysCols2-15"
+            keyType="regularKey"
+            id="R1C15_keyshape"
+            onClick={onClick}
+            className="key"
+            width={55}
+            height={55}
+            x={15 * 70}
+            y={keysRowsPosition.row2}
+            selectedKey={this.props.selectedKey}
+            fill={getColor(2, 15)}
+            dataLedIndex={getLEDIndex(2, 15)}
+            dataKeyIndex={keyIndex(2, 15)}
+            dataLayer={layer}
+            contrastText={getContrastText(getColor(2, 15))}
+            centerPrimary={getLabel(2, 15)}
+            centerExtra={getCenterExtra(2, 15, 0, 0, true)}
+          />
+          {/* Row 3 */}
+          <NewKeyCompressed
+            key="matrixKeysCols3-0"
+            keyType="regularKey"
+            id="R2C0_keyshape"
+            onClick={onClick}
+            className="key"
+            width={55}
+            height={55}
+            x={0 * 70}
+            y={keysRowsPosition.row3}
+            selectedKey={this.props.selectedKey}
+            fill={getColor(2, 0)}
+            dataLedIndex={getLEDIndex(2, 0)}
+            dataKeyIndex={keyIndex(2, 0)}
+            dataLayer={layer}
+            contrastText={getContrastText(getColor(2, 0))}
+            centerPrimary={getLabel(2, 0)}
+            centerExtra={getCenterExtra(2, 0, 0, 0, true)}
+          />
+          <NewKeyCompressed
+            key="matrixKeysCols3-1"
+            keyType="regularKey"
+            id="R2C1_keyshape"
+            onClick={onClick}
+            className="key"
+            width={55}
+            height={55}
+            x={1 * 70}
+            y={keysRowsPosition.row3}
+            selectedKey={this.props.selectedKey}
+            fill={getColor(2, 1)}
+            dataLedIndex={getLEDIndex(2, 1)}
+            dataKeyIndex={keyIndex(2, 1)}
+            dataLayer={layer}
+            contrastText={getContrastText(getColor(2, 1))}
+            centerPrimary={getLabel(2, 1)}
+            centerExtra={getCenterExtra(2, 1, 0, 0, true)}
+          />
+          <NewKeyCompressed
+            key="matrixKeysCols3-2"
+            keyType="regularKey"
+            id="R2C1_keyshape"
+            onClick={onClick}
+            className="key"
+            width={55}
+            height={55}
+            x={2 * 70}
+            y={keysRowsPosition.row3}
+            selectedKey={this.props.selectedKey}
+            fill={getColor(2, 2)}
+            dataLedIndex={getLEDIndex(2, 2)}
+            dataKeyIndex={keyIndex(2, 2)}
+            dataLayer={layer}
+            contrastText={getContrastText(getColor(2, 2))}
+            centerPrimary={getLabel(2, 2)}
+            centerExtra={getCenterExtra(2, 2, 0, 0, true)}
+          />
+          <NewKeyCompressed
+            key="matrixKeysCols3-3"
+            keyType="regularKey"
+            id="R2C1_keyshape"
+            onClick={onClick}
+            className="key"
+            width={55}
+            height={55}
+            x={3 * 70}
+            y={keysRowsPosition.row3}
+            selectedKey={this.props.selectedKey}
+            fill={getColor(2, 3)}
+            dataLedIndex={getLEDIndex(2, 3)}
+            dataKeyIndex={keyIndex(2, 3)}
+            dataLayer={layer}
+            contrastText={getContrastText(getColor(2, 3))}
+            centerPrimary={getLabel(2, 3)}
+            centerExtra={getCenterExtra(2, 3, 0, 0, true)}
+          />
+          <NewKeyCompressed
+            key="matrixKeysCols3-4"
+            keyType="regularKey"
+            id="R2C1_keyshape"
+            onClick={onClick}
+            className="key"
+            width={55}
+            height={55}
+            x={4 * 70}
+            y={keysRowsPosition.row3}
+            selectedKey={this.props.selectedKey}
+            fill={getColor(2, 4)}
+            dataLedIndex={getLEDIndex(2, 4)}
+            dataKeyIndex={keyIndex(2, 4)}
+            dataLayer={layer}
+            contrastText={getContrastText(getColor(2, 4))}
+            centerPrimary={getLabel(2, 4)}
+            centerExtra={getCenterExtra(2, 4, 0, 0, true)}
+          />
+          <NewKeyCompressed
+            key="matrixKeysCols3-5"
+            keyType="regularKey"
+            id="R2C1_keyshape"
+            onClick={onClick}
+            className="key"
+            width={55}
+            height={55}
+            x={5 * 70}
+            y={keysRowsPosition.row3}
+            selectedKey={this.props.selectedKey}
+            fill={getColor(2, 4)}
+            dataLedIndex={getLEDIndex(2, 5)}
+            dataKeyIndex={keyIndex(2, 5)}
+            dataLayer={layer}
+            contrastText={getContrastText(getColor(2, 5))}
+            centerPrimary={getLabel(2, 5)}
+            centerExtra={getCenterExtra(2, 5, 0, 0, true)}
+          />
+          <NewKeyCompressed
+            key="matrixKeysCols3-6"
+            keyType="regularKey"
+            id="R2C1_keyshape"
+            onClick={onClick}
+            className="key"
+            width={55}
+            height={55}
+            x={6 * 70}
+            y={keysRowsPosition.row3}
+            selectedKey={this.props.selectedKey}
+            fill={getColor(2, 9)}
+            dataLedIndex={getLEDIndex(2, 9)}
+            dataKeyIndex={keyIndex(2, 9)}
+            dataLayer={layer}
+            contrastText={getContrastText(getColor(2, 9))}
+            centerPrimary={getLabel(2, 9)}
+            centerExtra={getCenterExtra(2, 9, 0, 0, true)}
+          />
+          <NewKeyCompressed
+            key="matrixKeysCols3-7"
+            keyType="regularKey"
+            id="R2C1_keyshape"
+            onClick={onClick}
+            className="key"
+            width={55}
+            height={55}
+            x={7 * 70}
+            y={keysRowsPosition.row3}
+            selectedKey={this.props.selectedKey}
+            fill={getColor(2, 10)}
+            dataLedIndex={getLEDIndex(2, 10)}
+            dataKeyIndex={keyIndex(2, 10)}
+            dataLayer={layer}
+            contrastText={getContrastText(getColor(2, 10))}
+            centerPrimary={getLabel(2, 10)}
+            centerExtra={getCenterExtra(2, 10, 0, 0, true)}
+          />
+          <NewKeyCompressed
+            key="matrixKeysCols3-8"
+            keyType="regularKey"
+            id="R2C1_keyshape"
+            onClick={onClick}
+            className="key"
+            width={55}
+            height={55}
+            x={8 * 70}
+            y={keysRowsPosition.row3}
+            selectedKey={this.props.selectedKey}
+            fill={getColor(2, 11)}
+            dataLedIndex={getLEDIndex(2, 11)}
+            dataKeyIndex={keyIndex(2, 11)}
+            dataLayer={layer}
+            contrastText={getContrastText(getColor(2, 11))}
+            centerPrimary={getLabel(2, 11)}
+            centerExtra={getCenterExtra(2, 11, 0, 0, true)}
+          />
+          <NewKeyCompressed
+            key="matrixKeysCols3-9"
+            keyType="regularKey"
+            id="R2C1_keyshape"
+            onClick={onClick}
+            className="key"
+            width={55}
+            height={55}
+            x={9 * 70}
+            y={keysRowsPosition.row3}
+            selectedKey={this.props.selectedKey}
+            fill={getColor(2, 12)}
+            dataLedIndex={getLEDIndex(2, 12)}
+            dataKeyIndex={keyIndex(2, 12)}
+            dataLayer={layer}
+            contrastText={getContrastText(getColor(2, 12))}
+            centerPrimary={getLabel(2, 12)}
+            centerExtra={getCenterExtra(2, 12, 0, 0, true)}
+          />
+          <NewKeyCompressed
+            key="matrixKeysCols3-10"
+            keyType="regularKey"
+            id="R2C1_keyshape"
+            onClick={onClick}
+            className="key"
+            width={55}
+            height={55}
+            x={10 * 70}
+            y={keysRowsPosition.row3}
+            selectedKey={this.props.selectedKey}
+            fill={getColor(2, 13)}
+            dataLedIndex={getLEDIndex(2, 13)}
+            dataKeyIndex={keyIndex(2, 13)}
+            dataLayer={layer}
+            contrastText={getContrastText(getColor(2, 13))}
+            centerPrimary={getLabel(2, 13)}
+            centerExtra={getCenterExtra(2, 13, 0, 0, true)}
+          />
+          <NewKeyCompressed
+            key="matrixKeysCols3-11"
+            keyType="regularKey"
+            id="R2C1_keyshape"
+            onClick={onClick}
+            className="key"
+            width={55}
+            height={55}
+            x={11 * 70}
+            y={keysRowsPosition.row3}
+            selectedKey={this.props.selectedKey}
+            fill={getColor(2, 14)}
+            dataLedIndex={getLEDIndex(2, 14)}
+            dataKeyIndex={keyIndex(2, 14)}
+            dataLayer={layer}
+            contrastText={getContrastText(getColor(2, 14))}
+            centerPrimary={getLabel(2, 14)}
+            centerExtra={getCenterExtra(2, 14, 0, 0, true)}
+          />
+          <NewKeyCompressed
+            key="matrixKeysCols3-12"
+            keyType="regularKey"
+            id="R2C1_keyshape"
+            onClick={onClick}
+            className="key"
+            width={55}
+            height={55}
+            x={12 * 70}
+            y={keysRowsPosition.row3}
+            selectedKey={this.props.selectedKey}
+            fill={getColor(2, 15)}
+            dataLedIndex={getLEDIndex(2, 15)}
+            dataKeyIndex={keyIndex(2, 15)}
+            dataLayer={layer}
+            contrastText={getContrastText(getColor(2, 15))}
+            centerPrimary={getLabel(2, 15)}
+            centerExtra={getCenterExtra(2, 15, 0, 0, true)}
+          />
+          {/* Row 4 */}
+          <NewKeyCompressed
+            key="matrixKeysCols4-0"
+            keyType="regularKey"
+            id="R2C1_keyshape"
+            onClick={onClick}
+            className="key"
+            width={55}
+            height={55}
+            x={0 * 70}
+            y={keysRowsPosition.row4}
+            selectedKey={this.props.selectedKey}
+            fill={getColor(3, 0)}
+            dataLedIndex={getLEDIndex(3, 0)}
+            dataKeyIndex={keyIndex(3, 0)}
+            dataLayer={layer}
+            contrastText={getContrastText(getColor(3, 0))}
+            centerPrimary={getLabel(3, 0)}
+            centerExtra={getCenterExtra(3, 0, 0, 0, true)}
+          />
+          <NewKeyCompressed
+            key="matrixKeysCols4-1"
+            keyType="regularKey"
+            id="R2C1_keyshape"
+            onClick={onClick}
+            className="key"
+            width={55}
+            height={55}
+            x={1 * 70}
+            y={keysRowsPosition.row4}
+            selectedKey={this.props.selectedKey}
+            fill={getColor(3, 2)}
+            dataLedIndex={getLEDIndex(3, 2)}
+            dataKeyIndex={keyIndex(3, 2)}
+            dataLayer={layer}
+            contrastText={getContrastText(getColor(3, 2))}
+            centerPrimary={getLabel(3, 2)}
+            centerExtra={getCenterExtra(3, 2, 0, 0, true)}
+          />
+          <NewKeyCompressed
+            key="matrixKeysCols4-2"
+            keyType="regularKey"
+            id="R2C1_keyshape"
+            onClick={onClick}
+            className="key"
+            width={55}
+            height={55}
+            x={2 * 70}
+            y={keysRowsPosition.row4}
+            selectedKey={this.props.selectedKey}
+            fill={getColor(3, 3)}
+            dataLedIndex={getLEDIndex(3, 3)}
+            dataKeyIndex={keyIndex(3, 3)}
+            dataLayer={layer}
+            contrastText={getContrastText(getColor(3, 3))}
+            centerPrimary={getLabel(3, 3)}
+            centerExtra={getCenterExtra(3, 3, 0, 0, true)}
+          />
+          <NewKeyCompressed
+            key="matrixKeysCols4-3"
+            keyType="regularKey"
+            id="R2C1_keyshape"
+            onClick={onClick}
+            className="key"
+            width={55}
+            height={55}
+            x={3 * 70}
+            y={keysRowsPosition.row4}
+            selectedKey={this.props.selectedKey}
+            fill={getColor(3, 4)}
+            dataLedIndex={getLEDIndex(3, 4)}
+            dataKeyIndex={keyIndex(3, 4)}
+            dataLayer={layer}
+            contrastText={getContrastText(getColor(3, 4))}
+            centerPrimary={getLabel(3, 4)}
+            centerExtra={getCenterExtra(3, 4, 0, 0, true)}
+          />
+          <NewKeyCompressed
+            key="matrixKeysCols4-4"
+            keyType="regularKey"
+            id="R2C1_keyshape"
+            onClick={onClick}
+            className="key"
+            width={55}
+            height={55}
+            x={4 * 70}
+            y={keysRowsPosition.row4}
+            selectedKey={this.props.selectedKey}
+            fill={getColor(3, 5)}
+            dataLedIndex={getLEDIndex(3, 5)}
+            dataKeyIndex={keyIndex(3, 5)}
+            dataLayer={layer}
+            contrastText={getContrastText(getColor(3, 5))}
+            centerPrimary={getLabel(3, 5)}
+            centerExtra={getCenterExtra(3, 5, 0, 0, true)}
+          />
+          <NewKeyCompressed
+            key="matrixKeysCols4-5"
+            keyType="regularKey"
+            id="R2C1_keyshape"
+            onClick={onClick}
+            className="key"
+            width={55}
+            height={55}
+            x={5 * 70}
+            y={keysRowsPosition.row4}
+            selectedKey={this.props.selectedKey}
+            fill={getColor(3, 6)}
+            dataLedIndex={getLEDIndex(3, 6)}
+            dataKeyIndex={keyIndex(3, 6)}
+            dataLayer={layer}
+            contrastText={getContrastText(getColor(3, 6))}
+            centerPrimary={getLabel(3, 6)}
+            centerExtra={getCenterExtra(3, 6, 0, 0, true)}
+          />
+          <NewKeyCompressed
+            key="matrixKeysCols4-6"
+            keyType="regularKey"
+            id="R2C1_keyshape"
+            onClick={onClick}
+            className="key"
+            width={55}
+            height={55}
+            x={6 * 70}
+            y={keysRowsPosition.row4}
+            selectedKey={this.props.selectedKey}
+            fill={getColor(3, 10)}
+            dataLedIndex={getLEDIndex(3, 10)}
+            dataKeyIndex={keyIndex(3, 10)}
+            dataLayer={layer}
+            contrastText={getContrastText(getColor(3, 10))}
+            centerPrimary={getLabel(3, 10)}
+            centerExtra={getCenterExtra(3, 10, 0, 0, true)}
+          />
+          <NewKeyCompressed
+            key="matrixKeysCols4-7"
+            keyType="regularKey"
+            id="R2C1_keyshape"
+            onClick={onClick}
+            className="key"
+            width={55}
+            height={55}
+            x={7 * 70}
+            y={keysRowsPosition.row4}
+            selectedKey={this.props.selectedKey}
+            fill={getColor(3, 11)}
+            dataLedIndex={getLEDIndex(3, 11)}
+            dataKeyIndex={keyIndex(3, 11)}
+            dataLayer={layer}
+            contrastText={getContrastText(getColor(3, 11))}
+            centerPrimary={getLabel(3, 11)}
+            centerExtra={getCenterExtra(3, 11, 0, 0, true)}
+          />
+          <NewKeyCompressed
+            key="matrixKeysCols4-8"
+            keyType="regularKey"
+            id="R2C1_keyshape"
+            onClick={onClick}
+            className="key"
+            width={55}
+            height={55}
+            x={7 * 70}
+            y={keysRowsPosition.row4}
+            selectedKey={this.props.selectedKey}
+            fill={getColor(3, 12)}
+            dataLedIndex={getLEDIndex(3, 12)}
+            dataKeyIndex={keyIndex(3, 12)}
+            dataLayer={layer}
+            contrastText={getContrastText(getColor(3, 12))}
+            centerPrimary={getLabel(3, 12)}
+            centerExtra={getCenterExtra(3, 12, 0, 0, true)}
+          />
+          <NewKeyCompressed
+            key="matrixKeysCols4-9"
+            keyType="regularKey"
+            id="R2C1_keyshape"
+            onClick={onClick}
+            className="key"
+            width={55}
+            height={55}
+            x={8 * 70}
+            y={keysRowsPosition.row4}
+            selectedKey={this.props.selectedKey}
+            fill={getColor(3, 13)}
+            dataLedIndex={getLEDIndex(3, 13)}
+            dataKeyIndex={keyIndex(3, 13)}
+            dataLayer={layer}
+            contrastText={getContrastText(getColor(3, 13))}
+            centerPrimary={getLabel(3, 13)}
+            centerExtra={getCenterExtra(3, 13, 0, 0, true)}
+          />
+          <NewKeyCompressed
+            key="matrixKeysCols4-10"
+            keyType="regularKey"
+            id="R2C1_keyshape"
+            onClick={onClick}
+            className="key"
+            width={55}
+            height={55}
+            x={9 * 70}
+            y={keysRowsPosition.row4}
+            selectedKey={this.props.selectedKey}
+            fill={getColor(3, 14)}
+            dataLedIndex={getLEDIndex(3, 14)}
+            dataKeyIndex={keyIndex(3, 14)}
+            dataLayer={layer}
+            contrastText={getContrastText(getColor(3, 14))}
+            centerPrimary={getLabel(3, 14)}
+            centerExtra={getCenterExtra(3, 14, 0, 0, true)}
+          />
+          <NewKeyCompressed
+            key="matrixKeysCols4-11"
+            keyType="regularKey"
+            id="R2C1_keyshape"
+            onClick={onClick}
+            className="key"
+            width={55}
+            height={55}
+            x={10 * 70}
+            y={keysRowsPosition.row4}
+            selectedKey={this.props.selectedKey}
+            fill={getColor(3, 15)}
+            dataLedIndex={getLEDIndex(3, 15)}
+            dataKeyIndex={keyIndex(3, 15)}
+            dataLayer={layer}
+            contrastText={getContrastText(getColor(3, 15))}
+            centerPrimary={getLabel(3, 15)}
+            centerExtra={getCenterExtra(3, 15, 0, 0, true)}
+          />
+          {/* Row 5 */}
+          <NewKeyCompressed
+            key="matrixKeysCols5-0"
+            keyType="regularKey"
+            id="R2C1_keyshape"
+            onClick={onClick}
+            className="key"
+            width={55}
+            height={55}
+            x={0 * 70}
+            y={keysRowsPosition.row5}
+            selectedKey={this.props.selectedKey}
+            fill={getColor(4, 0)}
+            dataLedIndex={getLEDIndex(4, 0)}
+            dataKeyIndex={keyIndex(4, 0)}
+            dataLayer={layer}
+            contrastText={getContrastText(getColor(4, 0))}
+            centerPrimary={getLabel(4, 0)}
+            centerExtra={getCenterExtra(4, 0, 0, 0, true)}
+          />
+          <NewKeyCompressed
+            key="matrixKeysCols5-1"
+            keyType="regularKey"
+            id="R2C1_keyshape"
+            onClick={onClick}
+            className="key"
+            width={55}
+            height={55}
+            x={1 * 70}
+            y={keysRowsPosition.row5}
+            selectedKey={this.props.selectedKey}
+            fill={getColor(4, 1)}
+            dataLedIndex={getLEDIndex(4, 1)}
+            dataKeyIndex={keyIndex(4, 1)}
+            dataLayer={layer}
+            contrastText={getContrastText(getColor(4, 1))}
+            centerPrimary={getLabel(4, 1)}
+            centerExtra={getCenterExtra(4, 1, 0, 0, true)}
+          />
+          <NewKeyCompressed
+            key="matrixKeysCols5-2"
+            keyType="regularKey"
+            id="R2C1_keyshape"
+            onClick={onClick}
+            className="key"
+            width={55}
+            height={55}
+            x={2 * 70}
+            y={keysRowsPosition.row5}
+            selectedKey={this.props.selectedKey}
+            fill={getColor(4, 2)}
+            dataLedIndex={getLEDIndex(4, 2)}
+            dataKeyIndex={keyIndex(4, 2)}
+            dataLayer={layer}
+            contrastText={getContrastText(getColor(4, 2))}
+            centerPrimary={getLabel(4, 2)}
+            centerExtra={getCenterExtra(4, 2, 0, 0, true)}
+          />
+          <NewKeyCompressed
+            key="matrixKeysCols5-3"
+            keyType="regularKey"
+            id="R2C1_keyshape"
+            onClick={onClick}
+            className="key"
+            width={55}
+            height={55}
+            x={3 * 70}
+            y={keysRowsPosition.row5}
+            selectedKey={this.props.selectedKey}
+            fill={getColor(4, 3)}
+            dataLedIndex={getLEDIndex(4, 3)}
+            dataKeyIndex={keyIndex(4, 3)}
+            dataLayer={layer}
+            contrastText={getContrastText(getColor(4, 3))}
+            centerPrimary={getLabel(4, 3)}
+            centerExtra={getCenterExtra(4, 3, 0, 0, true)}
+          />
+          <NewKeyCompressed
+            key="matrixKeysCols5-4"
+            keyType="regularKey"
+            id="R2C1_keyshape"
+            onClick={onClick}
+            className="key"
+            width={55}
+            height={55}
+            x={4 * 70}
+            y={keysRowsPosition.row5}
+            selectedKey={this.props.selectedKey}
+            fill={getColor(4, 4)}
+            dataLedIndex={getLEDIndex(4, 4)}
+            dataKeyIndex={keyIndex(4, 4)}
+            dataLayer={layer}
+            contrastText={getContrastText(getColor(4, 4))}
+            centerPrimary={getLabel(4, 4)}
+            centerExtra={getCenterExtra(4, 4, 0, 0, true)}
+          />
+          <NewKeyCompressed
+            key="matrixKeysCols5-5"
+            keyType="regularKey"
+            id="R2C1_keyshape"
+            onClick={onClick}
+            className="key"
+            width={55}
+            height={55}
+            x={5 * 70}
+            y={keysRowsPosition.row5}
+            selectedKey={this.props.selectedKey}
+            fill={getColor(4, 10)}
+            dataLedIndex={getLEDIndex(4, 10)}
+            dataKeyIndex={keyIndex(4, 10)}
+            dataLayer={layer}
+            contrastText={getContrastText(getColor(4, 10))}
+            centerPrimary={getLabel(4, 10)}
+            centerExtra={getCenterExtra(4, 10, 0, 0, true)}
+          />
+          <NewKeyCompressed
+            key="matrixKeysCols5-6"
+            keyType="regularKey"
+            id="R2C1_keyshape"
+            onClick={onClick}
+            className="key"
+            width={55}
+            height={55}
+            x={6 * 70}
+            y={keysRowsPosition.row5}
+            selectedKey={this.props.selectedKey}
+            fill={getColor(4, 11)}
+            dataLedIndex={getLEDIndex(4, 11)}
+            dataKeyIndex={keyIndex(4, 11)}
+            dataLayer={layer}
+            contrastText={getContrastText(getColor(4, 11))}
+            centerPrimary={getLabel(4, 11)}
+            centerExtra={getCenterExtra(4, 11, 0, 0, true)}
+          />
+          <NewKeyCompressed
+            key="matrixKeysCols5-7"
+            keyType="regularKey"
+            id="R2C1_keyshape"
+            onClick={onClick}
+            className="key"
+            width={55}
+            height={55}
+            x={7 * 70}
+            y={keysRowsPosition.row5}
+            selectedKey={this.props.selectedKey}
+            fill={getColor(4, 12)}
+            dataLedIndex={getLEDIndex(4, 12)}
+            dataKeyIndex={keyIndex(4, 12)}
+            dataLayer={layer}
+            contrastText={getContrastText(getColor(4, 12))}
+            centerPrimary={getLabel(4, 12)}
+            centerExtra={getCenterExtra(4, 12, 0, 0, true)}
+          />
+          <NewKeyCompressed
+            key="matrixKeysCols5-8"
+            keyType="regularKey"
+            id="R2C1_keyshape"
+            onClick={onClick}
+            className="key"
+            width={55}
+            height={55}
+            x={8 * 70}
+            y={keysRowsPosition.row5}
+            selectedKey={this.props.selectedKey}
+            fill={getColor(4, 13)}
+            dataLedIndex={getLEDIndex(4, 13)}
+            dataKeyIndex={keyIndex(4, 13)}
+            dataLayer={layer}
+            contrastText={getContrastText(getColor(4, 13))}
+            centerPrimary={getLabel(4, 13)}
+            centerExtra={getCenterExtra(4, 13, 0, 0, true)}
+          />
+          <NewKeyCompressed
+            key="matrixKeysCols5-9"
+            keyType="regularKey"
+            id="R2C1_keyshape"
+            onClick={onClick}
+            className="key"
+            width={55}
+            height={55}
+            x={9 * 70}
+            y={keysRowsPosition.row5}
+            selectedKey={this.props.selectedKey}
+            fill={getColor(4, 14)}
+            dataLedIndex={getLEDIndex(4, 14)}
+            dataKeyIndex={keyIndex(4, 14)}
+            dataLayer={layer}
+            contrastText={getContrastText(getColor(4, 14))}
+            centerPrimary={getLabel(4, 14)}
+            centerExtra={getCenterExtra(4, 14, 0, 0, true)}
+          />
+          <NewKeyCompressed
+            key="matrixKeysCols5-10"
+            keyType="regularKey"
+            id="R2C1_keyshape"
+            onClick={onClick}
+            className="key"
+            width={55}
+            height={55}
+            x={10 * 70}
+            y={keysRowsPosition.row5}
+            selectedKey={this.props.selectedKey}
+            fill={getColor(4, 15)}
+            dataLedIndex={getLEDIndex(4, 15)}
+            dataKeyIndex={keyIndex(4, 15)}
+            dataLayer={layer}
+            contrastText={getContrastText(getColor(4, 15))}
+            centerPrimary={getLabel(4, 15)}
+            centerExtra={getCenterExtra(4, 15, 0, 0, true)}
+          />
+          {/* Row 6 */}
+          <NewKeyCompressed
+            key="matrixKeysCols6-0"
+            keyType="regularKey"
+            id="R2C1_keyshape"
+            onClick={onClick}
+            className="key"
+            width={55}
+            height={55}
+            x={0 * 70}
+            y={keysRowsPosition.row6}
+            selectedKey={this.props.selectedKey}
+            fill={getColor(4, 6)}
+            dataLedIndex={getLEDIndex(4, 6)}
+            dataKeyIndex={keyIndex(4, 6)}
+            dataLayer={layer}
+            contrastText={getContrastText(getColor(4, 6))}
+            centerPrimary={getLabel(4, 6)}
+            centerExtra={getCenterExtra(4, 6, 0, 0, true)}
+          />
+          <NewKeyCompressed
+            key="matrixKeysCols6-1"
+            keyType="regularKey"
+            id="R2C1_keyshape"
+            onClick={onClick}
+            className="key"
+            width={55}
+            height={55}
+            x={1 * 70}
+            y={keysRowsPosition.row6}
+            selectedKey={this.props.selectedKey}
+            fill={getColor(4, 7)}
+            dataLedIndex={getLEDIndex(4, 7)}
+            dataKeyIndex={keyIndex(4, 7)}
+            dataLayer={layer}
+            contrastText={getContrastText(getColor(4, 7))}
+            centerPrimary={getLabel(4, 7)}
+            centerExtra={getCenterExtra(4, 7, 0, 0, true)}
+          />
+          <NewKeyCompressed
+            key="matrixKeysCols6-2"
+            keyType="regularKey"
+            id="R2C1_keyshape"
+            onClick={onClick}
+            className="key"
+            width={55}
+            height={55}
+            x={2 * 70}
+            y={keysRowsPosition.row6}
+            selectedKey={this.props.selectedKey}
+            fill={getColor(4, 8)}
+            dataLedIndex={getLEDIndex(4, 8)}
+            dataKeyIndex={keyIndex(4, 8)}
+            dataLayer={layer}
+            contrastText={getContrastText(getColor(4, 8))}
+            centerPrimary={getLabel(4, 8)}
+            centerExtra={getCenterExtra(4, 8, 0, 0, true)}
+          />
+          <NewKeyCompressed
+            key="matrixKeysCols6-3"
+            keyType="regularKey"
+            id="R2C1_keyshape"
+            onClick={onClick}
+            className="key"
+            width={55}
+            height={55}
+            x={3 * 70}
+            y={keysRowsPosition.row6}
+            selectedKey={this.props.selectedKey}
+            fill={getColor(4, 9)}
+            dataLedIndex={getLEDIndex(4, 9)}
+            dataKeyIndex={keyIndex(4, 9)}
+            dataLayer={layer}
+            contrastText={getContrastText(getColor(4, 9))}
+            centerPrimary={getLabel(4, 9)}
+            centerExtra={getCenterExtra(4, 9, 0, 0, true)}
           />
         </Layer>
       </Stage>

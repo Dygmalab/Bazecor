@@ -18,7 +18,7 @@
 import React from "react";
 import ListModifiersKey from "../../renderer/component/ListModifiers/ListModifiersKey";
 
-function Key({
+const Key = ({
   keyType,
   id,
   onClick,
@@ -35,7 +35,7 @@ function Key({
   contrastText,
   centerPrimary,
   centerExtra,
-}) {
+}) => {
   const [color, setColor] = React.useState("rgb(255,255,255)");
   const xShape2 = x + 4;
   const yShape2 = y;
@@ -2526,5 +2526,5 @@ function Key({
       </defs>
     </>
   );
-}
+};
 export default Key;

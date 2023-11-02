@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useMemo } from "react";
 import { Path, Group, Rect, Text } from "react-konva";
 import { Spring, animated, useSpring } from "@react-spring/konva";
 import { settingColorOpacity } from "../../renderer/utils/colorOpacityCalculation";
@@ -22,9 +22,17 @@ const NewKeyCompressed = ({
   centerExtra,
 }) => {
   const actualKey = useRef(null);
-  const [active, setActive] = useState(false);
+  const [active, setActive] = useState(selectedKey === dataKeyIndex);
   const [hovered, setHovered] = useState(false);
   const [colorOpacity, setColorOpacity] = useState(settingColorOpacity("#ffffff", 0.6));
+
+  // const colorOpacity = useMemo(() => settingColorOpacity(fill, 0.6), [fill]);
+  // const active = useMemo(() => {
+  //   if (selectedKey === dataKeyIndex) {
+  //     return true;
+  //   }
+  //   return false;
+  // }, [selectedKey, dataKeyIndex]);
 
   const animationActive = useSpring({
     shadowOpacity: active ? 0.8 : 0.5,
@@ -36,28 +44,26 @@ const NewKeyCompressed = ({
     },
   });
 
-  const handleClick = e => {
-    console.log(e.target);
-    console.log(e.target.parent.attrs);
-    // animateClick(actualKey.current);
-    setActive(prev => !prev);
-  };
-
   useEffect(() => {
     setColorOpacity(settingColorOpacity(fill, 0.6));
   }, [fill]);
 
+  useEffect(() => {
+    setActive(selectedKey === dataKeyIndex);
+  }, [selectedKey]);
+
+  if (!fill) return null;
   return (
     <Group
       x={x}
       y={y}
-      onClick={handleClick}
+      onClick={onClick}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       ref={actualKey}
-      data-led-index={dataLedIndex}
-      data-key-index={dataKeyIndex}
-      data-layer={dataLayer}
+      ledIndex={dataLedIndex}
+      keyIndex={dataKeyIndex}
+      layer={dataLayer}
     >
       <>
         <animated.Rect
@@ -101,6 +107,11 @@ const NewKeyCompressed = ({
           fill={fill}
           opacity={0.3}
           cornerRadius={3}
+          shadowColor={fill}
+          shadowBlur={10}
+          shadowOffsetX={0}
+          shadowOffsetY={0}
+          shadowOpacity={1}
           perfectDrawEnabled={false}
         />
         <Rect

@@ -220,13 +220,24 @@ const Styles = Styled.div`
     text-anchor: start;
   }
   .shadowHover {
-    //transition: all 300ms ease-in-out;
+    transition: 300ms all ease-in-out;
     filter: blur(16px);
     opacity: 0.2;
+  }
+  .baseShape {
+    transition: 300ms all ease-in-out;
+    .keyOpacityInternal {
+      transition: 300ms all ease-in-out;
+    }
   }
   .shadowMiddle {
     filter: blur(18px);
     opacity: 0.4;
+  }
+  &:hover {
+    .baseShape .keyOpacityInternal {
+      stroke: white!important;
+    }
   }
   &.keyOnFocus {
     .baseShape {
@@ -307,7 +318,7 @@ const Styles = Styled.div`
       stroke-opacity: 0.5;
   }
   .underGlowStripShadow {
-    //transition: all 300ms ease-in-out;
+    transition: 300ms all ease-in-out;
     filter: blur(12px);
     opacity: 0.8;
   }
@@ -824,15 +835,28 @@ class LayoutEditor extends React.Component {
       showStandardView,
     } = this.state;
     const { currentTarget } = event;
-    const layer = parseInt(currentTarget.getAttribute("data-layer"));
-    const keyIndex = parseInt(currentTarget.getAttribute("data-key-index"));
-    const ledIndex = parseInt(currentTarget.getAttribute("data-led-index"));
+    console.log("currentKeyIndex: ", currentKeyIndex);
+    console.log("CurrentTaget onKeyselect: ", currentTarget);
+
+    let layer;
+    let keyIndex;
+    let ledIndex;
+    if (typeof currentTarget.attrs?.layer === "number") {
+      layer = currentTarget.attrs.layer;
+      keyIndex = currentTarget.attrs.keyIndex;
+      ledIndex = currentTarget.attrs.ledIndex;
+    } else {
+      layer = parseInt(currentTarget.getAttribute("data-layer"));
+      keyIndex = parseInt(currentTarget.getAttribute("data-key-index"));
+      ledIndex = parseInt(currentTarget.getAttribute("data-led-index"));
+    }
 
     if (isStandardView) {
       this.setState({ showStandardView: true });
       console.log("Show Standard View IF: ", showStandardView);
     }
 
+    console.log("keyIndex: ", keyIndex);
     if (keyIndex == currentKeyIndex && !isStandardView) {
       if (event.ctrlKey || (event.shiftKey && !isColorButtonSelected)) {
         this.onCtrlShiftPress(layer, ledIndex);

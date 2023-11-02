@@ -45,7 +45,7 @@ const NewKeyMotion = ({
     <Group
       x={x}
       y={y}
-      onClick={handleClick}
+      onClick={onClick}
       ref={actualKey}
       data-led-index={dataLedIndex}
       data-key-index={dataKeyIndex}

@@ -30,7 +30,6 @@ app.on("ready", async () => {
   createWindow();
   // we do not want a menu on top of the window
   Menu.setApplicationMenu(null);
-  app.disableHardwareAcceleration();
 });
 
 // Quit when all windows are closed, except on macOS. There, it's common
@@ -73,5 +72,5 @@ app.on("web-contents-created", (_, wc) => {
 
 app.whenReady().then(() => {
   console.log("if is not a browser is not possible to render a console");
-  app.disableHardwareAcceleration();
+  // app.disableHardwareAcceleration();
 });
