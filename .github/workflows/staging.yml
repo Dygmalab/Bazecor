@@ -67,7 +67,7 @@ jobs:
         id: SetupPython
         with:
           python-version: "3.10"
-      - run: pipx run --python '${{ steps.SetupPython.outputs.python-path }}' nox --version
+      - run: echo '${{ steps.SetupPython.outputs.python-version }}'
       - uses: actions/setup-node@v3
         with:
           node-version: 18.16.0
