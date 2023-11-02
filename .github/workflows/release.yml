@@ -67,7 +67,7 @@ jobs:
         id: SetupPython
         with:
           python-version: "3.10"
-      - run: echo '${{ steps.SetupPython.outputs.python-version }}'
+      - run: echo '"${{ env.pythonLocation }}${{ '\\python' }}"'
       - uses: actions/setup-node@v3
         with:
           node-version: 18.16.0
