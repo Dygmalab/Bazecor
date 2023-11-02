@@ -112,20 +112,21 @@ export default class BackupSettings extends Component {
   };
 
   async restoreBackup(backup) {
+    const { neurons, neuronID } = this.props;
     const focus = new Focus();
     let data = [];
     if (isArray(backup)) {
       data = backup;
     } else {
       data = backup.backup;
-      // TODO: IF THE USER WANTS!! --> Until this can be chosen, disabling this behaviour
-      // let neurons = this.props.neurons;
-      // let index = neurons.findIndex(n => n.id == this.props.neuronID);
-      // neurons[index] = backup.neuron;
-      // store.set("neurons", neurons);
+      // TODO: IF THE USER WANTS!! --> Until this can be chosen, disabling this behaviour --> Re enabled due to users tagging this as a bug
+      const localNeurons = [...neurons];
+      const index = localNeurons.findIndex(n => n.id === neuronID);
+      localNeurons[index] = backup.neuron;
+      store.set("neurons", localNeurons);
     }
     try {
-      for (let i = 0; i < data.length; i++) {
+      for (let i = 0; i < data.length; i += 1) {
         let val = data[i].data;
         // Boolean values needs to be sent as int
         if (typeof val === "boolean") {
