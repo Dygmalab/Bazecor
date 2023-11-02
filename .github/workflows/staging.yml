@@ -92,7 +92,7 @@ jobs:
         name: Setup GCloud Auth
         uses: "google-github-actions/auth@v1"
         env:
-          CLOUDSDK_PYTHON: ${{ steps.SetupPython.outputs.python-path }}
+          CLOUDSDK_PYTHON: ${{ 'C:\hostedtoolcache\windows\Python\3.10.11\x64' }}
         with:
           credentials_json: "${{ secrets.GCP_SIGNER_SERVICE_ACCOUNT }}"
       - if: runner.os == 'Windows'
