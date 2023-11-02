@@ -252,10 +252,14 @@ class TimelineEditorMacroTable extends Component {
   }
 
   scrollUpdate = evt => {
+    const { updateScroll } = this.props;
     const scrollContainer = this.horizontalWheel.current.firstChild;
-    evt.preventDefault();
-    scrollContainer.scrollLeft += evt.deltaY;
-    this.props.updateScroll(scrollContainer.scrollLeft);
+    if (typeof evt.preventDefault === "function") {
+      evt.preventDefault();
+      scrollContainer.scrollLeft += evt.deltaY;
+    }
+    // console.log("newScroll", scrollContainer.scrollLeft);
+    updateScroll(scrollContainer.scrollLeft);
   };
 
   createConversion(actions) {
@@ -393,6 +397,7 @@ class TimelineEditorMacroTable extends Component {
   }
 
   onDragEnd(result) {
+    this.scrollUpdate(result);
     // dropped outside the list
     if (!result.destination) {
       return;
@@ -424,7 +429,7 @@ class TimelineEditorMacroTable extends Component {
   };
 
   updateScrollPos = () => {
-    console.log(this.trackingWidth.current.scrollLeft);
+    console.log("ScrollPos: ", this.trackingWidth.current.scrollLeft);
   };
 
   render() {
