@@ -97,7 +97,7 @@ jobs:
         name: "Set up GCloud SDK"
         uses: "google-github-actions/setup-gcloud@v1"
         env:
-          CLOUDSDK_PYTHON: "${{ env.pythonLocation }}${{ '\\python' }}"
+          CLOUDSDK_PYTHON: echo '"${{ env.pythonLocation }}${{ '\python' }}"'
         with:
           version: ">= 416.0.0"
       - name: Cache node_modules
