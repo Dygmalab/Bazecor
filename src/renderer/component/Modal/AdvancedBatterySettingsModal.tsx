@@ -67,7 +67,14 @@ function AdvancedBatterySettingsModal(props: AdvancedEnergyManagementProps) {
   };
 
   return (
-    <Modal size="xl" show={showModal} onHide={() => setShowModal(false)} aria-labelledby="contained-modal-title-vcenter" centered>
+    <Modal
+      size="xl"
+      show={showModal}
+      onHide={() => setShowModal(false)}
+      aria-labelledby="contained-modal-title-vcenter"
+      centered
+      backdrop="static"
+    >
       <Modal.Header closeButton>
         <Modal.Title>{i18n.wireless.energyManagement.advancedSettings}</Modal.Title>
       </Modal.Header>
