@@ -91,13 +91,13 @@ jobs:
       - if: runner.os == 'Windows'
         name: Setup GCloud Auth
         uses: "google-github-actions/auth@v1"
-        env:
-          CLOUDSDK_PYTHON: ${{ 'C:\hostedtoolcache\windows\Python\3.10.11\x64' }}
         with:
           credentials_json: "${{ secrets.GCP_SIGNER_SERVICE_ACCOUNT }}"
       - if: runner.os == 'Windows'
         name: "Set up GCloud SDK"
         uses: "google-github-actions/setup-gcloud@v1"
+        env:
+          CLOUDSDK_PYTHON: ${{ 'C:\hostedtoolcache\windows\Python\3.10.11\x64' }}
         with:
           version: ">= 416.0.0"
       - name: Cache node_modules
