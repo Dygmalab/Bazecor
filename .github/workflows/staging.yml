@@ -63,17 +63,17 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        id: SetupPython
+        with:
+          python-version: "3.10"
+      - run: pipx run --python '${{ steps.SetupPython.outputs.python-path }}' nox --version
       - uses: actions/setup-node@v3
         with:
           node-version: 18.16.0
       - run: npm install -g yarn
       - if: runner.os == 'Linux'
         run: sudo apt update && sudo apt install libudev-dev
-      - if: runner.os == 'Windows'
-        name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: "3.10"
       - if: runner.os == 'Windows'
         name: Set up Java
         uses: actions/setup-java@v3
@@ -91,6 +91,8 @@ jobs:
       - if: runner.os == 'Windows'
         name: Setup GCloud Auth
         uses: "google-github-actions/auth@v1"
+        env:
+          CLOUDSDK_PYTHON: ${{ steps.SetupPython.outputs.python-path }}
         with:
           credentials_json: "${{ secrets.GCP_SIGNER_SERVICE_ACCOUNT }}"
       - if: runner.os == 'Windows'
