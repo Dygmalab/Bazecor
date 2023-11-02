@@ -63,17 +63,17 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
-      - uses: actions/setup-python@v4
-        id: SetupPython
-        with:
-          python-version: "3.10"
-      - run: echo '"${{ env.pythonLocation }}${{ '\python' }}"'
       - uses: actions/setup-node@v3
         with:
           node-version: 18.16.0
       - run: npm install -g yarn
       - if: runner.os == 'Linux'
         run: sudo apt update && sudo apt install libudev-dev
+      - if: runner.os == 'Windows'
+        name: SetupPython
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
       - if: runner.os == 'Windows'
         name: Set up Java
         uses: actions/setup-java@v3
@@ -97,7 +97,7 @@ jobs:
         name: "Set up GCloud SDK"
         uses: "google-github-actions/setup-gcloud@v1"
         env:
-          CLOUDSDK_PYTHON: echo '"${{ env.pythonLocation }}${{ '\python' }}"'
+          CLOUDSDK_PYTHON: ${{ env.pythonLocation }}${{ '\python' }}
         with:
           version: ">= 416.0.0"
       - name: Cache node_modules
