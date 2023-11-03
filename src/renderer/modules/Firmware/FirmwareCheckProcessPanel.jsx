@@ -215,6 +215,10 @@ function FirmwareCheckProcessPanel(props) {
                           className="disclaimerContent"
                           dangerouslySetInnerHTML={{ __html: i18n.firmwareUpdate.texts.disclaimerContent }}
                         />
+                        <div
+                          className="disclaimerContent"
+                          dangerouslySetInnerHTML={{ __html: i18n.firmwareUpdate.texts.disclaimerContent3 }}
+                        />
                         <Callout content={i18n.firmwareUpdate.texts.disclaimerContent2} size="sm" className="mt-lg" />
                       </>
                     ) : (

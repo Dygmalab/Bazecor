@@ -57,18 +57,25 @@ const Styles = Styled.div`
 &.trackingWrapper {
     position: relative;
     z-index: 1;
-    
+
     background-color: ${({ theme }) => theme.styles.macro.trackingBackground};
     overflow-x: hidden;
     position: relative;
     > div {
       width: inherit;
-      overflow-x: auto; 
+      overflow-x: auto;
       padding-left: 32px;
+      ::-webkit-scrollbar-track {
+        -webkit-box-shadow: transparent;
+        background-color: white;
+      }
+      ::-webkit-scrollbar-thumb {
+        background-color: grey;
+      }
     }
 }
 .timelinetracking {
-    display: flex; 
+    display: flex;
     flex-wrap: nowrap;
     flex-direction: row;
     width: fit-content;
@@ -245,10 +252,14 @@ class TimelineEditorMacroTable extends Component {
   }
 
   scrollUpdate = evt => {
+    const { updateScroll } = this.props;
     const scrollContainer = this.horizontalWheel.current.firstChild;
-    evt.preventDefault();
-    scrollContainer.scrollLeft += evt.deltaY;
-    this.props.updateScroll(scrollContainer.scrollLeft);
+    if (typeof evt.preventDefault === "function") {
+      evt.preventDefault();
+      scrollContainer.scrollLeft += evt.deltaY;
+    }
+    // console.log("newScroll", scrollContainer.scrollLeft);
+    updateScroll(scrollContainer.scrollLeft);
   };
 
   createConversion(actions) {
@@ -386,6 +397,7 @@ class TimelineEditorMacroTable extends Component {
   }
 
   onDragEnd(result) {
+    this.scrollUpdate(result);
     // dropped outside the list
     if (!result.destination) {
       return;
@@ -417,7 +429,7 @@ class TimelineEditorMacroTable extends Component {
   };
 
   updateScrollPos = () => {
-    console.log(this.trackingWidth.current.scrollLeft);
+    console.log("ScrollPos: ", this.trackingWidth.current.scrollLeft);
   };
 
   render() {
