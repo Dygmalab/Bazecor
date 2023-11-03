@@ -63,25 +63,8 @@ const Style = Styled.div`
   opacity: 35%;
 }
 `;
-/**
- * @typedef listElements
- * @type {Object[]}
- * @property {string} listElements[].text - The text to be shown in the selector.
- * @property {*} listElements[].value - The value to be passed when selected.
- * @property {string} listElements[].icon - The icon to be displayed when passed.
- * @property {number} listElements[].index - The index of the element that generates the entity.
- */
 
-/**
- * This select function returns a styled react-bootstrap Dropdown object
- * The object will accept the following parameters
- *
- * @param {function} onSelect - The function that act when a Dropdown.item is clicked.
- * @param {*} value - The current value selected on the Dropdown.
- * @param {listElements} listElements - The array of objects that hold the elements to be selected.\
- * @returns {<Select>} Dropdown object.
- */
-function SelectGenericKeys({ keyCode, onSelect, value, listElements, ksl, content, selected, disabled }) {
+function SelectGenericKeys({ keyCode, onSelect, value, listElements, content, disabled }) {
   const [load, setLoad] = React.useState(true);
   const contentWidth = 200;
   const keymapDB = new KeymapDB();
@@ -93,7 +76,7 @@ function SelectGenericKeys({ keyCode, onSelect, value, listElements, ksl, conten
 
   React.useEffect(() => {
     if (content != undefined) {
-      console.log("keyCode: ", keyCode);
+      // console.log("keyCode: ", keyCode);
       setLoad(false);
     }
   }, [content, value, keyCode]);

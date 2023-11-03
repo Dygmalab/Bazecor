@@ -82,7 +82,7 @@ import {
 
 import i18n from "@Renderer/i18n";
 
-import Key from "@Renderer/modules/KeyPickerKeyboard/Key";
+import Key from "@Renderer/modules/KeyPickerKeyboard/Keys/Key";
 import ES from "@Renderer/modules/KeyPickerKeyboard/ES.json";
 import ENi from "@Renderer/modules/KeyPickerKeyboard/ENi.json";
 import ENa from "@Renderer/modules/KeyPickerKeyboard/ENa.json";
