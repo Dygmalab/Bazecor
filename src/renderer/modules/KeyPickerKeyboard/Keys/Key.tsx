@@ -1,8 +1,8 @@
 import React from "react";
 import Styled, { useTheme } from "styled-components";
 import { KeyProps, KslProps } from "@Renderer/types/keys";
-import { SelectGenericKeys } from "@Renderer/component/Select";
 import { EnterISO, BaseShape, GenericBlockDropdown, SpecialBlockDropdown } from "./Shapes";
+import { Text } from "./Content";
 
 const KeyWrapper = Styled.g`
 .keycap {
@@ -345,9 +345,9 @@ const Key = ({
   centered,
   iconpresent,
   icon,
-  iconsize,
   iconx,
   icony,
+  iconsize,
   content,
   idArray,
   disabled = false,
@@ -359,15 +359,13 @@ const Key = ({
   return (
     <KeyWrapper>
       <g className={`keycap ${selected ? "active" : ""} ${disabled ? "disabled" : ""} ${content.type} id-${id}`}>
-        {content.type === "enter" ? <EnterISO onClick={clicked} /> : ""}
+        {content.type === "enter" ? <EnterISO onClick={clicked} /> : null}
         {content.type !== "enter" &&
         content.type !== "title" &&
         content.type !== "specialBlockDropdown" &&
         content.type !== "genericBlockDropdown" ? (
           <BaseShape x={x} y={y} onClick={clicked} content={content} ksl={ksl} />
-        ) : (
-          ""
-        )}
+        ) : null}
         {content.type === "specialBlockDropdown" ? (
           <SpecialBlockDropdown
             x={x}
@@ -380,9 +378,7 @@ const Key = ({
             idArray={idArray}
             keyCode={keyCode}
           />
-        ) : (
-          ""
-        )}
+        ) : null}
         {content.type === "genericBlockDropdown" ? (
           <GenericBlockDropdown
             x={x}
@@ -394,130 +390,26 @@ const Key = ({
             idArray={idArray}
             keyCode={keyCode}
           />
-        ) : (
-          ""
-        )}
-        {!iconpresent && content.type === "title" ? (
-          <>
-            <text
-              x={x + ksl[content.type].text.letter.dx}
-              y={y + ksl[content.type].text.letter.dy}
-              onClick={clicked}
-              fontSize={ksl[content.type].text.letter.fs}
-              fontWeight={600}
-              className="contentPrimary"
-            >
-              {content.first}
-            </text>
-            <text
-              x={x + ksl[content.type].text.letter.dx}
-              y={y + ksl[content.type].text.letter.dy}
-              onClick={clicked}
-              fontSize={ksl[content.type].text.letter.fss}
-              fontWeight={600}
-              className="contentSeconday"
-            >
-              {content.second}
-            </text>
-          </>
-        ) : (
-          ""
-        )}
-        {!iconpresent &&
-        centered &&
-        content.type !== "title" &&
-        content.type !== "specialBlockDropdown" &&
-        content.type !== "genericBlockDropdown" ? (
-          <>
-            <text
-              x={x + ksl[content.type].text.letter.dx}
-              y={y + ksl[content.type].text.letter.dy}
-              onClick={clicked}
-              fontSize={ksl[content.type].text.letter.fs}
-              fill={disabled ? keyTextDisabledColor : keyTextColor}
-              fontWeight={600}
-              textAnchor="middle"
-              className="contentFirst"
-            >
-              {content.first}
-            </text>
-            <text
-              x={x + ksl[content.type].text.letter.ddx}
-              y={y + ksl[content.type].text.letter.ddy + 8}
-              onClick={clicked}
-              fontSize={ksl[content.type].text.letter.fss}
-              fontWeight={600}
-              fill={selected ? keyActiveSubTextColor : keySubTextColor}
-              textAnchor="middle"
-              className="contentSeconday"
-            >
-              {content.second}
-            </text>
-          </>
-        ) : (
-          ""
-        )}
-        {!iconpresent && !centered && content.type !== "title" ? (
-          <>
-            <text
-              x={x + ksl[content.type].text.a.dx}
-              y={y + ksl[content.type].text.a.dy}
-              onClick={clicked}
-              fontSize={ksl[content.type].text.a.fs}
-              fontWeight={600}
-              className="contentFirst"
-            >
-              {content.first}
-            </text>
-            <text
-              x={x + ksl[content.type].text.b.dx}
-              y={y + ksl[content.type].text.b.dy}
-              onClick={clicked}
-              fontSize={ksl[content.type].text.b.fs}
-              fontWeight={600}
-              className="contentSecondary"
-            >
-              {content.second}
-            </text>
-            <text
-              x={x + ksl[content.type].text.c.dx}
-              y={y + ksl[content.type].text.c.dy}
-              onClick={clicked}
-              fontSize={ksl[content.type].text.c.fs}
-              fontWeight={600}
-              className="contentSecondary"
-            >
-              {content.third}
-            </text>
-            <text
-              x={x + ksl[content.type].text.d.dx}
-              y={y + ksl[content.type].text.d.dy}
-              onClick={clicked}
-              fontSize={ksl[content.type].text.d.fs}
-              fontWeight={600}
-              className="contentSecondary"
-            >
-              {content.fourth}
-            </text>
-          </>
-        ) : (
-          ""
-        )}
-
-        {iconpresent ? (
-          <foreignObject
-            x={iconx || x + ksl[content.type].icon.x}
-            y={icony || y + ksl[content.type].icon.y}
-            width={ksl[content.type].icon.w}
-            height={ksl[content.type].icon.h}
-            fontSize={iconsize || "inherit"}
-            onClick={clicked}
-          >
-            {icon}
-          </foreignObject>
-        ) : (
-          ""
-        )}
+        ) : null}
+        <Text
+          x={x}
+          y={y}
+          icon={icon}
+          iconpresent={iconpresent}
+          iconx={iconx}
+          icony={icony}
+          iconsize={iconsize}
+          centered={centered}
+          content={content}
+          ksl={ksl}
+          onClick={clicked}
+          selected={selected}
+          disabled={disabled}
+          keyActiveSubTextColor={keyActiveSubTextColor}
+          keyTextColor={keyTextColor}
+          keyTextDisabledColor={keyTextDisabledColor}
+          keySubTextColor={keySubTextColor}
+        />
       </g>
     </KeyWrapper>
   );
