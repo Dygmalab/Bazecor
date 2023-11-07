@@ -41,3 +41,27 @@ body {
   -moz-font-feature-settings: "liga" on;
   overflow: overlay;
 }
+
+.button.primary {
+  @apply px-6 py-4 rounded-md bg-linear bg-[length:300%] transition-all relative transform-style-3d before:absolute before:content-[''] before:w-[62px] before:h-[32px] before:bottom-[2px] before:left-[50%] before:bg-linearButton before:opacity-50 before:blur-[2px] before:transform before:translate-x-[-50%] before:translate-y-[0] before:translate-z-[-1px] before:transition-all before:ease-in-out before:duration-300 hover:cursor-pointer hover:bg-right hover:before:blur-lg hover:before:bottom-[-12px] hover:before:opacity-70 hover:before:w-[100px] aria-disabled:bg-buttonDisabled aria-disabled:text-gray-300 aria-disabled:before:content-none aria-disabled:bg-right aria-disabled:cursor-not-allowed text-gray-25 font-semibold tracking-tight;
+}
+.button.outline {
+  @apply px-6 py-4 rounded-md transition-all hover:cursor-pointer hover:bg-gray-400/40 text-gray-25 font-semibold tracking-tight;
+}
+
+.button.secondary {
+  @apply px-6 py-4 rounded-md bg-[length:300%] transition-all relative transform-style-3d after:absolute after:content-[''] after:w-[62px] after:h-[32px] after:bottom-[2px] after:left-[50%] after:bg-linearButton after:opacity-50 after:blur-[2px] after:transform after:translate-x-[-50%] after:translate-y-[0] after:translate-z-[-1px] after:transition-all after:ease-in-out after:duration-300 hover:cursor-pointer hover:bg-right hover:after:blur-lg hover:after:bottom-[-12px] hover:after:opacity-70 hover:after:w-[100px] aria-disabled:bg-buttonDisabled aria-disabled:text-gray-300 aria-disabled:after:content-none aria-disabled:bg-right aria-disabled:cursor-not-allowed text-gray-25 font-semibold tracking-tight;
+}
+
+.button.secondary:before {
+  @apply px-6 py-4 rounded-md absolute z-[1] top-[0] right-[0] bottom-[0] left-[0];
+  content: "";
+  margin: -1px;
+  border: 2px solid transparent;
+  background: linear-gradient(98.12deg, rgb(80, 80, 95) 0%, rgb(37, 39, 59) 56.24%) padding-box padding-box,
+    linear-gradient(90deg, rgb(254, 0, 124) 0%, rgb(107, 20, 249) 100%) border-box border-box;
+}
+
+.button.button-icon {
+  @apply px-4 py-4 rounded-md rounded-md transition-colors text-gray-25 bg-gray-600 hover:cursor-pointer hover:bg-gray-500;
+}
