@@ -1,0 +1,43 @@
+/* styles.css */
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
+
+/* Your custom CSS here */
+svg {
+  display: inline-flex;
+}
+
+@media (prefers-color-scheme: dark) {
+  body:after {
+    content: "dark";
+    position: absolute;
+    z-index: -1;
+    opacity: 0;
+    text-indent: -9999px;
+  }
+}
+@media (prefers-color-scheme: light) {
+  body:after {
+    content: "light";
+    position: absolute;
+    z-index: -1;
+    opacity: 0;
+    text-indent: -9999px;
+  }
+}
+
+body {
+  @apply text-gray-400 dark:text-gray-25 font-sans bg-appLightBackground dark:bg-appDarkBackground;
+  font-weight: 600;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-attachment: fixed;
+  text-rendering: optimizeLegibility;
+  font-smoothing: antialiased;
+  -moz-font-smoothing: antialiased;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -moz-font-feature-settings: "liga" on;
+  overflow: overlay;
+}

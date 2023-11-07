@@ -64,8 +64,9 @@ class App extends React.Component {
     let isDark;
     const mode = store.get("settings.darkMode");
     isDark = mode === "dark";
+
     if (mode === "system") {
-      isDark = ipcRenderer.invoke("get-NativeTheme");
+      isDark = ipcRenderer.invoke("get-NativeTheme").then(theme => theme);
     }
 
     // Settings entry creation for the beta toggle, it will have a control in preferences to change the policy
@@ -97,8 +98,10 @@ class App extends React.Component {
     // document.fonts.load("Libre Franklin");
 
     const fontFace = new FontFace("Libre Franklin", "@Renderer/theme/fonts/LibreFranklin/LibreFranklin-VariableFont_wght.ttf");
-    console.log("Font face: ", fontFace);
+    // console.log("Font face: ", fontFace);
     document.fonts.add(fontFace);
+
+    console.log("O.S. theme", this.state.darkMode);
 
     // Setting up function to receive O.S. dark theme changes
     ipcRenderer.on("darkTheme-update", (evt, message) => {
@@ -108,6 +111,11 @@ class App extends React.Component {
         this.forceDarkMode(message);
       }
     });
+    if (this.state.darkMode || (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches)) {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
     ipcRenderer.on("usb-disconnected", (event, response) => this.handleUSBDisconnection(response));
   }
 
@@ -216,6 +224,7 @@ class App extends React.Component {
 
   toggleDarkMode = async mode => {
     console.log("Dark mode changed to: ", mode, "NativeTheme says: ", ipcRenderer.invoke("get-NativeTheme"));
+
     let isDark = mode === "dark";
     if (mode === "system") {
       isDark = ipcRenderer.invoke("get-NativeTheme");
@@ -224,6 +233,13 @@ class App extends React.Component {
       darkMode: isDark,
     });
     store.set("settings.darkMode", mode);
+
+    const colorScheme = getComputedStyle(document.body, ":after").content.replace(/["']/g, "");
+    if (mode === "light" || (mode === "system" && colorScheme === "light")) {
+      document.documentElement.classList.remove("dark");
+    } else {
+      document.documentElement.classList.add("dark");
+    }
   };
 
   toggleFlashing = async () => {
