@@ -97,54 +97,8 @@ const GlobalStyles = createGlobalStyle<{ theme: DefaultTheme }>`
     opacity: 1;
   }
 
-  button {
-    border: 0;
-    display: inline-block;
-    padding: 12px 24px;
-    font-size: 14px;
-    border-radius: 4px;
-    margin-top: 5px;
-    cursor: pointer;
-    background-color: ${({ theme }) => theme.colors.button.background};
-    color: #FFFFFF;
-  }
 
 
-  button.btn-primary, button.btn{
-    background-color: ${({ theme }) => theme.colors.button.background};
-    color: ${({ theme }) => theme.colors.button.text};
-    border: none;
-  }
-  .btn-primary:hover {
-    color: ${({ theme }) => theme.colors.button.text};
-    background-color: ${({ theme }) => theme.colors.button.hover};
-    border: none;
-  }
-  .btn-primary:disabled, &.btn-primary.disabled {
-    color: ${({ theme }) => theme.colors.button.text};
-    background-color: ${({ theme }) => theme.colors.button.disabled};
-    border: none;
-  }
-  .btn-primary:not(:disabled):not(.disabled).active {
-    color: ${({ theme }) => theme.colors.button.text};
-    background-color: ${({ theme }) => theme.colors.button.active};
-    border: none;
-  }
-  .btn-primary.focus, .btn-primary:focus{
-    color: ${({ theme }) => theme.colors.button.text};
-    background-color: ${({ theme }) => theme.colors.button.hover};
-    border-color: ${({ theme }) => theme.colors.button.background};
-    box-shadow: none;
-  }
-  .btn-primary:not(:disabled):not(.disabled).active, .btn-primary:not(:disabled):not(.disabled):active, .show>.btn-primary.dropdown-toggle  {
-    color: ${({ theme }) => theme.colors.button.text};
-    background-color: ${({ theme }) => theme.colors.button.active};
-    border-color: ${({ theme }) => theme.colors.button.background};
-    box-shadow: ${({ theme }) => theme.colors.button.boxShadow};
-  }
-  .btn-primary:not(:disabled):not(.disabled).active:focus, .btn-primary:not(:disabled):not(.disabled):active:focus, .show>.btn-primary.dropdown-toggle:focus {
-    box-shadow: ${({ theme }) => theme.colors.button.boxShadow};
-}
 
 svg text{
   -webkit-user-select: none;
@@ -269,60 +223,7 @@ svg text{
 .keycap.active .badge-circle{
   opacity: 1;
 }
-.button {
-  font-weight: 600;
-  font-size: 16px;
-  line-height: 1.5em;
-  padding: 14px 24px;
-  border-radius: 6px;
-  display: inline-block;
-  transition: all 250ms ease-in-out;
-  &.iconOnright {
-    svg {
-      margin-left: 12px;
-    }
-  }
-  &.iconOnleft {
-    svg {
-      margin-right: 12px;
-    }
-  }
-}
-.button:hover {
-  cursor: pointer;
-}
-button:focus, button:focus-within,
-.button:focus,.button:focus-within {
-  outline: none;
-}
-button:focus-visible,
-.button:focus-visible {
-  outline: 2px solid ${({ theme }) => theme.accessibility.focusWithinColor};
-}
-.button[disabled]:hover {
-  cursor: not-allowed;
-}
-.button.sm {
-  padding: 9px 24px;
-}
 
-.button .buttonLabel {
-  position: relative;
-  z-index: 1;
-  display: flex;
-  line-height: 1.5em;
-}
-.button.primary {
-  color: #fff;
-  background: ${({ theme }) => theme.styles.button.primary.backgroundColor};
-  position: relative;
-  background-size: 300%;
-  transition: background-position .3s ease-in-out;
-  transform-style: preserve-3d;
-  &:hover {
-    background-position: right;
-  }
-}
 .button.secondary {
   color: #fff;
   background: ${({ theme }) => theme.colors.purple300};
@@ -343,24 +244,6 @@ button:focus-visible,
 .button.danger:hover {
   background: ${({ theme }) => theme.styles.button.danger.backgroundColorHover};
   color: ${({ theme }) => theme.styles.button.danger.color};
-}
-.button.outline {
-  color: ${({ theme }) => theme.styles.button.outline.color};
-  border: 1px solid ${({ theme }) => theme.styles.button.outline.borderColor};
-  box-shadow: 0px 0px 0px 1px ${({ theme }) => theme.styles.button.outline.borderColor} inset;
-  transition-property: border, box-shadow, background;
-  transition: 300ms ease-in-out;
-}
-.button.outline:hover {
-  border: 1px solid ${({ theme }) => theme.styles.button.outline.borderColorHover};
-  box-shadow: 0px 0px 0px 1px ${({ theme }) => theme.styles.button.outline.boxShadowColorHover} inset;
-  background-color: rgba(255,255,255,0.05);
-}
-.button.outline[disabled] {
-  opacity: ${({ theme }) => theme.styles.button.outline.disabledOpacity}; 
-  color: ${({ theme }) => theme.styles.button.outline.disabledTextColor};
-  border: 1px solid ${({ theme }) => theme.styles.button.outline.disabledBorderColor};
-  box-shadow: 0px 0px 0px 1px ${({ theme }) => theme.styles.button.outline.disabledBoxShadowColor} inset;
 }
 
 .button.outline.gradient {

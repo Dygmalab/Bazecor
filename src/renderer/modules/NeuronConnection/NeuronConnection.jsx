@@ -187,13 +187,13 @@ function NeuronConnection({
             <div className="buttons">
               <Button
                 onClick={scanDevices}
-                variant={`${connected || deviceItems.length > 0 ? "outline transp-bg" : "primary"}`}
+                variant={`${connected || deviceItems.length > 0 ? "outline" : "primary"}`}
                 disabled={scanFoundDevices}
               >
                 {i18n.keyboardSelect.scan}
               </Button>
               {connected && connectedDevice === selectedPortIndex ? (
-                <Button variant="secondary" onClick={onDisconnect} disabled={false}>
+                <Button variant="purple" onClick={onDisconnect} disabled={false}>
                   {i18n.keyboardSelect.disconnect}
                 </Button>
               ) : null}
