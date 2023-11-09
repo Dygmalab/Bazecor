@@ -6,6 +6,7 @@ on:
       - "development"
   pull_request:
     branches:
+      - "*"
       - "development"
 
 permissions:
