@@ -3,6 +3,7 @@ name: Staging
 on:
   push:
     branches:
+      - "*"
       - "development"
   pull_request:
     branches:
