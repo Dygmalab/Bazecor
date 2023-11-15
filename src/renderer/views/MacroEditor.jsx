@@ -178,6 +178,38 @@ class MacroEditor extends React.Component {
       .replaceAll(",", " ");
   }
 
+  static superkeyMap(superkeys) {
+    // console.log(superkeys);
+    // console.log(superkeys[0].length);
+    if (
+      superkeys.length === 0 ||
+      (superkeys.length === 1 && superkeys[0].length === 0) ||
+      (superkeys.length === 1 && superkeys[0].length === 1 && superkeys[0] === 0)
+    ) {
+      return Array.from({ length: 512 }, 65535).join(" ");
+    }
+    let keyMap = [...superkeys];
+    // console.log("First", keyMap);
+    keyMap = keyMap.map(sky => {
+      let sk = sky;
+      sk = sk.map(act => {
+        if (act === 0 || act == null) return 1;
+        return act;
+      });
+      return sk;
+    });
+    // console.log("Third", keyMap);
+    keyMap = keyMap.map(superkey => superkey.concat([0]));
+    // console.log("Fifth", keyMap);
+    const mapped = []
+      .concat(...keyMap.flat())
+      .concat([0])
+      .join(" ")
+      .replaceAll(",", " ");
+    // console.log(mapped, keyMap);
+    return mapped;
+  }
+
   constructor(props) {
     super(props);
 
@@ -315,9 +347,10 @@ class MacroEditor extends React.Component {
   }
 
   async writeMacros() {
-    const { macros, neurons, neuronID, keymap } = this.state;
+    const { macros, neurons, neuronID, keymap, superkeys } = this.state;
     const { setLoading, cancelContext } = this.props;
     setLoading(true);
+    console.log("saving Macros:", macros, keymap, superkeys);
     const focus = new Focus();
     const newMacros = macros;
     const localNeurons = JSON.parse(JSON.stringify(neurons));
@@ -326,6 +359,7 @@ class MacroEditor extends React.Component {
     try {
       await focus.command("macros.map", MacroEditor.macrosMap(newMacros));
       await focus.command("keymap", keymap);
+      await focus.command("superkeys.map", MacroEditor.superkeyMap(superkeys));
       const commands = await this.bkp.Commands();
       const backup = await this.bkp.DoBackup(commands, neurons[neuronID].id);
       this.bkp.SaveBackup(backup);
@@ -359,7 +393,6 @@ class MacroEditor extends React.Component {
 
   ActUponDelete() {
     const { selectedList, listToDelete, listToDeleteS, keymap, superkeys } = this.state;
-    console.log("CHECKING BEFORE ACTUPONDELETE: ", selectedList, listToDelete, listToDeleteS, keymap, superkeys);
     for (let i = 0; i < listToDelete.length; i += 1) {
       if (listToDelete[i].newKey === -1) {
         keymap.custom[listToDelete[i].layer][listToDelete[i].pos] = this.keymapDB.parse(
@@ -370,10 +403,10 @@ class MacroEditor extends React.Component {
       }
     }
     for (let i = 0; i < listToDeleteS.length; i += 1) {
-      if (selectedList === -1) {
-        superkeys[listToDeleteS[i].i][listToDeleteS[i].pos] = 1;
+      if (listToDeleteS[i].newKey === -1) {
+        superkeys[listToDeleteS[i].superIdx][listToDeleteS[i].pos] = selectedList === -1 ? 1 : selectedList + 53852;
       } else {
-        superkeys[listToDeleteS[i].i][listToDeleteS[i].pos] = selectedList + 53852;
+        superkeys[listToDeleteS[i].superIdx][listToDeleteS[i].pos] = listToDeleteS[i].newKey + 53852;
       }
     }
     this.setState({ keymap, superkeys });
@@ -381,15 +414,13 @@ class MacroEditor extends React.Component {
   }
 
   UpdateList(data) {
-    console.log("CHECKING UPDATE LIST!!", data);
     this.setState({ selectedList: parseInt(data, 10) });
   }
 
   updateKeyboard(keyboardIdx) {
-    const { macros, superkeys, keymap, selectedList } = this.state;
+    const { macros, superkeys, keymap } = this.state;
     let customKeymapList = [];
     let customSuperList = [];
-    console.log("CHECKING BEFORE UPDT KEYBOARD: ", macros, superkeys, keymap, selectedList);
     for (let i = keyboardIdx; i < macros.length; i += 1) {
       const macroID = macros[i].id + 53852;
       const newKey = i === keyboardIdx ? -1 : i - 1;
@@ -403,7 +434,7 @@ class MacroEditor extends React.Component {
       const superkeyList = superkeys
         ? superkeys
             .map((supers, superIdx) =>
-              supers.map((action, pos) => ({ i: superIdx, pos, action })).filter(elem => elem.action === macroID),
+              supers.map((action, pos) => ({ superIdx, pos, newKey, action })).filter(elem => elem.action === macroID),
             )
             .flat()
         : [];
@@ -411,12 +442,10 @@ class MacroEditor extends React.Component {
       customSuperList = customSuperList.concat(superkeyList);
     }
 
-    console.log("CHECKING UPDATE KEYBOARD: ", customKeymapList, customSuperList);
-
     this.setState({
       listToDelete: customKeymapList,
       listToDeleteS: customSuperList,
-      showDeleteModal: true,
+      showDeleteModal: customKeymapList.length > 0 || customSuperList.length > 0,
     });
   }
 
@@ -561,6 +590,7 @@ class MacroEditor extends React.Component {
       selectedList,
       selectedMacro,
       listToDelete,
+      listToDeleteS,
       usedMemory,
       totalMemory,
       showDeleteModal,
@@ -569,18 +599,33 @@ class MacroEditor extends React.Component {
       loading,
       scrollPos,
     } = this.state;
-    const ListOfMacros = listToDelete.map(({ layer, pos, key, newKey }) => {
+    let ListOfMacros = listToDelete.map(({ layer, pos, key, newKey }) => {
       if (newKey === -1) {
         return (
           <Row key={`${key.keyCode}-${layer}-${pos}-${newKey}`}>
             <Col xs={12} className="px-0 text-center gridded">
-              <p className="titles alignvert">{`Key in layer ${layer + 1} and pos ${pos}`}</p>
+              <p className="titles alignvert">{`Key in layer ${layer + 1} and pos ${pos + 1}`}</p>
             </Col>
           </Row>
         );
       }
       return "";
     });
+    ListOfMacros = ListOfMacros.concat(
+      listToDeleteS.map(({ superIdx, pos, newKey }) => {
+        const actions = ["Tap", "Hold", "Tap & hold", "2Tap", "2Tap & hold"];
+        if (newKey === -1) {
+          return (
+            <Row key={`${superIdx}-${pos}-${newKey}`}>
+              <Col xs={12} className="px-0 text-center gridded">
+                <p className="titles alignvert">{`Key in Superkey ${superIdx + 1} and action ${actions[pos]}`}</p>
+              </Col>
+            </Row>
+          );
+        }
+        return "";
+      }),
+    );
     const ListCombo = (
       <DropdownButton
         id="Selectlayers"
