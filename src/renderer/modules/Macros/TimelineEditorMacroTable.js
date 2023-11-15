@@ -428,10 +428,6 @@ class TimelineEditorMacroTable extends Component {
     this.updateRows(aux);
   };
 
-  updateScrollPos = () => {
-    console.log("ScrollPos: ", this.trackingWidth.current.scrollLeft);
-  };
-
   render() {
     // const {} = this.props;
     const cssObjectWidth = {
@@ -442,7 +438,7 @@ class TimelineEditorMacroTable extends Component {
       return <></>;
     }
     return (
-      <Styles className="trackingWrapper" style={cssObjectWidth} ref={this.horizontalWheel}>
+      <Styles className="trackingWrapper" style={cssObjectWidth} ref={this.horizontalWheel} id="hwTracker">
         <DragDropContext onDragEnd={this.onDragEnd}>
           <Droppable droppableId="droppable" direction="horizontal">
             {provided => (

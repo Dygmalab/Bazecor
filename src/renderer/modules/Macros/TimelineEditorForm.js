@@ -44,35 +44,43 @@ const Styles = Styled.div`
   float: right;
   margin-right: 1rem;
 }
-
+.goStart {
+  width: 50px;
+  font-size: 24px;
+  align-self: center;
+  text-align-last: center;
+  padding: 0;
+}
+.goEnd {
+  width: 50px;
+  font-size: 24px;
+  align-self: center;
+  text-align-last: center;
+  padding: 0;
+}
 
 position: relative;
-&:before,
-&:after {
-  position: absolute;
-  top: 0;
-  content: "";
-  width: 62px;
-  height: 100%;
-  background: ${({ theme }) => theme.styles.macro.timelineHiddenTracking};
-  z-index: 1;
-}
-&:before {
-  left: 0;
-  z-index: 2;
-  background: ${({ theme }) => theme.styles.macro.timelineHiddenTrackingBefore};
-  width: 42px;
-}
-&:after {
-  right: 0;
-
-}
+display: flex;
 `;
 
 class MacroForm extends Component {
   constructor(props) {
     super(props);
   }
+
+  wheelPosStart = () => {
+    const { updateScroll } = this.props;
+    const scrollContainer = document.getElementById("hwTracker").firstChild;
+    scrollContainer.scrollLeft = 0;
+    updateScroll(0);
+  };
+
+  wheelPosEnd = () => {
+    const { updateScroll } = this.props;
+    const scrollContainer = document.getElementById("hwTracker").firstChild;
+    // console.log("checking end pos of scroll", scrollContainer, scrollContainer.scrollWidth);
+    updateScroll(scrollContainer.scrollWidth);
+  };
 
   render() {
     const { macro, updateActions, keymapDB, componentWidth, updateScroll, scrollPos } = this.props;
@@ -81,6 +89,9 @@ class MacroForm extends Component {
     }
     return (
       <Styles>
+        <div className="goStart" onClick={this.wheelPosStart}>
+          {"<"}
+        </div>
         <TimelineEditorMacroTable
           key={JSON.stringify(macro.actions)}
           macro={macro}
@@ -90,6 +101,9 @@ class MacroForm extends Component {
           updateScroll={updateScroll}
           scrollPos={scrollPos}
         />
+        <div className="goEnd" onClick={this.wheelPosEnd}>
+          {">"}
+        </div>
       </Styles>
     );
   }
