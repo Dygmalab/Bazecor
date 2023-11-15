@@ -359,9 +359,12 @@ class MacroEditor extends React.Component {
 
   ActUponDelete() {
     const { selectedList, listToDelete, listToDeleteS, keymap, superkeys } = this.state;
+    console.log("CHECKING BEFORE ACTUPONDELETE: ", selectedList, listToDelete, listToDeleteS, keymap, superkeys);
     for (let i = 0; i < listToDelete.length; i += 1) {
       if (listToDelete[i].newKey === -1) {
-        keymap.custom[listToDelete[i].layer][listToDelete[i].pos] = this.keymapDB.parse(0);
+        keymap.custom[listToDelete[i].layer][listToDelete[i].pos] = this.keymapDB.parse(
+          selectedList === -1 ? 0 : selectedList + 53852,
+        );
       } else {
         keymap.custom[listToDelete[i].layer][listToDelete[i].pos] = this.keymapDB.parse(listToDelete[i].newKey + 53852);
       }
@@ -378,15 +381,18 @@ class MacroEditor extends React.Component {
   }
 
   UpdateList(data) {
-    this.setState({ selectedList: data });
+    console.log("CHECKING UPDATE LIST!!", data);
+    this.setState({ selectedList: parseInt(data, 10) });
   }
 
   updateKeyboard(keyboardIdx) {
-    const { macros, keymap, selectedList } = this.state;
+    const { macros, superkeys, keymap, selectedList } = this.state;
     let customKeymapList = [];
+    let customSuperList = [];
+    console.log("CHECKING BEFORE UPDT KEYBOARD: ", macros, superkeys, keymap, selectedList);
     for (let i = keyboardIdx; i < macros.length; i += 1) {
       const macroID = macros[i].id + 53852;
-      const newKey = i === keyboardIdx ? selectedList : i - 1;
+      const newKey = i === keyboardIdx ? -1 : i - 1;
       const filteredKeys = keymap.custom
         ? keymap.custom
             .map((layer, layerIdx) =>
@@ -394,16 +400,22 @@ class MacroEditor extends React.Component {
             )
             .flat()
         : [];
+      const superkeyList = superkeys
+        ? superkeys
+            .map((supers, superIdx) =>
+              supers.map((action, pos) => ({ i: superIdx, pos, action })).filter(elem => elem.action === macroID),
+            )
+            .flat()
+        : [];
       customKeymapList = customKeymapList.concat(filteredKeys);
+      customSuperList = customSuperList.concat(superkeyList);
     }
-    // const superkeyList = superkey
-    //   ? superkey
-    //       .map((supers, i) => supers.map((action, pos) => ({ i, pos, action })).filter(elem => elem.action === macroID))
-    //       .flat()
-    //   : [];
+
+    console.log("CHECKING UPDATE KEYBOARD: ", customKeymapList, customSuperList);
+
     this.setState({
       listToDelete: customKeymapList,
-      listToDeleteS: [],
+      listToDeleteS: customSuperList,
       showDeleteModal: true,
     });
   }
@@ -562,7 +574,7 @@ class MacroEditor extends React.Component {
         return (
           <Row key={`${key.keyCode}-${layer}-${pos}-${newKey}`}>
             <Col xs={12} className="px-0 text-center gridded">
-              <p className="titles alignvert">{`Key in layer ${layer} and pos ${pos}`}</p>
+              <p className="titles alignvert">{`Key in layer ${layer + 1} and pos ${pos}`}</p>
             </Col>
           </Row>
         );
