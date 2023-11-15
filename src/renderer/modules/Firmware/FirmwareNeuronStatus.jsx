@@ -304,7 +304,7 @@ const FirmwareNeuronStatus = props => {
 };
 
 FirmwareNeuronStatus.propTypes = {
-  icon: PropTypes.string,
+  icon: PropTypes.object,
   isUpdated: PropTypes.bool,
   status: PropTypes.string,
   deviceProduct: PropTypes.string,
