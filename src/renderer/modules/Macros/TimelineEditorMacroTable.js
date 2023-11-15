@@ -64,7 +64,7 @@ const Styles = Styled.div`
     > div {
       width: inherit;
       overflow-x: auto;
-      padding-left: 32px;
+      padding-left: 62px;
       ::-webkit-scrollbar-track {
         -webkit-box-shadow: transparent;
         background-color: white;

@@ -289,6 +289,11 @@ const Dark: DefaultTheme = {
         borderColorResume: Tokens.colors.gray700,
         color: Tokens.colors.brandPrimary,
       },
+      navButton: {
+        color: Tokens.colors.gray25,
+        background: settingColorOpacity(Tokens.colors.gray600, 0.5),
+        backgroundHover: settingColorOpacity(Tokens.colors.gray600, 0.85),
+      },
     },
     colorPanel: {
       colorTitle: Tokens.colors.gray100,

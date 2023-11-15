@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import Styled from "styled-components";
+import { IconArrowChevronLeft, IconArrowChevronRight } from "@Renderer/component/Icon";
 import i18n from "../../i18n";
 
 import TimelineEditorMacroTable from "./TimelineEditorMacroTable";
@@ -45,18 +46,37 @@ const Styles = Styled.div`
   margin-right: 1rem;
 }
 .goStart {
-  width: 50px;
-  font-size: 24px;
-  align-self: center;
-  text-align-last: center;
-  padding: 0;
+  left: 3px;
 }
 .goEnd {
+  right: 3px;
+}
+.goStart,
+.goEnd {
   width: 50px;
-  font-size: 24px;
+  height: calc(100% - 6px);
+  padding: 0;
+  top: 3px;
+  position: absolute;
+  backdrop-filter: blur(3px);
+  border-radius: 4px;
+  justify-content: center;
   align-self: center;
   text-align-last: center;
-  padding: 0;
+  z-index: 9;
+  display: flex;
+  transition: 300ms background-color ease-in-out;
+  color: ${({ theme }) => theme.styles.button.navButton.color};
+  background-color: ${({ theme }) => theme.styles.button.navButton.background};
+  &:hover {
+    cursor: pointer;
+    background-color: ${({ theme }) => theme.styles.button.navButton.backgroundHover};
+  }
+}
+.goStart svg,
+.goEnd svg {
+  margin-top: auto;
+  margin-bottom: auto;
 }
 
 position: relative;
@@ -90,7 +110,7 @@ class MacroForm extends Component {
     return (
       <Styles>
         <div className="goStart" onClick={this.wheelPosStart}>
-          {"<"}
+          <IconArrowChevronLeft />
         </div>
         <TimelineEditorMacroTable
           key={JSON.stringify(macro.actions)}
@@ -102,7 +122,7 @@ class MacroForm extends Component {
           scrollPos={scrollPos}
         />
         <div className="goEnd" onClick={this.wheelPosEnd}>
-          {">"}
+          <IconArrowChevronRight />
         </div>
       </Styles>
     );
