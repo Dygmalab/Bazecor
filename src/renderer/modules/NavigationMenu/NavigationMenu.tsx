@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-no-bind */
 // -*- mode: js-jsx -*-
 /* Bazecor
  * Copyright (C) 2022  Dygmalab, Inc.
@@ -15,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { Link, useLocation } from "react-router-dom";
 import SemVer from "semver";
 import { Octokit } from "@octokit/core";
@@ -125,28 +126,31 @@ function NavigationMenu(props: NavigationMenuProps): React.JSX.Element {
   const currentPage = location.pathname;
   const { connected, pages, fwUpdate, flashing, allowBeta, loading, inContext } = props;
 
-  const getGitHubFW = async (product: any) => {
-    const releases: any[] = [];
-    const octokit = new Octokit();
-    const data = await octokit.request("GET /repos/{owner}/{repo}/releases", {
-      owner: "Dygmalab",
-      repo: "Firmware-release",
-      headers: {
-        "X-GitHub-Api-Version": "2022-11-28",
-      },
-    });
-    data.data.forEach(release => {
-      const releaseData = release.name.split(" ");
-      const newRelease = { name: releaseData[0], version: releaseData[1] };
-      if (!releaseData[1].includes("beta") || allowBeta) releases.push(newRelease);
-    });
-    const finalReleases = releases.filter(release => release.name === product);
-    finalReleases.sort((a, b) => (SemVer.lt(SemVer.clean(a.version), SemVer.clean(b.version)) ? 1 : -1));
-    // console.log("data retrieved: ", finalReleases);
-    return finalReleases;
-  };
+  const getGitHubFW = useCallback(
+    async (product: any) => {
+      const releases: any[] = [];
+      const octokit = new Octokit();
+      const data = await octokit.request("GET /repos/{owner}/{repo}/releases", {
+        owner: "Dygmalab",
+        repo: "Firmware-release",
+        headers: {
+          "X-GitHub-Api-Version": "2022-11-28",
+        },
+      });
+      data.data.forEach(release => {
+        const releaseData = release.name.split(" ");
+        const newRelease = { name: releaseData[0], version: releaseData[1] };
+        if (!releaseData[1].includes("beta") || allowBeta) releases.push(newRelease);
+      });
+      const finalReleases = releases.filter(release => release.name === product);
+      finalReleases.sort((a, b) => (SemVer.lt(SemVer.clean(a.version), SemVer.clean(b.version)) ? 1 : -1));
+      // console.log("data retrieved: ", finalReleases);
+      return finalReleases;
+    },
+    [allowBeta],
+  );
 
-  async function checkKeyboardMetadata() {
+  const checkKeyboardMetadata = useCallback(async () => {
     const focus = new Focus();
     setDevice(focus.device);
     if (focus.device === undefined || focus.device.bootloader) return;
@@ -157,23 +161,32 @@ function NavigationMenu(props: NavigationMenuProps): React.JSX.Element {
       kaleidoscope: parts[1],
       firmware: parts[2],
     };
-    const fwList = await getGitHubFW(focus.device.info.product);
     let Beta = getVersions.bazecor.includes("beta");
     let cleanedVersion = getVersions.bazecor;
     if (Beta && !getVersions.bazecor.includes("-beta")) cleanedVersion = getVersions.bazecor.replace("beta", "");
+    // Getting GitHub Data
+    let fwList = [];
+    try {
+      fwList = await getGitHubFW(focus.device.info.product);
+    } catch (error) {
+      console.log("Error when fetching GitHub data");
+      console.warn(error);
+      fwList = [{ version: cleanedVersion }];
+    }
+    // Comparing online Data to FW version
     const semVerCheck = SemVer.compare(fwList[0].version, cleanedVersion);
     Beta = Beta || focus.device.info.product !== "Raise";
     setVersions(getVersions);
     setIsUpdated(semVerCheck > 0);
     setIsBeta(Beta);
     setVirtual(focus.file);
-  }
+  }, [getGitHubFW]);
 
   useEffect(() => {
     if (!flashing && connected) {
       checkKeyboardMetadata();
     }
-  }, [flashing, connected]);
+  }, [flashing, connected, checkKeyboardMetadata]);
 
   const [showAlertModal, setShowAlertModal] = useState(false);
 

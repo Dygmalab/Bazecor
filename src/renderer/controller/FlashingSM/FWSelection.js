@@ -45,15 +45,16 @@ const loadAvailableFirmwareVersions = async allowBeta => {
       const { body } = release;
       const assets = [];
       const newRelease = { name, version, body, assets };
-      release.assets.forEach(asset => {
-        newRelease.assets.push({
-          name: asset.name,
-          url: asset.browser_download_url,
+      if (release?.assets !== undefined)
+        release.assets.forEach(asset => {
+          newRelease.assets.push({
+            name: asset.name,
+            url: asset.browser_download_url,
+          });
+          // console.log([asset.name, asset.browser_download_url]);
         });
-        // console.log([asset.name, asset.browser_download_url]);
-      });
       // console.log(newRelease);
-      if (allowBeta || !newRelease.version.includes("beta")) {
+      if (newRelease.assets.length > 0 && (allowBeta || !newRelease.version.includes("beta"))) {
         Releases.push(newRelease);
       }
     });
