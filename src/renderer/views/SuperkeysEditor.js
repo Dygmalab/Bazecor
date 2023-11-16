@@ -485,8 +485,8 @@ class SuperkeysEditor extends React.Component {
   superkeyMap(superkeys) {
     if (
       superkeys.length === 0 ||
-      (superkeys.length === 1 && superkeys[0].actions.lenght === 0) ||
-      (superkeys.length === 1 && superkeys[0].actions.lenght === 1 && superkeys[0].actions[0] === 0)
+      (superkeys.length === 1 && superkeys[0].actions.length === 0) ||
+      (superkeys.length === 1 && superkeys[0].actions.length === 1 && superkeys[0].actions[0] === 0)
     ) {
       return Array.from({ length: 512 }, 65535).join(" ");
     }

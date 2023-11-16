@@ -35,6 +35,8 @@ const English = {
   success: {
     preferencesSaved: "Your preferences have been saved.",
     preferencesSavedBody: "",
+    changesSaved: "Changes saved successfully",
+    changesSavedContent: "Your changes were saved successfully on the device!",
   },
   components: {
     layer: "Layer {0}",
@@ -675,7 +677,7 @@ const English = {
       buttonLabel: "Select",
       buttonLabelSave: "Save",
       errorLoadingFile: "The file is not a valid virtual keyboard nor Backup",
-      backupTransform: "The selected file is a Backup, do you want to transform it into a virtual keyboard",
+      backupTransform: "The selected file is a Backup. Do you want to transform it into a virtual keyboard",
     },
   },
   firmwareUpdate: {
@@ -729,8 +731,8 @@ const English = {
       flashCardOverlay3: "in order for the Firmware to be loaded. This is for security reasons.",
       flashCardOverlay4: "The update process is designed so that it will never be triggered accidentally.",
       flashCardOverlay5: "This makes the keyboard secure against undesired firmware modifications.",
-      noInternetConncetion:
-        "We were unable to download the firmware you requested. Please, check your internet connection or try again later.",
+      noInternetConnection:
+        "We were unable to download the firmware you requested from GitHub. Please, check your internet connection and GitHub's status or try again later.",
       progressCardStatus1: "1. Hold the Key",
       progressCardStatus2: "2. Release the Key. Updating the Firmware",
       progressCardStatus3: "3. Restoring your Layers",

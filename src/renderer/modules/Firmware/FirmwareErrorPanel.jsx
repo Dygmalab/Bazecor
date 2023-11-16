@@ -212,6 +212,7 @@ function FirmwareErrorPanel(props) {
     }
   }, [nextBlock, state, state.context]);
 
+  console.log(state.context.error);
   return (
     <Style>
       {!handleError || loading ? (
@@ -221,7 +222,7 @@ function FirmwareErrorPanel(props) {
           <div className="firmware-row">
             <div className="firmware-content borderLeftTopRadius">
               <div className="firmware-content--inner">
-                {state.context.error === "error.platform.GitHubData" ? (
+                {state.context.error.type.includes("GitHubData") ? (
                   <>
                     <Title text={i18n.firmwareUpdate.texts.errorTitle} headingLevel={3} type="warning" />
                     <div className="errorListWrapper">
@@ -229,7 +230,7 @@ function FirmwareErrorPanel(props) {
                         <div className="errorListImage iconWarning">
                           <IconNoWifi />
                         </div>
-                        <div className="errorListContent">{i18n.firmwareUpdate.texts.noInternetConncetion}</div>
+                        <div className="errorListContent">{i18n.firmwareUpdate.texts.noInternetConnection}</div>
                       </div>
                     </div>
                   </>
@@ -242,7 +243,7 @@ function FirmwareErrorPanel(props) {
                           <IconNoWifi />
                         </div>
                         <div className="errorListContent">
-                          {state.context?.error ? state.context.error : "Contact our customer for more details"}
+                          {state.context?.error ? state.context.error.type : "Contact our customer for more details"}
                         </div>
                       </div>
                     </div>

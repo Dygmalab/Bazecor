@@ -251,6 +251,11 @@ declare module "styled-components" {
           borderColorResume: string;
           color: string;
         };
+        navButton: {
+          color: string;
+          background: string;
+          backgroundHover: string;
+        };
       };
       colorPanel: {
         colorTitle: string;

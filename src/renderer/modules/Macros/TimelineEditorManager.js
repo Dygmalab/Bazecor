@@ -182,7 +182,7 @@ class MacroManager extends Component {
   }
 
   render() {
-    const { keymapDB, macro, updateActions } = this.props;
+    const { keymapDB, macro, macros, updateActions } = this.props;
     // console.log("Macro on TimelineEditorManager", macro);
     return (
       <Styles className="timelineWrapper">
@@ -221,19 +221,24 @@ class MacroManager extends Component {
           </div>
         </div>
         <div className="timelineBodyWrapper" ref={this.trackingWidth}>
-          {macro !== null && macro.actions !== null && macro.actions.lenght > 0 ? (
+          {macro !== null && macro.actions !== null ? (
+            macro.actions.length > 0 ? (
+              <TimelineEditorForm
+                macro={macro}
+                macros={macros}
+                updateActions={updateActions}
+                keymapDB={keymapDB}
+                componentWidth={this.state.componentWidth}
+                updateScroll={this.props.updateScroll}
+                scrollPos={this.props.scrollPos}
+              />
+            ) : (
+              ""
+            )
+          ) : (
             <div className="loading marginCenter">
               <Spinner className="spinner-border" role="status" />
             </div>
-          ) : (
-            <TimelineEditorForm
-              macro={macro}
-              updateActions={updateActions}
-              keymapDB={keymapDB}
-              componentWidth={this.state.componentWidth}
-              updateScroll={this.props.updateScroll}
-              scrollPos={this.props.scrollPos}
-            />
           )}
           <div id="portalMacro" />
         </div>
