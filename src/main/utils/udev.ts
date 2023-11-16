@@ -33,7 +33,7 @@ const installUdev = (mainWindow: BrowserWindow) => {
     cancelId: 0,
     defaultId: 1,
     title: "Udev rules Installation",
-    message: "Bazecor lacks write access to your Raise keyboard",
+    message: "Bazecor lacks write access to your Dygma keyboard",
     detail: "Press install to set up the required Udev Rules, then scan keyboards again.",
   };
   dialog.showMessageBox(mainWindow, dialogOpts).then(response => {
