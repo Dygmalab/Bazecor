@@ -117,9 +117,6 @@ const defaultMacro = [
   },
 ];
 
-const defaultMacroString =
-  "255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255";
-
 class MacroEditor extends React.Component {
   static superTranslator(raw) {
     if (raw.search(" 0 0 ") === -1) {
@@ -145,37 +142,6 @@ class MacroEditor extends React.Component {
     )
       return [];
     return superkeys;
-  }
-
-  static macrosMap(macros) {
-    if (macros.length === 0 || (macros.length === 1 && Array.isArray(macros[0].actions))) {
-      return defaultMacroString;
-    }
-    const mapAction = action => {
-      switch (action.type) {
-        case 1:
-          return [
-            [action.type],
-            [action.keyCode[0] >> 8],
-            [action.keyCode[0] & 255],
-            [action.keyCode[1] >> 8],
-            [action.keyCode[1] & 255],
-          ];
-        case 2:
-        case 3:
-        case 4:
-        case 5:
-          return [[action.type], [action.keyCode >> 8], [action.keyCode & 255]];
-        default:
-          return [[action.type], [action.keyCode]];
-      }
-    };
-    return macros
-      .map(macro => macro.actions.map(action => mapAction(action)).concat([0]))
-      .concat([0])
-      .flat()
-      .join(" ")
-      .replaceAll(",", " ");
   }
 
   static superkeyMap(superkeys) {
@@ -230,6 +196,7 @@ class MacroEditor extends React.Component {
       selectedList: -1,
       usedMemory: 0,
       totalMemory: 0,
+      macrosEraser: [],
       loading: true,
       scrollPos: 0,
       currentLanguageLayout: store.get("settings.language") || "english",
@@ -336,6 +303,38 @@ class MacroEditor extends React.Component {
     this.setState({ scrollPos });
   };
 
+  macrosMap = macros => {
+    const { macrosEraser } = this.state;
+    if (macros.length === 0 || (macros.length === 1 && Array.isArray(macros[0].actions))) {
+      return macrosEraser;
+    }
+    const mapAction = action => {
+      switch (action.type) {
+        case 1:
+          return [
+            [action.type],
+            [action.keyCode[0] >> 8],
+            [action.keyCode[0] & 255],
+            [action.keyCode[1] >> 8],
+            [action.keyCode[1] & 255],
+          ];
+        case 2:
+        case 3:
+        case 4:
+        case 5:
+          return [[action.type], [action.keyCode >> 8], [action.keyCode & 255]];
+        default:
+          return [[action.type], [action.keyCode]];
+      }
+    };
+    return macros
+      .map(macro => macro.actions.map(action => mapAction(action)).concat([0]))
+      .concat([0])
+      .flat()
+      .join(" ")
+      .replaceAll(",", " ");
+  };
+
   updateMacros(recievedMacros) {
     const { startContext } = this.props;
     this.setState({
@@ -357,7 +356,7 @@ class MacroEditor extends React.Component {
     localNeurons[neuronID].macros = newMacros;
     store.set("neurons", localNeurons);
     try {
-      await focus.command("macros.map", MacroEditor.macrosMap(newMacros));
+      await focus.command("macros.map", this.macrosMap(newMacros));
       await focus.command("keymap", keymap);
       await focus.command("superkeys.map", MacroEditor.superkeyMap(superkeys));
       const commands = await this.bkp.Commands();
@@ -532,9 +531,6 @@ class MacroEditor extends React.Component {
     setLoading(true);
     const focus = new Focus();
     try {
-      /**
-       * Create property language to the object 'options', to call KeymapDB in Keymap and modify languagu layout
-       */
       const chipID = (await focus.command("hardware.chip_id")).replace(/\s/g, "");
       const neurons = store.get("neurons");
       const neuron = neurons.find(n => n.id === chipID) || {};
@@ -549,6 +545,7 @@ class MacroEditor extends React.Component {
       try {
         kbtype = focus.device && focus.device.info.keyboardType === "ISO" ? "iso" : "ansi";
       } catch (error) {
+        setLoading(false);
         return false;
       }
 
@@ -568,6 +565,7 @@ class MacroEditor extends React.Component {
         modified: false,
         usedMemory: parsedMacros.map(m => m.actions).flat().length,
         totalMemory: tMem,
+        macrosEraser: Array.from("255".repeat(tMem)).join(" "),
         loading: false,
       });
       cancelContext();
