@@ -35,6 +35,8 @@ const English = {
   success: {
     preferencesSaved: "Your preferences have been saved.",
     preferencesSavedBody: "",
+    changesSaved: "Changes saved successfully",
+    changesSavedContent: "Your changes were saved successfully on the device!",
   },
   components: {
     layer: "Layer {0}",
