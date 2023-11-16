@@ -182,7 +182,7 @@ class MacroManager extends Component {
   }
 
   render() {
-    const { keymapDB, macro, updateActions } = this.props;
+    const { keymapDB, macro, macros, updateActions } = this.props;
     // console.log("Macro on TimelineEditorManager", macro);
     return (
       <Styles className="timelineWrapper">
@@ -225,6 +225,7 @@ class MacroManager extends Component {
             macro.actions.length > 0 ? (
               <TimelineEditorForm
                 macro={macro}
+                macros={macros}
                 updateActions={updateActions}
                 keymapDB={keymapDB}
                 componentWidth={this.state.componentWidth}

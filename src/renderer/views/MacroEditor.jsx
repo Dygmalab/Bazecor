@@ -193,6 +193,7 @@ class MacroEditor extends React.Component {
       showDeleteModal: false,
       listToDelete: [],
       listToDeleteS: [],
+      listToDeleteM: [],
       selectedList: -1,
       usedMemory: 0,
       totalMemory: 0,
@@ -391,7 +392,9 @@ class MacroEditor extends React.Component {
   }
 
   ActUponDelete() {
-    const { selectedList, listToDelete, listToDeleteS, keymap, superkeys } = this.state;
+    const { selectedList, listToDelete, listToDeleteS, listToDeleteM, keymap, superkeys } = this.state;
+    let { macros } = this.state;
+    console.log("Checking list to delete macros", listToDeleteM, macros);
     for (let i = 0; i < listToDelete.length; i += 1) {
       if (listToDelete[i].newKey === -1) {
         keymap.custom[listToDelete[i].layer][listToDelete[i].pos] = this.keymapDB.parse(
@@ -408,7 +411,24 @@ class MacroEditor extends React.Component {
         superkeys[listToDeleteS[i].superIdx][listToDeleteS[i].pos] = listToDeleteS[i].newKey + 53852;
       }
     }
-    this.setState({ keymap, superkeys });
+    for (let i = 0; i < listToDeleteM.length; i += 1) {
+      if (listToDeleteM[i].newKey === -1) {
+        if (selectedList === -1) {
+          macros[listToDeleteM[i].macroIdx].actions[listToDeleteM[i].pos] = undefined;
+        } else {
+          macros[listToDeleteM[i].macroIdx].actions[listToDeleteM[i].pos].keyCode = selectedList + 53852;
+        }
+      } else {
+        macros[listToDeleteM[i].macroIdx].actions[listToDeleteM[i].pos].keyCode = listToDeleteM[i].newKey + 53852;
+      }
+    }
+    macros = macros.map(macro => {
+      const newMacro = { ...macro };
+      newMacro.actions = macro.actions.filter(x => x !== undefined);
+      return newMacro;
+    });
+    console.log("result!", macros);
+    this.setState({ keymap, superkeys, macros });
     this.toggleDeleteModal();
   }
 
@@ -420,6 +440,7 @@ class MacroEditor extends React.Component {
     const { macros, superkeys, keymap } = this.state;
     let customKeymapList = [];
     let customSuperList = [];
+    let customMacrosList = [];
     for (let i = keyboardIdx; i < macros.length; i += 1) {
       const macroID = macros[i].id + 53852;
       const newKey = i === keyboardIdx ? -1 : i - 1;
@@ -437,14 +458,25 @@ class MacroEditor extends React.Component {
             )
             .flat()
         : [];
+      const macrosList = macros
+        ? macros
+            .map((macro, macroIdx) =>
+              macro.actions
+                .map((action, pos) => ({ macroIdx: macroIdx - 1, pos, newKey, actions: macro.actions }))
+                .filter(elem => elem.actions[elem.pos].keyCode === macroID),
+            )
+            .flat()
+        : [];
       customKeymapList = customKeymapList.concat(filteredKeys);
       customSuperList = customSuperList.concat(superkeyList);
+      customMacrosList = customMacrosList.concat(macrosList);
     }
 
     this.setState({
       listToDelete: customKeymapList,
       listToDeleteS: customSuperList,
-      showDeleteModal: customKeymapList.length > 0 || customSuperList.length > 0,
+      listToDeleteM: customMacrosList,
+      showDeleteModal: customKeymapList.length > 0 || customSuperList.length > 0 || customMacrosList.length > 0,
     });
   }
 
@@ -565,7 +597,7 @@ class MacroEditor extends React.Component {
         modified: false,
         usedMemory: parsedMacros.map(m => m.actions).flat().length,
         totalMemory: tMem,
-        macrosEraser: Array.from("255".repeat(tMem)).join(" "),
+        macrosEraser: Array(tMem).fill("255").join(" "),
         loading: false,
       });
       cancelContext();
@@ -589,6 +621,7 @@ class MacroEditor extends React.Component {
       selectedMacro,
       listToDelete,
       listToDeleteS,
+      listToDeleteM,
       usedMemory,
       totalMemory,
       showDeleteModal,
@@ -597,7 +630,7 @@ class MacroEditor extends React.Component {
       loading,
       scrollPos,
     } = this.state;
-    let ListOfMacros = listToDelete.map(({ layer, pos, key, newKey }) => {
+    let ListOfDeletes = listToDelete.map(({ layer, pos, key, newKey }) => {
       if (newKey === -1) {
         return (
           <Row key={`${key.keyCode}-${layer}-${pos}-${newKey}`}>
@@ -609,7 +642,7 @@ class MacroEditor extends React.Component {
       }
       return "";
     });
-    ListOfMacros = ListOfMacros.concat(
+    ListOfDeletes = ListOfDeletes.concat(
       listToDeleteS.map(({ superIdx, pos, newKey }) => {
         const actions = ["Tap", "Hold", "Tap & hold", "2Tap", "2Tap & hold"];
         if (newKey === -1) {
@@ -617,6 +650,20 @@ class MacroEditor extends React.Component {
             <Row key={`${superIdx}-${pos}-${newKey}`}>
               <Col xs={12} className="px-0 text-center gridded">
                 <p className="titles alignvert">{`Key in Superkey ${superIdx + 1} and action ${actions[pos]}`}</p>
+              </Col>
+            </Row>
+          );
+        }
+        return "";
+      }),
+    );
+    ListOfDeletes = ListOfDeletes.concat(
+      listToDeleteM.map(({ macroIdx, pos, newKey }) => {
+        if (newKey === -1) {
+          return (
+            <Row key={`${macroIdx}-${pos}-${newKey}`}>
+              <Col xs={12} className="px-0 text-center gridded">
+                <p className="titles alignvert">{`Key in Macro ${macroIdx + 1} and action ${pos}`}</p>
               </Col>
             </Row>
           );
@@ -714,7 +761,7 @@ class MacroEditor extends React.Component {
             <Modal.Title>{i18n.editor.macros.deleteModal.title}</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            {ListOfMacros}
+            {ListOfDeletes}
             <p>{i18n.editor.macros.deleteModal.body}</p>
             {ListCombo}
           </Modal.Body>
