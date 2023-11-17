@@ -91,32 +91,6 @@ const Styles = Styled.div`
   }
 `;
 
-const defaultMacro = [
-  {
-    actions: [
-      { keyCode: 229, type: 6, id: 0 },
-      { keyCode: 11, type: 8, id: 1 },
-      { keyCode: 229, type: 7, id: 2 },
-      { keyCode: 8, type: 8, id: 3 },
-      { keyCode: 28, type: 8, id: 4 },
-      { keyCode: 54, type: 8, id: 5 },
-      { keyCode: 44, type: 8, id: 6 },
-      { keyCode: 229, type: 6, id: 7 },
-      { keyCode: 7, type: 8, id: 8 },
-      { keyCode: 229, type: 7, id: 9 },
-      { keyCode: 28, type: 8, id: 10 },
-      { keyCode: 10, type: 8, id: 11 },
-      { keyCode: 16, type: 8, id: 12 },
-      { keyCode: 4, type: 8, id: 13 },
-      { keyCode: 23, type: 8, id: 14 },
-      { keyCode: 8, type: 8, id: 15 },
-    ],
-    id: 0,
-    macro: "RIGHT SHIFT H RIGHT SHIFT E Y , SPACE RIGHT SHIFT D RIGHT SHIFT Y G M A T E",
-    name: "Hey, Dygmate!",
-  },
-];
-
 class MacroEditor extends React.Component {
   static superTranslator(raw) {
     if (raw.search(" 0 0 ") === -1) {
@@ -482,9 +456,6 @@ class MacroEditor extends React.Component {
 
   macroTranslator(raw) {
     const { storedMacros } = this.state;
-    if (raw.search(" 0 0") === -1) {
-      return defaultMacro;
-    }
     const macrosArray = raw.split(" 0 0")[0].split(" ").map(Number);
 
     // Translate received macros to human readable text
