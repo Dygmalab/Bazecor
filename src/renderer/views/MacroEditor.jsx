@@ -33,7 +33,7 @@ import { LogoLoaderCentered } from "@Renderer/component/Loader";
 
 import { RegularButton } from "@Renderer/component/Button";
 import Callout from "@Renderer/component/Callout";
-import { IconFloppyDisk } from "@Renderer/component/Icon";
+import { IconFloppyDisk, IconLoader } from "@Renderer/component/Icon";
 import { MacroSelector } from "@Renderer/component/Select";
 import ToastMessage from "@Renderer/component/ToastMessage";
 import { PageHeader } from "@Renderer/modules/PageHeader";
@@ -126,7 +126,7 @@ class MacroEditor extends React.Component {
       (superkeys.length === 1 && superkeys[0].length === 0) ||
       (superkeys.length === 1 && superkeys[0].length === 1 && superkeys[0] === 0)
     ) {
-      return Array.from({ length: 512 }, 65535).join(" ");
+      return Array(512).fill("65535").join(" ");
     }
     let keyMap = [...superkeys];
     // console.log("First", keyMap);
@@ -280,7 +280,14 @@ class MacroEditor extends React.Component {
 
   macrosMap = macros => {
     const { macrosEraser } = this.state;
-    if (macros.length === 0 || (macros.length === 1 && Array.isArray(macros[0].actions))) {
+    console.log(
+      "Macros map function",
+      macros,
+      macrosEraser,
+      macros.length === 0,
+      macros.length === 1 && Array.isArray(macros[0].actions),
+    );
+    if (macros.length === 0 || (macros.length === 1 && !Array.isArray(macros[0].actions))) {
       return macrosEraser;
     }
     const mapAction = action => {
@@ -302,12 +309,14 @@ class MacroEditor extends React.Component {
           return [[action.type], [action.keyCode]];
       }
     };
-    return macros
+    const result = macros
       .map(macro => macro.actions.map(action => mapAction(action)).concat([0]))
       .concat([0])
       .flat()
       .join(" ")
       .replaceAll(",", " ");
+    console.log("MACROS GOING TO BE SAVED", result);
+    return result;
   };
 
   updateMacros(recievedMacros) {
@@ -349,7 +358,9 @@ class MacroEditor extends React.Component {
       cancelContext();
       setLoading(false);
     } catch (error) {
-      toast.error(<ToastMessage title={error} icon={<IconFloppyDisk />} />, { icon: "" });
+      console.log("error when writing macros");
+      console.error(error);
+      toast.error(<ToastMessage title="Error when sending macros to the device" icon={<IconFloppyDisk />} />, { icon: "" });
       cancelContext();
       setLoading(false);
     }
@@ -548,8 +559,10 @@ class MacroEditor extends React.Component {
       try {
         kbtype = focus.device && focus.device.info.keyboardType === "ISO" ? "iso" : "ansi";
       } catch (error) {
+        console.log("error when reading focus.device and kbType for Macros");
+        console.error(error);
         setLoading(false);
-        return false;
+        throw Error(error);
       }
 
       let tMem = await focus.command("macros.memory");
@@ -574,8 +587,10 @@ class MacroEditor extends React.Component {
       cancelContext();
       setLoading(false);
       return true;
-    } catch (e) {
-      toast.error(<ToastMessage title={e} icon={<IconFloppyDisk />} />, { icon: "" });
+    } catch (error) {
+      console.log("error when loading macros");
+      console.error(error);
+      toast.error(<ToastMessage title="Error when loading macros from the device" icon={<IconLoader />} />, { icon: "" });
       cancelContext();
       setLoading(false);
       onDisconnect();
