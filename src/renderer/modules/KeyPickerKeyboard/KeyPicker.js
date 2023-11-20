@@ -90,6 +90,7 @@ import GR from "@Renderer/modules/KeyPickerKeyboard/GR.json";
 import FR from "@Renderer/modules/KeyPickerKeyboard/FR.json";
 import UK from "@Renderer/modules/KeyPickerKeyboard/UK.json";
 import FRBEPO from "@Renderer/modules/KeyPickerKeyboard/FR-BEPO.json";
+import FROPTIMOT from "@Renderer/modules/KeyPickerKeyboard/FR-OPTIMOT.json";
 import SW from "@Renderer/modules/KeyPickerKeyboard/SW.json";
 import DN from "@Renderer/modules/KeyPickerKeyboard/DN.json";
 import NW from "@Renderer/modules/KeyPickerKeyboard/NW.json";
@@ -406,6 +407,7 @@ class KeyPicker extends Component {
       german: GR,
       french: FR,
       frenchBepo: FRBEPO,
+      frenchOptimot: FROPTIMOT,
       swedish: SW,
       finnish: SW,
       danish: DN,
