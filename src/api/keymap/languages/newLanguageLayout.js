@@ -22,7 +22,7 @@
  * @param {newKeyCodeTable} newKeyCodeTable Key codes for new language
  */
 function newLanguageLayout(baseKeyCodeTable, language = "english", newKeyCodeTable) {
-  if (language === "english" || language === "british") {
+  if (language === "english") {
     return baseKeyCodeTable;
   }
   return baseKeyCodeTable.map(group => {

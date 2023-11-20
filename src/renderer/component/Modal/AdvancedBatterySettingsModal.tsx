@@ -67,7 +67,14 @@ function AdvancedBatterySettingsModal(props: AdvancedEnergyManagementProps) {
   };
 
   return (
-    <Modal size="xl" show={showModal} onHide={() => setShowModal(false)} aria-labelledby="contained-modal-title-vcenter" centered>
+    <Modal
+      size="xl"
+      show={showModal}
+      onHide={() => setShowModal(false)}
+      aria-labelledby="contained-modal-title-vcenter"
+      centered
+      backdrop="static"
+    >
       <Modal.Header closeButton>
         <Modal.Title>{i18n.wireless.energyManagement.advancedSettings}</Modal.Title>
       </Modal.Header>
@@ -85,7 +92,13 @@ function AdvancedBatterySettingsModal(props: AdvancedEnergyManagementProps) {
               <Col lg={5}>
                 <div className="slider-wrapper">
                   <span className="tagsfix slider-label">0%</span>
-                  <Slider min={1} max={100} value={Math.round((wireless.brightness * 100) / 255)} onChange={setBrightness} />
+                  <Slider
+                    min={0}
+                    max={100}
+                    step={1}
+                    value={Math.round((wireless.brightness * 100) / 255)}
+                    onChange={setBrightness}
+                  />
                   <span className="tagsfix slider-label">100%</span>
                 </div>
               </Col>
@@ -97,7 +110,13 @@ function AdvancedBatterySettingsModal(props: AdvancedEnergyManagementProps) {
               <Col lg={5}>
                 <div className="slider-wrapper">
                   <span className="tagsfix slider-label">0%</span>
-                  <Slider min={1} max={100} value={Math.round((wireless.brightnessUG * 100) / 255)} onChange={setBrightnessUG} />
+                  <Slider
+                    min={0}
+                    max={100}
+                    step={1}
+                    value={Math.round((wireless.brightnessUG * 100) / 255)}
+                    onChange={setBrightnessUG}
+                  />
                   <span className="tagsfix slider-label">100%</span>
                 </div>
               </Col>

@@ -176,11 +176,11 @@ Returns the version of the Raise firmware stored in the keyboard's EEPROM
 
 #### Commands
 
-- JavaScript: 
-  ```js 
+- JavaScript:
+  ```js
   focus.command("version")
   ```
-- Serial Command (Unix): 
+- Serial Command (Unix):
   ```shell
   echo 'version' > /dev/ttyACM0
   ```
@@ -213,30 +213,30 @@ To know the actual correlation between the position of the map sent and the actu
 
 To retrieve:
 
-- JavaScript: 
-  ```js 
+- JavaScript:
+  ```js
   focus.command("keymap.custom")
   ```
-- Serial Command (Unix): 
+- Serial Command (Unix):
   ```shell
   echo 'keymap.custom' > /dev/ttyACM0
   ```
 
 To set:
 
-- JavaScript: 
-  ```js 
+- JavaScript:
+  ```js
   focus.command("keymap.custom N N N N N N N N N N N N N N N")
   ```
-- Serial Command (Unix): 
+- Serial Command (Unix):
   ```shell
   echo 'keymap.custom N N N N N N N N N N N N N N N' > /dev/ttyACM0
   ```
 
-Being 
-```shell 
+Being
+```shell
  'N N N...'
-``` 
+```
 the 16bit numbers that represent each key assigned to that position of the keymap the numbers amount 80(keys per layer)x10(custom layers)
 
 #### Expected output
@@ -253,30 +253,30 @@ To know the actual correlation between the position of the map sent and the actu
 
 To retrieve:
 
-- JavaScript: 
-  ```js 
+- JavaScript:
+  ```js
   focus.command("keymap.default")
   ```
-- Serial Command (Unix): 
+- Serial Command (Unix):
   ```shell
   echo 'keymap.default' > /dev/ttyACM0
   ```
 
 To set:
 
-- JavaScript: 
-  ```js 
+- JavaScript:
+  ```js
   focus.command("keymap.default N N N N N N N N N N N N N N N")
   ```
-- Serial Command (Unix): 
+- Serial Command (Unix):
   ```shell
   echo 'keymap.default N N N N N N N N N N N N N N N' > /dev/ttyACM0
   ```
 
-Being 
-```shell 
+Being
+```shell
  'N N N...'
-``` 
+```
 the 16bit numbers that represent each key assigned to that position of the keymap the numbers amount 80(keys per layer)x2(default layers)
 
 #### Expected output
@@ -291,22 +291,22 @@ This command returns true or false depending on the user setting of hiding the d
 
 To retrieve:
 
-- JavaScript: 
-  ```js 
+- JavaScript:
+  ```js
   focus.command("keymap.onlyCustom")
   ```
-- Serial Command (Unix): 
+- Serial Command (Unix):
   ```shell
   echo 'keymap.onlyCustom' > /dev/ttyACM0
   ```
 
 To set:
 
-- JavaScript: 
-  ```js 
+- JavaScript:
+  ```js
   focus.command("keymap.onlyCustom true")
   ```
-- Serial Command (Unix): 
+- Serial Command (Unix):
   ```shell
   echo 'keymap.onlyCustom trure' > /dev/ttyACM0
   ```
@@ -323,22 +323,22 @@ This command returns the default layer the keyboard will boot in, with this you 
 
 To retrieve:
 
-- JavaScript: 
-  ```js 
+- JavaScript:
+  ```js
   focus.command("keymap.defaultLayer")
   ```
-- Serial Command (Unix): 
+- Serial Command (Unix):
   ```shell
   echo 'keymap.defaultLayer' > /dev/ttyACM0
   ```
 
 To set:
 
-- JavaScript: 
-  ```js 
+- JavaScript:
+  ```js
   focus.command("keymap.defaultLayer 1")
   ```
-- Serial Command (Unix): 
+- Serial Command (Unix):
   ```shell
   echo 'keymap.defaultLayer 1' > /dev/ttyACM0
   ```
@@ -355,11 +355,11 @@ This command returns a boolean value that states true if all checks have been pe
 
 To retrieve:
 
-- JavaScript: 
-  ```js 
+- JavaScript:
+  ```js
   focus.command("settings.valid")
   ```
-- Serial Command (Unix): 
+- Serial Command (Unix):
   ```shell
   echo 'settings.valid' > /dev/ttyACM0
   ```
@@ -376,22 +376,22 @@ This command returns the current settings version, it allows Bazecor to identify
 
 To retrieve:
 
-- JavaScript: 
-  ```js 
+- JavaScript:
+  ```js
   focus.command("settings.version")
   ```
-- Serial Command (Unix): 
+- Serial Command (Unix):
   ```shell
   echo 'settings.version' > /dev/ttyACM0
   ```
 
 To set:
 
-- JavaScript: 
-  ```js 
+- JavaScript:
+  ```js
   focus.command("settings.version 1")
   ```
-- Serial Command (Unix): 
+- Serial Command (Unix):
   ```shell
   echo 'settings.version 1' > /dev/ttyACM0
   ```
@@ -408,11 +408,11 @@ Returns the CRC checksum of the layout.
 
 To retrieve:
 
-- JavaScript: 
-  ```js 
+- JavaScript:
+  ```js
   focus.command("settings.crc")
   ```
-- Serial Command (Unix): 
+- Serial Command (Unix):
   ```shell
   echo 'settings.crc' > /dev/ttyACM0
   ```
@@ -429,29 +429,29 @@ This command returns the whole EEPROM contents. and allows you to send them in o
 
 To retrieve:
 
-- JavaScript: 
-  ```js 
+- JavaScript:
+  ```js
   focus.command("eeprom.contents")
   ```
-- Serial Command (Unix): 
+- Serial Command (Unix):
   ```shell
   echo 'eeprom.contents' > /dev/ttyACM0
   ```
 
 To set:
 
-- JavaScript: 
-  ```js 
+- JavaScript:
+  ```js
   focus.command("eeprom.contents NNNNNNNNNNNNN")
   ```
-- Serial Command (Unix): 
+- Serial Command (Unix):
   ```shell
   echo 'eeprom.contents NNNNNNNNNNNN' > /dev/ttyACM0
   ```
 
 #### Expected output
 
-It should return the whole EEPROM lenght of contents, in this case as CRC returned, 6228 bytes.
+It should return the whole EEPROM length of contents, in this case as CRC returned, 6228 bytes.
 
 ### eeprom.free
 
@@ -461,11 +461,11 @@ This command returns the remaining EEPROM bytes left.
 
 To retrieve:
 
-- JavaScript: 
-  ```js 
+- JavaScript:
+  ```js
   focus.command("eeprom.free")
   ```
-- Serial Command (Unix): 
+- Serial Command (Unix):
   ```shell
   echo 'eeprom.free' > /dev/ttyACM0
   ```
@@ -482,22 +482,22 @@ This command returns the color that an individual led has right now in RGB code,
 
 To retrieve:
 
-- JavaScript: 
-  ```js 
+- JavaScript:
+  ```js
   focus.command("led.at 21")
   ```
-- Serial Command (Unix): 
+- Serial Command (Unix):
   ```shell
   echo 'led.at 21' > /dev/ttyACM0
   ```
 
 To set:
 
-- JavaScript: 
-  ```js 
+- JavaScript:
+  ```js
   focus.command("led.at 21 255 255 0")
   ```
-- Serial Command (Unix): 
+- Serial Command (Unix):
   ```shell
   echo 'led.at 21 255 255 0' > /dev/ttyACM0
   ```
@@ -507,7 +507,7 @@ With this function you can change, based on external events, a led color dependi
 
 if sent only with the LED number, it will return its color
 ```js
-80 227 194 
+80 227 194
 ```
 
 if sent with the color coded (ex: 255 255 0 or yellow) it will change that numbered LEDs color to yellow.
@@ -520,11 +520,11 @@ This command returns the colors of each of the numbered LED's that are listed in
 
 To retrieve:
 
-- JavaScript: 
-  ```js 
+- JavaScript:
+  ```js
   focus.command("led.getMultiple 1 2 3 4 5")
   ```
-- Serial Command (Unix): 
+- Serial Command (Unix):
   ```shell
   echo 'led.getMultiple 1 2 3 4 5' > /dev/ttyACM0
   ```
@@ -535,9 +535,9 @@ With this function you can read the color of a given set of LED's and will retur
 
   ``` js
   1 # 80 227 194
-  2 # 80 227 194 
-  3 # 80 227 194 
-  4 # 80 227 194 
+  2 # 80 227 194
+  3 # 80 227 194
+  4 # 80 227 194
   5 # 80 227 194
   ```
 
@@ -549,11 +549,11 @@ This command applies the defined color to all of the numbered LEDs listed afterw
 
 To set:
 
-- JavaScript: 
-  ```js 
+- JavaScript:
+  ```js
   focus.command("led.setMultiple 255 0 0 1 2 3 4 5")
   ```
-- Serial Command (Unix): 
+- Serial Command (Unix):
   ```shell
   echo 'led.setMultiple 255 0 0 1 2 3 4 5' > /dev/ttyACM0
   ```
@@ -570,11 +570,11 @@ This command sets all leds to a certain color transmitted by RGB.
 
 To set:
 
-- JavaScript: 
-  ```js 
+- JavaScript:
+  ```js
   focus.command("led.setAll 255 255 255")
   ```
-- Serial Command (Unix): 
+- Serial Command (Unix):
   ```shell
   echo 'led.setAll 255 255 255' > /dev/ttyACM0
   ```
@@ -591,22 +591,22 @@ This command reads/writes the current led mode, which changes the type of led la
 
 To retrieve:
 
-- JavaScript: 
-  ```js 
+- JavaScript:
+  ```js
   focus.command("led.mode")
   ```
-- Serial Command (Unix): 
+- Serial Command (Unix):
   ```shell
   echo 'led.mode' > /dev/ttyACM0
   ```
 
 To set:
 
-- JavaScript: 
-  ```js 
+- JavaScript:
+  ```js
   focus.command("led.mode 2")
   ```
-- Serial Command (Unix): 
+- Serial Command (Unix):
   ```shell
   echo 'led.mode 2' > /dev/ttyACM0
   ```
@@ -636,22 +636,22 @@ When applied to the Defy keyboard, additional commands are available to modify t
 
 To retrieve:
 
-- JavaScript: 
-  ```js 
+- JavaScript:
+  ```js
   focus.command("led.brightness")
   ```
-- Serial Command (Unix): 
+- Serial Command (Unix):
   ```shell
   echo 'led.brightness' > /dev/ttyACM0
   ```
 
 To set:
 
-- JavaScript: 
-  ```js 
+- JavaScript:
+  ```js
   focus.command("led.brightness 210")
   ```
-- Serial Command (Unix): 
+- Serial Command (Unix):
   ```shell
   echo 'led.brightness 210' > /dev/ttyACM0
   ```
@@ -671,22 +671,22 @@ When applied to the Defy keyboard, additional commands are available to modify t
 
 To retrieve:
 
-- JavaScript: 
-  ```js 
+- JavaScript:
+  ```js
   focus.command("led.brightnessUG")
   ```
-- Serial Command (Unix): 
+- Serial Command (Unix):
   ```shell
   echo 'led.brightnessUG' > /dev/ttyACM0
   ```
 
 To set:
 
-- JavaScript: 
-  ```js 
+- JavaScript:
+  ```js
   focus.command("led.brightnessUG 210")
   ```
-- Serial Command (Unix): 
+- Serial Command (Unix):
   ```shell
   echo 'led.brightnessUG 210' > /dev/ttyACM0
   ```
@@ -705,22 +705,22 @@ This command reads/writes the whole LED color assignment currently in use on the
 
 To retrieve:
 
-- JavaScript: 
-  ```js 
+- JavaScript:
+  ```js
   focus.command("led.theme")
   ```
-- Serial Command (Unix): 
+- Serial Command (Unix):
   ```shell
   echo 'led.theme' > /dev/ttyACM0
   ```
 
 To set:
 
-- JavaScript: 
-  ```js 
+- JavaScript:
+  ```js
   focus.command("led.theme NNN NNN NNN NNN NNN NNN")
   ```
-- Serial Command (Unix): 
+- Serial Command (Unix):
   ```shell
   echo 'led.theme NNN NNN NNN NNN NNN NNN' > /dev/ttyACM0
   ```
@@ -744,22 +744,22 @@ This command reads/writes the color palette that is used by the color map to est
 
 To retrieve:
 
-- JavaScript: 
-  ```js 
+- JavaScript:
+  ```js
   focus.command("palette")
   ```
-- Serial Command (Unix): 
+- Serial Command (Unix):
   ```shell
   echo 'palette' > /dev/ttyACM0
   ```
 
 To set:
 
-- JavaScript: 
-  ```js 
+- JavaScript:
+  ```js
   focus.command("led.palete NNN NNN NNN NNN NNN NNN")
   ```
-- Serial Command (Unix): 
+- Serial Command (Unix):
   ```shell
   echo 'palette NNN NNN NNN NNN NNN NNN' > /dev/ttyACM0
   ```
@@ -778,22 +778,22 @@ To know the actual correlation between the position of the map sent and the actu
 
 To retrieve:
 
-- JavaScript: 
-  ```js 
+- JavaScript:
+  ```js
   focus.command("colormap.map")
   ```
-- Serial Command (Unix): 
+- Serial Command (Unix):
   ```shell
   echo 'colormap.map' > /dev/ttyACM0
   ```
 
 To set:
 
-- JavaScript: 
-  ```js 
+- JavaScript:
+  ```js
   focus.command("colormap.map N N N N N N N N N N N N N N N N N N")
   ```
-- Serial Command (Unix): 
+- Serial Command (Unix):
   ```shell
   echo 'colormap.map N N N N N N N N N N N N N N N N N N' > /dev/ttyACM0
   ```
@@ -810,22 +810,22 @@ This command reads/writes the idle led time to be turned off in seconds.
 
 To retrieve:
 
-- JavaScript: 
-  ```js 
+- JavaScript:
+  ```js
   focus.command("idleleds.time_limit")
   ```
-- Serial Command (Unix): 
+- Serial Command (Unix):
   ```shell
   echo 'idleleds.time_limit' > /dev/ttyACM0
   ```
 
 To set:
 
-- JavaScript: 
-  ```js 
+- JavaScript:
+  ```js
   focus.command("idleleds.time_limit 600")
   ```
-- Serial Command (Unix): 
+- Serial Command (Unix):
   ```shell
   echo 'idleleds.time_limit 600' > /dev/ttyACM0
   ```
@@ -880,7 +880,7 @@ This empty command has no support as of today, or is disabled / not working prop
 
 ### macros.map
 
-This command reads/writes the macros map (2048 bytes of max lenght), each action in a macro is composed of an action type and a key attached to it.
+This command reads/writes the macros map (2048 bytes of max length), each action in a macro is composed of an action type and a key attached to it.
 
 | Macro Action                      | Description                                                                                                                                                                                                               | Example                                                                                               | Total Cost                                                                     |   |
 |-----------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------|---|
@@ -937,7 +937,7 @@ Allows you to test any macro stored in the EEPROM without assigning it to a key
 
 ### superkeys.map
 
-This command reads/writes the superkeys map (1024 bytes of max lenght), each action in a superkey is represented by a keyCode number that encodes the action, for example if you use the number 44, you are encoding space, etc... to know more about keycodes and to find the right one for your actions, check [keymap database](https://github.com/Dygmalab/Bazecor/tree/development/src/api/keymap/db)
+This command reads/writes the superkeys map (1024 bytes of max length), each action in a superkey is represented by a keyCode number that encodes the action, for example if you use the number 44, you are encoding space, etc... to know more about keycodes and to find the right one for your actions, check [keymap database](https://github.com/Dygmalab/Bazecor/tree/development/src/api/keymap/db)
 
 The structure is composed of the encoded actions in this order
 
@@ -1055,22 +1055,22 @@ the holdstart value specifies the minimum time that has to pass between the firs
 
 To retrieve:
 
-- JavaScript: 
-  ```js 
+- JavaScript:
+  ```js
   focus.command("superkeys.holdstart")
   ```
-- Serial Command (Unix): 
+- Serial Command (Unix):
   ```shell
   echo 'superkeys.holdstart' > /dev/ttyACM0
   ```
 
 To set:
 
-- JavaScript: 
-  ```js 
+- JavaScript:
+  ```js
   focus.command("superkeys.holdstart 200")
   ```
-- Serial Command (Unix): 
+- Serial Command (Unix):
   ```shell
   echo 'superkeys.holdstart 200' > /dev/ttyACM0
   ```
@@ -1089,22 +1089,22 @@ the overlap value specifies the percentage of overlap when fast typing that is a
 
 To retrieve:
 
-- JavaScript: 
-  ```js 
+- JavaScript:
+  ```js
   focus.command("superkeys.overlap")
   ```
-- Serial Command (Unix): 
+- Serial Command (Unix):
   ```shell
   echo 'superkeys.overlap' > /dev/ttyACM0
   ```
 
 To set:
 
-- JavaScript: 
-  ```js 
+- JavaScript:
+  ```js
   focus.command("superkeys.overlap 80")
   ```
-- Serial Command (Unix): 
+- Serial Command (Unix):
   ```shell
   echo 'superkeys.overlap 80' > /dev/ttyACM0
   ```
@@ -1127,11 +1127,11 @@ The help command returns all the available commands in the current version of th
 
 #### Commands
 
-- JavaScript: 
-  ```js 
+- JavaScript:
+  ```js
   focus.command("help")
   ```
-- Serial Command (Unix): 
+- Serial Command (Unix):
   ```shell
   echo 'help' > /dev/ttyACM0
   ```
@@ -1148,11 +1148,11 @@ This command allows the host PC to activate a certain layer remotely just by sen
 
 To use:
 
-- JavaScript: 
-  ```js 
+- JavaScript:
+  ```js
   focus.command("layer.activate 1")
   ```
-- Serial Command (Unix): 
+- Serial Command (Unix):
   ```shell
   echo 'layer.activate 1' > /dev/ttyACM0
   ```
@@ -1169,11 +1169,11 @@ This command allows the host PC to deactivate the last layer that the keyboard s
 
 To use:
 
-- JavaScript: 
-  ```js 
+- JavaScript:
+  ```js
   focus.command("layer.deactivate")
   ```
-- Serial Command (Unix): 
+- Serial Command (Unix):
   ```shell
   echo 'layer.deactivate' > /dev/ttyACM0
   ```
@@ -1190,11 +1190,11 @@ This command allows the host PC to ask the keyboard which layer is in use right 
 
 To use:
 
-- JavaScript: 
-  ```js 
+- JavaScript:
+  ```js
   focus.command("layer.isActive")
   ```
-- Serial Command (Unix): 
+- Serial Command (Unix):
   ```shell
   echo 'layer.isActive' > /dev/ttyACM0
   ```
@@ -1207,7 +1207,7 @@ The command will return the active layer inmediately after launching it.
 
 This command allows the host PC to activate a certain layer remotely just by sending it's order number. The layer number will start by 0 to address the first one and will end with 9 if we suppose a 10 layer list to address the last one.
 
-The difference between this command and the layer.activate alternative, is that the activate command adds to the layer switching history, but moveTo will erase that memory and return it to an array lenght 1 and holding the current layer the keyboard moved to.
+The difference between this command and the layer.activate alternative, is that the activate command adds to the layer switching history, but moveTo will erase that memory and return it to an array length 1 and holding the current layer the keyboard moved to.
 
 This command does not affect the memory usage as the value is stored in RAM.
 
@@ -1215,11 +1215,11 @@ This command does not affect the memory usage as the value is stored in RAM.
 
 To use:
 
-- JavaScript: 
-  ```js 
+- JavaScript:
+  ```js
   focus.command("layer.moveTo 1")
   ```
-- Serial Command (Unix): 
+- Serial Command (Unix):
   ```shell
   echo 'layer.moveTo 1' > /dev/ttyACM0
   ```
@@ -1236,18 +1236,18 @@ This command returns the isActive status for up to 32 layers. It will return a 3
 
 To use:
 
-- JavaScript: 
-  ```js 
+- JavaScript:
+  ```js
   focus.command("layer.state")
   ```
-- Serial Command (Unix): 
+- Serial Command (Unix):
   ```shell
   echo 'layer.state' > /dev/ttyACM0
   ```
 
 #### Expected output
 
-This is the typical answer when the first layer is active: 
+This is the typical answer when the first layer is active:
 ```shell
 '1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 '
 ``````

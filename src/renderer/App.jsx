@@ -84,6 +84,7 @@ class App extends React.Component {
       pages: {},
       contextBar: false,
       fwUpdate: false,
+      loading: false,
       allowBeta,
     };
     localStorage.clear();
@@ -253,6 +254,12 @@ class App extends React.Component {
     });
   };
 
+  setLoading = loading => {
+    this.setState({
+      loading,
+    });
+  };
+
   async updateStorageSchema() {
     // Update stored settings schema
     console.log("Retrieving settings: ", store.get("settings"));
@@ -291,12 +298,20 @@ class App extends React.Component {
   }
 
   render() {
-    const { connected, pages, contextBar, darkMode, fwUpdate, allowBeta, device } = this.state;
+    const { connected, pages, contextBar, darkMode, fwUpdate, allowBeta, device, loading } = this.state;
 
     return (
       <ThemeProvider theme={darkMode ? Dark : Light}>
         <GlobalStyles />
-        <Header connected={connected} pages={pages} flashing={!connected} fwUpdate={fwUpdate} allowBeta={allowBeta} />
+        <Header
+          connected={connected}
+          pages={pages}
+          flashing={!connected}
+          fwUpdate={fwUpdate}
+          allowBeta={allowBeta}
+          inContext={contextBar}
+          loading={loading}
+        />
         <div className="main-container">
           <Routes>
             <Route exact path="/" element={<Navigate to="/keyboard-select" />} />
@@ -322,6 +337,7 @@ class App extends React.Component {
                   titleElement={() => document.querySelector("#page-title")}
                   device={device}
                   darkMode={darkMode}
+                  setLoading={this.setLoading}
                 />
               }
             />
@@ -337,6 +353,7 @@ class App extends React.Component {
                   titleElement={() => document.querySelector("#page-title")}
                   appBarElement={() => document.querySelector("#appbar")}
                   darkMode={darkMode}
+                  setLoading={this.setLoading}
                 />
               }
             />
@@ -350,6 +367,7 @@ class App extends React.Component {
                   cancelContext={this.cancelContext}
                   inContext={contextBar}
                   titleElement={() => document.querySelector("#page-title")}
+                  setLoading={this.setLoading}
                 />
               }
             />
@@ -363,6 +381,7 @@ class App extends React.Component {
                   cancelContext={this.cancelContext}
                   inContext={contextBar}
                   titleElement={() => document.querySelector("#page-title")}
+                  setLoading={this.setLoading}
                 />
               }
             />
@@ -395,6 +414,7 @@ class App extends React.Component {
                   updateAllowBeta={this.updateAllowBeta}
                   allowBeta={allowBeta}
                   inContext={contextBar}
+                  setLoading={this.setLoading}
                 />
               }
             />
@@ -412,6 +432,7 @@ class App extends React.Component {
                   updateAllowBeta={this.updateAllowBeta}
                   allowBeta={allowBeta}
                   inContext={contextBar}
+                  setLoading={this.setLoading}
                 />
               }
             />

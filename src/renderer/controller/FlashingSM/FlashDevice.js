@@ -2,7 +2,7 @@ import { createMachine, assign, raise } from "xstate";
 import fs from "fs";
 import path from "path";
 import { ipcRenderer } from "electron";
-import sideFlaser from "../../../api/flash/defyFlasher/sideFlasher";
+import SideFlaser from "../../../api/flash/defyFlasher/sideFlasher";
 import Focus from "../../../api/focus";
 import Hardware from "../../../api/hardware";
 import { FlashRaise, FlashDefyWireless } from "../../../api/flash";
@@ -18,7 +18,10 @@ let comPath;
  * @param {Number} ms - time to delay in miliseconds.
  * @returns {Promise} if no error, promise resolved, if not, rejected
  */
-const delay = ms => new Promise(res => setTimeout(res, ms));
+const delay = ms =>
+  new Promise(res => {
+    setTimeout(res, ms);
+  });
 
 const stateUpdate = (stage, percentage, context, callback) => {
   console.log(stage, percentage);
@@ -134,6 +137,7 @@ const reconnect = async (context, callback) => {
       console.log(`Keyboard not detected, trying again for ${times} times`);
       stateUpdate("reconnect", 10 + 100 * (1 / (5 - times)), context, callback);
       await runnerFindKeyboard(findKeyboard, times - 1, errorMessage);
+      return true;
     };
     const findKeyboard = async () =>
       new Promise(async resolve => {
@@ -162,7 +166,8 @@ const flashSide = async (side, context, callback) => {
     if (flashSides === undefined) {
       bootloader = context.device.bootloader;
       comPath = focus._port.port.openOptions.path;
-      flashSides = new sideFlaser(comPath, context.firmwares.fwSides);
+      console.log("CHECKING SIDES FW BEFORE FLASH", context.firmwares.fwSides);
+      flashSides = new SideFlaser(comPath, context.firmwares.fwSides);
     }
     // Flashing procedure for each side
     await focus.close();
@@ -192,7 +197,7 @@ const uploadDefyWired = async (context, callback) => {
     if (flashSides == undefined) {
       bootloader = context.device.bootloader;
       comPath = focus._port.port.openOptions.path;
-      flashSides = new sideFlaser(comPath, context.firmwares.fwSides);
+      flashSides = new SideFlaser(comPath, context.firmwares.fwSides);
     }
     stateUpdate("neuron", 10, context, callback);
     await flashSides.prepareNeuron();
@@ -391,8 +396,13 @@ const FlashDevice = createMachine(
       waitEsc: {
         id: "waitEsc",
         entry: [
-          (context, event) => {
-            console.log("Wait for esc!");
+          () => {
+            console.log("Wait for esc! & clearing globals");
+            flashRaise = undefined;
+            flashDefyWireless = undefined;
+            flashSides = undefined;
+            bootloader = undefined;
+            comPath = undefined;
           },
           assign({ stateblock: (context, event) => 1 }),
           "addEscListener",

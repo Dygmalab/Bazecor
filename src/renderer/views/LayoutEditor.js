@@ -93,8 +93,8 @@ const Styles = Styled.div`
   border-radius: 6px;
   button.btn {
     background: transparent;
-  } 
-  button.btn + button.btn {   
+  }
+  button.btn + button.btn {
     margin-left: 4px;
   }
 }
@@ -228,7 +228,7 @@ const Styles = Styled.div`
     filter: blur(18px);
     opacity: 0.4;
   }
-  &.keyOnFocus { 
+  &.keyOnFocus {
     .baseShape {
       filter: drop-shadow(0px 4px 0px ${({ theme }) => theme.styles.raiseKeyboard.keyShadow});
     }
@@ -267,7 +267,7 @@ const Styles = Styled.div`
     margin: 0;
     margin-left: 6px;
     margin-right: -1px;
-    &.extraBottom { 
+    &.extraBottom {
       margin-left: 1px;
       li {
         margin-left: 1px;
@@ -277,7 +277,7 @@ const Styles = Styled.div`
     li {
       padding: 0px 3px;
       border-radius: 3px;
-      
+
       display: inline-block;
       margin: 1px;
 
@@ -590,6 +590,8 @@ class LayoutEditor extends React.Component {
   }
 
   scanKeyboard = async lang => {
+    const { setLoading, onDisconnect } = this.props;
+    setLoading(true);
     const focus = new Focus();
     try {
       /**
@@ -606,7 +608,7 @@ class LayoutEditor extends React.Component {
       }
 
       let defLayer = await focus.command("settings.defaultLayer");
-      defLayer = parseInt(defLayer) || 0;
+      defLayer = parseInt(defLayer, 10) || 0;
 
       const keymap = await focus.command("keymap");
       const onlyC = await focus.command("keymap.onlyCustom");
@@ -680,10 +682,12 @@ class LayoutEditor extends React.Component {
           }
         }
       }
+      setLoading(false);
     } catch (e) {
       console.error(e);
       toast.error(e);
-      this.props.onDisconnect();
+      onDisconnect();
+      setLoading(false);
     }
   };
 
@@ -886,6 +890,8 @@ class LayoutEditor extends React.Component {
   };
 
   onApply = async () => {
+    const { setLoading } = this.props;
+    setLoading(true);
     this.setState({ saving: true });
     const focus = new Focus();
     await focus.command("keymap", this.state.keymap);
@@ -905,6 +911,18 @@ class LayoutEditor extends React.Component {
     const backup = await this.bkp.DoBackup(commands, this.state.neurons[this.state.neuronID].id);
     this.bkp.SaveBackup(backup);
     this.props.cancelContext();
+    toast.success(
+      <ToastMessage
+        title={i18n.success.changesSaved}
+        content={i18n.success.changesSavedContent}
+        icon={<IconArrowDownWithLine />}
+      />,
+      {
+        autoClose: 2000,
+        icon: "",
+      },
+    );
+    setLoading(false);
   };
 
   // Callback function to set State of new Language
@@ -1682,6 +1700,8 @@ class LayoutEditor extends React.Component {
     } else {
       this.setState({
         modeselect: data,
+        currentLedIndex: -1,
+        selectedPaletteColor: null,
       });
     }
   };
@@ -1798,36 +1818,37 @@ class LayoutEditor extends React.Component {
       layerData = isReadOnly ? keymap.default[cLayer] : keymap.custom[cLayer - keymap.default.length];
     }
 
-    if (layerData != undefined) {
+    if (layerData !== undefined) {
       layerData = layerData.map(key => {
         const newMKey = key;
-        if (key.extraLabel == "MACRO") {
+        const MNumber = key.keyCode - 53852;
+        if (key.extraLabel === "MACRO") {
           if (
-            macros.length > parseInt(key.label) &&
-            macros[parseInt(key.label)] != undefined &&
-            macros[parseInt(key.label)].name != undefined &&
-            macros[parseInt(key.label)].name.substr(0, 5) != "" &&
+            macros[MNumber] !== undefined &&
+            macros[MNumber].name !== undefined &&
+            macros[MNumber].name.substr(0, 5) !== "" &&
             !/\p{L}/u.test(key.label)
           ) {
-            newMKey.label = macros[parseInt(key.label)].name.substr(0, 5);
+            newMKey.label = macros[MNumber].name.substr(0, 5);
           }
         }
         return newMKey;
       });
     }
 
-    if (layerData != undefined && superkeys.length > 0) {
+    if (layerData !== undefined && superkeys.length > 0) {
       layerData = layerData.map(key => {
         const newSKey = key;
-        if (key.extraLabel == "SUPER") {
+        if (key.extraLabel === "SUPER") {
+          const SKNumber = key.keyCode - 53980;
           if (
-            superkeys.length > parseInt(key.label) - 1 &&
-            superkeys[parseInt(key.label) - 1] != undefined &&
-            superkeys[parseInt(key.label) - 1].name != undefined &&
-            superkeys[parseInt(key.label) - 1].name != "" &&
+            superkeys.length > SKNumber &&
+            superkeys[SKNumber] !== undefined &&
+            superkeys[SKNumber].name !== undefined &&
+            superkeys[SKNumber].name !== "" &&
             !/\p{L}/u.test(key.label)
           ) {
-            newSKey.label = superkeys[parseInt(key.label) - 1].name.substr(0, 5);
+            newSKey.label = superkeys[SKNumber].name.substr(0, 5);
           }
         }
         return newSKey;
@@ -1849,7 +1870,7 @@ class LayoutEditor extends React.Component {
           theme={this.props.theme}
           darkMode={this.props.darkMode}
           style={{ width: "50vw" }}
-          showUnderglow={this.state.modeselect != "keyboard"}
+          showUnderglow={this.state.modeselect !== "keyboard"}
           className="raiseKeyboard layer"
           isStandardView={isStandardView}
         />
@@ -1946,7 +1967,7 @@ class LayoutEditor extends React.Component {
                 deviceName={this.state.deviceName}
               />
             }
-            isColorActive={this.state.modeselect != "keyboard"}
+            isColorActive={this.state.modeselect !== "keyboard"}
             saveContext={this.onApply}
             destroyContext={() => {
               this.props.cancelContext();

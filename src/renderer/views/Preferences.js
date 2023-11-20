@@ -87,7 +87,6 @@ class Preferences extends React.Component {
 
     this.state = {
       devTools: false,
-      advanced: false,
       verboseFocus: false,
       darkMode: "system",
       neurons: store.get("neurons"),
@@ -99,6 +98,8 @@ class Preferences extends React.Component {
   }
 
   async componentDidMount() {
+    const { setLoading } = this.props;
+    setLoading(true);
     const focus = new Focus();
     const devTools = await ipcRenderer.invoke("is-devtools-opened");
     this.setState({ devTools });
@@ -118,6 +119,7 @@ class Preferences extends React.Component {
     this.setState({ darkMode: darkModeSetting });
 
     await this.getNeuronData();
+    setLoading(false);
   }
 
   getNeuronData = async () => {
@@ -203,6 +205,8 @@ class Preferences extends React.Component {
   };
 
   saveKeymapChanges = async () => {
+    const { setLoading } = this.props;
+    setLoading(true);
     const focus = new Focus();
 
     const {
@@ -227,28 +231,28 @@ class Preferences extends React.Component {
       mouseSpeedLimit,
     } = this.kbData;
 
-    await await focus.command("keymap.onlyCustom", keymap.onlyCustom);
-    await await focus.command("settings.defaultLayer", defaultLayer);
-    await await focus.command("led.brightness", ledBrightness);
-    await await focus.command("led.brightnessUG", ledBrightnessUG);
-    if (ledIdleTimeLimit >= 0) await await focus.command("idleleds.time_limit", ledIdleTimeLimit);
+    await focus.command("keymap.onlyCustom", keymap.onlyCustom);
+    await focus.command("settings.defaultLayer", defaultLayer);
+    await focus.command("led.brightness", ledBrightness);
+    await focus.command("led.brightnessUG", ledBrightnessUG);
+    if (ledIdleTimeLimit >= 0) await focus.command("idleleds.time_limit", ledIdleTimeLimit);
     store.set("settings.showDefaults", showDefaults);
     // QUKEYS
-    await await focus.command("qukeys.holdTimeout", qukeysHoldTimeout);
-    await await focus.command("qukeys.overlapThreshold", qukeysOverlapThreshold);
+    await focus.command("qukeys.holdTimeout", qukeysHoldTimeout);
+    await focus.command("qukeys.overlapThreshold", qukeysOverlapThreshold);
     // SUPER KEYS
-    await await focus.command("superkeys.timeout", SuperTimeout);
-    await await focus.command("superkeys.repeat", SuperRepeat);
-    await await focus.command("superkeys.waitfor", SuperWaitfor);
-    await await focus.command("superkeys.holdstart", SuperHoldstart);
+    await focus.command("superkeys.timeout", SuperTimeout);
+    await focus.command("superkeys.repeat", SuperRepeat);
+    await focus.command("superkeys.waitfor", SuperWaitfor);
+    await focus.command("superkeys.holdstart", SuperHoldstart);
     // MOUSE KEYS
-    await await focus.command("mouse.speed", mouseSpeed);
-    await await focus.command("mouse.speedDelay", mouseSpeedDelay);
-    await await focus.command("mouse.accelSpeed", mouseAccelSpeed);
-    await await focus.command("mouse.accelDelay", mouseAccelDelay);
-    await await focus.command("mouse.wheelSpeed", mouseWheelSpeed);
-    await await focus.command("mouse.wheelDelay", mouseWheelDelay);
-    await await focus.command("mouse.speedLimit", mouseSpeedLimit);
+    await focus.command("mouse.speed", mouseSpeed);
+    await focus.command("mouse.speedDelay", mouseSpeedDelay);
+    await focus.command("mouse.accelSpeed", mouseAccelSpeed);
+    await focus.command("mouse.accelDelay", mouseAccelDelay);
+    await focus.command("mouse.wheelSpeed", mouseWheelSpeed);
+    await focus.command("mouse.wheelDelay", mouseWheelDelay);
+    await focus.command("mouse.speedLimit", mouseSpeedLimit);
 
     // TODO: Review toast popup on try/catch works well.
     try {
@@ -265,6 +269,7 @@ class Preferences extends React.Component {
         progress: undefined,
         icon: "",
       });
+      setLoading(false);
     } catch (error) {
       console.error(error);
       toast.error(
@@ -284,16 +289,20 @@ class Preferences extends React.Component {
           icon: "",
         },
       );
+      setLoading(false);
     }
 
     this.destroyContext();
   };
 
   destroyContext = () => {
+    const { cancelContext, setLoading } = this.props;
+    setLoading(true);
     this.kbData.modified = false;
     this.setState({ modified: false });
     this.getNeuronData();
-    this.props.cancelContext();
+    setLoading(false);
+    cancelContext();
   };
 
   // GENERAL FUNCTIONS
@@ -304,7 +313,7 @@ class Preferences extends React.Component {
   };
 
   setKbData = kbData => {
-    if (this.kbData.modified == false && kbData.modified == true) {
+    if (this.kbData.modified === false && kbData.modified === true) {
       this.kbData = kbData;
       this.props.startContext();
       this.setState({ modified: kbData.modified });
@@ -314,28 +323,20 @@ class Preferences extends React.Component {
   };
 
   selectDefaultLayer = value => {
-    if (this.kbData.modified == false) {
+    if (this.kbData.modified === false) {
       this.kbData.modified = true;
       this.setState({ modified: true });
       this.props.startContext();
-      this.kbData.defaultLayer = parseInt(value);
+      this.kbData.defaultLayer = parseInt(value, 10);
     } else {
-      this.kbData.defaultLayer = parseInt(value);
+      this.kbData.defaultLayer = parseInt(value, 10);
       this.forceUpdate();
     }
-  };
-
-  // ADVANCED FUNCTIONS
-  toggleAdvanced = () => {
-    this.setState(state => ({
-      advanced: !state.advanced,
-    }));
   };
 
   toggleDevTools = async event => {
     this.setState({ devTools: event.target.checked });
     await ipcRenderer.invoke("manage-devtools", event.target.checked);
-    this.props.startContext();
   };
 
   // THEME MODE FUNCTIONS
@@ -392,14 +393,13 @@ class Preferences extends React.Component {
   };
 
   render() {
-    const { neurons, selectedNeuron, darkMode, neuronID, devTools, verboseFocus, kbData, modified } = this.state;
-    const { inContext, connected, allowBeta, updateAllowBeta } = this.props;
+    const { neurons, selectedNeuron, darkMode, neuronID, devTools, verboseFocus, kbData, modified, working } = this.state;
+    const { connected, allowBeta, updateAllowBeta } = this.props;
     const { defaultLayer } = this.kbData;
     const devToolsSwitch = <Form.Check type="switch" checked={devTools} onChange={this.toggleDevTools} />;
     const verboseSwitch = <Form.Check type="switch" checked={verboseFocus} onChange={this.toggleVerboseFocus} />;
     const onlyCustomSwitch = <Form.Check type="switch" checked={kbData.keymap.onlyCustom} onChange={this.toggleOnlyCustom} />;
     const allowBetas = <Form.Check value={allowBeta} type="switch" checked={allowBeta} onChange={updateAllowBeta} />;
-    const pairingButton = <RegularButton buttonText={"Re-Pair RF"} styles="short warning sm" onClick={this.sendRePairCommand} />;
     // console.log("CHECKING STATUS MOD", modified);
     // console.log("CHECKING STATUS CTX", inContext);
 
@@ -415,7 +415,7 @@ class Preferences extends React.Component {
             destroyContext={this.destroyContext}
             inContext={modified}
           />
-          {this.state.working && <Spinner role="status" />}
+          {working && <Spinner role="status" />}
           <div className="wrapper wrapperBackground">
             <Container fluid>
               <Row className="justify-content-center">
@@ -443,7 +443,7 @@ class Preferences extends React.Component {
                     verboseSwitch={verboseSwitch}
                     onlyCustomSwitch={onlyCustomSwitch}
                     allowBetas={allowBetas}
-                    pairingButton={<></>}
+                    pairingButton=""
                     connected={connected}
                   />
                   <Version />

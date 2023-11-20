@@ -29,6 +29,7 @@ import Modal from "react-bootstrap/Modal";
 
 import Dropdown from "react-bootstrap/Dropdown";
 import { USBDevice, USBDeviceDescriptor, NonSerialDeviceDescriptor } from "@Renderer/types/devices";
+import { Banner } from "@Renderer/component/Banner";
 import { PageHeader } from "../modules/PageHeader";
 import { RegularButton } from "../component/Button";
 
@@ -40,7 +41,7 @@ import i18n from "../i18n";
 import NeuronConnection from "../modules/NeuronConnection";
 import ToastMessage from "../component/ToastMessage";
 
-import { IconArrowRight, IconCloudDownload, IconUpload, IconKeyboard } from "../component/Icon";
+import { IconArrowRight, IconCloudDownload, IconUpload, IconKeyboard, IconBluetooth } from "../component/Icon";
 import Title from "../component/Title";
 import Store from "../utils/Store";
 
@@ -198,6 +199,8 @@ interface SelectKeyboardProps {
   connected: any;
   onDisconnect: any;
   device: any;
+  loading: boolean;
+  setLoading: (loading) => unknown;
 }
 
 const SelectKeyboard: React.FC<SelectKeyboardProps> = (props): JSX.Element => {
@@ -209,7 +212,7 @@ const SelectKeyboard: React.FC<SelectKeyboardProps> = (props): JSX.Element => {
   const [selectedVirtualKeyboard, setSelectedVirtualKeyboard] = useState(0);
   const [scanFoundDevices, setScanFoundDevices] = useState(false);
   const focus = useMemo(() => new Focus(), []);
-  const { onConnect, connected, device, onDisconnect } = props;
+  const { onConnect, connected, device, onDisconnect, loading, setLoading } = props;
 
   const findNonSerialKeyboards = useCallback(async (deviceList: any[]) => {
     const connectedDevices: USBDevice[] = await ipcRenderer.invoke("usb-devices");
@@ -241,10 +244,12 @@ const SelectKeyboard: React.FC<SelectKeyboardProps> = (props): JSX.Element => {
   }, []);
 
   const findKeyboards = useCallback(async (): Promise<any[]> => {
+    setLoading(true);
     setIsLoading(true);
     const isIterable = devices.length > 0 && typeof devices[Symbol.iterator] === "function";
     if (focus.closed === false && isIterable) {
       setIsLoading(false);
+      setLoading(false);
       return [];
     }
     // if (!focus.closed && device) {
@@ -272,6 +277,7 @@ const SelectKeyboard: React.FC<SelectKeyboardProps> = (props): JSX.Element => {
       const list = await findNonSerialKeyboards(supportedDevices);
       console.log("Non serial keyboards", list);
       setIsLoading(false);
+      setLoading(false);
       setDevices(list);
       if (connected) {
         const connectedDev = list.findIndex(dev => focus.serialNumber?.includes(dev.serialNumber));
@@ -289,6 +295,7 @@ const SelectKeyboard: React.FC<SelectKeyboardProps> = (props): JSX.Element => {
       const list = await findNonSerialKeyboards([]);
       console.log("Non serial keyboards", list);
       setIsLoading(false);
+      setLoading(false);
       setDevices(list);
       return list;
     }
@@ -340,6 +347,7 @@ const SelectKeyboard: React.FC<SelectKeyboardProps> = (props): JSX.Element => {
   };
 
   const onKeyboardConnect = async () => {
+    setLoading(true);
     setOpening(true);
     try {
       if (!devices[selectedPortIndex].path) {
@@ -348,7 +356,9 @@ const SelectKeyboard: React.FC<SelectKeyboardProps> = (props): JSX.Element => {
       const focus = new Focus();
       focus.serialNumber = devices[selectedPortIndex].serialNumber;
       await onConnect(devices[selectedPortIndex], null);
+      setLoading(false);
     } catch (err) {
+      setLoading(false);
       setOpening(false);
       const errorMessage = err.toString();
       toast.error(<ToastMessage title={errorMessage} />, { icon: "" });
@@ -388,7 +398,11 @@ const SelectKeyboard: React.FC<SelectKeyboardProps> = (props): JSX.Element => {
     });
 
     backup.backup.forEach(line => {
-      vk.virtual[line.command].data = line.data;
+      if (vk.virtual[line.command] !== undefined) {
+        vk.virtual[line.command].data = line.data;
+      } else {
+        vk.virtual[line.command] = { data: line.data, eraseable: true };
+      }
     });
 
     // Ask the user for the place to put the backup
@@ -476,13 +490,13 @@ const SelectKeyboard: React.FC<SelectKeyboardProps> = (props): JSX.Element => {
       return;
     }
 
-    Hardware.serial.forEach(device => {
+    Hardware.serial.forEach(localDevice => {
       if (
-        file.device.usb.productId === device.usb.productId &&
-        file.device.usb.vendorId === device.usb.vendorId &&
-        file.device.info.keyboardType === device.info.keyboardType
+        file.device.usb.productId === localDevice.usb.productId &&
+        file.device.usb.vendorId === localDevice.usb.vendorId &&
+        file.device.info.keyboardType === localDevice.info.keyboardType
       ) {
-        file.device.components = device.components;
+        file.device.components = localDevice.components;
       }
     });
 
@@ -507,13 +521,13 @@ const SelectKeyboard: React.FC<SelectKeyboardProps> = (props): JSX.Element => {
       return;
     }
     console.log("Exchange focus for file access");
-    Hardware.serial.forEach(device => {
+    Hardware.serial.forEach(localDevice => {
       if (
-        virtualKeyboard.device.usb.productId === device.usb.productId &&
-        virtualKeyboard.device.usb.vendorId === device.usb.vendorId &&
-        virtualKeyboard.device.info.keyboardType === device.info.keyboardType
+        virtualKeyboard.device.usb.productId === localDevice.usb.productId &&
+        virtualKeyboard.device.usb.vendorId === localDevice.usb.vendorId &&
+        virtualKeyboard.device.info.keyboardType === localDevice.info.keyboardType
       ) {
-        virtualKeyboard.device.components = device.components;
+        virtualKeyboard.device.components = localDevice.components;
       }
     });
 
@@ -549,23 +563,23 @@ const SelectKeyboard: React.FC<SelectKeyboardProps> = (props): JSX.Element => {
 
   const getDeviceItems = () => {
     const neurons = store.get("neurons");
-    const result = devices.map((device, index) => {
-      console.log("checking device :", device);
-      if (device.device.bootloader)
+    const result = devices.map((localDevice, index) => {
+      console.log("checking device :", localDevice);
+      if (localDevice.device.bootloader)
         return {
           index,
-          displayName: device?.device?.info?.displayName,
+          displayName: localDevice?.device?.info?.displayName,
           userName: "",
-          path: device.path || i18n.keyboardSelect.unknown,
+          path: localDevice.path || i18n.keyboardSelect.unknown,
         };
-      const preparedSN = device.productId === "2201" ? device.serialNumber.slice(0, 32) : device.serialNumber;
-      const neuron = neurons.find(neuron => neuron.id.toLowerCase() === preparedSN.toLowerCase());
+      const preparedSN = localDevice.productId === "2201" ? localDevice.serialNumber.slice(0, 32) : localDevice.serialNumber;
+      const neuron = Array.isArray(neurons) ? neurons.find(n => n.id.toLowerCase() === preparedSN.toLowerCase()) : { name: "" };
 
       return {
         index,
-        displayName: device?.device?.info?.displayName,
+        displayName: localDevice?.device?.info?.displayName,
         userName: neuron ? neuron.name : "",
-        path: device.path || i18n.keyboardSelect.unknown,
+        path: localDevice.path || i18n.keyboardSelect.unknown,
       };
     });
     return result;
@@ -600,6 +614,16 @@ const SelectKeyboard: React.FC<SelectKeyboardProps> = (props): JSX.Element => {
             virtualDevice={focus.device}
             connectedDevice={connectedDevice}
           />
+          <div className="card-alert" style={{ marginTop: "16px" }}>
+            <Banner icon={<IconBluetooth />} variant="warning">
+              <Title text="Defy owners!" headingLevel={5} />
+              <p style={{ maxWidth: "610px" }}>
+                To configure your keyboard using Bazecor, you must connect your keyboard either{" "}
+                <strong>through cables or RF (Radio Frequency).</strong> This is necessary to establish the initial connection and
+                settings.
+              </p>
+            </Banner>
+          </div>
           <div className="cardButton-wrapper">
             <div className="cardButton">
               <RegularButton
