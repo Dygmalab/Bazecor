@@ -9,6 +9,8 @@ export interface WirelessPropsInterface {
   updateAllowBeta: () => void;
   allowBeta: boolean;
   inContext: boolean;
+  loading: boolean;
+  setLoading: (loading: boolean) => unknown;
 }
 
 export interface WirelessInterface {

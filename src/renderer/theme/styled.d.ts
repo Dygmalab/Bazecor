@@ -132,6 +132,11 @@ declare module "styled-components" {
         subtleColor: string;
         subtleBGColor: string;
       };
+      banner: {
+        backgroundWarning: string;
+        textWarning: string;
+        svgBackgroundWarning: string;
+      };
       batteryIndicator: {
         pileBackgroundColor: string;
         pileBackgroundSavingMode: string;
@@ -245,6 +250,11 @@ declare module "styled-components" {
           borderColor: string;
           borderColorResume: string;
           color: string;
+        };
+        navButton: {
+          color: string;
+          background: string;
+          backgroundHover: string;
         };
       };
       colorPanel: {

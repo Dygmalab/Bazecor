@@ -34,7 +34,7 @@ const Style = Styled.div`
     position: relative;
     .badge-circle{
         width: 8px;
-        height: 8px; 
+        height: 8px;
         border-radius: 50%;
         background-color: rgba(254,0,124,1);
         position: absolute;
@@ -92,7 +92,7 @@ function SelectF13PlusKeys({ keyCode, onSelect, value, listElements, ksl, conten
 
   React.useEffect(() => {
     if (content != undefined) {
-      console.log("keyCode: ", keyCode);
+      //console.log("keyCode: ", keyCode);
       setLoad(false);
     }
   }, [content, value, keyCode]);

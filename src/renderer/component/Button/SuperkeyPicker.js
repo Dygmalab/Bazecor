@@ -17,14 +17,15 @@
 
 import React from "react";
 import Styled from "styled-components";
+import PropTypes from "prop-types";
 
 import Title from "../Title";
 import { IconCloseXs } from "../Icon";
 
 import ListModifiers from "../ListModifiers/ListModifiers";
 
-const Style = Styled.div` 
-.superkeyAction {  
+const Style = Styled.div`
+.superkeyAction {
     display: flex;
     flex-wrap: wrap;
     flex-shrink: 1;
@@ -53,10 +54,10 @@ const Style = Styled.div`
         flex-shrink: 1;
         align-self: self-start;
 
-    }   
+    }
     .superkeyTitle {
         flex-shrink: 1;
-        margin-bottom: 8px;    
+        margin-bottom: 8px;
         align-self: self-start;
         &.single {
             display: flex;
@@ -110,7 +111,7 @@ const Style = Styled.div`
     background: ${({ theme }) => theme.styles.superkeyButton.backgroundColor};
     border: ${({ theme }) => theme.styles.superkeyButton.border};
     box-shadow: ${({ theme }) => theme.styles.superkeyButton.boxShadow};
-    border-radius: 4px; 
+    border-radius: 4px;
     padding: 1px 3px 6px 3px;
     margin-top: 16px;
 
@@ -121,7 +122,7 @@ const Style = Styled.div`
     font-size: 12px;
     letter-spacing: -0.03em;
     line-height: 15px;
-    .superkeyButtonInner {  
+    .superkeyButtonInner {
         height: 50px;
         margin-top: -1px;
         padding: 8px;
@@ -131,13 +132,13 @@ const Style = Styled.div`
         color: ${({ theme }) => theme.styles.superkeyButton.colorInner};
         transition-property: box-shadow, border;
     }
-    
+
     &:hover {
         background: ${({ theme }) => theme.styles.superkeyButton.backgroundColorHover};
         border: 2px solid rgba(255, 255, 255, 0.8);
         box-shadow: ${({ theme }) => theme.styles.superkeyButton.boxShadowHover};
         cursor: pointer;
-        .superkeyButtonInner { 
+        .superkeyButtonInner {
             background: ${({ theme }) => theme.styles.superkeyButton.backgroundColorInnerActive};
             box-sizing: border-box;
             box-shadow: 0px 4px 24px rgba(108, 92, 231, 0.65), 0px 0px 0px 2px inset rgba(255, 255, 255, 0.1);
@@ -148,7 +149,7 @@ const Style = Styled.div`
     .superkeyButton {
         background: ${({ theme }) => theme.styles.superkeyButton.backgroundColorActive};
         border: 2px solid rgba(255, 255, 255, 0.6);
-        .superkeyButtonInner { 
+        .superkeyButtonInner {
             background: ${({ theme }) => theme.styles.superkeyButton.backgroundColorInnerActive};
             box-shadow: 0px 4px 12px rgba(108, 92, 231, 0.1), 0px 0px 0px 2px inset rgba(255, 255, 255, 0.1);
         }
@@ -159,28 +160,24 @@ const Style = Styled.div`
 
 function SuperkeyPicker({
   selected,
-  selectedAction,
   onClick,
   index,
   icon,
   title,
   description,
-  selKey,
   isStandardViewSuperkeys,
   elementActive,
   superkeys,
   macros,
   keymapDB,
-  changeSelected,
-  updateSuper,
   updateAction,
 }) {
   const [controlDeleteButton, setControlDeleteButton] = React.useState(false);
   const [keyContent, setKeyContent] = React.useState("Loading...");
-  const action = superkeys[selected] == undefined ? 0 : superkeys[selected].actions[index];
+  const action = superkeys[selected] === undefined ? 0 : superkeys[selected].actions[index];
 
   React.useEffect(() => {
-    if (superkeys[selected] == undefined) {
+    if (superkeys[selected] === undefined) {
       setControlDeleteButton(false);
       setKeyContent(keymapDB.parse(0).label);
       return;
@@ -198,13 +195,15 @@ function SuperkeyPicker({
       setControlDeleteButton(false);
     }
 
-    if (aux.extraLabel == "MACRO") {
-      if (macros.length > parseInt(aux.label) && macros[parseInt(aux.label)].name.substr(0, 5) != "") {
-        setKeyContent((aux.label = macros[parseInt(aux.label)].name.substr(0, 5).toLowerCase()));
+    if (aux.extraLabel === "MACRO") {
+      const macroID = superkeys[selected].actions[index] - 53852;
+      // console.log("checking macroID", macroID);
+      if (macros.length > macroID && macros[macroID].name.substr(0, 5) !== "") {
+        setKeyContent((aux.label = macros[macroID].name.substr(0, 5).toLowerCase()));
       }
     }
     if (aux.label) {
-      setKeyContent((aux.extraLabel != undefined ? `${aux.extraLabel} ` : "") + aux.label);
+      setKeyContent(aux.extraLabel !== undefined && aux.extraLabel !== "" ? `${aux.extraLabel} ${aux.label}` : aux.label);
     }
   }, [index, keymapDB, macros, selected, superkeys, action]);
 
@@ -225,12 +224,27 @@ function SuperkeyPicker({
           )}
           <div className="superkeyButton" onClick={() => onClick(index)}>
             <div className="superkeyButtonInner">{keyContent}</div>
-            {superkeys[selected] != undefined ? <ListModifiers keyCode={superkeys[selected].actions[index]} /> : ""}
+            {superkeys[selected] !== undefined ? <ListModifiers keyCode={superkeys[selected].actions[index]} /> : ""}
           </div>
         </div>
       </div>
     </Style>
   );
 }
+
+SuperkeyPicker.propTypes = {
+  isStandardViewSuperkeys: PropTypes.bool.isRequired,
+  superkeys: PropTypes.array.isRequired,
+  selected: PropTypes.number.isRequired,
+  macros: PropTypes.array.isRequired,
+  updateAction: PropTypes.func.isRequired,
+  keymapDB: PropTypes.object.isRequired,
+  onClick: PropTypes.func,
+  index: PropTypes.number,
+  icon: PropTypes.object,
+  title: PropTypes.string,
+  description: PropTypes.string,
+  elementActive: PropTypes.bool,
+};
 
 export default SuperkeyPicker;

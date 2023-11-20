@@ -255,7 +255,7 @@ export default class ColorEditor extends Component {
               {displayColorPicker ? (
                 <div style={popover}>
                   <div style={cover} onClick={this.showColorPicker} aria-hidden="true" />
-                  <SketchPicker color={colors[selected]} onChange={this.handleChange} />
+                  <SketchPicker color={colors[selected]} onChange={this.handleChange} width={240} />
                 </div>
               ) : null}
             </div>

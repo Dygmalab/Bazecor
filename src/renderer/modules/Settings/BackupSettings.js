@@ -19,9 +19,11 @@ import Title from "../../component/Title";
 import BackupFolderConfigurator from "../BackupFolderConfigurator";
 
 // Icons Imports
-import { IconFloppyDisk } from "../../component/Icon";
+import { IconArrowDownWithLine, IconFloppyDisk } from "../../component/Icon";
 
 import Store from "../../utils/Store";
+import { toast } from "react-toastify";
+import ToastMessage from "@Renderer/component/ToastMessage";
 
 const store = Store.getStore();
 
@@ -112,20 +114,21 @@ export default class BackupSettings extends Component {
   };
 
   async restoreBackup(backup) {
+    const { neurons, neuronID } = this.props;
     const focus = new Focus();
     let data = [];
     if (isArray(backup)) {
       data = backup;
     } else {
       data = backup.backup;
-      // TODO: IF THE USER WANTS!! --> Until this can be chosen, disabling this behaviour
-      // let neurons = this.props.neurons;
-      // let index = neurons.findIndex(n => n.id == this.props.neuronID);
-      // neurons[index] = backup.neuron;
-      // store.set("neurons", neurons);
+      // TODO: IF THE USER WANTS!! --> Until this can be chosen, disabling this behaviour --> Re enabled due to users tagging this as a bug
+      const localNeurons = [...neurons];
+      const index = localNeurons.findIndex(n => n.id === neuronID);
+      localNeurons[index] = backup.neuron;
+      store.set("neurons", localNeurons);
     }
     try {
-      for (let i = 0; i < data.length; i++) {
+      for (let i = 0; i < data.length; i += 1) {
         let val = data[i].data;
         // Boolean values needs to be sent as int
         if (typeof val === "boolean") {
@@ -141,6 +144,17 @@ export default class BackupSettings extends Component {
       await focus.command("led.mode 0");
       console.log("Restoring all settings");
       console.log("Firmware update OK");
+      toast.success(
+        <ToastMessage
+          title="Backup restored successfully"
+          content="Your backup was restored successfully to the device!"
+          icon={<IconArrowDownWithLine />}
+        />,
+        {
+          autoClose: 2000,
+          icon: "",
+        },
+      );
       return true;
     } catch (e) {
       console.log(`Restore settings: Error: ${e.message}`);
@@ -160,6 +174,17 @@ export default class BackupSettings extends Component {
       }
       await focus.command("led.mode 0");
       console.log("Settings restored OK");
+      toast.success(
+        <ToastMessage
+          title="Backup restored successfully"
+          content="Your backup was restored successfully to the device!"
+          icon={<IconArrowDownWithLine />}
+        />,
+        {
+          autoClose: 2000,
+          icon: "",
+        },
+      );
       return true;
     } catch (e) {
       console.log(`Restore settings: Error: ${e.message}`);

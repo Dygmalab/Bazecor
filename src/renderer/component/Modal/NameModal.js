@@ -31,13 +31,20 @@ export default class NameModal extends React.Component {
           <Modal.Title>{modalTitle}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <Form.Label>{labelInput}</Form.Label>
-          <Form.Control
-            type="text"
-            value={this.state.name}
-            onChange={event => this.setState({ name: event.target.value })}
-            ref={this.inputText}
-          />
+          <Form
+            onSubmit={e => {
+              event.preventDefault();
+              handleSave(this.state.name);
+            }}
+          >
+            <Form.Label>{labelInput}</Form.Label>
+            <Form.Control
+              type="text"
+              value={this.state.name}
+              onChange={event => this.setState({ name: event.target.value })}
+              ref={this.inputText}
+            />
+          </Form>
         </Modal.Body>
         <Modal.Footer>
           <RegularButton buttonText={i18n.app.cancelPending.button} styles="outline transp-bg" size="sm" onClick={toggleShow} />

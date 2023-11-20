@@ -1,5 +1,4 @@
-Bazecor
-=======
+# Bazecor
 
 ![Bazecor screenshot](data/screenshot.png)
 
@@ -49,6 +48,25 @@ To do a production build, use `yarn run make`, or limit it to a particular OS:
 | Linux   |              | `yarn run make-lin`       |
 
 See the `scripts` section of `package.json` for more scripts.
+
+### Development on Windows
+
+If you are using Windows, you will need `node-gyp` and `python3`:
+
+```sh
+# install python3 using winget
+# note that python 3.12 doesn't work
+winget install python.python.3.10.0
+
+# install node-gyp
+npm install -g node-gyp
+```
+
+If you are using WSL (with ubuntu), you will also need `libudev-dev`:
+
+```sm
+sudo apt-get install libudev-dev
+```
 
 ## Additional Information
 

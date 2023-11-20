@@ -195,6 +195,7 @@ class SuperkeysEditor extends React.Component {
     const aux = { ...superkeys[selectedSuper] };
     aux.id = superkeys.length;
     aux.name = `Copy of ${aux.name}`;
+    aux.actions = [...aux.actions];
     superkeys.push(aux);
     this.updateSuper(superkeys, -1);
     this.changeSelected(aux.id);
@@ -224,6 +225,7 @@ class SuperkeysEditor extends React.Component {
   }
 
   onKeyChange(keyCode) {
+    const { startContext } = this.props;
     const { superkeys, selectedSuper, selectedAction } = this.state;
     const newData = superkeys;
     newData[selectedSuper].actions[selectedAction] = keyCode;
@@ -232,11 +234,13 @@ class SuperkeysEditor extends React.Component {
       superkeys: newData,
       modified: true,
     });
+    startContext();
   }
 
   async loadSuperkeys() {
+    const { onDisconnect, setLoading, cancelContext } = this.props;
+    setLoading(true);
     const focus = new Focus();
-    const { onDisconnect } = this.props;
     try {
       /**
        * Create property language to the object 'options', to call KeymapDB in Keymap and modify languagu layout
@@ -298,10 +302,14 @@ class SuperkeysEditor extends React.Component {
         keymap,
         kbtype,
       });
+      cancelContext();
+      setLoading(false);
     } catch (e) {
       console.log("error when loading SuperKeys");
       console.error(e);
       toast.error(e);
+      cancelContext();
+      setLoading(false);
       onDisconnect();
     }
     return true;
@@ -477,8 +485,8 @@ class SuperkeysEditor extends React.Component {
   superkeyMap(superkeys) {
     if (
       superkeys.length === 0 ||
-      (superkeys.length === 1 && superkeys[0].actions.lenght === 0) ||
-      (superkeys.length === 1 && superkeys[0].actions.lenght === 1 && superkeys[0].actions[0] === 0)
+      (superkeys.length === 1 && superkeys[0].actions.length === 0) ||
+      (superkeys.length === 1 && superkeys[0].actions.length === 1 && superkeys[0].actions[0] === 0)
     ) {
       return Array.from({ length: 512 }, 65535).join(" ");
     }
@@ -549,18 +557,21 @@ class SuperkeysEditor extends React.Component {
   }
 
   updateSuper(newSuper, newID) {
-    console.log("launched update super using data:", newSuper, newID);
+    const { startContext } = this.props;
+    // console.log("launched update super using data:", newSuper, newID);
 
     this.setState({
       superkeys: newSuper,
       selectedSuper: newID,
       modified: true,
     });
+    startContext();
   }
 
   updateAction(actionNumber, newAction) {
+    const { startContext } = this.props;
     const { superkeys, selectedSuper } = this.state;
-    console.log("launched update action using data:", newAction);
+    // console.log("launched update action using data:", newAction);
     const newData = superkeys;
     newData[selectedSuper].actions[actionNumber] = newAction;
     this.setState({
@@ -568,21 +579,22 @@ class SuperkeysEditor extends React.Component {
       selectedAction: actionNumber,
       modified: true,
     });
+    startContext();
   }
 
   saveName(name) {
+    const { startContext } = this.props;
     const { superkeys, selectedSuper } = this.state;
     superkeys[selectedSuper].name = name;
     this.setState({ superkeys, modified: true });
+    startContext();
   }
 
   async writeSuper() {
-    const focus = new Focus();
     const { superkeys, modifiedKeymap, keymap, neurons, neuronID } = this.state;
-    this.setState({
-      modified: false,
-      modifiedKeymap: false,
-    });
+    const { setLoading, cancelContext } = this.props;
+    setLoading(true);
+    const focus = new Focus();
     const localNeurons = JSON.parse(JSON.stringify(neurons));
     localNeurons[neuronID].superkeys = superkeys;
     console.log(JSON.stringify(localNeurons));
@@ -600,8 +612,16 @@ class SuperkeysEditor extends React.Component {
         autoClose: 2000,
         icon: "",
       });
+      this.setState({
+        modified: false,
+        modifiedKeymap: false,
+      });
+      cancelContext();
+      setLoading(false);
     } catch (error) {
       toast.error(error);
+      cancelContext();
+      setLoading(false);
     }
   }
 
@@ -644,8 +664,8 @@ class SuperkeysEditor extends React.Component {
   }
 
   RemoveDeletedSK() {
-    const { keymap } = this.state;
-    const { selectedSuper, superkeys, listToDelete, futureSK, futureSSK } = this.state;
+    const { startContext } = this.props;
+    const { keymap, selectedSuper, superkeys, listToDelete, futureSK, futureSSK } = this.state;
     let listToDecrease = [];
     for (const key of superkeys.slice(selectedSuper + 1)) {
       listToDecrease.push(
@@ -675,10 +695,12 @@ class SuperkeysEditor extends React.Component {
       modified: true,
       modifiedKeymap: true,
     });
+    startContext();
     this.toggleDeleteModal();
   }
 
   SortSK(newSuper, newID) {
+    const { startContext } = this.props;
     const { keymap, selectedSuper, superkeys } = this.state;
     let listToDecrease = [];
     for (const key of superkeys.slice(selectedSuper + 1)) {
@@ -706,6 +728,7 @@ class SuperkeysEditor extends React.Component {
       modified: true,
       modifiedKeymap: true,
     });
+    startContext();
     this.toggleDeleteModal();
   }
 

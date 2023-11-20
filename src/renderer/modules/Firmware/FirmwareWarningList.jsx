@@ -15,11 +15,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React, { useState, useEffect } from "react";
+import React from "react";
+import PropTypes from "prop-types";
 import Styled from "styled-components";
-import i18n from "../../i18n";
+import i18n from "@Renderer/i18n";
 
-import Title from "../../component/Title";
+import Title from "@Renderer/component/Title";
 
 import videoDefyCablesDisconnect from "@Assets/videos/connectCablesDefy.mp4";
 
@@ -45,7 +46,7 @@ const Style = Styled.div`
   }
   .errorListContent {
       max-width: 200px;
-      color: ${({ theme }) => theme.styles.firmwareErrorPanel.textColor}   
+      color: ${({ theme }) => theme.styles.firmwareErrorPanel.textColor}
   }
   .errorListDescription {
     margin-top: 0.5rem;
@@ -73,13 +74,13 @@ const Style = Styled.div`
 .warningListItem {
   border-radius: 6px;
   padding: 16px 32px;
-  color: ${({ theme }) => theme.styles.callout.calloutColor}; 
-  background: ${({ theme }) => theme.styles.callout.calloutBackground}; 
-  border: 1px solid ${({ theme }) => theme.styles.callout.calloutBorderColor}; 
-  font-size: 13px; 
+  color: ${({ theme }) => theme.styles.callout.calloutColor};
+  background: ${({ theme }) => theme.styles.callout.calloutBackground};
+  border: 1px solid ${({ theme }) => theme.styles.callout.calloutBorderColor};
+  font-size: 13px;
   font-weight: 395;
   line-height: 1.35em;
-  
+
   .warningListHeader {
     display: flex;
     grid-gap: 8px;
@@ -93,7 +94,8 @@ const Style = Styled.div`
 }
 `;
 
-const FirmwareWarningList = ({ leftSideOK, rightSideOK, leftSideBL }) => {
+const FirmwareWarningList = props => {
+  const { leftSideOK, rightSideOK, leftSideBL } = props;
   return (
     <Style>
       <>
@@ -101,7 +103,8 @@ const FirmwareWarningList = ({ leftSideOK, rightSideOK, leftSideBL }) => {
           <div className="errorListWrapper">
             <div className="errorListItem">
               <div className="errorListImage">
-                <video width={162} height={162} autoPlay={true} loop={true} className="img-center img-fluid">
+                <video width={162} height={162} autoPlay loop className="img-center img-fluid">
+                  <track kind="captions" />
                   <source src={videoDefyCablesDisconnect} type="video/mp4" />
                 </video>
               </div>
@@ -130,6 +133,12 @@ const FirmwareWarningList = ({ leftSideOK, rightSideOK, leftSideBL }) => {
       </>
     </Style>
   );
+};
+
+FirmwareWarningList.propTypes = {
+  leftSideOK: PropTypes.bool,
+  rightSideOK: PropTypes.bool,
+  leftSideBL: PropTypes.bool,
 };
 
 export default FirmwareWarningList;
