@@ -19,13 +19,14 @@ import PropTypes from "prop-types";
 
 import Styled from "styled-components";
 import Spinner from "react-bootstrap/Spinner";
+import { RegularButton } from "@Renderer/component/Button";
 import i18n from "../../i18n";
 
 import { KeymapDB } from "../../../api/keymap";
 
 import TimelineEditorForm from "./TimelineEditorForm";
 import Title from "../../component/Title";
-import { IconStopWatchXs } from "../../component/Icon";
+import { IconDelete, IconStopWatchXs } from "../../component/Icon";
 import { PreviewMacroModal } from "../../component/Modal";
 
 const Styles = Styled.div`
@@ -59,6 +60,12 @@ padding-bottom: 5px;
         background-color: ${({ theme }) => theme.styles.button.previewButton.backgroundHover};
       }
     }
+}
+.timelineClearButton {
+  width: -webkit-fill-available;
+  .buttonLabel {
+    place-content: space-between;
+  }
 }
 .card {
   width: auto;
@@ -182,7 +189,7 @@ class MacroManager extends Component {
   }
 
   render() {
-    const { keymapDB, macro, updateActions } = this.props;
+    const { keymapDB, macro, macros, updateActions, clearMacro } = this.props;
     // console.log("Macro on TimelineEditorManager", macro);
     return (
       <Styles className="timelineWrapper">
@@ -217,23 +224,35 @@ class MacroManager extends Component {
               ) : (
                 ""
               )}
+              <RegularButton
+                buttonText="Clear Macro"
+                icoSVG={<IconDelete />}
+                styles="outline-sm transp-bg timelineClearButton"
+                icoPosition="right"
+                onClick={clearMacro}
+              />
             </div>
           </div>
         </div>
         <div className="timelineBodyWrapper" ref={this.trackingWidth}>
-          {macro !== null && macro.actions !== null && macro.actions.lenght > 0 ? (
+          {macro !== null && macro.actions !== null ? (
+            macro.actions.length > 0 ? (
+              <TimelineEditorForm
+                macro={macro}
+                macros={macros}
+                updateActions={updateActions}
+                keymapDB={keymapDB}
+                componentWidth={this.state.componentWidth}
+                updateScroll={this.props.updateScroll}
+                scrollPos={this.props.scrollPos}
+              />
+            ) : (
+              ""
+            )
+          ) : (
             <div className="loading marginCenter">
               <Spinner className="spinner-border" role="status" />
             </div>
-          ) : (
-            <TimelineEditorForm
-              macro={macro}
-              updateActions={updateActions}
-              keymapDB={keymapDB}
-              componentWidth={this.state.componentWidth}
-              updateScroll={this.props.updateScroll}
-              scrollPos={this.props.scrollPos}
-            />
           )}
           <div id="portalMacro" />
         </div>

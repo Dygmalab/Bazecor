@@ -285,6 +285,11 @@ const Light: DefaultTheme = {
         borderColorResume: Tokens.colors.gray400,
         color: Tokens.colors.brandPrimary,
       },
+      navButton: {
+        color: Tokens.colors.gray700,
+        background: settingColorOpacity(Tokens.colors.gray100, 0.5),
+        backgroundHover: settingColorOpacity(Tokens.colors.gray100, 0.85),
+      },
     },
     colorPanel: {
       colorTitle: Tokens.colors.gray500,

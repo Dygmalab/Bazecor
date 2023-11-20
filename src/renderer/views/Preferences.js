@@ -87,7 +87,6 @@ class Preferences extends React.Component {
 
     this.state = {
       devTools: false,
-      advanced: false,
       verboseFocus: false,
       darkMode: "system",
       neurons: store.get("neurons"),
@@ -314,7 +313,7 @@ class Preferences extends React.Component {
   };
 
   setKbData = kbData => {
-    if (this.kbData.modified == false && kbData.modified == true) {
+    if (this.kbData.modified === false && kbData.modified === true) {
       this.kbData = kbData;
       this.props.startContext();
       this.setState({ modified: kbData.modified });
@@ -324,28 +323,20 @@ class Preferences extends React.Component {
   };
 
   selectDefaultLayer = value => {
-    if (this.kbData.modified == false) {
+    if (this.kbData.modified === false) {
       this.kbData.modified = true;
       this.setState({ modified: true });
       this.props.startContext();
-      this.kbData.defaultLayer = parseInt(value);
+      this.kbData.defaultLayer = parseInt(value, 10);
     } else {
-      this.kbData.defaultLayer = parseInt(value);
+      this.kbData.defaultLayer = parseInt(value, 10);
       this.forceUpdate();
     }
-  };
-
-  // ADVANCED FUNCTIONS
-  toggleAdvanced = () => {
-    this.setState(state => ({
-      advanced: !state.advanced,
-    }));
   };
 
   toggleDevTools = async event => {
     this.setState({ devTools: event.target.checked });
     await ipcRenderer.invoke("manage-devtools", event.target.checked);
-    this.props.startContext();
   };
 
   // THEME MODE FUNCTIONS
@@ -402,14 +393,13 @@ class Preferences extends React.Component {
   };
 
   render() {
-    const { neurons, selectedNeuron, darkMode, neuronID, devTools, verboseFocus, kbData, modified } = this.state;
-    const { inContext, connected, allowBeta, updateAllowBeta } = this.props;
+    const { neurons, selectedNeuron, darkMode, neuronID, devTools, verboseFocus, kbData, modified, working } = this.state;
+    const { connected, allowBeta, updateAllowBeta } = this.props;
     const { defaultLayer } = this.kbData;
     const devToolsSwitch = <Form.Check type="switch" checked={devTools} onChange={this.toggleDevTools} />;
     const verboseSwitch = <Form.Check type="switch" checked={verboseFocus} onChange={this.toggleVerboseFocus} />;
     const onlyCustomSwitch = <Form.Check type="switch" checked={kbData.keymap.onlyCustom} onChange={this.toggleOnlyCustom} />;
     const allowBetas = <Form.Check value={allowBeta} type="switch" checked={allowBeta} onChange={updateAllowBeta} />;
-    const pairingButton = <RegularButton buttonText={"Re-Pair RF"} styles="short warning sm" onClick={this.sendRePairCommand} />;
     // console.log("CHECKING STATUS MOD", modified);
     // console.log("CHECKING STATUS CTX", inContext);
 
@@ -425,7 +415,7 @@ class Preferences extends React.Component {
             destroyContext={this.destroyContext}
             inContext={modified}
           />
-          {this.state.working && <Spinner role="status" />}
+          {working && <Spinner role="status" />}
           <div className="wrapper wrapperBackground">
             <Container fluid>
               <Row className="justify-content-center">
@@ -453,7 +443,7 @@ class Preferences extends React.Component {
                     verboseSwitch={verboseSwitch}
                     onlyCustomSwitch={onlyCustomSwitch}
                     allowBetas={allowBetas}
-                    pairingButton={<></>}
+                    pairingButton=""
                     connected={connected}
                   />
                   <Version />

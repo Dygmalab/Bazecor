@@ -11,7 +11,7 @@ import { IconKeysPress, IconKeysTapHold, IconKeysHold, IconKeys2Tap, IconKeys2Ta
 // API's
 import i18n from "../../i18n";
 
-const Style = Styled.div` 
+const Style = Styled.div`
 .keyWrapper {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
@@ -63,7 +63,7 @@ function SuperkeyActions({
   return (
     <Style>
       <div className="keyWrapper">
-        {superkeys != undefined && superkeys.length > 0
+        {superkeys !== undefined && superkeys.length > 0
           ? rows.map((item, index) => (
               <SuperkeyPicker
                 index={index}
@@ -74,7 +74,7 @@ function SuperkeyActions({
                 key={`skA-${index}`}
                 title={item.title}
                 description={item.description}
-                elementActive={selectedAction == index}
+                elementActive={selectedAction === index}
                 isStandardViewSuperkeys={isStandardViewSuperkeys}
                 changeSelected={changeSelected}
                 onClick={changeAction}
@@ -92,6 +92,15 @@ function SuperkeyActions({
 
 SuperkeyActions.propTypes = {
   isStandardViewSuperkeys: PropTypes.bool.isRequired,
+  superkeys: PropTypes.array.isRequired,
+  selected: PropTypes.number.isRequired,
+  selectedAction: PropTypes.number.isRequired,
+  changeSelected: PropTypes.func.isRequired,
+  updateSuper: PropTypes.func.isRequired,
+  macros: PropTypes.array.isRequired,
+  updateAction: PropTypes.func.isRequired,
+  changeAction: PropTypes.func.isRequired,
+  keymapDB: PropTypes.object.isRequired,
 };
 
 export default SuperkeyActions;
