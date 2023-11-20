@@ -179,6 +179,7 @@ class MacroEditor extends React.Component {
     this.updateMacros = this.updateMacros.bind(this);
     this.changeSelected = this.changeSelected.bind(this);
     this.loadMacros = this.loadMacros.bind(this);
+    this.clearMacro = this.clearMacro.bind(this);
     this.writeMacros = this.writeMacros.bind(this);
     this.toggleDeleteModal = this.toggleDeleteModal.bind(this);
     this.UpdateList = this.UpdateList.bind(this);
@@ -465,6 +466,16 @@ class MacroEditor extends React.Component {
     });
   }
 
+  clearMacro() {
+    const { macros, selectedMacro } = this.state;
+    if (macros.length === 0) {
+      return;
+    }
+    const localMacros = [...macros];
+    localMacros[selectedMacro].actions = [];
+    this.updateMacros(localMacros);
+  }
+
   macroTranslator(raw) {
     const { storedMacros } = this.state;
     const macrosArray = raw.split(" 0 0")[0].split(" ").map(Number);
@@ -718,6 +729,7 @@ class MacroEditor extends React.Component {
               <TimelineEditorManager
                 macro={macros[selectedMacro]}
                 macros={macros}
+                clearMacro={this.clearMacro}
                 keymapDB={this.keymapDB}
                 updateActions={this.updateActions}
                 updateScroll={this.updateScroll}
