@@ -693,7 +693,8 @@ const English = {
       letsStart: "Let's start",
       versionUpdatedTitle: "Your firmware is up to date 🤙",
       versionOutdatedTitle: "New update is available",
-      calloutIntroText: "Updating your device firmware is how we implement new cool features and bug fixes.",
+      calloutIntroText:
+        "Updating your device firmware is how we implement new cool features and bug fixes.<br><br>Make sure your keyboard is connected directly to your computer; no hubs or KVMs, please. And don't leave the app while flashing 😊",
       neuronUpdatedText: "[Solid as a rock!]",
       neuronOutdatedText: "[Almost is never enough]",
       versionExists: "Device Firmware Update",
