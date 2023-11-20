@@ -33,7 +33,7 @@ import { LogoLoaderCentered } from "@Renderer/component/Loader";
 
 import { RegularButton } from "@Renderer/component/Button";
 import Callout from "@Renderer/component/Callout";
-import { IconFloppyDisk } from "@Renderer/component/Icon";
+import { IconFloppyDisk, IconLoader } from "@Renderer/component/Icon";
 import { MacroSelector } from "@Renderer/component/Select";
 import ToastMessage from "@Renderer/component/ToastMessage";
 import { PageHeader } from "@Renderer/modules/PageHeader";
@@ -91,32 +91,6 @@ const Styles = Styled.div`
   }
 `;
 
-const defaultMacro = [
-  {
-    actions: [
-      { keyCode: 229, type: 6, id: 0 },
-      { keyCode: 11, type: 8, id: 1 },
-      { keyCode: 229, type: 7, id: 2 },
-      { keyCode: 8, type: 8, id: 3 },
-      { keyCode: 28, type: 8, id: 4 },
-      { keyCode: 54, type: 8, id: 5 },
-      { keyCode: 44, type: 8, id: 6 },
-      { keyCode: 229, type: 6, id: 7 },
-      { keyCode: 7, type: 8, id: 8 },
-      { keyCode: 229, type: 7, id: 9 },
-      { keyCode: 28, type: 8, id: 10 },
-      { keyCode: 10, type: 8, id: 11 },
-      { keyCode: 16, type: 8, id: 12 },
-      { keyCode: 4, type: 8, id: 13 },
-      { keyCode: 23, type: 8, id: 14 },
-      { keyCode: 8, type: 8, id: 15 },
-    ],
-    id: 0,
-    macro: "RIGHT SHIFT H RIGHT SHIFT E Y , SPACE RIGHT SHIFT D RIGHT SHIFT Y G M A T E",
-    name: "Hey, Dygmate!",
-  },
-];
-
 class MacroEditor extends React.Component {
   static superTranslator(raw) {
     if (raw.search(" 0 0 ") === -1) {
@@ -152,7 +126,7 @@ class MacroEditor extends React.Component {
       (superkeys.length === 1 && superkeys[0].length === 0) ||
       (superkeys.length === 1 && superkeys[0].length === 1 && superkeys[0] === 0)
     ) {
-      return Array.from({ length: 512 }, 65535).join(" ");
+      return Array(512).fill("65535").join(" ");
     }
     let keyMap = [...superkeys];
     // console.log("First", keyMap);
@@ -205,6 +179,7 @@ class MacroEditor extends React.Component {
     this.updateMacros = this.updateMacros.bind(this);
     this.changeSelected = this.changeSelected.bind(this);
     this.loadMacros = this.loadMacros.bind(this);
+    this.clearMacro = this.clearMacro.bind(this);
     this.writeMacros = this.writeMacros.bind(this);
     this.toggleDeleteModal = this.toggleDeleteModal.bind(this);
     this.UpdateList = this.UpdateList.bind(this);
@@ -306,7 +281,14 @@ class MacroEditor extends React.Component {
 
   macrosMap = macros => {
     const { macrosEraser } = this.state;
-    if (macros.length === 0 || (macros.length === 1 && Array.isArray(macros[0].actions))) {
+    console.log(
+      "Macros map function",
+      macros,
+      macrosEraser,
+      macros.length === 0,
+      macros.length === 1 && Array.isArray(macros[0].actions),
+    );
+    if (macros.length === 0 || (macros.length === 1 && !Array.isArray(macros[0].actions))) {
       return macrosEraser;
     }
     const mapAction = action => {
@@ -328,12 +310,14 @@ class MacroEditor extends React.Component {
           return [[action.type], [action.keyCode]];
       }
     };
-    return macros
+    const result = macros
       .map(macro => macro.actions.map(action => mapAction(action)).concat([0]))
       .concat([0])
       .flat()
       .join(" ")
       .replaceAll(",", " ");
+    console.log("MACROS GOING TO BE SAVED", result);
+    return result;
   };
 
   updateMacros(recievedMacros) {
@@ -375,7 +359,9 @@ class MacroEditor extends React.Component {
       cancelContext();
       setLoading(false);
     } catch (error) {
-      toast.error(<ToastMessage title={error} icon={<IconFloppyDisk />} />, { icon: "" });
+      console.log("error when writing macros");
+      console.error(error);
+      toast.error(<ToastMessage title="Error when sending macros to the device" icon={<IconFloppyDisk />} />, { icon: "" });
       cancelContext();
       setLoading(false);
     }
@@ -480,11 +466,18 @@ class MacroEditor extends React.Component {
     });
   }
 
+  clearMacro() {
+    const { macros, selectedMacro } = this.state;
+    if (macros.length === 0) {
+      return;
+    }
+    const localMacros = [...macros];
+    localMacros[selectedMacro].actions = [];
+    this.updateMacros(localMacros);
+  }
+
   macroTranslator(raw) {
     const { storedMacros } = this.state;
-    if (raw.search(" 0 0") === -1) {
-      return defaultMacro;
-    }
     const macrosArray = raw.split(" 0 0")[0].split(" ").map(Number);
 
     // Translate received macros to human readable text
@@ -577,8 +570,10 @@ class MacroEditor extends React.Component {
       try {
         kbtype = focus.device && focus.device.info.keyboardType === "ISO" ? "iso" : "ansi";
       } catch (error) {
+        console.log("error when reading focus.device and kbType for Macros");
+        console.error(error);
         setLoading(false);
-        return false;
+        throw Error(error);
       }
 
       let tMem = await focus.command("macros.memory");
@@ -603,8 +598,10 @@ class MacroEditor extends React.Component {
       cancelContext();
       setLoading(false);
       return true;
-    } catch (e) {
-      toast.error(<ToastMessage title={e} icon={<IconFloppyDisk />} />, { icon: "" });
+    } catch (error) {
+      console.log("error when loading macros");
+      console.error(error);
+      toast.error(<ToastMessage title="Error when loading macros from the device" icon={<IconLoader />} />, { icon: "" });
       cancelContext();
       setLoading(false);
       onDisconnect();
@@ -732,6 +729,7 @@ class MacroEditor extends React.Component {
               <TimelineEditorManager
                 macro={macros[selectedMacro]}
                 macros={macros}
+                clearMacro={this.clearMacro}
                 keymapDB={this.keymapDB}
                 updateActions={this.updateActions}
                 updateScroll={this.updateScroll}

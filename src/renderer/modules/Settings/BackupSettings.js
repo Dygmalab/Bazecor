@@ -146,8 +146,8 @@ export default class BackupSettings extends Component {
       console.log("Firmware update OK");
       toast.success(
         <ToastMessage
-          title="Backup restored sucessfully"
-          content="Your backup was restored sucessfully to the device!"
+          title="Backup restored successfully"
+          content="Your backup was restored successfully to the device!"
           icon={<IconArrowDownWithLine />}
         />,
         {
@@ -174,6 +174,17 @@ export default class BackupSettings extends Component {
       }
       await focus.command("led.mode 0");
       console.log("Settings restored OK");
+      toast.success(
+        <ToastMessage
+          title="Backup restored successfully"
+          content="Your backup was restored successfully to the device!"
+          icon={<IconArrowDownWithLine />}
+        />,
+        {
+          autoClose: 2000,
+          icon: "",
+        },
+      );
       return true;
     } catch (e) {
       console.log(`Restore settings: Error: ${e.message}`);

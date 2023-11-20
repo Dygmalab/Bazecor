@@ -398,7 +398,11 @@ const SelectKeyboard: React.FC<SelectKeyboardProps> = (props): JSX.Element => {
     });
 
     backup.backup.forEach(line => {
-      vk.virtual[line.command].data = line.data;
+      if (vk.virtual[line.command] !== undefined) {
+        vk.virtual[line.command].data = line.data;
+      } else {
+        vk.virtual[line.command] = { data: line.data, eraseable: true };
+      }
     });
 
     // Ask the user for the place to put the backup
