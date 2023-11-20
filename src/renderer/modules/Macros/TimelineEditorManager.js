@@ -19,13 +19,14 @@ import PropTypes from "prop-types";
 
 import Styled from "styled-components";
 import Spinner from "react-bootstrap/Spinner";
+import { RegularButton } from "@Renderer/component/Button";
 import i18n from "../../i18n";
 
 import { KeymapDB } from "../../../api/keymap";
 
 import TimelineEditorForm from "./TimelineEditorForm";
 import Title from "../../component/Title";
-import { IconStopWatchXs } from "../../component/Icon";
+import { IconDelete, IconStopWatchXs } from "../../component/Icon";
 import { PreviewMacroModal } from "../../component/Modal";
 
 const Styles = Styled.div`
@@ -59,6 +60,12 @@ padding-bottom: 5px;
         background-color: ${({ theme }) => theme.styles.button.previewButton.backgroundHover};
       }
     }
+}
+.timelineClearButton {
+  width: -webkit-fill-available;
+  .buttonLabel {
+    place-content: space-between;
+  }
 }
 .card {
   width: auto;
@@ -182,7 +189,7 @@ class MacroManager extends Component {
   }
 
   render() {
-    const { keymapDB, macro, macros, updateActions } = this.props;
+    const { keymapDB, macro, macros, updateActions, clearMacro } = this.props;
     // console.log("Macro on TimelineEditorManager", macro);
     return (
       <Styles className="timelineWrapper">
@@ -217,6 +224,13 @@ class MacroManager extends Component {
               ) : (
                 ""
               )}
+              <RegularButton
+                buttonText="Clear Macro"
+                icoSVG={<IconDelete />}
+                styles="outline-sm transp-bg timelineClearButton"
+                icoPosition="right"
+                onClick={clearMacro}
+              />
             </div>
           </div>
         </div>
