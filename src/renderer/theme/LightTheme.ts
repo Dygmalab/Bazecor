@@ -155,6 +155,8 @@ const Light: DefaultTheme = {
       textColor: Tokens.colors.gray500,
       dangerLowBG: settingColorOpacity(Tokens.colors.brandPrimary, 0.15),
       dangerLowText: settingColorOpacity(Tokens.colors.brandPrimary, 0.75),
+      warningBG: settingColorOpacity(Tokens.colors.brandWarning, 0.15),
+      warningText: settingColorOpacity(Tokens.colors.brandWarningLighter, 0.75),
       subtleColor: Tokens.colors.gray400,
       subtleBGColor: Tokens.colors.gray50,
     },

@@ -502,7 +502,12 @@ const English = {
         maximumLEDUnderglow: "Maximum Underglow intensity while the device is NOT connected by cable",
         idleLedsTime: "time to turn off LEDs when waiting while the device is NOT connected by cable",
         highBatteryImpact: "High battery impact",
+        mediumBatteryImpact: "Medium battery impact",
         lowBatteryImpact: "Low battery impact",
+        trueSleepEnabling: "True sleep of sides",
+        trueSleepEnablingDesc:
+          "True sleep will put your sides in deep sleep (they will require a physical key press to awake), this mode saves a moderate amount of battery when the keyboard is idle for long periods, like at night.",
+        trueSleepTimeDesc: "True sleep Time control that sets the time it takes to activate true sleep after LEDs are turned off",
         highlightLayerChanging: "Highlight layer changing",
         highlightLayerChangingDesc:
           "Adjust underglow and backlight intensity as you switch layers. The maximum intensity smoothly fades to a lower level.",

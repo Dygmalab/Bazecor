@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-no-bind */
 // General imports
 import React, { useState, useEffect } from "react";
 
@@ -9,7 +10,6 @@ import Col from "react-bootstrap/Col";
 
 // Custom component imports
 import { LogoLoader } from "@Renderer/component/Loader";
-import ConnectionStatus from "@Renderer/component/ConnectionStatus";
 import { PageHeader } from "@Renderer/modules/PageHeader";
 import { BatterySettings, EnergyManagement, RFSettings } from "@Renderer/modules/Settings";
 
@@ -64,6 +64,8 @@ const initialWireless = {
   brightnessUG: 0,
   fade: 0,
   idleleds: 0,
+  true_sleep: false,
+  true_sleep_time: 0,
 };
 
 function Wireless(props: WirelessPropsInterface) {
@@ -107,6 +109,12 @@ function Wireless(props: WirelessPropsInterface) {
     });
     await focus.command("idleleds.wireless").then(idleleds => {
       wireless.idleleds = idleleds ? parseInt(idleleds, 10) : 0;
+    });
+    await focus.command("idleleds.true_sleep").then(true_sleep => {
+      wireless.true_sleep = parseInt(true_sleep, 10) > 0;
+    });
+    await focus.command("idleleds.true_sleep_time").then(true_sleep_time => {
+      wireless.true_sleep_time = true_sleep_time ? parseInt(true_sleep_time, 10) : 0;
     });
 
     // Bluetooth commands
@@ -184,6 +192,8 @@ function Wireless(props: WirelessPropsInterface) {
     await focus.command("led.brightnessUG.wireless", wireless.brightnessUG);
     await focus.command("led.fade", wireless.fade);
     await focus.command("idleleds.wireless", wireless.idleleds);
+    await focus.command("idleleds.true_sleep", wireless.true_sleep);
+    await focus.command("idleleds.true_sleep_time", wireless.true_sleep_time);
 
     setLoading(false);
     destroyContext();
