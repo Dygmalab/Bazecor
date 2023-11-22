@@ -307,7 +307,7 @@ class MacroCreator extends Component {
   onAddText = () => {
     const { addText } = this.state;
     const { macro } = this.props;
-    // console.log("MacroCreator onAddText", this.state.rows, this.props.macro);
+    console.log("MacroCreator onAddText", addText, macro);
     const aux = addText;
     let newRows = this.createConversion(macro.actions);
     newRows = newRows.concat(
@@ -323,6 +323,9 @@ class MacroCreator extends Component {
             break;
           case "    ":
             item = "TAB";
+            break;
+          case "\n":
+            item = "ENTER";
             break;
           default:
             break;
@@ -622,7 +625,7 @@ class MacroCreator extends Component {
 
   assignColor = keyCode => {
     let color = this.modifiers.filter(x => x.keyCode === keyCode);
-    if (color === undefined || color.length == 0) {
+    if (color === undefined || color.length === 0) {
       color = "#ededed";
     } else {
       color = color[0].color;

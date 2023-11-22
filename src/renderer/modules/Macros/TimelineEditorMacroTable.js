@@ -64,7 +64,7 @@ const Styles = Styled.div`
     > div {
       width: inherit;
       overflow-x: auto;
-      padding-left: 32px;
+      padding-left: 62px;
       ::-webkit-scrollbar-track {
         -webkit-box-shadow: transparent;
         background-color: white;
@@ -263,6 +263,8 @@ class TimelineEditorMacroTable extends Component {
   };
 
   createConversion(actions) {
+    const { macros } = this.props;
+    console.log("TESTING NAME ASSIGNATION OF MACROS", macros);
     const converted = actions.map((action, i) => {
       const randID = new Date().getTime() + Math.floor(Math.random() * 1000);
       let km;
@@ -293,7 +295,12 @@ class TimelineEditorMacroTable extends Component {
         case 5:
           km = this.keymapDB.parse(action.keyCode);
           if (km.extraLabel !== undefined) {
-            txt = `${km.extraLabel} ${km.label}`;
+            if (km.extraLabel === "MACRO") {
+              const mName = macros[km.keyCode - 53852].name;
+              txt = `M. ${mName}`;
+            } else {
+              txt = `${km.extraLabel} ${km.label}`;
+            }
           } else {
             txt = km.label;
           }
@@ -428,21 +435,17 @@ class TimelineEditorMacroTable extends Component {
     this.updateRows(aux);
   };
 
-  updateScrollPos = () => {
-    console.log("ScrollPos: ", this.trackingWidth.current.scrollLeft);
-  };
-
   render() {
     // const {} = this.props;
     const cssObjectWidth = {
       width: this.props.componentWidth,
     };
-    // console.log("Timeline.ed.M.Table Rows", this.state.rows);
+    console.log("Timeline.ed.M.Table Rows", this.state.rows);
     if (this.state.rows.length === 0) {
       return <></>;
     }
     return (
-      <Styles className="trackingWrapper" style={cssObjectWidth} ref={this.horizontalWheel}>
+      <Styles className="trackingWrapper" style={cssObjectWidth} ref={this.horizontalWheel} id="hwTracker">
         <DragDropContext onDragEnd={this.onDragEnd}>
           <Droppable droppableId="droppable" direction="horizontal">
             {provided => (

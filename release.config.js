@@ -26,6 +26,11 @@ module.exports = {
             path: "@semantic-release/exec",
             cmd: "mv dist/*.AppImage dist/bazecor-v${nextRelease.version}.AppImage",
           },
+          {
+            path: "@semantic-release/exec",
+            cmd: "sha256sum * > sha256sums.txt",
+            execCwd: "dist",
+          },
         ],
         assets: [
           {
@@ -43,6 +48,10 @@ module.exports = {
           {
             path: "dist/bazecor-v${nextRelease.version}.AppImage",
             name: "bazecor-v${nextRelease.version}.AppImage",
+          },
+          {
+            path: "dist/sha256sums.txt",
+            name: "sha256sums.txt",
           },
         ],
       },

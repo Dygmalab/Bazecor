@@ -332,7 +332,6 @@ export default class RecordMacroModal extends React.Component {
 
   render() {
     const { showModal, isRecording, isDelayActive, recorded } = this.state;
-    console.log("rendering");
     return (
       <Styles>
         <RegularButton

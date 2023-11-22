@@ -19,9 +19,11 @@ import Title from "../../component/Title";
 import BackupFolderConfigurator from "../BackupFolderConfigurator";
 
 // Icons Imports
-import { IconFloppyDisk } from "../../component/Icon";
+import { IconArrowDownWithLine, IconFloppyDisk } from "../../component/Icon";
 
 import Store from "../../utils/Store";
+import { toast } from "react-toastify";
+import ToastMessage from "@Renderer/component/ToastMessage";
 
 const store = Store.getStore();
 
@@ -142,6 +144,17 @@ export default class BackupSettings extends Component {
       await focus.command("led.mode 0");
       console.log("Restoring all settings");
       console.log("Firmware update OK");
+      toast.success(
+        <ToastMessage
+          title="Backup restored successfully"
+          content="Your backup was restored successfully to the device!"
+          icon={<IconArrowDownWithLine />}
+        />,
+        {
+          autoClose: 2000,
+          icon: "",
+        },
+      );
       return true;
     } catch (e) {
       console.log(`Restore settings: Error: ${e.message}`);
@@ -161,6 +174,17 @@ export default class BackupSettings extends Component {
       }
       await focus.command("led.mode 0");
       console.log("Settings restored OK");
+      toast.success(
+        <ToastMessage
+          title="Backup restored successfully"
+          content="Your backup was restored successfully to the device!"
+          icon={<IconArrowDownWithLine />}
+        />,
+        {
+          autoClose: 2000,
+          icon: "",
+        },
+      );
       return true;
     } catch (e) {
       console.log(`Restore settings: Error: ${e.message}`);

@@ -4,7 +4,7 @@ import Styled, { withTheme } from "styled-components";
 
 import Dropdown from "react-bootstrap/Dropdown";
 import { FaLinux } from "react-icons/fa";
-import { AiFillWindows, AiFillApple } from "react-icons/ai";
+import { AiFillWindows } from "react-icons/ai";
 import i18n from "../../i18n";
 
 import Title from "../../component/Title";
@@ -46,7 +46,7 @@ const Styles = Styled.div`
     width: 100%;
     height: 2px;
     top: 71px;
-    left: 0; 
+    left: 0;
     background-color: ${({ theme }) => theme.styles.macro.timelineBackground};
   }
 }
@@ -81,17 +81,17 @@ class KeyMacro extends Component {
     let G = parseInt(color.substring(3, 5), 16);
     let B = parseInt(color.substring(5, 7), 16);
 
-    R = parseInt((R * (100 - percent)) / 100);
-    G = parseInt((G * (100 - percent)) / 100);
-    B = parseInt((B * (100 - percent)) / 100);
+    R = parseInt((R * (100 - percent)) / 100, 10);
+    G = parseInt((G * (100 - percent)) / 100, 10);
+    B = parseInt((B * (100 - percent)) / 100, 10);
 
     R = Math.round((R * 255) / (R + 5));
     G = Math.round((G * 255) / (G + 5));
     B = Math.round((B * 255) / (B + 5));
 
-    const RR = R.toString(16).length == 1 ? `0${R.toString(16)}` : R.toString(16);
-    const GG = G.toString(16).length == 1 ? `0${G.toString(16)}` : G.toString(16);
-    const BB = B.toString(16).length == 1 ? `0${B.toString(16)}` : B.toString(16);
+    const RR = R.toString(16).length === 1 ? `0${R.toString(16)}` : R.toString(16);
+    const GG = G.toString(16).length === 1 ? `0${G.toString(16)}` : G.toString(16);
+    const BB = B.toString(16).length === 1 ? `0${B.toString(16)}` : B.toString(16);
 
     return `#${RR}${GG}${BB}`;
   }
@@ -135,7 +135,7 @@ class KeyMacro extends Component {
       };
     }
     let isModifier = false;
-    if (item.keyCode > 223 && item.keyCode < 232 && item.action != 2) {
+    if (item.keyCode > 223 && item.keyCode < 232 && item.action !== 2) {
       isModifier = true;
     }
 
@@ -149,7 +149,7 @@ class KeyMacro extends Component {
         >
           <div
             className={`keyMacroWrapper keyCode-${item.keyCode} ${isModifier ? "isModifier" : ""} ${
-              item.action == 1 || item.action == 2 ? "isDelay" : ""
+              item.action === 1 || item.action === 2 ? "isDelay" : ""
             }`}
           >
             <div className="keyMacro">
@@ -166,15 +166,15 @@ class KeyMacro extends Component {
                       <Dropdown.Menu>
                         <div className="keyMacroMiniDashboard">
                           <div className="keyInfo">
-                            {item.action == 1 ? (
+                            {item.action === 1 ? (
                               <Title headingLevel={4} text={i18n.editor.macros.delayr} />
-                            ) : item.action == 2 ? (
+                            ) : item.action === 2 ? (
                               <Title headingLevel={4} text={i18n.editor.macros.delay} />
                             ) : (
                               <Title headingLevel={4} text={i18n.general.key} />
                             )}
                             <p className="keyValue">
-                              {item.symbol} {item.action == 1 || item.action == 2 ? <small>ms</small> : ""}
+                              {item.symbol} {item.action === 1 || item.action === 2 ? <small>ms</small> : ""}
                             </p>
                           </div>
 
@@ -185,24 +185,24 @@ class KeyMacro extends Component {
                                 buttonText="Press"
                                 icoPosition="left"
                                 icoSVG={<IconPressSm />}
-                                selected={actionTypes[item.action].name == "Key Press"}
-                                disabled={!!(item.action == 1 || item.action == 2)}
+                                selected={actionTypes[item.action].name === "Key Press"}
+                                disabled={!!(item.action === 1 || item.action === 2)}
                                 onClick={() => updateAction(item.id, 6)}
                               />
                               <ButtonConfig
                                 buttonText="Release"
                                 icoPosition="left"
                                 icoSVG={<IconReleaseSm />}
-                                selected={actionTypes[item.action].name == "Key Release"}
-                                disabled={!!(item.action == 1 || item.action == 2)}
+                                selected={actionTypes[item.action].name === "Key Release"}
+                                disabled={!!(item.action === 1 || item.action === 2)}
                                 onClick={() => updateAction(item.id, 7)}
                               />
                               <ButtonConfig
                                 buttonText="Press & Release"
                                 icoPosition="left"
                                 icoSVG={<IconPressAndReleaseSm />}
-                                selected={actionTypes[item.action].name == "Key Press & Rel."}
-                                disabled={!!(item.action == 1 || item.action == 2)}
+                                selected={actionTypes[item.action].name === "Key Press & Rel."}
+                                disabled={!!(item.action === 1 || item.action === 2)}
                                 onClick={() => updateAction(item.id, 8)}
                               />
                             </div>
@@ -358,13 +358,13 @@ class KeyMacro extends Component {
                   {item.symbol}
                 </p>
                 <div className="actionicon">
-                  {actionTypes[item.action].name == "Key Press" ? (
+                  {actionTypes[item.action].name === "Key Press" ? (
                     <IconPressSm />
-                  ) : actionTypes[item.action].name == "Key Release" ? (
+                  ) : actionTypes[item.action].name === "Key Release" ? (
                     <IconReleaseSm />
-                  ) : actionTypes[item.action].name == "Key Press & Rel." ? (
+                  ) : actionTypes[item.action].name === "Key Press & Rel." ? (
                     <IconPressAndReleaseSm />
-                  ) : actionTypes[item.action].name == "Delay" ? (
+                  ) : actionTypes[item.action].name === "Delay" ? (
                     <IconStopWatchSm />
                   ) : (
                     ""

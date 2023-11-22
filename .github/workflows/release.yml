@@ -27,7 +27,10 @@ jobs:
           - os: windows-2019
           - os: ubuntu-20.04
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+      - uses: actions/checkout@v3
       - uses: actions/setup-node@v4
         with:
           node-version: 18.16.0
@@ -62,18 +65,16 @@ jobs:
           - os: ubuntu-20.04
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+      - uses: actions/checkout@v3
       - uses: actions/setup-node@v4
         with:
           node-version: 18.16.0
       - run: npm install -g yarn
       - if: runner.os == 'Linux'
         run: sudo apt update && sudo apt install libudev-dev
-      - if: runner.os == 'Windows'
-        name: SetupPython
-        uses: actions/setup-python@v4
-        with:
-          python-version: "3.10"
       - if: runner.os == 'Windows'
         name: Set up Java
         uses: actions/setup-java@v3
