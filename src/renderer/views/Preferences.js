@@ -174,6 +174,11 @@ class Preferences extends React.Component {
       this.kbData.SuperTimeout = timeout;
     });
 
+    await focus.command("superkeys.overlap").then(overlap => {
+      overlap = overlap ? parseInt(overlap) : 80;
+      this.kbData.SuperOverlapThreshold = overlap;
+    });
+
     await focus.command("superkeys.holdstart").then(holdstart => {
       holdstart = holdstart ? parseInt(holdstart) : 200;
       this.kbData.SuperHoldstart = holdstart;
@@ -219,6 +224,7 @@ class Preferences extends React.Component {
       qukeysHoldTimeout,
       qukeysOverlapThreshold,
       SuperTimeout,
+      SuperOverlapThreshold,
       SuperRepeat,
       SuperWaitfor,
       SuperHoldstart,
@@ -243,6 +249,7 @@ class Preferences extends React.Component {
     // SUPER KEYS
     await focus.command("superkeys.timeout", SuperTimeout);
     await focus.command("superkeys.repeat", SuperRepeat);
+    await focus.command("superkeys.overlap", SuperOverlapThreshold);
     await focus.command("superkeys.waitfor", SuperWaitfor);
     await focus.command("superkeys.holdstart", SuperHoldstart);
     // MOUSE KEYS
