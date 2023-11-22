@@ -1,12 +1,11 @@
 import PropTypes from "prop-types";
 import React, { Component } from "react";
-import i18n from "../../i18n";
-import Slider from "@appigram/react-rangeslider";
-import Focus from "../../../api/focus";
-import Backup from "../../../api/backup";
-import { isArray } from "lodash";
 import { ipcRenderer } from "electron";
 import fs from "fs";
+import Slider from "@appigram/react-rangeslider";
+import i18n from "@Renderer/i18n";
+import { toast } from "react-toastify";
+import ToastMessage from "@Renderer/component/ToastMessage";
 
 // React Bootstrap Components
 import Card from "react-bootstrap/Card";
@@ -21,17 +20,14 @@ import BackupFolderConfigurator from "../BackupFolderConfigurator";
 // Icons Imports
 import { IconArrowDownWithLine, IconFloppyDisk } from "../../component/Icon";
 
+import Focus from "../../../api/focus";
 import Store from "../../utils/Store";
-import { toast } from "react-toastify";
-import ToastMessage from "@Renderer/component/ToastMessage";
 
 const store = Store.getStore();
 
 export default class BackupSettings extends Component {
   constructor(props) {
     super(props);
-
-    this.bkp = new Backup();
 
     this.state = {
       backupFolder: "",
@@ -70,10 +66,11 @@ export default class BackupSettings extends Component {
   };
 
   GetBackup = async () => {
+    const { backupFolder } = this.state;
     const options = {
       title: i18n.keyboardSettings.backupFolder.restoreTitle,
       buttonLabel: i18n.keyboardSettings.backupFolder.windowRestore,
-      defaultPath: this.state.backupFolder,
+      defaultPath: backupFolder,
       filters: [
         { name: "Json", extensions: ["json"] },
         { name: i18n.dialog.allFiles, extensions: ["*"] },
@@ -117,7 +114,7 @@ export default class BackupSettings extends Component {
     const { neurons, neuronID } = this.props;
     const focus = new Focus();
     let data = [];
-    if (isArray(backup)) {
+    if (Array.isArray(backup)) {
       data = backup;
     } else {
       data = backup.backup;
@@ -125,6 +122,7 @@ export default class BackupSettings extends Component {
       const localNeurons = [...neurons];
       const index = localNeurons.findIndex(n => n.id === neuronID);
       localNeurons[index] = backup.neuron;
+      localNeurons[index].id = neuronID;
       store.set("neurons", localNeurons);
     }
     try {
@@ -135,7 +133,7 @@ export default class BackupSettings extends Component {
           val = +val;
         }
         // TODO: remove this block when necessary
-        if (focus.device.info.product == "Defy") {
+        if (focus.device.info.product === "Defy") {
           // if (data[i].command.includes("macros") || data[i].command.includes("superkeys")) continue;
         }
         console.log(`Going to send ${data[i].command} to keyboard`);
