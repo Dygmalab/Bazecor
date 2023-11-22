@@ -192,7 +192,7 @@ function Wireless(props: WirelessPropsInterface) {
     await focus.command("led.brightnessUG.wireless", wireless.brightnessUG);
     await focus.command("led.fade", wireless.fade);
     await focus.command("idleleds.wireless", wireless.idleleds);
-    await focus.command("idleleds.true_sleep", wireless.true_sleep);
+    await focus.command("idleleds.true_sleep", wireless.true_sleep ? 1 : 0);
     await focus.command("idleleds.true_sleep_time", wireless.true_sleep_time);
 
     setLoading(false);
