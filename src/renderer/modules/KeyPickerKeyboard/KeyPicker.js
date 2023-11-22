@@ -651,7 +651,13 @@ class KeyPicker extends Component {
                 <IconLayersSm />
               </div>
               <div className="keysButtonsList">
-                <SelectLayersCustomDropdown action={action} activeTab={activeTab} keyCode={code} onKeySelect={onKeySelect} />
+                <SelectLayersCustomDropdown
+                  action={action}
+                  activeTab={activeTab}
+                  keyCode={code}
+                  onKeySelect={onKeySelect}
+                  disableMods={disableMods}
+                />
               </div>
             </div>
             {isWireless && (
