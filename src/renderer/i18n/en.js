@@ -618,9 +618,10 @@ const English = {
       waitforsub: " - time from 0 to 65,534 milliseconds",
       holdstart: "Superkeys - Hold timeout",
       holdstartsub: " - time from 0 to 65,534 milliseconds",
-      overlap:
-        "Adjust percentage that changes the way the hold function will trigger depending on the typing speed of the previous normal key",
-      overlapsub: " - Percentage from 0 to 100",
+      overlap: "Superkeys - OverlapThreshold",
+      overlapTip1: "This setting determines the overlap between the current and the next key press when using superkeys.",
+      overlapTip2: "With a low value, you will be able to chord better as it will not overlap the key presses.",
+      overlapTip3: "With a high value, the overlap is more responsive so it detects the superkey as being intercepted easier.",
     },
     mouse: {
       title: "Mouse keys",
