@@ -1133,7 +1133,7 @@ class LayoutEditor extends React.Component {
   };
 
   importLayer = data => {
-    if (data.palette.length > 0) this.setState({ palette: data.palette });
+    // if (data.palette.length > 0) this.setState({ palette: data.palette });
     const layerNames = this.state.layerNames.slice();
     const { currentLayer } = this.state;
     if (data.layerNames != null) {
@@ -1473,7 +1473,7 @@ class LayoutEditor extends React.Component {
       let layers;
       try {
         layers = JSON.parse(fs.readFileSync(resp.filePaths[0]));
-        console.log(Array.isArray(layers.keymap));
+        console.log(layers, Array.isArray(layers.keymap));
         if (Array.isArray(layers.keymap)) {
           console.log(layers.keymap[0]);
           this.importLayer(layers);
