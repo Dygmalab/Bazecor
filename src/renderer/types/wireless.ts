@@ -42,6 +42,8 @@ export interface WirelessInterface {
   brightnessUG: number;
   fade: number;
   idleleds: number;
+  true_sleep: boolean;
+  true_sleep_time: number;
 }
 
 export interface BatterySettingsProps {

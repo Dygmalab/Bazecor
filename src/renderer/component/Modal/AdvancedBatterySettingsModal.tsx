@@ -54,6 +54,18 @@ function AdvancedBatterySettingsModal(props: AdvancedEnergyManagementProps) {
     changeWireless(newWireless);
   };
 
+  const setTrueSleep = async (value: any) => {
+    const newWireless = { ...wireless };
+    newWireless.true_sleep = value.target.checked;
+    changeWireless(newWireless);
+  };
+
+  const setTrueSleepTime = async (value: number) => {
+    const newWireless = { ...wireless };
+    newWireless.true_sleep_time = value * 60;
+    changeWireless(newWireless);
+  };
+
   const setFade = async (value: any) => {
     const newWireless = { ...wireless };
     newWireless.fade = value.target.checked ? 1 : 0;
@@ -130,6 +142,37 @@ function AdvancedBatterySettingsModal(props: AdvancedEnergyManagementProps) {
                   <span className="tagsfix slider-label">off </span>
                   <Slider min={0} max={60} value={Math.round(wireless.idleleds / 60)} onChange={setIdleleds} />
                   <span className="tagsfix slider-label">60 min</span>
+                </div>
+              </Col>
+            </Row>
+          </Card.Body>
+        </Card>
+        <Card className="overflowFix card-preferences card-preferences--battery mt-4">
+          <Card.Title>
+            <Title text={i18n.wireless.energyManagement.settings.trueSleepEnabling} headingLevel={4} />
+            <Badge content={i18n.wireless.energyManagement.settings.mediumBatteryImpact} variation="warning" size="sm" />
+          </Card.Title>
+          <Card.Body>
+            <Row className="card-preferences--option justify-between">
+              <Col sm={8} lg={5}>
+                <Title text={i18n.wireless.energyManagement.settings.trueSleepEnablingDesc} headingLevel={6} />
+              </Col>
+              <Form.Check
+                type="switch"
+                id="toggleLayerHighlight"
+                checked={wireless.true_sleep === true}
+                onChange={setTrueSleep}
+              />
+            </Row>
+            <Row className="card-preferences--option justify-between">
+              <Col lg={5}>
+                <Title text={i18n.wireless.energyManagement.settings.trueSleepTimeDesc} headingLevel={6} />
+              </Col>
+              <Col lg={5}>
+                <div className="slider-wrapper">
+                  <span className="tagsfix slider-label">1 min </span>
+                  <Slider min={1} max={240} value={Math.round(wireless.true_sleep_time / 60)} onChange={setTrueSleepTime} />
+                  <span className="tagsfix slider-label">240 min</span>
                 </div>
               </Col>
             </Row>

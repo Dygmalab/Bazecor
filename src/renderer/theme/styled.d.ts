@@ -129,6 +129,8 @@ declare module "styled-components" {
         textColor: string;
         dangerLowBG: string;
         dangerLowText: string;
+        warningBG: string;
+        warningText: string;
         subtleColor: string;
         subtleBGColor: string;
       };
