@@ -36,7 +36,7 @@ import { NameModal } from "../Modal"; // Imported custom modal component
 import { ButtonSettings } from "../Button";
 import { KeyboardViewSelector } from "../ToggleButtons";
 
-const Style = Styled.div` 
+const Style = Styled.div`
 display: flex;
 align-items: center;
 .dropdownMultipleActions {
@@ -129,6 +129,7 @@ class LayerSelector extends React.Component {
       clearFunc,
       editModeActual,
       editModeFunc,
+      editFollowMode,
       exportToPdf,
     } = this.props;
     const { show, showAdd } = this.state;
@@ -146,8 +147,23 @@ class LayerSelector extends React.Component {
         icon: <IconFlashlight />,
       },
     ];
+    const followMode = [
+      {
+        name: "Dont follow",
+        tooltip: i18n.editor.keysEditor,
+        value: "off",
+        icon: <IconKeyboard />,
+      },
+      {
+        name: "Follow",
+        tooltip: i18n.editor.color.colorEditor,
+        value: "on",
+        icon: <IconFlashlight />,
+      },
+    ];
     return (
       <Style>
+        <div>piet</div>
         <div className="itemListelector dropdownMultipleActions">
           <Dropdown onSelect={value => onSelect(parseInt(value))} value={selectedItem} className="dropdownList">
             <Dropdown.Toggle className="toggler neuronToggler">
@@ -240,6 +256,7 @@ class LayerSelector extends React.Component {
           </div>
         </div>
         <KeyboardViewSelector listElements={layoutsMode} value={editModeActual} style="flex" editModeFunc={editModeFunc} />
+        <KeyboardViewSelector listElements={followMode} value={editModeActual} style="flex" editModeFunc={editFollowMode} />
 
         {itemList == undefined || itemList.length == 0 || itemList.length <= selectedItem ? (
           ""
