@@ -29,12 +29,13 @@ import {
   IconArrowDownWithLine,
   IconFileDownload,
   IconKeyboard,
-  IconFlashlight, IconRecord, IconStopWatch,
+  IconFlashlight, IconRecord, IconStopWatch, IconLayers,
 } from "../Icon";
 
 import { NameModal } from "../Modal"; // Imported custom modal component
 import { ButtonSettings } from "../Button";
 import { KeyboardViewSelector } from "../ToggleButtons";
+import IconMagnifier from "@Renderer/component/Icon/IconMagnifier";
 
 const Style = Styled.div`
 display: flex;
@@ -150,16 +151,16 @@ class LayerSelector extends React.Component {
     ];
     const followMode = [
       {
-        name: "Dont follow",
-        tooltip: i18n.editor.keysEditor,
+        name: i18n.editor.follow.stop,
+        tooltip: i18n.editor.follow.stopFollow,
         value: "off",
-        icon: <IconRecord />,
+        icon: <IconLayers />,
       },
       {
-        name: "Follow",
-        tooltip: i18n.editor.color.colorEditor,
+        name: i18n.editor.follow.layer,
+        tooltip: i18n.editor.follow.followLayer,
         value: "on",
-        icon: <IconStopWatch />,
+        icon: <IconMagnifier />,
       },
     ];
     return (

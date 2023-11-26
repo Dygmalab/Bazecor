@@ -112,6 +112,12 @@ const English = {
       exportToPdf: "Export layouts to pdf",
       layerToCopy: "You will copy the layout of this layer",
     },
+    follow:{
+      layer: "Start",
+      stop: "Stop",
+      followLayer: "Show active layer",
+      stopFollow: "Don't show active layer",
+    },
     color: {
       color: "Color",
       colorEditor: "Color Editor",
