@@ -29,7 +29,7 @@ import {
   IconArrowDownWithLine,
   IconFileDownload,
   IconKeyboard,
-  IconFlashlight,
+  IconFlashlight, IconRecord, IconStopWatch,
 } from "../Icon";
 
 import { NameModal } from "../Modal"; // Imported custom modal component
@@ -130,6 +130,7 @@ class LayerSelector extends React.Component {
       editModeActual,
       editModeFunc,
       editFollowMode,
+      followModeActual,
       exportToPdf,
     } = this.props;
     const { show, showAdd } = this.state;
@@ -152,18 +153,17 @@ class LayerSelector extends React.Component {
         name: "Dont follow",
         tooltip: i18n.editor.keysEditor,
         value: "off",
-        icon: <IconKeyboard />,
+        icon: <IconRecord />,
       },
       {
         name: "Follow",
         tooltip: i18n.editor.color.colorEditor,
         value: "on",
-        icon: <IconFlashlight />,
+        icon: <IconStopWatch />,
       },
     ];
     return (
       <Style>
-        <div>piet</div>
         <div className="itemListelector dropdownMultipleActions">
           <Dropdown onSelect={value => onSelect(parseInt(value))} value={selectedItem} className="dropdownList">
             <Dropdown.Toggle className="toggler neuronToggler">
@@ -256,7 +256,7 @@ class LayerSelector extends React.Component {
           </div>
         </div>
         <KeyboardViewSelector listElements={layoutsMode} value={editModeActual} style="flex" editModeFunc={editModeFunc} />
-        <KeyboardViewSelector listElements={followMode} value={editModeActual} style="flex" editModeFunc={editFollowMode} />
+        <KeyboardViewSelector listElements={followMode} value={followModeActual} style="flex" editModeFunc={editFollowMode} />
 
         {itemList == undefined || itemList.length == 0 || itemList.length <= selectedItem ? (
           ""

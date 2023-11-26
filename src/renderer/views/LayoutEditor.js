@@ -466,6 +466,9 @@ class LayoutEditor extends React.Component {
       showStandardView: false,
       layoutSelectorPosition: { x: 0, y: 0 },
       isWireless: false,
+      followLayerId:null,
+      followInterval: 1000,
+      followMode: "off"
     };
     this.onLayerNameChange = this.onLayerNameChange.bind(this);
     this.updateMacros = this.updateMacros.bind(this);
@@ -1688,23 +1691,42 @@ class LayoutEditor extends React.Component {
   }
 
  async onFollowModeToggle  (data){
+    if(data==="on"){
+        const ref = setInterval(this.selectCurrentLayer, this.state.followInterval)
+        this.setState({
+          followLayerId: ref,
+          followMode: "on"
+        })
+    }else{
+      const ref = this.state.followLayerId;
+      if(ref){
+        clearInterval(ref);
+      }
+      this.setState({
+        followLayerId: null,
+        followMode: "off"
+      })
+    }
+  }
+
+  selectCurrentLayer = async () => {
     const focus = new Focus();
     let layerState = await focus.command("layer.state");
-   const splitted =layerState.split(" ");
-   const rev =splitted.reverse()
+    const splitted = layerState.split(" ");
+    const rev = splitted.reverse()
 
-   const length = rev.length;
-   let found = -1;
+    const length = rev.length;
+    let found = -1;
 
-   for (let i = 0; i< length;i++){
-     const layer = rev[i];
-     if(layer === "1"){
-       found =i;
-       break;
-     }
-   }
-   const realLayer = length- found -1
-   this.selectLayer(realLayer)
+    for (let i = 0; i < length; i++) {
+      const layer = rev[i];
+      if (layer === "1") {
+        found = i;
+        break;
+      }
+    }
+    const realLayer = length - found - 1
+    this.selectLayer(realLayer)
   }
 
 
@@ -1973,6 +1995,7 @@ class LayoutEditor extends React.Component {
                 editModeActual={this.state.modeselect}
                 editModeFunc={this.modeSelectToggle}
                 editFollowMode={this.onFollowModeToggle}
+                followModeActual={this.state.followMode}
                 exportToPdf={this.exportToPdf}
               />
             }
