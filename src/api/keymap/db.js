@@ -46,6 +46,8 @@ import spanish, { spanishModifiedTables } from "./languages/spanish/spanish";
 
 import british, { britishModifiedTables } from "./languages/british/british";
 
+import dvorak, { dvorakModifiedTables } from "./languages/english/dvorak";
+
 // German - is an Array of objects of values that have to be modified
 import german, { germanModifiedTables } from "./languages/german/german";
 
@@ -129,6 +131,7 @@ const defaultBaseKeyCodeTable = [
 const supportModifiedTables = {
   spanish: spanishModifiedTables,
   british: britishModifiedTables,
+  dvorak: dvorakModifiedTables,
   german: germanModifiedTables,
   french: frenchModifiedTables,
   frenchBepo: frenchBepoModifiedTables,
@@ -162,6 +165,7 @@ const languagesDB = {
   english: "english",
   spanish,
   british,
+  dvorak,
   german,
   french,
   frenchBepo,

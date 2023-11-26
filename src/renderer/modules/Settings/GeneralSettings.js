@@ -78,6 +78,7 @@ export default class GeneralSettings extends Component {
     const flags = [
       englishUSF,
       englishUKF,
+      englishUSF,
       spanishF,
       germanF,
       frenchF,
@@ -96,6 +97,7 @@ export default class GeneralSettings extends Component {
     let language = [
       "english",
       "british",
+      "dvorak",
       "spanish",
       "german",
       "french",
@@ -114,6 +116,7 @@ export default class GeneralSettings extends Component {
     const languageNames = [
       "English US",
       "English UK",
+      "Dvorak Intl",
       "Spanish",
       "German",
       "French",
