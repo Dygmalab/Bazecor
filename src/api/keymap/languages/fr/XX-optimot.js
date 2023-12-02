@@ -330,7 +330,7 @@ const frXXoptimotLetters = [
 ];
 
 const altGRfrXXoptimot = {
-  groupName: "AltCtrl frXXoptimot",
+  groupName: "AltCtrl French",
   keys: [
     // Numbers row + AltGr
     {
@@ -631,7 +631,7 @@ const altGRfrXXoptimot = {
 };
 
 const shiftedSymbols = {
-  groupName: "Shifted frXXoptimot",
+  groupName: "Shifted French",
   keys: [
     {
       code: ModifierCodes.SHIFT + 53,
@@ -941,7 +941,7 @@ const shiftedSymbols = {
 };
 
 const tableAGrS = {
-  groupName: "AltGrShift frXXoptimot",
+  groupName: "AltGrShift French",
   keys: [
     {
       code: ModifierCodes.ALTGR_SHIFT + 53,
