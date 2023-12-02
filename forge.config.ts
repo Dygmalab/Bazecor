@@ -89,9 +89,9 @@ const config: ForgeConfig = {
       const packageJson = JSON.parse(fs.readFileSync(path.resolve(buildPath, "package.json")).toString());
 
       packageJson.dependencies = {
-        serialport: "^10.5.0",
+        serialport: "^10.0.0",
         usb: "^2.9.0",
-        "uiohook-napi": "^1.5.0",
+        "uiohook-napi": "^1.5.2",
       };
 
       fs.writeFileSync(path.resolve(buildPath, "package.json"), JSON.stringify(packageJson));

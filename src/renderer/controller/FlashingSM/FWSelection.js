@@ -1,20 +1,23 @@
-import { createMachine, assign, raise } from "xstate";
+import { createMachine, assign } from "xstate";
 import { Octokit } from "@octokit/core";
 import axios from "axios";
 import SemVer from "semver";
 import Focus from "../../../api/focus";
 
+const FWMAJORVERSION = "1.x";
+
 const FocusAPIRead = async () => {
-  let data = {};
+  const data = {};
   try {
-    let focus = new Focus();
+    const focus = new Focus();
     data.bootloader = focus.device ? focus.device.bootloader : false;
     data.info = focus.device.info;
     if (data.bootloader) return data;
     data.version = await focus.command("version");
+    // eslint-disable-next-line prefer-destructuring
     data.version = data.version.split(" ")[0];
     data.chipID = (await focus.command("hardware.chip_id")).replace(/\s/g, "");
-    if (Object.keys(data).length == 0 || Object.keys(data.info).length == 0) throw new Error("data is empty!");
+    if (Object.keys(data).length === 0 || Object.keys(data.info).length === 0) throw new Error("data is empty!");
   } catch (error) {
     console.warn("error when querying the device");
     console.error(error);
@@ -24,33 +27,34 @@ const FocusAPIRead = async () => {
 };
 
 const loadAvailableFirmwareVersions = async allowBeta => {
-  let Releases = [];
+  const Releases = [];
   try {
     const octokit = new Octokit();
-    let data = await octokit.request("GET /repos/{owner}/{repo}/releases", {
+    const data = await octokit.request("GET /repos/{owner}/{repo}/releases", {
       owner: "Dygmalab",
-      repo: "Firmware-releases",
+      repo: "Firmware-release",
       headers: {
-        "X-GitHub-Api-Version": "2022-11-28"
-      }
+        "X-GitHub-Api-Version": "2022-11-28",
+      },
     });
     // console.log("Data from github!", JSON.stringify(data));
     data.data.forEach(release => {
-      let newRelease = {};
       const releaseData = release.name.split(" ");
-      newRelease.name = releaseData[0];
-      newRelease.version = releaseData[1];
-      newRelease.body = release.body;
-      newRelease.assets = [];
-      release.assets.forEach(asset => {
-        newRelease.assets.push({
-          name: asset.name,
-          url: asset.browser_download_url
+      const name = releaseData[0];
+      const version = releaseData[1];
+      const { body } = release;
+      const assets = [];
+      const newRelease = { name, version, body, assets };
+      if (release?.assets !== undefined)
+        release.assets.forEach(asset => {
+          newRelease.assets.push({
+            name: asset.name,
+            url: asset.browser_download_url,
+          });
+          // console.log([asset.name, asset.browser_download_url]);
         });
-        //console.log([asset.name, asset.browser_download_url]);
-      });
-      //console.log(newRelease);
-      if (allowBeta || !newRelease.version.includes("beta")) {
+      // console.log(newRelease);
+      if (newRelease.assets.length > 0 && (allowBeta || !newRelease.version.includes("beta"))) {
         Releases.push(newRelease);
       }
     });
@@ -64,15 +68,21 @@ const loadAvailableFirmwareVersions = async allowBeta => {
 };
 
 const GitHubRead = async context => {
-  let finalReleases, isUpdated, isBeta;
+  let finalReleases;
+  let isUpdated;
+  let isBeta;
   try {
     const fwReleases = await loadAvailableFirmwareVersions(context.device.bootloader ? false : context.allowBeta);
-    finalReleases = fwReleases.filter(release => release.name === context.device.info.product);
-    finalReleases.sort((a, b) => {
-      return SemVer.lt(SemVer.clean(a.version), SemVer.clean(b.version)) ? 1 : -1;
-    });
+    finalReleases = fwReleases.filter(
+      release =>
+        release.name === context.device.info.product &&
+        (context.device.info.product === "Defy"
+          ? SemVer.satisfies(release.version, FWMAJORVERSION, { includePrerelease: true })
+          : true),
+    );
+    finalReleases.sort((a, b) => (SemVer.lt(SemVer.clean(a.version), SemVer.clean(b.version)) ? 1 : -1));
     if (context.device.bootloader) return { firmwareList: finalReleases, isUpdated: false, isBeta: false };
-    isUpdated = context.device.version == finalReleases[0].version ? true : false;
+    isUpdated = context.device.version === finalReleases[0].version;
     isBeta = context.device.version.includes("beta");
   } catch (error) {
     console.warn("error when filtering data from GitHub");
@@ -80,48 +90,48 @@ const GitHubRead = async context => {
     throw new Error(error);
   }
   console.log("GitHub data acquired!", finalReleases);
-  return { firmwareList: finalReleases, isUpdated: isUpdated, isBeta: isBeta };
+  return { firmwareList: finalReleases, isUpdated, isBeta };
 };
 
 const obtainFWFiles = async (type, url) => {
-  let response,
-    firmware = undefined;
+  let response;
+  let firmware;
   try {
-    if (type == "keyscanner.bin") {
+    if (type === "keyscanner.bin") {
       response = await axios.request({
         method: "GET",
-        url: url,
+        url,
         responseType: "arraybuffer",
-        reponseEncoding: "binary"
+        reponseEncoding: "binary",
       });
       firmware = new Uint8Array(response.data);
     }
-    if (type == "Wired_neuron.uf2") {
+    if (type === "Wired_neuron.uf2") {
       response = await axios.request({
         method: "GET",
-        url: url,
+        url,
         responseType: "arraybuffer",
-        reponseEncoding: "binary"
+        reponseEncoding: "binary",
       });
       firmware = response.data;
     }
-    if (type == "Wireless_neuron.hex") {
+    if (type === "Wireless_neuron.hex") {
       response = await axios.request({
         method: "GET",
-        url: url,
+        url,
         responseType: "text",
-        reponseEncoding: "utf8"
+        reponseEncoding: "utf8",
       });
       response = response.data.replace(/(?:\r\n|\r|\n)/g, "");
       firmware = response.split(":");
       firmware.splice(0, 1);
     }
-    if (type == "firmware.hex") {
+    if (type === "firmware.hex") {
       response = await axios.request({
         method: "GET",
-        url: url,
+        url,
         responseType: "text",
-        reponseEncoding: "utf8"
+        reponseEncoding: "utf8",
       });
       response = response.data.replace(/(?:\r\n|\r|\n)/g, "");
       firmware = response.split(":");
@@ -137,38 +147,31 @@ const obtainFWFiles = async (type, url) => {
 };
 
 const downloadFirmware = async (typeSelected, info, firmwareList, selectedFirmware) => {
-  let filename, filenameSides;
+  let filename;
+  let filenameSides;
   // console.log(typeSelected, info, firmwareList, selectedFirmware);
   try {
-    if (typeSelected == "default") {
-      if (info.product == "Raise") {
+    if (typeSelected === "default") {
+      if (info.product === "Raise") {
         filename = await obtainFWFiles(
           "firmware.hex",
-          firmwareList[selectedFirmware].assets.find(asset => {
-            return asset.name == "firmware.hex";
-          }).url
+          firmwareList[selectedFirmware].assets.find(asset => asset.name === "firmware.hex").url,
         );
       } else {
-        if (info.keyboardType == "wireless") {
+        if (info.keyboardType === "wireless") {
           filename = await obtainFWFiles(
             "Wireless_neuron.hex",
-            firmwareList[selectedFirmware].assets.find(asset => {
-              return asset.name == "Wireless_neuron.hex";
-            }).url
+            firmwareList[selectedFirmware].assets.find(asset => asset.name === "Wireless_neuron.hex").url,
           );
         } else {
           filename = await obtainFWFiles(
             "Wired_neuron.uf2",
-            firmwareList[selectedFirmware].assets.find(asset => {
-              return asset.name == "Wired_neuron.uf2";
-            }).url
+            firmwareList[selectedFirmware].assets.find(asset => asset.name === "Wired_neuron.uf2").url,
           );
         }
         filenameSides = await obtainFWFiles(
           "keyscanner.bin",
-          firmwareList[selectedFirmware].assets.find(asset => {
-            return asset.name == "keyscanner.bin";
-          }).url
+          firmwareList[selectedFirmware].assets.find(asset => asset.name === "keyscanner.bin").url,
         );
       }
     }
@@ -196,18 +199,18 @@ const SelectionSM = createMachine({
     selectedFirmware: 0,
     isUpdated: false,
     isBeta: false,
-    allowBeta: false
+    allowBeta: false,
   },
   states: {
     LoadDeviceData: {
       id: "LoadDeviceData",
       entry: [
-        (context, event) => {
+        () => {
           console.log("Getting device info");
         },
         assign({
-          stateblock: (context, event) => 1
-        })
+          stateblock: () => 1,
+        }),
       ],
       invoke: {
         id: "FocusAPIRead",
@@ -216,114 +219,117 @@ const SelectionSM = createMachine({
           target: "LoadGithubFW",
           actions: [
             assign({ device: (context, event) => event.data }),
-            (context, state) => {
+            context => {
               console.log("Success: ", context.device);
-            }
-          ]
+            },
+          ],
         },
         onError: {
           target: "failure",
           actions: [
-            (context, state) => {
+            () => {
               console.warn("error");
             },
-            assign({ error: (context, event) => event })
-          ]
-        }
-      }
+            assign({ error: (context, event) => event }),
+          ],
+        },
+      },
     },
     LoadGithubFW: {
       id: "LoadGitHubData",
       entry: [
-        (context, event) => {
+        () => {
           console.log("Loading Github data!");
         },
         assign({
-          stateblock: (context, event) => 2
-        })
+          stateblock: () => 2,
+        }),
       ],
       invoke: {
         id: "GitHubData",
-        src: (context, data) => GitHubRead(context),
+        src: context => GitHubRead(context),
         onDone: {
           target: "selectFirmware",
           actions: [
-            assign((context, event) => {
-              return {
-                firmwareList: event.data.firmwareList,
-                isUpdated: event.data.isUpdated,
-                isBeta: event.data.isBeta
-              };
-            })
-          ]
+            assign((context, event) => ({
+              firmwareList: event.data.firmwareList,
+              isUpdated: event.data.isUpdated,
+              isBeta: event.data.isBeta,
+            })),
+          ],
         },
         onError: {
           target: "failure",
-          actions: assign({ error: (context, event) => event })
-        }
-      }
+          actions: assign({ error: (context, event) => event }),
+        },
+      },
     },
     selectFirmware: {
       id: "selectFirmware",
       entry: [
-        (context, event) => {
+        () => {
           console.log("select Firmware!");
         },
         assign({
-          stateblock: (context, event) => 3
-        })
+          stateblock: () => 3,
+        }),
       ],
       on: {
         NEXT: ["loadingFWFiles"],
         CHANGEFW: {
-          actions: [assign({ selectedFirmware: (context, event) => event.selected })]
-        }
-      }
+          actions: [assign({ selectedFirmware: (context, event) => event.selected })],
+        },
+      },
     },
     loadingFWFiles: {
       id: "loadingFWFiles",
       entry: [
-        (context, event) => {
+        () => {
           console.log("Download Firmware!");
         },
         assign({
-          stateblock: (context, event) => 4
-        })
+          stateblock: () => 4,
+        }),
       ],
       invoke: {
         id: "donwloadFirmware",
-        src: (context, data) =>
+        src: context =>
           downloadFirmware(context.typeSelected, context.device.info, context.firmwareList, context.selectedFirmware),
         onDone: {
           target: "success",
-          actions: [assign({ firmwares: (context, event) => event.data })]
+          actions: [
+            assign({ firmwares: (context, event) => event.data }),
+            (context, event) => {
+              console.log("DOWNLOADED FW", event.data);
+            },
+          ],
         },
         onError: {
           target: "failure",
-          actions: [assign({ error: (context, event) => event })]
-        }
-      }
+          actions: [assign({ error: (context, event) => event })],
+        },
+      },
     },
     failure: {
       id: "failure",
       entry: [
-        (context, event) => {
+        () => {
           console.log("Failed state!");
-        }
+        },
       ],
       on: {
         RETRY: {
           target: "LoadDeviceData",
           actions: [
             assign({
-              stateblock: (context, event) => 0
-            })
-          ]
-        }
-      }
+              stateblock: () => 0,
+            }),
+          ],
+        },
+      },
     },
-    success: { type: "final" }
-  }
+    success: { type: "final" },
+  },
 });
 
 export default SelectionSM;

@@ -50,6 +50,7 @@ const flags = [
   fiFI,
   frFR,
   frFR, // BÉPO (French)
+  frFR, // Optimot (French)
   deDE,
   isIS,
   jaJP,
@@ -68,6 +69,7 @@ const languages = [
   "fi-FI",
   "fr-FR",
   "fr-XX-bepo",
+  "fr-XX-optimot",
   "de-DE",
   "is-IS",
   "ja-JP",
@@ -85,7 +87,8 @@ const languageNames = [
   "EurKEY (1.3)",
   "Finnish",
   "French",
-  "French (BÉPO)",
+  "French (Bépo)",
+  "French (Optimot)",
   "German",
   "Icelandic",
   "Japanese",

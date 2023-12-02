@@ -1,4 +1,4 @@
-// Do NOT modify this object - languages available in 1.3.4 and before
+// Do NOT modify this object - languages available in 1.3.8 and before
 const legacyLanguage = {
   english: "en-US",
   british: "en-GB",
@@ -6,6 +6,7 @@ const legacyLanguage = {
   german: "de-DE",
   french: "fr-FR",
   frenchBepo: "fr-XX-bepo",
+  frenchOptimot: "fr-XX-optimot",
   swedish: "sv-SE",
   finnish: "fi-FI",
   danish: "da-DK",

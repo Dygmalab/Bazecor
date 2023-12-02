@@ -117,6 +117,7 @@ class KeymapDB {
     if (languagesDB[this.language] === undefined) {
       this.language = "en-US";
     }
+
     // Modify our baseKeyCodeTable, depending on the language selected by the static methods and by inside function newLanguageLayout
     baseKeyCodeTable = KeymapDB.updateBaseKeyCode();
     const keyCodeTableWithModifiers =

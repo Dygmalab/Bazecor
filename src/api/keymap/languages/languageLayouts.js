@@ -94,6 +94,7 @@ import { deCH, deCHModifiedTables } from "./de/CH";
 // Dygma - Layouts (community/third-party)
 import { enXXeurkey, enXXeurkeyModifiedTables } from "./en/XX-eurkey";
 import { frXXbepo, frXXbepoModifiedTables } from "./fr/XX-bepo";
+import { frXXoptimot, frXXoptimotModifiedTables } from "./fr/XX-optimot";
 
 const supportModifiedTables = {
   // Keycaps
@@ -113,6 +114,7 @@ const supportModifiedTables = {
   // Community
   "en-XX-eurkey": enXXeurkeyModifiedTables,
   "fr-XX-bepo": frXXbepoModifiedTables,
+  "fr-XX-optimot": frXXoptimotModifiedTables,
 };
 
 const languages = {
@@ -134,6 +136,7 @@ const languages = {
   // Community
   "en-XX-eurkey": enXXeurkey,
   "fr-XX-bepo": frXXbepo,
+  "fr-XX-optimot": frXXoptimot,
 };
 
 export { languages as languagesDB, supportModifiedTables };

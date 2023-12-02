@@ -1,5 +1,5 @@
 import { app, BrowserWindow, Menu } from "electron";
-import electronUpdater from "update-electron-app";
+// import electronUpdater from "update-electron-app";
 import createWindow from "./createWindow";
 import { setTheme } from "./setup/theme";
 import setBackup from "./setup/setBackup";
@@ -7,16 +7,12 @@ import GlobalRecording from "./managers/GlobalRecording";
 import { addUSBListeners, removeUSBListeners } from "./setup/configureUSB";
 import { removeIPCs } from "./setup/configureIPCs";
 
-electronUpdater();
+// electronUpdater();
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 // eslint-disable-next-line global-require
 if (require("electron-squirrel-startup")) {
   app.quit();
-}
-
-if (process.platform === "linux") {
-  app.commandLine.appendSwitch("no-sandbox");
 }
 
 // This method will be called when Electron has finished

@@ -16,6 +16,7 @@
  */
 
 import React, { useState } from "react";
+import PropTypes from "prop-types";
 import Styled from "styled-components";
 
 import ReactMarkdown from "react-markdown";
@@ -35,7 +36,7 @@ margin-left:32px;
 .versionsStatus {
     height: 116px;
     margin-bottom: 42px;
-    background-color: ${({ theme }) => theme.styles.firmwareUpdatePanel.backgroundStripeColor};    
+    background-color: ${({ theme }) => theme.styles.firmwareUpdatePanel.backgroundStripeColor};
     border-bottom-left-radius: 16px;
     border-top-left-radius: 16px;
     // overflow: hidden;
@@ -51,7 +52,7 @@ margin-left:32px;
       margin-top: 6px;
       margin-bottom: 10px;
     }
-  } 
+  }
   .versionStatusInstalled {
     flex: 1;
     background: ${({ theme }) => theme.styles.firmwareUpdatePanel.backgroundStripeGradientColor};
@@ -75,7 +76,7 @@ h6 {
 .badge {
   color: ${({ theme }) => theme.styles.firmwareUpdatePanel.versionInstalledTitle};
   border-color: ${({ theme }) => theme.styles.firmwareUpdatePanel.badgeBorderColor};
-} 
+}
 .versionStatusNext {
   h6 {
     color: ${({ theme }) => theme.styles.firmwareUpdatePanel.nextVersionAvaliableTitle};
@@ -83,15 +84,15 @@ h6 {
   .badge {
     color: ${({ theme }) => theme.styles.firmwareUpdatePanel.nextVersionAvaliableBadge};
     border-color: ${({ theme }) => theme.styles.firmwareUpdatePanel.badgeBorderColorActive};
-  } 
+  }
 }
 .isUpdated {
   .versionStatusNext {
-    .badge {  
+    .badge {
       padding: 4px;
       color: ${({ theme }) => theme.styles.firmwareUpdatePanel.versionSuccessTitle};
       border-color: ${({ theme }) => theme.styles.firmwareUpdatePanel.versionSuccessBadge};
-    } 
+    }
   }
 }
 .badge,
@@ -138,7 +139,8 @@ h6 {
   }
 }
 `;
-const FirmwareVersionStatus = ({ currentlyVersionRunning, isUpdated, firmwareList, selectedFirmware, send }) => {
+const FirmwareVersionStatus = props => {
+  const { currentlyVersionRunning, isUpdated, firmwareList, selectedFirmware, send } = props;
   const [modalFirmwareDetails, setModalFirmwareDetails] = useState(false);
   return (
     <Style>
@@ -222,6 +224,14 @@ const FirmwareVersionStatus = ({ currentlyVersionRunning, isUpdated, firmwareLis
       </Modal>
     </Style>
   );
+};
+
+FirmwareVersionStatus.propTypes = {
+  currentlyVersionRunning: PropTypes.string,
+  isUpdated: PropTypes.bool,
+  firmwareList: PropTypes.any,
+  selectedFirmware: PropTypes.number,
+  send: PropTypes.func,
 };
 
 export default FirmwareVersionStatus;

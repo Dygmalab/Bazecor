@@ -1,5 +1,4 @@
-Bazecor
-=======
+# Bazecor
 
 ![Bazecor screenshot](data/screenshot.png)
 
@@ -34,12 +33,43 @@ better, please feel free to [open issues][issues] liberally!
 
 ## Development
 
-To launch the development environment, simply install nodejs and yarn (check node version in package.json engine.node) then type `yarn && yarn start`. To do a
-production build, use `yarn run build:all`, or limit it to a particular OS:
-`yarn run build:linux`, `yarn run build:mac` or `yarn run build:win`. See the
-`scripts` section of `package.json` for more scripts.
+To launch the development environment, simply install nodejs and yarn (check node version in package.json engine.node) then type `yarn && yarn start`.
+
+To do a local production build without signing the executable use `yarn run make-dev`.
+
+To do a production build, use `yarn run make`, or limit it to a particular OS:
+
+| OS      | Architecture | Command                   |
+|---------|--------------|---------------------------|
+| Windows |              | `yarn run make-win`       |
+| macOS   |              | `yarn run make-mac`       |
+| macOS   | x64          | `yarn run make-mac-intel` |
+| macOS   | arm64        | `yarn run make-mac-arm`   |
+| Linux   |              | `yarn run make-lin`       |
+
+See the `scripts` section of `package.json` for more scripts.
+
+### Development on Windows
+
+If you are using Windows, you will need `node-gyp` and `python3`:
+
+```sh
+# install python3 using winget
+# note that python 3.12 doesn't work
+winget install python.python.3.10.0
+
+# install node-gyp
+npm install -g node-gyp
+```
+
+If you are using WSL (with ubuntu), you will also need `libudev-dev`:
+
+```sm
+sudo apt-get install libudev-dev
+```
 
 ## Additional Information
+
 To get more information about our efforts, how Bazecor communicates with the Raise and the latest development news, please check the links below
 
 * [News](https://github.com/Dygmalab/Bazecor/blob/development/NEWS.md)

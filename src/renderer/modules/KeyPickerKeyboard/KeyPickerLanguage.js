@@ -61,13 +61,14 @@ import svSE from "@Renderer/modules/KeyPickerKeyboard/languages/sv/SE.json";
 
 // Dygma - Layouts (official/native)
 import isIS from "@Renderer/modules/KeyPickerKeyboard/languages/is/IS.json";
-import jaJP from "@Renderer/modules/KeyPickerKeyboard/languages/ja/JP.json"
+import jaJP from "@Renderer/modules/KeyPickerKeyboard/languages/ja/JP.json";
 import koKR from "@Renderer/modules/KeyPickerKeyboard/languages/ko/KR.json";
 import deCH from "@Renderer/modules/KeyPickerKeyboard/languages/de/CH.json";
 
 // Dygma - Layouts (community/third-party)
 import enXXeurkey from "@Renderer/modules/KeyPickerKeyboard/languages/en/XX-eurkey.json";
 import frXXbepo from "@Renderer/modules/KeyPickerKeyboard/languages/fr/XX-bepo.json";
+import frXXoptimot from "@Renderer/modules/KeyPickerKeyboard/languages/fr/XX-optimot.json";
 
 const languages = {
   // Keycaps
@@ -88,6 +89,7 @@ const languages = {
   // Community
   "en-XX-eurkey": enXXeurkey,
   "fr-XX-bepo": frXXbepo,
+  "fr-XX-optimot": frXXoptimot,
 };
 
 /**
