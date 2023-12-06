@@ -367,6 +367,7 @@ export default class StandardView extends React.Component {
                         keyCode={keyCode}
                         isStandardView={isStandardView}
                         actTab={actTab}
+                        disableMods={!!((keyIndex == 0 || keyIndex == 3) && actTab === "super")}
                       />
                     </Tab.Pane>
                     <Tab.Pane eventKey="tabMacro">

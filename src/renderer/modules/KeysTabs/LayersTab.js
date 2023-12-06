@@ -23,6 +23,10 @@ h4 {
 .cardButtons .groupButtons .button-config {
   padding: 8px 2px;
   width: 40px;
+
+  &[disabled] {
+    pointer-events: none;
+  }
 }
 .tabContentWrapper {
   width: 100%;
@@ -48,7 +52,7 @@ class LayersTab extends Component {
   }
 
   render() {
-    const { keyCode, isStandardView, actTab } = this.props;
+    const { keyCode, isStandardView, actTab, disableMods } = this.props;
     const layerDeltaSwitch = 17450;
     const layerDelta = 17492;
     return (
@@ -76,6 +80,7 @@ class LayersTab extends Component {
                   this.props.onLayerPress(layerDeltaSwitch + 0);
                 }}
                 selected={layerDeltaSwitch + 0 == keyCode}
+                disabled={disableMods}
               />
               <ButtonConfig
                 buttonText="2"
@@ -83,6 +88,7 @@ class LayersTab extends Component {
                   this.props.onLayerPress(layerDeltaSwitch + 1);
                 }}
                 selected={layerDeltaSwitch + 1 == keyCode}
+                disabled={disableMods}
               />
               <ButtonConfig
                 buttonText="3"
@@ -90,6 +96,7 @@ class LayersTab extends Component {
                   this.props.onLayerPress(layerDeltaSwitch + 2);
                 }}
                 selected={layerDeltaSwitch + 2 == keyCode}
+                disabled={disableMods}
               />
               <ButtonConfig
                 buttonText="4"
@@ -97,6 +104,7 @@ class LayersTab extends Component {
                   this.props.onLayerPress(layerDeltaSwitch + 3);
                 }}
                 selected={layerDeltaSwitch + 3 == keyCode}
+                disabled={disableMods}
               />
               <ButtonConfig
                 buttonText="5"
@@ -104,6 +112,7 @@ class LayersTab extends Component {
                   this.props.onLayerPress(layerDeltaSwitch + 4);
                 }}
                 selected={layerDeltaSwitch + 4 == keyCode}
+                disabled={disableMods}
               />
               <ButtonConfig
                 buttonText="6"
@@ -111,6 +120,7 @@ class LayersTab extends Component {
                   this.props.onLayerPress(layerDeltaSwitch + 5);
                 }}
                 selected={layerDeltaSwitch + 5 == keyCode}
+                disabled={disableMods}
               />
               <ButtonConfig
                 buttonText="7"
@@ -118,6 +128,7 @@ class LayersTab extends Component {
                   this.props.onLayerPress(layerDeltaSwitch + 6);
                 }}
                 selected={layerDeltaSwitch + 6 == keyCode}
+                disabled={disableMods}
               />
               <ButtonConfig
                 buttonText="8"
@@ -125,6 +136,7 @@ class LayersTab extends Component {
                   this.props.onLayerPress(layerDeltaSwitch + 7);
                 }}
                 selected={layerDeltaSwitch + 7 == keyCode}
+                disabled={disableMods}
               />
               <ButtonConfig
                 buttonText="9"
@@ -132,6 +144,7 @@ class LayersTab extends Component {
                   this.props.onLayerPress(layerDeltaSwitch + 8);
                 }}
                 selected={layerDeltaSwitch + 8 == keyCode}
+                disabled={disableMods}
               />
               <ButtonConfig
                 buttonText="10"
@@ -139,6 +152,7 @@ class LayersTab extends Component {
                   this.props.onLayerPress(layerDeltaSwitch + 9);
                 }}
                 selected={layerDeltaSwitch + 9 == keyCode}
+                disabled={disableMods}
               />
             </div>
           </div>
