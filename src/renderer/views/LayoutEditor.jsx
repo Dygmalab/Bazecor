@@ -1791,7 +1791,7 @@ function LayoutEditor(props) {
     setIsReadOnly(localIsReadOnly);
     setShowDefaults(localShowDefaults);
     setState({ ...state, currentLayer: cLayer });
-  }, [state]);
+  }, [state.keymap, state.currentLayer, state.macros, state.superkeys]);
 
   const {
     keymap,

@@ -109,6 +109,7 @@ interface NavigationMenuProps {
   allowBeta: boolean;
   loading: boolean;
   isSending: boolean;
+  inContext: boolean;
   setIsSending: () => void;
   pages: Pages;
 }
@@ -130,7 +131,7 @@ function NavigationMenu(props: NavigationMenuProps) {
   const [virtual, setVirtual] = useState(false);
   const location = useLocation();
   const currentPage = location.pathname;
-  const { connected, pages, fwUpdate, flashing, allowBeta, loading, setIsSending, isSending } = props;
+  const { connected, pages, fwUpdate, flashing, allowBeta, loading, setIsSending, isSending, inContext } = props;
 
   const getGitHubFW = useCallback(
     async (product: any) => {
