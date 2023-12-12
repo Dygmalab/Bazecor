@@ -344,7 +344,7 @@ function App() {
                 onDisconnect={onKeyboardDisconnect}
                 startContext={startContext}
                 cancelContext={cancelContext}
-                setLoadingData={setLoadingData}
+                setLoading={setLoadingData}
                 inContext={contextBar}
                 titleElement={() => document.querySelector("#page-title")}
               />
@@ -358,7 +358,7 @@ function App() {
                 onDisconnect={onKeyboardDisconnect}
                 startContext={startContext}
                 cancelContext={cancelContext}
-                setLoadingData={setLoadingData}
+                setLoading={setLoadingData}
                 inContext={contextBar}
                 titleElement={() => document.querySelector("#page-title")}
               />

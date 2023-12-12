@@ -114,6 +114,7 @@ function MacroEditor(props) {
     selectedList: -1,
     usedMemory: 0,
     totalMemory: 0,
+    macrosEraser: [],
     loading: true,
     currentLanguageLayout: store.get("settings.language") || "english",
     kbtype: "ansi",
@@ -630,6 +631,7 @@ function MacroEditor(props) {
       state.modified = false;
       state.usedMemory = parsedMacros.map(m => m.actions).flat().length;
       state.totalMemory = tMem;
+      state.macrosEraser = Array(tMem).fill("255").join(" ");
       state.loading = false;
       setState({ ...state });
       cancelContext();
@@ -647,22 +649,22 @@ function MacroEditor(props) {
   };
 
   const destroyThisContext = async () => {
-    const { setLoadingData } = props;
+    const { setLoading } = props;
     state.loading = true;
     setState({ ...state });
     await loadMacros();
     state.loading = false;
     setState({ ...state });
-    setLoadingData(state.loading);
+    setLoading(state.loading);
   };
 
   useEffect(() => {
     const macrosLoader = async () => {
-      const { setLoadingData } = props;
+      const { setLoading } = props;
       await loadMacros();
       state.loading = false;
       setState({ ...state });
-      setLoadingData(state.loading);
+      setLoading(state.loading);
     };
     macrosLoader();
   }, []);
@@ -840,7 +842,7 @@ function MacroEditor(props) {
 MacroEditor.propTypes = {
   startContext: PropTypes.func,
   onDisconnect: PropTypes.func,
-  setLoadingData: PropTypes.func,
+  setLoading: PropTypes.func,
   setLoading: PropTypes.func,
   cancelContext: PropTypes.func,
 };

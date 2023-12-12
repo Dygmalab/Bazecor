@@ -79,6 +79,7 @@ const GeneralSettings = (props: GeneralSettingsProps) => {
     germanF,
     frenchF,
     frenchF,
+    frenchF,
     swedishF,
     finnishF,
     danishF,
@@ -96,6 +97,7 @@ const GeneralSettings = (props: GeneralSettingsProps) => {
     "german",
     "french",
     "frenchBepo",
+    "frenchOptimot",
     "swedish",
     "finnish",
     "danish",
@@ -113,6 +115,7 @@ const GeneralSettings = (props: GeneralSettingsProps) => {
     "German",
     "French",
     "French Bépo",
+    "French Optimot",
     "Swedish",
     "Finnish",
     "Danish",
@@ -188,7 +191,7 @@ const GeneralSettings = (props: GeneralSettingsProps) => {
                     selectDarkMode={selectDarkMode}
                     value={darkMode}
                     listElements={layoutsModes}
-                    styles={"flex"}
+                    styles="flex"
                     size="sm"
                   />
                 </Form.Group>

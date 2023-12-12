@@ -505,7 +505,7 @@ const Preferences = (props: PreferencesProps) => {
                   selectDefaultLayer={selectDefaultLayer}
                   connected={connected}
                 />
-                <BackupSettings connected={connected} />
+                <BackupSettings connected={connected} neurons={neurons} neuronID={neuronID} />
                 <NeuronSettings
                   neurons={neurons}
                   selectedNeuron={selectedNeuron}

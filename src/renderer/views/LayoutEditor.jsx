@@ -1154,6 +1154,17 @@ function LayoutEditor(props) {
     const backup = await bkp.DoBackup(commands, state.neurons[state.neuronID].id, currentDevice);
     Backup.SaveBackup(backup, currentDevice);
     cancelContext();
+    toast.success(
+      <ToastMessage
+        title={i18n.success.changesSaved}
+        content={i18n.success.changesSavedContent}
+        icon={<IconArrowDownWithLine />}
+      />,
+      {
+        autoClose: 2000,
+        icon: "",
+      },
+    );
     setIsSaving(false);
     setIsSending(false);
     console.log("Changes saved.");
@@ -1304,7 +1315,7 @@ function LayoutEditor(props) {
 
   const importLayer = data => {
     const { startContext } = props;
-    if (data.palette.length > 0) state.palette = data.palette;
+    // if (data.palette.length > 0) state.palette = data.palette;
     setState({ ...state });
     const layerNames = state.layerNames.slice();
     const { currentLayer } = state;
@@ -1400,7 +1411,7 @@ function LayoutEditor(props) {
       let layers;
       try {
         layers = JSON.parse(fs.readFileSync(resp.filePaths[0]));
-        console.log(Array.isArray(layers.keymap));
+        console.log(layers, Array.isArray(layers.keymap));
         if (Array.isArray(layers.keymap)) {
           console.log(layers.keymap[0]);
           importLayer(layers);
@@ -1574,6 +1585,8 @@ function LayoutEditor(props) {
       newState.currentLedIndex = -1;
     } else {
       newState.modeselect = data;
+      newState.currentLedIndex = -1;
+      newState.selectedPaletteColor = null;
     }
     setState({ ...newState });
   };
@@ -1740,16 +1753,15 @@ function LayoutEditor(props) {
       localLayerData = localLayerData.map(key => {
         const newMKey = key;
         if (key.extraLabel === "MACRO") {
-          console.log("macro detected", macros, key);
+          const MNumber = key.keyCode - 53852;
           if (
-            macros.length > parseInt(key.label, 10) &&
-            macros[parseInt(key.label, 10)] !== undefined &&
-            macros[parseInt(key.label, 10)].name !== undefined &&
-            macros[parseInt(key.label, 10)].name.substr(0, 5) !== "" &&
+            macros[MNumber] !== undefined &&
+            macros[MNumber].name !== undefined &&
+            macros[MNumber].name.substr(0, 5) !== "" &&
             !/\p{L}/u.test(key.label)
           ) {
             console.log("macros:", macros);
-            newMKey.label = macros[parseInt(key.label, 10)].name.substr(0, 5);
+            newMKey.label = macros[MNumber].name.substr(0, 5);
           }
         }
         return newMKey;
@@ -1760,14 +1772,15 @@ function LayoutEditor(props) {
       localLayerData = localLayerData.map(key => {
         const newSKey = key;
         if (key.extraLabel === "SUPER") {
+          const SKNumber = key.keyCode - 53980;
           if (
-            superkeys.length > parseInt(key.label, 10) - 1 &&
-            superkeys[parseInt(key.label, 10) - 1] !== undefined &&
-            superkeys[parseInt(key.label, 10) - 1].name !== undefined &&
-            superkeys[parseInt(key.label, 10) - 1].name !== "" &&
+            superkeys.length > SKNumber &&
+            superkeys[SKNumber] !== undefined &&
+            superkeys[SKNumber].name !== undefined &&
+            superkeys[SKNumber].name !== "" &&
             !/\p{L}/u.test(key.label)
           ) {
-            newSKey.label = superkeys[parseInt(key.label, 10) - 1].name.substr(0, 5);
+            newSKey.label = superkeys[SKNumber].name.substr(0, 5);
           }
         }
         return newSKey;
@@ -1778,7 +1791,7 @@ function LayoutEditor(props) {
     setIsReadOnly(localIsReadOnly);
     setShowDefaults(localShowDefaults);
     setState({ ...state, currentLayer: cLayer });
-  }, [state.keymap, state.currentLayer, state.macros, state.superkeys]);
+  }, [state]);
 
   const {
     keymap,

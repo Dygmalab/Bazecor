@@ -291,17 +291,19 @@ function SuperkeysEditor(props) {
 
   const onKeyChange = keyCode => {
     const { superkeys, selectedSuper, selectedAction } = state;
+    const { startContext } = props;
     const newData = superkeys;
     newData[selectedSuper].actions[selectedAction] = keyCode;
     console.log("keyCode: ", keyCode);
     state.superkeys = newData;
     state.modified = true;
     setState({ ...state });
+    startContext();
   };
 
   const loadSuperkeys = async () => {
     const { currentDevice } = deviceState;
-    const { onDisconnect } = props;
+    const { onDisconnect, setLoading, cancelContext } = props;
     try {
       /**
        * Create property language to the object 'options', to call KeymapDB in Keymap and modify languagu layout
@@ -387,10 +389,15 @@ function SuperkeysEditor(props) {
       state.selectedSuper = 0;
       state.keymap = keymap;
       state.kbtype = kbtype;
+      setState({ ...state });
+      cancelContext();
+      setLoading(false);
     } catch (e) {
       console.log("error when loading SuperKeys");
       console.error(e);
       toast.error(e);
+      cancelContext();
+      setLoading(false);
       onDisconnect();
     }
     return true;
@@ -399,8 +406,8 @@ function SuperkeysEditor(props) {
   const superkeyMap = superkeys => {
     if (
       superkeys.length === 0 ||
-      (superkeys.length === 1 && superkeys[0].actions.lenght === 0) ||
-      (superkeys.length === 1 && superkeys[0].actions.lenght === 1 && superkeys[0].actions[0] === 0)
+      (superkeys.length === 1 && superkeys[0].actions.length === 0) ||
+      (superkeys.length === 1 && superkeys[0].actions.length === 1 && superkeys[0].actions[0] === 0)
     ) {
       return Array.from({ length: 512 }, 65535).join(" ");
     }
@@ -409,9 +416,10 @@ function SuperkeysEditor(props) {
     keyMap = keyMap.map(sky => {
       const sk = sky;
       sk.actions = sk.actions.map(act => {
-        if (act === 0 || act == null) return 1;
+        if (act === 0 || act === null || act === undefined) return 1;
         return act;
       });
+      if (sk.actions.length < 5) sk.actions = sk.actions.concat(Array(5 - sk.actions.length).fill("1"));
       return sk;
     });
     // console.log("Third", JSON.parse(JSON.stringify(keyMap)));
@@ -448,33 +456,40 @@ function SuperkeysEditor(props) {
   };
 
   const updateSuper = (newSuper, newID) => {
-    console.log("launched update super using data:", newSuper, newID);
+    const { startContext } = props;
+    // console.log("launched update super using data:", newSuper, newID);
     state.superkeys = newSuper;
     state.selectedSuper = newID;
     state.modified = true;
     setState({ ...state });
+    startContext();
   };
 
   const updateAction = (actionNumber, newAction) => {
+    const { startContext } = props;
     const { superkeys, selectedSuper } = state;
-    console.log("launched update action using data:", newAction);
+    // console.log("launched update action using data:", newAction);
     const newData = superkeys;
     newData[selectedSuper].actions[actionNumber] = newAction;
     state.superkeys = newData;
     state.selectedAction = actionNumber;
     state.modified = true;
     setState({ ...state });
+    startContext();
   };
 
   const saveName = name => {
+    const { startContext } = props;
     const { superkeys, selectedSuper } = state;
     superkeys[selectedSuper].name = name;
     state.superkeys = superkeys;
     state.modified = true;
     setState({ ...state });
+    startContext();
   };
 
   const writeSuper = async () => {
+    const { setLoading, cancelContext } = props;
     const { superkeys, modifiedKeymap, keymap, neurons, neuronID } = state;
     setIsSaving(true);
     const { currentDevice } = deviceState;
@@ -499,8 +514,12 @@ function SuperkeysEditor(props) {
         autoClose: 2000,
         icon: "",
       });
+      cancelContext();
+      setLoading(false);
     } catch (error) {
       toast.error(error);
+      cancelContext();
+      setLoading(false);
     }
     setIsSaving(false);
   };
@@ -514,6 +533,7 @@ function SuperkeysEditor(props) {
   };
 
   const SortSK = (newSuper, newID) => {
+    const { startContext } = props;
     const { keymap, selectedSuper, superkeys } = state;
     let listToDecrease = [];
     for (const key of superkeys.slice(selectedSuper + 1)) {
@@ -541,6 +561,7 @@ function SuperkeysEditor(props) {
     state.modified = true;
     state.modifiedKeymap = true;
     setState({ ...state });
+    startContext();
     toggleDeleteModal();
   };
 
@@ -576,8 +597,8 @@ function SuperkeysEditor(props) {
   };
 
   const RemoveDeletedSK = () => {
-    const { keymap } = state;
-    const { selectedSuper, superkeys, listToDelete, futureSK, futureSSK } = state;
+    const { startContext } = props;
+    const { keymap, selectedSuper, superkeys, listToDelete, futureSK, futureSSK } = state;
     let listToDecrease = [];
     for (const key of superkeys.slice(selectedSuper + 1)) {
       listToDecrease.push(
@@ -607,6 +628,7 @@ function SuperkeysEditor(props) {
     state.modified = true;
     state.modifiedKeymap = true;
     setState({ ...state });
+    startContext();
     toggleDeleteModal();
   };
 
@@ -651,6 +673,7 @@ function SuperkeysEditor(props) {
     const aux = { ...superkeys[selectedSuper] };
     aux.id = superkeys.length;
     aux.name = `Copy of ${aux.name}`;
+    aux.actions = [...aux.actions];
     superkeys.push(aux);
     updateSuper(superkeys, -1);
     changeSelected(aux.id);
@@ -681,25 +704,25 @@ function SuperkeysEditor(props) {
 
   useEffect(() => {
     const getInitialData = async () => {
-      const { setLoadingData } = props;
+      const { setLoading } = props;
       await loadSuperkeys();
       await configStandarView();
       state.loading = false;
       setState({ ...state });
-      setLoadingData(state.loading);
+      setLoading(state.loading);
     };
     getInitialData();
   }, []);
 
   const destroyThisContext = async () => {
-    const { setLoadingData } = props;
+    const { setLoading } = props;
     state.loading = true;
     setState({ ...state });
     await loadSuperkeys();
     await configStandarView();
     state.loading = false;
     setState({ ...state });
-    setLoadingData(state.loading);
+    setLoading(state.loading);
   };
 
   const {
@@ -852,7 +875,10 @@ function SuperkeysEditor(props) {
 
 SuperkeysEditor.propTypes = {
   onDisconnect: PropTypes.func,
-  setLoadingData: PropTypes.func,
+  setLoading: PropTypes.func,
+  startContext: PropTypes.func,
+  cancelContext: PropTypes.func,
+  setLoading: PropTypes.func,
 };
 
 export default SuperkeysEditor;
