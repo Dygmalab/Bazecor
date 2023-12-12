@@ -207,6 +207,7 @@ const SelectKeyboard: React.FC<SelectKeyboardProps> = (props): JSX.Element => {
     try {
       const list = await DeviceTools.list();
       dispatch({ type: "addDevicesList", payload: list });
+      console.log("Devices Available:", list);
       setIsLoading(false);
       setDevices(list);
       return list;
