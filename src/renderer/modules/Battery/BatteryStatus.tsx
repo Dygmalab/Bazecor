@@ -107,7 +107,7 @@ const Style = Styled.div`
 }
 .batteryLoader {
   width: 206px;
-  height: 176px;
+  height: 127px;
   text-align: center;
   display: grid;
   align-items: center;
