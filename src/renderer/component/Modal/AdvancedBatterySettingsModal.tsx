@@ -157,12 +157,7 @@ function AdvancedBatterySettingsModal(props: AdvancedEnergyManagementProps) {
               <Col sm={8} lg={5}>
                 <Title text={i18n.wireless.energyManagement.settings.trueSleepEnablingDesc} headingLevel={6} />
               </Col>
-              <Form.Check
-                type="switch"
-                id="toggleLayerHighlight"
-                checked={wireless.true_sleep === true}
-                onChange={setTrueSleep}
-              />
+              <Form.Check type="switch" id="toggleTrueSleep" checked={wireless.true_sleep === true} onChange={setTrueSleep} />
             </Row>
             <Row className="card-preferences--option justify-between">
               <Col lg={5}>
