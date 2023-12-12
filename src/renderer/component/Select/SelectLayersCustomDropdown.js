@@ -35,7 +35,7 @@ width: 100%;
     position: relative;
     .badge-circle {
       width: 8px;
-      height: 8px; 
+      height: 8px;
       border-radius: 50%;
       background-color: rgba(254,0,124,1);
       position: absolute;
@@ -59,7 +59,7 @@ width: 100%;
     margin-top: 0;
     padding: 12px 16px;
   }
-  
+
   .dropdown-menu.large-dropdown {
       min-width: 362px;
       &.show {
@@ -67,7 +67,7 @@ width: 100%;
       }
   }
   .large-dropdown-inner {
-    
+
   }
   .dropdownHeader {
     font-size: 12px;
@@ -103,7 +103,7 @@ width: 100%;
     flex-wrap: nowrap;
     padding: 2px 4px;
     border-radius: 6px;
-    background-color: ${({ theme }) => theme.styles.cardButtons.groupButtonsBackground}; 
+    background-color: ${({ theme }) => theme.styles.cardButtons.groupButtonsBackground};
 }
 
 .dropdown-item.dropdown-config-button {
@@ -118,7 +118,7 @@ width: 100%;
     letter-spacing: -0.03em;
     padding: 8px 0;
     border: ${({ theme }) => theme.styles.button.config.border};
-    color: ${({ theme }) => theme.styles.button.config.color}; 
+    color: ${({ theme }) => theme.styles.button.config.color};
     background: ${({ theme }) => theme.styles.button.config.background};
     border: none;
     border-radius: 6px;
@@ -130,12 +130,12 @@ width: 100%;
     }
     &:hover {
         cursor: pointer;
-        color: ${({ theme }) => theme.styles.button.config.colorHover}; 
+        color: ${({ theme }) => theme.styles.button.config.colorHover};
         background: ${({ theme }) => theme.styles.button.config.backgroundHover};
         box-shadow: ${({ theme }) => theme.styles.button.config.boxShadowHover};
     }
     &.active {
-        color: ${({ theme }) => theme.styles.button.config.colorActive}; 
+        color: ${({ theme }) => theme.styles.button.config.colorActive};
         background: ${({ theme }) => theme.styles.button.config.backgroundActive};
         box-shadow: ${({ theme }) => theme.styles.button.config.boxShadowActive};
     }
@@ -173,7 +173,7 @@ class SelectLayersCustomDropdown extends Component {
   }
 
   render() {
-    const { action, keyCode, onKeySelect, activeTab } = this.props;
+    const { action, keyCode, onKeySelect, activeTab, disableMods } = this.props;
     const KC = keyCode.base + keyCode.modified;
 
     return (
@@ -187,7 +187,7 @@ class SelectLayersCustomDropdown extends Component {
               this.layerSwitch.map(i => i.keynum).includes(keyCode.base + keyCode.modified))
               ? "active"
               : ""
-          } ${action == 1 || action == 2 || action == 4 ? "disabled" : ""}`}
+          }`}
         >
           <Dropdown.Toggle id="dropdown-custom" className="button-config-style">
             <div className="dropdownItemSelected">
@@ -199,7 +199,7 @@ class SelectLayersCustomDropdown extends Component {
           </Dropdown.Toggle>
           <Dropdown.Menu className="large-dropdown">
             <div className="large-dropdown-inner">
-              <div className={`dropdown-group ${activeTab == "super" ? "disabled" : ""}`}>
+              <div className={`dropdown-group ${activeTab == "super" ? "" : ""}`}>
                 <div className="dropdownHeader">
                   Layer <strong>Shift</strong>
                 </div>
@@ -208,7 +208,7 @@ class SelectLayersCustomDropdown extends Component {
                     <Dropdown.Item
                       eventKey={item.keynum}
                       key={`layerSwitch-${id}`}
-                      disabled={activeTab == "super" ? true : item.keynum == -1}
+                      disabled={disableMods ? true : item.keynum == -1}
                       className={`${
                         keyCode.modified > 0 && item.keynum == keyCode.base + keyCode.modified ? "active" : ""
                       } dropdown-config-button`}

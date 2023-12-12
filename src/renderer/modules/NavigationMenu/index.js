@@ -16,4 +16,4 @@
 
 import Header from "./NavigationMenuWrapper";
 
-export { Header as default };
+export default Header;

@@ -25,18 +25,21 @@ import "bootstrap-css-only/css/bootstrap.min.css";
 import "@appigram/react-rangeslider/lib/index.css";
 import i18n from "./i18n";
 import { DeviceProvider } from "./DeviceContext";
+import ErrorBoundary from "./ErrorBoundary";
 
 const container = document.getElementById("root");
 const root = createRoot(container);
 try {
   root.render(
-    <MemoryRouter>
-      <DeviceProvider>
-        <I18nextProvider i18n={i18n}>
-          <App />
-        </I18nextProvider>
-      </DeviceProvider>
-    </MemoryRouter>,
+    <ErrorBoundary>
+      <MemoryRouter>
+        <DeviceProvider>
+          <I18nextProvider i18n={i18n}>
+            <App />
+          </I18nextProvider>
+        </DeviceProvider>
+      </MemoryRouter>
+    </ErrorBoundary>,
   );
 } catch (e) {
   root.render(<Error error={e} />);

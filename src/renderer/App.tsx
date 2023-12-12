@@ -31,6 +31,7 @@ import GlobalStyles from "@Renderer/theme/GlobalStyles";
 import Light from "@Renderer/theme/LightTheme";
 import Dark from "@Renderer/theme/DarkTheme";
 
+import Header from "@Renderer/modules/NavigationMenu";
 import SelectKeyboard from "@Renderer/views/NewSelectKeyboard";
 import FirmwareUpdate from "@Renderer/views/FirmwareUpdate";
 import LayoutEditor from "@Renderer/views/LayoutEditor";
@@ -51,7 +52,6 @@ import "../api/keymap";
 import "../api/colormap";
 import { useDevice } from "./DeviceContext";
 import Device from "../api/comms/Device";
-import Header from "./modules/NavigationMenu";
 
 const store = Store.getStore();
 
@@ -312,6 +312,7 @@ function App() {
                 onConnect={onKeyboardConnect}
                 onDisconnect={onKeyboardDisconnect}
                 titleElement={() => document.querySelector("#page-title")}
+                setLoadingData={setLoadingData}
                 device={device}
                 darkMode={darkMode}
               />
@@ -388,6 +389,7 @@ function App() {
                 startContext={startContext}
                 cancelContext={cancelContext}
                 updateAllowBeta={updateAllowBeta}
+                setLoadingData={setLoadingData}
                 allowBeta={allowBeta}
                 inContext={contextBar}
               />
@@ -405,6 +407,7 @@ function App() {
                 startContext={startContext}
                 cancelContext={cancelContext}
                 updateAllowBeta={updateAllowBeta}
+                setLoadingData={setLoadingData}
                 allowBeta={allowBeta}
                 inContext={contextBar}
               />

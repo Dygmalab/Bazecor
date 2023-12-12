@@ -155,8 +155,16 @@ const Dark: DefaultTheme = {
       textColor: Tokens.colors.gray25,
       dangerLowBG: settingColorOpacity(Tokens.colors.brandPrimary, 0.35),
       dangerLowText: Tokens.colors.gray50,
+      warningBG: settingColorOpacity(Tokens.colors.brandWarning, 0.35),
+      warningText: Tokens.colors.gray50,
       subtleColor: Tokens.colors.gray100,
       subtleBGColor: Tokens.colors.gray700,
+    },
+    banner: {
+      backgroundWarning:
+        "linear-gradient(0deg, rgba(254, 202, 87, 0.08) 0%, rgba(254, 202, 87, 0.08) 100%), rgba(63, 66, 90, 0.02)",
+      textWarning: Tokens.colors.gray100,
+      svgBackgroundWarning: "rgba(254, 202, 87, 0.15)",
     },
     batteryIndicator: {
       pileBackgroundColor: Tokens.colors.gray800,
@@ -282,6 +290,11 @@ const Dark: DefaultTheme = {
         borderColor: Tokens.colors.brandPrimary,
         borderColorResume: Tokens.colors.gray700,
         color: Tokens.colors.brandPrimary,
+      },
+      navButton: {
+        color: Tokens.colors.gray25,
+        background: settingColorOpacity(Tokens.colors.gray600, 0.5),
+        backgroundHover: settingColorOpacity(Tokens.colors.gray600, 0.85),
       },
     },
     colorPanel: {

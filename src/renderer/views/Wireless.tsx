@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-no-bind */
 // General imports
 import React, { useState, useEffect } from "react";
 
@@ -63,6 +64,8 @@ const initialWireless = {
   brightnessUG: 0,
   fade: 0,
   idleleds: 0,
+  true_sleep: false,
+  true_sleep_time: 0,
 };
 
 const Wireless = (props: WirelessPropsInterface) => {
@@ -71,9 +74,10 @@ const Wireless = (props: WirelessPropsInterface) => {
   const [state] = useDevice();
   const [wireless, setWireless] = useState<WirelessInterface>(initialWireless);
   const [modified, setModified] = useState(false);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLocalLoading] = useState(true);
 
   async function getWirelessPreferences() {
+    setIsSaving(true);
     // Battery commands
     if (state.currentDevice) {
       await state.currentDevice.command("wireless.battery.left.level").then((batteryLevel: string) => {
@@ -139,7 +143,8 @@ const Wireless = (props: WirelessPropsInterface) => {
     }
 
     setWireless(wireless);
-    setLoading(false);
+    setLocalLoading(false);
+    setIsSaving(false);
   }
 
   useEffect(() => {
@@ -183,9 +188,16 @@ const Wireless = (props: WirelessPropsInterface) => {
       await state.currentDevice.command("led.fade", wireless.fade);
       await state.currentDevice.command("idleleds.wireless", wireless.idleleds);
 
+      await state.currentDevice.command("led.brightness.wireless", wireless.brightness);
+      await state.currentDevice.command("led.brightnessUG.wireless", wireless.brightnessUG);
+      await state.currentDevice.command("led.fade", wireless.fade);
+      await state.currentDevice.command("idleleds.wireless", wireless.idleleds);
+      await state.currentDevice.command("idleleds.true_sleep", wireless.true_sleep ? 1 : 0);
+      await state.currentDevice.command("idleleds.true_sleep_time", wireless.true_sleep_time);
+
+      setIsSaving(false);
       destroyContext();
     }
-    setIsSaving(false);
   }
 
   if (loading) <LogoLoader />;

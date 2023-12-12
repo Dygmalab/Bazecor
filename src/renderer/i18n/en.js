@@ -28,10 +28,15 @@ const English = {
     preferenceFailOnSaveBody: "Please try again.",
     dismiss: "Dismiss",
     troubleshooting: "Troubleshooting",
+    alertUnsavedTitle: "Unsaved changes",
+    alertUnsavedDescription:
+      "<p style='font-weight:401;'>You have made changes that haven't been saved yet.</p><p>Save or discard them before leaving.</p>",
   },
   success: {
     preferencesSaved: "Your preferences have been saved.",
     preferencesSavedBody: "",
+    changesSaved: "Changes saved successfully",
+    changesSavedContent: "Your changes were saved successfully on the device!",
   },
   components: {
     layer: "Layer {0}",
@@ -498,7 +503,12 @@ const English = {
         maximumLEDUnderglow: "Maximum Underglow intensity while the device is NOT connected by cable",
         idleLedsTime: "time to turn off LEDs when waiting while the device is NOT connected by cable",
         highBatteryImpact: "High battery impact",
+        mediumBatteryImpact: "Medium battery impact",
         lowBatteryImpact: "Low battery impact",
+        trueSleepEnabling: "True sleep of sides",
+        trueSleepEnablingDesc:
+          "True sleep will put your sides in deep sleep (they will require a physical key press to awake), this mode saves a moderate amount of battery when the keyboard is idle for long periods, like at night.",
+        trueSleepTimeDesc: "True sleep Time control that sets the time it takes to activate true sleep after LEDs are turned off",
         highlightLayerChanging: "Highlight layer changing",
         highlightLayerChangingDesc:
           "Adjust underglow and backlight intensity as you switch layers. The maximum intensity smoothly fades to a lower level.",
@@ -614,9 +624,10 @@ const English = {
       waitforsub: " - time from 0 to 65,534 milliseconds",
       holdstart: "Superkeys - Hold timeout",
       holdstartsub: " - time from 0 to 65,534 milliseconds",
-      overlap:
-        "Adjust percentage that changes the way the hold function will trigger depending on the typing speed of the previous normal key",
-      overlapsub: " - Percentage from 0 to 100",
+      overlap: "Superkeys - OverlapThreshold",
+      overlapTip1: "This setting determines the overlap between the current and the next key press when using superkeys.",
+      overlapTip2: "With a low value, you will be able to chord better as it will not overlap the key presses.",
+      overlapTip3: "With a high value, the overlap is more responsive so it detects the superkey as being intercepted easier.",
     },
     mouse: {
       title: "Mouse keys",
@@ -673,7 +684,7 @@ const English = {
       buttonLabel: "Select",
       buttonLabelSave: "Save",
       errorLoadingFile: "The file is not a valid virtual keyboard nor Backup",
-      backupTransform: "The selected file is a Backup, do you want to transform it into a virtual keyboard",
+      backupTransform: "The selected file is a Backup. Do you want to transform it into a virtual keyboard",
     },
   },
   firmwareUpdate: {
@@ -689,7 +700,8 @@ const English = {
       letsStart: "Let's start",
       versionUpdatedTitle: "Your firmware is up to date 🤙",
       versionOutdatedTitle: "New update is available",
-      calloutIntroText: "Updating your device firmware is how we implement new cool features and bug fixes.",
+      calloutIntroText:
+        "Updating your device firmware is how we implement new cool features and bug fixes.<br><br>Make sure your keyboard is connected directly to your computer; no hubs or KVMs, please. And don't leave the app while flashing 😊",
       neuronUpdatedText: "[Solid as a rock!]",
       neuronOutdatedText: "[Almost is never enough]",
       versionExists: "Device Firmware Update",
@@ -706,6 +718,8 @@ const English = {
         "<strong>Before the update the Neuron will backup your layers and settings after that the update process will begin automatically.</strong>",
       disclaimerContent2:
         "If the firmware update process isn't successful, don't worry. It won't damage your device, but you will need to repeat the process.",
+      disclaimerContent3:
+        "⚠️ If your layers are not automatically restored, don't worry, you can restore a backup from the preference menu.",
       disclaimerCard3: "Click Next to backup your layers and settings, and start the firmware update process.",
       errorTitle: "Oops! Review the following before continuing",
       errorMissingCables: "Connect both sides using cables and try again.",
@@ -725,8 +739,8 @@ const English = {
       flashCardOverlay3: "in order for the Firmware to be loaded. This is for security reasons.",
       flashCardOverlay4: "The update process is designed so that it will never be triggered accidentally.",
       flashCardOverlay5: "This makes the keyboard secure against undesired firmware modifications.",
-      noInternetConncetion:
-        "We were unable to download the firmware you requested. Please, check your internet connection or try again later.",
+      noInternetConnection:
+        "We were unable to download the firmware you requested from GitHub. Please, check your internet connection and GitHub's status or try again later.",
       progressCardStatus1: "1. Hold the Key",
       progressCardStatus2: "2. Release the Key. Updating the Firmware",
       progressCardStatus3: "3. Restoring your Layers",

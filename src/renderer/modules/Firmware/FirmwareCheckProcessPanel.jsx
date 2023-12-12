@@ -16,6 +16,7 @@
  */
 
 import React, { useState, useEffect } from "react";
+import PropTypes from "prop-types";
 import Styled from "styled-components";
 import { useMachine } from "@xstate/react";
 import { useDevice } from "@Renderer/DeviceContext";
@@ -31,7 +32,8 @@ import { RegularButton } from "@Renderer/component/Button";
 import { FirmwareLoader } from "@Renderer/component/Loader";
 import AccordionFirmware from "@Renderer/component/Accordion/AccordionFirmware";
 
-import { FirmwareNeuronStatus, FirmwareWarningList } from "../Firmware";
+import FirmwareNeuronStatus from "./FirmwareNeuronStatus";
+import FirmwareWarningList from "./FirmwareWarningList";
 
 const Style = Styled.div`
 width: 100%;
@@ -180,12 +182,12 @@ function FirmwareCheckProcessPanel(props) {
     const newValue = ["sideLeftOk", "sideLeftBL", "sideRightOK", "sideRightBL", "backup"].map((text, index) => {
       let checked = text.includes("BL") ? !state.context[text] : state.context[text];
       if (text === "backup") {
-        checked = state.context.backup !== undefined ? true : false;
+        checked = state.context.backup !== undefined;
       }
       // console.log(text, state.context[text], String(state.context[text]), String(state.context[text]).includes("true"), checked);
-      return { id: index, text: text, checked };
+      return { id: index, text, checked };
     });
-    console.log("Setting checks", newValue);
+    // console.log("Setting checks", newValue);
     setlistItems(newValue);
   }, [state.context]);
 
@@ -194,7 +196,7 @@ function FirmwareCheckProcessPanel(props) {
       {loading ? (
         <FirmwareLoader />
       ) : (
-        <>
+        <div>
           {state.context.device.info.product !== "Raise" ? (
             <div className="firmware-wrapper disclaimer-firmware">
               <div className="firmware-row">
@@ -212,8 +214,12 @@ function FirmwareCheckProcessPanel(props) {
                     {state.context.sideLeftOk && state.context.sideRightOK ? (
                       <>
                         <div
-                          className={"disclaimerContent"}
+                          className="disclaimerContent"
                           dangerouslySetInnerHTML={{ __html: i18n.firmwareUpdate.texts.disclaimerContent }}
+                        />
+                        <div
+                          className="disclaimerContent"
+                          dangerouslySetInnerHTML={{ __html: i18n.firmwareUpdate.texts.disclaimerContent3 }}
                         />
                         <Callout content={i18n.firmwareUpdate.texts.disclaimerContent2} size="sm" className="mt-lg" />
                       </>
@@ -280,10 +286,17 @@ function FirmwareCheckProcessPanel(props) {
           ) : (
             ""
           )}
-        </>
+        </div>
       )}
     </Style>
   );
 }
+
+FirmwareCheckProcessPanel.propTypes = {
+  nextBlock: PropTypes.func,
+  retryBlock: PropTypes.func,
+  errorBlock: PropTypes.func,
+  context: PropTypes.object,
+};
 
 export default FirmwareCheckProcessPanel;

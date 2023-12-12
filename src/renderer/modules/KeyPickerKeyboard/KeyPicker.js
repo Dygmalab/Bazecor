@@ -88,7 +88,9 @@ import ENi from "@Renderer/modules/KeyPickerKeyboard/ENi.json";
 import ENa from "@Renderer/modules/KeyPickerKeyboard/ENa.json";
 import GR from "@Renderer/modules/KeyPickerKeyboard/GR.json";
 import FR from "@Renderer/modules/KeyPickerKeyboard/FR.json";
+import UK from "@Renderer/modules/KeyPickerKeyboard/UK.json";
 import FRBEPO from "@Renderer/modules/KeyPickerKeyboard/FR-BEPO.json";
+import FROPTIMOT from "@Renderer/modules/KeyPickerKeyboard/FR-OPTIMOT.json";
 import SW from "@Renderer/modules/KeyPickerKeyboard/SW.json";
 import DN from "@Renderer/modules/KeyPickerKeyboard/DN.json";
 import NW from "@Renderer/modules/KeyPickerKeyboard/NW.json";
@@ -400,11 +402,12 @@ class KeyPicker extends Component {
 
     const liso = {
       english: ENi,
-      british: ENi,
+      british: UK,
       spanish: ES,
       german: GR,
       french: FR,
       frenchBepo: FRBEPO,
+      frenchOptimot: FROPTIMOT,
       swedish: SW,
       finnish: SW,
       danish: DN,
@@ -648,7 +651,13 @@ class KeyPicker extends Component {
                 <IconLayersSm />
               </div>
               <div className="keysButtonsList">
-                <SelectLayersCustomDropdown action={action} activeTab={activeTab} keyCode={code} onKeySelect={onKeySelect} />
+                <SelectLayersCustomDropdown
+                  action={action}
+                  activeTab={activeTab}
+                  keyCode={code}
+                  onKeySelect={onKeySelect}
+                  disableMods={disableMods}
+                />
               </div>
             </div>
             {isWireless && (

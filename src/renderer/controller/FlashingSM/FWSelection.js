@@ -44,15 +44,16 @@ const loadAvailableFirmwareVersions = async allowBeta => {
       const { body } = release;
       const assets = [];
       const newRelease = { name, version, body, assets };
-      release.assets.forEach(asset => {
-        newRelease.assets.push({
-          name: asset.name,
-          url: asset.browser_download_url,
+      if (release?.assets !== undefined)
+        release.assets.forEach(asset => {
+          newRelease.assets.push({
+            name: asset.name,
+            url: asset.browser_download_url,
+          });
+          // console.log([asset.name, asset.browser_download_url]);
         });
-        // console.log([asset.name, asset.browser_download_url]);
-      });
       // console.log(newRelease);
-      if (allowBeta || !newRelease.version.includes("beta")) {
+      if (newRelease.assets.length > 0 && (allowBeta || !newRelease.version.includes("beta"))) {
         Releases.push(newRelease);
       }
     });
@@ -71,15 +72,14 @@ const GitHubRead = async context => {
   let isBeta;
   try {
     const fwReleases = await loadAvailableFirmwareVersions(context.device.bootloader ? false : context.allowBeta);
-    console.log("final releases: ", fwReleases, context.device.info);
     finalReleases = fwReleases.filter(
       release =>
         release.name === context.device.info.product &&
-        (context.device.info.product === "Defy" ? SemVer.satisfies(release.version, FWMAJORVERSION) : true),
+        (context.device.info.product === "Defy"
+          ? SemVer.satisfies(release.version, FWMAJORVERSION, { includePrerelease: true })
+          : true),
     );
-    if (finalReleases.length > 1) {
-      finalReleases.sort((a, b) => (SemVer.lt(SemVer.clean(a.version), SemVer.clean(b.version)) ? 1 : -1));
-    }
+    finalReleases.sort((a, b) => (SemVer.lt(SemVer.clean(a.version), SemVer.clean(b.version)) ? 1 : -1));
     if (context.device.bootloader) return { firmwareList: finalReleases, isUpdated: false, isBeta: false };
     isUpdated = context.device.version === finalReleases[0].version;
     isBeta = context.device.version.includes("beta");
@@ -297,7 +297,12 @@ const SelectionSM = createMachine({
           downloadFirmware(context.typeSelected, context.device.info, context.firmwareList, context.selectedFirmware),
         onDone: {
           target: "success",
-          actions: [assign({ firmwares: (context, event) => event.data })],
+          actions: [
+            assign({ firmwares: (context, event) => event.data }),
+            (context, event) => {
+              console.log("DOWNLOADED FW", event.data);
+            },
+          ],
         },
         onError: {
           target: "failure",

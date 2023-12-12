@@ -218,7 +218,7 @@
     "content": {
       "type": "specialBlock",
       "first": "Print",
-      "second": "Screen",
+      "second": "Scr",
       "third": "",
       "fourth": ""
     }
@@ -250,7 +250,7 @@
     "content": {
       "type": "specialBlock",
       "first": "Pause",
-      "second": "",
+      "second": "Break",
       "third": "",
       "fourth": ""
     }
@@ -330,8 +330,8 @@
     "content": {
       "type": "1U",
       "first": "`",
-      "second": "~",
-      "third": "ﾛ",
+      "second": "¬",
+      "third": "¦",
       "fourth": ""
     }
   },
@@ -347,7 +347,7 @@
       "type": "1U",
       "first": "1",
       "second": "!",
-      "third": "ﾇ",
+      "third": "",
       "fourth": ""
     }
   },
@@ -362,8 +362,8 @@
     "content": {
       "type": "1U",
       "first": "2",
-      "second": "@",
-      "third": "ﾌ",
+      "second": "\"",
+      "third": "",
       "fourth": ""
     }
   },
@@ -378,8 +378,8 @@
     "content": {
       "type": "1U",
       "first": "3",
-      "second": "#",
-      "third": "ｱ",
+      "second": "£",
+      "third": "",
       "fourth": ""
     }
   },
@@ -395,7 +395,7 @@
       "type": "1U",
       "first": "4",
       "second": "$",
-      "third": "ｳ",
+      "third": "€",
       "fourth": ""
     }
   },
@@ -411,7 +411,7 @@
       "type": "1U",
       "first": "5",
       "second": "%",
-      "third": "ｴ",
+      "third": "",
       "fourth": ""
     }
   },
@@ -427,7 +427,7 @@
       "type": "1U",
       "first": "6",
       "second": "^",
-      "third": "ｵ",
+      "third": "",
       "fourth": ""
     }
   },
@@ -443,7 +443,7 @@
       "type": "1U",
       "first": "7",
       "second": "&",
-      "third": "ﾔ",
+      "third": "",
       "fourth": ""
     }
   },
@@ -459,7 +459,7 @@
       "type": "1U",
       "first": "8",
       "second": "*",
-      "third": "ﾕ",
+      "third": "",
       "fourth": ""
     }
   },
@@ -475,7 +475,7 @@
       "type": "1U",
       "first": "9",
       "second": "(",
-      "third": "ﾖ",
+      "third": "",
       "fourth": ""
     }
   },
@@ -491,8 +491,8 @@
       "type": "1U",
       "first": "0",
       "second": ")",
-      "third": "ｦ",
-      "fourth": "ﾜ"
+      "third": "",
+      "fourth": ""
     }
   },
   {
@@ -507,8 +507,8 @@
       "type": "1U",
       "first": "-",
       "second": "_",
-      "third": "ﾎ",
-      "fourth": "ｰ"
+      "third": "",
+      "fourth": ""
     }
   },
   {
@@ -523,7 +523,7 @@
       "type": "1U",
       "first": "=",
       "second": "+",
-      "third": "ﾍ",
+      "third": "",
       "fourth": ""
     }
   },
@@ -533,6 +533,7 @@
     "y": 38,
     "centered": true,
     "icon": true,
+    "iconsize": 16,
     "iconx": 655,
     "icony": 40,
     "idArray": "",
@@ -687,7 +688,7 @@
     "content": {
       "type": "1U",
       "first": "Q",
-      "second": "ﾀ",
+      "second": "",
       "third": "",
       "fourth": ""
     }
@@ -703,7 +704,7 @@
     "content": {
       "type": "1U",
       "first": "W",
-      "second": "ﾃ",
+      "second": "",
       "third": "",
       "fourth": ""
     }
@@ -719,7 +720,7 @@
     "content": {
       "type": "1U",
       "first": "E",
-      "second": "ｲ",
+      "second": "",
       "third": "",
       "fourth": ""
     }
@@ -735,7 +736,7 @@
     "content": {
       "type": "1U",
       "first": "R",
-      "second": "ｽ",
+      "second": "",
       "third": "",
       "fourth": ""
     }
@@ -751,7 +752,7 @@
     "content": {
       "type": "1U",
       "first": "T",
-      "second": "ｶ",
+      "second": "",
       "third": "",
       "fourth": ""
     }
@@ -767,7 +768,7 @@
     "content": {
       "type": "1U",
       "first": "Y",
-      "second": "ﾝ",
+      "second": "",
       "third": "",
       "fourth": ""
     }
@@ -783,7 +784,7 @@
     "content": {
       "type": "1U",
       "first": "U",
-      "second": "ﾅ",
+      "second": "",
       "third": "",
       "fourth": ""
     }
@@ -799,7 +800,7 @@
     "content": {
       "type": "1U",
       "first": "I",
-      "second": "ﾆ",
+      "second": "",
       "third": "",
       "fourth": ""
     }
@@ -815,7 +816,7 @@
     "content": {
       "type": "1U",
       "first": "O",
-      "second": "ﾗ",
+      "second": "",
       "third": "",
       "fourth": ""
     }
@@ -831,7 +832,7 @@
     "content": {
       "type": "1U",
       "first": "P",
-      "second": "ｾ",
+      "second": "",
       "third": "",
       "fourth": ""
     }
@@ -848,8 +849,8 @@
       "type": "1U",
       "first": "[",
       "second": "{",
-      "third": "ﾞ",
-      "fourth": "｢"
+      "third": "",
+      "fourth": ""
     }
   },
   {
@@ -864,8 +865,8 @@
       "type": "1U",
       "first": "]",
       "second": "}",
-      "third": "ﾟ",
-      "fourth": "｣"
+      "third": "",
+      "fourth": ""
     }
   },
   {
@@ -965,7 +966,7 @@
     "content": {
       "type": "1U",
       "first": "A",
-      "second": "ﾁ",
+      "second": "",
       "third": "",
       "fourth": ""
     }
@@ -981,7 +982,7 @@
     "content": {
       "type": "1U",
       "first": "S",
-      "second": "ﾄ",
+      "second": "",
       "third": "",
       "fourth": ""
     }
@@ -997,7 +998,7 @@
     "content": {
       "type": "1U",
       "first": "D",
-      "second": "ｼ",
+      "second": "",
       "third": "",
       "fourth": ""
     }
@@ -1013,7 +1014,7 @@
     "content": {
       "type": "1U",
       "first": "F",
-      "second": "ﾊ",
+      "second": "",
       "third": "",
       "fourth": ""
     }
@@ -1029,7 +1030,7 @@
     "content": {
       "type": "1U",
       "first": "G",
-      "second": "ｷ",
+      "second": "",
       "third": "",
       "fourth": ""
     }
@@ -1045,7 +1046,7 @@
     "content": {
       "type": "1U",
       "first": "H",
-      "second": "ｸ",
+      "second": "",
       "third": "",
       "fourth": ""
     }
@@ -1061,7 +1062,7 @@
     "content": {
       "type": "1U",
       "first": "J",
-      "second": "ﾏ",
+      "second": "",
       "third": "",
       "fourth": ""
     }
@@ -1077,7 +1078,7 @@
     "content": {
       "type": "1U",
       "first": "K",
-      "second": "ﾉ",
+      "second": "",
       "third": "",
       "fourth": ""
     }
@@ -1093,7 +1094,7 @@
     "content": {
       "type": "1U",
       "first": "L",
-      "second": "ﾘ",
+      "second": "",
       "third": "",
       "fourth": ""
     }
@@ -1102,14 +1103,14 @@
     "id": 51,
     "x": 514,
     "y": 108,
-    "centered": true,
+    "centered": false,
     "icon": false,
     "idArray": "",
     "iconname": "",
     "content": {
       "type": "1U",
-      "first": "Ñ",
-      "second": "ﾚ",
+      "first": ";",
+      "second": ":",
       "third": "",
       "fourth": ""
     }
@@ -1125,8 +1126,8 @@
     "content": {
       "type": "1U",
       "first": "'",
-      "second": "\"",
-      "third": "ｹ",
+      "second": "@",
+      "third": "",
       "fourth": ""
     }
   },
@@ -1140,9 +1141,9 @@
     "iconname": "",
     "content": {
       "type": "1U",
-      "first": "\\",
-      "second": "|",
-      "third": "ﾑ",
+      "first": "#",
+      "second": "~",
+      "third": "",
       "fourth": ""
     }
   },
@@ -1226,7 +1227,7 @@
       "type": "1U",
       "first": "\\",
       "second": "|",
-      "third": "ﾑ",
+      "third": "",
       "fourth": ""
     }
   },
@@ -1241,7 +1242,7 @@
     "content": {
       "type": "1U",
       "first": "Z",
-      "second": "ﾂ",
+      "second": "",
       "third": "",
       "fourth": ""
     }
@@ -1257,7 +1258,7 @@
     "content": {
       "type": "1U",
       "first": "X",
-      "second": "ｻ",
+      "second": "",
       "third": "",
       "fourth": ""
     }
@@ -1273,7 +1274,7 @@
     "content": {
       "type": "1U",
       "first": "C",
-      "second": "ｿ",
+      "second": "",
       "third": "",
       "fourth": ""
     }
@@ -1289,7 +1290,7 @@
     "content": {
       "type": "1U",
       "first": "V",
-      "second": "ﾋ",
+      "second": "",
       "third": "",
       "fourth": ""
     }
@@ -1305,7 +1306,7 @@
     "content": {
       "type": "1U",
       "first": "B",
-      "second": "ｺ",
+      "second": "",
       "third": "",
       "fourth": ""
     }
@@ -1321,7 +1322,7 @@
     "content": {
       "type": "1U",
       "first": "N",
-      "second": "ﾐ",
+      "second": "",
       "third": "",
       "fourth": ""
     }
@@ -1337,7 +1338,7 @@
     "content": {
       "type": "1U",
       "first": "M",
-      "second": "ﾓ",
+      "second": "",
       "third": "",
       "fourth": ""
     }
@@ -1354,8 +1355,8 @@
       "type": "1U",
       "first": ",",
       "second": "<",
-      "third": "ﾈ",
-      "fourth": "､"
+      "third": "",
+      "fourth": ""
     }
   },
   {
@@ -1370,8 +1371,8 @@
       "type": "1U",
       "first": ".",
       "second": ">",
-      "third": "ﾙ",
-      "fourth": "｡"
+      "third": "",
+      "fourth": ""
     }
   },
   {
@@ -1386,8 +1387,8 @@
       "type": "1U",
       "first": "/",
       "second": "?",
-      "third": "ﾒ",
-      "fourth": "･"
+      "third": "",
+      "fourth": ""
     }
   },
   {
@@ -1719,22 +1720,6 @@
     "content": {
       "type": "specialBlockDropdown",
       "first": "F13+",
-      "second": "",
-      "third": "",
-      "fourth": ""
-    }
-  },
-  {
-    "id": 136,
-    "x": 794,
-    "y": 0,
-    "centered": true,
-    "icon": false,
-    "idArray": [135, 136, 137, 138, 139],
-    "iconname": "",
-    "content": {
-      "type": "genericBlockDropdown",
-      "first": "カタカナ/ひらがな/ローマ字",
       "second": "",
       "third": "",
       "fourth": ""
