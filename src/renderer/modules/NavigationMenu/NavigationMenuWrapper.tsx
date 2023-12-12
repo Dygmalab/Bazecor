@@ -24,6 +24,7 @@ interface HeaderInterface {
   flashing: boolean;
   fwUpdate: boolean;
   allowBeta: boolean;
+  inContext: boolean;
   loading: boolean;
   isSending: boolean;
   setIsSending: () => void;
@@ -31,7 +32,7 @@ interface HeaderInterface {
 }
 
 function Header(props: HeaderInterface) {
-  const { connected, pages, flashing, fwUpdate, allowBeta, loading, setIsSending, isSending } = props;
+  const { connected, pages, flashing, fwUpdate, allowBeta, inContext, loading, setIsSending, isSending } = props;
 
   return (
     <NavigationMenu
@@ -41,6 +42,7 @@ function Header(props: HeaderInterface) {
       fwUpdate={fwUpdate}
       allowBeta={allowBeta}
       loading={loading}
+      inContext={inContext}
       setIsSending={setIsSending}
       isSending={isSending}
     />

@@ -284,8 +284,9 @@ function App() {
         pages={pages}
         flashing={!connected}
         fwUpdate={fwUpdate}
-        loading={loading}
         allowBeta={allowBeta}
+        loading={loading}
+        inContext={contextBar}
         setIsSending={setIsSending}
         isSending={isSending}
       />
