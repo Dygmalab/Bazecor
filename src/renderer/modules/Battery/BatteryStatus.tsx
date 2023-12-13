@@ -136,46 +136,50 @@ const BatteryStatus = ({ disable }: BatteryStatusProps) => {
     });
 
   const getBatteryStatus = useCallback(async () => {
-    let left = "";
-    let right = "";
-    let leftStatus = "";
-    let rightStatus = "";
-    let savingMode = "";
-    // iterator values
-    let newReading = false;
-    let counter = 5;
-    // reading until we get a result != 4 or we try 5 times
-    while (newReading === false && counter > 0) {
-      /* eslint-disable no-await-in-loop */
-      left = await state.currentDevice.command("wireless.battery.left.level");
-      right = await state.currentDevice.command("wireless.battery.right.level");
-      leftStatus = await state.currentDevice.command("wireless.battery.left.status");
-      rightStatus = await state.currentDevice.command("wireless.battery.right.status");
-      savingMode = await state.currentDevice.command("wireless.battery.savingMode");
-      counter -= 1;
-      if (leftStatus !== "4" && rightStatus !== "4") {
-        newReading = true;
-      } else {
-        await delay(500);
+    if (state.currentDevice && !disable && !state.currentDevice.isSending) {
+      let left = "";
+      let right = "";
+      let leftStatus = "";
+      let rightStatus = "";
+      let savingMode = "";
+      // iterator values
+      let newReading = false;
+      let counter = 5;
+      // reading until we get a result != 4 or we try 5 times
+      while (newReading === false && counter > 0) {
+        /* eslint-disable no-await-in-loop */
+        left = await state.currentDevice.command("wireless.battery.left.level");
+        right = await state.currentDevice.command("wireless.battery.right.level");
+        leftStatus = await state.currentDevice.command("wireless.battery.left.status");
+        rightStatus = await state.currentDevice.command("wireless.battery.right.status");
+        savingMode = await state.currentDevice.command("wireless.battery.savingMode");
+        counter -= 1;
+        if (leftStatus !== "4" && rightStatus !== "4") {
+          newReading = true;
+        } else {
+          await delay(500);
+        }
+        /* eslint-enable no-await-in-loop */
       }
-      /* eslint-enable no-await-in-loop */
-    }
-    setbLeft(parseInt(left, 10));
-    setbRight(parseInt(right, 10));
-    setsLeft(leftStatus.includes("0x") ? 255 : parseInt(leftStatus, 10));
-    setsRight(rightStatus.includes("0x") ? 255 : parseInt(rightStatus, 10));
-    setIsSavingMode(parseInt(savingMode, 10) > 0);
+      setbLeft(parseInt(left, 10));
+      setbRight(parseInt(right, 10));
+      setsLeft(leftStatus.includes("0x") ? 255 : parseInt(leftStatus, 10));
+      setsRight(rightStatus.includes("0x") ? 255 : parseInt(rightStatus, 10));
+      setIsSavingMode(parseInt(savingMode, 10) > 0);
 
-    // Logs to console
-    // console.log("L Status internal: ", sLeft);
-    // console.log("L Status focus: ", leftStatus);
-    // console.log("L Level internal: ", bLeft);
-    // console.log("R Status: ", sRight);
-    // console.log("R Status focus: ", rightStatus);
-  }, [state.currentDevice]);
+      // Logs to console
+      // console.log("L Status internal: ", sLeft);
+      // console.log("L Status focus: ", leftStatus);
+      // console.log("L Level internal: ", bLeft);
+      // console.log("R Status: ", sRight);
+      // console.log("R Status focus: ", rightStatus);
+    }
+  }, [disable, state.currentDevice]);
 
   useEffect(() => {
-    getBatteryStatus();
+    if (!disable) {
+      getBatteryStatus();
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
