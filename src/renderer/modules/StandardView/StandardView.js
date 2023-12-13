@@ -217,7 +217,6 @@ const Styles = Styled.div`
         margin-top: 0;
       }
     }
-    
   }
 }
 
@@ -366,9 +365,9 @@ export default class StandardView extends React.Component {
                       <LayersTab
                         onLayerPress={onKeySelect}
                         keyCode={keyCode}
-                        showLayerSwitch={actTab !== "super"}
                         isStandardView={isStandardView}
                         actTab={actTab}
+                        disableMods={!!((keyIndex == 0 || keyIndex == 3) && actTab === "super")}
                       />
                     </Tab.Pane>
                     <Tab.Pane eventKey="tabMacro">
