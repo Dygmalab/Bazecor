@@ -62,8 +62,8 @@ const createWindow = () => {
   onReadyToShow();
   onDevTools();
   onClose();
-  configureUSB();
   configureHID();
+  configureUSB();
 };
 
 export default createWindow;

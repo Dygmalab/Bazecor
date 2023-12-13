@@ -29,12 +29,18 @@ app.on("ready", async () => {
   Menu.setApplicationMenu(null);
 });
 
+// Emitted before the application starts closing its windows.
+// Calling event.preventDefault() will prevent the default behavior,
+// which is terminating the application.
+app.on("before-quit", () => {
+  removeUSBListeners();
+  removeHIDListeners();
+});
+
 // Quit when all windows are closed, except on macOS. There, it's common
 // for applications and their menu bar to stay active until the user quits
 // explicitly with Cmd + Q.
 app.on("window-all-closed", () => {
-  removeUSBListeners();
-  removeHIDListeners();
   if (process.platform !== "darwin") {
     app.quit();
   } else {
