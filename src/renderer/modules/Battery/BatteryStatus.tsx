@@ -156,7 +156,7 @@ const BatteryStatus = ({ disable }: BatteryStatusProps) => {
       if (leftStatus !== "4" && rightStatus !== "4") {
         newReading = true;
       } else {
-        await delay(1000);
+        await delay(500);
       }
       /* eslint-enable no-await-in-loop */
     }
@@ -175,10 +175,14 @@ const BatteryStatus = ({ disable }: BatteryStatusProps) => {
   }, []);
 
   useEffect(() => {
+    getBatteryStatus();
+  }, []);
+
+  useEffect(() => {
     if (!disable) {
       intervalIdRef.current = setInterval(() => {
         getBatteryStatus();
-      }, 60 * 1000);
+      }, 5 * 1000);
     }
     // Return a cleanup function to clear the interval
     return () => {
