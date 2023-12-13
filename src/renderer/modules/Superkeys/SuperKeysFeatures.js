@@ -61,7 +61,7 @@ h5 {
             height:16px;
             left: -26px;
             background-color: transparent;
-            background-image: url(${IconCheckmarkSm}); 
+            background-image: url(${IconCheckmarkSm});
         }
     }
 }
@@ -106,7 +106,7 @@ function SuperKeysFeatures() {
                         <li className="active">Media & LED</li>
                         <li className="active">Mouse</li>
                         <li className="active">Layer Lock</li>
-                        <li>Layer Shift</li>
+                        <li className="active">Layer Shift</li>
                         <li>Dual-function</li>
                         <li>OneShot</li>
                         <li>Superkeys</li>
@@ -121,7 +121,7 @@ function SuperKeysFeatures() {
                         <li className="active">Media & LED</li>
                         <li className="active">Mouse</li>
                         <li className="active">Layer Lock</li>
-                        <li>Layer Shift</li>
+                        <li className="active">Layer Shift</li>
                         <li>Dual-function</li>
                         <li>OneShot</li>
                         <li>Superkeys</li>
@@ -151,7 +151,7 @@ function SuperKeysFeatures() {
                         <li className="active">Media & LED</li>
                         <li className="active">Mouse</li>
                         <li className="active">Layer Lock</li>
-                        <li>Layer Shift</li>
+                        <li className="active">Layer Shift</li>
                         <li>Dual-function</li>
                         <li>OneShot</li>
                         <li>Superkeys</li>
