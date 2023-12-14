@@ -10,6 +10,7 @@ import { BatteryStatusSide, SavingModeIndicator } from "@Renderer/component/Batt
 // Assets
 import { IconBattery, IconRefresh } from "@Renderer/component/Icon";
 
+import { LogoLoader } from "@Renderer/component/Loader";
 import Focus from "../../../api/focus";
 import i18n from "../../i18n";
 
@@ -104,6 +105,13 @@ const Style = Styled.div`
     }
   }
 }
+.batteryLoader {
+  width: 206px;
+  height: 127px;
+  text-align: center;
+  display: grid;
+  align-items: center;
+}
 `;
 interface BatteryStatusProps {
   disable: boolean;
@@ -115,37 +123,66 @@ const BatteryStatus = ({ disable }: BatteryStatusProps) => {
   const [sRight, setsRight] = useState(0);
   const [isSavingMode, setIsSavingMode] = useState(false);
   const [animateIcon, setAnimateIcon] = useState(0);
+  const [loading, setLoading] = useState(false);
   const target = useRef(null);
 
   const intervalIdRef = useRef<NodeJS.Timeout | null>(null);
   const intervalIdAnimateRef = useRef<NodeJS.Timeout | null>(null);
 
+  const delay = (ms: number) =>
+    new Promise(res => {
+      setTimeout(res, ms);
+    });
+
   const getBatteryStatus = useCallback(async () => {
+    let left = "";
+    let right = "";
+    let leftStatus = "";
+    let rightStatus = "";
+    let savingMode = "";
+    // iterator values
     const focus = new Focus();
-    const left = await focus.command("wireless.battery.left.level");
-    const right = await focus.command("wireless.battery.right.level");
-    const leftStatus = await focus.command("wireless.battery.left.status");
-    const rightStatus = await focus.command("wireless.battery.right.status");
-    const savingMode = await focus.command("wireless.battery.savingMode");
+    let newReading = false;
+    let counter = 5;
+    // reading until we get a result != 4 or we try 5 times
+    while (newReading === false && counter > 0) {
+      /* eslint-disable no-await-in-loop */
+      left = await focus.command("wireless.battery.left.level");
+      right = await focus.command("wireless.battery.right.level");
+      leftStatus = await focus.command("wireless.battery.left.status");
+      rightStatus = await focus.command("wireless.battery.right.status");
+      savingMode = await focus.command("wireless.battery.savingMode");
+      counter -= 1;
+      if (leftStatus !== "4" && rightStatus !== "4") {
+        newReading = true;
+      } else {
+        await delay(500);
+      }
+      /* eslint-enable no-await-in-loop */
+    }
     setbLeft(parseInt(left, 10));
     setbRight(parseInt(right, 10));
     setsLeft(leftStatus.includes("0x") ? 255 : parseInt(leftStatus, 10));
     setsRight(rightStatus.includes("0x") ? 255 : parseInt(rightStatus, 10));
     setIsSavingMode(parseInt(savingMode, 10) > 0);
 
+    // Logs to console
     // console.log("L Status internal: ", sLeft);
     // console.log("L Status focus: ", leftStatus);
     // console.log("L Level internal: ", bLeft);
-
     // console.log("R Status: ", sRight);
     // console.log("R Status focus: ", rightStatus);
+  }, []);
+
+  useEffect(() => {
+    getBatteryStatus();
   }, []);
 
   useEffect(() => {
     if (!disable) {
       intervalIdRef.current = setInterval(() => {
         getBatteryStatus();
-      }, 60 * 1000);
+      }, 5 * 1000);
     }
     // Return a cleanup function to clear the interval
     return () => {
@@ -172,7 +209,9 @@ const BatteryStatus = ({ disable }: BatteryStatusProps) => {
     if (disable) return;
     const focus = new Focus();
     await focus.command("wireless.battery.forceRead");
+    setLoading(true);
     await getBatteryStatus();
+    setLoading(false);
     setAnimateIcon(1);
   };
 
@@ -186,23 +225,27 @@ const BatteryStatus = ({ disable }: BatteryStatusProps) => {
         <div className="dropdown-menu dropdown-menu--battery">
           <div className="dropdown-menu__inner">
             <Title text={i18n.wireless.batteryPreferences.battery} headingLevel={4} svgICO={<IconBattery />} />
-            <div className="battery-defy--indicator">
-              <BatteryStatusSide side="left" batteryLevel={bLeft} isSavingMode={isSavingMode} batteryStatus={sLeft} size="lg" />
-              <BatteryStatusSide
-                side="right"
-                batteryLevel={bRight}
-                isSavingMode={isSavingMode}
-                batteryStatus={sRight}
-                size="lg"
-              />
-              <SavingModeIndicator isSavingMode={isSavingMode} />
-            </div>
+            {loading ? (
+              <div className="batteryLoader">
+                <LogoLoader width="200" warning={false} error={false} paused={false} />
+              </div>
+            ) : (
+              <div className="battery-defy--indicator">
+                <BatteryStatusSide side="left" batteryLevel={bLeft} isSavingMode={isSavingMode} batteryStatus={sLeft} size="lg" />
+                <BatteryStatusSide
+                  side="right"
+                  batteryLevel={bRight}
+                  isSavingMode={isSavingMode}
+                  batteryStatus={sRight}
+                  size="lg"
+                />
+                <SavingModeIndicator isSavingMode={isSavingMode} />
+              </div>
+            )}
             <div className="batterySettingItem batteryUpdateStatus">
               <div className="batterySettingLabel">Force read Battery level</div>
               <ButtonConfig
-                onClick={() => {
-                  forceRetrieveBattery();
-                }}
+                onClick={forceRetrieveBattery}
                 icoSVG={<IconRefresh />}
                 variation="button-settings"
                 dataAnimate={animateIcon}
