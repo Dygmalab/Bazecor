@@ -17,18 +17,32 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
 import React from "react";
-import Styled from "styled-components";
+import Styled, { ThemeProvider } from "styled-components";
 import Title from "../Title";
 import ButtonConfig from "../Button/ButtonConfig";
 
-const Style = Styled.div` 
+/**
+ * This ToastMessage function returns a styled body of react-toastfy object
+ * The object will accept the following parameters
+ *
+ * @param {string} title - The text to render the title fo the Toast
+ * @param {string} content [Optional] - The content to render above the title
+ * @param {function} icon [Optional] - A compontent/SVG
+ * @param {function} onClickAction [Optional] - The function that act when a Primary button is clicked.
+ * @param {string} clickActionText [Optional] - The text to render the primary button
+ * @param {function} onClickDismiss [Optional] - The function that act when a Secondary button is clicked.
+ * @param {string} clickDismissText [Optional] - The text to render the secondary button
+ * @returns {<ToastMessage>} ToastMessage component.
+ */
+
+const Style = Styled.div`
 .toastBody {
-  padding: 24px 32px;  
+  padding: 24px 32px;
   display: flex;
   flex-wrap: nowrap;
   &.hasIcon {
-    padding-left: 16px; 
-    .toastIcon {  
+    padding-left: 16px;
+    .toastIcon {
       width: 32px;
       svg {
         margin-top: -6px;
@@ -44,12 +58,12 @@ const Style = Styled.div`
   font-size: 14px;
   font-weight: 500;
   line-height: 1.35em;
-} 
+}
 .toastFooter {
   display: flex;
   flex-wrap: nowrap;
-  justify-content: flex-end;  
-  padding: 0 32px 24px 32px;  
+  justify-content: flex-end;
+  padding: 0 32px 24px 32px;
   .button-config + .button-config {
     margin-left: 8px;
   }
@@ -57,23 +71,10 @@ const Style = Styled.div`
     color: ${({ theme }) => theme.styles.button.config.color};
     &:hover {
       ${({ theme }) => theme.styles.button.config.colorHover};
-    } 
+    }
   }
 }
 `;
-/**
- * This ToastMessage function returns a styled body of react-toastfy object
- * The object will accept the following parameters
- *
- * @param {string} title - The text to render the title fo the Toast
- * @param {string} content [Optional] - The content to render above the title
- * @param {function} icon [Optional] - A compontent/SVG
- * @param {function} onClickAction [Optional] - The function that act when a Primary button is clicked.
- * @param {string} clickActionText [Optional] - The text to render the primary button
- * @param {function} onClickDismiss [Optional] - The function that act when a Secondary button is clicked.
- * @param {string} clickDismissText [Optional] - The text to render the secondary button
- * @returns {<ToastMessage>} ToastMessage component.
- */
 
 interface ToasMessageProps {
   title: string;
@@ -83,6 +84,7 @@ interface ToasMessageProps {
   clickActionText?: string;
   onClickDismiss?: (...args: any[]) => any;
   clickDismissText?: string;
+  theme: any;
 }
 
 const ToastMessage: React.FC<ToasMessageProps> = ({
@@ -93,24 +95,30 @@ const ToastMessage: React.FC<ToasMessageProps> = ({
   clickActionText,
   onClickDismiss,
   clickDismissText,
-}) => (
-  <Style className="toastContentWrapper">
-    <div className={`toastBody ${icon ? "hasIcon" : "noIcon"}`}>
-      {icon && <div className="toastIcon">{icon}</div>}
-      <div className="toastBodyInner">
-        {title && <Title text={title} headingLevel={4} />}
-        <div className="toastContent" dangerouslySetInnerHTML={{ __html: content }} />
-      </div>
-    </div>
-    {onClickAction || onClickDismiss ? (
-      <div className="toastFooter">
-        <ButtonConfig onClick={onClickDismiss} buttonText={clickDismissText} variation="link" size="sm" />
-        <ButtonConfig onClick={onClickAction} buttonText={clickActionText} size="sm" />
-      </div>
-    ) : (
-      ""
-    )}
-  </Style>
-);
+  theme,
+}) => {
+  const jsx = (
+    <ThemeProvider theme={theme}>
+      <Style theme={theme} className="toastContentWrapper">
+        <div className={`toastBody ${icon ? "hasIcon" : "noIcon"}`}>
+          {icon && <div className="toastIcon">{icon}</div>}
+          <div className="toastBodyInner">
+            {title && <Title text={title} headingLevel={4} />}
+            <div className="toastContent" dangerouslySetInnerHTML={{ __html: content }} />
+          </div>
+        </div>
+        {onClickAction || onClickDismiss ? (
+          <div className="toastFooter">
+            <ButtonConfig onClick={onClickDismiss} buttonText={clickDismissText} variation="link" size="sm" />
+            <ButtonConfig onClick={onClickAction} buttonText={clickActionText} size="sm" />
+          </div>
+        ) : (
+          ""
+        )}
+      </Style>
+    </ThemeProvider>
+  );
+  return jsx;
+};
 
 export default ToastMessage;

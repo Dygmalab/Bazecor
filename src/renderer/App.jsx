@@ -17,14 +17,12 @@
 
 import React from "react";
 import { Routes, Navigate, Route } from "react-router-dom";
-import { ToastContainer, toast } from "react-toastify";
 import { ThemeProvider } from "styled-components";
 import { ipcRenderer } from "electron";
 import path from "path";
 import withRouter from "@Renderer/utils/withRouter";
 import i18n from "@Renderer/i18n";
-
-import "react-toastify/dist/ReactToastify.css";
+import { toast } from "react-toastify";
 
 import GlobalStyles from "@Renderer/theme/GlobalStyles";
 import Light from "@Renderer/theme/LightTheme";
@@ -112,7 +110,7 @@ class App extends React.Component {
   }
 
   async handleUSBDisconnection(device) {
-    const { connected } = this.state;
+    const { connected, darkMode } = this.state;
     console.log("Handling device disconnect");
     if (this.flashing) {
       console.log("no action due to flashing active");
@@ -128,6 +126,7 @@ class App extends React.Component {
     if (connected) {
       toast.warning(
         <ToastMessage
+          theme={darkMode ? Dark : Light}
           icon={<IconNoSignal />}
           title={i18n.errors.deviceDisconnected}
           content={i18n.errors.deviceDisconnectedContent}
@@ -438,16 +437,6 @@ class App extends React.Component {
             />
           </Routes>
         </div>
-        <ToastContainer
-          position="top-right"
-          autoClose={false}
-          hideProgressBar={false}
-          newestOnTop={false}
-          draggable={false}
-          closeOnClick
-          pauseOnHover
-          pauseOnFocusLoss
-        />
       </ThemeProvider>
     );
   }

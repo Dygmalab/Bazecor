@@ -18,6 +18,8 @@
 import React from "react";
 import { MemoryRouter } from "react-router-dom";
 import { createRoot } from "react-dom/client";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { I18nextProvider } from "react-i18next";
 import App from "./App";
 import Error from "./Error";
@@ -34,6 +36,16 @@ try {
       <MemoryRouter>
         <I18nextProvider i18n={i18n}>
           <App />
+          <ToastContainer
+            position="top-right"
+            autoClose={false}
+            hideProgressBar={false}
+            newestOnTop={false}
+            draggable={false}
+            closeOnClick
+            pauseOnHover
+            pauseOnFocusLoss={false}
+          />
         </I18nextProvider>
       </MemoryRouter>
     </ErrorBoundary>,

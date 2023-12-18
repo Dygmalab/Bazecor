@@ -22,16 +22,18 @@ import SemVer from "semver";
 import { Octokit } from "@octokit/core";
 
 import { Nav, Navbar, NavbarBrand } from "react-bootstrap";
-import Styled from "styled-components";
+import Styled, { useTheme } from "styled-components";
+import { toast } from "react-toastify";
 
 import Version from "@Types/version";
 import Pages from "@Types/pages";
 import DygmaLogo from "@Assets/logo.svg";
 import { AlertModal } from "@Renderer/component/Modal";
-import { BatteryStatus } from "../Battery";
-import i18n from "../../i18n";
+import ToastMessage from "@Renderer/component/ToastMessage";
+import { BatteryStatus } from "@Renderer/modules/Battery";
+import i18n from "@Renderer/i18n";
+import { NavigationButton } from "@Renderer/component/Button";
 import Focus from "../../../api/focus";
-import { NavigationButton } from "../../component/Button";
 
 import {
   IconKeyboardSelector,
@@ -41,6 +43,7 @@ import {
   IconThunder2Stroke,
   IconPreferences2Stroke,
   IconWireless,
+  IconKeyboard,
 } from "../../component/Icon";
 
 const Styles = Styled.div`
@@ -123,6 +126,7 @@ function NavigationMenu(props: NavigationMenuProps): React.JSX.Element {
   const [device, setDevice] = useState<Record<string, Device>>({});
   const [virtual, setVirtual] = useState(false);
   const location = useLocation();
+  const theme = useTheme();
   const currentPage = location.pathname;
   const { connected, pages, fwUpdate, flashing, allowBeta, loading, inContext } = props;
 
@@ -154,12 +158,37 @@ function NavigationMenu(props: NavigationMenuProps): React.JSX.Element {
     const focus = new Focus();
     setDevice(focus.device);
     if (focus.device === undefined || focus.device.bootloader) return;
-    let parts = await focus.command("version");
-    parts = parts.split(" ");
+    let parts = "";
+    try {
+      parts = await focus.command("version");
+    } catch (error) {
+      console.log("Error when fetching GitHub data");
+      console.error(error);
+      if (error === "Communication timeout") {
+        toast.error(
+          <ToastMessage
+            theme={theme}
+            title="Communication error"
+            content="Your keyboard has disconnected from Bazecor"
+            icon={<IconKeyboard />}
+          />,
+          {
+            icon: "",
+            autoClose: 4000,
+          },
+        );
+      } else {
+        toast.error(<ToastMessage theme={theme} title="Reading version error" content={`${error}`} icon={<IconKeyboard />} />, {
+          icon: "",
+          autoClose: 4000,
+        });
+      }
+    }
+    const splittedParts = parts.split(" ");
     const getVersions: Version = {
-      bazecor: parts[0],
-      kaleidoscope: parts[1],
-      firmware: parts[2],
+      bazecor: splittedParts[0],
+      kaleidoscope: splittedParts[1],
+      firmware: splittedParts[2],
     };
     let Beta = getVersions.bazecor.includes("beta");
     let cleanedVersion = getVersions.bazecor;
@@ -174,12 +203,25 @@ function NavigationMenu(props: NavigationMenuProps): React.JSX.Element {
       fwList = [{ version: cleanedVersion }];
     }
     // Comparing online Data to FW version
-    const semVerCheck = SemVer.compare(fwList[0].version, cleanedVersion);
-    Beta = Beta || focus.device.info.product !== "Raise";
-    setVersions(getVersions);
-    setIsUpdated(semVerCheck > 0);
-    setIsBeta(Beta);
-    setVirtual(focus.file);
+    try {
+      const semVerCheck = SemVer.compare(fwList[0].version, cleanedVersion);
+      Beta = Beta || focus.device.info.product !== "Raise";
+      setVersions(getVersions);
+      setIsUpdated(semVerCheck > 0);
+      setIsBeta(Beta);
+      setVirtual(focus.file);
+    } catch (error) {
+      console.log("error when cheching version with semver");
+      console.error(error);
+      setVersions({
+        bazecor: fwList[0].version,
+        kaleidoscope: "v0.0.0",
+        firmware: "v0.0.0",
+      });
+      setIsUpdated(true);
+      setIsBeta(false);
+      setVirtual(focus.file);
+    }
   }, [getGitHubFW]);
 
   useEffect(() => {

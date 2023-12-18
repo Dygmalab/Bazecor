@@ -1,6 +1,7 @@
 import React, { useEffect, useCallback, useRef, useState } from "react";
 
-import Styled from "styled-components";
+import Styled, { useTheme } from "styled-components";
+import { toast } from "react-toastify";
 
 // Custom components
 import Title from "@Renderer/component/Title";
@@ -8,9 +9,10 @@ import { ButtonConfig } from "@Renderer/component/Button";
 import { BatteryStatusSide, SavingModeIndicator } from "@Renderer/component/Battery";
 
 // Assets
-import { IconBattery, IconRefresh } from "@Renderer/component/Icon";
+import { IconBattery, IconKeyboard, IconRefresh } from "@Renderer/component/Icon";
 
 import { LogoLoader } from "@Renderer/component/Loader";
+import ToastMessage from "@Renderer/component/ToastMessage";
 import Focus from "../../../api/focus";
 import i18n from "../../i18n";
 
@@ -125,6 +127,7 @@ const BatteryStatus = ({ disable }: BatteryStatusProps) => {
   const [animateIcon, setAnimateIcon] = useState(0);
   const [loading, setLoading] = useState(false);
   const target = useRef(null);
+  const theme = useTheme();
 
   const intervalIdRef = useRef<NodeJS.Timeout | null>(null);
   const intervalIdAnimateRef = useRef<NodeJS.Timeout | null>(null);
@@ -145,20 +148,44 @@ const BatteryStatus = ({ disable }: BatteryStatusProps) => {
     let newReading = false;
     let counter = 5;
     // reading until we get a result != 4 or we try 5 times
-    while (newReading === false && counter > 0) {
-      /* eslint-disable no-await-in-loop */
-      left = await focus.command("wireless.battery.left.level");
-      right = await focus.command("wireless.battery.right.level");
-      leftStatus = await focus.command("wireless.battery.left.status");
-      rightStatus = await focus.command("wireless.battery.right.status");
-      savingMode = await focus.command("wireless.battery.savingMode");
-      counter -= 1;
-      if (leftStatus !== "4" && rightStatus !== "4") {
-        newReading = true;
-      } else {
-        await delay(500);
+    try {
+      while (newReading === false && counter > 0) {
+        /* eslint-disable no-await-in-loop */
+        left = await focus.command("wireless.battery.left.level");
+        right = await focus.command("wireless.battery.right.level");
+        leftStatus = await focus.command("wireless.battery.left.status");
+        rightStatus = await focus.command("wireless.battery.right.status");
+        savingMode = await focus.command("wireless.battery.savingMode");
+        counter -= 1;
+        if (leftStatus !== "4" && rightStatus !== "4") {
+          newReading = true;
+        } else {
+          await delay(500);
+        }
+        /* eslint-enable no-await-in-loop */
       }
-      /* eslint-enable no-await-in-loop */
+    } catch (error) {
+      console.log("Battery reading Error");
+      console.error(error);
+      if (error === "Communication timeout") {
+        toast.error(
+          <ToastMessage
+            theme={theme}
+            title="Communication error"
+            content="Your keyboard has disconnected from Bazecor"
+            icon={<IconKeyboard />}
+          />,
+          {
+            icon: "",
+            autoClose: 4000,
+          },
+        );
+      } else {
+        toast.error(<ToastMessage theme={theme} title="Reading Battery error" content={`${error}`} icon={<IconKeyboard />} />, {
+          icon: "",
+          autoClose: 4000,
+        });
+      }
     }
     setbLeft(parseInt(left, 10));
     setbRight(parseInt(right, 10));
