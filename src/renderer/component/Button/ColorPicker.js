@@ -15,13 +15,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React from "react";
+import React, { useState } from "react";
 import Styled from "styled-components";
 
-import { IconPlusXs } from "../Icon";
+import { IconDelete, IconPlusXs } from "../Icon";
 
-const Style = Styled.div` 
-
+const Style = Styled.div`
+height: 30px;
 .colorPickerButton {
     width: 38px;
     height: 38px;
@@ -31,7 +31,7 @@ const Style = Styled.div`
     border-radius: 4px;
 
     padding: 3px;
-    
+
     box-shadow: 0px 0px 24px rgba(108, 92, 231, 0);
     transition-property: background, border, box-shadow, width;
     transition: 300ms ease-in-out;
@@ -91,6 +91,29 @@ const Style = Styled.div`
   }
 }
 
+.removeButton{
+  position: relative;
+  bottom: 46px;
+  left: 20px;
+  width: 16px;
+  height: 16px;
+  margin: 0px;
+  padding: 0px;
+  font-size: 12px;
+  background-color: #ffffff26;
+  color: white;
+  line-height: 0px;
+  border: 1px solid rgb(255 255 255 / 24%);
+}
+
+.show {
+  display: inline
+}
+
+.hide {
+  display: none
+}
+
 @media screen and (max-width: 1200px) {
   .colorPickerButton {
     width: 16px;
@@ -125,12 +148,16 @@ const Style = Styled.div`
 }
 `;
 
-function ColorPicker({ menuKey, id, onClick, dataID, selected, buttonStyle, className }) {
+function ColorPicker({ menuKey, id, onClick, dataID, selected, buttonStyle, className, deleteColor, noDelete }) {
+  const [isShown, setIsShown] = useState(false);
+
   return (
     <Style>
       <div
         key={menuKey}
         onClick={onClick}
+        onMouseEnter={() => setIsShown(true)}
+        onMouseLeave={() => setIsShown(false)}
         className={`colorPickerButton ${className} ${selected === id ? "active" : ""}`}
         data-id={dataID}
       >
@@ -140,6 +167,21 @@ function ColorPicker({ menuKey, id, onClick, dataID, selected, buttonStyle, clas
           </div>
         </div>
       </div>
+      {noDelete ? (
+        ""
+      ) : (
+        <button
+          className={`removeButton ${isShown ? "show" : "hide"}`}
+          onMouseEnter={() => setIsShown(true)}
+          onMouseLeave={() => setIsShown(false)}
+          onClick={event => {
+            setIsShown(false);
+            deleteColor(id);
+          }}
+        >
+          <IconDelete width={14} height={14} />
+        </button>
+      )}
     </Style>
   );
 }

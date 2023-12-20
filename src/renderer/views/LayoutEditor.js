@@ -1108,20 +1108,39 @@ class LayoutEditor extends React.Component {
     });
   };
 
+  setColors = ({ r, g, b }) => ({
+    r,
+    g,
+    b,
+    rgb: `rgb(${r}, ${g}, ${b})`,
+  });
+
   onColorPick = (colorIndex, r, g, b) => {
-    const newPalette = this.state.palette.slice();
-    const setColors = (r, g, b) => ({
-      r,
-      g,
-      b,
-      rgb: `rgb(${r}, ${g}, ${b})`,
-    });
-    newPalette[colorIndex] = setColors(r, g, b);
+    const { palette } = this.state;
+    const { startContext } = this.props;
+
+    const newPalette = [...palette];
+    newPalette[colorIndex] = this.setColors({ r, g, b });
+
     this.setState({
       palette: newPalette,
       modified: true,
     });
-    this.props.startContext();
+    startContext();
+  };
+
+  updatePalette = color => {
+    const { palette } = this.state;
+    const { startContext } = this.props;
+    const newPalette = color.map(({ r, g, b }) => this.setColors({ r, g, b }));
+
+    console.log("old vs new palette: ", palette, newPalette);
+
+    this.setState({
+      palette: newPalette,
+      modified: true,
+    });
+    startContext();
   };
 
   importExportDialog = () => {
@@ -1960,6 +1979,7 @@ class LayoutEditor extends React.Component {
                 onColorSelect={this.onColorSelect}
                 colorButtonIsSelected={this.state.colorButtonIsSelected}
                 onColorPick={this.onColorPick}
+                updatePalette={this.updatePalette}
                 selected={this.state.selectedPaletteColor}
                 isColorButtonSelected={isColorButtonSelected}
                 onColorButtonSelect={this.onColorButtonSelect}

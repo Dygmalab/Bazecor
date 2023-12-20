@@ -15,17 +15,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React, { Component, Fragment } from "react";
+import React from "react";
+import PropTypes from "prop-types";
 import { SketchPicker } from "react-color";
 import Styled from "styled-components";
 
 // Bootstrap components
 
-import Button from "react-bootstrap/Button";
-import Tooltip from "react-bootstrap/Tooltip";
-import OverlayTrigger from "react-bootstrap/OverlayTrigger";
+// import Button from "react-bootstrap/Button";
+// import Tooltip from "react-bootstrap/Tooltip";
+// import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 
-import { CgSmartHomeLight, CgColorPicker } from "react-icons/cg";
+// import { CgColorPicker } from "react-icons/cg";
 import Title from "../../component/Title";
 import { ColorButton, ColorPicker } from "../../component/Button";
 
@@ -33,8 +34,6 @@ import { ColorButton, ColorPicker } from "../../component/Button";
 import i18n from "../../i18n";
 
 import { IconColorPalette, IconKeysLight, IconKeysUnderglow } from "../../component/Icon";
-
-const toolsWidth = 45;
 
 const Styles = Styled.div`
 width: 100%;
@@ -98,117 +97,153 @@ width: 100%;
 }
 `;
 
-export default class ColorEditor extends Component {
+class ColorEditor extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
       displayColorPicker: false,
-      internalColors: props.colors,
+      internalColors: [...props.colors],
     };
 
     this.showColorPicker = this.showColorPicker.bind(this);
     this.selectColor = this.selectColor.bind(this);
     this.handleChange = this.handleChange.bind(this);
-    this.spare = this.spare.bind(this);
     this.addNewColorPalette = this.addNewColorPalette.bind(this);
+  }
+
+  componentDidMount() {
+    const { colors } = this.props;
+    this.cleanBlackColors([...colors]);
   }
 
   handleChange(color) {
     const { selected, onColorPick } = this.props;
+    const { internalColors } = this.state;
+
+    internalColors[selected] = {
+      r: color.rgb.r,
+      g: color.rgb.g,
+      b: color.rgb.b,
+      rgb: `rgb(${color.rgb.r}, ${color.rgb.g}, ${color.rgb.b})`,
+    };
     onColorPick(selected, color.rgb.r, color.rgb.g, color.rgb.b);
   }
 
-  CButton(text, func, icon, disable, classes) {
-    const id = `tooltip-${text}`;
+  cleanBlackColors = internalColors => {
+    const localColors = JSON.parse(JSON.stringify(internalColors));
 
-    return (
-      <OverlayTrigger rootClose overlay={<Tooltip id={id}>{text}</Tooltip>} placement="top">
-        <Button disabled={disable} onClick={func} className={classes}>
-          {icon}
-        </Button>
-      </OverlayTrigger>
-    );
+    for (let i = localColors.length - 1; i > 0; i -= 1) {
+      // console.log(localColors[i], i, localColors[i].r === 0 && localColors[i].g === 0 && localColors[i].b === 0);
+      if (localColors[i].r === 0 && localColors[i].g === 0 && localColors[i].b === 0) {
+        localColors.pop();
+        // console.log("lenght after pop: ", localColors.length);
+      } else {
+        // console.log("color transformation: ", internalColors, localColors);
+        this.setState({ internalColors: localColors });
+        return;
+      }
+    }
+  };
+
+  deleteColor = id => {
+    const { internalColors } = this.state;
+    const { updatePalette } = this.props;
+    // console.log("clicked in delete color", id, internalColors.length);
+    if (id >= 16) return;
+    if (id === internalColors.length - 1) {
+      const arrayColorPalette = [...internalColors];
+      arrayColorPalette.pop();
+      this.cleanBlackColors([...arrayColorPalette]);
+      this.selectColor(null, arrayColorPalette.length);
+      // console.log("palettev1", arrayColorPalette);
+      for (let i = arrayColorPalette.length; i < 16; i += 1) {
+        arrayColorPalette.push({ r: 0, g: 0, b: 0, rgb: "(0, 0, 0)" });
+      }
+      // console.log("palettev1", arrayColorPalette);
+      updatePalette(arrayColorPalette);
+      return;
+    }
+    const arrayColorPalette = [...internalColors];
+    arrayColorPalette.splice(id, 1);
+    this.cleanBlackColors([...arrayColorPalette]);
+    this.selectColor(null, arrayColorPalette.length);
+    // console.log("palettev2", arrayColorPalette);
+    for (let i = arrayColorPalette.length; i < 16; i += 1) {
+      arrayColorPalette.push({ r: 0, g: 0, b: 0, rgb: "(0, 0, 0)" });
+    }
+    // console.log("palettev2", arrayColorPalette);
+    updatePalette(arrayColorPalette);
+  };
+
+  addNewColorPalette() {
+    const { internalColors } = this.state;
+    const arrayColorPalette = [...internalColors];
+    arrayColorPalette.push({ r: 122, g: 121, b: 241, rgb: "(122, 121, 241)" });
+    this.setState({ internalColors: arrayColorPalette });
+
+    this.selectColor(null, internalColors.length);
+    this.setState({ displayColorPicker: true });
   }
 
-  spare() {
-    const { colors } = this.props;
+  showColorPicker() {
+    this.setState(state => ({ displayColorPicker: !state.displayColorPicker }));
   }
 
   selectColor(ev, pick) {
-    const { colors, selected, onColorSelect } = this.props;
+    const { selected, onColorSelect, onColorButtonSelect } = this.props;
     onColorSelect(pick);
     if (pick === selected) {
       // setIndexFocusButton(!indexFocusButton);
-      this.props.onColorButtonSelect("one_button_click", pick);
+      onColorButtonSelect("one_button_click", pick);
       return;
     }
-    this.props.onColorButtonSelect("another_button_click", pick);
+    onColorButtonSelect("another_button_click", pick);
     // setIndexFocusButton(index);
     // setColorFocusButton(setColorTamplate(color));
   }
 
-  showColorPicker(event) {
-    this.setState(state => ({ displayColorPicker: !state.displayColorPicker }));
-  }
-
-  removeColorPalette(idx) {
-    const arrayColorPalette = [...this.state.internalColors];
-    const index = idx;
-    if (index !== -1) {
-      arrayColorPalette.splice(index, 1);
-      this.setState({ internalColors: arrayColorPalette });
-    }
-  }
-
-  addNewColorPalette() {
-    const arrayColorPalette = [...this.state.internalColors];
-    arrayColorPalette.push({ r: 122, g: 121, b: 241, rgb: "(122, 121, 241)" });
-    this.setState({ internalColors: arrayColorPalette });
-
-    this.selectColor(null, this.state.internalColors.length);
-    this.setState({ displayColorPicker: true });
-  }
-
   render() {
-    const { colors, selected, toChangeAllKeysColor, deviceName } = this.props;
+    const { selected, toChangeAllKeysColor, deviceName } = this.props;
     const { displayColorPicker, internalColors } = this.state;
 
     const layerButtons = internalColors.map((data, idx) => {
-      const menuKey = `color-${idx.toString()}-${colors[idx].rgb.toString()}`;
+      const menuKey = `color-${idx.toString()}-${internalColors[idx].rgb.toString()}`;
       const buttonStyle = {
         // backgroundColor: data.rgb
-        backgroundColor: colors[idx].rgb,
+        backgroundColor: internalColors[idx].rgb,
       };
-      if (
-        idx > 0 &&
-        data.rgb == "rgb(0, 0, 0)" &&
-        internalColors[idx - 1].rgb == "rgb(0, 0, 0)" &&
-        data.rgb == internalColors[idx - 1].rgb
-      ) {
-        // internalColors.slice(idx, 1);
-        this.removeColorPalette(idx);
-      } else {
-        return (
-          <ColorPicker
-            onClick={ev => {
-              this.selectColor(ev, idx);
-            }}
-            menuKey={menuKey}
-            key={`${menuKey}-key-${colors[idx]}`}
-            id={idx}
-            selected={selected}
-            buttonStyle={buttonStyle}
-            dataID={data.rgb}
-            className="colorPicker"
-          />
-        );
-      }
+      return (
+        // eslint-disable-next-line react/jsx-filename-extension
+        <ColorPicker
+          onClick={ev => {
+            this.selectColor(ev, idx);
+          }}
+          menuKey={menuKey}
+          key={`${menuKey}-key-${internalColors[idx]}`}
+          id={idx}
+          selected={selected}
+          buttonStyle={buttonStyle}
+          dataID={data.rgb}
+          className="colorPicker"
+          deleteColor={this.deleteColor}
+        />
+      );
     });
 
-    const iconStyles = { transform: "rotate(180deg)" };
+    // const iconStyles = { transform: "rotate(180deg)" };
+    // CButton(text, func, icon, disable, classes) {
+    //   const id = `tooltip-${text}`;
 
-    const edit = <>{this.CButton("Edit current color", this.showColorPicker, <CgColorPicker />, false, "first colorpick")}</>;
+    //   return (
+    //     <OverlayTrigger rootClose overlay={<Tooltip id={id}>{text}</Tooltip>} placement="top">
+    //       <Button disabled={disable} onClick={func} className={classes}>
+    //         {icon}
+    //       </Button>
+    //     </OverlayTrigger>
+    //   );
+    // }
+    // const edit = <>{this.CButton("Edit current color", this.showColorPicker, <CgColorPicker />, false, "first colorpick")}</>;
 
     const popover = {
       position: "absolute",
@@ -238,6 +273,7 @@ export default class ColorEditor extends Component {
                 menuKey="menuKeyAddNewColor"
                 key="buttonAddNewColor"
                 className="addColorButton"
+                noDelete
               />
             ) : (
               ""
@@ -250,12 +286,12 @@ export default class ColorEditor extends Component {
                 label={i18n.editor.color.selectedColor}
                 text={i18n.editor.color.editColor}
                 icoSVG={<IconColorPalette />}
-                color={colors[selected]}
+                color={internalColors[selected]}
               />
               {displayColorPicker ? (
                 <div style={popover}>
                   <div style={cover} onClick={this.showColorPicker} aria-hidden="true" />
-                  <SketchPicker color={colors[selected]} onChange={this.handleChange} width={240} />
+                  <SketchPicker color={internalColors[selected]} onChange={this.handleChange} width={240} />
                 </div>
               ) : null}
             </div>
@@ -267,7 +303,7 @@ export default class ColorEditor extends Component {
                 label={i18n.editor.color.applyColor}
                 text={i18n.editor.color.allKeys}
                 icoSVG={<IconKeysLight />}
-                color={colors[selected]}
+                color={internalColors[selected]}
               />
               <ColorButton
                 onClick={() => {
@@ -276,7 +312,7 @@ export default class ColorEditor extends Component {
                 label={i18n.editor.color.applyColor}
                 text={i18n.editor.color.underglow}
                 icoSVG={<IconKeysUnderglow />}
-                color={colors[selected]}
+                color={internalColors[selected]}
               />
             </div>
           </div>
@@ -285,3 +321,17 @@ export default class ColorEditor extends Component {
     );
   }
 }
+
+ColorEditor.propTypes = {
+  selected: PropTypes.bool,
+  toChangeAllKeysColor: PropTypes.func,
+  onColorPick: PropTypes.func,
+  updatePalette: PropTypes.func,
+  onColorSelect: PropTypes.func,
+  onColorButtonSelect: PropTypes.func,
+  deviceName: PropTypes.string,
+  // eslint-disable-next-line react/forbid-prop-types
+  colors: PropTypes.array,
+};
+
+export default ColorEditor;
