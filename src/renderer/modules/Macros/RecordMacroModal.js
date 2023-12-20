@@ -177,52 +177,58 @@ export default class RecordMacroModal extends React.Component {
 
   componentDidMount() {
     ipcRenderer.on("recorded-key-down", (event, response) => {
+      const { keymapDB } = this.props;
       const { isDelayActive, recorded } = this.state;
       console.log("Check key-down", response);
       const newRecorded = recorded;
+      const translated = keymapDB.parse(this.translator[response.event.keycode]);
+      console.log("key press", translated);
       if (isDelayActive && recorded.length > 0) {
         const timePast = response.time - recorded[recorded.length - 1].time;
         if (timePast !== undefined && timePast > 1)
           newRecorded.push({
-            char: response.name,
+            char: "delay",
             keycode: timePast,
             action: 2,
             time: response.time,
-            isMod: this.translator[response.event.keycode] >= 224 && this.translator[response.event.keycode] <= 231,
+            isMod: translated.keyCode >= 224 && translated.keyCode <= 231,
           });
       }
       newRecorded.push({
-        char: response.name,
-        keycode: this.translator[response.event.keycode],
+        char: translated.label,
+        keycode: translated.keyCode,
         action: 6,
         time: response.time,
-        isMod: this.translator[response.event.keycode] >= 224 && this.translator[response.event.keycode] <= 231,
+        isMod: translated.keyCode >= 224 && translated.keyCode <= 231,
       });
       this.setState({
         recorded: newRecorded,
       });
     });
     ipcRenderer.on("recorded-key-up", (event, response) => {
+      const { keymapDB } = this.props;
       const { isDelayActive, recorded } = this.state;
       console.log("Check key-up", response);
       const newRecorded = recorded;
+      const translated = keymapDB.parse(this.translator[response.event.keycode]);
+      console.log("key release", translated);
       if (isDelayActive) {
         const timePast = response.time - recorded[recorded.length - 1].time;
         if (timePast !== undefined && timePast > 1)
           newRecorded.push({
-            char: response.name,
+            char: "delay",
             keycode: timePast,
             action: 2,
             time: response.time,
-            isMod: this.translator[response.event.keycode] >= 224 && this.translator[response.event.keycode] <= 231,
+            isMod: translated.keyCode >= 224 && translated.keyCode <= 231,
           });
       }
       newRecorded.push({
-        char: response.name,
-        keycode: this.translator[response.event.keycode],
+        char: translated.label,
+        keycode: translated.keyCode,
         action: 7,
         time: response.time,
-        isMod: this.translator[response.event.keycode] >= 224 && this.translator[response.event.keycode] <= 231,
+        isMod: translated.keyCode >= 224 && translated.keyCode <= 231,
       });
       this.setState({
         recorded: newRecorded,
