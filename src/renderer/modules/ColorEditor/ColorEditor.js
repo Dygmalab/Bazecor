@@ -128,8 +128,6 @@ class ColorEditor extends Component {
     const { colors, selected, toChangeAllKeysColor, deviceName, colorsInUse } = this.props;
     const { displayColorPicker } = this.state;
 
-    console.log("new array value", colorsInUse);
-
     const layerButtons = colors.map((data, idx) => {
       const menuKey = `color-${idx.toString()}-${colors[idx].rgb.toString()}`;
       const buttonStyle = {
