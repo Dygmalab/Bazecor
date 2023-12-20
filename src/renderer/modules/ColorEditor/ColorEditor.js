@@ -125,13 +125,15 @@ class ColorEditor extends Component {
   }
 
   render() {
-    const { colors, selected, toChangeAllKeysColor, deviceName } = this.props;
+    const { colors, selected, toChangeAllKeysColor, deviceName, colorsInUse } = this.props;
     const { displayColorPicker } = this.state;
+
+    console.log("new array value", colorsInUse);
 
     const layerButtons = colors.map((data, idx) => {
       const menuKey = `color-${idx.toString()}-${colors[idx].rgb.toString()}`;
       const buttonStyle = {
-        backgroundColor: colors[idx].rgb,
+        backgroundColor: colorsInUse[idx] ? colors[idx].rgb : "transparent",
       };
       return (
         // eslint-disable-next-line react/jsx-filename-extension
@@ -224,6 +226,7 @@ ColorEditor.propTypes = {
       rgb: PropTypes.string,
     }),
   ),
+  colorsInUse: PropTypes.array,
   selected: PropTypes.number,
   onColorSelect: PropTypes.func,
   onColorButtonSelect: PropTypes.func,

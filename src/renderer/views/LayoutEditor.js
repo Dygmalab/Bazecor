@@ -1782,6 +1782,7 @@ class LayoutEditor extends React.Component {
     const {
       keymap,
       palette,
+      colorMap,
       isColorButtonSelected,
       currentLayer,
       currentKeyIndex,
@@ -1956,6 +1957,11 @@ class LayoutEditor extends React.Component {
               <ColorEditor
                 key={palette}
                 colors={palette}
+                colorsInUse={palette.map((color, idx) => {
+                  const presence = colorMap.map(lx => lx.find(x => x === idx));
+                  if (presence.find(x => x !== undefined) !== undefined) return true;
+                  return false;
+                })}
                 disabled={isReadOnly || currentLayer > this.state.colorMap.length}
                 onColorSelect={this.onColorSelect}
                 colorButtonIsSelected={this.state.colorButtonIsSelected}
