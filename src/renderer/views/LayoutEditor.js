@@ -1129,15 +1129,23 @@ class LayoutEditor extends React.Component {
     startContext();
   };
 
-  updatePalette = color => {
-    const { palette } = this.state;
+  updatePalette = (colorPalette, id) => {
+    const { palette, colorMap } = this.state;
     const { startContext } = this.props;
-    const newPalette = color.map(({ r, g, b }) => this.setColors({ r, g, b }));
+    const newPalette = colorPalette.map(({ r, g, b }) => this.setColors({ r, g, b }));
 
-    console.log("old vs new palette: ", palette, newPalette);
+    const newColorMap = JSON.parse(JSON.stringify(colorMap));
+    for (let i = 0; i < newColorMap.length; i += 1) {
+      newColorMap[i] = newColorMap[i].map(colorID => {
+        if (id < colorID) return colorID - 1;
+        if (id === colorID) return 15;
+        return colorID;
+      });
+    }
 
     this.setState({
       palette: newPalette,
+      colorMap: newColorMap,
       modified: true,
     });
     startContext();

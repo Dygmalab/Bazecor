@@ -161,7 +161,7 @@ class ColorEditor extends React.Component {
         arrayColorPalette.push({ r: 0, g: 0, b: 0, rgb: "(0, 0, 0)" });
       }
       // console.log("palettev1", arrayColorPalette);
-      updatePalette(arrayColorPalette);
+      updatePalette(arrayColorPalette, id);
       return;
     }
     const arrayColorPalette = [...internalColors];
@@ -173,7 +173,7 @@ class ColorEditor extends React.Component {
       arrayColorPalette.push({ r: 0, g: 0, b: 0, rgb: "(0, 0, 0)" });
     }
     // console.log("palettev2", arrayColorPalette);
-    updatePalette(arrayColorPalette);
+    updatePalette(arrayColorPalette, id);
   };
 
   addNewColorPalette() {
