@@ -1053,7 +1053,6 @@ function LayoutEditor(props) {
     const { selectedPaletteColor, modified } = state;
     const isEqualColor = onVerificationColor(selectedPaletteColor, currentLayer, ledIndex);
     if (!(!modified && isEqualColor)) {
-      startContext();
       setState(prevState => {
         const colormap = prevState.colorMap.slice();
         colormap[currentLayer][ledIndex] = prevState.selectedPaletteColor;
@@ -1065,6 +1064,7 @@ function LayoutEditor(props) {
           modified: true,
         };
       });
+      startContext();
     }
   };
 
