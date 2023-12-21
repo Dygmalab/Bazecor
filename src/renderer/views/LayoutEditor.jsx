@@ -1796,6 +1796,7 @@ function LayoutEditor(props) {
   const {
     keymap,
     palette,
+    colorMap,
     isColorButtonSelected,
     currentLayer,
     currentKeyIndex,
@@ -1921,6 +1922,11 @@ function LayoutEditor(props) {
               onColorSelect={onColorSelect}
               colorButtonIsSelected={state.colorButtonIsSelected}
               onColorPick={onColorPick}
+              colorsInUse={palette.map((color, idx) => {
+                const presence = colorMap.map(lx => lx.find(x => x === idx));
+                if (presence.find(x => x !== undefined) !== undefined) return true;
+                return false;
+              })}
               selected={state.selectedPaletteColor}
               isColorButtonSelected={isColorButtonSelected}
               onColorButtonSelect={onColorButtonSelect}
