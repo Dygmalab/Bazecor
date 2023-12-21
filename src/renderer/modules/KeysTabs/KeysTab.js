@@ -104,7 +104,7 @@ class KeysTab extends Component {
             keyCode={keyCode}
             disableMove={false}
             // disableMods={false}
-            disableMods={!!((superkeyAction == 0 || superkeyAction == 3) && actTab === "super")}
+            disableMods={!!((superkeyAction == 0 || superkeyAction == 3) && actTab === "disabled")}
             // disableMove={![0, 3].includes(actions) && actTab == "super"}
             actTab={actTab}
             superName="superName"

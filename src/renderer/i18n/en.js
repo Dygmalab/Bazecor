@@ -520,8 +520,8 @@ const English = {
     },
     batteryPreferences: {
       battery: "Battery",
-      batteryErrorReading: "Error reading battery level",
-      batteryDisconnected: "Battery physically disconnected!",
+      batteryErrorReading: "Charger error, check power source",
+      batteryDisconnected: "Side disconnected!",
       batteryFatalError: "Error!",
       savingModeDescription: `<p><strong>Turn on automatically when the battery level reach 20%.</strong> This mode is designed to optimize and reduce the power consumption helping extend the time between charges.</p>`,
     },

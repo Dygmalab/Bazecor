@@ -585,7 +585,11 @@ function MacroEditor(props) {
         throw Error(error);
       }
       let tMem = await currentDevice.command("macros.memory");
-      tMem = parseInt(tMem, 10);
+      if (tMem === "") {
+        tMem = 2048;
+      } else {
+        tMem = parseInt(tMem, 10);
+      }
       if (tMem === undefined || tMem < 100) tMem = 2048;
       const defaults = await currentDevice.command("keymap.default");
       const custom = await currentDevice.command("keymap.custom");

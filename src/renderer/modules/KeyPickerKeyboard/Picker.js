@@ -39,7 +39,7 @@ class Picker extends Component {
             base: actions[action] > 255 ? baseCode : actions[action],
             modified: modCode,
           }}
-          disableMods={[0, 3].includes(action) && activeTab == "super"}
+          disableMods={[0, 3].includes(action) && activeTab == "disabled"}
           disableMove={![0, 3].includes(action) && activeTab == "super"}
           disableAll={disable}
           selectedlanguage={selectedlanguage}
