@@ -15,17 +15,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React, { Component, Fragment } from "react";
+import React, { Component } from "react";
+import PropTypes from "prop-types";
 import { SketchPicker } from "react-color";
 import Styled from "styled-components";
 
 // Bootstrap components
 
-import Button from "react-bootstrap/Button";
-import Tooltip from "react-bootstrap/Tooltip";
-import OverlayTrigger from "react-bootstrap/OverlayTrigger";
-
-import { CgSmartHomeLight, CgColorPicker } from "react-icons/cg";
 import Title from "../../component/Title";
 import { ColorButton, ColorPicker } from "../../component/Button";
 
@@ -33,8 +29,6 @@ import { ColorButton, ColorPicker } from "../../component/Button";
 import i18n from "../../i18n";
 
 import { IconColorPalette, IconKeysLight, IconKeysUnderglow } from "../../component/Icon";
-
-const toolsWidth = 45;
 
 const Styles = Styled.div`
 width: 100%;
@@ -98,20 +92,17 @@ width: 100%;
 }
 `;
 
-export default class ColorEditor extends Component {
+class ColorEditor extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
       displayColorPicker: false,
-      internalColors: props.colors,
     };
 
     this.showColorPicker = this.showColorPicker.bind(this);
     this.selectColor = this.selectColor.bind(this);
     this.handleChange = this.handleChange.bind(this);
-    this.spare = this.spare.bind(this);
-    this.addNewColorPalette = this.addNewColorPalette.bind(this);
   }
 
   handleChange(color) {
@@ -119,96 +110,45 @@ export default class ColorEditor extends Component {
     onColorPick(selected, color.rgb.r, color.rgb.g, color.rgb.b);
   }
 
-  CButton(text, func, icon, disable, classes) {
-    const id = `tooltip-${text}`;
-
-    return (
-      <OverlayTrigger rootClose overlay={<Tooltip id={id}>{text}</Tooltip>} placement="top">
-        <Button disabled={disable} onClick={func} className={classes}>
-          {icon}
-        </Button>
-      </OverlayTrigger>
-    );
-  }
-
-  spare() {
-    const { colors } = this.props;
-  }
-
   selectColor(ev, pick) {
-    const { colors, selected, onColorSelect } = this.props;
+    const { selected, onColorSelect, onColorButtonSelect } = this.props;
     onColorSelect(pick);
     if (pick === selected) {
-      // setIndexFocusButton(!indexFocusButton);
-      this.props.onColorButtonSelect("one_button_click", pick);
+      onColorButtonSelect("one_button_click", pick);
       return;
     }
-    this.props.onColorButtonSelect("another_button_click", pick);
-    // setIndexFocusButton(index);
-    // setColorFocusButton(setColorTamplate(color));
+    onColorButtonSelect("another_button_click", pick);
   }
 
-  showColorPicker(event) {
+  showColorPicker() {
     this.setState(state => ({ displayColorPicker: !state.displayColorPicker }));
   }
 
-  removeColorPalette(idx) {
-    const arrayColorPalette = [...this.state.internalColors];
-    const index = idx;
-    if (index !== -1) {
-      arrayColorPalette.splice(index, 1);
-      this.setState({ internalColors: arrayColorPalette });
-    }
-  }
-
-  addNewColorPalette() {
-    const arrayColorPalette = [...this.state.internalColors];
-    arrayColorPalette.push({ r: 122, g: 121, b: 241, rgb: "(122, 121, 241)" });
-    this.setState({ internalColors: arrayColorPalette });
-
-    this.selectColor(null, this.state.internalColors.length);
-    this.setState({ displayColorPicker: true });
-  }
-
   render() {
-    const { colors, selected, toChangeAllKeysColor, deviceName } = this.props;
-    const { displayColorPicker, internalColors } = this.state;
+    const { colors, selected, toChangeAllKeysColor, deviceName, colorsInUse } = this.props;
+    const { displayColorPicker } = this.state;
 
-    const layerButtons = internalColors.map((data, idx) => {
+    const layerButtons = colors.map((data, idx) => {
       const menuKey = `color-${idx.toString()}-${colors[idx].rgb.toString()}`;
       const buttonStyle = {
-        // backgroundColor: data.rgb
-        backgroundColor: colors[idx].rgb,
+        backgroundColor: colorsInUse[idx] ? colors[idx].rgb : "transparent",
       };
-      if (
-        idx > 0 &&
-        data.rgb == "rgb(0, 0, 0)" &&
-        internalColors[idx - 1].rgb == "rgb(0, 0, 0)" &&
-        data.rgb == internalColors[idx - 1].rgb
-      ) {
-        // internalColors.slice(idx, 1);
-        this.removeColorPalette(idx);
-      } else {
-        return (
-          <ColorPicker
-            onClick={ev => {
-              this.selectColor(ev, idx);
-            }}
-            menuKey={menuKey}
-            key={`${menuKey}-key-${colors[idx]}`}
-            id={idx}
-            selected={selected}
-            buttonStyle={buttonStyle}
-            dataID={data.rgb}
-            className="colorPicker"
-          />
-        );
-      }
+      return (
+        // eslint-disable-next-line react/jsx-filename-extension
+        <ColorPicker
+          onClick={ev => {
+            this.selectColor(ev, idx);
+          }}
+          menuKey={menuKey}
+          key={`${menuKey}-key-${colors[idx]}`}
+          id={idx}
+          selected={selected}
+          buttonStyle={buttonStyle}
+          dataID={data.rgb}
+          className="colorPicker"
+        />
+      );
     });
-
-    const iconStyles = { transform: "rotate(180deg)" };
-
-    const edit = <>{this.CButton("Edit current color", this.showColorPicker, <CgColorPicker />, false, "first colorpick")}</>;
 
     const popover = {
       position: "absolute",
@@ -230,19 +170,7 @@ export default class ColorEditor extends Component {
           <Title text={i18n.editor.color.colorPalette} headingLevel={4} />
         </div>
         <div className="panelTools">
-          <div className="colorPallete">
-            {layerButtons}
-            {internalColors.length < 16 ? (
-              <ColorPicker
-                onClick={this.addNewColorPalette}
-                menuKey="menuKeyAddNewColor"
-                key="buttonAddNewColor"
-                className="addColorButton"
-              />
-            ) : (
-              ""
-            )}
-          </div>
+          <div className="colorPallete">{layerButtons}</div>
           <div className="buttonsGroup">
             <div className="buttonEditColor">
               <ColorButton
@@ -285,3 +213,23 @@ export default class ColorEditor extends Component {
     );
   }
 }
+
+ColorEditor.propTypes = {
+  onColorPick: PropTypes.func,
+  colors: PropTypes.arrayOf(
+    PropTypes.shape({
+      r: PropTypes.number,
+      g: PropTypes.number,
+      b: PropTypes.number,
+      rgb: PropTypes.string,
+    }),
+  ),
+  colorsInUse: PropTypes.array,
+  selected: PropTypes.number,
+  onColorSelect: PropTypes.func,
+  onColorButtonSelect: PropTypes.func,
+  toChangeAllKeysColor: PropTypes.func,
+  deviceName: PropTypes.string,
+};
+
+export default ColorEditor;
