@@ -575,9 +575,12 @@ class MacroEditor extends React.Component {
         setLoading(false);
         throw Error(error);
       }
-
       let tMem = await focus.command("macros.memory");
-      tMem = parseInt(tMem, 10);
+      if (tMem === "") {
+        tMem = 2048;
+      } else {
+        tMem = parseInt(tMem, 10);
+      }
       if (tMem === undefined || tMem < 100) tMem = 2048;
       const keymap = await focus.command("keymap");
       const macrosRaw = await focus.command("macros.map");
