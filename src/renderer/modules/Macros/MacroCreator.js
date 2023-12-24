@@ -640,7 +640,7 @@ class MacroCreator extends Component {
           <div className="tabWrapper">
             <div className="tabCategories">
               <Title headingLevel={3} text={i18n.general.actions} />
-              <RecordMacroModal onAddRecorded={this.onAddRecorded} />
+              <RecordMacroModal onAddRecorded={this.onAddRecorded} keymapDB={this.keymapDB} />
               <Nav className="flex-column">
                 <CustomTab eventKey="tabText" text="Text" icon={<IconLetterColor />} />
                 <CustomTab eventKey="tabKeys" text="Keys" icon={<IconKeyboard />} />

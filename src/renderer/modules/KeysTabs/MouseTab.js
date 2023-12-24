@@ -70,7 +70,7 @@ h4 {
     }
     padding-bottom: 12px;
 }
-.clickButtons .keysButtonsList {    
+.clickButtons .keysButtonsList {
     max-width: 430px;
     flex-wrap: wrap;
     .button-config {
@@ -88,13 +88,13 @@ h4 {
     &.mouseButtonsWheel {
         &:before, &:after {
             content: "";
-            position: absolute; 
+            position: absolute;
             left: 50%;
             top: 50%;
             transform: translate3d(-50%, -50%, 0);
         }
         &:before {
-            border-radius: 50%; 
+            border-radius: 50%;
             width: 52px;
             height: 52px;
             background:  ${({ theme }) => theme.styles.mouseButtons.backgroundWheelCircle};
@@ -124,8 +124,8 @@ h4 {
     grid-gap: 24px;
   }
   .buttonsRow {
-    // grid-template-columns: 1fr 1fr; 
-    grid-template-columns: minmax(240px, 370px) auto auto; 
+    // grid-template-columns: 1fr 1fr;
+    grid-template-columns: minmax(240px, 370px) auto auto;
     .clickButtons {
       //grid-column: 1 / -1;
     }
@@ -204,7 +204,7 @@ function MouseTab({ isStandardView, keyCode, onAddSpecial }) {
                 />
               </div>
             </div>
-            <div className="movementButtons">
+            {/* <div className="movementButtons">
               <Title text={i18n.mouse.movementTitle} headingLevel={4} />
               <p className="description">{i18n.mouse.movementDescription}</p>
               <div className="keysButtonsList">
@@ -267,9 +267,8 @@ function MouseTab({ isStandardView, keyCode, onAddSpecial }) {
                   />
                 </div>
               </div>
-            </div>
+            </div> */}
           </div>
-          {/* {isStandardView ? <MouseEventsReference /> : ""} */}
         </div>
       </div>
     </Styles>
