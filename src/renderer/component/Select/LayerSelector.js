@@ -29,14 +29,15 @@ import {
   IconArrowDownWithLine,
   IconFileDownload,
   IconKeyboard,
-  IconFlashlight,
+  IconFlashlight, IconRecord, IconStopWatch, IconLayers,
 } from "../Icon";
 
 import { NameModal } from "../Modal"; // Imported custom modal component
 import { ButtonSettings } from "../Button";
 import { KeyboardViewSelector } from "../ToggleButtons";
+import IconMagnifier from "@Renderer/component/Icon/IconMagnifier";
 
-const Style = Styled.div` 
+const Style = Styled.div`
 display: flex;
 align-items: center;
 .dropdownMultipleActions {
@@ -129,6 +130,8 @@ class LayerSelector extends React.Component {
       clearFunc,
       editModeActual,
       editModeFunc,
+      editFollowMode,
+      followModeActual,
       exportToPdf,
     } = this.props;
     const { show, showAdd } = this.state;
@@ -144,6 +147,20 @@ class LayerSelector extends React.Component {
         tooltip: i18n.editor.color.colorEditor,
         value: "color",
         icon: <IconFlashlight />,
+      },
+    ];
+    const followMode = [
+      {
+        name: i18n.editor.follow.stop,
+        tooltip: i18n.editor.follow.stopFollow,
+        value: "off",
+        icon: <IconLayers />,
+      },
+      {
+        name: i18n.editor.follow.layer,
+        tooltip: i18n.editor.follow.followLayer,
+        value: "on",
+        icon: <IconMagnifier />,
       },
     ];
     return (
@@ -240,6 +257,7 @@ class LayerSelector extends React.Component {
           </div>
         </div>
         <KeyboardViewSelector listElements={layoutsMode} value={editModeActual} style="flex" editModeFunc={editModeFunc} />
+        <KeyboardViewSelector listElements={followMode} value={followModeActual} style="flex" editModeFunc={editFollowMode} />
 
         {itemList == undefined || itemList.length == 0 || itemList.length <= selectedItem ? (
           ""
