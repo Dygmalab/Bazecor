@@ -22,33 +22,6 @@ const GlobalStyles = createGlobalStyle<{ theme: DefaultTheme }>`
     font-display: block;
   }
   
-  body {
-    background: ${({ theme }) => theme.colors.body};
-    font-weight: 600;
-    background-image: url(${({ theme }) => theme.body.backgroundImage});
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-attachment: fixed;
-    color: ${({ theme }) => theme.colors.text};
-    font-family: ${({ theme }) => theme.font};
-    // font-family: ${({ theme }) => theme.font},  -apple-system, sans-serif;
-
-    text-rendering: optimizeLegibility;
-    font-smoothing: antialiased;
-    -moz-font-smoothing: antialiased;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    -moz-font-feature-settings: "liga" on;
-
-    overflow: overlay;
-  }
-
-  @media screen and (-webkit-min-device-pixel-ratio: 2), 
-  (min-resolution: 192dpi) { 
-      body {
-        background-image: url(${({ theme }) => theme.body.backgroundImage2x});
-      }
-  }
   #root {
     display: grid;
     --sidebarWidth: ${({ theme }) => theme.sidebarWidthMedium}px;

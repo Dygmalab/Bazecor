@@ -156,6 +156,11 @@ const App = () => {
     if (dm === "system") {
       forceDarkMode(message);
     }
+    if (appState.darkMode || (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches)) {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
   };
 
   const handleUSBDisconnection = async (device: any) => {
@@ -274,6 +279,13 @@ const App = () => {
       darkMode: isDark,
     });
     store.set("settings.darkMode", mode);
+
+    const colorScheme = getComputedStyle(document.body, ":after").content.replace(/["']/g, "");
+    if (mode === "light" || (mode === "system" && colorScheme === "light")) {
+      document.documentElement.classList.remove("dark");
+    } else {
+      document.documentElement.classList.add("dark");
+    }
   };
 
   const toggleFlashing = async () => {
