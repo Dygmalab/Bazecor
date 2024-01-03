@@ -30,15 +30,33 @@ import "react-toastify/dist/ReactToastify.css";
 
 // Custom modules imports
 import { KeyboardSettings } from "@Renderer/modules/Settings/KeyboardSettings";
-import { BackupSettings, GeneralSettings, NeuronSettings, AdvancedSettings } from "@Renderer/modules/Settings";
+import {
+  BackupSettings,
+  DeviceConnectedPreview,
+  GeneralSettings,
+  NeuronSettings,
+  AdvancedSettings,
+} from "@Renderer/modules/Settings";
 
 import { PageHeader } from "@Renderer/modules/PageHeader";
 import ToastMessage from "@Renderer/component/ToastMessage";
-import { IconFloppyDisk } from "@Renderer/component/Icon";
+import {
+  IconBattery,
+  IconBluetooth,
+  IconFlashlight,
+  IconFloppyDisk,
+  IconKeyboard,
+  IconLogoDygma,
+  IconSignal,
+  IconWrench,
+} from "@Renderer/component/Icon";
 import Version from "@Renderer/component/Version/Version";
 
 import Store from "@Renderer/utils/Store";
 import { useDevice } from "@Renderer/DeviceContext";
+import { TabItem } from "@Renderer/component/Tab";
+import { Tab } from "@headlessui/react";
+import { motion } from "framer-motion";
 import Backup from "../../api/backup";
 
 const store = Store.getStore();
@@ -407,7 +425,7 @@ const Preferences = (props: PreferencesProps) => {
   };
 
   const toggleVerboseFocus = () => {
-    //focus.debug = !this.state.verboseFocus;
+    // focus.debug = !this.state.verboseFocus;
     setPreferencesState(prevState => ({
       ...preferencesState,
       verboseFocus: !prevState.verboseFocus,
@@ -476,12 +494,17 @@ const Preferences = (props: PreferencesProps) => {
   // console.log("CHECKING STATUS MOD", modified);
   // console.log("CHECKING STATUS CTX", inContext);
 
+  const [currentTab, setCurrentTab] = useState(6);
+
+  console.log("selectedNeuron: ", selectedNeuron);
+  console.log("Connected: ", connected);
+  console.log("neurons[selectedNeuron]: ", neurons[selectedNeuron]);
+
   return (
     <Styles>
-      <Container fluid>
+      <div className="px-2">
         <PageHeader
           text={i18n.preferences.title}
-          style="pageHeaderFlatBottom"
           showSaving
           contentSelector={false}
           saveContext={saveKeymapChanges}
@@ -489,19 +512,102 @@ const Preferences = (props: PreferencesProps) => {
           inContext={modified}
           isSaving={isSaving}
         />
+        <div className="flex w-full mx-auto mt-4">
+          <Tab.Group vertical onChange={index => setCurrentTab(index)} defaultIndex={currentTab}>
+            <div className="flex gap-3 w-full">
+              <Tab.List className="flex flex-col self-start gap-1 px-4 py-4 text-left min-w-64 rounded-xl bg-tabMenu dark:bg-tabMenuDark">
+                <DeviceConnectedPreview
+                  deviceName={neurons[selectedNeuron].name}
+                  deviceDisplayName={neurons[selectedNeuron].device.info.displayName}
+                  nameChange={updateNeuronName}
+                />
+                <h4 className="uppercase text-xs dark:text-gray-300 pb-2 mb-1 mt-3 border-solid border-b border-gray-300/30 dark:border-gray-300/30">
+                  Device settings
+                </h4>
+                <TabItem icon={<IconKeyboard />} text="Typing and Keys" />
+                <TabItem icon={<IconFlashlight />} text="LED" />
+                <TabItem icon={<IconBattery />} text="Battery Management" />
+                <TabItem icon={<IconBluetooth />} text="Bluetooth Settings" />
+                <TabItem icon={<IconSignal />} text="RF Settings" />
+                <TabItem icon={<IconWrench />} text="Advanced" />
+                <h4 className="uppercase text-xs dark:text-gray-300 pb-2 mb-1 mt-3 border-solid border-b border-gray-300/30 dark:border-gray-300/30">
+                  Global settings
+                </h4>
+                <TabItem icon={<IconLogoDygma />} text="Application" />
+              </Tab.List>
+              <Tab.Panels className="px-4 py-4 w-full dark:bg-gray-400/15 rounded-xl">
+                <Tab.Panel
+                  as={motion.div}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: currentTab === 0 ? 1 : 0 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  Content Typing and Keys
+                </Tab.Panel>
+                <Tab.Panel
+                  as={motion.div}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: currentTab === 1 ? 1 : 0 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  LED
+                </Tab.Panel>
+                <Tab.Panel
+                  as={motion.div}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: currentTab === 2 ? 1 : 0 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  Battery Management
+                </Tab.Panel>
+                <Tab.Panel
+                  as={motion.div}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: currentTab === 3 ? 1 : 0 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  Bluetooth Settings
+                </Tab.Panel>
+                <Tab.Panel
+                  as={motion.div}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: currentTab === 4 ? 1 : 0 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  RF Settings
+                </Tab.Panel>
+                <Tab.Panel
+                  as={motion.div}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: currentTab === 5 ? 1 : 0 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  Advanced
+                </Tab.Panel>
+                <Tab.Panel
+                  as={motion.div}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: currentTab === 6 ? 1 : 0 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <GeneralSettings
+                    selectDarkMode={selectDarkMode}
+                    darkMode={darkMode}
+                    neurons={neurons}
+                    selectedNeuron={selectedNeuron}
+                    defaultLayer={defaultLayer}
+                    selectDefaultLayer={selectDefaultLayer}
+                    connected={connected}
+                  />
+                </Tab.Panel>
+              </Tab.Panels>
+            </div>
+          </Tab.Group>
+        </div>
         <div className="wrapper wrapperBackground">
           <Container fluid>
             <Row className="justify-content-center">
               <Col lg={9} xl={6}>
-                <GeneralSettings
-                  selectDarkMode={selectDarkMode}
-                  darkMode={darkMode}
-                  neurons={neurons}
-                  selectedNeuron={selectedNeuron}
-                  defaultLayer={defaultLayer}
-                  selectDefaultLayer={selectDefaultLayer}
-                  connected={connected}
-                />
                 <BackupSettings connected={connected} />
                 <NeuronSettings
                   neurons={neurons}
@@ -524,7 +630,7 @@ const Preferences = (props: PreferencesProps) => {
             </Row>
           </Container>
         </div>
-      </Container>
+      </div>
     </Styles>
   );
 };

@@ -24,7 +24,7 @@ import { MdUnfoldLess, MdKeyboardArrowUp, MdKeyboardArrowDown, MdTimer } from "r
 import i18n from "../../i18n";
 
 import Title from "../../component/Title";
-import CustomTab from "../../component/Tab";
+import { CustomTab } from "../../component/Tab";
 import TextTab from "../KeysTabs/TextTab";
 import KeysTab from "../KeysTabs/KeysTab";
 import LayersTab from "../KeysTabs/LayersTab";

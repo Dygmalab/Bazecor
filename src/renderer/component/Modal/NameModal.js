@@ -1,54 +1,47 @@
-import React from "react";
-import Modal from "react-bootstrap/Modal";
-import Form from "react-bootstrap/Form";
+import React, { useState, useRef } from "react";
+import { Dialog } from "@headlessui/react";
+import { AnimatePresence, motion } from "framer-motion";
 import i18n from "../../i18n";
 
-import { RegularButton } from "../Button";
+const NameModal = ({ modalTitle, show, toggleShow, name, handleSave, label }) => {
+  const [internalName, setInternalName] = useState(name);
+  const inputRef = useRef(null);
 
-export default class NameModal extends React.Component {
-  constructor(props) {
-    super(props);
-    this.inputText = React.createRef();
-    this.state = {
-      name: props.name,
-    };
-  }
+  return (
+    // Use the `Transition` component + show prop to add transitions.
+    <AnimatePresence>
+      {open && (
+        <Dialog static as={motion.div} open={show} onClose={toggleShow} initialFocus={inputRef} className="relative z-50">
+          {/* The backdrop, rendered as a fixed sibling to the panel container */}
+          <div className="fixed inset-0 bg-black/30" aria-hidden="true" />
 
-  componentDidUpdate(previousProps, previousState) {
-    if (this.props != previousProps) {
-      // console.log("PROBLEM", this.props.name, previousProps.name);
-      this.setState({
-        name: this.props.name,
-      });
-    }
-  }
+          {/* Full-screen container to center the panel */}
+          <div className="fixed inset-0 flex w-screen items-center justify-center p-4">
+            {/* The actual dialog panel  */}
+            <Dialog.Panel className="mx-auto max-w-sm rounded bg-white">
+              <Dialog.Title>{modalTitle}</Dialog.Title>
+              <form>
+                <label htmlFor="changeName">{label}</label>
+                <input
+                  id="changeName"
+                  type="text"
+                  ref={inputRef}
+                  value={internalName}
+                  onChange={event => setInternalName(event.target.value)}
+                />
+                <button onClick={toggleShow} className="btn btn-outline" type="button">
+                  {i18n.app.cancelPending.button}
+                </button>
+                <button onClick={event => handleSave(internalName)} className="btn btn-primary" type="button">
+                  {i18n.components.save.button}
+                </button>
+              </form>
+            </Dialog.Panel>
+          </div>
+        </Dialog>
+      )}
+    </AnimatePresence>
+  );
+};
 
-  render() {
-    const { show, toggleShow, handleSave, modalTitle, labelInput, id } = this.props;
-    return (
-      <Modal size="lg" show={show} onHide={toggleShow} aria-labelledby="contained-modal-title-vcenter" centered>
-        <Modal.Header closeButton>
-          <Modal.Title>{modalTitle}</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <Form.Label>{labelInput}</Form.Label>
-          <Form.Control
-            type="text"
-            value={this.state.name}
-            onChange={event => this.setState({ name: event.target.value })}
-            ref={this.inputText}
-          />
-        </Modal.Body>
-        <Modal.Footer>
-          <RegularButton buttonText={i18n.app.cancelPending.button} styles="outline transp-bg" size="sm" onClick={toggleShow} />
-          <RegularButton
-            buttonText={i18n.components.save.button}
-            styles="outline gradient"
-            size="sm"
-            onClick={event => handleSave(this.state.name)}
-          />
-        </Modal.Footer>
-      </Modal>
-    );
-  }
-}
+export default NameModal;

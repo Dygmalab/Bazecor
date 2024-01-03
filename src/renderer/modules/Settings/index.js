@@ -17,9 +17,19 @@
 import AdvancedSettings from "./AdvancedSettings";
 import BackupSettings from "./BackupSettings";
 import BatterySettings from "./BatterySettings";
+import DeviceConnectedPreview from "./DeviceConnectedPreview";
 import EnergyManagement from "./EnergyManagement";
 import GeneralSettings from "./GeneralSettings";
 import NeuronSettings from "./NeuronSettings";
 import RFSettings from "./RFSettings";
 
-export { AdvancedSettings, BackupSettings, BatterySettings, EnergyManagement, GeneralSettings, NeuronSettings, RFSettings };
+export {
+  AdvancedSettings,
+  BackupSettings,
+  BatterySettings,
+  DeviceConnectedPreview,
+  EnergyManagement,
+  GeneralSettings,
+  NeuronSettings,
+  RFSettings,
+};

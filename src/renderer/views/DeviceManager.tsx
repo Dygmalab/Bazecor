@@ -249,8 +249,8 @@ const savedDevicesList = [
   },
 ];
 const DeviceManager = ({ titleElement, device }) => {
-  // const [listDevices, setListDevices] = useState(savedDevicesList);
-  const [listDevices, setListDevices] = useState([]);
+  const [listDevices, setListDevices] = useState(savedDevicesList);
+  // const [listDevices, setListDevices] = useState([]);
   const [activeTab, setActiveTab] = useState<"all" | boolean>("all");
   const [showModal, setShowModal] = useState(false);
 

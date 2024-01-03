@@ -4,12 +4,10 @@ import Styled from "styled-components";
 import Tab from "react-bootstrap/Tab";
 import Nav from "react-bootstrap/Nav";
 
-import Keymap, { KeymapDB } from "../../../api/keymap";
-
 // component
 import { RegularButton } from "@Renderer/component/Button";
 import KeyVisualizer from "@Renderer/modules/KeyVisualizer";
-import CustomTab from "@Renderer/component/Tab";
+import { CustomTab } from "@Renderer/component/Tab";
 import KeysTab from "@Renderer/modules/KeysTabs/KeysTab";
 import NoKeyTransparentTab from "@Renderer/modules/KeysTabs/NoKeyTransparentTab";
 import LayersTab from "@Renderer/modules/KeysTabs/LayersTab";
@@ -34,6 +32,7 @@ import {
   IconThunder,
   IconWirelessMd,
 } from "@Renderer/component/Icon";
+import Keymap, { KeymapDB } from "../../../api/keymap";
 
 const Styles = Styled.div`
 .standardView {

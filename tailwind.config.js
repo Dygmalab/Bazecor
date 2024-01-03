@@ -72,6 +72,11 @@ module.exports = {
         footer: "url('/assets/images/bg-footer.png')",
         noise: "url('/assets/images/noise.png')",
         home: "url('/assets/images/home-hero-background.jpg')",
+        lightAccent: "url('@Assets/base/light-accent--md.png')",
+        tabMenuDark: "url(@Assets/dark/noise-tabs.jpg)",
+        tabMenu: "url(@Assets/light/noise-tabs.jpg)",
+        tabGradientDarkActive:
+          "linear-gradient(100deg, rgba(240, 242, 244, 0.12) -24%, rgba(255, 255, 255, 0.00) 40%), rgba(18, 19, 36, 0.60))",
       },
       backgroundPosition: {
         position: "left -8rem top -8rem",
