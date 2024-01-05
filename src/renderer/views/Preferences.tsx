@@ -355,8 +355,8 @@ const Preferences = (props: PreferencesProps) => {
 
   const setKbDataHandler = (newKbData: any) => {
     if (kbData.modified === false && newKbData.modified === true) {
-      setKbData(newKbData);
       startContext();
+      setKbData(newKbData);
       setPreferencesState({
         ...preferencesState,
         modified: newKbData.modified,

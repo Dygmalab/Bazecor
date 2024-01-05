@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable no-continue */
 /* eslint-disable no-bitwise */
@@ -497,7 +496,6 @@ const LayoutEditor: React.FC<LayoutEditorProps> = (props): React.JSX.Element => 
     props;
 
   const onLayerNameChange = (newName: string) => {
-    console.log("RENAMING LAYERS!!!!");
     const slicedLayerNames = layerNames.slice();
     slicedLayerNames[currentLayer] = {
       id: currentLayer,
@@ -1598,7 +1596,7 @@ const LayoutEditor: React.FC<LayoutEditorProps> = (props): React.JSX.Element => 
   };
 
   useEffect(() => {
-    console.log("going to RUN INITIAL USE EFFECT just ONCE");
+    // console.log("going to RUN INITIAL USE EFFECT just ONCE");
     const scanner = async () => {
       await scanKeyboard(currentLanguageLayout);
       // setLoadingData(false);
@@ -1610,7 +1608,7 @@ const LayoutEditor: React.FC<LayoutEditorProps> = (props): React.JSX.Element => 
   }, [currentLanguageLayout, scanned, isSending, scanKeyboard, setLoadingData]);
 
   useEffect(() => {
-    console.log("Running processAfterScan useEffect");
+    // console.log("Running processAfterScan useEffect");
 
     const processAfterScan = () => {
       const standardView = configStandardView();
@@ -1628,11 +1626,10 @@ const LayoutEditor: React.FC<LayoutEditorProps> = (props): React.JSX.Element => 
   }, [previousLayer, scanned, setLoadingData]);
 
   useEffect(() => {
-    console.log("Running Scanner on changes useEffect");
+    // console.log("Running Scanner on changes useEffect");
     const scanner = async () => {
       console.log("props", inContext, modified);
       if (modified === true && inContext === false) {
-        console.log("Setting default");
         setLoadingData(true);
         setCurrentLayer(previousLayer !== 0 ? previousLayer : 0);
         setCurrentKeyIndex(-1);
@@ -1661,13 +1658,12 @@ const LayoutEditor: React.FC<LayoutEditorProps> = (props): React.JSX.Element => 
   ]);
 
   useEffect(() => {
-    console.log("Running StandardView useEffect");
+    // console.log("Running StandardView useEffect", isStandardView);
     store.set("settings.isStandardView", isStandardView);
-    console.log("Did update: ", isStandardView);
   }, [isStandardView]);
 
   useEffect(() => {
-    console.log("Running LayerData useEffect");
+    // console.log("Running LayerData useEffect");
     const localShowDefaults = store.get("settings.showDefaults") as boolean;
     let cLayer = currentLayer;
 
@@ -1787,9 +1783,9 @@ const LayoutEditor: React.FC<LayoutEditorProps> = (props): React.JSX.Element => 
     }
   }
 
-  console.log("execution that may not render");
+  // console.log("execution that may not render");
   if (layerData === undefined || layerData.length < 1) return <LogoLoaderCentered />;
-  console.log("GOING TO RENDER!!!");
+  // console.log("GOING TO RENDER!!!");
 
   const layer = (
     // TODO: restore fade effect <fade in appear key={currentLayer}>
