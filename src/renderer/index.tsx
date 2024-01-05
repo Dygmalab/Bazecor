@@ -19,6 +19,8 @@ import React from "react";
 import { MemoryRouter } from "react-router-dom";
 import { createRoot } from "react-dom/client";
 import { I18nextProvider } from "react-i18next";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import App from "./App";
 import Error from "./Error";
 import "bootstrap-css-only/css/bootstrap.min.css";
@@ -36,6 +38,16 @@ try {
         <DeviceProvider>
           <I18nextProvider i18n={i18n}>
             <App />
+            <ToastContainer
+              position="top-right"
+              autoClose={false}
+              hideProgressBar={false}
+              newestOnTop={false}
+              draggable={false}
+              closeOnClick
+              pauseOnHover
+              pauseOnFocusLoss
+            />
           </I18nextProvider>
         </DeviceProvider>
       </MemoryRouter>

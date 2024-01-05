@@ -203,7 +203,7 @@ interface SelectKeyboardProps {
   setLoading: (loading) => unknown;
 }
 
-const SelectKeyboard: React.FC<SelectKeyboardProps> = (props): JSX.Element => {
+const SelectKeyboard: React.FC<SelectKeyboardProps> = (props): React.JSX.Element => {
   const [selectedPortIndex, setSelectedPortIndex] = useState(0);
   const [opening, setOpening] = useState(false);
   const [devices, setDevices] = useState([]);

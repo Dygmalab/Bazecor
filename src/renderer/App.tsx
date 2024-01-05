@@ -19,13 +19,11 @@
 
 import React, { useState, useEffect } from "react";
 import { Routes, Navigate, Route, useNavigate } from "react-router-dom";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import { ThemeProvider } from "styled-components";
 import { ipcRenderer } from "electron";
 import path from "path";
 import i18n from "@Renderer/i18n";
-
-import "react-toastify/dist/ReactToastify.css";
 
 import GlobalStyles from "@Renderer/theme/GlobalStyles";
 import Light from "@Renderer/theme/LightTheme";
@@ -416,16 +414,6 @@ function App() {
           />
         </Routes>
       </div>
-      <ToastContainer
-        position="top-right"
-        autoClose={false}
-        hideProgressBar={false}
-        newestOnTop={false}
-        draggable={false}
-        closeOnClick
-        pauseOnHover
-        pauseOnFocusLoss
-      />
     </ThemeProvider>
   );
 }

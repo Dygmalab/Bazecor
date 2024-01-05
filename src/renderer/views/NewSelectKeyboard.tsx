@@ -32,6 +32,9 @@ import NeuronConnection from "../modules/NeuronConnection";
 import ToastMessage from "../component/ToastMessage";
 
 import Store from "../utils/Store";
+import { Banner } from "@Renderer/component/Banner";
+import Title from "@Renderer/component/Title";
+import { IconBluetooth } from "@Renderer/component/Icon";
 
 const store = Store.getStore();
 
@@ -354,6 +357,15 @@ const SelectKeyboard: React.FC<SelectKeyboardProps> = (props): JSX.Element => {
             virtualDevice={false}
             connectedDevice={connectedDevice}
           />
+          <div className="card-alert" style={{ marginTop: "16px" }}>
+            <Banner icon={<IconBluetooth />} variant="warning">
+              <Title text="Defy owners!" headingLevel={5} />
+              <p style={{ maxWidth: "610px" }}>
+                To use Bazecor on bluetooth, make sure the keyboard is connected via BT to the computer and{" "}
+                <strong>click on scan keyboards once.</strong> This is necessary due to Chrome's API restrictions.
+              </p>
+            </Banner>
+          </div>
         </div>
       </Container>
     </Styles>

@@ -18,17 +18,19 @@
 // @ts-nocheck
 import React from "react";
 import Styled from "styled-components";
-import Title from "../Title";
-import ButtonConfig from "../Button/ButtonConfig";
+import { ThemeProvider } from "react-bootstrap";
+import Dark from "@Renderer/theme/DarkTheme";
+import ButtonConfig from "@Renderer/component/Button/ButtonConfig";
+import Title from "@Renderer/component/Title";
 
-const Style = Styled.div` 
+const Style = Styled.div`
 .toastBody {
-  padding: 24px 32px;  
+  padding: 24px 32px;
   display: flex;
   flex-wrap: nowrap;
   &.hasIcon {
-    padding-left: 16px; 
-    .toastIcon {  
+    padding-left: 16px;
+    .toastIcon {
       width: 32px;
       svg {
         margin-top: -6px;
@@ -44,20 +46,20 @@ const Style = Styled.div`
   font-size: 14px;
   font-weight: 500;
   line-height: 1.35em;
-} 
+}
 .toastFooter {
   display: flex;
   flex-wrap: nowrap;
-  justify-content: flex-end;  
-  padding: 0 32px 24px 32px;  
+  justify-content: flex-end;
+  padding: 0 32px 24px 32px;
   .button-config + .button-config {
     margin-left: 8px;
   }
   .button-config {
-    color: ${({ theme }) => theme.styles.button.config.color};
+    color: rgba(226,228,234,1);
     &:hover {
-      ${({ theme }) => theme.styles.button.config.colorHover};
-    } 
+      rgba(240,242,244,1);
+    }
   }
 }
 `;
@@ -94,23 +96,26 @@ const ToastMessage: React.FC<ToasMessageProps> = ({
   onClickDismiss,
   clickDismissText,
 }) => (
-  <Style className="toastContentWrapper">
-    <div className={`toastBody ${icon ? "hasIcon" : "noIcon"}`}>
-      {icon && <div className="toastIcon">{icon}</div>}
-      <div className="toastBodyInner">
-        {title && <Title text={title} headingLevel={4} />}
-        <div className="toastContent" dangerouslySetInnerHTML={{ __html: content }} />
+  <ThemeProvider theme={Dark}>
+    <Style className="toastContentWrapper">
+      <div className={`toastBody ${icon ? "hasIcon" : "noIcon"}`}>
+        {icon && <div className="toastIcon">{icon}</div>}
+        <div className="toastBodyInner">
+          {/* {title && <Title text={title} headingLevel={4} />} */}
+          {title}
+          <div className="toastContent" dangerouslySetInnerHTML={{ __html: content }} />
+        </div>
       </div>
-    </div>
-    {onClickAction || onClickDismiss ? (
-      <div className="toastFooter">
-        <ButtonConfig onClick={onClickDismiss} buttonText={clickDismissText} variation="link" size="sm" />
-        <ButtonConfig onClick={onClickAction} buttonText={clickActionText} size="sm" />
-      </div>
-    ) : (
-      ""
-    )}
-  </Style>
+      {onClickAction || onClickDismiss ? (
+        <div className="toastFooter">
+          <ButtonConfig onClick={onClickDismiss} buttonText={clickDismissText} variation="link" size="sm" />
+          <ButtonConfig onClick={onClickAction} buttonText={clickActionText} size="sm" />
+        </div>
+      ) : (
+        ""
+      )}
+    </Style>
+  </ThemeProvider>
 );
 
 export default ToastMessage;
