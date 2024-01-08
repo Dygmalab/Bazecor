@@ -1,13 +1,15 @@
-import React, { useState, useEffect, useRef, Fragment } from "react";
+import React, { useState, useEffect, useRef, useCallback, Fragment } from "react";
 import { Dialog, Transition } from "@headlessui/react";
+import { Button } from "@Renderer/component/Button";
 import i18n from "../../i18n";
+import { IconCloseXs } from "../Icon";
 
 interface NameModalProps {
   modalTitle: string;
   show: boolean;
   name: string;
   toggleShow: () => void;
-  handleSave: (event) => void;
+  handleSave: (name: string) => void;
   labelInput: string;
 }
 
@@ -16,8 +18,8 @@ const NameModal = ({ modalTitle, show, toggleShow, name, handleSave, labelInput 
   const [isFocused, setIsFocused] = useState(false);
   const inputRef = useRef(null);
 
-  useEffect(() => {
-    const handleKeydown = (event: any) => {
+  const handleKeydown = useCallback(
+    (event: KeyboardEvent) => {
       if (event.key === "Enter") {
         event.preventDefault();
         if (inputRef.current && isFocused) {
@@ -25,13 +27,17 @@ const NameModal = ({ modalTitle, show, toggleShow, name, handleSave, labelInput 
           toggleShow();
         }
       }
-    };
+    },
+    [isFocused, internalName, toggleShow, handleSave],
+  );
+
+  useEffect(() => {
     window.addEventListener("keydown", handleKeydown);
 
     return () => {
       window.removeEventListener("keydown", handleKeydown);
     };
-  }, []);
+  }, [handleKeydown]);
 
   return (
     // Use the `Transition` component + show prop to add transitions.
@@ -48,7 +54,7 @@ const NameModal = ({ modalTitle, show, toggleShow, name, handleSave, labelInput 
           leaveFrom="opacity-100"
           leaveTo="opacity-0"
         >
-          <div className="fixed inset-0 bg-black/30" aria-hidden="true" />
+          <div className="fixed inset-0 bg-gray-50/85 dark:bg-gray-700/85" aria-hidden="true" />
         </Transition.Child>
         <Transition.Child
           as={Fragment}
@@ -62,26 +68,40 @@ const NameModal = ({ modalTitle, show, toggleShow, name, handleSave, labelInput 
           {/* Full-screen container to center the panel */}
           <div className="fixed inset-0 flex w-screen items-center justify-center p-4">
             {/* The actual dialog panel  */}
-            <Dialog.Panel className="mx-auto max-w-sm rounded bg-white">
-              <Dialog.Title>{modalTitle}</Dialog.Title>
-              <form>
-                <label htmlFor="changeName">{labelInput}</label>
-                <input
-                  id="changeName"
-                  type="text"
-                  ref={inputRef}
-                  value={internalName}
-                  onFocus={() => setIsFocused(true)}
-                  onBlur={() => setIsFocused(false)}
-                  onChange={event => setInternalName(event.target.value)}
-                />
-                <button onClick={toggleShow} className="btn btn-outline" type="button">
-                  {i18n.app.cancelPending.button}
+            <Dialog.Panel className="mx-auto max-w-3xl w-full rounded-xl bg-gray-25 dark:bg-gray-800">
+              <div className="px-4 py-4 flex items-center justify-between">
+                <Dialog.Title className="text-2xl tracking-tight font-semibold text-gray-400 dark:text-gray-25">
+                  {modalTitle}
+                </Dialog.Title>
+                <button type="button" className="flex mt-0 pt-2 mr-[-24px] text-gray-400 dark:text-gray-25" onClick={toggleShow}>
+                  <IconCloseXs />
                 </button>
-                <button onClick={event => handleSave(internalName)} className="btn btn-primary" type="button">
-                  {i18n.components.save.button}
-                </button>
-              </form>
+              </div>
+              <div className="px-4 pb-3">
+                <form className="flex flex-col">
+                  <label htmlFor="changeName" className="font-xs tracking-tight font-semibold text-gray-400 dark:text-gray-25">
+                    {labelInput}
+                  </label>
+                  <input
+                    id="changeName"
+                    type="text"
+                    ref={inputRef}
+                    value={internalName}
+                    onFocus={() => setIsFocused(true)}
+                    onBlur={() => setIsFocused(false)}
+                    onChange={event => setInternalName(event.target.value)}
+                    className="form-input form-input-xl"
+                  />
+                </form>
+              </div>
+              <div className="px-3 py-4 flex gap-4 justify-end bg-gray-100/10 dark:bg-gray-900/10">
+                <Button variant="outline" size="sm" onClick={toggleShow}>
+                  Discard changes
+                </Button>
+                <Button variant="secondary" size="sm" onClick={() => handleSave(internalName)}>
+                  Save changes
+                </Button>
+              </div>
             </Dialog.Panel>
           </div>
         </Transition.Child>

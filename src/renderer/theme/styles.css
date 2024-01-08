@@ -68,3 +68,32 @@ body {
 .button.button-icon {
   @apply px-4 py-4 rounded-md rounded-md transition-colors text-gray-25 bg-gray-600 hover:cursor-pointer hover:bg-gray-500;
 }
+
+[type="text"]:focus,
+input:where(:not([type])):focus,
+[type="email"]:focus,
+[type="url"]:focus,
+[type="password"]:focus,
+[type="number"]:focus,
+[type="date"]:focus,
+[type="datetime-local"]:focus,
+[type="month"]:focus,
+[type="search"]:focus,
+[type="tel"]:focus,
+[type="time"]:focus,
+[type="week"]:focus,
+[multiple]:focus,
+textarea:focus,
+select:focus {
+  outline: none;
+  @apply dark:border-purple-300;
+}
+.form-input {
+  @apply py-4 px-4 rounded-md bg-gray-700 autofill:bg-gray-700 border-gray-600 text-gray-25 font-semibold tracking-tight text-base transition-all placeholder:text-gray-200 focus:ring-1 focus:ring-purple-300;
+}
+.form-input[aria-invalid="true"] {
+  @apply ring-primary border-primary;
+}
+.form-input-xl {
+  @apply text-xl;
+}

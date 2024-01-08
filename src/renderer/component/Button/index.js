@@ -14,6 +14,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import Button from "./Button";
 import ColorButton from "./ColorButton";
 import ColorPicker from "./ColorPicker";
 import LargeButton from "./LargeButton";
@@ -26,6 +27,7 @@ import SuperkeyPicker from "./SuperkeyPicker";
 import ButtonMouse from "./ButtonMouse";
 
 export {
+  Button,
   ColorButton,
   ColorPicker,
   LargeButton,
