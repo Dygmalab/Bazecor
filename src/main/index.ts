@@ -1,5 +1,5 @@
 import { app, BrowserWindow, Menu } from "electron";
-import electronUpdater from "update-electron-app";
+// import electronUpdater from "update-electron-app";
 import createWindow from "./createWindow";
 import { setTheme } from "./setup/theme";
 import setBackup from "./setup/setBackup";
@@ -8,16 +8,12 @@ import { addUSBListeners, removeUSBListeners } from "./setup/configureUSB";
 import { removeHIDListeners } from "./setup/configureHID";
 import { removeIPCs } from "./setup/configureIPCs";
 
-electronUpdater();
+// electronUpdater();
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 // eslint-disable-next-line global-require
 if (require("electron-squirrel-startup")) {
   app.quit();
-}
-
-if (process.platform === "linux") {
-  app.commandLine.appendSwitch("no-sandbox");
 }
 
 // This method will be called when Electron has finished
@@ -33,12 +29,18 @@ app.on("ready", async () => {
   Menu.setApplicationMenu(null);
 });
 
+// Emitted before the application starts closing its windows.
+// Calling event.preventDefault() will prevent the default behavior,
+// which is terminating the application.
+app.on("before-quit", () => {
+  removeUSBListeners();
+  removeHIDListeners();
+});
+
 // Quit when all windows are closed, except on macOS. There, it's common
 // for applications and their menu bar to stay active until the user quits
 // explicitly with Cmd + Q.
 app.on("window-all-closed", () => {
-  removeUSBListeners();
-  removeHIDListeners();
   if (process.platform !== "darwin") {
     app.quit();
   } else {

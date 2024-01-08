@@ -83,10 +83,11 @@ const list = async () => {
   // working with hid
   const hidDevs = await HID.getDevices();
   for (const [index, device] of hidDevs.entries()) {
-    // console.log("Checking: ", device);
+    console.log("Checking: ", device);
     const hid = new HID();
     const connected = await hid.isDeviceConnected(index);
     const supported = await hid.isDeviceSupported(index);
+    console.log("Checking connected & supported: ", connected, supported);
     if (connected && supported) finalDevices.push(new Device(hid, "hid"));
   }
 

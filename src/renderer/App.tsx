@@ -1,3 +1,5 @@
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-nocheck
 // -*- mode: js-jsx -*-
 /* Bazecor -- Kaleidoscope Command Center
  * Copyright (C) 2018, 2019  Keyboardio, Inc.
@@ -17,18 +19,17 @@
 
 import React, { useState, useEffect } from "react";
 import { Routes, Navigate, Route, useNavigate } from "react-router-dom";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import { ThemeProvider } from "styled-components";
 import { ipcRenderer } from "electron";
 import path from "path";
 import i18n from "@Renderer/i18n";
 
-import "react-toastify/dist/ReactToastify.css";
-
 import GlobalStyles from "@Renderer/theme/GlobalStyles";
 import Light from "@Renderer/theme/LightTheme";
 import Dark from "@Renderer/theme/DarkTheme";
 
+import Header from "@Renderer/modules/NavigationMenu";
 import SelectKeyboard from "@Renderer/views/NewSelectKeyboard";
 import FirmwareUpdate from "@Renderer/views/FirmwareUpdate";
 import LayoutEditor from "@Renderer/views/LayoutEditor";
@@ -38,7 +39,6 @@ import Preferences from "@Renderer/views/Preferences";
 import Wireless from "@Renderer/views/Wireless";
 import Welcome from "@Renderer/views/Welcome";
 
-import Header from "@Renderer/modules/NavigationMenu";
 import ToastMessage from "@Renderer/component/ToastMessage";
 import { IconNoSignal } from "@Renderer/component/Icon";
 import BazecorDevtools from "@Renderer/views/BazecorDevtools";
@@ -50,6 +50,7 @@ import "../api/keymap";
 import "../api/colormap";
 import { useDevice } from "./DeviceContext";
 import DeviceManager from "./views/DeviceManager";
+import Device from "../api/comms/Device";
 
 const store = Store.getStore();
 
@@ -57,21 +58,20 @@ const focus = new Focus();
 focus.debug = true;
 focus.timeout = 5000;
 
-const App = () => {
+function App() {
   const [flashing, setFlashing] = useState(false);
+  const [fwUpdate, setFwUpdate] = useState(false);
+  const [darkMode, setDarkMode] = useState(false);
+  const [connected, setConnected] = useState(false);
+  const [pages, setPages] = useState({});
+  const [contextBar, setContextBar] = useState(false);
+  const [allowBeta, setAllowBeta] = useState(false);
+  const [loading, setLoading] = useState(true);
   const varFlashing = React.useRef(false);
+  const device = React.useRef();
   const navigate = useNavigate();
   const [state] = useDevice();
-  const [appState, setAppState] = useState({
-    darkMode: false,
-    connected: false,
-    device: null,
-    pages: {},
-    contextBar: false,
-    fwUpdate: false,
-    allowBeta: false,
-    loading: true,
-  });
+  const [isSending, setIsSending] = useState(false);
 
   const updateStorageSchema = async () => {
     // Update stored settings schema
@@ -120,37 +120,32 @@ const App = () => {
       }
 
       // Settings entry creation for the beta toggle, it will have a control in preferences to change the policy
-      let allowBeta: boolean;
+      let getAllowBeta: boolean;
       if (store.has("settings.allowBeta")) {
-        allowBeta = store.get("settings.allowBeta") as boolean;
+        getAllowBeta = store.get("settings.allowBeta") as boolean;
       } else {
-        allowBeta = true;
+        getAllowBeta = true;
         store.set("settings.allowBeta", true);
       }
 
-      setAppState({
-        darkMode: isDark,
-        connected: false,
-        device: null,
-        pages: {},
-        contextBar: false,
-        fwUpdate: false,
-        allowBeta,
-        loading: true,
-      });
+      setDarkMode(isDark);
+      setConnected(false);
+      device.current = null;
+      setPages({});
+      setContextBar(false);
+      setAllowBeta(getAllowBeta);
+      setLoading(true);
+      setFwUpdate(false);
       localStorage.clear();
     };
     init();
   }, []);
 
   const forceDarkMode = (mode: any) => {
-    setAppState({
-      ...appState,
-      darkMode: mode,
-    });
+    setDarkMode(mode);
   };
 
-  const darkThemeListener = (evt, message) => {
+  const darkThemeListener = (event: any, message: any) => {
     console.log("O.S. DarkTheme Settings changed to ", message);
     const dm = store.get("settings.darkMode");
     if (dm === "system") {
@@ -163,18 +158,80 @@ const App = () => {
     }
   };
 
-  const handleUSBDisconnection = async (device: any) => {
-    const { connected } = appState;
+  const startContext = () => {
+    setContextBar(true);
+  };
+
+  const cancelContext = () => {
+    setContextBar(false);
+  };
+
+  const onKeyboardDisconnect = () => {
+    console.log("disconnecting Keyboard!");
+    console.log(state);
+    setConnected(false);
+    device.current = null;
+    setPages({});
+    if (!state.currentDevice?.isClosed) {
+      state.currentDevice.close();
+    }
+    localStorage.clear();
+    navigate("/keyboard-select");
+  };
+
+  const onKeyboardConnect = async (currentDevice: Device) => {
+    console.log("Connecting to", currentDevice);
+
+    if (currentDevice.device.bootloader) {
+      setConnected(true);
+      device.current = currentDevice.device;
+      setPages({});
+      navigate("/welcome");
+      return;
+    }
+
+    setConnected(true);
+    device.current = currentDevice;
+    setPages({ keymap: true });
+    setIsSending(true);
+    // navigate(pages.keymap ? "/editor" : "/welcome");
+    navigate("/editor");
+  };
+
+  const toggleDarkMode = async (mode: string) => {
+    console.log("Dark mode changed to: ", mode, "NativeTheme says: ", ipcRenderer.invoke("get-NativeTheme"));
+    let isDark = mode === "dark";
+    if (mode === "system") {
+      isDark = await ipcRenderer.invoke("get-NativeTheme");
+    }
+    setDarkMode(isDark);
+    store.set("settings.darkMode", mode);
+  };
+
+  const toggleFlashing = () => {
+    setFlashing(!flashing);
+    varFlashing.current = !flashing;
+    console.log("toggled flashing to", !flashing);
+
+    if (flashing) {
+      setConnected(false);
+      device.current = null;
+      setPages({});
+      navigate("/keyboard-select");
+    }
+  };
+
+  const handleUSBDisconnection = async (dev: any) => {
     const isFlashing = varFlashing.current;
-    console.log("Handling device disconnect", isFlashing);
+    console.log("Handling device disconnect", isFlashing, dev, device);
     if (isFlashing) {
       console.log("no action due to flashing active");
       return;
     }
 
-    if (state.currentDevice.device?.usb?.productId !== state.currentDevice.device.deviceDescriptor?.idProduct) {
-      return;
-    }
+    // if (state.currentDevice?.device?.usb?.productId !== state.currentDevice?.device?.deviceDescriptor?.idProduct) {
+    //   return;
+    // }
 
     // Must await this to stop re-render of components reliant on `focus.device`
     // However, it only renders a blank screen. New route is rendered below.
@@ -191,12 +248,12 @@ const App = () => {
     onKeyboardDisconnect();
   };
 
-  const usbListener = (event, response) => handleUSBDisconnection(response);
-
   useEffect(() => {
     const fontFace = new FontFace("Libre Franklin", "@Renderer/theme/fonts/LibreFranklin/LibreFranklin-VariableFont_wght.ttf");
     console.log("Font face: ", fontFace);
     document.fonts.add(fontFace);
+
+    const usbListener = (event: any, response: any) => handleUSBDisconnection(response);
 
     // Setting up function to receive O.S. dark theme changes
     ipcRenderer.on("darkTheme-update", darkThemeListener);
@@ -207,132 +264,36 @@ const App = () => {
     };
   }, []);
 
-  const startContext = () => {
-    setAppState({
-      ...appState,
-      contextBar: true,
-    });
-  };
-
-  const doCancelContext = () => {
-    setAppState({
-      ...appState,
-      contextBar: false,
-    });
-  };
-
-  const cancelContext = () => {
-    doCancelContext();
-  };
-
-  const onKeyboardDisconnect = async () => {
-    setAppState({
-      ...appState,
-      connected: false,
-      device: null,
-      pages: {},
-    });
-    if (state.currentDevice) {
-      state.currentDevice.close();
-    }
-    localStorage.clear();
-    navigate("/keyboard-select");
-  };
-
-  const onKeyboardConnect = async currentDevice => {
-    console.log("Connecting to", currentDevice);
-
-    if (currentDevice.device.bootloader) {
-      appState.connected = true;
-      appState.pages = {};
-      appState.device = currentDevice.device;
-      setAppState({ ...appState });
-      navigate("/welcome");
-      return [];
-    }
-
-    // console.log("Probing for Focus support...");
-    // focus.setLayerSize(focus.device);
-    // focus.setLEDMode(focus.device);
-    // const pages = {
-    //   keymap: focus.isCommandSupported("keymap.custom") || focus.isCommandSupported("keymap.map"),
-    //   colormap: focus.isCommandSupported("colormap.map") && focus.isCommandSupported("palette"),
-    // };
-
-    appState.connected = true;
-    appState.pages = {};
-    appState.device = currentDevice;
-    setAppState({ ...appState });
-    // navigate(pages.keymap ? "/editor" : "/welcome");
-    navigate("/editor");
-    return [];
-  };
-
-  const toggleDarkMode = async mode => {
-    console.log("Dark mode changed to: ", mode, "NativeTheme says: ", ipcRenderer.invoke("get-NativeTheme"));
-    let isDark = mode === "dark";
-    if (mode === "system") {
-      isDark = await ipcRenderer.invoke("get-NativeTheme");
-    }
-    setAppState({
-      ...appState,
-      darkMode: isDark,
-    });
-    store.set("settings.darkMode", mode);
-
-    const colorScheme = getComputedStyle(document.body, ":after").content.replace(/["']/g, "");
-    if (mode === "light" || (mode === "system" && colorScheme === "light")) {
-      document.documentElement.classList.remove("dark");
-    } else {
-      document.documentElement.classList.add("dark");
-    }
-  };
-
-  const toggleFlashing = async () => {
-    setFlashing(!flashing);
-    varFlashing.current = !flashing;
-    console.log("toggled flashing to", varFlashing.current);
-    if (flashing) {
-      setAppState({
-        ...appState,
-        connected: false,
-        device: null,
-        pages: {},
-      });
-      navigate("/keyboard-select");
-    }
-  };
-
   const toggleFwUpdate = () => {
-    setAppState(prev => ({
-      ...prev,
-      fwUpdate: !prev.fwUpdate,
-    }));
+    console.log("toggling fwUpdate to: ", !fwUpdate);
+    setFwUpdate(!fwUpdate);
   };
 
-  const setLoadingData = (loading: boolean) => {
-    setAppState(prev => ({
-      ...prev,
-      loading,
-    }));
+  const setLoadingData = (lding: boolean) => {
+    setLoading(lding);
   };
 
   const updateAllowBeta = (event: any) => {
     const newValue = event.target.checked;
     // console.log("new allowBeta value: ", newValue);
     store.set("settings.allowBeta", newValue);
-    setAppState({
-      ...appState,
-      allowBeta: newValue,
-    });
+    setAllowBeta(newValue);
   };
-
-  const { connected, pages, contextBar, darkMode, fwUpdate, allowBeta, device, loading } = appState;
 
   return (
     <ThemeProvider theme={darkMode ? Dark : Light}>
       <GlobalStyles />
-      <Header connected={connected} pages={pages} flashing={!connected} fwUpdate={fwUpdate || loading} allowBeta={allowBeta} />
+      <Header
+        connected={connected}
+        pages={pages}
+        flashing={!connected}
+        fwUpdate={fwUpdate}
+        allowBeta={allowBeta}
+        loading={loading}
+        inContext={contextBar}
+        setIsSending={setIsSending}
+        isSending={isSending}
+      />
       <div className="main-container">
         <Routes>
           <Route exact path="/" element={<Navigate to="/keyboard-select" />} />
@@ -362,6 +323,7 @@ const App = () => {
                 onConnect={onKeyboardConnect}
                 onDisconnect={onKeyboardDisconnect}
                 titleElement={() => document.querySelector("#page-title")}
+                setLoadingData={setLoadingData}
                 device={device}
                 darkMode={darkMode}
               />
@@ -380,6 +342,8 @@ const App = () => {
                 titleElement={() => document.querySelector("#page-title")}
                 appBarElement={() => document.querySelector("#appbar")}
                 darkMode={darkMode}
+                isSending={isSending}
+                setIsSending={setIsSending}
               />
             }
           />
@@ -391,7 +355,7 @@ const App = () => {
                 onDisconnect={onKeyboardDisconnect}
                 startContext={startContext}
                 cancelContext={cancelContext}
-                setLoadingData={setLoadingData}
+                setLoading={setLoadingData}
                 inContext={contextBar}
                 titleElement={() => document.querySelector("#page-title")}
               />
@@ -405,7 +369,7 @@ const App = () => {
                 onDisconnect={onKeyboardDisconnect}
                 startContext={startContext}
                 cancelContext={cancelContext}
-                setLoadingData={setLoadingData}
+                setLoading={setLoadingData}
                 inContext={contextBar}
                 titleElement={() => document.querySelector("#page-title")}
               />
@@ -436,6 +400,7 @@ const App = () => {
                 startContext={startContext}
                 cancelContext={cancelContext}
                 updateAllowBeta={updateAllowBeta}
+                setLoadingData={setLoadingData}
                 allowBeta={allowBeta}
                 inContext={contextBar}
               />
@@ -453,6 +418,7 @@ const App = () => {
                 startContext={startContext}
                 cancelContext={cancelContext}
                 updateAllowBeta={updateAllowBeta}
+                setLoadingData={setLoadingData}
                 allowBeta={allowBeta}
                 inContext={contextBar}
               />
@@ -460,18 +426,8 @@ const App = () => {
           />
         </Routes>
       </div>
-      <ToastContainer
-        position="top-right"
-        autoClose={false}
-        hideProgressBar={false}
-        newestOnTop={false}
-        draggable={false}
-        closeOnClick
-        pauseOnHover
-        pauseOnFocusLoss
-      />
     </ThemeProvider>
   );
-};
+}
 
 export default App;

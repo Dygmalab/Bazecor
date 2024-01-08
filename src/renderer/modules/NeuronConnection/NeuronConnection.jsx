@@ -158,7 +158,7 @@ function NeuronConnection({
           </div>
         ) : (
           <div className="neuronInformation">
-            {!deviceItems.length ? (
+            {!deviceItems.length && !connected ? (
               <>
                 <Title text={i18n.keyboardSelect.noDevices} headingLevel={2} type="warning" />
                 <p className="neuronSubtileText">{i18n.keyboardSelect.noDevicesSubtitle}</p>

@@ -16,6 +16,7 @@
  */
 
 import React, { useState, useEffect } from "react";
+import PropTypes from "prop-types";
 import Styled from "styled-components";
 import { useMachine } from "@xstate/react";
 import i18n from "@Renderer/i18n";
@@ -30,7 +31,7 @@ import { RegularButton } from "@Renderer/component/Button";
 import { FirmwareLoader } from "@Renderer/component/Loader";
 
 // Visual modules
-import { FirmwareProgressStatus } from "@Renderer/modules/Firmware";
+import FirmwareProgressStatus from "./FirmwareProgressStatus";
 
 const Style = Styled.div`
 width: 100%;
@@ -95,12 +96,22 @@ function FirmwareUpdateProcess(props) {
   const { nextBlock, retryBlock, context, toggleFlashing, toggleFwUpdate, onDisconnect } = props;
   const [deviceState] = useDevice();
   const [toggledFlashing, sendToggledFlashing] = useState(false);
+  const handleKeyDown = event => {
+    switch (event.keyCode) {
+      case 27:
+        console.log("esc key logged");
+        send("ESCPRESSED");
+        break;
+      default:
+        break;
+    }
+  };
   const [state, send] = useMachine(FlashDevice, {
     context: {
       deviceState,
       device: deviceState.currentDevice.device,
       originalDevice: deviceState.currentDevice,
-      backup: context.backup,
+      backup: context.backup ? context.backup : undefined,
       firmwares: context.firmwares,
       isUpdated: context.isUpdated,
       versions: context.versions,
@@ -122,31 +133,20 @@ function FirmwareUpdateProcess(props) {
       toggleFlashing: async () => {
         if (toggledFlashing) return;
         console.log("starting flashing indicators");
-        await toggleFlashing();
-        await toggleFwUpdate();
+        toggleFlashing();
+        toggleFwUpdate();
         sendToggledFlashing(true);
       },
       finishFlashing: async () => {
         if (!toggledFlashing) return;
         sendToggledFlashing(false);
         console.log("closing flashin process");
-        await toggleFlashing();
-        await toggleFwUpdate();
+        toggleFlashing();
+        toggleFwUpdate();
         onDisconnect();
       },
     },
   });
-
-  const handleKeyDown = event => {
-    switch (event.keyCode) {
-      case 27:
-        console.log("esc key logged");
-        send("ESCPRESSED");
-        break;
-      default:
-        break;
-    }
-  };
 
   const [loading, setLoading] = useState(true);
   useEffect(() => {
@@ -154,7 +154,7 @@ function FirmwareUpdateProcess(props) {
       setLoading(false);
     }
     if (state.matches("success")) nextBlock(state.context);
-  }, [state]);
+  }, [nextBlock, state]);
 
   const stepsDefy = [
     { step: 1, title: i18n.firmwareUpdate.texts.flashCardTitle1, description: i18n.firmwareUpdate.texts.flashCardTitle2 },
@@ -316,5 +316,16 @@ function FirmwareUpdateProcess(props) {
     </Style>
   );
 }
+
+FirmwareUpdateProcess.propTypes = {
+  nextBlock: PropTypes.func,
+  retryBlock: PropTypes.func,
+  errorBlock: PropTypes.func,
+  context: PropTypes.any,
+  toggleFlashing: PropTypes.func,
+  toggleFwUpdate: PropTypes.func,
+  onDisconnect: PropTypes.func,
+  device: PropTypes.any,
+};
 
 export default FirmwareUpdateProcess;

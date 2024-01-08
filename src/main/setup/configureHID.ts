@@ -13,14 +13,9 @@ const onDeviceSelect = (event: Event, details: any, callback: any) => {
   // Add events to handle devices being added or removed before the callback on
   // `select-hid-device` is called.
   event.preventDefault();
-  const window = Window.getWindow();
-
-  window.webContents.session.on("hid-device-added", onDeviceAdded);
-
-  window.webContents.session.on("hid-device-removed", onDeviceRemove);
 
   if (details.deviceList && details.deviceList.length > 0) {
-    const filteredDevices = details.deviceList.filter((device: any) => device.name.includes("Defy"));
+    const filteredDevices = details.deviceList.filter((device: any) => device.productId === 18 && device.vendorId === 13807);
     console.log("Filtered list");
     console.log(filteredDevices);
     if (filteredDevices.length > 0) {
@@ -34,19 +29,25 @@ const onDeviceSelect = (event: Event, details: any, callback: any) => {
 export const configureHID = () => {
   const window = Window.getWindow();
   window.webContents.session.setPermissionCheckHandler((webContents, permission, requestingOrigin, details) => {
-    if (permission === "hid" && details.securityOrigin.includes("http://localhost")) {
+    console.log("hid configuration", permission, details);
+    if (permission === "hid") {
       return true;
     }
     return false;
   });
 
   window.webContents.session.setDevicePermissionHandler(details => {
-    if (details.deviceType === "hid" && details.origin.includes("http://localhost")) {
+    console.log("hid permissions", details);
+    if (details.deviceType === "hid") {
       return true;
     }
     return false;
   });
   window.webContents.session.on("select-hid-device", onDeviceSelect);
+
+  window.webContents.session.on("hid-device-added", onDeviceAdded);
+
+  window.webContents.session.on("hid-device-removed", onDeviceRemove);
 };
 
 export const removeHIDListeners = () => {

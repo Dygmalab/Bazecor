@@ -77,5 +77,5 @@ export const configureUSB = () => {
   // connect/disconnect events, but it only sends disconnect events for devices
   // it knows. If there are devices connected when we start up, we need to scan
   // them first to notice disconnects. We do that here.
-  webusb.getDevices();
+  // webusb.getDevices();
 };

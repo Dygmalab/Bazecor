@@ -18,7 +18,7 @@
 import React from "react";
 import Styled from "styled-components";
 
-const Style = Styled.div`	
+const Style = Styled.div`
 .badge {
 	border-radius: 3px;
 	font-size: 13px;
@@ -33,6 +33,11 @@ const Style = Styled.div`
   &.danger-low {
     border: 1px solid ${({ theme }) => theme.styles.badge.dangerLowBG};
     background-color: ${({ theme }) => theme.styles.badge.dangerLowBG};
+    color: ${({ theme }) => theme.styles.badge.dangerLowText};
+  }
+  &.warning {
+    border: 1px solid ${({ theme }) => theme.styles.badge.warningBG};
+    background-color: ${({ theme }) => theme.styles.badge.warningBG};
     color: ${({ theme }) => theme.styles.badge.dangerLowText};
   }
   &.subtle {

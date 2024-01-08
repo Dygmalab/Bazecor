@@ -142,6 +142,7 @@ const reconnect = async (context, callback) => {
       console.log(`Keyboard not detected, trying again for ${times} times`);
       stateUpdate("reconnect", 10 + 100 * (1 / (5 - times)), context, callback);
       await runnerFindKeyboard(findKeyboard, times - 1, errorMessage);
+      return true;
     };
     const findKeyboard = async () =>
       new Promise(async resolve => {
@@ -289,7 +290,7 @@ const uploadDefyWireles = async (context, callback) => {
 
 const restoreDefies = async (context, callback) => {
   let result = false;
-  if (bootloader) {
+  if (bootloader || context.backup === undefined) {
     return true;
   }
   try {
@@ -361,7 +362,7 @@ const uploadRaise = async (context, callback) => {
 
 const restoreRaise = async (context, callback) => {
   let result = false;
-  if (bootloader) {
+  if (bootloader || context.backup === undefined) {
     return true;
   }
   try {
@@ -426,7 +427,12 @@ const FlashDevice = createMachine(
         id: "waitEsc",
         entry: [
           () => {
-            console.log("Wait for esc!");
+            console.log("Wait for esc! & clearing globals");
+            flashRaise = undefined;
+            flashDefyWireless = undefined;
+            flashSides = undefined;
+            bootloader = undefined;
+            comPath = undefined;
           },
           assign({ stateblock: () => 1 }),
           "addEscListener",

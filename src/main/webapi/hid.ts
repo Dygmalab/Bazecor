@@ -37,7 +37,7 @@ export const configureHID = () => {
 
     if (details.deviceList && details.deviceList.length > 0) {
       console.log(details.deviceList);
-      const filteredDevices = details.deviceList.filter(device => device.name.includes("Defy"));
+      const filteredDevices = details.deviceList.filter(device => device.productId === 18 && device.vendorId === 13807);
       console.log(filteredDevices);
       if (filteredDevices.length > 0) {
         callback(filteredDevices[0].deviceId);

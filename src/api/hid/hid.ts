@@ -1,3 +1,6 @@
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-nocheck
+
 import Hardware from "../hardware";
 
 const DygmavendorID = 13807;
@@ -59,23 +62,38 @@ class HID {
     if (this.connectedDevice) {
       throw new HIDError("Device already connected");
     }
-    const devices = await navigator.hid.requestDevice({
-      filters: [
-        {
-          vendorId: DygmavendorID,
-          productId: DygmaproductID,
-          usage: DygmaUsage,
-          usagePage: DygmaUsagePage,
-        },
-      ],
+
+    const timeoutPromise = new Promise((_, reject) => {
+      setTimeout(() => {
+        reject(new Error("Timeout exceeded while waiting for device."));
+      }, 500);
     });
-    console.log("list of devices: ", devices);
-    if (devices.length > 0) {
-      const connectedDevice = devices[index];
-      this.connectedDevice = connectedDevice;
-      return connectedDevice;
+
+    const connectPromise = Promise.race([
+      navigator.hid.requestDevice({
+        filters: [
+          {
+            vendorId: DygmavendorID,
+            productId: DygmaproductID,
+            usage: DygmaUsage,
+            usagePage: DygmaUsagePage,
+          },
+        ],
+      }),
+      timeoutPromise,
+    ]);
+    try {
+      const devices = await connectPromise;
+      console.log("list of devices: ", devices);
+      if (devices.length > 0) {
+        const connectedDevice = devices[index];
+        this.connectedDevice = connectedDevice;
+        return connectedDevice;
+      }
+      throw new HIDError("No HID Devices to connect");
+    } catch (err) {
+      throw new HIDError("HID Device could not be connected");
     }
-    throw new HIDError("No HID Devices to connect");
   };
 
   isDeviceConnected = (index: number) => {
@@ -135,8 +153,9 @@ class HID {
   close = async () => {
     if (this.isOpen()) {
       await this.connectedDevice.close();
+    } else {
+      throw new HIDError("Device is not open, no need to close");
     }
-    throw new HIDError("Device is not open, no need to close");
   };
 
   isConnected = () => {

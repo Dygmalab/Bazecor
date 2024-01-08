@@ -28,7 +28,7 @@ h4 {
     flex: 0 0 100%;
 }
 .groupButtons {
-  padding: 0; 
+  padding: 0;
 }
 .cardButtons .groupButtons .button-config {
   padding: 8px 2px;
@@ -54,7 +54,7 @@ h4 {
       border-bottom-right-radius: 0;
       padding: 8px 16px;
       h4 {
-        font-size: 14px; 
+        font-size: 14px;
         margin-top: 2px;
         margin-bottom: 2px;
       }
@@ -104,7 +104,7 @@ class KeysTab extends Component {
             keyCode={keyCode}
             disableMove={false}
             // disableMods={false}
-            disableMods={!!((superkeyAction === 0 || superkeyAction === 3) && actTab === "super")}
+            disableMods={!!((superkeyAction == 0 || superkeyAction == 3) && actTab === "disabled")}
             // disableMove={![0, 3].includes(actions) && actTab == "super"}
             actTab={actTab}
             superName="superName"
@@ -113,7 +113,7 @@ class KeysTab extends Component {
           />
           {isStandardView ? (
             <div
-              className={`enhanceKeys ${(superkeyAction === 0 || superkeyAction === 3) && actTab === "super" ? "disabled" : ""}`}
+              className={`enhanceKeys ${(superkeyAction == 0 || superkeyAction == 3) && actTab === "super" ? "disabled" : ""}`}
             >
               <Title
                 text={i18n.editor.standardView.keys.enhanceTitle}

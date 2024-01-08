@@ -177,31 +177,58 @@ export default class RecordMacroModal extends React.Component {
 
   componentDidMount() {
     ipcRenderer.on("recorded-key-down", (event, response) => {
+      const { keymapDB } = this.props;
+      const { isDelayActive, recorded } = this.state;
       console.log("Check key-down", response);
-      const newRecorded = this.state.recorded;
+      const newRecorded = recorded;
+      const translated = keymapDB.parse(this.translator[response.event.keycode]);
+      console.log("key press", translated);
+      if (isDelayActive && recorded.length > 0) {
+        const timePast = response.time - recorded[recorded.length - 1].time;
+        if (timePast !== undefined && timePast > 1)
+          newRecorded.push({
+            char: "delay",
+            keycode: timePast,
+            action: 2,
+            time: response.time,
+            isMod: translated.keyCode >= 224 && translated.keyCode <= 231,
+          });
+      }
       newRecorded.push({
-        char: response.name,
-        keycode: this.translator[response.event.keycode],
+        char: translated.label,
+        keycode: translated.keyCode,
         action: 6,
         time: response.time,
-        isMod: this.translator[response.event.keycode] >= 224 && this.translator[response.event.keycode] <= 231,
+        isMod: translated.keyCode >= 224 && translated.keyCode <= 231,
       });
       this.setState({
         recorded: newRecorded,
       });
     });
     ipcRenderer.on("recorded-key-up", (event, response) => {
+      const { keymapDB } = this.props;
+      const { isDelayActive, recorded } = this.state;
       console.log("Check key-up", response);
-      if (response.event.keycode === 29 && !response.event.ctrlKey) {
-        return;
+      const newRecorded = recorded;
+      const translated = keymapDB.parse(this.translator[response.event.keycode]);
+      console.log("key release", translated);
+      if (isDelayActive) {
+        const timePast = response.time - recorded[recorded.length - 1].time;
+        if (timePast !== undefined && timePast > 1)
+          newRecorded.push({
+            char: "delay",
+            keycode: timePast,
+            action: 2,
+            time: response.time,
+            isMod: translated.keyCode >= 224 && translated.keyCode <= 231,
+          });
       }
-      const newRecorded = this.state.recorded;
       newRecorded.push({
-        char: response.name,
-        keycode: this.translator[response.event.keycode],
+        char: translated.label,
+        keycode: translated.keyCode,
         action: 7,
         time: response.time,
-        isMod: this.translator[response.event.keycode] >= 224 && this.translator[response.event.keycode] <= 231,
+        isMod: translated.keyCode >= 224 && translated.keyCode <= 231,
       });
       this.setState({
         recorded: newRecorded,
@@ -290,14 +317,6 @@ export default class RecordMacroModal extends React.Component {
         }
         continue;
       }
-      if (recorded[p].action === 7 && recorded[i].action === 6 && this.state.isDelayActive) {
-        console.log(`Inserted Delay with ${recorded[i].time - recorded[p].time} ms`);
-        newRecorded.push(JSON.parse(JSON.stringify(recorded[p])));
-        recorded[p].action = 2;
-        recorded[p].keycode = recorded[i].time - recorded[p].time;
-        newRecorded.push(recorded[p]);
-        continue;
-      }
       console.log(`Added as end of interaction ${recorded[p].char} to the rest of the elems`);
       newRecorded.push(recorded[p]);
       if (i === recorded.length - 1) {
@@ -319,7 +338,6 @@ export default class RecordMacroModal extends React.Component {
 
   render() {
     const { showModal, isRecording, isDelayActive, recorded } = this.state;
-    console.log("rendering");
     return (
       <Styles>
         <RegularButton
@@ -371,8 +389,13 @@ export default class RecordMacroModal extends React.Component {
               ) : (
                 <div className={`timelineRecordSequence ${isRecording ? "isRecording" : "isPaused"}`}>
                   <div className="timelineRecordSequenceInner">
-                    {recorded.map((item, index) => item.char)}
-                    {/* Lotem ipsum dolor aemet sit <div className="keySpecial">500 ms</div> waiting */}
+                    {recorded.map((item, index) => {
+                      let newItem = item.char;
+                      if (item.action === 2) return "";
+                      if (item.action === 6) newItem += "↓";
+                      if (item.action === 7) newItem += "↑";
+                      return newItem;
+                    })}
                   </div>
                   <div className="timelinePointeText" />
                 </div>

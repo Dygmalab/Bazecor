@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { useDevice } from "@Renderer/DeviceContext";
-import { ipcRenderer } from "electron";
 import Slider from "@appigram/react-rangeslider";
+import { ipcRenderer } from "electron";
+import { toast } from "react-toastify";
 import fs from "fs";
 
 // React Bootstrap Components
@@ -11,26 +11,31 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 
 // Own Components
-import i18n from "../../i18n";
-import Title from "../../component/Title";
-import BackupFolderConfigurator from "../BackupFolderConfigurator";
+import { useDevice } from "@Renderer/DeviceContext";
+import ToastMessage from "@Renderer/component/ToastMessage";
+import i18n from "@Renderer/i18n";
+import Title from "@Renderer/component/Title";
+import BackupFolderConfigurator from "@Renderer/modules/BackupFolderConfigurator";
 
 // Icons Imports
-import { IconFloppyDisk } from "../../component/Icon";
+import { IconArrowDownWithLine, IconFloppyDisk } from "@Renderer/component/Icon";
 
-import Store from "../../utils/Store";
+// Utils
+import Store from "@Renderer/utils/Store";
 
 const store = Store.getStore();
 
 interface BackupSettingsProps {
   connected: boolean;
+  neurons: any;
+  neuronID: string;
 }
 
 const BackupSettings = (props: BackupSettingsProps) => {
   const [backupFolder, setBackupFolder] = useState("");
   const [storeBackups, setStoreBackups] = useState(13);
   const [state] = useDevice();
-  const { connected } = props;
+  const { connected, neurons, neuronID } = props;
   useEffect(() => {
     setBackupFolder(store.get("settings.backupFolder") as string);
     setStoreBackups(store.get("settings.backupFrequency") as number);
@@ -60,6 +65,11 @@ const BackupSettings = (props: BackupSettingsProps) => {
       data = backup;
     } else {
       data = backup.backup;
+      const localNeurons = [...neurons];
+      const index = localNeurons.findIndex(n => n.id === neuronID);
+      localNeurons[index] = backup.neuron;
+      localNeurons[index].id = neuronID;
+      store.set("neurons", localNeurons);
     }
     if (state.currentDevice) {
       try {
@@ -80,6 +90,17 @@ const BackupSettings = (props: BackupSettingsProps) => {
         await state.currentDevice.command("led.mode 0");
         console.log("Restoring all settings");
         console.log("Firmware update OK");
+        toast.success(
+          <ToastMessage
+            title="Backup restored successfully"
+            content="Your backup was restored successfully to the device!"
+            icon={<IconArrowDownWithLine />}
+          />,
+          {
+            autoClose: 2000,
+            icon: "",
+          },
+        );
         return true;
       } catch (e) {
         console.log(`Restore settings: Error: ${e.message}`);
@@ -102,6 +123,17 @@ const BackupSettings = (props: BackupSettingsProps) => {
         }
         await state.currentDevice.command("led.mode 0");
         console.log("Settings restored OK");
+        toast.success(
+          <ToastMessage
+            title="Backup restored successfully"
+            content="Your backup was restored successfully to the device!"
+            icon={<IconArrowDownWithLine />}
+          />,
+          {
+            autoClose: 2000,
+            icon: "",
+          },
+        );
         return true;
       } catch (e) {
         console.log(`Restore settings: Error: ${e.message}`);

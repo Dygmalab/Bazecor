@@ -36,7 +36,7 @@ import Title from "../../component/Title";
 import { IconFlashlight, IconTypo, IconMouse } from "../../component/Icon";
 
 const Styles = Styled.div`
-  
+
   .slider{
     width: 100%;
   }
@@ -166,7 +166,7 @@ class KeyboardSettings extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = props.kbData;
+    this.state = { ...props.kbData };
   }
 
   delay = ms => new Promise(res => setTimeout(res, ms));
@@ -177,9 +177,9 @@ class KeyboardSettings extends React.Component {
     }
   }
 
-  setOnlyCustom = async event => {
+  setOnlyCustom = event => {
     const { checked } = event.target;
-    await this.setState(state => ({
+    this.setState(state => ({
       modified: true,
       keymap: {
         custom: state.keymap.custom,
@@ -187,63 +187,71 @@ class KeyboardSettings extends React.Component {
         onlyCustom: checked,
       },
     }));
-    this.props.setKbData(this.state);
+    this.props.setKbData({
+      ...this.state,
+      modified: true,
+      keymap: {
+        custom: this.state.keymap.custom,
+        default: this.state.keymap.default,
+        onlyCustom: checked,
+      },
+    });
   };
 
-  selectIdleLEDTime = async value => {
-    await this.setState(state => ({
+  selectIdleLEDTime = value => {
+    this.setState(state => ({
       ledIdleTimeLimit: value * 60,
       modified: true,
     }));
-    this.props.setKbData(this.state);
+    this.props.setKbData({ ...this.state, modified: true, ledIdleTimeLimit: value * 60 });
   };
 
-  setShowDefaults = async event => {
-    await this.setState(state => ({
+  setShowDefaults = event => {
+    this.setState(state => ({
       showDefaults: event.target.checked,
       modified: true,
     }));
-    this.props.setKbData(this.state);
+    this.props.setKbData({ ...this.state, modified: true, showDefaults: event.target.checked });
   };
 
-  setBrightness = async value => {
-    await this.setState(state => ({
+  setBrightness = value => {
+    this.setState(state => ({
       ledBrightness: (value * 255) / 100,
       modified: true,
     }));
-    this.props.setKbData(this.state);
+    this.props.setKbData({ ...this.state, modified: true, ledBrightness: (value * 255) / 100 });
   };
 
-  setBrightnessUG = async value => {
-    await this.setState(state => ({
+  setBrightnessUG = value => {
+    this.setState(state => ({
       ledBrightnessUG: (value * 255) / 100,
       modified: true,
     }));
-    this.props.setKbData(this.state);
+    this.props.setKbData({ ...this.state, modified: true, ledBrightnessUG: (value * 255) / 100 });
   };
 
-  setHoldTimeout = async value => {
-    await this.setState(state => ({
+  setHoldTimeout = value => {
+    this.setState(state => ({
       qukeysHoldTimeout: value,
       modified: true,
     }));
-    this.props.setKbData(this.state);
+    this.props.setKbData({ ...this.state, modified: true, qukeysHoldTimeout: value });
   };
 
-  setOverlapThreshold = async value => {
-    await this.setState(state => ({
+  setOverlapThreshold = value => {
+    this.setState(state => ({
       qukeysOverlapThreshold: value,
       modified: true,
     }));
-    this.props.setKbData(this.state);
+    this.props.setKbData({ ...this.state, modified: true, qukeysOverlapThreshold: value });
   };
 
-  setSuperTimeout = async value => {
-    await this.setState(state => ({
+  setSuperTimeout = value => {
+    this.setState(state => ({
       SuperTimeout: value,
       modified: true,
     }));
-    this.props.setKbData(this.state);
+    this.props.setKbData({ ...this.state, modified: true, SuperTimeout: value });
   };
 
   // setSuperRepeat = event => {
@@ -264,12 +272,12 @@ class KeyboardSettings extends React.Component {
   // this.props.setKbData(this.state));
   // };
 
-  setSuperHoldstart = async value => {
-    await this.setState(event => ({
+  setSuperHoldstart = value => {
+    this.setState(event => ({
       SuperHoldstart: value,
       modified: true,
     }));
-    this.props.setKbData(this.state);
+    this.props.setKbData({ ...this.state, modified: true, SuperHoldstart: value });
   };
 
   // setTyping = event => {
@@ -283,42 +291,52 @@ class KeyboardSettings extends React.Component {
   // this.props.setKbData(this.state));
   // };
 
-  setTyping = async value => {
+  setTyping = value => {
     const valueTyping = (100 - value) * 10;
-    await this.setState(state => ({
+    this.setState(state => ({
       SuperTimeout: valueTyping,
       SuperHoldstart: valueTyping - 20,
       qukeysHoldTimeout: valueTyping - 20,
       modified: true,
     }));
-    this.props.setKbData(this.state);
+    this.props.setKbData({
+      ...this.state,
+      modified: true,
+      SuperTimeout: valueTyping,
+      SuperHoldstart: valueTyping - 20,
+      qukeysHoldTimeout: valueTyping - 20,
+    });
   };
 
-  setChording = async value => {
-    await this.setState(state => ({
+  setChording = value => {
+    this.setState(state => ({
       qukeysOverlapThreshold: value,
       modified: true,
     }));
-    this.props.setKbData(this.state);
+    this.props.setKbData({ ...this.state, modified: true, qukeysOverlapThreshold: value });
   };
 
-  // setSuperOverlapThreshold = event => {
-  //   const value = event.target.value;
+  setSuperOverlapThreshold = value => {
+    this.setState(
+      state => ({
+        SuperOverlapThreshold: value,
+        modified: true,
+      }),
+      this.props.setKbData({
+        ...this.state,
+        modified: true,
+        SuperOverlapThreshold: value,
+      }),
+    );
+  };
 
-  //   this.setState(state=>({
-  //     SuperOverlapThreshold: value,
-  //     modified: true
-  //   }),
-  // this.props.setKbData(this.state));
-  // };
-
-  setSpeed = async value => {
-    await this.setState(state => ({
+  setSpeed = value => {
+    this.setState(state => ({
       mouseSpeed: parseInt(value),
       mouseSpeedDelay: 10,
       modified: true,
     }));
-    this.props.setKbData(this.state);
+    this.props.setKbData({ ...this.state, modified: true, mouseSpeed: parseInt(value, 10), mouseSpeedDelay: 10 });
   };
 
   // setSpeedDelay = event => {
@@ -332,12 +350,12 @@ class KeyboardSettings extends React.Component {
   // };
 
   setAccelSpeed = async value => {
-    await this.setState(state => ({
+    this.setState(state => ({
       mouseAccelSpeed: parseInt(value),
       mouseAccelDelay: 600,
       modified: true,
     }));
-    this.props.setKbData(this.state);
+    this.props.setKbData({ ...this.state, modified: true, mouseAccelSpeed: parseInt(value, 10), mouseAccelDelay: 600 });
   };
 
   // setAccelDelay = event => {
@@ -361,12 +379,12 @@ class KeyboardSettings extends React.Component {
   // this.props.setKbData(this.state));
   // };
   setWheelSpeed = async value => {
-    await this.setState(state => ({
+    this.setState(state => ({
       mouseWheelSpeed: value,
       mouseWheelDelay: 100,
       modified: true,
     }));
-    this.props.setKbData(this.state);
+    this.props.setKbData({ ...this.state, modified: true, mouseWheelSpeed: value, mouseWheelDelay: 100 });
   };
 
   // setWheelDelay = event => {
@@ -380,11 +398,11 @@ class KeyboardSettings extends React.Component {
   // };
 
   setSpeedLimit = async value => {
-    await this.setState(state => ({
-      mouseSpeedLimit: parseInt(value),
+    this.setState(state => ({
+      mouseSpeedLimit: parseInt(value, 10),
       modified: true,
     }));
-    this.props.setKbData(this.state);
+    this.props.setKbData({ ...this.state, modified: true, mouseSpeedLimit: parseInt(value, 10) });
   };
 
   renderTooltip(tooltips) {
@@ -550,7 +568,7 @@ class KeyboardSettings extends React.Component {
                         <Slider
                           min={0}
                           max={100}
-                          step={5}
+                          step={1}
                           value={Math.round((ledBrightness * 100) / 255)}
                           onChange={this.setBrightness}
                         />
@@ -576,7 +594,7 @@ class KeyboardSettings extends React.Component {
                         <Slider
                           min={0}
                           max={100}
-                          step={5}
+                          step={1}
                           value={Math.round((ledBrightnessUG * 100) / 255)}
                           onChange={this.setBrightnessUG}
                         />
@@ -650,6 +668,34 @@ class KeyboardSettings extends React.Component {
                     </Row>
                   </Form.Group>
                 )}
+                {SuperOverlapThreshold >= 0 && (
+                  <Form.Group controlId="SuperOverlap" className="formGroup">
+                    <Row>
+                      <Col>
+                        <Form.Label>
+                          <Title
+                            text={i18n.keyboardSettings.superkeys.overlap}
+                            headingLevel={6}
+                            tooltip={`<h5 class="text-left">${i18n.keyboardSettings.superkeys.overlapTip1}</h5><ul><li class="text-left">${i18n.keyboardSettings.superkeys.overlapTip2}</li><li class="text-left">${i18n.keyboardSettings.superkeys.overlapTip3}</li></ul>`}
+                            tooltipPlacement="bottom"
+                            tooltipSize="wide"
+                          />
+                        </Form.Label>
+                      </Col>
+                    </Row>
+                    <Row>
+                      <Col xs={2} md={1} className="p-0 text-center align-self-center">
+                        <span className="tagsfix">Less</span>
+                      </Col>
+                      <Col xs={8} md={10} className="px-2">
+                        <Slider min={0} max={80} value={SuperOverlapThreshold} onChange={this.setSuperOverlapThreshold} />
+                      </Col>
+                      <Col xs={2} md={1} className="p-0 text-center align-self-center">
+                        <span className="tagsfix">More</span>
+                      </Col>
+                    </Row>
+                  </Form.Group>
+                )}
                 {SuperTimeout >= 0 && (
                   <Form.Group controlId="superTimeout" className="formGroup">
                     <Row>
@@ -698,7 +744,7 @@ class KeyboardSettings extends React.Component {
                         <span className="tagsfix">Less</span>
                       </Col>
                       <Col xs={8} md={10} className="px-2">
-                        <Slider min={1} max={500} value={SuperHoldstart} onChange={this.setSuperHoldstart} />
+                        <Slider min={120} max={500} value={SuperHoldstart} onChange={this.setSuperHoldstart} />
                       </Col>
                       <Col xs={2} md={1} className="p-0 text-center align-self-center">
                         <span className="tagsfix">More</span>

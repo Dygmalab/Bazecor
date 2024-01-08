@@ -3,9 +3,11 @@ name: Staging
 on:
   push:
     branches:
+      - "*"
       - "development"
   pull_request:
     branches:
+      - "*"
       - "development"
 
 permissions:
@@ -27,8 +29,11 @@ jobs:
           - os: windows-2019
           - os: ubuntu-20.04
     steps:
+      - uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
       - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - uses: actions/setup-node@v4
         with:
           node-version: 18.16.0
       - run: npm install -g yarn
@@ -62,8 +67,11 @@ jobs:
           - os: ubuntu-20.04
 
     steps:
+      - uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
       - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - uses: actions/setup-node@v4
         with:
           node-version: 18.16.0
       - run: npm install -g yarn
@@ -91,6 +99,8 @@ jobs:
       - if: runner.os == 'Windows'
         name: "Set up GCloud SDK"
         uses: "google-github-actions/setup-gcloud@v1"
+        env:
+          CLOUDSDK_PYTHON: ${{ env.pythonLocation }}${{ '\python' }}
         with:
           version: ">= 416.0.0"
       - name: Cache node_modules
@@ -113,7 +123,7 @@ jobs:
           APPLE_INSTALLER_CERT_PATH=$RUNNER_TEMP/apple_installer.p12
           APPLE_APPLICATION_CERT_PATH=$RUNNER_TEMP/apple_application.p12
           KEYCHAIN_PATH=$RUNNER_TEMP/apple-signing.keychain-db
-          # create certificates from base64 
+          # create certificates from base64
           echo -n "$APPLE_INSTALLER_CERT_BASE64" | base64 --decode -o $APPLE_INSTALLER_CERT_PATH
           echo -n "$APPLE_APPLICATION_CERT_BASE64" | base64 --decode -o $APPLE_APPLICATION_CERT_PATH
           # create keychain stuff
@@ -122,9 +132,9 @@ jobs:
           security unlock-keychain -p "$APPLE_KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
           #import certificates
           echo "Importing installer cert"
-          security import $APPLE_INSTALLER_CERT_PATH -P "$APPLE_CERT_PASSWORD" -A -t cert -f pkcs12 -k $KEYCHAIN_PATH 
+          security import $APPLE_INSTALLER_CERT_PATH -P "$APPLE_CERT_PASSWORD" -A -t cert -f pkcs12 -k $KEYCHAIN_PATH
           echo "Importing application cert"
-          security import $APPLE_APPLICATION_CERT_PATH -P "$APPLE_CERT_PASSWORD" -A -t cert -f pkcs12 -k $KEYCHAIN_PATH 
+          security import $APPLE_APPLICATION_CERT_PATH -P "$APPLE_CERT_PASSWORD" -A -t cert -f pkcs12 -k $KEYCHAIN_PATH
           security list-keychain -d user -s $KEYCHAIN_PATH
           # - run: yarn run lint
       - if: runner.os == 'macOS'

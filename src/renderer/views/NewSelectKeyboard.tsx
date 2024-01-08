@@ -32,6 +32,9 @@ import NeuronConnection from "../modules/NeuronConnection";
 import ToastMessage from "../component/ToastMessage";
 
 import Store from "../utils/Store";
+import { Banner } from "@Renderer/component/Banner";
+import Title from "@Renderer/component/Title";
+import { IconBluetooth } from "@Renderer/component/Icon";
 
 const store = Store.getStore();
 
@@ -193,6 +196,7 @@ const SelectKeyboard: React.FC<SelectKeyboardProps> = (props): JSX.Element => {
   const [selectedPortIndex, setSelectedPortIndex] = useState(0);
   const [opening, setOpening] = useState(false);
   const [devices, setDevices] = useState([]);
+  const [deviceItems, setDeviceItems] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [scanFoundDevices, setScanFoundDevices] = useState(false);
   const { onConnect, onDisconnect, connected } = props;
@@ -206,6 +210,7 @@ const SelectKeyboard: React.FC<SelectKeyboardProps> = (props): JSX.Element => {
     try {
       const list = await DeviceTools.list();
       dispatch({ type: "addDevicesList", payload: list });
+      console.log("Devices Available:", list);
       setIsLoading(false);
       setDevices(list);
       return list;
@@ -217,8 +222,33 @@ const SelectKeyboard: React.FC<SelectKeyboardProps> = (props): JSX.Element => {
     }
   }, [dispatch]);
 
+  const getDeviceItems = useCallback(() => {
+    const neurons = store.get("neurons");
+    const result = devices.map((device, index) => {
+      // console.log("checking device :", device);
+      if (device.device.bootloader)
+        return {
+          index,
+          displayName: device?.device?.info?.displayName,
+          userName: "",
+          path: device.path || i18n.keyboardSelect.unknown,
+        };
+      const preparedSN = device.productId === "2201" ? device.serialNumber.slice(0, 32) : device.serialNumber;
+      const neuron = neurons.find(n => n.id.toLowerCase() === preparedSN.toLowerCase());
+
+      return {
+        index,
+        displayName: device?.device?.info?.displayName,
+        userName: neuron ? neuron.name : "",
+        path: device.path || i18n.keyboardSelect.unknown,
+      };
+    });
+    return result;
+  }, [devices]);
+
   useEffect(() => {
     const finder = () => findKeyboards();
+
     const disconnectedfinder = () => {
       setSelectedPortIndex(0);
       findKeyboards();
@@ -226,13 +256,16 @@ const SelectKeyboard: React.FC<SelectKeyboardProps> = (props): JSX.Element => {
         state.currentDevice.close();
       }
     };
+
     ipcRenderer.on("usb-connected", finder);
     ipcRenderer.on("usb-disconnected", disconnectedfinder);
+
     if (!connected) {
       findKeyboards();
     } else {
       setSelectedPortIndex(state.selected);
     }
+
     return () => {
       ipcRenderer.removeListener("usb-connected", finder);
       ipcRenderer.removeListener("usb-disconnected", disconnectedfinder);
@@ -244,6 +277,13 @@ const SelectKeyboard: React.FC<SelectKeyboardProps> = (props): JSX.Element => {
       findKeyboards();
     }
   }, [connected, findKeyboards, state.currentDevice]);
+
+  useEffect(() => {
+    if (devices && devices.length > 0) {
+      const currentDeviceItems = getDeviceItems();
+      setDeviceItems(currentDeviceItems);
+    }
+  }, [devices, getDeviceItems]);
 
   const scanDevices = async (): Promise<void> => {
     const keyboards = await findKeyboards();
@@ -292,38 +332,10 @@ const SelectKeyboard: React.FC<SelectKeyboardProps> = (props): JSX.Element => {
     await onKeyboardConnect();
   };
 
-  const getDeviceItems = () => {
-    const neurons = store.get("neurons");
-    const result = devices.map((device, index) => {
-      // console.log("checking device :", device);
-      if (device.device.bootloader)
-        return {
-          index,
-          displayName: device?.device?.info?.displayName,
-          userName: "",
-          path: device.path || i18n.keyboardSelect.unknown,
-        };
-      const preparedSN = device.productId === "2201" ? device.serialNumber.slice(0, 32) : device.serialNumber;
-      const neuron = neurons.find(n => n.id.toLowerCase() === preparedSN.toLowerCase());
-
-      return {
-        index,
-        displayName: device?.device?.info?.displayName,
-        userName: neuron ? neuron.name : "",
-        path: device.path || i18n.keyboardSelect.unknown,
-      };
-    });
-    return result;
-  };
-
-  let deviceItems = null;
-  if (devices && devices.length > 0) {
-    deviceItems = getDeviceItems();
-  }
-
   const selectedDevice = devices && devices[selectedPortIndex];
   const connectedDevice = state.selected;
   // console.log("Checking connected Data: ", connectedDevice, selectedPortIndex, connected, scanFoundDevices);
+
   return (
     <Styles>
       <Container fluid className="keyboard-select center-content">
@@ -338,13 +350,22 @@ const SelectKeyboard: React.FC<SelectKeyboardProps> = (props): JSX.Element => {
             connected={connected}
             onDisconnect={handleOnDisconnect}
             onDisconnectConnect={handleOnDisconnectConnect}
-            deviceItems={deviceItems != null ? deviceItems : []}
+            deviceItems={deviceItems}
             selectPort={selectPort}
             selectedPortIndex={selectedPortIndex}
             isVirtual={false}
             virtualDevice={false}
             connectedDevice={connectedDevice}
           />
+          <div className="card-alert" style={{ marginTop: "16px" }}>
+            <Banner icon={<IconBluetooth />} variant="warning">
+              <Title text="Defy owners!" headingLevel={5} />
+              <p style={{ maxWidth: "610px" }}>
+                To use Bazecor on bluetooth, make sure the keyboard is connected via BT to the computer and{" "}
+                <strong>click on scan keyboards once.</strong> This is necessary due to Chrome's API restrictions.
+              </p>
+            </Banner>
+          </div>
         </div>
       </Container>
     </Styles>

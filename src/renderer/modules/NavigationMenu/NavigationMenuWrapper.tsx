@@ -16,20 +16,37 @@
  */
 
 import React from "react";
-import PropTypes from "prop-types";
+import Pages from "@Types/pages";
 import NavigationMenu from "./NavigationMenu";
 
-function Header(props) {
-  const { connected, pages, flashing, fwUpdate, allowBeta } = props;
-
-  return <NavigationMenu connected={connected} pages={pages} flashing={flashing} fwUpdate={fwUpdate} allowBeta={allowBeta} />;
+interface HeaderInterface {
+  connected: boolean;
+  flashing: boolean;
+  fwUpdate: boolean;
+  allowBeta: boolean;
+  inContext: boolean;
+  loading: boolean;
+  isSending: boolean;
+  setIsSending: () => void;
+  pages: Pages;
 }
-Header.propTypes = {
-  connected: PropTypes.bool.isRequired,
-  pages: PropTypes.object.isRequired,
-  flashing: PropTypes.bool.isRequired,
-  fwUpdate: PropTypes.bool.isRequired,
-  allowBeta: PropTypes.any.isRequired,
-};
+
+function Header(props: HeaderInterface) {
+  const { connected, pages, flashing, fwUpdate, allowBeta, inContext, loading, setIsSending, isSending } = props;
+
+  return (
+    <NavigationMenu
+      connected={connected}
+      pages={pages}
+      flashing={flashing}
+      fwUpdate={fwUpdate}
+      allowBeta={allowBeta}
+      loading={loading}
+      inContext={inContext}
+      setIsSending={setIsSending}
+      isSending={isSending}
+    />
+  );
+}
 
 export default Header;

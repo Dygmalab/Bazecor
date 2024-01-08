@@ -1,7 +1,6 @@
-import React, { useState, useEffect, useRef, useCallback, Fragment } from "react";
+import React, { useState, useRef, Fragment } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { Button } from "@Renderer/component/Button";
-import i18n from "../../i18n";
 import { IconCloseXs } from "../Icon";
 
 interface NameModalProps {
@@ -15,29 +14,7 @@ interface NameModalProps {
 
 const NameModal = ({ modalTitle, show, toggleShow, name, handleSave, labelInput }: NameModalProps) => {
   const [internalName, setInternalName] = useState(name);
-  const [isFocused, setIsFocused] = useState(false);
   const inputRef = useRef(null);
-
-  const handleKeydown = useCallback(
-    (event: KeyboardEvent) => {
-      if (event.key === "Enter") {
-        event.preventDefault();
-        if (inputRef.current && isFocused) {
-          handleSave(internalName);
-          toggleShow();
-        }
-      }
-    },
-    [isFocused, internalName, toggleShow, handleSave],
-  );
-
-  useEffect(() => {
-    window.addEventListener("keydown", handleKeydown);
-
-    return () => {
-      window.removeEventListener("keydown", handleKeydown);
-    };
-  }, [handleKeydown]);
 
   return (
     // Use the `Transition` component + show prop to add transitions.
@@ -78,7 +55,13 @@ const NameModal = ({ modalTitle, show, toggleShow, name, handleSave, labelInput 
                 </button>
               </div>
               <div className="px-4 pb-3">
-                <form className="flex flex-col">
+                <form
+                  className="flex flex-col"
+                  onSubmit={e => {
+                    e.preventDefault();
+                    handleSave(internalName);
+                  }}
+                >
                   <label htmlFor="changeName" className="font-xs tracking-tight font-semibold text-gray-400 dark:text-gray-25">
                     {labelInput}
                   </label>
@@ -87,8 +70,6 @@ const NameModal = ({ modalTitle, show, toggleShow, name, handleSave, labelInput 
                     type="text"
                     ref={inputRef}
                     value={internalName}
-                    onFocus={() => setIsFocused(true)}
-                    onBlur={() => setIsFocused(false)}
                     onChange={event => setInternalName(event.target.value)}
                     className="form-input form-input-xl"
                   />
