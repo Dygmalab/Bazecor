@@ -16,4 +16,4 @@
 
 import NeuronData from "./NeuronData";
 
-export { NeuronData as default };
+export default NeuronData;

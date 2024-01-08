@@ -17,10 +17,8 @@
 
 import React from "react";
 import Styled from "styled-components";
-import Card from "react-bootstrap/Card";
-import Accordion from "react-bootstrap/Accordion";
-import Title from "../../component/Title";
-import i18n from "../../i18n";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@Renderer/components/ui/accordion";
+import { Neurons } from "@Types/neurons";
 import NeuronTitle from "../NeuronTitle";
 import { IconPlus, IconRobot, IconLayers, IconThunder } from "../../component/Icon";
 
@@ -70,14 +68,16 @@ const Style = Styled.div`
   padding-left: 12px;
 }
 `;
-function NeuronData({ neurons, selectedNeuron }) {
+
+function NeuronData(props: Neurons) {
+  const { neurons, selectedNeuron } = props;
   return (
     <Style>
       <div className="cardContentNeuronData">
         <NeuronTitle neuronName={neurons[selectedNeuron].name} neuronID={neurons[selectedNeuron].id} />
-        <Accordion className="accordionNeuronData" defaultActiveKey="0">
-          <Card className="neuronDataCard">
-            <Accordion.Toggle as={Card.Header} eventKey="1">
+        <Accordion type="single" collapsible className="w-full">
+          <AccordionItem value="item-1">
+            <AccordionTrigger>
               <div className="accordionHeader">
                 <div className="accordionIcon">
                   <IconLayers />
@@ -87,19 +87,19 @@ function NeuronData({ neurons, selectedNeuron }) {
                   <IconPlus />
                 </span>
               </div>
-            </Accordion.Toggle>
-            <Accordion.Collapse eventKey="1">
-              <Card.Body>
+            </AccordionTrigger>
+            <AccordionContent>
+              <div>
                 <ol>
-                  {neurons[selectedNeuron].layers.map((layer, id) => (
-                    <li key={`${id}-${layer.name}`}>{layer.name}</li>
+                  {neurons[selectedNeuron].layers.map((layer: { id: number; name: string }) => (
+                    <li key={`${layer.id}-${layer.name}`}>{layer.name}</li>
                   ))}
                 </ol>
-              </Card.Body>
-            </Accordion.Collapse>
-          </Card>
-          <Card className="neuronDataCard">
-            <Accordion.Toggle as={Card.Header} eventKey="2">
+              </div>
+            </AccordionContent>
+          </AccordionItem>
+          <AccordionItem value="item-2">
+            <AccordionTrigger>
               <div className="accordionHeader">
                 <div className="accordionIcon">
                   <IconRobot />
@@ -109,19 +109,19 @@ function NeuronData({ neurons, selectedNeuron }) {
                   <IconPlus />
                 </span>
               </div>
-            </Accordion.Toggle>
-            <Accordion.Collapse eventKey="2">
-              <Card.Body>
+            </AccordionTrigger>
+            <AccordionContent>
+              <div>
                 <ol>
-                  {neurons[selectedNeuron].macros.map((macro, id) => (
-                    <li key={`${id}-${macro.name}`}>{macro.name}</li>
+                  {neurons[selectedNeuron].macros.map((macro: { name: string; id: number }) => (
+                    <li key={`${macro.id}-${macro.name}`}>{macro.name}</li>
                   ))}
                 </ol>
-              </Card.Body>
-            </Accordion.Collapse>
-          </Card>
-          <Card className="neuronDataCard">
-            <Accordion.Toggle as={Card.Header} eventKey="3">
+              </div>
+            </AccordionContent>
+          </AccordionItem>
+          <AccordionItem value="item-3">
+            <AccordionTrigger>
               <div className="accordionHeader">
                 <div className="accordionIcon">
                   <IconThunder />
@@ -131,17 +131,17 @@ function NeuronData({ neurons, selectedNeuron }) {
                   <IconPlus />
                 </span>
               </div>
-            </Accordion.Toggle>
-            <Accordion.Collapse eventKey="3">
-              <Card.Body>
+            </AccordionTrigger>
+            <AccordionContent>
+              <div>
                 <ol>
-                  {neurons[selectedNeuron].superkeys.map((superkey, id) => (
-                    <li key={`${id}-${superkey.name}`}>{superkey.name}</li>
+                  {neurons[selectedNeuron].superkeys.map((superkey: { id: number; name: string }) => (
+                    <li key={`${superkey.id}-${superkey.name}`}>{superkey.name}</li>
                   ))}
                 </ol>
-              </Card.Body>
-            </Accordion.Collapse>
-          </Card>
+              </div>
+            </AccordionContent>
+          </AccordionItem>
         </Accordion>
       </div>
     </Style>

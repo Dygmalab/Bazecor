@@ -1,7 +1,8 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  darkMode: "class",
+  darkMode: ["class"],
   content: ["./src/**/*.{js,jsx,ts,tsx}"],
+  prefix: "",
   theme: {
     fontFamily: {
       sans: ['"Libre Franklin"', "Helvetica", "Arial", "-apple-system", "BlinkMacSystemFont", "sans-serif"],
@@ -87,7 +88,21 @@ module.exports = {
         buttonConfig: " 0px 2px 0px 0px rgba(0, 0, 0, 0.10)",
         buttonConfigHover: "0px 16px 16px -8px rgba(87, 97, 126, 0.30), 0px 3px 0px 0px rgba(37, 39, 59, 0.25)",
       },
+      keyframes: {
+        "accordion-down": {
+          from: { height: "0" },
+          to: { height: "var(--radix-accordion-content-height)" },
+        },
+        "accordion-up": {
+          from: { height: "var(--radix-accordion-content-height)" },
+          to: { height: "0" },
+        },
+      },
+      animation: {
+        "accordion-down": "accordion-down 0.2s ease-out",
+        "accordion-up": "accordion-up 0.2s ease-out",
+      },
     },
   },
-  plugins: [require("@xpd/tailwind-3dtransforms")],
+  plugins: [require("tailwindcss-animate"), require("@xpd/tailwind-3dtransforms")],
 };
