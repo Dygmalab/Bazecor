@@ -120,6 +120,7 @@
     "@headlessui/react": "^1.7.17",
     "@octokit/core": "^4.2.1",
     "@radix-ui/react-accordion": "^1.1.2",
+    "@radix-ui/react-tabs": "^1.0.4",
     "@serialport/parser-delimiter": "^10.0.0",
     "@types/react-rangeslider": "^2.2.4",
     "@types/w3c-web-hid": "^1.0.3",

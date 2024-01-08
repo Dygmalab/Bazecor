@@ -22,6 +22,7 @@ import Styled from "styled-components";
 import Tab from "react-bootstrap/Tab";
 import Nav from "react-bootstrap/Nav";
 import { MdUnfoldLess, MdKeyboardArrowUp, MdKeyboardArrowDown, MdTimer } from "react-icons/md";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@Renderer/components/ui/tabs";
 import i18n from "../../i18n";
 
 import Title from "../../component/Title";
@@ -636,75 +637,85 @@ class MacroCreator extends Component {
   render() {
     return (
       <Styles>
-        <Tab.Container id="macroCreator" defaultActiveKey="tabText">
+        <Tabs defaultValue="tabText" orientation="vertical">
           <div className="tabWrapper">
             <div className="tabCategories">
               <Title headingLevel={3} text={i18n.general.actions} />
               <RecordMacroModal onAddRecorded={this.onAddRecorded} keymapDB={this.keymapDB} />
-              <Nav className="flex-column">
-                <CustomTab eventKey="tabText" text="Text" icon={<IconLetterColor />} />
-                <CustomTab eventKey="tabKeys" text="Keys" icon={<IconKeyboard />} />
-                <CustomTab eventKey="tabSpecial" text="Special functions" icon={<IconMagicStick />} />
-                <CustomTab eventKey="tabDelay" text="Delay" icon={<IconStopWatch />} />
-              </Nav>
+              <TabsList className="grid">
+                <TabsTrigger value="tabText">
+                  <IconLetterColor />
+                  Text
+                </TabsTrigger>
+                <TabsTrigger value="tabKeys">
+                  <IconKeyboard />
+                  Keys
+                </TabsTrigger>
+                <TabsTrigger value="tabSpecial">
+                  <IconMagicStick />
+                  Special functions
+                </TabsTrigger>
+                <TabsTrigger value="tabDelay">
+                  <IconStopWatch />
+                  Delay
+                </TabsTrigger>
+              </TabsList>
             </div>
-            <div className="tabContent">
-              <div className="tabContentInner">
-                <Title headingLevel={3} text={i18n.general.configure} />
-                <Tab.Content>
-                  <Tab.Pane eventKey="tabText">
-                    <TextTab onAddText={this.onAddText} onTextChange={this.onTextChange} addText={this.state.addText} />
-                  </Tab.Pane>
-                  <Tab.Pane eventKey="tabKeys">
-                    <KeysTab
-                      onKeyPress={this.onKeyPress}
-                      kbtype={this.props.kbtype}
-                      selectedlanguage={this.props.selectedlanguage}
-                    />
-                  </Tab.Pane>
-                  <Tab.Pane eventKey="tabSpecial">
-                    <Tab.Container id="macroCreatorSpecialFunctions" defaultActiveKey="tabLayers">
-                      <div className="specialTabsWrapper">
-                        <div className="specialTabsCollum">
-                          <Nav className="flex-column">
-                            <CustomTab eventKey="tabLayers" text="Layers" icon={<IconLayers />} />
-                            <CustomTab eventKey="tabMacro" text="Macro" icon={<IconRobot />} />
-                            <CustomTab eventKey="tabMedia" text="Media & LED" icon={<IconNote />} />
-                            <CustomTab eventKey="tabMouse" text="Mouse" icon={<IconMouse />} />
-                          </Nav>
-                        </div>
-                        <div className="specialTabsContent">
-                          <Tab.Content>
-                            <Tab.Pane eventKey="tabLayers">
-                              <LayersTab onLayerPress={this.onLayerPress} />
-                            </Tab.Pane>
-                            <Tab.Pane eventKey="tabMacro">
-                              <MacroTab
-                                macros={this.props.macros}
-                                selectedMacro={this.props.selected}
-                                onMacrosPress={this.onMacrosPress}
-                              />
-                            </Tab.Pane>
-                            <Tab.Pane eventKey="tabMedia">
-                              <MediaAndLightTab onAddSpecial={this.onAddSpecial} />
-                            </Tab.Pane>
-                            <Tab.Pane eventKey="tabMouse">
-                              <MouseTab onAddSpecial={this.onAddSpecial} />
-                            </Tab.Pane>
-                          </Tab.Content>
-                        </div>
-                      </div>
-                    </Tab.Container>
-                  </Tab.Pane>
-
-                  <Tab.Pane eventKey="tabDelay">
-                    <DelayTab onAddDelay={this.onAddDelay} onAddDelayRnd={this.onAddDelayRnd} />
-                  </Tab.Pane>
-                </Tab.Content>
-              </div>
-            </div>
+            <TabsContent value="tabText">
+              <TextTab onAddText={this.onAddText} onTextChange={this.onTextChange} addText={this.state.addText} />
+            </TabsContent>
+            <TabsContent value="tabKeys">
+              <KeysTab onKeyPress={this.onKeyPress} kbtype={this.props.kbtype} selectedlanguage={this.props.selectedlanguage} />
+            </TabsContent>
+            <TabsContent value="tabSpecial">
+              <Tabs defaultValue="tabLayers" orientation="vertical">
+                <div className="specialTabsWrapper">
+                  <div className="specialTabsCollum">
+                    <TabsList className="grid">
+                      <TabsTrigger value="tabLayers">
+                        <IconLayers />
+                        Layers
+                      </TabsTrigger>
+                      <TabsTrigger value="tabMacro">
+                        <IconRobot />
+                        Macro
+                      </TabsTrigger>
+                      <TabsTrigger value="tabMedia">
+                        <IconNote />
+                        Media & LED
+                      </TabsTrigger>
+                      <TabsTrigger value="tabMouse">
+                        <IconMouse />
+                        Mouse
+                      </TabsTrigger>
+                    </TabsList>
+                  </div>
+                  <div className="specialTabsContent">
+                    <TabsContent value="tabLayers">
+                      <LayersTab onLayerPress={this.onLayerPress} />
+                    </TabsContent>
+                    <TabsContent value="tabMacro">
+                      <MacroTab
+                        macros={this.props.macros}
+                        selectedMacro={this.props.selected}
+                        onMacrosPress={this.onMacrosPress}
+                      />
+                    </TabsContent>
+                    <TabsContent value="tabMedia">
+                      <MediaAndLightTab onAddSpecial={this.onAddSpecial} />
+                    </TabsContent>
+                    <TabsContent value="tabMouse">
+                      <MouseTab onAddSpecial={this.onAddSpecial} />
+                    </TabsContent>
+                  </div>
+                </div>
+              </Tabs>
+            </TabsContent>
+            <TabsContent value="tabDelay">
+              <DelayTab onAddDelay={this.onAddDelay} onAddDelayRnd={this.onAddDelayRnd} />
+            </TabsContent>
           </div>
-        </Tab.Container>
+        </Tabs>
       </Styles>
     );
   }
