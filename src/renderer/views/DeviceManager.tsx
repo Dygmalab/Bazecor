@@ -49,7 +49,7 @@ const FilterHeaderWrapper = Styled.div`
   color: ${({ theme }) => theme.styles.filterHeader.titleColor};
   sup {
     color: ${({ theme }) => theme.colors.purple300};
-  } 
+  }
  }
  .modal-button--trigger {
   display: flex;
@@ -97,7 +97,7 @@ const DevicesWrapper = Styled.div`
   .devices-scroll {
     display: grid;
     grid-template-columns: repeat(3, minmax(340px, 1fr));
-    grid-gap: 16px; 
+    grid-gap: 16px;
   }
   .devices-container--no-devices {
     border-radius: 6px;
@@ -115,7 +115,7 @@ const DevicesWrapper = Styled.div`
           width: 100%;
           &:after, &:before {
             content: none;
-          } 
+          }
         }
         h4 {
           width: 100%;
@@ -142,7 +142,7 @@ const DevicesWrapper = Styled.div`
 
 `;
 const HelpMessage = Styled.div`
-  width: 100%; 
+  width: 100%;
   display: flex;
   justify-content: flex-end;
   margin-top: auto;
@@ -248,7 +248,7 @@ const savedDevicesList = [
     serialNumber: "BDAA4DC750535254352E3120FF15122ADefyVirtual2",
   },
 ];
-const DeviceManager = ({ titleElement, device }) => {
+const DeviceManager = () => {
   const [listDevices, setListDevices] = useState(savedDevicesList);
   // const [listDevices, setListDevices] = useState([]);
   const [activeTab, setActiveTab] = useState<"all" | boolean>("all");
@@ -265,7 +265,7 @@ const DeviceManager = ({ titleElement, device }) => {
     </button>
   );
 
-  const reOrderList = newList => {
+  const reOrderList = (newList: any) => {
     setListDevices(newList);
     setActiveTab("all");
     setShowModal(false);

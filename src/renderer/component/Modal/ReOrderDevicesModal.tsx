@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+/* eslint-disable react/jsx-props-no-spreading */
+import React, { useState } from "react";
 import Modal from "react-bootstrap/Modal";
 import { RegularButton } from "@Renderer/component/Button";
 import Heading from "@Renderer/component/Heading";
@@ -58,9 +59,10 @@ const DragListWrapper = Styled.div`
   }
 `;
 
-const ReOrderDevicesModal = ({ show, toggleShow, handleSave, devices }) => {
+const ReOrderDevicesModal = (props: any) => {
+  const { show, toggleShow, handleSave, devices } = props;
   const [devicesList, setDevicesList] = useState(devices);
-  const handleOnDragEnd = result => {
+  const handleOnDragEnd = (result: any) => {
     if (!result.destination) return;
     const items = Array.from(devicesList);
     const [reorderedItem] = items.splice(result.source.index, 1);
@@ -87,7 +89,7 @@ const ReOrderDevicesModal = ({ show, toggleShow, handleSave, devices }) => {
               <Droppable droppableId="devices" direction="horizontal">
                 {provided => (
                   <div className="droppable-area" {...provided.droppableProps} ref={provided.innerRef}>
-                    {devicesList.map((device, index) => (
+                    {devicesList.map((device: any, index: number) => (
                       <Draggable key={device.serialNumber} draggableId={device.serialNumber} index={index}>
                         {(dragProvided, dragSnapshot) => (
                           <div

@@ -3,7 +3,6 @@ import { Dropdown } from "react-bootstrap";
 
 import Heading from "@Renderer/component/Heading";
 import { IconSettings } from "@Renderer/component/Icon";
-import bgTexture from "@Assets/base/bg-texture-with-lines.jpg";
 
 import { DevicePreview } from "@Renderer/modules/DevicePreview";
 
@@ -138,7 +137,8 @@ const CardWrapper = Styled.div`
   }
 `;
 
-const CardDevice = ({ device, filterBy }) => {
+const CardDevice = (props: any) => {
+  const { device, filterBy } = props;
   const [isConnected, setIsConnected] = useState(false);
 
   const navigate = useNavigate();
@@ -149,7 +149,7 @@ const CardDevice = ({ device, filterBy }) => {
     }
   };
 
-  const filterAttribute = filter => {
+  const filterAttribute = (filter: any) => {
     switch (filter) {
       case true:
         return "show-online";
