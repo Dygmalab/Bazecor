@@ -19,14 +19,12 @@ import React, { Component } from "react";
 
 import Styled from "styled-components";
 
-import Tab from "react-bootstrap/Tab";
-import Nav from "react-bootstrap/Nav";
 import { MdUnfoldLess, MdKeyboardArrowUp, MdKeyboardArrowDown, MdTimer } from "react-icons/md";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@Renderer/components/ui/tabs";
+import { motion } from "framer-motion";
 import i18n from "../../i18n";
 
 import Title from "../../component/Title";
-import { CustomTab } from "../../component/Tab";
 import TextTab from "../KeysTabs/TextTab";
 import KeysTab from "../KeysTabs/KeysTab";
 import LayersTab from "../KeysTabs/LayersTab";
@@ -175,14 +173,6 @@ const Styles = Styled.div`
   grid-template-columns: minmax(125px,170px) auto;
   grid-gap: 14px;
 }
-.specialTabsContent {
-  .tab-content {
-    margin-top: -24px;
-    padding: 24px;
-    border-radius: 4px;
-    background-color: ${({ theme }) => theme.styles.macro.tabSpecialContentBackground};
-  }
-}
 `;
 
 class MacroCreator extends Component {
@@ -192,6 +182,7 @@ class MacroCreator extends Component {
     this.state = {
       addText: "",
       rows: [],
+      currentTab: 0,
     };
     this.keymapDB = props.keymapDB;
     this.modifiers = [
@@ -635,85 +626,123 @@ class MacroCreator extends Component {
   };
 
   render() {
+    const tabVariants = {
+      hidden: { opacity: 0 },
+      visible: { opacity: 1, transition: { duration: 0.5 } },
+    };
     return (
       <Styles>
-        <Tabs defaultValue="tabText" orientation="vertical">
+        <Tabs
+          defaultValue="tabText"
+          orientation="vertical"
+          index={this.state.currentTab}
+          onChange={index =>
+            this.setState({
+              currentTab: index,
+            })
+          }
+        >
           <div className="tabWrapper">
-            <div className="tabCategories">
+            <div className="tabCategories px-4 py-3">
               <Title headingLevel={3} text={i18n.general.actions} />
               <RecordMacroModal onAddRecorded={this.onAddRecorded} keymapDB={this.keymapDB} />
-              <TabsList className="grid">
-                <TabsTrigger value="tabText">
+              <TabsList className="flex flex-col gap-1">
+                <TabsTrigger value="tabText" variant="tab">
                   <IconLetterColor />
                   Text
                 </TabsTrigger>
-                <TabsTrigger value="tabKeys">
+                <TabsTrigger value="tabKeys" variant="tab">
                   <IconKeyboard />
                   Keys
                 </TabsTrigger>
-                <TabsTrigger value="tabSpecial">
+                <TabsTrigger value="tabSpecial" variant="tab">
                   <IconMagicStick />
                   Special functions
                 </TabsTrigger>
-                <TabsTrigger value="tabDelay">
+                <TabsTrigger value="tabDelay" variant="tab">
                   <IconStopWatch />
                   Delay
                 </TabsTrigger>
               </TabsList>
             </div>
-            <TabsContent value="tabText">
-              <TextTab onAddText={this.onAddText} onTextChange={this.onTextChange} addText={this.state.addText} />
-            </TabsContent>
-            <TabsContent value="tabKeys">
-              <KeysTab onKeyPress={this.onKeyPress} kbtype={this.props.kbtype} selectedlanguage={this.props.selectedlanguage} />
-            </TabsContent>
-            <TabsContent value="tabSpecial">
-              <Tabs defaultValue="tabLayers" orientation="vertical">
-                <div className="specialTabsWrapper">
-                  <div className="specialTabsCollum">
-                    <TabsList className="grid">
-                      <TabsTrigger value="tabLayers">
-                        <IconLayers />
-                        Layers
-                      </TabsTrigger>
-                      <TabsTrigger value="tabMacro">
-                        <IconRobot />
-                        Macro
-                      </TabsTrigger>
-                      <TabsTrigger value="tabMedia">
-                        <IconNote />
-                        Media & LED
-                      </TabsTrigger>
-                      <TabsTrigger value="tabMouse">
-                        <IconMouse />
-                        Mouse
-                      </TabsTrigger>
-                    </TabsList>
-                  </div>
-                  <div className="specialTabsContent">
-                    <TabsContent value="tabLayers">
-                      <LayersTab onLayerPress={this.onLayerPress} />
-                    </TabsContent>
-                    <TabsContent value="tabMacro">
-                      <MacroTab
-                        macros={this.props.macros}
-                        selectedMacro={this.props.selected}
-                        onMacrosPress={this.onMacrosPress}
-                      />
-                    </TabsContent>
-                    <TabsContent value="tabMedia">
-                      <MediaAndLightTab onAddSpecial={this.onAddSpecial} />
-                    </TabsContent>
-                    <TabsContent value="tabMouse">
-                      <MouseTab onAddSpecial={this.onAddSpecial} />
-                    </TabsContent>
-                  </div>
-                </div>
-              </Tabs>
-            </TabsContent>
-            <TabsContent value="tabDelay">
-              <DelayTab onAddDelay={this.onAddDelay} onAddDelayRnd={this.onAddDelayRnd} />
-            </TabsContent>
+            <div className="tabContent">
+              <div className="tabContentInner">
+                <Title headingLevel={3} text={i18n.general.configure} />
+                <TabsContent value="tabText">
+                  <motion.div initial="hidden" animate="visible" variants={tabVariants}>
+                    <TextTab onAddText={this.onAddText} onTextChange={this.onTextChange} addText={this.state.addText} />
+                  </motion.div>
+                </TabsContent>
+                <TabsContent value="tabKeys">
+                  <motion.div initial="hidden" animate="visible" variants={tabVariants}>
+                    <KeysTab
+                      onKeyPress={this.onKeyPress}
+                      kbtype={this.props.kbtype}
+                      selectedlanguage={this.props.selectedlanguage}
+                    />
+                  </motion.div>
+                </TabsContent>
+                <TabsContent value="tabSpecial">
+                  <motion.div initial="hidden" animate="visible" variants={tabVariants}>
+                    <Tabs defaultValue="tabLayers" orientation="vertical">
+                      <div className="specialTabsWrapper">
+                        <div className="specialTabsCollum pl-0 pr-4 py-3">
+                          <TabsList className="flex flex-col gap-1">
+                            <TabsTrigger value="tabLayers" variant="tab">
+                              <IconLayers />
+                              Layers
+                            </TabsTrigger>
+                            <TabsTrigger value="tabMacro" variant="tab">
+                              <IconRobot />
+                              Macro
+                            </TabsTrigger>
+                            <TabsTrigger value="tabMedia" variant="tab">
+                              <IconNote />
+                              Media & LED
+                            </TabsTrigger>
+                            <TabsTrigger value="tabMouse" variant="tab">
+                              <IconMouse />
+                              Mouse
+                            </TabsTrigger>
+                          </TabsList>
+                        </div>
+                        <div className="specialTabsContent px-3 py-3 rounded-md bg-gray-50/40 dark:bg-gray-600 mt-[-24px]">
+                          <TabsContent value="tabLayers">
+                            <motion.div initial="hidden" animate="visible" variants={tabVariants}>
+                              <LayersTab onLayerPress={this.onLayerPress} />
+                            </motion.div>
+                          </TabsContent>
+                          <TabsContent value="tabMacro">
+                            <motion.div initial="hidden" animate="visible" variants={tabVariants}>
+                              <MacroTab
+                                macros={this.props.macros}
+                                selectedMacro={this.props.selected}
+                                onMacrosPress={this.onMacrosPress}
+                              />
+                            </motion.div>
+                          </TabsContent>
+                          <TabsContent value="tabMedia">
+                            <motion.div initial="hidden" animate="visible" variants={tabVariants}>
+                              <MediaAndLightTab onAddSpecial={this.onAddSpecial} />
+                            </motion.div>
+                          </TabsContent>
+                          <TabsContent value="tabMouse">
+                            <motion.div initial="hidden" animate="visible" variants={tabVariants}>
+                              <MouseTab onAddSpecial={this.onAddSpecial} />
+                            </motion.div>
+                          </TabsContent>
+                        </div>
+                      </div>
+                    </Tabs>
+                  </motion.div>
+                </TabsContent>
+                <TabsContent value="tabDelay">
+                  <motion.div initial="hidden" animate="visible" variants={tabVariants}>
+                    <DelayTab onAddDelay={this.onAddDelay} onAddDelayRnd={this.onAddDelayRnd} />
+                  </motion.div>
+                </TabsContent>
+              </div>
+            </div>
           </div>
         </Tabs>
       </Styles>

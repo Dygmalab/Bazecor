@@ -2,36 +2,54 @@
 
 import * as React from "react";
 import * as TabsPrimitive from "@radix-ui/react-tabs";
+import { cva, type VariantProps } from "class-variance-authority";
 
 import { cn } from "@Renderer/utils";
+
+const tabsTriggerVariants = cva("flex flex-col", {
+  variants: {
+    variant: {
+      default: "bg-primary text-primary-foreground shadow hover:bg-primary/90",
+      tab: "w-full flex flex-row text-left justify-start relative items-center gap-2 font-semibold mt-0 transition-all isolate before:absolute before:w-[32px] before:h-[68px] before:right-[-24px] before:content-[''] before:bg-lightAccent before:opacity-0 before:transition-opacity before:duration-200 before:z-index-[-1] dark:text-gray-100 after:content-[''] after:h-[24px] after:w-[3px] after:absolute after:rounded-tr-[3px] after:rounded-br-[3px] after:opacity-0 after:transition-opacity after:duration-200 after:bg-gradient-to-t after:from-secondary after:to-primary after:top-[50%] after:translate-y-[-50%] after:right-[-27px] hover:dark:bg-gray-600/30 hover:bg-gray-25/10 hover:dark:text-gray-25 text-gray-400 dark:text-gray-100 data-[state=active]:bg-gray-25/80 data-[state=active]:dark:bg-gray-900/60 data-[state=active]:before:opacity-50 data-[state=active]:dark:before:opacity-100 data-[state=active]:after:opacity-100 data-[state=active]:text-purple-200 data-[state=active]:dark:text-gray-25",
+    },
+    size: {
+      default: "px-2 py-2.5 rounded text-sm",
+      sm: "px-1 py-2 rounded-md text-xs",
+      lg: "px-3 py-3 rounded text-base",
+    },
+  },
+  defaultVariants: {
+    variant: "default",
+    size: "default",
+  },
+});
+
+export interface TabsTriggerProps
+  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
+    VariantProps<typeof tabsTriggerVariants> {
+  asChild?: boolean;
+}
 
 const Tabs = TabsPrimitive.Root;
 
 const TabsList = React.forwardRef<
   React.ElementRef<typeof TabsPrimitive.List>,
   React.ComponentPropsWithoutRef<typeof TabsPrimitive.List>
->(({ className, ...props }, ref) => (
-  <TabsPrimitive.List
-    ref={ref}
-    className={cn(
-      "inline-flex h-10 items-center justify-center rounded-md bg-slate-100 p-1 text-slate-500 dark:bg-slate-800 dark:text-slate-400",
-      className,
-    )}
-    {...props}
-  />
-));
+>(({ className, ...props }, ref) => <TabsPrimitive.List ref={ref} className={cn("justify-start", className)} {...props} />);
 TabsList.displayName = TabsPrimitive.List.displayName;
 
 const TabsTrigger = React.forwardRef<
   React.ElementRef<typeof TabsPrimitive.Trigger>,
-  React.ComponentPropsWithoutRef<typeof TabsPrimitive.Trigger>
->(({ className, ...props }, ref) => (
+  React.ComponentPropsWithoutRef<typeof TabsPrimitive.Trigger>,
+  TabsTriggerProps
+>(({ className, variant, size, ...props }, ref) => (
   <TabsPrimitive.Trigger
     ref={ref}
-    className={cn(
-      "inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ring-offset-white transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-950 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-white data-[state=active]:text-slate-950 data-[state=active]:shadow-sm dark:ring-offset-slate-950 dark:focus-visible:ring-slate-300 dark:data-[state=active]:bg-slate-950 dark:data-[state=active]:text-slate-50",
-      className,
-    )}
+    // className={cn(
+    //   "inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ring-offset-white transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-950 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-white data-[state=active]:text-slate-950 data-[state=active]:shadow-sm dark:ring-offset-slate-950 dark:focus-visible:ring-slate-300 dark:data-[state=active]:bg-slate-950 dark:data-[state=active]:text-slate-50",
+    //   className,
+    // )}
+    className={cn(tabsTriggerVariants({ variant, size, className }))}
     {...props}
   />
 ));
