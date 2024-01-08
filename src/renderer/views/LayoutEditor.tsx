@@ -1011,13 +1011,11 @@ const LayoutEditor: React.FC<LayoutEditorProps> = (props): React.JSX.Element => 
       AnalizeChipID,
       deviceState,
       getColormap,
-      keymap.custom.length,
       keymapDB,
       ledIndexStart,
       macroTranslator,
       onDisconnect,
       previousLayer,
-      scanned,
       setIsSending,
     ],
   );
