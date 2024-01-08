@@ -117,6 +117,12 @@ function App() {
       isDark = mode === "dark";
       if (mode === "system") {
         isDark = await ipcRenderer.invoke("get-NativeTheme");
+        if (isDark) {
+          document.documentElement.classList.remove("light");
+          document.documentElement.classList.add("dark");
+        }
+      } else {
+        document.documentElement.classList.add(mode);
       }
 
       // Settings entry creation for the beta toggle, it will have a control in preferences to change the policy
@@ -151,7 +157,7 @@ function App() {
     if (dm === "system") {
       forceDarkMode(message);
     }
-    if (appState.darkMode || (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches)) {
+    if (dm || (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches)) {
       document.documentElement.classList.add("dark");
     } else {
       document.documentElement.classList.remove("dark");
@@ -199,10 +205,19 @@ function App() {
   };
 
   const toggleDarkMode = async (mode: string) => {
+    document.documentElement.classList.remove("light");
+    document.documentElement.classList.remove("dark");
+    document.documentElement.classList.remove("system");
     console.log("Dark mode changed to: ", mode, "NativeTheme says: ", ipcRenderer.invoke("get-NativeTheme"));
     let isDark = mode === "dark";
     if (mode === "system") {
       isDark = await ipcRenderer.invoke("get-NativeTheme");
+      if (isDark) {
+        document.documentElement.classList.remove("light");
+        document.documentElement.classList.add("dark");
+      }
+    } else {
+      document.documentElement.classList.add(mode);
     }
     setDarkMode(isDark);
     store.set("settings.darkMode", mode);
