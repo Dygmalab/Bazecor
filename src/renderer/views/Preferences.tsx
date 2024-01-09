@@ -21,6 +21,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { ipcRenderer } from "electron";
 import Styled from "styled-components";
+import { motion } from "framer-motion";
 
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
@@ -496,6 +497,11 @@ const Preferences = (props: PreferencesProps) => {
   const onlyCustomSwitch = <Form.Check type="switch" checked={kbData.keymap.onlyCustom as any} onChange={toggleOnlyCustom} />;
   const allowBetas = <Form.Check value={allowBeta as any} type="switch" checked={allowBeta} onChange={updateAllowBeta} />;
 
+  const tabVariants = {
+    hidden: { opacity: 0 },
+    visible: { opacity: 1, transition: { duration: 0.5 } },
+  };
+
   console.log("selectedNeuron: ", selectedNeuron);
   console.log("Connected: ", connected);
   console.log("neurons[selectedNeuron]: ", neurons[selectedNeuron]);
@@ -531,94 +537,73 @@ const Preferences = (props: PreferencesProps) => {
                 <h4 className="uppercase text-xs dark:text-gray-300 pb-2 mb-1 mt-3 border-solid border-b border-gray-300/30 dark:border-gray-300/30">
                   Device settings
                 </h4>
-                <TabsTrigger value="Keyboard">
+                <TabsTrigger value="Keyboard" variant="tab">
                   <IconKeyboard /> Typing and Keys
                 </TabsTrigger>
-                <TabsTrigger value="LED">
+                <TabsTrigger value="LED" variant="tab">
                   <IconFlashlight /> LED
                 </TabsTrigger>
-                <TabsTrigger value="Battery">
+                <TabsTrigger value="Battery" variant="tab">
                   <IconBattery /> Battery Management
                 </TabsTrigger>
-                <TabsTrigger value="Bluetooth">
+                <TabsTrigger value="Bluetooth" variant="tab">
                   <IconBluetooth /> Bluetooth Settings
                 </TabsTrigger>
-                <TabsTrigger value="RF">
+                <TabsTrigger value="RF" variant="tab">
                   <IconSignal /> RF Settings
                 </TabsTrigger>
-                <TabsTrigger value="Advanced">
+                <TabsTrigger value="Advanced" variant="tab">
                   <IconWrench /> Advanced
                 </TabsTrigger>
                 <h4 className="uppercase text-xs dark:text-gray-300 pb-2 mb-1 mt-3 border-solid border-b border-gray-300/30 dark:border-gray-300/30">
                   Global settings
                 </h4>
-                <TabsTrigger value="Application">
+                <TabsTrigger value="Application" variant="tab">
                   <IconLogoDygma /> Application
                 </TabsTrigger>
               </TabsList>
-              <TabsContent
-                value="Keyboard"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: currentTab === 0 ? 1 : 0 }}
-                transition={{ duration: 0.3 }}
-              >
-                Content Typing and Keys
+              <TabsContent value="Keyboard">
+                <motion.div initial="hidden" animate="visible" variants={tabVariants}>
+                  Content Typing and Keys
+                </motion.div>
               </TabsContent>
-              <TabsContent
-                value="LED"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: currentTab === 1 ? 1 : 0 }}
-                transition={{ duration: 0.3 }}
-              >
-                LED
+              <TabsContent value="LED">
+                <motion.div initial="hidden" animate="visible" variants={tabVariants}>
+                  LED
+                </motion.div>
               </TabsContent>
-              <TabsContent
-                value="Battery"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: currentTab === 2 ? 1 : 0 }}
-                transition={{ duration: 0.3 }}
-              >
-                Battery Management
+              <TabsContent value="Battery">
+                <motion.div initial="hidden" animate="visible" variants={tabVariants}>
+                  Battery Management
+                </motion.div>
               </TabsContent>
-              <TabsContent
-                value="Bluetooth"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: currentTab === 3 ? 1 : 0 }}
-                transition={{ duration: 0.3 }}
-              >
-                Bluetooth Settings
+              <TabsContent value="Bluetooth">
+                <motion.div initial="hidden" animate="visible" variants={tabVariants}>
+                  Bluetooth Settings
+                </motion.div>
               </TabsContent>
-              <TabsContent
-                value="RF"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: currentTab === 4 ? 1 : 0 }}
-                transition={{ duration: 0.3 }}
-              >
-                RF Settings
+              <TabsContent value="RF">
+                <motion.div initial="hidden" animate="visible" variants={tabVariants}>
+                  Content RF Settings
+                </motion.div>
               </TabsContent>
-              <TabsContent
-                value="Advanced"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: currentTab === 5 ? 1 : 0 }}
-                transition={{ duration: 0.3 }}
-              >
-                Advanced
+              <TabsContent value="Advanced">
+                <motion.div initial="hidden" animate="visible" variants={tabVariants}>
+                  Advanced
+                </motion.div>
               </TabsContent>
-              <TabsContent
-                value="Application"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: currentTab === 6 ? 1 : 0 }}
-                transition={{ duration: 0.3 }}
-              >
-                <GeneralSettings
-                  selectDarkMode={selectDarkMode}
-                  darkMode={darkMode}
-                  neurons={neurons}
-                  selectedNeuron={selectedNeuron}
-                  defaultLayer={defaultLayer}
-                  selectDefaultLayer={selectDefaultLayer}
-                  connected={connected}
-                />
+              <TabsContent value="Application">
+                <motion.div initial="hidden" animate="visible" variants={tabVariants}>
+                  <GeneralSettings
+                    selectDarkMode={selectDarkMode}
+                    darkMode={darkMode}
+                    neurons={neurons}
+                    selectedNeuron={selectedNeuron}
+                    defaultLayer={defaultLayer}
+                    selectDefaultLayer={selectDefaultLayer}
+                    connected={connected}
+                  />
+                </motion.div>
               </TabsContent>
             </div>
           </Tabs>
