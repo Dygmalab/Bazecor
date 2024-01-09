@@ -111,9 +111,6 @@ const Styles = Styled.div`
 
 
 .tabWrapper {
-  display: grid;
-  grid-template-columns: minmax(auto, 240px) 1fr;
-  margin-top: 3px;
   h3 {
     margin-bottom: 16px;
     color: ${({ theme }) => theme.styles.macro.tabTile};
@@ -642,8 +639,8 @@ class MacroCreator extends Component {
             })
           }
         >
-          <div className="tabWrapper">
-            <div className="tabCategories px-4 py-3">
+          <div className="tabWrapper grid mt-[3px] grid-cols-[minmax(auto,_240px)_1fr]">
+            <div className="px-4 py-4 rounded-bl-xl bg-gray-50 dark:bg-[#2b2c43]">
               <Title headingLevel={3} text={i18n.general.actions} />
               <RecordMacroModal onAddRecorded={this.onAddRecorded} keymapDB={this.keymapDB} />
               <TabsList className="flex flex-col gap-1">
@@ -665,7 +662,7 @@ class MacroCreator extends Component {
                 </TabsTrigger>
               </TabsList>
             </div>
-            <div className="tabContent">
+            <div className="px-4 py-4 rounded-br-xl bg-gray-25 dark:bg-gray-800">
               <div className="tabContentInner">
                 <Title headingLevel={3} text={i18n.general.configure} />
                 <TabsContent value="tabText">
@@ -685,8 +682,8 @@ class MacroCreator extends Component {
                 <TabsContent value="tabSpecial">
                   <motion.div initial="hidden" animate="visible" variants={tabVariants}>
                     <Tabs defaultValue="tabLayers" orientation="vertical">
-                      <div className="specialTabsWrapper">
-                        <div className="specialTabsCollum pl-0 pr-4 py-3">
+                      <div className="grid grid-cols-[minmax(125px,_170px)_auto]">
+                        <div className="pl-0 pr-4 py-3">
                           <TabsList className="flex flex-col gap-1">
                             <TabsTrigger value="tabLayers" variant="tab">
                               <IconLayers />
@@ -706,7 +703,7 @@ class MacroCreator extends Component {
                             </TabsTrigger>
                           </TabsList>
                         </div>
-                        <div className="specialTabsContent px-3 py-3 rounded-md bg-gray-50/40 dark:bg-gray-600 mt-[-24px]">
+                        <div className="px-4 py-2 rounded-md bg-gray-50/40 dark:bg-gray-900/20 mt-[-24px]">
                           <TabsContent value="tabLayers">
                             <motion.div initial="hidden" animate="visible" variants={tabVariants}>
                               <LayersTab onLayerPress={this.onLayerPress} />

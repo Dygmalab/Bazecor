@@ -96,3 +96,19 @@ select:focus {
 .form-input-xl {
   @apply text-xl;
 }
+
+.tab-item:hover {
+  background: linear-gradient(120deg, rgba(238, 241, 248, 0.2), rgba(255, 255, 255, 0.2));
+}
+.tab-item[data-state="active"],
+.tab-item[data-state="active"]:hover {
+  background: linear-gradient(120deg, rgba(238, 241, 248, 0.7), rgba(255, 255, 255, 0.7));
+}
+
+.dark .tab-item:hover {
+  background: linear-gradient(280deg, rgba(240, 242, 244, 0.05), rgba(255, 255, 255, 0)), rgba(18, 19, 36, 0.15);
+}
+.dark .tab-item[data-state="active"],
+.dark .tab-item[data-state="active"]:hover {
+  background: linear-gradient(280deg, rgba(240, 242, 244, 0.1), rgba(255, 255, 255, 0)), rgba(18, 19, 36, 0.6);
+}
