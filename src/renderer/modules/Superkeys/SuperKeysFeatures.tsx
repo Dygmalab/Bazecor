@@ -1,7 +1,7 @@
 import React from "react";
 import Styled from "styled-components";
 import Card from "react-bootstrap/Card";
-import Accordion from "react-bootstrap/Accordion";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@Renderer/components/ui/accordion";
 import IconCheckmarkSm from "@Assets/base/icon-checkmark-green.svg";
 import i18n from "../../i18n";
 
@@ -70,14 +70,14 @@ h5 {
 function SuperKeysFeatures() {
   return (
     <Style>
-      <Accordion className="simpleAccordion" defaultActiveKey="0">
-        <Card className="simpleAccordionHeader">
-          <Accordion.Toggle as={Card.Header} eventKey="1">
+      <Accordion type="single" collapsible className="w-full">
+        <AccordionItem value="item-1">
+          <AccordionTrigger>
             <div className="accordionHeader">
               <div className="accordionTitle">{i18n.editor.superkeys.collapse.title}</div>
             </div>
-          </Accordion.Toggle>
-          <Accordion.Collapse eventKey="1">
+          </AccordionTrigger>
+          <AccordionContent>
             <Card.Body>
               <div className="cardContent">
                 <div className="versionContent">
@@ -161,8 +161,8 @@ function SuperKeysFeatures() {
                 </div>
               </div>
             </Card.Body>
-          </Accordion.Collapse>
-        </Card>
+          </AccordionContent>
+        </AccordionItem>
       </Accordion>
     </Style>
   );
