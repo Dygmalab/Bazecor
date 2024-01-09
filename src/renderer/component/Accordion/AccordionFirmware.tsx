@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from "react";
 import Styled from "styled-components";
-import i18n from "../../i18n";
 
-import Accordion from "react-bootstrap/Accordion";
-import Card from "react-bootstrap/Card";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@Renderer/components/ui/accordion";
+import i18n from "../../i18n";
 
 // Visual components
 import Title from "../Title";
@@ -84,34 +83,34 @@ margin-top: 32px;
 }
 `;
 
-const AccordionFirmware = ({ items }) => {
+const AccordionFirmware = ({ items }: any) => {
   const [passedTasks, SetPassedTasks] = useState(true);
   const [counterTasks, SetCounterTasks] = useState(0);
 
   const textList = [
     {
-      text: i18n.firmwareUpdate.milestones.checkLeftSide
+      text: i18n.firmwareUpdate.milestones.checkLeftSide,
     },
     {
-      text: i18n.firmwareUpdate.milestones.checkLeftSideBL
+      text: i18n.firmwareUpdate.milestones.checkLeftSideBL,
     },
     {
-      text: i18n.firmwareUpdate.milestones.checkRightSide
+      text: i18n.firmwareUpdate.milestones.checkRightSide,
     },
     {
-      text: i18n.firmwareUpdate.milestones.checkRightSideBL
+      text: i18n.firmwareUpdate.milestones.checkRightSideBL,
     },
     {
-      text: i18n.firmwareUpdate.milestones.checkBackup
-    }
+      text: i18n.firmwareUpdate.milestones.checkBackup,
+    },
   ];
 
   useEffect(() => {
-    items.map((item, index) => {
-      if (index == 0) {
-        SetCounterTasks(false);
+    items.forEach((item: any, index: number) => {
+      if (index === 0) {
+        SetCounterTasks(-1);
       }
-      if ((index == 0 && !item.checked) || (index == 2 && !item.checked)) {
+      if ((index === 0 && !item.checked) || (index === 2 && !item.checked)) {
         SetPassedTasks(false);
       }
       if (item.checked) {
@@ -119,13 +118,13 @@ const AccordionFirmware = ({ items }) => {
       }
     });
     console.log(passedTasks);
-  }, [items]);
+  }, [items, passedTasks]);
 
   return (
     <Style>
-      <Accordion>
-        <Card>
-          <Accordion.Toggle as={Card.Header} eventKey="0">
+      <Accordion type="single" collapsible className="w-full">
+        <AccordionItem value="item-1">
+          <AccordionTrigger>
             <div className="stepsCompletedStatus">
               <div className="stepsCompletedHeader">
                 {passedTasks ? <IconCheckmarkSm /> : ""}
@@ -135,7 +134,7 @@ const AccordionFirmware = ({ items }) => {
                 />
               </div>
               <div className="stepsCompleted">
-                <div className={`stepsCompletedLabel ${counterTasks == items.length ? "passed" : "warning"}`}>
+                <div className={`stepsCompletedLabel ${counterTasks === items.length ? "passed" : "warning"}`}>
                   {counterTasks} {i18n.general.of} {items.length} {i18n.firmwareUpdate.milestones.tasksPassed}
                 </div>{" "}
                 <small>
@@ -143,13 +142,13 @@ const AccordionFirmware = ({ items }) => {
                 </small>
               </div>
             </div>
-          </Accordion.Toggle>
-          <Accordion.Collapse eventKey="0">
-            <Card.Body>
-              {items.map((item, index) => (
+          </AccordionTrigger>
+          <AccordionContent>
+            <div>
+              {items.map((item: any, index: number) => (
                 <div
                   className={`item-checked ${
-                    (index == 0 && item.checked == false) || (index == 2 && item.checked == false) ? "error" : ""
+                    (index === 0 && item.checked === false) || (index === 2 && item.checked === false) ? "error" : ""
                   } ${item.checked ? "checked" : "warning"}`}
                   key={`itemChecked-${item.id}`}
                 >
@@ -157,9 +156,9 @@ const AccordionFirmware = ({ items }) => {
                   {textList[index].text}
                 </div>
               ))}
-            </Card.Body>
-          </Accordion.Collapse>
-        </Card>
+            </div>
+          </AccordionContent>
+        </AccordionItem>
       </Accordion>
     </Style>
   );
