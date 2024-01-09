@@ -23,9 +23,6 @@ import { ipcRenderer } from "electron";
 import Styled from "styled-components";
 import { motion } from "framer-motion";
 
-import Container from "react-bootstrap/Container";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
 import { toast } from "react-toastify";
 import i18n from "@Renderer/i18n";
@@ -529,33 +526,42 @@ const Preferences = (props: PreferencesProps) => {
           >
             <div className="flex gap-3 w-full">
               <TabsList className="flex flex-col self-start gap-1 px-4 py-4 text-left min-w-64 rounded-xl bg-tabMenu dark:bg-tabMenuDark">
-                <DeviceConnectedPreview
-                  deviceName={neurons[selectedNeuron].name}
-                  deviceDisplayName={neurons[selectedNeuron].device.info.displayName}
-                  nameChange={updateNeuronName}
-                />
-                <h4 className="uppercase text-xs dark:text-gray-300 pb-2 mb-1 mt-3 border-solid border-b border-gray-300/30 dark:border-gray-300/30">
-                  Device settings
-                </h4>
-                <TabsTrigger value="Keyboard" variant="tab">
-                  <IconKeyboard /> Typing and Keys
-                </TabsTrigger>
-                <TabsTrigger value="LED" variant="tab">
-                  <IconFlashlight /> LED
-                </TabsTrigger>
-                <TabsTrigger value="Battery" variant="tab">
-                  <IconBattery /> Battery Management
-                </TabsTrigger>
-                <TabsTrigger value="Bluetooth" variant="tab">
-                  <IconBluetooth /> Bluetooth Settings
-                </TabsTrigger>
-                <TabsTrigger value="RF" variant="tab">
-                  <IconSignal /> RF Settings
-                </TabsTrigger>
-                <TabsTrigger value="Advanced" variant="tab">
-                  <IconWrench /> Advanced
-                </TabsTrigger>
-                <h4 className="uppercase text-xs dark:text-gray-300 pb-2 mb-1 mt-3 border-solid border-b border-gray-300/30 dark:border-gray-300/30">
+                {connected ? (
+                  <>
+                    <DeviceConnectedPreview
+                      deviceName={neurons[selectedNeuron].name}
+                      deviceDisplayName={neurons[selectedNeuron].device.info.displayName}
+                      nameChange={updateNeuronName}
+                    />
+                    <h4 className="uppercase text-xs dark:text-gray-300 pb-2 mb-1 mt-3 border-solid border-b border-gray-300/30 dark:border-gray-300/30">
+                      Device settings
+                    </h4>
+                    <TabsTrigger value="Keyboard" variant="tab">
+                      <IconKeyboard /> Typing and Keys
+                    </TabsTrigger>
+                    <TabsTrigger value="LED" variant="tab">
+                      <IconFlashlight /> LED
+                    </TabsTrigger>
+                    <TabsTrigger value="Battery" variant="tab">
+                      <IconBattery /> Battery Management
+                    </TabsTrigger>
+                    <TabsTrigger value="Bluetooth" variant="tab">
+                      <IconBluetooth /> Bluetooth Settings
+                    </TabsTrigger>
+                    <TabsTrigger value="RF" variant="tab">
+                      <IconSignal /> RF Settings
+                    </TabsTrigger>
+                    <TabsTrigger value="Advanced" variant="tab">
+                      <IconWrench /> Advanced
+                    </TabsTrigger>
+                  </>
+                ) : null}
+
+                <h4
+                  className={`uppercase text-xs dark:text-gray-300 pb-2 mb-1 border-solid border-b border-gray-300/30 dark:border-gray-300/30 ${
+                    connected ? "mt-3" : ""
+                  }`}
+                >
                   Global settings
                 </h4>
                 <TabsTrigger value="Application" variant="tab">
@@ -564,7 +570,15 @@ const Preferences = (props: PreferencesProps) => {
               </TabsList>
               <TabsContent value="Keyboard">
                 <motion.div initial="hidden" animate="visible" variants={tabVariants}>
-                  Content Typing and Keys
+                  <BackupSettings connected={connected} neurons={neurons} neuronID={neuronID} />
+                  <NeuronSettings
+                    neurons={neurons}
+                    selectedNeuron={selectedNeuron}
+                    selectNeuron={selectNeuron}
+                    updateNeuronName={updateNeuronName}
+                    deleteNeuron={deleteNeuron}
+                  />
+                  <KeyboardSettings kbData={kbData} setKbData={setKbDataHandler} connected={connected} />
                 </motion.div>
               </TabsContent>
               <TabsContent value="LED">
@@ -589,7 +603,14 @@ const Preferences = (props: PreferencesProps) => {
               </TabsContent>
               <TabsContent value="Advanced">
                 <motion.div initial="hidden" animate="visible" variants={tabVariants}>
-                  Advanced
+                  <AdvancedSettings
+                    devToolsSwitch={devToolsSwitch as any}
+                    verboseSwitch={verboseSwitch}
+                    onlyCustomSwitch={onlyCustomSwitch}
+                    allowBetas={allowBetas}
+                    pairingButton={<></>}
+                    connected={connected}
+                  />
                 </motion.div>
               </TabsContent>
               <TabsContent value="Application">
@@ -603,45 +624,11 @@ const Preferences = (props: PreferencesProps) => {
                     selectDefaultLayer={selectDefaultLayer}
                     connected={connected}
                   />
+                  <Version />
                 </motion.div>
               </TabsContent>
             </div>
           </Tabs>
-        </div>
-        <div className="wrapper wrapperBackground">
-          <Container fluid>
-            <Row className="justify-content-center">
-              <Col lg={9} xl={6}>
-                <GeneralSettings
-                  selectDarkMode={selectDarkMode}
-                  darkMode={darkMode}
-                  neurons={neurons}
-                  selectedNeuron={selectedNeuron}
-                  defaultLayer={defaultLayer}
-                  selectDefaultLayer={selectDefaultLayer}
-                  connected={connected}
-                />
-                <BackupSettings connected={connected} neurons={neurons} neuronID={neuronID} />
-                <NeuronSettings
-                  neurons={neurons}
-                  selectedNeuron={selectedNeuron}
-                  selectNeuron={selectNeuron}
-                  updateNeuronName={updateNeuronName}
-                  deleteNeuron={deleteNeuron}
-                />
-                <KeyboardSettings kbData={kbData} setKbData={setKbDataHandler} connected={connected} />
-                <AdvancedSettings
-                  devToolsSwitch={devToolsSwitch as any}
-                  verboseSwitch={verboseSwitch}
-                  onlyCustomSwitch={onlyCustomSwitch}
-                  allowBetas={allowBetas}
-                  pairingButton={<></>}
-                  connected={connected}
-                />
-                <Version />
-              </Col>
-            </Row>
-          </Container>
         </div>
       </div>
     </Styles>
