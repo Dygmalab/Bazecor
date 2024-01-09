@@ -56,9 +56,7 @@ import Version from "@Renderer/component/Version/Version";
 
 import Store from "@Renderer/utils/Store";
 import { useDevice } from "@Renderer/DeviceContext";
-import { TabItem } from "@Renderer/component/Tab";
-import { Tab } from "@headlessui/react";
-import { motion } from "framer-motion";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@Renderer/components/ui/tabs";
 import Backup from "../../api/backup";
 
 const store = Store.getStore();
@@ -85,6 +83,7 @@ const Preferences = (props: PreferencesProps) => {
   const [bkp] = useState(new Backup());
   const [isSaved, setIsSaved] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+  const [currentTab, setCurrentTab] = useState("Application");
   const { inContext, connected, allowBeta, updateAllowBeta, startContext, cancelContext, toggleDarkMode } = props;
   const [kbData, setKbData] = useState({
     keymap: {
@@ -497,8 +496,6 @@ const Preferences = (props: PreferencesProps) => {
   const onlyCustomSwitch = <Form.Check type="switch" checked={kbData.keymap.onlyCustom as any} onChange={toggleOnlyCustom} />;
   const allowBetas = <Form.Check value={allowBeta as any} type="switch" checked={allowBeta} onChange={updateAllowBeta} />;
 
-  const [currentTab, setCurrentTab] = useState(6);
-
   console.log("selectedNeuron: ", selectedNeuron);
   console.log("Connected: ", connected);
   console.log("neurons[selectedNeuron]: ", neurons[selectedNeuron]);
@@ -516,9 +513,16 @@ const Preferences = (props: PreferencesProps) => {
           isSaving={isSaving}
         />
         <div className="flex w-full mx-auto mt-4">
-          <Tab.Group vertical onChange={index => setCurrentTab(index)} defaultIndex={currentTab}>
+          <Tabs
+            defaultValue="Application"
+            orientation="vertical"
+            onChange={e => {
+              console.log(e, e.target.value);
+              setCurrentTab("Application");
+            }}
+          >
             <div className="flex gap-3 w-full">
-              <Tab.List className="flex flex-col self-start gap-1 px-4 py-4 text-left min-w-64 rounded-xl bg-tabMenu dark:bg-tabMenuDark">
+              <TabsList className="flex flex-col self-start gap-1 px-4 py-4 text-left min-w-64 rounded-xl bg-tabMenu dark:bg-tabMenuDark">
                 <DeviceConnectedPreview
                   deviceName={neurons[selectedNeuron].name}
                   deviceDisplayName={neurons[selectedNeuron].device.info.displayName}
@@ -527,85 +531,97 @@ const Preferences = (props: PreferencesProps) => {
                 <h4 className="uppercase text-xs dark:text-gray-300 pb-2 mb-1 mt-3 border-solid border-b border-gray-300/30 dark:border-gray-300/30">
                   Device settings
                 </h4>
-                <TabItem icon={<IconKeyboard />} text="Typing and Keys" />
-                <TabItem icon={<IconFlashlight />} text="LED" />
-                <TabItem icon={<IconBattery />} text="Battery Management" />
-                <TabItem icon={<IconBluetooth />} text="Bluetooth Settings" />
-                <TabItem icon={<IconSignal />} text="RF Settings" />
-                <TabItem icon={<IconWrench />} text="Advanced" />
+                <TabsTrigger value="Keyboard">
+                  <IconKeyboard /> Typing and Keys
+                </TabsTrigger>
+                <TabsTrigger value="LED">
+                  <IconFlashlight /> LED
+                </TabsTrigger>
+                <TabsTrigger value="Battery">
+                  <IconBattery /> Battery Management
+                </TabsTrigger>
+                <TabsTrigger value="Bluetooth">
+                  <IconBluetooth /> Bluetooth Settings
+                </TabsTrigger>
+                <TabsTrigger value="RF">
+                  <IconSignal /> RF Settings
+                </TabsTrigger>
+                <TabsTrigger value="Advanced">
+                  <IconWrench /> Advanced
+                </TabsTrigger>
                 <h4 className="uppercase text-xs dark:text-gray-300 pb-2 mb-1 mt-3 border-solid border-b border-gray-300/30 dark:border-gray-300/30">
                   Global settings
                 </h4>
-                <TabItem icon={<IconLogoDygma />} text="Application" />
-              </Tab.List>
-              <Tab.Panels className="px-4 py-4 w-full dark:bg-gray-400/15 rounded-xl">
-                <Tab.Panel
-                  as={motion.div}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: currentTab === 0 ? 1 : 0 }}
-                  transition={{ duration: 0.3 }}
-                >
-                  Content Typing and Keys
-                </Tab.Panel>
-                <Tab.Panel
-                  as={motion.div}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: currentTab === 1 ? 1 : 0 }}
-                  transition={{ duration: 0.3 }}
-                >
-                  LED
-                </Tab.Panel>
-                <Tab.Panel
-                  as={motion.div}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: currentTab === 2 ? 1 : 0 }}
-                  transition={{ duration: 0.3 }}
-                >
-                  Battery Management
-                </Tab.Panel>
-                <Tab.Panel
-                  as={motion.div}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: currentTab === 3 ? 1 : 0 }}
-                  transition={{ duration: 0.3 }}
-                >
-                  Bluetooth Settings
-                </Tab.Panel>
-                <Tab.Panel
-                  as={motion.div}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: currentTab === 4 ? 1 : 0 }}
-                  transition={{ duration: 0.3 }}
-                >
-                  RF Settings
-                </Tab.Panel>
-                <Tab.Panel
-                  as={motion.div}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: currentTab === 5 ? 1 : 0 }}
-                  transition={{ duration: 0.3 }}
-                >
-                  Advanced
-                </Tab.Panel>
-                <Tab.Panel
-                  as={motion.div}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: currentTab === 6 ? 1 : 0 }}
-                  transition={{ duration: 0.3 }}
-                >
-                  <GeneralSettings
-                    selectDarkMode={selectDarkMode}
-                    darkMode={darkMode}
-                    neurons={neurons}
-                    selectedNeuron={selectedNeuron}
-                    defaultLayer={defaultLayer}
-                    selectDefaultLayer={selectDefaultLayer}
-                    connected={connected}
-                  />
-                </Tab.Panel>
-              </Tab.Panels>
+                <TabsTrigger value="Application">
+                  <IconLogoDygma /> Application
+                </TabsTrigger>
+              </TabsList>
+              <TabsContent
+                value="Keyboard"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: currentTab === 0 ? 1 : 0 }}
+                transition={{ duration: 0.3 }}
+              >
+                Content Typing and Keys
+              </TabsContent>
+              <TabsContent
+                value="LED"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: currentTab === 1 ? 1 : 0 }}
+                transition={{ duration: 0.3 }}
+              >
+                LED
+              </TabsContent>
+              <TabsContent
+                value="Battery"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: currentTab === 2 ? 1 : 0 }}
+                transition={{ duration: 0.3 }}
+              >
+                Battery Management
+              </TabsContent>
+              <TabsContent
+                value="Bluetooth"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: currentTab === 3 ? 1 : 0 }}
+                transition={{ duration: 0.3 }}
+              >
+                Bluetooth Settings
+              </TabsContent>
+              <TabsContent
+                value="RF"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: currentTab === 4 ? 1 : 0 }}
+                transition={{ duration: 0.3 }}
+              >
+                RF Settings
+              </TabsContent>
+              <TabsContent
+                value="Advanced"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: currentTab === 5 ? 1 : 0 }}
+                transition={{ duration: 0.3 }}
+              >
+                Advanced
+              </TabsContent>
+              <TabsContent
+                value="Application"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: currentTab === 6 ? 1 : 0 }}
+                transition={{ duration: 0.3 }}
+              >
+                <GeneralSettings
+                  selectDarkMode={selectDarkMode}
+                  darkMode={darkMode}
+                  neurons={neurons}
+                  selectedNeuron={selectedNeuron}
+                  defaultLayer={defaultLayer}
+                  selectDefaultLayer={selectDefaultLayer}
+                  connected={connected}
+                />
+              </TabsContent>
             </div>
-          </Tab.Group>
+          </Tabs>
         </div>
         <div className="wrapper wrapperBackground">
           <Container fluid>
