@@ -16,4 +16,4 @@
 
 import WhatsNew from "./WhatsNew";
 
-export { WhatsNew as default };
+export default WhatsNew;

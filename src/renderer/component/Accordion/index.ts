@@ -16,4 +16,4 @@
 
 import AccordionFirmware from "./AccordionFirmware";
 
-export { AccordionFirmware as default };
+export default AccordionFirmware;

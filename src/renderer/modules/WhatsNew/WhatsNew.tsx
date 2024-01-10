@@ -17,8 +17,7 @@
 
 import React from "react";
 import Styled from "styled-components";
-import Card from "react-bootstrap/Card";
-import Accordion from "react-bootstrap/Accordion";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@Renderer/components/ui/accordion";
 import Spinner from "react-bootstrap/Spinner";
 import i18n from "../../i18n";
 
@@ -45,14 +44,14 @@ function WhatsNew() {
   const dateOptions = { year: "numeric", month: "long", day: "numeric" };
 
   const fetchContentOnClick = () => {
-    async function fetchContent(url) {
+    async function fetchContent(url: string) {
       try {
         const response = await fetch(url);
         const json = await response.json();
         const d = new Date(json.published_at);
-        setDatePublished(d.toLocaleDateString("en-US", dateOptions));
+        setDatePublished(d.toLocaleDateString("en-US", dateOptions as Intl.DateTimeFormatOptions));
         setContentRelease(json);
-      } catch (error) {
+      } catch (err) {
         setError(true);
       } finally {
         setLoading(false);
@@ -63,18 +62,18 @@ function WhatsNew() {
 
   return (
     <Style>
-      <Accordion className="simpleAccordion" defaultActiveKey="0">
-        <Card className="simpleAccordionHeader">
-          <Accordion.Toggle as={Card.Header} eventKey="1" onClick={fetchContentOnClick}>
+      <Accordion type="single" collapsible className="w-full">
+        <AccordionItem value="item-1">
+          <AccordionTrigger onClick={fetchContentOnClick}>
             <div className="accordionHeader">
               <div className="accordionTitle">{i18n.firmwareUpdate.texts.whatsNewTitle}</div>
             </div>
-          </Accordion.Toggle>
-          <Accordion.Collapse eventKey="1">
-            <Card.Body>
+          </AccordionTrigger>
+          <AccordionContent>
+            <div>
               {loading && !error ? (
                 <div className="loading marginCenter">
-                  <Spinner className="spinner-border" role="status" />
+                  <Spinner className="spinner-border" role="status" animation="border" />
                 </div>
               ) : (
                 ""
@@ -87,9 +86,9 @@ function WhatsNew() {
                   <div className="versionContent" dangerouslySetInnerHTML={{ __html: contentRelease.body }} />
                 </div>
               )}
-            </Card.Body>
-          </Accordion.Collapse>
-        </Card>
+            </div>
+          </AccordionContent>
+        </AccordionItem>
       </Accordion>
     </Style>
   );
