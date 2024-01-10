@@ -1,7 +1,7 @@
 import React from "react";
 import Styled from "styled-components";
-import Card from "react-bootstrap/Card";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@Renderer/components/ui/accordion";
+import { Card, CardContent } from "@Renderer/components/ui/card";
 import IconCheckmarkSm from "@Assets/base/icon-checkmark-green.svg";
 import i18n from "../../i18n";
 
@@ -78,8 +78,8 @@ function SuperKeysFeatures() {
             </div>
           </AccordionTrigger>
           <AccordionContent>
-            <Card.Body>
-              <div className="cardContent">
+            <Card>
+              <CardContent>
                 <div className="versionContent">
                   <div className="gridSuperKeys">
                     <div className="gridSuperKeysItem">
@@ -159,8 +159,8 @@ function SuperKeysFeatures() {
                     </div>
                   </div>
                 </div>
-              </div>
-            </Card.Body>
+              </CardContent>
+            </Card>
           </AccordionContent>
         </AccordionItem>
       </Accordion>
