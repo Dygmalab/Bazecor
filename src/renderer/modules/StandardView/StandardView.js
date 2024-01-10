@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-filename-extension */
 import React from "react";
 
 import Styled from "styled-components";
@@ -227,6 +228,7 @@ export default class StandardView extends React.Component {
     this.state = {
       name: props.name,
       code: 0,
+      currentTab: 0,
     };
     this.keymapDB = new KeymapDB();
   }
@@ -312,7 +314,16 @@ export default class StandardView extends React.Component {
     return (
       <Styles>
         <div className="standardView">
-          <Tabs defaultValue="tabKeys" orientation="vertical">
+          <Tabs
+            defaultValue="tabKeys"
+            orientation="vertical"
+            index={this.state.currentTab}
+            onChange={index =>
+              this.setState({
+                currentTab: index,
+              })
+            }
+          >
             <div className="standardViewInner w-full h-full grid gap-6 grid-cols-[minmax(200px,_220px)_1fr]">
               <div className="colVisualizerTabs">
                 <KeyVisualizer
@@ -338,8 +349,11 @@ export default class StandardView extends React.Component {
                   </TabsTrigger>
                   {actTab !== "super" ? (
                     <>
-                      <TabsTrigger value="tabSuperKeys" notifText="BETA" variant="tab">
-                        <IconThunder /> {i18n.editor.standardView.superkeys.title}
+                      <TabsTrigger value="tabSuperKeys" variant="tab">
+                        <>
+                          <IconThunder /> {i18n.editor.standardView.superkeys.title}{" "}
+                          <div className="badge badge-primary leading-none ml-1 font-bold text-[9px]">BETA</div>
+                        </>
                       </TabsTrigger>
                       <TabsTrigger value="tabOneShot" variant="tab">
                         <IconOneShot /> {i18n.editor.standardView.oneShot.title}
@@ -363,8 +377,8 @@ export default class StandardView extends React.Component {
               </div>
               <div className="colContentTabs">
                 <div className="contentBody">
-                  <TabsContent value="tabKeys">
-                    <motion.div initial="hidden" animate="visible" variants={tabVariants}>
+                  <TabsContent value="tabKeys" key="tabKeys">
+                    <motion.div initial="hidden" animate="visible" key="tabKeys" variants={tabVariants}>
                       <KeysTab
                         keyCode={keyCode}
                         code={code}
@@ -377,24 +391,25 @@ export default class StandardView extends React.Component {
                       />
                     </motion.div>
                   </TabsContent>
-                  <TabsContent value="tabNoKeys">
-                    <motion.div initial="hidden" animate="visible" variants={tabVariants}>
+                  <TabsContent value="tabNoKeys" key="tabNoKeys">
+                    <motion.div initial="hidden" animate="visible" key="tabKeys" variants={tabVariants}>
                       <NoKeyTransparentTab keyCode={keyCode} onKeySelect={onKeySelect} isStandardView={isStandardView} />
                     </motion.div>
                   </TabsContent>
-                  <TabsContent value="tabLayers">
-                    <motion.div initial="hidden" animate="visible" variants={tabVariants}>
+
+                  <TabsContent value="tabLayers" key="tabLayers">
+                    <motion.div initial="hidden" animate="visible" key="tabKeys" variants={tabVariants}>
                       <LayersTab
                         onLayerPress={onKeySelect}
                         keyCode={keyCode}
                         isStandardView={isStandardView}
                         actTab={actTab}
-                        disableMods={!!((keyIndex === 0 || keyIndex === 3) && actTab == "super")}
+                        disableMods={!!((keyIndex === 0 || keyIndex === 3) && actTab === "super")}
                       />
                     </motion.div>
                   </TabsContent>
-                  <TabsContent value="tabMacro">
-                    <motion.div initial="hidden" animate="visible" variants={tabVariants}>
+                  <TabsContent value="tabMacro" key="tabMacro">
+                    <motion.div initial="hidden" animate="visible" key="tabKeys" variants={tabVariants}>
                       <MacroTab
                         macros={macros}
                         selectedMacro={selected}
@@ -404,44 +419,40 @@ export default class StandardView extends React.Component {
                       />
                     </motion.div>
                   </TabsContent>
-                  {actTab !== "super" ? (
-                    <TabsContent value="tabSuperKeys">
-                      <motion.div initial="hidden" animate="visible" variants={tabVariants}>
-                        <SuperkeysTab
-                          actions={actions}
-                          superkeys={superkeys}
-                          onKeySelect={onKeySelect}
-                          macros={macros}
-                          keyCode={keyCode}
-                          isStandardView={isStandardView}
-                        />
-                      </motion.div>
-                    </TabsContent>
-                  ) : (
-                    ""
+                  {actTab !== "super" && (
+                    <>
+                      <TabsContent value="tabSuperKeys" key="tabSuperKeys">
+                        <motion.div initial="hidden" animate="visible" key="tabKeys" variants={tabVariants}>
+                          <SuperkeysTab
+                            actions={actions}
+                            superkeys={superkeys}
+                            onKeySelect={onKeySelect}
+                            macros={macros}
+                            keyCode={keyCode}
+                            isStandardView={isStandardView}
+                          />
+                        </motion.div>
+                      </TabsContent>
+                      <TabsContent value="tabOneShot" key="tabOneShot">
+                        <motion.div initial="hidden" animate="visible" key="tabKeys" variants={tabVariants}>
+                          <OneShotTab keyCode={keyCode} onKeySelect={onKeySelect} isStandardView={isStandardView} />
+                        </motion.div>
+                      </TabsContent>
+                    </>
                   )}
-                  {actTab !== "super" ? (
-                    <TabsContent value="tabOneShot">
-                      <motion.div initial="hidden" animate="visible" variants={tabVariants}>
-                        <OneShotTab keyCode={keyCode} onKeySelect={onKeySelect} isStandardView={isStandardView} />
-                      </motion.div>
-                    </TabsContent>
-                  ) : (
-                    ""
-                  )}
-                  <TabsContent value="tabMedia">
-                    <motion.div initial="hidden" animate="visible" variants={tabVariants}>
+                  <TabsContent value="tabMedia" key="tabMedia">
+                    <motion.div initial="hidden" animate="visible" key="tabKeys" variants={tabVariants}>
                       <MediaAndLightTab onAddSpecial={this.onAddSpecial} keyCode={keyCode} isStandardView={isStandardView} />
                     </motion.div>
                   </TabsContent>
-                  <TabsContent value="tabMouse">
-                    <motion.div initial="hidden" animate="visible" variants={tabVariants}>
+                  <TabsContent value="tabMouse" key="tabMouse">
+                    <motion.div initial="hidden" animate="visible" key="tabKeys" variants={tabVariants}>
                       <MouseTab onAddSpecial={this.onAddSpecial} keyCode={keyCode} isStandardView={isStandardView} />
                     </motion.div>
                   </TabsContent>
                   {isWireless && (
-                    <TabsContent value="tabWireless">
-                      <motion.div initial="hidden" animate="visible" variants={tabVariants}>
+                    <TabsContent value="tabWireless" key="tabWireless">
+                      <motion.div initial="hidden" animate="visible" key="tabKeys" variants={tabVariants}>
                         <WirelessTab keyCode={keyCode} onKeySelect={onKeySelect} isStandardView={isStandardView} />
                       </motion.div>
                     </TabsContent>
