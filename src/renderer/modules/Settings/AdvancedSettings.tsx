@@ -75,8 +75,6 @@ const AdvancedKeyboardSettings = () => {
 };
 
 interface AdvancedSettingsProps {
-  devToolsSwitch: JSX.Element;
-  verboseSwitch: JSX.Element;
   connected: boolean;
   onlyCustomSwitch: JSX.Element;
   allowBetas: JSX.Element;
@@ -84,7 +82,7 @@ interface AdvancedSettingsProps {
 }
 
 const AdvancedSettings = (props: AdvancedSettingsProps) => {
-  const { devToolsSwitch, verboseSwitch, onlyCustomSwitch, connected, allowBetas, pairingButton } = props;
+  const { onlyCustomSwitch, connected, allowBetas, pairingButton } = props;
   return (
     <Style>
       <Card className="overflowFix card-preferences mt-4 mb-4">
@@ -95,14 +93,6 @@ const AdvancedSettings = (props: AdvancedSettingsProps) => {
           <Row>
             <Col xs={12}>
               <div className="advancedToggles">
-                <Form.Group controlId="DevTools" className="switchHolder">
-                  <Form.Label>{i18n.preferences.devtools}</Form.Label>
-                  {devToolsSwitch}
-                </Form.Group>
-                <Form.Group controlId="Verbose" className="switchHolder">
-                  <Form.Label>{i18n.preferences.verboseFocus}</Form.Label>
-                  {verboseSwitch}
-                </Form.Group>
                 <Form.Group controlId="allowBetas" className="switchHolder">
                   <Form.Label>{i18n.preferences.allowBeta}</Form.Label>
                   {allowBetas}

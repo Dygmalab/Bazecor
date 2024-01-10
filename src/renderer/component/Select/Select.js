@@ -47,11 +47,11 @@ const Style = Styled.div`
 }
 `;
 
-function Select({ onSelect, value, listElements, disabled }) {
+function Select({ onSelect, value, listElements, disabled, id }) {
   return (
     <Style>
       <Dropdown onSelect={onSelect} value={value} className={`custom-dropdown ${disabled ? "disabled" : ""}`}>
-        <Dropdown.Toggle id="dropdown-custom">
+        <Dropdown.Toggle id={id}>
           <div className="dropdownItemSelected">
             {value != undefined && value != null && listElements.length > 0 ? ( // Ternary operator checking validity of variables
               <>

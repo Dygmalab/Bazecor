@@ -1,15 +1,6 @@
 import React, { useState, useEffect } from "react";
-import Styled from "styled-components";
 
-// React Bootstrap Components
-import Card from "react-bootstrap/Card";
 import Form from "react-bootstrap/Form";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
-
-// Own Components
-
-// Icons Imports
 
 // Flags imports
 import frenchF from "@Assets/flags/france.png";
@@ -27,19 +18,16 @@ import norwegianF from "@Assets/flags/norway.png";
 import swissF from "@Assets/flags/switzerland.png";
 import eurkeyF from "@Assets/flags/eurkey.png";
 import { useDevice } from "@Renderer/DeviceContext";
-import { IconWrench, IconSun, IconMoon, IconScreen } from "../../component/Icon";
+
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@Renderer/components/ui/card";
+import { Switch } from "@Renderer/components/ui/switch";
+
+import { IconChip, IconHanger, IconSun, IconMoon, IconScreen, IconKeyboard } from "../../component/Icon";
 import { ToggleButtons } from "../../component/ToggleButtons";
 import { Select } from "../../component/Select";
-import Title from "../../component/Title";
 import Keymap from "../../../api/keymap";
 import i18n from "../../i18n";
 import Store from "../../utils/Store";
-
-const GeneraslSettihngsWrapper = Styled.div`
-.dropdown-menu {
-  min-width: 13rem;
-}
-`;
 
 const store = Store.getStore();
 
@@ -48,14 +36,19 @@ interface GeneralSettingsProps {
   darkMode: string;
   neurons: Record<string, unknown>[];
   selectedNeuron: number;
-  connected: boolean;
-  defaultLayer: number;
-  selectDefaultLayer: (value: any) => void;
+  devToolsSwitch: JSX.Element;
+  verboseSwitch: JSX.Element;
 }
 
-const GeneralSettings = (props: GeneralSettingsProps) => {
+const GeneralSettings = ({
+  selectDarkMode,
+  darkMode,
+  neurons,
+  selectedNeuron,
+  devToolsSwitch,
+  verboseSwitch,
+}: GeneralSettingsProps) => {
   const [selectedLanguage, setSelectedLanguage] = useState("");
-  const { selectDarkMode, darkMode, neurons, selectedNeuron, connected, defaultLayer, selectDefaultLayer } = props;
   const [state] = useDevice();
 
   useEffect(() => {
@@ -162,45 +155,69 @@ const GeneralSettings = (props: GeneralSettingsProps) => {
   ];
 
   return (
-    <GeneraslSettihngsWrapper>
-      <Card className="overflowFix card-preferences mt-4">
-        <Card.Title>
-          <Title text={i18n.keyboardSettings.keymap.title} headingLevel={3} svgICO={<IconWrench />} />
-        </Card.Title>
-        <Card.Body>
-          <Form>
-            <Row>
-              <Col lg={6} md={12}>
-                <Form.Group controlId="selectLanguage" className="mb-3">
-                  <Form.Label>{i18n.preferences.language}</Form.Label>
-                  <Select onSelect={changeLanguage} value={selectedLanguage} listElements={language} disabled={false} />
-                </Form.Group>
-              </Col>
-              <Col lg={6} md={12}>
-                <Form.Group controlId="defaultLayer" className="mb-3">
-                  <Form.Label>{i18n.keyboardSettings.keymap.defaultLayer}</Form.Label>
-                  <Select onSelect={selectDefaultLayer} value={defaultLayer} listElements={layersNames} disabled={!connected} />
-                </Form.Group>
-              </Col>
-            </Row>
-            <Row>
-              <Col md={12}>
-                <Form.Group controlId="DarkMode" className="m-0">
-                  <Form.Label>{i18n.preferences.darkMode.label}</Form.Label>
-                  <ToggleButtons
-                    selectDarkMode={selectDarkMode}
-                    value={darkMode}
-                    listElements={layoutsModes}
-                    styles="flex"
-                    size="sm"
-                  />
-                </Form.Group>
-              </Col>
-            </Row>
-          </Form>
-        </Card.Body>
+    <>
+      <Card className="rounded-xl max-w-2xl mx-auto bg-white/60 dark:bg-gray-800">
+        <CardHeader>
+          <CardTitle variant="default">
+            <IconHanger /> {i18n.preferences.darkMode.label}
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <form>
+            <ToggleButtons selectDarkMode={selectDarkMode} value={darkMode} listElements={layoutsModes} styles="flex" size="sm" />
+          </form>
+        </CardContent>
       </Card>
-    </GeneraslSettihngsWrapper>
+
+      <Card className="mt-3 rounded-xl max-w-2xl mx-auto bg-white/60 dark:bg-gray-800">
+        <CardHeader>
+          <CardTitle variant="default">
+            <IconKeyboard /> Key Layout
+          </CardTitle>
+          <CardDescription className="mt-1">
+            Select the primary layout you&apos;d like to use as a reference when editing your layout in Bazecor.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <form>
+            <label htmlFor="languageSelector">{i18n.preferences.language}</label>
+            <Select
+              id="languageSelector"
+              onSelect={changeLanguage}
+              value={selectedLanguage}
+              listElements={language}
+              disabled={false}
+            />
+          </form>
+        </CardContent>
+      </Card>
+
+      <Card className="mt-3 rounded-xl max-w-2xl mx-auto bg-white/60 dark:bg-gray-800">
+        <CardHeader>
+          <CardTitle variant="default">
+            <IconChip /> Advanced
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <form>
+            <Form.Group controlId="DevTools" className="switchHolder">
+              <div className="flex items-center w-full justify-between py-2 border-b-[1px] border-gray-700">
+                <Form.Label className="mt-0">{i18n.preferences.devtools}</Form.Label>
+                {devToolsSwitch}
+                <Switch />
+              </div>
+            </Form.Group>
+
+            <Form.Group controlId="Verbose" className="switchHolder">
+              <div className="flex items-center w-full justify-between py-2 border-b-[1px] border-gray-700">
+                <Form.Label>{i18n.preferences.verboseFocus}</Form.Label>
+                {verboseSwitch}
+              </div>
+            </Form.Group>
+          </form>
+        </CardContent>
+      </Card>
+    </>
   );
 };
 

@@ -55,6 +55,7 @@ import Version from "@Renderer/component/Version/Version";
 import Store from "@Renderer/utils/Store";
 import { useDevice } from "@Renderer/DeviceContext";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@Renderer/components/ui/tabs";
+import { Switch } from "@Renderer/components/ui/switch";
 import Backup from "../../api/backup";
 
 const store = Store.getStore();
@@ -523,6 +524,7 @@ const Preferences = (props: PreferencesProps) => {
               console.log(e, e.target.value);
               setCurrentTab("Application");
             }}
+            className="w-full"
           >
             <div className="flex gap-3 w-full">
               <TabsList className="flex flex-col self-start gap-1 px-4 py-4 text-left min-w-64 rounded-xl bg-tabMenu dark:bg-tabMenuDark">
@@ -568,65 +570,69 @@ const Preferences = (props: PreferencesProps) => {
                   <IconLogoDygma /> Application
                 </TabsTrigger>
               </TabsList>
-              <TabsContent value="Keyboard">
-                <motion.div initial="hidden" animate="visible" variants={tabVariants}>
-                  <BackupSettings connected={connected} neurons={neurons} neuronID={neuronID} />
-                  <NeuronSettings
-                    neurons={neurons}
-                    selectedNeuron={selectedNeuron}
-                    selectNeuron={selectNeuron}
-                    updateNeuronName={updateNeuronName}
-                    deleteNeuron={deleteNeuron}
-                  />
-                  <KeyboardSettings kbData={kbData} setKbData={setKbDataHandler} connected={connected} />
-                </motion.div>
-              </TabsContent>
-              <TabsContent value="LED">
-                <motion.div initial="hidden" animate="visible" variants={tabVariants}>
-                  LED
-                </motion.div>
-              </TabsContent>
-              <TabsContent value="Battery">
-                <motion.div initial="hidden" animate="visible" variants={tabVariants}>
-                  Battery Management
-                </motion.div>
-              </TabsContent>
-              <TabsContent value="Bluetooth">
-                <motion.div initial="hidden" animate="visible" variants={tabVariants}>
-                  Bluetooth Settings
-                </motion.div>
-              </TabsContent>
-              <TabsContent value="RF">
-                <motion.div initial="hidden" animate="visible" variants={tabVariants}>
-                  Content RF Settings
-                </motion.div>
-              </TabsContent>
-              <TabsContent value="Advanced">
-                <motion.div initial="hidden" animate="visible" variants={tabVariants}>
-                  <AdvancedSettings
-                    devToolsSwitch={devToolsSwitch as any}
-                    verboseSwitch={verboseSwitch}
-                    onlyCustomSwitch={onlyCustomSwitch}
-                    allowBetas={allowBetas}
-                    pairingButton={<></>}
-                    connected={connected}
-                  />
-                </motion.div>
-              </TabsContent>
-              <TabsContent value="Application">
-                <motion.div initial="hidden" animate="visible" variants={tabVariants}>
-                  <GeneralSettings
-                    selectDarkMode={selectDarkMode}
-                    darkMode={darkMode}
-                    neurons={neurons}
-                    selectedNeuron={selectedNeuron}
-                    defaultLayer={defaultLayer}
-                    selectDefaultLayer={selectDefaultLayer}
-                    connected={connected}
-                  />
-                  <Version />
-                </motion.div>
-              </TabsContent>
+              <div className="rounded-xl bg-gray-25/50 dark:bg-gray-400/15 px-4 py-3 w-full">
+                <TabsContent value="Keyboard" className="w-full">
+                  <motion.div initial="hidden" animate="visible" variants={tabVariants}>
+                    <BackupSettings connected={connected} neurons={neurons} neuronID={neuronID} />
+                    <NeuronSettings
+                      neurons={neurons}
+                      selectedNeuron={selectedNeuron}
+                      selectNeuron={selectNeuron}
+                      updateNeuronName={updateNeuronName}
+                      deleteNeuron={deleteNeuron}
+                    />
+                    <KeyboardSettings kbData={kbData} setKbData={setKbDataHandler} connected={connected} />
+                  </motion.div>
+                </TabsContent>
+                <TabsContent value="LED">
+                  <motion.div initial="hidden" animate="visible" variants={tabVariants}>
+                    LED
+                  </motion.div>
+                </TabsContent>
+                <TabsContent value="Battery">
+                  <motion.div initial="hidden" animate="visible" variants={tabVariants}>
+                    Battery Management
+                  </motion.div>
+                </TabsContent>
+                <TabsContent value="Bluetooth">
+                  <motion.div initial="hidden" animate="visible" variants={tabVariants}>
+                    Bluetooth Settings
+                  </motion.div>
+                </TabsContent>
+                <TabsContent value="RF">
+                  <motion.div initial="hidden" animate="visible" variants={tabVariants}>
+                    Content RF Settings
+                  </motion.div>
+                </TabsContent>
+                <TabsContent value="Advanced">
+                  <motion.div initial="hidden" animate="visible" variants={tabVariants}>
+                    <AdvancedSettings
+                      devToolsSwitch={devToolsSwitch as any}
+                      verboseSwitch={verboseSwitch}
+                      onlyCustomSwitch={onlyCustomSwitch}
+                      allowBetas={allowBetas}
+                      pairingButton={<></>}
+                      connected={connected}
+                    />
+                  </motion.div>
+                </TabsContent>
+                <TabsContent value="Application">
+                  <motion.div initial="hidden" animate="visible" variants={tabVariants}>
+                    <GeneralSettings
+                      selectDarkMode={selectDarkMode}
+                      darkMode={darkMode}
+                      neurons={neurons}
+                      selectedNeuron={selectedNeuron}
+                      defaultLayer={defaultLayer}
+                      selectDefaultLayer={selectDefaultLayer}
+                      connected={connected}
+                      devToolsSwitch={devToolsSwitch as any}
+                      verboseSwitch={verboseSwitch}
+                    />
+                    <Version />
+                  </motion.div>
+                </TabsContent>
+              </div>
             </div>
           </Tabs>
         </div>

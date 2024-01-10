@@ -48,6 +48,7 @@ import IconEditModeStandardView from "./IconEditModeStandardView";
 import IconEditModeStandardViewSm from "./IconEditModeStandardViewSm";
 import IconEye from "./IconEye";
 import IconFileDownload from "./IconFileDownload";
+import IconHanger from "./IconHanger";
 import IconHome from "./IconHome";
 import IconKeysPress from "./IconKeysPress";
 import IconKeysTapHold from "./IconKeysTapHold";
@@ -193,6 +194,7 @@ export {
   IconEditModeStandardViewSm,
   IconEye,
   IconFileDownload,
+  IconHanger,
   IconHome,
   IconKeysPress,
   IconKeysTapHold,
