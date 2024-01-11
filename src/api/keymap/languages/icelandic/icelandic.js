@@ -24,70 +24,70 @@ const icelandicLetters = [
   {
     code: 45,
     labels: {
-      primary: "Ö"
+      primary: "Ö",
     },
-    newGroupName: "Letters"
+    newGroupName: "Letters",
   },
   {
     code: 47,
     labels: {
-      primary: "Ð"
+      primary: "Ð",
     },
-    newGroupName: "Letters"
+    newGroupName: "Letters",
   },
   {
     code: 51,
     labels: {
-      primary: "Æ"
+      primary: "Æ",
     },
-    newGroupName: "Letters"
+    newGroupName: "Letters",
   },
   {
     code: 56,
     labels: {
-      primary: "Þ"
+      primary: "Þ",
     },
-    newGroupName: "Letters"
-  }
+    newGroupName: "Letters",
+  },
 ];
 
 const icelandicModifierKeys = [
   {
     code: 46,
     labels: {
-      primary: "-"
-    }
+      primary: "-",
+    },
   },
   {
     code: 48,
     labels: {
-      primary: "'"
-    }
+      primary: "'",
+    },
   },
   {
     code: 49,
     labels: {
-      primary: "+"
-    }
+      primary: "+",
+    },
   },
   {
     code: 52,
     labels: {
-      primary: "´"
-    }
+      primary: "´",
+    },
   },
   {
     code: 53,
     labels: {
-      primary: "°"
-    }
+      primary: "°",
+    },
   },
   {
     code: 100,
     labels: {
-      primary: "<"
-    }
-  }
+      primary: "<",
+    },
+  },
 ];
 
 const altCtrlIcelandic = {
@@ -96,88 +96,88 @@ const altCtrlIcelandic = {
     {
       code: 776,
       labels: {
-        primary: "€"
-      }
+        primary: "€",
+      },
     },
     {
       code: 784,
       labels: {
-        primary: "µ"
-      }
+        primary: "µ",
+      },
     },
     {
       code: 788,
       labels: {
-        primary: "@"
-      }
+        primary: "@",
+      },
     },
     {
       code: 802,
       labels: {
-        primary: "€"
-      }
+        primary: "€",
+      },
     },
     {
       code: 804,
       labels: {
-        primary: "{"
-      }
+        primary: "{",
+      },
     },
     {
       code: 805,
       labels: {
-        primary: "["
-      }
+        primary: "[",
+      },
     },
     {
       code: 806,
       labels: {
-        primary: "]"
-      }
+        primary: "]",
+      },
     },
     {
       code: 807,
       labels: {
-        primary: "}"
-      }
+        primary: "}",
+      },
     },
     {
       code: 813,
       labels: {
-        primary: "\\"
-      }
+        primary: "\\",
+      },
     },
     {
       code: 816,
       labels: {
-        primary: "~"
-      }
+        primary: "~",
+      },
     },
     {
       code: 817,
       labels: {
-        primary: "`"
-      }
+        primary: "`",
+      },
     },
     {
       code: 820,
       labels: {
-        primary: "^"
-      }
+        primary: "^",
+      },
     },
     {
       code: 821,
       labels: {
-        primary: "°"
-      }
+        primary: "°",
+      },
     },
     {
       code: 868,
       labels: {
-        primary: "|"
-      }
-    }
-  ]
+        primary: "|",
+      },
+    },
+  ],
 };
 
 const altGRIcelandic = {
@@ -186,88 +186,88 @@ const altGRIcelandic = {
     {
       code: 1032,
       labels: {
-        primary: "€"
-      }
+        primary: "€",
+      },
     },
     {
       code: 1040,
       labels: {
-        primary: "µ"
-      }
+        primary: "µ",
+      },
     },
     {
       code: 1044,
       labels: {
-        primary: "@"
-      }
+        primary: "@",
+      },
     },
     {
       code: 1058,
       labels: {
-        primary: "€"
-      }
+        primary: "€",
+      },
     },
     {
       code: 1060,
       labels: {
-        primary: "{"
-      }
+        primary: "{",
+      },
     },
     {
       code: 1061,
       labels: {
-        primary: "["
-      }
+        primary: "[",
+      },
     },
     {
       code: 1062,
       labels: {
-        primary: "]"
-      }
+        primary: "]",
+      },
     },
     {
       code: 1063,
       labels: {
-        primary: "}"
-      }
+        primary: "}",
+      },
     },
     {
       code: 1069,
       labels: {
-        primary: "\\"
-      }
+        primary: "\\",
+      },
     },
     {
       code: 1072,
       labels: {
-        primary: "~"
-      }
+        primary: "~",
+      },
     },
     {
       code: 1073,
       labels: {
-        primary: "`"
-      }
+        primary: "`",
+      },
     },
     {
       code: 1076,
       labels: {
-        primary: "^"
-      }
+        primary: "^",
+      },
     },
     {
       code: 1077,
       labels: {
-        primary: "°"
-      }
+        primary: "°",
+      },
     },
     {
       code: 1124,
       labels: {
-        primary: "|"
-      }
-    }
-  ]
+        primary: "|",
+      },
+    },
+  ],
 };
 
 const shiftModifierIcelandic = {
@@ -276,95 +276,95 @@ const shiftModifierIcelandic = {
     {
       code: 2079,
       labels: {
-        primary: '"'
-      }
+        primary: '"',
+      },
     },
     {
       code: 2081,
       labels: {
-        primary: "$"
-      }
+        primary: "$",
+      },
     },
     {
       code: 2083,
       labels: {
-        primary: "&"
-      }
+        primary: "&",
+      },
     },
     {
       code: 2084,
       labels: {
-        primary: "/"
-      }
+        primary: "/",
+      },
     },
     {
       code: 2085,
       labels: {
-        primary: "("
-      }
+        primary: "(",
+      },
     },
     {
       code: 2086,
       labels: {
-        primary: ")"
-      }
+        primary: ")",
+      },
     },
     {
       code: 2087,
       labels: {
-        primary: "="
-      }
+        primary: "=",
+      },
     },
     {
       code: 2094,
       labels: {
-        primary: "_"
-      }
+        primary: "_",
+      },
     },
 
     {
       code: 2096,
       labels: {
-        primary: "?"
-      }
+        primary: "?",
+      },
     },
     {
       code: 2097,
       labels: {
-        primary: "*"
-      }
+        primary: "*",
+      },
     },
     {
       code: 2100,
       labels: {
-        primary: "'"
-      }
+        primary: "'",
+      },
     },
     {
       code: 2101,
       labels: {
-        primary: "¨"
-      }
+        primary: "¨",
+      },
     },
     {
       code: 2102,
       labels: {
-        primary: ";"
-      }
+        primary: ";",
+      },
     },
     {
       code: 2103,
       labels: {
-        primary: ":"
-      }
+        primary: ":",
+      },
     },
     {
       code: 2148,
       labels: {
-        primary: ">"
-      }
-    }
-  ]
+        primary: ">",
+      },
+    },
+  ],
 };
 
 const icelandic = icelandicLetters.concat(icelandicModifierKeys);
@@ -494,7 +494,7 @@ const icelandicModifiedTables = [
   DualUseLayer5Tables,
   DualUseLayer6Tables,
   DualUseLayer7Tables,
-  DualUseLayer8Tables
+  DualUseLayer8Tables,
 ];
 
 export { icelandic as default, icelandicModifiedTables };

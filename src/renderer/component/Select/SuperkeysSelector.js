@@ -136,8 +136,8 @@ class SuperKeysSelector extends React.Component {
                       {itemList == undefined || itemList.length == 0 || itemList.length <= selectedItem
                         ? i18n.dialog.loading
                         : itemList[selectedItem].name == ""
-                        ? i18n.general.noname
-                        : itemList[selectedItem].name}
+                          ? i18n.general.noname
+                          : itemList[selectedItem].name}
                     </div>
                     <span className="caret">
                       <IconArrowsSmallSeparating />

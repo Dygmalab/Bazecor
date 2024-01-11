@@ -31,14 +31,14 @@ const danishLetters = [
   {
     code: 51,
     labels: {
-      primary: "Æ"
+      primary: "Æ",
     },
     newGroupName: "Letters",
   },
   {
     code: 52,
     labels: {
-      primary: "Ø"
+      primary: "Ø",
     },
     newGroupName: "Letters",
   },
@@ -48,8 +48,8 @@ const danishModifierKeys = [
   {
     code: 53,
     labels: {
-      primary: "½"
-    }
+      primary: "½",
+    },
   },
   {
     code: 45,
@@ -60,8 +60,8 @@ const danishModifierKeys = [
   {
     code: 46,
     labels: {
-      primary: "´"
-    }
+      primary: "´",
+    },
   },
   {
     code: 48,
@@ -143,8 +143,8 @@ const altCtrlDanish = {
     {
       code: 814,
       labels: {
-        primary: "|"
-      }
+        primary: "|",
+      },
     },
     {
       code: 776,
@@ -161,16 +161,16 @@ const altCtrlDanish = {
     {
       code: 784,
       labels: {
-        primary: "µ"
-      }
+        primary: "µ",
+      },
     },
     {
       code: 868,
       labels: {
-        primary: "\\"
-      }
-    }
-  ]
+        primary: "\\",
+      },
+    },
+  ],
 };
 
 const altGRDanish = {
@@ -227,8 +227,8 @@ const altGRDanish = {
     {
       code: 1070,
       labels: {
-        primary: "|"
-      }
+        primary: "|",
+      },
     },
     {
       code: 1032,
@@ -245,16 +245,16 @@ const altGRDanish = {
     {
       code: 1040,
       labels: {
-        primary: "µ"
-      }
+        primary: "µ",
+      },
     },
     {
       code: 1124,
       labels: {
-        primary: "\\"
-      }
-    }
-  ]
+        primary: "\\",
+      },
+    },
+  ],
 };
 
 const shiftModifierDanish = {

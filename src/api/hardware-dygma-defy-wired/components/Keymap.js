@@ -340,21 +340,21 @@ class KeymapDEFY extends React.Component {
           ? getLabel(row, col).extraLabel && getDivideKeys(getLabel(row, col).extraLabel, xCord, yCord - 5, smallKey)
           : getLabel(row, col).extraLabel && getDivideKeys(getLabel(row, col).extraLabel, xCord, String(+yCord - 5), smallKey)
         : getLabel(row, col).extraLabel === getLabel(row, col).extraLabel.toLowerCase().endsWith("to")
-        ? getLabel(row, col).extraLabel && getDivideKeys(getLabel(row, col).extraLabel, xCord, yCord - 5, smallKey)
-        : getLabel(row, col).extraLabel;
+          ? getLabel(row, col).extraLabel && getDivideKeys(getLabel(row, col).extraLabel, xCord, yCord - 5, smallKey)
+          : getLabel(row, col).extraLabel;
 
     const getCenterPrimary = (row, col, xCord, yCord, smallKey = false) =>
       getLabel(row, col).extraLabel !== ""
         ? topsArr.includes(getLabel(row, col).extraLabel)
           ? getLabel(row, col).label && getDivideKeys(getLabel(row, col).label, xCord, yCord + 5, smallKey)
           : topsArrTransfer.includes(getLabel(row, col).extraLabel)
-          ? getLabel(row, col).label && getDivideKeys(getLabel(row, col).label, String(+xCord + 10), yCord + 5, smallKey)
-          : getLabel(row, col).label && getDivideKeys(getLabel(row, col).label, xCord, String(yCord + 7), smallKey)
+            ? getLabel(row, col).label && getDivideKeys(getLabel(row, col).label, String(+xCord + 10), yCord + 5, smallKey)
+            : getLabel(row, col).label && getDivideKeys(getLabel(row, col).label, xCord, String(yCord + 7), smallKey)
         : topsArrTransfer.includes(getLabel(row, col).extraLabel)
-        ? getLabel(row, col).label &&
-          getDivideKeys(getLabel(row, col).label, xCord, yCord + 5, smallKey) &&
-          getDivideKeys(getLabel(row, col).label, String(+xCord + 10), yCord + 5, smallKey)
-        : getLabel(row, col).label && getDivideKeys(getLabel(row, col).label, xCord, String(yCord + 7), smallKey);
+          ? getLabel(row, col).label &&
+            getDivideKeys(getLabel(row, col).label, xCord, yCord + 5, smallKey) &&
+            getDivideKeys(getLabel(row, col).label, String(+xCord + 10), yCord + 5, smallKey)
+          : getLabel(row, col).label && getDivideKeys(getLabel(row, col).label, xCord, String(yCord + 7), smallKey);
 
     // console.log("Selected Key: ", this.props.selectedKey);
     // console.log("Selected LED: ", this.props.selectedLED);
