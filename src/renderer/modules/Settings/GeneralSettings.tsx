@@ -184,7 +184,7 @@ const GeneralSettings = ({
   };
   return (
     <>
-      <Card className="rounded-xl max-w-2xl mx-auto bg-white/60 dark:bg-gray-800">
+      <Card variant="default">
         <CardHeader>
           <CardTitle variant="default">
             <IconHanger /> {i18n.preferences.darkMode.label}

@@ -1,15 +1,10 @@
+// @ts-nocheck
+
 import * as React from "react";
 
 import { cva, type VariantProps } from "class-variance-authority";
 
 import { cn } from "@Renderer/utils";
-
-export interface CardVariantsWrapperProps extends React.HTMLAttributes<HTMLDivElement>, VariantProps<typeof CardVariantsWrapper> {
-  asChild?: boolean;
-}
-export interface CardVariantsTitleProps extends React.HTMLAttributes<HTMLDivElement>, VariantProps<typeof CardVariantsWrapper> {
-  asChild?: boolean;
-}
 
 const CardVariantsWrapper = cva("flex flex-col", {
   variants: {
@@ -22,6 +17,15 @@ const CardVariantsWrapper = cva("flex flex-col", {
   },
 });
 
+export interface CardVariantsWrapperProps extends React.HTMLAttributes<HTMLDivElement>, VariantProps<typeof CardVariantsWrapper> {
+  asChild?: boolean;
+}
+export interface CardVariantsTitleProps
+  extends React.HTMLAttributes<HTMLHeadingElement>,
+    VariantProps<typeof CardVariantsWrapper> {
+  asChild?: boolean;
+}
+
 const CardVariantsTitle = cva("flex", {
   variants: {
     variant: {
@@ -33,11 +37,9 @@ const CardVariantsTitle = cva("flex", {
   },
 });
 
-const Card = React.forwardRef<HTMLDivElement, CardVariantsWrapperProps, React.HTMLAttributes<HTMLDivElement>>(
-  ({ className, variant, ...props }, ref) => (
-    <div ref={ref} className={cn(CardVariantsWrapper({ variant, className }))} {...props} />
-  ),
-);
+const Card = React.forwardRef<HTMLDivElement, CardVariantsWrapperProps>(({ className, variant, ...props }, ref) => (
+  <div ref={ref} className={cn(CardVariantsWrapper({ variant, className }))} {...props} />
+));
 Card.displayName = "Card";
 
 const CardHeader = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(({ className, ...props }, ref) => (
@@ -45,11 +47,9 @@ const CardHeader = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDiv
 ));
 CardHeader.displayName = "CardHeader";
 
-const CardTitle = React.forwardRef<HTMLParagraphElement, CardVariantsTitleProps, React.HTMLAttributes<HTMLHeadingElement>>(
-  ({ className, variant, ...props }, ref) => (
-    <h3 ref={ref} className={cn(CardVariantsTitle({ variant, className }))} {...props} />
-  ),
-);
+const CardTitle = React.forwardRef<HTMLParagraphElement, CardVariantsTitleProps>(({ className, variant, ...props }, ref) => (
+  <h3 ref={ref} className={cn(CardVariantsTitle({ variant, className }))} {...props} />
+));
 CardTitle.displayName = "CardTitle";
 
 const CardDescription = React.forwardRef<HTMLParagraphElement, React.HTMLAttributes<HTMLParagraphElement>>(

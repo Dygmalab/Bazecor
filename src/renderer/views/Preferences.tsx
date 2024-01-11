@@ -22,7 +22,6 @@ import React, { useState, useEffect, useCallback } from "react";
 import { ipcRenderer } from "electron";
 import { motion } from "framer-motion";
 
-import Form from "react-bootstrap/Form";
 import { toast } from "react-toastify";
 import i18n from "@Renderer/i18n";
 import "react-toastify/dist/ReactToastify.css";
@@ -73,7 +72,6 @@ const Preferences = (props: PreferencesProps) => {
   const [bkp] = useState(new Backup());
   const [isSaved, setIsSaved] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
-  const [currentTab, setCurrentTab] = useState("Application");
   const { inContext, connected, allowBeta, onChangeAllowBetas, startContext, cancelContext, toggleDarkMode } = props;
   const [kbData, setKbData] = useState({
     keymap: {
@@ -503,9 +501,12 @@ const Preferences = (props: PreferencesProps) => {
     visible: { opacity: 1, transition: { duration: 0.5 } },
   };
 
-  console.log("selectedNeuron: ", selectedNeuron);
+  const ChipID = state.currentDevice.serialNumber.includes("raise")
+    ? state.currentDevice.serialNumber.slice(0, -7).toLowerCase()
+    : state.currentDevice.serialNumber;
+
+  console.log("current Neuron: ", state.currentDevice, ChipID);
   console.log("Connected: ", connected);
-  console.log("neurons[selectedNeuron]: ", neurons[selectedNeuron]);
 
   return (
     <>
@@ -520,22 +521,14 @@ const Preferences = (props: PreferencesProps) => {
           isSaving={isSaving}
         />
         <div className="flex w-full mx-auto mt-4">
-          <Tabs
-            defaultValue="Application"
-            orientation="vertical"
-            onChange={e => {
-              console.log(e, e.target.value);
-              setCurrentTab("Application");
-            }}
-            className="w-full"
-          >
+          <Tabs defaultValue="Application" orientation="vertical" className="w-full">
             <div className="flex gap-3 w-full pb-4">
               <TabsList className="flex flex-col self-start gap-1 px-4 py-4 text-left min-w-64 rounded-xl bg-tabMenu dark:bg-tabMenuDark">
-                {connected ? (
+                {connected && state.currentDevice ? (
                   <>
                     <DeviceConnectedPreview
-                      deviceName={neurons[selectedNeuron].name}
-                      deviceDisplayName={neurons[selectedNeuron].device.info.displayName}
+                      deviceName={neurons.find(x => x.id === ChipID) ? neurons.find(x => x.id === ChipID).name : ""}
+                      deviceDisplayName={state.currentDevice.device.info.displayName}
                       nameChange={updateNeuronName}
                     />
                     <h4 className="uppercase text-xs dark:text-gray-300 pb-2 mb-1 mt-3 border-solid border-b border-gray-300/30 dark:border-gray-300/30">
