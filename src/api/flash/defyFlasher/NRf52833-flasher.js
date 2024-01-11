@@ -16,6 +16,7 @@
 
 import async from "async";
 import Focus from "../../focus";
+import { decodeHexLine } from "../decodeHexLine";
 
 const MAX_MS = 2000;
 
@@ -119,14 +120,6 @@ function num2hexstr(number, paddedTo) {
   return padToN(number.toString(16), paddedTo);
 }
 
-function hex2byte(hex) {
-  const bytes = [];
-
-  for (let i = 0; i < hex.length; i += 2) bytes.push(parseInt(hex.substr(i, 2), 16));
-
-  return bytes;
-}
-
 function str2ab(str) {
   const buf = new ArrayBuffer(str.length); // 2 bytes for each char
   const bufView = new Uint8Array(buf);
@@ -134,37 +127,6 @@ function str2ab(str) {
     bufView[i] = str.charCodeAt(i) & 0xff;
   }
   return buf;
-}
-
-/**
- * Decodes hex line to object.
- * @param {string} line - One line from hex file.
- * @returns {object} Щbject for use in firmware.
- */
-function ihex_decode(line) {
-  let offset = 0;
-
-  const byteCount = parseInt(line.substr(offset, 2), 16);
-  offset += 2;
-  const address = parseInt(line.substr(offset, 4), 16);
-  offset += 4;
-  const recordtype = parseInt(line.substr(offset, 2), 16);
-  offset += 2;
-
-  const byteData = hex2byte(line.substr(offset, byteCount * 2));
-
-  const bytes = new ArrayBuffer(byteData.length);
-  const bytesView = new Uint8Array(bytes, 0, byteData.length);
-
-  for (let i = 0; i < byteData.length; i++) bytesView[i] = byteData[i];
-
-  return {
-    str: line,
-    len: byteCount,
-    address,
-    type: recordtype,
-    data: bytesView,
-  };
 }
 
 /**
@@ -199,7 +161,7 @@ const NRf52833 = {
     const auxData = [];
 
     for (var i = 0; i < lines.length; i++) {
-      const hex = ihex_decode(lines[i]);
+      const hex = decodeHexLine(lines[i]);
 
       if (hex.type == TYPE_ESA) {
         segment = parseInt(hex.str.substr(8, hex.len * 2), 16) * 16;
