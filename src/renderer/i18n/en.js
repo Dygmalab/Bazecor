@@ -464,7 +464,7 @@ const English = {
   },
   preferences: {
     title: "Preferences",
-    devtools: "Chrome Tools",
+    devtools: "Developer Tools",
     language: "Select language",
     interface: "Interface",
     tooltips: {

@@ -388,7 +388,7 @@ class KeyPickerPreview extends Component {
       <Style>
         <div className="max-w-[1080px] mx-auto">
           <div className="px-3 py-3 rounded-md mt-3 flex flex-col w-full bg-gray-25 dark:bg-gray-700/60">
-            <h4 className="mt-0 mb-1 uppercase text-[13px] tracking-wide text-gray-300 dark:text-gray-500">Preview</h4>
+            <h4 className="mt-0 mb-1 uppercase text-xs tracking-wide text-gray-300 dark:text-gray-500">Preview</h4>
             <svg
               className="mx-auto w-full max-w-[1170px] overflow-hidden pointer-events-none"
               viewBox="0 0 860 180"

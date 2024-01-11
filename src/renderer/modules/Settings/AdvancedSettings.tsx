@@ -1,30 +1,17 @@
 import React, { useState } from "react";
-import Styled from "styled-components";
 
-// React Bootstrap Components
-import Card from "react-bootstrap/Card";
-import Form from "react-bootstrap/Form";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
+import { Card, CardContent, CardHeader, CardTitle } from "@Renderer/components/ui/card";
+
 import { useDevice } from "@Renderer/DeviceContext";
+import { Select } from "@Renderer/component/Select";
 import i18n from "../../i18n";
 
 // Own Components
-import Title from "../../component/Title";
 import { RegularButton } from "../../component/Button";
 import ConfirmationDialog from "../../component/ConfirmationDialog";
 
 // Icons Imports
-import { IconChip } from "../../component/Icon";
-
-const Style = Styled.div`
-.advancedToggles {
-  display: flex;
-  .switchHolder {
-    margin-right: 2rem;
-  } 
-}
-`;
+import { IconChip, IconLayers } from "../../component/Icon";
 
 const AdvancedKeyboardSettings = () => {
   const [EEPROMClearConfirmationOpen, setEEPROMClearConfirmationOpen] = useState(false);
@@ -76,54 +63,52 @@ const AdvancedKeyboardSettings = () => {
 
 interface AdvancedSettingsProps {
   connected: boolean;
-  onlyCustomSwitch: JSX.Element;
-  allowBetas: JSX.Element;
-  pairingButton: JSX.Element;
+  defaultLayer: number;
+  selectDefaultLayer: () => void;
+  neurons: Record<string, unknown>[];
+  selectedNeuron: number;
 }
 
-const AdvancedSettings = (props: AdvancedSettingsProps) => {
-  const { onlyCustomSwitch, connected, allowBetas, pairingButton } = props;
+const AdvancedSettings = ({ connected, selectDefaultLayer, defaultLayer, neurons, selectedNeuron }: AdvancedSettingsProps) => {
+  let layersNames: any = neurons[selectedNeuron] ? neurons[selectedNeuron].layers : [];
+  layersNames = layersNames.map((item: any, index: any) => ({
+    text: item.name !== "" ? item.name : `Layer ${index + 1}`,
+    value: index,
+    index,
+  }));
+  layersNames.push({ text: i18n.keyboardSettings.keymap.noDefault, value: 126, index: 126 });
   return (
-    <Style>
-      <Card className="overflowFix card-preferences mt-4 mb-4">
-        <Card.Title>
-          <Title text={i18n.preferences.advanced} headingLevel={3} svgICO={<IconChip />} />
-        </Card.Title>
-        <Card.Body className="pb-0">
-          <Row>
-            <Col xs={12}>
-              <div className="advancedToggles">
-                <Form.Group controlId="allowBetas" className="switchHolder">
-                  <Form.Label>{i18n.preferences.allowBeta}</Form.Label>
-                  {allowBetas}
-                </Form.Group>
-                {connected ? (
-                  <Form.Group controlId="onlyCustom" className="switchHolder">
-                    <Form.Label>{i18n.preferences.onlyCustom}</Form.Label>
-                    {onlyCustomSwitch}
-                  </Form.Group>
-                ) : (
-                  ""
-                )}
-              </div>
-            </Col>
-          </Row>
-          {connected ? (
-            <Row>
-              <Col xs={12} className="mt-4">
-                <Title headingLevel={6} text={i18n.keyboardSettings.resetEEPROM.title} />
-              </Col>
-              <Col xs={12}>
-                <AdvancedKeyboardSettings />
-                {pairingButton}
-              </Col>
-            </Row>
-          ) : (
-            ""
-          )}
-        </Card.Body>
+    <>
+      <Card className="rounded-xl max-w-2xl mx-auto bg-white/60 dark:bg-gray-800">
+        <CardHeader>
+          <CardTitle variant="default">
+            <IconLayers /> {i18n.keyboardSettings.keymap.defaultLayer}
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <form>
+            <Select
+              id="selectDefaultLayer"
+              onSelect={selectDefaultLayer}
+              value={defaultLayer}
+              listElements={layersNames}
+              disabled={!connected}
+            />
+          </form>
+        </CardContent>
       </Card>
-    </Style>
+
+      <Card className="mt-3 rounded-xl max-w-2xl mx-auto bg-white/60 dark:bg-gray-800">
+        <CardHeader>
+          <CardTitle variant="default">
+            <IconChip /> {i18n.keyboardSettings.resetEEPROM.title}
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <form>{connected && <AdvancedKeyboardSettings />}</form>
+        </CardContent>
+      </Card>
+    </>
   );
 };
 

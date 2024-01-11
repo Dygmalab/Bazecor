@@ -288,8 +288,15 @@ function App() {
     setLoading(lding);
   };
 
-  const updateAllowBeta = (event: any) => {
-    const newValue = event.target.checked;
+  // const updateAllowBeta = (event: any) => {
+  //   const newValue = event.target.checked;
+  //   // console.log("new allowBeta value: ", newValue);
+  //   store.set("settings.allowBeta", newValue);
+  //   setAllowBeta(newValue);
+  // };
+
+  const onChangeAllowBetas = checked => {
+    const newValue = checked;
     // console.log("new allowBeta value: ", newValue);
     store.set("settings.allowBeta", newValue);
     setAllowBeta(newValue);
@@ -414,7 +421,7 @@ function App() {
                 toggleDarkMode={toggleDarkMode}
                 startContext={startContext}
                 cancelContext={cancelContext}
-                updateAllowBeta={updateAllowBeta}
+                onChangeAllowBetas={onChangeAllowBetas}
                 setLoadingData={setLoadingData}
                 allowBeta={allowBeta}
                 inContext={contextBar}
@@ -432,7 +439,7 @@ function App() {
                 toggleDarkMode={toggleDarkMode}
                 startContext={startContext}
                 cancelContext={cancelContext}
-                updateAllowBeta={updateAllowBeta}
+                updateAllowBeta={onChangeAllowBetas}
                 setLoadingData={setLoadingData}
                 allowBeta={allowBeta}
                 inContext={contextBar}

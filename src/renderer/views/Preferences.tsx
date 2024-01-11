@@ -20,7 +20,6 @@
 
 import React, { useState, useEffect, useCallback } from "react";
 import { ipcRenderer } from "electron";
-import Styled from "styled-components";
 import { motion } from "framer-motion";
 
 import Form from "react-bootstrap/Form";
@@ -55,22 +54,14 @@ import Version from "@Renderer/component/Version/Version";
 import Store from "@Renderer/utils/Store";
 import { useDevice } from "@Renderer/DeviceContext";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@Renderer/components/ui/tabs";
-import { Switch } from "@Renderer/components/ui/switch";
 import Backup from "../../api/backup";
 
 const store = Store.getStore();
 
-const Styles = Styled.div`
-  .toggle-button{
-    text-align: center;
-    padding-bottom: 8px;
-  }
-`;
-
 interface PreferencesProps {
   inContext: boolean;
   cancelContext: () => void;
-  updateAllowBeta: (event: any) => void;
+  onChangeAllowBetas: (checked: boolean) => void;
   allowBeta: boolean;
   connected: boolean;
   startContext: () => void;
@@ -83,7 +74,7 @@ const Preferences = (props: PreferencesProps) => {
   const [isSaved, setIsSaved] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [currentTab, setCurrentTab] = useState("Application");
-  const { inContext, connected, allowBeta, updateAllowBeta, startContext, cancelContext, toggleDarkMode } = props;
+  const { inContext, connected, allowBeta, onChangeAllowBetas, startContext, cancelContext, toggleDarkMode } = props;
   const [kbData, setKbData] = useState({
     keymap: {
       custom: [],
@@ -411,12 +402,12 @@ const Preferences = (props: PreferencesProps) => {
     }));
   };
 
-  const toggleDevTools = async (event: any) => {
+  const onChangeDevTools = async checked => {
     setPreferencesState(prevState => ({
       ...prevState,
-      devTools: event.target.checked,
+      devTools: checked,
     }));
-    await ipcRenderer.invoke("manage-devtools", event.target.checked);
+    await ipcRenderer.invoke("manage-devtools", checked);
     startContext();
   };
 
@@ -429,7 +420,7 @@ const Preferences = (props: PreferencesProps) => {
     toggleDarkMode(key);
   };
 
-  const toggleVerboseFocus = () => {
+  const onChangeVerbose = () => {
     setPreferencesState(prevState => ({
       ...prevState,
       verboseFocus: !prevState.verboseFocus,
@@ -442,6 +433,22 @@ const Preferences = (props: PreferencesProps) => {
       keymap: {
         ...prevKbData.keymap,
         onlyCustom: event.target.checked,
+      },
+      modified: true,
+    }));
+    setPreferencesState(prevState => ({
+      ...prevState,
+      modified: true,
+    }));
+    startContext();
+  };
+
+  const onChangeOnlyCustomLayers = checked => {
+    setKbData(prevKbData => ({
+      ...prevKbData,
+      keymap: {
+        ...prevKbData.keymap,
+        onlyCustom: checked,
       },
       modified: true,
     }));
@@ -490,10 +497,6 @@ const Preferences = (props: PreferencesProps) => {
 
   const { neurons, selectedNeuron, darkMode, neuronID, devTools, verboseFocus, modified } = preferencesState;
   const { defaultLayer } = kbData;
-  const devToolsSwitch = <Form.Check type="switch" checked={devTools} onChange={toggleDevTools} />;
-  const verboseSwitch = <Form.Check type="switch" checked={verboseFocus} onChange={toggleVerboseFocus} />;
-  const onlyCustomSwitch = <Form.Check type="switch" checked={kbData.keymap.onlyCustom as any} onChange={toggleOnlyCustom} />;
-  const allowBetas = <Form.Check value={allowBeta as any} type="switch" checked={allowBeta} onChange={updateAllowBeta} />;
 
   const tabVariants = {
     hidden: { opacity: 0 },
@@ -505,7 +508,7 @@ const Preferences = (props: PreferencesProps) => {
   console.log("neurons[selectedNeuron]: ", neurons[selectedNeuron]);
 
   return (
-    <Styles>
+    <>
       <div className="px-2">
         <PageHeader
           text={i18n.preferences.title}
@@ -526,7 +529,7 @@ const Preferences = (props: PreferencesProps) => {
             }}
             className="w-full"
           >
-            <div className="flex gap-3 w-full">
+            <div className="flex gap-3 w-full pb-4">
               <TabsList className="flex flex-col self-start gap-1 px-4 py-4 text-left min-w-64 rounded-xl bg-tabMenu dark:bg-tabMenuDark">
                 {connected ? (
                   <>
@@ -607,27 +610,30 @@ const Preferences = (props: PreferencesProps) => {
                 <TabsContent value="Advanced">
                   <motion.div initial="hidden" animate="visible" variants={tabVariants}>
                     <AdvancedSettings
-                      devToolsSwitch={devToolsSwitch as any}
-                      verboseSwitch={verboseSwitch}
-                      onlyCustomSwitch={onlyCustomSwitch}
-                      allowBetas={allowBetas}
-                      pairingButton={<></>}
                       connected={connected}
+                      defaultLayer={defaultLayer}
+                      selectDefaultLayer={selectDefaultLayer}
+                      neurons={neurons}
+                      selectedNeuron={selectedNeuron}
                     />
                   </motion.div>
                 </TabsContent>
                 <TabsContent value="Application">
                   <motion.div initial="hidden" animate="visible" variants={tabVariants}>
                     <GeneralSettings
+                      connected={connected}
                       selectDarkMode={selectDarkMode}
                       darkMode={darkMode}
                       neurons={neurons}
                       selectedNeuron={selectedNeuron}
-                      defaultLayer={defaultLayer}
-                      selectDefaultLayer={selectDefaultLayer}
-                      connected={connected}
-                      devToolsSwitch={devToolsSwitch as any}
-                      verboseSwitch={verboseSwitch}
+                      devTools={devTools}
+                      onChangeDevTools={onChangeDevTools}
+                      verbose={verboseFocus}
+                      onChangeVerbose={onChangeVerbose}
+                      allowBeta={allowBeta}
+                      onChangeAllowBetas={onChangeAllowBetas}
+                      onlyCustomLayers={kbData.keymap.onlyCustom}
+                      onChangeOnlyCustomLayers={onChangeOnlyCustomLayers}
                     />
                     <Version />
                   </motion.div>
@@ -637,7 +643,7 @@ const Preferences = (props: PreferencesProps) => {
           </Tabs>
         </div>
       </div>
-    </Styles>
+    </>
   );
 };
 

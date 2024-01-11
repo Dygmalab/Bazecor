@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from "react";
 
-import Form from "react-bootstrap/Form";
-
 // Flags imports
 import frenchF from "@Assets/flags/france.png";
 import germanF from "@Assets/flags/germany.png";
@@ -28,26 +26,40 @@ import { Select } from "../../component/Select";
 import Keymap from "../../../api/keymap";
 import i18n from "../../i18n";
 import Store from "../../utils/Store";
-import { KeyPicker, KeyPickerPreview, Picker } from "../KeyPickerKeyboard";
+import { KeyPickerPreview } from "../KeyPickerKeyboard";
 
 const store = Store.getStore();
 
 interface GeneralSettingsProps {
+  connected: boolean;
   selectDarkMode: (item: string) => void;
   darkMode: string;
   neurons: Record<string, unknown>[];
   selectedNeuron: number;
-  devToolsSwitch: JSX.Element;
-  verboseSwitch: JSX.Element;
+  devTools: boolean;
+  onChangeDevTools: () => void;
+  verbose: boolean;
+  onChangeVerbose: () => void;
+  allowBeta: boolean;
+  onChangeAllowBetas: () => void;
+  onlyCustomLayers: string | boolean;
+  onChangeOnlyCustomLayers: () => void;
 }
 
 const GeneralSettings = ({
+  connected,
   selectDarkMode,
   darkMode,
   neurons,
   selectedNeuron,
-  devToolsSwitch,
-  verboseSwitch,
+  devTools,
+  onChangeDevTools,
+  verbose,
+  onChangeVerbose,
+  allowBeta,
+  onChangeAllowBetas,
+  onlyCustomLayers,
+  onChangeOnlyCustomLayers,
 }: GeneralSettingsProps) => {
   const [selectedLanguage, setSelectedLanguage] = useState("");
   const [state] = useDevice();
@@ -158,6 +170,18 @@ const GeneralSettings = ({
     base: 0,
     modified: 0,
   };
+
+  const normalizeOnlyCustomLayers = (item: string | boolean): boolean => {
+    if (typeof item === "string") {
+      if (item === "1") {
+        return true;
+      }
+      if (item === "0") {
+        return false;
+      }
+    }
+    return Boolean(item);
+  };
   return (
     <>
       <Card className="rounded-xl max-w-2xl mx-auto bg-white/60 dark:bg-gray-800">
@@ -212,20 +236,37 @@ const GeneralSettings = ({
         </CardHeader>
         <CardContent>
           <form>
-            <Form.Group controlId="DevTools" className="switchHolder">
-              <div className="flex items-center w-full justify-between py-2 border-b-[1px] border-gray-700">
-                <Form.Label className="mt-0">{i18n.preferences.devtools}</Form.Label>
-                {devToolsSwitch}
-                <Switch />
+            <div className="flex items-center w-full justify-between py-2 border-b-[1px] border-gray-50 dark:border-gray-700">
+              <label htmlFor="devToolsSwitch" className="m-0 text-sm font-semibold tracking-tight">
+                {i18n.preferences.devtools}
+              </label>
+              <Switch id="devToolsSwitch" defaultChecked={false} checked={devTools} onCheckedChange={onChangeDevTools} />
+            </div>
+            <div className="flex items-center w-full justify-between py-2 border-b-[1px] border-gray-50 dark:border-gray-700">
+              <label htmlFor="verboseSwitch" className="m-0 text-sm font-semibold tracking-tight">
+                {i18n.preferences.verboseFocus}
+              </label>
+              <Switch id="verboseSwitch" defaultChecked={false} checked={verbose} onCheckedChange={onChangeVerbose} />
+            </div>
+            <div className="flex items-center w-full justify-between py-2 border-b-[1px] border-gray-50 dark:border-gray-700">
+              <label htmlFor="betasSwitch" className="m-0 text-sm font-semibold tracking-tight">
+                {i18n.preferences.allowBeta}
+              </label>
+              <Switch id="betasSwitch" defaultChecked={false} checked={allowBeta} onCheckedChange={onChangeAllowBetas} />
+            </div>
+            {connected && (
+              <div className="flex items-center w-full justify-between py-2 border-b-[1px] border-gray-50 dark:border-gray-700">
+                <label htmlFor="customSwitch" className="m-0 text-sm font-semibold tracking-tight">
+                  {i18n.preferences.onlyCustom}
+                </label>
+                <Switch
+                  id="customSwitch"
+                  defaultChecked={false}
+                  checked={normalizeOnlyCustomLayers(onlyCustomLayers)}
+                  onCheckedChange={onChangeOnlyCustomLayers}
+                />
               </div>
-            </Form.Group>
-
-            <Form.Group controlId="Verbose" className="switchHolder">
-              <div className="flex items-center w-full justify-between py-2 border-b-[1px] border-gray-700">
-                <Form.Label>{i18n.preferences.verboseFocus}</Form.Label>
-                {verboseSwitch}
-              </div>
-            </Form.Group>
+            )}
           </form>
         </CardContent>
       </Card>
