@@ -28,6 +28,7 @@ import { Select } from "../../component/Select";
 import Keymap from "../../../api/keymap";
 import i18n from "../../i18n";
 import Store from "../../utils/Store";
+import { KeyPicker, KeyPickerPreview, Picker } from "../KeyPickerKeyboard";
 
 const store = Store.getStore();
 
@@ -153,7 +154,10 @@ const GeneralSettings = ({
       index: 2,
     },
   ];
-
+  const code = {
+    base: 0,
+    modified: 0,
+  };
   return (
     <>
       <Card className="rounded-xl max-w-2xl mx-auto bg-white/60 dark:bg-gray-800">
@@ -180,7 +184,6 @@ const GeneralSettings = ({
         </CardHeader>
         <CardContent>
           <form>
-            <label htmlFor="languageSelector">{i18n.preferences.language}</label>
             <Select
               id="languageSelector"
               onSelect={changeLanguage}
@@ -189,6 +192,15 @@ const GeneralSettings = ({
               disabled={false}
             />
           </form>
+          <KeyPickerPreview
+            code={code}
+            disableMods="disabled"
+            disableMove="preferences"
+            disableAll={false}
+            selectedlanguage={selectedLanguage}
+            kbtype="ansi"
+            activeTab="preferences"
+          />
         </CardContent>
       </Card>
 
