@@ -19,6 +19,7 @@ import BackupSettings from "./BackupSettings";
 import BatterySettings from "./BatterySettings";
 import DeviceConnectedPreview from "./DeviceConnectedPreview";
 import EnergyManagement from "./EnergyManagement";
+import FileBackUpHandling from "./FileBackUpHandling";
 import GeneralSettings from "./GeneralSettings";
 import NeuronSettings from "./NeuronSettings";
 import RFSettings from "./RFSettings";
@@ -29,6 +30,7 @@ export {
   BatterySettings,
   DeviceConnectedPreview,
   EnergyManagement,
+  FileBackUpHandling,
   GeneralSettings,
   NeuronSettings,
   RFSettings,

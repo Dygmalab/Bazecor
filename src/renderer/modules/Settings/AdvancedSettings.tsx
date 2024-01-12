@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@Renderer/components/u
 
 import { useDevice } from "@Renderer/DeviceContext";
 import { Select } from "@Renderer/component/Select";
+import { BackupSettings } from "@Renderer/modules/Settings";
 import i18n from "../../i18n";
 
 // Own Components
@@ -66,10 +67,20 @@ interface AdvancedSettingsProps {
   defaultLayer: number;
   selectDefaultLayer: () => void;
   neurons: Record<string, unknown>[];
+  neuronID: string;
   selectedNeuron: number;
+  updateTab: (value: string) => void;
 }
 
-const AdvancedSettings = ({ connected, selectDefaultLayer, defaultLayer, neurons, selectedNeuron }: AdvancedSettingsProps) => {
+const AdvancedSettings = ({
+  connected,
+  selectDefaultLayer,
+  defaultLayer,
+  neurons,
+  neuronID,
+  selectedNeuron,
+  updateTab,
+}: AdvancedSettingsProps) => {
   let layersNames: any = neurons[selectedNeuron] ? neurons[selectedNeuron].layers : [];
   layersNames = layersNames.map((item: any, index: any) => ({
     text: item.name !== "" ? item.name : `Layer ${index + 1}`,
@@ -79,7 +90,7 @@ const AdvancedSettings = ({ connected, selectDefaultLayer, defaultLayer, neurons
   layersNames.push({ text: i18n.keyboardSettings.keymap.noDefault, value: 126, index: 126 });
   return (
     <>
-      <Card className="rounded-xl max-w-2xl mx-auto bg-white/60 dark:bg-gray-800">
+      <Card className="max-w-2xl mx-auto" variant="default">
         <CardHeader>
           <CardTitle variant="default">
             <IconLayers /> {i18n.keyboardSettings.keymap.defaultLayer}
@@ -97,8 +108,8 @@ const AdvancedSettings = ({ connected, selectDefaultLayer, defaultLayer, neurons
           </form>
         </CardContent>
       </Card>
-
-      <Card className="mt-3 rounded-xl max-w-2xl mx-auto bg-white/60 dark:bg-gray-800">
+      <BackupSettings connected={connected} neurons={neurons} neuronID={neuronID} updateTab={updateTab} />
+      <Card className="mt-3 max-w-2xl mx-auto" variant="default">
         <CardHeader>
           <CardTitle variant="default">
             <IconChip /> {i18n.keyboardSettings.resetEEPROM.title}

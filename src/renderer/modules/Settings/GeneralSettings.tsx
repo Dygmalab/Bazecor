@@ -20,6 +20,7 @@ import { useDevice } from "@Renderer/DeviceContext";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@Renderer/components/ui/card";
 import { Switch } from "@Renderer/components/ui/switch";
 
+import { FileBackUpHandling } from "@Renderer/modules/Settings";
 import { IconChip, IconHanger, IconSun, IconMoon, IconScreen, IconKeyboard } from "../../component/Icon";
 import { ToggleButtons } from "../../component/ToggleButtons";
 import { Select } from "../../component/Select";
@@ -184,7 +185,7 @@ const GeneralSettings = ({
   };
   return (
     <>
-      <Card variant="default">
+      <Card className="max-w-2xl mx-auto" variant="default">
         <CardHeader>
           <CardTitle variant="default">
             <IconHanger /> {i18n.preferences.darkMode.label}
@@ -196,8 +197,7 @@ const GeneralSettings = ({
           </form>
         </CardContent>
       </Card>
-
-      <Card className="mt-3 rounded-xl max-w-2xl mx-auto bg-white/60 dark:bg-gray-800">
+      <Card className="mt-3 max-w-2xl mx-auto" variant="default">
         <CardHeader>
           <CardTitle variant="default">
             <IconKeyboard /> Key Layout
@@ -227,8 +227,8 @@ const GeneralSettings = ({
           />
         </CardContent>
       </Card>
-
-      <Card className="mt-3 rounded-xl max-w-2xl mx-auto bg-white/60 dark:bg-gray-800">
+      {connected && <FileBackUpHandling />}
+      <Card className="mt-3 max-w-2xl mx-auto" variant="default">
         <CardHeader>
           <CardTitle variant="default">
             <IconChip /> Advanced
@@ -240,19 +240,40 @@ const GeneralSettings = ({
               <label htmlFor="devToolsSwitch" className="m-0 text-sm font-semibold tracking-tight">
                 {i18n.preferences.devtools}
               </label>
-              <Switch id="devToolsSwitch" defaultChecked={false} checked={devTools} onCheckedChange={onChangeDevTools} />
+              <Switch
+                id="devToolsSwitch"
+                defaultChecked={false}
+                checked={devTools}
+                onCheckedChange={onChangeDevTools}
+                variant="default"
+                size="sm"
+              />
             </div>
             <div className="flex items-center w-full justify-between py-2 border-b-[1px] border-gray-50 dark:border-gray-700">
               <label htmlFor="verboseSwitch" className="m-0 text-sm font-semibold tracking-tight">
                 {i18n.preferences.verboseFocus}
               </label>
-              <Switch id="verboseSwitch" defaultChecked={false} checked={verbose} onCheckedChange={onChangeVerbose} />
+              <Switch
+                id="verboseSwitch"
+                defaultChecked={false}
+                checked={verbose}
+                onCheckedChange={onChangeVerbose}
+                variant="default"
+                size="sm"
+              />
             </div>
             <div className="flex items-center w-full justify-between py-2 border-b-[1px] border-gray-50 dark:border-gray-700">
               <label htmlFor="betasSwitch" className="m-0 text-sm font-semibold tracking-tight">
                 {i18n.preferences.allowBeta}
               </label>
-              <Switch id="betasSwitch" defaultChecked={false} checked={allowBeta} onCheckedChange={onChangeAllowBetas} />
+              <Switch
+                id="betasSwitch"
+                defaultChecked={false}
+                checked={allowBeta}
+                onCheckedChange={onChangeAllowBetas}
+                variant="default"
+                size="sm"
+              />
             </div>
             {connected && (
               <div className="flex items-center w-full justify-between py-2 border-b-[1px] border-gray-50 dark:border-gray-700">
@@ -264,6 +285,8 @@ const GeneralSettings = ({
                   defaultChecked={false}
                   checked={normalizeOnlyCustomLayers(onlyCustomLayers)}
                   onCheckedChange={onChangeOnlyCustomLayers}
+                  variant="default"
+                  size="sm"
                 />
               </div>
             )}
