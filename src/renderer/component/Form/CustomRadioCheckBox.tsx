@@ -17,7 +17,9 @@
 
 import React from "react";
 import Styled from "styled-components";
-import Form from "react-bootstrap/Form";
+import { Checkbox } from "@Renderer/components/ui/checkbox";
+import { Label } from "@Renderer/components/ui/label";
+import { CustomRCBProps } from "@Renderer/types/customRadioCheckBox";
 
 import Title from "../Title";
 
@@ -30,7 +32,7 @@ const Style = Styled.div`
     label,
     label h6 {
         margin-bottom: 0;
-    }	
+    }
     label:hover {
         cursor: pointer;
     }
@@ -59,7 +61,7 @@ const Style = Styled.div`
     .form-check::before {
         width: 18px;
         height: 18px;
-        border-radius: 4px; 
+        border-radius: 4px;
         transition-property: border;
     }
     .form-check::after {
@@ -68,33 +70,28 @@ const Style = Styled.div`
         border-radius: 2px;
         margin-left: 4px;
         transition-property: background;
-    }   
+    }
 }
 &:hover {
     cursor: pointer;
 }
 `;
 
-function CustomRadioCheckBox({
-  label,
-  type,
-  id,
-  name,
-  tooltip,
-  tooltipDelay,
-  tooltipPlacement,
-  className,
-  onClick,
-  disabled,
-  checked,
-}) {
+function CustomRadioCheckBox(props: CustomRCBProps) {
+  const { label, type, id, name, tooltip, className, onClick, disabled, checked } = props;
   return (
-    <Style className={`customCheckbox ${className}`} onClick={onClick}>
+    <Style className={`customCheckbox ${className}`}>
       <div className="customCheckboxInner" id={`input-${id}`}>
-        <Form.Check type={type} id={`input-${id}-${type}`} name={name} disabled={disabled || false} checked={checked} />
-        <label htmlFor={`input-${id}-${type}`}>
+        <Checkbox
+          id={`input-${id}-${type}`}
+          name={name}
+          disabled={disabled || false}
+          checked={checked}
+          onCheckedChange={onClick}
+        />
+        <Label htmlFor={`input-${id}-${type}`}>
           <Title text={label} tooltip={tooltip} headingLevel={6} />
-        </label>
+        </Label>
       </div>
     </Style>
   );

@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 import Styled from "styled-components";
 
 import Form from "react-bootstrap/Form";
@@ -99,8 +99,19 @@ h4 {
 }
 `;
 
-class DelayTab extends Component {
-  constructor(props) {
+interface DelayTabProps {
+  onAddDelay: (value: number, type: number) => void;
+  onAddDelayRnd: (valueMin: number, valueMax: number, type: number) => void;
+}
+
+interface DelayTabState {
+  fixedSelected: boolean;
+  fixedValue: number;
+  randomValue: { min: number; max: number };
+}
+
+class DelayTab extends React.Component<DelayTabProps, DelayTabState> {
+  constructor(props: DelayTabProps) {
     super(props);
 
     this.state = {
@@ -118,14 +129,14 @@ class DelayTab extends Component {
     this.setState({ fixedSelected: false });
   };
 
-  updateFixed = e => {
-    const value = parseInt(e.target.value, 10);
+  updateFixed = (e: React.FormEvent<HTMLInputElement>) => {
+    const value = parseInt(e.currentTarget.value, 10);
     this.setState({ fixedValue: value > 65535 ? 65535 : value });
   };
 
-  updateRandomMin = e => {
+  updateRandomMin = (e: React.FormEvent<HTMLInputElement>) => {
     const { randomValue } = this.state;
-    let valueMin = parseInt(e.target.value, 10);
+    let valueMin = parseInt(e.currentTarget.value, 10);
     valueMin = valueMin > 65535 ? 65535 : valueMin;
     if (valueMin > randomValue.max) {
       randomValue.max = valueMin;
@@ -134,9 +145,9 @@ class DelayTab extends Component {
     this.setState({ randomValue });
   };
 
-  updateRandomMax = e => {
+  updateRandomMax = (e: React.FormEvent<HTMLInputElement>) => {
     const { randomValue } = this.state;
-    let valueMax = parseInt(e.target.value, 10);
+    let valueMax = parseInt(e.currentTarget.value, 10);
     valueMax = valueMax > 65535 ? 65535 : valueMax;
     if (valueMax < randomValue.min) {
       randomValue.min = valueMax;
@@ -164,8 +175,6 @@ class DelayTab extends Component {
 
   render() {
     const { fixedSelected, fixedValue, randomValue } = this.state;
-    const classFixed = fixedSelected ? "active" : "inactive";
-    const classRandom = fixedSelected ? "inactive" : "active";
     return (
       <Styles>
         <div className="tabContentWrapper">
@@ -173,20 +182,25 @@ class DelayTab extends Component {
           <div className="formWrapper">
             <CustomRadioCheckBox
               label="Fixed value"
+              checked={fixedSelected}
               onClick={this.setFixedSelected}
               type="radio"
               name="addDelay"
               id="addFixedDelay"
-              className={classFixed}
+              className=""
+              disabled={false}
+              tooltip={undefined}
             />
             <CustomRadioCheckBox
               label="Random value"
+              checked={!fixedSelected}
               onClick={this.setRandomSelected}
               type="radio"
               name="addDelay"
               id="addRandomDelay"
               tooltip="You can configure a maximum value and minimum value for each time the macro is executed Bazecor choose a delay between this range."
-              className={classRandom}
+              className=""
+              disabled={false}
             />
           </div>
           <div className="inputsWrapper mt-3">
@@ -198,7 +212,9 @@ class DelayTab extends Component {
                     min={0}
                     max={65535}
                     type="number"
-                    onChange={this.updateFixed}
+                    onChange={(e: any) => {
+                      this.updateFixed(e);
+                    }}
                     value={fixedValue}
                   />
                   <InputGroup.Text>ms</InputGroup.Text>
@@ -212,7 +228,9 @@ class DelayTab extends Component {
                     placeholder="Min."
                     min={0}
                     type="number"
-                    onChange={this.updateRandomMin}
+                    onChange={(e: any) => {
+                      this.updateRandomMin(e);
+                    }}
                     value={randomValue.min}
                   />
                   <Form.Control
@@ -220,7 +238,9 @@ class DelayTab extends Component {
                     placeholder="Max"
                     min={1}
                     type="number"
-                    onChange={this.updateRandomMax}
+                    onChange={(e: any) => {
+                      this.updateRandomMax(e);
+                    }}
                     value={randomValue.max}
                   />
                   <InputGroup.Text>ms</InputGroup.Text>
