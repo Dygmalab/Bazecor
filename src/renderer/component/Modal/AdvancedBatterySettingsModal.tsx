@@ -1,12 +1,12 @@
 import React from "react";
 
-import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Modal from "react-bootstrap/Modal";
 import Card from "react-bootstrap/Card";
 
 import Slider from "@appigram/react-rangeslider";
+import { Switch } from "@Renderer/components/ui/switch";
 
 import Title from "@Renderer/component/Title";
 import { Badge } from "@Renderer/component/Badge";
@@ -54,9 +54,10 @@ function AdvancedBatterySettingsModal(props: AdvancedEnergyManagementProps) {
     changeWireless(newWireless);
   };
 
-  const setTrueSleep = async (value: any) => {
+  const setTrueSleep = async (checked: boolean) => {
+    console.log("clicked true sleep");
     const newWireless = { ...wireless };
-    newWireless.true_sleep = value.target.checked;
+    newWireless.true_sleep = checked;
     changeWireless(newWireless);
   };
 
@@ -66,9 +67,10 @@ function AdvancedBatterySettingsModal(props: AdvancedEnergyManagementProps) {
     changeWireless(newWireless);
   };
 
-  const setFade = async (value: any) => {
+  const setFade = async (checked: boolean) => {
+    console.log("clicked fade");
     const newWireless = { ...wireless };
-    newWireless.fade = value.target.checked ? 1 : 0;
+    newWireless.fade = checked ? 1 : 0;
     changeWireless(newWireless);
   };
 
@@ -157,7 +159,12 @@ function AdvancedBatterySettingsModal(props: AdvancedEnergyManagementProps) {
               <Col sm={8} lg={5}>
                 <Title text={i18n.wireless.energyManagement.settings.trueSleepEnablingDesc} headingLevel={6} />
               </Col>
-              <Form.Check type="switch" id="toggleTrueSleep" checked={wireless.true_sleep === true} onChange={setTrueSleep} />
+              <Switch
+                id="TrueSleepSwitch"
+                defaultChecked={false}
+                checked={wireless.true_sleep === true}
+                onCheckedChange={setTrueSleep}
+              />
             </Row>
             <Row className="card-preferences--option justify-between">
               <Col lg={5}>
@@ -183,7 +190,7 @@ function AdvancedBatterySettingsModal(props: AdvancedEnergyManagementProps) {
               <Col sm={8} lg={5}>
                 <Title text={i18n.wireless.energyManagement.settings.highlightLayerChangingDesc} headingLevel={6} />
               </Col>
-              <Form.Check type="switch" id="toggleLayerHighlight" checked={wireless.fade === 1} onChange={setFade} />
+              <Switch id="FadeSwitch" defaultChecked={false} checked={wireless.fade === 1} onCheckedChange={setFade} />
             </Row>
           </Card.Body>
         </Card>
