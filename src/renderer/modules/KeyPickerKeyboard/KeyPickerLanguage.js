@@ -63,6 +63,7 @@ import svSE from "@Renderer/modules/KeyPickerKeyboard/languages/sv/SE.json";
 import isIS from "@Renderer/modules/KeyPickerKeyboard/languages/is/IS.json";
 import jaJP from "@Renderer/modules/KeyPickerKeyboard/languages/ja/JP.json";
 import koKR from "@Renderer/modules/KeyPickerKeyboard/languages/ko/KR.json";
+import plPLprog from "@Renderer/modules/KeyPickerKeyboard/languages/pl/PL-prog.json";
 import deCH from "@Renderer/modules/KeyPickerKeyboard/languages/de/CH.json";
 
 // Dygma - Layouts (community/third-party)
@@ -85,6 +86,7 @@ const languages = {
   "is-IS": isIS,
   "ja-JP": jaJP,
   "ko-KR": koKR,
+  "pl-PL-prog": plPLprog,
   "de-CH": deCH,
   // Community
   "en-XX-eurkey": enXXeurkey,

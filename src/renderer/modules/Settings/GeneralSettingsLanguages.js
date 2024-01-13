@@ -33,6 +33,7 @@ import svSE from "@Assets/flags/svSE.png";
 import isIS from "@Assets/flags/isIS.png";
 import jaJP from "@Assets/flags/jaJP.png";
 import koKR from "@Assets/flags/koKR.png";
+import plPL from "@Assets/flags/plPL.png";
 import deCH from "@Assets/flags/deCH.png";
 
 // Dygma - Layouts (community/third-party)
@@ -56,6 +57,7 @@ const flags = [
   jaJP,
   koKR,
   nbNO,
+  plPL,
   esES,
   svSE,
   deCH,
@@ -75,6 +77,7 @@ const languages = [
   "ja-JP",
   "ko-KR",
   "nb-NO",
+  "pl-PL-prog",
   "es-ES",
   "sv-SE",
   "de-CH",
@@ -94,6 +97,7 @@ const languageNames = [
   "Japanese",
   "Korean",
   "Norwegian",
+  "Polish (programmer's)",
   "Spanish",
   "Swedish",
   "Swiss German",

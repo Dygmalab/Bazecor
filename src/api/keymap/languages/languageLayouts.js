@@ -89,6 +89,7 @@ import { svSE, svSEModifiedTables } from "./sv/SE";
 import { isIS, isISModifiedTables } from "./is/IS";
 import { jaJP, jaJPModifiedTables } from "./ja/JP";
 import { koKR, koKRModifiedTables } from "./ko/KR";
+import { plPLprog, plPLprogModifiedTables } from "./pl/PL-prog";
 import { deCH, deCHModifiedTables } from "./de/CH";
 
 // Dygma - Layouts (community/third-party)
@@ -110,6 +111,7 @@ const supportModifiedTables = {
   "is-IS": isISModifiedTables,
   "ja-JP": jaJPModifiedTables,
   "ko-KR": koKRModifiedTables,
+  "pl-PL-prog": plPLprogModifiedTables,
   "de-CH": deCHModifiedTables,
   // Community
   "en-XX-eurkey": enXXeurkeyModifiedTables,
@@ -132,6 +134,7 @@ const languages = {
   "is-IS": isIS,
   "ja-JP": jaJP,
   "ko-KR": koKR,
+  "pl-PL-prog": plPLprog,
   "de-CH": deCH,
   // Community
   "en-XX-eurkey": enXXeurkey,
