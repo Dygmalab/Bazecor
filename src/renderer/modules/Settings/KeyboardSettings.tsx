@@ -1,7 +1,6 @@
 // -*- mode: js-jsx -*-
-/* Bazecor -- Kaleidoscope Command Center
- * Copyright (C) 2018, 2019  Keyboardio, Inc.
- * Copyright (C) 2020  DygmaLab SE.
+/* Bazecor
+ * Copyright (C) 2024  DygmaLab SE.
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -16,24 +15,23 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Styled from "styled-components";
 
-import Card from "react-bootstrap/Card";
+// External components
 import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import Tooltip from "react-bootstrap/Tooltip";
-
 import Slider from "@appigram/react-rangeslider";
 
-import { isArray } from "lodash";
-
-import i18n from "../../i18n";
-
+// Custom components
+import { Card, CardContent, CardHeader } from "@Renderer/components/ui/card";
+import KBDataPref from "@Renderer/types/preferences";
 import Title from "../../component/Title";
 
+// Assets
 import { IconFlashlight, IconTypo, IconMouse } from "../../component/Icon";
+import i18n from "../../i18n";
 
 const Styles = Styled.div`
 
@@ -151,661 +149,475 @@ const Styles = Styled.div`
   }
 `;
 
-const TooltipStyle = Styled.div`
-text-align: left;
-.ttip-p {
-  margin: 0;
+interface KeyboardSettingsProps {
+  kbData: KBDataPref;
+  setKbData: (data: KBDataPref) => void;
+  connected: boolean;
 }
-.ttip-h {
-  margin: 0;
-  font-size: 1.3em;
-}
-`;
 
-class KeyboardSettings extends React.Component {
-  constructor(props) {
-    super(props);
+function KeyboardSettings(props: KeyboardSettingsProps) {
+  const { kbData, setKbData, connected } = props;
+  const [localKBData, setLocalKBData] = useState(kbData);
 
-    this.state = { ...props.kbData };
-  }
+  useEffect(() => {
+    const { kbData: newKBData } = props;
+    setLocalKBData(newKBData);
+  }, [props, setKbData]);
 
-  delay = ms => new Promise(res => setTimeout(res, ms));
-
-  componentDidUpdate(previousProps) {
-    if (this.props.kbData != previousProps.kbData) {
-      this.setState({ ...this.props.kbData });
-    }
-  }
-
-  setOnlyCustom = event => {
-    const { checked } = event.target;
-    this.setState(state => ({
-      modified: true,
-      keymap: {
-        custom: state.keymap.custom,
-        default: state.keymap.default,
-        onlyCustom: checked,
-      },
-    }));
-    this.props.setKbData({
-      ...this.state,
-      modified: true,
-      keymap: {
-        custom: this.state.keymap.custom,
-        default: this.state.keymap.default,
-        onlyCustom: checked,
-      },
-    });
-  };
-
-  selectIdleLEDTime = value => {
-    this.setState(state => ({
+  const selectIdleLEDTime = (value: number) => {
+    setLocalKBData(data => ({
+      ...data,
       ledIdleTimeLimit: value * 60,
-      modified: true,
     }));
-    this.props.setKbData({ ...this.state, modified: true, ledIdleTimeLimit: value * 60 });
+    setKbData({ ...localKBData, ledIdleTimeLimit: value * 60 });
   };
 
-  setShowDefaults = event => {
-    this.setState(state => ({
-      showDefaults: event.target.checked,
-      modified: true,
-    }));
-    this.props.setKbData({ ...this.state, modified: true, showDefaults: event.target.checked });
-  };
-
-  setBrightness = value => {
-    this.setState(state => ({
+  const setBrightness = (value: number) => {
+    setLocalKBData(data => ({
+      ...data,
       ledBrightness: (value * 255) / 100,
-      modified: true,
     }));
-    this.props.setKbData({ ...this.state, modified: true, ledBrightness: (value * 255) / 100 });
+    setKbData({ ...localKBData, ledBrightness: (value * 255) / 100 });
   };
 
-  setBrightnessUG = value => {
-    this.setState(state => ({
+  const setBrightnessUG = (value: number) => {
+    setLocalKBData(data => ({
+      ...data,
       ledBrightnessUG: (value * 255) / 100,
-      modified: true,
     }));
-    this.props.setKbData({ ...this.state, modified: true, ledBrightnessUG: (value * 255) / 100 });
+    setKbData({ ...localKBData, ledBrightnessUG: (value * 255) / 100 });
   };
 
-  setHoldTimeout = value => {
-    this.setState(state => ({
+  const setHoldTimeout = (value: number) => {
+    setLocalKBData(data => ({
+      ...data,
       qukeysHoldTimeout: value,
-      modified: true,
     }));
-    this.props.setKbData({ ...this.state, modified: true, qukeysHoldTimeout: value });
+    setKbData({ ...localKBData, qukeysHoldTimeout: value });
   };
 
-  setOverlapThreshold = value => {
-    this.setState(state => ({
+  const setOverlapThreshold = (value: number) => {
+    setLocalKBData(data => ({
+      ...data,
       qukeysOverlapThreshold: value,
-      modified: true,
     }));
-    this.props.setKbData({ ...this.state, modified: true, qukeysOverlapThreshold: value });
+    setKbData({ ...localKBData, qukeysOverlapThreshold: value });
   };
 
-  setSuperTimeout = value => {
-    this.setState(state => ({
+  const setSuperTimeout = (value: number) => {
+    setLocalKBData(data => ({
+      ...data,
       SuperTimeout: value,
-      modified: true,
     }));
-    this.props.setKbData({ ...this.state, modified: true, SuperTimeout: value });
+    setKbData({ ...localKBData, SuperTimeout: value });
   };
 
-  // setSuperRepeat = event => {
-  //   const value = event.target.value;
-  //   this.setState(state => ({
-  //     SuperRepeat: value,
-  //     modified: true
-  //   }),
-  // this.props.setKbData(this.state));
-  // };
-
-  // setSuperWaitfor = event => {
-  //   const value = event.target.value;
-  //   this.setState(event => ({
-  //     SuperWaitfor: value,
-  //     modified: true
-  //   }),
-  // this.props.setKbData(this.state));
-  // };
-
-  setSuperHoldstart = value => {
-    this.setState(event => ({
+  const setSuperHoldstart = (value: number) => {
+    setLocalKBData(data => ({
+      ...data,
       SuperHoldstart: value,
-      modified: true,
     }));
-    this.props.setKbData({ ...this.state, modified: true, SuperHoldstart: value });
+    setKbData({ ...localKBData, SuperHoldstart: value });
   };
 
-  // setTyping = event => {
-  //   const value = (100 - event.target.value) * 10;
-  //   this.setState(event=>({
-  //     SuperTimeout: value,
-  //     SuperHoldstart: value - 20,
-  //     qukeysHoldTimeout: value - 20,
-  //     modified: true
-  //   }),
-  // this.props.setKbData(this.state));
-  // };
-
-  setTyping = value => {
-    const valueTyping = (100 - value) * 10;
-    this.setState(state => ({
-      SuperTimeout: valueTyping,
-      SuperHoldstart: valueTyping - 20,
-      qukeysHoldTimeout: valueTyping - 20,
-      modified: true,
+  const setSuperOverlapThreshold = (value: number) => {
+    setLocalKBData(data => ({
+      ...data,
+      SuperOverlapThreshold: value,
     }));
-    this.props.setKbData({
-      ...this.state,
-      modified: true,
-      SuperTimeout: valueTyping,
-      SuperHoldstart: valueTyping - 20,
-      qukeysHoldTimeout: valueTyping - 20,
+    setKbData({
+      ...localKBData,
+      SuperOverlapThreshold: value,
     });
   };
 
-  setChording = value => {
-    this.setState(state => ({
-      qukeysOverlapThreshold: value,
-      modified: true,
-    }));
-    this.props.setKbData({ ...this.state, modified: true, qukeysOverlapThreshold: value });
-  };
-
-  setSuperOverlapThreshold = value => {
-    this.setState(
-      state => ({
-        SuperOverlapThreshold: value,
-        modified: true,
-      }),
-      this.props.setKbData({
-        ...this.state,
-        modified: true,
-        SuperOverlapThreshold: value,
-      }),
-    );
-  };
-
-  setSpeed = value => {
-    this.setState(state => ({
-      mouseSpeed: parseInt(value),
+  const setSpeed = (value: number) => {
+    setLocalKBData(data => ({
+      ...data,
+      mouseSpeed: value,
       mouseSpeedDelay: 10,
-      modified: true,
     }));
-    this.props.setKbData({ ...this.state, modified: true, mouseSpeed: parseInt(value, 10), mouseSpeedDelay: 10 });
+    setKbData({ ...localKBData, mouseSpeed: value, mouseSpeedDelay: 10 });
   };
 
-  // setSpeedDelay = event => {
-  //   const value = event.target.value;
-
-  //   this.setState(state=>({
-  //     mouseSpeedDelay: value,
-  //     modified: true
-  //   }),
-  // this.props.setKbData(this.state));
-  // };
-
-  setAccelSpeed = async value => {
-    this.setState(state => ({
-      mouseAccelSpeed: parseInt(value),
+  const setAccelSpeed = async (value: number) => {
+    setLocalKBData(data => ({
+      ...data,
+      mouseAccelSpeed: value,
       mouseAccelDelay: 600,
-      modified: true,
     }));
-    this.props.setKbData({ ...this.state, modified: true, mouseAccelSpeed: parseInt(value, 10), mouseAccelDelay: 600 });
+    setKbData({ ...localKBData, mouseAccelSpeed: value, mouseAccelDelay: 600 });
   };
 
-  // setAccelDelay = event => {
-  //   const value =  ;
-
-  //   this.setState(state =>{
-  //     mouseAccelDelay: val(ue,
-  //     modified: true
-  //   }),
-  // this.props.setKbData(this.state));
-  // };
-
-  // setWheelSpeed = event => {
-  //   const value = event.target.value;
-
-  //   this.setState(state=>({
-  //     mouseWheelSpeed: value,
-  //     mouseWheelDelay: 100,
-  //     modified: true
-  //   }),
-  // this.props.setKbData(this.state));
-  // };
-  setWheelSpeed = async value => {
-    this.setState(state => ({
+  const setWheelSpeed = async (value: number) => {
+    setLocalKBData(data => ({
+      ...data,
       mouseWheelSpeed: value,
       mouseWheelDelay: 100,
-      modified: true,
     }));
-    this.props.setKbData({ ...this.state, modified: true, mouseWheelSpeed: value, mouseWheelDelay: 100 });
+    setKbData({ ...localKBData, mouseWheelSpeed: value, mouseWheelDelay: 100 });
   };
 
-  // setWheelDelay = event => {
-  //   const value = event.target.value;
-
-  //   this.setState(state=>({
-  //     mouseWheelDelay: value,
-  //     modified: true
-  //   }),
-  // this.props.setKbData(this.state));
-  // };
-
-  setSpeedLimit = async value => {
-    this.setState(state => ({
-      mouseSpeedLimit: parseInt(value, 10),
-      modified: true,
+  const setSpeedLimit = async (value: number) => {
+    setLocalKBData(data => ({
+      ...data,
+      mouseSpeedLimit: value,
     }));
-    this.props.setKbData({ ...this.state, modified: true, mouseSpeedLimit: parseInt(value, 10) });
+    setKbData({ ...localKBData, mouseSpeedLimit: value });
   };
 
-  renderTooltip(tooltips) {
-    return (
-      <Tooltip id="select-tooltip" className="longtooltip">
-        <TooltipStyle>
-          {tooltips.map((tip, i) => (
-            <React.Fragment key={`Tip-${i}`}>
-              {i % 2 == 1 || !isNaN(tip[0]) || tip[0] == "-" ? (
-                <p className="ttip-p">{tip}</p>
-              ) : (
-                <>
-                  {i == 0 ? "" : <br />}
-                  <h5 className="ttip-h">{tip}</h5>
-                </>
+  const {
+    ledBrightness,
+    ledBrightnessUG,
+    ledIdleTimeLimit,
+    qukeysHoldTimeout,
+    qukeysOverlapThreshold,
+    SuperTimeout,
+    SuperHoldstart,
+    SuperOverlapThreshold,
+    mouseSpeed,
+    mouseAccelSpeed,
+    mouseWheelSpeed,
+    mouseSpeedLimit,
+  } = localKBData;
+
+  const mSpeed = (
+    <Row>
+      <Col xs={2} md={1} className="p-0 text-center align-self-center">
+        <span className="tagsfix">Slow</span>
+      </Col>
+      <Col xs={8} md={10} className="px-2">
+        <Slider min={0} max={127} value={mouseSpeed} onChange={setSpeed} />
+      </Col>
+      <Col xs={2} md={1} className="p-0 text-center align-self-center">
+        <span className="tagsfix">Fast</span>
+      </Col>
+    </Row>
+  );
+
+  const mAccelS = (
+    <Row>
+      <Col xs={2} md={1} className="p-0 text-center align-self-center">
+        <span className="tagsfix">Slow</span>
+      </Col>
+      <Col xs={8} md={10} className="px-2">
+        <Slider min={0} max={254} value={mouseAccelSpeed} onChange={setAccelSpeed} />
+      </Col>
+      <Col xs={2} md={1} className="p-0 text-center align-self-center">
+        <span className="tagsfix">Fast</span>
+      </Col>
+    </Row>
+  );
+
+  const mWheelS = (
+    <Row>
+      <Col xs={2} md={1} className="p-0 text-center align-self-center">
+        <span className="tagsfix">Slow</span>
+      </Col>
+      <Col xs={8} md={10} className="px-2">
+        <Slider min={1} max={15} value={mouseWheelSpeed} onChange={setWheelSpeed} />
+      </Col>
+      <Col xs={2} md={1} className="p-0 text-center align-self-center">
+        <span className="tagsfix">Fast</span>
+      </Col>
+    </Row>
+  );
+
+  const mSpeedL = (
+    <Row>
+      <Col xs={2} md={1} className="p-0 text-center align-self-center">
+        <span className="tagsfix">Slow</span>
+      </Col>
+      <Col xs={8} md={10} className="px-2">
+        <Slider min={0} max={255} value={mouseSpeedLimit} onChange={setSpeedLimit} />
+      </Col>
+      <Col xs={2} md={1} className="p-0 text-center align-self-center">
+        <span className="tagsfix">Fast</span>
+      </Col>
+    </Row>
+  );
+
+  return (
+    <Styles>
+      {connected && (
+        <>
+          <Card className="overflowFix card-preferences mt-4">
+            <CardHeader>
+              <Title text={i18n.keyboardSettings.led.title} headingLevel={3} svgICO={<IconFlashlight />} />
+            </CardHeader>
+            <CardContent>
+              {ledIdleTimeLimit >= 0 && (
+                <Form.Group controlId="idleTimeLimit" className="formGroup">
+                  <Row>
+                    <Col>
+                      <Form.Label>{i18n.keyboardSettings.led.idleTimeLimit}</Form.Label>
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col xs={2} md={1} className="p-0 text-center align-self-center">
+                      <span className="tagsfix">Off</span>
+                    </Col>
+                    <Col xs={8} md={10} className="px-2">
+                      <Slider min={0} max={60} step={1} value={ledIdleTimeLimit / 60} onChange={selectIdleLEDTime} />
+                    </Col>
+                    <Col xs={2} md={1} className="p-0 text-center align-self-center">
+                      <span className="tagsfix">60min</span>
+                    </Col>
+                  </Row>
+                </Form.Group>
               )}
-            </React.Fragment>
-          ))}
-        </TooltipStyle>
-      </Tooltip>
-    );
-  }
-
-  render() {
-    const {
-      keymap,
-      modified,
-      showDefaults,
-      ledBrightness,
-      ledBrightnessUG,
-      ledIdleTimeLimit,
-      qukeysHoldTimeout,
-      qukeysOverlapThreshold,
-      SuperTimeout,
-      // SuperRepeat,
-      // SuperWaitfor,
-      SuperHoldstart,
-      SuperOverlapThreshold,
-      mouseSpeed,
-      // mouseSpeedDelay,
-      mouseAccelSpeed,
-      // mouseAccelDelay,
-      mouseWheelSpeed,
-      // mouseWheelDelay,
-      mouseSpeedLimit,
-    } = this.state;
-
-    const mSpeed = (
-      <Row>
-        <Col xs={2} md={1} className="p-0 text-center align-self-center">
-          <span className="tagsfix">Slow</span>
-        </Col>
-        <Col xs={8} md={10} className="px-2">
-          <Slider min={0} max={127} value={mouseSpeed} onChange={this.setSpeed} />
-        </Col>
-        <Col xs={2} md={1} className="p-0 text-center align-self-center">
-          <span className="tagsfix">Fast</span>
-        </Col>
-      </Row>
-    );
-
-    const mAccelS = (
-      <Row>
-        <Col xs={2} md={1} className="p-0 text-center align-self-center">
-          <span className="tagsfix">Slow</span>
-        </Col>
-        <Col xs={8} md={10} className="px-2">
-          <Slider min={0} max={254} value={mouseAccelSpeed} onChange={this.setAccelSpeed} />
-        </Col>
-        <Col xs={2} md={1} className="p-0 text-center align-self-center">
-          <span className="tagsfix">Fast</span>
-        </Col>
-      </Row>
-    );
-    // const maccelD = (
-    //   <RangeSlider
-    //     min={0}
-    //     max={1000}
-    //     value={mouseAccelDelay}
-    //     className="slider"
-    //     onChange={this.setAccelDelay}
-    //     marks={[{ value: 64, label: i18n.keyboardSettings.defaultLabel }]}
-    //   />
-    // );
-    const mWheelS = (
-      <Row>
-        <Col xs={2} md={1} className="p-0 text-center align-self-center">
-          <span className="tagsfix">Slow</span>
-        </Col>
-        <Col xs={8} md={10} className="px-2">
-          <Slider min={1} max={15} value={mouseWheelSpeed} onChange={this.setWheelSpeed} />
-        </Col>
-        <Col xs={2} md={1} className="p-0 text-center align-self-center">
-          <span className="tagsfix">Fast</span>
-        </Col>
-      </Row>
-    );
-    // const mWheelD = (
-    //   <RangeSlider
-    //     min={0}
-    //     max={1000}
-    //     value={mouseWheelDelay}
-    //     className="slider"
-    //     onChange={this.setWheelDelay}
-    //     marks={[{ value: 200, label: i18n.keyboardSettings.defaultLabel }]}
-    //   />
-    // );
-    const mSpeedL = (
-      <Row>
-        <Col xs={2} md={1} className="p-0 text-center align-self-center">
-          <span className="tagsfix">Slow</span>
-        </Col>
-        <Col xs={8} md={10} className="px-2">
-          <Slider min={0} max={255} value={mouseSpeedLimit} onChange={this.setSpeedLimit} />
-        </Col>
-        <Col xs={2} md={1} className="p-0 text-center align-self-center">
-          <span className="tagsfix">Fast</span>
-        </Col>
-      </Row>
-    );
-
-    return (
-      <Styles>
-        {this.props.connected && (
-          <>
-            <Card className="overflowFix card-preferences mt-4">
-              <Card.Title>
-                <Title text={i18n.keyboardSettings.led.title} headingLevel={3} svgICO={<IconFlashlight />} />
-              </Card.Title>
-              <Card.Body>
-                {ledIdleTimeLimit >= 0 && (
-                  <Form.Group controlId="idleTimeLimit" className="formGroup">
-                    <Row>
-                      <Col>
-                        <Form.Label>{i18n.keyboardSettings.led.idleTimeLimit}</Form.Label>
-                      </Col>
-                    </Row>
-                    <Row>
-                      <Col xs={2} md={1} className="p-0 text-center align-self-center">
-                        <span className="tagsfix">Off</span>
-                      </Col>
-                      <Col xs={8} md={10} className="px-2">
-                        <Slider min={0} max={60} step={1} value={ledIdleTimeLimit / 60} onChange={this.selectIdleLEDTime} />
-                      </Col>
-                      <Col xs={2} md={1} className="p-0 text-center align-self-center">
-                        <span className="tagsfix">60min</span>
-                      </Col>
-                    </Row>
-                  </Form.Group>
-                )}
-                {ledBrightness >= 0 && (
-                  <Form.Group controlId="brightnessControl" className="formGroup">
-                    <Row>
-                      <Col>
-                        <Form.Label>{i18n.keyboardSettings.led.brightness}</Form.Label>
-                      </Col>
-                    </Row>
-                    <Row>
-                      <Col xs={2} md={1} className="p-0 text-center align-self-center">
-                        <span className="tagsfix">None</span>
-                      </Col>
-                      <Col xs={8} md={10} className="px-2">
-                        <Slider
-                          min={0}
-                          max={100}
-                          step={1}
-                          value={Math.round((ledBrightness * 100) / 255)}
-                          onChange={this.setBrightness}
+              {ledBrightness >= 0 && (
+                <Form.Group controlId="brightnessControl" className="formGroup">
+                  <Row>
+                    <Col>
+                      <Form.Label>{i18n.keyboardSettings.led.brightness}</Form.Label>
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col xs={2} md={1} className="p-0 text-center align-self-center">
+                      <span className="tagsfix">None</span>
+                    </Col>
+                    <Col xs={8} md={10} className="px-2">
+                      <Slider
+                        min={0}
+                        max={100}
+                        step={1}
+                        value={Math.round((ledBrightness * 100) / 255)}
+                        onChange={setBrightness}
+                      />
+                    </Col>
+                    <Col xs={2} md={1} className="p-0 text-center align-self-center">
+                      <span className="tagsfix">Max</span>
+                    </Col>
+                  </Row>
+                </Form.Group>
+              )}
+              {ledBrightnessUG >= 0 && (
+                <Form.Group controlId="brightnessUGControl" className="formGroup">
+                  <Row>
+                    <Col>
+                      <Form.Label>{i18n.keyboardSettings.led.brightnessUG}</Form.Label>
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col xs={2} md={1} className="p-0 text-center align-self-center">
+                      <span className="tagsfix">None</span>
+                    </Col>
+                    <Col xs={8} md={10} className="px-2">
+                      <Slider
+                        min={0}
+                        max={100}
+                        step={1}
+                        value={Math.round((ledBrightnessUG * 100) / 255)}
+                        onChange={setBrightnessUG}
+                      />
+                    </Col>
+                    <Col xs={2} md={1} className="p-0 text-center align-self-center">
+                      <span className="tagsfix">Max</span>
+                    </Col>
+                  </Row>
+                </Form.Group>
+              )}
+            </CardContent>
+          </Card>
+          <Card className="overflowFix card-preferences mt-4">
+            <CardHeader>
+              <Title text={i18n.keyboardSettings.superkeys.title} headingLevel={3} svgICO={<IconTypo />} />
+            </CardHeader>
+            <CardContent>
+              {qukeysOverlapThreshold >= 0 && (
+                <Form.Group controlId="QukeysOverlap" className="formGroup">
+                  <Row>
+                    <Col>
+                      <Form.Label>
+                        <Title
+                          text={i18n.keyboardSettings.qukeys.overlapThreshold}
+                          headingLevel={6}
+                          tooltip={`<h5 class="text-left">${i18n.keyboardSettings.qukeys.overlapThresholdTip1}</h5><ul><li class="text-left">${i18n.keyboardSettings.qukeys.overlapThresholdTip2}</li><li class="text-left">${i18n.keyboardSettings.qukeys.overlapThresholdTip3}</li></ul>`}
+                          tooltipPlacement="bottom"
+                          tooltipSize="wide"
                         />
-                      </Col>
-                      <Col xs={2} md={1} className="p-0 text-center align-self-center">
-                        <span className="tagsfix">Max</span>
-                      </Col>
-                    </Row>
-                  </Form.Group>
-                )}
-                {ledBrightnessUG >= 0 && (
-                  <Form.Group controlId="brightnessUGControl" className="formGroup">
-                    <Row>
-                      <Col>
-                        <Form.Label>{i18n.keyboardSettings.led.brightnessUG}</Form.Label>
-                      </Col>
-                    </Row>
-                    <Row>
-                      <Col xs={2} md={1} className="p-0 text-center align-self-center">
-                        <span className="tagsfix">None</span>
-                      </Col>
-                      <Col xs={8} md={10} className="px-2">
-                        <Slider
-                          min={0}
-                          max={100}
-                          step={1}
-                          value={Math.round((ledBrightnessUG * 100) / 255)}
-                          onChange={this.setBrightnessUG}
+                      </Form.Label>
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col xs={2} md={1} className="p-0 text-center align-self-center">
+                      <span className="tagsfix">Less</span>
+                    </Col>
+                    <Col xs={8} md={10} className="px-2">
+                      <Slider min={0} max={100} value={qukeysOverlapThreshold} onChange={setOverlapThreshold} />
+                    </Col>
+                    <Col xs={2} md={1} className="p-0 text-center align-self-center">
+                      <span className="tagsfix">More</span>
+                    </Col>
+                  </Row>
+                </Form.Group>
+              )}
+              {qukeysHoldTimeout >= 0 && (
+                <Form.Group controlId="QukeysOverlap" className="formGroup">
+                  <Row>
+                    <Col>
+                      <Form.Label>
+                        <Title
+                          text={i18n.keyboardSettings.qukeys.holdTimeout}
+                          headingLevel={6}
+                          tooltip={`<h5 class="text-left">${i18n.keyboardSettings.qukeys.holdTimeoutTip1}</h5><ul><li class="text-left">${i18n.keyboardSettings.qukeys.holdTimeoutTip2}</li><li class="text-left">${i18n.keyboardSettings.qukeys.holdTimeoutTip3}</li></ul>`}
+                          tooltipPlacement="bottom"
+                          tooltipSize="wide"
                         />
-                      </Col>
-                      <Col xs={2} md={1} className="p-0 text-center align-self-center">
-                        <span className="tagsfix">Max</span>
-                      </Col>
-                    </Row>
-                  </Form.Group>
-                )}
-              </Card.Body>
-            </Card>
-            <Card className="overflowFix card-preferences mt-4">
-              <Card.Title>
-                <Title text={i18n.keyboardSettings.superkeys.title} headingLevel={3} svgICO={<IconTypo />} />
-              </Card.Title>
-              <Card.Body>
-                {qukeysOverlapThreshold >= 0 && (
-                  <Form.Group controlId="QukeysOverlap" className="formGroup">
-                    <Row>
-                      <Col>
-                        <Form.Label>
-                          <Title
-                            text={i18n.keyboardSettings.qukeys.overlapThreshold}
-                            headingLevel={6}
-                            tooltip={`<h5 class="text-left">${i18n.keyboardSettings.qukeys.overlapThresholdTip1}</h5><ul><li class="text-left">${i18n.keyboardSettings.qukeys.overlapThresholdTip2}</li><li class="text-left">${i18n.keyboardSettings.qukeys.overlapThresholdTip3}</li></ul>`}
-                            tooltipPlacement="bottom"
-                            tooltipSize="wide"
-                          />
-                        </Form.Label>
-                      </Col>
-                    </Row>
-                    <Row>
-                      <Col xs={2} md={1} className="p-0 text-center align-self-center">
-                        <span className="tagsfix">Less</span>
-                      </Col>
-                      <Col xs={8} md={10} className="px-2">
-                        <Slider min={0} max={100} value={qukeysOverlapThreshold} onChange={this.setOverlapThreshold} />
-                      </Col>
-                      <Col xs={2} md={1} className="p-0 text-center align-self-center">
-                        <span className="tagsfix">More</span>
-                      </Col>
-                    </Row>
-                  </Form.Group>
-                )}
-                {qukeysHoldTimeout >= 0 && (
-                  <Form.Group controlId="QukeysOverlap" className="formGroup">
-                    <Row>
-                      <Col>
-                        <Form.Label>
-                          <Title
-                            text={i18n.keyboardSettings.qukeys.holdTimeout}
-                            headingLevel={6}
-                            tooltip={`<h5 class="text-left">${i18n.keyboardSettings.qukeys.holdTimeoutTip1}</h5><ul><li class="text-left">${i18n.keyboardSettings.qukeys.holdTimeoutTip2}</li><li class="text-left">${i18n.keyboardSettings.qukeys.holdTimeoutTip3}</li></ul>`}
-                            tooltipPlacement="bottom"
-                            tooltipSize="wide"
-                          />
-                        </Form.Label>
-                      </Col>
-                    </Row>
-                    <Row>
-                      <Col xs={2} md={1} className="p-0 text-center align-self-center">
-                        <span className="tagsfix">Less</span>
-                      </Col>
-                      <Col xs={8} md={10} className="px-2">
-                        <Slider min={1} max={255} value={qukeysHoldTimeout} onChange={this.setHoldTimeout} />
-                      </Col>
-                      <Col xs={2} md={1} className="p-0 text-center align-self-center">
-                        <span className="tagsfix">More</span>
-                      </Col>
-                    </Row>
-                  </Form.Group>
-                )}
-                {SuperOverlapThreshold >= 0 && (
-                  <Form.Group controlId="SuperOverlap" className="formGroup">
-                    <Row>
-                      <Col>
-                        <Form.Label>
-                          <Title
-                            text={i18n.keyboardSettings.superkeys.overlap}
-                            headingLevel={6}
-                            tooltip={`<h5 class="text-left">${i18n.keyboardSettings.superkeys.overlapTip1}</h5><ul><li class="text-left">${i18n.keyboardSettings.superkeys.overlapTip2}</li><li class="text-left">${i18n.keyboardSettings.superkeys.overlapTip3}</li></ul>`}
-                            tooltipPlacement="bottom"
-                            tooltipSize="wide"
-                          />
-                        </Form.Label>
-                      </Col>
-                    </Row>
-                    <Row>
-                      <Col xs={2} md={1} className="p-0 text-center align-self-center">
-                        <span className="tagsfix">Less</span>
-                      </Col>
-                      <Col xs={8} md={10} className="px-2">
-                        <Slider min={0} max={80} value={SuperOverlapThreshold} onChange={this.setSuperOverlapThreshold} />
-                      </Col>
-                      <Col xs={2} md={1} className="p-0 text-center align-self-center">
-                        <span className="tagsfix">More</span>
-                      </Col>
-                    </Row>
-                  </Form.Group>
-                )}
-                {SuperTimeout >= 0 && (
-                  <Form.Group controlId="superTimeout" className="formGroup">
-                    <Row>
-                      <Col>
-                        <Form.Label>
-                          <Title
-                            text={i18n.keyboardSettings.superkeys.timeout}
-                            headingLevel={6}
-                            tooltip={`<h5 class="text-left">${i18n.keyboardSettings.superkeys.timeoutTip1}</h5><ul><li class="text-left">${i18n.keyboardSettings.superkeys.timeoutTip2}</li><li class="text-left">${i18n.keyboardSettings.superkeys.timeoutTip3}</li></ul>`}
-                            tooltipPlacement="bottom"
-                            tooltipSize="wide"
-                          />
-                        </Form.Label>
-                      </Col>
-                    </Row>
-                    <Row>
-                      <Col xs={2} md={1} className="p-0 text-center align-self-center">
-                        <span className="tagsfix">Less</span>
-                      </Col>
-                      <Col xs={8} md={10} className="px-2">
-                        <Slider min={1} max={500} value={SuperTimeout} onChange={this.setSuperTimeout} />
-                      </Col>
-                      <Col xs={2} md={1} className="p-0 text-center align-self-center">
-                        <span className="tagsfix">More</span>
-                      </Col>
-                    </Row>
-                  </Form.Group>
-                )}
-                {SuperHoldstart >= 0 && (
-                  <Form.Group controlId="superHoldstart" className="formGroup">
-                    <Row>
-                      <Col>
-                        <Form.Label>
-                          <Title
-                            text={i18n.keyboardSettings.superkeys.holdstart}
-                            headingLevel={6}
-                            tooltip={`<h5 class="text-left">${i18n.keyboardSettings.superkeys.chordingTip1}</h5><ul><li class="text-left">${i18n.keyboardSettings.superkeys.chordingTip2}</li><li class="text-left">${i18n.keyboardSettings.superkeys.chordingTip3}</li></ul>`}
-                            tooltipPlacement="bottom"
-                            tooltipSize="wide"
-                          />
-                        </Form.Label>
-                      </Col>
-                    </Row>
-                    <Row>
-                      <Col xs={2} md={1} className="p-0 text-center align-self-center">
-                        <span className="tagsfix">Less</span>
-                      </Col>
-                      <Col xs={8} md={10} className="px-2">
-                        <Slider min={120} max={500} value={SuperHoldstart} onChange={this.setSuperHoldstart} />
-                      </Col>
-                      <Col xs={2} md={1} className="p-0 text-center align-self-center">
-                        <span className="tagsfix">More</span>
-                      </Col>
-                    </Row>
-                  </Form.Group>
-                )}
-              </Card.Body>
-            </Card>
-            <Card className="overflowFix card-preferences mt-4">
-              <Card.Title>
-                <Title text={i18n.keyboardSettings.mouse.title} headingLevel={3} svgICO={<IconMouse />} />
-              </Card.Title>
-              <Card.Body className="pb-0">
-                {mouseSpeed >= 0 && (
-                  <Form.Group controlId="mouseSpeed" className="formGroup">
-                    <Row>
-                      <Col>
-                        <Form.Label>{i18n.keyboardSettings.mouse.speed}</Form.Label>
-                      </Col>
-                    </Row>
-                    {mSpeed}
-                  </Form.Group>
-                )}
-                {mouseAccelSpeed >= 0 && (
-                  <Form.Group controlId="mousemAccelS" className="formGroup">
-                    <Row>
-                      <Col>
-                        <Form.Label>{i18n.keyboardSettings.mouse.accelSpeed}</Form.Label>
-                      </Col>
-                    </Row>
-                    {mAccelS}
-                  </Form.Group>
-                )}
-                {mouseSpeedLimit >= 0 && (
-                  <Form.Group controlId="mouseSpeedL" className="formGroup">
-                    <Row>
-                      <Col>
-                        <Form.Label>{i18n.keyboardSettings.mouse.speedLimit}</Form.Label>
-                      </Col>
-                    </Row>
-                    {mSpeedL}
-                  </Form.Group>
-                )}
-                {mouseWheelSpeed >= 0 && (
-                  <Form.Group controlId="mousemWheelS" className="formGroup">
-                    <Row>
-                      <Col>
-                        <Form.Label>{i18n.keyboardSettings.mouse.wheelSpeed}</Form.Label>
-                      </Col>
-                    </Row>
-                    {mWheelS}
-                  </Form.Group>
-                )}
-              </Card.Body>
-            </Card>
-          </>
-        )}
-      </Styles>
-    );
-  }
+                      </Form.Label>
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col xs={2} md={1} className="p-0 text-center align-self-center">
+                      <span className="tagsfix">Less</span>
+                    </Col>
+                    <Col xs={8} md={10} className="px-2">
+                      <Slider min={1} max={255} value={qukeysHoldTimeout} onChange={setHoldTimeout} />
+                    </Col>
+                    <Col xs={2} md={1} className="p-0 text-center align-self-center">
+                      <span className="tagsfix">More</span>
+                    </Col>
+                  </Row>
+                </Form.Group>
+              )}
+              {SuperOverlapThreshold >= 0 && (
+                <Form.Group controlId="SuperOverlap" className="formGroup">
+                  <Row>
+                    <Col>
+                      <Form.Label>
+                        <Title
+                          text={i18n.keyboardSettings.superkeys.overlap}
+                          headingLevel={6}
+                          tooltip={`<h5 class="text-left">${i18n.keyboardSettings.superkeys.overlapTip1}</h5><ul><li class="text-left">${i18n.keyboardSettings.superkeys.overlapTip2}</li><li class="text-left">${i18n.keyboardSettings.superkeys.overlapTip3}</li></ul>`}
+                          tooltipPlacement="bottom"
+                          tooltipSize="wide"
+                        />
+                      </Form.Label>
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col xs={2} md={1} className="p-0 text-center align-self-center">
+                      <span className="tagsfix">Less</span>
+                    </Col>
+                    <Col xs={8} md={10} className="px-2">
+                      <Slider min={0} max={80} value={SuperOverlapThreshold} onChange={setSuperOverlapThreshold} />
+                    </Col>
+                    <Col xs={2} md={1} className="p-0 text-center align-self-center">
+                      <span className="tagsfix">More</span>
+                    </Col>
+                  </Row>
+                </Form.Group>
+              )}
+              {SuperTimeout >= 0 && (
+                <Form.Group controlId="superTimeout" className="formGroup">
+                  <Row>
+                    <Col>
+                      <Form.Label>
+                        <Title
+                          text={i18n.keyboardSettings.superkeys.timeout}
+                          headingLevel={6}
+                          tooltip={`<h5 class="text-left">${i18n.keyboardSettings.superkeys.timeoutTip1}</h5><ul><li class="text-left">${i18n.keyboardSettings.superkeys.timeoutTip2}</li><li class="text-left">${i18n.keyboardSettings.superkeys.timeoutTip3}</li></ul>`}
+                          tooltipPlacement="bottom"
+                          tooltipSize="wide"
+                        />
+                      </Form.Label>
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col xs={2} md={1} className="p-0 text-center align-self-center">
+                      <span className="tagsfix">Less</span>
+                    </Col>
+                    <Col xs={8} md={10} className="px-2">
+                      <Slider min={1} max={500} value={SuperTimeout} onChange={setSuperTimeout} />
+                    </Col>
+                    <Col xs={2} md={1} className="p-0 text-center align-self-center">
+                      <span className="tagsfix">More</span>
+                    </Col>
+                  </Row>
+                </Form.Group>
+              )}
+              {SuperHoldstart >= 0 && (
+                <Form.Group controlId="superHoldstart" className="formGroup">
+                  <Row>
+                    <Col>
+                      <Form.Label>
+                        <Title
+                          text={i18n.keyboardSettings.superkeys.holdstart}
+                          headingLevel={6}
+                          tooltip={`<h5 class="text-left">${i18n.keyboardSettings.superkeys.chordingTip1}</h5><ul><li class="text-left">${i18n.keyboardSettings.superkeys.chordingTip2}</li><li class="text-left">${i18n.keyboardSettings.superkeys.chordingTip3}</li></ul>`}
+                          tooltipPlacement="bottom"
+                          tooltipSize="wide"
+                        />
+                      </Form.Label>
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col xs={2} md={1} className="p-0 text-center align-self-center">
+                      <span className="tagsfix">Less</span>
+                    </Col>
+                    <Col xs={8} md={10} className="px-2">
+                      <Slider min={120} max={500} value={SuperHoldstart} onChange={setSuperHoldstart} />
+                    </Col>
+                    <Col xs={2} md={1} className="p-0 text-center align-self-center">
+                      <span className="tagsfix">More</span>
+                    </Col>
+                  </Row>
+                </Form.Group>
+              )}
+            </CardContent>
+          </Card>
+          <Card className="overflowFix card-preferences mt-4">
+            <CardHeader>
+              <Title text={i18n.keyboardSettings.mouse.title} headingLevel={3} svgICO={<IconMouse />} />
+            </CardHeader>
+            <CardContent className="pb-0">
+              {mouseSpeed >= 0 && (
+                <Form.Group controlId="mouseSpeed" className="formGroup">
+                  <Row>
+                    <Col>
+                      <Form.Label>{i18n.keyboardSettings.mouse.speed}</Form.Label>
+                    </Col>
+                  </Row>
+                  {mSpeed}
+                </Form.Group>
+              )}
+              {mouseAccelSpeed >= 0 && (
+                <Form.Group controlId="mousemAccelS" className="formGroup">
+                  <Row>
+                    <Col>
+                      <Form.Label>{i18n.keyboardSettings.mouse.accelSpeed}</Form.Label>
+                    </Col>
+                  </Row>
+                  {mAccelS}
+                </Form.Group>
+              )}
+              {mouseSpeedLimit >= 0 && (
+                <Form.Group controlId="mouseSpeedL" className="formGroup">
+                  <Row>
+                    <Col>
+                      <Form.Label>{i18n.keyboardSettings.mouse.speedLimit}</Form.Label>
+                    </Col>
+                  </Row>
+                  {mSpeedL}
+                </Form.Group>
+              )}
+              {mouseWheelSpeed >= 0 && (
+                <Form.Group controlId="mousemWheelS" className="formGroup">
+                  <Row>
+                    <Col>
+                      <Form.Label>{i18n.keyboardSettings.mouse.wheelSpeed}</Form.Label>
+                    </Col>
+                  </Row>
+                  {mWheelS}
+                </Form.Group>
+              )}
+            </CardContent>
+          </Card>
+        </>
+      )}
+    </Styles>
+  );
 }
 
 export { KeyboardSettings };

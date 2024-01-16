@@ -1,20 +1,33 @@
+/* Bazecor
+ * Copyright (C) 2024  DygmaLab SE.
+ *
+ * This program is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation, version 3.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 import React from "react";
-
-// Bootstrap components
 import Styled from "styled-components";
-import Card from "react-bootstrap/Card";
 
-// Import Types for wireless
-import { BatterySettingsProps } from "../../types/wireless";
-
-import i18n from "../../i18n";
+// Import Types
+import { BatterySettingsProps } from "@Types/wireless";
 
 // Custom components
-import Title from "../../component/Title";
-import { BatteryStatusSide, SavingModeIndicator } from "../../component/Battery";
+import { Card, CardContent, CardHeader } from "@Renderer/components/ui/card";
+import Title from "@Renderer/component/Title";
+import { BatteryStatusSide, SavingModeIndicator } from "@Renderer/component/Battery";
 
 // Assets
-import { IconBattery } from "../../component/Icon";
+import { IconBattery } from "@Renderer/component/Icon";
+import i18n from "@Renderer/i18n";
 
 const Styles = Styled.div`
 padding-top: 24px;
@@ -35,10 +48,10 @@ function BatterySettings(props: BatterySettingsProps) {
   return (
     <Styles>
       <Card className="overflowFix card-preferences">
-        <Card.Title>
+        <CardHeader>
           <Title text={i18n.wireless.batteryPreferences.battery} headingLevel={3} svgICO={<IconBattery />} />
-        </Card.Title>
-        <Card.Body className="py-0">
+        </CardHeader>
+        <CardContent className="py-0">
           <div className="battery-defy--indicator">
             <BatteryStatusSide
               side="left"
@@ -56,7 +69,7 @@ function BatterySettings(props: BatterySettingsProps) {
             />
             <SavingModeIndicator isSavingMode={wireless.battery ? wireless.battery.savingMode : false} />
           </div>
-        </Card.Body>
+        </CardContent>
       </Card>
     </Styles>
   );

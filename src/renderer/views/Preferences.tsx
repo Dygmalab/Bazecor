@@ -53,6 +53,7 @@ import Version from "@Renderer/component/Version/Version";
 import Store from "@Renderer/utils/Store";
 import { useDevice } from "@Renderer/DeviceContext";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@Renderer/components/ui/tabs";
+import KBDataPref from "@Renderer/types/preferences";
 import Backup from "../../api/backup";
 
 const store = Store.getStore();
@@ -77,7 +78,7 @@ const Preferences = (props: PreferencesProps) => {
     keymap: {
       custom: [],
       default: [],
-      onlyCustom: "1",
+      onlyCustom: 1,
     },
     ledBrightness: 255,
     ledBrightnessUG: 255,
@@ -105,30 +106,33 @@ const Preferences = (props: PreferencesProps) => {
     advanced: false,
     verboseFocus: false,
     darkMode: "system",
-    neurons: store.get("neurons") as any,
+    neurons: store.get("neurons") as unknown,
     selectedNeuron: 0,
     selectNeuron: 0,
     neuronID: "",
-    kbData,
     modified: inContext,
   });
   const [activeTab, setActiveTab] = useState(connected ? "Keyboard" : "Application");
 
   const openDevTool = useCallback(() => {
     setPreferencesState({ ...preferencesState, devTools: true });
-  }, []);
+  }, [preferencesState]);
 
   const closeDevTool = useCallback(() => {
     setPreferencesState({ ...preferencesState, devTools: false });
-  }, []);
+  }, [preferencesState]);
 
-  const getNeuronData = async () => {
-    const neuronData: any = {
+  const getNeuronData = useCallback(async () => {
+    const neuronData: {
+      neuronID: string;
+      kbData: KBDataPref;
+    } = {
       neuronID: "",
       kbData: {
         keymap: {},
       },
     };
+
     if (state.currentDevice) {
       await state.currentDevice.command("hardware.chip_id").then((neuronID: string) => {
         const neuronIDParsed = neuronID.replace(/\s/g, "");
@@ -141,7 +145,7 @@ const Preferences = (props: PreferencesProps) => {
       });
 
       await state.currentDevice.command("keymap.onlyCustom").then((onlyCustom: string) => {
-        neuronData.kbData.keymap.onlyCustom = onlyCustom;
+        neuronData.kbData.keymap.onlyCustom = parseInt(onlyCustom, 10);
       });
       await state.currentDevice.command("led.brightness").then((brightness: string) => {
         const brightnessParsed = brightness ? parseInt(brightness, 10) : -1;
@@ -182,6 +186,11 @@ const Preferences = (props: PreferencesProps) => {
         neuronData.kbData.SuperHoldstart = holdstartParsed;
       });
 
+      await state.currentDevice.command("superkeys.overlap").then((overlap: string) => {
+        const overlapThreshold = overlap ? parseInt(overlap, 10) : 80;
+        neuronData.kbData.SuperOverlapThreshold = overlapThreshold;
+      });
+
       // MOUSE variables commands
       await state.currentDevice.command("mouse.speed").then((speed: string) => {
         const speedParsed = speed ? parseInt(speed, 10) : 1;
@@ -209,13 +218,9 @@ const Preferences = (props: PreferencesProps) => {
       setPreferencesState(prevPreferencesState => ({
         ...prevPreferencesState,
         neuronID: neuronData.neuronID,
-        kbData: {
-          ...prevPreferencesState.kbData,
-          ...neuronData.kbData,
-        },
       }));
     }
-  };
+  }, [state.currentDevice]);
 
   useEffect(() => {
     const init = async () => {
@@ -251,12 +256,11 @@ const Preferences = (props: PreferencesProps) => {
       }
     };
     fetchNewData();
-  }, [isSaved]);
+  }, [getNeuronData, isSaved]);
 
   const destroyContext = async () => {
     setKbData(prevKbData => ({
       ...prevKbData,
-      modified: false,
     }));
     setPreferencesState(prevState => ({
       ...prevState,
@@ -280,6 +284,7 @@ const Preferences = (props: PreferencesProps) => {
       SuperRepeat,
       SuperWaitfor,
       SuperHoldstart,
+      SuperOverlapThreshold,
       mouseSpeed,
       mouseSpeedDelay,
       mouseAccelSpeed,
@@ -304,6 +309,7 @@ const Preferences = (props: PreferencesProps) => {
       await state.currentDevice.command("superkeys.repeat", SuperRepeat);
       await state.currentDevice.command("superkeys.waitfor", SuperWaitfor);
       await state.currentDevice.command("superkeys.holdstart", SuperHoldstart);
+      await state.currentDevice.command("superkeys.overlap", SuperOverlapThreshold);
       // MOUSE KEYS
       await state.currentDevice.command("mouse.speed", mouseSpeed);
       await state.currentDevice.command("mouse.speedDelay", mouseSpeedDelay);
@@ -353,19 +359,13 @@ const Preferences = (props: PreferencesProps) => {
     }
   };
 
-  const setLanguage = async (event: any) => {
-    i18n.setLanguage(event.target.value);
-    // await this.setState({}); // what is the meaning of this?
-    await store.set("settings.language", event.target.value);
-  };
-
-  const setKbDataHandler = (newKbData: any) => {
-    if (kbData.modified === false && newKbData.modified === true) {
+  const setKbDataHandler = (newKbData: KBDataPref) => {
+    if (preferencesState.modified === false) {
       startContext();
       setKbData(newKbData);
       setPreferencesState({
         ...preferencesState,
-        modified: newKbData.modified,
+        modified: true,
       });
     } else {
       setKbData(newKbData);
@@ -426,28 +426,12 @@ const Preferences = (props: PreferencesProps) => {
     }));
   };
 
-  const toggleOnlyCustom = (event: any) => {
-    setKbData(prevKbData => ({
-      ...prevKbData,
-      keymap: {
-        ...prevKbData.keymap,
-        onlyCustom: event.target.checked,
-      },
-      modified: true,
-    }));
-    setPreferencesState(prevState => ({
-      ...prevState,
-      modified: true,
-    }));
-    startContext();
-  };
-
   const onChangeOnlyCustomLayers = checked => {
     setKbData(prevKbData => ({
       ...prevKbData,
       keymap: {
         ...prevKbData.keymap,
-        onlyCustom: checked,
+        onlyCustom: checked ? 1 : 0,
       },
       modified: true,
     }));
@@ -507,8 +491,7 @@ const Preferences = (props: PreferencesProps) => {
       ? state.currentDevice.serialNumber.slice(0, -7).toLowerCase()
       : state.currentDevice.serialNumber;
 
-  console.log("current Neuron: ", state.currentDevice, ChipID);
-  console.log("Connected: ", connected);
+  // console.log("current Neuron: ", state.currentDevice, ChipID, "connected?: ", connected);
 
   const handleTabChange = value => {
     setActiveTab(value);

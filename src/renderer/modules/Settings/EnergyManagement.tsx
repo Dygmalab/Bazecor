@@ -1,12 +1,27 @@
-import React from "react";
+/* Bazecor
+ * Copyright (C) 2024  DygmaLab SE.
+ *
+ * This program is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation, version 3.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
-// Bootstrap components
+import React from "react";
 import Styled from "styled-components";
-import Card from "react-bootstrap/Card";
 
 // Modules
 import { AdvancedBatterySettings, SavingMode } from "@Renderer/modules/Battery";
-// Internal components
+
+// Custom components
+import { Card, CardContent, CardHeader } from "@Renderer/components/ui/card";
 import Title from "@Renderer/component/Title";
 import { IconThunder } from "@Renderer/component/Icon";
 import i18n from "@Renderer/i18n";
@@ -49,13 +64,13 @@ function EnergyManagement(props: EnergyManagementProps) {
   return (
     <Styles>
       <Card className="overflowFix card-preferences">
-        <Card.Title>
+        <CardHeader>
           <Title text={i18n.wireless.energyManagement.title} headingLevel={3} svgICO={<IconThunder />} />
-        </Card.Title>
-        <Card.Body className="py-0">
+        </CardHeader>
+        <CardContent className="py-0">
           <AdvancedBatterySettings wireless={wireless} changeWireless={changeWireless} />
           <SavingMode wireless={wireless} changeWireless={changeWireless} />
-        </Card.Body>
+        </CardContent>
       </Card>
     </Styles>
   );

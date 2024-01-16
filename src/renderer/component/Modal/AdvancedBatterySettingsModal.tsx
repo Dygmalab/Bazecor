@@ -1,19 +1,39 @@
+/* Bazecor
+ * Copyright (C) 2024  DygmaLab SE.
+ *
+ * This program is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation, version 3.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 import React from "react";
 
+// Import Types
+import { AdvancedEnergyManagementProps } from "@Renderer/types/wireless";
+
+// External components
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Modal from "react-bootstrap/Modal";
-import Card from "react-bootstrap/Card";
-
 import Slider from "@appigram/react-rangeslider";
-import { Switch } from "@Renderer/components/ui/switch";
 
+// Custom components
+import { Card, CardContent, CardHeader } from "@Renderer/components/ui/card";
+import { Switch } from "@Renderer/components/ui/switch";
 import Title from "@Renderer/component/Title";
 import { Badge } from "@Renderer/component/Badge";
 import { RegularButton } from "@Renderer/component/Button";
 import { ToggleButtons } from "@Renderer/component/ToggleButtons";
-import { AdvancedEnergyManagementProps } from "@Renderer/types/wireless";
 
+// Assets
 import i18n from "@Renderer/i18n";
 
 function AdvancedBatterySettingsModal(props: AdvancedEnergyManagementProps) {
@@ -55,7 +75,7 @@ function AdvancedBatterySettingsModal(props: AdvancedEnergyManagementProps) {
   };
 
   const setTrueSleep = async (checked: boolean) => {
-    console.log("clicked true sleep");
+    // console.log("clicked true sleep");
     const newWireless = { ...wireless };
     newWireless.true_sleep = checked;
     changeWireless(newWireless);
@@ -68,7 +88,7 @@ function AdvancedBatterySettingsModal(props: AdvancedEnergyManagementProps) {
   };
 
   const setFade = async (checked: boolean) => {
-    console.log("clicked fade");
+    // console.log("clicked fade");
     const newWireless = { ...wireless };
     newWireless.fade = checked ? 1 : 0;
     changeWireless(newWireless);
@@ -94,11 +114,11 @@ function AdvancedBatterySettingsModal(props: AdvancedEnergyManagementProps) {
       </Modal.Header>
       <Modal.Body>
         <Card className="overflowFix card-preferences card-preferences--battery">
-          <Card.Title>
+          <CardHeader>
             <Title text={i18n.wireless.energyManagement.settings.maximumLED} headingLevel={4} />
             <Badge content={i18n.wireless.energyManagement.settings.highBatteryImpact} variation="danger-low" size="sm" />
-          </Card.Title>
-          <Card.Body>
+          </CardHeader>
+          <CardContent>
             <Row className="card-preferences--option justify-between">
               <Col lg={5}>
                 <Title text={i18n.wireless.energyManagement.settings.maximumLEDBackLight} headingLevel={6} />
@@ -147,14 +167,14 @@ function AdvancedBatterySettingsModal(props: AdvancedEnergyManagementProps) {
                 </div>
               </Col>
             </Row>
-          </Card.Body>
+          </CardContent>
         </Card>
         <Card className="overflowFix card-preferences card-preferences--battery mt-4">
-          <Card.Title>
+          <CardHeader>
             <Title text={i18n.wireless.energyManagement.settings.trueSleepEnabling} headingLevel={4} />
             <Badge content={i18n.wireless.energyManagement.settings.mediumBatteryImpact} variation="warning" size="sm" />
-          </Card.Title>
-          <Card.Body>
+          </CardHeader>
+          <CardContent>
             <Row className="card-preferences--option justify-between">
               <Col sm={8} lg={5}>
                 <Title text={i18n.wireless.energyManagement.settings.trueSleepEnablingDesc} headingLevel={6} />
@@ -178,28 +198,28 @@ function AdvancedBatterySettingsModal(props: AdvancedEnergyManagementProps) {
                 </div>
               </Col>
             </Row>
-          </Card.Body>
+          </CardContent>
         </Card>
         <Card className="overflowFix card-preferences card-preferences--battery mt-4">
-          <Card.Title>
+          <CardHeader>
             <Title text={i18n.wireless.energyManagement.settings.highlightLayerChanging} headingLevel={4} />
             <Badge content={i18n.wireless.energyManagement.settings.lowBatteryImpact} variation="subtle" size="sm" />
-          </Card.Title>
-          <Card.Body>
+          </CardHeader>
+          <CardContent>
             <Row className="card-preferences--option justify-between">
               <Col sm={8} lg={5}>
                 <Title text={i18n.wireless.energyManagement.settings.highlightLayerChangingDesc} headingLevel={6} />
               </Col>
               <Switch id="FadeSwitch" defaultChecked={false} checked={wireless.fade === 1} onCheckedChange={setFade} />
             </Row>
-          </Card.Body>
+          </CardContent>
         </Card>
         <Card className="overflowFix card-preferences card-preferences--battery mt-4">
-          <Card.Title>
+          <CardHeader>
             <Title text={i18n.wireless.energyManagement.settings.RFSettingTitle} headingLevel={4} />
             <Badge content={i18n.wireless.energyManagement.settings.lowBatteryImpact} variation="subtle" size="sm" />
-          </Card.Title>
-          <Card.Body>
+          </CardHeader>
+          <CardContent>
             <Row className="card-preferences--option justify-between">
               <Col lg={5}>
                 <Title
@@ -216,7 +236,7 @@ function AdvancedBatterySettingsModal(props: AdvancedEnergyManagementProps) {
                 size="sm"
               />
             </Row>
-          </Card.Body>
+          </CardContent>
         </Card>
       </Modal.Body>
       <Modal.Footer>
