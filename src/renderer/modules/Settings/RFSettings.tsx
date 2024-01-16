@@ -1,11 +1,9 @@
 import React from "react";
 import i18n from "@Renderer/i18n";
-
-// Bootstrap components
 import Styled from "styled-components";
-import Card from "react-bootstrap/Card";
 
 // Custom components
+import { Card, CardContent, CardHeader } from "@Renderer/components/ui/card";
 import Title from "@Renderer/component/Title";
 import { RegularButton } from "@Renderer/component/Button";
 
@@ -29,7 +27,7 @@ padding-top: 24px;
       font-weight: 401;
       color: ${({ theme }) => theme.styles.batterySettings.descriptionHighlightColor};
     }
-  } 
+  }
 }
 .button.outline {
   margin-top: 4px;
@@ -41,10 +39,10 @@ function RFSettings(props: RFSettingsProps) {
   return (
     <Styles>
       <Card className="overflowFix card-preferences">
-        <Card.Title>
+        <CardHeader>
           <Title text={i18n.wireless.RFPreferences.RFSettings} headingLevel={3} svgICO={<IconSignal />} />
-        </Card.Title>
-        <Card.Body className="py-0">
+        </CardHeader>
+        <CardContent className="py-0">
           <Title text={i18n.wireless.RFPreferences.repairChannel} headingLevel={4} />
           <RegularButton
             buttonText={i18n.wireless.RFPreferences.reconnectSides}
@@ -55,7 +53,7 @@ function RFSettings(props: RFSettingsProps) {
           <div className="RFdescription">
             <p>{i18n.wireless.RFPreferences.repairChannelDescription}</p>
           </div>
-        </Card.Body>
+        </CardContent>
       </Card>
     </Styles>
   );
