@@ -17,10 +17,10 @@ import { Neuron } from "@Types/neurons";
 import { IconNeuronManager } from "@Renderer/component/Icon";
 
 interface NeuronSettingsProps {
-  neurons: [Neuron];
+  neurons: Neuron[];
   selectedNeuron: number;
-  selectNeuron: () => void;
-  updateNeuronName: () => void;
+  selectNeuron: (value: string) => void;
+  updateNeuronName: (data: string) => void;
   deleteNeuron: () => void;
 }
 

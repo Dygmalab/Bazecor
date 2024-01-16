@@ -6,7 +6,7 @@ import { IconCloseXs } from "../Icon";
 interface NameModalProps {
   modalTitle: string;
   show: boolean;
-  name: string;
+  name: string | boolean;
   toggleShow: () => void;
   handleSave: (name: string) => void;
   labelInput: string;
@@ -59,7 +59,7 @@ const NameModal = ({ modalTitle, show, toggleShow, name, handleSave, labelInput 
                   className="flex flex-col"
                   onSubmit={e => {
                     e.preventDefault();
-                    handleSave(internalName);
+                    handleSave(typeof internalName === "string" ? internalName : "");
                   }}
                 >
                   <label htmlFor="changeName" className="font-xs tracking-tight font-semibold text-gray-400 dark:text-gray-25">
@@ -69,7 +69,7 @@ const NameModal = ({ modalTitle, show, toggleShow, name, handleSave, labelInput 
                     id="changeName"
                     type="text"
                     ref={inputRef}
-                    value={internalName}
+                    value={typeof internalName === "string" ? internalName : ""}
                     onChange={event => setInternalName(event.target.value)}
                     className="form-input form-input-xl"
                   />
@@ -79,7 +79,11 @@ const NameModal = ({ modalTitle, show, toggleShow, name, handleSave, labelInput 
                 <Button variant="outline" size="sm" onClick={toggleShow}>
                   Discard changes
                 </Button>
-                <Button variant="secondary" size="sm" onClick={() => handleSave(internalName)}>
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  onClick={() => handleSave(typeof internalName === "string" ? internalName : "")}
+                >
                   Save changes
                 </Button>
               </div>

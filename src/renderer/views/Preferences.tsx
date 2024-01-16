@@ -1,5 +1,3 @@
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-nocheck
 // -*- mode: js-jsx -*-
 /* Bazecor -- Kaleidoscope Command Center
  * Copyright (C) 2018, 2019  Keyboardio, Inc.
@@ -28,13 +26,7 @@ import "react-toastify/dist/ReactToastify.css";
 
 // Custom modules imports
 import { KeyboardSettings } from "@Renderer/modules/Settings/KeyboardSettings";
-import {
-  BackupSettings,
-  DeviceConnectedPreview,
-  GeneralSettings,
-  NeuronSettings,
-  AdvancedSettings,
-} from "@Renderer/modules/Settings";
+import { DeviceConnectedPreview, GeneralSettings, NeuronSettings, AdvancedSettings } from "@Renderer/modules/Settings";
 
 import { PageHeader } from "@Renderer/modules/PageHeader";
 import ToastMessage from "@Renderer/component/ToastMessage";
@@ -53,7 +45,8 @@ import Version from "@Renderer/component/Version/Version";
 import Store from "@Renderer/utils/Store";
 import { useDevice } from "@Renderer/DeviceContext";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@Renderer/components/ui/tabs";
-import KBDataPref from "@Renderer/types/preferences";
+import { KBDataPref, PrefState } from "@Renderer/types/preferences";
+import { Neuron } from "@Renderer/types/neurons";
 import Backup from "../../api/backup";
 
 const store = Store.getStore();
@@ -74,7 +67,7 @@ const Preferences = (props: PreferencesProps) => {
   const [isSaved, setIsSaved] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const { inContext, connected, allowBeta, onChangeAllowBetas, startContext, cancelContext, toggleDarkMode } = props;
-  const [kbData, setKbData] = useState({
+  const [kbData, setKbData] = useState<KBDataPref>({
     keymap: {
       custom: [],
       default: [],
@@ -98,15 +91,14 @@ const Preferences = (props: PreferencesProps) => {
     mouseWheelSpeed: 1,
     mouseWheelDelay: 100,
     mouseSpeedLimit: 1,
-    modified: inContext,
     showDefaults: false,
   });
-  const [preferencesState, setPreferencesState] = useState({
+  const [preferencesState, setPreferencesState] = useState<PrefState>({
     devTools: false,
     advanced: false,
     verboseFocus: false,
     darkMode: "system",
-    neurons: store.get("neurons") as unknown,
+    neurons: store.get("neurons") as Array<Neuron>,
     selectedNeuron: 0,
     selectNeuron: 0,
     neuronID: "",
@@ -115,12 +107,12 @@ const Preferences = (props: PreferencesProps) => {
   const [activeTab, setActiveTab] = useState(connected ? "Keyboard" : "Application");
 
   const openDevTool = useCallback(() => {
-    setPreferencesState({ ...preferencesState, devTools: true });
-  }, [preferencesState]);
+    setPreferencesState(prefState => ({ ...prefState, devTools: true }));
+  }, []);
 
   const closeDevTool = useCallback(() => {
-    setPreferencesState({ ...preferencesState, devTools: false });
-  }, [preferencesState]);
+    setPreferencesState(prefState => ({ ...prefState, devTools: false }));
+  }, []);
 
   const getNeuronData = useCallback(async () => {
     const neuronData: {
@@ -129,7 +121,30 @@ const Preferences = (props: PreferencesProps) => {
     } = {
       neuronID: "",
       kbData: {
-        keymap: {},
+        keymap: {
+          custom: [],
+          default: [],
+          onlyCustom: 0,
+        },
+        ledBrightness: 0,
+        ledBrightnessUG: 0,
+        defaultLayer: 0,
+        ledIdleTimeLimit: 0,
+        qukeysHoldTimeout: 0,
+        qukeysOverlapThreshold: 0,
+        SuperTimeout: 0,
+        SuperRepeat: 0,
+        SuperWaitfor: 0,
+        SuperHoldstart: 0,
+        SuperOverlapThreshold: 0,
+        mouseSpeed: 0,
+        mouseSpeedDelay: 0,
+        mouseAccelSpeed: 0,
+        mouseAccelDelay: 0,
+        mouseWheelSpeed: 0,
+        mouseWheelDelay: 0,
+        mouseSpeedLimit: 0,
+        showDefaults: false,
       },
     };
 
@@ -162,7 +177,7 @@ const Preferences = (props: PreferencesProps) => {
       });
 
       neuronData.kbData.showDefaults =
-        store.get("settings.showDefaults") === undefined ? false : store.get("settings.showDefaults");
+        store.get("settings.showDefaults") === undefined ? false : (store.get("settings.showDefaults") as boolean);
 
       // QUKEYS variables commands
       await state.currentDevice.command("qukeys.holdTimeout").then((holdTimeout: string) => {
@@ -246,7 +261,7 @@ const Preferences = (props: PreferencesProps) => {
       };
     };
     init();
-  }, []);
+  }, [closeDevTool, getNeuronData, openDevTool]);
 
   useEffect(() => {
     const fetchNewData = async () => {
@@ -373,35 +388,15 @@ const Preferences = (props: PreferencesProps) => {
   };
 
   const selectDefaultLayer = (value: string) => {
-    if (kbData.modified === false) {
-      setKbData(prevKbData => ({
-        ...prevKbData,
-        modified: true,
-        defaultLayer: parseInt(value, 10),
-      }));
-      setPreferencesState(prevState => ({
-        ...prevState,
-        modified: true,
-      }));
-      startContext();
-    } else {
-      setKbData(prevKbData => ({
-        ...prevKbData,
-        defaultLayer: parseInt(value, 10),
-      }));
-      // this.forceUpdate(); what??
-    }
-  };
-
-  // ADVANCED FUNCTIONS
-  const toggleAdvanced = () => {
-    setPreferencesState(prevState => ({
-      ...prevState,
-      advanced: !prevState.advanced,
+    setKbData(prevKbData => ({
+      ...prevKbData,
+      defaultLayer: parseInt(value, 10),
     }));
   };
 
-  const onChangeDevTools = async checked => {
+  // ADVANCED FUNCTIONS
+
+  const onChangeDevTools = async (checked: boolean) => {
     setPreferencesState(prevState => ({
       ...prevState,
       devTools: checked,
@@ -426,7 +421,7 @@ const Preferences = (props: PreferencesProps) => {
     }));
   };
 
-  const onChangeOnlyCustomLayers = checked => {
+  const onChangeOnlyCustomLayers = (checked: boolean) => {
     setKbData(prevKbData => ({
       ...prevKbData,
       keymap: {
@@ -450,12 +445,12 @@ const Preferences = (props: PreferencesProps) => {
     }));
   };
 
-  const applyNeuronName = (neurons: any) => {
+  const applyNeuronName = (neurons: unknown) => {
     store.set("neurons", neurons);
   };
 
   const updateNeuronName = (data: string) => {
-    const temp = preferencesState.neurons;
+    const temp = preferencesState.neurons as Array<any>;
     temp[preferencesState.selectedNeuron].name = data;
     setPreferencesState(prevState => ({
       ...prevState,
@@ -493,7 +488,7 @@ const Preferences = (props: PreferencesProps) => {
 
   // console.log("current Neuron: ", state.currentDevice, ChipID, "connected?: ", connected);
 
-  const handleTabChange = value => {
+  const handleTabChange = (value: string) => {
     setActiveTab(value);
   };
 
@@ -522,7 +517,7 @@ const Preferences = (props: PreferencesProps) => {
                 {connected && state.currentDevice ? (
                   <>
                     <DeviceConnectedPreview
-                      deviceName={neurons.find(x => x.id === ChipID) ? neurons.find(x => x.id === ChipID).name : false}
+                      deviceName={neurons.find(x => x.id === ChipID) ? neurons.find(x => x.id === ChipID).name : ""}
                       deviceDisplayName={state.currentDevice.device.info.displayName}
                       nameChange={updateNeuronName}
                     />
@@ -624,7 +619,7 @@ const Preferences = (props: PreferencesProps) => {
                       onChangeVerbose={onChangeVerbose}
                       allowBeta={allowBeta}
                       onChangeAllowBetas={onChangeAllowBetas}
-                      onlyCustomLayers={kbData.keymap.onlyCustom}
+                      onlyCustomLayers={kbData.keymap.onlyCustom.toString()}
                       onChangeOnlyCustomLayers={onChangeOnlyCustomLayers}
                     />
                     <Version />

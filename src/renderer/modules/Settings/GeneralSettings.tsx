@@ -20,8 +20,9 @@ import { useDevice } from "@Renderer/DeviceContext";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@Renderer/components/ui/card";
 import { Switch } from "@Renderer/components/ui/switch";
 
-import { FileBackUpHandling } from "@Renderer/modules/Settings";
+import { Neuron } from "@Renderer/types/neurons";
 import { IconChip, IconHanger, IconSun, IconMoon, IconScreen, IconKeyboard } from "../../component/Icon";
+import FileBackUpHandling from "./FileBackUpHandling";
 import { ToggleButtons } from "../../component/ToggleButtons";
 import { Select } from "../../component/Select";
 import Keymap from "../../../api/keymap";
@@ -35,16 +36,16 @@ interface GeneralSettingsProps {
   connected: boolean;
   selectDarkMode: (item: string) => void;
   darkMode: string;
-  neurons: Record<string, unknown>[];
+  neurons: Neuron[];
   selectedNeuron: number;
   devTools: boolean;
-  onChangeDevTools: () => void;
+  onChangeDevTools: (checked: boolean) => void;
   verbose: boolean;
   onChangeVerbose: () => void;
   allowBeta: boolean;
-  onChangeAllowBetas: () => void;
+  onChangeAllowBetas: (checked: boolean) => void;
   onlyCustomLayers: string | boolean;
-  onChangeOnlyCustomLayers: () => void;
+  onChangeOnlyCustomLayers: (checked: boolean) => void;
 }
 
 const GeneralSettings = ({

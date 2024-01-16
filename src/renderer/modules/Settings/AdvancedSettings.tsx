@@ -4,7 +4,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@Renderer/components/u
 
 import { useDevice } from "@Renderer/DeviceContext";
 import { Select } from "@Renderer/component/Select";
-import { BackupSettings } from "@Renderer/modules/Settings";
+import { Neuron } from "@Renderer/types/neurons";
+import BackupSettings from "./BackupSettings";
 import i18n from "../../i18n";
 
 // Own Components
@@ -65,8 +66,8 @@ const AdvancedKeyboardSettings = () => {
 interface AdvancedSettingsProps {
   connected: boolean;
   defaultLayer: number;
-  selectDefaultLayer: () => void;
-  neurons: Record<string, unknown>[];
+  selectDefaultLayer: (value: string) => void;
+  neurons: Neuron[];
   neuronID: string;
   selectedNeuron: number;
   updateTab: (value: string) => void;

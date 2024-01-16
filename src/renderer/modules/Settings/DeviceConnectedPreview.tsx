@@ -6,7 +6,7 @@ import i18n from "../../i18n";
 import { DevicePreview } from "../DevicePreview";
 
 interface DeviceConnectedPreviewProps {
-  deviceName?: string;
+  deviceName?: string | boolean;
   deviceDisplayName?: string;
   nameChange: (data: string) => void;
 }

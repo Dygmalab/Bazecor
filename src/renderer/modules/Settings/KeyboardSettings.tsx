@@ -26,7 +26,7 @@ import Slider from "@appigram/react-rangeslider";
 
 // Custom components
 import { Card, CardContent, CardHeader } from "@Renderer/components/ui/card";
-import KBDataPref from "@Renderer/types/preferences";
+import { KBDataPref } from "@Renderer/types/preferences";
 import Title from "../../component/Title";
 
 // Assets

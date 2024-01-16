@@ -1,4 +1,6 @@
-export default interface KBDataPref {
+import { Neuron } from "./neurons";
+
+export interface KBDataPref {
   keymap: {
     custom: Array<number>;
     default: Array<number>;
@@ -23,4 +25,16 @@ export default interface KBDataPref {
   mouseWheelDelay: number;
   mouseSpeedLimit: number;
   showDefaults: boolean;
+}
+
+export interface PrefState {
+  devTools: boolean;
+  advanced: boolean;
+  verboseFocus: boolean;
+  darkMode: string;
+  neurons: Array<Neuron>;
+  selectedNeuron: number;
+  selectNeuron: number;
+  neuronID: string;
+  modified: boolean;
 }

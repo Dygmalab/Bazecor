@@ -25,6 +25,6 @@ export interface Neuron {
 }
 
 export interface Neurons {
-  neurons: [Neuron];
+  neurons: Neuron[];
   selectedNeuron: number;
 }
