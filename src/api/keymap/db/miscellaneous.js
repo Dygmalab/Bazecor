@@ -15,6 +15,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import React from "react";
+
+import { IconShutdownSm, IconSleepSm } from "@Renderer/component/Icon";
 import { withModifiers } from "./utils";
 
 const MiscellaneousTable = {
@@ -43,14 +46,14 @@ const MiscellaneousTable = {
     {
       code: 20865,
       labels: {
-        primary: "SHUT DWN",
+        primary: <IconShutdownSm />,
         verbose: "Shut Down",
       },
     },
     {
       code: 20866,
       labels: {
-        primary: "SLEEP",
+        primary: <IconSleepSm />,
         verbose: "Sleep",
       },
     },
