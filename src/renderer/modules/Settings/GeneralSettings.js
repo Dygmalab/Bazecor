@@ -26,7 +26,7 @@ import i18n from "../../i18n";
 import Store from "../../utils/Store";
 import getLanguage from "../../utils/language";
 
-const GeneraslSettihngsWrapper = Styled.div`
+const GeneralSettingsWrapper = Styled.div`
 .dropdown-menu {
   min-width: 13rem;
 }
@@ -102,7 +102,7 @@ export default class GeneralSettings extends Component {
     ];
 
     return (
-      <GeneraslSettihngsWrapper>
+      <GeneralSettingsWrapper>
         <Card className="overflowFix card-preferences mt-4">
           <Card.Title>
             <Title text={i18n.keyboardSettings.keymap.title} headingLevel={3} svgICO={<IconWrench />} />
@@ -140,7 +140,7 @@ export default class GeneralSettings extends Component {
             </Form>
           </Card.Body>
         </Card>
-      </GeneraslSettihngsWrapper>
+      </GeneralSettingsWrapper>
     );
   }
 }
