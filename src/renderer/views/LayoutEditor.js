@@ -50,6 +50,7 @@ import Backup from "../../api/backup";
 import i18n from "../i18n";
 
 import Store from "../utils/Store";
+import getLanguage from "../utils/language";
 
 const store = Store.getStore();
 
@@ -927,10 +928,10 @@ class LayoutEditor extends React.Component {
 
   // Callback function to set State of new Language
   onChangeLanguageLayout = () => {
-    const newLanguage = store.get("settings.language");
+    const newLanguage = getLanguage(store.get("settings.language"));
     console.log("Language automatically set to: ", newLanguage);
     this.setState({
-      currentLanguageLayout: newLanguage || "english",
+      currentLanguageLayout: newLanguage,
     });
   };
 

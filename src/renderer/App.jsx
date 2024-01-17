@@ -44,6 +44,7 @@ import ToastMessage from "@Renderer/component/ToastMessage";
 import { IconNoSignal } from "@Renderer/component/Icon";
 
 import Store from "@Renderer/utils/Store";
+import getTranslator from "@Renderer/utils/translator";
 import Focus from "../api/focus";
 import "../api/keymap";
 import "../api/colormap";
@@ -269,25 +270,13 @@ class App extends React.Component {
       i18n.setLanguage(store.get("settings.language"));
       return;
     }
-    // create locale language identifier
-    const translator = {
-      en: "english",
-      es: "spanish",
-      fr: "french",
-      de: "german",
-      sv: "swedish",
-      da: "danish",
-      no: "norwegian",
-      is: "icelandic",
-    };
-    // console.log("languageTEST", lang, translator[lang.split("-")[0]], translator["hh"]);
 
     // Store all settings from electron settings in electron store.
     const data = {};
     const userPath = await ipcRenderer.invoke("get-userPath", "home");
     data.backupFolder = path.join(userPath, "Dygma", "Backups");
     data.backupFrequency = 30;
-    data.language = translator[locale.split("-")[0]] !== "" ? translator[locale.split("-")[0]] : "english";
+    data.language = getTranslator(locale);
     data.darkMode = "system";
     data.showDefaults = false;
     i18n.setLanguage(data.language);

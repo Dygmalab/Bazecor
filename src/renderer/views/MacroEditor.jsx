@@ -47,6 +47,7 @@ import Keymap, { KeymapDB } from "../../api/keymap";
 import i18n from "../i18n";
 
 import Store from "../utils/Store";
+import getLanguage from "../utils/language";
 
 const store = Store.getStore();
 
@@ -174,7 +175,7 @@ class MacroEditor extends React.Component {
       macrosEraser: [],
       loading: true,
       scrollPos: 0,
-      currentLanguageLayout: store.get("settings.language") || "english",
+      currentLanguageLayout: getLanguage(store.get("settings.language")),
     };
     this.updateMacros = this.updateMacros.bind(this);
     this.changeSelected = this.changeSelected.bind(this);
