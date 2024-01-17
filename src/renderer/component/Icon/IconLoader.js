@@ -9,7 +9,7 @@ function IconLoader(props) {
         display: "block",
         shapeRendering: "auto",
         animationPlayState: "running",
-        animationDelay: "0s"
+        animationDelay: "0s",
       }}
       width="21px"
       height="21px"

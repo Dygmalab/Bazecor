@@ -132,11 +132,11 @@ const MacrosMemoryUsage = ({ mem, tMem }) => {
       </div>
     </Styles>
   );
-}
+};
 
 MacrosMemoryUsage.propTypes = {
   mem: PropTypes.number,
-  tMem: PropTypes.number
+  tMem: PropTypes.number,
 };
 
 export default MacrosMemoryUsage;

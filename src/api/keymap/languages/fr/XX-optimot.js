@@ -29,7 +29,7 @@ const symbols = [
   {
     code: 30,
     labels: {
-      primary: '«',
+      primary: "«",
     },
   },
   {
@@ -41,7 +41,7 @@ const symbols = [
   {
     code: 32,
     labels: {
-      primary: "\"",
+      primary: '"',
     },
   },
   {
@@ -642,7 +642,7 @@ const shiftedSymbols = {
     {
       code: ModifierCodes.SHIFT + 30,
       labels: {
-        primary: '1',
+        primary: "1",
       },
     },
     {
@@ -952,7 +952,7 @@ const tableAGrS = {
     {
       code: ModifierCodes.ALTGR_SHIFT + 30,
       labels: {
-        primary: '¼',
+        primary: "¼",
       },
     },
     {

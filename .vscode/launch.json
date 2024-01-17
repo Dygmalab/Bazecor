@@ -10,9 +10,9 @@
       },
       // runtimeArgs will be passed directly to your Electron application
       "runtimeArgs": [
-          ".",
-          // this args for attaching render process
-          "--remote-debugging-port=9222"
+        ".",
+        // this args for attaching render process
+        "--remote-debugging-port=9222"
       ],
       "cwd": "${workspaceFolder}",
       "console": "integratedTerminal"

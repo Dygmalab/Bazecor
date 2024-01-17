@@ -304,21 +304,21 @@ class KeymapISO extends React.Component {
           ? getLabel(row, col).extraLabel && getDivideKeys(getLabel(row, col).extraLabel, xCord, yCord, smallKey)
           : getLabel(row, col).extraLabel && getDivideKeys(getLabel(row, col).extraLabel, xCord, String(+yCord - 5), smallKey)
         : getLabel(row, col).extraLabel === getLabel(row, col).extraLabel.toLowerCase().endsWith("to")
-        ? getLabel(row, col).extraLabel && getDivideKeys(getLabel(row, col).extraLabel, xCord, yCord, smallKey)
-        : getLabel(row, col).extraLabel;
+          ? getLabel(row, col).extraLabel && getDivideKeys(getLabel(row, col).extraLabel, xCord, yCord, smallKey)
+          : getLabel(row, col).extraLabel;
 
     const getCenterPrimary = (row, col, xCord, yCord, smallKey = false) =>
       getLabel(row, col).extraLabel !== ""
         ? topsArr.includes(getLabel(row, col).extraLabel)
           ? getLabel(row, col).label && getDivideKeys(getLabel(row, col).label, xCord, yCord, smallKey)
           : topsArrTransfer.includes(getLabel(row, col).extraLabel)
-          ? getLabel(row, col).label && getDivideKeys(getLabel(row, col).label, String(+xCord + 10), yCord, smallKey)
-          : getLabel(row, col).label && getDivideKeys(getLabel(row, col).label, xCord, String(yCord + 2), smallKey)
+            ? getLabel(row, col).label && getDivideKeys(getLabel(row, col).label, String(+xCord + 10), yCord, smallKey)
+            : getLabel(row, col).label && getDivideKeys(getLabel(row, col).label, xCord, String(yCord + 2), smallKey)
         : topsArrTransfer.includes(getLabel(row, col).extraLabel)
-        ? getLabel(row, col).label &&
-          getDivideKeys(getLabel(row, col).label, xCord, yCord, smallKey) &&
-          getDivideKeys(getLabel(row, col).label, String(+xCord + 10), yCord, smallKey)
-        : getLabel(row, col).label && getDivideKeys(getLabel(row, col).label, xCord, String(yCord + 2), smallKey);
+          ? getLabel(row, col).label &&
+            getDivideKeys(getLabel(row, col).label, xCord, yCord, smallKey) &&
+            getDivideKeys(getLabel(row, col).label, String(+xCord + 10), yCord, smallKey)
+          : getLabel(row, col).label && getDivideKeys(getLabel(row, col).label, xCord, String(yCord + 2), smallKey);
 
     return (
       <svg
