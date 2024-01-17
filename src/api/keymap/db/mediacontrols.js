@@ -15,6 +15,23 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {
+  IconToolsEjectSm,
+  IconMediaSoundLessSm,
+  IconMediaSoundMoreSm,
+  IconMediaPlayPauseSm,
+  IconMediaStopSm,
+  IconMediaForwardSm,
+  IconMediaSoundMuteSm,
+  IconMediaRewindSm,
+  IconToolsCameraSm,
+  IconToolsCalculatorSm,
+  IconToolsBrightnessMoreSm,
+  IconToolsBrightnessLessSm,
+  IconMediaShuffleSm,
+} from "@Renderer/component/Icon";
+import React from "react";
+
 const MediaControlTable = {
   groupName: "Media",
   keys: [
@@ -22,15 +39,15 @@ const MediaControlTable = {
       code: 19682,
       labels: {
         top: "",
-        primary: "🔇",
-        verbose: "MUTE",
+        primary: <IconMediaSoundMuteSm />,
+        verbose: "Mute",
       },
     },
     {
       code: 22709,
       labels: {
         top: "",
-        primary: "⏭",
+        primary: <IconMediaForwardSm />,
         verbose: "Next track",
       },
     },
@@ -38,7 +55,7 @@ const MediaControlTable = {
       code: 22710,
       labels: {
         top: "",
-        primary: "⏮",
+        primary: <IconMediaRewindSm />,
         verbose: "Prev. track",
       },
     },
@@ -46,15 +63,15 @@ const MediaControlTable = {
       code: 22711,
       labels: {
         top: "",
-        primary: "⏹",
-        verbose: "STOP",
+        primary: <IconMediaStopSm />,
+        verbose: "Stop",
       },
     },
     {
       code: 22733,
       labels: {
         top: "",
-        primary: "⏯",
+        primary: <IconMediaPlayPauseSm />,
         verbose: "Play / pause",
       },
     },
@@ -62,7 +79,7 @@ const MediaControlTable = {
       code: 23785,
       labels: {
         top: "",
-        primary: "🔊",
+        primary: <IconMediaSoundMoreSm />,
         verbose: "Volume up",
       },
     },
@@ -70,7 +87,7 @@ const MediaControlTable = {
       code: 23786,
       labels: {
         top: "",
-        primary: "🔉",
+        primary: <IconMediaSoundLessSm />,
         verbose: "Volume down",
       },
     },
@@ -78,7 +95,7 @@ const MediaControlTable = {
       code: 22712,
       labels: {
         top: "",
-        primary: "⏏",
+        primary: <IconToolsEjectSm />,
         verbose: "Eject",
       },
     },
@@ -86,35 +103,40 @@ const MediaControlTable = {
       code: 18552,
       labels: {
         top: "",
-        primary: "Camera",
+        primary: <IconToolsCameraSm />,
+        verbose: "Camera",
       },
     },
     {
       code: 23663,
       labels: {
         top: "Display",
-        primary: "Bright +",
+        primary: <IconToolsBrightnessMoreSm />,
+        verbose: "Bright +",
       },
     },
     {
       code: 23664,
       labels: {
         top: "Display",
-        primary: "Bright -",
+        primary: <IconToolsBrightnessLessSm />,
+        verbose: "Bright -",
       },
     },
     {
       code: 18834,
       labels: {
-        top: "Apps",
-        primary: "Calc",
+        top: "",
+        primary: <IconToolsCalculatorSm />,
+        verbose: "Calc",
       },
     },
     {
       code: 22713,
       labels: {
-        top: "",
-        primary: "Shuff.",
+        top: "Shuf.",
+        primary: <IconMediaShuffleSm />,
+        verbose: "Shuffle",
       },
     },
   ],
