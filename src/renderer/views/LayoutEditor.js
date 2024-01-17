@@ -1919,7 +1919,7 @@ class LayoutEditor extends React.Component {
       if (
         code.modified + code.base > 53980 &&
         code.modified + code.base < 54108 &&
-        superkeys[code.base + code.modified - 53980] != undefined
+        superkeys[code.base + code.modified - 53980] !== undefined
       ) {
         actions = superkeys[code.base + code.modified - 53980].actions;
         superName = superkeys[code.base + code.modified - 53980].name;
