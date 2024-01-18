@@ -99,7 +99,7 @@ height:inherit;
   z-index: 9;
 
   .buttonToggler.dropdown-toggle.btn {
-    color: ${({ theme }) => theme.styles.firmwareUpdatePanel.iconDropodownColor};
+    color: ${({ theme }) => theme.styles.firmwareUpdatePanel.iconDropdownColor};
   }
 }
 .wrapperActions {

@@ -1,20 +1,8 @@
 import React, { useState, useEffect } from "react";
+import Styled from "styled-components";
 
-// Flags imports
-import frenchF from "@Assets/flags/france.png";
-import germanF from "@Assets/flags/germany.png";
-import japaneseF from "@Assets/flags/japan.png";
-import koreanF from "@Assets/flags/korean.png";
-import spanishF from "@Assets/flags/spain.png";
-import englishUSF from "@Assets/flags/englishUS.png";
-import englishUKF from "@Assets/flags/englishUK.png";
-import danishF from "@Assets/flags/denmark.png";
-import swedishF from "@Assets/flags/sweden.png";
-import finnishF from "@Assets/flags/finland.png";
-import icelandicF from "@Assets/flags/iceland.png";
-import norwegianF from "@Assets/flags/norway.png";
-import swissF from "@Assets/flags/switzerland.png";
-import eurkeyF from "@Assets/flags/eurkey.png";
+// Own Components
+import { flags, languages, languageNames } from "./GeneralSettingsLanguages";
 import { useDevice } from "@Renderer/DeviceContext";
 
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@Renderer/components/ui/card";
@@ -29,6 +17,13 @@ import Keymap from "../../../api/keymap";
 import i18n from "../../i18n";
 import Store from "../../utils/Store";
 import { KeyPickerPreview } from "../KeyPickerKeyboard";
+import getLanguage from "../../utils/language";
+
+const GeneralSettingsWrapper = Styled.div`
+.dropdown-menu {
+  min-width: 13rem;
+}
+`;
 
 const store = Store.getStore();
 
@@ -67,7 +62,7 @@ const GeneralSettings = ({
   const [state] = useDevice();
 
   useEffect(() => {
-    setSelectedLanguage(store.get("settings.language") as string);
+    setSelectedLanguage(getLanguage(store.get("settings.language") as string));
   }, []);
 
   const changeLanguage = (language: string) => {
@@ -80,61 +75,7 @@ const GeneralSettings = ({
   };
 
   let layersNames: any = neurons[selectedNeuron] ? neurons[selectedNeuron].layers : [];
-  const flags = [
-    englishUSF,
-    englishUKF,
-    spanishF,
-    germanF,
-    frenchF,
-    frenchF,
-    frenchF,
-    swedishF,
-    finnishF,
-    danishF,
-    norwegianF,
-    icelandicF,
-    japaneseF,
-    koreanF,
-    swissF,
-    eurkeyF,
-  ];
-  let language: any = [
-    "english",
-    "british",
-    "spanish",
-    "german",
-    "french",
-    "frenchBepo",
-    "frenchOptimot",
-    "swedish",
-    "finnish",
-    "danish",
-    "norwegian",
-    "icelandic",
-    "japanese",
-    "korean",
-    "swissGerman",
-    "eurkey",
-  ];
-  const languageNames = [
-    "English US",
-    "English UK",
-    "Spanish",
-    "German",
-    "French",
-    "French Bépo",
-    "French Optimot",
-    "Swedish",
-    "Finnish",
-    "Danish",
-    "Norwegian",
-    "Icelandic",
-    "Japanese",
-    "Korean",
-    "Swiss (German)",
-    "EurKEY (1.3)",
-  ];
-  language = language.map((item: any, index: any) => ({
+  const languageElements = languages.map((item, index) => ({
     text: languageNames[index],
     value: item,
     icon: flags[index],
@@ -185,7 +126,7 @@ const GeneralSettings = ({
     return Boolean(item);
   };
   return (
-    <>
+    <GeneralSettingsWrapper>
       <Card className="max-w-2xl mx-auto" variant="default">
         <CardHeader>
           <CardTitle variant="default">
@@ -213,7 +154,7 @@ const GeneralSettings = ({
               id="languageSelector"
               onSelect={changeLanguage}
               value={selectedLanguage}
-              listElements={language}
+              listElements={languageElements}
               disabled={false}
             />
           </form>
@@ -294,7 +235,7 @@ const GeneralSettings = ({
           </form>
         </CardContent>
       </Card>
-    </>
+    </GeneralSettingsWrapper>
   );
 };
 

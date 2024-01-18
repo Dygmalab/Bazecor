@@ -48,6 +48,7 @@ import Keymap, { KeymapDB } from "../../api/keymap";
 import i18n from "../i18n";
 
 import Store from "../utils/Store";
+import getLanguage from "../utils/language";
 
 const store = Store.getStore();
 
@@ -116,7 +117,7 @@ function MacroEditor(props) {
     totalMemory: 0,
     macrosEraser: [],
     loading: true,
-    currentLanguageLayout: store.get("settings.language") || "english",
+    currentLanguageLayout: getLanguage(store.get("settings.language")),
     kbtype: "ansi",
     scrollPos: 0,
   };

@@ -1,7 +1,7 @@
 {
   "name": "Bazecor",
   "productName": "Bazecor",
-  "version": "1.3.10-rc.2",
+  "version": "1.3.10-rc.3",
   "description": "Bazecor desktop app",
   "private": true,
   "repository": {
@@ -22,7 +22,7 @@
     "make-lin": "electron-forge make --platform=linux",
     "lint": "eslint --ext .ts,.tsx,.js,.jsx .",
     "prettier": "prettier --write \"./**/*.{js,json,css,scss,md}\"",
-    "test": "vitest run src/renderer/tests src/main/tests",
+    "test": "vitest run src",
     "e2e": "yarn playwright test",
     "commit": "cz -s",
     "prepare": "husky install"
@@ -104,7 +104,7 @@
     "node-loader": "^2.0.0",
     "postcss": "^8.4.32",
     "postcss-loader": "^7.3.4",
-    "prettier": "^2.8.8",
+    "prettier": "^3.1.1",
     "semantic-release": "^21.0.5",
     "style-loader": "^3.0.0",
     "tailwindcss": "^3.4.0",

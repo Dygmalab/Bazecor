@@ -69,6 +69,7 @@ import IconLEDNextEffectSm from "./IconLEDNextEffectSm";
 import IconLEDPreviousEffect from "./IconLEDPreviousEffect";
 import IconLEDPreviousEffectSm from "./IconLEDPreviousEffectSm";
 import IconLEDSwitchLeft from "./IconLEDSwitchLeft";
+import IconLEDToggleEffectSm from "./IconLEDToggleEffectSm";
 import IconLetterColor from "./IconLetterColor";
 import IconLoader from "./IconLoader";
 import IconLogoDygma from "./IconLogoDygma";
@@ -216,6 +217,7 @@ export {
   IconLEDNextEffectSm,
   IconLEDPreviousEffect,
   IconLEDPreviousEffectSm,
+  IconLEDToggleEffectSm,
   IconLetterColor,
   IconLoader,
   IconLogoDygma,

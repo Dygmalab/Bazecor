@@ -173,7 +173,7 @@ class KeyVisualizer extends React.Component {
 
     return (
       <Style className="KeyVisualizer">
-        <div className={`KeyVisualizerInner ${newValue != oldValue && isStandardView ? "showConnection" : ""}`}>
+        <div className={`KeyVisualizerInner ${newValue !== oldValue && isStandardView ? "showConnection" : ""}`}>
           {oldValue ? (
             <div className="oldKeyValue">
               <Title text={`${rows ? rows[superkeyAction].title : "Selected value"}`} headingLevel={4} />
@@ -199,7 +199,7 @@ class KeyVisualizer extends React.Component {
           ) : (
             ""
           )}
-          {newValue != oldValue && isStandardView ? (
+          {newValue !== oldValue && isStandardView ? (
             <div className="newKeyValue">
               <Title text="New value" headingLevel={4} />
               <div className="keySelectedBox">

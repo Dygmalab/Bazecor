@@ -7,7 +7,7 @@ function IconNoWifi(props) {
         <mask
           id="prefix__c"
           style={{
-            maskType: "alpha"
+            maskType: "alpha",
           }}
           maskUnits="userSpaceOnUse"
           x={2}
@@ -18,7 +18,7 @@ function IconNoWifi(props) {
           <mask
             id="prefix__a"
             style={{
-              maskType: "luminance"
+              maskType: "luminance",
             }}
             maskUnits="userSpaceOnUse"
             x={2}
@@ -32,7 +32,7 @@ function IconNoWifi(props) {
             <mask
               id="prefix__b"
               style={{
-                maskType: "alpha"
+                maskType: "alpha",
               }}
               maskUnits="userSpaceOnUse"
               x={2}
@@ -55,7 +55,7 @@ function IconNoWifi(props) {
         <mask
           id="prefix__f"
           style={{
-            maskType: "alpha"
+            maskType: "alpha",
           }}
           maskUnits="userSpaceOnUse"
           x={2}
@@ -66,7 +66,7 @@ function IconNoWifi(props) {
           <mask
             id="prefix__d"
             style={{
-              maskType: "luminance"
+              maskType: "luminance",
             }}
             maskUnits="userSpaceOnUse"
             x={2}
@@ -80,7 +80,7 @@ function IconNoWifi(props) {
             <mask
               id="prefix__e"
               style={{
-                maskType: "alpha"
+                maskType: "alpha",
               }}
               maskUnits="userSpaceOnUse"
               x={2}

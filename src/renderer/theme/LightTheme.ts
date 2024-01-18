@@ -320,7 +320,7 @@ const Light: DefaultTheme = {
       addButtonColor: Tokens.colors.gray500,
     },
     collpase: {
-      iconBackgroud: IconPlusXS,
+      iconBackground: IconPlusXS,
       gridItemBackground: "rgba(255,255,255, 0.3)",
       gridItemTitle: Tokens.colors.gray400,
       gridItemBody: Tokens.colors.gray300,
@@ -520,7 +520,7 @@ const Light: DefaultTheme = {
       versionSuccessBadge: settingColorOpacity(Tokens.colors.brandSuccess, 0.3),
       badgeBorderColor: Tokens.colors.gray50,
       badgeBorderColorActive: Tokens.colors.gray100,
-      iconDropodownColor: Tokens.colors.purple200,
+      iconDropdownColor: Tokens.colors.purple200,
       backgroundStripeColor: "white",
       backgroundStripeGradientColor: "linear-gradient(90deg, #FFFFFF -9.28%, #F4F4F5 94.29%)",
       caretColor: "#F4F4F5",

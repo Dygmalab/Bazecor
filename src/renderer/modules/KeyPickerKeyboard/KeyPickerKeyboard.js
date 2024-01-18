@@ -94,12 +94,12 @@ width: -webkit-fill-available;
 .ball-container {
   padding: 8px;
   width: 100%;
-  
+
 }
 .ball-inner {
   display: flex;
   padding: 8px;
-  overflow-y: auto; 
+  overflow-y: auto;
   border: 1px solid ${({ theme }) => theme.styles.standardView.superkeys.key.border};
   border-radius: 3px;
   background-color: ${({ theme }) => theme.styles.standardView.superkeys.key.background};
@@ -225,7 +225,7 @@ width: -webkit-fill-available;
   padding-right: 18px;
 }
 .superkeyTitle h5.actionTitle {
-  font-size: 8px; 
+  font-size: 8px;
   text-transform: uppercase;
   font-weight: 700;
   letter-spacing: 0.04em;
@@ -378,7 +378,7 @@ class KeyPickerKeyboard extends Component {
   };
 
   parseKey(keycode) {
-    if (keycode >= 53980 && keycode <= 53980 + 128) {
+    if (keycode >= 53980 && keycode < 54108) {
       let superk = "";
       console.log(this.props.superkeys[keycode - 53980]);
       superk = `SUPER\n${
@@ -386,12 +386,13 @@ class KeyPickerKeyboard extends Component {
       }`;
       return superk;
     }
-    if (keycode > 53851 && keycode <= 53851 + 128) {
+    if (keycode > 53851 && keycode < 53979) {
       let macroN = "";
       console.log(this.props.macros[keycode - 53852]);
       macroN = `MACRO\n${this.props.macros[keycode - 53852] ? this.props.macros[keycode - 53852].name : keycode - 53852}`;
       return macroN;
     }
+    if (React.isValidElement(this.keymapDB.parse(keycode).label)) return this.keymapDB.parse(keycode).label;
     return this.props.code !== null
       ? this.keymapDB.parse(keycode).extraLabel != undefined
         ? `${this.keymapDB.parse(keycode).extraLabel}.${this.keymapDB.parse(keycode).label}`

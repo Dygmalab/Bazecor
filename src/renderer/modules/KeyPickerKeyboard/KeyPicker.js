@@ -78,27 +78,13 @@ import {
   IconRobotSm,
   IconWrenchSm,
   IconWirelessSm,
+  IconLEDToggleEffectSm,
 } from "@Renderer/component/Icon";
 
 import i18n from "@Renderer/i18n";
 
 import Key from "@Renderer/modules/KeyPickerKeyboard/Key";
-import ES from "@Renderer/modules/KeyPickerKeyboard/ES.json";
-import ENi from "@Renderer/modules/KeyPickerKeyboard/ENi.json";
-import ENa from "@Renderer/modules/KeyPickerKeyboard/ENa.json";
-import GR from "@Renderer/modules/KeyPickerKeyboard/GR.json";
-import FR from "@Renderer/modules/KeyPickerKeyboard/FR.json";
-import UK from "@Renderer/modules/KeyPickerKeyboard/UK.json";
-import FRBEPO from "@Renderer/modules/KeyPickerKeyboard/FR-BEPO.json";
-import FROPTIMOT from "@Renderer/modules/KeyPickerKeyboard/FR-OPTIMOT.json";
-import SW from "@Renderer/modules/KeyPickerKeyboard/SW.json";
-import DN from "@Renderer/modules/KeyPickerKeyboard/DN.json";
-import NW from "@Renderer/modules/KeyPickerKeyboard/NW.json";
-import IC from "@Renderer/modules/KeyPickerKeyboard/IC.json";
-import JP from "@Renderer/modules/KeyPickerKeyboard/JP.json";
-import KR from "@Renderer/modules/KeyPickerKeyboard/KR.json";
-import SWGR from "@Renderer/modules/KeyPickerKeyboard/SWGR.json";
-import EU from "@Renderer/modules/KeyPickerKeyboard/EU.json";
+import getLanguage from "@Renderer/modules/KeyPickerKeyboard/KeyPickerLanguage";
 
 const Style = Styled.div`
 width: 100%;
@@ -400,44 +386,7 @@ class KeyPicker extends Component {
 
     // let boxShadowMatrix = useTheme().styles.keyPicker.keyMatrixShadow;
 
-    const liso = {
-      english: ENi,
-      british: UK,
-      spanish: ES,
-      german: GR,
-      french: FR,
-      frenchBepo: FRBEPO,
-      frenchOptimot: FROPTIMOT,
-      swedish: SW,
-      finnish: SW,
-      danish: DN,
-      norwegian: NW,
-      icelandic: IC,
-      japanese: JP,
-      swissGerman: SWGR,
-    };
-    const lansi = {
-      english: ENa,
-      korean: KR,
-      eurkey: EU,
-    };
-    let Lang = ENa;
-
-    if (selectedlanguage === "english") {
-      if (kbtype === "ansi") {
-        if (lansi[selectedlanguage] !== undefined) {
-          Lang = lansi[selectedlanguage];
-        }
-      } else {
-        Lang = liso[selectedlanguage];
-      }
-    } else if (selectedlanguage !== "") {
-      if (liso[selectedlanguage] !== undefined) {
-        Lang = liso[selectedlanguage];
-      } else if (lansi[selectedlanguage] !== undefined) {
-        Lang = lansi[selectedlanguage];
-      }
-    }
+    const Lang = getLanguage(selectedlanguage);
 
     const os = process.platform;
     const iconlist = {
@@ -879,7 +828,7 @@ class KeyPicker extends Component {
               </div>
               <div className="keysButtonsList">
                 <ButtonConfig
-                  buttonText={i18n.editor.superkeys.specialKeys.ledToggleText}
+                  icoSVG={<IconLEDToggleEffectSm />}
                   tooltip={i18n.editor.superkeys.specialKeys.ledToggleTootip}
                   tooltipDelay={300}
                   onClick={() => {

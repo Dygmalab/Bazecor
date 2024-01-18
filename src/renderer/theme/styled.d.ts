@@ -278,7 +278,7 @@ declare module "styled-components" {
         addButtonColor: string;
       };
       collpase: {
-        iconBackgroud: string;
+        iconBackground: string;
         gridItemBackground: string;
         gridItemTitle: string;
         gridItemBody: string;
@@ -477,7 +477,7 @@ declare module "styled-components" {
         versionSuccessBadge: string;
         badgeBorderColor: string;
         badgeBorderColorActive: string;
-        iconDropodownColor: string;
+        iconDropdownColor: string;
         backgroundStripeColor: string;
         backgroundStripeGradientColor: string;
         caretColor: string;

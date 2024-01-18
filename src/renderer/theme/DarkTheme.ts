@@ -323,7 +323,7 @@ const Dark: DefaultTheme = {
       addButtonColor: Tokens.colors.gray100,
     },
     collpase: {
-      iconBackgroud: IconPlusXS,
+      iconBackground: IconPlusXS,
       gridItemBackground: settingColorOpacity(Tokens.colors.gray500, 0.2),
       gridItemTitle: Tokens.colors.gray100,
       gridItemBody: Tokens.colors.gray300,
@@ -526,7 +526,7 @@ const Dark: DefaultTheme = {
       versionSuccessBadge: settingColorOpacity(Tokens.colors.brandSuccess, 0.3),
       badgeBorderColor: settingColorOpacity(Tokens.colors.gray100, 0.25),
       badgeBorderColorActive: Tokens.colors.gray100,
-      iconDropodownColor: Tokens.colors.gray300,
+      iconDropdownColor: Tokens.colors.gray300,
       backgroundStripeColor: "rgba(43, 44, 67, 1)",
       backgroundStripeGradientColor: "linear-gradient(90deg, #3F425A -136.64%, #25273B 94.29%)",
       caretColor: "#25273B",

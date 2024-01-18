@@ -268,6 +268,7 @@ export default class StandardView extends React.Component {
     if (keycode >= 53852 && keycode <= 53852 + 128) {
       if (code !== null) return `${this.keymapDB.parse(keycode).extraLabel}.${macroName}`;
     }
+    if (React.isValidElement(this.keymapDB.parse(keycode).label)) return this.keymapDB.parse(keycode).label;
     return this.props.code !== null
       ? this.keymapDB.parse(keycode).extraLabel !== undefined
         ? `${this.keymapDB.parse(keycode).extraLabel}.${this.keymapDB.parse(keycode).label}`
