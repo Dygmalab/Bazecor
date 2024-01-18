@@ -56,6 +56,7 @@ import Backup from "../../api/backup";
 import i18n from "../i18n";
 
 import Store from "../utils/Store";
+import getLanguage from "../utils/language";
 
 const store = Store.getStore();
 
@@ -1613,7 +1614,7 @@ const LayoutEditor: React.FC<LayoutEditorProps> = (props): React.JSX.Element => 
 
     const processAfterScan = () => {
       const standardView = configStandardView();
-      const newLanguage = store.get("settings.language") as string;
+      const newLanguage = getLanguage(store.get("settings.language") as string);
       console.log("Language automatically set to: ", newLanguage);
       setCurrentLanguageLayout(newLanguage || "english");
       setIsStandardView(standardView);

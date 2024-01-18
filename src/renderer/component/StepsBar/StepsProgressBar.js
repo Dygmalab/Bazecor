@@ -106,10 +106,10 @@ width: 100%;
 
 const StepsProgressBar = ({ steps, stepActive }) => {
   let [refreshPositionStyle, setRefreshPositionStyle] = useState({
-    width: `0`
+    width: `0`,
   });
   const constructGrid = {
-    gridTemplateColumns: `repeat(${steps.length - 3}, 1fr)`
+    gridTemplateColumns: `repeat(${steps.length - 3}, 1fr)`,
   };
   const bulletsRef = useRef([]);
   const stepsElementsRef = useRef();
@@ -118,29 +118,29 @@ const StepsProgressBar = ({ steps, stepActive }) => {
     //setStepsPosition(steps.findIndex(x => x.step === stepActive));
     if (stepActive == steps.length - 1) {
       widthPercentage = {
-        width: `calc(0%)`
+        width: `calc(0%)`,
       };
       stepsElementsRef.current.classList.add("error");
     } else {
       stepsElementsRef.current.classList.remove("error");
       if (stepActive == 0) {
         widthPercentage = {
-          width: `calc(0%)`
+          width: `calc(0%)`,
         };
       } else {
         if (stepActive == 1) {
           widthPercentage = {
-            width: `calc(0% + 34px)`
+            width: `calc(0% + 34px)`,
           };
         } else {
           if (stepActive == steps.length - 2) {
             widthPercentage = {
-              width: `calc(100% + 64px)`
+              width: `calc(100% + 64px)`,
             };
             bulletsRef.current[stepActive].classList.add("success");
           } else {
             widthPercentage = {
-              width: `calc(${(100 / (steps.length - 3)) * (stepActive - 1)}% + 34px)`
+              width: `calc(${(100 / (steps.length - 3)) * (stepActive - 1)}% + 34px)`,
             };
           }
         }
@@ -169,7 +169,7 @@ const StepsProgressBar = ({ steps, stepActive }) => {
                 >
                   <div className="stepBullet"></div>
                 </div>
-              )
+              ),
             )}
           </div>
           <div className={`progressBar progressBar-set${stepActive}`}>

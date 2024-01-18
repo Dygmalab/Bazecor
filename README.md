@@ -4,7 +4,7 @@
 
 ## About
 
-Bazecor is the graphical configurator for the Dygma Raise. While still heavily under development, it's at a stage where it is already usable.
+Bazecor is the graphical configurator for the Dygma Raise & Defy. While still heavily under development, it's at a stage where it is already usable.
 
 The primary purpose of the application is to allow one to configure their keyboard without having to compile or flash firmware, by storing the configuration on the keyboard itself, in EEPROM. There are no external tools required, just Bazecor itself.
 

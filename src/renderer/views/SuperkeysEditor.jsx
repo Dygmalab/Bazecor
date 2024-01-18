@@ -51,6 +51,7 @@ import Keymap, { KeymapDB } from "../../api/keymap";
 import Backup from "../../api/backup";
 
 import Store from "../utils/Store";
+import getLanguage from "../utils/language";
 
 const store = Store.getStore();
 
@@ -132,7 +133,7 @@ function SuperkeysEditor(props) {
     listToDelete: [],
     futureSK: [],
     futureSSK: 0,
-    currentLanguageLayout: store.get("settings.language") || "english",
+    currentLanguageLayout: getLanguage(store.get("settings.language")),
     isStandardViewSuperkeys: store.get("settings.isStandardViewSuperkeys") || true,
     showStandardView: false,
   };

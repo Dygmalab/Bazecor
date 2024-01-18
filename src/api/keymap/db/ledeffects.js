@@ -15,29 +15,34 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import React from "react";
+import { IconLEDNextEffectSm, IconLEDPreviousEffectSm, IconLEDToggleEffectSm } from "@Renderer/component/Icon";
+
 const LEDEffectsTable = {
   groupName: "LED Effect",
   keys: [
     {
       code: 17152,
       labels: {
-        primary: "NEXT",
         top: "LED",
+        primary: <IconLEDNextEffectSm />,
+        verbose: "Next",
       },
     },
     {
       code: 17153,
       labels: {
-        primary: "PREV",
         top: "LED",
+        primary: <IconLEDPreviousEffectSm />,
         verbose: "Previous",
       },
     },
     {
       code: 17154,
       labels: {
-        primary: "TOGGLE",
+        primary: <IconLEDToggleEffectSm />,
         top: "LED",
+        verbose: "Toggle",
       },
     },
   ],

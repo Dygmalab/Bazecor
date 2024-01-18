@@ -90,20 +90,20 @@ const AccordionFirmware = ({ items }) => {
 
   const textList = [
     {
-      text: i18n.firmwareUpdate.milestones.checkLeftSide
+      text: i18n.firmwareUpdate.milestones.checkLeftSide,
     },
     {
-      text: i18n.firmwareUpdate.milestones.checkLeftSideBL
+      text: i18n.firmwareUpdate.milestones.checkLeftSideBL,
     },
     {
-      text: i18n.firmwareUpdate.milestones.checkRightSide
+      text: i18n.firmwareUpdate.milestones.checkRightSide,
     },
     {
-      text: i18n.firmwareUpdate.milestones.checkRightSideBL
+      text: i18n.firmwareUpdate.milestones.checkRightSideBL,
     },
     {
-      text: i18n.firmwareUpdate.milestones.checkBackup
-    }
+      text: i18n.firmwareUpdate.milestones.checkBackup,
+    },
   ];
 
   useEffect(() => {
