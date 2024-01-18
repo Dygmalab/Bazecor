@@ -1909,7 +1909,7 @@ class LayoutEditor extends React.Component {
     });
 
     let code = 0;
-    if (currentKeyIndex !== -1 && currentLedIndex < ledIndexStart) {
+    if (currentKeyIndex !== -1 && currentKeyIndex < ledIndexStart) {
       const tempkey = this.keymapDB.parse(layerData[currentKeyIndex].keyCode);
       // console.log("Key to be used in render", tempkey);
       code = this.keymapDB.keySegmentator(tempkey.keyCode);
