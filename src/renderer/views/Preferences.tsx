@@ -505,144 +505,142 @@ const Preferences = (props: PreferencesProps) => {
   };
 
   return (
-    <>
-      <div className="px-2">
-        <PageHeader
-          text={i18n.preferences.title}
-          showSaving
-          contentSelector={false}
-          saveContext={saveKeymapChanges}
-          destroyContext={destroyContext}
-          inContext={modified}
-          isSaving={isSaving}
-        />
-        <div className="flex w-full mx-auto mt-4">
-          <Tabs
-            defaultValue="Application"
-            orientation="vertical"
-            className="w-full"
-            value={activeTab}
-            onValueChange={handleTabChange}
-          >
-            <div className="flex gap-3 w-full pb-4">
-              <TabsList className="flex flex-col self-start gap-1 px-4 py-4 text-left min-w-64 rounded-xl bg-tabMenu dark:bg-tabMenuDark">
-                {connected && state.currentDevice ? (
-                  <>
-                    <DeviceConnectedPreview
-                      deviceName={neurons.find(x => x.id === chipID) ? neurons.find(x => x.id === chipID).name : ""}
-                      deviceDisplayName={state.currentDevice.device.info.displayName}
-                      nameChange={updateNeuronName}
-                    />
-                    <h4 className="uppercase text-xs dark:text-gray-300 pb-2 mb-1 mt-3 border-solid border-b border-gray-300/30 dark:border-gray-300/30">
-                      Device settings
-                    </h4>
-                    <TabsTrigger value="Keyboard" variant="tab">
-                      <IconKeyboard /> Typing and Keys
-                    </TabsTrigger>
-                    <TabsTrigger value="LED" variant="tab">
-                      <IconFlashlight /> LED
-                    </TabsTrigger>
-                    <TabsTrigger value="Battery" variant="tab">
-                      <IconBattery /> Battery Management
-                    </TabsTrigger>
-                    <TabsTrigger value="Bluetooth" variant="tab">
-                      <IconBluetooth /> Bluetooth Settings
-                    </TabsTrigger>
-                    <TabsTrigger value="RF" variant="tab">
-                      <IconSignal /> RF Settings
-                    </TabsTrigger>
-                    <TabsTrigger value="Advanced" variant="tab">
-                      <IconWrench /> Advanced
-                    </TabsTrigger>
-                  </>
-                ) : null}
-                <h4
-                  className={`uppercase text-xs dark:text-gray-300 pb-2 mb-1 border-solid border-b border-gray-300/30 dark:border-gray-300/30 ${
-                    connected ? "mt-3" : ""
-                  }`}
-                >
-                  Global settings
-                </h4>
-                <TabsTrigger value="Application" variant="tab">
-                  <IconLogoDygma /> Application
-                </TabsTrigger>
-              </TabsList>
-              <div className="rounded-xl bg-gray-25/50 dark:bg-gray-400/15 px-4 py-3 w-full">
-                {connected && state.currentDevice ? (
-                  <>
-                    <TabsContent value="Keyboard" className="w-full">
-                      <motion.div initial="hidden" animate="visible" variants={tabVariants}>
-                        <KeyboardSettings kbData={kbData} setKbData={setKbDataHandler} connected={connected} />
-                        <NeuronSettings
-                          neurons={neurons}
-                          selectedNeuron={selectedNeuron}
-                          selectNeuron={selectNeuron}
-                          updateNeuronName={updateNeuronName}
-                          deleteNeuron={deleteNeuron}
-                        />
-                      </motion.div>
-                    </TabsContent>
-                    <TabsContent value="LED">
-                      <motion.div initial="hidden" animate="visible" variants={tabVariants}>
-                        <LEDSettings kbData={kbData} setKbData={setKbDataHandler} connected={connected} />
-                      </motion.div>
-                    </TabsContent>
-                    <TabsContent value="Battery">
-                      <motion.div initial="hidden" animate="visible" variants={tabVariants}>
-                        Battery Management
-                      </motion.div>
-                    </TabsContent>
-                    <TabsContent value="Bluetooth">
-                      <motion.div initial="hidden" animate="visible" variants={tabVariants}>
-                        Bluetooth Settings
-                      </motion.div>
-                    </TabsContent>
-                    <TabsContent value="RF">
-                      <motion.div initial="hidden" animate="visible" variants={tabVariants}>
-                        Content RF Settings
-                      </motion.div>
-                    </TabsContent>
-                    <TabsContent value="Advanced">
-                      <motion.div initial="hidden" animate="visible" variants={tabVariants}>
-                        <AdvancedSettings
-                          connected={connected}
-                          defaultLayer={defaultLayer}
-                          selectDefaultLayer={selectDefaultLayer}
-                          neurons={neurons}
-                          neuronID={neuronID}
-                          selectedNeuron={selectedNeuron}
-                          updateTab={handleTabChange}
-                        />
-                      </motion.div>
-                    </TabsContent>
-                  </>
-                ) : null}
-                <TabsContent value="Application">
-                  <motion.div initial="hidden" animate="visible" variants={tabVariants}>
-                    <GeneralSettings
-                      connected={connected}
-                      selectDarkMode={selectDarkMode}
-                      darkMode={darkMode}
-                      neurons={neurons}
-                      selectedNeuron={selectedNeuron}
-                      devTools={devTools}
-                      onChangeDevTools={onChangeDevTools}
-                      verbose={verboseFocus}
-                      onChangeVerbose={onChangeVerbose}
-                      allowBeta={allowBeta}
-                      onChangeAllowBetas={onChangeAllowBetas}
-                      onlyCustomLayers={kbData.keymap.onlyCustom.toString()}
-                      onChangeOnlyCustomLayers={onChangeOnlyCustomLayers}
-                    />
-                    <Version />
-                  </motion.div>
-                </TabsContent>
-              </div>
+    <div className="px-2">
+      <PageHeader
+        text={i18n.preferences.title}
+        showSaving
+        contentSelector={false}
+        saveContext={saveKeymapChanges}
+        destroyContext={destroyContext}
+        inContext={modified}
+        isSaving={isSaving}
+      />
+      <div className="flex w-full mx-auto mt-4">
+        <Tabs
+          defaultValue="Application"
+          orientation="vertical"
+          className="w-full"
+          value={activeTab}
+          onValueChange={handleTabChange}
+        >
+          <div className="flex gap-3 w-full pb-4">
+            <TabsList className="flex flex-col self-start gap-1 px-4 py-4 text-left min-w-64 rounded-xl bg-tabMenu dark:bg-tabMenuDark">
+              {connected && state.currentDevice ? (
+                <>
+                  <DeviceConnectedPreview
+                    deviceName={neurons.find(x => x.id === chipID) ? neurons.find(x => x.id === chipID).name : ""}
+                    deviceDisplayName={state.currentDevice.device.info.displayName}
+                    nameChange={updateNeuronName}
+                  />
+                  <h4 className="uppercase text-xs dark:text-gray-300 pb-2 mb-1 mt-3 border-solid border-b border-gray-300/30 dark:border-gray-300/30">
+                    Device settings
+                  </h4>
+                  <TabsTrigger value="Keyboard" variant="tab">
+                    <IconKeyboard /> Typing and Keys
+                  </TabsTrigger>
+                  <TabsTrigger value="LED" variant="tab">
+                    <IconFlashlight /> LED
+                  </TabsTrigger>
+                  <TabsTrigger value="Battery" variant="tab">
+                    <IconBattery /> Battery Management
+                  </TabsTrigger>
+                  <TabsTrigger value="Bluetooth" variant="tab">
+                    <IconBluetooth /> Bluetooth Settings
+                  </TabsTrigger>
+                  <TabsTrigger value="RF" variant="tab">
+                    <IconSignal /> RF Settings
+                  </TabsTrigger>
+                  <TabsTrigger value="Advanced" variant="tab">
+                    <IconWrench /> Advanced
+                  </TabsTrigger>
+                </>
+              ) : null}
+              <h4
+                className={`uppercase text-xs dark:text-gray-300 pb-2 mb-1 border-solid border-b border-gray-300/30 dark:border-gray-300/30 ${
+                  connected ? "mt-3" : ""
+                }`}
+              >
+                Global settings
+              </h4>
+              <TabsTrigger value="Application" variant="tab">
+                <IconLogoDygma /> Application
+              </TabsTrigger>
+            </TabsList>
+            <div className="rounded-xl bg-gray-25/50 dark:bg-gray-400/15 px-4 py-3 w-full">
+              {connected && state.currentDevice ? (
+                <>
+                  <TabsContent value="Keyboard" className="w-full">
+                    <motion.div initial="hidden" animate="visible" variants={tabVariants}>
+                      <KeyboardSettings kbData={kbData} setKbData={setKbDataHandler} connected={connected} />
+                      <NeuronSettings
+                        neurons={neurons}
+                        selectedNeuron={selectedNeuron}
+                        selectNeuron={selectNeuron}
+                        updateNeuronName={updateNeuronName}
+                        deleteNeuron={deleteNeuron}
+                      />
+                    </motion.div>
+                  </TabsContent>
+                  <TabsContent value="LED">
+                    <motion.div initial="hidden" animate="visible" variants={tabVariants}>
+                      <LEDSettings kbData={kbData} setKbData={setKbDataHandler} connected={connected} />
+                    </motion.div>
+                  </TabsContent>
+                  <TabsContent value="Battery">
+                    <motion.div initial="hidden" animate="visible" variants={tabVariants}>
+                      Battery Management
+                    </motion.div>
+                  </TabsContent>
+                  <TabsContent value="Bluetooth">
+                    <motion.div initial="hidden" animate="visible" variants={tabVariants}>
+                      Bluetooth Settings
+                    </motion.div>
+                  </TabsContent>
+                  <TabsContent value="RF">
+                    <motion.div initial="hidden" animate="visible" variants={tabVariants}>
+                      Content RF Settings
+                    </motion.div>
+                  </TabsContent>
+                  <TabsContent value="Advanced">
+                    <motion.div initial="hidden" animate="visible" variants={tabVariants}>
+                      <AdvancedSettings
+                        connected={connected}
+                        defaultLayer={defaultLayer}
+                        selectDefaultLayer={selectDefaultLayer}
+                        neurons={neurons}
+                        neuronID={neuronID}
+                        selectedNeuron={selectedNeuron}
+                        updateTab={handleTabChange}
+                      />
+                    </motion.div>
+                  </TabsContent>
+                </>
+              ) : null}
+              <TabsContent value="Application">
+                <motion.div initial="hidden" animate="visible" variants={tabVariants}>
+                  <GeneralSettings
+                    connected={connected}
+                    selectDarkMode={selectDarkMode}
+                    darkMode={darkMode}
+                    neurons={neurons}
+                    selectedNeuron={selectedNeuron}
+                    devTools={devTools}
+                    onChangeDevTools={onChangeDevTools}
+                    verbose={verboseFocus}
+                    onChangeVerbose={onChangeVerbose}
+                    allowBeta={allowBeta}
+                    onChangeAllowBetas={onChangeAllowBetas}
+                    onlyCustomLayers={kbData.keymap.onlyCustom.toString()}
+                    onChangeOnlyCustomLayers={onChangeOnlyCustomLayers}
+                  />
+                  <Version />
+                </motion.div>
+              </TabsContent>
             </div>
-          </Tabs>
-        </div>
+          </div>
+        </Tabs>
       </div>
-    </>
+    </div>
   );
 };
 
