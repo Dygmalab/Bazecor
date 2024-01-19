@@ -1,14 +1,13 @@
 import React from "react";
 
 // React Bootstrap Components
-import Card from "react-bootstrap/Card";
 import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import i18n from "@Renderer/i18n";
 
 // Own Components
-import Title from "@Renderer/component/Title";
+import { Card, CardContent, CardHeader, CardTitle } from "@Renderer/components/ui/card";
 import { NeuronSelector } from "@Renderer/component/Select";
 import NeuronData from "@Renderer/modules/NeuronData";
 import { Neuron } from "@Types/neurons";
@@ -28,11 +27,13 @@ function NeuronSettings(props: NeuronSettingsProps) {
   const { neurons, selectedNeuron, selectNeuron, updateNeuronName, deleteNeuron } = props;
 
   return (
-    <Card className="overflowFix card-preferences mt-4">
-      <Card.Title>
-        <Title text={i18n.keyboardSettings.neuronManager.header} headingLevel={3} svgICO={<IconNeuronManager />} />
-      </Card.Title>
-      <Card.Body className="py-0">
+    <Card className="max-w-2xl mx-auto" variant="default">
+      <CardHeader>
+        <CardTitle>
+          <IconNeuronManager /> {i18n.keyboardSettings.neuronManager.header}
+        </CardTitle>
+      </CardHeader>
+      <CardContent>
         <Form.Group controlId="backupFolder" className="mb-3">
           <NeuronSelector
             onSelect={selectNeuron}
@@ -52,7 +53,7 @@ function NeuronSettings(props: NeuronSettingsProps) {
             </Col>
           </Row>
         </Form.Group>
-      </Card.Body>
+      </CardContent>
     </Card>
   );
 }
