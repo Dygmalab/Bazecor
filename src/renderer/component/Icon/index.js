@@ -126,6 +126,7 @@ import IconStopWatchXs from "./IconStopWatchXs";
 import IconStopWatchCrossed from "./IconStopWatchCrossed";
 import IconLayers from "./IconLayers";
 import IconLayersSm from "./IconLayersSm";
+import IconRadar from "./IconRadar";
 import IconRecord from "./IconRecord";
 import IconRefresh from "./IconRefresh";
 import IconReleaseSm from "./IconReleaseSm";
@@ -221,6 +222,11 @@ export {
   IconLetterColor,
   IconLoader,
   IconLogoDygma,
+  IconMagicStick,
+  IconMouse,
+  IconMouseSm,
+  IconMoon,
+  IconMoreVertical,
   IconMediaForward,
   IconMediaForwardSm,
   IconMediaPlayPause,
@@ -260,11 +266,6 @@ export {
   IconFlashlight,
   IconFloppyDisk,
   IconTypo,
-  IconMagicStick,
-  IconMouse,
-  IconMouseSm,
-  IconMoon,
-  IconMoreVertical,
   IconNullSm,
   IconSun,
   IconScreen,
@@ -287,6 +288,7 @@ export {
   IconShutdownSm,
   IconSleep,
   IconSleepSm,
+  IconRadar,
   IconThunder,
   IconThunderSm,
   IconToolsCalculator,

@@ -32,6 +32,7 @@ import {
   NeuronSettings,
   AdvancedSettings,
   LEDSettings,
+  RFSettings,
 } from "@Renderer/modules/Settings";
 
 import { PageHeader } from "@Renderer/modules/PageHeader";
@@ -52,10 +53,44 @@ import Store from "@Renderer/utils/Store";
 import { useDevice } from "@Renderer/DeviceContext";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@Renderer/components/ui/tabs";
 import { KBDataPref, PrefState } from "@Renderer/types/preferences";
+import { WirelessInterface } from "@Renderer/types/wireless";
 import { Neuron } from "@Renderer/types/neurons";
 import Backup from "../../api/backup";
 
 const store = Store.getStore();
+
+const initialWireless = {
+  battery: {
+    LeftLevel: 0,
+    RightLevel: 0,
+    LeftState: 0,
+    RightState: 0,
+    savingMode: false,
+  },
+  energy: {
+    modes: 0,
+    currentMode: 0,
+    disable: 0,
+  },
+  bluetooth: {
+    infoChannel1: "",
+    infoChannel2: "",
+    infoChannel3: "",
+    infoChannel4: "",
+    infoChannel5: "",
+    deviceName: "",
+  },
+  rf: {
+    channelHop: 0,
+    power: 0,
+  },
+  brightness: 0,
+  brightnessUG: 0,
+  fade: 0,
+  idleleds: 0,
+  true_sleep: false,
+  true_sleep_time: 0,
+};
 
 interface PreferencesProps {
   inContext: boolean;
@@ -71,6 +106,7 @@ const Preferences = (props: PreferencesProps) => {
   const [state] = useDevice();
   const [chipID, setchipID] = useState("");
   const [bkp] = useState(new Backup());
+  const [wireless, setWireless] = useState<WirelessInterface>(initialWireless);
   const [isSaved, setIsSaved] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const { inContext, connected, allowBeta, onChangeAllowBetas, startContext, cancelContext, toggleDarkMode } = props;
@@ -233,6 +269,7 @@ const Preferences = (props: PreferencesProps) => {
         const speedLimitParsed = speedLimit ? parseInt(speedLimit, 10) : 127;
         neuronData.kbData.mouseSpeedLimit = speedLimitParsed;
       });
+
       setKbData(prevKbData => ({
         ...prevKbData,
         ...neuronData.kbData,
@@ -505,6 +542,13 @@ const Preferences = (props: PreferencesProps) => {
     setActiveTab(value);
   };
 
+  async function sendRePairCommand() {
+    if (state.currentDevice) {
+      const result = await state.currentDevice.command("wireless.rf.syncPairing");
+      console.log("command returned", result);
+    }
+  }
+
   return (
     <div className="px-2">
       <PageHeader
@@ -610,7 +654,7 @@ const Preferences = (props: PreferencesProps) => {
                       </TabsContent>
                       <TabsContent value="RF">
                         <motion.div initial="hidden" animate="visible" variants={tabVariants}>
-                          Content RF Settings
+                          <RFSettings wireless={wireless} changeWireless={setKbData} sendRePair={sendRePairCommand} />
                         </motion.div>
                       </TabsContent>
                     </>

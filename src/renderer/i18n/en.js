@@ -529,6 +529,7 @@ const English = {
       RFSettings: "RF Settings",
       repairChannel: "Repair Channel",
       reconnectSides: "Reconnect sides",
+      RFRadioSignal: "Radio Signal",
       repairChannelDescription:
         "Generate a new channel communication between the sides to reduce noise interference and enhance signal quality for uninterrupted and crystal-clear communication.",
     },
