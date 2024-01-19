@@ -26,7 +26,13 @@ import "react-toastify/dist/ReactToastify.css";
 
 // Custom modules imports
 import { KeyboardSettings } from "@Renderer/modules/Settings/KeyboardSettings";
-import { DeviceConnectedPreview, GeneralSettings, NeuronSettings, AdvancedSettings } from "@Renderer/modules/Settings";
+import {
+  DeviceConnectedPreview,
+  GeneralSettings,
+  NeuronSettings,
+  AdvancedSettings,
+  LEDSettings,
+} from "@Renderer/modules/Settings";
 
 import { PageHeader } from "@Renderer/modules/PageHeader";
 import ToastMessage from "@Renderer/component/ToastMessage";
@@ -63,7 +69,7 @@ interface PreferencesProps {
 
 const Preferences = (props: PreferencesProps) => {
   const [state] = useDevice();
-  const [chipID, setChipID] = useState("");
+  const [chipID, setchipID] = useState("");
   const [bkp] = useState(new Backup());
   const [isSaved, setIsSaved] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
@@ -484,15 +490,15 @@ const Preferences = (props: PreferencesProps) => {
 
   useEffect(() => {
     if (state.currentDevice && connected) {
-      const previewChipID =
+      const previewchipID =
         state.currentDevice.serialNumber?.includes("raise") && connected
           ? state.currentDevice.serialNumber.slice(0, -7).toLowerCase()
           : state.currentDevice.serialNumber;
-      setChipID(previewChipID);
+      setchipID(previewchipID);
     }
   }, [state.currentDevice, connected]);
 
-  // console.log("current Neuron: ", state.currentDevice, ChipID, "connected?: ", connected);
+  // console.log("current Neuron: ", state.currentDevice, chipID, "connected?: ", connected);
 
   const handleTabChange = (value: string) => {
     setActiveTab(value);
@@ -566,6 +572,7 @@ const Preferences = (props: PreferencesProps) => {
                   <>
                     <TabsContent value="Keyboard" className="w-full">
                       <motion.div initial="hidden" animate="visible" variants={tabVariants}>
+                        <KeyboardSettings kbData={kbData} setKbData={setKbDataHandler} connected={connected} />
                         <NeuronSettings
                           neurons={neurons}
                           selectedNeuron={selectedNeuron}
@@ -573,12 +580,11 @@ const Preferences = (props: PreferencesProps) => {
                           updateNeuronName={updateNeuronName}
                           deleteNeuron={deleteNeuron}
                         />
-                        <KeyboardSettings kbData={kbData} setKbData={setKbDataHandler} connected={connected} />
                       </motion.div>
                     </TabsContent>
                     <TabsContent value="LED">
                       <motion.div initial="hidden" animate="visible" variants={tabVariants}>
-                        LED
+                        <LEDSettings kbData={kbData} setKbData={setKbDataHandler} connected={connected} />
                       </motion.div>
                     </TabsContent>
                     <TabsContent value="Battery">
