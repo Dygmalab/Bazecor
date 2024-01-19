@@ -495,6 +495,7 @@ const Preferences = (props: PreferencesProps) => {
           ? state.currentDevice.serialNumber.slice(0, -7).toLowerCase()
           : state.currentDevice.serialNumber;
       setchipID(previewchipID);
+      console.log(state.currentDevice.device);
     }
   }, [state.currentDevice, connected]);
 
@@ -541,15 +542,19 @@ const Preferences = (props: PreferencesProps) => {
                   <TabsTrigger value="LED" variant="tab">
                     <IconFlashlight /> LED
                   </TabsTrigger>
-                  <TabsTrigger value="Battery" variant="tab">
-                    <IconBattery /> Battery Management
-                  </TabsTrigger>
-                  <TabsTrigger value="Bluetooth" variant="tab">
-                    <IconBluetooth /> Bluetooth Settings
-                  </TabsTrigger>
-                  <TabsTrigger value="RF" variant="tab">
-                    <IconSignal /> RF Settings
-                  </TabsTrigger>
+                  {state.currentDevice.device.info.keyboardType === "wireless" && (
+                    <>
+                      <TabsTrigger value="Battery" variant="tab">
+                        <IconBattery /> Battery Management
+                      </TabsTrigger>
+                      <TabsTrigger value="Bluetooth" variant="tab">
+                        <IconBluetooth /> Bluetooth Settings
+                      </TabsTrigger>
+                      <TabsTrigger value="RF" variant="tab">
+                        <IconSignal /> RF Settings
+                      </TabsTrigger>
+                    </>
+                  )}
                   <TabsTrigger value="Advanced" variant="tab">
                     <IconWrench /> Advanced
                   </TabsTrigger>
@@ -583,24 +588,33 @@ const Preferences = (props: PreferencesProps) => {
                   </TabsContent>
                   <TabsContent value="LED">
                     <motion.div initial="hidden" animate="visible" variants={tabVariants}>
-                      <LEDSettings kbData={kbData} setKbData={setKbDataHandler} connected={connected} />
+                      <LEDSettings
+                        kbData={kbData}
+                        setKbData={setKbDataHandler}
+                        connected={connected}
+                        isWireless={state.currentDevice.device.info.keyboardType === "wireless"}
+                      />
                     </motion.div>
                   </TabsContent>
-                  <TabsContent value="Battery">
-                    <motion.div initial="hidden" animate="visible" variants={tabVariants}>
-                      Battery Management
-                    </motion.div>
-                  </TabsContent>
-                  <TabsContent value="Bluetooth">
-                    <motion.div initial="hidden" animate="visible" variants={tabVariants}>
-                      Bluetooth Settings
-                    </motion.div>
-                  </TabsContent>
-                  <TabsContent value="RF">
-                    <motion.div initial="hidden" animate="visible" variants={tabVariants}>
-                      Content RF Settings
-                    </motion.div>
-                  </TabsContent>
+                  {state.currentDevice.device.info.keyboardType === "wireless" && (
+                    <>
+                      <TabsContent value="Battery">
+                        <motion.div initial="hidden" animate="visible" variants={tabVariants}>
+                          Battery Management
+                        </motion.div>
+                      </TabsContent>
+                      <TabsContent value="Bluetooth">
+                        <motion.div initial="hidden" animate="visible" variants={tabVariants}>
+                          Bluetooth Settings
+                        </motion.div>
+                      </TabsContent>
+                      <TabsContent value="RF">
+                        <motion.div initial="hidden" animate="visible" variants={tabVariants}>
+                          Content RF Settings
+                        </motion.div>
+                      </TabsContent>
+                    </>
+                  )}
                   <TabsContent value="Advanced">
                     <motion.div initial="hidden" animate="visible" variants={tabVariants}>
                       <AdvancedSettings
