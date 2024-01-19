@@ -63,6 +63,7 @@ interface PreferencesProps {
 
 const Preferences = (props: PreferencesProps) => {
   const [state] = useDevice();
+  const [chipID, setChipID] = useState("");
   const [bkp] = useState(new Backup());
   const [isSaved, setIsSaved] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
@@ -481,10 +482,15 @@ const Preferences = (props: PreferencesProps) => {
     visible: { opacity: 1, transition: { duration: 0.5 } },
   };
 
-  const ChipID =
-    state.currentDevice.serialNumber?.includes("raise") && connected
-      ? state.currentDevice.serialNumber.slice(0, -7).toLowerCase()
-      : state.currentDevice.serialNumber;
+  useEffect(() => {
+    if (state.currentDevice && connected) {
+      const previewChipID =
+        state.currentDevice.serialNumber?.includes("raise") && connected
+          ? state.currentDevice.serialNumber.slice(0, -7).toLowerCase()
+          : state.currentDevice.serialNumber;
+      setChipID(previewChipID);
+    }
+  }, [state.currentDevice, connected]);
 
   // console.log("current Neuron: ", state.currentDevice, ChipID, "connected?: ", connected);
 
