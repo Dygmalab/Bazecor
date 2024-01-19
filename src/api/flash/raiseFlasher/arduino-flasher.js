@@ -17,6 +17,7 @@
 import async from "async";
 import Focus from "../../focus";
 import { decodeHexLine } from "../decodeHexLine";
+import { padToN } from '../padToN';
 
 const MAX_MS = 2000;
 
@@ -104,14 +105,6 @@ async function read_cb(callback) {
 async function disconnect_cb(cb) {
   await focus.close();
   cb(null, "");
-}
-
-function padToN(number, numberToPad) {
-  let str = "";
-
-  for (let i = 0; i < numberToPad; i++) str += "0";
-
-  return (str + number).slice(-numberToPad);
 }
 
 function num2hexstr(number, paddedTo) {
