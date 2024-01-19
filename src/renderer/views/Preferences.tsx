@@ -523,7 +523,7 @@ const Preferences = (props: PreferencesProps) => {
                 {connected && state.currentDevice ? (
                   <>
                     <DeviceConnectedPreview
-                      deviceName={neurons.find(x => x.id === ChipID) ? neurons.find(x => x.id === ChipID).name : ""}
+                      deviceName={neurons.find(x => x.id === chipID) ? neurons.find(x => x.id === chipID).name : ""}
                       deviceDisplayName={state.currentDevice.device.info.displayName}
                       nameChange={updateNeuronName}
                     />

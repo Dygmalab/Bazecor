@@ -57,6 +57,7 @@ import i18n from "../i18n";
 
 import Store from "../utils/Store";
 import getLanguage from "../utils/language";
+import { Neuron, LayerType, macrosType, superkeysType } from "@Renderer/types/neurons";
 
 const store = Store.getStore();
 
@@ -450,7 +451,7 @@ const LayoutEditor: React.FC<LayoutEditorProps> = (props): React.JSX.Element => 
 
   const [currentLayer, setCurrentLayer] = useState(0);
   const [previousLayer, setPreviousLayer] = useState(0);
-  const [layerNames, setLayerNames] = useState([]);
+  const [layerNames, setLayerNames] = useState<Array<LayerType>>();
   const [neuronID, setNeuronID] = useState("");
   const [currentKeyIndex, setCurrentKeyIndex] = useState(-1);
   const [currentLedIndex, setCurrentLedIndex] = useState(-1);
@@ -771,42 +772,30 @@ const LayoutEditor: React.FC<LayoutEditorProps> = (props): React.JSX.Element => 
   };
 
   const AnalizeChipID = useCallback(
-    async (CID: any) => {
+    async (CID: string) => {
       const { currentDevice } = deviceState;
-      let neurons = store.get("neurons") as any;
+      let neurons = store.get("neurons") as Neuron[];
       let finalNeuron;
       console.log("Neuron ID", CID, neurons);
       if (neurons === undefined) {
         neurons = [];
       }
-      if (neurons.some((n: { id: any }) => n.id === CID)) {
+      if (neurons.some((n: { id: unknown }) => n.id === CID)) {
         finalNeuron = neurons.find((n: { id: any }) => n.id === CID);
       }
-      const neuron = { id: "", name: "", layers: new Array<any>(), macros: new Array<any>(), superkeys: new Array<any>() };
+      const neuron: Neuron = {
+        id: "",
+        name: "",
+        layers: new Array<LayerType>(),
+        macros: new Array<macrosType>(),
+        superkeys: new Array<superkeysType>(),
+      };
       if (!neurons.some((n: { id: any }) => n.id === CID) && neurons.length === 0) {
         neuron.id = CID;
         neuron.name = currentDevice.device.info.product;
-        neuron.layers =
-          store.get("layerNames") !== undefined
-            ? (store.get("layerNames") as Array<any>).map((name, id) => ({
-                id,
-                name,
-              }))
-            : defaultLayerNames;
-        neuron.macros =
-          store.get("macros") !== undefined
-            ? (store.get("macros") as Array<any>).map((macro: { id: any; name: any }) => ({
-                id: macro.id,
-                name: macro.name,
-              }))
-            : [];
-        neuron.superkeys =
-          store.get("superkeys") !== undefined
-            ? (store.get("superkeys") as Array<any>).map((sk: { id: any; name: any }) => ({
-                id: sk.id,
-                name: sk.name,
-              }))
-            : [];
+        neuron.layers = store.get("layerNames") !== undefined ? (store.get("layerNames") as Array<LayerType>) : defaultLayerNames;
+        neuron.macros = store.get("macros") !== undefined ? (store.get("macros") as Array<macrosType>) : [];
+        neuron.superkeys = store.get("superkeys") !== undefined ? (store.get("superkeys") as Array<superkeysType>) : [];
         console.log("New neuron", neuron);
         neurons = neurons.concat(neuron);
         store.set("neurons", neurons);
@@ -1340,15 +1329,15 @@ const LayoutEditor: React.FC<LayoutEditorProps> = (props): React.JSX.Element => 
 
   const getLayout = () => {
     const { currentDevice } = deviceState;
-    let Layer = {};
+    let Layer = (<div></div>) as JSX.Element;
     let kbtype = "iso";
-    if (currentDevice.device === null) return { Layer: false, kbtype: false };
+    if (currentDevice.device === null) return { Layer: undefined, kbtype: undefined };
     try {
-      Layer = currentDevice.device.components.keymap;
+      Layer = currentDevice.device.components.keymap as JSX.Element;
       kbtype = currentDevice.device && currentDevice.device.info.keyboardType === "ISO" ? "iso" : "ansi";
     } catch (error) {
       console.error("Focus lost connection to Raise: ", error);
-      return { Layer: false, kbtype: false };
+      return { Layer: undefined, kbtype: undefined };
     }
 
     return { Layer, kbtype };
@@ -1528,7 +1517,7 @@ const LayoutEditor: React.FC<LayoutEditorProps> = (props): React.JSX.Element => 
   };
 
   const layerName = (index: number): string =>
-    layerNames.length > index ? layerNames[index].name : defaultLayerNames[index].name;
+    layerNames !== undefined && layerNames.length > index ? layerNames[index].name : defaultLayerNames[index].name;
 
   const modeSelectToggle = (data: string) => {
     if (isStandardView) {

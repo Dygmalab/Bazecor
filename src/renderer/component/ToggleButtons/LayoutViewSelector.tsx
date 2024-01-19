@@ -16,7 +16,6 @@
  */
 
 import React from "react";
-import PropTypes from "prop-types";
 import Styled from "styled-components";
 import i18n from "../../i18n";
 
@@ -25,13 +24,13 @@ import { ButtonConfig } from "../Button";
 
 import { IconEditModeStandardViewSm, IconEditModeSingleViewSm } from "../Icon";
 
-const Style = Styled.div`
+const Style = Styled.div<{ isStandardView: boolean; layoutSelectorPosition: { x: number; y: number } }>`
 &.layoutSelector {
   align-self: self-start;
   margin-top: auto;
   margin-bottom: 24px;
   padding-top: 16px;
-  
+
   // WHY: We want to render the LayoutViewSelector directly above the KeyPickerKeyboard (and below the key editor)
   // when in single view.
   // Currently we only want this behaviour in the LayoutEditor, not in the SuperkeysEditor.
@@ -60,7 +59,7 @@ const Style = Styled.div`
     margin-right: -2px;
     display: flex;
     flex-wrap: nowrap;
-  } 
+  }
 }
 .button-config {
   margin-left: 2px;
@@ -78,7 +77,7 @@ const Style = Styled.div`
     background: ${({ theme }) => theme.styles.toggleEditMode.buttonBackgroundHover};
     color: ${({ theme }) => theme.styles.toggleEditMode.buttonColorHover};
     box-shadow: ${({ theme }) => theme.styles.toggleEditMode.buttonBoxShadow};
-  } 
+  }
   &.active {
     background: ${({ theme }) => theme.styles.toggleEditMode.buttonBackgroundActive};
     color: ${({ theme }) => theme.styles.toggleEditMode.buttonColorActive};
@@ -100,21 +99,18 @@ h5 {
 }
 `;
 
-/**
- * This LayoutViewSelector function returns a component that render a toggle element that help the user select between Standard View/Single View
- * The object will accept the following parameters
- *
- * @param {function} onToggle - The function that handle the states
- * @param {boolean} isStandardView - The actual state if the Standand View is Selected
- * @param {string} tooltip - [Optional] Help text used next to the title
- * @param layoutSelectorPosition
- * @returns {LayoutViewSelector} Badge component.
- */
+interface LayoutViewSelectorProps {
+  onToggle: (e: Event) => void;
+  isStandardView: boolean;
+  tooltip: HTMLElement | string | undefined;
+  layoutSelectorPosition: { x: number; y: number };
+}
 
-function LayoutViewSelector({ onToggle, isStandardView, tooltip, layoutSelectorPosition }) {
+function LayoutViewSelector(props: LayoutViewSelectorProps) {
+  const { onToggle, isStandardView, tooltip, layoutSelectorPosition } = props;
   return (
     <Style className="layoutSelector" isStandardView={isStandardView} layoutSelectorPosition={layoutSelectorPosition}>
-      <Title text={i18n.editor.editMode.title} headingLevel={5} tooltip={tooltip || false} tooltipIconSize="sm" />
+      <Title text={i18n.editor.editMode.title} headingLevel={5} tooltip={tooltip || undefined} tooltipIconSize="sm" />
       <div className="toggleButtonsContainer">
         <div className="toggleButtonsInner">
           <ButtonConfig
@@ -124,6 +120,13 @@ function LayoutViewSelector({ onToggle, isStandardView, tooltip, layoutSelectorP
             selected={isStandardView}
             buttonText={i18n.editor.editMode.standardView}
             size="sm"
+            tooltip={undefined}
+            tooltipPlacement={undefined}
+            tooltipClassName={undefined}
+            variation={undefined}
+            tooltipDelay={undefined}
+            disabled={undefined}
+            dataAnimate={undefined}
           />
           <ButtonConfig
             onClick={onToggle}
@@ -132,17 +135,18 @@ function LayoutViewSelector({ onToggle, isStandardView, tooltip, layoutSelectorP
             selected={!isStandardView}
             buttonText={i18n.editor.editMode.singleView}
             size="sm"
+            tooltip={undefined}
+            tooltipPlacement={undefined}
+            tooltipClassName={undefined}
+            variation={undefined}
+            tooltipDelay={undefined}
+            disabled={undefined}
+            dataAnimate={undefined}
           />
         </div>
       </div>
     </Style>
   );
 }
-
-LayoutViewSelector.propTypes = {
-  onToggle: PropTypes.func.isRequired,
-  isStandardView: PropTypes.bool.isRequired,
-  tooltip: PropTypes.string,
-};
 
 export default LayoutViewSelector;
