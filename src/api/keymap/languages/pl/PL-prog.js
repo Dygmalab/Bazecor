@@ -3,7 +3,7 @@ import { withModifiers } from "../../db/utils";
 const plPLprogLetters = [];
 
 const altGRPolish = {
-  groupName: "AltGR Polish",
+  groupName: "AltGr Polish",
   keys: [
     {
       code: 1028,
