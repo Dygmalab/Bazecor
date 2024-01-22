@@ -30,12 +30,6 @@ const altGRPolish = {
       },
     },
     {
-      code: 1040,
-      labels: {
-        primary: "µ",
-      },
-    },
-    {
       code: 1041,
       labels: {
         primary: "Ń",
