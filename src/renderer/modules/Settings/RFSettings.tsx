@@ -19,6 +19,7 @@ import i18n from "@Renderer/i18n";
 
 // Custom components
 import { Card, CardContent, CardHeader, CardTitle } from "@Renderer/components/ui/card";
+import Heading from "@Renderer/components/ui/heading";
 import Title from "@Renderer/component/Title";
 import { RegularButton } from "@Renderer/component/Button";
 
@@ -31,7 +32,7 @@ import { Badge } from "@Renderer/component/Badge";
 import { RFSettingsProps } from "@Renderer/types/wireless";
 
 function RFSettings(props: RFSettingsProps) {
-  const { sendRePair, wireless, changeWireless} = props;
+  const { sendRePair, wireless, changeWireless } = props;
 
   const RFModes = [
     {
@@ -71,15 +72,15 @@ function RFSettings(props: RFSettingsProps) {
             styles="outline gradient"
             size="sm"
           />
-          <div className="py-3 mb-2 text-xs font-normal tracking-tight text-gray-400 dark:text-gray-100">
+          <div className="py-3 mb-2 text-sm font-normal tracking-tight text-gray-400 dark:text-gray-100">
             <p>{i18n.wireless.RFPreferences.repairChannelDescription}</p>
           </div>
         </CardContent>
       </Card>
       <Card className="mt-3 max-w-2xl mx-auto" variant="default">
         <CardHeader>
-          <CardTitle className="flex items-center justify-between">
-            <div className="flex gap-1">
+          <CardTitle className="flex flex-row items-center justify-between">
+            <div className="flex items-center gap-3">
               <IconRadar /> {i18n.wireless.RFPreferences.RFRadioSignal}
             </div>{" "}
             <Badge content={i18n.wireless.energyManagement.settings.lowBatteryImpact} variation="subtle" size="sm" />
@@ -88,6 +89,9 @@ function RFSettings(props: RFSettingsProps) {
         <CardContent>
           <Row className="card-preferences--option justify-between">
             <Col lg={5}>
+              <Heading headingLevel={1} renderAs="h1">
+                {i18n.wireless.energyManagement.settings.manageRFSignal}
+              </Heading>
               <Title
                 text={i18n.wireless.energyManagement.settings.manageRFSignal}
                 tooltip={i18n.wireless.energyManagement.settings.tooltipRF}

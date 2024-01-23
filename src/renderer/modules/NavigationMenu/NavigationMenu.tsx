@@ -306,7 +306,7 @@ function NavigationMenu(props: NavigationMenuProps) {
                 disabled={fwUpdate || isSending}
               />
             </Link>
-            <Link to="/device-manager" className="list-link">
+            {/* <Link to="/device-manager" className="list-link">
               <NavigationButton
                 selected={false}
                 showNotif={false}
@@ -314,7 +314,7 @@ function NavigationMenu(props: NavigationMenuProps) {
                 icoSVG={<IconHome />}
                 disabled={false}
               />
-            </Link>
+            </Link> */}
             {connected && device && device.info && device.info.keyboardType === "wireless" && versions !== null ? (
               <>
                 <Link to="/wireless" onClick={linkHandler} className={`list-link ${fwUpdate || isSending ? "disabled" : ""}`}>
