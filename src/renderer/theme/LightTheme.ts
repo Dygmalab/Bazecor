@@ -12,6 +12,13 @@ import neuronDefyWirelessImage from "@Assets/base/neuron-defy--white.png";
 import mouseWheelBackground from "@Assets/light/mouseWheel.png";
 import oldToNew from "@Assets/light/oldValueToNewValue.svg";
 
+import RaiseOff from "@Assets/base/devices/raise-ansi-white-offline.png";
+import RaiseOn from "@Assets/base/devices/raise-ansi-white-on.png";
+import DefyOff from "@Assets/base/devices/defy-white-offline.png";
+import DefyOn from "@Assets/base/devices/defy-white-on.png";
+
+import bgTextures from "@Assets/light/bg-texture-with-lines.jpg";
+
 import Tokens from "./Tokens";
 
 const settingColorOpacity = (color: string, opacity: number) => {
@@ -155,8 +162,16 @@ const Light: DefaultTheme = {
       textColor: Tokens.colors.gray500,
       dangerLowBG: settingColorOpacity(Tokens.colors.brandPrimary, 0.15),
       dangerLowText: settingColorOpacity(Tokens.colors.brandPrimary, 0.75),
+      warningBG: settingColorOpacity(Tokens.colors.brandWarning, 0.15),
+      warningText: settingColorOpacity(Tokens.colors.brandWarningLighter, 0.75),
       subtleColor: Tokens.colors.gray400,
       subtleBGColor: Tokens.colors.gray50,
+    },
+    banner: {
+      backgroundWarning:
+        "linear-gradient(0deg, rgba(254, 202, 87, 0.1) 0%, rgba(254, 202, 87, 0.1) 100%), rgba(255, 255, 255, 0.1)",
+      textWarning: Tokens.colors.gray600,
+      svgBackgroundWarning: "rgba(254, 202, 87, 0.35)",
     },
     batteryIndicator: {
       pileBackgroundColor: Tokens.colors.gray50,
@@ -272,12 +287,25 @@ const Light: DefaultTheme = {
         colorHover: Tokens.colors.gray500,
         colorActive: "#fff",
       },
+      buttonLarge: {
+        borderColor: Tokens.colors.gray100,
+        borderHoverColor: Tokens.colors.gray100,
+        backgroundColor: settingColorOpacity(Tokens.colors.gray100, 0.25),
+        backgroundHoverColor: settingColorOpacity(Tokens.colors.gray50, 0.8),
+        titleColor: Tokens.colors.gray500,
+        contentColor: Tokens.colors.gray300,
+      },
       recordButton: {
         background: settingColorOpacity(Tokens.colors.gray25, 0.5),
         backgroundHover: "linear-gradient(0deg, rgba(254, 0, 124, 0.05), rgba(254, 0, 124, 0.05)), rgba(240, 242, 244, 0.5)",
         borderColor: Tokens.colors.brandPrimary,
         borderColorResume: Tokens.colors.gray400,
         color: Tokens.colors.brandPrimary,
+      },
+      navButton: {
+        color: Tokens.colors.gray700,
+        background: settingColorOpacity(Tokens.colors.gray100, 0.5),
+        backgroundHover: settingColorOpacity(Tokens.colors.gray100, 0.85),
       },
     },
     colorPanel: {
@@ -292,7 +320,7 @@ const Light: DefaultTheme = {
       addButtonColor: Tokens.colors.gray500,
     },
     collpase: {
-      iconBackgroud: IconPlusXS,
+      iconBackground: IconPlusXS,
       gridItemBackground: "rgba(255,255,255, 0.3)",
       gridItemTitle: Tokens.colors.gray400,
       gridItemBody: Tokens.colors.gray300,
@@ -325,6 +353,19 @@ const Light: DefaultTheme = {
       cardBattery: {
         backgroundColor: "rgba(255, 255, 255, 0.6)",
       },
+      cardDevice: {
+        cardBackground: bgTextures,
+        cardBorder: Tokens.colors.gray100,
+        cardBorderConnected: Tokens.colors.purple300,
+        cardOverlayOffline: `linear-gradient(180deg, rgba(240, 240, 240, 0.60) 1.33%, rgba(240, 240, 240, 0.00) 51.04%, rgba(240, 240, 245, 0.35) 100%), rgba(30, 30, 55, 0.20)`,
+        canvasOpacity: 0.25,
+        cardFooterBg: settingColorOpacity(Tokens.colors.gray25, 0.8),
+        dropdownBgColor: settingColorOpacity(Tokens.colors.gray100, 0.5),
+        dropdownDisabledColor: Tokens.colors.gray200,
+        cardTitleColor: Tokens.colors.gray600,
+        cardSubTitleColor: Tokens.colors.gray400,
+        cardPathColor: Tokens.colors.gray300,
+      },
     },
     cardButtons: {
       background: "rgba(255, 255, 255, 0.6)",
@@ -341,6 +382,15 @@ const Light: DefaultTheme = {
       borderColor: Tokens.colors.gray100,
       backgroundActive: Tokens.colors.brandSuccess,
       borderColorActive: Tokens.colors.brandSuccess,
+    },
+    deviceManager: {
+      noDevicesBackground: settingColorOpacity(Tokens.colors.gray25, 0.25),
+    },
+    devicePreview: {
+      raiseOn: RaiseOn,
+      raiseOff: RaiseOff,
+      defyOn: DefyOn,
+      defyOff: DefyOff,
     },
     dropdown: {
       backgroundButtonColor: "rgba(255, 255, 255, 0.5)",
@@ -442,6 +492,15 @@ const Light: DefaultTheme = {
       labelBorderSm: "none",
       bgOldToNew: oldToNew,
     },
+    filterHeader: {
+      titleColor: Tokens.colors.gray400,
+      borderColor: Tokens.colors.gray100,
+      tabBackgroundColor: Tokens.colors.gray300,
+      tabBackgroundActive: Tokens.colors.purple300,
+      tabBackgroundHover: Tokens.colors.gray400,
+      triggerModalColor: Tokens.colors.gray500,
+      triggerModalHover: Tokens.colors.purple300,
+    },
     firmwareErrorPanel: {
       textColor: Tokens.colors.gray400,
     },
@@ -461,7 +520,7 @@ const Light: DefaultTheme = {
       versionSuccessBadge: settingColorOpacity(Tokens.colors.brandSuccess, 0.3),
       badgeBorderColor: Tokens.colors.gray50,
       badgeBorderColorActive: Tokens.colors.gray100,
-      iconDropodownColor: Tokens.colors.purple200,
+      iconDropdownColor: Tokens.colors.purple200,
       backgroundStripeColor: "white",
       backgroundStripeGradientColor: "linear-gradient(90deg, #FFFFFF -9.28%, #F4F4F5 94.29%)",
       caretColor: "#F4F4F5",
@@ -490,6 +549,12 @@ const Light: DefaultTheme = {
       inputGroup: {
         background: "#F9FAFB",
       },
+    },
+    helpMessage: {
+      titleColor: Tokens.colors.gray600,
+      titleHoverColor: Tokens.colors.purple200,
+      textColor: Tokens.colors.gray300,
+      textHoverColor: Tokens.colors.gray400,
     },
     listGroup: {
       listItem: {
@@ -592,6 +657,16 @@ const Light: DefaultTheme = {
       backgroundInner: "#fff",
       titleColor: Tokens.colors.gray400,
       footerBackground: settingColorOpacity(Tokens.colors.gray200, 0.075),
+      modalDevices: {
+        bodyBackground: Tokens.colors.gray50,
+        cardBackground: Tokens.colors.gray25,
+        cardBorderColor: Tokens.colors.gray300,
+        titleColor: Tokens.colors.gray600,
+        subTitleColor: Tokens.colors.gray400,
+        contentColor: Tokens.colors.gray300,
+        dragBackground: Tokens.colors.gray50,
+        dragIconColor: Tokens.colors.gray300,
+      },
     },
     mouseButtons: {
       background: Tokens.colors.gray50,

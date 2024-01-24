@@ -99,7 +99,6 @@ out/
 dist
 
 #editor's configuration
-.vscode
 .idea
 /test-results/
 /playwright-report/

@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-no-bind */
 /* eslint-disable no-bitwise */
 // -*- mode: js-jsx -*-
 /* Bazecor -- Kaleidoscope Command Center
@@ -33,7 +34,7 @@ import { LogoLoaderCentered } from "@Renderer/component/Loader";
 
 import { RegularButton } from "@Renderer/component/Button";
 import Callout from "@Renderer/component/Callout";
-import { IconFloppyDisk } from "@Renderer/component/Icon";
+import { IconFloppyDisk, IconLoader } from "@Renderer/component/Icon";
 import { MacroSelector } from "@Renderer/component/Select";
 import ToastMessage from "@Renderer/component/ToastMessage";
 import { PageHeader } from "@Renderer/modules/PageHeader";
@@ -47,6 +48,7 @@ import Keymap, { KeymapDB } from "../../api/keymap";
 import i18n from "../i18n";
 
 import Store from "../utils/Store";
+import getLanguage from "../utils/language";
 
 const store = Store.getStore();
 
@@ -91,35 +93,6 @@ const Styles = Styled.div`
   }
 `;
 
-const defaultMacro = [
-  {
-    actions: [
-      { keyCode: 229, type: 6, id: 0 },
-      { keyCode: 11, type: 8, id: 1 },
-      { keyCode: 229, type: 7, id: 2 },
-      { keyCode: 8, type: 8, id: 3 },
-      { keyCode: 28, type: 8, id: 4 },
-      { keyCode: 54, type: 8, id: 5 },
-      { keyCode: 44, type: 8, id: 6 },
-      { keyCode: 229, type: 6, id: 7 },
-      { keyCode: 7, type: 8, id: 8 },
-      { keyCode: 229, type: 7, id: 9 },
-      { keyCode: 28, type: 8, id: 10 },
-      { keyCode: 10, type: 8, id: 11 },
-      { keyCode: 16, type: 8, id: 12 },
-      { keyCode: 4, type: 8, id: 13 },
-      { keyCode: 23, type: 8, id: 14 },
-      { keyCode: 8, type: 8, id: 15 },
-    ],
-    id: 0,
-    macro: "RIGHT SHIFT H RIGHT SHIFT E Y , SPACE RIGHT SHIFT D RIGHT SHIFT Y G M A T E",
-    name: "Hey, Dygmate!",
-  },
-];
-
-const defaultMacroString =
-  "255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255";
-
 function MacroEditor(props) {
   let keymapDB = new KeymapDB();
   const bkp = new Backup();
@@ -138,11 +111,15 @@ function MacroEditor(props) {
     showDeleteModal: false,
     listToDelete: [],
     listToDeleteS: [],
+    listToDeleteM: [],
     selectedList: -1,
     usedMemory: 0,
     totalMemory: 0,
+    macrosEraser: [],
     loading: true,
-    currentLanguageLayout: store.get("settings.language") || "english",
+    currentLanguageLayout: getLanguage(store.get("settings.language")),
+    kbtype: "ansi",
+    scrollPos: 0,
   };
   const [state, setState] = useState(initialState);
   const [deviceState] = useDevice();
@@ -173,9 +150,49 @@ function MacroEditor(props) {
     return superkeys;
   }
 
+  function superkeyMap(superkeys) {
+    // console.log(superkeys);
+    // console.log(superkeys[0].length);
+    if (
+      superkeys.length === 0 ||
+      (superkeys.length === 1 && superkeys[0].length === 0) ||
+      (superkeys.length === 1 && superkeys[0].length === 1 && superkeys[0] === 0)
+    ) {
+      return Array(512).fill("65535").join(" ");
+    }
+    let keyMap = [...superkeys];
+    // console.log("First", keyMap);
+    keyMap = keyMap.map(sky => {
+      let sk = sky;
+      sk = sk.map(act => {
+        if (act === 0 || act == null) return 1;
+        return act;
+      });
+      return sk;
+    });
+    // console.log("Third", keyMap);
+    keyMap = keyMap.map(superkey => superkey.concat([0]));
+    // console.log("Fifth", keyMap);
+    const mapped = []
+      .concat(...keyMap.flat())
+      .concat([0])
+      .join(" ")
+      .replaceAll(",", " ");
+    // console.log(mapped, keyMap);
+    return mapped;
+  }
+
   function macrosMap(macros) {
-    if (macros.length === 0 || (macros.length === 1 && Array.isArray(macros[0].actions))) {
-      return defaultMacroString;
+    const { macrosEraser } = state;
+    console.log(
+      "Macros map function",
+      macros,
+      macrosEraser,
+      macros.length === 0,
+      macros.length === 1 && Array.isArray(macros[0].actions),
+    );
+    if (macros.length === 0 || (macros.length === 1 && !Array.isArray(macros[0].actions))) {
+      return macrosEraser;
     }
     const mapAction = action => {
       switch (action.type) {
@@ -196,19 +213,276 @@ function MacroEditor(props) {
           return [[action.type], [action.keyCode]];
       }
     };
-    return macros
+    const result = macros
       .map(macro => macro.actions.map(action => mapAction(action)).concat([0]))
       .concat([0])
       .flat()
       .join(" ")
       .replaceAll(",", " ");
+    console.log("MACROS GOING TO BE SAVED", result);
+    return result;
   }
 
-  const macroTranslator = raw => {
-    const { storedMacros } = state;
-    if (raw.search(" 0 0") === -1) {
-      return defaultMacro;
+  function addToActions(actions) {
+    const { startContext } = props;
+    const { macros, selectedMacro } = state;
+
+    const macrosList = [...macros];
+    macrosList[selectedMacro].actions = actions;
+    state.macros = macrosList;
+    state.modified = true;
+    setState({ ...state });
+    startContext();
+  }
+
+  // Define updateActions function to update the actions of the selected macro
+  function updateActions(actions) {
+    const { startContext } = props;
+    const { macros, selectedMacro, modified } = state;
+
+    const macrosList = macros;
+    macrosList[selectedMacro].actions = actions;
+    if (!modified) {
+      state.macros = macrosList;
+      state.modified = true;
+      setState({ ...state });
+      startContext();
+    } else {
+      state.macros = macrosList;
+      setState({ ...state });
     }
+  }
+
+  function saveName(data) {
+    const { startContext } = props;
+    const { macros, selectedMacro } = state;
+    const localMacros = [...macros];
+    localMacros[selectedMacro].name = data;
+    state.macros = localMacros;
+    state.modified = true;
+    setState({ ...state });
+    startContext();
+  }
+
+  function updateScroll(scrollPos) {
+    state.scrollPos = scrollPos;
+    setState({ ...state });
+  }
+
+  function changeSelected(id) {
+    state.selectedMacro = id < 0 ? 0 : id;
+    setState({ ...state });
+  }
+
+  function updateMacros(recievedMacros) {
+    const { startContext } = props;
+    state.macros = recievedMacros;
+    state.modified = true;
+    state.usedMemory = recievedMacros.map(m => m.actions).flat().length;
+    setState({ ...state });
+    startContext();
+  }
+
+  function duplicateMacro() {
+    const { macros, maxMacros, selectedMacro } = state;
+    if (macros.length >= maxMacros) {
+      return;
+    }
+    const selected = selectedMacro;
+    const aux = { ...macros[selected] };
+    aux.id = macros.length;
+    aux.name = `Copy of ${aux.name}`;
+    macros.push(aux);
+    updateMacros(macros);
+    changeSelected(aux.id);
+  }
+
+  async function writeMacros() {
+    const { macros, neurons, neuronID, keymap, superkeys } = state;
+    const { setLoading, cancelContext } = props;
+    const { currentDevice } = deviceState;
+    setIsSaving(true);
+    setLoading(true);
+    console.log("saving Macros:", macros, keymap, superkeys);
+    const newMacros = macros;
+    const localNeurons = [...neurons];
+    localNeurons[neuronID].macros = newMacros;
+    store.set("neurons", localNeurons);
+    try {
+      await currentDevice.command("macros.map", macrosMap(newMacros));
+      const args = flatten(keymap.custom).map(k => keymapDB.serialize(k));
+      await currentDevice.command("keymap.custom", ...args);
+      await currentDevice.command("superkeys.map", superkeyMap(superkeys));
+      const commands = await Backup.Commands(currentDevice);
+      const backup = await bkp.DoBackup(commands, neurons[neuronID].id, currentDevice);
+      Backup.SaveBackup(backup, currentDevice);
+      toast.success(<ToastMessage title={i18n.editor.macros.successFlashTitle} content="" icon={<IconFloppyDisk />} />, {
+        autoClose: 2000,
+        icon: "",
+      });
+      state.modified = false;
+      state.macros = newMacros;
+      state.storedMacros = newMacros;
+      setState({ ...state });
+      cancelContext();
+      setLoading(false);
+      setIsSaving(false);
+    } catch (error) {
+      console.log("error when writing macros");
+      console.error(error);
+      toast.error(<ToastMessage title="Error when sending macros to the device" icon={<IconFloppyDisk />} />, { icon: "" });
+      cancelContext();
+      setLoading(false);
+      setIsSaving(false);
+    }
+  }
+
+  function toggleDeleteModal() {
+    state.showDeleteModal = false;
+    setState({ ...state });
+  }
+
+  function ActUponDelete() {
+    const { selectedList, listToDelete, listToDeleteS, listToDeleteM, keymap, superkeys } = state;
+    let { macros } = state;
+    console.log("Checking list to delete macros", listToDeleteM, macros);
+    for (let i = 0; i < listToDelete.length; i += 1) {
+      if (listToDelete[i].newKey === -1) {
+        keymap.custom[listToDelete[i].layer][listToDelete[i].pos] = keymapDB.parse(
+          selectedList === -1 ? 0 : selectedList + 53852,
+        );
+      } else {
+        keymap.custom[listToDelete[i].layer][listToDelete[i].pos] = keymapDB.parse(listToDelete[i].newKey + 53852);
+      }
+    }
+    for (let i = 0; i < listToDeleteS.length; i += 1) {
+      if (listToDeleteS[i].newKey === -1) {
+        superkeys[listToDeleteS[i].superIdx][listToDeleteS[i].pos] = selectedList === -1 ? 1 : selectedList + 53852;
+      } else {
+        superkeys[listToDeleteS[i].superIdx][listToDeleteS[i].pos] = listToDeleteS[i].newKey + 53852;
+      }
+    }
+    for (let i = 0; i < listToDeleteM.length; i += 1) {
+      if (listToDeleteM[i].newKey === -1) {
+        if (selectedList === -1) {
+          macros[listToDeleteM[i].macroIdx].actions[listToDeleteM[i].pos] = undefined;
+        } else {
+          macros[listToDeleteM[i].macroIdx].actions[listToDeleteM[i].pos].keyCode = selectedList + 53852;
+        }
+      } else {
+        macros[listToDeleteM[i].macroIdx].actions[listToDeleteM[i].pos].keyCode = listToDeleteM[i].newKey + 53852;
+      }
+    }
+    macros = macros.map(macro => {
+      const newMacro = { ...macro };
+      newMacro.actions = macro.actions.filter(x => x !== undefined);
+      return newMacro;
+    });
+    console.log("result!", macros);
+    state.keymap = keymap;
+    state.superkeys = superkeys;
+    state.macros = macros;
+    setState({ ...state });
+    toggleDeleteModal();
+  }
+
+  function UpdateList(data) {
+    state.selectedList = parseInt(data, 10);
+    setState({ ...state });
+  }
+
+  function updateKeyboard(keyboardIdx) {
+    const { macros, superkeys, keymap } = state;
+    let customKeymapList = [];
+    let customSuperList = [];
+    let customMacrosList = [];
+    for (let i = keyboardIdx; i < macros.length; i += 1) {
+      const macroID = macros[i].id + 53852;
+      const newKey = i === keyboardIdx ? -1 : i - 1;
+      const filteredKeys = keymap.custom
+        ? keymap.custom
+            .map((layer, layerIdx) =>
+              layer.map((key, pos) => ({ layer: layerIdx, key, pos, newKey })).filter(elem => elem.key.keyCode === macroID),
+            )
+            .flat()
+        : [];
+      const superkeyList = superkeys
+        ? superkeys
+            .map((supers, superIdx) =>
+              supers.map((action, pos) => ({ superIdx, pos, newKey, action })).filter(elem => elem.action === macroID),
+            )
+            .flat()
+        : [];
+      const macrosList = macros
+        ? macros
+            .map((macro, macroIdx) =>
+              macro.actions
+                .map((action, pos) => ({ macroIdx: macroIdx - 1, pos, newKey, actions: macro.actions }))
+                .filter(elem => elem.actions[elem.pos].keyCode === macroID),
+            )
+            .flat()
+        : [];
+      customKeymapList = customKeymapList.concat(filteredKeys);
+      customSuperList = customSuperList.concat(superkeyList);
+      customMacrosList = customMacrosList.concat(macrosList);
+    }
+
+    state.listToDelete = customKeymapList;
+    state.listToDeleteS = customSuperList;
+    state.listToDeleteM = customMacrosList;
+    state.showDeleteModal = customKeymapList.length > 0 || customSuperList.length > 0 || customMacrosList.length > 0;
+    setState({ ...state });
+  }
+
+  function deleteMacro() {
+    const { macros, selectedMacro } = state;
+    if (macros.length === 0) {
+      return;
+    }
+    const selected = selectedMacro;
+    let localMacros = [...macros];
+    localMacros.splice(selected, 1);
+    localMacros = localMacros.map((macro, idx) => {
+      const item = { ...macro };
+      item.id = idx;
+      return item;
+    });
+    if (selected >= macros.length - 1) {
+      changeSelected(macros.length - 2);
+    }
+    updateMacros(localMacros);
+    updateKeyboard(selected);
+  }
+
+  function addMacro(name) {
+    const { macros, maxMacros } = state;
+    if (macros.length >= maxMacros) {
+      return;
+    }
+    const aux = macros;
+    const newID = aux.length;
+    aux.push({
+      actions: [],
+      name,
+      id: newID,
+      macro: "",
+    });
+    updateMacros(aux);
+    changeSelected(newID);
+  }
+
+  function clearMacro() {
+    const { macros, selectedMacro } = state;
+    if (macros.length === 0) {
+      return;
+    }
+    const localMacros = [...macros];
+    localMacros[selectedMacro].actions = [];
+    updateMacros(localMacros);
+  }
+
+  function macroTranslator(raw) {
+    const { storedMacros } = state;
     const macrosArray = raw.split(" 0 0")[0].split(" ").map(Number);
 
     // Translate received macros to human readable text
@@ -280,10 +554,10 @@ function MacroEditor(props) {
         macro: macro.actions.map(k => keymapDB.parse(k.keyCode).label).join(" "),
       };
     });
-  };
+  }
 
   const loadMacros = async () => {
-    const { onDisconnect } = props;
+    const { onDisconnect, cancelContext, setLoading } = props;
     const { currentDevice } = deviceState;
     console.log("Loading macros!");
     try {
@@ -306,10 +580,17 @@ function MacroEditor(props) {
       try {
         kbtype = currentDevice.device && currentDevice.device.info.keyboardType === "ISO" ? "iso" : "ansi";
       } catch (error) {
-        return false;
+        console.log("error when reading focus.device and kbType for Macros");
+        console.error(error);
+        setLoading(false);
+        throw Error(error);
       }
       let tMem = await currentDevice.command("macros.memory");
-      tMem = parseInt(tMem, 10);
+      if (tMem === "") {
+        tMem = 2048;
+      } else {
+        tMem = parseInt(tMem, 10);
+      }
       if (tMem === undefined || tMem < 100) tMem = 2048;
       const defaults = await currentDevice.command("keymap.default");
       const custom = await currentDevice.command("keymap.custom");
@@ -355,212 +636,43 @@ function MacroEditor(props) {
       state.modified = false;
       state.usedMemory = parsedMacros.map(m => m.actions).flat().length;
       state.totalMemory = tMem;
+      state.macrosEraser = Array(tMem).fill("255").join(" ");
       state.loading = false;
       setState({ ...state });
+      cancelContext();
+      setLoading(false);
       return true;
-    } catch (e) {
-      toast.error(<ToastMessage title={e} icon={<IconFloppyDisk />} />, { icon: "" });
+    } catch (error) {
+      console.log("error when loading macros");
+      console.error(error);
+      toast.error(<ToastMessage title="Error when loading macros from the device" icon={<IconLoader />} />, { icon: "" });
+      cancelContext();
+      setLoading(false);
       onDisconnect();
       return false;
     }
   };
 
-  useEffect(() => {
-    const macrosLoader = async () => {
-      const { setLoadingData } = props;
-      await loadMacros();
-      state.loading = false;
-      setState({ ...state });
-      setLoadingData(state.loading);
-    };
-    macrosLoader();
-  }, []);
-
-  const updateMacros = recievedMacros => {
-    const { startContext } = props;
-    state.macros = recievedMacros;
-    state.modified = true;
-    state.usedMemory = recievedMacros.map(m => m.actions).flat().length;
-    setState({ ...state });
-    startContext();
-  };
-
-  const updateKeyboard = keyboardIdx => {
-    const { macros, keymap, selectedList } = state;
-    let customKeymapList = [];
-    for (let i = keyboardIdx; i < macros.length; i += 1) {
-      const macroID = macros[i].id + 53852;
-      const newKey = i === keyboardIdx ? selectedList : i - 1;
-      const filteredKeys = keymap.custom
-        ? keymap.custom
-            .map((layer, layerIdx) =>
-              layer.map((key, pos) => ({ layer: layerIdx, key, pos, newKey })).filter(elem => elem.key.keyCode === macroID),
-            )
-            .flat()
-        : [];
-      customKeymapList = customKeymapList.concat(filteredKeys);
-    }
-    state.listToDelete = customKeymapList;
-    state.listToDeleteS = [];
-    state.showDeleteModal = true;
-    setState({ ...state });
-  };
-
-  const changeSelected = id => {
-    state.selectedMacro = id < 0 ? 0 : id;
-    setState({ ...state });
-  };
-
-  const deleteMacro = () => {
-    const { macros, selectedMacro } = state;
-    if (macros.length === 0) {
-      return;
-    }
-    const selected = selectedMacro;
-    let localMacros = [...macros];
-    localMacros.splice(selected, 1);
-    localMacros = localMacros.map((macro, idx) => {
-      const item = { ...macro };
-      item.id = idx;
-      return item;
-    });
-    if (selected >= macros.length - 1) {
-      changeSelected(macros.length - 2);
-    }
-    updateMacros(localMacros);
-    updateKeyboard(selected);
-  };
-
-  const addMacro = name => {
-    const { macros, maxMacros } = state;
-    if (macros.length >= maxMacros) {
-      return;
-    }
-    const aux = macros;
-    const newID = aux.length;
-    aux.push({
-      actions: [],
-      name,
-      id: newID,
-      macro: "",
-    });
-    updateMacros(aux);
-    changeSelected(newID);
-  };
-
-  const addToActions = actions => {
-    const { macros, selectedMacro } = state;
-
-    const macrosList = [...macros];
-    macrosList[selectedMacro].actions = actions;
-    state.macros = macrosList;
-    state.modified = true;
-    setState({ ...state });
-  };
-
-  const duplicateMacro = () => {
-    const { macros, maxMacros, selectedMacro } = state;
-    if (macros.length >= maxMacros) {
-      return;
-    }
-    const selected = selectedMacro;
-    const aux = { ...macros[selected] };
-    aux.id = macros.length;
-    aux.name = `Copy of ${aux.name}`;
-    macros.push(aux);
-    updateMacros(macros);
-    changeSelected(aux.id);
-  };
-
-  // Define updateActions function to update the actions of the selected macro
-  const updateActions = actions => {
-    const { macros, selectedMacro } = state;
-
-    const macrosList = macros;
-    macrosList[selectedMacro].actions = actions;
-    state.macros = macrosList;
-    state.modified = true;
-    setState({ ...state });
-  };
-
-  const saveName = data => {
-    const { macros, selectedMacro } = state;
-    const localMacros = [...macros];
-    localMacros[selectedMacro].name = data;
-    state.macros = localMacros;
-    state.modified = true;
-    setState({ ...state });
-  };
-
-  const writeMacros = async () => {
-    const { macros, neurons, neuronID, keymap } = state;
-    const { currentDevice } = deviceState;
-    setIsSaving(true);
-    const newMacros = macros;
-    state.modified = false;
-    state.macros = newMacros;
-    state.storedMacros = newMacros;
-    const localNeurons = [...neurons];
-    localNeurons[neuronID].macros = newMacros;
-    store.set("neurons", localNeurons);
-    try {
-      await currentDevice.command("macros.map", macrosMap(newMacros));
-      const args = flatten(keymap.custom).map(k => keymapDB.serialize(k));
-      await currentDevice.command("keymap.custom", ...args);
-      const commands = await Backup.Commands(currentDevice);
-      const backup = await bkp.DoBackup(commands, neurons[neuronID].id, currentDevice);
-      Backup.SaveBackup(backup, currentDevice);
-      toast.success(<ToastMessage title={i18n.editor.macros.successFlashTitle} content="" icon={<IconFloppyDisk />} />, {
-        autoClose: 2000,
-        icon: "",
-      });
-    } catch (error) {
-      toast.error(<ToastMessage title={error} icon={<IconFloppyDisk />} />, { icon: "" });
-    }
-    setIsSaving(false);
-  };
-
-  const toggleDeleteModal = () => {
-    state.showDeleteModal = false;
-    setState({ ...state });
-  };
-
-  const ActUponDelete = () => {
-    const { selectedList, listToDelete, listToDeleteS, keymap, superkeys } = state;
-    for (let i = 0; i < listToDelete.length; i += 1) {
-      if (listToDelete[i].newKey === -1) {
-        keymap.custom[listToDelete[i].layer][listToDelete[i].pos] = keymapDB.parse(0);
-      } else {
-        keymap.custom[listToDelete[i].layer][listToDelete[i].pos] = keymapDB.parse(listToDelete[i].newKey + 53852);
-      }
-    }
-    for (let i = 0; i < listToDeleteS.length; i += 1) {
-      if (selectedList === -1) {
-        superkeys[listToDeleteS[i].i][listToDeleteS[i].pos] = 1;
-      } else {
-        superkeys[listToDeleteS[i].i][listToDeleteS[i].pos] = selectedList + 53852;
-      }
-    }
-    state.keymap = keymap;
-    state.superkeys = superkeys;
-    setState({ ...state });
-    toggleDeleteModal();
-  };
-
-  const UpdateList = data => {
-    state.selectedList = data;
-    setState({ ...state });
-  };
-
   const destroyThisContext = async () => {
-    const { setLoadingData } = props;
+    const { setLoading } = props;
     state.loading = true;
     setState({ ...state });
     await loadMacros();
     state.loading = false;
     setState({ ...state });
-    setLoadingData(state.loading);
+    setLoading(state.loading);
   };
+
+  useEffect(() => {
+    const macrosLoader = async () => {
+      const { setLoading } = props;
+      await loadMacros();
+      state.loading = false;
+      setState({ ...state });
+      setLoading(state.loading);
+    };
+    macrosLoader();
+  }, []);
 
   const {
     macros,
@@ -569,25 +681,59 @@ function MacroEditor(props) {
     selectedList,
     selectedMacro,
     listToDelete,
+    listToDeleteS,
+    listToDeleteM,
     usedMemory,
     totalMemory,
     showDeleteModal,
     kbtype,
     currentLanguageLayout,
     loading,
+    scrollPos,
   } = state;
-  const ListOfMacros = listToDelete.map(({ layer, pos, key, newKey }) => {
+
+  let ListOfDeletes = listToDelete.map(({ layer, pos, key, newKey }) => {
     if (newKey === -1) {
       return (
         <Row key={`${key.keyCode}-${layer}-${pos}-${newKey}`}>
           <Col xs={12} className="px-0 text-center gridded">
-            <p className="titles alignvert">{`Key in layer ${layer} and pos ${pos}`}</p>
+            <p className="titles alignvert">{`Key in layer ${layer + 1} and pos ${pos + 1}`}</p>
           </Col>
         </Row>
       );
     }
     return "";
   });
+  ListOfDeletes = ListOfDeletes.concat(
+    listToDeleteS.map(({ superIdx, pos, newKey }) => {
+      const actions = ["Tap", "Hold", "Tap & hold", "2Tap", "2Tap & hold"];
+      if (newKey === -1) {
+        return (
+          <Row key={`${superIdx}-${pos}-${newKey}`}>
+            <Col xs={12} className="px-0 text-center gridded">
+              <p className="titles alignvert">{`Key in Superkey ${superIdx + 1} and action ${actions[pos]}`}</p>
+            </Col>
+          </Row>
+        );
+      }
+      return "";
+    }),
+  );
+  ListOfDeletes = ListOfDeletes.concat(
+    listToDeleteM.map(({ macroIdx, pos, newKey }) => {
+      if (newKey === -1) {
+        return (
+          <Row key={`${macroIdx}-${pos}-${newKey}`}>
+            <Col xs={12} className="px-0 text-center gridded">
+              <p className="titles alignvert">{`Key in Macro ${macroIdx + 1} and action ${pos}`}</p>
+            </Col>
+          </Row>
+        );
+      }
+      return "";
+    }),
+  );
+
   const ListCombo = (
     <DropdownButton
       id="Selectlayers"
@@ -607,6 +753,7 @@ function MacroEditor(props) {
       ))}
     </DropdownButton>
   );
+
   if (loading) return <LogoLoaderCentered />;
   return (
     <Styles className="macroEditor">
@@ -650,11 +797,14 @@ function MacroEditor(props) {
             <TimelineEditorManager
               macro={macros[selectedMacro]}
               macros={macros}
+              clearMacro={clearMacro}
               keymapDB={keymapDB}
               updateActions={updateActions}
+              updateScroll={updateScroll}
+              scrollPos={scrollPos}
             />
             <MacroCreator
-              macro={JSON.parse(JSON.stringify(macros[selectedMacro]))}
+              macro={{ ...macros[selectedMacro] }}
               macros={macros}
               selected={selectedMacro}
               addToActions={addToActions}
@@ -671,7 +821,7 @@ function MacroEditor(props) {
           <Modal.Title>{i18n.editor.macros.deleteModal.title}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          {ListOfMacros}
+          {ListOfDeletes}
           <p>{i18n.editor.macros.deleteModal.body}</p>
           {ListCombo}
         </Modal.Body>
@@ -697,7 +847,9 @@ function MacroEditor(props) {
 MacroEditor.propTypes = {
   startContext: PropTypes.func,
   onDisconnect: PropTypes.func,
-  setLoadingData: PropTypes.func,
+  setLoading: PropTypes.func,
+  setLoading: PropTypes.func,
+  cancelContext: PropTypes.func,
 };
 
 export default MacroEditor;

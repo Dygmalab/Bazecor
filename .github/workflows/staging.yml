@@ -29,8 +29,11 @@ jobs:
           - os: windows-2019
           - os: ubuntu-20.04
     steps:
+      - uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
       - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - uses: actions/setup-node@v4
         with:
           node-version: 18.16.0
       - run: npm install -g yarn
@@ -68,7 +71,7 @@ jobs:
         with:
           python-version: "3.10"
       - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - uses: actions/setup-node@v4
         with:
           node-version: 18.16.0
       - run: npm install -g yarn

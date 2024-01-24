@@ -29,14 +29,16 @@ const onDeviceSelect = (event: Event, details: any, callback: any) => {
 export const configureHID = () => {
   const window = Window.getWindow();
   window.webContents.session.setPermissionCheckHandler((webContents, permission, requestingOrigin, details) => {
-    if (permission === "hid" && details.securityOrigin.includes("http://localhost")) {
+    console.log("hid configuration", permission, details);
+    if (permission === "hid") {
       return true;
     }
     return false;
   });
 
   window.webContents.session.setDevicePermissionHandler(details => {
-    if (details.deviceType === "hid" && details.origin.includes("http://localhost")) {
+    console.log("hid permissions", details);
+    if (details.deviceType === "hid") {
       return true;
     }
     return false;

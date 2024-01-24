@@ -1,13 +1,11 @@
 import React, { Component } from "react";
+import PropTypes, { object } from "prop-types";
 
 import Styled from "styled-components";
 
 import { MdUnfoldLess, MdKeyboardArrowUp, MdKeyboardArrowDown, MdTimer } from "react-icons/md";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
-import { PreviewMacroModal } from "../../component/Modal";
 import KeyMacro from "./KeyMacro";
-
-import { IconStopWatchXs } from "../../component/Icon";
 
 const Styles = Styled.div`
 .root {
@@ -57,18 +55,25 @@ const Styles = Styled.div`
 &.trackingWrapper {
     position: relative;
     z-index: 1;
-    
+
     background-color: ${({ theme }) => theme.styles.macro.trackingBackground};
     overflow-x: hidden;
     position: relative;
     > div {
       width: inherit;
-      overflow-x: auto; 
-      padding-left: 32px;
+      overflow-x: auto;
+      padding-left: 62px;
+      ::-webkit-scrollbar-track {
+        -webkit-box-shadow: transparent;
+        background-color: white;
+      }
+      ::-webkit-scrollbar-thumb {
+        background-color: grey;
+      }
     }
 }
 .timelinetracking {
-    display: flex; 
+    display: flex;
     flex-wrap: nowrap;
     flex-direction: row;
     width: fit-content;
@@ -83,7 +88,6 @@ class TimelineEditorMacroTable extends Component {
     this.horizontalWheel = React.createRef();
 
     this.state = {
-      addText: "",
       rows: [],
       macro: props.macro,
     };
@@ -102,8 +106,8 @@ class TimelineEditorMacroTable extends Component {
       {
         enum: "MACRO_ACTION_END",
         name: "End macro",
-        icon: <></>,
-        smallIcon: <></>,
+        icon: "",
+        smallIcon: "",
       },
       {
         enum: "MACRO_ACTION_STEP_INTERVAL",
@@ -188,8 +192,10 @@ class TimelineEditorMacroTable extends Component {
   }
 
   componentDidMount() {
-    if (this.props.macro !== null && this.props.macro.actions !== null && this.props.macro.actions.length > 0) {
-      const conv = this.createConversion(this.props.macro.actions);
+    const { macro } = this.props;
+    const { rows } = this.state;
+    if (macro !== null && macro.actions !== null && macro.actions.length > 0) {
+      const conv = this.createConversion(macro.actions);
       const texted = conv.map(k => this.keymapDB.parse(k.keyCode).label).join(" ");
       const newRows = conv.map((item, index) => {
         const aux = item;
@@ -201,7 +207,7 @@ class TimelineEditorMacroTable extends Component {
         macro: texted,
       });
     }
-    if (this.state.rows.length !== 0) {
+    if (rows.length !== 0) {
       const scrollContainer = this.horizontalWheel.current.firstChild;
       // console.log("comparing values of scrollpos in mount", this.props.scrollPos, scrollContainer.scrollLeft);
       scrollContainer.addEventListener("wheel", this.scrollUpdate);
@@ -209,23 +215,25 @@ class TimelineEditorMacroTable extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
+    const { macro, scrollPos } = this.props;
+    const { rows } = this.state;
     if (this.horizontalWheel.current === null) return;
     const scrollContainer = this.horizontalWheel.current.firstChild;
-    if (this.state.rows.length !== 0 && prevState.rows.length === 0) {
+    if (rows.length !== 0 && prevState.rows.length === 0) {
       scrollContainer.addEventListener("wheel", this.scrollUpdate);
     }
-    if (this.state.rows.length === 0 && prevState.rows.length !== 0) {
+    if (rows.length === 0 && prevState.rows.length !== 0) {
       scrollContainer.removeEventListener("wheel", this.scrollUpdate);
     }
     // console.log("comparing values of scrollpos in update", this.props.scrollPos, scrollContainer.scrollLeft);
-    if (scrollContainer.scrollLeft !== this.props.scrollPos) {
-      scrollContainer.scrollLeft = this.props.scrollPos;
+    if (scrollContainer.scrollLeft !== scrollPos) {
+      scrollContainer.scrollLeft = scrollPos;
     }
-    if (this.props.macro !== prevProps.macro) {
-      const rows = this.createConversion(this.props.macro.actions);
-      console.log("TiEMTa CompDidUpdate", rows);
-      const texted = rows.map(k => this.keymapDB.parse(k.keyCode).label).join(" ");
-      const newRows = rows.map((item, index) => {
+    if (macro !== prevProps.macro) {
+      const localRows = this.createConversion(macro.actions);
+      console.log("TiEMTa CompDidUpdate", localRows);
+      const texted = localRows.map(k => this.keymapDB.parse(k.keyCode).label).join(" ");
+      const newRows = localRows.map((item, index) => {
         const aux = item;
         aux.id = index;
         return aux;
@@ -238,20 +246,63 @@ class TimelineEditorMacroTable extends Component {
   }
 
   componentWillUnmount() {
-    if (this.state.rows.length !== 0) {
+    const { rows } = this.state;
+    if (rows.length !== 0) {
       const scrollContainer = this.horizontalWheel.current.firstChild;
       scrollContainer.removeEventListener("wheel", this.scrollUpdate);
     }
   }
 
+  onDeleteRow = id => {
+    const { rows } = this.state;
+    const { uid } = rows.filter(x => x.id === id)[0];
+    const aux = rows.filter(x => x.uid !== uid);
+    this.updateRows(aux);
+  };
+
+  onCloneRow = id => {
+    const { rows } = this.state;
+    const uid = rows.filter(x => x.id === id)[0];
+    const preAux = rows.slice(0, id);
+    const postAux = rows.slice(id);
+    preAux.push(uid);
+    this.updateRows(preAux.concat(postAux));
+  };
+
+  onDragEnd(result) {
+    const { rows } = this.state;
+    this.scrollUpdate(result);
+    // dropped outside the list
+    if (!result.destination) {
+      return;
+    }
+
+    const newRows = this.reorder(rows, result.source.index, result.destination.index);
+
+    this.updateRows(newRows);
+  }
+
+  updateAction = (id, action) => {
+    const { rows } = this.state;
+    const aux = rows;
+    aux[id].action = action;
+    this.updateRows(aux);
+  };
+
   scrollUpdate = evt => {
+    const { updateScroll } = this.props;
     const scrollContainer = this.horizontalWheel.current.firstChild;
-    evt.preventDefault();
-    scrollContainer.scrollLeft += evt.deltaY;
-    this.props.updateScroll(scrollContainer.scrollLeft);
+    if (typeof evt.preventDefault === "function") {
+      evt.preventDefault();
+      scrollContainer.scrollLeft += evt.deltaY;
+    }
+    // console.log("newScroll", scrollContainer.scrollLeft);
+    updateScroll(scrollContainer.scrollLeft);
   };
 
   createConversion(actions) {
+    const { macros } = this.props;
+    console.log("TESTING NAME ASSIGNATION OF MACROS", macros);
     const converted = actions.map((action, i) => {
       const randID = new Date().getTime() + Math.floor(Math.random() * 1000);
       let km;
@@ -282,7 +333,12 @@ class TimelineEditorMacroTable extends Component {
         case 5:
           km = this.keymapDB.parse(action.keyCode);
           if (km.extraLabel !== undefined) {
-            txt = `${km.extraLabel} ${km.label}`;
+            if (km.extraLabel === "MACRO") {
+              const mName = macros[km.keyCode - 53852].name;
+              txt = `M. ${mName}`;
+            } else {
+              txt = `${km.extraLabel} ${km.label}`;
+            }
           } else {
             txt = km.label;
           }
@@ -325,7 +381,7 @@ class TimelineEditorMacroTable extends Component {
 
   assignColor(keyCode) {
     let color = this.modifiers.filter(x => x.keyCode === keyCode);
-    if (color === undefined || color.length == 0) {
+    if (color === undefined || color.length === 0) {
       color = "#ededed";
     } else {
       color = color[0].color;
@@ -334,6 +390,7 @@ class TimelineEditorMacroTable extends Component {
   }
 
   updateRows(rows) {
+    const { updateActions } = this.props;
     console.log("TiEMTa updaterows", rows);
     const texted = rows.map(k => this.keymapDB.parse(k.keyCode).label).join(" ");
     const newRows = rows.map((item, index) => {
@@ -347,7 +404,7 @@ class TimelineEditorMacroTable extends Component {
     });
     const revConv = this.revertConversion(rows);
     // console.log("TiEMTa revConv", revConv);
-    this.props.updateActions(revConv);
+    updateActions(revConv);
   }
 
   reorder(list, startIndex, endIndex) {
@@ -359,11 +416,12 @@ class TimelineEditorMacroTable extends Component {
   }
 
   addModifier(rowID, modifierID) {
+    const { rows } = this.state;
     console.log("Called addModifier", rowID, modifierID);
     const { name, keyCode, color } = this.modifiers[modifierID];
     const randID = new Date().getTime() + Math.floor(Math.random() * 1000);
     const randColor = `#${Math.floor(Math.abs(Math.sin(randID) * 16777215) % 16777215).toString(16)}`;
-    const newRows = this.state.rows;
+    const newRows = rows;
     newRows.splice(rowID + 1, 0, {
       symbol: name,
       keyCode,
@@ -385,62 +443,28 @@ class TimelineEditorMacroTable extends Component {
     this.updateRows(newRows);
   }
 
-  onDragEnd(result) {
-    // dropped outside the list
-    if (!result.destination) {
-      return;
-    }
-
-    const rows = this.reorder(this.state.rows, result.source.index, result.destination.index);
-
-    this.updateRows(rows);
-  }
-
-  onDeleteRow = id => {
-    const { uid } = this.state.rows.filter(x => x.id === id)[0];
-    const aux = this.state.rows.filter(x => x.uid !== uid);
-    this.updateRows(aux);
-  };
-
-  onCloneRow = id => {
-    const uid = this.state.rows.filter(x => x.id === id)[0];
-    const preAux = this.state.rows.slice(0, id);
-    const postAux = this.state.rows.slice(id);
-    preAux.push(uid);
-    this.updateRows(preAux.concat(postAux));
-  };
-
-  updateAction = (id, action) => {
-    const aux = this.state.rows;
-    aux[id].action = action;
-    this.updateRows(aux);
-  };
-
-  updateScrollPos = () => {
-    console.log(this.trackingWidth.current.scrollLeft);
-  };
-
   render() {
-    // const {} = this.props;
+    const { componentWidth } = this.props;
+    const { rows } = this.state;
     const cssObjectWidth = {
-      width: this.props.componentWidth,
+      width: componentWidth,
     };
-    // console.log("Timeline.ed.M.Table Rows", this.state.rows);
-    if (this.state.rows.length === 0) {
+    // console.log("Timeline.ed.M.Table Rows", rows);
+    if (rows.length === 0) {
       return <></>;
     }
     return (
-      <Styles className="trackingWrapper" style={cssObjectWidth} ref={this.horizontalWheel}>
+      <Styles className="trackingWrapper" style={cssObjectWidth} ref={this.horizontalWheel} id="hwTracker">
         <DragDropContext onDragEnd={this.onDragEnd}>
           <Droppable droppableId="droppable" direction="horizontal">
             {provided => (
               <div ref={provided.innerRef}>
                 <div className="timelinetracking">
-                  {this.state.rows.map((item, index) => (
-                    <Draggable key={index} draggableId={String(index)} index={index}>
-                      {(provided, snapshot) => (
+                  {rows.map((item, index) => (
+                    <Draggable key={item.uid} draggableId={String(index)} index={index}>
+                      {(providd, snapshot) => (
                         <KeyMacro
-                          provided={provided}
+                          provided={providd}
                           snapshot={snapshot}
                           item={item}
                           modifiers={this.modifiers}
@@ -463,5 +487,15 @@ class TimelineEditorMacroTable extends Component {
     );
   }
 }
+
+TimelineEditorMacroTable.propTypes = {
+  keymapDB: PropTypes.object,
+  macro: PropTypes.object,
+  macros: PropTypes.arrayOf(object),
+  updateActions: PropTypes.func,
+  updateScroll: PropTypes.func,
+  componentWidth: PropTypes.number,
+  scrollPos: PropTypes.number,
+};
 
 export default TimelineEditorMacroTable;

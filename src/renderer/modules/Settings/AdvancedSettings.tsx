@@ -1,30 +1,35 @@
-import React, { useState } from "react";
-import Styled from "styled-components";
+/* Bazecor
+ * Copyright (C) 2024  DygmaLab SE.
+ *
+ * This program is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation, version 3.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
-// React Bootstrap Components
-import Card from "react-bootstrap/Card";
-import Form from "react-bootstrap/Form";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
+import React, { useState } from "react";
+
+import { Card, CardContent, CardHeader, CardTitle } from "@Renderer/components/ui/card";
+
 import { useDevice } from "@Renderer/DeviceContext";
+import { Select } from "@Renderer/component/Select";
+import { Neuron } from "@Renderer/types/neurons";
+import BackupSettings from "./BackupSettings";
 import i18n from "../../i18n";
 
 // Own Components
-import Title from "../../component/Title";
 import { RegularButton } from "../../component/Button";
 import ConfirmationDialog from "../../component/ConfirmationDialog";
 
 // Icons Imports
-import { IconChip } from "../../component/Icon";
-
-const Style = Styled.div`
-.advancedToggles {
-  display: flex;
-  .switchHolder {
-    margin-right: 2rem;
-  } 
-}
-`;
+import { IconChip, IconLayers } from "../../component/Icon";
 
 const AdvancedKeyboardSettings = () => {
   const [EEPROMClearConfirmationOpen, setEEPROMClearConfirmationOpen] = useState(false);
@@ -75,65 +80,63 @@ const AdvancedKeyboardSettings = () => {
 };
 
 interface AdvancedSettingsProps {
-  devToolsSwitch: JSX.Element;
-  verboseSwitch: JSX.Element;
   connected: boolean;
-  onlyCustomSwitch: JSX.Element;
-  allowBetas: JSX.Element;
-  pairingButton: JSX.Element;
+  defaultLayer: number;
+  selectDefaultLayer: (value: string) => void;
+  neurons: Neuron[];
+  neuronID: string;
+  selectedNeuron: number;
+  updateTab: (value: string) => void;
 }
 
-const AdvancedSettings = (props: AdvancedSettingsProps) => {
-  const { devToolsSwitch, verboseSwitch, onlyCustomSwitch, connected, allowBetas, pairingButton } = props;
+const AdvancedSettings = ({
+  connected,
+  selectDefaultLayer,
+  defaultLayer,
+  neurons,
+  neuronID,
+  selectedNeuron,
+  updateTab,
+}: AdvancedSettingsProps) => {
+  let layersNames: any = neurons[selectedNeuron] ? neurons[selectedNeuron].layers : [];
+  layersNames = layersNames.map((item: any, index: any) => ({
+    text: item.name !== "" ? item.name : `Layer ${index + 1}`,
+    value: index,
+    index,
+  }));
+  layersNames.push({ text: i18n.keyboardSettings.keymap.noDefault, value: 126, index: 126 });
   return (
-    <Style>
-      <Card className="overflowFix card-preferences mt-4 mb-4">
-        <Card.Title>
-          <Title text={i18n.preferences.advanced} headingLevel={3} svgICO={<IconChip />} />
-        </Card.Title>
-        <Card.Body className="pb-0">
-          <Row>
-            <Col xs={12}>
-              <div className="advancedToggles">
-                <Form.Group controlId="DevTools" className="switchHolder">
-                  <Form.Label>{i18n.preferences.devtools}</Form.Label>
-                  {devToolsSwitch}
-                </Form.Group>
-                <Form.Group controlId="Verbose" className="switchHolder">
-                  <Form.Label>{i18n.preferences.verboseFocus}</Form.Label>
-                  {verboseSwitch}
-                </Form.Group>
-                <Form.Group controlId="allowBetas" className="switchHolder">
-                  <Form.Label>{i18n.preferences.allowBeta}</Form.Label>
-                  {allowBetas}
-                </Form.Group>
-                {connected ? (
-                  <Form.Group controlId="onlyCustom" className="switchHolder">
-                    <Form.Label>{i18n.preferences.onlyCustom}</Form.Label>
-                    {onlyCustomSwitch}
-                  </Form.Group>
-                ) : (
-                  ""
-                )}
-              </div>
-            </Col>
-          </Row>
-          {connected ? (
-            <Row>
-              <Col xs={12} className="mt-4">
-                <Title headingLevel={6} text={i18n.keyboardSettings.resetEEPROM.title} />
-              </Col>
-              <Col xs={12}>
-                <AdvancedKeyboardSettings />
-                {pairingButton}
-              </Col>
-            </Row>
-          ) : (
-            ""
-          )}
-        </Card.Body>
+    <>
+      <Card className="max-w-2xl mx-auto" variant="default">
+        <CardHeader>
+          <CardTitle variant="default">
+            <IconLayers /> {i18n.keyboardSettings.keymap.defaultLayer}
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <form>
+            <Select
+              id="selectDefaultLayer"
+              onSelect={selectDefaultLayer}
+              value={defaultLayer}
+              listElements={layersNames}
+              disabled={!connected}
+            />
+          </form>
+        </CardContent>
       </Card>
-    </Style>
+      <BackupSettings connected={connected} neurons={neurons} neuronID={neuronID} updateTab={updateTab} />
+      <Card className="mt-3 max-w-2xl mx-auto" variant="default">
+        <CardHeader>
+          <CardTitle variant="default">
+            <IconChip /> {i18n.keyboardSettings.resetEEPROM.title}
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <form>{connected && <AdvancedKeyboardSettings />}</form>
+        </CardContent>
+      </Card>
+    </>
   );
 };
 

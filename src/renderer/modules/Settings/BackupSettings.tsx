@@ -1,58 +1,55 @@
+/* Bazecor
+ * Copyright (C) 2024  DygmaLab SE.
+ *
+ * This program is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation, version 3.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 import React, { useState, useEffect } from "react";
-import { useDevice } from "@Renderer/DeviceContext";
 import { ipcRenderer } from "electron";
-import Slider from "@appigram/react-rangeslider";
+import { toast } from "react-toastify";
 import fs from "fs";
 
 // React Bootstrap Components
-import Card from "react-bootstrap/Card";
-import Form from "react-bootstrap/Form";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
+import { Card, CardContent, CardHeader, CardTitle } from "@Renderer/components/ui/card";
 
 // Own Components
-import i18n from "../../i18n";
-import Title from "../../component/Title";
-import BackupFolderConfigurator from "../BackupFolderConfigurator";
+import { useDevice } from "@Renderer/DeviceContext";
+import ToastMessage from "@Renderer/component/ToastMessage";
+import i18n from "@Renderer/i18n";
+import { RegularButton } from "@Renderer/component/Button";
 
 // Icons Imports
-import { IconFloppyDisk } from "../../component/Icon";
+import { IconArrowDownWithLine, IconFloppyDisk } from "@Renderer/component/Icon";
 
-import Store from "../../utils/Store";
+// Utils
+import Store from "@Renderer/utils/Store";
 
 const store = Store.getStore();
 
 interface BackupSettingsProps {
   connected: boolean;
+  neurons: any;
+  neuronID: string;
+  updateTab: (value: string) => void;
 }
 
 const BackupSettings = (props: BackupSettingsProps) => {
   const [backupFolder, setBackupFolder] = useState("");
-  const [storeBackups, setStoreBackups] = useState(13);
   const [state] = useDevice();
-  const { connected } = props;
+  const { connected, neurons, neuronID, updateTab } = props;
   useEffect(() => {
     setBackupFolder(store.get("settings.backupFolder") as string);
-    setStoreBackups(store.get("settings.backupFrequency") as number);
   }, []);
-
-  const ChooseBackupFolder = async () => {
-    const options = {
-      title: i18n.keyboardSettings.backupFolder.title,
-      buttonLabel: i18n.keyboardSettings.backupFolder.windowButton,
-      properties: ["openDirectory"],
-    };
-
-    const resp = await ipcRenderer.invoke("open-dialog", options);
-
-    if (!resp.canceled) {
-      console.log(resp.filePaths);
-      setBackupFolder(resp.filePaths[0]);
-      store.set("settings.backupFolder", `${resp.filePaths[0]}`);
-    } else {
-      console.log("user closed backup folder dialog");
-    }
-  };
 
   const restoreBackup = async (backup: any) => {
     let data = [];
@@ -60,6 +57,11 @@ const BackupSettings = (props: BackupSettingsProps) => {
       data = backup;
     } else {
       data = backup.backup;
+      const localNeurons = [...neurons];
+      const index = localNeurons.findIndex(n => n.id === neuronID);
+      localNeurons[index] = backup.neuron;
+      localNeurons[index].id = neuronID;
+      store.set("neurons", localNeurons);
     }
     if (state.currentDevice) {
       try {
@@ -80,6 +82,17 @@ const BackupSettings = (props: BackupSettingsProps) => {
         await state.currentDevice.command("led.mode 0");
         console.log("Restoring all settings");
         console.log("Firmware update OK");
+        toast.success(
+          <ToastMessage
+            title="Backup restored successfully"
+            content="Your backup was restored successfully to the device!"
+            icon={<IconArrowDownWithLine />}
+          />,
+          {
+            autoClose: 2000,
+            icon: "",
+          },
+        );
         return true;
       } catch (e) {
         console.log(`Restore settings: Error: ${e.message}`);
@@ -102,6 +115,17 @@ const BackupSettings = (props: BackupSettingsProps) => {
         }
         await state.currentDevice.command("led.mode 0");
         console.log("Settings restored OK");
+        toast.success(
+          <ToastMessage
+            title="Backup restored successfully"
+            content="Your backup was restored successfully to the device!"
+            icon={<IconArrowDownWithLine />}
+          />,
+          {
+            autoClose: 2000,
+            icon: "",
+          },
+        );
         return true;
       } catch (e) {
         console.log(`Restore settings: Error: ${e.message}`);
@@ -147,47 +171,39 @@ const BackupSettings = (props: BackupSettingsProps) => {
     }
   };
 
-  const onSetStoreBackups = (value: any) => {
-    console.log("changed backup period to: ", value);
-    setStoreBackups(value);
-    store.set("settings.backupFrequency", value);
+  const setApplicationTab = () => {
+    // Call the onTabChange function from props with the desired value
+    updateTab("Application");
   };
 
   return (
-    <Card className="overflowFix card-preferences mt-4">
-      <Card.Title>
-        <Title text={i18n.keyboardSettings.backupFolder.header} headingLevel={3} svgICO={<IconFloppyDisk />} />
-      </Card.Title>
-      <Card.Body className="pb-0">
-        <Form.Group controlId="backupFolder" className="mb-0">
-          <Row>
-            <Col>
-              <BackupFolderConfigurator
-                chooseBackupFolder={ChooseBackupFolder}
-                getBackup={GetBackup}
-                backupFolder={backupFolder}
-                connected={connected}
-              />
-            </Col>
-          </Row>
-          <Row>
-            <Col className="mt-3">
-              <Form.Label>{i18n.keyboardSettings.backupFolder.storeTime}</Form.Label>
-            </Col>
-          </Row>
-          <Row>
-            <Col xs={2} className="p-0 text-center align-self-center">
-              <span className="tagsfix">1 month</span>
-            </Col>
-            <Col xs={8} className="px-1">
-              <Slider min={0} max={13} step={1} value={storeBackups} onChange={onSetStoreBackups} />
-            </Col>
-            <Col xs={2} className="p-0 text-center align-self-center">
-              <span className="tagsfix">Forever</span>
-            </Col>
-          </Row>
-        </Form.Group>
-      </Card.Body>
+    <Card className="mt-3 max-w-2xl mx-auto" variant="default">
+      <CardHeader>
+        <CardTitle variant="default">
+          <IconFloppyDisk /> {i18n.keyboardSettings.backupFolder.header}
+        </CardTitle>
+      </CardHeader>
+      <CardContent>
+        <form>
+          <h3 className="text-gray-400 dark:text-gray-100 tracking-tight font-semibold">Backup folder</h3>
+          <p className="text-gray-300 dark:text-gray-300 tracking-tight font-semibold text-sm">
+            {backupFolder}{" "}
+            <button
+              type="button"
+              className="px-1 m-0 decoration-1 text-purple-300 hover:text-purple-300 dark:text-purple-200 dark:hover:text-purple-100"
+              value="Application"
+              onClick={setApplicationTab}
+            >
+              Change folder
+            </button>
+          </p>
+          <h3 className="mt-3 mb-1 text-gray-400 dark:text-gray-100 tracking-tight font-semibold">Backup actions</h3>
+          <div className="flex gap-3">
+            <RegularButton onClick={GetBackup} styles="short" buttonText="Restore backup from file..." disabled={!connected} />
+            <RegularButton onClick={() => console.log("Last backup")} styles="short" buttonText="Restore from last backup" />
+          </div>
+        </form>
+      </CardContent>
     </Card>
   );
 };

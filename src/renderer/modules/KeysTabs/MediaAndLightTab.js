@@ -22,6 +22,7 @@ import {
   IconToolsEjectSm,
   IconLEDPreviousEffectSm,
   IconLEDNextEffectSm,
+  IconLEDToggleEffectSm,
   IconSleepSm,
   IconShutdownSm,
 } from "@Renderer/component/Icon";
@@ -177,7 +178,7 @@ class MediaAndLightTab extends Component {
               <p className="description">{i18n.editor.superkeys.specialKeys.LEDDescription}</p>
               <div className="keysButtonsList">
                 <ButtonConfig
-                  buttonText={i18n.editor.superkeys.specialKeys.ledToggleText}
+                  icoSVG={<IconLEDToggleEffectSm />}
                   tooltip={i18n.editor.superkeys.specialKeys.ledToggleTootip}
                   tooltipDelay={300}
                   className="buttonConfigLED"

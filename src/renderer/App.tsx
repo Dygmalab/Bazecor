@@ -19,18 +19,17 @@
 
 import React, { useState, useEffect } from "react";
 import { Routes, Navigate, Route, useNavigate } from "react-router-dom";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import { ThemeProvider } from "styled-components";
 import { ipcRenderer } from "electron";
 import path from "path";
 import i18n from "@Renderer/i18n";
 
-import "react-toastify/dist/ReactToastify.css";
-
 import GlobalStyles from "@Renderer/theme/GlobalStyles";
 import Light from "@Renderer/theme/LightTheme";
 import Dark from "@Renderer/theme/DarkTheme";
 
+import Header from "@Renderer/modules/NavigationMenu";
 import SelectKeyboard from "@Renderer/views/NewSelectKeyboard";
 import FirmwareUpdate from "@Renderer/views/FirmwareUpdate";
 import LayoutEditor from "@Renderer/views/LayoutEditor";
@@ -46,12 +45,13 @@ import BazecorDevtools from "@Renderer/views/BazecorDevtools";
 import { showDevtools } from "@Renderer/devMode";
 
 import Store from "@Renderer/utils/Store";
+import getTranslator from "@Renderer/utils/translator";
 import Focus from "../api/focus";
 import "../api/keymap";
 import "../api/colormap";
 import { useDevice } from "./DeviceContext";
+import DeviceManager from "./views/DeviceManager";
 import Device from "../api/comms/Device";
-import Header from "./modules/NavigationMenu";
 
 const store = Store.getStore();
 
@@ -83,25 +83,13 @@ function App() {
       i18n.setLanguage(store.get("settings.language").toString());
       return;
     }
-    // create locale language identifier
-    const translator = {
-      en: "english",
-      es: "spanish",
-      fr: "french",
-      de: "german",
-      sv: "swedish",
-      da: "danish",
-      no: "norwegian",
-      is: "icelandic",
-    };
-    // console.log("languageTEST", lang, translator[lang.split("-")[0]], translator["hh"]);
 
     // Store all settings from electron settings in electron store.
     const data = {} as any;
     const userPath = await ipcRenderer.invoke("get-userPath", "home");
     data.backupFolder = path.join(userPath, "Dygma", "Backups");
     data.backupFrequency = 30;
-    data.language = translator[locale.split("-")[0]] !== "" ? translator[locale.split("-")[0]] : "english";
+    data.language = getTranslator(locale);
     data.darkMode = "system";
     data.showDefaults = false;
     i18n.setLanguage(data.language);
@@ -118,6 +106,12 @@ function App() {
       isDark = mode === "dark";
       if (mode === "system") {
         isDark = await ipcRenderer.invoke("get-NativeTheme");
+        if (isDark) {
+          document.documentElement.classList.remove("light");
+          document.documentElement.classList.add("dark");
+        }
+      } else {
+        document.documentElement.classList.add(mode);
       }
 
       // Settings entry creation for the beta toggle, it will have a control in preferences to change the policy
@@ -151,6 +145,11 @@ function App() {
     const dm = store.get("settings.darkMode");
     if (dm === "system") {
       forceDarkMode(message);
+    }
+    if (dm || (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches)) {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
     }
   };
 
@@ -195,10 +194,19 @@ function App() {
   };
 
   const toggleDarkMode = async (mode: string) => {
+    document.documentElement.classList.remove("light");
+    document.documentElement.classList.remove("dark");
+    document.documentElement.classList.remove("system");
     console.log("Dark mode changed to: ", mode, "NativeTheme says: ", ipcRenderer.invoke("get-NativeTheme"));
     let isDark = mode === "dark";
     if (mode === "system") {
       isDark = await ipcRenderer.invoke("get-NativeTheme");
+      if (isDark) {
+        document.documentElement.classList.remove("light");
+        document.documentElement.classList.add("dark");
+      }
+    } else {
+      document.documentElement.classList.add(mode);
     }
     setDarkMode(isDark);
     store.set("settings.darkMode", mode);
@@ -269,8 +277,15 @@ function App() {
     setLoading(lding);
   };
 
-  const updateAllowBeta = (event: any) => {
-    const newValue = event.target.checked;
+  // const updateAllowBeta = (event: any) => {
+  //   const newValue = event.target.checked;
+  //   // console.log("new allowBeta value: ", newValue);
+  //   store.set("settings.allowBeta", newValue);
+  //   setAllowBeta(newValue);
+  // };
+
+  const onChangeAllowBetas = checked => {
+    const newValue = checked;
     // console.log("new allowBeta value: ", newValue);
     store.set("settings.allowBeta", newValue);
     setAllowBeta(newValue);
@@ -284,8 +299,9 @@ function App() {
         pages={pages}
         flashing={!connected}
         fwUpdate={fwUpdate}
-        loading={loading}
         allowBeta={allowBeta}
+        loading={loading}
+        inContext={contextBar}
         setIsSending={setIsSending}
         isSending={isSending}
       />
@@ -304,6 +320,12 @@ function App() {
             }
           />
           <Route
+            path="/device-manager"
+            element={
+              <DeviceManager path="/device-manager" titleElement={() => document.querySelector("#page-title")} device={device} />
+            }
+          />
+          <Route
             path="/keyboard-select"
             element={
               <SelectKeyboard
@@ -312,6 +334,7 @@ function App() {
                 onConnect={onKeyboardConnect}
                 onDisconnect={onKeyboardDisconnect}
                 titleElement={() => document.querySelector("#page-title")}
+                setLoadingData={setLoadingData}
                 device={device}
                 darkMode={darkMode}
               />
@@ -343,7 +366,7 @@ function App() {
                 onDisconnect={onKeyboardDisconnect}
                 startContext={startContext}
                 cancelContext={cancelContext}
-                setLoadingData={setLoadingData}
+                setLoading={setLoadingData}
                 inContext={contextBar}
                 titleElement={() => document.querySelector("#page-title")}
               />
@@ -357,7 +380,7 @@ function App() {
                 onDisconnect={onKeyboardDisconnect}
                 startContext={startContext}
                 cancelContext={cancelContext}
-                setLoadingData={setLoadingData}
+                setLoading={setLoadingData}
                 inContext={contextBar}
                 titleElement={() => document.querySelector("#page-title")}
               />
@@ -387,7 +410,8 @@ function App() {
                 toggleDarkMode={toggleDarkMode}
                 startContext={startContext}
                 cancelContext={cancelContext}
-                updateAllowBeta={updateAllowBeta}
+                onChangeAllowBetas={onChangeAllowBetas}
+                setLoadingData={setLoadingData}
                 allowBeta={allowBeta}
                 inContext={contextBar}
               />
@@ -404,7 +428,8 @@ function App() {
                 toggleDarkMode={toggleDarkMode}
                 startContext={startContext}
                 cancelContext={cancelContext}
-                updateAllowBeta={updateAllowBeta}
+                updateAllowBeta={onChangeAllowBetas}
+                setLoadingData={setLoadingData}
                 allowBeta={allowBeta}
                 inContext={contextBar}
               />
@@ -412,16 +437,6 @@ function App() {
           />
         </Routes>
       </div>
-      <ToastContainer
-        position="top-right"
-        autoClose={false}
-        hideProgressBar={false}
-        newestOnTop={false}
-        draggable={false}
-        closeOnClick
-        pauseOnHover
-        pauseOnFocusLoss
-      />
     </ThemeProvider>
   );
 }

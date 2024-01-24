@@ -19,24 +19,40 @@ import React from "react";
 import { MemoryRouter } from "react-router-dom";
 import { createRoot } from "react-dom/client";
 import { I18nextProvider } from "react-i18next";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import App from "./App";
 import Error from "./Error";
 import "bootstrap-css-only/css/bootstrap.min.css";
 import "@appigram/react-rangeslider/lib/index.css";
+import "./theme/styles.css";
 import i18n from "./i18n";
 import { DeviceProvider } from "./DeviceContext";
+import ErrorBoundary from "./ErrorBoundary";
 
 const container = document.getElementById("root");
 const root = createRoot(container);
 try {
   root.render(
-    <MemoryRouter>
-      <DeviceProvider>
-        <I18nextProvider i18n={i18n}>
-          <App />
-        </I18nextProvider>
-      </DeviceProvider>
-    </MemoryRouter>,
+    <ErrorBoundary>
+      <MemoryRouter>
+        <DeviceProvider>
+          <I18nextProvider i18n={i18n}>
+            <App />
+            <ToastContainer
+              position="top-right"
+              autoClose={false}
+              hideProgressBar={false}
+              newestOnTop={false}
+              draggable={false}
+              closeOnClick
+              pauseOnHover
+              pauseOnFocusLoss
+            />
+          </I18nextProvider>
+        </DeviceProvider>
+      </MemoryRouter>
+    </ErrorBoundary>,
   );
 } catch (e) {
   root.render(<Error error={e} />);

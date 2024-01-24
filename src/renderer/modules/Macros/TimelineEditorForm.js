@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import Styled from "styled-components";
+import { IconArrowChevronLeft, IconArrowChevronRight } from "@Renderer/component/Icon";
 import i18n from "../../i18n";
 
 import TimelineEditorMacroTable from "./TimelineEditorMacroTable";
@@ -44,29 +45,42 @@ const Styles = Styled.div`
   float: right;
   margin-right: 1rem;
 }
-
+.goStart {
+  left: 3px;
+}
+.goEnd {
+  right: 3px;
+}
+.goStart,
+.goEnd {
+  width: 50px;
+  height: calc(100% - 6px);
+  padding: 0;
+  top: 3px;
+  position: absolute;
+  backdrop-filter: blur(3px);
+  border-radius: 4px;
+  justify-content: center;
+  align-self: center;
+  text-align-last: center;
+  z-index: 9;
+  display: flex;
+  transition: 300ms background-color ease-in-out;
+  color: ${({ theme }) => theme.styles.button.navButton.color};
+  background-color: ${({ theme }) => theme.styles.button.navButton.background};
+  &:hover {
+    cursor: pointer;
+    background-color: ${({ theme }) => theme.styles.button.navButton.backgroundHover};
+  }
+}
+.goStart svg,
+.goEnd svg {
+  margin-top: auto;
+  margin-bottom: auto;
+}
 
 position: relative;
-&:before,
-&:after {
-  position: absolute;
-  top: 0;
-  content: "";
-  width: 62px;
-  height: 100%;
-  background: ${({ theme }) => theme.styles.macro.timelineHiddenTracking};
-  z-index: 1;
-}
-&:before {
-  left: 0;
-  z-index: 2;
-  background: ${({ theme }) => theme.styles.macro.timelineHiddenTrackingBefore};
-  width: 42px;
-}
-&:after {
-  right: 0;
-
-}
+display: flex;
 `;
 
 class MacroForm extends Component {
@@ -74,22 +88,43 @@ class MacroForm extends Component {
     super(props);
   }
 
+  wheelPosStart = () => {
+    const { updateScroll } = this.props;
+    const scrollContainer = document.getElementById("hwTracker").firstChild;
+    scrollContainer.scrollLeft = 0;
+    updateScroll(0);
+  };
+
+  wheelPosEnd = () => {
+    const { updateScroll } = this.props;
+    const scrollContainer = document.getElementById("hwTracker").firstChild;
+    // console.log("checking end pos of scroll", scrollContainer, scrollContainer.scrollWidth);
+    updateScroll(scrollContainer.scrollWidth);
+  };
+
   render() {
-    const { macro, updateActions, keymapDB, componentWidth, updateScroll, scrollPos } = this.props;
+    const { macro, macros, updateActions, keymapDB, componentWidth, updateScroll, scrollPos } = this.props;
     if (macro === undefined || macro.actions === undefined) {
       return <div>{i18n.editor.macros.macroTab.noMacro}</div>;
     }
     return (
       <Styles>
+        <div className="goStart" onClick={this.wheelPosStart}>
+          <IconArrowChevronLeft />
+        </div>
         <TimelineEditorMacroTable
           key={JSON.stringify(macro.actions)}
           macro={macro}
+          macros={macros}
           updateActions={updateActions}
           keymapDB={keymapDB}
           componentWidth={componentWidth}
           updateScroll={updateScroll}
           scrollPos={scrollPos}
         />
+        <div className="goEnd" onClick={this.wheelPosEnd}>
+          <IconArrowChevronRight />
+        </div>
       </Styles>
     );
   }

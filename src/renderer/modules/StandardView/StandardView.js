@@ -1,15 +1,11 @@
 import React from "react";
 
 import Styled from "styled-components";
-import Tab from "react-bootstrap/Tab";
-import Nav from "react-bootstrap/Nav";
-
-import Keymap, { KeymapDB } from "../../../api/keymap";
+import { motion } from "framer-motion";
 
 // component
 import { RegularButton } from "@Renderer/component/Button";
 import KeyVisualizer from "@Renderer/modules/KeyVisualizer";
-import CustomTab from "@Renderer/component/Tab";
 import KeysTab from "@Renderer/modules/KeysTabs/KeysTab";
 import NoKeyTransparentTab from "@Renderer/modules/KeysTabs/NoKeyTransparentTab";
 import LayersTab from "@Renderer/modules/KeysTabs/LayersTab";
@@ -34,6 +30,8 @@ import {
   IconThunder,
   IconWirelessMd,
 } from "@Renderer/component/Icon";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@Renderer/components/ui/tabs";
+import { KeymapDB } from "../../../api/keymap";
 
 const Styles = Styled.div`
 .standardView {
@@ -46,11 +44,11 @@ const Styles = Styled.div`
     z-index: 500;
     padding: 32px 32px 32px 164px;
     .standardViewInner {
-        width: 100%;
-        height: 100%;
-        display: grid;
-        grid-gap: 14px;
-        grid-template-columns: minmax(200px, 220px) 1fr;
+        // width: 100%;
+        // height: 100%;
+        // display: grid;
+        // grid-gap: 14px;
+        // grid-template-columns: minmax(200px, 220px) 1fr;
     }
 }
 .colContentTabs {
@@ -217,7 +215,6 @@ const Styles = Styled.div`
         margin-top: 0;
       }
     }
-    
   }
 }
 
@@ -230,21 +227,23 @@ export default class StandardView extends React.Component {
     this.state = {
       name: props.name,
       code: 0,
+      currentTab: 0,
     };
     this.keymapDB = new KeymapDB();
   }
 
   componentDidUpdate(prevProps) {
+    const { keyIndex, actTab, layerData } = this.props;
     // console.log("StandardView componentDidUpdate", prevProps.keyIndex, this.props.keyIndex);
     // if(this.props.actTab == "editor") {
 
     // }
-    if (prevProps.keyIndex !== this.props.keyIndex) {
-      if (this.props.keyIndex !== -1) {
-        if (this.props.actTab == "super") {
-          this.setState({ code: this.props.layerData[this.props.keyIndex] });
+    if (prevProps.keyIndex !== keyIndex) {
+      if (keyIndex !== -1) {
+        if (actTab == "super") {
+          this.setState({ code: layerData[keyIndex] });
         } else {
-          this.setState({ code: this.props.layerData[this.props.keyIndex].keyCode });
+          this.setState({ code: layerData[keyIndex].keyCode });
         }
       } else {
         this.setState({ code: 0 });
@@ -252,42 +251,42 @@ export default class StandardView extends React.Component {
     }
   }
 
+  onAddSpecial = (keycode, action) => {
+    const { onKeySelect } = this.props;
+    onKeySelect(keycode);
+  };
+
   parseKey(keycode) {
-    const macro = this.props.macros[parseInt(this.keymapDB.parse(keycode).label)];
+    const { macros, code } = this.props;
+    const macro = macros[parseInt(this.keymapDB.parse(keycode).label, 10)];
     let macroName;
     try {
-      macroName = this.props.macros[parseInt(this.keymapDB.parse(keycode).label)].name.substr(0, 5);
+      macroName = macros[parseInt(this.keymapDB.parse(keycode).label, 10)].name.substr(0, 5);
     } catch (error) {
       macroName = "*NotFound*";
     }
     if (keycode >= 53852 && keycode <= 53852 + 128) {
-      if (this.props.code !== null) return `${this.keymapDB.parse(keycode).extraLabel}.${macroName}`;
+      if (code !== null) return `${this.keymapDB.parse(keycode).extraLabel}.${macroName}`;
     }
+    if (React.isValidElement(this.keymapDB.parse(keycode).label)) return this.keymapDB.parse(keycode).label;
     return this.props.code !== null
-      ? this.keymapDB.parse(keycode).extraLabel != undefined
+      ? this.keymapDB.parse(keycode).extraLabel !== undefined
         ? `${this.keymapDB.parse(keycode).extraLabel}.${this.keymapDB.parse(keycode).label}`
         : this.keymapDB.parse(keycode).label
       : "";
   }
 
-  onAddSpecial = (keycode, action) => {
-    this.props.onKeySelect(keycode);
-  };
-
   render() {
     const {
       actions,
-      action,
       actTab,
       code,
       closeStandardView,
       handleSave,
-      id,
       isStandardView,
       kbtype,
       keyIndex,
       layerData,
-      labelInput,
       macros,
       onKeySelect,
       selectedlanguage,
@@ -295,6 +294,7 @@ export default class StandardView extends React.Component {
       superkeys,
       isWireless,
     } = this.props;
+    const { stateCode, selected } = this.state;
     let keyCode;
     if (actTab == "super") {
       keyCode = keyIndex !== -1 ? layerData[keyIndex] : 0;
@@ -303,121 +303,165 @@ export default class StandardView extends React.Component {
     }
 
     const selKey = this.parseKey(keyCode);
-    const oldKey = this.parseKey(this.state.code);
+    const oldKey = this.parseKey(stateCode);
     if (!showStandardView) return null;
+
+    const tabVariants = {
+      hidden: { opacity: 0 },
+      visible: { opacity: 1, transition: { duration: 0.5 } },
+    };
+
     return (
       <Styles>
         <div className="standardView">
-          <Tab.Container id="standardViewCointainer" defaultActiveKey="tabKeys">
-            <div className="standardViewInner">
+          <Tabs
+            defaultValue="tabKeys"
+            orientation="vertical"
+            index={this.state.currentTab}
+            onChange={index =>
+              this.setState({
+                currentTab: index,
+              })
+            }
+          >
+            <div className="standardViewInner w-full h-full grid gap-6 grid-cols-[minmax(200px,_220px)_1fr]">
               <div className="colVisualizerTabs">
                 <KeyVisualizer
                   keyCode={keyCode}
-                  oldKeyCode={this.state.code}
+                  oldKeyCode={stateCode}
                   oldValue={oldKey}
                   newValue={selKey}
                   isStandardView={isStandardView}
                   superkeyAction={`${actTab === "super" ? keyIndex : 5}`}
                 />
-                <Nav className="flex-column tabsWrapper">
-                  <CustomTab eventKey="tabKeys" text="Keys" icon={<IconKeyboard />} />
-                  <CustomTab eventKey="tabNoKeys" text={i18n.editor.standardView.noKeyTransparent} icon={<IconNoKey />} />
-                  <CustomTab eventKey="tabLayers" text={i18n.editor.standardView.layers.title} icon={<IconLayers />} />
-                  <CustomTab eventKey="tabMacro" text={i18n.editor.standardView.macros.title} icon={<IconRobot />} />
+                <TabsList className="flex flex-column gap-1 tabsWrapper">
+                  <TabsTrigger value="tabKeys" variant="tab">
+                    <IconKeyboard /> Keys
+                  </TabsTrigger>
+                  <TabsTrigger value="tabNoKeys" variant="tab">
+                    <IconNoKey /> {i18n.editor.standardView.noKeyTransparent}
+                  </TabsTrigger>
+                  <TabsTrigger value="tabLayers" variant="tab">
+                    <IconLayers /> {i18n.editor.standardView.layers.title}
+                  </TabsTrigger>
+                  <TabsTrigger value="tabMacro" variant="tab">
+                    <IconRobot /> {i18n.editor.standardView.macros.title}
+                  </TabsTrigger>
                   {actTab !== "super" ? (
                     <>
-                      <CustomTab
-                        eventKey="tabSuperKeys"
-                        text={i18n.editor.standardView.superkeys.title}
-                        icon={<IconThunder />}
-                        notifText="BETA"
-                      />
-                      <CustomTab eventKey="tabOneShot" text={i18n.editor.standardView.oneShot.title} icon={<IconOneShot />} />
+                      <TabsTrigger value="tabSuperKeys" variant="tab">
+                        <>
+                          <IconThunder /> {i18n.editor.standardView.superkeys.title}{" "}
+                          <div className="badge badge-primary leading-none ml-1 font-bold text-[9px]">BETA</div>
+                        </>
+                      </TabsTrigger>
+                      <TabsTrigger value="tabOneShot" variant="tab">
+                        <IconOneShot /> {i18n.editor.standardView.oneShot.title}
+                      </TabsTrigger>
                     </>
                   ) : (
                     ""
                   )}
-                  <CustomTab eventKey="tabMedia" text={i18n.editor.standardView.mediaAndLED.title} icon={<IconNote />} />
-                  <CustomTab eventKey="tabMouse" text={i18n.editor.standardView.mouse.title} icon={<IconMouse />} />
+                  <TabsTrigger value="tabMedia" variant="tab">
+                    <IconNote /> {i18n.editor.standardView.mediaAndLED.title}
+                  </TabsTrigger>
+                  <TabsTrigger value="tabMouse" variant="tab">
+                    <IconMouse /> {i18n.editor.standardView.mouse.title}
+                  </TabsTrigger>
                   {isWireless && (
-                    <CustomTab eventKey="tabWireless" text={i18n.app.menu.wireless} icon={<IconWirelessMd strokeWidth={1.2} />} />
+                    <TabsTrigger value="tabWireless" variant="tab">
+                      <IconWirelessMd strokeWidth={1.2} /> {i18n.app.menu.wireless}
+                    </TabsTrigger>
                   )}
-                </Nav>
+                </TabsList>
               </div>
               <div className="colContentTabs">
                 <div className="contentBody">
-                  <Tab.Content>
-                    <Tab.Pane eventKey="tabKeys">
+                  <TabsContent value="tabKeys" key="tabKeys">
+                    <motion.div initial="hidden" animate="visible" key="tabKeys" variants={tabVariants}>
                       <KeysTab
                         keyCode={keyCode}
                         code={code}
                         onKeyPress={onKeySelect}
                         isStandardView={isStandardView}
-                        superkeyAction={`${actTab == "super" ? keyIndex : 5}`}
+                        superkeyAction={`${actTab === "super" ? keyIndex : 5}`}
                         actTab={actTab}
                         selectedlanguage={selectedlanguage}
                         kbtype={kbtype}
                       />
-                    </Tab.Pane>
-                    <Tab.Pane eventKey="tabNoKeys">
+                    </motion.div>
+                  </TabsContent>
+                  <TabsContent value="tabNoKeys" key="tabNoKeys">
+                    <motion.div initial="hidden" animate="visible" key="tabKeys" variants={tabVariants}>
                       <NoKeyTransparentTab keyCode={keyCode} onKeySelect={onKeySelect} isStandardView={isStandardView} />
-                    </Tab.Pane>
-                    <Tab.Pane eventKey="tabLayers">
+                    </motion.div>
+                  </TabsContent>
+
+                  <TabsContent value="tabLayers" key="tabLayers">
+                    <motion.div initial="hidden" animate="visible" key="tabKeys" variants={tabVariants}>
                       <LayersTab
                         onLayerPress={onKeySelect}
                         keyCode={keyCode}
-                        showLayerSwitch={actTab !== "super"}
                         isStandardView={isStandardView}
                         actTab={actTab}
+                        disableMods={!!((keyIndex === 0 || keyIndex === 3) && actTab === "super")}
                       />
-                    </Tab.Pane>
-                    <Tab.Pane eventKey="tabMacro">
+                    </motion.div>
+                  </TabsContent>
+                  <TabsContent value="tabMacro" key="tabMacro">
+                    <motion.div initial="hidden" animate="visible" key="tabKeys" variants={tabVariants}>
                       <MacroTab
                         macros={macros}
-                        selectedMacro={this.state.selected}
+                        selectedMacro={selected}
                         onMacrosPress={onKeySelect}
                         keyCode={keyCode}
                         isStandardView={isStandardView}
                       />
-                    </Tab.Pane>
-                    {actTab !== "super" ? (
-                      <Tab.Pane eventKey="tabSuperKeys">
-                        <SuperkeysTab
-                          actions={actions}
-                          superkeys={superkeys}
-                          onKeySelect={onKeySelect}
-                          macros={macros}
-                          keyCode={keyCode}
-                          isStandardView={isStandardView}
-                        />
-                      </Tab.Pane>
-                    ) : (
-                      ""
-                    )}
-                    {actTab !== "super" ? (
-                      <Tab.Pane eventKey="tabOneShot">
-                        <OneShotTab keyCode={keyCode} onKeySelect={onKeySelect} isStandardView={isStandardView} />
-                      </Tab.Pane>
-                    ) : (
-                      ""
-                    )}
-                    <Tab.Pane eventKey="tabMedia">
+                    </motion.div>
+                  </TabsContent>
+                  {actTab !== "super" && (
+                    <>
+                      <TabsContent value="tabSuperKeys" key="tabSuperKeys">
+                        <motion.div initial="hidden" animate="visible" key="tabKeys" variants={tabVariants}>
+                          <SuperkeysTab
+                            actions={actions}
+                            superkeys={superkeys}
+                            onKeySelect={onKeySelect}
+                            macros={macros}
+                            keyCode={keyCode}
+                            isStandardView={isStandardView}
+                          />
+                        </motion.div>
+                      </TabsContent>
+                      <TabsContent value="tabOneShot" key="tabOneShot">
+                        <motion.div initial="hidden" animate="visible" key="tabKeys" variants={tabVariants}>
+                          <OneShotTab keyCode={keyCode} onKeySelect={onKeySelect} isStandardView={isStandardView} />
+                        </motion.div>
+                      </TabsContent>
+                    </>
+                  )}
+                  <TabsContent value="tabMedia" key="tabMedia">
+                    <motion.div initial="hidden" animate="visible" key="tabKeys" variants={tabVariants}>
                       <MediaAndLightTab onAddSpecial={this.onAddSpecial} keyCode={keyCode} isStandardView={isStandardView} />
-                    </Tab.Pane>
-                    <Tab.Pane eventKey="tabMouse">
+                    </motion.div>
+                  </TabsContent>
+                  <TabsContent value="tabMouse" key="tabMouse">
+                    <motion.div initial="hidden" animate="visible" key="tabKeys" variants={tabVariants}>
                       <MouseTab onAddSpecial={this.onAddSpecial} keyCode={keyCode} isStandardView={isStandardView} />
-                    </Tab.Pane>
-                    {isWireless && (
-                      <Tab.Pane eventKey="tabWireless">
+                    </motion.div>
+                  </TabsContent>
+                  {isWireless && (
+                    <TabsContent value="tabWireless" key="tabWireless">
+                      <motion.div initial="hidden" animate="visible" key="tabKeys" variants={tabVariants}>
                         <WirelessTab keyCode={keyCode} onKeySelect={onKeySelect} isStandardView={isStandardView} />
-                      </Tab.Pane>
-                    )}
-                  </Tab.Content>
+                      </motion.div>
+                    </TabsContent>
+                  )}
                 </div>
                 <div className="contentFooter">
                   <div className="d-flex justify-content-end">
                     <RegularButton
-                      onClick={() => closeStandardView(this.state.code)}
+                      onClick={() => closeStandardView(stateCode)}
                       styles="outline transp-bg"
                       size="sm"
                       buttonText={i18n.app.cancelPending.button}
@@ -432,7 +476,7 @@ export default class StandardView extends React.Component {
                 </div>
               </div>
             </div>
-          </Tab.Container>
+          </Tabs>
         </div>
       </Styles>
     );

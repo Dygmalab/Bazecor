@@ -22,9 +22,11 @@ import Styled from "styled-components";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
+import { Link } from "react-router-dom";
 import { PageHeader } from "@Renderer/modules/PageHeader";
 import { useDevice, DeviceTools } from "@Renderer/DeviceContext";
-import { RegularButton } from "../component/Button";
+import { NavigationButton, RegularButton } from "../component/Button";
+import { IconHome } from "../component/Icon";
 import HID from "../../api/hid/hid";
 import Device from "../../api/comms/Device";
 
@@ -226,6 +228,17 @@ const BazecorDevtools = () => {
             <RegularButton buttonText="Connect to Serial Device" styles="primary" onClick={() => onSerialConnect(0)} />
             <RegularButton buttonText="Send message" styles="primary" onClick={onMessageSend} />
             <RegularButton buttonText="Disconnect" styles="primary" onClick={onSerialDisconnect} />
+          </Col>
+          <Col className="col-3">
+            <Link to="/device-manager" className="list-link">
+              <NavigationButton
+                selected={false}
+                showNotif={false}
+                buttonText="Device Manager"
+                icoSVG={<IconHome />}
+                disabled={false}
+              />
+            </Link>
           </Col>
         </Row>
         <Row>

@@ -21,34 +21,7 @@ const GlobalStyles = createGlobalStyle<{ theme: DefaultTheme }>`
     src: url(${LibreFranklinItalic}) format("truetype");
     font-display: block;
   }
-  
-  body {
-    background: ${({ theme }) => theme.colors.body};
-    font-weight: 600;
-    background-image: url(${({ theme }) => theme.body.backgroundImage});
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-attachment: fixed;
-    color: ${({ theme }) => theme.colors.text};
-    font-family: ${({ theme }) => theme.font};
-    // font-family: ${({ theme }) => theme.font},  -apple-system, sans-serif;
 
-    text-rendering: optimizeLegibility;
-    font-smoothing: antialiased;
-    -moz-font-smoothing: antialiased;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    -moz-font-feature-settings: "liga" on;
-
-    overflow: overlay;
-  }
-
-  @media screen and (-webkit-min-device-pixel-ratio: 2), 
-  (min-resolution: 192dpi) { 
-      body {
-        background-image: url(${({ theme }) => theme.body.backgroundImage2x});
-      }
-  }
   #root {
     display: grid;
     --sidebarWidth: ${({ theme }) => theme.sidebarWidthMedium}px;
@@ -59,7 +32,7 @@ const GlobalStyles = createGlobalStyle<{ theme: DefaultTheme }>`
     padding-left: calc(90px + 8px);
     padding-left: 8px;
     padding-right: 8px;
-    
+
     // overflow: auto;
     min-height: 100vh;
   }
@@ -99,7 +72,7 @@ const GlobalStyles = createGlobalStyle<{ theme: DefaultTheme }>`
       margin-right: auto;
       display: block;
     }
-    
+
   }
 
 .transp-bg {
@@ -133,6 +106,8 @@ const GlobalStyles = createGlobalStyle<{ theme: DefaultTheme }>`
     cursor: pointer;
     background-color: ${({ theme }) => theme.colors.button.background};
     color: #FFFFFF;
+    font-family: ${({ theme }) => theme.font};
+    font-weight: 600;
   }
 
 
@@ -178,9 +153,9 @@ svg text{
   -ms-user-select: none;
   user-select: none;
 }
-// 
+//
 // Typography
-// 
+//
 .displayLg {
 	font-size:81px;
 	font-weight:600;
@@ -247,9 +222,9 @@ svg text{
 	text-decoration:none;
 }
 
-// 
+//
 // Components
-// 
+//
 
 .simpleAccordion {
   background-color: ${({ theme }) => theme.styles.accordion.background};
@@ -257,7 +232,7 @@ svg text{
   margin-top: 24px;
   .card {
     background:transparent;
-  } 
+  }
   .card .card-header {
     background: transparent;
     color: ${({ theme }) => theme.colors.purple300};
@@ -271,7 +246,7 @@ svg text{
       height: 8px;
       display: inline-block;
       margin-left: 8px;
-      background: url(${({ theme }) => theme.styles.collpase.iconBackgroud});
+      background: url(${({ theme }) => theme.styles.collpase.iconBackground});
     }
   }
   .cardContent {
@@ -383,7 +358,7 @@ button:focus-visible,
   background-color: rgba(255,255,255,0.05);
 }
 .button.outline[disabled] {
-  opacity: ${({ theme }) => theme.styles.button.outline.disabledOpacity}; 
+  opacity: ${({ theme }) => theme.styles.button.outline.disabledOpacity};
   color: ${({ theme }) => theme.styles.button.outline.disabledTextColor};
   border: 1px solid ${({ theme }) => theme.styles.button.outline.disabledBorderColor};
   box-shadow: 0px 0px 0px 1px ${({ theme }) => theme.styles.button.outline.disabledBoxShadowColor} inset;
@@ -407,7 +382,7 @@ button:focus-visible,
   position: absolute;
   z-index: 1;
   top: 0; right: 0; bottom: 0; left: 0;
-  margin: -1px; 
+  margin: -1px;
   border-radius: 6px;
   background: ${({ theme }) => theme.styles.button.outlineGradient.background};
   border: 2px solid transparent;
@@ -450,7 +425,7 @@ button:focus-visible,
   letter-spacing: -0.03em;
   padding: 8px 16px;
   border: ${({ theme }) => theme.styles.button.config.border};
-  color: ${({ theme }) => theme.styles.button.config.color}; 
+  color: ${({ theme }) => theme.styles.button.config.color};
   background: ${({ theme }) => theme.styles.button.config.background};
   border: none;
   border-radius: 6px;
@@ -489,7 +464,7 @@ button:focus-visible,
 .btn-primary.button-config:not([disabled]):hover,
 .button-config:not([disabled]):hover {
   cursor: pointer;
-  color: ${({ theme }) => theme.styles.button.config.colorHover}; 
+  color: ${({ theme }) => theme.styles.button.config.colorHover};
   background: ${({ theme }) => theme.styles.button.config.backgroundHover};
   box-shadow: ${({ theme }) => theme.styles.button.config.boxShadowHover};
 }
@@ -497,7 +472,7 @@ button:focus-visible,
 .btn-primary.button-config.active:not([disabled]):hover,
 .button-config.active:not([disabled]),
 .button-config.active:not([disabled]):hover {
-  color: ${({ theme }) => theme.styles.button.config.colorActive}; 
+  color: ${({ theme }) => theme.styles.button.config.colorActive};
   background: ${({ theme }) => theme.styles.button.config.backgroundActive};
   box-shadow: ${({ theme }) => theme.styles.button.config.boxShadowActive};
 }
@@ -586,8 +561,8 @@ button:focus-visible,
   box-shadow: none;
   outline: auto;
 }
-.btn-primary:not(:disabled):not(.disabled).active:focus, 
-.btn-primary:not(:disabled):not(.disabled):active:focus, 
+.btn-primary:not(:disabled):not(.disabled).active:focus,
+.btn-primary:not(:disabled):not(.disabled):active:focus,
 .show>.btn-primary.dropdown-toggle:focus {
   box-shadow: none;
 }
@@ -611,7 +586,7 @@ button:focus-visible,
   font-size: 12px;
   font-weight: 600;
   border: ${({ theme }) => theme.styles.button.config.border};
-  color: ${({ theme }) => theme.styles.button.config.color}; 
+  color: ${({ theme }) => theme.styles.button.config.color};
   background: ${({ theme }) => theme.styles.button.config.background};
   border: none;
   box-shadow: ${({ theme }) => theme.styles.button.config.boxShadow};
@@ -619,7 +594,7 @@ button:focus-visible,
 }
 .dropdown-toggle.btn.btn-primary.button-config-style:not([disabled]):hover {
   cursor: pointer;
-  color: ${({ theme }) => theme.styles.button.config.colorHover}; 
+  color: ${({ theme }) => theme.styles.button.config.colorHover};
   background: ${({ theme }) => theme.styles.button.config.backgroundHover};
   box-shadow: ${({ theme }) => theme.styles.button.config.boxShadowHover};
   border: none;
@@ -632,7 +607,7 @@ button:focus-visible,
 .show .dropdown-toggle.btn.btn-primary.button-config-style {border: none;}
 .active .dropdown-toggle.btn.btn-primary.button-config-style:not([disabled]),
 .active .dropdown-toggle.btn.btn-primary.button-config-style:not([disabled]):hover {
-  color: ${({ theme }) => theme.styles.button.config.colorActive}; 
+  color: ${({ theme }) => theme.styles.button.config.colorActive};
   background: ${({ theme }) => theme.styles.button.config.backgroundActive};
   box-shadow: ${({ theme }) => theme.styles.button.config.boxShadowActive};
   border: none;
@@ -657,7 +632,7 @@ button:focus-visible,
   display: flex;
   align-items: center;
   text-align: left;
-} 
+}
 .dropdownIcon {
   flex: 0 0 24px;
 }
@@ -671,11 +646,11 @@ button:focus-visible,
 }
 .dropdown-item {
   padding: 8px;
-  border-radius: 6px; 
+  border-radius: 6px;
   margin: 2px 0;
   color: ${({ theme }) => theme.styles.dropdown.dropdownMenu.itemTextColor};
   font-weight: 600;
-  font-size: 14px; 
+  font-size: 14px;
 }
 .dropdown-item:hover {
   color: ${({ theme }) => theme.styles.dropdown.dropdownMenu.itemTextColorHover};
@@ -745,11 +720,11 @@ button:focus-visible,
 }
 .dropdownListItemLabel {
   letter-spacing: -0.03em;
-  font-size: 11px; 
+  font-size: 11px;
   color: ${({ theme }) => theme.styles.dropdown.selector.labelColor};
 }
 .dropdownListItemSelected {
-  font-size: 13px; 
+  font-size: 13px;
   color: ${({ theme }) => theme.styles.dropdown.selector.color}
 }
 
@@ -788,21 +763,21 @@ button:focus-visible,
   flex-wrap: nowrap;
 }
 .dropdownInner .dropdownIcon {
-  flex: 0 0 32px; 
+  flex: 0 0 32px;
 }
 .dropdownInner .dropdownItem {
   flex: calc(100% -32px);
 }
 .buttonToggler.dropdown-toggle.btn.btn-primary{
   background-color: transparent;
-  border: none; 
+  border: none;
   width: 36px;
   padding: 12px 0;
   margin-top: 0;
   text-align: center;
   &:after{
     content: none;
-  } 
+  }
 }
 .dropdownWithContent {
   .dropdownMenuPadding {
@@ -826,7 +801,7 @@ button:focus-visible,
 
 .cardButtons {
   border-radius: 6px;
-  background-color: ${({ theme }) => theme.styles.cardButtons.background};  
+  background-color: ${({ theme }) => theme.styles.cardButtons.background};
   flex: 0 0 100%;
   padding: 24px 16px 20px 16px;
   h4 {
@@ -838,7 +813,7 @@ button:focus-visible,
   }
   p {
     color: ${({ theme }) => theme.styles.cardButtons.color};
-    font-weight: 395; 
+    font-weight: 395;
     font-size: 13px;
     margin-bottom: 8px;
   }
@@ -849,10 +824,10 @@ button:focus-visible,
     background-color: ${({ theme }) => theme.styles.cardButtons.groupButtonsBackground};
     border-radius: 6px;
     max-width: 500px;
-    .button-config {  
+    .button-config {
       width: 42px;
       margin: 0 2px;
-      padding: 10px 2px;  
+      padding: 10px 2px;
       text-align: center;
       flex: 1;
     }
@@ -958,7 +933,7 @@ div.card {
 }
 div.card-body {
   padding-left: 0;
-  padding-right: 0; 
+  padding-right: 0;
 }
 
 div.card.card-preferences .card-title {
@@ -980,6 +955,13 @@ div.card.card-preferences .card-body {
   border: none;
   border-radius: 6px;
   background-color: ${({ theme }) => theme.styles.modal.background};
+}
+.modal.with-drag .modal-content {
+  transform: none; //Fix drap position in chrome
+  margin-left: 64px;
+}
+.modal.with-drag .modal-body {
+  padding: 24px 0;
 }
 .modal .modal-header {
   border: none;
@@ -1004,12 +986,12 @@ div.card.card-preferences .card-body {
 }
 .modal .modal-body .form-control {
   font-weight: 600;
-  font-size: 16px; 
+  font-size: 16px;
   height: calc(1.5em + 1.5rem + 2px);
    color: ${({ theme }) => theme.styles.form.inputColor};
   background: ${({ theme }) => theme.styles.form.inputBackgroundColor};
   border: 1px solid ${({ theme }) => theme.styles.form.inputBorder};
-} 
+}
 .modal .modal-body .form-control:focus {
   background: ${({ theme }) => theme.styles.form.inputBackgroundColorActive};
   border: 1px solid ${({ theme }) => theme.styles.form.inputBorderActive};
@@ -1070,9 +1052,9 @@ div.card.card-preferences .card-body {
     text-align: center;
     .button.outline.gradient[disabled] {
       opacity: 1;
-      color: ${({ theme }) => theme.styles.macro.tabSaveButtonColor}; 
+      color: ${({ theme }) => theme.styles.macro.tabSaveButtonColor};
       &:before {
-        background: ${({ theme }) => theme.styles.macro.tabSaveButtonBorder};  
+        background: ${({ theme }) => theme.styles.macro.tabSaveButtonBorder};
       }
       .buttonFX {
         display: none;
@@ -1243,7 +1225,7 @@ div.card.card-preferences .card-body {
       transform: translate3d(0, -55%, 0);
     }
   }
-  .action-8 { 
+  .action-8 {
     margin: 0;
     border-color: transparent;
     padding: 0;
@@ -1279,7 +1261,7 @@ div.card.card-preferences .card-body {
     &.keyCode-82,
     &.keyCode-83,
     &.keyCode-88,
-    &.keyCode-101, 
+    &.keyCode-101,
     &.keyCode-104,
     &.keyCode-105,
     &.keyCode-106,
@@ -1306,22 +1288,22 @@ div.card.card-preferences .card-body {
     margin-bottom: 2px;
     &.keyCode-229,
     &.keyCode-225 {
-      border-color: ${({ theme }) => theme.styles.macroKey.shift.background}; 
+      border-color: ${({ theme }) => theme.styles.macroKey.shift.background};
       color:  ${({ theme }) => theme.styles.macroKey.shift.background};
     }
     &.keyCode-224,
     &.keyCode-228 {
-      border-color: ${({ theme }) => theme.styles.macroKey.control.background}; 
+      border-color: ${({ theme }) => theme.styles.macroKey.control.background};
       color:  ${({ theme }) => theme.styles.macroKey.control.background};
     }
     &.keyCode-226,
     &.keyCode-230 {
-      border-color: ${({ theme }) => theme.styles.macroKey.alt.background}; 
+      border-color: ${({ theme }) => theme.styles.macroKey.alt.background};
       color:  ${({ theme }) => theme.styles.macroKey.alt.background};
     }
     &.keyCode-227,
     &.keyCode-231 {
-      border-color: ${({ theme }) => theme.styles.macroKey.os.background}; 
+      border-color: ${({ theme }) => theme.styles.macroKey.os.background};
       color:  ${({ theme }) => theme.styles.macroKey.os.background};
     }
   }
@@ -1332,17 +1314,17 @@ div.card.card-preferences .card-body {
   height: 6px;
   background-color: ${({ theme }) => theme.styles.progress.progressBackground};
   overflow: visible;
-} 
+}
 .progress-bar {
   height: 6px;
   border-radius: 3px;
-  box-shadow: ${({ theme }) => theme.styles.progress.boxShadow};    
+  box-shadow: ${({ theme }) => theme.styles.progress.boxShadow};
   background-color: ${({ theme }) => theme.styles.progress.progressBarBackground};
 }
 
 //
 // Toast
-// 
+//
 .Toastify__toast-container {
   padding: 0;
   width: 368px;
@@ -1356,7 +1338,7 @@ div.card.card-preferences .card-body {
   padding: 0;
   border-radius: 6px;
   background: ${({ theme }) => theme.styles.toast.background};
-  box-shadow: ${({ theme }) => theme.styles.toast.boxShadow}; 
+  box-shadow: ${({ theme }) => theme.styles.toast.boxShadow};
   position: relative;
   overflow: visible;
   color: ${({ theme }) => theme.styles.toast.defaultColorBody};
@@ -1460,17 +1442,17 @@ div.card.card-preferences .card-body {
   .headerDrag {
       border-radius: 4px 4px 0px 0px;
       background-color:  ${({ theme }) => theme.styles.macroKey.backgroundHeader};
-      border-bottom: 1px solid ${({ theme }) => theme.styles.macroKey.borderColor}; 
+      border-bottom: 1px solid ${({ theme }) => theme.styles.macroKey.borderColor};
       display: flex;
       flex-wrap: nowrap;
       justify-content: space-between;
       align-items: center;
-      padding: 0; 
+      padding: 0;
       padding-right: 4px;
       flex: 0 0 100%;
   }
   .dragable {
-    color:  ${({ theme }) => theme.styles.macroKey.iconDragColor};  
+    color:  ${({ theme }) => theme.styles.macroKey.iconDragColor};
     padding: 0 6px;
   }
   .actionicon {
@@ -1480,7 +1462,7 @@ div.card.card-preferences .card-body {
       display: flex;
       flex-wrap: nowrap;
       justify-content: space-between;
-      align-items: center;  
+      align-items: center;
       flex: 0 0 100%;
   }
   .dropdown-toggle.btn.btn-primary {
@@ -1491,36 +1473,36 @@ div.card.card-preferences .card-body {
       &:after {
           content: none;
       }
-  } 
+  }
 }
 #portalMacro {
   .keyMacroMiniDashboard {
     border-radius: 6px;
     overflow: hidden;
-    border: ${({ theme }) => theme.styles.macro.keyMacroMiniDashboardBorder}; 
+    border: ${({ theme }) => theme.styles.macro.keyMacroMiniDashboardBorder};
   }
     .keyInfo {
       padding: 16px 12px 12px 12px;
-      background: ${({ theme }) => theme.styles.macro.keyInfoBackground}; 
+      background: ${({ theme }) => theme.styles.macro.keyInfoBackground};
       h4 {
           font-weight: 600;
           text-transform: uppercase;
           margin: 0;
           font-size: 13px;
           font-weight: 500;
-          color: ${({ theme }) => theme.styles.macro.keyInfoTitle}; 
+          color: ${({ theme }) => theme.styles.macro.keyInfoTitle};
       }
     }
     .keyFunctions {
         border-top: 1px solid ${({ theme }) => theme.styles.macro.keyFunctionsBorder};
         padding: 12px 8px;
-        background: ${({ theme }) => theme.styles.macro.keyInfoBackground}; 
+        background: ${({ theme }) => theme.styles.macro.keyInfoBackground};
         h5 {
             color: ${({ theme }) => theme.styles.macro.keyFunctionTile};
             font-size: 13px;
             font-weight: 500;
-            text-transform: none; 
-            letter-spacingL: -0.025em; 
+            text-transform: none;
+            letter-spacingL: -0.025em;
             margin: 0;
             margin-bottom: 8px;
         }
@@ -1546,13 +1528,13 @@ div.card.card-preferences .card-body {
     }
     .keyModifiers {
       padding: 12px 8px;
-      background: ${({ theme }) => theme.styles.macro.keyMacroMiniDashboardBackground}; 
+      background: ${({ theme }) => theme.styles.macro.keyMacroMiniDashboardBackground};
       h4 {
           color: ${({ theme }) => theme.styles.macro.keyFunctionTile};
           font-size: 13px;
           font-weight: 500;
-          text-transform: none; 
-          letter-spacingL: -0.025em; 
+          text-transform: none;
+          letter-spacingL: -0.025em;
           margin-bottom: 8px;
       }
     }
@@ -1617,13 +1599,13 @@ div.card.card-preferences .card-body {
 .keyMacro {
   order: 2;
   // width: 86px;
-  color: ${({ theme }) => theme.styles.macroKey.colorModifier}; 
+  color: ${({ theme }) => theme.styles.macroKey.colorModifier};
   .headerDrag {
     order: 2;
     border-radius: 0px 0px 4px 4px;
     background-color: ${({ theme }) => theme.styles.macroKey.backgroundHeaderModifier};
     border-bottom: none;
-    border-top: 1px solid ${({ theme }) => theme.styles.macroKey.borderColorModifier}; 
+    border-top: 1px solid ${({ theme }) => theme.styles.macroKey.borderColorModifier};
   }
   .bodyDrag {
     order: 1;
@@ -1643,7 +1625,7 @@ div.card.card-preferences .card-body {
 &.keyCode-229,
 &.keyCode-225 {
   .keyMacro {
-    background: ${({ theme }) => theme.styles.macroKey.shift.background}; 
+    background: ${({ theme }) => theme.styles.macroKey.shift.background};
     color:  ${({ theme }) => theme.styles.macroKey.shift.color};
   }
   .keyMacroFreeSlot {
@@ -1657,7 +1639,7 @@ div.card.card-preferences .card-body {
 &.keyCode-224,
 &.keyCode-228 {
   .keyMacro {
-    background: ${({ theme }) => theme.styles.macroKey.control.background}; 
+    background: ${({ theme }) => theme.styles.macroKey.control.background};
   }
   .keyMacroFreeSlot {
     background: transparent;
@@ -1667,7 +1649,7 @@ div.card.card-preferences .card-body {
 &.keyCode-226,
 &.keyCode-230 {
   .keyMacro {
-    background: ${({ theme }) => theme.styles.macroKey.alt.background}; 
+    background: ${({ theme }) => theme.styles.macroKey.alt.background};
   }
   .keyMacroFreeSlot {
     background: transparent;
@@ -1677,7 +1659,7 @@ div.card.card-preferences .card-body {
 &.keyCode-227,
 &.keyCode-231 {
   .keyMacro {
-    background: ${({ theme }) => theme.styles.macroKey.os.background}; 
+    background: ${({ theme }) => theme.styles.macroKey.os.background};
   }
   .keyMacroFreeSlot {
     background: transparent;
@@ -1692,7 +1674,7 @@ div.card.card-preferences .card-body {
 }
 .keyMacro {
   background:  ${({ theme }) => theme.styles.macroKey.delay.background};
-  color: ${({ theme }) => theme.styles.macroKey.delay.color}; 
+  color: ${({ theme }) => theme.styles.macroKey.delay.color};
   .headerDrag {
     border-bottom: 1px solid ${({ theme }) => theme.styles.macroKey.delay.borderColor};
   }
@@ -1800,7 +1782,7 @@ div.card.card-preferences .card-body {
   white-space: nowrap;
 }
 .bs-tooltip-right.tooltipMenu {
-  z-index: 2000;  
+  z-index: 2000;
   white-space: nowrap!important;
   font-weight: 600;
   letter-spacing: -0.03em;
@@ -1861,7 +1843,7 @@ div.card.card-preferences .card-body {
 .animOpacity {
   opacity: 0;
   animation: animOpacity 0.3s forwards;
-} 
+}
 @keyframes animOpacity {
   to {
     opacity: initial;
@@ -1873,7 +1855,7 @@ div.card.card-preferences .card-body {
     opacity: 0;
     animation: animRight 0.3s forwards;
 }
-  
+
 @keyframes animRight {
     to {
       transform: initial;
@@ -1890,7 +1872,7 @@ div.card.card-preferences .card-body {
 @keyframes animHide {
   to {
     transform: translateX(82px);
-    opacity: 0;  
+    opacity: 0;
   }
 }
 
@@ -1951,7 +1933,7 @@ div.card.card-preferences .card-body {
     }
     .form-check::after {
       background-color: ${({ theme }) => theme.styles.customCheckbox.backgroundActive};
-    } 
+    }
   }
 }
 
@@ -1969,23 +1951,25 @@ div.card.card-preferences .card-body {
   border-radius: 3px;
 }
 ::-webkit-scrollbar:vertical {
-  width: 8px; 
+  width: 8px;
 }
 ::-webkit-scrollbar-thumb:vertical {
-  width: 6px; 
+  width: 6px;
 }
 ::-webkit-scrollbar:horizontal {
-  height: 8px; 
+  height: 8px;
 }
 ::-webkit-scrollbar-thumb:horizontal {
-  height: 6px; 
+  height: 6px;
 }
 
 
 .pageHeader .savingButtons {
   display: flex;
   flex-wrap: nowrap;
-  
+  button {
+    margin-top: 0;
+  }
 }
 .pageHeader .itemListelector .dropdown-menu {
   max-height: 80vh;
@@ -2188,7 +2172,7 @@ div.card.card-preferences .card-body {
       }
     }
   }
-  
+
 }
 
 `;

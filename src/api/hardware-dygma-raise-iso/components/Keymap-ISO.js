@@ -240,6 +240,7 @@ class KeymapISO extends React.Component {
      * @param {boolean} smallKey if the word longer than key switch to true
      */
     const getDivideKeys = (str, xCord, yCord, smallKey = false) => {
+      if (React.isValidElement(str)) return str;
       const numbers =
         (str.charCodeAt() >= 48 && str.charCodeAt() <= 57) ||
         (str.charCodeAt() >= 96 && str.charCodeAt() <= 105) ||

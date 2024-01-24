@@ -17,23 +17,29 @@
 
 /**
  * Is a JavaScript function that changes language layout
- * @param {Array} baseKeyCodeTable Default language layout (english)
+ * @param {Array} baseKeyCodeTable Default language layout (en-US)
  * @param {string} language Select language
  * @param {newKeyCodeTable} newKeyCodeTable Key codes for new language
  */
-function newLanguageLayout(baseKeyCodeTable, language = "english", newKeyCodeTable) {
-  if (language === "english" || language === "british") {
+function newLanguageLayout(baseKeyCodeTable, language, newKeyCodeTable) {
+  if (language === "en-US") {
     return baseKeyCodeTable;
   }
+
   return baseKeyCodeTable.map(group => {
     const newArray = group.keys.reduce((acc, key) => {
       const newKey = newKeyCodeTable.find(item => item.code === key.code);
       const isDeleteNewKey = newKey && newKey.newGroupName && newKey.newGroupName !== group.groupName;
       if (!isDeleteNewKey) {
-        newKey ? acc.push(newKey) : acc.push(key);
+        if (newKey) {
+          acc.push(newKey);
+        } else {
+          acc.push(key);
+        }
       }
       return acc;
     }, []);
+
     const arrayFromAnotherGroup = newKeyCodeTable.filter(keys => keys.newGroupName === group.groupName);
 
     return {

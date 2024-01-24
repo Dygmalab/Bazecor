@@ -81,6 +81,7 @@ const DeviceChecks = createMachine(
       sideLeftBL: false,
       sideRightOK: true,
       sideRightBL: false,
+      firmwares: [],
       backup: undefined,
     },
     states: {

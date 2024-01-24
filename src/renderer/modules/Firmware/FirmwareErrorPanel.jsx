@@ -16,25 +16,24 @@
  */
 
 import React, { useState, useEffect } from "react";
+import PropTypes from "prop-types";
 import Styled from "styled-components";
 import { useMachine } from "@xstate/react";
-import i18n from "../../i18n";
-import SemVer from "semver";
 
 // State machine
 import FWSelection from "../../controller/FlashingSM/FWSelection";
 
 // Visual components
 import Title from "../../component/Title";
-import Callout from "../../component/Callout";
 import { RegularButton } from "../../component/Button";
 import { FirmwareLoader } from "../../component/Loader";
+import i18n from "../../i18n";
 
 // Visual modules
-import { FirmwareNeuronStatus } from "../Firmware";
+import FirmwareNeuronStatus from "./FirmwareNeuronStatus";
 
-//Assets
-import videoDefyCablesDisconnect from "@Assets/videos/connectCablesDefy.mp4";
+// Assets
+// import videoDefyCablesDisconnect from "@Assets/videos/connectCablesDefy.mp4";
 import { IconNoWifi, IconWarning } from "../../component/Icon";
 
 const Style = Styled.div`
@@ -96,7 +95,7 @@ width: 100%;
   z-index: 9;
 
   .buttonToggler.dropdown-toggle.btn {
-    color: ${({ theme }) => theme.styles.firmwareUpdatePanel.iconDropodownColor};
+    color: ${({ theme }) => theme.styles.firmwareUpdatePanel.iconDropdownColor};
   }
 }
 .wrapperActions {
@@ -191,7 +190,8 @@ width: 100%;
 }
 `;
 
-function FirmwareErrorPanel({ nextBlock, retryBlock }) {
+function FirmwareErrorPanel(props) {
+  const { nextBlock, retryBlock } = props;
   const [state, send] = useMachine(FWSelection);
   const [handleError, setHandleError] = useState(false);
 
@@ -202,24 +202,27 @@ function FirmwareErrorPanel({ nextBlock, retryBlock }) {
     }
     if (state.matches("success")) {
       setHandleError(false);
+      setLoading(false);
       nextBlock(state.context);
     }
     if (state.matches("failure")) {
       console.log("Matches failure");
       setHandleError(true);
+      setLoading(false);
     }
-  }, [state.context]);
+  }, [nextBlock, state, state.context]);
 
+  console.log(state.context.error);
   return (
     <Style>
-      {!handleError ? (
+      {!handleError || loading ? (
         <FirmwareLoader />
       ) : (
         <div className="firmware-wrapper">
           <div className="firmware-row">
             <div className="firmware-content borderLeftTopRadius">
               <div className="firmware-content--inner">
-                {state.context.error === "error.platform.GitHubData" ? (
+                {state.context.error.type.includes("GitHubData") ? (
                   <>
                     <Title text={i18n.firmwareUpdate.texts.errorTitle} headingLevel={3} type="warning" />
                     <div className="errorListWrapper">
@@ -227,7 +230,7 @@ function FirmwareErrorPanel({ nextBlock, retryBlock }) {
                         <div className="errorListImage iconWarning">
                           <IconNoWifi />
                         </div>
-                        <div className="errorListContent">{i18n.firmwareUpdate.texts.noInternetConncetion}</div>
+                        <div className="errorListContent">{i18n.firmwareUpdate.texts.noInternetConnection}</div>
                       </div>
                     </div>
                   </>
@@ -240,7 +243,7 @@ function FirmwareErrorPanel({ nextBlock, retryBlock }) {
                           <IconNoWifi />
                         </div>
                         <div className="errorListContent">
-                          {state.context?.error ? state.context.error : "Contact our customer for more details"}
+                          {state.context?.error ? state.context.error.type : "Contact our customer for more details"}
                         </div>
                       </div>
                     </div>
@@ -293,5 +296,10 @@ function FirmwareErrorPanel({ nextBlock, retryBlock }) {
     </Style>
   );
 }
+
+FirmwareErrorPanel.propTypes = {
+  nextBlock: PropTypes.func,
+  retryBlock: PropTypes.func,
+};
 
 export default FirmwareErrorPanel;

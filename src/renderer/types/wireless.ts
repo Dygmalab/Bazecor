@@ -9,6 +9,8 @@ export interface WirelessPropsInterface {
   updateAllowBeta: (event: any) => void;
   allowBeta: boolean;
   inContext: boolean;
+  loading: boolean;
+  setLoading: (loading: boolean) => unknown;
 }
 
 export interface WirelessInterface {
@@ -40,6 +42,8 @@ export interface WirelessInterface {
   brightnessUG: number;
   fade: number;
   idleleds: number;
+  true_sleep: boolean;
+  true_sleep_time: number;
 }
 
 export interface BatterySettingsProps {
@@ -61,8 +65,8 @@ export interface AdvancedEnergyManagementProps {
 }
 
 export interface RFSettingsProps {
-  wireless: WirelessInterface;
-  changeWireless: (wireless: WirelessInterface) => void;
+  wireless?: WirelessInterface;
+  changeWireless?: (wireless: WirelessInterface) => void;
   sendRePair: () => void;
 }
 

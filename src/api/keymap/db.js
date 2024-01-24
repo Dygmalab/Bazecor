@@ -41,46 +41,14 @@ import LeaderTable from "./db/leader";
 import StenoTable from "./db/steno";
 import SpaceCadetTable from "./db/spacecadet";
 
-// Spanish - is an Array of objects of values that have to be modified
-import spanish, { spanishModifiedTables } from "./languages/spanish/spanish";
-
-// German - is an Array of objects of values that have to be modified
-import german, { germanModifiedTables } from "./languages/german/german";
-
-// French - is an Array of objects of values that have to be modified
-import french, { frenchModifiedTables } from "./languages/french/french";
-
-// French - is an Array of objects of values that have to be modified
-import frenchBepo, { frenchBepoModifiedTables } from "./languages/french/frenchBepo";
-
-// Norwegian - is an Array of objects of values that have to be modified
-import norwegian, { norwegianModifiedTables } from "./languages/norwegian/norwegian";
-
-// Swedish - is an Array of objects of values that have to be modified
-import swedish, { swedishModifiedTables } from "./languages/swedish/swedish";
-
-// Danish - is an Array of objects of values that have to be modified
-import danish, { danishModifiedTables } from "./languages/danish/danish";
-
-// Icelandic - is an Array of objects of values that have to be modified
-import icelandic, { icelandicModifiedTables } from "./languages/icelandic/icelandic";
-
-// Japanese - is an Array of objects of values that have to be modified
-import japanese, { japaneseModifiedTables } from "./languages/japanese/japanese";
-
-// Korean - is an Array of objects of values that have to be modified
-import korean, { koreanModifiedTables } from "./languages/korean/korean";
-
-// Swiss German - is an Array of objects of values that have to be modified
-import swissGerman, { swissGermanModifiedTables } from "./languages/swissGerman/swissGerman";
-
-// EurKEY - is an Array of objects of values that have to be modified
-import eurkey, { eurkeyModifiedTables } from "./languages/eurkey/eurkey";
+// languageLayouts - all available languages for layouts
+import { languagesDB, supportModifiedTables } from "./languages/languageLayouts";
 
 // newLanguageLayout - is a function that modify language layout
 import newLanguageLayout from "./languages/newLanguageLayout";
 
 import Store from "../../renderer/utils/Store";
+import getLanguage from "../../renderer/utils/language";
 
 const store = Store.getStore();
 
@@ -121,21 +89,6 @@ const defaultBaseKeyCodeTable = [
   BlankTable,
 ];
 
-const supportModifiedTables = {
-  spanish: spanishModifiedTables,
-  german: germanModifiedTables,
-  french: frenchModifiedTables,
-  frenchBepo: frenchBepoModifiedTables,
-  norwegian: norwegianModifiedTables,
-  swedish: swedishModifiedTables,
-  danish: danishModifiedTables,
-  icelandic: icelandicModifiedTables,
-  japanese: japaneseModifiedTables,
-  korean: koreanModifiedTables,
-  swissGerman: swissGermanModifiedTables,
-  eurkey: eurkeyModifiedTables,
-};
-
 const defaultKeyCodeTable = defaultBaseKeyCodeTable
   .concat(ModifiedLetterTables)
   .concat(ModifiedDigitTables)
@@ -150,22 +103,6 @@ const defaultKeyCodeTable = defaultBaseKeyCodeTable
   .concat(DualUseModifierTables)
   .concat(DualUseLayerTables);
 
-// DataBase of languages
-const languagesDB = {
-  english: "english",
-  spanish,
-  german,
-  french,
-  frenchBepo,
-  norwegian,
-  swedish,
-  danish,
-  icelandic,
-  japanese,
-  korean,
-  swissGerman,
-  eurkey,
-};
 // Create cache for language layout
 const map = new Map();
 
@@ -176,14 +113,15 @@ class KeymapDB {
   constructor() {
     this.keymapCodeTable = [];
     // create variable that get language from the local storage
-    this.language = store.get("settings.language");
-    if (this.language === "finnish") {
-      this.language = "swedish";
+    this.language = getLanguage(store.get("settings.language"));
+    if (languagesDB[this.language] === undefined) {
+      this.language = "en-US";
     }
+
     // Modify our baseKeyCodeTable, depending on the language selected by the static methods and by inside function newLanguageLayout
     baseKeyCodeTable = KeymapDB.updateBaseKeyCode();
     const keyCodeTableWithModifiers =
-      this.language !== "english" && this.language !== "british" && supportModifiedTables[this.language]
+      this.language !== "en-US" && supportModifiedTables[this.language]
         ? defaultKeyCodeTable.concat(supportModifiedTables[this.language])
         : defaultKeyCodeTable;
     // Modify our baseKeyCodeTable, depending on the language selected through function newLanguageLayout
@@ -361,9 +299,9 @@ class KeymapDB {
   }
 
   static updateBaseKeyCode() {
-    this.language = store.get("settings.language") || "english";
-    if (this.language === "finnish") {
-      this.language = "swedish";
+    this.language = getLanguage(store.get("settings.language"));
+    if (languagesDB[this.language] === undefined) {
+      this.language = "en-US";
     }
     // Checking language in the cache
     if (map.has(this.language)) {

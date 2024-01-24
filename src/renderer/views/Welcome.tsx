@@ -19,23 +19,25 @@ import React from "react";
 import Styled from "styled-components";
 import { toast } from "react-toastify";
 
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@Renderer/components/ui/card";
+
 import Container from "react-bootstrap/Container";
-import Card from "react-bootstrap/Card";
 import { useNavigate } from "react-router-dom";
 import { useDevice } from "@Renderer/DeviceContext";
-import i18n from "../i18n";
+import i18n from "@Renderer/i18n";
 
-import { PageHeader } from "../modules/PageHeader";
-import Title from "../component/Title";
-import ToastMessage from "../component/ToastMessage";
-import { RegularButton } from "../component/Button";
-import { IconKeyboard, IconFloppyDisk } from "../component/Icon";
+import { PageHeader } from "@Renderer/modules/PageHeader";
+import Title from "@Renderer/component/Title";
+import ToastMessage from "@Renderer/component/ToastMessage";
+import { RegularButton } from "@Renderer/component/Button";
+import { IconKeyboard, IconFloppyDisk } from "@Renderer/component/Icon";
+import { DygmaDeviceType } from "@Renderer/types/devices";
 
 const Styles = Styled.div`
 height: inherit;
 .main-container {
   overflow: hidden;
-  height: 100vh;  
+  height: 100vh;
 }
 .welcome {
   height: 100%;
@@ -43,7 +45,7 @@ height: inherit;
   flex-wrap: wrap;
   justify-content: center;
   &.center-content {
-    height: 100vh;  
+    height: 100vh;
   }
 }
 .welcomeInner {
@@ -59,7 +61,7 @@ height: inherit;
 }
 .card {
     padding: 0;
-    
+
 }
 .card-header {
     padding: 24px 32px;
@@ -94,7 +96,7 @@ height: inherit;
 .keyboardSelected {
     display: flex;
     grid-gap: 16px;
-    align-items: center; 
+    align-items: center;
     justify-content: space-between;
     h6 {
         opacity: 0.6;
@@ -103,9 +105,14 @@ height: inherit;
 }
 `;
 
-function Welcome(props: any) {
+interface WelcomeProps {
+  onConnect: (currentDevice: unknown, file: null) => void;
+  device: DygmaDeviceType;
+}
+
+function Welcome(props: WelcomeProps) {
   const navigate = useNavigate();
-  const [state, dispatch] = useDevice();
+  const [state] = useDevice();
   const { onConnect, device } = props;
 
   const reconnect = async () => {
@@ -125,7 +132,7 @@ function Welcome(props: any) {
   );
 
   const showDeviceName = () => {
-    const name = state.currentDevice?.device?.info?.displayName || "";
+    const name = state.currentDevice?.device?.info?.displayName || device?.info?.displayName;
     return (
       <div className="content">
         <Title text={name} headingLevel={4} />
@@ -141,15 +148,15 @@ function Welcome(props: any) {
         <div className="welcomeWrapper">
           <div className="welcomeInner">
             <Card className="welcomeCard">
-              <Card.Header>
-                <div className="keyboardSelected">
+              <CardHeader>
+                <CardTitle className="keyboardSelected">
                   {showDeviceName()}
                   <div className="icon">
                     <IconKeyboard />
                   </div>
-                </div>
-              </Card.Header>
-              <Card.Body>
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
                 <div>
                   <Title type="warning" text={i18n.welcome.bootloaderTitle} headingLevel={3} />
                   <p>{i18n.welcome.description}</p>
@@ -165,8 +172,8 @@ function Welcome(props: any) {
                     </ul>
                   </span>
                 </div>
-              </Card.Body>
-              <Card.Footer>
+              </CardContent>
+              <CardFooter>
                 <div className="firmwareButton">
                   {reconnectButton}
                   <RegularButton
@@ -177,7 +184,7 @@ function Welcome(props: any) {
                     }}
                   />
                 </div>
-              </Card.Footer>
+              </CardFooter>
             </Card>
           </div>
         </div>

@@ -1,41 +1,41 @@
 import React, { useState, useEffect } from "react";
 import Styled from "styled-components";
 
-// React Bootstrap Components
-import Card from "react-bootstrap/Card";
-import Form from "react-bootstrap/Form";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
-
 // Own Components
-
-// Icons Imports
-
-// Flags imports
-import frenchF from "@Assets/flags/france.png";
-import germanF from "@Assets/flags/germany.png";
-import japaneseF from "@Assets/flags/japan.png";
-import koreanF from "@Assets/flags/korean.png";
-import spanishF from "@Assets/flags/spain.png";
-import englishUSF from "@Assets/flags/englishUS.png";
-import englishUKF from "@Assets/flags/englishUK.png";
-import danishF from "@Assets/flags/denmark.png";
-import swedishF from "@Assets/flags/sweden.png";
-import finnishF from "@Assets/flags/finland.png";
-import icelandicF from "@Assets/flags/iceland.png";
-import norwegianF from "@Assets/flags/norway.png";
-import swissF from "@Assets/flags/switzerland.png";
-import eurkeyF from "@Assets/flags/eurkey.png";
+import { flags, languages, languageNames } from "./GeneralSettingsLanguages";
 import { useDevice } from "@Renderer/DeviceContext";
-import { IconWrench, IconSun, IconMoon, IconScreen } from "../../component/Icon";
+
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@Renderer/components/ui/card";
+import { Switch } from "@Renderer/components/ui/switch";
+
+/* Bazecor
+ * Copyright (C) 2024  DygmaLab SE.
+ *
+ * This program is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation, version 3.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+import { Neuron } from "@Renderer/types/neurons";
+import { IconChip, IconHanger, IconSun, IconMoon, IconScreen, IconKeyboard } from "../../component/Icon";
+import FileBackUpHandling from "./FileBackUpHandling";
 import { ToggleButtons } from "../../component/ToggleButtons";
 import { Select } from "../../component/Select";
-import Title from "../../component/Title";
 import Keymap from "../../../api/keymap";
 import i18n from "../../i18n";
 import Store from "../../utils/Store";
+import { KeyPickerPreview } from "../KeyPickerKeyboard";
+import getLanguage from "../../utils/language";
 
-const GeneraslSettihngsWrapper = Styled.div`
+const GeneralSettingsWrapper = Styled.div`
 .dropdown-menu {
   min-width: 13rem;
 }
@@ -44,22 +44,41 @@ const GeneraslSettihngsWrapper = Styled.div`
 const store = Store.getStore();
 
 interface GeneralSettingsProps {
+  connected: boolean;
   selectDarkMode: (item: string) => void;
   darkMode: string;
-  neurons: Record<string, unknown>[];
+  neurons: Neuron[];
   selectedNeuron: number;
-  connected: boolean;
-  defaultLayer: number;
-  selectDefaultLayer: (value: any) => void;
+  devTools: boolean;
+  onChangeDevTools: (checked: boolean) => void;
+  verbose: boolean;
+  onChangeVerbose: () => void;
+  allowBeta: boolean;
+  onChangeAllowBetas: (checked: boolean) => void;
+  onlyCustomLayers: string | boolean;
+  onChangeOnlyCustomLayers: (checked: boolean) => void;
 }
 
-const GeneralSettings = (props: GeneralSettingsProps) => {
+const GeneralSettings = ({
+  connected,
+  selectDarkMode,
+  darkMode,
+  neurons,
+  selectedNeuron,
+  devTools,
+  onChangeDevTools,
+  verbose,
+  onChangeVerbose,
+  allowBeta,
+  onChangeAllowBetas,
+  onlyCustomLayers,
+  onChangeOnlyCustomLayers,
+}: GeneralSettingsProps) => {
   const [selectedLanguage, setSelectedLanguage] = useState("");
-  const { selectDarkMode, darkMode, neurons, selectedNeuron, connected, defaultLayer, selectDefaultLayer } = props;
   const [state] = useDevice();
 
   useEffect(() => {
-    setSelectedLanguage(store.get("settings.language") as string);
+    setSelectedLanguage(getLanguage(store.get("settings.language") as string));
   }, []);
 
   const changeLanguage = (language: string) => {
@@ -72,58 +91,7 @@ const GeneralSettings = (props: GeneralSettingsProps) => {
   };
 
   let layersNames: any = neurons[selectedNeuron] ? neurons[selectedNeuron].layers : [];
-  const flags = [
-    englishUSF,
-    englishUKF,
-    spanishF,
-    germanF,
-    frenchF,
-    frenchF,
-    swedishF,
-    finnishF,
-    danishF,
-    norwegianF,
-    icelandicF,
-    japaneseF,
-    koreanF,
-    swissF,
-    eurkeyF,
-  ];
-  let language: any = [
-    "english",
-    "british",
-    "spanish",
-    "german",
-    "french",
-    "frenchBepo",
-    "swedish",
-    "finnish",
-    "danish",
-    "norwegian",
-    "icelandic",
-    "japanese",
-    "korean",
-    "swissGerman",
-    "eurkey",
-  ];
-  const languageNames = [
-    "English US",
-    "English UK",
-    "Spanish",
-    "German",
-    "French",
-    "French Bépo",
-    "Swedish",
-    "Finnish",
-    "Danish",
-    "Norwegian",
-    "Icelandic",
-    "Japanese",
-    "Korean",
-    "Swiss (German)",
-    "EurKEY (1.3)",
-  ];
-  language = language.map((item: any, index: any) => ({
+  const languageElements = languages.map((item, index) => ({
     text: languageNames[index],
     value: item,
     icon: flags[index],
@@ -157,47 +125,133 @@ const GeneralSettings = (props: GeneralSettingsProps) => {
       index: 2,
     },
   ];
+  const code = {
+    base: 0,
+    modified: 0,
+  };
 
+  const normalizeOnlyCustomLayers = (item: string | boolean): boolean => {
+    if (typeof item === "string") {
+      if (item === "1") {
+        return true;
+      }
+      if (item === "0") {
+        return false;
+      }
+    }
+    return Boolean(item);
+  };
   return (
-    <GeneraslSettihngsWrapper>
-      <Card className="overflowFix card-preferences mt-4">
-        <Card.Title>
-          <Title text={i18n.keyboardSettings.keymap.title} headingLevel={3} svgICO={<IconWrench />} />
-        </Card.Title>
-        <Card.Body>
-          <Form>
-            <Row>
-              <Col lg={6} md={12}>
-                <Form.Group controlId="selectLanguage" className="mb-3">
-                  <Form.Label>{i18n.preferences.language}</Form.Label>
-                  <Select onSelect={changeLanguage} value={selectedLanguage} listElements={language} disabled={false} />
-                </Form.Group>
-              </Col>
-              <Col lg={6} md={12}>
-                <Form.Group controlId="defaultLayer" className="mb-3">
-                  <Form.Label>{i18n.keyboardSettings.keymap.defaultLayer}</Form.Label>
-                  <Select onSelect={selectDefaultLayer} value={defaultLayer} listElements={layersNames} disabled={!connected} />
-                </Form.Group>
-              </Col>
-            </Row>
-            <Row>
-              <Col md={12}>
-                <Form.Group controlId="DarkMode" className="m-0">
-                  <Form.Label>{i18n.preferences.darkMode.label}</Form.Label>
-                  <ToggleButtons
-                    selectDarkMode={selectDarkMode}
-                    value={darkMode}
-                    listElements={layoutsModes}
-                    styles={"flex"}
-                    size="sm"
-                  />
-                </Form.Group>
-              </Col>
-            </Row>
-          </Form>
-        </Card.Body>
+    <GeneralSettingsWrapper>
+      <Card className="max-w-2xl mx-auto" variant="default">
+        <CardHeader>
+          <CardTitle variant="default">
+            <IconHanger /> {i18n.preferences.darkMode.label}
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <form>
+            <ToggleButtons selectDarkMode={selectDarkMode} value={darkMode} listElements={layoutsModes} styles="flex" size="sm" />
+          </form>
+        </CardContent>
       </Card>
-    </GeneraslSettihngsWrapper>
+      <Card className="mt-3 max-w-2xl mx-auto" variant="default">
+        <CardHeader>
+          <CardTitle variant="default">
+            <IconKeyboard /> Key Layout
+          </CardTitle>
+          <CardDescription className="mt-1">
+            Select the primary layout you&apos;d like to use as a reference when editing your layout in Bazecor.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <form>
+            <Select
+              id="languageSelector"
+              onSelect={changeLanguage}
+              value={selectedLanguage}
+              listElements={languageElements}
+              disabled={false}
+            />
+          </form>
+          <KeyPickerPreview
+            code={code}
+            disableMods="disabled"
+            disableMove="preferences"
+            disableAll={false}
+            selectedlanguage={selectedLanguage}
+            kbtype="ansi"
+            activeTab="preferences"
+          />
+        </CardContent>
+      </Card>
+      {connected && <FileBackUpHandling />}
+      <Card className="mt-3 max-w-2xl mx-auto" variant="default">
+        <CardHeader>
+          <CardTitle variant="default">
+            <IconChip /> Advanced
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <form>
+            <div className="flex items-center w-full justify-between py-2 border-b-[1px] border-gray-50 dark:border-gray-700">
+              <label htmlFor="devToolsSwitch" className="m-0 text-sm font-semibold tracking-tight">
+                {i18n.preferences.devtools}
+              </label>
+              <Switch
+                id="devToolsSwitch"
+                defaultChecked={false}
+                checked={devTools}
+                onCheckedChange={onChangeDevTools}
+                variant="default"
+                size="sm"
+              />
+            </div>
+            <div className="flex items-center w-full justify-between py-2 border-b-[1px] border-gray-50 dark:border-gray-700">
+              <label htmlFor="verboseSwitch" className="m-0 text-sm font-semibold tracking-tight">
+                {i18n.preferences.verboseFocus}
+              </label>
+              <Switch
+                id="verboseSwitch"
+                defaultChecked={false}
+                checked={verbose}
+                onCheckedChange={onChangeVerbose}
+                variant="default"
+                size="sm"
+              />
+            </div>
+            <div className="flex items-center w-full justify-between py-2 border-b-[1px] border-gray-50 dark:border-gray-700">
+              <label htmlFor="betasSwitch" className="m-0 text-sm font-semibold tracking-tight">
+                {i18n.preferences.allowBeta}
+              </label>
+              <Switch
+                id="betasSwitch"
+                defaultChecked={false}
+                checked={allowBeta}
+                onCheckedChange={onChangeAllowBetas}
+                variant="default"
+                size="sm"
+              />
+            </div>
+            {connected && (
+              <div className="flex items-center w-full justify-between py-2 border-b-[1px] border-gray-50 dark:border-gray-700">
+                <label htmlFor="customSwitch" className="m-0 text-sm font-semibold tracking-tight">
+                  {i18n.preferences.onlyCustom}
+                </label>
+                <Switch
+                  id="customSwitch"
+                  defaultChecked={false}
+                  checked={normalizeOnlyCustomLayers(onlyCustomLayers)}
+                  onCheckedChange={onChangeOnlyCustomLayers}
+                  variant="default"
+                  size="sm"
+                />
+              </div>
+            )}
+          </form>
+        </CardContent>
+      </Card>
+    </GeneralSettingsWrapper>
   );
 };
 

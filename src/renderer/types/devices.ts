@@ -45,3 +45,39 @@ export type State = {
   currentDevice: Device | undefined;
   deviceList: Array<DeviceType>;
 };
+
+export type DygmaDeviceType = {
+  info: {
+    vendor: string;
+    product: string;
+    keyboardType: string;
+    displayName: string;
+    urls: [
+      {
+        name: string;
+        url: string;
+      },
+    ];
+  };
+  usb: {
+    vendorId: number;
+    productId: number;
+  };
+  keyboard: {
+    rows: number;
+    columns: number;
+  };
+  keyboardUnderglow: {
+    rows: number;
+    columns: number;
+  };
+  components: {
+    keymap: unknown;
+  };
+
+  instructions: {
+    en: {
+      updateInstructions: string;
+    };
+  };
+};

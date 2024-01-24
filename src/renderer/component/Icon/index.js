@@ -27,16 +27,20 @@ import IconArrowDownWithLine from "./IconArrowDownWithLine";
 import IconBattery from "./IconBattery";
 import IconBazecordevtools from "./IconBazecordevtools";
 import IconBluetooth from "./IconBluetooth";
+import IconBugWarning from "./IconBugWarning";
 import IconColorPalette from "./IconColorPalette";
 import IconColorPicker from "./IconColorPicker";
 import IconConnected from "./IconConnected";
 import IconCheckmarkSm from "./IconCheckmarkSm";
+import IconArrowChevronLeft from "./IconArrowChevronLeft";
+import IconArrowChevronRight from "./IconArrowChevronRight";
 import IconChevronDown from "./IconChevronDown";
 import IconChip from "./IconChip";
 import IconClone from "./IconClone";
 import IconCloseXs from "./IconCloseXs";
 import IconCloudDownload from "./IconCloudDownload";
 import IconDragAndDrop from "./IconDragAndDrop";
+import IconDragDots from "./IconDragDots";
 import IconDelete from "./IconDelete";
 import IconEditModeSingleView from "./IconEditModeSingleView";
 import IconEditModeSingleViewSm from "./IconEditModeSingleViewSm";
@@ -44,6 +48,9 @@ import IconEditModeStandardView from "./IconEditModeStandardView";
 import IconEditModeStandardViewSm from "./IconEditModeStandardViewSm";
 import IconEye from "./IconEye";
 import IconFileDownload from "./IconFileDownload";
+import IconFolder from "./IconFolder";
+import IconHanger from "./IconHanger";
+import IconHome from "./IconHome";
 import IconKeysPress from "./IconKeysPress";
 import IconKeysTapHold from "./IconKeysTapHold";
 import IconKeys2Tap from "./IconKeys2Tap";
@@ -62,8 +69,10 @@ import IconLEDNextEffectSm from "./IconLEDNextEffectSm";
 import IconLEDPreviousEffect from "./IconLEDPreviousEffect";
 import IconLEDPreviousEffectSm from "./IconLEDPreviousEffectSm";
 import IconLEDSwitchLeft from "./IconLEDSwitchLeft";
+import IconLEDToggleEffectSm from "./IconLEDToggleEffectSm";
 import IconLetterColor from "./IconLetterColor";
 import IconLoader from "./IconLoader";
+import IconLogoDygma from "./IconLogoDygma";
 import IconMemory2Stroke from "./IconMemory2Stroke";
 import IconMediaForward from "./IconMediaForward";
 import IconMediaForwardSm from "./IconMediaForwardSm";
@@ -97,8 +106,6 @@ import IconPreferences2Stroke from "./IconPreferences2Stroke";
 import IconPressSm from "./IconPressSm";
 import IconPressAndReleaseSm from "./IconPressAndReleaseSm";
 import IconPen from "./IconPen";
-import IconReleaseSm from "./IconReleaseSm";
-import IconRobot2Stroke from "./IconRobot2Stroke";
 import IconThunder2Stroke from "./IconThunder2Stroke";
 import IconInformationBubble from "./IconInformationBubble";
 import IconInformationBubbleSm from "./IconInformationBubbleSm";
@@ -119,10 +126,14 @@ import IconStopWatchXs from "./IconStopWatchXs";
 import IconStopWatchCrossed from "./IconStopWatchCrossed";
 import IconLayers from "./IconLayers";
 import IconLayersSm from "./IconLayersSm";
+import IconRadar from "./IconRadar";
 import IconRecord from "./IconRecord";
 import IconRefresh from "./IconRefresh";
+import IconReleaseSm from "./IconReleaseSm";
+import IconRobot2Stroke from "./IconRobot2Stroke";
 import IconRobot from "./IconRobot";
 import IconRobotSm from "./IconRobotSm";
+import IconRobotOffline from "./IconRobotOffline";
 import IconSettings from "./IconSettings";
 import IconSignal from "./IconSignal";
 import IconShutdown from "./IconShutdown";
@@ -165,16 +176,20 @@ export {
   IconBattery,
   IconBazecordevtools,
   IconBluetooth,
+  IconBugWarning,
   IconColorPalette,
   IconColorPicker,
   IconConnected,
   IconCheckmarkSm,
+  IconArrowChevronLeft,
+  IconArrowChevronRight,
   IconChevronDown,
   IconChip,
   IconClone,
   IconCloseXs,
   IconCloudDownload,
   IconDragAndDrop,
+  IconDragDots,
   IconDelete,
   IconEditModeSingleView,
   IconEditModeSingleViewSm,
@@ -182,6 +197,9 @@ export {
   IconEditModeStandardViewSm,
   IconEye,
   IconFileDownload,
+  IconFolder,
+  IconHanger,
+  IconHome,
   IconKeysPress,
   IconKeysTapHold,
   IconKeys2Tap,
@@ -200,8 +218,15 @@ export {
   IconLEDNextEffectSm,
   IconLEDPreviousEffect,
   IconLEDPreviousEffectSm,
+  IconLEDToggleEffectSm,
   IconLetterColor,
   IconLoader,
+  IconLogoDygma,
+  IconMagicStick,
+  IconMouse,
+  IconMouseSm,
+  IconMoon,
+  IconMoreVertical,
   IconMediaForward,
   IconMediaForwardSm,
   IconMediaPlayPause,
@@ -235,19 +260,12 @@ export {
   IconPreferences2Stroke,
   IconPressSm,
   IconPressAndReleaseSm,
-  IconReleaseSm,
-  IconRobot2Stroke,
   IconThunder2Stroke,
   IconInformationBubble,
   IconInformationBubbleSm,
   IconFlashlight,
   IconFloppyDisk,
   IconTypo,
-  IconMagicStick,
-  IconMouse,
-  IconMouseSm,
-  IconMoon,
-  IconMoreVertical,
   IconNullSm,
   IconSun,
   IconScreen,
@@ -261,12 +279,16 @@ export {
   IconRefresh,
   IconRobot,
   IconRobotSm,
+  IconReleaseSm,
+  IconRobot2Stroke,
+  IconRobotOffline,
   IconSettings,
   IconSignal,
   IconShutdown,
   IconShutdownSm,
   IconSleep,
   IconSleepSm,
+  IconRadar,
   IconThunder,
   IconThunderSm,
   IconToolsCalculator,

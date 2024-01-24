@@ -142,6 +142,7 @@ const reconnect = async (context, callback) => {
       console.log(`Keyboard not detected, trying again for ${times} times`);
       stateUpdate("reconnect", 10 + 100 * (1 / (5 - times)), context, callback);
       await runnerFindKeyboard(findKeyboard, times - 1, errorMessage);
+      return true;
     };
     const findKeyboard = async () =>
       new Promise(async resolve => {
@@ -426,7 +427,12 @@ const FlashDevice = createMachine(
         id: "waitEsc",
         entry: [
           () => {
-            console.log("Wait for esc!");
+            console.log("Wait for esc! & clearing globals");
+            flashRaise = undefined;
+            flashDefyWireless = undefined;
+            flashSides = undefined;
+            bootloader = undefined;
+            comPath = undefined;
           },
           assign({ stateblock: () => 1 }),
           "addEscListener",

@@ -91,21 +91,21 @@ h6 {
 	&:before {
 		content: "";
 		position: absolute;
-		left: -32px;	
+		left: -32px;
 		top: 50%;
 		background-repeat: no-repeat;
 		width: 32px;
 		height: 96px;
 		transform: translate3d(0, -50%, 0);
-	} 
+	}
 	&:after {
 		content: "";
 		position: absolute;
-		left: -35px;	
+		left: -35px;
 		top: 50%;
 		width: 3px;
-		height: 24px;	
-		border-radius: 3px 0px 0px 3px;	
+		height: 24px;
+		border-radius: 3px 0px 0px 3px;
 		transform: translate3d(0, -50%, 0);
 	}
 }
@@ -164,7 +164,7 @@ interface TitleProps {
   className?: string;
   color?: "danger" | "error" | "success" | "warning";
   type?: "danger" | "error" | "success" | "warning";
-  tooltip?: string | HTMLElement;
+  tooltip?: undefined | string | HTMLElement;
   tooltipSize?: "wide" | "narrow";
   tooltipIconSize?: "sm" | "md" | "lg";
   tooltipPlacement?: "left" | "top" | "right" | "bottom";

@@ -15,5 +15,6 @@
  */
 
 import CustomTab from "./customTab";
+import TabItem from "./TabItem";
 
-export { CustomTab as default };
+export { CustomTab, TabItem };

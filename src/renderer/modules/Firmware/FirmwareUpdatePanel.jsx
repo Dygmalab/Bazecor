@@ -16,6 +16,7 @@
  */
 
 import React, { useState, useEffect } from "react";
+import PropTypes from "prop-types";
 import Styled from "styled-components";
 import { useMachine } from "@xstate/react";
 import i18n from "@Renderer/i18n";
@@ -94,7 +95,7 @@ height:inherit;
   z-index: 9;
 
   .buttonToggler.dropdown-toggle.btn {
-    color: ${({ theme }) => theme.styles.firmwareUpdatePanel.iconDropodownColor};
+    color: ${({ theme }) => theme.styles.firmwareUpdatePanel.iconDropdownColor};
   }
 }
 .wrapperActions {
@@ -168,13 +169,18 @@ function FirmwareUpdatePanel(props) {
   const [state, send] = useMachine(FWSelection, { context: { allowBeta, deviceState } });
 
   const [loading, setLoading] = useState(true);
+
+  let flashButtonText = state.context.stateblock === 4 ? "Processing..." : "";
+  if (flashButtonText === "")
+    flashButtonText = state.context.isUpdated ? i18n.firmwareUpdate.flashing.buttonUpdated : i18n.firmwareUpdate.flashing.button;
+
   useEffect(() => {
     if (state.context.stateblock >= 3 || state.context.stateblock === -1) {
       setLoading(false);
     }
     if (state.matches("success")) nextBlock(state.context);
     if (state.matches("failure")) errorBlock(state.context.error);
-  }, [state]);
+  }, [errorBlock, nextBlock, retryBlock, state]);
 
   return (
     <Style>
@@ -232,13 +238,7 @@ function FirmwareUpdatePanel(props) {
                 <RegularButton
                   className="flashingbutton nooutlined"
                   styles={state.context.isUpdated ? "outline transp-bg" : "primary"}
-                  buttonText={
-                    state.context.stateblock === 4
-                      ? "Processing..."
-                      : state.context.isUpdated
-                      ? i18n.firmwareUpdate.flashing.buttonUpdated
-                      : i18n.firmwareUpdate.flashing.button
-                  }
+                  buttonText={flashButtonText}
                   icoSVG={state.context.stateblock === 4 ? <IconLoader /> : null}
                   icoPosition={state.context.stateblock === 4 ? "right" : null}
                   disabled={state.context.stateblock === 4}
@@ -262,5 +262,12 @@ function FirmwareUpdatePanel(props) {
     </Style>
   );
 }
+
+FirmwareUpdatePanel.propTypes = {
+  nextBlock: PropTypes.func,
+  errorBlock: PropTypes.func,
+  retryBlock: PropTypes.func,
+  allowBeta: PropTypes.bool,
+};
 
 export default FirmwareUpdatePanel;

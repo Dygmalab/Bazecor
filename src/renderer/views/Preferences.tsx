@@ -1,5 +1,3 @@
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-nocheck
 // -*- mode: js-jsx -*-
 /* Bazecor -- Kaleidoscope Command Center
  * Copyright (C) 2018, 2019  Keyboardio, Inc.
@@ -20,42 +18,84 @@
 
 import React, { useState, useEffect, useCallback } from "react";
 import { ipcRenderer } from "electron";
-import Styled from "styled-components";
+import { motion } from "framer-motion";
 
-import Container from "react-bootstrap/Container";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
-import Form from "react-bootstrap/Form";
 import { toast } from "react-toastify";
 import i18n from "@Renderer/i18n";
 import "react-toastify/dist/ReactToastify.css";
 
 // Custom modules imports
 import { KeyboardSettings } from "@Renderer/modules/Settings/KeyboardSettings";
-import { BackupSettings, GeneralSettings, NeuronSettings, AdvancedSettings } from "@Renderer/modules/Settings";
+import {
+  DeviceConnectedPreview,
+  GeneralSettings,
+  NeuronSettings,
+  AdvancedSettings,
+  LEDSettings,
+  RFSettings,
+} from "@Renderer/modules/Settings";
 
 import { PageHeader } from "@Renderer/modules/PageHeader";
 import ToastMessage from "@Renderer/component/ToastMessage";
-import { IconFloppyDisk } from "@Renderer/component/Icon";
+import {
+  IconBattery,
+  IconBluetooth,
+  IconFlashlight,
+  IconFloppyDisk,
+  IconKeyboard,
+  IconLogoDygma,
+  IconSignal,
+  IconWrench,
+} from "@Renderer/component/Icon";
 import Version from "@Renderer/component/Version/Version";
 
 import Store from "@Renderer/utils/Store";
 import { useDevice } from "@Renderer/DeviceContext";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@Renderer/components/ui/tabs";
+import { KBDataPref, PrefState } from "@Renderer/types/preferences";
+import { WirelessInterface } from "@Renderer/types/wireless";
+import { Neuron } from "@Renderer/types/neurons";
 import Backup from "../../api/backup";
 
 const store = Store.getStore();
 
-const Styles = Styled.div`
-  .toggle-button{
-    text-align: center;
-    padding-bottom: 8px;
-  }
-`;
+const initialWireless = {
+  battery: {
+    LeftLevel: 0,
+    RightLevel: 0,
+    LeftState: 0,
+    RightState: 0,
+    savingMode: false,
+  },
+  energy: {
+    modes: 0,
+    currentMode: 0,
+    disable: 0,
+  },
+  bluetooth: {
+    infoChannel1: "",
+    infoChannel2: "",
+    infoChannel3: "",
+    infoChannel4: "",
+    infoChannel5: "",
+    deviceName: "",
+  },
+  rf: {
+    channelHop: 0,
+    power: 0,
+  },
+  brightness: 0,
+  brightnessUG: 0,
+  fade: 0,
+  idleleds: 0,
+  true_sleep: false,
+  true_sleep_time: 0,
+};
 
 interface PreferencesProps {
   inContext: boolean;
   cancelContext: () => void;
-  updateAllowBeta: (event: any) => void;
+  onChangeAllowBetas: (checked: boolean) => void;
   allowBeta: boolean;
   connected: boolean;
   startContext: () => void;
@@ -64,15 +104,17 @@ interface PreferencesProps {
 
 const Preferences = (props: PreferencesProps) => {
   const [state] = useDevice();
+  const [chipID, setchipID] = useState("");
   const [bkp] = useState(new Backup());
+  const [wireless, setWireless] = useState<WirelessInterface>(initialWireless);
   const [isSaved, setIsSaved] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
-  const { inContext, connected, allowBeta, updateAllowBeta, startContext, cancelContext, toggleDarkMode } = props;
-  const [kbData, setKbData] = useState({
+  const { inContext, connected, allowBeta, onChangeAllowBetas, startContext, cancelContext, toggleDarkMode } = props;
+  const [kbData, setKbData] = useState<KBDataPref>({
     keymap: {
       custom: [],
       default: [],
-      onlyCustom: "1",
+      onlyCustom: 1,
     },
     ledBrightness: 255,
     ledBrightnessUG: 255,
@@ -92,37 +134,63 @@ const Preferences = (props: PreferencesProps) => {
     mouseWheelSpeed: 1,
     mouseWheelDelay: 100,
     mouseSpeedLimit: 1,
-    modified: inContext,
     showDefaults: false,
   });
-  const [preferencesState, setPreferencesState] = useState({
+  const [preferencesState, setPreferencesState] = useState<PrefState>({
     devTools: false,
     advanced: false,
     verboseFocus: false,
     darkMode: "system",
-    neurons: store.get("neurons") as any,
+    neurons: store.get("neurons") as Array<Neuron>,
     selectedNeuron: 0,
     selectNeuron: 0,
     neuronID: "",
-    kbData,
     modified: inContext,
   });
+  const [activeTab, setActiveTab] = useState(connected ? "Keyboard" : "Application");
 
   const openDevTool = useCallback(() => {
-    setPreferencesState({ ...preferencesState, devTools: true });
+    setPreferencesState(prefState => ({ ...prefState, devTools: true }));
   }, []);
 
   const closeDevTool = useCallback(() => {
-    setPreferencesState({ ...preferencesState, devTools: false });
+    setPreferencesState(prefState => ({ ...prefState, devTools: false }));
   }, []);
 
-  const getNeuronData = async () => {
-    const neuronData: any = {
+  const getNeuronData = useCallback(async () => {
+    const neuronData: {
+      neuronID: string;
+      kbData: KBDataPref;
+    } = {
       neuronID: "",
       kbData: {
-        keymap: {},
+        keymap: {
+          custom: [],
+          default: [],
+          onlyCustom: 0,
+        },
+        ledBrightness: 0,
+        ledBrightnessUG: 0,
+        defaultLayer: 0,
+        ledIdleTimeLimit: 0,
+        qukeysHoldTimeout: 0,
+        qukeysOverlapThreshold: 0,
+        SuperTimeout: 0,
+        SuperRepeat: 0,
+        SuperWaitfor: 0,
+        SuperHoldstart: 0,
+        SuperOverlapThreshold: 0,
+        mouseSpeed: 0,
+        mouseSpeedDelay: 0,
+        mouseAccelSpeed: 0,
+        mouseAccelDelay: 0,
+        mouseWheelSpeed: 0,
+        mouseWheelDelay: 0,
+        mouseSpeedLimit: 0,
+        showDefaults: false,
       },
     };
+
     if (state.currentDevice) {
       await state.currentDevice.command("hardware.chip_id").then((neuronID: string) => {
         const neuronIDParsed = neuronID.replace(/\s/g, "");
@@ -135,7 +203,7 @@ const Preferences = (props: PreferencesProps) => {
       });
 
       await state.currentDevice.command("keymap.onlyCustom").then((onlyCustom: string) => {
-        neuronData.kbData.keymap.onlyCustom = onlyCustom;
+        neuronData.kbData.keymap.onlyCustom = parseInt(onlyCustom, 10);
       });
       await state.currentDevice.command("led.brightness").then((brightness: string) => {
         const brightnessParsed = brightness ? parseInt(brightness, 10) : -1;
@@ -152,7 +220,7 @@ const Preferences = (props: PreferencesProps) => {
       });
 
       neuronData.kbData.showDefaults =
-        store.get("settings.showDefaults") === undefined ? false : store.get("settings.showDefaults");
+        store.get("settings.showDefaults") === undefined ? false : (store.get("settings.showDefaults") as boolean);
 
       // QUKEYS variables commands
       await state.currentDevice.command("qukeys.holdTimeout").then((holdTimeout: string) => {
@@ -176,6 +244,11 @@ const Preferences = (props: PreferencesProps) => {
         neuronData.kbData.SuperHoldstart = holdstartParsed;
       });
 
+      await state.currentDevice.command("superkeys.overlap").then((overlap: string) => {
+        const overlapThreshold = overlap ? parseInt(overlap, 10) : 80;
+        neuronData.kbData.SuperOverlapThreshold = overlapThreshold;
+      });
+
       // MOUSE variables commands
       await state.currentDevice.command("mouse.speed").then((speed: string) => {
         const speedParsed = speed ? parseInt(speed, 10) : 1;
@@ -196,6 +269,7 @@ const Preferences = (props: PreferencesProps) => {
         const speedLimitParsed = speedLimit ? parseInt(speedLimit, 10) : 127;
         neuronData.kbData.mouseSpeedLimit = speedLimitParsed;
       });
+
       setKbData(prevKbData => ({
         ...prevKbData,
         ...neuronData.kbData,
@@ -203,13 +277,9 @@ const Preferences = (props: PreferencesProps) => {
       setPreferencesState(prevPreferencesState => ({
         ...prevPreferencesState,
         neuronID: neuronData.neuronID,
-        kbData: {
-          ...prevPreferencesState.kbData,
-          ...neuronData.kbData,
-        },
       }));
     }
-  };
+  }, [state.currentDevice]);
 
   useEffect(() => {
     const init = async () => {
@@ -235,7 +305,7 @@ const Preferences = (props: PreferencesProps) => {
       };
     };
     init();
-  }, []);
+  }, [closeDevTool, getNeuronData, openDevTool]);
 
   useEffect(() => {
     const fetchNewData = async () => {
@@ -245,12 +315,11 @@ const Preferences = (props: PreferencesProps) => {
       }
     };
     fetchNewData();
-  }, [isSaved]);
+  }, [getNeuronData, isSaved]);
 
   const destroyContext = async () => {
     setKbData(prevKbData => ({
       ...prevKbData,
-      modified: false,
     }));
     setPreferencesState(prevState => ({
       ...prevState,
@@ -274,6 +343,7 @@ const Preferences = (props: PreferencesProps) => {
       SuperRepeat,
       SuperWaitfor,
       SuperHoldstart,
+      SuperOverlapThreshold,
       mouseSpeed,
       mouseSpeedDelay,
       mouseAccelSpeed,
@@ -298,6 +368,7 @@ const Preferences = (props: PreferencesProps) => {
       await state.currentDevice.command("superkeys.repeat", SuperRepeat);
       await state.currentDevice.command("superkeys.waitfor", SuperWaitfor);
       await state.currentDevice.command("superkeys.holdstart", SuperHoldstart);
+      await state.currentDevice.command("superkeys.overlap", SuperOverlapThreshold);
       // MOUSE KEYS
       await state.currentDevice.command("mouse.speed", mouseSpeed);
       await state.currentDevice.command("mouse.speedDelay", mouseSpeedDelay);
@@ -347,19 +418,13 @@ const Preferences = (props: PreferencesProps) => {
     }
   };
 
-  const setLanguage = async (event: any) => {
-    i18n.setLanguage(event.target.value);
-    // await this.setState({}); // what is the meaning of this?
-    await store.set("settings.language", event.target.value);
-  };
-
-  const setKbDataHandler = (newKbData: any) => {
-    if (kbData.modified === false && newKbData.modified === true) {
-      setKbData(newKbData);
+  const setKbDataHandler = (newKbData: KBDataPref) => {
+    if (preferencesState.modified === false) {
       startContext();
+      setKbData(newKbData);
       setPreferencesState({
         ...preferencesState,
-        modified: newKbData.modified,
+        modified: true,
       });
     } else {
       setKbData(newKbData);
@@ -367,40 +432,20 @@ const Preferences = (props: PreferencesProps) => {
   };
 
   const selectDefaultLayer = (value: string) => {
-    if (kbData.modified === false) {
-      setKbData(prevKbData => ({
-        ...prevKbData,
-        modified: true,
-        defaultLayer: parseInt(value, 10),
-      }));
-      setPreferencesState(prevState => ({
-        ...prevState,
-        modified: true,
-      }));
-      startContext();
-    } else {
-      setKbData(prevKbData => ({
-        ...prevKbData,
-        defaultLayer: parseInt(value, 10),
-      }));
-      // this.forceUpdate(); what??
-    }
+    setKbData(prevKbData => ({
+      ...prevKbData,
+      defaultLayer: parseInt(value, 10),
+    }));
   };
 
   // ADVANCED FUNCTIONS
-  const toggleAdvanced = () => {
-    setPreferencesState(prevState => ({
-      ...prevState,
-      advanced: !prevState.advanced,
-    }));
-  };
 
-  const toggleDevTools = async (event: any) => {
+  const onChangeDevTools = async (checked: boolean) => {
     setPreferencesState(prevState => ({
       ...prevState,
-      devTools: event.target.checked,
+      devTools: checked,
     }));
-    await ipcRenderer.invoke("manage-devtools", event.target.checked);
+    await ipcRenderer.invoke("manage-devtools", checked);
     startContext();
   };
 
@@ -413,19 +458,19 @@ const Preferences = (props: PreferencesProps) => {
     toggleDarkMode(key);
   };
 
-  const toggleVerboseFocus = () => {
+  const onChangeVerbose = () => {
     setPreferencesState(prevState => ({
       ...prevState,
       verboseFocus: !prevState.verboseFocus,
     }));
   };
 
-  const toggleOnlyCustom = (event: any) => {
+  const onChangeOnlyCustomLayers = (checked: boolean) => {
     setKbData(prevKbData => ({
       ...prevKbData,
       keymap: {
         ...prevKbData.keymap,
-        onlyCustom: event.target.checked,
+        onlyCustom: checked ? 1 : 0,
       },
       modified: true,
     }));
@@ -444,12 +489,12 @@ const Preferences = (props: PreferencesProps) => {
     }));
   };
 
-  const applyNeuronName = (neurons: any) => {
+  const applyNeuronName = (neurons: unknown) => {
     store.set("neurons", neurons);
   };
 
   const updateNeuronName = (data: string) => {
-    const temp = preferencesState.neurons;
+    const temp = preferencesState.neurons as Array<any>;
     temp[preferencesState.selectedNeuron].name = data;
     setPreferencesState(prevState => ({
       ...prevState,
@@ -474,61 +519,186 @@ const Preferences = (props: PreferencesProps) => {
 
   const { neurons, selectedNeuron, darkMode, neuronID, devTools, verboseFocus, modified } = preferencesState;
   const { defaultLayer } = kbData;
-  const devToolsSwitch = <Form.Check type="switch" checked={devTools} onChange={toggleDevTools} />;
-  const verboseSwitch = <Form.Check type="switch" checked={verboseFocus} onChange={toggleVerboseFocus} />;
-  const onlyCustomSwitch = <Form.Check type="switch" checked={kbData.keymap.onlyCustom as any} onChange={toggleOnlyCustom} />;
-  const allowBetas = <Form.Check value={allowBeta as any} type="switch" checked={allowBeta} onChange={updateAllowBeta} />;
+
+  const tabVariants = {
+    hidden: { opacity: 0 },
+    visible: { opacity: 1, transition: { duration: 0.5 } },
+  };
+
+  useEffect(() => {
+    if (state.currentDevice && connected) {
+      const previewchipID =
+        state.currentDevice.serialNumber?.includes("raise") && connected
+          ? state.currentDevice.serialNumber.slice(0, -7).toLowerCase()
+          : state.currentDevice.serialNumber;
+      setchipID(previewchipID);
+      console.log(state.currentDevice.device);
+    }
+  }, [state.currentDevice, connected]);
+
+  // console.log("current Neuron: ", state.currentDevice, chipID, "connected?: ", connected);
+
+  const handleTabChange = (value: string) => {
+    setActiveTab(value);
+  };
+
+  async function sendRePairCommand() {
+    if (state.currentDevice) {
+      const result = await state.currentDevice.command("wireless.rf.syncPairing");
+      console.log("command returned", result);
+    }
+  }
 
   return (
-    <Styles>
-      <Container fluid>
-        <PageHeader
-          text={i18n.preferences.title}
-          style="pageHeaderFlatBottom"
-          showSaving
-          contentSelector={false}
-          saveContext={saveKeymapChanges}
-          destroyContext={destroyContext}
-          inContext={modified}
-          isSaving={isSaving}
-        />
-        <div className="wrapper wrapperBackground">
-          <Container fluid>
-            <Row className="justify-content-center">
-              <Col lg={9} xl={6}>
-                <GeneralSettings
-                  selectDarkMode={selectDarkMode}
-                  darkMode={darkMode}
-                  neurons={neurons}
-                  selectedNeuron={selectedNeuron}
-                  defaultLayer={defaultLayer}
-                  selectDefaultLayer={selectDefaultLayer}
-                  connected={connected}
-                />
-                <BackupSettings connected={connected} />
-                <NeuronSettings
-                  neurons={neurons}
-                  selectedNeuron={selectedNeuron}
-                  selectNeuron={selectNeuron}
-                  updateNeuronName={updateNeuronName}
-                  deleteNeuron={deleteNeuron}
-                />
-                <KeyboardSettings kbData={kbData} setKbData={setKbDataHandler} connected={connected} />
-                <AdvancedSettings
-                  devToolsSwitch={devToolsSwitch as any}
-                  verboseSwitch={verboseSwitch}
-                  onlyCustomSwitch={onlyCustomSwitch}
-                  allowBetas={allowBetas}
-                  pairingButton={<></>}
-                  connected={connected}
-                />
-                <Version />
-              </Col>
-            </Row>
-          </Container>
-        </div>
-      </Container>
-    </Styles>
+    <div className="px-2">
+      <PageHeader
+        text={i18n.preferences.title}
+        showSaving
+        contentSelector={false}
+        saveContext={saveKeymapChanges}
+        destroyContext={destroyContext}
+        inContext={modified}
+        isSaving={isSaving}
+      />
+      <div className="flex w-full mx-auto mt-4">
+        <Tabs
+          defaultValue="Application"
+          orientation="vertical"
+          className="w-full"
+          value={activeTab}
+          onValueChange={handleTabChange}
+        >
+          <div className="flex gap-3 w-full pb-4">
+            <TabsList className="flex flex-col self-start gap-1 px-4 py-4 text-left min-w-64 rounded-xl bg-tabMenu dark:bg-tabMenuDark">
+              {connected && state.currentDevice ? (
+                <>
+                  <DeviceConnectedPreview
+                    deviceName={neurons.find(x => x.id === chipID) ? neurons.find(x => x.id === chipID).name : ""}
+                    deviceDisplayName={state.currentDevice.device.info.displayName}
+                    nameChange={updateNeuronName}
+                  />
+                  <h4 className="uppercase text-xs dark:text-gray-300 pb-2 mb-1 mt-3 border-solid border-b border-gray-300/30 dark:border-gray-300/30">
+                    Device settings
+                  </h4>
+                  <TabsTrigger value="Keyboard" variant="tab">
+                    <IconKeyboard /> Typing and Keys
+                  </TabsTrigger>
+                  <TabsTrigger value="LED" variant="tab">
+                    <IconFlashlight /> LED
+                  </TabsTrigger>
+                  {state.currentDevice.device.info.keyboardType === "wireless" && (
+                    <>
+                      <TabsTrigger value="Battery" variant="tab">
+                        <IconBattery /> Battery Management
+                      </TabsTrigger>
+                      <TabsTrigger value="Bluetooth" variant="tab">
+                        <IconBluetooth /> Bluetooth Settings
+                      </TabsTrigger>
+                      <TabsTrigger value="RF" variant="tab">
+                        <IconSignal /> RF Settings
+                      </TabsTrigger>
+                    </>
+                  )}
+                  <TabsTrigger value="Advanced" variant="tab">
+                    <IconWrench /> Advanced
+                  </TabsTrigger>
+                </>
+              ) : null}
+              <h4
+                className={`uppercase text-xs dark:text-gray-300 pb-2 mb-1 border-solid border-b border-gray-300/30 dark:border-gray-300/30 ${
+                  connected ? "mt-3" : ""
+                }`}
+              >
+                Global settings
+              </h4>
+              <TabsTrigger value="Application" variant="tab">
+                <IconLogoDygma /> Application
+              </TabsTrigger>
+            </TabsList>
+            <div className="rounded-xl bg-gray-25/50 dark:bg-gray-400/15 px-4 py-3 w-full">
+              {connected && state.currentDevice ? (
+                <>
+                  <TabsContent value="Keyboard" className="w-full">
+                    <motion.div initial="hidden" animate="visible" variants={tabVariants}>
+                      <KeyboardSettings kbData={kbData} setKbData={setKbDataHandler} connected={connected} />
+                      <NeuronSettings
+                        neurons={neurons}
+                        selectedNeuron={selectedNeuron}
+                        selectNeuron={selectNeuron}
+                        updateNeuronName={updateNeuronName}
+                        deleteNeuron={deleteNeuron}
+                      />
+                    </motion.div>
+                  </TabsContent>
+                  <TabsContent value="LED">
+                    <motion.div initial="hidden" animate="visible" variants={tabVariants}>
+                      <LEDSettings
+                        kbData={kbData}
+                        setKbData={setKbDataHandler}
+                        connected={connected}
+                        isWireless={state.currentDevice.device.info.keyboardType === "wireless"}
+                      />
+                    </motion.div>
+                  </TabsContent>
+                  {state.currentDevice.device.info.keyboardType === "wireless" && (
+                    <>
+                      <TabsContent value="Battery">
+                        <motion.div initial="hidden" animate="visible" variants={tabVariants}>
+                          Battery Management
+                        </motion.div>
+                      </TabsContent>
+                      <TabsContent value="Bluetooth">
+                        <motion.div initial="hidden" animate="visible" variants={tabVariants}>
+                          Bluetooth Settings
+                        </motion.div>
+                      </TabsContent>
+                      <TabsContent value="RF">
+                        <motion.div initial="hidden" animate="visible" variants={tabVariants}>
+                          <RFSettings wireless={wireless} changeWireless={setKbData} sendRePair={sendRePairCommand} />
+                        </motion.div>
+                      </TabsContent>
+                    </>
+                  )}
+                  <TabsContent value="Advanced">
+                    <motion.div initial="hidden" animate="visible" variants={tabVariants}>
+                      <AdvancedSettings
+                        connected={connected}
+                        defaultLayer={defaultLayer}
+                        selectDefaultLayer={selectDefaultLayer}
+                        neurons={neurons}
+                        neuronID={neuronID}
+                        selectedNeuron={selectedNeuron}
+                        updateTab={handleTabChange}
+                      />
+                    </motion.div>
+                  </TabsContent>
+                </>
+              ) : null}
+              <TabsContent value="Application">
+                <motion.div initial="hidden" animate="visible" variants={tabVariants}>
+                  <GeneralSettings
+                    connected={connected}
+                    selectDarkMode={selectDarkMode}
+                    darkMode={darkMode}
+                    neurons={neurons}
+                    selectedNeuron={selectedNeuron}
+                    devTools={devTools}
+                    onChangeDevTools={onChangeDevTools}
+                    verbose={verboseFocus}
+                    onChangeVerbose={onChangeVerbose}
+                    allowBeta={allowBeta}
+                    onChangeAllowBetas={onChangeAllowBetas}
+                    onlyCustomLayers={kbData.keymap.onlyCustom.toString()}
+                    onChangeOnlyCustomLayers={onChangeOnlyCustomLayers}
+                  />
+                  <Version />
+                </motion.div>
+              </TabsContent>
+            </div>
+          </div>
+        </Tabs>
+      </div>
+    </div>
   );
 };
 
