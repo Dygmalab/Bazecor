@@ -94,6 +94,7 @@ const DefyBatteryIndicatorLeft = ({ batteryStatus, batteryHeight }: DefyBatteryI
           fill={batteryStatus === 1 ? "currentColor" : "white"}
           stroke="currentColor"
           strokeWidth="1.2"
+          transform={batteryStatus === 1 ? "scale(1, 1) translate(-7,34)" : ""}
         />
       ) : (
         ""
