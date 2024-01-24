@@ -654,7 +654,7 @@ const Preferences = (props: PreferencesProps) => {
                       </TabsContent>
                       <TabsContent value="RF">
                         <motion.div initial="hidden" animate="visible" variants={tabVariants}>
-                          <RFSettings wireless={wireless} changeWireless={setKbData} sendRePair={sendRePairCommand} />
+                          {/* <RFSettings wireless={wireless} changeWireless={setKbData} sendRePair={sendRePairCommand} /> */}
                         </motion.div>
                       </TabsContent>
                     </>
