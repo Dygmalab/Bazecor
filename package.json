@@ -1,7 +1,7 @@
 {
   "name": "Bazecor",
   "productName": "Bazecor",
-  "version": "1.3.10-rc.3",
+  "version": "2.0.0-rc.1",
   "description": "Bazecor desktop app",
   "private": true,
   "repository": {
@@ -111,7 +111,7 @@
     "ts-loader": "^9.2.2",
     "ts-node": "^10.0.0",
     "typescript": "~4.5.4",
-    "vite": "^4.3.9",
+    "vite": "^4.5.2",
     "vitest": "^0.32.2",
     "webpack-cli": "^5.1.3"
   },
