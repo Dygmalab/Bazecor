@@ -16,47 +16,52 @@
 
 import React from "react";
 import i18n from "@Renderer/i18n";
-import Styled from "styled-components";
 
 // Custom components
-import { Card, CardContent, CardHeader } from "@Renderer/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@Renderer/components/ui/card";
 import Title from "@Renderer/component/Title";
 import { RegularButton } from "@Renderer/component/Button";
 
+import { Row, Col } from "react-bootstrap";
+import { ToggleButtons } from "@Renderer/component/ToggleButtons";
+
 // Assets
-import { IconSignal } from "@Renderer/component/Icon";
+import { IconSignal, IconRadar } from "@Renderer/component/Icon";
+import { Badge } from "@Renderer/component/Badge";
 import { RFSettingsProps } from "@Renderer/types/wireless";
 
-const Styles = Styled.div`
-height: 100%;
-padding-top: 24px;
-.card {
-  height: inherit;
-}
-.RFdescription {
-  margin-top: 24px;
-  p {
-    font-size: 0.75rem;
-    font-weight: 401;
-    color: ${({ theme }) => theme.styles.batterySettings.descriptionColor};
-    strong {
-      font-weight: 401;
-      color: ${({ theme }) => theme.styles.batterySettings.descriptionHighlightColor};
-    }
-  }
-}
-.button.outline {
-  margin-top: 4px;
-}
-`;
-
 function RFSettings(props: RFSettingsProps) {
-  const { sendRePair } = props;
+  const { sendRePair, wireless, changeWireless} = props;
+
+  const RFModes = [
+    {
+      name: "Low",
+      value: 0,
+      index: 0,
+    },
+    {
+      name: "Medium",
+      value: 1,
+      index: 1,
+    },
+    {
+      name: "High",
+      value: 2,
+      index: 2,
+    },
+  ];
+  const setRfPower = async (value: number) => {
+    const newWireless = { ...wireless };
+    newWireless.rf.power = value;
+    changeWireless(newWireless);
+  };
   return (
-    <Styles>
-      <Card className="overflowFix card-preferences">
+    <>
+      <Card className="max-w-2xl mx-auto" variant="default">
         <CardHeader>
-          <Title text={i18n.wireless.RFPreferences.RFSettings} headingLevel={3} svgICO={<IconSignal />} />
+          <CardTitle>
+            <IconSignal /> {i18n.wireless.RFPreferences.RFSettings}
+          </CardTitle>
         </CardHeader>
         <CardContent className="py-0">
           <Title text={i18n.wireless.RFPreferences.repairChannel} headingLevel={4} />
@@ -66,12 +71,34 @@ function RFSettings(props: RFSettingsProps) {
             styles="outline gradient"
             size="sm"
           />
-          <div className="RFdescription">
+          <div className="py-3 mb-2 text-xs font-normal tracking-tight text-gray-400 dark:text-gray-100">
             <p>{i18n.wireless.RFPreferences.repairChannelDescription}</p>
           </div>
         </CardContent>
       </Card>
-    </Styles>
+      <Card className="mt-3 max-w-2xl mx-auto" variant="default">
+        <CardHeader>
+          <CardTitle className="flex items-center justify-between">
+            <div className="flex gap-1">
+              <IconRadar /> {i18n.wireless.RFPreferences.RFRadioSignal}
+            </div>{" "}
+            <Badge content={i18n.wireless.energyManagement.settings.lowBatteryImpact} variation="subtle" size="sm" />
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <Row className="card-preferences--option justify-between">
+            <Col lg={5}>
+              <Title
+                text={i18n.wireless.energyManagement.settings.manageRFSignal}
+                tooltip={i18n.wireless.energyManagement.settings.tooltipRF}
+                headingLevel={6}
+              />
+            </Col>
+            <ToggleButtons selectDarkMode={setRfPower} value={wireless.rf.power} listElements={RFModes} styles="flex" size="sm" />
+          </Row>
+        </CardContent>
+      </Card>
+    </>
   );
 }
 

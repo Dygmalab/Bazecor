@@ -1518,7 +1518,7 @@ const LayoutEditor: React.FC<LayoutEditorProps> = (props): React.JSX.Element => 
   };
 
   const layerName = (index: number): string =>
-    layerNames !== undefined && layerNames.length > index ? layerNames[index].name : defaultLayerNames[index].name;
+    layerNames !== undefined && layerNames.length > index ? layerNames[index]?.name : defaultLayerNames[index]?.name;
 
   const modeSelectToggle = (data: string) => {
     if (isStandardView) {
