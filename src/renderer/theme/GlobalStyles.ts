@@ -1746,6 +1746,9 @@ div.card.card-preferences .card-body {
   top: 0;
   box-shadow: none;
 }
+.rangeslider-horizontal.slider-danger .rangeslider__fill {
+  background-color: ${({ theme }) => theme.colors.brandPrimary};
+}
 
 .rangeslider-horizontal .rangeslider__handle {
   background: ${({ theme }) => theme.styles.slider.handleBackgroundColor};
@@ -1756,6 +1759,10 @@ div.card.card-preferences .card-body {
   height: 18px;
   border-radius: 50%;
   font-weight: 600;
+}
+.rangeslider-horizontal.slider-danger .rangeslider__handle {
+  background-color: ${({ theme }) => theme.colors.brandPrimary};
+  box-shadow: 0px 4px 12px ${({ theme }) => theme.colors.brandPrimary};
 }
 .rangeslider-horizontal .rangeslider__handle:after {
   content: none;

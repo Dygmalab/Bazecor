@@ -51,6 +51,7 @@ import IconFileDownload from "./IconFileDownload";
 import IconFolder from "./IconFolder";
 import IconHanger from "./IconHanger";
 import IconHome from "./IconHome";
+import IconIridescentWhiteBalance from "./IconIridescentWhiteBalance";
 import IconKeysPress from "./IconKeysPress";
 import IconKeysTapHold from "./IconKeysTapHold";
 import IconKeys2Tap from "./IconKeys2Tap";
@@ -199,6 +200,7 @@ export {
   IconFileDownload,
   IconFolder,
   IconHanger,
+  IconIridescentWhiteBalance,
   IconHome,
   IconKeysPress,
   IconKeysTapHold,
