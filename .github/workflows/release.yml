@@ -157,7 +157,7 @@ jobs:
         name: Build for Linux/Windows
         run: |
           yarn run make
-          sha256sum -b out/make/**/*.AppImage > Linux.sha256
+          sha256sum -b ./out/make/**/*.AppImage > Linux.sha256
       - if: runner.os == 'Windows'
         shell: bash
         name: Get executable into signing folder
