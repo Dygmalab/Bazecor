@@ -653,10 +653,8 @@ class LayoutEditor extends React.Component {
       }
       const parsedSuper = this.superTranslator(raw2);
 
-      let ledIndexStart = 69;
-      if (device === "Defy") {
-        ledIndexStart = 70;
-      }
+      let ledIndexStart = 80;
+
       this.setState({
         currentLayer: this.state.previousLayer,
         defaultLayer: defLayer,
