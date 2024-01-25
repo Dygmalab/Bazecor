@@ -25,28 +25,20 @@ import Slider from "@appigram/react-rangeslider";
 
 // Custom components
 import { Card, CardContent, CardHeader, CardTitle } from "@Renderer/components/ui/card";
-import { KBDataPref } from "@Renderer/types/preferences";
+import { Switch } from "@Renderer/components/ui/switch";
+import { KBDataPref, LEDSettingsPreferences } from "@Renderer/types/preferences";
 
 // Assets
-import { IconFlashlight } from "@Renderer/component/Icon";
+import { Badge } from "@Renderer/component/Badge";
+import { IconFlashlight, IconIridescentWhiteBalance, IconThunder } from "@Renderer/component/Icon";
 import Callout from "@Renderer/component/Callout";
 import i18n from "../../i18n";
+import Heading from "@Renderer/components/ui/heading";
 
-interface KeyboardSettingsProps {
-  kbData: KBDataPref;
-  setKbData: (data: KBDataPref) => void;
-  connected: boolean;
-  isWireless: boolean;
-}
-
-function LEDSettings(props: KeyboardSettingsProps) {
-  const { kbData, setKbData, connected, isWireless } = props;
+function LEDSettings(props: LEDSettingsPreferences) {
+  const { kbData, wireless, setKbData, setWireless, connected, isWireless } = props;
   const [localKBData, setLocalKBData] = useState(kbData);
-
-  useEffect(() => {
-    const { kbData: newKBData } = props;
-    setLocalKBData(newKBData);
-  }, [props, setKbData]);
+  const [localWireless, setLocalWireless] = useState(wireless);
 
   const selectIdleLEDTime = (value: number) => {
     setLocalKBData(data => ({
@@ -54,6 +46,14 @@ function LEDSettings(props: KeyboardSettingsProps) {
       ledIdleTimeLimit: value * 60,
     }));
     setKbData({ ...localKBData, ledIdleTimeLimit: value * 60 });
+  };
+
+  const selectIdleLEDTimeWireless = (value: number) => {
+    setLocalWireless(data => ({
+      ...data,
+      idleleds: value * 60,
+    }));
+    setWireless({ ...localWireless, idleleds: value * 60 });
   };
 
   const setBrightness = (value: number) => {
@@ -64,6 +64,14 @@ function LEDSettings(props: KeyboardSettingsProps) {
     setKbData({ ...localKBData, ledBrightness: (value * 255) / 100 });
   };
 
+  const setBrightnessWireless = (value: number) => {
+    setLocalWireless(data => ({
+      ...data,
+      brightness: (value * 255) / 100,
+    }));
+    setWireless({ ...localWireless, brightness: (value * 255) / 100 });
+  };
+
   const setBrightnessUG = (value: number) => {
     setLocalKBData(data => ({
       ...data,
@@ -72,91 +80,237 @@ function LEDSettings(props: KeyboardSettingsProps) {
     setKbData({ ...localKBData, ledBrightnessUG: (value * 255) / 100 });
   };
 
+  const setBrightnessUGWireless = (value: number) => {
+    setLocalWireless(data => ({
+      ...data,
+      brightnessUG: (value * 255) / 100,
+    }));
+    setWireless({ ...localWireless, brightnessUG: (value * 255) / 100 });
+  };
+
+  const setFade = async (checked: boolean) => {
+    setLocalWireless(data => ({
+      ...data,
+      fade: checked ? 1 : 0,
+    }));
+    setWireless({ ...localWireless, fade: checked ? 1 : 0 });
+  };
+
+  useEffect(() => {
+    const { kbData: newKBData } = props;
+    setLocalKBData(newKBData);
+  }, [props, setKbData]);
+
   const { ledBrightness, ledBrightnessUG, ledIdleTimeLimit } = localKBData;
+  const { idleleds, brightness, brightnessUG, fade } = localWireless;
 
   if (connected) {
     return (
       <>
         {isWireless && (
           <div className="max-w-2xl mx-auto mb-3">
-            <Callout content="These configurations only apply when the Saving Mode is NOT active." />
+            <Callout content="These configurations only apply when the Saving Mode is NOT active." size="sm" />
           </div>
         )}
         <Card className="max-w-2xl mx-auto" variant="default">
           <CardHeader>
-            <CardTitle variant="default">
-              <IconFlashlight /> {i18n.keyboardSettings.led.title}
+            <CardTitle className="flex flex-row items-center justify-between">
+              <div className="flex items-center gap-2">
+                <IconFlashlight /> {i18n.keyboardSettings.led.title}
+              </div>{" "}
+              {isWireless && (
+                <Badge content={i18n.wireless.energyManagement.settings.highBatteryImpact} variation="danger-low" size="sm" />
+              )}
             </CardTitle>
           </CardHeader>
           <CardContent>
             {ledIdleTimeLimit >= 0 && (
-              <Form.Group controlId="idleTimeLimit" className="formGroup">
-                <Row>
-                  <Col>
-                    <Form.Label>{i18n.keyboardSettings.led.idleTimeLimit}</Form.Label>
-                  </Col>
-                </Row>
-                <Row>
-                  <Col xs={2} md={1} className="p-0 text-center align-self-center">
-                    <span className="tagsfix">Off</span>
-                  </Col>
-                  <Col xs={8} md={10} className="px-2">
-                    <Slider min={0} max={60} step={1} value={ledIdleTimeLimit / 60} onChange={selectIdleLEDTime} />
-                  </Col>
-                  <Col xs={2} md={1} className="p-0 text-center align-self-center">
-                    <span className="tagsfix">60min</span>
-                  </Col>
-                </Row>
-              </Form.Group>
+              <div className={`${isWireless ? "px-3 py-3 bg-gray-100/20 dark:bg-gray-900/15 rounded" : ""}`}>
+                <Heading headingLevel={2} renderAs="paragraph-sm" className={`tracking-normal ${isWireless && "mb-2"}`}>
+                  {i18n.keyboardSettings.led.idleTimeLimit}
+                </Heading>
+                <div className="flex flex-col">
+                  <div className="flex w-full gap-2 items-center">
+                    {isWireless && <label className="min-w-16 mb-0 text-sm text-gray-400 dark:text-gray-100">Wired</label>}
+                    <div className="block w-full relative">
+                      <Slider min={0} max={60} step={1} value={ledIdleTimeLimit / 60} onChange={selectIdleLEDTime} />
+                    </div>
+                  </div>
+                  {isWireless && (
+                    <div className="flex w-full gap-2 items-center">
+                      <label className="min-w-16 mb-0 text-sm text-gray-400 dark:text-gray-100">Wireless</label>
+                      <div className="block w-full relative">
+                        <Slider
+                          min={0}
+                          max={60}
+                          step={1}
+                          value={idleleds / 60}
+                          onChange={selectIdleLEDTimeWireless}
+                          className="slider-danger"
+                        />
+                      </div>
+                    </div>
+                  )}
+                  <div className={`flex justify-between ${isWireless && "pl-[4.5rem]"}`}>
+                    <span className="text-xs text-gray-300 dark:text-gray-200">Off</span>
+                    <span className="text-xs text-gray-300 dark:text-gray-200">60min</span>
+                  </div>
+                </div>
+              </div>
             )}
             {ledBrightness >= 0 && (
-              <Form.Group controlId="brightnessControl" className="formGroup">
-                <Row>
-                  <Col>
-                    <Form.Label>{i18n.keyboardSettings.led.brightness}</Form.Label>
-                  </Col>
-                </Row>
-                <Row>
-                  <Col xs={2} md={1} className="p-0 text-center align-self-center">
-                    <span className="tagsfix">None</span>
-                  </Col>
-                  <Col xs={8} md={10} className="px-2">
-                    <Slider min={0} max={100} step={1} value={Math.round((ledBrightness * 100) / 255)} onChange={setBrightness} />
-                  </Col>
-                  <Col xs={2} md={1} className="p-0 text-center align-self-center">
-                    <span className="tagsfix">Max</span>
-                  </Col>
-                </Row>
-              </Form.Group>
+              <div className={`${isWireless ? "px-3 py-3 bg-gray-100/20 dark:bg-gray-900/15 rounded mt-3" : "mt-4"}`}>
+                <Heading headingLevel={2} renderAs="paragraph-sm" className={`tracking-normal ${isWireless && "mb-2"}`}>
+                  {i18n.keyboardSettings.led.brightness}
+                </Heading>
+                <div className="flex flex-col">
+                  <div className="flex w-full gap-2 items-center">
+                    {isWireless && <label className="min-w-16 mb-0 text-sm text-gray-400 dark:text-gray-100">Wired</label>}
+                    <div className="block w-full relative">
+                      <Slider
+                        min={0}
+                        max={100}
+                        step={1}
+                        value={Math.round((ledBrightness * 100) / 255)}
+                        onChange={setBrightness}
+                      />
+                    </div>
+                  </div>
+                  {isWireless && (
+                    <div className="flex w-full gap-2 items-center">
+                      <label className="min-w-16 mb-0 text-sm text-gray-400 dark:text-gray-100">Wireless</label>
+                      <div className="block w-full relative">
+                        <Slider
+                          min={0}
+                          max={100}
+                          step={1}
+                          value={Math.round((brightness * 100) / 255)}
+                          onChange={setBrightnessWireless}
+                          className="slider-danger"
+                        />
+                      </div>
+                    </div>
+                  )}
+                  <div className={`flex justify-between ${isWireless && "pl-[4.5rem]"}`}>
+                    <span className="text-xs text-gray-300 dark:text-gray-200">0%</span>
+                    <span className="text-xs text-gray-300 dark:text-gray-200">100%</span>
+                  </div>
+                </div>
+              </div>
             )}
             {ledBrightnessUG >= 0 && (
-              <Form.Group controlId="brightnessUGControl" className="formGroup">
-                <Row>
-                  <Col>
-                    <Form.Label>{i18n.keyboardSettings.led.brightnessUG}</Form.Label>
-                  </Col>
-                </Row>
-                <Row>
-                  <Col xs={2} md={1} className="p-0 text-center align-self-center">
-                    <span className="tagsfix">None</span>
-                  </Col>
-                  <Col xs={8} md={10} className="px-2">
-                    <Slider
-                      min={0}
-                      max={100}
-                      step={1}
-                      value={Math.round((ledBrightnessUG * 100) / 255)}
-                      onChange={setBrightnessUG}
-                    />
-                  </Col>
-                  <Col xs={2} md={1} className="p-0 text-center align-self-center">
-                    <span className="tagsfix">Max</span>
-                  </Col>
-                </Row>
-              </Form.Group>
+              <div className={`${isWireless ? "px-3 py-3 bg-gray-100/20 dark:bg-gray-900/15 rounded mt-3" : "mt-4"}`}>
+                <Heading headingLevel={2} renderAs="paragraph-sm" className={`tracking-normal ${isWireless && "mb-2"}`}>
+                  {i18n.keyboardSettings.led.brightnessUG}
+                </Heading>
+                <div className="flex flex-col">
+                  <div className="flex w-full gap-2 items-center">
+                    {isWireless && <label className="min-w-16 mb-0 text-sm text-gray-400 dark:text-gray-100">Wired</label>}
+                    <div className="block w-full relative">
+                      <Slider
+                        min={0}
+                        max={100}
+                        step={1}
+                        value={Math.round((ledBrightnessUG * 100) / 255)}
+                        onChange={setBrightnessUG}
+                      />
+                    </div>
+                  </div>
+                  {isWireless && (
+                    <div className="flex w-full gap-2 items-center">
+                      <label className="min-w-16 mb-0 text-sm text-gray-400 dark:text-gray-100">Wireless</label>
+                      <div className="block w-full relative">
+                        <Slider
+                          min={0}
+                          max={100}
+                          step={1}
+                          value={Math.round((brightnessUG * 100) / 255)}
+                          onChange={setBrightnessUGWireless}
+                          className="slider-danger"
+                        />
+                      </div>
+                    </div>
+                  )}
+                  <div className={`flex justify-between ${isWireless && "pl-[4.5rem]"}`}>
+                    <span className="text-xs text-gray-300 dark:text-gray-200">0%</span>
+                    <span className="text-xs text-gray-300 dark:text-gray-200">100%</span>
+                  </div>
+                </div>
+              </div>
+            )}
+            {isWireless && (
+              <>
+                <div className="px-3 py-3 bg-gray-100/20 dark:bg-gray-900/15 rounded mt-3">
+                  <Heading headingLevel={2} renderAs="paragraph-sm" className="tracking-normal">
+                    {i18n.wireless.energyManagement.settings.trueSleepEnabling}
+                  </Heading>
+                  <p className="text-sm text-gray-100 mb-2">These settings only apply when the device is connected wirelessly</p>
+                  <div className="flex flex-col">
+                    <div className="flex flex-row gap-2 items-center justify-between">
+                      <Heading headingLevel={3} renderAs="paragraph-sm" className="flex flex-row gap-2 items-center">
+                        {i18n.wireless.energyManagement.settings.trueSleepEnablingDesc}
+                      </Heading>
+                      <Switch
+                        id="TrueSleepSwitch"
+                        defaultChecked={false}
+                        checked={false}
+                        onCheckedChange={() => {}}
+                        variant="default"
+                        size="sm"
+                      />
+                    </div>
+                    <div className="flex flex-col gap-2 items-center justify-between border-t dark:border-gray-600 mt-3 pb-3">
+                      <Heading headingLevel={3} renderAs="paragraph-sm" className="flex flex-row gap-2 items-center">
+                        {i18n.wireless.energyManagement.settings.trueSleepTimeDesc}
+                      </Heading>
+                      <div className="block w-full relative">
+                        <Slider
+                          min={0}
+                          max={100}
+                          step={1}
+                          value={Math.round((ledBrightnessUG * 100) / 255)}
+                          onChange={setBrightnessUG}
+                          className="slider-danger"
+                        />
+                      </div>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-xs text-gray-300 dark:text-gray-200">1 min</span>
+                      <span className="text-xs text-gray-300 dark:text-gray-200">240 min</span>
+                    </div>
+                  </div>
+                </div>
+                <div className="mt-3 rounded-sm bg-primary/35 border-[1px] border-primary/90 py-3 px-3">
+                  <p className="flex flex-row gap-2 items-center text-xs text-gray-50">
+                    <span className="w-[24px]">
+                      <IconThunder />
+                    </span>{" "}
+                    It's essential to note that LEDs can significantly impact battery consumption. To optimize battery life when
+                    using your device wirelessly, you can finely adjust LED intensity.
+                  </p>
+                </div>
+              </>
             )}
           </CardContent>
         </Card>
+        {isWireless && (
+          <Card className="mt-3 max-w-2xl mx-auto" variant="default">
+            <CardHeader>
+              <CardTitle className="flex flex-row items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <IconIridescentWhiteBalance /> {i18n.wireless.energyManagement.settings.highlightLayerChanging}
+                </div>{" "}
+                <Badge content={i18n.wireless.energyManagement.settings.lowBatteryImpact} variation="subtle" size="sm" />
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="flex flex-row gap-3 justify-between items-center">
+              <p className="text-sm font-normal text-gray-300 dark:text-gray-100">
+                {i18n.wireless.energyManagement.settings.highlightLayerChangingDesc}
+              </p>
+              <Switch id="FadeSwitch" checked={fade > 0} onCheckedChange={setFade} variant="default" size="sm" />
+            </CardContent>
+          </Card>
+        )}
       </>
     );
   }

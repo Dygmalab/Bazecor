@@ -16,22 +16,23 @@
 
 import React from "react";
 import i18n from "@Renderer/i18n";
+import OverlayTrigger from "react-bootstrap/OverlayTrigger";
+import Tooltip from "react-bootstrap/Tooltip";
 
 // Custom components
 import { Card, CardContent, CardHeader, CardTitle } from "@Renderer/components/ui/card";
-import Title from "@Renderer/component/Title";
+import Heading from "@Renderer/components/ui/heading";
 import { RegularButton } from "@Renderer/component/Button";
 
-import { Row, Col } from "react-bootstrap";
 import { ToggleButtons } from "@Renderer/component/ToggleButtons";
 
 // Assets
-import { IconSignal, IconRadar } from "@Renderer/component/Icon";
+import { IconSignal, IconRadar, IconInformationBubble, IconThunder } from "@Renderer/component/Icon";
 import { Badge } from "@Renderer/component/Badge";
 import { RFSettingsProps } from "@Renderer/types/wireless";
 
 function RFSettings(props: RFSettingsProps) {
-  const { sendRePair, wireless, changeWireless} = props;
+  const { sendRePair, wireless, changeWireless } = props;
 
   const RFModes = [
     {
@@ -64,38 +65,53 @@ function RFSettings(props: RFSettingsProps) {
           </CardTitle>
         </CardHeader>
         <CardContent className="py-0">
-          <Title text={i18n.wireless.RFPreferences.repairChannel} headingLevel={4} />
+          <Heading headingLevel={2} renderAs="h4">
+            {i18n.wireless.RFPreferences.repairChannel}
+          </Heading>
           <RegularButton
             buttonText={i18n.wireless.RFPreferences.reconnectSides}
             onClick={sendRePair}
             styles="outline gradient"
             size="sm"
           />
-          <div className="py-3 mb-2 text-xs font-normal tracking-tight text-gray-400 dark:text-gray-100">
+          <div className="py-3 mb-2 text-sm font-normal tracking-tight text-gray-400 dark:text-gray-100">
             <p>{i18n.wireless.RFPreferences.repairChannelDescription}</p>
           </div>
         </CardContent>
       </Card>
       <Card className="mt-3 max-w-2xl mx-auto" variant="default">
         <CardHeader>
-          <CardTitle className="flex items-center justify-between">
-            <div className="flex gap-1">
+          <CardTitle className="flex flex-row items-center justify-between">
+            <div className="flex items-center gap-2">
               <IconRadar /> {i18n.wireless.RFPreferences.RFRadioSignal}
             </div>{" "}
             <Badge content={i18n.wireless.energyManagement.settings.lowBatteryImpact} variation="subtle" size="sm" />
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <Row className="card-preferences--option justify-between">
-            <Col lg={5}>
-              <Title
-                text={i18n.wireless.energyManagement.settings.manageRFSignal}
-                tooltip={i18n.wireless.energyManagement.settings.tooltipRF}
-                headingLevel={6}
-              />
-            </Col>
+          <div className="flex flex-row gap-2 items-center justify-between">
+            <Heading headingLevel={2} renderAs="paragraph-sm" className="flex flex-row gap-2 items-center">
+              {i18n.wireless.energyManagement.settings.manageRFSignal}
+              <OverlayTrigger
+                placement="top"
+                overlay={
+                  <Tooltip id="tooltip-top" className="">
+                    <div dangerouslySetInnerHTML={{ __html: i18n.wireless.energyManagement.settings.tooltipRF }} />
+                  </Tooltip>
+                }
+              >
+                <span className="text-purple-100">
+                  <IconInformationBubble />
+                </span>
+              </OverlayTrigger>
+            </Heading>
             <ToggleButtons selectDarkMode={setRfPower} value={wireless.rf.power} listElements={RFModes} styles="flex" size="sm" />
-          </Row>
+          </div>
+          <div className="rounded-sm bg-gray-100/20 dark:bg-gray-900/20 py-3 px-3 mt-3">
+            <p className="flex flex-row gap-2 items-center text-xs text-gray-300 dark:text-gray-100">
+              <IconThunder /> Consider minimize radio signal strength for power savings.
+            </p>
+          </div>
         </CardContent>
       </Card>
     </>

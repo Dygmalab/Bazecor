@@ -43,7 +43,7 @@ function NeuronSettings(props: NeuronSettingsProps) {
   const { neurons, selectedNeuron, selectNeuron, updateNeuronName, deleteNeuron } = props;
 
   return (
-    <Card className="max-w-2xl mx-auto" variant="default">
+    <Card className="mt-3 max-w-2xl mx-auto" variant="default">
       <CardHeader>
         <CardTitle>
           <IconNeuronManager /> {i18n.keyboardSettings.neuronManager.header}
