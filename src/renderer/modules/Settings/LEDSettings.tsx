@@ -227,15 +227,57 @@ function LEDSettings(props: KeyboardSettingsProps) {
               </div>
             )}
             {isWireless && (
-              <div className="mt-3 rounded-sm bg-primary/35 border-[1px] border-primary/90 py-3 px-3">
-                <p className="flex flex-row gap-2 items-center text-xs text-gray-50">
-                  <span className="w-[24px]">
-                    <IconThunder />
-                  </span>{" "}
-                  It's essential to note that LEDs can significantly impact battery consumption. To optimize battery life when
-                  using your device wirelessly, you can finely adjust LED intensity.
-                </p>
-              </div>
+              <>
+                <div className="px-3 py-3 bg-gray-100/20 dark:bg-gray-900/15 rounded mt-3">
+                  <Heading headingLevel={2} renderAs="paragraph-sm" className="tracking-normal">
+                    {i18n.wireless.energyManagement.settings.trueSleepEnabling}
+                  </Heading>
+                  <p className="text-sm text-gray-100 mb-2">These settings only apply when the device is connected wirelessly</p>
+                  <div className="flex flex-col">
+                    <div className="flex flex-row gap-2 items-center justify-between">
+                      <Heading headingLevel={3} renderAs="paragraph-sm" className="flex flex-row gap-2 items-center">
+                        {i18n.wireless.energyManagement.settings.trueSleepEnablingDesc}
+                      </Heading>
+                      <Switch
+                        id="TrueSleepSwitch"
+                        defaultChecked={false}
+                        checked={false}
+                        onCheckedChange={() => {}}
+                        variant="default"
+                        size="sm"
+                      />
+                    </div>
+                    <div className="flex flex-col gap-2 items-center justify-between border-t dark:border-gray-600 mt-3 pb-3">
+                      <Heading headingLevel={3} renderAs="paragraph-sm" className="flex flex-row gap-2 items-center">
+                        {i18n.wireless.energyManagement.settings.trueSleepTimeDesc}
+                      </Heading>
+                      <div className="block w-full relative">
+                        <Slider
+                          min={0}
+                          max={100}
+                          step={1}
+                          value={Math.round((ledBrightnessUG * 100) / 255)}
+                          onChange={setBrightnessUG}
+                          className="slider-danger"
+                        />
+                      </div>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-xs text-gray-300 dark:text-gray-200">1 min</span>
+                      <span className="text-xs text-gray-300 dark:text-gray-200">240 min</span>
+                    </div>
+                  </div>
+                </div>
+                <div className="mt-3 rounded-sm bg-primary/35 border-[1px] border-primary/90 py-3 px-3">
+                  <p className="flex flex-row gap-2 items-center text-xs text-gray-50">
+                    <span className="w-[24px]">
+                      <IconThunder />
+                    </span>{" "}
+                    It's essential to note that LEDs can significantly impact battery consumption. To optimize battery life when
+                    using your device wirelessly, you can finely adjust LED intensity.
+                  </p>
+                </div>
+              </>
             )}
           </CardContent>
         </Card>
