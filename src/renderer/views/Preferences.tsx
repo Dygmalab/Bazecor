@@ -129,7 +129,6 @@ const initialPreferences = {
   darkMode: store.get("settings.darkMode") as string,
   neurons: store.get("neurons") as Array<Neuron>,
   selectedNeuron: 0,
-  selectNeuron: 0,
   neuronID: "",
 };
 
@@ -151,13 +150,13 @@ const Preferences = (props: PreferencesProps) => {
   const [activeTab, setActiveTab] = useState(connected ? "Keyboard" : "Application");
 
   const getNeuronData = useCallback(async () => {
-    const neuronID: string = "";
+    let localNeuronID: string = "";
     const kbData: KBDataPref = initialKBData;
 
     if (state.currentDevice) {
       await state.currentDevice.command("hardware.chip_id").then((neuronID: string) => {
         const neuronIDParsed = neuronID.replace(/\s/g, "");
-        neuronID = neuronIDParsed;
+        localNeuronID = neuronIDParsed;
       });
 
       await state.currentDevice.command("settings.defaultLayer").then((layer: string) => {
@@ -239,8 +238,9 @@ const Preferences = (props: PreferencesProps) => {
       }));
       setPreferencesState(prevPreferencesState => ({
         ...prevPreferencesState,
-        neuronID,
+        neuronID: localNeuronID,
       }));
+      return localNeuronID;
     }
   }, [state.currentDevice]);
 
@@ -508,7 +508,7 @@ const Preferences = (props: PreferencesProps) => {
         ...prevState,
         neurons: newNeurons,
         selectedNeuron:
-          newNeurons.length - 1 > preferencesState.selectNeuron ? preferencesState.selectNeuron : newNeurons.length - 1,
+          newNeurons.length - 1 > preferencesState.selectedNeuron ? preferencesState.selectedNeuron : newNeurons.length - 1,
       }));
       applyNeurons(newNeurons);
     }
@@ -538,20 +538,9 @@ const Preferences = (props: PreferencesProps) => {
   // USE EFFECTS!!!
 
   useEffect(() => {
-    if (state.currentDevice && connected) {
-      const previewchipID =
-        state.currentDevice.serialNumber?.includes("raise") && connected
-          ? state.currentDevice.serialNumber.slice(0, -7).toLowerCase()
-          : state.currentDevice.serialNumber;
-      setchipID(previewchipID);
-      console.log(state.currentDevice.device);
-    }
-  }, [state.currentDevice, connected]);
-
-  useEffect(() => {
     const init = async () => {
-      getNeuronData();
-      if (state.currentDevice.device.info.keyboardType === "wireless") getWirelessPreferences();
+      let NID = await getNeuronData();
+      if (state.currentDevice.device.info.keyboardType === "wireless") await getWirelessPreferences();
       const devTools = await ipcRenderer.invoke("is-devtools-opened");
       let darkMode = store.get("settings.darkMode") as string;
       if (!darkMode) {
@@ -561,6 +550,7 @@ const Preferences = (props: PreferencesProps) => {
         ...prevPreferencesState,
         devTools,
         darkMode,
+        selectedNeuron: prevPreferencesState.neurons.indexOf(prevPreferencesState.neurons.find((x: Neuron) => x.id === NID)),
         verboseFocus: true,
       }));
 
@@ -586,7 +576,15 @@ const Preferences = (props: PreferencesProps) => {
   const { neurons, selectedNeuron, darkMode, neuronID, devTools, verboseFocus } = preferencesState;
   const { defaultLayer } = kbData;
 
-  // console.log("current Neuron: ", state.currentDevice, chipID, "connected?: ", connected);
+  console.log(
+    "current Neuron: ",
+    state.currentDevice,
+    neuronID,
+    "connected?: ",
+    connected,
+    "found",
+    neurons.find(x => x.id === neuronID),
+  );
   if (localloading) <LogoLoader />;
 
   return (
@@ -613,7 +611,7 @@ const Preferences = (props: PreferencesProps) => {
               {connected && state.currentDevice ? (
                 <>
                   <DeviceConnectedPreview
-                    deviceName={neurons.find(x => x.id === chipID) ? neurons.find(x => x.id === chipID).name : ""}
+                    deviceName={neurons.find(x => x.id === neuronID) ? neurons.find(x => x.id === neuronID).name : ""}
                     deviceDisplayName={state.currentDevice.device.info.displayName}
                     nameChange={updateNeuronName}
                   />

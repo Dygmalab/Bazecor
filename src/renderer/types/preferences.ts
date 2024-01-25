@@ -45,7 +45,6 @@ export interface PrefState {
   darkMode: string;
   neurons: Array<Neuron>;
   selectedNeuron: number;
-  selectNeuron: number;
   neuronID: string;
 }
 
