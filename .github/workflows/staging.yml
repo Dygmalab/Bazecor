@@ -157,7 +157,7 @@ jobs:
         name: Build for Linux/Windows
         run: |
           yarn run make
-          sha256sum -b ./out/make/**/*.AppImage > Linux.sha256
+          sha256sum -b ${{ github.workspace }}/out/make/**/*.AppImage > ${{ github.workspace }}/out/make/Linux.sha256
       - if: runner.os == 'Windows'
         shell: bash
         name: Get executable into signing folder
@@ -178,7 +178,7 @@ jobs:
           java -jar jsign.jar --storetype GOOGLECLOUD --storepass "$(gcloud auth print-access-token)" \
             --keystore "${{ secrets.GCP_KEYSTORE }}" --alias "${{ secrets.GCP_WINDOWS_SIGNING_KEY }}" \
             --certfile "dygma_cert.pem" --tsmode RFC3161 --tsaurl http://timestamp.digicert.com $EXE_FILE
-          sha256sum -b *.exe > Windows.sha256
+          sha256sum -b ./*.exe > Windows.sha256
           cd ..
       - name: Upload build
         uses: actions/upload-artifact@v3
@@ -188,7 +188,8 @@ jobs:
             out/make/**/*.dmg
             out/make/**/*.AppImage
             windows_signing/**/*.exe
-            ./**/*.sha256
+            windows_signing/**/*.sha256
+            out/make/**/*.sha256
       - name: Show build items
         run: |
           ls -R out/make
