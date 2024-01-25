@@ -412,9 +412,9 @@ const Preferences = (props: PreferencesProps) => {
   const destroyContext = async () => {
     setKbData(initialKBData);
     setPreferencesState(initialPreferences);
-    setWireless(initialWireless);
+    if (state.currentDevice.device.info.keyboardType === "wireless") setWireless(initialWireless);
     getNeuronData();
-    getWirelessPreferences();
+    if (state.currentDevice.device.info.keyboardType === "wireless") getWirelessPreferences();
     setModified(false);
     cancelContext();
   };
@@ -551,7 +551,7 @@ const Preferences = (props: PreferencesProps) => {
   useEffect(() => {
     const init = async () => {
       getNeuronData();
-      getWirelessPreferences();
+      if (state.currentDevice.device.info.keyboardType === "wireless") getWirelessPreferences();
       const devTools = await ipcRenderer.invoke("is-devtools-opened");
       let darkMode = store.get("settings.darkMode") as string;
       if (!darkMode) {
