@@ -486,7 +486,6 @@ const LayoutEditor: React.FC<LayoutEditorProps> = (props): React.JSX.Element => 
   });
   const [isWireless, setIsWireless] = useState(false);
 
-  const [ledIndexStart, setLedIndexStart] = useState(69);
   const [selectedPaletteColor, setSelectedPaletteColor] = useState(-1);
 
   const [scanned, setScanned] = useState(false);
@@ -496,6 +495,7 @@ const LayoutEditor: React.FC<LayoutEditorProps> = (props): React.JSX.Element => 
   const [isReadOnly, setIsReadOnly] = useState(false);
   const [showDefaults, setShowDefaults] = useState(false);
   const [keymapDB, setkeymapDB] = useState(new KeymapDB());
+  const ledIndexStart = 80;
   const { darkMode, inContext, cancelContext, isSending, setIsSending, onDisconnect, startContext, setLoadingData, theme } =
     props;
 
@@ -960,9 +960,6 @@ const LayoutEditor: React.FC<LayoutEditorProps> = (props): React.JSX.Element => 
         }
         const parsedSuper = superTranslator(raw2, neuronData.storedSuper);
 
-        if (device === "Defy") {
-          setLedIndexStart(70);
-        }
         let showMM = false;
         if (KeyMap.custom) {
           const oldmacro = [...Array(64).keys()].map(x => x + 24576);
@@ -987,7 +984,6 @@ const LayoutEditor: React.FC<LayoutEditorProps> = (props): React.JSX.Element => 
         setNeuronID(chipID);
         setDeviceName(device);
         setIsWireless(wirelessChecker);
-        setLedIndexStart(ledIndexStart);
         setShowMacroModal(showMM);
         setScanned(true);
         setIsSending(false);
@@ -1755,7 +1751,7 @@ const LayoutEditor: React.FC<LayoutEditorProps> = (props): React.JSX.Element => 
       : [];
 
   let code: number | any = 0;
-  if (currentKeyIndex !== -1 && currentLedIndex < ledIndexStart) {
+  if (currentKeyIndex !== -1 && currentKeyIndex < ledIndexStart) {
     const tempkey = keymapDB.parse(layerData[currentKeyIndex].keyCode);
     // console.log("Key to be used in render", tempkey);
     code = keymapDB.keySegmentator(tempkey.keyCode);
