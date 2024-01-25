@@ -495,7 +495,7 @@ const English = {
       advancedSettingsDesc: "Settings applied when the low-power mode is off",
       savingMode: "Energy saving mode",
       savingModeDesc: "Easy way to extend battery life",
-      savingModeInfo: "Consider that the battery has a safety policy that is activated when it reaches 10%.",
+      savingModeInfo: "Keep in mind that the battery incorporates a safety protocol triggered once it descends to 10%.",
       lowPowerMode: "Low-power mode",
       settings: {
         maximumLED: "Maximum LED intensity",

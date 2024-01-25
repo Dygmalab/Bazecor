@@ -55,8 +55,6 @@ interface GeneralSettingsProps {
   onChangeVerbose: () => void;
   allowBeta: boolean;
   onChangeAllowBetas: (checked: boolean) => void;
-  onlyCustomLayers: string | boolean;
-  onChangeOnlyCustomLayers: (checked: boolean) => void;
 }
 
 const GeneralSettings = ({
@@ -71,8 +69,6 @@ const GeneralSettings = ({
   onChangeVerbose,
   allowBeta,
   onChangeAllowBetas,
-  onlyCustomLayers,
-  onChangeOnlyCustomLayers,
 }: GeneralSettingsProps) => {
   const [selectedLanguage, setSelectedLanguage] = useState("");
   const [state] = useDevice();
@@ -130,17 +126,6 @@ const GeneralSettings = ({
     modified: 0,
   };
 
-  const normalizeOnlyCustomLayers = (item: string | boolean): boolean => {
-    if (typeof item === "string") {
-      if (item === "1") {
-        return true;
-      }
-      if (item === "0") {
-        return false;
-      }
-    }
-    return Boolean(item);
-  };
   return (
     <GeneralSettingsWrapper>
       <Card className="max-w-2xl mx-auto" variant="default">
@@ -233,21 +218,6 @@ const GeneralSettings = ({
                 size="sm"
               />
             </div>
-            {connected && (
-              <div className="flex items-center w-full justify-between py-2 border-b-[1px] border-gray-50 dark:border-gray-700">
-                <label htmlFor="customSwitch" className="m-0 text-sm font-semibold tracking-tight">
-                  {i18n.preferences.onlyCustom}
-                </label>
-                <Switch
-                  id="customSwitch"
-                  defaultChecked={false}
-                  checked={normalizeOnlyCustomLayers(onlyCustomLayers)}
-                  onCheckedChange={onChangeOnlyCustomLayers}
-                  variant="default"
-                  size="sm"
-                />
-              </div>
-            )}
           </form>
         </CardContent>
       </Card>

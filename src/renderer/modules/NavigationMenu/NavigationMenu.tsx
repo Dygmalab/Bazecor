@@ -317,14 +317,14 @@ function NavigationMenu(props: NavigationMenuProps) {
             </Link> */}
             {connected && device && device.info && device.info.keyboardType === "wireless" && versions !== null ? (
               <>
-                <Link to="/wireless" onClick={linkHandler} className={`list-link ${fwUpdate || isSending ? "disabled" : ""}`}>
+                {/* <Link to="/wireless" onClick={linkHandler} className={`list-link ${fwUpdate || isSending ? "disabled" : ""}`}>
                   <NavigationButton
                     selected={currentPage === "/wireless"}
                     buttonText={i18n.app.menu.wireless}
                     icoSVG={<IconWireless width={42} height={42} strokeWidth={2} />}
                     disabled={fwUpdate || isSending}
                   />
-                </Link>
+                </Link> */}
                 <BatteryStatus disable={fwUpdate || virtual || loading} />
               </>
             ) : (

@@ -607,7 +607,7 @@ const Preferences = (props: PreferencesProps) => {
           onValueChange={handleTabChange}
         >
           <div className="flex gap-3 w-full pb-4">
-            <TabsList className="flex flex-col self-start gap-1 px-4 py-4 text-left min-w-64 rounded-xl bg-tabMenu dark:bg-tabMenuDark">
+            <TabsList className="sticky top-0 flex flex-col self-start gap-1 px-4 py-4 text-left min-w-64 rounded-xl bg-tabMenu dark:bg-tabMenuDark">
               {connected && state.currentDevice ? (
                 <>
                   <DeviceConnectedPreview
@@ -629,9 +629,9 @@ const Preferences = (props: PreferencesProps) => {
                       <TabsTrigger value="Battery" variant="tab">
                         <IconBattery /> Battery Management
                       </TabsTrigger>
-                      <TabsTrigger value="Bluetooth" variant="tab">
+                      {/* <TabsTrigger value="Bluetooth" variant="tab">
                         <IconBluetooth /> Bluetooth Settings
-                      </TabsTrigger>
+                      </TabsTrigger> */}
                       <TabsTrigger value="RF" variant="tab">
                         <IconSignal /> RF Settings
                       </TabsTrigger>
@@ -688,11 +688,11 @@ const Preferences = (props: PreferencesProps) => {
                           <EnergyManagement wireless={wireless} changeWireless={updateWireless} />
                         </motion.div>
                       </TabsContent>
-                      <TabsContent value="Bluetooth">
+                      {/* <TabsContent value="Bluetooth">
                         <motion.div initial="hidden" animate="visible" variants={tabVariants}>
                           Bluetooth Settings
                         </motion.div>
-                      </TabsContent>
+                      </TabsContent> */}
                       <TabsContent value="RF">
                         <motion.div initial="hidden" animate="visible" variants={tabVariants}>
                           <RFSettings wireless={wireless} changeWireless={updateWireless} sendRePair={sendRePairCommand} />
@@ -710,6 +710,8 @@ const Preferences = (props: PreferencesProps) => {
                         neuronID={neuronID}
                         selectedNeuron={selectedNeuron}
                         updateTab={handleTabChange}
+                        onlyCustomLayers={kbData.keymap.onlyCustom.toString()}
+                        onChangeOnlyCustomLayers={onChangeOnlyCustomLayers}
                       />
                     </motion.div>
                   </TabsContent>
@@ -729,8 +731,6 @@ const Preferences = (props: PreferencesProps) => {
                     onChangeVerbose={onChangeVerbose}
                     allowBeta={allowBeta}
                     onChangeAllowBetas={onChangeAllowBetas}
-                    onlyCustomLayers={kbData.keymap.onlyCustom.toString()}
-                    onChangeOnlyCustomLayers={onChangeOnlyCustomLayers}
                   />
                   <Version />
                 </motion.div>

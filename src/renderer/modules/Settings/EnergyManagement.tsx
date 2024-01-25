@@ -17,20 +17,25 @@
 import React from "react";
 import Styled from "styled-components";
 
+// External components
+import Slider from "@appigram/react-rangeslider";
+
 // Modules
 import { AdvancedBatterySettings, SavingMode } from "@Renderer/modules/Battery";
 
 // Custom components
-import { Card, CardContent, CardHeader } from "@Renderer/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@Renderer/components/ui/card";
+import { Switch } from "@Renderer/components/ui/switch";
 import Title from "@Renderer/component/Title";
-import { IconThunder } from "@Renderer/component/Icon";
+import { Badge } from "@Renderer/component/Badge";
+import { IconFlashlight, IconLeaf } from "@Renderer/component/Icon";
+import Heading from "@Renderer/components/ui/heading";
 import i18n from "@Renderer/i18n";
 
 // Import Types for wireless
 import { EnergyManagementProps } from "@Renderer/types/wireless";
 
 const Styles = Styled.div`
-padding-top: 24px;
 .card {
   height: inherit;
 }
@@ -61,15 +66,82 @@ padding-top: 24px;
 
 function EnergyManagement(props: EnergyManagementProps) {
   const { wireless, changeWireless } = props;
+
+  const setTrueSleep = async (checked: boolean) => {
+    // console.log("clicked true sleep");
+    const newWireless = { ...wireless };
+    newWireless.true_sleep = checked;
+    changeWireless(newWireless);
+  };
+
+  const setTrueSleepTime = async (value: number) => {
+    const newWireless = { ...wireless };
+    newWireless.true_sleep_time = value * 60;
+    changeWireless(newWireless);
+  };
+
   return (
     <Styles>
-      <Card className="overflowFix card-preferences">
+      <Card className="mt-3 max-w-2xl mx-auto" variant="default">
         <CardHeader>
-          <Title text={i18n.wireless.energyManagement.title} headingLevel={3} svgICO={<IconThunder />} />
+          <CardTitle>
+            <IconLeaf /> {i18n.wireless.energyManagement.savingMode}
+          </CardTitle>
         </CardHeader>
-        <CardContent className="py-0">
-          <AdvancedBatterySettings wireless={wireless} changeWireless={changeWireless} />
+        <CardContent className="pt-0 pb-3">
           <SavingMode wireless={wireless} changeWireless={changeWireless} />
+        </CardContent>
+      </Card>
+      <Card className="mt-3 max-w-2xl mx-auto" variant="default">
+        <CardHeader>
+          <CardTitle className="flex flex-row items-center justify-between mb-3">
+            <div className="flex items-center gap-2">
+              <IconFlashlight /> {i18n.wireless.energyManagement.settings.trueSleepEnabling} mode
+            </div>{" "}
+            <Badge content={i18n.wireless.energyManagement.settings.mediumBatteryImpact} variation="warning" size="sm" />
+          </CardTitle>
+          <CardDescription>
+            <p className="text-sm font-semibold tracking-tight text-gray-500 dark:text-gray-100">
+              {i18n.wireless.energyManagement.settings.trueSleepEnablingDesc}
+            </p>
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="py-3">
+          <div className="flex flex-col">
+            <div className="flex items-center w-full justify-between py-2 border-b-[1px] border-gray-50 dark:border-gray-700">
+              <label htmlFor="TrueSleepSwitch" className="m-0 text-sm font-semibold tracking-tight">
+                Enable true sleep mode
+              </label>
+              <Switch
+                id="TrueSleepSwitch"
+                value={wireless.true_sleep ? 1 : 0}
+                checked={wireless.true_sleep === true}
+                onCheckedChange={setTrueSleep}
+                variant="default"
+                size="sm"
+              />
+            </div>
+            <div className={`flex flex-col gap-2 pt-3 ${wireless.true_sleep ? "opacity-50 pointer-events-none" : "opacity-100"}`}>
+              <Heading headingLevel={3} renderAs="paragraph-sm" className="flex flex-row gap-2 items-center">
+                {i18n.wireless.energyManagement.settings.trueSleepTimeDesc}
+              </Heading>
+              <div className="block w-full relative">
+                <Slider
+                  min={0}
+                  max={100}
+                  step={1}
+                  value={Math.round(wireless.true_sleep_time / 60)}
+                  onChange={setTrueSleepTime}
+                  className="slider-danger"
+                  disabled={wireless.true_sleep === true}
+                />
+              </div>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-xs text-gray-300 dark:text-gray-200">1 min</span>
+              <span className="text-xs text-gray-300 dark:text-gray-200">240 min</span>
+            </div>
+          </div>
         </CardContent>
       </Card>
     </Styles>
