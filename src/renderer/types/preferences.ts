@@ -1,4 +1,15 @@
 import { Neuron } from "./neurons";
+import { WirelessInterface } from "./wireless";
+
+export interface PreferencesProps {
+  inContext: boolean;
+  cancelContext: () => void;
+  onChangeAllowBetas: (checked: boolean) => void;
+  allowBeta: boolean;
+  connected: boolean;
+  startContext: () => void;
+  toggleDarkMode: (mode: string) => void;
+}
 
 export interface KBDataPref {
   keymap: {
@@ -36,5 +47,13 @@ export interface PrefState {
   selectedNeuron: number;
   selectNeuron: number;
   neuronID: string;
-  modified: boolean;
+}
+
+export interface LEDSettingsPreferences {
+  kbData: KBDataPref;
+  wireless: WirelessInterface;
+  setKbData: (data: KBDataPref) => void;
+  setWireless: (data: WirelessInterface) => void;
+  connected: boolean;
+  isWireless: boolean;
 }

@@ -26,7 +26,7 @@ import Slider from "@appigram/react-rangeslider";
 // Custom components
 import { Card, CardContent, CardHeader, CardTitle } from "@Renderer/components/ui/card";
 import { Switch } from "@Renderer/components/ui/switch";
-import { KBDataPref } from "@Renderer/types/preferences";
+import { KBDataPref, LEDSettingsPreferences } from "@Renderer/types/preferences";
 
 // Assets
 import { Badge } from "@Renderer/component/Badge";
@@ -35,21 +35,10 @@ import Callout from "@Renderer/component/Callout";
 import i18n from "../../i18n";
 import Heading from "@Renderer/components/ui/heading";
 
-interface KeyboardSettingsProps {
-  kbData: KBDataPref;
-  setKbData: (data: KBDataPref) => void;
-  connected: boolean;
-  isWireless: boolean;
-}
-
-function LEDSettings(props: KeyboardSettingsProps) {
-  const { kbData, setKbData, connected, isWireless } = props;
+function LEDSettings(props: LEDSettingsPreferences) {
+  const { kbData, wireless, setKbData, setWireless, connected, isWireless } = props;
   const [localKBData, setLocalKBData] = useState(kbData);
-
-  useEffect(() => {
-    const { kbData: newKBData } = props;
-    setLocalKBData(newKBData);
-  }, [props, setKbData]);
+  const [localWireless, setLocalWireless] = useState(wireless);
 
   const selectIdleLEDTime = (value: number) => {
     setLocalKBData(data => ({
@@ -57,6 +46,14 @@ function LEDSettings(props: KeyboardSettingsProps) {
       ledIdleTimeLimit: value * 60,
     }));
     setKbData({ ...localKBData, ledIdleTimeLimit: value * 60 });
+  };
+
+  const selectIdleLEDTimeWireless = (value: number) => {
+    setLocalWireless(data => ({
+      ...data,
+      idleleds: value * 60,
+    }));
+    setWireless({ ...localWireless, idleleds: value * 60 });
   };
 
   const setBrightness = (value: number) => {
@@ -67,6 +64,14 @@ function LEDSettings(props: KeyboardSettingsProps) {
     setKbData({ ...localKBData, ledBrightness: (value * 255) / 100 });
   };
 
+  const setBrightnessWireless = (value: number) => {
+    setLocalWireless(data => ({
+      ...data,
+      brightness: (value * 255) / 100,
+    }));
+    setWireless({ ...localWireless, brightness: (value * 255) / 100 });
+  };
+
   const setBrightnessUG = (value: number) => {
     setLocalKBData(data => ({
       ...data,
@@ -75,7 +80,29 @@ function LEDSettings(props: KeyboardSettingsProps) {
     setKbData({ ...localKBData, ledBrightnessUG: (value * 255) / 100 });
   };
 
+  const setBrightnessUGWireless = (value: number) => {
+    setLocalWireless(data => ({
+      ...data,
+      brightnessUG: (value * 255) / 100,
+    }));
+    setWireless({ ...localWireless, brightnessUG: (value * 255) / 100 });
+  };
+
+  const setFade = async (checked: boolean) => {
+    setLocalWireless(data => ({
+      ...data,
+      fade: checked ? 1 : 0,
+    }));
+    setWireless({ ...localWireless, fade: checked ? 1 : 0 });
+  };
+
+  useEffect(() => {
+    const { kbData: newKBData } = props;
+    setLocalKBData(newKBData);
+  }, [props, setKbData]);
+
   const { ledBrightness, ledBrightnessUG, ledIdleTimeLimit } = localKBData;
+  const { idleleds, brightness, brightnessUG, fade } = localWireless;
 
   if (connected) {
     return (
@@ -112,14 +139,13 @@ function LEDSettings(props: KeyboardSettingsProps) {
                   {isWireless && (
                     <div className="flex w-full gap-2 items-center">
                       <label className="min-w-16 mb-0 text-sm text-gray-400 dark:text-gray-100">Wireless</label>
-                      {/* <Slider min={0} max={60} value={Math.round(wireless.idleleds / 60)} onChange={setIdleleds} /> */}
                       <div className="block w-full relative">
                         <Slider
                           min={0}
                           max={60}
                           step={1}
-                          value={ledIdleTimeLimit / 60}
-                          onChange={selectIdleLEDTime}
+                          value={idleleds / 60}
+                          onChange={selectIdleLEDTimeWireless}
                           className="slider-danger"
                         />
                       </div>
@@ -141,13 +167,6 @@ function LEDSettings(props: KeyboardSettingsProps) {
                   <div className="flex w-full gap-2 items-center">
                     {isWireless && <label className="min-w-16 mb-0 text-sm text-gray-400 dark:text-gray-100">Wired</label>}
                     <div className="block w-full relative">
-                      {/* <Slider
-                        min={0}
-                        max={100}
-                        step={1}
-                        value={Math.round((wireless.brightness * 100) / 255)}
-                        onChange={setBrightness}
-                      /> */}
                       <Slider
                         min={0}
                         max={100}
@@ -165,8 +184,8 @@ function LEDSettings(props: KeyboardSettingsProps) {
                           min={0}
                           max={100}
                           step={1}
-                          value={Math.round((ledBrightness * 100) / 255)}
-                          onChange={setBrightness}
+                          value={Math.round((brightness * 100) / 255)}
+                          onChange={setBrightnessWireless}
                           className="slider-danger"
                         />
                       </div>
@@ -188,13 +207,6 @@ function LEDSettings(props: KeyboardSettingsProps) {
                   <div className="flex w-full gap-2 items-center">
                     {isWireless && <label className="min-w-16 mb-0 text-sm text-gray-400 dark:text-gray-100">Wired</label>}
                     <div className="block w-full relative">
-                      {/* <Slider
-                        min={0}
-                        max={100}
-                        step={1}
-                        value={Math.round((wireless.brightnessUG * 100) / 255)}
-                        onChange={setBrightnessUG}
-                      /> */}
                       <Slider
                         min={0}
                         max={100}
@@ -212,8 +224,8 @@ function LEDSettings(props: KeyboardSettingsProps) {
                           min={0}
                           max={100}
                           step={1}
-                          value={Math.round((ledBrightnessUG * 100) / 255)}
-                          onChange={setBrightnessUG}
+                          value={Math.round((brightnessUG * 100) / 255)}
+                          onChange={setBrightnessUGWireless}
                           className="slider-danger"
                         />
                       </div>
@@ -295,14 +307,7 @@ function LEDSettings(props: KeyboardSettingsProps) {
               <p className="text-sm font-normal text-gray-300 dark:text-gray-100">
                 {i18n.wireless.energyManagement.settings.highlightLayerChangingDesc}
               </p>
-              <Switch
-                id="FadeSwitch"
-                defaultChecked={false}
-                checked={false}
-                onCheckedChange={() => {}}
-                variant="default"
-                size="sm"
-              />
+              <Switch id="FadeSwitch" checked={fade > 0} onCheckedChange={setFade} variant="default" size="sm" />
             </CardContent>
           </Card>
         )}
