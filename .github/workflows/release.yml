@@ -181,7 +181,12 @@ jobs:
             out/make/**/*.dmg
             out/make/**/*.AppImage
             windows_signing/**/*.exe
-
+      - name: Checksum
+        run: |
+          sha256sum -b out/make/**/*arm64.dmg > MacOS-arm64.sha256
+          sha256sum -b out/make/**/*x64.dmg > MacOS-x64.sha256
+          sha256sum -b out/make/**/*.AppImage > Linux.sha256
+          sha256sum -b windows_signing/**/*.exe > Windows.sha256
       - name: Show build items
         if: runner.os != 'Windows'
         run: |
