@@ -9,6 +9,7 @@ interface ButtonProps {
   variant?: "primary" | "secondary" | "outline" | "purple";
   icon?: React.ReactNode;
   iconPosition?: "left" | "right" | boolean;
+  className?: string;
 }
 
 const Button = ({
@@ -20,6 +21,7 @@ const Button = ({
   variant = "primary",
   icon,
   iconPosition = false,
+  className,
 }: ButtonProps) => (
   // const buttonClasses = {
   //   primary:
@@ -32,7 +34,7 @@ const Button = ({
   <button
     type="button"
     onClick={disabled ? () => {} : onClick}
-    className={`button ${size || ""} ${active ? "active" : ""} ${variant} iconOn${iconPosition || "none"}`}
+    className={`button ${size || ""} ${active ? "active" : ""} tw-${variant} iconOn${iconPosition || "none"} ${className}`}
     disabled={disabled}
     tabIndex={0}
   >

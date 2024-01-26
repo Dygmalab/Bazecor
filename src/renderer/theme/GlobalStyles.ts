@@ -522,7 +522,8 @@ button:focus-visible,
   padding: 6px 16px;
   border-radius: 4px;
   line-height: 2em;
-  border: ${({ theme }) => theme.styles.button.short.background};
+  color: ${({ theme }) => theme.styles.button.short.color};
+  border: ${({ theme }) => theme.styles.button.short.border};
   background: ${({ theme }) => theme.styles.button.short.background};
 }
 .button.short:hover {

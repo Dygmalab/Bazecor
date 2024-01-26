@@ -75,12 +75,13 @@ const NameModal = ({ modalTitle, show, toggleShow, name, handleSave, labelInput 
                   />
                 </form>
               </div>
-              <div className="px-3 py-4 flex gap-4 justify-end bg-gray-100/10 dark:bg-gray-900/10">
-                <Button variant="outline" size="sm" onClick={toggleShow}>
+              <div className="px-3 py-4 flex gap-3 justify-end bg-gray-100/10 dark:bg-gray-900/10">
+                <Button variant="outline" className="self-center" size="sm" onClick={toggleShow}>
                   Discard changes
                 </Button>
                 <Button
                   variant="secondary"
+                  className="self-center"
                   size="sm"
                   onClick={() => handleSave(typeof internalName === "string" ? internalName : "")}
                 >
