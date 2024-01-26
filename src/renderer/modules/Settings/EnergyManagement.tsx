@@ -66,7 +66,7 @@ const Styles = Styled.div`
 `;
 
 function EnergyManagement(props: EnergyManagementProps) {
-  const { wireless, changeWireless } = props;
+  const { wireless, changeWireless, updateTab } = props;
 
   const setTrueSleep = async (checked: boolean) => {
     const newWireless = { ...wireless };
@@ -78,6 +78,11 @@ function EnergyManagement(props: EnergyManagementProps) {
     const newWireless = { ...wireless };
     newWireless.true_sleep_time = value * 60;
     changeWireless(newWireless);
+  };
+
+  const setApplicationTab = () => {
+    // Call the onTabChange function from props with the desired value
+    updateTab("LED");
   };
 
   return (
@@ -128,12 +133,7 @@ function EnergyManagement(props: EnergyManagementProps) {
                 size="sm"
               />
             </div>
-            <div
-              className={`flex flex-col gap-2 pt-3 ${!wireless.true_sleep ? "opacity-50 pointer-events-none" : "opacity-100"}`}
-            >
-              <Heading headingLevel={3} renderAs="paragraph-sm" className="flex flex-row gap-2 items-center">
-                <span>{i18n.wireless.energyManagement.settings.trueSleepTimeDesc}</span>
-              </Heading>
+            <div className={`flex flex-col pt-3 ${!wireless.true_sleep ? "opacity-50 pointer-events-none" : "opacity-100"}`}>
               <div className="block w-full relative">
                 <Slider
                   min={0}
@@ -145,14 +145,22 @@ function EnergyManagement(props: EnergyManagementProps) {
                   disabled={wireless.true_sleep === true}
                 />
               </div>
+              <div className="flex justify-between">
+                <span className="text-xs text-gray-300 dark:text-gray-200">1 min</span>
+                <span className="text-xs text-gray-300 dark:text-gray-200">240 min</span>
+              </div>
             </div>
-            <div className="flex justify-between">
-              <span className="text-xs text-gray-300 dark:text-gray-200">1 min</span>
-              <span className="text-xs text-gray-300 dark:text-gray-200">240 min</span>
+            <div className="mt-3 text-sm font-semibold tracking-tight text-gray-500 dark:text-gray-100">
+              Note that the timer will only begin when the LEDs go into sleep mode(wireless), and it's currently
+              <button
+                type="button"
+                className="p-0 m-0 decoration-1 text-purple-300 hover:text-purple-300 dark:text-purple-200 dark:hover:text-purple-100 inline-block"
+                value="Application"
+                onClick={setApplicationTab}
+              >
+                set for {wireless.idleleds / 60} min.
+              </button>
             </div>
-            <span className="text-sm font-semibold tracking-tight text-gray-500 dark:text-gray-100">{`min to start true sleep timer (wireless): ${
-              wireless.idleleds / 60
-            } min`}</span>
           </div>
         </CardContent>
       </Card>

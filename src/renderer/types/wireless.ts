@@ -55,6 +55,7 @@ export interface BatterySettingsProps {
 export interface EnergyManagementProps {
   wireless: WirelessInterface;
   changeWireless: (wireless: WirelessInterface) => void;
+  updateTab?: (value: string) => void;
 }
 
 export interface AdvancedEnergyManagementProps {
