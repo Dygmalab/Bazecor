@@ -48,6 +48,7 @@ import {
   IconLogoDygma,
   IconSignal,
   IconWrench,
+  IconNeuronManager,
 } from "@Renderer/component/Icon";
 import Version from "@Renderer/component/Version/Version";
 
@@ -540,7 +541,7 @@ const Preferences = (props: PreferencesProps) => {
   useEffect(() => {
     const init = async () => {
       let NID = await getNeuronData();
-      if (state.currentDevice.device.info.keyboardType === "wireless") await getWirelessPreferences();
+      if (connected && state.currentDevice.device.info.keyboardType === "wireless") await getWirelessPreferences();
       const devTools = await ipcRenderer.invoke("is-devtools-opened");
       let darkMode = store.get("settings.darkMode") as string;
       if (!darkMode) {
@@ -652,6 +653,13 @@ const Preferences = (props: PreferencesProps) => {
               <TabsTrigger value="Application" variant="tab">
                 <IconLogoDygma /> Application
               </TabsTrigger>
+              {connected && state.currentDevice ? (
+                <TabsTrigger value="NeuronManager" variant="tab">
+                  <IconNeuronManager /> Neuron Manager
+                </TabsTrigger>
+              ) : (
+                ""
+              )}
             </TabsList>
             <div className="rounded-xl bg-gray-25/50 dark:bg-gray-400/15 px-4 py-3 w-full">
               {connected && state.currentDevice ? (
@@ -659,13 +667,6 @@ const Preferences = (props: PreferencesProps) => {
                   <TabsContent value="Keyboard" className="w-full">
                     <motion.div initial="hidden" animate="visible" variants={tabVariants}>
                       <KeyboardSettings kbData={kbData} setKbData={updateKBData} connected={connected} />
-                      <NeuronSettings
-                        neurons={neurons}
-                        selectedNeuron={selectedNeuron}
-                        selectNeuron={selectNeuron}
-                        updateNeuronName={updateNeuronName}
-                        deleteNeuron={deleteNeuron}
-                      />
                     </motion.div>
                   </TabsContent>
                   <TabsContent value="LED">
@@ -735,6 +736,21 @@ const Preferences = (props: PreferencesProps) => {
                   <Version />
                 </motion.div>
               </TabsContent>
+              {connected && state.currentDevice ? (
+                <TabsContent value="NeuronManager">
+                  <motion.div initial="hidden" animate="visible" variants={tabVariants}>
+                    <NeuronSettings
+                      neurons={neurons}
+                      selectedNeuron={selectedNeuron}
+                      selectNeuron={selectNeuron}
+                      updateNeuronName={updateNeuronName}
+                      deleteNeuron={deleteNeuron}
+                    />
+                  </motion.div>
+                </TabsContent>
+              ) : (
+                ""
+              )}
             </div>
           </div>
         </Tabs>
