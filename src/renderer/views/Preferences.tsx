@@ -577,15 +577,7 @@ const Preferences = (props: PreferencesProps) => {
   const { neurons, selectedNeuron, darkMode, neuronID, devTools, verboseFocus } = preferencesState;
   const { defaultLayer } = kbData;
 
-  console.log(
-    "current Neuron: ",
-    state.currentDevice,
-    neuronID,
-    "connected?: ",
-    connected,
-    "found",
-    neurons.find(x => x.id === neuronID),
-  );
+  console.log("current Neuron: ", state.currentDevice, neuronID, "connected?: ", connected);
   if (localloading) <LogoLoader />;
 
   return (

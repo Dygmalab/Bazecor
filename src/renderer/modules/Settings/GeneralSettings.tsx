@@ -25,7 +25,7 @@ import { Switch } from "@Renderer/components/ui/switch";
  */
 
 import { Neuron } from "@Renderer/types/neurons";
-import { IconChip, IconHanger, IconSun, IconMoon, IconScreen, IconKeyboard } from "../../component/Icon";
+import { IconChip, IconHanger, IconSun, IconMoon, IconScreen, IconKeyboard, IconFlashlight } from "../../component/Icon";
 import FileBackUpHandling from "./FileBackUpHandling";
 import { ToggleButtons } from "../../component/ToggleButtons";
 import { Select } from "../../component/Select";
@@ -34,6 +34,8 @@ import i18n from "../../i18n";
 import Store from "../../utils/Store";
 import { KeyPickerPreview } from "../KeyPickerKeyboard";
 import getLanguage from "../../utils/language";
+import ToastMessage from "@Renderer/component/ToastMessage";
+import { toast } from "react-toastify";
 
 const GeneralSettingsWrapper = Styled.div`
 .dropdown-menu {
@@ -78,12 +80,24 @@ const GeneralSettings = ({
   }, []);
 
   const changeLanguage = (language: string) => {
-    setSelectedLanguage(language);
-    store.set("settings.language", `${language}`);
-    if (state.currentDevice && !state.currentDevice.isClosed) {
-      const deviceLang = { ...state.currentDevice.device, language: true };
-      state.currentDevice.commands.keymap = new Keymap(deviceLang);
-    }
+    try {
+      setSelectedLanguage(language);
+      store.set("settings.language", `${language}`);
+      if (state.currentDevice && !state.currentDevice.isClosed) {
+        const deviceLang = { ...state.currentDevice.device, language: true };
+        state.currentDevice.commands.keymap = new Keymap(deviceLang);
+      }
+      toast.success(<ToastMessage title={`${i18n.success.languageSaved} ${language}`} icon={<IconFlashlight />} />, {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: false,
+        draggable: false,
+        progress: undefined,
+        icon: "",
+      });
+    } catch (error) {}
   };
 
   let layersNames: any = neurons[selectedNeuron] ? neurons[selectedNeuron].layers : [];

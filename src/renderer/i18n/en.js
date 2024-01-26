@@ -33,6 +33,7 @@ const English = {
       "<p style='font-weight:401;'>You have made changes that haven't been saved yet.</p><p>Save or discard them before leaving.</p>",
   },
   success: {
+    languageSaved: "Key picker language has been changed to ",
     preferencesSaved: "Your preferences have been saved.",
     preferencesSavedBody: "",
     changesSaved: "Changes saved successfully",
