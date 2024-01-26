@@ -35,6 +35,7 @@ const English = {
   },
   success: {
     languageSaved: "Key picker language has been changed to ",
+    pairedSuccesfully: "Your device has ben succesfully re-paired",
     preferencesSaved: "Your preferences have been saved.",
     preferencesSavedBody: "",
     changesSaved: "Changes saved successfully",

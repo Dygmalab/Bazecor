@@ -49,6 +49,7 @@ import {
   IconSignal,
   IconWrench,
   IconNeuronManager,
+  IconChip,
 } from "@Renderer/component/Icon";
 import Version from "@Renderer/component/Version/Version";
 
@@ -531,8 +532,20 @@ const Preferences = (props: PreferencesProps) => {
 
   const sendRePairCommand = async () => {
     if (state.currentDevice) {
-      const result = await state.currentDevice.command("wireless.rf.syncPairing");
-      console.log("command returned", result);
+      try {
+        const result = await state.currentDevice.command("wireless.rf.syncPairing");
+        console.log("command returned", result);
+        toast.success(<ToastMessage title={`${i18n.success.pairedSuccesfully}`} icon={<IconChip />} />, {
+          position: "top-right",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: false,
+          draggable: false,
+          progress: undefined,
+          icon: "",
+        });
+      } catch (error) {}
     }
   };
 
