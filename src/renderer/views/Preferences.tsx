@@ -749,6 +749,7 @@ const Preferences = (props: PreferencesProps) => {
                       neurons={neurons}
                       selectedNeuron={selectedNeuron}
                       selectNeuron={selectNeuron}
+                      applyNeurons={applyNeurons}
                       updateNeuronName={updateNeuronName}
                       deleteNeuron={deleteNeuron}
                     />

@@ -69,3 +69,12 @@ export interface AdvancedSettingsProps {
   onlyCustomLayers: string | boolean;
   onChangeOnlyCustomLayers: (checked: boolean) => void;
 }
+
+export interface NeuronSettingsProps {
+  neurons: Neuron[];
+  selectedNeuron: number;
+  selectNeuron: (value: string) => void;
+  applyNeurons: (data: Neuron[]) => void;
+  updateNeuronName: (data: string) => void;
+  deleteNeuron: () => void;
+}
