@@ -56,3 +56,16 @@ export interface LEDSettingsPreferences {
   connected: boolean;
   isWireless: boolean;
 }
+
+export interface AdvancedSettingsProps {
+  connected: boolean;
+  defaultLayer: number;
+  selectDefaultLayer: (value: string) => void;
+  keyboardType: string;
+  neurons: Neuron[];
+  neuronID: string;
+  selectedNeuron: number;
+  updateTab: (value: string) => void;
+  onlyCustomLayers: string | boolean;
+  onChangeOnlyCustomLayers: (checked: boolean) => void;
+}

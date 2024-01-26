@@ -699,6 +699,7 @@ const Preferences = (props: PreferencesProps) => {
                         connected={connected}
                         defaultLayer={defaultLayer}
                         selectDefaultLayer={selectDefaultLayer}
+                        keyboardType={state.currentDevice.device.info.product as string}
                         neurons={neurons}
                         neuronID={neuronID}
                         selectedNeuron={selectedNeuron}

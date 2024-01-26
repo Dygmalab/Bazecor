@@ -31,6 +31,7 @@ import ConfirmationDialog from "../../component/ConfirmationDialog";
 
 // Icons Imports
 import { IconChip, IconLayers } from "../../component/Icon";
+import { AdvancedSettingsProps } from "@Renderer/types/preferences";
 
 const AdvancedKeyboardSettings = () => {
   const [EEPROMClearConfirmationOpen, setEEPROMClearConfirmationOpen] = useState(false);
@@ -80,22 +81,11 @@ const AdvancedKeyboardSettings = () => {
   );
 };
 
-interface AdvancedSettingsProps {
-  connected: boolean;
-  defaultLayer: number;
-  selectDefaultLayer: (value: string) => void;
-  neurons: Neuron[];
-  neuronID: string;
-  selectedNeuron: number;
-  updateTab: (value: string) => void;
-  onlyCustomLayers: string | boolean;
-  onChangeOnlyCustomLayers: (checked: boolean) => void;
-}
-
 const AdvancedSettings = ({
   connected,
-  selectDefaultLayer,
   defaultLayer,
+  selectDefaultLayer,
+  keyboardType,
   neurons,
   neuronID,
   selectedNeuron,
@@ -161,16 +151,20 @@ const AdvancedSettings = ({
         </CardContent>
       </Card>
       <BackupSettings connected={connected} neurons={neurons} neuronID={neuronID} updateTab={updateTab} />
-      <Card className="mt-3 max-w-2xl mx-auto" variant="default">
-        <CardHeader>
-          <CardTitle variant="default">
-            <IconChip /> {i18n.keyboardSettings.resetEEPROM.title}
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <form>{connected && <AdvancedKeyboardSettings />}</form>
-        </CardContent>
-      </Card>
+      {keyboardType === "Raise" ? (
+        <Card className="mt-3 max-w-2xl mx-auto" variant="default">
+          <CardHeader>
+            <CardTitle variant="default">
+              <IconChip /> {i18n.keyboardSettings.resetEEPROM.title}
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <form>{connected && <AdvancedKeyboardSettings />}</form>
+          </CardContent>
+        </Card>
+      ) : (
+        ""
+      )}
     </>
   );
 };
