@@ -50,8 +50,6 @@ function NeuronSettings(props: NeuronSettingsProps) {
     }
   };
 
-  console.log(localSelection, neurons);
-
   return (
     <Card className="mt-3 max-w-2xl mx-auto" variant="default">
       <CardHeader>

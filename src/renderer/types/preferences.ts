@@ -76,5 +76,14 @@ export interface NeuronSettingsProps {
   selectNeuron: (value: string) => void;
   applyNeurons: (data: Neuron[]) => void;
   updateNeuronName: (data: string) => void;
-  deleteNeuron: () => void;
+  deleteNeuron: (toDelete: number) => void;
+}
+
+export interface NeuronSelectorProps {
+  onSelect: (value: string) => void;
+  itemList: Neuron[];
+  selectedItem: number;
+  updateItem: (data: string) => void;
+  deleteItem: (toDelete: number) => void;
+  subtitle: string;
 }
