@@ -69,7 +69,6 @@ function EnergyManagement(props: EnergyManagementProps) {
   const { wireless, changeWireless } = props;
 
   const setTrueSleep = async (checked: boolean) => {
-    // console.log("clicked true sleep");
     const newWireless = { ...wireless };
     newWireless.true_sleep = checked;
     changeWireless(newWireless);
@@ -98,7 +97,7 @@ function EnergyManagement(props: EnergyManagementProps) {
           <CardTitle className="flex flex-row items-center justify-between">
             <div className="flex items-center gap-2">
               <IconFlashlight /> {i18n.wireless.energyManagement.settings.trueSleepEnabling} mode
-            </div>{" "}
+            </div>
             <Badge content={i18n.wireless.energyManagement.settings.mediumBatteryImpact} variation="warning" size="sm" />
           </CardTitle>
         </CardHeader>
@@ -129,9 +128,11 @@ function EnergyManagement(props: EnergyManagementProps) {
                 size="sm"
               />
             </div>
-            <div className={`flex flex-col gap-2 pt-3 ${wireless.true_sleep ? "opacity-50 pointer-events-none" : "opacity-100"}`}>
+            <div
+              className={`flex flex-col gap-2 pt-3 ${!wireless.true_sleep ? "opacity-50 pointer-events-none" : "opacity-100"}`}
+            >
               <Heading headingLevel={3} renderAs="paragraph-sm" className="flex flex-row gap-2 items-center">
-                {i18n.wireless.energyManagement.settings.trueSleepTimeDesc}
+                <span>{i18n.wireless.energyManagement.settings.trueSleepTimeDesc}</span>
               </Heading>
               <div className="block w-full relative">
                 <Slider
@@ -149,6 +150,9 @@ function EnergyManagement(props: EnergyManagementProps) {
               <span className="text-xs text-gray-300 dark:text-gray-200">1 min</span>
               <span className="text-xs text-gray-300 dark:text-gray-200">240 min</span>
             </div>
+            <span className="text-sm font-semibold tracking-tight text-gray-500 dark:text-gray-100">{`min to start true sleep timer (wireless): ${
+              wireless.idleleds / 60
+            } min`}</span>
           </div>
         </CardContent>
       </Card>

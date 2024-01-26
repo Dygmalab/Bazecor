@@ -501,16 +501,15 @@ const Preferences = (props: PreferencesProps) => {
     applyNeurons(neuronsToChangeName);
   };
 
-  const deleteNeuron = () => {
+  const deleteNeuron = (toDelete: number) => {
     const result = window.confirm(i18n.keyboardSettings.neuronManager.deleteNeuron);
     if (result) {
       const newNeurons = JSON.parse(JSON.stringify(preferencesState.neurons));
-      newNeurons.splice(preferencesState.selectedNeuron, 1);
+      newNeurons.splice(toDelete, 1);
       setPreferencesState(prevState => ({
         ...prevState,
         neurons: newNeurons,
-        selectedNeuron:
-          newNeurons.length - 1 > preferencesState.selectedNeuron ? preferencesState.selectedNeuron : newNeurons.length - 1,
+        selectedNeuron: newNeurons.length - 1 > toDelete ? toDelete : newNeurons.length - 1,
       }));
       applyNeurons(newNeurons);
     }
@@ -590,7 +589,6 @@ const Preferences = (props: PreferencesProps) => {
   const { neurons, selectedNeuron, darkMode, neuronID, devTools, verboseFocus } = preferencesState;
   const { defaultLayer } = kbData;
 
-  console.log("current Neuron: ", state.currentDevice, neuronID, "connected?: ", connected);
   if (localloading) <LogoLoader />;
 
   return (
@@ -750,6 +748,7 @@ const Preferences = (props: PreferencesProps) => {
                       neurons={neurons}
                       selectedNeuron={selectedNeuron}
                       selectNeuron={selectNeuron}
+                      applyNeurons={applyNeurons}
                       updateNeuronName={updateNeuronName}
                       deleteNeuron={deleteNeuron}
                     />

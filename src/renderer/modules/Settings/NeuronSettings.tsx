@@ -14,7 +14,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React from "react";
+import React, { useState } from "react";
 
 // React Bootstrap Components
 import Form from "react-bootstrap/Form";
@@ -30,17 +30,25 @@ import { Neuron } from "@Types/neurons";
 
 // Icons Imports
 import { IconNeuronManager } from "@Renderer/component/Icon";
-
-interface NeuronSettingsProps {
-  neurons: Neuron[];
-  selectedNeuron: number;
-  selectNeuron: (value: string) => void;
-  updateNeuronName: (data: string) => void;
-  deleteNeuron: () => void;
-}
+import { NeuronSettingsProps } from "@Renderer/types/preferences";
 
 function NeuronSettings(props: NeuronSettingsProps) {
-  const { neurons, selectedNeuron, selectNeuron, updateNeuronName, deleteNeuron } = props;
+  const { neurons, selectedNeuron, selectNeuron, applyNeurons, updateNeuronName, deleteNeuron } = props;
+  const [localSelection, setLocalSelection] = useState(selectedNeuron);
+
+  const localSelectNeuron = (value: string) => {
+    setLocalSelection(parseInt(value, 10));
+  };
+
+  const localUpdateNeuronName = (data: string) => {
+    const neuronsToChangeName = neurons;
+    neuronsToChangeName[localSelection].name = data;
+    if (selectedNeuron === localSelection) {
+      updateNeuronName(data);
+    } else {
+      applyNeurons(neuronsToChangeName);
+    }
+  };
 
   return (
     <Card className="mt-3 max-w-2xl mx-auto" variant="default">
@@ -52,17 +60,17 @@ function NeuronSettings(props: NeuronSettingsProps) {
       <CardContent>
         <Form.Group controlId="backupFolder" className="mb-3">
           <NeuronSelector
-            onSelect={selectNeuron}
+            onSelect={localSelectNeuron}
             itemList={neurons}
-            selectedItem={selectedNeuron}
-            updateItem={updateNeuronName}
+            selectedItem={localSelection}
+            updateItem={localUpdateNeuronName}
             deleteItem={deleteNeuron}
             subtitle={i18n.keyboardSettings.neuronManager.neuronLabel}
           />
           <Row className="mb-4 mt-4">
             <Col>
               {Array.isArray(neurons) && neurons.length > 0 ? (
-                <NeuronData neurons={neurons} selectedNeuron={selectedNeuron} />
+                <NeuronData neurons={neurons} selectedNeuron={localSelection} />
               ) : (
                 ""
               )}

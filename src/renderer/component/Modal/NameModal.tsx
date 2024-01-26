@@ -1,4 +1,4 @@
-import React, { useState, useRef, Fragment } from "react";
+import React, { useState, useRef, Fragment, useEffect } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { Button } from "@Renderer/component/Button";
 import { IconCloseXs } from "../Icon";
@@ -15,6 +15,10 @@ interface NameModalProps {
 const NameModal = ({ modalTitle, show, toggleShow, name, handleSave, labelInput }: NameModalProps) => {
   const [internalName, setInternalName] = useState(name);
   const inputRef = useRef(null);
+
+  useEffect(() => {
+    setInternalName(name);
+  }, [name]);
 
   return (
     // Use the `Transition` component + show prop to add transitions.
