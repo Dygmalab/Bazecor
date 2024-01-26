@@ -60,19 +60,21 @@ focus.debug = true;
 focus.timeout = 5000;
 
 function App() {
-  const [flashing, setFlashing] = useState(false);
-  const [fwUpdate, setFwUpdate] = useState(false);
-  const [darkMode, setDarkMode] = useState(false);
-  const [connected, setConnected] = useState(false);
   const [pages, setPages] = useState({});
   const [contextBar, setContextBar] = useState(false);
   const [allowBeta, setAllowBeta] = useState(false);
+  const [darkMode, setDarkMode] = useState(false);
+
+  const [connected, setConnected] = useState(false);
+  const [flashing, setFlashing] = useState(false);
+  const [fwUpdate, setFwUpdate] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [isSending, setIsSending] = useState(false);
+
+  const [state] = useDevice();
+  const navigate = useNavigate();
   const varFlashing = React.useRef(false);
   const device = React.useRef();
-  const navigate = useNavigate();
-  const [state] = useDevice();
-  const [isSending, setIsSending] = useState(false);
 
   const updateStorageSchema = async () => {
     // Update stored settings schema

@@ -35,6 +35,7 @@ import { AlertModal } from "@Renderer/component/Modal";
 import { BatteryStatus } from "../Battery";
 import i18n from "../../i18n";
 import { NavigationButton } from "../../component/Button";
+import { DeviceDescriptor } from "@Renderer/types/devices";
 
 import {
   IconKeyboardSelector,
@@ -115,20 +116,12 @@ interface NavigationMenuProps {
   pages: Pages;
 }
 
-interface Device {
-  vendor: any;
-  product: any;
-  keyboardType: string;
-  displayName: string;
-  urls: any;
-}
-
 function NavigationMenu(props: NavigationMenuProps) {
   const [state] = useDevice();
   const [versions, setVersions] = useState(null);
   const [isUpdated, setIsUpdated] = useState(true);
   const [isBeta, setIsBeta] = useState(false);
-  const [device, setDevice] = useState<Record<string, Device>>({});
+  const [device, setDevice] = useState<Record<string, DeviceDescriptor>>({});
   const [virtual, setVirtual] = useState(false);
   const location = useLocation();
   const currentPage = location.pathname;
