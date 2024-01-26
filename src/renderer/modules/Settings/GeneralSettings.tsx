@@ -87,7 +87,7 @@ const GeneralSettings = ({
         const deviceLang = { ...state.currentDevice.device, language: true };
         state.currentDevice.commands.keymap = new Keymap(deviceLang);
       }
-      toast.success(<ToastMessage title={`${i18n.success.languageSaved} ${language}`} icon={<IconFlashlight />} />, {
+      toast.success(<ToastMessage title={`${i18n.success.languageSaved} ${language}`} icon={<IconKeyboard />} />, {
         position: "top-right",
         autoClose: 2000,
         hideProgressBar: false,

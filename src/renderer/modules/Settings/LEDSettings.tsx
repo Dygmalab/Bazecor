@@ -109,7 +109,7 @@ function LEDSettings(props: LEDSettingsPreferences) {
       <>
         {isWireless && (
           <div className="max-w-2xl mx-auto mb-3">
-            <Callout content="These configurations only apply when the Saving Mode is NOT active." size="sm" />
+            <Callout content="These wireless configurations only apply when the Saving Mode is NOT active." size="sm" />
           </div>
         )}
         <Card className="max-w-2xl mx-auto" variant="default">
@@ -273,8 +273,8 @@ function LEDSettings(props: LEDSettingsPreferences) {
                 <Switch id="FadeSwitch" checked={fade > 0} onCheckedChange={setFade} variant="default" size="sm" />
               </CardContent>
             </Card>
-            <div className="mt-3 max-w-2xl mx-auto rounded-sm bg-primary/35 border-[1px] border-primary/90 py-3 px-3">
-              <p className="flex flex-row gap-2 items-center text-xs text-gray-50">
+            <div className="mt-3 max-w-2xl mx-auto py-3 px-3 rounded-sm border-[1px] border-primary/15 dark:border-primary/90 bg-primary/15 dark:bg-primary/35">
+              <p className="flex flex-row gap-2 items-center text-xs text-primary/75 dark:text-gray-50">
                 <span className="w-[24px]">
                   <IconThunder />
                 </span>{" "}

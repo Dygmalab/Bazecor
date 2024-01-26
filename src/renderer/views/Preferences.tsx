@@ -603,6 +603,7 @@ const Preferences = (props: PreferencesProps) => {
         destroyContext={destroyContext}
         inContext={modified}
         isSaving={isSaving}
+        style="pageHeaderFlatBottom"
       />
       <div className="flex w-full mx-auto mt-4">
         <Tabs
@@ -613,7 +614,7 @@ const Preferences = (props: PreferencesProps) => {
           onValueChange={handleTabChange}
         >
           <div className="flex gap-3 w-full pb-4">
-            <TabsList className="sticky top-0 flex flex-col self-start gap-1 px-4 py-4 text-left min-w-64 rounded-xl bg-tabMenu dark:bg-tabMenuDark">
+            <TabsList className="sticky top-20 flex flex-col self-start gap-1 px-4 py-4 text-left min-w-64 rounded-xl bg-tabMenu dark:bg-tabMenuDark">
               {connected && state.currentDevice ? (
                 <>
                   <DeviceConnectedPreview

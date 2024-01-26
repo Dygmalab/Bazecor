@@ -55,10 +55,6 @@ z-index: 300;
       color: ${({ theme }) => theme.styles.pageHeader.titleColor};
       font-size: 20px;
     }
-    &.pageHeaderFlatBottom {
-      border-radius: 6px 6px 0 0;
-    }
-
     .pageTitle {
       width: 190px;
       white-space: nowrap;

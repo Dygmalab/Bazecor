@@ -19,16 +19,17 @@ import Styled from "styled-components";
 
 // External components
 import Slider from "@appigram/react-rangeslider";
+import OverlayTrigger from "react-bootstrap/OverlayTrigger";
+import Tooltip from "react-bootstrap/Tooltip";
 
 // Modules
-import { AdvancedBatterySettings, SavingMode } from "@Renderer/modules/Battery";
+import { SavingMode } from "@Renderer/modules/Battery";
 
 // Custom components
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@Renderer/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@Renderer/components/ui/card";
 import { Switch } from "@Renderer/components/ui/switch";
-import Title from "@Renderer/component/Title";
 import { Badge } from "@Renderer/component/Badge";
-import { IconFlashlight, IconLeaf } from "@Renderer/component/Icon";
+import { IconFlashlight, IconLeaf, IconInformationBubble } from "@Renderer/component/Icon";
 import Heading from "@Renderer/components/ui/heading";
 import i18n from "@Renderer/i18n";
 
@@ -94,24 +95,31 @@ function EnergyManagement(props: EnergyManagementProps) {
       </Card>
       <Card className="mt-3 max-w-2xl mx-auto" variant="default">
         <CardHeader>
-          <CardTitle className="flex flex-row items-center justify-between mb-3">
+          <CardTitle className="flex flex-row items-center justify-between">
             <div className="flex items-center gap-2">
               <IconFlashlight /> {i18n.wireless.energyManagement.settings.trueSleepEnabling} mode
             </div>{" "}
             <Badge content={i18n.wireless.energyManagement.settings.mediumBatteryImpact} variation="warning" size="sm" />
           </CardTitle>
-          <CardDescription>
-            <p className="text-sm font-semibold tracking-tight text-gray-500 dark:text-gray-100">
-              {i18n.wireless.energyManagement.settings.trueSleepEnablingDesc}
-            </p>
-          </CardDescription>
         </CardHeader>
-        <CardContent className="py-3">
+        <CardContent className="pb-3 pt-0">
           <div className="flex flex-col">
             <div className="flex items-center w-full justify-between py-2 border-b-[1px] border-gray-50 dark:border-gray-700">
-              <label htmlFor="TrueSleepSwitch" className="m-0 text-sm font-semibold tracking-tight">
+              <Heading headingLevel={2} renderAs="paragraph-sm" className="flex flex-row gap-2 items-center">
                 Enable true sleep mode
-              </label>
+                <OverlayTrigger
+                  placement="top"
+                  overlay={
+                    <Tooltip id="tooltip-top" className="">
+                      {i18n.wireless.energyManagement.settings.trueSleepEnablingDesc}
+                    </Tooltip>
+                  }
+                >
+                  <span className="text-purple-100">
+                    <IconInformationBubble />
+                  </span>
+                </OverlayTrigger>
+              </Heading>
               <Switch
                 id="TrueSleepSwitch"
                 value={wireless.true_sleep ? 1 : 0}
