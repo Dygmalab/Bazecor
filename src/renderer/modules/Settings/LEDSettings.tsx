@@ -97,9 +97,10 @@ function LEDSettings(props: LEDSettingsPreferences) {
   };
 
   useEffect(() => {
-    const { kbData: newKBData } = props;
+    const { kbData: newKBData, wireless: newWireless } = props;
     setLocalKBData(newKBData);
-  }, [props, setKbData]);
+    setLocalWireless(newWireless);
+  }, [props]);
 
   const { ledBrightness, ledBrightnessUG, ledIdleTimeLimit } = localKBData;
   const { idleleds, brightness, brightnessUG, fade } = localWireless;

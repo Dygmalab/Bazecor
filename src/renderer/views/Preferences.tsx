@@ -247,6 +247,7 @@ const Preferences = (props: PreferencesProps) => {
   }, [state.currentDevice]);
 
   const getWirelessPreferences = useCallback(async () => {
+    let wireless = { ...initialWireless };
     setIsSaving(true);
     // Battery commands
     if (state.currentDevice) {
@@ -314,7 +315,7 @@ const Preferences = (props: PreferencesProps) => {
 
     setWireless(wireless);
     setIsSaving(false);
-  }, []);
+  }, [state.currentDevice]);
 
   const saveKeymapChanges = async () => {
     if (state.currentDevice) {
@@ -412,11 +413,14 @@ const Preferences = (props: PreferencesProps) => {
   };
 
   const destroyContext = async () => {
-    setKbData(initialKBData);
     setPreferencesState(initialPreferences);
-    if (state.currentDevice.device.info.keyboardType === "wireless") setWireless(initialWireless);
-    getNeuronData();
-    if (state.currentDevice.device.info.keyboardType === "wireless") getWirelessPreferences();
+    setKbData(initialKBData);
+    await getNeuronData();
+    if (state.currentDevice.device.info.keyboardType === "wireless") {
+      console.log("setting wireless");
+      setWireless(initialWireless);
+      await getWirelessPreferences();
+    }
     setModified(false);
     cancelContext();
   };
