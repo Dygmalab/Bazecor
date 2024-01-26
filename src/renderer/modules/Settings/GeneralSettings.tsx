@@ -25,7 +25,7 @@ import { Switch } from "@Renderer/components/ui/switch";
  */
 
 import { Neuron } from "@Renderer/types/neurons";
-import { IconChip, IconHanger, IconSun, IconMoon, IconScreen, IconKeyboard } from "../../component/Icon";
+import { IconChip, IconHanger, IconSun, IconMoon, IconScreen, IconKeyboard, IconFlashlight } from "../../component/Icon";
 import FileBackUpHandling from "./FileBackUpHandling";
 import { ToggleButtons } from "../../component/ToggleButtons";
 import { Select } from "../../component/Select";
@@ -34,6 +34,8 @@ import i18n from "../../i18n";
 import Store from "../../utils/Store";
 import { KeyPickerPreview } from "../KeyPickerKeyboard";
 import getLanguage from "../../utils/language";
+import ToastMessage from "@Renderer/component/ToastMessage";
+import { toast } from "react-toastify";
 
 const GeneralSettingsWrapper = Styled.div`
 .dropdown-menu {
@@ -55,8 +57,6 @@ interface GeneralSettingsProps {
   onChangeVerbose: () => void;
   allowBeta: boolean;
   onChangeAllowBetas: (checked: boolean) => void;
-  onlyCustomLayers: string | boolean;
-  onChangeOnlyCustomLayers: (checked: boolean) => void;
 }
 
 const GeneralSettings = ({
@@ -71,8 +71,6 @@ const GeneralSettings = ({
   onChangeVerbose,
   allowBeta,
   onChangeAllowBetas,
-  onlyCustomLayers,
-  onChangeOnlyCustomLayers,
 }: GeneralSettingsProps) => {
   const [selectedLanguage, setSelectedLanguage] = useState("");
   const [state] = useDevice();
@@ -82,12 +80,24 @@ const GeneralSettings = ({
   }, []);
 
   const changeLanguage = (language: string) => {
-    setSelectedLanguage(language);
-    store.set("settings.language", `${language}`);
-    if (state.currentDevice && !state.currentDevice.isClosed) {
-      const deviceLang = { ...state.currentDevice.device, language: true };
-      state.currentDevice.commands.keymap = new Keymap(deviceLang);
-    }
+    try {
+      setSelectedLanguage(language);
+      store.set("settings.language", `${language}`);
+      if (state.currentDevice && !state.currentDevice.isClosed) {
+        const deviceLang = { ...state.currentDevice.device, language: true };
+        state.currentDevice.commands.keymap = new Keymap(deviceLang);
+      }
+      toast.success(<ToastMessage title={`${i18n.success.languageSaved} ${language}`} icon={<IconKeyboard />} />, {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: false,
+        draggable: false,
+        progress: undefined,
+        icon: "",
+      });
+    } catch (error) {}
   };
 
   let layersNames: any = neurons[selectedNeuron] ? neurons[selectedNeuron].layers : [];
@@ -130,17 +140,6 @@ const GeneralSettings = ({
     modified: 0,
   };
 
-  const normalizeOnlyCustomLayers = (item: string | boolean): boolean => {
-    if (typeof item === "string") {
-      if (item === "1") {
-        return true;
-      }
-      if (item === "0") {
-        return false;
-      }
-    }
-    return Boolean(item);
-  };
   return (
     <GeneralSettingsWrapper>
       <Card className="max-w-2xl mx-auto" variant="default">
@@ -233,21 +232,6 @@ const GeneralSettings = ({
                 size="sm"
               />
             </div>
-            {connected && (
-              <div className="flex items-center w-full justify-between py-2 border-b-[1px] border-gray-50 dark:border-gray-700">
-                <label htmlFor="customSwitch" className="m-0 text-sm font-semibold tracking-tight">
-                  {i18n.preferences.onlyCustom}
-                </label>
-                <Switch
-                  id="customSwitch"
-                  defaultChecked={false}
-                  checked={normalizeOnlyCustomLayers(onlyCustomLayers)}
-                  onCheckedChange={onChangeOnlyCustomLayers}
-                  variant="default"
-                  size="sm"
-                />
-              </div>
-            )}
           </form>
         </CardContent>
       </Card>

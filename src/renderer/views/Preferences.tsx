@@ -1,7 +1,7 @@
 // -*- mode: js-jsx -*-
 /* Bazecor -- Kaleidoscope Command Center
  * Copyright (C) 2018, 2019  Keyboardio, Inc.
- * Copyright (C) 2019  DygmaLab SE
+ * Copyright (C) 2019, 2024  DygmaLab SE
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -48,6 +48,8 @@ import {
   IconLogoDygma,
   IconSignal,
   IconWrench,
+  IconNeuronManager,
+  IconChip,
 } from "@Renderer/component/Icon";
 import Version from "@Renderer/component/Version/Version";
 
@@ -245,6 +247,7 @@ const Preferences = (props: PreferencesProps) => {
   }, [state.currentDevice]);
 
   const getWirelessPreferences = useCallback(async () => {
+    let wireless = { ...initialWireless };
     setIsSaving(true);
     // Battery commands
     if (state.currentDevice) {
@@ -312,7 +315,7 @@ const Preferences = (props: PreferencesProps) => {
 
     setWireless(wireless);
     setIsSaving(false);
-  }, []);
+  }, [state.currentDevice]);
 
   const saveKeymapChanges = async () => {
     if (state.currentDevice) {
@@ -410,11 +413,14 @@ const Preferences = (props: PreferencesProps) => {
   };
 
   const destroyContext = async () => {
-    setKbData(initialKBData);
     setPreferencesState(initialPreferences);
-    if (state.currentDevice.device.info.keyboardType === "wireless") setWireless(initialWireless);
-    getNeuronData();
-    if (state.currentDevice.device.info.keyboardType === "wireless") getWirelessPreferences();
+    setKbData(initialKBData);
+    await getNeuronData();
+    if (state.currentDevice.device.info.keyboardType === "wireless") {
+      console.log("setting wireless");
+      setWireless(initialWireless);
+      await getWirelessPreferences();
+    }
     setModified(false);
     cancelContext();
   };
@@ -499,16 +505,15 @@ const Preferences = (props: PreferencesProps) => {
     applyNeurons(neuronsToChangeName);
   };
 
-  const deleteNeuron = () => {
+  const deleteNeuron = (toDelete: number) => {
     const result = window.confirm(i18n.keyboardSettings.neuronManager.deleteNeuron);
     if (result) {
       const newNeurons = JSON.parse(JSON.stringify(preferencesState.neurons));
-      newNeurons.splice(preferencesState.selectedNeuron, 1);
+      newNeurons.splice(toDelete, 1);
       setPreferencesState(prevState => ({
         ...prevState,
         neurons: newNeurons,
-        selectedNeuron:
-          newNeurons.length - 1 > preferencesState.selectedNeuron ? preferencesState.selectedNeuron : newNeurons.length - 1,
+        selectedNeuron: newNeurons.length - 1 > toDelete ? toDelete : newNeurons.length - 1,
       }));
       applyNeurons(newNeurons);
     }
@@ -530,8 +535,20 @@ const Preferences = (props: PreferencesProps) => {
 
   const sendRePairCommand = async () => {
     if (state.currentDevice) {
-      const result = await state.currentDevice.command("wireless.rf.syncPairing");
-      console.log("command returned", result);
+      try {
+        const result = await state.currentDevice.command("wireless.rf.syncPairing");
+        console.log("command returned", result);
+        toast.success(<ToastMessage title={`${i18n.success.pairedSuccesfully}`} icon={<IconChip />} />, {
+          position: "top-right",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: false,
+          draggable: false,
+          progress: undefined,
+          icon: "",
+        });
+      } catch (error) {}
     }
   };
 
@@ -540,7 +557,7 @@ const Preferences = (props: PreferencesProps) => {
   useEffect(() => {
     const init = async () => {
       let NID = await getNeuronData();
-      if (state.currentDevice.device.info.keyboardType === "wireless") await getWirelessPreferences();
+      if (connected && state.currentDevice.device.info.keyboardType === "wireless") await getWirelessPreferences();
       const devTools = await ipcRenderer.invoke("is-devtools-opened");
       let darkMode = store.get("settings.darkMode") as string;
       if (!darkMode) {
@@ -576,15 +593,6 @@ const Preferences = (props: PreferencesProps) => {
   const { neurons, selectedNeuron, darkMode, neuronID, devTools, verboseFocus } = preferencesState;
   const { defaultLayer } = kbData;
 
-  console.log(
-    "current Neuron: ",
-    state.currentDevice,
-    neuronID,
-    "connected?: ",
-    connected,
-    "found",
-    neurons.find(x => x.id === neuronID),
-  );
   if (localloading) <LogoLoader />;
 
   return (
@@ -597,6 +605,7 @@ const Preferences = (props: PreferencesProps) => {
         destroyContext={destroyContext}
         inContext={modified}
         isSaving={isSaving}
+        style="pageHeaderFlatBottom"
       />
       <div className="flex w-full mx-auto mt-4">
         <Tabs
@@ -607,7 +616,7 @@ const Preferences = (props: PreferencesProps) => {
           onValueChange={handleTabChange}
         >
           <div className="flex gap-3 w-full pb-4">
-            <TabsList className="flex flex-col self-start gap-1 px-4 py-4 text-left min-w-64 rounded-xl bg-tabMenu dark:bg-tabMenuDark">
+            <TabsList className="sticky top-20 flex flex-col self-start gap-1 px-4 py-4 text-left min-w-64 rounded-xl bg-tabMenu dark:bg-tabMenuDark">
               {connected && state.currentDevice ? (
                 <>
                   <DeviceConnectedPreview
@@ -629,9 +638,9 @@ const Preferences = (props: PreferencesProps) => {
                       <TabsTrigger value="Battery" variant="tab">
                         <IconBattery /> Battery Management
                       </TabsTrigger>
-                      <TabsTrigger value="Bluetooth" variant="tab">
+                      {/* <TabsTrigger value="Bluetooth" variant="tab">
                         <IconBluetooth /> Bluetooth Settings
-                      </TabsTrigger>
+                      </TabsTrigger> */}
                       <TabsTrigger value="RF" variant="tab">
                         <IconSignal /> RF Settings
                       </TabsTrigger>
@@ -652,6 +661,13 @@ const Preferences = (props: PreferencesProps) => {
               <TabsTrigger value="Application" variant="tab">
                 <IconLogoDygma /> Application
               </TabsTrigger>
+              {connected && state.currentDevice ? (
+                <TabsTrigger value="NeuronManager" variant="tab">
+                  <IconNeuronManager /> Neuron Manager
+                </TabsTrigger>
+              ) : (
+                ""
+              )}
             </TabsList>
             <div className="rounded-xl bg-gray-25/50 dark:bg-gray-400/15 px-4 py-3 w-full">
               {connected && state.currentDevice ? (
@@ -659,13 +675,6 @@ const Preferences = (props: PreferencesProps) => {
                   <TabsContent value="Keyboard" className="w-full">
                     <motion.div initial="hidden" animate="visible" variants={tabVariants}>
                       <KeyboardSettings kbData={kbData} setKbData={updateKBData} connected={connected} />
-                      <NeuronSettings
-                        neurons={neurons}
-                        selectedNeuron={selectedNeuron}
-                        selectNeuron={selectNeuron}
-                        updateNeuronName={updateNeuronName}
-                        deleteNeuron={deleteNeuron}
-                      />
                     </motion.div>
                   </TabsContent>
                   <TabsContent value="LED">
@@ -685,14 +694,14 @@ const Preferences = (props: PreferencesProps) => {
                       <TabsContent value="Battery">
                         <motion.div initial="hidden" animate="visible" variants={tabVariants}>
                           <BatterySettings wireless={wireless} changeWireless={updateWireless} isCharging={false} />
-                          <EnergyManagement wireless={wireless} changeWireless={updateWireless} />
+                          <EnergyManagement wireless={wireless} changeWireless={updateWireless} updateTab={handleTabChange} />
                         </motion.div>
                       </TabsContent>
-                      <TabsContent value="Bluetooth">
+                      {/* <TabsContent value="Bluetooth">
                         <motion.div initial="hidden" animate="visible" variants={tabVariants}>
                           Bluetooth Settings
                         </motion.div>
-                      </TabsContent>
+                      </TabsContent> */}
                       <TabsContent value="RF">
                         <motion.div initial="hidden" animate="visible" variants={tabVariants}>
                           <RFSettings wireless={wireless} changeWireless={updateWireless} sendRePair={sendRePairCommand} />
@@ -706,10 +715,13 @@ const Preferences = (props: PreferencesProps) => {
                         connected={connected}
                         defaultLayer={defaultLayer}
                         selectDefaultLayer={selectDefaultLayer}
+                        keyboardType={state.currentDevice.device.info.product as string}
                         neurons={neurons}
                         neuronID={neuronID}
                         selectedNeuron={selectedNeuron}
                         updateTab={handleTabChange}
+                        onlyCustomLayers={kbData.keymap.onlyCustom.toString()}
+                        onChangeOnlyCustomLayers={onChangeOnlyCustomLayers}
                       />
                     </motion.div>
                   </TabsContent>
@@ -729,12 +741,26 @@ const Preferences = (props: PreferencesProps) => {
                     onChangeVerbose={onChangeVerbose}
                     allowBeta={allowBeta}
                     onChangeAllowBetas={onChangeAllowBetas}
-                    onlyCustomLayers={kbData.keymap.onlyCustom.toString()}
-                    onChangeOnlyCustomLayers={onChangeOnlyCustomLayers}
                   />
                   <Version />
                 </motion.div>
               </TabsContent>
+              {connected && state.currentDevice ? (
+                <TabsContent value="NeuronManager">
+                  <motion.div initial="hidden" animate="visible" variants={tabVariants}>
+                    <NeuronSettings
+                      neurons={neurons}
+                      selectedNeuron={selectedNeuron}
+                      selectNeuron={selectNeuron}
+                      applyNeurons={applyNeurons}
+                      updateNeuronName={updateNeuronName}
+                      deleteNeuron={deleteNeuron}
+                    />
+                  </motion.div>
+                </TabsContent>
+              ) : (
+                ""
+              )}
             </div>
           </div>
         </Tabs>

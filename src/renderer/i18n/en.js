@@ -1,6 +1,7 @@
 // -*- mode: js-jsx -*-
 /* Bazecor -- Kaleidoscope Command Center
  * Copyright (C) 2018, 2019  Keyboardio, Inc.
+ * Copyright (C) 2019, 2024  DygmaLab SE
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -33,6 +34,8 @@ const English = {
       "<p style='font-weight:401;'>You have made changes that haven't been saved yet.</p><p>Save or discard them before leaving.</p>",
   },
   success: {
+    languageSaved: "Key picker language has been changed to ",
+    pairedSuccesfully: "Your device has ben succesfully re-paired",
     preferencesSaved: "Your preferences have been saved.",
     preferencesSavedBody: "",
     changesSaved: "Changes saved successfully",
@@ -495,7 +498,7 @@ const English = {
       advancedSettingsDesc: "Settings applied when the low-power mode is off",
       savingMode: "Energy saving mode",
       savingModeDesc: "Easy way to extend battery life",
-      savingModeInfo: "Consider that the battery has a safety policy that is activated when it reaches 10%.",
+      savingModeInfo: "Keep in mind that the battery incorporates a safety protocol triggered once it descends to 10%.",
       lowPowerMode: "Low-power mode",
       settings: {
         maximumLED: "Maximum LED intensity",

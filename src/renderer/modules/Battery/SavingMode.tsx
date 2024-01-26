@@ -4,6 +4,7 @@ import Styled from "styled-components";
 import Form from "react-bootstrap/Form";
 
 // Internal components
+import { Switch } from "@Renderer/components/ui/switch";
 import Title from "@Renderer/component/Title";
 
 import { EnergyManagementProps } from "@Renderer/types/wireless";
@@ -60,28 +61,25 @@ function SavingMode({ wireless, changeWireless }: EnergyManagementProps) {
     changeWireless(newWireless);
   };
   return (
-    <Styles>
-      <Title text={i18n.wireless.energyManagement.lowPowerMode} headingLevel={5} />
-      <div className="settingsWrapper">
-        <div className="settingsContent">
-          <Title text={i18n.wireless.energyManagement.savingMode} headingLevel={4} />
-          <p>{i18n.wireless.energyManagement.savingModeDesc}</p>
-          <p>
-            <small>{i18n.wireless.energyManagement.savingModeInfo}</small>
-          </p>
+    <div className="flex flex-col gap-2">
+      <div className="flex items-center w-full justify-between py-2 border-b-[1px] border-gray-50 dark:border-gray-700">
+        <div className="flex flex-col gap-1">
+          <label htmlFor="settingSavingMode" className="m-0 text-sm font-semibold tracking-tight">
+            Enable saving mode
+          </label>
+          {/* <p className="text-sm text-gray-400 dark:text-gray-300">{i18n.wireless.energyManagement.savingModeDesc}</p> */}
         </div>
-        <div className="settingsActions">
-          <Form className="batterySettingItem batterySetSavingMode">
-            <Form.Check
-              type="switch"
-              id="settingSavingMode"
-              checked={wireless.battery ? wireless.battery.savingMode : false}
-              onChange={toggleSavingBatteryMode}
-            />
-          </Form>
-        </div>
+        <Switch
+          id="settingSavingMode"
+          value={wireless.battery ? 1 : 0}
+          checked={wireless.battery ? wireless.battery.savingMode : false}
+          onCheckedChange={toggleSavingBatteryMode}
+          variant="default"
+          size="sm"
+        />
       </div>
-    </Styles>
+      <p className="text-xs text-gray-400 dark:text-gray-300">{i18n.wireless.energyManagement.savingModeInfo}</p>
+    </div>
   );
 }
 
