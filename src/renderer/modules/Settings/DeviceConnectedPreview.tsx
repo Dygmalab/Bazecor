@@ -74,7 +74,7 @@ const DeviceConnectedPreview = ({ deviceName, deviceDisplayName, nameChange }: D
 
       <NameModal
         show={showModal}
-        name={deviceName || ""}
+        name={deviceName}
         toggleShow={() => setShowModal(false)}
         handleSave={(data: string) => handleSave(data)}
         modalTitle={i18n.keyboardSettings.neuronManager.changeLayerTitle}
