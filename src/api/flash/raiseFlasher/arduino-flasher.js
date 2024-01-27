@@ -18,6 +18,7 @@ import async from "async";
 import Focus from "../../focus";
 import { decodeHexLine } from "../decodeHexLine";
 import { padToN } from '../padToN';
+import { str2ab } from '../str2ab';
 
 const MAX_MS = 2000;
 
@@ -109,15 +110,6 @@ async function disconnect_cb(cb) {
 
 function num2hexstr(number, paddedTo) {
   return padToN(number.toString(16), paddedTo);
-}
-
-function str2ab(str) {
-  const buf = new ArrayBuffer(str.length); // 2 bytes for each char
-  const bufView = new Uint8Array(buf);
-  for (let i = 0, strLen = str.length; i < strLen; i++) {
-    bufView[i] = str.charCodeAt(i) & 0xff;
-  }
-  return buf;
 }
 
 /**
