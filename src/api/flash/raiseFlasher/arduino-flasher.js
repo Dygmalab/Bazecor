@@ -19,6 +19,7 @@ import Focus from "../../focus";
 import { decodeHexLine } from "../decodeHexLine";
 import { MAX_MS, PACKET_SIZE, TYPE_DAT, TYPE_ELA } from "../flasherConstants";
 import { padToN } from "../padToN";
+import { num2hexstr } from "../num2hexstr";
 import { str2ab } from "../str2ab";
 
 const focus = new Focus();
@@ -100,10 +101,6 @@ async function read_cb(callback) {
 async function disconnect_cb(cb) {
   await focus.close();
   cb(null, "");
-}
-
-function num2hexstr(number, paddedTo) {
-  return padToN(number.toString(16), paddedTo);
 }
 
 /**
