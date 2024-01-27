@@ -18,7 +18,6 @@ import async from "async";
 import Focus from "../../focus";
 import { decodeHexLine } from "../decodeHexLine";
 import { MAX_MS, PACKET_SIZE, TYPE_DAT, TYPE_ELA } from "../flasherConstants";
-import { padToN } from "../padToN";
 import { num2hexstr } from "../num2hexstr";
 import { str2ab } from "../str2ab";
 
@@ -142,7 +141,7 @@ export var arduino = {
     let { address } = dataObjects[0];
 
     if (address < 2000) {
-      finished(true, `You're attempting to overwrite the bootloader... (0x${padToN(num2hexstr(dataObjects[0].address), 8)})`);
+      finished(true, `You're attempting to overwrite the bootloader... (0x${num2hexstr(dataObjects[0].address, 8)})`);
       return;
     }
 
