@@ -10,7 +10,7 @@
   },
   "main": ".webpack/main",
   "scripts": {
-    "coverage": "vitest run src --coverage",
+    "coverage": "vitest run --coverage",
     "clean": "rm -rf dist && rm -rf out && rm -rf node_modules",
     "start": "cross-env NODE_ENV=development electron-forge start",
     "make-dev": "cross-env NODE_ENV=development electron-forge make",
@@ -23,9 +23,10 @@
     "make-lin": "electron-forge make --platform=linux",
     "lint": "eslint --ext .ts,.tsx,.js,.jsx .",
     "prettier": "prettier --write \"./**/*.{js,json,css,scss,md}\"",
-    "test": "vitest run src",
+    "t": "vitest",
+    "tc": "vitest --coverage",
+    "test": "vitest",
     "test:type": "tsc --noEmit",
-    "w": "vitest src",
     "e2e": "yarn playwright test",
     "commit": "cz -s",
     "prepare": "husky install"
