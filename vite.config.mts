@@ -5,7 +5,7 @@ export default defineConfig({
 	root: 'src',
   test: {
 		coverage: {
-			// exclude: ['**/*.{system,perf,stress}.ts']
+			exclude: ['**/*.{spec,test,unit,accept,integrate,system,perf,stress}.ts']
 		},
 		include: [
 			// '**/*.{system,perf,stress}.ts',
