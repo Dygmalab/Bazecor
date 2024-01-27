@@ -17,6 +17,5 @@
     "sourceMap": true,
     "target": "ES6",
   },
-  "include": ["src/**/*"],
-  // "files": ["src/renderer/theme/styled.d.ts"]
+  "include": ["src/**/*"]
 }
