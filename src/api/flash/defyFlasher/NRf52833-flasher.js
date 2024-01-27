@@ -17,16 +17,9 @@
 import async from "async";
 import Focus from "../../focus";
 import { decodeHexLine } from "../decodeHexLine";
-import { padToN } from '../padToN';
-import { str2ab } from '../str2ab';
-
-const MAX_MS = 2000;
-
-const PACKET_SIZE = 4096;
-
-const TYPE_DAT = 0x00;
-const TYPE_ESA = 0x02;
-const TYPE_ELA = 0x04;
+import { MAX_MS, PACKET_SIZE, TYPE_DAT, TYPE_ELA, TYPE_ESA } from "../flasherConstants";
+import { padToN } from "../padToN";
+import { str2ab } from "../str2ab";
 
 const focus = new Focus();
 
