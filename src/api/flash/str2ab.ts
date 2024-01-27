@@ -1,4 +1,3 @@
-
 export function str2ab(str: string) {
   const buf = new ArrayBuffer(str.length); // 2 bytes for each char
   const bufView = new Uint8Array(buf);
