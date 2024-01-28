@@ -15,8 +15,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import fs from "fs";
 import { spawn } from "child_process";
+import fs from "fs";
+import { delay } from '../flash/delay';
 
 const { SerialPort } = eval('require("serialport")');
 const { DelimiterParser } = eval('require("@serialport/parser-delimiter")');
@@ -35,8 +36,6 @@ class Focus {
     }
     return focus_instance;
   }
-
-  delay = (ms: number) => new Promise(res => setTimeout(res, ms));
 
   debugLog(...args: unknown[]) {
     if (!this.debug) return;
@@ -192,7 +191,7 @@ class Focus {
         }
         delete this._port;
         this.closed = true;
-        await this.delay(200);
+        await delay(200);
       }
     } catch (error) {
       console.error("error when closing", error);

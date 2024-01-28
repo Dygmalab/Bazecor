@@ -14,11 +14,12 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { ipcRenderer } from "electron";
 import fs from "fs";
 import path from "path";
-import { ipcRenderer } from "electron";
 import Focus from "../../focus";
 import Hardware from "../../hardware";
+import { delay } from '../delay';
 import NRf52833 from "./NRf52833-flasher";
 
 /**
@@ -44,7 +45,6 @@ class FlashDefyWireless {
       firmwareFile: "File has not being selected",
     };
     this.backup = [];
-    this.delay = ms => new Promise(res => setTimeout(res, ms));
   }
 
   /**
@@ -216,7 +216,7 @@ class FlashDefyWireless {
         if (err) console.log("answer after shutdown not received");
       });
       console.log("waiting for bootloader");
-      await this.delay(1000);
+      await delay(1000);
       stateUpdate("reset", 30);
       try {
         let bootCount = 10;
@@ -227,7 +227,7 @@ class FlashDefyWireless {
             stateUpdate("reset", 100);
             break;
           }
-          await this.delay(300);
+          await delay(300);
           bootCount--;
         }
         if (bootCount != true) {
@@ -266,7 +266,7 @@ class FlashDefyWireless {
           else {
             stateUpdate("neuron", 100);
             console.log("End update firmware with NRf52833");
-            // await this.delay(1500);
+            // await delay(1500);
             // await this.detectKeyboard();
             resolve();
           }
@@ -290,7 +290,7 @@ class FlashDefyWireless {
     // wait until the bootloader serial port disconnects and the keyboard serial port reconnects
     const findKeyboard = async () =>
       new Promise(async resolve => {
-        await this.delay(timeouts);
+        await delay(timeouts);
         if (await this.foundDevices(Hardware.serial, "Keyboard detected", false)) {
           resolve(true);
         } else {
