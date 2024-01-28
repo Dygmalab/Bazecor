@@ -13,12 +13,27 @@ export class LoggingFocusSpy extends Focus {
 }
 
 export class FocusStub extends LoggingFocusSpy {
-  constructor(private ctx: { ports: PortInfo[] }) {
+  private portStubs: PortInfo[];
+  constructor({ ports }: { ports: Partial<PortInfo>[] }) {
     super();
+    this.portStubs = ports.map(stubPortInfo);
   }
   protected async listSerialPorts(): Promise<PortInfo[]> {
-    return this.ctx.ports;
+    return this.portStubs;
   }
+}
+
+function stubPortInfo(port: Partial<PortInfo>): PortInfo {
+  return {
+    locationId: "",
+    manufacturer: "",
+    path: "",
+    pnpId: "",
+    productId: "",
+    serialNumber: "",
+    vendorId: "",
+    ...port,
+  };
 }
 
 export type LogMethod = keyof Console;

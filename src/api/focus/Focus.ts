@@ -55,14 +55,14 @@ export class Focus {
     return new sp.SerialPort(options, openCallback);
   }
 
-  async find(...devices: any[]) {
+  async find(...devices: Array<{ usb: { productId: number, vendorId: number }}>) {
     const portList = await this.listSerialPorts()
 
     const foundDevices = [];
 
     this.debugLog("focus.find: portList:", portList, "devices:", devices);
-    console.log("Passed devices", devices);
-    console.log("Port list from where");
+    this.logger.log("Passed devices", devices);
+    this.logger.log("Port list from where");
     for (const port of portList) {
       for (const device of devices) {
         if (parseInt(`0x${port.productId}`) == device.usb.productId && parseInt(`0x${port.vendorId}`) == device.usb.vendorId) {
