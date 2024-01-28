@@ -33,11 +33,13 @@ export class Focus {
   closed = true;
   file = false;
   commands: Record<string, any> = { help: this._help };
+  protected logger = console
   constructor() {}
 
-  debugLog(...args: unknown[]) {
+  protected debugLog(...args: unknown[]) {
     if (!this.debug) return;
-    console.log(...args);
+    // TODO: should be able to use `this.logger.debug` instead
+    this.logger.log(...args);
   }
 
   async find(...devices: any[]) {
