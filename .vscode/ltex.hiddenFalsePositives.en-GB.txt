@@ -1,0 +1,2 @@
+{"rule":"MAC_OS","sentence":"^\\QBazecor is supported on all three major operating systems, we test our releases on Windows 10, MacOS, and Ubuntu LTS.\\E$"}
+{"rule":"WHITESPACE_RULE","sentence":"^\\QWindows   \\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q\nmacOS   \\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q\nmacOS x64 \\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q\nmacOS arm64 \\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q\nLinux   \\E(?:Dummy|Ina|Jimmy-)[0-9]+$"}
