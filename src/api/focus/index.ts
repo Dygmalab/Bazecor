@@ -21,31 +21,29 @@ import { spawn } from "child_process";
 const { SerialPort } = eval('require("serialport")');
 const { DelimiterParser } = eval('require("@serialport/parser-delimiter")');
 
-global.focus_instance = null;
+let focus_instance: Focus;
 
 class Focus {
+  timeout = 5000;
+  debug = false;
+  closed = true;
+  file = false;
+  commands: Record<string, any> = { help: this._help };
   constructor() {
-    if (!global.focus_instance) {
-      global.focus_instance = this;
-      this.commands = {
-        help: this._help,
-      };
-      this.timeout = 5000;
-      this.debug = false;
-      this.closed = true;
-      this.file = false;
+    if (!focus_instance) {
+      focus_instance = this;
     }
-    return global.focus_instance;
+    return focus_instance;
   }
 
-  delay = ms => new Promise(res => setTimeout(res, ms));
+  delay = (ms: number) => new Promise(res => setTimeout(res, ms));
 
-  debugLog(...args) {
+  debugLog(...args: unknown[]) {
     if (!this.debug) return;
     console.log(...args);
   }
 
-  async find(...devices) {
+  async find(...devices: any[]) {
     const portList = await SerialPort.list();
 
     const foundDevices = [];
@@ -67,8 +65,14 @@ class Focus {
 
     return foundDevices;
   }
-
-  async fileOpen(info, file) {
+  device: any
+  result: string
+  callbacks: any[]
+  fileData: any
+  supportedCommands: any
+  _port: any
+  parser: any
+  async fileOpen(_info: unknown, file: any) {
     // console.log("DATA!!", info, file);
     this.device = file.device;
     this.result = "";
@@ -79,7 +83,7 @@ class Focus {
     this.supportedCommands = await this.command("help");
   }
 
-  async open(device, info, file) {
+  async open(device: any, info: any, file: any) {
     if (file !== null) {
       await this.fileOpen(info, file);
       return true;
@@ -101,7 +105,7 @@ class Focus {
         const testingDevices = await SerialPort.list();
         console.log(testingDevices);
         this._port = new SerialPort({ path, baudRate: 115200, autoOpen: false, endOnClose: true });
-        await this._port.open(err => {
+        await this._port.open((err: any) => {
           if (err) console.error("error when opening port: ", err);
           else console.log("connected");
         });
@@ -114,7 +118,7 @@ class Focus {
       this.result = "";
       this.callbacks = [];
       this.supportedCommands = [];
-      this.parser.on("data", data => {
+      this.parser.on("data", (data: any) => {
         data = data.toString("utf-8");
         this.debugLog("focus: incoming data:", data);
 
@@ -152,7 +156,7 @@ class Focus {
     }
 
     // Setup error port alert
-    this._port.on("error", async function (err) {
+    this._port.on("error", async function (err: any) {
       console.error(`Error on SerialPort: ${err}`);
       await this._port.close();
     });
@@ -198,7 +202,7 @@ class Focus {
     return result;
   }
 
-  async isDeviceAccessible(port) {
+  async isDeviceAccessible(port: { path: string }) {
     if (process.platform !== "linux") return true;
 
     try {
@@ -209,7 +213,7 @@ class Focus {
     return true;
   }
 
-  async isDeviceSupported(device) {
+  async isDeviceSupported(device: any) {
     if (!device.device.isDeviceSupported) {
       return true;
     }
@@ -218,11 +222,11 @@ class Focus {
     return supported;
   }
 
-  isCommandSupported(cmd) {
+  isCommandSupported(cmd: string) {
     return this.supportedCommands.indexOf(cmd) !== -1;
   }
 
-  async _write_parts(parts, cb) {
+  async _write_parts(parts: any[], cb: any) {
     if (!parts || parts.length === 0) {
       cb();
       return;
@@ -236,7 +240,7 @@ class Focus {
     });
   }
 
-  request(cmd, ...args) {
+  request(cmd: string, ...args: unknown[]) {
     this.debugLog("focus.request:", cmd, ...args);
     return new Promise((resolve, reject) => {
       const timer = setTimeout(() => {
@@ -254,7 +258,7 @@ class Focus {
     });
   }
 
-  async _request(cmd, ...args) {
+  async _request(cmd: string, ...args: unknown[]) {
     if (this.file === true) {
       console.log("performing virtual request");
       if (args.length > 0 && this.fileData.virtual[cmd].eraseable) {
@@ -285,7 +289,7 @@ class Focus {
     });
   }
 
-  async command(cmd, ...args) {
+  async command(cmd: string, ...args: unknown[]) {
     if (typeof this.commands[cmd] === "function") {
       return this.commands[cmd](this, ...args);
     }
@@ -295,27 +299,28 @@ class Focus {
     return this.request(cmd, ...args);
   }
 
-  addCommands(cmds) {
+  addCommands(cmds: any) {
     Object.assign(this.commands, cmds);
   }
 
-  addMethod(methodName, command) {
-    if (this[methodName]) {
-      const tmp = this[methodName];
-      this[methodName] = (...args) => {
+  addMethod(methodName: string, command: string) {
+    const self: any = this
+    if (self[methodName]) {
+      const tmp = self[methodName];
+      self[methodName] = (...args: unknown[]) => {
         tmp(...args);
         this.commands[command][methodName](...args);
       };
     } else {
-      this[methodName] = (...args) => {
+      self[methodName] = (...args: unknown[]) => {
         this.commands[command][methodName](...args);
       };
     }
   }
 
-  async _help(s) {
+  async _help(s: any) {
     const data = await s.request("help");
-    return data.split(/\r?\n/).filter(v => v.length > 0);
+    return data.split(/\r?\n/).filter((v: string) => v.length > 0);
   }
 }
 
