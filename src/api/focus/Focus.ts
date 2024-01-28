@@ -15,12 +15,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { AutoDetectTypes, PortInfo } from "@serialport/bindings-cpp"
-import { spawn } from "child_process"
-import fs from "fs"
-import type { SerialPort, SerialPortOpenOptions } from "serialport"
-import { delay } from "../flash/delay"
-import { ctx } from "./Focus.ctx"
+import type { AutoDetectTypes, PortInfo } from "@serialport/bindings-cpp";
+import { spawn } from "child_process";
+import fs from "fs";
+import type { SerialPort, SerialPortOpenOptions } from "serialport";
+import { delay } from "../flash/delay";
+import { ctx } from "./Focus.ctx";
 
 // TODO: any reason we can't import directly?
 const sp = eval('require("serialport")');
@@ -36,7 +36,7 @@ export class Focus {
   closed = true;
   file = false;
   commands: Record<string, any> = { help: this._help };
-  protected logger = console
+  protected logger = console;
   constructor() {}
 
   protected debugLog(...args: unknown[]) {
@@ -46,7 +46,7 @@ export class Focus {
   }
 
   protected async listSerialPorts(): Promise<PortInfo[]> {
-    return sp.SerialPort.list()
+    return sp.SerialPort.list();
   }
   protected createSerialPort<T extends AutoDetectTypes>(
     options: SerialPortOpenOptions<T>,
@@ -55,8 +55,8 @@ export class Focus {
     return new sp.SerialPort(options, openCallback);
   }
 
-  async find(...devices: Array<{ usb: { productId: number, vendorId: number }}>) {
-    const portList = await this.listSerialPorts()
+  async find(...devices: Array<{ usb: { productId: number; vendorId: number } }>) {
+    const portList = await this.listSerialPorts();
 
     const foundDevices = [];
 
@@ -82,7 +82,7 @@ export class Focus {
   supportedCommands: any;
   _port: any;
   parser: any;
-  async fileOpen(_info: unknown, file: any) {
+  private async fileOpen(_info: unknown, file: any) {
     // console.log("DATA!!", info, file);
     this.device = file.device;
     this.result = "";
@@ -174,7 +174,7 @@ export class Focus {
     return this._port;
   }
 
-  clearContext() {
+  private clearContext() {
     this.result = "";
     this.callbacks = [];
     this.device = null;
@@ -268,7 +268,7 @@ export class Focus {
     });
   }
 
-  async _request(cmd: string, ...args: unknown[]) {
+  private async _request(cmd: string, ...args: unknown[]) {
     if (this.file === true) {
       console.log("performing virtual request");
       if (args.length > 0 && this.fileData.virtual[cmd].eraseable) {
@@ -328,7 +328,7 @@ export class Focus {
     }
   }
 
-  async _help(s: any) {
+  private async _help(s: any) {
     const data = await s.request("help");
     return data.split(/\r?\n/).filter((v: string) => v.length > 0);
   }
