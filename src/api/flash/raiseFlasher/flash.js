@@ -65,7 +65,7 @@ export class FlashRaise {
    * @returns {boolean} if device found - true, if no - false
    */
   async foundDevices(hardware, message, bootloader) {
-    const focus = new Focus();
+    const focus = Focus.getInstance();
     let isFindDevice = false;
     console.log("looking at device", this.device);
     await focus.find(...hardware).then(devices => {
@@ -99,7 +99,7 @@ export class FlashRaise {
    * Takes backup settings from keyboard and writes its in backupfile.
    */
   async backupSettings() {
-    const focus = new Focus();
+    const focus = Focus.getInstance();
 
     const commands = [
       "hardware.keyscan",
@@ -252,7 +252,7 @@ export class FlashRaise {
    * @returns {promise}
    */
   async updateFirmware(filename, stateUpdate) {
-    const focus = new Focus();
+    const focus = Focus.getInstance();
     console.log("Begin update firmware with arduino-flasher");
     // console.log(JSON.stringify(focus));
     return new Promise(async (resolve, reject) => {
@@ -326,7 +326,7 @@ export class FlashRaise {
    */
   async restoreSettings(backup, stateUpdate) {
     stateUpdate("restore", 0);
-    let focus = new Focus();
+    let focus = Focus.getInstance();
     const errorMessage = "Firmware update failed, because the settings could not be restored";
     console.log(backup);
     if (backup === undefined || backup.length === 0) {

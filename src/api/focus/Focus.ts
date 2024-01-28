@@ -17,25 +17,23 @@
 
 import { spawn } from "child_process";
 import fs from "fs";
-import { delay } from '../flash/delay';
+import { delay } from "../flash/delay";
+import { ctx } from "./Focus.ctx";
 
 const { SerialPort } = eval('require("serialport")');
 const { DelimiterParser } = eval('require("@serialport/parser-delimiter")');
 
-let focus_instance: Focus;
-
 export class Focus {
-  timeout = 5000;
-  debug = false;
+  public static getInstance() {
+    if (ctx.instance) return ctx.instance;
+    return (ctx.instance = new Focus());
+  }
+  public timeout = 5000;
+  public debug = false;
   closed = true;
   file = false;
   commands: Record<string, any> = { help: this._help };
-  constructor() {
-    if (!focus_instance) {
-      focus_instance = this;
-    }
-    return focus_instance;
-  }
+  constructor() {}
 
   debugLog(...args: unknown[]) {
     if (!this.debug) return;
@@ -64,13 +62,13 @@ export class Focus {
 
     return foundDevices;
   }
-  device: any
-  result: string
-  callbacks: any[]
-  fileData: any
-  supportedCommands: any
-  _port: any
-  parser: any
+  device: any;
+  result: string;
+  callbacks: any[];
+  fileData: any;
+  supportedCommands: any;
+  _port: any;
+  parser: any;
   async fileOpen(_info: unknown, file: any) {
     // console.log("DATA!!", info, file);
     this.device = file.device;
@@ -303,7 +301,7 @@ export class Focus {
   }
 
   addMethod(methodName: string, command: string) {
-    const self: any = this
+    const self: any = this;
     if (self[methodName]) {
       const tmp = self[methodName];
       self[methodName] = (...args: unknown[]) => {

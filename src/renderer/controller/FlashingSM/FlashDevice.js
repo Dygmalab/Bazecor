@@ -76,7 +76,7 @@ const restoreSettings = async (context, backup, stateUpd) => {
     stateUpd("restore", 100);
     return true;
   }
-  const focus = new Focus();
+  const focus = Focus.getInstance();
   console.log(backup);
   if (backup === undefined || backup.length === 0) {
     await focus.open(comPath, context.originalDevice.device.info, null);
@@ -107,7 +107,7 @@ const reconnect = async (context, callback) => {
   let result = false;
   try {
     const foundDevices = async (hardware, message, isBootloader) => {
-      const focus = new Focus();
+      const focus = Focus.getInstance();
       let isFindDevice = false;
       let currentPort;
       let currentPath;
@@ -167,7 +167,7 @@ const reconnect = async (context, callback) => {
 const flashSide = async (side, context, callback) => {
   let result = false;
   try {
-    const focus = new Focus();
+    const focus = Focus.getInstance();
     if (flashSides === undefined) {
       bootloader = context.device.bootloader;
       comPath = focus._port.port.openOptions.path;
@@ -197,7 +197,7 @@ const flashSide = async (side, context, callback) => {
 const uploadDefyWired = async (context, callback) => {
   const result = false;
   try {
-    const focus = new Focus();
+    const focus = Focus.getInstance();
     if (flashSides === undefined) {
       bootloader = context.device.bootloader;
       comPath = focus._port.port.openOptions.path;
@@ -228,7 +228,7 @@ const resetDefy = async (context, callback) => {
   const { currentDevice } = context.deviceState;
   let result = false;
   try {
-    const focus = new Focus();
+    const focus = Focus.getInstance();
     if (flashDefyWireless === undefined) {
       console.log("when creating FDW", context.originalDevice.device);
       flashDefyWireless = new FlashDefyWireless(context.originalDevice.device);
@@ -266,7 +266,7 @@ const resetDefy = async (context, callback) => {
 const uploadDefyWireles = async (context, callback) => {
   let result = false;
   try {
-    const focus = new Focus();
+    const focus = Focus.getInstance();
     if (!context.device.bootloader) {
       await focus.close();
     }
@@ -309,7 +309,7 @@ const resetRaise = async (context, callback) => {
   let result = false;
 
   try {
-    const focus = new Focus();
+    const focus = Focus.getInstance();
     if (flashRaise === undefined) {
       flashRaise = new FlashRaise(context.originalDevice.device);
       comPath = focus._port.port.openOptions.path;
@@ -344,7 +344,7 @@ const resetRaise = async (context, callback) => {
 const uploadRaise = async (context, callback) => {
   let result = false;
   try {
-    const focus = new Focus();
+    const focus = Focus.getInstance();
     if (!context.device.bootloader) {
       await focus.close();
     }
@@ -390,7 +390,7 @@ const integrateCommsToFocus = async context => {
 
     await delay(100);
 
-    const focus = new Focus();
+    const focus = Focus.getInstance();
     await focus.open(path, device, null);
     console.log("opened using focus currentDevice", focus);
     result = true;

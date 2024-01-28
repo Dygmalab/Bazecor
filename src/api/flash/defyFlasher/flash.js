@@ -66,7 +66,7 @@ class FlashDefyWireless {
    * @returns {boolean} if device found - true, if no - false
    */
   async foundDevices(hardware, message, bootloader) {
-    const focus = new Focus();
+    const focus = Focus.getInstance();
     let isFindDevice = false;
     await focus.find(...hardware).then(devices => {
       for (const device of devices) {
@@ -100,7 +100,7 @@ class FlashDefyWireless {
    * Takes backup settings from keyboard and writes its in backupfile.
    */
   async backupSettings() {
-    const focus = new Focus();
+    const focus = Focus.getInstance();
 
     const commands = [
       "hardware.keyscan",
@@ -204,7 +204,7 @@ class FlashDefyWireless {
    * @returns {promise}
    */
   async resetKeyboard(backup, stateUpdate) {
-    const focus = new Focus();
+    const focus = Focus.getInstance();
     console.log("reset start");
     const errorMessage =
       "The firmware update couldn't start because the Defy Bootloader wasn't found. Please check our Help Center for more details or schedule a video call with us.";
@@ -248,14 +248,14 @@ class FlashDefyWireless {
    */
   async updateFirmware(firmware, bootloader, stateUpdate) {
     if (!bootloader) {
-      const focus = new Focus();
+      const focus = Focus.getInstance();
       await focus.close();
     }
     console.log("Begin update firmware with NRf52833", bootloader);
     return new Promise(async (resolve, reject) => {
       try {
         if (!bootloader) {
-          const focus = new Focus();
+          const focus = Focus.getInstance();
           if (focus.closed) {
             await focus.open(this.currentPath, this.currentPort.device, null);
           }
@@ -329,7 +329,7 @@ class FlashDefyWireless {
    */
   async restoreSettings(backup, stateUpdate) {
     stateUpdate("restore", 0);
-    const focus = new Focus();
+    const focus = Focus.getInstance();
     const errorMessage = "Firmware update failed, because the settings could not be restored";
     console.log(backup);
     if (backup === undefined || backup.length === 0) {

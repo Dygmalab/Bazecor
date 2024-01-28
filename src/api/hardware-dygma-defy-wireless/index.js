@@ -63,7 +63,7 @@ const DefyWireless = {
     }
   },
   isDeviceSupported: async () =>
-    // const focus = new Focus();
+    // const focus = Focus.getInstance();
     // focus._port && focus._port.path === port.path
     //   ? await focus.open(focus._port, port.device, null)
     //   : await focus.open(port.path, port.device, null);
