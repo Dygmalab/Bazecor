@@ -7,10 +7,14 @@
     "noUncheckedIndexedAccess": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
+    "rootDir": ".",
     "strict": true,
     // "verbatimModuleSyntax": true  // requires TypeScript 5
   },
   "include": [
-    "src/api/flash"
+    "src/api/flash",
+  ],
+  "files": [
+    "./forge.config.ts"
   ]
 }
