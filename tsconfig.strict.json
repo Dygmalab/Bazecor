@@ -13,8 +13,10 @@
   },
   "include": [
     "src/api/flash",
+    "webpack.*.ts"
   ],
   "files": [
-    "./forge.config.ts"
+    "./forge.config.ts",
+    "./vite.config.mts"
   ]
 }
