@@ -1,3 +1,4 @@
+import type { PortInfo } from "@serialport/bindings-cpp";
 import { Focus } from "./Focus";
 
 export class LoggingFocusSpy extends Focus {
@@ -8,6 +9,15 @@ export class LoggingFocusSpy extends Focus {
   }
   public debugLog(...args: unknown[]): void {
     super.debugLog(...args);
+  }
+}
+
+export class FocusStub extends LoggingFocusSpy {
+  constructor(private ctx: { ports: PortInfo[] }) {
+    super();
+  }
+  protected async listSerialPorts(): Promise<PortInfo[]> {
+    return this.ctx.ports;
   }
 }
 

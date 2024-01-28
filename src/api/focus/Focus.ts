@@ -15,12 +15,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { spawn } from "child_process";
-import fs from "fs";
-import { delay } from "../flash/delay";
-import { ctx } from "./Focus.ctx";
+import type { AutoDetectTypes, PortInfo } from "@serialport/bindings-cpp"
+import { spawn } from "child_process"
+import fs from "fs"
+import type { SerialPort, SerialPortOpenOptions } from "serialport"
+import { delay } from "../flash/delay"
+import { ctx } from "./Focus.ctx"
 
-const { SerialPort } = eval('require("serialport")');
+// TODO: any reason we can't import directly?
+const sp = eval('require("serialport")');
 const { DelimiterParser } = eval('require("@serialport/parser-delimiter")');
 
 export class Focus {
@@ -42,8 +45,18 @@ export class Focus {
     this.logger.log(...args);
   }
 
+  protected async listSerialPorts(): Promise<PortInfo[]> {
+    return sp.SerialPort.list()
+  }
+  protected createSerialPort<T extends AutoDetectTypes>(
+    options: SerialPortOpenOptions<T>,
+    openCallback?: ErrorCallback,
+  ): SerialPort<T> {
+    return new sp.SerialPort(options, openCallback);
+  }
+
   async find(...devices: any[]) {
-    const portList = await SerialPort.list();
+    const portList = await this.listSerialPorts()
 
     const foundDevices = [];
 
@@ -53,9 +66,7 @@ export class Focus {
     for (const port of portList) {
       for (const device of devices) {
         if (parseInt(`0x${port.productId}`) == device.usb.productId && parseInt(`0x${port.vendorId}`) == device.usb.vendorId) {
-          const newPort = { ...port };
-          newPort.device = device;
-          foundDevices.push(newPort);
+          foundDevices.push({ ...port, device });
         }
       }
     }
@@ -101,9 +112,9 @@ export class Focus {
       if (typeof device === "string") path = device;
       if (typeof device === "object") path = device.settings.path;
       if (path !== undefined) {
-        const testingDevices = await SerialPort.list();
+        const testingDevices = await this.listSerialPorts();
         console.log(testingDevices);
-        this._port = new SerialPort({ path, baudRate: 115200, autoOpen: false, endOnClose: true });
+        this._port = this.createSerialPort({ path, baudRate: 115200, autoOpen: false, endOnClose: true });
         await this._port.open((err: any) => {
           if (err) console.error("error when opening port: ", err);
           else console.log("connected");
