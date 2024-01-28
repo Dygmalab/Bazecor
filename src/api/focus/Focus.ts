@@ -26,6 +26,10 @@ import { ctx } from "./Focus.ctx";
 const sp = eval('require("serialport")');
 const { DelimiterParser } = eval('require("@serialport/parser-delimiter")');
 
+type AnyFunction = (...args: unknown[]) => unknown;
+
+type CommandOverrides = Record<string, AnyFunction | { focus: AnyFunction; [k: string]: AnyFunction }>;
+
 export class Focus {
   public static getInstance() {
     if (ctx.instance) return ctx.instance;
@@ -35,7 +39,7 @@ export class Focus {
   public debug = false;
   closed = true;
   file = false;
-  commands: Record<string, any> = { help: this._help };
+  commands: CommandOverrides = { help: this._help };
   protected logger = console;
   constructor() {}
 
@@ -223,7 +227,7 @@ export class Focus {
     return true;
   }
 
-  async isDeviceSupported(device: any) {
+  async isDeviceSupported(device: { device: { isDeviceSupported?: (device: unknown) => Promise<boolean> } }) {
     if (!device.device.isDeviceSupported) {
       return true;
     }
@@ -250,14 +254,14 @@ export class Focus {
     });
   }
 
-  request(cmd: string, ...args: unknown[]) {
+  request<T>(cmd: string, ...args: unknown[]) {
     this.debugLog("focus.request:", cmd, ...args);
-    return new Promise((resolve, reject) => {
+    return new Promise<T>((resolve, reject) => {
       const timer = setTimeout(() => {
         reject("Communication timeout");
       }, this.timeout);
       this._request(cmd, ...args)
-        .then(data => {
+        .then((data: T) => {
           clearTimeout(timer);
           resolve(data);
         })
@@ -300,16 +304,17 @@ export class Focus {
   }
 
   async command(cmd: string, ...args: unknown[]) {
-    if (typeof this.commands[cmd] === "function") {
-      return this.commands[cmd](this, ...args);
+    const override = this.commands[cmd];
+    if (typeof override === "function") {
+      return override(this, ...args);
     }
-    if (typeof this.commands[cmd] === "object") {
-      return this.commands[cmd].focus(this, ...args);
+    if (typeof override === "object") {
+      return override.focus(this, ...args);
     }
     return this.request(cmd, ...args);
   }
 
-  addCommands(cmds: any) {
+  addCommands(cmds: CommandOverrides) {
     Object.assign(this.commands, cmds);
   }
 
@@ -319,17 +324,17 @@ export class Focus {
       const tmp = self[methodName];
       self[methodName] = (...args: unknown[]) => {
         tmp(...args);
-        this.commands[command][methodName](...args);
+        (this.commands[command] as any)[methodName](...args);
       };
     } else {
       self[methodName] = (...args: unknown[]) => {
-        this.commands[command][methodName](...args);
+        (this.commands[command] as any)[methodName](...args);
       };
     }
   }
 
-  private async _help(s: any) {
-    const data = await s.request("help");
+  private async _help(s: Focus) {
+    const data = await s.request<string>("help");
     return data.split(/\r?\n/).filter((v: string) => v.length > 0);
   }
 }
