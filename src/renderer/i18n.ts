@@ -16,22 +16,30 @@
  */
 
 import LocalizedStrings from "react-localization";
+import { Language } from "@Renderer/types/i18n";
+import English from "@Renderer/i18n/en";
 
-import English from "./i18n/en";
-
-const strings = {
-  en: English,
+const strings: any = {
+  en: English as Language,
 };
 
-const i18n = new LocalizedStrings(strings);
-i18n.refreshHardware = ({ device }) => {
-  i18n.getAvailableLanguages().forEach(code => {
+const languages = new LocalizedStrings<Language>(strings);
+
+const refreshHardware = ({ device }: any) => {
+  languages.getAvailableLanguages().forEach(code => {
     strings[code].hardware = device.instructions ? device.instructions[code] : {};
   });
 
-  const language = i18n.getLanguage();
-  Object.assign(i18n, new LocalizedStrings(strings));
-  i18n.setLanguage(language);
+  const language = languages.getLanguage();
+  Object.assign(languages, new LocalizedStrings(strings));
+  languages.setLanguage(language);
 };
+
+function i18n() {
+  return {
+    ...languages,
+    refreshHardware,
+  };
+}
 
 export default i18n;

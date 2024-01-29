@@ -674,6 +674,8 @@ const English = {
     installUdevRules: "Fix it",
     permissionError: `Your computer won't let BAZECOR talk to your keyboard. (You do not have read/write permissions to {{path}}.)`,
     permissionErrorSuggestion: `BAZECOR can fix this by installing a udev rules file into /etc/udev/rules.d/.`,
+    HIDReminderOfManuallyScan:
+      "To use Bazecor on bluetooth, make sure the keyboard is connected via BT to the computer and <strong> click on scan keyboards once.</strong> This is necessary due to Chrome's API restrictions.",
     virtualKeyboard: {
       buttonText: "Use without a keyboard",
       modaltitle: "Manage virtual keyboard",
