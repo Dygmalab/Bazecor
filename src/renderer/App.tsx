@@ -30,7 +30,7 @@ import Light from "@Renderer/theme/LightTheme";
 import Dark from "@Renderer/theme/DarkTheme";
 
 import Header from "@Renderer/modules/NavigationMenu";
-import SelectKeyboard from "@Renderer/views/NewSelectKeyboard";
+import SelectKeyboard from "@Renderer/views/SelectKeyboard";
 import FirmwareUpdate from "@Renderer/views/FirmwareUpdate";
 import LayoutEditor from "@Renderer/views/LayoutEditor";
 import MacroEditor from "@Renderer/views/MacroEditor";
@@ -69,7 +69,6 @@ function App() {
   const [flashing, setFlashing] = useState(false);
   const [fwUpdate, setFwUpdate] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [isSending, setIsSending] = useState(false);
 
   const [state] = useDevice();
   const navigate = useNavigate();
@@ -190,7 +189,7 @@ function App() {
     setConnected(true);
     device.current = currentDevice;
     setPages({ keymap: true });
-    setIsSending(true);
+    setLoading(true);
     // navigate(pages.keymap ? "/editor" : "/welcome");
     navigate("/editor");
   };
@@ -275,8 +274,8 @@ function App() {
     setFwUpdate(!fwUpdate);
   };
 
-  const setLoadingData = (lding: boolean) => {
-    setLoading(lding);
+  const setLoadingData = (isLoading: boolean) => {
+    setLoading(isLoading);
   };
 
   // const updateAllowBeta = (event: any) => {
@@ -286,7 +285,7 @@ function App() {
   //   setAllowBeta(newValue);
   // };
 
-  const onChangeAllowBetas = checked => {
+  const updateAllowBetas = checked => {
     const newValue = checked;
     // console.log("new allowBeta value: ", newValue);
     store.set("settings.allowBeta", newValue);
@@ -302,10 +301,9 @@ function App() {
         flashing={!connected}
         fwUpdate={fwUpdate}
         allowBeta={allowBeta}
-        loading={loading}
         inContext={contextBar}
-        setIsSending={setIsSending}
-        isSending={isSending}
+        setLoading={setLoadingData}
+        loading={loading}
       />
       <div className="main-container">
         <Routes>
@@ -336,9 +334,9 @@ function App() {
                 onConnect={onKeyboardConnect}
                 onDisconnect={onKeyboardDisconnect}
                 titleElement={() => document.querySelector("#page-title")}
-                setLoadingData={setLoadingData}
                 device={device}
                 darkMode={darkMode}
+                setLoading={setLoadingData}
               />
             }
           />
@@ -350,13 +348,11 @@ function App() {
                 onDisconnect={onKeyboardDisconnect}
                 startContext={startContext}
                 cancelContext={cancelContext}
-                setLoadingData={setLoadingData}
                 inContext={contextBar}
                 titleElement={() => document.querySelector("#page-title")}
                 appBarElement={() => document.querySelector("#appbar")}
                 darkMode={darkMode}
-                isSending={isSending}
-                setIsSending={setIsSending}
+                setLoading={setLoadingData}
               />
             }
           />
@@ -368,9 +364,9 @@ function App() {
                 onDisconnect={onKeyboardDisconnect}
                 startContext={startContext}
                 cancelContext={cancelContext}
-                setLoading={setLoadingData}
                 inContext={contextBar}
                 titleElement={() => document.querySelector("#page-title")}
+                setLoading={setLoadingData}
               />
             }
           />
@@ -382,9 +378,9 @@ function App() {
                 onDisconnect={onKeyboardDisconnect}
                 startContext={startContext}
                 cancelContext={cancelContext}
-                setLoading={setLoadingData}
                 inContext={contextBar}
                 titleElement={() => document.querySelector("#page-title")}
+                setLoading={setLoadingData}
               />
             }
           />
@@ -409,13 +405,14 @@ function App() {
             element={
               <Preferences
                 connected={connected}
+                darkMode={darkMode}
                 toggleDarkMode={toggleDarkMode}
                 startContext={startContext}
                 cancelContext={cancelContext}
-                onChangeAllowBetas={onChangeAllowBetas}
-                setLoadingData={setLoadingData}
+                updateAllowBetas={updateAllowBetas}
                 allowBeta={allowBeta}
                 inContext={contextBar}
+                setLoading={setLoadingData}
               />
             }
           />
@@ -430,10 +427,10 @@ function App() {
                 toggleDarkMode={toggleDarkMode}
                 startContext={startContext}
                 cancelContext={cancelContext}
-                updateAllowBeta={onChangeAllowBetas}
-                setLoadingData={setLoadingData}
+                updateAllowBeta={updateAllowBetas}
                 allowBeta={allowBeta}
                 inContext={contextBar}
+                setLoading={setLoadingData}
               />
             }
           />
