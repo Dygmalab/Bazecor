@@ -20,22 +20,24 @@
 
 import React, { useEffect, useState, useCallback } from "react";
 import { Link, useLocation } from "react-router-dom";
-import SemVer from "semver";
 import { Octokit } from "@octokit/core";
+import SemVer from "semver";
 
 import { Nav, Navbar, NavbarBrand } from "react-bootstrap";
 import Styled from "styled-components";
 
-import Version from "@Types/version";
-import Pages from "@Types/pages";
 import DygmaLogo from "@Assets/logo.svg";
 import { showDevtools } from "@Renderer/devMode";
 import { useDevice } from "@Renderer/DeviceContext";
 import { AlertModal } from "@Renderer/component/Modal";
-import { BatteryStatus } from "../Battery";
-import i18n from "../../i18n";
-import { NavigationButton } from "../../component/Button";
+import { BatteryStatus } from "@Renderer/modules/Battery";
+import { NavigationButton } from "@Renderer/component/Button";
+import i18n from "@Renderer/i18n";
+
+// Types
+import Version from "@Types/version";
 import { DeviceDescriptor } from "@Renderer/types/devices";
+import { NavigationMenuProps } from "@Renderer/types/navigation";
 
 import {
   IconKeyboardSelector,
@@ -45,8 +47,6 @@ import {
   IconThunder2Stroke,
   IconPreferences2Stroke,
   IconBazecordevtools,
-  IconWireless,
-  IconHome,
 } from "../../component/Icon";
 
 const Styles = Styled.div`
@@ -104,18 +104,6 @@ const Styles = Styled.div`
 }
 `;
 
-interface NavigationMenuProps {
-  connected: boolean;
-  flashing: boolean;
-  fwUpdate: boolean;
-  allowBeta: boolean;
-  loading: boolean;
-  isSending: boolean;
-  inContext: boolean;
-  setIsSending: () => void;
-  pages: Pages;
-}
-
 function NavigationMenu(props: NavigationMenuProps) {
   const [state] = useDevice();
   const [versions, setVersions] = useState(null);
@@ -125,7 +113,7 @@ function NavigationMenu(props: NavigationMenuProps) {
   const [virtual, setVirtual] = useState(false);
   const location = useLocation();
   const currentPage = location.pathname;
-  const { connected, pages, fwUpdate, flashing, allowBeta, loading, setIsSending, isSending, inContext } = props;
+  const { connected, pages, fwUpdate, flashing, allowBeta, inContext, loading, setLoading } = props;
 
   const getGitHubFW = useCallback(
     async (product: any) => {
@@ -181,8 +169,8 @@ function NavigationMenu(props: NavigationMenuProps) {
     setIsUpdated(semVerCheck > 0);
     setIsBeta(Beta);
     setVirtual(currentDevice.file);
-    setIsSending(false);
-  }, [getGitHubFW, setIsSending, state]);
+    setLoading(false);
+  }, [getGitHubFW, state]);
 
   useEffect(() => {
     if (!flashing && connected) {
@@ -218,26 +206,26 @@ function NavigationMenu(props: NavigationMenuProps) {
               <>
                 {pages.keymap && (
                   <>
-                    <Link to="/editor" onClick={linkHandler} className={`list-link ${fwUpdate || isSending ? "disabled" : ""}`}>
+                    <Link to="/editor" onClick={linkHandler} className={`list-link ${fwUpdate || loading ? "disabled" : ""}`}>
                       <NavigationButton
                         selected={currentPage === "/editor"}
                         buttonText={i18n.app.menu.editor}
                         icoSVG={<IconKeyboard2Stroke />}
-                        disabled={fwUpdate || isSending}
+                        disabled={fwUpdate || loading}
                       />
                     </Link>
-                    <Link to="/macros" onClick={linkHandler} className={`list-link ${fwUpdate || isSending ? "disabled" : ""}`}>
+                    <Link to="/macros" onClick={linkHandler} className={`list-link ${fwUpdate || loading ? "disabled" : ""}`}>
                       <NavigationButton
                         selected={currentPage === "/macros"}
                         buttonText={i18n.app.menu.macros}
                         icoSVG={<IconRobot2Stroke />}
-                        disabled={fwUpdate || isSending}
+                        disabled={fwUpdate || loading}
                       />
                     </Link>
                     <Link
                       to="/superkeys"
                       onClick={linkHandler}
-                      className={`list-link ${fwUpdate || !isBeta || isSending ? "disabled" : ""}`}
+                      className={`list-link ${fwUpdate || !isBeta || loading ? "disabled" : ""}`}
                     >
                       <NavigationButton
                         selected={currentPage === "/superkeys"}
@@ -245,7 +233,7 @@ function NavigationMenu(props: NavigationMenuProps) {
                         icoSVG={<IconThunder2Stroke />}
                         showNotif={isBeta}
                         notifText="BETA"
-                        disabled={fwUpdate || !isBeta || isSending}
+                        disabled={fwUpdate || !isBeta || loading}
                       />
                     </Link>
                   </>
@@ -254,7 +242,7 @@ function NavigationMenu(props: NavigationMenuProps) {
                   to="/firmware-update"
                   onClick={linkHandler}
                   className={`list-link ${
-                    fwUpdate || virtual || state.currentDevice.type === "hid" || isSending ? "disabled" : ""
+                    fwUpdate || virtual || state.currentDevice.type === "hid" || loading ? "disabled" : ""
                   }`}
                 >
                   <NavigationButton
@@ -262,41 +250,37 @@ function NavigationMenu(props: NavigationMenuProps) {
                     showNotif={isUpdated}
                     buttonText={i18n.app.menu.firmwareUpdate}
                     icoSVG={<IconMemory2Stroke />}
-                    disabled={fwUpdate || virtual || state.currentDevice.type === "hid" || isSending}
+                    disabled={fwUpdate || virtual || state.currentDevice.type === "hid" || loading}
                   />
                 </Link>
               </>
             )}
-            <Link to="/keyboard-select" onClick={linkHandler} className={`list-link ${fwUpdate || isSending ? "disabled" : ""}`}>
+            <Link to="/keyboard-select" onClick={linkHandler} className={`list-link ${fwUpdate || loading ? "disabled" : ""}`}>
               <NavigationButton
                 selected={currentPage === "/keyboard-select"}
                 buttonText={i18n.app.menu.selectAKeyboard}
                 icoSVG={<IconKeyboardSelector />}
-                disabled={fwUpdate || isSending}
+                disabled={fwUpdate || loading}
               />
             </Link>
           </div>
           <div className="bottomMenu">
             {showDevtools && (
-              <Link
-                to="/bazecordevtools"
-                onClick={linkHandler}
-                className={`list-link ${fwUpdate || isSending ? "disabled" : ""}`}
-              >
+              <Link to="/bazecordevtools" onClick={linkHandler} className={`list-link ${fwUpdate || loading ? "disabled" : ""}`}>
                 <NavigationButton
                   selected={currentPage === "/bazecordevtools"}
                   buttonText="Dev tools"
                   icoSVG={<IconBazecordevtools width={32} height={32} strokeWidth={2} />}
-                  disabled={fwUpdate || isSending}
+                  disabled={fwUpdate || loading}
                 />
               </Link>
             )}
-            <Link to="/preferences" onClick={linkHandler} className={`list-link ${fwUpdate || isSending ? "disabled" : ""}`}>
+            <Link to="/preferences" onClick={linkHandler} className={`list-link ${fwUpdate || loading ? "disabled" : ""}`}>
               <NavigationButton
                 selected={currentPage === "/preferences"}
                 buttonText={i18n.app.menu.preferences}
                 icoSVG={<IconPreferences2Stroke />}
-                disabled={fwUpdate || isSending}
+                disabled={fwUpdate || loading}
               />
             </Link>
             {/* <Link to="/device-manager" className="list-link">
@@ -310,12 +294,12 @@ function NavigationMenu(props: NavigationMenuProps) {
             </Link> */}
             {connected && device && device.info && device.info.keyboardType === "wireless" && versions !== null ? (
               <>
-                {/* <Link to="/wireless" onClick={linkHandler} className={`list-link ${fwUpdate || isSending ? "disabled" : ""}`}>
+                {/* <Link to="/wireless" onClick={linkHandler} className={`list-link ${fwUpdate || loading ? "disabled" : ""}`}>
                   <NavigationButton
                     selected={currentPage === "/wireless"}
                     buttonText={i18n.app.menu.wireless}
                     icoSVG={<IconWireless width={42} height={42} strokeWidth={2} />}
-                    disabled={fwUpdate || isSending}
+                    disabled={fwUpdate || loading}
                   />
                 </Link> */}
                 <BatteryStatus disable={fwUpdate || virtual || loading} />

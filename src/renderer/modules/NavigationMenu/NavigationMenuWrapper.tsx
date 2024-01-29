@@ -16,23 +16,11 @@
  */
 
 import React from "react";
-import Pages from "@Types/pages";
 import NavigationMenu from "./NavigationMenu";
-
-interface HeaderInterface {
-  connected: boolean;
-  flashing: boolean;
-  fwUpdate: boolean;
-  allowBeta: boolean;
-  inContext: boolean;
-  loading: boolean;
-  isSending: boolean;
-  setIsSending: () => void;
-  pages: Pages;
-}
+import { HeaderInterface } from "@Renderer/types/navigation";
 
 function Header(props: HeaderInterface) {
-  const { connected, pages, flashing, fwUpdate, allowBeta, inContext, loading, setIsSending, isSending } = props;
+  const { connected, pages, flashing, fwUpdate, allowBeta, inContext, loading, setLoading } = props;
 
   return (
     <NavigationMenu
@@ -41,10 +29,9 @@ function Header(props: HeaderInterface) {
       flashing={flashing}
       fwUpdate={fwUpdate}
       allowBeta={allowBeta}
-      loading={loading}
       inContext={inContext}
-      setIsSending={setIsSending}
-      isSending={isSending}
+      loading={loading}
+      setLoading={setLoading}
     />
   );
 }

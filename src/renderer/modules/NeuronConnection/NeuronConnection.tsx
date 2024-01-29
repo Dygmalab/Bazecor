@@ -27,9 +27,10 @@ import i18n from "../../i18n";
 
 import "react-toastify/dist/ReactToastify.css";
 import { IconConnected } from "../../component/Icon";
+import { NeuronConnectionProps } from "@Renderer/types/selectKeyboard";
 
 const Style = Styled.div`
-.button.toastButton {   
+.button.toastButton {
   z-index: 3000;
 }
 .neuronConnection {
@@ -83,7 +84,7 @@ const Style = Styled.div`
   font-size: 13px;
   font-weight: 600;
   letter-spacing: -0.03em;
-  
+
   margin-bottom: 0;
   small {
     font-size: 12px;
@@ -106,21 +107,22 @@ const Style = Styled.div`
   }
 }
 `;
-function NeuronConnection({
-  loading,
-  scanFoundDevices,
-  scanDevices,
-  onKeyboardConnect,
-  connected,
-  onDisconnect,
-  onDisconnectConnect,
-  selectPort,
-  selectedPortIndex,
-  deviceItems,
-  isVirtual,
-  virtualDevice,
-  connectedDevice,
-}) {
+function NeuronConnection(props: NeuronConnectionProps) {
+  const {
+    loading,
+    scanFoundDevices,
+    scanDevices,
+    onKeyboardConnect,
+    connected,
+    onDisconnect,
+    onDisconnectConnect,
+    selectPort,
+    selectedPortIndex,
+    deviceItems,
+    isVirtual,
+    virtualDevice,
+    connectedDevice,
+  } = props;
   return (
     <Style>
       <div className="neuronConnection">
@@ -142,7 +144,7 @@ function NeuronConnection({
               </div>
               <div className="activeVirtualKeyboardName">
                 <div className="activeVirtualKeyboardModel">
-                  {virtualDevice.info.vendor} {virtualDevice.info.product} {virtualDevice.info.keyboardType}
+                  {virtualDevice.device.info.vendor} {virtualDevice.device.info.product} {virtualDevice.device.info.keyboardType}
                 </div>
                 <div className="activeVirtualKeyboardType">Virtual keyboard</div>
               </div>
