@@ -121,7 +121,7 @@ function NeuronConnection(props: NeuronConnectionProps) {
     deviceItems,
     isVirtual,
     virtualDevice,
-    connectedDevice,
+    connectedDeviceIndex,
   } = props;
   return (
     <Style>
@@ -129,7 +129,7 @@ function NeuronConnection(props: NeuronConnectionProps) {
         <NeuronStatus
           loading={loading ? "loading" : undefined}
           connected={connected}
-          connectedDevice={connectedDevice}
+          connectedDevice={connectedDeviceIndex}
           scanFoundDevices={scanFoundDevices}
           deviceItems={deviceItems.length}
           selectedPortIndex={selectedPortIndex}
@@ -177,7 +177,7 @@ function NeuronConnection(props: NeuronConnectionProps) {
                   selectPort={selectPort}
                   selectedPortIndex={selectedPortIndex}
                   connected={connected}
-                  connectedDevice={connectedDevice}
+                  connectedDevice={connectedDeviceIndex}
                 />
               </>
             ) : (
@@ -190,7 +190,7 @@ function NeuronConnection(props: NeuronConnectionProps) {
                 styles={`${connected || deviceItems.length > 0 ? "outline transp-bg" : "primary"}`}
                 disabled={scanFoundDevices}
               />
-              {connected && connectedDevice === selectedPortIndex ? (
+              {connected && connectedDeviceIndex === selectedPortIndex ? (
                 <RegularButton
                   buttonText={i18n.keyboardSelect.disconnect}
                   styles="secondary"
@@ -200,7 +200,7 @@ function NeuronConnection(props: NeuronConnectionProps) {
               ) : (
                 ""
               )}
-              {connected && connectedDevice !== selectedPortIndex ? (
+              {connected && connectedDeviceIndex !== selectedPortIndex ? (
                 <RegularButton
                   buttonText={i18n.keyboardSelect.connect}
                   styles="primary"

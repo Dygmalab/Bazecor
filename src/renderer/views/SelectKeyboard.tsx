@@ -324,7 +324,7 @@ const SelectKeyboard = (props: SelectKeyboardProps) => {
   };
 
   const selectedDevice = devices && devices[selectedPortIndex];
-  const connectedDevice = state.selected;
+  const connectedDeviceIndex = state.selected;
   // console.log("Checking connected Data: ", connectedDevice, selectedPortIndex, connected, scanFoundDevices);
 
   return (
@@ -345,7 +345,7 @@ const SelectKeyboard = (props: SelectKeyboardProps) => {
             selectedPortIndex={selectedPortIndex}
             isVirtual={false}
             virtualDevice={undefined}
-            connectedDevice={connectedDevice}
+            connectedDeviceIndex={connectedDeviceIndex}
           />
           <div className="card-alert" style={{ marginTop: "16px" }}>
             <Banner icon={<IconBluetooth />} variant="warning">
