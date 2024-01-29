@@ -25,7 +25,7 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 
 // Own Components
-import i18n from "@Renderer/i18n";
+import { i18n } from "@Renderer/i18n";
 
 // Icons Imports
 import { IconFolder } from "@Renderer/component/Icon";

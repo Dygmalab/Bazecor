@@ -8,7 +8,7 @@ import { Switch } from "@Renderer/components/ui/switch";
 import Title from "@Renderer/component/Title";
 
 import { EnergyManagementProps } from "@Renderer/types/wireless";
-import i18n from "../../i18n";
+import { i18n } from "@Renderer/i18n";
 
 const Styles = Styled.div`
 h5 {
@@ -21,7 +21,7 @@ h5 {
 .settingsWrapper {
   display: flex;
   align-items: center;
-  grid-gap: 1rem; 
+  grid-gap: 1rem;
   justify-content: space-between;
   padding: 1rem 0;
 }

@@ -17,7 +17,7 @@ import { BatterySettings, EnergyManagement, RFSettings } from "@Renderer/modules
 import { WirelessPropsInterface, WirelessInterface } from "@Renderer/types/wireless";
 
 import { useDevice } from "@Renderer/DeviceContext";
-import i18n from "../i18n";
+import { i18n } from "@Renderer/i18n";
 
 const Styles = Styled.div`
   height: 100%;

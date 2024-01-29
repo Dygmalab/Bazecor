@@ -20,7 +20,7 @@ import React, { useState } from "react";
 import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import i18n from "@Renderer/i18n";
+import { i18n } from "@Renderer/i18n";
 
 // Own Components
 import { Card, CardContent, CardHeader, CardTitle } from "@Renderer/components/ui/card";

@@ -46,7 +46,7 @@ import StandardView from "@Renderer/modules/StandardView";
 
 // API's
 import { useDevice } from "@Renderer/DeviceContext";
-import i18n from "../i18n";
+import { i18n } from "@Renderer/i18n";
 import Keymap, { KeymapDB } from "../../api/keymap";
 import Backup from "../../api/backup";
 

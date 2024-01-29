@@ -1,6 +1,5 @@
 import React, { Component, Fragment } from "react";
 import Styled from "styled-components";
-import i18n from "../../i18n";
 
 // Internal components
 import { KeymapDB } from "../../../api/keymap";

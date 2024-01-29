@@ -18,7 +18,7 @@
 import React from "react";
 import Styled from "styled-components";
 import Dropdown from "react-bootstrap/Dropdown";
-import i18n from "../../i18n";
+import { i18n } from "@Renderer/i18n";
 import { NameModal } from "../Modal"; // Imported custom modal component
 import { RegularButton, ButtonConfig } from "../Button";
 
@@ -26,7 +26,7 @@ import { IconArrowsSmallSeparating, IconPen, IconAddNew, IconClone, IconDelete }
 
 1;
 
-const Style = Styled.div` 
+const Style = Styled.div`
 display: flex;
 .dropdownMultipleActions {
   min-width: 320px;

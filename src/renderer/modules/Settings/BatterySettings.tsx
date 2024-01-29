@@ -27,7 +27,7 @@ import { BatteryStatusSide, SavingModeIndicator } from "@Renderer/component/Batt
 
 // Assets
 import { IconBattery } from "@Renderer/component/Icon";
-import i18n from "@Renderer/i18n";
+import { i18n } from "@Renderer/i18n";
 
 const Styles = Styled.div`
 padding-top: 24px;

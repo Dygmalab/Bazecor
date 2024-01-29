@@ -19,12 +19,12 @@ import React from "react";
 import PropTypes from "prop-types";
 import Styled from "styled-components";
 import { toast } from "react-toastify";
-import i18n from "../../i18n";
+import { i18n } from "@Renderer/i18n";
 
 import ToastMessage from "../ToastMessage";
 import { IconColorPicker } from "../Icon";
 
-const Style = Styled.div` 
+const Style = Styled.div`
 .buttonColor {
   display: flex;
   flex-wrap: nowrap;

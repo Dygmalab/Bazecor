@@ -32,7 +32,7 @@ import { useDevice } from "@Renderer/DeviceContext";
 import { AlertModal } from "@Renderer/component/Modal";
 import { BatteryStatus } from "@Renderer/modules/Battery";
 import { NavigationButton } from "@Renderer/component/Button";
-import i18n from "@Renderer/i18n";
+import { i18n } from "@Renderer/i18n";
 
 // Types
 import Version from "@Types/version";

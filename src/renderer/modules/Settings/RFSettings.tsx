@@ -15,7 +15,7 @@
  */
 
 import React from "react";
-import i18n from "@Renderer/i18n";
+import { i18n } from "@Renderer/i18n";
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import Tooltip from "react-bootstrap/Tooltip";
 

@@ -31,7 +31,7 @@ import Title from "../../component/Title";
 
 // Assets
 import { IconTypo, IconMouse } from "../../component/Icon";
-import i18n from "../../i18n";
+import { i18n } from "@Renderer/i18n";
 
 const Styles = Styled.div`
 

@@ -45,7 +45,7 @@ import { useDevice } from "@Renderer/DeviceContext";
 
 import Backup from "../../api/backup";
 import Keymap, { KeymapDB } from "../../api/keymap";
-import i18n from "../i18n";
+import { i18n } from "@Renderer/i18n";
 
 import Store from "../utils/Store";
 import getLanguage from "../utils/language";

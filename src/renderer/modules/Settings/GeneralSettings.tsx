@@ -30,7 +30,7 @@ import FileBackUpHandling from "./FileBackUpHandling";
 import { ToggleButtons } from "../../component/ToggleButtons";
 import { Select } from "../../component/Select";
 import Keymap from "../../../api/keymap";
-import i18n from "../../i18n";
+import { i18n } from "@Renderer/i18n";
 import Store from "../../utils/Store";
 import { KeyPickerPreview } from "../KeyPickerKeyboard";
 import getLanguage from "../../utils/language";

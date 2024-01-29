@@ -21,7 +21,7 @@ import { ipcRenderer } from "electron";
 import { motion } from "framer-motion";
 
 import { toast } from "react-toastify";
-import i18n from "@Renderer/i18n";
+import { i18n } from "@Renderer/i18n";
 import "react-toastify/dist/ReactToastify.css";
 
 // Custom modules imports
@@ -148,7 +148,7 @@ const Preferences = (props: PreferencesProps) => {
   const [preferencesState, setPreferencesState] = useState<PrefState>(initialPreferences);
 
   // Destructuring PROPS
-  const { inContext, connected, allowBeta, onChangeAllowBetas, startContext, cancelContext, toggleDarkMode } = props;
+  const { inContext, connected, allowBeta, updateAllowBetas, startContext, cancelContext, toggleDarkMode } = props;
   const [activeTab, setActiveTab] = useState(connected ? "Keyboard" : "Application");
 
   const getNeuronData = useCallback(async () => {
@@ -740,7 +740,7 @@ const Preferences = (props: PreferencesProps) => {
                     verbose={verboseFocus}
                     onChangeVerbose={onChangeVerbose}
                     allowBeta={allowBeta}
-                    onChangeAllowBetas={onChangeAllowBetas}
+                    onChangeAllowBetas={updateAllowBetas}
                   />
                   <Version />
                 </motion.div>

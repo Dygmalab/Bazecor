@@ -3,7 +3,7 @@ import Styled from "styled-components";
 
 import Form from "react-bootstrap/Form";
 import InputGroup from "react-bootstrap/InputGroup";
-import i18n from "../../i18n";
+import { i18n } from "@Renderer/i18n";
 
 import Title from "../../component/Title";
 import { RegularButton } from "../../component/Button";

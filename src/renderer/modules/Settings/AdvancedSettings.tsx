@@ -23,7 +23,7 @@ import { useDevice } from "@Renderer/DeviceContext";
 import { Select } from "@Renderer/component/Select";
 import { Neuron } from "@Renderer/types/neurons";
 import BackupSettings from "./BackupSettings";
-import i18n from "../../i18n";
+import { i18n } from "@Renderer/i18n";
 
 // Own Components
 import { RegularButton } from "../../component/Button";

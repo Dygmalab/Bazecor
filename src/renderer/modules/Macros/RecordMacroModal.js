@@ -3,7 +3,7 @@ import Styled from "styled-components";
 
 import Modal from "react-bootstrap/Modal";
 import { ipcRenderer } from "electron";
-import i18n from "../../i18n";
+import { i18n } from "@Renderer/i18n";
 
 import { RegularButton, RegularButtonFwRef, ButtonConfig } from "../../component/Button";
 import Title from "../../component/Title";

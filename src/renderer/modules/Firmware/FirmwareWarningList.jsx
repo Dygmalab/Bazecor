@@ -18,7 +18,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import Styled from "styled-components";
-import i18n from "@Renderer/i18n";
+import { i18n } from "@Renderer/i18n";
 
 import Title from "@Renderer/component/Title";
 

@@ -54,7 +54,7 @@ import { rgb2w, rgbw2b } from "../../api/color";
 import Keymap, { KeymapDB } from "../../api/keymap";
 
 import Backup from "../../api/backup";
-import i18n from "../i18n";
+import { i18n } from "@Renderer/i18n";
 
 import Store from "../utils/Store";
 import getLanguage from "../utils/language";

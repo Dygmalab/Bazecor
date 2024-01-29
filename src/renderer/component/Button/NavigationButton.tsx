@@ -22,7 +22,7 @@ import Styled from "styled-components";
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import Tooltip from "react-bootstrap/Tooltip";
 import LightAccent from "@Assets/dark/light-accent--lg.png";
-import i18n from "../../i18n";
+import { i18n } from "@Renderer/i18n";
 
 const Style = Styled.div`
 width: 100%;
@@ -72,10 +72,10 @@ width: 100%;
         color: ${({ theme }) => theme.styles.navbar.menuLink.colorActive};
     }
     &:hover svg {
-        color: ${({ theme }) => theme.styles.navbar.menuLink.svgColorHover}; 
+        color: ${({ theme }) => theme.styles.navbar.menuLink.svgColorHover};
     }
     &.active svg {
-        color: ${({ theme }) => theme.styles.navbar.menuLink.svgColorActive}; 
+        color: ${({ theme }) => theme.styles.navbar.menuLink.svgColorActive};
     }
 }
 .menuLink:before {
@@ -87,7 +87,7 @@ width: 100%;
     width: 3px;
     height: 42px;
     background: linear-gradient(180deg, #FE007C 0%, #6B14F9 100%);
-    border-radius: 0px 3px 3px 0px;     
+    border-radius: 0px 3px 3px 0px;
     opacity: 0;
     transition: 250ms opacity ease-in-out;
     z-index: 2;
@@ -105,12 +105,12 @@ width: 100%;
     transition: 250ms opacity ease-in-out;
     z-index: 1;
 }
-.menuLink:hover {   
+.menuLink:hover {
     text-decoration: none;
     .menuLinkInner:before {
         opacity: 1;
     }
-}   
+}
 .menuLink:hover,
 .menuLink.active {
     .menuLinkInner:before {
@@ -118,10 +118,10 @@ width: 100%;
     }
 }
 .menuLink.active:before {
-    opacity: 1; 
+    opacity: 1;
 }
 .menuLink.active:after {
-    opacity: ${({ theme }) => theme.styles.navbar.menuLink.lightingOpacity};; 
+    opacity: ${({ theme }) => theme.styles.navbar.menuLink.lightingOpacity};;
 }
 .menuLinkInner {
     position: relative;

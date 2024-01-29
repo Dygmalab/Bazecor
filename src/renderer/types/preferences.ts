@@ -4,7 +4,7 @@ import { WirelessInterface } from "./wireless";
 export interface PreferencesProps {
   inContext: boolean;
   cancelContext: () => void;
-  onChangeAllowBetas: (checked: boolean) => void;
+  updateAllowBetas: (checked: boolean) => void;
   allowBeta: boolean;
   connected: boolean;
   startContext: () => void;

@@ -31,7 +31,7 @@ import { Switch } from "@Renderer/components/ui/switch";
 import { Badge } from "@Renderer/component/Badge";
 import { IconFlashlight, IconLeaf, IconInformationBubble } from "@Renderer/component/Icon";
 import Heading from "@Renderer/components/ui/heading";
-import i18n from "@Renderer/i18n";
+import { i18n } from "@Renderer/i18n";
 
 // Import Types for wireless
 import { EnergyManagementProps } from "@Renderer/types/wireless";

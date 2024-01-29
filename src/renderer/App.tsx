@@ -23,7 +23,7 @@ import { toast } from "react-toastify";
 import { ThemeProvider } from "styled-components";
 import { ipcRenderer } from "electron";
 import path from "path";
-import i18n from "@Renderer/i18n";
+import { i18n } from "@Renderer/i18n";
 
 import GlobalStyles from "@Renderer/theme/GlobalStyles";
 import Light from "@Renderer/theme/LightTheme";

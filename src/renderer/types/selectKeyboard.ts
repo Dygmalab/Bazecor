@@ -22,7 +22,7 @@ export interface NeuronConnectionProps {
   selectedPortIndex: number;
   isVirtual: boolean;
   virtualDevice: Device;
-  connectedDevice: any;
+  connectedDeviceIndex: number;
 }
 
 export interface DeviceItemsType {

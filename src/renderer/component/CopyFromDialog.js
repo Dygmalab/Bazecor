@@ -20,9 +20,8 @@ import Styled from "styled-components";
 
 // React Bootstrap components
 import Modal from "react-bootstrap/Modal";
-import Button from "react-bootstrap/Button";
 import ListGroup from "react-bootstrap/ListGroup";
-import i18n from "../i18n";
+import { i18n } from "@Renderer/i18n";
 
 import { RegularButton } from "./Button";
 import Title from "./Title";

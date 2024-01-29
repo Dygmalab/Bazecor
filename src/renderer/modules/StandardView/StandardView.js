@@ -16,7 +16,7 @@ import OneShotTab from "@Renderer/modules/KeysTabs/OneShotTab";
 import MouseTab from "@Renderer/modules/KeysTabs/MouseTab";
 import WirelessTab from "@Renderer/modules/KeysTabs/WirelessTab";
 
-import i18n from "@Renderer/i18n";
+import { i18n } from "@Renderer/i18n";
 
 // Icons
 import {

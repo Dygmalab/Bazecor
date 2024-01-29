@@ -18,11 +18,11 @@
 import React, { useState } from "react";
 import Styled from "styled-components";
 import Dropdown from "react-bootstrap/Dropdown";
-import i18n from "../../i18n";
-import { ButtonSettings } from "../Button";
-import { IconArrowsSmallSeparating, IconPen, IconDelete } from "../Icon";
+import { i18n } from "@Renderer/i18n";
+import { ButtonSettings } from "@Renderer/component/Button";
+import { IconArrowsSmallSeparating, IconPen, IconDelete } from "@Renderer/component/Icon";
 
-import { NameModal } from "../Modal"; // Imported custom modal component
+import { NameModal } from "@Renderer/component/Modal"; // Imported custom modal component
 import { NeuronSelectorProps } from "@Renderer/types/preferences";
 
 const Style = Styled.div`

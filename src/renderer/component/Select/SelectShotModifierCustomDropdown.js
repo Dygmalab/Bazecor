@@ -18,7 +18,7 @@
 import React, { Component } from "react";
 import Styled from "styled-components";
 import Dropdown from "react-bootstrap/Dropdown";
-import i18n from "../../i18n";
+import { i18n } from "@Renderer/i18n";
 
 const Style = Styled.div`
 width: 100%;
@@ -36,7 +36,7 @@ width: 100%;
     position: relative;
     .badge-circle {
       width: 8px;
-      height: 8px; 
+      height: 8px;
       border-radius: 50%;
       background-color: rgba(254,0,124,1);
       position: absolute;
@@ -60,7 +60,7 @@ width: 100%;
     margin-top: 0;
     padding: 12px 16px;
   }
-  
+
   .dropdown-menu.large-dropdown {
       min-width: 472px;
       &.show {
@@ -68,7 +68,7 @@ width: 100%;
       }
   }
   .large-dropdown-inner {
-    
+
   }
   .dropdownHeader {
     font-size: 12px;
@@ -107,7 +107,7 @@ width: 100%;
     flex-wrap: nowrap;
     padding: 2px 4px;
     border-radius: 6px;
-    background-color: ${({ theme }) => theme.styles.cardButtons.groupButtonsBackground}; 
+    background-color: ${({ theme }) => theme.styles.cardButtons.groupButtonsBackground};
 }
 .oneShotLayer .dropdown-group-buttons {
     grid-template-columns: repeat(8, 1fr);
@@ -128,7 +128,7 @@ width: 100%;
     letter-spacing: -0.03em;
     padding: 8px 0;
     border: ${({ theme }) => theme.styles.button.config.border};
-    color: ${({ theme }) => theme.styles.button.config.color}; 
+    color: ${({ theme }) => theme.styles.button.config.color};
     background: ${({ theme }) => theme.styles.button.config.background};
     border: none;
     border-radius: 6px;
@@ -140,12 +140,12 @@ width: 100%;
     }
     &:hover {
         cursor: pointer;
-        color: ${({ theme }) => theme.styles.button.config.colorHover}; 
+        color: ${({ theme }) => theme.styles.button.config.colorHover};
         background: ${({ theme }) => theme.styles.button.config.backgroundHover};
         box-shadow: ${({ theme }) => theme.styles.button.config.boxShadowHover};
     }
     &.active {
-        color: ${({ theme }) => theme.styles.button.config.colorActive}; 
+        color: ${({ theme }) => theme.styles.button.config.colorActive};
         background: ${({ theme }) => theme.styles.button.config.backgroundActive};
         box-shadow: ${({ theme }) => theme.styles.button.config.boxShadowActive};
     }

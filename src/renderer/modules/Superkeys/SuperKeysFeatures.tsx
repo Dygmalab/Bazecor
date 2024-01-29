@@ -3,7 +3,7 @@ import Styled from "styled-components";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@Renderer/components/ui/accordion";
 import { Card, CardContent } from "@Renderer/components/ui/card";
 import IconCheckmarkSm from "@Assets/base/icon-checkmark-green.svg";
-import i18n from "../../i18n";
+import { i18n } from "@Renderer/i18n";
 
 const Style = Styled.div`
 .card-header:hover {

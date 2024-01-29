@@ -5,7 +5,7 @@ import Styled, { withTheme } from "styled-components";
 import Dropdown from "react-bootstrap/Dropdown";
 import { FaLinux } from "react-icons/fa";
 import { AiFillWindows } from "react-icons/ai";
-import i18n from "../../i18n";
+import { i18n } from "@Renderer/i18n";
 
 import Title from "../../component/Title";
 import { ButtonConfig } from "../../component/Button";

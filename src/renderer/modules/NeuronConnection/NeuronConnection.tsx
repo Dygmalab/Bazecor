@@ -23,7 +23,7 @@ import Title from "../../component/Title";
 import { RegularButton } from "../../component/Button";
 import NeuronStatus from "../../component/NeuronStatus";
 import { SelectKeyboardDropdown } from "../../component/Select";
-import i18n from "../../i18n";
+import { i18n } from "@Renderer/i18n";
 
 import "react-toastify/dist/ReactToastify.css";
 import { IconConnected } from "../../component/Icon";

@@ -32,7 +32,7 @@ import { KBDataPref, LEDSettingsPreferences } from "@Renderer/types/preferences"
 import { Badge } from "@Renderer/component/Badge";
 import { IconFlashlight, IconIridescentWhiteBalance, IconThunder } from "@Renderer/component/Icon";
 import Callout from "@Renderer/component/Callout";
-import i18n from "../../i18n";
+import { i18n } from "@Renderer/i18n";
 import Heading from "@Renderer/components/ui/heading";
 
 function LEDSettings(props: LEDSettingsPreferences) {

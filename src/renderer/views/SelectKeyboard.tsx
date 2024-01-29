@@ -22,18 +22,19 @@ import { ipcRenderer } from "electron";
 import Container from "react-bootstrap/Container";
 import { useDevice, DeviceTools } from "@Renderer/DeviceContext";
 
-import { PageHeader } from "../modules/PageHeader";
-
-import i18n from "../i18n";
-import NeuronConnection from "../modules/NeuronConnection";
-import ToastMessage from "../component/ToastMessage";
-
-import Store from "../utils/Store";
 import { Banner } from "@Renderer/component/Banner";
 import Title from "@Renderer/component/Title";
 import { IconBluetooth } from "@Renderer/component/Icon";
 import { DeviceItemsType, SelectKeyboardProps } from "@Renderer/types/selectKeyboard";
 import { Neuron } from "@Renderer/types/neurons";
+import { PageHeader } from "@Renderer/modules/PageHeader";
+
+import { i18n, refreshHardware } from "@Renderer/i18n";
+import NeuronConnection from "@Renderer/modules/NeuronConnection";
+import ToastMessage from "@Renderer/component/ToastMessage";
+
+import Store from "../utils/Store";
+import Device from "../../api/comms/Device";
 
 const store = Store.getStore();
 
@@ -187,21 +188,20 @@ height: 100vh;
 const SelectKeyboard = (props: SelectKeyboardProps) => {
   const [state, dispatch] = useDevice();
   const [selectedPortIndex, setSelectedPortIndex] = useState(0);
-  const [opening, setOpening] = useState(false);
   const [devices, setDevices] = useState([]);
   const [deviceItems, setDeviceItems] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [scanFoundDevices, setScanFoundDevices] = useState(false);
-  const { onConnect, onDisconnect, connected, device, darkMode, setLoading } = props;
+  const { onConnect, onDisconnect, connected } = props;
 
-  const findKeyboards = useCallback(async (): Promise<any[]> => {
+  const findKeyboards = useCallback(async (): Promise<Device[]> => {
     setIsLoading(true);
     // if (state.currentDevice !== undefined && isIterable) {
     //   setIsLoading(false);
     //   return [];
     // }
     try {
-      const list = await DeviceTools.list();
+      const list = (await DeviceTools.list()) as Device[];
       dispatch({ type: "addDevicesList", payload: list });
       console.log("Devices Available:", list);
       setIsLoading(false);
@@ -210,30 +210,30 @@ const SelectKeyboard = (props: SelectKeyboardProps) => {
     } catch (err) {
       console.log("Error while finding keyboards", err);
       setIsLoading(false);
-      setDevices([]);
-      return [];
+      setDevices(undefined);
+      return undefined;
     }
   }, [dispatch]);
 
   const getDeviceItems: () => Array<DeviceItemsType> = useCallback(() => {
     const neurons = store.get("neurons") as Neuron[];
-    const result = devices.map((device, index) => {
+    const result = devices?.map((dev, index) => {
       // console.log("checking device :", device);
-      if (device.device.bootloader)
+      if (dev.device.bootloader)
         return {
           index,
-          displayName: device?.device?.info?.displayName as string,
+          displayName: dev?.device?.info?.displayName as string,
           userName: "",
-          path: (device.path || i18n.keyboardSelect.unknown) as string,
+          path: (dev.path || i18n.keyboardSelect.unknown) as string,
         };
-      const preparedSN = device.productId === "2201" ? device.serialNumber.slice(0, 32) : device.serialNumber;
+      const preparedSN = dev.productId === "2201" ? dev.serialNumber.slice(0, 32) : dev.serialNumber;
       const neuron = neurons.find(n => n.id.toLowerCase() === preparedSN.toLowerCase());
 
       return {
         index,
-        displayName: device?.device?.info?.displayName as string,
+        displayName: dev?.device?.info?.displayName as string,
         userName: neuron ? neuron.name : "",
-        path: (device.path || i18n.keyboardSelect.unknown) as string,
+        path: (dev.path || i18n.keyboardSelect.unknown) as string,
       };
     });
     return result;
@@ -272,7 +272,7 @@ const SelectKeyboard = (props: SelectKeyboardProps) => {
   }, [connected, findKeyboards, state.currentDevice]);
 
   useEffect(() => {
-    if (devices && devices.length > 0) {
+    if (devices) {
       const currentDeviceItems = getDeviceItems() as DeviceItemsType[];
       setDeviceItems(currentDeviceItems);
     }
@@ -287,7 +287,7 @@ const SelectKeyboard = (props: SelectKeyboardProps) => {
     }, 1000);
   };
 
-  const selectPort = (event: any) => {
+  const selectPort = (event: string) => {
     // console.log(event);
     setSelectedPortIndex(parseInt(event, 10));
   };
@@ -295,18 +295,16 @@ const SelectKeyboard = (props: SelectKeyboardProps) => {
   const onKeyboardConnect = async () => {
     const { deviceList } = state;
     console.log("trying to connect to:", deviceList, selectedPortIndex, deviceList[selectedPortIndex]);
-    setOpening(true);
     try {
       const response = await DeviceTools.connect(deviceList[selectedPortIndex]);
       console.log("GOING TO CONNECT TO!!", selectedPortIndex, response);
       dispatch({ type: "changeCurrent", payload: { selected: selectedPortIndex, device: response } });
       await onConnect(response);
     } catch (err) {
-      setOpening(false);
       const errorMessage = err.toString();
       toast.error(<ToastMessage title={errorMessage} />, { icon: "" });
     }
-    (i18n as any).refreshHardware(devices[selectedPortIndex]); // we use any because i18n indeed has that function defined
+    refreshHardware(devices[selectedPortIndex]); // we use any because i18n indeed has that function defined
   };
 
   const handleOnDisconnect = async () => {
@@ -323,7 +321,6 @@ const SelectKeyboard = (props: SelectKeyboardProps) => {
     await onKeyboardConnect();
   };
 
-  const selectedDevice = devices && devices[selectedPortIndex];
   const connectedDeviceIndex = state.selected;
   // console.log("Checking connected Data: ", connectedDevice, selectedPortIndex, connected, scanFoundDevices);
 
@@ -350,10 +347,7 @@ const SelectKeyboard = (props: SelectKeyboardProps) => {
           <div className="card-alert" style={{ marginTop: "16px" }}>
             <Banner icon={<IconBluetooth />} variant="warning">
               <Title text="Defy owners!" headingLevel={5} />
-              <p style={{ maxWidth: "610px" }}>
-                To use Bazecor on bluetooth, make sure the keyboard is connected via BT to the computer and{" "}
-                <strong>click on scan keyboards once.</strong> This is necessary due to Chrome's API restrictions.
-              </p>
+              <p style={{ maxWidth: "610px" }}>{i18n.keyboardSelect.HIDReminderOfManuallyScan}</p>
             </Banner>
           </div>
         </div>
