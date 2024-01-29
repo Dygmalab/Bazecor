@@ -16,4 +16,4 @@
 
 import NeuronConnection from "./NeuronConnection";
 
-export { NeuronConnection as default };
+export default NeuronConnection;
