@@ -16,4 +16,4 @@
 
 import NeuronTitle from "./NeuronTitle";
 
-export { NeuronTitle as default };
+export default NeuronTitle;

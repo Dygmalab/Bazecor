@@ -17,7 +17,7 @@
 
 import React from "react";
 import Styled from "styled-components";
-import Title from "../../component/Title";
+import Title from "@Renderer/component/Title";
 import { i18n } from "@Renderer/i18n";
 
 const Style = Styled.div`
@@ -31,7 +31,13 @@ h4 {
   color: ${({ theme }) => theme.styles.neuronTitle.heading4Color};
 }
 `;
-function NeuronTitle({ neuronName, neuronID }) {
+
+interface NeuronTitleProps {
+  neuronName: string;
+  neuronID: string;
+}
+
+function NeuronTitle({ neuronName, neuronID }: NeuronTitleProps) {
   return (
     <Style>
       <div className="backupFolderConfigurator">
