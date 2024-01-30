@@ -28,7 +28,7 @@ import { SavingMode } from "@Renderer/modules/Battery";
 // Custom components
 import { Card, CardContent, CardHeader, CardTitle } from "@Renderer/components/ui/card";
 import { Switch } from "@Renderer/components/ui/switch";
-import { Badge } from "@Renderer/component/Badge";
+import { Badge } from "@Renderer/components/ui/badge";
 import { IconFlashlight, IconLeaf, IconInformationBubble } from "@Renderer/component/Icon";
 import Heading from "@Renderer/components/ui/heading";
 import { i18n } from "@Renderer/i18n";
@@ -103,7 +103,9 @@ function EnergyManagement(props: EnergyManagementProps) {
             <div className="flex items-center gap-2">
               <IconFlashlight /> {i18n.wireless.energyManagement.settings.trueSleepEnabling} mode
             </div>
-            <Badge content={i18n.wireless.energyManagement.settings.mediumBatteryImpact} variation="warning" size="sm" />
+            <Badge variant="warning" size="sm">
+              {i18n.wireless.energyManagement.settings.mediumBatteryImpact}
+            </Badge>
           </CardTitle>
         </CardHeader>
         <CardContent className="pb-3 pt-0">

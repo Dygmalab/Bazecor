@@ -28,7 +28,7 @@ import { ToggleButtons } from "@Renderer/component/ToggleButtons";
 
 // Assets
 import { IconSignal, IconRadar, IconInformationBubble, IconThunder } from "@Renderer/component/Icon";
-import { Badge } from "@Renderer/component/Badge";
+import { Badge } from "@Renderer/components/ui/badge";
 import { RFSettingsProps } from "@Renderer/types/wireless";
 
 function RFSettings(props: RFSettingsProps) {
@@ -85,7 +85,9 @@ function RFSettings(props: RFSettingsProps) {
             <div className="flex items-center gap-2">
               <IconRadar /> {i18n.wireless.RFPreferences.RFRadioSignal}
             </div>{" "}
-            <Badge content={i18n.wireless.energyManagement.settings.lowBatteryImpact} variation="subtle" size="sm" />
+            <Badge variant="subtle" size="sm">
+              {i18n.wireless.energyManagement.settings.lowBatteryImpact}
+            </Badge>
           </CardTitle>
         </CardHeader>
         <CardContent>
