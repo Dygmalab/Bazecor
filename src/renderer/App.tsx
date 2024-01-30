@@ -283,8 +283,6 @@ function App() {
     setAllowBeta(newValue);
   };
 
-  console.log("RENDERING APP!!!!!!!!!!!!!!!!!!!!!!!!!!!", loading, contextBar);
-
   return (
     <ThemeProvider theme={darkMode ? Dark : Light}>
       <GlobalStyles />

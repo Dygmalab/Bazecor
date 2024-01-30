@@ -219,12 +219,13 @@ const SelectKeyboard = (props: SelectKeyboardProps) => {
     const neurons = store.get("neurons") as Neuron[];
     const result = devices?.map((dev, index) => {
       // console.log("checking device :", device);
+      const devName = dev.type === "hid" ? "Bluetooth" : i18n.keyboardSelect.unknown;
       if (dev.device.bootloader)
         return {
           index,
           displayName: dev?.device?.info?.displayName as string,
           userName: "",
-          path: (dev.path || i18n.keyboardSelect.unknown) as string,
+          path: (dev.path || devName) as string,
         };
       const preparedSN = dev.productId === "2201" ? dev.serialNumber.slice(0, 32) : dev.serialNumber;
       const neuron = neurons.find(n => n.id.toLowerCase() === preparedSN.toLowerCase());
@@ -233,7 +234,7 @@ const SelectKeyboard = (props: SelectKeyboardProps) => {
         index,
         displayName: dev?.device?.info?.displayName as string,
         userName: neuron ? neuron.name : "",
-        path: (dev.path || i18n.keyboardSelect.unknown) as string,
+        path: (dev.path || devName) as string,
       };
     });
     return result;
@@ -347,7 +348,10 @@ const SelectKeyboard = (props: SelectKeyboardProps) => {
           <div className="card-alert" style={{ marginTop: "16px" }}>
             <Banner icon={<IconBluetooth />} variant="warning">
               <Title text="Defy owners!" headingLevel={5} />
-              <p style={{ maxWidth: "610px" }}>{i18n.keyboardSelect.HIDReminderOfManuallyScan}</p>
+              <p
+                style={{ maxWidth: "610px" }}
+                dangerouslySetInnerHTML={{ __html: i18n.keyboardSelect.HIDReminderOfManuallyScan }}
+              />
             </Banner>
           </div>
         </div>
