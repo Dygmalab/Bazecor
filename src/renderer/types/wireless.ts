@@ -1,9 +1,8 @@
 export interface WirelessPropsInterface {
   connected: boolean;
   path: string;
-  titleElement: () => void;
   darkMode: boolean;
-  toggleDarkMode: (mode: any) => void;
+  toggleDarkMode: (mode: string) => void;
   startContext: () => void;
   cancelContext: () => void;
   updateAllowBeta: (event: any) => void;

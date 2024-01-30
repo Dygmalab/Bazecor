@@ -2,13 +2,13 @@ import { Neuron } from "./neurons";
 import { WirelessInterface } from "./wireless";
 
 export interface PreferencesProps {
-  inContext: boolean;
   cancelContext: () => void;
   updateAllowBetas: (checked: boolean) => void;
   allowBeta: boolean;
   connected: boolean;
   startContext: () => void;
   toggleDarkMode: (mode: string) => void;
+  setLoading: (lding: boolean) => void;
 }
 
 export interface KBDataPref {

@@ -16,11 +16,11 @@
  */
 
 import React from "react";
-import NavigationMenu from "./NavigationMenu";
 import { HeaderInterface } from "@Renderer/types/navigation";
+import NavigationMenu from "./NavigationMenu";
 
 function Header(props: HeaderInterface) {
-  const { connected, pages, flashing, fwUpdate, allowBeta, inContext, loading, setLoading } = props;
+  const { connected, pages, flashing, fwUpdate, allowBeta, modified, loading, setLoading } = props;
 
   return (
     <NavigationMenu
@@ -29,7 +29,7 @@ function Header(props: HeaderInterface) {
       flashing={flashing}
       fwUpdate={fwUpdate}
       allowBeta={allowBeta}
-      inContext={inContext}
+      modified={modified}
       loading={loading}
       setLoading={setLoading}
     />

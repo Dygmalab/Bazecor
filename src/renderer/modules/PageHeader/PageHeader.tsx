@@ -61,7 +61,7 @@ z-index: 300;
       br {
         content: ' ';
       }
-    } 
+    }
     .pageTools {
       width: calc(100% - 190px);
       display: flex;
@@ -95,7 +95,7 @@ function PageHeader(props: PageHeaderType) {
   const {
     size,
     text,
-    style,
+    styles,
     contentSelector,
     colorEditor,
     isColorActive,
@@ -108,8 +108,8 @@ function PageHeader(props: PageHeaderType) {
     secondaryButton,
   } = props;
   return (
-    <Style className={`${style === "pageHeaderFlatBottom" ? "pageHeaderSticky" : ""}`}>
-      <div className={`pageHeader ${size && size} ${style && style} ${isColorActive ? "extraPanelActive" : ""}`}>
+    <Style className={`${styles === "pageHeaderFlatBottom" ? "pageHeaderSticky" : ""}`}>
+      <div className={`pageHeader ${size && size} ${styles && styles} ${isColorActive ? "extraPanelActive" : ""}`}>
         <div className="pageTitle">
           <Title text={text} headingLevel={2} />
         </div>

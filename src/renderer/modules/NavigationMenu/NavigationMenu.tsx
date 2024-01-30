@@ -113,7 +113,7 @@ function NavigationMenu(props: NavigationMenuProps) {
   const [virtual, setVirtual] = useState(false);
   const location = useLocation();
   const currentPage = location.pathname;
-  const { connected, pages, fwUpdate, flashing, allowBeta, inContext, loading, setLoading } = props;
+  const { connected, pages, fwUpdate, flashing, allowBeta, modified, loading, setLoading } = props;
 
   const getGitHubFW = useCallback(
     async (product: any) => {
@@ -170,7 +170,7 @@ function NavigationMenu(props: NavigationMenuProps) {
     setIsBeta(Beta);
     setVirtual(currentDevice.file);
     setLoading(false);
-  }, [getGitHubFW, state]);
+  }, [getGitHubFW, setLoading, state]);
 
   useEffect(() => {
     if (!flashing && connected) {
@@ -181,7 +181,7 @@ function NavigationMenu(props: NavigationMenuProps) {
   const [showAlertModal, setShowAlertModal] = useState(false);
 
   function linkHandler(event: React.MouseEvent<HTMLElement>) {
-    if (inContext) {
+    if (modified) {
       event.preventDefault();
       setShowAlertModal(true);
       // alert("you have pending changes! save or discard them before leaving.");

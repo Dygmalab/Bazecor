@@ -19,14 +19,14 @@
 import React from "react";
 import Styled from "styled-components";
 import { ToastContainer } from "react-toastify";
-import Title from "../../component/Title";
-import { RegularButton } from "../../component/Button";
-import NeuronStatus from "../../component/NeuronStatus";
-import { SelectKeyboardDropdown } from "../../component/Select";
+import Title from "@Renderer/component/Title";
+import { RegularButton } from "@Renderer/component/Button";
+import NeuronStatus from "@Renderer/component/NeuronStatus";
+import { SelectKeyboardDropdown } from "@Renderer/component/Select";
 import { i18n } from "@Renderer/i18n";
 
 import "react-toastify/dist/ReactToastify.css";
-import { IconConnected } from "../../component/Icon";
+import { IconConnected } from "@Renderer/component/Icon";
 import { NeuronConnectionProps } from "@Renderer/types/selectKeyboard";
 
 const Style = Styled.div`

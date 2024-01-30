@@ -5,10 +5,10 @@ export interface NavigationMenuProps {
   flashing: boolean;
   fwUpdate: boolean;
   allowBeta: boolean;
-  inContext: boolean;
+  modified: boolean;
   loading: boolean;
   setLoading: (isLoading: boolean) => void;
-  pages: Pages;
+  pages: Pages | object;
 }
 
 export interface HeaderInterface {
@@ -16,8 +16,8 @@ export interface HeaderInterface {
   flashing: boolean;
   fwUpdate: boolean;
   allowBeta: boolean;
-  inContext: boolean;
+  modified: boolean;
   loading: boolean;
   setLoading: (isLoading: boolean) => void;
-  pages: Pages;
+  pages: Pages | object;
 }

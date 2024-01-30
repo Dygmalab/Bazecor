@@ -720,8 +720,7 @@ const English = {
       advUsersText2: "If you have installed your own ",
       advUsersText3: ", this update will overwrite it.",
       disclaimerTitle: "Start update process",
-      disclaimerContent:
-        "<strong>Before the update the Neuron will backup your layers and settings after that the update process will begin automatically.</strong>",
+      disclaimerContent: `<strong>Before the update the Neuron will backup your layers and settings after that the update process will begin automatically.</strong>`,
       disclaimerContent2:
         "If the firmware update process isn't successful, don't worry. It won't damage your device, but you will need to repeat the process.",
       disclaimerContent3:

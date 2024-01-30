@@ -6,7 +6,6 @@ export interface SelectKeyboardProps {
   connected: boolean;
   device: unknown;
   darkMode: boolean;
-  setLoading: (isLoading: boolean) => void;
 }
 
 export interface NeuronConnectionProps {

@@ -705,7 +705,8 @@ function SuperkeysEditor(props) {
 
   useEffect(() => {
     const getInitialData = async () => {
-      const { setLoading } = props;
+      const { setLoading, inContext } = props;
+      console.log("initial load of superkeys", setLoading, inContext);
       await loadSuperkeys();
       await configStandarView();
       state.loading = false;
@@ -713,6 +714,7 @@ function SuperkeysEditor(props) {
       setLoading(state.loading);
     };
     getInitialData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const destroyThisContext = async () => {
@@ -879,7 +881,7 @@ SuperkeysEditor.propTypes = {
   setLoading: PropTypes.func,
   startContext: PropTypes.func,
   cancelContext: PropTypes.func,
-  setLoading: PropTypes.func,
+  inContext: PropTypes.bool,
 };
 
 export default SuperkeysEditor;
