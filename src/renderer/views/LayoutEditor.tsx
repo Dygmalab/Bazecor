@@ -1589,9 +1589,10 @@ const LayoutEditor = (props: LayoutEditorProps) => {
 
   useEffect(() => {
     // console.log("Running Scanner on changes useEffect: ", inContext && modified !== true);
-    if (inContext && modified !== true) {
+    if (!inContext && modified) {
       const scanner = async () => {
         console.log("Resseting KB Data!!");
+        setModified(false);
         setLoading(true);
         setCurrentLayer(previousLayer !== 0 ? previousLayer : 0);
         setCurrentKeyIndex(-1);
@@ -1603,7 +1604,6 @@ const LayoutEditor = (props: LayoutEditorProps) => {
         });
         setPalette([]);
         await scanKeyboard(currentLanguageLayout);
-        setModified(false);
         setLoading(false);
       };
       scanner();
