@@ -183,6 +183,8 @@ function App() {
       return;
     }
 
+    console.log("VERSION: ", await currentDevice.command("version"));
+
     setConnected(true);
     device.current = currentDevice;
     setPages({ keymap: true });

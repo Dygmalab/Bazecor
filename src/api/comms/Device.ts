@@ -1,6 +1,7 @@
 // eslint-disable-next-line import/no-cycle
 import { DeviceType } from "../../renderer/types/devices";
 import HID from "../hid/hid";
+import DeviceMap from "./deviceMap";
 // eslint-disable-next-line no-eval
 const { DelimiterParser } = eval('require("@serialport/parser-delimiter")');
 
@@ -22,6 +23,7 @@ interface Device {
   file?: boolean;
   isClosed: boolean;
   isSending: boolean;
+  memoryMap: DeviceMap;
 }
 
 class Device {
@@ -36,6 +38,7 @@ class Device {
     this.file = false;
     this.isClosed = true;
     this.isSending = false;
+    this.memoryMap = new DeviceMap();
 
     // Handling differences between object types
     let params;
@@ -169,7 +172,6 @@ class Device {
 
   hidRequest = async (cmd: string, ...args: Array<string>) => {
     if (this.port === undefined) throw new Error("Device not connected!");
-    console.log("device.hid.request:", cmd, ...args, this.port);
 
     let request = cmd;
     if (args && args.length > 0) {
@@ -187,18 +189,23 @@ class Device {
         console.log(err);
       },
     );
-    console.log("return value of request: ", returnValue);
+    console.log("device.hid.request:", cmd, ...args, "retured: ", returnValue);
     return returnValue;
   };
 
   command = async (command: string, ...args: Array<string>) => {
     if (this.port === undefined) return false;
-    // if (typeof this.commands[command] === "function") {
-    //   return this.commands[command](this, ...args);
-    // }
-    // if (typeof this.commands[command] === "object") {
-    //   return this.commands[command].focus(this, ...args);
-    // }
+
+    // HashMap cache to improve performance
+    if (!args || args.length === 0) {
+      // if no args and it hits the cache, return the cache
+      if (this.memoryMap.has(command)) return this.memoryMap.get(command);
+    }
+    if (args || args.length > 0) {
+      // if args and no changes with cache, return cache instead of sending the command to the keyboard
+      if (this.memoryMap.isUpdated(command, args.join(" "))) return this.memoryMap.get(command);
+    }
+
     let result: any;
     this.isSending = true;
     try {
@@ -208,6 +215,7 @@ class Device {
       console.log("Error when handling request", error);
       result = error;
     }
+    this.memoryMap.set(command, result);
     this.isSending = false;
     return result;
   };

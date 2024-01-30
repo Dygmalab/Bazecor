@@ -869,7 +869,8 @@ const LayoutEditor = (props: LayoutEditorProps) => {
 
         const defaults = await currentDevice.command("keymap.default");
         const custom = await currentDevice.command("keymap.custom");
-        const onlyCustom = Boolean(parseInt(await currentDevice.command("keymap.onlyCustom"), 10));
+        const onlycstm = await currentDevice.command("keymap.onlyCustom");
+        const onlyCustom = Boolean(parseInt(onlycstm, 10));
         const KeyMap: { custom: any; default: any; onlyCustom: any } = {
           custom: undefined,
           default: undefined,
