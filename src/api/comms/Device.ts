@@ -215,7 +215,12 @@ class Device {
       console.log("Error when handling request", error);
       result = error;
     }
-    this.memoryMap.set(command, result);
+    if (!args || args.length === 0) {
+      // if no args and it hits the cache, return the cache
+      this.memoryMap.set(command, result);
+    } else {
+      this.memoryMap.set(command, args.join(" "));
+    }
     this.isSending = false;
     return result;
   };
