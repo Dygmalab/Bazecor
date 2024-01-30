@@ -239,8 +239,8 @@ const Preferences = (props: PreferencesProps) => {
         ...prevPreferencesState,
         neuronID: localNeuronID,
       }));
-      return localNeuronID;
     }
+    return localNeuronID;
   }, [state.currentDevice]);
 
   const getWirelessPreferences = useCallback(async () => {
@@ -278,6 +278,12 @@ const Preferences = (props: PreferencesProps) => {
       await state.currentDevice.command("idleleds.wireless").then((idleleds: string) => {
         newWireless.idleleds = idleleds ? parseInt(idleleds, 10) : 0;
       });
+      await state.currentDevice.command("idleleds.true_sleep").then((trueSleep: string) => {
+        newWireless.true_sleep = trueSleep ? parseInt(trueSleep, 10) === 1 : false;
+      });
+      await state.currentDevice.command("idleleds.true_sleep_time").then((trueSleepTime: string) => {
+        newWireless.true_sleep_time = trueSleepTime ? parseInt(trueSleepTime, 10) : 0;
+      });
 
       // Bluetooth commands
 
@@ -312,7 +318,7 @@ const Preferences = (props: PreferencesProps) => {
 
     setWireless(newWireless);
     setLoading(false);
-  }, [state.currentDevice]);
+  }, [setLoading, state.currentDevice]);
 
   const saveKeymapChanges = async () => {
     if (state.currentDevice) {

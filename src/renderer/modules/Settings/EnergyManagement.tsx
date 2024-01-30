@@ -126,8 +126,7 @@ function EnergyManagement(props: EnergyManagementProps) {
               </Heading>
               <Switch
                 id="TrueSleepSwitch"
-                value={wireless.true_sleep ? 1 : 0}
-                checked={wireless.true_sleep === true}
+                checked={wireless.true_sleep}
                 onCheckedChange={setTrueSleep}
                 variant="default"
                 size="sm"
@@ -151,7 +150,7 @@ function EnergyManagement(props: EnergyManagementProps) {
               </div>
             </div>
             <div className="mt-3 text-sm font-semibold tracking-tight text-gray-500 dark:text-gray-100">
-              Note that the timer will only begin when the LEDs go into sleep mode(wireless), and it's currently
+              {`Note that the timer will only begin when the LEDs go into sleep mode(wireless), and it's currently`}
               <button
                 type="button"
                 className="p-0 m-0 decoration-1 text-purple-300 hover:text-purple-300 dark:text-purple-200 dark:hover:text-purple-100 inline-block"
