@@ -16,4 +16,4 @@
 
 import StandardView from "./StandardView";
 
-export { StandardView as default };
+export default StandardView;

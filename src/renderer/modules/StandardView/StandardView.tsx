@@ -217,51 +217,56 @@ const Styles = Styled.div`
     }
   }
 }
-
 `;
 
-export default class StandardView extends React.Component {
-  constructor(props) {
+interface StandardViewProps {
+  name: string;
+  actions: any[];
+  actTab: string;
+  code: any;
+  closeStandardView: (stateCode: number) => void;
+  handleSave: () => void;
+  isStandardView: boolean;
+  kbtype: any;
+  keyIndex: number;
+  layerData: any[];
+  macros: any[];
+  onKeySelect: (keycode: number) => void;
+  selectedlanguage: string;
+  showStandardView: boolean;
+  superkeys: any[];
+  isWireless: boolean;
+}
+
+interface StandardViewState {
+  currentTab: any;
+  stateCode: number;
+  selected: number;
+}
+
+export default class StandardView extends React.Component<StandardViewProps, StandardViewState> {
+  keymapDB: KeymapDB;
+  constructor(props: StandardViewProps) {
     super(props);
-    this.inputText = React.createRef();
     this.state = {
-      name: props.name,
-      code: 0,
-      currentTab: 0,
+      currentTab: undefined,
+      stateCode: 0,
+      selected: 0,
     };
     this.keymapDB = new KeymapDB();
   }
 
-  componentDidUpdate(prevProps) {
-    const { keyIndex, actTab, layerData } = this.props;
-    // console.log("StandardView componentDidUpdate", prevProps.keyIndex, this.props.keyIndex);
-    // if(this.props.actTab == "editor") {
-
-    // }
-    if (prevProps.keyIndex !== keyIndex) {
-      if (keyIndex !== -1) {
-        if (actTab == "super") {
-          this.setState({ code: layerData[keyIndex] });
-        } else {
-          this.setState({ code: layerData[keyIndex].keyCode });
-        }
-      } else {
-        this.setState({ code: 0 });
-      }
-    }
-  }
-
-  onAddSpecial = (keycode, action) => {
+  onAddSpecial = (keycode: number) => {
     const { onKeySelect } = this.props;
     onKeySelect(keycode);
   };
 
-  parseKey(keycode) {
+  parseKey(keycode: number) {
     const { macros, code } = this.props;
     const macro = macros[parseInt(this.keymapDB.parse(keycode).label, 10)];
     let macroName;
     try {
-      macroName = macros[parseInt(this.keymapDB.parse(keycode).label, 10)].name.substr(0, 5);
+      macroName = macro.name.substr(0, 5);
     } catch (error) {
       macroName = "*NotFound*";
     }
@@ -269,11 +274,14 @@ export default class StandardView extends React.Component {
       if (code !== null) return `${this.keymapDB.parse(keycode).extraLabel}.${macroName}`;
     }
     if (React.isValidElement(this.keymapDB.parse(keycode).label)) return this.keymapDB.parse(keycode).label;
-    return this.props.code !== null
-      ? this.keymapDB.parse(keycode).extraLabel !== undefined
-        ? `${this.keymapDB.parse(keycode).extraLabel}.${this.keymapDB.parse(keycode).label}`
-        : this.keymapDB.parse(keycode).label
-      : "";
+    let result;
+    if (code !== null) {
+      result =
+        this.keymapDB.parse(keycode).extraLabel !== undefined
+          ? `${this.keymapDB.parse(keycode).extraLabel}.${this.keymapDB.parse(keycode).label}`
+          : this.keymapDB.parse(keycode).label;
+    }
+    return result;
   }
 
   render() {
@@ -294,14 +302,13 @@ export default class StandardView extends React.Component {
       superkeys,
       isWireless,
     } = this.props;
-    const { stateCode, selected } = this.state;
+    const { stateCode, selected, currentTab } = this.state;
     let keyCode;
-    if (actTab == "super") {
+    if (actTab === "super") {
       keyCode = keyIndex !== -1 ? layerData[keyIndex] : 0;
     } else {
       keyCode = keyIndex !== -1 ? layerData[keyIndex].keyCode : 0;
     }
-
     const selKey = this.parseKey(keyCode);
     const oldKey = this.parseKey(stateCode);
     if (!showStandardView) return null;
@@ -317,7 +324,7 @@ export default class StandardView extends React.Component {
           <Tabs
             defaultValue="tabKeys"
             orientation="vertical"
-            index={this.state.currentTab}
+            value={currentTab}
             onChange={index =>
               this.setState({
                 currentTab: index,
