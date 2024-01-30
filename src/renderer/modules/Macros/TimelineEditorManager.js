@@ -20,7 +20,7 @@ import PropTypes from "prop-types";
 import Styled from "styled-components";
 import Spinner from "react-bootstrap/Spinner";
 import { RegularButton } from "@Renderer/component/Button";
-import i18n from "../../i18n";
+import { i18n } from "@Renderer/i18n";
 
 import { KeymapDB } from "../../../api/keymap";
 

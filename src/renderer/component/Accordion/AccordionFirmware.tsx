@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import Styled from "styled-components";
 
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@Renderer/components/ui/accordion";
-import i18n from "../../i18n";
+import { i18n } from "@Renderer/i18n";
 
 // Visual components
 import Title from "../Title";

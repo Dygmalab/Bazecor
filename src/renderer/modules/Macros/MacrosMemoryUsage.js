@@ -20,7 +20,7 @@ import Styled from "styled-components";
 import PropTypes from "prop-types";
 
 import { toast } from "react-toastify";
-import i18n from "../../i18n";
+import { i18n } from "@Renderer/i18n";
 
 import Title from "../../component/Title";
 import DotsProgressBar from "./DotsProgressBar";

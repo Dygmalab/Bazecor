@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import Styled from "styled-components";
 
-import i18n from "../../i18n";
+import { i18n } from "@Renderer/i18n";
 
 import Title from "../../component/Title";
 import CallOut from "../../component/Callout";

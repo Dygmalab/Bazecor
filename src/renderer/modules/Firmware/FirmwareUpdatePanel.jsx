@@ -19,7 +19,7 @@ import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import Styled from "styled-components";
 import { useMachine } from "@xstate/react";
-import i18n from "@Renderer/i18n";
+import { i18n } from "@Renderer/i18n";
 
 // State machine
 import FWSelection from "@Renderer/controller/FlashingSM/FWSelection";

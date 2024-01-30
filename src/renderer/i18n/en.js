@@ -1,6 +1,7 @@
 // -*- mode: js-jsx -*-
 /* Bazecor -- Kaleidoscope Command Center
  * Copyright (C) 2018, 2019  Keyboardio, Inc.
+ * Copyright (C) 2019, 2024  DygmaLab SE
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -33,6 +34,8 @@ const English = {
       "<p style='font-weight:401;'>You have made changes that haven't been saved yet.</p><p>Save or discard them before leaving.</p>",
   },
   success: {
+    languageSaved: "Key picker language has been changed to ",
+    pairedSuccesfully: "Your device has ben succesfully re-paired",
     preferencesSaved: "Your preferences have been saved.",
     preferencesSavedBody: "",
     changesSaved: "Changes saved successfully",
@@ -495,7 +498,7 @@ const English = {
       advancedSettingsDesc: "Settings applied when the low-power mode is off",
       savingMode: "Energy saving mode",
       savingModeDesc: "Easy way to extend battery life",
-      savingModeInfo: "Consider that the battery has a safety policy that is activated when it reaches 10%.",
+      savingModeInfo: "Keep in mind that the battery incorporates a safety protocol triggered once it descends to 10%.",
       lowPowerMode: "Low-power mode",
       settings: {
         maximumLED: "Maximum LED intensity",
@@ -671,6 +674,8 @@ const English = {
     installUdevRules: "Fix it",
     permissionError: `Your computer won't let BAZECOR talk to your keyboard. (You do not have read/write permissions to {{path}}.)`,
     permissionErrorSuggestion: `BAZECOR can fix this by installing a udev rules file into /etc/udev/rules.d/.`,
+    HIDReminderOfManuallyScan:
+      "To use Bazecor on bluetooth, make sure the keyboard is connected via BT to the computer and <strong> click on scan keyboards once.</strong> This is necessary due to Chrome's API restrictions.",
     virtualKeyboard: {
       buttonText: "Use without a keyboard",
       modaltitle: "Manage virtual keyboard",
@@ -715,8 +720,7 @@ const English = {
       advUsersText2: "If you have installed your own ",
       advUsersText3: ", this update will overwrite it.",
       disclaimerTitle: "Start update process",
-      disclaimerContent:
-        "<strong>Before the update the Neuron will backup your layers and settings after that the update process will begin automatically.</strong>",
+      disclaimerContent: `<strong>Before the update the Neuron will backup your layers and settings after that the update process will begin automatically.</strong>`,
       disclaimerContent2:
         "If the firmware update process isn't successful, don't worry. It won't damage your device, but you will need to repeat the process.",
       disclaimerContent3:

@@ -34,7 +34,7 @@ import { RegularButton } from "@Renderer/component/Button";
 import { ToggleButtons } from "@Renderer/component/ToggleButtons";
 
 // Assets
-import i18n from "@Renderer/i18n";
+import { i18n } from "@Renderer/i18n";
 
 function AdvancedBatterySettingsModal(props: AdvancedEnergyManagementProps) {
   const { wireless, changeWireless, showModal, setShowModal } = props;

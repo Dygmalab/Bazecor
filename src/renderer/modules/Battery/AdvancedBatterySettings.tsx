@@ -5,14 +5,14 @@ import Title from "@Renderer/component/Title";
 import { IconSettings } from "@Renderer/component/Icon";
 import { RegularButton } from "@Renderer/component/Button";
 import { AdvancedBatterySettingsModal } from "@Renderer/component/Modal";
-import i18n from "@Renderer/i18n";
+import { i18n } from "@Renderer/i18n";
 import { EnergyManagementProps } from "@Renderer/types/wireless";
 
 const Styles = Styled.div`
 .settingsWrapper {
   display: flex;
   align-items: center;
-  grid-gap: 1rem; 
+  grid-gap: 1rem;
   justify-content: space-between;
   padding: 1rem 0;
 }

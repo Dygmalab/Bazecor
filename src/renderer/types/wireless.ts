@@ -1,9 +1,8 @@
 export interface WirelessPropsInterface {
   connected: boolean;
   path: string;
-  titleElement: () => void;
   darkMode: boolean;
-  toggleDarkMode: (mode: any) => void;
+  toggleDarkMode: (mode: string) => void;
   startContext: () => void;
   cancelContext: () => void;
   updateAllowBeta: (event: any) => void;
@@ -55,6 +54,7 @@ export interface BatterySettingsProps {
 export interface EnergyManagementProps {
   wireless: WirelessInterface;
   changeWireless: (wireless: WirelessInterface) => void;
+  updateTab?: (value: string) => void;
 }
 
 export interface AdvancedEnergyManagementProps {

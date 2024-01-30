@@ -18,7 +18,7 @@
 import React from "react";
 import Styled from "styled-components";
 import Title from "../../component/Title";
-import i18n from "../../i18n";
+import { i18n } from "@Renderer/i18n";
 
 const Style = Styled.div`
 h3 {

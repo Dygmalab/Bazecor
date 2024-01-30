@@ -1,4 +1,4 @@
-import React, { useState, useRef, Fragment } from "react";
+import React, { useState, useRef, Fragment, useEffect } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { Button } from "@Renderer/component/Button";
 import { IconCloseXs } from "../Icon";
@@ -15,6 +15,10 @@ interface NameModalProps {
 const NameModal = ({ modalTitle, show, toggleShow, name, handleSave, labelInput }: NameModalProps) => {
   const [internalName, setInternalName] = useState(name);
   const inputRef = useRef(null);
+
+  useEffect(() => {
+    setInternalName(name);
+  }, [name]);
 
   return (
     // Use the `Transition` component + show prop to add transitions.
@@ -75,12 +79,13 @@ const NameModal = ({ modalTitle, show, toggleShow, name, handleSave, labelInput 
                   />
                 </form>
               </div>
-              <div className="px-3 py-4 flex gap-4 justify-end bg-gray-100/10 dark:bg-gray-900/10">
-                <Button variant="outline" size="sm" onClick={toggleShow}>
+              <div className="px-3 py-4 flex gap-3 justify-end bg-gray-100/10 dark:bg-gray-900/10">
+                <Button variant="outline" className="self-center" size="sm" onClick={toggleShow}>
                   Discard changes
                 </Button>
                 <Button
                   variant="secondary"
+                  className="self-center"
                   size="sm"
                   onClick={() => handleSave(typeof internalName === "string" ? internalName : "")}
                 >

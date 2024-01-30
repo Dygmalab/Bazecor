@@ -27,7 +27,7 @@ import { BatteryStatusSide, SavingModeIndicator } from "@Renderer/component/Batt
 
 // Assets
 import { IconBattery } from "@Renderer/component/Icon";
-import i18n from "@Renderer/i18n";
+import { i18n } from "@Renderer/i18n";
 
 const Styles = Styled.div`
 padding-top: 24px;
@@ -47,7 +47,7 @@ function BatterySettings(props: BatterySettingsProps) {
   const { wireless } = props;
   return (
     <Styles>
-      <Card className="overflowFix card-preferences">
+      <Card className="max-w-2xl mx-auto" variant="default">
         <CardHeader>
           <Title text={i18n.wireless.batteryPreferences.battery} headingLevel={3} svgICO={<IconBattery />} />
         </CardHeader>

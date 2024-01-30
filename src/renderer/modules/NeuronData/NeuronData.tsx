@@ -21,6 +21,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@R
 import { Neurons } from "@Types/neurons";
 import NeuronTitle from "../NeuronTitle";
 import { IconPlus, IconRobot, IconLayers, IconThunder } from "../../component/Icon";
+import Heading from "@Renderer/components/ui/heading";
 
 const Style = Styled.div`
 .cardContentNeuronData {
@@ -75,22 +76,21 @@ function NeuronData(props: Neurons) {
     <Style>
       <div className="cardContentNeuronData">
         <NeuronTitle neuronName={neurons[selectedNeuron].name} neuronID={neurons[selectedNeuron].id} />
-        <Accordion type="single" collapsible className="w-full">
-          <AccordionItem value="item-1">
-            <AccordionTrigger>
-              <div className="accordionHeader">
-                <div className="accordionIcon">
-                  <IconLayers />
-                </div>
-                <div className="accordionTitle">Layers</div>
-                <span className="plus">
-                  <IconPlus />
-                </span>
+        <Accordion
+          type="single"
+          collapsible
+          className="w-full mt-3 border-[1px] border-solid border-gray-50 dark:border-gray-600 bg-transparent dark:bg-gray-900/20 rounded"
+        >
+          <AccordionItem value="item-1" className="border-b border-solid border-gray-50 dark:border-gray-600">
+            <AccordionTrigger className="flex justify-between items-center py-3 mt-0 mb-[-1px] rounded-none text-purple-200 dark:text-gray-25 border-b border-solid border-gray-50 dark:border-gray-600">
+              <div className="flex gap-3 items-center">
+                <IconLayers />
+                <strong className="font-base">Layers</strong>
               </div>
             </AccordionTrigger>
-            <AccordionContent>
+            <AccordionContent className="bg-gray-25/20 dark:bg-gray-900/50 px-3 py-3">
               <div>
-                <ol>
+                <ol className="list-decimal pl-6">
                   {neurons[selectedNeuron].layers.map((layer: { id: number; name: string }) => (
                     <li key={`${layer.id}-${layer.name}`}>{layer.name}</li>
                   ))}
@@ -98,21 +98,16 @@ function NeuronData(props: Neurons) {
               </div>
             </AccordionContent>
           </AccordionItem>
-          <AccordionItem value="item-2">
-            <AccordionTrigger>
-              <div className="accordionHeader">
-                <div className="accordionIcon">
-                  <IconRobot />
-                </div>
-                <div className="accordionTitle">Macro</div>
-                <span className="plus">
-                  <IconPlus />
-                </span>
+          <AccordionItem value="item-2" className="border-0">
+            <AccordionTrigger className="flex justify-between items-center py-3 mt-0 mb-[-1px] rounded-none text-purple-200 dark:text-gray-25 border-b border-solid border-gray-50 dark:border-gray-600">
+              <div className="flex gap-3 items-center">
+                <IconRobot />
+                <strong className="font-base">Macro</strong>
               </div>
             </AccordionTrigger>
-            <AccordionContent>
+            <AccordionContent className="bg-gray-25/20 dark:bg-gray-900/50 px-3 py-3">
               <div>
-                <ol>
+                <ol className="list-decimal pl-6">
                   {neurons[selectedNeuron].macros.map((macro: { name: string; id: number }) => (
                     <li key={`${macro.id}-${macro.name}`}>{macro.name}</li>
                   ))}
@@ -120,21 +115,16 @@ function NeuronData(props: Neurons) {
               </div>
             </AccordionContent>
           </AccordionItem>
-          <AccordionItem value="item-3">
-            <AccordionTrigger>
-              <div className="accordionHeader">
-                <div className="accordionIcon">
-                  <IconThunder />
-                </div>
-                <div className="accordionTitle">Superkeys</div>
-                <span className="plus">
-                  <IconPlus />
-                </span>
+          <AccordionItem value="item-3" className="border-0">
+            <AccordionTrigger className="flex justify-between items-center py-3 mt-0 mb-[-1px] rounded-none text-purple-200 dark:text-gray-25 border-b border-solid border-gray-50 dark:border-gray-600">
+              <div className="flex gap-3 items-center">
+                <IconThunder />
+                <strong className="font-base">Superkeys</strong>
               </div>
             </AccordionTrigger>
-            <AccordionContent>
+            <AccordionContent className="bg-gray-25/20 dark:bg-gray-900/50 px-3 py-3">
               <div>
-                <ol>
+                <ol className="list-decimal pl-6">
                   {neurons[selectedNeuron].superkeys.map((superkey: { id: number; name: string }) => (
                     <li key={`${superkey.id}-${superkey.name}`}>{superkey.name}</li>
                   ))}

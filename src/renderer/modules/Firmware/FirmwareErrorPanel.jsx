@@ -27,7 +27,7 @@ import FWSelection from "../../controller/FlashingSM/FWSelection";
 import Title from "../../component/Title";
 import { RegularButton } from "../../component/Button";
 import { FirmwareLoader } from "../../component/Loader";
-import i18n from "../../i18n";
+import { i18n } from "@Renderer/i18n";
 
 // Visual modules
 import FirmwareNeuronStatus from "./FirmwareNeuronStatus";

@@ -3,7 +3,7 @@ import ReactDOM from "react-dom";
 import Styled from "styled-components";
 
 import Dropdown from "react-bootstrap/Dropdown";
-import i18n from "../../i18n";
+import { i18n } from "@Renderer/i18n";
 
 import Title from "../../component/Title";
 import Callout from "../../component/Callout";
@@ -83,7 +83,7 @@ h4 {
   padding-right: 24px;
 }
 .superkeyTitle h5.actionTitle {
-  font-size: 11px; 
+  font-size: 11px;
   text-transform: uppercase;
   font-weight: 700;
   letter-spacing: 0.04em;
@@ -91,7 +91,7 @@ h4 {
   color: ${({ theme }) => theme.styles.standardView.superkeys.item.titleColor};
 }
 .superkeyTitle p {
-  font-size: 13px; 
+  font-size: 13px;
   font-weight: 401;
   margin: 0;
   line-height: 1.2em;

@@ -21,12 +21,12 @@ import { createRoot } from "react-dom/client";
 import { I18nextProvider } from "react-i18next";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import App from "./App";
-import Error from "./Error";
 import "bootstrap-css-only/css/bootstrap.min.css";
 import "@appigram/react-rangeslider/lib/index.css";
+import { i18n } from "@Renderer/i18n";
+import App from "./App";
+import Error from "./Error";
 import "./theme/styles.css";
-import i18n from "./i18n";
 import { DeviceProvider } from "./DeviceContext";
 import ErrorBoundary from "./ErrorBoundary";
 

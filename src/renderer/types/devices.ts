@@ -29,6 +29,14 @@ export interface DeviceType {
   device?: any | undefined;
 }
 
+export interface DeviceDescriptor {
+  vendor: any;
+  product: any;
+  keyboardType: string;
+  displayName: string;
+  urls: any;
+}
+
 export type CountProviderProps = { children: React.ReactNode };
 
 export type Action =

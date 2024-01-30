@@ -55,17 +55,13 @@ z-index: 300;
       color: ${({ theme }) => theme.styles.pageHeader.titleColor};
       font-size: 20px;
     }
-    &.pageHeaderFlatBottom {
-      border-radius: 6px 6px 0 0;
-    }
-
     .pageTitle {
       width: 190px;
       white-space: nowrap;
       br {
         content: ' ';
       }
-    } 
+    }
     .pageTools {
       width: calc(100% - 190px);
       display: flex;
@@ -99,7 +95,7 @@ function PageHeader(props: PageHeaderType) {
   const {
     size,
     text,
-    style,
+    styles,
     contentSelector,
     colorEditor,
     isColorActive,
@@ -112,8 +108,8 @@ function PageHeader(props: PageHeaderType) {
     secondaryButton,
   } = props;
   return (
-    <Style className={`${style === "pageHeaderFlatBottom" ? "pageHeaderSticky" : ""}`}>
-      <div className={`pageHeader ${size && size} ${style && style} ${isColorActive ? "extraPanelActive" : ""}`}>
+    <Style className={`${styles === "pageHeaderFlatBottom" ? "pageHeaderSticky" : ""}`}>
+      <div className={`pageHeader ${size && size} ${styles && styles} ${isColorActive ? "extraPanelActive" : ""}`}>
         <div className="pageTitle">
           <Title text={text} headingLevel={2} />
         </div>

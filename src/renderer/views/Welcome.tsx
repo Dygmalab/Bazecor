@@ -24,7 +24,7 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@Renderer/
 import Container from "react-bootstrap/Container";
 import { useNavigate } from "react-router-dom";
 import { useDevice } from "@Renderer/DeviceContext";
-import i18n from "@Renderer/i18n";
+import { i18n } from "@Renderer/i18n";
 
 import { PageHeader } from "@Renderer/modules/PageHeader";
 import Title from "@Renderer/component/Title";

@@ -3,7 +3,7 @@ import Styled from "styled-components";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@Renderer/components/ui/accordion";
 import { Card, CardContent } from "@Renderer/components/ui/card";
 import IconCheckmarkSm from "@Assets/base/icon-checkmark-green.svg";
-import i18n from "../../i18n";
+import { i18n } from "@Renderer/i18n";
 
 const Style = Styled.div`
 .card-header:hover {
@@ -70,97 +70,91 @@ h5 {
 function SuperKeysFeatures() {
   return (
     <Style>
-      <Accordion type="single" collapsible className="w-full">
-        <AccordionItem value="item-1">
-          <AccordionTrigger>
-            <div className="accordionHeader">
-              <div className="accordionTitle">{i18n.editor.superkeys.collapse.title}</div>
-            </div>
+      <Accordion type="single" collapsible className="w-full rounded bg-gray-25/80 dark:bg-gray-600 mt-3">
+        <AccordionItem value="item-1" className="border-0">
+          <AccordionTrigger className="flex justify-between items-center py-3 mt-0 mb-[-1px] rounded-none text-purple-200 dark:text-gray-25 border-b border-solid border-gray-50 dark:border-gray-600">
+            <strong className="text-xs tracking-tight font-semibold">{i18n.editor.superkeys.collapse.title}</strong>
           </AccordionTrigger>
-          <AccordionContent>
-            <Card>
-              <CardContent>
-                <div className="versionContent">
-                  <div className="gridSuperKeys">
-                    <div className="gridSuperKeysItem">
-                      <h6>Tap</h6>
-                      <ul>
-                        <li className="active">Keys</li>
-                        <li>Modifiers</li>
-                        <li className="active">Macros</li>
-                        <li className="active">Media & LED</li>
-                        <li className="active">Mouse</li>
-                        <li className="active">Layer Lock</li>
-                        <li>Layer Shift</li>
-                        <li>Dual-function</li>
-                        <li>OneShot</li>
-                        <li>Superkeys</li>
-                      </ul>
-                    </div>
-                    <div className="gridSuperKeysItem">
-                      <h6>Hold</h6>
-                      <ul>
-                        <li className="active">Keys</li>
-                        <li className="active">Modifiers</li>
-                        <li className="active">Macros</li>
-                        <li className="active">Media & LED</li>
-                        <li className="active">Mouse</li>
-                        <li className="active">Layer Lock</li>
-                        <li className="active">Layer Shift</li>
-                        <li>Dual-function</li>
-                        <li>OneShot</li>
-                        <li>Superkeys</li>
-                      </ul>
-                    </div>
-                    <div className="gridSuperKeysItem">
-                      <h6>Tap & Hold</h6>
-                      <ul>
-                        <li className="active">Keys</li>
-                        <li className="active">Modifiers</li>
-                        <li className="active">Macros</li>
-                        <li className="active">Media & LED</li>
-                        <li className="active">Mouse</li>
-                        <li className="active">Layer Lock</li>
-                        <li className="active">Layer Shift</li>
-                        <li>Dual-function</li>
-                        <li>OneShot</li>
-                        <li>Superkeys</li>
-                      </ul>
-                    </div>
-                    <div className="gridSuperKeysItem">
-                      <h6>2Tap</h6>
-                      <ul>
-                        <li className="active">Keys</li>
-                        <li>Modifiers</li>
-                        <li className="active">Macros</li>
-                        <li className="active">Media & LED</li>
-                        <li className="active">Mouse</li>
-                        <li className="active">Layer Lock</li>
-                        <li>Layer Shift</li>
-                        <li>Dual-function</li>
-                        <li>OneShot</li>
-                        <li>Superkeys</li>
-                      </ul>
-                    </div>
-                    <div className="gridSuperKeysItem">
-                      <h6>2Tap & Hold</h6>
-                      <ul>
-                        <li className="active">Keys</li>
-                        <li className="active">Modifiers</li>
-                        <li className="active">Macros</li>
-                        <li className="active">Media & LED</li>
-                        <li className="active">Mouse</li>
-                        <li className="active">Layer Lock</li>
-                        <li className="active">Layer Shift</li>
-                        <li>Dual-function</li>
-                        <li>OneShot</li>
-                        <li>Superkeys</li>
-                      </ul>
-                    </div>
-                  </div>
+          <AccordionContent className="px-3 py-3 bg-transparent border-0">
+            <div className="versionContent">
+              <div className="gridSuperKeys">
+                <div className="gridSuperKeysItem">
+                  <h6>Tap</h6>
+                  <ul>
+                    <li className="active">Keys</li>
+                    <li>Modifiers</li>
+                    <li className="active">Macros</li>
+                    <li className="active">Media & LED</li>
+                    <li className="active">Mouse</li>
+                    <li className="active">Layer Lock</li>
+                    <li>Layer Shift</li>
+                    <li>Dual-function</li>
+                    <li>OneShot</li>
+                    <li>Superkeys</li>
+                  </ul>
                 </div>
-              </CardContent>
-            </Card>
+                <div className="gridSuperKeysItem">
+                  <h6>Hold</h6>
+                  <ul>
+                    <li className="active">Keys</li>
+                    <li className="active">Modifiers</li>
+                    <li className="active">Macros</li>
+                    <li className="active">Media & LED</li>
+                    <li className="active">Mouse</li>
+                    <li className="active">Layer Lock</li>
+                    <li className="active">Layer Shift</li>
+                    <li>Dual-function</li>
+                    <li>OneShot</li>
+                    <li>Superkeys</li>
+                  </ul>
+                </div>
+                <div className="gridSuperKeysItem">
+                  <h6>Tap & Hold</h6>
+                  <ul>
+                    <li className="active">Keys</li>
+                    <li className="active">Modifiers</li>
+                    <li className="active">Macros</li>
+                    <li className="active">Media & LED</li>
+                    <li className="active">Mouse</li>
+                    <li className="active">Layer Lock</li>
+                    <li className="active">Layer Shift</li>
+                    <li>Dual-function</li>
+                    <li>OneShot</li>
+                    <li>Superkeys</li>
+                  </ul>
+                </div>
+                <div className="gridSuperKeysItem">
+                  <h6>2Tap</h6>
+                  <ul>
+                    <li className="active">Keys</li>
+                    <li>Modifiers</li>
+                    <li className="active">Macros</li>
+                    <li className="active">Media & LED</li>
+                    <li className="active">Mouse</li>
+                    <li className="active">Layer Lock</li>
+                    <li>Layer Shift</li>
+                    <li>Dual-function</li>
+                    <li>OneShot</li>
+                    <li>Superkeys</li>
+                  </ul>
+                </div>
+                <div className="gridSuperKeysItem">
+                  <h6>2Tap & Hold</h6>
+                  <ul>
+                    <li className="active">Keys</li>
+                    <li className="active">Modifiers</li>
+                    <li className="active">Macros</li>
+                    <li className="active">Media & LED</li>
+                    <li className="active">Mouse</li>
+                    <li className="active">Layer Lock</li>
+                    <li className="active">Layer Shift</li>
+                    <li>Dual-function</li>
+                    <li>OneShot</li>
+                    <li>Superkeys</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
           </AccordionContent>
         </AccordionItem>
       </Accordion>

@@ -42,10 +42,10 @@ import { PageHeader } from "@Renderer/modules/PageHeader";
 import MacroCreator from "@Renderer/modules/Macros/MacroCreator";
 import TimelineEditorManager from "@Renderer/modules/Macros/TimelineEditorManager";
 import { useDevice } from "@Renderer/DeviceContext";
+import { i18n } from "@Renderer/i18n";
 
 import Backup from "../../api/backup";
 import Keymap, { KeymapDB } from "../../api/keymap";
-import i18n from "../i18n";
 
 import Store from "../utils/Store";
 import getLanguage from "../utils/language";
@@ -847,7 +847,6 @@ function MacroEditor(props) {
 MacroEditor.propTypes = {
   startContext: PropTypes.func,
   onDisconnect: PropTypes.func,
-  setLoading: PropTypes.func,
   setLoading: PropTypes.func,
   cancelContext: PropTypes.func,
 };

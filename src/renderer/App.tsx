@@ -1,5 +1,3 @@
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-nocheck
 // -*- mode: js-jsx -*-
 /* Bazecor -- Kaleidoscope Command Center
  * Copyright (C) 2018, 2019  Keyboardio, Inc.
@@ -23,20 +21,19 @@ import { toast } from "react-toastify";
 import { ThemeProvider } from "styled-components";
 import { ipcRenderer } from "electron";
 import path from "path";
-import i18n from "@Renderer/i18n";
+import { i18n } from "@Renderer/i18n";
 
 import GlobalStyles from "@Renderer/theme/GlobalStyles";
 import Light from "@Renderer/theme/LightTheme";
 import Dark from "@Renderer/theme/DarkTheme";
 
 import Header from "@Renderer/modules/NavigationMenu";
-import SelectKeyboard from "@Renderer/views/NewSelectKeyboard";
+import SelectKeyboard from "@Renderer/views/SelectKeyboard";
 import FirmwareUpdate from "@Renderer/views/FirmwareUpdate";
 import LayoutEditor from "@Renderer/views/LayoutEditor";
 import MacroEditor from "@Renderer/views/MacroEditor";
 import SuperkeysEditor from "@Renderer/views/SuperkeysEditor";
 import Preferences from "@Renderer/views/Preferences";
-import Wireless from "@Renderer/views/Wireless";
 import Welcome from "@Renderer/views/Welcome";
 
 import ToastMessage from "@Renderer/component/ToastMessage";
@@ -60,19 +57,20 @@ focus.debug = true;
 focus.timeout = 5000;
 
 function App() {
-  const [flashing, setFlashing] = useState(false);
-  const [fwUpdate, setFwUpdate] = useState(false);
-  const [darkMode, setDarkMode] = useState(false);
-  const [connected, setConnected] = useState(false);
   const [pages, setPages] = useState({});
   const [contextBar, setContextBar] = useState(false);
   const [allowBeta, setAllowBeta] = useState(false);
+  const [darkMode, setDarkMode] = useState(false);
+
+  const [connected, setConnected] = useState(false);
+  const [flashing, setFlashing] = useState(false);
+  const [fwUpdate, setFwUpdate] = useState(false);
   const [loading, setLoading] = useState(true);
-  const varFlashing = React.useRef(false);
-  const device = React.useRef();
-  const navigate = useNavigate();
+
   const [state] = useDevice();
-  const [isSending, setIsSending] = useState(false);
+  const navigate = useNavigate();
+  const varFlashing = React.useRef(false);
+  const device: any = React.useRef();
 
   const updateStorageSchema = async () => {
     // Update stored settings schema
@@ -102,7 +100,7 @@ function App() {
     const init = async () => {
       await updateStorageSchema();
       let isDark: boolean;
-      const mode = store.get("settings.darkMode");
+      const mode = store.get("settings.darkMode") as string;
       isDark = mode === "dark";
       if (mode === "system") {
         isDark = await ipcRenderer.invoke("get-NativeTheme");
@@ -188,7 +186,7 @@ function App() {
     setConnected(true);
     device.current = currentDevice;
     setPages({ keymap: true });
-    setIsSending(true);
+    setLoading(true);
     // navigate(pages.keymap ? "/editor" : "/welcome");
     navigate("/editor");
   };
@@ -266,6 +264,7 @@ function App() {
       ipcRenderer.off("darkTheme-update", darkThemeListener);
       ipcRenderer.off("usb-disconnected", usbListener);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const toggleFwUpdate = () => {
@@ -273,23 +272,18 @@ function App() {
     setFwUpdate(!fwUpdate);
   };
 
-  const setLoadingData = (lding: boolean) => {
-    setLoading(lding);
+  const setLoadingData = (isLoading: boolean) => {
+    setLoading(isLoading);
   };
 
-  // const updateAllowBeta = (event: any) => {
-  //   const newValue = event.target.checked;
-  //   // console.log("new allowBeta value: ", newValue);
-  //   store.set("settings.allowBeta", newValue);
-  //   setAllowBeta(newValue);
-  // };
-
-  const onChangeAllowBetas = checked => {
+  const updateAllowBetas = (checked: boolean) => {
     const newValue = checked;
     // console.log("new allowBeta value: ", newValue);
     store.set("settings.allowBeta", newValue);
     setAllowBeta(newValue);
   };
+
+  console.log("RENDERING APP!!!!!!!!!!!!!!!!!!!!!!!!!!!", loading, contextBar);
 
   return (
     <ThemeProvider theme={darkMode ? Dark : Light}>
@@ -300,41 +294,22 @@ function App() {
         flashing={!connected}
         fwUpdate={fwUpdate}
         allowBeta={allowBeta}
+        modified={contextBar}
+        setLoading={setLoadingData}
         loading={loading}
-        inContext={contextBar}
-        setIsSending={setIsSending}
-        isSending={isSending}
       />
       <div className="main-container">
         <Routes>
-          <Route exact path="/" element={<Navigate to="/keyboard-select" />} />
-          <Route
-            path="/welcome"
-            element={
-              <Welcome
-                path="/welcome"
-                device={device}
-                onConnect={onKeyboardConnect}
-                titleElement={() => document.querySelector("#page-title")}
-              />
-            }
-          />
-          <Route
-            path="/device-manager"
-            element={
-              <DeviceManager path="/device-manager" titleElement={() => document.querySelector("#page-title")} device={device} />
-            }
-          />
+          <Route path="/" element={<Navigate to="/keyboard-select" />} />
+          <Route path="/welcome" element={<Welcome device={device} onConnect={onKeyboardConnect} />} />
+          <Route path="/device-manager" element={<DeviceManager />} />
           <Route
             path="/keyboard-select"
             element={
               <SelectKeyboard
-                path="/keyboard-select"
                 connected={connected}
                 onConnect={onKeyboardConnect}
                 onDisconnect={onKeyboardDisconnect}
-                titleElement={() => document.querySelector("#page-title")}
-                setLoadingData={setLoadingData}
                 device={device}
                 darkMode={darkMode}
               />
@@ -344,17 +319,12 @@ function App() {
             path="/editor"
             element={
               <LayoutEditor
-                path="/editor"
                 onDisconnect={onKeyboardDisconnect}
                 startContext={startContext}
                 cancelContext={cancelContext}
-                setLoadingData={setLoadingData}
-                inContext={contextBar}
-                titleElement={() => document.querySelector("#page-title")}
-                appBarElement={() => document.querySelector("#appbar")}
                 darkMode={darkMode}
-                isSending={isSending}
-                setIsSending={setIsSending}
+                setLoading={setLoadingData}
+                inContext={contextBar}
               />
             }
           />
@@ -362,13 +332,10 @@ function App() {
             path="/macros"
             element={
               <MacroEditor
-                path="/macros"
                 onDisconnect={onKeyboardDisconnect}
                 startContext={startContext}
                 cancelContext={cancelContext}
                 setLoading={setLoadingData}
-                inContext={contextBar}
-                titleElement={() => document.querySelector("#page-title")}
               />
             }
           />
@@ -376,13 +343,10 @@ function App() {
             path="/superkeys"
             element={
               <SuperkeysEditor
-                path="/superkeys"
                 onDisconnect={onKeyboardDisconnect}
                 startContext={startContext}
                 cancelContext={cancelContext}
                 setLoading={setLoadingData}
-                inContext={contextBar}
-                titleElement={() => document.querySelector("#page-title")}
               />
             }
           />
@@ -410,28 +374,9 @@ function App() {
                 toggleDarkMode={toggleDarkMode}
                 startContext={startContext}
                 cancelContext={cancelContext}
-                onChangeAllowBetas={onChangeAllowBetas}
-                setLoadingData={setLoadingData}
+                updateAllowBetas={updateAllowBetas}
                 allowBeta={allowBeta}
-                inContext={contextBar}
-              />
-            }
-          />
-          <Route
-            path="/wireless"
-            element={
-              <Wireless
-                connected={connected}
-                path="/wireless"
-                titleElement={() => document.querySelector("#page-title")}
-                darkMode={darkMode}
-                toggleDarkMode={toggleDarkMode}
-                startContext={startContext}
-                cancelContext={cancelContext}
-                updateAllowBeta={onChangeAllowBetas}
-                setLoadingData={setLoadingData}
-                allowBeta={allowBeta}
-                inContext={contextBar}
+                setLoading={setLoadingData}
               />
             }
           />

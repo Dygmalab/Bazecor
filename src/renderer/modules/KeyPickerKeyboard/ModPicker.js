@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import Styled from "styled-components";
-import i18n from "../../i18n";
+import { i18n } from "@Renderer/i18n";
 
 // Components
 import Title from "../../component/Title";
@@ -19,11 +19,11 @@ height: inherit;
 }
 .modPickerButtonsList {
   display: flex;
-  margin-left: -2px;  
+  margin-left: -2px;
   margin-right: -2px;
   flex-wrap: wrap;
   .button-config {
-    margin: 4px 2px 0 2px;  
+    margin: 4px 2px 0 2px;
     width: 56px;
     text-align: center;
     padding: 7px 4px;

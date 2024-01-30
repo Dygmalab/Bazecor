@@ -18,7 +18,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import Styled, { useTheme } from "styled-components";
-import i18n from "../../i18n";
+import { i18n } from "@Renderer/i18n";
 
 const Style = Styled.div`
 height: 100%;

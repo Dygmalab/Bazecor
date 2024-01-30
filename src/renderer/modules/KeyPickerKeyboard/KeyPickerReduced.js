@@ -7,7 +7,6 @@
 import React, { Component } from "react";
 import Styled, { withTheme } from "styled-components";
 
-import Tooltip from "react-bootstrap/Tooltip";
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 
 import { RiStopFill } from "react-icons/ri";
@@ -42,7 +41,7 @@ import {
 } from "react-icons/ai";
 import { MdKeyboardReturn, MdSpaceBar, MdKeyboardCapslock, MdInfoOutline, MdEject } from "react-icons/md";
 
-import i18n from "@Renderer/i18n";
+import { i18n } from "@Renderer/i18n";
 
 import Key from "@Renderer/modules/KeyPickerKeyboard/Key";
 import getLanguage from "@Renderer/modules/KeyPickerKeyboard/KeyPickerLanguage";

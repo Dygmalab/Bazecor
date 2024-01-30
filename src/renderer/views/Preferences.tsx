@@ -1,7 +1,7 @@
 // -*- mode: js-jsx -*-
 /* Bazecor -- Kaleidoscope Command Center
  * Copyright (C) 2018, 2019  Keyboardio, Inc.
- * Copyright (C) 2019  DygmaLab SE
+ * Copyright (C) 2019, 2024  DygmaLab SE
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -21,7 +21,7 @@ import { ipcRenderer } from "electron";
 import { motion } from "framer-motion";
 
 import { toast } from "react-toastify";
-import i18n from "@Renderer/i18n";
+import { i18n } from "@Renderer/i18n";
 import "react-toastify/dist/ReactToastify.css";
 
 // Custom modules imports
@@ -41,13 +41,14 @@ import { PageHeader } from "@Renderer/modules/PageHeader";
 import ToastMessage from "@Renderer/component/ToastMessage";
 import {
   IconBattery,
-  IconBluetooth,
   IconFlashlight,
   IconFloppyDisk,
   IconKeyboard,
   IconLogoDygma,
   IconSignal,
   IconWrench,
+  IconNeuronManager,
+  IconChip,
 } from "@Renderer/component/Icon";
 import Version from "@Renderer/component/Version/Version";
 
@@ -134,10 +135,8 @@ const initialPreferences = {
 
 const Preferences = (props: PreferencesProps) => {
   const [state] = useDevice();
-  const [chipID, setchipID] = useState("");
   const [bkp] = useState(new Backup());
   const [modified, setModified] = useState(false);
-  const [isSaving, setIsSaving] = useState(false);
   const [localloading, setLocalLoading] = useState(true);
 
   // Keyboard & App Prefrerences data storage
@@ -146,12 +145,12 @@ const Preferences = (props: PreferencesProps) => {
   const [preferencesState, setPreferencesState] = useState<PrefState>(initialPreferences);
 
   // Destructuring PROPS
-  const { inContext, connected, allowBeta, onChangeAllowBetas, startContext, cancelContext, toggleDarkMode } = props;
+  const { connected, allowBeta, updateAllowBetas, startContext, cancelContext, toggleDarkMode, setLoading } = props;
   const [activeTab, setActiveTab] = useState(connected ? "Keyboard" : "Application");
 
   const getNeuronData = useCallback(async () => {
-    let localNeuronID: string = "";
-    const kbData: KBDataPref = initialKBData;
+    let localNeuronID = "";
+    const newKbData: KBDataPref = initialKBData;
 
     if (state.currentDevice) {
       await state.currentDevice.command("hardware.chip_id").then((neuronID: string) => {
@@ -161,80 +160,80 @@ const Preferences = (props: PreferencesProps) => {
 
       await state.currentDevice.command("settings.defaultLayer").then((layer: string) => {
         const layerParsed = layer ? parseInt(layer, 10) : 126;
-        kbData.defaultLayer = layerParsed <= 126 ? layerParsed : 0;
+        newKbData.defaultLayer = layerParsed <= 126 ? layerParsed : 0;
       });
 
       await state.currentDevice.command("keymap.onlyCustom").then((onlyCustom: string) => {
-        kbData.keymap.onlyCustom = parseInt(onlyCustom, 10);
+        newKbData.keymap.onlyCustom = parseInt(onlyCustom, 10);
       });
       await state.currentDevice.command("led.brightness").then((brightness: string) => {
         const brightnessParsed = brightness ? parseInt(brightness, 10) : -1;
-        kbData.ledBrightness = brightnessParsed;
+        newKbData.ledBrightness = brightnessParsed;
       });
 
       await state.currentDevice.command("led.brightnessUG").then((brightness: string) => {
         const brightnessParsed = brightness ? parseInt(brightness, 10) : -1;
-        kbData.ledBrightnessUG = brightnessParsed;
+        newKbData.ledBrightnessUG = brightnessParsed;
       });
 
       await state.currentDevice.command("idleleds.time_limit").then((limit: string) => {
-        kbData.ledIdleTimeLimit = limit ? parseInt(limit, 10) : -1;
+        newKbData.ledIdleTimeLimit = limit ? parseInt(limit, 10) : -1;
       });
 
-      kbData.showDefaults =
+      newKbData.showDefaults =
         store.get("settings.showDefaults") === undefined ? false : (store.get("settings.showDefaults") as boolean);
 
       // QUKEYS variables commands
       await state.currentDevice.command("qukeys.holdTimeout").then((holdTimeout: string) => {
         const holdTimeoutParsed = holdTimeout ? parseInt(holdTimeout, 10) : 250;
-        kbData.qukeysHoldTimeout = holdTimeoutParsed;
+        newKbData.qukeysHoldTimeout = holdTimeoutParsed;
       });
 
       await state.currentDevice.command("qukeys.overlapThreshold").then((overlapThreshold: string) => {
         const overlapThresholdParsed = overlapThreshold ? parseInt(overlapThreshold, 10) : 80;
-        kbData.qukeysOverlapThreshold = overlapThresholdParsed;
+        newKbData.qukeysOverlapThreshold = overlapThresholdParsed;
       });
 
       // SuperKeys variables commands
       await state.currentDevice.command("superkeys.timeout").then((timeout: string) => {
         const timeoutParsed = timeout ? parseInt(timeout, 10) : 250;
-        kbData.SuperTimeout = timeoutParsed;
+        newKbData.SuperTimeout = timeoutParsed;
       });
 
       await state.currentDevice.command("superkeys.holdstart").then((holdstart: string) => {
         const holdstartParsed = holdstart ? parseInt(holdstart, 10) : 200;
-        kbData.SuperHoldstart = holdstartParsed;
+        newKbData.SuperHoldstart = holdstartParsed;
       });
 
       await state.currentDevice.command("superkeys.overlap").then((overlap: string) => {
         const overlapThreshold = overlap ? parseInt(overlap, 10) : 80;
-        kbData.SuperOverlapThreshold = overlapThreshold;
+        newKbData.SuperOverlapThreshold = overlapThreshold;
       });
 
       // MOUSE variables commands
       await state.currentDevice.command("mouse.speed").then((speed: string) => {
         const speedParsed = speed ? parseInt(speed, 10) : 1;
-        kbData.mouseSpeed = speedParsed;
+        newKbData.mouseSpeed = speedParsed;
       });
 
       await state.currentDevice.command("mouse.accelSpeed").then((accelSpeed: string) => {
         const accelSpeedParsed = accelSpeed ? parseInt(accelSpeed, 10) : 1;
-        kbData.mouseAccelSpeed = accelSpeedParsed;
+        newKbData.mouseAccelSpeed = accelSpeedParsed;
       });
 
       await state.currentDevice.command("mouse.wheelSpeed").then((wheelSpeed: string) => {
         const wheelSpeedParsed = wheelSpeed ? parseInt(wheelSpeed, 10) : 1;
-        kbData.mouseWheelSpeed = wheelSpeedParsed;
+        newKbData.mouseWheelSpeed = wheelSpeedParsed;
       });
 
       await state.currentDevice.command("mouse.speedLimit").then((speedLimit: string) => {
         const speedLimitParsed = speedLimit ? parseInt(speedLimit, 10) : 127;
-        kbData.mouseSpeedLimit = speedLimitParsed;
+        newKbData.mouseSpeedLimit = speedLimitParsed;
       });
 
       setKbData(prevKbData => ({
         ...prevKbData,
-        ...kbData,
+        ...newKbData,
       }));
       setPreferencesState(prevPreferencesState => ({
         ...prevPreferencesState,
@@ -245,74 +244,75 @@ const Preferences = (props: PreferencesProps) => {
   }, [state.currentDevice]);
 
   const getWirelessPreferences = useCallback(async () => {
-    setIsSaving(true);
+    const newWireless = { ...initialWireless };
+    setLoading(true);
     // Battery commands
     if (state.currentDevice) {
       await state.currentDevice.command("wireless.battery.left.level").then((batteryLevel: string) => {
-        wireless.battery.LeftLevel = batteryLevel ? parseInt(batteryLevel, 10) : 100;
+        newWireless.battery.LeftLevel = batteryLevel ? parseInt(batteryLevel, 10) : 100;
       });
       await state.currentDevice.command("wireless.battery.right.level").then((batteryLevel: string) => {
-        wireless.battery.RightLevel = batteryLevel ? parseInt(batteryLevel, 10) : 100;
+        newWireless.battery.RightLevel = batteryLevel ? parseInt(batteryLevel, 10) : 100;
       });
       await state.currentDevice.command("wireless.battery.left.status").then((stateLeftStatus: string) => {
-        wireless.battery.LeftState = stateLeftStatus ? parseInt(stateLeftStatus, 10) : 0;
+        newWireless.battery.LeftState = stateLeftStatus ? parseInt(stateLeftStatus, 10) : 0;
       });
       await state.currentDevice.command("wireless.battery.right.status").then((stateRightStatus: string) => {
-        wireless.battery.RightState = stateRightStatus ? parseInt(stateRightStatus, 10) : 0;
+        newWireless.battery.RightState = stateRightStatus ? parseInt(stateRightStatus, 10) : 0;
       });
       await state.currentDevice.command("wireless.battery.savingMode").then((batteryMode: string) => {
-        wireless.battery.savingMode = parseInt(batteryMode, 10) > 0;
+        newWireless.battery.savingMode = parseInt(batteryMode, 10) > 0;
       });
 
       // Energy saving commands
 
       await state.currentDevice.command("led.brightness.wireless").then((brightness: string) => {
-        wireless.brightness = brightness ? parseInt(brightness, 10) : 0;
+        newWireless.brightness = brightness ? parseInt(brightness, 10) : 0;
       });
       await state.currentDevice.command("led.brightnessUG.wireless").then((brightnessUG: string) => {
-        wireless.brightnessUG = brightnessUG ? parseInt(brightnessUG, 10) : 0;
+        newWireless.brightnessUG = brightnessUG ? parseInt(brightnessUG, 10) : 0;
       });
       await state.currentDevice.command("led.fade").then((fade: string) => {
-        wireless.fade = fade ? parseInt(fade, 10) : 0;
+        newWireless.fade = fade ? parseInt(fade, 10) : 0;
       });
       await state.currentDevice.command("idleleds.wireless").then((idleleds: string) => {
-        wireless.idleleds = idleleds ? parseInt(idleleds, 10) : 0;
+        newWireless.idleleds = idleleds ? parseInt(idleleds, 10) : 0;
       });
 
       // Bluetooth commands
 
       await state.currentDevice.command("wireless.bluetooth.infoChannel 1").then((infoChannel1: string) => {
-        wireless.bluetooth.infoChannel1 = infoChannel1;
+        newWireless.bluetooth.infoChannel1 = infoChannel1;
       });
       await state.currentDevice.command("wireless.bluetooth.infoChannel 2").then((infoChannel2: string) => {
-        wireless.bluetooth.infoChannel2 = infoChannel2;
+        newWireless.bluetooth.infoChannel2 = infoChannel2;
       });
       await state.currentDevice.command("wireless.bluetooth.infoChannel 3").then((infoChannel3: string) => {
-        wireless.bluetooth.infoChannel3 = infoChannel3;
+        newWireless.bluetooth.infoChannel3 = infoChannel3;
       });
       await state.currentDevice.command("wireless.bluetooth.infoChannel 4").then((infoChannel4: string) => {
-        wireless.bluetooth.infoChannel4 = infoChannel4;
+        newWireless.bluetooth.infoChannel4 = infoChannel4;
       });
       await state.currentDevice.command("wireless.bluetooth.infoChannel 5").then((infoChannel5: string) => {
-        wireless.bluetooth.infoChannel5 = infoChannel5;
+        newWireless.bluetooth.infoChannel5 = infoChannel5;
       });
       await state.currentDevice.command("wireless.bluetooth.deviceName").then((bluetoothState: string) => {
-        wireless.bluetooth.deviceName = bluetoothState;
+        newWireless.bluetooth.deviceName = bluetoothState;
       });
 
       // rf commands
 
       await state.currentDevice.command("wireless.rf.channelHop").then((rfChannelHop: string) => {
-        wireless.rf.channelHop = rfChannelHop ? parseInt(rfChannelHop, 10) : 0;
+        newWireless.rf.channelHop = rfChannelHop ? parseInt(rfChannelHop, 10) : 0;
       });
       await state.currentDevice.command("wireless.rf.power").then((rfPower: string) => {
-        wireless.rf.power = rfPower ? parseInt(rfPower, 10) : 0;
+        newWireless.rf.power = rfPower ? parseInt(rfPower, 10) : 0;
       });
     }
 
-    setWireless(wireless);
-    setIsSaving(false);
-  }, []);
+    setWireless(newWireless);
+    setLoading(false);
+  }, [state.currentDevice]);
 
   const saveKeymapChanges = async () => {
     if (state.currentDevice) {
@@ -364,8 +364,21 @@ const Preferences = (props: PreferencesProps) => {
     }
   };
 
+  const destroyContext = async () => {
+    setPreferencesState(initialPreferences);
+    setKbData(initialKBData);
+    await getNeuronData();
+    if (state.currentDevice.device.info.keyboardType === "wireless") {
+      console.log("setting wireless");
+      setWireless(initialWireless);
+      await getWirelessPreferences();
+    }
+    setModified(false);
+    cancelContext();
+  };
+
   const saveContext = async () => {
-    setIsSaving(true);
+    setLoading(true);
 
     try {
       await saveKeymapChanges();
@@ -406,17 +419,7 @@ const Preferences = (props: PreferencesProps) => {
       );
     }
     await destroyContext();
-    setIsSaving(false);
-  };
-
-  const destroyContext = async () => {
-    setKbData(initialKBData);
-    setPreferencesState(initialPreferences);
-    if (state.currentDevice.device.info.keyboardType === "wireless") setWireless(initialWireless);
-    getNeuronData();
-    if (state.currentDevice.device.info.keyboardType === "wireless") getWirelessPreferences();
-    setModified(false);
-    cancelContext();
+    setLoading(false);
   };
 
   const updateKBData = (newKbData: KBDataPref) => {
@@ -499,16 +502,15 @@ const Preferences = (props: PreferencesProps) => {
     applyNeurons(neuronsToChangeName);
   };
 
-  const deleteNeuron = () => {
+  const deleteNeuron = (toDelete: number) => {
     const result = window.confirm(i18n.keyboardSettings.neuronManager.deleteNeuron);
     if (result) {
       const newNeurons = JSON.parse(JSON.stringify(preferencesState.neurons));
-      newNeurons.splice(preferencesState.selectedNeuron, 1);
+      newNeurons.splice(toDelete, 1);
       setPreferencesState(prevState => ({
         ...prevState,
         neurons: newNeurons,
-        selectedNeuron:
-          newNeurons.length - 1 > preferencesState.selectedNeuron ? preferencesState.selectedNeuron : newNeurons.length - 1,
+        selectedNeuron: newNeurons.length - 1 > toDelete ? toDelete : newNeurons.length - 1,
       }));
       applyNeurons(newNeurons);
     }
@@ -530,8 +532,22 @@ const Preferences = (props: PreferencesProps) => {
 
   const sendRePairCommand = async () => {
     if (state.currentDevice) {
-      const result = await state.currentDevice.command("wireless.rf.syncPairing");
-      console.log("command returned", result);
+      try {
+        const result = await state.currentDevice.command("wireless.rf.syncPairing");
+        console.log("command returned", result);
+        toast.success(<ToastMessage title={`${i18n.success.pairedSuccesfully}`} icon={<IconChip />} />, {
+          position: "top-right",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: false,
+          draggable: false,
+          progress: undefined,
+          icon: "",
+        });
+      } catch (error) {
+        console.error(error);
+      }
     }
   };
 
@@ -539,8 +555,9 @@ const Preferences = (props: PreferencesProps) => {
 
   useEffect(() => {
     const init = async () => {
-      let NID = await getNeuronData();
-      if (state.currentDevice.device.info.keyboardType === "wireless") await getWirelessPreferences();
+      setLoading(true);
+      const NID = await getNeuronData();
+      if (connected && state.currentDevice.device.info.keyboardType === "wireless") await getWirelessPreferences();
       const devTools = await ipcRenderer.invoke("is-devtools-opened");
       let darkMode = store.get("settings.darkMode") as string;
       if (!darkMode) {
@@ -559,12 +576,14 @@ const Preferences = (props: PreferencesProps) => {
       await getNeuronData();
       setModified(false);
       setLocalLoading(false);
+      setLoading(false);
     };
     init();
     return () => {
       ipcRenderer.off("opened-devtool", openDevTool);
       ipcRenderer.off("close-devtool", closeDevTool);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Render variables
@@ -576,15 +595,6 @@ const Preferences = (props: PreferencesProps) => {
   const { neurons, selectedNeuron, darkMode, neuronID, devTools, verboseFocus } = preferencesState;
   const { defaultLayer } = kbData;
 
-  console.log(
-    "current Neuron: ",
-    state.currentDevice,
-    neuronID,
-    "connected?: ",
-    connected,
-    "found",
-    neurons.find(x => x.id === neuronID),
-  );
   if (localloading) <LogoLoader />;
 
   return (
@@ -596,7 +606,8 @@ const Preferences = (props: PreferencesProps) => {
         saveContext={saveContext}
         destroyContext={destroyContext}
         inContext={modified}
-        isSaving={isSaving}
+        isSaving={localloading}
+        styles="pageHeaderFlatBottom"
       />
       <div className="flex w-full mx-auto mt-4">
         <Tabs
@@ -607,7 +618,7 @@ const Preferences = (props: PreferencesProps) => {
           onValueChange={handleTabChange}
         >
           <div className="flex gap-3 w-full pb-4">
-            <TabsList className="flex flex-col self-start gap-1 px-4 py-4 text-left min-w-64 rounded-xl bg-tabMenu dark:bg-tabMenuDark">
+            <TabsList className="sticky top-20 flex flex-col self-start gap-1 px-4 py-4 text-left min-w-64 rounded-xl bg-tabMenu dark:bg-tabMenuDark">
               {connected && state.currentDevice ? (
                 <>
                   <DeviceConnectedPreview
@@ -629,9 +640,9 @@ const Preferences = (props: PreferencesProps) => {
                       <TabsTrigger value="Battery" variant="tab">
                         <IconBattery /> Battery Management
                       </TabsTrigger>
-                      <TabsTrigger value="Bluetooth" variant="tab">
+                      {/* <TabsTrigger value="Bluetooth" variant="tab">
                         <IconBluetooth /> Bluetooth Settings
-                      </TabsTrigger>
+                      </TabsTrigger> */}
                       <TabsTrigger value="RF" variant="tab">
                         <IconSignal /> RF Settings
                       </TabsTrigger>
@@ -652,6 +663,13 @@ const Preferences = (props: PreferencesProps) => {
               <TabsTrigger value="Application" variant="tab">
                 <IconLogoDygma /> Application
               </TabsTrigger>
+              {connected && state.currentDevice ? (
+                <TabsTrigger value="NeuronManager" variant="tab">
+                  <IconNeuronManager /> Neuron Manager
+                </TabsTrigger>
+              ) : (
+                ""
+              )}
             </TabsList>
             <div className="rounded-xl bg-gray-25/50 dark:bg-gray-400/15 px-4 py-3 w-full">
               {connected && state.currentDevice ? (
@@ -659,13 +677,6 @@ const Preferences = (props: PreferencesProps) => {
                   <TabsContent value="Keyboard" className="w-full">
                     <motion.div initial="hidden" animate="visible" variants={tabVariants}>
                       <KeyboardSettings kbData={kbData} setKbData={updateKBData} connected={connected} />
-                      <NeuronSettings
-                        neurons={neurons}
-                        selectedNeuron={selectedNeuron}
-                        selectNeuron={selectNeuron}
-                        updateNeuronName={updateNeuronName}
-                        deleteNeuron={deleteNeuron}
-                      />
                     </motion.div>
                   </TabsContent>
                   <TabsContent value="LED">
@@ -685,14 +696,14 @@ const Preferences = (props: PreferencesProps) => {
                       <TabsContent value="Battery">
                         <motion.div initial="hidden" animate="visible" variants={tabVariants}>
                           <BatterySettings wireless={wireless} changeWireless={updateWireless} isCharging={false} />
-                          <EnergyManagement wireless={wireless} changeWireless={updateWireless} />
+                          <EnergyManagement wireless={wireless} changeWireless={updateWireless} updateTab={handleTabChange} />
                         </motion.div>
                       </TabsContent>
-                      <TabsContent value="Bluetooth">
+                      {/* <TabsContent value="Bluetooth">
                         <motion.div initial="hidden" animate="visible" variants={tabVariants}>
                           Bluetooth Settings
                         </motion.div>
-                      </TabsContent>
+                      </TabsContent> */}
                       <TabsContent value="RF">
                         <motion.div initial="hidden" animate="visible" variants={tabVariants}>
                           <RFSettings wireless={wireless} changeWireless={updateWireless} sendRePair={sendRePairCommand} />
@@ -706,10 +717,13 @@ const Preferences = (props: PreferencesProps) => {
                         connected={connected}
                         defaultLayer={defaultLayer}
                         selectDefaultLayer={selectDefaultLayer}
+                        keyboardType={state.currentDevice.device.info.product as string}
                         neurons={neurons}
                         neuronID={neuronID}
                         selectedNeuron={selectedNeuron}
                         updateTab={handleTabChange}
+                        onlyCustomLayers={kbData.keymap.onlyCustom.toString()}
+                        onChangeOnlyCustomLayers={onChangeOnlyCustomLayers}
                       />
                     </motion.div>
                   </TabsContent>
@@ -728,13 +742,27 @@ const Preferences = (props: PreferencesProps) => {
                     verbose={verboseFocus}
                     onChangeVerbose={onChangeVerbose}
                     allowBeta={allowBeta}
-                    onChangeAllowBetas={onChangeAllowBetas}
-                    onlyCustomLayers={kbData.keymap.onlyCustom.toString()}
-                    onChangeOnlyCustomLayers={onChangeOnlyCustomLayers}
+                    onChangeAllowBetas={updateAllowBetas}
                   />
                   <Version />
                 </motion.div>
               </TabsContent>
+              {connected && state.currentDevice ? (
+                <TabsContent value="NeuronManager">
+                  <motion.div initial="hidden" animate="visible" variants={tabVariants}>
+                    <NeuronSettings
+                      neurons={neurons}
+                      selectedNeuron={selectedNeuron}
+                      selectNeuron={selectNeuron}
+                      applyNeurons={applyNeurons}
+                      updateNeuronName={updateNeuronName}
+                      deleteNeuron={deleteNeuron}
+                    />
+                  </motion.div>
+                </TabsContent>
+              ) : (
+                ""
+              )}
             </div>
           </div>
         </Tabs>

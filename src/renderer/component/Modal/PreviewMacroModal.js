@@ -5,7 +5,7 @@ import Modal from "react-bootstrap/Modal";
 import { RegularButton } from "../Button";
 import { IconEye } from "../Icon";
 
-import i18n from "../../i18n";
+import { i18n } from "@Renderer/i18n";
 
 export default function PreviewMacroModal({ children, hookref }) {
   const [show, setShow] = React.useState(false);

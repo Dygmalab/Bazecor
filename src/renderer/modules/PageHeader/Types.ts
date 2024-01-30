@@ -3,7 +3,7 @@ import { ReactNode } from "react";
 export interface PageHeaderType {
   size?: number;
   text: string;
-  style?: string;
+  styles?: string;
   contentSelector?: ReactNode | undefined;
   colorEditor?: ReactNode | undefined;
   isColorActive?: boolean;

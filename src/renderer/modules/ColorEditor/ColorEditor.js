@@ -26,7 +26,7 @@ import Title from "../../component/Title";
 import { ColorButton, ColorPicker } from "../../component/Button";
 
 // Icons
-import i18n from "../../i18n";
+import { i18n } from "@Renderer/i18n";
 
 import { IconColorPalette, IconKeysLight, IconKeysUnderglow } from "../../component/Icon";
 

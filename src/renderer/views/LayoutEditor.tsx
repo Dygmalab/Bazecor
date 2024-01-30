@@ -5,6 +5,7 @@
 // -*- mode: js-jsx -*-
 /* Bazecor -- Kaleidoscope Command Center
  * Copyright (C) 2018, 2019  Keyboardio, Inc.
+ * Copyright (C) 2020, 2024  Dygma Lab S.L.
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -31,7 +32,6 @@ import Modal from "react-bootstrap/Modal";
 import customCursor from "@Assets/base/cursorBucket.png";
 import { LogoLoaderCentered } from "@Renderer/component/Loader";
 import ToastMessage from "@Renderer/component/ToastMessage";
-import PropTypes from "prop-types";
 
 import ConfirmationDialog from "@Renderer/component/ConfirmationDialog";
 import { CopyFromDialog } from "@Renderer/component/CopyFromDialog";
@@ -48,16 +48,15 @@ import { LayerSelector } from "@Renderer/component/Select";
 import { RegularButton } from "@Renderer/component/Button";
 import { LayoutViewSelector } from "@Renderer/component/ToggleButtons";
 import { IconArrowUpWithLine, IconArrowDownWithLine } from "@Renderer/component/Icon";
-import { rgb2w, rgbw2b } from "../../api/color";
-
-import Keymap, { KeymapDB } from "../../api/keymap";
-
-import Backup from "../../api/backup";
-import i18n from "../i18n";
-
-import Store from "../utils/Store";
-import getLanguage from "../utils/language";
 import { Neuron, LayerType, macrosType, superkeysType } from "@Renderer/types/neurons";
+import { LayoutEditorProps } from "@Renderer/types/layout";
+import { i18n } from "@Renderer/i18n";
+
+import Store from "@Renderer/utils/Store";
+import getLanguage from "@Renderer/utils/language";
+import Keymap, { KeymapDB } from "../../api/keymap";
+import { rgb2w, rgbw2b } from "../../api/color";
+import Backup from "../../api/backup";
 
 const store = Store.getStore();
 
@@ -388,19 +387,7 @@ const Styles = Styled.div`
 
 `;
 
-interface LayoutEditorProps {
-  onDisconnect: () => void;
-  startContext: () => void;
-  cancelContext: () => void;
-  setLoadingData: (lding: boolean) => void;
-  theme: any;
-  inContext: boolean;
-  darkMode: boolean;
-  isSending: boolean;
-  setIsSending: React.Dispatch<React.SetStateAction<boolean>>;
-}
-
-const LayoutEditor: React.FC<LayoutEditorProps> = (props): React.JSX.Element => {
+const LayoutEditor = (props: LayoutEditorProps) => {
   const defaultLayerNames = useMemo(
     () => [
       {
@@ -495,8 +482,7 @@ const LayoutEditor: React.FC<LayoutEditorProps> = (props): React.JSX.Element => 
   const [showDefaults, setShowDefaults] = useState(false);
   const [keymapDB, setkeymapDB] = useState(new KeymapDB());
   const ledIndexStart = 80;
-  const { darkMode, inContext, cancelContext, isSending, setIsSending, onDisconnect, startContext, setLoadingData, theme } =
-    props;
+  const { darkMode, cancelContext, setLoading, onDisconnect, startContext, inContext, theme } = props;
 
   const onLayerNameChange = (newName: string) => {
     const slicedLayerNames = layerNames.slice();
@@ -862,7 +848,7 @@ const LayoutEditor: React.FC<LayoutEditorProps> = (props): React.JSX.Element => 
     async (lang: string) => {
       console.log("Scanning KEYBOARD");
       const { currentDevice } = deviceState;
-      setIsSending(true);
+      setLoading(true);
       try {
         /**
          * Create property language to the object 'options', to call KeymapDB in Keymap and modify languagu layout
@@ -985,25 +971,15 @@ const LayoutEditor: React.FC<LayoutEditorProps> = (props): React.JSX.Element => 
         setIsWireless(wirelessChecker);
         setShowMacroModal(showMM);
         setScanned(true);
-        setIsSending(false);
+        setLoading(false);
       } catch (e) {
         console.error(e);
         toast.error(e);
-        setIsSending(false);
+        setLoading(false);
         onDisconnect();
       }
     },
-    [
-      AnalizeChipID,
-      deviceState,
-      getColormap,
-      keymapDB,
-      ledIndexStart,
-      macroTranslator,
-      onDisconnect,
-      previousLayer,
-      setIsSending,
-    ],
+    [AnalizeChipID, deviceState, getColormap, keymapDB, macroTranslator, onDisconnect, previousLayer, setLoading],
   );
 
   const onKeyChange = (keyCode: any) => {
@@ -1122,7 +1098,7 @@ const LayoutEditor: React.FC<LayoutEditorProps> = (props): React.JSX.Element => 
 
   const onApply = async () => {
     const { currentDevice } = deviceState;
-    setIsSending(true);
+    setLoading(true);
     setIsSaving(true);
     const args = flatten(keymap.custom).map(k => keymapDB.serialize(k));
     await currentDevice.command("keymap.custom", ...args);
@@ -1151,7 +1127,7 @@ const LayoutEditor: React.FC<LayoutEditorProps> = (props): React.JSX.Element => 
         icon: "",
       },
     );
-    setIsSending(false);
+    setLoading(false);
     setIsSaving(false);
     console.log("Changes saved.");
   };
@@ -1325,7 +1301,7 @@ const LayoutEditor: React.FC<LayoutEditorProps> = (props): React.JSX.Element => 
 
   const getLayout = () => {
     const { currentDevice } = deviceState;
-    let Layer = (<div></div>) as JSX.Element;
+    let Layer = (<div />) as JSX.Element;
     let kbtype = "iso";
     if (currentDevice.device === null) return { Layer: undefined, kbtype: undefined };
     try {
@@ -1587,10 +1563,11 @@ const LayoutEditor: React.FC<LayoutEditorProps> = (props): React.JSX.Element => 
       // setLoadingData(false);
       setScanned(true);
     };
-    if (!scanned && !isSending) {
+    if (!scanned) {
       scanner();
     }
-  }, [currentLanguageLayout, scanned, isSending, scanKeyboard, setLoadingData]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     // console.log("Running processAfterScan useEffect");
@@ -1601,21 +1578,21 @@ const LayoutEditor: React.FC<LayoutEditorProps> = (props): React.JSX.Element => 
       console.log("Language automatically set to: ", newLanguage);
       setCurrentLanguageLayout(newLanguage || "english");
       setIsStandardView(standardView);
-      setLoadingData(false);
+      setLoading(false);
       setCurrentLayer(previousLayer !== 0 ? previousLayer : 0);
     };
     if (scanned) {
       processAfterScan();
       // setScanned(false);
     }
-  }, [previousLayer, scanned, setLoadingData]);
+  }, [previousLayer, scanned, setLoading]);
 
   useEffect(() => {
-    // console.log("Running Scanner on changes useEffect");
-    const scanner = async () => {
-      console.log("props", inContext, modified);
-      if (modified === true && inContext === false) {
-        setLoadingData(true);
+    // console.log("Running Scanner on changes useEffect: ", inContext && modified !== true);
+    if (inContext && modified !== true) {
+      const scanner = async () => {
+        console.log("Resseting KB Data!!");
+        setLoading(true);
         setCurrentLayer(previousLayer !== 0 ? previousLayer : 0);
         setCurrentKeyIndex(-1);
         setCurrentLedIndex(-1);
@@ -1627,20 +1604,11 @@ const LayoutEditor: React.FC<LayoutEditorProps> = (props): React.JSX.Element => 
         setPalette([]);
         await scanKeyboard(currentLanguageLayout);
         setModified(false);
-        setLoadingData(false);
-      }
-    };
-    scanner();
-  }, [
-    currentLanguageLayout,
-    inContext,
-    keymap.custom.length,
-    modified,
-    previousLayer,
-    scanKeyboard,
-    setIsSending,
-    setLoadingData,
-  ]);
+        setLoading(false);
+      };
+      scanner();
+    }
+  }, [currentLanguageLayout, inContext, keymap.custom.length, modified, previousLayer, scanKeyboard, setLoading]);
 
   useEffect(() => {
     // console.log("Running StandardView useEffect", isStandardView);
@@ -1705,7 +1673,7 @@ const LayoutEditor: React.FC<LayoutEditorProps> = (props): React.JSX.Element => 
         return newSKey;
       });
     }
-    console.log("SAVING USEFFECT!!:", localLayerData, localIsReadOnly, localShowDefaults, cLayer);
+    // console.log("SAVING USEFFECT!!:", localLayerData, localIsReadOnly, localShowDefaults, cLayer);
     setLayerData(localLayerData);
     setIsReadOnly(localIsReadOnly);
     setShowDefaults(localShowDefaults);
@@ -1750,7 +1718,7 @@ const LayoutEditor: React.FC<LayoutEditorProps> = (props): React.JSX.Element => 
       : [];
 
   let code: number | any = 0;
-  if (currentKeyIndex !== -1 && currentLedIndex < ledIndexStart) {
+  if (currentKeyIndex !== -1 && currentKeyIndex < ledIndexStart) {
     const tempkey = keymapDB.parse(layerData[currentKeyIndex].keyCode);
     // console.log("Key to be used in render", tempkey);
     code = keymapDB.keySegmentator(tempkey.keyCode);
@@ -1977,18 +1945,6 @@ const LayoutEditor: React.FC<LayoutEditorProps> = (props): React.JSX.Element => 
       )}
     </Styles>
   );
-};
-
-LayoutEditor.propTypes = {
-  onDisconnect: PropTypes.func,
-  startContext: PropTypes.func,
-  cancelContext: PropTypes.func,
-  setLoadingData: PropTypes.func,
-  inContext: PropTypes.bool,
-  theme: PropTypes.shape({}),
-  darkMode: PropTypes.bool,
-  isSending: PropTypes.bool,
-  setIsSending: PropTypes.func,
 };
 
 export default LayoutEditor;

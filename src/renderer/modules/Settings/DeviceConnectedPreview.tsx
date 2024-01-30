@@ -18,7 +18,7 @@ import React, { useState } from "react";
 import { NameModal } from "@Renderer/component/Modal";
 import { IconPen } from "@Renderer/component/Icon";
 import { motion } from "framer-motion";
-import i18n from "../../i18n";
+import { i18n } from "@Renderer/i18n";
 import { DevicePreview } from "../DevicePreview";
 
 interface DeviceConnectedPreviewProps {
@@ -74,7 +74,7 @@ const DeviceConnectedPreview = ({ deviceName, deviceDisplayName, nameChange }: D
 
       <NameModal
         show={showModal}
-        name={deviceName || ""}
+        name={deviceName}
         toggleShow={() => setShowModal(false)}
         handleSave={(data: string) => handleSave(data)}
         modalTitle={i18n.keyboardSettings.neuronManager.changeLayerTitle}

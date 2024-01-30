@@ -19,7 +19,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import Styled from "styled-components";
 import Dropdown from "react-bootstrap/Dropdown";
-import i18n from "../../i18n";
+import { i18n } from "@Renderer/i18n";
 
 import { RegularButton } from "../../component/Button";
 import { IconMoreVertical } from "../../component/Icon";

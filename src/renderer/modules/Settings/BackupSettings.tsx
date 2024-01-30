@@ -18,6 +18,8 @@ import React, { useState, useEffect } from "react";
 import { ipcRenderer } from "electron";
 import { toast } from "react-toastify";
 import fs from "fs";
+import path from "path";
+const glob = require(`glob`);
 
 // React Bootstrap Components
 import { Card, CardContent, CardHeader, CardTitle } from "@Renderer/components/ui/card";
@@ -25,7 +27,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@Renderer/components/u
 // Own Components
 import { useDevice } from "@Renderer/DeviceContext";
 import ToastMessage from "@Renderer/component/ToastMessage";
-import i18n from "@Renderer/i18n";
+import { i18n } from "@Renderer/i18n";
 import { RegularButton } from "@Renderer/component/Button";
 
 // Icons Imports
@@ -171,6 +173,32 @@ const BackupSettings = (props: BackupSettingsProps) => {
     }
   };
 
+  const getLatestBackup = async () => {
+    try {
+      // creating folder path with current device
+      const folderPath = path.join(backupFolder, state.currentDevice.device.info.product, neuronID);
+      console.log("going to search for newest file in: ", folderPath);
+
+      // sorting folder files to find newest
+      const newestFile = glob
+        .sync(folderPath + "/*json")
+        .map((name: string) => ({ name, ctime: fs.statSync(name).ctime }))
+        .sort((a: any, b: any) => b.ctime - a.ctime)[0].name;
+      console.log("selected backup: ", newestFile);
+
+      // Loading latest backup for the device
+      const loadedFile = JSON.parse(fs.readFileSync(newestFile, "utf-8"));
+      console.log("selected backup content: ", loadedFile);
+
+      // called restorer with backup data
+      await restoreBackup(loadedFile);
+      console.log("Restored latest backup");
+    } catch (error) {
+      console.error(error);
+      alert(`The loaded backup could not be restored`);
+    }
+  };
+
   const setApplicationTab = () => {
     // Call the onTabChange function from props with the desired value
     updateTab("Application");
@@ -187,7 +215,7 @@ const BackupSettings = (props: BackupSettingsProps) => {
         <form>
           <h3 className="text-gray-400 dark:text-gray-100 tracking-tight font-semibold">Backup folder</h3>
           <p className="text-gray-300 dark:text-gray-300 tracking-tight font-semibold text-sm">
-            {backupFolder}{" "}
+            {backupFolder}
             <button
               type="button"
               className="px-1 m-0 decoration-1 text-purple-300 hover:text-purple-300 dark:text-purple-200 dark:hover:text-purple-100"
@@ -200,7 +228,7 @@ const BackupSettings = (props: BackupSettingsProps) => {
           <h3 className="mt-3 mb-1 text-gray-400 dark:text-gray-100 tracking-tight font-semibold">Backup actions</h3>
           <div className="flex gap-3">
             <RegularButton onClick={GetBackup} styles="short" buttonText="Restore backup from file..." disabled={!connected} />
-            <RegularButton onClick={() => console.log("Last backup")} styles="short" buttonText="Restore from last backup" />
+            <RegularButton onClick={getLatestBackup} styles="short" buttonText="Restore from last backup" />
           </div>
         </form>
       </CardContent>
