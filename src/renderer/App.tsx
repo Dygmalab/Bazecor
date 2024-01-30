@@ -293,7 +293,6 @@ function App() {
         fwUpdate={fwUpdate}
         allowBeta={allowBeta}
         modified={contextBar}
-        setLoading={setLoadingData}
         loading={loading}
       />
       <div className="main-container">

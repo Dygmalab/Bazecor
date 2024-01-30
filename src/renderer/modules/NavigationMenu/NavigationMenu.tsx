@@ -106,6 +106,7 @@ const Styles = Styled.div`
 
 function NavigationMenu(props: NavigationMenuProps) {
   const [state] = useDevice();
+  const [checkedVer, setCheckedVer] = useState(false);
   const [versions, setVersions] = useState(null);
   const [isUpdated, setIsUpdated] = useState(true);
   const [isBeta, setIsBeta] = useState(false);
@@ -113,7 +114,7 @@ function NavigationMenu(props: NavigationMenuProps) {
   const [virtual, setVirtual] = useState(false);
   const location = useLocation();
   const currentPage = location.pathname;
-  const { connected, pages, fwUpdate, flashing, allowBeta, modified, loading, setLoading } = props;
+  const { connected, pages, fwUpdate, flashing, allowBeta, modified, loading } = props;
 
   const getGitHubFW = useCallback(
     async (product: any) => {
@@ -169,14 +170,14 @@ function NavigationMenu(props: NavigationMenuProps) {
     setIsUpdated(semVerCheck > 0);
     setIsBeta(Beta);
     setVirtual(currentDevice.file);
-    setLoading(false);
-  }, [getGitHubFW, setLoading, state]);
+    setCheckedVer(true);
+  }, [getGitHubFW, state]);
 
   useEffect(() => {
-    if (!flashing && connected) {
+    if (!flashing && connected && !loading && !checkedVer) {
       checkKeyboardMetadata();
     }
-  }, [flashing, connected, checkKeyboardMetadata]);
+  }, [flashing, connected, loading, checkKeyboardMetadata, checkedVer]);
 
   const [showAlertModal, setShowAlertModal] = useState(false);
 

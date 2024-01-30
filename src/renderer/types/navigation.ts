@@ -7,7 +7,6 @@ export interface NavigationMenuProps {
   allowBeta: boolean;
   modified: boolean;
   loading: boolean;
-  setLoading: (isLoading: boolean) => void;
   pages: Pages | object;
 }
 
@@ -18,6 +17,5 @@ export interface HeaderInterface {
   allowBeta: boolean;
   modified: boolean;
   loading: boolean;
-  setLoading: (isLoading: boolean) => void;
   pages: Pages | object;
 }
