@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
 // -*- mode: js-jsx -*-
@@ -43,11 +44,9 @@ const BazecorDevtools = () => {
   let connectedDevice: undefined | HIDDevice;
   const [hid] = useState(new HID());
   const [keymap, setKeymap] = useState("");
-  const [grantedDevices, setGrantedDevices] = useState({});
 
   const onGetHIDDevices = async () => {
     const gDevices = await HID.getDevices();
-    setGrantedDevices(gDevices);
     console.log(gDevices);
   };
 

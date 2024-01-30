@@ -192,28 +192,36 @@ const SelectKeyboard = (props: SelectKeyboardProps) => {
   const [deviceItems, setDeviceItems] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [scanFoundDevices, setScanFoundDevices] = useState(false);
-  const { onConnect, onDisconnect, connected } = props;
+  const { onConnect, onDisconnect, connected, setLoading } = props;
+
+  const loadingHandler = useCallback(
+    (value: boolean) => {
+      setIsLoading(value);
+      setLoading(value);
+    },
+    [setLoading],
+  );
 
   const findKeyboards = useCallback(async (): Promise<Device[]> => {
-    setIsLoading(true);
+    loadingHandler(true);
     // if (state.currentDevice !== undefined && isIterable) {
-    //   setIsLoading(false);
+    //   loadingHandler(false);
     //   return [];
     // }
     try {
       const list = (await DeviceTools.list()) as Device[];
       dispatch({ type: "addDevicesList", payload: list });
       console.log("Devices Available:", list);
-      setIsLoading(false);
+      loadingHandler(false);
       setDevices(list);
       return list;
     } catch (err) {
       console.log("Error while finding keyboards", err);
-      setIsLoading(false);
+      loadingHandler(false);
       setDevices(undefined);
       return undefined;
     }
-  }, [dispatch]);
+  }, [dispatch, loadingHandler]);
 
   const getDeviceItems: () => Array<DeviceItemsType> = useCallback(() => {
     const neurons = store.get("neurons") as Neuron[];
@@ -264,7 +272,8 @@ const SelectKeyboard = (props: SelectKeyboardProps) => {
       ipcRenderer.removeListener("usb-connected", finder);
       ipcRenderer.removeListener("usb-disconnected", disconnectedfinder);
     };
-  }, [connected, findKeyboards, state.currentDevice, state.selected]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     if (connected && state.currentDevice) {

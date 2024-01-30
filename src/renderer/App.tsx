@@ -65,7 +65,7 @@ function App() {
   const [connected, setConnected] = useState(false);
   const [flashing, setFlashing] = useState(false);
   const [fwUpdate, setFwUpdate] = useState(false);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   const [state] = useDevice();
   const navigate = useNavigate();
@@ -311,6 +311,7 @@ function App() {
                 onDisconnect={onKeyboardDisconnect}
                 device={device}
                 darkMode={darkMode}
+                setLoading={setLoadingData}
               />
             }
           />
