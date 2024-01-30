@@ -148,11 +148,11 @@ const BatteryStatus = ({ disable }: BatteryStatusProps) => {
       // reading until we get a result != 4 or we try 5 times
       while (newReading === false && counter > 0) {
         /* eslint-disable no-await-in-loop */
-        left = await state.currentDevice.command("wireless.battery.left.level");
-        right = await state.currentDevice.command("wireless.battery.right.level");
-        leftStatus = await state.currentDevice.command("wireless.battery.left.status");
-        rightStatus = await state.currentDevice.command("wireless.battery.right.status");
-        savingMode = await state.currentDevice.command("wireless.battery.savingMode");
+        left = await state.currentDevice.noCacheCommand("wireless.battery.left.level");
+        right = await state.currentDevice.noCacheCommand("wireless.battery.right.level");
+        leftStatus = await state.currentDevice.noCacheCommand("wireless.battery.left.status");
+        rightStatus = await state.currentDevice.noCacheCommand("wireless.battery.right.status");
+        savingMode = await state.currentDevice.noCacheCommand("wireless.battery.savingMode");
         counter -= 1;
         if (leftStatus !== "4" && rightStatus !== "4") {
           newReading = true;
@@ -212,7 +212,7 @@ const BatteryStatus = ({ disable }: BatteryStatusProps) => {
   const forceRetrieveBattery = async () => {
     if (disable) return;
     if (state.currentDevice) {
-      await state.currentDevice.command("wireless.battery.forceRead");
+      await state.currentDevice.noCacheCommand("wireless.battery.forceRead");
     }
     setLoading(true);
     await getBatteryStatus();

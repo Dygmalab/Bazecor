@@ -225,6 +225,28 @@ class Device {
     return result;
   };
 
+  noCacheCommand = async (command: string, ...args: Array<string>) => {
+    if (this.port === undefined) return false;
+
+    let result: any;
+    this.isSending = true;
+    try {
+      if (this.type === "serial") result = await this.request(command, ...args);
+      if (this.type === "hid") result = await this.hidRequest(command, ...args);
+    } catch (error) {
+      console.log("Error when handling request", error);
+      result = error;
+    }
+    if (!args || args.length === 0) {
+      // if no args and it hits the cache, return the cache
+      this.memoryMap.set(command, result);
+    } else {
+      this.memoryMap.set(command, args.join(" "));
+    }
+    this.isSending = false;
+    return result;
+  };
+
   write_parts = async (parts: Array<any>, cb: () => void) => {
     if (!parts || parts.length === 0) {
       cb();
