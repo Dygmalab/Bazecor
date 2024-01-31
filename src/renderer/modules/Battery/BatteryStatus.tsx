@@ -117,10 +117,10 @@ interface BatteryStatusProps {
   disable: boolean;
 }
 const BatteryStatus = ({ disable }: BatteryStatusProps) => {
-  const [bLeft, setbLeft] = useState(100);
-  const [bRight, setbRight] = useState(100);
-  const [sLeft, setsLeft] = useState(0);
-  const [sRight, setsRight] = useState(0);
+  const [bLeft, setbLeft] = useState(0);
+  const [bRight, setbRight] = useState(0);
+  const [sLeft, setsLeft] = useState(3);
+  const [sRight, setsRight] = useState(3);
   const [isSavingMode, setIsSavingMode] = useState(false);
   const [animateIcon, setAnimateIcon] = useState(0);
   const [loading, setLoading] = useState(false);

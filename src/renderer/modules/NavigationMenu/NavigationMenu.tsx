@@ -192,7 +192,11 @@ function NavigationMenu(props: NavigationMenuProps) {
     <Styles>
       <Navbar
         className={`left-navbar sidebar ${
-          connected && device && device.info && device.info.keyboardType === "wireless" && versions !== null
+          connected &&
+          device &&
+          state.currentDevice.device.info &&
+          state.currentDevice.device.info.keyboardType === "wireless" &&
+          versions !== null
             ? "isWireless"
             : "wired"
         }`}
@@ -293,7 +297,12 @@ function NavigationMenu(props: NavigationMenuProps) {
                 disabled={false}
               />
             </Link> */}
-            {connected && device && device.info && device.info.keyboardType === "wireless" && versions !== null ? (
+            {connected &&
+            state.currentDevice &&
+            state.currentDevice.device.info &&
+            state.currentDevice.device.info.product !== "Raise" &&
+            state.currentDevice.device.info.keyboardType === "wireless" &&
+            versions !== null ? (
               <>
                 {/* <Link to="/wireless" onClick={linkHandler} className={`list-link ${fwUpdate || loading ? "disabled" : ""}`}>
                   <NavigationButton
