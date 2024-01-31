@@ -262,17 +262,36 @@ export default class StandardView extends React.Component<StandardViewProps, Sta
   };
 
   parseKey(keycode: number) {
-    const { macros, code } = this.props;
-    const macro = macros[parseInt(this.keymapDB.parse(keycode).label, 10)];
+    const { macros, superkeys, code } = this.props;
+    const aux = this.keymapDB.parse(keycode);
+
     let macroName;
-    try {
-      macroName = macro.name.substr(0, 5);
-    } catch (error) {
-      macroName = "*NotFound*";
+    let superName;
+
+    if (aux.extraLabel === "MACRO") {
+      const macro = macros[parseInt(this.keymapDB.parse(keycode).label, 10) - 1];
+      try {
+        macroName = macro.name.substr(0, 5);
+      } catch (error) {
+        macroName = "*NotFound*";
+      }
+      if (keycode >= 53852 && keycode <= 53852 + 128) {
+        if (code !== null) return `${this.keymapDB.parse(keycode).extraLabel}.${macroName}`;
+      }
     }
-    if (keycode >= 53852 && keycode <= 53852 + 128) {
-      if (code !== null) return `${this.keymapDB.parse(keycode).extraLabel}.${macroName}`;
+
+    if (aux.extraLabel === "SUPER") {
+      const superk = superkeys[parseInt(this.keymapDB.parse(keycode).label, 10) - 1];
+      try {
+        superName = superk.name.substr(0, 5);
+      } catch (error) {
+        superName = "*NotFound*";
+      }
+      if (keycode >= 53980 && keycode <= 53980 + 128) {
+        if (code !== null) return `${this.keymapDB.parse(keycode).extraLabel}.${superName}`;
+      }
     }
+
     if (React.isValidElement(this.keymapDB.parse(keycode).label)) return this.keymapDB.parse(keycode).label;
     let result;
     if (code !== null) {
@@ -419,7 +438,7 @@ export default class StandardView extends React.Component<StandardViewProps, Sta
                     <motion.div initial="hidden" animate="visible" key="tabKeys" variants={tabVariants}>
                       <MacroTab
                         macros={macros}
-                        selectedMacro={selected}
+                        selectedMacro={this.keymapDB.parse(keyCode).extraLabel === "MACRO" ? selected : -1}
                         onMacrosPress={onKeySelect}
                         keyCode={keyCode}
                         isStandardView={isStandardView}
