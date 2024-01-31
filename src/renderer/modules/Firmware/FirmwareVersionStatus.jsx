@@ -22,7 +22,7 @@ import Styled from "styled-components";
 import ReactMarkdown from "react-markdown";
 
 import Title from "@Renderer/component/Title";
-import { Badge } from "@Renderer/component/Badge";
+import { Badge } from "@Renderer/components/ui/badge";
 import { IconEye } from "@Renderer/component/Icon";
 
 import Dropdown from "react-bootstrap/Dropdown";
@@ -148,7 +148,9 @@ const FirmwareVersionStatus = props => {
         <div className="versionStatusInner">
           <div className="versionStatusInstalled">
             <Title text="Installed firmware version" headingLevel={6} />
-            <Badge content={currentlyVersionRunning} />
+            <Badge variant={isUpdated ? "success" : "default"} size="sm">
+              {currentlyVersionRunning}
+            </Badge>
           </div>
           <div className="versionStatusNext">
             <svg className="caret" width={18} height={27} viewBox="0 0 18 27" fill="none" xmlns="http://www.w3.org/2000/svg">

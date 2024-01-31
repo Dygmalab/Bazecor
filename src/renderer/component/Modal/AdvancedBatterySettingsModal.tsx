@@ -29,7 +29,7 @@ import Slider from "@appigram/react-rangeslider";
 import { Card, CardContent, CardHeader } from "@Renderer/components/ui/card";
 import { Switch } from "@Renderer/components/ui/switch";
 import Title from "@Renderer/component/Title";
-import { Badge } from "@Renderer/component/Badge";
+import { Badge } from "@Renderer/components/ui/badge";
 import { RegularButton } from "@Renderer/component/Button";
 import { ToggleButtons } from "@Renderer/component/ToggleButtons";
 
@@ -116,7 +116,9 @@ function AdvancedBatterySettingsModal(props: AdvancedEnergyManagementProps) {
         <Card className="overflowFix card-preferences card-preferences--battery">
           <CardHeader>
             <Title text={i18n.wireless.energyManagement.settings.maximumLED} headingLevel={4} />
-            <Badge content={i18n.wireless.energyManagement.settings.highBatteryImpact} variation="danger-low" size="sm" />
+            <Badge variant="danger-low" size="sm">
+              {i18n.wireless.energyManagement.settings.highBatteryImpact}
+            </Badge>
           </CardHeader>
           <CardContent>
             <Row className="card-preferences--option justify-between">
@@ -172,7 +174,9 @@ function AdvancedBatterySettingsModal(props: AdvancedEnergyManagementProps) {
         <Card className="overflowFix card-preferences card-preferences--battery mt-4">
           <CardHeader>
             <Title text={i18n.wireless.energyManagement.settings.trueSleepEnabling} headingLevel={4} />
-            <Badge content={i18n.wireless.energyManagement.settings.mediumBatteryImpact} variation="warning" size="sm" />
+            <Badge variant="warning" size="sm">
+              {i18n.wireless.energyManagement.settings.mediumBatteryImpact}
+            </Badge>
           </CardHeader>
           <CardContent>
             <Row className="card-preferences--option justify-between">
@@ -203,7 +207,9 @@ function AdvancedBatterySettingsModal(props: AdvancedEnergyManagementProps) {
         <Card className="overflowFix card-preferences card-preferences--battery mt-4">
           <CardHeader>
             <Title text={i18n.wireless.energyManagement.settings.highlightLayerChanging} headingLevel={4} />
-            <Badge content={i18n.wireless.energyManagement.settings.lowBatteryImpact} variation="subtle" size="sm" />
+            <Badge variant="subtle" size="sm">
+              {i18n.wireless.energyManagement.settings.lowBatteryImpact}
+            </Badge>
           </CardHeader>
           <CardContent>
             <Row className="card-preferences--option justify-between">
@@ -217,7 +223,9 @@ function AdvancedBatterySettingsModal(props: AdvancedEnergyManagementProps) {
         <Card className="overflowFix card-preferences card-preferences--battery mt-4">
           <CardHeader>
             <Title text={i18n.wireless.energyManagement.settings.RFSettingTitle} headingLevel={4} />
-            <Badge content={i18n.wireless.energyManagement.settings.lowBatteryImpact} variation="subtle" size="sm" />
+            <Badge variant="subtle" size="sm">
+              {i18n.wireless.energyManagement.settings.lowBatteryImpact}
+            </Badge>
           </CardHeader>
           <CardContent>
             <Row className="card-preferences--option justify-between">

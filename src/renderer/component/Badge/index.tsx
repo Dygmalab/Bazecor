@@ -14,7 +14,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import Badge from "./Badge";
 import BadgeFirmware from "./BadgeFirmware";
 
-export { Badge, BadgeFirmware };
+export { BadgeFirmware };

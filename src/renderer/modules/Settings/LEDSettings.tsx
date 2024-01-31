@@ -29,7 +29,7 @@ import { Switch } from "@Renderer/components/ui/switch";
 import { KBDataPref, LEDSettingsPreferences } from "@Renderer/types/preferences";
 
 // Assets
-import { Badge } from "@Renderer/component/Badge";
+import { Badge } from "@Renderer/components/ui/badge";
 import { IconFlashlight, IconIridescentWhiteBalance, IconThunder } from "@Renderer/component/Icon";
 import Callout from "@Renderer/component/Callout";
 import { i18n } from "@Renderer/i18n";
@@ -120,7 +120,9 @@ function LEDSettings(props: LEDSettingsPreferences) {
                 <IconFlashlight /> {i18n.keyboardSettings.led.title} brightness intensity
               </div>{" "}
               {isWireless && (
-                <Badge content={i18n.wireless.energyManagement.settings.highBatteryImpact} variation="danger-low" size="sm" />
+                <Badge variant="danger-low" size="sm">
+                  {i18n.wireless.energyManagement.settings.highBatteryImpact}
+                </Badge>
               )}
             </CardTitle>
           </CardHeader>
@@ -214,7 +216,9 @@ function LEDSettings(props: LEDSettingsPreferences) {
                 <IconFlashlight /> {i18n.keyboardSettings.led.title} sleep mode
               </div>{" "}
               {isWireless && (
-                <Badge content={i18n.wireless.energyManagement.settings.highBatteryImpact} variation="danger-low" size="sm" />
+                <Badge variant="danger-low" size="sm">
+                  {i18n.wireless.energyManagement.settings.highBatteryImpact}
+                </Badge>
               )}
             </CardTitle>
           </CardHeader>
@@ -264,7 +268,9 @@ function LEDSettings(props: LEDSettingsPreferences) {
                   <div className="flex items-center gap-2">
                     <IconIridescentWhiteBalance /> {i18n.wireless.energyManagement.settings.highlightLayerChanging}
                   </div>{" "}
-                  <Badge content={i18n.wireless.energyManagement.settings.lowBatteryImpact} variation="subtle" size="sm" />
+                  <Badge variant="subtle" size="sm">
+                    {i18n.wireless.energyManagement.settings.lowBatteryImpact}
+                  </Badge>
                 </CardTitle>
               </CardHeader>
               <CardContent className="flex flex-row gap-3 justify-between items-center">
