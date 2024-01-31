@@ -454,7 +454,12 @@ export default class StandardView extends React.Component<StandardViewProps, Sta
                   </TabsContent>
                   <TabsContent value="tabMouse" key="tabMouse">
                     <motion.div initial="hidden" animate="visible" key="tabKeys" variants={tabVariants}>
-                      <MouseTab onAddSpecial={this.onAddSpecial} keyCode={keyCode} isStandardView={isStandardView} />
+                      <MouseTab
+                        onAddSpecial={this.onAddSpecial}
+                        keyCode={keyCode}
+                        isStandardView={isStandardView}
+                        actTab={actTab}
+                      />
                     </motion.div>
                   </TabsContent>
                   {isWireless && (
