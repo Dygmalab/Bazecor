@@ -579,9 +579,8 @@ const Preferences = (props: PreferencesProps) => {
 
       ipcRenderer.on("opened-devtool", openDevTool);
       ipcRenderer.on("closed-devtool", closeDevTool);
-      await getNeuronData();
-      setModified(false);
       setLocalLoading(false);
+      setModified(false);
       setLoading(false);
     };
     init();
@@ -601,7 +600,14 @@ const Preferences = (props: PreferencesProps) => {
   const { neurons, selectedNeuron, darkMode, neuronID, devTools, verboseFocus } = preferencesState;
   const { defaultLayer } = kbData;
 
-  if (localloading) <LogoLoader />;
+  if (localloading)
+    return (
+      <div className="flex place-content-center h-full">
+        <div className="my-auto">
+          <LogoLoader />
+        </div>
+      </div>
+    );
 
   return (
     <div className="px-2">
