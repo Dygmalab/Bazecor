@@ -150,14 +150,14 @@ function EnergyManagement(props: EnergyManagementProps) {
               </div>
             </div>
             <div className="mt-3 text-sm font-semibold tracking-tight text-gray-500 dark:text-gray-100">
-              The timer will only begin when the LEDs turn off. Your LED off time is currently
+              The timer will only begin when the LEDs turn off. Your LED off time is currently{" "}
               <button
                 type="button"
                 className="p-0 m-0 decoration-1 text-purple-300 hover:text-purple-300 dark:text-purple-200 dark:hover:text-purple-100 inline-block"
                 value="Application"
                 onClick={setApplicationTab}
               >
-                {wireless.idleleds > 0 ? `set to ${wireless.idleleds / 60}` : "OFF"}
+                {wireless.idleleds > 0 ? `set to ${wireless.idleleds / 60}min` : "Deactivated"}
               </button>
             </div>
           </div>
