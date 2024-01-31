@@ -6,7 +6,7 @@ import { cn } from "@Renderer/utils";
 import Modal from "react-bootstrap/Modal";
 
 const alertVariants = cva(
-  "relative w-full rounded pl-[32px] pt-3 pr-4 pb-3 border border-[1px] font-normal [&>svg]:absolute [&>svg]:left-[-1.15rem] [&>svg]:top-3",
+  "relative w-full rounded pl-[32px] pt-3 pr-4 pb-3 border border-[1px] font-normal [&>svg]:absolute [&>svg]:left-[-1.15rem] [&>svg]:top-[0.45em]",
   {
     variants: {
       variant: {

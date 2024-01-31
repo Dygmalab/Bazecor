@@ -29,7 +29,7 @@ import Col from "react-bootstrap/Col";
 import Modal from "react-bootstrap/Modal";
 
 // Components
-import Callout from "@Renderer/component/Callout";
+import { Alert, AlertDescription } from "@Renderer/components/ui/alert";
 import { LayoutViewSelector } from "@Renderer/component/ToggleButtons";
 import { SuperkeysSelector } from "@Renderer/component/Select";
 import { RegularButton } from "@Renderer/component/Button";
@@ -780,16 +780,19 @@ function SuperkeysEditor(props) {
           inContext={modified}
           isSaving={isSaving}
         />
-
-        <Callout
-          content={i18n.editor.superkeys.callout}
-          className="mt-md"
+        <Alert
           size="sm"
+          className="mt-3"
           hasVideo
           media="6Az05_Yl6AU"
           videoTitle="The Greatest Keyboard Feature Of All Time: SUPERKEYS! 🦹‍♀️"
           videoDuration="5:34"
-        />
+        >
+          <AlertDescription>
+            <p>{i18n.editor.superkeys.callout}</p>
+            <p>{i18n.editor.superkeys.callout2}</p>
+          </AlertDescription>
+        </Alert>
 
         <SuperkeyActions
           isStandardViewSuperkeys={isStandardViewSuperkeys}

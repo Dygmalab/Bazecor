@@ -31,7 +31,7 @@ import { KBDataPref, LEDSettingsPreferences } from "@Renderer/types/preferences"
 // Assets
 import { Badge } from "@Renderer/components/ui/badge";
 import { IconFlashlight, IconIridescentWhiteBalance, IconThunder } from "@Renderer/component/Icon";
-import Callout from "@Renderer/component/Callout";
+import { Alert, AlertDescription } from "@Renderer/components/ui/alert";
 import { i18n } from "@Renderer/i18n";
 import Heading from "@Renderer/components/ui/heading";
 
@@ -110,7 +110,11 @@ function LEDSettings(props: LEDSettingsPreferences) {
       <>
         {isWireless && (
           <div className="max-w-2xl mx-auto mb-3">
-            <Callout content="These wireless configurations only apply when the Saving Mode is NOT active." size="sm" />
+            <Alert size="sm">
+              <AlertDescription>
+                <p>These wireless configurations only apply when the Saving Mode is NOT active.</p>
+              </AlertDescription>
+            </Alert>
           </div>
         )}
         <Card className="max-w-2xl mx-auto" variant="default">

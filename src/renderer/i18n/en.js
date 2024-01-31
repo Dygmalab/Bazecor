@@ -377,8 +377,9 @@ const English = {
         doubleTapAndHoldLabel: "2Tap & hold",
         doubleTapAndHold: "Tap twice fast and hold to see others keyboards crying.",
       },
-      callout:
-        "<p>Wow! Superpowers, my friend!</p><p>Superkeys allow up to 5 different functions in a single key. You activate each function with a tap, hold, tap and hold, double-tap or double-tap and hold. This allows you to create crazy combinations to boost your workflow.</p>",
+      callout: "Wow! Superpowers, my friend!",
+      callout2:
+        "Superkeys allow up to 5 different functions in a single key. You activate each function with a tap, hold, tap and hold, double-tap or double-tap and hold. This allows you to create crazy combinations to boost your workflow.",
       tooltip:
         "You can edit keys in two different ways. Advanced users may prefer Single View which is designed for quick key editing.",
       collapse: {
