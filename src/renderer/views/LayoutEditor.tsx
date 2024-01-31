@@ -1588,10 +1588,10 @@ const LayoutEditor = (props: LayoutEditorProps) => {
   }, [previousLayer, scanned, setLoading]);
 
   useEffect(() => {
-    // console.log("Running Scanner on changes useEffect: ", inContext && modified !== true);
-    if (!inContext && modified) {
+    // console.log("Running Scanner on changes useEffect: ", inContext, modified, !scanned, !inContext && modified && !scanned);
+    if (!inContext && modified && !scanned) {
       const scanner = async () => {
-        console.log("Resseting KB Data!!");
+        console.log("Resseting KB Data!!!");
         setModified(false);
         setLoading(true);
         setCurrentLayer(previousLayer !== 0 ? previousLayer : 0);
@@ -1608,7 +1608,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
       };
       scanner();
     }
-  }, [currentLanguageLayout, inContext, keymap.custom.length, modified, previousLayer, scanKeyboard, setLoading]);
+  }, [currentLanguageLayout, inContext, keymap.custom.length, modified, previousLayer, scanKeyboard, scanned, setLoading]);
 
   useEffect(() => {
     // console.log("Running StandardView useEffect", isStandardView);
@@ -1815,6 +1815,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
           saveContext={onApply}
           destroyContext={() => {
             console.log("cancelling context: ", props);
+            setScanned(false);
             cancelContext();
           }}
           inContext={modified}
