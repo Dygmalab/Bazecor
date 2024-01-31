@@ -204,10 +204,11 @@ const SelectKeyboard = (props: SelectKeyboardProps) => {
 
   const findKeyboards = useCallback(async (): Promise<Device[]> => {
     loadingHandler(true);
-    // if (state.currentDevice !== undefined && isIterable) {
-    //   loadingHandler(false);
-    //   return [];
-    // }
+    if (state.currentDevice !== undefined) {
+      loadingHandler(false);
+      setDevices(state.deviceList);
+      return state.deviceList;
+    }
     try {
       const list = (await DeviceTools.list()) as Device[];
       dispatch({ type: "addDevicesList", payload: list });
@@ -221,7 +222,7 @@ const SelectKeyboard = (props: SelectKeyboardProps) => {
       setDevices(undefined);
       return undefined;
     }
-  }, [dispatch, loadingHandler]);
+  }, [dispatch, loadingHandler, state.currentDevice, state.deviceList]);
 
   const getDeviceItems: () => Array<DeviceItemsType> = useCallback(() => {
     const neurons = store.get("neurons") as Neuron[];
@@ -276,12 +277,14 @@ const SelectKeyboard = (props: SelectKeyboardProps) => {
   }, []);
 
   useEffect(() => {
+    console.log("connected useEffect");
     if (connected && state.currentDevice) {
       findKeyboards();
     }
   }, [connected, findKeyboards, state.currentDevice]);
 
   useEffect(() => {
+    console.log("devices useEffect");
     if (devices) {
       const currentDeviceItems = getDeviceItems() as DeviceItemsType[];
       setDeviceItems(currentDeviceItems);
