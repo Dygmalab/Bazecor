@@ -204,7 +204,7 @@ const SelectKeyboard = (props: SelectKeyboardProps) => {
 
   const findKeyboards = useCallback(async (): Promise<Device[]> => {
     loadingHandler(true);
-    if (state.currentDevice !== undefined) {
+    if (state.currentDevice !== undefined && connected) {
       loadingHandler(false);
       setDevices(state.deviceList);
       return state.deviceList;
@@ -222,7 +222,7 @@ const SelectKeyboard = (props: SelectKeyboardProps) => {
       setDevices(undefined);
       return undefined;
     }
-  }, [dispatch, loadingHandler, state.currentDevice, state.deviceList]);
+  }, [connected, dispatch, loadingHandler, state.currentDevice, state.deviceList]);
 
   const getDeviceItems: () => Array<DeviceItemsType> = useCallback(() => {
     const neurons = store.get("neurons") as Neuron[];
