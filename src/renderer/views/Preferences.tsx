@@ -238,6 +238,8 @@ const Preferences = (props: PreferencesProps) => {
       setPreferencesState(prevPreferencesState => ({
         ...prevPreferencesState,
         neuronID: localNeuronID,
+        darkMode: store.get("settings.darkMode") as string,
+        neurons: store.get("neurons") as Array<Neuron>,
       }));
     }
     return localNeuronID;

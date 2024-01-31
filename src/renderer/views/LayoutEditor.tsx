@@ -491,9 +491,9 @@ const LayoutEditor = (props: LayoutEditorProps) => {
       name: newName,
     };
     setLayerNames(slicedLayerNames);
-    const neurons = store.get("neurons") as any;
-    console.log(`changed layer ${currentLayer} name to: ${newName}`, slicedLayerNames);
-    neurons[neuronID].layers = slicedLayerNames;
+    const neurons = store.get("neurons") as Neuron[];
+    console.log(`changed layer ${currentLayer} name to: ${newName}`, slicedLayerNames, neuronID, neurons);
+    neurons[neurons.findIndex(x => x.id === neuronID)].layers = slicedLayerNames;
     store.set("neurons", neurons);
   };
 
@@ -836,6 +836,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
           storedSuper: finalNeuron.superkeys,
         };
         console.log(neuronData);
+        setLayerNames(finalNeuron.layers);
         return neuronData;
       }
       setLayerNames(finalNeuron.layers);
