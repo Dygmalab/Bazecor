@@ -6,12 +6,12 @@ const keyboardSetup = async context => {
   try {
     const { currentDevice } = context.deviceState;
     if (context.device.info.product === "Raise") {
-      await currentDevice.command("led.mode 1");
-      const brightness = await currentDevice.command("led.brightness");
-      await currentDevice.command("led.brightness 255");
+      await currentDevice.noCacheCommand("led.mode", "1");
+      const brightness = await currentDevice.noCacheCommand("led.brightness");
+      await currentDevice.noCacheCommand("led.brightness", "255");
       return { RaiseBrightness: brightness };
     }
-    await currentDevice.command("upgrade.start");
+    await currentDevice.noCacheCommand("upgrade.start");
   } catch (error) {
     console.warn("error when querying the device");
     console.error(error);
@@ -24,8 +24,8 @@ const GetLSideData = async context => {
   const result = {};
   try {
     const { currentDevice } = context.deviceState;
-    result.leftSideConn = String(await currentDevice.command("upgrade.keyscanner.isConnected 1")).includes("true");
-    result.leftSideBoot = String(await currentDevice.command("upgrade.keyscanner.isBootloader 1")).includes("true");
+    result.leftSideConn = String(await currentDevice.noCacheCommand("upgrade.keyscanner.isConnected", "1")).includes("true");
+    result.leftSideBoot = String(await currentDevice.noCacheCommand("upgrade.keyscanner.isBootloader", "1")).includes("true");
   } catch (error) {
     console.warn("error when querying the device");
     console.error(error);
@@ -38,8 +38,8 @@ const GetRSideData = async context => {
   const result = {};
   try {
     const { currentDevice } = context.deviceState;
-    result.rightSideConn = String(await currentDevice.command("upgrade.keyscanner.isConnected 0")).includes("true");
-    result.rightSideBoot = String(await currentDevice.command("upgrade.keyscanner.isBootloader 0")).includes("true");
+    result.rightSideConn = String(await currentDevice.noCacheCommand("upgrade.keyscanner.isConnected", "0")).includes("true");
+    result.rightSideBoot = String(await currentDevice.noCacheCommand("upgrade.keyscanner.isBootloader", "0")).includes("true");
   } catch (error) {
     console.warn("error when querying the device");
     console.error(error);
@@ -56,10 +56,10 @@ const CreateBackup = async context => {
     const commands = await Backup.Commands(currentDevice);
     backup = await bkp.DoBackup(commands, context.device.chipID, currentDevice);
     await Backup.SaveBackup(backup, currentDevice);
-    let keymap = await currentDevice.command("keymap.custom");
+    let keymap = await currentDevice.noCacheCommand("keymap.custom");
     keymap = keymap.split(" ");
     keymap[0] = "41";
-    await currentDevice.command(`keymap.custom ${keymap.join(" ")}`);
+    await currentDevice.noCacheCommand("keymap.custom", keymap.join(" "));
   } catch (error) {
     console.warn("error when creating Backup of the device");
     console.error(error);

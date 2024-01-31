@@ -12,10 +12,10 @@ const FocusAPIRead = async context => {
     data.bootloader = currentDevice.device?.bootloader !== undefined ? currentDevice.device.bootloader : false;
     data.info = currentDevice.device.info;
     if (data.bootloader) return data;
-    data.version = await currentDevice.command("version");
+    data.version = await currentDevice.noCacheCommand("version");
     // eslint-disable-next-line prefer-destructuring
     data.version = data.version.split(" ")[0];
-    data.chipID = (await currentDevice.command("hardware.chip_id")).replace(/\s/g, "");
+    data.chipID = (await currentDevice.noCacheCommand("hardware.chip_id")).replace(/\s/g, "");
     if (Object.keys(data).length === 0 || Object.keys(data.info).length === 0) throw new Error("data is empty!");
   } catch (error) {
     console.warn("error when querying the device");

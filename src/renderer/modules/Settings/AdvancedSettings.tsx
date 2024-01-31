@@ -56,7 +56,7 @@ const AdvancedKeyboardSettings = () => {
         .filter((v: any) => v.length > 0)
         .map(() => 255)
         .join(" ");
-      await state.currentDevice.command("eeprom.contents", eeprom);
+      await state.currentDevice.noCacheCommand("eeprom.contents", eeprom);
     }
     setWorking(false);
   };

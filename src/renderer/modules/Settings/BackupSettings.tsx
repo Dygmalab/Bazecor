@@ -19,7 +19,6 @@ import { ipcRenderer } from "electron";
 import { toast } from "react-toastify";
 import fs from "fs";
 import path from "path";
-const glob = require(`glob`);
 
 // React Bootstrap Components
 import { Card, CardContent, CardHeader, CardTitle } from "@Renderer/components/ui/card";
@@ -36,6 +35,8 @@ import { IconArrowDownWithLine, IconFloppyDisk } from "@Renderer/component/Icon"
 // Utils
 import Store from "@Renderer/utils/Store";
 
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const glob = require(`glob`);
 const store = Store.getStore();
 
 interface BackupSettingsProps {
@@ -79,9 +80,9 @@ const BackupSettings = (props: BackupSettingsProps) => {
           }
           console.log(`Going to send ${data[i].command} to keyboard`);
           // eslint-disable-next-line no-await-in-loop
-          await state.currentDevice.command(`${data[i].command} ${val}`.trim());
+          await state.currentDevice.noCacheCommand(data[i].command, val.trim());
         }
-        await state.currentDevice.command("led.mode 0");
+        await state.currentDevice.noCacheCommand("led.mode 0");
         console.log("Restoring all settings");
         console.log("Firmware update OK");
         toast.success(
@@ -112,10 +113,10 @@ const BackupSettings = (props: BackupSettingsProps) => {
           if (virtual[command].eraseable === true) {
             console.log(`Going to send ${command} to keyboard`);
             // eslint-disable-next-line no-await-in-loop
-            await state.currentDevice.command(`${command} ${virtual[command].data}`.trim());
+            await state.currentDevice.noCacheCommand(`${command} ${virtual[command].data}`.trim());
           }
         }
-        await state.currentDevice.command("led.mode 0");
+        await state.currentDevice.noCacheCommand("led.mode 0");
         console.log("Settings restored OK");
         toast.success(
           <ToastMessage
@@ -181,7 +182,7 @@ const BackupSettings = (props: BackupSettingsProps) => {
 
       // sorting folder files to find newest
       const newestFile = glob
-        .sync(folderPath + "/*json")
+        .sync(`${folderPath}/*json`)
         .map((name: string) => ({ name, ctime: fs.statSync(name).ctime }))
         .sort((a: any, b: any) => b.ctime - a.ctime)[0].name;
       console.log("selected backup: ", newestFile);
