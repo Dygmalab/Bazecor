@@ -508,7 +508,7 @@ const English = {
         highBatteryImpact: "High battery impact",
         mediumBatteryImpact: "Medium battery impact",
         lowBatteryImpact: "Low battery impact",
-        trueSleepEnabling: "True sleep of sides",
+        trueSleepEnabling: "True sleep",
         trueSleepEnablingDesc:
           "True sleep will put your sides in deep sleep (they will require a physical key press to awake), this mode saves a moderate amount of battery when the keyboard is idle for long periods, like at night.",
         trueSleepTimeDesc: "True sleep Time control that sets the time it takes to activate true sleep after LEDs are turned off",

@@ -101,9 +101,9 @@ function EnergyManagement(props: EnergyManagementProps) {
         <CardHeader>
           <CardTitle className="flex flex-row items-center justify-between">
             <div className="flex items-center gap-2">
-              <IconFlashlight /> {i18n.wireless.energyManagement.settings.trueSleepEnabling} mode
+              <IconFlashlight /> {i18n.wireless.energyManagement.settings.trueSleepEnabling}
             </div>
-            <Badge content={i18n.wireless.energyManagement.settings.mediumBatteryImpact} variation="warning" size="sm" />
+            <Badge content={i18n.wireless.energyManagement.settings.highBatteryImpact} variation="danger-low" size="sm" />
           </CardTitle>
         </CardHeader>
         <CardContent className="pb-3 pt-0">
