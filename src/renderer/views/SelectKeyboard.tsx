@@ -277,14 +277,12 @@ const SelectKeyboard = (props: SelectKeyboardProps) => {
   }, []);
 
   useEffect(() => {
-    console.log("connected useEffect");
     if (connected && state.currentDevice) {
       findKeyboards();
     }
   }, [connected, findKeyboards, state.currentDevice]);
 
   useEffect(() => {
-    console.log("devices useEffect");
     if (devices) {
       const currentDeviceItems = getDeviceItems() as DeviceItemsType[];
       setDeviceItems(currentDeviceItems);

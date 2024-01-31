@@ -655,7 +655,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
       });
       // TODO: Check if stored macros match the received ones, if they match, retrieve name and apply it to current macros
       let finalMacros = [];
-      console.log(mcros, storeMacros);
+      console.log("Checking Macros", mcros, storeMacros);
       if (storeMacros === undefined) {
         return mcros;
       }
@@ -958,7 +958,6 @@ const LayoutEditor = (props: LayoutEditorProps) => {
             }
           }
         }
-        console.log("Saving data using SET!!!", colormap);
         setCurrentLayer(previousLayer);
         setNeuronID(chipID);
         setKeymap(KeyMap);
@@ -1328,13 +1327,13 @@ const LayoutEditor = (props: LayoutEditorProps) => {
 
     const resp = await ipcRenderer.invoke("open-dialog", options);
     if (!resp.canceled) {
-      console.log(resp.filePaths);
+      // console.log(resp.filePaths);
       let layers;
       try {
         layers = JSON.parse(fs.readFileSync(resp.filePaths[0], "utf-8"));
-        console.log(layers, Array.isArray(layers.keymap));
+        // console.log(layers, Array.isArray(layers.keymap));
         if (Array.isArray(layers.keymap)) {
-          console.log(layers.keymap[0]);
+          // console.log(layers.keymap[0]);
           importLayer(layers);
           toast.success(
             <ToastMessage
@@ -1348,7 +1347,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
             },
           );
         } else {
-          console.log(layers.keymap.custom[0]);
+          // console.log(layers.keymap.custom[0]);
           setLayerNames(layers.layerNames);
           setKeymap(layers.keymap);
           setColorMap(layers.colormap);
@@ -1416,7 +1415,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
     try {
       const path = await ipcRenderer.invoke("save-dialog", options);
       if (typeof path !== "undefined") {
-        console.log(path, data);
+        console.log("path & data to export to: ", path, data);
         fs.writeFileSync(path, data);
         toast.success(
           <ToastMessage
