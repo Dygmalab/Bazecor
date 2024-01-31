@@ -145,7 +145,8 @@ class SuperkeysTab extends Component {
       }
     }
     if (aux.label) {
-      translatedAction = (aux.extraLabel != undefined ? `${aux.extraLabel} ` : "") + aux.label;
+      if (React.isValidElement(aux.label)) return aux.label;
+      translatedAction = (aux.extraLabel !== undefined ? `${aux.extraLabel} ` : "") + aux.label;
     }
     return translatedAction;
   };
