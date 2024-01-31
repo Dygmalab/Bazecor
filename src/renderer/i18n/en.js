@@ -214,7 +214,8 @@ const English = {
         applyButton: "Update Keyboard",
       },
       callout:
-        "<p>Macros are sequences of events (such as keystrokes, mouse clicks, and delays) that can be played back to help with repetitive strings of texts or tasks. </p><p>They can also be used to replay sequences that are long or difficult to run.</p>",
+        "Macros are sequences of events (such as keystrokes, mouse clicks, and delays) that can be played back to help with repetitive strings of texts or tasks.",
+      callout2: "They can also be used to replay sequences that are long or difficult to run.",
       textTabs: {
         title: "Text",
         callout: "<p>Using text you can add an entire sequence of commands using only one key.</p>",

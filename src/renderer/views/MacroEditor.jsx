@@ -33,7 +33,7 @@ import Row from "react-bootstrap/Row";
 import { LogoLoaderCentered } from "@Renderer/component/Loader";
 
 import { RegularButton } from "@Renderer/component/Button";
-import Callout from "@Renderer/component/Callout";
+import { Alert, AlertDescription } from "@Renderer/components/ui/alert";
 import { IconFloppyDisk, IconLoader } from "@Renderer/component/Icon";
 import { MacroSelector } from "@Renderer/component/Select";
 import ToastMessage from "@Renderer/component/ToastMessage";
@@ -781,15 +781,18 @@ function MacroEditor(props) {
           destroyContext={destroyThisContext}
           inContext={modified}
         />
-        <Callout
-          content={i18n.editor.macros.callout}
-          className="mt-md"
+        <Alert
           size="sm"
+          className="mt-3"
           hasVideo
           media="MfTUvFrHLsE"
           videoTitle="13 Time-saving MACROS For Your Keyboard"
           videoDuration="5:24"
-        />
+        >
+          <AlertDescription>
+            {i18n.editor.macros.callout} {i18n.editor.macros.callout2}
+          </AlertDescription>
+        </Alert>
         {macros[selectedMacro] === undefined || macros[selectedMacro].actions === undefined ? (
           <div />
         ) : (

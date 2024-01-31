@@ -13,6 +13,9 @@ module.exports = {
         "3xl": "2rem",
         "4xl": "2.625rem",
       },
+      fontWeight: {
+        normal: "395",
+      },
       colors: {
         primary: "rgb(254, 0, 124)",
         secondary: "rgb(107, 20, 249)",
