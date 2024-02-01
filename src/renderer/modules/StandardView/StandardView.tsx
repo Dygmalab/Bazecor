@@ -492,7 +492,7 @@ export default class StandardView extends React.Component<StandardViewProps, Sta
                 <div className="contentFooter">
                   <div className="d-flex justify-content-end">
                     <RegularButton
-                      onClick={() => closeStandardView(stateCode)}
+                      onClick={() => closeStandardView(undefined)}
                       styles="outline transp-bg"
                       size="sm"
                       buttonText={i18n.app.cancelPending.button}

@@ -1512,7 +1512,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
   };
 
   const closeStandardViewModal = (code: any) => {
-    onKeyChange(code);
+    if (code !== undefined) onKeyChange(code);
     setShowStandardView(false);
   };
 
