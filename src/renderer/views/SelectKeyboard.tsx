@@ -319,11 +319,15 @@ const SelectKeyboard = (props: SelectKeyboardProps) => {
   };
 
   const handleOnDisconnect = async () => {
-    await onDisconnect(state.currentDevice);
+    await DeviceTools.disconnect(state.currentDevice);
+    dispatch({ type: "disconnect", payload: selectedPortIndex });
+    await onDisconnect();
   };
 
   const handleOnDisconnectConnect = async () => {
-    await onDisconnect(state.currentDevice);
+    await DeviceTools.disconnect(state.currentDevice);
+    dispatch({ type: "disconnect", payload: selectedPortIndex });
+    await onDisconnect();
     const delay = (ms: number) =>
       new Promise(res => {
         setTimeout(res, ms);

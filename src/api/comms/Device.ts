@@ -129,7 +129,9 @@ class Device {
 
   close = async () => {
     try {
-      await this.port.close();
+      if (this.type === "serial") await this.port.close();
+      if (this.type === "hid") await this.port.connectedDevice.close();
+      this.memoryMap = new DeviceMap();
       this.isClosed = true;
     } catch (error) {
       console.error(error);

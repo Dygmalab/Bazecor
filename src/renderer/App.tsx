@@ -163,11 +163,8 @@ function App() {
     console.log("disconnecting Keyboard!");
     console.log(state);
     setConnected(false);
-    device.current = null;
     setPages({});
-    if (!state.currentDevice?.isClosed) {
-      state.currentDevice.close();
-    }
+    device.current = null;
     localStorage.clear();
     navigate("/keyboard-select");
   };

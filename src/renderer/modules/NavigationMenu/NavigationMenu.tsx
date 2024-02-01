@@ -141,10 +141,9 @@ function NavigationMenu(props: NavigationMenuProps) {
   );
 
   const checkKeyboardMetadata = useCallback(async () => {
-    const { currentDevice } = state;
-    setDevice(currentDevice.device);
-    if (currentDevice.device === undefined || currentDevice.device.bootloader) return;
-    let parts = await currentDevice.command("version");
+    setDevice(state.currentDevice.device);
+    if (state.currentDevice.device === undefined || state.currentDevice.device.bootloader) return;
+    let parts = await state.currentDevice.command("version");
     parts = parts.split(" ");
     const getVersions: Version = {
       bazecor: parts[0],
@@ -157,7 +156,7 @@ function NavigationMenu(props: NavigationMenuProps) {
     // Getting GitHub Data
     let fwList = [];
     try {
-      fwList = await getGitHubFW(currentDevice.device.info.product);
+      fwList = await getGitHubFW(state.currentDevice.device.info.product);
     } catch (error) {
       console.log("Error when fetching GitHub data");
       console.warn(error);
@@ -165,19 +164,25 @@ function NavigationMenu(props: NavigationMenuProps) {
     }
     // Comparing online Data to FW version
     const semVerCheck = SemVer.compare(fwList[0].version, cleanedVersion);
-    Beta = Beta || currentDevice.device.info.product !== "Raise";
+    Beta = Beta || state.currentDevice.device.info.product !== "Raise";
     setVersions(getVersions);
     setIsUpdated(semVerCheck > 0);
     setIsBeta(Beta);
-    setVirtual(currentDevice.file);
+    setVirtual(state.currentDevice.file);
     setCheckedVer(true);
-  }, [getGitHubFW, state]);
+  }, [getGitHubFW, state.currentDevice]);
 
   useEffect(() => {
     if (!flashing && connected && !loading && !checkedVer) {
       checkKeyboardMetadata();
     }
   }, [flashing, connected, loading, checkKeyboardMetadata, checkedVer]);
+
+  useEffect(() => {
+    if (checkedVer && !connected) {
+      setCheckedVer(false);
+    }
+  }, [checkedVer, connected]);
 
   const [showAlertModal, setShowAlertModal] = useState(false);
 

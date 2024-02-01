@@ -2,7 +2,7 @@ import Device from "../../api/comms/Device";
 
 export interface SelectKeyboardProps {
   onConnect: (...args: any[]) => any;
-  onDisconnect: (currentDevice: Device) => void;
+  onDisconnect: () => void;
   connected: boolean;
   device: unknown;
   darkMode: boolean;

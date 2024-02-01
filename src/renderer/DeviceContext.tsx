@@ -27,6 +27,9 @@ function deviceReducer(state: State, action: Action) {
       const newDevices = action.payload;
       return { ...state, deviceList: newDevices };
     }
+    case "disconnect": {
+      return { ...state, currentDevice: undefined };
+    }
     default: {
       throw new Error(`Unhandled action type: ${action.type}`);
     }
@@ -113,8 +116,22 @@ const connect = async (device: Device) => {
   }
 };
 
+const disconnect = async (device: Device) => {
+  try {
+    if (!device?.isClosed) {
+      await device.close();
+    }
+    console.log("device disconnected successfully");
+    return true;
+  } catch (error) {
+    console.error(error);
+    return false;
+  }
+};
+
 const DeviceTools: any = {};
 DeviceTools.list = list;
 DeviceTools.connect = connect;
+DeviceTools.disconnect = disconnect;
 
 export { DeviceProvider, useDevice, DeviceTools };
