@@ -37,6 +37,12 @@ import ConfirmationDialog from "@Renderer/component/ConfirmationDialog";
 import { CopyFromDialog } from "@Renderer/component/CopyFromDialog";
 import { useDevice } from "@Renderer/DeviceContext";
 
+// Types
+import { Neuron, LayerType } from "@Renderer/types/neurons";
+import { LayoutEditorProps } from "@Renderer/types/layout";
+import { SuperkeysType } from "@Renderer/types/superkeys";
+import { MacrosType } from "@Renderer/types/macros";
+
 // Modules
 import { PageHeader } from "@Renderer/modules/PageHeader";
 import ColorEditor from "@Renderer/modules/ColorEditor";
@@ -48,8 +54,6 @@ import { LayerSelector } from "@Renderer/component/Select";
 import { RegularButton } from "@Renderer/component/Button";
 import { LayoutViewSelector } from "@Renderer/component/ToggleButtons";
 import { IconArrowUpWithLine, IconArrowDownWithLine } from "@Renderer/component/Icon";
-import { Neuron, LayerType, MacrosType, SuperkeysType } from "@Renderer/types/neurons";
-import { LayoutEditorProps } from "@Renderer/types/layout";
 import { i18n } from "@Renderer/i18n";
 
 import Store from "@Renderer/utils/Store";

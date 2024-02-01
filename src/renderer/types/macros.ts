@@ -14,23 +14,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { MacrosType } from "./macros";
-import { SuperkeysType } from "./superkeys";
-
-export interface LayerType {
+export interface MacrosType {
+  actions: {
+    keyCode: number;
+    type: number;
+    id: number;
+  };
   id: number;
   name: string;
-}
-
-export interface Neuron {
-  id: string;
-  name: string;
-  layers: Array<LayerType>;
-  macros: Array<MacrosType>;
-  superkeys: Array<SuperkeysType>;
-}
-
-export interface Neurons {
-  neurons: Neuron[];
-  selectedNeuron: number;
+  macro: string;
 }

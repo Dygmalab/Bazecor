@@ -1,16 +1,16 @@
 /* eslint-disable react/forbid-prop-types */
 import React from "react";
-import PropTypes from "prop-types";
 import Styled from "styled-components";
 
 // Components
-import { SuperkeyPicker } from "../../component/Button";
+import { SuperkeyPicker } from "@Renderer/component/Button";
 
 // Icons
-import { IconKeysPress, IconKeysTapHold, IconKeysHold, IconKeys2Tap, IconKeys2TapHold } from "../../component/Icon";
+import { IconKeysPress, IconKeysTapHold, IconKeysHold, IconKeys2Tap, IconKeys2TapHold } from "@Renderer/component/Icon";
 
 // API's
 import { i18n } from "@Renderer/i18n";
+import { SuperKeyActionsProps } from "@Renderer/types/superkeys";
 
 const Style = Styled.div`
 .keyWrapper {
@@ -21,16 +21,8 @@ const Style = Styled.div`
 }
 `;
 
-function SuperkeyActions({
-  isStandardViewSuperkeys,
-  superkeys,
-  selected,
-  selectedAction,
-  macros,
-  updateAction,
-  changeAction,
-  keymapDB,
-}: any) {
+function SuperkeyActions(props: SuperKeyActionsProps) {
+  const { isStandardViewSuperkeys, superkeys, selected, selectedAction, macros, updateAction, changeAction, keymapDB } = props;
   const rows = [
     {
       id: 0,
@@ -90,16 +82,5 @@ function SuperkeyActions({
     </Style>
   );
 }
-
-SuperkeyActions.propTypes = {
-  isStandardViewSuperkeys: PropTypes.bool.isRequired,
-  superkeys: PropTypes.any.isRequired,
-  selected: PropTypes.number.isRequired,
-  selectedAction: PropTypes.number.isRequired,
-  macros: PropTypes.any.isRequired,
-  updateAction: PropTypes.func.isRequired,
-  changeAction: PropTypes.func.isRequired,
-  keymapDB: PropTypes.any.isRequired,
-};
 
 export default SuperkeyActions;

@@ -269,36 +269,42 @@ export default class StandardView extends React.Component<StandardViewProps, Sta
     let superName;
 
     if (aux.extraLabel === "MACRO") {
-      const macro = macros[parseInt(this.keymapDB.parse(keycode).label, 10) - 1];
+      const macro = macros[parseInt(aux.label, 10) - 1];
       try {
         macroName = macro.name.substr(0, 5);
       } catch (error) {
         macroName = "*NotFound*";
       }
       if (keycode >= 53852 && keycode <= 53852 + 128) {
-        if (code !== null) return `${this.keymapDB.parse(keycode).extraLabel}.${macroName}`;
+        if (code !== null) return `${aux.extraLabel}.${macroName}`;
       }
     }
 
     if (aux.extraLabel === "SUPER") {
-      const superk = superkeys[parseInt(this.keymapDB.parse(keycode).label, 10) - 1];
+      const superk = superkeys[parseInt(aux.label, 10) - 1];
       try {
         superName = superk.name.substr(0, 5);
       } catch (error) {
         superName = "*NotFound*";
       }
       if (keycode >= 53980 && keycode <= 53980 + 128) {
-        if (code !== null) return `${this.keymapDB.parse(keycode).extraLabel}.${superName}`;
+        if (code !== null) return `${aux.extraLabel}.${superName}`;
       }
     }
 
-    if (React.isValidElement(this.keymapDB.parse(keycode).label)) return this.keymapDB.parse(keycode).label;
+    if (React.isValidElement(aux.label))
+      return aux.extraLabel !== undefined ? (
+        <>
+          {aux.extraLabel}
+          <br />
+          {aux.label}
+        </>
+      ) : (
+        aux.label
+      );
     let result;
     if (code !== null) {
-      result =
-        this.keymapDB.parse(keycode).extraLabel !== undefined
-          ? `${this.keymapDB.parse(keycode).extraLabel}.${this.keymapDB.parse(keycode).label}`
-          : this.keymapDB.parse(keycode).label;
+      result = aux.extraLabel !== undefined ? `${aux.extraLabel}.${aux.label}` : aux.label;
     }
     return result;
   }
