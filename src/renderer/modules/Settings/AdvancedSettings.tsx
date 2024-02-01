@@ -21,16 +21,15 @@ import { Switch } from "@Renderer/components/ui/switch";
 
 import { useDevice } from "@Renderer/DeviceContext";
 import { Select } from "@Renderer/component/Select";
-import { Neuron } from "@Renderer/types/neurons";
-import BackupSettings from "./BackupSettings";
+import BackupSettings from "@Renderer/modules/Settings/BackupSettings";
 import { i18n } from "@Renderer/i18n";
 
 // Own Components
-import { RegularButton } from "../../component/Button";
-import ConfirmationDialog from "../../component/ConfirmationDialog";
+import { RegularButton } from "@Renderer/component/Button";
+import ConfirmationDialog from "@Renderer/component/ConfirmationDialog";
 
 // Icons Imports
-import { IconChip, IconLayers } from "../../component/Icon";
+import { IconChip, IconLayers } from "@Renderer/component/Icon";
 import { AdvancedSettingsProps } from "@Renderer/types/preferences";
 
 const AdvancedKeyboardSettings = () => {

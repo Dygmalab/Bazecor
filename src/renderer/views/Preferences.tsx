@@ -746,7 +746,6 @@ const Preferences = (props: PreferencesProps) => {
               <TabsContent value="Application">
                 <motion.div initial="hidden" animate="visible" variants={tabVariants}>
                   <GeneralSettings
-                    connected={connected}
                     selectDarkMode={selectDarkMode}
                     darkMode={darkMode}
                     neurons={neurons}

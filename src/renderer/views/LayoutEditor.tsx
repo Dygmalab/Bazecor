@@ -48,7 +48,7 @@ import { LayerSelector } from "@Renderer/component/Select";
 import { RegularButton } from "@Renderer/component/Button";
 import { LayoutViewSelector } from "@Renderer/component/ToggleButtons";
 import { IconArrowUpWithLine, IconArrowDownWithLine } from "@Renderer/component/Icon";
-import { Neuron, LayerType, macrosType, superkeysType } from "@Renderer/types/neurons";
+import { Neuron, LayerType, MacrosType, SuperkeysType } from "@Renderer/types/neurons";
 import { LayoutEditorProps } from "@Renderer/types/layout";
 import { i18n } from "@Renderer/i18n";
 
@@ -773,15 +773,15 @@ const LayoutEditor = (props: LayoutEditorProps) => {
         id: "",
         name: "",
         layers: new Array<LayerType>(),
-        macros: new Array<macrosType>(),
-        superkeys: new Array<superkeysType>(),
+        macros: new Array<MacrosType>(),
+        superkeys: new Array<SuperkeysType>(),
       };
       if (!neurons.some((n: { id: any }) => n.id === CID) && neurons.length === 0) {
         neuron.id = CID;
         neuron.name = currentDevice.device.info.product;
         neuron.layers = store.get("layerNames") !== undefined ? (store.get("layerNames") as Array<LayerType>) : defaultLayerNames;
-        neuron.macros = store.get("macros") !== undefined ? (store.get("macros") as Array<macrosType>) : [];
-        neuron.superkeys = store.get("superkeys") !== undefined ? (store.get("superkeys") as Array<superkeysType>) : [];
+        neuron.macros = store.get("macros") !== undefined ? (store.get("macros") as Array<MacrosType>) : [];
+        neuron.superkeys = store.get("superkeys") !== undefined ? (store.get("superkeys") as Array<SuperkeysType>) : [];
         console.log("New neuron", neuron);
         neurons = neurons.concat(neuron);
         store.set("neurons", neurons);

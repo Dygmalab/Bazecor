@@ -1,13 +1,3 @@
-import React, { useState, useEffect } from "react";
-import Styled from "styled-components";
-
-// Own Components
-import { flags, languages, languageNames } from "./GeneralSettingsLanguages";
-import { useDevice } from "@Renderer/DeviceContext";
-
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@Renderer/components/ui/card";
-import { Switch } from "@Renderer/components/ui/switch";
-
 /* Bazecor
  * Copyright (C) 2024  DygmaLab SE.
  *
@@ -24,18 +14,29 @@ import { Switch } from "@Renderer/components/ui/switch";
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Neuron } from "@Renderer/types/neurons";
-import { IconChip, IconHanger, IconSun, IconMoon, IconScreen, IconKeyboard, IconFlashlight } from "../../component/Icon";
-import FileBackUpHandling from "./FileBackUpHandling";
-import { ToggleButtons } from "../../component/ToggleButtons";
-import { Select } from "../../component/Select";
-import Keymap from "../../../api/keymap";
-import { i18n } from "@Renderer/i18n";
-import Store from "../../utils/Store";
-import { KeyPickerPreview } from "../KeyPickerKeyboard";
-import getLanguage from "../../utils/language";
-import ToastMessage from "@Renderer/component/ToastMessage";
+import React, { useState, useEffect } from "react";
+import Styled from "styled-components";
 import { toast } from "react-toastify";
+
+// Types
+import { LayerType, Neuron } from "@Renderer/types/neurons";
+
+// Own Components
+import { useDevice } from "@Renderer/DeviceContext";
+import { flags, languages, languageNames } from "@Renderer/modules/Settings/GeneralSettingsLanguages";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@Renderer/components/ui/card";
+import { Switch } from "@Renderer/components/ui/switch";
+import { IconChip, IconHanger, IconSun, IconMoon, IconScreen, IconKeyboard } from "@Renderer/component/Icon";
+import FileBackUpHandling from "@Renderer/modules/Settings/FileBackUpHandling";
+import { ToggleButtons } from "@Renderer/component/ToggleButtons";
+import { Select } from "@Renderer/component/Select";
+import { KeyPickerPreview } from "@Renderer/modules/KeyPickerKeyboard";
+import getLanguage from "@Renderer/utils/language";
+import ToastMessage from "@Renderer/component/ToastMessage";
+
+import { i18n } from "@Renderer/i18n";
+import Keymap from "../../../api/keymap";
+import Store from "../../utils/Store";
 
 const GeneralSettingsWrapper = Styled.div`
 .dropdown-menu {
@@ -46,7 +47,6 @@ const GeneralSettingsWrapper = Styled.div`
 const store = Store.getStore();
 
 interface GeneralSettingsProps {
-  connected: boolean;
   selectDarkMode: (item: string) => void;
   darkMode: string;
   neurons: Neuron[];
@@ -60,7 +60,6 @@ interface GeneralSettingsProps {
 }
 
 const GeneralSettings = ({
-  connected,
   selectDarkMode,
   darkMode,
   neurons,
@@ -97,10 +96,12 @@ const GeneralSettings = ({
         progress: undefined,
         icon: "",
       });
-    } catch (error) {}
+    } catch (error) {
+      console.error(error);
+    }
   };
 
-  let layersNames: any = neurons[selectedNeuron] ? neurons[selectedNeuron].layers : [];
+  const layersNames: LayerType[] = neurons[selectedNeuron] ? neurons[selectedNeuron].layers : new Array<LayerType>();
   const languageElements = languages.map((item, index) => ({
     text: languageNames[index],
     value: item,
@@ -108,12 +109,12 @@ const GeneralSettings = ({
     index,
   }));
 
-  layersNames = layersNames.map((item: any, index: any) => ({
-    text: item.name !== "" ? item.name : `Layer ${index + 1}`,
-    value: index,
-    index,
+  const localLayerNames = layersNames.map((layer: LayerType) => ({
+    text: layer.name !== "" ? layer.name : `Layer ${layer.id + 1}`,
+    value: layer.id,
+    index: layer.id,
   }));
-  layersNames.push({ text: i18n.keyboardSettings.keymap.noDefault, value: 126, index: 126 });
+  localLayerNames.push({ text: i18n.keyboardSettings.keymap.noDefault, value: 126, index: 126 });
 
   const layoutsModes = [
     {
@@ -184,7 +185,7 @@ const GeneralSettings = ({
           />
         </CardContent>
       </Card>
-      {connected && <FileBackUpHandling />}
+      <FileBackUpHandling />
       <Card className="mt-3 max-w-2xl mx-auto" variant="default">
         <CardHeader>
           <CardTitle variant="default">

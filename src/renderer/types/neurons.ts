@@ -19,14 +19,14 @@ export interface LayerType {
   name: string;
 }
 
-export interface macrosType {
+export interface MacrosType {
   actions: unknown;
   id: number;
   name: string;
   macro: string;
 }
 
-export interface superkeysType {
+export interface SuperkeysType {
   actions: unknown;
   name: string;
   id: number;
@@ -36,8 +36,8 @@ export interface Neuron {
   id: string;
   name: string;
   layers: Array<LayerType>;
-  macros: Array<macrosType>;
-  superkeys: Array<superkeysType>;
+  macros: Array<MacrosType>;
+  superkeys: Array<SuperkeysType>;
 }
 
 export interface Neurons {

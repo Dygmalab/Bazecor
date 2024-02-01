@@ -37,7 +37,7 @@ const store = Store.getStore();
 
 const FileBackUpHandling = () => {
   const [backupFolder, setBackupFolder] = useState("");
-  const [storeBackups, setStoreBackups] = useState(13);
+  const [storeBackups, setStoreBackups] = useState(0);
   useEffect(() => {
     setBackupFolder(store.get("settings.backupFolder") as string);
     setStoreBackups(store.get("settings.backupFrequency") as number);
@@ -95,7 +95,7 @@ const FileBackUpHandling = () => {
                   <span className="tagsfix">1 month</span>
                 </Col>
                 <Col xs={8} className="px-1">
-                  <Slider min={0} max={13} step={1} value={storeBackups} onChange={onSetStoreBackups} />
+                  <Slider min={1} max={13} step={1} value={storeBackups} onChange={onSetStoreBackups} />
                 </Col>
                 <Col xs={2} className="p-0 text-center align-self-center">
                   <span className="tagsfix">Forever</span>
