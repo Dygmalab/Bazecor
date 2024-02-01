@@ -145,7 +145,7 @@ const Preferences = (props: PreferencesProps) => {
   const [preferencesState, setPreferencesState] = useState<PrefState>(initialPreferences);
 
   // Destructuring PROPS
-  const { connected, allowBeta, updateAllowBetas, startContext, cancelContext, toggleDarkMode, setLoading } = props;
+  const { connected, allowBeta, updateAllowBetas, startContext, cancelContext, toggleDarkMode, toggleBackup, setLoading } = props;
   const [activeTab, setActiveTab] = useState(connected ? "Keyboard" : "Application");
 
   const getNeuronData = useCallback(async () => {
@@ -738,6 +738,7 @@ const Preferences = (props: PreferencesProps) => {
                         updateTab={handleTabChange}
                         onlyCustomLayers={kbData.keymap.onlyCustom.toString()}
                         onChangeOnlyCustomLayers={onChangeOnlyCustomLayers}
+                        toggleBackup={toggleBackup}
                       />
                     </motion.div>
                   </TabsContent>

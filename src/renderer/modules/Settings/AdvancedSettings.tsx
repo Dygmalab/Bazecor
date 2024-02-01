@@ -89,6 +89,7 @@ const AdvancedSettings = ({
   neuronID,
   selectedNeuron,
   updateTab,
+  toggleBackup,
   onlyCustomLayers,
   onChangeOnlyCustomLayers,
 }: AdvancedSettingsProps) => {
@@ -149,7 +150,13 @@ const AdvancedSettings = ({
           </div>
         </CardContent>
       </Card>
-      <BackupSettings connected={connected} neurons={neurons} neuronID={neuronID} updateTab={updateTab} />
+      <BackupSettings
+        connected={connected}
+        neurons={neurons}
+        neuronID={neuronID}
+        updateTab={updateTab}
+        toggleBackup={toggleBackup}
+      />
       {keyboardType === "Raise" ? (
         <Card className="mt-3 max-w-2xl mx-auto" variant="default">
           <CardHeader>

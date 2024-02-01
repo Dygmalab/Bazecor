@@ -134,7 +134,7 @@ function FirmwareUpdateProcess(props) {
         if (toggledFlashing) return;
         console.log("starting flashing indicators");
         toggleFlashing();
-        toggleFwUpdate();
+        toggleFwUpdate(true);
         sendToggledFlashing(true);
       },
       finishFlashing: async () => {
@@ -142,7 +142,7 @@ function FirmwareUpdateProcess(props) {
         sendToggledFlashing(false);
         console.log("closing flashin process");
         toggleFlashing();
-        toggleFwUpdate();
+        toggleFwUpdate(false);
         onDisconnect();
       },
     },

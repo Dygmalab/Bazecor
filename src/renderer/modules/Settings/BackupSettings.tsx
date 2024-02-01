@@ -34,25 +34,29 @@ import { IconArrowDownWithLine, IconFloppyDisk } from "@Renderer/component/Icon"
 
 // Utils
 import Store from "@Renderer/utils/Store";
+import { BackupSettingsProps } from "@Renderer/types/preferences";
+import WaitForRestoreDialog from "@Renderer/component/WaitForRestoreDialog";
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const glob = require(`glob`);
 const store = Store.getStore();
 
-interface BackupSettingsProps {
-  connected: boolean;
-  neurons: any;
-  neuronID: string;
-  updateTab: (value: string) => void;
-}
-
 const BackupSettings = (props: BackupSettingsProps) => {
   const [backupFolder, setBackupFolder] = useState("");
+  const [performingBackup, setPerformingBackup] = useState(false);
   const [state] = useDevice();
-  const { connected, neurons, neuronID, updateTab } = props;
+  const { connected, neurons, neuronID, updateTab, toggleBackup } = props;
   useEffect(() => {
     setBackupFolder(store.get("settings.backupFolder") as string);
   }, []);
+
+  const openPerformingBackup = () => {
+    setPerformingBackup(true);
+  };
+
+  const closePerformingBackup = () => {
+    setPerformingBackup(false);
+  };
 
   const restoreBackup = async (backup: any) => {
     let data = [];
@@ -68,6 +72,8 @@ const BackupSettings = (props: BackupSettingsProps) => {
     }
     if (state.currentDevice) {
       try {
+        openPerformingBackup();
+        toggleBackup(true);
         for (let i = 0; i < data.length; i += 1) {
           let val = data[i].data;
           // Boolean values needs to be sent as int
@@ -96,9 +102,13 @@ const BackupSettings = (props: BackupSettingsProps) => {
             icon: "",
           },
         );
+        closePerformingBackup();
+        toggleBackup(false);
         return true;
       } catch (e) {
         console.log(`Restore settings: Error: ${e.message}`);
+        closePerformingBackup();
+        toggleBackup(false);
         return false;
       }
     }
@@ -108,6 +118,8 @@ const BackupSettings = (props: BackupSettingsProps) => {
   const restoreVirtual = async (virtual: any) => {
     if (state.currentDevice) {
       try {
+        openPerformingBackup();
+        toggleBackup(true);
         console.log("Restoring all settings");
         for (const command in virtual) {
           if (virtual[command].eraseable === true) {
@@ -129,9 +141,13 @@ const BackupSettings = (props: BackupSettingsProps) => {
             icon: "",
           },
         );
+        closePerformingBackup();
+        toggleBackup(false);
         return true;
       } catch (e) {
         console.log(`Restore settings: Error: ${e.message}`);
+        closePerformingBackup();
+        toggleBackup(false);
         return false;
       }
     }
@@ -230,6 +246,7 @@ const BackupSettings = (props: BackupSettingsProps) => {
           <div className="flex gap-3">
             <RegularButton onClick={GetBackup} styles="short" buttonText="Restore backup from file..." disabled={!connected} />
             <RegularButton onClick={getLatestBackup} styles="short" buttonText="Restore from last backup" />
+            <WaitForRestoreDialog title="Restoring Backup" open={performingBackup} />
           </div>
         </form>
       </CardContent>

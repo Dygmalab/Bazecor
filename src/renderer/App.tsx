@@ -269,9 +269,9 @@ function App() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const toggleFwUpdate = () => {
-    console.log("toggling fwUpdate to: ", !fwUpdate);
-    setFwUpdate(!fwUpdate);
+  const toggleFwUpdate = (value: boolean) => {
+    console.log("toggling fwUpdate to: ", value);
+    setFwUpdate(value);
   };
 
   const setLoadingData = (isLoading: boolean) => {
@@ -373,6 +373,7 @@ function App() {
                 connected={connected}
                 toggleDarkMode={toggleDarkMode}
                 startContext={startContext}
+                toggleBackup={toggleFwUpdate}
                 cancelContext={cancelContext}
                 updateAllowBetas={updateAllowBetas}
                 allowBeta={allowBeta}

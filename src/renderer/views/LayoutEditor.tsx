@@ -1686,12 +1686,12 @@ const LayoutEditor = (props: LayoutEditorProps) => {
     return <div />;
   }
 
-  const copyCustomItems = keymap.custom.map((_: any, index: number) => {
-    const idx = index + (keymap.onlyCustom ? 0 : keymap.default.length);
+  const copyCustomItems = keymap.custom.map((_: any, id: number) => {
+    const idx = id + (keymap.onlyCustom ? 0 : keymap.default.length);
     const label = `${(idx + 1).toString()}: ${layerName(idx)}`;
     return {
-      index: idx,
-      label,
+      id: idx,
+      name: label,
     };
   });
 
@@ -1701,8 +1701,8 @@ const LayoutEditor = (props: LayoutEditorProps) => {
       const idx = index - (keymap.onlyCustom ? keymap.default.length : 0);
       const label = idx.toString();
       return {
-        index: idx,
-        label,
+        id: idx,
+        name: label,
       };
     });
   const copyFromLayerOptions = (copyDefaultItems || []).concat(copyCustomItems);

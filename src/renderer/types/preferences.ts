@@ -8,6 +8,7 @@ export interface PreferencesProps {
   connected: boolean;
   startContext: () => void;
   toggleDarkMode: (mode: string) => void;
+  toggleBackup: (value: boolean) => void;
   setLoading: (lding: boolean) => void;
 }
 
@@ -67,6 +68,7 @@ export interface AdvancedSettingsProps {
   selectedNeuron: number;
   updateTab: (value: string) => void;
   onlyCustomLayers: string | boolean;
+  toggleBackup: (value: boolean) => void;
   onChangeOnlyCustomLayers: (checked: boolean) => void;
 }
 
@@ -86,4 +88,12 @@ export interface NeuronSelectorProps {
   updateItem: (data: string) => void;
   deleteItem: (toDelete: number) => void;
   subtitle: string;
+}
+
+export interface BackupSettingsProps {
+  connected: boolean;
+  neurons: any;
+  neuronID: string;
+  updateTab: (value: string) => void;
+  toggleBackup: (value: boolean) => void;
 }

@@ -22,6 +22,7 @@ import Styled from "styled-components";
 import Modal from "react-bootstrap/Modal";
 import ListGroup from "react-bootstrap/ListGroup";
 import { i18n } from "@Renderer/i18n";
+import { LayerType } from "@Renderer/types/neurons";
 
 import { RegularButton } from "./Button";
 import Title from "./Title";
@@ -76,17 +77,19 @@ const Styles = Styled.div`
 }
 `;
 
-export function CopyFromDialog(props) {
+interface CopyFromDialogProps {
+  open: boolean;
+  onCancel: () => void;
+  onCopy: (layer: number) => void;
+  layers: LayerType[];
+  currentLayer: number;
+}
+
+export function CopyFromDialog(props: CopyFromDialogProps) {
+  const { open, onCancel, onCopy, layers, currentLayer } = props;
   const [selectedLayer, setSelectedLayer] = useState(-1);
   return (
-    <Modal
-      backdrop="static"
-      show={props.open}
-      onHide={props.onCancel}
-      size="lg"
-      aria-labelledby="contained-modal-title-vcenter"
-      centered
-    >
+    <Modal backdrop="static" show={open} onHide={onCancel} size="lg" aria-labelledby="contained-modal-title-vcenter" centered>
       <Styles>
         <Modal.Header closeButton>
           <Modal.Title>{i18n.editor.layers.copyFrom}</Modal.Title>
@@ -94,19 +97,19 @@ export function CopyFromDialog(props) {
         <Modal.Body>
           <Title text={i18n.editor.pleaseSelectLayer} headingLevel={4} />
           <ListGroup variant="flush">
-            {props.layers.map(layer => (
+            {layers.map(layer => (
               <ListGroup.Item
-                className={`listitem ${
-                  layer.index == props.currentLayer ? "disabled" : layer.index == selectedLayer ? "selected" : ""
+                className={`listitem ${layer.id === currentLayer ? "disabled" : ""} ${
+                  layer.id === selectedLayer ? "selected" : ""
                 }`}
-                key={layer.index}
+                key={layer.id}
                 action
-                disabled={layer.index == props.currentLayer}
+                disabled={layer.id === currentLayer}
                 onClick={() => {
-                  setSelectedLayer(layer.index);
+                  setSelectedLayer(layer.id);
                 }}
               >
-                {layer.label} {layer.index == selectedLayer ? <span>{i18n.editor.layers.layerToCopy}</span> : ""}
+                {layer.name} {layer.id === selectedLayer ? <span>{i18n.editor.layers.layerToCopy}</span> : ""}
               </ListGroup.Item>
             ))}
           </ListGroup>
@@ -118,7 +121,7 @@ export function CopyFromDialog(props) {
             size="sm"
             onClick={() => {
               setSelectedLayer(-1);
-              props.onCancel();
+              onCancel();
             }}
           />
           <RegularButton
@@ -128,7 +131,7 @@ export function CopyFromDialog(props) {
             onClick={() => {
               const layer = selectedLayer;
               setSelectedLayer(-1);
-              props.onCopy(layer);
+              onCopy(layer);
             }}
           />
         </Modal.Footer>
