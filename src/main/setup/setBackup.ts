@@ -41,7 +41,8 @@ const setBackup = () => {
   const store = Store.getStore();
   const bfolder = store.get("settings.backupFolder") as string;
   const bfrequency = store.get("settings.backupFrequency") as number;
-  console.log("** Checking backup folder value", bfolder);
+  console.log("** Checking backup folder value **");
+  console.log(bfolder);
   if (bfolder === "" || bfolder === undefined) {
     const defaultPath = path.join(app.getPath("home"), "Dygma", "Backups");
     console.log(defaultPath);
@@ -53,6 +54,7 @@ const setBackup = () => {
       console.log("Directory created successfully!");
     });
   } else if (bfrequency > 0 && bfrequency < 13) {
+    console.log(`** Going to erase backups older than: ${bfrequency} months **`);
     deleteOldFiles(bfolder, bfrequency);
   }
 };

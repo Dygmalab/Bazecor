@@ -37,10 +37,16 @@ const store = Store.getStore();
 
 const FileBackUpHandling = () => {
   const [backupFolder, setBackupFolder] = useState("");
-  const [storeBackups, setStoreBackups] = useState(0);
+  const [storeBackups, setStoreBackups] = useState(13);
   useEffect(() => {
+    const freq = store.get("settings.backupFrequency") as number;
     setBackupFolder(store.get("settings.backupFolder") as string);
-    setStoreBackups(store.get("settings.backupFrequency") as number);
+    if (freq === 0) {
+      setStoreBackups(13);
+      store.set("settings.backupFrequency", 13);
+    } else {
+      setStoreBackups(freq);
+    }
   }, []);
 
   const ChooseBackupFolder = async () => {
