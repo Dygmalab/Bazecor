@@ -157,7 +157,7 @@ function EnergyManagement(props: EnergyManagementProps) {
                 value="Application"
                 onClick={setApplicationTab}
               >
-                {wireless.idleleds > 0 ? `set to ${wireless.idleleds / 60}min` : "Deactivated"}
+                {wireless.idleleds > 0 ? `set to ${wireless.idleleds / 60}min` : "deactivated"}
               </button>
             </div>
           </div>

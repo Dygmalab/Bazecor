@@ -202,7 +202,7 @@ function LEDSettings(props: LEDSettingsPreferences) {
           <CardHeader>
             <CardTitle className="flex flex-row items-center justify-between">
               <div className="flex items-center gap-2">
-                <IconFlashlight /> {i18n.keyboardSettings.led.title} Timer off
+                <IconFlashlight /> {i18n.keyboardSettings.led.title} timer off
               </div>
               {isWireless && (
                 <Badge content={i18n.wireless.energyManagement.settings.highBatteryImpact} variation="danger-low" size="sm" />
