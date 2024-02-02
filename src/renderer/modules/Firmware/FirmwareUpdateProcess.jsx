@@ -94,7 +94,7 @@ height: inherit;
 
 function FirmwareUpdateProcess(props) {
   const { nextBlock, retryBlock, context, toggleFlashing, toggleFwUpdate, onDisconnect } = props;
-  const [deviceState] = useDevice();
+  const { state: deviceState } = useDevice();
   const [toggledFlashing, sendToggledFlashing] = useState(false);
   const handleKeyDown = event => {
     switch (event.keyCode) {

@@ -1807,7 +1807,6 @@ const LayoutEditor = (props: LayoutEditorProps) => {
           }
           colorEditor={
             <ColorEditor
-              key={JSON.stringify(palette)}
               colors={palette}
               disabled={isReadOnly || currentLayer > colorMap.length}
               onColorSelect={onColorSelect}

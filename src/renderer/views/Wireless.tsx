@@ -71,7 +71,8 @@ const initialWireless = {
 const Wireless = (props: WirelessPropsInterface) => {
   const { startContext, cancelContext } = props;
   const [isSaving, setIsSaving] = useState(false);
-  const [state] = useDevice();
+  const { state } = useDevice();
+
   const [wireless, setWireless] = useState<WirelessInterface>(initialWireless);
   const [modified, setModified] = useState(false);
   const [loading, setLocalLoading] = useState(true);
@@ -178,22 +179,22 @@ const Wireless = (props: WirelessPropsInterface) => {
     setIsSaving(true);
     if (state.currentDevice) {
       // Commands to be sent to the keyboard
-      await state.currentDevice.command("wireless.battery.savingMode", wireless.battery.savingMode ? 1 : 0);
+      await state.currentDevice.command("wireless.battery.savingMode", wireless.battery.savingMode ? "1" : "0");
       await state.currentDevice.command("wireless.bluetooth.deviceName", wireless.bluetooth.deviceName);
-      await state.currentDevice.command("wireless.rf.channelHop", wireless.rf.channelHop);
-      await state.currentDevice.command("wireless.rf.power", wireless.rf.power);
+      await state.currentDevice.command("wireless.rf.channelHop", wireless.rf.channelHop.toString());
+      await state.currentDevice.command("wireless.rf.power", wireless.rf.power.toString());
 
-      await state.currentDevice.command("led.brightness.wireless", wireless.brightness);
-      await state.currentDevice.command("led.brightnessUG.wireless", wireless.brightnessUG);
-      await state.currentDevice.command("led.fade", wireless.fade);
-      await state.currentDevice.command("idleleds.wireless", wireless.idleleds);
+      await state.currentDevice.command("led.brightness.wireless", wireless.brightness.toString());
+      await state.currentDevice.command("led.brightnessUG.wireless", wireless.brightnessUG.toString());
+      await state.currentDevice.command("led.fade", wireless.fade.toString());
+      await state.currentDevice.command("idleleds.wireless", wireless.idleleds.toString());
 
-      await state.currentDevice.command("led.brightness.wireless", wireless.brightness);
-      await state.currentDevice.command("led.brightnessUG.wireless", wireless.brightnessUG);
-      await state.currentDevice.command("led.fade", wireless.fade);
-      await state.currentDevice.command("idleleds.wireless", wireless.idleleds);
-      await state.currentDevice.command("idleleds.true_sleep", wireless.true_sleep ? 1 : 0);
-      await state.currentDevice.command("idleleds.true_sleep_time", wireless.true_sleep_time);
+      await state.currentDevice.command("led.brightness.wireless", wireless.brightness.toString());
+      await state.currentDevice.command("led.brightnessUG.wireless", wireless.brightnessUG.toString());
+      await state.currentDevice.command("led.fade", wireless.fade.toString());
+      await state.currentDevice.command("idleleds.wireless", wireless.idleleds.toString());
+      await state.currentDevice.command("idleleds.true_sleep", wireless.true_sleep ? "1" : "0");
+      await state.currentDevice.command("idleleds.true_sleep_time", wireless.true_sleep_time.toString());
 
       setIsSaving(false);
       destroyContext();

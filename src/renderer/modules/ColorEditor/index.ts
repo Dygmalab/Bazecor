@@ -16,4 +16,4 @@
 
 import ColorEditor from "./ColorEditor";
 
-export { ColorEditor as default };
+export default ColorEditor;

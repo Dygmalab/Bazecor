@@ -165,7 +165,7 @@ height:inherit;
 
 function FirmwareUpdatePanel(props) {
   const { nextBlock, retryBlock, errorBlock, allowBeta } = props;
-  const [deviceState] = useDevice();
+  const { state: deviceState } = useDevice();
   const [state, send] = useMachine(FWSelection, { context: { allowBeta, deviceState } });
 
   const [loading, setLoading] = useState(true);

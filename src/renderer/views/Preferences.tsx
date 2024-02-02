@@ -134,7 +134,8 @@ const initialPreferences = {
 };
 
 const Preferences = (props: PreferencesProps) => {
-  const [state] = useDevice();
+  const { state } = useDevice();
+
   const [bkp] = useState(new Backup());
   const [modified, setModified] = useState(false);
   const [localloading, setLocalLoading] = useState(true);
@@ -324,51 +325,52 @@ const Preferences = (props: PreferencesProps) => {
 
   const saveKeymapChanges = async () => {
     if (state.currentDevice) {
-      await state.currentDevice.command("keymap.onlyCustom", kbData.keymap.onlyCustom);
-      await state.currentDevice.command("settings.defaultLayer", kbData.defaultLayer);
-      await state.currentDevice.command("led.brightness", kbData.ledBrightness);
-      await state.currentDevice.command("led.brightnessUG", kbData.ledBrightnessUG);
-      if (kbData.ledIdleTimeLimit >= 0) await state.currentDevice.command("idleleds.time_limit", kbData.ledIdleTimeLimit);
+      await state.currentDevice.command("keymap.onlyCustom", kbData.keymap.onlyCustom.toString());
+      await state.currentDevice.command("settings.defaultLayer", kbData.defaultLayer.toString());
+      await state.currentDevice.command("led.brightness", kbData.ledBrightness.toString());
+      await state.currentDevice.command("led.brightnessUG", kbData.ledBrightnessUG.toString());
+      if (kbData.ledIdleTimeLimit >= 0)
+        await state.currentDevice.command("idleleds.time_limit", kbData.ledIdleTimeLimit.toString());
       store.set("settings.showDefaults", kbData.showDefaults);
       // QUKEYS
-      await state.currentDevice.command("qukeys.holdTimeout", kbData.qukeysHoldTimeout);
-      await state.currentDevice.command("qukeys.overlapThreshold", kbData.qukeysOverlapThreshold);
+      await state.currentDevice.command("qukeys.holdTimeout", kbData.qukeysHoldTimeout.toString());
+      await state.currentDevice.command("qukeys.overlapThreshold", kbData.qukeysOverlapThreshold.toString());
       // SUPER KEYS
-      await state.currentDevice.command("superkeys.timeout", kbData.SuperTimeout);
-      await state.currentDevice.command("superkeys.repeat", kbData.SuperRepeat);
-      await state.currentDevice.command("superkeys.waitfor", kbData.SuperWaitfor);
-      await state.currentDevice.command("superkeys.holdstart", kbData.SuperHoldstart);
-      await state.currentDevice.command("superkeys.overlap", kbData.SuperOverlapThreshold);
+      await state.currentDevice.command("superkeys.timeout", kbData.SuperTimeout.toString());
+      await state.currentDevice.command("superkeys.repeat", kbData.SuperRepeat.toString());
+      await state.currentDevice.command("superkeys.waitfor", kbData.SuperWaitfor.toString());
+      await state.currentDevice.command("superkeys.holdstart", kbData.SuperHoldstart.toString());
+      await state.currentDevice.command("superkeys.overlap", kbData.SuperOverlapThreshold.toString());
       // MOUSE KEYS
-      await state.currentDevice.command("mouse.speed", kbData.mouseSpeed);
-      await state.currentDevice.command("mouse.speedDelay", kbData.mouseSpeedDelay);
-      await state.currentDevice.command("mouse.accelSpeed", kbData.mouseAccelSpeed);
-      await state.currentDevice.command("mouse.accelDelay", kbData.mouseAccelDelay);
-      await state.currentDevice.command("mouse.wheelSpeed", kbData.mouseWheelSpeed);
-      await state.currentDevice.command("mouse.wheelDelay", kbData.mouseWheelDelay);
-      await state.currentDevice.command("mouse.speedLimit", kbData.mouseSpeedLimit);
+      await state.currentDevice.command("mouse.speed", kbData.mouseSpeed.toString());
+      await state.currentDevice.command("mouse.speedDelay", kbData.mouseSpeedDelay.toString());
+      await state.currentDevice.command("mouse.accelSpeed", kbData.mouseAccelSpeed.toString());
+      await state.currentDevice.command("mouse.accelDelay", kbData.mouseAccelDelay.toString());
+      await state.currentDevice.command("mouse.wheelSpeed", kbData.mouseWheelSpeed.toString());
+      await state.currentDevice.command("mouse.wheelDelay", kbData.mouseWheelDelay.toString());
+      await state.currentDevice.command("mouse.speedLimit", kbData.mouseSpeedLimit.toString());
     }
   };
 
   const saveWirelessChanges = async () => {
     if (state.currentDevice) {
       // Commands to be sent to the keyboard
-      await state.currentDevice.command("wireless.battery.savingMode", wireless.battery.savingMode ? 1 : 0);
+      await state.currentDevice.command("wireless.battery.savingMode", wireless.battery.savingMode ? "1" : "0");
       await state.currentDevice.command("wireless.bluetooth.deviceName", wireless.bluetooth.deviceName);
-      await state.currentDevice.command("wireless.rf.channelHop", wireless.rf.channelHop);
-      await state.currentDevice.command("wireless.rf.power", wireless.rf.power);
+      await state.currentDevice.command("wireless.rf.channelHop", wireless.rf.channelHop.toString());
+      await state.currentDevice.command("wireless.rf.power", wireless.rf.power.toString());
 
-      await state.currentDevice.command("led.brightness.wireless", wireless.brightness);
-      await state.currentDevice.command("led.brightnessUG.wireless", wireless.brightnessUG);
-      await state.currentDevice.command("led.fade", wireless.fade);
-      await state.currentDevice.command("idleleds.wireless", wireless.idleleds);
+      await state.currentDevice.command("led.brightness.wireless", wireless.brightness.toString());
+      await state.currentDevice.command("led.brightnessUG.wireless", wireless.brightnessUG.toString());
+      await state.currentDevice.command("led.fade", wireless.fade.toString());
+      await state.currentDevice.command("idleleds.wireless", wireless.idleleds.toString());
 
-      await state.currentDevice.command("led.brightness.wireless", wireless.brightness);
-      await state.currentDevice.command("led.brightnessUG.wireless", wireless.brightnessUG);
-      await state.currentDevice.command("led.fade", wireless.fade);
-      await state.currentDevice.command("idleleds.wireless", wireless.idleleds);
-      await state.currentDevice.command("idleleds.true_sleep", wireless.true_sleep ? 1 : 0);
-      await state.currentDevice.command("idleleds.true_sleep_time", wireless.true_sleep_time);
+      await state.currentDevice.command("led.brightness.wireless", wireless.brightness.toString());
+      await state.currentDevice.command("led.brightnessUG.wireless", wireless.brightnessUG.toString());
+      await state.currentDevice.command("led.fade", wireless.fade.toString());
+      await state.currentDevice.command("idleleds.wireless", wireless.idleleds.toString());
+      await state.currentDevice.command("idleleds.true_sleep", wireless.true_sleep ? "1" : "0");
+      await state.currentDevice.command("idleleds.true_sleep_time", wireless.true_sleep_time.toString());
     }
   };
 

@@ -52,7 +52,7 @@ export type Dispatch = (action: Action) => void;
 export type State = {
   selected: number;
   currentDevice: Device;
-  deviceList: Array<DeviceType>;
+  deviceList: Array<Device>;
 };
 
 export type DygmaDeviceType = {

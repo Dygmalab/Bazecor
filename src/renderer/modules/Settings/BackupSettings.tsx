@@ -44,7 +44,8 @@ const store = Store.getStore();
 const BackupSettings = (props: BackupSettingsProps) => {
   const [backupFolder, setBackupFolder] = useState("");
   const [performingBackup, setPerformingBackup] = useState(false);
-  const [state] = useDevice();
+  const { state } = useDevice();
+
   const { connected, neurons, neuronID, updateTab, toggleBackup } = props;
   useEffect(() => {
     setBackupFolder(store.get("settings.backupFolder") as string);

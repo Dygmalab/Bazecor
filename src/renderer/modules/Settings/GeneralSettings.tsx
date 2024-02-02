@@ -72,7 +72,7 @@ const GeneralSettings = ({
   onChangeAllowBetas,
 }: GeneralSettingsProps) => {
   const [selectedLanguage, setSelectedLanguage] = useState("");
-  const [state] = useDevice();
+  const { state } = useDevice();
 
   useEffect(() => {
     setSelectedLanguage(getLanguage(store.get("settings.language") as string));

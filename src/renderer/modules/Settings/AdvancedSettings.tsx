@@ -35,7 +35,7 @@ import { AdvancedSettingsProps } from "@Renderer/types/preferences";
 const AdvancedKeyboardSettings = () => {
   const [EEPROMClearConfirmationOpen, setEEPROMClearConfirmationOpen] = useState(false);
   const [working, setWorking] = useState(false);
-  const [state] = useDevice();
+  const { state } = useDevice();
 
   const openEEPROMClearConfirmation = () => {
     setEEPROMClearConfirmationOpen(true);
@@ -70,12 +70,11 @@ const AdvancedKeyboardSettings = () => {
       />
       <ConfirmationDialog
         title={i18n.keyboardSettings.resetEEPROM.dialogTitle}
+        text={i18n.keyboardSettings.resetEEPROM.dialogContents}
         open={EEPROMClearConfirmationOpen}
         onConfirm={clearEEPROM}
         onCancel={closeEEPROMClearConfirmation}
-      >
-        {i18n.keyboardSettings.resetEEPROM.dialogContents}
-      </ConfirmationDialog>
+      />
     </>
   );
 };

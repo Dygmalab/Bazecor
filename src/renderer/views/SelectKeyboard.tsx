@@ -186,7 +186,7 @@ height: 100vh;
 `;
 
 const SelectKeyboard = (props: SelectKeyboardProps) => {
-  const [state, dispatch] = useDevice();
+  const { state, dispatch } = useDevice();
   const [selectedPortIndex, setSelectedPortIndex] = useState(0);
   const [devices, setDevices] = useState([]);
   const [deviceItems, setDeviceItems] = useState([]);

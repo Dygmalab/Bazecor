@@ -105,7 +105,8 @@ const Styles = Styled.div`
 `;
 
 function NavigationMenu(props: NavigationMenuProps) {
-  const [state] = useDevice();
+  const { state } = useDevice();
+
   const [checkedVer, setCheckedVer] = useState(false);
   const [versions, setVersions] = useState(null);
   const [isUpdated, setIsUpdated] = useState(true);
