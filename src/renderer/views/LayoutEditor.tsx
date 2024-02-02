@@ -441,19 +441,19 @@ const LayoutEditor = (props: LayoutEditorProps) => {
 
   const [currentLayer, setCurrentLayer] = useState(0);
   const [previousLayer, setPreviousLayer] = useState(0);
-  const [layerNames, setLayerNames] = useState<Array<LayerType>>();
+  const [layerNames, setLayerNames] = useState([]);
   const [neuronID, setNeuronID] = useState("");
   const [currentKeyIndex, setCurrentKeyIndex] = useState(-1);
   const [currentLedIndex, setCurrentLedIndex] = useState(-1);
   const [keymap, setKeymap] = useState<KeymapType>({
-    custom: undefined,
-    default: undefined,
+    custom: [],
+    default: [],
     onlyCustom: false,
   });
-  const [palette, setPalette] = useState(Array<PaletteType>());
-  const [colorMap, setColorMap] = useState(Array<number[]>());
-  const [macros, setMacros] = useState(Array<MacrosType>());
-  const [superkeys, setSuperkeys] = useState(Array<SuperkeysType>());
+  const [palette, setPalette] = useState([]);
+  const [colorMap, setColorMap] = useState([]);
+  const [macros, setMacros] = useState([]);
+  const [superkeys, setSuperkeys] = useState([]);
 
   const [modified, setModified] = useState(false);
   const [modeselect, setModeselect] = useState("keyboard");
@@ -480,7 +480,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
   const [scanned, setScanned] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const { state: deviceState } = useDevice();
-  const [layerData, setLayerData] = useState(Array<KeyType>());
+  const [layerData, setLayerData] = useState([]);
   const [isReadOnly, setIsReadOnly] = useState(false);
   const [showDefaults, setShowDefaults] = useState(false);
   const [keymapDB, setkeymapDB] = useState(new KeymapDB());
@@ -969,7 +969,6 @@ const LayoutEditor = (props: LayoutEditorProps) => {
             }
           }
         }
-        setCurrentLayer(previousLayer);
         setNeuronID(chipID);
         setKeymap(KeyMap);
         setShowDefaults(!KeyMap.onlyCustom);
@@ -1607,6 +1606,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
         setModified(false);
         setLoading(true);
         setCurrentLayer(previousLayer !== 0 ? previousLayer : 0);
+        setPreviousLayer(0);
         setCurrentKeyIndex(-1);
         setCurrentLedIndex(-1);
         setKeymap({
@@ -1620,7 +1620,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
       };
       scanner();
     }
-  }, [currentLanguageLayout, inContext, keymap.custom.length, modified, previousLayer, scanKeyboard, scanned, setLoading]);
+  }, [currentLanguageLayout, inContext, keymap.custom, modified, previousLayer, scanKeyboard, scanned, setLoading]);
 
   useEffect(() => {
     // console.log("Running StandardView useEffect", isStandardView);
@@ -1638,7 +1638,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
       }
     }
 
-    let localLayerData;
+    let localLayerData: KeyType[];
     let localIsReadOnly;
     if (keymap.onlyCustom) {
       localIsReadOnly = cLayer < 0;
@@ -1697,25 +1697,28 @@ const LayoutEditor = (props: LayoutEditorProps) => {
     return <div />;
   }
 
-  const copyCustomItems = keymap.custom.map((_: unknown, id: number) => {
-    const idx = id + (keymap.onlyCustom ? 0 : keymap.default.length);
-    const label = `${(idx + 1).toString()}: ${layerName(idx)}`;
-    return {
-      id: idx,
-      name: label,
-    };
-  });
+  const copyCustomItems = keymap
+    ? keymap.custom.map((_: unknown, id: number) => {
+        const idx = id + (keymap.onlyCustom ? 0 : keymap.default.length);
+        const label = `${(idx + 1).toString()}: ${layerName(idx)}`;
+        return {
+          id: idx,
+          name: label,
+        };
+      })
+    : [];
 
   const copyDefaultItems =
-    showDefaults &&
-    keymap.default.map((_, index) => {
-      const idx = index - (keymap.onlyCustom ? keymap.default.length : 0);
-      const label = idx.toString();
-      return {
-        id: idx,
-        name: label,
-      };
-    });
+    showDefaults && keymap
+      ? keymap.default.map((_, index) => {
+          const idx = index - (keymap.onlyCustom ? keymap.default.length : 0);
+          const label = idx.toString();
+          return {
+            id: idx,
+            name: label,
+          };
+        })
+      : [];
   const copyFromLayerOptions = (copyDefaultItems || []).concat(copyCustomItems);
 
   const layerMenu =
