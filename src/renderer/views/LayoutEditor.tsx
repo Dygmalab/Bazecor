@@ -1,7 +1,5 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable no-continue */
 /* eslint-disable no-bitwise */
-// @ts-nocheck
+/* eslint-disable no-console */
 // -*- mode: js-jsx -*-
 /* Bazecor -- Kaleidoscope Command Center
  * Copyright (C) 2018, 2019  Keyboardio, Inc.
@@ -39,9 +37,9 @@ import { useDevice } from "@Renderer/DeviceContext";
 
 // Types
 import { Neuron, LayerType } from "@Renderer/types/neurons";
-import { LayoutEditorProps } from "@Renderer/types/layout";
+import { ColormapType, KeymapType, KeyType, LayoutEditorProps, PaletteType, SegmentedKeyType } from "@Renderer/types/layout";
 import { SuperkeysType } from "@Renderer/types/superkeys";
-import { MacrosType } from "@Renderer/types/macros";
+import { MacroActionsType, MacrosType } from "@Renderer/types/macros";
 
 // Modules
 import { PageHeader } from "@Renderer/modules/PageHeader";
@@ -58,6 +56,7 @@ import { i18n } from "@Renderer/i18n";
 
 import Store from "@Renderer/utils/Store";
 import getLanguage from "@Renderer/utils/language";
+import Device from "../../api/comms/Device";
 import Keymap, { KeymapDB } from "../../api/keymap";
 import { rgb2w, rgbw2b } from "../../api/color";
 import Backup from "../../api/backup";
@@ -446,15 +445,15 @@ const LayoutEditor = (props: LayoutEditorProps) => {
   const [neuronID, setNeuronID] = useState("");
   const [currentKeyIndex, setCurrentKeyIndex] = useState(-1);
   const [currentLedIndex, setCurrentLedIndex] = useState(-1);
-  const [keymap, setKeymap] = useState({
-    custom: [],
-    default: [],
+  const [keymap, setKeymap] = useState<KeymapType>({
+    custom: undefined,
+    default: undefined,
     onlyCustom: false,
   });
-  const [palette, setPalette] = useState([]);
-  const [colorMap, setColorMap] = useState([]);
-  const [macros, setMacros] = useState([]);
-  const [superkeys, setSuperkeys] = useState([]);
+  const [palette, setPalette] = useState(Array<PaletteType>());
+  const [colorMap, setColorMap] = useState(Array<number[]>());
+  const [macros, setMacros] = useState(Array<MacrosType>());
+  const [superkeys, setSuperkeys] = useState(Array<SuperkeysType>());
 
   const [modified, setModified] = useState(false);
   const [modeselect, setModeselect] = useState("keyboard");
@@ -480,13 +479,13 @@ const LayoutEditor = (props: LayoutEditorProps) => {
 
   const [scanned, setScanned] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
-  const [deviceState] = useDevice();
-  const [layerData, setLayerData] = useState([]);
+  const { state: deviceState } = useDevice();
+  const [layerData, setLayerData] = useState(Array<KeyType>());
   const [isReadOnly, setIsReadOnly] = useState(false);
   const [showDefaults, setShowDefaults] = useState(false);
   const [keymapDB, setkeymapDB] = useState(new KeymapDB());
   const ledIndexStart = 80;
-  const { darkMode, cancelContext, setLoading, onDisconnect, startContext, inContext, theme } = props;
+  const { darkMode, cancelContext, setLoading, onDisconnect, startContext, inContext } = props;
 
   const onLayerNameChange = (newName: string) => {
     const slicedLayerNames = layerNames.slice();
@@ -501,13 +500,13 @@ const LayoutEditor = (props: LayoutEditorProps) => {
     store.set("neurons", neurons);
   };
 
-  const superTranslator = (raw: string | any[], sSuper: string | any[]) => {
+  const superTranslator = (raw: string | number[], sSuper: SuperkeysType[]): SuperkeysType[] => {
     let superkey = [];
-    const skeys = [];
+    const skeys: SuperkeysType[] = [];
     let iter = 0;
     let superindex = 0;
 
-    if (raw === "") {
+    if (typeof raw === "string") {
       return [];
     }
     // console.log(raw, raw.length);
@@ -532,7 +531,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
     )
       return [];
     // TODO: Check if stored superKeys match the received ones, if they match, retrieve name and apply it to current superKeys
-    let finalSuper = [];
+    let finalSuper: SuperkeysType[] = [];
     console.log("Checking superkeys and stored superkeys", skeys, sSuper);
     finalSuper = skeys.map((superk, i) => {
       if (sSuper !== undefined && sSuper.length > i && sSuper.length > 0) {
@@ -549,7 +548,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
   };
 
   const macroTranslator = useCallback(
-    (raw: any, storeMacros: any) => {
+    (raw: string | number[], storeMacros: MacrosType[]) => {
       if (raw === "") {
         return [
           {
@@ -583,94 +582,100 @@ const LayoutEditor = (props: LayoutEditorProps) => {
       let kcs = 0;
       let type = 0;
       let keyCode = [];
-      let actions = [];
-      let mcros = [];
+      let actions = new Array<MacroActionsType>();
+      const mcros = new Array<MacrosType>();
       actions = [];
       while (raw.length > iter) {
         if (kcs > 0) {
-          keyCode.push(raw[iter]);
+          keyCode.push((raw as number[])[iter]);
           kcs -= 1;
-          iter += 1;
-          continue;
-        }
-        if (iter !== 0 && type !== 0) {
-          actions.push({
-            type,
-            keyCode,
-          });
-          keyCode = [];
-        }
-        type = raw[iter];
-        switch (type) {
-          case 0:
-            kcs = 0;
-            mcros[i] = { actions, id: i, name: "", macro: "" };
-            i += 1;
-            actions = [];
-            iter += 1;
-            continue;
-          case 1:
-            kcs = 4;
-            break;
-          case 2:
-          case 3:
-          case 4:
-          case 5:
-            kcs = 2;
-            break;
-          default:
-            kcs = 1;
+        } else {
+          if (iter !== 0 && type !== 0) {
+            actions.push({
+              type,
+              keyCode,
+              id: undefined,
+            });
+            keyCode = [];
+          }
+          type = (raw as number[])[iter];
+          switch (type) {
+            case 0:
+              kcs = 0;
+              mcros[i] = { actions, id: i, name: "", macro: "" };
+              i += 1;
+              actions = [];
+              break;
+            case 1:
+              kcs = 4;
+              break;
+            case 2:
+            case 3:
+            case 4:
+            case 5:
+              kcs = 2;
+              break;
+            default:
+              kcs = 1;
+          }
         }
         iter += 1;
       }
       actions.push({
         type,
         keyCode,
+        id: undefined,
       });
-      mcros[i] = {};
-      mcros[i].actions = actions;
-      mcros[i].id = i;
-      mcros[i].name = "";
-      mcros[i].macro = "";
-      mcros = mcros.map(macro => {
-        const aux = macro.actions.map((action: { type: any; keyCode: any[] }) => {
-          switch (action.type) {
-            case 1:
-              return {
-                type: action.type,
-                keyCode: [(action.keyCode[0] << 8) + action.keyCode[1], (action.keyCode[2] << 8) + action.keyCode[3]],
-              };
-            case 2:
-            case 3:
-            case 4:
-            case 5:
-              return {
-                type: action.type,
-                keyCode: (action.keyCode[0] << 8) + action.keyCode[1],
-              };
-            default:
-              return {
-                type: action.type,
-                keyCode: action.keyCode[0],
-              };
-          }
+      mcros[i] = {
+        actions,
+        id: i,
+        name: "",
+        macro: "",
+      };
+      const localMacros = mcros.map(m => {
+        const aux: MacroActionsType[] = m.actions.map((action, idx) => {
+          if (Array.isArray(action.keyCode))
+            switch (action.type) {
+              case 1:
+                return {
+                  type: action.type,
+                  keyCode: [(action.keyCode[0] << 8) + action.keyCode[1], (action.keyCode[2] << 8) + action.keyCode[3]],
+                  id: idx,
+                };
+              case 2:
+              case 3:
+              case 4:
+              case 5:
+                return {
+                  type: action.type,
+                  keyCode: (action.keyCode[0] << 8) + action.keyCode[1],
+                  id: idx,
+                };
+              default:
+                return {
+                  type: action.type,
+                  keyCode: action.keyCode[0],
+                  id: idx,
+                };
+            }
+          return action;
         });
-        return { ...macro, actions: aux };
+        return { ...m, actions: aux };
       });
       // TODO: Check if stored macros match the received ones, if they match, retrieve name and apply it to current macros
       let finalMacros = [];
-      console.log("Checking Macros", mcros, storeMacros);
+      console.log("Checking Macros", localMacros, storeMacros);
       if (storeMacros === undefined) {
-        return mcros;
+        return localMacros;
       }
-      finalMacros = mcros.map((macro, idx) => {
+      finalMacros = localMacros.map((m, idx) => {
         if (storeMacros.length > idx && storeMacros.length > 0) {
-          const aux = macro;
+          const aux = m;
           aux.name = storeMacros[idx].name;
-          aux.macro = macro.actions.map((k: { keyCode: any }) => keymapDB.parse(k.keyCode).label).join(" ");
+          aux.macro = m.actions.map(k => keymapDB.parse(k.keyCode as number).label).join(" ");
           return aux;
         }
-        return macro;
+        return m;
       });
 
       return finalMacros;
@@ -678,24 +683,24 @@ const LayoutEditor = (props: LayoutEditorProps) => {
     [keymapDB],
   );
 
-  const getColormap = useCallback(async () => {
+  const getColormap = useCallback(async (): Promise<ColormapType> => {
     const { currentDevice } = deviceState;
     const layerSize = currentDevice.device.keyboardUnderglow.rows * currentDevice.device.keyboardUnderglow.columns;
-    const chunk = (a: string | any[], chunkSize: number) => {
+    const chunk = (a: number[], chunkSize: number) => {
       const R = [];
       for (let i = 0; i < a.length; i += chunkSize) R.push(a.slice(i, i + chunkSize));
       return R;
     };
 
-    const paletteData = await currentDevice.command("palette");
-    const colorMapData = await currentDevice.command("colormap.map");
+    const paletteData = (await currentDevice.command("palette")) as string;
+    const colorMapData = (await currentDevice.command("colormap.map")) as string;
 
     const plette =
       currentDevice.device.RGBWMode !== true
         ? chunk(
             paletteData
               .split(" ")
-              .filter((v: string | any[]) => v.length > 0)
+              .filter((v: string) => v.length > 0)
               .map((k: string) => parseInt(k, 10)),
             3,
           ).map(color => ({
@@ -707,7 +712,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
         : chunk(
             paletteData
               .split(" ")
-              .filter((v: string | any[]) => v.length > 0)
+              .filter((v: string) => v.length > 0)
               .map((k: string) => parseInt(k, 10)),
             4,
           ).map(color => {
@@ -723,7 +728,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
     const colMap = chunk(
       colorMapData
         .split(" ")
-        .filter((v: string | any[]) => v.length > 0)
+        .filter((v: string) => v.length > 0)
         .map((k: string) => parseInt(k, 10)),
       layerSize,
     );
@@ -734,20 +739,18 @@ const LayoutEditor = (props: LayoutEditorProps) => {
     };
   }, [deviceState]);
 
-  const flatten = (arr: any) => [].concat(...arr);
+  const flatten = (arr: Array<unknown>) => [].concat(...arr);
 
-  const updatePalette = async (device: { command: (arg0: string, arg1: any) => any }, plette: any[]) => {
-    let args: any[];
+  const updatePalette = async (device: Device, plette: PaletteType[]) => {
+    let args: string[];
     if (deviceState.currentDevice.device.RGBWMode !== true) {
-      args = flatten(plette.map((color: { r: any; g: any; b: any }) => [color.r, color.g, color.b])).map(v => v.toString());
+      args = flatten(plette.map(color => [color.r, color.g, color.b])).map(v => v.toString());
     } else {
-      const paletteAux = plette.map((color: { r: any; g: any; b: any }) => {
+      const paletteAux = plette.map(color => {
         const aux = rgb2w({ r: color.r, g: color.g, b: color.b });
         return aux;
       });
-      args = flatten(paletteAux.map((color: { r: any; g: any; b: any; w: any }) => [color.r, color.g, color.b, color.w])).map(v =>
-        v.toString(),
-      );
+      args = flatten(paletteAux.map(color => [color.r, color.g, color.b, color.w])).map(v => v.toString());
       // console.log(plette, paletteAux, args);
     }
 
@@ -755,7 +758,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
     return result;
   };
 
-  const updateColormap = async (device: { command: (arg0: string, arg1: any) => any }, colormap: any) => {
+  const updateColormap = async (device: Device, colormap: number[][]) => {
     const args = flatten(colormap).map(v => v.toString());
     const result = await device.command("colormap.map", ...args);
     return result;
@@ -770,8 +773,8 @@ const LayoutEditor = (props: LayoutEditorProps) => {
       if (neurons === undefined) {
         neurons = [];
       }
-      if (neurons.some((n: { id: unknown }) => n.id === CID)) {
-        finalNeuron = neurons.find((n: { id: any }) => n.id === CID);
+      if (neurons.some(n => n.id === CID)) {
+        finalNeuron = neurons.find(n => n.id === CID);
       }
       const neuron: Neuron = {
         id: "",
@@ -780,7 +783,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
         macros: new Array<MacrosType>(),
         superkeys: new Array<SuperkeysType>(),
       };
-      if (!neurons.some((n: { id: any }) => n.id === CID) && neurons.length === 0) {
+      if (!neurons.some(n => n.id === CID) && neurons.length === 0) {
         neuron.id = CID;
         neuron.name = currentDevice.device.info.product;
         neuron.layers = store.get("layerNames") !== undefined ? (store.get("layerNames") as Array<LayerType>) : defaultLayerNames;
@@ -791,9 +794,9 @@ const LayoutEditor = (props: LayoutEditorProps) => {
         store.set("neurons", neurons);
         finalNeuron = neuron;
       }
-      const existingDefy = neurons.some((n: { id: string | any[] }) => n.id.length < 32);
-      const existingRaise = neurons.some((n: { id: string | any[] }) => n.id.length === 32);
-      if (!neurons.some((n: { id: any }) => n.id === CID) && neurons.length > 0) {
+      const existingDefy = neurons.some(n => n.id.length < 32);
+      const existingRaise = neurons.some(n => n.id.length === 32);
+      if (!neurons.some(n => n.id === CID) && neurons.length > 0) {
         neuron.id = CID;
         neuron.name = currentDevice.device.info.product;
         neuron.layers = defaultLayerNames;
@@ -813,6 +816,8 @@ const LayoutEditor = (props: LayoutEditorProps) => {
         ) {
           result = false;
         } else {
+          // TODO: replacethis with proper popup
+          // eslint-disable-next-line no-alert
           result = window.confirm(
             "A new Neuron was detected and new settings need to be created. The names of the layers, macros and Superkeys are empty. If you want to copy the names of your default Neuron (first in the list) click ‘Ok’. If you prefer to reset all names click ‘Cancel’.",
           );
@@ -834,7 +839,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
       if (finalNeuron) {
         const neuronData = {
           neurons,
-          neuronID: neurons.findIndex((n: { id: any }) => n.id === CID),
+          neuronID: neurons.findIndex(n => n.id === CID),
           layerNames: finalNeuron.layers,
           storedMacros: finalNeuron.macros,
           storedSuper: finalNeuron.superkeys,
@@ -872,11 +877,11 @@ const LayoutEditor = (props: LayoutEditorProps) => {
         // let defLayer = await currentDevice.command("settings.defaultLayer");
         // defLayer = parseInt(defLayer, 10) || 0;
 
-        const defaults = await currentDevice.command("keymap.default");
-        const custom = await currentDevice.command("keymap.custom");
-        const onlycstm = await currentDevice.command("keymap.onlyCustom");
+        const defaults = (await currentDevice.command("keymap.default")) as string;
+        const custom = (await currentDevice.command("keymap.custom")) as string;
+        const onlycstm = (await currentDevice.command("keymap.onlyCustom")) as string;
         const onlyCustom = Boolean(parseInt(onlycstm, 10));
-        const KeyMap: { custom: any; default: any; onlyCustom: any } = {
+        const KeyMap: KeymapType = {
           custom: undefined,
           default: undefined,
           onlyCustom: false,
@@ -885,9 +890,9 @@ const LayoutEditor = (props: LayoutEditorProps) => {
         const layerSize = currentDevice.device.keyboard.rows * currentDevice.device.keyboard.columns;
         KeyMap.custom = custom
           .split(" ")
-          .filter((v: string | any[]) => v.length > 0)
+          .filter(v => v.length > 0)
           .map((k: string) => keymapDB.parse(parseInt(k, 10)))
-          .reduce((resultArray: any[][], item: any, index: number) => {
+          .reduce((resultArray, item, index) => {
             const localResult = resultArray;
             const chunkIndex = Math.floor(index / layerSize);
 
@@ -899,9 +904,9 @@ const LayoutEditor = (props: LayoutEditorProps) => {
           }, []);
         KeyMap.default = defaults
           .split(" ")
-          .filter((v: string | any[]) => v.length > 0)
+          .filter(v => v.length > 0)
           .map((k: string) => keymapDB.parse(parseInt(k, 10)))
-          .reduce((resultArray: any[][], item: any, index: number) => {
+          .reduce((resultArray, item, index) => {
             const localResult = resultArray;
             const chunkIndex = Math.floor(index / layerSize);
 
@@ -930,20 +935,21 @@ const LayoutEditor = (props: LayoutEditorProps) => {
             KeyMap.custom[i] = KeyMap.default[i].slice();
           }
           KeyMap.onlyCustom = true;
-          await currentDevice.command("keymap", KeyMap);
+          const args = flatten(KeyMap.custom).map(k => keymapDB.serialize(k));
+          await currentDevice.command("keymap", ...args);
         }
 
         const colormap = await getColormap();
         const plette = colormap.palette.slice();
         // console.log("retrieved color.map & palette", colormap, palette);
-        let raw = await currentDevice.command("macros.map");
+        let raw: string | number[] = (await currentDevice.command("macros.map")) as string;
         if (raw.search(" 0 0") !== -1) {
           raw = raw.split(" 0 0")[0].split(" ").map(Number);
         } else {
           raw = "";
         }
         const parsedMacros = macroTranslator(raw, neuronData.storedMacros);
-        let raw2 = await currentDevice.command("superkeys.map");
+        let raw2: string | number[] = (await currentDevice.command("superkeys.map")) as string;
         if (raw2.search(" 0 0") !== -1) {
           raw2 = raw2.split(" 0 0")[0].split(" ").map(Number);
         } else {
@@ -987,7 +993,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
     [AnalizeChipID, deviceState, getColormap, keymapDB, macroTranslator, onDisconnect, previousLayer, setLoading],
   );
 
-  const onKeyChange = (keyCode: any) => {
+  const onKeyChange = (keyCode: number) => {
     // Keys can only change on the custom layers
     const layer = currentLayer;
     const keyIndex = currentKeyIndex;
@@ -1107,7 +1113,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
     setIsSaving(true);
     const args = flatten(keymap.custom).map(k => keymapDB.serialize(k));
     await currentDevice.command("keymap.custom", ...args);
-    await currentDevice.command("keymap.onlyCustom", keymap.onlyCustom ? 1 : 0);
+    await currentDevice.command("keymap.onlyCustom", keymap.onlyCustom ? "1" : "0");
     await updateColormap(currentDevice, colorMap);
     await updatePalette(currentDevice, palette);
     setCurrentLayer(currentLayer);
@@ -1146,7 +1152,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
   };
 
   const copyFromLayer = (layer: number) => {
-    let newKeymap: any[];
+    let newKeymap: KeyType[][];
 
     if (keymap.onlyCustom) {
       newKeymap = layer < 0 ? keymap.default.slice() : keymap.custom.slice();
@@ -1202,7 +1208,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
     setClearConfirmationOpen(false);
   };
 
-  const onColorButtonSelect = (action: string, colorIndex: any) => {
+  const onColorButtonSelect = (action: string, colorIndex: number) => {
     if (action === "one_button_click") {
       setIsMultiSelected(false);
       setIsColorButtonSelected(!isColorButtonSelected);
@@ -1232,9 +1238,9 @@ const LayoutEditor = (props: LayoutEditorProps) => {
     }
   };
 
-  const onColorPick = (colorIndex: number, r: any, g: any, b: any) => {
+  const onColorPick = (colorIndex: number, r: number, g: number, b: number) => {
     const newPalette = palette.slice();
-    const setColors = (red: any, green: any, blue: any) => ({
+    const setColors = (red: number, green: number, blue: number) => ({
       r: red,
       g: green,
       b: blue,
@@ -1247,11 +1253,13 @@ const LayoutEditor = (props: LayoutEditorProps) => {
   };
 
   const importLayer = (data: {
-    layerNames: string | any[];
-    layerName: any;
-    keymap: string | any[];
-    colormap: string | any[];
+    layerNames: LayerType[];
+    layerName: string;
+    keymap: KeyType[];
+    colormap: number[];
+    palette: PaletteType[];
   }) => {
+    console.log("not loading the palette: ", palette);
     // if (data.palette.length > 0) state.palette = data.palette;
     const lNames = layerNames.slice();
     if (data.layerNames !== null) {
@@ -1259,7 +1267,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
         lNames[i] = data.layerNames[i];
       }
       if (data.layerName && currentLayer) {
-        lNames[currentLayer] = data.layerName;
+        lNames[currentLayer] = { name: data.layerName, id: currentLayer };
       }
       setLayerNames(lNames);
     }
@@ -1296,7 +1304,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
     startContext();
   };
 
-  const toChangeAllKeysColor = (colorIndex: any, start: any, end: any) => {
+  const toChangeAllKeysColor = (colorIndex: number, start: number, end: number) => {
     const colormap = colorMap.slice();
     colormap[currentLayer] = colormap[currentLayer].fill(colorIndex, start, end);
     setColorMap(colormap);
@@ -1306,11 +1314,11 @@ const LayoutEditor = (props: LayoutEditorProps) => {
 
   const getLayout = () => {
     const { currentDevice } = deviceState;
-    let Layer = (<div />) as JSX.Element;
+    let Layer = null;
     let kbtype = "iso";
     if (currentDevice.device === null) return { Layer: undefined, kbtype: undefined };
     try {
-      Layer = currentDevice.device.components.keymap as JSX.Element;
+      Layer = currentDevice.device.components.keymap as React.FC<any>;
       kbtype = currentDevice.device && currentDevice.device.info.keyboardType === "ISO" ? "iso" : "ansi";
     } catch (error) {
       console.error("Focus lost connection to Raise: ", error);
@@ -1476,7 +1484,6 @@ const LayoutEditor = (props: LayoutEditorProps) => {
     for (let index = 0; index < localKeymap.custom.length; index += 1) {
       if (localKeymap.custom[index].some((r: { keyCode: number }) => oldmacro.includes(r.keyCode))) {
         layers.push(index);
-        continue;
       }
     }
     for (let index = 0; index < layers.length; index += 1) {
@@ -1515,7 +1522,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
     setIsStandardView(!isStandardView);
   };
 
-  const closeStandardViewModal = (code: any) => {
+  const closeStandardViewModal = (code: number) => {
     if (code !== undefined) onKeyChange(code);
     setShowStandardView(false);
   };
@@ -1543,7 +1550,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
     );
   };
 
-  const refreshLayoutSelectorPosition = (x: any, y: any) => {
+  const refreshLayoutSelectorPosition = (x: number, y: number) => {
     setLayoutSelectorPosition({ x, y });
   };
 
@@ -1642,7 +1649,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
     }
 
     if (localLayerData !== undefined) {
-      localLayerData = localLayerData.map((key: { extraLabel: string; keyCode: number; label: string }) => {
+      localLayerData = localLayerData.map(key => {
         const newMKey = key;
         if (key.extraLabel === "MACRO") {
           const MNumber = key.keyCode - 53852;
@@ -1661,7 +1668,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
     }
 
     if (localLayerData !== undefined && superkeys.length > 0) {
-      localLayerData = localLayerData.map((key: { extraLabel: string; keyCode: number; label: string }) => {
+      localLayerData = localLayerData.map(key => {
         const newSKey = key;
         if (key.extraLabel === "SUPER") {
           const SKNumber = key.keyCode - 53980;
@@ -1690,7 +1697,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
     return <div />;
   }
 
-  const copyCustomItems = keymap.custom.map((_: any, id: number) => {
+  const copyCustomItems = keymap.custom.map((_: unknown, id: number) => {
     const idx = id + (keymap.onlyCustom ? 0 : keymap.default.length);
     const label = `${(idx + 1).toString()}: ${layerName(idx)}`;
     return {
@@ -1722,7 +1729,10 @@ const LayoutEditor = (props: LayoutEditorProps) => {
         })
       : [];
 
-  let code: number | any = 0;
+  let code: SegmentedKeyType = {
+    base: 0,
+    modified: 0,
+  };
   if (currentKeyIndex !== -1 && currentKeyIndex < ledIndexStart) {
     const tempkey = keymapDB.parse(layerData[currentKeyIndex].keyCode);
     // console.log("Key to be used in render", tempkey);
@@ -1757,7 +1767,6 @@ const LayoutEditor = (props: LayoutEditorProps) => {
         selectedLED={currentLedIndex}
         palette={palette}
         colormap={colorMap[currentLayer]}
-        theme={theme}
         darkMode={darkMode}
         style={{ width: "50vw" }}
         showUnderglow={modeselect !== "keyboard"}
@@ -1867,9 +1876,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
           open={clearConfirmationOpen}
           onConfirm={clearLayer}
           onCancel={cancelClear}
-        >
-          {i18n.editor.clearLayerPrompt}
-        </ConfirmationDialog>
+        />
         <CopyFromDialog
           open={copyFromOpen}
           onCopy={copyFromLayer}
@@ -1935,8 +1942,6 @@ const LayoutEditor = (props: LayoutEditorProps) => {
           macros={macros}
           superkeys={superkeys}
           actions={actions}
-          action={0}
-          superName={superName}
           keyIndex={currentKeyIndex}
           code={code}
           layerData={layerData}

@@ -5,7 +5,12 @@ import serial, { isSerialType } from "../api/comms/serial";
 import Device from "../api/comms/Device";
 import HID from "../api/hid/hid";
 
-const DeviceContext = createContext(undefined);
+type ContextType = {
+  state: State;
+  dispatch: React.Dispatch<Action>;
+};
+
+const DeviceContext = createContext<ContextType>(undefined);
 
 function deviceReducer(state: State, action: Action) {
   // console.log("Entering DeviceREDUCER!!!", state, action);
@@ -41,7 +46,7 @@ function DeviceProvider({ children }: CountProviderProps) {
   // NOTE: you *might* need to memoize this value
   // Learn more in http://kcd.im/optimize-context
   // const value = { state, dispatch };
-  const value = useMemo(() => [state, dispatch], [state, dispatch]);
+  const value = useMemo(() => ({ state, dispatch }), [state]);
   return <DeviceContext.Provider value={value}>{children}</DeviceContext.Provider>;
 }
 
@@ -53,7 +58,7 @@ function useDevice() {
   return context;
 }
 
-const isDeviceConnected = async (device: any) => {
+const isDeviceConnected = async (device: Device) => {
   if (isSerialType(device)) {
     const result = await serial.isDeviceConnected(device);
     return result;
@@ -63,7 +68,7 @@ const isDeviceConnected = async (device: any) => {
   return false;
 };
 
-const isDeviceSupported = async (device: any) => {
+const isDeviceSupported = async (device: Device) => {
   if (isSerialType(device)) {
     const result = await serial.isDeviceSupported(device);
     return result;
@@ -129,9 +134,10 @@ const disconnect = async (device: Device) => {
   }
 };
 
-const DeviceTools: any = {};
-DeviceTools.list = list;
-DeviceTools.connect = connect;
-DeviceTools.disconnect = disconnect;
+const DeviceTools = {
+  list,
+  connect,
+  disconnect,
+};
 
 export { DeviceProvider, useDevice, DeviceTools };
