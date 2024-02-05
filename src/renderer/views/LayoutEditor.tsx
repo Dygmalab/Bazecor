@@ -483,8 +483,8 @@ const LayoutEditor = (props: LayoutEditorProps) => {
   const [layerData, setLayerData] = useState([]);
   const [isReadOnly, setIsReadOnly] = useState(false);
   const [showDefaults, setShowDefaults] = useState(false);
+  const [ledIndexStart, setLedIndexStart] = useState(80);
   const [keymapDB, setkeymapDB] = useState(new KeymapDB());
-  const ledIndexStart = 80;
   const { darkMode, cancelContext, setLoading, onDisconnect, startContext, inContext } = props;
 
   const onLayerNameChange = (newName: string) => {
@@ -969,6 +969,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
             }
           }
         }
+        setLedIndexStart(currentDevice.device.info.product === "Raise" ? 80 : 80);
         setNeuronID(chipID);
         setKeymap(KeyMap);
         setShowDefaults(!KeyMap.onlyCustom);
