@@ -79,6 +79,7 @@ export interface SelectWirelessDropdownProps {
   // activeTab: number;
   keyCode: { base: number; modified: number };
   onKeySelect: (event: number) => void;
+  disable: boolean;
 }
 
 export interface WirelessButton {
