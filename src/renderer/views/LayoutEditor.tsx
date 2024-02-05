@@ -390,6 +390,8 @@ const Styles = Styled.div`
 
 `;
 
+type ModeType = "keyboard" | "color";
+
 const LayoutEditor = (props: LayoutEditorProps) => {
   const defaultLayerNames = useMemo(
     () => [
@@ -456,7 +458,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
   const [superkeys, setSuperkeys] = useState([]);
 
   const [modified, setModified] = useState(false);
-  const [modeselect, setModeselect] = useState("keyboard");
+  const [modeselect, setModeselect] = useState<ModeType>("keyboard");
   const [deviceName, setDeviceName] = useState("");
   const [clearConfirmationOpen, setClearConfirmationOpen] = useState(false);
   const [copyFromOpen, setCopyFromOpen] = useState(false);
@@ -1516,19 +1518,19 @@ const LayoutEditor = (props: LayoutEditorProps) => {
   const layerName = (index: number): string =>
     layerNames !== undefined && layerNames.length > index ? layerNames[index]?.name : defaultLayerNames[index]?.name;
 
-  const modeSelectToggle = (data: string) => {
+  const modeSelectToggle = (data: ModeType) => {
     if (isStandardView) {
       if (currentLedIndex > ledIndexStart) {
         setCurrentKeyIndex(-1);
       }
-      setModeselect(data);
       setShowStandardView(false);
-      setCurrentLedIndex(-1);
     } else {
-      setModeselect(data);
-      setCurrentLedIndex(-1);
       setSelectedPaletteColor(null);
     }
+    if (data === "keyboard") {
+      setCurrentLedIndex(-1);
+    }
+    setModeselect(data);
   };
 
   const onToggleStandardView = () => {
