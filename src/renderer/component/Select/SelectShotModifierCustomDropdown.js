@@ -150,6 +150,9 @@ width: 100%;
         box-shadow: ${({ theme }) => theme.styles.button.config.boxShadowActive};
     }
   }
+  .button-config-style .disable {
+    pointer-events: none;
+  }
 `;
 
 class SelectShotModifierCustomDropdown extends Component {
@@ -179,7 +182,7 @@ class SelectShotModifierCustomDropdown extends Component {
   }
 
   render() {
-    const { keyCode, onKeySelect } = this.props;
+    const { keyCode, onKeySelect, disable } = this.props;
     const KC = keyCode.base + keyCode.modified;
 
     return (
@@ -194,7 +197,7 @@ class SelectShotModifierCustomDropdown extends Component {
               : ""
           }`}
         >
-          <Dropdown.Toggle id="dropdown-custom" className="button-config-style">
+          <Dropdown.Toggle id="dropdown-custom" disabled={disable} className={`button-config-style ${disable ? "disable" : ""}`}>
             <div className="dropdownItemSelected">
               <div className="dropdownItem">
                 <div className="dropdownItem">OneShot</div>

@@ -282,7 +282,7 @@ class KeyPickerKeyboard extends Component {
       action: Number.isInteger(props.action) ? props.action : 0,
       actions: tempActions,
       modifs: tempModifs,
-      disable: false,
+      disable: props.keyIndex === -1,
       selectdual: 0,
       selectlayer: 0,
       activeTab: "editor",
@@ -303,7 +303,7 @@ class KeyPickerKeyboard extends Component {
 
   componentDidUpdate() {
     let selectdual = 0;
-    const disable = this.props.code === 0;
+    const disable = this.props.keyIndex === -1;
     const keynum = this.props.code != null ? this.props.code.modified + this.props.code.base : 0;
     if (keynum >= 51218 && keynum <= 53266) {
       selectdual = (this.props.code.modified >>> 8) << 8;
@@ -485,8 +485,12 @@ class KeyPickerKeyboard extends Component {
         <div className="singleViewWrapper" ref={this.layoutSelectorWatcherPosition}>
           <div className="keyEnhanceWrapper">
             <div className="keyEnhanceInner">
-              <KeyVisualizer newValue={selKey} keyCode={code} />
-              <div className={`ModPicker ${this.props.macros[KC - 53852] ? "ModPickerScrollHidden" : ""}`}>
+              <KeyVisualizer newValue={selKey} keyCode={code} disable={disable} />
+              <div
+                className={`ModPicker ${this.props.macros[KC - 53852] ? "ModPickerScrollHidden" : ""} ${
+                  disable ? "disable" : ""
+                }`}
+              >
                 {superkeys[superk.indexOf(KC)] ? (
                   <div className="superkeyHint">
                     {superKeysActions.map((item, index) => (
