@@ -989,7 +989,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
         onDisconnect();
       }
     },
-    [AnalizeChipID, deviceState, getColormap, keymapDB, macroTranslator, onDisconnect, previousLayer, setLoading],
+    [AnalizeChipID, deviceState, getColormap, keymapDB, macroTranslator, onDisconnect, setLoading],
   );
 
   const onKeyChange = (keyCode: number) => {
@@ -1221,10 +1221,20 @@ const LayoutEditor = (props: LayoutEditorProps) => {
 
   const onColorSelect = (colorIndex: number) => {
     const isEqualColor = onVerificationColor(colorIndex, currentLayer, currentLedIndex);
+    // console.log(
+    //   "data from onColorSelect",
+    //   isEqualColor,
+    //   currentLayer,
+    //   colorMap.length,
+    //   currentLedIndex,
+    //   colorIndex,
+    //   selectedPaletteColor,
+    //   currentKeyIndex,
+    // );
 
     if (currentLayer < 0 || currentLayer >= colorMap.length) return;
 
-    if (!isEqualColor) {
+    if (!isEqualColor && currentKeyIndex > 0) {
       const colormap = colorMap.slice();
       colormap[currentLayer][currentLedIndex] = colorIndex;
       setIsMultiSelected(true);
@@ -1232,8 +1242,11 @@ const LayoutEditor = (props: LayoutEditorProps) => {
       setSelectedPaletteColor(colorIndex);
       setModified(true);
       startContext();
-    } else {
+    }
+    if (colorIndex !== selectedPaletteColor) {
       setSelectedPaletteColor(colorIndex);
+    } else {
+      setSelectedPaletteColor(-1);
     }
   };
 
