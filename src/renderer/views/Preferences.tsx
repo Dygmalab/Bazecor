@@ -760,7 +760,6 @@ const Preferences = (props: PreferencesProps) => {
                     allowBeta={allowBeta}
                     onChangeAllowBetas={updateAllowBetas}
                   />
-                  <Version />
                 </motion.div>
               </TabsContent>
               {connected && state.currentDevice ? (
@@ -781,6 +780,7 @@ const Preferences = (props: PreferencesProps) => {
               )}
             </div>
           </div>
+          <Version />
         </Tabs>
       </div>
     </div>

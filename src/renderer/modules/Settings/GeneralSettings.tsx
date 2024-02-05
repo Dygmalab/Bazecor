@@ -186,7 +186,7 @@ const GeneralSettings = ({
         </CardContent>
       </Card>
       <FileBackUpHandling />
-      <Card className="mt-3 max-w-2xl mx-auto" variant="default">
+      <Card className="my-3 max-w-2xl mx-auto" variant="default">
         <CardHeader>
           <CardTitle variant="default">
             <IconChip /> Advanced
