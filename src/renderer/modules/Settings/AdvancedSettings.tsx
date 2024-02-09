@@ -21,7 +21,6 @@ import { Switch } from "@Renderer/components/ui/switch";
 
 import { useDevice } from "@Renderer/DeviceContext";
 import { Select } from "@Renderer/component/Select";
-import BackupSettings from "@Renderer/modules/Settings/BackupSettings";
 import { i18n } from "@Renderer/i18n";
 
 // Own Components
@@ -149,13 +148,6 @@ const AdvancedSettings = ({
           </div>
         </CardContent>
       </Card>
-      <BackupSettings
-        connected={connected}
-        neurons={neurons}
-        neuronID={neuronID}
-        updateTab={updateTab}
-        toggleBackup={toggleBackup}
-      />
       {keyboardType === "Raise" ? (
         <Card className="mt-3 max-w-2xl mx-auto" variant="default">
           <CardHeader>

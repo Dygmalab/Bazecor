@@ -46,7 +46,7 @@ const BackupSettings = (props: BackupSettingsProps) => {
   const [performingBackup, setPerformingBackup] = useState(false);
   const { state } = useDevice();
 
-  const { connected, neurons, neuronID, updateTab, toggleBackup } = props;
+  const { connected, neurons, neuronID, toggleBackup } = props;
   useEffect(() => {
     setBackupFolder(store.get("settings.backupFolder") as string);
   }, []);
@@ -217,11 +217,6 @@ const BackupSettings = (props: BackupSettingsProps) => {
     }
   };
 
-  const setApplicationTab = () => {
-    // Call the onTabChange function from props with the desired value
-    updateTab("Application");
-  };
-
   return (
     <Card className="mt-3 max-w-2xl mx-auto" variant="default">
       <CardHeader>
@@ -231,19 +226,7 @@ const BackupSettings = (props: BackupSettingsProps) => {
       </CardHeader>
       <CardContent>
         <form>
-          <h3 className="text-gray-400 dark:text-gray-100 tracking-tight font-semibold">Backup folder</h3>
-          <p className="text-gray-300 dark:text-gray-300 tracking-tight font-semibold text-sm">
-            {backupFolder}
-            <button
-              type="button"
-              className="px-1 m-0 decoration-1 text-purple-300 hover:text-purple-300 dark:text-purple-200 dark:hover:text-purple-100"
-              value="Application"
-              onClick={setApplicationTab}
-            >
-              Change folder
-            </button>
-          </p>
-          <h3 className="mt-3 mb-1 text-gray-400 dark:text-gray-100 tracking-tight font-semibold">Backup actions</h3>
+          <h3 className="mb-1 text-gray-400 dark:text-gray-100 tracking-tight font-semibold">Backup actions</h3>
           <div className="flex gap-3">
             <RegularButton onClick={GetBackup} styles="short" buttonText="Restore backup from file..." disabled={!connected} />
             <RegularButton onClick={getLatestBackup} styles="short" buttonText="Restore from last backup" />
