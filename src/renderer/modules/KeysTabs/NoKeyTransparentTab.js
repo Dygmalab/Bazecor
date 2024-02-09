@@ -4,7 +4,7 @@ import Styled from "styled-components";
 import { i18n } from "@Renderer/i18n";
 
 import Title from "../../component/Title";
-import CallOut from "../../component/Callout";
+import { Alert, AlertDescription } from "@Renderer/components/ui/alert";
 import { ButtonConfig } from "../../component/Button";
 
 const Styles = Styled.div`
@@ -44,8 +44,11 @@ class NoKeyTransparentTab extends Component {
         <div className="tabContentWrapper">
           <div className="buttonsRow">
             <Title text={i18n.editor.standardView.noKeyTransparent} headingLevel={3} />
-            <CallOut content={i18n.editor.standardView.callOut} size="sm" />
-
+            <Alert size="sm">
+              <AlertDescription>
+                <p>{i18n.editor.standardView.callOut}</p>
+              </AlertDescription>
+            </Alert>
             <div className="keysButtonsList">
               <Title text={i18n.editor.standardView.noKey} headingLevel={4} />
               <p className="description">{i18n.editor.standardView.noKeyDescription}</p>

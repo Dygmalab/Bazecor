@@ -6,7 +6,7 @@ import Dropdown from "react-bootstrap/Dropdown";
 import { i18n } from "@Renderer/i18n";
 
 import Title from "../../component/Title";
-import Callout from "../../component/Callout";
+import { Alert, AlertDescription } from "@Renderer/components/ui/alert";
 
 import ListModifiers from "../../component/ListModifiers/ListModifiers";
 
@@ -192,14 +192,17 @@ class SuperkeysTab extends Component {
       <Styles className={`${isStandardView ? "standardViewTab" : ""} tabsSuperkeys`}>
         <div className="tabContentWrapper">
           <Title text={i18n.editor.standardView.superkeys.title} headingLevel={3} />
-          <Callout
-            content={i18n.editor.standardView.superkeys.callOut}
+          <Alert
             size="sm"
             hasVideo
             media="6Az05_Yl6AU"
             videoTitle="The Greatest Keyboard Feature Of All Time: SUPERKEYS! 🦹‍♀️"
             videoDuration="5:34"
-          />
+          >
+            <AlertDescription>
+              <p>{i18n.editor.standardView.superkeys.callOut}</p>
+            </AlertDescription>
+          </Alert>
 
           <Title text={i18n.editor.standardView.superkeys.label} headingLevel={4} />
           <div className="superKeyGroup">
