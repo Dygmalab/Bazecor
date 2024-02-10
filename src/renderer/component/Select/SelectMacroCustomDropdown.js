@@ -35,7 +35,7 @@ width: 100%;
     position: relative;
     .badge-circle {
       width: 8px;
-      height: 8px; 
+      height: 8px;
       border-radius: 50%;
       background-color: rgba(254,0,124,1);
       position: absolute;
@@ -59,7 +59,7 @@ width: 100%;
     margin-top: 0;
     padding: 12px 16px;
   }
-  
+
   .dropdown-menu.large-dropdown {
       min-width: 362px;
       background: ${({ theme }) => theme.styles.dropdown.largeDropdown.background};
@@ -86,6 +86,9 @@ width: 100%;
     height: 142px;
     overflow-y: auto;
   }
+  .button-config-style .disable {
+    pointer-events: none;
+  }
 `;
 
 class SelectMacroCustomDropdown extends Component {
@@ -95,7 +98,7 @@ class SelectMacroCustomDropdown extends Component {
   }
 
   render() {
-    const { keyCode, onKeySelect, macros } = this.props;
+    const { keyCode, onKeySelect, macros, disable } = this.props;
     const KC = keyCode.base + keyCode.modified;
     const mcros = Array(macros.length)
       .fill()
@@ -110,7 +113,7 @@ class SelectMacroCustomDropdown extends Component {
           value={macros[mcros.indexOf(KC)] != undefined ? mcros[mcros.indexOf(KC)] : ""}
           className={`custom-dropdown ${macros[mcros.indexOf(KC)] != undefined ? "active" : ""}`}
         >
-          <Dropdown.Toggle id="dropdown-custom" className="button-config-style">
+          <Dropdown.Toggle id="dropdown-custom" disabled={disable} className={`button-config-style ${disable ? "disable" : ""}`}>
             <div className="dropdownItemSelected">
               <div className="dropdownItem">
                 <div className="dropdownItem">Macros</div>

@@ -220,7 +220,6 @@ const Styles = Styled.div`
 `;
 
 interface StandardViewProps {
-  name: string;
   actions: any[];
   actTab: string;
   code: any;

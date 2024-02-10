@@ -125,7 +125,7 @@ const BatteryStatus = ({ disable }: BatteryStatusProps) => {
   const [animateIcon, setAnimateIcon] = useState(0);
   const [loading, setLoading] = useState(false);
   const target = useRef(null);
-  const [state] = useDevice();
+  const { state } = useDevice();
 
   const intervalIdRef = useRef<NodeJS.Timeout | null>(null);
   const intervalIdAnimateRef = useRef<NodeJS.Timeout | null>(null);

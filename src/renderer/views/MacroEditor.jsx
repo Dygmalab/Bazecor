@@ -122,7 +122,7 @@ function MacroEditor(props) {
     scrollPos: 0,
   };
   const [state, setState] = useState(initialState);
-  const [deviceState] = useDevice();
+  const { state: deviceState } = useDevice();
 
   function superTranslator(raw) {
     if (raw.search(" 0 0 ") === -1) {

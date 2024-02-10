@@ -31,14 +31,14 @@ width: 100%;
     line-height: 1em;
     overflow: initial;
     position: relative;
-    
+
   }
   .dropdownItemSelected {
     color: ${({ theme }) => theme.styles.dropdown.textButtonColor};
     position: relative;
     .badge-circle {
       width: 8px;
-      height: 8px; 
+      height: 8px;
       border-radius: 50%;
       background-color: rgba(254,0,124,1);
       position: absolute;
@@ -98,6 +98,9 @@ width: 100%;
   height: 142px;
   overflow-y: auto;
 }
+.button-config-style .disable {
+  pointer-events: none;
+}
 `;
 
 class SelectSuperKeyCustomDropdown extends Component {
@@ -108,7 +111,7 @@ class SelectSuperKeyCustomDropdown extends Component {
   }
 
   render() {
-    const { action, actions, selKeys, onKeySelect, superkeys, keyCode, notifText } = this.props;
+    const { action, actions, selKeys, onKeySelect, superkeys, keyCode, notifText, disable } = this.props;
 
     const KC = keyCode.base + keyCode.modified;
     const superk = Array(superkeys.length)
@@ -130,7 +133,7 @@ class SelectSuperKeyCustomDropdown extends Component {
         }}
         className={`custom-dropdown ${superkeys[superk.indexOf(KC)] != undefined ? "active" : ""}`}
       >
-        <Dropdown.Toggle id="dropdown-custom" className="button-config-style">
+        <Dropdown.Toggle id="dropdown-custom" disabled={disable} className={`button-config-style ${disable ? "disable" : ""}`}>
           <div className="dropdownItemSelected">
             <div className="dropdownItem">
               Superkeys {notifText ? <div className="badge badge-primary">{notifText}</div> : ""}

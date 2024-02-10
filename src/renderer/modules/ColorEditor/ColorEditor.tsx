@@ -15,20 +15,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React, { Component } from "react";
-import PropTypes from "prop-types";
-import { SketchPicker } from "react-color";
+import React, { CSSProperties, Component } from "react";
+import { ColorResult, SketchPicker } from "react-color";
 import Styled from "styled-components";
 
 // Bootstrap components
-
-import Title from "../../component/Title";
-import { ColorButton, ColorPicker } from "../../component/Button";
+import Title from "@Renderer/component/Title";
+import { ColorButton, ColorPicker } from "@Renderer/component/Button";
 
 // Icons
 import { i18n } from "@Renderer/i18n";
-
-import { IconColorPalette, IconKeysLight, IconKeysUnderglow } from "../../component/Icon";
+import { IconColorPalette, IconKeysLight, IconKeysUnderglow } from "@Renderer/component/Icon";
+import { ColorEditorProps } from "@Renderer/types/colorEditor";
 
 const Styles = Styled.div`
 width: 100%;
@@ -92,8 +90,8 @@ width: 100%;
 }
 `;
 
-class ColorEditor extends Component {
-  constructor(props) {
+class ColorEditor extends Component<ColorEditorProps, { displayColorPicker: boolean }> {
+  constructor(props: ColorEditorProps) {
     super(props);
 
     this.state = {
@@ -105,12 +103,12 @@ class ColorEditor extends Component {
     this.handleChange = this.handleChange.bind(this);
   }
 
-  handleChange(color) {
+  handleChange(color: ColorResult) {
     const { selected, onColorPick } = this.props;
     onColorPick(selected, color.rgb.r, color.rgb.g, color.rgb.b);
   }
 
-  selectColor(ev, pick) {
+  selectColor(ev: Event, pick: number) {
     const { selected, onColorSelect, onColorButtonSelect } = this.props;
     onColorSelect(pick);
     if (pick === selected) {
@@ -136,7 +134,7 @@ class ColorEditor extends Component {
       return (
         // eslint-disable-next-line react/jsx-filename-extension
         <ColorPicker
-          onClick={ev => {
+          onClick={(ev: Event) => {
             this.selectColor(ev, idx);
           }}
           menuKey={menuKey}
@@ -153,14 +151,14 @@ class ColorEditor extends Component {
     const popover = {
       position: "absolute",
       top: "42px",
-    };
+    } as CSSProperties;
     const cover = {
       position: "fixed",
       top: "0px",
       right: "0px",
       bottom: "0px",
       left: "0px",
-    };
+    } as CSSProperties;
 
     const underglowStart = deviceName === "Defy" ? 70 : 69;
 
@@ -183,7 +181,7 @@ class ColorEditor extends Component {
               {displayColorPicker ? (
                 <div style={popover}>
                   <div style={cover} onClick={this.showColorPicker} aria-hidden="true" />
-                  <SketchPicker color={colors[selected]} onChange={this.handleChange} width={240} />
+                  <SketchPicker color={colors[selected]} onChange={this.handleChange} width="240px" />
                 </div>
               ) : null}
             </div>
@@ -213,23 +211,5 @@ class ColorEditor extends Component {
     );
   }
 }
-
-ColorEditor.propTypes = {
-  onColorPick: PropTypes.func,
-  colors: PropTypes.arrayOf(
-    PropTypes.shape({
-      r: PropTypes.number,
-      g: PropTypes.number,
-      b: PropTypes.number,
-      rgb: PropTypes.string,
-    }),
-  ),
-  colorsInUse: PropTypes.array,
-  selected: PropTypes.number,
-  onColorSelect: PropTypes.func,
-  onColorButtonSelect: PropTypes.func,
-  toChangeAllKeysColor: PropTypes.func,
-  deviceName: PropTypes.string,
-};
 
 export default ColorEditor;

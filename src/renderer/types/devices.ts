@@ -1,3 +1,4 @@
+// eslint-disable-next-line import/no-cycle
 import Device from "../../api/comms/Device";
 
 export interface USBDeviceDescriptor {
@@ -50,8 +51,8 @@ export type Dispatch = (action: Action) => void;
 
 export type State = {
   selected: number;
-  currentDevice: Device | undefined;
-  deviceList: Array<DeviceType>;
+  currentDevice: Device;
+  deviceList: Array<Device>;
 };
 
 export type DygmaDeviceType = {

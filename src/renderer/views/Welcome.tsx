@@ -112,7 +112,8 @@ interface WelcomeProps {
 
 function Welcome(props: WelcomeProps) {
   const navigate = useNavigate();
-  const [state] = useDevice();
+  const { state } = useDevice();
+
   const { onConnect, device } = props;
 
   const reconnect = async () => {

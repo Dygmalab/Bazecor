@@ -15,12 +15,14 @@
  */
 
 export interface MacrosType {
-  actions: {
-    keyCode: number;
-    type: number;
-    id: number;
-  };
+  actions: MacroActionsType[];
   id: number;
   name: string;
   macro: string;
+}
+
+export interface MacroActionsType {
+  keyCode: number | number[];
+  type: number;
+  id: number;
 }

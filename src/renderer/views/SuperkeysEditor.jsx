@@ -138,7 +138,7 @@ function SuperkeysEditor(props) {
     showStandardView: false,
   };
   const [state, setState] = useState(initialState);
-  const [deviceState] = useDevice();
+  const { state: deviceState } = useDevice();
 
   const handleSaveStandardView = () => {
     state.showStandardView = false;

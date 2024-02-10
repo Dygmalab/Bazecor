@@ -27,7 +27,6 @@ import { flags, languages, languageNames } from "@Renderer/modules/Settings/Gene
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@Renderer/components/ui/card";
 import { Switch } from "@Renderer/components/ui/switch";
 import { IconChip, IconHanger, IconSun, IconMoon, IconScreen, IconKeyboard } from "@Renderer/component/Icon";
-import FileBackUpHandling from "@Renderer/modules/Settings/FileBackUpHandling";
 import { ToggleButtons } from "@Renderer/component/ToggleButtons";
 import { Select } from "@Renderer/component/Select";
 import { KeyPickerPreview } from "@Renderer/modules/KeyPickerKeyboard";
@@ -72,7 +71,7 @@ const GeneralSettings = ({
   onChangeAllowBetas,
 }: GeneralSettingsProps) => {
   const [selectedLanguage, setSelectedLanguage] = useState("");
-  const [state] = useDevice();
+  const { state } = useDevice();
 
   useEffect(() => {
     setSelectedLanguage(getLanguage(store.get("settings.language") as string));
@@ -185,7 +184,6 @@ const GeneralSettings = ({
           />
         </CardContent>
       </Card>
-      <FileBackUpHandling />
       <Card className="mt-3 max-w-2xl mx-auto" variant="default">
         <CardHeader>
           <CardTitle variant="default">

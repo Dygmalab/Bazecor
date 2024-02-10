@@ -174,7 +174,7 @@ function SuperkeyPicker(props: SuperkeyPickerProps) {
     updateAction,
   } = props;
   const [controlDeleteButton, setControlDeleteButton] = React.useState(false);
-  const [keyContent, setKeyContent] = useState<unknown>("Loading...");
+  const [keyContent, setKeyContent] = useState<string | JSX.Element>("Loading...");
   const action = superkeys[selected] === undefined ? 0 : superkeys[selected].actions[index];
 
   React.useEffect(() => {

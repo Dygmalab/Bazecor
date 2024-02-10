@@ -71,7 +71,7 @@ const GitHubRead = async context => {
   let isUpdated;
   let isBeta;
   try {
-    const fwReleases = await loadAvailableFirmwareVersions(context.device.bootloader ? false : context.allowBeta);
+    const fwReleases = await loadAvailableFirmwareVersions(context.allowBeta);
     finalReleases = fwReleases.filter(
       release =>
         release.name === context.device.info.product &&

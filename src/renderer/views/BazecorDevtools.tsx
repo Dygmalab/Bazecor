@@ -38,7 +38,7 @@ const Styles = Styled.div`
 `;
 
 const BazecorDevtools = () => {
-  const [state, dispatch] = useDevice();
+  const { state, dispatch } = useDevice();
 
   // HID devices connectiont tools
   let connectedDevice: undefined | HIDDevice;

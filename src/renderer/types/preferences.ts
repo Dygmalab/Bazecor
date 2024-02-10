@@ -94,6 +94,5 @@ export interface BackupSettingsProps {
   connected: boolean;
   neurons: any;
   neuronID: string;
-  updateTab: (value: string) => void;
   toggleBackup: (value: boolean) => void;
 }

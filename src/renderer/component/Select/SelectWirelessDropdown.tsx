@@ -137,6 +137,9 @@ width: 100%;
         box-shadow: ${({ theme }) => theme.styles.button.config.boxShadowActive};
     }
   }
+  .button-config-style .disable {
+    pointer-events: none;
+  }
 `;
 
 enum WirelessButtonOrder {
@@ -145,7 +148,7 @@ enum WirelessButtonOrder {
 }
 
 function SelectWirelessDropdown(props: SelectWirelessDropdownProps) {
-  const { keyCode, onKeySelect } = props;
+  const { keyCode, onKeySelect, disable } = props;
   const WirelessButtons: Array<WirelessButton> = [
     { name: i18n.editor.standardView.wireless.batteryLevel, keynum: BatteryCodes.STATUS },
     { name: i18n.wireless.bluetooth.pairingModeButton, keynum: BluetoothCodes.PAIRING },
@@ -159,7 +162,7 @@ function SelectWirelessDropdown(props: SelectWirelessDropdownProps) {
         onSelect={value => onKeySelect(parseInt(value, 10))}
         className={`custom-dropdown  ${WirelessButtons.map(i => i.keynum).includes(KC) ? "active" : ""}`}
       >
-        <Dropdown.Toggle id="dropdown-custom" className="button-config-style">
+        <Dropdown.Toggle id="dropdown-custom" disabled={disable} className={`button-config-style ${disable ? "disable" : ""}`}>
           <div className="dropdownItemSelected">
             <div className="dropdownItem">
               <div className="dropdownItem">{i18n.app.menu.wireless}</div>

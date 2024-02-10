@@ -166,7 +166,7 @@ height:inherit;
 
 function FirmwareCheckProcessPanel(props) {
   const { nextBlock, retryBlock, context } = props;
-  const [deviceState] = useDevice();
+  const { state: deviceState } = useDevice();
   const [state, send] = useMachine(DeviceChecks, { context: { device: context.device, deviceState } });
   const [listItems, setlistItems] = useState([]);
   const [loading, setLoading] = useState(true);

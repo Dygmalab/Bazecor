@@ -21,7 +21,6 @@ import { Switch } from "@Renderer/components/ui/switch";
 
 import { useDevice } from "@Renderer/DeviceContext";
 import { Select } from "@Renderer/component/Select";
-import BackupSettings from "@Renderer/modules/Settings/BackupSettings";
 import { i18n } from "@Renderer/i18n";
 
 // Own Components
@@ -35,7 +34,7 @@ import { AdvancedSettingsProps } from "@Renderer/types/preferences";
 const AdvancedKeyboardSettings = () => {
   const [EEPROMClearConfirmationOpen, setEEPROMClearConfirmationOpen] = useState(false);
   const [working, setWorking] = useState(false);
-  const [state] = useDevice();
+  const { state } = useDevice();
 
   const openEEPROMClearConfirmation = () => {
     setEEPROMClearConfirmationOpen(true);
@@ -70,12 +69,11 @@ const AdvancedKeyboardSettings = () => {
       />
       <ConfirmationDialog
         title={i18n.keyboardSettings.resetEEPROM.dialogTitle}
+        text={i18n.keyboardSettings.resetEEPROM.dialogContents}
         open={EEPROMClearConfirmationOpen}
         onConfirm={clearEEPROM}
         onCancel={closeEEPROMClearConfirmation}
-      >
-        {i18n.keyboardSettings.resetEEPROM.dialogContents}
-      </ConfirmationDialog>
+      />
     </>
   );
 };
@@ -150,13 +148,6 @@ const AdvancedSettings = ({
           </div>
         </CardContent>
       </Card>
-      <BackupSettings
-        connected={connected}
-        neurons={neurons}
-        neuronID={neuronID}
-        updateTab={updateTab}
-        toggleBackup={toggleBackup}
-      />
       {keyboardType === "Raise" ? (
         <Card className="mt-3 max-w-2xl mx-auto" variant="default">
           <CardHeader>

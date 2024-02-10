@@ -67,7 +67,7 @@ function App() {
   const [fwUpdate, setFwUpdate] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const [state] = useDevice();
+  const { state } = useDevice();
   const navigate = useNavigate();
   const varFlashing = React.useRef(false);
   const device: any = React.useRef();

@@ -18,9 +18,10 @@
 import React from "react";
 import Styled from "styled-components";
 
+import { ColorPickerProps } from "@Renderer/types/colorEditor";
 import { IconPlusXs } from "../Icon";
 
-const Style = Styled.div` 
+const Style = Styled.div`
 
 .colorPickerButton {
     width: 38px;
@@ -31,7 +32,7 @@ const Style = Styled.div`
     border-radius: 4px;
 
     padding: 3px;
-    
+
     box-shadow: 0px 0px 24px rgba(108, 92, 231, 0);
     transition-property: background, border, box-shadow, width;
     transition: 300ms ease-in-out;
@@ -125,7 +126,8 @@ const Style = Styled.div`
 }
 `;
 
-function ColorPicker({ menuKey, id, onClick, dataID, selected, buttonStyle, className }) {
+function ColorPicker(props: ColorPickerProps) {
+  const { menuKey, id, onClick, dataID, selected, buttonStyle, className } = props;
   return (
     <Style>
       <div
@@ -133,10 +135,12 @@ function ColorPicker({ menuKey, id, onClick, dataID, selected, buttonStyle, clas
         onClick={onClick}
         className={`colorPickerButton ${className} ${selected === id ? "active" : ""}`}
         data-id={dataID}
+        // TODO: Remove ARIA HIDDEN
+        aria-hidden="true"
       >
         <div className="button-content">
           <div className="colorItem" style={buttonStyle}>
-            {className == "addColorButton" ? <IconPlusXs /> : " "}
+            {className === "addColorButton" ? <IconPlusXs /> : " "}
           </div>
         </div>
       </div>

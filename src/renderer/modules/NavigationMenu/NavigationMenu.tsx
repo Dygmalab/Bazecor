@@ -105,7 +105,8 @@ const Styles = Styled.div`
 `;
 
 function NavigationMenu(props: NavigationMenuProps) {
-  const [state] = useDevice();
+  const { state } = useDevice();
+
   const [checkedVer, setCheckedVer] = useState(false);
   const [versions, setVersions] = useState(null);
   const [isUpdated, setIsUpdated] = useState(true);
@@ -141,6 +142,7 @@ function NavigationMenu(props: NavigationMenuProps) {
   );
 
   const checkKeyboardMetadata = useCallback(async () => {
+    setIsUpdated(true);
     setDevice(state.currentDevice.device);
     if (state.currentDevice.device === undefined || state.currentDevice.device.bootloader) return;
     let parts = await state.currentDevice.command("version");
@@ -166,7 +168,7 @@ function NavigationMenu(props: NavigationMenuProps) {
     const semVerCheck = SemVer.compare(fwList[0].version, cleanedVersion);
     Beta = Beta || state.currentDevice.device.info.product !== "Raise";
     setVersions(getVersions);
-    setIsUpdated(semVerCheck > 0);
+    setIsUpdated(semVerCheck !== 1);
     setIsBeta(Beta);
     setVirtual(state.currentDevice.file);
     setCheckedVer(true);
@@ -257,7 +259,7 @@ function NavigationMenu(props: NavigationMenuProps) {
                 >
                   <NavigationButton
                     selected={currentPage === "/firmware-update"}
-                    showNotif={isUpdated}
+                    showNotif={!isUpdated}
                     buttonText={i18n.app.menu.firmwareUpdate}
                     icoSVG={<IconMemory2Stroke />}
                     disabled={fwUpdate || virtual || state.currentDevice.type === "hid" || loading}
