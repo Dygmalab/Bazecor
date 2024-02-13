@@ -1,6 +1,5 @@
 /* Bazecor-hardware -- Bazecor Hardware library collection
- * Copyright (C) 2018, 2019  Keyboardio, Inc.
- * Copyright (C) 2019, 2020  DygmaLab SE
+ * Copyright (C) 2019, 2024  DygmaLab SE
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -19,6 +18,8 @@ import { RaiseANSI, RaiseANSIBootloader } from "../hardware-dygma-raise-ansi";
 import { RaiseISO, RaiseISOBootloader } from "../hardware-dygma-raise-iso";
 import { DefyWired, DefyWiredBootloader } from "../hardware-dygma-defy-wired";
 import { DefyWireless, DefyWirelessBootloader } from "../hardware-dygma-defy-wireless";
+import { Raise2ANSI, Raise2ANSIBootloader } from "../hardware-dygma-raise2-ansi";
+import { Raise2ISO, Raise2ISOBootloader } from "../hardware-dygma-raise2-iso";
 
 // const Hardware = {
 //   serial: [Raise_ANSI, Raise_ISO, Raise_ANSIBootloader, Raise_ISOBootloader],
@@ -27,9 +28,28 @@ import { DefyWireless, DefyWirelessBootloader } from "../hardware-dygma-defy-wir
 // };
 
 const Hardware: any = {
-  serial: [RaiseISO, RaiseANSI, DefyWired, DefyWireless, RaiseANSIBootloader, RaiseISOBootloader, DefyWirelessBootloader],
+  serial: [
+    RaiseISO,
+    RaiseANSI,
+    DefyWired,
+    DefyWireless,
+    Raise2ANSI,
+    Raise2ISO,
+    RaiseANSIBootloader,
+    RaiseISOBootloader,
+    DefyWirelessBootloader,
+    Raise2ANSIBootloader,
+    Raise2ISOBootloader,
+  ],
   nonSerial: [DefyWiredBootloader],
-  bootloader: [RaiseANSIBootloader, RaiseISOBootloader, DefyWiredBootloader, DefyWirelessBootloader],
+  bootloader: [
+    RaiseANSIBootloader,
+    RaiseISOBootloader,
+    DefyWiredBootloader,
+    DefyWirelessBootloader,
+    Raise2ANSIBootloader,
+    Raise2ISOBootloader,
+  ],
 };
 
 export default Hardware;
