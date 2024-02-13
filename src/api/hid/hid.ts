@@ -46,7 +46,7 @@ class HID {
     for (const device of filteredDevices) {
       for (const Hdevice of Hardware.serial) {
         if (device.productId === Hdevice.usb.productId && device.vendorId === Hdevice.usb.vendorId) {
-          const newHID: any = device;
+          const newHID: HIDDevice = device;
           newHID.device = Hdevice;
           foundDevices.push(newHID);
         }

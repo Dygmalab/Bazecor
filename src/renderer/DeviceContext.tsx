@@ -1,6 +1,6 @@
 /* eslint-disable no-await-in-loop */
 import React, { useReducer, createContext, useContext, useMemo } from "react";
-import { CountProviderProps, Action, State } from "./types/devices";
+import { CountProviderProps, Action, State, DeviceClass } from "./types/devices";
 import serial, { isSerialType } from "../api/comms/serial";
 import Device from "../api/comms/Device";
 import HID from "../api/hid/hid";
@@ -102,7 +102,7 @@ const list = async () => {
   return finalDevices;
 };
 
-const connect = async (device: Device) => {
+const connect = async (device: DeviceClass) => {
   try {
     if (device.type === "serial") {
       const result = await serial.connect(device);
@@ -111,8 +111,8 @@ const connect = async (device: Device) => {
       return device;
     }
     console.log(device.port);
-    const result = await device.port.connect();
-    await device.addHID(result);
+    const result = await (device.port as HID).connect();
+    await device.addHID();
     console.log("the device is hid type: ", device, " and connected as: ", result);
     return device;
   } catch (error) {
@@ -121,7 +121,7 @@ const connect = async (device: Device) => {
   }
 };
 
-const disconnect = async (device: Device) => {
+const disconnect = async (device: DeviceClass) => {
   try {
     if (!device?.isClosed) {
       await device.close();

@@ -1,5 +1,41 @@
 // eslint-disable-next-line import/no-cycle
-import Device from "../../api/comms/Device";
+import { SerialPort } from "serialport";
+import HID from "../../api/hid/hid";
+import DeviceMap from "../../api/comms/deviceMap";
+
+export interface DeviceClass {
+  type: string;
+  path: string;
+  manufacturer: string;
+  serialNumber: string;
+  pnpId: string;
+  locationId: string;
+  productId: string;
+  vendorId: string;
+  timeout: number;
+  result: string;
+  callbacks: Array<(value: unknown) => void>;
+  device: DygmaDeviceType;
+  port?: HID | SerialPort;
+  commands?: { [key: string]: unknown; help: Array<string> };
+  file?: boolean;
+  isClosed: boolean;
+  isSending: boolean;
+  memoryMap: DeviceMap;
+  fileData: VirtualType;
+
+  addPort: (serialport: SerialPort) => Promise<void>;
+  addHID: () => Promise<void>;
+  close: () => Promise<void>;
+  request: (command: string, ...args: Array<string>) => Promise<string>;
+  serialRequest: (cmd: string, ...args: Array<string>) => Promise<string>;
+  hidRequest: (cmd: string, ...args: Array<string>) => Promise<string>;
+  virtualRequest: (cmd: string, ...args: Array<string>) => Promise<string>;
+  command: (cmd: string, ...args: Array<string>) => Promise<string>;
+  noCacheCommand: (cmd: string, ...args: Array<string>) => Promise<string>;
+  write_parts: (parts: Array<string>, cb: () => void) => Promise<void>;
+  addCommands: (cmds: string) => void;
+}
 
 export interface USBDeviceDescriptor {
   idVendor: number;
@@ -27,6 +63,20 @@ export interface DeviceType {
   locationId: string | undefined;
   productId: string | undefined;
   vendorId: string | undefined;
+  device?: DygmaDeviceType;
+}
+
+export interface VirtualType {
+  device: DygmaDeviceType;
+  virtual: {
+    [command: string]: {
+      data: string;
+      eraseable: boolean;
+    };
+  };
+}
+
+export interface HIDDeviceExtended extends HIDDevice {
   device?: any | undefined;
 }
 
@@ -51,8 +101,8 @@ export type Dispatch = (action: Action) => void;
 
 export type State = {
   selected: number;
-  currentDevice: Device;
-  deviceList: Array<Device>;
+  currentDevice: DeviceClass;
+  deviceList: Array<DeviceClass>;
 };
 
 export type DygmaDeviceType = {
@@ -80,13 +130,14 @@ export type DygmaDeviceType = {
     rows: number;
     columns: number;
   };
-  components: {
-    keymap: unknown;
-  };
-
+  RGBWMode: boolean;
+  components: unknown;
   instructions: {
     en: {
       updateInstructions: string;
     };
   };
+  path?: string;
+  bootloader?: boolean;
+  filePath?: string;
 };

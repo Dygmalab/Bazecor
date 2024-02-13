@@ -1,4 +1,6 @@
-const DefyWired = {
+import { VirtualType } from "@Renderer/types/devices";
+
+const DefyWired: VirtualType = {
   device: {
     info: {
       vendor: "Dygma",

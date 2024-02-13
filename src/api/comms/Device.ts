@@ -1,11 +1,12 @@
-// eslint-disable-next-line import/no-cycle
-import { DeviceType } from "../../renderer/types/devices";
+/* eslint-disable no-console */
+import { SerialPort } from "serialport";
+import { DeviceClass, DeviceType, DygmaDeviceType, HIDDeviceExtended, VirtualType } from "@Renderer/types/devices";
 import HID from "../hid/hid";
 import DeviceMap from "./deviceMap";
 // eslint-disable-next-line no-eval
 const { DelimiterParser } = eval('require("@serialport/parser-delimiter")');
 
-interface Device {
+class Device implements DeviceClass {
   type: string;
   path: string;
   manufacturer: string;
@@ -16,18 +17,17 @@ interface Device {
   vendorId: string;
   timeout: number;
   result: string;
-  callbacks: Array<any>;
-  device: any;
-  port?: any;
-  commands?: any;
+  callbacks: Array<(value: unknown) => void>;
+  device: DygmaDeviceType;
+  port?: HID | SerialPort;
+  commands?: { [key: string]: unknown; help: Array<string> };
   file?: boolean;
   isClosed: boolean;
   isSending: boolean;
   memoryMap: DeviceMap;
-}
+  fileData: VirtualType;
 
-class Device {
-  constructor(parameters: DeviceType | HID, type: string) {
+  constructor(parameters: DeviceType | HID | VirtualType, type: string) {
     // constructor for Device
     this.type = type;
     this.timeout = 5000;
@@ -55,16 +55,28 @@ class Device {
     }
     if (type === "hid") {
       params = parameters as HID;
-      this.path = "";
+      this.path = undefined;
       this.manufacturer = "Dygma";
       this.serialNumber = params.serialNumber;
-      this.pnpId = "";
+      this.pnpId = undefined;
       this.locationId = "";
       this.productId = String(params.connectedDevice.productId);
       this.vendorId = String(params.connectedDevice.vendorId);
-      const newDevice = params.connectedDevice as any;
+      const newDevice = params.connectedDevice as HIDDeviceExtended;
       this.device = newDevice.device;
-      this.port = params;
+      this.port = params as HID;
+    }
+    if (type === "virtual") {
+      params = parameters as VirtualType;
+      this.path = undefined;
+      this.manufacturer = params.device.info.vendor;
+      this.serialNumber = params.virtual["hardware.chip_id"].data;
+      this.pnpId = undefined;
+      this.locationId = undefined;
+      this.productId = params.device.usb.productId.toString(16);
+      this.vendorId = params.device.usb.vendorId.toString(16);
+      this.device = params.device;
+      this.fileData = params;
     }
   }
 
@@ -73,27 +85,28 @@ class Device {
       setTimeout(res, ms);
     });
 
-  static help = async (dev: any) => {
+  static help = async (dev: Device) => {
     const data = await dev.request("help");
-    const result = data.split(/\r?\n/).filter((v: any) => v.length > 0);
+    const result = data.split(/\r?\n/).filter(v => v.length > 0);
     // console.log("requesting to fill help: ", dev, result);
     return result;
   };
 
-  static HIDhelp = async (dev: any) => {
+  static HIDhelp = async (dev: Device) => {
     const data = await dev.hidRequest("help");
-    const result = data.split(/\r?\n/).filter((v: any) => v.length > 0);
+    const result = data.split(/\r?\n/).filter(v => v.length > 0);
     // console.log("requesting to fill help: ", dev, result);
     return result;
   };
 
-  addPort = async (serialport: any) => {
+  async addPort(serialport: SerialPort) {
     this.port = serialport;
     this.type = "serial";
     this.isClosed = false;
+    serialport.pipe(new DelimiterParser({ delimiter: "\r\n" }));
     // Port is loaded, creating message handler
     const parser = this.port.pipe(new DelimiterParser({ delimiter: "\r\n" }));
-    parser.on("data", (data: any) => {
+    parser.on("data", (data: Buffer) => {
       const utfData = data.toString("utf-8");
       console.log("addport: incoming data:", utfData);
 
@@ -116,47 +129,47 @@ class Device {
     this.commands = {
       help: kbCommands,
     };
-  };
+  }
 
-  addHID = async (device: any) => {
+  async addHID() {
     const kbCommands = await Device.HIDhelp(this);
     this.isClosed = false;
-    console.log("these are the commands", kbCommands, device);
+    console.log("these are the commands", kbCommands);
     this.commands = {
       help: kbCommands,
     };
-  };
+  }
 
-  close = async () => {
+  async close() {
     try {
       if (this.type === "serial") await this.port.close();
-      if (this.type === "hid") await this.port.connectedDevice.close();
+      if (this.type === "hid") await (this.port as HID).connectedDevice.close();
       this.memoryMap = new DeviceMap();
       this.isClosed = true;
     } catch (error) {
       console.error(error);
     }
-  };
+  }
 
-  request(command: string, ...args: Array<any>) {
+  request(command: string, ...args: Array<string>) {
     console.log("device.request:", command, ...args);
-    return new Promise((resolve, reject) => {
+    return new Promise<string>((resolve, reject) => {
       const timer = setTimeout(() => {
         reject(new Error("Communication timeout"));
       }, this.timeout);
       this.serialRequest(command, ...args)
-        .then(data => {
+        .then((data: string) => {
           clearTimeout(timer);
-          resolve(data);
+          resolve(data as string);
         })
-        .catch(err => {
+        .catch((err: Error) => {
           console.log("Error sending request from focus", err);
           reject(new Error("Error sending request from focus"));
         });
     });
   }
 
-  async serialRequest(cmd: string, ...args: any[]) {
+  async serialRequest(cmd: string, ...args: string[]) {
     console.log("performing request");
     if (!this.port) throw new Error("Device not connected!");
 
@@ -166,13 +179,13 @@ class Device {
     }
     request += "\n";
 
-    return new Promise(resolve => {
+    return new Promise<string>(resolve => {
       this.callbacks.push(resolve);
-      this.port.write(request);
+      (this.port as SerialPort).write(request);
     });
   }
 
-  hidRequest = async (cmd: string, ...args: Array<string>) => {
+  async hidRequest(cmd: string, ...args: Array<string>) {
     if (this.port === undefined) throw new Error("Device not connected!");
 
     let request = cmd;
@@ -182,9 +195,9 @@ class Device {
     request += "\n";
 
     let returnValue = "";
-    await this.port.sendData(
+    await (this.port as HID).sendData(
       request,
-      (rxData: any) => {
+      (rxData: string) => {
         returnValue = rxData;
       },
       (err: Error) => {
@@ -193,63 +206,81 @@ class Device {
     );
     console.log("device.hid.request:", cmd, ...args, "retured: ", returnValue);
     return returnValue;
-  };
+  }
 
-  command = async (command: string, ...args: Array<string>) => {
-    if (this.port === undefined) return false;
+  async virtualRequest(cmd: string, ...args: string[]) {
+    console.log("performing virtual request");
+    if (args.length > 0 && this.fileData.virtual[cmd].eraseable) {
+      this.fileData.virtual[cmd].data = args.join(" ");
+    }
+    console.log(`reading virtual data from ${cmd}: `, this.fileData.virtual[cmd]);
+    let result = "";
+    if (this.fileData.virtual[cmd] !== undefined) {
+      result = this.fileData.virtual[cmd].data;
+    }
+    console.log(result);
+    return new Promise<string>(resolve => {
+      resolve(result);
+    });
+  }
+
+  async command(cmd: string, ...args: Array<string>) {
+    if (this.port === undefined) return undefined;
 
     // HashMap cache to improve performance
     if (!args || args.length === 0) {
       // if no args and it hits the cache, return the cache
-      if (this.memoryMap.has(command)) return this.memoryMap.get(command);
+      if (this.memoryMap.has(cmd)) return this.memoryMap.get(cmd);
     }
     if (args || args.length > 0) {
       // if args and no changes with cache, return cache instead of sending the command to the keyboard
-      if (this.memoryMap.isUpdated(command, args.join(" "))) return this.memoryMap.get(command);
+      if (this.memoryMap.isUpdated(cmd, args.join(" "))) return this.memoryMap.get(cmd);
     }
 
-    let result: any;
+    let result: string;
     this.isSending = true;
     try {
-      if (this.type === "serial") result = await this.request(command, ...args);
-      if (this.type === "hid") result = await this.hidRequest(command, ...args);
+      if (this.type === "serial") result = await this.request(cmd, ...args);
+      if (this.type === "hid") result = await this.hidRequest(cmd, ...args);
+      if (this.type === "virtual") result = await this.virtualRequest(cmd, ...args);
     } catch (error) {
       console.log("Error when handling request", error);
       result = error;
     }
     if (!args || args.length === 0) {
       // if no args and it hits the cache, return the cache
-      this.memoryMap.set(command, result);
+      this.memoryMap.set(cmd, result);
     } else {
-      this.memoryMap.set(command, args.join(" "));
+      this.memoryMap.set(cmd, args.join(" "));
     }
     this.isSending = false;
     return result;
-  };
+  }
 
-  noCacheCommand = async (command: string, ...args: Array<string>) => {
-    if (this.port === undefined) return false;
+  async noCacheCommand(cmd: string, ...args: Array<string>) {
+    if (this.port === undefined) return undefined;
 
-    let result: any;
+    let result: string;
     this.isSending = true;
     try {
-      if (this.type === "serial") result = await this.request(command, ...args);
-      if (this.type === "hid") result = await this.hidRequest(command, ...args);
+      if (this.type === "serial") result = await this.request(cmd, ...args);
+      if (this.type === "hid") result = await this.hidRequest(cmd, ...args);
+      if (this.type === "virtual") result = await this.virtualRequest(cmd, ...args);
     } catch (error) {
       console.log("Error when handling request", error);
       result = error;
     }
     if (!args || args.length === 0) {
       // if no args and it hits the cache, return the cache
-      this.memoryMap.set(command, result);
+      this.memoryMap.set(cmd, result);
     } else {
-      this.memoryMap.set(command, args.join(" "));
+      this.memoryMap.set(cmd, args.join(" "));
     }
     this.isSending = false;
     return result;
-  };
+  }
 
-  write_parts = async (parts: Array<any>, cb: () => void) => {
+  async write_parts(parts: Array<string>, cb: () => void) {
     if (!parts || parts.length === 0) {
       cb();
       return;
@@ -257,30 +288,15 @@ class Device {
 
     let part = parts.shift();
     part += " ";
-    this.port.write(part);
-    this.port.drain(async () => {
+    (this.port as SerialPort).write(part);
+    (this.port as SerialPort).drain(async () => {
       await this.write_parts(parts, cb);
     });
-  };
+  }
 
-  addCommands = (cmds: string) => {
+  addCommands(cmds: string) {
     Object.assign(this.commands, cmds);
-  };
-
-  // addMethod = (methodName: string, command: string) => {
-  //   const keyedMethodName = methodName as keyof Device;
-  //   if (this[keyedMethodName]) {
-  //     const tmp = this[keyedMethodName];
-  //     this[keyedMethodName as any] = (...args: Array<any>) => {
-  //       tmp(...args);
-  //       this.commands[command][methodName](...args);
-  //     };
-  //   } else {
-  //     this[keyedMethodName as never] = (...args: Array<any>) => {
-  //       this.commands[command][methodName](...args);
-  //     };
-  //   }
-  // };
+  }
 }
 
 export default Device;

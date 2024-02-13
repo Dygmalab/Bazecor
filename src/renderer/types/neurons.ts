@@ -14,6 +14,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { DygmaDeviceType } from "./devices";
 import { MacrosType } from "./macros";
 import { SuperkeysType } from "./superkeys";
 
@@ -28,6 +29,7 @@ export interface Neuron {
   layers: Array<LayerType>;
   macros: Array<MacrosType>;
   superkeys: Array<SuperkeysType>;
+  device?: DygmaDeviceType;
 }
 
 export interface Neurons {

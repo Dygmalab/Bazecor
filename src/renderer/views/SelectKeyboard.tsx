@@ -22,16 +22,18 @@ import { ipcRenderer } from "electron";
 import Container from "react-bootstrap/Container";
 import { useDevice, DeviceTools } from "@Renderer/DeviceContext";
 
+import { DeviceItemsType, SelectKeyboardProps } from "@Renderer/types/selectKeyboard";
+import { DeviceClass } from "@Renderer/types/devices";
+import { Neuron } from "@Renderer/types/neurons";
+
 import { Banner } from "@Renderer/component/Banner";
 import Title from "@Renderer/component/Title";
 import { IconBluetooth } from "@Renderer/component/Icon";
-import { DeviceItemsType, SelectKeyboardProps } from "@Renderer/types/selectKeyboard";
-import { Neuron } from "@Renderer/types/neurons";
 import { PageHeader } from "@Renderer/modules/PageHeader";
-
 import { i18n, refreshHardware } from "@Renderer/i18n";
 import NeuronConnection from "@Renderer/modules/NeuronConnection";
 import ToastMessage from "@Renderer/component/ToastMessage";
+import VirtualSelector from "@Renderer/modules/VirtualKeyboards/VirtualSelector";
 
 import Store from "../utils/Store";
 import Device from "../../api/comms/Device";
@@ -202,7 +204,7 @@ const SelectKeyboard = (props: SelectKeyboardProps) => {
     [setLoading],
   );
 
-  const findKeyboards = useCallback(async (): Promise<Device[]> => {
+  const findKeyboards = useCallback(async (): Promise<DeviceClass[]> => {
     loadingHandler(true);
     if (state.currentDevice !== undefined && connected) {
       loadingHandler(false);
@@ -368,6 +370,7 @@ const SelectKeyboard = (props: SelectKeyboardProps) => {
               />
             </Banner>
           </div>
+          <VirtualSelector onConnect={onConnect} />
         </div>
       </Container>
     </Styles>
