@@ -26,6 +26,8 @@ import "react-toastify/dist/ReactToastify.css";
 
 // Custom modules imports
 import { KeyboardSettings } from "@Renderer/modules/Settings/KeyboardSettings";
+import BackupSettings from "@Renderer/modules/Settings/BackupSettings";
+import FileBackUpHandling from "@Renderer/modules/Settings/FileBackUpHandling";
 import {
   DeviceConnectedPreview,
   GeneralSettings,
@@ -679,6 +681,9 @@ const Preferences = (props: PreferencesProps) => {
               <TabsTrigger value="Application" variant="tab">
                 <IconLogoDygma /> Application
               </TabsTrigger>
+              <TabsTrigger value="Backups" variant="tab">
+                <IconFloppyDisk /> Backups
+              </TabsTrigger>
               {connected && state.currentDevice ? (
                 <TabsTrigger value="NeuronManager" variant="tab">
                   <IconNeuronManager /> Neuron Manager
@@ -760,6 +765,16 @@ const Preferences = (props: PreferencesProps) => {
                     allowBeta={allowBeta}
                     onChangeAllowBetas={updateAllowBetas}
                   />
+                </motion.div>
+              </TabsContent>
+              <TabsContent value="Backups">
+                <motion.div initial="hidden" animate="visible" variants={tabVariants}>
+                  <FileBackUpHandling />
+                  {connected && state.currentDevice ? (
+                    <BackupSettings connected={connected} neurons={neurons} neuronID={neuronID} toggleBackup={toggleBackup} />
+                  ) : (
+                    ""
+                  )}
                 </motion.div>
               </TabsContent>
               {connected && state.currentDevice ? (
