@@ -21,6 +21,7 @@
     "make-mac-arm": "electron-forge make --platform=darwin --arch=arm64",
     "make-lin": "electron-forge make --platform=linux",
     "lint": "eslint --ext .ts,.tsx,.js,.jsx .",
+    "typeCheck": "tsc --noEmit && eslint",
     "prettier": "prettier --write \"./**/*.{js,json,css,scss,md}\"",
     "test": "vitest run src",
     "e2e": "yarn playwright test",

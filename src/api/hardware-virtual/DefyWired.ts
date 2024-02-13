@@ -27,7 +27,10 @@ const DefyWired: VirtualType = {
       columns: 89,
     },
     RGBWMode: true,
-    components: {},
+    bootloader: false,
+    components: {
+      keymap: {},
+    },
     instructions: {
       en: {
         updateInstructions:

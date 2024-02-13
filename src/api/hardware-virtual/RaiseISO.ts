@@ -27,7 +27,10 @@ const RaiseISO: VirtualType = {
       columns: 22,
     },
     RGBWMode: false,
-    components: {},
+    bootloader: false,
+    components: {
+      keymap: {},
+    },
     instructions: {
       en: {
         updateInstructions:

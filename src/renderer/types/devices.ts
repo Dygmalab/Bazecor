@@ -17,7 +17,7 @@ export interface DeviceClass {
   callbacks: Array<(value: unknown) => void>;
   device: DygmaDeviceType;
   port?: HID | SerialPort;
-  commands?: { [key: string]: unknown; help: Array<string> };
+  commands?: { [key: string]: any; help: Array<string> };
   file?: boolean;
   isClosed: boolean;
   isSending: boolean;
@@ -77,25 +77,16 @@ export interface VirtualType {
 }
 
 export interface HIDDeviceExtended extends HIDDevice {
-  device?: any | undefined;
-}
-
-export interface DeviceDescriptor {
-  vendor: any;
-  product: any;
-  keyboardType: string;
-  displayName: string;
-  urls: any;
+  device?: DygmaDeviceType | undefined;
 }
 
 export type CountProviderProps = { children: React.ReactNode };
 
 export type Action =
-  | { type: "changeCurrent"; payload: any }
-  | { type: "addDevice"; payload: any }
-  | { type: "addDevicesList"; payload: any }
-  | { type: "command"; payload: any }
-  | { type: unknown; payload?: unknown };
+  | { type: "changeCurrent"; payload: { selected: number; device: DeviceClass } }
+  | { type: "addDevice"; payload: DeviceClass }
+  | { type: "addDevicesList"; payload: DeviceClass[] }
+  | { type: "disconnect"; payload: number };
 
 export type Dispatch = (action: Action) => void;
 
@@ -131,13 +122,16 @@ export type DygmaDeviceType = {
     columns: number;
   };
   RGBWMode: boolean;
-  components: unknown;
+  components: {
+    keymap: any;
+  };
   instructions: {
     en: {
       updateInstructions: string;
     };
   };
+  bootloader: boolean;
   path?: string;
-  bootloader?: boolean;
   filePath?: string;
+  isDeviceSupported?: (device: DeviceType) => boolean;
 };

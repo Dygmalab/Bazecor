@@ -36,7 +36,7 @@ function deviceReducer(state: State, action: Action) {
       return { ...state, currentDevice: undefined };
     }
     default: {
-      throw new Error(`Unhandled action type: ${action.type}`);
+      throw new Error(`Unhandled action type: ${action}`);
     }
   }
 }
@@ -117,7 +117,7 @@ const connect = async (device: DeviceClass) => {
     return device;
   } catch (error) {
     console.error(error);
-    return false;
+    throw error;
   }
 };
 

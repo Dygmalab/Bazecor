@@ -36,7 +36,7 @@ import { i18n } from "@Renderer/i18n";
 
 // Types
 import Version from "@Types/version";
-import { DeviceDescriptor } from "@Renderer/types/devices";
+import { DygmaDeviceType } from "@Renderer/types/devices";
 import { NavigationMenuProps } from "@Renderer/types/navigation";
 
 import {
@@ -111,7 +111,7 @@ function NavigationMenu(props: NavigationMenuProps) {
   const [versions, setVersions] = useState(null);
   const [isUpdated, setIsUpdated] = useState(true);
   const [isBeta, setIsBeta] = useState(false);
-  const [device, setDevice] = useState<Record<string, DeviceDescriptor>>({});
+  const [device, setDevice] = useState<Record<string, DygmaDeviceType>>({});
   const [virtual, setVirtual] = useState(false);
   const location = useLocation();
   const currentPage = location.pathname;
