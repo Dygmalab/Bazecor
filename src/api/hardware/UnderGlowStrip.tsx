@@ -18,23 +18,25 @@
 import React from "react";
 import colorDarkerCalculation from "../../renderer/utils/colorDarkerCalculation";
 
-function UnderGlowStrip({
-  id,
-  onClick,
-  fill,
-  stroke,
-  visibility,
-  clickAble,
-  x,
-  y,
-  selectedLED,
-  dataLedIndex,
-  dataKeyIndex,
-  dataLayer,
-  path,
-}) {
+interface UnderGlowStripProps {
+  id: string;
+  onClick: () => void;
+  fill: string;
+  visibility: boolean;
+  clickAble: boolean;
+  x: number;
+  y: number;
+  selectedLED: number;
+  dataLedIndex: number;
+  dataKeyIndex: number;
+  dataLayer: number;
+  path: string;
+}
+
+function UnderGlowStrip(props: UnderGlowStripProps) {
   const [color, setColor] = React.useState("rgb(255,255,255)");
   const [strokeColor, setStrokeColor] = React.useState(colorDarkerCalculation("rgb(255,255,255)"));
+  const { id, onClick, fill, visibility, clickAble, x, y, selectedLED, dataLedIndex, dataKeyIndex, dataLayer, path } = props;
 
   React.useEffect(() => {
     setColor(fill);
@@ -52,7 +54,7 @@ function UnderGlowStrip({
       // className={`${stroke == "#fff" || stroke == "#000" ? "keyOnFocus" : "keyOnHold"} underGlowStrip ${
       //   clickAble ? "clickAble" : ""
       // }`}
-      className={`${selectedLED == dataLedIndex ? "keyOnFocus" : "keyOnHold"} underGlowStrip ${clickAble ? "clickAble" : ""}`}
+      className={`${selectedLED === dataLedIndex ? "keyOnFocus" : "keyOnHold"} underGlowStrip ${clickAble ? "clickAble" : ""}`}
       transform={`translate(${x},${y})`}
     >
       <path d={path} fill={color} className="underGlowStripShadow" />
