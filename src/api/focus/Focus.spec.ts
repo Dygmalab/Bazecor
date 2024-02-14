@@ -4,6 +4,7 @@ import { ctx } from "./Focus.ctx";
 import { Focus } from "./Focus";
 import { FocusStub } from "./Focus.mocks";
 
+// eslint-disable-next-line no-return-assign
 afterEach(() => (ctx.instance = undefined));
 
 describe(`${Focus.getInstance.name}()`, () => {

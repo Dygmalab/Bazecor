@@ -24,14 +24,14 @@ import Backup from "../../../api/backup";
 const store = Store.getStore();
 
 interface VirtualSelectorProps {
-  onConnect: (device: DeviceClass) => Promise<void>;
+  handleVirtualConnect: (file: any) => void;
 }
 
 export default function VirtualSelector(props: VirtualSelectorProps) {
   const { dispatch } = useDevice();
   const [showVirtualKeyboardModal, setShowVirtualKeyboardModal] = useState(false);
   const [selectedVirtualKeyboard, setSelectedVirtualKeyboard] = useState(0);
-  const { onConnect } = props;
+  const { handleVirtualConnect } = props;
 
   const toggleVirtualKeyboardModal = (): void => {
     setShowVirtualKeyboardModal(currentValue => !currentValue);
@@ -162,9 +162,7 @@ export default function VirtualSelector(props: VirtualSelectorProps) {
       }
       file = await convertBackupToVK(file);
       file.virtual["hardware.chip_id"].data += getDateTime();
-      const response = await DeviceTools.connect(file);
-      dispatch({ type: "changeCurrent", payload: { selected: -1, device: response } });
-      await onConnect(response);
+      handleVirtualConnect(file);
       return;
     }
     if (isVirtualType(file)) {
@@ -181,9 +179,7 @@ export default function VirtualSelector(props: VirtualSelectorProps) {
       file.device.path = "VIRTUAL";
       file.device.bootloader = false;
       file.device.filePath = filePath;
-      const response = await DeviceTools.connect(file);
-      dispatch({ type: "changeCurrent", payload: { selected: -1, device: response } });
-      await onConnect(response);
+      handleVirtualConnect(file);
     }
   };
 
@@ -229,9 +225,7 @@ export default function VirtualSelector(props: VirtualSelectorProps) {
     }
 
     // Final connection function
-    const response = await DeviceTools.connect(newVK);
-    dispatch({ type: "changeCurrent", payload: { selected: -1, device: response } });
-    await onConnect(response);
+    handleVirtualConnect(newVK);
   };
 
   return (

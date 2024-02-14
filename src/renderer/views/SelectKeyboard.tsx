@@ -204,6 +204,11 @@ const SelectKeyboard = (props: SelectKeyboardProps) => {
     [setLoading],
   );
 
+  const delay = (ms: number) =>
+    new Promise(res => {
+      setTimeout(res, ms);
+    });
+
   const findKeyboards = useCallback(async (): Promise<DeviceClass[]> => {
     loadingHandler(true);
     if (state.currentDevice !== undefined && connected) {
@@ -230,7 +235,7 @@ const SelectKeyboard = (props: SelectKeyboardProps) => {
     const neurons = store.get("neurons") as Neuron[];
     const result = devices?.map((dev, index) => {
       // console.log("checking device :", device);
-      const devName = dev.type === "hid" ? "Bluetooth" : i18n.keyboardSelect.unknown;
+      const devName = dev.type === "hid" ? "Bluetooth" : dev.type;
       if (dev.device.bootloader)
         return {
           index,
@@ -321,25 +326,32 @@ const SelectKeyboard = (props: SelectKeyboardProps) => {
   };
 
   const handleOnDisconnect = async () => {
+    const newDevices = deviceItems.filter(device => device.path !== "virtual");
+    setDeviceItems(newDevices);
+    setSelectedPortIndex(0);
     await DeviceTools.disconnect(state.currentDevice);
     dispatch({ type: "disconnect", payload: selectedPortIndex });
     await onDisconnect();
   };
 
   const handleOnDisconnectConnect = async () => {
-    await DeviceTools.disconnect(state.currentDevice);
-    dispatch({ type: "disconnect", payload: selectedPortIndex });
-    await onDisconnect();
-    const delay = (ms: number) =>
-      new Promise(res => {
-        setTimeout(res, ms);
-      });
+    await handleOnDisconnect();
     await delay(500);
     await onKeyboardConnect();
   };
 
+  const handleVirtualConnect = async (file: any) => {
+    if (connected) {
+      await handleOnDisconnect();
+      await delay(500);
+    }
+    const response = await DeviceTools.connect(file);
+    dispatch({ type: "changeCurrent", payload: { selected: -1, device: response } });
+    await onConnect(response);
+  };
+
   const connectedDeviceIndex = state.selected;
-  // console.log("Checking connected Data: ", connectedDevice, selectedPortIndex, connected, scanFoundDevices);
+  console.log("Checking connected Data: ", connectedDeviceIndex, selectedPortIndex, connected, scanFoundDevices, deviceItems);
 
   return (
     <Styles>
@@ -357,8 +369,10 @@ const SelectKeyboard = (props: SelectKeyboardProps) => {
             deviceItems={deviceItems}
             selectPort={selectPort}
             selectedPortIndex={selectedPortIndex}
-            isVirtual={false}
-            virtualDevice={undefined}
+            isVirtual={deviceItems[connectedDeviceIndex]?.path === "virtual"}
+            virtualDevice={
+              deviceItems[connectedDeviceIndex]?.path === "virtual" ? state.deviceList[connectedDeviceIndex] : undefined
+            }
             connectedDeviceIndex={connectedDeviceIndex}
           />
           <div className="card-alert" style={{ marginTop: "16px" }}>
@@ -370,7 +384,7 @@ const SelectKeyboard = (props: SelectKeyboardProps) => {
               />
             </Banner>
           </div>
-          <VirtualSelector onConnect={onConnect} />
+          <VirtualSelector handleVirtualConnect={handleVirtualConnect} />
         </div>
       </Container>
     </Styles>

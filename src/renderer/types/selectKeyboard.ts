@@ -1,4 +1,4 @@
-import Device from "../../api/comms/Device";
+import { DeviceClass } from "./devices";
 
 export interface SelectKeyboardProps {
   onConnect: (...args: any[]) => any;
@@ -21,7 +21,7 @@ export interface NeuronConnectionProps {
   selectPort: (event: any) => void;
   selectedPortIndex: number;
   isVirtual: boolean;
-  virtualDevice: Device;
+  virtualDevice: DeviceClass;
   connectedDeviceIndex: number;
 }
 

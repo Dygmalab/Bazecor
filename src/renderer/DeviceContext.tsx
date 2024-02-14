@@ -24,7 +24,7 @@ function deviceReducer(state: State, action: Action) {
       }
       const deviceList = [...state.deviceList];
       deviceList.push(action.payload.device);
-      return { ...state, selected: deviceList.length, currentDevice: action.payload.device, deviceList };
+      return { ...state, selected: deviceList.length - 1, currentDevice: action.payload.device, deviceList };
     }
     case "addDevice": {
       const newDevices = state.deviceList;
@@ -36,7 +36,8 @@ function deviceReducer(state: State, action: Action) {
       return { ...state, deviceList: newDevices };
     }
     case "disconnect": {
-      return { ...state, currentDevice: undefined };
+      const newDevices = state.deviceList.filter(device => device.type !== "virtual");
+      return { ...state, deviceList: newDevices, currentDevice: undefined, selected: -1 };
     }
     default: {
       throw new Error(`Unhandled action type: ${action}`);
