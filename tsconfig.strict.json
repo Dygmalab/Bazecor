@@ -1,0 +1,22 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "exactOptionalPropertyTypes": true,
+    "isolatedModules": true,
+    "noPropertyAccessFromIndexSignature": true,
+    "noUncheckedIndexedAccess": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "rootDir": ".",
+    "strict": true,
+    // "verbatimModuleSyntax": true  // requires TypeScript 5
+  },
+  "include": [
+    "src/api/flash",
+    "webpack.*.ts"
+  ],
+  "files": [
+    "./forge.config.ts",
+    "./vite.config.mts"
+  ]
+}

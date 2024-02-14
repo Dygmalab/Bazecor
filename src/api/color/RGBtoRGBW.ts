@@ -1,4 +1,10 @@
-export default function rgb2w(rgb) {
+type RGB = {
+  r: number,
+  g: number,
+  b: number
+}
+
+export default function rgb2w(rgb: RGB) {
   const Ri = rgb.r;
   const Gi = rgb.g;
   const Bi = rgb.b;

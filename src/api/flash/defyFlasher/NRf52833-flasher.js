@@ -17,14 +17,9 @@
 import async from "async";
 import Focus from "../../focus";
 import { decodeHexLine } from "../decodeHexLine";
-
-const MAX_MS = 2000;
-
-const PACKET_SIZE = 4096;
-
-const TYPE_DAT = 0x00;
-const TYPE_ESA = 0x02;
-const TYPE_ELA = 0x04;
+import { MAX_MS, PACKET_SIZE, TYPE_DAT, TYPE_ELA, TYPE_ESA } from "../flasherConstants";
+import { num2hexstr } from "../num2hexstr";
+import { str2ab } from "../str2ab";
 
 const focus = new Focus();
 
@@ -106,27 +101,6 @@ async function read_cb(callback) {
 async function disconnect_cb(cb) {
   await focus.close();
   cb(null, "");
-}
-
-function padToN(number, numberToPad) {
-  let str = "";
-
-  for (let i = 0; i < numberToPad; i++) str += "0";
-
-  return (str + number).slice(-numberToPad);
-}
-
-function num2hexstr(number, paddedTo) {
-  return padToN(number.toString(16), paddedTo);
-}
-
-function str2ab(str) {
-  const buf = new ArrayBuffer(str.length); // 2 bytes for each char
-  const bufView = new Uint8Array(buf);
-  for (let i = 0, strLen = str.length; i < strLen; i++) {
-    bufView[i] = str.charCodeAt(i) & 0xff;
-  }
-  return buf;
 }
 
 /**

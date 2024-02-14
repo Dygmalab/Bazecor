@@ -20,12 +20,12 @@ const packagerConfig: ForgePackagerOptions = {
   appCopyright: "Copyright © 2018, 2023 DygmaLab SL; distributed under the GPLv3",
 };
 
-if (process.env.NODE_ENV !== "development") {
+if (process.env["NODE_ENV"] !== "development") {
   packagerConfig.osxNotarize = {
     tool: "notarytool",
-    appleId: process.env.APPLE_ID || "",
-    appleIdPassword: process.env.APPLE_ID_PASSWORD || "",
-    teamId: process.env.APPLE_TEAM_ID || "",
+    appleId: process.env["APPLE_ID"] || "",
+    appleIdPassword: process.env["APPLE_ID_PASSWORD"] || "",
+    teamId: process.env["APPLE_TEAM_ID"] || "",
   };
   packagerConfig.osxSign = {
     optionsForFile: () => ({
@@ -79,7 +79,7 @@ const config: ForgeConfig = {
     }),
   ],
   hooks: {
-    packageAfterPrune: async (forgeConfig, buildPath, electronVersion, platform, arch) => {
+    packageAfterPrune: async (_forgeConfig, buildPath, _electronVersion, platform, _arch) => {
       /**
        * Serialport, usb and uiohook-napi are problematic libraries to run in Electron.
        * When Electron app is been built, these libraries are not included properly in the final executable.
@@ -95,7 +95,7 @@ const config: ForgeConfig = {
       };
 
       fs.writeFileSync(path.resolve(buildPath, "package.json"), JSON.stringify(packageJson));
-      const npmInstall = spawnSync("npm", ["install", "--omit=dev"], {
+      spawnSync("npm", ["install", "--omit=dev"], {
         cwd: buildPath,
         stdio: "inherit",
         shell: true,
