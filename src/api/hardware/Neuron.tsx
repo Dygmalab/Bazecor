@@ -19,9 +19,23 @@ import React from "react";
 
 import colorMatrixCalc from "../../renderer/utils/colorMatrixCalculation";
 
-function Neuron({ visibility, onClick, clickAble, fill, stroke, dataLedIndex, dataKeyIndex, dataLayer, translateX, translateY }) {
+interface NeuronShapeProps {
+  visibility: boolean;
+  onClick: () => void;
+  clickAble: boolean;
+  fill: string;
+  stroke: string;
+  dataLedIndex: number;
+  dataKeyIndex: number;
+  dataLayer: number;
+  translateX: number;
+  translateY: number;
+}
+
+function Neuron(props: NeuronShapeProps) {
   const [color, setColor] = React.useState("rgb(255,255,255)");
   const [colorMatrix, setColorMatrix] = React.useState(colorMatrixCalc("rgb(255,255,255)", 0.65));
+  const { visibility, onClick, clickAble, fill, stroke, dataLedIndex, dataKeyIndex, dataLayer, translateX, translateY } = props;
 
   React.useEffect(() => {
     setColor(fill);
