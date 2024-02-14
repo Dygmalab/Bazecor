@@ -18,8 +18,9 @@
  * Is an Array of objects of values that have to be modified.
  */
 import { withModifiers } from "../../db/utils";
+import { BaseKeycodeTableType, KeymapCodeTableType } from "../../types";
 
-const jaJPLetters = [
+const jaJPLetters: KeymapCodeTableType[] = [
   {
     code: 53,
     labels: {
@@ -339,7 +340,7 @@ const jaJPLetters = [
   },
 ];
 
-const jaJPModifierKeys = [
+const jaJPModifierKeys: KeymapCodeTableType[] = [
   {
     code: 47,
     labels: {
@@ -354,7 +355,7 @@ const jaJPModifierKeys = [
   },
 ];
 
-const altCtrlJapanese = {
+const altCtrlJapanese: BaseKeycodeTableType = {
   groupName: "AltCtrl Japanese",
   keys: [
     {
@@ -631,7 +632,7 @@ const altCtrlJapanese = {
   ],
 };
 
-const altGRJapanese = {
+const altGRJapanese: BaseKeycodeTableType = {
   groupName: "AltCtrl Japanese",
   keys: [
     {
@@ -908,7 +909,7 @@ const altGRJapanese = {
   ],
 };
 
-const shiftModifierJapanese = {
+const shiftModifierJapanese: BaseKeycodeTableType = {
   groupName: "Shifted Japanese",
   keys: [
     {
@@ -1012,8 +1013,8 @@ const shiftModifierJapanese = {
 
 const jaJP = jaJPLetters.concat(jaJPModifierKeys);
 
-const table = { keys: jaJP };
-const tableWithoutModifier = { keys: jaJPLetters };
+const table: BaseKeycodeTableType = { keys: jaJP, groupName: "" };
+const tableWithoutModifier: BaseKeycodeTableType = { keys: jaJPLetters, groupName: "" };
 
 const jaJPCtrlTable = withModifiers(table, "Control +", "C+", 256);
 const jaJPLAltTable = withModifiers(table, "Alt +", "A+", 512);

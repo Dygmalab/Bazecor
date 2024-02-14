@@ -14,6 +14,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { Focus } from './Focus';
+import { Focus } from "./Focus";
 
-export default Focus
+export default Focus;

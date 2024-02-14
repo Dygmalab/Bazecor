@@ -268,7 +268,7 @@ export default class StandardView extends React.Component<StandardViewProps, Sta
     let superName;
 
     if (aux.extraLabel === "MACRO") {
-      const macro = macros[parseInt(aux.label, 10) - 1];
+      const macro = macros[parseInt(aux.label as string, 10) - 1];
       try {
         macroName = macro.name.substr(0, 5);
       } catch (error) {
@@ -280,7 +280,7 @@ export default class StandardView extends React.Component<StandardViewProps, Sta
     }
 
     if (aux.extraLabel === "SUPER") {
-      const superk = superkeys[parseInt(aux.label, 10) - 1];
+      const superk = superkeys[parseInt(aux.label as string, 10) - 1];
       try {
         superName = superk.name.substr(0, 5);
       } catch (error) {

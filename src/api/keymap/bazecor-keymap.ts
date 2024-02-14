@@ -1,3 +1,4 @@
+/* eslint-disable class-methods-use-this */
 /* bazecor-keymap -- Bazecor keymap library
  * Copyright (C) 2018  Keyboardio, Inc.
  * Copyright (C) 2019, 2020  DygmaLab SE
@@ -15,14 +16,24 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { KeymapType } from "@Renderer/types/layout";
 import Focus from "../focus";
 
 import KeymapDB from "./db";
 
+declare global {
+  namespace globalThis {
+    var keymap_instance: Keymap;
+  }
+}
+
 global.keymap_instance = null;
 
 class Keymap {
-  constructor(opts) {
+  db: KeymapDB;
+  legacyInterface: boolean;
+  _layerSize: number;
+  constructor(opts?: any) {
     // Add checking of language existing to call KeymapDB and change language from the local storage
     if (!global.keymap_instance || opts.language) {
       global.keymap_instance = this;
@@ -30,11 +41,12 @@ class Keymap {
       this.legacyInterface = false;
     }
     global.keymap_instance.setLayerSize(opts);
+    // eslint-disable-next-line no-constructor-return
     return global.keymap_instance;
   }
 
-  setLayerSize(opts) {
-    if (!opts || opts == undefined) return;
+  setLayerSize(opts: number | { keyboard: { rows: number; columns: number } }) {
+    if (!opts || opts === undefined) return;
 
     if (typeof opts === "number") {
       this._layerSize = opts;
@@ -42,23 +54,23 @@ class Keymap {
       this._layerSize = opts.keyboard.rows * opts.keyboard.columns;
     }
 
-    return this;
+    return;
   }
 
-  _chunk(a, chunkSize) {
+  _chunk(a: any[], chunkSize: number) {
     const R = [];
     for (let i = 0; i < a.length; i += chunkSize) R.push(a.slice(i, i + chunkSize));
     return R;
   }
 
-  async focus(s, keymap) {
+  async focus(s: Focus, keymap: KeymapType) {
     if (keymap && keymap.custom && keymap.custom.length > 0) {
-      const flatten = arr => [].concat(...arr);
+      const flatten = (arr: any) => [].concat(...arr);
 
       if (this.legacyInterface) {
         const args = flatten(keymap.default.concat(keymap.custom)).map(k => this.db.serialize(k));
 
-        return await s.request("keymap.map", ...args);
+        return (await s.request("keymap.map", ...args)) as string;
       }
 
       const args = flatten(keymap.custom).map(k => this.db.serialize(k));
@@ -66,22 +78,22 @@ class Keymap {
       await s.request("keymap.onlyCustom", keymap.onlyCustom ? "1" : "0");
       return await s.request("keymap.custom", ...args);
     }
-    let defaults;
-    let custom;
-    let onlyCustom;
+    let defaults: string;
+    let custom: string;
+    let onlyCustom: boolean;
 
     if (!this.legacyInterface) {
-      defaults = await s.request("keymap.default");
-      custom = await s.request("keymap.custom");
-      onlyCustom = Boolean(parseInt(await s.request("keymap.onlyCustom")));
+      defaults = (await s.request("keymap.default")) as string;
+      custom = (await s.request("keymap.custom")) as string;
+      onlyCustom = Boolean(parseInt(await s.request("keymap.onlyCustom"))) as boolean;
     }
 
     if (!defaults && !custom) {
-      const keymap = (await s.request("keymap.map")).split(" ").filter(v => v.length > 0);
+      const localKeymap = ((await s.request("keymap.map")) as string).split(" ").filter(v => v.length > 0);
       const roLayers = parseInt((await s.request("keymap.roLayers")) || "0");
 
-      defaults = keymap.slice(0, this._layerSize * roLayers).join(" ");
-      custom = keymap.slice(this._layerSize * roLayers, keymap.length).join(" ");
+      defaults = localKeymap.slice(0, this._layerSize * roLayers).join(" ");
+      custom = localKeymap.slice(this._layerSize * roLayers, localKeymap.length).join(" ");
 
       onlyCustom = false;
       this.legacyInterface = true;
@@ -89,13 +101,13 @@ class Keymap {
     const defaultKeymap = defaults
       .split(" ")
       .filter(v => v.length > 0)
-      .map(k => this.db.parse(parseInt(k)));
+      .map(k => this.db.parse(parseInt(k, 10)));
     const customKeymap = custom
       .split(" ")
       .filter(v => v.length > 0)
-      .map(k => this.db.parse(parseInt(k)));
+      .map(k => this.db.parse(parseInt(k, 10)));
 
-    if (customKeymap.length == 0) {
+    if (customKeymap.length === 0) {
       onlyCustom = false;
     }
 

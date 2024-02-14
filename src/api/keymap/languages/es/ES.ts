@@ -18,8 +18,9 @@
  * Is an Array of objects of values that have to be modified.
  */
 import { withModifiers } from "../../db/utils";
+import { BaseKeycodeTableType, KeymapCodeTableType } from "../../types";
 
-const esESLetters = [
+const esESLetters: KeymapCodeTableType[] = [
   {
     code: 49,
     labels: {
@@ -36,7 +37,7 @@ const esESLetters = [
   },
 ];
 
-const esESModifierKeys = [
+const esESModifierKeys: KeymapCodeTableType[] = [
   {
     code: 45,
     labels: {
@@ -92,7 +93,7 @@ const esESModifierKeys = [
     },
   },
 ];
-const shiftModifierSpanish = {
+const shiftModifierSpanish: BaseKeycodeTableType = {
   groupName: "AltCtrl Spanish",
   keys: [
     {
@@ -223,7 +224,7 @@ const shiftModifierSpanish = {
   ],
 };
 
-const altCtrlSpanish = {
+const altCtrlSpanish: BaseKeycodeTableType = {
   groupName: "AltCtrl Spanish",
   keys: [
     {
@@ -301,7 +302,7 @@ const altCtrlSpanish = {
   ],
 };
 
-const altGrSpanish = {
+const altGrSpanish: BaseKeycodeTableType = {
   groupName: "AltCtrl Spanish",
   keys: [
     {
@@ -381,8 +382,8 @@ const altGrSpanish = {
 
 const esES = esESLetters.concat(esESModifierKeys);
 
-const table = { keys: esES };
-const tableWithoutModifier = { keys: esESLetters };
+const table: BaseKeycodeTableType = { keys: esES, groupName: "" };
+const tableWithoutModifier: BaseKeycodeTableType = { keys: esESLetters, groupName: "" };
 
 const esESCtrlTable = withModifiers(table, "Control +", "C+", 256);
 const esESLAltTable = withModifiers(table, "Alt +", "A+", 512);

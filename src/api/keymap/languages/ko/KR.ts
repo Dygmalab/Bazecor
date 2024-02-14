@@ -19,8 +19,9 @@
  */
 
 import { withModifiers } from "../../db/utils";
+import { BaseKeycodeTableType, KeymapCodeTableType } from "../../types";
 
-const koKRLetters = [
+const koKRLetters: KeymapCodeTableType[] = [
   {
     code: 144,
     labels: {
@@ -39,27 +40,27 @@ const koKRLetters = [
   },
 ];
 
-const koKRModifierKeys = [];
+const koKRModifierKeys: KeymapCodeTableType[] = [];
 
-const altCtrlKorean = {
+const altCtrlKorean: BaseKeycodeTableType = {
   groupName: "AltCtrl Korean",
   keys: [],
 };
 
-const altGRKorean = {
+const altGRKorean: BaseKeycodeTableType = {
   groupName: "AltCtrl Korean",
   keys: [],
 };
 
-const shiftModifierKorean = {
+const shiftModifierKorean: BaseKeycodeTableType = {
   groupName: "Shifted Korean",
   keys: [],
 };
 
 const koKR = koKRLetters.concat(koKRModifierKeys);
 
-const table = { keys: koKR };
-const tableWithoutModifier = { keys: koKRLetters };
+const table: BaseKeycodeTableType = { keys: koKR, groupName: "" };
+const tableWithoutModifier: BaseKeycodeTableType = { keys: koKRLetters, groupName: "" };
 
 const koKRCtrlTable = withModifiers(table, "Control +", "C+", 256);
 const koKRLAltTable = withModifiers(table, "Alt +", "A+", 512);

@@ -15,7 +15,7 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import Keymap from "./bazecor-keymap.js";
-import KeymapDB, { baseKeyCodeTable, keyCodeTable, languagesDB } from "./db.js";
+import Keymap from "./bazecor-keymap";
+import KeymapDB, { baseKeyCodeTable, keyCodeTable, languagesDB } from "./db";
 
 export { Keymap as default, KeymapDB, baseKeyCodeTable, keyCodeTable, languagesDB };

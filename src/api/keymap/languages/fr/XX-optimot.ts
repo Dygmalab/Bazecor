@@ -18,8 +18,9 @@
  * Is an Array of objects of values that have to be modified.
  */
 import { withModifiers, ModifierCodes } from "../../db/utils";
+import { BaseKeycodeTableType, KeymapCodeTableType } from "../../types";
 
-const symbols = [
+const symbols: KeymapCodeTableType[] = [
   {
     code: 53,
     labels: {
@@ -100,7 +101,7 @@ const symbols = [
   },
 ];
 
-const frXXoptimotLetters = [
+const frXXoptimotLetters: KeymapCodeTableType[] = [
   // First row
   {
     code: 20,
@@ -329,7 +330,7 @@ const frXXoptimotLetters = [
   },
 ];
 
-const altGRfrXXoptimot = {
+const altGRfrXXoptimot: BaseKeycodeTableType = {
   groupName: "AltCtrl French",
   keys: [
     // Numbers row + AltGr
@@ -630,7 +631,7 @@ const altGRfrXXoptimot = {
   ],
 };
 
-const shiftedSymbols = {
+const shiftedSymbols: BaseKeycodeTableType = {
   groupName: "Shifted French",
   keys: [
     {
@@ -940,7 +941,7 @@ const shiftedSymbols = {
   ],
 };
 
-const tableAGrS = {
+const tableAGrS: BaseKeycodeTableType = {
   groupName: "AltGrShift French",
   keys: [
     {
@@ -1245,8 +1246,8 @@ const tableAGrS = {
 
 const frXXoptimot = frXXoptimotLetters.concat(symbols);
 
-const table = { keys: frXXoptimot };
-const tableWithoutModifier = { keys: frXXoptimotLetters };
+const table: BaseKeycodeTableType = { keys: frXXoptimot, groupName: "" };
+const tableWithoutModifier: BaseKeycodeTableType = { keys: frXXoptimotLetters, groupName: "" };
 
 const frXXoptimotCtrlTable = withModifiers(table, "Control +", "C+", 256);
 const frXXoptimotLAltTable = withModifiers(table, "Alt +", "A+", 512);

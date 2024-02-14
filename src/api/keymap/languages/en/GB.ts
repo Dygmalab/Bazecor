@@ -19,10 +19,11 @@
  */
 
 import { withModifiers, ModifierCodes } from "../../db/utils";
+import { BaseKeycodeTableType, KeymapCodeTableType } from "../../types";
 
-const enGBLetters = [];
+const enGBLetters: KeymapCodeTableType[] = [];
 
-const enGBModifierKeys = [
+const enGBModifierKeys: KeymapCodeTableType[] = [
   // R4
   {
     code: 49,
@@ -39,7 +40,7 @@ const enGBModifierKeys = [
   },
 ];
 
-const shiftModifier = {
+const shiftModifier: BaseKeycodeTableType = {
   groupName: "Shifted British English",
   keys: [
     // R4
@@ -84,7 +85,7 @@ const shiftModifier = {
   ],
 };
 
-const altCtrlModifier = {
+const altCtrlModifier: BaseKeycodeTableType = {
   groupName: "AltCtrl British English",
   keys: [
     // R4
@@ -135,7 +136,7 @@ const altCtrlModifier = {
   ],
 };
 
-const altGrModifier = {
+const altGrModifier: BaseKeycodeTableType = {
   groupName: "AltGr British English",
   keys: [
     // R4
@@ -188,8 +189,8 @@ const altGrModifier = {
 
 const enGB = enGBLetters.concat(enGBModifierKeys);
 
-const table = { keys: enGB };
-const tableWithoutModifier = { keys: enGBLetters };
+const table: BaseKeycodeTableType = { keys: enGB, groupName: "" };
+const tableWithoutModifier: BaseKeycodeTableType = { keys: enGBLetters, groupName: "" };
 
 const enGBCtrlTable = withModifiers(table, "Control +", "C+", 256);
 const enGBLAltTable = withModifiers(table, "Alt +", "A+", 512);

@@ -19,8 +19,9 @@
  */
 
 import { withModifiers } from "../../db/utils";
+import { BaseKeycodeTableType, KeymapCodeTableType } from "../../types";
 
-const deCHLetters = [
+const deCHLetters: KeymapCodeTableType[] = [
   {
     code: 28,
     labels: {
@@ -35,7 +36,7 @@ const deCHLetters = [
   },
 ];
 
-const deCHModifierKeys = [
+const deCHModifierKeys: KeymapCodeTableType[] = [
   {
     code: 53,
     labels: {
@@ -102,7 +103,7 @@ const deCHModifierKeys = [
   },
 ];
 
-const altCtrlSwissGerman = {
+const altCtrlSwissGerman: BaseKeycodeTableType = {
   groupName: "AltCtrl SwissGerman",
   keys: [
     {
@@ -192,7 +193,7 @@ const altCtrlSwissGerman = {
   ],
 };
 
-const altGrSwissGerman = {
+const altGrSwissGerman: BaseKeycodeTableType = {
   groupName: "AltCtrl SwissGerman",
   keys: [
     {
@@ -282,7 +283,7 @@ const altGrSwissGerman = {
   ],
 };
 
-const shiftModifierSwissGerman = {
+const shiftModifierSwissGerman: BaseKeycodeTableType = {
   groupName: "Shifted SwissGerman",
   keys: [
     {
@@ -416,8 +417,8 @@ const shiftModifierSwissGerman = {
 
 const deCH = deCHLetters.concat(deCHModifierKeys);
 
-const table = { keys: deCH };
-const tableWithoutModifier = { keys: deCHLetters };
+const table: BaseKeycodeTableType = { keys: deCH, groupName: "" };
+const tableWithoutModifier: BaseKeycodeTableType = { keys: deCHLetters, groupName: "" };
 
 const deCHCtrlTable = withModifiers(table, "Control +", "C+", 256);
 const deCHLAltTable = withModifiers(table, "Alt +", "A+", 512);

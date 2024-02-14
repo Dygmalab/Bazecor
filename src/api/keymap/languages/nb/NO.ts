@@ -19,73 +19,61 @@
  */
 
 import { withModifiers } from "../../db/utils";
+import { BaseKeycodeTableType, KeymapCodeTableType } from "../../types";
 
-const deDELetters = [
-  {
-    code: 28,
-    labels: {
-      primary: "Z",
-    },
-  },
+const nbNOLetters: KeymapCodeTableType[] = [
   {
     code: 47,
     labels: {
-      primary: "Ü",
+      primary: "Å",
     },
     newGroupName: "Letters",
   },
   {
     code: 51,
     labels: {
-      primary: "Ö",
+      primary: "Ø",
     },
     newGroupName: "Letters",
   },
   {
     code: 52,
     labels: {
-      primary: "Ä",
+      primary: "Æ",
     },
     newGroupName: "Letters",
   },
-  {
-    code: 29,
-    labels: {
-      primary: "Y",
-    },
-  },
 ];
 
-const deDEModifierKeys = [
+const nbNOModifierKeys: KeymapCodeTableType[] = [
   {
     code: 53,
     labels: {
-      primary: "^",
+      primary: "|",
     },
   },
   {
     code: 45,
     labels: {
-      primary: "ß",
+      primary: "+",
     },
-    newGroupName: "Letters",
   },
   {
     code: 46,
     labels: {
-      primary: "´",
+      primary: "\\",
     },
   },
   {
     code: 48,
     labels: {
-      primary: "+",
+      primary: "¨",
     },
   },
   {
     code: 49,
     labels: {
-      primary: "#",
+      primary: "'",
     },
   },
   {
@@ -102,29 +90,31 @@ const deDEModifierKeys = [
   },
 ];
 
-const deDENumpad = [
-  {
-    code: 99,
-    labels: {
-      top: "Num",
-      primary: ",",
-    },
-  },
-];
-
-const altCtrlGerman = {
-  groupName: "AltCtrl German",
+const altCtrlNorwegian: BaseKeycodeTableType = {
+  groupName: "AltCtrl Norwegian",
   keys: [
     {
       code: 799,
       labels: {
-        primary: "²",
+        primary: "@",
       },
     },
     {
       code: 800,
       labels: {
-        primary: "³",
+        primary: "£",
+      },
+    },
+    {
+      code: 801,
+      labels: {
+        primary: "$",
+      },
+    },
+    {
+      code: 802,
+      labels: {
+        primary: "€",
       },
     },
     {
@@ -152,15 +142,9 @@ const altCtrlGerman = {
       },
     },
     {
-      code: 813,
+      code: 814,
       labels: {
-        primary: "\\",
-      },
-    },
-    {
-      code: 788,
-      labels: {
-        primary: "@",
+        primary: "´",
       },
     },
     {
@@ -176,39 +160,39 @@ const altCtrlGerman = {
       },
     },
     {
-      code: 817,
-      labels: {
-        primary: "|",
-      },
-    },
-    {
       code: 784,
       labels: {
         primary: "µ",
       },
     },
-    {
-      code: 868,
-      labels: {
-        primary: "|",
-      },
-    },
   ],
 };
 
-const altGrGerman = {
-  groupName: "AltCtrl German",
+const altGRNorwegian: BaseKeycodeTableType = {
+  groupName: "AltCtrl Norwegian",
   keys: [
     {
       code: 1055,
       labels: {
-        primary: "²",
+        primary: "@",
       },
     },
     {
       code: 1056,
       labels: {
-        primary: "³",
+        primary: "£",
+      },
+    },
+    {
+      code: 1057,
+      labels: {
+        primary: "$",
+      },
+    },
+    {
+      code: 1058,
+      labels: {
+        primary: "€",
       },
     },
     {
@@ -236,15 +220,9 @@ const altGrGerman = {
       },
     },
     {
-      code: 1069,
+      code: 1070,
       labels: {
-        primary: "\\",
-      },
-    },
-    {
-      code: 1044,
-      labels: {
-        primary: "@",
+        primary: "´",
       },
     },
     {
@@ -260,33 +238,21 @@ const altGrGerman = {
       },
     },
     {
-      code: 1073,
-      labels: {
-        primary: "|",
-      },
-    },
-    {
       code: 1040,
       labels: {
         primary: "µ",
       },
     },
-    {
-      code: 1124,
-      labels: {
-        primary: "|",
-      },
-    },
   ],
 };
 
-const shiftModifierGerman = {
-  groupName: "Shifted German",
+const shiftModifierNorwegian: BaseKeycodeTableType = {
+  groupName: "Shifted Norwegian",
   keys: [
     {
       code: 2101,
       labels: {
-        primary: "°",
+        primary: "§",
       },
     },
     {
@@ -296,9 +262,9 @@ const shiftModifierGerman = {
       },
     },
     {
-      code: 2080,
+      code: 2081,
       labels: {
-        primary: "§",
+        primary: "¤",
       },
     },
     {
@@ -343,16 +309,17 @@ const shiftModifierGerman = {
         primary: "`",
       },
     },
+
     {
       code: 2096,
       labels: {
-        primary: "*",
+        primary: "^",
       },
     },
     {
       code: 2097,
       labels: {
-        primary: "'",
+        primary: "*",
       },
     },
     {
@@ -382,50 +349,50 @@ const shiftModifierGerman = {
   ],
 };
 
-const deDE = deDELetters.concat(deDEModifierKeys, deDENumpad);
+const nbNO = nbNOLetters.concat(nbNOModifierKeys);
 
-const table = { keys: deDE };
-const tableWithoutModifier = { keys: deDELetters };
+const table: BaseKeycodeTableType = { keys: nbNO, groupName: "" };
+const tableWithoutModifier: BaseKeycodeTableType = { keys: nbNOLetters, groupName: "" };
 
-const deDECtrlTable = withModifiers(table, "Control +", "C+", 256);
-const deDELAltTable = withModifiers(table, "Alt +", "A+", 512);
-const deDERAltTable = withModifiers(table, "AltGr +", "AGr+", 1024);
-const deDEShiftTable = withModifiers(tableWithoutModifier, "Shift +", "S+", 2048);
-const deDEGuiTable = withModifiers(table, "Os+", "O+", 4096);
+const nbNOCtrlTable = withModifiers(table, "Control +", "C+", 256);
+const nbNOLAltTable = withModifiers(table, "Alt +", "A+", 512);
+const nbNORAltTable = withModifiers(table, "AltGr +", "AGr+", 1024);
+const nbNOShiftTable = withModifiers(tableWithoutModifier, "Shift +", "S+", 2048);
+const nbNOGuiTable = withModifiers(table, "Os+", "O+", 4096);
 
 // Double
 
-const deDECATable = withModifiers(table, "Control + Alt +", "C+A+", 768);
-const deDECAGrTable = withModifiers(table, "Control + AltGr +", "C+AGr+", 1280);
-const deDECSTable = withModifiers(table, "Control + Shift +", "C+S+", 2304);
-const deDECGTable = withModifiers(table, "Control + Os +", "C+O+", 4352);
-const deDEAAGrTable = withModifiers(table, "Alt + AltGr +", "A+AGr+", 1536);
-const deDEASTable = withModifiers(table, "Alt + Shift +", "A+S+", 2560);
-const deDEAGTable = withModifiers(table, "Alt + Os +", "A+O+", 4608);
-const deDEAGrSTable = withModifiers(table, "AltGr + Shift +", "AGr+S+", 3072);
-const deDEAGrGTable = withModifiers(table, "AltGr + Os +", "AGr+O+", 5120);
-const deDESGTable = withModifiers(table, "Shift + Os +", "S+O+", 6144);
+const nbNOCATable = withModifiers(table, "Control + Alt +", "C+A+", 768);
+const nbNOCAGrTable = withModifiers(table, "Control + AltGr +", "C+AGr+", 1280);
+const nbNOCSTable = withModifiers(table, "Control + Shift +", "C+S+", 2304);
+const nbNOCGTable = withModifiers(table, "Control + Os +", "C+O+", 4352);
+const nbNOAAGrTable = withModifiers(table, "Alt + AltGr +", "A+AGr+", 1536);
+const nbNOASTable = withModifiers(table, "Alt + Shift +", "A+S+", 2560);
+const nbNOAGTable = withModifiers(table, "Alt + Os +", "A+O+", 4608);
+const nbNOAGrSTable = withModifiers(table, "AltGr + Shift +", "AGr+S+", 3072);
+const nbNOAGrGTable = withModifiers(table, "AltGr + Os +", "AGr+O+", 5120);
+const nbNOSGTable = withModifiers(table, "Shift + Os +", "S+O+", 6144);
 
 // Triple
 
-const deDECAAGTable = withModifiers(table, "Control + Alt + AltGr +", "C+A+AGr+", 1792);
-const deDECASTable = withModifiers(table, "Meh +", "Meh+", 2816);
-const deDECAGTable = withModifiers(table, "Control + Alt + Os +", "C+A+O+", 4864);
-const deDECAGSTable = withModifiers(table, "Control + AltGr + Shift +", "C+AGr+S+", 3328);
-const deDECAGGTable = withModifiers(table, "Control + AltGr + Os +", "C+AGr+O+", 5376);
-const deDECSGTable = withModifiers(table, "Control + Shift + Os +", "C+S+O+", 6400);
-const deDEAAGSTable = withModifiers(table, "Alt + AltGr + Shift +", "A+AGr+S+", 3584);
-const deDEAAGGTable = withModifiers(table, "Alt + AltGr + Os +", "A+AGr+O+", 5632);
-const deDEASGTable = withModifiers(table, "Alt + Shift + Os +", "A+S+O+", 6656);
-const deDEAGSGTable = withModifiers(table, "AltGr + Shift + Os +", "AGr+S+O+", 7168);
+const nbNOCAAGTable = withModifiers(table, "Control + Alt + AltGr +", "C+A+AGr+", 1792);
+const nbNOCASTable = withModifiers(table, "Meh +", "Meh+", 2816);
+const nbNOCAGTable = withModifiers(table, "Control + Alt + Os +", "C+A+O+", 4864);
+const nbNOCAGSTable = withModifiers(table, "Control + AltGr + Shift +", "C+AGr+S+", 3328);
+const nbNOCAGGTable = withModifiers(table, "Control + AltGr + Os +", "C+AGr+O+", 5376);
+const nbNOCSGTable = withModifiers(table, "Control + Shift + Os +", "C+S+O+", 6400);
+const nbNOAAGSTable = withModifiers(table, "Alt + AltGr + Shift +", "A+AGr+S+", 3584);
+const nbNOAAGGTable = withModifiers(table, "Alt + AltGr + Os +", "A+AGr+O+", 5632);
+const nbNOASGTable = withModifiers(table, "Alt + Shift + Os +", "A+S+O+", 6656);
+const nbNOAGSGTable = withModifiers(table, "AltGr + Shift + Os +", "AGr+S+O+", 7168);
 
 // Quad
 
-const deDECAAGrSTable = withModifiers(table, "Meh + AltGr +", "M+AGr+", 3840);
-const deDECAAGrGTable = withModifiers(table, "Control + Alt + AltGr + Os +", "C+A+AGr+O+", 5888);
-const deDECAGrSGTable = withModifiers(table, "Control + AltGr + Shift + Os +", "C+AGr+S+O+", 7424);
-const deDEAAGrSGTable = withModifiers(table, "Alt + AltGr + Shift + Os +", "A+AGr+S+O+", 7680);
-const deDEAllModTable = withModifiers(table, "Hyper + AltGr +", "H+AGr+", 7936);
+const nbNOCAAGrSTable = withModifiers(table, "Meh + AltGr +", "M+AGr+", 3840);
+const nbNOCAAGrGTable = withModifiers(table, "Control + Alt + AltGr + Os +", "C+A+AGr+O+", 5888);
+const nbNOCAGrSGTable = withModifiers(table, "Control + AltGr + Shift + Os +", "C+AGr+S+O+", 7424);
+const nbNOAAGrSGTable = withModifiers(table, "Alt + AltGr + Shift + Os +", "A+AGr+S+O+", 7680);
+const nbNOAllModTable = withModifiers(table, "Hyper + AltGr +", "H+AGr+", 7936);
 
 const DualUseCtrlTable = withModifiers(table, "Control /", "CTRL/", 49169);
 const DualUseShiftTable = withModifiers(table, "Shift /", "SHIFT/", 49425);
@@ -441,41 +408,41 @@ const DualUseLayer6Tables = withModifiers(table, "Layer #6 /", "L#6/", 52498);
 const DualUseLayer7Tables = withModifiers(table, "Layer #7 /", "L#7/", 52754);
 const DualUseLayer8Tables = withModifiers(table, "Layer #8 /", "L#8/", 53010);
 
-const deDEModifiedTables = [
-  shiftModifierGerman,
-  deDECtrlTable,
-  deDELAltTable,
-  deDERAltTable,
-  deDEShiftTable,
-  deDEGuiTable,
-  deDECATable,
-  altCtrlGerman,
-  altGrGerman,
-  deDECAGrTable,
-  deDECSTable,
-  deDECGTable,
-  deDEAAGrTable,
-  deDEASTable,
-  deDEAGTable,
-  deDEAGrSTable,
-  deDEAGrGTable,
-  deDESGTable,
-  deDECAAGTable,
-  deDECASTable,
-  deDECAGTable,
-  deDECAGSTable,
-  deDECAGGTable,
-  deDECSGTable,
-  deDEAAGSTable,
-  deDEAAGGTable,
-  deDEASGTable,
-  deDEAGSGTable,
-  deDECAAGrSTable,
-  deDECAAGrGTable,
+const nbNOModifiedTables = [
+  shiftModifierNorwegian,
+  nbNOCtrlTable,
+  nbNOLAltTable,
+  nbNORAltTable,
+  nbNOShiftTable,
+  nbNOGuiTable,
+  nbNOCATable,
+  altCtrlNorwegian,
+  altGRNorwegian,
+  nbNOCAGrTable,
+  nbNOCSTable,
+  nbNOCGTable,
+  nbNOAAGrTable,
+  nbNOASTable,
+  nbNOAGTable,
+  nbNOAGrSTable,
+  nbNOAGrGTable,
+  nbNOSGTable,
+  nbNOCAAGTable,
+  nbNOCASTable,
+  nbNOCAGTable,
+  nbNOCAGSTable,
+  nbNOCAGGTable,
+  nbNOCSGTable,
+  nbNOAAGSTable,
+  nbNOAAGGTable,
+  nbNOASGTable,
+  nbNOAGSGTable,
+  nbNOCAAGrSTable,
+  nbNOCAAGrGTable,
   withModifiers(table, "Hyper +", "Hyper+", 6912),
-  deDECAGrSGTable,
-  deDEAAGrSGTable,
-  deDEAllModTable,
+  nbNOCAGrSGTable,
+  nbNOAAGrSGTable,
+  nbNOAllModTable,
   DualUseCtrlTable,
   DualUseShiftTable,
   DualUseAltTable,
@@ -491,4 +458,4 @@ const deDEModifiedTables = [
   DualUseLayer8Tables,
 ];
 
-export { deDE, deDEModifiedTables };
+export { nbNO, nbNOModifiedTables };

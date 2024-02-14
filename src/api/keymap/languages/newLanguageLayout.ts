@@ -15,19 +15,15 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/**
- * Is a JavaScript function that changes language layout
- * @param {Array} baseKeyCodeTable Default language layout (en-US)
- * @param {string} language Select language
- * @param {newKeyCodeTable} newKeyCodeTable Key codes for new language
- */
-function newLanguageLayout(baseKeyCodeTable, language, newKeyCodeTable) {
+import { BaseKeycodeTableType, KeymapCodeTableType } from "../types";
+
+function newLanguageLayout(baseKeyCodeTable: BaseKeycodeTableType[], language: string, newKeyCodeTable: any[]) {
   if (language === "en-US") {
     return baseKeyCodeTable;
   }
 
   return baseKeyCodeTable.map(group => {
-    const newArray = group.keys.reduce((acc, key) => {
+    const newArray = group.keys.reduce((acc: KeymapCodeTableType[], key) => {
       const newKey = newKeyCodeTable.find(item => item.code === key.code);
       const isDeleteNewKey = newKey && newKey.newGroupName && newKey.newGroupName !== group.groupName;
       if (!isDeleteNewKey) {
@@ -40,7 +36,7 @@ function newLanguageLayout(baseKeyCodeTable, language, newKeyCodeTable) {
       return acc;
     }, []);
 
-    const arrayFromAnotherGroup = newKeyCodeTable.filter(keys => keys.newGroupName === group.groupName);
+    const arrayFromAnotherGroup = newKeyCodeTable.filter((keys: { newGroupName: any }) => keys.newGroupName === group.groupName);
 
     return {
       ...group,

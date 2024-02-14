@@ -19,8 +19,9 @@
  */
 
 import { withModifiers } from "../../db/utils";
+import { BaseKeycodeTableType, KeymapCodeTableType } from "../../types";
 
-const nbNOLetters = [
+const daDKLetters: KeymapCodeTableType[] = [
   {
     code: 47,
     labels: {
@@ -31,24 +32,24 @@ const nbNOLetters = [
   {
     code: 51,
     labels: {
-      primary: "Ø",
+      primary: "Æ",
     },
     newGroupName: "Letters",
   },
   {
     code: 52,
     labels: {
-      primary: "Æ",
+      primary: "Ø",
     },
     newGroupName: "Letters",
   },
 ];
 
-const nbNOModifierKeys = [
+const daDKModifierKeys: KeymapCodeTableType[] = [
   {
     code: 53,
     labels: {
-      primary: "|",
+      primary: "½",
     },
   },
   {
@@ -60,7 +61,7 @@ const nbNOModifierKeys = [
   {
     code: 46,
     labels: {
-      primary: "\\",
+      primary: "´",
     },
   },
   {
@@ -89,8 +90,8 @@ const nbNOModifierKeys = [
   },
 ];
 
-const altCtrlNorwegian = {
-  groupName: "AltCtrl Norwegian",
+const altCtrlDanish: BaseKeycodeTableType = {
+  groupName: "AltCtrl Danish",
   keys: [
     {
       code: 799,
@@ -143,7 +144,7 @@ const altCtrlNorwegian = {
     {
       code: 814,
       labels: {
-        primary: "´",
+        primary: "|",
       },
     },
     {
@@ -164,11 +165,17 @@ const altCtrlNorwegian = {
         primary: "µ",
       },
     },
+    {
+      code: 868,
+      labels: {
+        primary: "\\",
+      },
+    },
   ],
 };
 
-const altGRNorwegian = {
-  groupName: "AltCtrl Norwegian",
+const altGRDanish: BaseKeycodeTableType = {
+  groupName: "AltCtrl Danish",
   keys: [
     {
       code: 1055,
@@ -221,7 +228,7 @@ const altGRNorwegian = {
     {
       code: 1070,
       labels: {
-        primary: "´",
+        primary: "|",
       },
     },
     {
@@ -242,11 +249,17 @@ const altGRNorwegian = {
         primary: "µ",
       },
     },
+    {
+      code: 1124,
+      labels: {
+        primary: "\\",
+      },
+    },
   ],
 };
 
-const shiftModifierNorwegian = {
-  groupName: "Shifted Norwegian",
+const shiftModifierDanish: BaseKeycodeTableType = {
+  groupName: "Shifted Danish",
   keys: [
     {
       code: 2101,
@@ -348,50 +361,50 @@ const shiftModifierNorwegian = {
   ],
 };
 
-const nbNO = nbNOLetters.concat(nbNOModifierKeys);
+const daDK = daDKLetters.concat(daDKModifierKeys);
 
-const table = { keys: nbNO };
-const tableWithoutModifier = { keys: nbNOLetters };
+const table: BaseKeycodeTableType = { keys: daDK, groupName: "" };
+const tableWithoutModifier: BaseKeycodeTableType = { keys: daDKLetters, groupName: "" };
 
-const nbNOCtrlTable = withModifiers(table, "Control +", "C+", 256);
-const nbNOLAltTable = withModifiers(table, "Alt +", "A+", 512);
-const nbNORAltTable = withModifiers(table, "AltGr +", "AGr+", 1024);
-const nbNOShiftTable = withModifiers(tableWithoutModifier, "Shift +", "S+", 2048);
-const nbNOGuiTable = withModifiers(table, "Os+", "O+", 4096);
+const daDKCtrlTable = withModifiers(table, "Control +", "C+", 256);
+const daDKLAltTable = withModifiers(table, "Alt +", "A+", 512);
+const daDKRAltTable = withModifiers(table, "AltGr +", "AGr+", 1024);
+const daDKShiftTable = withModifiers(tableWithoutModifier, "Shift +", "S+", 2048);
+const daDKGuiTable = withModifiers(table, "Os+", "O+", 4096);
 
 // Double
 
-const nbNOCATable = withModifiers(table, "Control + Alt +", "C+A+", 768);
-const nbNOCAGrTable = withModifiers(table, "Control + AltGr +", "C+AGr+", 1280);
-const nbNOCSTable = withModifiers(table, "Control + Shift +", "C+S+", 2304);
-const nbNOCGTable = withModifiers(table, "Control + Os +", "C+O+", 4352);
-const nbNOAAGrTable = withModifiers(table, "Alt + AltGr +", "A+AGr+", 1536);
-const nbNOASTable = withModifiers(table, "Alt + Shift +", "A+S+", 2560);
-const nbNOAGTable = withModifiers(table, "Alt + Os +", "A+O+", 4608);
-const nbNOAGrSTable = withModifiers(table, "AltGr + Shift +", "AGr+S+", 3072);
-const nbNOAGrGTable = withModifiers(table, "AltGr + Os +", "AGr+O+", 5120);
-const nbNOSGTable = withModifiers(table, "Shift + Os +", "S+O+", 6144);
+const daDKCATable = withModifiers(table, "Control + Alt +", "C+A+", 768);
+const daDKCAGrTable = withModifiers(table, "Control + AltGr +", "C+AGr+", 1280);
+const daDKCSTable = withModifiers(table, "Control + Shift +", "C+S+", 2304);
+const daDKCGTable = withModifiers(table, "Control + Os +", "C+O+", 4352);
+const daDKAAGrTable = withModifiers(table, "Alt + AltGr +", "A+AGr+", 1536);
+const daDKASTable = withModifiers(table, "Alt + Shift +", "A+S+", 2560);
+const daDKAGTable = withModifiers(table, "Alt + Os +", "A+O+", 4608);
+const daDKAGrSTable = withModifiers(table, "AltGr + Shift +", "AGr+S+", 3072);
+const daDKAGrGTable = withModifiers(table, "AltGr + Os +", "AGr+O+", 5120);
+const daDKSGTable = withModifiers(table, "Shift + Os +", "S+O+", 6144);
 
 // Triple
 
-const nbNOCAAGTable = withModifiers(table, "Control + Alt + AltGr +", "C+A+AGr+", 1792);
-const nbNOCASTable = withModifiers(table, "Meh +", "Meh+", 2816);
-const nbNOCAGTable = withModifiers(table, "Control + Alt + Os +", "C+A+O+", 4864);
-const nbNOCAGSTable = withModifiers(table, "Control + AltGr + Shift +", "C+AGr+S+", 3328);
-const nbNOCAGGTable = withModifiers(table, "Control + AltGr + Os +", "C+AGr+O+", 5376);
-const nbNOCSGTable = withModifiers(table, "Control + Shift + Os +", "C+S+O+", 6400);
-const nbNOAAGSTable = withModifiers(table, "Alt + AltGr + Shift +", "A+AGr+S+", 3584);
-const nbNOAAGGTable = withModifiers(table, "Alt + AltGr + Os +", "A+AGr+O+", 5632);
-const nbNOASGTable = withModifiers(table, "Alt + Shift + Os +", "A+S+O+", 6656);
-const nbNOAGSGTable = withModifiers(table, "AltGr + Shift + Os +", "AGr+S+O+", 7168);
+const daDKCAAGTable = withModifiers(table, "Control + Alt + AltGr +", "C+A+AGr+", 1792);
+const daDKCASTable = withModifiers(table, "Meh +", "Meh+", 2816);
+const daDKCAGTable = withModifiers(table, "Control + Alt + Os +", "C+A+O+", 4864);
+const daDKCAGSTable = withModifiers(table, "Control + AltGr + Shift +", "C+AGr+S+", 3328);
+const daDKCAGGTable = withModifiers(table, "Control + AltGr + Os +", "C+AGr+O+", 5376);
+const daDKCSGTable = withModifiers(table, "Control + Shift + Os +", "C+S+O+", 6400);
+const daDKAAGSTable = withModifiers(table, "Alt + AltGr + Shift +", "A+AGr+S+", 3584);
+const daDKAAGGTable = withModifiers(table, "Alt + AltGr + Os +", "A+AGr+O+", 5632);
+const daDKASGTable = withModifiers(table, "Alt + Shift + Os +", "A+S+O+", 6656);
+const daDKAGSGTable = withModifiers(table, "AltGr + Shift + Os +", "AGr+S+O+", 7168);
 
 // Quad
 
-const nbNOCAAGrSTable = withModifiers(table, "Meh + AltGr +", "M+AGr+", 3840);
-const nbNOCAAGrGTable = withModifiers(table, "Control + Alt + AltGr + Os +", "C+A+AGr+O+", 5888);
-const nbNOCAGrSGTable = withModifiers(table, "Control + AltGr + Shift + Os +", "C+AGr+S+O+", 7424);
-const nbNOAAGrSGTable = withModifiers(table, "Alt + AltGr + Shift + Os +", "A+AGr+S+O+", 7680);
-const nbNOAllModTable = withModifiers(table, "Hyper + AltGr +", "H+AGr+", 7936);
+const daDKCAAGrSTable = withModifiers(table, "Meh + AltGr +", "M+AGr+", 3840);
+const daDKCAAGrGTable = withModifiers(table, "Control + Alt + AltGr + Os +", "C+A+AGr+O+", 5888);
+const daDKCAGrSGTable = withModifiers(table, "Control + AltGr + Shift + Os +", "C+AGr+S+O+", 7424);
+const daDKAAGrSGTable = withModifiers(table, "Alt + AltGr + Shift + Os +", "A+AGr+S+O+", 7680);
+const daDKAllModTable = withModifiers(table, "Hyper + AltGr +", "H+AGr+", 7936);
 
 const DualUseCtrlTable = withModifiers(table, "Control /", "CTRL/", 49169);
 const DualUseShiftTable = withModifiers(table, "Shift /", "SHIFT/", 49425);
@@ -407,41 +420,41 @@ const DualUseLayer6Tables = withModifiers(table, "Layer #6 /", "L#6/", 52498);
 const DualUseLayer7Tables = withModifiers(table, "Layer #7 /", "L#7/", 52754);
 const DualUseLayer8Tables = withModifiers(table, "Layer #8 /", "L#8/", 53010);
 
-const nbNOModifiedTables = [
-  shiftModifierNorwegian,
-  nbNOCtrlTable,
-  nbNOLAltTable,
-  nbNORAltTable,
-  nbNOShiftTable,
-  nbNOGuiTable,
-  nbNOCATable,
-  altCtrlNorwegian,
-  altGRNorwegian,
-  nbNOCAGrTable,
-  nbNOCSTable,
-  nbNOCGTable,
-  nbNOAAGrTable,
-  nbNOASTable,
-  nbNOAGTable,
-  nbNOAGrSTable,
-  nbNOAGrGTable,
-  nbNOSGTable,
-  nbNOCAAGTable,
-  nbNOCASTable,
-  nbNOCAGTable,
-  nbNOCAGSTable,
-  nbNOCAGGTable,
-  nbNOCSGTable,
-  nbNOAAGSTable,
-  nbNOAAGGTable,
-  nbNOASGTable,
-  nbNOAGSGTable,
-  nbNOCAAGrSTable,
-  nbNOCAAGrGTable,
+const daDKModifiedTables = [
+  shiftModifierDanish,
+  daDKCtrlTable,
+  daDKLAltTable,
+  daDKRAltTable,
+  daDKShiftTable,
+  daDKGuiTable,
+  daDKCATable,
+  altCtrlDanish,
+  altGRDanish,
+  daDKCAGrTable,
+  daDKCSTable,
+  daDKCGTable,
+  daDKAAGrTable,
+  daDKASTable,
+  daDKAGTable,
+  daDKAGrSTable,
+  daDKAGrGTable,
+  daDKSGTable,
+  daDKCAAGTable,
+  daDKCASTable,
+  daDKCAGTable,
+  daDKCAGSTable,
+  daDKCAGGTable,
+  daDKCSGTable,
+  daDKAAGSTable,
+  daDKAAGGTable,
+  daDKASGTable,
+  daDKAGSGTable,
+  daDKCAAGrSTable,
+  daDKCAAGrGTable,
   withModifiers(table, "Hyper +", "Hyper+", 6912),
-  nbNOCAGrSGTable,
-  nbNOAAGrSGTable,
-  nbNOAllModTable,
+  daDKCAGrSGTable,
+  daDKAAGrSGTable,
+  daDKAllModTable,
   DualUseCtrlTable,
   DualUseShiftTable,
   DualUseAltTable,
@@ -457,4 +470,4 @@ const nbNOModifiedTables = [
   DualUseLayer8Tables,
 ];
 
-export { nbNO, nbNOModifiedTables };
+export { daDK, daDKModifiedTables };

@@ -20,8 +20,9 @@
 
 import { withModifiers } from "../../db/utils";
 import LetterTable from "../../db/letters";
+import { BaseKeycodeTableType, KeymapCodeTableType } from "../../types";
 
-const Letters = [
+const Letters: KeymapCodeTableType[] = [
   {
     code: 4,
     labels: {
@@ -180,7 +181,7 @@ const Letters = [
   },
 ];
 
-const AGrLetters = [
+const AGrLetters: KeymapCodeTableType[] = [
   {
     code: 4,
     labels: {
@@ -333,7 +334,7 @@ const AGrLetters = [
   },
 ];
 
-const AGrSLetters = [
+const AGrSLetters: KeymapCodeTableType[] = [
   {
     code: 4,
     labels: {
@@ -486,7 +487,7 @@ const AGrSLetters = [
   },
 ];
 
-const AGSymbols = [
+const AGSymbols: KeymapCodeTableType[] = [
   {
     code: 53,
     labels: {
@@ -621,7 +622,7 @@ const AGSymbols = [
   },
 ];
 
-const AGrSSymbols = [
+const AGrSSymbols: KeymapCodeTableType[] = [
   {
     code: 53,
     labels: {
@@ -758,8 +759,8 @@ const AGrSSymbols = [
 
 const enXXeurkey = Letters;
 
-const table = { keys: enXXeurkey };
-const tableS = { keys: LetterTable.keys };
+const table: BaseKeycodeTableType = { keys: enXXeurkey, groupName: "" };
+const tableS: BaseKeycodeTableType = { keys: LetterTable.keys, groupName: "" };
 
 const tableAGr = {
   groupName: "AltGr Eurkey",

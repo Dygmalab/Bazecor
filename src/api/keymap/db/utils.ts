@@ -15,9 +15,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { KeymapCodeTableType } from "../types";
+
 function withModifiers(
   table: {
-    keys: Array<{ code: number; labels: { primary: string } }>;
+    keys: Array<KeymapCodeTableType>;
     groupName: string;
   },
   groupName: string,

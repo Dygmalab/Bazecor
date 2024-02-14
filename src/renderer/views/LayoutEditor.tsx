@@ -938,7 +938,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
             KeyMap.custom[i] = KeyMap.default[i].slice();
           }
           KeyMap.onlyCustom = true;
-          const args = flatten(KeyMap.custom).map(k => keymapDB.serialize(k));
+          const args = flatten(KeyMap.custom).map(k => keymapDB.serialize(k).toString());
           await currentDevice.command("keymap", ...args);
         }
 
@@ -1114,7 +1114,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
     const { currentDevice } = deviceState;
     setLoading(true);
     setIsSaving(true);
-    const args = flatten(keymap.custom).map(k => keymapDB.serialize(k));
+    const args = flatten(keymap.custom).map(k => keymapDB.serialize(k).toString());
     await currentDevice.command("keymap.custom", ...args);
     await currentDevice.command("keymap.onlyCustom", keymap.onlyCustom ? "1" : "0");
     await updateColormap(currentDevice, colorMap);
@@ -1674,6 +1674,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
             macros[MNumber] !== undefined &&
             macros[MNumber].name !== undefined &&
             macros[MNumber].name.substr(0, 5) !== "" &&
+            typeof key.label === "string" &&
             !/\p{L}/u.test(key.label)
           ) {
             console.log("macros:", macros);
@@ -1694,6 +1695,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
             superkeys[SKNumber] !== undefined &&
             superkeys[SKNumber].name !== undefined &&
             superkeys[SKNumber].name !== "" &&
+            typeof key.label === "string" &&
             !/\p{L}/u.test(key.label)
           ) {
             newSKey.label = superkeys[SKNumber].name.substr(0, 5);

@@ -19,67 +19,67 @@
  */
 
 import { withModifiers } from "../../db/utils";
+import { BaseKeycodeTableType, KeymapCodeTableType } from "../../types";
 
-const isISLetters = [
-  {
-    code: 45,
-    labels: {
-      primary: "Ö",
-    },
-    newGroupName: "Letters",
-  },
+const svSELetters: KeymapCodeTableType[] = [
   {
     code: 47,
     labels: {
-      primary: "Ð",
+      primary: "Å",
     },
     newGroupName: "Letters",
   },
   {
     code: 51,
     labels: {
-      primary: "Æ",
+      primary: "Ö",
     },
     newGroupName: "Letters",
   },
   {
-    code: 56,
+    code: 52,
     labels: {
-      primary: "Þ",
+      primary: "Ä",
     },
     newGroupName: "Letters",
   },
 ];
 
-const isISModifierKeys = [
+const svSEModifierKeys: KeymapCodeTableType[] = [
   {
-    code: 46,
+    code: 53,
     labels: {
-      primary: "-",
+      primary: "§",
     },
   },
   {
-    code: 48,
-    labels: {
-      primary: "'",
-    },
-  },
-  {
-    code: 49,
+    code: 45,
     labels: {
       primary: "+",
     },
   },
   {
-    code: 52,
+    code: 46,
     labels: {
       primary: "´",
     },
   },
   {
-    code: 53,
+    code: 48,
     labels: {
-      primary: "°",
+      primary: "¨",
+    },
+  },
+  {
+    code: 49,
+    labels: {
+      primary: "'",
+    },
+  },
+  {
+    code: 56,
+    labels: {
+      primary: "-",
     },
   },
   {
@@ -90,25 +90,25 @@ const isISModifierKeys = [
   },
 ];
 
-const altCtrlIcelandic = {
-  groupName: "AltCtrl Icelandic",
+const altCtrlSwedish: BaseKeycodeTableType = {
+  groupName: "AltCtrl Swedish",
   keys: [
     {
-      code: 776,
-      labels: {
-        primary: "€",
-      },
-    },
-    {
-      code: 784,
-      labels: {
-        primary: "µ",
-      },
-    },
-    {
-      code: 788,
+      code: 799,
       labels: {
         primary: "@",
+      },
+    },
+    {
+      code: 800,
+      labels: {
+        primary: "£",
+      },
+    },
+    {
+      code: 801,
+      labels: {
+        primary: "$",
       },
     },
     {
@@ -148,27 +148,21 @@ const altCtrlIcelandic = {
       },
     },
     {
+      code: 776,
+      labels: {
+        primary: "€",
+      },
+    },
+    {
       code: 816,
       labels: {
         primary: "~",
       },
     },
     {
-      code: 817,
+      code: 784,
       labels: {
-        primary: "`",
-      },
-    },
-    {
-      code: 820,
-      labels: {
-        primary: "^",
-      },
-    },
-    {
-      code: 821,
-      labels: {
-        primary: "°",
+        primary: "µ",
       },
     },
     {
@@ -180,25 +174,25 @@ const altCtrlIcelandic = {
   ],
 };
 
-const altGRIcelandic = {
-  groupName: "AltCtrl Icelandic",
+const altGRSwedish: BaseKeycodeTableType = {
+  groupName: "AltCtrl Swedish",
   keys: [
     {
-      code: 1032,
-      labels: {
-        primary: "€",
-      },
-    },
-    {
-      code: 1040,
-      labels: {
-        primary: "µ",
-      },
-    },
-    {
-      code: 1044,
+      code: 1055,
       labels: {
         primary: "@",
+      },
+    },
+    {
+      code: 1056,
+      labels: {
+        primary: "£",
+      },
+    },
+    {
+      code: 1057,
+      labels: {
+        primary: "$",
       },
     },
     {
@@ -238,27 +232,21 @@ const altGRIcelandic = {
       },
     },
     {
+      code: 1032,
+      labels: {
+        primary: "€",
+      },
+    },
+    {
       code: 1072,
       labels: {
         primary: "~",
       },
     },
     {
-      code: 1073,
+      code: 1040,
       labels: {
-        primary: "`",
-      },
-    },
-    {
-      code: 1076,
-      labels: {
-        primary: "^",
-      },
-    },
-    {
-      code: 1077,
-      labels: {
-        primary: "°",
+        primary: "µ",
       },
     },
     {
@@ -270,9 +258,15 @@ const altGRIcelandic = {
   ],
 };
 
-const shiftModifierIcelandic = {
-  groupName: "Shifted Icelandic",
+const shiftModifierSwedish: BaseKeycodeTableType = {
+  groupName: "Shifted Swedish",
   keys: [
+    {
+      code: 2101,
+      labels: {
+        primary: "½",
+      },
+    },
     {
       code: 2079,
       labels: {
@@ -282,7 +276,7 @@ const shiftModifierIcelandic = {
     {
       code: 2081,
       labels: {
-        primary: "$",
+        primary: "¤",
       },
     },
     {
@@ -316,34 +310,27 @@ const shiftModifierIcelandic = {
       },
     },
     {
-      code: 2094,
+      code: 2093,
       labels: {
-        primary: "_",
+        primary: "?",
       },
     },
-
+    {
+      code: 2094,
+      labels: {
+        primary: "`",
+      },
+    },
     {
       code: 2096,
       labels: {
-        primary: "?",
+        primary: "^",
       },
     },
     {
       code: 2097,
       labels: {
         primary: "*",
-      },
-    },
-    {
-      code: 2100,
-      labels: {
-        primary: "'",
-      },
-    },
-    {
-      code: 2101,
-      labels: {
-        primary: "¨",
       },
     },
     {
@@ -359,6 +346,12 @@ const shiftModifierIcelandic = {
       },
     },
     {
+      code: 2104,
+      labels: {
+        primary: "_",
+      },
+    },
+    {
       code: 2148,
       labels: {
         primary: ">",
@@ -367,50 +360,50 @@ const shiftModifierIcelandic = {
   ],
 };
 
-const isIS = isISLetters.concat(isISModifierKeys);
+const svSE = svSELetters.concat(svSEModifierKeys);
 
-const table = { keys: isIS };
-const tableWithoutModifier = { keys: isISLetters };
+const table: BaseKeycodeTableType = { keys: svSE, groupName: "" };
+const tableWithoutModifier: BaseKeycodeTableType = { keys: svSELetters, groupName: "" };
 
-const isISCtrlTable = withModifiers(table, "Control +", "C+", 256);
-const isISLAltTable = withModifiers(table, "Alt +", "A+", 512);
-const isISRAltTable = withModifiers(table, "AltGr +", "AGr+", 1024);
-const isISShiftTable = withModifiers(tableWithoutModifier, "Shift +", "S+", 2048);
-const isISGuiTable = withModifiers(table, "Os+", "O+", 4096);
+const svSECtrlTable = withModifiers(table, "Control +", "C+", 256);
+const svSELAltTable = withModifiers(table, "Alt +", "A+", 512);
+const svSERAltTable = withModifiers(table, "AltGr +", "AGr+", 1024);
+const svSEShiftTable = withModifiers(tableWithoutModifier, "Shift +", "S+", 2048);
+const svSEGuiTable = withModifiers(table, "Os+", "O+", 4096);
 
 // Double
 
-const isISCATable = withModifiers(table, "Control + Alt +", "C+A+", 768);
-const isISCAGrTable = withModifiers(table, "Control + AltGr +", "C+AGr+", 1280);
-const isISCSTable = withModifiers(table, "Control + Shift +", "C+S+", 2304);
-const isISCGTable = withModifiers(table, "Control + Os +", "C+O+", 4352);
-const isISAAGrTable = withModifiers(table, "Alt + AltGr +", "A+AGr+", 1536);
-const isISASTable = withModifiers(table, "Alt + Shift +", "A+S+", 2560);
-const isISAGTable = withModifiers(table, "Alt + Os +", "A+O+", 4608);
-const isISAGrSTable = withModifiers(table, "AltGr + Shift +", "AGr+S+", 3072);
-const isISAGrGTable = withModifiers(table, "AltGr + Os +", "AGr+O+", 5120);
-const isISSGTable = withModifiers(table, "Shift + Os +", "S+O+", 6144);
+const svSECATable = withModifiers(table, "Control + Alt +", "C+A+", 768);
+const svSECAGrTable = withModifiers(table, "Control + AltGr +", "C+AGr+", 1280);
+const svSECSTable = withModifiers(table, "Control + Shift +", "C+S+", 2304);
+const svSECGTable = withModifiers(table, "Control + Os +", "C+O+", 4352);
+const svSEAAGrTable = withModifiers(table, "Alt + AltGr +", "A+AGr+", 1536);
+const svSEASTable = withModifiers(table, "Alt + Shift +", "A+S+", 2560);
+const svSEAGTable = withModifiers(table, "Alt + Os +", "A+O+", 4608);
+const svSEAGrSTable = withModifiers(table, "AltGr + Shift +", "AGr+S+", 3072);
+const svSEAGrGTable = withModifiers(table, "AltGr + Os +", "AGr+O+", 5120);
+const svSESGTable = withModifiers(table, "Shift + Os +", "S+O+", 6144);
 
 // Triple
 
-const isISCAAGTable = withModifiers(table, "Control + Alt + AltGr +", "C+A+AGr+", 1792);
-const isISCASTable = withModifiers(table, "Meh +", "Meh+", 2816);
-const isISCAGTable = withModifiers(table, "Control + Alt + Os +", "C+A+O+", 4864);
-const isISCAGSTable = withModifiers(table, "Control + AltGr + Shift +", "C+AGr+S+", 3328);
-const isISCAGGTable = withModifiers(table, "Control + AltGr + Os +", "C+AGr+O+", 5376);
-const isISCSGTable = withModifiers(table, "Control + Shift + Os +", "C+S+O+", 6400);
-const isISAAGSTable = withModifiers(table, "Alt + AltGr + Shift +", "A+AGr+S+", 3584);
-const isISAAGGTable = withModifiers(table, "Alt + AltGr + Os +", "A+AGr+O+", 5632);
-const isISASGTable = withModifiers(table, "Alt + Shift + Os +", "A+S+O+", 6656);
-const isISAGSGTable = withModifiers(table, "AltGr + Shift + Os +", "AGr+S+O+", 7168);
+const svSECAAGTable = withModifiers(table, "Control + Alt + AltGr +", "C+A+AGr+", 1792);
+const svSECASTable = withModifiers(table, "Meh +", "Meh+", 2816);
+const svSECAGTable = withModifiers(table, "Control + Alt + Os +", "C+A+O+", 4864);
+const svSECAGSTable = withModifiers(table, "Control + AltGr + Shift +", "C+AGr+S+", 3328);
+const svSECAGGTable = withModifiers(table, "Control + AltGr + Os +", "C+AGr+O+", 5376);
+const svSECSGTable = withModifiers(table, "Control + Shift + Os +", "C+S+O+", 6400);
+const svSEAAGSTable = withModifiers(table, "Alt + AltGr + Shift +", "A+AGr+S+", 3584);
+const svSEAAGGTable = withModifiers(table, "Alt + AltGr + Os +", "A+AGr+O+", 5632);
+const svSEASGTable = withModifiers(table, "Alt + Shift + Os +", "A+S+O+", 6656);
+const svSEAGSGTable = withModifiers(table, "AltGr + Shift + Os +", "AGr+S+O+", 7168);
 
 // Quad
 
-const isISCAAGrSTable = withModifiers(table, "Meh + AltGr +", "M+AGr+", 3840);
-const isISCAAGrGTable = withModifiers(table, "Control + Alt + AltGr + Os +", "C+A+AGr+O+", 5888);
-const isISCAGrSGTable = withModifiers(table, "Control + AltGr + Shift + Os +", "C+AGr+S+O+", 7424);
-const isISAAGrSGTable = withModifiers(table, "Alt + AltGr + Shift + Os +", "A+AGr+S+O+", 7680);
-const isISAllModTable = withModifiers(table, "Hyper + AltGr +", "H+AGr+", 7936);
+const svSECAAGrSTable = withModifiers(table, "Meh + AltGr +", "M+AGr+", 3840);
+const svSECAAGrGTable = withModifiers(table, "Control + Alt + AltGr + Os +", "C+A+AGr+O+", 5888);
+const svSECAGrSGTable = withModifiers(table, "Control + AltGr + Shift + Os +", "C+AGr+S+O+", 7424);
+const svSEAAGrSGTable = withModifiers(table, "Alt + AltGr + Shift + Os +", "A+AGr+S+O+", 7680);
+const svSEAllModTable = withModifiers(table, "Hyper + AltGr +", "H+AGr+", 7936);
 
 const DualUseCtrlTable = withModifiers(table, "Control /", "CTRL/", 49169);
 const DualUseShiftTable = withModifiers(table, "Shift /", "SHIFT/", 49425);
@@ -426,41 +419,41 @@ const DualUseLayer6Tables = withModifiers(table, "Layer #6 /", "L#6/", 52498);
 const DualUseLayer7Tables = withModifiers(table, "Layer #7 /", "L#7/", 52754);
 const DualUseLayer8Tables = withModifiers(table, "Layer #8 /", "L#8/", 53010);
 
-const isISModifiedTables = [
-  shiftModifierIcelandic,
-  isISCtrlTable,
-  isISLAltTable,
-  isISRAltTable,
-  isISShiftTable,
-  isISGuiTable,
-  isISCATable,
-  altCtrlIcelandic,
-  altGRIcelandic,
-  isISCAGrTable,
-  isISCSTable,
-  isISCGTable,
-  isISAAGrTable,
-  isISASTable,
-  isISAGTable,
-  isISAGrSTable,
-  isISAGrGTable,
-  isISSGTable,
-  isISCAAGTable,
-  isISCASTable,
-  isISCAGTable,
-  isISCAGSTable,
-  isISCAGGTable,
-  isISCSGTable,
-  isISAAGSTable,
-  isISAAGGTable,
-  isISASGTable,
-  isISAGSGTable,
-  isISCAAGrSTable,
-  isISCAAGrGTable,
+const svSEModifiedTables = [
+  shiftModifierSwedish,
+  svSECtrlTable,
+  svSELAltTable,
+  svSERAltTable,
+  svSEShiftTable,
+  svSEGuiTable,
+  svSECATable,
+  altCtrlSwedish,
+  altGRSwedish,
+  svSECAGrTable,
+  svSECSTable,
+  svSECGTable,
+  svSEAAGrTable,
+  svSEASTable,
+  svSEAGTable,
+  svSEAGrSTable,
+  svSEAGrGTable,
+  svSESGTable,
+  svSECAAGTable,
+  svSECASTable,
+  svSECAGTable,
+  svSECAGSTable,
+  svSECAGGTable,
+  svSECSGTable,
+  svSEAAGSTable,
+  svSEAAGGTable,
+  svSEASGTable,
+  svSEAGSGTable,
+  svSECAAGrSTable,
+  svSECAAGrGTable,
   withModifiers(table, "Hyper +", "Hyper+", 6912),
-  isISCAGrSGTable,
-  isISAAGrSGTable,
-  isISAllModTable,
+  svSECAGrSGTable,
+  svSEAAGrSGTable,
+  svSEAllModTable,
   DualUseCtrlTable,
   DualUseShiftTable,
   DualUseAltTable,
@@ -476,4 +469,4 @@ const isISModifiedTables = [
   DualUseLayer8Tables,
 ];
 
-export { isIS, isISModifiedTables };
+export { svSE, svSEModifiedTables };

@@ -351,7 +351,6 @@ const SelectKeyboard = (props: SelectKeyboardProps) => {
   };
 
   const connectedDeviceIndex = state.selected;
-  console.log("Checking connected Data: ", connectedDeviceIndex, selectedPortIndex, connected, scanFoundDevices, deviceItems);
 
   return (
     <Styles>

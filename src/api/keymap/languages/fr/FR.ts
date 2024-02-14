@@ -18,8 +18,9 @@
  * Is an Array of objects of values that have to be modified.
  */
 import { withModifiers } from "../../db/utils";
+import { BaseKeycodeTableType, KeymapCodeTableType } from "../../types";
 
-const frFRLetters = [
+const frFRLetters: KeymapCodeTableType[] = [
   {
     code: 20,
     labels: {
@@ -60,7 +61,7 @@ const frFRLetters = [
   },
 ];
 
-const frFRModifierKeys = [
+const frFRModifierKeys: KeymapCodeTableType[] = [
   {
     code: 31,
     labels: {
@@ -196,7 +197,7 @@ const frFRModifierKeys = [
   },
 ];
 
-const altCtrlFrench = {
+const altCtrlFrench: BaseKeycodeTableType = {
   groupName: "AltCtrl French",
   keys: [
     {
@@ -280,7 +281,7 @@ const altCtrlFrench = {
   ],
 };
 
-const altGRFrench = {
+const altGRFrench: BaseKeycodeTableType = {
   groupName: "AltCtrl French",
   keys: [
     {
@@ -364,7 +365,7 @@ const altGRFrench = {
   ],
 };
 
-const shiftModifierFrench = {
+const shiftModifierFrench: BaseKeycodeTableType = {
   groupName: "Shifted French",
   keys: [
     {
@@ -508,8 +509,8 @@ const shiftModifierFrench = {
 
 const frFR = frFRLetters.concat(frFRModifierKeys);
 
-const table = { keys: frFR };
-const tableWithoutModifier = { keys: frFRLetters };
+const table: BaseKeycodeTableType = { keys: frFR, groupName: "" };
+const tableWithoutModifier: BaseKeycodeTableType = { keys: frFRLetters, groupName: "" };
 
 const frFRCtrlTable = withModifiers(table, "Control +", "C+", 256);
 const frFRLAltTable = withModifiers(table, "Alt +", "A+", 512);

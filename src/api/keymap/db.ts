@@ -1,3 +1,4 @@
+/* eslint-disable class-methods-use-this */
 /* eslint-disable no-bitwise */
 /* bazecor-keymap -- Bazecor keymap library
  * Copyright (C) 2018, 2019  Keyboardio, Inc.
@@ -15,6 +16,8 @@
  * You should have received a copy of the GNU General Public License along with
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
+
+import { KeyType } from "@Renderer/types/layout";
 import BlankTable from "./db/blanks";
 import LetterTable, { ModifiedLetterTables } from "./db/letters";
 import DigitTable, { ModifiedDigitTables } from "./db/digits";
@@ -49,10 +52,11 @@ import newLanguageLayout from "./languages/newLanguageLayout";
 
 import Store from "../../renderer/utils/Store";
 import getLanguage from "../../renderer/utils/language";
+import { BaseKeycodeTableType, KeymapCodeTableType } from "./types";
 
 const store = Store.getStore();
 
-const defaultBaseKeyCodeTable = [
+const defaultBaseKeyCodeTable: BaseKeycodeTableType[] = [
   LetterTable,
   DigitTable,
   PunctuationTable,
@@ -85,7 +89,6 @@ const defaultBaseKeyCodeTable = [
   Bluetooth,
   Energy,
   RF,
-
   BlankTable,
 ];
 
@@ -106,20 +109,43 @@ const defaultKeyCodeTable = defaultBaseKeyCodeTable
 // Create cache for language layout
 const map = new Map();
 
-let baseKeyCodeTable;
-let keyCodeTable;
+// eslint-disable-next-line import/no-mutable-exports
+let baseKeyCodeTable: BaseKeycodeTableType[];
+// eslint-disable-next-line import/no-mutable-exports
+let keyCodeTable: BaseKeycodeTableType[];
 
 class KeymapDB {
+  keymapCodeTable: KeymapCodeTableType[];
+  language:
+    | "en-US"
+    | "en-GB"
+    | "es-ES"
+    | "de-DE"
+    | "fr-FR"
+    | "da-DK"
+    | "fi-FI"
+    | "nb-NO"
+    | "sv-SE"
+    | "is-IS"
+    | "ja-JP"
+    | "ko-KR"
+    | "pl-PL"
+    | "de-CH"
+    | "en-XX-eurkey"
+    | "fr-XX-bepo"
+    | "fr-XX-optimot";
+  allCodes: BaseKeycodeTableType[];
+
   constructor() {
-    this.keymapCodeTable = [];
+    this.keymapCodeTable = new Array<KeymapCodeTableType>();
     // create variable that get language from the local storage
-    this.language = getLanguage(store.get("settings.language"));
+    this.language = getLanguage(store.get("settings.language") as string);
     if (languagesDB[this.language] === undefined) {
       this.language = "en-US";
     }
 
     // Modify our baseKeyCodeTable, depending on the language selected by the static methods and by inside function newLanguageLayout
-    baseKeyCodeTable = KeymapDB.updateBaseKeyCode();
+    baseKeyCodeTable = this.updateBaseKeyCode();
     const keyCodeTableWithModifiers =
       this.language !== "en-US" && supportModifiedTables[this.language]
         ? defaultKeyCodeTable.concat(supportModifiedTables[this.language])
@@ -154,7 +180,7 @@ class KeymapDB {
     }
   }
 
-  parseModifs(keycode) {
+  parseModifs(keycode: number) {
     let modified = 0;
     if (keycode & 0b100000000) {
       // Ctrl Decoder
@@ -185,7 +211,7 @@ class KeymapDB {
     return modified;
   }
 
-  keySegmentator(keyCode) {
+  keySegmentator(keyCode: number) {
     let code = { base: 0, modified: 0 };
     const modified = this.parseModifs(keyCode);
     switch (true) {
@@ -254,20 +280,21 @@ class KeymapDB {
     return code;
   }
 
-  parse(keyCode) {
+  parse(keyCode: number) {
     let key;
+    let localKeyCode = keyCode;
 
-    if (!keyCode) keyCode = 0;
+    if (!localKeyCode) localKeyCode = 0;
 
-    if (keyCode < this.keymapCodeTable.length) {
-      key = this.keymapCodeTable[keyCode];
+    if (localKeyCode < this.keymapCodeTable.length) {
+      key = this.keymapCodeTable[localKeyCode];
     }
 
     if (!key) {
       key = {
-        code: keyCode,
+        code: localKeyCode,
         labels: {
-          primary: `#${keyCode.toString()}`,
+          primary: `#${localKeyCode.toString()}`,
         },
       };
     }
@@ -280,26 +307,26 @@ class KeymapDB {
     };
   }
 
-  reverse(label) {
-    const answ = this.keymapCodeTable.filter(Boolean).find(x => x.labels.primary === label);
+  reverse(label: string) {
+    const answ = this.keymapCodeTable.filter(Boolean).find((x: any) => x.labels.primary === label);
     return answ !== undefined ? answ.code : 1;
   }
 
-  reverseSub(label, top) {
-    const answ = this.keymapCodeTable.filter(Boolean).find(x => x.labels.primary === label && x.labels.top === top);
+  reverseSub(label: string, top: string) {
+    const answ = this.keymapCodeTable.filter(Boolean).find((x: any) => x.labels.primary === label && x.labels.top === top);
     return answ !== undefined ? answ.code : 1;
   }
 
   getMap() {
-    return this.keymapCodeTable.filter(Boolean).filter(x => x.code < 255 && x.code > 0);
+    return this.keymapCodeTable.filter(Boolean).filter((x: any) => x.code < 255 && x.code > 0);
   }
 
-  serialize(key) {
+  serialize(key: KeyType) {
     return key.keyCode;
   }
 
-  static updateBaseKeyCode() {
-    this.language = getLanguage(store.get("settings.language"));
+  updateBaseKeyCode() {
+    this.language = getLanguage(store.get("settings.language") as string);
     if (languagesDB[this.language] === undefined) {
       this.language = "en-US";
     }
@@ -316,4 +343,5 @@ class KeymapDB {
   }
 }
 
-export { KeymapDB as default, baseKeyCodeTable, keyCodeTable, languagesDB };
+export default KeymapDB;
+export { baseKeyCodeTable, keyCodeTable, languagesDB };

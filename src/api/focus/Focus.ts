@@ -1,3 +1,6 @@
+/* eslint-disable no-eval */
+/* eslint-disable no-await-in-loop */
+/* eslint-disable class-methods-use-this */
 /* bazecor-focus -- Bazecor Focus protocol library
  * Copyright (C) 2018, 2019  Keyboardio, Inc.
  * Copyright (C) 2019, 2020 DygmaLab SE
@@ -33,7 +36,8 @@ type CommandOverrides = Record<string, AnyFunction | { focus: AnyFunction; [k: s
 export class Focus {
   public static getInstance() {
     if (ctx.instance) return ctx.instance;
-    return (ctx.instance = new Focus());
+    ctx.instance = new Focus();
+    return ctx.instance;
   }
   public timeout = 5000;
   public debug = false;
@@ -41,7 +45,6 @@ export class Focus {
   file = false;
   commands: CommandOverrides = { help: this._help };
   protected logger = console;
-  constructor() {}
 
   protected debugLog(...args: unknown[]) {
     if (!this.debug) return;
@@ -69,7 +72,10 @@ export class Focus {
     this.logger.log("Port list from where");
     for (const port of portList) {
       for (const device of devices) {
-        if (parseInt(`0x${port.productId}`) == device.usb.productId && parseInt(`0x${port.vendorId}`) == device.usb.vendorId) {
+        if (
+          parseInt(`0x${port.productId}`, 16) === device.usb.productId &&
+          parseInt(`0x${port.vendorId}`, 16) === device.usb.vendorId
+        ) {
           foundDevices.push({ ...port, device });
         }
       }
@@ -133,6 +139,7 @@ export class Focus {
       this.callbacks = [];
       this.supportedCommands = [];
       this.parser.on("data", (data: any) => {
+        // eslint-disable-next-line no-param-reassign
         data = data.toString("utf-8");
         this.debugLog("focus: incoming data:", data);
 
@@ -220,6 +227,7 @@ export class Focus {
     if (process.platform !== "linux") return true;
 
     try {
+      // eslint-disable-next-line no-bitwise
       fs.accessSync(port.path, fs.constants.R_OK | fs.constants.W_OK);
     } catch (e) {
       return false;
@@ -258,7 +266,7 @@ export class Focus {
     this.debugLog("focus.request:", cmd, ...args);
     return new Promise<T>((resolve, reject) => {
       const timer = setTimeout(() => {
-        reject("Communication timeout");
+        reject(new Error("Communication timeout"));
       }, this.timeout);
       this._request(cmd, ...args)
         .then((data: T) => {
@@ -267,7 +275,7 @@ export class Focus {
         })
         .catch(err => {
           console.log("Error sending request from focus", err);
-          reject("Error sending request from focus");
+          reject(new Error("Error sending request from focus"));
         });
     });
   }
@@ -289,7 +297,7 @@ export class Focus {
       });
     }
     console.log("performing request");
-    if (!this._port) throw "Device not connected!";
+    if (!this._port) throw new Error("Device not connected!");
 
     let request = cmd;
     if (args && args.length > 0) {
@@ -314,11 +322,12 @@ export class Focus {
     return this.request(cmd, ...args);
   }
 
-  addCommands(cmds: CommandOverrides) {
+  addCommands(cmds: object) {
     Object.assign(this.commands, cmds);
   }
 
   addMethod(methodName: string, command: string) {
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
     const self: any = this;
     if (self[methodName]) {
       const tmp = self[methodName];

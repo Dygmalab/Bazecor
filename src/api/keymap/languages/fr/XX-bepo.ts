@@ -18,8 +18,9 @@
  * Is an Array of objects of values that have to be modified.
  */
 import { withModifiers } from "../../db/utils";
+import { BaseKeycodeTableType, KeymapCodeTableType } from "../../types";
 
-const symbols = [
+const symbols: KeymapCodeTableType[] = [
   {
     code: 53,
     labels: {
@@ -100,7 +101,7 @@ const symbols = [
   },
 ];
 
-const symbolsS = [
+const symbolsS: KeymapCodeTableType[] = [
   {
     code: 53,
     labels: {
@@ -191,7 +192,7 @@ const symbolsS = [
   },
 ];
 
-const letters = [
+const letters: KeymapCodeTableType[] = [
   // First row
   {
     code: 20,
@@ -420,7 +421,7 @@ const letters = [
   },
 ];
 
-const lettersS = [
+const lettersS: KeymapCodeTableType[] = [
   // First row
   {
     code: 20,
@@ -649,7 +650,7 @@ const lettersS = [
   },
 ];
 
-const tableAGr = {
+const tableAGr: BaseKeycodeTableType = {
   groupName: "AltGr French",
   keys: [
     // Numbers row + AltGr
@@ -958,7 +959,7 @@ const tableAGr = {
   ],
 };
 
-const tableAGrS = {
+const tableAGrS: BaseKeycodeTableType = {
   groupName: "AltGrShift French",
   keys: [
     {
@@ -1270,8 +1271,8 @@ const tableAGrS = {
 const frXXbepo = letters.concat(symbols);
 const frXXbepoS = lettersS.concat(symbolsS);
 
-const table = { keys: frXXbepo };
-const tableS = { keys: frXXbepoS };
+const table: BaseKeycodeTableType = { keys: frXXbepo, groupName: "" };
+const tableS: BaseKeycodeTableType = { keys: frXXbepoS, groupName: "" };
 
 const frXXbepoCtrlTable = withModifiers(table, "Control +", "C+", 256);
 const frXXbepoLAltTable = withModifiers(table, "Alt +", "A+", 512);

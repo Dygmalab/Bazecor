@@ -96,6 +96,7 @@ import { deCH, deCHModifiedTables } from "./de/CH";
 import { enXXeurkey, enXXeurkeyModifiedTables } from "./en/XX-eurkey";
 import { frXXbepo, frXXbepoModifiedTables } from "./fr/XX-bepo";
 import { frXXoptimot, frXXoptimotModifiedTables } from "./fr/XX-optimot";
+import { KeymapCodeTableType } from "../types";
 
 const supportModifiedTables = {
   // Keycaps
@@ -119,9 +120,11 @@ const supportModifiedTables = {
   "fr-XX-optimot": frXXoptimotModifiedTables,
 };
 
-const languages = {
+const languages: {
+  [key: string]: KeymapCodeTableType[];
+} = {
   // Keycaps
-  "en-US": "en-US",
+  "en-US": undefined,
   "en-GB": enGB,
   "es-ES": esES,
   "de-DE": deDE,

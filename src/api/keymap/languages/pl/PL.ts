@@ -1,8 +1,9 @@
 import { withModifiers } from "../../db/utils";
+import { BaseKeycodeTableType, KeymapCodeTableType } from "../../types";
 
-const plPLLetters = [];
+const plPLLetters: KeymapCodeTableType[] = [];
 
-const altGRPolish = {
+const altGRPolish: BaseKeycodeTableType = {
   groupName: "AltGr Polish",
   keys: [
     {
@@ -64,8 +65,8 @@ const altGRPolish = {
 
 const plPL = plPLLetters;
 
-const table = { keys: plPL };
-const tableWithoutModifier = { keys: plPLLetters };
+const table: BaseKeycodeTableType = { keys: plPL, groupName: "" };
+const tableWithoutModifier: BaseKeycodeTableType = { keys: plPLLetters, groupName: "" };
 
 const plPLCtrlTable = withModifiers(table, "Control +", "C+", 256);
 const plPLLAltTable = withModifiers(table, "Alt +", "A+", 512);
