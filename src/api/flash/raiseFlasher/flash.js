@@ -14,11 +14,12 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { ipcRenderer } from "electron";
 import fs from "fs";
 import path from "path";
-import { ipcRenderer } from "electron";
 import Focus from "../../focus";
 import Hardware from "../../hardware";
+import { delay } from '../delay';
 import { arduino } from "./arduino-flasher";
 
 /**
@@ -43,7 +44,6 @@ export class FlashRaise {
       firmwareFile: "File has not being selected",
     };
     this.backup = [];
-    this.delay = ms => new Promise(res => setTimeout(res, ms));
   }
 
   /**
@@ -65,7 +65,7 @@ export class FlashRaise {
    * @returns {boolean} if device found - true, if no - false
    */
   async foundDevices(hardware, message, bootloader) {
-    const focus = new Focus();
+    const focus = Focus.getInstance();
     let isFindDevice = false;
     console.log("looking at device", this.device);
     await focus.find(...hardware).then(devices => {
@@ -99,7 +99,7 @@ export class FlashRaise {
    * Takes backup settings from keyboard and writes its in backupfile.
    */
   async backupSettings() {
-    const focus = new Focus();
+    const focus = Focus.getInstance();
 
     const commands = [
       "hardware.keyscan",
@@ -217,12 +217,12 @@ export class FlashRaise {
       await this.updatePort(port, 1200);
       console.log("resetting neuron");
       await this.setDTR(port, true);
-      await this.delay(timeouts.dtrToggle);
+      await delay(timeouts.dtrToggle);
       await this.setDTR(port, false);
       stateUpdate("reset", 20);
       console.log("waiting for bootloader");
       try {
-        await this.delay(timeouts.waitingClose);
+        await delay(timeouts.waitingClose);
         let bootCount = 6;
         while (bootCount > 0) {
           stateUpdate("reset", 20 + (10 - bootCount) * 8);
@@ -232,7 +232,7 @@ export class FlashRaise {
             stateUpdate("reset", 100);
             break;
           }
-          await this.delay(timeouts.bootLoaderUp);
+          await delay(timeouts.bootLoaderUp);
           bootCount--;
         }
         if (bootCount != true) {
@@ -252,7 +252,7 @@ export class FlashRaise {
    * @returns {promise}
    */
   async updateFirmware(filename, stateUpdate) {
-    const focus = new Focus();
+    const focus = Focus.getInstance();
     console.log("Begin update firmware with arduino-flasher");
     // console.log(JSON.stringify(focus));
     return new Promise(async (resolve, reject) => {
@@ -264,7 +264,7 @@ export class FlashRaise {
           else {
             stateUpdate("neuron", 100);
             console.log("End update firmware with arduino-flasher");
-            await this.delay(1500);
+            await delay(1500);
             await this.detectKeyboard();
             resolve();
           }
@@ -287,7 +287,7 @@ export class FlashRaise {
     // wait until the bootloader serial port disconnects and the keyboard serial port reconnects
     const findKeyboard = async () =>
       new Promise(async resolve => {
-        await this.delay(timeouts);
+        await delay(timeouts);
         if (await this.foundDevices(Hardware.serial, "Keyboard detected", false)) {
           resolve(true);
         } else {
@@ -326,7 +326,7 @@ export class FlashRaise {
    */
   async restoreSettings(backup, stateUpdate) {
     stateUpdate("restore", 0);
-    let focus = new Focus();
+    let focus = Focus.getInstance();
     const errorMessage = "Firmware update failed, because the settings could not be restored";
     console.log(backup);
     if (backup === undefined || backup.length === 0) {

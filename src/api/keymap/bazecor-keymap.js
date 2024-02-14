@@ -117,7 +117,7 @@ class Keymap {
 //   }
 // }
 
-const focus = new Focus();
+const focus = Focus.getInstance();
 focus.addCommands({
   keymap: new Keymap(),
 });

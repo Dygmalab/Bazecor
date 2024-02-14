@@ -64,7 +64,7 @@ const RaiseANSI = {
   },
 
   isDeviceSupported: async port => {
-    const focus = new Focus();
+    const focus = Focus.getInstance();
     let layout = localStorage.getItem(port.serialNumber);
     if (!layout) {
       if (focus._port && focus._port.path === port.path) {

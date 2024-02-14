@@ -21,7 +21,7 @@ import { MAX_MS, PACKET_SIZE, TYPE_DAT, TYPE_ELA } from "../flasherConstants";
 import { num2hexstr } from "../num2hexstr";
 import { str2ab } from "../str2ab";
 
-const focus = new Focus();
+const focus = Focus.getInstance();
 
 /**
  * Writes data to the given bootloader serial port.
