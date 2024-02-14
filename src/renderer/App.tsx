@@ -52,7 +52,7 @@ import Device from "../api/comms/Device";
 
 const store = Store.getStore();
 
-const focus = new Focus();
+const focus = Focus.getInstance();
 focus.debug = true;
 focus.timeout = 5000;
 

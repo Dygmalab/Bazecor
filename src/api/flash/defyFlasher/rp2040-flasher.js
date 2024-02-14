@@ -17,6 +17,7 @@
 import { ipcRenderer } from "electron";
 import fs from "fs";
 import * as path from "path";
+import { delay } from "../delay";
 import sideFlaser from "./sideFlasher";
 
 /**
@@ -54,7 +55,7 @@ export default class rp2040 {
     if (result.error) finished(result.error, result.message);
     console.log("Left side flash has error? ", result.error);
     step += 25;
-    await this.delay(20);
+    await delay(20);
     finished(false, "");
   }
 
