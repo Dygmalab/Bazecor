@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-expressions */
+/* eslint-disable eqeqeq */
 // -*- mode: js-jsx -*-
 /* Bazecor
  * Copyright (C) 2022  Dygmalab, Inc.
@@ -18,33 +20,48 @@
 import React from "react";
 import ListModifiersKey from "../../renderer/component/ListModifiers/ListModifiersKey";
 
-function Key({
-  keyType,
-  id,
-  onClick,
-  fill,
-  stroke,
-  width,
-  height,
-  x,
-  y,
-  dataLedIndex,
-  dataKeyIndex,
-  dataLayer,
-  selectedKey,
-  contrastText,
-  centerPrimary,
-  centerExtra,
-}) {
-  const [color, setColor] = React.useState("rgb(255,255,255)");
+interface KeyShapeProps {
+  keyType: string;
+  id: string;
+  onClick: () => void;
+  fill: string;
+  stroke: string;
+  width: number;
+  height: number;
+  x: number;
+  y: number;
+  dataLedIndex: number;
+  dataKeyIndex: number;
+  dataLayer: number;
+  centerPrimary: boolean;
+  centerExtra: boolean;
+}
+
+function Key(props: KeyShapeProps) {
+  const {
+    keyType,
+    id,
+    onClick,
+    fill,
+    stroke,
+    width,
+    height,
+    x,
+    y,
+    dataLedIndex,
+    dataKeyIndex,
+    dataLayer,
+    centerPrimary,
+    centerExtra,
+  } = props;
   const xShape2 = x + 4;
   const yShape2 = y;
   const widthShape2 = width - 8;
   const heightShape2 = height - 8;
-  const [extraLabelClass, setExtraLabelClass] = React.useState(false);
-  const [isActive, setIsActive] = React.useState(false);
   const setExtralabel = React.useRef(null);
 
+  const [extraLabelClass, setExtraLabelClass] = React.useState(false);
+  const [color, setColor] = React.useState("rgb(255,255,255)");
   const [altApplied, setAltApplied] = React.useState(false);
   const [altGrApplied, setAltGrApplied] = React.useState(false);
   const [ctrlApplied, setCtrlApplied] = React.useState(false);
