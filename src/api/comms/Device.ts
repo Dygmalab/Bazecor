@@ -76,6 +76,7 @@ class Device implements DeviceClass {
       this.productId = params.device.usb.productId.toString(16);
       this.vendorId = params.device.usb.vendorId.toString(16);
       this.device = params.device;
+      this.file = true;
       this.fileData = params;
     }
   }
@@ -225,7 +226,7 @@ class Device implements DeviceClass {
   }
 
   async command(cmd: string, ...args: Array<string>) {
-    if (this.port === undefined) return undefined;
+    if (this.port === undefined && !this.file) return undefined;
 
     // HashMap cache to improve performance
     if (!args || args.length === 0) {
@@ -297,6 +298,8 @@ class Device implements DeviceClass {
   addCommands(cmds: string) {
     Object.assign(this.commands, cmds);
   }
+
+  static isDevice = (device: any): device is DeviceClass => "type" in device;
 }
 
 export default Device;

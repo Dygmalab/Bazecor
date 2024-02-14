@@ -8,23 +8,27 @@ import fs from "fs";
 
 import { IconArrowRight, IconCloudDownload, IconKeyboard, IconUpload } from "@Renderer/component/Icon";
 import { RegularButton } from "@Renderer/component/Button";
+import { useDevice, DeviceTools } from "@Renderer/DeviceContext";
 import Title from "@Renderer/component/Title";
 import { i18n } from "@Renderer/i18n";
 
-import { DygmaDeviceType, VirtualType } from "@Renderer/types/devices";
+import { DeviceClass, DygmaDeviceType, VirtualType } from "@Renderer/types/devices";
 import { BackupType } from "@Renderer/types/backups";
 
 import Hardware from "../../../api/hardware";
 import { RaiseISO, RaiseANSI, DefyWired, DefyWireless, enumerator } from "../../../api/hardware-virtual";
 import Store from "../../utils/Store";
+import { isVirtualType } from "../../../api/comms/virtual";
+import Backup from "../../../api/backup";
 
 const store = Store.getStore();
 
 interface VirtualSelectorProps {
-  onConnect: (...args: any[]) => any;
+  onConnect: (device: DeviceClass) => Promise<void>;
 }
 
 export default function VirtualSelector(props: VirtualSelectorProps) {
+  const { dispatch } = useDevice();
   const [showVirtualKeyboardModal, setShowVirtualKeyboardModal] = useState(false);
   const [selectedVirtualKeyboard, setSelectedVirtualKeyboard] = useState(0);
   const { onConnect } = props;
@@ -141,41 +145,46 @@ export default function VirtualSelector(props: VirtualSelectorProps) {
     }
     console.log("Opening file", filePath);
     // Open the file and load it's contents
-    let file: any;
+    let file: VirtualType | BackupType;
     try {
-      file = JSON.parse(fs.readFileSync(filePath).toString("utf-8"));
+      file = JSON.parse(fs.readFileSync(filePath).toString("utf-8")) as VirtualType | BackupType;
       // console.log(file);
       // console.log("loaded backup", file.device.info.product + " " + file.device.info.keyboardType, file.virtual.version.data);
-      if (!file.virtual && !file.backup) throw Error("not a valid file, no virtual or backup objects");
+      if (!isVirtualType(file) && !Backup.isBackupType(file)) throw Error("not a valid file, no virtual or backup objects");
     } catch (e) {
       console.error(e);
       window.alert(i18n.keyboardSelect.virtualKeyboard.errorLoadingFile);
       return;
     }
-    if (!file.virtual && file.backup) {
+    if (!isVirtualType(file) && Backup.isBackupType(file)) {
       if (!window.confirm(i18n.keyboardSelect.virtualKeyboard.backupTransform)) {
         return;
       }
       file = await convertBackupToVK(file);
       file.virtual["hardware.chip_id"].data += getDateTime();
-      await onConnect(file.device, file);
+      const response = await DeviceTools.connect(file);
+      dispatch({ type: "changeCurrent", payload: { selected: -1, device: response } });
+      await onConnect(response);
       return;
     }
+    if (isVirtualType(file)) {
+      Hardware.serial.forEach((localDevice: any) => {
+        if (
+          (file as VirtualType).device.usb.productId === localDevice.usb.productId &&
+          (file as VirtualType).device.usb.vendorId === localDevice.usb.vendorId &&
+          (file as VirtualType).device.info.keyboardType === localDevice.info.keyboardType
+        ) {
+          (file as VirtualType).device.components = localDevice.components;
+        }
+      });
 
-    Hardware.serial.forEach((localDevice: any) => {
-      if (
-        file.device.usb.productId === localDevice.usb.productId &&
-        file.device.usb.vendorId === localDevice.usb.vendorId &&
-        file.device.info.keyboardType === localDevice.info.keyboardType
-      ) {
-        file.device.components = localDevice.components;
-      }
-    });
-
-    file.device.path = "VIRTUAL";
-    file.device.bootloader = false;
-    file.device.filePath = filePath;
-    await onConnect(file.device, file);
+      file.device.path = "VIRTUAL";
+      file.device.bootloader = false;
+      file.device.filePath = filePath;
+      const response = await DeviceTools.connect(file);
+      dispatch({ type: "changeCurrent", payload: { selected: -1, device: response } });
+      await onConnect(response);
+    }
   };
 
   const newFile = async (virtualKeyboard: VirtualType, fileName: string) => {
@@ -220,7 +229,9 @@ export default function VirtualSelector(props: VirtualSelectorProps) {
     }
 
     // Final connection function
-    await onConnect(newVK.device, newVK);
+    const response = await DeviceTools.connect(newVK);
+    dispatch({ type: "changeCurrent", payload: { selected: -1, device: response } });
+    await onConnect(response);
   };
 
   return (

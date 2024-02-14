@@ -17,7 +17,7 @@ export interface DeviceClass {
   callbacks: Array<(value: unknown) => void>;
   device: DygmaDeviceType;
   port?: HID | SerialPort;
-  commands?: { [key: string]: any; help: Array<string> };
+  commands?: { [key: string]: any };
   file?: boolean;
   isClosed: boolean;
   isSending: boolean;

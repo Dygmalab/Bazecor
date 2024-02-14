@@ -1,9 +1,10 @@
 /* eslint-disable no-await-in-loop */
 import React, { useReducer, createContext, useContext, useMemo } from "react";
-import { CountProviderProps, Action, State, DeviceClass } from "./types/devices";
+import { CountProviderProps, Action, State, DeviceClass, VirtualType } from "./types/devices";
 import serial, { isSerialType } from "../api/comms/serial";
 import Device from "../api/comms/Device";
 import HID from "../api/hid/hid";
+import { isVirtualType } from "../api/comms/virtual";
 
 type ContextType = {
   state: State;
@@ -21,7 +22,9 @@ function deviceReducer(state: State, action: Action) {
         deviceList[action.payload.selected] = action.payload.device;
         return { ...state, selected: action.payload.selected, currentDevice: action.payload.device, deviceList };
       }
-      return { ...state, selected: -1, currentDevice: undefined };
+      const deviceList = [...state.deviceList];
+      deviceList.push(action.payload.device);
+      return { ...state, selected: deviceList.length, currentDevice: action.payload.device, deviceList };
     }
     case "addDevice": {
       const newDevices = state.deviceList;
@@ -102,23 +105,31 @@ const list = async () => {
   return finalDevices;
 };
 
-const connect = async (device: DeviceClass) => {
+const connect = async (device: DeviceClass | VirtualType) => {
   try {
-    if (device.type === "serial") {
-      const result = await serial.connect(device);
-      device.addPort(result);
-      console.log("the device is serial type: ", device, " and connected as: ", result);
+    if (isVirtualType(device)) {
+      const result = await new Device(device, "virtual");
+      console.log("the device is virtual type: ", device, " and connected as: ", result);
+      return result;
+    }
+    if (Device.isDevice(device)) {
+      if (device.type === "serial") {
+        const result = await serial.connect(device);
+        device.addPort(result);
+        console.log("the device is serial type: ", device, " and connected as: ", result);
+        return device;
+      }
+      console.log(device.port);
+      const result = await (device.port as HID).connect();
+      await device.addHID();
+      console.log("the device is hid type: ", device, " and connected as: ", result);
       return device;
     }
-    console.log(device.port);
-    const result = await (device.port as HID).connect();
-    await device.addHID();
-    console.log("the device is hid type: ", device, " and connected as: ", result);
-    return device;
   } catch (error) {
     console.error(error);
     throw error;
   }
+  return undefined;
 };
 
 const disconnect = async (device: DeviceClass) => {

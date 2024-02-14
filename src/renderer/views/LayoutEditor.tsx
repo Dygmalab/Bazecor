@@ -40,6 +40,7 @@ import { Neuron, LayerType } from "@Renderer/types/neurons";
 import { ColormapType, KeymapType, KeyType, LayoutEditorProps, PaletteType, SegmentedKeyType } from "@Renderer/types/layout";
 import { SuperkeysType } from "@Renderer/types/superkeys";
 import { MacroActionsType, MacrosType } from "@Renderer/types/macros";
+import { DeviceClass } from "@Renderer/types/devices";
 
 // Modules
 import { PageHeader } from "@Renderer/modules/PageHeader";
@@ -56,7 +57,6 @@ import { i18n } from "@Renderer/i18n";
 
 import Store from "@Renderer/utils/Store";
 import getLanguage from "@Renderer/utils/language";
-import Device from "../../api/comms/Device";
 import Keymap, { KeymapDB } from "../../api/keymap";
 import { rgb2w, rgbw2b } from "../../api/color";
 import Backup from "../../api/backup";
@@ -743,7 +743,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
 
   const flatten = (arr: Array<unknown>) => [].concat(...arr);
 
-  const updatePalette = async (device: Device, plette: PaletteType[]) => {
+  const updatePalette = async (device: DeviceClass, plette: PaletteType[]) => {
     let args: string[];
     if (deviceState.currentDevice.device.RGBWMode !== true) {
       args = flatten(plette.map(color => [color.r, color.g, color.b])).map(v => v.toString());
@@ -760,7 +760,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
     return result;
   };
 
-  const updateColormap = async (device: Device, colormap: number[][]) => {
+  const updateColormap = async (device: DeviceClass, colormap: number[][]) => {
     const args = flatten(colormap).map(v => v.toString());
     const result = await device.command("colormap.map", ...args);
     return result;
@@ -872,6 +872,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
         const wirelessChecker = currentDevice.device.info.keyboardType === "wireless";
         if (lang) {
           const deviceLang = { ...currentDevice.device, language: true };
+          currentDevice.commands = {};
           currentDevice.commands.keymap = new Keymap(deviceLang);
           setkeymapDB(currentDevice.commands.keymap.db);
         }

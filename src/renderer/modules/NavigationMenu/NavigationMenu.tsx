@@ -165,7 +165,7 @@ function NavigationMenu(props: NavigationMenuProps) {
       fwList = [{ version: cleanedVersion }];
     }
     // Comparing online Data to FW version
-    const semVerCheck = SemVer.compare(fwList[0].version, cleanedVersion);
+    const semVerCheck = fwList.length > 0 ? SemVer.compare(fwList[0].version, cleanedVersion) : 0;
     Beta = Beta || state.currentDevice.device.info.product !== "Raise";
     setVersions(getVersions);
     setIsUpdated(semVerCheck !== 1);

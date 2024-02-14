@@ -3,7 +3,7 @@ import fs from "fs";
 import Store from "electron-store";
 import { Neuron } from "@Renderer/types/neurons";
 import { BackupType } from "@Renderer/types/backups";
-import Device from "../comms/Device";
+import { DeviceClass } from "@Renderer/types/devices";
 
 const store = new Store();
 
@@ -19,7 +19,7 @@ export default class Backup {
    * Function that returns the list of available commands excluding the ones that do not return usefull information for the backup
    * @returns An array with strings that contain the serial commands that are capable of returing the keyboard configuration
    */
-  static async Commands(device: Device) {
+  static async Commands(device: DeviceClass) {
     const notRequired = [
       "eeprom",
       "hardware",
@@ -62,7 +62,7 @@ export default class Backup {
    * @param {string} neuronID This parameter contains the neuronID obtained from the Raise, so the corresponding local settings can be retrieved.
    * @returns {Backup} Backup The function returns the full made backup, so it can be stored wherever is needed, and changed if the module requires it.
    */
-  async DoBackup(commands: string[], neuronID: string, device: Device) {
+  async DoBackup(commands: string[], neuronID: string, device: DeviceClass) {
     if (device.file !== false) return undefined;
     const backup: BackupType = {
       neuronID: undefined,
@@ -109,7 +109,7 @@ export default class Backup {
    * @param {*} localBackup The backup data object to be stored locally
    * @returns True when the function has successfully stored the backup locally, and false if something fails, an error log will be also pushed to the console
    */
-  static SaveBackup(backup: BackupType, device: Device) {
+  static SaveBackup(backup: BackupType, device: DeviceClass) {
     const localBackup = { ...backup };
     if (device.file !== false) {
       const file = JSON.parse(fs.readFileSync(device.fileData.device.filePath).toString("utf-8"));
@@ -164,4 +164,5 @@ export default class Backup {
       throw new Error(error);
     }
   }
+  static isBackupType = (backup: any): backup is BackupType => "backup" in backup;
 }
