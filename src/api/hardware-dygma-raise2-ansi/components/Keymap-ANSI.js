@@ -1651,8 +1651,8 @@ class KeymapANSI extends React.Component {
           {/* Left side */}
           <UnderGlowStrip
             id="71_undeglow"
-            x={54}
-            y={14}
+            x={56.6}
+            y={13}
             onClick={e => {
               setUndeglowIndex(71, e);
             }}
@@ -1665,12 +1665,12 @@ class KeymapANSI extends React.Component {
             dataLedIndex={getLEDIndex(71)}
             dataKeyIndex={keyIndex(71)}
             dataLayer={layer}
-            path="M3 33C4.7 33 6 31.7 6 30V17C6 10.9 10.9 6 17 6H82.7C84.4 6 85.7 4.7 85.7 3C85.7 1.3 84.4 0 82.7 0H17C7.6 0 0 7.6 0 17V30C0 31.6 1.4 33 3 33Z"
+            path="M0.600037 29.4C0.600037 13.1909 13.7909 0 30 0H42C44.2092 0 46 1.79086 46 4C46 6.20914 44.2092 8 42 8H30C18.2092 8 8.60004 17.6091 8.60004 29.4V41.4C8.60004 43.6091 6.80918 45.4 4.60004 45.4C2.3909 45.4 0.600037 43.6091 0.600037 41.4V29.4Z"
           />
           <UnderGlowStrip
             id="72_undeglow"
-            x={144}
-            y={14}
+            x={106}
+            y={13}
             onClick={e => {
               setUndeglowIndex(72, e);
             }}
@@ -1683,12 +1683,12 @@ class KeymapANSI extends React.Component {
             dataLedIndex={getLEDIndex(72)}
             dataKeyIndex={keyIndex(72)}
             dataLayer={layer}
-            path="M3.26816 6H74.7318C76.5838 6 78 4.7 78 3C78 1.3 76.5838 0 74.7318 0H3.26816C1.4162 0 -1.48937e-06 1.3 -1.48937e-06 3C-1.48937e-06 4.7 1.4162 6 3.26816 6Z"
+            path="M0 4C0 1.79086 1.79086 0 4 0H64C66.2091 0 68 1.79086 68 4C68 6.20914 66.2091 8 64 8H4C1.79086 8 0 6.20914 0 4Z"
           />
           <UnderGlowStrip
             id="73_undeglow"
-            x={226}
-            y={14}
+            x={178}
+            y={13}
             onClick={e => {
               setUndeglowIndex(73, e);
             }}
@@ -1701,12 +1701,12 @@ class KeymapANSI extends React.Component {
             dataLedIndex={getLEDIndex(73)}
             dataKeyIndex={keyIndex(73)}
             dataLayer={layer}
-            path="M3.15921 6H74.7318C76.5838 6 78 4.7 78 3C78 1.3 76.5838 0 74.7318 0H3.26816C1.4162 0 -5.93249e-07 1.3 -5.93249e-07 3C-5.93249e-07 4.7 1.41619 6 3.15921 6Z"
+            path="M0 4C0 1.79086 1.79086 0 4 0H63.9C66.1091 0 67.9 1.79086 67.9 4C67.9 6.20914 66.1091 8 63.9 8H4C1.79086 8 0 6.20914 0 4Z"
           />
           <UnderGlowStrip
             id="74_undeglow"
-            x={308}
-            y={14}
+            x={250}
+            y={13}
             onClick={e => {
               setUndeglowIndex(74, e);
             }}
@@ -1719,12 +1719,12 @@ class KeymapANSI extends React.Component {
             dataLedIndex={getLEDIndex(74)}
             dataKeyIndex={keyIndex(74)}
             dataLayer={layer}
-            path="M3.26816 6H74.7318C76.5838 6 78 4.7 78 3C78 1.3 76.5838 0 74.7318 0H3.26816C1.4162 0 -5.93249e-07 1.3 -5.93249e-07 3C-5.93249e-07 4.7 1.4162 6 3.26816 6Z"
+            path="M0.900024 4C0.900024 1.79086 2.69089 0 4.90002 0H64.9C67.1092 0 68.9 1.79086 68.9 4C68.9 6.20914 67.1092 8 64.9 8H4.90002C2.69089 8 0.900024 6.20914 0.900024 4Z"
           />
           <UnderGlowStrip
             id="75_undeglow"
-            x={390}
-            y={14}
+            x={321}
+            y={13}
             onClick={e => {
               setUndeglowIndex(75, e);
             }}
@@ -1737,12 +1737,12 @@ class KeymapANSI extends React.Component {
             dataLedIndex={getLEDIndex(75)}
             dataKeyIndex={keyIndex(75)}
             dataLayer={layer}
-            path="M3.05882 6H74.9412C76.6745 6 78 4.7 78 3C78 1.3 76.6745 0 74.9412 0H3.05882C1.32549 0 -4.47035e-06 1.3 -4.47035e-06 3C-4.47035e-06 4.7 1.42745 6 3.05882 6Z"
+            path="M0.899994 4C0.899994 1.79086 2.69085 0 4.89999 0H64.8C67.0091 0 68.8 1.79086 68.8 4C68.8 6.20914 67.0091 8 64.8 8H4.89999C2.69085 8 0.899994 6.20914 0.899994 4Z"
           />
           <UnderGlowStrip
             id="76_undeglow"
-            x={472}
-            y={14}
+            x={394}
+            y={13}
             onClick={e => {
               setUndeglowIndex(76, e);
             }}
@@ -1755,12 +1755,12 @@ class KeymapANSI extends React.Component {
             dataLedIndex={getLEDIndex(76)}
             dataKeyIndex={keyIndex(76)}
             dataLayer={layer}
-            path="M3.63919 6H84.3608C86.423 6 88 4.7 88 3C88 1.3 86.423 0 84.3608 0H3.63919C1.57698 0 0 1.3 0 3C0 4.7 1.69829 6 3.63919 6Z"
+            path="M0.799988 4C0.799988 1.79086 2.59085 0 4.79999 0H64.8C67.0091 0 68.8 1.79086 68.8 4C68.8 6.20914 67.0091 8 64.8 8H4.79999C2.59085 8 0.799988 6.20914 0.799988 4Z"
           />
           <UnderGlowStrip
             id="77_undeglow"
-            x={565}
-            y={14}
+            x={465}
+            y={13}
             onClick={e => {
               setUndeglowIndex(77, e);
             }}
@@ -1773,12 +1773,12 @@ class KeymapANSI extends React.Component {
             dataLedIndex={getLEDIndex(77)}
             dataKeyIndex={keyIndex(77)}
             dataLayer={layer}
-            path="M3 72C4.7 72 6 70.6817 6 68.9577V3.04225C6 1.31831 4.7 0 3 0C1.3 0 0 1.31831 0 3.04225V69.0592C0 70.6817 1.3 72 3 72Z"
+            path="M0.799988 4C0.799988 1.79086 2.59085 0 4.79999 0H64.7C66.9091 0 68.7 1.79086 68.7 4C68.7 6.20914 66.9091 8 64.7 8H4.79999C2.59085 8 0.799988 6.20914 0.799988 4Z"
           />
           <UnderGlowStrip
             id="78_undeglow"
-            x={545}
-            y={90}
+            x={537}
+            y={13}
             onClick={e => {
               setUndeglowIndex(78, e);
             }}
@@ -1791,12 +1791,12 @@ class KeymapANSI extends React.Component {
             dataLedIndex={getLEDIndex(78)}
             dataKeyIndex={keyIndex(78)}
             dataLayer={layer}
-            path="M3.90002 44.1469C2.20002 44.1469 0.900024 42.8469 0.900024 41.1469V12C0.900024 9.8 2.70002 8 4.90002 8H20V3C20 1.3 21.3 0 23 0C24.7 0 26 1.3 26 3V10C26 12.2 24.2 14 22 14H6.90002V41.0469C6.90002 42.7469 5.60002 44.1469 3.90002 44.1469Z"
+            path="M0.700012 4C0.700012 1.79086 2.49087 0 4.70001 0H28C31.508 0 34.6 2.79102 34.6 6.6V21C34.6 23.2091 32.8091 25 30.6 25C28.3908 25 26.6 23.2091 26.6 21V8H4.70001C2.49087 8 0.700012 6.20914 0.700012 4Z"
           />
           <UnderGlowStrip
             id="79_undeglow"
-            x={546}
-            y={137}
+            x={563}
+            y={42}
             onClick={e => {
               setUndeglowIndex(79, e);
             }}
@@ -1809,12 +1809,12 @@ class KeymapANSI extends React.Component {
             dataLedIndex={getLEDIndex(79)}
             dataKeyIndex={keyIndex(79)}
             dataLayer={layer}
-            path="M24 100H17C14.8 100 13 98.2 13 96V29H4C1.8 29 0 27.2 0 25V3.00001C0 1.30001 1.3 0 3 0C4.7 0 6 1.30001 6 3.00001V23H15C17.2 23 19 24.8 19 27V94H24C25.7 94 27 95.3 27 97C27 98.7 25.6 100 24 100Z"
+            path="M4.59998 0C6.80911 0 8.59998 1.79086 8.59998 4V34.8C8.59998 37.0091 6.80911 38.8 4.59998 38.8C2.39084 38.8 0.599976 37.0091 0.599976 34.8V4C0.599976 1.79086 2.39084 0 4.59998 0Z"
           />
           <UnderGlowStrip
             id="80_undeglow"
-            x={576}
-            y={231}
+            x={544}
+            y={85}
             onClick={e => {
               setUndeglowIndex(80, e);
             }}
@@ -1827,12 +1827,12 @@ class KeymapANSI extends React.Component {
             dataLedIndex={getLEDIndex(80)}
             dataKeyIndex={keyIndex(80)}
             dataLayer={layer}
-            path="M11 54C9.3 54 8 52.7 8 51V6H3C1.3 6 0 4.7 0 3C0 1.3 1.3 0 3 0H10C12.2 0 14 1.8 14 4V51C14 52.7 12.7 54 11 54Z"
+            path="M23.7 0.799988C25.9092 0.799988 27.7 2.59085 27.7 4.79999V13.1C27.7 16.545 24.8707 19 21.8 19H8.09998V45.1C8.09998 47.3091 6.30911 49.1 4.09998 49.1C1.89084 49.1 0.0999756 47.3091 0.0999756 45.1V17.5C0.0999756 13.8908 2.99084 11 6.59998 11H19.7V4.79999C19.7 2.59085 21.4909 0.799988 23.7 0.799988Z"
           />
           <UnderGlowStrip
             id="81_undeglow"
-            x={570}
-            y={289}
+            x={544}
+            y={137}
             onClick={e => {
               setUndeglowIndex(81, e);
             }}
@@ -1845,12 +1845,12 @@ class KeymapANSI extends React.Component {
             dataLedIndex={getLEDIndex(81)}
             dataKeyIndex={keyIndex(81)}
             dataLayer={layer}
-            path="M3 57C1.3 57 0 55.7 0 54V17C0 14.8 1.8 13 4 13H14V3C14 1.3 15.3 0 17 0C18.7 0 20 1.3 20 3V15C20 17.2 18.2 19 16 19H6V54C6 55.6 4.6 57 3 57Z"
+            path="M4.09998 0.0999756C6.30911 0.0999756 8.09998 1.89084 8.09998 4.09998V25H14.8C18.2091 25 21 27.7908 21 31.2V75C21 77.2091 19.2091 79 17 79C14.7909 79 13 77.2091 13 75V33H6C2.9293 33 0.0999756 30.5451 0.0999756 27.1V4.09998C0.0999756 1.89084 1.89084 0.0999756 4.09998 0.0999756Z"
           />
           <UnderGlowStrip
             id="82_undeglow"
-            x={570}
-            y={350}
+            x={557}
+            y={220}
             onClick={e => {
               setUndeglowIndex(82, e);
             }}
@@ -1863,12 +1863,12 @@ class KeymapANSI extends React.Component {
             dataLedIndex={getLEDIndex(82)}
             dataKeyIndex={keyIndex(82)}
             dataLayer={layer}
-            path="M3 64C4.7 64 6 62.6271 6 60.8317V3.16832C6 1.37294 4.7 0 3 0C1.3 0 0 1.37294 0 3.16832V60.9373C0 62.6271 1.4 64 3 64Z"
+            path="M4.90002 0C7.10916 0 8.90002 1.79086 8.90002 4V14H25.2C28.7092 14 31.6 16.8909 31.6 20.4V69.7C31.6 71.9091 29.8091 73.7 27.6 73.7C25.3908 73.7 23.6 71.9091 23.6 69.7V22H7.09998C3.69073 22 0.900024 19.209 0.900024 15.8V4C0.900024 1.79086 2.69089 0 4.90002 0Z"
           />
           <UnderGlowStrip
             id="83_undeglow"
-            x={506}
-            y={418}
+            x={561}
+            y={299}
             onClick={e => {
               setUndeglowIndex(83, e);
             }}
@@ -1881,12 +1881,12 @@ class KeymapANSI extends React.Component {
             dataLedIndex={getLEDIndex(83)}
             dataKeyIndex={keyIndex(83)}
             dataLayer={layer}
-            path="M3 30.2H70V3C70 1.3 68.7 0 67 0C65.3 0 64 1.3 64 3V24.2H3C1.3 24.2 0 25.5 0 27.2C0 28.9 1.3 30.2 3 30.2Z"
+            path="M8.79999 8.09998H23.6C25.8091 8.09998 27.6 6.30911 27.6 4.09998C27.6 1.89084 25.8091 0.0999756 23.6 0.0999756H6.70001C3.62932 0.0999756 0.799988 2.55488 0.799988 5.99997V46.3C0.799988 48.5091 2.59085 50.3 4.79999 50.3C7.00913 50.3 8.79999 48.5091 8.79999 46.3V8.09998Z"
           />
           <UnderGlowStrip
             id="84_undeglow"
-            x={456}
-            y={442}
+            x={561}
+            y={352}
             onClick={e => {
               setUndeglowIndex(84, e);
             }}
@@ -1899,12 +1899,12 @@ class KeymapANSI extends React.Component {
             dataLedIndex={getLEDIndex(84)}
             dataKeyIndex={keyIndex(84)}
             dataLayer={layer}
-            path="M17.3 12.9999L6.0062 60.528C5.61846 62.1598 3.9664 63.155 2.34265 62.7351C0.763683 62.3268 -0.198242 60.73 0.178802 59.1433L11.5 11.4999C13.2 4.79994 19.1 0.199951 26 0.199951H43C44.7 0.199951 46 1.49995 46 3.19995C46 4.89995 44.7 6.19995 43 6.19995H26C21.9 6.19995 18.3 8.99994 17.3 12.9999Z"
+            path="M4.79999 0.299988C7.00913 0.299988 8.79999 2.09085 8.79999 4.29999V58.7C8.79999 60.9092 7.00913 62.7 4.79999 62.7C2.59085 62.7 0.799988 60.9092 0.799988 58.7V4.29999C0.799988 2.09085 2.59085 0.299988 4.79999 0.299988Z"
           />
           <UnderGlowStrip
             id="85_undeglow"
-            x={438}
-            y={509}
+            x={525}
+            y={419.7}
             onClick={e => {
               setUndeglowIndex(85, e);
             }}
@@ -1917,12 +1917,12 @@ class KeymapANSI extends React.Component {
             dataLedIndex={getLEDIndex(85)}
             dataKeyIndex={keyIndex(85)}
             dataLayer={layer}
-            path="M2.98818 67.9882C4.28818 67.9882 5.58819 67.0882 5.88819 65.6882L21.5882 3.68821C21.9882 2.08821 20.9882 0.488203 19.3882 0.0882035C17.7882 -0.311797 16.1882 0.688185 15.7882 2.28819L0.0881882 64.2882C-0.311811 65.8882 0.688185 67.4882 2.28819 67.8882C2.48819 67.9882 2.68818 67.9882 2.98818 67.9882Z"
+            path="M39.7 0.700012C41.9092 0.700012 43.7 2.49087 43.7 4.70001V28C43.7 31.4091 40.9091 34.2 37.5 34.2H4C1.79086 34.2 0 32.4092 0 30.2C0 27.9909 1.79086 26.2 4 26.2H35.7V4.70001C35.7 2.49087 37.4909 0.700012 39.7 0.700012Z"
           />
           <UnderGlowStrip
             id="86_undeglow"
-            x={419}
-            y={581}
+            x={459}
+            y={445}
             onClick={e => {
               setUndeglowIndex(86, e);
             }}
@@ -1935,13 +1935,13 @@ class KeymapANSI extends React.Component {
             dataLedIndex={getLEDIndex(86)}
             dataKeyIndex={keyIndex(86)}
             dataLayer={layer}
-            path="M3.2 69.2C4.5 69.2 5.80001 68.3 6.10001 66.9L21.8 3.9C22.2 2.3 21.2 0.699995 19.6 0.299995C18 -0.100005 16.4 0.899977 16 2.49998L0.300011 65.5C-0.0999889 67.1 0.900007 68.7 2.50001 69.1C2.70001 69.2 2.90001 69.2 3.2 69.2Z"
+            path="M10.4766 19.8859C10.4762 19.8877 10.4757 19.8895 10.4752 19.8913L8.07818 29.3797C7.53708 31.5216 5.36212 32.8193 3.22028 32.2782C1.07843 31.7371 -0.219235 29.5621 0.321862 27.4203L2.72479 17.9087C5.3749 7.5491 14.7616 0.200012 25.5 0.200012H58C60.2091 0.200012 62 1.99087 62 4.20001C62 6.40915 60.2091 8.20001 58 8.20001H25.5C18.4403 8.20001 12.2284 13.0483 10.4766 19.8859Z"
           />
 
           <UnderGlowStrip
             id="87_undeglow"
-            x={381}
-            y={654}
+            x={444}
+            y={482}
             onClick={e => {
               setUndeglowIndex(87, e);
             }}
@@ -1954,12 +1954,12 @@ class KeymapANSI extends React.Component {
             dataLedIndex={getLEDIndex(87)}
             dataKeyIndex={keyIndex(87)}
             dataLayer={layer}
-            path="M3.1 40.0999H18.4C26.2 40.0999 32.9 34.7999 34.9 27.2999L40.9 3.69996C41.3 2.09996 40.3 0.49992 38.7 0.0999204C37.1 -0.30008 35.5 0.699932 35.1 2.29993L29.1 25.9C27.9 30.8 23.5 34.2 18.4 34.2H3.1C1.4 34.2 0.0999985 35.5 0.0999985 37.2C0.0999985 38.9 1.5 40.0999 3.1 40.0999Z"
+            path="M17.2891 0.924239C19.4296 1.47048 20.722 3.64854 20.1758 5.78908L7.87581 53.9891C7.32957 56.1296 5.15151 57.4221 3.01096 56.8758C0.870423 56.3296 -0.422017 54.1515 0.12422 52.011L12.4242 3.81098C12.9704 1.67044 15.1485 0.378002 17.2891 0.924239Z"
           />
           <UnderGlowStrip
             id="88_undeglow"
-            x={295}
-            y={688}
+            x={429}
+            y={541}
             onClick={e => {
               setUndeglowIndex(88, e);
             }}
@@ -1972,12 +1972,12 @@ class KeymapANSI extends React.Component {
             dataLedIndex={getLEDIndex(88)}
             dataKeyIndex={keyIndex(88)}
             dataLayer={layer}
-            path="M3.49929 6.09998H78.5007C80.4836 6.09998 82 4.79998 82 3.09998C82 1.39998 80.4836 0.0999756 78.5007 0.0999756H3.49929C1.51636 0.0999756 2.24619e-06 1.39998 2.24619e-06 3.09998C2.24619e-06 4.79998 1.633 6.09998 3.49929 6.09998Z"
+            path="M16.8877 1.02387C19.0285 1.56937 20.3216 3.74699 19.7761 5.88772L7.87615 52.5877C7.33065 54.7284 5.15303 56.0216 3.0123 55.4761C0.871573 54.9306 -0.421619 52.753 0.123878 50.6123L12.0239 3.9123C12.5694 1.77157 14.747 0.478375 16.8877 1.02387Z"
           />
           <UnderGlowStrip
             id="89_undeglow"
-            x={209}
-            y={688}
+            x={414}
+            y={600}
             onClick={e => {
               setUndeglowIndex(89, e);
             }}
@@ -1990,13 +1990,13 @@ class KeymapANSI extends React.Component {
             dataLedIndex={getLEDIndex(89)}
             dataKeyIndex={keyIndex(89)}
             dataLayer={layer}
-            path="M3.21568 6.09998H78.7843C80.6065 6.09998 82 4.79998 82 3.09998C82 1.39998 80.6065 0.0999756 78.7843 0.0999756H3.21568C1.39346 0.0999756 -4.23193e-06 1.39998 -4.23193e-06 3.09998C-4.23193e-06 4.79998 1.39346 6.09998 3.21568 6.09998Z"
+            path="M16.9955 0.625846C19.1351 1.17564 20.4239 3.35586 19.8741 5.49549L7.87413 52.1955C7.32433 54.3351 5.14412 55.6239 3.00449 55.0741C0.864862 54.5243 -0.423952 52.3441 0.125846 50.2045L12.1258 3.50449C12.6756 1.36486 14.8559 0.0760476 16.9955 0.625846Z"
           />
 
           <UnderGlowStrip
             id="90_undeglow"
-            x={123}
-            y={688}
+            x={373}
+            y={658}
             onClick={e => {
               setUndeglowIndex(90, e);
             }}
@@ -2009,11 +2009,11 @@ class KeymapANSI extends React.Component {
             dataLedIndex={getLEDIndex(90)}
             dataKeyIndex={keyIndex(90)}
             dataLayer={layer}
-            path="M3.34235 6.09998H78.6576C80.5516 6.09998 82 4.79998 82 3.09998C82 1.39998 80.5516 0.0999756 78.6576 0.0999756H3.34235C1.44833 0.0999756 -4.05312e-06 1.39998 -4.05312e-06 3.09998C-4.05312e-06 4.79998 1.55974 6.09998 3.34235 6.09998Z"
+            path="M42.8873 0.323703C45.0281 0.868995 46.3215 3.04649 45.7762 5.18727L43.0762 15.7872L43.074 15.7961C39.9201 28.0612 28.8284 36.6999 16.1 36.6999H4.20001C1.99087 36.6999 0.200012 34.9091 0.200012 32.6999C0.200012 30.4908 1.99087 28.6999 4.20001 28.6999H16.1C25.1703 28.6999 33.0776 22.5404 35.325 13.8076C35.3254 13.8063 35.3257 13.805 35.326 13.8037L38.0238 3.2126C38.5691 1.07181 40.7465 -0.221588 42.8873 0.323703Z"
           />
           <UnderGlowStrip
             id="91_undeglow"
-            x={32}
+            x={313}
             y={687}
             onClick={e => {
               setUndeglowIndex(91, e);
@@ -2027,12 +2027,12 @@ class KeymapANSI extends React.Component {
             dataLedIndex={getLEDIndex(91)}
             dataKeyIndex={keyIndex(91)}
             dataLayer={layer}
-            path="M7.90002 7.10002H83C84.7 7.10002 86 5.80002 86 4.10002C86 2.40002 84.7 1.10002 83 1.10002H7.90002C6.70002 1.10002 5.49999 0.900048 4.29999 0.500048C2.69999 4.825e-05 1 0.800073 0.5 2.40007C0 4.00007 0.800024 5.70006 2.40002 6.20006C4.10002 6.80006 6.00002 7.10002 7.90002 7.10002Z"
+            path="M0.100006 4.69995C0.100006 2.49081 1.89087 0.699951 4.10001 0.699951H52.2C54.4092 0.699951 56.2 2.49081 56.2 4.69995C56.2 6.90909 54.4092 8.69995 52.2 8.69995H4.10001C1.89087 8.69995 0.100006 6.90909 0.100006 4.69995Z"
           />
           <UnderGlowStrip
             id="92_undeglow"
-            x={19}
-            y={618}
+            x={253}
+            y={687}
             onClick={e => {
               setUndeglowIndex(92, e);
             }}
@@ -2045,12 +2045,12 @@ class KeymapANSI extends React.Component {
             dataLedIndex={getLEDIndex(92)}
             dataKeyIndex={keyIndex(92)}
             dataLayer={layer}
-            path="M7.59999 68.7001C8.09999 68.7001 8.60001 68.6 9.00001 68.3C10.5 67.5 11 65.7001 10.2 64.2001C9.40002 62.7001 8.90003 61.1001 8.90003 59.4001L6.8 3.20007C6.7 1.50007 5.40002 0.300049 3.70002 0.300049C2.00002 0.400049 0.799998 1.80009 0.799998 3.40009L2.90003 59.6C3.00003 62.2 3.70003 64.8 4.90003 67.1C5.50003 68.2 6.49999 68.7001 7.59999 68.7001Z"
+            path="M0 4.69995C0 2.49081 1.79086 0.699951 4 0.699951H52.1C54.3091 0.699951 56.1 2.49081 56.1 4.69995C56.1 6.90909 54.3091 8.69995 52.1 8.69995H4C1.79086 8.69995 0 6.90909 0 4.69995Z"
           />
           <UnderGlowStrip
             id="93_undeglow"
-            x={18}
-            y={553}
+            x={193}
+            y={687}
             onClick={e => {
               setUndeglowIndex(93, e);
             }}
@@ -2063,12 +2063,12 @@ class KeymapANSI extends React.Component {
             dataLedIndex={getLEDIndex(93)}
             dataKeyIndex={keyIndex(93)}
             dataLayer={layer}
-            path="M4.40002 60.4H4.5C6.2 60.3 7.40002 58.9 7.40002 57.3L6 2.89999C5.9 1.19999 4.60002 0 2.90002 0C1.20002 0.1 0 1.50001 0 3.10001L1.40002 57.5C1.50002 59.1 2.80002 60.4 4.40002 60.4Z"
+            path="M0.900024 4.69995C0.900024 2.49081 2.69089 0.699951 4.90002 0.699951H53C55.2092 0.699951 57 2.49081 57 4.69995C57 6.90909 55.2092 8.69995 53 8.69995H4.90002C2.69089 8.69995 0.900024 6.90909 0.900024 4.69995Z"
           />
           <UnderGlowStrip
             id="94_undeglow"
-            x={16}
-            y={481}
+            x={133}
+            y={687}
             onClick={e => {
               setUndeglowIndex(94, e);
             }}
@@ -2081,12 +2081,12 @@ class KeymapANSI extends React.Component {
             dataLedIndex={getLEDIndex(94)}
             dataKeyIndex={keyIndex(94)}
             dataLayer={layer}
-            path="M4.59998 67H4.70001C6.40001 66.9 7.59998 65.5 7.59998 63.9L6 2.99997C5.9 1.29997 4.60002 0.0999756 2.90002 0.0999756C1.20002 0.199976 0 1.59998 0 3.19998L1.59998 64.1C1.59998 65.7 2.99998 67 4.59998 67Z"
+            path="M0.800018 4.69995C0.800018 2.49081 2.59088 0.699951 4.80002 0.699951H52.9C55.1091 0.699951 56.9 2.49081 56.9 4.69995C56.9 6.90909 55.1091 8.69995 52.9 8.69995H4.80002C2.59088 8.69995 0.800018 6.90909 0.800018 4.69995Z"
           />
           <UnderGlowStrip
             id="95_undeglow"
-            x={14}
-            y={409}
+            x={73}
+            y={687}
             onClick={e => {
               setUndeglowIndex(95, e);
             }}
@@ -2099,13 +2099,13 @@ class KeymapANSI extends React.Component {
             dataLedIndex={getLEDIndex(95)}
             dataKeyIndex={keyIndex(95)}
             dataLayer={layer}
-            path="M4.59998 66.9H4.70001C6.40001 66.8 7.59998 65.4 7.59998 63.8L6 2.89999C5.9 1.19999 4.60002 0 2.90002 0C1.20002 0.1 0 1.50001 0 3.10001L1.59998 64C1.59998 65.6 2.99998 66.9 4.59998 66.9Z"
+            path="M0.700012 4.69995C0.700012 2.49081 2.49087 0.699951 4.70001 0.699951H52.8C55.0092 0.699951 56.8 2.49081 56.8 4.69995C56.8 6.90909 55.0092 8.69995 52.8 8.69995H4.70001C2.49087 8.69995 0.700012 6.90909 0.700012 4.69995Z"
           />
 
           <UnderGlowStrip
             id="96_undeglow"
-            x={11}
-            y={336}
+            x={24.5}
+            y={651.6}
             onClick={e => {
               setUndeglowIndex(96, e);
             }}
@@ -2118,12 +2118,12 @@ class KeymapANSI extends React.Component {
             dataLedIndex={getLEDIndex(96)}
             dataKeyIndex={keyIndex(96)}
             dataLayer={layer}
-            path="M5.90747 68H6.00744C7.70744 67.9 8.90747 66.5 8.90747 64.9L6.60748 3.10001C6.50748 1.40001 5.10744 0.100012 3.50744 0.200012C1.80744 0.300012 0.60748 1.70002 0.60748 3.30002L2.90747 65.1C2.90747 66.8 4.30747 68 5.90747 68Z"
+            path="M4.33621 0.603272C6.54349 0.51281 8.40619 2.22883 8.49665 4.43612L8.99696 16.6438C9.41316 27.2986 18.1499 35.7 28.8 35.7H40.8C43.0091 35.7 44.8 37.4908 44.8 39.7C44.8 41.9091 43.0091 43.7 40.8 43.7H28.8C13.8514 43.7 1.58901 31.9034 1.00321 16.96C1.00315 16.9587 1.0031 16.9574 1.00305 16.9561L0.503357 4.76371C0.412895 2.55643 2.12892 0.693734 4.33621 0.603272Z"
           />
           <UnderGlowStrip
             id="97_undeglow"
-            x={11}
-            y={219}
+            x={22.1}
+            y={588.5}
             onClick={e => {
               setUndeglowIndex(97, e);
             }}
@@ -2136,12 +2136,12 @@ class KeymapANSI extends React.Component {
             dataLedIndex={getLEDIndex(97)}
             dataKeyIndex={keyIndex(97)}
             dataLayer={layer}
-            path="M3.39996 112H3.5C5.2 111.9 6.39996 110.5 6.39996 108.9L6.20001 104.5C5.90001 96.1 8.39998 87.7 13.1 80.8L41 40.6C46.3 33 49 24.1 49 14.9V3C49 1.3 47.7 0 46 0C44.3 0 43 1.3 43 3V15C43 23 40.6 30.7 36 37.2L8.09998 77.4C2.59998 85.3 -0.300024 95 0.0999756 104.7L0.299988 109.1C0.399988 110.7 1.79996 112 3.39996 112Z"
+            path="M3.94994 0.502871C6.15752 0.419977 8.01432 2.14238 8.09721 4.34996L9.99721 54.9499C10.0801 57.1575 8.3577 59.0143 6.15012 59.0972C3.94254 59.1801 2.08574 57.4577 2.00285 55.2501L0.102846 4.65015C0.0199528 2.44256 1.74235 0.585764 3.94994 0.502871Z"
           />
           <UnderGlowStrip
             id="98_undeglow"
-            x={54}
-            y={163}
+            x={19.8}
+            y={528.1}
             onClick={e => {
               setUndeglowIndex(98, e);
             }}
@@ -2154,12 +2154,12 @@ class KeymapANSI extends React.Component {
             dataLedIndex={getLEDIndex(98)}
             dataKeyIndex={keyIndex(98)}
             dataLayer={layer}
-            path="M3 52C4.7 52 6 50.6693 6 48.9291V3.07087C6 1.33071 4.7 0 3 0C1.3 0 0 1.33071 0 3.07087V48.9291C0 50.6693 1.4 52 3 52Z"
+            path="M4.6504 0.102766C6.85799 0.0201532 8.71457 1.74279 8.79718 3.95038L10.5972 52.0504C10.6798 54.258 8.95716 56.1146 6.74957 56.1972C4.54197 56.2798 2.68539 54.5572 2.60278 52.3496L0.802778 4.24955C0.720165 2.04196 2.4428 0.185379 4.6504 0.102766Z"
           />
           <UnderGlowStrip
             id="69_undeglow"
-            x={54}
-            y={107}
+            x={17.5}
+            y={467}
             onClick={e => {
               setUndeglowIndex(69, e);
             }}
@@ -2172,12 +2172,12 @@ class KeymapANSI extends React.Component {
             dataLedIndex={getLEDIndex(69)}
             dataKeyIndex={keyIndex(69)}
             dataLayer={layer}
-            path="M3 52C4.7 52 6 50.5556 6 48.6667V3.33333C6 1.44444 4.7 0 3 0C1.3 0 0 1.44444 0 3.33333V48.6667C0 50.5556 1.4 52 3 52Z"
+            path="M4.34438 0.00302495C6.55184 -0.0829216 8.41102 1.63691 8.49697 3.84438L10.397 52.6444C10.4829 54.8518 8.76308 56.711 6.55562 56.797C4.34815 56.8829 2.48897 55.1631 2.40302 52.9556L0.503025 4.15562C0.417078 1.94815 2.13691 0.0889713 4.34438 0.00302495Z"
           />
           <UnderGlowStrip
             id="70_undeglow"
-            x={54}
-            y={51}
+            x={15.2}
+            y={406.1}
             onClick={e => {
               setUndeglowIndex(70, e);
             }}
@@ -2190,14 +2190,123 @@ class KeymapANSI extends React.Component {
             dataLedIndex={getLEDIndex(70)}
             dataKeyIndex={keyIndex(70)}
             dataLayer={layer}
-            path="M3 52C4.7 52 6 50.5556 6 48.6667V3.33333C6 1.44444 4.7 0 3 0C1.3 0 0 1.44444 0 3.33333V48.6667C0 50.4444 1.4 52 3 52Z"
+            path="M4.04375 0.103087C6.2512 0.0167875 8.11066 1.73632 8.19696 3.94377L10.097 52.5438C10.1833 54.7512 8.46372 56.6107 6.25627 56.697C4.04882 56.7833 2.18936 55.0638 2.10306 52.8563L0.203063 4.25629C0.116763 2.04884 1.8363 0.189387 4.04375 0.103087Z"
           />
+          <UnderGlowStrip
+            id="70_undeglow"
+            x={13}
+            y={345.7}
+            onClick={e => {
+              setUndeglowIndex(70, e);
+            }}
+            selectedLED={this.props.selectedLED}
+            visibility={!!(this.props.showUnderglow || this.props.isStandardView)}
+            clickAble={!(this.props.isStandardView && !this.props.showUnderglow)}
+            fill={getColor(70)}
+            stroke={stroke(70)}
+            strokeWidth={getStrokeWidth(70)}
+            dataLedIndex={getLEDIndex(70)}
+            dataKeyIndex={keyIndex(70)}
+            dataLayer={layer}
+            path="M3.85041 0.702803C6.058 0.62019 7.91458 2.34283 7.99719 4.55042L9.79719 52.6504C9.87981 54.858 8.15717 56.7146 5.94958 56.7972C3.74198 56.8798 1.8854 55.1572 1.80279 52.9496L0.00279041 4.84959C-0.0798223 2.64199 1.64282 0.785415 3.85041 0.702803Z"
+          />
+          <UnderGlowStrip
+            id="70_undeglow"
+            x={12.3}
+            y={280.8}
+            onClick={e => {
+              setUndeglowIndex(70, e);
+            }}
+            selectedLED={this.props.selectedLED}
+            visibility={!!(this.props.showUnderglow || this.props.isStandardView)}
+            clickAble={!(this.props.isStandardView && !this.props.showUnderglow)}
+            fill={getColor(70)}
+            stroke={stroke(70)}
+            strokeWidth={getStrokeWidth(70)}
+            dataLedIndex={getLEDIndex(70)}
+            dataKeyIndex={keyIndex(70)}
+            dataLayer={layer}
+            path="M23.0408 1.35978C24.9408 2.48689 25.5673 4.94082 24.4402 6.84081L17.4431 18.6359C17.4426 18.6367 17.4422 18.6376 17.4417 18.6384C11.0361 29.4725 7.92564 41.8123 8.39723 54.4509L8.39765 54.4622L8.49764 57.3622C8.57377 59.57 6.84569 61.4215 4.63786 61.4976C2.43004 61.5738 0.578521 59.8457 0.502389 57.6379L0.402794 54.7492C0.402722 54.7472 0.40265 54.7453 0.402578 54.7434C-0.12463 40.5849 3.36449 26.7277 10.5569 14.5641L17.5598 2.7592C18.6869 0.859215 21.1408 0.232675 23.0408 1.35978Z"
+          />
+          <UnderGlowStrip
+            id="70_undeglow"
+            x={35}
+            y={215}
+            onClick={e => {
+              setUndeglowIndex(70, e);
+            }}
+            selectedLED={this.props.selectedLED}
+            visibility={!!(this.props.showUnderglow || this.props.isStandardView)}
+            clickAble={!(this.props.isStandardView && !this.props.showUnderglow)}
+            fill={getColor(70)}
+            stroke={stroke(70)}
+            strokeWidth={getStrokeWidth(70)}
+            dataLedIndex={getLEDIndex(70)}
+            dataKeyIndex={keyIndex(70)}
+            dataLayer={layer}
+            path="M25.6 0C27.8092 0 29.6 1.79086 29.6 4C29.6 17.1069 26.1123 30.0156 19.3375 41.3455C19.3359 41.3481 19.3344 41.3507 19.3328 41.3533L7.44202 61.4378C6.31657 63.3388 3.86318 63.9674 1.96221 62.842C0.0612503 61.7165 -0.56743 59.2632 0.558016 57.3622L12.4626 37.2545L12.4672 37.2467C18.4893 27.1786 21.6 15.6901 21.6 4C21.6 1.79086 23.3909 0 25.6 0Z"
+          />
+          <UnderGlowStrip
+            id="70_undeglow"
+            x={56.6}
+            y={164.4}
+            onClick={e => {
+              setUndeglowIndex(70, e);
+            }}
+            selectedLED={this.props.selectedLED}
+            visibility={!!(this.props.showUnderglow || this.props.isStandardView)}
+            clickAble={!(this.props.isStandardView && !this.props.showUnderglow)}
+            fill={getColor(70)}
+            stroke={stroke(70)}
+            strokeWidth={getStrokeWidth(70)}
+            dataLedIndex={getLEDIndex(70)}
+            dataKeyIndex={keyIndex(70)}
+            dataLayer={layer}
+            path="M4.60004 0.400024C6.80918 0.400024 8.60004 2.19089 8.60004 4.40002V43.3C8.60004 45.5092 6.80918 47.3 4.60004 47.3C2.3909 47.3 0.600037 45.5092 0.600037 43.3V4.40002C0.600037 2.19089 2.3909 0.400024 4.60004 0.400024Z"
+          />
+          <UnderGlowStrip
+            id="70_undeglow"
+            x={56.6}
+            y={113.4}
+            onClick={e => {
+              setUndeglowIndex(70, e);
+            }}
+            selectedLED={this.props.selectedLED}
+            visibility={!!(this.props.showUnderglow || this.props.isStandardView)}
+            clickAble={!(this.props.isStandardView && !this.props.showUnderglow)}
+            fill={getColor(70)}
+            stroke={stroke(70)}
+            strokeWidth={getStrokeWidth(70)}
+            dataLedIndex={getLEDIndex(70)}
+            dataKeyIndex={keyIndex(70)}
+            dataLayer={layer}
+            path="M4.60004 0.400024C6.80918 0.400024 8.60004 2.19089 8.60004 4.40002V44.3C8.60004 46.5092 6.80918 48.3 4.60004 48.3C2.3909 48.3 0.600037 46.5092 0.600037 44.3V4.40002C0.600037 2.19089 2.3909 0.400024 4.60004 0.400024Z"
+          />
+          <UnderGlowStrip
+            id="70_undeglow"
+            x={56.6}
+            y={62.4}
+            onClick={e => {
+              setUndeglowIndex(70, e);
+            }}
+            selectedLED={this.props.selectedLED}
+            visibility={!!(this.props.showUnderglow || this.props.isStandardView)}
+            clickAble={!(this.props.isStandardView && !this.props.showUnderglow)}
+            fill={getColor(70)}
+            stroke={stroke(70)}
+            strokeWidth={getStrokeWidth(70)}
+            dataLedIndex={getLEDIndex(70)}
+            dataKeyIndex={keyIndex(70)}
+            dataLayer={layer}
+            path="M4.60004 0.400024C6.80918 0.400024 8.60004 2.19089 8.60004 4.40002V43.4C8.60004 45.6092 6.80918 47.4 4.60004 47.4C2.3909 47.4 0.600037 45.6092 0.600037 43.4V4.40002C0.600037 2.19089 2.3909 0.400024 4.60004 0.400024Z"
+          />
+
           {/* End Left side */}
           {/* Right side */}
           <UnderGlowStrip
             id="107_undeglow"
-            x={595}
-            y={14}
+            x={586}
+            y={13}
             onClick={e => {
               setUndeglowIndex(107, e);
             }}
@@ -2210,12 +2319,12 @@ class KeymapANSI extends React.Component {
             dataLedIndex={getLEDIndex(107)}
             dataKeyIndex={keyIndex(107)}
             dataLayer={layer}
-            path="M77.967 6H3.033C1.314 6 0 4.7 0 3s1.314-3 3.033-3h74.934C79.686 0 81 1.3 81 3s-1.415 3-3.033 3z"
+            path="M8 8H25C27.2091 8 29 6.20914 29 4C29 1.79086 27.2091 0 25 0H6.59998C3.09201 0 0 2.79102 0 6.6V21C0 23.2091 1.79086 25 4 25C6.20914 25 8 23.2091 8 21V8Z"
           />
           <UnderGlowStrip
             id="106_undeglow"
-            x={680}
-            y={14}
+            x={619.1}
+            y={13}
             onClick={e => {
               setUndeglowIndex(106, e);
             }}
@@ -2228,12 +2337,12 @@ class KeymapANSI extends React.Component {
             dataLedIndex={getLEDIndex(106)}
             dataKeyIndex={keyIndex(106)}
             dataLayer={layer}
-            path="M70.8908 6H3.10924C1.34734 6 0 4.7 0 3C0 1.3 1.34734 0 3.10924 0H70.8908C72.6527 0 74 1.3 74 3C74 4.7 72.6527 6 70.8908 6Z"
+            path="M0.0999756 4C0.0999756 1.79086 1.89084 0 4.09998 0H64.4C66.6092 0 68.4 1.79086 68.4 4C68.4 6.20914 66.6092 8 64.4 8H4.09998C1.89084 8 0.0999756 6.20914 0.0999756 4Z"
           />
           <UnderGlowStrip
             id="105_undeglow"
-            x={758}
-            y={14}
+            x={694.4}
+            y={13}
             onClick={e => {
               setUndeglowIndex(105, e);
             }}
@@ -2246,12 +2355,12 @@ class KeymapANSI extends React.Component {
             dataLedIndex={getLEDIndex(105)}
             dataKeyIndex={keyIndex(105)}
             dataLayer={layer}
-            path="M82.6275 6H3.37255C1.46144 6 0 4.7 0 3C0 1.3 1.46144 0 3.37255 0H82.6275C84.5386 0 86 1.3 86 3C86 4.7 84.4261 6 82.6275 6Z"
+            path="M0.400024 4C0.400024 1.79086 2.19089 0 4.40002 0H64.8C67.0091 0 68.8 1.79086 68.8 4C68.8 6.20914 67.0091 8 64.8 8H4.40002C2.19089 8 0.400024 6.20914 0.400024 4Z"
           />
           <UnderGlowStrip
             id="104_undeglow"
-            x={848}
-            y={14}
+            x={766.8}
+            y={13}
             onClick={e => {
               setUndeglowIndex(104, e);
             }}
@@ -2264,12 +2373,12 @@ class KeymapANSI extends React.Component {
             dataLedIndex={getLEDIndex(104)}
             dataKeyIndex={keyIndex(104)}
             dataLayer={layer}
-            path="M68.9832 6H3.01676C1.30726 6 0 4.7 0 3C0 1.3 1.30726 0 3.01676 0H68.9832C70.6927 0 72 1.3 72 3C72 4.7 70.6927 6 68.9832 6Z"
+            path="M0.799988 4C0.799988 1.79086 2.59085 0 4.79999 0H65.2C67.4091 0 69.2 1.79086 69.2 4C69.2 6.20914 67.4091 8 65.2 8H4.79999C2.59085 8 0.799988 6.20914 0.799988 4Z"
           />
           <UnderGlowStrip
             id="103_undeglow"
-            x={924}
-            y={14}
+            x={839.2}
+            y={13}
             onClick={e => {
               setUndeglowIndex(103, e);
             }}
@@ -2282,12 +2391,12 @@ class KeymapANSI extends React.Component {
             dataLedIndex={getLEDIndex(103)}
             dataKeyIndex={keyIndex(103)}
             dataLayer={layer}
-            path="M71.0028 6H3.10056C1.34358 6 0 4.7 0 3C0 1.3 1.34358 0 3.10056 0H70.8994C72.6564 0 74 1.3 74 3C74 4.7 72.6564 6 71.0028 6Z"
+            path="M0.200012 4C0.200012 1.79086 1.99087 0 4.20001 0H64.5C66.7091 0 68.5 1.79086 68.5 4C68.5 6.20914 66.7091 8 64.5 8H4.20001C1.99087 8 0.200012 6.20914 0.200012 4Z"
           />
           <UnderGlowStrip
             id="102_undeglow"
-            x={1002}
-            y={14}
+            x={911.5}
+            y={13}
             onClick={e => {
               setUndeglowIndex(102, e);
             }}
@@ -2300,12 +2409,12 @@ class KeymapANSI extends React.Component {
             dataLedIndex={getLEDIndex(102)}
             dataKeyIndex={keyIndex(102)}
             dataLayer={layer}
-            path="M70.8994 6H3.10056C1.34358 6 0 4.7 0 3C0 1.3 1.34358 0 3.10056 0H70.8994C72.6564 0 74 1.3 74 3C74 4.7 72.6564 6 70.8994 6Z"
+            path="M0.5 4C0.5 1.79086 2.29086 0 4.5 0H64.9C67.1092 0 68.9 1.79086 68.9 4C68.9 6.20914 67.1092 8 64.9 8H4.5C2.29086 8 0.5 6.20914 0.5 4Z"
           />
           <UnderGlowStrip
             id="101_undeglow"
-            x={1080}
-            y={14}
+            x={983.9}
+            y={13}
             onClick={e => {
               setUndeglowIndex(101, e);
             }}
@@ -2318,12 +2427,12 @@ class KeymapANSI extends React.Component {
             dataLedIndex={getLEDIndex(101)}
             dataKeyIndex={keyIndex(101)}
             dataLayer={layer}
-            path="M85.0001 33C83.3001 33 82.0001 31.7 82.0001 30V17C82.0001 10.9 77.1001 6 71.0001 6H3.30005C1.60005 6 0.300049 4.7 0.300049 3C0.300049 1.3 1.60005 0 3.30005 0H71.0001C80.4001 0 88.0001 7.6 88.0001 17V30C88.0001 31.6 86.6001 33 85.0001 33Z"
+            path="M0.900024 4C0.900024 1.79086 2.69089 0 4.90002 0H65.2C67.4091 0 69.2 1.79086 69.2 4C69.2 6.20914 67.4091 8 65.2 8H4.90002C2.69089 8 0.900024 6.20914 0.900024 4Z"
           />
           <UnderGlowStrip
             id="100_undeglow"
-            x={1162}
-            y={51}
+            x={1056.2}
+            y={13}
             onClick={e => {
               setUndeglowIndex(100, e);
             }}
@@ -2336,12 +2445,12 @@ class KeymapANSI extends React.Component {
             dataLedIndex={getLEDIndex(100)}
             dataKeyIndex={keyIndex(100)}
             dataLayer={layer}
-            path="M3 52C1.3 52 0 50.5556 0 48.6667V3.33333C0 1.44444 1.3 0 3 0C4.7 0 6 1.44444 6 3.33333V48.6667C6 50.4444 4.6 52 3 52Z"
+            path="M0.199951 4C0.199951 1.79086 1.99081 0 4.19995 0H64.6C66.8091 0 68.6 1.79086 68.6 4C68.6 6.20914 66.8091 8 64.6 8H4.19995C1.99081 8 0.199951 6.20914 0.199951 4Z"
           />
           <UnderGlowStrip
             id="99_undeglow"
-            x={1162}
-            y={107}
+            x={1128.6}
+            y={13}
             onClick={e => {
               setUndeglowIndex(99, e);
             }}
@@ -2354,12 +2463,12 @@ class KeymapANSI extends React.Component {
             dataLedIndex={getLEDIndex(99)}
             dataKeyIndex={keyIndex(99)}
             dataLayer={layer}
-            path="M3 52C1.3 52 0 50.5556 0 48.6667V3.33333C0 1.44444 1.3 0 3 0C4.7 0 6 1.44444 6 3.33333V48.6667C6 50.5556 4.6 52 3 52Z"
+            path="M0.599976 4C0.599976 1.79086 2.39084 0 4.59998 0H16.6C32.8091 0 46 13.1909 46 29.4C46 31.6091 44.2091 33.4 42 33.4C39.7909 33.4 38 31.6091 38 29.4C38 17.6091 28.3908 8 16.6 8H4.59998C2.39084 8 0.599976 6.20914 0.599976 4Z"
           />
           <UnderGlowStrip
             id="130_undeglow"
-            x={1162}
-            y={163}
+            x={1166}
+            y={50}
             onClick={e => {
               setUndeglowIndex(130, e);
             }}
@@ -2372,12 +2481,12 @@ class KeymapANSI extends React.Component {
             dataLedIndex={getLEDIndex(130)}
             dataKeyIndex={keyIndex(130)}
             dataLayer={layer}
-            path="M3 52C1.3 52 0 50.6693 0 48.9291V3.07087C0 1.33071 1.3 0 3 0C4.7 0 6 1.33071 6 3.07087V48.9291C6 50.6693 4.6 52 3 52Z"
+            path="M4 0C6.20914 0 8 1.79086 8 4V47.8C8 50.0091 6.20914 51.8 4 51.8C1.79086 51.8 0 50.0091 0 47.8V4C0 1.79086 1.79086 0 4 0Z"
           />
           <UnderGlowStrip
             id="129_undeglow"
-            x={1162}
-            y={219}
+            x={1166}
+            y={105.9}
             onClick={e => {
               setUndeglowIndex(129, e);
             }}
@@ -2390,12 +2499,12 @@ class KeymapANSI extends React.Component {
             dataLedIndex={getLEDIndex(129)}
             dataKeyIndex={keyIndex(129)}
             dataLayer={layer}
-            path="M45.6 112H45.5C43.8 111.9 42.6 110.5 42.6 108.9L42.8 104.5C43.1 96.1 40.6 87.7 35.9 80.8L8 40.6C2.7 33 0 24.1 0 14.9V3C0 1.3 1.3 0 3 0C4.7 0 6 1.3 6 3V15C6 23 8.4 30.7 13 37.2L40.9 77.4C46.4 85.3 49.3 95 48.9 104.7L48.7 109.1C48.6 110.7 47.2 112 45.6 112Z"
+            path="M4 0.900024C6.20914 0.900024 8 2.69089 8 4.90002V48.6C8 50.8092 6.20914 52.6 4 52.6C1.79086 52.6 0 50.8092 0 48.6V4.90002C0 2.69089 1.79086 0.900024 4 0.900024Z"
           />
           <UnderGlowStrip
             id="128_undeglow"
-            x={1201}
-            y={336}
+            x={1166}
+            y={161.5}
             onClick={e => {
               setUndeglowIndex(128, e);
             }}
@@ -2408,12 +2517,12 @@ class KeymapANSI extends React.Component {
             dataLedIndex={getLEDIndex(128)}
             dataKeyIndex={keyIndex(128)}
             dataLayer={layer}
-            path="M3.67102 67.8054H3.57105C1.87105 67.7054 0.671023 66.3054 0.671023 64.7054L2.97101 2.90543C3.07101 1.20543 4.47105 -0.0945679 6.07105 0.00543213C7.77105 0.105432 8.97101 1.50544 8.97101 3.10544L6.67102 64.9054C6.67102 66.6054 5.27102 67.8054 3.67102 67.8054Z"
+            path="M4 0.5C6.20914 0.5 8 2.29086 8 4.5V48C8 50.2091 6.20914 52 4 52C1.79086 52 0 50.2091 0 48V4.5C0 2.29086 1.79086 0.5 4 0.5Z"
           />
           <UnderGlowStrip
             id="127_undeglow"
-            x={1199}
-            y={409}
+            x={1166}
+            y={216.8}
             onClick={e => {
               setUndeglowIndex(127, e);
             }}
@@ -2426,12 +2535,12 @@ class KeymapANSI extends React.Component {
             dataLedIndex={getLEDIndex(127)}
             dataKeyIndex={keyIndex(127)}
             dataLayer={layer}
-            path="M3.67102 67.8054H3.57105C1.87105 67.7054 0.671023 66.3054 0.671023 64.7054L2.97101 2.90543C3.07101 1.20543 4.47105 -0.0945679 6.07105 0.00543213C7.77105 0.105432 8.97101 1.50544 8.97101 3.10544L6.67102 64.9054C6.67102 66.6054 5.27102 67.8054 3.67102 67.8054Z"
+            path="M3.89836 0.801306C6.10679 0.745159 7.94259 2.48993 7.99873 4.69835C8.28164 15.8258 11.3946 26.7557 17.039 36.2571L17.0429 36.2637L26.7429 52.6637C27.8676 54.5651 27.2379 57.0182 25.3364 58.1429C23.435 59.2675 20.9819 58.6378 19.8572 56.7364L10.161 40.343C10.1604 40.3418 10.1597 40.3407 10.159 40.3396C3.8047 29.6418 0.318382 17.3729 0.00131795 4.90168C-0.0548284 2.69325 1.68994 0.857452 3.89836 0.801306Z"
           />
           <UnderGlowStrip
             id="126_undeglow"
-            x={1197}
-            y={481}
+            x={1191.5}
+            y={277.1}
             onClick={e => {
               setUndeglowIndex(126, e);
             }}
@@ -2444,12 +2553,12 @@ class KeymapANSI extends React.Component {
             dataLedIndex={getLEDIndex(126)}
             dataKeyIndex={keyIndex(126)}
             dataLayer={layer}
-            path="M3.97852 67.8054H3.87848C2.17848 67.7054 0.978516 66.3054 0.978516 64.7054L2.57849 3.80539C2.67849 2.10539 3.97847 0.905396 5.67847 0.905396C7.37847 1.0054 8.57849 2.4054 8.57849 4.0054L6.97852 64.9054C6.97852 66.5054 5.57852 67.8054 3.97852 67.8054Z"
+            path="M2.47487 0.650552C4.37995 -0.467912 6.83102 0.169767 7.94948 2.07485L17.0528 17.5805C23.5937 28.7634 27.194 41.4455 27.2999 54.3672C27.3181 56.5763 25.5419 58.3818 23.3329 58.3999C21.1238 58.418 19.3183 56.6418 19.3002 54.4328C19.2061 42.9555 16.0069 31.6387 10.1488 21.6222C10.1483 21.6213 10.1478 21.6204 10.1473 21.6195L1.05058 6.12516C-0.067888 4.22008 0.569791 1.76902 2.47487 0.650552Z"
           />
           <UnderGlowStrip
             id="125_undeglow"
-            x={1195}
-            y={553}
+            x={1208}
+            y={339.4}
             onClick={e => {
               setUndeglowIndex(125, e);
             }}
@@ -2462,12 +2571,12 @@ class KeymapANSI extends React.Component {
             dataLedIndex={getLEDIndex(125)}
             dataKeyIndex={keyIndex(125)}
             dataLayer={layer}
-            path="M3.17847 61.2054H3.07849C1.37849 61.1054 0.178467 59.7054 0.178467 58.1054L1.57849 3.70541C1.67849 2.00541 2.97847 0.80542 4.67847 0.80542C6.37847 0.90542 7.57849 2.30543 7.57849 3.90543L6.17847 58.3054C6.07847 59.9054 4.77847 61.2054 3.17847 61.2054Z"
+            path="M6.04864 0.402717C8.25626 0.484802 9.97934 2.34097 9.89725 4.54858L7.99723 55.6486C7.91514 57.8562 6.05898 59.5793 3.85136 59.4972C1.64375 59.4151 -0.0793306 57.5589 0.0027541 55.3513L1.90278 4.25133C1.98486 2.04371 3.84103 0.320633 6.04864 0.402717Z"
           />
           <UnderGlowStrip
             id="124_undeglow"
-            x={1191}
-            y={619}
+            x={1205.6}
+            y={402.5}
             onClick={e => {
               setUndeglowIndex(124, e);
             }}
@@ -2480,12 +2589,12 @@ class KeymapANSI extends React.Component {
             dataLedIndex={getLEDIndex(124)}
             dataKeyIndex={keyIndex(124)}
             dataLayer={layer}
-            path="M2.97851 68.5055C2.47851 68.5055 1.97848 68.4055 1.57848 68.1055C0.0784807 67.3055 -0.421532 65.5055 0.378468 64.0055C1.17847 62.5055 1.67846 60.9055 1.67846 59.2055L3.77849 3.00549C3.87849 1.30549 5.17847 0.105469 6.87847 0.105469C8.57847 0.205469 9.77849 1.60551 9.77849 3.20551L7.67846 59.4055C7.57846 62.0055 6.87846 64.6055 5.67846 66.9055C5.07846 68.0055 4.07851 68.5055 2.97851 68.5055Z"
+            path="M6.6495 0.502787C8.85709 0.585356 10.5798 2.4419 10.4972 4.6495L8.59717 55.4495C8.5146 57.6571 6.65806 59.3798 4.45046 59.2972C2.24287 59.2146 0.520194 57.3581 0.602763 55.1505L2.50279 4.35049C2.58536 2.14289 4.4419 0.420218 6.6495 0.502787Z"
           />
           <UnderGlowStrip
             id="123_undeglow"
-            x={1109}
-            y={688}
+            x={1203.2}
+            y={464.6}
             onClick={e => {
               setUndeglowIndex(123, e);
             }}
@@ -2498,12 +2607,12 @@ class KeymapANSI extends React.Component {
             dataLedIndex={getLEDIndex(123)}
             dataKeyIndex={keyIndex(123)}
             dataLayer={layer}
-            path="M72.1 7.10002H3C1.3 7.10002 0 5.80002 0 4.10002C0 2.40002 1.3 1.10002 3 1.10002H72.1C73.3 1.10002 74.5 0.900048 75.7 0.500048C77.3 4.825e-05 79 0.800073 79.5 2.40007C80 4.00007 79.2 5.70006 77.6 6.20006C75.9 6.80006 74 7.10002 72.1 7.10002Z"
+            path="M6.35487 0.603034C8.56235 0.688595 10.2825 2.54747 10.1969 4.75496L8.19695 56.355C8.11138 58.5624 6.25251 60.2826 4.04502 60.197C1.83754 60.1115 0.117387 58.2526 0.202949 56.0451L2.20295 4.44511C2.28851 2.23763 4.14739 0.517473 6.35487 0.603034Z"
           />
           <UnderGlowStrip
             id="122_undeglow"
-            x={1027}
-            y={688}
+            x={1200.9}
+            y={528.2}
             onClick={e => {
               setUndeglowIndex(122, e);
             }}
@@ -2516,12 +2625,12 @@ class KeymapANSI extends React.Component {
             dataLedIndex={getLEDIndex(122)}
             dataKeyIndex={keyIndex(122)}
             dataLayer={layer}
-            path="M74.9412 6.09998H3.05882C1.32549 6.09998 0 4.79998 0 3.09998C0 1.39998 1.32549 0.0999756 3.05882 0.0999756H74.9412C76.6745 0.0999756 78 1.39998 78 3.09998C78 4.79998 76.6745 6.09998 74.9412 6.09998Z"
+            path="M6.95133 0.202868C9.15889 0.286422 10.8807 2.14374 10.7972 4.35129L8.89716 54.5513C8.8136 56.7589 6.95629 58.4807 4.74873 58.3972C2.54117 58.3136 0.819326 56.4563 0.90288 54.2487L2.8029 4.04872C2.88646 1.84116 4.74377 0.119314 6.95133 0.202868Z"
           />
           <UnderGlowStrip
             id="121_undeglow"
-            x={945}
-            y={688}
+            x={1198.5}
+            y={590.4}
             onClick={e => {
               setUndeglowIndex(121, e);
             }}
@@ -2534,13 +2643,13 @@ class KeymapANSI extends React.Component {
             dataLedIndex={getLEDIndex(121)}
             dataKeyIndex={keyIndex(121)}
             dataLayer={layer}
-            path="M74.9412 6.09998H3.05882C1.32549 6.09998 0 4.79998 0 3.09998C0 1.39998 1.32549 0.0999756 3.05882 0.0999756H74.9412C76.6745 0.0999756 78 1.39998 78 3.09998C78 4.79998 76.6745 6.09998 74.9412 6.09998Z"
+            path="M6.65643 0.403021C8.86388 0.489418 10.5833 2.34895 10.4969 4.5564L8.49694 55.6564C8.41054 57.8638 6.55101 59.5833 4.34356 59.4969C2.13611 59.4105 0.41666 57.5509 0.503057 55.3435L2.50306 4.24352C2.58945 2.03608 4.44898 0.316624 6.65643 0.403021Z"
           />
 
           <UnderGlowStrip
             id="120_undeglow"
-            x={863}
-            y={688}
+            x={1161.9}
+            y={653}
             onClick={e => {
               setUndeglowIndex(120, e);
             }}
@@ -2553,12 +2662,12 @@ class KeymapANSI extends React.Component {
             dataLedIndex={getLEDIndex(120)}
             dataKeyIndex={keyIndex(120)}
             dataLayer={layer}
-            path="M74.6714 6.09998H3.32859C1.44239 6.09998 0 4.79998 0 3.09998C0 1.39998 1.44239 0.0999756 3.32859 0.0999756H74.6714C76.5576 0.0999756 78 1.39998 78 3.09998C78 4.79998 76.4467 6.09998 74.6714 6.09998Z"
+            path="M41.2494 0.00284587C43.457 0.0853778 45.1797 1.94189 45.0972 4.14949L44.6969 14.8562C44.1131 29.8014 31.85 41.6 16.9 41.6H4.90002C2.69089 41.6 0.900024 39.8092 0.900024 37.6C0.900024 35.3909 2.69089 33.6 4.90002 33.6H16.9C27.5491 33.6 36.2851 25.2003 36.7029 14.547C36.7029 14.546 36.703 14.5449 36.703 14.5439L37.1028 3.85062C37.1853 1.64302 39.0418 -0.0796861 41.2494 0.00284587Z"
           />
           <UnderGlowStrip
             id="119_undeglow"
-            x={781}
-            y={688}
+            x={1100.1}
+            y={686.7}
             onClick={e => {
               setUndeglowIndex(119, e);
             }}
@@ -2571,12 +2680,12 @@ class KeymapANSI extends React.Component {
             dataLedIndex={getLEDIndex(119)}
             dataKeyIndex={keyIndex(119)}
             dataLayer={layer}
-            path="M74.6761 6.09998H3.32386C1.44034 6.09998 0 4.79998 0 3.09998C0 1.39998 1.44034 0.0999756 3.32386 0.0999756H74.6761C76.5597 0.0999756 78 1.39998 78 3.09998C78 4.79998 76.5597 6.09998 74.6761 6.09998Z"
+            path="M0.0999756 4.69995C0.0999756 2.49081 1.89084 0.699951 4.09998 0.699951H53.8C56.0092 0.699951 57.8 2.49081 57.8 4.69995C57.8 6.90909 56.0092 8.69995 53.8 8.69995H4.09998C1.89084 8.69995 0.0999756 6.90909 0.0999756 4.69995Z"
           />
           <UnderGlowStrip
             id="118_undeglow"
-            x={744}
-            y={654}
+            x={1038.4}
+            y={686.7}
             onClick={e => {
               setUndeglowIndex(118, e);
             }}
@@ -2589,12 +2698,12 @@ class KeymapANSI extends React.Component {
             dataLedIndex={getLEDIndex(118)}
             dataKeyIndex={keyIndex(118)}
             dataLayer={layer}
-            path="M29.9 40.0999H22.6C14.8 40.0999 8.10001 34.7999 6.10001 27.2999L0.100013 3.69996C-0.299987 2.09996 0.70001 0.49992 2.30001 0.0999204C3.90001 -0.30008 5.5 0.699932 5.9 2.29993L11.9 25.9C13.1 30.8 17.5 34.2 22.6 34.2H29.9C31.6 34.2 32.9 35.5 32.9 37.2C32.9 38.9 31.5 40.0999 29.9 40.0999Z"
+            path="M0.400024 4.69995C0.400024 2.49081 2.19089 0.699951 4.40002 0.699951H54.1C56.3091 0.699951 58.1 2.49081 58.1 4.69995C58.1 6.90909 56.3091 8.69995 54.1 8.69995H4.40002C2.19089 8.69995 0.400024 6.90909 0.400024 4.69995Z"
           />
           <UnderGlowStrip
             id="117_undeglow"
-            x={725}
-            y={581}
+            x={976.6}
+            y={686.7}
             onClick={e => {
               setUndeglowIndex(117, e);
             }}
@@ -2607,12 +2716,12 @@ class KeymapANSI extends React.Component {
             dataLedIndex={getLEDIndex(117)}
             dataKeyIndex={keyIndex(117)}
             dataLayer={layer}
-            path="M19.4764 69.2C18.1764 69.2 16.8764 68.3 16.5764 66.9L0.87641 3.9C0.47641 2.3 1.47641 0.699995 3.07641 0.299995C4.67641 -0.100005 6.27641 0.899977 6.67641 2.49998L22.3764 65.5C22.7764 67.1 21.7764 68.7 20.1764 69.1C19.9764 69.2 19.7764 69.2 19.4764 69.2Z"
+            path="M0.599976 4.69995C0.599976 2.49081 2.39084 0.699951 4.59998 0.699951H54.4C56.6092 0.699951 58.4 2.49081 58.4 4.69995C58.4 6.90909 56.6092 8.69995 54.4 8.69995H4.59998C2.39084 8.69995 0.599976 6.90909 0.599976 4.69995Z"
           />
           <UnderGlowStrip
             id="116_undeglow"
-            x={707}
-            y={509}
+            x={914.8}
+            y={686.7}
             onClick={e => {
               setUndeglowIndex(116, e);
             }}
@@ -2625,12 +2734,12 @@ class KeymapANSI extends React.Component {
             dataLedIndex={getLEDIndex(116)}
             dataKeyIndex={keyIndex(116)}
             dataLayer={layer}
-            path="M18.6882 67.9882C17.3882 67.9882 16.0882 67.0882 15.7882 65.6882L0.0882021 3.68821C-0.311798 2.08821 0.688207 0.488203 2.28821 0.0882035C3.88821 -0.311797 5.48821 0.688185 5.88821 2.28819L21.5882 64.2882C21.9882 65.8882 20.9882 67.4882 19.3882 67.8882C19.1882 67.9882 18.9882 67.9882 18.6882 67.9882Z"
+            path="M0.799988 4.69995C0.799988 2.49081 2.59085 0.699951 4.79999 0.699951H54.6C56.8091 0.699951 58.6 2.49081 58.6 4.69995C58.6 6.90909 56.8091 8.69995 54.6 8.69995H4.79999C2.59085 8.69995 0.799988 6.90909 0.799988 4.69995Z"
           />
           <UnderGlowStrip
             id="115_undeglow"
-            x={667}
-            y={443}
+            x={853.1}
+            y={686.7}
             onClick={e => {
               setUndeglowIndex(115, e);
             }}
@@ -2643,12 +2752,12 @@ class KeymapANSI extends React.Component {
             dataLedIndex={getLEDIndex(115)}
             dataKeyIndex={keyIndex(115)}
             dataLayer={layer}
-            path="M25.7 12.9999L36.9835 59.5445C37.3774 61.1694 39.0255 62.1571 40.6442 61.7385C42.2284 61.3288 43.1906 59.7235 42.805 58.1332L31.5 11.4999C29.8 4.79994 23.9 0.199951 17 0.199951H3C1.3 0.199951 0 1.49995 0 3.19995C0 4.89995 1.3 6.19995 3 6.19995H17C21.1 6.19995 24.7 8.99994 25.7 12.9999Z"
+            path="M0.0999756 4.69995C0.0999756 2.49081 1.89084 0.699951 4.09998 0.699951H53.8C56.0091 0.699951 57.8 2.49081 57.8 4.69995C57.8 6.90909 56.0091 8.69995 53.8 8.69995H4.09998C1.89084 8.69995 0.0999756 6.90909 0.0999756 4.69995Z"
           />
           <UnderGlowStrip
             id="114_undeglow"
-            x={590}
-            y={419}
+            x={791.3}
+            y={686.7}
             onClick={e => {
               setUndeglowIndex(114, e);
             }}
@@ -2661,12 +2770,12 @@ class KeymapANSI extends React.Component {
             dataLedIndex={getLEDIndex(114)}
             dataKeyIndex={keyIndex(114)}
             dataLayer={layer}
-            path="M70 30.2H0V3c0-1.7 1.3-3 3-3s3 1.3 3 3v21.2h64c1.7 0 3 1.3 3 3s-1.3 3-3 3z"
+            path="M0.299988 4.69995C0.299988 2.49081 2.09085 0.699951 4.29999 0.699951H54.1C56.3091 0.699951 58.1 2.49081 58.1 4.69995C58.1 6.90909 56.3091 8.69995 54.1 8.69995H4.29999C2.09085 8.69995 0.299988 6.90909 0.299988 4.69995Z"
           />
           <UnderGlowStrip
             id="113_undeglow"
-            x={590}
-            y={351}
+            x={742.6}
+            y={662.2}
             onClick={e => {
               setUndeglowIndex(113, e);
             }}
@@ -2679,12 +2788,12 @@ class KeymapANSI extends React.Component {
             dataLedIndex={getLEDIndex(113)}
             dataKeyIndex={keyIndex(113)}
             dataLayer={layer}
-            path="M3 64C1.3 64 0 62.6271 0 60.8317V3.16832C0 1.37294 1.3 0 3 0C4.7 0 6 1.37294 6 3.16832V60.9373C6 62.6271 4.6 64 3 64Z"
+            path="M3.60223 0.326377C5.74154 -0.224663 7.92251 1.06288 8.47355 3.20219L10.174 9.80375C12.4201 18.5386 20.3284 24.6999 29.4 24.6999H41.3C43.5091 24.6999 45.3 26.4908 45.3 28.6999C45.3 30.9091 43.5091 32.6999 41.3 32.6999H29.4C16.6722 32.6999 5.58087 24.062 2.42643 11.7977C2.42633 11.7973 2.42623 11.7969 2.42614 11.7965C2.4261 11.7964 2.42618 11.7967 2.42614 11.7965L0.726417 5.19769C0.175376 3.05838 1.46292 0.877418 3.60223 0.326377Z"
           />
           <UnderGlowStrip
             id="112_undeglow"
-            x={590}
-            y={290}
+            x={727.8}
+            y={603.8}
             onClick={e => {
               setUndeglowIndex(112, e);
             }}
@@ -2697,12 +2806,12 @@ class KeymapANSI extends React.Component {
             dataLedIndex={getLEDIndex(112)}
             dataKeyIndex={keyIndex(112)}
             dataLayer={layer}
-            path="M3 57C1.3 57 0 55.7 0 54V27C0 24.8 1.8 23 4 23H14V3C14 1.3 15.3 0 17 0C18.7 0 20 1.3 20 3V25C20 27.2 18.2 29 16 29H6V54C6 55.6 4.6 57 3 57Z"
+            path="M3.81562 0.923041C5.95683 0.379395 8.13333 1.67447 8.67697 3.81567L20.077 48.7157C20.6206 50.8569 19.3256 53.0334 17.1844 53.577C15.0432 54.1207 12.8667 52.8256 12.323 50.6844L0.922995 5.78439C0.379349 3.64319 1.67442 1.46669 3.81562 0.923041Z"
           />
           <UnderGlowStrip
             id="111_undeglow"
-            x={596}
-            y={212}
+            x={711.2}
+            y={539}
             onClick={e => {
               setUndeglowIndex(111, e);
             }}
@@ -2715,12 +2824,12 @@ class KeymapANSI extends React.Component {
             dataLedIndex={getLEDIndex(111)}
             dataKeyIndex={keyIndex(111)}
             dataLayer={layer}
-            path="M11 74C9.3 74 8 72.7 8 71V6H3C1.3 6 0 4.7 0 3C0 1.3 1.3 0 3 0H10C12.2 0 14 1.8 14 4V71C14 72.7 12.7 74 11 74Z"
+            path="M3.20932 0.124611C5.34963 -0.422535 7.52824 0.86898 8.07539 3.00929L21.6754 56.2093C22.2225 58.3496 20.931 60.5282 18.7907 61.0754C16.6504 61.6225 14.4718 60.331 13.9246 58.1907L0.324639 4.99068C-0.222507 2.85037 1.06901 0.671757 3.20932 0.124611Z"
           />
           <UnderGlowStrip
             id="110_undeglow"
-            x={565}
-            y={138}
+            x={697.1}
+            y={483.6}
             onClick={e => {
               setUndeglowIndex(110, e);
             }}
@@ -2733,12 +2842,12 @@ class KeymapANSI extends React.Component {
             dataLedIndex={getLEDIndex(110)}
             dataKeyIndex={keyIndex(110)}
             dataLayer={layer}
-            path="M24 80H17C14.8 80 13 78.2 13 76V19H4C1.8 19 0 17.2 0 15V3.00001C0 1.30001 1.3 0 3 0C4.7 0 6 1.30001 6 3.00001V13H15C17.2 13 19 14.8 19 17V74H24C25.7 74 27 75.3 27 77C27 78.7 25.6 80 24 80Z"
+            path="M3.11746 0.722562C5.25892 0.179929 7.43481 1.47603 7.97744 3.61749L19.1775 47.8175C19.7201 49.9589 18.424 52.1348 16.2825 52.6775C14.1411 53.2201 11.9652 51.924 11.4225 49.7825L0.222531 5.58254C-0.320101 3.44108 0.976003 1.2652 3.11746 0.722562Z"
           />
           <UnderGlowStrip
             id="109_undeglow"
-            x={565}
-            y={82}
+            x={655.9}
+            y={445.2}
             onClick={e => {
               setUndeglowIndex(109, e);
             }}
@@ -2751,12 +2860,12 @@ class KeymapANSI extends React.Component {
             dataLedIndex={getLEDIndex(109)}
             dataKeyIndex={keyIndex(109)}
             dataLayer={layer}
-            path="M3 52.147c-1.7 0-3-1.3-3-3V30c0-2.2 1.8-4 4-4h15.1V3c0-1.7 1.3-3 3-3s3 1.3 3 3v25c0 2.2-1.8 4-4 4H6v17.047c0 1.7-1.3 3.1-3 3.1z"
+            path="M0.900024 4.20001C0.900024 1.99087 2.69089 0.200012 4.90002 0.200012H21.9C32.1208 0.200012 41.1202 7.13183 43.6749 17.1076L43.6768 17.115L46.7787 29.4224C47.3186 31.5646 46.0197 33.7388 43.8776 34.2787C41.7354 34.8186 39.5612 33.5197 39.0213 31.3776L35.925 19.0924C35.9245 19.0901 35.9239 19.0879 35.9233 19.0856C34.2757 12.665 28.477 8.20001 21.9 8.20001H4.90002C2.69089 8.20001 0.900024 6.40915 0.900024 4.20001Z"
           />
           <UnderGlowStrip
             id="108_undeglow"
-            x={584}
-            y={14}
+            x={588.9}
+            y={419.7}
             onClick={e => {
               setUndeglowIndex(108, e);
             }}
@@ -2769,7 +2878,133 @@ class KeymapANSI extends React.Component {
             dataLedIndex={getLEDIndex(108)}
             dataKeyIndex={keyIndex(108)}
             dataLayer={layer}
-            path="M3 64c-1.7 0-3-1.318-3-3.042V3.042C0 1.318 1.3 0 3 0s3 1.318 3 3.042V61.06C6 62.682 4.7 64 3 64z"
+            path="M4.90002 0.700012C7.10916 0.700012 8.90002 2.49087 8.90002 4.70001V26.2H56.8C59.0091 26.2 60.8 27.9909 60.8 30.2C60.8 32.4092 59.0091 34.2 56.8 34.2H7.29999C3.79072 34.2 0.900024 31.309 0.900024 27.8V4.70001C0.900024 2.49087 2.69089 0.700012 4.90002 0.700012Z"
+          />
+          <UnderGlowStrip
+            id="108_undeglow"
+            x={588.9}
+            y={352.5}
+            onClick={e => {
+              setUndeglowIndex(108, e);
+            }}
+            selectedLED={this.props.selectedLED}
+            visibility={!!(this.props.showUnderglow || this.props.isStandardView)}
+            clickAble={!(this.props.isStandardView && !this.props.showUnderglow)}
+            fill={getColor(108)}
+            stroke={stroke(108)}
+            strokeWidth={getStrokeWidth(108)}
+            dataLedIndex={getLEDIndex(108)}
+            dataKeyIndex={keyIndex(108)}
+            dataLayer={layer}
+            path="M4.79999 0.5C7.00913 0.5 8.79999 2.29086 8.79999 4.5V59.7C8.79999 61.9092 7.00913 63.7 4.79999 63.7C2.59085 63.7 0.799988 61.9092 0.799988 59.7V4.5C0.799988 2.29086 2.59085 0.5 4.79999 0.5Z"
+          />
+          <UnderGlowStrip
+            id="108_undeglow"
+            x={588.9}
+            y={295}
+            onClick={e => {
+              setUndeglowIndex(108, e);
+            }}
+            selectedLED={this.props.selectedLED}
+            visibility={!!(this.props.showUnderglow || this.props.isStandardView)}
+            clickAble={!(this.props.isStandardView && !this.props.showUnderglow)}
+            fill={getColor(108)}
+            stroke={stroke(108)}
+            strokeWidth={getStrokeWidth(108)}
+            dataLedIndex={getLEDIndex(108)}
+            dataKeyIndex={keyIndex(108)}
+            dataLayer={layer}
+            path="M22.9 0C25.1092 0 26.9 1.79086 26.9 4V20.7C26.9 24.1092 24.1091 26.9 20.7 26.9H8.79999V49.5C8.79999 51.7091 7.00913 53.5 4.79999 53.5C2.59085 53.5 0.799988 51.7091 0.799988 49.5V24.8C0.799988 21.7291 3.25509 18.9 6.70001 18.9H18.9V4C18.9 1.79086 20.6909 0 22.9 0Z"
+          />
+          <UnderGlowStrip
+            id="108_undeglow"
+            x={607}
+            y={248}
+            onClick={e => {
+              setUndeglowIndex(108, e);
+            }}
+            selectedLED={this.props.selectedLED}
+            visibility={!!(this.props.showUnderglow || this.props.isStandardView)}
+            clickAble={!(this.props.isStandardView && !this.props.showUnderglow)}
+            fill={getColor(108)}
+            stroke={stroke(108)}
+            strokeWidth={getStrokeWidth(108)}
+            dataLedIndex={getLEDIndex(108)}
+            dataKeyIndex={keyIndex(108)}
+            dataLayer={layer}
+            path="M4 0C6.20914 0 8 1.79086 8 4V39C8 41.2091 6.20914 43 4 43C1.79086 43 0 41.2091 0 39V4C0 1.79086 1.79086 0 4 0Z"
+          />
+          <UnderGlowStrip
+            id="108_undeglow"
+            x={577.7}
+            y={189.4}
+            onClick={e => {
+              setUndeglowIndex(108, e);
+            }}
+            selectedLED={this.props.selectedLED}
+            visibility={!!(this.props.showUnderglow || this.props.isStandardView)}
+            clickAble={!(this.props.isStandardView && !this.props.showUnderglow)}
+            fill={getColor(108)}
+            stroke={stroke(108)}
+            strokeWidth={getStrokeWidth(108)}
+            dataLedIndex={getLEDIndex(108)}
+            dataKeyIndex={keyIndex(108)}
+            dataLayer={layer}
+            path="M4.70001 0.400024C6.90915 0.400024 8.70001 2.19089 8.70001 4.40002V26.9H31.5C35.1091 26.9 38 29.7909 38 33.4V51C38 53.2092 36.2091 55 34 55C31.7909 55 30 53.2092 30 51V34.9H7.09998C3.59077 34.9 0.700012 32.0091 0.700012 28.5V4.40002C0.700012 2.19089 2.49087 0.400024 4.70001 0.400024Z"
+          />
+          <UnderGlowStrip
+            id="108_undeglow"
+            x={565.6}
+            y={137.1}
+            onClick={e => {
+              setUndeglowIndex(108, e);
+            }}
+            selectedLED={this.props.selectedLED}
+            visibility={!!(this.props.showUnderglow || this.props.isStandardView)}
+            clickAble={!(this.props.isStandardView && !this.props.showUnderglow)}
+            fill={getColor(108)}
+            stroke={stroke(108)}
+            strokeWidth={getStrokeWidth(108)}
+            dataLedIndex={getLEDIndex(108)}
+            dataKeyIndex={keyIndex(108)}
+            dataLayer={layer}
+            path="M4.59998 0.0999756C6.80911 0.0999756 8.59998 1.89084 8.59998 4.09998V9.99997H14.6C18.009 9.99997 20.7 12.6908 20.7 16.1V44C20.7 46.2091 18.9092 48 16.7 48C14.4909 48 12.7 46.2091 12.7 44V18H6.29999C3.34636 18 0.599976 15.6615 0.599976 12.3V4.09998C0.599976 1.89084 2.39084 0.0999756 4.59998 0.0999756Z"
+          />
+          <UnderGlowStrip
+            id="108_undeglow"
+            x={565.6}
+            y={84.8}
+            onClick={e => {
+              setUndeglowIndex(108, e);
+            }}
+            selectedLED={this.props.selectedLED}
+            visibility={!!(this.props.showUnderglow || this.props.isStandardView)}
+            clickAble={!(this.props.isStandardView && !this.props.showUnderglow)}
+            fill={getColor(108)}
+            stroke={stroke(108)}
+            strokeWidth={getStrokeWidth(108)}
+            dataLedIndex={getLEDIndex(108)}
+            dataKeyIndex={keyIndex(108)}
+            dataLayer={layer}
+            path="M25 0.799988C27.2091 0.799988 29 2.59085 29 4.79999V26.5C29 30.1091 26.1091 33 22.5 33H8.5V45.1C8.5 47.3091 6.70914 49.1 4.5 49.1C2.29086 49.1 0.5 47.3091 0.5 45.1V31.1C0.5 27.9155 3.06816 25 6.59998 25H21V4.79999C21 2.59085 22.7909 0.799988 25 0.799988Z"
+          />
+          <UnderGlowStrip
+            id="108_undeglow"
+            x={586}
+            y={42}
+            onClick={e => {
+              setUndeglowIndex(108, e);
+            }}
+            selectedLED={this.props.selectedLED}
+            visibility={!!(this.props.showUnderglow || this.props.isStandardView)}
+            clickAble={!(this.props.isStandardView && !this.props.showUnderglow)}
+            fill={getColor(108)}
+            stroke={stroke(108)}
+            strokeWidth={getStrokeWidth(108)}
+            dataLedIndex={getLEDIndex(108)}
+            dataKeyIndex={keyIndex(108)}
+            dataLayer={layer}
+            path="M4 0C6.20914 0 8 1.79086 8 4V34.8C8 37.0091 6.20914 38.8 4 38.8C1.79086 38.8 0 37.0091 0 34.8V4C0 1.79086 1.79086 0 4 0Z"
           />
           {/* End Right side */}
         </g>
