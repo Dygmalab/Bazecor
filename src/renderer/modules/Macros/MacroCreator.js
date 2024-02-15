@@ -295,10 +295,9 @@ class MacroCreator extends Component {
 
   onAddText = () => {
     const { addText } = this.state;
-    const { macro } = this.props;
-    console.log("MacroCreator onAddText", addText, macro);
+    console.log("MacroCreator onAddText", addText);
     const aux = addText;
-    let newRows = this.createConversion(macro.actions);
+    let newRows = [];
     newRows = newRows.concat(
       aux.split("").flatMap((symbol, index) => {
         let item = symbol.toUpperCase();
@@ -380,17 +379,14 @@ class MacroCreator extends Component {
   };
 
   onAddRecorded = recorded => {
-    const { macro } = this.props;
-    console.log("MacroCreator onAddRecorded", recorded, macro);
-    let { actions } = macro;
-    actions = actions.concat(
+    console.log("MacroCreator onAddRecorded", recorded);
+    const newRows = [].concat(
       recorded.map(item => ({
         keyCode: item.keycode,
         type: item.action,
       })),
     );
-    const newRows = this.createConversion(actions);
-    this.updateRows(newRows);
+    this.updateRows(this.createConversion(newRows));
   };
 
   createConversion = actions => {
@@ -474,7 +470,7 @@ class MacroCreator extends Component {
 
   onAddSymbol = (keyCode, action) => {
     const randID = new Date().getTime() + Math.floor(Math.random() * 1000);
-    const newRows = this.state.rows;
+    const newRows = [];
     const symbol = this.keymapDB.parse(keyCode).label;
     newRows.push({
       symbol,
@@ -490,10 +486,10 @@ class MacroCreator extends Component {
 
   onAddDelay = (delay, action) => {
     const randID = new Date().getTime() + Math.floor(Math.random() * 1000);
-    const newRows = this.state.rows;
+    const newRows = [];
     newRows.push({
-      symbol: parseInt(delay),
-      keyCode: parseInt(delay),
+      symbol: parseInt(delay, 10),
+      keyCode: parseInt(delay, 10),
       action,
       id: newRows.length,
       color: "#faf0e3",
@@ -505,7 +501,7 @@ class MacroCreator extends Component {
 
   onAddDelayRnd = (delayMin, delayMax, action) => {
     const randID = new Date().getTime() + Math.floor(Math.random() * 1000);
-    const newRows = this.state.rows;
+    const newRows = [];
     newRows.push({
       symbol: `${delayMin} - ${delayMax}`,
       keyCode: [delayMin, delayMax],
@@ -520,7 +516,7 @@ class MacroCreator extends Component {
 
   onAddSpecial = (keyCode, action) => {
     const randID = new Date().getTime() + Math.floor(Math.random() * 1000);
-    const newRows = this.state.rows;
+    const newRows = [];
     let symbol = this.keymapDB.parse(keyCode);
     if (symbol.extraLabel !== undefined) {
       symbol = `${symbol.extraLabel} ${symbol.label}`;
@@ -588,7 +584,7 @@ class MacroCreator extends Component {
       uid: randID,
       ucolor: randColor,
     });
-    actions[1].keyCode = actions[1].keyCode ^ modBit;
+    actions[1].keyCode ^= modBit;
     actions[1].symbol = this.keymapDB.parse(actions[1].keyCode).label;
     return actions;
   };

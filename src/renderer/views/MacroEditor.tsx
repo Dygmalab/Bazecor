@@ -21,7 +21,6 @@
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import Styled from "styled-components";
-import PropTypes from "prop-types";
 
 import Col from "react-bootstrap/Col";
 import Container from "react-bootstrap/Container";
@@ -265,8 +264,8 @@ function MacroEditor(props: MacroEditorProps) {
     const { startContext } = props;
     const { macros, selectedMacro } = state;
 
-    const macrosList = [...macros];
-    macrosList[selectedMacro].actions = actions;
+    const macrosList: MacrosType[] = JSON.parse(JSON.stringify(macros));
+    macrosList[selectedMacro].actions = macrosList[selectedMacro].actions.concat(actions);
     state.macros = macrosList;
     state.modified = true;
     setState({ ...state });
@@ -880,12 +879,5 @@ function MacroEditor(props: MacroEditorProps) {
     </Styles>
   );
 }
-
-MacroEditor.propTypes = {
-  startContext: PropTypes.func,
-  onDisconnect: PropTypes.func,
-  setLoading: PropTypes.func,
-  cancelContext: PropTypes.func,
-};
 
 export default MacroEditor;

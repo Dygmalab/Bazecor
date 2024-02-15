@@ -336,6 +336,14 @@ class TimelineEditorMacroTable extends Component {
             if (km.extraLabel === "MACRO") {
               const mName = macros[km.keyCode - 53852].name;
               txt = `M. ${mName}`;
+            } else if (React.isValidElement(km.label)) {
+              txt = km.extraLabel ? (
+                <>
+                  {km.extraLabel.substr(0, 3)}. {km.label}
+                </>
+              ) : (
+                km.label
+              );
             } else {
               txt = `${km.extraLabel} ${km.label}`;
             }

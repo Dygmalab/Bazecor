@@ -174,18 +174,30 @@ class MacroManager extends Component {
   parseKey(keycode) {
     const { macros, code } = this.props;
     let macroName;
+    const aux = this.keymapDB.parse(keycode);
     try {
-      macroName = macros[parseInt(this.keymapDB.parse(keycode).label, 10) - 1]?.name.substr(0, 5);
+      macroName = macros[parseInt(aux.label, 10) - 1]?.name.substr(0, 5);
     } catch (error) {
       macroName = "*NotFound*";
     }
     if (keycode >= 53852 && keycode <= 53852 + 128) {
-      if (code !== null) return `${this.keymapDB.parse(keycode).extraLabel}.${macroName}`;
+      if (code !== null) return `${aux.extraLabel}.${macroName}`;
     }
     if (code === null) return "";
-    if (this.keymapDB.parse(keycode).extraLabel !== undefined)
-      return `${this.keymapDB.parse(keycode).extraLabel}.${this.keymapDB.parse(keycode).label}`;
-    return this.keymapDB.parse(keycode).label;
+    if (aux.label === "SPACE") return " ";
+    if (React.isValidElement(aux.label)) {
+      return aux.extraLabel !== undefined && aux.extraLabel !== "" ? (
+        <>
+          {aux.extraLabel}
+          <br />
+          {aux.label}
+        </>
+      ) : (
+        <>{aux.label}</>
+      );
+    }
+    if (aux.extraLabel !== undefined) return `${aux.extraLabel}.${aux.label}`;
+    return aux.label;
   }
 
   render() {
@@ -201,19 +213,17 @@ class MacroManager extends Component {
               {this.portal.current !== null ? (
                 <PreviewMacroModal hookref={this.portal}>
                   {macro.actions.length > 0
-                    ? macro.actions.map((item, index) => (
+                    ? macro.actions.map(item => (
                         <span
-                          key={`literal-${index}`}
+                          key={`literal-${item.uid}`}
                           className={`previewKey action-${item.actions} keyCode-${item.keyCode} ${
                             item.keyCode > 223 && item.keyCode < 232 && item.action !== 2 ? "isModifier" : ""
                           }`}
                         >
-                          {item.type == 2 ? (
+                          {item.type === 2 ? (
                             <>
                               <IconStopWatchXs /> {item.keyCode}
                             </>
-                          ) : this.parseKey(item.keyCode) === "SPACE" ? (
-                            " "
                           ) : (
                             this.parseKey(item.keyCode)
                           )}
