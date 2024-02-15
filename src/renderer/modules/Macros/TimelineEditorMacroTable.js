@@ -444,7 +444,7 @@ class TimelineEditorMacroTable extends Component {
   }
 
   render() {
-    const { componentWidth } = this.props;
+    const { componentWidth, updateScroll } = this.props;
     const { rows } = this.state;
     const cssObjectWidth = {
       width: componentWidth,
@@ -458,10 +458,18 @@ class TimelineEditorMacroTable extends Component {
         <DragDropContext onDragEnd={this.onDragEnd}>
           <Droppable droppableId="droppable" direction="horizontal">
             {provided => (
-              <div ref={provided.innerRef}>
+              <div
+                ref={provided.innerRef}
+                id="scrollableElementWithRef"
+                onScroll={event => updateScroll(event.target.scrollLeft)}
+              >
                 <div className="timelinetracking">
                   {rows.map((item, index) => (
-                    <Draggable key={item.uid} draggableId={String(index)} index={index}>
+                    <Draggable
+                      key={`${item.uid}-${item.keyCode}-${item.action}-${item.id}`}
+                      draggableId={String(index)}
+                      index={index}
+                    >
                       {(providd, snapshot) => (
                         <KeyMacro
                           provided={providd}
