@@ -45,22 +45,21 @@ function UnderGlowStrip(props: UnderGlowStripProps) {
 
   if (!visibility) return null;
   return (
-    <g
-      id={id}
-      onClick={clickAble ? onClick : () => {}}
-      data-led-index={dataLedIndex}
-      data-key-index={dataKeyIndex}
-      data-layer={dataLayer}
-      // className={`${stroke == "#fff" || stroke == "#000" ? "keyOnFocus" : "keyOnHold"} underGlowStrip ${
-      //   clickAble ? "clickAble" : ""
-      // }`}
-      className={`${selectedLED === dataLedIndex ? "keyOnFocus" : "keyOnHold"} underGlowStrip ${clickAble ? "clickAble" : ""}`}
-      transform={`translate(${x},${y})`}
-    >
-      <path d={path} fill={color} className="underGlowStripShadow" />
-      <path d={path} fill={color} />
-      <path d={path} fill="transparent" strokeWidth={1.5} stroke={strokeColor} className="underGlowStripStroke" />
-    </g>
+    <>
+      <g
+        id={id}
+        onClick={clickAble ? onClick : () => {}}
+        data-led-index={dataLedIndex}
+        data-key-index={dataKeyIndex}
+        data-layer={dataLayer}
+        className={`${selectedLED === dataLedIndex ? "keyOnFocus" : "keyOnHold"} underGlowStrip ${clickAble ? "clickAble" : ""}`}
+        transform={`translate(${x},${y})`}
+      >
+        <path d={path} fill={color} className="underGlowStripShadow" />
+        <path d={path} fill={color} />
+        <path d={path} fill="transparent" strokeWidth={1.5} stroke={strokeColor} className="underGlowStripStroke" />
+      </g>
+    </>
   );
 }
 export default UnderGlowStrip;
