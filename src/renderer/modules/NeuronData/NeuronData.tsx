@@ -20,8 +20,7 @@ import Styled from "styled-components";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@Renderer/components/ui/accordion";
 import { Neurons } from "@Types/neurons";
 import NeuronTitle from "../NeuronTitle";
-import { IconPlus, IconRobot, IconLayers, IconThunder } from "../../component/Icon";
-import Heading from "@Renderer/components/ui/heading";
+import { IconRobot, IconLayers, IconThunder } from "../../component/Icon";
 
 const Style = Styled.div`
 .cardContentNeuronData {
@@ -108,7 +107,7 @@ function NeuronData(props: Neurons) {
             <AccordionContent className="bg-gray-25/20 dark:bg-gray-900/50 px-3 py-3">
               <div>
                 <ol className="list-decimal pl-6">
-                  {neurons[selectedNeuron].macros.map((macro: { name: string; id: number }) => (
+                  {neurons[selectedNeuron].macros.map(macro => (
                     <li key={`${macro.id}-${macro.name}`}>{macro.name}</li>
                   ))}
                 </ol>
