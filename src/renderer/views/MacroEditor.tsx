@@ -213,7 +213,8 @@ function MacroEditor(props: MacroEditorProps) {
       .flat()
       .concat([0])
       .join(" ")
-      .replaceAll(",", " ");
+      .split(",")
+      .join(" ");
     console.log("Mapped superkeys: ", mapped, keyMap);
     return mapped;
   };
@@ -254,7 +255,8 @@ function MacroEditor(props: MacroEditorProps) {
       .flat()
       .concat([0])
       .join(" ")
-      .replaceAll(",", " ");
+      .split(",")
+      .join(" ");
     console.log("MACROS GOING TO BE SAVED", result);
     return result;
   }
