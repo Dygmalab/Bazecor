@@ -16,7 +16,7 @@
 
 export interface MacrosType {
   actions: MacroActionsType[];
-  id: number;
+  id?: number;
   name: string;
   macro: string;
 }
@@ -24,5 +24,5 @@ export interface MacrosType {
 export interface MacroActionsType {
   keyCode: number | number[];
   type: number;
-  id: number;
+  id?: number;
 }

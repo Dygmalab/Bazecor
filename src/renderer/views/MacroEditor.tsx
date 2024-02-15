@@ -1,6 +1,6 @@
 /* eslint-disable react/jsx-no-bind */
+/* eslint-disable no-console */
 /* eslint-disable no-bitwise */
-// -*- mode: js-jsx -*-
 /* Bazecor -- Kaleidoscope Command Center
  * Copyright (C) 2018, 2019  Keyboardio, Inc.
  * Copyright (C) 2019  DygmaLab SE
@@ -30,20 +30,35 @@ import DropdownButton from "react-bootstrap/DropdownButton";
 import Modal from "react-bootstrap/Modal";
 import Row from "react-bootstrap/Row";
 
-import { LogoLoaderCentered } from "@Renderer/component/Loader";
+// Types
+import {
+  ListToDeleteMType,
+  ListToDeleteSType,
+  ListToDeleteType,
+  MacroEditorInitialStateType,
+  MacroEditorProps,
+} from "@Renderer/types/macroEditor";
+import { Neuron } from "@Renderer/types/neurons";
+import { KeymapType } from "@Renderer/types/layout";
+import { SuperkeysType } from "@Renderer/types/superkeys";
+import { MacroActionsType, MacrosType } from "@Renderer/types/macros";
 
+// Components
+import { LogoLoaderCentered } from "@Renderer/component/Loader";
 import { RegularButton } from "@Renderer/component/Button";
 import Callout from "@Renderer/component/Callout";
 import { IconFloppyDisk, IconLoader } from "@Renderer/component/Icon";
 import { MacroSelector } from "@Renderer/component/Select";
 import ToastMessage from "@Renderer/component/ToastMessage";
-import { PageHeader } from "@Renderer/modules/PageHeader";
 
+// Modules
+import { PageHeader } from "@Renderer/modules/PageHeader";
 import MacroCreator from "@Renderer/modules/Macros/MacroCreator";
 import TimelineEditorManager from "@Renderer/modules/Macros/TimelineEditorManager";
+
+// Tools
 import { useDevice } from "@Renderer/DeviceContext";
 import { i18n } from "@Renderer/i18n";
-
 import Backup from "../../api/backup";
 import Keymap, { KeymapDB } from "../../api/keymap";
 
@@ -93,18 +108,20 @@ const Styles = Styled.div`
   }
 `;
 
-function MacroEditor(props) {
+function MacroEditor(props: MacroEditorProps) {
   let keymapDB = new KeymapDB();
   const bkp = new Backup();
   const [isSaving, setIsSaving] = useState(false);
 
-  const flatten = arr => [].concat(...arr);
+  const flatten = (arr: unknown[]) => [].concat(...arr);
 
-  const initialState = {
-    keymap: [],
+  const initialState: MacroEditorInitialStateType = {
+    keymap: undefined,
     macros: [],
     superkeys: [],
     storedMacros: [],
+    neurons: [],
+    neuronIdx: 0,
     maxMacros: 128,
     modified: false,
     selectedMacro: 0,
@@ -115,74 +132,93 @@ function MacroEditor(props) {
     selectedList: -1,
     usedMemory: 0,
     totalMemory: 0,
-    macrosEraser: [],
+    macrosEraser: "",
     loading: true,
-    currentLanguageLayout: getLanguage(store.get("settings.language")),
+    currentLanguageLayout: getLanguage(store.get("settings.language") as string),
     kbtype: "ansi",
     scrollPos: 0,
   };
   const [state, setState] = useState(initialState);
   const { state: deviceState } = useDevice();
 
-  function superTranslator(raw) {
-    if (raw.search(" 0 0 ") === -1) {
-      return [];
-    }
-    const supersArray = raw.split(" 0 0")[0].split(" ").map(Number);
+  const superTranslator = (raw: string) => {
+    const { neurons, neuronIdx } = state;
+    const superArray = raw.split(" 0 0")[0].split(" ").map(Number);
 
-    const superkeys = [];
-    let superkey = [];
-    for (let iter = 0; iter < supersArray.length; iter += 1) {
-      if (supersArray[iter] === 0) {
-        superkeys.push(superkey);
-        superkey = [];
+    let skAction: number[] = [];
+    const superkeys: SuperkeysType[] = [];
+    let iter = 0;
+    let superindex = 0;
+
+    if (superArray.length < 1) {
+      console.log("Discarded Superkeys due to short length of string", raw, raw.length);
+      return [{ actions: [53, 2101, 1077, 41, 0], name: "Welcome to superkeys", id: superindex }];
+    }
+    while (superArray.length > iter) {
+      // console.log(iter, raw[iter], superkey);
+      if (superArray[iter] === 0) {
+        superkeys[superindex] = { actions: skAction, name: "", id: superindex };
+        superindex += 1;
+        skAction = [];
       } else {
-        superkey.push(supersArray[iter]);
+        skAction.push(superArray[iter]);
       }
+      iter += 1;
     }
-    superkeys.push(superkey);
+    superkeys[superindex] = { actions: skAction, name: "", id: superindex };
 
-    if (
-      (Array.isArray(superkeys[0]) && superkeys[0][0] === 0) ||
-      superkeys[0].filter(v => v === 0).length === superkeys[0].length - 1
-    )
+    if (superkeys[0].actions.length === 0 || superkeys[0].actions.length > 5) {
+      console.log(`Superkeys were empty`);
       return [];
-    return superkeys;
-  }
+    }
+    console.log(`Got Superkeys:${JSON.stringify(superkeys)} from ${raw}`);
+    // TODO: Check if stored superKeys match the received ones, if they match, retrieve name and apply it to current superKeys
+    let finalSuper: SuperkeysType[] = [];
+    const stored = neurons[neuronIdx].superkeys;
+    finalSuper = superkeys.map((superky, i) => {
+      const superk = superky;
+      superk.id = i;
+      if (stored.length > i && stored.length > 0) {
+        const aux = superk;
+        aux.name = stored[i].name;
+        return aux;
+      }
+      return superk;
+    });
+    console.log("final superkeys", finalSuper);
+    return finalSuper;
+  };
 
-  function superkeyMap(superkeys) {
-    // console.log(superkeys);
-    // console.log(superkeys[0].length);
+  const superkeyMap = (superkeys: SuperkeysType[]) => {
     if (
       superkeys.length === 0 ||
-      (superkeys.length === 1 && superkeys[0].length === 0) ||
-      (superkeys.length === 1 && superkeys[0].length === 1 && superkeys[0] === 0)
+      (superkeys.length === 1 && superkeys[0].actions.length === 0) ||
+      (superkeys.length === 1 && superkeys[0].actions.length === 1 && superkeys[0].actions[0] === 0)
     ) {
       return Array(512).fill("65535").join(" ");
     }
     let keyMap = [...superkeys];
-    // console.log("First", keyMap);
+    // console.log("First", JSON.stringify(keyMap));
     keyMap = keyMap.map(sky => {
-      let sk = sky;
-      sk = sk.map(act => {
-        if (act === 0 || act == null) return 1;
+      const sk = sky;
+      sk.actions = sk.actions.map(act => {
+        if (act === 0 || act === null || act === undefined) return 1;
         return act;
       });
+      if (sk.actions.length < 5) sk.actions = sk.actions.concat(Array(5 - sk.actions.length).fill("1"));
       return sk;
     });
-    // console.log("Third", keyMap);
-    keyMap = keyMap.map(superkey => superkey.concat([0]));
-    // console.log("Fifth", keyMap);
-    const mapped = []
-      .concat(...keyMap.flat())
+    const mapped = keyMap
+      .map(superkey => superkey.actions.filter(act => act !== 0).concat([0]))
+      .flat()
       .concat([0])
       .join(" ")
       .replaceAll(",", " ");
-    // console.log(mapped, keyMap);
+    console.log("Mapped superkeys: ", mapped, keyMap);
     return mapped;
-  }
+  };
 
-  function macrosMap(macros) {
+  function macrosMap(macros: MacrosType[]) {
     const { macrosEraser } = state;
     console.log(
       "Macros map function",
@@ -194,36 +230,36 @@ function MacroEditor(props) {
     if (macros.length === 0 || (macros.length === 1 && !Array.isArray(macros[0].actions))) {
       return macrosEraser;
     }
-    const mapAction = action => {
+    const mapAction = (action: MacroActionsType): number[] => {
       switch (action.type) {
         case 1:
           return [
-            [action.type],
-            [action.keyCode[0] >> 8],
-            [action.keyCode[0] & 255],
-            [action.keyCode[1] >> 8],
-            [action.keyCode[1] & 255],
+            action.type,
+            (action.keyCode as number[])[0] >> 8,
+            (action.keyCode as number[])[0] & 255,
+            (action.keyCode as number[])[1] >> 8,
+            (action.keyCode as number[])[1] & 255,
           ];
         case 2:
         case 3:
         case 4:
         case 5:
-          return [[action.type], [action.keyCode >> 8], [action.keyCode & 255]];
+          return [action.type, (action.keyCode as number) >> 8, (action.keyCode as number) & 255];
         default:
-          return [[action.type], [action.keyCode]];
+          return [action.type, action.keyCode as number];
       }
     };
-    const result = macros
-      .map(macro => macro.actions.map(action => mapAction(action)).concat([0]))
-      .concat([0])
+    const result: string = macros
+      .map(macro => macro.actions.map((action: MacroActionsType) => mapAction(action)).concat([0]))
       .flat()
+      .concat([0])
       .join(" ")
       .replaceAll(",", " ");
     console.log("MACROS GOING TO BE SAVED", result);
     return result;
   }
 
-  function addToActions(actions) {
+  function addToActions(actions: MacroActionsType[]) {
     const { startContext } = props;
     const { macros, selectedMacro } = state;
 
@@ -236,7 +272,7 @@ function MacroEditor(props) {
   }
 
   // Define updateActions function to update the actions of the selected macro
-  function updateActions(actions) {
+  function updateActions(actions: MacroActionsType[]) {
     const { startContext } = props;
     const { macros, selectedMacro, modified } = state;
 
@@ -253,7 +289,7 @@ function MacroEditor(props) {
     }
   }
 
-  function saveName(data) {
+  function saveName(data: string) {
     const { startContext } = props;
     const { macros, selectedMacro } = state;
     const localMacros = [...macros];
@@ -264,17 +300,17 @@ function MacroEditor(props) {
     startContext();
   }
 
-  function updateScroll(scrollPos) {
+  function updateScroll(scrollPos: number) {
     state.scrollPos = scrollPos;
     setState({ ...state });
   }
 
-  function changeSelected(id) {
+  function changeSelected(id: number) {
     state.selectedMacro = id < 0 ? 0 : id;
     setState({ ...state });
   }
 
-  function updateMacros(recievedMacros) {
+  function updateMacros(recievedMacros: MacrosType[]) {
     const { startContext } = props;
     state.macros = recievedMacros;
     state.modified = true;
@@ -298,7 +334,7 @@ function MacroEditor(props) {
   }
 
   async function writeMacros() {
-    const { macros, neurons, neuronID, keymap, superkeys } = state;
+    const { macros, neurons, neuronIdx, keymap, superkeys } = state;
     const { setLoading, cancelContext } = props;
     const { currentDevice } = deviceState;
     setIsSaving(true);
@@ -306,15 +342,15 @@ function MacroEditor(props) {
     console.log("saving Macros:", macros, keymap, superkeys);
     const newMacros = macros;
     const localNeurons = [...neurons];
-    localNeurons[neuronID].macros = newMacros;
+    localNeurons[neuronIdx].macros = newMacros;
     store.set("neurons", localNeurons);
     try {
       await currentDevice.command("macros.map", macrosMap(newMacros));
-      const args = flatten(keymap.custom).map(k => keymapDB.serialize(k));
+      const args = flatten(keymap.custom).map(k => keymapDB.serialize(k).toString());
       await currentDevice.command("keymap.custom", ...args);
       await currentDevice.command("superkeys.map", superkeyMap(superkeys));
       const commands = await Backup.Commands(currentDevice);
-      const backup = await bkp.DoBackup(commands, neurons[neuronID].id, currentDevice);
+      const backup = await bkp.DoBackup(commands, neurons[neuronIdx].id, currentDevice);
       Backup.SaveBackup(backup, currentDevice);
       toast.success(<ToastMessage title={i18n.editor.macros.successFlashTitle} content="" icon={<IconFloppyDisk />} />, {
         autoClose: 2000,
@@ -357,9 +393,9 @@ function MacroEditor(props) {
     }
     for (let i = 0; i < listToDeleteS.length; i += 1) {
       if (listToDeleteS[i].newKey === -1) {
-        superkeys[listToDeleteS[i].superIdx][listToDeleteS[i].pos] = selectedList === -1 ? 1 : selectedList + 53852;
+        superkeys[listToDeleteS[i].superIdx].actions[listToDeleteS[i].pos] = selectedList === -1 ? 1 : selectedList + 53852;
       } else {
-        superkeys[listToDeleteS[i].superIdx][listToDeleteS[i].pos] = listToDeleteS[i].newKey + 53852;
+        superkeys[listToDeleteS[i].superIdx].actions[listToDeleteS[i].pos] = listToDeleteS[i].newKey + 53852;
       }
     }
     for (let i = 0; i < listToDeleteM.length; i += 1) {
@@ -386,16 +422,16 @@ function MacroEditor(props) {
     toggleDeleteModal();
   }
 
-  function UpdateList(data) {
+  function UpdateList(data: string) {
     state.selectedList = parseInt(data, 10);
     setState({ ...state });
   }
 
-  function updateKeyboard(keyboardIdx) {
+  function updateKeyboard(keyboardIdx: number) {
     const { macros, superkeys, keymap } = state;
-    let customKeymapList = [];
-    let customSuperList = [];
-    let customMacrosList = [];
+    let customKeymapList: ListToDeleteType[] = [];
+    let customSuperList: ListToDeleteSType[] = [];
+    let customMacrosList: ListToDeleteMType[] = [];
     for (let i = keyboardIdx; i < macros.length; i += 1) {
       const macroID = macros[i].id + 53852;
       const newKey = i === keyboardIdx ? -1 : i - 1;
@@ -409,19 +445,17 @@ function MacroEditor(props) {
       const superkeyList = superkeys
         ? superkeys
             .map((supers, superIdx) =>
-              supers.map((action, pos) => ({ superIdx, pos, newKey, action })).filter(elem => elem.action === macroID),
+              supers.actions.map((action, pos) => ({ superIdx, pos, newKey, action })).filter(elem => elem.action === macroID),
             )
             .flat()
         : [];
       const macrosList = macros
-        ? macros
-            .map((macro, macroIdx) =>
-              macro.actions
-                .map((action, pos) => ({ macroIdx: macroIdx - 1, pos, newKey, actions: macro.actions }))
-                .filter(elem => elem.actions[elem.pos].keyCode === macroID),
-            )
-            .flat()
-        : [];
+        .map((macro, macroIdx) =>
+          macro.actions
+            .map((action, pos) => ({ macroIdx: macroIdx - 1, pos, newKey, actions: macro.actions }))
+            .filter(elem => elem.actions[elem.pos].keyCode === macroID),
+        )
+        .flat();
       customKeymapList = customKeymapList.concat(filteredKeys);
       customSuperList = customSuperList.concat(superkeyList);
       customMacrosList = customMacrosList.concat(macrosList);
@@ -440,7 +474,7 @@ function MacroEditor(props) {
       return;
     }
     const selected = selectedMacro;
-    let localMacros = [...macros];
+    let localMacros: MacrosType[] = JSON.parse(JSON.stringify(macros));
     localMacros.splice(selected, 1);
     localMacros = localMacros.map((macro, idx) => {
       const item = { ...macro };
@@ -450,11 +484,11 @@ function MacroEditor(props) {
     if (selected >= macros.length - 1) {
       changeSelected(macros.length - 2);
     }
-    updateMacros(localMacros);
     updateKeyboard(selected);
+    updateMacros(localMacros);
   }
 
-  function addMacro(name) {
+  function addMacro(name: string) {
     const { macros, maxMacros } = state;
     if (macros.length >= maxMacros) {
       return;
@@ -481,17 +515,17 @@ function MacroEditor(props) {
     updateMacros(localMacros);
   }
 
-  function macroTranslator(raw) {
+  function macroTranslator(raw: string) {
     const { storedMacros } = state;
     const macrosArray = raw.split(" 0 0")[0].split(" ").map(Number);
 
     // Translate received macros to human readable text
-    const macros = [];
+    const macros: MacrosType[] = [];
     let iter = 0;
     // macros are `0` terminated or when end of macrosArray has been reached, the outer loop
     // must cycle once more than the inner
     while (iter <= macrosArray.length) {
-      const actions = [];
+      const actions: MacroActionsType[] = [];
       while (iter < macrosArray.length) {
         const type = macrosArray[iter];
         if (type === 0) {
@@ -551,7 +585,7 @@ function MacroEditor(props) {
       return {
         ...macro,
         name: stored[i]?.name,
-        macro: macro.actions.map(k => keymapDB.parse(k.keyCode).label).join(" "),
+        macro: macro.actions.map(k => keymapDB.parse(k.keyCode as number).label).join(" "),
       };
     });
   }
@@ -566,13 +600,11 @@ function MacroEditor(props) {
        */
       let chipID = await currentDevice.command("hardware.chip_id");
       chipID = chipID.replace(/\s/g, "");
-      const neurons = store.get("neurons");
-      const neuron = neurons.find(n => n.id === chipID) || {};
+      const neurons = store.get("neurons") as Neuron[];
       state.neurons = neurons;
-      state.neuronID = neurons.findIndex(n => n.id === chipID);
-      state.storedMacros = neuron.macros;
+      state.neuronIdx = neurons.findIndex(n => n.id === chipID);
+      state.storedMacros = neurons[state.neuronIdx].macros;
       setState({ ...state });
-      console.log("Looking for Bug!");
       const deviceLang = { ...currentDevice.device, language: true };
       currentDevice.commands.keymap = new Keymap(deviceLang);
       keymapDB = currentDevice.commands.keymap.db;
@@ -585,17 +617,18 @@ function MacroEditor(props) {
         setLoading(false);
         throw Error(error);
       }
-      let tMem = await currentDevice.command("macros.memory");
-      if (tMem === "") {
+      let tMem = 0;
+      const aux = await currentDevice.command("macros.memory");
+      if (typeof aux === "string") {
         tMem = 2048;
       } else {
-        tMem = parseInt(tMem, 10);
+        tMem = parseInt(aux, 10);
       }
       if (tMem === undefined || tMem < 100) tMem = 2048;
       const defaults = await currentDevice.command("keymap.default");
       const custom = await currentDevice.command("keymap.custom");
       const onlyCustom = Boolean(parseInt(await currentDevice.command("keymap.onlyCustom"), 10));
-      const keymap = { custom: undefined, default: undefined, onlyCustom: false };
+      const keymap: KeymapType = { custom: undefined, default: undefined, onlyCustom: false };
 
       const layerSize = currentDevice.device.keyboard.rows * currentDevice.device.keyboard.columns;
       keymap.custom = custom
@@ -603,26 +636,28 @@ function MacroEditor(props) {
         .filter(v => v.length > 0)
         .map(k => keymapDB.parse(parseInt(k, 10)))
         .reduce((resultArray, item, index) => {
+          const localResultArray = resultArray;
           const chunkIndex = Math.floor(index / layerSize);
 
-          if (!resultArray[chunkIndex]) {
-            resultArray[chunkIndex] = []; // start a new chunk
+          if (!localResultArray[chunkIndex]) {
+            localResultArray[chunkIndex] = []; // start a new chunk
           }
-          resultArray[chunkIndex].push(item);
-          return resultArray;
+          localResultArray[chunkIndex].push(item);
+          return localResultArray;
         }, []);
       keymap.default = defaults
         .split(" ")
         .filter(v => v.length > 0)
         .map(k => keymapDB.parse(parseInt(k, 10)))
         .reduce((resultArray, item, index) => {
+          const localResultArray = resultArray;
           const chunkIndex = Math.floor(index / layerSize);
 
-          if (!resultArray[chunkIndex]) {
-            resultArray[chunkIndex] = []; // start a new chunk
+          if (!localResultArray[chunkIndex]) {
+            localResultArray[chunkIndex] = []; // start a new chunk
           }
-          resultArray[chunkIndex].push(item);
-          return resultArray;
+          localResultArray[chunkIndex].push(item);
+          return localResultArray;
         }, []);
       keymap.onlyCustom = onlyCustom;
       const macrosRaw = await currentDevice.command("macros.map");
@@ -672,6 +707,7 @@ function MacroEditor(props) {
       setLoading(state.loading);
     };
     macrosLoader();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const {
@@ -740,14 +776,13 @@ function MacroEditor(props) {
       className="selectButton"
       // drop={"up"}
       title={macros.length > 0 && selectedList > -1 ? macros[selectedList]?.name : "No Key"}
-      value={selectedList}
       onSelect={UpdateList}
     >
-      <Dropdown.Item eventKey={-1} key={`macro-${-1}`} disabled={false}>
+      <Dropdown.Item eventKey={(-1).toString()} key={`macro-${-1}`} disabled={false}>
         No Key
       </Dropdown.Item>
       {macros.map(macro => (
-        <Dropdown.Item eventKey={macro.id} key={`macro-${macro.id}`} disabled={macro.id === -1}>
+        <Dropdown.Item eventKey={macro.id.toString()} key={`macro-${macro.id}`} disabled={macro.id === -1}>
           {macro?.name}
         </Dropdown.Item>
       ))}
