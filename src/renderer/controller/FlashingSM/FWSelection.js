@@ -12,6 +12,7 @@ const FocusAPIRead = async context => {
     data.bootloader = currentDevice.device?.bootloader !== undefined ? currentDevice.device.bootloader : false;
     data.info = currentDevice.device.info;
     if (data.bootloader) return data;
+    console.log("CHECKING CONTEXT DEPENDENCIES: ", context.deviceState);
     data.version = await currentDevice.noCacheCommand("version");
     // eslint-disable-next-line prefer-destructuring
     data.version = data.version.split(" ")[0];

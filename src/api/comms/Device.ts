@@ -226,7 +226,7 @@ class Device implements DeviceClass {
   }
 
   async command(cmd: string, ...args: Array<string>) {
-    if (this.port === undefined && !this.file) return undefined;
+    if (this.isClosed || (this.port === undefined && !this.file)) return undefined;
 
     // HashMap cache to improve performance
     if (!args || args.length === 0) {
@@ -259,7 +259,7 @@ class Device implements DeviceClass {
   }
 
   async noCacheCommand(cmd: string, ...args: Array<string>) {
-    if (this.port === undefined) return undefined;
+    if (this.isClosed || (this.port === undefined && !this.file)) return undefined;
 
     let result: string;
     this.isSending = true;

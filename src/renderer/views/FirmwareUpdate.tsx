@@ -19,6 +19,7 @@ import {
 } from "@Renderer/modules/Firmware";
 
 import { FirmwareLoader } from "@Renderer/component/Loader";
+import { useDevice } from "@Renderer/DeviceContext";
 
 const Styles = Styled.div`
 height: inherit;
@@ -48,7 +49,8 @@ height: inherit;
 
 function FirmwareUpdate(props: any) {
   const { allowBeta, toggleFlashing, toggleFwUpdate, onDisconnect, device } = props;
-  const [state, send] = useMachine(MainProcessSM);
+  const { state: deviceState } = useDevice();
+  const [state, send] = useMachine(MainProcessSM, { context: { Block: 0, deviceState } });
 
   const nextBlock = (context: any) => {
     send("NEXT", { data: context });
