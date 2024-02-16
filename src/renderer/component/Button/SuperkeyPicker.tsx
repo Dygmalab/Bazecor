@@ -201,7 +201,9 @@ function SuperkeyPicker(props: SuperkeyPickerProps) {
       // console.log("checking macroID", macroID);
       if (macros.length > macroID && macros[macroID].name.substr(0, 5) !== "") {
         setKeyContent((aux.label = macros[macroID].name.substr(0, 5).toLowerCase()));
+        return;
       }
+      setKeyContent(`${aux.extraLabel} ${aux.label}`);
       return;
     }
     if (React.isValidElement(aux.label)) {

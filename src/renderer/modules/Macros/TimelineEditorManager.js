@@ -213,9 +213,9 @@ class MacroManager extends Component {
               {this.portal.current !== null ? (
                 <PreviewMacroModal hookref={this.portal}>
                   {macro.actions.length > 0
-                    ? macro.actions.map(item => (
+                    ? macro.actions.map((item, index) => (
                         <span
-                          key={`literal-${item.uid}`}
+                          key={`literal-${index}-${item.id}`}
                           className={`previewKey action-${item.actions} keyCode-${item.keyCode} ${
                             item.keyCode > 223 && item.keyCode < 232 && item.action !== 2 ? "isModifier" : ""
                           }`}

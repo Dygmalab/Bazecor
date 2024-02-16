@@ -502,48 +502,47 @@ const LayoutEditor = (props: LayoutEditorProps) => {
     store.set("neurons", neurons);
   };
 
-  const superTranslator = (raw: string | number[], sSuper: SuperkeysType[]): SuperkeysType[] => {
-    let superkey = [];
-    const skeys: SuperkeysType[] = [];
+  const superTranslator = (raw: string, sSuper: SuperkeysType[]): SuperkeysType[] => {
+    const superArray = raw.split(" 0 0")[0].split(" ").map(Number);
+
+    let skAction: number[] = [];
+    const sKeys: SuperkeysType[] = [];
     let iter = 0;
     let superindex = 0;
 
-    if (typeof raw === "string") {
+    if (superArray.length < 1) {
+      console.log("Discarded Superkeys due to short length of string", raw, raw.length);
       return [];
     }
-    // console.log(raw, raw.length);
-    while (raw.length > iter) {
+    while (superArray.length > iter) {
       // console.log(iter, raw[iter], superkey);
-      if (raw[iter] === 0) {
-        skeys[superindex] = { actions: superkey, name: "", id: superindex };
+      if (superArray[iter] === 0) {
+        sKeys[superindex] = { actions: skAction, name: "", id: superindex };
         superindex += 1;
-        superkey = [];
+        skAction = [];
       } else {
-        superkey.push(raw[iter]);
+        skAction.push(superArray[iter]);
       }
       iter += 1;
     }
-    skeys[superindex] = { actions: superkey, name: "", id: superindex };
-    console.log(`Got Superkeys:${JSON.stringify(skeys)} from ${raw}`);
+    sKeys[superindex] = { actions: skAction, name: "", id: superindex };
 
-    if (
-      skeys[0].actions === undefined ||
-      (skeys[0].actions.length === 1 && skeys[0].actions[0] === 0) ||
-      skeys[0].actions.filter(v => v === 0).length === skeys.length - 1
-    )
+    if (sKeys[0].actions.length === 0 || sKeys[0].actions.length > 5) {
+      console.log(`Superkeys were empty`);
       return [];
+    }
+    console.log(`Got Superkeys:${JSON.stringify(sKeys)} from ${raw}`);
     // TODO: Check if stored superKeys match the received ones, if they match, retrieve name and apply it to current superKeys
     let finalSuper: SuperkeysType[] = [];
-    console.log("Checking superkeys and stored superkeys", skeys, sSuper);
-    finalSuper = skeys.map((superk, i) => {
-      if (sSuper !== undefined && sSuper.length > i && sSuper.length > 0) {
+    finalSuper = sKeys.map((superky, i) => {
+      const superk = superky;
+      superk.id = i;
+      if (sSuper.length > i && sSuper.length > 0) {
         const aux = superk;
-        aux.name = sSuper[i] ? sSuper[i]?.name : "";
+        aux.name = sSuper[i].name;
         return aux;
       }
-      const aux = superk;
-      aux.name = "";
-      return aux;
+      return superk;
     });
     console.log("final superkeys", finalSuper);
     return finalSuper;
@@ -952,12 +951,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
           raw = "";
         }
         const parsedMacros = macroTranslator(raw, neuronData.storedMacros);
-        let raw2: string | number[] = (await currentDevice.command("superkeys.map")) as string;
-        if (raw2.search(" 0 0") !== -1) {
-          raw2 = raw2.split(" 0 0")[0].split(" ").map(Number);
-        } else {
-          raw2 = "";
-        }
+        const raw2: string = (await currentDevice.command("superkeys.map")) as string;
         const parsedSuper = superTranslator(raw2, neuronData.storedSuper);
 
         let showMM = false;
