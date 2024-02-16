@@ -273,7 +273,6 @@ function SuperkeysEditor(props) {
     const stored = neurons[neuronID].superkeys;
     finalSuper = superkeys.map((superky, i) => {
       const superk = superky;
-      superk.id = i;
       if (stored.length > i && stored.length > 0) {
         const aux = superk;
         aux.name = stored[i].name;
@@ -617,8 +616,8 @@ function SuperkeysEditor(props) {
     for (let i = 0; i < listToDelete.length; i += 1) {
       keymap.custom[listToDelete[i].layer][listToDelete[i].pos] = keymapDB.parse(0);
     }
-    console.log("now decreasing... ", listToDecrease.flat());
     listToDecrease = listToDecrease.flat();
+    console.log("now decreasing... ", listToDecrease);
     for (let i = 0; i < listToDecrease.length; i += 1) {
       keymap.custom[listToDecrease[i].layer][listToDecrease[i].pos] = keymapDB.parse(listToDecrease[i].sk - 1);
     }
@@ -652,7 +651,7 @@ function SuperkeysEditor(props) {
   const deleteSuperkey = () => {
     const { superkeys, selectedSuper } = state;
     if (superkeys.length > 0) {
-      let aux = [...superkeys];
+      let aux = JSON.parse(JSON.stringify(superkeys));
       const selected = selectedSuper;
       aux.splice(selected, 1);
       aux = aux.map((item, index) => {
