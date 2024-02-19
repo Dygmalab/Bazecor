@@ -21,10 +21,11 @@ h4 {
     width: 100%;
 }
 .description {
-    font-size: 14px;
-    color: ${({ theme }) => theme.styles.macro.descriptionColor};
-    flex: 0 0 100%;
-    width: 100%;
+  margin-top: 8px;
+  font-size: 14px;
+  color: ${({ theme }) => theme.styles.macro.descriptionColor};
+  flex: 0 0 100%;
+  width: 100%;
 }
 .form-control {
     color: ${({ theme }) => theme.styles.form.inputColor};
@@ -71,7 +72,7 @@ h4 {
   position: relative;
   .inputIcon {
     position: absolute;
-    top: 50%;
+    top: 33%;
     left: 95px;
     transform: translate3d(0, -50%, 0);
     width: 32px;
@@ -219,6 +220,7 @@ class DelayTab extends React.Component<DelayTabProps, DelayTabState> {
                   />
                   <InputGroup.Text>ms</InputGroup.Text>
                 </InputGroup>
+                <p className="description">{i18n.editor.macros.delayTabs.minMaxDescription}</p>
               </div>
             ) : (
               <div className="inputGroupRandom">
@@ -248,6 +250,7 @@ class DelayTab extends React.Component<DelayTabProps, DelayTabState> {
                 <div className="inputIcon">
                   <IconMediaShuffle />
                 </div>
+                <p className="description">{i18n.editor.macros.delayTabs.minMaxDescription}</p>
               </div>
             )}
           </div>

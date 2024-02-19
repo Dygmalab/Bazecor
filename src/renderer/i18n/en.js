@@ -224,6 +224,7 @@ const English = {
       delayTabs: {
         title: "Delay",
         description: "Add mouse clicks events in your key.",
+        minMaxDescription: "from 1 to 65535 miliseconds",
       },
       macroTab: {
         callout: "<p>That's right! You can add macros inside macros! 🔥</p>",
