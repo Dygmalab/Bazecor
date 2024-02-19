@@ -53,7 +53,7 @@ export default class RecordMacroModal extends React.Component {
     this.state = {
       showModal: false,
       isRecording: false,
-      isDelayActive: true,
+      isDelayActive: false,
       recorded: [],
     };
     this.translator = {
@@ -366,19 +366,19 @@ export default class RecordMacroModal extends React.Component {
               <Title text={i18n.editor.macros.delays} headingLevel={5} />
               <div className="recordMacroButtons">
                 <ButtonConfig
-                  icoSVG={<IconStopWatch />}
-                  icoPosition="left"
-                  buttonText={i18n.editor.macros.recordDelays}
-                  variation={`buttonConfigMinimal ${isDelayActive ? "config-active" : ""}`}
-                  onClick={this.setDelayOn}
-                  disabled={isRecording}
-                />
-                <ButtonConfig
                   icoSVG={<IconStopWatchCrossed />}
                   icoPosition="left"
                   buttonText={i18n.editor.macros.ignoreDelays}
                   variation={`buttonConfigMinimal ${!isDelayActive ? "config-active" : ""}`}
                   onClick={this.setDelayOff}
+                  disabled={isRecording}
+                />
+                <ButtonConfig
+                  icoSVG={<IconStopWatch />}
+                  icoPosition="left"
+                  buttonText={i18n.editor.macros.recordDelays}
+                  variation={`buttonConfigMinimal ${isDelayActive ? "config-active" : ""}`}
+                  onClick={this.setDelayOn}
                   disabled={isRecording}
                 />
               </div>
