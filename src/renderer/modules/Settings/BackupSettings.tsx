@@ -194,18 +194,21 @@ const BackupSettings = (props: BackupSettingsProps) => {
   const getLatestBackup = async () => {
     try {
       // creating folder path with current device
-      const folderPath = path.join(backupFolder, state.currentDevice.device.info.product, neuronID);
+      const folderPath = path
+        .join(backupFolder, state.currentDevice.device.info.product, neuronID)
+        .split(path.sep)
+        .join(path[process.platform === "win32" ? "win32" : "posix"].sep);
       console.log("going to search for newest file in: ", folderPath);
 
       // sorting folder files to find newest
-      const newestFile = glob
-        .sync(`${folderPath}/*json`)
-        .map((name: string) => ({ name, ctime: fs.statSync(name).ctime }))
-        .sort((a: any, b: any) => b.ctime - a.ctime)[0].name;
-      console.log("selected backup: ", newestFile);
+      let folderSync;
+      if (process.platform === "win32") folderSync = glob.sync(`${folderPath}\\*json`.replace(/\\/g, "/"));
+      else folderSync = glob.sync(`${folderPath}/*json`);
+      const mappedFolder = folderSync.map((name: string) => ({ name, ctime: fs.statSync(name).ctime }));
+      const newestFile = mappedFolder.sort((a: any, b: any) => b.ctime - a.ctime);
 
       // Loading latest backup for the device
-      const loadedFile = JSON.parse(fs.readFileSync(newestFile, "utf-8"));
+      const loadedFile = JSON.parse(fs.readFileSync(newestFile[0].name, "utf-8"));
       console.log("selected backup content: ", loadedFile);
 
       // called restorer with backup data
