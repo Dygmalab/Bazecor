@@ -362,8 +362,10 @@ class TimelineEditorMacroTable extends Component {
         case 6:
         case 7:
         case 8:
+          km = this.keymapDB.parse(action.keyCode);
+          txt = km.extraLabel ? `${km.extraLabel} ${km.label}` : km.label;
           return {
-            symbol: this.keymapDB.parse(action.keyCode).label,
+            symbol: txt,
             keyCode: action.keyCode,
             action: action.type,
             id: i,
