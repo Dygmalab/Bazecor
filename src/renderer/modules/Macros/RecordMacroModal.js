@@ -323,6 +323,12 @@ export default class RecordMacroModal extends React.Component {
         newRecorded.push(recorded[i]);
       }
     }
+    if (
+      newRecorded[newRecorded.length - 1].keycode === newRecorded[newRecorded.length - 2].keycode &&
+      newRecorded[newRecorded.length - 2].action === 8 &&
+      newRecorded[newRecorded.length - 1].action < 8
+    )
+      newRecorded.pop();
     console.log("Checking cleaned", newRecorded);
     return newRecorded;
   };
