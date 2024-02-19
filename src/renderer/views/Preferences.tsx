@@ -771,7 +771,13 @@ const Preferences = (props: PreferencesProps) => {
                 <motion.div initial="hidden" animate="visible" variants={tabVariants}>
                   <FileBackUpHandling />
                   {connected && state.currentDevice ? (
-                    <BackupSettings connected={connected} neurons={neurons} neuronID={neuronID} toggleBackup={toggleBackup} />
+                    <BackupSettings
+                      connected={connected}
+                      neurons={neurons}
+                      neuronID={neuronID}
+                      toggleBackup={toggleBackup}
+                      destroyContext={destroyContext}
+                    />
                   ) : (
                     ""
                   )}

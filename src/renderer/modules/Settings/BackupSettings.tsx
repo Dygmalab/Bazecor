@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 /* Bazecor
  * Copyright (C) 2024  DygmaLab SE.
  *
@@ -36,6 +37,8 @@ import { IconArrowDownWithLine, IconFloppyDisk } from "@Renderer/component/Icon"
 import Store from "@Renderer/utils/Store";
 import { BackupSettingsProps } from "@Renderer/types/preferences";
 import WaitForRestoreDialog from "@Renderer/component/WaitForRestoreDialog";
+import { BackupType } from "@Renderer/types/backups";
+import { VirtualType } from "@Renderer/types/devices";
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const glob = require(`glob`);
@@ -46,7 +49,7 @@ const BackupSettings = (props: BackupSettingsProps) => {
   const [performingBackup, setPerformingBackup] = useState(false);
   const { state } = useDevice();
 
-  const { connected, neurons, neuronID, toggleBackup } = props;
+  const { connected, neurons, neuronID, toggleBackup, destroyContext } = props;
   useEffect(() => {
     setBackupFolder(store.get("settings.backupFolder") as string);
   }, []);
@@ -59,7 +62,7 @@ const BackupSettings = (props: BackupSettingsProps) => {
     setPerformingBackup(false);
   };
 
-  const restoreBackup = async (backup: any) => {
+  const restoreBackup = async (backup: BackupType) => {
     let data = [];
     if (Array.isArray(backup)) {
       data = backup;
@@ -87,7 +90,7 @@ const BackupSettings = (props: BackupSettingsProps) => {
           }
           console.log(`Going to send ${data[i].command} to keyboard`);
           // eslint-disable-next-line no-await-in-loop
-          await state.currentDevice.noCacheCommand(data[i].command, val.trim());
+          await state.currentDevice.command(data[i].command, val.trim());
         }
         await state.currentDevice.noCacheCommand("led.mode 0");
         console.log("Restoring all settings");
@@ -116,17 +119,18 @@ const BackupSettings = (props: BackupSettingsProps) => {
     return false;
   };
 
-  const restoreVirtual = async (virtual: any) => {
+  const restoreVirtual = async (virtual: VirtualType) => {
     if (state.currentDevice) {
       try {
         openPerformingBackup();
         toggleBackup(true);
         console.log("Restoring all settings");
-        for (const command in virtual) {
-          if (virtual[command].eraseable === true) {
+        const data = virtual.virtual;
+        for (const command in data) {
+          if (data[command].eraseable === true) {
             console.log(`Going to send ${command} to keyboard`);
             // eslint-disable-next-line no-await-in-loop
-            await state.currentDevice.noCacheCommand(`${command} ${virtual[command].data}`.trim());
+            await state.currentDevice.noCacheCommand(`${command} ${data[command].data}`.trim());
           }
         }
         await state.currentDevice.noCacheCommand("led.mode 0");
@@ -174,12 +178,14 @@ const BackupSettings = (props: BackupSettingsProps) => {
       try {
         loadedFile = JSON.parse(fs.readFileSync(resp.filePaths[0], "utf-8"));
         if (loadedFile.virtual !== undefined) {
-          restoreVirtual(loadedFile.virtual);
+          await restoreVirtual(loadedFile as VirtualType);
+          await destroyContext();
           console.log("Restored Virtual backup");
           return;
         }
         if (loadedFile.backup !== undefined || loadedFile[0].command !== undefined) {
-          restoreBackup(loadedFile);
+          await restoreBackup(loadedFile);
+          await destroyContext();
           console.log("Restored normal backup");
         }
       } catch (e) {
@@ -213,6 +219,7 @@ const BackupSettings = (props: BackupSettingsProps) => {
 
       // called restorer with backup data
       await restoreBackup(loadedFile);
+      await destroyContext();
       console.log("Restored latest backup");
     } catch (error) {
       console.error(error);

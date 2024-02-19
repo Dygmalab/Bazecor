@@ -36,8 +36,9 @@ export default class Backup {
       "led.setMultiple",
       "led.getMultiple",
       "led.setAll",
+      "led.fade",
       "macros.trigger",
-      "qukeys",
+      "macros.memory",
       "upgrade",
       "settings.printConfig",
       "settings.aliveInterval",
@@ -46,9 +47,13 @@ export default class Backup {
       "settings.ledDriverPullUp",
       "settings.underGlow",
       "settings.ledDriver",
+      "wireless.battery.left",
+      "wireless.battery.right",
     ];
     const commands = await device.command("help");
-    return commands.split(/\r?\n/).filter(c => !notRequired.some(v => c.includes(v)));
+    const validCommands = commands.split(/\r?\n/).filter(c => !notRequired.some(v => c.includes(v)));
+    if (!validCommands.includes("led.brightnessUG")) validCommands.push("led.brightnessUG");
+    return validCommands;
   }
 
   /**

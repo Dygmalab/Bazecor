@@ -95,4 +95,5 @@ export interface BackupSettingsProps {
   neurons: any;
   neuronID: string;
   toggleBackup: (value: boolean) => void;
+  destroyContext: () => Promise<void>;
 }

@@ -27,10 +27,10 @@ import Slider from "@appigram/react-rangeslider";
 // Custom components
 import { Card, CardContent, CardHeader, CardTitle } from "@Renderer/components/ui/card";
 import { KBDataPref } from "@Renderer/types/preferences";
-import Title from "../../component/Title";
+import { IconTypo, IconMouse } from "@Renderer/component/Icon";
+import Title from "@Renderer/component/Title";
 
 // Assets
-import { IconTypo, IconMouse } from "../../component/Icon";
 import { i18n } from "@Renderer/i18n";
 
 const Styles = Styled.div`
