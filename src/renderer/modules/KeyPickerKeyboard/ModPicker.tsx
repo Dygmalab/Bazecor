@@ -45,7 +45,7 @@ interface ModPickerProps {
 function ModPicker(props: ModPickerProps) {
   const { keyCode, onKeySelect, isStandardView } = props;
   const [modifs, setModifs] = useState([]);
-  const previousKeyCode = usePrevious(keyCode);
+  const previousKeyCode = usePrevious({ base: keyCode.base, modified: keyCode.modified });
 
   function parseModifs(keycode: number) {
     const newModifs = [];
@@ -126,14 +126,17 @@ function ModPicker(props: ModPickerProps) {
   }, []);
 
   useEffect(() => {
-    if (typeof keyCode === "object" && keyCode.base + keyCode.modified !== previousKeyCode.base + previousKeyCode.modified) {
-      if (keyCode.base + keyCode.modified > 10000) {
-        setModifs([]);
-      } else {
-        setModifs(parseModifs(keyCode.base + keyCode.modified));
+    if (previousKeyCode !== undefined) {
+      const { base, modified } = previousKeyCode;
+      if (typeof keyCode === "object" && keyCode.base + keyCode.modified !== base + modified) {
+        if (keyCode.base + keyCode.modified > 10000) {
+          setModifs([]);
+        } else {
+          setModifs(parseModifs(keyCode.base + keyCode.modified));
+        }
       }
     }
-  }, [keyCode, previousKeyCode.base, previousKeyCode.modified]);
+  }, [keyCode, previousKeyCode]);
 
   return (
     <Style>
