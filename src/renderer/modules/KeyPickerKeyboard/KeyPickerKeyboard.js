@@ -301,7 +301,7 @@ class KeyPickerKeyboard extends Component {
     window.addEventListener("resize", this.updateSelectorPosition);
   }
 
-  componentDidUpdate() {
+  componentDidUpdate(prevProps) {
     let selectdual = 0;
     const disable = this.props.keyIndex === -1;
     const keynum = this.props.code != null ? this.props.code.modified + this.props.code.base : 0;
@@ -350,7 +350,7 @@ class KeyPickerKeyboard extends Component {
     } else {
       activeTab = "super";
     }
-    if (JSON.stringify(this.state.actions) !== JSON.stringify(tempActions)) {
+    if (JSON.stringify(this.state.actions) !== JSON.stringify(tempActions) || prevProps.keyIndex !== this.props.keyIndex) {
       this.setState({
         action: this.props.keyIndex !== this.state.pastkeyindex ? 0 : this.state.action,
         actions: tempActions,
