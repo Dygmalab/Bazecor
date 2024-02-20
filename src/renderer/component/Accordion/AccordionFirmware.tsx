@@ -108,7 +108,7 @@ const AccordionFirmware = ({ items }: any) => {
   useEffect(() => {
     items.forEach((item: any, index: number) => {
       if (index === 0) {
-        SetCounterTasks(-1);
+        SetCounterTasks(0);
       }
       if ((index === 0 && !item.checked) || (index === 2 && !item.checked)) {
         SetPassedTasks(false);
