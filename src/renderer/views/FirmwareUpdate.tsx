@@ -56,8 +56,8 @@ function FirmwareUpdate(props: any) {
     send("NEXT", { data: context });
   };
 
-  const retryBlock = () => {
-    send("RETRY");
+  const retryBlock = (context: any) => {
+    send("RETRY", { data: context });
   };
 
   const errorBlock = (error: any) => {

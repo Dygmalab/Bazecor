@@ -3,14 +3,14 @@ import { DeviceTools } from "@Renderer/DeviceContext";
 import Focus from "../../../api/focus";
 
 const RestoreESCKey = async context => {
-  console.log("Going to restore topmost left key", context.backup, context.deviceState);
+  // console.log("Going to restore topmost left key", context.backup, context.deviceState);
   try {
     if (context.backup === undefined || context.deviceState?.currentDevice === undefined) return;
     const { currentDevice } = context.deviceState;
-    console.log("Checking connected status: ", currentDevice.isClosed);
+    // console.log("Checking connected status: ", currentDevice.isClosed);
     if (currentDevice.isClosed) {
       const focus = Focus.getInstance();
-      console.log("Checking focus status: ", focus.closed);
+      // console.log("Checking focus status: ", focus.closed);
       await focus.close();
       await DeviceTools.connect(currentDevice);
     }
@@ -79,7 +79,12 @@ const MainProcessSM = createMachine({
             RaiseBrightness: event.data.RaiseBrightness,
           })),
         },
-        RETRY: ["retry"],
+        RETRY: {
+          actions: assign((context, event) => ({
+            backup: event.data.backup,
+          })),
+          target: "retry",
+        },
         ERROR: { target: "error", actions: [assign({ errorCause: (context, event) => event.data })] },
       },
     },

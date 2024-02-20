@@ -1,3 +1,4 @@
+// @ts-nocheck
 // -*- mode: js-jsx -*-
 /* Bazecor
  * Copyright (C) 2022  Dygmalab, Inc.

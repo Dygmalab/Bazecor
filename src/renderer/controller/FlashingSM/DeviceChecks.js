@@ -226,6 +226,7 @@ const DeviceChecks = createMachine(
           RETRY: {
             target: "PerfSetup",
           },
+          CANCEL: { target: "success" },
         },
       },
       failure: {

@@ -255,7 +255,8 @@ function FirmwareCheckProcessPanel(props) {
                           : i18n.firmwareUpdate.texts.backwds
                       }
                       onClick={() => {
-                        retryBlock();
+                        send("CANCEL");
+                        retryBlock(state.context);
                       }}
                     />
                   </div>
