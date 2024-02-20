@@ -20,33 +20,54 @@ import Styled from "styled-components";
 
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import Tooltip from "react-bootstrap/Tooltip";
+import { Placement } from "react-bootstrap/esm/Overlay";
 
 const Style = Styled.div`
 
 }
 `;
 
-function ButtonConfig({
-  selected,
-  onClick,
-  size,
-  buttonText,
-  tooltip,
-  tooltipPlacement,
-  tooltipClassName,
-  variation,
-  icoSVG,
-  icoPosition,
-  tooltipDelay,
-  disabled,
-  dataAnimate,
-}) {
+interface ButtonConfigProps {
+  selected: boolean;
+  onClick: (e: unknown) => void;
+  buttonText: string;
+  disabled: boolean;
+  className?: string;
+  size?: string;
+  tooltip?: string;
+  tooltipPlacement?: Placement;
+  tooltipClassName?: string;
+  variation?: string;
+  icoSVG?: any;
+  icoPosition?: string;
+  tooltipDelay?: number;
+  dataAnimate?: any;
+}
+
+function ButtonConfig(props: ButtonConfigProps) {
+  const {
+    selected,
+    onClick,
+    size,
+    buttonText,
+    tooltip,
+    tooltipPlacement,
+    tooltipClassName,
+    variation,
+    icoSVG,
+    icoPosition,
+    tooltipDelay,
+    disabled,
+    dataAnimate,
+    className,
+  } = props;
+
   return (
     <>
       {tooltip ? (
         <OverlayTrigger
           placement={tooltipPlacement || "top"}
-          delay={{ show: `${tooltipDelay || "0"}`, hide: "0" }}
+          delay={{ show: tooltipDelay || 0, hide: 0 }}
           overlay={
             <Tooltip id="tooltip-top" className={`${tooltipClassName || "tooltipRegular"}`}>
               <div dangerouslySetInnerHTML={{ __html: tooltip }} />
@@ -54,12 +75,13 @@ function ButtonConfig({
           }
         >
           <Style
-            onClick={disabled ? () => {} : onClick}
+            onClick={e => {
+              if (!disabled) onClick(e);
+            }}
             data-value={selected}
-            className={`${size || ""} ${selected ? "active" : ""}  button-config ${variation || ""} ${variation || ""} icon-${
-              icoPosition || "none"
-            }`}
-            disabled={disabled}
+            className={`${className} ${size || ""} ${selected ? "active" : ""} ${disabled ? "disabled" : ""}  button-config ${
+              variation || ""
+            } ${variation || ""} ${variation || ""} icon-${icoPosition || "none"}`}
           >
             {icoSVG && icoPosition !== "right" ? icoSVG : ""}
             {buttonText && <span className="buttonLabel" dangerouslySetInnerHTML={{ __html: buttonText }} />}
@@ -68,12 +90,13 @@ function ButtonConfig({
         </OverlayTrigger>
       ) : (
         <Style
-          onClick={disabled ? () => {} : onClick}
+          onClick={e => {
+            if (!disabled) onClick(e);
+          }}
           data-value={selected}
-          className={`${size || ""} ${selected ? "active" : ""} ${disabled ? "disabled" : ""}  button-config ${variation || ""} ${
+          className={`${className} ${size || ""} ${selected ? "active" : ""} ${disabled ? "disabled" : ""}  button-config ${
             variation || ""
-          } icon-${icoPosition || "none"}`}
-          disabled={disabled}
+          } ${variation || ""} icon-${icoPosition || "none"}`}
           data-animate={dataAnimate}
         >
           {icoSVG && icoPosition !== "right" ? icoSVG : ""}

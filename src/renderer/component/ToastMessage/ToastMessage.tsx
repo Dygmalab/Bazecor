@@ -21,7 +21,6 @@ import Styled from "styled-components";
 import { ThemeProvider } from "react-bootstrap";
 import Dark from "@Renderer/theme/DarkTheme";
 import ButtonConfig from "@Renderer/component/Button/ButtonConfig";
-import Title from "@Renderer/component/Title";
 
 const Style = Styled.div`
 .toastBody {
