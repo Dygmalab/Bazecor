@@ -94,12 +94,31 @@ const languages = {
   "fr-XX-optimot": frXXoptimot,
 };
 
+type LangOptions =
+  | "en-US"
+  | "en-GB"
+  | "es-ES"
+  | "de-DE"
+  | "fr-FR"
+  | "da-DK"
+  | "fi-FI"
+  | "nb-NO"
+  | "sv-SE"
+  | "is-IS"
+  | "ja-JP"
+  | "ko-KR"
+  | "pl-PL"
+  | "de-CH"
+  | "en-XX-eurkey"
+  | "fr-XX-bepo"
+  | "fr-XX-optimot";
+
 /**
  * Is a JavaScript function that changes key picker layout
  * @param {string} selectedlanguage Selected language
  */
-function getLanguage(selectedlanguage) {
-  if (selectedlanguage !== "") {
+function getLanguage(selectedlanguage: LangOptions) {
+  if (typeof selectedlanguage === "string") {
     if (languages[selectedlanguage] !== undefined) {
       return languages[selectedlanguage];
     }
