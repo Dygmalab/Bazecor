@@ -16,72 +16,22 @@
  */
 
 import React from "react";
-import Styled from "styled-components";
+
+import OverlayTrigger from "react-bootstrap/OverlayTrigger";
+import Tooltip from "react-bootstrap/Tooltip";
+
 import { Checkbox } from "@Renderer/components/ui/checkbox";
 import { Label } from "@Renderer/components/ui/label";
+import Heading from "@Renderer/components/ui/heading";
 import { CustomRCBProps } from "@Renderer/types/customRadioCheckBox";
 
-import Title from "../Title";
-
-const Style = Styled.div`
-&.customCheckbox {
-    .customCheckboxInner {
-        display: flex;
-        flex-wrap: nowrap;
-    }
-    label,
-    label h6 {
-        margin-bottom: 0;
-    }
-    label:hover {
-        cursor: pointer;
-    }
-    label h6 {
-        line-height: 32px;
-    }
-    .tooltipIcon {
-        vertical-align: 0;
-    }
-    input[type=checkbox], input[type=radio] {
-        display: none;
-    }
-    .form-check {
-        padding-left: 26px;
-    }
-    .form-check:before,
-    .form-check:after {
-        content: "";
-        position: absolute;
-        transition: 300ms ease-in-out;
-        display: inline-block;
-        transform: translate3d(0, -50%, 0);
-        top: 50%;
-        left: 0;
-    }
-    .form-check::before {
-        width: 18px;
-        height: 18px;
-        border-radius: 4px;
-        transition-property: border;
-    }
-    .form-check::after {
-        width: 10px;
-        height: 10px;
-        border-radius: 2px;
-        margin-left: 4px;
-        transition-property: background;
-    }
-}
-&:hover {
-    cursor: pointer;
-}
-`;
+import { IconInformationBubble } from "@Renderer/component/Icon";
 
 function CustomRadioCheckBox(props: CustomRCBProps) {
   const { label, type, id, name, tooltip, className, onClick, disabled, checked } = props;
   return (
-    <Style className={`customCheckbox ${className}`}>
-      <div className="customCheckboxInner" id={`input-${id}`}>
+    <div className={`customCheckbox ${className}`}>
+      <div className="flex flex-nowrap items-center mt-3 hover:cursor-pointer" id={`input-${id}`}>
         <Checkbox
           id={`input-${id}-${type}`}
           name={name}
@@ -89,11 +39,24 @@ function CustomRadioCheckBox(props: CustomRCBProps) {
           checked={checked}
           onCheckedChange={onClick}
         />
-        <Label htmlFor={`input-${id}-${type}`}>
-          <Title text={label} tooltip={tooltip} headingLevel={6} />
+        <Label className="pl-2 flex items-center mb-0" htmlFor={`input-${id}-${type}`}>
+          <Heading
+            headingLevel={6}
+            renderAs="paragraph-sm"
+            className={`flex items-center ${tooltip ? "gap-2 [&_.tooltipIcon]:text-purple-200" : ""}`}
+          >
+            {label}
+            {tooltip && (
+              <OverlayTrigger placement="top" overlay={<Tooltip id="tooltip-top">{tooltip}</Tooltip>}>
+                <span className="tooltipIcon">
+                  <IconInformationBubble />
+                </span>
+              </OverlayTrigger>
+            )}
+          </Heading>
         </Label>
       </div>
-    </Style>
+    </div>
   );
 }
 
