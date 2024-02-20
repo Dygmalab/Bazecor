@@ -1,6 +1,9 @@
+/* eslint-disable eqeqeq */
 /* eslint-disable react/jsx-filename-extension */
+// @ts-nocheck
 import React from "react";
 import Styled, { withTheme } from "styled-components";
+import { SegmentedKeyType } from "@Renderer/types/layout";
 import { SelectF13PlusKeys, SelectGenericKeys } from "../../component/Select";
 
 const Style = Styled.g`
@@ -67,7 +70,12 @@ const Style = Styled.g`
 
 // variable with the Key Size Library
 const keyCapRegularSize = { width: 44, height: 30 };
-const ksl = {
+
+interface KslType {
+  [key: string]: any;
+}
+
+const ksl: KslType = {
   "1UT": {
     outb: { x: keyCapRegularSize.width, y: 26, dx: 0, dy: 0 },
     out: { x: 42, y: 18, dx: 1, dy: 1 },
@@ -334,292 +342,311 @@ const ksl = {
   },
 };
 
-class Key extends React.Component {
-  render() {
-    const {
-      id,
-      keyCode,
-      x,
-      y,
-      selected,
-      clicked,
-      onKeyPress,
-      centered,
-      iconpresent,
-      icon,
-      iconsize,
-      iconx,
-      icony,
-      content,
-      idArray,
-      disabled,
-    } = this.props;
-    return (
-      <Style>
-        <g className={`keycap ${selected ? "active" : ""} ${disabled ? "disabled" : ""} ${content.type} id-${id}`}>
-          {content.type === "enter" ? (
-            <>
-              <g filter="url(#filter0_d_2211_181319)">
-                <path
-                  d="M0 3a3 3 0 013-3h38a3 3 0 013 3v60a3 3 0 01-3 3H14a3 3 0 01-3-3V33a3 3 0 00-3-3H3a3 3 0 01-3-3V3z"
-                  className="baseKey KeyPositionEnter"
-                  onClick={clicked}
-                />
-              </g>
+interface KeyProps {
+  id: number;
+  keyCode: SegmentedKeyType;
+  x: number;
+  y: number;
+  selected: boolean;
+  clicked: () => void;
+  onKeyPress: (keyCode: number) => void;
+  centered: boolean;
+  iconpresent: boolean;
+  icon: JSX.Element;
+  iconsize: number;
+  iconx: number;
+  icony: number;
+  content: {
+    type: string;
+    first: string;
+    second: string;
+    third: string;
+    fourth: string;
+  };
+  idArray: string;
+  disabled: boolean;
+}
+
+function Key(props: KeyProps) {
+  const {
+    id,
+    keyCode,
+    x,
+    y,
+    selected,
+    clicked,
+    onKeyPress,
+    centered,
+    iconpresent,
+    icon,
+    iconsize,
+    iconx,
+    icony,
+    content,
+    idArray,
+    disabled,
+    theme,
+  } = props;
+
+  return (
+    <Style>
+      <g className={`keycap ${selected ? "active" : ""} ${disabled ? "disabled" : ""} ${content.type} id-${id}`}>
+        {content.type === "enter" ? (
+          <>
+            <g filter="url(#filter0_d_2211_181319)">
               <path
                 d="M0 3a3 3 0 013-3h38a3 3 0 013 3v60a3 3 0 01-3 3H14a3 3 0 01-3-3V33a3 3 0 00-3-3H3a3 3 0 01-3-3V3z"
-                fill="url(#paint_gradient)"
-                fillOpacity={0.1}
-                className="shapeKey KeyPositionEnter"
+                className="baseKey KeyPositionEnter"
                 onClick={clicked}
               />
-            </>
-          ) : (
-            ""
-          )}
-          {content.type !== "enter" &&
-          content.type != "title" &&
-          content.type != "specialBlockDropdown" &&
-          content.type != "genericBlockDropdown" ? (
-            <>
-              <g filter="url(#filter0_d_2211_181319)">
-                <rect
-                  x={x + ksl[content.type].outb.dx}
-                  y={y + ksl[content.type].outb.dy}
-                  width={ksl[content.type].outb.x}
-                  height={ksl[content.type].outb.y}
-                  rx="5"
-                  // fill={
-                  //   disabled
-                  //     ? this.props.theme.keyboardPicker.keyDisabledColor
-                  //     : selected
-                  //     ? this.props.theme.keyboardPicker.keyActiveColor
-                  //     : this.props.theme.keyboardPicker.keyColor
-                  // }
-
-                  className="baseKey"
-                  onClick={clicked}
-                />
-              </g>
+            </g>
+            <path
+              d="M0 3a3 3 0 013-3h38a3 3 0 013 3v60a3 3 0 01-3 3H14a3 3 0 01-3-3V33a3 3 0 00-3-3H3a3 3 0 01-3-3V3z"
+              fill="url(#paint_gradient)"
+              fillOpacity={0.1}
+              className="shapeKey KeyPositionEnter"
+              onClick={clicked}
+            />
+          </>
+        ) : (
+          ""
+        )}
+        {content.type !== "enter" &&
+        content.type != "title" &&
+        content.type != "specialBlockDropdown" &&
+        content.type != "genericBlockDropdown" ? (
+          <>
+            <g filter="url(#filter0_d_2211_181319)">
               <rect
                 x={x + ksl[content.type].outb.dx}
                 y={y + ksl[content.type].outb.dy}
                 width={ksl[content.type].outb.x}
                 height={ksl[content.type].outb.y}
-                onClick={clicked}
                 rx="5"
                 // fill={
                 //   disabled
-                //     ? this.props.theme.card.background
+                //     ? this.props.theme.keyboardPicker.keyDisabledColor
                 //     : selected
                 //     ? this.props.theme.keyboardPicker.keyActiveColor
                 //     : this.props.theme.keyboardPicker.keyColor
                 // }
-                fill="url(#paint_gradient)"
-                fillOpacity={0.1}
-                className="shapeKey"
-              />
-            </>
-          ) : (
-            ""
-          )}
-          {content.type == "specialBlockDropdown" ? (
-            <foreignObject
-              width={ksl[content.type].outb.x}
-              height={ksl[content.type].outb.y}
-              x={x + ksl[content.type].outb.dx}
-              y={y + ksl[content.type].outb.dy}
-              style={{ overflow: "visible" }}
-            >
-              <div xmlns="http://www.w3.org/1999/xhtml">
-                <SelectF13PlusKeys
-                  x={x + ksl[content.type].outb.dx}
-                  y={y + ksl[content.type].outb.dy}
-                  onSelect={onKeyPress}
-                  selected={selected}
-                  value={id}
-                  listElements={idArray}
-                  content={content}
-                  keyCode={keyCode}
-                />
-              </div>
-            </foreignObject>
-          ) : (
-            ""
-          )}
-          {content.type == "genericBlockDropdown" ? (
-            <foreignObject
-              width={ksl[content.type].outb.x}
-              height={ksl[content.type].outb.y}
-              x={x + ksl[content.type].outb.dx}
-              y={y + ksl[content.type].outb.dy}
-              style={{ overflow: "visible" }}
-            >
-              <div xmlns="http://www.w3.org/1999/xhtml">
-                <SelectGenericKeys
-                  x={x + ksl[content.type].outb.dx}
-                  y={y + ksl[content.type].outb.dy}
-                  onSelect={onKeyPress}
-                  selected={selected}
-                  value={id}
-                  listElements={idArray}
-                  content={content}
-                  keyCode={keyCode}
-                />
-              </div>
-            </foreignObject>
-          ) : (
-            ""
-          )}
-          {!iconpresent && content.type == "title" ? (
-            <>
-              <text
-                x={x + ksl[content.type].text.letter.dx}
-                y={y + ksl[content.type].text.letter.dy}
-                onClick={clicked}
-                fontSize={ksl[content.type].text.letter.fs}
-                fontWeight={600}
-                className="contentPrimary"
-              >
-                {content.first}
-              </text>
-              <text
-                x={x + ksl[content.type].text.letter.dx}
-                y={y + ksl[content.type].text.letter.dy}
-                onClick={clicked}
-                fontSize={ksl[content.type].text.letter.fss}
-                fontWeight={600}
-                className="contentSeconday"
-              >
-                {content.second}
-              </text>
-            </>
-          ) : (
-            ""
-          )}
-          {!iconpresent &&
-          centered &&
-          content.type != "title" &&
-          content.type != "specialBlockDropdown" &&
-          content.type != "genericBlockDropdown" ? (
-            <>
-              <text
-                x={x + ksl[content.type].text.letter.dx}
-                y={y + ksl[content.type].text.letter.dy}
-                onClick={clicked}
-                fontSize={ksl[content.type].text.letter.fs}
-                fill={
-                  disabled ? this.props.theme.keyboardPicker.keyTextDisabledColor : this.props.theme.keyboardPicker.keyTextColor
-                }
-                fontWeight={600}
-                textAnchor="middle"
-                className="contentFirst"
-              >
-                {content.first}
-              </text>
-              <text
-                x={x + ksl[content.type].text.letter.ddx}
-                y={y + ksl[content.type].text.letter.ddy + 8}
-                onClick={clicked}
-                fontSize={ksl[content.type].text.letter.fss}
-                fontWeight={600}
-                fill={
-                  selected
-                    ? this.props.theme.keyboardPicker.keyActiveSubTextColor
-                    : this.props.theme.keyboardPicker.keySubTextColor
-                }
-                textAnchor="middle"
-                className="contentSeconday"
-              >
-                {content.second}
-              </text>
-            </>
-          ) : (
-            ""
-          )}
-          {!iconpresent && !centered && content.type != "title" ? (
-            <>
-              <text
-                x={x + ksl[content.type].text.a.dx}
-                y={y + ksl[content.type].text.a.dy}
-                onClick={clicked}
-                fontSize={ksl[content.type].text.a.fs}
-                fontWeight={600}
-                // fill={
-                //   disabled ? this.props.theme.keyboardPicker.keyTextDisabledColor : this.props.theme.keyboardPicker.keyTextColor
-                // }
-                className="contentFirst"
-              >
-                {content.first}
-              </text>
-              <text
-                x={x + ksl[content.type].text.b.dx}
-                y={y + ksl[content.type].text.b.dy}
-                onClick={clicked}
-                fontSize={ksl[content.type].text.b.fs}
-                fontWeight={600}
-                // fill={
-                //   selected
-                //     ? this.props.theme.keyboardPicker.keyActiveSubTextColor
-                //     : this.props.theme.keyboardPicker.keySubTextColor
-                // }
-                className="contentSecondary"
-              >
-                {content.second}
-              </text>
-              <text
-                x={x + ksl[content.type].text.c.dx}
-                y={y + ksl[content.type].text.c.dy}
-                onClick={clicked}
-                fontSize={ksl[content.type].text.c.fs}
-                fontWeight={600}
-                // fill={
-                //   selected
-                //     ? this.props.theme.keyboardPicker.keyActiveSubTextColor
-                //     : this.props.theme.keyboardPicker.keySubTextColor
-                // }
-                className="contentSecondary"
-              >
-                {content.third}
-              </text>
-              <text
-                x={x + ksl[content.type].text.d.dx}
-                y={y + ksl[content.type].text.d.dy}
-                onClick={clicked}
-                fontSize={ksl[content.type].text.d.fs}
-                fontWeight={600}
-                // fill={
-                //   selected
-                //     ? this.props.theme.keyboardPicker.keyActiveSubTextColor
-                //     : this.props.theme.keyboardPicker.keySubTextColor
-                // }
-                className="contentSecondary"
-              >
-                {content.fourth}
-              </text>
-            </>
-          ) : (
-            ""
-          )}
 
-          {iconpresent ? (
-            <foreignObject
-              x={iconx || x + ksl[content.type].icon.x}
-              y={icony || y + ksl[content.type].icon.y}
-              width={ksl[content.type].icon.w}
-              height={ksl[content.type].icon.h}
-              fontSize={iconsize || "inherit"}
+                className="baseKey"
+                onClick={clicked}
+              />
+            </g>
+            <rect
+              x={x + ksl[content.type].outb.dx}
+              y={y + ksl[content.type].outb.dy}
+              width={ksl[content.type].outb.x}
+              height={ksl[content.type].outb.y}
               onClick={clicked}
+              rx="5"
+              // fill={
+              //   disabled
+              //     ? this.props.theme.card.background
+              //     : selected
+              //     ? this.props.theme.keyboardPicker.keyActiveColor
+              //     : this.props.theme.keyboardPicker.keyColor
+              // }
+              fill="url(#paint_gradient)"
+              fillOpacity={0.1}
+              className="shapeKey"
+            />
+          </>
+        ) : (
+          ""
+        )}
+        {content.type == "specialBlockDropdown" ? (
+          <foreignObject
+            width={ksl[content.type].outb.x}
+            height={ksl[content.type].outb.y}
+            x={x + ksl[content.type].outb.dx}
+            y={y + ksl[content.type].outb.dy}
+            style={{ overflow: "visible" }}
+          >
+            <div xmlns="http://www.w3.org/1999/xhtml">
+              <SelectF13PlusKeys
+                x={x + ksl[content.type].outb.dx}
+                y={y + ksl[content.type].outb.dy}
+                onSelect={onKeyPress}
+                selected={selected}
+                value={id}
+                listElements={idArray}
+                content={content}
+                keyCode={keyCode}
+              />
+            </div>
+          </foreignObject>
+        ) : (
+          ""
+        )}
+        {content.type == "genericBlockDropdown" ? (
+          <foreignObject
+            width={ksl[content.type].outb.x}
+            height={ksl[content.type].outb.y}
+            x={x + ksl[content.type].outb.dx}
+            y={y + ksl[content.type].outb.dy}
+            style={{ overflow: "visible" }}
+          >
+            <div xmlns="http://www.w3.org/1999/xhtml">
+              <SelectGenericKeys
+                x={x + ksl[content.type].outb.dx}
+                y={y + ksl[content.type].outb.dy}
+                onSelect={onKeyPress}
+                selected={selected}
+                value={id}
+                listElements={idArray}
+                content={content}
+                keyCode={keyCode}
+              />
+            </div>
+          </foreignObject>
+        ) : (
+          ""
+        )}
+        {!iconpresent && content.type == "title" ? (
+          <>
+            <text
+              x={x + ksl[content.type].text.letter.dx}
+              y={y + ksl[content.type].text.letter.dy}
+              onClick={clicked}
+              fontSize={ksl[content.type].text.letter.fs}
+              fontWeight={600}
+              className="contentPrimary"
             >
-              {icon}
-            </foreignObject>
-          ) : (
-            ""
-          )}
-        </g>
-      </Style>
-    );
-  }
+              {content.first}
+            </text>
+            <text
+              x={x + ksl[content.type].text.letter.dx}
+              y={y + ksl[content.type].text.letter.dy}
+              onClick={clicked}
+              fontSize={ksl[content.type].text.letter.fss}
+              fontWeight={600}
+              className="contentSeconday"
+            >
+              {content.second}
+            </text>
+          </>
+        ) : (
+          ""
+        )}
+        {!iconpresent &&
+        centered &&
+        content.type != "title" &&
+        content.type != "specialBlockDropdown" &&
+        content.type != "genericBlockDropdown" ? (
+          <>
+            <text
+              x={x + ksl[content.type].text.letter.dx}
+              y={y + ksl[content.type].text.letter.dy}
+              onClick={clicked}
+              fontSize={ksl[content.type].text.letter.fs}
+              fill={disabled ? theme.keyboardPicker.keyTextDisabledColor : theme.keyboardPicker.keyTextColor}
+              fontWeight={600}
+              textAnchor="middle"
+              className="contentFirst"
+            >
+              {content.first}
+            </text>
+            <text
+              x={x + ksl[content.type].text.letter.ddx}
+              y={y + ksl[content.type].text.letter.ddy + 8}
+              onClick={clicked}
+              fontSize={ksl[content.type].text.letter.fss}
+              fontWeight={600}
+              fill={selected ? theme.keyboardPicker.keyActiveSubTextColor : theme.keyboardPicker.keySubTextColor}
+              textAnchor="middle"
+              className="contentSeconday"
+            >
+              {content.second}
+            </text>
+          </>
+        ) : (
+          ""
+        )}
+        {!iconpresent && !centered && content.type != "title" ? (
+          <>
+            <text
+              x={x + ksl[content.type].text.a.dx}
+              y={y + ksl[content.type].text.a.dy}
+              onClick={clicked}
+              fontSize={ksl[content.type].text.a.fs}
+              fontWeight={600}
+              // fill={
+              //   disabled ? this.props.theme.keyboardPicker.keyTextDisabledColor : this.props.theme.keyboardPicker.keyTextColor
+              // }
+              className="contentFirst"
+            >
+              {content.first}
+            </text>
+            <text
+              x={x + ksl[content.type].text.b.dx}
+              y={y + ksl[content.type].text.b.dy}
+              onClick={clicked}
+              fontSize={ksl[content.type].text.b.fs}
+              fontWeight={600}
+              // fill={
+              //   selected
+              //     ? this.props.theme.keyboardPicker.keyActiveSubTextColor
+              //     : this.props.theme.keyboardPicker.keySubTextColor
+              // }
+              className="contentSecondary"
+            >
+              {content.second}
+            </text>
+            <text
+              x={x + ksl[content.type].text.c.dx}
+              y={y + ksl[content.type].text.c.dy}
+              onClick={clicked}
+              fontSize={ksl[content.type].text.c.fs}
+              fontWeight={600}
+              // fill={
+              //   selected
+              //     ? this.props.theme.keyboardPicker.keyActiveSubTextColor
+              //     : this.props.theme.keyboardPicker.keySubTextColor
+              // }
+              className="contentSecondary"
+            >
+              {content.third}
+            </text>
+            <text
+              x={x + ksl[content.type].text.d.dx}
+              y={y + ksl[content.type].text.d.dy}
+              onClick={clicked}
+              fontSize={ksl[content.type].text.d.fs}
+              fontWeight={600}
+              // fill={
+              //   selected
+              //     ? this.props.theme.keyboardPicker.keyActiveSubTextColor
+              //     : this.props.theme.keyboardPicker.keySubTextColor
+              // }
+              className="contentSecondary"
+            >
+              {content.fourth}
+            </text>
+          </>
+        ) : (
+          ""
+        )}
+
+        {iconpresent ? (
+          <foreignObject
+            x={iconx || x + ksl[content.type].icon.x}
+            y={icony || y + ksl[content.type].icon.y}
+            width={ksl[content.type].icon.w}
+            height={ksl[content.type].icon.h}
+            fontSize={iconsize || "inherit"}
+            onClick={clicked}
+          >
+            {icon}
+          </foreignObject>
+        ) : (
+          ""
+        )}
+      </g>
+    </Style>
+  );
 }
 
 export default withTheme(Key);
