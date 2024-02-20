@@ -454,8 +454,8 @@ const LayoutEditor = (props: LayoutEditorProps) => {
   });
   const [palette, setPalette] = useState([]);
   const [colorMap, setColorMap] = useState([]);
-  const [macros, setMacros] = useState([]);
-  const [superkeys, setSuperkeys] = useState([]);
+  const [macros, setMacros] = useState<MacrosType[]>();
+  const [superkeys, setSuperkeys] = useState<SuperkeysType[]>();
 
   const [modified, setModified] = useState(false);
   const [modeselect, setModeselect] = useState<ModeType>("keyboard");
@@ -481,7 +481,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
 
   const [scanned, setScanned] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
-  const { state: deviceState } = useDevice();
+  const { state } = useDevice();
   const [layerData, setLayerData] = useState([]);
   const [isReadOnly, setIsReadOnly] = useState(false);
   const [showDefaults, setShowDefaults] = useState(false);
@@ -685,7 +685,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
   );
 
   const getColormap = useCallback(async (): Promise<ColormapType> => {
-    const { currentDevice } = deviceState;
+    const { currentDevice } = state;
     const layerSize = currentDevice.device.keyboardUnderglow.rows * currentDevice.device.keyboardUnderglow.columns;
     const chunk = (a: number[], chunkSize: number) => {
       const R = [];
@@ -738,13 +738,13 @@ const LayoutEditor = (props: LayoutEditorProps) => {
       palette: plette,
       colorMap: colMap,
     };
-  }, [deviceState]);
+  }, [state]);
 
   const flatten = (arr: Array<unknown>) => [].concat(...arr);
 
   const updatePalette = async (device: DeviceClass, plette: PaletteType[]) => {
     let args: string[];
-    if (deviceState.currentDevice.device.RGBWMode !== true) {
+    if (state.currentDevice.device.RGBWMode !== true) {
       args = flatten(plette.map(color => [color.r, color.g, color.b])).map(v => v.toString());
     } else {
       const paletteAux = plette.map(color => {
@@ -767,7 +767,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
 
   const AnalizeChipID = useCallback(
     async (CID: string) => {
-      const { currentDevice } = deviceState;
+      const { currentDevice } = state;
       let neurons = store.get("neurons") as Neuron[];
       let finalNeuron;
       console.log("Neuron ID", CID, neurons);
@@ -852,13 +852,13 @@ const LayoutEditor = (props: LayoutEditorProps) => {
       setLayerNames(finalNeuron.layers);
       return finalNeuron;
     },
-    [defaultLayerNames, deviceState],
+    [defaultLayerNames, state],
   );
 
   const scanKeyboard = useCallback(
     async (lang: string) => {
       console.log("Scanning KEYBOARD");
-      const { currentDevice } = deviceState;
+      const { currentDevice } = state;
       setLoading(true);
       try {
         /**
@@ -987,7 +987,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
         onDisconnect();
       }
     },
-    [AnalizeChipID, deviceState, getColormap, keymapDB, macroTranslator, onDisconnect, setLoading],
+    [AnalizeChipID, state, getColormap, keymapDB, macroTranslator, onDisconnect, setLoading],
   );
 
   const onKeyChange = (keyCode: number) => {
@@ -1105,7 +1105,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
   };
 
   const onApply = async () => {
-    const { currentDevice } = deviceState;
+    const { currentDevice } = state;
     setLoading(true);
     setIsSaving(true);
     const args = flatten(keymap.custom).map(k => keymapDB.serialize(k).toString());
@@ -1323,7 +1323,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
   };
 
   const getLayout = () => {
-    const { currentDevice } = deviceState;
+    const { currentDevice } = state;
     let Layer = null;
     let kbtype = "iso";
     if (currentDevice.device === null) return { Layer: undefined, kbtype: undefined };
@@ -1411,7 +1411,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
       localIsReadOnly = currentLayer < keymap.default.length;
       localLayerData = localIsReadOnly ? keymap.default[currentLayer] : keymap.custom[currentLayer - keymap.default.length];
     }
-    const { currentDevice } = deviceState;
+    const { currentDevice } = state;
     const { info } = currentDevice.device;
     const data = JSON.stringify(
       {

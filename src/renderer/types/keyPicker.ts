@@ -14,24 +14,22 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import Pages from "@Types/pages";
+import { MacrosType } from "@Renderer/types/macros";
+import { SuperkeysType } from "@Renderer/types/superkeys";
+import { SegmentedKeyType } from "@Renderer/types/layout";
 
-export interface NavigationMenuProps {
-  connected: boolean;
-  flashing: boolean;
-  fwUpdate: boolean;
-  allowBeta: boolean;
-  modified: boolean;
-  loading: boolean;
-  pages: Pages | object;
-}
-
-export interface HeaderInterface {
-  connected: boolean;
-  flashing: boolean;
-  fwUpdate: boolean;
-  allowBeta: boolean;
-  modified: boolean;
-  loading: boolean;
-  pages: Pages | object;
+export interface PickerProps {
+  action: number;
+  actions: number[];
+  onKeySelect: (keyCode: number) => void;
+  activeTab: string;
+  selectedlanguage: string;
+  kbtype: string;
+  baseCode: number;
+  modCode: number;
+  disable: boolean;
+  macros: MacrosType[];
+  superkeys: SuperkeysType[];
+  keyCode: SegmentedKeyType;
+  isWireless: boolean;
 }
