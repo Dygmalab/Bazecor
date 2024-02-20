@@ -1,8 +1,11 @@
-import React, { Component } from "react";
+/* eslint-disable no-bitwise */
+import React, { useEffect, useState } from "react";
 import Styled from "styled-components";
 import { i18n } from "@Renderer/i18n";
 
 // Components
+import { SegmentedKeyType } from "@Renderer/types/layout";
+import usePrevious from "@Renderer/utils/usePrevious";
 import Title from "../../component/Title";
 import { ButtonConfig } from "../../component/Button";
 
@@ -33,65 +36,43 @@ height: inherit;
 
 `;
 
-class ModPicker extends Component {
-  constructor(props) {
-    super(props);
+interface ModPickerProps {
+  keyCode: SegmentedKeyType;
+  onKeySelect: (key: number) => void;
+  isStandardView: boolean;
+}
 
-    this.state = {
-      modifs: [],
-    };
-  }
+function ModPicker(props: ModPickerProps) {
+  const { keyCode, onKeySelect, isStandardView } = props;
+  const [modifs, setModifs] = useState([]);
+  const previousKeyCode = usePrevious(keyCode);
 
-  componentDidMount() {
-    if (this.props.keyCode.base + this.props.keyCode.modified > 10000) return;
-    this.setState({
-      modifs: this.parseModifs(this.props.keyCode.base + this.props.keyCode.modified),
-    });
-  }
-
-  componentDidUpdate(previousProps, previousState) {
-    if (
-      this.props.keyCode != 0 &&
-      this.props.keyCode.base + this.props.keyCode.modified != previousProps.keyCode.base + previousProps.keyCode.modified
-    ) {
-      if (this.props.keyCode.base + this.props.keyCode.modified > 10000) {
-        this.setState({
-          modifs: [],
-        });
-      } else {
-        this.setState({
-          modifs: this.parseModifs(this.props.keyCode.base + this.props.keyCode.modified),
-        });
-      }
-    }
-  }
-
-  parseModifs(keycode) {
-    const modifs = [];
+  function parseModifs(keycode: number) {
+    const newModifs = [];
     if (keycode & 0b100000000) {
       // Ctrl Decoder
-      modifs.push(1);
+      newModifs.push(1);
     }
     if (keycode & 0b1000000000) {
       // Alt Decoder
-      modifs.push(2);
+      newModifs.push(2);
     }
     if (keycode & 0b10000000000) {
       // AltGr Decoder
-      modifs.push(3);
+      newModifs.push(3);
     }
     if (keycode & 0b100000000000) {
       // Shift Decoder
-      modifs.push(0);
+      newModifs.push(0);
     }
     if (keycode & 0b1000000000000) {
       // Win Decoder
-      modifs.push(4);
+      newModifs.push(4);
     }
-    return modifs;
+    return newModifs;
   }
 
-  applyModif(data) {
+  function applyModif(data: number[]) {
     let state = 0;
     if (data.includes(0)) {
       state += 2048;
@@ -112,87 +93,94 @@ class ModPicker extends Component {
     return state;
   }
 
-  SelectModif(data) {
-    const { keyCode, onKeySelect } = this.props;
-    const { modifs } = this.state;
+  function SelectModif(data: number) {
     let mod = [...modifs];
     if (mod.includes(data)) {
       mod = mod.filter(e => e !== data);
     } else {
       mod.push(data);
     }
-    this.setState({ modifs: mod });
-    onKeySelect(keyCode.base + this.applyModif(mod));
+    setModifs(mod);
+    onKeySelect(keyCode.base + applyModif(mod));
   }
 
-  setModifierVisibility() {
+  function setModifierVisibility() {
     if (
-      // (this.props.keyCode != undefined &&
-      //   this.props.keyCode.base + this.props.keyCode.modified >= 224 &&
-      //   this.props.keyCode.base + this.props.keyCode.modified <= 255) ||
-      (this.props.keyCode != undefined &&
-        this.props.keyCode.base + this.props.keyCode.modified >= 53852 &&
-        this.props.keyCode.base + this.props.keyCode.modified <= 53852 + 128) ||
-      this.props.keyCode.base + this.props.keyCode.modified == 0 ||
-      (this.props.keyCode.base + this.props.keyCode.modified >= 17492 &&
-        this.props.keyCode.base + this.props.keyCode.modified <= 17501) ||
-      this.props.keyCode.base + this.props.keyCode.modified >= 8192
+      // (keyCode != undefined &&
+      //   keyCode.base + keyCode.modified >= 224 &&
+      //   keyCode.base + keyCode.modified <= 255) ||
+      (keyCode !== undefined && keyCode.base + keyCode.modified >= 53852 && keyCode.base + keyCode.modified <= 53852 + 128) ||
+      keyCode.base + keyCode.modified === 0 ||
+      (keyCode.base + keyCode.modified >= 17492 && keyCode.base + keyCode.modified <= 17501) ||
+      keyCode.base + keyCode.modified >= 8192
     ) {
       return true;
     }
     return false;
   }
 
-  render() {
-    const { modifs, keyCode } = this.state;
+  useEffect(() => {
+    if (keyCode.base + keyCode.modified > 10000) return;
+    setModifs(parseModifs(keyCode.base + keyCode.modified));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-    return (
-      <Style>
-        <div className={`modPickerInner ${this.props.isStandardView ? "modPickerInnerStd" : ""}`}>
-          {!this.props.isStandardView ? <Title text={i18n.editor.standardView.keys.addModifier} headingLevel={4} /> : null}
-          <div className="modPickerButtonsList">
-            <ButtonConfig
-              selected={modifs.includes(0)}
-              buttonText="Shift"
-              className="modbutton"
-              onClick={e => this.SelectModif(0)}
-              disabled={this.setModifierVisibility()}
-            />
-            <ButtonConfig
-              selected={modifs.includes(1)}
-              buttonText="Ctrl"
-              className="modbutton"
-              onClick={e => this.SelectModif(1)}
-              disabled={this.setModifierVisibility()}
-            />
-            <ButtonConfig
-              selected={modifs.includes(2)}
-              buttonText="Alt"
-              className="modbutton"
-              onClick={e => this.SelectModif(2)}
-              disabled={this.setModifierVisibility()}
-            />
+  useEffect(() => {
+    if (typeof keyCode === "object" && keyCode.base + keyCode.modified !== previousKeyCode.base + previousKeyCode.modified) {
+      if (keyCode.base + keyCode.modified > 10000) {
+        setModifs([]);
+      } else {
+        setModifs(parseModifs(keyCode.base + keyCode.modified));
+      }
+    }
+  }, [keyCode, previousKeyCode.base, previousKeyCode.modified]);
 
-            <ButtonConfig
-              selected={modifs.includes(3)}
-              buttonText="Alt Gr"
-              className="modbutton"
-              onClick={e => this.SelectModif(3)}
-              disabled={this.setModifierVisibility()}
-            />
+  return (
+    <Style>
+      <div className={`modPickerInner ${isStandardView ? "modPickerInnerStd" : ""}`}>
+        {!isStandardView ? <Title text={i18n.editor.standardView.keys.addModifier} headingLevel={4} /> : null}
+        <div className="modPickerButtonsList">
+          <ButtonConfig
+            selected={modifs.includes(0)}
+            buttonText="Shift"
+            className="modbutton"
+            onClick={() => SelectModif(0)}
+            disabled={setModifierVisibility()}
+          />
+          <ButtonConfig
+            selected={modifs.includes(1)}
+            buttonText="Ctrl"
+            className="modbutton"
+            onClick={() => SelectModif(1)}
+            disabled={setModifierVisibility()}
+          />
+          <ButtonConfig
+            selected={modifs.includes(2)}
+            buttonText="Alt"
+            className="modbutton"
+            onClick={() => SelectModif(2)}
+            disabled={setModifierVisibility()}
+          />
 
-            <ButtonConfig
-              selected={modifs.includes(4)}
-              buttonText="OS"
-              className="modbutton"
-              onClick={e => this.SelectModif(4)}
-              disabled={this.setModifierVisibility()}
-            />
-          </div>
+          <ButtonConfig
+            selected={modifs.includes(3)}
+            buttonText="Alt Gr"
+            className="modbutton"
+            onClick={() => SelectModif(3)}
+            disabled={setModifierVisibility()}
+          />
+
+          <ButtonConfig
+            selected={modifs.includes(4)}
+            buttonText="OS"
+            className="modbutton"
+            onClick={() => SelectModif(4)}
+            disabled={setModifierVisibility()}
+          />
         </div>
-      </Style>
-    );
-  }
+      </div>
+    </Style>
+  );
 }
 
 export default ModPicker;
