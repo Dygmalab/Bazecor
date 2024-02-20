@@ -123,7 +123,7 @@ const BatteryStatus = ({ disable }: BatteryStatusProps) => {
   const [sRight, setsRight] = useState(3);
   const [isSavingMode, setIsSavingMode] = useState(false);
   const [animateIcon, setAnimateIcon] = useState(0);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const target = useRef(null);
   const { state } = useDevice();
 
@@ -166,6 +166,7 @@ const BatteryStatus = ({ disable }: BatteryStatusProps) => {
       setsLeft(leftStatus?.includes("0x") ? 255 : parseInt(leftStatus, 10));
       setsRight(rightStatus?.includes("0x") ? 255 : parseInt(rightStatus, 10));
       setIsSavingMode(parseInt(savingMode, 10) > 0);
+      setLoading(false);
 
       // Logs to console
       // console.log("L Status internal: ", sLeft);
