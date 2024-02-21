@@ -68,6 +68,7 @@ class Device implements DeviceClass {
     }
     if (type === "virtual") {
       params = parameters as VirtualType;
+      this.isClosed = false;
       this.path = undefined;
       this.manufacturer = params.device.info.vendor;
       this.serialNumber = params.virtual["hardware.chip_id"].data;
