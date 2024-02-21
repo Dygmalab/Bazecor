@@ -1106,38 +1106,47 @@ const LayoutEditor = (props: LayoutEditorProps) => {
 
   const onApply = async () => {
     const { currentDevice } = state;
-    setLoading(true);
-    setIsSaving(true);
-    const args = flatten(keymap.custom).map(k => keymapDB.serialize(k).toString());
-    await currentDevice.command("keymap.custom", ...args);
-    await currentDevice.command("keymap.onlyCustom", keymap.onlyCustom ? "1" : "0");
-    await updateColormap(currentDevice, colorMap);
-    await updatePalette(currentDevice, palette);
-    setCurrentLayer(currentLayer);
-    setCurrentKeyIndex(currentKeyIndex);
-    setCurrentLedIndex(currentLedIndex);
-    setModified(false);
-    setIsMultiSelected(false);
-    setSelectedPaletteColor(null);
-    setIsColorButtonSelected(false);
-    const commands = await Backup.Commands(currentDevice);
-    const backup = await bkp.DoBackup(commands, neuronID, currentDevice);
-    Backup.SaveBackup(backup, currentDevice);
-    cancelContext();
-    toast.success(
-      <ToastMessage
-        title={i18n.success.changesSaved}
-        content={i18n.success.changesSavedContent}
-        icon={<IconArrowDownWithLine />}
-      />,
-      {
+    try {
+      setLoading(true);
+      setIsSaving(true);
+      const args = flatten(keymap.custom).map(k => keymapDB.serialize(k).toString());
+      await currentDevice.command("keymap.custom", ...args);
+      await currentDevice.command("keymap.onlyCustom", keymap.onlyCustom ? "1" : "0");
+      await updateColormap(currentDevice, colorMap);
+      await updatePalette(currentDevice, palette);
+      setCurrentLayer(currentLayer);
+      setCurrentKeyIndex(currentKeyIndex);
+      setCurrentLedIndex(currentLedIndex);
+      setModified(false);
+      setIsMultiSelected(false);
+      setSelectedPaletteColor(null);
+      setIsColorButtonSelected(false);
+      const commands = await Backup.Commands(currentDevice);
+      const backup = await bkp.DoBackup(commands, neuronID, currentDevice);
+      Backup.SaveBackup(backup, currentDevice);
+      cancelContext();
+      toast.success(
+        <ToastMessage
+          title={i18n.success.changesSaved}
+          content={i18n.success.changesSavedContent}
+          icon={<IconArrowDownWithLine />}
+        />,
+        {
+          autoClose: 2000,
+          icon: "",
+        },
+      );
+      setLoading(false);
+      setIsSaving(false);
+      console.log("Changes saved.");
+    } catch (error) {
+      toast.error(<ToastMessage title="Error when saving" content={error} icon={<IconArrowDownWithLine />} />, {
         autoClose: 2000,
         icon: "",
-      },
-    );
-    setLoading(false);
-    setIsSaving(false);
-    console.log("Changes saved.");
+      });
+      setLoading(false);
+      setIsSaving(false);
+    }
   };
 
   const copyFromDialog = () => {

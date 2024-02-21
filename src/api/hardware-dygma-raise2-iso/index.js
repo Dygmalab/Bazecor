@@ -48,6 +48,7 @@ const Raise2ISO = {
     rows: 6,
     columns: 22,
   },
+  RGBWMode: true,
   components: {
     keymap: KeymapISO,
   },

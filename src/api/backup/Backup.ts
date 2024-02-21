@@ -158,6 +158,9 @@ export default class Backup {
       });
       console.log(`Saving Backup to -> ${fullPath}`);
       try {
+        if (!fs.existsSync(path.parse(fullPath).dir)) {
+          fs.mkdirSync(path.parse(fullPath).dir, { recursive: true });
+        }
         fs.writeFileSync(fullPath, json);
       } catch (error) {
         console.error(error);

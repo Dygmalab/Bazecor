@@ -48,6 +48,7 @@ const Raise2ANSI = {
     rows: 6,
     columns: 22,
   },
+  RGBWMode: true,
   components: {
     keymap: KeymapANSI,
   },
