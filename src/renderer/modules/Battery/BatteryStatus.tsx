@@ -10,9 +10,9 @@ import { BatteryStatusSide, SavingModeIndicator } from "@Renderer/component/Batt
 // Assets
 import { IconBattery, IconRefresh } from "@Renderer/component/Icon";
 
+import { useDevice } from "@Renderer/DeviceContext";
 import { LogoLoader } from "@Renderer/component/Loader";
-import Focus from "../../../api/focus";
-import i18n from "../../i18n";
+import { i18n } from "@Renderer/i18n";
 
 const Style = Styled.div`
 .battery-indicator--wrapper {
@@ -117,14 +117,15 @@ interface BatteryStatusProps {
   disable: boolean;
 }
 const BatteryStatus = ({ disable }: BatteryStatusProps) => {
-  const [bLeft, setbLeft] = useState(100);
-  const [bRight, setbRight] = useState(100);
-  const [sLeft, setsLeft] = useState(0);
-  const [sRight, setsRight] = useState(0);
+  const [bLeft, setbLeft] = useState(0);
+  const [bRight, setbRight] = useState(0);
+  const [sLeft, setsLeft] = useState(3);
+  const [sRight, setsRight] = useState(3);
   const [isSavingMode, setIsSavingMode] = useState(false);
   const [animateIcon, setAnimateIcon] = useState(0);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const target = useRef(null);
+  const { state } = useDevice();
 
   const intervalIdRef = useRef<NodeJS.Timeout | null>(null);
   const intervalIdAnimateRef = useRef<NodeJS.Timeout | null>(null);
@@ -135,47 +136,52 @@ const BatteryStatus = ({ disable }: BatteryStatusProps) => {
     });
 
   const getBatteryStatus = useCallback(async () => {
-    let left = "";
-    let right = "";
-    let leftStatus = "";
-    let rightStatus = "";
-    let savingMode = "";
-    // iterator values
-    const focus = new Focus();
-    let newReading = false;
-    let counter = 5;
-    // reading until we get a result != 4 or we try 5 times
-    while (newReading === false && counter > 0) {
-      /* eslint-disable no-await-in-loop */
-      left = await focus.command("wireless.battery.left.level");
-      right = await focus.command("wireless.battery.right.level");
-      leftStatus = await focus.command("wireless.battery.left.status");
-      rightStatus = await focus.command("wireless.battery.right.status");
-      savingMode = await focus.command("wireless.battery.savingMode");
-      counter -= 1;
-      if (leftStatus !== "4" && rightStatus !== "4") {
-        newReading = true;
-      } else {
-        await delay(500);
+    if (state.currentDevice && !disable && !state.currentDevice.isSending) {
+      let left = "";
+      let right = "";
+      let leftStatus = "";
+      let rightStatus = "";
+      let savingMode = "";
+      // iterator values
+      let newReading = false;
+      let counter = 5;
+      // reading until we get a result != 4 or we try 5 times
+      while (newReading === false && counter > 0) {
+        /* eslint-disable no-await-in-loop */
+        left = await state.currentDevice.noCacheCommand("wireless.battery.left.level");
+        right = await state.currentDevice.noCacheCommand("wireless.battery.right.level");
+        leftStatus = await state.currentDevice.noCacheCommand("wireless.battery.left.status");
+        rightStatus = await state.currentDevice.noCacheCommand("wireless.battery.right.status");
+        savingMode = await state.currentDevice.noCacheCommand("wireless.battery.savingMode");
+        counter -= 1;
+        if (leftStatus !== "4" && rightStatus !== "4") {
+          newReading = true;
+        } else {
+          await delay(500);
+        }
+        /* eslint-enable no-await-in-loop */
       }
-      /* eslint-enable no-await-in-loop */
-    }
-    setbLeft(parseInt(left, 10));
-    setbRight(parseInt(right, 10));
-    setsLeft(leftStatus.includes("0x") ? 255 : parseInt(leftStatus, 10));
-    setsRight(rightStatus.includes("0x") ? 255 : parseInt(rightStatus, 10));
-    setIsSavingMode(parseInt(savingMode, 10) > 0);
+      setbLeft(parseInt(left, 10));
+      setbRight(parseInt(right, 10));
+      setsLeft(leftStatus?.includes("0x") ? 255 : parseInt(leftStatus, 10));
+      setsRight(rightStatus?.includes("0x") ? 255 : parseInt(rightStatus, 10));
+      setIsSavingMode(parseInt(savingMode, 10) > 0);
+      setLoading(false);
 
-    // Logs to console
-    // console.log("L Status internal: ", sLeft);
-    // console.log("L Status focus: ", leftStatus);
-    // console.log("L Level internal: ", bLeft);
-    // console.log("R Status: ", sRight);
-    // console.log("R Status focus: ", rightStatus);
-  }, []);
+      // Logs to console
+      // console.log("L Status internal: ", sLeft);
+      // console.log("L Status focus: ", leftStatus);
+      // console.log("L Level internal: ", bLeft);
+      // console.log("R Status: ", sRight);
+      // console.log("R Status focus: ", rightStatus);
+    }
+  }, [disable, state.currentDevice]);
 
   useEffect(() => {
-    getBatteryStatus();
+    if (!disable) {
+      getBatteryStatus();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -205,10 +211,10 @@ const BatteryStatus = ({ disable }: BatteryStatusProps) => {
   }, [animateIcon]);
 
   const forceRetrieveBattery = async () => {
-    // const { disable } = props;
     if (disable) return;
-    const focus = new Focus();
-    await focus.command("wireless.battery.forceRead");
+    if (state.currentDevice) {
+      await state.currentDevice.noCacheCommand("wireless.battery.forceRead");
+    }
     setLoading(true);
     await getBatteryStatus();
     setLoading(false);

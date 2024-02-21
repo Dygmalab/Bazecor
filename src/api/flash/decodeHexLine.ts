@@ -26,7 +26,7 @@ export function decodeHexLine(line: string) {
   const bytes = new ArrayBuffer(byteData.length);
   const bytesView = new Uint8Array(bytes, 0, byteData.length);
 
-  for (let i = 0; i < byteData.length; i++) bytesView[i] = byteData[i];
+  byteData.forEach((v, i) => bytesView[i] = v)
 
   return {
     str: line,

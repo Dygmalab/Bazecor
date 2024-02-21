@@ -31,7 +31,7 @@ const Style = Styled.div`
       margin-left: 2px;
       margin-right: 2px;
     }
-  } 
+  }
 }
 &.toggleButtonsContainerFlex {
   .toggleButtonsInner {
@@ -44,10 +44,10 @@ const Style = Styled.div`
   }
 }
 `;
-function ToggleButtons({ selectDarkMode, value, listElements, style, size }) {
+function ToggleButtons({ selectDarkMode, value, listElements, styles, size }) {
   return (
     // className={`button-config ${value == item.value ? "active" : ""}`}
-    <Style className={`toggleButtonsContainer ${style == "flex" ? "toggleButtonsContainerFlex" : ""}`}>
+    <Style className={`toggleButtonsContainer ${styles == "flex" ? "toggleButtonsContainerFlex" : ""}`}>
       <strong className="sr-only">{value}</strong>
       <div className="toggleButtonsInner">
         {listElements.map((item, index) => (

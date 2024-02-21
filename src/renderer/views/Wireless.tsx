@@ -16,8 +16,8 @@ import { BatterySettings, EnergyManagement, RFSettings } from "@Renderer/modules
 // Import Types for wireless
 import { WirelessPropsInterface, WirelessInterface } from "@Renderer/types/wireless";
 
-import Focus from "../../api/focus";
-import i18n from "../i18n";
+import { useDevice } from "@Renderer/DeviceContext";
+import { i18n } from "@Renderer/i18n";
 
 const Styles = Styled.div`
   height: 100%;
@@ -68,88 +68,84 @@ const initialWireless = {
   true_sleep_time: 0,
 };
 
-function Wireless(props: WirelessPropsInterface) {
-  const { startContext, cancelContext, setLoading } = props;
+const Wireless = (props: WirelessPropsInterface) => {
+  const { startContext, cancelContext } = props;
+  const [isSaving, setIsSaving] = useState(false);
+  const { state } = useDevice();
+
   const [wireless, setWireless] = useState<WirelessInterface>(initialWireless);
   const [modified, setModified] = useState(false);
   const [loading, setLocalLoading] = useState(true);
 
   async function getWirelessPreferences() {
-    setLoading(true);
-    const focus = new Focus();
-    // Use focus commands to retrieve wireless data
+    setIsSaving(true);
     // Battery commands
+    if (state.currentDevice) {
+      await state.currentDevice.command("wireless.battery.left.level").then((batteryLevel: string) => {
+        wireless.battery.LeftLevel = batteryLevel ? parseInt(batteryLevel, 10) : 100;
+      });
+      await state.currentDevice.command("wireless.battery.right.level").then((batteryLevel: string) => {
+        wireless.battery.RightLevel = batteryLevel ? parseInt(batteryLevel, 10) : 100;
+      });
+      await state.currentDevice.command("wireless.battery.left.status").then((stateLeftStatus: string) => {
+        wireless.battery.LeftState = stateLeftStatus ? parseInt(stateLeftStatus, 10) : 0;
+      });
+      await state.currentDevice.command("wireless.battery.right.status").then((stateRightStatus: string) => {
+        wireless.battery.RightState = stateRightStatus ? parseInt(stateRightStatus, 10) : 0;
+      });
+      await state.currentDevice.command("wireless.battery.savingMode").then((batteryMode: string) => {
+        wireless.battery.savingMode = parseInt(batteryMode, 10) > 0;
+      });
 
-    await focus.command("wireless.battery.left.level").then(batteryLevel => {
-      wireless.battery.LeftLevel = batteryLevel ? parseInt(batteryLevel, 10) : 100;
-    });
-    await focus.command("wireless.battery.right.level").then(batteryLevel => {
-      wireless.battery.RightLevel = batteryLevel ? parseInt(batteryLevel, 10) : 100;
-    });
-    await focus.command("wireless.battery.left.status").then(state => {
-      wireless.battery.LeftState = state ? parseInt(state, 10) : 0;
-    });
-    await focus.command("wireless.battery.right.status").then(state => {
-      wireless.battery.RightState = state ? parseInt(state, 10) : 0;
-    });
-    await focus.command("wireless.battery.savingMode").then(batteryMode => {
-      wireless.battery.savingMode = parseInt(batteryMode, 10) > 0;
-    });
+      // Energy saving commands
 
-    // Energy saving commands
+      await state.currentDevice.command("led.brightness.wireless").then((brightness: string) => {
+        wireless.brightness = brightness ? parseInt(brightness, 10) : 0;
+      });
+      await state.currentDevice.command("led.brightnessUG.wireless").then((brightnessUG: string) => {
+        wireless.brightnessUG = brightnessUG ? parseInt(brightnessUG, 10) : 0;
+      });
+      await state.currentDevice.command("led.fade").then((fade: string) => {
+        wireless.fade = fade ? parseInt(fade, 10) : 0;
+      });
+      await state.currentDevice.command("idleleds.wireless").then((idleleds: string) => {
+        wireless.idleleds = idleleds ? parseInt(idleleds, 10) : 0;
+      });
 
-    await focus.command("led.brightness.wireless").then(brightness => {
-      wireless.brightness = brightness ? parseInt(brightness, 10) : 0;
-    });
-    await focus.command("led.brightnessUG.wireless").then(brightnessUG => {
-      wireless.brightnessUG = brightnessUG ? parseInt(brightnessUG, 10) : 0;
-    });
-    await focus.command("led.fade").then(fade => {
-      wireless.fade = fade ? parseInt(fade, 10) : 0;
-    });
-    await focus.command("idleleds.wireless").then(idleleds => {
-      wireless.idleleds = idleleds ? parseInt(idleleds, 10) : 0;
-    });
-    await focus.command("idleleds.true_sleep").then(true_sleep => {
-      wireless.true_sleep = parseInt(true_sleep, 10) > 0;
-    });
-    await focus.command("idleleds.true_sleep_time").then(true_sleep_time => {
-      wireless.true_sleep_time = true_sleep_time ? parseInt(true_sleep_time, 10) : 0;
-    });
+      // Bluetooth commands
 
-    // Bluetooth commands
+      await state.currentDevice.command("wireless.bluetooth.infoChannel 1").then((infoChannel1: string) => {
+        wireless.bluetooth.infoChannel1 = infoChannel1;
+      });
+      await state.currentDevice.command("wireless.bluetooth.infoChannel 2").then((infoChannel2: string) => {
+        wireless.bluetooth.infoChannel2 = infoChannel2;
+      });
+      await state.currentDevice.command("wireless.bluetooth.infoChannel 3").then((infoChannel3: string) => {
+        wireless.bluetooth.infoChannel3 = infoChannel3;
+      });
+      await state.currentDevice.command("wireless.bluetooth.infoChannel 4").then((infoChannel4: string) => {
+        wireless.bluetooth.infoChannel4 = infoChannel4;
+      });
+      await state.currentDevice.command("wireless.bluetooth.infoChannel 5").then((infoChannel5: string) => {
+        wireless.bluetooth.infoChannel5 = infoChannel5;
+      });
+      await state.currentDevice.command("wireless.bluetooth.deviceName").then((bluetoothState: string) => {
+        wireless.bluetooth.deviceName = bluetoothState;
+      });
 
-    await focus.command("wireless.bluetooth.infoChannel 1").then(infoChannel1 => {
-      wireless.bluetooth.infoChannel1 = infoChannel1;
-    });
-    await focus.command("wireless.bluetooth.infoChannel 2").then(infoChannel2 => {
-      wireless.bluetooth.infoChannel2 = infoChannel2;
-    });
-    await focus.command("wireless.bluetooth.infoChannel 3").then(infoChannel3 => {
-      wireless.bluetooth.infoChannel3 = infoChannel3;
-    });
-    await focus.command("wireless.bluetooth.infoChannel 4").then(infoChannel4 => {
-      wireless.bluetooth.infoChannel4 = infoChannel4;
-    });
-    await focus.command("wireless.bluetooth.infoChannel 5").then(infoChannel5 => {
-      wireless.bluetooth.infoChannel5 = infoChannel5;
-    });
-    await focus.command("wireless.bluetooth.deviceName").then(bluetoothState => {
-      wireless.bluetooth.deviceName = bluetoothState;
-    });
+      // rf commands
 
-    // rf commands
-
-    await focus.command("wireless.rf.channelHop").then(rfChannelHop => {
-      wireless.rf.channelHop = rfChannelHop;
-    });
-    await focus.command("wireless.rf.power").then(rfPower => {
-      wireless.rf.power = rfPower ? parseInt(rfPower, 10) : 0;
-    });
+      await state.currentDevice.command("wireless.rf.channelHop").then((rfChannelHop: string) => {
+        wireless.rf.channelHop = rfChannelHop ? parseInt(rfChannelHop, 10) : 0;
+      });
+      await state.currentDevice.command("wireless.rf.power").then((rfPower: string) => {
+        wireless.rf.power = rfPower ? parseInt(rfPower, 10) : 0;
+      });
+    }
 
     setWireless(wireless);
     setLocalLoading(false);
-    setLoading(false);
+    setIsSaving(false);
   }
 
   useEffect(() => {
@@ -158,9 +154,10 @@ function Wireless(props: WirelessPropsInterface) {
   }, []);
 
   async function sendRePairCommand() {
-    const focus = new Focus();
-    const result = await focus.command("wireless.rf.syncPairing");
-    console.log("command returned", result);
+    if (state.currentDevice) {
+      const result = await state.currentDevice.command("wireless.rf.syncPairing");
+      console.log("command returned", result);
+    }
   }
 
   async function destroyContext() {
@@ -179,24 +176,29 @@ function Wireless(props: WirelessPropsInterface) {
   }
 
   async function saveWirelessChanges() {
-    setLoading(true);
-    const focus = new Focus();
+    setIsSaving(true);
+    if (state.currentDevice) {
+      // Commands to be sent to the keyboard
+      await state.currentDevice.command("wireless.battery.savingMode", wireless.battery.savingMode ? "1" : "0");
+      await state.currentDevice.command("wireless.bluetooth.deviceName", wireless.bluetooth.deviceName);
+      await state.currentDevice.command("wireless.rf.channelHop", wireless.rf.channelHop.toString());
+      await state.currentDevice.command("wireless.rf.power", wireless.rf.power.toString());
 
-    // Commands to be sent to the keyboard
-    await focus.command("wireless.battery.savingMode", wireless.battery.savingMode ? 1 : 0);
-    await focus.command("wireless.bluetooth.deviceName", wireless.bluetooth.deviceName);
-    await focus.command("wireless.rf.channelHop", wireless.rf.channelHop);
-    await focus.command("wireless.rf.power", wireless.rf.power);
+      await state.currentDevice.command("led.brightness.wireless", wireless.brightness.toString());
+      await state.currentDevice.command("led.brightnessUG.wireless", wireless.brightnessUG.toString());
+      await state.currentDevice.command("led.fade", wireless.fade.toString());
+      await state.currentDevice.command("idleleds.wireless", wireless.idleleds.toString());
 
-    await focus.command("led.brightness.wireless", wireless.brightness);
-    await focus.command("led.brightnessUG.wireless", wireless.brightnessUG);
-    await focus.command("led.fade", wireless.fade);
-    await focus.command("idleleds.wireless", wireless.idleleds);
-    await focus.command("idleleds.true_sleep", wireless.true_sleep ? 1 : 0);
-    await focus.command("idleleds.true_sleep_time", wireless.true_sleep_time);
+      await state.currentDevice.command("led.brightness.wireless", wireless.brightness.toString());
+      await state.currentDevice.command("led.brightnessUG.wireless", wireless.brightnessUG.toString());
+      await state.currentDevice.command("led.fade", wireless.fade.toString());
+      await state.currentDevice.command("idleleds.wireless", wireless.idleleds.toString());
+      await state.currentDevice.command("idleleds.true_sleep", wireless.true_sleep ? "1" : "0");
+      await state.currentDevice.command("idleleds.true_sleep_time", wireless.true_sleep_time.toString());
 
-    setLoading(false);
-    destroyContext();
+      setIsSaving(false);
+      destroyContext();
+    }
   }
 
   if (loading) <LogoLoader />;
@@ -209,6 +211,7 @@ function Wireless(props: WirelessPropsInterface) {
           saveContext={saveWirelessChanges}
           destroyContext={destroyContext}
           inContext={modified}
+          isSaving={isSaving}
         />
         <div className="wirelessWrapper">
           <div className="wirelessInner">
@@ -231,6 +234,6 @@ function Wireless(props: WirelessPropsInterface) {
       </Container>
     </Styles>
   );
-}
+};
 
 export default Wireless;

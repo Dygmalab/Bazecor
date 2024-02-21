@@ -1,12 +1,27 @@
+/* Bazecor -- Kaleidoscope Command Center
+ * Copyright (C) 2024  Dygma Lab S.L.
+ *
+ * This program is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation, version 3.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 export interface WirelessPropsInterface {
   connected: boolean;
   path: string;
-  titleElement: () => void;
-  darkMode: () => void;
-  toggleDarkMode: () => void;
+  darkMode: boolean;
+  toggleDarkMode: (mode: string) => void;
   startContext: () => void;
   cancelContext: () => void;
-  updateAllowBeta: () => void;
+  updateAllowBeta: (event: any) => void;
   allowBeta: boolean;
   inContext: boolean;
   loading: boolean;
@@ -55,6 +70,7 @@ export interface BatterySettingsProps {
 export interface EnergyManagementProps {
   wireless: WirelessInterface;
   changeWireless: (wireless: WirelessInterface) => void;
+  updateTab?: (value: string) => void;
 }
 
 export interface AdvancedEnergyManagementProps {
@@ -65,8 +81,8 @@ export interface AdvancedEnergyManagementProps {
 }
 
 export interface RFSettingsProps {
-  wireless: WirelessInterface;
-  changeWireless: (wireless: WirelessInterface) => void;
+  wireless?: WirelessInterface;
+  changeWireless?: (wireless: WirelessInterface) => void;
   sendRePair: () => void;
 }
 
@@ -79,6 +95,7 @@ export interface SelectWirelessDropdownProps {
   // activeTab: number;
   keyCode: { base: number; modified: number };
   onKeySelect: (event: number) => void;
+  disable: boolean;
 }
 
 export interface WirelessButton {

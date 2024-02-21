@@ -3,7 +3,7 @@ import Styled from "styled-components";
 
 import Modal from "react-bootstrap/Modal";
 import { ipcRenderer } from "electron";
-import i18n from "../../i18n";
+import { i18n } from "@Renderer/i18n";
 
 import { RegularButton, RegularButtonFwRef, ButtonConfig } from "../../component/Button";
 import Title from "../../component/Title";
@@ -53,7 +53,7 @@ export default class RecordMacroModal extends React.Component {
     this.state = {
       showModal: false,
       isRecording: false,
-      isDelayActive: true,
+      isDelayActive: false,
       recorded: [],
     };
     this.translator = {
@@ -323,6 +323,12 @@ export default class RecordMacroModal extends React.Component {
         newRecorded.push(recorded[i]);
       }
     }
+    if (
+      newRecorded[newRecorded.length - 1].keycode === newRecorded[newRecorded.length - 2].keycode &&
+      newRecorded[newRecorded.length - 2].action === 8 &&
+      newRecorded[newRecorded.length - 1].action < 8
+    )
+      newRecorded.pop();
     console.log("Checking cleaned", newRecorded);
     return newRecorded;
   };
@@ -366,19 +372,19 @@ export default class RecordMacroModal extends React.Component {
               <Title text={i18n.editor.macros.delays} headingLevel={5} />
               <div className="recordMacroButtons">
                 <ButtonConfig
-                  icoSVG={<IconStopWatch />}
-                  icoPosition="left"
-                  buttonText={i18n.editor.macros.recordDelays}
-                  variation={`buttonConfigMinimal ${isDelayActive ? "config-active" : ""}`}
-                  onClick={this.setDelayOn}
-                  disabled={isRecording}
-                />
-                <ButtonConfig
                   icoSVG={<IconStopWatchCrossed />}
                   icoPosition="left"
                   buttonText={i18n.editor.macros.ignoreDelays}
                   variation={`buttonConfigMinimal ${!isDelayActive ? "config-active" : ""}`}
                   onClick={this.setDelayOff}
+                  disabled={isRecording}
+                />
+                <ButtonConfig
+                  icoSVG={<IconStopWatch />}
+                  icoPosition="left"
+                  buttonText={i18n.editor.macros.recordDelays}
+                  variation={`buttonConfigMinimal ${isDelayActive ? "config-active" : ""}`}
+                  onClick={this.setDelayOn}
                   disabled={isRecording}
                 />
               </div>

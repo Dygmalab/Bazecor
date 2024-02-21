@@ -7,7 +7,7 @@ import Dropdown from "react-bootstrap/Dropdown";
 // Local components
 import Title from "../../component/Title";
 import { ButtonConfig } from "../../component/Button";
-import i18n from "../../i18n";
+import { i18n } from "@Renderer/i18n";
 
 const Style = Styled.div`
 .dualFunctionPickerInner {
@@ -31,7 +31,7 @@ const Style = Styled.div`
   font-size: inherit;
   .badge-circle {
     width: 8px;
-    height: 8px; 
+    height: 8px;
     border-radius: 50%;
     background-color: rgba(254,0,124,1);
     position: absolute;

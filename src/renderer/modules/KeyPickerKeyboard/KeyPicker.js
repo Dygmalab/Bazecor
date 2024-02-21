@@ -81,7 +81,7 @@ import {
   IconLEDToggleEffectSm,
 } from "@Renderer/component/Icon";
 
-import i18n from "@Renderer/i18n";
+import { i18n } from "@Renderer/i18n";
 
 import Key from "@Renderer/modules/KeyPickerKeyboard/Key";
 import getLanguage from "@Renderer/modules/KeyPickerKeyboard/KeyPickerLanguage";
@@ -500,13 +500,13 @@ class KeyPicker extends Component {
             code === null
               ? false
               : Array.isArray(key.idArray)
-              ? key.idArray.some(key => key === code.base + code.modified || (key === code.base && key >= 104 && key <= 115))
-              : code.base === key.id &&
-                (code.base + code.modified < 53267 || code.base + code.modified > 60000) &&
-                (code.base + code.modified < 17450 || code.base + code.modified > 17501) &&
-                (code.base + code.modified < 49153 || code.base + code.modified > 49168)
-              ? true
-              : !!(code.modified > 0 && code.base + code.modified === key.id)
+                ? key.idArray.some(key => key === code.base + code.modified || (key === code.base && key >= 104 && key <= 115))
+                : code.base === key.id &&
+                    (code.base + code.modified < 53267 || code.base + code.modified > 60000) &&
+                    (code.base + code.modified < 17450 || code.base + code.modified > 17501) &&
+                    (code.base + code.modified < 49153 || code.base + code.modified > 49168)
+                  ? true
+                  : !!(code.modified > 0 && code.base + code.modified === key.id)
           }
           clicked={() => {
             key.mod === disableMods || key.move === disableMove ? () => {} : this.onKeyPress(key.id);
@@ -578,6 +578,7 @@ class KeyPicker extends Component {
                     actions={actions}
                     selKeys={selKeys}
                     onKeySelect={onKeySelect}
+                    disable={disableAll}
                     superkeys={superkeys}
                     keyCode={code}
                     notifText="BETA"
@@ -591,7 +592,7 @@ class KeyPicker extends Component {
                 <IconRobotSm />
               </div>
               <div className="keysButtonsList">
-                <SelectMacroCustomDropdown macros={macros} keyCode={code} onKeySelect={onKeySelect} />
+                <SelectMacroCustomDropdown macros={macros} keyCode={code} onKeySelect={onKeySelect} disable={disableAll} />
               </div>
             </div>
 
@@ -604,6 +605,7 @@ class KeyPicker extends Component {
                   action={action}
                   activeTab={activeTab}
                   keyCode={code}
+                  disable={disableAll}
                   onKeySelect={onKeySelect}
                   disableMods={disableMods}
                 />
@@ -615,7 +617,13 @@ class KeyPicker extends Component {
                   <IconWirelessSm />
                 </div>
                 <div className="keysButtonsList">
-                  <SelectWirelessDropdown action={action} activeTab={activeTab} keyCode={code} onKeySelect={onKeySelect} />
+                  <SelectWirelessDropdown
+                    action={action}
+                    activeTab={activeTab}
+                    keyCode={code}
+                    onKeySelect={onKeySelect}
+                    disable={disableAll}
+                  />
                 </div>
               </div>
             )}
@@ -631,6 +639,7 @@ class KeyPicker extends Component {
                     action={action}
                     activeTab={activeTab}
                     keyCode={code}
+                    disable={disableAll}
                     onKeySelect={onKeySelect}
                   />
                 </div>
@@ -641,7 +650,7 @@ class KeyPicker extends Component {
                 <IconMouseSm />
               </div>
               <div className="keysButtonsList">
-                <SelectMouseCustomDropdown keyCode={code} onKeySelect={onKeySelect} />
+                <SelectMouseCustomDropdown keyCode={code} onKeySelect={onKeySelect} disable={disableAll} />
               </div>
             </div>
             {activeTab === "super" ? (
@@ -654,6 +663,7 @@ class KeyPicker extends Component {
                 <div className="keysButtonsList">
                   <ButtonConfig
                     buttonText={i18n.editor.superkeys.specialKeys.noKey}
+                    disabled={disableAll}
                     onClick={() => {
                       onKeySelect(0);
                     }}
@@ -661,6 +671,7 @@ class KeyPicker extends Component {
                   />
                   <ButtonConfig
                     buttonText={i18n.editor.standardView.trans}
+                    disabled={disableAll}
                     onClick={() => {
                       onKeySelect(65535);
                     }}
@@ -680,6 +691,7 @@ class KeyPicker extends Component {
                   tooltipDelay={100}
                   icoSVG={<IconMediaPlayPauseSm />}
                   selected={keyCode.base + keyCode.modified === 22733}
+                  disabled={disableAll}
                   onClick={() => {
                     onKeySelect(22733);
                   }}
@@ -689,6 +701,7 @@ class KeyPicker extends Component {
                   tooltipDelay={100}
                   icoSVG={<IconMediaStopSm />}
                   selected={keyCode.base + keyCode.modified === 22711}
+                  disabled={disableAll}
                   onClick={() => {
                     onKeySelect(22711);
                   }}
@@ -698,6 +711,7 @@ class KeyPicker extends Component {
                   tooltipDelay={100}
                   icoSVG={<IconMediaRewindSm />}
                   selected={keyCode.base + keyCode.modified === 22710}
+                  disabled={disableAll}
                   onClick={() => {
                     onKeySelect(22710);
                   }}
@@ -707,6 +721,7 @@ class KeyPicker extends Component {
                   tooltipDelay={100}
                   icoSVG={<IconMediaForwardSm />}
                   selected={keyCode.base + keyCode.modified === 22709}
+                  disabled={disableAll}
                   onClick={() => {
                     onKeySelect(22709);
                   }}
@@ -716,6 +731,7 @@ class KeyPicker extends Component {
                   tooltipDelay={100}
                   icoSVG={<IconMediaShuffleSm />}
                   selected={keyCode.base + keyCode.modified === 22713}
+                  disabled={disableAll}
                   onClick={() => {
                     onKeySelect(22713);
                   }}
@@ -725,6 +741,7 @@ class KeyPicker extends Component {
                   tooltipDelay={100}
                   icoSVG={<IconMediaSoundMuteSm />}
                   selected={keyCode.base + keyCode.modified === 19682}
+                  disabled={disableAll}
                   onClick={() => {
                     onKeySelect(19682);
                   }}
@@ -733,6 +750,7 @@ class KeyPicker extends Component {
                   tooltip={i18n.editor.superkeys.specialKeys.soundLess}
                   tooltipDelay={100}
                   icoSVG={<IconMediaSoundLessSm />}
+                  disabled={disableAll}
                   selected={keyCode.base + keyCode.modified === 23786}
                   onClick={() => {
                     onKeySelect(23786);
@@ -742,6 +760,7 @@ class KeyPicker extends Component {
                   tooltip={i18n.editor.superkeys.specialKeys.soundMore}
                   tooltipDelay={100}
                   icoSVG={<IconMediaSoundMoreSm />}
+                  disabled={disableAll}
                   selected={keyCode.base + keyCode.modified === 23785}
                   onClick={() => {
                     onKeySelect(23785);
@@ -759,6 +778,7 @@ class KeyPicker extends Component {
                   tooltip={i18n.editor.superkeys.specialKeys.eject}
                   tooltipDelay={100}
                   icoSVG={<IconToolsEjectSm />}
+                  disabled={disableAll}
                   selected={keyCode.base + keyCode.modified === 22712}
                   onClick={() => {
                     onKeySelect(22712);
@@ -768,6 +788,7 @@ class KeyPicker extends Component {
                   tooltip={i18n.editor.superkeys.specialKeys.calculator}
                   tooltipDelay={100}
                   icoSVG={<IconToolsCalculatorSm />}
+                  disabled={disableAll}
                   selected={keyCode.base + keyCode.modified === 18834}
                   onClick={() => {
                     onKeySelect(18834);
@@ -777,6 +798,7 @@ class KeyPicker extends Component {
                   tooltip={i18n.editor.superkeys.specialKeys.camera}
                   tooltipDelay={100}
                   icoSVG={<IconToolsCameraSm />}
+                  disabled={disableAll}
                   selected={keyCode.base + keyCode.modified === 18552}
                   onClick={() => {
                     onKeySelect(18552);
@@ -787,6 +809,7 @@ class KeyPicker extends Component {
                   tooltip={i18n.editor.superkeys.specialKeys.brightnessLess}
                   tooltipDelay={100}
                   icoSVG={<IconToolsBrightnessLessSm />}
+                  disabled={disableAll}
                   selected={keyCode.base + keyCode.modified === 23664}
                   onClick={() => {
                     onKeySelect(23664);
@@ -796,6 +819,7 @@ class KeyPicker extends Component {
                   tooltip={i18n.editor.superkeys.specialKeys.brightnessMore}
                   tooltipDelay={100}
                   icoSVG={<IconToolsBrightnessMoreSm />}
+                  disabled={disableAll}
                   selected={keyCode.base + keyCode.modified === 23663}
                   onClick={() => {
                     onKeySelect(23663);
@@ -805,6 +829,7 @@ class KeyPicker extends Component {
                   tooltip={i18n.editor.superkeys.specialKeys.sleep}
                   tooltipDelay={100}
                   icoSVG={<IconSleepSm />}
+                  disabled={disableAll}
                   selected={keyCode.base + keyCode.modified === 20866}
                   onClick={() => {
                     onKeySelect(20866);
@@ -814,6 +839,7 @@ class KeyPicker extends Component {
                   tooltip={i18n.editor.superkeys.specialKeys.shutdown}
                   tooltipDelay={100}
                   icoSVG={<IconShutdownSm />}
+                  disabled={disableAll}
                   selected={keyCode.base + keyCode.modified === 20865}
                   onClick={() => {
                     onKeySelect(20865);
@@ -831,6 +857,7 @@ class KeyPicker extends Component {
                   icoSVG={<IconLEDToggleEffectSm />}
                   tooltip={i18n.editor.superkeys.specialKeys.ledToggleTootip}
                   tooltipDelay={300}
+                  disabled={disableAll}
                   onClick={() => {
                     onKeySelect(17154);
                   }}
@@ -841,6 +868,7 @@ class KeyPicker extends Component {
                   tooltip={i18n.editor.superkeys.specialKeys.ledPreviousEffectTootip}
                   tooltipDelay={300}
                   icoSVG={<IconLEDPreviousEffectSm />}
+                  disabled={disableAll}
                   onClick={() => {
                     onKeySelect(17153);
                   }}
@@ -850,6 +878,7 @@ class KeyPicker extends Component {
                   tooltip={i18n.editor.superkeys.specialKeys.ledNextEffectTootip}
                   tooltipDelay={300}
                   icoSVG={<IconLEDNextEffectSm />}
+                  disabled={disableAll}
                   onClick={() => {
                     onKeySelect(17152);
                   }}

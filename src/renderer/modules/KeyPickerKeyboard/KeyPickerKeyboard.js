@@ -1,6 +1,5 @@
 import React, { Component, Fragment } from "react";
 import Styled from "styled-components";
-import i18n from "../../i18n";
 
 // Internal components
 import { KeymapDB } from "../../../api/keymap";
@@ -283,7 +282,7 @@ class KeyPickerKeyboard extends Component {
       action: Number.isInteger(props.action) ? props.action : 0,
       actions: tempActions,
       modifs: tempModifs,
-      disable: false,
+      disable: props.keyIndex === -1,
       selectdual: 0,
       selectlayer: 0,
       activeTab: "editor",
@@ -302,9 +301,9 @@ class KeyPickerKeyboard extends Component {
     window.addEventListener("resize", this.updateSelectorPosition);
   }
 
-  componentDidUpdate() {
+  componentDidUpdate(prevProps) {
     let selectdual = 0;
-    const disable = this.props.code === 0;
+    const disable = this.props.keyIndex === -1;
     const keynum = this.props.code != null ? this.props.code.modified + this.props.code.base : 0;
     if (keynum >= 51218 && keynum <= 53266) {
       selectdual = (this.props.code.modified >>> 8) << 8;
@@ -351,7 +350,7 @@ class KeyPickerKeyboard extends Component {
     } else {
       activeTab = "super";
     }
-    if (JSON.stringify(this.state.actions) !== JSON.stringify(tempActions)) {
+    if (JSON.stringify(this.state.actions) !== JSON.stringify(tempActions) || prevProps.keyIndex !== this.props.keyIndex) {
       this.setState({
         action: this.props.keyIndex !== this.state.pastkeyindex ? 0 : this.state.action,
         actions: tempActions,
@@ -433,7 +432,8 @@ class KeyPickerKeyboard extends Component {
       }
     }
     if (aux.label) {
-      translatedAction = (aux.extraLabel != undefined ? `${aux.extraLabel} ` : "") + aux.label;
+      if (React.isValidElement(aux.label)) return aux.label;
+      translatedAction = (aux.extraLabel !== undefined ? `${aux.extraLabel} ` : "") + aux.label;
     }
     return translatedAction;
   };
@@ -485,8 +485,12 @@ class KeyPickerKeyboard extends Component {
         <div className="singleViewWrapper" ref={this.layoutSelectorWatcherPosition}>
           <div className="keyEnhanceWrapper">
             <div className="keyEnhanceInner">
-              <KeyVisualizer newValue={selKey} keyCode={code} />
-              <div className={`ModPicker ${this.props.macros[KC - 53852] ? "ModPickerScrollHidden" : ""}`}>
+              <KeyVisualizer newValue={selKey} keyCode={code} disable={disable} />
+              <div
+                className={`ModPicker ${this.props.macros[KC - 53852] ? "ModPickerScrollHidden" : ""} ${
+                  disable ? "disable" : ""
+                }`}
+              >
                 {superkeys[superk.indexOf(KC)] ? (
                   <div className="superkeyHint">
                     {superKeysActions.map((item, index) => (

@@ -140,6 +140,9 @@ width: 100%;
         box-shadow: ${({ theme }) => theme.styles.button.config.boxShadowActive};
     }
   }
+  .button-config-style .disable {
+    pointer-events: none;
+  }
 `;
 
 class SelectLayersCustomDropdown extends Component {
@@ -173,7 +176,7 @@ class SelectLayersCustomDropdown extends Component {
   }
 
   render() {
-    const { action, keyCode, onKeySelect, activeTab, disableMods } = this.props;
+    const { action, keyCode, onKeySelect, activeTab, disableMods, disable } = this.props;
     const KC = keyCode.base + keyCode.modified;
 
     return (
@@ -189,7 +192,7 @@ class SelectLayersCustomDropdown extends Component {
               : ""
           }`}
         >
-          <Dropdown.Toggle id="dropdown-custom" className="button-config-style">
+          <Dropdown.Toggle id="dropdown-custom" disabled={disable} className={`button-config-style ${disable ? "disable" : ""}`}>
             <div className="dropdownItemSelected">
               <div className="dropdownItem">
                 <div className="dropdownItem">Layers</div>

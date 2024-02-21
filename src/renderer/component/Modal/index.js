@@ -20,5 +20,14 @@ import NameModal from "./NameModal";
 import MacroKeyModal from "./MacroKeyModal";
 import PreviewMacroModal from "./PreviewMacroModal";
 import RecordMacroModal from "../../modules/Macros/RecordMacroModal";
+import ReOrderDevicesModal from "./ReOrderDevicesModal";
 
-export { AdvancedBatterySettingsModal, AlertModal, NameModal, MacroKeyModal, PreviewMacroModal, RecordMacroModal };
+export {
+  AdvancedBatterySettingsModal,
+  AlertModal,
+  NameModal,
+  MacroKeyModal,
+  PreviewMacroModal,
+  RecordMacroModal,
+  ReOrderDevicesModal,
+};

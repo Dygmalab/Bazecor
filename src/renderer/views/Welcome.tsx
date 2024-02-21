@@ -19,23 +19,25 @@ import React from "react";
 import Styled from "styled-components";
 import { toast } from "react-toastify";
 
-import Container from "react-bootstrap/Container";
-import Card from "react-bootstrap/Card";
-import { useNavigate } from "react-router-dom";
-import Focus from "../../api/focus";
-import i18n from "../i18n";
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@Renderer/components/ui/card";
 
-import { PageHeader } from "../modules/PageHeader";
-import Title from "../component/Title";
-import ToastMessage from "../component/ToastMessage";
-import { RegularButton } from "../component/Button";
-import { IconKeyboard, IconFloppyDisk } from "../component/Icon";
+import Container from "react-bootstrap/Container";
+import { useNavigate } from "react-router-dom";
+import { useDevice } from "@Renderer/DeviceContext";
+import { i18n } from "@Renderer/i18n";
+
+import { PageHeader } from "@Renderer/modules/PageHeader";
+import Title from "@Renderer/component/Title";
+import ToastMessage from "@Renderer/component/ToastMessage";
+import { RegularButton } from "@Renderer/component/Button";
+import { IconKeyboard, IconFloppyDisk } from "@Renderer/component/Icon";
+import { DygmaDeviceType } from "@Renderer/types/devices";
 
 const Styles = Styled.div`
 height: inherit;
 .main-container {
   overflow: hidden;
-  height: 100vh;  
+  height: 100vh;
 }
 .welcome {
   height: 100%;
@@ -43,7 +45,7 @@ height: inherit;
   flex-wrap: wrap;
   justify-content: center;
   &.center-content {
-    height: 100vh;  
+    height: 100vh;
   }
 }
 .welcomeInner {
@@ -59,7 +61,7 @@ height: inherit;
 }
 .card {
     padding: 0;
-    
+
 }
 .card-header {
     padding: 24px 32px;
@@ -94,7 +96,7 @@ height: inherit;
 .keyboardSelected {
     display: flex;
     grid-gap: 16px;
-    align-items: center; 
+    align-items: center;
     justify-content: space-between;
     h6 {
         opacity: 0.6;
@@ -103,22 +105,22 @@ height: inherit;
 }
 `;
 
-function Welcome(props: any) {
+interface WelcomeProps {
+  onConnect: (currentDevice: unknown, file: null) => void;
+  device: DygmaDeviceType;
+}
+
+function Welcome(props: WelcomeProps) {
   const navigate = useNavigate();
+  const { state } = useDevice();
+
   const { onConnect, device } = props;
 
   const reconnect = async () => {
-    const focus = new Focus();
-    const dev = {
-      path: focus._port.path,
-      device: focus.device,
-    };
-
     try {
-      if (!dev.path) {
-        dev.device.device = dev.device;
+      if (state.currentDevice) {
+        await onConnect(state.currentDevice, null);
       }
-      await onConnect(dev, null);
     } catch (err) {
       toast.error(<ToastMessage title={i18n.errors.preferenceFailOnSave} content={err.toString()} icon={<IconFloppyDisk />} />, {
         icon: "",
@@ -126,12 +128,19 @@ function Welcome(props: any) {
     }
   };
 
-  const focus = new Focus();
-  const dev = device.device || focus.device;
-
-  const reconnectButton = focus._port && (
+  const reconnectButton = state.currentDevice && (
     <RegularButton onClick={reconnect} buttonText={i18n.welcome.reconnect} styles="outline transp-bg" />
   );
+
+  const showDeviceName = () => {
+    const name = state.currentDevice?.device?.info?.displayName || device?.info?.displayName;
+    return (
+      <div className="content">
+        <Title text={name} headingLevel={4} />
+        {state.currentDevice ? <Title text={state.currentDevice?.path} headingLevel={6} /> : ""}
+      </div>
+    );
+  };
 
   return (
     <Styles>
@@ -140,18 +149,15 @@ function Welcome(props: any) {
         <div className="welcomeWrapper">
           <div className="welcomeInner">
             <Card className="welcomeCard">
-              <Card.Header>
-                <div className="keyboardSelected">
-                  <div className="content">
-                    <Title text={dev.info.displayName} headingLevel={4} />
-                    {focus._port ? <Title text={focus._port.path} headingLevel={6} /> : ""}
-                  </div>
+              <CardHeader>
+                <CardTitle className="keyboardSelected">
+                  {showDeviceName()}
                   <div className="icon">
                     <IconKeyboard />
                   </div>
-                </div>
-              </Card.Header>
-              <Card.Body>
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
                 <div>
                   <Title type="warning" text={i18n.welcome.bootloaderTitle} headingLevel={3} />
                   <p>{i18n.welcome.description}</p>
@@ -167,8 +173,8 @@ function Welcome(props: any) {
                     </ul>
                   </span>
                 </div>
-              </Card.Body>
-              <Card.Footer>
+              </CardContent>
+              <CardFooter>
                 <div className="firmwareButton">
                   {reconnectButton}
                   <RegularButton
@@ -179,7 +185,7 @@ function Welcome(props: any) {
                     }}
                   />
                 </div>
-              </Card.Footer>
+              </CardFooter>
             </Card>
           </div>
         </div>

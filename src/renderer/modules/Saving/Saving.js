@@ -17,13 +17,13 @@
 
 import React from "react";
 import Styled from "styled-components";
-import i18n from "../../i18n";
+import { i18n } from "@Renderer/i18n";
 import { RegularButton } from "../../component/Button";
 
 const Style = Styled.div`
 
 `;
-function Saving({ saveContext, destroyContext, inContext }) {
+function Saving({ saveContext, destroyContext, inContext, isSaving }) {
   return (
     <Style className="savingButtons">
       <RegularButton
@@ -31,14 +31,14 @@ function Saving({ saveContext, destroyContext, inContext }) {
         buttonText={i18n.app.cancelPending.button}
         styles="outline transp-bg"
         size="sm"
-        disabled={!inContext}
+        disabled={!inContext || isSaving}
       />
       <RegularButton
         onClick={saveContext}
-        buttonText={i18n.components.save.button}
+        buttonText={isSaving ? i18n.components.save.saving : i18n.components.save.button}
         styles="primary"
         size="sm"
-        disabled={!inContext}
+        disabled={!inContext || isSaving}
       />
     </Style>
   );

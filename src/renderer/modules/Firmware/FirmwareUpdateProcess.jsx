@@ -19,7 +19,8 @@ import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import Styled from "styled-components";
 import { useMachine } from "@xstate/react";
-import i18n from "@Renderer/i18n";
+import { i18n } from "@Renderer/i18n";
+import { useDevice } from "@Renderer/DeviceContext";
 
 // State machine
 import FlashDevice from "@Renderer/controller/FlashingSM/FlashDevice";
@@ -92,7 +93,8 @@ height: inherit;
 `;
 
 function FirmwareUpdateProcess(props) {
-  const { nextBlock, retryBlock, errorBlock, context, toggleFlashing, toggleFwUpdate, onDisconnect, device } = props;
+  const { nextBlock, retryBlock, context, toggleFlashing, toggleFwUpdate, onDisconnect } = props;
+  const { state: deviceState } = useDevice();
   const [toggledFlashing, sendToggledFlashing] = useState(false);
   const handleKeyDown = event => {
     switch (event.keyCode) {
@@ -106,9 +108,10 @@ function FirmwareUpdateProcess(props) {
   };
   const [state, send] = useMachine(FlashDevice, {
     context: {
-      device: context.device,
-      originalDevice: device,
-      backup: context.backup,
+      deviceState,
+      device: deviceState.currentDevice.device,
+      originalDevice: deviceState.currentDevice,
+      backup: context.backup ? context.backup : undefined,
       firmwares: context.firmwares,
       isUpdated: context.isUpdated,
       versions: context.versions,
@@ -130,16 +133,16 @@ function FirmwareUpdateProcess(props) {
       toggleFlashing: async () => {
         if (toggledFlashing) return;
         console.log("starting flashing indicators");
-        await toggleFlashing();
-        await toggleFwUpdate();
+        toggleFlashing();
+        toggleFwUpdate(true);
         sendToggledFlashing(true);
       },
       finishFlashing: async () => {
         if (!toggledFlashing) return;
         sendToggledFlashing(false);
         console.log("closing flashin process");
-        await toggleFlashing();
-        await toggleFwUpdate();
+        toggleFlashing();
+        toggleFwUpdate(false);
         onDisconnect();
       },
     },
@@ -151,7 +154,7 @@ function FirmwareUpdateProcess(props) {
       setLoading(false);
     }
     if (state.matches("success")) nextBlock(state.context);
-  }, [nextBlock, errorBlock, state]);
+  }, [nextBlock, state]);
 
   const stepsDefy = [
     { step: 1, title: i18n.firmwareUpdate.texts.flashCardTitle1, description: i18n.firmwareUpdate.texts.flashCardTitle2 },

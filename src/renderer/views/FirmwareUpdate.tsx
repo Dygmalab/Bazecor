@@ -7,7 +7,7 @@ import Styled from "styled-components";
 import Container from "react-bootstrap/Container";
 
 // Extra components
-import i18n from "@Renderer/i18n";
+import { i18n } from "@Renderer/i18n";
 
 // Bazecor components
 import { PageHeader } from "@Renderer/modules/PageHeader";
@@ -19,6 +19,7 @@ import {
 } from "@Renderer/modules/Firmware";
 
 import { FirmwareLoader } from "@Renderer/component/Loader";
+import { useDevice } from "@Renderer/DeviceContext";
 
 const Styles = Styled.div`
 height: inherit;
@@ -48,14 +49,15 @@ height: inherit;
 
 function FirmwareUpdate(props: any) {
   const { allowBeta, toggleFlashing, toggleFwUpdate, onDisconnect, device } = props;
-  const [state, send] = useMachine(MainProcessSM);
+  const { state: deviceState } = useDevice();
+  const [state, send] = useMachine(MainProcessSM, { context: { Block: 0, deviceState } });
 
   const nextBlock = (context: any) => {
     send("NEXT", { data: context });
   };
 
-  const retryBlock = () => {
-    send("RETRY");
+  const retryBlock = (context: any) => {
+    send("RETRY", { data: context });
   };
 
   const errorBlock = (error: any) => {

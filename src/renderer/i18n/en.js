@@ -1,6 +1,7 @@
 // -*- mode: js-jsx -*-
 /* Bazecor -- Kaleidoscope Command Center
  * Copyright (C) 2018, 2019  Keyboardio, Inc.
+ * Copyright (C) 2019, 2024  DygmaLab SE
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -33,6 +34,8 @@ const English = {
       "<p style='font-weight:401;'>You have made changes that haven't been saved yet.</p><p>Save or discard them before leaving.</p>",
   },
   success: {
+    languageSaved: "Key picker language has been changed to ",
+    pairedSuccesfully: "Your device has ben succesfully re-paired",
     preferencesSaved: "Your preferences have been saved.",
     preferencesSavedBody: "",
     changesSaved: "Changes saved successfully",
@@ -44,6 +47,7 @@ const English = {
       success: "Sent!",
       savePreferences: "Save preferences",
       button: "Save<span> changes</span>",
+      saving: "Saving...",
     },
     pickerColorButton: "Change color",
     underglowColorButton: "Change color of all underglows",
@@ -220,6 +224,7 @@ const English = {
       delayTabs: {
         title: "Delay",
         description: "Add mouse clicks events in your key.",
+        minMaxDescription: "from 1 to 65535 miliseconds",
       },
       macroTab: {
         callout: "<p>That's right! You can add macros inside macros! 🔥</p>",
@@ -463,8 +468,8 @@ const English = {
   },
   preferences: {
     title: "Preferences",
-    devtools: "Chrome Tools",
-    language: "Select keyboard layout",
+    devtools: "Developer Tools",
+    language: "Select language",
     interface: "Interface",
     tooltips: {
       language: "",
@@ -494,7 +499,7 @@ const English = {
       advancedSettingsDesc: "Settings applied when the low-power mode is off",
       savingMode: "Energy saving mode",
       savingModeDesc: "Easy way to extend battery life",
-      savingModeInfo: "Consider that the battery has a safety policy that is activated when it reaches 10%.",
+      savingModeInfo: "Keep in mind that the battery incorporates a safety protocol triggered once it descends to 10%.",
       lowPowerMode: "Low-power mode",
       settings: {
         maximumLED: "Maximum LED intensity",
@@ -504,7 +509,7 @@ const English = {
         highBatteryImpact: "High battery impact",
         mediumBatteryImpact: "Medium battery impact",
         lowBatteryImpact: "Low battery impact",
-        trueSleepEnabling: "True sleep of sides",
+        trueSleepEnabling: "True sleep",
         trueSleepEnablingDesc:
           "True sleep will put your sides in deep sleep (they will require a physical key press to awake), this mode saves a moderate amount of battery when the keyboard is idle for long periods, like at night.",
         trueSleepTimeDesc: "True sleep Time control that sets the time it takes to activate true sleep after LEDs are turned off",
@@ -528,6 +533,7 @@ const English = {
       RFSettings: "RF Settings",
       repairChannel: "Repair Channel",
       reconnectSides: "Reconnect sides",
+      RFRadioSignal: "Radio Signal",
       repairChannelDescription:
         "Generate a new channel communication between the sides to reduce noise interference and enhance signal quality for uninterrupted and crystal-clear communication.",
     },
@@ -669,6 +675,7 @@ const English = {
     installUdevRules: "Fix it",
     permissionError: `Your computer won't let BAZECOR talk to your keyboard. (You do not have read/write permissions to {{path}}.)`,
     permissionErrorSuggestion: `BAZECOR can fix this by installing a udev rules file into /etc/udev/rules.d/.`,
+    HIDReminderOfManuallyScan: `To use Bazecor on bluetooth, make sure the keyboard is connected via BT to the computer and <strong> click on scan keyboards once.</strong> This is necessary due to Chrome's API restrictions.`,
     virtualKeyboard: {
       buttonText: "Use without a keyboard",
       modaltitle: "Manage virtual keyboard",
@@ -700,7 +707,7 @@ const English = {
       versionUpdatedTitle: "Your firmware is up to date 🤙",
       versionOutdatedTitle: "New update is available",
       calloutIntroText:
-        "Updating your device firmware is how we implement new cool features and bug fixes.<br><br>Make sure your keyboard is connected directly to your computer; no hubs or KVMs, please. And don't leave the app while flashing 😊",
+        "Updating your device firmware is how we implement new cool features and bug fixes.<br><br>Make sure your keyboard is connected directly to your computer using the original Dygma cables; no hubs or KVMs, please. And don't leave the app while flashing 😊",
       neuronUpdatedText: "[Solid as a rock!]",
       neuronOutdatedText: "[Almost is never enough]",
       versionExists: "Device Firmware Update",
@@ -713,8 +720,7 @@ const English = {
       advUsersText2: "If you have installed your own ",
       advUsersText3: ", this update will overwrite it.",
       disclaimerTitle: "Start update process",
-      disclaimerContent:
-        "<strong>Before the update the Neuron will backup your layers and settings after that the update process will begin automatically.</strong>",
+      disclaimerContent: `<strong>Before the update the Neuron will backup your layers and settings after that the update process will begin automatically.</strong>`,
       disclaimerContent2:
         "If the firmware update process isn't successful, don't worry. It won't damage your device, but you will need to repeat the process.",
       disclaimerContent3:

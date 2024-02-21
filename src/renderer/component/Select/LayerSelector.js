@@ -18,7 +18,7 @@
 import React from "react";
 import Styled from "styled-components";
 import Dropdown from "react-bootstrap/Dropdown";
-import i18n from "../../i18n";
+import { i18n } from "@Renderer/i18n";
 
 import {
   IconArrowsSmallSeparating,
@@ -36,7 +36,7 @@ import { NameModal } from "../Modal"; // Imported custom modal component
 import { ButtonSettings } from "../Button";
 import { KeyboardViewSelector } from "../ToggleButtons";
 
-const Style = Styled.div` 
+const Style = Styled.div`
 display: flex;
 align-items: center;
 .dropdownMultipleActions {

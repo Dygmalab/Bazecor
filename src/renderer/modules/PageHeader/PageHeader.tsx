@@ -55,17 +55,13 @@ z-index: 300;
       color: ${({ theme }) => theme.styles.pageHeader.titleColor};
       font-size: 20px;
     }
-    &.pageHeaderFlatBottom {
-      border-radius: 6px 6px 0 0;
-    }
-
     .pageTitle {
       width: 190px;
       white-space: nowrap;
       br {
         content: ' ';
       }
-    } 
+    }
     .pageTools {
       width: calc(100% - 190px);
       display: flex;
@@ -96,17 +92,40 @@ z-index: 300;
 `;
 
 function PageHeader(props: PageHeaderType) {
-  const { size, text, style, contentSelector, colorEditor, isColorActive, showSaving, saveContext, destroyContext, inContext } =
-    props;
+  const {
+    size,
+    text,
+    styles,
+    contentSelector,
+    colorEditor,
+    isColorActive,
+    showSaving,
+    saveContext,
+    destroyContext,
+    inContext,
+    isSaving,
+    primaryButton,
+    secondaryButton,
+  } = props;
   return (
-    <Style className={`${style === "pageHeaderFlatBottom" ? "pageHeaderSticky" : ""}`}>
-      <div className={`pageHeader ${size && size} ${style && style} ${isColorActive ? "extraPanelActive" : ""}`}>
+    <Style className={`${styles === "pageHeaderFlatBottom" ? "pageHeaderSticky" : ""}`}>
+      <div className={`pageHeader ${size && size} ${styles && styles} ${isColorActive ? "extraPanelActive" : ""}`}>
         <div className="pageTitle">
           <Title text={text} headingLevel={2} />
         </div>
         <div className="pageTools">
           {contentSelector || ""}
-          {showSaving ? <Saving saveContext={saveContext} destroyContext={destroyContext} inContext={inContext} /> : ""}
+          {showSaving ? (
+            <Saving saveContext={saveContext} destroyContext={destroyContext} inContext={inContext} isSaving={isSaving} />
+          ) : (
+            ""
+          )}
+          {secondaryButton || primaryButton ? (
+            <div className="savingButtons">
+              {secondaryButton || ""}
+              {primaryButton || ""}
+            </div>
+          ) : null}
         </div>
       </div>
       {isColorActive ? colorEditor : ""}

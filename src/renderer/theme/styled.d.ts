@@ -246,6 +246,14 @@ declare module "styled-components" {
           colorHover: string;
           colorActive: string;
         };
+        buttonLarge: {
+          borderColor: string;
+          borderHoverColor: string;
+          backgroundColor: string;
+          backgroundHoverColor: string;
+          titleColor: string;
+          contentColor: string;
+        };
         recordButton: {
           background: string;
           backgroundHover: string;
@@ -303,6 +311,19 @@ declare module "styled-components" {
         cardBattery: {
           backgroundColor: string;
         };
+        cardDevice: {
+          cardBackground: string;
+          cardBorder: string;
+          cardBorderConnected: string;
+          cardOverlayOffline: string;
+          canvasOpacity: number;
+          cardFooterBg: string;
+          dropdownBgColor: string;
+          dropdownDisabledColor: string;
+          cardTitleColor: string;
+          cardSubTitleColor: string;
+          cardPathColor: string;
+        };
       };
       cardButtons: {
         background: string;
@@ -319,6 +340,15 @@ declare module "styled-components" {
         borderColor: string;
         backgroundActive: string;
         borderColorActive: string;
+      };
+      deviceManager: {
+        noDevicesBackground: string;
+      };
+      devicePreview: {
+        raiseOn: string;
+        raiseOff: string;
+        defyOn: string;
+        defyOff: string;
       };
       dropdown: {
         backgroundButtonColor: string;
@@ -419,6 +449,15 @@ declare module "styled-components" {
         labelBorderSm: string;
         bgOldToNew: string;
       };
+      filterHeader: {
+        titleColor: string;
+        borderColor: string;
+        tabBackgroundColor: string;
+        tabBackgroundActive: string;
+        tabBackgroundHover: string;
+        triggerModalColor: string;
+        triggerModalHover: string;
+      };
       firmwareErrorPanel: {
         textColor: string;
       };
@@ -467,6 +506,12 @@ declare module "styled-components" {
         inputGroup: {
           background: string;
         };
+      };
+      helpMessage: {
+        titleColor: string;
+        titleHoverColor: string;
+        textColor: string;
+        textHoverColor: string;
       };
       listGroup: {
         listItem: {
@@ -569,6 +614,16 @@ declare module "styled-components" {
         backgroundInner: string;
         titleColor: string;
         footerBackground: string;
+        modalDevices: {
+          bodyBackground: string;
+          cardBackground: string;
+          cardBorderColor: string;
+          titleColor: string;
+          subTitleColor: string;
+          contentColor: string;
+          dragBackground: string;
+          dragIconColor: string;
+        };
       };
       mouseButtons: {
         background: string;

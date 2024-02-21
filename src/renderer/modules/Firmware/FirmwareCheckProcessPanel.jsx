@@ -19,17 +19,18 @@ import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import Styled from "styled-components";
 import { useMachine } from "@xstate/react";
-import i18n from "../../i18n";
+import { useDevice } from "@Renderer/DeviceContext";
+import { i18n } from "@Renderer/i18n";
 
 // State machine
-import DeviceChecks from "../../controller/FlashingSM/DeviceChecks";
+import DeviceChecks from "@Renderer/controller/FlashingSM/DeviceChecks";
 
 // Visual components
-import Title from "../../component/Title";
-import Callout from "../../component/Callout";
-import { RegularButton } from "../../component/Button";
-import { FirmwareLoader } from "../../component/Loader";
-import AccordionFirmware from "../../component/Accordion/AccordionFirmware";
+import Title from "@Renderer/component/Title";
+import Callout from "@Renderer/component/Callout";
+import { RegularButton } from "@Renderer/component/Button";
+import { FirmwareLoader } from "@Renderer/component/Loader";
+import AccordionFirmware from "@Renderer/component/Accordion/AccordionFirmware";
 
 import FirmwareNeuronStatus from "./FirmwareNeuronStatus";
 import FirmwareWarningList from "./FirmwareWarningList";
@@ -164,8 +165,9 @@ height:inherit;
 `;
 
 function FirmwareCheckProcessPanel(props) {
-  const { nextBlock, retryBlock, errorBlock, context } = props;
-  const [state, send] = useMachine(DeviceChecks, { context: { device: context.device, firmwares: context.firmwares } });
+  const { nextBlock, retryBlock, context } = props;
+  const { state: deviceState } = useDevice();
+  const [state, send] = useMachine(DeviceChecks, { context: { device: context.device, deviceState } });
   const [listItems, setlistItems] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -174,7 +176,7 @@ function FirmwareCheckProcessPanel(props) {
       setLoading(false);
     }
     if (state.matches("success")) nextBlock(state.context);
-  }, [state.context, state, nextBlock, errorBlock]);
+  }, [state.context, state, nextBlock]);
 
   useEffect(() => {
     const newValue = ["sideLeftOk", "sideLeftBL", "sideRightOK", "sideRightBL", "backup"].map((text, index) => {
@@ -253,7 +255,8 @@ function FirmwareCheckProcessPanel(props) {
                           : i18n.firmwareUpdate.texts.backwds
                       }
                       onClick={() => {
-                        retryBlock();
+                        send("CANCEL");
+                        retryBlock(state.context);
                       }}
                     />
                   </div>

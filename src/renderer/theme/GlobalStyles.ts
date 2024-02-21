@@ -22,33 +22,6 @@ const GlobalStyles = createGlobalStyle<{ theme: DefaultTheme }>`
     font-display: block;
   }
 
-  body {
-    background: ${({ theme }) => theme.colors.body};
-    font-weight: 600;
-    background-image: url(${({ theme }) => theme.body.backgroundImage});
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-attachment: fixed;
-    color: ${({ theme }) => theme.colors.text};
-    font-family: ${({ theme }) => theme.font};
-    // font-family: ${({ theme }) => theme.font},  -apple-system, sans-serif;
-
-    text-rendering: optimizeLegibility;
-    font-smoothing: antialiased;
-    -moz-font-smoothing: antialiased;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    -moz-font-feature-settings: "liga" on;
-
-    overflow: overlay;
-  }
-
-  @media screen and (-webkit-min-device-pixel-ratio: 2),
-  (min-resolution: 192dpi) {
-      body {
-        background-image: url(${({ theme }) => theme.body.backgroundImage2x});
-      }
-  }
   #root {
     display: grid;
     --sidebarWidth: ${({ theme }) => theme.sidebarWidthMedium}px;
@@ -133,6 +106,8 @@ const GlobalStyles = createGlobalStyle<{ theme: DefaultTheme }>`
     cursor: pointer;
     background-color: ${({ theme }) => theme.colors.button.background};
     color: #FFFFFF;
+    font-family: ${({ theme }) => theme.font};
+    font-weight: 600;
   }
 
 
@@ -547,7 +522,8 @@ button:focus-visible,
   padding: 6px 16px;
   border-radius: 4px;
   line-height: 2em;
-  border: ${({ theme }) => theme.styles.button.short.background};
+  color: ${({ theme }) => theme.styles.button.short.color};
+  border: ${({ theme }) => theme.styles.button.short.border};
   background: ${({ theme }) => theme.styles.button.short.background};
 }
 .button.short:hover {
@@ -980,6 +956,13 @@ div.card.card-preferences .card-body {
   border: none;
   border-radius: 6px;
   background-color: ${({ theme }) => theme.styles.modal.background};
+}
+.modal.with-drag .modal-content {
+  transform: none; //Fix drap position in chrome
+  margin-left: 64px;
+}
+.modal.with-drag .modal-body {
+  padding: 24px 0;
 }
 .modal .modal-header {
   border: none;
@@ -1764,6 +1747,9 @@ div.card.card-preferences .card-body {
   top: 0;
   box-shadow: none;
 }
+.rangeslider-horizontal.slider-danger .rangeslider__fill {
+  background-color: ${({ theme }) => theme.colors.brandPrimary};
+}
 
 .rangeslider-horizontal .rangeslider__handle {
   background: ${({ theme }) => theme.styles.slider.handleBackgroundColor};
@@ -1774,6 +1760,10 @@ div.card.card-preferences .card-body {
   height: 18px;
   border-radius: 50%;
   font-weight: 600;
+}
+.rangeslider-horizontal.slider-danger .rangeslider__handle {
+  background-color: ${({ theme }) => theme.colors.brandPrimary};
+  box-shadow: 0px 4px 12px ${({ theme }) => theme.colors.brandPrimary};
 }
 .rangeslider-horizontal .rangeslider__handle:after {
   content: none;
@@ -1985,7 +1975,9 @@ div.card.card-preferences .card-body {
 .pageHeader .savingButtons {
   display: flex;
   flex-wrap: nowrap;
-
+  button {
+    margin-top: 0;
+  }
 }
 .pageHeader .itemListelector .dropdown-menu {
   max-height: 80vh;

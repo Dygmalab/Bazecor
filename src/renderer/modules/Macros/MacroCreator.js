@@ -19,13 +19,12 @@ import React, { Component } from "react";
 
 import Styled from "styled-components";
 
-import Tab from "react-bootstrap/Tab";
-import Nav from "react-bootstrap/Nav";
 import { MdUnfoldLess, MdKeyboardArrowUp, MdKeyboardArrowDown, MdTimer } from "react-icons/md";
-import i18n from "../../i18n";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@Renderer/components/ui/tabs";
+import { motion } from "framer-motion";
+import { i18n } from "@Renderer/i18n";
 
 import Title from "../../component/Title";
-import CustomTab from "../../component/Tab";
 import TextTab from "../KeysTabs/TextTab";
 import KeysTab from "../KeysTabs/KeysTab";
 import LayersTab from "../KeysTabs/LayersTab";
@@ -112,9 +111,6 @@ const Styles = Styled.div`
 
 
 .tabWrapper {
-  display: grid;
-  grid-template-columns: minmax(auto, 240px) 1fr;
-  margin-top: 3px;
   h3 {
     margin-bottom: 16px;
     color: ${({ theme }) => theme.styles.macro.tabTile};
@@ -174,14 +170,6 @@ const Styles = Styled.div`
   grid-template-columns: minmax(125px,170px) auto;
   grid-gap: 14px;
 }
-.specialTabsContent {
-  .tab-content {
-    margin-top: -24px;
-    padding: 24px;
-    border-radius: 4px;
-    background-color: ${({ theme }) => theme.styles.macro.tabSpecialContentBackground};
-  }
-}
 `;
 
 class MacroCreator extends Component {
@@ -191,6 +179,7 @@ class MacroCreator extends Component {
     this.state = {
       addText: "",
       rows: [],
+      currentTab: 0,
     };
     this.keymapDB = props.keymapDB;
     this.modifiers = [
@@ -306,10 +295,9 @@ class MacroCreator extends Component {
 
   onAddText = () => {
     const { addText } = this.state;
-    const { macro } = this.props;
-    console.log("MacroCreator onAddText", addText, macro);
+    console.log("MacroCreator onAddText", addText);
     const aux = addText;
-    let newRows = this.createConversion(macro.actions);
+    let newRows = [];
     newRows = newRows.concat(
       aux.split("").flatMap((symbol, index) => {
         let item = symbol.toUpperCase();
@@ -391,17 +379,14 @@ class MacroCreator extends Component {
   };
 
   onAddRecorded = recorded => {
-    const { macro } = this.props;
-    console.log("MacroCreator onAddRecorded", recorded, macro);
-    let { actions } = macro;
-    actions = actions.concat(
+    console.log("MacroCreator onAddRecorded", recorded);
+    const newRows = [].concat(
       recorded.map(item => ({
         keyCode: item.keycode,
         type: item.action,
       })),
     );
-    const newRows = this.createConversion(actions);
-    this.updateRows(newRows);
+    this.updateRows(this.createConversion(newRows));
   };
 
   createConversion = actions => {
@@ -485,7 +470,7 @@ class MacroCreator extends Component {
 
   onAddSymbol = (keyCode, action) => {
     const randID = new Date().getTime() + Math.floor(Math.random() * 1000);
-    const newRows = this.state.rows;
+    const newRows = [];
     const symbol = this.keymapDB.parse(keyCode).label;
     newRows.push({
       symbol,
@@ -501,10 +486,10 @@ class MacroCreator extends Component {
 
   onAddDelay = (delay, action) => {
     const randID = new Date().getTime() + Math.floor(Math.random() * 1000);
-    const newRows = this.state.rows;
+    const newRows = [];
     newRows.push({
-      symbol: parseInt(delay),
-      keyCode: parseInt(delay),
+      symbol: parseInt(delay, 10),
+      keyCode: parseInt(delay, 10),
       action,
       id: newRows.length,
       color: "#faf0e3",
@@ -516,7 +501,7 @@ class MacroCreator extends Component {
 
   onAddDelayRnd = (delayMin, delayMax, action) => {
     const randID = new Date().getTime() + Math.floor(Math.random() * 1000);
-    const newRows = this.state.rows;
+    const newRows = [];
     newRows.push({
       symbol: `${delayMin} - ${delayMax}`,
       keyCode: [delayMin, delayMax],
@@ -531,7 +516,7 @@ class MacroCreator extends Component {
 
   onAddSpecial = (keyCode, action) => {
     const randID = new Date().getTime() + Math.floor(Math.random() * 1000);
-    const newRows = this.state.rows;
+    const newRows = [];
     let symbol = this.keymapDB.parse(keyCode);
     if (symbol.extraLabel !== undefined) {
       symbol = `${symbol.extraLabel} ${symbol.label}`;
@@ -599,7 +584,7 @@ class MacroCreator extends Component {
       uid: randID,
       ucolor: randColor,
     });
-    actions[1].keyCode = actions[1].keyCode ^ modBit;
+    actions[1].keyCode ^= modBit;
     actions[1].symbol = this.keymapDB.parse(actions[1].keyCode).label;
     return actions;
   };
@@ -634,77 +619,125 @@ class MacroCreator extends Component {
   };
 
   render() {
+    const tabVariants = {
+      hidden: { opacity: 0 },
+      visible: { opacity: 1, transition: { duration: 0.5 } },
+    };
     return (
       <Styles>
-        <Tab.Container id="macroCreator" defaultActiveKey="tabText">
-          <div className="tabWrapper">
-            <div className="tabCategories">
+        <Tabs
+          defaultValue="tabText"
+          orientation="vertical"
+          index={this.state.currentTab}
+          onChange={index =>
+            this.setState({
+              currentTab: index,
+            })
+          }
+        >
+          <div className="tabWrapper grid mt-[3px] grid-cols-[minmax(auto,_240px)_1fr]">
+            <div className="px-4 py-4 rounded-bl-xl bg-gray-50 dark:bg-[#2b2c43]">
               <Title headingLevel={3} text={i18n.general.actions} />
               <RecordMacroModal onAddRecorded={this.onAddRecorded} keymapDB={this.keymapDB} />
-              <Nav className="flex-column">
-                <CustomTab eventKey="tabText" text="Text" icon={<IconLetterColor />} />
-                <CustomTab eventKey="tabKeys" text="Keys" icon={<IconKeyboard />} />
-                <CustomTab eventKey="tabSpecial" text="Special functions" icon={<IconMagicStick />} />
-                <CustomTab eventKey="tabDelay" text="Delay" icon={<IconStopWatch />} />
-              </Nav>
+              <TabsList className="flex flex-col gap-1">
+                <TabsTrigger value="tabText" variant="tab">
+                  <IconLetterColor />
+                  Text
+                </TabsTrigger>
+                <TabsTrigger value="tabKeys" variant="tab">
+                  <IconKeyboard />
+                  Keys
+                </TabsTrigger>
+                <TabsTrigger value="tabSpecial" variant="tab">
+                  <IconMagicStick />
+                  Special functions
+                </TabsTrigger>
+                <TabsTrigger value="tabDelay" variant="tab">
+                  <IconStopWatch />
+                  Delay
+                </TabsTrigger>
+              </TabsList>
             </div>
-            <div className="tabContent">
+            <div className="px-4 py-4 rounded-br-xl bg-gray-25 dark:bg-gray-800">
               <div className="tabContentInner">
                 <Title headingLevel={3} text={i18n.general.configure} />
-                <Tab.Content>
-                  <Tab.Pane eventKey="tabText">
+                <TabsContent value="tabText">
+                  <motion.div initial="hidden" animate="visible" variants={tabVariants}>
                     <TextTab onAddText={this.onAddText} onTextChange={this.onTextChange} addText={this.state.addText} />
-                  </Tab.Pane>
-                  <Tab.Pane eventKey="tabKeys">
+                  </motion.div>
+                </TabsContent>
+                <TabsContent value="tabKeys">
+                  <motion.div initial="hidden" animate="visible" variants={tabVariants}>
                     <KeysTab
                       onKeyPress={this.onKeyPress}
                       kbtype={this.props.kbtype}
                       selectedlanguage={this.props.selectedlanguage}
                     />
-                  </Tab.Pane>
-                  <Tab.Pane eventKey="tabSpecial">
-                    <Tab.Container id="macroCreatorSpecialFunctions" defaultActiveKey="tabLayers">
-                      <div className="specialTabsWrapper">
-                        <div className="specialTabsCollum">
-                          <Nav className="flex-column">
-                            <CustomTab eventKey="tabLayers" text="Layers" icon={<IconLayers />} />
-                            <CustomTab eventKey="tabMacro" text="Macro" icon={<IconRobot />} />
-                            <CustomTab eventKey="tabMedia" text="Media & LED" icon={<IconNote />} />
-                            <CustomTab eventKey="tabMouse" text="Mouse" icon={<IconMouse />} />
-                          </Nav>
+                  </motion.div>
+                </TabsContent>
+                <TabsContent value="tabSpecial">
+                  <motion.div initial="hidden" animate="visible" variants={tabVariants}>
+                    <Tabs defaultValue="tabLayers" orientation="vertical">
+                      <div className="grid grid-cols-[minmax(125px,_170px)_auto]">
+                        <div className="pl-0 pr-4 py-3">
+                          <TabsList className="flex flex-col gap-1">
+                            <TabsTrigger value="tabLayers" variant="tab">
+                              <IconLayers />
+                              Layers
+                            </TabsTrigger>
+                            <TabsTrigger value="tabMacro" variant="tab">
+                              <IconRobot />
+                              Macro
+                            </TabsTrigger>
+                            <TabsTrigger value="tabMedia" variant="tab">
+                              <IconNote />
+                              Media & LED
+                            </TabsTrigger>
+                            <TabsTrigger value="tabMouse" variant="tab">
+                              <IconMouse />
+                              Mouse
+                            </TabsTrigger>
+                          </TabsList>
                         </div>
-                        <div className="specialTabsContent">
-                          <Tab.Content>
-                            <Tab.Pane eventKey="tabLayers">
+                        <div className="px-4 py-2 rounded-md bg-gray-50/40 dark:bg-gray-900/20 mt-[-24px]">
+                          <TabsContent value="tabLayers">
+                            <motion.div initial="hidden" animate="visible" variants={tabVariants}>
                               <LayersTab onLayerPress={this.onLayerPress} />
-                            </Tab.Pane>
-                            <Tab.Pane eventKey="tabMacro">
+                            </motion.div>
+                          </TabsContent>
+                          <TabsContent value="tabMacro">
+                            <motion.div initial="hidden" animate="visible" variants={tabVariants}>
                               <MacroTab
                                 macros={this.props.macros}
                                 selectedMacro={this.props.selected}
                                 onMacrosPress={this.onMacrosPress}
                               />
-                            </Tab.Pane>
-                            <Tab.Pane eventKey="tabMedia">
+                            </motion.div>
+                          </TabsContent>
+                          <TabsContent value="tabMedia">
+                            <motion.div initial="hidden" animate="visible" variants={tabVariants}>
                               <MediaAndLightTab onAddSpecial={this.onAddSpecial} />
-                            </Tab.Pane>
-                            <Tab.Pane eventKey="tabMouse">
+                            </motion.div>
+                          </TabsContent>
+                          <TabsContent value="tabMouse">
+                            <motion.div initial="hidden" animate="visible" variants={tabVariants}>
                               <MouseTab onAddSpecial={this.onAddSpecial} />
-                            </Tab.Pane>
-                          </Tab.Content>
+                            </motion.div>
+                          </TabsContent>
                         </div>
                       </div>
-                    </Tab.Container>
-                  </Tab.Pane>
-
-                  <Tab.Pane eventKey="tabDelay">
+                    </Tabs>
+                  </motion.div>
+                </TabsContent>
+                <TabsContent value="tabDelay">
+                  <motion.div initial="hidden" animate="visible" variants={tabVariants}>
                     <DelayTab onAddDelay={this.onAddDelay} onAddDelayRnd={this.onAddDelayRnd} />
-                  </Tab.Pane>
-                </Tab.Content>
+                  </motion.div>
+                </TabsContent>
               </div>
             </div>
           </div>
-        </Tab.Container>
+        </Tabs>
       </Styles>
     );
   }

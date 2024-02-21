@@ -17,16 +17,11 @@
 import async from "async";
 import Focus from "../../focus";
 import { decodeHexLine } from "../decodeHexLine";
+import { MAX_MS, PACKET_SIZE, TYPE_DAT, TYPE_ELA, TYPE_ESA } from "../flasherConstants";
+import { num2hexstr } from "../num2hexstr";
+import { str2ab } from "../str2ab";
 
-const MAX_MS = 2000;
-
-const PACKET_SIZE = 4096;
-
-const TYPE_DAT = 0x00;
-const TYPE_ESA = 0x02;
-const TYPE_ELA = 0x04;
-
-const focus = new Focus();
+const focus = Focus.getInstance();
 
 /**
  * Writes data to the given bootloader serial port.
@@ -108,27 +103,6 @@ async function disconnect_cb(cb) {
   cb(null, "");
 }
 
-function padToN(number, numberToPad) {
-  let str = "";
-
-  for (let i = 0; i < numberToPad; i++) str += "0";
-
-  return (str + number).slice(-numberToPad);
-}
-
-function num2hexstr(number, paddedTo) {
-  return padToN(number.toString(16), paddedTo);
-}
-
-function str2ab(str) {
-  const buf = new ArrayBuffer(str.length); // 2 bytes for each char
-  const bufView = new Uint8Array(buf);
-  for (let i = 0, strLen = str.length; i < strLen; i++) {
-    bufView[i] = str.charCodeAt(i) & 0xff;
-  }
-  return buf;
-}
-
 /**
  * Object NRf52833 with flash method.
  *
@@ -192,7 +166,8 @@ const NRf52833 = {
 
     //ERASE device
     func_array.push(function (callback) {
-      write_cb(str2ab("E" + num2hexstr(dataObjects[0].address, 8) + "#"), callback);
+      //Max addres of firmware program  is 0x00072000
+      write_cb(str2ab(`E${num2hexstr(dataObjects[0].address, 8)},${num2hexstr(0x00072000-dataObjects[0].address, 8)}#`), callback);
     });
     func_array.push(callback => {
       read_cb(callback);

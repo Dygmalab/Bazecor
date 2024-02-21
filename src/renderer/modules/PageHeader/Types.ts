@@ -3,7 +3,7 @@ import { ReactNode } from "react";
 export interface PageHeaderType {
   size?: number;
   text: string;
-  style?: string;
+  styles?: string;
   contentSelector?: ReactNode | undefined;
   colorEditor?: ReactNode | undefined;
   isColorActive?: boolean;
@@ -11,4 +11,7 @@ export interface PageHeaderType {
   saveContext?: unknown | undefined;
   destroyContext?: unknown | undefined;
   inContext?: boolean;
+  isSaving?: boolean;
+  primaryButton?: React.ReactNode;
+  secondaryButton?: React.ReactNode;
 }

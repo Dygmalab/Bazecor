@@ -146,7 +146,7 @@ export default class Colormap {
   }
 }
 
-const focus = new Focus();
+const focus = Focus.getInstance();
 focus.addCommands({ colormap: new Colormap() });
 focus.addMethod("setLayerSize", "colormap");
 focus.addMethod("setLEDMode", "colormap");

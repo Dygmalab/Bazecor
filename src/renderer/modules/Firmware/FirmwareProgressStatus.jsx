@@ -19,7 +19,7 @@ import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import Styled from "styled-components";
 import ProgressBar from "react-bootstrap/ProgressBar";
-import i18n from "../../i18n";
+import { i18n } from "@Renderer/i18n";
 
 import Title from "../../component/Title";
 import { StepsProgressBar } from "../../component/StepsBar";

@@ -4,7 +4,7 @@ import Styled from "styled-components";
 import DefyBatteryIndicatorLeft from "@Renderer/component/Battery/DefyBatteryIndicatorLeft";
 import DefyBatteryIndicatorRight from "@Renderer/component/Battery/DefyBatteryIndicatorRight";
 
-import i18n from "../../i18n";
+import { i18n } from "@Renderer/i18n";
 
 const Style = Styled.div`
 .levelIndicator {

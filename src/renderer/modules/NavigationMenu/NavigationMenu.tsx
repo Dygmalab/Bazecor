@@ -1,4 +1,6 @@
 /* eslint-disable react/jsx-no-bind */
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-nocheck
 // -*- mode: js-jsx -*-
 /* Bazecor
  * Copyright (C) 2022  Dygmalab, Inc.
@@ -18,20 +20,24 @@
 
 import React, { useEffect, useState, useCallback } from "react";
 import { Link, useLocation } from "react-router-dom";
-import SemVer from "semver";
 import { Octokit } from "@octokit/core";
+import SemVer from "semver";
 
 import { Nav, Navbar, NavbarBrand } from "react-bootstrap";
 import Styled from "styled-components";
 
-import Version from "@Types/version";
-import Pages from "@Types/pages";
 import DygmaLogo from "@Assets/logo.svg";
+import { showDevtools } from "@Renderer/devMode";
+import { useDevice } from "@Renderer/DeviceContext";
 import { AlertModal } from "@Renderer/component/Modal";
-import { BatteryStatus } from "../Battery";
-import i18n from "../../i18n";
-import Focus from "../../../api/focus";
-import { NavigationButton } from "../../component/Button";
+import { BatteryStatus } from "@Renderer/modules/Battery";
+import { NavigationButton } from "@Renderer/component/Button";
+import { i18n } from "@Renderer/i18n";
+
+// Types
+import Version from "@Types/version";
+import { DygmaDeviceType } from "@Renderer/types/devices";
+import { NavigationMenuProps } from "@Renderer/types/navigation";
 
 import {
   IconKeyboardSelector,
@@ -40,7 +46,7 @@ import {
   IconRobot2Stroke,
   IconThunder2Stroke,
   IconPreferences2Stroke,
-  IconWireless,
+  IconBazecordevtools,
 } from "../../component/Icon";
 
 const Styles = Styled.div`
@@ -98,33 +104,18 @@ const Styles = Styled.div`
 }
 `;
 
-interface NavigationMenuProps {
-  connected: boolean;
-  flashing: boolean;
-  fwUpdate: boolean;
-  allowBeta: boolean;
-  loading: boolean;
-  inContext: boolean;
-  pages: Pages;
-}
+function NavigationMenu(props: NavigationMenuProps) {
+  const { state } = useDevice();
 
-interface Device {
-  vendor: any;
-  product: any;
-  keyboardType: string;
-  displayName: string;
-  urls: any;
-}
-
-function NavigationMenu(props: NavigationMenuProps): React.JSX.Element {
+  const [checkedVer, setCheckedVer] = useState(false);
   const [versions, setVersions] = useState(null);
   const [isUpdated, setIsUpdated] = useState(true);
   const [isBeta, setIsBeta] = useState(false);
-  const [device, setDevice] = useState<Record<string, Device>>({});
+  const [device, setDevice] = useState<Record<string, DygmaDeviceType>>({});
   const [virtual, setVirtual] = useState(false);
   const location = useLocation();
   const currentPage = location.pathname;
-  const { connected, pages, fwUpdate, flashing, allowBeta, loading, inContext } = props;
+  const { connected, pages, fwUpdate, flashing, allowBeta, modified, loading } = props;
 
   const getGitHubFW = useCallback(
     async (product: any) => {
@@ -151,10 +142,10 @@ function NavigationMenu(props: NavigationMenuProps): React.JSX.Element {
   );
 
   const checkKeyboardMetadata = useCallback(async () => {
-    const focus = new Focus();
-    setDevice(focus.device);
-    if (focus.device === undefined || focus.device.bootloader) return;
-    let parts = await focus.command("version");
+    setIsUpdated(true);
+    setDevice(state.currentDevice.device);
+    if (state.currentDevice.device === undefined || state.currentDevice.device.bootloader) return;
+    let parts = await state.currentDevice.command("version");
     parts = parts.split(" ");
     const getVersions: Version = {
       bazecor: parts[0],
@@ -167,31 +158,38 @@ function NavigationMenu(props: NavigationMenuProps): React.JSX.Element {
     // Getting GitHub Data
     let fwList = [];
     try {
-      fwList = await getGitHubFW(focus.device.info.product);
+      fwList = await getGitHubFW(state.currentDevice.device.info.product);
     } catch (error) {
       console.log("Error when fetching GitHub data");
       console.warn(error);
       fwList = [{ version: cleanedVersion }];
     }
     // Comparing online Data to FW version
-    const semVerCheck = SemVer.compare(fwList[0].version, cleanedVersion);
-    Beta = Beta || focus.device.info.product !== "Raise";
+    const semVerCheck = fwList.length > 0 ? SemVer.compare(fwList[0].version, cleanedVersion) : 0;
+    Beta = Beta || state.currentDevice.device.info.product !== "Raise";
     setVersions(getVersions);
-    setIsUpdated(semVerCheck > 0);
+    setIsUpdated(semVerCheck !== 1);
     setIsBeta(Beta);
-    setVirtual(focus.file);
-  }, [getGitHubFW]);
+    setVirtual(state.currentDevice.file);
+    setCheckedVer(true);
+  }, [getGitHubFW, state.currentDevice]);
 
   useEffect(() => {
-    if (!flashing && connected) {
+    if (!flashing && connected && !loading && !checkedVer) {
       checkKeyboardMetadata();
     }
-  }, [flashing, connected, checkKeyboardMetadata]);
+  }, [flashing, connected, loading, checkKeyboardMetadata, checkedVer]);
+
+  useEffect(() => {
+    if (checkedVer && !connected) {
+      setCheckedVer(false);
+    }
+  }, [checkedVer, connected]);
 
   const [showAlertModal, setShowAlertModal] = useState(false);
 
   function linkHandler(event: React.MouseEvent<HTMLElement>) {
-    if (inContext) {
+    if (modified) {
       event.preventDefault();
       setShowAlertModal(true);
       // alert("you have pending changes! save or discard them before leaving.");
@@ -201,7 +199,11 @@ function NavigationMenu(props: NavigationMenuProps): React.JSX.Element {
     <Styles>
       <Navbar
         className={`left-navbar sidebar ${
-          connected && device && device.info && device.info.keyboardType === "wireless" && versions !== null
+          connected &&
+          device &&
+          state.currentDevice.device.info &&
+          state.currentDevice.device.info.keyboardType === "wireless" &&
+          versions !== null
             ? "isWireless"
             : "wired"
         }`}
@@ -216,30 +218,34 @@ function NavigationMenu(props: NavigationMenuProps): React.JSX.Element {
               <>
                 {pages.keymap && (
                   <>
-                    <Link to="/editor" onClick={linkHandler} className={`list-link ${fwUpdate ? "disabled" : ""}`}>
+                    <Link to="/editor" onClick={linkHandler} className={`list-link ${fwUpdate || loading ? "disabled" : ""}`}>
                       <NavigationButton
                         selected={currentPage === "/editor"}
                         buttonText={i18n.app.menu.editor}
                         icoSVG={<IconKeyboard2Stroke />}
-                        disabled={fwUpdate}
+                        disabled={fwUpdate || loading}
                       />
                     </Link>
-                    <Link to="/macros" onClick={linkHandler} className={`list-link ${fwUpdate ? "disabled" : ""}`}>
+                    <Link to="/macros" onClick={linkHandler} className={`list-link ${fwUpdate || loading ? "disabled" : ""}`}>
                       <NavigationButton
                         selected={currentPage === "/macros"}
                         buttonText={i18n.app.menu.macros}
                         icoSVG={<IconRobot2Stroke />}
-                        disabled={fwUpdate}
+                        disabled={fwUpdate || loading}
                       />
                     </Link>
-                    <Link to="/superkeys" onClick={linkHandler} className={`list-link ${fwUpdate || !isBeta ? "disabled" : ""}`}>
+                    <Link
+                      to="/superkeys"
+                      onClick={linkHandler}
+                      className={`list-link ${fwUpdate || !isBeta || loading ? "disabled" : ""}`}
+                    >
                       <NavigationButton
                         selected={currentPage === "/superkeys"}
                         buttonText={i18n.app.menu.superkeys}
                         icoSVG={<IconThunder2Stroke />}
                         showNotif={isBeta}
                         notifText="BETA"
-                        disabled={fwUpdate || !isBeta}
+                        disabled={fwUpdate || !isBeta || loading}
                       />
                     </Link>
                   </>
@@ -247,46 +253,72 @@ function NavigationMenu(props: NavigationMenuProps): React.JSX.Element {
                 <Link
                   to="/firmware-update"
                   onClick={linkHandler}
-                  className={`list-link ${fwUpdate || virtual ? "disabled" : ""}`}
+                  className={`list-link ${
+                    fwUpdate || virtual || state.currentDevice.type === "hid" || loading ? "disabled" : ""
+                  }`}
                 >
                   <NavigationButton
                     selected={currentPage === "/firmware-update"}
-                    showNotif={isUpdated}
+                    showNotif={!isUpdated}
                     buttonText={i18n.app.menu.firmwareUpdate}
                     icoSVG={<IconMemory2Stroke />}
-                    disabled={fwUpdate || virtual}
+                    disabled={fwUpdate || virtual || state.currentDevice.type === "hid" || loading}
                   />
                 </Link>
               </>
             )}
-            <Link to="/keyboard-select" onClick={linkHandler} className={`list-link ${fwUpdate ? "disabled" : ""}`}>
+            <Link to="/keyboard-select" onClick={linkHandler} className={`list-link ${fwUpdate || loading ? "disabled" : ""}`}>
               <NavigationButton
                 selected={currentPage === "/keyboard-select"}
                 buttonText={i18n.app.menu.selectAKeyboard}
                 icoSVG={<IconKeyboardSelector />}
-                disabled={fwUpdate}
+                disabled={fwUpdate || loading}
               />
             </Link>
           </div>
           <div className="bottomMenu">
-            <Link to="/preferences" onClick={linkHandler} className={`list-link ${fwUpdate ? "disabled" : ""}`}>
+            {showDevtools && (
+              <Link to="/bazecordevtools" onClick={linkHandler} className={`list-link ${fwUpdate || loading ? "disabled" : ""}`}>
+                <NavigationButton
+                  selected={currentPage === "/bazecordevtools"}
+                  buttonText="Dev tools"
+                  icoSVG={<IconBazecordevtools width={32} height={32} strokeWidth={2} />}
+                  disabled={fwUpdate || loading}
+                />
+              </Link>
+            )}
+            <Link to="/preferences" onClick={linkHandler} className={`list-link ${fwUpdate || loading ? "disabled" : ""}`}>
               <NavigationButton
                 selected={currentPage === "/preferences"}
                 buttonText={i18n.app.menu.preferences}
                 icoSVG={<IconPreferences2Stroke />}
-                disabled={fwUpdate}
+                disabled={fwUpdate || loading}
               />
             </Link>
-            {connected && device && device.info && device.info.keyboardType === "wireless" && versions !== null ? (
+            {/* <Link to="/device-manager" className="list-link">
+              <NavigationButton
+                selected={false}
+                showNotif={false}
+                buttonText="Device Manager"
+                icoSVG={<IconHome />}
+                disabled={false}
+              />
+            </Link> */}
+            {connected &&
+            state.currentDevice &&
+            state.currentDevice.device.info &&
+            state.currentDevice.device.info.product !== "Raise" &&
+            state.currentDevice.device.info.keyboardType === "wireless" &&
+            versions !== null ? (
               <>
-                <Link to="/wireless" onClick={linkHandler} className={`list-link ${fwUpdate ? "disabled" : ""}`}>
+                {/* <Link to="/wireless" onClick={linkHandler} className={`list-link ${fwUpdate || loading ? "disabled" : ""}`}>
                   <NavigationButton
                     selected={currentPage === "/wireless"}
                     buttonText={i18n.app.menu.wireless}
                     icoSVG={<IconWireless width={42} height={42} strokeWidth={2} />}
-                    disabled={fwUpdate}
+                    disabled={fwUpdate || loading}
                   />
-                </Link>
+                </Link> */}
                 <BatteryStatus disable={fwUpdate || virtual || loading} />
               </>
             ) : (

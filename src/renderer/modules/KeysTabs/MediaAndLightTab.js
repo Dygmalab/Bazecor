@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import Styled from "styled-components";
-import i18n from "@Renderer/i18n";
+import { i18n } from "@Renderer/i18n";
 
 import Title from "@Renderer/component/Title";
 import Callout from "@Renderer/component/Callout";
