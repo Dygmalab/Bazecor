@@ -1837,11 +1837,6 @@ const LayoutEditor = (props: LayoutEditorProps) => {
               onColorSelect={onColorSelect}
               colorButtonIsSelected={isColorButtonSelected}
               onColorPick={onColorPick}
-              colorsInUse={palette.map((color, idx) => {
-                const presence = colorMap.map(lx => lx.find((x: number) => x === idx));
-                if (presence.find(x => x !== undefined) !== undefined) return true;
-                return false;
-              })}
               selected={selectedPaletteColor}
               isColorButtonSelected={isColorButtonSelected}
               onColorButtonSelect={onColorButtonSelect}

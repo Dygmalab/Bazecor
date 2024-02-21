@@ -123,13 +123,13 @@ class ColorEditor extends Component<ColorEditorProps, { displayColorPicker: bool
   }
 
   render() {
-    const { colors, selected, toChangeAllKeysColor, deviceName, colorsInUse } = this.props;
+    const { colors, selected, toChangeAllKeysColor, deviceName } = this.props;
     const { displayColorPicker } = this.state;
 
     const layerButtons = colors.map((data, idx) => {
       const menuKey = `color-${idx.toString()}-${colors[idx].rgb.toString()}`;
       const buttonStyle = {
-        backgroundColor: colorsInUse[idx] ? colors[idx].rgb : "transparent",
+        backgroundColor: colors[idx].rgb,
       };
       return (
         // eslint-disable-next-line react/jsx-filename-extension
