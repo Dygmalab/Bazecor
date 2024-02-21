@@ -938,7 +938,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
           }
           KeyMap.onlyCustom = true;
           const args = flatten(KeyMap.custom).map(k => keymapDB.serialize(k).toString());
-          await currentDevice.command("keymap", ...args);
+          await currentDevice.command("keymap.custom", ...args);
         }
 
         const colormap = await getColormap();
