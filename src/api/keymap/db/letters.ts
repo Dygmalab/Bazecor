@@ -16,8 +16,9 @@
  */
 
 import { withModifiers } from "./utils";
+import { BaseKeycodeTableType } from "../types";
 
-const LetterTable = {
+const LetterTable: BaseKeycodeTableType = {
   groupName: "Letters",
   keys: [
     {
@@ -277,4 +278,4 @@ const ModifiedLetterTables = [
   AllModLetterTable,
 ];
 
-export { LetterTable as default, ModifiedLetterTables };
+export { LetterTable, ModifiedLetterTables };

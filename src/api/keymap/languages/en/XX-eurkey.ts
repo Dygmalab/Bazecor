@@ -19,167 +19,10 @@
  */
 
 import { withModifiers } from "../../db/utils";
-import LetterTable from "../../db/letters";
+import { LetterTable } from "../../db/letters";
 import { BaseKeycodeTableType, KeymapCodeTableType } from "../../types";
 
-const Letters: KeymapCodeTableType[] = [
-  {
-    code: 4,
-    labels: {
-      primary: "a",
-    },
-  },
-  {
-    code: 5,
-    labels: {
-      primary: "b",
-    },
-  },
-  {
-    code: 6,
-    labels: {
-      primary: "c",
-    },
-  },
-  {
-    code: 7,
-    labels: {
-      primary: "d",
-    },
-  },
-  {
-    code: 8,
-    labels: {
-      primary: "e",
-    },
-  },
-  {
-    code: 9,
-    labels: {
-      primary: "f",
-    },
-  },
-  {
-    code: 10,
-    labels: {
-      primary: "g",
-    },
-  },
-  {
-    code: 11,
-    labels: {
-      primary: "h",
-    },
-  },
-  {
-    code: 12,
-    labels: {
-      primary: "i",
-    },
-  },
-  {
-    code: 13,
-    labels: {
-      primary: "j",
-    },
-  },
-  {
-    code: 14,
-    labels: {
-      primary: "k",
-    },
-  },
-  {
-    code: 15,
-    labels: {
-      primary: "l",
-    },
-  },
-  {
-    code: 16,
-    labels: {
-      primary: "m",
-    },
-  },
-  {
-    code: 17,
-    labels: {
-      primary: "n",
-    },
-  },
-  {
-    code: 18,
-    labels: {
-      primary: "o",
-    },
-  },
-  {
-    code: 19,
-    labels: {
-      primary: "p",
-    },
-  },
-  {
-    code: 20,
-    labels: {
-      primary: "q",
-    },
-  },
-  {
-    code: 21,
-    labels: {
-      primary: "r",
-    },
-  },
-  {
-    code: 22,
-    labels: {
-      primary: "s",
-    },
-  },
-  {
-    code: 23,
-    labels: {
-      primary: "t",
-    },
-  },
-  {
-    code: 24,
-    labels: {
-      primary: "u",
-    },
-  },
-  {
-    code: 25,
-    labels: {
-      primary: "v",
-    },
-  },
-  {
-    code: 26,
-    labels: {
-      primary: "w",
-    },
-  },
-  {
-    code: 27,
-    labels: {
-      primary: "x",
-    },
-  },
-  {
-    code: 28,
-    labels: {
-      primary: "y",
-    },
-  },
-  {
-    code: 29,
-    labels: {
-      primary: "z",
-    },
-  },
-];
+const Letters: KeymapCodeTableType[] = LetterTable.keys;
 
 const AGrLetters: KeymapCodeTableType[] = [
   {
@@ -760,7 +603,7 @@ const AGrSSymbols: KeymapCodeTableType[] = [
 const enXXeurkey = Letters;
 
 const table: BaseKeycodeTableType = { keys: enXXeurkey, groupName: "" };
-const tableS: BaseKeycodeTableType = { keys: LetterTable.keys, groupName: "" };
+const tableS: BaseKeycodeTableType = { keys: Letters, groupName: "" };
 
 const tableAGr = {
   groupName: "AltGr Eurkey",

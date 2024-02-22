@@ -17,7 +17,7 @@
 
 import { withModifiers } from "./utils";
 
-import LetterTable from "./letters";
+import { LetterTable } from "./letters";
 import DigitTable from "./digits";
 import PunctuationTable from "./punctuation";
 import SpacingTable from "./spacing";
