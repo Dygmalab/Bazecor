@@ -410,7 +410,7 @@ function SuperkeysEditor(props) {
     ) {
       return Array.from({ length: 512 }, 65535).join(" ");
     }
-    let keyMap = [...superkeys];
+    let keyMap = JSON.parse(JSON.stringify(superkeys));
     // console.log("First", JSON.stringify(keyMap));
     keyMap = keyMap.map(sky => {
       const sk = sky;
@@ -418,7 +418,7 @@ function SuperkeysEditor(props) {
         if (act === 0 || act === null || act === undefined) return 1;
         return act;
       });
-      if (sk.actions.length < 5) sk.actions = sk.actions.concat(Array(5 - sk.actions.length).fill("1"));
+      if (sk.actions.length < 5) sk.actions = sk.actions.concat(Array(5 - sk.actions.length).fill(1));
       return sk;
     });
     // console.log("Third", JSON.parse(JSON.stringify(keyMap)));
@@ -692,7 +692,7 @@ function SuperkeysEditor(props) {
       const aux = superkeys;
       const newID = aux.length;
       aux.push({
-        actions: [],
+        actions: [0, 0, 0, 0, 0],
         name: SKname,
         id: newID,
         superkey: "",
