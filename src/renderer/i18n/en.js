@@ -239,6 +239,13 @@ const English = {
           "Everything will still work perfectly but consider deleting macros you don't use to continue adding more actions to your macros.",
       },
     },
+    modal: {
+      customKeyCodeModal: {
+        title: "Choose a custom KeyCode",
+        message: "Custom KeyCodes can be changed manually, corresponding to the HID codes from the attached ",
+        labelInput: "Input KeyCode in Hex format",
+      },
+    },
     standardView: {
       noKeyTransparent: "No Key/Transparent",
       callOut: "You can remove a functionality or inherit the functionality from the previous layer",
@@ -403,6 +410,7 @@ const English = {
         brightnessLess: "Brightness Less",
         sleep: "Sleep",
         shutdown: "Shutdown",
+        custom: "Custom Keycode",
         ledToggleText: "On/Off",
         ledToggleTootip: "Toggle lights On/Off",
         ledPreviousEffectTootip: "Previous light effect",

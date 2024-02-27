@@ -79,12 +79,14 @@ import {
   IconWrenchSm,
   IconWirelessSm,
   IconLEDToggleEffectSm,
+  IconWrench,
 } from "@Renderer/component/Icon";
 
 import { i18n } from "@Renderer/i18n";
 
 import Key from "@Renderer/modules/KeyPickerKeyboard/Key";
 import getLanguage from "@Renderer/modules/KeyPickerKeyboard/KeyPickerLanguage";
+import { CustomKeyCodeModal } from "@Renderer/component/Modal";
 
 const Style = Styled.div`
 width: 100%;
@@ -237,7 +239,8 @@ width: 100%;
   .keysNoKey { grid-area: 1 / 11 / 2 / 13; }
   .keysMedia { grid-area: 2 / 1 / 3 / 6; }
   .keysTools { grid-area: 2 / 6 / 3 / 10; }
-  .keysLED { grid-area: 2 / 10 / 3 / 13; }
+  .keysLED { grid-area: 2 / 10 / 3 / 12; }
+  .keysCustom { grid-area: 2 / 12 / 3 / 13; }
 }
 .KeysWrapper.super.notWireless {
   .keysContainerGrid {
@@ -248,7 +251,8 @@ width: 100%;
   .keysMouseEvents { grid-area: 1 / 9 / 2 / 13; }
   .keysMedia { grid-area: 2 / 1 / 3 / 6; }
   .keysTools { grid-area: 2 / 6 / 3 / 10; }
-  .keysLED { grid-area: 2 / 10 / 3 / 13; }
+  .keysLED { grid-area: 2 / 10 / 3 / 12; }
+  .keysCustom { grid-area: 2 / 12 / 3 / 13; }
 }
 @media (max-width: 1460px) {
   .KeysWrapper.notWireless {
@@ -263,7 +267,8 @@ width: 100%;
     .keysNoKey { grid-area: 2 / 7 / 3 / 10; }
     .keysLED { grid-area: 2 / 10 / 3 / 13; }
     .keysMedia { grid-area: 3 / 1 / 4 / 7; }
-    .keysTools { grid-area: 3 / 7 / 4 / 13; }
+    .keysTools { grid-area: 3 / 7 / 4 / 12; }
+    .keysCustom { grid-area: 3 / 12 / 4 / 13; }
   }
 }
 
@@ -280,7 +285,8 @@ width: 100%;
   .keysNoKey { grid-area: 2 / 7 / 3 / 10; }
   .keysLED { grid-area: 2 / 10 / 3 / 13; }
   .keysMedia { grid-area: 3 / 1 / 4 / 7; }
-  .keysTools { grid-area: 3 / 7 / 4 / 13; }
+  .keysTools { grid-area: 3 / 7 / 4 / 12; }
+  .keysCustom { grid-area: 3 / 12 / 4 / 13; }
 }
 .KeysWrapper.super.isWireless {
   .keysContainerGrid {
@@ -292,7 +298,8 @@ width: 100%;
   .keysMouseEvents { grid-area: 1 / 9 / 2 / 13; }
   .keysMedia { grid-area: 2 / 1 / 3 / 6; }
   .keysTools { grid-area: 2 / 6 / 3 / 10; }
-  .keysLED { grid-area: 2 / 10 / 3 / 13; }
+  .keysLED { grid-area: 2 / 10 / 3 / 12; }
+  .keysCustom { grid-area: 2 / 12 / 3 / 13; }
 }
 
 .editor {
@@ -334,9 +341,14 @@ class KeyPicker extends Component {
   constructor(props) {
     super(props);
 
-    // this.state = { selected: 0 };
+    this.state = { customModal: false };
     this.onKeyPress = this.onKeyPress.bind(this);
   }
+
+  toggleModal = () => {
+    const { customModal: cModal } = this.state;
+    this.setState({ customModal: !cModal });
+  };
 
   onKeyPress = keycode => {
     const { onKeySelect } = this.props;
@@ -535,6 +547,7 @@ class KeyPicker extends Component {
         />
       );
     });
+    const { customModal } = this.state;
     return (
       <Style>
         <div className="KeysWrapper">
@@ -883,6 +896,36 @@ class KeyPicker extends Component {
                     onKeySelect(17152);
                   }}
                   selected={keyCode.base + keyCode.modified === 17152}
+                />
+              </div>
+            </div>
+            <div className="keysRow keysCustom">
+              <div className="keyIcon">
+                <h4>Cust.</h4>
+              </div>
+              <div className="keysButtonsList">
+                <ButtonConfig
+                  tooltip={i18n.editor.superkeys.specialKeys.custom}
+                  tooltipDelay={300}
+                  icoSVG={<IconWrench />}
+                  disabled={disableAll}
+                  onClick={() => {
+                    this.toggleModal();
+                  }}
+                  selected={keyCode.base + keyCode.modified >= 20000}
+                />
+                <CustomKeyCodeModal
+                  show={customModal}
+                  name={(keyCode.base + keyCode.modified).toString(16)}
+                  toggleShow={this.toggleModal}
+                  handleSave={data => {
+                    console.log("CustomKey selected key", data);
+                    onKeySelect(parseInt(data, 16));
+                    this.toggleModal();
+                  }}
+                  modalTitle={i18n.editor.modal.customKeyCodeModal.title}
+                  modalMessage={i18n.editor.modal.customKeyCodeModal.message}
+                  labelInput={i18n.editor.modal.customKeyCodeModal.labelInput}
                 />
               </div>
             </div>
