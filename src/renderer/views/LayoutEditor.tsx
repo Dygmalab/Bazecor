@@ -1591,7 +1591,13 @@ const LayoutEditor = (props: LayoutEditorProps) => {
     // console.log("going to RUN INITIAL USE EFFECT just ONCE");
     const scanner = async () => {
       await scanKeyboard(currentLanguageLayout);
-      // setLoadingData(false);
+      const standardView = configStandardView();
+      const newLanguage = getLanguage(store.get("settings.language") as string);
+      console.log("Language automatically set to: ", newLanguage);
+      setCurrentLanguageLayout(newLanguage || "english");
+      setIsStandardView(standardView);
+      setLoading(false);
+      setCurrentLayer(0);
       setScanned(true);
     };
     if (!scanned) {
@@ -1599,24 +1605,6 @@ const LayoutEditor = (props: LayoutEditorProps) => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  useEffect(() => {
-    // console.log("Running processAfterScan useEffect");
-
-    const processAfterScan = () => {
-      const standardView = configStandardView();
-      const newLanguage = getLanguage(store.get("settings.language") as string);
-      console.log("Language automatically set to: ", newLanguage);
-      setCurrentLanguageLayout(newLanguage || "english");
-      setIsStandardView(standardView);
-      setLoading(false);
-      setCurrentLayer(previousLayer !== 0 ? previousLayer : 0);
-    };
-    if (scanned) {
-      processAfterScan();
-      // setScanned(false);
-    }
-  }, [previousLayer, scanned, setLoading]);
 
   useEffect(() => {
     // console.log("Running Scanner on changes useEffect: ", inContext, modified, !scanned, !inContext && modified && !scanned);
