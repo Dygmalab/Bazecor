@@ -2,15 +2,15 @@ import React from "react";
 import ReactDom from "react-dom";
 
 import Modal from "react-bootstrap/Modal";
+import { i18n } from "@Renderer/i18n";
 import { RegularButton } from "../Button";
 import { IconEye } from "../Icon";
 
-import { i18n } from "@Renderer/i18n";
-
-export default function PreviewMacroModal({ children, hookref }) {
+export default function PreviewMacroModal(props: any) {
+  const { children, hookref } = props;
   const [show, setShow] = React.useState(false);
 
-  const toggleShow = event => {
+  const toggleShow = () => {
     setShow(!show);
   };
 
