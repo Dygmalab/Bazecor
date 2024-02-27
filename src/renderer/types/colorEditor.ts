@@ -23,7 +23,6 @@ export interface ColorEditorProps {
   onColorSelect: (colorIndex: number) => void;
   colorButtonIsSelected: boolean;
   onColorPick: (colorIndex: number, r: number, g: number, b: number) => void;
-  colorsInUse: boolean[];
   selected: number;
   isColorButtonSelected: boolean;
   onColorButtonSelect: (action: string, colorIndex: number) => void;

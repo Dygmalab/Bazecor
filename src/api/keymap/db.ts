@@ -19,7 +19,7 @@
 
 import { KeyType } from "@Renderer/types/layout";
 import BlankTable from "./db/blanks";
-import LetterTable, { ModifiedLetterTables } from "./db/letters";
+import { LetterTable, ModifiedLetterTables } from "./db/letters";
 import DigitTable, { ModifiedDigitTables } from "./db/digits";
 import { LockLayerTable, ShiftToLayerTable, MoveToLayerTable } from "./db/layerswitch";
 import PunctuationTable, { ModifiedPunctuationTables } from "./db/punctuation";
