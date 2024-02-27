@@ -48,7 +48,7 @@ height: inherit;
 `;
 
 function FirmwareUpdate(props: any) {
-  const { allowBeta, toggleFlashing, toggleFwUpdate, onDisconnect, device } = props;
+  const { allowBeta, toggleFlashing, toggleFwUpdate, onDisconnect, device, setRestoredOk } = props;
   const { state: deviceState } = useDevice();
   const [state, send] = useMachine(MainProcessSM, { context: { Block: 0, deviceState } });
 
@@ -100,6 +100,7 @@ function FirmwareUpdate(props: any) {
               toggleFwUpdate={toggleFwUpdate}
               onDisconnect={onDisconnect}
               device={device}
+              setRestoredOk={setRestoredOk}
             />
           ) : (
             ""

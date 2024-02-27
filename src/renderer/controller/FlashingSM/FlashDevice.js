@@ -416,6 +416,7 @@ const FlashDevice = createMachine(
       resetProgress: 0,
       neuronProgress: 0,
       restoreProgress: 0,
+      restoreResult: undefined,
       retriesRight: 0,
       retriesLeft: 0,
       retriesNeuron: 0,
@@ -813,7 +814,7 @@ const FlashDevice = createMachine(
           src: context => callback => restoreRaise(context, callback),
           onDone: {
             target: "reportSucess",
-            actions: [assign({ flashResult: (context, event) => event.data })],
+            actions: [assign({ restoreResult: (context, event) => event.data })],
           },
           onError: {
             target: "failure",

@@ -93,7 +93,7 @@ height: inherit;
 `;
 
 function FirmwareUpdateProcess(props) {
-  const { nextBlock, retryBlock, context, toggleFlashing, toggleFwUpdate, onDisconnect } = props;
+  const { nextBlock, retryBlock, context, toggleFlashing, toggleFwUpdate, onDisconnect, setRestoredOk } = props;
   const { state: deviceState } = useDevice();
   const [toggledFlashing, sendToggledFlashing] = useState(false);
   const handleKeyDown = event => {
@@ -139,6 +139,7 @@ function FirmwareUpdateProcess(props) {
       },
       finishFlashing: async () => {
         if (!toggledFlashing) return;
+        setRestoredOk(state.context.restoreResult);
         sendToggledFlashing(false);
         console.log("closing flashin process");
         toggleFlashing();
@@ -322,6 +323,7 @@ FirmwareUpdateProcess.propTypes = {
   retryBlock: PropTypes.func,
   errorBlock: PropTypes.func,
   context: PropTypes.any,
+  setRestoredOk: PropTypes.func,
   toggleFlashing: PropTypes.func,
   toggleFwUpdate: PropTypes.func,
   onDisconnect: PropTypes.func,

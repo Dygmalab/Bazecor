@@ -487,7 +487,17 @@ const LayoutEditor = (props: LayoutEditorProps) => {
   const [showDefaults, setShowDefaults] = useState(false);
   const [ledIndexStart, setLedIndexStart] = useState(80);
   const [keymapDB, setkeymapDB] = useState(new KeymapDB());
-  const { darkMode, cancelContext, setLoading, onDisconnect, startContext, inContext } = props;
+  const {
+    darkMode,
+    cancelContext,
+    setLoading,
+    onDisconnect,
+    startContext,
+    inContext,
+    restoredOk,
+    handleSetRestoredOk,
+    flashedID,
+  } = props;
 
   const onLayerNameChange = (newName: string) => {
     const slicedLayerNames = layerNames.slice();
@@ -861,12 +871,26 @@ const LayoutEditor = (props: LayoutEditorProps) => {
       const { currentDevice } = state;
       setLoading(true);
       try {
-        /**
-         * Create property language to the object 'options', to call KeymapDB in Keymap and modify languagu layout
-         */
+        // Acquire ChipID from device
         let chipID = await currentDevice.command("hardware.chip_id");
         chipID = chipID.replace(/\s/g, "");
         const neuronData = await AnalizeChipID(chipID);
+
+        // Restore backup if process failed after flashing
+        if (!restoredOk && flashedID === chipID) {
+          console.log("Error when restoring data after flash detected, repairing...");
+          try {
+            const backupFolder = store.get("settings.backupFolder") as string;
+            const neurons = store.get("neurons") as Neuron[];
+            const latestBackup = await Backup.getLatestBackup(backupFolder, chipID, currentDevice);
+            await Backup.restoreBackup(neurons, chipID, latestBackup, currentDevice);
+            console.log("repaired successfully");
+            handleSetRestoredOk(true);
+          } catch (error) {
+            console.log("error when trying to restore keyboard after a bad flash");
+          }
+        }
+
         const device = currentDevice.device.info.product;
         const wirelessChecker = currentDevice.device.info.keyboardType === "wireless";
         if (lang) {
@@ -987,7 +1011,18 @@ const LayoutEditor = (props: LayoutEditorProps) => {
         onDisconnect();
       }
     },
-    [AnalizeChipID, state, getColormap, keymapDB, macroTranslator, onDisconnect, setLoading],
+    [
+      state,
+      setLoading,
+      AnalizeChipID,
+      restoredOk,
+      flashedID,
+      getColormap,
+      macroTranslator,
+      handleSetRestoredOk,
+      keymapDB,
+      onDisconnect,
+    ],
   );
 
   const onKeyChange = (keyCode: number) => {

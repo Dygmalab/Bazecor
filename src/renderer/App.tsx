@@ -64,6 +64,8 @@ function App() {
 
   const [connected, setConnected] = useState(false);
   const [flashing, setFlashing] = useState(false);
+  const [flashedID, setFlashedID] = useState("");
+  const [restoredOk, setRestoredOk] = useState(true);
   const [fwUpdate, setFwUpdate] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -209,16 +211,19 @@ function App() {
     store.set("settings.darkMode", mode);
   };
 
-  const toggleFlashing = () => {
+  const toggleFlashing = async () => {
     setFlashing(!flashing);
     varFlashing.current = !flashing;
     console.log("toggled flashing to", !flashing);
 
-    if (flashing) {
+    if (!flashing === false) {
       setConnected(false);
       device.current = null;
       setPages({});
       navigate("/keyboard-select");
+    } else {
+      const chipID = (await state.currentDevice.command("hardware.chip_id")) as string;
+      setFlashedID(chipID);
     }
   };
 
@@ -282,6 +287,12 @@ function App() {
     setAllowBeta(newValue);
   };
 
+  const handleSetRestoredOk = (status: boolean) => {
+    console.log("CHECK RESTORE", status);
+    setRestoredOk(status);
+    setFlashedID("");
+  };
+
   return (
     <ThemeProvider theme={darkMode ? Dark : Light}>
       <GlobalStyles />
@@ -322,6 +333,9 @@ function App() {
                 darkMode={darkMode}
                 setLoading={setLoadingData}
                 inContext={contextBar}
+                restoredOk={restoredOk}
+                handleSetRestoredOk={handleSetRestoredOk}
+                flashedID={flashedID}
               />
             }
           />
@@ -359,6 +373,7 @@ function App() {
                 titleElement={() => document.querySelector("#page-title")}
                 darkMode={darkMode}
                 allowBeta={allowBeta}
+                setRestoredOk={handleSetRestoredOk}
               />
             }
           />

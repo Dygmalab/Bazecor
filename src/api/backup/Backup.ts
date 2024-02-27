@@ -3,8 +3,10 @@ import fs from "fs";
 import Store from "electron-store";
 import { Neuron } from "@Renderer/types/neurons";
 import { BackupType } from "@Renderer/types/backups";
-import { DeviceClass } from "@Renderer/types/devices";
+import { DeviceClass, VirtualType } from "@Renderer/types/devices";
 
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const glob = require(`glob`);
 const store = new Store();
 
 export default class Backup {
@@ -172,5 +174,96 @@ export default class Backup {
       throw new Error(error);
     }
   }
+
+  static restoreBackup = async (neurons: Neuron[], neuronID: string, backup: BackupType, device: DeviceClass) => {
+    let data = [];
+    if (Array.isArray(backup)) {
+      data = backup;
+    } else {
+      data = backup.backup;
+      const localNeurons = [...neurons];
+      const index = localNeurons.findIndex(n => n.id === neuronID);
+      localNeurons[index] = backup.neuron;
+      localNeurons[index].id = neuronID;
+      store.set("neurons", localNeurons);
+    }
+    if (device) {
+      try {
+        for (let i = 0; i < data.length; i += 1) {
+          let val = data[i].data;
+          // Boolean values needs to be sent as int
+          if (typeof val === "boolean") {
+            val = +val;
+          }
+          // TODO: remove this block when necessary
+          if (device.device.info.product === "Defy") {
+            // if (data[i].command.includes("macros") || data[i].command.includes("superkeys")) continue;
+          }
+          console.log(`Going to send ${data[i].command} to keyboard`);
+          // eslint-disable-next-line no-await-in-loop
+          await device.command(data[i].command, val.trim());
+        }
+        await device.noCacheCommand("led.mode 0");
+        console.log("Restoring all settings");
+        console.log("Firmware update OK");
+        return true;
+      } catch (e) {
+        console.log(`Restore settings: Error: ${e.message}`);
+        return false;
+      }
+    }
+    return false;
+  };
+
+  static restoreVirtual = async (virtual: VirtualType, device: DeviceClass) => {
+    if (device) {
+      try {
+        console.log("Restoring all settings");
+        const data = virtual.virtual;
+        for (const command in data) {
+          if (data[command].eraseable === true) {
+            console.log(`Going to send ${command} to keyboard`);
+            // eslint-disable-next-line no-await-in-loop
+            await device.noCacheCommand(`${command} ${data[command].data}`.trim());
+          }
+        }
+        await device.noCacheCommand("led.mode 0");
+        console.log("Settings restored OK");
+        return true;
+      } catch (e) {
+        console.log(`Restore settings: Error: ${e.message}`);
+        return false;
+      }
+    }
+    return false;
+  };
+
+  static getLatestBackup = async (backupFolder: string, neuronID: string, device: DeviceClass) => {
+    try {
+      // creating folder path with current device
+      const folderPath = path
+        .join(backupFolder, device.device.info.product, neuronID)
+        .split(path.sep)
+        .join(path[process.platform === "win32" ? "win32" : "posix"].sep);
+      console.log("going to search for newest file in: ", folderPath);
+
+      // sorting folder files to find newest
+      let folderSync;
+      if (process.platform === "win32") folderSync = glob.sync(`${folderPath}\\*json`.replace(/\\/g, "/"));
+      else folderSync = glob.sync(`${folderPath}/*json`);
+      const mappedFolder = folderSync.map((name: string) => ({ name, ctime: fs.statSync(name).ctime }));
+      const newestFile = mappedFolder.sort((a: any, b: any) => b.ctime - a.ctime);
+
+      // Loading latest backup for the device
+      const loadedFile = JSON.parse(fs.readFileSync(newestFile[0].name, "utf-8"));
+      console.log("selected backup content: ", loadedFile);
+      console.log("Restored latest backup");
+      return loadedFile;
+    } catch (error) {
+      console.error(error);
+      return undefined;
+    }
+  };
+
   static isBackupType = (backup: any): backup is BackupType => "backup" in backup;
 }
