@@ -64,7 +64,6 @@ function App() {
 
   const [connected, setConnected] = useState(false);
   const [flashing, setFlashing] = useState(false);
-  const [flashedID, setFlashedID] = useState("");
   const [restoredOk, setRestoredOk] = useState(true);
   const [fwUpdate, setFwUpdate] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -216,14 +215,12 @@ function App() {
     varFlashing.current = !flashing;
     console.log("toggled flashing to", !flashing);
 
-    if (!flashing === false) {
+    // if Flashing is going to be set to false from true
+    if (flashing) {
       setConnected(false);
       device.current = null;
       setPages({});
       navigate("/keyboard-select");
-    } else {
-      const chipID = (await state.currentDevice.command("hardware.chip_id")) as string;
-      setFlashedID(chipID);
     }
   };
 
@@ -271,7 +268,7 @@ function App() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const toggleFwUpdate = (value: boolean) => {
+  const toggleFwUpdate = async (value: boolean) => {
     console.log("toggling fwUpdate to: ", value);
     setFwUpdate(value);
   };
@@ -290,7 +287,6 @@ function App() {
   const handleSetRestoredOk = (status: boolean) => {
     console.log("CHECK RESTORE", status);
     setRestoredOk(status);
-    setFlashedID("");
   };
 
   return (
@@ -320,6 +316,7 @@ function App() {
                 device={device}
                 darkMode={darkMode}
                 setLoading={setLoadingData}
+                restoredOk={restoredOk}
               />
             }
           />
@@ -335,7 +332,6 @@ function App() {
                 inContext={contextBar}
                 restoredOk={restoredOk}
                 handleSetRestoredOk={handleSetRestoredOk}
-                flashedID={flashedID}
               />
             }
           />

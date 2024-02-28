@@ -28,7 +28,7 @@ import { Neuron } from "@Renderer/types/neurons";
 
 import { Banner } from "@Renderer/component/Banner";
 import Title from "@Renderer/component/Title";
-import { IconBluetooth } from "@Renderer/component/Icon";
+import { IconArrowDownWithLine, IconBluetooth } from "@Renderer/component/Icon";
 import { PageHeader } from "@Renderer/modules/PageHeader";
 import { i18n, refreshHardware } from "@Renderer/i18n";
 import NeuronConnection from "@Renderer/modules/NeuronConnection";
@@ -194,7 +194,7 @@ const SelectKeyboard = (props: SelectKeyboardProps) => {
   const [deviceItems, setDeviceItems] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [scanFoundDevices, setScanFoundDevices] = useState(false);
-  const { onConnect, onDisconnect, connected, setLoading } = props;
+  const { onConnect, onDisconnect, connected, setLoading, restoredOk } = props;
 
   const loadingHandler = useCallback(
     (value: boolean) => {
@@ -349,6 +349,19 @@ const SelectKeyboard = (props: SelectKeyboardProps) => {
     dispatch({ type: "changeCurrent", payload: { selected: -1, device: response } });
     await onConnect(response);
   };
+
+  useEffect(() => {
+    if (!restoredOk) {
+      toast.error(
+        <ToastMessage
+          title="Oops! Layers not restored"
+          content="There was an error loading your configuration. But worry not: reconnect your keyboard and the latest backup will be automatically restored."
+          icon={<IconArrowDownWithLine />}
+        />,
+        { icon: "" },
+      );
+    }
+  }, [restoredOk]);
 
   const connectedDeviceIndex = state.selected;
 

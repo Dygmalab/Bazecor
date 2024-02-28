@@ -23,7 +23,6 @@ export interface LayoutEditorProps {
   inContext: boolean;
   restoredOk: boolean;
   handleSetRestoredOk: (status: boolean) => void;
-  flashedID: string;
 }
 
 export interface KeyType {

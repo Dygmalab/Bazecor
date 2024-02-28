@@ -487,17 +487,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
   const [showDefaults, setShowDefaults] = useState(false);
   const [ledIndexStart, setLedIndexStart] = useState(80);
   const [keymapDB, setkeymapDB] = useState(new KeymapDB());
-  const {
-    darkMode,
-    cancelContext,
-    setLoading,
-    onDisconnect,
-    startContext,
-    inContext,
-    restoredOk,
-    handleSetRestoredOk,
-    flashedID,
-  } = props;
+  const { darkMode, cancelContext, setLoading, onDisconnect, startContext, inContext, restoredOk, handleSetRestoredOk } = props;
 
   const onLayerNameChange = (newName: string) => {
     const slicedLayerNames = layerNames.slice();
@@ -877,7 +867,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
         const neuronData = await AnalizeChipID(chipID);
 
         // Restore backup if process failed after flashing
-        if (!restoredOk && flashedID === chipID) {
+        if (!restoredOk) {
           console.log("Error when restoring data after flash detected, repairing...");
           try {
             const backupFolder = store.get("settings.backupFolder") as string;
@@ -1011,18 +1001,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
         onDisconnect();
       }
     },
-    [
-      state,
-      setLoading,
-      AnalizeChipID,
-      restoredOk,
-      flashedID,
-      getColormap,
-      macroTranslator,
-      handleSetRestoredOk,
-      keymapDB,
-      onDisconnect,
-    ],
+    [state, setLoading, AnalizeChipID, restoredOk, getColormap, macroTranslator, handleSetRestoredOk, keymapDB, onDisconnect],
   );
 
   const onKeyChange = (keyCode: number) => {
