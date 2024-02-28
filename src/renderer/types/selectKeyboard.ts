@@ -22,6 +22,7 @@ export interface SelectKeyboardProps {
   connected: boolean;
   device: unknown;
   darkMode: boolean;
+  restoredOk: boolean;
   setLoading: (loading: boolean) => void;
 }
 

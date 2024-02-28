@@ -19,7 +19,6 @@ import React, { useState, useEffect } from "react";
 import { ipcRenderer } from "electron";
 import { toast } from "react-toastify";
 import fs from "fs";
-import path from "path";
 
 // React Bootstrap Components
 import { Card, CardContent, CardHeader, CardTitle } from "@Renderer/components/ui/card";
@@ -39,9 +38,8 @@ import { BackupSettingsProps } from "@Renderer/types/preferences";
 import WaitForRestoreDialog from "@Renderer/component/WaitForRestoreDialog";
 import { BackupType } from "@Renderer/types/backups";
 import { VirtualType } from "@Renderer/types/devices";
+import Backup from "../../../api/backup";
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const glob = require(`glob`);
 const store = Store.getStore();
 
 const BackupSettings = (props: BackupSettingsProps) => {
@@ -62,101 +60,56 @@ const BackupSettings = (props: BackupSettingsProps) => {
     setPerformingBackup(false);
   };
 
-  const restoreBackup = async (backup: BackupType) => {
-    let data = [];
-    if (Array.isArray(backup)) {
-      data = backup;
-    } else {
-      data = backup.backup;
-      const localNeurons = [...neurons];
-      const index = localNeurons.findIndex(n => n.id === neuronID);
-      localNeurons[index] = backup.neuron;
-      localNeurons[index].id = neuronID;
-      store.set("neurons", localNeurons);
+  const localRestoreBackup = async (backup: BackupType) => {
+    try {
+      openPerformingBackup();
+      toggleBackup(true);
+      await Backup.restoreBackup(neurons, neuronID, backup, state.currentDevice);
+      toast.success(
+        <ToastMessage
+          title="Backup restored successfully"
+          content="Your backup was restored successfully to the device!"
+          icon={<IconArrowDownWithLine />}
+        />,
+        {
+          autoClose: 2000,
+          icon: "",
+        },
+      );
+      closePerformingBackup();
+      toggleBackup(false);
+      return true;
+    } catch (e) {
+      closePerformingBackup();
+      toggleBackup(false);
+      return false;
     }
-    if (state.currentDevice) {
-      try {
-        openPerformingBackup();
-        toggleBackup(true);
-        for (let i = 0; i < data.length; i += 1) {
-          let val = data[i].data;
-          // Boolean values needs to be sent as int
-          if (typeof val === "boolean") {
-            val = +val;
-          }
-          // TODO: remove this block when necessary
-          if (state.currentDevice.device.info.product === "Defy") {
-            // if (data[i].command.includes("macros") || data[i].command.includes("superkeys")) continue;
-          }
-          console.log(`Going to send ${data[i].command} to keyboard`);
-          // eslint-disable-next-line no-await-in-loop
-          await state.currentDevice.command(data[i].command, val.trim());
-        }
-        await state.currentDevice.noCacheCommand("led.mode 0");
-        console.log("Restoring all settings");
-        console.log("Firmware update OK");
-        toast.success(
-          <ToastMessage
-            title="Backup restored successfully"
-            content="Your backup was restored successfully to the device!"
-            icon={<IconArrowDownWithLine />}
-          />,
-          {
-            autoClose: 2000,
-            icon: "",
-          },
-        );
-        closePerformingBackup();
-        toggleBackup(false);
-        return true;
-      } catch (e) {
-        console.log(`Restore settings: Error: ${e.message}`);
-        closePerformingBackup();
-        toggleBackup(false);
-        return false;
-      }
-    }
-    return false;
   };
 
-  const restoreVirtual = async (virtual: VirtualType) => {
-    if (state.currentDevice) {
-      try {
-        openPerformingBackup();
-        toggleBackup(true);
-        console.log("Restoring all settings");
-        const data = virtual.virtual;
-        for (const command in data) {
-          if (data[command].eraseable === true) {
-            console.log(`Going to send ${command} to keyboard`);
-            // eslint-disable-next-line no-await-in-loop
-            await state.currentDevice.noCacheCommand(`${command} ${data[command].data}`.trim());
-          }
-        }
-        await state.currentDevice.noCacheCommand("led.mode 0");
-        console.log("Settings restored OK");
-        toast.success(
-          <ToastMessage
-            title="Backup restored successfully"
-            content="Your backup was restored successfully to the device!"
-            icon={<IconArrowDownWithLine />}
-          />,
-          {
-            autoClose: 2000,
-            icon: "",
-          },
-        );
-        closePerformingBackup();
-        toggleBackup(false);
-        return true;
-      } catch (e) {
-        console.log(`Restore settings: Error: ${e.message}`);
-        closePerformingBackup();
-        toggleBackup(false);
-        return false;
-      }
+  const localRestoreVirtual = async (virtual: VirtualType) => {
+    try {
+      openPerformingBackup();
+      toggleBackup(true);
+      await Backup.restoreVirtual(virtual, state.currentDevice);
+      toast.success(
+        <ToastMessage
+          title="Backup restored successfully"
+          content="Your backup was restored successfully to the device!"
+          icon={<IconArrowDownWithLine />}
+        />,
+        {
+          autoClose: 2000,
+          icon: "",
+        },
+      );
+      closePerformingBackup();
+      toggleBackup(false);
+      return true;
+    } catch (e) {
+      closePerformingBackup();
+      toggleBackup(false);
+      return false;
     }
-    return false;
   };
 
   const GetBackup = async () => {
@@ -178,13 +131,13 @@ const BackupSettings = (props: BackupSettingsProps) => {
       try {
         loadedFile = JSON.parse(fs.readFileSync(resp.filePaths[0], "utf-8"));
         if (loadedFile.virtual !== undefined) {
-          await restoreVirtual(loadedFile as VirtualType);
+          await localRestoreVirtual(loadedFile as VirtualType);
           await destroyContext();
           console.log("Restored Virtual backup");
           return;
         }
         if (loadedFile.backup !== undefined || loadedFile[0].command !== undefined) {
-          await restoreBackup(loadedFile);
+          await localRestoreBackup(loadedFile);
           await destroyContext();
           console.log("Restored normal backup");
         }
@@ -197,28 +150,10 @@ const BackupSettings = (props: BackupSettingsProps) => {
     }
   };
 
-  const getLatestBackup = async () => {
+  const localGetLatestBackup = async () => {
     try {
-      // creating folder path with current device
-      const folderPath = path
-        .join(backupFolder, state.currentDevice.device.info.product, neuronID)
-        .split(path.sep)
-        .join(path[process.platform === "win32" ? "win32" : "posix"].sep);
-      console.log("going to search for newest file in: ", folderPath);
-
-      // sorting folder files to find newest
-      let folderSync;
-      if (process.platform === "win32") folderSync = glob.sync(`${folderPath}\\*json`.replace(/\\/g, "/"));
-      else folderSync = glob.sync(`${folderPath}/*json`);
-      const mappedFolder = folderSync.map((name: string) => ({ name, ctime: fs.statSync(name).ctime }));
-      const newestFile = mappedFolder.sort((a: any, b: any) => b.ctime - a.ctime);
-
-      // Loading latest backup for the device
-      const loadedFile = JSON.parse(fs.readFileSync(newestFile[0].name, "utf-8"));
-      console.log("selected backup content: ", loadedFile);
-
-      // called restorer with backup data
-      await restoreBackup(loadedFile);
+      const loadedFile = await Backup.getLatestBackup(backupFolder, neuronID, state.currentDevice);
+      await localRestoreBackup(loadedFile);
       await destroyContext();
       console.log("Restored latest backup");
     } catch (error) {
@@ -239,7 +174,7 @@ const BackupSettings = (props: BackupSettingsProps) => {
           <h3 className="mb-1 text-gray-400 dark:text-gray-100 tracking-tight font-semibold">Backup actions</h3>
           <div className="flex gap-3">
             <RegularButton onClick={GetBackup} styles="short" buttonText="Restore backup from file..." disabled={!connected} />
-            <RegularButton onClick={getLatestBackup} styles="short" buttonText="Restore from last backup" />
+            <RegularButton onClick={localGetLatestBackup} styles="short" buttonText="Restore from last backup" />
             <WaitForRestoreDialog title="Restoring Backup" open={performingBackup} />
           </div>
         </form>

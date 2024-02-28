@@ -64,6 +64,7 @@ function App() {
 
   const [connected, setConnected] = useState(false);
   const [flashing, setFlashing] = useState(false);
+  const [restoredOk, setRestoredOk] = useState(true);
   const [fwUpdate, setFwUpdate] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -209,11 +210,12 @@ function App() {
     store.set("settings.darkMode", mode);
   };
 
-  const toggleFlashing = () => {
+  const toggleFlashing = async () => {
     setFlashing(!flashing);
     varFlashing.current = !flashing;
     console.log("toggled flashing to", !flashing);
 
+    // if Flashing is going to be set to false from true
     if (flashing) {
       setConnected(false);
       device.current = null;
@@ -266,7 +268,7 @@ function App() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const toggleFwUpdate = (value: boolean) => {
+  const toggleFwUpdate = async (value: boolean) => {
     console.log("toggling fwUpdate to: ", value);
     setFwUpdate(value);
   };
@@ -280,6 +282,11 @@ function App() {
     // console.log("new allowBeta value: ", newValue);
     store.set("settings.allowBeta", newValue);
     setAllowBeta(newValue);
+  };
+
+  const handleSetRestoredOk = (status: boolean) => {
+    console.log("CHECK RESTORE", status);
+    setRestoredOk(status);
   };
 
   return (
@@ -309,6 +316,7 @@ function App() {
                 device={device}
                 darkMode={darkMode}
                 setLoading={setLoadingData}
+                restoredOk={restoredOk}
               />
             }
           />
@@ -322,6 +330,8 @@ function App() {
                 darkMode={darkMode}
                 setLoading={setLoadingData}
                 inContext={contextBar}
+                restoredOk={restoredOk}
+                handleSetRestoredOk={handleSetRestoredOk}
               />
             }
           />
@@ -359,6 +369,7 @@ function App() {
                 titleElement={() => document.querySelector("#page-title")}
                 darkMode={darkMode}
                 allowBeta={allowBeta}
+                setRestoredOk={handleSetRestoredOk}
               />
             }
           />

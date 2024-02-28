@@ -21,6 +21,8 @@ export interface LayoutEditorProps {
   darkMode: boolean;
   setLoading: (lding: boolean) => void;
   inContext: boolean;
+  restoredOk: boolean;
+  handleSetRestoredOk: (status: boolean) => void;
 }
 
 export interface KeyType {
