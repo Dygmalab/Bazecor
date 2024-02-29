@@ -135,23 +135,6 @@ function App() {
     init();
   }, []);
 
-  const forceDarkMode = (mode: any) => {
-    setDarkMode(mode);
-  };
-
-  const darkThemeListener = (event: any, message: any) => {
-    console.log("O.S. DarkTheme Settings changed to ", message);
-    const dm = store.get("settings.darkMode");
-    if (dm === "system") {
-      forceDarkMode(message);
-    }
-    if (dm || (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches)) {
-      document.documentElement.classList.add("dark");
-    } else {
-      document.documentElement.classList.remove("dark");
-    }
-  };
-
   const startContext = () => {
     setContextBar(true);
   };
@@ -202,12 +185,28 @@ function App() {
       if (isDark) {
         document.documentElement.classList.remove("light");
         document.documentElement.classList.add("dark");
+      } else {
+        document.documentElement.classList.remove("dark");
+        document.documentElement.classList.add("light");
       }
     } else {
       document.documentElement.classList.add(mode);
     }
     setDarkMode(isDark);
     store.set("settings.darkMode", mode);
+  };
+
+  const darkThemeListener = (event: any, message: boolean) => {
+    console.log("O.S. DarkTheme Settings changed to ", message, event);
+    const dm = store.get("settings.darkMode");
+    if (dm === "system") {
+      toggleDarkMode(dm);
+    }
+    if (dm || (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches)) {
+      toggleDarkMode("dark");
+    } else {
+      toggleDarkMode("light");
+    }
   };
 
   const toggleFlashing = async () => {
