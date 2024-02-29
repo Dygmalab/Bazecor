@@ -1,4 +1,4 @@
-import { ipcMain, app, dialog, shell, nativeTheme } from "electron";
+import { ipcMain, app, dialog, shell, nativeTheme, systemPreferences } from "electron";
 import { uIOhook } from "uiohook-napi";
 import { sendKeyUp, sendkeyDown } from "./configureCaptureKeys";
 import listDrivesHandler from "../utils/listDrivesHandler";
@@ -17,6 +17,7 @@ const removeIPCs = () => {
   ipcMain.removeHandler("get-Locale");
   ipcMain.removeHandler("openExternal");
   ipcMain.removeHandler("get-NativeTheme");
+  ipcMain.removeHandler("ask-for-accessibility");
 };
 
 const configureIPCs = () => {
@@ -31,11 +32,14 @@ const configureIPCs = () => {
   });
 
   ipcMain.on("stop-recording", () => {
-    console.log("stop-recording");
-    globalRecording.setRecording(false);
-    uIOhook.off("keydown", sendkeyDown);
-    uIOhook.off("keyup", sendKeyUp);
-    uIOhook.stop();
+    const isTrusted = systemPreferences.isTrustedAccessibilityClient(false);
+    if (isTrusted) {
+      console.log("stop-recording");
+      globalRecording.setRecording(false);
+      uIOhook.off("keydown", sendkeyDown);
+      uIOhook.off("keyup", sendKeyUp);
+      uIOhook.stop();
+    }
   });
 
   ipcMain.handle("list-drives", async (event, options) => {
@@ -80,6 +84,36 @@ const configureIPCs = () => {
   });
 
   ipcMain.handle("get-NativeTheme", () => nativeTheme.shouldUseDarkColors);
+
+  ipcMain.handle("ask-for-accessibility", async () => {
+    console.log("someone asked for accessibility", process.platform);
+    if (process.platform === "darwin") {
+      const isTrusted = systemPreferences.isTrustedAccessibilityClient(false);
+      console.log("isTrustedAccessibilityClient", isTrusted);
+      if (!isTrusted) {
+        const clickedButton = await dialog.showMessageBox(null, {
+          type: "warning",
+          message: "Bazecor requires accessibility",
+          detail:
+            "Bazecor uses accessibility to record macros and list Bluetooth-HID devices like the Defy wireless, please try again after authorizing the application if you want access to these features",
+          defaultId: 1,
+          cancelId: 0,
+          buttons: ["Not Now", "Turn On Accessibility"],
+        });
+        console.log("checking return value: ", clickedButton);
+        if (clickedButton.response === 1) {
+          // Calling isTrustedAccessibilityClient with prompt=true has the side effect
+          // of showing the native dialog that either denies access or opens System
+          // Preferences.
+          systemPreferences.isTrustedAccessibilityClient(true);
+          return false;
+        }
+        return false;
+      }
+      return true;
+    }
+    return true;
+  });
 };
 
 export { configureIPCs, removeIPCs };

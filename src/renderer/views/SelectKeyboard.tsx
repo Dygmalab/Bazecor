@@ -297,8 +297,11 @@ const SelectKeyboard = (props: SelectKeyboardProps) => {
   }, [devices, getDeviceItems]);
 
   const scanDevices = async (): Promise<void> => {
+    // asking for bluetooth access as it uses HID interface
+    const isAccessible = await ipcRenderer.invoke("ask-for-accessibility", "");
+
     const keyboards = await findKeyboards();
-    console.log("found devices!!", keyboards);
+    console.log("found devices!!", keyboards, isAccessible);
     setScanFoundDevices(keyboards?.length > 0);
     setTimeout(() => {
       setScanFoundDevices(false);
