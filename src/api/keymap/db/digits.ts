@@ -192,4 +192,5 @@ const ModifiedDigitTables = [
   withModifiers(DigitTable, "Hyper + AltGr +", "H+AGr", 7936),
 ];
 
-export { DigitTable as default, ModifiedDigitTables };
+export default DigitTable;
+export { ModifiedDigitTables };

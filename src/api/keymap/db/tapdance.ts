@@ -13,7 +13,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-const tapdance = index => ({
+const tapdance = (index: number) => ({
   code: 53267 + index,
   labels: {
     primary: index.toString(),
@@ -22,7 +22,7 @@ const tapdance = index => ({
 });
 
 const tapdances = Array(64)
-  .fill()
+  .fill(0)
   .map((_, index) => tapdance(index));
 
 const TapDanceTable = {

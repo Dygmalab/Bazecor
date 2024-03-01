@@ -17,25 +17,25 @@
 
 import { withModifiers } from "./utils";
 
-const GuiLabels = {
+const GuiLabels: { [key: string]: string } = {
   linux: "LINUX",
   win32: "WIN",
   darwin: "⌘",
 };
 
-const GuiVerboses = {
+const GuiVerboses: { [key: string]: string } = {
   linux: "Linux",
   win32: "Windows",
   darwin: "Command",
 };
 
-const AltLabels = {
+const AltLabels: { [key: string]: string } = {
   linux: "ALT",
   win32: "ALT",
   darwin: "⌥",
 };
 
-const AltVerboses = {
+const AltVerboses: { [key: string]: string } = {
   linux: "Alt",
   win32: "Alt",
   darwin: "Option",
@@ -174,4 +174,5 @@ const ModifiedModifiersTables = [
   withModifiers(ModifiersTable, "Hyper + AltGr +", "H+AGr+", 7936),
 ];
 
-export { ModifiersTable as default, ModifiedModifiersTables, HyperMehTable };
+export default ModifiersTable;
+export { ModifiedModifiersTables, HyperMehTable };

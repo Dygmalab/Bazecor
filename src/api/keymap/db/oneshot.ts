@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-const GuiLabels = {
+const GuiLabels: { [key: string]: string } = {
   linux: "Linux",
   win32: "Win",
   darwin: "Cmd",
