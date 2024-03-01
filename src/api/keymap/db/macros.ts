@@ -13,7 +13,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-const macro = index => ({
+const macro = (index: number) => ({
   code: 53852 + index,
   labels: {
     primary: (index + 1).toString(),
@@ -22,7 +22,7 @@ const macro = index => ({
 });
 
 const macros = Array(128)
-  .fill()
+  .fill(0)
   .map((_, index) => macro(index));
 
 const MacrosTable = {
