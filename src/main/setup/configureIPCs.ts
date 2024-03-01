@@ -93,9 +93,9 @@ const configureIPCs = () => {
       if (!isTrusted) {
         const clickedButton = await dialog.showMessageBox(null, {
           type: "warning",
-          message: "Bazecor requires accessibility",
+          message: "Bazecor requires accessibility permissions",
           detail:
-            "Bazecor uses accessibility to record macros and list Bluetooth-HID devices like the Defy wireless, please try again after authorizing the application if you want access to these features",
+            "Bazecor uses accessibility to record macros and list Bluetooth-HID devices like the Defy wireless, please try again after authorizing the application if you want access to these features, you will need to restart the application after giving it permissions",
           defaultId: 1,
           cancelId: 0,
           buttons: ["Not Now", "Turn On Accessibility"],
