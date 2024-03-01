@@ -303,22 +303,21 @@ export default class RecordMacroModal extends React.Component {
   cleanRecorded = recorded => {
     console.log("Clean recorded", recorded);
     const newRecorded = [];
-    const previous = 0;
-    for (let i = 1; i < recorded.length; i++) {
+    for (let i = 1; i < recorded.length; i += 1) {
       const p = i - 1;
       console.log(`pressed key: ${recorded[i].char}`, recorded[p], recorded[i]);
-      if (recorded[p].isMod) {
+      if (recorded[p].keyCode > 223 && recorded[p].keyCode < 232) {
         console.log(`Modifier detected: ${recorded[p].char}`);
-        newRecorded.push(recorded[p]);
+        newRecorded.push(JSON.parse(JSON.stringify(recorded[p])));
         continue;
       }
       if (recorded[p].keycode === recorded[i].keycode && recorded[p].action === 6 && recorded[i].action === 7) {
         console.log(
           `pressRelease joining ${recorded[i].char} as 1 with ${recorded[p].action} as p action and ${recorded[i].action} as i action`,
         );
-        recorded[p].action = 8;
-        newRecorded.push(recorded[p]);
-        i++;
+        newRecorded.push(JSON.parse(JSON.stringify(recorded[p])));
+        newRecorded[p].action = 8;
+        i += 1;
         console.log("state of i", i);
         if (i >= recorded.length - 1) {
           newRecorded.push(recorded[recorded.length - 1]);
