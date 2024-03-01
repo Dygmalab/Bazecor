@@ -120,4 +120,5 @@ const ModifiedMiscellaneousTables = [
   withModifiers(MiscellaneousTable, "Hyper + AltGr +", "H+AGr+", 7936),
 ];
 
-export { MiscellaneousTable as default, ModifiedMiscellaneousTables };
+export default MiscellaneousTable;
+export { ModifiedMiscellaneousTables };

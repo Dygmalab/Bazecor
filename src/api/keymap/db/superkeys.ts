@@ -13,21 +13,21 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-const tapdance = index => ({
-  code: 53267 + index,
+const superkey = (index: number) => ({
+  code: 53980 + index,
   labels: {
-    primary: index.toString(),
-    top: "TAPD",
+    primary: (index + 1).toString(),
+    top: "SUPER",
   },
 });
 
-const tapdances = Array(64)
-  .fill()
-  .map((_, index) => tapdance(index));
+const superkeys = Array(128)
+  .fill(0)
+  .map((_, index) => superkey(index));
 
-const TapDanceTable = {
-  groupName: "TapDance",
-  keys: tapdances,
+const SuperKeyTable = {
+  groupName: "SuperKeys",
+  keys: superkeys,
 };
 
-export default TapDanceTable;
+export default SuperKeyTable;

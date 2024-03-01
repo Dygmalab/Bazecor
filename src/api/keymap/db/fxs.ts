@@ -210,4 +210,5 @@ const ModifiedFunctionKeyTables = [
   withModifiers(FunctionKeyTable, "Hyper + AltGr +", "H+AGr+", 7936),
 ];
 
-export { FunctionKeyTable as default, ModifiedFunctionKeyTables };
+export default FunctionKeyTable;
+export { ModifiedFunctionKeyTables };

@@ -109,4 +109,5 @@ const ModifiedSpacingTables = [
   withModifiers(SpacingTable, "Hyper + AltGr +", "H+AGr+", 7936),
 ];
 
-export { SpacingTable as default, ModifiedSpacingTables };
+export default SpacingTable;
+export { ModifiedSpacingTables };

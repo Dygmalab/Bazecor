@@ -77,4 +77,4 @@ const LeaderTable = {
   ],
 };
 
-export { LeaderTable as default };
+export default LeaderTable;
