@@ -8,8 +8,8 @@ export interface PageHeaderType {
   colorEditor?: ReactNode | undefined;
   isColorActive?: boolean;
   showSaving?: boolean;
-  saveContext?: unknown | undefined;
-  destroyContext?: unknown | undefined;
+  saveContext?: () => Promise<void> | void;
+  destroyContext?: () => Promise<void> | void;
   inContext?: boolean;
   isSaving?: boolean;
   primaryButton?: React.ReactNode;

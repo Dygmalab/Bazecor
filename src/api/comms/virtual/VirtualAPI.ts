@@ -16,6 +16,6 @@ const isDeviceConnected = (device: DeviceType) => true;
 
 const isDeviceSupported = async (device: DeviceType) => true;
 
-const isVirtualType = (device: any): device is DeviceClass => "virtual" in device;
+const isVirtualType = (device: any): device is DeviceClass => (typeof device !== "object" ? false : "virtual" in device);
 
 export { connect, isDeviceConnected, isDeviceSupported, DeviceType, isVirtualType };

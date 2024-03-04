@@ -18,9 +18,9 @@
 import React from "react";
 import Styled from "styled-components";
 import Form from "react-bootstrap/Form";
+import { i18n } from "@Renderer/i18n";
 import Title from "../../component/Title";
 import { RegularButton } from "../../component/Button";
-import { i18n } from "@Renderer/i18n";
 
 const Style = Styled.div`
 width: 100%;
@@ -57,7 +57,16 @@ h6 {
   }
 }
 `;
-function BackupFolderConfigurator({ chooseBackupFolder, getBackup, backupFolder, connected }) {
+
+interface BackupFolderConfiguratorProps {
+  chooseBackupFolder: () => void;
+  getBackup: () => void;
+  backupFolder: string;
+  connected: boolean;
+}
+
+function BackupFolderConfigurator(props: BackupFolderConfiguratorProps) {
+  const { chooseBackupFolder, getBackup, backupFolder, connected } = props;
   return (
     <Style>
       <div className="backupFolderConfigurator">

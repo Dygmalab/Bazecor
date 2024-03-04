@@ -14,6 +14,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import BackupFolderConfigurator from "./BackupFolderConfigurator";
+import Saving from "./Saving";
 
-export { BackupFolderConfigurator as default };
+export default Saving;

@@ -133,11 +133,15 @@ class SuperKeysSelector extends React.Component {
                   <div className="dropdownListItemInner">
                     <div className="dropdownListItemLabel">{subtitle}</div>
                     <div className="dropdownListItemSelected">
-                      {itemList == undefined || itemList.length == 0 || itemList.length <= selectedItem
-                        ? i18n.dialog.loading
-                        : itemList[selectedItem].name == ""
-                          ? i18n.general.noname
-                          : itemList[selectedItem].name}
+                      {itemList === undefined ? i18n.dialog.loading : ""}
+                      {itemList !== undefined && itemList.length === 0 ? "No Superkeys" : ""}
+                      {itemList !== undefined &&
+                      itemList.length > 0 &&
+                      itemList.length < selectedItem &&
+                      itemList[selectedItem].name == ""
+                        ? i18n.general.noname
+                        : ""}
+                      {itemList[selectedItem]?.name}
                     </div>
                     <span className="caret">
                       <IconArrowsSmallSeparating />

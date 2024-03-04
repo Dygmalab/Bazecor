@@ -23,7 +23,16 @@ import { RegularButton } from "../../component/Button";
 const Style = Styled.div`
 
 `;
-function Saving({ saveContext, destroyContext, inContext, isSaving }) {
+
+interface SavingProps {
+  saveContext: () => Promise<void> | void;
+  destroyContext: () => Promise<void> | void;
+  inContext: boolean;
+  isSaving: boolean;
+}
+
+function Saving(props: SavingProps) {
+  const { saveContext, destroyContext, inContext, isSaving } = props;
   return (
     <Style className="savingButtons">
       <RegularButton

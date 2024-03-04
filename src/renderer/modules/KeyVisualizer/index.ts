@@ -16,4 +16,4 @@
 
 import KeyVisualizer from "./KeyVisualizer";
 
-export { KeyVisualizer as default };
+export default KeyVisualizer;

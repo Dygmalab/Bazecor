@@ -327,7 +327,7 @@ export default class StandardView extends React.Component<StandardViewProps, Sta
       isWireless,
     } = this.props;
     const { stateCode, selected, currentTab } = this.state;
-    let keyCode;
+    let keyCode: number;
     if (actTab === "super") {
       keyCode = keyIndex !== -1 ? layerData[keyIndex] : 0;
     } else {
@@ -363,7 +363,7 @@ export default class StandardView extends React.Component<StandardViewProps, Sta
                   oldValue={oldKey}
                   newValue={selKey}
                   isStandardView={isStandardView}
-                  superkeyAction={`${actTab === "super" ? keyIndex : 5}`}
+                  superkeyAction={actTab === "super" ? keyIndex : 5}
                 />
                 <TabsList className="flex flex-column gap-1 tabsWrapper">
                   <TabsTrigger value="tabKeys" variant="tab">
