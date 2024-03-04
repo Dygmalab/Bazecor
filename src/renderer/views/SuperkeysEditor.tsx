@@ -711,7 +711,7 @@ function SuperkeysEditor(props: SuperkeysEditorProps) {
       await loadSuperkeys();
       await configStandarView();
       setState({ ...state, loading: false });
-      setLoading(state.loading);
+      setLoading(false);
     };
     getInitialData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -723,7 +723,7 @@ function SuperkeysEditor(props: SuperkeysEditorProps) {
     await loadSuperkeys();
     await configStandarView();
     setState({ ...state, loading: false });
-    setLoading(state.loading);
+    setLoading(false);
   };
 
   const {
