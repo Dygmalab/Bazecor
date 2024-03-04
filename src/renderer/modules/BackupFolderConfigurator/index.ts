@@ -16,4 +16,4 @@
 
 import BackupFolderConfigurator from "./BackupFolderConfigurator";
 
-export { BackupFolderConfigurator as default };
+export default BackupFolderConfigurator;
