@@ -21,6 +21,7 @@ export interface SuperkeysType {
   actions: number[];
   name: string;
   id: number;
+  superkey?: string;
 }
 
 export interface SuperKeyActionsProps {
@@ -29,6 +30,8 @@ export interface SuperKeyActionsProps {
   selected: number;
   selectedAction: number;
   macros: MacrosType[];
+  changeSelected: (id: number) => void;
+  updateSuper: (newSuper: SuperkeysType[], newID: number) => void;
   updateAction: (actionNumber: number, newAction: unknown) => void;
   changeAction: (id: number) => void;
   keymapDB: KeymapDB;

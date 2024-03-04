@@ -19,7 +19,6 @@
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import Styled from "styled-components";
-import PropTypes from "prop-types";
 
 // Styling and elements
 import Container from "react-bootstrap/Container";
@@ -42,6 +41,13 @@ import { PageHeader } from "@Renderer/modules/PageHeader";
 import { SuperKeysFeatures, SuperkeyActions } from "@Renderer/modules/Superkeys";
 import { KeyPickerKeyboard } from "@Renderer/modules/KeyPickerKeyboard";
 import StandardView from "@Renderer/modules/StandardView";
+
+// Types
+import { SuperkeysEditorInitialStateType, SuperkeysEditorProps } from "@Renderer/types/superkeyseditor";
+import { MacrosType } from "@Renderer/types/macros";
+import { SuperkeysType } from "@Renderer/types/superkeys";
+import { Neuron } from "@Renderer/types/neurons";
+import { KeymapType } from "@Renderer/types/layout";
 
 // API's
 import { useDevice } from "@Renderer/DeviceContext";
@@ -85,12 +91,12 @@ flex-direction: column;
 }
 `;
 
-function SuperkeysEditor(props) {
+function SuperkeysEditor(props: SuperkeysEditorProps) {
   let keymapDB = new KeymapDB();
   const bkp = new Backup();
   const [isSaving, setIsSaving] = useState(false);
 
-  const flatten = arr => [].concat(...arr);
+  const flatten = (arr: unknown[]) => [].concat(...arr);
 
   const defaultMacro = [
     {
@@ -118,11 +124,14 @@ function SuperkeysEditor(props) {
     },
   ];
 
-  const initialState = {
-    keymap: [],
+  const initialState: SuperkeysEditorInitialStateType = {
+    keymap: undefined,
     macros: [],
-    storedMacros: [],
     superkeys: [],
+    storedMacros: [],
+    neurons: [],
+    neuronID: "",
+    kbtype: "iso",
     maxSuperKeys: 128,
     modified: false,
     modifiedKeymap: false,
@@ -132,9 +141,10 @@ function SuperkeysEditor(props) {
     listToDelete: [],
     futureSK: [],
     futureSSK: 0,
-    currentLanguageLayout: getLanguage(store.get("settings.language")),
-    isStandardViewSuperkeys: store.get("settings.isStandardViewSuperkeys") || true,
+    currentLanguageLayout: getLanguage(store.get("settings.language") as string),
+    isStandardViewSuperkeys: store.get("settings.isStandardViewSuperkeys") as boolean,
     showStandardView: false,
+    loading: true,
   };
   const [state, setState] = useState(initialState);
   const { state: deviceState } = useDevice();
@@ -158,7 +168,7 @@ function SuperkeysEditor(props) {
     }
   };
 
-  const macroTranslator = raw => {
+  const macroTranslator = (raw: string) => {
     const { storedMacros } = state;
     if (typeof raw === "string" && raw.search(" 0 0") === -1) {
       return defaultMacro;
@@ -213,7 +223,7 @@ function SuperkeysEditor(props) {
       iter += 1;
     }
     macros.forEach((m, idx) => {
-      const aux = m;
+      const aux: MacrosType = m;
       aux.id = idx;
       macros[idx] = aux;
     });
@@ -231,46 +241,46 @@ function SuperkeysEditor(props) {
       return {
         ...macro,
         name: stored[i]?.name,
-        macro: macro.actions.map(k => keymapDB.parse(k.keyCode).label).join(" "),
+        macro: macro.actions.map(k => keymapDB.parse(k.keyCode as number).label).join(" "),
       };
     });
   };
 
-  const superTranslator = raw => {
+  const superTranslator = (raw: string) => {
     const { neurons, neuronID } = state;
-    let superkey = [];
-    const superkeys = [];
+    const superArray = raw.split(" 0 0")[0].split(" ").map(Number);
+
+    let superkey: number[] = [];
+    const superkeys: SuperkeysType[] = [];
     let iter = 0;
     let superindex = 0;
 
-    if (raw === "") {
+    if (superArray.length < 1) {
+      console.log("Discarded Superkeys due to short length of string", raw, raw.length);
       return [{ actions: [53, 2101, 1077, 41, 0], name: "Welcome to superkeys", id: superindex }];
     }
     // console.log(raw, raw.length);
-    while (raw.length > iter) {
+    while (superArray.length > iter) {
       // console.log(iter, raw[iter], superkey);
-      if (raw[iter] === 0) {
+      if (superArray[iter] === 0) {
         superkeys[superindex] = { actions: superkey, name: "", id: superindex };
         superindex += 1;
         superkey = [];
       } else {
-        superkey.push(raw[iter]);
+        superkey.push(superArray[iter]);
       }
       iter += 1;
     }
     superkeys[superindex] = { actions: superkey, name: "", id: superindex };
-    console.log(`Got Superkeys:${JSON.stringify(superkeys)} from ${raw}`);
 
-    if (
-      superkeys[0].actions === undefined ||
-      !Array.isArray(superkeys[0].actions) ||
-      superkeys[0].actions.filter(v => v === 0).length === superkeys[0].length - 1
-    ) {
+    if (superkeys[0].actions.length === 0 || superkeys[0].actions.length > 5) {
+      console.log(`Superkeys were empty`);
       return [];
     }
+    console.log(`Got Superkeys:${JSON.stringify(superkeys)} from ${raw}`);
     // TODO: Check if stored superKeys match the received ones, if they match, retrieve name and apply it to current superKeys
-    let finalSuper = [];
-    const stored = neurons[neuronID].superkeys;
+    let finalSuper: SuperkeysType[] = [];
+    const stored = neurons.find(n => n.id === neuronID).superkeys;
     finalSuper = superkeys.map((superky, i) => {
       const superk = superky;
       if (stored.length > i && stored.length > 0) {
@@ -288,7 +298,7 @@ function SuperkeysEditor(props) {
     store.set("settings.isStandardViewSuperkeys", state.isStandardViewSuperkeys);
   }, [state.isStandardViewSuperkeys]);
 
-  const onKeyChange = keyCode => {
+  const onKeyChange = (keyCode: number) => {
     const { superkeys, selectedSuper, selectedAction } = state;
     const { startContext } = props;
     const newData = superkeys;
@@ -309,14 +319,14 @@ function SuperkeysEditor(props) {
        */
       let chipID = await currentDevice.command("hardware.chip_id");
       chipID = chipID.replace(/\s/g, "");
-      const neurons = store.get("neurons");
-      let neuron = {};
+      const neurons = store.get("neurons") as Neuron[];
+      let neuron: Neuron;
       if (neurons.some(n => n.id === chipID)) {
         console.log(neurons.filter(n => n.id === chipID));
         [neuron] = neurons.filter(n => n.id === chipID);
       }
       state.neurons = neurons;
-      state.neuronID = neurons.findIndex(n => n.id === chipID);
+      state.neuronID = chipID;
       state.storedMacros = neuron.macros;
       setState({ ...state });
       const deviceLang = { ...currentDevice.device, language: true };
@@ -332,7 +342,7 @@ function SuperkeysEditor(props) {
       const defaults = await currentDevice.command("keymap.default");
       const custom = await currentDevice.command("keymap.custom");
       const onlyCustom = Boolean(parseInt(await currentDevice.command("keymap.onlyCustom"), 10));
-      const keymap = { custom: undefined, default: undefined, onlyCustom: false };
+      const keymap: KeymapType = { custom: undefined, default: undefined, onlyCustom: false };
       const layerSize = currentDevice.device.keyboard.rows * currentDevice.device.keyboard.columns;
       keymap.custom = custom
         .split(" ")
@@ -342,6 +352,7 @@ function SuperkeysEditor(props) {
           const chunkIndex = Math.floor(index / layerSize);
 
           if (!resultArray[chunkIndex]) {
+            // eslint-disable-next-line no-param-reassign
             resultArray[chunkIndex] = []; // start a new chunk
           }
           resultArray[chunkIndex].push(item);
@@ -355,6 +366,7 @@ function SuperkeysEditor(props) {
           const chunkIndex = Math.floor(index / layerSize);
 
           if (!resultArray[chunkIndex]) {
+            // eslint-disable-next-line no-param-reassign
             resultArray[chunkIndex] = []; // start a new chunk
           }
           resultArray[chunkIndex].push(item);
@@ -362,26 +374,10 @@ function SuperkeysEditor(props) {
         }, []);
       keymap.onlyCustom = onlyCustom;
       // Macros
-      const raw = await currentDevice.command("macros.map");
-      const parsedMacros = macroTranslator(raw);
-      let raw2 = await currentDevice.command("superkeys.map");
-      raw2 = String(raw2);
-      if (raw2.search(" 0 0") !== -1) {
-        raw2 = raw2.split(" 0 0")[0].split(" ").map(Number);
-      } else {
-        raw2 = "";
-      }
-      let parsedSuper = superTranslator(raw2);
-      if (!Array.isArray(parsedSuper) || parsedSuper.length === 0) {
-        parsedSuper = [
-          {
-            actions: [],
-            name: "Empty Superkey",
-            id: 0,
-            superkey: "",
-          },
-        ];
-      }
+      const macrosRaw = await currentDevice.command("macros.map");
+      const parsedMacros = macroTranslator(macrosRaw);
+      const supersRaw = await currentDevice.command("superkeys.map");
+      const parsedSuper = superTranslator(supersRaw);
       state.modified = false;
       state.macros = parsedMacros;
       state.superkeys = parsedSuper;
@@ -402,17 +398,17 @@ function SuperkeysEditor(props) {
     return true;
   };
 
-  const superkeyMap = superkeys => {
+  const superkeyMap = (superkeys: SuperkeysType[]) => {
     if (
       superkeys.length === 0 ||
       (superkeys.length === 1 && superkeys[0].actions.length === 0) ||
       (superkeys.length === 1 && superkeys[0].actions.length === 1 && superkeys[0].actions[0] === 0)
     ) {
-      return Array.from({ length: 512 }, 65535).join(" ");
+      return Array(512).fill("65535").join(" ");
     }
     let keyMap = JSON.parse(JSON.stringify(superkeys));
     // console.log("First", JSON.stringify(keyMap));
-    keyMap = keyMap.map(sky => {
+    keyMap = keyMap.map((sky: SuperkeysType) => {
       const sk = sky;
       sk.actions = sk.actions.map(act => {
         if (act === 0 || act === null || act === undefined) return 1;
@@ -422,20 +418,24 @@ function SuperkeysEditor(props) {
       return sk;
     });
     // console.log("Third", JSON.parse(JSON.stringify(keyMap)));
-    keyMap = keyMap.map(superkey => superkey.actions.filter(act => act !== 0).concat([0]));
-    // console.log("Fifth", JSON.parse(JSON.stringify(keyMap)));
-    const mapped = [].concat.apply([], keyMap.flat()).concat([0]).join(" ").replaceAll(",", " ");
+    const mapped = keyMap
+      .map((superkey: SuperkeysType) => superkey.actions.filter(act => act !== 0).concat([0]))
+      .flat()
+      .concat([0])
+      .join(" ")
+      .split(",")
+      .join(" ");
     console.log("Mapped superkeys: ", mapped, keyMap);
     return mapped;
   };
 
-  const changeSelected = id => {
+  const changeSelected = (id: number) => {
     state.selectedSuper = id < 0 ? 0 : id;
     state.selectedAction = -1;
     setState({ ...state });
   };
 
-  const changeAction = id => {
+  const changeAction = (id: number) => {
     const { isStandardViewSuperkeys, selectedAction } = state;
     if (isStandardViewSuperkeys) {
       state.selectedAction = id < 0 ? 0 : id;
@@ -454,7 +454,7 @@ function SuperkeysEditor(props) {
     }
   };
 
-  const updateSuper = (newSuper, newID) => {
+  const updateSuper = (newSuper: SuperkeysType[], newID: number) => {
     const { startContext } = props;
     // console.log("launched update super using data:", newSuper, newID);
     state.superkeys = newSuper;
@@ -464,7 +464,7 @@ function SuperkeysEditor(props) {
     startContext();
   };
 
-  const updateAction = (actionNumber, newAction) => {
+  const updateAction = (actionNumber: number, newAction: number) => {
     const { startContext } = props;
     const { superkeys, selectedSuper } = state;
     // console.log("launched update action using data:", newAction);
@@ -477,7 +477,7 @@ function SuperkeysEditor(props) {
     startContext();
   };
 
-  const saveName = name => {
+  const saveName = (name: string) => {
     const { startContext } = props;
     const { superkeys, selectedSuper } = state;
     superkeys[selectedSuper].name = name;
@@ -493,13 +493,16 @@ function SuperkeysEditor(props) {
     setIsSaving(true);
     const { currentDevice } = deviceState;
     const localNeurons = [...neurons];
-    localNeurons[neuronID].superkeys = superkeys;
+    const nIdx = localNeurons.findIndex(n => n.id === neuronID);
+    localNeurons[nIdx].superkeys = superkeys;
     console.log("Loaded neurons: ", JSON.stringify(localNeurons));
     store.set("neurons", localNeurons);
     try {
       await currentDevice.command("superkeys.map", superkeyMap(superkeys));
       if (modifiedKeymap) {
-        const args = flatten(keymap.custom).map(k => keymapDB.serialize(k));
+        const args = flatten(keymap.custom)
+          .map(k => keymapDB.serialize(k))
+          .toString();
         await currentDevice.command("keymap.custom", ...args);
       }
       state.modified = false;
@@ -507,7 +510,7 @@ function SuperkeysEditor(props) {
       setState({ ...state });
       console.log("Changes saved.");
       const commands = await Backup.Commands(currentDevice);
-      const backup = await bkp.DoBackup(commands, neurons[neuronID].id, currentDevice);
+      const backup = await bkp.DoBackup(commands, neurons[nIdx].id, currentDevice);
       Backup.SaveBackup(backup, currentDevice);
       toast.success(<ToastMessage title={i18n.editor.superkeys.successFlashTitle} content="" icon={<IconFloppyDisk />} />, {
         autoClose: 2000,
@@ -531,7 +534,7 @@ function SuperkeysEditor(props) {
     setState({ ...state });
   };
 
-  const SortSK = (newSuper, newID) => {
+  const SortSK = (newSuper: SuperkeysType[], newID: number) => {
     const { startContext } = props;
     const { keymap, selectedSuper, superkeys } = state;
     let listToDecrease = [];
@@ -564,8 +567,8 @@ function SuperkeysEditor(props) {
     toggleDeleteModal();
   };
 
-  const checkKBSuperkeys = (newSuper, newID, SKC) => {
-    const { keymap, selected, superkeys } = state;
+  const checkKBSuperkeys = (newSuper: SuperkeysType[], newID: number, SKC: number) => {
+    const { keymap, selectedSuper, superkeys } = state;
     let localNewSuper = newSuper;
     let localNewID = newID;
     if (localNewSuper.length === 0) {
@@ -576,7 +579,7 @@ function SuperkeysEditor(props) {
       .map((l, c) =>
         l
           .map((k, i) => {
-            if (k.keyCode === SKC) return { layer: c, pos: i, sk: SKC };
+            if (k.keyCode === SKC) return { layer: c, pos: i, superIdx: SKC, newKey: 0 };
             return undefined;
           })
           .filter(x => x !== undefined),
@@ -588,7 +591,7 @@ function SuperkeysEditor(props) {
       state.futureSK = localNewSuper;
       state.futureSSK = localNewID;
       setState({ ...state });
-    } else if (selected !== superkeys.length - 1) {
+    } else if (selectedSuper !== superkeys.length - 1) {
       SortSK(localNewSuper, localNewID);
     } else {
       updateSuper(localNewSuper, localNewID);
@@ -605,7 +608,7 @@ function SuperkeysEditor(props) {
           .map((l, c) =>
             l
               .map((k, i) => {
-                if (k.keyCode === key.id + 53980) return { layer: c, pos: i, sk: key.id + 53980 };
+                if (k.keyCode === key.id + 53980) return { layer: c, pos: i, superIdx: key.id + 53980 };
                 return undefined;
               })
               .filter(x => x !== undefined),
@@ -619,7 +622,7 @@ function SuperkeysEditor(props) {
     listToDecrease = listToDecrease.flat();
     console.log("now decreasing... ", listToDecrease);
     for (let i = 0; i < listToDecrease.length; i += 1) {
-      keymap.custom[listToDecrease[i].layer][listToDecrease[i].pos] = keymapDB.parse(listToDecrease[i].sk - 1);
+      keymap.custom[listToDecrease[i].layer][listToDecrease[i].pos] = keymapDB.parse(listToDecrease[i].superIdx - 1);
     }
     state.keymap = keymap;
     state.superkeys = futureSK;
@@ -634,7 +637,7 @@ function SuperkeysEditor(props) {
   // Manage Standard/Single view
   const configStandarView = async () => {
     try {
-      const preferencesStandardView = JSON.parse(store.get("settings.isStandardViewSuperkeys"));
+      const preferencesStandardView = store.get("settings.isStandardViewSuperkeys") as boolean;
       // console.log("Preferences StandardView", preferencesStandardViewJSON);
       if (preferencesStandardView !== null) {
         state.isStandardViewSuperkeys = preferencesStandardView;
@@ -654,7 +657,7 @@ function SuperkeysEditor(props) {
       let aux = JSON.parse(JSON.stringify(superkeys));
       const selected = selectedSuper;
       aux.splice(selected, 1);
-      aux = aux.map((item, index) => {
+      aux = aux.map((item: SuperkeysType, index: number) => {
         const newItem = item;
         newItem.id = index;
         return newItem;
@@ -678,18 +681,18 @@ function SuperkeysEditor(props) {
     changeSelected(aux.id);
   };
 
-  const closeStandardViewModal = code => {
+  const closeStandardViewModal = (code: number) => {
     onKeyChange(code);
     state.showStandardView = false;
     state.selectedAction = -1;
     setState({ ...state });
   };
 
-  const addSuperkey = SKname => {
+  const addSuperkey = (SKname: string) => {
     const { superkeys, maxSuperKeys } = state;
     // console.log("TEST", superkeys.length, maxSuperKeys);
     if (superkeys.length < maxSuperKeys) {
-      const aux = superkeys;
+      const aux: SuperkeysType[] = JSON.parse(JSON.stringify(superkeys));
       const newID = aux.length;
       aux.push({
         actions: [0, 0, 0, 0, 0],
@@ -703,12 +706,11 @@ function SuperkeysEditor(props) {
 
   useEffect(() => {
     const getInitialData = async () => {
-      const { setLoading, inContext } = props;
-      console.log("initial load of superkeys", setLoading, inContext);
+      const { setLoading } = props;
+      console.log("initial load of superkeys", setLoading);
       await loadSuperkeys();
       await configStandarView();
-      state.loading = false;
-      setState({ ...state });
+      setState({ ...state, loading: false });
       setLoading(state.loading);
     };
     getInitialData();
@@ -717,12 +719,10 @@ function SuperkeysEditor(props) {
 
   const destroyThisContext = async () => {
     const { setLoading } = props;
-    state.loading = true;
-    setState({ ...state });
+    setState({ ...state, loading: true });
     await loadSuperkeys();
     await configStandarView();
-    state.loading = false;
-    setState({ ...state });
+    setState({ ...state, loading: false });
     setLoading(state.loading);
   };
 
@@ -738,23 +738,23 @@ function SuperkeysEditor(props) {
     modified,
     showStandardView,
     showDeleteModal,
+    loading,
   } = state;
 
-  let code = 0;
   const tempkey = keymapDB.parse(superkeys[selectedSuper] !== undefined ? superkeys[selectedSuper].actions[selectedAction] : 0);
-  code = keymapDB.keySegmentator(tempkey.keyCode);
+  const code = keymapDB.keySegmentator(tempkey.keyCode);
   // console.log(selectedSuper, JSON.stringify(code), JSON.stringify(superkeys));
   const actions = superkeys.length > 0 && superkeys.length > selectedSuper ? superkeys[selectedSuper].actions : [];
   const superName = superkeys.length > 0 && superkeys.length > selectedSuper ? superkeys[selectedSuper].name : "";
 
-  const listOfSKK = listToDelete.map(({ layer, pos, sk }) => (
-    <Row key={`${layer}-${pos}-${sk}`}>
+  const listOfSKK = listToDelete.map(({ layer, pos, superIdx }) => (
+    <Row key={`${layer}-${pos}-${superIdx}`}>
       <Col xs={12} className="px-0 text-center gridded">
         <p className="titles alignvert">{`Key in layer ${layer + 1} and pos ${pos}`}</p>
       </Col>
     </Row>
   ));
-  if (superkeys.length === 0 || !Array.isArray(superkeys)) return <LogoLoaderCentered />;
+  if (loading || !Array.isArray(superkeys)) return <LogoLoaderCentered />;
   return (
     <Styles className="superkeys">
       <Container fluid className={`${isStandardViewSuperkeys ? "standarViewMode" : "singleViewMode"}`}>
@@ -823,7 +823,15 @@ function SuperkeysEditor(props) {
       ) : (
         ""
       )}
-      <LayoutViewSelector onToggle={onToggle} isStandardView={isStandardViewSuperkeys} tooltip={i18n.editor.superkeys.tooltip} />
+      <LayoutViewSelector
+        onToggle={onToggle}
+        isStandardView={isStandardViewSuperkeys}
+        tooltip={i18n.editor.superkeys.tooltip}
+        layoutSelectorPosition={{
+          x: 0,
+          y: 0,
+        }}
+      />
       {isStandardViewSuperkeys ? (
         <StandardView
           showStandardView={showStandardView}
@@ -833,8 +841,6 @@ function SuperkeysEditor(props) {
           macros={macros}
           superkeys={superkeys}
           actions={selectedAction > -1 ? superkeys[selectedSuper].actions : []}
-          action={selectedAction > -1 ? superkeys[selectedSuper].actions[selectedAction] : 0}
-          superName={superName}
           keyIndex={selectedAction}
           code={code}
           layerData={selectedAction > -1 ? superkeys[selectedSuper].actions : []}
@@ -842,6 +848,7 @@ function SuperkeysEditor(props) {
           selectedlanguage={currentLanguageLayout}
           kbtype={kbtype}
           isStandardView={isStandardViewSuperkeys}
+          isWireless={deviceState?.currentDevice?.device?.info?.keyboardType === "wireless"}
         />
       ) : (
         ""
@@ -873,13 +880,5 @@ function SuperkeysEditor(props) {
     </Styles>
   );
 }
-
-SuperkeysEditor.propTypes = {
-  onDisconnect: PropTypes.func,
-  setLoading: PropTypes.func,
-  startContext: PropTypes.func,
-  cancelContext: PropTypes.func,
-  inContext: PropTypes.bool,
-};
 
 export default SuperkeysEditor;

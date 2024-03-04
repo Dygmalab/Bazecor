@@ -196,19 +196,19 @@ function MacroEditor(props: MacroEditorProps) {
     ) {
       return Array(512).fill("65535").join(" ");
     }
-    let keyMap = [...superkeys];
+    let keyMap = JSON.parse(JSON.stringify(superkeys));
     // console.log("First", JSON.stringify(keyMap));
-    keyMap = keyMap.map(sky => {
+    keyMap = keyMap.map((sky: SuperkeysType) => {
       const sk = sky;
       sk.actions = sk.actions.map(act => {
         if (act === 0 || act === null || act === undefined) return 1;
         return act;
       });
-      if (sk.actions.length < 5) sk.actions = sk.actions.concat(Array(5 - sk.actions.length).fill("1"));
+      if (sk.actions.length < 5) sk.actions = sk.actions.concat(Array(5 - sk.actions.length).fill(1));
       return sk;
     });
     const mapped = keyMap
-      .map(superkey => superkey.actions.filter(act => act !== 0).concat([0]))
+      .map((superkey: SuperkeysType) => superkey.actions.filter(act => act !== 0).concat([0]))
       .flat()
       .concat([0])
       .join(" ")
