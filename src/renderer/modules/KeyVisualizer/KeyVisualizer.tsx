@@ -18,6 +18,7 @@
 import React from "react";
 import Styled from "styled-components";
 import { i18n } from "@Renderer/i18n";
+import { SegmentedKeyType } from "@Renderer/types/layout";
 import Title from "../../component/Title";
 
 import ListModifiers from "../../component/ListModifiers/ListModifiers";
@@ -108,112 +109,92 @@ const Style = Styled.div`
 }
 
 `;
-// }= ({ oldValue, newValue, keyCode }) => {
-class KeyVisualizer extends React.Component {
-  constructor(props) {
-    super(props);
 
-    this.state = {
-      // modifs: []
-    };
-  }
-
-  parseModifs(keycode) {
-    const modifs = [];
-    if (keycode & 0b100000000) {
-      // Ctrl Decoder
-      modifs.push(1);
-      console.log("modifs", modifs);
-    }
-    if (keycode & 0b1000000000) {
-      // Alt Decoder
-      modifs.push(2);
-      console.log("modifs", modifs);
-    }
-    if (keycode & 0b10000000000) {
-      // AltGr Decoder
-      modifs.push(3);
-      console.log("modifs", modifs);
-    }
-    if (keycode & 0b100000000000) {
-      // Shift Decoder
-      modifs.push(0);
-      console.log("modifs", modifs);
-    }
-    if (keycode & 0b1000000000000) {
-      // Win Decoder
-      modifs.push(4);
-      console.log("modifs", modifs);
-    }
-    return modifs;
-  }
-
-  render() {
-    const { keyCode, oldKeyCode, newValue, oldValue, isStandardView, superkeyAction } = this.props;
-    const rows = [
-      {
-        title: `<strong>${i18n.editor.superkeys.actions.tapLabel}:</strong> Selected value`,
-      },
-      {
-        title: `<strong>${i18n.editor.superkeys.actions.holdLabel}:</strong> Selected value`,
-      },
-      {
-        title: `<strong>${i18n.editor.superkeys.actions.tapAndHoldLabel}:</strong> Selected value`,
-      },
-      {
-        title: `<strong>${i18n.editor.superkeys.actions.doubleTapLabel}:</strong> Selected value`,
-      },
-      {
-        title: `<strong>${i18n.editor.superkeys.actions.doubleTapAndHoldLabel}:</strong> Selected value`,
-      },
-      {
-        title: `Selected value`,
-      },
-    ];
-
-    return (
-      <Style className="KeyVisualizer">
-        <div className={`KeyVisualizerInner ${newValue !== oldValue && isStandardView ? "showConnection" : ""}`}>
-          {oldValue ? (
-            <div className="oldKeyValue">
-              <Title text={`${rows ? rows[superkeyAction].title : "Selected value"}`} headingLevel={4} />
-              <div className="keySelectedBox">
-                <div className="keySelectedValue">{oldValue}</div>
-                <ListModifiers
-                  keyCode={oldKeyCode !== undefined && oldKeyCode.base ? oldKeyCode.base + oldKeyCode.modified : oldKeyCode}
-                  size="sm"
-                />
-              </div>
-            </div>
-          ) : (
-            ""
-          )}
-          {newValue && !isStandardView ? (
-            <div className="newKeyValue">
-              <Title text="New value" headingLevel={4} />
-              <div className="keySelectedBox">
-                <div className="keySelectedValue">{newValue}</div>
-                <ListModifiers keyCode={keyCode !== undefined && keyCode.base ? keyCode.base + keyCode.modified : keyCode} />
-              </div>
-            </div>
-          ) : (
-            ""
-          )}
-          {newValue !== oldValue && isStandardView ? (
-            <div className="newKeyValue">
-              <Title text="New value" headingLevel={4} />
-              <div className="keySelectedBox">
-                <div className="keySelectedValue">{newValue}</div>
-                <ListModifiers keyCode={keyCode !== undefined && keyCode.base ? keyCode.base + keyCode.modified : keyCode} />
-              </div>
-            </div>
-          ) : (
-            ""
-          )}
-        </div>
-      </Style>
-    );
-  }
+interface KeyVisualizerProps {
+  keyCode: number | SegmentedKeyType;
+  oldKeyCode: number | SegmentedKeyType;
+  newValue: string | JSX.Element;
+  oldValue: string | JSX.Element;
+  isStandardView: boolean;
+  superkeyAction: number;
+  disable?: boolean;
 }
+
+const KeyVisualizer = (props: KeyVisualizerProps) => {
+  const { keyCode, oldKeyCode, newValue, oldValue, isStandardView, superkeyAction, disable } = props;
+  const rows = [
+    {
+      title: `<strong>${i18n.editor.superkeys.actions.tapLabel}:</strong> Selected value`,
+    },
+    {
+      title: `<strong>${i18n.editor.superkeys.actions.holdLabel}:</strong> Selected value`,
+    },
+    {
+      title: `<strong>${i18n.editor.superkeys.actions.tapAndHoldLabel}:</strong> Selected value`,
+    },
+    {
+      title: `<strong>${i18n.editor.superkeys.actions.doubleTapLabel}:</strong> Selected value`,
+    },
+    {
+      title: `<strong>${i18n.editor.superkeys.actions.doubleTapAndHoldLabel}:</strong> Selected value`,
+    },
+    {
+      title: `Selected value`,
+    },
+  ];
+
+  return (
+    <Style className="KeyVisualizer">
+      <div
+        className={`KeyVisualizerInner ${newValue !== oldValue && isStandardView ? "showConnection" : ""} ${
+          disable ? "disable" : ""
+        }`}
+      >
+        {oldValue ? (
+          <div className="oldKeyValue">
+            <Title text={`${rows ? rows[superkeyAction].title : "Selected value"}`} headingLevel={4} />
+            <div className="keySelectedBox">
+              <div className="keySelectedValue">{oldValue}</div>
+              <ListModifiers
+                keyCode={
+                  oldKeyCode !== undefined && typeof oldKeyCode !== "number" ? oldKeyCode.base + oldKeyCode.modified : oldKeyCode
+                }
+                size="sm"
+              />
+            </div>
+          </div>
+        ) : (
+          ""
+        )}
+        {newValue && !isStandardView ? (
+          <div className="newKeyValue">
+            <Title text="New value" headingLevel={4} />
+            <div className="keySelectedBox">
+              <div className="keySelectedValue">{newValue}</div>
+              <ListModifiers
+                keyCode={keyCode !== undefined && typeof keyCode !== "number" ? keyCode.base + keyCode.modified : keyCode}
+              />
+            </div>
+          </div>
+        ) : (
+          ""
+        )}
+        {newValue !== oldValue && isStandardView ? (
+          <div className="newKeyValue">
+            <Title text="New value" headingLevel={4} />
+            <div className="keySelectedBox">
+              <div className="keySelectedValue">{newValue}</div>
+              <ListModifiers
+                keyCode={keyCode !== undefined && typeof keyCode !== "number" ? keyCode.base + keyCode.modified : keyCode}
+              />
+            </div>
+          </div>
+        ) : (
+          ""
+        )}
+      </div>
+    </Style>
+  );
+};
 
 export default KeyVisualizer;
