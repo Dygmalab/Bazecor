@@ -16,4 +16,4 @@
 
 import Saving from "./Saving";
 
-export { Saving as default };
+export default Saving;
