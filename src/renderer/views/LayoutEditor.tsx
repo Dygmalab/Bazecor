@@ -897,10 +897,10 @@ const LayoutEditor = (props: LayoutEditorProps) => {
         // let defLayer = await currentDevice.command("settings.defaultLayer");
         // defLayer = parseInt(defLayer, 10) || 0;
 
-        const defaults = (await currentDevice.command("keymap.default")) as string;
         setScanningStep(4);
-        const custom = (await currentDevice.command("keymap.custom")) as string;
+        const defaults = (await currentDevice.command("keymap.default")) as string;
         setScanningStep(5);
+        const custom = (await currentDevice.command("keymap.custom")) as string;
         const onlycstm = (await currentDevice.command("keymap.onlyCustom")) as string;
         const onlyCustom = Boolean(parseInt(onlycstm, 10));
         const KeyMap: KeymapType = {
