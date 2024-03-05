@@ -981,6 +981,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
         const raw2: string = (await currentDevice.command("superkeys.map")) as string;
         const parsedSuper = superTranslator(raw2, neuronData.storedSuper);
 
+        setScanningStep(9);
         let showMM = false;
         if (KeyMap.custom) {
           const oldmacro = [...Array(64).keys()].map(x => x + 24576);
@@ -993,8 +994,8 @@ const LayoutEditor = (props: LayoutEditorProps) => {
             }
           }
         }
-        setScanningStep(9);
-        console.log("last scanning step", scanningStep);
+
+        setScanningStep(10);
         setLedIndexStart(currentDevice.device.info.product === "Raise" ? 80 : 80);
         setNeuronID(chipID);
         setKeymap(KeyMap);
@@ -1018,18 +1019,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
         onDisconnect();
       }
     },
-    [
-      state,
-      setLoading,
-      scanningStep,
-      AnalizeChipID,
-      restoredOk,
-      getColormap,
-      macroTranslator,
-      handleSetRestoredOk,
-      keymapDB,
-      onDisconnect,
-    ],
+    [state, setLoading, AnalizeChipID, restoredOk, getColormap, macroTranslator, handleSetRestoredOk, keymapDB, onDisconnect],
   );
 
   const onKeyChange = (keyCode: number) => {
