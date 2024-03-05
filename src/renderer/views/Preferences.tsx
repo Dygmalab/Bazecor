@@ -110,6 +110,8 @@ const initialKBData = {
   ledIdleTimeLimit: 0,
   qukeysHoldTimeout: 0,
   qukeysOverlapThreshold: 0,
+  qukeysMinHold: 0,
+  qukeysMinPrior: 0,
   SuperTimeout: 0,
   SuperRepeat: 20,
   SuperWaitfor: 500,
@@ -195,6 +197,16 @@ const Preferences = (props: PreferencesProps) => {
       await state.currentDevice.command("qukeys.overlapThreshold").then((overlapThreshold: string) => {
         const overlapThresholdParsed = overlapThreshold ? parseInt(overlapThreshold, 10) : 80;
         newKbData.qukeysOverlapThreshold = overlapThresholdParsed;
+      });
+
+      await state.currentDevice.command("qukeys.minimumHoldTime").then((minimumHoldTime: string) => {
+        const minHoldParsed = minimumHoldTime ? parseInt(minimumHoldTime, 10) : 50;
+        newKbData.qukeysMinHold = minHoldParsed;
+      });
+
+      await state.currentDevice.command("qukeys.minimumPriorInterval").then((minimumPriorInterval: string) => {
+        const minPriorParsed = minimumPriorInterval ? parseInt(minimumPriorInterval, 10) : 75;
+        newKbData.qukeysMinPrior = minPriorParsed;
       });
 
       // SuperKeys variables commands
@@ -337,6 +349,8 @@ const Preferences = (props: PreferencesProps) => {
       // QUKEYS
       await state.currentDevice.command("qukeys.holdTimeout", kbData.qukeysHoldTimeout.toString());
       await state.currentDevice.command("qukeys.overlapThreshold", kbData.qukeysOverlapThreshold.toString());
+      await state.currentDevice.command("qukeys.minimumHoldTime", kbData.qukeysMinHold.toString());
+      await state.currentDevice.command("qukeys.minimumPriorInterval", kbData.qukeysMinPrior.toString());
       // SUPER KEYS
       await state.currentDevice.command("superkeys.timeout", kbData.SuperTimeout.toString());
       await state.currentDevice.command("superkeys.repeat", kbData.SuperRepeat.toString());

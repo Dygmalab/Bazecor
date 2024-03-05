@@ -617,6 +617,15 @@ const English = {
       holdTimeoutTip2: "With a high value, it’ll take more time to activate the hold function.",
       holdTimeoutTip3: "With a low value, you might trigger the hold function if you linger on the key too much while typing.",
       holdTimeoutTip4: "If the slider is at 'High', it'll take a bit more time for the hold function to activate.",
+      minHold: "Dual-Function Keys - Minimum Hold time",
+      minHoldsub: " - From 0 to 254 milliseconds",
+      minHoldTip1: "Set the minimum length of time a qukey must be held before it can resolve to its alternate key value",
+      minHoldTip2:
+        "If a qukey is pressed and released in less than this number of milliseconds, it will always produce its primary key value",
+      minPrior: "Dual-Function Keys - Minimum Prior Interval",
+      minPriorsub: " - From 0 to 254 milliseconds",
+      minPriorTip1: "Set the minimum interval between the previous keypress and the qukey press",
+      minPriorTip2: "to make the qukey eligible to become its alternate keycode",
     },
     superkeys: {
       title: "Typing",

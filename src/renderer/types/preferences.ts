@@ -40,6 +40,8 @@ export interface KBDataPref {
   ledIdleTimeLimit: number;
   qukeysHoldTimeout: number;
   qukeysOverlapThreshold: number;
+  qukeysMinHold: number;
+  qukeysMinPrior: number;
   SuperTimeout: number;
   SuperRepeat: number;
   SuperWaitfor: number;
