@@ -268,7 +268,7 @@ function App() {
             title="Detected Dgyma Bluetooth Device"
             content={`Found ${localDev.name} device! to connect, first press scan keyboards button in keyboard selection view`}
           />,
-          { icon: "" },
+          { autoClose: 3000, icon: "" },
         );
     };
 

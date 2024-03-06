@@ -8,11 +8,10 @@ import fs from "fs";
 
 import { IconArrowRight, IconCloudDownload, IconKeyboard, IconUpload } from "@Renderer/component/Icon";
 import { RegularButton } from "@Renderer/component/Button";
-import { useDevice, DeviceTools } from "@Renderer/DeviceContext";
 import Title from "@Renderer/component/Title";
 import { i18n } from "@Renderer/i18n";
 
-import { DeviceClass, DygmaDeviceType, VirtualType } from "@Renderer/types/devices";
+import { VirtualType } from "@Renderer/types/devices";
 import { BackupType } from "@Renderer/types/backups";
 
 import Hardware from "../../../api/hardware";
@@ -28,7 +27,6 @@ interface VirtualSelectorProps {
 }
 
 export default function VirtualSelector(props: VirtualSelectorProps) {
-  const { dispatch } = useDevice();
   const [showVirtualKeyboardModal, setShowVirtualKeyboardModal] = useState(false);
   const [selectedVirtualKeyboard, setSelectedVirtualKeyboard] = useState(0);
   const { handleVirtualConnect } = props;
@@ -46,7 +44,7 @@ export default function VirtualSelector(props: VirtualSelectorProps) {
     let vk: VirtualType;
     let fileName;
 
-    Hardware.serial.forEach((hardwareDevice: DygmaDeviceType) => {
+    Hardware.serial.forEach(hardwareDevice => {
       if (
         backup.neuron.device.usb.productId === hardwareDevice.usb.productId &&
         backup.neuron.device.usb.vendorId === hardwareDevice.usb.vendorId &&
@@ -199,7 +197,7 @@ export default function VirtualSelector(props: VirtualSelectorProps) {
       return;
     }
     console.log("Exchange focus for file access");
-    Hardware.serial.forEach((localDevice: DygmaDeviceType) => {
+    Hardware.serial.forEach(localDevice => {
       if (
         newVK.device.usb.productId === localDevice.usb.productId &&
         newVK.device.usb.vendorId === localDevice.usb.vendorId &&

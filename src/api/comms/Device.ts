@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 import { SerialPort } from "serialport";
-import { DeviceClass, DeviceType, DygmaDeviceType, HIDDeviceExtended, VirtualType } from "@Renderer/types/devices";
+import { DeviceClass, DeviceType, DygmaDeviceType, VirtualType } from "@Renderer/types/devices";
 import HID from "../hid/hid";
 import DeviceMap from "./deviceMap";
 // eslint-disable-next-line no-eval
@@ -62,7 +62,7 @@ class Device implements DeviceClass {
       this.locationId = "";
       this.productId = String(params.connectedDevice.productId);
       this.vendorId = String(params.connectedDevice.vendorId);
-      const newDevice = params.connectedDevice as HIDDeviceExtended;
+      const newDevice = params.connectedDevice as HIDDevice;
       this.device = newDevice.device;
       this.port = params as HID;
     }

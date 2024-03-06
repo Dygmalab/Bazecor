@@ -92,10 +92,6 @@ export interface VirtualType {
   };
 }
 
-export interface HIDDeviceExtended extends HIDDevice {
-  device?: DygmaDeviceType | undefined;
-}
-
 export type CountProviderProps = { children: React.ReactNode };
 
 export type Action =

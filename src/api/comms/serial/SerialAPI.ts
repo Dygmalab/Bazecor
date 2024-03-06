@@ -21,7 +21,7 @@ const find = async () => {
         parseInt(`0x${device.productId}`, 16) === Hdevice.usb.productId &&
         parseInt(`0x${device.vendorId}`, 16) === Hdevice.usb.vendorId
       ) {
-        const newPort: DeviceType = { ...device };
+        const newPort = { ...device };
         newPort.device = Hdevice;
         foundDevices.push(newPort);
       }

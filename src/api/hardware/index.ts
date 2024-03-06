@@ -28,19 +28,7 @@ import { Raise2ISO, Raise2ISOBootloader } from "../hardware-dygma-raise2-iso";
 // };
 
 const Hardware = {
-  serial: [
-    RaiseISO,
-    RaiseANSI,
-    DefyWired,
-    DefyWireless,
-    Raise2ANSI,
-    Raise2ISO,
-    RaiseANSIBootloader,
-    RaiseISOBootloader,
-    DefyWirelessBootloader,
-    Raise2ANSIBootloader,
-    Raise2ISOBootloader,
-  ],
+  serial: [RaiseISO, RaiseANSI, DefyWired, DefyWireless, Raise2ANSI, Raise2ISO],
   nonSerial: [DefyWiredBootloader],
   bootloader: [
     RaiseANSIBootloader,
