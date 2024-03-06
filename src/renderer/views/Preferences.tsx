@@ -200,12 +200,12 @@ const Preferences = (props: PreferencesProps) => {
       });
 
       await state.currentDevice.command("qukeys.minimumHoldTime").then((minimumHoldTime: string) => {
-        const minHoldParsed = minimumHoldTime ? parseInt(minimumHoldTime, 10) : 50;
+        const minHoldParsed = minimumHoldTime ? parseInt(minimumHoldTime, 10) : undefined;
         newKbData.qukeysMinHold = minHoldParsed;
       });
 
       await state.currentDevice.command("qukeys.minimumPriorInterval").then((minimumPriorInterval: string) => {
-        const minPriorParsed = minimumPriorInterval ? parseInt(minimumPriorInterval, 10) : 75;
+        const minPriorParsed = minimumPriorInterval ? parseInt(minimumPriorInterval, 10) : undefined;
         newKbData.qukeysMinPrior = minPriorParsed;
       });
 
