@@ -53,11 +53,13 @@ export const onUSBConnect = (event: USBConnectionEvent) => {
 };
 
 export const addUSBListeners = () => {
+  console.log("adding USB Listeners");
   webusb.addEventListener("connect", onUSBConnect);
   webusb.addEventListener("disconnect", onUSBDisconnect);
 };
 
 export const removeUSBListeners = () => {
+  console.log("removing USB Listeners");
   webusb.removeEventListener("connect", onUSBConnect);
   webusb.removeEventListener("disconnect", onUSBDisconnect);
   ipcMain.removeHandler("usb-devices");

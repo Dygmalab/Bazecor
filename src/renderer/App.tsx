@@ -262,16 +262,15 @@ function App() {
 
     const notifyBtDevice = (event: any, hidDev: string) => {
       const localDev: HIDNotifdevice = JSON.parse(hidDev);
-      console.log("received connection event: ", localDev, localDev.vendorId === 13807);
-      if (localDev.vendorId === 13807)
-        toast.success(
-          <ToastMessage
-            icon={<IconBluetooth />}
-            title="Detected Dgyma Bluetooth Device"
-            content={`Found ${localDev.name} device! to connect, first press scan keyboards button in keyboard selection view`}
-          />,
-          { autoClose: 3000, icon: "" },
-        );
+      console.log("received connection event: ", localDev);
+      toast.success(
+        <ToastMessage
+          icon={<IconBluetooth />}
+          title="Detected Dgyma Bluetooth Device"
+          content={`Found ${localDev.name} device! to connect, first press scan keyboards button in keyboard selection view`}
+        />,
+        { autoClose: 3000, icon: "" },
+      );
     };
 
     // Setting up function to receive O.S. dark theme changes
