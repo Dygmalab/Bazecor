@@ -28,7 +28,6 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Modal from "react-bootstrap/Modal";
 import customCursor from "@Assets/base/cursorBucket.png";
-import { LogoLoaderCentered } from "@Renderer/component/Loader";
 import ToastMessage from "@Renderer/component/ToastMessage";
 
 import ConfirmationDialog from "@Renderer/component/ConfirmationDialog";
@@ -53,6 +52,7 @@ import { LayerSelector } from "@Renderer/component/Select";
 import { RegularButton } from "@Renderer/component/Button";
 import { LayoutViewSelector } from "@Renderer/component/ToggleButtons";
 import { IconArrowUpWithLine, IconArrowDownWithLine } from "@Renderer/component/Icon";
+import LoaderLayout from "@Renderer/components/loader/loaderLayout";
 import { i18n } from "@Renderer/i18n";
 
 import Store from "@Renderer/utils/Store";
@@ -486,6 +486,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
   const [isReadOnly, setIsReadOnly] = useState(false);
   const [showDefaults, setShowDefaults] = useState(false);
   const [ledIndexStart, setLedIndexStart] = useState(80);
+  const [scanningStep, setScanningStep] = useState(0);
   const [keymapDB, setkeymapDB] = useState(new KeymapDB());
   const { darkMode, cancelContext, setLoading, onDisconnect, startContext, inContext, restoredOk, handleSetRestoredOk } = props;
 
@@ -784,6 +785,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
         macros: new Array<MacrosType>(),
         superkeys: new Array<SuperkeysType>(),
       };
+      setScanningStep(2);
       if (!neurons.some(n => n.id === CID) && neurons.length === 0) {
         neuron.id = CID;
         neuron.name = currentDevice.device.info.product;
@@ -863,10 +865,12 @@ const LayoutEditor = (props: LayoutEditorProps) => {
       try {
         // Acquire ChipID from device
         let chipID = await currentDevice.command("hardware.chip_id");
+        setScanningStep(1);
         chipID = chipID.replace(/\s/g, "");
         const neuronData = await AnalizeChipID(chipID);
 
         // Restore backup if process failed after flashing
+        setScanningStep(3);
         if (!restoredOk) {
           console.log("Error when restoring data after flash detected, repairing...");
           try {
@@ -893,7 +897,9 @@ const LayoutEditor = (props: LayoutEditorProps) => {
         // let defLayer = await currentDevice.command("settings.defaultLayer");
         // defLayer = parseInt(defLayer, 10) || 0;
 
+        setScanningStep(4);
         const defaults = (await currentDevice.command("keymap.default")) as string;
+        setScanningStep(5);
         const custom = (await currentDevice.command("keymap.custom")) as string;
         const onlycstm = (await currentDevice.command("keymap.onlyCustom")) as string;
         const onlyCustom = Boolean(parseInt(onlycstm, 10));
@@ -955,9 +961,13 @@ const LayoutEditor = (props: LayoutEditorProps) => {
           await currentDevice.command("keymap.custom", ...args);
         }
 
+        // Loading Colors
+        setScanningStep(6);
         const colormap = await getColormap();
         const plette = colormap.palette.slice();
-        // console.log("retrieved color.map & palette", colormap, palette);
+
+        // loading Macros
+        setScanningStep(7);
         let raw: string | number[] = (await currentDevice.command("macros.map")) as string;
         if (raw.search(" 0 0") !== -1) {
           raw = raw.split(" 0 0")[0].split(" ").map(Number);
@@ -965,9 +975,13 @@ const LayoutEditor = (props: LayoutEditorProps) => {
           raw = "";
         }
         const parsedMacros = macroTranslator(raw, neuronData.storedMacros);
+
+        // Loading Superkeys
+        setScanningStep(8);
         const raw2: string = (await currentDevice.command("superkeys.map")) as string;
         const parsedSuper = superTranslator(raw2, neuronData.storedSuper);
 
+        setScanningStep(9);
         let showMM = false;
         if (KeyMap.custom) {
           const oldmacro = [...Array(64).keys()].map(x => x + 24576);
@@ -980,6 +994,8 @@ const LayoutEditor = (props: LayoutEditorProps) => {
             }
           }
         }
+
+        setScanningStep(10);
         setLedIndexStart(currentDevice.device.info.product === "Raise" ? 80 : 80);
         setNeuronID(chipID);
         setKeymap(KeyMap);
@@ -994,10 +1010,12 @@ const LayoutEditor = (props: LayoutEditorProps) => {
         setShowMacroModal(showMM);
         setScanned(true);
         setLoading(false);
+        setScanningStep(0);
       } catch (e) {
         console.error(e);
         toast.error(e);
         setLoading(false);
+        setScanningStep(0);
         onDisconnect();
       }
     },
@@ -1779,7 +1797,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
   }
 
   // console.log("execution that may not render");
-  if (layerData === undefined || layerData.length < 1) return <LogoLoaderCentered />;
+  if (layerData === undefined || layerData.length < 1) return <LoaderLayout steps={scanningStep} />;
   // console.log("GOING TO RENDER!!!");
 
   const layer = (
