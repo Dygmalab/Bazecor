@@ -256,7 +256,7 @@ function App() {
     console.log("Font face: ", fontFace);
     document.fonts.add(fontFace);
 
-    const usbListener = (event: unknown, response: unknown) => handleDeviceDisconnection(response);
+    const usbListener = (event: unknown, response: unknown) => handleDeviceDisconnection(JSON.parse(response as string));
     const hidListener = (event: unknown, response: unknown) =>
       handleDeviceDisconnection(JSON.parse(response as string) as HIDNotifdevice);
 

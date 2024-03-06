@@ -34,7 +34,7 @@ export const onUSBDisconnect = async (event: USBConnectionEvent) => {
       console.log("Dygma Device USB Disconnection detected");
       console.log("VendorID", vendorID);
       console.log("ProductID", productID);
-      sendToRenderer("usb-disconnected", device);
+      sendToRenderer("usb-disconnected", JSON.stringify(device));
     }
   }
 };
@@ -47,7 +47,7 @@ export const onUSBConnect = (event: USBConnectionEvent) => {
       console.log("Dygma Device USB Connection detected");
       console.log("VendorID", vendorID);
       console.log("ProductID", productID);
-      sendToRenderer("usb-connected", vendorID, productID);
+      sendToRenderer("usb-connected", JSON.stringify(device));
     }
   }
 };

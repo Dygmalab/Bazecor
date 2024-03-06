@@ -259,7 +259,8 @@ const SelectKeyboard = (props: SelectKeyboardProps) => {
   useEffect(() => {
     const finder = () => findKeyboards();
 
-    const disconnectedfinder = () => {
+    const disconnectedfinder = (event: unknown, DygmaDev: string) => {
+      console.log("Disconnected: ", DygmaDev);
       setSelectedPortIndex(0);
       findKeyboards();
       if (state.currentDevice) {
