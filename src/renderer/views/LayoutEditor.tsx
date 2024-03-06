@@ -28,7 +28,6 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Modal from "react-bootstrap/Modal";
 import customCursor from "@Assets/base/cursorBucket.png";
-import { LogoLoaderCentered } from "@Renderer/component/Loader";
 import ToastMessage from "@Renderer/component/ToastMessage";
 
 import ConfirmationDialog from "@Renderer/component/ConfirmationDialog";
@@ -53,6 +52,7 @@ import { LayerSelector } from "@Renderer/component/Select";
 import { RegularButton } from "@Renderer/component/Button";
 import { LayoutViewSelector } from "@Renderer/component/ToggleButtons";
 import { IconArrowUpWithLine, IconArrowDownWithLine } from "@Renderer/component/Icon";
+import LoaderLayout from "@Renderer/components/loader/loaderLayout";
 import { i18n } from "@Renderer/i18n";
 
 import Store from "@Renderer/utils/Store";
@@ -1797,13 +1797,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
   }
 
   // console.log("execution that may not render");
-  if (layerData === undefined || layerData.length < 1)
-    return (
-      <div>
-        {/* <LogoLoaderCentered /> */}
-        <h1>{`Current Step: ${scanningStep}`}</h1>
-      </div>
-    );
+  if (layerData === undefined || layerData.length < 1) return <LoaderLayout steps={scanningStep} />;
   // console.log("GOING TO RENDER!!!");
 
   const layer = (
