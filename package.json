@@ -45,7 +45,7 @@
   },
   "homepage": "https://github.com/Dygmalab/Bazecor",
   "engines": {
-    "node": "^18.16.0",
+    "node": "^20.11.1",
     "npm": ">=8.11.0"
   },
   "devDependencies": {
@@ -143,7 +143,7 @@
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
     "core-js": "^3.30.2",
-    "drivelist": "^11.1.0",
+    "drivelist": "^11.2.1",
     "easy-crc": "^1.1.0",
     "electron-squirrel-startup": "^1.0.0",
     "electron-store": "^8.1.0",

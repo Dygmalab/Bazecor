@@ -5849,10 +5849,10 @@ dotenv@^9.0.2:
   resolved "https://registry.yarnpkg.com/dotenv/-/dotenv-9.0.2.tgz#dacc20160935a37dea6364aa1bef819fb9b6ab05"
   integrity sha512-I9OvvrHp4pIARv4+x9iuewrWycX6CcZtoAu1XrzPxc5UygMJXJZYmBsynku8IkrJwgypE5DGNjDPmPRhDCptUg==
 
-drivelist@^11.1.0:
-  version "11.1.0"
-  resolved "https://registry.yarnpkg.com/drivelist/-/drivelist-11.1.0.tgz#39b17b78bf7d717e666ad57f006ffaf9ee344ac7"
-  integrity sha512-DT328SbKqB78y+HUeuazwj4+Enh5ormv9OgTIMB0/OP2VxKLFDOrKhejJxjP9ytmJok8W/nzR8gSWdpiaJi1XA==
+drivelist@^11.2.1:
+  version "11.2.1"
+  resolved "https://registry.yarnpkg.com/drivelist/-/drivelist-11.2.1.tgz#a879732b1f3057efe6a562d20298b7e65e9476db"
+  integrity sha512-6QO94SWxKxTXCpIvHpBk8NhIK+ZcgGjm9CclciB8cu7iND8JaQQk1+a4jwh8gSpIc8Uv2MTrfE+xCzI/+4O4QA==
   dependencies:
     bindings "^1.5.0"
     debug "^4.3.4"
