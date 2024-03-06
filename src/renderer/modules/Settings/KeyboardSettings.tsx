@@ -180,6 +180,22 @@ function KeyboardSettings(props: KeyboardSettingsProps) {
     setKbData({ ...localKBData, qukeysOverlapThreshold: value });
   };
 
+  const setMinHold = (value: number) => {
+    setLocalKBData(data => ({
+      ...data,
+      qukeysMinHold: value,
+    }));
+    setKbData({ ...localKBData, qukeysMinHold: value });
+  };
+
+  const setMinPrior = (value: number) => {
+    setLocalKBData(data => ({
+      ...data,
+      qukeysMinPrior: value,
+    }));
+    setKbData({ ...localKBData, qukeysMinPrior: value });
+  };
+
   const setSuperTimeout = (value: number) => {
     setLocalKBData(data => ({
       ...data,
@@ -245,6 +261,8 @@ function KeyboardSettings(props: KeyboardSettingsProps) {
   const {
     qukeysHoldTimeout,
     qukeysOverlapThreshold,
+    qukeysMinHold,
+    qukeysMinPrior,
     SuperTimeout,
     SuperHoldstart,
     SuperOverlapThreshold,
@@ -369,6 +387,62 @@ function KeyboardSettings(props: KeyboardSettingsProps) {
                   </Col>
                   <Col xs={8} md={10} className="px-2">
                     <Slider min={1} max={255} value={qukeysHoldTimeout} onChange={setHoldTimeout} />
+                  </Col>
+                  <Col xs={2} md={1} className="p-0 text-center align-self-center">
+                    <span className="tagsfix">More</span>
+                  </Col>
+                </Row>
+              </Form.Group>
+            )}
+            {qukeysMinHold >= 0 && (
+              <Form.Group controlId="QukeysMinHold" className="formGroup">
+                <Row>
+                  <Col>
+                    <Form.Label>
+                      <Title
+                        text={i18n.keyboardSettings.qukeys.minHold}
+                        headingLevel={6}
+                        tooltip={`<h5 class="text-left">${i18n.keyboardSettings.qukeys.minHoldTip1}</h5><ul><li class="text-left">${i18n.keyboardSettings.qukeys.minHoldTip2}</li></ul>`}
+                        tooltipPlacement="bottom"
+                        tooltipSize="wide"
+                      />
+                    </Form.Label>
+                  </Col>
+                </Row>
+                <Row>
+                  <Col xs={2} md={1} className="p-0 text-center align-self-center">
+                    <span className="tagsfix">Less</span>
+                  </Col>
+                  <Col xs={8} md={10} className="px-2">
+                    <Slider min={1} max={254} value={qukeysMinHold} onChange={setMinHold} />
+                  </Col>
+                  <Col xs={2} md={1} className="p-0 text-center align-self-center">
+                    <span className="tagsfix">More</span>
+                  </Col>
+                </Row>
+              </Form.Group>
+            )}
+            {qukeysMinPrior >= 0 && (
+              <Form.Group controlId="QukeysMinHold" className="formGroup">
+                <Row>
+                  <Col>
+                    <Form.Label>
+                      <Title
+                        text={i18n.keyboardSettings.qukeys.minPrior}
+                        headingLevel={6}
+                        tooltip={`<h5 class="text-left">${i18n.keyboardSettings.qukeys.minPriorTip1}</h5><ul><li class="text-left">${i18n.keyboardSettings.qukeys.minPriorTip2}</li></ul>`}
+                        tooltipPlacement="bottom"
+                        tooltipSize="wide"
+                      />
+                    </Form.Label>
+                  </Col>
+                </Row>
+                <Row>
+                  <Col xs={2} md={1} className="p-0 text-center align-self-center">
+                    <span className="tagsfix">Less</span>
+                  </Col>
+                  <Col xs={8} md={10} className="px-2">
+                    <Slider min={1} max={254} value={qukeysMinPrior} onChange={setMinPrior} />
                   </Col>
                   <Col xs={2} md={1} className="p-0 text-center align-self-center">
                     <span className="tagsfix">More</span>
