@@ -269,6 +269,8 @@ const SelectKeyboard = (props: SelectKeyboardProps) => {
 
     ipcRenderer.on("usb-connected", finder);
     ipcRenderer.on("usb-disconnected", disconnectedfinder);
+    ipcRenderer.on("hid-connected", finder);
+    ipcRenderer.on("hid-disconnected", disconnectedfinder);
 
     if (!connected) {
       findKeyboards();
@@ -277,8 +279,10 @@ const SelectKeyboard = (props: SelectKeyboardProps) => {
     }
 
     return () => {
-      ipcRenderer.removeListener("usb-connected", finder);
-      ipcRenderer.removeListener("usb-disconnected", disconnectedfinder);
+      ipcRenderer.off("usb-connected", finder);
+      ipcRenderer.off("usb-disconnected", disconnectedfinder);
+      ipcRenderer.off("hid-connected", finder);
+      ipcRenderer.off("hid-disconnected", disconnectedfinder);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

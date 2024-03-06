@@ -224,7 +224,7 @@ function App() {
     }
   };
 
-  const handleUSBDisconnection = async (dev: any) => {
+  const handleDeviceDisconnection = async (dev: any) => {
     const isFlashing = varFlashing.current;
     console.log("Handling device disconnect", isFlashing, dev, device);
     if (isFlashing) {
@@ -256,7 +256,9 @@ function App() {
     console.log("Font face: ", fontFace);
     document.fonts.add(fontFace);
 
-    const usbListener = (event: any, response: any) => handleUSBDisconnection(response);
+    const usbListener = (event: unknown, response: unknown) => handleDeviceDisconnection(response);
+    const hidListener = (event: unknown, response: unknown) =>
+      handleDeviceDisconnection(JSON.parse(response as string) as HIDNotifdevice);
 
     const notifyBtDevice = (event: any, hidDev: string) => {
       const localDev: HIDNotifdevice = JSON.parse(hidDev);
@@ -275,12 +277,12 @@ function App() {
     // Setting up function to receive O.S. dark theme changes
     ipcRenderer.on("darkTheme-update", darkThemeListener);
     ipcRenderer.on("usb-disconnected", usbListener);
-    ipcRenderer.on("hid-disconnected", usbListener);
+    ipcRenderer.on("hid-disconnected", hidListener);
     ipcRenderer.on("hid-connected", notifyBtDevice);
     return () => {
       ipcRenderer.off("darkTheme-update", darkThemeListener);
       ipcRenderer.off("usb-disconnected", usbListener);
-      ipcRenderer.off("hid-disconnected", usbListener);
+      ipcRenderer.off("hid-disconnected", hidListener);
       ipcRenderer.off("hid-connected", notifyBtDevice);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
