@@ -1,3 +1,6 @@
+// eslint-disable-next-line import/no-cycle
+import { DygmaDeviceType } from "@Renderer/types/devices";
+import { ExtHIDInterface } from "../comms/types";
 import Hardware from "../hardware";
 
 const DygmavendorID = 13807;
@@ -43,8 +46,8 @@ class HID {
     for (const device of filteredDevices) {
       for (const Hdevice of Hardware.serial) {
         if (device.productId === Hdevice.usb.productId && device.vendorId === Hdevice.usb.vendorId) {
-          const newHID = device;
-          newHID.device = Hdevice;
+          const newHID: ExtHIDInterface = device;
+          newHID.device = Hdevice as DygmaDeviceType;
           foundDevices.push(newHID);
         }
       }

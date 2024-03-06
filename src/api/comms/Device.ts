@@ -3,6 +3,7 @@ import { SerialPort } from "serialport";
 import { DeviceClass, DeviceType, DygmaDeviceType, VirtualType } from "@Renderer/types/devices";
 import HID from "../hid/hid";
 import DeviceMap from "./deviceMap";
+import { ExtHIDInterface } from "./types";
 // eslint-disable-next-line no-eval
 const { DelimiterParser } = eval('require("@serialport/parser-delimiter")');
 
@@ -62,7 +63,7 @@ class Device implements DeviceClass {
       this.locationId = "";
       this.productId = String(params.connectedDevice.productId);
       this.vendorId = String(params.connectedDevice.vendorId);
-      const newDevice = params.connectedDevice as HIDDevice;
+      const newDevice = params.connectedDevice as ExtHIDInterface;
       this.device = newDevice.device;
       this.port = params as HID;
     }
