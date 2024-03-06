@@ -37,7 +37,7 @@ import Preferences from "@Renderer/views/Preferences";
 import Welcome from "@Renderer/views/Welcome";
 
 import ToastMessage from "@Renderer/component/ToastMessage";
-import { IconNoSignal } from "@Renderer/component/Icon";
+import { IconBluetooth, IconNoSignal } from "@Renderer/component/Icon";
 import BazecorDevtools from "@Renderer/views/BazecorDevtools";
 import { showDevtools } from "@Renderer/devMode";
 
@@ -49,6 +49,7 @@ import "../api/colormap";
 import { useDevice } from "./DeviceContext";
 import DeviceManager from "./views/DeviceManager";
 import Device from "../api/comms/Device";
+import { HIDNotifdevice } from "./types/hid";
 
 const store = Store.getStore();
 
@@ -257,12 +258,30 @@ function App() {
 
     const usbListener = (event: any, response: any) => handleUSBDisconnection(response);
 
+    const notifyBtDevice = (event: any, hidDev: string) => {
+      const localDev: HIDNotifdevice = JSON.parse(hidDev);
+      console.log("received connection event: ", localDev, localDev.vendorId === 13807);
+      if (localDev.vendorId === 13807)
+        toast.success(
+          <ToastMessage
+            icon={<IconBluetooth />}
+            title="Detected Dgyma Bluetooth Device"
+            content={`Found ${localDev.name} device! to connect, first press scan keyboards button in keyboard selection view`}
+          />,
+          { icon: "" },
+        );
+    };
+
     // Setting up function to receive O.S. dark theme changes
     ipcRenderer.on("darkTheme-update", darkThemeListener);
     ipcRenderer.on("usb-disconnected", usbListener);
+    ipcRenderer.on("hid-disconnected", usbListener);
+    ipcRenderer.on("hid-connected", notifyBtDevice);
     return () => {
       ipcRenderer.off("darkTheme-update", darkThemeListener);
       ipcRenderer.off("usb-disconnected", usbListener);
+      ipcRenderer.off("hid-disconnected", usbListener);
+      ipcRenderer.off("hid-connected", notifyBtDevice);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

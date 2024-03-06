@@ -203,7 +203,13 @@ class Device implements DeviceClass {
         returnValue = rxData;
       },
       (err: Error) => {
-        console.log(err);
+        console.error(err);
+        console.log("now closing device");
+        try {
+          (this.port as HID).close();
+        } catch (error) {
+          console.log("error when closing the device: ", error);
+        }
       },
     );
     console.log("device.hid.request:", cmd, ...args, "retured: ", returnValue);

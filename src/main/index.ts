@@ -5,7 +5,6 @@ import { setTheme } from "./setup/theme";
 import setBackup from "./setup/setBackup";
 import GlobalRecording from "./managers/GlobalRecording";
 import { addUSBListeners, removeUSBListeners } from "./setup/configureUSB";
-import { removeHIDListeners } from "./setup/configureHID";
 import { removeIPCs } from "./setup/configureIPCs";
 
 // electronUpdater();
@@ -34,7 +33,6 @@ app.on("ready", async () => {
 // which is terminating the application.
 app.on("before-quit", () => {
   removeUSBListeners();
-  removeHIDListeners();
 });
 
 // Quit when all windows are closed, except on macOS. There, it's common

@@ -1,12 +1,15 @@
 import Window from "../managers/Window";
+import sendToRenderer from "../utils/sendToRenderer";
 
 const onDeviceAdded = (added_device_event: any, device: any) => {
-  console.log("hid-device-added FIRED WITH", device);
+  console.log("hid-device-added FIRED WITH", device.device);
   // Optionally update details.deviceList
+  sendToRenderer("hid-connected", JSON.stringify(device.device));
 };
 
 const onDeviceRemove = (removed_device_event: any, device: any) => {
-  console.log("hid-device-removed FIRED WITH", device);
+  console.log("hid-device-removed FIRED WITH", device.device);
+  sendToRenderer("hid-disconnected", JSON.stringify(device.device));
 };
 
 const onDeviceSelect = (event: Event, details: any, callback: any) => {

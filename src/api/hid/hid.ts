@@ -1,6 +1,3 @@
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-nocheck
-
 import Hardware from "../hardware";
 
 const DygmavendorID = 13807;
@@ -83,7 +80,7 @@ class HID {
       timeoutPromise,
     ]);
     try {
-      const devices = await connectPromise;
+      const devices = (await connectPromise) as HIDDevice[];
       console.log("list of devices: ", devices);
       if (devices.length > 0) {
         const connectedDevice = devices[index];

@@ -27,7 +27,7 @@ import { Raise2ISO, Raise2ISOBootloader } from "../hardware-dygma-raise2-iso";
 //   bootloader: [Raise_ANSIBootloader, Raise_ISOBootloader]
 // };
 
-const Hardware: any = {
+const Hardware = {
   serial: [
     RaiseISO,
     RaiseANSI,
