@@ -1,8 +1,9 @@
 /* eslint-disable no-console */
 import { SerialPort } from "serialport";
-import { DeviceClass, DeviceType, DygmaDeviceType, HIDDeviceExtended, VirtualType } from "@Renderer/types/devices";
+import { DeviceClass, DeviceType, DygmaDeviceType, VirtualType } from "@Renderer/types/devices";
 import HID from "../hid/hid";
 import DeviceMap from "./deviceMap";
+import { ExtHIDInterface } from "./types";
 // eslint-disable-next-line no-eval
 const { DelimiterParser } = eval('require("@serialport/parser-delimiter")');
 
@@ -62,7 +63,7 @@ class Device implements DeviceClass {
       this.locationId = "";
       this.productId = String(params.connectedDevice.productId);
       this.vendorId = String(params.connectedDevice.vendorId);
-      const newDevice = params.connectedDevice as HIDDeviceExtended;
+      const newDevice = params.connectedDevice as ExtHIDInterface;
       this.device = newDevice.device;
       this.port = params as HID;
     }
@@ -203,7 +204,13 @@ class Device implements DeviceClass {
         returnValue = rxData;
       },
       (err: Error) => {
-        console.log(err);
+        console.error(err);
+        console.log("now closing device");
+        try {
+          (this.port as HID).close();
+        } catch (error) {
+          console.log("error when closing the device: ", error);
+        }
       },
     );
     console.log("device.hid.request:", cmd, ...args, "retured: ", returnValue);

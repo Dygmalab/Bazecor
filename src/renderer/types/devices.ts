@@ -92,10 +92,6 @@ export interface VirtualType {
   };
 }
 
-export interface HIDDeviceExtended extends HIDDevice {
-  device?: DygmaDeviceType | undefined;
-}
-
 export type CountProviderProps = { children: React.ReactNode };
 
 export type Action =
@@ -118,12 +114,10 @@ export type DygmaDeviceType = {
     product: string;
     keyboardType: string;
     displayName: string;
-    urls: [
-      {
-        name: string;
-        url: string;
-      },
-    ];
+    urls: {
+      name: string;
+      url: string;
+    }[];
   };
   usb: {
     vendorId: number;
@@ -139,15 +133,15 @@ export type DygmaDeviceType = {
   };
   RGBWMode: boolean;
   components: {
-    keymap: any;
+    keymap: unknown;
   };
   instructions: {
     en: {
       updateInstructions: string;
     };
   };
-  bootloader: boolean;
+  bootloader?: boolean;
   path?: string;
   filePath?: string;
-  isDeviceSupported?: (device: DeviceType) => boolean;
+  isDeviceSupported?: (device: DeviceType) => string;
 };

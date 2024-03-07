@@ -1,6 +1,6 @@
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-nocheck
-
+// eslint-disable-next-line import/no-cycle
+import { DygmaDeviceType } from "@Renderer/types/devices";
+import { ExtHIDInterface } from "../comms/types";
 import Hardware from "../hardware";
 
 const DygmavendorID = 13807;
@@ -46,8 +46,8 @@ class HID {
     for (const device of filteredDevices) {
       for (const Hdevice of Hardware.serial) {
         if (device.productId === Hdevice.usb.productId && device.vendorId === Hdevice.usb.vendorId) {
-          const newHID: HIDDevice = device;
-          newHID.device = Hdevice;
+          const newHID: ExtHIDInterface = device;
+          newHID.device = Hdevice as DygmaDeviceType;
           foundDevices.push(newHID);
         }
       }
@@ -83,7 +83,7 @@ class HID {
       timeoutPromise,
     ]);
     try {
-      const devices = await connectPromise;
+      const devices = (await connectPromise) as HIDDevice[];
       console.log("list of devices: ", devices);
       if (devices.length > 0) {
         const connectedDevice = devices[index];

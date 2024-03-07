@@ -37,7 +37,7 @@ import Preferences from "@Renderer/views/Preferences";
 import Welcome from "@Renderer/views/Welcome";
 
 import ToastMessage from "@Renderer/component/ToastMessage";
-import { IconNoSignal } from "@Renderer/component/Icon";
+import { IconBluetooth, IconNoSignal } from "@Renderer/component/Icon";
 import BazecorDevtools from "@Renderer/views/BazecorDevtools";
 import { showDevtools } from "@Renderer/devMode";
 
@@ -49,6 +49,7 @@ import "../api/colormap";
 import { useDevice } from "./DeviceContext";
 import DeviceManager from "./views/DeviceManager";
 import Device from "../api/comms/Device";
+import { HIDNotifdevice } from "./types/hid";
 
 const store = Store.getStore();
 
@@ -223,7 +224,7 @@ function App() {
     }
   };
 
-  const handleUSBDisconnection = async (dev: any) => {
+  const handleDeviceDisconnection = async (dev: any) => {
     const isFlashing = varFlashing.current;
     console.log("Handling device disconnect", isFlashing, dev, device);
     if (isFlashing) {
@@ -255,14 +256,33 @@ function App() {
     console.log("Font face: ", fontFace);
     document.fonts.add(fontFace);
 
-    const usbListener = (event: any, response: any) => handleUSBDisconnection(response);
+    const usbListener = (event: unknown, response: unknown) => handleDeviceDisconnection(JSON.parse(response as string));
+    const hidListener = (event: unknown, response: unknown) =>
+      handleDeviceDisconnection(JSON.parse(response as string) as HIDNotifdevice);
+
+    const notifyBtDevice = (event: any, hidDev: string) => {
+      const localDev: HIDNotifdevice = JSON.parse(hidDev);
+      console.log("received connection event: ", localDev);
+      toast.success(
+        <ToastMessage
+          icon={<IconBluetooth />}
+          title="Detected Dgyma Bluetooth Device"
+          content={`Found ${localDev.name} device! to connect, first press scan keyboards button in keyboard selection view`}
+        />,
+        { autoClose: 3000, icon: "" },
+      );
+    };
 
     // Setting up function to receive O.S. dark theme changes
     ipcRenderer.on("darkTheme-update", darkThemeListener);
     ipcRenderer.on("usb-disconnected", usbListener);
+    ipcRenderer.on("hid-disconnected", hidListener);
+    ipcRenderer.on("hid-connected", notifyBtDevice);
     return () => {
       ipcRenderer.off("darkTheme-update", darkThemeListener);
       ipcRenderer.off("usb-disconnected", usbListener);
+      ipcRenderer.off("hid-disconnected", hidListener);
+      ipcRenderer.off("hid-connected", notifyBtDevice);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
