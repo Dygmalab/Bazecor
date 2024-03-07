@@ -75,6 +75,7 @@ width: 100%;
   input {
     font-weight: 500;
     width: 100%;
+    color: #000;
   }
 }
 
