@@ -18,4 +18,5 @@
 import Keymap from "./bazecor-keymap";
 import KeymapDB, { baseKeyCodeTable, keyCodeTable, languagesDB } from "./db";
 
-export { Keymap as default, KeymapDB, baseKeyCodeTable, keyCodeTable, languagesDB };
+export default Keymap;
+export { KeymapDB, baseKeyCodeTable, keyCodeTable, languagesDB };
