@@ -349,8 +349,11 @@ const Preferences = (props: PreferencesProps) => {
       // QUKEYS
       await state.currentDevice.command("qukeys.holdTimeout", kbData.qukeysHoldTimeout.toString());
       await state.currentDevice.command("qukeys.overlapThreshold", kbData.qukeysOverlapThreshold.toString());
-      await state.currentDevice.command("qukeys.minimumHoldTime", kbData.qukeysMinHold.toString());
-      await state.currentDevice.command("qukeys.minimumPriorInterval", kbData.qukeysMinPrior.toString());
+      await state.currentDevice.command("qukeys.minimumHoldTime", kbData.qukeysMinHold ? kbData.qukeysMinHold.toString() : "50");
+      await state.currentDevice.command(
+        "qukeys.minimumPriorInterval",
+        kbData.qukeysMinPrior ? kbData.qukeysMinPrior.toString() : "75",
+      );
       // SUPER KEYS
       await state.currentDevice.command("superkeys.timeout", kbData.SuperTimeout.toString());
       await state.currentDevice.command("superkeys.repeat", kbData.SuperRepeat.toString());
