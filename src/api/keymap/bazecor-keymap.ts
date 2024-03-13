@@ -53,8 +53,6 @@ class Keymap {
     } else if (typeof opts === "object") {
       this._layerSize = opts.keyboard.rows * opts.keyboard.columns;
     }
-
-    return;
   }
 
   _chunk(a: any[], chunkSize: number) {
@@ -76,7 +74,7 @@ class Keymap {
       const args = flatten(keymap.custom).map(k => this.db.serialize(k));
 
       await s.request("keymap.onlyCustom", keymap.onlyCustom ? "1" : "0");
-      return await s.request("keymap.custom", ...args);
+      return s.request("keymap.custom", ...args);
     }
     let defaults: string;
     let custom: string;
@@ -85,12 +83,12 @@ class Keymap {
     if (!this.legacyInterface) {
       defaults = (await s.request("keymap.default")) as string;
       custom = (await s.request("keymap.custom")) as string;
-      onlyCustom = Boolean(parseInt(await s.request("keymap.onlyCustom"))) as boolean;
+      onlyCustom = Boolean(parseInt(await s.request("keymap.onlyCustom"), 10)) as boolean;
     }
 
     if (!defaults && !custom) {
       const localKeymap = ((await s.request("keymap.map")) as string).split(" ").filter(v => v.length > 0);
-      const roLayers = parseInt((await s.request("keymap.roLayers")) || "0");
+      const roLayers = parseInt((await s.request("keymap.roLayers")) || "0", 10);
 
       defaults = localKeymap.slice(0, this._layerSize * roLayers).join(" ");
       custom = localKeymap.slice(this._layerSize * roLayers, localKeymap.length).join(" ");
@@ -135,4 +133,4 @@ focus.addCommands({
 });
 focus.addMethod("setLayerSize", "keymap");
 
-export { Keymap as default };
+export default Keymap;

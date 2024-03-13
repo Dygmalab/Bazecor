@@ -52,11 +52,10 @@ import { KeymapType } from "@Renderer/types/layout";
 // API's
 import { useDevice } from "@Renderer/DeviceContext";
 import { i18n } from "@Renderer/i18n";
+import Store from "@Renderer/utils/Store";
+import getLanguage from "@Renderer/utils/language";
 import Keymap, { KeymapDB } from "../../api/keymap";
 import Backup from "../../api/backup";
-
-import Store from "../utils/Store";
-import getLanguage from "../utils/language";
 
 const store = Store.getStore();
 
@@ -142,7 +141,7 @@ function SuperkeysEditor(props: SuperkeysEditorProps) {
     futureSK: [],
     futureSSK: 0,
     currentLanguageLayout: getLanguage(store.get("settings.language") as string),
-    isStandardViewSuperkeys: store.get("settings.isStandardViewSuperkeys") as boolean,
+    isStandardView: store.get("settings.isStandardView") as boolean,
     showStandardView: false,
     loading: true,
   };
@@ -156,13 +155,13 @@ function SuperkeysEditor(props: SuperkeysEditorProps) {
   };
 
   const onToggle = () => {
-    const { isStandardViewSuperkeys } = state;
+    const { isStandardView: isStandardViewSuperkeys } = state;
     if (isStandardViewSuperkeys) {
-      state.isStandardViewSuperkeys = false;
+      state.isStandardView = false;
       state.selectedAction = -1;
       setState({ ...state });
     } else {
-      state.isStandardViewSuperkeys = true;
+      state.isStandardView = true;
       state.selectedAction = -1;
       setState({ ...state });
     }
@@ -295,8 +294,12 @@ function SuperkeysEditor(props: SuperkeysEditorProps) {
   };
 
   useEffect(() => {
-    store.set("settings.isStandardViewSuperkeys", state.isStandardViewSuperkeys);
-  }, [state.isStandardViewSuperkeys]);
+    try {
+      store.set("settings.isStandardViewSuperkeys", state.isStandardView);
+    } catch (error) {
+      console.log("error when setting standard view mode", error);
+    }
+  }, [state.isStandardView]);
 
   const onKeyChange = (keyCode: number) => {
     const { superkeys, selectedSuper, selectedAction } = state;
@@ -436,7 +439,7 @@ function SuperkeysEditor(props: SuperkeysEditorProps) {
   };
 
   const changeAction = (id: number) => {
-    const { isStandardViewSuperkeys, selectedAction } = state;
+    const { isStandardView: isStandardViewSuperkeys, selectedAction } = state;
     if (isStandardViewSuperkeys) {
       state.selectedAction = id < 0 ? 0 : id;
       state.showStandardView = true;
@@ -496,8 +499,8 @@ function SuperkeysEditor(props: SuperkeysEditorProps) {
     const nIdx = localNeurons.findIndex(n => n.id === neuronID);
     localNeurons[nIdx].superkeys = superkeys;
     console.log("Loaded neurons: ", JSON.stringify(localNeurons));
-    store.set("neurons", localNeurons);
     try {
+      store.set("neurons", localNeurons);
       await currentDevice.command("superkeys.map", superkeyMap(superkeys));
       if (modifiedKeymap) {
         const args = flatten(keymap.custom)
@@ -637,13 +640,13 @@ function SuperkeysEditor(props: SuperkeysEditorProps) {
   // Manage Standard/Single view
   const configStandarView = async () => {
     try {
-      const preferencesStandardView = store.get("settings.isStandardViewSuperkeys") as boolean;
+      const preferencesStandardView = store.get("settings.isStandardView") as boolean;
       // console.log("Preferences StandardView", preferencesStandardViewJSON);
       if (preferencesStandardView !== null) {
-        state.isStandardViewSuperkeys = preferencesStandardView;
+        state.isStandardView = preferencesStandardView;
         setState({ ...state });
       } else {
-        state.isStandardViewSuperkeys = true;
+        state.isStandardView = true;
         setState({ ...state });
       }
     } catch (e) {
@@ -733,7 +736,7 @@ function SuperkeysEditor(props: SuperkeysEditorProps) {
     superkeys,
     macros,
     selectedAction,
-    isStandardViewSuperkeys,
+    isStandardView: isStandardViewSuperkeys,
     listToDelete,
     modified,
     showStandardView,

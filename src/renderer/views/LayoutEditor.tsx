@@ -1607,7 +1607,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
 
   const configStandardView = () => {
     try {
-      const preferencesStandardView = JSON.parse(store.get("settings.isStandardView", true) as string);
+      const preferencesStandardView = store.get("settings.isStandardView", true) as boolean;
       console.log("preferencesStandardView: ", preferencesStandardView);
       if (preferencesStandardView !== null) {
         return preferencesStandardView;
