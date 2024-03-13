@@ -55,7 +55,7 @@ const schema: Schema<StorageType> = {
                 items: {
                   type: "object",
                   properties: {
-                    keyCode: { type: "array" },
+                    keyCode: { type: "number" },
                     type: { type: "number" },
                     id: { type: "number" },
                   },
@@ -90,10 +90,13 @@ const schema: Schema<StorageType> = {
                 keyboardType: { type: "string" },
                 displayName: { type: "string" },
                 urls: {
-                  type: "object",
-                  properties: {
-                    name: { type: "string" },
-                    url: { type: "string" },
+                  type: "array",
+                  items: {
+                    type: "object",
+                    properties: {
+                      name: { type: "string" },
+                      url: { type: "string" },
+                    },
                   },
                 },
               },
