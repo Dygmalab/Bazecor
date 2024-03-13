@@ -36,7 +36,7 @@ const MediaControlTable = {
   groupName: "Media",
   keys: [
     {
-      code: 19682,
+      code: 18658,
       labels: {
         top: "",
         primary: <IconMediaSoundMuteSm />,
@@ -44,7 +44,7 @@ const MediaControlTable = {
       },
     },
     {
-      code: 22709,
+      code: 18613,
       labels: {
         top: "",
         primary: <IconMediaForwardSm />,
@@ -52,7 +52,7 @@ const MediaControlTable = {
       },
     },
     {
-      code: 22710,
+      code: 18614,
       labels: {
         top: "",
         primary: <IconMediaRewindSm />,
@@ -60,7 +60,7 @@ const MediaControlTable = {
       },
     },
     {
-      code: 22711,
+      code: 18615,
       labels: {
         top: "",
         primary: <IconMediaStopSm />,
@@ -68,7 +68,7 @@ const MediaControlTable = {
       },
     },
     {
-      code: 22733,
+      code: 18637,
       labels: {
         top: "",
         primary: <IconMediaPlayPauseSm />,
@@ -76,7 +76,7 @@ const MediaControlTable = {
       },
     },
     {
-      code: 23785,
+      code: 18665,
       labels: {
         top: "",
         primary: <IconMediaSoundMoreSm />,
@@ -84,7 +84,7 @@ const MediaControlTable = {
       },
     },
     {
-      code: 23786,
+      code: 18667,
       labels: {
         top: "",
         primary: <IconMediaSoundLessSm />,
@@ -92,7 +92,7 @@ const MediaControlTable = {
       },
     },
     {
-      code: 22712,
+      code: 18616,
       labels: {
         top: "",
         primary: <IconToolsEjectSm />,
@@ -108,7 +108,7 @@ const MediaControlTable = {
       },
     },
     {
-      code: 23663,
+      code: 18543,
       labels: {
         top: "Display",
         primary: <IconToolsBrightnessMoreSm />,
@@ -116,7 +116,7 @@ const MediaControlTable = {
       },
     },
     {
-      code: 23664,
+      code: 18544,
       labels: {
         top: "Display",
         primary: <IconToolsBrightnessLessSm />,
@@ -132,7 +132,7 @@ const MediaControlTable = {
       },
     },
     {
-      code: 22713,
+      code: 18617,
       labels: {
         top: "Shuf.",
         primary: <IconMediaShuffleSm />,
