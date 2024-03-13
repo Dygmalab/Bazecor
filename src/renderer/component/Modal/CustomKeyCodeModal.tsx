@@ -7,7 +7,7 @@ interface CustomKeyCodeModalProps {
   modalTitle: string;
   modalMessage: string;
   show: boolean;
-  name: string | boolean;
+  name: string;
   toggleShow: () => void;
   handleSave: (name: string) => void;
   labelInput: string;
@@ -30,7 +30,10 @@ const CustomKeyCodeModal = ({
   }, [name]);
 
   function parseNewValue(value: string) {
-    if (parseInt(value, 16).toString(16) === value.toLowerCase()) setInternalName(value);
+    const newValue = parseInt(value, 16).toString(16);
+    // console.log("new value: ", value, newValue);
+    if (!Number.isNaN(parseInt(value, 16))) setInternalName(newValue);
+    else setInternalName("0");
   }
 
   return (
@@ -94,14 +97,19 @@ const CustomKeyCodeModal = ({
                   <label htmlFor="changeKeyCode" className="font-xs tracking-tight font-semibold text-gray-400 dark:text-gray-25">
                     {labelInput}
                   </label>
-                  <input
-                    id="changeKeyCode"
-                    type="text"
-                    ref={inputRef}
-                    value={typeof internalName === "string" ? internalName : ""}
-                    onChange={event => parseNewValue(event.target.value)}
-                    className="form-input form-input-xl"
-                  />
+                  <div className="grid grid-flow-col grid-cols-12">
+                    <div className="self-center col-start-1 col-span-1 row-start-1 z-10 !p-4 form-input-xl text-gray-300 select-none border-r border-gray-500">
+                      0x
+                    </div>
+                    <input
+                      id="changeKeyCode"
+                      type="text"
+                      ref={inputRef}
+                      value={typeof internalName === "string" ? internalName : ""}
+                      onChange={event => parseNewValue(event.target.value)}
+                      className="!pl-20 form-input form-input-xl col-start-1 col-span-12 row-start-1"
+                    />
+                  </div>
                 </form>
               </div>
               <div className="px-3 py-4 flex gap-3 justify-end bg-gray-100/10 dark:bg-gray-900/10">
