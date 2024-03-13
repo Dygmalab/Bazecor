@@ -1,6 +1,7 @@
-export default function colorMatrixCalc(color, opacity) {
+/* eslint-disable no-bitwise */
+export default function colorDarkerCalculation(color: string) {
   // Functions to convert colors
-  function hexToRgb(hex) {
+  function hexToRgb(hex: string) {
     const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
     return result
       ? {
@@ -13,36 +14,35 @@ export default function colorMatrixCalc(color, opacity) {
   // alert(hexToRgb("#0033ff").g); // "51";
 
   // alert(rgbToHex(0, 51, 255)); // #0033ff
-  function rgbToHex(r, g, b) {
-    return `#${((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1)}`;
-  }
+  // function rgbToHex(r, g, b) {
+  //   return `#${((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1)}`;
+  // }
   // alert(rgbToHex(0, 51, 255)); // #0033ff
 
   const regexTestHEX = /^#([0-9a-f]{3}){1,2}$/i;
 
   // Calc matrix color but you need to convert to RGB color first
-  const calMatrix = (rgbColor, opacity) => {
-    let matrixColorInternal;
-    rgbColor = rgbColor.replace(/[^\d,]/g, "").split(",");
-    matrixColorInternal = `0 0 0 0 ${(rgbColor[0] / 255).toFixed(2)} 0 0 0 0 ${(rgbColor[1] / 255).toFixed(2)} 0 0 0 0 ${(
-      rgbColor[2] / 255
-    ).toFixed(2)} 0 0 0 ${opacity} 0`;
-    return matrixColorInternal;
+  const sumColor = (rgbColor: string) => {
+    const localRgbColor = rgbColor.replace(/[^\d,]/g, "").split(",");
+    const shadeDarkerInternal = `rgb(${(parseInt(localRgbColor[0], 10) * 0.25).toFixed(0)}, ${(
+      parseInt(localRgbColor[1], 10) * 0.5
+    ).toFixed(0)}, ${(parseInt(localRgbColor[2], 10) * 0.75).toFixed(0)} )`;
+    return shadeDarkerInternal;
   };
 
   let safeRGBColor;
-  let matrixColor;
+  let shadeDarker;
 
   if (regexTestHEX.test(color)) {
     // is Hexa
     // console.log("Color is Hexa: ", color);
     safeRGBColor = `rgb(${hexToRgb(color).r}, ${hexToRgb(color).g}, ${hexToRgb(color).b})`;
-    matrixColor = calMatrix(safeRGBColor, opacity);
+    shadeDarker = sumColor(safeRGBColor);
   } else {
     // is rgba
     // console.log("Color is RGB: ", color);
-    matrixColor = calMatrix(color, opacity);
+    shadeDarker = sumColor(color);
   }
 
-  return matrixColor;
+  return shadeDarker;
 }
