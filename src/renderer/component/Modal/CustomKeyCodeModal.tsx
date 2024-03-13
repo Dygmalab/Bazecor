@@ -74,18 +74,22 @@ const CustomKeyCodeModal = ({
                   <IconCloseXs />
                 </button>
               </div>
-              <Dialog.Description className="px-4 py-4 items-center justify-between">
-                <span className="font-md tracking-tight font-semibold text-gray-400 dark:text-gray-25">
-                  {modalMessage}
-                  <a href="https://usb.org/sites/default/files/hut1_21.pdf">Link.</a> Use a hex calculator to add 0x4800 to the
-                  0x0C page (Consumer Page, section 15) code of your preference.
-                </span>
-                <br />
-                <br />
-                <span className="font-md tracking-tight font-semibold text-gray-400 dark:text-gray-25">
-                  For example for Media Play key which is code B0 on the aforementioned consumer page, 0x4800 + 0x00B0 = 0x48B0
-                </span>
+              <Dialog.Description className="px-4 py-2 items-center justify-between">
+                <span className="font-md tracking-tight font-semibold text-gray-400 dark:text-gray-25">{modalMessage}</span>
+                <a href="https://usb.org/sites/default/files/hut1_21.pdf">Link</a>.
               </Dialog.Description>
+              <div className="px-4 py-4">
+                <p className="h2 text-2xl">Available pages:</p>
+                <ul>
+                  <li>Keyboard Page, section 10: 0x0000</li>
+                  <li>Consumer Page, section 15: 0x4800</li>
+                </ul>
+                <br />
+                <span className="font-md tracking-tight font-semibold text-gray-400 dark:text-gray-25">
+                  For example for Media Play/Pause key which is code CD on the consumer page, do the following: 0x4800 + 0x00CD =
+                  0x48CD
+                </span>
+              </div>
               <div className="px-4 pb-3">
                 <form
                   className="flex flex-col"
