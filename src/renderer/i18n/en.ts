@@ -16,6 +16,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {i18n} from "@Renderer/i18n";
+
 const English = {
   language: "English",
   errors: {
@@ -245,6 +247,11 @@ const English = {
         message: "Custom KeyCodes can be changed manually, corresponding to the HID codes from the attached ",
         labelInput: "Input KeyCode in Hex format",
       },
+      clearLayer: {
+        title: "Clear layer",
+        resetColors: "Reset underglow and key colors",
+        useNoKey: "Fill layer with NOKEY instead of TRANS key",
+      },
     },
     standardView: {
       noKeyTransparent: "No Key/Transparent",
@@ -452,8 +459,6 @@ const English = {
       standardView: "Standard View",
       singleView: "Single View",
     },
-    clearLayerQuestion: "Clear layer?",
-    clearLayerPrompt: "This will fill current layer with selected key and last color from color palette.",
     pleaseSelectLayer: "Please select a layer",
     dualUse: "Modifier when held, normal key otherwise",
     dualUseLayer: "Layer shift when held, normal key otherwise",

@@ -15,18 +15,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React, { CSSProperties, Component } from "react";
-import { ColorResult, SketchPicker } from "react-color";
+import React, {Component, CSSProperties} from "react";
+import {ColorResult, SketchPicker} from "react-color";
 import Styled from "styled-components";
 
 // Bootstrap components
 import Title from "@Renderer/component/Title";
-import { ColorButton, ColorPicker } from "@Renderer/component/Button";
+import {ColorButton} from "@Renderer/component/Button";
 
 // Icons
-import { i18n } from "@Renderer/i18n";
-import { IconColorPalette, IconKeysLight, IconKeysUnderglow } from "@Renderer/component/Icon";
-import { ColorEditorProps } from "@Renderer/types/colorEditor";
+import {i18n} from "@Renderer/i18n";
+import {IconColorPalette, IconKeysLight, IconKeysUnderglow} from "@Renderer/component/Icon";
+import {ColorEditorProps} from "@Renderer/types/colorEditor";
+import {ColorPalette} from "@Renderer/modules/ColorEditor/ColorPalette";
 
 const Styles = Styled.div`
 width: 100%;
@@ -63,7 +64,7 @@ width: 100%;
   flex-wrap: nowrap;
 }
 
-.colorPallete {
+.colorPalette {
   display: grid;
   grid-auto-columns: auto;
   grid-auto-flow: column;
@@ -126,29 +127,6 @@ class ColorEditor extends Component<ColorEditorProps, { displayColorPicker: bool
   render() {
     const { colors, selected, toChangeAllKeysColor, deviceName } = this.props;
     const { displayColorPicker } = this.state;
-
-    const layerButtons = colors.map((data, idx) => {
-      const menuKey = `color-${idx.toString()}-${colors[idx].rgb.toString()}`;
-      const buttonStyle = {
-        backgroundColor: colors[idx].rgb,
-      };
-      return (
-        // eslint-disable-next-line react/jsx-filename-extension
-        <ColorPicker
-          onClick={(ev: Event) => {
-            this.selectColor(ev, idx);
-          }}
-          menuKey={menuKey}
-          key={`${menuKey}-key-${colors[idx]}`}
-          id={idx}
-          selected={selected}
-          buttonStyle={buttonStyle}
-          dataID={data.rgb}
-          className="colorPicker"
-        />
-      );
-    });
-
     const popover = {
       position: "absolute",
       top: "42px",
@@ -169,7 +147,7 @@ class ColorEditor extends Component<ColorEditorProps, { displayColorPicker: bool
           <Title text={i18n.editor.color.colorPalette} headingLevel={4} />
         </div>
         <div className="panelTools">
-          <div className="colorPallete">{layerButtons}</div>
+          <ColorPalette colors={colors} selected={selected} onColorSelect={this.selectColor} />
           <div className="buttonsGroup">
             <div className="buttonEditColor">
               <ColorButton

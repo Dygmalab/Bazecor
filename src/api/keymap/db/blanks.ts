@@ -15,11 +15,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { KeymapCodeTableType } from "../types";
+import { KeymapCodeTableType, NOKEY_KEY_CODE, TRANS_KEY_CODE } from "../types";
 
-export const TRANS_KEY: KeymapCodeTableType = {
+const TRANS_KEY: KeymapCodeTableType = {
   // Transparent
-  code: 65535,
+  code: TRANS_KEY_CODE,
   labels: {
     top: "TRANS",
     primary: "",
@@ -27,9 +27,9 @@ export const TRANS_KEY: KeymapCodeTableType = {
   },
 };
 
-export const NOKEY_KEY: KeymapCodeTableType = {
+const NOKEY_KEY: KeymapCodeTableType = {
   // NoKey
-  code: 0,
+  code: NOKEY_KEY_CODE,
   labels: {
     top: "NO",
     primary: "KEY",

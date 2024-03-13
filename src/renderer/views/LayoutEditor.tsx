@@ -59,6 +59,7 @@ import { ClearLayerDialog } from "@Renderer/modules/LayoutEditor/ClearLayerDialo
 import Keymap, { KeymapDB } from "../../api/keymap";
 import { rgb2w, rgbw2b } from "../../api/color";
 import Backup from "../../api/backup";
+import {TRANS_KEY_CODE} from "../../api/keymap/types";
 
 const store = Store.getStore();
 
@@ -1213,20 +1214,20 @@ const LayoutEditor = (props: LayoutEditorProps) => {
     });
   };
 
-  const clearLayer = (fillKeyCode = 65535) => {
+  const clearLayer = (fillKeyCode = TRANS_KEY_CODE, colorIndex = 15) => {
     const newKeymap = keymap.custom.slice();
     const idx = keymap.onlyCustom ? currentLayer : currentLayer - keymap.default.length;
     const keyCodeFiller = keymapDB.parse(fillKeyCode);
     newKeymap[idx] = new Array(newKeymap[0].length).fill(keyCodeFiller);
 
-    const newColormap = colorMap.slice();
-    if (newColormap.length > 0) {
-      newColormap[idx] = Array(newColormap[0].length)
-        .fill(15)
-        .map(() => 15);
-    }
     startContext();
-    setColorMap(newColormap);
+    if (colorIndex >= 0) {
+      const newColormap = colorMap.slice();
+      if (newColormap.length > 0) {
+        newColormap[idx] = Array(newColormap[0].length).fill(colorIndex);
+      }
+      setColorMap(newColormap);
+    }
     setClearConfirmationOpen(false);
     setModified(true);
     setKeymap({
@@ -1907,7 +1908,14 @@ const LayoutEditor = (props: LayoutEditorProps) => {
           />
         ) : null}
 
-        <ClearLayerDialog open={clearConfirmationOpen} onCancel={cancelClear} onConfirm={k => clearLayer(k.keyCode)} />
+        <ClearLayerDialog
+          open={clearConfirmationOpen}
+          onCancel={cancelClear}
+          onConfirm={k => clearLayer(k.keyCode, k.colorIndex)}
+          colors={palette}
+          selectedColorIndex={palette.length - 1}
+          fillWithNoKey={false}
+        />
 
         <CopyFromDialog
           open={copyFromOpen}
