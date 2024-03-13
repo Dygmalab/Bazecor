@@ -453,7 +453,7 @@ const English = {
       singleView: "Single View",
     },
     clearLayerQuestion: "Clear layer?",
-    clearLayerPrompt: "This will reset the layer to its default state.",
+    clearLayerPrompt: "This will fill current layer with selected key and last color from color palette.",
     pleaseSelectLayer: "Please select a layer",
     dualUse: "Modifier when held, normal key otherwise",
     dualUseLayer: "Layer shift when held, normal key otherwise",

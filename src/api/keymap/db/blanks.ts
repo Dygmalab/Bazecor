@@ -15,28 +15,31 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { KeymapCodeTableType } from "../types";
+
+export const TRANS_KEY: KeymapCodeTableType = {
+  // Transparent
+  code: 65535,
+  labels: {
+    top: "TRANS",
+    primary: "",
+    verbose: "Transparent",
+  },
+};
+
+export const NOKEY_KEY: KeymapCodeTableType = {
+  // NoKey
+  code: 0,
+  labels: {
+    top: "NO",
+    primary: "KEY",
+    verbose: "Disabled",
+  },
+};
+
 const BlankTable = {
   groupName: "Blank",
-  keys: [
-    {
-      // NoKey
-      code: 0,
-      labels: {
-        top: "NO",
-        primary: "KEY",
-        verbose: "Disabled",
-      },
-    },
-    {
-      // Transparent
-      code: 65535,
-      labels: {
-        top: "TRANS",
-        primary: "",
-        verbose: "Transparent",
-      },
-    },
-  ],
+  keys: [NOKEY_KEY, TRANS_KEY],
 };
 
 export default BlankTable;

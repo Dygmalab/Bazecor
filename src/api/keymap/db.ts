@@ -114,6 +114,13 @@ let baseKeyCodeTable: BaseKeycodeTableType[];
 // eslint-disable-next-line import/no-mutable-exports
 let keyCodeTable: BaseKeycodeTableType[];
 
+export const toKeyTypeType = (key: KeymapCodeTableType): KeyType => ({
+  keyCode: key.code,
+  label: key.labels.primary,
+  extraLabel: key.labels.top,
+  verbose: key.labels.verbose,
+});
+
 class KeymapDB {
   keymapCodeTable: KeymapCodeTableType[];
   language:

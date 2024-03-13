@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React, { MouseEvent, useEffect, useState, useCallback, useMemo } from "react";
+import React, { MouseEvent, useCallback, useEffect, useMemo, useState } from "react";
 import Styled from "styled-components";
 import { toast } from "react-toastify";
 import { ipcRenderer } from "electron";
@@ -29,13 +29,11 @@ import Col from "react-bootstrap/Col";
 import Modal from "react-bootstrap/Modal";
 import customCursor from "@Assets/base/cursorBucket.png";
 import ToastMessage from "@Renderer/component/ToastMessage";
-
-import ConfirmationDialog from "@Renderer/component/ConfirmationDialog";
 import { CopyFromDialog } from "@Renderer/component/CopyFromDialog";
 import { useDevice } from "@Renderer/DeviceContext";
 
 // Types
-import { Neuron, LayerType } from "@Renderer/types/neurons";
+import { LayerType, Neuron } from "@Renderer/types/neurons";
 import { ColormapType, KeymapType, KeyType, LayoutEditorProps, PaletteType, SegmentedKeyType } from "@Renderer/types/layout";
 import { SuperkeysType } from "@Renderer/types/superkeys";
 import { MacroActionsType, MacrosType } from "@Renderer/types/macros";
@@ -51,12 +49,13 @@ import StandardView from "@Renderer/modules/StandardView";
 import { LayerSelector } from "@Renderer/component/Select";
 import { RegularButton } from "@Renderer/component/Button";
 import { LayoutViewSelector } from "@Renderer/component/ToggleButtons";
-import { IconArrowUpWithLine, IconArrowDownWithLine } from "@Renderer/component/Icon";
+import { IconArrowDownWithLine, IconArrowUpWithLine } from "@Renderer/component/Icon";
 import LoaderLayout from "@Renderer/components/loader/loaderLayout";
 import { i18n } from "@Renderer/i18n";
 
 import Store from "@Renderer/utils/Store";
 import getLanguage from "@Renderer/utils/language";
+import { ClearLayerDialog } from "@Renderer/modules/LayoutEditor/ClearLayerDialog";
 import Keymap, { KeymapDB } from "../../api/keymap";
 import { rgb2w, rgbw2b } from "../../api/color";
 import Backup from "../../api/backup";
@@ -1214,12 +1213,11 @@ const LayoutEditor = (props: LayoutEditorProps) => {
     });
   };
 
-  const clearLayer = () => {
+  const clearLayer = (fillKeyCode = 65535) => {
     const newKeymap = keymap.custom.slice();
     const idx = keymap.onlyCustom ? currentLayer : currentLayer - keymap.default.length;
-    newKeymap[idx] = Array(newKeymap[0].length)
-      .fill({})
-      .map(() => ({ keyCode: 65535, label: "", extraLabel: "TRANS", verbose: "Transparent" }));
+    const keyCodeFiller = keymapDB.parse(fillKeyCode);
+    newKeymap[idx] = new Array(newKeymap[0].length).fill(keyCodeFiller);
 
     const newColormap = colorMap.slice();
     if (newColormap.length > 0) {
@@ -1909,13 +1907,8 @@ const LayoutEditor = (props: LayoutEditorProps) => {
           />
         ) : null}
 
-        <ConfirmationDialog
-          title={i18n.editor.clearLayerQuestion}
-          text={i18n.editor.clearLayerPrompt}
-          open={clearConfirmationOpen}
-          onConfirm={clearLayer}
-          onCancel={cancelClear}
-        />
+        <ClearLayerDialog open={clearConfirmationOpen} onCancel={cancelClear} onConfirm={k => clearLayer(k.keyCode)} />
+
         <CopyFromDialog
           open={copyFromOpen}
           onCopy={copyFromLayer}
