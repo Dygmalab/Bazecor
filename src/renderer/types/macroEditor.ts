@@ -14,6 +14,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { LanguageType } from "src/api/keymap/types";
 import { KeyType, KeymapType } from "./layout";
 import { MacroActionsType, MacrosType } from "./macros";
 import { Neuron } from "./neurons";
@@ -45,7 +46,7 @@ export interface MacroEditorInitialStateType {
   totalMemory: number;
   macrosEraser: string;
   loading: boolean;
-  currentLanguageLayout: (storedLanguage: string, defaultLanguage?: string) => string;
+  currentLanguageLayout: LanguageType;
   kbtype: string;
   scrollPos: number;
 }

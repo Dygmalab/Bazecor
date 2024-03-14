@@ -50,9 +50,10 @@ import { languagesDB, supportModifiedTables } from "./languages/languageLayouts"
 // newLanguageLayout - is a function that modify language layout
 import newLanguageLayout from "./languages/newLanguageLayout";
 
+// eslint-disable-next-line import/no-cycle
 import Store from "../../renderer/utils/Store";
 import getLanguage from "../../renderer/utils/language";
-import { BaseKeycodeTableType, KeymapCodeTableType } from "./types";
+import { BaseKeycodeTableType, KeymapCodeTableType, LanguageType } from "./types";
 
 const store = Store.getStore();
 
@@ -116,30 +117,13 @@ let keyCodeTable: BaseKeycodeTableType[];
 
 class KeymapDB {
   keymapCodeTable: KeymapCodeTableType[];
-  language:
-    | "en-US"
-    | "en-GB"
-    | "es-ES"
-    | "de-DE"
-    | "fr-FR"
-    | "da-DK"
-    | "fi-FI"
-    | "nb-NO"
-    | "sv-SE"
-    | "is-IS"
-    | "ja-JP"
-    | "ko-KR"
-    | "pl-PL"
-    | "de-CH"
-    | "en-XX-eurkey"
-    | "fr-XX-bepo"
-    | "fr-XX-optimot";
+  language: LanguageType;
   allCodes: BaseKeycodeTableType[];
 
   constructor() {
     this.keymapCodeTable = new Array<KeymapCodeTableType>();
     // create variable that get language from the local storage
-    this.language = getLanguage(store.get("settings.language") as string);
+    this.language = getLanguage(store.get("settings.language"));
     if (languagesDB[this.language] === undefined) {
       this.language = "en-US";
     }
@@ -326,7 +310,7 @@ class KeymapDB {
   }
 
   updateBaseKeyCode() {
-    this.language = getLanguage(store.get("settings.language") as string);
+    this.language = getLanguage(store.get("settings.language"));
     if (languagesDB[this.language] === undefined) {
       this.language = "en-US";
     }
