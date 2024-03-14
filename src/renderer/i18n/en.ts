@@ -16,8 +16,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {i18n} from "@Renderer/i18n";
-
 const English = {
   language: "English",
   errors: {
@@ -250,7 +248,7 @@ const English = {
       },
       clearLayer: {
         title: "Clear layer",
-        resetColors: "Reset underglow and key colors",
+        resetColors: "Reset underglow and key colors using the selection",
         useNoKey: "Fill layer with NOKEY instead of TRANS key",
       },
     },

@@ -3,9 +3,9 @@ import Modal from "react-bootstrap/Modal";
 import { RegularButton } from "@Renderer/component/Button";
 import { ColorPalette } from "@Renderer/modules/ColorEditor/ColorPalette";
 import { PaletteType } from "@Types/layout";
-import { Switch } from "@Renderer/components/ui/switch";
 import { i18n } from "@Renderer/i18n";
 import { NOKEY_KEY_CODE, TRANS_KEY_CODE } from "../../../api/keymap/types";
+import { ToggleButtons } from "@Renderer/component/ToggleButtons";
 
 export interface OnConfirmProps {
   keyCode: number;
@@ -24,7 +24,6 @@ interface ClearLayerDialogProps {
 export const ClearLayerDialog = (props: ClearLayerDialogProps): JSX.Element => {
   const { open, onCancel, onConfirm, colors, selectedColorIndex, fillWithNoKey } = props;
   const [useNoKey, setUseNoKey] = useState(fillWithNoKey ?? false);
-  const [clearColors, setClearColors] = useState(selectedColorIndex >= 0);
   const [indexOfSelectedColor, setIndexOfSelectedColor] = useState(selectedColorIndex ?? -1);
   const createLabel = (text: string, forId: string) => (
     <label htmlFor={forId} className="grow m-0 font-semibold">
@@ -46,35 +45,27 @@ export const ClearLayerDialog = (props: ClearLayerDialogProps): JSX.Element => {
         <Modal.Title className="title">{i18n.editor.modal.clearLayer.title}</Modal.Title>
       </Modal.Header>
       <Modal.Body className="body">
-        <div className="border-b-[1px] mb-2 py-2">
+        <div className="mb-2 py-2">
           <div className="cursor-pointer flex items-center w-full justify-between py-2">
             {createLabel(i18n.editor.modal.clearLayer.resetColors, "clearColors")}
-            <Switch
-              id="clearColors"
-              defaultChecked
-              checked={clearColors}
-              onCheckedChange={setClearColors}
-              variant="default"
-              size="sm"
-            />
           </div>
-          {clearColors && (
-            <ColorPalette
-              colors={colors}
-              selected={indexOfSelectedColor}
-              onColorSelect={(ev, idx) => setIndexOfSelectedColor(idx)}
-              className="ml-3 mt-2 mb-3"
-            />
-          )}
+          <ColorPalette
+            colors={colors.concat({ r: 0, g: 0, b: 0, rgb: "transparent" })}
+            selected={indexOfSelectedColor}
+            onColorSelect={idx => setIndexOfSelectedColor(idx)}
+            className="ml-3 mt-2 mb-3"
+          />
         </div>
-        <div className="flex items-center w-full justify-between py-2">
-          {createLabel(i18n.editor.modal.clearLayer.useNoKey, "useNoKeyInstead")}
-          <Switch
-            id="useNoKeyInstead"
-            defaultChecked={false}
-            checked={useNoKey}
-            onCheckedChange={setUseNoKey}
-            variant="default"
+        <div className="grid items-center w-full justify-between py-2">
+          <div className="mb-4">{createLabel(i18n.editor.modal.clearLayer.useNoKey, "useNoKeyInstead")}</div>
+          <ToggleButtons
+            selectDarkMode={setUseNoKey}
+            value={useNoKey}
+            listElements={[
+              { value: false, name: "Transparent", icon: "" },
+              { value: true, name: "No Key", icon: "" },
+            ]}
+            styles="flex"
             size="sm"
           />
         </div>
@@ -88,7 +79,7 @@ export const ClearLayerDialog = (props: ClearLayerDialogProps): JSX.Element => {
           onClick={() =>
             onConfirm({
               keyCode: useNoKey ? NOKEY_KEY_CODE : TRANS_KEY_CODE,
-              colorIndex: clearColors ? indexOfSelectedColor : -1,
+              colorIndex: indexOfSelectedColor < colors.length ? indexOfSelectedColor : -1,
             })
           }
         />

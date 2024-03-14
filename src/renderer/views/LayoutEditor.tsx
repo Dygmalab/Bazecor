@@ -59,7 +59,7 @@ import { ClearLayerDialog } from "@Renderer/modules/LayoutEditor/ClearLayerDialo
 import Keymap, { KeymapDB } from "../../api/keymap";
 import { rgb2w, rgbw2b } from "../../api/color";
 import Backup from "../../api/backup";
-import {TRANS_KEY_CODE} from "../../api/keymap/types";
+import { TRANS_KEY_CODE } from "../../api/keymap/types";
 
 const store = Store.getStore();
 

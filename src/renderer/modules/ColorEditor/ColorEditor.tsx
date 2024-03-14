@@ -15,19 +15,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React, {Component, CSSProperties} from "react";
-import {ColorResult, SketchPicker} from "react-color";
+import React, { Component, CSSProperties } from "react";
+import { ColorResult, SketchPicker } from "react-color";
 import Styled from "styled-components";
 
 // Bootstrap components
 import Title from "@Renderer/component/Title";
-import {ColorButton} from "@Renderer/component/Button";
+import { ColorButton } from "@Renderer/component/Button";
 
 // Icons
-import {i18n} from "@Renderer/i18n";
-import {IconColorPalette, IconKeysLight, IconKeysUnderglow} from "@Renderer/component/Icon";
-import {ColorEditorProps} from "@Renderer/types/colorEditor";
-import {ColorPalette} from "@Renderer/modules/ColorEditor/ColorPalette";
+import { i18n } from "@Renderer/i18n";
+import { IconColorPalette, IconKeysLight, IconKeysUnderglow } from "@Renderer/component/Icon";
+import { ColorEditorProps } from "@Renderer/types/colorEditor";
+import { ColorPalette } from "@Renderer/modules/ColorEditor/ColorPalette";
 
 const Styles = Styled.div`
 width: 100%;
@@ -110,7 +110,7 @@ class ColorEditor extends Component<ColorEditorProps, { displayColorPicker: bool
     onColorPick(selected, color.rgb.r, color.rgb.g, color.rgb.b);
   }
 
-  selectColor(ev: Event, pick: number) {
+  selectColor(pick: number) {
     const { selected, onColorSelect, onColorButtonSelect } = this.props;
     onColorSelect(pick);
     if (pick === selected) {
