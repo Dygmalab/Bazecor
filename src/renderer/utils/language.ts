@@ -1,3 +1,5 @@
+import { LanguageType } from "src/api/keymap/types";
+
 // Do NOT modify this object - languages available in 1.3.8 and before
 const legacyLanguage: { [key: string]: string } = {
   english: "en-US",
@@ -23,14 +25,14 @@ const legacyLanguage: { [key: string]: string } = {
  * @param {string} storedLanguage Stored language
  * @param {string} defaultLanguage Default language
  */
-function getLanguage(storedLanguage: string, defaultLanguage = "en-US") {
+function getLanguage(storedLanguage: string, defaultLanguage = "en-US"): LanguageType {
   const language = storedLanguage || defaultLanguage;
 
   if (legacyLanguage[language] !== undefined) {
-    return legacyLanguage[language];
+    return legacyLanguage[language] as LanguageType;
   }
 
-  return language;
+  return language as LanguageType;
 }
 
 export default getLanguage;
