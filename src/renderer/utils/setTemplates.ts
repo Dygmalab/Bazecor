@@ -19,7 +19,7 @@
  * Use to reduce the amount of code
  * @param {number} value Size in pixels
  */
-export const setButtonSizeTemplate = value => ({
+export const setButtonSizeTemplate = (value: number) => ({
   minWidth: value,
   minHeight: value,
   maxWidth: value,
@@ -30,7 +30,7 @@ export const setButtonSizeTemplate = value => ({
  * Use to reduce the amount of code
  * @param {object} color Object with keys that defining colors using the Red-green-blue-alpha (RGBA) model
  */
-export const setColorTemplate = color => ({
+export const setColorTemplate = (color: { r: number; g: number; b: number }) => ({
   r: color.r,
   g: color.g,
   b: color.b,

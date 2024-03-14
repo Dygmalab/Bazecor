@@ -1,4 +1,4 @@
-const translator = {
+const translator: { [key: string]: string } = {
   da: "da-DK",
   "da-DK": "da-DK",
   de: "de-DE",
@@ -30,7 +30,7 @@ const translator = {
  * @param {string} localLanguage Local language
  * @param {string} defaultLanguage Default language
  */
-function getTranslator(localLanguage, defaultLanguage = "en-US") {
+function getTranslator(localLanguage: string, defaultLanguage = "en-US") {
   const language = localLanguage || defaultLanguage;
 
   if (translator[language] !== undefined) {
