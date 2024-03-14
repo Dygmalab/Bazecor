@@ -313,10 +313,10 @@ export default class RecordMacroModal extends React.Component {
       }
       if (recorded[p].keycode === recorded[i].keycode && recorded[p].action === 6 && recorded[i].action === 7) {
         console.log(
-          `pressRelease joining ${recorded[i].char} as 1 with ${recorded[p].action} as p action and ${recorded[i].action} as i action`,
+          `pressRelease joining ${recorded[i].char} as 1 with ${recorded[p].action} as p action and ${recorded[i].action} as i action, being i:${i}, and p:${p}`,
         );
         newRecorded.push(JSON.parse(JSON.stringify(recorded[p])));
-        newRecorded[p].action = 8;
+        newRecorded[newRecorded.length - 1].action = 8;
         i += 1;
         console.log("state of i", i);
         if (i >= recorded.length - 1) {

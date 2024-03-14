@@ -511,7 +511,7 @@ function MacroEditor(props: MacroEditorProps) {
     if (macros.length === 0) {
       return;
     }
-    const localMacros = [...macros];
+    const localMacros = JSON.parse(JSON.stringify(macros)) as MacrosType[];
     localMacros[selectedMacro].actions = [];
     updateMacros(localMacros);
   }
