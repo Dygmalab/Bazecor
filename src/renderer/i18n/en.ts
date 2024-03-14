@@ -242,7 +242,8 @@ const English = {
     modal: {
       customKeyCodeModal: {
         title: "Choose a custom KeyCode",
-        message: "Custom KeyCodes can be changed manually, corresponding to the HID codes from the attached ",
+        message:
+          "To add custom keycodes, please use a HEX Calculator to add the following numbers to the HID codes you can find in the",
         labelInput: "Input KeyCode in Hex format",
       },
     },

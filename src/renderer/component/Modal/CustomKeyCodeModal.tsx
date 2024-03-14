@@ -76,7 +76,7 @@ const CustomKeyCodeModal = ({
               </div>
               <Dialog.Description className="px-4 py-2 items-center justify-between">
                 <span className="font-md tracking-tight font-semibold text-gray-400 dark:text-gray-25">{modalMessage}</span>
-                <a href="https://usb.org/sites/default/files/hut1_21.pdf">Link</a>.
+                <a href="https://usb.org/sites/default/files/hut1_21.pdf">HID Usage Tables</a>.
               </Dialog.Description>
               <div className="px-4 py-4">
                 <p className="h2 text-2xl">Available pages:</p>
@@ -86,8 +86,8 @@ const CustomKeyCodeModal = ({
                 </ul>
                 <br />
                 <span className="font-md tracking-tight font-semibold text-gray-400 dark:text-gray-25">
-                  For example for Media Play/Pause key which is code CD on the consumer page, do the following: 0x4800 + 0x00CD =
-                  0x48CD
+                  For example, for the Media Play/Pause key, which is code CD on the Consumer Page, do the following: 0x4800 +
+                  0x00CD = 0x48CD
                 </span>
               </div>
               <div className="px-4 pb-3">
