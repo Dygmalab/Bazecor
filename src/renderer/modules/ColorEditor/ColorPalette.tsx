@@ -23,7 +23,7 @@ export const ColorPalette = (props: ColorPaletteProps) => {
           type="button"
           key={`${menuKey}-key-${data}`}
           onClick={() => onColorSelect(idx)}
-          className="border border-solid !border-[#7b869e] h-8 m-0 p-1 text-gray-300 hover:text-white focus:outline-none focus:!border-[#6c5ce7] focus:shadow-[0_4px_24px_0px_rgba(108,92,231,0.6)]"
+          className="w-[81px] border border-solid !border-[#7b869e] h-8 m-0 p-1 text-gray-300 hover:text-white focus:outline-none focus:!border-[#6c5ce7] focus:shadow-[0_4px_24px_0px_rgba(108,92,231,0.6)]"
         >
           No change
         </button>
