@@ -115,7 +115,6 @@ export interface Editor {
   oldMacroModal: Modal;
   oldNeuronModal: Modal;
   editMode: EditMode;
-  clearLayerQuestion: string;
   clearLayerPrompt: string;
   pleaseSelectLayer: string;
   dualUse: string;

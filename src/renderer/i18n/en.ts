@@ -246,6 +246,11 @@ const English = {
           "To add custom keycodes, please use a HEX Calculator to add the following numbers to the HID codes you can find in the ",
         labelInput: "Input KeyCode in Hex format",
       },
+      clearLayer: {
+        title: "Clear layer",
+        resetColors: "Reset underglow and key colors using the selection",
+        useNoKey: "Fill layer with NOKEY instead of TRANS key",
+      },
     },
     standardView: {
       noKeyTransparent: "No Key/Transparent",
@@ -453,8 +458,6 @@ const English = {
       standardView: "Standard View",
       singleView: "Single View",
     },
-    clearLayerQuestion: "Clear layer?",
-    clearLayerPrompt: "This will reset the layer to its default state.",
     pleaseSelectLayer: "Please select a layer",
     dualUse: "Modifier when held, normal key otherwise",
     dualUseLayer: "Layer shift when held, normal key otherwise",
