@@ -147,6 +147,7 @@ const schema: Schema<StorageType> = {
         },
       },
     },
+    default: [],
   },
 };
 
