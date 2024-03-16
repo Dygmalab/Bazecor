@@ -100,7 +100,7 @@ const DefyBatteryIndicator = ({ side, batteryLevel, batteryStatus }: DefyBattery
         <div className="batterySide">
           {side === "left" ? <DefyBatteryIndicatorLeft batteryStatus={batteryStatus} batteryHeight={batteryHeight} /> : ""}
           {side === "right" ? <DefyBatteryIndicatorRight batteryStatus={batteryStatus} batteryHeight={batteryHeight} /> : ""}
-          {batteryStatus === 0 ? <div className="batterySide--percentage">{batteryLevel}%</div> : ""}
+          {batteryStatus === 0 || batteryStatus === 1 ? <div className="batterySide--percentage">{batteryLevel}%</div> : ""}
         </div>
         {batteryStatus === 3 ? (
           <div className="alertMessage alert-warning">{i18n.wireless.batteryPreferences.batteryErrorReading}</div>
