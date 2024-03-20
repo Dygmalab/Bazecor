@@ -75,7 +75,8 @@ const schema: Schema<StorageType> = {
               superkey: { type: "string" },
               actions: {
                 type: "array",
-                items: { type: "number" },
+                // added null for backward compatibility, should be removed in the future
+                items: { type: ["number", "null"] },
               },
             },
           },
