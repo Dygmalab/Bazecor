@@ -43,6 +43,7 @@ import { showDevtools } from "@Renderer/devMode";
 
 import Store from "@Renderer/utils/Store";
 import getTranslator from "@Renderer/utils/translator";
+import { Neuron } from "@Types/neurons";
 import Focus from "../api/focus";
 import "../api/keymap";
 import "../api/colormap";
@@ -79,8 +80,28 @@ function App() {
     console.log("Retrieving settings: ", store.get("settings"));
     const locale = await ipcRenderer.invoke("get-Locale");
     if (store.get("settings.language") !== undefined) {
-      console.log("settings already upgraded, returning");
       i18n.setLanguage(store.get("settings.language").toString());
+    }
+
+    // when moving from other version, config may for superkeys may contain wrong data (wrong legnth, nulls)
+    // so we have to fix it. This fix should not be here. It should be in separate file.
+    // Store class could handle this kind of things.
+    const neurons = store.get("neurons");
+    if (neurons !== undefined) {
+      (neurons as Neuron[])
+        .flatMap(n => n.superkeys)
+        .map(sk => sk.actions)
+        .filter(a => a.length !== 5 || a.some(n => typeof n !== "number"))
+        .forEach(n => {
+          for (let i = 0; i < 5; i += 1) {
+            if (typeof n[i] !== "number") {
+              // eslint-disable-next-line no-param-reassign
+              n[i] = 1;
+            }
+          }
+        });
+
+      store.set("neurons", neurons);
       return;
     }
 
