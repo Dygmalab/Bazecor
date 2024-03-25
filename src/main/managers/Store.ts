@@ -55,8 +55,10 @@ const schema: Schema<StorageType> = {
                 items: {
                   type: "object",
                   properties: {
-                    keyCode: { type: "number" },
-                    type: { type: "number" },
+                    keyCode: {
+                      type: ["number", "array"],
+                      items: { type: "number" },
+                    },
                     id: { type: "number" },
                   },
                 },
