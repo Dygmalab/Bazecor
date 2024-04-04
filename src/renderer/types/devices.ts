@@ -140,6 +140,7 @@ export type DygmaDeviceType = {
       updateInstructions: string;
     };
   };
+  wireless?: boolean;
   bootloader?: boolean;
   path?: string;
   filePath?: string;

@@ -851,7 +851,9 @@ function SuperkeysEditor(props: SuperkeysEditorProps) {
           selectedlanguage={currentLanguageLayout}
           kbtype={kbtype}
           isStandardView={isStandardViewSuperkeys}
-          isWireless={deviceState?.currentDevice?.device?.info?.keyboardType === "wireless"}
+          isWireless={
+            deviceState?.currentDevice?.device?.info?.keyboardType === "wireless" || deviceState?.currentDevice?.device?.wireless
+          }
         />
       ) : (
         ""

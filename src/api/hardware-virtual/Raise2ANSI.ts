@@ -28,6 +28,7 @@ const Raise2ANSI: VirtualType = {
     },
     RGBWMode: true,
     bootloader: false,
+    wireless: true,
     components: {
       keymap: {},
     },

@@ -28,6 +28,7 @@ const Raise2ISO: VirtualType = {
     },
     RGBWMode: true,
     bootloader: false,
+    wireless: true,
     components: {
       keymap: {},
     },

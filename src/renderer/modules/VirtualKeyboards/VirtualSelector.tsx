@@ -15,7 +15,7 @@ import { VirtualType } from "@Renderer/types/devices";
 import { BackupType } from "@Renderer/types/backups";
 
 import Hardware from "../../../api/hardware";
-import { RaiseISO, RaiseANSI, DefyWired, DefyWireless, enumerator } from "../../../api/hardware-virtual";
+import { RaiseISO, RaiseANSI, DefyWired, DefyWireless, Raise2ANSI, Raise2ISO, enumerator } from "../../../api/hardware-virtual";
 import Store from "../../utils/Store";
 import { isVirtualType } from "../../../api/comms/virtual";
 import Backup from "../../../api/backup";
@@ -51,18 +51,28 @@ export default function VirtualSelector(props: VirtualSelectorProps) {
         backup.neuron.device.info.keyboardType === hardwareDevice.info.keyboardType
       ) {
         if (hardwareDevice.info.keyboardType === "ANSI") {
-          vk = { ...RaiseANSI };
-          fileName = "VirtualRaiseANSI";
+          if (hardwareDevice.info.product === "Raise2") {
+            vk = { ...Raise2ANSI };
+            fileName = "VirtualRaise2ANSI";
+          } else {
+            vk = { ...RaiseANSI };
+            fileName = "VirtualRaiseANSI";
+          }
         }
         if (hardwareDevice.info.keyboardType === "ISO") {
+          if (hardwareDevice.info.product === "Raise2") {
+            vk = { ...Raise2ISO };
+            fileName = "VirtualRaise2ISO";
+          } else {
+            vk = { ...RaiseISO };
+            fileName = "VirtualRaiseISO";
+          }
           vk = { ...RaiseISO };
-          fileName = "VirtualRaiseISO";
         }
         if (hardwareDevice.info.keyboardType === "wired") {
           vk = { ...DefyWired };
           fileName = "VirtualDefy";
         }
-        // TODO: replace this DEFY with the wireless version
         if (hardwareDevice.info.keyboardType === "wireless") {
           vk = { ...DefyWireless };
           fileName = "VirtualDefy";

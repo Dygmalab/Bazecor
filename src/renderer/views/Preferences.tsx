@@ -397,7 +397,7 @@ const Preferences = (props: PreferencesProps) => {
     setPreferencesState(initialPreferences);
     setKbData(initialKBData);
     await getNeuronData();
-    if (state.currentDevice.device.info.keyboardType === "wireless") {
+    if (state.currentDevice.device.info.keyboardType === "wireless" || state.currentDevice.device.wireless) {
       console.log("setting wireless");
       setWireless(initialWireless);
       await getWirelessPreferences();
@@ -586,7 +586,8 @@ const Preferences = (props: PreferencesProps) => {
     const init = async () => {
       setLoading(true);
       const NID = await getNeuronData();
-      if (connected && state.currentDevice.device.info.keyboardType === "wireless") await getWirelessPreferences();
+      if (connected && (state.currentDevice.device.info.keyboardType === "wireless" || state.currentDevice.device.wireless))
+        await getWirelessPreferences();
       const devTools = await ipcRenderer.invoke("is-devtools-opened");
       let darkMode = store.get("settings.darkMode") as string;
       if (!darkMode) {
@@ -670,7 +671,7 @@ const Preferences = (props: PreferencesProps) => {
                   <TabsTrigger value="LED" variant="tab">
                     <IconFlashlight /> LED
                   </TabsTrigger>
-                  {state.currentDevice.device.info.keyboardType === "wireless" && (
+                  {(state.currentDevice.device.info.keyboardType === "wireless" || state.currentDevice.device.wireless) && (
                     <>
                       <TabsTrigger value="Battery" variant="tab">
                         <IconBattery /> Battery Management
@@ -725,11 +726,13 @@ const Preferences = (props: PreferencesProps) => {
                         setKbData={updateKBData}
                         setWireless={updateWireless}
                         connected={connected}
-                        isWireless={state.currentDevice.device.info.keyboardType === "wireless"}
+                        isWireless={
+                          state.currentDevice.device.info.keyboardType === "wireless" || state.currentDevice.device.wireless
+                        }
                       />
                     </motion.div>
                   </TabsContent>
-                  {state.currentDevice.device.info.keyboardType === "wireless" && (
+                  {(state.currentDevice.device.info.keyboardType === "wireless" || state.currentDevice.device.wireless) && (
                     <>
                       <TabsContent value="Battery">
                         <motion.div initial="hidden" animate="visible" variants={tabVariants}>
