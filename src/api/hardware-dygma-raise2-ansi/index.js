@@ -45,8 +45,8 @@ const Raise2ANSI = {
     columns: 16,
   },
   keyboardUnderglow: {
-    rows: 6,
-    columns: 22,
+    rows: 2,
+    columns: 39,
   },
   RGBWMode: true,
   components: {
