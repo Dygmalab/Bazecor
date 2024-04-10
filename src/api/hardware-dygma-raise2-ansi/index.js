@@ -45,10 +45,12 @@ const Raise2ANSI = {
     columns: 16,
   },
   keyboardUnderglow: {
-    rows: 2,
+    rows: 4,
     columns: 39,
   },
   RGBWMode: true,
+  bootloader: false,
+  wireless: true,
   components: {
     keymap: KeymapANSI,
   },

@@ -1,9 +1,9 @@
 type RGBW = {
-  r: number,
-  g: number,
-  b: number,
-  w: number
-}
+  r: number;
+  g: number;
+  b: number;
+  w: number;
+};
 
 export default function rgbw2b(rgbw: RGBW) {
   const r = rgbw.w + rgbw.r > 255 ? 255 : rgbw.w + rgbw.r;
