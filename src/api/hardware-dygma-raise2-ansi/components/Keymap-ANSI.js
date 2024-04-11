@@ -22,7 +22,7 @@ import Key from "../../hardware/Key";
 import UnderGlowStrip from "../../hardware/UnderGlowStrip";
 
 const XX = 255;
-const LEDS_LEFT_KEYS = 32;
+const LEDS_LEFT_KEYS = 33;
 const LEDS_RIGHT_KEYS = 36;
 const UNDERGLOW = 77;
 const LedMap = [
