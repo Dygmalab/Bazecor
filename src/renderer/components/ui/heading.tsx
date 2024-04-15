@@ -7,6 +7,7 @@ const HeadingVariants = cva("font-semibold tracking-tight decoration-none headin
   variants: {
     variant: {
       default: "align-center gap-2 text-gray-500 dark:text-gray-25 tracking-tight font-semibold",
+      warning: "align-center gap-2 text-orange-200 dark:text-orange-200 tracking-tight font-semibold",
     },
     renderAs: {
       "display-lg": "text-7xl",

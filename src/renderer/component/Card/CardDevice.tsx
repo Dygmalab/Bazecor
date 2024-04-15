@@ -124,17 +124,17 @@ const CardWrapper = Styled.div`
   .dropdown-item.disabled {
     color: ${({ theme }) => theme.styles.card.cardDevice.dropdownDisabledColor};
   }
-  &.card-filter-on,
-  &.card-filter-on.card-offline.show-online,
-  &.card-filter-on.card-online.show-offline {
-    display: none;
-  }
-  &.card-filter-on.card-online {
-    display: flex;
-  }
-  &.card-filter-on.card-offline {
-    display: flex;
-  }
+  // &.card-filter-on,
+  // &.card-filter-on.card-offline.show-online,
+  // &.card-filter-on.card-online.show-offline {
+  //   display: none;
+  // }
+  // &.card-filter-on.card-online {
+  //   display: flex;
+  // }
+  // &.card-filter-on.card-offline {
+  //   display: flex;
+  // }
 `;
 
 const CardDevice = (props: any) => {

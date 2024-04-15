@@ -8,18 +8,14 @@ import Title from "@Renderer/component/Title";
 import { Container } from "react-bootstrap";
 
 import { ReOrderDevicesModal } from "@Renderer/component/Modal";
-import Heading from "@Renderer/component/Heading";
+import Heading from "@Renderer/components/ui/heading";
 import { LargeButton } from "@Renderer/component/Button";
 
+import { i18n } from "@Renderer/i18n";
+import { AnimatePresence, motion } from "framer-motion";
+
 const DeviceManagerWrapper = Styled.div`
-  height: 100%;
-  .container-fluid {
-    height: 100%;
-  }
   .view-wrapper {
-    display: flex;
-    flex-direction: column;
-    height: inherit;
     > div {
       width: 100%;
       flex: initial;
@@ -27,77 +23,14 @@ const DeviceManagerWrapper = Styled.div`
   }
 `;
 
-const FilterHeaderWrapper = Styled.div`
- display: flex;
- align-items: center;
- justify-content: space-between;
- padding-top: 32px;
- padding-bottom: 16px;
- margin-bottom: 32px;
- border-bottom: 1px solid ${({ theme }) => theme.styles.filterHeader.borderColor};
- .filter-header {
-  display: flex;
-  align-items: center;
-  grid-gap: 16px;
- }
- .filter-title {
-  font-size: 1.5em;
-  font-weight: 600;
-  letter-spacing: -0.03em;
-  margin: 0;
-  padding-left: 2px;
-  color: ${({ theme }) => theme.styles.filterHeader.titleColor};
-  sup {
-    color: ${({ theme }) => theme.colors.purple300};
-  }
- }
- .modal-button--trigger {
-  display: flex;
-  align-items: center;
-  color: ${({ theme }) => theme.styles.filterHeader.triggerModalColor};
-  grid-gap: 8px;
-  font-size: 0.8em;
-  transition: 300ms ease-in-out color;
-  padding: 0;
-  background-color: transparent;
-  &:hover {
-    color: ${({ theme }) => theme.styles.filterHeader.triggerModalHover};
-  }
-}
- .filter-header--tabs ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: flex;
-  grid-gap: 4px;
-  .tab {
-    border-radius: 16px;
-    color: ${({ theme }) => theme.colors.gray25};
-    background-color: ${({ theme }) => theme.styles.filterHeader.tabBackgroundColor};
-    padding: 4px 16px;
-    margin: 0;
-    font-family: "Libre Franklin";
-    font-weight: 600;
-    font-size: 0.8em;
-    transition: 300ms background-color ease-in-out;
-    &:hover {
-      background-color: ${({ theme }) => theme.styles.filterHeader.tabBackgroundHover};
-    }
-    &.tab-active {
-      background-color: ${({ theme }) => theme.styles.filterHeader.tabBackgroundActive};
-    }
-  }
- }
-`;
-
 const DevicesWrapper = Styled.div`
   display: flex;
   grid-gap: 16px;
   position: relative;
   .devices-scroll {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(340px, 1fr));
-    grid-gap: 16px;
+    // display: grid;
+    // grid-template-columns: repeat(3, minmax(340px, 1fr));
+    // grid-gap: 16px;
   }
   .devices-container--no-devices {
     border-radius: 6px;
@@ -272,64 +205,89 @@ const DeviceManager = () => {
   };
 
   return (
-    <DeviceManagerWrapper>
-      <Container fluid>
-        <div className="view-wrapper">
+    <DeviceManagerWrapper className="h-full">
+      <Container fluid className="h-full">
+        <div className="view-wrapper flex h-[inherit] flex-col">
           <PageHeader text="Device Manager" primaryButton={scanDevices} secondaryButton={addVirtualDevices} />
-          <FilterHeaderWrapper>
-            <div className="filter-header">
-              <h3 className="filter-title">
-                My devices <sup>{listDevices.length}</sup>
-              </h3>
+          <div className="filterHeaderWrapper flex items-center justify-between pt-6 pb-3 mb-6 border-b-[1px] border-gray-100 dark:border-gray-600">
+            <div className="filter-header flex items-center gap-4">
+              <Heading headingLevel={3} renderAs="h3" className="ml-[2px]">
+                {i18n.deviceManager.myDevices} <sup className="text-purple-300">{listDevices.length}</sup>
+              </Heading>
               {listDevices.length > 0 ? (
                 <div className="filter-header--tabs">
-                  <ul>
+                  <ul className="list-none p-0 m-0 flex gap-1">
                     <li>
                       <button
                         type="button"
-                        className={`tab ${activeTab === "all" ? "tab-active" : ""}`}
+                        className={`tab text-gray-25 rounded-[16px] py-1 px-3 m-0 font-semibold tracking-tight text-sm transition-all ${
+                          activeTab === "all"
+                            ? "tab-active bg-purple-300"
+                            : "bg-gray-300 hover:bg-gray-400 dark:bg-gray-600 dark:hover:bg-gray-500"
+                        }`}
                         onClick={() => setActiveTab("all")}
                       >
-                        All
+                        {i18n.general.all}
                       </button>
                     </li>
                     <li>
                       <button
                         type="button"
-                        className={`tab ${activeTab === true ? "tab-active" : ""}`}
+                        className={`tab text-gray-25 rounded-[16px] py-1 px-3 m-0 font-semibold tracking-tight text-sm transition-all ${
+                          activeTab === true
+                            ? "tab-active bg-purple-300"
+                            : "bg-gray-300 hover:bg-gray-400 dark:bg-gray-600 dark:hover:bg-gray-500"
+                        }`}
                         onClick={() => setActiveTab(true)}
                       >
-                        Online
+                        {i18n.general.online}
                       </button>
                     </li>
                     <li>
                       <button
                         type="button"
-                        className={`tab ${activeTab === false ? "tab-active" : ""}`}
+                        className={`tab text-gray-25 rounded-[16px] py-1 px-3 m-0 font-semibold tracking-tight text-sm transition-all ${
+                          activeTab === false
+                            ? "tab-active bg-purple-300"
+                            : "bg-gray-300 hover:bg-gray-400 dark:bg-gray-600 dark:hover:bg-gray-500"
+                        }`}
                         onClick={() => setActiveTab(false)}
                       >
-                        Offline
+                        {i18n.general.offline}
                       </button>
                     </li>
                   </ul>
                 </div>
               ) : null}
             </div>
+
             {listDevices.length > 0 ? (
               <div className="filter-header--actions">
-                <button type="button" onClick={() => setShowModal(true)} className="modal-button--trigger">
+                <button
+                  type="button"
+                  onClick={() => setShowModal(true)}
+                  className="modal-button--trigger flex items-center text-sm gap-2 transition-all p-0 bg-transparent text-gray-500 dark:text-gray-25 hover:text-purple-300 dark:hover:text-purple-100"
+                >
                   <IconDragDots />
-                  Re-order list
+                  {i18n.general.reorderList}
                 </button>
               </div>
             ) : null}
-          </FilterHeaderWrapper>
+          </div>
           <DevicesWrapper>
             {listDevices.length > 0 ? (
               <div className="devices-container">
-                <div className="devices-scroll">
+                <div className="devices-scroll w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                   {listDevices.map(item => (
-                    <CardDevice key={item.serialNumber} device={item} filterBy={activeTab} />
+                    <AnimatePresence mode="popLayout">
+                      {item.available === activeTab || activeTab === "all" ? (
+                        <motion.div initial={{ opacity: 0, y: -50 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -50 }}>
+                          <CardDevice key={item.serialNumber} device={item} filterBy={activeTab} />
+                        </motion.div>
+                      ) : (
+                        ""
+                      )}
+                    </AnimatePresence>
                   ))}
                 </div>
               </div>
@@ -340,10 +298,12 @@ const DeviceManager = () => {
                     <IconRobotOffline />
                   </div>
                   <div className="devices-title-group">
-                    <Heading headingLevel={3} variant="warning">
+                    <Heading headingLevel={3} renderAs="h3" variant="warning">
                       No devices found!
                     </Heading>
-                    <Heading headingLevel={4}>[Black metal plays in background]</Heading>
+                    <Heading headingLevel={4} renderAs="h4">
+                      [Black metal plays in background]
+                    </Heading>
                   </div>
                   <div className="devices-buttons-group">
                     <LargeButton onClick={() => console.log("Add virtual keyboard")} icon={<IconPlus />}>

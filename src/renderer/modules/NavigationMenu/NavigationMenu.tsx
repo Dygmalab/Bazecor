@@ -47,7 +47,8 @@ import {
   IconThunder2Stroke,
   IconPreferences2Stroke,
   IconBazecordevtools,
-} from "../../component/Icon";
+  IconHome,
+} from "@Renderer/component/Icon";
 
 const Styles = Styled.div`
 .disabled {
@@ -214,6 +215,15 @@ function NavigationMenu(props: NavigationMenuProps) {
         </NavbarBrand>
         <Nav>
           <div className="topMenu">
+            <Link to="/device-manager" className="list-link">
+              <NavigationButton
+                selected={false}
+                showNotif={false}
+                buttonText="Device Manager"
+                icoSVG={<IconHome />}
+                disabled={false}
+              />
+            </Link>
             {connected && (
               <>
                 {pages.keymap && (
@@ -295,15 +305,6 @@ function NavigationMenu(props: NavigationMenuProps) {
                 disabled={fwUpdate || loading}
               />
             </Link>
-            {/* <Link to="/device-manager" className="list-link">
-              <NavigationButton
-                selected={false}
-                showNotif={false}
-                buttonText="Device Manager"
-                icoSVG={<IconHome />}
-                disabled={false}
-              />
-            </Link> */}
             {connected &&
             state.currentDevice &&
             state.currentDevice.device.info &&
