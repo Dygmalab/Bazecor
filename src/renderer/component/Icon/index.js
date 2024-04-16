@@ -40,7 +40,6 @@ import IconClone from "./IconClone";
 import IconCloseXs from "./IconCloseXs";
 import IconCloudDownload from "./IconCloudDownload";
 import IconDragAndDrop from "./IconDragAndDrop";
-import IconDragDots from "./IconDragDots";
 import IconDelete from "./IconDelete";
 import IconEditModeSingleView from "./IconEditModeSingleView";
 import IconEditModeSingleViewSm from "./IconEditModeSingleViewSm";
@@ -129,7 +128,6 @@ import IconLayers from "./IconLayers";
 import IconLayersSm from "./IconLayersSm";
 import IconRadar from "./IconRadar";
 import IconRecord from "./IconRecord";
-import IconRefresh from "./IconRefresh";
 import IconReleaseSm from "./IconReleaseSm";
 import IconRobot2Stroke from "./IconRobot2Stroke";
 import IconRobot from "./IconRobot";
@@ -190,7 +188,6 @@ export {
   IconCloseXs,
   IconCloudDownload,
   IconDragAndDrop,
-  IconDragDots,
   IconDelete,
   IconEditModeSingleView,
   IconEditModeSingleViewSm,
@@ -278,7 +275,6 @@ export {
   IconLayers,
   IconLayersSm,
   IconRecord,
-  IconRefresh,
   IconRobot,
   IconRobotSm,
   IconReleaseSm,

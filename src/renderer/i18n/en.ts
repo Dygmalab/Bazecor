@@ -687,6 +687,8 @@ const English = {
   deviceManager: {
     title: "Device Manager",
     myDevices: "My devices",
+    needHelpTitle: "Need help?",
+    needHelpDescription: "Whether it's a bug or any other issue, we are here to help you!",
   },
   keyboardSelect: {
     title: "Keyboard Selection",

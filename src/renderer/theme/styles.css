@@ -117,6 +117,11 @@ select:focus {
   @apply text-xl;
 }
 
+.view-wrapper--devices > div {
+  width: 100%;
+  flex: initial;
+}
+
 .tab-item:hover {
   background: linear-gradient(120deg, rgba(238, 241, 248, 0.2), rgba(255, 255, 255, 0.2));
 }

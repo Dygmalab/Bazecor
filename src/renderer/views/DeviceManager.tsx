@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import Styled from "styled-components";
 
-import { IconDragDots, IconBugWarning, IconRobotOffline, IconPlus, IconRefresh } from "@Renderer/component/Icon";
+import { IconRobotOffline, IconPlus } from "@Renderer/component/Icon";
+import { IconDragDots, IconRefresh } from "@Renderer/components/icons";
 import { PageHeader } from "@Renderer/modules/PageHeader";
 import { CardDevice } from "@Renderer/component/Card";
-import Title from "@Renderer/component/Title";
 import { Container } from "react-bootstrap";
 
 import { ReOrderDevicesModal } from "@Renderer/component/Modal";
@@ -13,25 +13,9 @@ import { LargeButton } from "@Renderer/component/Button";
 
 import { i18n } from "@Renderer/i18n";
 import { AnimatePresence, motion } from "framer-motion";
-
-const DeviceManagerWrapper = Styled.div`
-  .view-wrapper {
-    > div {
-      width: 100%;
-      flex: initial;
-    }
-  }
-`;
+import HelpSupportLink from "@Renderer/modules/DeviceManager/help-support-link";
 
 const DevicesWrapper = Styled.div`
-  display: flex;
-  grid-gap: 16px;
-  position: relative;
-  .devices-scroll {
-    // display: grid;
-    // grid-template-columns: repeat(3, minmax(340px, 1fr));
-    // grid-gap: 16px;
-  }
   .devices-container--no-devices {
     border-radius: 6px;
     background-color: ${({ theme }) => theme.styles.deviceManager.noDevicesBackground};
@@ -73,42 +57,6 @@ const DevicesWrapper = Styled.div`
     }
   }
 
-`;
-const HelpMessage = Styled.div`
-  width: 100%;
-  display: flex;
-  justify-content: flex-end;
-  margin-top: auto;
-  .help-wrapper {
-    display: flex;
-    flex-wrap: nowrap;
-    grid-gap: 8px;
-    max-width: 224px;
-    h4, svg, p {
-      transition: 300ms ease-in-out color;
-    }
-    svg {
-      flex: 0 0 24px;
-      color: ${({ theme }) => theme.styles.helpMessage.titleColor};
-    }
-    h4 {
-      font-size: 1em;
-      color: ${({ theme }) => theme.styles.helpMessage.titleColor};
-    }
-    p {
-      color: ${({ theme }) => theme.styles.helpMessage.textColor};
-      font-size: 0.825em;
-    }
-    &:hover {
-      text-decoration: none;
-      h4, svg {
-        color: ${({ theme }) => theme.styles.helpMessage.titleHoverColor};
-      }
-      p {
-        color: ${({ theme }) => theme.styles.helpMessage.textHoverColor};
-      }
-    }
-  }
 `;
 
 const savedDevicesList = [
@@ -205,9 +153,9 @@ const DeviceManager = () => {
   };
 
   return (
-    <DeviceManagerWrapper className="h-full">
+    <div className="h-full">
       <Container fluid className="h-full">
-        <div className="view-wrapper flex h-[inherit] flex-col">
+        <div className="view-wrapper--devices flex h-[inherit] flex-col">
           <PageHeader text="Device Manager" primaryButton={scanDevices} secondaryButton={addVirtualDevices} />
           <div className="filterHeaderWrapper flex items-center justify-between pt-6 pb-3 mb-6 border-b-[1px] border-gray-100 dark:border-gray-600">
             <div className="filter-header flex items-center gap-4">
@@ -274,15 +222,15 @@ const DeviceManager = () => {
               </div>
             ) : null}
           </div>
-          <DevicesWrapper>
+          <DevicesWrapper className="flex gap-4 relative">
             {listDevices.length > 0 ? (
               <div className="devices-container">
                 <div className="devices-scroll w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                   {listDevices.map(item => (
-                    <AnimatePresence mode="popLayout">
+                    <AnimatePresence mode="popLayout" key={item.serialNumber}>
                       {item.available === activeTab || activeTab === "all" ? (
                         <motion.div initial={{ opacity: 0, y: -50 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -50 }}>
-                          <CardDevice key={item.serialNumber} device={item} filterBy={activeTab} />
+                          <CardDevice device={item} filterBy={activeTab} />
                         </motion.div>
                       ) : (
                         ""
@@ -319,15 +267,7 @@ const DeviceManager = () => {
               </div>
             )}
           </DevicesWrapper>
-          <HelpMessage>
-            <a href="https://support.dygma.com/hc/en-us/requests/new" className="help-wrapper">
-              <IconBugWarning />
-              <div className="help-warning--content">
-                <Title text="Need help?" headingLevel={4} />
-                <p>Whether it&#39;s a bug or any other issue, we are here to help you!</p>
-              </div>
-            </a>
-          </HelpMessage>
+          <HelpSupportLink />
         </div>
       </Container>
 
@@ -337,7 +277,7 @@ const DeviceManager = () => {
         devices={listDevices}
         handleSave={reOrderList}
       />
-    </DeviceManagerWrapper>
+    </div>
   );
 };
 
