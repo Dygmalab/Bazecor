@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import Styled from "styled-components";
 
-import { IconRobotOffline, IconPlus } from "@Renderer/component/Icon";
-import { IconDragDots, IconRefresh } from "@Renderer/components/icons";
+import { IconDragDots, IconPlus, IconRefresh, IconRobotOffline } from "@Renderer/components/icons";
 import { PageHeader } from "@Renderer/modules/PageHeader";
 import { CardDevice } from "@Renderer/component/Card";
 import { Container } from "react-bootstrap";
@@ -254,7 +253,7 @@ const DeviceManager = () => {
                     </Heading>
                   </div>
                   <div className="devices-buttons-group">
-                    <LargeButton onClick={() => console.log("Add virtual keyboard")} icon={<IconPlus />}>
+                    <LargeButton onClick={() => console.log("Add virtual keyboard")} icon={<IconPlus size="md" />}>
                       <Heading headingLevel={4}>Add virtual device</Heading>
                       <p>Use without a keyboard</p>
                     </LargeButton>
