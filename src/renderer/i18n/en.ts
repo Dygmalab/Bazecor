@@ -689,6 +689,10 @@ const English = {
     myDevices: "My devices",
     needHelpTitle: "Need help?",
     needHelpDescription: "Whether it's a bug or any other issue, we are here to help you!",
+    scanDevices: "Scan devices",
+    addVirtualDevice: "Add virtual device",
+    checkForDevices: "Check for nearby devices",
+    useWithoutKeyboard: "Use without keyboard",
   },
   keyboardSelect: {
     title: "Keyboard Selection",

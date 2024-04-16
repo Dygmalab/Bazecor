@@ -91,12 +91,12 @@ const DeviceManager = () => {
 
   const addVirtualDevices = (
     <button className="sm button outline transp-bg iconOnNone" type="button" onClick={() => console.log("Add virtual device")}>
-      Add virtual device
+      {i18n.deviceManager.addVirtualDevice}
     </button>
   );
   const scanDevices = (
     <button className="sm button primary iconOnNone" type="button" onClick={() => console.log("Scan devices")}>
-      Scan devices
+      {i18n.deviceManager.scanDevices}
     </button>
   );
 
@@ -201,20 +201,20 @@ const DeviceManager = () => {
                   </div>
                   <div className="devices-title-group">
                     <Heading headingLevel={3} renderAs="h3" variant="warning">
-                      No devices found!
+                      {i18n.deviceManager.noDevicesFound}
                     </Heading>
                     <Heading headingLevel={4} renderAs="h4" className="text-base">
-                      [Black metal plays in background]
+                      {i18n.deviceManager.noDevicesFoundDescription}
                     </Heading>
                   </div>
                   <div className="devices-buttons-group flex items-center justify-center gap-4 mt-6 pb-6 [&_button]:min-w-[280px]">
                     <LargeButton onClick={() => console.log("Add virtual keyboard")} icon={<IconPlus size="md" />}>
-                      <Heading headingLevel={4}>Add virtual device</Heading>
-                      <p>Use without a keyboard</p>
+                      <Heading headingLevel={4}>{i18n.deviceManager.addVirtualDevice}</Heading>
+                      <p>{i18n.deviceManager.useWithoutKeyboard}</p>
                     </LargeButton>
                     <LargeButton onClick={() => console.log("Scan devices")} icon={<IconRefresh />}>
-                      <Heading headingLevel={4}>Scan devices</Heading>
-                      <p>Check for nearby devices</p>
+                      <Heading headingLevel={4}>{i18n.deviceManager.scanDevices}</Heading>
+                      <p>{i18n.deviceManager.checkForDevices}</p>
                     </LargeButton>
                   </div>
                 </div>
