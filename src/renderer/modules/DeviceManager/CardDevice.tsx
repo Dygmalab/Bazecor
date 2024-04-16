@@ -10,25 +10,8 @@ import Styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 
 const CardWrapper = Styled.div`
-  display: flex;
-  //width: clamp(340px, 60%, 520px);
-  &.card {
-    padding: 0;
-    border-radius: 24px;
-    border: 2px solid ${({ theme }) => theme.styles.card.cardDevice.cardBorder};
-    background-position: right top;
-    background-repeat: no-repeat;
-    background-image: url(${({ theme }) => theme.styles.card.cardDevice.cardBackground});
-    background-size: cover;
-    overflow: hidden;
-    transition: 300ms ease-in-out border-color;
-  }
-  &.card-connected {
-    border: 2px solid ${({ theme }) => theme.styles.card.cardDevice.cardBorderConnected};
-  }
+  
   &.card-offline {
-    position: relative;
-    isolation: isolate;
     &:before {
       position: absolute;
       content: "";
@@ -49,11 +32,7 @@ const CardWrapper = Styled.div`
     }
   }
   .card-header {
-    position: relative;
-    background: transparent;
-    border: none;
-    padding-top: 32px;
-    min-height: 140px;
+    
     h3 {
       font-size: 1.5em;
       margin: 0 0 0.5em 0;
@@ -69,18 +48,7 @@ const CardWrapper = Styled.div`
       text-transform: none;
       letter-spacing: 0;
     }
-    .bullet-connect {
-      position: absolute;
-      right: 24px;
-      top: 24px;
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background-color: ${({ theme }) => theme.colors.gray200};
-      &.connected {
-        background-color: ${({ theme }) => theme.styles.card.cardDevice.cardBorderConnected};
-      }
-    }
+    
   }
   .device-preview {
     margin-bottom: -20%;
@@ -99,21 +67,21 @@ const CardWrapper = Styled.div`
       box-shadow: none;
     }
   }
-  .card-footer {
-    background: transparent;
-    border: none;
-    padding: 2px;
-    margin-top: auto;
-    .card-footer--inner {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border-radius: 18px;
-      padding: 16px;
-      background: ${({ theme }) => theme.styles.card.cardDevice.cardFooterBg};
-      backdrop-filter: blur(3px);
-    }
-  }
+  // .card-footer {
+  //   background: transparent;
+  //   border: none;
+  //   padding: 2px;
+  //   margin-top: auto;
+  //   .card-footer--inner {
+  //     display: flex;
+  //     justify-content: space-between;
+  //     align-items: center;
+  //     border-radius: 18px;
+  //     padding: 16px;
+  //     background: ${({ theme }) => theme.styles.card.cardDevice.cardFooterBg};
+  //     backdrop-filter: blur(3px);
+  //   }
+  // }
   .buttonToggler.dropdown-toggle.btn.btn-primary {
     width: 52px;
     height: 52px;
@@ -124,17 +92,7 @@ const CardWrapper = Styled.div`
   .dropdown-item.disabled {
     color: ${({ theme }) => theme.styles.card.cardDevice.dropdownDisabledColor};
   }
-  // &.card-filter-on,
-  // &.card-filter-on.card-offline.show-online,
-  // &.card-filter-on.card-online.show-offline {
-  //   display: none;
-  // }
-  // &.card-filter-on.card-online {
-  //   display: flex;
-  // }
-  // &.card-filter-on.card-offline {
-  //   display: flex;
-  // }
+
 `;
 
 const CardDevice = (props: any) => {
@@ -163,11 +121,15 @@ const CardDevice = (props: any) => {
   };
   return (
     <CardWrapper
-      className={`card card-device ${isConnected ? "card-connected" : "card-disconnected"} ${
-        device.available ? "card-online" : "card-offline"
-      } ${filterBy !== "all" ? `card-filter-on ${filterAttribute(filterBy)}` : "card-all"}`}
+      className={`card-device flex flex-col relative p-0 rounded-[24px] border-2 border-solid bg-cardDeviceTextureLight dark:bg-cardDeviceTextureDark  bg-no-repeat bg-right-top bg-cover transition-all overflow-hidden ${
+        isConnected
+          ? "card-connected border-purple-300 dark:border-green-200"
+          : "card-disconnected border-gray-100 dark:border-gray-600"
+      } ${device.available ? "card-online" : "card-offline relative isolate"} ${
+        filterBy !== "all" ? `card-filter-on ${filterAttribute(filterBy)}` : "card-all"
+      }`}
     >
-      <div className="card-header">
+      <div className="card-header relative bg-transparent border-none pt-6 min-h-[140px]">
         {device.name ? (
           <>
             <Heading headingLevel={3} renderAs="h3">
@@ -185,11 +147,17 @@ const CardDevice = (props: any) => {
         <Heading headingLevel={5} renderAs="h5">
           {device.path}
         </Heading>
-        <span className={`bullet-connect ${isConnected ? "connected" : "disconnected"}`}>&nbsp;</span>
+        <span
+          className={`bullet-connect absolute right-6 top-6 w-2 h-2 rounded-full  ${
+            isConnected ? "connected bg-purple-300 dark:bg-green-200" : "disconnected bg-gray-200"
+          }`}
+        >
+          &nbsp;
+        </span>
       </div>
       <DevicePreview deviceName={device.device.info.displayName} isConnected={isConnected} />
-      <div className="card-footer">
-        <div className="card-footer--inner">
+      <div className="card-footer bg-transparent border-none p-0.5 mt-auto">
+        <div className="card-footer--inner flex justify-between items-center rounded-[18px] p-4 bg-gray-25/80 dark:bg-gray-700/70 backdrop-blur-sm">
           {device.available ? (
             <button
               type="button"

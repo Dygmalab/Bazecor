@@ -75,6 +75,8 @@ module.exports = {
         blurPink: "linear-gradient(180deg,rgba(0,194,255,0) 0%,#FF29C3 100%)",
         blurBlue: "linear-gradient(180deg,rgba(24,75,255,0) 0%,#174AFF 100%)",
         body: "url('/assets/images/bg-body.jpg')",
+        cardDeviceTextureLight: "url('@Assets/light/bg-texture-with-lines.jpg')",
+        cardDeviceTextureDark: "url('@Assets/dark/bg-texture-with-lines.jpg')",
         footer: "url('/assets/images/bg-footer.png')",
         noise: "url('/assets/images/noise.png')",
         home: "url('/assets/images/home-hero-background.jpg')",
