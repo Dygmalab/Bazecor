@@ -693,6 +693,8 @@ const English = {
     addVirtualDevice: "Add virtual device",
     checkForDevices: "Check for nearby devices",
     useWithoutKeyboard: "Use without keyboard",
+    noDevicesFound: "No devices found!",
+    noDevicesFoundDescription: "[Black metal plays in background]",
   },
   keyboardSelect: {
     title: "Keyboard Selection",

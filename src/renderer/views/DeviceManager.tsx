@@ -203,7 +203,7 @@ const DeviceManager = () => {
                     <Heading headingLevel={3} renderAs="h3" variant="warning">
                       {i18n.deviceManager.noDevicesFound}
                     </Heading>
-                    <Heading headingLevel={4} renderAs="h4" className="text-base">
+                    <Heading headingLevel={4} renderAs="h4" className="text-base text-gray-400 dark:text-gray-200">
                       {i18n.deviceManager.noDevicesFoundDescription}
                     </Heading>
                   </div>
