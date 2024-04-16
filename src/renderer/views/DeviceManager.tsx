@@ -3,7 +3,7 @@ import Styled from "styled-components";
 
 import { IconDragDots, IconPlus, IconRefresh, IconRobotOffline } from "@Renderer/components/icons";
 import { PageHeader } from "@Renderer/modules/PageHeader";
-import { CardDevice } from "@Renderer/component/Card";
+import CardDevice from "@Renderer/modules/DeviceManager/CardDevice";
 import { Container } from "react-bootstrap";
 
 import { ReOrderDevicesModal } from "@Renderer/component/Modal";
@@ -12,7 +12,7 @@ import { LargeButton } from "@Renderer/component/Button";
 
 import { i18n } from "@Renderer/i18n";
 import { AnimatePresence, motion } from "framer-motion";
-import HelpSupportLink from "@Renderer/modules/DeviceManager/help-support-link";
+import HelpSupportLink from "@Renderer/modules/DeviceManager/HelpSupportLink";
 
 const DevicesWrapper = Styled.div`
   .devices-container--no-devices {
