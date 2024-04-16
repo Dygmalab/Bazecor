@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import Styled from "styled-components";
 
 import { IconDragDots, IconPlus, IconRefresh, IconRobotOffline } from "@Renderer/components/icons";
 import { PageHeader } from "@Renderer/modules/PageHeader";
@@ -13,50 +12,6 @@ import { LargeButton } from "@Renderer/component/Button";
 import { i18n } from "@Renderer/i18n";
 import { AnimatePresence, motion } from "framer-motion";
 import HelpSupportLink from "@Renderer/modules/DeviceManager/HelpSupportLink";
-
-const DevicesWrapper = Styled.div`
-  .devices-container--no-devices {
-    border-radius: 6px;
-    background-color: ${({ theme }) => theme.styles.deviceManager.noDevicesBackground};
-    padding: 32px 24px;
-    width: 100%;
-    .devices-inner {
-      display: flex;
-      justify-content: center;
-      flex-direction: column;
-      text-align: center;
-      width: 100%;
-      .devices-title-group {
-        h3 {
-          width: 100%;
-          &:after, &:before {
-            content: none;
-          }
-        }
-        h4 {
-          width: 100%;
-          font-size: 1em;
-          color: ${({ theme }) => theme.styles.neuronConnection.subTitleColor};
-        }
-      }
-    }
-    .devices-icon {
-      margin: 0 auto 16px auto;
-    }
-    .devices-buttons-group {
-      display: flex;
-      align-items: center;
-      grid-gap: 16px;
-      margin-top: 24px;
-      padding-bottom: 24px;
-      justify-content: center;
-      .button {
-        min-width: 280px;
-      }
-    }
-  }
-
-`;
 
 const savedDevicesList = [
   {
@@ -129,8 +84,8 @@ const savedDevicesList = [
   },
 ];
 const DeviceManager = () => {
-  const [listDevices, setListDevices] = useState(savedDevicesList);
-  // const [listDevices, setListDevices] = useState([]);
+  // const [listDevices, setListDevices] = useState(savedDevicesList);
+  const [listDevices, setListDevices] = useState([]);
   const [activeTab, setActiveTab] = useState<"all" | boolean>("all");
   const [showModal, setShowModal] = useState(false);
 
@@ -221,7 +176,7 @@ const DeviceManager = () => {
               </div>
             ) : null}
           </div>
-          <DevicesWrapper className="flex gap-4 relative">
+          <div className="flex gap-4 relative">
             {listDevices.length > 0 ? (
               <div className="devices-container">
                 <div className="devices-scroll w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -239,20 +194,20 @@ const DeviceManager = () => {
                 </div>
               </div>
             ) : (
-              <div className="devices-container devices-container--no-devices">
-                <div className="devices-inner">
-                  <div className="devices-icon">
+              <div className="devices-container devices-container--no-devices w-full rounded-md px-6 py-8 bg-gray-25/25 dark:bg-gray-700/50">
+                <div className="devices-inner w-full flex justify-center flex-col text-center">
+                  <div className="devices-icon mt-0 mb-2 mx-auto">
                     <IconRobotOffline />
                   </div>
                   <div className="devices-title-group">
                     <Heading headingLevel={3} renderAs="h3" variant="warning">
                       No devices found!
                     </Heading>
-                    <Heading headingLevel={4} renderAs="h4">
+                    <Heading headingLevel={4} renderAs="h4" className="text-base">
                       [Black metal plays in background]
                     </Heading>
                   </div>
-                  <div className="devices-buttons-group">
+                  <div className="devices-buttons-group flex items-center justify-center gap-4 mt-6 pb-6 [&_button]:min-w-[280px]">
                     <LargeButton onClick={() => console.log("Add virtual keyboard")} icon={<IconPlus size="md" />}>
                       <Heading headingLevel={4}>Add virtual device</Heading>
                       <p>Use without a keyboard</p>
@@ -265,7 +220,7 @@ const DeviceManager = () => {
                 </div>
               </div>
             )}
-          </DevicesWrapper>
+          </div>
           <HelpSupportLink />
         </div>
       </Container>
