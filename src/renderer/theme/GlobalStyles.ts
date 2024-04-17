@@ -96,19 +96,19 @@ const GlobalStyles = createGlobalStyle<{ theme: DefaultTheme }>`
     opacity: 1;
   }
 
-  button {
-    border: 0;
-    display: inline-block;
-    padding: 12px 24px;
-    font-size: 14px;
-    border-radius: 4px;
-    margin-top: 5px;
-    cursor: pointer;
-    background-color: ${({ theme }) => theme.colors.button.background};
-    color: #FFFFFF;
-    font-family: ${({ theme }) => theme.font};
-    font-weight: 600;
-  }
+  // button {
+  //   border: 0;
+  //   display: inline-block;
+  //   padding: 12px 24px;
+  //   font-size: 14px;
+  //   border-radius: 4px;
+  //   margin-top: 5px;
+  //   cursor: pointer;
+  //   background-color: ${({ theme }) => theme.colors.button.background};
+  //   color: #FFFFFF;
+  //   font-family: ${({ theme }) => theme.font};
+  //   font-weight: 600;
+  // }
 
 
   button.btn-primary, button.btn{

@@ -1,30 +1,14 @@
 import React, { useState } from "react";
-import { Dropdown } from "react-bootstrap";
 
 import Heading from "@Renderer/components/ui/heading";
 import { IconSettings } from "@Renderer/component/Icon";
 
 import { DevicePreview } from "@Renderer/modules/DevicePreview";
 
-import Styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 
 import { i18n } from "@Renderer/i18n";
-
-const CardWrapper = Styled.div`
-  
-  .buttonToggler.dropdown-toggle.btn.btn-primary {
-    width: 52px;
-    height: 52px;
-    &:hover {
-      background-color: ${({ theme }) => theme.styles.card.cardDevice.dropdownBgColor};
-    }
-  }
-  .dropdown-item.disabled {
-    color: ${({ theme }) => theme.styles.card.cardDevice.dropdownDisabledColor};
-  }
-
-`;
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@Renderer/components/ui/dropdown-menu";
 
 const CardDevice = (props: any) => {
   const { device, filterBy } = props;
@@ -51,7 +35,7 @@ const CardDevice = (props: any) => {
     }
   };
   return (
-    <CardWrapper
+    <div
       className={`card-device flex flex-col relative p-0 rounded-[24px] border-2 border-solid bg-cardDeviceTextureLight dark:bg-cardDeviceTextureDark  bg-no-repeat bg-right-top bg-cover transition-all overflow-hidden ${
         isConnected
           ? "card-connected border-purple-300 dark:border-green-200"
@@ -114,7 +98,7 @@ const CardDevice = (props: any) => {
           ) : (
             <span className="device-status text-sm text-red-100">Offline</span>
           )}
-          <Dropdown>
+          {/* <Dropdown>
             <Dropdown.Toggle className="buttonToggler">
               <div className="buttonTogglerInner">
                 <IconSettings />
@@ -130,10 +114,23 @@ const CardDevice = (props: any) => {
                 </Dropdown.Item>
               </div>
             </Dropdown.Menu>
-          </Dropdown>
+          </Dropdown> */}
+          <DropdownMenu>
+            <DropdownMenuTrigger className="data-[state=open]:bg-gray-100/50 data-[state=open]:dark:bg-gray-25/5 rounded">
+              <div className="buttonTogglerInner flex items-center p-0 w-[52px] h-[52px] rounded transition-all justify-center hover:bg-gray-100/50 hover:dark:bg-gray-25/5">
+                <IconSettings />
+              </div>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem disabled={!isConnected} onClick={handlePreferences}>
+                Settings
+              </DropdownMenuItem>
+              <DropdownMenuItem disabled={isConnected}>Forget this device</DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </div>
-    </CardWrapper>
+    </div>
   );
 };
 
