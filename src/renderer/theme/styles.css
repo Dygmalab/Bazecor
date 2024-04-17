@@ -137,3 +137,16 @@ select:focus {
 .dark .tab-item[data-state="active"]:hover {
   background: linear-gradient(280deg, rgba(240, 242, 244, 0.1), rgba(255, 255, 255, 0)), rgba(18, 19, 36, 0.6);
 }
+
+.Defy {
+  @apply bg-cardDefyOffLight dark:bg-cardDefyOffDark;
+}
+.Defy.on {
+  @apply bg-cardDefyOnLight dark:bg-cardDefyOnDark;
+}
+.Raise {
+  @apply bg-cardRaiseOffLight dark:bg-cardRaiseOffDark;
+}
+.Raise.on {
+  @apply bg-cardRaiseOnLight dark:bg-cardRaiseOnDark;
+}

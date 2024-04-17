@@ -77,6 +77,14 @@ module.exports = {
         body: "url('/assets/images/bg-body.jpg')",
         cardDeviceTextureLight: "url('@Assets/light/bg-texture-with-lines.jpg')",
         cardDeviceTextureDark: "url('@Assets/dark/bg-texture-with-lines.jpg')",
+        cardDefyOffLight: "url('@Assets/base/devices/defy-white-offline.png')",
+        cardDefyOnLight: "url('@Assets/base/devices/defy-white-on.png')",
+        cardDefyOffDark: "url('@Assets/base/devices/defy-black-offline.png')",
+        cardDefyOnDark: "url('@Assets/base/devices/defy-black-on.png')",
+        cardRaiseOffLight: "url('@Assets/base/devices/raise-ansi-white-offline.png')",
+        cardRaiseOnLight: "url('@Assets/base/devices/raise-ansi-white-on.png')",
+        cardRaiseOffDark: "url('@Assets/base/devices/raise-ansi-black-offline.png')",
+        cardRaiseOnDark: "url('@Assets/base/devices/raise-ansi-black-on.png')",
         bgCardOfflineLight:
           "linear-gradient(180deg, rgba(240, 240, 240, 0.60) 1.33%, rgba(240, 240, 240, 0.00) 51.04%, rgba(240, 240, 245, 0.35) 100%), linear-gradient(rgba(30, 30, 55, 0.20), rgba(30, 30, 55, 0.20))",
         bgCardOfflineDark:
