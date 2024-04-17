@@ -704,6 +704,7 @@ const English = {
     noDevicesSubtitle: "[Death metal plays in background]",
     connect: "Connect",
     disconnect: "Disconnect",
+    disconnectFromBazecor: "Disconnect from Bazecor",
     scan: "Scan keyboards",
     installUdevRules: "Fix it",
     permissionError: `Your computer won't let BAZECOR talk to your keyboard. (You do not have read/write permissions to {{path}}.)`,

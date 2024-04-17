@@ -77,6 +77,10 @@ module.exports = {
         body: "url('/assets/images/bg-body.jpg')",
         cardDeviceTextureLight: "url('@Assets/light/bg-texture-with-lines.jpg')",
         cardDeviceTextureDark: "url('@Assets/dark/bg-texture-with-lines.jpg')",
+        bgCardOfflineLight:
+          "linear-gradient(180deg, rgba(240, 240, 240, 0.60) 1.33%, rgba(240, 240, 240, 0.00) 51.04%, rgba(240, 240, 245, 0.35) 100%), linear-gradient(rgba(30, 30, 55, 0.20), rgba(30, 30, 55, 0.20))",
+        bgCardOfflineDark:
+          "linear-gradient(180deg, rgba(48, 49, 73, 0.60) 1.33%, rgba(48, 57, 73, 0.00) 51.04%, rgba(48, 57, 73, 0.35) 100%), linear-gradient(rgba(48, 51, 73, 0.60), rgba(48, 51, 73, 0.60))",
         footer: "url('/assets/images/bg-footer.png')",
         noise: "url('/assets/images/noise.png')",
         home: "url('/assets/images/home-hero-background.jpg')",
