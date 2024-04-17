@@ -98,23 +98,6 @@ const CardDevice = (props: any) => {
           ) : (
             <span className="device-status text-sm text-red-100">Offline</span>
           )}
-          {/* <Dropdown>
-            <Dropdown.Toggle className="buttonToggler">
-              <div className="buttonTogglerInner">
-                <IconSettings />
-              </div>
-            </Dropdown.Toggle>
-            <Dropdown.Menu className="dropdownMenu">
-              <div className="dropdownMenuPadding">
-                <Dropdown.Item disabled={!isConnected} onClick={handlePreferences}>
-                  <div className="dropdownItem">Settings</div>
-                </Dropdown.Item>
-                <Dropdown.Item disabled={isConnected}>
-                  <div className="dropdownItem">Forget this device</div>
-                </Dropdown.Item>
-              </div>
-            </Dropdown.Menu>
-          </Dropdown> */}
           <DropdownMenu>
             <DropdownMenuTrigger className="data-[state=open]:bg-gray-100/50 data-[state=open]:dark:bg-gray-25/5 rounded">
               <div className="buttonTogglerInner flex items-center p-0 w-[52px] h-[52px] rounded transition-all justify-center hover:bg-gray-100/50 hover:dark:bg-gray-25/5">
