@@ -23,8 +23,8 @@ const Raise2ANSI: VirtualType = {
       columns: 16,
     },
     keyboardUnderglow: {
-      rows: 4,
-      columns: 39,
+      rows: 5,
+      columns: 29,
     },
     RGBWMode: true,
     bootloader: false,
