@@ -55,8 +55,10 @@ const schema: Schema<StorageType> = {
                 items: {
                   type: "object",
                   properties: {
-                    keyCode: { type: "number" },
-                    type: { type: "number" },
+                    keyCode: {
+                      type: ["number", "array"],
+                      items: { type: "number" },
+                    },
                     id: { type: "number" },
                   },
                 },
@@ -74,7 +76,8 @@ const schema: Schema<StorageType> = {
               superkey: { type: "string" },
               actions: {
                 type: "array",
-                items: { type: "number" },
+                // added null for backward compatibility, should be removed in the future
+                items: { type: ["number", "null"] },
               },
             },
           },
