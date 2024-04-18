@@ -12,6 +12,16 @@ import Heading from "@Renderer/components/ui/heading";
 import { i18n } from "@Renderer/i18n";
 import { AnimatePresence, motion } from "framer-motion";
 import HelpSupportLink from "@Renderer/modules/DeviceManager/HelpSupportLink";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@Renderer/components/ui/alert-dialog";
 
 const savedDevicesList = [
   {
@@ -88,6 +98,8 @@ const DeviceManager = () => {
   // const [listDevices, setListDevices] = useState([]);
   const [activeTab, setActiveTab] = useState<"all" | boolean>("all");
   const [showModal, setShowModal] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [selectedDevice, setSelectedDevice] = useState(null);
 
   const addVirtualDevices = (
     <button className="sm button outline transp-bg iconOnNone" type="button" onClick={() => console.log("Add virtual device")}>
@@ -104,6 +116,17 @@ const DeviceManager = () => {
     setListDevices(newList);
     setActiveTab("all");
     setShowModal(false);
+  };
+
+  const openDialog = (device: any) => {
+    console.log(device);
+    setSelectedDevice(device);
+    setOpen(true);
+  };
+  const forgetDevice = (device: any) => {
+    console.log("remove device", device);
+    const updatedDevices = listDevices.filter(item => item !== device);
+    setListDevices(updatedDevices);
   };
 
   return (
@@ -184,7 +207,7 @@ const DeviceManager = () => {
                     <AnimatePresence mode="popLayout" key={item.serialNumber}>
                       {item.available === activeTab || activeTab === "all" ? (
                         <motion.div initial={{ opacity: 0, y: -50 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -50 }}>
-                          <CardDevice device={item} filterBy={activeTab} />
+                          <CardDevice device={item} filterBy={activeTab} openDialog={openDialog} />
                         </motion.div>
                       ) : (
                         ""
@@ -200,6 +223,30 @@ const DeviceManager = () => {
           <HelpSupportLink />
         </div>
       </Container>
+
+      <AlertDialog
+        open={open}
+        onOpenChange={isOpen => {
+          if (isOpen === true) return;
+          setOpen(false);
+        }}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This action cannot be undone. This will permanently delete the{" "}
+              <span className="font-semibold text-purple-200 dark:text-gray-25">{selectedDevice?.name}</span> device.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel buttonVariant="outline">Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={() => forgetDevice(selectedDevice)} buttonVariant="destructive">
+              Continue
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
 
       <ReOrderDevicesModal
         show={showModal}

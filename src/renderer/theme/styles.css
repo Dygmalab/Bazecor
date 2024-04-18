@@ -54,7 +54,7 @@ body {
 .tw-outline {
   outline: none;
   box-shadow: 0px 0px 0px 1px rgba(196, 201, 213, 1) inset;
-  @apply px-6 py-4 text-gray-400 dark:text-gray-25 hover:text-gray-500 dark:hover:text-white hover:bg-transparent dark:hover:bg-gray-300/15 border-[1px] border-solid border-gray-100 dark:border-gray-400 hover:border-gray-300 dark:hover:border-gray-200 rounded-md transition-all hover:cursor-pointer font-semibold tracking-tight;
+  @apply text-gray-400 dark:text-gray-25 hover:text-gray-500 dark:hover:text-white hover:bg-transparent dark:hover:bg-gray-300/15 border-[1px] border-solid border-gray-100 dark:border-gray-400 hover:border-gray-300 dark:hover:border-gray-200 rounded-md transition-all hover:cursor-pointer font-semibold tracking-tight;
 }
 .tw-outline:hover {
   box-shadow: 0px 0px 0px 1px rgba(123, 134, 158, 1) inset;
@@ -86,6 +86,10 @@ body {
 }
 .button.button-icon {
   @apply px-4 py-4 rounded-md rounded-md transition-colors text-gray-25 bg-gray-600 hover:cursor-pointer hover:bg-gray-500;
+}
+
+.img-fluid {
+  @apply h-auto block max-w-full;
 }
 
 [type="text"]:focus,

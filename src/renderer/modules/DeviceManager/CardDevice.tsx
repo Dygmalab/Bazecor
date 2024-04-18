@@ -11,7 +11,7 @@ import { i18n } from "@Renderer/i18n";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@Renderer/components/ui/dropdown-menu";
 
 const CardDevice = (props: any) => {
-  const { device, filterBy } = props;
+  const { device, filterBy, openDialog } = props;
   const [isConnected, setIsConnected] = useState(false);
 
   const navigate = useNavigate();
@@ -108,7 +108,9 @@ const CardDevice = (props: any) => {
               <DropdownMenuItem disabled={!isConnected} onClick={handlePreferences}>
                 Settings
               </DropdownMenuItem>
-              <DropdownMenuItem disabled={isConnected}>Forget this device</DropdownMenuItem>
+              <DropdownMenuItem disabled={isConnected} onClick={() => openDialog(device)}>
+                Forget this device
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
