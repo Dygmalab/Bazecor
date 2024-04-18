@@ -233,16 +233,17 @@ const DeviceManager = () => {
       >
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+            <AlertDialogTitle>{i18n.deviceManager.dialogDeleteTitle}</AlertDialogTitle>
             <AlertDialogDescription>
-              This action cannot be undone. This will permanently delete the{" "}
-              <span className="font-semibold text-purple-200 dark:text-gray-25">{selectedDevice?.name}</span> device.
+              {i18n.deviceManager.dialogDeleteDescription}{" "}
+              <span className="font-semibold text-purple-200 dark:text-gray-25">{selectedDevice?.name}</span>{" "}
+              {i18n.general.device}.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel buttonVariant="outline">Cancel</AlertDialogCancel>
+            <AlertDialogCancel buttonVariant="outline">{i18n.dialog.cancel}</AlertDialogCancel>
             <AlertDialogAction onClick={() => forgetDevice(selectedDevice)} buttonVariant="destructive">
-              Continue
+              {i18n.general.continue}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
