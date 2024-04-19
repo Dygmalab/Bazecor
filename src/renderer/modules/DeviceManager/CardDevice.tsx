@@ -1,14 +1,14 @@
 import React, { useState } from "react";
 
 import Heading from "@Renderer/components/ui/heading";
-import { IconSettings, IconDelete } from "@Renderer/component/Icon";
+import { IconSettings, IconDelete } from "@Renderer/components/icons";
 
 import { DevicePreview } from "@Renderer/modules/DevicePreview";
 
 import { useNavigate } from "react-router-dom";
 
 import { i18n } from "@Renderer/i18n";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@Renderer/components/ui/dropdown-menu";
+// import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@Renderer/components/ui/dropdown-menu";
 
 const CardDevice = (props: any) => {
   const { device, filterBy, openDialog } = props;

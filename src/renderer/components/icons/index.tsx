@@ -21,5 +21,6 @@ import IconDragDots from "./icon-drag-dots";
 import IconPlus from "./icon-plus";
 import IconRefresh from "./icon-refresh";
 import IconRobotOffline from "./icon-robot-offline";
+import IconSettings from "./icon-settings";
 
-export { IconBugWarning, IconDelete, IconDragAndDrop, IconDragDots, IconPlus, IconRefresh, IconRobotOffline };
+export { IconBugWarning, IconDelete, IconDragAndDrop, IconDragDots, IconPlus, IconRefresh, IconRobotOffline, IconSettings };
