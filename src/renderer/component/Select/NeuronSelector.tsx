@@ -20,7 +20,8 @@ import Styled from "styled-components";
 import Dropdown from "react-bootstrap/Dropdown";
 import { i18n } from "@Renderer/i18n";
 import { ButtonSettings } from "@Renderer/component/Button";
-import { IconArrowsSmallSeparating, IconPen, IconDelete } from "@Renderer/component/Icon";
+import { IconDelete } from "@Renderer/components/icons";
+import { IconArrowsSmallSeparating, IconPen } from "@Renderer/component/Icon";
 
 import { NameModal } from "@Renderer/component/Modal"; // Imported custom modal component
 import { NeuronSelectorProps } from "@Renderer/types/preferences";
@@ -45,7 +46,7 @@ const NeuronSelector = (props: NeuronSelectorProps) => {
     deleteItem(parseInt(event.target.value, 10));
   };
 
-  let localItemList = Array.isArray(itemList) ? itemList : [];
+  const localItemList = Array.isArray(itemList) ? itemList : [];
 
   return (
     <Style>

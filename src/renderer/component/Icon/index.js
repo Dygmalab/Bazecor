@@ -39,7 +39,6 @@ import IconChip from "./IconChip";
 import IconClone from "./IconClone";
 import IconCloseXs from "./IconCloseXs";
 import IconCloudDownload from "./IconCloudDownload";
-import IconDelete from "./IconDelete";
 import IconEditModeSingleView from "./IconEditModeSingleView";
 import IconEditModeSingleViewSm from "./IconEditModeSingleViewSm";
 import IconEditModeStandardView from "./IconEditModeStandardView";
@@ -183,7 +182,6 @@ export {
   IconClone,
   IconCloseXs,
   IconCloudDownload,
-  IconDelete,
   IconEditModeSingleView,
   IconEditModeSingleViewSm,
   IconEditModeStandardView,

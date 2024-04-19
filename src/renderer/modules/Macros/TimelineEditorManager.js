@@ -22,11 +22,12 @@ import Spinner from "react-bootstrap/Spinner";
 import { RegularButton } from "@Renderer/component/Button";
 import { i18n } from "@Renderer/i18n";
 
+import { IconDelete } from "@Renderer/components/icons";
 import { KeymapDB } from "../../../api/keymap";
 
 import TimelineEditorForm from "./TimelineEditorForm";
 import Title from "../../component/Title";
-import { IconDelete, IconStopWatchXs } from "../../component/Icon";
+import { IconStopWatchXs } from "../../component/Icon";
 import { PreviewMacroModal } from "../../component/Modal";
 
 const Styles = Styled.div`

@@ -6,7 +6,7 @@ import CardDevice from "@Renderer/modules/DeviceManager/CardDevice";
 import NoDeviceFound from "@Renderer/modules/DeviceManager/noDeviceFound";
 import { Container } from "react-bootstrap";
 
-import { ReOrderDevicesModal } from "@Renderer/component/Modal";
+import ReOrderDevicesModal from "@Renderer/modules/DeviceManager/ReOrderDevicesModal";
 import Heading from "@Renderer/components/ui/heading";
 
 import { i18n } from "@Renderer/i18n";

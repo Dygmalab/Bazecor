@@ -697,6 +697,7 @@ const English = {
     noDevicesFoundDescription: "[Black metal plays in background]",
     dialogDeleteTitle: "Are you absolutely sure?",
     dialogDeleteDescription: "This action cannot be undone. This will permanently delete the",
+    ReOrderList: "Re-order list",
   },
   keyboardSelect: {
     title: "Keyboard Selection",

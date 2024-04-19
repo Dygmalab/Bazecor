@@ -5,6 +5,7 @@ import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
 import { IconDragAndDrop } from "@Renderer/components/icons";
 import { RegularButton } from "@Renderer/component/Button";
+import Heading from "@Renderer/components/ui/heading";
 
 import { i18n } from "@Renderer/i18n";
 
@@ -26,40 +27,51 @@ const ReOrderDevicesModal = ({ show, toggleShow, handleSave, devices }: ReOrderD
   };
   return (
     <Dialog open={show} onOpenChange={toggleShow} modal defaultOpen={show}>
-      <DialogContent>
+      <DialogContent className="px-0">
         <DialogHeader>
-          <DialogTitle>Are you absolutely sure?</DialogTitle>
+          <DialogTitle>{i18n.deviceManager.ReOrderList}</DialogTitle>
         </DialogHeader>
-        <div className="relative">
+        <div className="relative w-100 p-6 overflow-auto bg-gray-50 dark:bg-gray-700">
           <DragDropContext onDragEnd={handleOnDragEnd}>
             <Droppable droppableId="devices" direction="horizontal">
               {provided => (
-                <div
-                  className="droppable-area flex p-6 overflow-auto relative bg-gray-50 dark:bg-gray-700"
-                  {...provided.droppableProps}
-                  ref={provided.innerRef}
-                >
+                <div className="droppable-area w-100 flex relative" {...provided.droppableProps} ref={provided.innerRef}>
                   {devicesList.map((device: any, index: number) => (
                     <Draggable key={device.serialNumber} draggableId={device.serialNumber} index={index}>
                       {(dragProvided, dragSnapshot) => (
                         <div
-                          className={`draggable-item ${dragSnapshot.isDragging ? "dragging" : ""}`}
+                          className={`draggable-item w-[224px] flex-shrink-0 flex-grow-0 basis-[224px] my-0 mx-1 p-4 rounded-[6px] border-[1px] border-dashed border-gray-300 dark:border-purple-100 bg-gray-25 dark:bg-gray-600 ${
+                            dragSnapshot.isDragging ? "dragging" : ""
+                          }`}
                           {...dragProvided.draggableProps}
                           {...dragProvided.dragHandleProps}
                           ref={dragProvided.innerRef}
                         >
-                          <div className="drag-icon">
+                          <div className="drag-icon w-6 h-6 rounded-[2px] cursor-grab flex justify-center items-center mb-4 text-gray-300 dark:text-gray-25 bg-gray-50 dark:bg-gray-500">
                             <IconDragAndDrop />
                           </div>
-                          <div className="drag-content">
-                            {device.name ? <Heading headingLevel={3}>{device.name}</Heading> : null}
-                            <Heading headingLevel={device.name ? 4 : 3}>{device.device.info.displayName}</Heading>
-                            <p>{device.path}</p>
+                          <div className="drag-content w-full">
+                            {device.name ? (
+                              <Heading headingLevel={3} renderAs="h3" className="text-gray-600 dark:text-gray-25">
+                                {device.name}
+                              </Heading>
+                            ) : null}
+                            <Heading
+                              headingLevel={device.name ? 4 : 3}
+                              renderAs="h3"
+                              className={`text-base ${
+                                device.name ? "text-gray-400 dark:text-gray-50" : "text-gray-600 dark:text-gray-25"
+                              }`}
+                            >
+                              {device.device.info.displayName}
+                            </Heading>
+                            <p className="text-xs mt-1 text-gray-300 dark:text-gray-100">{device.path}</p>
                           </div>
                         </div>
                       )}
                     </Draggable>
                   ))}
+
                   {provided.placeholder}
                 </div>
               )}

@@ -20,11 +20,11 @@ import Styled from "styled-components";
 import Dropdown from "react-bootstrap/Dropdown";
 import { i18n } from "@Renderer/i18n";
 
+import { IconDelete } from "@Renderer/components/icons";
 import {
   IconArrowsSmallSeparating,
   IconPen,
   IconClone,
-  IconDelete,
   IconArrowUpWithLine,
   IconArrowDownWithLine,
   IconFileDownload,

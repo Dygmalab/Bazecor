@@ -20,7 +20,6 @@ import NameModal from "./NameModal";
 import MacroKeyModal from "./MacroKeyModal";
 import PreviewMacroModal from "./PreviewMacroModal";
 import RecordMacroModal from "../../modules/Macros/RecordMacroModal";
-import ReOrderDevicesModal from "./ReOrderDevicesModal";
 import CustomKeyCodeModal from "./CustomKeyCodeModal";
 
 export {
@@ -30,6 +29,5 @@ export {
   MacroKeyModal,
   PreviewMacroModal,
   RecordMacroModal,
-  ReOrderDevicesModal,
   CustomKeyCodeModal,
 };

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 
 import Heading from "@Renderer/components/ui/heading";
-import { IconSettings } from "@Renderer/component/Icon";
+import { IconSettings, IconDelete } from "@Renderer/component/Icon";
 
 import { DevicePreview } from "@Renderer/modules/DevicePreview";
 
@@ -98,7 +98,26 @@ const CardDevice = (props: any) => {
           ) : (
             <span className="device-status text-sm text-red-100">Offline</span>
           )}
-          <DropdownMenu>
+          <div className="flex gap-2">
+            {isConnected ? (
+              <button
+                className="buttonTogglerInner flex items-center p-0 w-[52px] h-[52px] rounded transition-all justify-center hover:bg-gray-100/50 hover:dark:bg-gray-25/5"
+                onClick={handlePreferences}
+                type="button"
+              >
+                <IconSettings />
+              </button>
+            ) : (
+              <button
+                className="buttonTogglerInner flex items-center p-0 w-[52px] h-[52px] rounded transition-all justify-center hover:bg-gray-100/50 hover:dark:bg-gray-25/5"
+                onClick={() => openDialog(device)}
+                type="button"
+              >
+                <IconDelete />
+              </button>
+            )}
+          </div>
+          {/* <DropdownMenu>
             <DropdownMenuTrigger className="data-[state=open]:bg-gray-100/50 data-[state=open]:dark:bg-gray-25/5 rounded">
               <div className="buttonTogglerInner flex items-center p-0 w-[52px] h-[52px] rounded transition-all justify-center hover:bg-gray-100/50 hover:dark:bg-gray-25/5">
                 <IconSettings />
@@ -112,7 +131,7 @@ const CardDevice = (props: any) => {
                 Forget this device
               </DropdownMenuItem>
             </DropdownMenuContent>
-          </DropdownMenu>
+          </DropdownMenu> */}
         </div>
       </div>
     </div>

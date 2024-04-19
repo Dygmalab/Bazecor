@@ -7,7 +7,7 @@ import { FaLinux } from "react-icons/fa";
 import { AiFillWindows } from "react-icons/ai";
 import { i18n } from "@Renderer/i18n";
 
-import { IconDragAndDrop } from "@Renderer/components/icons";
+import { IconDragAndDrop, IconDelete } from "@Renderer/components/icons";
 import Title from "../../component/Title";
 import { ButtonConfig } from "../../component/Button";
 import { MacroKeyModal } from "../../component/Modal";
@@ -18,7 +18,6 @@ import {
   IconPressSm,
   IconReleaseSm,
   IconPressAndReleaseSm,
-  IconDelete,
   IconStopWatchSm,
 } from "../../component/Icon";
 

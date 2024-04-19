@@ -154,3 +154,9 @@ select:focus {
 .Raise.on {
   @apply bg-cardRaiseOnLight dark:bg-cardRaiseOnDark;
 }
+
+[role="dialog"] .droppable-area .draggable-item,
+[role="dialog"] .droppable-area .draggable-item.dragging {
+  left: auto !important;
+  top: auto !important;
+}
