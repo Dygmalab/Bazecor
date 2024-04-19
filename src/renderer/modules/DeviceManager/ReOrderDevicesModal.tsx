@@ -8,14 +8,14 @@ import { RegularButton } from "@Renderer/component/Button";
 
 import { i18n } from "@Renderer/i18n";
 
-interface ReOrderDevicesModal {
+interface ReOrderDevicesModalProps {
   show: boolean;
   toggleShow: () => void;
   handleSave: (device: any) => void;
   devices: any;
 }
 
-const ReOrderDevicesModal = ({ show, toggleShow, handleSave, devices }: ReOrderDevicesModal) => {
+const ReOrderDevicesModal = ({ show, toggleShow, handleSave, devices }: ReOrderDevicesModalProps) => {
   const [devicesList, setDevicesList] = useState(devices);
   const handleOnDragEnd = (result: any) => {
     if (!result.destination) return;
@@ -25,7 +25,7 @@ const ReOrderDevicesModal = ({ show, toggleShow, handleSave, devices }: ReOrderD
     setDevicesList(items);
   };
   return (
-    <Dialog>
+    <Dialog open={show} onOpenChange={toggleShow} modal defaultOpen={show}>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Are you absolutely sure?</DialogTitle>
