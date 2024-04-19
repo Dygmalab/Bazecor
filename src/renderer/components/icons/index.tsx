@@ -15,9 +15,10 @@
  */
 
 import IconBugWarning from "./icon-bug";
+import IconDragAndDrop from "./icon-drag-and-drop";
 import IconDragDots from "./icon-drag-dots";
 import IconPlus from "./icon-plus";
 import IconRefresh from "./icon-refresh";
 import IconRobotOffline from "./icon-robot-offline";
 
-export { IconBugWarning, IconDragDots, IconPlus, IconRefresh, IconRobotOffline };
+export { IconBugWarning, IconDragAndDrop, IconDragDots, IconPlus, IconRefresh, IconRobotOffline };
