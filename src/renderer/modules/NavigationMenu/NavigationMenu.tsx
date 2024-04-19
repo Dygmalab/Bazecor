@@ -202,7 +202,7 @@ function NavigationMenu(props: NavigationMenuProps) {
           connected &&
           device &&
           state.currentDevice.device.info &&
-          state.currentDevice.device.info.keyboardType === "wireless" &&
+          (state.currentDevice.device.info.keyboardType === "wireless" || state.currentDevice.device.wireless) &&
           versions !== null
             ? "isWireless"
             : "wired"
@@ -308,7 +308,7 @@ function NavigationMenu(props: NavigationMenuProps) {
             state.currentDevice &&
             state.currentDevice.device.info &&
             state.currentDevice.device.info.product !== "Raise" &&
-            state.currentDevice.device.info.keyboardType === "wireless" &&
+            (state.currentDevice.device.info.keyboardType === "wireless" || state.currentDevice.device.wireless) &&
             versions !== null ? (
               <>
                 {/* <Link to="/wireless" onClick={linkHandler} className={`list-link ${fwUpdate || loading ? "disabled" : ""}`}>

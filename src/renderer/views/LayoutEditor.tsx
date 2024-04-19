@@ -886,7 +886,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
         }
 
         const device = currentDevice.device.info.product;
-        const wirelessChecker = currentDevice.device.info.keyboardType === "wireless";
+        const wirelessChecker = currentDevice.device.info.keyboardType === "wireless" || currentDevice.device.wireless;
         if (lang) {
           const deviceLang = { ...currentDevice.device, language: true };
           currentDevice.commands = {};
