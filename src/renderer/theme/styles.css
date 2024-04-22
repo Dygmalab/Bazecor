@@ -155,8 +155,7 @@ select:focus {
   @apply bg-cardRaiseOnLight dark:bg-cardRaiseOnDark;
 }
 
-[role="dialog"] .droppable-area .draggable-item,
-[role="dialog"] .droppable-area .draggable-item.dragging {
-  left: auto !important;
-  top: auto !important;
+.dragged .card-device-knob,
+.dragged .card-device-knob:hover {
+  cursor: grabbing;
 }

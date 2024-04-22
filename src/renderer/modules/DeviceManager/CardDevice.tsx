@@ -1,17 +1,22 @@
-import React, { useState } from "react";
+import React, { useState, forwardRef } from "react";
 
 import Heading from "@Renderer/components/ui/heading";
-import { IconSettings, IconDelete } from "@Renderer/components/icons";
+import { IconSettings, IconDelete, IconDragAndDrop } from "@Renderer/components/icons";
 
 import { DevicePreview } from "@Renderer/modules/DevicePreview";
 
 import { useNavigate } from "react-router-dom";
+import { SortableKnob } from "react-easy-sort";
 
 import { i18n } from "@Renderer/i18n";
 // import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@Renderer/components/ui/dropdown-menu";
+interface CardDeviceProps {
+  device: any;
+  filterBy: boolean | "all";
+  openDialog: (device: any) => void;
+}
 
-const CardDevice = (props: any) => {
-  const { device, filterBy, openDialog } = props;
+const CardDevice = forwardRef<HTMLDivElement, CardDeviceProps>(({ device, filterBy, openDialog }, ref) => {
   const [isConnected, setIsConnected] = useState(false);
 
   const navigate = useNavigate();
@@ -34,9 +39,11 @@ const CardDevice = (props: any) => {
         return "all";
     }
   };
+
   return (
     <div
-      className={`card-device flex flex-col relative p-0 rounded-[24px] border-2 border-solid bg-cardDeviceTextureLight dark:bg-cardDeviceTextureDark  bg-no-repeat bg-right-top bg-cover transition-all overflow-hidden ${
+      ref={ref}
+      className={`card-device select-none flex flex-col relative p-0 rounded-[24px] border-2 border-solid bg-cardDeviceTextureLight dark:bg-cardDeviceTextureDark  bg-no-repeat bg-right-top bg-cover overflow-hidden ${
         isConnected
           ? "card-connected border-purple-300 dark:border-green-200"
           : "card-disconnected border-gray-100 dark:border-gray-600"
@@ -53,28 +60,36 @@ const CardDevice = (props: any) => {
               {device.name}
             </Heading>
             <Heading headingLevel={4} renderAs="h4" className="text-base text-gray-400 dark:text-gray-50">
-              {device.device.info.displayName} {device.device.info.product === "Raise" ? device.device.info.keyboardType : null}
+              {device.device.info.displayName}
             </Heading>
           </>
         ) : (
           <Heading headingLevel={3} renderAs="h3" className="text-gray-600 dark:text-gray-50">
-            {device.device.info.displayName} {device.device.info.product === "Raise" ? device.device.info.keyboardType : null}
+            {device.device.info.displayName}
           </Heading>
         )}
-        <Heading
-          headingLevel={5}
-          renderAs="h5"
-          className="text-xs normal-case tracking-normal mt-2 text-gray-300 dark:text-gray-100"
-        >
-          {device.path}
-        </Heading>
-        <span
+        {device.file ? (
+          <Heading
+            headingLevel={5}
+            renderAs="h5"
+            className="text-xs normal-case tracking-normal mt-2 text-gray-300 dark:text-gray-100"
+          >
+            Virtual
+          </Heading>
+        ) : null}
+
+        <SortableKnob>
+          <div className="card-device-knob z-50 absolute right-6 top-6 w-8 h-8 rounded-sm flex justify-center items-center bg-gray-50/35 hover:bg-gray-50/60 dark:bg-gray-600/40 hover:dark:bg-gray-600/60 hover:cursor-grab transition-colors">
+            <IconDragAndDrop />
+          </div>
+        </SortableKnob>
+        {/* <span
           className={`bullet-connect absolute right-6 top-6 w-2 h-2 rounded-full  ${
             isConnected ? "connected bg-purple-300 dark:bg-green-200" : "disconnected bg-gray-200"
           }`}
         >
           &nbsp;
-        </span>
+        </span> */}
       </div>
       <div
         className={`mb-[-20%] mt-[-14%] flex justify-end [&_canvas]:transition-all [&_canvas]:translate-x-[24%] ${
@@ -93,10 +108,10 @@ const CardDevice = (props: any) => {
                 isConnected ? "outline transp-bg" : "primary"
               }`}
             >
-              {isConnected ? i18n.keyboardSelect.disconnectFromBazecor : i18n.keyboardSelect.connect}
+              {isConnected ? i18n.keyboardSelect.disconnect : "Configure"}
             </button>
           ) : (
-            <span className="device-status text-sm text-red-100">Offline</span>
+            <span className="device-status text-sm text-red-100">{i18n.general.offline}</span>
           )}
           <div className="flex gap-2">
             {isConnected ? (
@@ -136,6 +151,6 @@ const CardDevice = (props: any) => {
       </div>
     </div>
   );
-};
+});
 
 export default CardDevice;

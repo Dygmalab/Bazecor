@@ -1,13 +1,17 @@
 import React, { useState } from "react";
 
-import { IconDragDots } from "@Renderer/components/icons";
 import { PageHeader } from "@Renderer/modules/PageHeader";
 import CardDevice from "@Renderer/modules/DeviceManager/CardDevice";
 import NoDeviceFound from "@Renderer/modules/DeviceManager/noDeviceFound";
 import { Container } from "react-bootstrap";
 
-import ReOrderDevicesModal from "@Renderer/modules/DeviceManager/ReOrderDevicesModal";
 import Heading from "@Renderer/components/ui/heading";
+import { Banner } from "@Renderer/component/Banner";
+import Title from "@Renderer/component/Title";
+import { IconBluetooth } from "@Renderer/component/Icon";
+
+import SortableList, { SortableItem } from "react-easy-sort";
+import { arrayMoveImmutable } from "array-move";
 
 import { i18n } from "@Renderer/i18n";
 import { AnimatePresence, motion } from "framer-motion";
@@ -97,7 +101,6 @@ const DeviceManager = () => {
   const [listDevices, setListDevices] = useState(savedDevicesList);
   // const [listDevices, setListDevices] = useState([]);
   const [activeTab, setActiveTab] = useState<"all" | boolean>("all");
-  const [showModal, setShowModal] = useState(false);
   const [open, setOpen] = useState(false);
   const [selectedDevice, setSelectedDevice] = useState(null);
 
@@ -112,12 +115,6 @@ const DeviceManager = () => {
     </button>
   );
 
-  const reOrderList = (newList: any) => {
-    setListDevices(newList);
-    setActiveTab("all");
-    setShowModal(false);
-  };
-
   const openDialog = (device: any) => {
     console.log(device);
     setSelectedDevice(device);
@@ -127,6 +124,10 @@ const DeviceManager = () => {
     console.log("remove device", device);
     const updatedDevices = listDevices.filter(item => item !== device);
     setListDevices(updatedDevices);
+  };
+
+  const onSortEnd = (oldIndex: number, newIndex: number) => {
+    setListDevices(array => arrayMoveImmutable(array, oldIndex, newIndex));
   };
 
   return (
@@ -185,36 +186,38 @@ const DeviceManager = () => {
                 </div>
               ) : null}
             </div>
-
-            {listDevices.length > 0 ? (
-              <div className="filter-header--actions">
-                <button
-                  type="button"
-                  onClick={() => setShowModal(true)}
-                  className="modal-button--trigger flex items-center text-sm gap-2 transition-all p-0 bg-transparent text-gray-500 dark:text-gray-25 hover:text-purple-300 dark:hover:text-purple-100"
-                >
-                  <IconDragDots />
-                  {i18n.general.reorderList}
-                </button>
-              </div>
-            ) : null}
+          </div>
+          <div className="card-alert" style={{ marginTop: "16px" }}>
+            <Banner icon={<IconBluetooth />} variant="warning">
+              <Title text="Defy owners!" headingLevel={5} />
+              <p
+                style={{ maxWidth: "610px" }}
+                dangerouslySetInnerHTML={{ __html: i18n.keyboardSelect.HIDReminderOfManuallyScan }}
+              />
+            </Banner>
           </div>
           <div className="flex gap-4 relative">
             {listDevices.length > 0 ? (
               <div className="devices-container">
-                <div className="devices-scroll w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <SortableList
+                  onSortEnd={onSortEnd}
+                  className="list devices-scroll relative w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
+                  draggedItemClassName="dragged"
+                >
                   {listDevices.map(item => (
                     <AnimatePresence mode="popLayout" key={item.serialNumber}>
                       {item.available === activeTab || activeTab === "all" ? (
                         <motion.div initial={{ opacity: 0, y: -50 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -50 }}>
-                          <CardDevice device={item} filterBy={activeTab} openDialog={openDialog} />
+                          <SortableItem key={item.serialNumber}>
+                            <CardDevice device={item} filterBy={activeTab} openDialog={openDialog} />
+                          </SortableItem>
                         </motion.div>
                       ) : (
                         ""
                       )}
                     </AnimatePresence>
                   ))}
-                </div>
+                </SortableList>
               </div>
             ) : (
               <NoDeviceFound />
@@ -248,13 +251,6 @@ const DeviceManager = () => {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-
-      <ReOrderDevicesModal
-        show={showModal}
-        toggleShow={() => setShowModal(false)}
-        devices={listDevices}
-        handleSave={reOrderList}
-      />
     </div>
   );
 };

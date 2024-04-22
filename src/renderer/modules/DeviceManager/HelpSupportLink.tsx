@@ -8,7 +8,7 @@ const HelpSupportLink = () => (
   <div className="w-full flex justify-end mt-auto pb-4">
     <a
       href="https://support.dygma.com/hc/en-us/requests/new"
-      className="help-wrapper flex flex-nowrap gap-2 max-w-[224px] group [&_svg]:mt-1 [&_svg]:flex-shrink-0 [&_svg]:flex-grow-0 [&_svg]:flex-basis-[24px] [&_svg]:text-gray-500 [&_svg]:dark:text-gray-100 no-underline hover:no-underline"
+      className="help-wrapper flex flex-nowrap gap-2 max-w-[264px] group [&_svg]:mt-1 [&_svg]:flex-shrink-0 [&_svg]:flex-grow-0 [&_svg]:flex-basis-[24px] [&_svg]:text-gray-500 [&_svg]:dark:text-gray-100 no-underline hover:no-underline"
     >
       <IconBugWarning />
       <div className="help-warning--content">
