@@ -6,7 +6,7 @@ import NoDeviceFound from "@Renderer/modules/DeviceManager/noDeviceFound";
 import { Container } from "react-bootstrap";
 
 import Heading from "@Renderer/components/ui/heading";
-import { Banner } from "@Renderer/component/Banner";
+import Banner from "@Renderer/components/common/banner";
 import { IconBluetooth } from "@Renderer/components/icons";
 
 import SortableList, { SortableItem } from "react-easy-sort";
