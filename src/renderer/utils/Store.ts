@@ -24,7 +24,7 @@ const schema: Schema<StorageType> = {
       showDefaults: false,
       isStandardView: true,
     },
-    required: ["backupFolder", "backupFrequency", "language", "darkMode", "showDefaults", "isStandardView"],
+    required: ["backupFolder", "backupFrequency", "language", "darkMode", "showDefaults"],
   },
   neurons: {
     type: "array",
