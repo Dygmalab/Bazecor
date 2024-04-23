@@ -1,7 +1,8 @@
 import React from "react";
 import Styled from "styled-components";
 
-import { IconBluetooth, IconPlug, IconSignal } from "@Renderer/component/Icon";
+import { IconPlug, IconSignal } from "@Renderer/component/Icon";
+import { IconBluetooth } from "@Renderer/components/icons";
 import Title from "@Renderer/component/Title";
 import { ConnectionProps } from "@Renderer/types/wireless";
 

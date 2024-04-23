@@ -71,6 +71,10 @@ module.exports = {
         appLightBackground: "url(@Assets/light/lightBackground.png)",
         linear: "linear-gradient(75deg,#FE007C,#6B14F6,#6B14F9,#FE007c)",
         linearButton: "linear-gradient(90deg, rgb(254, 0, 124) 0%, rgb(107, 20, 249) 100%)",
+        warningBanner:
+          "linear-gradient(0deg, rgba(254, 202, 87, 0.1) 0%, rgba(254, 202, 87, 0.1) 100%), linear-gradient(0deg, rgba(255, 255, 255, 0.1) 0%, rgba(254, 255, 255, 0.1) 100%)",
+        warningBannerDark:
+          "linear-gradient(0deg, rgba(254, 202, 87, 0.08) 0%, rgba(254, 202, 87, 0.08) 100%), linear-gradient(0deg, rgba(63, 66, 90, 0.02) 0%, rgba(63, 66, 90, 0.02) 100%)",
         buttonDisabled: "linear-gradient(90deg, #57617E 0%, #3F425A 100%)",
         blurPink: "linear-gradient(180deg,rgba(0,194,255,0) 0%,#FF29C3 100%)",
         blurBlue: "linear-gradient(180deg,rgba(24,75,255,0) 0%,#174AFF 100%)",

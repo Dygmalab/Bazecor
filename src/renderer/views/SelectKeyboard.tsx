@@ -28,7 +28,8 @@ import { Neuron } from "@Renderer/types/neurons";
 
 import { Banner } from "@Renderer/component/Banner";
 import Title from "@Renderer/component/Title";
-import { IconArrowDownWithLine, IconBluetooth } from "@Renderer/component/Icon";
+import { IconArrowDownWithLine } from "@Renderer/component/Icon";
+import { IconBluetooth } from "@Renderer/components/icons";
 import { PageHeader } from "@Renderer/modules/PageHeader";
 import { i18n, refreshHardware } from "@Renderer/i18n";
 import NeuronConnection from "@Renderer/modules/NeuronConnection";

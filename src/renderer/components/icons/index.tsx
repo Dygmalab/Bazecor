@@ -14,6 +14,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import IconBluetooth from "./icon-bluetooth";
 import IconBugWarning from "./icon-bug";
 import IconDelete from "./icon-delete";
 import IconDragAndDrop from "./icon-drag-and-drop";
@@ -23,4 +24,14 @@ import IconRefresh from "./icon-refresh";
 import IconRobotOffline from "./icon-robot-offline";
 import IconSettings from "./icon-settings";
 
-export { IconBugWarning, IconDelete, IconDragAndDrop, IconDragDots, IconPlus, IconRefresh, IconRobotOffline, IconSettings };
+export {
+  IconBluetooth,
+  IconBugWarning,
+  IconDelete,
+  IconDragAndDrop,
+  IconDragDots,
+  IconPlus,
+  IconRefresh,
+  IconRobotOffline,
+  IconSettings,
+};

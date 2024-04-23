@@ -7,8 +7,7 @@ import { Container } from "react-bootstrap";
 
 import Heading from "@Renderer/components/ui/heading";
 import { Banner } from "@Renderer/component/Banner";
-import Title from "@Renderer/component/Title";
-import { IconBluetooth } from "@Renderer/component/Icon";
+import { IconBluetooth } from "@Renderer/components/icons";
 
 import SortableList, { SortableItem } from "react-easy-sort";
 import { arrayMoveImmutable } from "array-move";
@@ -135,7 +134,7 @@ const DeviceManager = () => {
       <Container fluid className="h-full">
         <div className="view-wrapper--devices flex h-[inherit] flex-col">
           <PageHeader text="Device Manager" primaryButton={scanDevices} secondaryButton={addVirtualDevices} />
-          <div className="filterHeaderWrapper flex items-center justify-between pt-6 pb-3 mb-6 border-b-[1px] border-gray-100 dark:border-gray-600">
+          <div className="filterHeaderWrapper flex items-center justify-between pt-8 pb-3 mb-3 border-b-[1px] border-gray-100 dark:border-gray-600">
             <div className="filter-header flex items-center gap-4">
               <Heading headingLevel={3} renderAs="h3" className="ml-[2px]">
                 {i18n.deviceManager.myDevices} <sup className="text-purple-300">{listDevices.length}</sup>
@@ -187,13 +186,15 @@ const DeviceManager = () => {
               ) : null}
             </div>
           </div>
-          <div className="card-alert" style={{ marginTop: "16px" }}>
+          <div className="card-alert mt-0 mb-3">
             <Banner icon={<IconBluetooth />} variant="warning">
-              <Title text="Defy owners!" headingLevel={5} />
-              <p
-                style={{ maxWidth: "610px" }}
-                dangerouslySetInnerHTML={{ __html: i18n.keyboardSelect.HIDReminderOfManuallyScan }}
-              />
+              <Heading headingLevel={5} renderAs="h5">
+                Defy owners!
+              </Heading>
+              <p className="max-w-5xl">
+                To use Bazecor on bluetooth, make sure the keyboard is connected via BT to the computer and{" "}
+                <strong> click on scan keyboards once.</strong> This is necessary due to Chrome&apos;s API restrictions.
+              </p>
             </Banner>
           </div>
           <div className="flex gap-4 relative">
