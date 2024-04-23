@@ -1,12 +1,14 @@
 import React, { useState, forwardRef } from "react";
 
 import Heading from "@Renderer/components/ui/heading";
-import { IconSettings, IconDelete, IconDragAndDrop } from "@Renderer/components/icons";
+import { IconDelete, IconDragAndDrop, IconNeuron, IconSettings } from "@Renderer/components/icons";
 
 import { DevicePreview } from "@Renderer/modules/DevicePreview";
 
 import { useNavigate } from "react-router-dom";
 import { SortableKnob } from "react-easy-sort";
+
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@Renderer/components/ui/tooltip";
 
 import { i18n } from "@Renderer/i18n";
 // import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@Renderer/components/ui/dropdown-menu";
@@ -14,9 +16,10 @@ interface CardDeviceProps {
   device: any;
   filterBy: boolean | "all";
   openDialog: (device: any) => void;
+  openInfoDialog: (device: any) => void;
 }
 
-const CardDevice = forwardRef<HTMLDivElement, CardDeviceProps>(({ device, filterBy, openDialog }, ref) => {
+const CardDevice = forwardRef<HTMLDivElement, CardDeviceProps>(({ device, filterBy, openDialog, openInfoDialog }, ref) => {
   const [isConnected, setIsConnected] = useState(false);
 
   const navigate = useNavigate();
@@ -115,13 +118,22 @@ const CardDevice = forwardRef<HTMLDivElement, CardDeviceProps>(({ device, filter
           )}
           <div className="flex gap-2">
             {isConnected ? (
-              <button
-                className="buttonTogglerInner flex items-center p-0 w-[52px] h-[52px] rounded transition-all justify-center hover:bg-gray-100/50 hover:dark:bg-gray-25/5"
-                onClick={handlePreferences}
-                type="button"
-              >
-                <IconSettings />
-              </button>
+              <>
+                <button
+                  className="buttonTogglerInner flex items-center p-0 w-[52px] h-[52px] rounded transition-all justify-center hover:bg-gray-100/50 hover:dark:bg-gray-25/5"
+                  onClick={() => openInfoDialog(device)}
+                  type="button"
+                >
+                  <IconNeuron />
+                </button>
+                <button
+                  className="buttonTogglerInner flex items-center p-0 w-[52px] h-[52px] rounded transition-all justify-center hover:bg-gray-100/50 hover:dark:bg-gray-25/5"
+                  onClick={handlePreferences}
+                  type="button"
+                >
+                  <IconSettings />
+                </button>
+              </>
             ) : (
               <button
                 className="buttonTogglerInner flex items-center p-0 w-[52px] h-[52px] rounded transition-all justify-center hover:bg-gray-100/50 hover:dark:bg-gray-25/5"
