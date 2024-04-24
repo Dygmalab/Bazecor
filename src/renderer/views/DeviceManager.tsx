@@ -8,7 +8,6 @@ import { Container } from "react-bootstrap";
 import Heading from "@Renderer/components/ui/heading";
 import Banner from "@Renderer/components/common/banner";
 import { IconBluetooth } from "@Renderer/components/icons";
-import { IconLayers, IconRobot, IconThunder } from "@Renderer/component/Icon";
 
 import SortableList, { SortableItem } from "react-easy-sort";
 import { arrayMoveImmutable } from "array-move";
@@ -26,9 +25,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@Renderer/components/ui/alert-dialog";
-
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@Renderer/components/ui/dialog";
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@Renderer/components/ui/accordion";
+import CardAddDevice from "@Renderer/modules/DeviceManager/CardAddDevice";
 
 const savedDevicesList = [
   {
@@ -105,7 +102,6 @@ const DeviceManager = () => {
   // const [listDevices, setListDevices] = useState([]);
   const [activeTab, setActiveTab] = useState<"all" | boolean>("all");
   const [open, setOpen] = useState(false);
-  const [openModal, setOpenModal] = useState(false);
   const [selectedDevice, setSelectedDevice] = useState(null);
 
   const addVirtualDevices = (
@@ -125,12 +121,6 @@ const DeviceManager = () => {
     setOpen(true);
   };
 
-  const openInfoDialog = (device: any) => {
-    console.log(device);
-    setSelectedDevice(device);
-    setOpenModal(true);
-  };
-
   const forgetDevice = (device: any) => {
     console.log("remove device", device);
     const updatedDevices = listDevices.filter(item => item !== device);
@@ -145,11 +135,12 @@ const DeviceManager = () => {
     <div className="h-full">
       <Container fluid className="h-full">
         <div className="view-wrapper--devices flex h-[inherit] flex-col">
-          <PageHeader text="Device Manager" primaryButton={scanDevices} secondaryButton={addVirtualDevices} />
+          <PageHeader text={i18n.deviceManager.title} primaryButton={scanDevices} secondaryButton={addVirtualDevices} />
           <div className="filterHeaderWrapper flex items-center justify-between pt-8 pb-3 mb-3 border-b-[1px] border-gray-100 dark:border-gray-600">
             <div className="filter-header flex items-center gap-4">
               <Heading headingLevel={3} renderAs="h3" className="ml-[2px]">
-                {i18n.deviceManager.myDevices} <sup className="text-purple-300">{listDevices.length}</sup>
+                {listDevices.length > 1 ? i18n.deviceManager.myDevices : i18n.deviceManager.myDevice}{" "}
+                <sup className="text-purple-300">{listDevices.length}</sup>
               </Heading>
               {listDevices.length > 0 ? (
                 <div className="filter-header--tabs">
@@ -198,7 +189,7 @@ const DeviceManager = () => {
               ) : null}
             </div>
           </div>
-          <div className="card-alert mt-0 mb-3">
+          {/* <div className="card-alert mt-0 mb-3">
             <Banner icon={<IconBluetooth />} variant="warning">
               <Heading headingLevel={5} renderAs="h5">
                 Defy owners!
@@ -208,13 +199,13 @@ const DeviceManager = () => {
                 <strong> click on scan keyboards once.</strong> This is necessary due to Chrome&apos;s API restrictions.
               </p>
             </Banner>
-          </div>
+          </div> */}
           <div className="flex gap-4 relative">
             {listDevices.length > 0 ? (
               <div className="devices-container">
                 <SortableList
                   onSortEnd={onSortEnd}
-                  className="list devices-scroll relative w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
+                  className="list devices-scroll relative w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 pb-4"
                   draggedItemClassName="dragged"
                 >
                   {listDevices.map(item => (
@@ -222,12 +213,7 @@ const DeviceManager = () => {
                       {item.available === activeTab || activeTab === "all" ? (
                         <motion.div initial={{ opacity: 0, y: -50 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -50 }}>
                           <SortableItem key={item.serialNumber}>
-                            <CardDevice
-                              device={item}
-                              filterBy={activeTab}
-                              openDialog={openDialog}
-                              openInfoDialog={openInfoDialog}
-                            />
+                            <CardDevice device={item} filterBy={activeTab} openDialog={openDialog} />
                           </SortableItem>
                         </motion.div>
                       ) : (
@@ -235,10 +221,24 @@ const DeviceManager = () => {
                       )}
                     </AnimatePresence>
                   ))}
+                  <AnimatePresence mode="popLayout">
+                    <motion.div initial={{ opacity: 0, y: -50 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -50 }}>
+                      <CardAddDevice />
+                    </motion.div>
+                  </AnimatePresence>
                 </SortableList>
               </div>
             ) : (
-              <NoDeviceFound />
+              <div className="devices-container">
+                <AnimatePresence mode="popLayout">
+                  <motion.div initial={{ opacity: 0, y: -50 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -50 }}>
+                    <div className="list devices-scroll relative w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 pb-4">
+                      <NoDeviceFound />
+                      <CardAddDevice />
+                    </div>
+                  </motion.div>
+                </AnimatePresence>
+              </div>
             )}
           </div>
           <HelpSupportLink />
@@ -269,86 +269,6 @@ const DeviceManager = () => {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-
-      <Dialog open={openModal} onOpenChange={setOpenModal} modal>
-        {selectedDevice && (
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>
-                <strong>{selectedDevice?.name ? selectedDevice.name : selectedDevice.device.info.displayName}</strong> info{" "}
-              </DialogTitle>
-            </DialogHeader>
-            <div className="relative w-100 px-6 pt-2 pb-6 overflow-auto">
-              <Accordion
-                type="single"
-                collapsible
-                className="w-full mt-3 border-[1px] border-solid border-gray-50 dark:border-gray-600 bg-transparent dark:bg-gray-900/20 rounded"
-              >
-                <AccordionItem value="item-1" className="border-b border-solid border-gray-50 dark:border-gray-600">
-                  <AccordionTrigger className="flex justify-between items-center p-3 mt-0 mb-[-1px] rounded-none text-purple-200 dark:text-gray-25 border-b border-solid border-gray-50 dark:border-gray-600">
-                    <div className="flex gap-3 items-center">
-                      <IconLayers />
-                      <strong className="font-base">Layers</strong>
-                    </div>
-                  </AccordionTrigger>
-                  <AccordionContent className="bg-gray-25/20 dark:bg-gray-900/50 p-3">
-                    <div>
-                      <ol className="list-decimal pl-6">
-                        <li>Default</li>
-                        <li>Symbols and Arrows</li>
-                        <li>Media</li>
-                        <li>VS Code</li>
-                        <li>Confluence</li>
-                        <li>Valorant</li>
-                        <li>LINUX</li>
-                        <li>No name</li>
-                        <li>No name</li>
-                        <li>No name</li>
-                      </ol>
-                    </div>
-                  </AccordionContent>
-                </AccordionItem>
-                <AccordionItem value="item-2" className="border-0">
-                  <AccordionTrigger className="flex justify-between items-center p-3 mt-0 mb-[-1px] rounded-none text-purple-200 dark:text-gray-25 border-b border-solid border-gray-50 dark:border-gray-600">
-                    <div className="flex gap-3 items-center">
-                      <IconRobot />
-                      <strong className="font-base">Macro</strong>
-                    </div>
-                  </AccordionTrigger>
-                  <AccordionContent className="bg-gray-25/20 dark:bg-gray-900/50 p-3">
-                    <div>
-                      <ol className="list-decimal pl-6">
-                        <li>Welcome world</li>
-                        <li>Server snippet</li>
-                        <li>Update active cells</li>
-                        <li>Moonwalk</li>
-                      </ol>
-                    </div>
-                  </AccordionContent>
-                </AccordionItem>
-                <AccordionItem value="item-3" className="border-0">
-                  <AccordionTrigger className="flex justify-between items-center p-3 mt-0 mb-[-1px] rounded-none text-purple-200 dark:text-gray-25 border-b border-solid border-gray-50 dark:border-gray-600">
-                    <div className="flex gap-3 items-center">
-                      <IconThunder />
-                      <strong className="font-base">Superkeys</strong>
-                    </div>
-                  </AccordionTrigger>
-                  <AccordionContent className="bg-gray-25/20 dark:bg-gray-900/50 p-3">
-                    <div>
-                      <ol className="list-decimal pl-6">
-                        <li>SuperESC</li>
-                        <li>EmojiSet</li>
-                        <li>FastAmmo</li>
-                        <li>Super jump</li>
-                      </ol>
-                    </div>
-                  </AccordionContent>
-                </AccordionItem>
-              </Accordion>
-            </div>
-          </DialogContent>
-        )}
-      </Dialog>
     </div>
   );
 };

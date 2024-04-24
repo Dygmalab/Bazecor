@@ -1,14 +1,11 @@
 import React, { useState, forwardRef } from "react";
 
 import Heading from "@Renderer/components/ui/heading";
-import { IconDelete, IconDragAndDrop, IconNeuron, IconSettings } from "@Renderer/components/icons";
+import { IconDelete, IconDragAndDrop } from "@Renderer/components/icons";
 
 import { DevicePreview } from "@Renderer/modules/DevicePreview";
 
-import { useNavigate } from "react-router-dom";
 import { SortableKnob } from "react-easy-sort";
-
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@Renderer/components/ui/tooltip";
 
 import { i18n } from "@Renderer/i18n";
 // import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@Renderer/components/ui/dropdown-menu";
@@ -16,19 +13,10 @@ interface CardDeviceProps {
   device: any;
   filterBy: boolean | "all";
   openDialog: (device: any) => void;
-  openInfoDialog: (device: any) => void;
 }
 
-const CardDevice = forwardRef<HTMLDivElement, CardDeviceProps>(({ device, filterBy, openDialog, openInfoDialog }, ref) => {
+const CardDevice = forwardRef<HTMLDivElement, CardDeviceProps>(({ device, filterBy, openDialog }, ref) => {
   const [isConnected, setIsConnected] = useState(false);
-
-  const navigate = useNavigate();
-
-  const handlePreferences = () => {
-    if (isConnected) {
-      navigate("/preferences");
-    }
-  };
 
   const filterAttribute = (filter: any) => {
     switch (filter) {
@@ -86,13 +74,6 @@ const CardDevice = forwardRef<HTMLDivElement, CardDeviceProps>(({ device, filter
             <IconDragAndDrop />
           </div>
         </SortableKnob>
-        {/* <span
-          className={`bullet-connect absolute right-6 top-6 w-2 h-2 rounded-full  ${
-            isConnected ? "connected bg-purple-300 dark:bg-green-200" : "disconnected bg-gray-200"
-          }`}
-        >
-          &nbsp;
-        </span> */}
       </div>
       <div
         className={`mb-[-20%] mt-[-14%] flex justify-end [&_canvas]:transition-all [&_canvas]:translate-x-[24%] ${
@@ -117,24 +98,7 @@ const CardDevice = forwardRef<HTMLDivElement, CardDeviceProps>(({ device, filter
             <span className="device-status text-sm text-red-100">{i18n.general.offline}</span>
           )}
           <div className="flex gap-2">
-            {isConnected ? (
-              <>
-                <button
-                  className="buttonTogglerInner flex items-center p-0 w-[52px] h-[52px] rounded transition-all justify-center hover:bg-gray-100/50 hover:dark:bg-gray-25/5"
-                  onClick={() => openInfoDialog(device)}
-                  type="button"
-                >
-                  <IconNeuron />
-                </button>
-                <button
-                  className="buttonTogglerInner flex items-center p-0 w-[52px] h-[52px] rounded transition-all justify-center hover:bg-gray-100/50 hover:dark:bg-gray-25/5"
-                  onClick={handlePreferences}
-                  type="button"
-                >
-                  <IconSettings />
-                </button>
-              </>
-            ) : (
+            {!isConnected ? (
               <button
                 className="buttonTogglerInner flex items-center p-0 w-[52px] h-[52px] rounded transition-all justify-center hover:bg-gray-100/50 hover:dark:bg-gray-25/5"
                 onClick={() => openDialog(device)}
@@ -142,7 +106,7 @@ const CardDevice = forwardRef<HTMLDivElement, CardDeviceProps>(({ device, filter
               >
                 <IconDelete />
               </button>
-            )}
+            ) : null}
           </div>
           {/* <DropdownMenu>
             <DropdownMenuTrigger className="data-[state=open]:bg-gray-100/50 data-[state=open]:dark:bg-gray-25/5 rounded">

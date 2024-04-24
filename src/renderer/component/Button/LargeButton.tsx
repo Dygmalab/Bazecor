@@ -4,8 +4,8 @@ import Styled from "styled-components";
 
 const LargeButtonWrapper = Styled.button`
   display: flex;
-  padding: 24px;
-  border-radius: 14px;
+  padding: 16px 24px;
+  border-radius: 8px;
   border: 1px solid ${({ theme }) => theme.styles.button.buttonLarge.borderColor};
   background-color: ${({ theme }) => theme.styles.button.buttonLarge.backgroundColor};
   color: ${({ theme }) => theme.styles.button.buttonLarge.titleColor};

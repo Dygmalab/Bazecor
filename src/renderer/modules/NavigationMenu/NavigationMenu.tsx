@@ -217,9 +217,9 @@ function NavigationMenu(props: NavigationMenuProps) {
           <div className="topMenu">
             <Link to="/device-manager" className="list-link">
               <NavigationButton
-                selected={false}
+                selected={currentPage === "/device-manager"}
                 showNotif={false}
-                buttonText="Device Manager"
+                buttonText={i18n.deviceManager.title}
                 icoSVG={<IconHome />}
                 disabled={false}
               />
