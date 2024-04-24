@@ -32,14 +32,11 @@ const configureIPCs = () => {
   });
 
   ipcMain.on("stop-recording", () => {
-    const isTrusted = systemPreferences.isTrustedAccessibilityClient(false);
-    if (isTrusted) {
-      console.log("stop-recording");
-      globalRecording.setRecording(false);
-      uIOhook.off("keydown", sendkeyDown);
-      uIOhook.off("keyup", sendKeyUp);
-      uIOhook.stop();
-    }
+    console.log("stop-recording");
+    globalRecording.setRecording(false);
+    uIOhook.off("keydown", sendkeyDown);
+    uIOhook.off("keyup", sendKeyUp);
+    uIOhook.stop();
   });
 
   ipcMain.handle("list-drives", async (event, options) => {
@@ -87,32 +84,31 @@ const configureIPCs = () => {
 
   ipcMain.handle("ask-for-accessibility", async () => {
     console.log("someone asked for accessibility", process.platform);
-    if (process.platform === "darwin") {
-      const isTrusted = systemPreferences.isTrustedAccessibilityClient(false);
-      console.log("isTrustedAccessibilityClient", isTrusted);
-      if (!isTrusted) {
-        const clickedButton = await dialog.showMessageBox(null, {
-          type: "warning",
-          message: "Bazecor requires accessibility permissions",
-          detail:
-            "Bazecor uses accessibility to record macros and list Bluetooth-HID devices like the Defy wireless, please try again after authorizing the application if you want access to these features, you will need to restart the application after giving it permissions",
-          defaultId: 1,
-          cancelId: 0,
-          buttons: ["Not Now", "Turn On Accessibility"],
-        });
-        console.log("checking return value: ", clickedButton);
-        if (clickedButton.response === 1) {
-          // Calling isTrustedAccessibilityClient with prompt=true has the side effect
-          // of showing the native dialog that either denies access or opens System
-          // Preferences.
-          systemPreferences.isTrustedAccessibilityClient(true);
-          return false;
-        }
-        return false;
-      }
+    if (process.platform !== "darwin") {
       return true;
     }
-    return true;
+    const isTrusted = systemPreferences.isTrustedAccessibilityClient(false);
+    console.log("isTrustedAccessibilityClient", isTrusted);
+    if (isTrusted) {
+      return true;
+    }
+    const clickedButton = await dialog.showMessageBox(null, {
+      type: "warning",
+      message: "Bazecor requires accessibility permissions",
+      detail:
+        "Bazecor uses accessibility to record macros and list Bluetooth-HID devices like the Defy wireless, please try again after authorizing the application if you want access to these features, you will need to restart the application after giving it permissions",
+      defaultId: 1,
+      cancelId: 0,
+      buttons: ["Not Now", "Turn On Accessibility"],
+    });
+    console.log("checking return value: ", clickedButton);
+    if (clickedButton.response === 1) {
+      // Calling isTrustedAccessibilityClient with prompt=true has the side effect
+      // of showing the native dialog that either denies access or opens System
+      // Preferences.
+      systemPreferences.isTrustedAccessibilityClient(true);
+    }
+    return false;
   });
 };
 
