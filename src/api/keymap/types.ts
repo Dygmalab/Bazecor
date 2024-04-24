@@ -35,4 +35,5 @@ export type LanguageType =
   | "de-CH"
   | "en-XX-eurkey"
   | "fr-XX-bepo"
-  | "fr-XX-optimot";
+  | "fr-XX-optimot"
+  | "fr-XX-ergol";
