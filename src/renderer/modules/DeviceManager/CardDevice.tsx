@@ -7,6 +7,8 @@ import { DevicePreview } from "@Renderer/modules/DevicePreview";
 
 import { SortableKnob } from "react-easy-sort";
 
+import { Button } from "@Renderer/components/ui/button";
+
 import { i18n } from "@Renderer/i18n";
 // import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@Renderer/components/ui/dropdown-menu";
 interface CardDeviceProps {
@@ -85,16 +87,23 @@ const CardDevice = forwardRef<HTMLDivElement, CardDeviceProps>(({ device, filter
       <div className="card-footer bg-transparent border-none p-0.5 mt-auto">
         <div className="card-footer--inner flex justify-between items-center rounded-[18px] p-4 bg-gray-25/80 dark:bg-gray-700/70 backdrop-blur-sm">
           {device.available ? (
-            <button
-              type="button"
+            <Button
+              variant={`${isConnected ? "outline" : "primary"}`}
+              className="h-[52px]"
               onClick={() => setIsConnected(!isConnected)}
-              className={`button m-0 h-[52px] focus:shadow-none focus-within:shadow-none ${
-                isConnected ? "outline transp-bg" : "primary"
-              }`}
             >
               {isConnected ? i18n.keyboardSelect.disconnect : "Configure"}
-            </button>
+            </Button>
           ) : (
+            // <button
+            //   type="button"
+            //   onClick={() => setIsConnected(!isConnected)}
+            //   className={`button m-0 h-[52px] focus:shadow-none focus-within:shadow-none ${
+            //     isConnected ? "outline transp-bg" : "primary"
+            //   }`}
+            // >
+            //   {isConnected ? i18n.keyboardSelect.disconnect : "Configure"}
+            // </button>
             <span className="device-status text-sm text-red-100">{i18n.general.offline}</span>
           )}
           <div className="flex gap-2">

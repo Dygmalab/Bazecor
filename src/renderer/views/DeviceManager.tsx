@@ -6,8 +6,7 @@ import NoDeviceFound from "@Renderer/modules/DeviceManager/noDeviceFound";
 import { Container } from "react-bootstrap";
 
 import Heading from "@Renderer/components/ui/heading";
-import Banner from "@Renderer/components/common/banner";
-import { IconBluetooth } from "@Renderer/components/icons";
+import { Button } from "@Renderer/components/ui/button";
 
 import SortableList, { SortableItem } from "react-easy-sort";
 import { arrayMoveImmutable } from "array-move";
@@ -104,15 +103,25 @@ const DeviceManager = () => {
   const [open, setOpen] = useState(false);
   const [selectedDevice, setSelectedDevice] = useState(null);
 
-  const addVirtualDevices = (
-    <button className="sm button outline transp-bg iconOnNone" type="button" onClick={() => console.log("Add virtual device")}>
+  const addVirtualDevice = () => {
+    console.log("Add virtual device!");
+  };
+  const scanDevices = () => {
+    console.log("Scan devices!");
+  };
+
+  const addVirtualDevicesButton = (
+    // <button className="sm button outline transp-bg iconOnNone" type="button" onClick={addVirtualDevice}>
+    //   {i18n.deviceManager.addVirtualDevice}
+    // </button>
+    <Button variant="outline" size="sm" onClick={addVirtualDevice}>
       {i18n.deviceManager.addVirtualDevice}
-    </button>
+    </Button>
   );
-  const scanDevices = (
-    <button className="sm button primary iconOnNone" type="button" onClick={() => console.log("Scan devices")}>
+  const scanDevicesButton = (
+    <Button variant="primary" size="sm" className="ml-3" onClick={scanDevices}>
       {i18n.deviceManager.scanDevices}
-    </button>
+    </Button>
   );
 
   const openDialog = (device: any) => {
@@ -135,7 +144,11 @@ const DeviceManager = () => {
     <div className="h-full">
       <Container fluid className="h-full">
         <div className="view-wrapper--devices flex h-[inherit] flex-col">
-          <PageHeader text={i18n.deviceManager.title} primaryButton={scanDevices} secondaryButton={addVirtualDevices} />
+          <PageHeader
+            text={i18n.deviceManager.title}
+            primaryButton={scanDevicesButton}
+            secondaryButton={addVirtualDevicesButton}
+          />
           <div className="filterHeaderWrapper flex items-center justify-between pt-8 pb-3 mb-3 border-b-[1px] border-gray-100 dark:border-gray-600">
             <div className="filter-header flex items-center gap-4">
               <Heading headingLevel={3} renderAs="h3" className="ml-[2px]">
@@ -223,7 +236,7 @@ const DeviceManager = () => {
                   ))}
                   <AnimatePresence mode="popLayout">
                     <motion.div initial={{ opacity: 0, y: -50 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -50 }}>
-                      <CardAddDevice />
+                      <CardAddDevice addVirtualDevice={addVirtualDevice} scanDevices={scanDevices} />
                     </motion.div>
                   </AnimatePresence>
                 </SortableList>
@@ -234,7 +247,7 @@ const DeviceManager = () => {
                   <motion.div initial={{ opacity: 0, y: -50 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -50 }}>
                     <div className="list devices-scroll relative w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 pb-4">
                       <NoDeviceFound />
-                      <CardAddDevice />
+                      <CardAddDevice addVirtualDevice={addVirtualDevice} scanDevices={scanDevices} />
                     </div>
                   </motion.div>
                 </AnimatePresence>
