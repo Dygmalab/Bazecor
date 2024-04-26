@@ -697,7 +697,8 @@ const English = {
     noDevicesFound: "No keyboards found!",
     noDevicesFoundDescription: "[Black metal plays in background]",
     dialogDeleteTitle: "Are you absolutely sure?",
-    dialogDeleteDescription: "This action cannot be undone. This will permanently delete the",
+    dialogDeleteDescription:
+      "This action can't be undone and will remove the keyboard from your Device List, deleting the names of your layers, macros and superkeys. The rest of your configuration will remain on the keyboard.",
     ReOrderList: "Re-order list",
   },
   keyboardSelect: {

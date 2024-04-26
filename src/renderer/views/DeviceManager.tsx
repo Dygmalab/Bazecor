@@ -268,11 +268,7 @@ const DeviceManager = () => {
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>{i18n.deviceManager.dialogDeleteTitle}</AlertDialogTitle>
-            <AlertDialogDescription>
-              {i18n.deviceManager.dialogDeleteDescription}{" "}
-              <span className="font-semibold text-purple-200 dark:text-gray-25">{selectedDevice?.name}</span>{" "}
-              {i18n.general.device}.
-            </AlertDialogDescription>
+            <AlertDialogDescription>{i18n.deviceManager.dialogDeleteDescription}</AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel buttonVariant="outline">{i18n.dialog.cancel}</AlertDialogCancel>
