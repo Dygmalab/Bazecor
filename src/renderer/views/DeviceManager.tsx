@@ -3,7 +3,6 @@ import React, { useState } from "react";
 import { PageHeader } from "@Renderer/modules/PageHeader";
 import CardDevice from "@Renderer/modules/DeviceManager/CardDevice";
 import NoDeviceFound from "@Renderer/modules/DeviceManager/noDeviceFound";
-import { Container } from "react-bootstrap";
 
 import Heading from "@Renderer/components/ui/heading";
 import { Button } from "@Renderer/components/ui/button";
@@ -142,7 +141,7 @@ const DeviceManager = () => {
 
   return (
     <div className="h-full">
-      <Container fluid className="h-full">
+      <div className="px-3 h-full">
         <div className="view-wrapper--devices flex h-[inherit] flex-col">
           <PageHeader
             text={i18n.deviceManager.title}
@@ -256,7 +255,7 @@ const DeviceManager = () => {
           </div>
           <HelpSupportLink />
         </div>
-      </Container>
+      </div>
 
       <AlertDialog
         open={open}

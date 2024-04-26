@@ -633,7 +633,7 @@ const Preferences = (props: PreferencesProps) => {
     );
 
   return (
-    <div className="px-2">
+    <div className="px-3">
       <PageHeader
         text={i18n.preferences.title}
         showSaving
