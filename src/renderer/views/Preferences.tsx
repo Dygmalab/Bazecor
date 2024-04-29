@@ -52,7 +52,7 @@ import {
   IconNeuronManager,
   IconChip,
 } from "@Renderer/component/Icon";
-import Version from "@Renderer/component/Version/Version";
+import Version from "@Renderer/components/common/Version";
 
 import Store from "@Renderer/utils/Store";
 import { useDevice } from "@Renderer/DeviceContext";
