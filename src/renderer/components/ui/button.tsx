@@ -17,7 +17,7 @@ const buttonVariants = cva(
         primary:
           "rounded-md bg-linear bg-[length:300%] transition-all relative transform-style-3d before:absolute before:content-[''] before:w-[62px] before:h-[32px] before:bottom-[2px] before:left-[50%] before:bg-linearButton before:opacity-50 before:blur-[2px] before:transform before:translate-x-[-50%] before:translate-y-[0] before:translate-z-[-1px] before:transition-all before:ease-in-out before:duration-300 hover:cursor-pointer hover:bg-right hover:before:blur-lg hover:before:bottom-[-12px] hover:before:opacity-70 hover:before:w-[100px] aria-disabled:bg-buttonDisabled aria-disabled:text-gray-300 aria-disabled:before:content-none aria-disabled:bg-right aria-disabled:cursor-not-allowed text-gray-25 font-semibold tracking-tight",
         secondary:
-          "tw-secondary bg-slate-100 text-slate-900 hover:bg-slate-100/80 dark:bg-slate-800 dark:text-slate-50 dark:hover:bg-slate-800/80",
+          "tw-secondary tw-text-primary rounded-md bg-[length:300%] transition-all relative isolate transform-style-3d after:absolute after:content-[''] after:w-[62px] after:h-[32px] after:bottom-[2px] after:left-[50%] after:bg-linearButton after:opacity-50 after:blur-[2px] after:transform after:translate-x-[-50%] after:translate-y-[0] after:translate-z-[-1px] after:transition-all after:ease-in-out after:duration-300 hover:cursor-pointer hover:bg-right hover:after:blur-lg hover:after:bottom-[-12px] hover:after:opacity-70 hover:after:w-[100px] aria-disabled:bg-buttonDisabled aria-disabled:text-gray-300 aria-disabled:after:content-none aria-disabled:bg-right aria-disabled:cursor-not-allowed font-semibold tracking-tight",
         ghost: "hover:bg-slate-100 hover:text-slate-900 dark:hover:bg-slate-800 dark:hover:text-slate-50",
         link: "text-slate-900 underline-offset-4 hover:underline dark:text-slate-50",
         supportive:
@@ -25,7 +25,7 @@ const buttonVariants = cva(
       },
       size: {
         default: "px-6 py-[14px] text-base",
-        md: "px-6 py-4",
+        md: "px-6 py-[14px]",
         sm: "rounded-md px-3 py-2.5 text-sm",
         lg: "h-11 rounded-md px-8",
         icon: "h-10 w-10",

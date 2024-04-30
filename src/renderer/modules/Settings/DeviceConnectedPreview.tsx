@@ -15,20 +15,10 @@
  */
 
 import React, { useState } from "react";
-import { NameModal } from "@Renderer/component/Modal";
 import { IconPen } from "@Renderer/component/Icon";
 import { motion } from "framer-motion";
 import { i18n } from "@Renderer/i18n";
-import { Button } from "@Renderer/components/ui/button";
-
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@Renderer/components/ui/dialog";
+import NameModal from "@Renderer/components/common/modal-name";
 import { DevicePreview } from "../DevicePreview";
 
 interface DeviceConnectedPreviewProps {
@@ -82,33 +72,14 @@ const DeviceConnectedPreview = ({ deviceName, deviceDisplayName, nameChange }: D
         </button>
       )}
 
-      {/* <NameModal
+      <NameModal
         show={showModal}
         name={deviceName}
         toggleShow={() => setShowModal(false)}
         handleSave={(data: string) => handleSave(data)}
         modalTitle={i18n.keyboardSettings.neuronManager.changeLayerTitle}
         labelInput={i18n.keyboardSettings.neuronManager.inputLabel}
-      /> */}
-
-      <Dialog open={showModal} onOpenChange={() => setShowModal(false)}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Are you absolutely sure?</DialogTitle>
-            <DialogDescription>
-              This action cannot be undone. This will permanently delete your account and remove your data from our servers.
-            </DialogDescription>
-          </DialogHeader>
-          <DialogFooter>
-            <Button variant="outline" size="md" onClick={() => setShowModal(false)}>
-              Discard changes
-            </Button>
-            <Button variant="secondary" size="md" onClick={() => setShowModal(false)}>
-              Save changes
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+      />
     </div>
   );
 };
