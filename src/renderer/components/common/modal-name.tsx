@@ -3,6 +3,8 @@ import React, { useState, useEffect, useRef } from "react";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@Renderer/components/ui/dialog";
 import { Button } from "@Renderer/components/ui/button";
 
+import { i18n } from "@Renderer/i18n";
+
 interface NameModalProps {
   modalTitle: string;
   show: boolean;
@@ -25,7 +27,7 @@ const NameModal = ({ modalTitle, show, toggleShow, name, handleSave, labelInput 
         <DialogHeader>
           <DialogTitle>{modalTitle}</DialogTitle>
         </DialogHeader>
-        <div className="px-4 pb-3">
+        <div className="px-6 pb-2 mt-2">
           <form
             className="flex flex-col"
             onSubmit={e => {
@@ -48,11 +50,10 @@ const NameModal = ({ modalTitle, show, toggleShow, name, handleSave, labelInput 
         </div>
         <DialogFooter>
           <Button variant="outline" size="md" onClick={toggleShow}>
-            Discard changes
+            {i18n.general.discard} {i18n.general.changes}
           </Button>
-
           <Button variant="secondary" size="md" onClick={() => handleSave(typeof internalName === "string" ? internalName : "")}>
-            Save changes
+            {i18n.general.save} {i18n.general.changes}
           </Button>
         </DialogFooter>
       </DialogContent>

@@ -879,12 +879,14 @@ const English = {
     actionRequired: "Action required",
     add: "Add",
     all: "All",
+    changes: "changes",
     configure: "Configure",
     continue: "Continue",
     clone: "Clone",
     create: "Create",
     delete: "Delete",
     device: "device",
+    discard: "Discard",
     key: "Key",
     layer: "Layer",
     loadFile: "Load file",
@@ -901,6 +903,7 @@ const English = {
     reorderList: "Re-order list",
     resume: "Resume",
     retry: "Retry",
+    save: "Save",
   },
 };
 
