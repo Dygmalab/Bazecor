@@ -17,6 +17,7 @@
 import IconBluetooth from "./icon-bluetooth";
 import IconBugWarning from "./icon-bug";
 import IconDelete from "./icon-delete";
+import IconEye from "./icon-eye";
 import IconDragAndDrop from "./icon-drag-and-drop";
 import IconDragDots from "./icon-drag-dots";
 import IconNeuron from "./icon-neuron";
@@ -29,6 +30,7 @@ export {
   IconBluetooth,
   IconBugWarning,
   IconDelete,
+  IconEye,
   IconDragAndDrop,
   IconDragDots,
   IconNeuron,

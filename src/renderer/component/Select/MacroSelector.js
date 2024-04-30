@@ -21,10 +21,10 @@ import Dropdown from "react-bootstrap/Dropdown";
 import { i18n } from "@Renderer/i18n";
 
 import { IconDelete } from "@Renderer/components/icons";
+import NameModal from "@Renderer/components/common/modal-name";
 import MacrosMemoryUsage from "../../modules/Macros/MacrosMemoryUsage";
 import { IconArrowsSmallSeparating, IconPen, IconAddNew, IconClone } from "../Icon";
 
-import { NameModal } from "../Modal"; // Imported custom modal component
 import { RegularButton, ButtonConfig } from "../Button";
 
 const Style = Styled.div`

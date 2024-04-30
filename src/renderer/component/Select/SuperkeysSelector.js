@@ -19,13 +19,14 @@ import React from "react";
 import Styled from "styled-components";
 import Dropdown from "react-bootstrap/Dropdown";
 import { i18n } from "@Renderer/i18n";
+
+import NameModal from "@Renderer/components/common/modal-name";
 import { IconDelete } from "@Renderer/components/icons";
-import { NameModal } from "../Modal"; // Imported custom modal component
 import { RegularButton, ButtonConfig } from "../Button";
 
 import { IconArrowsSmallSeparating, IconPen, IconAddNew, IconClone } from "../Icon";
 
-1;
+// 1;
 
 const Style = Styled.div`
 display: flex;

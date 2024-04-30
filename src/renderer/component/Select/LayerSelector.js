@@ -20,6 +20,7 @@ import Styled from "styled-components";
 import Dropdown from "react-bootstrap/Dropdown";
 import { i18n } from "@Renderer/i18n";
 
+import NameModal from "@Renderer/components/common/modal-name";
 import { IconDelete } from "@Renderer/components/icons";
 import {
   IconArrowsSmallSeparating,
@@ -32,7 +33,6 @@ import {
   IconFlashlight,
 } from "../Icon";
 
-import { NameModal } from "../Modal"; // Imported custom modal component
 import { ButtonSettings } from "../Button";
 import { KeyboardViewSelector } from "../ToggleButtons";
 

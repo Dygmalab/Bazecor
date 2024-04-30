@@ -23,7 +23,7 @@ import { ButtonSettings } from "@Renderer/component/Button";
 import { IconDelete } from "@Renderer/components/icons";
 import { IconArrowsSmallSeparating, IconPen } from "@Renderer/component/Icon";
 
-import { NameModal } from "@Renderer/component/Modal"; // Imported custom modal component
+import NameModal from "@Renderer/components/common/modal-name";
 import { NeuronSelectorProps } from "@Renderer/types/preferences";
 
 const Style = Styled.div`
