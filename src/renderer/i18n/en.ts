@@ -207,6 +207,7 @@ const English = {
       successFlashTitle: "Your macros have been saved.",
       successFlash: "Successfully sent the macros to the device",
       previewMacro: "Preview macro",
+      clearMacro: "Clear macro",
       deleteModal: {
         title: "This macro is in use on your layout",
         body: "Pick the action to replace it:",

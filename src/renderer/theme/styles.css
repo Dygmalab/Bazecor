@@ -169,3 +169,103 @@ select:focus {
 .dragged .card-device-knob:hover {
   cursor: grabbing;
 }
+
+/*
+// PREVIEW MACRO
+*/
+.previewMacro {
+  @apply flex flex-wrap items-baseline gap-1;
+}
+.previewMacro .previewKey {
+  @apply text-xs rounded relative text-gray-200 leading-4 border-[1px] border-gray-200 border-solid;
+  padding: 4px 6px;
+}
+.previewMacro .previewKey svg {
+  position: absolute;
+  top: 50%;
+  left: 3px;
+  transform: translate3d(0, -55%, 0);
+}
+.previewMacro .previewKey.action-2 {
+  @apply text-red-100 border-red-100;
+  padding-left: 24px;
+}
+.previewMacro .previewKey.action-8 {
+  margin: 0;
+  border-color: transparent;
+  padding: 0;
+}
+.previewMacro .previewKey.action-8.keyCode-40,
+.previewMacro .previewKey.action-8.keyCode-41,
+.previewMacro .previewKey.action-8.keyCode-42,
+.previewMacro .previewKey.action-8.keyCode-43,
+.previewMacro .previewKey.action-8.keyCode-44,
+.previewMacro .previewKey.action-8.keyCode-57,
+.previewMacro .previewKey.action-8.keyCode-58,
+.previewMacro .previewKey.action-8.keyCode-59,
+.previewMacro .previewKey.action-8.keyCode-60,
+.previewMacro .previewKey.action-8.keyCode-61,
+.previewMacro .previewKey.action-8.keyCode-62,
+.previewMacro .previewKey.action-8.keyCode-63,
+.previewMacro .previewKey.action-8.keyCode-64,
+.previewMacro .previewKey.action-8.keyCode-65,
+.previewMacro .previewKey.action-8.keyCode-66,
+.previewMacro .previewKey.action-8.keyCode-67,
+.previewMacro .previewKey.action-8.keyCode-68,
+.previewMacro .previewKey.action-8.keyCode-69,
+.previewMacro .previewKey.action-8.keyCode-70,
+.previewMacro .previewKey.action-8.keyCode-71,
+.previewMacro .previewKey.action-8.keyCode-72,
+.previewMacro .previewKey.action-8.keyCode-73,
+.previewMacro .previewKey.action-8.keyCode-74,
+.previewMacro .previewKey.action-8.keyCode-75,
+.previewMacro .previewKey.action-8.keyCode-76,
+.previewMacro .previewKey.action-8.keyCode-77,
+.previewMacro .previewKey.action-8.keyCode-78,
+.previewMacro .previewKey.action-8.keyCode-79,
+.previewMacro .previewKey.action-8.keyCode-80,
+.previewMacro .previewKey.action-8.keyCode-81,
+.previewMacro .previewKey.action-8.keyCode-82,
+.previewMacro .previewKey.action-8.keyCode-83,
+.previewMacro .previewKey.action-8.keyCode-88,
+.previewMacro .previewKey.action-8.keyCode-101,
+.previewMacro .previewKey.action-8.keyCode-104,
+.previewMacro .previewKey.action-8.keyCode-105,
+.previewMacro .previewKey.action-8.keyCode-106,
+.previewMacro .previewKey.action-8.keyCode-107,
+.previewMacro .previewKey.action-8.keyCode-108,
+.previewMacro .previewKey.action-8.keyCode-109,
+.previewMacro .previewKey.action-8.keyCode-110,
+.previewMacro .previewKey.action-8.keyCode-111,
+.previewMacro .previewKey.action-8.keyCode-112,
+.previewMacro .previewKey.action-8.keyCode-113,
+.previewMacro .previewKey.action-8.keyCode-114,
+.previewMacro .previewKey.action-8.keyCode-115 {
+  @apply border-[1px] border-gray-200;
+  padding: 4px 6px;
+  margin: 2px;
+}
+.previewMacro .previewKey.isModifier {
+  @apply border-[1px] border-gray-200;
+  padding: 4px 6px;
+}
+/* Shift */
+.previewMacro .previewKey.isModifier.keyCode-229,
+.previewMacro .previewKey.isModifier.keyCode-225 {
+  @apply text-orange-100 border-orange-100 bg-orange-100/5;
+}
+/* Control */
+.previewMacro .previewKey.isModifier.keyCode-224,
+.previewMacro .previewKey.isModifier.keyCode-228 {
+  @apply text-mint-300 border-mint-300 bg-mint-300/5;
+}
+/* Alt */
+.previewMacro .previewKey.isModifier.keyCode-226,
+.previewMacro .previewKey.isModifier.keyCode-230 {
+  @apply text-pink-200 border-pink-200 bg-pink-200/5;
+}
+/* OS */
+.previewMacro .previewKey.isModifier.keyCode-227,
+.previewMacro .previewKey.isModifier.keyCode-231 {
+  @apply text-purple-200 border-purple-200 bg-purple-200/5;
+}

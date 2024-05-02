@@ -18,15 +18,21 @@ export default function PreviewMacroModal(props: any) {
 
   return ReactDom.createPortal(
     <>
-      <Button variant="outline" size="sm" iconDirection="right" onClick={() => setShow(!show)}>
-        <IconEye /> Preview macro
+      <Button
+        variant="outline"
+        size="sm"
+        iconDirection="right"
+        onClick={() => setShow(!show)}
+        className="px-[12px] py-[2px] w-full justify-between"
+      >
+        <IconEye /> {i18n.editor.macros.previewMacro}
       </Button>
       <Dialog open={show} onOpenChange={toggleShow}>
         <DialogContent>
           <DialogHeader>
             <DialogTitle>{i18n.editor.macros.previewMacro}</DialogTitle>
           </DialogHeader>
-          <div className="px-6 pb-2 mt-2">{children}</div>
+          <div className="px-6 pb-6 mt-2 previewMacro">{children}</div>
         </DialogContent>
       </Dialog>
     </>,

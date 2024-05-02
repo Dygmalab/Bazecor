@@ -25,6 +25,7 @@ import IconPlus from "./icon-plus";
 import IconRefresh from "./icon-refresh";
 import IconRobotOffline from "./icon-robot-offline";
 import IconSettings from "./icon-settings";
+import IconStopWatch from "./icon-stopwatch";
 
 export {
   IconBluetooth,
@@ -38,4 +39,5 @@ export {
   IconRefresh,
   IconRobotOffline,
   IconSettings,
+  IconStopWatch,
 };
