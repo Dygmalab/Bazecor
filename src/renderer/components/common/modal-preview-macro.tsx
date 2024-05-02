@@ -6,8 +6,13 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@Renderer/comp
 import { Button } from "@Renderer/components/ui/button";
 import { IconEye } from "@Renderer/components/icons";
 
-export default function PreviewMacroModal(props: any) {
-  const { children, hookref } = props;
+interface PreviewMacroModalProps {
+  children: React.ReactNode;
+  hookref: React.RefObject<HTMLDivElement>;
+}
+
+const PreviewMacroModal = ({ children, hookref }: PreviewMacroModalProps) => {
+  // const { children, hookref } = props;
   const [show, setShow] = React.useState(false);
 
   const toggleShow = () => {
@@ -38,4 +43,6 @@ export default function PreviewMacroModal(props: any) {
     </>,
     hookref.current,
   );
-}
+};
+
+export default PreviewMacroModal;

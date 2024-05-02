@@ -15,16 +15,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import React, { Component } from "react";
-import PropTypes from "prop-types";
 
 import Styled from "styled-components";
-import Spinner from "react-bootstrap/Spinner";
 import { Button } from "@Renderer/components/ui/button";
 import { i18n } from "@Renderer/i18n";
 
 import { IconDelete, IconStopWatch } from "@Renderer/components/icons";
 import PreviewMacroModal from "@Renderer/components/common/modal-preview-macro";
 import Heading from "@Renderer/components/ui/heading";
+import LogoLoader from "@Renderer/components/loader/logo-loader";
 import { KeymapDB } from "../../../api/keymap";
 
 import TimelineEditorForm from "./TimelineEditorForm";
@@ -159,11 +158,11 @@ class MacroManager extends Component {
 
   render() {
     const { keymapDB, macro, macros, updateActions, clearMacro } = this.props;
-    console.log("Macro on TimelineEditorManager", macro);
+    // console.log("Macro on TimelineEditorManager", macro);
     const macroID = Math.random().toString(36).substring(0, 7);
 
     return (
-      <Styles className="timelineWrapper grid mt-4 grid-cols-[minmax(auto,_240px)_1fr] rounded-none pb-[5px] bg-white/80 dark:bg-[#2B2C43]">
+      <Styles className="timelineWrapper grid mt-4 grid-cols-[minmax(auto,_240px)_1fr] rounded-t-lg pb-[5px] bg-white/80 dark:bg-[#2B2C43]">
         <div className="timelineHeaderWrapper">
           <div className="timelineHeader flex items-baseline px-8 py-6">
             <div className="timelineHeaderContent">
@@ -208,23 +207,19 @@ class MacroManager extends Component {
           </div>
         </div>
         <div className="timelineBodyWrapper" ref={this.trackingWidth}>
-          {macro !== null && macro.actions !== null ? (
-            macro.actions.length > 0 ? (
-              <TimelineEditorForm
-                macro={macro}
-                macros={macros}
-                updateActions={updateActions}
-                keymapDB={keymapDB}
-                componentWidth={this.state.componentWidth}
-                updateScroll={this.props.updateScroll}
-                scrollPos={this.props.scrollPos}
-              />
-            ) : (
-              ""
-            )
+          {macro !== null && macro.actions !== null && macro.actions.length > 0 ? (
+            <TimelineEditorForm
+              macro={macro}
+              macros={macros}
+              updateActions={updateActions}
+              keymapDB={keymapDB}
+              componentWidth={this.state.componentWidth}
+              updateScroll={this.props.updateScroll}
+              scrollPos={this.props.scrollPos}
+            />
           ) : (
             <div className="loading marginCenter">
-              <Spinner className="spinner-border" role="status" />
+              <LogoLoader />
             </div>
           )}
           <div id="portalMacro" />
@@ -233,15 +228,5 @@ class MacroManager extends Component {
     );
   }
 }
-
-MacroManager.propTypes = {
-  macro: PropTypes.object,
-  macros: PropTypes.array,
-  code: PropTypes.object,
-  keymapDB: PropTypes.object,
-  updateActions: PropTypes.func,
-  updateScroll: PropTypes.func,
-  scrollPos: PropTypes.number,
-};
 
 export default MacroManager;
