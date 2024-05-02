@@ -19,6 +19,5 @@ import AlertModal from "./AlertModal";
 import MacroKeyModal from "./MacroKeyModal";
 import PreviewMacroModal from "./PreviewMacroModal";
 import RecordMacroModal from "../../modules/Macros/RecordMacroModal";
-import CustomKeyCodeModal from "./CustomKeyCodeModal";
 
-export { AdvancedBatterySettingsModal, AlertModal, MacroKeyModal, PreviewMacroModal, RecordMacroModal, CustomKeyCodeModal };
+export { AdvancedBatterySettingsModal, AlertModal, MacroKeyModal, PreviewMacroModal, RecordMacroModal };
