@@ -30,6 +30,16 @@ import DygmaLogo from "@Assets/logo.svg";
 import { showDevtools } from "@Renderer/devMode";
 import { useDevice } from "@Renderer/DeviceContext";
 import { AlertModal } from "@Renderer/component/Modal";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@Renderer/components/ui/alert-dialog";
 import { BatteryStatus } from "@Renderer/modules/Battery";
 import { NavigationButton } from "@Renderer/component/Button";
 import { i18n } from "@Renderer/i18n";
@@ -334,6 +344,26 @@ function NavigationMenu(props: NavigationMenuProps) {
         title={i18n.errors.alertUnsavedTitle}
         description={i18n.errors.alertUnsavedDescription}
       />
+      {/* <AlertDialog
+        open={showAlertModal}
+        onOpenChange={showAlertModal => {
+          if (showAlertModal === true) return;
+          setShowAlertModal(false);
+        }}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>{i18n.deviceManager.dialogDeleteTitle}</AlertDialogTitle>
+            <AlertDialogDescription>{i18n.deviceManager.dialogDeleteDescription}</AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel buttonVariant="outline">{i18n.dialog.cancel}</AlertDialogCancel>
+            <AlertDialogAction onClick={() => forgetDevice(selectedDevice)} buttonVariant="destructive">
+              {i18n.general.continue}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog> */}
     </Styles>
   );
 }
