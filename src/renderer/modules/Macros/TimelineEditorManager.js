@@ -208,18 +208,15 @@ class MacroManager extends Component {
         </div>
         <div className="timelineBodyWrapper" ref={this.trackingWidth}>
           {macro !== null && macro.actions !== null && macro.actions.length > 0 ? (
-            // <TimelineEditorForm
-            //   macro={macro}
-            //   macros={macros}
-            //   updateActions={updateActions}
-            //   keymapDB={keymapDB}
-            //   componentWidth={this.state.componentWidth}
-            //   updateScroll={this.props.updateScroll}
-            //   scrollPos={this.props.scrollPos}
-            // />
-            <div className="loading marginCenter">
-              <LogoLoader />
-            </div>
+            <TimelineEditorForm
+              macro={macro}
+              macros={macros}
+              updateActions={updateActions}
+              keymapDB={keymapDB}
+              componentWidth={this.state.componentWidth}
+              updateScroll={this.props.updateScroll}
+              scrollPos={this.props.scrollPos}
+            />
           ) : (
             <div className="loading marginCenter">
               <LogoLoader />
