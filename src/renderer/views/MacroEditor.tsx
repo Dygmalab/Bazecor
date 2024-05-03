@@ -43,7 +43,8 @@ import { SuperkeysType } from "@Renderer/types/superkeys";
 import { MacroActionsType, MacrosType } from "@Renderer/types/macros";
 
 // Components
-import { LogoLoaderCentered } from "@Renderer/component/Loader";
+// import { LogoLoaderCentered } from "@Renderer/component/Loader";
+import LogoLoader from "@Renderer/components/loader/logo-loader";
 import { RegularButton } from "@Renderer/component/Button";
 import Callout from "@Renderer/component/Callout";
 import { IconFloppyDisk, IconLoader } from "@Renderer/component/Icon";
@@ -790,7 +791,7 @@ function MacroEditor(props: MacroEditorProps) {
     </DropdownButton>
   );
 
-  if (loading) return <LogoLoaderCentered />;
+  if (loading) return <LogoLoader centered />;
   return (
     <Styles className="macroEditor">
       <Container fluid>

@@ -269,3 +269,45 @@ select:focus {
 .previewMacro .previewKey.isModifier.keyCode-231 {
   @apply text-purple-200 border-purple-200 bg-purple-200/5;
 }
+
+/* LOADER */
+.running {
+  --animation-state: running;
+}
+.paused {
+  --animation-state: running;
+}
+.loader-piece {
+  animation: loadingPieces 300ms linear;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+  animation-play-state: var(--animation-state);
+  --color-base: rgb(108, 92, 231);
+}
+@keyframes loadingPieces {
+  to {
+    opacity: 0.2;
+  }
+}
+.fillShapeColor {
+  fill: var(--color-base);
+}
+.strokeShapeColor {
+  stroke: var(--color-base);
+  stroke-opacity: 0.15;
+}
+.loader-base {
+  animation: loadingScale 300ms linear;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+  transform-origin: center;
+  animation-play-state: var(--animation-state);
+}
+@keyframes loadingScale {
+  to {
+    transform: scale(0.9);
+  }
+}
+.loader-rotating {
+  filter: drop-shadow(0px 4px 6px rgba(100, 135, 220, 0.5));
+}

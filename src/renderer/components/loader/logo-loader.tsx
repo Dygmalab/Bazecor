@@ -1,130 +1,40 @@
-import React from "react";
-import Styled, { useTheme } from "styled-components";
-
-const Style = Styled.div`
-.running {
-  --animation-state: running;
-}
-.paused {
-  --animation-state: running;
-}
-.loader-container {
-    display: block;
-    margin: 0 auto;
-    --color-base: ${({ theme }) => theme.colors.purple300};
-    &.loader-warning {
-      --color-base: ${({ theme }) => theme.colors.brandWarning};
-      .loader-rotating {
-        opacity: 0.2;
-      }
-    }
-    &.loader-error {
-      --color-base: ${({ theme }) => theme.colors.brandPrimary};
-      .loader-rotating {
-        opacity: 0.2;
-      }
-    }
-}
-svg {
-    overflow: visible;
-    max-width: 100%;
-}
-.loader-piece {
-    animation: loadingPieces 300ms linear;
-    animation-iteration-count: infinite;
-    animation-direction: alternate;
-    animation-play-state: var(--animation-state);
-}
-@keyframes loadingPieces {
-    to {
-        opacity: 0.2;
-    }
-}
-.piece2 {
-    animation-delay: 100ms;
-}
-.piece3 {
-    animation-delay: 200ms;
-}
-.fillShapeColor {
-  fill: var(--color-base);
-}
-.strokeShapeColor {
-  stroke: var(--color-base);
-  stroke-opacity: 0.15;
-}
-.loader-base {
-    animation: loadingScale 300ms linear;
-    animation-iteration-count: infinite;
-    animation-direction: alternate;
-    transform-origin: center;
-    animation-play-state: var(--animation-state);
-}
-
-@keyframes loadingScale {
-    to {
-        transform: scale(0.9);
-    }
-}
-.paused {
-  .loader-piece {
-    animation: resetOpacity 600ms linear;
-    animation-iteration-count: 1;
-    animation-direction: forwards;
-  }
-  .loader-base {
-      animation: resetScale 600ms linear;
-      animation-iteration-count: 1;
-      animation-direction: forwards;
-  }
-}
-@keyframes resetScale {
-  to {
-      transform: scale(1);
-  }
-}
-@keyframes resetOpacity {
-  to {
-      opacity: 1;
-  }
-}
-.loader-rotating {
-    filter: drop-shadow(0px 4px 6px rgba(100, 135, 220, 0.5));
-}
-.rotating {
-    transform-origin: 320% 300%;
-	  animation: rotating 1s linear infinite;
-    animation-play-state: var(--animation-state);
-}
-@keyframes rotating {
-    from {
-        transform: rotate(0deg);
-    }
-    to {
-        transform: rotate(360deg);
-    }
-}
-`;
+import React, { useState, useEffect } from "react";
+import NeuronLoaderLight from "@Assets/light/neuron-loader.jpg";
+import NeuronLoaderDark from "@Assets/dark/neuron-loader.jpg";
 
 interface LogoLoaderProps {
   width?: string;
   warning?: boolean;
   error?: boolean;
   paused?: boolean;
+  centered?: boolean;
 }
 
-const LogoLoader = ({ width = "52px", warning = false, error = false, paused = false }: LogoLoaderProps) => {
-  const { neuronLoader } = useTheme().styles.neuronStatus;
+const LogoLoader = ({ width = "52px", warning = false, error = false, paused = false, centered = false }: LogoLoaderProps) => {
+  const [neuronLoaderImage, setNeuronLoaderImage] = useState(NeuronLoaderLight);
+
+  useEffect(() => {
+    if (document.documentElement.classList.contains("dark")) {
+      setNeuronLoaderImage(NeuronLoaderDark);
+    }
+  }, []);
 
   return (
-    <Style>
+    <div className={`${centered ? "w-full h-full flex justify-center items-center" : ""}`}>
       <div
-        className={`loader-container ${warning ? "loader-warning" : ""} ${error ? "loader-error" : ""} ${
-          paused ? "paused" : "running"
-        }`}
+        className={`loader-container block my-0 mx-auto text-purple-300 text-center ${warning ? "loader-warning" : ""} ${
+          error ? "loader-error" : ""
+        } ${paused ? "paused" : "running"}`}
         style={{ width: `${width}` }}
       >
-        <svg width="50" height="52" viewBox="0 0 50 52" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <svg
+          width="50"
+          height="52"
+          viewBox="0 0 50 52"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+          className="overflow-visible max-w-full"
+        >
           <g className="loader-rotating">
             <mask
               id="mask0_3994_257195"
@@ -165,7 +75,7 @@ const LogoLoader = ({ width = "52px", warning = false, error = false, paused = f
                 className="strokeShapeColor"
               />
             </g>
-            <g className="loader-piece piece2">
+            <g className="loader-piece delay-100">
               <path
                 d="M7.49405 21.1849C7.98546 21.6741 8.35402 22.1632 8.84543 22.6523C9.82826 23.7528 10.8111 24.7311 11.9168 25.7093L10.6882 20.0844L10.1968 17.6388L9.09114 12.9922L25.0621 7.12279C28.5019 5.89999 32.3104 5.16631 36.2417 5.16631H36.4874C37.2245 5.16631 37.8388 5.16631 38.4531 5.16631C39.313 5.16631 40.2959 5.28859 41.1558 5.41087L38.3302 4.43264L35.996 3.57668L30.7133 1.74248L26.6591 0.275129C25.5535 -0.0917097 24.4478 -0.0917097 23.3421 0.275129L18.7965 1.86476L4.42272 7.00051L0 8.46786C1.71994 13.2368 4.29986 17.5166 7.49405 21.1849Z"
                 className="fillShapeColor"
@@ -175,7 +85,7 @@ const LogoLoader = ({ width = "52px", warning = false, error = false, paused = f
                 className="strokeShapeColor"
               />
             </g>
-            <g className="loader-piece piece3">
+            <g className="loader-piece delay-200">
               <path
                 d="M30.2236 34.8812L27.6437 36.96L24.9409 39.161L12.7785 29.1341C11.0585 27.6667 9.33857 26.0771 7.86433 24.3652C7.37292 23.876 7.00436 23.3869 6.51295 22.7755C4.91585 20.8191 3.56447 18.7403 2.33594 16.417L4.91585 24.8543L5.16156 25.8325L6.02153 28.645L6.51295 30.3569C6.75865 30.9683 7.00436 31.7019 7.49577 32.1911C7.98718 32.6802 8.60145 33.4139 9.33857 34.2698C9.82998 34.8812 10.4442 35.4926 11.0585 36.2263C16.3412 42.218 24.8181 51.8781 25.0638 52.0004C29.6093 45.7641 32.9264 38.6719 34.892 30.9683L30.2236 34.8812Z"
                 className="fillShapeColor"
@@ -190,11 +100,17 @@ const LogoLoader = ({ width = "52px", warning = false, error = false, paused = f
             <pattern id="prefix__pattern0" patternContentUnits="objectBoundingBox" width={1} height={1}>
               <use xlinkHref="#prefix__image0_1082_145292" transform="scale(.00357)" />
             </pattern>
-            <image className="rotating" id="prefix__image0_1082_145292" width={280} height={280} xlinkHref={neuronLoader} />
+            <image
+              className="rotating animate-spin origin-[320%_300%]"
+              id="prefix__image0_1082_145292"
+              width={280}
+              height={280}
+              xlinkHref={neuronLoaderImage}
+            />
           </defs>
         </svg>
       </div>
-    </Style>
+    </div>
   );
 };
 

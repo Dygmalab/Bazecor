@@ -31,7 +31,8 @@ import Callout from "@Renderer/component/Callout";
 import { LayoutViewSelector } from "@Renderer/component/ToggleButtons";
 import { SuperkeysSelector } from "@Renderer/component/Select";
 import { RegularButton } from "@Renderer/component/Button";
-import { LogoLoaderCentered } from "@Renderer/component/Loader";
+// import { LogoLoaderCentered } from "@Renderer/component/Loader";
+import LogoLoader from "@Renderer/components/loader/logo-loader";
 
 import ToastMessage from "@Renderer/component/ToastMessage";
 import { IconFloppyDisk } from "@Renderer/component/Icon";
@@ -757,7 +758,8 @@ function SuperkeysEditor(props: SuperkeysEditorProps) {
       </Col>
     </Row>
   ));
-  if (loading || !Array.isArray(superkeys)) return <LogoLoaderCentered />;
+  // if (loading || !Array.isArray(superkeys)) return <LogoLoaderCentered />;
+  if (loading || !Array.isArray(superkeys)) return <LogoLoader centered />;
   return (
     <Styles className="superkeys">
       <Container fluid className={`${isStandardViewSuperkeys ? "standarViewMode" : "singleViewMode"}`}>

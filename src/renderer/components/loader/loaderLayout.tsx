@@ -1,12 +1,12 @@
 import React from "react";
-import { LogoLoader } from "@Renderer/component/Loader";
+import LogoLoader from "@Renderer/components/loader/logo-loader";
 import Heading from "@Renderer/components/ui/heading";
 
 interface LoaderLayoutProps {
   steps: number;
 }
 const LoaderLayout = ({ steps }: LoaderLayoutProps) => {
-  console.log(steps);
+  // console.log(steps);
 
   const contextualStep = [
     { step: 1, text: "Loading Neuron information" },
