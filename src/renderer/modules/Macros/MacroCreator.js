@@ -20,7 +20,7 @@ import React, { Component } from "react";
 import Styled from "styled-components";
 
 import { MdUnfoldLess, MdKeyboardArrowUp, MdKeyboardArrowDown, MdTimer } from "react-icons/md";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@Renderer/components/ui/tabs";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@Renderer/components/ui/Tabs";
 import { motion } from "framer-motion";
 import { i18n } from "@Renderer/i18n";
 

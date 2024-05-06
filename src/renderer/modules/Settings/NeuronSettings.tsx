@@ -23,7 +23,7 @@ import Col from "react-bootstrap/Col";
 import { i18n } from "@Renderer/i18n";
 
 // Own Components
-import { Card, CardContent, CardHeader, CardTitle } from "@Renderer/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@Renderer/components/ui/Card";
 import { NeuronSelector } from "@Renderer/component/Select";
 import NeuronData from "@Renderer/modules/NeuronData";
 import { Neuron } from "@Types/neurons";

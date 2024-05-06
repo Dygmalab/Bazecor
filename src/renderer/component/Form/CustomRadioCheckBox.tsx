@@ -20,9 +20,9 @@ import React from "react";
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import Tooltip from "react-bootstrap/Tooltip";
 
-import { Checkbox } from "@Renderer/components/ui/checkbox";
-import { Label } from "@Renderer/components/ui/label";
-import Heading from "@Renderer/components/ui/heading";
+import { Checkbox } from "@Renderer/components/ui/Checkbox";
+import { Label } from "@Renderer/components/ui/Label";
+import Heading from "@Renderer/components/ui/Heading";
 import { CustomRCBProps } from "@Renderer/types/customRadioCheckBox";
 
 import { IconInformationBubble } from "@Renderer/component/Icon";

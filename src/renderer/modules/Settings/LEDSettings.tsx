@@ -21,8 +21,8 @@ import React, { useEffect, useState } from "react";
 import Slider from "@appigram/react-rangeslider";
 
 // Custom components
-import { Card, CardContent, CardHeader, CardTitle } from "@Renderer/components/ui/card";
-import { Switch } from "@Renderer/components/ui/switch";
+import { Card, CardContent, CardHeader, CardTitle } from "@Renderer/components/ui/Card";
+import { Switch } from "@Renderer/components/ui/Switch";
 import { LEDSettingsPreferences } from "@Renderer/types/preferences";
 
 // Assets
@@ -30,7 +30,7 @@ import { Badge } from "@Renderer/component/Badge";
 import { IconFlashlight, IconIridescentWhiteBalance, IconThunder } from "@Renderer/component/Icon";
 import Callout from "@Renderer/component/Callout";
 import { i18n } from "@Renderer/i18n";
-import Heading from "@Renderer/components/ui/heading";
+import Heading from "@Renderer/components/ui/Heading";
 
 function LEDSettings(props: LEDSettingsPreferences) {
   const { kbData, wireless, setKbData, setWireless, connected, isWireless } = props;

@@ -2,8 +2,8 @@ import React from "react";
 import ReactDom from "react-dom";
 
 import { i18n } from "@Renderer/i18n";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@Renderer/components/ui/dialog";
-import { Button } from "@Renderer/components/ui/button";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@Renderer/components/ui/Dialog";
+import { Button } from "@Renderer/components/ui/Button";
 import { IconEye } from "@Renderer/components/icons";
 
 interface PreviewMacroModalProps {

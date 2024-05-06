@@ -30,7 +30,7 @@ import {
   IconThunder,
   IconWirelessMd,
 } from "@Renderer/component/Icon";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@Renderer/components/ui/tabs";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@Renderer/components/ui/Tabs";
 import { KeymapDB } from "../../../api/keymap";
 
 const Styles = Styled.div`

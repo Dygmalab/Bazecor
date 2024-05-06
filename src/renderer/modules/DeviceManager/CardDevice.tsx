@@ -1,13 +1,13 @@
 import React, { useState, forwardRef } from "react";
 
-import Heading from "@Renderer/components/ui/heading";
+import Heading from "@Renderer/components/ui/Heading";
 import { IconDelete, IconDragAndDrop } from "@Renderer/components/icons";
 
 import { DevicePreview } from "@Renderer/modules/DevicePreview";
 
 import { SortableKnob } from "react-easy-sort";
 
-import { Button } from "@Renderer/components/ui/button";
+import { Button } from "@Renderer/components/ui/Button";
 
 import { i18n } from "@Renderer/i18n";
 // import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@Renderer/components/ui/dropdown-menu";

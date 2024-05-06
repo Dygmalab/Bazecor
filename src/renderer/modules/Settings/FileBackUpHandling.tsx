@@ -19,7 +19,7 @@ import Slider from "@appigram/react-rangeslider";
 import { ipcRenderer } from "electron";
 
 // React Bootstrap Components
-import { Card, CardContent, CardHeader, CardTitle } from "@Renderer/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@Renderer/components/ui/Card";
 import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";

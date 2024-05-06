@@ -21,7 +21,7 @@ import Styled from "styled-components";
 import { BatterySettingsProps } from "@Types/wireless";
 
 // Custom components
-import { Card, CardContent, CardHeader } from "@Renderer/components/ui/card";
+import { Card, CardContent, CardHeader } from "@Renderer/components/ui/Card";
 import Title from "@Renderer/component/Title";
 import { BatteryStatusSide, SavingModeIndicator } from "@Renderer/component/Battery";
 

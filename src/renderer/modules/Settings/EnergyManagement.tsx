@@ -26,11 +26,11 @@ import Tooltip from "react-bootstrap/Tooltip";
 import { SavingMode } from "@Renderer/modules/Battery";
 
 // Custom components
-import { Card, CardContent, CardHeader, CardTitle } from "@Renderer/components/ui/card";
-import { Switch } from "@Renderer/components/ui/switch";
+import { Card, CardContent, CardHeader, CardTitle } from "@Renderer/components/ui/Card";
+import { Switch } from "@Renderer/components/ui/Switch";
 import { Badge } from "@Renderer/component/Badge";
 import { IconFlashlight, IconLeaf, IconInformationBubble } from "@Renderer/component/Icon";
-import Heading from "@Renderer/components/ui/heading";
+import Heading from "@Renderer/components/ui/Heading";
 import { i18n } from "@Renderer/i18n";
 
 // Import Types for wireless

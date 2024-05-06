@@ -39,7 +39,7 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "@Renderer/components/ui/alert-dialog";
+} from "@Renderer/components/ui/AlertDialog";
 import { BatteryStatus } from "@Renderer/modules/Battery";
 import { NavigationButton } from "@Renderer/component/Button";
 import { i18n } from "@Renderer/i18n";

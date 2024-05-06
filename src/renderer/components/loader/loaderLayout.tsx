@@ -1,6 +1,6 @@
 import React from "react";
 import LogoLoader from "@Renderer/components/loader/logo-loader";
-import Heading from "@Renderer/components/ui/heading";
+import Heading from "@Renderer/components/ui/Heading";
 
 interface LoaderLayoutProps {
   steps: number;

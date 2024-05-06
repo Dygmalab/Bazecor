@@ -1,11 +1,11 @@
 import React, { useState } from "react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@Renderer/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@Renderer/components/ui/Dialog";
 
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
 import { IconDragAndDrop } from "@Renderer/components/icons";
 import { RegularButton } from "@Renderer/component/Button";
-import Heading from "@Renderer/components/ui/heading";
+import Heading from "@Renderer/components/ui/Heading";
 
 import { i18n } from "@Renderer/i18n";
 

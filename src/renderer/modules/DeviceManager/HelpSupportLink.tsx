@@ -1,6 +1,6 @@
 import React from "react";
 import { IconBugWarning } from "@Renderer/components/icons";
-import Heading from "@Renderer/components/ui/heading";
+import Heading from "@Renderer/components/ui/Heading";
 
 import { i18n } from "@Renderer/i18n";
 

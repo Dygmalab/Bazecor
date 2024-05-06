@@ -4,7 +4,7 @@ import Styled from "styled-components";
 import Form from "react-bootstrap/Form";
 
 // Internal components
-import { Switch } from "@Renderer/components/ui/switch";
+import { Switch } from "@Renderer/components/ui/Switch";
 import Title from "@Renderer/component/Title";
 
 import { EnergyManagementProps } from "@Renderer/types/wireless";

@@ -16,8 +16,8 @@
 
 import React, { useState } from "react";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@Renderer/components/ui/card";
-import { Switch } from "@Renderer/components/ui/switch";
+import { Card, CardContent, CardHeader, CardTitle } from "@Renderer/components/ui/Card";
+import { Switch } from "@Renderer/components/ui/Switch";
 
 import { useDevice } from "@Renderer/DeviceContext";
 import { Select } from "@Renderer/component/Select";

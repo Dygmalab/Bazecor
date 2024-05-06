@@ -17,12 +17,12 @@
 import React, { Component } from "react";
 
 import Styled from "styled-components";
-import { Button } from "@Renderer/components/ui/button";
+import { Button } from "@Renderer/components/ui/Button";
 import { i18n } from "@Renderer/i18n";
 
 import { IconDelete, IconStopWatch } from "@Renderer/components/icons";
 import PreviewMacroModal from "@Renderer/components/common/modal-preview-macro";
-import Heading from "@Renderer/components/ui/heading";
+import Heading from "@Renderer/components/ui/Heading";
 import LogoLoader from "@Renderer/components/loader/logo-loader";
 import { KeymapDB } from "../../../api/keymap";
 

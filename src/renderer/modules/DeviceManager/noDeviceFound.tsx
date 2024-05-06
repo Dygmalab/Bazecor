@@ -1,6 +1,6 @@
 import React from "react";
 
-import Heading from "@Renderer/components/ui/heading";
+import Heading from "@Renderer/components/ui/Heading";
 import { IconRobotOffline } from "@Renderer/components/icons";
 
 import { i18n } from "@Renderer/i18n";

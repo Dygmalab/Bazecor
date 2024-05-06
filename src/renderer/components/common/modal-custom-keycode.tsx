@@ -7,9 +7,9 @@ import {
   DialogTitle,
   DialogDescription,
   DialogFooter,
-} from "@Renderer/components/ui/dialog";
+} from "@Renderer/components/ui/Dialog";
 
-import { Button } from "@Renderer/components/ui/button";
+import { Button } from "@Renderer/components/ui/Button";
 
 interface CustomKeyCodeModalProps {
   modalTitle: string;
