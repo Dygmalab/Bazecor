@@ -1,8 +1,8 @@
 import React from "react";
 
-import Heading from "@Renderer/components/ui/Heading";
-import { IconPlus, IconRefresh, IconBluetooth } from "@Renderer/components/icons";
-import { Button } from "@Renderer/components/ui/Button";
+import Heading from "@Renderer/components/atoms/Heading";
+import { IconPlus, IconRefresh, IconBluetooth } from "@Renderer/components/atoms/icons";
+import { Button } from "@Renderer/components/atoms/Button";
 
 import { i18n } from "@Renderer/i18n";
 

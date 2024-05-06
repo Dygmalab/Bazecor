@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@Renderer/components/ui/Dialog";
-import { Button } from "@Renderer/components/ui/Button";
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@Renderer/components/atoms/Dialog";
+import { Button } from "@Renderer/components/atoms/Button";
 
 import { i18n } from "@Renderer/i18n";
 

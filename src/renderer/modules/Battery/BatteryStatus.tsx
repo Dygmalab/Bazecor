@@ -9,7 +9,7 @@ import { BatteryStatusSide, SavingModeIndicator } from "@Renderer/component/Batt
 
 // Assets
 import { IconBattery } from "@Renderer/component/Icon";
-import { IconRefresh } from "@Renderer/components/icons";
+import { IconRefresh } from "@Renderer/components/atoms/icons";
 
 import { useDevice } from "@Renderer/DeviceContext";
 import { LogoLoader } from "@Renderer/component/Loader";

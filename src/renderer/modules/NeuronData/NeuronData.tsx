@@ -17,7 +17,7 @@
 
 import React from "react";
 import Styled from "styled-components";
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@Renderer/components/ui/Accordion";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@Renderer/components/atoms/Accordion";
 import { Neurons } from "@Types/neurons";
 import NeuronTitle from "../NeuronTitle";
 import { IconRobot, IconLayers, IconThunder } from "../../component/Icon";

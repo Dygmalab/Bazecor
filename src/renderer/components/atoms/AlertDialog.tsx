@@ -2,7 +2,7 @@ import * as React from "react";
 import * as AlertDialogPrimitive from "@radix-ui/react-alert-dialog";
 
 import { cn } from "@Renderer/utils";
-import { buttonVariants } from "@Renderer/components/ui/Button";
+import { buttonVariants } from "@Renderer/components/atoms/Button";
 
 interface ButtonVariantProps {
   buttonVariant: "default" | "destructive" | "outline" | "link" | "secondary" | "ghost";

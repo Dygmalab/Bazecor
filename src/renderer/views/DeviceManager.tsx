@@ -4,8 +4,8 @@ import { PageHeader } from "@Renderer/modules/PageHeader";
 import CardDevice from "@Renderer/modules/DeviceManager/CardDevice";
 import NoDeviceFound from "@Renderer/modules/DeviceManager/noDeviceFound";
 
-import Heading from "@Renderer/components/ui/Heading";
-import { Button } from "@Renderer/components/ui/Button";
+import Heading from "@Renderer/components/atoms/Heading";
+import { Button } from "@Renderer/components/atoms/Button";
 
 import SortableList, { SortableItem } from "react-easy-sort";
 import { arrayMoveImmutable } from "array-move";
@@ -22,7 +22,7 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "@Renderer/components/ui/AlertDialog";
+} from "@Renderer/components/atoms/AlertDialog";
 import CardAddDevice from "@Renderer/modules/DeviceManager/CardAddDevice";
 
 const savedDevicesList = [

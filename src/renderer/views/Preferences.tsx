@@ -52,11 +52,11 @@ import {
   IconNeuronManager,
   IconChip,
 } from "@Renderer/component/Icon";
-import Version from "@Renderer/components/ui/Version";
+import Version from "@Renderer/components/atoms/Version";
 
 import Store from "@Renderer/utils/Store";
 import { useDevice } from "@Renderer/DeviceContext";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@Renderer/components/ui/Tabs";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@Renderer/components/atoms/Tabs";
 import { KBDataPref, PrefState, PreferencesProps } from "@Renderer/types/preferences";
 import { WirelessInterface } from "@Renderer/types/wireless";
 import { LogoLoader } from "@Renderer/component/Loader";

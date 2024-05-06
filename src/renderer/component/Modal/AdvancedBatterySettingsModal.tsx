@@ -26,8 +26,8 @@ import Modal from "react-bootstrap/Modal";
 import Slider from "@appigram/react-rangeslider";
 
 // Custom components
-import { Card, CardContent, CardHeader } from "@Renderer/components/ui/Card";
-import { Switch } from "@Renderer/components/ui/Switch";
+import { Card, CardContent, CardHeader } from "@Renderer/components/atoms/Card";
+import { Switch } from "@Renderer/components/atoms/Switch";
 import Title from "@Renderer/component/Title";
 import { Badge } from "@Renderer/component/Badge";
 import { RegularButton } from "@Renderer/component/Button";

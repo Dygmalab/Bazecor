@@ -32,7 +32,7 @@ import { LayoutViewSelector } from "@Renderer/component/ToggleButtons";
 import { SuperkeysSelector } from "@Renderer/component/Select";
 import { RegularButton } from "@Renderer/component/Button";
 // import { LogoLoaderCentered } from "@Renderer/component/Loader";
-import LogoLoader from "@Renderer/components/loader/logo-loader";
+import LogoLoader from "@Renderer/components/atoms/loader/LogoLoader";
 
 import ToastMessage from "@Renderer/component/ToastMessage";
 import { IconFloppyDisk } from "@Renderer/component/Icon";

@@ -18,7 +18,7 @@ import React, { useState } from "react";
 import { IconPen } from "@Renderer/component/Icon";
 import { motion } from "framer-motion";
 import { i18n } from "@Renderer/i18n";
-import NameModal from "@Renderer/components/common/modal-name";
+import NameModal from "@Renderer/components/molecules/CustomModal/ModalName";
 import { DevicePreview } from "../DevicePreview";
 
 interface DeviceConnectedPreviewProps {

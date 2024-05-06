@@ -25,7 +25,7 @@ import Col from "react-bootstrap/Col";
 import Slider from "@appigram/react-rangeslider";
 
 // Custom components
-import { Card, CardContent, CardHeader, CardTitle } from "@Renderer/components/ui/Card";
+import { Card, CardContent, CardHeader, CardTitle } from "@Renderer/components/atoms/Card";
 import { KBDataPref } from "@Renderer/types/preferences";
 import { IconTypo, IconMouse } from "@Renderer/component/Icon";
 import Title from "@Renderer/component/Title";

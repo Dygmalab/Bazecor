@@ -21,7 +21,7 @@ import { toast } from "react-toastify";
 import fs from "fs";
 
 // React Bootstrap Components
-import { Card, CardContent, CardHeader, CardTitle } from "@Renderer/components/ui/Card";
+import { Card, CardContent, CardHeader, CardTitle } from "@Renderer/components/atoms/Card";
 
 // Own Components
 import { useDevice } from "@Renderer/DeviceContext";

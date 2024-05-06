@@ -19,7 +19,7 @@ import React from "react";
 import Styled from "styled-components";
 import { toast } from "react-toastify";
 
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@Renderer/components/ui/Card";
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@Renderer/components/atoms/Card";
 
 import Container from "react-bootstrap/Container";
 import { useNavigate } from "react-router-dom";

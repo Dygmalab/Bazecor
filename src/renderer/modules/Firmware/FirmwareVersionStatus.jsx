@@ -23,7 +23,7 @@ import ReactMarkdown from "react-markdown";
 
 import Title from "@Renderer/component/Title";
 import { Badge } from "@Renderer/component/Badge";
-import { IconEye } from "@Renderer/components/icons";
+import { IconEye } from "@Renderer/components/atoms/icons";
 
 import Dropdown from "react-bootstrap/Dropdown";
 import Modal from "react-bootstrap/Modal";

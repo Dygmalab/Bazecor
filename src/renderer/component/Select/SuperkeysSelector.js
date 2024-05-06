@@ -20,8 +20,8 @@ import Styled from "styled-components";
 import Dropdown from "react-bootstrap/Dropdown";
 import { i18n } from "@Renderer/i18n";
 
-import NameModal from "@Renderer/components/common/modal-name";
-import { IconDelete } from "@Renderer/components/icons";
+import NameModal from "@Renderer/components/molecules/CustomModal/ModalName";
+import { IconDelete } from "@Renderer/components/atoms/icons";
 import { RegularButton, ButtonConfig } from "../Button";
 
 import { IconArrowsSmallSeparating, IconPen, IconAddNew, IconClone } from "../Icon";

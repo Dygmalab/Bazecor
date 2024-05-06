@@ -19,7 +19,7 @@ import React from "react";
 import Styled from "styled-components";
 
 import { ColorPickerProps } from "@Renderer/types/colorEditor";
-import { IconPlus } from "@Renderer/components/icons";
+import { IconPlus } from "@Renderer/components/atoms/icons";
 
 const Style = Styled.div`
 

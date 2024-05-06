@@ -24,8 +24,8 @@ import { LayerType, Neuron } from "@Renderer/types/neurons";
 // Own Components
 import { useDevice } from "@Renderer/DeviceContext";
 import { flags, languages, languageNames } from "@Renderer/modules/Settings/GeneralSettingsLanguages";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@Renderer/components/ui/Card";
-import { Switch } from "@Renderer/components/ui/Switch";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@Renderer/components/atoms/Card";
+import { Switch } from "@Renderer/components/atoms/Switch";
 import { IconChip, IconHanger, IconSun, IconMoon, IconScreen, IconKeyboard } from "@Renderer/component/Icon";
 import { ToggleButtons } from "@Renderer/component/ToggleButtons";
 import { Select } from "@Renderer/component/Select";

@@ -20,8 +20,8 @@ import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import Tooltip from "react-bootstrap/Tooltip";
 
 // Custom components
-import { Card, CardContent, CardHeader, CardTitle } from "@Renderer/components/ui/Card";
-import Heading from "@Renderer/components/ui/Heading";
+import { Card, CardContent, CardHeader, CardTitle } from "@Renderer/components/atoms/Card";
+import Heading from "@Renderer/components/atoms/Heading";
 import { RegularButton } from "@Renderer/component/Button";
 
 import { ToggleButtons } from "@Renderer/component/ToggleButtons";

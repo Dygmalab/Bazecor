@@ -20,10 +20,10 @@ import Styled from "styled-components";
 import Dropdown from "react-bootstrap/Dropdown";
 import { i18n } from "@Renderer/i18n";
 import { ButtonSettings } from "@Renderer/component/Button";
-import { IconDelete } from "@Renderer/components/icons";
+import { IconDelete } from "@Renderer/components/atoms/icons";
 import { IconArrowsSmallSeparating, IconPen } from "@Renderer/component/Icon";
 
-import NameModal from "@Renderer/components/common/modal-name";
+import NameModal from "@Renderer/components/molecules/CustomModal/ModalName";
 import { NeuronSelectorProps } from "@Renderer/types/preferences";
 
 const Style = Styled.div`
