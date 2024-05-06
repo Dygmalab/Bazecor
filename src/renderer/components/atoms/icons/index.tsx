@@ -21,8 +21,21 @@ import IconEye from "./IconEye";
 import IconDragAndDrop from "./IconDragAndDrop";
 import IconDragDots from "./IconDragDots";
 import IconNeuron from "./IconNeuron";
+import IconNoWifi from "./IconNoWifi";
+import IconNull from "./IconNull";
+import IconOneShot from "./IconOneShot";
+import IconPause from "./IconPause";
+import IconPen from "./IconPen";
+import IconPlug from "./IconPlug";
 import IconPlus from "./IconPlus";
+import IconPreferences from "./IconPreferences";
+import IconPress from "./IconPress";
+import IconPressAndRelease from "./IconPressAndRelease";
+import IconRadar from "./IconRadar";
+import IconRecord from "./IconRecord";
 import IconRefresh from "./IconRefresh";
+import IconRelease from "./IconRelease";
+import IconRobot from "./IconRobot";
 import IconRobotOffline from "./IconRobotOffline";
 import IconScreen from "./IconScreen";
 import IconSettings from "./IconSettings";
@@ -54,8 +67,21 @@ export {
   IconDragAndDrop,
   IconDragDots,
   IconNeuron,
+  IconNoWifi,
+  IconNull,
+  IconOneShot,
+  IconPause,
+  IconPen,
+  IconPlug,
   IconPlus,
+  IconPreferences,
+  IconPress,
+  IconPressAndRelease,
+  IconRadar,
+  IconRecord,
   IconRefresh,
+  IconRelease,
+  IconRobot,
   IconRobotOffline,
   IconScreen,
   IconSettings,
