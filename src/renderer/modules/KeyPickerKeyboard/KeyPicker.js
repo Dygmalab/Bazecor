@@ -76,11 +76,10 @@ import {
   IconSleepSm,
   IconShutdownSm,
   IconRobotSm,
-  IconWrenchSm,
   IconWirelessSm,
   IconLEDToggleEffectSm,
-  IconWrench,
 } from "@Renderer/component/Icon";
+import { IconWrench } from "@Renderer/components/atoms/icons";
 
 import { i18n } from "@Renderer/i18n";
 
@@ -785,7 +784,7 @@ class KeyPicker extends Component {
 
             <div className="keysRow keysTools">
               <div className="keyIcon">
-                <IconWrenchSm />
+                <IconWrench size="sm" />
               </div>
               <div className="keysButtonsList">
                 <ButtonConfig

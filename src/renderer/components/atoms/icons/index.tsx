@@ -14,18 +14,37 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import IconBluetooth from "./icon-bluetooth";
-import IconBugWarning from "./icon-bug";
-import IconDelete from "./icon-delete";
-import IconEye from "./icon-eye";
-import IconDragAndDrop from "./icon-drag-and-drop";
-import IconDragDots from "./icon-drag-dots";
-import IconNeuron from "./icon-neuron";
-import IconPlus from "./icon-plus";
-import IconRefresh from "./icon-refresh";
-import IconRobotOffline from "./icon-robot-offline";
-import IconSettings from "./icon-settings";
-import IconStopWatch from "./icon-stopwatch";
+import IconBluetooth from "./IconBluetooth";
+import IconBugWarning from "./IconBug";
+import IconDelete from "./IconDelete";
+import IconEye from "./IconEye";
+import IconDragAndDrop from "./IconDragAndDrop";
+import IconDragDots from "./IconDragDots";
+import IconNeuron from "./IconNeuron";
+import IconPlus from "./IconPlus";
+import IconRefresh from "./IconRefresh";
+import IconRobotOffline from "./IconRobotOffline";
+import IconScreen from "./IconScreen";
+import IconSettings from "./IconSettings";
+import IconShutdown from "./IconShutdown";
+import IconSignal from "./IconSignal";
+import IconSleep from "./IconSleep";
+import IconStopWatch from "./IconStopwatch";
+import IconStopWatchCrossed from "./IconStopWatchCrossed";
+import IconSun from "./IconSun";
+import IconThreeDots from "./IconThreeDots";
+import IconThunder from "./IconThunder";
+import IconToolsBrightnessLess from "./IconToolsBrightnessLess";
+import IconBrightnessMore from "./IconToolsBrightnessMore";
+import IconToolsCalculator from "./IconToolsCalculator";
+import IconToolsCamera from "./IconToolsCamera";
+import IconToolsEject from "./IconToolsEject";
+import IconTypo from "./IconTypo";
+import IconUndoRestart from "./IconUndoRestart";
+import IconUpload from "./IconUpload";
+import IconWarning from "./IconWarning";
+import IconWireless from "./IconWireless";
+import IconWrench from "./IconWrench";
 
 export {
   IconBluetooth,
@@ -38,6 +57,25 @@ export {
   IconPlus,
   IconRefresh,
   IconRobotOffline,
+  IconScreen,
   IconSettings,
+  IconShutdown,
+  IconSignal,
+  IconSleep,
   IconStopWatch,
+  IconStopWatchCrossed,
+  IconSun,
+  IconThreeDots,
+  IconThunder,
+  IconToolsBrightnessLess,
+  IconBrightnessMore,
+  IconToolsCalculator,
+  IconToolsCamera,
+  IconToolsEject,
+  IconTypo,
+  IconUndoRestart,
+  IconUpload,
+  IconWarning,
+  IconWireless,
+  IconWrench,
 };

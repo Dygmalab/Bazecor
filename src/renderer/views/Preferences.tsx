@@ -48,10 +48,10 @@ import {
   IconKeyboard,
   IconLogoDygma,
   IconSignal,
-  IconWrench,
   IconNeuronManager,
   IconChip,
 } from "@Renderer/component/Icon";
+import { IconWrench } from "@Renderer/components/atoms/icons";
 import Version from "@Renderer/components/atoms/Version";
 
 import Store from "@Renderer/utils/Store";

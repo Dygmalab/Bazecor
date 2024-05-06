@@ -24,6 +24,7 @@ import {
   AlertDialogTitle,
 } from "@Renderer/components/atoms/AlertDialog";
 import CardAddDevice from "@Renderer/modules/DeviceManager/CardAddDevice";
+import { IconWarning } from "@Renderer/components/atoms/icons";
 
 const savedDevicesList = [
   {
@@ -151,6 +152,7 @@ const DeviceManager = () => {
           <div className="filterHeaderWrapper flex items-center justify-between pt-8 pb-3 mb-3 border-b-[1px] border-gray-100 dark:border-gray-600">
             <div className="filter-header flex items-center gap-4">
               <Heading headingLevel={3} renderAs="h3" className="ml-[2px]">
+                <IconWarning />
                 {listDevices.length > 1 ? i18n.deviceManager.myDevices : i18n.deviceManager.myDevice}{" "}
                 <sup className="text-purple-300">{listDevices.length}</sup>
               </Heading>

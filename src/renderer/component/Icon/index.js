@@ -153,7 +153,6 @@ import IconWarning from "./IconWarning";
 import IconWireless from "./IconWireless";
 import IconWirelessMd from "./IconWirelessMd";
 import IconWirelessSm from "./IconWirelessSm";
-import IconWrench from "./IconWrench";
 import IconWrenchSm from "./IconWrenchSm";
 
 export {
@@ -296,6 +295,5 @@ export {
   IconWireless,
   IconWirelessMd,
   IconWirelessSm,
-  IconWrench,
   IconWrenchSm,
 };
