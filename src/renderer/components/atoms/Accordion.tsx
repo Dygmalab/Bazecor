@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import * as AccordionPrimitive from "@radix-ui/react-accordion";
-import { cva, type VariantProps } from "class-variance-authority";
+// import { cva, type VariantProps } from "class-variance-authority";
 
 import { ChevronDown } from "lucide-react";
 
