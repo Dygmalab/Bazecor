@@ -33,6 +33,7 @@ import IconCheckmark from "./IconCheckmark";
 import IconChevronDown from "./IconChevronDown";
 import IconChip from "./IconChip";
 import IconClone from "./IconClone";
+import IconClose from "./IconClose";
 import IconCloudDownload from "./IconCloudDownload";
 import IconColorPalette from "./IconColorPalette";
 import IconColorPicker from "./IconColorPicker";
@@ -146,6 +147,7 @@ export {
   IconChevronDown,
   IconChip,
   IconClone,
+  IconClose,
   IconCloudDownload,
   IconColorPalette,
   IconColorPicker,

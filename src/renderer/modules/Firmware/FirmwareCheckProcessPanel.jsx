@@ -30,7 +30,8 @@ import Title from "@Renderer/component/Title";
 import Callout from "@Renderer/component/Callout";
 import { RegularButton } from "@Renderer/component/Button";
 import { FirmwareLoader } from "@Renderer/component/Loader";
-import AccordionFirmware from "@Renderer/component/Accordion/AccordionFirmware";
+// import AccordionFirmware from "@Renderer/component/Accordion/AccordionFirmware";
+import AccordionFirmware from "@Renderer/components/molecules/CustomAccordion/AccordionFirmware";
 
 import FirmwareNeuronStatus from "./FirmwareNeuronStatus";
 import FirmwareWarningList from "./FirmwareWarningList";

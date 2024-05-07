@@ -123,9 +123,9 @@ const AccordionFirmware = ({ items }: any) => {
   return (
     <Style>
       <Accordion type="single" collapsible className="w-full">
-        <AccordionItem value="item-1">
-          <AccordionTrigger>
-            <div className="stepsCompletedStatus">
+        <AccordionItem value="item-1" className="bg-white dark:bg-gray-700 rounded">
+          <AccordionTrigger className="px-3 py-2 bg-transparent bg-dark:bg-black/5 mb-[-1px]">
+            <div className="stepsCompletedStatus text-gray-500 dark:text-gray-100">
               <div className="stepsCompletedHeader">
                 {passedTasks ? <IconCheckmarkSm /> : ""}
                 <Title
