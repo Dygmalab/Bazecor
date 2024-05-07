@@ -18,7 +18,8 @@ import {
   FirmwareUpdateProcess,
 } from "@Renderer/modules/Firmware";
 
-import { FirmwareLoader } from "@Renderer/component/Loader";
+// import { FirmwareLoader } from "@Renderer/component/Loader";
+import LogoLoader from "@Renderer/components/atoms/loader/LogoLoader";
 import { useDevice } from "@Renderer/DeviceContext";
 
 const Styles = Styled.div`
@@ -71,8 +72,9 @@ function FirmwareUpdate(props: any) {
         <div className="panel-wrapper">
           {state.context.Block === -1 ? <FirmwareErrorPanel nextBlock={nextBlock} retryBlock={retryBlock} /> : ""}
           {state.context.Block === 0 ? (
-            <FirmwareLoader width={undefined} warning={undefined} error={undefined} paused={undefined} />
+            <LogoLoader firmwareLoader />
           ) : (
+            // <FirmwareLoader width={undefined} warning={undefined} error={undefined} paused={undefined} />
             ""
           )}
           {state.context.Block === 1 ? (

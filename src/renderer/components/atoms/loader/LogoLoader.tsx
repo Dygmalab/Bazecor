@@ -8,9 +8,17 @@ interface LogoLoaderProps {
   error?: boolean;
   paused?: boolean;
   centered?: boolean;
+  firmwareLoader?: boolean;
 }
 
-const LogoLoader = ({ width = "52px", warning = false, error = false, paused = false, centered = false }: LogoLoaderProps) => {
+const LogoLoader = ({
+  width = "52px",
+  warning = false,
+  error = false,
+  paused = false,
+  centered = false,
+  firmwareLoader = false,
+}: LogoLoaderProps) => {
   const [neuronLoaderImage, setNeuronLoaderImage] = useState(NeuronLoaderLight);
 
   useEffect(() => {
@@ -20,7 +28,11 @@ const LogoLoader = ({ width = "52px", warning = false, error = false, paused = f
   }, []);
 
   return (
-    <div className={`${centered ? "w-full h-full flex justify-center items-center" : ""}`}>
+    <div
+      className={`${centered ? "w-full h-full flex justify-center items-center" : ""} ${
+        firmwareLoader ? "w-full max-w-[960px] mx-auto my-auto" : ""
+      }`}
+    >
       <div
         className={`loader-container block my-0 mx-auto text-purple-300 text-center ${warning ? "loader-warning" : ""} ${
           error ? "loader-error" : ""

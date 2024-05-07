@@ -28,7 +28,8 @@ import FWSelection from "@Renderer/controller/FlashingSM/FWSelection";
 import Title from "@Renderer/component/Title";
 import Callout from "@Renderer/component/Callout";
 import { RegularButton } from "@Renderer/component/Button";
-import { FirmwareLoader } from "@Renderer/component/Loader";
+// import { FirmwareLoader } from "@Renderer/component/Loader";
+import LogoLoader from "@Renderer/components/atoms/loader/LogoLoader";
 import { IconLoader } from "@Renderer/component/Icon";
 
 // Visual modules
@@ -185,7 +186,8 @@ function FirmwareUpdatePanel(props) {
   return (
     <Style>
       {loading ? (
-        <FirmwareLoader />
+        // <FirmwareLoader />
+        <LogoLoader firmwareLoader />
       ) : (
         <div className="firmware-wrapper home-firmware">
           <div className="firmware-row">
