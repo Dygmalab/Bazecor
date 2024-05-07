@@ -14,13 +14,80 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import IconAddLayer from "./IconAddLayer";
+import IconAddNew from "./IconAddNew";
+import IconArrowChevronLeft from "./IconArrowChevronLeft";
+import IconArrowChevronRight from "./IconArrowChevronRight";
+import IconArrowDownWithLine from "./IconArrowDownWithLine";
+import IconArrowInBoxDown from "./IconArrowInBoxDown";
+import IconArrowInBoxUp from "./IconArrowInBoxUp";
+import IconArrowRight from "./IconArrowRight";
+import IconArrowsMouseWheel from "./IconArrowsMouseWheel";
+import IconArrowsSmallSeparating from "./IconArrowsSmallSeparating";
+import IconArrowUpWithLine from "./IconArrowUpWithLine";
+import IconBattery from "./IconBattery";
+import IconBazecordevtools from "./IconBazecordevtools";
 import IconBluetooth from "./IconBluetooth";
 import IconBugWarning from "./IconBug";
+import IconCheckmark from "./IconCheckmark";
+import IconChevronDown from "./IconChevronDown";
+import IconChip from "./IconChip";
+import IconClone from "./IconClone";
+import IconCloudDownload from "./IconCloudDownload";
+import IconColorPalette from "./IconColorPalette";
+import IconColorPicker from "./IconColorPicker";
+import IconConnected from "./IconConnected";
 import IconDelete from "./IconDelete";
-import IconEye from "./IconEye";
 import IconDragAndDrop from "./IconDragAndDrop";
 import IconDragDots from "./IconDragDots";
+import IconEditModeSingleView from "./IconEditModeSingleView";
+import IconEditModeStandardView from "./IconEditModeStandardView";
+import IconEye from "./IconEye";
+import IconFileDownload from "./IconFileDownload";
+import IconFlashlight from "./IconFLashlight";
+import IconFloppyDisk from "./IconFloppyDisk";
+import IconFolder from "./IconFolder";
+import IconHome from "./IconHome";
+import IconInformation from "./IconInformation";
+import IconIridescentWhiteBalance from "./IconIridescentWhiteBalance";
+import IconKeyboard from "./IconKeyboard";
+import IconKeyboard2Stroke from "./IconKeyboard2Stroke";
+import IconKeyboardSelector from "./IconKeyboardSelector";
+import IconKeys2Tap from "./IconKeys2Tap";
+import IconKeys2TapHold from "./IconKeys2TapHold";
+import IconKeysHold from "./IconKeysHold";
+import IconKeysLight from "./IconKeysLight";
+import IconKeysPress from "./IconKeysPress";
+import IconKeysRelease from "./IconKeysRelease";
+import IconKeysStopWatch from "./IconKeysStopWatch";
+import IconKeysTapHold from "./IconKeysTapHold";
+import IconKeysUnderglow from "./IconKeysUnderglow";
+import IconLeaf from "./IconLeaf";
+import IconLayers from "./IconLayers";
+import IconLEDNextEffect from "./IconLEDNextEffect";
+import IconLEDPreviousEffect from "./IconLEDPreviousEffect";
+import IconLEDSwitchLeft from "./IconLEDSwitchLeft";
+import IconLEDToggleEffect from "./IconLEDToggleEffect";
+import IconLetterColor from "./IconLetterColor";
+import IconLoader from "./IconLoader";
+import IconLogoDygma from "./IconLogoDygma";
+import IconMagicStick from "./IconMagicStick";
+import IconMediaForward from "./IconMediaForward";
+import IconMediaPlayPause from "./IconMediaPlayPause";
+import IconMediaRewind from "./IconMediaRewind";
+import IconMediaShuffle from "./IconMediaShuffle";
+import IconMediaSoundLess from "./IconMediaSoundLess";
+import IconMediaSoundMore from "./IconMediaSoundMore";
+import IconMediaSoundMute from "./IconMediaSoundMute";
+import IconMediaStop from "./IconMediaStop";
+import IconMemory from "./IconMemory";
+import IconMoon from "./IconMoon";
+import IconMoreVertical from "./IconMoreVertical";
+import IconMouse from "./IconMouse";
+import IconNeuronManager from "./IconNeuronManager";
 import IconNeuron from "./IconNeuron";
+import IconNoKey from "./IconNoKey";
+import IconNote from "./IconNote";
 import IconNoWifi from "./IconNoWifi";
 import IconNull from "./IconNull";
 import IconOneShot from "./IconOneShot";
@@ -60,13 +127,80 @@ import IconWireless from "./IconWireless";
 import IconWrench from "./IconWrench";
 
 export {
+  IconAddLayer,
+  IconAddNew,
+  IconArrowChevronLeft,
+  IconArrowChevronRight,
+  IconArrowDownWithLine,
+  IconArrowInBoxDown,
+  IconArrowInBoxUp,
+  IconArrowRight,
+  IconArrowsMouseWheel,
+  IconArrowsSmallSeparating,
+  IconArrowUpWithLine,
+  IconBattery,
+  IconBazecordevtools,
   IconBluetooth,
   IconBugWarning,
+  IconCheckmark,
+  IconChevronDown,
+  IconChip,
+  IconClone,
+  IconCloudDownload,
+  IconColorPalette,
+  IconColorPicker,
+  IconConnected,
   IconDelete,
-  IconEye,
   IconDragAndDrop,
   IconDragDots,
+  IconEditModeSingleView,
+  IconEditModeStandardView,
+  IconEye,
+  IconFileDownload,
+  IconFlashlight,
+  IconFloppyDisk,
+  IconFolder,
+  IconHome,
+  IconInformation,
+  IconIridescentWhiteBalance,
+  IconKeyboard,
+  IconKeyboard2Stroke,
+  IconKeyboardSelector,
+  IconKeys2Tap,
+  IconKeys2TapHold,
+  IconKeysHold,
+  IconKeysLight,
+  IconKeysPress,
+  IconKeysRelease,
+  IconKeysStopWatch,
+  IconKeysTapHold,
+  IconKeysUnderglow,
+  IconLeaf,
+  IconLayers,
+  IconLEDNextEffect,
+  IconLEDPreviousEffect,
+  IconLEDSwitchLeft,
+  IconLEDToggleEffect,
+  IconLetterColor,
+  IconLoader,
+  IconLogoDygma,
+  IconMagicStick,
+  IconMediaForward,
+  IconMediaPlayPause,
+  IconMediaRewind,
+  IconMediaShuffle,
+  IconMediaSoundLess,
+  IconMediaSoundMore,
+  IconMediaSoundMute,
+  IconMediaStop,
+  IconMemory,
+  IconMoon,
+  IconMoreVertical,
+  IconMouse,
+  IconNeuronManager,
   IconNeuron,
+  IconNoKey,
+  IconNote,
   IconNoWifi,
   IconNull,
   IconOneShot,
