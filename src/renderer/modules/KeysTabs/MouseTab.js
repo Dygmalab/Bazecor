@@ -22,7 +22,7 @@ import { i18n } from "@Renderer/i18n";
 
 import Title from "../../component/Title";
 import Callout from "../../component/Callout";
-import MouseEventsReference from "../../component/MouseEventsReference";
+// import MouseEventsReference from "../../component/MouseEventsReference";
 import { ButtonConfig, ButtonMouse } from "../../component/Button";
 
 const Styles = Styled.div`
