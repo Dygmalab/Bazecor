@@ -6,6 +6,7 @@ import { i18n } from "@Renderer/i18n";
 // Visual components
 import Heading from "@Renderer/components/atoms/Heading";
 import { IconCheckmark, IconClose } from "@Renderer/components/atoms/icons";
+import { Badge } from "@Renderer/components/atoms/Badge";
 
 interface CheckedItem {
   id: number;
@@ -70,7 +71,10 @@ const AccordionFirmware = ({ items }: AccordionFirmwareProps) => {
                 </Heading>
               </div>
               <div className="stepsCompleted text-xs tracking-tight flex gap-2 mr-1">
-                <div
+                <Badge variant={`${counterTasks === items.length ? "success" : "warning"}`} size="xs">
+                  {counterTasks} {i18n.general.of} {items.length} {i18n.firmwareUpdate.milestones.tasksPassed}
+                </Badge>
+                {/* <div
                   className={`stepsCompletedLabel py-1 px-2 rounded-sm ${
                     counterTasks === items.length
                       ? "passed text-green-200 bg-green-200/10"
@@ -78,7 +82,7 @@ const AccordionFirmware = ({ items }: AccordionFirmwareProps) => {
                   }`}
                 >
                   {counterTasks} {i18n.general.of} {items.length} {i18n.firmwareUpdate.milestones.tasksPassed}
-                </div>
+                </div> */}
               </div>
             </div>
           </AccordionTrigger>
