@@ -61,7 +61,11 @@ const AccordionFirmware = ({ items }: AccordionFirmwareProps) => {
             <div className="stepsCompletedStatus flex w-full gap-2 justify-between items-center text-gray-500 dark:text-gray-100">
               <div className="stepsCompletedHeader flex gap-2 items-center">
                 {passedTasks ? <IconCheckmark size="sm" /> : ""}
-                <Heading headingLevel={5} renderAs="h5" className="text-xs tracking-tight mb-0 normal-case">
+                <Heading
+                  headingLevel={5}
+                  renderAs="h5"
+                  className={`${passedTasks ? "pl-0" : "pl-2"} text-xs tracking-tight mb-0 normal-case`}
+                >
                   {passedTasks ? i18n.firmwareUpdate.milestones.readyToStart : i18n.firmwareUpdate.milestones.analyzedTasks}
                 </Heading>
               </div>
