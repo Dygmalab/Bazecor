@@ -8,9 +8,10 @@ import { AiFillWindows } from "react-icons/ai";
 import { i18n } from "@Renderer/i18n";
 
 import { IconDragAndDrop, IconDelete } from "@Renderer/components/atoms/icons";
+import MacroKeyPortal from "@Renderer/components/molecules/Portals/MacroKeyPortal";
 import Title from "../../component/Title";
 import { ButtonConfig } from "../../component/Button";
-import { MacroKeyModal } from "../../component/Modal";
+// import { MacroKeyModal } from "../../component/Modal";
 
 import {
   IconClone,
@@ -161,7 +162,7 @@ class KeyMacro extends Component {
                     <Dropdown.Toggle variant="primary" id="dropdown-basic" drop="up" align="end">
                       <IconThreeDots />
                     </Dropdown.Toggle>
-                    <MacroKeyModal>
+                    <MacroKeyPortal>
                       <Dropdown.Menu>
                         <div className="keyMacroMiniDashboard">
                           <div className="keyInfo">
@@ -337,7 +338,7 @@ class KeyMacro extends Component {
                           </Dropdown.Item>
                         </div>
                       </Dropdown.Menu>
-                    </MacroKeyModal>
+                    </MacroKeyPortal>
                   </Dropdown>
                 </div>
               </div>
