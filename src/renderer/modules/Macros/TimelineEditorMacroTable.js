@@ -208,7 +208,7 @@ class TimelineEditorMacroTable extends Component {
       });
     }
     if (rows.length !== 0) {
-      const scrollContainer = this.horizontalWheel.current.firstChild;
+      const scrollContainer = this.horizontalWheel.current?.firstChild;
       // console.log("comparing values of scrollpos in mount", this.props.scrollPos, scrollContainer.scrollLeft);
       scrollContainer.addEventListener("wheel", this.scrollUpdate);
     }
@@ -218,7 +218,7 @@ class TimelineEditorMacroTable extends Component {
     const { macro, scrollPos } = this.props;
     const { rows } = this.state;
     if (this.horizontalWheel.current === null) return;
-    const scrollContainer = this.horizontalWheel.current.firstChild;
+    const scrollContainer = this.horizontalWheel.current?.firstChild;
     if (rows.length !== 0 && prevState.rows.length === 0) {
       scrollContainer.addEventListener("wheel", this.scrollUpdate);
     }
@@ -248,7 +248,7 @@ class TimelineEditorMacroTable extends Component {
   componentWillUnmount() {
     const { rows } = this.state;
     if (rows.length !== 0) {
-      const scrollContainer = this.horizontalWheel.current.firstChild;
+      const scrollContainer = this.horizontalWheel.current?.firstChild;
       scrollContainer.removeEventListener("wheel", this.scrollUpdate);
     }
   }
@@ -291,7 +291,7 @@ class TimelineEditorMacroTable extends Component {
 
   scrollUpdate = evt => {
     const { updateScroll } = this.props;
-    const scrollContainer = this.horizontalWheel.current.firstChild;
+    const scrollContainer = this.horizontalWheel.current?.firstChild;
     if (typeof evt.preventDefault === "function") {
       evt.preventDefault();
       scrollContainer.scrollLeft += evt.deltaY;
