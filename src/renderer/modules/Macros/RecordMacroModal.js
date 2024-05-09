@@ -266,21 +266,21 @@ export default class RecordMacroModal extends React.Component {
     if (this.buttonRecord.current && this.buttonRecord.current instanceof HTMLButtonElement) {
       this.buttonRecord.current.blur();
     }
-    if (!isRecording) {
-      const isAccessible = await ipcRenderer.invoke("ask-for-accessibility", "");
-      if (isAccessible) {
-        await ipcRenderer.send("start-recording", "");
-        this.setState({
-          isRecording: true,
-        });
-      }
-    } else {
-      await ipcRenderer.send("stop-recording", "");
-      this.setState({
-        isRecording: false,
-      });
+    const isAccessible = await ipcRenderer.invoke("ask-for-accessibility", "");
+    if (!isAccessible) {
+      return;
     }
+    if (!isRecording) {
+      ipcRenderer.send("start-recording", "");
+    } else {
+      ipcRenderer.send("stop-recording", "");
+    }
+    this.setRecordingState(!isRecording);
   };
+
+  setRecordingState(isRecording) {
+    this.setState({ isRecording });
+  }
 
   undoRecording = () => {
     this.setState({
