@@ -30,8 +30,8 @@ const English = {
     dismiss: "Dismiss",
     troubleshooting: "Troubleshooting",
     alertUnsavedTitle: "Unsaved changes",
-    alertUnsavedDescription:
-      "<p style='font-weight:401;'>You have made changes that haven't been saved yet.</p><p>Save or discard them before leaving.</p>",
+    alertUnsavedDescription1: "You have made changes that haven't been saved yet.",
+    alertUnsavedDescription2: "Save or discard them before leaving.",
   },
   success: {
     languageSaved: "Key picker language has been changed to ",

@@ -29,11 +29,10 @@ import Styled from "styled-components";
 import DygmaLogo from "@Assets/logo.svg";
 import { showDevtools } from "@Renderer/devMode";
 import { useDevice } from "@Renderer/DeviceContext";
-import { AlertModal } from "@Renderer/component/Modal";
+
 import {
   AlertDialog,
   AlertDialogAction,
-  AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
   AlertDialogFooter,
@@ -338,32 +337,22 @@ function NavigationMenu(props: NavigationMenuProps) {
           </div>
         </Nav>
       </Navbar>
-      <AlertModal
-        showModal={showAlertModal}
-        setShowModal={setShowAlertModal}
-        title={i18n.errors.alertUnsavedTitle}
-        description={i18n.errors.alertUnsavedDescription}
-      />
-      {/* <AlertDialog
-        open={showAlertModal}
-        onOpenChange={showAlertModal => {
-          if (showAlertModal === true) return;
-          setShowAlertModal(false);
-        }}
-      >
+      <AlertDialog open={showAlertModal}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>{i18n.deviceManager.dialogDeleteTitle}</AlertDialogTitle>
-            <AlertDialogDescription>{i18n.deviceManager.dialogDeleteDescription}</AlertDialogDescription>
+            <AlertDialogTitle>{i18n.errors.alertUnsavedTitle}</AlertDialogTitle>
+            <AlertDialogDescription>
+              <p>{i18n.errors.alertUnsavedDescription1}</p>
+              <p>{i18n.errors.alertUnsavedDescription2}</p>
+            </AlertDialogDescription>
           </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel buttonVariant="outline">{i18n.dialog.cancel}</AlertDialogCancel>
-            <AlertDialogAction onClick={() => forgetDevice(selectedDevice)} buttonVariant="destructive">
-              {i18n.general.continue}
+          <AlertDialogFooter className="">
+            <AlertDialogAction onClick={() => setShowAlertModal(false)} buttonVariant="secondary">
+              Go back
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
-      </AlertDialog> */}
+      </AlertDialog>
     </Styles>
   );
 }
