@@ -16,9 +16,19 @@
  */
 
 import React from "react";
-import PropTypes from "prop-types";
 
-function RegularButton({ selected, onClick, size, buttonText, styles, icoSVG, icoPosition, disabled }) {
+interface RegularButtonProps {
+  selected?: boolean;
+  onClick: any;
+  size?: string;
+  buttonText?: string;
+  styles?: string;
+  icoSVG?: any;
+  icoPosition?: string;
+  disabled?: boolean;
+}
+
+function RegularButton({ selected, onClick, size, buttonText, styles, icoSVG, icoPosition, disabled }: RegularButtonProps) {
   return (
     <button
       type="button"
@@ -36,16 +46,5 @@ function RegularButton({ selected, onClick, size, buttonText, styles, icoSVG, ic
     </button>
   );
 }
-
-RegularButton.propTypes = {
-  selected: PropTypes.bool,
-  onClick: PropTypes.func,
-  size: PropTypes.string,
-  buttonText: PropTypes.string,
-  styles: PropTypes.string,
-  icoSVG: PropTypes.object,
-  icoPosition: PropTypes.string,
-  disabled: PropTypes.bool,
-};
 
 export default RegularButton;

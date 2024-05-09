@@ -16,7 +16,6 @@
  */
 
 import React, { useState } from "react";
-import PropTypes from "prop-types";
 import Styled from "styled-components";
 
 import ReactMarkdown from "react-markdown";
@@ -139,7 +138,16 @@ h6 {
   }
 }
 `;
-const FirmwareVersionStatus = props => {
+
+interface FirmwareVersionStatusProps {
+  currentlyVersionRunning: string;
+  isUpdated: boolean;
+  firmwareList: any;
+  selectedFirmware: number;
+  send: any;
+}
+
+const FirmwareVersionStatus = (props: FirmwareVersionStatusProps) => {
   const { currentlyVersionRunning, isUpdated, firmwareList, selectedFirmware, send } = props;
   const [modalFirmwareDetails, setModalFirmwareDetails] = useState(false);
   return (
@@ -162,7 +170,7 @@ const FirmwareVersionStatus = props => {
             <div className="firmwareVersionContainer">
               <Dropdown
                 onSelect={value => send("CHANGEFW", { selected: parseInt(value, 10) })}
-                value={selectedFirmware}
+                defaultValue={selectedFirmware}
                 className="custom-dropdown sm"
               >
                 <div>
@@ -172,10 +180,10 @@ const FirmwareVersionStatus = props => {
                     </div>
                   </Dropdown.Toggle>
                   <Dropdown.Menu>
-                    {firmwareList.map((item, index) => (
+                    {firmwareList.map((item: any, index: number) => (
                       <Dropdown.Item
-                        eventKey={index}
-                        key={`id-${index}`}
+                        eventKey={index.toString()}
+                        key={`id-${index.toString()}`}
                         className={`${selectedFirmware === index ? "active" : ""}`}
                         disabled={item.disabled}
                       >
@@ -189,8 +197,7 @@ const FirmwareVersionStatus = props => {
               </Dropdown>
 
               <RegularButton
-                className="flashingbutton nooutlined"
-                styles="btn-link transp-bg"
+                styles="btn-link transp-bg flashingbutton nooutlined"
                 icoSVG={<IconEye />}
                 onClick={() => {
                   setModalFirmwareDetails(true);
@@ -216,7 +223,7 @@ const FirmwareVersionStatus = props => {
               <ReactMarkdown>{firmwareList[selectedFirmware].body}</ReactMarkdown>
             ) : (
               <div className="loading marginCenter">
-                <Spinner className="spinner-border" role="status" />
+                <Spinner className="spinner-border" role="status" animation="border" />
               </div>
             )}
           </div>
@@ -224,14 +231,6 @@ const FirmwareVersionStatus = props => {
       </Modal>
     </Style>
   );
-};
-
-FirmwareVersionStatus.propTypes = {
-  currentlyVersionRunning: PropTypes.string,
-  isUpdated: PropTypes.bool,
-  firmwareList: PropTypes.any,
-  selectedFirmware: PropTypes.number,
-  send: PropTypes.func,
 };
 
 export default FirmwareVersionStatus;

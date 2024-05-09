@@ -408,6 +408,7 @@ const FlashDevice = createMachine(
     id: "FlahsingProcess",
     initial: "waitEsc",
     context: {
+      deviceState: undefined,
       loadedComms: false,
       stateblock: 1,
       globalProgress: 0,
