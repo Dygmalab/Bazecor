@@ -145,6 +145,7 @@
     "core-js": "^3.30.2",
     "drivelist": "^11.2.1",
     "easy-crc": "^1.1.0",
+    "electron-log": "^5.1.4",
     "electron-squirrel-startup": "^1.0.0",
     "electron-store": "^8.2.0",
     "electron-window-state": "^5.0.3",
@@ -170,7 +171,7 @@
     "tailwind-merge": "^2.2.0",
     "tailwindcss-animate": "^1.0.7",
     "uiohook-napi": "^1.5.2",
-    "update-electron-app": "^2.0.1",
+    "update-electron-app": "^3.0.0",
     "usb": "^2.9.0",
     "xstate": "^4.37.2"
   },
