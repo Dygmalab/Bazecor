@@ -18,7 +18,9 @@
 import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import Styled from "styled-components";
+import log from "electron-log/renderer";
 import { useMachine } from "@xstate/react";
+import { i18n } from "@Renderer/i18n";
 
 // State machine
 import FWSelection from "../../controller/FlashingSM/FWSelection";
@@ -27,7 +29,6 @@ import FWSelection from "../../controller/FlashingSM/FWSelection";
 import Title from "../../component/Title";
 import { RegularButton } from "../../component/Button";
 import { FirmwareLoader } from "../../component/Loader";
-import { i18n } from "@Renderer/i18n";
 
 // Visual modules
 import FirmwareNeuronStatus from "./FirmwareNeuronStatus";
@@ -206,13 +207,13 @@ function FirmwareErrorPanel(props) {
       nextBlock(state.context);
     }
     if (state.matches("failure")) {
-      console.log("Matches failure");
+      log.info("Matches failure");
       setHandleError(true);
       setLoading(false);
     }
   }, [nextBlock, state, state.context]);
 
-  console.log(state.context.error);
+  log.info(state.context.error);
   return (
     <Style>
       {!handleError || loading ? (

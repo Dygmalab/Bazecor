@@ -2,6 +2,7 @@ import { createMachine, assign } from "xstate";
 import { Octokit } from "@octokit/core";
 import axios from "axios";
 import SemVer from "semver";
+import log from "electron-log/renderer";
 
 const FWMAJORVERSION = "1.x";
 
@@ -12,15 +13,15 @@ const FocusAPIRead = async context => {
     data.bootloader = currentDevice.device?.bootloader !== undefined ? currentDevice.device.bootloader : false;
     data.info = currentDevice.device.info;
     if (data.bootloader) return data;
-    console.log("CHECKING CONTEXT DEPENDENCIES: ", context.deviceState);
+    log.info("CHECKING CONTEXT DEPENDENCIES: ", context.deviceState);
     data.version = await currentDevice.noCacheCommand("version");
     // eslint-disable-next-line prefer-destructuring
     data.version = data.version.split(" ")[0];
     data.chipID = (await currentDevice.noCacheCommand("hardware.chip_id")).replace(/\s/g, "");
     if (Object.keys(data).length === 0 || Object.keys(data.info).length === 0) throw new Error("data is empty!");
   } catch (error) {
-    console.warn("error when querying the device");
-    console.error(error);
+    log.warn("error when querying the device");
+    log.error(error);
     throw new Error(error);
   }
   return data;
@@ -37,7 +38,7 @@ const loadAvailableFirmwareVersions = async allowBeta => {
         "X-GitHub-Api-Version": "2022-11-28",
       },
     });
-    // console.log("Data from github!", JSON.stringify(data));
+    // log.info("Data from github!", JSON.stringify(data));
     data.data.forEach(release => {
       const releaseData = release.name.split(" ");
       const name = releaseData[0];
@@ -51,19 +52,19 @@ const loadAvailableFirmwareVersions = async allowBeta => {
             name: asset.name,
             url: asset.browser_download_url,
           });
-          // console.log([asset.name, asset.browser_download_url]);
+          // log.info([asset.name, asset.browser_download_url]);
         });
-      // console.log(newRelease);
+      // log.info(newRelease);
       if (newRelease.assets.length > 0 && (allowBeta || !newRelease.version.includes("beta"))) {
         Releases.push(newRelease);
       }
     });
   } catch (error) {
-    console.warn("error when querying GitHub with Octokit");
-    console.error(error);
+    log.warn("error when querying GitHub with Octokit");
+    log.error(error);
     throw new Error(error);
   }
-  // console.log(defyReleases);
+  // log.info(defyReleases);
   return Releases;
 };
 
@@ -85,11 +86,11 @@ const GitHubRead = async context => {
     isUpdated = context.device.version === finalReleases[0].version;
     isBeta = context.device.version.includes("beta");
   } catch (error) {
-    console.warn("error when filtering data from GitHub");
-    console.error(error);
+    log.warn("error when filtering data from GitHub");
+    log.error(error);
     throw new Error(error);
   }
-  console.log("GitHub data acquired!", finalReleases);
+  log.info("GitHub data acquired!", finalReleases);
   return { firmwareList: finalReleases, isUpdated, isBeta };
 };
 
@@ -138,18 +139,18 @@ const obtainFWFiles = async (type, url) => {
       firmware.splice(0, 1);
     }
   } catch (error) {
-    console.warn("error when retrieving firmware data with Axios");
-    console.error(error);
+    log.warn("error when retrieving firmware data with Axios");
+    log.error(error);
     throw new Error(error);
   }
-  // console.log(firmware);
+  // log.info(firmware);
   return firmware;
 };
 
 const downloadFirmware = async (typeSelected, info, firmwareList, selectedFirmware) => {
   let filename;
   let filenameSides;
-  // console.log(typeSelected, info, firmwareList, selectedFirmware);
+  // log.info(typeSelected, info, firmwareList, selectedFirmware);
   try {
     if (typeSelected === "default") {
       if (info.product === "Raise") {
@@ -176,8 +177,8 @@ const downloadFirmware = async (typeSelected, info, firmwareList, selectedFirmwa
       }
     }
   } catch (error) {
-    console.warn("error when asking for FW files");
-    console.error(error);
+    log.warn("error when asking for FW files");
+    log.error(error);
     throw new Error(error);
   }
 
@@ -207,7 +208,7 @@ const SelectionSM = createMachine({
       id: "LoadDeviceData",
       entry: [
         () => {
-          console.log("Getting device info");
+          log.info("Getting device info");
         },
         assign({
           stateblock: () => 1,
@@ -221,7 +222,7 @@ const SelectionSM = createMachine({
           actions: [
             assign({ device: (context, event) => event.data }),
             context => {
-              console.log("Success: ", context.device);
+              log.info("Success: ", context.device);
             },
           ],
         },
@@ -229,7 +230,7 @@ const SelectionSM = createMachine({
           target: "failure",
           actions: [
             () => {
-              console.warn("error");
+              log.warn("error");
             },
             assign({ error: (context, event) => event }),
           ],
@@ -240,7 +241,7 @@ const SelectionSM = createMachine({
       id: "LoadGitHubData",
       entry: [
         () => {
-          console.log("Loading Github data!");
+          log.info("Loading Github data!");
         },
         assign({
           stateblock: () => 2,
@@ -269,7 +270,7 @@ const SelectionSM = createMachine({
       id: "selectFirmware",
       entry: [
         () => {
-          console.log("select Firmware!");
+          log.info("select Firmware!");
         },
         assign({
           stateblock: () => 3,
@@ -286,7 +287,7 @@ const SelectionSM = createMachine({
       id: "loadingFWFiles",
       entry: [
         () => {
-          console.log("Download Firmware!");
+          log.info("Download Firmware!");
         },
         assign({
           stateblock: () => 4,
@@ -301,7 +302,7 @@ const SelectionSM = createMachine({
           actions: [
             assign({ firmwares: (context, event) => event.data }),
             (context, event) => {
-              console.log("DOWNLOADED FW", event.data);
+              log.info("DOWNLOADED FW", event.data);
             },
           ],
         },
@@ -315,7 +316,7 @@ const SelectionSM = createMachine({
       id: "failure",
       entry: [
         () => {
-          console.log("Failed state!");
+          log.info("Failed state!");
         },
       ],
       on: {

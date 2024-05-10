@@ -21,6 +21,7 @@ import { toast } from "react-toastify";
 import { ipcRenderer } from "electron";
 import Container from "react-bootstrap/Container";
 import { useDevice, DeviceTools } from "@Renderer/DeviceContext";
+import log from "electron-log/renderer";
 
 import { DeviceItemsType, SelectKeyboardProps } from "@Renderer/types/selectKeyboard";
 import { DeviceClass } from "@Renderer/types/devices";
@@ -219,12 +220,12 @@ const SelectKeyboard = (props: SelectKeyboardProps) => {
     try {
       const list = (await DeviceTools.list()) as Device[];
       dispatch({ type: "addDevicesList", payload: list });
-      console.log("Devices Available:", list);
+      log.info("Devices Available:", list);
       loadingHandler(false);
       setDevices(list);
       return list;
     } catch (err) {
-      console.log("Error while finding keyboards", err);
+      log.info("Error while finding keyboards", err);
       loadingHandler(false);
       setDevices(undefined);
       return undefined;
@@ -234,7 +235,7 @@ const SelectKeyboard = (props: SelectKeyboardProps) => {
   const getDeviceItems: () => Array<DeviceItemsType> = useCallback(() => {
     const neurons = store.get("neurons") as Neuron[];
     const result = devices?.map((dev, index) => {
-      // console.log("checking device :", device);
+      // log.info("checking device :", device);
       const devName = dev.type === "hid" ? "Bluetooth" : dev.type;
       if (dev.device.bootloader)
         return {
@@ -260,7 +261,7 @@ const SelectKeyboard = (props: SelectKeyboardProps) => {
     const finder = () => findKeyboards();
 
     const disconnectedfinder = (event: unknown, DygmaDev: string) => {
-      console.log("Disconnected: ", DygmaDev);
+      log.info("Disconnected: ", DygmaDev);
       setSelectedPortIndex(0);
       findKeyboards();
       if (state.currentDevice) {
@@ -306,7 +307,7 @@ const SelectKeyboard = (props: SelectKeyboardProps) => {
     const isAccessible = await ipcRenderer.invoke("ask-for-accessibility", "");
 
     const keyboards = await findKeyboards();
-    console.log("found devices!!", keyboards, isAccessible);
+    log.info("found devices!!", keyboards, isAccessible);
     setScanFoundDevices(keyboards?.length > 0);
     setTimeout(() => {
       setScanFoundDevices(false);
@@ -314,16 +315,16 @@ const SelectKeyboard = (props: SelectKeyboardProps) => {
   };
 
   const selectPort = (event: string) => {
-    // console.log(event);
+    // log.info(event);
     setSelectedPortIndex(parseInt(event, 10));
   };
 
   const onKeyboardConnect = async () => {
     const { deviceList } = state;
-    console.log("trying to connect to:", deviceList, selectedPortIndex, deviceList[selectedPortIndex]);
+    log.info("trying to connect to:", deviceList, selectedPortIndex, deviceList[selectedPortIndex]);
     try {
       const response = await DeviceTools.connect(deviceList[selectedPortIndex]);
-      console.log("GOING TO CONNECT TO!!", selectedPortIndex, response);
+      log.info("GOING TO CONNECT TO!!", selectedPortIndex, response);
       dispatch({ type: "changeCurrent", payload: { selected: selectedPortIndex, device: response } });
       await onConnect(response);
     } catch (err) {

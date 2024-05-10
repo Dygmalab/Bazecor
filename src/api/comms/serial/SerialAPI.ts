@@ -2,7 +2,7 @@
 /* eslint-disable no-eval */
 /* eslint-disable no-bitwise */
 import fs from "fs";
-// import { SerialPort } from "serialport";
+import log from "electron-log/renderer";
 import Hardware from "../../hardware";
 import { DeviceType } from "../../../renderer/types/devices";
 
@@ -14,7 +14,7 @@ const find = async () => {
 
   const foundDevices = [];
 
-  console.log("SerialPort devices find:", serialDevices);
+  log.info("SerialPort devices find:", serialDevices);
   for (const device of serialDevices) {
     for (const Hdevice of Hardware.serial) {
       if (
@@ -27,12 +27,12 @@ const find = async () => {
       }
     }
   }
-  console.log("Usable found devices:", foundDevices);
+  log.info("Usable found devices:", foundDevices);
 
   return foundDevices;
 };
 
-const open = async (device: any) => {
+const open = async (device: DeviceType) => {
   const serialport = new SerialPort({
     path: device.path,
     baudRate: 115200,
@@ -40,13 +40,13 @@ const open = async (device: any) => {
     endOnClose: true,
   });
   serialport.open((err: Error) => {
-    if (err) console.error("error when opening port: ", err);
-    else console.log("connected");
+    if (err) log.error("error when opening port: ", err);
+    else log.info("connected");
   });
   return serialport;
 };
 
-const connect = async (device: any) => {
+const connect = async (device: DeviceType) => {
   const dev = await open(device);
   return dev;
 };
@@ -67,10 +67,10 @@ const isDeviceSupported = async (device: DeviceType) => {
     return true;
   }
   const supported = await device.device.isDeviceSupported(device);
-  // console.log("focus.isDeviceSupported: port=", device, "supported=", supported);
+  // log.info("focus.isDeviceSupported: port=", device, "supported=", supported);
   return supported;
 };
 
-const isSerialType = (device: any): device is DeviceType => "path" in device;
+const isSerialType = (device: DeviceType): device is DeviceType => "path" in device;
 
 export { find, connect, isDeviceConnected, isDeviceSupported, DeviceType, isSerialType };

@@ -1,4 +1,5 @@
 import React from "react";
+import log from "electron-log/renderer";
 import { LogoLoader } from "@Renderer/component/Loader";
 import Heading from "@Renderer/components/ui/heading";
 
@@ -6,7 +7,7 @@ interface LoaderLayoutProps {
   steps: number;
 }
 const LoaderLayout = ({ steps }: LoaderLayoutProps) => {
-  console.log(steps);
+  log.info(steps);
 
   const contextualStep = [
     { step: 1, text: "Loading Neuron information" },

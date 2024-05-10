@@ -22,8 +22,8 @@ import Styled from "styled-components";
 import { MdUnfoldLess, MdKeyboardArrowUp, MdKeyboardArrowDown, MdTimer } from "react-icons/md";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@Renderer/components/ui/tabs";
 import { motion } from "framer-motion";
+import log from "electron-log/renderer";
 import { i18n } from "@Renderer/i18n";
-
 import Title from "../../component/Title";
 import TextTab from "../KeysTabs/TextTab";
 import KeysTab from "../KeysTabs/KeysTab";
@@ -279,9 +279,9 @@ class MacroCreator extends Component {
     try {
       const prevAux = prevProps.macro.actions.map((x, id) => ({ keyCode: x.keyCode, type: x.type, id }));
       const propAux = this.props.macro.actions.map((x, id) => ({ keyCode: x.keyCode, type: x.type, id }));
-      // console.log("Testing: ", JSON.parse(JSON.stringify(prevAux)), JSON.parse(JSON.stringify(propAux)));
+      // log.info("Testing: ", JSON.parse(JSON.stringify(prevAux)), JSON.parse(JSON.stringify(propAux)));
       if (JSON.stringify(prevAux) !== JSON.stringify(propAux)) {
-        console.log("Updating");
+        log.info("Updating");
         const auxConv = this.createConversion(this.props.macro.actions);
         const newRows = auxConv.map((item, index) => ({ ...item, id: index }));
         this.setState({
@@ -289,13 +289,13 @@ class MacroCreator extends Component {
         });
       }
     } catch (e) {
-      console.warn("Error Happened", e);
+      log.warn("Error Happened", e);
     }
   }
 
   onAddText = () => {
     const { addText } = this.state;
-    console.log("MacroCreator onAddText", addText);
+    log.info("MacroCreator onAddText", addText);
     const aux = addText;
     let newRows = [];
     newRows = newRows.concat(
@@ -371,7 +371,7 @@ class MacroCreator extends Component {
         return actions;
       }),
     );
-    // console.log("TEST", JSON.stringify(newRows), JSON.stringify(this.props.macros));
+    // log.info("TEST", JSON.stringify(newRows), JSON.stringify(this.props.macros));
     this.setState({
       addText: "",
     });
@@ -379,7 +379,7 @@ class MacroCreator extends Component {
   };
 
   onAddRecorded = recorded => {
-    console.log("MacroCreator onAddRecorded", recorded);
+    log.info("MacroCreator onAddRecorded", recorded);
     const newRows = [].concat(
       recorded.map(item => ({
         keyCode: item.keycode,
@@ -453,7 +453,7 @@ class MacroCreator extends Component {
   };
 
   updateRows = rows => {
-    console.log("Macro creator updaterows", rows);
+    log.info("Macro creator updaterows", rows);
     const texted = rows.map(k => this.keymapDB.parse(k.keyCode).label).join(" ");
     const newRows = rows.map((item, index) => {
       const aux = item;
@@ -599,12 +599,12 @@ class MacroCreator extends Component {
   };
 
   onLayerPress = layer => {
-    // console.log("layer", layer);
+    // log.info("layer", layer);
     this.onAddSpecial(layer, 5);
   };
 
   onMacrosPress = Macro => {
-    // console.log("Macro", Macro);
+    // log.info("Macro", Macro);
     this.onAddSpecial(Macro, 5);
   };
 

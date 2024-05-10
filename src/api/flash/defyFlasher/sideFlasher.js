@@ -29,7 +29,7 @@
  */
 
 import { crc32 } from "easy-crc";
-
+import log from "electron-log/renderer";
 const { SerialPort } = eval('require("serialport")');
 const { DelimiterParser } = eval('require("@serialport/parser-delimiter")');
 
@@ -54,12 +54,12 @@ export default class sideFlaser {
     parser.on("data", data => {
       receivedData.push(data.toString("utf-8"));
     });
-    console.log("Upgrading the neuron...");
+    log.info("Upgrading the neuron...");
     await serialport.write("upgrade.neuron\n");
     await sleep(10);
     await serialport.close(function (err) {
-      if (err) console.warn("device already disconnected!! no need to close serialport");
-      else console.log("port closed successfully");
+      if (err) log.warn("device already disconnected!! no need to close serialport");
+      else log.info("port closed successfully");
     });
   }
 
@@ -89,10 +89,9 @@ export default class sideFlaser {
     }
 
     // Update process
-    // console.log(this.firmwareSides);
+    // log.info(this.firmwareSides);
     const seal = recoverSeal(this.firmwareSides.slice(0, 28));
-    console.log("This is the seal", seal);
-    // console.dir(seal);
+    log.info("This is the seal", seal);
 
     // Serial port instancing
     if (side.includes("left")) await sleep(2000);
@@ -123,7 +122,7 @@ export default class sideFlaser {
     serialport.write("upgrade.keyscanner.getInfo\n");
     await readLine();
     ans = await readLine();
-    console.log("Received Info from Side: ", ans);
+    log.info("Received Info from Side: ", ans);
     ans = ans.split(" ");
     const info = {
       hardwareVersion: parseInt(ans[0]),
@@ -136,14 +135,14 @@ export default class sideFlaser {
     // Write Firmware FOR Loop
     let step = 0;
     const totalsteps = this.firmwareSides.length / 256;
-    console.log("CRC check is ", info.programCrc !== seal.programCrc, ", info:", info.programCrc, "seal:", seal.programCrc);
+    log.info("CRC check is ", info.programCrc !== seal.programCrc, ", info:", info.programCrc, "seal:", seal.programCrc);
     if (info.programCrc !== seal.programCrc || isItBootloader === true) {
       let validate = "false",
         retry = 0;
       // while (validate !== "true" && retry < 3) {
-      // console.log("retry count: ", retry);
+      // log.info("retry count: ", retry);
       for (let i = 0; i < this.firmwareSides.length; i = i + 256) {
-        // console.log(`Addres ${i} of ${this.firmwareSides.length}`);
+        // log.info(`Addres ${i} of ${this.firmwareSides.length}`);
         serialport.write("upgrade.keyscanner.sendWrite ");
         if (wiredOrWireless == "wireless") await sleep(4);
         const writeAction = new Uint8Array(new Uint32Array([info.flashStart + i, 256]).buffer);
@@ -154,13 +153,13 @@ export default class sideFlaser {
         blob.set(data, writeAction.length);
         blob.set(crc, data.length + writeAction.length);
         const buffer = new Buffer.from(blob);
-        // console.log("write sent: ", buffer);
-        // console.log("write sent, %", (step / totalsteps) * 100);
+        // log.info("write sent: ", buffer);
+        // log.info("write sent, %", (step / totalsteps) * 100);
         serialport.write(buffer);
         if (wiredOrWireless == "wireless") await sleep(4);
         let ack = await readLine();
         ack = ack + (await readLine());
-        // console.log("ack received: ", ack);
+        // log.info("ack received: ", ack);
         if (!ack.includes("true") || ack.includes("false")) {
           let retries = 3;
           if (wiredOrWireless == "wireless") await sleep(100);
@@ -171,7 +170,7 @@ export default class sideFlaser {
             if (wiredOrWireless == "wireless") await sleep(10);
             ack = await readLine();
             ack = ack + (await readLine());
-            console.log(`received ${ack} after ${3 - retries} retires`);
+            log.info(`received ${ack} after ${3 - retries} retires`);
             retries--;
           }
         }
@@ -182,7 +181,7 @@ export default class sideFlaser {
       serialport.write("upgrade.keyscanner.validate\n");
       validate = await readLine();
       validate = validate + (await readLine());
-      console.log("result of validation", validate);
+      log.info("result of validation", validate);
       // retry++;
     }
 
@@ -196,7 +195,7 @@ export default class sideFlaser {
 
     await serialport.close();
     if (side.includes("left")) await sleep(2000);
-    console.log("after serialport close");
+    log.info("after serialport close");
 
     return { error: false, message: "" };
   }

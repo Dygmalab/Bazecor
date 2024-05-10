@@ -21,6 +21,7 @@
  *
  */
 
+import log from "electron-log/renderer";
 import KeymapANSI from "./components/Keymap-ANSI";
 
 const Raise2ANSI = {
@@ -66,7 +67,7 @@ const Raise2ANSI = {
       await flashDefyWireless.updateFirmware(filename, bootloader, stateUpdate);
       return true;
     } catch (e) {
-      console.error(e);
+      log.error(e);
       return false;
     }
   },
@@ -102,6 +103,7 @@ const Raise2ANSIBootloader = {
       await flashDefyWireless.updateFirmware(filename, bootloader, stateUpdate);
       return true;
     } catch (e) {
+      log.error(e);
       return false;
     }
   },

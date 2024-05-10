@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Styled from "styled-components";
-
+import log from "electron-log/renderer";
 import { IconDragDots, IconBugWarning, IconRobotOffline, IconPlus, IconRefresh } from "@Renderer/component/Icon";
 import { PageHeader } from "@Renderer/modules/PageHeader";
 import { CardDevice } from "@Renderer/component/Card";
@@ -255,12 +255,12 @@ const DeviceManager = () => {
   const [showModal, setShowModal] = useState(false);
 
   const addVirtualDevices = (
-    <button className="sm button outline transp-bg iconOnNone" type="button" onClick={() => console.log("Add virtual device")}>
+    <button className="sm button outline transp-bg iconOnNone" type="button" onClick={() => log.info("Add virtual device")}>
       Add virtual device
     </button>
   );
   const scanDevices = (
-    <button className="sm button primary iconOnNone" type="button" onClick={() => console.log("Scan devices")}>
+    <button className="sm button primary iconOnNone" type="button" onClick={() => log.info("Scan devices")}>
       Scan devices
     </button>
   );
@@ -346,11 +346,11 @@ const DeviceManager = () => {
                     <Heading headingLevel={4}>[Black metal plays in background]</Heading>
                   </div>
                   <div className="devices-buttons-group">
-                    <LargeButton onClick={() => console.log("Add virtual keyboard")} icon={<IconPlus />}>
+                    <LargeButton onClick={() => log.info("Add virtual keyboard")} icon={<IconPlus />}>
                       <Heading headingLevel={4}>Add virtual device</Heading>
                       <p>Use without a keyboard</p>
                     </LargeButton>
-                    <LargeButton onClick={() => console.log("Scan devices")} icon={<IconRefresh />}>
+                    <LargeButton onClick={() => log.info("Scan devices")} icon={<IconRefresh />}>
                       <Heading headingLevel={4}>Scan devices</Heading>
                       <p>Check for nearby devices</p>
                     </LargeButton>

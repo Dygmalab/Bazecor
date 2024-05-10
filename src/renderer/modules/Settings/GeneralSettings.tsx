@@ -17,6 +17,7 @@
 import React, { useState, useEffect } from "react";
 import Styled from "styled-components";
 import { toast } from "react-toastify";
+import log from "electron-log/renderer";
 
 // Types
 import { LayerType, Neuron } from "@Renderer/types/neurons";
@@ -96,7 +97,7 @@ const GeneralSettings = ({
         icon: "",
       });
     } catch (error) {
-      console.error(error);
+      log.error(error);
     }
   };
 

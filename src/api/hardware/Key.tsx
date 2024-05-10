@@ -98,14 +98,6 @@ function Key(props: KeyShapeProps) {
       : setHyperApplied(false);
   }, [centerPrimary, centerExtra]);
 
-  // React.useEffect(() => {
-  //   console.log("selectedKey internal: ", parseInt(selectedKey));
-  //   console.log("dataKeyIndex internal: ", dataKeyIndex);
-  //   if (parseInt(selectedKey) === parseInt(dataKeyIndex)) {
-  //     setIsActive(true);
-  //   }
-  // }, [selectedKey]);
-
   return (
     <>
       {keyType == "regularKey" ? (
