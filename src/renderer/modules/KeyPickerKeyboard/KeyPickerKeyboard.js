@@ -2,7 +2,7 @@ import React, { Component, Fragment } from "react";
 import Styled from "styled-components";
 
 // Internal components
-import ListModifier from "@Renderer/components/molecules/ListModifier";
+import ListModifier from "@Renderer/components/molecules/ListModifiers/ListModifiers";
 import { KeymapDB } from "../../../api/keymap";
 import { Picker } from ".";
 // import ListModifiers from "../../component/ListModifiers/ListModifiers";

@@ -19,7 +19,7 @@ import React from "react";
 import Styled from "styled-components";
 import { i18n } from "@Renderer/i18n";
 import { SegmentedKeyType } from "@Renderer/types/layout";
-import ListModifier from "@Renderer/components/molecules/ListModifier";
+import ListModifier from "@Renderer/components/molecules/ListModifiers/ListModifiers";
 import Title from "../../component/Title";
 
 // import ListModifiers from "../../component/ListModifiers/ListModifiers";
