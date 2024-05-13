@@ -71,6 +71,6 @@ const isDeviceSupported = async (device: DeviceType) => {
   return supported;
 };
 
-const isSerialType = (device: DeviceType): device is DeviceType => "path" in device;
+const isSerialType = (device: any): device is any => "path" in device;
 
 export { find, connect, isDeviceConnected, isDeviceSupported, DeviceType, isSerialType };

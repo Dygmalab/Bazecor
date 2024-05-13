@@ -270,5 +270,5 @@ export default class Backup {
     }
   };
 
-  static isBackupType = (backup: BackupType): backup is BackupType => "backup" in backup;
+  static isBackupType = (backup: any): backup is any => "backup" in backup;
 }

@@ -41,7 +41,7 @@ export default function VirtualSelector(props: VirtualSelectorProps) {
     setSelectedVirtualKeyboard(parseInt(event, 10));
   };
 
-  const convertBackupToVK = async (backup: BackupType) => {
+  const convertBackupToVK = async (backup: any) => {
     let vk: VirtualType;
     let fileName;
 
@@ -154,7 +154,7 @@ export default function VirtualSelector(props: VirtualSelectorProps) {
     }
     log.info("Opening file", filePath);
     // Open the file and load it's contents
-    let file: VirtualType | BackupType;
+    let file: any;
     try {
       file = JSON.parse(fs.readFileSync(filePath).toString("utf-8")) as VirtualType | BackupType;
       // log.info(file);
