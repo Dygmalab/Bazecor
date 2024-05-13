@@ -114,6 +114,7 @@ class ListModifiers extends Component {
 
   render() {
     const { keyCode, size } = this.props;
+    console.log("Modifiers keycaode: ", keyCode);
     if (keyCode >= 8192) return null;
     return (
       <Style>

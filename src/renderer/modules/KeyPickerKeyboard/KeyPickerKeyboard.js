@@ -2,9 +2,10 @@ import React, { Component, Fragment } from "react";
 import Styled from "styled-components";
 
 // Internal components
+import ListModifier from "@Renderer/components/molecules/ListModifier";
 import { KeymapDB } from "../../../api/keymap";
 import { Picker } from ".";
-import ListModifiers from "../../component/ListModifiers/ListModifiers";
+// import ListModifiers from "../../component/ListModifiers/ListModifiers";
 
 import ModPicker from "./ModPicker";
 import KeyVisualizer from "../KeyVisualizer";
@@ -500,7 +501,7 @@ class KeyPickerKeyboard extends Component {
                         </div>
                         <div className="superKey">
                           {this.translateSuperKeyAction(superkeys[superk.indexOf(KC)].actions[index])}
-                          <ListModifiers keyCode={superkeys[superk.indexOf(KC)].actions[index]} />
+                          <ListModifier keyCode={superkeys[superk.indexOf(KC)].actions[index]} />
                         </div>
                       </div>
                     ))}

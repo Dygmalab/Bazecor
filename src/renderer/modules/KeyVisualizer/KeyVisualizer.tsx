@@ -19,9 +19,10 @@ import React from "react";
 import Styled from "styled-components";
 import { i18n } from "@Renderer/i18n";
 import { SegmentedKeyType } from "@Renderer/types/layout";
+import ListModifier from "@Renderer/components/molecules/ListModifier";
 import Title from "../../component/Title";
 
-import ListModifiers from "../../component/ListModifiers/ListModifiers";
+// import ListModifiers from "../../component/ListModifiers/ListModifiers";
 
 const Style = Styled.div`
 &.KeyVisualizer {
@@ -155,9 +156,11 @@ const KeyVisualizer = (props: KeyVisualizerProps) => {
             <Title text={`${rows ? rows[superkeyAction].title : "Selected value"}`} headingLevel={4} />
             <div className="keySelectedBox">
               <div className="keySelectedValue">{oldValue}</div>
-              <ListModifiers
+              <ListModifier
                 keyCode={
-                  oldKeyCode !== undefined && typeof oldKeyCode !== "number" ? oldKeyCode.base + oldKeyCode.modified : oldKeyCode
+                  oldKeyCode !== undefined && typeof oldKeyCode !== "number"
+                    ? Number(oldKeyCode.base + oldKeyCode.modified)
+                    : Number(oldKeyCode)
                 }
                 size="sm"
               />
@@ -171,8 +174,10 @@ const KeyVisualizer = (props: KeyVisualizerProps) => {
             <Title text="New value" headingLevel={4} />
             <div className="keySelectedBox">
               <div className="keySelectedValue">{newValue}</div>
-              <ListModifiers
-                keyCode={keyCode !== undefined && typeof keyCode !== "number" ? keyCode.base + keyCode.modified : keyCode}
+              <ListModifier
+                keyCode={
+                  keyCode !== undefined && typeof keyCode !== "number" ? Number(keyCode.base + keyCode.modified) : Number(keyCode)
+                }
               />
             </div>
           </div>
@@ -184,8 +189,10 @@ const KeyVisualizer = (props: KeyVisualizerProps) => {
             <Title text="New value" headingLevel={4} />
             <div className="keySelectedBox">
               <div className="keySelectedValue">{newValue}</div>
-              <ListModifiers
-                keyCode={keyCode !== undefined && typeof keyCode !== "number" ? keyCode.base + keyCode.modified : keyCode}
+              <ListModifier
+                keyCode={
+                  keyCode !== undefined && typeof keyCode !== "number" ? Number(keyCode.base + keyCode.modified) : Number(keyCode)
+                }
               />
             </div>
           </div>
