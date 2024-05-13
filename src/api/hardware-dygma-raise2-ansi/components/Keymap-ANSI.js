@@ -105,9 +105,9 @@ const LedMap = [
     28,
     29,
     30,
-    XX,
     31,
     32,
+    XX,
     35 + LEDS_LEFT_KEYS,
     34 + LEDS_LEFT_KEYS,
     33 + LEDS_LEFT_KEYS,
@@ -1581,13 +1581,13 @@ class KeymapANSI extends React.Component {
             height={57}
             x={334}
             y={keysRowsPosition.row6}
-            fill={getColor(4, 6)}
-            stroke={stroke(4, 6)}
-            strokeWidth={getStrokeWidth(4, 6)}
-            dataLedIndex={getLEDIndex(4, 6)}
-            dataKeyIndex={keyIndex(4, 6)}
+            fill={getColor(4, 5)}
+            stroke={stroke(4, 5)}
+            strokeWidth={getStrokeWidth(4, 5)}
+            dataLedIndex={getLEDIndex(4, 5)}
+            dataKeyIndex={keyIndex(4, 5)}
             dataLayer={layer}
-            contrastText={getContrastText(getColor(4, 6))}
+            contrastText={getContrastText(getColor(4, 5))}
             centerPrimary={getCenterPrimary(4, 6, 0, 0, true)}
             centerExtra={getCenterExtra(4, 6, 0, 0, true)}
           />
@@ -1601,13 +1601,13 @@ class KeymapANSI extends React.Component {
             height={57}
             x={464}
             y={keysRowsPosition.row6}
-            fill={getColor(4, 7)}
-            stroke={stroke(4, 7)}
-            strokeWidth={getStrokeWidth(4, 7)}
-            dataLedIndex={getLEDIndex(4, 7)}
-            dataKeyIndex={keyIndex(4, 7)}
+            fill={getColor(4, 6)}
+            stroke={stroke(4, 6)}
+            strokeWidth={getStrokeWidth(4, 6)}
+            dataLedIndex={getLEDIndex(4, 6)}
+            dataKeyIndex={keyIndex(4, 6)}
             dataLayer={layer}
-            contrastText={getContrastText(getColor(4, 7))}
+            contrastText={getContrastText(getColor(4, 6))}
             centerPrimary={getCenterPrimary(4, 7, 0, 0, true)}
             centerExtra={getCenterExtra(4, 7, 0, 0, true)}
           />
