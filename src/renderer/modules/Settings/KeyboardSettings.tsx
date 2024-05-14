@@ -32,6 +32,9 @@ import Title from "@Renderer/component/Title";
 
 // Assets
 import { i18n } from "@Renderer/i18n";
+import Heading from "@Renderer/components/atoms/Heading";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@Renderer/components/atoms/Tooltip";
+import { IconInformation } from "@Renderer/components/atoms/icons";
 
 const Styles = Styled.div`
 
@@ -343,13 +346,32 @@ function KeyboardSettings(props: KeyboardSettingsProps) {
                 <Row>
                   <Col>
                     <Form.Label>
-                      <Title
+                      <Heading headingLevel={3} renderAs="paragraph-sm" className="flex items-center gap-2">
+                        {i18n.keyboardSettings.qukeys.overlapThreshold}
+                        <TooltipProvider delayDuration={200}>
+                          <Tooltip>
+                            <TooltipTrigger className="[&_svg]:text-purple-100 [&_svg]:dark:text-purple-200">
+                              <IconInformation />
+                            </TooltipTrigger>
+                            <TooltipContent className="max-w-xs">
+                              <Heading headingLevel={4} renderAs="h4" className="text-gray-600 dark:text-gray-25 mb-3 leading-6">
+                                {i18n.keyboardSettings.qukeys.overlapThresholdTip1}
+                              </Heading>
+                              <ul>
+                                <li className="text-left">{i18n.keyboardSettings.qukeys.overlapThresholdTip2}</li>
+                                <li className="text-left">{i18n.keyboardSettings.qukeys.overlapThresholdTip3}</li>
+                              </ul>
+                            </TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
+                      </Heading>
+                      {/* <Title
                         text={i18n.keyboardSettings.qukeys.overlapThreshold}
                         headingLevel={6}
                         tooltip={`<h5 class="text-left">${i18n.keyboardSettings.qukeys.overlapThresholdTip1}</h5><ul><li class="text-left">${i18n.keyboardSettings.qukeys.overlapThresholdTip2}</li><li class="text-left">${i18n.keyboardSettings.qukeys.overlapThresholdTip3}</li></ul>`}
                         tooltipPlacement="bottom"
                         tooltipSize="wide"
-                      />
+                      /> */}
                     </Form.Label>
                   </Col>
                 </Row>
