@@ -81,7 +81,7 @@ const Styles = Styled.div`
   width: var(--sidebarWidth);
   height: 100%;
   position: fixed !important;
-  z-index: 1100;
+  z-index: 49;
   padding: 12px !important;
   background-color: ${({ theme }) => theme.styles.navbar.background};
   display: flex;

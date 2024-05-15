@@ -21,7 +21,12 @@ import Dropdown from "react-bootstrap/Dropdown";
 import { i18n } from "@Renderer/i18n";
 
 import NameModal from "@Renderer/components/molecules/CustomModal/ModalName";
-import { IconDelete } from "@Renderer/components/atoms/icons";
+
+import { ToggleGroup, ToggleGroupItem } from "@Renderer/components/atoms/ToggleGroup";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@Renderer/components/atoms/Tooltip";
+import { IconDelete, IconKeyboard, IconFlashlight } from "@Renderer/components/atoms/icons/";
+import { ButtonSettings } from "../Button";
+import { KeyboardViewSelector } from "../ToggleButtons";
 import {
   IconArrowsSmallSeparating,
   IconPen,
@@ -29,12 +34,7 @@ import {
   IconArrowUpWithLine,
   IconArrowDownWithLine,
   IconFileDownload,
-  IconKeyboard,
-  IconFlashlight,
 } from "../Icon";
-
-import { ButtonSettings } from "../Button";
-import { KeyboardViewSelector } from "../ToggleButtons";
 
 const Style = Styled.div`
 display: flex;
@@ -239,9 +239,36 @@ class LayerSelector extends React.Component {
             </Dropdown>
           </div>
         </div>
+
+        <ToggleGroup type="single" value={editModeActual} onValueChange={editModeFunc} className="p-[2px]">
+          <TooltipProvider delayDuration={200}>
+            <Tooltip>
+              <TooltipTrigger>
+                <ToggleGroupItem value="keyboard" className="sm:px-2 md:px-2 lg:px-2 xl:px-[16px]">
+                  <IconKeyboard /> <span className="sm:hidden md:hidden lg:hidden xl:inline-flex">{i18n.editor.keys}</span>
+                </ToggleGroupItem>
+              </TooltipTrigger>
+              <TooltipContent className="max-w-xs sm:flex md:flex lg:flex xl:hidden">{i18n.editor.keysEditor}</TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+          <TooltipProvider delayDuration={200}>
+            <Tooltip>
+              <TooltipTrigger>
+                <ToggleGroupItem value="color" className="sm:px-2 md:px-2 lg:px-2 xl:px-[16px]">
+                  <IconFlashlight />{" "}
+                  <span className="sm:hidden md:hidden lg:hidden xl:inline-flex">{i18n.editor.color.color}</span>
+                </ToggleGroupItem>
+              </TooltipTrigger>
+              <TooltipContent className="max-w-xs sm:flex md:flex lg:flex xl:hidden">
+                {i18n.editor.color.colorEditor}
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        </ToggleGroup>
+
         <KeyboardViewSelector listElements={layoutsMode} value={editModeActual} style="flex" editModeFunc={editModeFunc} />
 
-        {itemList == undefined || itemList.length == 0 || itemList.length <= selectedItem ? (
+        {itemList === undefined || itemList.length === 0 || itemList.length <= selectedItem ? (
           ""
         ) : (
           <NameModal

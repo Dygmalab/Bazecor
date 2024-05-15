@@ -21,21 +21,24 @@ import { toast } from "react-toastify";
 import Styled from "styled-components";
 
 // Styling and elements
-import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Modal from "react-bootstrap/Modal";
 
 // Components
 import Callout from "@Renderer/component/Callout";
-import { LayoutViewSelector } from "@Renderer/component/ToggleButtons";
+// import { LayoutViewSelector } from "@Renderer/component/ToggleButtons";
 import { SuperkeysSelector } from "@Renderer/component/Select";
 import { RegularButton } from "@Renderer/component/Button";
 // import { LogoLoaderCentered } from "@Renderer/component/Loader";
 import LogoLoader from "@Renderer/components/atoms/loader/LogoLoader";
+import { ToggleGroup, ToggleGroupItem } from "@Renderer/components/atoms/ToggleGroup";
+import Heading from "@Renderer/components/atoms/Heading";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@Renderer/components/atoms/Tooltip";
 
 import ToastMessage from "@Renderer/component/ToastMessage";
 import { IconFloppyDisk } from "@Renderer/component/Icon";
+import { IconEditModeStandardView, IconEditModeSingleView, IconInformation } from "@Renderer/components/atoms/icons/";
 
 // Modules
 import { PageHeader } from "@Renderer/modules/PageHeader";
@@ -68,9 +71,9 @@ const Styles = Styled.div`
     margin-left: 15px;
   }
 }
-height: -webkit-fill-available;
-display: flex;
-flex-direction: column;
+  height: -webkit-fill-available;
+  display: flex;
+  flex-direction: column;
   .toggle-button{
     text-align: center;
     padding-bottom: 8px;
@@ -95,6 +98,8 @@ function SuperkeysEditor(props: SuperkeysEditorProps) {
   let keymapDB = new KeymapDB();
   const bkp = new Backup();
   const [isSaving, setIsSaving] = useState(false);
+
+  const [viewMode, setViewMode] = useState("standard");
 
   const flatten = (arr: unknown[]) => [].concat(...arr);
 
@@ -166,6 +171,7 @@ function SuperkeysEditor(props: SuperkeysEditorProps) {
       state.selectedAction = -1;
       setState({ ...state });
     }
+    setViewMode(isStandardViewSuperkeys ? "standard" : "single");
   };
 
   const macroTranslator = (raw: string) => {
@@ -297,10 +303,11 @@ function SuperkeysEditor(props: SuperkeysEditorProps) {
   useEffect(() => {
     try {
       store.set("settings.isStandardViewSuperkeys", state.isStandardView);
+      setViewMode(state.isStandardView ? "standard" : "single");
     } catch (error) {
       console.log("error when setting standard view mode", error);
     }
-  }, [state.isStandardView]);
+  }, [state.isStandardView, viewMode]);
 
   const onKeyChange = (keyCode: number) => {
     const { superkeys, selectedSuper, selectedAction } = state;
@@ -762,7 +769,7 @@ function SuperkeysEditor(props: SuperkeysEditorProps) {
   if (loading || !Array.isArray(superkeys)) return <LogoLoader centered />;
   return (
     <Styles className="superkeys">
-      <Container fluid className={`${isStandardViewSuperkeys ? "standarViewMode" : "singleViewMode"}`}>
+      <div className={`px-3 ${isStandardViewSuperkeys ? "standarViewMode" : "singleViewMode"}`}>
         <PageHeader
           text={i18n.app.menu.superkeys}
           showSaving
@@ -808,9 +815,9 @@ function SuperkeysEditor(props: SuperkeysEditorProps) {
         />
 
         {isStandardViewSuperkeys && <SuperKeysFeatures />}
-      </Container>
+      </div>
       {!isStandardViewSuperkeys ? (
-        <Container fluid className="keyboardcontainer" hidden={selectedAction < 0}>
+        <div className="keyboardcontainer" hidden={selectedAction < 0}>
           <KeyPickerKeyboard
             key={JSON.stringify(superkeys) + selectedAction}
             onKeySelect={onKeyChange}
@@ -824,11 +831,37 @@ function SuperkeysEditor(props: SuperkeysEditorProps) {
             selectedlanguage={currentLanguageLayout}
             kbtype={kbtype}
           />
-        </Container>
+        </div>
       ) : (
         ""
       )}
-      <LayoutViewSelector
+      <div className="px-3 self-start mt-auto mb-6 pt-4">
+        <Heading
+          renderAs="h5"
+          headingLevel={5}
+          className="mb-1 gap-2 flex items-center text-[10px] text-gray-300 dark:text-gray-500"
+        >
+          {i18n.editor.editMode.title}
+          <TooltipProvider delayDuration={200}>
+            <Tooltip>
+              <TooltipTrigger className="[&_svg]:text-purple-100 [&_svg]:dark:text-purple-200">
+                <IconInformation size="sm" />
+              </TooltipTrigger>
+              <TooltipContent className="max-w-xs">{i18n.editor.superkeys.tooltip}</TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        </Heading>
+        <ToggleGroup type="single" value={viewMode} onValueChange={onToggle} size="sm">
+          <ToggleGroupItem value="standard">
+            <IconEditModeStandardView size="sm" /> {i18n.editor.editMode.standardView}
+          </ToggleGroupItem>
+          <ToggleGroupItem value="single">
+            <IconEditModeSingleView size="sm" /> {i18n.editor.editMode.singleView}
+          </ToggleGroupItem>
+        </ToggleGroup>
+      </div>
+
+      {/* <LayoutViewSelector
         onToggle={onToggle}
         isStandardView={isStandardViewSuperkeys}
         tooltip={i18n.editor.superkeys.tooltip}
@@ -836,7 +869,7 @@ function SuperkeysEditor(props: SuperkeysEditorProps) {
           x: 0,
           y: 0,
         }}
-      />
+      /> */}
       {isStandardViewSuperkeys ? (
         <StandardView
           showStandardView={showStandardView}
