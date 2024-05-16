@@ -1,16 +1,17 @@
 import { createMachine, assign } from "xstate";
+import log from "electron-log/renderer";
 import { DeviceTools } from "@Renderer/DeviceContext";
 import Focus from "../../../api/focus";
 
 const RestoreESCKey = async context => {
-  // console.log("Going to restore topmost left key", context.backup, context.deviceState);
+  // log.info("Going to restore topmost left key", context.backup, context.deviceState);
   try {
     if (context.backup === undefined || context.deviceState?.currentDevice === undefined) return;
     const { currentDevice } = context.deviceState;
-    // console.log("Checking connected status: ", currentDevice.isClosed);
+    // log.info("Checking connected status: ", currentDevice.isClosed);
     if (currentDevice.isClosed) {
       const focus = Focus.getInstance();
-      // console.log("Checking focus status: ", focus.closed);
+      // log.info("Checking focus status: ", focus.closed);
       await focus.close();
       await DeviceTools.connect(currentDevice);
     }
@@ -18,8 +19,8 @@ const RestoreESCKey = async context => {
     await currentDevice.noCacheCommand("led.mode 0");
     await currentDevice.noCacheCommand("keymap.custom", keymap);
   } catch (error) {
-    console.warn("error when restoring Backup of the device after error");
-    console.error(error);
+    log.warn("error when restoring Backup of the device after error");
+    log.error(error);
     throw new Error(error);
   }
 };
@@ -39,7 +40,7 @@ const MainProcessSM = createMachine({
       entry: [
         () => {
           // This will error at .flag
-          console.log("First Block");
+          log.info("First Block");
         },
         assign({ Block: () => 1 }),
       ],
@@ -63,7 +64,7 @@ const MainProcessSM = createMachine({
       entry: [
         () => {
           // This will error at .flag
-          console.log("Second Block");
+          log.info("Second Block");
         },
         assign({ Block: () => 2 }),
       ],
@@ -93,7 +94,7 @@ const MainProcessSM = createMachine({
       entry: [
         () => {
           // This will error at .flag
-          console.log("Third Block");
+          log.info("Third Block");
         },
         assign({ Block: () => 3 }),
       ],
@@ -107,7 +108,7 @@ const MainProcessSM = createMachine({
       id: "retry",
       entry: [
         () => {
-          console.log("Retry Card entry");
+          log.info("Retry Card entry");
         },
       ],
       invoke: {
@@ -127,7 +128,7 @@ const MainProcessSM = createMachine({
       id: "error",
       entry: [
         () => {
-          console.log("Error Card entry");
+          log.info("Error Card entry");
         },
         assign({ Block: () => -1 }),
       ],

@@ -18,6 +18,7 @@
 import React, { Component } from "react";
 import Styled from "styled-components";
 import Dropdown from "react-bootstrap/Dropdown";
+import log from "electron-log/renderer";
 
 const Style = Styled.div`
 width: 100%;
@@ -37,7 +38,7 @@ width: 100%;
     }
   }
   .dropdownLabel {
-    display: block; 
+    display: block;
     font-size: 11px;
     color: ${({ theme }) => theme.colors.gray200};
   }
@@ -75,15 +76,15 @@ class SelectLayersLock extends Component {
     const { action, keyCode, onKeySelect, activeTab } = this.props;
     const KC = keyCode.base + keyCode.modified;
 
-    console.log("action", action);
+    log.info("action", action);
     return (
       <Style>
         <Dropdown
-          value={KC != 0 ? this.layerLock.map(i => i.keynum).includes(KC) : KC}
-          onSelect={value => onKeySelect(parseInt(value))}
+          value={KC !== 0 ? this.layerLock.map(i => i.keynum).includes(KC) : KC}
+          onSelect={value => onKeySelect(parseInt(value, 10))}
           className={`custom-dropdown dropdownLayerLock ${
             keyCode.modified > 0 && this.layerLock.map(i => i.keynum).includes(keyCode.base + keyCode.modified) ? "active" : ""
-          } ${action == 1 || action == 2 || action == 4 ? "disabled" : ""}`}
+          } ${action === 1 || action === 2 || action === 4 ? "disabled" : ""}`}
         >
           <Dropdown.Toggle id="dropdown-custom">
             <div className="dropdownItemSelected">
@@ -91,7 +92,7 @@ class SelectLayersLock extends Component {
                 <span className="dropdownLabel">Layer lock</span>
                 {`${
                   keyCode.modified > 0 && this.layerLock.map(i => i.keynum).includes(keyCode.base + keyCode.modified)
-                    ? this.layerLock[this.layerLock.findIndex(o => o.keynum == KC)].name
+                    ? this.layerLock[this.layerLock.findIndex(o => o.keynum === KC)].name
                     : "Select Layer"
                 }`}
               </div>
@@ -102,7 +103,7 @@ class SelectLayersLock extends Component {
               <Dropdown.Item
                 eventKey={item.keynum}
                 key={`item-${id}`}
-                disabled={item.keynum == -1}
+                disabled={item.keynum === -1}
                 className={`${keyCode.modified > 0 && item.keynum == keyCode.base + keyCode.modified ? "active" : ""}`}
               >
                 <div className="dropdownInner">

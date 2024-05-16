@@ -19,7 +19,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { ipcRenderer } from "electron";
 import { motion } from "framer-motion";
-
+import log from "electron-log/renderer";
 import { toast } from "react-toastify";
 import { i18n } from "@Renderer/i18n";
 import "react-toastify/dist/ReactToastify.css";
@@ -398,7 +398,7 @@ const Preferences = (props: PreferencesProps) => {
     setKbData(initialKBData);
     await getNeuronData();
     if (state.currentDevice.device.info.keyboardType === "wireless" || state.currentDevice.device.wireless) {
-      console.log("setting wireless");
+      log.info("setting wireless");
       setWireless(initialWireless);
       await getWirelessPreferences();
     }
@@ -428,7 +428,7 @@ const Preferences = (props: PreferencesProps) => {
         icon: "",
       });
     } catch (error) {
-      console.error(error);
+      log.error(error);
       toast.error(
         <ToastMessage
           title={i18n.errors.preferenceFailOnSave}
@@ -482,7 +482,7 @@ const Preferences = (props: PreferencesProps) => {
         devTools: checked,
       }));
     } catch (error) {
-      console.error("error when opening devTools");
+      log.error("error when opening devTools");
     }
   };
 
@@ -563,7 +563,7 @@ const Preferences = (props: PreferencesProps) => {
     if (state.currentDevice) {
       try {
         const result = await state.currentDevice.command("wireless.rf.syncPairing");
-        console.log("command returned", result);
+        log.info("command returned", result);
         toast.success(<ToastMessage title={`${i18n.success.pairedSuccesfully}`} icon={<IconChip />} />, {
           position: "top-right",
           autoClose: 2000,
@@ -575,7 +575,7 @@ const Preferences = (props: PreferencesProps) => {
           icon: "",
         });
       } catch (error) {
-        console.error(error);
+        log.error(error);
       }
     }
   };

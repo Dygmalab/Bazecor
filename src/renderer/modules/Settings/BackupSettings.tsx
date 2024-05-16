@@ -19,6 +19,7 @@ import React, { useState, useEffect } from "react";
 import { ipcRenderer } from "electron";
 import { toast } from "react-toastify";
 import fs from "fs";
+import log from "electron-log/renderer";
 
 // React Bootstrap Components
 import { Card, CardContent, CardHeader, CardTitle } from "@Renderer/components/ui/card";
@@ -126,27 +127,27 @@ const BackupSettings = (props: BackupSettingsProps) => {
     const resp = await ipcRenderer.invoke("open-dialog", options);
 
     if (!resp.canceled) {
-      console.log(resp.filePaths);
+      log.info(resp.filePaths);
       let loadedFile;
       try {
         loadedFile = JSON.parse(fs.readFileSync(resp.filePaths[0], "utf-8"));
         if (loadedFile.virtual !== undefined) {
           await localRestoreVirtual(loadedFile as VirtualType);
           await destroyContext();
-          console.log("Restored Virtual backup");
+          log.info("Restored Virtual backup");
           return;
         }
         if (loadedFile.backup !== undefined || loadedFile[0].command !== undefined) {
           await localRestoreBackup(loadedFile);
           await destroyContext();
-          console.log("Restored normal backup");
+          log.info("Restored normal backup");
         }
       } catch (e) {
-        console.error(e);
+        log.error(e);
         alert("The file is not a valid global backup");
       }
     } else {
-      console.log("user closed SaveDialog");
+      log.info("user closed SaveDialog");
     }
   };
 
@@ -155,9 +156,9 @@ const BackupSettings = (props: BackupSettingsProps) => {
       const loadedFile = await Backup.getLatestBackup(backupFolder, neuronID, state.currentDevice);
       await localRestoreBackup(loadedFile);
       await destroyContext();
-      console.log("Restored latest backup");
+      log.info("Restored latest backup");
     } catch (error) {
-      console.error(error);
+      log.error(error);
       alert(`The loaded backup could not be restored`);
     }
   };

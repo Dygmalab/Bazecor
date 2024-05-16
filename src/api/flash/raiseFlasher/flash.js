@@ -17,9 +17,10 @@
 import { ipcRenderer } from "electron";
 import fs from "fs";
 import path from "path";
+import log from "electron-log/renderer";
 import Focus from "../../focus";
 import Hardware from "../../hardware";
-import { delay } from '../delay';
+import { delay } from "../delay";
 import { arduino } from "./arduino-flasher";
 
 /**
@@ -67,10 +68,10 @@ export class FlashRaise {
   async foundDevices(hardware, message, bootloader) {
     const focus = Focus.getInstance();
     let isFindDevice = false;
-    console.log("looking at device", this.device);
+    log.info("looking at device", this.device);
     await focus.find(...hardware).then(devices => {
       for (const device of devices) {
-        console.log(
+        log.info(
           "DATA CHECKER: ",
           device,
           this.device,
@@ -86,7 +87,7 @@ export class FlashRaise {
               this.device.info.keyboardType == device.device.info.keyboardType
             : this.device.info.keyboardType == device.device.info.keyboardType
         ) {
-          console.log(message);
+          log.info(message);
           this.currentPort = { ...device };
           isFindDevice = true;
         }
@@ -163,7 +164,7 @@ export class FlashRaise {
   async saveBackupFile() {
     const userDataPath = await ipcRenderer.invoke("get-userPath", "userData");
     const route = path.join(userDataPath, this.backupFileName + ".json");
-    console.log("saving file to: " + route);
+    log.info("saving file to: " + route);
     fs.writeFile(route, JSON.stringify(this.backupFileData), err => {
       if (err) throw err;
     });
@@ -178,7 +179,7 @@ export class FlashRaise {
   setDTR = (port, state) =>
     new Promise((resolve, reject) => {
       port.set({ dtr: state }, () => {
-        console.log(`DTR set to ${state} at ${new Date(Date.now()).toISOString()}`);
+        log.info(`DTR set to ${state} at ${new Date(Date.now()).toISOString()}`);
         resolve();
       });
     });
@@ -192,7 +193,7 @@ export class FlashRaise {
   updatePort = (port, baud) =>
     new Promise((resolve, reject) => {
       port.update({ baudRate: baud }, () => {
-        console.log(`Port update started at: ${new Date(Date.now()).toISOString()}`);
+        log.info(`Port update started at: ${new Date(Date.now()).toISOString()}`);
         resolve();
       });
     });
@@ -204,7 +205,7 @@ export class FlashRaise {
    */
   async resetKeyboard(port, stateUpdate) {
     stateUpdate("reset", 5);
-    console.log("reset start", port);
+    log.info("reset start", port);
     const errorMessage =
       "The firmware update couldn't start because the Raise Bootloader wasn't found. Please check our Help Center for more details or schedule a video call with us.";
     const timeouts = {
@@ -215,12 +216,12 @@ export class FlashRaise {
     return new Promise(async (resolve, reject) => {
       stateUpdate("reset", 10);
       await this.updatePort(port, 1200);
-      console.log("resetting neuron");
+      log.info("resetting neuron");
       await this.setDTR(port, true);
       await delay(timeouts.dtrToggle);
       await this.setDTR(port, false);
       stateUpdate("reset", 20);
-      console.log("waiting for bootloader");
+      log.info("waiting for bootloader");
       try {
         await delay(timeouts.waitingClose);
         let bootCount = 6;
@@ -253,8 +254,8 @@ export class FlashRaise {
    */
   async updateFirmware(filename, stateUpdate) {
     const focus = Focus.getInstance();
-    console.log("Begin update firmware with arduino-flasher");
-    // console.log(JSON.stringify(focus));
+    log.info("Begin update firmware with arduino-flasher");
+    // log.info(JSON.stringify(focus));
     return new Promise(async (resolve, reject) => {
       try {
         if (focus.closed) await focus.open(this.currentPort.path, this.currentPort.device, null);
@@ -263,7 +264,7 @@ export class FlashRaise {
           if (err) throw new Error(`Flash error ${result}`);
           else {
             stateUpdate("neuron", 100);
-            console.log("End update firmware with arduino-flasher");
+            log.info("End update firmware with arduino-flasher");
             await delay(1500);
             await this.detectKeyboard();
             resolve();
@@ -283,7 +284,7 @@ export class FlashRaise {
     const findTimes = 5;
     const errorMessage =
       "The firmware update has failed during the flashing process. Please unplug and replug the keyboard and try again";
-    console.log("Waiting for keyboard");
+    log.info("Waiting for keyboard");
     // wait until the bootloader serial port disconnects and the keyboard serial port reconnects
     const findKeyboard = async () =>
       new Promise(async resolve => {
@@ -297,7 +298,7 @@ export class FlashRaise {
     try {
       await this.runnerFindKeyboard(findKeyboard, findTimes, errorMessage);
     } catch (e) {
-      console.error(`Detect keyboard: Error: ${e.message}`);
+      log.error(`Detect keyboard: Error: ${e.message}`);
       throw e;
     }
   }
@@ -310,14 +311,14 @@ export class FlashRaise {
    */
   async runnerFindKeyboard(findKeyboard, times, errorMessage) {
     if (!times) {
-      console.error(errorMessage);
+      log.error(errorMessage);
       return false;
     }
     if (await findKeyboard()) {
-      console.log("Ready to restore");
+      log.info("Ready to restore");
       return true;
     }
-    console.log(`Keyboard not detected, trying again for ${times} times`);
+    log.info(`Keyboard not detected, trying again for ${times} times`);
     await this.runnerFindKeyboard(findKeyboard, times - 1, errorMessage);
   }
 
@@ -328,7 +329,7 @@ export class FlashRaise {
     stateUpdate("restore", 0);
     let focus = Focus.getInstance();
     const errorMessage = "Firmware update failed, because the settings could not be restored";
-    console.log(backup);
+    log.info(backup);
     if (backup === undefined || backup.length === 0) {
       await focus.open(this.currentPort.path, this.currentPort.device.info, null);
       return true;
@@ -341,7 +342,7 @@ export class FlashRaise {
         if (typeof val === "boolean") {
           val = +val;
         }
-        console.log(`Going to send ${backup[i].command} to keyboard`);
+        log.info(`Going to send ${backup[i].command} to keyboard`);
         await focus.command(`${backup[i].command} ${val}`.trim());
         stateUpdate("restore", (i / backup.length) * 90);
       }

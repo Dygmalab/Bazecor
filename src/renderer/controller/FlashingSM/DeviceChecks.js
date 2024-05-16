@@ -1,3 +1,4 @@
+import log from "electron-log/renderer";
 import { createMachine, assign, raise } from "xstate";
 import Backup from "../../../api/backup";
 
@@ -13,8 +14,8 @@ const keyboardSetup = async context => {
     }
     await currentDevice.noCacheCommand("upgrade.start");
   } catch (error) {
-    console.warn("error when querying the device");
-    console.error(error);
+    log.warn("error when querying the device");
+    log.error(error);
     throw new Error(error);
   }
   return { RaiseBrightness: undefined };
@@ -27,8 +28,8 @@ const GetLSideData = async context => {
     result.leftSideConn = String(await currentDevice.noCacheCommand("upgrade.keyscanner.isConnected", "1")).includes("true");
     result.leftSideBoot = String(await currentDevice.noCacheCommand("upgrade.keyscanner.isBootloader", "1")).includes("true");
   } catch (error) {
-    console.warn("error when querying the device");
-    console.error(error);
+    log.warn("error when querying the device");
+    log.error(error);
     throw new Error(error);
   }
   return result;
@@ -41,8 +42,8 @@ const GetRSideData = async context => {
     result.rightSideConn = String(await currentDevice.noCacheCommand("upgrade.keyscanner.isConnected", "0")).includes("true");
     result.rightSideBoot = String(await currentDevice.noCacheCommand("upgrade.keyscanner.isBootloader", "0")).includes("true");
   } catch (error) {
-    console.warn("error when querying the device");
-    console.error(error);
+    log.warn("error when querying the device");
+    log.error(error);
     throw new Error(error);
   }
   return result;
@@ -61,8 +62,8 @@ const CreateBackup = async context => {
     keymap[0] = "41";
     await currentDevice.noCacheCommand("keymap.custom", keymap.join(" "));
   } catch (error) {
-    console.warn("error when creating Backup of the device");
-    console.error(error);
+    log.warn("error when creating Backup of the device");
+    log.error(error);
     throw new Error(error);
   }
   return { backup };
@@ -89,7 +90,7 @@ const DeviceChecks = createMachine(
         id: "PerfSetup",
         entry: [
           () => {
-            console.log("Performing setup");
+            log.info("Performing setup");
           },
         ],
         invoke: {
@@ -103,6 +104,7 @@ const DeviceChecks = createMachine(
                     RaiseBrightness: event.data.RaiseBrightness,
                   };
                 }
+                return undefined;
               }),
               assign({
                 stateblock: () => 1,
@@ -125,7 +127,7 @@ const DeviceChecks = createMachine(
         id: "LSideCheck",
         entry: [
           () => {
-            console.log("Checking left side");
+            log.info("Checking left side");
           },
         ],
         invoke: {
@@ -135,7 +137,7 @@ const DeviceChecks = createMachine(
             target: "RSideCheck",
             actions: [
               assign((context, event) => {
-                console.log(event);
+                log.info(event);
                 return {
                   sideLeftOk: event.data.leftSideConn,
                   sideLeftBL: event.data.leftSideBoot,
@@ -153,7 +155,7 @@ const DeviceChecks = createMachine(
         id: "RSideCheck",
         entry: [
           () => {
-            console.log("Checking right side");
+            log.info("Checking right side");
           },
         ],
         invoke: {
@@ -163,7 +165,7 @@ const DeviceChecks = createMachine(
             target: "validateStatus",
             actions: [
               assign((context, event) => {
-                console.log(event);
+                log.info(event);
                 return {
                   sideRightOK: event.data.rightSideConn,
                   sideRightBL: event.data.rightSideBoot,
@@ -181,7 +183,7 @@ const DeviceChecks = createMachine(
         id: "validateStatus",
         entry: [
           () => {
-            console.log("Validating status, waiting for UPDATE");
+            log.info("Validating status, waiting for UPDATE");
           },
         ],
         invoke: {
@@ -190,7 +192,7 @@ const DeviceChecks = createMachine(
           onDone: {
             actions: [
               assign((context, event) => {
-                console.log(event);
+                log.info(event);
                 return {
                   backup: event.data.backup,
                 };
@@ -199,7 +201,7 @@ const DeviceChecks = createMachine(
                 stateblock: context => (context.device.info.product === "Raise" ? 0 : 5),
               }),
               () => {
-                console.log("Backup ready");
+                log.info("Backup ready");
               },
               raise("AUTOPRESSED"),
             ],

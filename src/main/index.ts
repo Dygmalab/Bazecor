@@ -1,5 +1,6 @@
 import { app, BrowserWindow, Menu } from "electron";
-// import electronUpdater from "update-electron-app";
+import { updateElectronApp, UpdateSourceType } from "update-electron-app";
+import log from "electron-log/main";
 import createWindow from "./createWindow";
 import { setTheme } from "./setup/theme";
 import setBackup from "./setup/setBackup";
@@ -7,7 +8,17 @@ import GlobalRecording from "./managers/GlobalRecording";
 import { addUSBListeners, removeUSBListeners } from "./setup/configureUSB";
 import { removeIPCs } from "./setup/configureIPCs";
 
-// electronUpdater();
+log.initialize();
+
+updateElectronApp({
+  updateSource: {
+    type: UpdateSourceType.ElectronPublicUpdateService,
+    repo: "Dygmalab/Bazecor",
+    host: "https://github.com/Dygmalab/Bazecor",
+  },
+  updateInterval: "24 hour",
+  logger: log,
+});
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 // eslint-disable-next-line global-require

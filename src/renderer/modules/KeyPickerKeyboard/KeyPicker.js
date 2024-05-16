@@ -919,7 +919,7 @@ class KeyPicker extends Component {
                   name={(keyCode.base + keyCode.modified).toString(16)}
                   toggleShow={this.toggleModal}
                   handleSave={data => {
-                    console.log("CustomKey selected key", data);
+                    // console.log("CustomKey selected key", data);
                     onKeySelect(parseInt(data, 16));
                     this.toggleModal();
                   }}

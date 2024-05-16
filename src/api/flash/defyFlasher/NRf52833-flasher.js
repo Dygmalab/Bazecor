@@ -15,6 +15,7 @@
  */
 
 import async from "async";
+import log from "electron-log/renderer";
 import Focus from "../../focus";
 import { decodeHexLine } from "../decodeHexLine";
 import { MAX_MS, PACKET_SIZE, TYPE_DAT, TYPE_ELA, TYPE_ESA } from "../flasherConstants";
@@ -65,7 +66,7 @@ function write_cb(buffer, cb) {
   // execute!
   async.series(send, (err, result) => {
     cb(err);
-    console.log(result);
+    log.info(result);
   });
 }
 
@@ -158,7 +159,7 @@ const NRf52833 = {
         auxData.push(hex.data);
         dataObjects.push(hex);
       }
-      //   console.log(num2hexstr(segment, 8), linear, num2hexstr(aux), num2hexstr(hex.address));
+      //   log.info(num2hexstr(segment, 8), linear, num2hexstr(aux), num2hexstr(hex.address));
     }
     const totalSaved = total;
     let hexCount = 0;
@@ -167,7 +168,10 @@ const NRf52833 = {
     //ERASE device
     func_array.push(function (callback) {
       //Max addres of firmware program  is 0x00072000
-      write_cb(str2ab(`E${num2hexstr(dataObjects[0].address, 8)},${num2hexstr(0x00072000-dataObjects[0].address, 8)}#`), callback);
+      write_cb(
+        str2ab(`E${num2hexstr(dataObjects[0].address, 8)},${num2hexstr(0x00072000 - dataObjects[0].address, 8)}#`),
+        callback,
+      );
     });
     func_array.push(callback => {
       read_cb(callback);

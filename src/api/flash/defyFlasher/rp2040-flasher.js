@@ -17,6 +17,7 @@
 import { ipcRenderer } from "electron";
 import fs from "fs";
 import * as path from "path";
+import log from "electron-log/renderer";
 import { delay } from "../delay";
 import sideFlaser from "./sideFlasher";
 
@@ -34,7 +35,7 @@ export default class rp2040 {
   async flash(firmware, stateUpdate, finished) {
     ipcRenderer.invoke("list-drives").then(result => {
       const finalPath = path.join(result, "default.uf2");
-      // console.log("RESULTS!!!", result, file, " to ", finalPath);
+      // log.info("RESULTS!!!", result, file, " to ", finalPath);
       fs.writeFileSync(finalPath, Buffer.from(new Uint8Array(firmware)));
       stateUpdate(3, 80);
       finished(false, "");
@@ -49,11 +50,11 @@ export default class rp2040 {
     this.sideFlash = new sideFlaser(this.device.path, firmwareSides);
     let result = await this.sideFlash.flashSide("right", stateUpdate, wiredOrWireless);
     if (result.error) finished(result.error, result.message);
-    console.log("Right side flash has error? ", result.error);
+    log.info("Right side flash has error? ", result.error);
     step = step + 25;
     result = await this.sideFlash.flashSide("left", stateUpdate, wiredOrWireless);
     if (result.error) finished(result.error, result.message);
-    console.log("Left side flash has error? ", result.error);
+    log.info("Left side flash has error? ", result.error);
     step += 25;
     await delay(20);
     finished(false, "");

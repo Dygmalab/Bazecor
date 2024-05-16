@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Styled from "styled-components";
+import log from "electron-log/renderer";
 
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@Renderer/components/ui/accordion";
 import { i18n } from "@Renderer/i18n";
@@ -117,7 +118,7 @@ const AccordionFirmware = ({ items }: any) => {
         SetCounterTasks(previousValue => previousValue + 1);
       }
     });
-    console.log(passedTasks);
+    log.verbose(passedTasks);
   }, [items, passedTasks]);
 
   return (

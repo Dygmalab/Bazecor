@@ -2,6 +2,7 @@ import { app } from "electron";
 import fs from "fs";
 import path from "path";
 import moment from "moment";
+import log from "electron-log/main";
 import Store from "../managers/Store";
 
 function deleteOldFiles(backupPath: string, period: number) {
@@ -31,7 +32,7 @@ function deleteOldFiles(backupPath: string, period: number) {
       if (monthsDifference >= period) {
         // Delete the file
         fs.unlinkSync(filePath);
-        console.log(`Deleted file: ${filePath}`);
+        log.verbose(`Deleted file: ${filePath}`);
       }
     }
   }
@@ -41,20 +42,20 @@ const setBackup = () => {
   const store = Store.getStore();
   const bfolder = store.get("settings.backupFolder") as string;
   const bfrequency = store.get("settings.backupFrequency") as number;
-  console.log("** Checking backup folder value **");
-  console.log(bfolder);
+  log.verbose("** Checking backup folder value **");
+  log.verbose(bfolder);
   if (bfolder === "" || bfolder === undefined) {
     const defaultPath = path.join(app.getPath("home"), "Dygma", "Backups");
-    console.log(defaultPath);
+    log.verbose(defaultPath);
     store.set("settings.backupFolder", defaultPath);
     fs.mkdir(defaultPath, { recursive: true }, err => {
       if (err) {
-        console.error(err);
+        log.error(err);
       }
-      console.log("Directory created successfully!");
+      log.verbose("Directory created successfully!");
     });
   } else if (bfrequency > 0 && bfrequency < 13) {
-    console.log(`** Going to erase backups older than: ${bfrequency} months **`);
+    log.verbose(`** Going to erase backups older than: ${bfrequency} months **`);
     deleteOldFiles(bfolder, bfrequency);
   }
 };

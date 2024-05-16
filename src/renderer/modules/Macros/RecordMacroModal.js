@@ -1,6 +1,6 @@
 import React from "react";
 import Styled from "styled-components";
-
+import log from "electron-log/renderer";
 import Modal from "react-bootstrap/Modal";
 import { ipcRenderer } from "electron";
 import { i18n } from "@Renderer/i18n";
@@ -179,10 +179,10 @@ export default class RecordMacroModal extends React.Component {
     ipcRenderer.on("recorded-key-down", (event, response) => {
       const { keymapDB } = this.props;
       const { isDelayActive, recorded } = this.state;
-      console.log("Check key-down", response);
+      log.info("Check key-down", response);
       const newRecorded = recorded;
       const translated = keymapDB.parse(this.translator[response.event.keycode]);
-      console.log("key press", translated);
+      log.info("key press", translated);
       if (isDelayActive && recorded.length > 0) {
         const timePast = response.time - recorded[recorded.length - 1].time;
         if (timePast !== undefined && timePast > 1)
@@ -208,10 +208,10 @@ export default class RecordMacroModal extends React.Component {
     ipcRenderer.on("recorded-key-up", (event, response) => {
       const { keymapDB } = this.props;
       const { isDelayActive, recorded } = this.state;
-      console.log("Check key-up", response);
+      log.info("Check key-up", response);
       const newRecorded = recorded;
       const translated = keymapDB.parse(this.translator[response.event.keycode]);
-      console.log("key release", translated);
+      log.info("key release", translated);
       if (isDelayActive) {
         const timePast = response.time - recorded[recorded.length - 1].time;
         if (timePast !== undefined && timePast > 1)
@@ -235,13 +235,13 @@ export default class RecordMacroModal extends React.Component {
       });
     });
     // ipcRenderer.on("recorded-mouse-move", (event, response) => {
-    //   console.log(response);
+    //   log.info(response);
     // });
     ipcRenderer.on("recorded-mouse-click", (event, response) => {
-      console.log(response);
+      log.info(response);
     });
     ipcRenderer.on("recorded-mouse-wheel", (event, response) => {
-      console.log(response);
+      log.info(response);
     });
   }
 
@@ -301,30 +301,30 @@ export default class RecordMacroModal extends React.Component {
   };
 
   cleanRecorded = recorded => {
-    console.log("Clean recorded", recorded);
+    log.info("Clean recorded", recorded);
     const newRecorded = [];
     for (let i = 1; i < recorded.length; i += 1) {
       const p = i - 1;
-      console.log(`pressed key: ${recorded[i].char}`, recorded[p], recorded[i]);
+      log.info(`pressed key: ${recorded[i].char}`, recorded[p], recorded[i]);
       if (recorded[p].keyCode > 223 && recorded[p].keyCode < 232) {
-        console.log(`Modifier detected: ${recorded[p].char}`);
+        log.info(`Modifier detected: ${recorded[p].char}`);
         newRecorded.push(JSON.parse(JSON.stringify(recorded[p])));
         continue;
       }
       if (recorded[p].keycode === recorded[i].keycode && recorded[p].action === 6 && recorded[i].action === 7) {
-        console.log(
+        log.info(
           `pressRelease joining ${recorded[i].char} as 1 with ${recorded[p].action} as p action and ${recorded[i].action} as i action, being i:${i}, and p:${p}`,
         );
         newRecorded.push(JSON.parse(JSON.stringify(recorded[p])));
         newRecorded[newRecorded.length - 1].action = 8;
         i += 1;
-        console.log("state of i", i);
+        log.info("state of i", i);
         if (i >= recorded.length - 1) {
           newRecorded.push(recorded[recorded.length - 1]);
         }
         continue;
       }
-      console.log(`Added as end of interaction ${recorded[p].char} to the rest of the elems`);
+      log.info(`Added as end of interaction ${recorded[p].char} to the rest of the elems`);
       newRecorded.push(recorded[p]);
       if (i === recorded.length - 1) {
         newRecorded.push(recorded[i]);
@@ -336,7 +336,7 @@ export default class RecordMacroModal extends React.Component {
       newRecorded[newRecorded.length - 1].action < 8
     )
       newRecorded.pop();
-    console.log("Checking cleaned", newRecorded);
+    log.info("Checking cleaned", newRecorded);
     return newRecorded;
   };
 

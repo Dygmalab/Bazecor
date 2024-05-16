@@ -2,6 +2,7 @@ import { createMachine, assign, raise } from "xstate";
 import fs from "fs";
 import path from "path";
 import { ipcRenderer } from "electron";
+import log from "electron-log/renderer";
 import SideFlaser from "../../../api/flash/defyFlasher/sideFlasher";
 import Focus from "../../../api/focus";
 import Hardware from "../../../api/hardware";
@@ -24,7 +25,7 @@ const delay = ms =>
   });
 
 const stateUpdate = (stage, percentage, context, callback) => {
-  console.log(stage, percentage);
+  log.info(stage, percentage);
   let { globalProgress } = context;
   let { leftProgress } = context;
   let { rightProgress } = context;
@@ -77,7 +78,7 @@ const restoreSettings = async (context, backup, stateUpd) => {
     return true;
   }
   const focus = Focus.getInstance();
-  console.log(backup);
+  log.info(backup);
   if (backup === undefined || backup.length === 0) {
     await focus.open(comPath, context.originalDevice.device.info, null);
     return true;
@@ -90,7 +91,7 @@ const restoreSettings = async (context, backup, stateUpd) => {
       if (typeof val === "boolean") {
         val = +val;
       }
-      console.log(`Going to send ${backup[i].command} to keyboard`);
+      log.info(`Going to send ${backup[i].command} to keyboard`);
       await focus.command(`${backup[i].command} ${val}`.trim());
       stateUpd("restore", (i / backup.length) * 90);
     }
@@ -120,7 +121,7 @@ const reconnect = async (context, callback) => {
                 context.originalDevice.device.info.keyboardType === device.device.info.keyboardType
               : context.originalDevice.device.info.keyboardType === device.device.info.keyboardType
           ) {
-            console.log(message);
+            log.info(message);
             currentPort = { ...device };
             currentPath = device.path;
             isFindDevice = true;
@@ -132,14 +133,14 @@ const reconnect = async (context, callback) => {
     };
     const runnerFindKeyboard = async (findKeyboard, times, errorMessage) => {
       if (!times) {
-        console.error("Keyboard not found!");
+        log.error("Keyboard not found!");
         return false;
       }
       if (await findKeyboard()) {
-        console.log("Ready to restore");
+        log.info("Ready to restore");
         return true;
       }
-      console.log(`Keyboard not detected, trying again for ${times} times`);
+      log.info(`Keyboard not detected, trying again for ${times} times`);
       stateUpdate("reconnect", 10 + 100 * (1 / (5 - times)), context, callback);
       await runnerFindKeyboard(findKeyboard, times - 1, errorMessage);
       return true;
@@ -157,8 +158,8 @@ const reconnect = async (context, callback) => {
     await runnerFindKeyboard(findKeyboard, 5);
     stateUpdate("reconnect", 100, context, callback);
   } catch (error) {
-    console.warn("error when flashing Sides");
-    console.error(error);
+    log.warn("error when flashing Sides");
+    log.error(error);
     throw new Error(error);
   }
   return result;
@@ -175,8 +176,8 @@ const flashSide = async (side, context, callback) => {
     }
     // Flashing procedure for each side
     await focus.close();
-    console.log("done closing focus");
-    console.log("Going to flash side:", side);
+    log.info("done closing focus");
+    log.info("Going to flash side:", side);
     result = await flashSides.flashSide(
       side,
       (stage, percentage) => {
@@ -187,8 +188,8 @@ const flashSide = async (side, context, callback) => {
     if (result.error) throw new Error(result.error);
     stateUpdate(side, 100, context, callback);
   } catch (error) {
-    console.warn("error when flashing Sides");
-    console.error(error);
+    log.warn("error when flashing Sides");
+    log.error(error);
     throw new Error(error);
   }
   return result;
@@ -209,7 +210,7 @@ const uploadDefyWired = async (context, callback) => {
     await ipcRenderer.invoke("list-drives", true).then(rsl => {
       stateUpdate("neuron", 60, context, callback);
       const finalPath = path.join(rsl, "default.uf2");
-      // console.log("RESULTS!!!", rsl, context.firmwares.fw, " to ", finalPath);
+      // log.info("RESULTS!!!", rsl, context.firmwares.fw, " to ", finalPath);
       fs.writeFileSync(finalPath, Buffer.from(new Uint8Array(context.firmwares.fw)));
       stateUpdate("neuron", 80, context, callback);
     });
@@ -217,8 +218,8 @@ const uploadDefyWired = async (context, callback) => {
     if (result.error) throw new Error(result.error);
     stateUpdate("neuron", 100, context, callback);
   } catch (error) {
-    console.warn("error when flashing Neuron");
-    console.error(error);
+    log.warn("error when flashing Neuron");
+    log.error(error);
     throw new Error(error);
   }
   return result;
@@ -230,7 +231,7 @@ const resetDefy = async (context, callback) => {
   try {
     const focus = Focus.getInstance();
     if (flashDefyWireless === undefined) {
-      console.log("when creating FDW", context.originalDevice.device);
+      log.info("when creating FDW", context.originalDevice.device);
       flashDefyWireless = new FlashDefyWireless(context.originalDevice.device);
       if (flashSides === undefined && bootloader === false) {
         comPath = focus._port?.port?.openOptions?.path;
@@ -239,7 +240,7 @@ const resetDefy = async (context, callback) => {
     }
     if (!bootloader) {
       try {
-        console.log("reset indicators", focus, flashDefyWireless, context.originalDevice.device);
+        log.info("reset indicators", focus, flashDefyWireless, context.originalDevice.device);
         if (focus._port === null || focus.closed) {
           const { info } = context.originalDevice.device;
           await focus.close();
@@ -249,15 +250,15 @@ const resetDefy = async (context, callback) => {
           stateUpdate(stage, percentage, context, callback);
         });
       } catch (error) {
-        console.error("Bootloader Not found: ", error);
+        log.error("Bootloader Not found: ", error);
         throw new Error(error);
       }
     } else {
       flashDefyWireless.currentPort = { ...context.device };
     }
   } catch (error) {
-    console.warn("error when resetting Neuron");
-    console.error(error);
+    log.warn("error when resetting Neuron");
+    log.error(error);
     throw new Error(error);
   }
   return result;
@@ -270,7 +271,7 @@ const uploadDefyWireles = async (context, callback) => {
     if (!context.device.bootloader) {
       await focus.close();
     }
-    // console.log(context.originalDevice.device, focus, focus._port, flashDefyWireless);
+    // log.info(context.originalDevice.device, focus, focus._port, flashDefyWireless);
     result = await context.originalDevice.device.flash(
       focus._port,
       context.firmwares.fw,
@@ -281,8 +282,8 @@ const uploadDefyWireles = async (context, callback) => {
       },
     );
   } catch (error) {
-    console.warn("error when flashing Neuron");
-    console.error(error);
+    log.warn("error when flashing Neuron");
+    log.error(error);
     throw new Error(error);
   }
   return result;
@@ -298,8 +299,8 @@ const restoreDefies = async (context, callback) => {
       stateUpdate(stage, percentage, context, callback);
     });
   } catch (error) {
-    console.warn("error when restoring Neuron");
-    console.error(error);
+    log.warn("error when restoring Neuron");
+    log.error(error);
     throw new Error(error);
   }
   return result;
@@ -317,7 +318,7 @@ const resetRaise = async (context, callback) => {
     }
     if (!bootloader) {
       try {
-        console.log("reset indicators", focus, flashRaise, context.originalDevice.device);
+        log.info("reset indicators", focus, flashRaise, context.originalDevice.device);
         if (focus._port.closed) {
           const { info } = context.originalDevice.device;
           await focus.close();
@@ -327,15 +328,15 @@ const resetRaise = async (context, callback) => {
           stateUpdate(stage, percentage, context, callback);
         });
       } catch (error) {
-        console.error("Bootloader Not found: ", error);
+        log.error("Bootloader Not found: ", error);
         throw new Error(error);
       }
     } else {
       flashRaise.currentPort = { ...context.device };
     }
   } catch (error) {
-    console.warn("error when resetting Neuron");
-    console.error(error);
+    log.warn("error when resetting Neuron");
+    log.error(error);
     throw new Error(error);
   }
   return result;
@@ -348,13 +349,13 @@ const uploadRaise = async (context, callback) => {
     if (!context.device.bootloader) {
       await focus.close();
     }
-    console.log(context.originalDevice.device, focus, focus._port, flashRaise);
+    log.info(context.originalDevice.device, focus, focus._port, flashRaise);
     result = await context.originalDevice.device.flash(focus._port, context.firmwares.fw, flashRaise, (stage, percentage) => {
       stateUpdate(stage, percentage, context, callback);
     });
   } catch (error) {
-    console.warn("error when flashing Neuron");
-    console.error(error);
+    log.warn("error when flashing Neuron");
+    log.error(error);
     throw new Error(error);
   }
   return result;
@@ -370,8 +371,8 @@ const restoreRaise = async (context, callback) => {
       stateUpdate(stage, percentage, context, callback);
     });
   } catch (error) {
-    console.warn("error when restoring Neuron");
-    console.error(error);
+    log.warn("error when restoring Neuron");
+    log.error(error);
     throw new Error(error);
   }
   return result;
@@ -386,16 +387,16 @@ const integrateCommsToFocus = async context => {
     const { device } = currentDevice;
 
     await currentDevice.close();
-    console.log("closed currentDevice", currentDevice);
+    log.info("closed currentDevice", currentDevice);
 
     await delay(100);
 
     const focus = Focus.getInstance();
     await focus.open(path, device, null);
-    console.log("opened using focus currentDevice", focus);
+    log.info("opened using focus currentDevice", focus);
     result = true;
   } catch (error) {
-    console.log("error detected on comms integration: ", error);
+    log.info("error detected on comms integration: ", error);
   }
 
   return result;
@@ -428,7 +429,7 @@ const FlashDevice = createMachine(
         id: "waitEsc",
         entry: [
           () => {
-            console.log("Wait for esc! & clearing globals");
+            log.info("Wait for esc! & clearing globals");
             flashRaise = undefined;
             flashDefyWireless = undefined;
             flashSides = undefined;
@@ -460,8 +461,8 @@ const FlashDevice = createMachine(
         id: "flashPathSelector",
         entry: [
           context => {
-            console.log("Selecting upgrade path");
-            console.log("context of device", context.device);
+            log.info("Selecting upgrade path");
+            log.info("context of device", context.device);
           },
           assign({
             stateblock: () => 1,
@@ -480,7 +481,7 @@ const FlashDevice = createMachine(
         id: "flashRightSide",
         entry: [
           context => {
-            console.log(`Flashing Right Side! for ${context.retriesRight} times`);
+            log.info(`Flashing Right Side! for ${context.retriesRight} times`);
           },
           assign(context => ({
             retriesRight: context.retriesRight + 1,
@@ -517,7 +518,7 @@ const FlashDevice = createMachine(
         id: "flashLeftSide",
         entry: [
           context => {
-            console.log(`Flashing Left Side! for ${context.retriesLeft} times`);
+            log.info(`Flashing Left Side! for ${context.retriesLeft} times`);
           },
           assign(context => ({
             retriesLeft: context.retriesLeft + 1,
@@ -562,7 +563,7 @@ const FlashDevice = createMachine(
         id: "flashDefyWired",
         entry: [
           context => {
-            console.log(`Flashing Neuron! for ${context.retriesDefyWired} times`);
+            log.info(`Flashing Neuron! for ${context.retriesDefyWired} times`);
           },
           assign(context => ({
             retriesDefyWired: context.retriesDefyNeuron + 1,
@@ -599,7 +600,7 @@ const FlashDevice = createMachine(
         id: "resetDefyWireless",
         entry: [
           () => {
-            console.log(`Resetting Neuron!`);
+            log.info(`Resetting Neuron!`);
           },
           assign({ stateblock: () => 4 }),
         ],
@@ -633,7 +634,7 @@ const FlashDevice = createMachine(
         id: "flashDefyWireless",
         entry: [
           context => {
-            console.log(`Flashing Neuron! for ${context.retriesNeuron} times`);
+            log.info(`Flashing Neuron! for ${context.retriesNeuron} times`);
           },
           assign({ stateblock: () => 5 }),
           assign({ retriesNeuron: context => context.retriesNeuron + 1 }),
@@ -668,7 +669,7 @@ const FlashDevice = createMachine(
         id: "reconnectDefy",
         entry: [
           () => {
-            console.log(`Reconnecting to Neuron!`);
+            log.info(`Reconnecting to Neuron!`);
           },
           assign({ stateblock: () => 5 }),
         ],
@@ -702,7 +703,7 @@ const FlashDevice = createMachine(
         id: "restoreDefy",
         entry: [
           () => {
-            console.log(`Restoring Neuron!`);
+            log.info(`Restoring Neuron!`);
           },
           assign({ stateblock: () => 6 }),
         ],
@@ -736,7 +737,7 @@ const FlashDevice = createMachine(
         id: "resetRaiseNeuron",
         entry: [
           () => {
-            console.log(`Resetting Neuron!`);
+            log.info(`Resetting Neuron!`);
           },
           assign({ stateblock: () => 4 }),
         ],
@@ -770,7 +771,7 @@ const FlashDevice = createMachine(
         id: "flashRaiseNeuron",
         entry: [
           context => {
-            console.log(`Flashing Neuron! for ${context.retriesNeuron} times`);
+            log.info(`Flashing Neuron! for ${context.retriesNeuron} times`);
           },
           assign({ stateblock: () => 5 }),
           assign({ retriesNeuron: context => context.retriesNeuron + 1 }),
@@ -805,7 +806,7 @@ const FlashDevice = createMachine(
         id: "restoreRaiseNeuron",
         entry: [
           () => {
-            console.log(`Restoring Neuron!`);
+            log.info(`Restoring Neuron!`);
           },
           assign({ stateblock: () => 6 }),
         ],
@@ -839,7 +840,7 @@ const FlashDevice = createMachine(
         id: "reportSucess",
         entry: [
           () => {
-            console.log("Reporting Sucess");
+            log.info("Reporting Sucess");
           },
           assign({
             stateblock: () => 7,
@@ -852,7 +853,7 @@ const FlashDevice = createMachine(
       failure: {
         entry: [
           () => {
-            console.log("Failure state");
+            log.info("Failure state");
           },
           assign({
             stateblock: () => 8,

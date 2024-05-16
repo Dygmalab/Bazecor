@@ -1,6 +1,6 @@
 import React from "react";
 import Styled from "styled-components";
-
+import log from "electron-log/renderer";
 import Form from "react-bootstrap/Form";
 import InputGroup from "react-bootstrap/InputGroup";
 import { i18n } from "@Renderer/i18n";
@@ -160,7 +160,7 @@ class DelayTab extends React.Component<DelayTabProps, DelayTabState> {
   addDelay = () => {
     const { fixedSelected, fixedValue, randomValue } = this.state;
     const { onAddDelay, onAddDelayRnd } = this.props;
-    console.log("add delay", fixedSelected, fixedValue, randomValue);
+    log.info("add delay", fixedSelected, fixedValue, randomValue);
     if (fixedSelected) {
       onAddDelay(fixedValue, 2);
     } else {

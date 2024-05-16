@@ -16,6 +16,7 @@
  */
 
 import React, { useEffect, useState } from "react";
+import log from "electron-log/renderer";
 
 // External components
 import Slider from "@appigram/react-rangeslider";
@@ -95,7 +96,7 @@ function LEDSettings(props: LEDSettingsPreferences) {
 
   useEffect(() => {
     const { kbData: newKBData, wireless: newWireless } = props;
-    console.log("checking for changes", newKBData, newWireless);
+    log.log("checking for changes", newKBData, newWireless);
 
     setLocalKBData(newKBData);
     setLocalWireless(newWireless);

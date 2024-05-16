@@ -21,6 +21,7 @@ import { toast } from "react-toastify";
 import { ThemeProvider } from "styled-components";
 import { ipcRenderer } from "electron";
 import path from "path";
+import log from "electron-log/renderer";
 import { i18n } from "@Renderer/i18n";
 
 import GlobalStyles from "@Renderer/theme/GlobalStyles";
@@ -77,7 +78,7 @@ function App() {
 
   const updateStorageSchema = async () => {
     // Update stored settings schema
-    console.log("Retrieving settings: ", store.get("settings"));
+    log.verbose("Retrieving settings: ", store.get("settings"));
     const locale = await ipcRenderer.invoke("get-Locale");
     if (store.get("settings.language") !== undefined) {
       i18n.setLanguage(store.get("settings.language").toString());
@@ -116,7 +117,7 @@ function App() {
     i18n.setLanguage(data.language);
     store.set("settings", data);
     store.set("neurons", []);
-    console.log("Testing results: ", data, store.get("settings"), store.get("settings.darkMode"));
+    log.verbose("Testing results: ", data, store.get("settings"), store.get("settings.darkMode"));
   };
 
   useEffect(() => {
@@ -166,8 +167,8 @@ function App() {
   };
 
   const onKeyboardDisconnect = () => {
-    console.log("disconnecting Keyboard!");
-    console.log(state);
+    log.verbose("disconnecting Keyboard!");
+    log.verbose(state);
     setConnected(false);
     setPages({});
     device.current = null;
@@ -176,7 +177,7 @@ function App() {
   };
 
   const onKeyboardConnect = async (currentDevice: Device) => {
-    console.log("Connecting to", currentDevice);
+    log.verbose("Connecting to", currentDevice);
 
     if (currentDevice.device.bootloader) {
       setConnected(true);
@@ -186,7 +187,7 @@ function App() {
       return;
     }
 
-    console.log("VERSION: ", await currentDevice.command("version"));
+    log.verbose("VERSION: ", await currentDevice.command("version"));
 
     setConnected(true);
     device.current = currentDevice;
@@ -200,7 +201,7 @@ function App() {
     document.documentElement.classList.remove("light");
     document.documentElement.classList.remove("dark");
     document.documentElement.classList.remove("system");
-    console.log("Dark mode changed to: ", mode, "NativeTheme says: ", ipcRenderer.invoke("get-NativeTheme"));
+    log.verbose("Dark mode changed to: ", mode, "NativeTheme says: ", ipcRenderer.invoke("get-NativeTheme"));
     let isDark = mode === "dark";
     if (mode === "system") {
       isDark = await ipcRenderer.invoke("get-NativeTheme");
@@ -219,7 +220,7 @@ function App() {
   };
 
   const darkThemeListener = (event: any, message: boolean) => {
-    console.log("O.S. DarkTheme Settings changed to ", message, event);
+    log.verbose("O.S. DarkTheme Settings changed to ", message, event);
     const dm = store.get("settings.darkMode");
     if (dm === "system") {
       toggleDarkMode(dm);
@@ -234,7 +235,7 @@ function App() {
   const toggleFlashing = async () => {
     setFlashing(!flashing);
     varFlashing.current = !flashing;
-    console.log("toggled flashing to", !flashing);
+    log.verbose("toggled flashing to", !flashing);
 
     // if Flashing is going to be set to false from true
     if (flashing) {
@@ -247,9 +248,9 @@ function App() {
 
   const handleDeviceDisconnection = async (dev: any) => {
     const isFlashing = varFlashing.current;
-    console.log("Handling device disconnect", isFlashing, dev, device);
+    log.verbose("Handling device disconnect", isFlashing, dev, device);
     if (isFlashing) {
-      console.log("no action due to flashing active");
+      log.verbose("no action due to flashing active");
       return;
     }
 
@@ -274,7 +275,7 @@ function App() {
 
   useEffect(() => {
     const fontFace = new FontFace("Libre Franklin", "@Renderer/theme/fonts/LibreFranklin/LibreFranklin-VariableFont_wght.ttf");
-    console.log("Font face: ", fontFace);
+    log.verbose("Font face: ", fontFace);
     document.fonts.add(fontFace);
 
     const usbListener = (event: unknown, response: unknown) => handleDeviceDisconnection(JSON.parse(response as string));
@@ -283,7 +284,7 @@ function App() {
 
     const notifyBtDevice = (event: any, hidDev: string) => {
       const localDev: HIDNotifdevice = JSON.parse(hidDev);
-      console.log("received connection event: ", localDev);
+      log.verbose("received connection event: ", localDev);
       toast.success(
         <ToastMessage
           icon={<IconBluetooth />}
@@ -309,7 +310,7 @@ function App() {
   }, []);
 
   const toggleFwUpdate = async (value: boolean) => {
-    console.log("toggling fwUpdate to: ", value);
+    log.verbose("toggling fwUpdate to: ", value);
     setFwUpdate(value);
   };
 
@@ -319,13 +320,13 @@ function App() {
 
   const updateAllowBetas = (checked: boolean) => {
     const newValue = checked;
-    // console.log("new allowBeta value: ", newValue);
+    // log.verbose("new allowBeta value: ", newValue);
     store.set("settings.allowBeta", newValue);
     setAllowBeta(newValue);
   };
 
   const handleSetRestoredOk = (status: boolean) => {
-    console.log("CHECK RESTORE", status);
+    log.verbose("CHECK RESTORE", status);
     setRestoredOk(status);
   };
 

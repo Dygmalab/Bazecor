@@ -17,12 +17,11 @@
 
 import React from "react";
 import Styled from "styled-components";
-
+import log from "electron-log/renderer";
 import { i18n } from "@Renderer/i18n";
 
 import Title from "../../component/Title";
 import Callout from "../../component/Callout";
-import MouseEventsReference from "../../component/MouseEventsReference";
 import { ButtonConfig, ButtonMouse } from "../../component/Button";
 
 const Styles = Styled.div`
@@ -144,7 +143,7 @@ function MouseTab({ isStandardView, keyCode, onAddSpecial, actTab }) {
 
   const handleLeaveAnimations = mouseEvent => {
     setIsHovering(true);
-    console.log("MouseLeave", mouseEvent);
+    log.info("MouseLeave", mouseEvent);
   };
 
   return (

@@ -1,5 +1,6 @@
 import { ipcMain, app, dialog, shell, nativeTheme, systemPreferences } from "electron";
 import { uIOhook } from "uiohook-napi";
+import log from "electron-log/main";
 import { sendKeyUp, sendkeyDown } from "./configureCaptureKeys";
 import listDrivesHandler from "../utils/listDrivesHandler";
 import GlobalRecording from "../managers/GlobalRecording";
@@ -24,7 +25,7 @@ const configureIPCs = () => {
   const globalRecording = GlobalRecording.getInstance();
 
   ipcMain.on("start-recording", () => {
-    console.log("start-recording");
+    log.verbose("start-recording");
     globalRecording.setRecording(true);
     uIOhook.on("keydown", sendkeyDown);
     uIOhook.on("keyup", sendKeyUp);
@@ -32,7 +33,7 @@ const configureIPCs = () => {
   });
 
   ipcMain.on("stop-recording", () => {
-    console.log("stop-recording");
+    log.verbose("stop-recording");
     globalRecording.setRecording(false);
     uIOhook.off("keydown", sendkeyDown);
     uIOhook.off("keyup", sendKeyUp);
@@ -83,12 +84,12 @@ const configureIPCs = () => {
   ipcMain.handle("get-NativeTheme", () => nativeTheme.shouldUseDarkColors);
 
   ipcMain.handle("ask-for-accessibility", async () => {
-    console.log("someone asked for accessibility", process.platform);
+    log.verbose("someone asked for accessibility", process.platform);
     if (process.platform !== "darwin") {
       return true;
     }
     const isTrusted = systemPreferences.isTrustedAccessibilityClient(false);
-    console.log("isTrustedAccessibilityClient", isTrusted);
+    log.verbose("isTrustedAccessibilityClient", isTrusted);
     if (isTrusted) {
       return true;
     }
@@ -101,7 +102,7 @@ const configureIPCs = () => {
       cancelId: 0,
       buttons: ["Not Now", "Turn On Accessibility"],
     });
-    console.log("checking return value: ", clickedButton);
+    log.verbose("checking return value: ", clickedButton);
     if (clickedButton.response === 1) {
       // Calling isTrustedAccessibilityClient with prompt=true has the side effect
       // of showing the native dialog that either denies access or opens System

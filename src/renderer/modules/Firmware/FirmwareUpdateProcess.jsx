@@ -18,6 +18,7 @@
 import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import Styled from "styled-components";
+import log from "electron-log/renderer";
 import { useMachine } from "@xstate/react";
 import { i18n } from "@Renderer/i18n";
 import { useDevice } from "@Renderer/DeviceContext";
@@ -99,7 +100,7 @@ function FirmwareUpdateProcess(props) {
   const handleKeyDown = event => {
     switch (event.keyCode) {
       case 27:
-        console.log("esc key logged");
+        log.info("esc key logged");
         send("ESCPRESSED");
         break;
       default:
@@ -123,16 +124,16 @@ function FirmwareUpdateProcess(props) {
     },
     actions: {
       addEscListener: () => {
-        console.log("added event listener");
+        log.info("added event listener");
         document.addEventListener("keydown", handleKeyDown);
       },
       removeEscListener: () => {
-        console.log("removed event listener");
+        log.info("removed event listener");
         document.removeEventListener("keydown", handleKeyDown);
       },
       toggleFlashing: async () => {
         if (toggledFlashing) return;
-        console.log("starting flashing indicators");
+        log.info("starting flashing indicators");
         toggleFlashing();
         toggleFwUpdate(true);
         sendToggledFlashing(true);
@@ -141,7 +142,7 @@ function FirmwareUpdateProcess(props) {
         if (!toggledFlashing) return;
         setRestoredOk(state.context.restoreResult);
         sendToggledFlashing(false);
-        console.log("closing flashin process");
+        log.info("closing flashin process");
         toggleFlashing();
         toggleFwUpdate(false);
         onDisconnect();

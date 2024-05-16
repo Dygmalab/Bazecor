@@ -19,6 +19,7 @@
  */
 
 import React, { useState } from "react";
+import log from "electron-log/renderer";
 import Styled from "styled-components";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
@@ -47,16 +48,16 @@ const BazecorDevtools = () => {
 
   const onGetHIDDevices = async () => {
     const gDevices = await HID.getDevices();
-    console.log(gDevices);
+    log.info(gDevices);
   };
 
   const onHIDConnect = async () => {
     try {
       connectedDevice = await hid.connectDevice(0);
-      console.log("Connected to");
-      console.log(connectedDevice);
+      log.info("Connected to");
+      log.info(connectedDevice);
     } catch (err) {
-      console.log(err);
+      log.info(err);
     }
   };
 
@@ -64,7 +65,7 @@ const BazecorDevtools = () => {
     try {
       await hid.open();
     } catch (err) {
-      console.log(err);
+      log.info(err);
     }
   };
 
@@ -79,17 +80,17 @@ const BazecorDevtools = () => {
         inputReports = collection.inputReports;
         outputReports = collection.outputReports;
         featureReports = collection.featureReports;
-        console.log("Input reports");
+        log.info("Input reports");
         for (const inputReport of inputReports) {
-          console.log(inputReport);
+          log.info(inputReport);
         }
-        console.log("Output reports");
+        log.info("Output reports");
         for (const outputReport of outputReports) {
-          console.log(outputReport);
+          log.info(outputReport);
         }
-        console.log("Feature reports");
+        log.info("Feature reports");
         for (const featureReport of featureReports) {
-          console.log(featureReport);
+          log.info(featureReport);
         }
       }
     }
@@ -97,40 +98,40 @@ const BazecorDevtools = () => {
 
   const onHIDHelp = async () => {
     try {
-      console.log("Sending help...");
+      log.info("Sending help...");
       await hid.sendData(
         "help\n",
         rxData => {
-          console.log("All data received");
-          console.log(rxData);
+          log.info("All data received");
+          log.info(rxData);
         },
         err => {
-          console.log(err);
+          log.info(err);
         },
       );
     } catch (err) {
-      console.log(err);
+      log.info(err);
     }
   };
 
   const onHIDGetKeymap = async () => {
     try {
-      console.log("Getting keymap...");
+      log.info("Getting keymap...");
       await hid.sendData(
         "keymap.custom\n",
         rxData => {
-          console.log("All data received");
-          console.log(rxData);
+          log.info("All data received");
+          log.info(rxData);
           const encodedRX = new TextEncoder().encode(rxData);
-          console.log(encodedRX);
+          log.info(encodedRX);
           setKeymap(rxData);
         },
         err => {
-          console.log(err);
+          log.info(err);
         },
       );
     } catch (err) {
-      console.log(err);
+      log.info(err);
     }
   };
 
@@ -141,67 +142,67 @@ const BazecorDevtools = () => {
       await hid.sendData(
         `keymap.custom ${hardcodedKeymap}\n`,
         rxData => {
-          console.log("All data received");
-          console.log(rxData);
+          log.info("All data received");
+          log.info(rxData);
         },
         err => {
-          console.log(err);
+          log.info(err);
         },
       );
     } catch (err) {
-      console.log(err);
+      log.info(err);
     }
   };
 
   const onHIDSetOriginalKeymap = async () => {
     try {
-      console.log("Setting original keymap...");
+      log.info("Setting original keymap...");
       await hid.sendData(
         `keymap.custom ${keymap}\n`,
         rxData => {
-          console.log("All data received");
-          console.log(rxData);
+          log.info("All data received");
+          log.info(rxData);
         },
         err => {
-          console.log(err);
+          log.info(err);
         },
       );
     } catch (err) {
-      console.log(err);
+      log.info(err);
     }
   };
 
   const onListSerialDevices = async () => {
     const response = await DeviceTools.list();
-    console.log("Listing Serial Devices", response);
+    log.info("Listing Serial Devices", response);
     dispatch({ type: "addDevicesList", payload: response });
   };
 
   const onMessageSend = async () => {
     const dev = state.currentDevice;
     const message = await dev.command("palette");
-    console.log("retrieving message help: ", message);
+    log.info("retrieving message help: ", message);
   };
 
   const onSerialConnect = async (selected: number) => {
     try {
-      console.log("going to connect to device: ");
+      log.info("going to connect to device: ");
       const response = await DeviceTools.connect(state.deviceList[selected]);
       dispatch({ type: "changeCurrent", payload: { selected, device: response } });
-      console.log("Connected!", state);
+      log.info("Connected!", state);
     } catch (err) {
-      console.log("error when connecting");
-      console.error(err);
+      log.info("error when connecting");
+      log.error(err);
     }
   };
 
   const onSerialDisconnect = async () => {
     try {
       const response = await state.currentDevice.close();
-      console.log("Disconnected!", response);
+      log.info("Disconnected!", response);
     } catch (err) {
-      console.log("error when disconnecting");
-      console.error(err);
+      log.info("error when disconnecting");
+      log.error(err);
     }
   };
 

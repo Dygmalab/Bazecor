@@ -1,6 +1,7 @@
 import { BrowserWindow, dialog, MessageBoxOptions } from "electron";
 import fs from "fs";
 import * as sudo from "sudo-prompt";
+import log from "electron-log/main";
 
 const udevRulesToWrite =
   'SUBSYSTEMS=="usb", ATTRS{idVendor}=="1209", ATTRS{idProduct}=="2201", MODE="0666"\nSUBSYSTEMS=="usb", ATTRS{idVendor}=="1209", ATTRS{idProduct}=="2200", MODE="0666"\nSUBSYSTEMS=="usb", ATTRS{idVendor}=="35ef", MODE="0666"\nKERNEL=="hidraw*", ATTRS{idVendor}=="35ef", MODE="0666"';
@@ -17,7 +18,7 @@ const checkUdev = () => {
       return true;
     }
   } catch (err) {
-    console.error(err);
+    log.error(err);
   }
   return false;
 };
@@ -43,7 +44,7 @@ const installUdev = (mainWindow: BrowserWindow) => {
         options,
         error => {
           if (error !== null) {
-            console.log(`stdout: ${error.message}`);
+            log.verbose(`stdout: ${error.message}`);
             const errorOpts: MessageBoxOptions = {
               type: "error",
               buttons: ["Ok"],

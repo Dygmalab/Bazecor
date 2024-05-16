@@ -1,5 +1,6 @@
 import { _electron as electron, ElectronApplication, test, Page, expect } from "@playwright/test";
 import { findLatestBuild, parseElectronApp } from "electron-playwright-helpers";
+import log from "electron-log/main";
 
 // this test does not work yet because we need to do something in firmware to avoid having to hold ESC key
 test.describe("Testing Bazecor E2E", async () => {
@@ -18,14 +19,14 @@ test.describe("Testing Bazecor E2E", async () => {
 
     electronApp.on("window", async initialPage => {
       const filename = initialPage.url()?.split("/").pop();
-      console.log(`Window opened: ${filename}`);
+      log.info(`Window opened: ${filename}`);
 
       initialPage.on("pageerror", error => {
-        console.error(error);
+        log.error(error);
       });
 
       initialPage.on("console", msg => {
-        console.log(msg.text());
+        log.info(msg.text());
       });
     });
   });
@@ -41,7 +42,7 @@ test.describe("Testing Bazecor E2E", async () => {
 
     expect(connectButton).not.toBe(undefined);
     if (connectButton) {
-      console.log(connectButton);
+      log.info(connectButton);
       await connectButton.click();
       await page.screenshot({ path: `${outputFolder}/connected.png` });
     }
@@ -49,7 +50,7 @@ test.describe("Testing Bazecor E2E", async () => {
     const firmwareMenuButton = page.getByRole("link", { name: "Firmware Update" });
     expect(firmwareMenuButton).not.toBe(undefined);
     if (firmwareMenuButton) {
-      console.log(firmwareMenuButton);
+      log.info(firmwareMenuButton);
       await firmwareMenuButton.click();
       await page.screenshot({ path: `${outputFolder}/firmwareUpdateSection.png` });
     }
@@ -57,7 +58,7 @@ test.describe("Testing Bazecor E2E", async () => {
     const updateButton = page.getByRole("button", { name: "Update now" });
     expect(updateButton).not.toBe(undefined);
     if (updateButton) {
-      console.log(updateButton);
+      log.info(updateButton);
       await updateButton.click();
       await page.waitForTimeout(1000);
       await page.screenshot({ path: `${outputFolder}/updateStart.png` });
