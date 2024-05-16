@@ -15,52 +15,66 @@
  */
 
 import { ipcRenderer } from "electron";
+import log from "electron-log/renderer";
 import fs from "fs";
 import * as path from "path";
-import log from "electron-log/renderer";
+import SideFlaser from "./sideFlasher";
 import { delay } from "../delay";
-import sideFlaser from "./sideFlasher";
 
 /**
  * Object rp2040 with flash method.
  */
-export default class rp2040 {
-  constructor(device) {
+export default class Rp2040 {
+  device: any;
+  sideflash: any;
+  constructor(device: any) {
     this.device = device;
     this.sideflash = null;
   }
 
-  delay = ms => new Promise(res => setTimeout(res, ms));
-
-  async flash(firmware, stateUpdate, finished) {
+  async flash(
+    firmware: Buffer,
+    stateUpdate: (arg0: number, arg1: number) => void,
+    finished: (arg0: boolean, arg1: string) => void,
+  ) {
+    log.info("flashing rp2040 with rom bootloader", this.device);
     ipcRenderer.invoke("list-drives").then(result => {
       const finalPath = path.join(result, "default.uf2");
-      // log.info("RESULTS!!!", result, file, " to ", finalPath);
+      // console.log("RESULTS!!!", result, file, " to ", finalPath);
       fs.writeFileSync(finalPath, Buffer.from(new Uint8Array(firmware)));
       stateUpdate(3, 80);
       finished(false, "");
     });
   }
 
-  async sideFlash(firmwareSides, stateUpdate, wiredOrWireless, finished) {
+  async sideFlash(
+    firmwareSides: any,
+    stateUpdate: (arg0: number, arg1: number) => void,
+    wiredOrWireless: boolean,
+    finished: (arg0: boolean, arg1: string) => void,
+  ) {
     // State update auxiliarly function
     let step = 0;
 
     // Flashing procedure for each side
-    this.sideFlash = new sideFlaser(this.device.path, firmwareSides);
-    let result = await this.sideFlash.flashSide("right", stateUpdate, wiredOrWireless);
+    stateUpdate(3, step);
+    this.sideflash = new SideFlaser(firmwareSides);
+    let result = await this.sideflash.flashSide("right", stateUpdate, wiredOrWireless);
     if (result.error) finished(result.error, result.message);
     log.info("Right side flash has error? ", result.error);
-    step = step + 25;
-    result = await this.sideFlash.flashSide("left", stateUpdate, wiredOrWireless);
+    step += 25;
+    stateUpdate(3, step);
+    result = await this.sideflash.flashSide("left", stateUpdate, wiredOrWireless);
     if (result.error) finished(result.error, result.message);
     log.info("Left side flash has error? ", result.error);
     step += 25;
+    stateUpdate(3, step);
     await delay(20);
     finished(false, "");
   }
 
   async prepareNeuron() {
-    return await this.sideFlash.prepareNeuron();
+    const result = await this.sideflash.prepareNeuron();
+    return result;
   }
 }
