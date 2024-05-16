@@ -17,15 +17,13 @@
 
 import React from "react";
 
-import OverlayTrigger from "react-bootstrap/OverlayTrigger";
-import Tooltip from "react-bootstrap/Tooltip";
-
 import { Checkbox } from "@Renderer/components/atoms/Checkbox";
 import { Label } from "@Renderer/components/atoms/Label";
 import Heading from "@Renderer/components/atoms/Heading";
 import { CustomRCBProps } from "@Renderer/types/customRadioCheckBox";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@Renderer/components/atoms/Tooltip";
 
-import { IconInformationBubble } from "@Renderer/component/Icon";
+import { IconInformation } from "@Renderer/components/atoms/icons";
 
 function CustomRadioCheckBox(props: CustomRCBProps) {
   const { label, type, id, name, tooltip, className, onClick, disabled, checked } = props;
@@ -47,11 +45,14 @@ function CustomRadioCheckBox(props: CustomRCBProps) {
           >
             {label}
             {tooltip && (
-              <OverlayTrigger placement="top" overlay={<Tooltip id="tooltip-top">{tooltip}</Tooltip>}>
-                <span className="tooltipIcon">
-                  <IconInformationBubble />
-                </span>
-              </OverlayTrigger>
+              <TooltipProvider delayDuration={200}>
+                <Tooltip>
+                  <TooltipTrigger className="[&_svg]:text-purple-100 [&_svg]:dark:text-purple-200">
+                    <IconInformation size="sm" />
+                  </TooltipTrigger>
+                  <TooltipContent className="max-w-xs">{tooltip}</TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
             )}
           </Heading>
         </Label>

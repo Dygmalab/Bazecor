@@ -5,9 +5,9 @@ import Form from "react-bootstrap/Form";
 import InputGroup from "react-bootstrap/InputGroup";
 import { i18n } from "@Renderer/i18n";
 
+import CustomRadioCheckBox from "@Renderer/components/molecules/Form/CustomRadioCheckBox";
 import Title from "../../component/Title";
 import { RegularButton } from "../../component/Button";
-import { CustomRadioCheckBox } from "../../component/Form";
 
 import { IconArrowInBoxUp, IconMediaShuffle } from "../../component/Icon";
 
