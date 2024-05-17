@@ -106,6 +106,9 @@ module.exports = {
         position: "left -8rem top -8rem",
         positionFooter: "center bottom -124px",
       },
+      borderRadius: {
+        "2sm": "3px",
+      },
       boxShadow: {
         dropdown: "0px 32px 72px -32px rgba(26, 17, 46, 0.50), 16px 32px 32px -16px rgba(11, 2, 25, 0.20)",
         buttonConfig: " 0px 2px 0px 0px rgba(0, 0, 0, 0.10)",

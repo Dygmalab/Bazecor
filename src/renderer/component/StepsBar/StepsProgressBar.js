@@ -105,7 +105,7 @@ width: 100%;
 `;
 
 const StepsProgressBar = ({ steps, stepActive }) => {
-  let [refreshPositionStyle, setRefreshPositionStyle] = useState({
+  const [refreshPositionStyle, setRefreshPositionStyle] = useState({
     width: `0`,
   });
   const constructGrid = {
@@ -115,7 +115,7 @@ const StepsProgressBar = ({ steps, stepActive }) => {
   const stepsElementsRef = useRef();
   let widthPercentage;
   useEffect(() => {
-    //setStepsPosition(steps.findIndex(x => x.step === stepActive));
+    // setStepsPosition(steps.findIndex(x => x.step === stepActive));
     if (stepActive == steps.length - 1) {
       widthPercentage = {
         width: `calc(0%)`,
@@ -127,23 +127,19 @@ const StepsProgressBar = ({ steps, stepActive }) => {
         widthPercentage = {
           width: `calc(0%)`,
         };
+      } else if (stepActive == 1) {
+        widthPercentage = {
+          width: `calc(0% + 34px)`,
+        };
+      } else if (stepActive == steps.length - 2) {
+        widthPercentage = {
+          width: `calc(100% + 64px)`,
+        };
+        bulletsRef.current[stepActive].classList.add("success");
       } else {
-        if (stepActive == 1) {
-          widthPercentage = {
-            width: `calc(0% + 34px)`,
-          };
-        } else {
-          if (stepActive == steps.length - 2) {
-            widthPercentage = {
-              width: `calc(100% + 64px)`,
-            };
-            bulletsRef.current[stepActive].classList.add("success");
-          } else {
-            widthPercentage = {
-              width: `calc(${(100 / (steps.length - 3)) * (stepActive - 1)}% + 34px)`,
-            };
-          }
-        }
+        widthPercentage = {
+          width: `calc(${(100 / (steps.length - 3)) * (stepActive - 1)}% + 34px)`,
+        };
       }
     }
 
@@ -167,13 +163,13 @@ const StepsProgressBar = ({ steps, stepActive }) => {
                     bulletsRef.current[index] = ref;
                   }}
                 >
-                  <div className="stepBullet"></div>
+                  <div className="stepBullet" />
                 </div>
               ),
             )}
           </div>
           <div className={`progressBar progressBar-set${stepActive}`}>
-            <div className="progressBarActive" style={refreshPositionStyle}></div>
+            <div className="progressBarActive" style={refreshPositionStyle} />
           </div>
         </div>
       </div>

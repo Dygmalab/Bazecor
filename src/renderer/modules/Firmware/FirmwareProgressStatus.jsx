@@ -21,8 +21,9 @@ import Styled from "styled-components";
 import ProgressBar from "react-bootstrap/ProgressBar";
 import { i18n } from "@Renderer/i18n";
 
+import StepsProgressBar from "@Renderer/components/atoms/stepsBar/StepsProgressBar";
 import Title from "../../component/Title";
-import { StepsProgressBar } from "../../component/StepsBar";
+// import { StepsProgressBar } from "../../component/StepsBar";
 import FirmwareImageHelp from "./FirmwareImageHelp";
 import { CircleLoader } from "../../component/Loader";
 
