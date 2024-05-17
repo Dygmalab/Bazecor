@@ -18,10 +18,11 @@
 import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import Styled from "styled-components";
-import ProgressBar from "react-bootstrap/ProgressBar";
+// import ProgressBar from "react-bootstrap/ProgressBar";
 import { i18n } from "@Renderer/i18n";
 
 import StepsProgressBar from "@Renderer/components/atoms/stepsBar/StepsProgressBar";
+import { Progress } from "@Renderer/components/atoms/Progress";
 import Title from "../../component/Title";
 // import { StepsProgressBar } from "../../component/StepsBar";
 import FirmwareImageHelp from "./FirmwareImageHelp";
@@ -179,9 +180,10 @@ const FirmwareProgressStatus = props => {
         />
         <div className="process-row">
           <StepsProgressBar steps={steps} stepActive={stepsPosition} />
-          <ProgressBar>
+          <Progress variant="animated" value={flashProgress} className="mt-[-6px]" />
+          {/* <ProgressBar>
             <ProgressBar striped animated now={flashProgress} />
-          </ProgressBar>
+          </ProgressBar> */}
           <div
             className={`partialLoader partialLoader--${deviceProduct}`}
             style={{ gridTemplateColumns: `repeat(${steps.length - 3}, 1fr)` }}
