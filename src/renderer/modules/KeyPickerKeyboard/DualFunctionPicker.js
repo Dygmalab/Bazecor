@@ -16,7 +16,7 @@ const Style = Styled.div`
     font-size: 12px;
   }
 }
-.dropdwonsGroup {
+.dropdownsGroup {
   display: grid;
   grid-gap: 4px;
   grid-template-columns: 1fr 1fr;
@@ -110,7 +110,7 @@ class DualFunctionPicker extends Component {
     const layers = (
       <div className="dualFunctionPickerInner">
         <Title text="Add Dual-function" headingLevel={4} />
-        <div className="dropdwonsGroup">
+        <div className="dropdownsGroup">
           <Dropdown
             value={keyCode.modified != 0 ? this.layerKey.map(i => i.keynum).includes(keyCode.modified) : keyCode.modified}
             onSelect={value => onKeySelect(parseInt(value) + keyCode.base)}
