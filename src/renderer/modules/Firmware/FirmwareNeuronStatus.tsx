@@ -16,7 +16,6 @@
  */
 
 import React from "react";
-import PropTypes from "prop-types";
 import Styled, { useTheme } from "styled-components";
 import { i18n } from "@Renderer/i18n";
 
@@ -132,7 +131,16 @@ height: 100%;
   }
 }
 `;
-const FirmwareNeuronStatus = props => {
+
+interface FirmwareNeuronStatusType {
+  icon: any;
+  isUpdated: boolean;
+  status: string;
+  deviceProduct: string;
+  keyboardType: string;
+}
+
+const FirmwareNeuronStatus = (props: FirmwareNeuronStatusType) => {
   const { isUpdated, status, deviceProduct, keyboardType, icon } = props;
   const connectionColorMatrixSucess = useTheme().styles.firmwareUpdatePanel.neuronLightMatrixSuccess;
   const connectionColorMatrixWarning = useTheme().styles.firmwareUpdatePanel.neuronLightMatrixWarning;
@@ -301,14 +309,6 @@ const FirmwareNeuronStatus = props => {
       )}
     </Style>
   );
-};
-
-FirmwareNeuronStatus.propTypes = {
-  icon: PropTypes.object,
-  isUpdated: PropTypes.bool,
-  status: PropTypes.string,
-  deviceProduct: PropTypes.string,
-  keyboardType: PropTypes.string,
 };
 
 export default FirmwareNeuronStatus;

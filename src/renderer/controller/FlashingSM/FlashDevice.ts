@@ -1,4 +1,5 @@
-import { createMachine, assign, raise } from "xstate";
+/* eslint-disable no-await-in-loop */
+import { createMachine, assign, raise, fromPromise, emit } from "xstate";
 import fs from "fs";
 import path from "path";
 import { ipcRenderer } from "electron";
@@ -8,23 +9,51 @@ import Focus from "../../../api/focus";
 import Hardware from "../../../api/hardware";
 import { FlashRaise, FlashDefyWireless } from "../../../api/flash";
 
-let flashRaise;
-let flashDefyWireless;
-let flashSides;
-let bootloader;
-let comPath;
+let flashRaise: FlashRaise | undefined;
+let flashDefyWireless: any;
+let flashSides: SideFlaser | undefined;
+let bootloader: boolean | undefined;
+let comPath: string | Buffer | undefined;
+
+interface FlashDeviceType {
+  deviceState: { currentDevice: any };
+  loadedComms: boolean;
+  stateblock: number;
+  globalProgress: number;
+  leftProgress: number;
+  rightProgress: number;
+  resetProgress: number;
+  neuronProgress: number;
+  restoreProgress: number;
+  restoreResult: number | undefined;
+  retriesRight: number;
+  retriesLeft: number;
+  retriesNeuron: number;
+  retriesDefyWired: number;
+  sideLeftBL: boolean | undefined;
+  rightResult: any;
+  leftResult: any;
+  resetResult: any;
+  flashResult: any;
+  firmwares: any;
+  device: any;
+  originalDevice: any;
+  backup: any;
+  error: unknown;
+  DefyVariant: any;
+}
 
 /**
  * Waits for N miliseconds, uses promises resolution to achieve this effect.
  * @param {Number} ms - time to delay in miliseconds.
  * @returns {Promise} if no error, promise resolved, if not, rejected
  */
-const delay = ms =>
+const delay = (ms: number) =>
   new Promise(res => {
     setTimeout(res, ms);
   });
 
-const stateUpdate = (stage, percentage, context, callback) => {
+const stateUpdate = (stage: string, percentage: number, context: FlashDeviceType) => {
   log.info(stage, percentage);
   let { globalProgress } = context;
   let { leftProgress } = context;
@@ -58,7 +87,7 @@ const stateUpdate = (stage, percentage, context, callback) => {
     globalProgress =
       leftProgress * 0.2 + rightProgress * 0.2 + resetProgress * 0.2 + neuronProgress * 0.2 + restoreProgress * 0.2;
   }
-  callback({
+  emit({
     type: "INC",
     data: {
       globalProgress,
@@ -71,7 +100,7 @@ const stateUpdate = (stage, percentage, context, callback) => {
   });
 };
 
-const restoreSettings = async (context, backup, stateUpd) => {
+const restoreSettings = async (context: FlashDeviceType, backup: any, stateUpd: (state: string, progress: number) => void) => {
   stateUpd("restore", 0);
   if (bootloader) {
     stateUpd("restore", 100);
@@ -104,10 +133,10 @@ const restoreSettings = async (context, backup, stateUpd) => {
   }
 };
 
-const reconnect = async (context, callback) => {
-  let result = false;
+const reconnect = async (context: FlashDeviceType) => {
+  let result;
   try {
-    const foundDevices = async (hardware, message, isBootloader) => {
+    const foundDevices = async (hardware: any, message: string, isBootloader: boolean) => {
       const focus = Focus.getInstance();
       let isFindDevice = false;
       let currentPort;
@@ -131,7 +160,7 @@ const reconnect = async (context, callback) => {
       result = { isFindDevice, currentPort, currentPath };
       return isFindDevice;
     };
-    const runnerFindKeyboard = async (findKeyboard, times, errorMessage) => {
+    const runnerFindKeyboard = async (findKeyboard: { (): Promise<unknown>; (): any }, times: number) => {
       if (!times) {
         log.error("Keyboard not found!");
         return false;
@@ -141,11 +170,12 @@ const reconnect = async (context, callback) => {
         return true;
       }
       log.info(`Keyboard not detected, trying again for ${times} times`);
-      stateUpdate("reconnect", 10 + 100 * (1 / (5 - times)), context, callback);
-      await runnerFindKeyboard(findKeyboard, times - 1, errorMessage);
+      stateUpdate("reconnect", 10 + 100 * (1 / (5 - times)), context);
+      await runnerFindKeyboard(findKeyboard, times - 1);
       return true;
     };
     const findKeyboard = async () =>
+      // eslint-disable-next-line no-async-promise-executor
       new Promise(async resolve => {
         await delay(2500);
         if (await foundDevices(Hardware.serial, "Keyboard detected", false)) {
@@ -154,9 +184,9 @@ const reconnect = async (context, callback) => {
           resolve(false);
         }
       });
-    stateUpdate("reconnect", 10, context, callback);
+    stateUpdate("reconnect", 10, context);
     await runnerFindKeyboard(findKeyboard, 5);
-    stateUpdate("reconnect", 100, context, callback);
+    stateUpdate("reconnect", 100, context);
   } catch (error) {
     log.warn("error when flashing Sides");
     log.error(error);
@@ -165,58 +195,56 @@ const reconnect = async (context, callback) => {
   return result;
 };
 
-const flashSide = async (side, context, callback) => {
+const flashSide = async (side: string, context: FlashDeviceType) => {
+  try {
+    const focus = Focus.getInstance();
+    if (flashSides === undefined) {
+      bootloader = context.device.bootloader;
+      comPath = focus._port?.port?.openOptions?.path;
+      flashSides = new SideFlaser(context.firmwares.fwSides);
+    }
+    // Flashing procedure for each side
+    await focus.close();
+    log.info("done closing focus");
+    log.info("Going to flash side:", side);
+    const forceFlashSides = false;
+    await flashSides.flashSide(
+      side,
+      (stage, percentage) => {
+        stateUpdate(stage, percentage, context);
+      },
+      context.device.info.keyboardType,
+      forceFlashSides,
+    );
+    stateUpdate(side, 100, context);
+  } catch (error) {
+    log.warn("error when flashing Sides");
+    log.error(error);
+    throw new Error(error);
+  }
+};
+
+const uploadDefyWired = async (context: FlashDeviceType) => {
   let result = false;
   try {
     const focus = Focus.getInstance();
     if (flashSides === undefined) {
       bootloader = context.device.bootloader;
       comPath = focus._port?.port?.openOptions?.path;
-      flashSides = new SideFlaser(comPath, context.firmwares.fwSides);
+      flashSides = new SideFlaser(context.firmwares.fwSides);
     }
-    // Flashing procedure for each side
-    await focus.close();
-    log.info("done closing focus");
-    log.info("Going to flash side:", side);
-    result = await flashSides.flashSide(
-      side,
-      (stage, percentage) => {
-        stateUpdate(stage, percentage, context, callback);
-      },
-      context.device.info.keyboardType,
-    );
-    if (result.error) throw new Error(result.error);
-    stateUpdate(side, 100, context, callback);
-  } catch (error) {
-    log.warn("error when flashing Sides");
-    log.error(error);
-    throw new Error(error);
-  }
-  return result;
-};
-
-const uploadDefyWired = async (context, callback) => {
-  const result = false;
-  try {
-    const focus = Focus.getInstance();
-    if (flashSides === undefined) {
-      bootloader = context.device.bootloader;
-      comPath = focus._port?.port?.openOptions?.path;
-      flashSides = new SideFlaser(comPath, context.firmwares.fwSides);
-    }
-    stateUpdate("neuron", 10, context, callback);
+    stateUpdate("neuron", 10, context);
     await flashSides.prepareNeuron();
-    stateUpdate("neuron", 30, context, callback);
+    stateUpdate("neuron", 30, context);
     await ipcRenderer.invoke("list-drives", true).then(rsl => {
-      stateUpdate("neuron", 60, context, callback);
+      stateUpdate("neuron", 60, context);
       const finalPath = path.join(rsl, "default.uf2");
       // log.info("RESULTS!!!", rsl, context.firmwares.fw, " to ", finalPath);
       fs.writeFileSync(finalPath, Buffer.from(new Uint8Array(context.firmwares.fw)));
-      stateUpdate("neuron", 80, context, callback);
+      stateUpdate("neuron", 80, context);
     });
-
-    if (result.error) throw new Error(result.error);
-    stateUpdate("neuron", 100, context, callback);
+    stateUpdate("neuron", 100, context);
+    result = true;
   } catch (error) {
     log.warn("error when flashing Neuron");
     log.error(error);
@@ -225,9 +253,9 @@ const uploadDefyWired = async (context, callback) => {
   return result;
 };
 
-const resetDefy = async (context, callback) => {
+const resetDefy = async (context: FlashDeviceType) => {
   const { currentDevice } = context.deviceState;
-  let result = false;
+  let result;
   try {
     const focus = Focus.getInstance();
     if (flashDefyWireless === undefined) {
@@ -246,8 +274,8 @@ const resetDefy = async (context, callback) => {
           await focus.close();
           await focus.open(currentDevice.path, info, null);
         }
-        result = await flashDefyWireless.resetKeyboard(focus._port, (stage, percentage) => {
-          stateUpdate(stage, percentage, context, callback);
+        result = await flashDefyWireless.resetKeyboard(focus._port, (stage: string, percentage: number) => {
+          stateUpdate(stage, percentage, context);
         });
       } catch (error) {
         log.error("Bootloader Not found: ", error);
@@ -264,7 +292,7 @@ const resetDefy = async (context, callback) => {
   return result;
 };
 
-const uploadDefyWireles = async (context, callback) => {
+const uploadDefyWireles = async (context: FlashDeviceType) => {
   let result = false;
   try {
     const focus = Focus.getInstance();
@@ -277,8 +305,8 @@ const uploadDefyWireles = async (context, callback) => {
       context.firmwares.fw,
       bootloader,
       flashDefyWireless,
-      (stage, percentage) => {
-        stateUpdate(stage, percentage, context, callback);
+      (stage: string, percentage: number) => {
+        stateUpdate(stage, percentage, context);
       },
     );
   } catch (error) {
@@ -289,14 +317,14 @@ const uploadDefyWireles = async (context, callback) => {
   return result;
 };
 
-const restoreDefies = async (context, callback) => {
+const restoreDefies = async (context: FlashDeviceType) => {
   let result = false;
   if (bootloader || context.backup === undefined) {
     return true;
   }
   try {
     result = await restoreSettings(context, context.backup.backup, (stage, percentage) => {
-      stateUpdate(stage, percentage, context, callback);
+      stateUpdate(stage, percentage, context);
     });
   } catch (error) {
     log.warn("error when restoring Neuron");
@@ -306,7 +334,7 @@ const restoreDefies = async (context, callback) => {
   return result;
 };
 
-const resetRaise = async (context, callback) => {
+const resetRaise = async (context: FlashDeviceType) => {
   let result = false;
 
   try {
@@ -324,8 +352,8 @@ const resetRaise = async (context, callback) => {
           await focus.close();
           await focus.open(comPath, info, null);
         }
-        result = await flashRaise.resetKeyboard(focus._port, (stage, percentage) => {
-          stateUpdate(stage, percentage, context, callback);
+        result = await flashRaise.resetKeyboard(focus._port, (stage: string, percentage: number) => {
+          stateUpdate(stage, percentage, context);
         });
       } catch (error) {
         log.error("Bootloader Not found: ", error);
@@ -342,7 +370,7 @@ const resetRaise = async (context, callback) => {
   return result;
 };
 
-const uploadRaise = async (context, callback) => {
+const uploadRaise = async (context: FlashDeviceType) => {
   let result = false;
   try {
     const focus = Focus.getInstance();
@@ -350,9 +378,14 @@ const uploadRaise = async (context, callback) => {
       await focus.close();
     }
     log.info(context.originalDevice.device, focus, focus._port, flashRaise);
-    result = await context.originalDevice.device.flash(focus._port, context.firmwares.fw, flashRaise, (stage, percentage) => {
-      stateUpdate(stage, percentage, context, callback);
-    });
+    result = await context.originalDevice.device.flash(
+      focus._port,
+      context.firmwares.fw,
+      flashRaise,
+      (stage: string, percentage: number) => {
+        stateUpdate(stage, percentage, context);
+      },
+    );
   } catch (error) {
     log.warn("error when flashing Neuron");
     log.error(error);
@@ -361,14 +394,14 @@ const uploadRaise = async (context, callback) => {
   return result;
 };
 
-const restoreRaise = async (context, callback) => {
+const restoreRaise = async (context: FlashDeviceType) => {
   let result = false;
   if (bootloader || context.backup === undefined) {
     return true;
   }
   try {
     result = await restoreSettings(context, context.backup.backup, (stage, percentage) => {
-      stateUpdate(stage, percentage, context, callback);
+      stateUpdate(stage, percentage, context);
     });
   } catch (error) {
     log.warn("error when restoring Neuron");
@@ -378,12 +411,12 @@ const restoreRaise = async (context, callback) => {
   return result;
 };
 
-const integrateCommsToFocus = async context => {
+const integrateCommsToFocus = async (context: FlashDeviceType) => {
   let result = false;
   try {
     const { currentDevice } = context.deviceState;
     bootloader = currentDevice.bootloader;
-    const { path } = currentDevice;
+    const { path: localPath } = currentDevice;
     const { device } = currentDevice;
 
     await currentDevice.close();
@@ -392,7 +425,7 @@ const integrateCommsToFocus = async context => {
     await delay(100);
 
     const focus = Focus.getInstance();
-    await focus.open(path, device, null);
+    await focus.open(localPath, device, null);
     log.info("opened using focus currentDevice", focus);
     result = true;
   } catch (error) {
@@ -405,7 +438,6 @@ const integrateCommsToFocus = async context => {
 const FlashDevice = createMachine(
   {
     /** @xstate-layout N4IgpgJg5mDOIC5QDEA2BDAFrAlgOygAUAnAewGM5YA6Ad3RwBcBRWcgYmYGUBhQgJW5dmAEQDaABgC6iUAAdSuRjlJ5ZIAB6IATAA4ArNQkB2bQE4zxgIzbz+gCxWANCACeiAGz7t1KxI8AzB4S+pYeZtoeAL5RLmhYuAQkFFTUAGYYsJj8OFCYjFw4EGDsXACqPDxCkjJIIApKKmp1Wgh6hibmljZ2ji7ubdoB1NrGuh66Elb6umb60-YxcRjY+ERklLA0GehZOXkFRSXM-PwA8vw16g1MTeqt7UamFta2c31uiPa6PgG6s5FdAF7KZvEsQPFVkkNqkdlkADJgNKHYqlCpVLhcK51G7KVT3TzmaihKxWMz+AzGay6fo6CT2ajGen2YKkrx+YzgyGJdYpLbpTKYRHIwqok7nS7Sa6KW74lqEszEsyk8kTfRUqw0z4IIJWaheazeMwg-QBKzRWIQlY85KbbaCgByYAArmQ8GjKtUpTiZXjmqBWhFhlYAgEJCEzcZvKTaQgyRJqCzNWb2nNSdouda1rbYY6XW7OKcLtj5L67vKEEHfKHw6arFHtDHtdp7AmIqbjKqJKHO-pMwlszD+cQ4IxSCP4ehXGBiLAPRisd7S405QHEDZzfrjN8ycaIkz7LHtCFiQEqQYph5zzZ+1DeXbqCPYGOJ1OZ3PxcWl-Uy6vNOuJCBEZ6y8cIAkbMxgVjXQ9RBZUvDCb59AkMxbxtIdtgYVBXRKQQABV+AATRLH8V39f82gMJ4uleXpnG1H4Ex+M9jSCfwLUtPBSGKeA6m5Qc+V45dZXI1oAFoPFjCS0IEh96CYVhyGlMiCQQextFjdVjGrPw5g8IZZgCPtLX46FBIFXZMEIdBGEwLgwFQMByBfZSRNU+wWSMIZ7G8cDjxBDxJO1YJg2PJlOjJTVUJMrMzIfOFslyfJRTAVy-VUmxDAcetAPDVsPG+Q9mxPcZjxDMwPBsQJzRkuLc0s4UUVSn0VIrFkEzGbt7DMAx7GBbtY01bS9CpSDlX+CCAlq+96qyJ1XT-XFyzXBBjAKkZw0q8DvCGGZBpgxlAOBKMbAkbQHGM5YBzq-kZzIYg0uWii-HVRl1PUsYgR6-RY1DXR9Uq+kurDFkLSuu8c2HUdxzASdp1nR6-1aF7tO3FtRn+AJvv2nxsvCDUrG6qZpshzCcGwkdEdE9cqK8f4r2CD61WgxtqDNExgX0U1AhMEmMOoWBnXIO0qYyoy9T0d7zumYxgSKgZ-MZGC9CGaYwyMxYYiiIA */
-    predictableActionArguments: true,
     id: "FlahsingProcess",
     initial: "waitEsc",
     context: {
@@ -422,8 +454,18 @@ const FlashDevice = createMachine(
       retriesLeft: 0,
       retriesNeuron: 0,
       retriesDefyWired: 0,
-      firwmares: [],
-    },
+      sideLeftBL: undefined,
+      rightResult: undefined,
+      leftResult: undefined,
+      resetResult: undefined,
+      flashResult: undefined,
+      firmwares: [],
+      device: undefined,
+      originalDevice: undefined,
+      backup: undefined,
+      error: undefined,
+      DefyVariant: undefined,
+    } as FlashDeviceType,
     states: {
       waitEsc: {
         id: "waitEsc",
@@ -441,17 +483,19 @@ const FlashDevice = createMachine(
         ],
         invoke: {
           id: "integrateComms",
-          src: context => integrateCommsToFocus(context),
+          src: fromPromise(({ input }) => integrateCommsToFocus(input.context)),
+          input: ({ context }) => ({ context }),
           onDone: {
-            actions: [assign({ loadedComms: (context, event) => event.data })],
+            actions: [assign({ loadedComms: ({ event }) => event.output })],
           },
           onError: {
-            actions: assign({ error: (context, event) => event }),
+            target: "failure",
+            actions: assign({ error: ({ event }) => event.error }),
           },
         },
         on: {
           // Go to flashPathSelector automatically when no esc key can be pressed
-          "": [{ target: "flashPathSelector", cond: "doNotWaitForESC" }],
+          "": [{ target: "flashPathSelector", guard: "doNotWaitForESC" }],
           // Esc key listener will send this event
           ESCPRESSED: "flashPathSelector",
         },
@@ -460,7 +504,7 @@ const FlashDevice = createMachine(
       flashPathSelector: {
         id: "flashPathSelector",
         entry: [
-          context => {
+          ({ context }) => {
             log.info("Selecting upgrade path");
             log.info("context of device", context.device);
           },
@@ -468,32 +512,35 @@ const FlashDevice = createMachine(
             stateblock: () => 1,
           }),
           "toggleFlashing",
-          raise("flashingPath"),
+          raise({ type: "flashingPath" }),
         ],
-        on: [
-          { event: "*", target: "flashDefyWired", cond: "doNotFlashSidesW" },
-          { event: "*", target: "resetDefyWireless", cond: "doNotFlashSidesWi" },
-          { event: "*", target: "resetRaiseNeuron", cond: "flashRaise" },
-          { event: "*", target: "flashRightSide", cond: "flashSides" },
-        ],
+        on: {
+          "*": [
+            { target: "flashDefyWired", guard: "doNotFlashSidesW" },
+            { target: "resetDefyWireless", guard: "doNotFlashSidesWi" },
+            { target: "resetRaiseNeuron", guard: "flashRaise" },
+            { target: "flashRightSide", guard: "flashSides" },
+          ],
+        },
       },
       flashRightSide: {
         id: "flashRightSide",
         entry: [
-          context => {
+          ({ context }) => {
             log.info(`Flashing Right Side! for ${context.retriesRight} times`);
           },
-          assign(context => ({
+          assign(({ context }) => ({
             retriesRight: context.retriesRight + 1,
             stateblock: 2,
           })),
         ],
         invoke: {
           id: "flashRightSide",
-          src: context => callback => flashSide("right", context, callback),
+          src: fromPromise(({ input }) => flashSide("right", input.context)),
+          input: ({ context }) => ({ context }),
           onDone: {
             target: "flashLeftSide",
-            actions: [assign({ rightResult: (context, event) => event.data })],
+            actions: [assign({ rightResult: ({ event }) => event.output })],
           },
           onError: {
             target: "failure",
@@ -502,9 +549,9 @@ const FlashDevice = createMachine(
         },
         on: {
           INC: {
-            actions: assign((context, event) => ({
+            actions: assign(({ context, event }) => ({
               ...context,
-              globalProgress: event.data.globalProgress,
+              globalProgress: event.output.globalProgress,
               leftProgress: event.data.leftProgress,
               rightProgress: event.data.rightProgress,
               resetProgress: event.data.resetProgress,
@@ -517,24 +564,23 @@ const FlashDevice = createMachine(
       flashLeftSide: {
         id: "flashLeftSide",
         entry: [
-          context => {
+          ({ context }) => {
             log.info(`Flashing Left Side! for ${context.retriesLeft} times`);
           },
-          assign(context => ({
+          assign(({ context }) => ({
             retriesLeft: context.retriesLeft + 1,
             stateblock: 3,
           })),
         ],
         invoke: {
           id: "flashLeftSide",
-          src: context => callback => flashSide("left", context, callback),
+          src: fromPromise(({ input }) => flashSide("left", input.context)),
+          input: ({ context }) => ({ context }),
           onDone: {
             actions: [
-              assign({ leftResult: (context, event) => event.data }),
-              assign(context => ({
-                DefyVariant: `${context.device.info.product}${context.device.info.keyboardType}`,
-              })),
-              raise("internal"),
+              assign({ leftResult: ({ event }) => event.output }),
+              assign({ DefyVariant: ({ context }) => `${context.device.info.product}${context.device.info.keyboardType}` }),
+              raise({ type: "internal" }),
             ],
           },
           onError: {
@@ -542,10 +588,9 @@ const FlashDevice = createMachine(
             actions: assign({ error: (context, event) => event }),
           },
         },
-        on: [
-          {
-            event: "INC",
-            actions: assign((context, event) => ({
+        on: {
+          INC: {
+            actions: assign(({ context, event }) => ({
               ...context,
               globalProgress: event.data.globalProgress,
               leftProgress: event.data.leftProgress,
@@ -555,27 +600,30 @@ const FlashDevice = createMachine(
               restoreProgress: event.data.restoreProgress,
             })),
           },
-          { event: "*", target: "flashDefyWired", cond: "isDefywired" },
-          { event: "*", target: "resetDefyWireless", cond: "isDefywireless" },
-        ],
+          "*": [
+            { target: "flashDefyWired", guard: "isDefywired" },
+            { target: "resetDefyWireless", guard: "isDefywireless" },
+          ],
+        },
       },
       flashDefyWired: {
         id: "flashDefyWired",
         entry: [
-          context => {
+          ({ context }) => {
             log.info(`Flashing Neuron! for ${context.retriesDefyWired} times`);
           },
-          assign(context => ({
-            retriesDefyWired: context.retriesDefyNeuron + 1,
+          assign(({ context }) => ({
+            retriesDefyWired: context.retriesNeuron + 1,
             stateblock: 5,
           })),
         ],
         invoke: {
           id: "flashRP2040",
-          src: context => callback => uploadDefyWired(context, callback),
+          src: fromPromise(({ input }) => uploadDefyWired(input.context)),
+          input: ({ context }) => ({ context }),
           onDone: {
             target: "reconnectDefy",
-            actions: [assign({ rightResult: (context, event) => event.data })],
+            actions: [assign({ rightResult: ({ event }) => event.output })],
           },
           onError: {
             target: "failure",
@@ -584,7 +632,7 @@ const FlashDevice = createMachine(
         },
         on: {
           INC: {
-            actions: assign((context, event) => ({
+            actions: assign(({ context, event }) => ({
               ...context,
               globalProgress: event.data.globalProgress,
               leftProgress: event.data.leftProgress,
@@ -606,10 +654,11 @@ const FlashDevice = createMachine(
         ],
         invoke: {
           id: "resetDefyWireless",
-          src: context => callback => resetDefy(context, callback),
+          src: fromPromise(({ input }) => resetDefy(input.context)),
+          input: ({ context }) => ({ context }),
           onDone: {
             target: "flashDefyWireless",
-            actions: [assign({ resetResult: (context, event) => event.data })],
+            actions: [assign({ resetResult: ({ event }) => event.output })],
           },
           onError: {
             target: "failure",
@@ -618,7 +667,7 @@ const FlashDevice = createMachine(
         },
         on: {
           INC: {
-            actions: assign((context, event) => ({
+            actions: assign(({ context, event }) => ({
               ...context,
               globalProgress: event.data.globalProgress,
               leftProgress: event.data.leftProgress,
@@ -633,18 +682,19 @@ const FlashDevice = createMachine(
       flashDefyWireless: {
         id: "flashDefyWireless",
         entry: [
-          context => {
+          ({ context }) => {
             log.info(`Flashing Neuron! for ${context.retriesNeuron} times`);
           },
           assign({ stateblock: () => 5 }),
-          assign({ retriesNeuron: context => context.retriesNeuron + 1 }),
+          assign({ retriesNeuron: ({ context }) => context.retriesNeuron + 1 }),
         ],
         invoke: {
           id: "uploadDefyWireless",
-          src: context => callback => uploadDefyWireles(context, callback),
+          src: fromPromise(({ input }) => uploadDefyWireles(input.context)),
+          input: ({ context }) => ({ context }),
           onDone: {
             target: "reconnectDefy",
-            actions: [assign({ flashResult: (context, event) => event.data })],
+            actions: [assign({ flashResult: ({ event }) => event.output })],
           },
           onError: {
             target: "failure",
@@ -653,7 +703,7 @@ const FlashDevice = createMachine(
         },
         on: {
           INC: {
-            actions: assign((context, event) => ({
+            actions: assign(({ context, event }) => ({
               ...context,
               globalProgress: event.data.globalProgress,
               leftProgress: event.data.leftProgress,
@@ -675,10 +725,11 @@ const FlashDevice = createMachine(
         ],
         invoke: {
           id: "reconnectDefy",
-          src: context => callback => reconnect(context, callback),
+          src: fromPromise(({ input }) => reconnect(input.context)),
+          input: ({ context }) => ({ context }),
           onDone: {
             target: "restoreDefy",
-            actions: [assign({ flashResult: (context, event) => event.data })],
+            actions: [assign({ flashResult: ({ event }) => event.output })],
           },
           onError: {
             target: "failure",
@@ -687,7 +738,7 @@ const FlashDevice = createMachine(
         },
         on: {
           INC: {
-            actions: assign((context, event) => ({
+            actions: assign(({ context, event }) => ({
               ...context,
               globalProgress: event.data.globalProgress,
               leftProgress: event.data.leftProgress,
@@ -709,10 +760,11 @@ const FlashDevice = createMachine(
         ],
         invoke: {
           id: "restoreDefy",
-          src: context => callback => restoreDefies(context, callback),
+          src: fromPromise(({ input }) => restoreDefies(input.context)),
+          input: ({ context }) => ({ context }),
           onDone: {
             target: "reportSucess",
-            actions: [assign({ restoreResult: (context, event) => event.data })],
+            actions: [assign({ restoreResult: ({ event }) => event.output })],
           },
           onError: {
             target: "failure",
@@ -721,7 +773,7 @@ const FlashDevice = createMachine(
         },
         on: {
           INC: {
-            actions: assign((context, event) => ({
+            actions: assign(({ context, event }) => ({
               ...context,
               globalProgress: event.data.globalProgress,
               leftProgress: event.data.leftProgress,
@@ -743,10 +795,11 @@ const FlashDevice = createMachine(
         ],
         invoke: {
           id: "resetRaise",
-          src: context => callback => resetRaise(context, callback),
+          src: fromPromise(({ input }) => resetRaise(input.context)),
+          input: ({ context }) => ({ context }),
           onDone: {
             target: "flashRaiseNeuron",
-            actions: [assign({ resetResult: (context, event) => event.data })],
+            actions: [assign({ resetResult: ({ event }) => event.output })],
           },
           onError: {
             target: "failure",
@@ -755,7 +808,7 @@ const FlashDevice = createMachine(
         },
         on: {
           INC: {
-            actions: assign((context, event) => ({
+            actions: assign(({ context, event }) => ({
               ...context,
               globalProgress: event.data.globalProgress,
               leftProgress: event.data.leftProgress,
@@ -770,18 +823,19 @@ const FlashDevice = createMachine(
       flashRaiseNeuron: {
         id: "flashRaiseNeuron",
         entry: [
-          context => {
+          ({ context }) => {
             log.info(`Flashing Neuron! for ${context.retriesNeuron} times`);
           },
           assign({ stateblock: () => 5 }),
-          assign({ retriesNeuron: context => context.retriesNeuron + 1 }),
+          assign({ retriesNeuron: ({ context }) => context.retriesNeuron + 1 }),
         ],
         invoke: {
           id: "uploadRaise",
-          src: context => callback => uploadRaise(context, callback),
+          src: fromPromise(({ input }) => uploadRaise(input.context)),
+          input: ({ context }) => ({ context }),
           onDone: {
             target: "restoreRaiseNeuron",
-            actions: [assign({ flashResult: (context, event) => event.data })],
+            actions: [assign({ flashResult: ({ event }) => event.output })],
           },
           onError: {
             target: "failure",
@@ -790,7 +844,7 @@ const FlashDevice = createMachine(
         },
         on: {
           INC: {
-            actions: assign((context, event) => ({
+            actions: assign(({ context, event }) => ({
               ...context,
               globalProgress: event.data.globalProgress,
               leftProgress: event.data.leftProgress,
@@ -812,10 +866,11 @@ const FlashDevice = createMachine(
         ],
         invoke: {
           id: "restoreRaise",
-          src: context => callback => restoreRaise(context, callback),
+          src: fromPromise(({ input }) => restoreRaise(input.context)),
+          input: ({ context }) => ({ context }),
           onDone: {
             target: "reportSucess",
-            actions: [assign({ restoreResult: (context, event) => event.data })],
+            actions: [assign({ restoreResult: ({ event }) => event.output })],
           },
           onError: {
             target: "failure",
@@ -824,7 +879,7 @@ const FlashDevice = createMachine(
         },
         on: {
           INC: {
-            actions: assign((context, event) => ({
+            actions: assign(({ context, event }) => ({
               ...context,
               globalProgress: event.data.globalProgress,
               leftProgress: event.data.leftProgress,
@@ -871,20 +926,20 @@ const FlashDevice = createMachine(
   },
   {
     guards: {
-      flashSides: context => context.device.bootloader !== true && context.device.info.product !== "Raise",
-      flashRaise: context => context.device.info.product === "Raise",
-      doNotFlashSidesW: context =>
+      flashSides: ({ context }) => context.device.bootloader !== true && context.device.info.product !== "Raise",
+      flashRaise: ({ context }) => context.device.info.product === "Raise",
+      doNotFlashSidesW: ({ context }) =>
         context.device.bootloader === true &&
         context.device.info.product !== "Raise" &&
         context.device.info.keyboardType === "wired",
-      doNotFlashSidesWi: context =>
+      doNotFlashSidesWi: ({ context }) =>
         context.device.bootloader === true &&
         context.device.info.product !== "Raise" &&
         context.device.info.keyboardType === "wireless",
-      doNotWaitForESC: context =>
+      doNotWaitForESC: ({ context }) =>
         (context.device.bootloader === true || context.sideLeftBL === true) && context.loadedComms === true,
-      isDefywired: context => context.DefyVariant === "Defywired",
-      isDefywireless: context => context.DefyVariant === "Defywireless",
+      isDefywired: ({ context }) => context.DefyVariant === "Defywired",
+      isDefywireless: ({ context }) => context.DefyVariant === "Defywireless",
     },
   },
 );

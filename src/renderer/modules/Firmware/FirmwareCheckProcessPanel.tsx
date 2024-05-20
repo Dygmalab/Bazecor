@@ -164,7 +164,13 @@ height:inherit;
 }
 `;
 
-function FirmwareCheckProcessPanel(props) {
+interface FirmwareCheckProcessPanelType {
+  nextBlock: (context: any) => void;
+  retryBlock: (context: any) => void;
+  context: any;
+}
+
+function FirmwareCheckProcessPanel(props: FirmwareCheckProcessPanelType) {
   const { nextBlock, retryBlock, context } = props;
   const { state: deviceState } = useDevice();
   const [state, send] = useMachine(DeviceChecks, { context: { device: context.device, deviceState } });
@@ -194,7 +200,7 @@ function FirmwareCheckProcessPanel(props) {
   return (
     <Style>
       {loading ? (
-        <FirmwareLoader />
+        <FirmwareLoader width={undefined} warning={undefined} error={undefined} paused={undefined} />
       ) : (
         <div>
           {state.context.device.info.product !== "Raise" ? (
@@ -209,7 +215,9 @@ function FirmwareCheckProcessPanel(props) {
                           : i18n.firmwareUpdate.texts.disclaimerTitle
                       }
                       headingLevel={3}
-                      type={!state.context.sideLeftOk || !state.context.sideRightOK ? "warning" : "default"}
+                      type={
+                        (!state.context.sideLeftOk || !state.context.sideRightOK ? "warning" : "default") as "warning" | "default"
+                      }
                     />
                     {state.context.sideLeftOk && state.context.sideRightOK ? (
                       <>
@@ -247,8 +255,7 @@ function FirmwareCheckProcessPanel(props) {
                 <div className="firmware-content borderLeftBottomRadius">
                   <div className="wrapperActions">
                     <RegularButton
-                      className="flashingbutton nooutlined"
-                      styles="outline transp-bg"
+                      styles="outline transp-bg flashingbutton nooutlined"
                       buttonText={
                         !state.context.sideLeftOk || !state.context.sideRightOK
                           ? i18n.firmwareUpdate.texts.cancelButton
@@ -265,15 +272,13 @@ function FirmwareCheckProcessPanel(props) {
                   <div className="buttonActions">
                     {state.context.sideLeftOk && state.context.sideRightOK && state.context.backup ? (
                       <RegularButton
-                        className="flashingbutton nooutlined"
-                        styles="primary"
+                        styles="primary flashingbutton nooutlined"
                         buttonText={i18n.firmwareUpdate.texts.letsStart}
                         onClick={() => send("PRESSED")}
                       />
                     ) : (
                       <RegularButton
-                        className="flashingbutton nooutlined"
-                        styles="primary"
+                        styles="primary flashingbutton nooutlined"
                         buttonText={i18n.general.retry}
                         onClick={() => {
                           send("RETRY");
@@ -292,12 +297,5 @@ function FirmwareCheckProcessPanel(props) {
     </Style>
   );
 }
-
-FirmwareCheckProcessPanel.propTypes = {
-  nextBlock: PropTypes.func,
-  retryBlock: PropTypes.func,
-  errorBlock: PropTypes.func,
-  context: PropTypes.object,
-};
 
 export default FirmwareCheckProcessPanel;

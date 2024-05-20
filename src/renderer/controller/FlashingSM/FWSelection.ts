@@ -1,13 +1,38 @@
-import { createMachine, assign } from "xstate";
+import { createMachine, assign, fromPromise } from "xstate";
 import { Octokit } from "@octokit/core";
 import axios from "axios";
 import SemVer from "semver";
 import log from "electron-log/renderer";
 
+interface SelectionSMType {
+  stateblock: number;
+  device: any;
+  version: any;
+  firmwareList: any[];
+  firmwares: any[];
+  typeSelected: string;
+  selectedFirmware: number;
+  isUpdated: boolean;
+  isBeta: boolean;
+  allowBeta: boolean;
+  deviceState: any;
+  error: unknown;
+}
+
 const FWMAJORVERSION = "1.x";
 
-const FocusAPIRead = async context => {
-  const data = {};
+const FocusAPIRead = async (context: SelectionSMType) => {
+  const data = {} as {
+    info: {
+      vendor: string;
+      product: string;
+      keyboardType: string;
+      displayName: string;
+    };
+    bootloader: boolean;
+    version: any;
+    chipID: string;
+  };
   try {
     const { currentDevice } = context.deviceState;
     data.bootloader = currentDevice.device?.bootloader !== undefined ? currentDevice.device.bootloader : false;
@@ -27,8 +52,9 @@ const FocusAPIRead = async context => {
   return data;
 };
 
-const loadAvailableFirmwareVersions = async allowBeta => {
-  const Releases = [];
+const loadAvailableFirmwareVersions = async (allowBeta: boolean) => {
+  type ReleaseType = { name: string; version: string; body: string; assets: any[] };
+  const Releases: ReleaseType[] = [];
   try {
     const octokit = new Octokit();
     const data = await octokit.request("GET /repos/{owner}/{repo}/releases", {
@@ -40,13 +66,16 @@ const loadAvailableFirmwareVersions = async allowBeta => {
     });
     // log.info("Data from github!", JSON.stringify(data));
     data.data.forEach(release => {
-      const releaseData = release.name.split(" ");
-      const name = releaseData[0];
-      const version = releaseData[1];
-      const { body } = release;
-      const assets = [];
-      const newRelease = { name, version, body, assets };
-      if (release?.assets !== undefined)
+      const releaseData = release.name?.split(" ");
+      const name = releaseData ? releaseData[0] : "";
+      const version = releaseData ? releaseData[1] : "";
+      const body = release.body || "";
+      const assets: Array<{
+        name: string;
+        url: string;
+      }> = [];
+      const newRelease: ReleaseType = { name, version, body, assets };
+      if (release?.assets !== undefined) {
         release.assets.forEach(asset => {
           newRelease.assets.push({
             name: asset.name,
@@ -54,8 +83,9 @@ const loadAvailableFirmwareVersions = async allowBeta => {
           });
           // log.info([asset.name, asset.browser_download_url]);
         });
+      }
       // log.info(newRelease);
-      if (newRelease.assets.length > 0 && (allowBeta || !newRelease.version.includes("beta"))) {
+      if (newRelease.assets.length > 0 && (allowBeta || !newRelease.version?.includes("beta"))) {
         Releases.push(newRelease);
       }
     });
@@ -68,7 +98,7 @@ const loadAvailableFirmwareVersions = async allowBeta => {
   return Releases;
 };
 
-const GitHubRead = async context => {
+const GitHubRead = async (context: SelectionSMType) => {
   let finalReleases;
   let isUpdated;
   let isBeta;
@@ -78,10 +108,10 @@ const GitHubRead = async context => {
       release =>
         release.name === context.device.info.product &&
         (context.device.info.product === "Defy"
-          ? SemVer.satisfies(release.version, FWMAJORVERSION, { includePrerelease: true })
+          ? SemVer.satisfies(release.version ? release.version : "", FWMAJORVERSION, { includePrerelease: true })
           : true),
     );
-    finalReleases.sort((a, b) => (SemVer.lt(SemVer.clean(a.version), SemVer.clean(b.version)) ? 1 : -1));
+    finalReleases.sort((a, b) => (SemVer.lt(SemVer.clean(a.version) as string, SemVer.clean(b.version) as string) ? 1 : -1));
     if (context.device.bootloader) return { firmwareList: finalReleases, isUpdated: false, isBeta: false };
     isUpdated = context.device.version === finalReleases[0].version;
     isBeta = context.device.version.includes("beta");
@@ -94,7 +124,7 @@ const GitHubRead = async context => {
   return { firmwareList: finalReleases, isUpdated, isBeta };
 };
 
-const obtainFWFiles = async (type, url) => {
+const obtainFWFiles = async (type: string, url: string) => {
   let response;
   let firmware;
   try {
@@ -103,7 +133,7 @@ const obtainFWFiles = async (type, url) => {
         method: "GET",
         url,
         responseType: "arraybuffer",
-        reponseEncoding: "binary",
+        responseEncoding: "binary",
       });
       firmware = new Uint8Array(response.data);
     }
@@ -112,7 +142,7 @@ const obtainFWFiles = async (type, url) => {
         method: "GET",
         url,
         responseType: "arraybuffer",
-        reponseEncoding: "binary",
+        responseEncoding: "binary",
       });
       firmware = response.data;
     }
@@ -121,7 +151,7 @@ const obtainFWFiles = async (type, url) => {
         method: "GET",
         url,
         responseType: "text",
-        reponseEncoding: "utf8",
+        responseEncoding: "utf8",
       });
       response = response.data.replace(/(?:\r\n|\r|\n)/g, "");
       firmware = response.split(":");
@@ -132,7 +162,7 @@ const obtainFWFiles = async (type, url) => {
         method: "GET",
         url,
         responseType: "text",
-        reponseEncoding: "utf8",
+        responseEncoding: "utf8",
       });
       response = response.data.replace(/(?:\r\n|\r|\n)/g, "");
       firmware = response.split(":");
@@ -147,7 +177,12 @@ const obtainFWFiles = async (type, url) => {
   return firmware;
 };
 
-const downloadFirmware = async (typeSelected, info, firmwareList, selectedFirmware) => {
+const downloadFirmware = async (
+  typeSelected: string,
+  info: { product: string; keyboardType: string },
+  firmwareList: { [x: string]: { assets: any[] } },
+  selectedFirmware: string | number,
+) => {
   let filename;
   let filenameSides;
   // log.info(typeSelected, info, firmwareList, selectedFirmware);
@@ -156,23 +191,23 @@ const downloadFirmware = async (typeSelected, info, firmwareList, selectedFirmwa
       if (info.product === "Raise") {
         filename = await obtainFWFiles(
           "firmware.hex",
-          firmwareList[selectedFirmware].assets.find(asset => asset.name === "firmware.hex").url,
+          firmwareList[selectedFirmware].assets.find((asset: { name: string }) => asset.name === "firmware.hex").url,
         );
       } else {
         if (info.keyboardType === "wireless") {
           filename = await obtainFWFiles(
             "Wireless_neuron.hex",
-            firmwareList[selectedFirmware].assets.find(asset => asset.name === "Wireless_neuron.hex").url,
+            firmwareList[selectedFirmware].assets.find((asset: { name: string }) => asset.name === "Wireless_neuron.hex").url,
           );
         } else {
           filename = await obtainFWFiles(
             "Wired_neuron.uf2",
-            firmwareList[selectedFirmware].assets.find(asset => asset.name === "Wired_neuron.uf2").url,
+            firmwareList[selectedFirmware].assets.find((asset: { name: string }) => asset.name === "Wired_neuron.uf2").url,
           );
         }
         filenameSides = await obtainFWFiles(
           "keyscanner.bin",
-          firmwareList[selectedFirmware].assets.find(asset => asset.name === "keyscanner.bin").url,
+          firmwareList[selectedFirmware].assets.find((asset: { name: string }) => asset.name === "keyscanner.bin").url,
         );
       }
     }
@@ -187,7 +222,6 @@ const downloadFirmware = async (typeSelected, info, firmwareList, selectedFirmwa
 
 const SelectionSM = createMachine({
   /** @xstate-layout N4IgpgJg5mDOIC5QDEA2BDAFrAlgOygAUAnAewGM5YA6ZAdQGUxUxyAXHUvagGVPQgARMADcclQejboAxBC5hq+EaQDWi5BQCusAIKEAkgCUwAgNoAGALqJQAB1K4OXWyAAeiAEwA2C9QsAHACsAJxBAIyengGeACwhAMwA7AA0IACeiN7eSdThSSFJngkh4SGeIRbeAL7VaWhYuAQkFFS0jMysztx8AsJiElKyYMRkxNR2GGwAZqTEALa02nqGJubWrg5OnHiuHgg+foGhEVEx8clpmQgJ4QHU3kHePrHZnvlJj7X1GNj4RGRKLAaPQmCx2DtePwIABxHBsTBaABG9DkCiUeBU6mocLYAAlkZJpJYbEgQFt4Ts9ll3tRgjkgkkAiUnt5wlcssFqEkgiVYoykrEkuFIt8QA0-s1AW1QZ0IVwoQJcYiUXQZCMxhMprMFjj4QSkUT0CTNo5KS4yftnuE6U8eUyWdl2RlEK8-N5mb4Et4ShZ3iExRKmgDWsD2mCupDYHK2MgcAsAO7oYhgGQAOQAogANAAqJrJFO61IQIW8IQeYU8gtingigWd1ySJW53li3vCQo7FiCgd+wZaQJBHXB3Wo0ZHccTydTAGE8bo0zCM-R8-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-opebU6AsVPTSYTaUiu10U7nyNeV9-Jymsj9PkbyRtj2iNwQjW6G9rPvXKk82zjnbhMJCNrG0flbxRxDi22+XbRV+YzrwLOCNgtVwTgg4KFUdkxEzYgSo7pGHLJiEEQIRaUv-rSxdTO+Mstexrb7EoNomEJzbAeeB0XQkJ3uEyd4hUfSkVCL5nB6XX79zHpPaes9ss7zZGOyKmyyzNPpqWZDFxgjbkPTUMzoL6uXXwYQr+YASFSB0ItxAkXcj5RIlUYOxXuHXhbIChjTI-SYcreZ47CSTKcbADdg4nwbRClWwUdbIUSrlF1oxqs3l0W7ePeS+JIPC3MnAe8Vk3ksJ6zWui3WzwPSFG8naZLWGJXiv-dYtgtjyAY95DacoUdsh45k8OlyHYdGFBqWpzSNZUc0-M90wZ2Ss4Y+wuA-k14tmlO9Ni+43kyblB9DWYowuoXU6hTCi5wOWvrpKUDfw-zGQPirFHcOTDymkT2+8Io9otfJP-ZKmlZB+2KpQvyYom0ihx1CExz5Ud3PbiBsUeIgpnc9PMxqOYIOIe8pbSHWOC18IihxSFYoV5qwPgfMeyNVqY3rwT5w1ZzIEHbgqoEtku8-THsU4OEHjIFLvGbD4UsS1QgVAO7UIAA */
-  predictableActionArguments: true,
   id: "FlahsingProcess",
   initial: "LoadDeviceData",
   context: {
@@ -202,7 +236,8 @@ const SelectionSM = createMachine({
     isBeta: false,
     allowBeta: false,
     deviceState: {},
-  },
+    error: undefined,
+  } as SelectionSMType,
   states: {
     LoadDeviceData: {
       id: "LoadDeviceData",
@@ -216,12 +251,13 @@ const SelectionSM = createMachine({
       ],
       invoke: {
         id: "FocusAPIRead",
-        src: context => FocusAPIRead(context),
+        src: fromPromise(({ input }) => FocusAPIRead(input.context)),
+        input: ({ context }) => ({ context }),
         onDone: {
           target: "LoadGithubFW",
           actions: [
-            assign({ device: (context, event) => event.data }),
-            context => {
+            assign({ device: ({ event }) => event.output }),
+            ({ context }) => {
               log.info("Success: ", context.device);
             },
           ],
@@ -249,14 +285,15 @@ const SelectionSM = createMachine({
       ],
       invoke: {
         id: "GitHubData",
-        src: context => GitHubRead(context),
+        src: fromPromise(({ input }) => GitHubRead(input.context)),
+        input: ({ context }) => ({ context }),
         onDone: {
           target: "selectFirmware",
           actions: [
-            assign((context, event) => ({
-              firmwareList: event.data.firmwareList,
-              isUpdated: event.data.isUpdated,
-              isBeta: event.data.isBeta,
+            assign(({ event }) => ({
+              firmwareList: event.output.firmwareList,
+              isUpdated: event.output.isUpdated,
+              isBeta: event.output.isBeta,
             })),
           ],
         },
@@ -279,7 +316,7 @@ const SelectionSM = createMachine({
       on: {
         NEXT: ["loadingFWFiles"],
         CHANGEFW: {
-          actions: [assign({ selectedFirmware: (context, event) => event.selected })],
+          actions: [assign({ selectedFirmware: ({ event }) => event.selected })],
         },
       },
     },
@@ -295,14 +332,21 @@ const SelectionSM = createMachine({
       ],
       invoke: {
         id: "donwloadFirmware",
-        src: context =>
-          downloadFirmware(context.typeSelected, context.device.info, context.firmwareList, context.selectedFirmware),
+        src: fromPromise(({ input }) =>
+          downloadFirmware(
+            input.context.typeSelected,
+            input.context.device.info,
+            input.context.firmwareList,
+            input.context.selectedFirmware,
+          ),
+        ),
+        input: ({ context }) => ({ context }),
         onDone: {
           target: "success",
           actions: [
-            assign({ firmwares: (context, event) => event.data }),
-            (context, event) => {
-              log.info("DOWNLOADED FW", event.data);
+            assign({ firmwares: ({ event }) => event.output }),
+            ({ event }) => {
+              log.info("DOWNLOADED FW", event.output);
             },
           ],
         },

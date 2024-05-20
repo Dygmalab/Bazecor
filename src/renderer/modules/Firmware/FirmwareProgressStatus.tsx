@@ -16,7 +16,6 @@
  */
 
 import React, { useState, useEffect } from "react";
-import PropTypes from "prop-types";
 import Styled from "styled-components";
 import ProgressBar from "react-bootstrap/ProgressBar";
 import { i18n } from "@Renderer/i18n";
@@ -132,16 +131,24 @@ width: 100%;
 }
 `;
 
-/**
- * This FirmwareProgressStatus function returns a card with text and images that reacts according the process update
- * The object will accept the following parameters
- *
- * @param {number} countdown - A number that represents the actual step on the firmware update process.
- * @param {number} flashProgress - The value used to render the progress bar.
- * @returns {<FirmwareProgressStatus>} FirmwareProgressStatus component.
- */
+interface FirmwareProgressStatusType {
+  countdown: number;
+  flashProgress: number;
+  leftProgress: any;
+  retriesLeft: any;
+  rightProgress: any;
+  retriesRight: any;
+  resetProgress: any;
+  neuronProgress: any;
+  retriesNeuron: any;
+  retriesDefyWired: any;
+  restoreProgress: any;
+  deviceProduct: any;
+  keyboardType: any;
+  steps: any;
+}
 
-const FirmwareProgressStatus = props => {
+const FirmwareProgressStatus = (props: FirmwareProgressStatusType) => {
   const {
     countdown,
     flashProgress,
@@ -244,23 +251,6 @@ const FirmwareProgressStatus = props => {
       </div>
     </Style>
   );
-};
-
-FirmwareProgressStatus.propTypes = {
-  countdown: PropTypes.number,
-  flashProgress: PropTypes.number,
-  leftProgress: PropTypes.number,
-  retriesLeft: PropTypes.number,
-  rightProgress: PropTypes.number,
-  retriesRight: PropTypes.number,
-  resetProgress: PropTypes.number,
-  neuronProgress: PropTypes.number,
-  retriesNeuron: PropTypes.number,
-  retriesDefyWired: PropTypes.number,
-  restoreProgress: PropTypes.number,
-  deviceProduct: PropTypes.string,
-  keyboardType: PropTypes.string,
-  steps: PropTypes.array,
 };
 
 export default FirmwareProgressStatus;

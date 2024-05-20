@@ -191,7 +191,12 @@ width: 100%;
 }
 `;
 
-function FirmwareErrorPanel(props) {
+interface FirmwareErrorPanelType {
+  nextBlock: any;
+  retryBlock: any;
+}
+
+function FirmwareErrorPanel(props: FirmwareErrorPanelType) {
   const { nextBlock, retryBlock } = props;
   const [state, send] = useMachine(FWSelection);
   const [handleError, setHandleError] = useState(false);
@@ -217,7 +222,7 @@ function FirmwareErrorPanel(props) {
   return (
     <Style>
       {!handleError || loading ? (
-        <FirmwareLoader />
+        <FirmwareLoader width={undefined} warning={undefined} error={undefined} paused={undefined} />
       ) : (
         <div className="firmware-wrapper">
           <div className="firmware-row">
@@ -267,8 +272,7 @@ function FirmwareErrorPanel(props) {
               <div className="wrapperActions">
                 {!handleError ? (
                   <RegularButton
-                    className="flashingbutton nooutlined"
-                    styles="outline transp-bg"
+                    styles="outline transp-bg flashingbutton nooutlined"
                     buttonText={i18n.firmwareUpdate.texts.cancelButton}
                     // onClick={onCancelDialog}
                   />
@@ -280,8 +284,7 @@ function FirmwareErrorPanel(props) {
             <div className="firmware-sidebar borderRightBottomRadius">
               <div className="buttonActions">
                 <RegularButton
-                  className="flashingbutton nooutlined"
-                  styles="primary"
+                  styles="primary flashingbutton nooutlined"
                   buttonText={i18n.general.retry}
                   onClick={() => {
                     send("RETRY");

@@ -136,7 +136,7 @@
     "@types/react-color": "^3.0.11",
     "@types/react-rangeslider": "^2.2.4",
     "@types/w3c-web-hid": "^1.0.3",
-    "@xstate/react": "^3.2.2",
+    "@xstate/react": "^4.1.1",
     "async": "^3.2.4",
     "axios": "^1.6.0",
     "bootstrap-css-only": "^4.4.1",
@@ -173,7 +173,7 @@
     "uiohook-napi": "^1.5.2",
     "update-electron-app": "^3.0.0",
     "usb": "^2.9.0",
-    "xstate": "^4.37.2"
+    "xstate": "^5.13.0"
   },
   "build": {
     "appId": "com.dygmalab.bazecor",

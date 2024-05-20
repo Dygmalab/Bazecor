@@ -1,3 +1,7 @@
+/* eslint-disable no-async-promise-executor */
+// @ts-nocheck
+
+/* eslint-disable no-await-in-loop */
 /* bazecor-flash-raise -- Dygma Raise flash helper for Bazecor
  * Copyright (C) 2019, 2020  DygmaLab SE
  *
@@ -18,23 +22,30 @@ import { ipcRenderer } from "electron";
 import fs from "fs";
 import path from "path";
 import log from "electron-log/renderer";
+import { DeviceClass, State } from "@Renderer/types/devices";
+import { DeviceTools } from "@Renderer/DeviceContext";
+import Device from "src/api/comms/Device";
 import Focus from "../../focus";
 import Hardware from "../../hardware";
 import { delay } from "../delay";
 import NRf52833 from "./NRf52833-flasher";
+import formatedDate from "../formatedDate";
 
-/**
- * Create a new flash raise object.
- * @class FlashRaise
- * @param {object} port - serial port object for the "path"
- * @param {object} device - device data from SerailPort.list()
- * @property {object} backupFileData Object with settings from raise keyboard EEPROM, logging data, keyboard serial number and file with firmware
- * @emits backupSettings
- * @emits resetKeyboard
- * @emits updateFirmware
- */
 class FlashDefyWireless {
-  constructor(device) {
+  device: any;
+  currentPort: string | null;
+  currentPath: string | null;
+  backupFileName: string | null;
+  backupFileData: {
+    backup: any;
+    log: string[];
+    serialNumber: string;
+    firmwareFile: string;
+  };
+  backup: string[];
+  currentDevice: DeviceClass;
+
+  constructor(device: any, deviceState: State) {
     this.device = device;
     this.currentPort = null;
     this.currentPath = null;
@@ -46,54 +57,38 @@ class FlashDefyWireless {
       firmwareFile: "File has not being selected",
     };
     this.backup = [];
+    this.currentDevice = deviceState.currentDevice;
   }
 
-  /**
-   * Formats date for create name of backup file.
-   * @returns {string} formate date for example "2019-07-12-19_40_56"
-   */
-  formatedDate() {
-    const date = new Date();
-    const firstFind = /, /gi;
-    const secondFind = /:/gi;
-    const formatterDate = date.toLocaleString("en-CA", { hour12: false }).replace(firstFind, "-").replace(secondFind, "_");
-    return formatterDate;
-  }
-
-  /**
-   * Founds device what connected from Bazecor Hardware api.
-   * @param {array} hardware - Array of supported devices by Bazecor api.
-   * @param {string} message - Message for backup file.
-   * @returns {boolean} if device found - true, if no - false
-   */
-  async foundDevices(hardware, message, bootloader) {
-    const focus = Focus.getInstance();
+  async foundDevices(hardware: any, message: string, bootloader: boolean) {
     let isFindDevice = false;
-    await focus.find(...hardware).then(devices => {
-      for (const device of devices) {
-        log.info(
-          "DATA CHECKER: ",
-          device,
-          this.device,
-          device.device.bootloader,
-          bootloader,
-          this.device.info.keyboardType,
-          device.device.info.keyboardType,
-        );
-        if (
-          bootloader
-            ? device.device.bootloader !== undefined &&
-              device.device.bootloader === bootloader &&
-              this.device.info.keyboardType === device.device.info.keyboardType
-            : this.device.info.keyboardType === device.device.info.keyboardType
-        ) {
-          log.info(message);
-          this.currentPort = { ...device };
-          this.currentPath = device.path;
-          isFindDevice = true;
-        }
-      }
-    });
+    const list = (await DeviceTools.list()) as Device[];
+    console.log("List of Devices without FOCUS!!", list);
+    // await focus.find(...hardware).then(devices => {
+    //   for (const device of devices) {
+    //     log.info(
+    //       "DATA CHECKER: ",
+    //       device,
+    //       this.device,
+    //       device.device.bootloader,
+    //       bootloader,
+    //       this.device.info.keyboardType,
+    //       device.device.info.keyboardType,
+    //     );
+    //     if (
+    //       bootloader
+    //         ? device.device.bootloader !== undefined &&
+    //           device.device.bootloader === bootloader &&
+    //           this.device.info.keyboardType === device.device.info.keyboardType
+    //         : this.device.info.keyboardType === device.device.info.keyboardType
+    //     ) {
+    //       log.info(message);
+    //       this.currentPort = { ...device };
+    //       this.currentPath = device.path;
+    //       isFindDevice = true;
+    //     }
+    //   }
+    // });
     return isFindDevice;
   }
 
@@ -133,21 +128,19 @@ class FlashDefyWireless {
       "superkeys.repeat",
       "superkeys.overlap",
     ];
-    this.backupFileName = `defy-backup-${this.formatedDate()}.json`;
+    this.backupFileName = `defy-backup-${formatedDate()}.json`;
 
     try {
       let errorFlag = false;
       const errorMessage = "Firmware update failed, because the settings could not be saved";
       for (const command of commands) {
         // Ignore the command if it's not supported
-        if (!focus.isCommandSupported(command)) {
-          continue;
-        }
-
-        const res = await focus.command(command);
-        this.backupFileData.backup[command] = typeof res === "string" ? res.trim() : res;
-        if (res === undefined || res === "") {
-          errorFlag = true;
+        if (focus.isCommandSupported(command)) {
+          const res = await focus.command(command);
+          this.backupFileData.backup[command] = typeof res === "string" ? res.trim() : res;
+          if (res === undefined || res === "") {
+            errorFlag = true;
+          }
         }
       }
       if (errorFlag) throw new Error(errorMessage);
@@ -177,11 +170,11 @@ class FlashDefyWireless {
    * @param {*} state State of the DTR flag to be set on the port
    * @returns {promise} that will resolve when the function has successfully setted the DTR flag
    */
-  setDTR = (port, state) =>
-    new Promise((resolve, reject) => {
+  setDTR = (port: any, state: any) =>
+    new Promise(resolve => {
       port.set({ dtr: state }, () => {
         log.info(`DTR set to ${state} at ${new Date(Date.now()).toISOString()}`);
-        resolve();
+        resolve(true);
       });
     });
 
@@ -192,7 +185,7 @@ class FlashDefyWireless {
    * @returns {promise} Promise to be returned, that will resolve when the operation is done
    */
   updatePort = (port, baud) =>
-    new Promise((resolve, reject) => {
+    new Promise(resolve => {
       port.update({ baudRate: baud }, () => {
         log.info(`Port update started at: ${new Date(Date.now()).toISOString()}`);
         resolve();
@@ -322,7 +315,8 @@ class FlashDefyWireless {
       return true;
     }
     log.info(`Keyboard not detected, trying again for ${times} times`);
-    await this.runnerFindKeyboard(findKeyboard, times - 1, errorMessage);
+    const result = await this.runnerFindKeyboard(findKeyboard, times - 1, errorMessage);
+    return result;
   }
 
   /**

@@ -52,11 +52,11 @@ export default class SideFlaser {
 
     let deviceList = await SerialPort.list();
     let retry = 5;
-    let selectedDev = deviceList.find((dev: PortInfo) => parseInt(dev.vendorId, 16) === 0x35ef);
+    let selectedDev = deviceList.find((dev: PortInfo) => parseInt(dev.vendorId as string, 16) === 0x35ef);
     while (selectedDev === undefined && retry > 0) {
       delay(500);
       deviceList = await SerialPort.list();
-      selectedDev = deviceList.find((dev: PortInfo) => parseInt(dev.vendorId, 16) === 0x35ef);
+      selectedDev = deviceList.find((dev: PortInfo) => parseInt(dev.vendorId as string, 16) === 0x35ef);
       retry -= 1;
     }
     // log.info('Found this device:', deviceList, selectedDev);
@@ -84,7 +84,7 @@ export default class SideFlaser {
 
   async flashSide(
     side: string,
-    stateUpd: (arg0: number, arg1: number) => void,
+    stateUpd: (arg0: string, arg1: number) => void,
     wiredOrWireless: string,
     forceFlashSides: boolean,
   ) {
@@ -127,11 +127,11 @@ export default class SideFlaser {
 
       let deviceList = await SerialPort.list();
       let retry = 5;
-      let selectedDev = deviceList.find((dev: PortInfo) => parseInt(dev.vendorId, 16) === 0x35ef);
+      let selectedDev = deviceList.find((dev: PortInfo) => parseInt(dev.vendorId as string, 16) === 0x35ef);
       while (selectedDev === undefined && retry > 0) {
         await delay(500);
         deviceList = await SerialPort.list();
-        selectedDev = deviceList.find((dev: PortInfo) => parseInt(dev.vendorId, 16) === 0x35ef);
+        selectedDev = deviceList.find((dev: PortInfo) => parseInt(dev.vendorId as string, 16) === 0x35ef);
         retry -= 1;
       }
       log.info("Found this device:", deviceList, selectedDev);
@@ -156,12 +156,12 @@ export default class SideFlaser {
       this.serialport.write(`upgrade.keyscanner.isConnected ${sideId}\n`);
       const testRead = await readLine();
       log.info("testing after first read", testRead);
-      let isConnected: string | boolean = await readLine();
+      let isConnected: string | boolean = (await readLine()) as string;
 
       isConnected = isConnected.includes("true");
       this.serialport.write(`upgrade.keyscanner.isBootloader ${sideId}\n`);
       await readLine();
-      let isItBootloader: string | boolean = await readLine();
+      let isItBootloader: string | boolean = (await readLine()) as string;
       isItBootloader = isItBootloader.includes("true");
       log.info(`Checking ${sideId} side for isConnected: ${isConnected} and isBootloader: ${isItBootloader}`);
       if (!isConnected) {
@@ -172,7 +172,7 @@ export default class SideFlaser {
       this.serialport.write(`upgrade.keyscanner.begin ${sideId}\n`);
       await readLine();
       ans = await readLine();
-      if (ans.trim() !== "true") {
+      if ((ans as string).trim() !== "true") {
         log.info("not returned true when begin!!!", ans);
         return {
           error: true,
@@ -184,7 +184,7 @@ export default class SideFlaser {
       await readLine();
       ans = await readLine();
       log.info("Received Info from Side: ", ans);
-      ans = ans.split(" ");
+      ans = (ans as string).split(" ");
       const info = {
         hardwareVersion: parseInt(ans[0], 10),
         flashStart: parseInt(ans[1], 10),
@@ -217,8 +217,8 @@ export default class SideFlaser {
           // log.info("write sent, %", (step / totalsteps) * 100);
           this.serialport.write(buffer);
           if (wiredOrWireless !== "wired") await delay(20);
-          let ack = await readLine();
-          ack += await readLine();
+          let ack = (await readLine()) as string;
+          ack += (await readLine()) as string;
           // log.info("ack received: ", ack);
           if (!ack.includes("true") || ack.includes("false")) {
             let retries = 3;
@@ -228,8 +228,8 @@ export default class SideFlaser {
               if (wiredOrWireless !== "wired") await delay(10);
               this.serialport.write(buffer);
               if (wiredOrWireless !== "wired") await delay(10);
-              ack = await readLine();
-              ack += await readLine();
+              ack = (await readLine()) as string;
+              ack += (await readLine()) as string;
               // log.info(`received ${ack} after ${3 - retries} retires`);
               retries -= 1;
             }
@@ -237,13 +237,13 @@ export default class SideFlaser {
               throw new Error("NACK after third attempt");
             }
           }
-          stateUpd(parseInt(side, 10), (step / totalsteps) * 100);
+          stateUpd(side, (step / totalsteps) * 100);
           step += 1;
           // }
         }
         this.serialport.write("upgrade.keyscanner.validate\n");
-        validate = await readLine();
-        validate += await readLine();
+        validate = (await readLine()) as string;
+        validate += (await readLine()) as string;
         log.info("result of validation", validate);
         // retry++;
       }

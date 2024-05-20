@@ -1,9 +1,22 @@
-import { createMachine, assign } from "xstate";
+import { createMachine, assign, fromPromise } from "xstate";
 import log from "electron-log/renderer";
 import { DeviceTools } from "@Renderer/DeviceContext";
 import Focus from "../../../api/focus";
 
-const RestoreESCKey = async context => {
+interface MainProcessSMType {
+  Block: number;
+  deviceState: any;
+  backup?: any;
+  error: unknown;
+  errorCause: unknown;
+  firmwareList: any;
+  firmwares: any;
+  device: any;
+  isUpdated: any;
+  isBeta: any;
+}
+
+const RestoreESCKey = async (context: MainProcessSMType) => {
   // log.info("Going to restore topmost left key", context.backup, context.deviceState);
   try {
     if (context.backup === undefined || context.deviceState?.currentDevice === undefined) return;
@@ -15,7 +28,7 @@ const RestoreESCKey = async context => {
       await focus.close();
       await DeviceTools.connect(currentDevice);
     }
-    const keymap = context.backup.backup.find(c => c.command === "keymap.custom").data;
+    const keymap = context.backup.backup.find((c: { command: string }) => c.command === "keymap.custom").data;
     await currentDevice.noCacheCommand("led.mode 0");
     await currentDevice.noCacheCommand("keymap.custom", keymap);
   } catch (error) {
@@ -27,13 +40,19 @@ const RestoreESCKey = async context => {
 
 const MainProcessSM = createMachine({
   /** @xstate-layout N4IgpgJg5mDOIC5QDEA2BDAFrAlgOygAUAnAewGM5YAZUqHcgOmQHUBlMVMcgFx1LwBhdMQgBiAHIBRABoAVANoAGALqJQAB1K4+A9SAAeiAEwAWY4wCsATgAc1gMzXT1gOxLnDgGwAaEAE9EV1cLJVsvS3cnY1dbMIBfeL80LFwCEgoqWnomVg4uXn4hEXEAJSk5UoBNZTUkEC0dIv0jBFtTRgclUy92pSUzLwBGS1s-QIQvY2tGM2NjIdtLU1t3S2NE5IxsfCIySlgaOgZmdk5uXWLRMSlS0oB5Utr9RpxLlpNzKztHZzcPUzecaIWxDTrzaxDBztIamSzeVybEApHbpfZZY5MAAiYAAbgwwIJMNwANawYTXaTyZ71V7veqtSyjRhKEZeJSuKYOVwOUxDYGTYy2RjWUZ2VbWLycplIlFpPaZQ7ZE44-GUImk8klMTlSo1VQvbRvZoMxBM4WsyzsznGbm8-kBRDQ4WuUVW0HhW1TWXbeUZA5HHKMVUEjXkMkU8S3B5PA20o300CM5mW61cnl8gWumbWMLtJbGSxKbxDH2pXb+jFBlKwTAV9EQACuxEJ2qpijjmgTJqTiFzlk6DiHxi87LhkrGjoQTJmrPMkJ5o36DjLqIVAeVuQwtfrmSbLcjOoq1RpXaaelNCH7g+Ho+6Nl6AqLM2MrLiji8zjmq796KVmOYbc6zRPdm1ba5o0eU8Gm7C9eyvJQByHW8xwfScJgiLxGFiIYzFcUxEKLIZrB-XcNwAlseGIfwxAgAQwEYfBcVIEkGJbWAeFIFspDYQQAGkwH8aC6R7Qw+0Qm8HBHVCJwFeYB1FUxzBiSEpm6UiQPIoNKOosQwGIMhiEYDQMB4AAzLiAFtGHYzjuN4gShM7GDzzwD4EFw-CRWmXpImfGIBScJRZmsaYmRGLooSGREkmRX0yKrE59MMo89WE2C3MvKEvAcRhouI4tFgiFZAoIxgVm6EJYlHblSyRPBSAgOB9DlBL-xyQ1XPcgBaB0Jm6rD+n6Yj1gcSwCumDT10S3IzgKS5I06404LEhBTFcLNpnKtxzA5VZgicKbK3alU8VDYlwy1UQlsTVaxo6VSpn7PkVj6oJmStSURjwuIeiOv9AxOGtgOm-dwIgG7RNaKVguQ6ZXEWPbYgFYYByU18Qk-WxbBiSx-sVQGmB0iYz2WzL4KGIYJNzKZ1r5KrosCpkWUiaYFnG0VovxrSkoMrjIZW1pYXaPLhjpqVVmIwLgmwkIhi8HpHGHP7YtazSZsYWBG3IAMBfJ1bKeppRafw6KYkZqcmVcEUpIWHlcOcYtEkSIA */
-  predictableActionArguments: true,
   id: "FlahsingProcessLogic",
   initial: "FWSelectionCard",
   context: {
     Block: 0,
     deviceState: {},
-  },
+    error: undefined,
+    errorCause: undefined,
+    firmwareList: undefined,
+    firmwares: undefined,
+    device: undefined,
+    isUpdated: undefined,
+    isBeta: undefined,
+  } as MainProcessSMType,
   states: {
     FWSelectionCard: {
       id: "FWSelectionCard",
@@ -47,16 +66,19 @@ const MainProcessSM = createMachine({
       on: {
         NEXT: {
           target: "DeviceChecksCard",
-          actions: assign((context, event) => ({
-            firmwareList: event.data.firmwareList,
-            firmwares: event.data.firmwares,
-            device: event.data.device,
-            isUpdated: event.data.isUpdated,
-            isBeta: event.data.isBeta,
-          })),
+          actions: assign(({ event }) => {
+            log.info(event);
+            return {
+              firmwareList: event.output.firmwareList,
+              firmwares: event.output.firmwares,
+              device: event.output.device,
+              isUpdated: event.output.isUpdated,
+              isBeta: event.output.isBeta,
+            };
+          }),
         },
-        RETRY: { target: "FWSelectionCard", actions: assign({ Block: (context, event) => (context.Block = 0) }) },
-        ERROR: { target: "error", actions: [assign({ errorCause: (context, event) => event.data })] },
+        RETRY: { target: "FWSelectionCard", actions: assign({ Block: () => 0 }) },
+        ERROR: { target: "error", actions: assign({ errorCause: ({ event }) => event.output }) },
       },
     },
     DeviceChecksCard: {
@@ -71,22 +93,22 @@ const MainProcessSM = createMachine({
       on: {
         NEXT: {
           target: "FlashingProcedureCard",
-          actions: assign((context, event) => ({
-            backup: event.data.backup,
-            sideLeftOk: event.data.sideLeftOk,
-            sideLeftBL: event.data.sideLeftBL,
-            sideRightOK: event.data.sideRightOK,
-            sideRightBL: event.data.sideRightBL,
-            RaiseBrightness: event.data.RaiseBrightness,
+          actions: assign(({ event }) => ({
+            backup: event.output.backup,
+            sideLeftOk: event.output.sideLeftOk,
+            sideLeftBL: event.output.sideLeftBL,
+            sideRightOK: event.output.sideRightOK,
+            sideRightBL: event.output.sideRightBL,
+            RaiseBrightness: event.output.RaiseBrightness,
           })),
         },
         RETRY: {
-          actions: assign((context, event) => ({
-            backup: event.data.backup,
+          actions: assign(({ event }) => ({
+            backup: event.output.backup,
           })),
           target: "retry",
         },
-        ERROR: { target: "error", actions: [assign({ errorCause: (context, event) => event.data })] },
+        ERROR: { target: "error", actions: [assign({ errorCause: ({ event }) => event.output })] },
       },
     },
     FlashingProcedureCard: {
@@ -101,7 +123,7 @@ const MainProcessSM = createMachine({
       on: {
         NEXT: ["success"],
         RETRY: ["retry"],
-        ERROR: { target: "error", actions: [assign({ errorCause: (context, event) => event.data })] },
+        ERROR: { target: "error", actions: [assign({ errorCause: ({ event }) => event.output })] },
       },
     },
     retry: {
@@ -113,10 +135,11 @@ const MainProcessSM = createMachine({
       ],
       invoke: {
         id: "restoreESCKey",
-        src: context => RestoreESCKey(context),
+        src: fromPromise(({ input }) => RestoreESCKey(input.context)),
+        input: ({ context }) => ({ context }),
         onDone: {
           target: "FWSelectionCard",
-          actions: [assign({ Block: (context, event) => (context.Block = 0) })],
+          actions: [assign({ Block: () => 0 })],
         },
         onError: {
           target: "error",

@@ -16,7 +16,6 @@
  */
 
 import React from "react";
-import PropTypes from "prop-types";
 import Styled from "styled-components";
 import Dropdown from "react-bootstrap/Dropdown";
 import { i18n } from "@Renderer/i18n";
@@ -58,15 +57,14 @@ const Style = Styled.div`
   background-color: ${({ theme }) => theme.styles.firmwareUpdatePanel.fileSelected};
 }
 `;
-/**
- * This FirmwareAdvancedOptions function returns a dropdwon component to help the user to intall a custom firmware
- * The object will accept the following parameters
- *
- * @param {string} firmwareFilename - [Optional] String that receive the route where is located the custom software
- * @param {function} selectFirmware - The function that allows the user select the custom software
- * @returns {<FirmwareAdvancedOptions>} FirmwareAdvancedOptions component.
- */
-function FirmwareAdvancedOptions(props) {
+
+interface FirmwareAdvancedOptionsType {
+  firmwareFilename: any;
+  selectFirmware: any;
+  selectExperimental: any;
+}
+
+function FirmwareAdvancedOptions(props: FirmwareAdvancedOptionsType) {
   const { firmwareFilename, selectFirmware, selectExperimental } = props;
   return (
     <Style>
@@ -81,14 +79,12 @@ function FirmwareAdvancedOptions(props) {
           <div className="dropdownMenuPadding">
             <div className="dropdownMenuContent" dangerouslySetInnerHTML={{ __html: i18n.firmwareUpdate.texts.advUsersHTML }} />
             <RegularButton
-              className="flashingbutton nooutlined"
-              styles="outline gradient btn-block"
+              styles="outline gradient btn-block flashingbutton nooutlined"
               buttonText={firmwareFilename === "" ? i18n.firmwareUpdate.custom : i18n.firmwareUpdate.rcustom}
               onClick={selectFirmware}
             />
             <RegularButton
-              className="flashingbutton nooutlined"
-              styles="outline gradient btn-block"
+              styles="outline gradient btn-block flashingbutton nooutlined"
               buttonText="Use Experimental"
               onClick={selectExperimental}
             />
@@ -99,11 +95,5 @@ function FirmwareAdvancedOptions(props) {
     </Style>
   );
 }
-
-FirmwareAdvancedOptions.propTypes = {
-  firmwareFilename: PropTypes.string,
-  selectFirmware: PropTypes.func,
-  selectExperimental: PropTypes.func,
-};
 
 export default FirmwareAdvancedOptions;
