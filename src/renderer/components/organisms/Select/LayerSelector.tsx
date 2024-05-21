@@ -1,6 +1,6 @@
 // -*- mode: js-jsx -*-
 /* Bazecor
- * Copyright (C) 2022  Dygmalab, Inc.
+ * Copyright (C) 2024  Dygmalab, Inc.
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -22,26 +22,20 @@ import { i18n } from "@Renderer/i18n";
 
 import NameModal from "@Renderer/components/molecules/CustomModal/ModalName";
 
-import { IconDelete, IconKeyboard, IconFlashlight } from "@Renderer/components/atoms/icons/";
-import ToggleGroupKeyboardViewMode from "@Renderer/components/molecules/CustomToggleGroup/ToggleGroupKeyboardViewMode";
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@Renderer/components/atoms/DropdownMenu";
-import { ButtonSettings } from "../Button";
-import { KeyboardViewSelector } from "../ToggleButtons";
-import {
+  IconDelete,
+  IconKeyboard,
+  IconFlashlight,
   IconArrowsSmallSeparating,
   IconPen,
   IconClone,
   IconArrowUpWithLine,
   IconArrowDownWithLine,
   IconFileDownload,
-  IconSettings,
-} from "../Icon";
+} from "@Renderer/components/atoms/icons/";
+import ToggleGroupKeyboardViewMode from "@Renderer/components/molecules/CustomToggleGroup/ToggleGroupKeyboardViewMode";
+import { ButtonSettings } from "@Renderer/component/Button";
+import { KeyboardViewSelector } from "@Renderer/component/ToggleButtons";
 
 const Style = Styled.div`
 display: flex;
@@ -187,35 +181,7 @@ class LayerSelector extends React.Component {
             </Dropdown.Menu>
           </Dropdown>
           <div className="dropdownActions">
-            <DropdownMenu>
-              <DropdownMenuTrigger>
-                <div className="flex w-[36px] h-[36px] items-center justify-center shadow-none rounded-sm p-0 text-purple-300 dark:text-gray-100 hover:text-purple-100 hover:dark:text-gray-50 dark:bg-gray-600 dark:hover:bg-gray-500">
-                  <IconSettings />
-                </div>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent>
-                <DropdownMenuItem className="flex gap-2" onSelect={this.toggleShow}>
-                  <IconPen /> {i18n.app.menu.changeName}
-                </DropdownMenuItem>
-                <DropdownMenuItem className="flex gap-2" onSelect={exportFunc}>
-                  <IconArrowUpWithLine /> {i18n.editor.layers.exportTitle}
-                </DropdownMenuItem>
-                <DropdownMenuItem className="flex gap-2" onSelect={importFunc}>
-                  <IconArrowDownWithLine /> {i18n.editor.layers.importTitle}
-                </DropdownMenuItem>
-                <DropdownMenuItem className="flex gap-2" onSelect={copyFunc}>
-                  <IconClone /> {i18n.editor.layers.copyFrom}
-                </DropdownMenuItem>
-                <DropdownMenuItem className="flex gap-2" onSelect={clearFunc}>
-                  <IconDelete /> {i18n.editor.layers.clearLayer}
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem className="flex gap-2" onSelect={exportToPdf}>
-                  <IconFileDownload /> {i18n.editor.layers.exportToPdf}
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-            {/* <Dropdown drop="down" align="end" className="dropdownActionsList">
+            <Dropdown drop="down" align="end" className="dropdownActionsList">
               <Dropdown.Toggle className="button-settings">
                 <ButtonSettings />
               </Dropdown.Toggle>
@@ -271,7 +237,7 @@ class LayerSelector extends React.Component {
                   </div>
                 </Dropdown.Item>
               </Dropdown.Menu>
-            </Dropdown> */}
+            </Dropdown>
           </div>
         </div>
 
