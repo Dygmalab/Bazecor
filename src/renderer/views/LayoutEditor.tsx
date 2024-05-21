@@ -46,7 +46,7 @@ import { KeyPickerKeyboard } from "@Renderer/modules/KeyPickerKeyboard";
 import StandardView from "@Renderer/modules/StandardView";
 
 // Components
-import { LayerSelector } from "@Renderer/component/Select";
+import LayerSelector from "@Renderer/components/organisms/Select/LayerSelector";
 import { RegularButton } from "@Renderer/component/Button";
 import { LayoutViewSelector } from "@Renderer/component/ToggleButtons";
 import { IconArrowDownWithLine, IconArrowUpWithLine } from "@Renderer/component/Icon";

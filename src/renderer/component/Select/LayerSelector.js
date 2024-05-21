@@ -193,7 +193,7 @@ class LayerSelector extends React.Component {
                   <IconSettings />
                 </div>
               </DropdownMenuTrigger>
-              <DropdownMenuContent>
+              <DropdownMenuContent align="start">
                 <DropdownMenuItem className="flex gap-2" onSelect={this.toggleShow}>
                   <IconPen /> {i18n.app.menu.changeName}
                 </DropdownMenuItem>

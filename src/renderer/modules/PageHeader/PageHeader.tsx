@@ -27,7 +27,7 @@ flex: 0 0 100%;
 align-self: flex-start;
 // position: sticky;
 // top: 32px;
-z-index: 300;
+z-index: 30;
 &.pageHeaderSticky {
   position: sticky;
   top: 0;

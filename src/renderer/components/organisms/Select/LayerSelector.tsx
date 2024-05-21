@@ -15,61 +15,36 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React from "react";
+import React, { useState } from "react";
 import Styled from "styled-components";
-import Dropdown from "react-bootstrap/Dropdown";
 import { i18n } from "@Renderer/i18n";
 
 import NameModal from "@Renderer/components/molecules/CustomModal/ModalName";
 
 import {
   IconDelete,
-  IconKeyboard,
-  IconFlashlight,
-  IconArrowsSmallSeparating,
   IconPen,
   IconClone,
   IconArrowUpWithLine,
   IconArrowDownWithLine,
   IconFileDownload,
+  IconSettings,
 } from "@Renderer/components/atoms/icons/";
 import ToggleGroupKeyboardViewMode from "@Renderer/components/molecules/CustomToggleGroup/ToggleGroupKeyboardViewMode";
-import { ButtonSettings } from "@Renderer/component/Button";
-import { KeyboardViewSelector } from "@Renderer/component/ToggleButtons";
+
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@Renderer/components/atoms/DropdownMenu";
+
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@Renderer/components/atoms/Select";
 
 const Style = Styled.div`
-display: flex;
-align-items: center;
-.dropdownMultipleActions {
-    min-width: 290px;
-    max-width: 290px;
-    .dropdownActions {
-      display: flex;
-      flex-wrap: nowrap;
-      border-radius: 3px;
-      height: 48px;
-    }
-}
-.dropdownListItemSelected {
-    max-width: 200px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-.dropdownListItemInner {
-    padding-right: 64px;
-    .caret {
-      right: 16px;
-    }
-}
 .dropdown-menu {
     min-width: 268px;
-}
-.itemIndex {
-    display: inline-block;
-    width: 28px;
-    margin-right: 6px;
-    text-align: right;
 }
 .button.outline.gradient {
   align-self: center;
@@ -90,176 +65,121 @@ align-items: center;
     border-top-color: ${({ theme }) => theme.styles.dropdown.dropdownMenu.dropdownDivider};
 }
 `;
-class LayerSelector extends React.Component {
-  constructor(props) {
-    super(props);
 
-    this.state = {
-      show: false,
-      showAdd: false,
-    };
-  }
+interface ItemList {
+  id: number;
+  name: string;
+}
 
-  toggleShow = () => {
-    this.setState({ show: !this.state.show });
+const LayerSelector: React.FC<any> = ({
+  onSelect,
+  itemList,
+  selectedItem,
+  subtitle,
+  exportFunc,
+  importFunc,
+  copyFunc,
+  clearFunc,
+  editModeActual,
+  editModeFunc,
+  exportToPdf,
+  updateItem,
+}) => {
+  const [show, setShow] = useState(false);
+  const toggleShow = () => setShow(!show);
+
+  const handleSave = (data: string) => {
+    toggleShow();
+    updateItem(data);
   };
 
-  toggleShowAdd = () => {
-    this.setState({ showAdd: !this.state.showAdd });
-  };
+  console.log("itemList: ", itemList);
 
-  handleSave = data => {
-    this.toggleShow();
-    this.props.updateItem(data);
-  };
-
-  handleAdd = data => {
-    this.toggleShowAdd();
-    this.props.addItem(data);
-  };
-
-  render() {
-    const {
-      onSelect,
-      itemList,
-      selectedItem,
-      subtitle,
-      exportFunc,
-      importFunc,
-      copyFunc,
-      clearFunc,
-      editModeActual,
-      editModeFunc,
-      exportToPdf,
-    } = this.props;
-    const { show, showAdd } = this.state;
-    const layoutsMode = [
-      {
-        name: i18n.editor.keys,
-        tooltip: i18n.editor.keysEditor,
-        value: "keyboard",
-        icon: <IconKeyboard />,
-      },
-      {
-        name: i18n.editor.color.color,
-        tooltip: i18n.editor.color.colorEditor,
-        value: "color",
-        icon: <IconFlashlight />,
-      },
-    ];
-    return (
-      <Style>
-        <div className="itemListelector dropdownMultipleActions">
-          <Dropdown onSelect={value => onSelect(parseInt(value))} value={selectedItem} className="dropdownList">
-            <Dropdown.Toggle className="toggler neuronToggler">
-              <div className="dropdownListInner">
-                <div className="dropdownListNumber">{itemList.length == 0 ? "#0" : `#${parseInt(selectedItem) + 1}`}</div>
-                <div className="dropdownListItem">
-                  <div className="dropdownListItemInner">
-                    <div className="dropdownListItemLabel">{subtitle}</div>
-                    <div className="dropdownListItemSelected">
-                      {itemList == undefined || itemList.length == 0 || itemList.length <= selectedItem
-                        ? i18n.dialog.loading
-                        : itemList[selectedItem].name == ""
-                          ? i18n.general.noname
-                          : itemList[selectedItem].name}
-                    </div>
-                    <span className="caret">
-                      <IconArrowsSmallSeparating />
-                    </span>
+  return (
+    <Style className="flex items-center gap-1">
+      <div className="itemListelector dropdownMultipleActions max-w-[290px] min-w-[290px]">
+        <Select onValueChange={value => onSelect(parseInt(value, 10))} value={selectedItem}>
+          <SelectTrigger variant="combo">
+            {/* dropdownListInner */}
+            <div className="flex flex-nowrap items-center">
+              {/* dropdownListNumber */}
+              <div className="relative self-center w-[34px] text-center pr-[8px] text-[13px] font-semibold tracking-tight text-gray-500 dark:text-gray-200 after:content-[' '] after:absolute after:flex after:w-[1px] after:h-[30px] after:right-0 after:top-1/2 after:transform-style-3d after:translate-y-[-50%] after:bg-gray-200/50 dark:after:bg-gray-500/50">
+                {itemList.length === 0 ? "#0" : `#${parseInt(selectedItem, 10) + 1}`}
+              </div>
+              {/* dropdownListItem style={{ width: "calc(100% - 42px)" }} */}
+              <div className="flex flex-wrap pl-[12px] leading-[1.25em] text-left">
+                {/* dropdownListItemInner */}
+                <div className="relative w-full leading-[1em]">
+                  {/* dropdownListItemLabel */}
+                  <div className="tracking-tight text-[11px] text-gray-200 dark:text-gray-200">{subtitle}</div>
+                  {/* dropdownListItemSelected */}
+                  <div className="max-w-[200px] whitespace-nowrap overflow-hidden text-ellipsis text-[13px] text-gray-600 dark:text-gray-100 [&_em]:hidden">
+                    <SelectValue placeholder="Theme" />
                   </div>
+                  {/* <span className="caret right-4 text-gray-300 dark:text-gray-300">
+                    <IconArrowsSmallSeparating />
+                  </span> */}
                 </div>
               </div>
-            </Dropdown.Toggle>
-            <Dropdown.Menu className="dropdownMenu">
-              {itemList.map((item, iter) => (
-                <Dropdown.Item eventKey={iter} key={`item-${iter}`} className={iter === selectedItem ? "active" : ""}>
-                  <span className="itemIndex">#{iter + 1}.</span>
-                  {item.name == "" ? i18n.general.noname : item.name}
-                </Dropdown.Item>
-              ))}
-            </Dropdown.Menu>
-          </Dropdown>
-          <div className="dropdownActions">
-            <Dropdown drop="down" align="end" className="dropdownActionsList">
-              <Dropdown.Toggle className="button-settings">
-                <ButtonSettings />
-              </Dropdown.Toggle>
-              <Dropdown.Menu className="dropdownMenu">
-                <Dropdown.Item onClick={this.toggleShow}>
-                  <div className="dropdownInner">
-                    <div className="dropdownIcon">
-                      <IconPen />
-                    </div>
-                    <div className="dropdownItem">{i18n.app.menu.changeName}</div>
-                  </div>
-                </Dropdown.Item>
-
-                <Dropdown.Item onClick={exportFunc}>
-                  <div className="dropdownInner">
-                    <div className="dropdownIcon">
-                      <IconArrowUpWithLine />
-                    </div>
-                    <div className="dropdownItem">{i18n.editor.layers.exportTitle}</div>
-                  </div>
-                </Dropdown.Item>
-                <Dropdown.Item onClick={importFunc}>
-                  <div className="dropdownInner">
-                    <div className="dropdownIcon">
-                      <IconArrowDownWithLine />
-                    </div>
-                    <div className="dropdownItem">{i18n.editor.layers.importTitle}</div>
-                  </div>
-                </Dropdown.Item>
-                <Dropdown.Item onClick={copyFunc}>
-                  <div className="dropdownInner">
-                    <div className="dropdownIcon">
-                      <IconClone />
-                    </div>
-                    <div className="dropdownItem">{i18n.editor.layers.copyFrom}</div>
-                  </div>
-                </Dropdown.Item>
-                <Dropdown.Item onClick={clearFunc}>
-                  <div className="dropdownInner">
-                    <div className="dropdownIcon">
-                      <IconDelete />
-                    </div>
-                    <div className="dropdownItem">{i18n.editor.layers.clearLayer}</div>
-                  </div>
-                </Dropdown.Item>
-                <Dropdown.Divider />
-                <Dropdown.Item onClick={exportToPdf}>
-                  <div className="dropdownInner">
-                    <div className="dropdownIcon">
-                      <IconFileDownload />
-                    </div>
-                    <div className="dropdownItem">{i18n.editor.layers.exportToPdf}</div>
-                  </div>
-                </Dropdown.Item>
-              </Dropdown.Menu>
-            </Dropdown>
-          </div>
+            </div>
+          </SelectTrigger>
+          <SelectContent>
+            {itemList.map((item: ItemList, i: string) => (
+              <SelectItem key={`item-layer-id-${item.id}`} value={i}>
+                <em className="itemIndex inline-block w-7 mr-1 text-right not-italic">#{i + 1}.</em>
+                {item.name === "" ? i18n.general.noname : item.name}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+        <div className="absolute top-1 right-1">
+          <DropdownMenu>
+            <DropdownMenuTrigger>
+              <div className="flex w-[36px] h-[36px] items-center justify-center shadow-none rounded-sm p-0 text-purple-300 dark:text-gray-100 hover:text-purple-100 hover:dark:text-gray-50 bg-gradient-to-r from-gray-100/70 to-gray-25/70 hover:from-gray-100 hover:to-gray-25 dark:bg-none dark:bg-gray-600 dark:hover:bg-gray-500">
+                <IconSettings />
+              </div>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="start" className="min-w-56">
+              <DropdownMenuItem className="flex gap-2" onSelect={toggleShow}>
+                <IconPen /> {i18n.app.menu.changeName}
+              </DropdownMenuItem>
+              <DropdownMenuItem className="flex gap-2" onSelect={exportFunc}>
+                <IconArrowUpWithLine /> {i18n.editor.layers.exportTitle}
+              </DropdownMenuItem>
+              <DropdownMenuItem className="flex gap-2" onSelect={importFunc}>
+                <IconArrowDownWithLine /> {i18n.editor.layers.importTitle}
+              </DropdownMenuItem>
+              <DropdownMenuItem className="flex gap-2" onSelect={copyFunc}>
+                <IconClone /> {i18n.editor.layers.copyFrom}
+              </DropdownMenuItem>
+              <DropdownMenuItem className="flex gap-2" onSelect={clearFunc}>
+                <IconDelete /> {i18n.editor.layers.clearLayer}
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem className="flex gap-2" onSelect={exportToPdf}>
+                <IconFileDownload /> {i18n.editor.layers.exportToPdf}
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
+      </div>
 
-        <ToggleGroupKeyboardViewMode value={editModeActual} onValueChange={editModeFunc} />
+      <ToggleGroupKeyboardViewMode value={editModeActual} onValueChange={editModeFunc} />
 
-        <KeyboardViewSelector listElements={layoutsMode} value={editModeActual} style="flex" editModeFunc={editModeFunc} />
-
-        {itemList === undefined || itemList.length === 0 || itemList.length <= selectedItem ? (
-          ""
-        ) : (
-          <NameModal
-            show={show}
-            name={itemList[selectedItem].name}
-            toggleShow={this.toggleShow}
-            handleSave={this.handleSave}
-            modalTitle="Change layer name"
-            labelInput="Layer name"
-          />
-        )}
-      </Style>
-    );
-  }
-}
+      {itemList === undefined || itemList.length === 0 || itemList.length <= selectedItem ? (
+        ""
+      ) : (
+        <NameModal
+          show={show}
+          name={itemList[selectedItem].name}
+          toggleShow={toggleShow}
+          handleSave={handleSave}
+          modalTitle="Change layer name"
+          labelInput="Layer name"
+        />
+      )}
+    </Style>
+  );
+};
 
 export default LayerSelector;
