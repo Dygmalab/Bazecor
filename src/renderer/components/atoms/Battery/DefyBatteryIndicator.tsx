@@ -15,44 +15,12 @@
  */
 
 import React, { useState, useEffect } from "react";
-import Styled from "styled-components";
 
 import DefyBatteryIndicatorLeft from "@Renderer/component/Battery/DefyBatteryIndicatorLeft";
 import DefyBatteryIndicatorRight from "@Renderer/component/Battery/DefyBatteryIndicatorRight";
 
 import { i18n } from "@Renderer/i18n";
 
-const Style = Styled.div`
-.levelIndicator {
-    transform-origin: bottom left;
-    transform: rotate(180deg);
-    fill: var(--color-status);
-}
-
-.shapeStroke {
-  stroke: var(--color-stroke);
-}
-.shapeFill {
-  fill: ${({ theme }) => theme.styles.batteryIndicator.largeIndicatorFillColor};
-}
-.shapeIndicator {
-  fill: var(--color-status);
-}
-.alertMessage {
-  &.alert-warning {
-    color: ${({ theme }) => theme.styles.batteryIndicator.alertWarningText};
-    background-color: ${({ theme }) => theme.styles.batteryIndicator.alertWarningBackground};
-  }
-  &.alert-fatal-error {
-    color: ${({ theme }) => theme.styles.batteryIndicator.alertErrorText};
-    background-color: ${({ theme }) => theme.styles.batteryIndicator.alertErrorBackground};
-  }
-  &.alert-disconnected {
-    color: ${({ theme }) => theme.styles.batteryIndicator.alertDisconnectedText};
-    background-color: ${({ theme }) => theme.styles.batteryIndicator.alertDisconnectedBackground};
-  }
-}
-`;
 interface DefyBatteryIndicatorProps {
   side: "left" | "right";
   batteryLevel: number;
@@ -88,7 +56,7 @@ const DefyBatteryIndicator = ({ side, batteryLevel, batteryStatus }: DefyBattery
   }, [batteryLevel, batteryStatus]);
 
   return (
-    <Style>
+    <div>
       <div className="batterySideWrapper">
         <div className="batterySide relative">
           {side === "left" ? <DefyBatteryIndicatorLeft batteryStatus={batteryStatus} batteryHeight={batteryHeight} /> : ""}
@@ -102,28 +70,28 @@ const DefyBatteryIndicator = ({ side, batteryLevel, batteryStatus }: DefyBattery
           )}
         </div>
         {batteryStatus === 3 ? (
-          <div className="alertMessage alert-warning tracking-tight leading-4 mt-[4px] rounded-sm font-semibold text-center text-2xxs py-[0.3rem] px-[0.25rem]">
+          <div className="alertMessage alert-warning text-gray-600 bg-orange-200/25 dark:text-orange-200 dark:bg-orange-200/20 tracking-tight leading-4 mt-[4px] rounded-sm font-semibold text-center text-2xxs py-[0.3rem] px-[0.25rem]">
             {i18n.wireless.batteryPreferences.batteryErrorReading}
           </div>
         ) : (
           ""
         )}
         {batteryStatus === 4 ? (
-          <div className="alertMessage alert-disconnected tracking-tight leading-4 mt-[4px] rounded-sm font-semibold text-center text-2xxs py-[0.3rem] px-[0.25rem]">
+          <div className="alertMessage alert-disconnected text-gray-300 bg-gray-50 dark:text-gray-100 dark:bg-gray-600 tracking-tight leading-4 mt-[4px] rounded-sm font-semibold text-center text-2xxs py-[0.3rem] px-[0.25rem]">
             {i18n.wireless.batteryPreferences.batteryDisconnected}
           </div>
         ) : (
           ""
         )}
         {batteryStatus === 255 ? (
-          <div className="alertMessage alert-fatal-error tracking-tight leading-4 mt-[4px] rounded-sm font-semibold text-center text-2xxs py-[0.3rem] px-[0.25rem]">
+          <div className="alertMessage alert-fatal-error text-gray-600 bg-primary/25 dark:text-primary dark:bg-primary/25 tracking-tight leading-4 mt-[4px] rounded-sm font-semibold text-center text-2xxs py-[0.3rem] px-[0.25rem]">
             {i18n.wireless.batteryPreferences.batteryFatalError}
           </div>
         ) : (
           ""
         )}
       </div>
-    </Style>
+    </div>
   );
 };
 
