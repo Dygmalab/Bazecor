@@ -29,7 +29,7 @@ import Title from "@Renderer/component/Title";
 import Callout from "@Renderer/component/Callout";
 import { RegularButton } from "@Renderer/component/Button";
 // import { FirmwareLoader } from "@Renderer/component/Loader";
-import LogoLoader from "@Renderer/components/atoms/loader/LogoLoader";
+import LogoLoader from "@Renderer/components/atoms/Loader/LogoLoader";
 import { IconLoader } from "@Renderer/component/Icon";
 
 // Visual modules

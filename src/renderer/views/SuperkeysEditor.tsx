@@ -31,7 +31,7 @@ import Callout from "@Renderer/component/Callout";
 import { SuperkeysSelector } from "@Renderer/component/Select";
 import { RegularButton } from "@Renderer/component/Button";
 // import { LogoLoaderCentered } from "@Renderer/component/Loader";
-import LogoLoader from "@Renderer/components/atoms/loader/LogoLoader";
+import LogoLoader from "@Renderer/components/atoms/Loader/LogoLoader";
 import ToggleGroupLayoutViewMode from "@Renderer/components/molecules/CustomToggleGroup/ToggleGroupLayoutViewMode";
 import ToastMessage from "@Renderer/component/ToastMessage";
 import { IconFloppyDisk } from "@Renderer/component/Icon";

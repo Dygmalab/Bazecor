@@ -44,7 +44,7 @@ import { MacroActionsType, MacrosType } from "@Renderer/types/macros";
 
 // Components
 // import { LogoLoaderCentered } from "@Renderer/component/Loader";
-import LogoLoader from "@Renderer/components/atoms/loader/LogoLoader";
+import LogoLoader from "@Renderer/components/atoms/Loader/LogoLoader";
 import { RegularButton } from "@Renderer/component/Button";
 import Callout from "@Renderer/component/Callout";
 import { IconFloppyDisk, IconLoader } from "@Renderer/component/Icon";

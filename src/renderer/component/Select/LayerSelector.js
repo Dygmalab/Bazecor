@@ -22,7 +22,7 @@ import { i18n } from "@Renderer/i18n";
 
 import NameModal from "@Renderer/components/molecules/CustomModal/ModalName";
 
-import { IconDelete, IconKeyboard, IconFlashlight } from "@Renderer/components/atoms/icons/";
+import { IconDelete, IconKeyboard, IconFlashlight } from "@Renderer/components/atoms/Icons";
 import ToggleGroupKeyboardViewMode from "@Renderer/components/molecules/CustomToggleGroup/ToggleGroupKeyboardViewMode";
 import {
   DropdownMenu,

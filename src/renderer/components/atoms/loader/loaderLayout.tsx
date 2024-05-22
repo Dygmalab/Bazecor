@@ -1,5 +1,5 @@
 import React from "react";
-import LogoLoader from "@Renderer/components/atoms/loader/LogoLoader";
+import LogoLoader from "@Renderer/components/atoms/Loader/LogoLoader";
 import Heading from "@Renderer/components/atoms/Heading";
 
 interface LoaderLayoutProps {

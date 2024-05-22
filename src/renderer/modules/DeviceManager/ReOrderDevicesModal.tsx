@@ -3,7 +3,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "
 
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
-import { IconDragAndDrop } from "@Renderer/components/atoms/icons";
+import { IconDragAndDrop } from "@Renderer/components/atoms/Icons";
 import { RegularButton } from "@Renderer/component/Button";
 import Heading from "@Renderer/components/atoms/Heading";
 

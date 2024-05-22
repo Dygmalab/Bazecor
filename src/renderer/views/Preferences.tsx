@@ -51,7 +51,7 @@ import {
   IconNeuronManager,
   IconChip,
 } from "@Renderer/component/Icon";
-import { IconWrench } from "@Renderer/components/atoms/icons";
+import { IconWrench } from "@Renderer/components/atoms/Icons";
 import Version from "@Renderer/components/atoms/Version";
 
 import Store from "@Renderer/utils/Store";

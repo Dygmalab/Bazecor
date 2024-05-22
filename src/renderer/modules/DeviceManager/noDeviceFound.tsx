@@ -1,7 +1,7 @@
 import React from "react";
 
 import Heading from "@Renderer/components/atoms/Heading";
-import { IconRobotOffline } from "@Renderer/components/atoms/icons";
+import { IconRobotOffline } from "@Renderer/components/atoms/Icons";
 
 import { i18n } from "@Renderer/i18n";
 

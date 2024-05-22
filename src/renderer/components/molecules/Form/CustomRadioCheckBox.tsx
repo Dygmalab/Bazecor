@@ -23,7 +23,7 @@ import Heading from "@Renderer/components/atoms/Heading";
 import { CustomRCBProps } from "@Renderer/types/customRadioCheckBox";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@Renderer/components/atoms/Tooltip";
 
-import { IconInformation } from "@Renderer/components/atoms/icons";
+import { IconInformation } from "@Renderer/components/atoms/Icons";
 
 function CustomRadioCheckBox(props: CustomRCBProps) {
   const { label, type, id, name, tooltip, className, onClick, disabled, checked } = props;

@@ -50,7 +50,7 @@ import LayerSelector from "@Renderer/components/organisms/Select/LayerSelector";
 import { RegularButton } from "@Renderer/component/Button";
 import { LayoutViewSelector } from "@Renderer/component/ToggleButtons";
 import { IconArrowDownWithLine, IconArrowUpWithLine } from "@Renderer/component/Icon";
-import LoaderLayout from "@Renderer/components/atoms/loader/loaderLayout";
+import LoaderLayout from "@Renderer/components/atoms/Loader/loaderLayout";
 import { i18n } from "@Renderer/i18n";
 
 import Store from "@Renderer/utils/Store";

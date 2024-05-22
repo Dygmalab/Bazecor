@@ -34,7 +34,7 @@ import Title from "@Renderer/component/Title";
 import { i18n } from "@Renderer/i18n";
 import Heading from "@Renderer/components/atoms/Heading";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@Renderer/components/atoms/Tooltip";
-import { IconInformation } from "@Renderer/components/atoms/icons";
+import { IconInformation } from "@Renderer/components/atoms/Icons";
 
 const Styles = Styled.div`
 

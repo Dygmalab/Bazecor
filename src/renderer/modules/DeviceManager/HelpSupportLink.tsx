@@ -1,5 +1,5 @@
 import React from "react";
-import { IconBugWarning } from "@Renderer/components/atoms/icons";
+import { IconBugWarning } from "@Renderer/components/atoms/Icons";
 import Heading from "@Renderer/components/atoms/Heading";
 
 import { i18n } from "@Renderer/i18n";

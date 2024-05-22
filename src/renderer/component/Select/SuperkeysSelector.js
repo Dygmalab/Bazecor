@@ -21,7 +21,7 @@ import Dropdown from "react-bootstrap/Dropdown";
 import { i18n } from "@Renderer/i18n";
 
 import NameModal from "@Renderer/components/molecules/CustomModal/ModalName";
-import { IconDelete } from "@Renderer/components/atoms/icons";
+import { IconDelete } from "@Renderer/components/atoms/Icons";
 import { RegularButton, ButtonConfig } from "../Button";
 
 import { IconArrowsSmallSeparating, IconPen, IconAddNew, IconClone } from "../Icon";

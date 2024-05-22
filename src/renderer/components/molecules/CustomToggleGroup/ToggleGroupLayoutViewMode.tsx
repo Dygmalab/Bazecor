@@ -5,7 +5,7 @@ import { i18n } from "@Renderer/i18n";
 import { ToggleGroup, ToggleGroupItem } from "@Renderer/components/atoms/ToggleGroup";
 import Heading from "@Renderer/components/atoms/Heading";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@Renderer/components/atoms/Tooltip";
-import { IconEditModeStandardView, IconEditModeSingleView, IconInformation } from "@Renderer/components/atoms/icons/";
+import { IconEditModeStandardView, IconEditModeSingleView, IconInformation } from "@Renderer/components/atoms/Icons";
 
 interface ToggleGroupLayoutViewModeProps {
   value: string;

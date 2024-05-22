@@ -19,7 +19,7 @@ import {
 } from "@Renderer/modules/Firmware";
 
 // import { FirmwareLoader } from "@Renderer/component/Loader";
-import LogoLoader from "@Renderer/components/atoms/loader/LogoLoader";
+import LogoLoader from "@Renderer/components/atoms/Loader/LogoLoader";
 import { useDevice } from "@Renderer/DeviceContext";
 
 const Styles = Styled.div`

@@ -1,6 +1,5 @@
-// -*- mode: js-jsx -*-
 /* Bazecor
- * Copyright (C) 2022  Dygmalab, Inc.
+ * Copyright (C) 2024  Dygmalab, Inc.
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -15,22 +14,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React from "react";
-import Styled from "styled-components";
-import { IconSettings } from "@Renderer/components/atoms/Icons";
+// import BatteryStatusSide from "./BatteryStatusSide";
+// import DefyBatteryIndicator from "./DefyBatteryIndicator";
+// import DefyBatteryIndicatorLeft from "./DefyBatteryIndicatorLeft";
+// import DefyBatteryIndicatorRight from "./DefyBatteryIndicatorRight";
+import PileIndicator from "./PileIndicator";
+// import SavingModeIndicator from "./SavingModeIndicator";
 
-const Style = Styled.div`
-.button-settings {
-
-}
-`;
-
-function ButtonSettings(props) {
-  return (
-    <Style>
-      <IconSettings />
-    </Style>
-  );
-}
-
-export default ButtonSettings;
+export {
+  // BatteryStatusSide,
+  // DefyBatteryIndicator,
+  // DefyBatteryIndicatorLeft,
+  // DefyBatteryIndicatorRight,
+  PileIndicator,
+  // SavingModeIndicator,
+};

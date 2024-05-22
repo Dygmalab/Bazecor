@@ -1,6 +1,6 @@
 import React from "react";
 
-import { IconRefresh, IconWarning, IconCheckmark } from "@Renderer/components/atoms/icons";
+import { IconRefresh, IconWarning, IconCheckmark } from "@Renderer/components/atoms/Icons";
 
 interface DefyNeuronStatusProps {
   updating?: boolean;

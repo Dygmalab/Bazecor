@@ -1,6 +1,6 @@
 import React from "react";
 
-import { IconWarning, IconCheckmark, IconRefresh } from "@Renderer/components/atoms/icons";
+import { IconWarning, IconCheckmark, IconRefresh } from "@Renderer/components/atoms/Icons";
 
 interface DefyLeftSideProps {
   updating?: boolean;

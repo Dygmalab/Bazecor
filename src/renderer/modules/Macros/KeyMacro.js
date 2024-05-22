@@ -7,7 +7,7 @@ import { FaLinux } from "react-icons/fa";
 import { AiFillWindows } from "react-icons/ai";
 import { i18n } from "@Renderer/i18n";
 
-import { IconDragAndDrop, IconDelete } from "@Renderer/components/atoms/icons";
+import { IconDragAndDrop, IconDelete } from "@Renderer/components/atoms/Icons";
 import MacroKeyPortal from "@Renderer/components/molecules/Portals/MacroKeyPortal";
 import Title from "../../component/Title";
 import { ButtonConfig } from "../../component/Button";

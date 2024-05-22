@@ -4,7 +4,7 @@ import { i18n } from "@Renderer/i18n";
 
 import { ToggleGroup, ToggleGroupItem } from "@Renderer/components/atoms/ToggleGroup";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@Renderer/components/atoms/Tooltip";
-import { IconKeyboard, IconFlashlight } from "@Renderer/components/atoms/icons/";
+import { IconKeyboard, IconFlashlight } from "@Renderer/components/atoms/Icons";
 
 interface ToggleGroupLayoutSelectorProps {
   value: string;

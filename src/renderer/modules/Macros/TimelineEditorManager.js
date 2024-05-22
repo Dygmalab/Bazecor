@@ -20,10 +20,10 @@ import Styled from "styled-components";
 import { Button } from "@Renderer/components/atoms/Button";
 import { i18n } from "@Renderer/i18n";
 
-import { IconDelete, IconStopWatch } from "@Renderer/components/atoms/icons";
+import { IconDelete, IconStopWatch } from "@Renderer/components/atoms/Icons";
 import PreviewMacroModal from "@Renderer/components/molecules/CustomModal/ModalPreviewMacro";
 import Heading from "@Renderer/components/atoms/Heading";
-import LogoLoader from "@Renderer/components/atoms/loader/LogoLoader";
+import LogoLoader from "@Renderer/components/atoms/Loader/LogoLoader";
 import { KeymapDB } from "../../../api/keymap";
 
 import TimelineEditorForm from "./TimelineEditorForm";
