@@ -135,7 +135,7 @@ const LayerSelector: React.FC<any> = ({
         <div className="absolute top-1 right-1">
           <DropdownMenu>
             <DropdownMenuTrigger>
-              <div className="flex w-[36px] h-[36px] items-center justify-center shadow-none rounded-sm p-0 text-purple-300 dark:text-gray-100 hover:text-purple-100 hover:dark:text-gray-50 bg-gradient-to-r from-gray-100/70 to-gray-25/70 hover:from-gray-100 hover:to-gray-25 dark:bg-none dark:bg-gray-600 dark:hover:bg-gray-500">
+              <div className="flex w-[36px] h-[36px] items-center justify-center shadow-none rounded-sm p-0 text-purple-300 dark:text-gray-100 hover:text-purple-300 hover:dark:text-gray-50 bg-gradient-to-r from-gray-100/40 to-gray-25/40 hover:from-gray-70 hover:to-gray-25 dark:bg-none dark:bg-gray-600 dark:hover:bg-gray-500">
                 <IconSettings />
               </div>
             </DropdownMenuTrigger>

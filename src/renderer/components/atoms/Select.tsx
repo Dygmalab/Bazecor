@@ -12,7 +12,7 @@ const selectVariants = cva("flex w-full items-center justify-between rounded-md"
       default:
         " border border-slate-200 bg-white px-3 py-2 text-sm ring-offset-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-slate-950 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1 dark:border-slate-800 dark:bg-slate-950 dark:ring-offset-slate-950 dark:placeholder:text-slate-400 dark:focus:ring-slate-300",
       combo:
-        "border-[1px] py-[6px] pl-[8px] pr-[2px] border-solid border-gray-100/60 dark:border-gray-600 hover:border-purple-200 data-[state=open]:border-purple-200 dark:data-[state=open]:border-purple-300 hover:dark:border-purple-300  bg-white/50 dark:bg-gray-900/20 hover:border-purple-100 pr-[40px] [&_svg]:text-gray-300 [&_svg]:dark:text-gray-300",
+        "border-[1px] py-[6px] pl-[8px] pr-[2px] border-solid border-gray-100/60 dark:border-gray-600 hover:border-purple-200 data-[state=open]:border-purple-200 dark:data-[state=open]:border-purple-300 hover:dark:border-purple-300 bg-white/50 dark:bg-gray-900/20 hover:border-purple-100 pr-[40px] [&_svg]:text-gray-300 [&_svg]:dark:text-gray-300",
     },
     size: {
       default: "h-[44px]",
@@ -92,7 +92,7 @@ const SelectContent = React.forwardRef<
       <SelectScrollUpButton />
       <SelectPrimitive.Viewport
         className={cn(
-          "p-1 flex flex-col gap-1",
+          "p-1 flex flex-col gap-0.5",
           position === "popper" && "h-[var(--radix-select-trigger-height)] w-full min-w-[var(--radix-select-trigger-width)]",
         )}
       >
@@ -119,7 +119,7 @@ const SelectItem = React.forwardRef<
   <SelectPrimitive.Item
     ref={ref}
     className={cn(
-      "relative flex w-full cursor-default select-none items-center rounded-sm py-1.5 pl-2 pr-8 text-[14px] text-gray-400 dark:text-gray-50 text-sm outline-none focus:bg-slate-100 focus:text-slate-900 data-[disabled]:pointer-events-none data-[disabled]:opacity-50 dark:focus:bg-slate-800 dark:focus:text-slate-50 hover:bg-gray-400 hover:dark:bg-gray-400/20 data-[state=checked]:bg-purple-200 dark:data-[state=checked]:bg-purple-300 data-[state=checked]:text-gray-25",
+      "relative flex w-full cursor-default select-none items-center rounded-sm py-1.5 pl-2 pr-8 text-[14px] text-gray-400 hover:text-gray-400 dark:text-gray-50 dark:hover:text-gray-50 text-sm outline-none focus:bg-gray-25 focus:text-gray-400 data-[disabled]:pointer-events-none data-[disabled]:opacity-50 dark:focus:bg-gray-400/20 dark:focus:text-gray-50 hover:bg-gray-25 dark:hover:bg-gray-400/20 data-[state=checked]:bg-purple-200 dark:data-[state=checked]:bg-purple-300 data-[state=checked]:text-gray-25",
       className,
     )}
     {...props}
