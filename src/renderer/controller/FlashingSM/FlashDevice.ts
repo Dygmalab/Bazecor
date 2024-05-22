@@ -16,7 +16,7 @@ let bootloader: boolean | undefined;
 let comPath: string | Buffer | undefined;
 
 interface FlashDeviceType {
-  deviceState: { currentDevice: any };
+  deviceState: any;
   loadedComms: boolean;
   stateblock: number;
   globalProgress: number;
@@ -260,7 +260,7 @@ const resetDefy = async (context: FlashDeviceType) => {
     const focus = Focus.getInstance();
     if (flashDefyWireless === undefined) {
       log.info("when creating FDW", context.originalDevice.device);
-      flashDefyWireless = new FlashDefyWireless(context.originalDevice.device);
+      flashDefyWireless = new FlashDefyWireless(context.originalDevice.device, context.deviceState);
       if (flashSides === undefined && bootloader === false) {
         comPath = focus._port?.port?.openOptions?.path;
         bootloader = currentDevice.bootloader;
@@ -495,10 +495,10 @@ const FlashDevice = createMachine(
         },
         on: {
           // Go to flashPathSelector automatically when no esc key can be pressed
-          "": [{ target: "flashPathSelector", guard: "doNotWaitForESC" }],
           // Esc key listener will send this event
           ESCPRESSED: "flashPathSelector",
         },
+        always: [{ target: "flashPathSelector", guard: "doNotWaitForESC" }],
         exit: ["removeEscListener"],
       },
       flashPathSelector: {

@@ -16,13 +16,12 @@
  */
 
 import React, { useState, useEffect } from "react";
-import PropTypes from "prop-types";
 import Styled from "styled-components";
 import { useMachine } from "@xstate/react";
 import { i18n } from "@Renderer/i18n";
 
 // State machine
-import FWSelection from "@Renderer/controller/FlashingSM/FWSelection";
+import FirmwareSelection from "@Renderer/controller/FirmwareSelection/machine";
 
 // Visual components
 import Title from "@Renderer/component/Title";
@@ -163,12 +162,18 @@ height:inherit;
 }
 `;
 
-function FirmwareUpdatePanel(props) {
+interface FirmwareUpdatePanelProps {
+  nextBlock: (context: any) => void;
+  retryBlock: (context: any) => void;
+  errorBlock: (context: any) => void;
+  allowBeta: boolean;
+}
+
+function FirmwareUpdatePanel(props: FirmwareUpdatePanelProps) {
   const { nextBlock, retryBlock, errorBlock, allowBeta } = props;
   const { state: deviceState } = useDevice();
-  const [state, send] = useMachine(FWSelection, { context: { allowBeta, deviceState } });
-
   const [loading, setLoading] = useState(true);
+  const [state, send] = useMachine(FirmwareSelection, { input: { allowBeta, deviceState } });
 
   let flashButtonText = state.context.stateblock === 4 ? "Processing..." : "";
   if (flashButtonText === "")
@@ -178,14 +183,14 @@ function FirmwareUpdatePanel(props) {
     if (state.context.stateblock >= 3 || state.context.stateblock === -1) {
       setLoading(false);
     }
-    if (state.matches("success")) nextBlock(state.context);
-    if (state.matches("failure")) errorBlock(state.context.error);
+    if (state.value === "success") nextBlock(state.context);
+    if (state.value === "failure") errorBlock(state.context.error);
   }, [errorBlock, nextBlock, retryBlock, state]);
 
   return (
     <Style>
       {loading ? (
-        <FirmwareLoader />
+        <FirmwareLoader width={undefined} warning={undefined} error={undefined} paused={undefined} />
       ) : (
         <div className="firmware-wrapper home-firmware">
           <div className="firmware-row">
@@ -216,6 +221,8 @@ function FirmwareUpdatePanel(props) {
                 isUpdated={state.context.isUpdated}
                 deviceProduct={state.context.device.info.product}
                 keyboardType={state.context.device.info.keyboardType}
+                icon={undefined}
+                status=""
               />
             </div>
           </div>
@@ -236,14 +243,13 @@ function FirmwareUpdatePanel(props) {
             <div className="firmware-sidebar borderRightBottomRadius">
               <div className="buttonActions">
                 <RegularButton
-                  className="flashingbutton nooutlined"
-                  styles={state.context.isUpdated ? "outline transp-bg" : "primary"}
+                  styles={state.context.isUpdated ? "flashingbutton outline transp-bg" : "flashingbutton nooutlined primary"}
                   buttonText={flashButtonText}
                   icoSVG={state.context.stateblock === 4 ? <IconLoader /> : null}
                   icoPosition={state.context.stateblock === 4 ? "right" : null}
                   disabled={state.context.stateblock === 4}
                   onClick={() => {
-                    send("NEXT");
+                    send({ type: "next-event" });
                   }}
                 />
 
@@ -262,12 +268,5 @@ function FirmwareUpdatePanel(props) {
     </Style>
   );
 }
-
-FirmwareUpdatePanel.propTypes = {
-  nextBlock: PropTypes.func,
-  errorBlock: PropTypes.func,
-  retryBlock: PropTypes.func,
-  allowBeta: PropTypes.bool,
-};
 
 export default FirmwareUpdatePanel;

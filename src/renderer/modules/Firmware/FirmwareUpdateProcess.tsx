@@ -16,7 +16,6 @@
  */
 
 import React, { useState, useEffect } from "react";
-import PropTypes from "prop-types";
 import Styled from "styled-components";
 import log from "electron-log/renderer";
 import { useMachine } from "@xstate/react";
@@ -93,20 +92,34 @@ height: inherit;
 }
 `;
 
-function FirmwareUpdateProcess(props) {
+interface FirmwareUpdateProcessProps {
+  nextBlock: (context: any) => void;
+  retryBlock: (context: any) => void;
+  context: any;
+  toggleFlashing: () => void;
+  toggleFwUpdate: (value: boolean) => void;
+  onDisconnect: () => void;
+  setRestoredOk: (value: number) => void;
+}
+
+function FirmwareUpdateProcess(props: FirmwareUpdateProcessProps) {
   const { nextBlock, retryBlock, context, toggleFlashing, toggleFwUpdate, onDisconnect, setRestoredOk } = props;
   const { state: deviceState } = useDevice();
   const [toggledFlashing, sendToggledFlashing] = useState(false);
-  const handleKeyDown = event => {
+
+  // keypress handler to handle keyboard actions.
+  const handleKeyDown = (event: KeyboardEvent) => {
     switch (event.keyCode) {
       case 27:
         log.info("esc key logged");
-        send("ESCPRESSED");
+        // eslint-disable-next-line @typescript-eslint/no-use-before-define
+        send({ type: "ESCPRESSED" });
         break;
       default:
         break;
     }
   };
+
   const [state, send] = useMachine(FlashDevice, {
     context: {
       deviceState,
@@ -140,7 +153,7 @@ function FirmwareUpdateProcess(props) {
       },
       finishFlashing: async () => {
         if (!toggledFlashing) return;
-        setRestoredOk(state.context.restoreResult);
+        setRestoredOk(state.context.restoreResult as number);
         sendToggledFlashing(false);
         log.info("closing flashin process");
         toggleFlashing();
@@ -216,7 +229,7 @@ function FirmwareUpdateProcess(props) {
   return (
     <Style>
       {loading ? (
-        <FirmwareLoader />
+        <FirmwareLoader width={undefined} warning={undefined} error={undefined} paused={undefined} />
       ) : (
         <div className="firmware-wrapper upgrade-firmware">
           <div className="firmware-row progress-visualizer">
@@ -241,12 +254,11 @@ function FirmwareUpdateProcess(props) {
             <div className="firmware-footer">
               <div className="holdButton">
                 <RegularButton
-                  className="flashingbutton nooutlined"
-                  styles="outline transp-bg"
+                  styles="flashingbutton nooutlined outline transp-bg"
                   size="sm"
                   buttonText={i18n.firmwareUpdate.texts.cancelButton}
                   onClick={() => {
-                    retryBlock();
+                    retryBlock(state.context);
                   }}
                 />
               </div>
@@ -274,22 +286,20 @@ function FirmwareUpdateProcess(props) {
             <div className="firmware-footer">
               <div className="holdButton">
                 <RegularButton
-                  className="flashingbutton nooutlined"
-                  styles="outline transp-bg"
+                  styles="flashingbutton nooutlined outline transp-bg"
                   size="sm"
                   buttonText={i18n.firmwareUpdate.texts.cancelButton}
                   onClick={() => {
-                    send("CANCEL");
-                    retryBlock();
+                    send({ type: "CANCEL" });
+                    retryBlock(state.context);
                   }}
                 />
                 <RegularButton
-                  className="flashingbutton nooutlined"
-                  styles="primary"
+                  styles="flashingbutton nooutlined primary"
                   size="sm"
                   buttonText="Retry the flashing procedure"
                   onClick={() => {
-                    send("RETRY");
+                    send({ type: "RETRY" });
                   }}
                 />
               </div>
@@ -318,17 +328,5 @@ function FirmwareUpdateProcess(props) {
     </Style>
   );
 }
-
-FirmwareUpdateProcess.propTypes = {
-  nextBlock: PropTypes.func,
-  retryBlock: PropTypes.func,
-  errorBlock: PropTypes.func,
-  context: PropTypes.any,
-  setRestoredOk: PropTypes.func,
-  toggleFlashing: PropTypes.func,
-  toggleFwUpdate: PropTypes.func,
-  onDisconnect: PropTypes.func,
-  device: PropTypes.any,
-};
 
 export default FirmwareUpdateProcess;

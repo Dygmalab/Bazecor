@@ -1,5 +1,5 @@
-import hex2byte from "../hex2byte";
-import { HexType } from "./Raise2-flasher";
+import hex2byte from "./hex2byte";
+import { HexType } from "./types";
 
 /**
  * Decodes hex line to object.

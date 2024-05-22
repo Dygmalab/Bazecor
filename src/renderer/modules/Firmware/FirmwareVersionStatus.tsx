@@ -16,7 +16,6 @@
  */
 
 import React, { useState } from "react";
-import PropTypes from "prop-types";
 import Styled from "styled-components";
 
 import ReactMarkdown from "react-markdown";
@@ -30,6 +29,7 @@ import Modal from "react-bootstrap/Modal";
 import Spinner from "react-bootstrap/Spinner";
 
 import { RegularButton } from "@Renderer/component/Button";
+import { ReleaseType } from "@Renderer/types/releases";
 
 const Style = Styled.div`
 margin-left:32px;
@@ -139,7 +139,16 @@ h6 {
   }
 }
 `;
-const FirmwareVersionStatus = props => {
+
+interface FirmwareVersionStatusProps {
+  currentlyVersionRunning: string;
+  isUpdated: boolean;
+  firmwareList: ReleaseType[];
+  selectedFirmware: any;
+  send: (value: unknown) => void;
+}
+
+const FirmwareVersionStatus = (props: FirmwareVersionStatusProps) => {
   const { currentlyVersionRunning, isUpdated, firmwareList, selectedFirmware, send } = props;
   const [modalFirmwareDetails, setModalFirmwareDetails] = useState(false);
   return (
@@ -161,8 +170,7 @@ const FirmwareVersionStatus = props => {
             <Title text="Update to the version" headingLevel={6} />
             <div className="firmwareVersionContainer">
               <Dropdown
-                onSelect={value => send("CHANGEFW", { selected: parseInt(value, 10) })}
-                value={selectedFirmware}
+                onSelect={(value: string) => send({ type: "CHANGEFW", selected: parseInt(value, 10) })}
                 className="custom-dropdown sm"
               >
                 <div>
@@ -172,12 +180,12 @@ const FirmwareVersionStatus = props => {
                     </div>
                   </Dropdown.Toggle>
                   <Dropdown.Menu>
-                    {firmwareList.map((item, index) => (
+                    {firmwareList.map((item, index: number) => (
                       <Dropdown.Item
-                        eventKey={index}
-                        key={`id-${index}`}
+                        eventKey={index.toString(10)}
+                        key={`id-${item.name}-${item.version}`}
                         className={`${selectedFirmware === index ? "active" : ""}`}
-                        disabled={item.disabled}
+                        disabled={item === undefined}
                       >
                         <div className="dropdownInner">
                           <div className="dropdownItem">{item.version}</div>
@@ -189,8 +197,7 @@ const FirmwareVersionStatus = props => {
               </Dropdown>
 
               <RegularButton
-                className="flashingbutton nooutlined"
-                styles="btn-link transp-bg"
+                styles="flashingbutton nooutlined btn-link transp-bg"
                 icoSVG={<IconEye />}
                 onClick={() => {
                   setModalFirmwareDetails(true);
@@ -216,7 +223,7 @@ const FirmwareVersionStatus = props => {
               <ReactMarkdown>{firmwareList[selectedFirmware].body}</ReactMarkdown>
             ) : (
               <div className="loading marginCenter">
-                <Spinner className="spinner-border" role="status" />
+                <Spinner className="spinner-border" role="status" animation="border" />
               </div>
             )}
           </div>
@@ -224,14 +231,6 @@ const FirmwareVersionStatus = props => {
       </Modal>
     </Style>
   );
-};
-
-FirmwareVersionStatus.propTypes = {
-  currentlyVersionRunning: PropTypes.string,
-  isUpdated: PropTypes.bool,
-  firmwareList: PropTypes.any,
-  selectedFirmware: PropTypes.number,
-  send: PropTypes.func,
 };
 
 export default FirmwareVersionStatus;

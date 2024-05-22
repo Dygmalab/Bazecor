@@ -9,6 +9,7 @@ interface ContextType {
     bootloader: boolean;
     chipID: string;
     info: {
+      keyboardType: string;
       product: string;
     };
   };
@@ -104,6 +105,7 @@ const DeviceChecks = createMachine(
         chipID: "",
         info: {
           product: "",
+          keyboardType: "",
         },
       },
       sideLeftOk: true,

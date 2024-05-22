@@ -16,14 +16,13 @@
  */
 
 import React, { useState, useEffect } from "react";
-import PropTypes from "prop-types";
 import Styled from "styled-components";
 import log from "electron-log/renderer";
 import { useMachine } from "@xstate/react";
 import { i18n } from "@Renderer/i18n";
 
 // State machine
-import FWSelection from "../../controller/FlashingSM/FWSelection";
+import FWSelection from "../../controller/FirmwareSelection/machine";
 
 // Visual components
 import Title from "../../component/Title";
@@ -192,8 +191,8 @@ width: 100%;
 `;
 
 interface FirmwareErrorPanelType {
-  nextBlock: any;
-  retryBlock: any;
+  nextBlock: (context: any) => void;
+  retryBlock: (context: any) => void;
 }
 
 function FirmwareErrorPanel(props: FirmwareErrorPanelType) {
@@ -206,12 +205,12 @@ function FirmwareErrorPanel(props: FirmwareErrorPanelType) {
     if (state.context.device.version && state.context.firmwareList && state.context.firmwareList.length > 0) {
       setLoading(false);
     }
-    if (state.matches("success")) {
+    if (state.value === "success") {
       setHandleError(false);
       setLoading(false);
       nextBlock(state.context);
     }
-    if (state.matches("failure")) {
+    if (state.value === "failure") {
       log.info("Matches failure");
       setHandleError(true);
       setLoading(false);
@@ -228,7 +227,7 @@ function FirmwareErrorPanel(props: FirmwareErrorPanelType) {
           <div className="firmware-row">
             <div className="firmware-content borderLeftTopRadius">
               <div className="firmware-content--inner">
-                {state.context.error.type.includes("GitHubData") ? (
+                {(state.context.error as Error).message.includes("GitHubData") ? (
                   <>
                     <Title text={i18n.firmwareUpdate.texts.errorTitle} headingLevel={3} type="warning" />
                     <div className="errorListWrapper">
@@ -249,7 +248,9 @@ function FirmwareErrorPanel(props: FirmwareErrorPanelType) {
                           <IconNoWifi />
                         </div>
                         <div className="errorListContent">
-                          {state.context?.error ? state.context.error.type : "Contact our customer for more details"}
+                          {state.context?.error
+                            ? (state.context.error as Error).message
+                            : "Contact our customer for more details"}
                         </div>
                       </div>
                     </div>
@@ -287,8 +288,8 @@ function FirmwareErrorPanel(props: FirmwareErrorPanelType) {
                   styles="primary flashingbutton nooutlined"
                   buttonText={i18n.general.retry}
                   onClick={() => {
-                    send("RETRY");
-                    retryBlock();
+                    send({ type: "retry-event" });
+                    retryBlock(state.context);
                   }}
                 />
               </div>
@@ -300,10 +301,5 @@ function FirmwareErrorPanel(props: FirmwareErrorPanelType) {
     </Style>
   );
 }
-
-FirmwareErrorPanel.propTypes = {
-  nextBlock: PropTypes.func,
-  retryBlock: PropTypes.func,
-};
 
 export default FirmwareErrorPanel;

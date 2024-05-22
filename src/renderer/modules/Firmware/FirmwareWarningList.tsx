@@ -16,7 +16,6 @@
  */
 
 import React from "react";
-import PropTypes from "prop-types";
 import Styled from "styled-components";
 import { i18n } from "@Renderer/i18n";
 
@@ -94,7 +93,13 @@ const Style = Styled.div`
 }
 `;
 
-const FirmwareWarningList = props => {
+interface FirmwareWarningListProps {
+  leftSideOK: boolean;
+  rightSideOK: boolean;
+  leftSideBL: boolean;
+}
+
+const FirmwareWarningList = (props: FirmwareWarningListProps) => {
   const { leftSideOK, rightSideOK, leftSideBL } = props;
   return (
     <Style>
@@ -133,12 +138,6 @@ const FirmwareWarningList = props => {
       </>
     </Style>
   );
-};
-
-FirmwareWarningList.propTypes = {
-  leftSideOK: PropTypes.bool,
-  rightSideOK: PropTypes.bool,
-  leftSideBL: PropTypes.bool,
 };
 
 export default FirmwareWarningList;
