@@ -546,3 +546,68 @@ select:focus {
 .dark .battery-indicator--item.size--lg.status--fatal-error.status--saving .shapeIndicator {
   opacity: 0.2;
 }
+
+/*
+// Toast
+*/
+.Toastify__toast-container {
+  @apply p-0 w-[368px];
+}
+.Toastify__toast-container .Toastify__toast-icon {
+  @apply hidden invisible;
+}
+.toastBody.hasIcon .toastBodyInner {
+  width: calc(100% - 32px);
+}
+.Toastify__toast--default,
+.Toastify__toast {
+  @apply p-0 rounded-md shadow-md relative overflow-visible bg-gray-25 dark:bg-gray-800 text-gray-500 dark:text-gray-50 after:content-[''] after:w-[3px] after:h-[24px] after:rounded-l-[3px] after:absolute after:-left-[3px] after:top-[22px];
+}
+.Toastify__toast--default .toastIcon,
+.Toastify__toast--default .toastBodyInner h4 {
+  @apply text-gray-700 dark:text-gray-25;
+}
+.Toastify__toast--warning {
+  @apply bg-gradientWarningLight dark:bg-gradientWarningDark after:bg-gradientWarning;
+}
+.Toastify__toast--warning .toastIcon,
+.Toastify__toast--warning .toastBodyInner h4 {
+  @apply text-orange-200 dark:text-orange-100;
+}
+.Toastify__toast--error {
+  @apply bg-gradientErrorLight dark:bg-gradientErrorDark after:bg-gradientDanger;
+}
+.Toastify__toast--error .toastIcon,
+.Toastify__toast--error .toastBodyInner h4 {
+  @apply text-primary/100;
+}
+.Toastify__toast--success {
+  @apply bg-gradientSuccessLight dark:bg-gradientSuccessDark after:bg-gradientSuccess;
+}
+.Toastify__toast--success .toastIcon,
+.Toastify__toast--success .toastBodyInner h4 {
+  @apply text-green-200;
+}
+.Toastify__close-button {
+  @apply absolute top-[8px] right-[8px] w-[24px] h-[24px] bg-no-repeat opacity-70 bg-center [&_svg]:hidden;
+  background-image: url("../../static/light/X.svg");
+}
+.dark .Toastify__close-button {
+  background-image: url("../../static/dark/X.svg");
+}
+.Toastify__progress-bar {
+  @apply my-[8px] mx-[24px] h-[3px] rounded-sm bg-gray-100 dark:bg-gray-600;
+  width: calc(100% - 42px);
+}
+.Toastify__progress-bar.Toastify__progress-bar--success {
+  @apply bg-green-200;
+}
+.Toastify__progress-bar.Toastify__progress-bar--warning {
+  @apply bg-orange-200 dark:bg-orange-100;
+}
+.Toastify__progress-bar.Toastify__progress-bar--error {
+  @apply bg-primary/100;
+}
+.Toastify__toast-container--top-right {
+  @apply top-[92px] right-[26px];
+}

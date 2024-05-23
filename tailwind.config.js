@@ -9,9 +9,10 @@ module.exports = {
     },
     extend: {
       fontSize: {
-        xxs: "0.625rem",
-        "2xxs": "0.6875rem",
-        ssm: "0.8125rem",
+        xxs: "0.625rem", // 10px
+        "2xxs": "0.6875rem", // 11px
+        ssm: "0.8125rem", // 13px
+        "2ssm": "0.875em", // 14px
         "2xl": "1.5rem",
         "3xl": "2rem",
         "4xl": "2.625rem",
@@ -104,6 +105,21 @@ module.exports = {
         tabMenu: "url(@Assets/light/noise-tabs.jpg)",
         tabGradientDarkActive:
           "linear-gradient(100deg, rgba(240, 242, 244, 0.12) -24%, rgba(255, 255, 255, 0.00) 40%), rgba(18, 19, 36, 0.60))",
+        gradientWarning: "linear-gradient(180deg, #FE007C 0%, #FF9F43 0.01%, #FECA57 100%)",
+        gradientDanger: "linear-gradient(180deg, #FE007C 0%, #FE007C 0.01%, #FF6B6B 100%)",
+        gradientSuccess: "linear-gradient(180deg, #00CEC5 0%, #00CEC9 0.01%, #55EFC4 100%)",
+        gradientWarningLight:
+          "linear-gradient(90deg, rgba(255, 107, 107, 0.05) -10.33%, rgba(255, 159, 67, 0) 41.03%), linear-gradient(rgb(240, 242, 244), rgb(240, 242, 244))",
+        gradientWarningDark:
+          "linear-gradient(90deg, rgba(255, 107, 107, 0.25) -10.33%, rgba(255, 159, 67, 0) 41.03%), linear-gradient(rgb(37, 39, 59), rgb(37, 39, 59))",
+        gradientErrorLight:
+          "linear-gradient(90deg, rgba(255, 4, 90, 0.05) -10.33%, rgba(255, 4, 67, 0.9) 41.03%), linear-gradient(rgb(240, 242, 244), rgb(240, 242, 244))",
+        gradientErrorDark:
+          "linear-gradient(90deg, rgba(255, 4, 90, 0.25) -10.33%, rgba(255, 4, 90, 0) 41.03%), linear-gradient(rgb(37, 39, 59), rgb(37, 39, 59))",
+        gradientSuccessLight:
+          "linear-gradient(90deg, rgba(0, 206, 201, 0.05) -10.33%, rgba(0, 206, 201, 90) 41.03%), linear-gradient(rgb(240, 242, 244), rgb(240, 242, 244))",
+        gradientSuccessDark:
+          "linear-gradient(90deg, rgba(0, 206, 201, 0.25) -10.33%, rgba(0, 206, 201, 0) 41.03%), linear-gradient(rgb(37, 39, 59), rgb(37, 39, 59))",
       },
       backgroundPosition: {
         position: "left -8rem top -8rem",
