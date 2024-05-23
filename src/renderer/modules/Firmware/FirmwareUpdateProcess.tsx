@@ -23,7 +23,7 @@ import { i18n } from "@Renderer/i18n";
 import { useDevice } from "@Renderer/DeviceContext";
 
 // State machine
-import FlashDevice from "@Renderer/controller/FlashingSM/FlashDevice";
+import FlashDevice from "@Renderer/controller/FlashingProcedure/machine";
 
 // Visual components
 import Title from "@Renderer/component/Title";
@@ -120,22 +120,8 @@ function FirmwareUpdateProcess(props: FirmwareUpdateProcessProps) {
     }
   };
 
-  const [state, send] = useMachine(FlashDevice, {
-    context: {
-      deviceState,
-      device: deviceState.currentDevice.device,
-      originalDevice: deviceState.currentDevice,
-      backup: context.backup ? context.backup : undefined,
-      firmwares: context.firmwares,
-      isUpdated: context.isUpdated,
-      versions: context.versions,
-      RaiseBrightness: context.RaiseBrightness,
-      sideLeftOk: context.sideLeftOk,
-      sideLeftBL: context.sideLeftBL,
-      sideRightOK: context.sideRightOK,
-      sideRightBL: context.sideRightBL,
-    },
-    actions: {
+  const [state, send] = useMachine(
+    FlashDevice.provide({
       addEscListener: () => {
         log.info("added event listener");
         document.addEventListener("keydown", handleKeyDown);
@@ -160,8 +146,24 @@ function FirmwareUpdateProcess(props: FirmwareUpdateProcessProps) {
         toggleFwUpdate(false);
         onDisconnect();
       },
+    }),
+    {
+      input: {
+        deviceState,
+        device: deviceState.currentDevice.device,
+        originalDevice: deviceState.currentDevice,
+        backup: context.backup ? context.backup : undefined,
+        firmwares: context.firmwares,
+        isUpdated: context.isUpdated,
+        versions: context.versions,
+        RaiseBrightness: context.RaiseBrightness,
+        sideLeftOk: context.sideLeftOk,
+        sideLeftBL: context.sideLeftBL,
+        sideRightOK: context.sideRightOK,
+        sideRightBL: context.sideRightBL,
+      },
     },
-  });
+  );
 
   const [loading, setLoading] = useState(true);
   useEffect(() => {
