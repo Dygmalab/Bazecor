@@ -18,7 +18,6 @@ export const FocusAPIRead = async (context: Context.ContextType): Promise<Contex
     if (data.device.bootloader) return data;
     log.info("CHECKING CONTEXT DEPENDENCIES: ", context.deviceState);
     const versionData = await currentDevice.noCacheCommand("version");
-    log.info("take my cubata: ", versionData);
     // eslint-disable-next-line prefer-destructuring
     data.device.version = versionData.split(" ")[0];
     data.device.chipID = (await currentDevice.noCacheCommand("hardware.chip_id")).replace(/\s/g, "");
@@ -172,7 +171,7 @@ export const downloadFirmware = async (
 ): Promise<{ fw: any; fwSides: any }> => {
   let filename;
   let filenameSides;
-  // log.info(typeSelected, info, firmwareList, selectedFirmware);
+  log.info(typeSelected, info, firmwareList, selectedFirmware);
   try {
     if (typeSelected === "default") {
       if (info.product === "Raise") {
@@ -203,7 +202,7 @@ export const downloadFirmware = async (
     log.error(error);
     throw new Error(error);
   }
-
+  console.log("obtained FW's:", { fw: filename, fwSides: filenameSides });
   const result: { fw: any; fwSides: any } = { fw: filename, fwSides: filenameSides };
 
   return result;

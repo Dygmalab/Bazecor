@@ -16,13 +16,15 @@
  */
 
 import React, { useState, useEffect } from "react";
+import log from "electron-log";
 import Styled from "styled-components";
 import { useMachine } from "@xstate/react";
 import { useDevice } from "@Renderer/DeviceContext";
 import { i18n } from "@Renderer/i18n";
 
 // State machine
-import DeviceChecks from "@Renderer/controller/FlashingSM/DeviceChecks";
+import DeviceChecks from "@Renderer/controller/DeviceChecks/machine";
+import { ContextType } from "@Renderer/controller/FirmwareSelection/context";
 
 // Visual components
 import Title from "@Renderer/component/Title";
@@ -166,34 +168,40 @@ height:inherit;
 interface FirmwareCheckProcessPanelType {
   nextBlock: (context: any) => void;
   retryBlock: (context: any) => void;
-  context: any;
+  context: ContextType;
 }
 
-type ListItems = { id: number; text: string; checked: boolean };
+type ListItems = { id: number; text: "sideLeftOk" | "sideLeftBL" | "sideRightOK" | "sideRightBL" | "backup"; checked: boolean };
 
 function FirmwareCheckProcessPanel(props: FirmwareCheckProcessPanelType) {
   const { nextBlock, retryBlock, context } = props;
   const { state: deviceState } = useDevice();
-  const [state, send] = useMachine(DeviceChecks, { input: { device: context.device, deviceState } });
-  const [listItems, setlistItems] = useState<any[]>([]);
+  const [state, send] = useMachine(DeviceChecks, {
+    input: { device: context.device, deviceState, firmwares: context.firmwares },
+  });
+  const [listItems, setlistItems] = useState<ListItems[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (state.context.stateblock > 4) {
       setLoading(false);
     }
-    if (state.matches("success")) nextBlock(state.context);
+    if (state.value === "success") nextBlock(state.context);
   }, [state.context, state, nextBlock]);
 
   useEffect(() => {
-    const newValue: ListItems[] = ["sideLeftOk", "sideLeftBL", "sideRightOK", "sideRightBL", "backup"].map((text, index) => {
-      let checked = text.includes("BL") ? !(state as any).context[text] : (state as any).context[text];
-      if (text === "backup") {
-        checked = state.context.backup !== undefined;
-      }
-      // console.log(text, state.context[text], String(state.context[text]), String(state.context[text]).includes("true"), checked);
-      return { id: index, text, checked };
-    });
+    const newValue: ListItems[] = ["sideLeftOk", "sideLeftBL", "sideRightOK", "sideRightBL", "backup"].map(
+      (text: "sideLeftOk" | "sideLeftBL" | "sideRightOK" | "sideRightBL" | "backup", index) => {
+        let checked = false;
+        if (text === "backup") {
+          checked = state.context.backup !== undefined;
+          return { id: index, text, checked };
+        }
+        checked = text.includes("BL") ? !state.context[text] : state.context[text];
+        // log.info(text, state.context, checked);
+        return { id: index, text, checked };
+      },
+    );
     // console.log("Setting checks", newValue);
     setlistItems(newValue);
   }, [state]);
@@ -264,7 +272,7 @@ function FirmwareCheckProcessPanel(props: FirmwareCheckProcessPanelType) {
                           : i18n.firmwareUpdate.texts.backwds
                       }
                       onClick={() => {
-                        send({ type: "CANCEL" });
+                        send({ type: "cancel-event" });
                         retryBlock(state.context);
                       }}
                     />
@@ -276,14 +284,14 @@ function FirmwareCheckProcessPanel(props: FirmwareCheckProcessPanelType) {
                       <RegularButton
                         styles="primary flashingbutton nooutlined"
                         buttonText={i18n.firmwareUpdate.texts.letsStart}
-                        onClick={() => send({ type: "PRESSED" })}
+                        onClick={() => send({ type: "pressed-event" })}
                       />
                     ) : (
                       <RegularButton
                         styles="primary flashingbutton nooutlined"
                         buttonText={i18n.general.retry}
                         onClick={() => {
-                          send({ type: "RETRY" });
+                          send({ type: "retry-event" });
                         }}
                       />
                     )}

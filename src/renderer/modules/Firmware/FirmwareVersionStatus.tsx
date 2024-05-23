@@ -17,6 +17,7 @@
 
 import React, { useState } from "react";
 import Styled from "styled-components";
+import log from "electron-log";
 
 import ReactMarkdown from "react-markdown";
 
@@ -170,7 +171,7 @@ const FirmwareVersionStatus = (props: FirmwareVersionStatusProps) => {
             <Title text="Update to the version" headingLevel={6} />
             <div className="firmwareVersionContainer">
               <Dropdown
-                onSelect={(value: string) => send({ type: "CHANGEFW", selected: parseInt(value, 10) })}
+                onSelect={(value: string) => send({ type: "changeFW-event", selected: parseInt(value, 10) })}
                 className="custom-dropdown sm"
               >
                 <div>

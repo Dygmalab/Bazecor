@@ -21,7 +21,6 @@ export const Input = async (input: InputType): Promise<Context.ContextType> => {
       version: "",
       chipID: "",
     },
-    version: undefined,
     error: undefined,
     firmwareList: [],
     firmwares: {
@@ -30,7 +29,7 @@ export const Input = async (input: InputType): Promise<Context.ContextType> => {
     },
     isUpdated: false,
     isBeta: false,
-    typeSelected: "",
+    typeSelected: "default",
     selectedFirmware: 0,
     allowBeta: input.allowBeta,
   };

@@ -141,12 +141,7 @@ const FirmwareSelection = setup({
         input: ({ context }) => context,
         onDone: {
           target: "success",
-          actions: [
-            assign({ firmwares: ({ event }) => event.output }),
-            ({ event }) => {
-              log.info("DOWNLOADED FW", event.output);
-            },
-          ],
+          actions: [assign({ firmwares: ({ event }) => event.output })],
         },
         onError: {
           target: "failure",

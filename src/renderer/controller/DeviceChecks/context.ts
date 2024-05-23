@@ -1,5 +1,5 @@
 import { State } from "@Renderer/types/devices";
-import { ReleaseType } from "@Renderer/types/releases";
+import { BackupType } from "@Renderer/types/backups";
 
 export interface ContextType {
   stateblock: number;
@@ -14,21 +14,22 @@ export interface ContextType {
     version: string;
     chipID: string;
   };
-  firmwareList: ReleaseType[];
+  sideLeftOk: boolean;
+  sideLeftBL: boolean;
+  sideRightOK: boolean;
+  sideRightBL: boolean;
   firmwares: {
     fw: any;
     fwSides: any;
   };
-  typeSelected: string;
-  selectedFirmware: number;
-  isUpdated: boolean;
-  isBeta: boolean;
-  allowBeta: boolean;
+  backup: BackupType | undefined;
   deviceState: State | undefined;
+  isUpdated: unknown;
+  RaiseBrightness: string | undefined;
   error: unknown;
 }
 
-export const Context: ContextType = {
+export const Context = {
   stateblock: 0,
   device: {
     info: {
@@ -41,16 +42,17 @@ export const Context: ContextType = {
     version: "",
     chipID: "",
   },
-  firmwareList: [],
+  sideLeftOk: true,
+  sideLeftBL: false,
+  sideRightOK: true,
+  sideRightBL: false,
   firmwares: {
     fw: undefined,
     fwSides: undefined,
   },
-  typeSelected: "default",
-  selectedFirmware: 0,
-  isUpdated: false,
-  isBeta: false,
-  allowBeta: false,
+  backup: undefined,
   deviceState: undefined,
+  isUpdated: undefined,
+  RaiseBrightness: undefined,
   error: undefined,
 };
