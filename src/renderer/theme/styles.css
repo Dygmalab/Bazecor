@@ -393,3 +393,156 @@ select:focus {
   color: var(--color-status);
   transform: translate3d(-50%, -4px, 0);
 }
+
+.battery-indicator--item.status--default,
+.battery-indicator--item.status--disconnected,
+.battery-indicator--item.status--disconnected.status--saving {
+  --color-status: rgb(151, 160, 180);
+}
+.battery-indicator--item.status--saving,
+.battery-indicator--item.status--fault,
+.battery-indicator--item.status--warning {
+  --color-status: rgb(255, 159, 67);
+}
+.battery-indicator--item.status--critical,
+.battery-indicator--item.status--fatal-error {
+  --color-status: rgb(254, 0, 124);
+}
+.battery-indicator--item.status--charging {
+  --color-status: rgb(120, 121, 241);
+}
+@media screen and (max-width: 999px) {
+  .size--sm .battery-item--container .battery-indicator--side {
+    display: none;
+  }
+}
+@media screen and (max-height: 870px) {
+  .size--sm .battery-item--container .battery-indicator--side {
+    display: none;
+  }
+}
+@media screen and (max-width: 999px) {
+  .size--sm .battery-item--container .battery-indicator--side {
+    display: none;
+  }
+}
+@media screen and (max-height: 870px) {
+  .size--sm .battery-item--container .battery-indicator--side {
+    display: none;
+  }
+}
+.battery-indicator--item.size--sm.status--saving,
+.battery-indicator--item.size--sm.status--fault {
+  @apply bg-orange-200/25 dark:bg-orange-200/15;
+}
+.battery-indicator--item.size--sm.status--fatal-error {
+  @apply bg-primary/15;
+}
+.battery-indicator--item.size--sm.status--disconnected,
+.battery-indicator--item.size--sm.status--disconnected.status--saving {
+  @apply bg-gray-50 dark:bg-gray-800;
+}
+.battery-indicator--item.size--lg {
+  --color-stroke: rgb(226, 228, 234);
+}
+.dark .battery-indicator--item.size--lg {
+  --color-stroke: rgba(63, 66, 90, 0.8);
+}
+.battery-indicator--item.size--lg .shapeIndicator {
+  opacity: 0.1;
+}
+.battery-indicator--item.size--lg .shapeFill {
+  opacity: 0.2;
+}
+.dark .battery-indicator--item.size--lg .shapeFill {
+  opacity: 0.5;
+}
+.battery-indicator--item.size--lg.status--default {
+  --color-status: rgb(120, 121, 241);
+}
+.battery-indicator--item.size--lg.status--default .shapeIndicator {
+  opacity: 0;
+}
+.battery-indicator--item.size--lg.status--default .shapeFill {
+  opacity: 0.5;
+}
+.battery-indicator--item.size--lg.status--disconnected,
+.battery-indicator--item.size--lg.status--disconnected.status--saving {
+  --color-stroke: rgb(196, 201, 213);
+  --color-status: rgb(196, 201, 213);
+}
+.dark .battery-indicator--item.size--lg.status--disconnected,
+.dark .battery-indicator--item.size--lg.status--disconnected.status--saving {
+  --color-stroke: rgb(63, 66, 90);
+  --color-status: rgb(63, 66, 90);
+}
+.battery-indicator--item.size--lg.status--disconnected svg,
+.battery-indicator--item.size--lg.status--disconnected.status--saving svg {
+  overflow: visible;
+}
+.battery-indicator--item.size--lg.status--disconnected .fillBaseDisconnected,
+.battery-indicator--item.size--lg.status--disconnected.status--saving .fillBaseDisconnected {
+  opacity: 0.5;
+  color: rgb(196, 201, 213);
+}
+.dark .battery-indicator--item.size--lg.status--disconnected .fillBaseDisconnected,
+.dark .battery-indicator--item.size--lg.status--disconnected.status--saving .fillBaseDisconnected {
+  color: rgb(63, 66, 90);
+}
+.battery-indicator--item.size--lg.status--disconnected .lineDisconnected,
+.battery-indicator--item.size--lg.status--disconnected.status--saving .lineDisconnected {
+  color: rgb(196, 201, 213);
+}
+.dark .battery-indicator--item.size--lg.status--disconnected .lineDisconnected,
+.dark .battery-indicator--item.size--lg.status--disconnected.status--saving .lineDisconnected {
+  color: rgb(63, 66, 90);
+}
+.battery-indicator--item.size--lg.status--saving {
+  --color-status: rgb(255, 159, 67);
+  --color-stroke: rgb(255, 159, 67);
+}
+.battery-indicator--item.size--lg.status--saving .shapeIndicator {
+  opacity: 0.25;
+}
+.battery-indicator--item.size--lg.status--critical:not(.status--saving) .shapeIndicator {
+  opacity: 0.2;
+}
+.battery-indicator--item.size--lg.status--charging,
+.battery-indicator--item.size--lg.status--charging.status--saving {
+  --color-status: rgb(120, 121, 241);
+  --color-stroke: rgb(226, 228, 234);
+}
+.dark .battery-indicator--item.size--lg.status--charging,
+.dark .battery-indicator--item.size--lg.status--charging.status--saving {
+  --color-stroke: rgba(63, 66, 90);
+}
+.battery-indicator--item.size--lg.status--charging .lightningbattery,
+.battery-indicator--item.size--lg.status--charging.status--saving .lightningbattery {
+  color: rgb(120, 121, 241);
+}
+.battery-indicator--item.size--lg.status--charging .shapeIndicator,
+.battery-indicator--item.size--lg.status--charging.status--saving .shapeIndicator {
+  opacity: 0.1;
+}
+.battery-indicator--item.size--lg.status--charging.status--charging-done .lightningbattery {
+  color: rgb(240, 242, 244);
+}
+.battery-indicator--item.size--lg.status--fault {
+  --color-stroke: rgb(255, 159, 67);
+}
+.battery-indicator--item.size--lg.status--fault .shapeIndicator {
+  opacity: 0.1;
+}
+.battery-indicator--item.size--lg.status--fatal-error,
+.battery-indicator--item.size--lg.status--fatal-error.status--saving {
+  --color-status: rgb(254, 0, 124);
+  --color-stroke: rgb(254, 0, 124);
+}
+.battery-indicator--item.size--lg.status--fatal-error .shapeIndicator,
+.battery-indicator--item.size--lg.status--fatal-error.status--saving .shapeIndicator {
+  opacity: 0.1;
+}
+.dark .battery-indicator--item.size--lg.status--fatal-error .shapeIndicator,
+.dark .battery-indicator--item.size--lg.status--fatal-error.status--saving .shapeIndicator {
+  opacity: 0.2;
+}

@@ -38,7 +38,14 @@ const PileIndicator = ({ batteryLevel, batteryStatus }: PileIndicatorProps) => {
   }, [batteryLevel, batteryStatus]);
 
   return (
-    <svg className="pileIndicator" width="22" height="16" viewBox="0 0 22 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <svg
+      className="pileIndicator max-w-full"
+      width="22"
+      height="16"
+      viewBox="0 0 22 16"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
       {batteryStatus === 1 || batteryStatus === 2 ? (
         <>
           <mask
