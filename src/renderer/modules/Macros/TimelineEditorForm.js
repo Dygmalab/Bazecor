@@ -90,16 +90,18 @@ class MacroForm extends Component {
 
   wheelPosStart = () => {
     const { updateScroll } = this.props;
-    const scrollContainer = document.getElementById("hwTracker").firstChild;
-    scrollContainer.scrollLeft = 0;
-    updateScroll(0);
+    const scrollContainer = document.getElementById("hwTracker")?.firstChild;
+    if (scrollContainer?.scrollLeft !== undefined) {
+      scrollContainer.scrollLeft = 0;
+      updateScroll(0);
+    }
   };
 
   wheelPosEnd = () => {
     const { updateScroll } = this.props;
-    const scrollContainer = document.getElementById("hwTracker").firstChild;
+    const scrollContainer = document.getElementById("hwTracker")?.firstChild;
     // console.log("checking end pos of scroll", scrollContainer, scrollContainer.scrollWidth);
-    updateScroll(scrollContainer.scrollWidth);
+    if (scrollContainer?.scrollWidth !== undefined) updateScroll(scrollContainer.scrollWidth);
   };
 
   render() {

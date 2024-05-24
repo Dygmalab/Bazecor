@@ -1,3 +1,4 @@
+import log from "electron-log/renderer";
 import HID from "./hid";
 import { ConnectedDevice } from "../ConnectedDevice";
 import { ConnectedDeviceComms, ConnnectedDeviceCommsHandler, ErrorHandler } from "../ConnectedDeviceComms";
@@ -23,7 +24,7 @@ class HIDConnectedDeviceComms implements ConnectedDeviceComms {
   /* eslint-disable */
   // README!! we need to disable eslint because we do not have implemented raw send over HID so it complains otherwise
   sendRawData = async (data: string, receiverHandler: ConnnectedDeviceCommsHandler, errorHandler: ErrorHandler) => {
-    console.log("Raw data send on HID not supported yet");
+    log.verbose("Raw data send on HID not supported yet");
     throw new HIDConnectedDeviceCommsError("Raw data not supported on HID yet");
   };
   /* eslint-enable */

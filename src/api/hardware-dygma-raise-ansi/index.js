@@ -15,6 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import log from "electron-log/renderer";
 import KeymapANSI from "./components/Keymap-ANSI";
 import Focus from "../focus";
 
@@ -58,7 +59,7 @@ const RaiseANSI = {
       await flashRaise.updateFirmware(filename, stateUpdate);
       return true;
     } catch (e) {
-      console.log(e);
+      log.error(e);
       return false;
     }
   },
@@ -109,7 +110,7 @@ const RaiseANSIBootloader = {
       await flashRaise.updateFirmware(filename, stateUpdate);
       return true;
     } catch (e) {
-      console.log(e);
+      log.error(e);
       return false;
     }
   },

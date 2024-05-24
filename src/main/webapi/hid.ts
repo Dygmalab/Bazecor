@@ -1,4 +1,4 @@
-import { ipcMain } from "electron";
+import log from "electron-log/main";
 import Window from "../managers/Window";
 
 export const addHIDListeners = () => {};
@@ -27,25 +27,21 @@ export const configureHID = () => {
     event.preventDefault();
 
     window.webContents.session.on("hid-device-added", (added_device_event, device) => {
-      console.log("hid-device-added FIRED WITH", device);
+      log.verbose("hid-device-added FIRED WITH", device);
       // Optionally update details.deviceList
     });
 
     window.webContents.session.on("hid-device-removed", (removed_device_event, device) => {
-      console.log("hid-device-removed FIRED WITH", device);
+      log.verbose("hid-device-removed FIRED WITH", device);
     });
 
     if (details.deviceList && details.deviceList.length > 0) {
-      console.log(details.deviceList);
+      log.verbose(details.deviceList);
       const filteredDevices = details.deviceList.filter(device => device.productId === 18 && device.vendorId === 13807);
-      console.log(filteredDevices);
+      log.verbose(filteredDevices);
       if (filteredDevices.length > 0) {
         callback(filteredDevices[0].deviceId);
       }
     }
   });
-  /*ipcMain.handle("hid-device-connected", (event, device) => {
-    console.log("Device connected");
-    console.log(device);
-  });*/
 };

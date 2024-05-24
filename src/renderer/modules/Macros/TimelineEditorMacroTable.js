@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import PropTypes, { object } from "prop-types";
-
+import log from "electron-log/renderer";
 import Styled from "styled-components";
 
 import { MdUnfoldLess, MdKeyboardArrowUp, MdKeyboardArrowDown, MdTimer } from "react-icons/md";
@@ -208,8 +208,8 @@ class TimelineEditorMacroTable extends Component {
       });
     }
     if (rows.length !== 0) {
-      const scrollContainer = this.horizontalWheel.current.firstChild;
-      // console.log("comparing values of scrollpos in mount", this.props.scrollPos, scrollContainer.scrollLeft);
+      const scrollContainer = this.horizontalWheel.current?.firstChild;
+      // log.info("comparing values of scrollpos in mount", this.props.scrollPos, scrollContainer.scrollLeft);
       scrollContainer.addEventListener("wheel", this.scrollUpdate);
     }
   }
@@ -218,20 +218,20 @@ class TimelineEditorMacroTable extends Component {
     const { macro, scrollPos } = this.props;
     const { rows } = this.state;
     if (this.horizontalWheel.current === null) return;
-    const scrollContainer = this.horizontalWheel.current.firstChild;
+    const scrollContainer = this.horizontalWheel.current?.firstChild;
     if (rows.length !== 0 && prevState.rows.length === 0) {
       scrollContainer.addEventListener("wheel", this.scrollUpdate);
     }
     if (rows.length === 0 && prevState.rows.length !== 0) {
       scrollContainer.removeEventListener("wheel", this.scrollUpdate);
     }
-    // console.log("comparing values of scrollpos in update", this.props.scrollPos, scrollContainer.scrollLeft);
+    // log.info("comparing values of scrollpos in update", this.props.scrollPos, scrollContainer.scrollLeft);
     if (scrollContainer.scrollLeft !== scrollPos) {
       scrollContainer.scrollLeft = scrollPos;
     }
     if (macro !== prevProps.macro) {
       const localRows = this.createConversion(macro.actions);
-      console.log("TiEMTa CompDidUpdate", localRows);
+      log.info("TiEMTa CompDidUpdate", localRows);
       const texted = localRows.map(k => this.keymapDB.parse(k.keyCode).label).join(" ");
       const newRows = localRows.map((item, index) => {
         const aux = item;
@@ -248,7 +248,7 @@ class TimelineEditorMacroTable extends Component {
   componentWillUnmount() {
     const { rows } = this.state;
     if (rows.length !== 0) {
-      const scrollContainer = this.horizontalWheel.current.firstChild;
+      const scrollContainer = this.horizontalWheel.current?.firstChild;
       scrollContainer.removeEventListener("wheel", this.scrollUpdate);
     }
   }
@@ -291,18 +291,18 @@ class TimelineEditorMacroTable extends Component {
 
   scrollUpdate = evt => {
     const { updateScroll } = this.props;
-    const scrollContainer = this.horizontalWheel.current.firstChild;
+    const scrollContainer = this.horizontalWheel.current?.firstChild;
     if (typeof evt.preventDefault === "function") {
       evt.preventDefault();
       scrollContainer.scrollLeft += evt.deltaY;
     }
-    // console.log("newScroll", scrollContainer.scrollLeft);
+    // log.info("newScroll", scrollContainer.scrollLeft);
     updateScroll(scrollContainer.scrollLeft);
   };
 
   createConversion(actions) {
     const { macros } = this.props;
-    console.log("TESTING NAME ASSIGNATION OF MACROS", macros);
+    log.info("TESTING NAME ASSIGNATION OF MACROS", macros);
     const converted = actions.map((action, i) => {
       const randID = new Date().getTime() + Math.floor(Math.random() * 1000);
       let km;
@@ -401,7 +401,7 @@ class TimelineEditorMacroTable extends Component {
 
   updateRows(rows) {
     const { updateActions } = this.props;
-    console.log("TiEMTa updaterows", rows);
+    log.info("TiEMTa updaterows", rows);
     const texted = rows.map(k => this.keymapDB.parse(k.keyCode).label).join(" ");
     const newRows = rows.map((item, index) => {
       const aux = item;
@@ -413,7 +413,7 @@ class TimelineEditorMacroTable extends Component {
       macro: texted,
     });
     const revConv = this.revertConversion(rows);
-    // console.log("TiEMTa revConv", revConv);
+    // log.info("TiEMTa revConv", revConv);
     updateActions(revConv);
   }
 
@@ -427,7 +427,7 @@ class TimelineEditorMacroTable extends Component {
 
   addModifier(rowID, modifierID) {
     const { rows } = this.state;
-    console.log("Called addModifier", rowID, modifierID);
+    log.info("Called addModifier", rowID, modifierID);
     const { name, keyCode, color } = this.modifiers[modifierID];
     const randID = new Date().getTime() + Math.floor(Math.random() * 1000);
     const randColor = `#${Math.floor(Math.abs(Math.sin(randID) * 16777215) % 16777215).toString(16)}`;
@@ -459,7 +459,7 @@ class TimelineEditorMacroTable extends Component {
     const cssObjectWidth = {
       width: componentWidth,
     };
-    // console.log("Timeline.ed.M.Table Rows", rows);
+    // log.info("Timeline.ed.M.Table Rows", rows);
     if (rows.length === 0) {
       return <></>;
     }

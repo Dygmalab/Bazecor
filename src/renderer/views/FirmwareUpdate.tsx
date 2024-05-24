@@ -1,6 +1,6 @@
 import React from "react";
 import { useMachine } from "@xstate/react";
-import MainProcessSM from "@Renderer/controller/FlashingSM/MainProcess";
+import FlashManager from "@Renderer/controller/FlashManager/machine";
 
 // Visual components
 import Styled from "styled-components";
@@ -48,21 +48,29 @@ height: inherit;
 }
 `;
 
-function FirmwareUpdate(props: any) {
-  const { allowBeta, toggleFlashing, toggleFwUpdate, onDisconnect, device, setRestoredOk } = props;
+interface FirmwareUpdateProps {
+  allowBeta: boolean;
+  toggleFlashing: () => void;
+  toggleFwUpdate: (value: boolean) => void;
+  onDisconnect: () => void;
+  setRestoredOk: () => void;
+}
+
+function FirmwareUpdate(props: FirmwareUpdateProps) {
+  const { allowBeta, toggleFlashing, toggleFwUpdate, onDisconnect, setRestoredOk } = props;
   const { state: deviceState } = useDevice();
-  const [state, send] = useMachine(MainProcessSM, { context: { Block: 0, deviceState } });
+  const [state, send] = useMachine(FlashManager, { input: { Block: 0, deviceState } });
 
   const nextBlock = (context: any) => {
-    send("NEXT", { data: context });
+    send({ type: "next-event", ...context });
   };
 
   const retryBlock = (context: any) => {
-    send("RETRY", { data: context });
+    send({ type: "retry-event", Block: context.Block, backup: context.backup });
   };
 
-  const errorBlock = (error: any) => {
-    send("ERROR", { data: error });
+  const errorBlock = (context: any) => {
+    send({ type: "error-event", error: context.error });
   };
 
   return (
@@ -83,12 +91,7 @@ function FirmwareUpdate(props: any) {
             ""
           )}
           {state.context.Block === 2 ? (
-            <FirmwareCheckProcessPanel
-              nextBlock={nextBlock}
-              retryBlock={retryBlock}
-              errorBlock={errorBlock}
-              context={state.context}
-            />
+            <FirmwareCheckProcessPanel nextBlock={nextBlock} retryBlock={retryBlock} context={state.context} />
           ) : (
             ""
           )}
@@ -96,12 +99,10 @@ function FirmwareUpdate(props: any) {
             <FirmwareUpdateProcess
               nextBlock={nextBlock}
               retryBlock={retryBlock}
-              errorBlock={errorBlock}
               context={state.context}
               toggleFlashing={toggleFlashing}
               toggleFwUpdate={toggleFwUpdate}
               onDisconnect={onDisconnect}
-              device={device}
               setRestoredOk={setRestoredOk}
             />
           ) : (

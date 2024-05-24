@@ -16,14 +16,15 @@
  */
 
 import React, { useState, useEffect } from "react";
-import PropTypes from "prop-types";
+import log from "electron-log";
 import Styled from "styled-components";
 import { useMachine } from "@xstate/react";
 import { useDevice } from "@Renderer/DeviceContext";
 import { i18n } from "@Renderer/i18n";
 
 // State machine
-import DeviceChecks from "@Renderer/controller/FlashingSM/DeviceChecks";
+import DeviceChecks from "@Renderer/controller/DeviceChecks/machine";
+import { ContextType } from "@Renderer/controller/FirmwareSelection/context";
 
 // Visual components
 import Title from "@Renderer/component/Title";
@@ -165,37 +166,51 @@ height:inherit;
 }
 `;
 
-function FirmwareCheckProcessPanel(props) {
+interface FirmwareCheckProcessPanelType {
+  nextBlock: (context: any) => void;
+  retryBlock: (context: any) => void;
+  context: ContextType;
+}
+
+type ListItems = { id: number; text: "sideLeftOk" | "sideLeftBL" | "sideRightOK" | "sideRightBL" | "backup"; checked: boolean };
+
+function FirmwareCheckProcessPanel(props: FirmwareCheckProcessPanelType) {
   const { nextBlock, retryBlock, context } = props;
   const { state: deviceState } = useDevice();
-  const [state, send] = useMachine(DeviceChecks, { context: { device: context.device, deviceState } });
-  const [listItems, setlistItems] = useState([]);
+  const [state, send] = useMachine(DeviceChecks, {
+    input: { device: context.device, deviceState, firmwares: context.firmwares },
+  });
+  const [listItems, setlistItems] = useState<ListItems[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (state.context.stateblock > 4) {
       setLoading(false);
     }
-    if (state.matches("success")) nextBlock(state.context);
+    if (state.value === "success") nextBlock(state.context);
   }, [state.context, state, nextBlock]);
 
   useEffect(() => {
-    const newValue = ["sideLeftOk", "sideLeftBL", "sideRightOK", "sideRightBL", "backup"].map((text, index) => {
-      let checked = text.includes("BL") ? !state.context[text] : state.context[text];
-      if (text === "backup") {
-        checked = state.context.backup !== undefined;
-      }
-      // console.log(text, state.context[text], String(state.context[text]), String(state.context[text]).includes("true"), checked);
-      return { id: index, text, checked };
-    });
+    const newValue: ListItems[] = ["sideLeftOk", "sideLeftBL", "sideRightOK", "sideRightBL", "backup"].map(
+      (text: "sideLeftOk" | "sideLeftBL" | "sideRightOK" | "sideRightBL" | "backup", index) => {
+        let checked = false;
+        if (text === "backup") {
+          checked = state.context.backup !== undefined;
+          return { id: index, text, checked };
+        }
+        checked = text.includes("BL") ? !state.context[text] : state.context[text];
+        // log.info(text, state.context, checked);
+        return { id: index, text, checked };
+      },
+    );
     // console.log("Setting checks", newValue);
     setlistItems(newValue);
-  }, [state.context]);
+  }, [state]);
 
   return (
     <Style>
       {loading ? (
-        <FirmwareLoader />
+        <FirmwareLoader width={undefined} warning={undefined} error={undefined} paused={undefined} />
       ) : (
         <div>
           {state.context.device.info.product !== "Raise" ? (
@@ -210,7 +225,9 @@ function FirmwareCheckProcessPanel(props) {
                           : i18n.firmwareUpdate.texts.disclaimerTitle
                       }
                       headingLevel={3}
-                      type={!state.context.sideLeftOk || !state.context.sideRightOK ? "warning" : "default"}
+                      type={
+                        (!state.context.sideLeftOk || !state.context.sideRightOK ? "warning" : "default") as "warning" | "default"
+                      }
                     />
                     {state.context.sideLeftOk && state.context.sideRightOK ? (
                       <>
@@ -237,10 +254,11 @@ function FirmwareCheckProcessPanel(props) {
                 </div>
                 <div className="firmware-sidebar borderRightTopRadius">
                   <FirmwareNeuronStatus
-                    isUpdated={state.context.isUpdated}
+                    isUpdated={state.context.isUpdated as boolean}
                     status={!state.context.sideLeftOk || !state.context.sideRightOK ? "warning" : "waiting"}
                     deviceProduct={state.context.device.info.product}
                     keyboardType={state.context.device.info.keyboardType}
+                    icon={undefined}
                   />
                 </div>
               </div>
@@ -248,15 +266,14 @@ function FirmwareCheckProcessPanel(props) {
                 <div className="firmware-content borderLeftBottomRadius">
                   <div className="wrapperActions">
                     <RegularButton
-                      className="flashingbutton nooutlined"
-                      styles="outline transp-bg"
+                      styles="outline transp-bg flashingbutton nooutlined"
                       buttonText={
                         !state.context.sideLeftOk || !state.context.sideRightOK
                           ? i18n.firmwareUpdate.texts.cancelButton
                           : i18n.firmwareUpdate.texts.backwds
                       }
                       onClick={() => {
-                        send("CANCEL");
+                        send({ type: "cancel-event" });
                         retryBlock(state.context);
                       }}
                     />
@@ -266,18 +283,16 @@ function FirmwareCheckProcessPanel(props) {
                   <div className="buttonActions">
                     {state.context.sideLeftOk && state.context.sideRightOK && state.context.backup ? (
                       <RegularButton
-                        className="flashingbutton nooutlined"
-                        styles="primary"
+                        styles="primary flashingbutton nooutlined"
                         buttonText={i18n.firmwareUpdate.texts.letsStart}
-                        onClick={() => send("PRESSED")}
+                        onClick={() => send({ type: "pressed-event" })}
                       />
                     ) : (
                       <RegularButton
-                        className="flashingbutton nooutlined"
-                        styles="primary"
+                        styles="primary flashingbutton nooutlined"
                         buttonText={i18n.general.retry}
                         onClick={() => {
-                          send("RETRY");
+                          send({ type: "retry-event" });
                         }}
                       />
                     )}
@@ -293,12 +308,5 @@ function FirmwareCheckProcessPanel(props) {
     </Style>
   );
 }
-
-FirmwareCheckProcessPanel.propTypes = {
-  nextBlock: PropTypes.func,
-  retryBlock: PropTypes.func,
-  errorBlock: PropTypes.func,
-  context: PropTypes.object,
-};
 
 export default FirmwareCheckProcessPanel;

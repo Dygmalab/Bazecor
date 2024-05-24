@@ -15,6 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import log from "electron-log/renderer";
 import KeymapISO from "./components/Keymap-ISO";
 import Focus from "../focus";
 
@@ -58,7 +59,7 @@ const RaiseISO = {
       await flashRaise.updateFirmware(filename, stateUpdate);
       return true;
     } catch (e) {
-      console.log(e);
+      log.error(e);
       return false;
     }
   },
@@ -108,7 +109,7 @@ const RaiseISOBootloader = {
       await flashRaise.updateFirmware(filename, stateUpdate);
       return true;
     } catch (e) {
-      console.log(e);
+      log.error(e);
       return false;
     }
   },

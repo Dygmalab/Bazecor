@@ -20,6 +20,7 @@
 
 import React, { useEffect, useState, useCallback } from "react";
 import { Link, useLocation } from "react-router-dom";
+import log from "electron-log/renderer";
 import { Octokit } from "@octokit/core";
 import SemVer from "semver";
 
@@ -145,7 +146,7 @@ function NavigationMenu(props: NavigationMenuProps) {
       });
       const finalReleases = releases.filter(release => release.name === product);
       finalReleases.sort((a, b) => (SemVer.lt(SemVer.clean(a.version), SemVer.clean(b.version)) ? 1 : -1));
-      // console.log("data retrieved: ", finalReleases);
+      // log.info("data retrieved: ", finalReleases);
       return finalReleases;
     },
     [allowBeta],
@@ -170,8 +171,8 @@ function NavigationMenu(props: NavigationMenuProps) {
     try {
       fwList = await getGitHubFW(state.currentDevice.device.info.product);
     } catch (error) {
-      console.log("Error when fetching GitHub data");
-      console.warn(error);
+      log.info("Error when fetching GitHub data");
+      log.warn(error);
       fwList = [{ version: cleanedVersion }];
     }
     // Comparing online Data to FW version
@@ -212,7 +213,7 @@ function NavigationMenu(props: NavigationMenuProps) {
           connected &&
           device &&
           state.currentDevice.device.info &&
-          state.currentDevice.device.info.keyboardType === "wireless" &&
+          (state.currentDevice.device.info.keyboardType === "wireless" || state.currentDevice.device.wireless) &&
           versions !== null
             ? "isWireless"
             : "wired"
@@ -318,7 +319,7 @@ function NavigationMenu(props: NavigationMenuProps) {
             state.currentDevice &&
             state.currentDevice.device.info &&
             state.currentDevice.device.info.product !== "Raise" &&
-            state.currentDevice.device.info.keyboardType === "wireless" &&
+            (state.currentDevice.device.info.keyboardType === "wireless" || state.currentDevice.device.wireless) &&
             versions !== null ? (
               <>
                 {/* <Link to="/wireless" onClick={linkHandler} className={`list-link ${fwUpdate || loading ? "disabled" : ""}`}>

@@ -24,7 +24,7 @@ const schema: Schema<StorageType> = {
       showDefaults: false,
       isStandardView: true,
     },
-    required: ["backupFolder", "backupFrequency", "language", "darkMode", "showDefaults", "isStandardView"],
+    required: ["backupFolder", "backupFrequency", "language", "darkMode", "showDefaults"],
   },
   neurons: {
     type: "array",
@@ -56,7 +56,10 @@ const schema: Schema<StorageType> = {
                 items: {
                   type: "object",
                   properties: {
-                    keyCode: { type: "number" },
+                    keyCode: {
+                      type: ["number", "array"],
+                      items: { type: "number" },
+                    },
                     type: { type: "number" },
                     id: { type: "number" },
                   },
@@ -75,7 +78,8 @@ const schema: Schema<StorageType> = {
               superkey: { type: "string" },
               actions: {
                 type: "array",
-                items: { type: "number" },
+                // added null for backward compatibility, should be removed in the future
+                items: { type: ["number", "null"] },
               },
             },
           },

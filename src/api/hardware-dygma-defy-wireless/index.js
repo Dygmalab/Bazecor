@@ -15,6 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import log from "electron-log/renderer";
 import KeymapDEFY from "./components/Keymap";
 
 const DefyWireless = {
@@ -58,7 +59,7 @@ const DefyWireless = {
       await flashDefyWireless.updateFirmware(filename, bootloader, stateUpdate);
       return true;
     } catch (e) {
-      console.error(e);
+      log.error(e);
       return false;
     }
   },
@@ -100,6 +101,7 @@ const DefyWirelessBootloader = {
       await flashDefyWireless.updateFirmware(filename, bootloader, stateUpdate);
       return true;
     } catch (e) {
+      log.error(e);
       return false;
     }
   },

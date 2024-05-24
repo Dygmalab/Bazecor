@@ -4,8 +4,8 @@ import { RegularButton } from "@Renderer/component/Button";
 import { ColorPalette } from "@Renderer/modules/ColorEditor/ColorPalette";
 import { PaletteType } from "@Types/layout";
 import { i18n } from "@Renderer/i18n";
-import { NOKEY_KEY_CODE, TRANS_KEY_CODE } from "../../../api/keymap/types";
 import { ToggleButtons } from "@Renderer/component/ToggleButtons";
+import { NOKEY_KEY_CODE, TRANS_KEY_CODE } from "../../../api/keymap/types";
 
 export interface OnConfirmProps {
   keyCode: number;

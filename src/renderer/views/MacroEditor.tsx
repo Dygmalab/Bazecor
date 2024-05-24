@@ -21,7 +21,7 @@
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import Styled from "styled-components";
-
+import log from "electron-log/renderer";
 import Col from "react-bootstrap/Col";
 import Container from "react-bootstrap/Container";
 import Dropdown from "react-bootstrap/Dropdown";
@@ -152,11 +152,11 @@ function MacroEditor(props: MacroEditorProps) {
     let superindex = 0;
 
     if (superArray.length < 1) {
-      console.log("Discarded Superkeys due to short length of string", raw, raw.length);
+      log.info("Discarded Superkeys due to short length of string", raw, raw.length);
       return [{ actions: [53, 2101, 1077, 41, 0], name: "Welcome to superkeys", id: superindex }];
     }
     while (superArray.length > iter) {
-      // console.log(iter, raw[iter], superkey);
+      // log.info(iter, raw[iter], superkey);
       if (superArray[iter] === 0) {
         superkeys[superindex] = { actions: skAction, name: "", id: superindex };
         superindex += 1;
@@ -169,10 +169,10 @@ function MacroEditor(props: MacroEditorProps) {
     superkeys[superindex] = { actions: skAction, name: "", id: superindex };
 
     if (superkeys[0].actions.length === 0 || superkeys[0].actions.length > 5) {
-      console.log(`Superkeys were empty`);
+      log.info(`Superkeys were empty`);
       return [];
     }
-    console.log(`Got Superkeys:${JSON.stringify(superkeys)} from ${raw}`);
+    log.info(`Got Superkeys:${JSON.stringify(superkeys)} from ${raw}`);
     // TODO: Check if stored superKeys match the received ones, if they match, retrieve name and apply it to current superKeys
     let finalSuper: SuperkeysType[] = [];
     const stored = neurons[neuronIdx].superkeys;
@@ -186,7 +186,7 @@ function MacroEditor(props: MacroEditorProps) {
       }
       return superk;
     });
-    console.log("final superkeys", finalSuper);
+    log.info("final superkeys", finalSuper);
     return finalSuper;
   };
 
@@ -199,7 +199,7 @@ function MacroEditor(props: MacroEditorProps) {
       return Array(512).fill("65535").join(" ");
     }
     let keyMap = JSON.parse(JSON.stringify(superkeys));
-    // console.log("First", JSON.stringify(keyMap));
+    // log.info("First", JSON.stringify(keyMap));
     keyMap = keyMap.map((sky: SuperkeysType) => {
       const sk = sky;
       sk.actions = sk.actions.map(act => {
@@ -216,13 +216,13 @@ function MacroEditor(props: MacroEditorProps) {
       .join(" ")
       .split(",")
       .join(" ");
-    console.log("Mapped superkeys: ", mapped, keyMap);
+    log.info("Mapped superkeys: ", mapped, keyMap);
     return mapped;
   };
 
   function macrosMap(macros: MacrosType[]) {
     const { macrosEraser } = state;
-    console.log(
+    log.info(
       "Macros map function",
       macros,
       macrosEraser,
@@ -258,7 +258,7 @@ function MacroEditor(props: MacroEditorProps) {
       .join(" ")
       .split(",")
       .join(" ");
-    console.log("MACROS GOING TO BE SAVED", result);
+    log.info("MACROS GOING TO BE SAVED", result);
     return result;
   }
 
@@ -342,7 +342,7 @@ function MacroEditor(props: MacroEditorProps) {
     const { currentDevice } = deviceState;
     setIsSaving(true);
     setLoading(true);
-    console.log("saving Macros:", macros, keymap, superkeys);
+    log.info("saving Macros:", macros, keymap, superkeys);
     const newMacros = macros;
     const localNeurons = [...neurons];
     localNeurons[neuronIdx].macros = newMacros;
@@ -367,8 +367,8 @@ function MacroEditor(props: MacroEditorProps) {
       setLoading(false);
       setIsSaving(false);
     } catch (error) {
-      console.log("error when writing macros");
-      console.error(error);
+      log.info("error when writing macros");
+      log.error(error);
       toast.error(<ToastMessage title="Error when sending macros to the device" icon={<IconFloppyDisk />} />, { icon: "" });
       cancelContext();
       setLoading(false);
@@ -384,7 +384,7 @@ function MacroEditor(props: MacroEditorProps) {
   function ActUponDelete() {
     const { selectedList, listToDelete, listToDeleteS, listToDeleteM, keymap, superkeys } = state;
     let { macros } = state;
-    console.log("Checking list to delete macros", listToDeleteM, macros);
+    log.info("Checking list to delete macros", listToDeleteM, macros);
     for (let i = 0; i < listToDelete.length; i += 1) {
       if (listToDelete[i].newKey === -1) {
         keymap.custom[listToDelete[i].layer][listToDelete[i].pos] = keymapDB.parse(
@@ -417,7 +417,7 @@ function MacroEditor(props: MacroEditorProps) {
       newMacro.actions = macro.actions.filter(x => x !== undefined);
       return newMacro;
     });
-    console.log("result!", macros);
+    log.info("result!", macros);
     state.keymap = keymap;
     state.superkeys = superkeys;
     state.macros = macros;
@@ -596,7 +596,7 @@ function MacroEditor(props: MacroEditorProps) {
   const loadMacros = async () => {
     const { onDisconnect, cancelContext, setLoading } = props;
     const { currentDevice } = deviceState;
-    console.log("Loading macros!");
+    log.info("Loading macros!");
     try {
       /**
        * Create property language to the object 'options', to call KeymapDB in Keymap and modify languagu layout
@@ -615,8 +615,8 @@ function MacroEditor(props: MacroEditorProps) {
       try {
         kbtype = currentDevice.device && currentDevice.device.info.keyboardType === "ISO" ? "iso" : "ansi";
       } catch (error) {
-        console.log("error when reading focus.device and kbType for Macros");
-        console.error(error);
+        log.info("error when reading focus.device and kbType for Macros");
+        log.error(error);
         setLoading(false);
         throw Error(error);
       }
@@ -681,8 +681,8 @@ function MacroEditor(props: MacroEditorProps) {
       setLoading(false);
       return true;
     } catch (error) {
-      console.log("error when loading macros");
-      console.error(error);
+      log.info("error when loading macros");
+      log.error(error);
       toast.error(<ToastMessage title="Error when loading macros from the device" icon={<IconLoader />} />, { icon: "" });
       cancelContext();
       setLoading(false);

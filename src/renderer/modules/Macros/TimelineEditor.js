@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import Styled from "styled-components";
+import log from "electron-log/renderer";
 import ListGroup from "react-bootstrap/ListGroup";
 import { MdUnfoldLess, MdKeyboardArrowUp, MdKeyboardArrowDown, MdTimer } from "react-icons/md";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
@@ -260,7 +261,7 @@ class TimelineEditor extends Component {
   }
 
   updateRows(rows) {
-    console.log("TimelineEditor updaterows", rows);
+    log.info("TimelineEditor updaterows", rows);
     const texted = rows.map(k => this.keymapDB.parse(k.keyCode).label).join(" ");
     const newRows = rows.map((item, index) => {
       const aux = item;

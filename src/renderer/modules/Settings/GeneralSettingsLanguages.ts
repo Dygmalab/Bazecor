@@ -52,6 +52,7 @@ const flags = [
   frFR,
   frFR, // BÉPO (French)
   frFR, // Optimot (French)
+  frFR, // Ergo-L (French)
   deDE,
   isIS,
   jaJP,
@@ -72,6 +73,7 @@ const languages = [
   "fr-FR",
   "fr-XX-bepo",
   "fr-XX-optimot",
+  "fr-XX-ergol",
   "de-DE",
   "is-IS",
   "ja-JP",
@@ -92,6 +94,7 @@ const languageNames = [
   "French",
   "French (Bépo)",
   "French (Optimot)",
+  "French (Ergo-L)",
   "German",
   "Icelandic",
   "Japanese",

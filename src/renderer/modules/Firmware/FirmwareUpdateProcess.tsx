@@ -16,14 +16,14 @@
  */
 
 import React, { useState, useEffect } from "react";
-import PropTypes from "prop-types";
 import Styled from "styled-components";
+import log from "electron-log/renderer";
 import { useMachine } from "@xstate/react";
 import { i18n } from "@Renderer/i18n";
 import { useDevice } from "@Renderer/DeviceContext";
 
 // State machine
-import FlashDevice from "@Renderer/controller/FlashingSM/FlashDevice";
+import FlashDevice from "@Renderer/controller/FlashingProcedure/machine";
 
 // Visual components
 import Title from "@Renderer/component/Title";
@@ -92,62 +92,78 @@ height: inherit;
 }
 `;
 
-function FirmwareUpdateProcess(props) {
+interface FirmwareUpdateProcessProps {
+  nextBlock: (context: any) => void;
+  retryBlock: (context: any) => void;
+  context: any;
+  toggleFlashing: () => void;
+  toggleFwUpdate: (value: boolean) => void;
+  onDisconnect: () => void;
+  setRestoredOk: (value: number) => void;
+}
+
+function FirmwareUpdateProcess(props: FirmwareUpdateProcessProps) {
   const { nextBlock, retryBlock, context, toggleFlashing, toggleFwUpdate, onDisconnect, setRestoredOk } = props;
   const { state: deviceState } = useDevice();
   const [toggledFlashing, sendToggledFlashing] = useState(false);
-  const handleKeyDown = event => {
+
+  // keypress handler to handle keyboard actions.
+  const handleKeyDown = (event: KeyboardEvent) => {
     switch (event.keyCode) {
       case 27:
-        console.log("esc key logged");
-        send("ESCPRESSED");
+        log.info("esc key logged");
+        // eslint-disable-next-line @typescript-eslint/no-use-before-define
+        send({ type: "ESCPRESSED" });
         break;
       default:
         break;
     }
   };
-  const [state, send] = useMachine(FlashDevice, {
-    context: {
-      deviceState,
-      device: deviceState.currentDevice.device,
-      originalDevice: deviceState.currentDevice,
-      backup: context.backup ? context.backup : undefined,
-      firmwares: context.firmwares,
-      isUpdated: context.isUpdated,
-      versions: context.versions,
-      RaiseBrightness: context.RaiseBrightness,
-      sideLeftOk: context.sideLeftOk,
-      sideLeftBL: context.sideLeftBL,
-      sideRightOK: context.sideRightOK,
-      sideRightBL: context.sideRightBL,
-    },
-    actions: {
+
+  const [state, send] = useMachine(
+    FlashDevice.provide({
       addEscListener: () => {
-        console.log("added event listener");
+        log.info("added event listener");
         document.addEventListener("keydown", handleKeyDown);
       },
       removeEscListener: () => {
-        console.log("removed event listener");
+        log.info("removed event listener");
         document.removeEventListener("keydown", handleKeyDown);
       },
       toggleFlashing: async () => {
         if (toggledFlashing) return;
-        console.log("starting flashing indicators");
+        log.info("starting flashing indicators");
         toggleFlashing();
         toggleFwUpdate(true);
         sendToggledFlashing(true);
       },
       finishFlashing: async () => {
         if (!toggledFlashing) return;
-        setRestoredOk(state.context.restoreResult);
+        setRestoredOk(state.context.restoreResult as number);
         sendToggledFlashing(false);
-        console.log("closing flashin process");
+        log.info("closing flashin process");
         toggleFlashing();
         toggleFwUpdate(false);
         onDisconnect();
       },
+    }),
+    {
+      input: {
+        deviceState,
+        device: deviceState.currentDevice.device,
+        originalDevice: deviceState.currentDevice,
+        backup: context.backup ? context.backup : undefined,
+        firmwares: context.firmwares,
+        isUpdated: context.isUpdated,
+        versions: context.versions,
+        RaiseBrightness: context.RaiseBrightness,
+        sideLeftOk: context.sideLeftOk,
+        sideLeftBL: context.sideLeftBL,
+        sideRightOK: context.sideRightOK,
+        sideRightBL: context.sideRightBL,
+      },
     },
-  });
+  );
 
   const [loading, setLoading] = useState(true);
   useEffect(() => {
@@ -215,7 +231,7 @@ function FirmwareUpdateProcess(props) {
   return (
     <Style>
       {loading ? (
-        <FirmwareLoader />
+        <FirmwareLoader width={undefined} warning={undefined} error={undefined} paused={undefined} />
       ) : (
         <div className="firmware-wrapper upgrade-firmware">
           <div className="firmware-row progress-visualizer">
@@ -240,12 +256,11 @@ function FirmwareUpdateProcess(props) {
             <div className="firmware-footer">
               <div className="holdButton">
                 <RegularButton
-                  className="flashingbutton nooutlined"
-                  styles="outline transp-bg"
+                  styles="flashingbutton nooutlined outline transp-bg"
                   size="sm"
                   buttonText={i18n.firmwareUpdate.texts.cancelButton}
                   onClick={() => {
-                    retryBlock();
+                    retryBlock(state.context);
                   }}
                 />
               </div>
@@ -273,22 +288,20 @@ function FirmwareUpdateProcess(props) {
             <div className="firmware-footer">
               <div className="holdButton">
                 <RegularButton
-                  className="flashingbutton nooutlined"
-                  styles="outline transp-bg"
+                  styles="flashingbutton nooutlined outline transp-bg"
                   size="sm"
                   buttonText={i18n.firmwareUpdate.texts.cancelButton}
                   onClick={() => {
-                    send("CANCEL");
-                    retryBlock();
+                    send({ type: "CANCEL" });
+                    retryBlock(state.context);
                   }}
                 />
                 <RegularButton
-                  className="flashingbutton nooutlined"
-                  styles="primary"
+                  styles="flashingbutton nooutlined primary"
                   size="sm"
                   buttonText="Retry the flashing procedure"
                   onClick={() => {
-                    send("RETRY");
+                    send({ type: "RETRY" });
                   }}
                 />
               </div>
@@ -317,17 +330,5 @@ function FirmwareUpdateProcess(props) {
     </Style>
   );
 }
-
-FirmwareUpdateProcess.propTypes = {
-  nextBlock: PropTypes.func,
-  retryBlock: PropTypes.func,
-  errorBlock: PropTypes.func,
-  context: PropTypes.any,
-  setRestoredOk: PropTypes.func,
-  toggleFlashing: PropTypes.func,
-  toggleFwUpdate: PropTypes.func,
-  onDisconnect: PropTypes.func,
-  device: PropTypes.any,
-};
 
 export default FirmwareUpdateProcess;

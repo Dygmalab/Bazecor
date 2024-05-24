@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import log from "electron-log/renderer";
 
 import { PageHeader } from "@Renderer/modules/PageHeader";
 import CardDevice from "@Renderer/modules/DeviceManager/CardDevice";
@@ -103,10 +104,10 @@ const DeviceManager = () => {
   const [selectedDevice, setSelectedDevice] = useState(null);
 
   const addVirtualDevice = () => {
-    console.log("Add virtual device!");
+    log.info("Add virtual device!");
   };
   const scanDevices = () => {
-    console.log("Scan devices!");
+    log.info("Scan devices!");
   };
 
   const addVirtualDevicesButton = (
@@ -124,13 +125,13 @@ const DeviceManager = () => {
   );
 
   const openDialog = (device: any) => {
-    console.log(device);
+    log.info(device);
     setSelectedDevice(device);
     setOpen(true);
   };
 
   const forgetDevice = (device: any) => {
-    console.log("remove device", device);
+    log.info("remove device", device);
     const updatedDevices = listDevices.filter(item => item !== device);
     setListDevices(updatedDevices);
   };
@@ -259,7 +260,7 @@ const DeviceManager = () => {
 
       <AlertDialog
         open={open}
-        onOpenChange={isOpen => {
+        onOpenChange={(isOpen: boolean) => {
           if (isOpen === true) return;
           setOpen(false);
         }}

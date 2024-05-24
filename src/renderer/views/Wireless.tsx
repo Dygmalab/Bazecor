@@ -1,6 +1,7 @@
 /* eslint-disable react/jsx-no-bind */
 // General imports
 import React, { useState, useEffect } from "react";
+import log from "electron-log/renderer";
 
 // Bootstrap components imports
 import Styled from "styled-components";
@@ -156,7 +157,7 @@ const Wireless = (props: WirelessPropsInterface) => {
   async function sendRePairCommand() {
     if (state.currentDevice) {
       const result = await state.currentDevice.command("wireless.rf.syncPairing");
-      console.log("command returned", result);
+      log.info("command returned", result);
     }
   }
 

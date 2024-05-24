@@ -5,6 +5,7 @@ import { ipcRenderer } from "electron";
 import { toast } from "react-toastify";
 import path from "path";
 import fs from "fs";
+import log from "electron-log/renderer";
 
 import { IconArrowRight, IconCloudDownload, IconKeyboard, IconUpload } from "@Renderer/component/Icon";
 import { RegularButton } from "@Renderer/component/Button";
@@ -15,7 +16,7 @@ import { VirtualType } from "@Renderer/types/devices";
 import { BackupType } from "@Renderer/types/backups";
 
 import Hardware from "../../../api/hardware";
-import { RaiseISO, RaiseANSI, DefyWired, DefyWireless, enumerator } from "../../../api/hardware-virtual";
+import { RaiseISO, RaiseANSI, DefyWired, DefyWireless, Raise2ANSI, Raise2ISO, enumerator } from "../../../api/hardware-virtual";
 import Store from "../../utils/Store";
 import { isVirtualType } from "../../../api/comms/virtual";
 import Backup from "../../../api/backup";
@@ -36,11 +37,11 @@ export default function VirtualSelector(props: VirtualSelectorProps) {
   };
 
   const selectVirtualKeyboard = (event: string) => {
-    // console.log(event);
+    // log.info(event);
     setSelectedVirtualKeyboard(parseInt(event, 10));
   };
 
-  const convertBackupToVK = async (backup: BackupType) => {
+  const convertBackupToVK = async (backup: any) => {
     let vk: VirtualType;
     let fileName;
 
@@ -51,18 +52,28 @@ export default function VirtualSelector(props: VirtualSelectorProps) {
         backup.neuron.device.info.keyboardType === hardwareDevice.info.keyboardType
       ) {
         if (hardwareDevice.info.keyboardType === "ANSI") {
-          vk = { ...RaiseANSI };
-          fileName = "VirtualRaiseANSI";
+          if (hardwareDevice.info.product === "Raise2") {
+            vk = { ...Raise2ANSI };
+            fileName = "VirtualRaise2ANSI";
+          } else {
+            vk = { ...RaiseANSI };
+            fileName = "VirtualRaiseANSI";
+          }
         }
         if (hardwareDevice.info.keyboardType === "ISO") {
+          if (hardwareDevice.info.product === "Raise2") {
+            vk = { ...Raise2ISO };
+            fileName = "VirtualRaise2ISO";
+          } else {
+            vk = { ...RaiseISO };
+            fileName = "VirtualRaiseISO";
+          }
           vk = { ...RaiseISO };
-          fileName = "VirtualRaiseISO";
         }
         if (hardwareDevice.info.keyboardType === "wired") {
           vk = { ...DefyWired };
           fileName = "VirtualDefy";
         }
-        // TODO: replace this DEFY with the wireless version
         if (hardwareDevice.info.keyboardType === "wireless") {
           vk = { ...DefyWireless };
           fileName = "VirtualDefy";
@@ -88,7 +99,7 @@ export default function VirtualSelector(props: VirtualSelectorProps) {
       filters: [{ name: "Json", extensions: ["json"] }],
     };
     const newPath = await ipcRenderer.invoke("save-dialog", options);
-    console.log("Save file to", newPath);
+    log.info("Save file to", newPath);
     if (newPath === undefined) {
       toast.warning("Path not defined! aborting...", {
         autoClose: 2000,
@@ -101,7 +112,7 @@ export default function VirtualSelector(props: VirtualSelectorProps) {
     try {
       fs.writeFileSync(newPath, json);
     } catch (error) {
-      console.error(error);
+      log.error(error);
       throw error;
     }
 
@@ -138,19 +149,19 @@ export default function VirtualSelector(props: VirtualSelectorProps) {
     if (!data.canceled) {
       [filePath] = data.filePaths;
     } else {
-      console.log("user closed file connect dialog");
+      log.info("user closed file connect dialog");
       return;
     }
-    console.log("Opening file", filePath);
+    log.info("Opening file", filePath);
     // Open the file and load it's contents
-    let file: VirtualType | BackupType;
+    let file: any;
     try {
       file = JSON.parse(fs.readFileSync(filePath).toString("utf-8")) as VirtualType | BackupType;
-      // console.log(file);
-      // console.log("loaded backup", file.device.info.product + " " + file.device.info.keyboardType, file.virtual.version.data);
+      // log.info(file);
+      // log.info("loaded backup", file.device.info.product + " " + file.device.info.keyboardType, file.virtual.version.data);
       if (!isVirtualType(file) && !Backup.isBackupType(file)) throw Error("not a valid file, no virtual or backup objects");
     } catch (e) {
-      console.error(e);
+      log.error(e);
       window.alert(i18n.keyboardSelect.virtualKeyboard.errorLoadingFile);
       return;
     }
@@ -191,12 +202,12 @@ export default function VirtualSelector(props: VirtualSelectorProps) {
       filters: [{ name: "Json", extensions: ["json"] }],
     };
     const newPath = await ipcRenderer.invoke("save-dialog", options);
-    console.log("Save file to", newPath);
+    log.info("Save file to", newPath);
     if (newPath === undefined) {
       toast.warning("Path not defined! aborting...");
       return;
     }
-    console.log("Exchange focus for file access");
+    log.info("Exchange focus for file access");
     Hardware.serial.forEach(localDevice => {
       if (
         newVK.device.usb.productId === localDevice.usb.productId &&
@@ -218,7 +229,7 @@ export default function VirtualSelector(props: VirtualSelectorProps) {
     try {
       fs.writeFileSync(newPath, json);
     } catch (error) {
-      console.error(error);
+      log.error(error);
       throw error;
     }
 

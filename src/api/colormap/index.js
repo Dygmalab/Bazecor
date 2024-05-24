@@ -125,7 +125,6 @@ export default class Colormap {
         return aux;
       });
       args = this._flatten(paletteAux.map(color => [color.r, color.g, color.b, color.w])).map(v => v.toString());
-      console.log(palette, paletteAux, args);
     }
 
     return await s.request("palette", ...args);

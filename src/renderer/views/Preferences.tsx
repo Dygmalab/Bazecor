@@ -19,7 +19,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { ipcRenderer } from "electron";
 import { motion } from "framer-motion";
-
+import log from "electron-log/renderer";
 import { toast } from "react-toastify";
 import { i18n } from "@Renderer/i18n";
 import "react-toastify/dist/ReactToastify.css";
@@ -397,8 +397,8 @@ const Preferences = (props: PreferencesProps) => {
     setPreferencesState(initialPreferences);
     setKbData(initialKBData);
     await getNeuronData();
-    if (state.currentDevice.device.info.keyboardType === "wireless") {
-      console.log("setting wireless");
+    if (state.currentDevice.device.info.keyboardType === "wireless" || state.currentDevice.device.wireless) {
+      log.info("setting wireless");
       setWireless(initialWireless);
       await getWirelessPreferences();
     }
@@ -428,7 +428,7 @@ const Preferences = (props: PreferencesProps) => {
         icon: "",
       });
     } catch (error) {
-      console.error(error);
+      log.error(error);
       toast.error(
         <ToastMessage
           title={i18n.errors.preferenceFailOnSave}
@@ -482,7 +482,7 @@ const Preferences = (props: PreferencesProps) => {
         devTools: checked,
       }));
     } catch (error) {
-      console.error("error when opening devTools");
+      log.error("error when opening devTools");
     }
   };
 
@@ -563,7 +563,7 @@ const Preferences = (props: PreferencesProps) => {
     if (state.currentDevice) {
       try {
         const result = await state.currentDevice.command("wireless.rf.syncPairing");
-        console.log("command returned", result);
+        log.info("command returned", result);
         toast.success(<ToastMessage title={`${i18n.success.pairedSuccesfully}`} icon={<IconChip />} />, {
           position: "top-right",
           autoClose: 2000,
@@ -575,7 +575,7 @@ const Preferences = (props: PreferencesProps) => {
           icon: "",
         });
       } catch (error) {
-        console.error(error);
+        log.error(error);
       }
     }
   };
@@ -586,7 +586,8 @@ const Preferences = (props: PreferencesProps) => {
     const init = async () => {
       setLoading(true);
       const NID = await getNeuronData();
-      if (connected && state.currentDevice.device.info.keyboardType === "wireless") await getWirelessPreferences();
+      if (connected && (state.currentDevice.device.info.keyboardType === "wireless" || state.currentDevice.device.wireless))
+        await getWirelessPreferences();
       const devTools = await ipcRenderer.invoke("is-devtools-opened");
       let darkMode = store.get("settings.darkMode") as string;
       if (!darkMode) {
@@ -670,7 +671,7 @@ const Preferences = (props: PreferencesProps) => {
                   <TabsTrigger value="LED" variant="tab">
                     <IconFlashlight /> LED
                   </TabsTrigger>
-                  {state.currentDevice.device.info.keyboardType === "wireless" && (
+                  {(state.currentDevice.device.info.keyboardType === "wireless" || state.currentDevice.device.wireless) && (
                     <>
                       <TabsTrigger value="Battery" variant="tab">
                         <IconBattery /> Battery Management
@@ -725,11 +726,13 @@ const Preferences = (props: PreferencesProps) => {
                         setKbData={updateKBData}
                         setWireless={updateWireless}
                         connected={connected}
-                        isWireless={state.currentDevice.device.info.keyboardType === "wireless"}
+                        isWireless={
+                          state.currentDevice.device.info.keyboardType === "wireless" || state.currentDevice.device.wireless
+                        }
                       />
                     </motion.div>
                   </TabsContent>
-                  {state.currentDevice.device.info.keyboardType === "wireless" && (
+                  {(state.currentDevice.device.info.keyboardType === "wireless" || state.currentDevice.device.wireless) && (
                     <>
                       <TabsContent value="Battery">
                         <motion.div initial="hidden" animate="visible" variants={tabVariants}>

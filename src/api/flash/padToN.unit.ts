@@ -15,6 +15,6 @@ it("trims to N digit string", () => {
   expect(padToN("1234", 3)).toEqual("234");
 });
 
-it('number to pad is optional', () => {
-	expect(padToN('123')).toEqual('123')
-})
+it("number to pad is optional", () => {
+  expect(padToN("123")).toEqual("123");
+});

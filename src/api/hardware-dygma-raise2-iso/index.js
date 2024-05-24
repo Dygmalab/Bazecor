@@ -45,8 +45,8 @@ const Raise2ISO = {
     columns: 16,
   },
   keyboardUnderglow: {
-    rows: 6,
-    columns: 22,
+    rows: 5,
+    columns: 29,
   },
   RGBWMode: true,
   components: {
