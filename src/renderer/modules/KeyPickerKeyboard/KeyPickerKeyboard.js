@@ -3,6 +3,7 @@ import Styled from "styled-components";
 
 // Internal components
 import ListModifier from "@Renderer/components/molecules/ListModifiers/ListModifiers";
+import { IconKeysPress, IconKeysTapHold, IconKeysHold, IconKeys2Tap, IconKeys2TapHold } from "@Renderer/components/atoms/Icons";
 import { KeymapDB } from "../../../api/keymap";
 import { Picker } from ".";
 // import ListModifiers from "../../component/ListModifiers/ListModifiers";
@@ -12,7 +13,6 @@ import KeyVisualizer from "../KeyVisualizer";
 import DualFunctionPicker from "./DualFunctionPicker";
 
 // Icons
-import { IconKeysPress, IconKeysTapHold, IconKeysHold, IconKeys2Tap, IconKeys2TapHold } from "../../component/Icon";
 
 const Style = Styled.div`
 width: -webkit-fill-available;

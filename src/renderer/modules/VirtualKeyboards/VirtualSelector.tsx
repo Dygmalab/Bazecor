@@ -7,7 +7,7 @@ import path from "path";
 import fs from "fs";
 import log from "electron-log/renderer";
 
-import { IconArrowRight, IconCloudDownload, IconKeyboard, IconUpload } from "@Renderer/component/Icon";
+import { IconArrowRight, IconCloudDownload, IconKeyboard, IconUpload } from "@Renderer/components/atoms/Icons";
 import { RegularButton } from "@Renderer/component/Button";
 import Title from "@Renderer/component/Title";
 import { i18n } from "@Renderer/i18n";

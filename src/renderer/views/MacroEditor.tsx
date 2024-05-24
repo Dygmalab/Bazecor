@@ -47,7 +47,7 @@ import { MacroActionsType, MacrosType } from "@Renderer/types/macros";
 import LogoLoader from "@Renderer/components/atoms/Loader/LogoLoader";
 import { RegularButton } from "@Renderer/component/Button";
 import Callout from "@Renderer/component/Callout";
-import { IconFloppyDisk, IconLoader } from "@Renderer/component/Icon";
+import { IconFloppyDisk, IconLoader } from "@Renderer/components/atoms/Icons";
 import { MacroSelector } from "@Renderer/component/Select";
 import ToastMessage from "@Renderer/component/ToastMessage";
 // import Callout from "@Renderer/components/molecules/Callout/Callout";

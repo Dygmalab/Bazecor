@@ -35,7 +35,7 @@ import { RegularButton } from "@Renderer/component/Button";
 import LogoLoader from "@Renderer/components/atoms/Loader/LogoLoader";
 import ToggleGroupLayoutViewMode from "@Renderer/components/molecules/CustomToggleGroup/ToggleGroupLayoutViewMode";
 import ToastMessage from "@Renderer/component/ToastMessage";
-import { IconFloppyDisk } from "@Renderer/component/Icon";
+import { IconFloppyDisk } from "@Renderer/components/atoms/Icons";
 
 // Modules
 import { PageHeader } from "@Renderer/modules/PageHeader";

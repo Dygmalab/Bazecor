@@ -28,7 +28,7 @@ import Col from "react-bootstrap/Col";
 import { i18n } from "@Renderer/i18n";
 
 // Icons Imports
-import { IconFolder } from "@Renderer/component/Icon";
+import { IconFolder } from "@Renderer/components/atoms/Icons";
 
 // Utils
 import Store from "@Renderer/utils/Store";

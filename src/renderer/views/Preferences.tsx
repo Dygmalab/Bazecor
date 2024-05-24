@@ -50,8 +50,8 @@ import {
   IconSignal,
   IconNeuronManager,
   IconChip,
-} from "@Renderer/component/Icon";
-import { IconWrench } from "@Renderer/components/atoms/Icons";
+  IconWrench,
+} from "@Renderer/components/atoms/Icons";
 import Version from "@Renderer/components/atoms/Version";
 
 import Store from "@Renderer/utils/Store";

@@ -24,16 +24,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@Renderer/components/a
 import { motion } from "framer-motion";
 import log from "electron-log/renderer";
 import { i18n } from "@Renderer/i18n";
-import Title from "../../component/Title";
-import TextTab from "../KeysTabs/TextTab";
-import KeysTab from "../KeysTabs/KeysTab";
-import LayersTab from "../KeysTabs/LayersTab";
-import MacroTab from "../KeysTabs/MacroTab";
-import DelayTab from "../KeysTabs/DelayTab";
-import MediaAndLightTab from "../KeysTabs/MediaAndLightTab";
-import MouseTab from "../KeysTabs/MouseTab";
-import { RecordMacroModal } from "../../component/Modal";
-
 import {
   IconKeyboard,
   IconLetterColor,
@@ -43,7 +33,16 @@ import {
   IconNote,
   IconStopWatch,
   IconMagicStick,
-} from "../../component/Icon";
+} from "@Renderer/components/atoms/Icons";
+import Title from "../../component/Title";
+import TextTab from "../KeysTabs/TextTab";
+import KeysTab from "../KeysTabs/KeysTab";
+import LayersTab from "../KeysTabs/LayersTab";
+import MacroTab from "../KeysTabs/MacroTab";
+import DelayTab from "../KeysTabs/DelayTab";
+import MediaAndLightTab from "../KeysTabs/MediaAndLightTab";
+import MouseTab from "../KeysTabs/MouseTab";
+import { RecordMacroModal } from "../../component/Modal";
 
 const Styles = Styled.div`
 .card {

@@ -52,13 +52,24 @@ import { NavigationMenuProps } from "@Renderer/types/navigation";
 import {
   IconKeyboardSelector,
   IconKeyboard2Stroke,
-  IconMemory2Stroke,
-  IconRobot2Stroke,
-  IconThunder2Stroke,
-  IconPreferences2Stroke,
+  IconMemory,
+  IconRobot,
+  IconThunder,
+  IconPreferences,
   IconBazecordevtools,
   IconHome,
-} from "@Renderer/component/Icon";
+} from "@Renderer/components/atoms/Icons";
+
+// import {
+//   IconKeyboardSelector,
+//   IconKeyboard2Stroke,
+//   IconMemory2Stroke,
+//   IconRobot2Stroke,
+//   IconThunder2Stroke,
+//   IconPreferences2Stroke,
+//   IconBazecordevtools,
+//   IconHome,
+// } from "@Renderer/component/Icon";
 
 const Styles = Styled.div`
 .disabled {
@@ -250,7 +261,7 @@ function NavigationMenu(props: NavigationMenuProps) {
                       <NavigationButton
                         selected={currentPage === "/macros"}
                         buttonText={i18n.app.menu.macros}
-                        icoSVG={<IconRobot2Stroke />}
+                        icoSVG={<IconRobot size="lg" />}
                         disabled={fwUpdate || loading}
                       />
                     </Link>
@@ -262,7 +273,7 @@ function NavigationMenu(props: NavigationMenuProps) {
                       <NavigationButton
                         selected={currentPage === "/superkeys"}
                         buttonText={i18n.app.menu.superkeys}
-                        icoSVG={<IconThunder2Stroke />}
+                        icoSVG={<IconThunder size="lg" />}
                         showNotif={isBeta}
                         notifText="BETA"
                         disabled={fwUpdate || !isBeta || loading}
@@ -281,7 +292,7 @@ function NavigationMenu(props: NavigationMenuProps) {
                     selected={currentPage === "/firmware-update"}
                     showNotif={!isUpdated}
                     buttonText={i18n.app.menu.firmwareUpdate}
-                    icoSVG={<IconMemory2Stroke />}
+                    icoSVG={<IconMemory />}
                     disabled={fwUpdate || virtual || state.currentDevice.type === "hid" || loading}
                   />
                 </Link>
@@ -311,7 +322,7 @@ function NavigationMenu(props: NavigationMenuProps) {
               <NavigationButton
                 selected={currentPage === "/preferences"}
                 buttonText={i18n.app.menu.preferences}
-                icoSVG={<IconPreferences2Stroke />}
+                icoSVG={<IconPreferences size="lg" />}
                 disabled={fwUpdate || loading}
               />
             </Link>

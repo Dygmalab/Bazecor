@@ -27,8 +27,8 @@ import Col from "react-bootstrap/Col";
 import { Link } from "react-router-dom";
 import { PageHeader } from "@Renderer/modules/PageHeader";
 import { useDevice, DeviceTools } from "@Renderer/DeviceContext";
+import { IconHome } from "@Renderer/components/atoms/Icons";
 import { NavigationButton, RegularButton } from "../component/Button";
-import { IconHome } from "../component/Icon";
 import HID from "../../api/hid/hid";
 import Device from "../../api/comms/Device";
 

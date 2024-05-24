@@ -26,7 +26,7 @@ import Title from "@Renderer/component/Title";
 import { BatteryStatusSide, SavingModeIndicator } from "@Renderer/component/Battery";
 
 // Assets
-import { IconBattery } from "@Renderer/component/Icon";
+import { IconBattery } from "@Renderer/components/atoms/Icons";
 import { i18n } from "@Renderer/i18n";
 
 const Styles = Styled.div`

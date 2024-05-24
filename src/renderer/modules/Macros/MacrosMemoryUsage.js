@@ -22,11 +22,11 @@ import PropTypes from "prop-types";
 import { toast } from "react-toastify";
 import { i18n } from "@Renderer/i18n";
 
+import { IconFloppyDisk } from "@Renderer/components/atoms/Icons";
 import Title from "../../component/Title";
 import DotsProgressBar from "./DotsProgressBar";
 
 import ToastMessage from "../../component/ToastMessage";
-import { IconFloppyDisk } from "../../component/Icon";
 
 const Styles = Styled.div`
 margin: 0 24px;
@@ -85,7 +85,7 @@ const MacrosMemoryUsage = ({ mem, tMem }) => {
 
   React.useEffect(() => {
     if (mem < 1 || tMem < 1) return;
-    //setMemoryUsage(macros.map(m => m.actions).flat().length);
+    // setMemoryUsage(macros.map(m => m.actions).flat().length);
     setMemoryUsage(((mem / tMem) * 100).toFixed(1));
     setIsLoading(false);
     if (mem > tMem * 0.95 && mem < tMem - 20) {

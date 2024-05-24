@@ -5,16 +5,16 @@ import Modal from "react-bootstrap/Modal";
 import { ipcRenderer } from "electron";
 import { i18n } from "@Renderer/i18n";
 
-import { RegularButton, RegularButtonFwRef, ButtonConfig } from "../../component/Button";
-import Title from "../../component/Title";
 import {
   IconRecord,
   IconArrowInBoxDown,
-  IconPauseXl,
+  IconPause,
   IconUndoRestart,
   IconStopWatch,
   IconStopWatchCrossed,
-} from "../../component/Icon";
+} from "@Renderer/components/atoms/Icons";
+import { RegularButton, RegularButtonFwRef, ButtonConfig } from "../../component/Button";
+import Title from "../../component/Title";
 import AnimatedTimelineRecording from "./AnimatedTimelineRecording";
 
 const Styles = Styled.div`
@@ -428,7 +428,7 @@ export default class RecordMacroModal extends React.Component {
                 ""
               )}
               <RegularButtonFwRef
-                icoSVG={<IconPauseXl />}
+                icoSVG={<IconPause size="xl" />}
                 variation={`recordButton ${isRecording ? "isRecording" : ""} ${
                   recorded.length > 0 && !isRecording ? "isResume" : ""
                 }`}

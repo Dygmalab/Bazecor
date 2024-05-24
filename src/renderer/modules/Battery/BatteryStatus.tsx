@@ -8,8 +8,7 @@ import { ButtonConfig } from "@Renderer/component/Button";
 import { BatteryStatusSide, SavingModeIndicator } from "@Renderer/component/Battery";
 
 // Assets
-import { IconBattery } from "@Renderer/component/Icon";
-import { IconRefresh } from "@Renderer/components/atoms/Icons";
+import { IconRefresh, IconBattery } from "@Renderer/components/atoms/Icons";
 
 import { useDevice } from "@Renderer/DeviceContext";
 import { LogoLoader } from "@Renderer/component/Loader";

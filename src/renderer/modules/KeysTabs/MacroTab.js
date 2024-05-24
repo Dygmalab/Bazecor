@@ -2,12 +2,11 @@ import React, { Component } from "react";
 import Styled from "styled-components";
 import { i18n } from "@Renderer/i18n";
 
+import { IconArrowInBoxUp } from "@Renderer/components/atoms/Icons";
 import Title from "../../component/Title";
 import Callout from "../../component/Callout";
 import { Select } from "../../component/Select";
 import { RegularButton } from "../../component/Button";
-
-import { IconArrowInBoxUp } from "../../component/Icon";
 
 const Styles = Styled.div`
 display: flex;

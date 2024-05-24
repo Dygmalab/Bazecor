@@ -7,20 +7,20 @@ import { FaLinux } from "react-icons/fa";
 import { AiFillWindows } from "react-icons/ai";
 import { i18n } from "@Renderer/i18n";
 
-import { IconDragAndDrop, IconDelete } from "@Renderer/components/atoms/Icons";
+import {
+  IconClone,
+  IconThreeDots,
+  IconPress,
+  IconRelease,
+  IconPressAndRelease,
+  IconStopWatch,
+  IconDragAndDrop,
+  IconDelete,
+} from "@Renderer/components/atoms/Icons";
 import MacroKeyPortal from "@Renderer/components/molecules/Portals/MacroKeyPortal";
 import Title from "../../component/Title";
 import { ButtonConfig } from "../../component/Button";
 // import { MacroKeyModal } from "../../component/Modal";
-
-import {
-  IconClone,
-  IconThreeDots,
-  IconPressSm,
-  IconReleaseSm,
-  IconPressAndReleaseSm,
-  IconStopWatchSm,
-} from "../../component/Icon";
 
 const Styles = Styled.div`
 .chip {
@@ -184,7 +184,7 @@ class KeyMacro extends Component {
                               <ButtonConfig
                                 buttonText="Press"
                                 icoPosition="left"
-                                icoSVG={<IconPressSm />}
+                                icoSVG={<IconPress size="sm" />}
                                 selected={actionTypes[item.action].name === "Key Press"}
                                 disabled={!!(item.action === 1 || item.action === 2)}
                                 onClick={() => updateAction(item.id, 6)}
@@ -192,7 +192,7 @@ class KeyMacro extends Component {
                               <ButtonConfig
                                 buttonText="Release"
                                 icoPosition="left"
-                                icoSVG={<IconReleaseSm />}
+                                icoSVG={<IconRelease size="sm" />}
                                 selected={actionTypes[item.action].name === "Key Release"}
                                 disabled={!!(item.action === 1 || item.action === 2)}
                                 onClick={() => updateAction(item.id, 7)}
@@ -200,7 +200,7 @@ class KeyMacro extends Component {
                               <ButtonConfig
                                 buttonText="Press & Release"
                                 icoPosition="left"
-                                icoSVG={<IconPressAndReleaseSm />}
+                                icoSVG={<IconPressAndRelease size="sm" />}
                                 selected={actionTypes[item.action].name === "Key Press & Rel."}
                                 disabled={!!(item.action === 1 || item.action === 2)}
                                 onClick={() => updateAction(item.id, 8)}
@@ -359,13 +359,13 @@ class KeyMacro extends Component {
                 </p>
                 <div className="actionicon">
                   {actionTypes[item.action].name === "Key Press" ? (
-                    <IconPressSm />
+                    <IconPress size="sm" />
                   ) : actionTypes[item.action].name === "Key Release" ? (
-                    <IconReleaseSm />
+                    <IconRelease size="sm" />
                   ) : actionTypes[item.action].name === "Key Press & Rel." ? (
-                    <IconPressAndReleaseSm />
+                    <IconPressAndRelease size="sm" />
                   ) : actionTypes[item.action].name === "Delay" ? (
-                    <IconStopWatchSm />
+                    <IconStopWatch size="sm" />
                   ) : (
                     ""
                   )}

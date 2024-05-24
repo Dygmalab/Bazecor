@@ -31,7 +31,7 @@ import { i18n } from "@Renderer/i18n";
 import { RegularButton } from "@Renderer/component/Button";
 
 // Icons Imports
-import { IconArrowDownWithLine, IconFloppyDisk } from "@Renderer/component/Icon";
+import { IconArrowDownWithLine, IconFloppyDisk } from "@Renderer/components/atoms/Icons";
 
 // Utils
 import Store from "@Renderer/utils/Store";

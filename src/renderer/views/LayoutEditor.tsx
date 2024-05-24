@@ -50,7 +50,7 @@ import StandardView from "@Renderer/modules/StandardView";
 import LayerSelector from "@Renderer/components/organisms/Select/LayerSelector";
 import { RegularButton } from "@Renderer/component/Button";
 import { LayoutViewSelector } from "@Renderer/component/ToggleButtons";
-import { IconArrowDownWithLine, IconArrowUpWithLine } from "@Renderer/component/Icon";
+import { IconArrowDownWithLine, IconArrowUpWithLine } from "@Renderer/components/atoms/Icons";
 import LoaderLayout from "@Renderer/components/atoms/Loader/loaderLayout";
 import { i18n } from "@Renderer/i18n";
 

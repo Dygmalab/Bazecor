@@ -7,8 +7,6 @@ import Title from "../../component/Title";
 import Callout from "../../component/Callout";
 import { ButtonConfig } from "../../component/Button";
 
-import { IconArrowInBoxUp } from "../../component/Icon";
-
 const Styles = Styled.div`
 display: flex;
 flex-wrap: wrap;

@@ -28,8 +28,8 @@ import {
   IconNote,
   IconOneShot,
   IconThunder,
-  IconWirelessMd,
-} from "@Renderer/component/Icon";
+  IconWireless,
+} from "@Renderer/components/atoms/Icons";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@Renderer/components/atoms/Tabs";
 import { KeymapDB } from "../../../api/keymap";
 
@@ -401,7 +401,7 @@ export default class StandardView extends React.Component<StandardViewProps, Sta
                   </TabsTrigger>
                   {isWireless && (
                     <TabsTrigger value="tabWireless" variant="tab">
-                      <IconWirelessMd strokeWidth={1.2} /> {i18n.app.menu.wireless}
+                      <IconWireless size="md" strokeWidth={1.2} /> {i18n.app.menu.wireless}
                     </TabsTrigger>
                   )}
                 </TabsList>

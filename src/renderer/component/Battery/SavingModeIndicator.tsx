@@ -4,7 +4,7 @@ import Tooltip from "react-bootstrap/Tooltip";
 
 import Styled from "styled-components";
 
-import { IconLeaf } from "@Renderer/component/Icon";
+import { IconLeaf } from "@Renderer/components/atoms/Icons";
 
 const Style = Styled.div`
 &.status--default {

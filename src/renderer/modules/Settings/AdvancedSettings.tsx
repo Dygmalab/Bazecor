@@ -28,7 +28,7 @@ import { RegularButton } from "@Renderer/component/Button";
 import ConfirmationDialog from "@Renderer/component/ConfirmationDialog";
 
 // Icons Imports
-import { IconChip, IconLayers } from "@Renderer/component/Icon";
+import { IconChip, IconLayers } from "@Renderer/components/atoms/Icons";
 import { AdvancedSettingsProps } from "@Renderer/types/preferences";
 
 const AdvancedKeyboardSettings = () => {

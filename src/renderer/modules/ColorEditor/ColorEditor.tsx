@@ -25,7 +25,7 @@ import { ColorButton } from "@Renderer/component/Button";
 
 // Icons
 import { i18n } from "@Renderer/i18n";
-import { IconColorPalette, IconKeysLight, IconKeysUnderglow } from "@Renderer/component/Icon";
+import { IconColorPalette, IconKeysLight, IconKeysUnderglow } from "@Renderer/components/atoms/Icons";
 import { ColorEditorProps } from "@Renderer/types/colorEditor";
 import { ColorPalette } from "@Renderer/modules/ColorEditor/ColorPalette";
 

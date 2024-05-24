@@ -29,7 +29,7 @@ import { SavingMode } from "@Renderer/modules/Battery";
 import { Card, CardContent, CardHeader, CardTitle } from "@Renderer/components/atoms/Card";
 import { Switch } from "@Renderer/components/atoms/Switch";
 import { Badge } from "@Renderer/component/Badge";
-import { IconFlashlight, IconLeaf, IconInformationBubble } from "@Renderer/component/Icon";
+import { IconFlashlight, IconLeaf, IconInformation } from "@Renderer/components/atoms/Icons";
 import Heading from "@Renderer/components/atoms/Heading";
 import { i18n } from "@Renderer/i18n";
 
@@ -120,7 +120,7 @@ function EnergyManagement(props: EnergyManagementProps) {
                   }
                 >
                   <span className="text-purple-100">
-                    <IconInformationBubble />
+                    <IconInformation />
                   </span>
                 </OverlayTrigger>
               </Heading>

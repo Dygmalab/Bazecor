@@ -27,14 +27,13 @@ import Slider from "@appigram/react-rangeslider";
 // Custom components
 import { Card, CardContent, CardHeader, CardTitle } from "@Renderer/components/atoms/Card";
 import { KBDataPref } from "@Renderer/types/preferences";
-import { IconTypo, IconMouse } from "@Renderer/component/Icon";
+import { IconTypo, IconMouse, IconInformation } from "@Renderer/components/atoms/Icons";
 import Title from "@Renderer/component/Title";
 
 // Assets
 import { i18n } from "@Renderer/i18n";
 import Heading from "@Renderer/components/atoms/Heading";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@Renderer/components/atoms/Tooltip";
-import { IconInformation } from "@Renderer/components/atoms/Icons";
 
 const Styles = Styled.div`
 

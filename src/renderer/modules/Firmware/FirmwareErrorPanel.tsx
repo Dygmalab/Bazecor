@@ -22,6 +22,7 @@ import { useMachine } from "@xstate/react";
 import { i18n } from "@Renderer/i18n";
 
 // State machine
+import { IconNoWifi, IconWarning } from "@Renderer/components/atoms/Icons";
 import FWSelection from "../../controller/FirmwareSelection/machine";
 
 // Visual components
@@ -34,7 +35,6 @@ import FirmwareNeuronStatus from "./FirmwareNeuronStatus";
 
 // Assets
 // import videoDefyCablesDisconnect from "@Assets/videos/connectCablesDefy.mp4";
-import { IconNoWifi, IconWarning } from "../../component/Icon";
 
 const Style = Styled.div`
 width: 100%;

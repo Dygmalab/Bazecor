@@ -27,7 +27,7 @@ import { RegularButton } from "@Renderer/component/Button";
 import { ToggleButtons } from "@Renderer/component/ToggleButtons";
 
 // Assets
-import { IconSignal, IconRadar, IconInformationBubble, IconThunder } from "@Renderer/component/Icon";
+import { IconSignal, IconRadar, IconInformation, IconThunder } from "@Renderer/components/atoms/Icons";
 import { Badge } from "@Renderer/component/Badge";
 import { RFSettingsProps } from "@Renderer/types/wireless";
 
@@ -101,7 +101,7 @@ function RFSettings(props: RFSettingsProps) {
                 }
               >
                 <span className="text-purple-100">
-                  <IconInformationBubble />
+                  <IconInformation />
                 </span>
               </OverlayTrigger>
             </Heading>

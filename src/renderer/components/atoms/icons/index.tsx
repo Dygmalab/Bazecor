@@ -48,6 +48,7 @@ import IconFileDownload from "./IconFileDownload";
 import IconFlashlight from "./IconFLashlight";
 import IconFloppyDisk from "./IconFloppyDisk";
 import IconFolder from "./IconFolder";
+import IconHanger from "./IconHanger";
 import IconHome from "./IconHome";
 import IconInformation from "./IconInformation";
 import IconIridescentWhiteBalance from "./IconIridescentWhiteBalance";
@@ -90,6 +91,7 @@ import IconNeuron from "./IconNeuron";
 import IconNoKey from "./IconNoKey";
 import IconNote from "./IconNote";
 import IconNoWifi from "./IconNoWifi";
+import IconNoSignal from "./IconNoSignal";
 import IconNull from "./IconNull";
 import IconOneShot from "./IconOneShot";
 import IconPause from "./IconPause";
@@ -162,6 +164,7 @@ export {
   IconFlashlight,
   IconFloppyDisk,
   IconFolder,
+  IconHanger,
   IconHome,
   IconInformation,
   IconIridescentWhiteBalance,
@@ -204,6 +207,7 @@ export {
   IconNoKey,
   IconNote,
   IconNoWifi,
+  IconNoSignal,
   IconNull,
   IconOneShot,
   IconPause,

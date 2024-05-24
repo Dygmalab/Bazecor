@@ -6,10 +6,9 @@ import InputGroup from "react-bootstrap/InputGroup";
 import { i18n } from "@Renderer/i18n";
 
 import CustomRadioCheckBox from "@Renderer/components/molecules/Form/CustomRadioCheckBox";
+import { IconArrowInBoxUp, IconMediaShuffle } from "@Renderer/components/atoms/Icons";
 import Title from "../../component/Title";
 import { RegularButton } from "../../component/Button";
-
-import { IconArrowInBoxUp, IconMediaShuffle } from "../../component/Icon";
 
 const Styles = Styled.div`
 display: flex;

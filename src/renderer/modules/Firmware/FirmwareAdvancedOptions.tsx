@@ -20,8 +20,8 @@ import Styled from "styled-components";
 import Dropdown from "react-bootstrap/Dropdown";
 import { i18n } from "@Renderer/i18n";
 
+import { IconMoreVertical } from "@Renderer/components/atoms/Icons";
 import { RegularButton } from "../../component/Button";
-import { IconMoreVertical } from "../../component/Icon";
 
 const Style = Styled.div`
 .button.btn-block{

@@ -29,7 +29,7 @@ import { LEDSettingsPreferences } from "@Renderer/types/preferences";
 // Assets
 // import { Badge } from "@Renderer/component/Badge";
 import { Badge } from "@Renderer/components/atoms/Badge";
-import { IconFlashlight, IconIridescentWhiteBalance, IconThunder } from "@Renderer/component/Icon";
+import { IconFlashlight, IconIridescentWhiteBalance, IconThunder } from "@Renderer/components/atoms/Icons";
 import Callout from "@Renderer/component/Callout";
 import { i18n } from "@Renderer/i18n";
 import Heading from "@Renderer/components/atoms/Heading";

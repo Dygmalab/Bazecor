@@ -29,7 +29,7 @@ import Callout from "@Renderer/component/Callout";
 import { RegularButton } from "@Renderer/component/Button";
 // import { FirmwareLoader } from "@Renderer/component/Loader";
 import LogoLoader from "@Renderer/components/atoms/Loader/LogoLoader";
-import { IconLoader } from "@Renderer/component/Icon";
+import { IconLoader } from "@Renderer/components/atoms/Icons";
 
 // Visual modules
 import { FirmwareNeuronStatus, FirmwareVersionStatus } from "@Renderer/modules/Firmware";
