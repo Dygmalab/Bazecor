@@ -1,7 +1,6 @@
 import React from "react";
 import Styled from "styled-components";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@Renderer/components/atoms/Accordion";
-import { Card, CardContent } from "@Renderer/components/atoms/Card";
 import IconCheckmarkSm from "@Assets/base/icon-checkmark-green.svg";
 import { i18n } from "@Renderer/i18n";
 

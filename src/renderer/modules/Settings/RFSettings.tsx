@@ -16,8 +16,7 @@
 
 import React from "react";
 import { i18n } from "@Renderer/i18n";
-import OverlayTrigger from "react-bootstrap/OverlayTrigger";
-import Tooltip from "react-bootstrap/Tooltip";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@Renderer/components/atoms/Tooltip";
 
 // Custom components
 import { Card, CardContent, CardHeader, CardTitle } from "@Renderer/components/atoms/Card";
@@ -28,7 +27,8 @@ import { ToggleButtons } from "@Renderer/component/ToggleButtons";
 
 // Assets
 import { IconSignal, IconRadar, IconInformation, IconThunder } from "@Renderer/components/atoms/Icons";
-import { Badge } from "@Renderer/component/Badge";
+// import { Badge } from "@Renderer/component/Badge";
+import { Badge } from "@Renderer/components/atoms/Badge";
 import { RFSettingsProps } from "@Renderer/types/wireless";
 
 function RFSettings(props: RFSettingsProps) {
@@ -85,25 +85,41 @@ function RFSettings(props: RFSettingsProps) {
             <div className="flex items-center gap-2">
               <IconRadar /> {i18n.wireless.RFPreferences.RFRadioSignal}
             </div>{" "}
-            <Badge content={i18n.wireless.energyManagement.settings.lowBatteryImpact} variation="subtle" size="sm" />
+            <Badge variant="subtle" size="sm">
+              {i18n.wireless.energyManagement.settings.lowBatteryImpact}
+            </Badge>
           </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="flex flex-row gap-2 items-center justify-between">
             <Heading headingLevel={2} renderAs="paragraph-sm" className="flex flex-row gap-2 items-center">
               {i18n.wireless.energyManagement.settings.manageRFSignal}
-              <OverlayTrigger
-                placement="top"
-                overlay={
-                  <Tooltip id="tooltip-top" className="">
-                    <div dangerouslySetInnerHTML={{ __html: i18n.wireless.energyManagement.settings.tooltipRF }} />
-                  </Tooltip>
-                }
-              >
-                <span className="text-purple-100">
-                  <IconInformation />
-                </span>
-              </OverlayTrigger>
+              <TooltipProvider delayDuration={200}>
+                <Tooltip>
+                  <TooltipTrigger className="[&_svg]:text-purple-100 [&_svg]:dark:text-purple-200">
+                    <IconInformation />
+                  </TooltipTrigger>
+                  <TooltipContent className="max-w-xs">
+                    <>
+                      <p className="text-left">
+                        <strong>High</strong>
+                        <br />
+                        {i18n.wireless.energyManagement.settings.tooltipHighConsumptionMessage}
+                      </p>
+                      <p className="text-left">
+                        <strong>Medium</strong>
+                        <br />
+                        {i18n.wireless.energyManagement.settings.tooltipMediumConsumptionMessage}
+                      </p>
+                      <p className="text-left">
+                        <strong>Low</strong>
+                        <br />
+                        {i18n.wireless.energyManagement.settings.tooltipLowConsumptionMessage}
+                      </p>
+                    </>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
             </Heading>
             <ToggleButtons selectDarkMode={setRfPower} value={wireless.rf.power} listElements={RFModes} styles="flex" size="sm" />
           </div>

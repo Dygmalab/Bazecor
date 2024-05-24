@@ -532,7 +532,10 @@ const English = {
         RFSettingTitle: "RF energy saving settings",
         manageRFSignal: "Manage the power of the radio signal",
         reduceRFFrequency: "Reduce the frequency of data exchange in RF",
-        tooltipRF: `<div style="text-align: left"><strong>High</strong><p>Maximum coverage at the cost of higher energy consumption.</p><strong>Medium</strong><p>Reduced coverage and medium energy consumption</p><strong>Low</strong><p>Designed to conserves battery energy reducing at minimum levels the coverage.</p></div>`,
+        tooltipRF: `<div style="text-align: left"><strong>High</strong><p></p><strong>Medium</strong><p></p><strong>Low</strong><p></p></div>`,
+        tooltipHighConsumptionMessage: "Maximum coverage at the cost of higher energy consumption.",
+        tooltipMediumConsumptionMessage: "Reduced coverage and medium energy consumption.",
+        tooltipLowConsumptionMessage: "Designed to conserves battery energy reducing at minimum levels the coverage.",
       },
     },
     batteryPreferences: {

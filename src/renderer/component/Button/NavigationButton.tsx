@@ -52,19 +52,6 @@ width: 100%;
         font-weight: 600;
         flex: 0 0 100%;
     }
-    .badge {
-        position: absolute;
-        right: 2px;
-        top: 2px;
-        font-size: 9px;
-        font-weight: 700;
-        padding: 4px 6px;
-        z-index: 3;
-        &.badge-primary {
-            background: ${({ theme }) => theme.colors.brandPrimary};
-            border-radius: 16px;
-        }
-    }
     &:hover {
         color: ${({ theme }) => theme.styles.navbar.menuLink.colorHover};
     }
@@ -265,9 +252,13 @@ function NavigationButton({ selected, showNotif, notifText, buttonText, icoSVG, 
             {icoSVG}
             {showNotif ? (
               notifText ? (
-                <div className="badge badge-primary">{notifText}</div>
+                <div className="badge badge-primary absolute font-bold z-[3] text-[9px] right-[2px] top-[2px] py-[4px] px-[6px] bg-primary/100 text-white rounded-2xl">
+                  {notifText}
+                </div>
               ) : (
-                <div className="badge badge-primary">{i18n.app.menu.badgeNew}</div>
+                <div className="badge badge-primary absolute font-bold z-[3] text-[9px] right-[2px] top-[2px] py-[4px] px-[6px] bg-primary/100 text-white rounded-2xl">
+                  {i18n.app.menu.badgeNew}
+                </div>
               )
             ) : (
               ""
