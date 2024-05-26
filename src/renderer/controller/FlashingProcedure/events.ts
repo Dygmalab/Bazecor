@@ -7,7 +7,7 @@ export interface AutoInit {
 }
 
 export interface INTERNAL {
-  readonly type: "flashingPath";
+  readonly type: "internal-event";
 }
 
 export interface ESCPRESSED {

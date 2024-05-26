@@ -99,7 +99,7 @@ const restoreSettings = async (
   }
 };
 
-const reconnect = async (context: Context.ContextType) => {
+export const reconnect = async (context: Context.ContextType) => {
   let result;
   try {
     const foundDevices = async (hardware: any, message: string, isBootloader: boolean) => {
@@ -161,20 +161,21 @@ const reconnect = async (context: Context.ContextType) => {
   return result;
 };
 
-const flashSide = async (side: string, context: Context.ContextType) => {
+export const flashSide = async (side: string, context: Context.ContextType) => {
+  let result = false;
   try {
     const focus = Focus.getInstance();
-    if (flashSides === undefined) {
-      bootloader = context.device.bootloader;
-      comPath = focus._port?.port?.openOptions?.path;
-      flashSides = new SideFlaser(context.firmwares.fwSides);
+    if (context.flashSides === undefined) {
+      context.bootloader = context.device.bootloader;
+      context.comPath = focus._port?.port?.openOptions?.path;
+      context.flashSides = new SideFlaser(context.firmwares.fwSides);
     }
     // Flashing procedure for each side
     await focus.close();
     log.info("done closing focus");
     log.info("Going to flash side:", side);
     const forceFlashSides = false;
-    await flashSides.flashSide(
+    await context.flashSides.flashSide(
       side,
       (stage, percentage) => {
         stateUpdate(stage, percentage, context);
@@ -183,14 +184,21 @@ const flashSide = async (side: string, context: Context.ContextType) => {
       forceFlashSides,
     );
     stateUpdate(side, 100, context);
+    result = true;
   } catch (error) {
     log.warn("error when flashing Sides");
     log.error(error);
     throw new Error(error);
   }
+  if (side === "right") {
+    context.rightResult = result;
+  } else {
+    context.leftResult = result;
+  }
+  return context;
 };
 
-const uploadDefyWired = async (context: Context.ContextType) => {
+export const uploadDefyWired = async (context: Context.ContextType) => {
   let result = false;
   try {
     const focus = Focus.getInstance();
@@ -219,7 +227,7 @@ const uploadDefyWired = async (context: Context.ContextType) => {
   return result;
 };
 
-const resetDefy = async (context: Context.ContextType) => {
+export const resetDefy = async (context: Context.ContextType) => {
   const { currentDevice } = context.deviceState;
   let result;
   try {
@@ -258,7 +266,7 @@ const resetDefy = async (context: Context.ContextType) => {
   return result;
 };
 
-const uploadDefyWireles = async (context: Context.ContextType) => {
+export const uploadDefyWireles = async (context: Context.ContextType) => {
   let result = false;
   try {
     const focus = Focus.getInstance();
@@ -283,7 +291,7 @@ const uploadDefyWireles = async (context: Context.ContextType) => {
   return result;
 };
 
-const restoreDefies = async (context: Context.ContextType) => {
+export const restoreDefies = async (context: Context.ContextType) => {
   let result = false;
   if (bootloader || context.backup === undefined) {
     return true;
@@ -300,7 +308,7 @@ const restoreDefies = async (context: Context.ContextType) => {
   return result;
 };
 
-const resetRaise = async (context: Context.ContextType) => {
+export const resetRaise = async (context: Context.ContextType) => {
   let result = false;
 
   try {
@@ -336,7 +344,7 @@ const resetRaise = async (context: Context.ContextType) => {
   return result;
 };
 
-const uploadRaise = async (context: Context.ContextType) => {
+export const uploadRaise = async (context: Context.ContextType) => {
   let result = false;
   try {
     const focus = Focus.getInstance();
@@ -360,7 +368,7 @@ const uploadRaise = async (context: Context.ContextType) => {
   return result;
 };
 
-const restoreRaise = async (context: Context.ContextType) => {
+export const restoreRaise = async (context: Context.ContextType) => {
   let result = false;
   if (bootloader || context.backup === undefined) {
     return true;
@@ -377,11 +385,11 @@ const restoreRaise = async (context: Context.ContextType) => {
   return result;
 };
 
-const integrateCommsToFocus = async (context: Context.ContextType) => {
-  let result = false;
+export const integrateCommsToFocus = async (context: Context.ContextType): Promise<boolean | undefined> => {
+  let result;
   try {
     const { currentDevice } = context.deviceState;
-    bootloader = currentDevice.bootloader;
+    result = currentDevice.device.bootloader;
     const { path: localPath } = currentDevice;
     const { device } = currentDevice;
 
@@ -393,9 +401,8 @@ const integrateCommsToFocus = async (context: Context.ContextType) => {
     const focus = Focus.getInstance();
     await focus.open(localPath, device, null);
     log.info("opened using focus currentDevice", focus);
-    result = true;
   } catch (error) {
-    log.info("error detected on comms integration: ", error);
+    log.warn("error detected on comms integration: ", error);
   }
 
   return result;

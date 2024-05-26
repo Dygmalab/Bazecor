@@ -16,14 +16,19 @@ const FlashDevice = setup({
   actors: {
     /// Create actors using `fromPromise`
     onInit: fromPromise<Context.ContextType, Input.InputType>(({ input }) => Input.Input(input)),
-    keyboardSetup: fromPromise<string | undefined, Context.ContextType>(({ input }) => Actions.keyboardSetup(input)),
-    GetLSideData: fromPromise<{ leftSideConn: boolean; leftSideBoot: boolean }, Context.ContextType>(({ input }) =>
-      Actions.GetLSideData(input),
-    ),
-    GetRSideData: fromPromise<{ rightSideConn: boolean; rightSideBoot: boolean }, Context.ContextType>(({ input }) =>
+    integrateCommsToFocus: fromPromise<boolean, Context.ContextType>(({ input }) => Actions.integrateCommsToFocus(input)),
+    flashRSide: fromPromise<Context.ContextType, Context.ContextType>(({ input }) => Actions.flashSide("right", input)),
+    flashLSide: fromPromise<Context.ContextType, Context.ContextType>(({ input }) => Actions.flashSide("left", input)),
+    uploadDefyWired: fromPromise<{ rightSideConn: boolean; rightSideBoot: boolean }, Context.ContextType>(({ input }) =>
       Actions.GetRSideData(input),
     ),
-    CreateBackup: fromPromise<BackupType | undefined, Context.ContextType>(({ input }) => Actions.CreateBackup(input)),
+    resetDefy: fromPromise<BackupType | undefined, Context.ContextType>(({ input }) => Actions.CreateBackup(input)),
+    uploadDefyWireles: fromPromise<BackupType | undefined, Context.ContextType>(({ input }) => Actions.CreateBackup(input)),
+    reconnect: fromPromise<BackupType | undefined, Context.ContextType>(({ input }) => Actions.CreateBackup(input)),
+    restoreDefies: fromPromise<BackupType | undefined, Context.ContextType>(({ input }) => Actions.CreateBackup(input)),
+    resetRaise: fromPromise<BackupType | undefined, Context.ContextType>(({ input }) => Actions.CreateBackup(input)),
+    uploadRaise: fromPromise<BackupType | undefined, Context.ContextType>(({ input }) => Actions.CreateBackup(input)),
+    restoreRaise: fromPromise<BackupType | undefined, Context.ContextType>(({ input }) => Actions.CreateBackup(input)),
   },
   actions: {
     /// Execute `Actions`
@@ -76,11 +81,22 @@ const FlashDevice = setup({
           "addEscListener",
         ],
         invoke: {
-          id: "integrateComms",
-          src: fromPromise(({ input }) => integrateCommsToFocus(input.context)),
-          input: ({ context }) => ({ context }),
+          src: "integrateCommsToFocus",
+          input: ({ context }) => context,
           onDone: {
-            actions: [assign({ loadedComms: ({ event }) => event.output })],
+            actions: assign(({ event }) => {
+              log.info(event);
+              if (event.output !== undefined) {
+                return {
+                  bootloader: event.output,
+                  loadedComms: true,
+                };
+              }
+              return {
+                bootloader: event.output,
+                loadedComms: false,
+              };
+            }),
           },
           onError: {
             target: "failure",
@@ -106,7 +122,7 @@ const FlashDevice = setup({
             stateblock: () => 1,
           }),
           "toggleFlashing",
-          raise({ type: "flashingPath" }),
+          raise({ type: "internal-event" }),
         ],
         on: {
           "*": [
@@ -129,12 +145,17 @@ const FlashDevice = setup({
           })),
         ],
         invoke: {
-          id: "flashRightSide",
-          src: fromPromise(({ input }) => flashSide("right", input.context)),
-          input: ({ context }) => ({ context }),
+          src: "flashRSide",
+          input: ({ context }) => context,
           onDone: {
             target: "flashLeftSide",
-            actions: [assign({ rightResult: ({ event }) => event.output })],
+            actions: assign(({ event }) => ({
+              bootloader: event.output.bootloader,
+              comPath: event.output.comPath,
+              flashSides: event.output.flashSides,
+              rightResult: event.output.rightResult,
+              leftResult: event.output.leftResult,
+            })),
           },
           onError: {
             target: "failure",
@@ -167,14 +188,13 @@ const FlashDevice = setup({
           })),
         ],
         invoke: {
-          id: "flashLeftSide",
-          src: fromPromise(({ input }) => flashSide("left", input.context)),
-          input: ({ context }) => ({ context }),
+          src: "flashLSide",
+          input: ({ context }) => context,
           onDone: {
             actions: [
               assign({ leftResult: ({ event }) => event.output }),
               assign({ DefyVariant: ({ context }) => `${context.device.info.product}${context.device.info.keyboardType}` }),
-              raise({ type: "internal" }),
+              raise({ type: "internal-event" }),
             ],
           },
           onError: {
