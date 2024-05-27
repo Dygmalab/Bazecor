@@ -46,11 +46,10 @@ import { MacroActionsType, MacrosType } from "@Renderer/types/macros";
 // import { LogoLoaderCentered } from "@Renderer/component/Loader";
 import LogoLoader from "@Renderer/components/atoms/Loader/LogoLoader";
 import { RegularButton } from "@Renderer/component/Button";
-import Callout from "@Renderer/component/Callout";
 import { IconFloppyDisk, IconLoader } from "@Renderer/components/atoms/Icons";
 import { MacroSelector } from "@Renderer/component/Select";
 import ToastMessage from "@Renderer/component/ToastMessage";
-// import Callout from "@Renderer/components/molecules/Callout/Callout";
+import Callout from "@Renderer/components/molecules/Callout/Callout";
 
 // Modules
 import { PageHeader } from "@Renderer/modules/PageHeader";
@@ -820,7 +819,7 @@ function MacroEditor(props: MacroEditorProps) {
           inContext={modified}
         />
 
-        {/* <Callout
+        <Callout
           size="sm"
           className="mt-4"
           hasVideo
@@ -828,18 +827,10 @@ function MacroEditor(props: MacroEditorProps) {
           videoTitle="13 Time-saving MACROS For Your Keyboard"
           videoDuration="5:24"
         >
-          {i18n.editor.macros.callout}
-        </Callout> */}
+          <p>{i18n.editor.macros.callout1}</p>
+          <p>{i18n.editor.macros.callout2}</p>
+        </Callout>
 
-        <Callout
-          content={i18n.editor.macros.callout}
-          className="mt-md"
-          size="sm"
-          hasVideo
-          media="MfTUvFrHLsE"
-          videoTitle="13 Time-saving MACROS For Your Keyboard"
-          videoDuration="5:24"
-        />
         {macros[selectedMacro] === undefined || macros[selectedMacro].actions === undefined ? (
           <div />
         ) : (

@@ -214,8 +214,9 @@ const English = {
         cancelButton: "Cancel",
         applyButton: "Update Keyboard",
       },
-      callout:
-        "<p>Macros are sequences of events (such as keystrokes, mouse clicks, and delays) that can be played back to help with repetitive strings of texts or tasks. </p><p>They can also be used to replay sequences that are long or difficult to run.</p>",
+      callout1:
+        "Macros are sequences of events (such as keystrokes, mouse clicks, and delays) that can be played back to help with repetitive strings of texts or tasks.",
+      callout2: "They can also be used to replay sequences that are long or difficult to run.",
       textTabs: {
         title: "Text",
         callout: "<p>Using text you can add an entire sequence of commands using only one key.</p>",
@@ -317,8 +318,9 @@ const English = {
       },
       superkeys: {
         title: "Superkeys",
-        callOut:
-          "<p>You are about to create crazy combinations to boost your workflow! 🔥</p><p>Superkeys allow up to 5 different functions in a single key. You activate each function with a tap, hold, tap and hold, double-tap or double-tap and hold.</p>",
+        callout1: "You are about to create crazy combinations to boost your workflow! 🔥",
+        callout2:
+          "Superkeys allow up to 5 different functions in a single key. You activate each function with a tap, hold, tap and hold, double-tap or double-tap and hold.",
         label: "Select Superkey",
       },
       wireless: {
@@ -391,8 +393,9 @@ const English = {
         doubleTapAndHoldLabel: "2Tap & hold",
         doubleTapAndHold: "Tap twice fast and hold to see others keyboards crying.",
       },
-      callout:
-        "<p>Wow! Superpowers, my friend!</p><p>Superkeys allow up to 5 different functions in a single key. You activate each function with a tap, hold, tap and hold, double-tap or double-tap and hold. This allows you to create crazy combinations to boost your workflow.</p>",
+      callout1: "Wow! Superpowers, my friend!",
+      callout2:
+        "Superkeys allow up to 5 different functions in a single key. You activate each function with a tap, hold, tap and hold, double-tap or double-tap and hold. This allows you to create crazy combinations to boost your workflow.",
       tooltip:
         "You can edit keys in two different ways. Advanced users may prefer Single View which is designed for quick key editing.",
       collapse: {

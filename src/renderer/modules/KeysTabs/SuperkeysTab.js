@@ -5,8 +5,8 @@ import Styled from "styled-components";
 import Dropdown from "react-bootstrap/Dropdown";
 import { i18n } from "@Renderer/i18n";
 
+import Callout from "@Renderer/components/molecules/Callout/Callout";
 import Title from "../../component/Title";
-import Callout from "../../component/Callout";
 
 import ListModifiers from "../../component/ListModifiers/ListModifiers";
 
@@ -194,13 +194,16 @@ class SuperkeysTab extends Component {
         <div className="tabContentWrapper">
           <Title text={i18n.editor.standardView.superkeys.title} headingLevel={3} />
           <Callout
-            content={i18n.editor.standardView.superkeys.callOut}
             size="sm"
+            className="mt-4"
             hasVideo
             media="6Az05_Yl6AU"
             videoTitle="The Greatest Keyboard Feature Of All Time: SUPERKEYS! 🦹‍♀️"
             videoDuration="5:34"
-          />
+          >
+            <p>{i18n.editor.standardView.superkeys.callout1}</p>
+            <p>{i18n.editor.standardView.superkeys.callout2}</p>
+          </Callout>
 
           <Title text={i18n.editor.standardView.superkeys.label} headingLevel={4} />
           <div className="superKeyGroup">
