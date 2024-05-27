@@ -6,7 +6,6 @@ import ListModifier from "@Renderer/components/molecules/ListModifiers/ListModif
 import { IconKeysPress, IconKeysTapHold, IconKeysHold, IconKeys2Tap, IconKeys2TapHold } from "@Renderer/components/atoms/Icons";
 import { KeymapDB } from "../../../api/keymap";
 import { Picker } from ".";
-// import ListModifiers from "../../component/ListModifiers/ListModifiers";
 
 import ModPicker from "./ModPicker";
 import KeyVisualizer from "../KeyVisualizer";

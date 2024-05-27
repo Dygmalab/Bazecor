@@ -22,8 +22,6 @@ import { SegmentedKeyType } from "@Renderer/types/layout";
 import ListModifier from "@Renderer/components/molecules/ListModifiers/ListModifiers";
 import Title from "../../component/Title";
 
-// import ListModifiers from "../../component/ListModifiers/ListModifiers";
-
 const Style = Styled.div`
 &.KeyVisualizer {
     padding: 16px;

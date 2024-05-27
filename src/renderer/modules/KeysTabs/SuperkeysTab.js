@@ -6,9 +6,8 @@ import Dropdown from "react-bootstrap/Dropdown";
 import { i18n } from "@Renderer/i18n";
 
 import Callout from "@Renderer/components/molecules/Callout/Callout";
+import ListModifier from "@Renderer/components/molecules/ListModifiers/ListModifiers";
 import Title from "../../component/Title";
-
-import ListModifiers from "../../component/ListModifiers/ListModifiers";
 
 import Keymap, { KeymapDB } from "../../../api/keymap";
 
@@ -247,7 +246,7 @@ class SuperkeysTab extends Component {
                       </div>
                       <div className="superKey">
                         {this.translateSuperKeyAction(superkeys[superk.indexOf(KC)].actions[index])}
-                        <ListModifiers keyCode={superkeys[superk.indexOf(KC)].actions[index]} />
+                        <ListModifier keyCode={superkeys[superk.indexOf(KC)].actions[index]} />
                       </div>
                     </div>
                   ))}

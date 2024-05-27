@@ -19,10 +19,9 @@ import React, { useState } from "react";
 import Styled from "styled-components";
 
 import { SuperkeyPickerProps } from "@Renderer/types/superkeys";
+import ListModifier from "@Renderer/components/molecules/ListModifiers/ListModifiers";
 import Title from "../Title";
 import { IconCloseXs } from "../Icon";
-
-import ListModifiers from "../ListModifiers/ListModifiers";
 
 const Style = Styled.div`
 .superkeyAction {
@@ -244,7 +243,7 @@ function SuperkeyPicker(props: SuperkeyPickerProps) {
           {/* TODO: Div with click should not exist, use Button instead!! */}
           <div className="superkeyButton" aria-hidden="true" onClick={() => onClick(index)}>
             <div className="superkeyButtonInner">{keyContent}</div>
-            {superkeys[selected] !== undefined ? <ListModifiers keyCode={superkeys[selected].actions[index]} /> : ""}
+            {superkeys[selected] !== undefined ? <ListModifier keyCode={superkeys[selected].actions[index]} /> : ""}
           </div>
         </div>
       </div>

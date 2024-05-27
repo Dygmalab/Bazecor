@@ -18,7 +18,6 @@
  */
 
 import React from "react";
-// import ListModifiersKey from "../../renderer/component/ListModifiers/ListModifiersKey";
 import ListModifiersKey from "@Renderer/components/molecules/ListModifiers/ListModifiersKey";
 
 interface KeyShapeProps {
