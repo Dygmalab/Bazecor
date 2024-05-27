@@ -6,6 +6,7 @@
     "module": "commonjs",
     "moduleResolution": "node",
     "forceConsistentCasingInFileNames": true,
+    "maxNodeModuleJsDepth": 0,
     "noEmit": true,
     "paths": {
       "@Assets/*": ["src/static/*"],
@@ -16,7 +17,7 @@
     "resolveJsonModule": true,
     "skipLibCheck": true,
     "sourceMap": true,
-    "target": "ES6",
+    "target": "ES6"
   },
   "include": ["src/**/*"]
 }

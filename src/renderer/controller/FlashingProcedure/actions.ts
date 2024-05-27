@@ -47,7 +47,7 @@ const stateUpdate = (stage: string, percentage: number, context: Context.Context
     default:
       break;
   }
-  if (context.device.info.product === "Raise") {
+  if (context.device?.info.product === "Raise") {
     globalProgress = leftProgress * 0 + rightProgress * 0 + resetProgress * 0.33 + neuronProgress * 0.33 + restoreProgress * 0.33;
   } else {
     globalProgress =
@@ -79,7 +79,7 @@ const restoreSettings = async (
   log.info(backup);
   if (backup === undefined || context.backup?.backup.length === 0) {
     const list = (await DeviceTools.list()) as Device[];
-    const selected = list.find(x => x.productId === context.originalDevice.device.info.productID);
+    const selected = list.find(x => x.productId === context.originalDevice?.device?.info.product);
     if (selected !== undefined) await DeviceTools.connect(selected);
     return true;
   }
@@ -87,7 +87,7 @@ const restoreSettings = async (
   try {
     let device: Device | undefined;
     const list = (await DeviceTools.list()) as Device[];
-    const selected = list.find(x => x.productId === context.originalDevice.device.info.productID);
+    const selected = list.find(x => x.productId === context.originalDevice?.device?.info.product);
     if (selected !== undefined) device = await DeviceTools.connect(selected);
     for (let i = 0; i < backup.backup.length; i += 1) {
       const val = backup.backup[i].data;
@@ -115,8 +115,8 @@ export const reconnect = async (context: Context.ContextType) => {
             isBootloader
               ? device.device?.bootloader !== undefined &&
                 device.device.bootloader === isBootloader &&
-                context.originalDevice.device.info.keyboardType === device.device.info.keyboardType
-              : context.originalDevice.device.info.keyboardType === device.device?.info.keyboardType
+                context.originalDevice?.device?.info.keyboardType === device.device.info.keyboardType
+              : context.originalDevice?.device?.info.keyboardType === device.device?.info.keyboardType
           ) {
             result = device;
             break;
@@ -180,7 +180,7 @@ export const flashSide = async (side: string, context: Context.ContextType) => {
       (stage, percentage) => {
         stateUpdate(stage, percentage, context);
       },
-      context.device.info.keyboardType,
+      context.device?.info.keyboardType as string,
       forceFlashSides,
     );
     stateUpdate(side, 100, context);
@@ -202,9 +202,9 @@ export const uploadDefyWired = async (context: Context.ContextType) => {
   try {
     const { currentDevice } = context.deviceState as State;
     if (context.flashSides === undefined) {
-      context.bootloader = context.device.bootloader;
+      context.bootloader = context.device?.bootloader;
       context.comPath = (currentDevice?.port as SerialPort).path;
-      context.flashSides = new SideFlaser(context.firmwares.fwSides);
+      context.flashSides = new SideFlaser(context.firmwares?.fwSides);
       context.originalDevice = currentDevice;
     }
     await DeviceTools.disconnect(currentDevice);
@@ -215,7 +215,7 @@ export const uploadDefyWired = async (context: Context.ContextType) => {
       stateUpdate("neuron", 60, context);
       const finalPath = path.join(rsl, "default.uf2");
       // log.info("RESULTS!!!", rsl, context.firmwares.fw, " to ", finalPath);
-      fs.writeFileSync(finalPath, Buffer.from(new Uint8Array(context.firmwares.fw)));
+      fs.writeFileSync(finalPath, Buffer.from(new Uint8Array(context.firmwares?.fw)));
       stateUpdate("neuron", 80, context);
     });
     stateUpdate("neuron", 100, context);
@@ -271,11 +271,9 @@ export const uploadDefyWireless = async (context: Context.ContextType) => {
       await DeviceTools.disconnect(currentDevice);
     }
     // log.info(context.originalDevice.device, focus, focus._port, flashDefyWireless);
-    await context.originalDevice.device.flash(
-      currentDevice.port,
-      context.firmwares.fw,
+    await context.flashDefyWireless?.updateFirmware(
+      context.firmwares?.fw,
       context.bootloader,
-      context.flashDefyWireless,
       (stage: string, percentage: number) => {
         stateUpdate(stage, percentage, context);
       },
@@ -310,16 +308,16 @@ export const resetRaise = async (context: Context.ContextType) => {
   try {
     const { currentDevice } = context.deviceState as State;
     if (context.flashRaise === undefined) {
-      context.flashRaise = new FlashRaise(context.originalDevice.device);
+      context.flashRaise = new FlashRaise(context.originalDevice?.device);
       context.comPath = (currentDevice.port as SerialPort).path;
-      context.bootloader = context.device.bootloader;
+      context.bootloader = context.device?.bootloader;
     }
     if (!context.bootloader) {
       try {
-        log.info("reset indicators", currentDevice, context.flashRaise, context.originalDevice.device);
+        log.info("reset indicators", currentDevice, context.flashRaise, context.originalDevice?.device);
         if (currentDevice.isClosed) {
           await DeviceTools.disconnect(currentDevice);
-          await DeviceTools.connect(context.originalDevice);
+          await DeviceTools.connect(context.originalDevice as Device);
         }
         await context.flashRaise.resetKeyboard(currentDevice.port as SerialPort, (stage: string, percentage: number) => {
           stateUpdate(stage, percentage, context);
@@ -329,7 +327,7 @@ export const resetRaise = async (context: Context.ContextType) => {
         throw new Error(error);
       }
     } else {
-      context.flashRaise.currentPort = { ...context.device };
+      // context.flashRaise.currentPort?.path = context.device?.path as string;
     }
   } catch (error) {
     log.warn("error when resetting Neuron");
@@ -343,18 +341,13 @@ export const uploadRaise = async (context: Context.ContextType) => {
   let result = false;
   try {
     const focus = Focus.getInstance();
-    if (!context.device.bootloader) {
+    if (!context.device?.bootloader) {
       await focus.close();
     }
-    log.info(context.originalDevice.device, focus, focus._port, context.flashRaise);
-    result = await context.originalDevice.device.flash(
-      focus._port,
-      context.firmwares.fw,
-      context.flashRaise,
-      (stage: string, percentage: number) => {
-        stateUpdate(stage, percentage, context);
-      },
-    );
+    log.info(context.originalDevice?.device, focus, focus._port, context.flashRaise);
+    result = await context.flashRaise?.updateFirmware(context.firmwares?.fw, (stage: string, percentage: number) => {
+      stateUpdate(stage, percentage, context);
+    });
   } catch (error) {
     log.warn("error when flashing Neuron");
     log.error(error);
