@@ -23,12 +23,12 @@ import { i18n } from "@Renderer/i18n";
 
 // State machine
 import { IconNoWifi, IconWarning } from "@Renderer/components/atoms/Icons";
+import LogoLoader from "@Renderer/components/atoms/Loader/LogoLoader";
 import FWSelection from "../../controller/FirmwareSelection/machine";
 
 // Visual components
 import Title from "../../component/Title";
 import { RegularButton } from "../../component/Button";
-import { FirmwareLoader } from "../../component/Loader";
 
 // Visual modules
 import FirmwareNeuronStatus from "./FirmwareNeuronStatus";
@@ -221,7 +221,7 @@ function FirmwareErrorPanel(props: FirmwareErrorPanelType) {
   return (
     <Style>
       {!handleError || loading ? (
-        <FirmwareLoader width={undefined} warning={undefined} error={undefined} paused={undefined} />
+        <LogoLoader firmwareLoader />
       ) : (
         <div className="firmware-wrapper">
           <div className="firmware-row">

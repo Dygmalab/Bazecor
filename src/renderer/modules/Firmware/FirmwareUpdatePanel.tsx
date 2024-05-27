@@ -27,7 +27,6 @@ import FirmwareSelection from "@Renderer/controller/FirmwareSelection/machine";
 import Title from "@Renderer/component/Title";
 import Callout from "@Renderer/components/molecules/Callout/Callout";
 import { RegularButton } from "@Renderer/component/Button";
-// import { FirmwareLoader } from "@Renderer/component/Loader";
 import LogoLoader from "@Renderer/components/atoms/Loader/LogoLoader";
 import { IconLoader } from "@Renderer/components/atoms/Icons";
 

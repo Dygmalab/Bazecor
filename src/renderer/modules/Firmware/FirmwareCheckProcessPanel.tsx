@@ -30,7 +30,7 @@ import { ContextType } from "@Renderer/controller/FirmwareSelection/context";
 import Title from "@Renderer/component/Title";
 import Callout from "@Renderer/components/molecules/Callout/Callout";
 import { RegularButton } from "@Renderer/component/Button";
-import { FirmwareLoader } from "@Renderer/component/Loader";
+import LogoLoader from "@Renderer/components/atoms/Loader/LogoLoader";
 // import AccordionFirmware from "@Renderer/component/Accordion/AccordionFirmware";
 import AccordionFirmware from "@Renderer/components/molecules/CustomAccordion/AccordionFirmware";
 
@@ -210,7 +210,7 @@ function FirmwareCheckProcessPanel(props: FirmwareCheckProcessPanelType) {
   return (
     <Style>
       {loading ? (
-        <FirmwareLoader width={undefined} warning={undefined} error={undefined} paused={undefined} />
+        <LogoLoader firmwareLoader />
       ) : (
         <div>
           {state.context.device.info.product !== "Raise" ? (

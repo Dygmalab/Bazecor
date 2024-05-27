@@ -28,7 +28,7 @@ import FlashDevice from "@Renderer/controller/FlashingProcedure/machine";
 // Visual components
 import Title from "@Renderer/component/Title";
 import { RegularButton } from "@Renderer/component/Button";
-import { FirmwareLoader } from "@Renderer/component/Loader";
+import LogoLoader from "@Renderer/components/atoms/Loader/LogoLoader";
 
 // Visual modules
 import FirmwareProgressStatus from "./FirmwareProgressStatus";
@@ -231,7 +231,7 @@ function FirmwareUpdateProcess(props: FirmwareUpdateProcessProps) {
   return (
     <Style>
       {loading ? (
-        <FirmwareLoader width={undefined} warning={undefined} error={undefined} paused={undefined} />
+        <LogoLoader firmwareLoader />
       ) : (
         <div className="firmware-wrapper upgrade-firmware">
           <div className="firmware-row progress-visualizer">

@@ -20,7 +20,7 @@ import Styled from "styled-components";
 // import ProgressBar from "react-bootstrap/ProgressBar";
 import { i18n } from "@Renderer/i18n";
 
-import StepsProgressBar from "@Renderer/components/atoms/stepsBar/StepsProgressBar";
+import StepsProgressBar from "@Renderer/components/atoms/StepsBar/StepsProgressBar";
 import { Progress } from "@Renderer/components/atoms/Progress";
 import CircleLoader from "@Renderer/components/atoms/Loader/CircleLoader";
 import Title from "../../component/Title";
