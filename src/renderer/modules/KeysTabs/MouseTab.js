@@ -20,8 +20,8 @@ import Styled from "styled-components";
 import log from "electron-log/renderer";
 import { i18n } from "@Renderer/i18n";
 
+import Callout from "@Renderer/components/molecules/Callout/Callout";
 import Title from "../../component/Title";
-import Callout from "../../component/Callout";
 // import MouseEventsReference from "../../component/MouseEventsReference";
 import { ButtonConfig, ButtonMouse } from "../../component/Button";
 
@@ -153,7 +153,10 @@ function MouseTab({ isStandardView, keyCode, onAddSpecial, actTab }) {
         {isStandardView ? (
           <>
             <Title text={i18n.editor.standardView.mouse.title} headingLevel={3} />
-            <Callout content={i18n.editor.standardView.mouse.callOut} size="sm" />
+
+            <Callout size="sm" className="mt-4">
+              <p>{i18n.editor.standardView.mouse.callOut}</p>
+            </Callout>
           </>
         ) : null}
         <div className="mouseWrapper">

@@ -3,8 +3,8 @@ import Styled from "styled-components";
 
 import { i18n } from "@Renderer/i18n";
 
+import Callout from "@Renderer/components/molecules/Callout/Callout";
 import Title from "../../component/Title";
-import Callout from "../../component/Callout";
 import { ButtonConfig } from "../../component/Button";
 
 const Styles = Styled.div`
@@ -51,7 +51,9 @@ class OneShotTab extends Component {
           {isStandardView ? (
             <>
               <Title text={i18n.editor.standardView.oneShot.title} headingLevel={3} />
-              <Callout content={i18n.editor.standardView.oneShot.callOut} size="sm" />
+              <Callout size="sm" className="mt-4">
+                <p>{i18n.editor.standardView.callOut}</p>
+              </Callout>
             </>
           ) : null}
 

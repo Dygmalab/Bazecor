@@ -29,7 +29,7 @@ const alertVariants = cva("relative w-full rounded-lg", {
       variant: "default",
       behaviour: "callout",
       size: "sm",
-      className: "[&_svg]:top-[10px]",
+      className: "[&_svg]:top-[10px] [&_p]:text-ssm",
     },
   ],
   defaultVariants: {
@@ -55,7 +55,7 @@ AlertTitle.displayName = "AlertTitle";
 
 const AlertDescription = React.forwardRef<HTMLParagraphElement, React.HTMLAttributes<HTMLParagraphElement>>(
   ({ className, ...props }, ref) => (
-    <div ref={ref} className={cn("text-sm [&_p]:leading-relaxed [&_p:last-of-type]:mb-0", className)} {...props} />
+    <div ref={ref} className={cn("[&_p]:leading-relaxed [&_p:last-of-type]:mb-0", className)} {...props} />
   ),
 );
 AlertDescription.displayName = "AlertDescription";

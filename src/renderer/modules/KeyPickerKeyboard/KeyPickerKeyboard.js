@@ -154,11 +154,6 @@ width: -webkit-fill-available;
 
 }
 
-@media (max-height: 890px) {
-  .callOut {
-    max-width: 100%!important;
-  }
-}
 @media screen and (max-width: 1240px) {
   // .singleViewWrapper {
   //   grid-template-columns: 1fr;

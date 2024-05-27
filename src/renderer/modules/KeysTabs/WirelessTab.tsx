@@ -6,7 +6,7 @@ import { TabLayoutEditorProps } from "@Renderer/types/pages";
 import { i18n } from "@Renderer/i18n";
 
 import Title from "@Renderer/component/Title";
-import Callout from "@Renderer/component/Callout";
+import Callout from "@Renderer/components/molecules/Callout/Callout";
 import { ButtonConfig } from "@Renderer/component/Button";
 import { BatteryCodes } from "@Renderer/../hw/battery";
 import { BluetoothCodes } from "@Renderer/../hw/bluetooth";
@@ -43,7 +43,9 @@ function WirelessTab(props: TabLayoutEditorProps) {
       <div className="tabContentWrapper">
         <div className="buttonsRow">
           <Title text={i18n.app.menu.wireless} headingLevel={3} />
-          <Callout content={i18n.editor.standardView.wireless.callOut} size="sm" />
+          <Callout size="sm" className="mt-4">
+            <p>{i18n.editor.standardView.wireless.callOut}</p>
+          </Callout>
           <div className="keysButtonsList">
             <Title text={i18n.editor.standardView.wireless.batteryPowerStatus} headingLevel={4} />
             <p className="description">{i18n.editor.standardView.wireless.batteryLevelDescription}</p>

@@ -4,7 +4,7 @@ import Styled from "styled-components";
 import { i18n } from "@Renderer/i18n";
 
 import Title from "@Renderer/component/Title";
-import CallOut from "@Renderer/component/Callout";
+import Callout from "@Renderer/components/molecules/Callout/Callout";
 import { KeyPickerReduced } from "@Renderer/modules/KeyPickerKeyboard";
 import ModPicker from "@Renderer/modules/KeyPickerKeyboard/ModPicker";
 import DualFunctionPicker from "@Renderer/modules/KeyPickerKeyboard/DualFunctionPicker";
@@ -90,7 +90,9 @@ class KeysTab extends Component {
                 headingLevel={3}
                 className="counterIndicator counter1"
               />
-              <CallOut content={i18n.editor.standardView.keys.callOut} className="reduceMargin" size="sm" />
+              <Callout size="sm" className="mt-4">
+                <p>{i18n.editor.standardView.keys.callOut}</p>
+              </Callout>
             </>
           ) : (
             <Title text={i18n.editor.standardView.keys.keys} headingLevel={4} />
@@ -120,14 +122,16 @@ class KeysTab extends Component {
                 headingLevel={3}
                 className="counterIndicator counter2 mt-2"
               />
-              <CallOut
-                content={i18n.editor.standardView.keys.callOutEnhance}
+              <Callout
                 size="sm"
+                className="mt-4 mb-4"
                 hasVideo
                 media="Yk8S0TJuZ8A"
                 videoTitle="These keys have a SECRET function"
                 videoDuration="3:57"
-              />
+              >
+                <p>{i18n.editor.standardView.keys.callOutEnhance}</p>
+              </Callout>
               <div className="cardButtons cardButtonsModifier">
                 <Title text={i18n.editor.standardView.keys.addModifiers} headingLevel={4} />
                 <p>{i18n.editor.standardView.keys.descriptionModifiers}</p>

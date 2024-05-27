@@ -25,7 +25,7 @@ import FirmwareSelection from "@Renderer/controller/FirmwareSelection/machine";
 
 // Visual components
 import Title from "@Renderer/component/Title";
-import Callout from "@Renderer/component/Callout";
+import Callout from "@Renderer/components/molecules/Callout/Callout";
 import { RegularButton } from "@Renderer/component/Button";
 // import { FirmwareLoader } from "@Renderer/component/Loader";
 import LogoLoader from "@Renderer/components/atoms/Loader/LogoLoader";
@@ -208,14 +208,19 @@ function FirmwareUpdatePanel(props: FirmwareUpdatePanelProps) {
                   type={state.context.isUpdated ? "success" : "warning"}
                 />
                 <Callout
-                  content={i18n.firmwareUpdate.texts.calloutIntroText}
-                  className="mt-lg"
-                  size="md"
+                  className="mt-4"
+                  size="sm"
                   hasVideo={state.context.device.info.product === "Raise"}
                   media="aVu7EL4LXMI"
                   videoTitle="How to update the Software & Firmware of your Dygma keyboard"
                   videoDuration={state.context.device.info.product === "Raise" ? "2:58" : null}
-                />
+                >
+                  <p>
+                    {i18n.firmwareUpdate.texts.calloutIntroText}
+                    <br />
+                    {i18n.firmwareUpdate.texts.calloutIntroText2}
+                  </p>
+                </Callout>
               </div>
             </div>
             <div className="firmware-sidebar borderRightTopRadius">

@@ -3,8 +3,8 @@ import Styled from "styled-components";
 import { i18n } from "@Renderer/i18n";
 
 import { IconArrowInBoxUp } from "@Renderer/components/atoms/Icons";
+import Callout from "@Renderer/components/molecules/Callout/Callout";
 import Title from "../../component/Title";
-import Callout from "../../component/Callout";
 import { Select } from "../../component/Select";
 import { RegularButton } from "../../component/Button";
 
@@ -17,10 +17,6 @@ h4 {
     flex: 0 0 100%;
     width: 100%;
     margin-top: 24px;
-}
-.callOut {
-    width: 100%;
-    flex: 0 0 100%;
 }
 .w100 {
     width: 100%;
@@ -75,19 +71,22 @@ class MacroTab extends Component {
           {isStandardView ? (
             <>
               <Title text={i18n.editor.standardView.macros.title} headingLevel={3} />
-
               <Callout
-                content={i18n.editor.standardView.macros.callOut}
                 size="sm"
-                className="w100"
+                className="mt-4"
                 hasVideo
                 media="MfTUvFrHLsE"
                 videoTitle="13 Time-saving MACROS For Your Keyboard"
                 videoDuration="5:24"
-              />
+              >
+                <p>{i18n.editor.standardView.macros.callOut1}</p>
+                <p>{i18n.editor.standardView.macros.callOut2}</p>
+              </Callout>
             </>
           ) : (
-            <Callout content={i18n.editor.macros.macroTab.callout} className="w100" size="sm" />
+            <Callout size="sm" className="mt-4">
+              <p>{i18n.editor.macros.macroTab.callout}</p>
+            </Callout>
           )}
           <Title text={i18n.editor.macros.macroTab.label} headingLevel={4} />
           <div className="w100">

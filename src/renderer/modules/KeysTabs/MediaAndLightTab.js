@@ -3,7 +3,7 @@ import Styled from "styled-components";
 import { i18n } from "@Renderer/i18n";
 
 import Title from "@Renderer/component/Title";
-import Callout from "@Renderer/component/Callout";
+import Callout from "@Renderer/components/molecules/Callout/Callout";
 import { ButtonConfig } from "@Renderer/component/Button";
 
 import {
@@ -104,7 +104,9 @@ class MediaAndLightTab extends Component {
           {isStandardView ? (
             <>
               <Title text={i18n.editor.standardView.mediaAndLED.title} headingLevel={3} />
-              <Callout content={i18n.editor.standardView.mediaAndLED.callOut} size="sm" />
+              <Callout size="sm" className="mt-4">
+                <p>{i18n.editor.standardView.mediaAndLED.callOut}</p>
+              </Callout>
             </>
           ) : null}
           <div className="buttonsRow">

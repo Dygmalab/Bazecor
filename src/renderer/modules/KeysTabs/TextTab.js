@@ -5,8 +5,8 @@ import Form from "react-bootstrap/Form";
 import { i18n } from "@Renderer/i18n";
 
 import { IconArrowInBoxUp } from "@Renderer/components/atoms/Icons";
+import Callout from "@Renderer/components/molecules/Callout/Callout";
 import Title from "../../component/Title";
-import Callout from "../../component/Callout";
 import { RegularButton } from "../../component/Button";
 
 const Styles = Styled.div`
@@ -49,7 +49,9 @@ class TextTab extends Component {
     return (
       <Styles>
         <div className="tabContentWrapper">
-          <Callout content={i18n.editor.macros.textTabs.callout} className="w100" size="sm" />
+          <Callout size="sm" className="mt-4 karaka">
+            <p>{i18n.editor.macros.textTabs.callout}</p>
+          </Callout>
           <Title text={i18n.editor.macros.textTabs.title} headingLevel={4} />
           <Form.Control
             type="text"

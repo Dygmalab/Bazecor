@@ -219,7 +219,7 @@ const English = {
       callout2: "They can also be used to replay sequences that are long or difficult to run.",
       textTabs: {
         title: "Text",
-        callout: "<p>Using text you can add an entire sequence of commands using only one key.</p>",
+        callout: "Using text you can add an entire sequence of commands using only one key.",
         placeholder: "Enter text",
         buttonText: "Add to timeline",
       },
@@ -229,7 +229,7 @@ const English = {
         minMaxDescription: "from 1 to 65535 miliseconds",
       },
       macroTab: {
-        callout: "<p>That's right! You can add macros inside macros! 🔥</p>",
+        callout: "That's right! You can add macros inside macros! 🔥",
         label: "Select macro",
       },
       memoryUsage: {
@@ -287,8 +287,9 @@ const English = {
       },
       macros: {
         title: "Macro",
-        callOut:
-          "<p>Oh Yeah!! More superpowers! Here you can add macros to your keys! 🔥</p><p>Not so clear what is macros? Macros are sequences of events (such as keystrokes, mouse clicks, and delays) that can be played back to help with repetitive strings of texts or tasks.</p><p>They can also be used to replay sequences that are long or difficult to run.</p>",
+        callOut1: "Oh Yeah!! More superpowers! Here you can add macros to your keys! 🔥",
+        callOut2:
+          "Not so clear what is macros? Macros are sequences of events (such as keystrokes, mouse clicks, and delays) that can be played back to help with repetitive strings of texts or tasks. They can also be used to replay sequences that are long or difficult to run.",
       },
       mediaAndLED: {
         title: "Media & LED",
@@ -752,8 +753,9 @@ const English = {
       letsStart: "Let's start",
       versionUpdatedTitle: "Your firmware is up to date 🤙",
       versionOutdatedTitle: "New update is available",
-      calloutIntroText:
-        "Updating your device firmware is how we implement new cool features and bug fixes.<br><br>Make sure your keyboard is connected directly to your computer using the original Dygma cables; no hubs or KVMs, please 😊",
+      calloutIntroText: "Updating your device firmware is how we implement new cool features and bug fixes.",
+      calloutIntroText2:
+        "Make sure your keyboard is connected directly to your computer using the original Dygma cables; no hubs or KVMs, please 😊",
       neuronUpdatedText: "[Solid as a rock!]",
       neuronOutdatedText: "[Almost is never enough]",
       versionExists: "Device Firmware Update",
@@ -766,7 +768,7 @@ const English = {
       advUsersText2: "If you have installed your own ",
       advUsersText3: ", this update will overwrite it.",
       disclaimerTitle: "Start update process",
-      disclaimerContent: `<strong>Before the update the Neuron will backup your layers and settings after that the update process will begin automatically.</strong>`,
+      disclaimerContent: `Before the update the Neuron will backup your layers and settings after that the update process will begin automatically.`,
       disclaimerContent2:
         "If the firmware update process isn't successful, don't worry. It won't damage your device, but you will need to repeat the process.",
       disclaimerContent3:

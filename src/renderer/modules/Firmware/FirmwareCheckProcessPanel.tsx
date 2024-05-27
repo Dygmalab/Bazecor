@@ -28,7 +28,7 @@ import { ContextType } from "@Renderer/controller/FirmwareSelection/context";
 
 // Visual components
 import Title from "@Renderer/component/Title";
-import Callout from "@Renderer/component/Callout";
+import Callout from "@Renderer/components/molecules/Callout/Callout";
 import { RegularButton } from "@Renderer/component/Button";
 import { FirmwareLoader } from "@Renderer/component/Loader";
 // import AccordionFirmware from "@Renderer/component/Accordion/AccordionFirmware";
@@ -239,7 +239,9 @@ function FirmwareCheckProcessPanel(props: FirmwareCheckProcessPanelType) {
                           className="disclaimerContent"
                           dangerouslySetInnerHTML={{ __html: i18n.firmwareUpdate.texts.disclaimerContent3 }}
                         />
-                        <Callout content={i18n.firmwareUpdate.texts.disclaimerContent2} size="sm" className="mt-lg" />
+                        <Callout size="sm" className="mt-4">
+                          <p>{i18n.firmwareUpdate.texts.disclaimerContent2}</p>
+                        </Callout>
                       </>
                     ) : (
                       ""

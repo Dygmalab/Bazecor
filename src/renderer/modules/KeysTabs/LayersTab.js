@@ -3,8 +3,8 @@ import Styled from "styled-components";
 
 import { i18n } from "@Renderer/i18n";
 
+import Callout from "@Renderer/components/molecules/Callout/Callout";
 import Title from "../../component/Title";
-import Callout from "../../component/Callout";
 import { ButtonConfig } from "../../component/Button";
 
 const Styles = Styled.div`
@@ -60,13 +60,15 @@ class LayersTab extends Component {
 
           {isStandardView ? (
             <Callout
-              content={i18n.editor.standardView.layers.callOut}
               size="sm"
+              className="mt-4"
               hasVideo
               media="wsx0OtkKXXg"
               videoTitle="This 60% keyboard can have +2500 keys!"
               videoDuration="6:50"
-            />
+            >
+              <p>{i18n.editor.standardView.layers.callOut}</p>
+            </Callout>
           ) : null}
           <div className="cardButtons">
             <Title text={i18n.editor.standardView.layers.layerSwitch} headingLevel={4} />
