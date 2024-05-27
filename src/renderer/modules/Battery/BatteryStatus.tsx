@@ -11,7 +11,7 @@ import { BatteryStatusSide, SavingModeIndicator } from "@Renderer/component/Batt
 import { IconRefresh, IconBattery } from "@Renderer/components/atoms/Icons";
 
 import { useDevice } from "@Renderer/DeviceContext";
-import { LogoLoader } from "@Renderer/component/Loader";
+import LogoLoader from "@Renderer/components/atoms/Loader/LogoLoader";
 import { i18n } from "@Renderer/i18n";
 
 const Style = Styled.div`

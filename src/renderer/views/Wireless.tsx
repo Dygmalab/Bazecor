@@ -10,7 +10,7 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 
 // Custom component imports
-import { LogoLoader } from "@Renderer/component/Loader";
+import LogoLoader from "@Renderer/components/atoms/Loader/LogoLoader";
 import { PageHeader } from "@Renderer/modules/PageHeader";
 import { BatterySettings, EnergyManagement, RFSettings } from "@Renderer/modules/Settings";
 

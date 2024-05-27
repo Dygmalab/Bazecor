@@ -43,7 +43,6 @@ import { SuperkeysType } from "@Renderer/types/superkeys";
 import { MacroActionsType, MacrosType } from "@Renderer/types/macros";
 
 // Components
-// import { LogoLoaderCentered } from "@Renderer/component/Loader";
 import LogoLoader from "@Renderer/components/atoms/Loader/LogoLoader";
 import { RegularButton } from "@Renderer/component/Button";
 import { IconFloppyDisk, IconLoader } from "@Renderer/components/atoms/Icons";

@@ -59,7 +59,7 @@ import { useDevice } from "@Renderer/DeviceContext";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@Renderer/components/atoms/Tabs";
 import { KBDataPref, PrefState, PreferencesProps } from "@Renderer/types/preferences";
 import { WirelessInterface } from "@Renderer/types/wireless";
-import { LogoLoader } from "@Renderer/component/Loader";
+import LogoLoader from "@Renderer/components/atoms/Loader/LogoLoader";
 import { Neuron } from "@Renderer/types/neurons";
 import Backup from "../../api/backup";
 

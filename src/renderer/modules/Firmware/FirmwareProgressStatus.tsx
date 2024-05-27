@@ -22,10 +22,10 @@ import { i18n } from "@Renderer/i18n";
 
 import StepsProgressBar from "@Renderer/components/atoms/stepsBar/StepsProgressBar";
 import { Progress } from "@Renderer/components/atoms/Progress";
+import CircleLoader from "@Renderer/components/atoms/Loader/CircleLoader";
 import Title from "../../component/Title";
 // import { StepsProgressBar } from "../../component/StepsBar";
 import FirmwareImageHelp from "./FirmwareImageHelp";
-import { CircleLoader } from "../../component/Loader";
 
 const Style = Styled.div`
 width: 100%;
