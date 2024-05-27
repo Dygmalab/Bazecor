@@ -30,6 +30,11 @@ import Title from "@Renderer/component/Title";
 import { RegularButton } from "@Renderer/component/Button";
 import { FirmwareLoader } from "@Renderer/component/Loader";
 
+// types
+import { DygmaDeviceType } from "@Renderer/types/devices";
+import { ContextType } from "@Renderer/controller/DeviceChecks/context";
+import { BackupType } from "@Renderer/types/backups";
+
 // Visual modules
 import FirmwareProgressStatus from "./FirmwareProgressStatus";
 
@@ -95,11 +100,11 @@ height: inherit;
 interface FirmwareUpdateProcessProps {
   nextBlock: (context: any) => void;
   retryBlock: (context: any) => void;
-  context: any;
+  context: ContextType;
   toggleFlashing: () => void;
   toggleFwUpdate: (value: boolean) => void;
   onDisconnect: () => void;
-  setRestoredOk: (value: number) => void;
+  setRestoredOk: (value: boolean) => void;
 }
 
 function FirmwareUpdateProcess(props: FirmwareUpdateProcessProps) {
@@ -113,7 +118,7 @@ function FirmwareUpdateProcess(props: FirmwareUpdateProcessProps) {
       case 27:
         log.info("esc key logged");
         // eslint-disable-next-line @typescript-eslint/no-use-before-define
-        send({ type: "ESCPRESSED" });
+        send({ type: "escpressed-event" });
         break;
       default:
         break;
@@ -122,41 +127,41 @@ function FirmwareUpdateProcess(props: FirmwareUpdateProcessProps) {
 
   const [state, send] = useMachine(
     FlashDevice.provide({
-      addEscListener: () => {
-        log.info("added event listener");
-        document.addEventListener("keydown", handleKeyDown);
-      },
-      removeEscListener: () => {
-        log.info("removed event listener");
-        document.removeEventListener("keydown", handleKeyDown);
-      },
-      toggleFlashing: async () => {
-        if (toggledFlashing) return;
-        log.info("starting flashing indicators");
-        toggleFlashing();
-        toggleFwUpdate(true);
-        sendToggledFlashing(true);
-      },
-      finishFlashing: async () => {
-        if (!toggledFlashing) return;
-        setRestoredOk(state.context.restoreResult as number);
-        sendToggledFlashing(false);
-        log.info("closing flashin process");
-        toggleFlashing();
-        toggleFwUpdate(false);
-        onDisconnect();
+      actions: {
+        addEscListener: () => {
+          log.info("added event listener");
+          document.addEventListener("keydown", handleKeyDown);
+        },
+        removeEscListener: () => {
+          log.info("removed event listener");
+          document.removeEventListener("keydown", handleKeyDown);
+        },
+        toggleFlashing: async () => {
+          if (toggledFlashing) return;
+          log.info("starting flashing indicators");
+          toggleFlashing();
+          toggleFwUpdate(true);
+          sendToggledFlashing(true);
+        },
+        finishFlashing: async () => {
+          if (!toggledFlashing) return;
+          setRestoredOk(state.context.restoreResult as boolean);
+          sendToggledFlashing(false);
+          log.info("closing flashin process");
+          toggleFlashing();
+          toggleFwUpdate(false);
+          onDisconnect();
+        },
       },
     }),
     {
       input: {
         deviceState,
-        device: deviceState.currentDevice.device,
-        originalDevice: deviceState.currentDevice,
-        backup: context.backup ? context.backup : undefined,
+        device: deviceState.currentDevice.device as DygmaDeviceType,
+        backup: context.backup as BackupType,
         firmwares: context.firmwares,
-        isUpdated: context.isUpdated,
-        versions: context.versions,
-        RaiseBrightness: context.RaiseBrightness,
+        isUpdated: context.isUpdated as boolean,
+        RaiseBrightness: context.RaiseBrightness as string,
         sideLeftOk: context.sideLeftOk,
         sideLeftBL: context.sideLeftBL,
         sideRightOK: context.sideRightOK,
@@ -170,7 +175,7 @@ function FirmwareUpdateProcess(props: FirmwareUpdateProcessProps) {
     if (state.context.stateblock > 0) {
       setLoading(false);
     }
-    if (state.matches("success")) nextBlock(state.context);
+    if (state.value === "success") nextBlock(state.context);
   }, [nextBlock, state]);
 
   const stepsDefy = [
@@ -247,9 +252,9 @@ function FirmwareUpdateProcess(props: FirmwareUpdateProcessProps) {
               retriesDefyWired={state.context.retriesDefyWired}
               restoreProgress={state.context.restoreProgress}
               countdown={state.context.stateblock}
-              deviceProduct={state.context.device.info.product}
-              keyboardType={state.context.device.info.keyboardType}
-              steps={state.context.device.info.product === "Defy" ? stepsDefy : stepsRaise}
+              deviceProduct={state.context.device?.info.product}
+              keyboardType={state.context.device?.info.keyboardType}
+              steps={state.context.device?.info.product === "Defy" ? stepsDefy : stepsRaise}
             />
           </div>
           {state.context.stateblock === 1 ? (
@@ -267,13 +272,13 @@ function FirmwareUpdateProcess(props: FirmwareUpdateProcessProps) {
               <div className="holdTootip">
                 <Title
                   text={
-                    state.context.device.info.product === "Raise"
+                    state.context.device?.info.product === "Raise"
                       ? i18n.firmwareUpdate.texts.flashCardHelp
                       : i18n.firmwareUpdate.texts.flashCardHelpDefy
                   }
                   headingLevel={6}
                   tooltip={
-                    state.context.device.info.product === "Raise"
+                    state.context.device?.info.product === "Raise"
                       ? i18n.firmwareUpdate.texts.flashCardHelpTooltip
                       : i18n.firmwareUpdate.texts.flashCardHelpTooltipDefy
                   }
@@ -292,7 +297,7 @@ function FirmwareUpdateProcess(props: FirmwareUpdateProcessProps) {
                   size="sm"
                   buttonText={i18n.firmwareUpdate.texts.cancelButton}
                   onClick={() => {
-                    send({ type: "CANCEL" });
+                    send({ type: "cancel-event" });
                     retryBlock(state.context);
                   }}
                 />
@@ -301,20 +306,20 @@ function FirmwareUpdateProcess(props: FirmwareUpdateProcessProps) {
                   size="sm"
                   buttonText="Retry the flashing procedure"
                   onClick={() => {
-                    send({ type: "RETRY" });
+                    send({ type: "retry-event" });
                   }}
                 />
               </div>
               <div className="holdTootip">
                 <Title
                   text={
-                    state.context.device.info.product === "Raise"
+                    state.context.device?.info.product === "Raise"
                       ? i18n.firmwareUpdate.texts.flashCardHelp
                       : i18n.firmwareUpdate.texts.flashCardHelpDefy
                   }
                   headingLevel={6}
                   tooltip={
-                    state.context.device.info.product === "Raise"
+                    state.context.device?.info.product === "Raise"
                       ? i18n.firmwareUpdate.texts.flashCardHelpTooltip
                       : i18n.firmwareUpdate.texts.flashCardHelpTooltipDefy
                   }

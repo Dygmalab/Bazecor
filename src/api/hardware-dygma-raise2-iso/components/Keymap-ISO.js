@@ -1610,8 +1610,8 @@ class KeymapISO extends React.Component {
             dataKeyIndex={keyIndex(4, 5)}
             dataLayer={layer}
             contrastText={getContrastText(getColor(4, 5))}
-            centerPrimary={getCenterPrimary(4, 6, 0, 0, true)}
-            centerExtra={getCenterExtra(4, 6, 0, 0, true)}
+            centerPrimary={getCenterPrimary(4, 5, 0, 0, true)}
+            centerExtra={getCenterExtra(4, 5, 0, 0, true)}
           />
 
           <Key
@@ -1630,8 +1630,8 @@ class KeymapISO extends React.Component {
             dataKeyIndex={keyIndex(4, 6)}
             dataLayer={layer}
             contrastText={getContrastText(getColor(4, 6))}
-            centerPrimary={getCenterPrimary(4, 7, 0, 0, true)}
-            centerExtra={getCenterExtra(4, 7, 0, 0, true)}
+            centerPrimary={getCenterPrimary(4, 6, 0, 0, true)}
+            centerExtra={getCenterExtra(4, 6, 0, 0, true)}
           />
           <Key
             keyType="regularKey"

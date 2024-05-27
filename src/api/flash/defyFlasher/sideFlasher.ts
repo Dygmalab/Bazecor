@@ -35,8 +35,8 @@ import log from "electron-log/renderer";
 import type { PortInfo } from "@serialport/bindings-cpp";
 import { delay } from "../delay";
 
-const SerialPort = eval('require("serialport")');
-const Delimiter = eval('require("@serialport/parser-delimiter")');
+const { SerialPort } = eval('require("serialport")');
+const { DelimiterParser } = eval('require("@serialport/parser-delimiter")');
 
 export default class SideFlaser {
   firmwareSides: Buffer;
@@ -64,11 +64,12 @@ export default class SideFlaser {
     if (selectedDev === undefined) throw new Error("Flashable device not found");
 
     // Serial port instancing
-    const serialport = new SerialPort(selectedDev.path, {
+    const serialport = new SerialPort({
+      path: selectedDev.path,
       baudRate: 115200,
       lock: true,
     });
-    const parser = serialport.pipe(new Delimiter({ delimiter: "\r\n" }));
+    const parser = serialport.pipe(new DelimiterParser({ delimiter: "\r\n" }));
     const receivedData = [];
     parser.on("data", (data: Buffer) => {
       receivedData.push(data.toString("utf-8"));
@@ -116,8 +117,8 @@ export default class SideFlaser {
 
       // Serial port instancing
       if (this.serialport !== undefined) {
-        log.info("closing serial port", this.serialport.isOpen);
         try {
+          log.info("closing serial port", this.serialport.isOpen);
           await this.serialport.close();
           await delay(500);
         } catch (error) {
@@ -125,25 +126,28 @@ export default class SideFlaser {
         }
       }
 
-      let deviceList = await SerialPort.list();
+      let deviceList: PortInfo[] = await SerialPort.list();
       let retry = 5;
       let selectedDev = deviceList.find((dev: PortInfo) => parseInt(dev.vendorId as string, 16) === 0x35ef);
-      while (selectedDev === undefined && retry > 0) {
-        await delay(500);
-        deviceList = await SerialPort.list();
-        selectedDev = deviceList.find((dev: PortInfo) => parseInt(dev.vendorId as string, 16) === 0x35ef);
-        retry -= 1;
+      if (selectedDev === undefined) {
+        while (selectedDev === undefined && retry > 0) {
+          await delay(500);
+          deviceList = await SerialPort.SerialPort.list();
+          selectedDev = deviceList.find((dev: PortInfo) => parseInt(dev.vendorId as string, 16) === 0x35ef);
+          retry -= 1;
+        }
       }
-      log.info("Found this device:", deviceList, selectedDev);
-
       if (selectedDev === undefined) throw new Error("Flashable device not found");
+      log.info("Found this device:", selectedDev);
 
-      this.serialport = await new SerialPort(selectedDev.path, {
+      this.serialport = new SerialPort({
+        path: selectedDev?.path,
         baudRate: 115200,
         lock: true,
+        endOnClose: true,
       });
       log.info("defined serialport");
-      const parser = this.serialport.pipe(new Delimiter({ delimiter: "\r\n" }));
+      const parser = this.serialport.pipe(new DelimiterParser({ delimiter: "\r\n" }));
       receivedData = [];
       parser.on("data", (data: Buffer) => {
         receivedData.push(data.toString("utf-8"));
@@ -269,7 +273,7 @@ export default class SideFlaser {
       }
     } catch (error) {
       log.info("error when flashing side");
-      log.info("Going to close Serialport! cause its: ", this.serialport.isOpen);
+      log.info("Going to close Serialport! cause its: ", this.serialport?.isOpen);
       let limit = 10;
       while (this.serialport !== undefined && this.serialport.isOpen && limit > 0) {
         await this.serialport.close();

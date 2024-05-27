@@ -23,4 +23,14 @@ export interface CANCEL {
   readonly type: "cancel-event";
 }
 
-export type Events = AutoInit | INTERNAL | ESCPRESSED | AUTOPRESSED | RETRY | CANCEL;
+export interface INC {
+  readonly type: "increment-event";
+  readonly globalProgress: number;
+  readonly leftProgress: number;
+  readonly rightProgress: number;
+  readonly resetProgress: number;
+  readonly neuronProgress: number;
+  readonly restoreProgress: number;
+}
+
+export type Events = AutoInit | INTERNAL | ESCPRESSED | AUTOPRESSED | RETRY | CANCEL | INC;

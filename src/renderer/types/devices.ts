@@ -18,6 +18,7 @@
 import { SerialPort } from "serialport";
 import HID from "../../api/hid/hid";
 import DeviceMap from "../../api/comms/deviceMap";
+import Device from "src/api/comms/Device";
 
 export interface DeviceClass {
   type: string;
@@ -31,9 +32,9 @@ export interface DeviceClass {
   timeout: number;
   result: string;
   callbacks: Array<(value: unknown) => void>;
-  device: DygmaDeviceType;
+  device: DygmaDeviceType | undefined;
   port?: HID | SerialPort;
-  commands?: { [key: string]: any };
+  commands?: { [key: string]: unknown; help: Array<string> };
   file?: boolean;
   isClosed: boolean;
   isSending: boolean;
@@ -47,10 +48,9 @@ export interface DeviceClass {
   serialRequest: (cmd: string, ...args: Array<string>) => Promise<string>;
   hidRequest: (cmd: string, ...args: Array<string>) => Promise<string>;
   virtualRequest: (cmd: string, ...args: Array<string>) => Promise<string>;
-  command: (cmd: string, ...args: Array<string>) => Promise<string>;
-  noCacheCommand: (cmd: string, ...args: Array<string>) => Promise<string>;
+  command: (cmd: string, ...args: Array<string>) => Promise<string | undefined>;
+  noCacheCommand: (cmd: string, ...args: Array<string>) => Promise<string | undefined>;
   write_parts: (parts: Array<string>, cb: () => void) => Promise<void>;
-  addCommands: (cmds: string) => void;
 }
 
 export interface USBDeviceDescriptor {
@@ -73,12 +73,12 @@ export interface NonSerialDevice {
 
 export interface DeviceType {
   path: string;
-  manufacturer: string | undefined;
-  serialNumber: string | undefined;
-  pnpId: string | undefined;
-  locationId: string | undefined;
-  productId: string | undefined;
-  vendorId: string | undefined;
+  manufacturer: string;
+  serialNumber: string;
+  pnpId: string;
+  locationId: string;
+  productId: string;
+  vendorId: string;
   device?: DygmaDeviceType;
 }
 
@@ -104,7 +104,7 @@ export type Dispatch = (action: Action) => void;
 
 export type State = {
   selected: number;
-  currentDevice: DeviceClass;
+  currentDevice: Device;
   deviceList: Array<DeviceClass>;
 };
 

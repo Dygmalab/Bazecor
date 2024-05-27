@@ -7,10 +7,12 @@ import Device from "../api/comms/Device";
 import HID from "../api/hid/hid";
 import { isVirtualType } from "../api/comms/virtual";
 
-type ContextType = {
-  state: State;
-  dispatch: React.Dispatch<Action>;
-};
+type ContextType =
+  | {
+      state: State;
+      dispatch: React.Dispatch<Action>;
+    }
+  | undefined;
 
 const DeviceContext = createContext<ContextType>(undefined);
 
@@ -107,7 +109,7 @@ const list = async () => {
   return finalDevices;
 };
 
-const connect = async (device: DeviceClass | VirtualType) => {
+const connect = async (device: Device | VirtualType) => {
   try {
     if (isVirtualType(device)) {
       const result = await new Device(device, "virtual");
@@ -134,7 +136,7 @@ const connect = async (device: DeviceClass | VirtualType) => {
   return undefined;
 };
 
-const disconnect = async (device: DeviceClass) => {
+const disconnect = async (device: Device) => {
   try {
     if (!device?.isClosed) {
       await device.close();
