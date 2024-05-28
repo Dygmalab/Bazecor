@@ -41,7 +41,8 @@ import {
   AlertDialogTitle,
 } from "@Renderer/components/atoms/AlertDialog";
 import { BatteryStatus } from "@Renderer/modules/Battery";
-import { NavigationButton } from "@Renderer/component/Button";
+// import { NavigationButton } from "@Renderer/component/Button";
+import NavigationButton from "@Renderer/components/molecules/CustomButton/NavigationButton";
 import { i18n } from "@Renderer/i18n";
 
 // Types

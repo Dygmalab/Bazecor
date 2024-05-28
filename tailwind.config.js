@@ -11,6 +11,7 @@ module.exports = {
       fontSize: {
         xxs: "0.625rem", // 10px
         "2xxs": "0.6875rem", // 11px
+        "3xxs": "0.75rem", // 12px
         ssm: "0.8125rem", // 13px
         "2ssm": "0.875em", // 14px
         "2xl": "1.5rem",
@@ -101,6 +102,7 @@ module.exports = {
         noise: "url('/assets/images/noise.png')",
         home: "url('/assets/images/home-hero-background.jpg')",
         lightAccent: "url('@Assets/base/light-accent--md.png')",
+        lightAccentLg: "url('@Assets/base/light-accent--lg.png')",
         tabMenuDark: "url(@Assets/dark/noise-tabs.jpg)",
         tabMenu: "url(@Assets/light/noise-tabs.jpg)",
         tabGradientDarkActive:
