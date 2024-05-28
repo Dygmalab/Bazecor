@@ -473,7 +473,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
     store.get("settings.isStandardView") !== undefined ? (store.get("settings.isStandardView") as boolean) : false,
   );
   const [showStandardView, setShowStandardView] = useState(false);
-  const [viewMode, setViewMode] = useState("standard");
+  const [viewMode, setViewMode] = useState(store.get("settings.isStandardView") !== undefined ? "standard" : "single");
   const [layoutSelectorPosition, setLayoutSelectorPosition] = useState({
     x: 0,
     y: 0,
@@ -1634,6 +1634,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
       log.info("Language automatically set to: ", newLanguage);
       setCurrentLanguageLayout(newLanguage || "english");
       setIsStandardView(standardView);
+      setViewMode(standardView ? "standard" : "single");
       setLoading(false);
       setCurrentLayer(0);
       setScanned(true);
