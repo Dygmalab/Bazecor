@@ -18,94 +18,8 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
 import React from "react";
-import Styled from "styled-components";
-import OverlayTrigger from "react-bootstrap/OverlayTrigger";
-import Tooltip from "react-bootstrap/Tooltip";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@Renderer/components/atoms/Tooltip";
 import { i18n } from "@Renderer/i18n";
-
-const Style = Styled.div`
-@media screen and (max-width: 999px) {
-  .menuLinkText {
-      display: none;
-  }
-  .menuLink:after {
-      right: -14px;
-  }
-  .menuLink:before {
-      right: -17px;
-      height: 36px;
-  }
-  .menuLinkInner {
-      align-items: center;
-      display: flex;
-      justify-content: center;
-      padding: 0;
-  }
-  .menuLinkInner svg {
-      transform: scale(1);
-      flex: 0 0 26px;
-  }
-  .menuLink .badge {
-      right: -18px;
-  }
-}
-@media screen and (max-width: 860px) {
-  .menuLinkText {
-      display: none;
-  }
-  .menuLink:before {
-      right: -15px;
-      height: 26px;
-  }
-  .menuLinkInner {
-      align-items: center;
-      display: flex;
-      justify-content: center;
-      padding: 0;
-  }
-  .menuLinkInner svg {
-    transform: scale(1);
-    flex: 0 0 30px;
-  }
-  .menuLink .badge {
-      right: -18px;
-  }
-}
-@media screen and (max-height: 870px) {
-  .menuLinkText {
-      display: none;
-  }
-  .menuLink:before {
-      right: -15px;
-      height: 36px;
-  }
-  .menuLinkInner {
-      align-items: center;
-      display: flex;
-      justify-content: center;
-      padding: 0;
-  }
-  .menuLinkInner svg {
-    transform: scale(1);
-    flex: 0 0 30px;
-  }
-  .menuLink .badge {
-      right: -18px;
-  }
-}
-@media screen and (max-height: 670px) {
-  .menuLink:before {
-    height: 26px;
-  }
-  .menuLink:after {
-    right: -12px;
-  }
-  .menuLinkInner svg {
-    transform: scale(1);
-    flex: 0 0 24px;
-  }
-}
-`;
 
 interface NavigationButtonProps {
   selected: boolean;
@@ -125,36 +39,38 @@ function NavigationButton({
   disabled = false,
 }: NavigationButtonProps) {
   return (
-    <Style className="w-full">
-      <OverlayTrigger
-        placement="right"
-        overlay={
-          <Tooltip className="tooltipMenu">
-            <div dangerouslySetInnerHTML={{ __html: buttonText }} />
-          </Tooltip>
-        }
-      >
-        <div
-          className={`group menuLink w-full flex aspect-square flex-wrap justify-center relative text-center text-gray-200 hover:text-gray-500 [&_svg]:text-gray-400 hover:[&_svg]:text-gray-600 dark:text-gray-300 dark:hover:text-gray-50 dark:[&_svg]:text-gray-50 dark:hover:[&_svg]:text-gray-50 transition-colors no-underline before:content-[' '] before:absolute before:right-[-15px] before:top-1/2 before:w-[3px] before:h-[42px] before:transition-all before:z-[2] before:transform-style-3d before:translate-y-[-50%] before:rounded-r-[3px] before:bg-gradient-to-b before:from-primary before:to-secondary before:opacity-0 after:content-[' '] after:absolute after:right-[-12px] after:top-1/2 after:transform-style-3d after:translate-y-[-50%] after:w-[32px] after:h-[96px] after:bg-lightAccentLg after:z-[1] after:transition-all after:opacity-0 ${selected ? "active group/enabled before:opacity-100 after:opacity-50 dark:after:opacity-100 [&_div]:before:opacity-100 text-purple-300 hover:text-purple-300 [&_svg]:text-secondary/100 hover:[&_svg]:text-secondary/100 dark:text-gray-50 dark:hover:text-gray-50 dark:[&_svg]:text-gray-50" : ""} ${disabled ? "disabled opacity-50 pointer-events-none text-gray-200 dark:text-gray-300 " : ""}`}
-        >
-          <div className="menuLinkInner relative w-full aspect-square flex justify-center items-center flex-wrap py-[8px] px-[6px] [&_svg]:relative [&_svg]:z-[2] [&_svg]:flex [&_svg]:grow-0 [&_svg]:shrink-0 [&_svg]:basis-full before:absolute before:content-[' '] before:opacity-0 before:transition-all before:rounded-[6px] before:w-full before:h-full before:aspect-ratio before:left-0 before:right-0 before:z-[1] before:bg-gradient-to-tl before:from-gray-25 before:to-gray-100/50 dark:before:from-gray-800/30 dark:before:to-gray-300/30 group-hover:before:opacity-100">
-            {icoSVG}
-            {showNotif ? (
-              <div className="badge badge-primary absolute font-bold z-[3] text-[9px] right-[2px] top-[2px] py-[4px] px-[6px] bg-primary/100 text-white rounded-2xl">
-                {notifText || i18n.app.menu.badgeNew}
-              </div>
-            ) : (
-              ""
-            )}
+    <div className="w-full">
+      <TooltipProvider delayDuration={200}>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <div className="corte">
+              <div
+                className={`group menuLink w-full flex aspect-square flex-wrap justify-center relative text-center text-gray-200 hover:text-gray-500 [&_svg]:text-gray-400 hover:[&_svg]:text-gray-600 dark:text-gray-300 dark:hover:text-gray-50 dark:[&_svg]:text-gray-50 dark:hover:[&_svg]:text-gray-50 transition-colors no-underline before:content-[' '] before:absolute before:right-[-15px] before:top-1/2 before:w-[3px] before:h-[42px] before:transition-all before:z-[2] before:transform-style-3d before:translate-y-[-50%] before:rounded-r-[3px] before:bg-gradient-to-b before:from-primary before:to-secondary before:opacity-0 after:content-[' '] after:absolute after:right-[-12px] after:top-1/2 after:transform-style-3d after:translate-y-[-50%] after:w-[32px] after:h-[96px] after:bg-lightAccentLg after:z-[1] after:transition-all after:opacity-0 ${selected ? "active group/enabled before:opacity-100 after:opacity-50 dark:after:opacity-100 [&_div]:before:opacity-100 text-purple-300 hover:text-purple-300 [&_svg]:text-secondary/100 hover:[&_svg]:text-secondary/100 dark:text-gray-50 dark:hover:text-gray-50 dark:[&_svg]:text-gray-50" : ""} ${disabled ? "disabled opacity-50 pointer-events-none text-gray-200 dark:text-gray-300 " : ""}`}
+              >
+                <div className="menuLinkInner relative w-full aspect-square flex justify-center items-center flex-wrap py-[8px] px-[6px] [&_svg]:relative [&_svg]:z-[2] [&_svg]:flex [&_svg]:grow-0 [&_svg]:shrink-0 [&_svg]:basis-full before:absolute before:content-[' '] before:opacity-0 before:transition-all before:rounded-[6px] before:w-full before:h-full before:aspect-ratio before:left-0 before:right-0 before:z-[1] before:bg-gradient-to-tl before:from-gray-25 before:to-gray-100/50 dark:before:from-gray-800/30 dark:before:to-gray-300/30 group-hover:before:opacity-100">
+                  {icoSVG}
+                  {showNotif ? (
+                    <div className="badge badge-primary absolute font-bold z-[3] text-[9px] right-[2px] top-[2px] py-[4px] px-[6px] bg-primary/100 text-white rounded-2xl">
+                      {notifText || i18n.app.menu.badgeNew}
+                    </div>
+                  ) : (
+                    ""
+                  )}
 
-            <div
-              dangerouslySetInnerHTML={{ __html: buttonText }}
-              className="menuLinkText relative font-semibold text-3xxs grow-0 shrink-0 basis-full z-[2] mb-auto"
-            />
-          </div>
-        </div>
-      </OverlayTrigger>
-    </Style>
+                  <div
+                    dangerouslySetInnerHTML={{ __html: buttonText }}
+                    className="menuLinkText text-wrap relative font-semibold text-3xxs grow-0 shrink-0 basis-full z-[2] mb-auto"
+                  />
+                </div>
+              </div>
+            </div>
+          </TooltipTrigger>
+          <TooltipContent className="sm:flex md:flex lg:hidden xl:hidden whitespace-nowrap text-ssm" side="right">
+            <div className="whitespace-nowrap" dangerouslySetInnerHTML={{ __html: buttonText }} />
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
+    </div>
   );
 }
 

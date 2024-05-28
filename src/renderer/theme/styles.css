@@ -611,3 +611,88 @@ select:focus {
 .Toastify__toast-container--top-right {
   @apply top-[92px] right-[26px];
 }
+
+/*
+// Main Button
+*/
+@media screen and (max-width: 999px) {
+  .menuLinkText {
+    display: none;
+  }
+  .menuLink:after {
+    right: -14px;
+  }
+  .menuLink:before {
+    right: -17px;
+    height: 36px;
+  }
+  .menuLinkInner {
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    padding: 0;
+  }
+  .menuLinkInner svg {
+    transform: scale(1);
+    flex: 0 0 26px;
+  }
+  .menuLink .badge {
+    right: -18px;
+  }
+}
+@media screen and (max-width: 860px) {
+  .menuLinkText {
+    display: none;
+  }
+  .menuLink:before {
+    right: -15px;
+    height: 26px;
+  }
+  .menuLinkInner {
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    padding: 0;
+  }
+  .menuLinkInner svg {
+    transform: scale(1);
+    flex: 0 0 30px;
+  }
+  .menuLink .badge {
+    right: -18px;
+  }
+}
+@media screen and (max-height: 870px) {
+  .menuLinkText {
+    display: none;
+  }
+  .menuLink:before {
+    right: -15px;
+    height: 36px;
+  }
+  .menuLinkInner {
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    padding: 0;
+  }
+  .menuLinkInner svg {
+    transform: scale(1);
+    flex: 0 0 30px;
+  }
+  .menuLink .badge {
+    right: -18px;
+  }
+}
+@media screen and (max-height: 670px) {
+  .menuLink:before {
+    height: 26px;
+  }
+  .menuLink:after {
+    right: -12px;
+  }
+  .menuLinkInner svg {
+    transform: scale(1);
+    flex: 0 0 24px;
+  }
+}
