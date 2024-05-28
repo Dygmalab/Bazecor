@@ -31,7 +31,7 @@ import Title from "@Renderer/component/Title";
 import { Badge } from "@Renderer/component/Badge";
 import { RegularButton } from "@Renderer/component/Button";
 import { ToggleButtons } from "@Renderer/component/ToggleButtons";
-import { Slider } from "@Renderer/components/atoms/slider";
+import { Slider } from "@Renderer/components/atoms/Slider";
 
 // Assets
 import { i18n } from "@Renderer/i18n";

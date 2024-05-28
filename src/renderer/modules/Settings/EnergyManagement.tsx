@@ -30,7 +30,7 @@ import { Switch } from "@Renderer/components/atoms/Switch";
 import { Badge } from "@Renderer/component/Badge";
 import { IconFlashlight, IconLeaf, IconInformation } from "@Renderer/components/atoms/Icons";
 import Heading from "@Renderer/components/atoms/Heading";
-import { Slider } from "@Renderer/components/atoms/slider";
+import { Slider } from "@Renderer/components/atoms/Slider";
 import { i18n } from "@Renderer/i18n";
 
 // Import Types for wireless

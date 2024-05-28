@@ -22,7 +22,7 @@ import log from "electron-log/renderer";
 import { Card, CardContent, CardHeader, CardTitle } from "@Renderer/components/atoms/Card";
 import { Switch } from "@Renderer/components/atoms/Switch";
 import { LEDSettingsPreferences } from "@Renderer/types/preferences";
-import { Slider } from "@Renderer/components/atoms/slider";
+import { Slider } from "@Renderer/components/atoms/Slider";
 
 // Assets
 // import { Badge } from "@Renderer/component/Badge";
@@ -156,6 +156,7 @@ function LEDSettings(props: LEDSettingsPreferences) {
                         value={[Math.round((brightness * 100) / 255)]}
                         onValueChange={setBrightnessWireless}
                         className="slider-danger"
+                        variant="alert"
                       />
                     </div>
                   </div>
@@ -194,6 +195,7 @@ function LEDSettings(props: LEDSettingsPreferences) {
                         value={[Math.round((brightnessUG * 100) / 255)]}
                         onValueChange={setBrightnessUGWireless}
                         className="slider-danger"
+                        variant="alert"
                       />
                     </div>
                   </div>
@@ -243,6 +245,7 @@ function LEDSettings(props: LEDSettingsPreferences) {
                           value={[idleleds / 60]}
                           onValueChange={selectIdleLEDTimeWireless}
                           className="slider-danger"
+                          variant="alert"
                         />
                       </div>
                     </div>
