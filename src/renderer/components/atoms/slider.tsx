@@ -7,7 +7,7 @@ import * as SliderPrimitive from "@radix-ui/react-slider";
 import { cn } from "@Renderer/utils";
 
 const sliderVariants = cva(
-  "relative flex w-full touch-none select-none items-center py-4 [&_.track]:relative [&_.track]:h-2 [&_.track]:w-full [&_.track]:grow [&_.track]:overflow-hidden [&_.track]:rounded-full [&_.range]:absolute [&_.range]:h-full",
+  "relative flex w-full touch-none select-none items-center py-4 [&_.track]:relative [&_.track]:h-2 [&_.track]:w-full [&_.track]:grow [&_.track]:overflow-hidden [&_.track]:rounded-full [&_.range]:absolute [&_.range]:h-full group",
   {
     variants: {
       variant: {
@@ -26,14 +26,21 @@ const sliderVariants = cva(
 const Slider = React.forwardRef<
   React.ElementRef<typeof SliderPrimitive.Root>,
   React.ComponentPropsWithoutRef<typeof SliderPrimitive.Root> & VariantProps<typeof sliderVariants>
->(({ className, variant, ...props }, ref) => (
-  <SliderPrimitive.Root ref={ref} className={cn(sliderVariants({ variant }), className)} {...props}>
-    <SliderPrimitive.Track className="track ">
-      <SliderPrimitive.Range className="range" />
-    </SliderPrimitive.Track>
-    <SliderPrimitive.Thumb className="thumb block h-4 w-4 rounded-full border-[3px] ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50" />
-  </SliderPrimitive.Root>
-));
+>(({ className, variant, ...props }, ref) => {
+  const internalValue = props.value || props.defaultValue;
+  return (
+    <SliderPrimitive.Root ref={ref} className={cn(sliderVariants({ variant }), className)} {...props}>
+      <SliderPrimitive.Track className="track ">
+        <SliderPrimitive.Range className="range" />
+      </SliderPrimitive.Track>
+      <SliderPrimitive.Thumb className="thumb block h-4 w-4 rounded-full border-[3px] ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50">
+        <span className="thumbValue absolute bg-gray-25 text-gray-600 shadow-lg text-ssm rounded-sm p-[6px] top-[-32px] left-[-50%] transition-all opacity-0 group-hover:opacity-100">
+          {internalValue}
+        </span>
+      </SliderPrimitive.Thumb>
+    </SliderPrimitive.Root>
+  );
+});
 Slider.displayName = SliderPrimitive.Root.displayName;
 
 export { Slider };
