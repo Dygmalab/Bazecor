@@ -31,8 +31,8 @@ import { RegularButton } from "@Renderer/component/Button";
 import { FirmwareLoader } from "@Renderer/component/Loader";
 
 // types
-import { DygmaDeviceType } from "@Renderer/types/devices";
-import { ContextType } from "@Renderer/controller/DeviceChecks/context";
+import { ContextType } from "@Renderer/controller/FlashManager/context";
+import { DygmaDeviceType } from "@Renderer/types/dygmaDefs";
 import { BackupType } from "@Renderer/types/backups";
 
 // Visual modules

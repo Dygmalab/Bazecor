@@ -31,7 +31,7 @@ import Title from "@Renderer/component/Title";
 import ToastMessage from "@Renderer/component/ToastMessage";
 import { RegularButton } from "@Renderer/component/Button";
 import { IconKeyboard, IconFloppyDisk } from "@Renderer/component/Icon";
-import { DygmaDeviceType } from "@Renderer/types/devices";
+import { DygmaDeviceType } from "@Renderer/types/dygmaDefs";
 
 const Styles = Styled.div`
 height: inherit;

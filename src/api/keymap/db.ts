@@ -50,7 +50,6 @@ import { languagesDB, supportModifiedTables } from "./languages/languageLayouts"
 // newLanguageLayout - is a function that modify language layout
 import newLanguageLayout from "./languages/newLanguageLayout";
 
-// eslint-disable-next-line import/no-cycle
 import Store from "../../renderer/utils/Store";
 import getLanguage from "../../renderer/utils/language";
 import { BaseKeycodeTableType, KeymapCodeTableType, LanguageType } from "./types";

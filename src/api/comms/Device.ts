@@ -1,14 +1,22 @@
 /* eslint-disable no-console */
 import { SerialPort } from "serialport";
-import { DeviceClass, DeviceType, DygmaDeviceType, VirtualType } from "@Renderer/types/devices";
+import { DeviceClass, DeviceType, VirtualType } from "@Renderer/types/devices";
 import log from "electron-log/renderer";
+import { DygmaDeviceType } from "@Renderer/types/dygmaDefs";
 import HID from "../hid/hid";
 import DeviceMap from "./deviceMap";
 import { ExtHIDInterface } from "./types";
 // eslint-disable-next-line no-eval
 const { DelimiterParser } = eval('require("@serialport/parser-delimiter")');
 
+export type State = {
+  selected: number;
+  currentDevice: Device;
+  deviceList: Array<Device>;
+};
+
 class Device implements DeviceClass {
+  [x: string]: any;
   type: string;
   path: string;
   manufacturer: string;
@@ -22,12 +30,13 @@ class Device implements DeviceClass {
   callbacks: Array<(value: unknown) => void>;
   device: DygmaDeviceType | undefined;
   port?: HID | SerialPort;
-  commands?: { [key: string]: unknown; help: Array<string> };
+  commands?: { [key: string]: unknown };
   file?: boolean;
   isClosed: boolean;
   isSending: boolean;
   memoryMap: DeviceMap;
   fileData: VirtualType;
+  currentDevice: any;
 
   constructor(parameters: DeviceType | HID | VirtualType, type: string) {
     // constructor for Device

@@ -1,9 +1,9 @@
 /* eslint-disable no-await-in-loop */
 import React, { useReducer, createContext, useContext, useMemo } from "react";
 import log from "electron-log/renderer";
-import { CountProviderProps, Action, State, DeviceClass, VirtualType } from "./types/devices";
+import { CountProviderProps, VirtualType } from "./types/devices";
 import serial, { isSerialType } from "../api/comms/serial";
-import Device from "../api/comms/Device";
+import Device, { State } from "../api/comms/Device";
 import HID from "../api/hid/hid";
 import { isVirtualType } from "../api/comms/virtual";
 
@@ -13,6 +13,14 @@ type ContextType =
       dispatch: React.Dispatch<Action>;
     }
   | undefined;
+
+export type Action =
+  | { type: "changeCurrent"; payload: { selected: number; device: Device } }
+  | { type: "addDevice"; payload: Device }
+  | { type: "addDevicesList"; payload: Device[] }
+  | { type: "disconnect"; payload: number };
+
+export type Dispatch = (action: Action) => void;
 
 const DeviceContext = createContext<ContextType>(undefined);
 

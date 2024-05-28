@@ -18,7 +18,7 @@
 import { SerialPort } from "serialport";
 import HID from "../../api/hid/hid";
 import DeviceMap from "../../api/comms/deviceMap";
-import Device from "src/api/comms/Device";
+import { DygmaDeviceType } from "./dygmaDefs";
 
 export interface DeviceClass {
   type: string;
@@ -34,7 +34,7 @@ export interface DeviceClass {
   callbacks: Array<(value: unknown) => void>;
   device: DygmaDeviceType | undefined;
   port?: HID | SerialPort;
-  commands?: { [key: string]: unknown; help: Array<string> };
+  commands?: { [key: string]: unknown };
   file?: boolean;
   isClosed: boolean;
   isSending: boolean;
@@ -93,56 +93,3 @@ export interface VirtualType {
 }
 
 export type CountProviderProps = { children: React.ReactNode };
-
-export type Action =
-  | { type: "changeCurrent"; payload: { selected: number; device: DeviceClass } }
-  | { type: "addDevice"; payload: DeviceClass }
-  | { type: "addDevicesList"; payload: DeviceClass[] }
-  | { type: "disconnect"; payload: number };
-
-export type Dispatch = (action: Action) => void;
-
-export type State = {
-  selected: number;
-  currentDevice: Device;
-  deviceList: Array<DeviceClass>;
-};
-
-export type DygmaDeviceType = {
-  info: {
-    vendor: string;
-    product: string;
-    keyboardType: string;
-    displayName: string;
-    urls: {
-      name: string;
-      url: string;
-    }[];
-  };
-  usb: {
-    vendorId: number;
-    productId: number;
-  };
-  keyboard: {
-    rows: number;
-    columns: number;
-  };
-  keyboardUnderglow: {
-    rows: number;
-    columns: number;
-  };
-  RGBWMode: boolean;
-  components: {
-    keymap: unknown;
-  };
-  instructions: {
-    en: {
-      updateInstructions: string;
-    };
-  };
-  wireless?: boolean;
-  bootloader?: boolean;
-  path?: string;
-  filePath?: string;
-  isDeviceSupported?: (device: DeviceType) => string;
-};

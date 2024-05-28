@@ -335,7 +335,7 @@ function SuperkeysEditor(props: SuperkeysEditorProps) {
       setState({ ...state });
       const deviceLang = { ...currentDevice.device, language: true };
       currentDevice.commands.keymap = new Keymap(deviceLang);
-      keymapDB = currentDevice.commands.keymap.db;
+      keymapDB = (currentDevice.commands.keymap as Keymap).db;
       let kbtype = "iso";
       try {
         kbtype = currentDevice.device && currentDevice.device.info.keyboardType === "ISO" ? "iso" : "ansi";

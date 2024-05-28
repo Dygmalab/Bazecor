@@ -1,6 +1,6 @@
-import { DygmaDeviceType, State } from "@Renderer/types/devices";
 import { BackupType } from "@Renderer/types/backups";
-import Device from "src/api/comms/Device";
+import Device, { State } from "src/api/comms/Device";
+import { DygmaDeviceType } from "@Renderer/types/dygmaDefs";
 import { FlashRaise, FlashDefyWireless } from "../../../api/flash";
 import SideFlaser from "../../../api/flash/defyFlasher/sideFlasher";
 
@@ -47,7 +47,7 @@ export interface ContextType {
   comPath: string | Buffer | undefined;
 }
 
-export const Context = {
+export const Context: ContextType = {
   deviceState: undefined,
   loadedComms: false,
   stateblock: 1,

@@ -24,7 +24,8 @@ import fs from "fs";
 import type { SerialPort, SerialPortOpenOptions } from "serialport";
 import log from "electron-log/renderer";
 // eslint-disable-next-line import/no-cycle
-import { DygmaDeviceType, VirtualType } from "@Renderer/types/devices";
+import { VirtualType } from "@Renderer/types/devices";
+import { DygmaDeviceType } from "@Renderer/types/dygmaDefs";
 import { delay } from "../flash/delay";
 import { ctx } from "./Focus.ctx";
 

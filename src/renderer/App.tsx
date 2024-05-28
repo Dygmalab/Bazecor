@@ -402,13 +402,9 @@ function App() {
             path="/firmware-update"
             element={
               <FirmwareUpdate
-                path="/firmware-update"
-                device={device}
                 toggleFlashing={toggleFlashing}
                 toggleFwUpdate={toggleFwUpdate}
                 onDisconnect={onKeyboardDisconnect}
-                titleElement={() => document.querySelector("#page-title")}
-                darkMode={darkMode}
                 allowBeta={allowBeta}
                 setRestoredOk={handleSetRestoredOk}
               />

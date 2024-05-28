@@ -11,13 +11,12 @@
     "paths": {
       "@Assets/*": ["src/static/*"],
       "@Renderer/*": ["src/renderer/*"],
-      "@Types/*": ["src/renderer/types/*"],
-      "@appigram/react-rangeslider": ["./node_modules/@types/react-rangeslider"]
+      "@Types/*": ["src/renderer/types/*"]
     },
     "resolveJsonModule": true,
     "skipLibCheck": true,
     "sourceMap": true,
-    "target": "ES6"
+    "target": "ESNext"
   },
   "include": ["src/**/*"]
 }

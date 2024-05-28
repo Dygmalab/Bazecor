@@ -1,11 +1,14 @@
 import log from "electron-log/renderer";
 import { setup, assign, raise, fromPromise } from "xstate";
+
 import { BackupType } from "@Renderer/types/backups";
 
 import * as Actions from "./actions";
 import * as Context from "./context";
 import type * as Events from "./events";
 import * as Input from "./input";
+
+// eslint-disable-next-line no-eval
 
 const DeviceChecks = setup({
   types: {

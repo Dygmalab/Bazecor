@@ -1,5 +1,5 @@
-import { State } from "@Renderer/types/devices";
 import { BackupType } from "@Renderer/types/backups";
+import { State } from "src/api/comms/Device";
 
 export interface ContextType {
   stateblock: number;
@@ -29,7 +29,7 @@ export interface ContextType {
   error: unknown;
 }
 
-export const Context = {
+export const Context: ContextType = {
   stateblock: 0,
   device: {
     info: {

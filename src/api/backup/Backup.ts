@@ -4,7 +4,8 @@ import Store from "electron-store";
 import log from "electron-log/renderer";
 import { Neuron } from "@Renderer/types/neurons";
 import { BackupType } from "@Renderer/types/backups";
-import { DeviceClass, VirtualType } from "@Renderer/types/devices";
+import { VirtualType } from "@Renderer/types/devices";
+import Device from "../comms/Device";
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const glob = require(`glob`);
@@ -22,7 +23,7 @@ export default class Backup {
    * Function that returns the list of available commands excluding the ones that do not return usefull information for the backup
    * @returns An array with strings that contain the serial commands that are capable of returing the keyboard configuration
    */
-  static async Commands(device: DeviceClass) {
+  static async Commands(device: Device) {
     const notRequired = [
       "eeprom",
       "hardware",
@@ -70,7 +71,7 @@ export default class Backup {
    * @param {string} neuronID This parameter contains the neuronID obtained from the Raise, so the corresponding local settings can be retrieved.
    * @returns {Backup} Backup The function returns the full made backup, so it can be stored wherever is needed, and changed if the module requires it.
    */
-  async DoBackup(commands: string[], neuronID: string, device: DeviceClass) {
+  async DoBackup(commands: string[], neuronID: string, device: Device) {
     if (device.file !== false) return undefined;
     const backup: BackupType = {
       neuronID: undefined,
@@ -117,7 +118,7 @@ export default class Backup {
    * @param {*} localBackup The backup data object to be stored locally
    * @returns True when the function has successfully stored the backup locally, and false if something fails, an error log will be also pushed to the console
    */
-  static SaveBackup(backup: BackupType, device: DeviceClass) {
+  static SaveBackup(backup: BackupType, device: Device) {
     const localBackup = { ...backup };
     if (device.file !== false) {
       const file = JSON.parse(fs.readFileSync(device.fileData.device.filePath).toString("utf-8"));
@@ -176,7 +177,7 @@ export default class Backup {
     }
   }
 
-  static restoreBackup = async (neurons: Neuron[], neuronID: string, backup: BackupType, device: DeviceClass) => {
+  static restoreBackup = async (neurons: Neuron[], neuronID: string, backup: BackupType, device: Device) => {
     let data = [];
     if (Array.isArray(backup)) {
       data = backup;
@@ -216,7 +217,7 @@ export default class Backup {
     return false;
   };
 
-  static restoreVirtual = async (virtual: VirtualType, device: DeviceClass) => {
+  static restoreVirtual = async (virtual: VirtualType, device: Device) => {
     if (device) {
       try {
         log.info("Restoring all settings");
@@ -239,7 +240,7 @@ export default class Backup {
     return false;
   };
 
-  static getLatestBackup = async (backupFolder: string, neuronID: string, device: DeviceClass) => {
+  static getLatestBackup = async (backupFolder: string, neuronID: string, device: Device) => {
     try {
       // creating folder path with current device
       const folderPath = path

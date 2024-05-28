@@ -23,7 +23,6 @@ import { AdvancedEnergyManagementProps } from "@Renderer/types/wireless";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Modal from "react-bootstrap/Modal";
-import Slider from "@appigram/react-rangeslider";
 
 // Custom components
 import { Card, CardContent, CardHeader } from "@Renderer/components/ui/card";
@@ -32,6 +31,7 @@ import Title from "@Renderer/component/Title";
 import { Badge } from "@Renderer/component/Badge";
 import { RegularButton } from "@Renderer/component/Button";
 import { ToggleButtons } from "@Renderer/component/ToggleButtons";
+import { Slider } from "@Renderer/components/ui/slider";
 
 // Assets
 import { i18n } from "@Renderer/i18n";
@@ -56,21 +56,21 @@ function AdvancedBatterySettingsModal(props: AdvancedEnergyManagementProps) {
     },
   ];
 
-  const setBrightness = async (value: number) => {
+  const setBrightness = async (value: number[]) => {
     const newWireless = { ...wireless };
-    newWireless.brightness = (value * 255) / 100;
+    newWireless.brightness = (value[0] * 255) / 100;
     changeWireless(newWireless);
   };
 
-  const setBrightnessUG = async (value: number) => {
+  const setBrightnessUG = async (value: number[]) => {
     const newWireless = { ...wireless };
-    newWireless.brightnessUG = (value * 255) / 100;
+    newWireless.brightnessUG = (value[0] * 255) / 100;
     changeWireless(newWireless);
   };
 
-  const setIdleleds = async (value: number) => {
+  const setIdleleds = async (value: number[]) => {
     const newWireless = { ...wireless };
-    newWireless.idleleds = value * 60;
+    newWireless.idleleds = value[0] * 60;
     changeWireless(newWireless);
   };
 
@@ -81,9 +81,9 @@ function AdvancedBatterySettingsModal(props: AdvancedEnergyManagementProps) {
     changeWireless(newWireless);
   };
 
-  const setTrueSleepTime = async (value: number) => {
+  const setTrueSleepTime = async (value: number[]) => {
     const newWireless = { ...wireless };
-    newWireless.true_sleep_time = value * 60;
+    newWireless.true_sleep_time = value[0] * 60;
     changeWireless(newWireless);
   };
 
@@ -130,8 +130,8 @@ function AdvancedBatterySettingsModal(props: AdvancedEnergyManagementProps) {
                     min={0}
                     max={100}
                     step={1}
-                    value={Math.round((wireless.brightness * 100) / 255)}
-                    onChange={setBrightness}
+                    value={[Math.round((wireless.brightness * 100) / 255)]}
+                    onValueChange={setBrightness}
                   />
                   <span className="tagsfix slider-label">100%</span>
                 </div>
@@ -148,8 +148,8 @@ function AdvancedBatterySettingsModal(props: AdvancedEnergyManagementProps) {
                     min={0}
                     max={100}
                     step={1}
-                    value={Math.round((wireless.brightnessUG * 100) / 255)}
-                    onChange={setBrightnessUG}
+                    value={[Math.round((wireless.brightnessUG * 100) / 255)]}
+                    onValueChange={setBrightnessUG}
                   />
                   <span className="tagsfix slider-label">100%</span>
                 </div>
@@ -162,7 +162,7 @@ function AdvancedBatterySettingsModal(props: AdvancedEnergyManagementProps) {
               <Col lg={5}>
                 <div className="slider-wrapper">
                   <span className="tagsfix slider-label">off </span>
-                  <Slider min={0} max={60} value={Math.round(wireless.idleleds / 60)} onChange={setIdleleds} />
+                  <Slider min={0} max={60} value={[Math.round(wireless.idleleds / 60)]} onValueChange={setIdleleds} />
                   <span className="tagsfix slider-label">60 min</span>
                 </div>
               </Col>
@@ -193,7 +193,12 @@ function AdvancedBatterySettingsModal(props: AdvancedEnergyManagementProps) {
               <Col lg={5}>
                 <div className="slider-wrapper">
                   <span className="tagsfix slider-label">1 min </span>
-                  <Slider min={1} max={240} value={Math.round(wireless.true_sleep_time / 60)} onChange={setTrueSleepTime} />
+                  <Slider
+                    min={1}
+                    max={240}
+                    value={[Math.round(wireless.true_sleep_time / 60)]}
+                    onValueChange={setTrueSleepTime}
+                  />
                   <span className="tagsfix slider-label">240 min</span>
                 </div>
               </Col>

@@ -84,10 +84,11 @@ export const GitHubRead = async (context: Context.ContextType): Promise<Context.
     const fwReleases = await loadAvailableFirmwareVersions(context.allowBeta);
     finalReleases = fwReleases.filter(
       release =>
-        release.name === context.device.info.product &&
-        (context.device.info.product === "Defy"
-          ? SemVer.satisfies(release.version ? release.version : "", FWMAJORVERSION, { includePrerelease: true })
-          : true),
+        release.name === context.device.info.product
+      // &&
+      //   (context.device.info.product === "Defy"
+      //     ? SemVer.satisfies(release.version ? release.version : "", FWMAJORVERSION, { includePrerelease: true })
+      //     : true),
     );
     finalReleases.sort((a, b) => (SemVer.lt(SemVer.clean(a.version) as string, SemVer.clean(b.version) as string) ? 1 : -1));
     if (context.device.bootloader) {

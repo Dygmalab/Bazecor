@@ -892,7 +892,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
           const deviceLang = { ...currentDevice.device, language: true };
           currentDevice.commands = {};
           currentDevice.commands.keymap = new Keymap(deviceLang);
-          setkeymapDB(currentDevice.commands.keymap.db);
+          setkeymapDB((currentDevice.commands.keymap as Keymap).db);
         }
 
         // let defLayer = await currentDevice.command("settings.defaultLayer");

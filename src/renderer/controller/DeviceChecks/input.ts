@@ -1,4 +1,4 @@
-import { State } from "@Renderer/types/devices";
+import { State } from "src/api/comms/Device";
 import type * as Context from "./context";
 
 export interface InputType {

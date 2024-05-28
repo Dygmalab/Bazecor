@@ -167,7 +167,7 @@ const FirmwareProgressStatus = (props: FirmwareProgressStatusType) => {
   } = props;
   const [stepsPosition, setStepsPosition] = useState(0);
   useEffect(() => {
-    setStepsPosition(steps.findIndex(x => x.step === countdown));
+    setStepsPosition(steps.findIndex((x: { step: number }) => x.step === countdown));
   }, [countdown, steps]);
   return (
     <Style>

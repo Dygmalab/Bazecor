@@ -154,7 +154,7 @@ export default function VirtualSelector(props: VirtualSelectorProps) {
     }
     log.info("Opening file", filePath);
     // Open the file and load it's contents
-    let file: any;
+    let file: VirtualType | BackupType;
     try {
       file = JSON.parse(fs.readFileSync(filePath).toString("utf-8")) as VirtualType | BackupType;
       // log.info(file);

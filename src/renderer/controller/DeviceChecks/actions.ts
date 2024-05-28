@@ -1,6 +1,6 @@
 import log from "electron-log/renderer";
 import { BackupType } from "@Renderer/types/backups";
-import { State } from "@Renderer/types/devices";
+import { State } from "src/api/comms/Device";
 import Backup from "../../../api/backup";
 import * as Context from "./context";
 
