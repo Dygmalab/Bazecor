@@ -20,23 +20,14 @@
 
 import React, { useState } from "react";
 import log from "electron-log/renderer";
-import Styled from "styled-components";
-import Container from "react-bootstrap/Container";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
 import { Link } from "react-router-dom";
 import { PageHeader } from "@Renderer/modules/PageHeader";
 import { useDevice, DeviceTools } from "@Renderer/DeviceContext";
 import { IconHome } from "@Renderer/components/atoms/Icons";
-import { NavigationButton, RegularButton } from "../component/Button";
+import { NavigationButton } from "@Renderer/components/molecules/CustomButton/NavigationButton";
+import { RegularButton } from "../component/Button";
 import HID from "../../api/hid/hid";
 import Device from "../../api/comms/Device";
-
-const Styles = Styled.div`
-.button-container {
-
-}
-`;
 
 const BazecorDevtools = () => {
   const { state, dispatch } = useDevice();
@@ -207,11 +198,11 @@ const BazecorDevtools = () => {
   };
 
   return (
-    <Styles>
-      <Container fluid className="center-content">
+    <div className="h-full">
+      <div className="px-3 h-full">
         <PageHeader text="Bazecor dev tools" />
-        <Row className="button-container">
-          <Col className="my-4 col-3">
+        <div className="columns-3 gap-4">
+          <div className="w-full py-4">
             <h4>HID Testing Buttons</h4>
             <RegularButton buttonText="List of HID Devices" styles="primary" onClick={onGetHIDDevices} />
             <RegularButton buttonText="Connect by HID" styles="primary" onClick={onHIDConnect} />
@@ -221,15 +212,15 @@ const BazecorDevtools = () => {
             <RegularButton buttonText="Get keymap" styles="primary" onClick={onHIDGetKeymap} />
             <RegularButton buttonText="Harcoded keymap" styles="primary" onClick={onHIDHardcodedKeymap} />
             <RegularButton buttonText="Restore keymap" styles="primary" onClick={onHIDSetOriginalKeymap} />
-          </Col>
-          <Col className="my-4 col-3">
+          </div>
+          <div className="w-full py-4">
             <h4>Serial Testing Buttons</h4>
             <RegularButton buttonText="List of Serial Devices" styles="primary" onClick={onListSerialDevices} />
             <RegularButton buttonText="Connect to Serial Device" styles="primary" onClick={() => onSerialConnect(0)} />
             <RegularButton buttonText="Send message" styles="primary" onClick={onMessageSend} />
             <RegularButton buttonText="Disconnect" styles="primary" onClick={onSerialDisconnect} />
-          </Col>
-          <Col className="col-3">
+          </div>
+          <div className="w-full py-4">
             <Link to="/device-manager" className="list-link">
               <NavigationButton
                 selected={false}
@@ -239,10 +230,10 @@ const BazecorDevtools = () => {
                 disabled={false}
               />
             </Link>
-          </Col>
-        </Row>
-        <Row>
-          <Col md={6}>
+          </div>
+        </div>
+        <div className="columns-2 gap-4">
+          <div className="w-full py-4">
             <div>
               <h4>Connection data</h4>
               <ul>
@@ -251,8 +242,8 @@ const BazecorDevtools = () => {
                 ))}
               </ul>
             </div>
-          </Col>
-          <Col md={6}>
+          </div>
+          <div className="w-full py-4">
             <div>
               <h4>Connected device</h4>
               <ul>
@@ -271,10 +262,10 @@ const BazecorDevtools = () => {
                   : ""}
               </ul>
             </div>
-          </Col>
-        </Row>
-      </Container>
-    </Styles>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 };
 
