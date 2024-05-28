@@ -121,20 +121,20 @@ const connect = async (device: Device | VirtualType) => {
   try {
     if (isVirtualType(device)) {
       const result = await new Device(device, "virtual");
-      log.verbose("the device is virtual type: ", device, " and connected as: ", result);
+      log.verbose(`the device is ${device.type} type, and connected as: ${result}`);
       return result;
     }
     if (Device.isDevice(device)) {
       if (device.type === "serial") {
         const result = await serial.connect(device);
         device.addPort(result);
-        log.verbose("the device is serial type: ", device, " and connected as: ", result);
+        log.verbose(`the device is ${device.type} type, and connected as: ${result}`);
         return device;
       }
       log.verbose(device.port);
       const result = await (device.port as HID).connect();
       await device.addHID();
-      log.verbose("the device is hid type: ", device, " and connected as: ", result);
+      log.verbose(`the device is ${device.type} type, and connected as: ${result}`);
       return device;
     }
   } catch (error) {

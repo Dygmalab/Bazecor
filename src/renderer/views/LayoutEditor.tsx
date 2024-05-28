@@ -772,7 +772,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
       const { currentDevice } = state;
       let neurons = store.get("neurons") as Neuron[];
       let finalNeuron;
-      log.info("Neuron ID", CID, neurons);
+      log.info("Neuron ID", CID, neurons.length);
       if (neurons === undefined) {
         neurons = [];
       }
@@ -848,7 +848,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
           storedMacros: finalNeuron.macros,
           storedSuper: finalNeuron.superkeys,
         };
-        log.info(neuronData);
+        log.info("connected to: ", neuronData.neuronID);
         setLayerNames(finalNeuron.layers);
         return neuronData;
       }

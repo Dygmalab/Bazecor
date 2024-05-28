@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { Routes, Navigate, Route, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { ThemeProvider } from "styled-components";
@@ -38,7 +38,7 @@ import Preferences from "@Renderer/views/Preferences";
 import Welcome from "@Renderer/views/Welcome";
 
 import ToastMessage from "@Renderer/component/ToastMessage";
-import { IconBluetooth, IconNoSignal } from "@Renderer/component/Icon";
+import { IconBluetooth, IconConnected, IconPlug } from "@Renderer/component/Icon";
 import BazecorDevtools from "@Renderer/views/BazecorDevtools";
 import { showDevtools } from "@Renderer/devMode";
 
@@ -166,18 +166,18 @@ function App() {
     setContextBar(false);
   };
 
-  const onKeyboardDisconnect = () => {
+  const onKeyboardDisconnect = useCallback(() => {
     log.verbose("disconnecting Keyboard!");
-    log.verbose(state);
-    setConnected(false);
-    setPages({});
-    device.current = null;
+    log.verbose(state.currentDevice?.type, state.currentDevice?.path);
     localStorage.clear();
+    setConnected(false);
+    device.current = null;
+    setPages({});
     navigate("/keyboard-select");
-  };
+  }, [navigate, state.currentDevice]);
 
-  const onKeyboardConnect = async (currentDevice: Device) => {
-    log.verbose("Connecting to", currentDevice);
+  const onKeyboardConnect = async (currentDevice: Device): Promise<void> => {
+    log.verbose("Connecting to", currentDevice.type, currentDevice.device);
 
     if (currentDevice.device.bootloader) {
       setConnected(true);
@@ -219,19 +219,6 @@ function App() {
     store.set("settings.darkMode", mode);
   };
 
-  const darkThemeListener = (event: any, message: boolean) => {
-    log.verbose("O.S. DarkTheme Settings changed to ", message, event);
-    const dm = store.get("settings.darkMode");
-    if (dm === "system") {
-      toggleDarkMode(dm);
-    }
-    if (dm || (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches)) {
-      toggleDarkMode("dark");
-    } else {
-      toggleDarkMode("light");
-    }
-  };
-
   const toggleFlashing = async () => {
     setFlashing(!flashing);
     varFlashing.current = !flashing;
@@ -246,39 +233,54 @@ function App() {
     }
   };
 
-  const handleDeviceDisconnection = async (dev: any) => {
-    const isFlashing = varFlashing.current;
-    log.verbose("Handling device disconnect", isFlashing, dev, device);
-    if (isFlashing) {
-      log.verbose("no action due to flashing active");
-      return;
-    }
-
-    // if (state.currentDevice?.device?.usb?.productId !== state.currentDevice?.device?.deviceDescriptor?.idProduct) {
-    //   return;
-    // }
-
-    // Must await this to stop re-render of components reliant on `focus.device`
-    // However, it only renders a blank screen. New route is rendered below.
-    if (connected) {
-      toast.warning(
-        <ToastMessage
-          icon={<IconNoSignal />}
-          title={i18n.errors.deviceDisconnected}
-          content={i18n.errors.deviceDisconnectedContent}
-        />,
-        { icon: "" },
-      );
-    }
-    onKeyboardDisconnect();
-  };
-
   useEffect(() => {
     const fontFace = new FontFace("Libre Franklin", "@Renderer/theme/fonts/LibreFranklin/LibreFranklin-VariableFont_wght.ttf");
     log.verbose("Font face: ", fontFace);
     document.fonts.add(fontFace);
+  }, []);
+
+  useEffect(() => {
+    const handleDeviceConnection = async (dev: any) => {
+      log.verbose("new Device connected to USB", dev);
+      const isFlashing = varFlashing.current;
+      if (isFlashing) {
+        log.verbose("no action due to flashing active");
+        return;
+      }
+      if (!connected) {
+        toast.success(
+          <ToastMessage
+            icon={<IconConnected />}
+            title={i18n.success.USBdeviceConnected}
+            content={i18n.success.USBdeviceConnectedText}
+          />,
+          { autoClose: 2000, icon: "" },
+        );
+      }
+      onKeyboardDisconnect();
+    };
+    const handleDeviceDisconnection = async (dev: any) => {
+      const isFlashing = varFlashing.current;
+      log.verbose("Handling device disconnect", isFlashing, dev);
+      if (isFlashing) {
+        log.verbose("no action due to flashing active");
+        return;
+      }
+      if (connected) {
+        toast.warn(
+          <ToastMessage
+            icon={<IconPlug />}
+            title={i18n.errors.deviceDisconnected}
+            content={i18n.errors.deviceDisconnectedContent}
+          />,
+          { autoClose: 3000, icon: "" },
+        );
+      }
+      onKeyboardDisconnect();
+    };
 
     const usbListener = (event: unknown, response: unknown) => handleDeviceDisconnection(JSON.parse(response as string));
+    const newUsbConnection = (event: unknown, response: unknown) => handleDeviceConnection(JSON.parse(response as string));
     const hidListener = (event: unknown, response: unknown) =>
       handleDeviceDisconnection(JSON.parse(response as string) as HIDNotifdevice);
 
@@ -295,19 +297,33 @@ function App() {
       );
     };
 
+    const darkThemeListener = (event: any, message: boolean) => {
+      log.verbose("O.S. DarkTheme Settings changed to ", message, event);
+      const dm = store.get("settings.darkMode");
+      if (dm === "system") {
+        toggleDarkMode(dm);
+      }
+      if (dm || (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches)) {
+        toggleDarkMode("dark");
+      } else {
+        toggleDarkMode("light");
+      }
+    };
+
     // Setting up function to receive O.S. dark theme changes
     ipcRenderer.on("darkTheme-update", darkThemeListener);
     ipcRenderer.on("usb-disconnected", usbListener);
+    ipcRenderer.on("usb-connected", newUsbConnection);
     ipcRenderer.on("hid-disconnected", hidListener);
     ipcRenderer.on("hid-connected", notifyBtDevice);
     return () => {
       ipcRenderer.off("darkTheme-update", darkThemeListener);
       ipcRenderer.off("usb-disconnected", usbListener);
+      ipcRenderer.off("usb-connected", newUsbConnection);
       ipcRenderer.off("hid-disconnected", hidListener);
       ipcRenderer.off("hid-connected", notifyBtDevice);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [connected, navigate, onKeyboardDisconnect]);
 
   const toggleFwUpdate = async (value: boolean) => {
     log.verbose("toggling fwUpdate to: ", value);

@@ -321,10 +321,10 @@ const SelectKeyboard = (props: SelectKeyboardProps) => {
 
   const onKeyboardConnect = async () => {
     const { deviceList } = state;
-    log.info("trying to connect to:", deviceList, selectedPortIndex, deviceList[selectedPortIndex]);
+    // log.info("trying to connect to:", deviceList, selectedPortIndex, deviceList[selectedPortIndex]);
     try {
       const response = await DeviceTools.connect(deviceList[selectedPortIndex]);
-      log.info("GOING TO CONNECT TO!!", selectedPortIndex, response);
+      log.info("GOING TO CONNECT TO!!", selectedPortIndex, response.device);
       dispatch({ type: "changeCurrent", payload: { selected: selectedPortIndex, device: response } });
       await onConnect(response);
     } catch (err) {

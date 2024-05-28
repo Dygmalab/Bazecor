@@ -20,8 +20,7 @@ const English = {
   language: "English",
   errors: {
     deviceDisconnected: "Keyboard disconnected",
-    deviceDisconnectedContent:
-      "Houston we have a problem! Could not connect with Neuron, configure if cables are connected and if everything is ok.",
+    deviceDisconnectedContent: "The device was disconnected from bazecor!",
     invalidLayerFile: "Not a valid Layer file",
     exportError: "Error at Exporting: ",
     exportFailed: "Export failed!",
@@ -34,6 +33,8 @@ const English = {
       "<p style='font-weight:401;'>You have made changes that haven't been saved yet.</p><p>Save or discard them before leaving.</p>",
   },
   success: {
+    USBdeviceConnected: "Dygma Device detected through USB!!",
+    USBdeviceConnectedText: "A device with Dygma's ID's was recently connected to your computer",
     languageSaved: "Key picker language has been changed to ",
     pairedSuccesfully: "Your device has ben succesfully re-paired",
     preferencesSaved: "Your preferences have been saved.",
