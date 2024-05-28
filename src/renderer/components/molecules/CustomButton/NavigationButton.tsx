@@ -45,7 +45,7 @@ function NavigationButton({
           <TooltipTrigger asChild>
             <div className="tooltip-menu">
               <div
-                className={`group menuLink w-full flex aspect-square flex-wrap justify-center relative text-center text-gray-200 hover:text-gray-500 [&_svg]:text-gray-400 hover:[&_svg]:text-gray-600 dark:text-gray-300 dark:hover:text-gray-50 dark:[&_svg]:text-gray-50 dark:hover:[&_svg]:text-gray-50 transition-colors no-underline before:content-[' '] before:absolute before:right-[-15px] before:top-1/2 before:w-[3px] before:h-[42px] before:transition-all before:z-[2] before:transform-style-3d before:translate-y-[-50%] before:rounded-r-[3px] before:bg-gradient-to-b before:from-primary before:to-secondary before:opacity-0 after:content-[' '] after:absolute after:right-[-12px] after:top-1/2 after:transform-style-3d after:translate-y-[-50%] after:w-[32px] after:h-[96px] after:bg-lightAccentLg after:z-[1] after:transition-all after:opacity-0 ${selected ? "active group/enabled before:opacity-100 after:opacity-50 dark:after:opacity-100 [&_div]:before:opacity-100 text-purple-300 hover:text-purple-300 [&_svg]:text-secondary/100 hover:[&_svg]:text-secondary/100 dark:text-gray-50 dark:hover:text-gray-50 dark:[&_svg]:text-gray-50" : ""} ${disabled ? "disabled opacity-50 pointer-events-none text-gray-200 dark:text-gray-300 " : ""}`}
+                className={`group menuLink w-full flex aspect-square justify-center relative text-center text-gray-200 hover:text-gray-500 [&_svg]:text-gray-400 hover:[&_svg]:text-gray-600 dark:text-gray-300 dark:hover:text-gray-50 dark:[&_svg]:text-gray-50 dark:hover:[&_svg]:text-gray-50 transition-colors no-underline before:content-[' '] before:absolute before:right-[-15px] before:top-1/2 before:w-[3px] before:h-[42px] before:transition-all before:z-[2] before:transform-style-3d before:translate-y-[-50%] before:rounded-r-[3px] before:bg-gradient-to-b before:from-primary before:to-secondary before:opacity-0 after:content-[' '] after:absolute after:right-[-12px] after:top-1/2 after:transform-style-3d after:translate-y-[-50%] after:w-[32px] after:h-[96px] after:bg-lightAccentLg after:z-[1] after:transition-all after:opacity-0 ${selected ? "active group/enabled before:opacity-100 after:opacity-50 dark:after:opacity-100 [&_div]:before:opacity-100 text-purple-300 hover:text-purple-300 [&_svg]:text-secondary/100 hover:[&_svg]:text-secondary/100 dark:text-gray-50 dark:hover:text-gray-50 dark:[&_svg]:text-gray-50" : ""} ${disabled ? "disabled opacity-50 pointer-events-none text-gray-200 dark:text-gray-300 " : ""}`}
               >
                 <div className="menuLinkInner relative w-full aspect-square flex justify-center items-center flex-wrap py-[8px] px-[6px] [&_svg]:relative [&_svg]:z-[2] [&_svg]:flex [&_svg]:grow-0 [&_svg]:shrink-0 [&_svg]:basis-full before:absolute before:content-[' '] before:opacity-0 before:transition-all before:rounded-[6px] before:w-full before:h-full before:aspect-ratio before:left-0 before:right-0 before:z-[1] before:bg-gradient-to-tl before:from-gray-25 before:to-gray-100/50 dark:before:from-gray-800/30 dark:before:to-gray-300/30 group-hover:before:opacity-100">
                   {icoSVG}
@@ -59,14 +59,14 @@ function NavigationButton({
 
                   <div
                     dangerouslySetInnerHTML={{ __html: buttonText }}
-                    className="menuLinkText text-wrap relative font-semibold text-3xxs grow-0 shrink-0 basis-full z-[2] mb-auto"
+                    className="menuLinkText whitespace-nowrap relative font-semibold text-3xxs grow-0 shrink-0 basis-full z-[2] mb-auto"
                   />
                 </div>
               </div>
             </div>
           </TooltipTrigger>
           <TooltipContent className="sm:flex md:flex lg:hidden xl:hidden whitespace-nowrap text-ssm" side="right">
-            <div className="whitespace-nowrap" dangerouslySetInnerHTML={{ __html: buttonText }} />
+            <div className="whitespace-nowrap [&_br]:hidden" dangerouslySetInnerHTML={{ __html: buttonText }} />
           </TooltipContent>
         </Tooltip>
       </TooltipProvider>

@@ -7,13 +7,21 @@ import Heading from "@Renderer/components/atoms/Heading";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@Renderer/components/atoms/Tooltip";
 import { IconEditModeStandardView, IconEditModeSingleView, IconInformation } from "@Renderer/components/atoms/Icons";
 
+interface PositionProps {
+  x: number;
+  y: number;
+}
 interface ToggleGroupLayoutViewModeProps {
   value: string;
   onValueChange: () => void;
+  layoutSelectorPosition: PositionProps;
 }
 
-const ToggleGroupLayoutViewMode = ({ value, onValueChange }: ToggleGroupLayoutViewModeProps) => (
-  <div className="px-3 self-start mt-auto mb-6 pt-4">
+const ToggleGroupLayoutViewMode = ({ value, onValueChange, layoutSelectorPosition }: ToggleGroupLayoutViewModeProps) => (
+  <div
+    className={`self-start mt-auto mb-6 pt-4 ${value === "single" ? "absolute" : " "}`}
+    style={{ top: layoutSelectorPosition.y, left: layoutSelectorPosition.x }}
+  >
     <Heading renderAs="h5" headingLevel={5} className="mb-1 gap-2 flex items-center text-[10px] text-gray-300 dark:text-gray-500">
       {i18n.editor.editMode.title}
       <TooltipProvider delayDuration={200}>

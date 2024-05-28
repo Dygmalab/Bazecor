@@ -16,7 +16,6 @@
  */
 
 import React, { useState } from "react";
-import Styled from "styled-components";
 import { i18n } from "@Renderer/i18n";
 
 import NameModal from "@Renderer/components/molecules/CustomModal/ModalName";
@@ -41,30 +40,6 @@ import {
 } from "@Renderer/components/atoms/DropdownMenu";
 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@Renderer/components/atoms/Select";
-
-const Style = Styled.div`
-.dropdown-menu {
-    min-width: 268px;
-}
-.button.outline.gradient {
-  align-self: center;
-  padding: 12px;
-  padding-right: 18px;
-  margin-left: 8px;
-  .buttonFX {
-    width: 50px;
-  }
-}
-.button-config {
-  background: transparent;
-  padding: 12px 8px;
-  border: none;
-  box-shadow: none;
-}
-.dropdown-divider {
-    border-top-color: ${({ theme }) => theme.styles.dropdown.dropdownMenu.dropdownDivider};
-}
-`;
 
 interface ItemList {
   id: number;
@@ -96,7 +71,7 @@ const LayerSelector: React.FC<any> = ({
   console.log("itemList: ", itemList);
 
   return (
-    <Style className="flex items-center gap-1">
+    <div className="flex items-center gap-1">
       <div className="itemListelector dropdownMultipleActions max-w-[290px] min-w-[290px]">
         <Select onValueChange={value => onSelect(parseInt(value, 10))} value={selectedItem}>
           <SelectTrigger variant="combo">
@@ -178,7 +153,7 @@ const LayerSelector: React.FC<any> = ({
           labelInput="Layer name"
         />
       )}
-    </Style>
+    </div>
   );
 };
 

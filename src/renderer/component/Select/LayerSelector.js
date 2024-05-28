@@ -31,7 +31,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@Renderer/components/atoms/DropdownMenu";
-import { ButtonSettings } from "../Button";
 import { KeyboardViewSelector } from "../ToggleButtons";
 import {
   IconArrowsSmallSeparating,

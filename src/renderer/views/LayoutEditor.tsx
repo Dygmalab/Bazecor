@@ -49,7 +49,8 @@ import StandardView from "@Renderer/modules/StandardView";
 // Components
 import LayerSelector from "@Renderer/components/organisms/Select/LayerSelector";
 import { RegularButton } from "@Renderer/component/Button";
-import { LayoutViewSelector } from "@Renderer/component/ToggleButtons";
+// import { LayoutViewSelector } from "@Renderer/component/ToggleButtons";
+import ToggleGroupLayoutViewMode from "@Renderer/components/molecules/CustomToggleGroup/ToggleGroupLayoutViewMode";
 import { IconArrowDownWithLine, IconArrowUpWithLine } from "@Renderer/components/atoms/Icons";
 import LoaderLayout from "@Renderer/components/atoms/Loader/loaderLayout";
 import { i18n } from "@Renderer/i18n";
@@ -472,6 +473,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
     store.get("settings.isStandardView") !== undefined ? (store.get("settings.isStandardView") as boolean) : false,
   );
   const [showStandardView, setShowStandardView] = useState(false);
+  const [viewMode, setViewMode] = useState("standard");
   const [layoutSelectorPosition, setLayoutSelectorPosition] = useState({
     x: 0,
     y: 0,
@@ -1095,6 +1097,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
 
     if (isStandardView) {
       setShowStandardView(true);
+      setViewMode("standard");
       // log.info("Show Standard View IF: ", showStandardView);
     }
 
@@ -1560,6 +1563,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
         setCurrentKeyIndex(-1);
       }
       setShowStandardView(false);
+      setViewMode("single");
     } else {
       setSelectedPaletteColor(null);
     }
@@ -1571,6 +1575,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
 
   const onToggleStandardView = () => {
     setIsStandardView(!isStandardView);
+    setViewMode(!isStandardView ? "standard" : "single");
   };
 
   const closeStandardViewModal = (code: number) => {
@@ -1582,6 +1587,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
     setCurrentKeyIndex(-1);
     setCurrentLedIndex(-1);
     setShowStandardView(false);
+    setViewMode(isStandardView ? "standard" : "single");
     setSelectedPaletteColor(null);
     setIsMultiSelected(false);
     setIsColorButtonSelected(false);
@@ -1901,10 +1907,15 @@ const LayoutEditor = (props: LayoutEditorProps) => {
 
         {/* WHY: We want to hide the selector when we cannot use it (e.g. when color editor is active) */}
         {modeselect === "keyboard" ? (
-          <LayoutViewSelector
-            onToggle={onToggleStandardView}
-            isStandardView={isStandardView}
-            tooltip={i18n.editor.superkeys.tooltip}
+          // <LayoutViewSelector
+          //   onToggle={onToggleStandardView}
+          //   isStandardView={isStandardView}
+          //   tooltip={i18n.editor.superkeys.tooltip}
+          //   layoutSelectorPosition={layoutSelectorPosition}
+          // />
+          <ToggleGroupLayoutViewMode
+            value={viewMode}
+            onValueChange={onToggleStandardView}
             layoutSelectorPosition={layoutSelectorPosition}
           />
         ) : null}
