@@ -1,16 +1,26 @@
 /* eslint-disable no-await-in-loop */
 import React, { useReducer, createContext, useContext, useMemo } from "react";
 import log from "electron-log/renderer";
-import { CountProviderProps, Action, State, DeviceClass, VirtualType } from "./types/devices";
+import { CountProviderProps, VirtualType } from "./types/devices";
 import serial, { isSerialType } from "../api/comms/serial";
-import Device from "../api/comms/Device";
+import Device, { State } from "../api/comms/Device";
 import HID from "../api/hid/hid";
 import { isVirtualType } from "../api/comms/virtual";
 
-type ContextType = {
-  state: State;
-  dispatch: React.Dispatch<Action>;
-};
+type ContextType =
+  | {
+      state: State;
+      dispatch: React.Dispatch<Action>;
+    }
+  | undefined;
+
+export type Action =
+  | { type: "changeCurrent"; payload: { selected: number; device: Device } }
+  | { type: "addDevice"; payload: Device }
+  | { type: "addDevicesList"; payload: Device[] }
+  | { type: "disconnect"; payload: number };
+
+export type Dispatch = (action: Action) => void;
 
 const DeviceContext = createContext<ContextType>(undefined);
 
@@ -107,7 +117,7 @@ const list = async () => {
   return finalDevices;
 };
 
-const connect = async (device: DeviceClass | VirtualType) => {
+const connect = async (device: Device | VirtualType) => {
   try {
     if (isVirtualType(device)) {
       const result = await new Device(device, "virtual");
@@ -134,7 +144,7 @@ const connect = async (device: DeviceClass | VirtualType) => {
   return undefined;
 };
 
-const disconnect = async (device: DeviceClass) => {
+const disconnect = async (device: Device) => {
   try {
     if (!device?.isClosed) {
       await device.close();

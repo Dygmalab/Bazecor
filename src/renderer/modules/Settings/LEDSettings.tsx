@@ -18,13 +18,11 @@
 import React, { useEffect, useState } from "react";
 import log from "electron-log/renderer";
 
-// External components
-import Slider from "@appigram/react-rangeslider";
-
 // Custom components
 import { Card, CardContent, CardHeader, CardTitle } from "@Renderer/components/atoms/Card";
 import { Switch } from "@Renderer/components/atoms/Switch";
 import { LEDSettingsPreferences } from "@Renderer/types/preferences";
+import { Slider } from "@Renderer/components/atoms/slider";
 
 // Assets
 // import { Badge } from "@Renderer/component/Badge";
@@ -39,52 +37,52 @@ function LEDSettings(props: LEDSettingsPreferences) {
   const [localKBData, setLocalKBData] = useState(kbData);
   const [localWireless, setLocalWireless] = useState(wireless);
 
-  const selectIdleLEDTime = (value: number) => {
+  const selectIdleLEDTime = (value: number[]) => {
     setLocalKBData(data => ({
       ...data,
-      ledIdleTimeLimit: value * 60,
+      ledIdleTimeLimit: value[0] * 60,
     }));
-    setKbData({ ...localKBData, ledIdleTimeLimit: value * 60 });
+    setKbData({ ...localKBData, ledIdleTimeLimit: value[0] * 60 });
   };
 
-  const selectIdleLEDTimeWireless = (value: number) => {
+  const selectIdleLEDTimeWireless = (value: number[]) => {
     setLocalWireless(data => ({
       ...data,
-      idleleds: value * 60,
+      idleleds: value[0] * 60,
     }));
-    setWireless({ ...localWireless, idleleds: value * 60 });
+    setWireless({ ...localWireless, idleleds: value[0] * 60 });
   };
 
-  const setBrightness = (value: number) => {
+  const setBrightness = (value: number[]) => {
     setLocalKBData(data => ({
       ...data,
-      ledBrightness: (value * 255) / 100,
+      ledBrightness: (value[0] * 255) / 100,
     }));
-    setKbData({ ...localKBData, ledBrightness: (value * 255) / 100 });
+    setKbData({ ...localKBData, ledBrightness: (value[0] * 255) / 100 });
   };
 
-  const setBrightnessWireless = (value: number) => {
+  const setBrightnessWireless = (value: number[]) => {
     setLocalWireless(data => ({
       ...data,
-      brightness: (value * 255) / 100,
+      brightness: (value[0] * 255) / 100,
     }));
-    setWireless({ ...localWireless, brightness: (value * 255) / 100 });
+    setWireless({ ...localWireless, brightness: (value[0] * 255) / 100 });
   };
 
-  const setBrightnessUG = (value: number) => {
+  const setBrightnessUG = (value: number[]) => {
     setLocalKBData(data => ({
       ...data,
-      ledBrightnessUG: (value * 255) / 100,
+      ledBrightnessUG: (value[0] * 255) / 100,
     }));
-    setKbData({ ...localKBData, ledBrightnessUG: (value * 255) / 100 });
+    setKbData({ ...localKBData, ledBrightnessUG: (value[0] * 255) / 100 });
   };
 
-  const setBrightnessUGWireless = (value: number) => {
+  const setBrightnessUGWireless = (value: number[]) => {
     setLocalWireless(data => ({
       ...data,
-      brightnessUG: (value * 255) / 100,
+      brightnessUG: (value[0] * 255) / 100,
     }));
-    setWireless({ ...localWireless, brightnessUG: (value * 255) / 100 });
+    setWireless({ ...localWireless, brightnessUG: (value[0] * 255) / 100 });
   };
 
   const setFade = async (checked: boolean) => {
@@ -138,7 +136,13 @@ function LEDSettings(props: LEDSettingsPreferences) {
                 <div className="flex w-full gap-2 items-center">
                   {isWireless && <div className="min-w-16 mb-0 text-sm text-gray-400 dark:text-gray-100">Wired</div>}
                   <div className="block w-full relative">
-                    <Slider min={0} max={100} step={1} value={Math.round((ledBrightness * 100) / 255)} onChange={setBrightness} />
+                    <Slider
+                      min={0}
+                      max={100}
+                      step={1}
+                      value={[Math.round((ledBrightness * 100) / 255)]}
+                      onValueChange={setBrightness}
+                    />
                   </div>
                 </div>
                 {isWireless && (
@@ -149,8 +153,8 @@ function LEDSettings(props: LEDSettingsPreferences) {
                         min={0}
                         max={100}
                         step={1}
-                        value={Math.round((brightness * 100) / 255)}
-                        onChange={setBrightnessWireless}
+                        value={[Math.round((brightness * 100) / 255)]}
+                        onValueChange={setBrightnessWireless}
                         className="slider-danger"
                       />
                     </div>
@@ -174,8 +178,8 @@ function LEDSettings(props: LEDSettingsPreferences) {
                       min={0}
                       max={100}
                       step={1}
-                      value={Math.round((ledBrightnessUG * 100) / 255)}
-                      onChange={setBrightnessUG}
+                      value={[Math.round((ledBrightnessUG * 100) / 255)]}
+                      onValueChange={setBrightnessUG}
                     />
                   </div>
                 </div>
@@ -187,8 +191,8 @@ function LEDSettings(props: LEDSettingsPreferences) {
                         min={0}
                         max={100}
                         step={1}
-                        value={Math.round((brightnessUG * 100) / 255)}
-                        onChange={setBrightnessUGWireless}
+                        value={[Math.round((brightnessUG * 100) / 255)]}
+                        onValueChange={setBrightnessUGWireless}
                         className="slider-danger"
                       />
                     </div>
@@ -225,7 +229,7 @@ function LEDSettings(props: LEDSettingsPreferences) {
                   <div className="flex w-full gap-2 items-center">
                     {isWireless && <div className="min-w-16 mb-0 text-sm text-gray-400 dark:text-gray-100">Wired</div>}
                     <div className="block w-full relative">
-                      <Slider min={0} max={60} step={1} value={ledIdleTimeLimit / 60} onChange={selectIdleLEDTime} />
+                      <Slider min={0} max={60} step={1} value={[ledIdleTimeLimit / 60]} onValueChange={selectIdleLEDTime} />
                     </div>
                   </div>
                   {isWireless && (
@@ -236,8 +240,8 @@ function LEDSettings(props: LEDSettingsPreferences) {
                           min={0}
                           max={60}
                           step={1}
-                          value={idleleds / 60}
-                          onChange={selectIdleLEDTimeWireless}
+                          value={[idleleds / 60]}
+                          onValueChange={selectIdleLEDTimeWireless}
                           className="slider-danger"
                         />
                       </div>

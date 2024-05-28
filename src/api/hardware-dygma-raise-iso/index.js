@@ -17,7 +17,6 @@
 
 import log from "electron-log/renderer";
 import KeymapISO from "./components/Keymap-ISO";
-import Focus from "../focus";
 
 const RaiseISO = {
   info: {
@@ -65,19 +64,21 @@ const RaiseISO = {
   },
 
   isDeviceSupported: async port => {
-    const focus = Focus.getInstance();
-    let layout = localStorage.getItem(port.serialNumber);
-    if (!layout) {
-      if (focus._port && focus._port.path === port.path) {
-        await focus.open(focus._port, port.device, null);
-      } else {
-        await focus.open(port.path, port.device, null);
-      }
-      layout = await focus.command("hardware.layout");
-      focus.close();
-      localStorage.setItem(port.serialNumber, layout);
-    }
-    return layout.trim() === "ISO";
+    // const focus = Focus.getInstance();
+    // let layout = localStorage.getItem(port.serialNumber);
+    // if (!layout) {
+    //   if (focus._port && focus._port.path === port.path) {
+    //     await focus.open(focus._port, port.device, null);
+    //   } else {
+    //     await focus.open(port.path, port.device, null);
+    //   }
+    //   layout = await focus.command("hardware.layout");
+    //   focus.close();
+    //   localStorage.setItem(port.serialNumber, layout);
+    // }
+    // return layout.trim() === "ISO";
+    log.info(port);
+    return true;
   },
 };
 

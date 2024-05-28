@@ -16,7 +16,6 @@
  */
 
 import React, { useState, useEffect } from "react";
-import log from "electron-log";
 import Styled from "styled-components";
 import { useMachine } from "@xstate/react";
 import { useDevice } from "@Renderer/DeviceContext";
@@ -24,7 +23,7 @@ import { i18n } from "@Renderer/i18n";
 
 // State machine
 import DeviceChecks from "@Renderer/controller/DeviceChecks/machine";
-import { ContextType } from "@Renderer/controller/FirmwareSelection/context";
+import { ContextType } from "@Renderer/controller/FlashManager/context";
 
 // Visual components
 import Title from "@Renderer/component/Title";

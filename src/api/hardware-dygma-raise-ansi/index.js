@@ -17,7 +17,6 @@
 
 import log from "electron-log/renderer";
 import KeymapANSI from "./components/Keymap-ANSI";
-import Focus from "../focus";
 
 const RaiseANSI = {
   info: {
@@ -65,20 +64,22 @@ const RaiseANSI = {
   },
 
   isDeviceSupported: async port => {
-    const focus = Focus.getInstance();
-    let layout = localStorage.getItem(port.serialNumber);
-    if (!layout) {
-      if (focus._port && focus._port.path === port.path) {
-        await focus.open(focus._port, port.device, null);
-      } else {
-        await focus.open(port.path, port.device, null);
-      }
-      layout = await focus.command("hardware.layout");
-      focus.close();
-      localStorage.setItem(port.serialNumber, layout);
-    }
-    const result = layout.trim() === "ANSI";
-    return result;
+    // const focus = Focus.getInstance();
+    // let layout = localStorage.getItem(port.serialNumber);
+    // if (!layout) {
+    //   if (focus._port && focus._port.path === port.path) {
+    //     await focus.open(focus._port, port.device, null);
+    //   } else {
+    //     await focus.open(port.path, port.device, null);
+    //   }
+    //   layout = await focus.command("hardware.layout");
+    //   focus.close();
+    //   localStorage.setItem(port.serialNumber, layout);
+    // }
+    // const result = layout.trim() === "ANSI";
+    // return result;
+    log.info(port);
+    return true;
   },
 };
 

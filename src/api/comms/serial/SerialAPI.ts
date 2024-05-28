@@ -66,7 +66,7 @@ const isDeviceSupported = async (device: DeviceType) => {
   if (!device.device.isDeviceSupported) {
     return true;
   }
-  const supported = await device.device.isDeviceSupported(device);
+  const supported = await device.device.isDeviceSupported(device.device);
   // log.info("focus.isDeviceSupported: port=", device, "supported=", supported);
   return supported;
 };

@@ -18,7 +18,6 @@ import React from "react";
 import Styled from "styled-components";
 
 // External components
-import Slider from "@appigram/react-rangeslider";
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import Tooltip from "react-bootstrap/Tooltip";
 
@@ -31,6 +30,7 @@ import { Switch } from "@Renderer/components/atoms/Switch";
 import { Badge } from "@Renderer/component/Badge";
 import { IconFlashlight, IconLeaf, IconInformation } from "@Renderer/components/atoms/Icons";
 import Heading from "@Renderer/components/atoms/Heading";
+import { Slider } from "@Renderer/components/atoms/slider";
 import { i18n } from "@Renderer/i18n";
 
 // Import Types for wireless
@@ -74,9 +74,9 @@ function EnergyManagement(props: EnergyManagementProps) {
     changeWireless(newWireless);
   };
 
-  const setTrueSleepTime = async (value: number) => {
+  const setTrueSleepTime = async (value: number[]) => {
     const newWireless = { ...wireless };
-    newWireless.true_sleep_time = value * 60;
+    newWireless.true_sleep_time = value[0] * 60;
     changeWireless(newWireless);
   };
 
@@ -138,8 +138,8 @@ function EnergyManagement(props: EnergyManagementProps) {
                   min={0}
                   max={100}
                   step={1}
-                  value={Math.round(wireless.true_sleep_time / 60)}
-                  onChange={setTrueSleepTime}
+                  value={[Math.round(wireless.true_sleep_time / 60)]}
+                  onValueChange={setTrueSleepTime}
                   className="slider-danger"
                   disabled={wireless.true_sleep === true}
                 />

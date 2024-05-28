@@ -1,4 +1,3 @@
-// eslint-disable-next-line import/no-cycle
 import { StorageType } from "@Renderer/types/store";
 import ElectronStore, { Schema } from "electron-store";
 

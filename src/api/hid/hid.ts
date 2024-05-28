@@ -1,6 +1,5 @@
 import log from "electron-log/renderer";
-// eslint-disable-next-line import/no-cycle
-import { DygmaDeviceType } from "@Renderer/types/devices";
+import { DygmaDeviceType } from "@Renderer/types/dygmaDefs";
 import { ExtHIDInterface } from "../comms/types";
 import Hardware from "../hardware";
 

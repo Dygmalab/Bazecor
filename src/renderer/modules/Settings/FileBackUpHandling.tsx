@@ -15,7 +15,6 @@
  */
 
 import React, { useState, useEffect } from "react";
-import Slider from "@appigram/react-rangeslider";
 import { ipcRenderer } from "electron";
 
 // React Bootstrap Components
@@ -32,6 +31,7 @@ import { IconFolder } from "@Renderer/components/atoms/Icons";
 
 // Utils
 import Store from "@Renderer/utils/Store";
+import { Slider } from "@Renderer/components/atoms/slider";
 
 const store = Store.getStore();
 
@@ -67,9 +67,9 @@ const FileBackUpHandling = () => {
     }
   };
 
-  const onSetStoreBackups = (value: any) => {
+  const onSetStoreBackups = (value: number[]) => {
     // console.log("changed backup period to: ", value);
-    setStoreBackups(value);
+    setStoreBackups(value[0]);
     store.set("settings.backupFrequency", value);
   };
 
@@ -101,7 +101,7 @@ const FileBackUpHandling = () => {
                   <span className="tagsfix">1 month</span>
                 </Col>
                 <Col xs={8} className="px-1">
-                  <Slider min={1} max={13} step={1} value={storeBackups} onChange={onSetStoreBackups} />
+                  <Slider min={1} max={13} step={1} value={[storeBackups]} onValueChange={onSetStoreBackups} />
                 </Col>
                 <Col xs={2} className="p-0 text-center align-self-center">
                   <span className="tagsfix">Forever</span>

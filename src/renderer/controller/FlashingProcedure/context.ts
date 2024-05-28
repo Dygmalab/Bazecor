@@ -1,10 +1,11 @@
-import { State } from "@Renderer/types/devices";
 import { BackupType } from "@Renderer/types/backups";
+import Device, { State } from "src/api/comms/Device";
+import { DygmaDeviceType } from "@Renderer/types/dygmaDefs";
 import { FlashRaise, FlashDefyWireless } from "../../../api/flash";
 import SideFlaser from "../../../api/flash/defyFlasher/sideFlasher";
 
 export interface ContextType {
-  deviceState: State;
+  deviceState: State | undefined;
   loadedComms: boolean;
   stateblock: number;
   globalProgress: number;
@@ -13,30 +14,41 @@ export interface ContextType {
   resetProgress: number;
   neuronProgress: number;
   restoreProgress: number;
-  restoreResult: number | undefined;
+  restoreResult: boolean | undefined;
   retriesRight: number;
   retriesLeft: number;
   retriesNeuron: number;
   retriesDefyWired: number;
+  sideLeftOk: boolean | undefined;
   sideLeftBL: boolean | undefined;
-  rightResult: any;
-  leftResult: any;
-  resetResult: any;
-  flashResult: any;
-  firmwares: any;
-  device: any;
-  originalDevice: any;
+  isUpdated: boolean | undefined;
+  sideRightOK: boolean | undefined;
+  sideRightBL: boolean | undefined;
+  rightResult: boolean | undefined;
+  leftResult: boolean | undefined;
+  resetResult: boolean | undefined;
+  flashResult: boolean | undefined;
+  firmwares:
+    | {
+        fw: any;
+        fwSides: any;
+      }
+    | undefined;
+  device: DygmaDeviceType | undefined;
+  originalDevice: Device | undefined;
   backup: BackupType | undefined;
   error: unknown;
-  DefyVariant: string;
+  DefyVariant: string | undefined;
   flashRaise: FlashRaise | undefined;
   flashDefyWireless: FlashDefyWireless | undefined;
+  RaiseBrightness: string | undefined;
   flashSides: SideFlaser | undefined;
   bootloader: boolean | undefined;
   comPath: string | Buffer | undefined;
 }
 
-export const Context = {
+export const Context: ContextType = {
+  deviceState: undefined,
   loadedComms: false,
   stateblock: 1,
   globalProgress: 0,
@@ -50,12 +62,17 @@ export const Context = {
   retriesLeft: 0,
   retriesNeuron: 0,
   retriesDefyWired: 0,
+  RaiseBrightness: undefined,
+  isUpdated: undefined,
   sideLeftBL: undefined,
+  sideLeftOk: undefined,
+  sideRightBL: undefined,
+  sideRightOK: undefined,
   rightResult: undefined,
   leftResult: undefined,
   resetResult: undefined,
   flashResult: undefined,
-  firmwares: [],
+  firmwares: undefined,
   device: undefined,
   originalDevice: undefined,
   backup: undefined,

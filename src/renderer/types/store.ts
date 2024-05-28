@@ -1,5 +1,3 @@
-import { Neuron } from "./neurons";
-
 export interface StorageType {
   settings: {
     backupFolder: string;
@@ -9,5 +7,5 @@ export interface StorageType {
     showDefaults: boolean;
     isStandardView: boolean;
   };
-  neurons: Neuron[];
+  neurons: unknown[];
 }

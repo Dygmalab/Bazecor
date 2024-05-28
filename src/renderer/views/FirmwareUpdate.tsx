@@ -52,7 +52,7 @@ interface FirmwareUpdateProps {
   toggleFlashing: () => void;
   toggleFwUpdate: (value: boolean) => void;
   onDisconnect: () => void;
-  setRestoredOk: () => void;
+  setRestoredOk: (value: boolean) => void;
 }
 
 function FirmwareUpdate(props: FirmwareUpdateProps) {

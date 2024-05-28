@@ -1,5 +1,5 @@
-import { State } from "@Renderer/types/devices";
 import { ReleaseType } from "@Renderer/types/releases";
+import { State } from "src/api/comms/Device";
 
 export interface ContextType {
   stateblock: number;
