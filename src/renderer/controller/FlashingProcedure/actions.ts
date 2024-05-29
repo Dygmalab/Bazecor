@@ -175,6 +175,7 @@ export const flashSide = async (side: string, context: Context.ContextType) => {
     log.info("Going to flash side:", side);
     const forceFlashSides = false;
     await context.flashSides.flashSide(
+      context.comPath as string,
       side,
       (stage, percentage) => {
         stateUpdate(stage, percentage, context);
@@ -228,7 +229,7 @@ export const uploadDefyWired = async (context: Context.ContextType) => {
 
 export const resetDefy = async (context: Context.ContextType) => {
   let { currentDevice } = context.deviceState as State;
-  log.info("Checking resseting Defy: ", currentDevice, context.originalDevice);
+  log.info("Checking resseting Defy: ", currentDevice.device, context.originalDevice);
   try {
     if (context.flashDefyWireless === undefined) {
       log.info("when creating FDW", context.originalDevice?.device);
@@ -240,11 +241,12 @@ export const resetDefy = async (context: Context.ContextType) => {
     }
     if (!context.bootloader) {
       try {
-        log.info("reset indicators", currentDevice, context.flashDefyWireless, currentDevice.device);
+        log.info("reset indicators", currentDevice.device.bootloader, context.flashDefyWireless, currentDevice.device);
         if (currentDevice.port === undefined || currentDevice.isClosed) {
-          currentDevice = (await DeviceTools.connect(currentDevice)) as Device;
+          context.deviceState.currentDevice = (await DeviceTools.connect(currentDevice)) as Device;
+          currentDevice = context.deviceState.currentDevice;
         }
-        await context.flashDefyWireless.resetKeyboard(currentDevice.port, (stage: string, percentage: number) => {
+        await context.flashDefyWireless.resetKeyboard(currentDevice, (stage: string, percentage: number) => {
           stateUpdate(stage, percentage, context);
         });
       } catch (error) {

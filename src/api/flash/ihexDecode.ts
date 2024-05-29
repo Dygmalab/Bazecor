@@ -6,7 +6,7 @@ import { HexType } from "./types";
  * @param {string} line - One line from hex file.
  * @returns {object} Щbject for use in firmware.
  */
-export function ihexDecode(line: string): HexType {
+export default function ihexDecode(line: string): HexType {
   let offset = 0;
 
   const byteCount = parseInt(line.substr(offset, 2), 16);

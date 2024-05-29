@@ -26,6 +26,16 @@ const find = async () => {
         foundDevices.push(newPort);
       }
     }
+    for (const Hdevice of Hardware.bootloader) {
+      if (
+        parseInt(`0x${device.productId}`, 16) === Hdevice.usb.productId &&
+        parseInt(`0x${device.vendorId}`, 16) === Hdevice.usb.vendorId
+      ) {
+        const newPort = { ...device };
+        newPort.device = Hdevice;
+        foundDevices.push(newPort);
+      }
+    }
   }
   log.info("Usable found devices:", foundDevices);
 

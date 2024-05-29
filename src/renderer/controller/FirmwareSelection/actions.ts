@@ -202,7 +202,7 @@ export const downloadFirmware = async (
     log.error(error);
     throw new Error(error);
   }
-  console.log("obtained FW's:", { fw: filename, fwSides: filenameSides });
+  console.log("obtained FW's lengths:", filename.length, filenameSides.length);
   const result: { fw: any; fwSides: any } = { fw: filename, fwSides: filenameSides };
 
   return result;

@@ -20,7 +20,7 @@ import log from "electron-log/renderer";
 import { num2hexstr } from "../num2hexstr";
 import { serialConnection, rawCommand, noWaitCommand } from "../serialConnection";
 import { HexType } from "../types";
-import { ihexDecode } from "../ihexDecode";
+import ihexDecode from "../ihexDecode";
 
 const PACKET_SIZE = 4096;
 
@@ -35,6 +35,7 @@ const NRf52833 = {
     lines: string[],
     stateUpdate: (arg0: string, arg1: number) => void,
     finished: (err: Error, result: unknown) => void,
+    erasePairings: boolean,
   ) => {
     // let fileData = fs.readFileSync(firmware, { encoding: "utf8" });
     // fileData = fileData.replace(/(?:\r\n|\r|\n)/g, "");
@@ -90,20 +91,25 @@ const NRf52833 = {
 
     // Prepare connection
     serialPort = await serialConnection();
+    let ans: Buffer;
 
     // ERASE device
     log.info("Erasing...");
-    let ans: Buffer = await rawCommand(
-      `E${num2hexstr(dataObjects[0].address, 8)},${num2hexstr(0x00072000 - dataObjects[0].address, 8)}#`,
-      serialPort,
-    );
-    if (ans[0] !== 65) {
-      log.info("answer to Erase command: ", String.fromCharCode.apply(null, ans));
-      log.info(
-        `RAW Command: ${`E${num2hexstr(dataObjects[0].address, 8)},${num2hexstr(0x00072000 - dataObjects[0].address, 8)}#`}`,
+    if (erasePairings) {
+      ans = await rawCommand(`E${num2hexstr(dataObjects[0].address, 8)}#`, serialPort);
+    } else {
+      ans = await rawCommand(
+        `E${num2hexstr(dataObjects[0].address, 8)},${num2hexstr(0x00072000 - dataObjects[0].address, 8)}#`,
+        serialPort,
       );
-      throw Error("error when Erasing");
     }
+    // if (ans[0] !== 65) {
+    //   log.info("answer to Erase command: ", String.fromCharCode.apply(null, ans));
+    //   log.info(
+    //     `RAW Command: ${`E${num2hexstr(dataObjects[0].address, 8)},${num2hexstr(0x00072000 - dataObjects[0].address, 8)}#`}`,
+    //   );
+    //   throw Error("error when Erasing");
+    // }
 
     let state = 1;
     const stateT = totalSaved / 4096;
@@ -157,11 +163,15 @@ const NRf52833 = {
 
     log.info("Validating...");
     ans = await rawCommand("V#", serialPort);
-    if (ans[0] !== 65) throw Error("error when Validating");
+    // if (ans[0] !== 65) throw Error("error when Validating");
 
     // START APPLICATION
-    ans = await rawCommand("F#", serialPort);
-    if (ans[0] !== 65) log.warn("error when disconnecting");
+    try {
+      ans = await rawCommand("F#", serialPort);
+      if (ans[0] !== 65) log.warn("warning when disconnecting");
+    } catch (error) {
+      log.warn(error);
+    }
 
     // DISCONNECT
     finished(undefined, true);

@@ -44,7 +44,7 @@ export interface ContextType {
   RaiseBrightness: string | undefined;
   flashSides: SideFlaser | undefined;
   bootloader: boolean | undefined;
-  comPath: string | Buffer | undefined;
+  comPath: string | undefined;
 }
 
 export const Context: ContextType = {

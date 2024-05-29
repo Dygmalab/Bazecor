@@ -168,7 +168,7 @@ class Device implements DeviceClass {
     log.info("device.request:", command, ...args);
     return new Promise<string>((resolve, reject) => {
       const timer = setTimeout(() => {
-        reject(new Error("Communication timeout"));
+        reject(new Error(`Communication timeout ${command}`));
       }, this.timeout);
       this.serialRequest(command, ...args)
         .then((data: string) => {
