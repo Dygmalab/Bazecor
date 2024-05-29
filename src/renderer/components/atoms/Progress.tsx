@@ -16,17 +16,21 @@ const progressVariants = cva("relative h-[6px] w-full overflow-hidden rounded-fu
   },
 });
 
-const Progress = React.forwardRef<
-  React.ElementRef<typeof ProgressPrimitive.Root> & VariantProps<typeof progressVariants>,
-  React.ComponentPropsWithoutRef<typeof ProgressPrimitive.Root>
->(({ className, variant, value, ...props }, ref) => (
-  <ProgressPrimitive.Root ref={ref} className={cn(progressVariants({ variant, className }))} {...props}>
-    <ProgressPrimitive.Indicator
-      className={`h-full w-full flex-1   transition-all ${variant === "animated" ? "custom-progress-striped" : ""} bg-gray-600/50 dark:bg-gray-500/50`}
-      style={{ transform: `translateX(-${100 - (value || 0)}%)` }}
-    />
-  </ProgressPrimitive.Root>
-));
+// export interface ProgressProps extends React.ElementRef<typeof ProgressPrimitive.Root>, React.ComponentPropsWithoutRef<typeof ProgressPrimitive.Root> & VariantProps<typeof badgeVariants> {}
+export interface ProgressProps
+  extends React.ComponentPropsWithoutRef<typeof ProgressPrimitive.Root>,
+    VariantProps<typeof progressVariants> {}
+
+const Progress = React.forwardRef<React.ElementRef<typeof ProgressPrimitive.Root>, ProgressProps>(
+  ({ className, variant, value, ...props }, ref) => (
+    <ProgressPrimitive.Root ref={ref} className={cn(progressVariants({ variant, className }))} {...props}>
+      <ProgressPrimitive.Indicator
+        className={`h-full w-full flex-1 transition-all ${variant === "animated" ? "custom-progress-striped" : ""} bg-gray-600/50 dark:bg-gray-500/50`}
+        style={{ transform: `translateX(-${100 - (value || 0)}%)` }}
+      />
+    </ProgressPrimitive.Root>
+  ),
+);
 Progress.displayName = ProgressPrimitive.Root.displayName;
 
 export { Progress };
