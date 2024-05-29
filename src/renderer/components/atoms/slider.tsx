@@ -34,7 +34,7 @@ const Slider = React.forwardRef<
         <SliderPrimitive.Range className="range" />
       </SliderPrimitive.Track>
       <SliderPrimitive.Thumb className="thumb block h-4 w-4 rounded-full border-[3px] ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50">
-        <span className="thumbValue absolute bg-gray-25 text-gray-600 shadow-lg text-ssm rounded-sm p-[6px] top-[-32px] left-[-50%] transition-all opacity-0 group-hover:opacity-100">
+        <span className="thumbValue absolute bg-gray-25 dark:bg-gray-600 text-gray-600 dark:text-gray-25 shadow-lg text-ssm rounded-sm p-[6px] top-[-36px] left-[50%] translate-x-[-50%] transition-all opacity-0 group-hover:opacity-100">
           {internalValue}
         </span>
       </SliderPrimitive.Thumb>
