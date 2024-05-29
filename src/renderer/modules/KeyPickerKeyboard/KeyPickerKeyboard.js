@@ -367,7 +367,7 @@ class KeyPickerKeyboard extends Component {
   updateSelectorPosition = () => {
     const elPosition = this.layoutSelectorWatcherPosition.current.getBoundingClientRect();
     if (this.props.refreshLayoutSelectorPosition) {
-      this.props.refreshLayoutSelectorPosition(elPosition.left, elPosition.top);
+      this.props.refreshLayoutSelectorPosition(elPosition.left, elPosition.top - 102);
     }
   };
 

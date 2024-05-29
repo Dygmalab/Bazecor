@@ -14,12 +14,18 @@ interface PositionProps {
 interface ToggleGroupLayoutViewModeProps {
   value: string;
   onValueChange: () => void;
-  layoutSelectorPosition: PositionProps;
+  view: "layout" | "superkeys";
+  layoutSelectorPosition?: PositionProps;
 }
 
-const ToggleGroupLayoutViewMode = ({ value, onValueChange, layoutSelectorPosition }: ToggleGroupLayoutViewModeProps) => (
+const ToggleGroupLayoutViewMode = ({
+  value,
+  onValueChange,
+  layoutSelectorPosition = { x: 0, y: 0 },
+  view,
+}: ToggleGroupLayoutViewModeProps) => (
   <div
-    className={`self-start mt-auto mb-6 pt-4 ${value === "single" ? "absolute" : " "}`}
+    className={`self-start mt-auto mb-6 pt-4 ${value === "single" && view === "layout" ? "absolute" : " "}`}
     style={{ top: layoutSelectorPosition.y, left: layoutSelectorPosition.x }}
   >
     <Heading renderAs="h5" headingLevel={5} className="mb-1 gap-2 flex items-center text-[10px] text-gray-300 dark:text-gray-500">

@@ -1918,6 +1918,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
             value={viewMode}
             onValueChange={onToggleStandardView}
             layoutSelectorPosition={layoutSelectorPosition}
+            view="layout"
           />
         ) : null}
 
