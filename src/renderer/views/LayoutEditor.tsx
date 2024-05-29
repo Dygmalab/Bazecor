@@ -57,7 +57,7 @@ import { i18n } from "@Renderer/i18n";
 
 import Store from "@Renderer/utils/Store";
 import getLanguage from "@Renderer/utils/language";
-import { ClearLayerDialog } from "@Renderer/modules/LayoutEditor/ClearLayerDialog";
+import { ClearLayerDialog } from "@Renderer/components/molecules/CustomModal/ClearLayerDialog";
 import Keymap, { KeymapDB } from "../../api/keymap";
 import { rgb2w, rgbw2b } from "../../api/color";
 import Backup from "../../api/backup";

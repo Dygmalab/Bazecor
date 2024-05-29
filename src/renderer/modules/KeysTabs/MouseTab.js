@@ -21,8 +21,8 @@ import log from "electron-log/renderer";
 import { i18n } from "@Renderer/i18n";
 
 import Callout from "@Renderer/components/molecules/Callout/Callout";
+// import MouseEventsReference from "@Renderer/components/atoms/MouseEventsReference";
 import Title from "../../component/Title";
-// import MouseEventsReference from "../../component/MouseEventsReference";
 import { ButtonConfig, ButtonMouse } from "../../component/Button";
 
 const Styles = Styled.div`

@@ -45,13 +45,13 @@ import { ButtonConfig } from "@Renderer/component/Button";
 // `;
 interface ItemButton {
   name: string;
-  value: string | number;
+  value: string | number | boolean;
   index: number;
   icon?: React.ReactNode;
 }
 interface ToggleGroupProps {
-  triggerFunction: (value: string | number) => void;
-  value: string | number;
+  triggerFunction: (value: string | number | boolean) => void;
+  value: string | number | boolean;
   listElements: ItemButton[];
   variant?: "flex" | "regular";
   size?: "sm" | "md";
@@ -60,7 +60,7 @@ const ToggleGroup = ({ triggerFunction, value, listElements, variant = "regular"
   <div className="toggleButtonsContainer">
     <strong className="sr-only hidden">{value}</strong>
     <div
-      className={`toggleButtonsInner w-fit flex items-center justify-start gap-1 p-[4px] rounded-regular border-[1px] border-solid border-gray-100/60 bg-white/30 dark:border-transparent dark:bg-gray-900/25 ${variant === "flex" ? "flex [&_.button-config]:basis-full [&_.button-config]:text-center" : ""}`}
+      className={`toggleButtonsInner flex items-center justify-start gap-1 p-[4px] rounded-regular border-[1px] border-solid border-gray-100/60 bg-white/30 dark:border-transparent dark:bg-gray-900/25 ${variant === "flex" ? "w-fit [&_.button-config]:basis-full [&_.button-config]:text-center" : "w-full [&_.button-config]:flex-1 [&_.button-config]:text-center"}`}
     >
       {listElements.map(item => (
         <ButtonConfig
