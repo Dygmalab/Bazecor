@@ -1,11 +1,9 @@
 import React, { useState } from "react";
-// import Modal from "react-bootstrap/Modal";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@Renderer/components/atoms/Dialog";
 import { Button } from "@Renderer/components/atoms/Button";
 import { ColorPalette } from "@Renderer/modules/ColorEditor/ColorPalette";
 import { PaletteType } from "@Types/layout";
 import { i18n } from "@Renderer/i18n";
-// import { ToggleButtons } from "@Renderer/component/ToggleButtons";
 import ToggleGroup from "@Renderer/components/molecules/CustomToggleGroup/ToggleGroup";
 import { NOKEY_KEY_CODE, TRANS_KEY_CODE } from "../../../../api/keymap/types";
 

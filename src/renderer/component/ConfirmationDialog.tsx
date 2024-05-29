@@ -16,9 +16,9 @@
  */
 
 import React from "react";
-import Modal from "react-bootstrap/Modal";
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@Renderer/components/atoms/Dialog";
 import { i18n } from "@Renderer/i18n";
-import { RegularButton } from "./Button";
+import { Button } from "@Renderer/components/atoms/Button";
 
 interface ConfirmationDialogProps {
   open: boolean;
@@ -31,16 +31,22 @@ interface ConfirmationDialogProps {
 const ConfirmationDialog = (props: ConfirmationDialogProps): JSX.Element => {
   const { open, onCancel, title, text, onConfirm } = props;
   return (
-    <Modal backdrop="static" show={open} onHide={onCancel} size="lg" aria-labelledby="contained-modal-title-vcenter" centered>
-      <Modal.Header closeButton>
-        <Modal.Title className="title">{title}</Modal.Title>
-      </Modal.Header>
-      <Modal.Body className="body">{text}</Modal.Body>
-      <Modal.Footer>
-        <RegularButton buttonText={i18n.dialog.cancel} styles="outline transp-bg" size="sm" onClick={onCancel} />
-        <RegularButton buttonText={i18n.dialog.applyChanges} styles="outline gradient" size="sm" onClick={onConfirm} />
-      </Modal.Footer>
-    </Modal>
+    <Dialog open={open} onOpenChange={onCancel}>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>{title}</DialogTitle>
+        </DialogHeader>
+        <div className="px-6 pb-2 mt-2">{text}</div>
+        <DialogFooter>
+          <Button variant="outline" size="md" onClick={onCancel}>
+            {i18n.dialog.cancel}
+          </Button>
+          <Button variant="secondary" size="md" onClick={onConfirm}>
+            {i18n.dialog.applyChanges}
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 };
 

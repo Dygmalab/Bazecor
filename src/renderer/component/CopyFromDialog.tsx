@@ -16,66 +16,17 @@
  */
 
 import React, { useState } from "react";
-import Styled from "styled-components";
 
 // React Bootstrap components
-import Modal from "react-bootstrap/Modal";
-import ListGroup from "react-bootstrap/ListGroup";
+// import Modal from "react-bootstrap/Modal";
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@Renderer/components/atoms/Dialog";
 import { i18n } from "@Renderer/i18n";
 import { LayerType } from "@Renderer/types/neurons";
 
-import { RegularButton } from "./Button";
-import Title from "./Title";
-
-const Styles = Styled.div`
-.list-group-item {
-  border-radius: none;
-}
-.list-group-item:first-child {
-  border-top-left-radius: .25rem;
-  border-top-right-radius: .25rem;
-}
-.list-group-item:last-child {
-  border-bottom-left-radius: .25rem;
-  border-bottom-right-radius: .25rem;
-}
-.listitem {
-  background-color: ${({ theme }) => theme.styles.listGroup.listItem.background};
-  color: ${({ theme }) => theme.styles.listGroup.listItem.color};
-  font-weight: 410;
-  margin-top: 1px;
-  transition: 300ms background ease-in-out;
-  border: none;
-  span {
-    display: none;
-    font-size: 80%;
-    margin-left: 8px
-  }
-  &:focus,
-  &:hover {
-    background-color: ${({ theme }) => theme.styles.listGroup.listItem.backgroundHover};
-    outline: none;
-    box-shadow: none;
-  }
-}
-.disabled {
-  background-color: ${({ theme }) => theme.styles.listGroup.listItem.backgroundDisabled};
-  color: ${({ theme }) => theme.styles.listGroup.listItem.colorDisabled};
-}
-.selected {
-  background-color: ${({ theme }) => theme.styles.listGroup.listItem.backgroundSelected};
-  color: ${({ theme }) => theme.styles.listGroup.listItem.colorSelected};
-  span {
-    display: inline-block;
-    color: ${({ theme }) => theme.styles.listGroup.listItem.colorSelectedSpan};
-  }
-  &:focus,
-  &:hover {
-    background-color: ${({ theme }) => theme.styles.listGroup.listItem.backgroundSelected};
-    color: ${({ theme }) => theme.styles.listGroup.listItem.colorSelected};
-  }
-}
-`;
+// import { RegularButton } from "./Button";
+import { Button } from "@Renderer/components/atoms/Button";
+import { ButtonConfig } from "@Renderer/component/Button";
+import Heading from "@Renderer/components/atoms/Heading";
 
 interface CopyFromDialogProps {
   open: boolean;
@@ -88,15 +39,35 @@ interface CopyFromDialogProps {
 export function CopyFromDialog(props: CopyFromDialogProps) {
   const { open, onCancel, onCopy, layers, currentLayer } = props;
   const [selectedLayer, setSelectedLayer] = useState(-1);
+
   return (
-    <Modal backdrop="static" show={open} onHide={onCancel} size="lg" aria-labelledby="contained-modal-title-vcenter" centered>
-      <Styles>
-        <Modal.Header closeButton>
-          <Modal.Title>{i18n.editor.layers.copyFrom}</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <Title text={i18n.editor.pleaseSelectLayer} headingLevel={4} />
-          <ListGroup variant="flush">
+    <Dialog open={open} onOpenChange={onCancel}>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>{i18n.editor.layers.copyFrom}</DialogTitle>
+        </DialogHeader>
+        <div className="px-6 pb-2 mt-2">
+          <Heading renderAs="h4" headingLevel={4}>
+            {i18n.editor.pleaseSelectLayer}
+          </Heading>
+          <div
+            className={`toggleButtonsInner flex flex-col items-center justify-start gap-1 p-[4px] rounded-regular border-[1px] border-solid border-gray-100/60 bg-white/30 dark:border-transparent dark:bg-gray-900/25 w-full [&_.button-config]:w-full [&_.button-config]:basis-full [&_.button-config]:text-left [&_.button-config.disabled]:opacity-25 [&_.button-config.disabled]:pointer-events-none"}`}
+          >
+            {layers.map(layer => (
+              <ButtonConfig
+                onClick={() => {
+                  setSelectedLayer(layer.id);
+                }}
+                selected={layer.id === selectedLayer}
+                key={layer.id}
+                buttonText={`${layer.name} ${layer.id === selectedLayer ? i18n.editor.layers.layerToCopy : ""}`}
+                size="sm"
+                disabled={layer.id === currentLayer}
+              />
+            ))}
+          </div>
+
+          {/* <ListGroup variant="flush">
             {layers.map(layer => (
               <ListGroup.Item
                 className={`listitem ${layer.id === currentLayer ? "disabled" : ""} ${
@@ -112,30 +83,32 @@ export function CopyFromDialog(props: CopyFromDialogProps) {
                 {layer.name} {layer.id === selectedLayer ? <span>{i18n.editor.layers.layerToCopy}</span> : ""}
               </ListGroup.Item>
             ))}
-          </ListGroup>
-        </Modal.Body>
-        <Modal.Footer>
-          <RegularButton
-            buttonText={i18n.dialog.cancel}
-            styles="outline transp-bg"
+          </ListGroup> */}
+        </div>
+        <DialogFooter>
+          <Button
+            variant="outline"
             size="sm"
             onClick={() => {
               setSelectedLayer(-1);
               onCancel();
             }}
-          />
-          <RegularButton
-            buttonText={i18n.dialog.ok}
-            styles="outline gradient"
+          >
+            {i18n.dialog.cancel}
+          </Button>
+          <Button
+            variant="secondary"
             size="sm"
             onClick={() => {
               const layer = selectedLayer;
               setSelectedLayer(-1);
               onCopy(layer);
             }}
-          />
-        </Modal.Footer>
-      </Styles>
-    </Modal>
+          >
+            Copy layer
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 }
