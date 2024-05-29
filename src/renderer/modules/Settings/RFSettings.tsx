@@ -23,7 +23,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@Renderer/components/a
 import Heading from "@Renderer/components/atoms/Heading";
 import { RegularButton } from "@Renderer/component/Button";
 
-import { ToggleButtons } from "@Renderer/component/ToggleButtons";
+// import { ToggleButtons } from "@Renderer/component/ToggleButtons";
+import ToggleGroup from "@Renderer/components/molecules/CustomToggleGroup/ToggleGroup";
 
 // Assets
 import { IconSignal, IconRadar, IconInformation, IconThunder } from "@Renderer/components/atoms/Icons";
@@ -121,7 +122,7 @@ function RFSettings(props: RFSettingsProps) {
                 </Tooltip>
               </TooltipProvider>
             </Heading>
-            <ToggleButtons selectDarkMode={setRfPower} value={wireless.rf.power} listElements={RFModes} styles="flex" size="sm" />
+            <ToggleGroup triggerFunction={setRfPower} value={wireless.rf.power} listElements={RFModes} variant="flex" size="sm" />
           </div>
           <div className="rounded-sm bg-gray-100/20 dark:bg-gray-900/20 py-3 px-3 mt-3">
             <p className="flex flex-row gap-2 items-center text-xs text-gray-300 dark:text-gray-100">

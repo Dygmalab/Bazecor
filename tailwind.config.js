@@ -129,6 +129,7 @@ module.exports = {
       },
       borderRadius: {
         "2sm": "3px",
+        regular: "6px",
       },
       boxShadow: {
         dropdown: "0px 32px 72px -32px rgba(26, 17, 46, 0.50), 16px 32px 32px -16px rgba(11, 2, 25, 0.20)",
