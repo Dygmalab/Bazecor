@@ -23,7 +23,6 @@ import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "
 import { i18n } from "@Renderer/i18n";
 import { LayerType } from "@Renderer/types/neurons";
 
-// import { RegularButton } from "./Button";
 import { Button } from "@Renderer/components/atoms/Button";
 import { ButtonConfig } from "@Renderer/component/Button";
 import Heading from "@Renderer/components/atoms/Heading";

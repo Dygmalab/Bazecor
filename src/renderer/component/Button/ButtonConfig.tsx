@@ -28,10 +28,10 @@ const Style = Styled.div`
 `;
 
 interface ButtonConfigProps {
-  selected: boolean;
+  selected?: boolean;
   onClick: (e: unknown) => void;
-  buttonText: string;
-  disabled: boolean;
+  buttonText?: string;
+  disabled?: boolean;
   className?: string;
   size?: string;
   tooltip?: string;
@@ -46,7 +46,7 @@ interface ButtonConfigProps {
 
 function ButtonConfig(props: ButtonConfigProps) {
   const {
-    selected,
+    selected = false,
     onClick,
     size,
     buttonText,
@@ -57,7 +57,7 @@ function ButtonConfig(props: ButtonConfigProps) {
     icoSVG,
     icoPosition,
     tooltipDelay,
-    disabled,
+    disabled = false,
     dataAnimate,
     className,
   } = props;
