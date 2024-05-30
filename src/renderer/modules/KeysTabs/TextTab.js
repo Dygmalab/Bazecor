@@ -6,8 +6,8 @@ import { i18n } from "@Renderer/i18n";
 
 import { IconArrowInBoxUp } from "@Renderer/components/atoms/Icons";
 import Callout from "@Renderer/components/molecules/Callout/Callout";
-import Title from "../../component/Title";
-import { RegularButton } from "../../component/Button";
+import { Button } from "@Renderer/components/atoms/Button";
+import Heading from "@Renderer/components/atoms/Heading";
 
 const Styles = Styled.div`
 display: flex;
@@ -52,7 +52,9 @@ class TextTab extends Component {
           <Callout size="sm" className="mt-4 karaka">
             <p>{i18n.editor.macros.textTabs.callout}</p>
           </Callout>
-          <Title text={i18n.editor.macros.textTabs.title} headingLevel={4} />
+          <Heading headingLevel={4} renderAs="h4">
+            {i18n.editor.macros.textTabs.title}
+          </Heading>
           <Form.Control
             type="text"
             placeholder={i18n.editor.macros.textTabs.placeholder}
@@ -63,13 +65,9 @@ class TextTab extends Component {
           />
         </div>
         <div className="tabSaveButton">
-          <RegularButton
-            buttonText={i18n.editor.macros.textTabs.buttonText}
-            styles="outline gradient"
-            onClick={this.props.onAddText}
-            icoSVG={<IconArrowInBoxUp />}
-            icoPosition="right"
-          />
+          <Button variant="secondary" onClick={this.props.onAddText} iconDirection="right">
+            <IconArrowInBoxUp /> {i18n.editor.macros.textTabs.buttonText}
+          </Button>
         </div>
       </Styles>
     );

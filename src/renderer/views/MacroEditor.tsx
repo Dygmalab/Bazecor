@@ -44,7 +44,7 @@ import { MacroActionsType, MacrosType } from "@Renderer/types/macros";
 
 // Components
 import LogoLoader from "@Renderer/components/atoms/Loader/LogoLoader";
-import { RegularButton } from "@Renderer/component/Button";
+import { Button } from "@Renderer/components/atoms/Button";
 import { IconFloppyDisk, IconLoader } from "@Renderer/components/atoms/Icons";
 import MacroSelector from "@Renderer/components/organisms/Select/MacroSelector";
 import ToastMessage from "@Renderer/component/ToastMessage";
@@ -866,18 +866,12 @@ function MacroEditor(props: MacroEditorProps) {
           {ListCombo}
         </Modal.Body>
         <Modal.Footer>
-          <RegularButton
-            buttonText={i18n.editor.macros.deleteModal.cancelButton}
-            styles="outline transp-bg"
-            size="sm"
-            onClick={toggleDeleteModal}
-          />
-          <RegularButton
-            buttonText={i18n.editor.macros.deleteModal.applyButton}
-            styles="outline gradient"
-            size="sm"
-            onClick={ActUponDelete}
-          />
+          <Button size="sm" variant="outline" onClick={toggleDeleteModal}>
+            {i18n.editor.macros.deleteModal.cancelButton}
+          </Button>
+          <Button size="sm" variant="secondary" onClick={ActUponDelete}>
+            {i18n.editor.macros.deleteModal.applyButton}
+          </Button>
         </Modal.Footer>
       </Modal>
     </Styles>

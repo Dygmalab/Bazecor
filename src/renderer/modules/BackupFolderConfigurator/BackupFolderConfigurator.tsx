@@ -19,6 +19,7 @@ import React from "react";
 import Styled from "styled-components";
 import Form from "react-bootstrap/Form";
 import { i18n } from "@Renderer/i18n";
+import { Button } from "@Renderer/components/atoms/Button";
 import Title from "../../component/Title";
 import { RegularButton } from "../../component/Button";
 
@@ -74,7 +75,13 @@ function BackupFolderConfigurator(props: BackupFolderConfiguratorProps) {
         <div className="containerInfo">
           <div className="containerInfoInner">
             <Form.Control type="text" value={backupFolder} readOnly />
-            <RegularButton
+            <Button variant="short" onClick={chooseBackupFolder}>
+              {i18n.keyboardSettings.backupFolder.selectButtonText}
+            </Button>
+            <Button variant="short" onClick={getBackup} disabled={!connected}>
+              {i18n.keyboardSettings.backupFolder.restoreButtonText}
+            </Button>
+            {/* <RegularButton
               onClick={chooseBackupFolder}
               styles="short"
               buttonText={i18n.keyboardSettings.backupFolder.selectButtonText}
@@ -84,7 +91,7 @@ function BackupFolderConfigurator(props: BackupFolderConfiguratorProps) {
               styles="short"
               buttonText={i18n.keyboardSettings.backupFolder.restoreButtonText}
               disabled={!connected}
-            />
+            /> */}
           </div>
         </div>
       </div>

@@ -80,11 +80,16 @@ module.exports = {
           "linear-gradient(90deg,rgba(255,255,255,0.3) 20%,rgba(255,255,255,0) 100%), linear-gradient(rgba(176,175,194,0.3), rgba(176,175,194,0.3))",
         configButtonHover:
           "linear-gradient(90deg,rgba(255,255,255,0.4) 20%,rgba(255,255,255,0) 100%), linear-gradient(rgba(196,201,213,0.8), rgba(196,201,213,0.8))",
+        configButtonDark:
+          "linear-gradient(90deg,rgba(255,255,255,0.1) -20%,rgba(255,255,255,0) 120%), linear-gradient(0deg,rgba(87,97,126,0.25), rgba(87,97,126,0.25)), linear-gradient(rgba(11,2,25,0.2), rgba(11,2,25,0.2))",
+        configButtonDarkHover:
+          "linear-gradient(90deg,rgba(255,255,255,0.15) -20%,rgba(255,255,255,0) 120%), linear-gradient(rgba(87,97,126,0.6), rgba(87,97,126,0.6))",
         warningBanner:
           "linear-gradient(0deg, rgba(254, 202, 87, 0.1) 0%, rgba(254, 202, 87, 0.1) 100%), linear-gradient(0deg, rgba(255, 255, 255, 0.1) 0%, rgba(254, 255, 255, 0.1) 100%)",
         warningBannerDark:
           "linear-gradient(0deg, rgba(254, 202, 87, 0.08) 0%, rgba(254, 202, 87, 0.08) 100%), linear-gradient(0deg, rgba(63, 66, 90, 0.02) 0%, rgba(63, 66, 90, 0.02) 100%)",
-        buttonDisabled: "linear-gradient(90deg, #57617E 0%, #3F425A 100%)",
+        buttonDisabled: "linear-gradient(90deg, #E8EBEE -20%, #DEE0E4 80%)",
+        buttonDisabledDark: "linear-gradient(90deg, #57617E -20%, #3F425A 80%)",
         blurPink: "linear-gradient(180deg,rgba(0,194,255,0) 0%,#FF29C3 100%)",
         blurBlue: "linear-gradient(180deg,rgba(24,75,255,0) 0%,#174AFF 100%)",
         body: "url('/assets/images/bg-body.jpg')",

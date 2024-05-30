@@ -15,15 +15,19 @@ const buttonVariants = cva(
         outline:
           "tw-outline rounded-md transition-all hover:cursor-pointer hover:bg-gray-400/10 dark:hover:bg-gray-400/40 text-gray-25 font-semibold tracking-tight",
         primary:
-          "rounded-md bg-linear bg-[length:300%] transition-all relative transform-style-3d before:absolute before:content-[''] before:w-[62px] before:h-[32px] before:bottom-[2px] before:left-[50%] before:bg-linearButton before:opacity-50 before:blur-[2px] before:transform before:translate-x-[-50%] before:translate-y-[0] before:translate-z-[-1px] before:transition-all before:ease-in-out before:duration-300 hover:cursor-pointer hover:bg-right hover:before:blur-lg hover:before:bottom-[-12px] hover:before:opacity-70 hover:before:w-[100px] aria-disabled:bg-buttonDisabled aria-disabled:text-gray-300 aria-disabled:before:content-none aria-disabled:bg-right aria-disabled:cursor-not-allowed text-gray-25 font-semibold tracking-tight",
+          "rounded-md bg-linear bg-[length:300%] transition-all relative transform-style-3d before:absolute before:content-[''] before:w-[62px] before:h-[32px] before:bottom-[2px] before:left-[50%] before:bg-linearButton before:opacity-50 before:blur-[2px] before:transform before:translate-x-[-50%] before:translate-y-[0] before:translate-z-[-1px] before:transition-all before:ease-in-out before:duration-300 hover:cursor-pointer hover:bg-right hover:before:blur-lg hover:before:bottom-[-12px] hover:before:opacity-70 hover:before:w-[100px] disabled:bg-buttonDisabled dark:disabled:bg-buttonDisabledDark disabled:text-gray-300 dark:disabled:text-gray-300 disabled:before:content-none disabled:bg-right disabled:cursor-not-allowed disabled:opacity-100 disabled:pointer-events-none text-gray-25 font-semibold tracking-tight",
         secondary:
           "tw-secondary tw-text-primary rounded-md bg-[length:300%] transition-all relative isolate transform-style-3d after:absolute after:content-[''] after:w-[62px] after:h-[32px] after:bottom-[2px] after:left-[50%] after:bg-linearButton after:opacity-50 after:blur-[2px] after:transform after:translate-x-[-50%] after:translate-y-[0] after:translate-z-[-1px] after:transition-all after:ease-in-out after:duration-300 hover:cursor-pointer hover:bg-right hover:after:blur-lg hover:after:bottom-[-12px] hover:after:opacity-70 hover:after:w-[100px] aria-disabled:bg-buttonDisabled aria-disabled:text-gray-300 aria-disabled:after:content-none aria-disabled:bg-right aria-disabled:cursor-not-allowed font-semibold tracking-tight",
+        purple:
+          "rounded-md bg-purple-200 dark:bg-purple-300 transition-all relative transform-style-3d before:absolute before:content-[''] before:w-[62px] before:h-[32px] before:bottom-[2px] before:left-[50%] before:bg-purple-200 before:opacity-50 before:blur-[2px] before:transform before:translate-x-[-50%] before:translate-y-[0] before:translate-z-[-1px] before:transition-all before:ease-in-out before:duration-300 hover:cursor-pointer hover:bg-right hover:before:blur-lg hover:before:bottom-[-12px] hover:before:opacity-70 hover:before:w-[100px] aria-disabled:bg-buttonDisabled aria-disabled:text-gray-300 aria-disabled:before:content-none aria-disabled:bg-right aria-disabled:cursor-not-allowed text-gray-25 font-semibold tracking-tight",
         ghost: "hover:bg-slate-100 hover:text-slate-900 dark:hover:bg-slate-800 dark:hover:text-slate-50",
         link: "text-slate-900 underline-offset-4 hover:underline dark:text-slate-50",
         supportive:
           "flex items-center gap-4 justify-start rounded-md py-4 px-6 border-[1px] border-solid border-gray-100 hover:border-gray-200/50 dark:border-gray-600 dark:hover:border-gray-400 bg-gray-100/25 hover:bg-gray-50/80 dark:bg-gray-600/50 hover:dark:bg-gray-600/80 transition-all text-left min-w-36 [&_p]:text-xs [&_p]:text-gray-300 [&_p]:dark:text-gray-100 [&_.buttonIcon]:basis-8",
         config:
-          "border-regular shadow-buttonConfigLight hover:buttonConfigLightHover text-ssm py-[8px] px-[16px] text-gray-500 hover:text-gray-600 dark:text-gray-25 bg-configButton hover:bg-configButtonHover",
+          "border-regular shadow-buttonConfigLight dark:shadow-buttonConfig hover:buttonConfigLightHover dark:hover:shadow-buttonConfigHover text-ssm py-[8px] px-[16px] text-gray-500 hover:text-gray-600 dark:text-gray-25 bg-configButton dark:bg-configButtonDark hover:bg-configButtonHover dark:bg-configButtonDarkHover",
+        short:
+          "rounded-md transition-all border-[1px] border-solid border-gray-50 text-gray-500 hover:text-gray-500 bg-gradient-to-r from-gray-25 to-gray-50 dark:text-gray-25 dark:from-gray-600 dark:to-gray-700 dark:border-none",
       },
       size: {
         default: "px-6 py-[14px] text-base",
@@ -33,6 +37,7 @@ const buttonVariants = cva(
         icon: "h-10 w-10 aspect-square",
       },
       iconDirection: {
+        none: "",
         left: "gap-4",
         right: "gap-4 flex-row-reverse",
       },
@@ -67,11 +72,11 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
   asChild?: boolean;
   icon?: React.ReactNode | null;
   children: React.ReactNode;
-  iconDirection?: "left" | "right";
+  iconDirection?: "left" | "right" | "none";
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant, size, asChild = false, icon, iconDirection = "left", children, ...props }, ref) => {
+  ({ className, variant, size, asChild = false, icon, iconDirection = "none", children, ...props }, ref) => {
     const Comp = asChild ? Slot : "button";
     return (
       <Comp className={cn(buttonVariants({ variant, size, iconDirection, className }))} ref={ref} {...props}>

@@ -28,10 +28,8 @@ import Modal from "react-bootstrap/Modal";
 
 // Components
 import Callout from "@Renderer/components/molecules/Callout/Callout";
-// import { LayoutViewSelector } from "@Renderer/component/ToggleButtons";
-// import { SuperkeysSelector } from "@Renderer/component/Select";
 import SuperkeysSelector from "@Renderer/components/organisms/Select/SuperkeysSelector";
-import { RegularButton } from "@Renderer/component/Button";
+import { Button } from "@Renderer/components/atoms/Button";
 import LogoLoader from "@Renderer/components/atoms/Loader/LogoLoader";
 import ToggleGroupLayoutViewMode from "@Renderer/components/molecules/CustomToggleGroup/ToggleGroupLayoutViewMode";
 import ToastMessage from "@Renderer/component/ToastMessage";
@@ -879,18 +877,12 @@ function SuperkeysEditor(props: SuperkeysEditorProps) {
           {listOfSKK}
         </Modal.Body>
         <Modal.Footer>
-          <RegularButton
-            buttonText={i18n.editor.superkeys.deleteModal.cancelButton}
-            styles="outline transp-bg"
-            size="sm"
-            onClick={toggleDeleteModal}
-          />
-          <RegularButton
-            buttonText={i18n.editor.superkeys.deleteModal.applyButton}
-            styles="outline gradient"
-            size="sm"
-            onClick={RemoveDeletedSK}
-          />
+          <Button size="sm" variant="outline" onClick={toggleDeleteModal}>
+            {i18n.editor.superkeys.deleteModal.cancelButton}
+          </Button>
+          <Button size="sm" variant="secondary" onClick={RemoveDeletedSK}>
+            {i18n.editor.superkeys.deleteModal.applyButton}
+          </Button>
         </Modal.Footer>
       </Modal>
     </Styles>

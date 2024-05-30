@@ -48,7 +48,7 @@ import StandardView from "@Renderer/modules/StandardView";
 
 // Components
 import LayerSelector from "@Renderer/components/organisms/Select/LayerSelector";
-import { RegularButton } from "@Renderer/component/Button";
+import { Button } from "@Renderer/components/atoms/Button";
 // import { LayoutViewSelector } from "@Renderer/component/ToggleButtons";
 import ToggleGroupLayoutViewMode from "@Renderer/components/molecules/CustomToggleGroup/ToggleGroupLayoutViewMode";
 import { IconArrowDownWithLine, IconArrowUpWithLine } from "@Renderer/components/atoms/Icons";
@@ -1949,18 +1949,12 @@ const LayoutEditor = (props: LayoutEditorProps) => {
           <p className="italic">{i18n.editor.oldMacroModal.body2}</p>
         </Modal.Body>
         <Modal.Footer>
-          <RegularButton
-            buttonText={i18n.editor.oldMacroModal.cancelButton}
-            styles="outline transp-bg"
-            size="sm"
-            onClick={toggleMacroModal}
-          />
-          <RegularButton
-            buttonText={i18n.editor.oldMacroModal.applyButton}
-            styles="outline gradient"
-            size="sm"
-            onClick={updateOldMacros}
-          />
+          <Button variant="outline" size="sm" onClick={toggleMacroModal}>
+            {i18n.editor.oldMacroModal.cancelButton}
+          </Button>
+          <Button variant="secondary" size="sm" onClick={updateOldMacros}>
+            {i18n.editor.oldMacroModal.cancelButton}
+          </Button>
         </Modal.Footer>
       </Modal>
       <Modal show={showNeuronModal} size="lg" onHide={toggleNeuronModal} aria-labelledby="contained-modal-title-vcenter" centered>
@@ -1972,18 +1966,12 @@ const LayoutEditor = (props: LayoutEditorProps) => {
           <p className="italic">{i18n.editor.oldNeuronModal.body2}</p>
         </Modal.Body>
         <Modal.Footer>
-          <RegularButton
-            buttonText={i18n.editor.oldNeuronModal.cancelButton}
-            styles="outline transp-bg"
-            size="sm"
-            onClick={toggleNeuronModal}
-          />
-          <RegularButton
-            buttonText={i18n.editor.oldNeuronModal.applyButton}
-            styles="outline gradient"
-            size="sm"
-            onClick={CloneExistingNeuron}
-          />
+          <Button variant="outline" size="sm" onClick={toggleNeuronModal}>
+            {i18n.editor.oldNeuronModal.cancelButton}
+          </Button>
+          <Button variant="secondary" size="sm" onClick={CloneExistingNeuron}>
+            {i18n.editor.oldNeuronModal.applyButton}
+          </Button>
         </Modal.Footer>
       </Modal>
 

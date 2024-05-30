@@ -4,9 +4,9 @@ import { i18n } from "@Renderer/i18n";
 
 import { IconArrowInBoxUp } from "@Renderer/components/atoms/Icons";
 import Callout from "@Renderer/components/molecules/Callout/Callout";
-import Title from "../../component/Title";
+import { Button } from "@Renderer/components/atoms/Button";
+import Heading from "@Renderer/components/atoms/Heading";
 import { Select } from "../../component/Select";
-import { RegularButton } from "../../component/Button";
 
 const Styles = Styled.div`
 display: flex;
@@ -70,7 +70,9 @@ class MacroTab extends Component {
         <div className="tabContentWrapper">
           {isStandardView ? (
             <>
-              <Title text={i18n.editor.standardView.macros.title} headingLevel={3} />
+              <Heading headingLevel={3} renderAs="h3">
+                {i18n.editor.standardView.macros.title}
+              </Heading>
               <Callout
                 size="sm"
                 className="mt-4"
@@ -88,7 +90,9 @@ class MacroTab extends Component {
               <p>{i18n.editor.macros.macroTab.callout}</p>
             </Callout>
           )}
-          <Title text={i18n.editor.macros.macroTab.label} headingLevel={4} />
+          <Heading headingLevel={4} renderAs="h4">
+            {i18n.editor.macros.macroTab.label}
+          </Heading>
           <div className="w100">
             <Select
               value={
@@ -103,13 +107,9 @@ class MacroTab extends Component {
         </div>
         {!isStandardView ? (
           <div className="tabSaveButton">
-            <RegularButton
-              buttonText={i18n.editor.macros.textTabs.buttonText}
-              styles="outline gradient"
-              onClick={this.sendMacro}
-              icoSVG={<IconArrowInBoxUp />}
-              icoPosition="right"
-            />
+            <Button variant="secondary" onClick={this.sendMacro} iconDirection="right">
+              <IconArrowInBoxUp /> {i18n.editor.macros.textTabs.buttonText}
+            </Button>
           </div>
         ) : null}
       </Styles>

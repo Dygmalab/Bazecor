@@ -7,8 +7,8 @@ import { i18n } from "@Renderer/i18n";
 
 import CustomRadioCheckBox from "@Renderer/components/molecules/Form/CustomRadioCheckBox";
 import { IconArrowInBoxUp, IconMediaShuffle } from "@Renderer/components/atoms/Icons";
-import Title from "../../component/Title";
-import { RegularButton } from "../../component/Button";
+import { Button } from "@Renderer/components/atoms/Button";
+import Heading from "@Renderer/components/atoms/Heading";
 
 const Styles = Styled.div`
 display: flex;
@@ -178,7 +178,9 @@ class DelayTab extends React.Component<DelayTabProps, DelayTabState> {
     return (
       <Styles>
         <div className="tabContentWrapper">
-          <Title text={i18n.editor.macros.delayTabs.title} headingLevel={4} />
+          <Heading renderAs="h4" headingLevel={4}>
+            {i18n.editor.macros.delayTabs.title}
+          </Heading>
           <div className="formWrapper">
             <CustomRadioCheckBox
               label="Fixed value"
@@ -255,13 +257,9 @@ class DelayTab extends React.Component<DelayTabProps, DelayTabState> {
           </div>
         </div>
         <div className="tabSaveButton">
-          <RegularButton
-            buttonText={i18n.editor.macros.textTabs.buttonText}
-            styles="outline gradient"
-            onClick={this.addDelay}
-            icoSVG={<IconArrowInBoxUp />}
-            icoPosition="right"
-          />
+          <Button variant="secondary" iconDirection="right" onClick={this.addDelay}>
+            <IconArrowInBoxUp /> {i18n.editor.macros.textTabs.buttonText}
+          </Button>
         </div>
       </Styles>
     );

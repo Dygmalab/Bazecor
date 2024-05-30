@@ -21,9 +21,8 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@Rende
 // Custom components
 import { Card, CardContent, CardHeader, CardTitle } from "@Renderer/components/atoms/Card";
 import Heading from "@Renderer/components/atoms/Heading";
-import { RegularButton } from "@Renderer/component/Button";
+import { Button } from "@Renderer/components/atoms/Button";
 
-// import { ToggleButtons } from "@Renderer/component/ToggleButtons";
 import ToggleGroup from "@Renderer/components/molecules/CustomToggleGroup/ToggleGroup";
 
 // Assets
@@ -69,12 +68,9 @@ function RFSettings(props: RFSettingsProps) {
           <Heading headingLevel={2} renderAs="h4">
             {i18n.wireless.RFPreferences.repairChannel}
           </Heading>
-          <RegularButton
-            buttonText={i18n.wireless.RFPreferences.reconnectSides}
-            onClick={sendRePair}
-            styles="outline gradient"
-            size="sm"
-          />
+          <Button onClick={sendRePair} size="sm" variant="secondary">
+            {i18n.wireless.RFPreferences.reconnectSides}
+          </Button>
           <div className="py-3 mb-2 text-sm font-normal tracking-tight text-gray-400 dark:text-gray-100">
             <p>{i18n.wireless.RFPreferences.repairChannelDescription}</p>
           </div>

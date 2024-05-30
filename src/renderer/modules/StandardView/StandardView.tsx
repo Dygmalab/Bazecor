@@ -4,7 +4,7 @@ import Styled from "styled-components";
 import { motion } from "framer-motion";
 
 // component
-import { RegularButton } from "@Renderer/component/Button";
+import { Button } from "@Renderer/components/atoms/Button";
 import KeyVisualizer from "@Renderer/modules/KeyVisualizer";
 import KeysTab from "@Renderer/modules/KeysTabs/KeysTab";
 import NoKeyTransparentTab from "@Renderer/modules/KeysTabs/NoKeyTransparentTab";
@@ -495,19 +495,13 @@ export default class StandardView extends React.Component<StandardViewProps, Sta
                   )}
                 </div>
                 <div className="contentFooter">
-                  <div className="d-flex justify-content-end">
-                    <RegularButton
-                      onClick={() => closeStandardView(undefined)}
-                      styles="outline transp-bg"
-                      size="sm"
-                      buttonText={i18n.app.cancelPending.button}
-                    />
-                    <RegularButton
-                      onClick={handleSave}
-                      styles="outline gradient"
-                      size="sm"
-                      buttonText={i18n.dialog.applyChanges}
-                    />
+                  <div className="d-flex flex gap-4 justify-content-end">
+                    <Button onClick={() => closeStandardView(undefined)} variant="outline" size="sm">
+                      Discard changes
+                    </Button>
+                    <Button onClick={handleSave} variant="secondary" size="sm">
+                      {i18n.dialog.applyChanges}
+                    </Button>
                   </div>
                 </div>
               </div>

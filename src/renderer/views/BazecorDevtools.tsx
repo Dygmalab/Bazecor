@@ -25,7 +25,7 @@ import { PageHeader } from "@Renderer/modules/PageHeader";
 import { useDevice, DeviceTools } from "@Renderer/DeviceContext";
 import { IconHome } from "@Renderer/components/atoms/Icons";
 import { NavigationButton } from "@Renderer/components/molecules/CustomButton/NavigationButton";
-import { RegularButton } from "../component/Button";
+import { Button } from "@Renderer/components/atoms/Button";
 import HID from "../../api/hid/hid";
 import Device from "../../api/comms/Device";
 
@@ -204,21 +204,46 @@ const BazecorDevtools = () => {
         <div className="columns-3 gap-4">
           <div className="w-full py-4">
             <h4>HID Testing Buttons</h4>
-            <RegularButton buttonText="List of HID Devices" styles="primary" onClick={onGetHIDDevices} />
-            <RegularButton buttonText="Connect by HID" styles="primary" onClick={onHIDConnect} />
-            <RegularButton buttonText="Open device" styles="primary" onClick={onHIDOpen} />
-            <RegularButton buttonText="List reports" styles="primary" onClick={onHIDReports} />
-            <RegularButton buttonText="Send help" styles="primary" onClick={onHIDHelp} />
-            <RegularButton buttonText="Get keymap" styles="primary" onClick={onHIDGetKeymap} />
-            <RegularButton buttonText="Harcoded keymap" styles="primary" onClick={onHIDHardcodedKeymap} />
-            <RegularButton buttonText="Restore keymap" styles="primary" onClick={onHIDSetOriginalKeymap} />
+
+            <Button variant="primary" onClick={onGetHIDDevices}>
+              List of HID Devices
+            </Button>
+            <Button variant="primary" onClick={onHIDConnect}>
+              Connect by HID
+            </Button>
+            <Button variant="primary" onClick={onHIDOpen}>
+              Open device
+            </Button>
+            <Button variant="primary" onClick={onHIDReports}>
+              List reports
+            </Button>
+            <Button variant="primary" onClick={onHIDHelp}>
+              Send help
+            </Button>
+            <Button variant="primary" onClick={onHIDGetKeymap}>
+              Get keymap
+            </Button>
+            <Button variant="primary" onClick={onHIDHardcodedKeymap}>
+              Harcoded keymap
+            </Button>
+            <Button variant="primary" onClick={onHIDSetOriginalKeymap}>
+              Restore keymap
+            </Button>
           </div>
           <div className="w-full py-4">
             <h4>Serial Testing Buttons</h4>
-            <RegularButton buttonText="List of Serial Devices" styles="primary" onClick={onListSerialDevices} />
-            <RegularButton buttonText="Connect to Serial Device" styles="primary" onClick={() => onSerialConnect(0)} />
-            <RegularButton buttonText="Send message" styles="primary" onClick={onMessageSend} />
-            <RegularButton buttonText="Disconnect" styles="primary" onClick={onSerialDisconnect} />
+            <Button variant="primary" onClick={onListSerialDevices}>
+              List of Serial Devices
+            </Button>
+            <Button variant="primary" onClick={() => onSerialConnect(0)}>
+              Connect to Serial Device
+            </Button>
+            <Button variant="primary" onClick={onMessageSend}>
+              Send message
+            </Button>
+            <Button variant="primary" onClick={onSerialDisconnect}>
+              Disconnect
+            </Button>
           </div>
           <div className="w-full py-4">
             <Link to="/device-manager" className="list-link">

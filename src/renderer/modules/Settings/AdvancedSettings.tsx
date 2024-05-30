@@ -24,7 +24,7 @@ import { Select } from "@Renderer/component/Select";
 import { i18n } from "@Renderer/i18n";
 
 // Own Components
-import { RegularButton } from "@Renderer/component/Button";
+import { Button } from "@Renderer/components/atoms/Button";
 import ConfirmationDialog from "@Renderer/component/ConfirmationDialog";
 
 // Icons Imports
@@ -61,12 +61,9 @@ const AdvancedKeyboardSettings = () => {
 
   return (
     <>
-      <RegularButton
-        buttonText={i18n.keyboardSettings.resetEEPROM.button}
-        styles="short danger"
-        onClick={openEEPROMClearConfirmation}
-        disabled={working}
-      />
+      <Button variant="destructive" size="sm" onClick={openEEPROMClearConfirmation} disabled={working}>
+        {i18n.keyboardSettings.resetEEPROM.button}
+      </Button>
       <ConfirmationDialog
         title={i18n.keyboardSettings.resetEEPROM.dialogTitle}
         text={i18n.keyboardSettings.resetEEPROM.dialogContents}

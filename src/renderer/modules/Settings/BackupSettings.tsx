@@ -28,7 +28,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@Renderer/components/a
 import { useDevice } from "@Renderer/DeviceContext";
 import ToastMessage from "@Renderer/component/ToastMessage";
 import { i18n } from "@Renderer/i18n";
-import { RegularButton } from "@Renderer/component/Button";
+import { Button } from "@Renderer/components/atoms/Button";
 
 // Icons Imports
 import { IconArrowDownWithLine, IconFloppyDisk } from "@Renderer/components/atoms/Icons";
@@ -174,8 +174,12 @@ const BackupSettings = (props: BackupSettingsProps) => {
         <form>
           <h3 className="mb-1 text-gray-400 dark:text-gray-100 tracking-tight font-semibold">Backup actions</h3>
           <div className="flex gap-3">
-            <RegularButton onClick={GetBackup} styles="short" buttonText="Restore backup from file..." disabled={!connected} />
-            <RegularButton onClick={localGetLatestBackup} styles="short" buttonText="Restore from last backup" />
+            <Button variant="short" onClick={GetBackup} disabled={!connected}>
+              Restore backup from file...
+            </Button>
+            <Button variant="short" onClick={localGetLatestBackup} disabled={!connected}>
+              Restore from last backup
+            </Button>
             <WaitForRestoreDialog title="Restoring Backup" open={performingBackup} />
           </div>
         </form>

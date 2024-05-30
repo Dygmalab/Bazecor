@@ -68,8 +68,6 @@ const LayerSelector: React.FC<any> = ({
     updateItem(data);
   };
 
-  console.log("itemList: ", itemList);
-
   return (
     <div className="flex items-center gap-1">
       <div className="itemListelector dropdownMultipleActions max-w-[290px] min-w-[290px]">
