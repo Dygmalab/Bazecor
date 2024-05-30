@@ -75,7 +75,11 @@ export default class SideFlaser {
       receivedData.push(data.toString("utf-8"));
     });
     log.info("Upgrading the neuron...");
-    await serialport.write("upgrade.neuron\n");
+    try {
+      await serialport.write("upgrade.neuron\n");
+    } catch (error) {
+      log.info("answer after shutdown not received");
+    }
     await delay(10);
     await serialport.close((err: string) => {
       if (err) log.warn("device already disconnected!! no need to close serialport");

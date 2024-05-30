@@ -97,7 +97,12 @@ export const serialConnection = async () => {
   return serialport;
 };
 
-export async function rawCommand(cmd: string | Buffer, serialPort: typeof SerialPort, ...args: unknown[]): Promise<any> {
+export async function rawCommand(
+  cmd: string | Buffer,
+  serialPort: typeof SerialPort,
+  timeout: number,
+  ...args: unknown[]
+): Promise<any> {
   const req = async (c: string | Buffer, ...args2: unknown[]) => {
     if (args2) log.info(args2);
     if (!serialPort) throw new Error("Device not connected!");
@@ -109,7 +114,7 @@ export async function rawCommand(cmd: string | Buffer, serialPort: typeof Serial
   return new Promise((resolve, reject) => {
     const timer = setTimeout(() => {
       reject(new Error("Communication timeout"));
-    }, 8000);
+    }, timeout);
     req(cmd, ...args).then(data => {
       clearTimeout(timer);
       resolve(data);

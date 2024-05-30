@@ -34,7 +34,7 @@ export const Input = async (input: InputType): Promise<Context.ContextType> => {
     sideLeftBL: input.sideLeftBL,
     sideRightOK: input.sideRightOK,
     sideRightBL: input.sideRightBL,
-    loadedComms: false,
+    loadedComms: true,
     globalProgress: 0,
     leftProgress: 0,
     rightProgress: 0,

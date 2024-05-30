@@ -96,11 +96,12 @@ const NRf52833 = {
     // ERASE device
     log.info("Erasing...");
     if (erasePairings) {
-      ans = await rawCommand(`E${num2hexstr(dataObjects[0].address, 8)}#`, serialPort);
+      ans = await rawCommand(`E${num2hexstr(dataObjects[0].address, 8)}#`, serialPort, 20000);
     } else {
       ans = await rawCommand(
         `E${num2hexstr(dataObjects[0].address, 8)},${num2hexstr(0x00072000 - dataObjects[0].address, 8)}#`,
         serialPort,
+        20000,
       );
     }
     // if (ans[0] !== 65) {
@@ -146,13 +147,13 @@ const NRf52833 = {
       }
 
       // tell the NRf52833 the size of data being sent.
-      ans = await rawCommand(`U${num2hexstr(bufferSize, 8)}#`, serialPort);
+      ans = await rawCommand(`U${num2hexstr(bufferSize, 8)}#`, serialPort, 1000);
 
       // write our data.
       noWaitCommand(buffer, serialPort);
 
       // copy N bytes to memory location Y -> W function.
-      ans = await rawCommand(`W${num2hexstr(address, 8)},${num2hexstr(bufferSize, 8)}#`, serialPort);
+      ans = await rawCommand(`W${num2hexstr(address, 8)},${num2hexstr(bufferSize, 8)}#`, serialPort, 1000);
 
       // Update External State
       stateUpdate("neuron", (state / stateT) * 100);
@@ -161,13 +162,13 @@ const NRf52833 = {
       address += bufferSize;
     }
 
-    log.info("Validating...");
-    ans = await rawCommand("V#", serialPort);
+    // log.info("Validating...");
+    // ans = await rawCommand("V#", serialPort);
     // if (ans[0] !== 65) throw Error("error when Validating");
 
-    // START APPLICATION
     try {
-      ans = await rawCommand("F#", serialPort);
+      // START APPLICATION
+      ans = await rawCommand("S#", serialPort, 1000);
       if (ans[0] !== 65) log.warn("warning when disconnecting");
     } catch (error) {
       log.warn(error);

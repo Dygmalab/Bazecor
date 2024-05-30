@@ -52,6 +52,7 @@ const checkProperties = async (path: string) => {
       if (!serialPort) throw new Error("Device not connected!");
       return new Promise<string>(resolve => {
         callbacks.push(resolve);
+        // eslint-disable-next-line no-param-reassign
         serialPort.write((c += "\n"));
       });
     };

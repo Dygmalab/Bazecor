@@ -126,9 +126,11 @@ class FlashDefyWireless {
       "The firmware update couldn't start because the Defy Bootloader wasn't found. Please check our Help Center for more details or schedule a video call with us.";
     return new Promise(async (resolve, reject) => {
       stateUpdate("reset", 10);
-      currentDevice.command("upgrade.neuron").catch(err => {
-        if (err) log.info("answer after shutdown not received");
-      });
+      try {
+        currentDevice.command("upgrade.neuron");
+      } catch (error) {
+        log.info("answer after shutdown not received");
+      }
       log.info("waiting for bootloader");
       await delay(1000);
       stateUpdate("reset", 30);

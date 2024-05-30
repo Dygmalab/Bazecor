@@ -71,22 +71,12 @@ const restoreSettings = async (
   stateUpd: (state: string, progress: number) => void,
 ) => {
   stateUpd("restore", 0);
-  if (context.bootloader) {
-    stateUpd("restore", 100);
-    return true;
-  }
   log.info(backup);
-  if (backup === undefined || context.backup?.backup.length === 0) {
-    const list = (await DeviceTools.list()) as Device[];
-    const selected = list.find(x => x.productId === context.originalDevice?.device?.info.product);
-    if (selected !== undefined) await DeviceTools.connect(selected);
-    return true;
-  }
-
   try {
     let device: Device | undefined;
     const list = (await DeviceTools.list()) as Device[];
-    const selected = list.find(x => x.productId === context.originalDevice?.device?.info.product);
+    log.info(list);
+    const selected = list.find(x => parseInt(x.productId, 16) === context.originalDevice?.device?.usb.productId);
     if (selected !== undefined) device = await DeviceTools.connect(selected);
     for (let i = 0; i < backup.backup.length; i += 1) {
       const val = backup.backup[i].data;
@@ -108,20 +98,20 @@ export const reconnect = async (context: Context.ContextType) => {
   try {
     const foundDevices = async (isBootloader: boolean) => {
       let result: Device | undefined;
-      await DeviceTools.list().then(devices => {
-        for (const device of devices) {
-          if (
-            isBootloader
-              ? device.device?.bootloader !== undefined &&
-                device.device.bootloader === isBootloader &&
-                context.originalDevice?.device?.info.keyboardType === device.device.info.keyboardType
-              : context.originalDevice?.device?.info.keyboardType === device.device?.info.keyboardType
-          ) {
-            result = device;
-            break;
-          }
+      const devices = await DeviceTools.list();
+
+      for (const device of devices) {
+        if (
+          isBootloader
+            ? device.device?.bootloader !== undefined &&
+              context.originalDevice?.device?.info.product === device.device.info.product
+            : context.originalDevice?.device?.info.keyboardType === device.device?.info.keyboardType &&
+              context.originalDevice?.device?.info.product === device.device.info.product
+        ) {
+          result = device;
+          break;
         }
-      });
+      }
       return result;
     };
     const runnerFindKeyboard = async (findKeyboard: { (): Promise<unknown>; (): any }, times: number) => {
@@ -229,17 +219,15 @@ export const uploadDefyWired = async (context: Context.ContextType) => {
 
 export const resetDefy = async (context: Context.ContextType) => {
   let { currentDevice } = context.deviceState as State;
-  log.info("Checking resseting Defy: ", currentDevice.device, context.originalDevice);
+  log.info("Checking resseting Defy: ", currentDevice.device.bootloader);
   try {
     if (context.flashDefyWireless === undefined) {
       log.info("when creating FDW", context.originalDevice?.device);
       context.flashDefyWireless = new FlashDefyWireless(currentDevice.device, context.deviceState as State);
-      if (context.flashSides === undefined && context.bootloader === false) {
-        context.comPath = (currentDevice.port as SerialPort).path;
-        context.bootloader = currentDevice.device?.bootloader;
-      }
+      context.bootloader = currentDevice.device?.bootloader;
+      context.comPath = (currentDevice.port as SerialPort).path;
     }
-    if (!context.bootloader) {
+    if (!currentDevice.device.bootloader) {
       try {
         log.info("reset indicators", currentDevice.device.bootloader, context.flashDefyWireless, currentDevice.device);
         if (currentDevice.port === undefined || currentDevice.isClosed) {
@@ -268,9 +256,7 @@ export const uploadDefyWireless = async (context: Context.ContextType) => {
   let result = false;
   try {
     const { currentDevice } = context.deviceState as State;
-    if (!context.device?.bootloader) {
-      await DeviceTools.disconnect(currentDevice);
-    }
+    await DeviceTools.disconnect(currentDevice);
     // log.info(context.originalDevice.device, focus, focus._port, flashDefyWireless);
     await context.flashDefyWireless?.updateFirmware(
       context.firmwares?.fw,

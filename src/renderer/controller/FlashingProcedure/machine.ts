@@ -71,13 +71,7 @@ const FlashDevice = setup({
     },
     onDone: {
       target: ".waitEsc",
-      actions: [
-        assign(({ event }) => ({
-          firmwares: event.output.firmwares,
-          device: event.output.device,
-          deviceState: event.output.deviceState,
-        })),
-      ],
+      actions: [assign(({ event }) => event.output)],
     },
     src: "onInit",
   },
@@ -88,8 +82,10 @@ const FlashDevice = setup({
     waitEsc: {
       id: "waitEsc",
       entry: [
-        () => {
-          log.info("Wait for esc! & clearing globals");
+        ({ context }) => {
+          log.info(
+            `Wait for esc! & clearing globals, Bootloader: ${context.device.bootloader}, loadedComms: ${context.loadedComms}`,
+          );
         },
         assign({
           stateblock: 1,

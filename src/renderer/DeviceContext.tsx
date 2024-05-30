@@ -129,7 +129,7 @@ const connect = async (device: Device | VirtualType) => {
     if (Device.isDevice(device)) {
       if (device.type === "serial") {
         const result = await serial.connect(device);
-        device.addPort(result);
+        await device.addPort(result);
         log.verbose(`the device is ${device.type} type, and connected as: ${result}`);
         return device;
       }
