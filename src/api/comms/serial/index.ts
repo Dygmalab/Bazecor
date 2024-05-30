@@ -1,4 +1,4 @@
-import { find, connect, isDeviceConnected, isDeviceSupported, DeviceType, isSerialType } from "./SerialAPI";
+import { find, connect, isDeviceConnected, isDeviceSupported, DeviceType, checkProperties, isSerialType } from "./SerialAPI";
 
 interface SerialType {
   find: () => Array<DeviceType>;
@@ -12,6 +12,7 @@ serial.find = find;
 serial.connect = connect;
 serial.isDeviceConnected = isDeviceConnected;
 serial.isDeviceSupported = isDeviceSupported;
+serial.checkProperties = checkProperties;
 
 export default serial;
 export { DeviceType, isSerialType };

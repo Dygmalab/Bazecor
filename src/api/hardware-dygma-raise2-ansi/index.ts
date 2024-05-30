@@ -21,24 +21,26 @@
  *
  */
 
-import KeymapISO from "./components/Keymap-ISO";
+import log from "electron-log/renderer";
+import { DeviceTools } from "@Renderer/DeviceContext";
+import KeymapANSI from "./components/Keymap-ANSI";
 
-const Raise2ISO = {
+const Raise2ANSI = {
   info: {
     vendor: "Dygma",
     product: "Raise2",
-    keyboardType: "ISO",
-    displayName: "Dygma Raise2 ISO",
+    keyboardType: "ANSI",
+    displayName: "Dygma Raise2 ANSI",
     urls: [
       {
         name: "Homepage",
-        url: "https://www.dygma.com/raise/",
+        url: "https://www.dygma.com/raise2/",
       },
     ],
   },
   usb: {
     vendorId: 0x35ef,
-    productId: 0x0023,
+    productId: 0x0021,
   },
   keyboard: {
     rows: 5,
@@ -49,8 +51,10 @@ const Raise2ISO = {
     columns: 29,
   },
   RGBWMode: true,
+  bootloader: false,
+  wireless: true,
   components: {
-    keymap: KeymapISO,
+    keymap: KeymapANSI,
   },
 
   instructions: {
@@ -59,34 +63,45 @@ const Raise2ISO = {
     },
   },
 
-  flash: async (_, filename, bootloader, flashDefyWireless, stateUpdate) => {
+  flash: async (
+    _: any,
+    filename: any,
+    bootloader: any,
+    flashDefyWireless: { updateFirmware: (arg0: any, arg1: any, arg2: any) => any },
+    stateUpdate: any,
+  ) => {
     try {
       await flashDefyWireless.updateFirmware(filename, bootloader, stateUpdate);
       return true;
     } catch (e) {
+      log.error(e);
       return false;
     }
   },
 
-  isDeviceSupported: () => "ISO",
+  isDeviceSupported: async (path: string) => {
+    const result = await DeviceTools.poll(path);
+
+    return result.layout === "ANSI";
+  },
 };
 
-const Raise2ISOBootloader = {
+const Raise2ANSIBootloader = {
   info: {
     vendor: "Dygma",
     product: "Raise2",
-    keyboardType: "ISO",
-    displayName: "Dygma Raise2 ISO",
+    keyboardType: "ANSI",
+    displayName: "Dygma Raise2 ANSI",
     urls: [
       {
         name: "Homepage",
-        url: "https://www.dygma.com/raise/",
+        url: "https://www.dygma.com/raise2/",
       },
     ],
   },
   usb: {
     vendorId: 0x35ef,
-    productId: 0x0022,
+    productId: 0x0020,
   },
   bootloader: true,
   instructions: {
@@ -94,14 +109,21 @@ const Raise2ISOBootloader = {
       updateInstructions: `To update the firmware, press the button at the bottom. You must not hold any key on the keyboard while the countdown is in progress, nor afterwards, until the flashing is finished. When the countdown reaches zero, the Neuron's light should start a blue pulsing pattern, and flashing will then proceed. `,
     },
   },
-  flash: async (_, filename, bootloader, flashDefyWireless, stateUpdate) => {
+  flash: async (
+    _: any,
+    filename: any,
+    bootloader: any,
+    flashDefyWireless: { updateFirmware: (arg0: any, arg1: any, arg2: any) => any },
+    stateUpdate: any,
+  ) => {
     try {
       await flashDefyWireless.updateFirmware(filename, bootloader, stateUpdate);
       return true;
     } catch (e) {
+      log.error(e);
       return false;
     }
   },
 };
 
-export { Raise2ISO, Raise2ISOBootloader };
+export { Raise2ANSI, Raise2ANSIBootloader };

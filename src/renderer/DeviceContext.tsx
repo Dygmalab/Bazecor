@@ -6,6 +6,7 @@ import serial, { isSerialType } from "../api/comms/serial";
 import Device, { State } from "../api/comms/Device";
 import HID from "../api/hid/hid";
 import { isVirtualType } from "../api/comms/virtual";
+import { SerialPort } from "serialport";
 
 type ContextType =
   | {
@@ -100,6 +101,7 @@ const list = async () => {
   for (const dev of serialDevs) {
     const connected = await isDeviceConnected(dev);
     const supported = await isDeviceSupported(dev);
+    log.info("Checking connected & supported for Serial: ", connected, supported);
     if (connected && supported) finalDevices.push(new Device(dev, "serial"));
   }
 
@@ -110,7 +112,7 @@ const list = async () => {
     const hid = new HID();
     const connected = await hid.isDeviceConnected(index);
     const supported = await hid.isDeviceSupported(index);
-    log.verbose("Checking connected & supported: ", connected, supported);
+    log.info("Checking connected & supported for HID: ", connected, supported);
     if (connected && supported) finalDevices.push(new Device(hid, "hid"));
   }
 
@@ -157,10 +159,20 @@ const disconnect = async (device: Device) => {
   }
 };
 
+type PollType = { wireless: boolean; layout: string };
+
+const poll = async (path: string): Promise<PollType> => {
+  const result: PollType = await serial.checkProperties(path);
+  log.info("Checking sides properties", result);
+
+  return result;
+};
+
 const DeviceTools = {
   list,
   connect,
   disconnect,
+  poll,
 };
 
 export { DeviceProvider, useDevice, DeviceTools };

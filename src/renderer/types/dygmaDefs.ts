@@ -34,5 +34,5 @@ export type DygmaDeviceType = {
   bootloader?: boolean;
   path?: string;
   filePath?: string;
-  isDeviceSupported?: (device: DygmaDeviceType) => string;
+  isDeviceSupported?: (port: string) => any;
 };
