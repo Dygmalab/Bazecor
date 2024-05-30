@@ -24,8 +24,8 @@ import MacrosMemoryUsage from "@Renderer/modules/Macros/MacrosMemoryUsage";
 import { IconDelete, IconPen, IconClone, IconAddNew } from "@Renderer/components/atoms/Icons";
 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@Renderer/components/atoms/Select";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@Renderer/components/atoms/Tooltip";
 import { Button } from "@Renderer/components/atoms/Button";
-import { ButtonConfig } from "@Renderer/component/Button";
 
 interface ItemList {
   id: number;
@@ -61,9 +61,9 @@ const MacroSelector: React.FC<any> = ({
 
   return (
     <div className="flex items-center gap-1">
-      <div className="itemListelector dropdownMultipleActions max-w-[290px] min-w-[290px]">
+      <div className="itemListelector dropdownMultipleActions max-w-[350px] min-w-[350px]">
         <Select onValueChange={value => onSelect(parseInt(value, 10))} value={selectedItem}>
-          <SelectTrigger variant="combo">
+          <SelectTrigger variant="combo" className="pr-[136px]">
             {/* dropdownListInner */}
             <div className="flex flex-nowrap items-center">
               {/* dropdownListNumber */}
@@ -96,34 +96,68 @@ const MacroSelector: React.FC<any> = ({
             ))}
           </SelectContent>
         </Select>
-        <div className="absolute top-1 right-1">
-          <ButtonConfig
-            onClick={toggleShow}
-            icoSVG={<IconPen />}
-            tooltip={i18n.app.menu.changeName}
-            tooltipPlacement="bottom"
-            tooltipDelay={600}
-          />
-          <ButtonConfig
-            onClick={cloneItem}
-            icoSVG={<IconClone />}
-            tooltip={i18n.general.clone}
-            tooltipPlacement="bottom"
-            tooltipDelay={600}
-          />
-          <ButtonConfig
-            onClick={deleteItem}
-            icoSVG={<IconDelete />}
-            tooltip={i18n.general.delete}
-            tooltipPlacement="bottom"
-            tooltipDelay={600}
-          />
+        <div className="absolute top-[2px] right-[2px] flex gap-0.5">
+          <TooltipProvider delayDuration={50}>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <div>
+                  <Button variant="config" size="icon" onClick={toggleShow}>
+                    <IconPen />
+                  </Button>
+                </div>
+              </TooltipTrigger>
+              <TooltipContent className="max-w-xs" side="bottom" size="sm">
+                {i18n.app.menu.changeName}
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+
+          <TooltipProvider delayDuration={50}>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <div>
+                  <Button variant="config" size="icon" onClick={cloneItem}>
+                    <IconClone />
+                  </Button>
+                </div>
+              </TooltipTrigger>
+              <TooltipContent className="max-w-xs" side="bottom" size="sm">
+                {i18n.general.clone}
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+
+          <TooltipProvider delayDuration={50}>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <div>
+                  <Button variant="config" size="icon" onClick={deleteItem}>
+                    <IconDelete />
+                  </Button>
+                </div>
+              </TooltipTrigger>
+              <TooltipContent className="max-w-xs" side="bottom" size="sm">
+                {i18n.general.delete}
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
         </div>
       </div>
+      <TooltipProvider delayDuration={50}>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <div>
+              <Button variant="secondary" size="icon" onClick={toggleShowAdd}>
+                <IconAddNew />
+              </Button>
+            </div>
+          </TooltipTrigger>
+          <TooltipContent className="max-w-xs" side="bottom" size="sm">
+            {i18n.general.new} macro
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
 
-      <Button variant="secondary" onClick={toggleShowAdd}>
-        <IconAddNew /> {i18n.general.new}
-      </Button>
       <MacrosMemoryUsage mem={mem} tMem={tMem} />
 
       {itemList === undefined || itemList.length === 0 || itemList.length <= selectedItem ? (

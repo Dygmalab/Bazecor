@@ -76,6 +76,10 @@ module.exports = {
         appLightBackground: "url(@Assets/light/lightBackground.png)",
         linear: "linear-gradient(75deg,#FE007C,#6B14F6,#6B14F9,#FE007c)",
         linearButton: "linear-gradient(90deg, rgb(254, 0, 124) 0%, rgb(107, 20, 249) 100%)",
+        configButton:
+          "linear-gradient(90deg,rgba(255,255,255,0.3) 20%,rgba(255,255,255,0) 100%), linear-gradient(rgba(176,175,194,0.3), rgba(176,175,194,0.3))",
+        configButtonHover:
+          "linear-gradient(90deg,rgba(255,255,255,0.4) 20%,rgba(255,255,255,0) 100%), linear-gradient(rgba(196,201,213,0.8), rgba(196,201,213,0.8))",
         warningBanner:
           "linear-gradient(0deg, rgba(254, 202, 87, 0.1) 0%, rgba(254, 202, 87, 0.1) 100%), linear-gradient(0deg, rgba(255, 255, 255, 0.1) 0%, rgba(254, 255, 255, 0.1) 100%)",
         warningBannerDark:
@@ -133,6 +137,8 @@ module.exports = {
       },
       boxShadow: {
         dropdown: "0px 32px 72px -32px rgba(26, 17, 46, 0.50), 16px 32px 32px -16px rgba(11, 2, 25, 0.20)",
+        buttonConfigLight: "0px 2px 0px rgba(141,132,188,0.2), 0px 0px 0px 1px rgba(209,207,234,0.5) inset",
+        buttonConfigLightHover: "0px 2px 0px rgba(141,132,188,0.4)",
         buttonConfig: " 0px 2px 0px 0px rgba(0, 0, 0, 0.10)",
         buttonConfigHover: "0px 16px 16px -8px rgba(87, 97, 126, 0.30), 0px 3px 0px 0px rgba(37, 39, 59, 0.25)",
       },

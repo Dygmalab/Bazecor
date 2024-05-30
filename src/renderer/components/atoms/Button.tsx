@@ -22,13 +22,15 @@ const buttonVariants = cva(
         link: "text-slate-900 underline-offset-4 hover:underline dark:text-slate-50",
         supportive:
           "flex items-center gap-4 justify-start rounded-md py-4 px-6 border-[1px] border-solid border-gray-100 hover:border-gray-200/50 dark:border-gray-600 dark:hover:border-gray-400 bg-gray-100/25 hover:bg-gray-50/80 dark:bg-gray-600/50 hover:dark:bg-gray-600/80 transition-all text-left min-w-36 [&_p]:text-xs [&_p]:text-gray-300 [&_p]:dark:text-gray-100 [&_.buttonIcon]:basis-8",
+        config:
+          "border-regular shadow-buttonConfigLight hover:buttonConfigLightHover text-ssm py-[8px] px-[16px] text-gray-500 hover:text-gray-600 dark:text-gray-25 bg-configButton hover:bg-configButtonHover",
       },
       size: {
         default: "px-6 py-[14px] text-base",
         md: "px-6 py-[14px]",
         sm: "rounded-md px-3 py-2.5 text-sm",
         lg: "h-11 rounded-md px-8",
-        icon: "h-10 w-10",
+        icon: "h-10 w-10 aspect-square",
       },
       iconDirection: {
         left: "gap-4",
@@ -42,6 +44,16 @@ const buttonVariants = cva(
         variant: "supportive",
         size: "md",
         className: "px-6 py-3",
+      },
+      {
+        variant: "secondary",
+        size: "icon",
+        className: "before:px-[1rem] after:w-[32px] hover:after:w-[32px]",
+      },
+      {
+        variant: "config",
+        size: "icon",
+        className: "p-[2px] aspect-square",
       },
     ],
     defaultVariants: {
