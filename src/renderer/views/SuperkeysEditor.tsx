@@ -29,7 +29,8 @@ import Modal from "react-bootstrap/Modal";
 // Components
 import Callout from "@Renderer/components/molecules/Callout/Callout";
 // import { LayoutViewSelector } from "@Renderer/component/ToggleButtons";
-import { SuperkeysSelector } from "@Renderer/component/Select";
+// import { SuperkeysSelector } from "@Renderer/component/Select";
+import SuperkeysSelector from "@Renderer/components/organisms/Select/SuperkeysSelector";
 import { RegularButton } from "@Renderer/component/Button";
 import LogoLoader from "@Renderer/components/atoms/Loader/LogoLoader";
 import ToggleGroupLayoutViewMode from "@Renderer/components/molecules/CustomToggleGroup/ToggleGroupLayoutViewMode";
