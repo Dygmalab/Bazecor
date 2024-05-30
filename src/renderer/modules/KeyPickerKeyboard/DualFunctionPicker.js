@@ -5,9 +5,9 @@ import Styled from "styled-components";
 import Dropdown from "react-bootstrap/Dropdown";
 
 // Local components
-import Title from "../../component/Title";
-import { ButtonConfig } from "../../component/Button";
+import Heading from "@Renderer/components/atoms/Heading";
 import { i18n } from "@Renderer/i18n";
+import { ButtonConfig } from "../../component/Button";
 
 const Style = Styled.div`
 .dualFunctionPickerInner {
@@ -109,7 +109,9 @@ class DualFunctionPicker extends Component {
     // if (disabled && !isStandardView) return <></>;
     const layers = (
       <div className="dualFunctionPickerInner">
-        <Title text="Add Dual-function" headingLevel={4} />
+        <Heading headingLevel={4} renderAs="h4">
+          Add Dual-function
+        </Heading>
         <div className="dropdwonsGroup">
           <Dropdown
             value={keyCode.modified != 0 ? this.layerKey.map(i => i.keynum).includes(keyCode.modified) : keyCode.modified}
@@ -177,7 +179,9 @@ class DualFunctionPicker extends Component {
     const layersStdView = (
       <div className="dualFuntionWrapper">
         <div className="layersButtons">
-          <Title text={i18n.general.layer} headingLevel={5} />
+          <Heading headingLevel={5} renderAs="h5">
+            {i18n.general.layer}
+          </Heading>
           <div className="groupButtons">
             {this.layerKey.map((item, id) => {
               if (item.nameStd === undefined) return;
@@ -194,7 +198,7 @@ class DualFunctionPicker extends Component {
           </div>
         </div>
         <div className="modButtons">
-          <Title text={i18n.general.modifier} headingLevel={5} />
+          <Heading headingLevel={5}>{i18n.general.modifier}</Heading>
           <div className="groupButtons">
             {this.modKey.map((item, id) => {
               if (item.nameStd === undefined) return;

@@ -19,7 +19,6 @@
 import React from "react";
 import Styled from "styled-components";
 import { ToastContainer } from "react-toastify";
-import Title from "@Renderer/component/Title";
 import Heading from "@Renderer/components/atoms/Heading";
 import { Button } from "@Renderer/components/atoms/Button";
 import NeuronStatus from "@Renderer/component/NeuronStatus";
@@ -138,7 +137,6 @@ function NeuronConnection(props: NeuronConnectionProps) {
         />
         {isVirtual ? (
           <div className="neuronInformation">
-            <Title text={i18n.keyboardSelect.selectPrompt} headingLevel={2} />
             <Heading renderAs="h2" headingLevel={2}>
               {i18n.keyboardSelect.selectPrompt}
             </Heading>

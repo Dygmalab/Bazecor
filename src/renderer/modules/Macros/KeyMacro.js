@@ -18,7 +18,7 @@ import {
   IconDelete,
 } from "@Renderer/components/atoms/Icons";
 import MacroKeyPortal from "@Renderer/components/molecules/Portals/MacroKeyPortal";
-import Title from "../../component/Title";
+import Heading from "@Renderer/components/atoms/Heading";
 import { ButtonConfig } from "../../component/Button";
 // import { MacroKeyModal } from "../../component/Modal";
 
@@ -167,11 +167,17 @@ class KeyMacro extends Component {
                         <div className="keyMacroMiniDashboard">
                           <div className="keyInfo">
                             {item.action === 1 ? (
-                              <Title headingLevel={4} text={i18n.editor.macros.delayr} />
+                              <Heading headingLevel={4} renderAs="h4">
+                                {i18n.editor.macros.delay}
+                              </Heading>
                             ) : item.action === 2 ? (
-                              <Title headingLevel={4} text={i18n.editor.macros.delay} />
+                              <Heading headingLevel={4} renderAs="h4">
+                                {i18n.editor.macros.delay}
+                              </Heading>
                             ) : (
-                              <Title headingLevel={4} text={i18n.general.key} />
+                              <Heading headingLevel={4} renderAs="h4">
+                                {i18n.general.key}
+                              </Heading>
                             )}
                             <p className="keyValue">
                               {item.symbol} {item.action === 1 || item.action === 2 ? <small>ms</small> : ""}
@@ -179,7 +185,9 @@ class KeyMacro extends Component {
                           </div>
 
                           <div className="keyFunctions">
-                            <Title headingLevel={5} text="Edit function" />
+                            <Heading headingLevel={5} renderAs="h5">
+                              Edit function
+                            </Heading>
                             <div className="keyFunctionsButtons">
                               <ButtonConfig
                                 buttonText="Press"
@@ -209,7 +217,9 @@ class KeyMacro extends Component {
                           </div>
 
                           <div className="keyModifiers">
-                            <Title headingLevel={4} text="Add modifier" />
+                            <Heading headingLevel={4} renderAs="h4">
+                              Add modifier
+                            </Heading>
                             <div className="keyModifiersButtons">
                               {modifiers.map((elem, id) => {
                                 switch (elem.name) {

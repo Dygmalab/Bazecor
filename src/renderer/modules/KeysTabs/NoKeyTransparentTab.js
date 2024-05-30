@@ -4,7 +4,7 @@ import Styled from "styled-components";
 import { i18n } from "@Renderer/i18n";
 
 import Callout from "@Renderer/components/molecules/Callout/Callout";
-import Title from "../../component/Title";
+import Heading from "@Renderer/components/atoms/Heading";
 import { ButtonConfig } from "../../component/Button";
 
 const Styles = Styled.div`
@@ -43,13 +43,17 @@ class NoKeyTransparentTab extends Component {
       <Styles className={`${isStandardView ? "standardViewTab" : ""} tabsNoKeysTransparent`}>
         <div className="tabContentWrapper">
           <div className="buttonsRow">
-            <Title text={i18n.editor.standardView.noKeyTransparent} headingLevel={3} />
+            <Heading renderAs="h3" headingLevel={3}>
+              {i18n.editor.standardView.noKeyTransparent}{" "}
+            </Heading>
             <Callout size="sm" className="mt-4">
               <p>{i18n.editor.standardView.callOut}</p>
             </Callout>
 
             <div className="keysButtonsList">
-              <Title text={i18n.editor.standardView.noKey} headingLevel={4} />
+              <Heading renderAs="h4" headingLevel={4}>
+                {i18n.editor.standardView.noKey}
+              </Heading>
               <p className="description">{i18n.editor.standardView.noKeyDescription}</p>
               <ButtonConfig
                 buttonText={i18n.editor.standardView.noKey}
@@ -60,7 +64,9 @@ class NoKeyTransparentTab extends Component {
               />
             </div>
             <div className="keysButtonsList">
-              <Title text={i18n.editor.standardView.transparent} headingLevel={4} />
+              <Heading headingLevel={4} renderAs="h4">
+                {i18n.editor.standardView.transparent}
+              </Heading>
               <p className="description">{i18n.editor.standardView.transparentDescription}</p>
               <ButtonConfig
                 buttonText={i18n.editor.standardView.transparent}

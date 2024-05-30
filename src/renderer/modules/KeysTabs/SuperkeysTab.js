@@ -7,7 +7,7 @@ import { i18n } from "@Renderer/i18n";
 
 import Callout from "@Renderer/components/molecules/Callout/Callout";
 import ListModifier from "@Renderer/components/molecules/ListModifiers/ListModifiers";
-import Title from "../../component/Title";
+import Heading from "@Renderer/components/atoms/Heading";
 
 import Keymap, { KeymapDB } from "../../../api/keymap";
 
@@ -191,7 +191,9 @@ class SuperkeysTab extends Component {
     return (
       <Styles className={`${isStandardView ? "standardViewTab" : ""} tabsSuperkeys`}>
         <div className="tabContentWrapper">
-          <Title text={i18n.editor.standardView.superkeys.title} headingLevel={3} />
+          <Heading headingLevel={3} renderAs="h3">
+            {i18n.editor.standardView.superkeys.title}
+          </Heading>
           <Callout
             size="sm"
             className="mt-4"
@@ -203,8 +205,9 @@ class SuperkeysTab extends Component {
             <p>{i18n.editor.standardView.superkeys.callout1}</p>
             <p>{i18n.editor.standardView.superkeys.callout2}</p>
           </Callout>
-
-          <Title text={i18n.editor.standardView.superkeys.label} headingLevel={4} />
+          <Heading headingLevel={4} renderAs="h4">
+            {i18n.editor.standardView.superkeys.label}
+          </Heading>
           <div className="superKeyGroup">
             <div className="superKeySelect">
               <Dropdown
@@ -237,7 +240,9 @@ class SuperkeysTab extends Component {
             <div className={`superKeyInfo ${superkeys[superk.indexOf(KC)] != undefined ? "animRight" : "animHide"}`}>
               {superkeys[superk.indexOf(KC)] != undefined ? (
                 <div className="superkeyHint">
-                  <Title text={superkeys[superk.indexOf(KC)].name} headingLevel={3} />
+                  <Heading headingLevel={3} renderAs="h3">
+                    {superkeys[superk.indexOf(KC)].name}
+                  </Heading>
                   {superKeysActions.map((item, index) => (
                     <div className="superkeyItem" key={`superHint-${index}`}>
                       <div className="superkeyTitle">

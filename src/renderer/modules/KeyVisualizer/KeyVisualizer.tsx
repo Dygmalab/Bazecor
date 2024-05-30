@@ -20,7 +20,7 @@ import Styled from "styled-components";
 import { i18n } from "@Renderer/i18n";
 import { SegmentedKeyType } from "@Renderer/types/layout";
 import ListModifier from "@Renderer/components/molecules/ListModifiers/ListModifiers";
-import Title from "../../component/Title";
+import Heading from "@Renderer/components/atoms/Heading";
 
 const Style = Styled.div`
 &.KeyVisualizer {
@@ -151,7 +151,7 @@ const KeyVisualizer = (props: KeyVisualizerProps) => {
       >
         {oldValue ? (
           <div className="oldKeyValue">
-            <Title text={`${rows ? rows[superkeyAction].title : "Selected value"}`} headingLevel={4} />
+            <Heading headingLevel={4} renderAs="h4">{`${rows ? rows[superkeyAction].title : "Selected value"}`}</Heading>
             <div className="keySelectedBox">
               <div className="keySelectedValue">{oldValue}</div>
               <ListModifier
@@ -169,7 +169,9 @@ const KeyVisualizer = (props: KeyVisualizerProps) => {
         )}
         {newValue && !isStandardView ? (
           <div className="newKeyValue">
-            <Title text="New value" headingLevel={4} />
+            <Heading headingLevel={4} renderAs="h4">
+              New value
+            </Heading>
             <div className="keySelectedBox">
               <div className="keySelectedValue">{newValue}</div>
               <ListModifier
@@ -184,7 +186,9 @@ const KeyVisualizer = (props: KeyVisualizerProps) => {
         )}
         {newValue !== oldValue && isStandardView ? (
           <div className="newKeyValue">
-            <Title text="New value" headingLevel={4} />
+            <Heading headingLevel={4} renderAs="h4">
+              New value
+            </Heading>
             <div className="keySelectedBox">
               <div className="keySelectedValue">{newValue}</div>
               <ListModifier

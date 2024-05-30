@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import Styled from "styled-components";
 import { i18n } from "@Renderer/i18n";
 
-import Title from "@Renderer/component/Title";
+import Heading from "@Renderer/components/atoms/Heading";
 import Callout from "@Renderer/components/molecules/Callout/Callout";
 import { ButtonConfig } from "@Renderer/component/Button";
 
@@ -103,7 +103,9 @@ class MediaAndLightTab extends Component {
         <div className="tabContentWrapper">
           {isStandardView ? (
             <>
-              <Title text={i18n.editor.standardView.mediaAndLED.title} headingLevel={3} />
+              <Heading headingLevel={3} renderAs="h3">
+                {i18n.editor.standardView.mediaAndLED.title}
+              </Heading>
               <Callout size="sm" className="mt-4">
                 <p>{i18n.editor.standardView.mediaAndLED.callOut}</p>
               </Callout>
@@ -111,7 +113,9 @@ class MediaAndLightTab extends Component {
           ) : null}
           <div className="buttonsRow">
             <div className="mediaButtons">
-              <Title text={i18n.editor.superkeys.specialKeys.mediaTitle} headingLevel={4} />
+              <Heading headingLevel={4} renderAs="h4">
+                {i18n.editor.superkeys.specialKeys.mediaTitle}
+              </Heading>
               <p
                 className="description"
                 dangerouslySetInnerHTML={{ __html: i18n.editor.superkeys.specialKeys.mediaDescription }}
@@ -176,7 +180,9 @@ class MediaAndLightTab extends Component {
               </div>
             </div>
             <div className="LEDButtons">
-              <Title text={i18n.editor.superkeys.specialKeys.LEDTitle} headingLevel={4} />
+              <Heading headingLevel={4} renderAs="h4">
+                {i18n.editor.superkeys.specialKeys.LEDTitle}
+              </Heading>
               <p className="description">{i18n.editor.superkeys.specialKeys.LEDDescription}</p>
               <div className="keysButtonsList">
                 <ButtonConfig
@@ -207,7 +213,9 @@ class MediaAndLightTab extends Component {
           </div>
           <div className="buttonsRow">
             <div className="othersButtons">
-              <Title text={i18n.editor.superkeys.specialKeys.othersTitle} headingLevel={4} />
+              <Heading headingLevel={4} renderAs="h4">
+                {i18n.editor.superkeys.specialKeys.othersTitle}
+              </Heading>
               <p className="description">{i18n.editor.superkeys.specialKeys.othersDescription}</p>
               <div className="keysButtonsList">
                 <ButtonConfig

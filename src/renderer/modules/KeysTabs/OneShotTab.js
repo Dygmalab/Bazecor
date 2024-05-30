@@ -4,7 +4,7 @@ import Styled from "styled-components";
 import { i18n } from "@Renderer/i18n";
 
 import Callout from "@Renderer/components/molecules/Callout/Callout";
-import Title from "../../component/Title";
+import Heading from "@Renderer/components/atoms/Heading";
 import { ButtonConfig } from "../../component/Button";
 
 const Styles = Styled.div`
@@ -50,7 +50,9 @@ class OneShotTab extends Component {
         <div className="tabContentWrapper">
           {isStandardView ? (
             <>
-              <Title text={i18n.editor.standardView.oneShot.title} headingLevel={3} />
+              <Heading headingLevel={3} renderAs="h3">
+                {i18n.editor.standardView.oneShot.title}
+              </Heading>
               <Callout size="sm" className="mt-4">
                 <p>{i18n.editor.standardView.callOut}</p>
               </Callout>
@@ -58,7 +60,9 @@ class OneShotTab extends Component {
           ) : null}
 
           <div className="cardButtons">
-            <Title text={i18n.editor.standardView.oneShot.titleModifiers} headingLevel={4} />
+            <Heading headingLevel={4} renderAs="h4">
+              {i18n.editor.standardView.oneShot.titleModifiers}
+            </Heading>
             <p className="description">{i18n.editor.standardView.oneShot.modifiersDescription}</p>
             <div className="groupButtons groupButtonsGrid">
               <div className="buttonsGrid">
@@ -106,7 +110,9 @@ class OneShotTab extends Component {
             </div>
           </div>
           <div className="cardButtons">
-            <Title text={i18n.editor.standardView.oneShot.titleLayers} headingLevel={4} />
+            <Heading headingLevel={4} renderAs="h4">
+              {i18n.editor.standardView.oneShot.titleLayers}
+            </Heading>
             <p className="description">{i18n.editor.standardView.oneShot.layersDescription}</p>
             <div className="groupButtons">
               <ButtonConfig

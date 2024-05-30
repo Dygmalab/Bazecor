@@ -2,7 +2,7 @@ import React from "react";
 import Styled from "styled-components";
 
 import { IconBluetooth, IconPlug, IconSignal } from "@Renderer/components/atoms/Icons";
-import Title from "@Renderer/component/Title";
+import Heading from "@Renderer/components/atoms/Heading";
 import { ConnectionProps } from "@Renderer/types/wireless";
 
 const Styles = Styled.div`
@@ -43,7 +43,9 @@ function ConnectionStatus(props: ConnectionProps) {
     <Styles>
       <div className="cardConnection">
         <div className="cardConnectionIcon">{connectionTypes[connection].icon}</div>
-        <Title text={connectionTypes[connection].text} headingLevel={4} />
+        <Heading headingLevel={4} renderAs="h4">
+          {connectionTypes[connection].text}
+        </Heading>
       </div>
     </Styles>
   );

@@ -34,7 +34,7 @@ import {
   IconStopWatch,
   IconMagicStick,
 } from "@Renderer/components/atoms/Icons";
-import Title from "../../component/Title";
+import Heading from "@Renderer/components/atoms/Heading";
 import TextTab from "../KeysTabs/TextTab";
 import KeysTab from "../KeysTabs/KeysTab";
 import LayersTab from "../KeysTabs/LayersTab";
@@ -636,7 +636,9 @@ class MacroCreator extends Component {
         >
           <div className="tabWrapper grid mt-[3px] grid-cols-[minmax(auto,_240px)_1fr]">
             <div className="px-4 py-4 rounded-bl-xl bg-gray-50 dark:bg-[#2b2c43]">
-              <Title headingLevel={3} text={i18n.general.actions} />
+              <Heading headingLevel={3} renderAs="h3">
+                {i18n.general.actions}
+              </Heading>
               <RecordMacroModal onAddRecorded={this.onAddRecorded} keymapDB={this.keymapDB} />
               <TabsList className="flex flex-col gap-1">
                 <TabsTrigger value="tabText" variant="tab">
@@ -659,7 +661,9 @@ class MacroCreator extends Component {
             </div>
             <div className="px-4 py-4 rounded-br-xl bg-gray-25 dark:bg-gray-800">
               <div className="tabContentInner">
-                <Title headingLevel={3} text={i18n.general.configure} />
+                <Heading headingLevel={3} renderAs="h3">
+                  {i18n.general.configure}
+                </Heading>
                 <TabsContent value="tabText">
                   <motion.div initial="hidden" animate="visible" variants={tabVariants}>
                     <TextTab onAddText={this.onAddText} onTextChange={this.onTextChange} addText={this.state.addText} />

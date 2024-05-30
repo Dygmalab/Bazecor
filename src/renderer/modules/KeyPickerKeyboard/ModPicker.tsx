@@ -6,7 +6,7 @@ import { i18n } from "@Renderer/i18n";
 // Components
 import { SegmentedKeyType } from "@Renderer/types/layout";
 import usePrevious from "@Renderer/utils/usePrevious";
-import Title from "../../component/Title";
+import Heading from "@Renderer/components/atoms/Heading";
 import { ButtonConfig } from "../../component/Button";
 
 const Style = Styled.div`
@@ -141,7 +141,11 @@ function ModPicker(props: ModPickerProps) {
   return (
     <Style>
       <div className={`modPickerInner ${isStandardView ? "modPickerInnerStd" : ""}`}>
-        {!isStandardView ? <Title text={i18n.editor.standardView.keys.addModifier} headingLevel={4} /> : null}
+        {!isStandardView ? (
+          <Heading headingLevel={4} renderAs="h4">
+            {i18n.editor.standardView.keys.addModifier}
+          </Heading>
+        ) : null}
         <div className="modPickerButtonsList">
           <ButtonConfig
             selected={modifs.includes(0)}

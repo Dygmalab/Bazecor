@@ -9,7 +9,7 @@ import log from "electron-log/renderer";
 
 import { IconArrowRight, IconCloudDownload, IconKeyboard, IconUpload } from "@Renderer/components/atoms/Icons";
 import { Button } from "@Renderer/components/atoms/Button";
-import Title from "@Renderer/component/Title";
+import Heading from "@Renderer/components/atoms/Heading";
 import { i18n } from "@Renderer/i18n";
 
 import { VirtualType } from "@Renderer/types/devices";
@@ -266,11 +266,9 @@ export default function VirtualSelector(props: VirtualSelectorProps) {
         <Modal.Body>
           <div className="virtualKeyboards-wrapper">
             <div className="virtualKeyboards-col">
-              <Title
-                text={i18n.keyboardSelect.virtualKeyboard.newVirtualKeyboardTitle}
-                headingLevel={4}
-                svgICO={<IconCloudDownload />}
-              />
+              <Heading headingLevel={4} renderAs="h4">
+                <IconCloudDownload /> {i18n.keyboardSelect.virtualKeyboard.newVirtualKeyboardTitle}
+              </Heading>
               <p>{i18n.keyboardSelect.virtualKeyboard.newVirtualKeyboardDescription}</p>
               <h3>{i18n.keyboardSelect.virtualKeyboard.newVirtualKeyboardLabel}</h3>
               <Dropdown className="custom-dropdown" onSelect={selectVirtualKeyboard}>
@@ -317,11 +315,9 @@ export default function VirtualSelector(props: VirtualSelectorProps) {
               <span>OR</span>
             </div>
             <div className="virtualKeyboards-col">
-              <Title
-                text={i18n.keyboardSelect.virtualKeyboard.loadVirtualKeyboardTitle}
-                headingLevel={4}
-                svgICO={<IconUpload />}
-              />
+              <Heading headingLevel={4} renderAs="h4">
+                <IconUpload /> {i18n.keyboardSelect.virtualKeyboard.loadVirtualKeyboardTitle}
+              </Heading>
               <p>{i18n.keyboardSelect.virtualKeyboard.loadVirtualKeyboardDescription}</p>
               <Button variant="primary" onClick={() => onLoadFile()}>
                 {i18n.general.loadFile}

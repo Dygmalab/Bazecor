@@ -28,11 +28,10 @@ import { Card, CardContent, CardHeader, CardTitle } from "@Renderer/components/a
 import { KBDataPref } from "@Renderer/types/preferences";
 import { IconTypo, IconMouse, IconInformation } from "@Renderer/components/atoms/Icons";
 import { Slider } from "@Renderer/components/atoms/Slider";
-import Title from "@Renderer/component/Title";
+import Heading from "@Renderer/components/atoms/Heading";
 
 // Assets
 import { i18n } from "@Renderer/i18n";
-import Heading from "@Renderer/components/atoms/Heading";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@Renderer/components/atoms/Tooltip";
 
 const Styles = Styled.div`
@@ -392,13 +391,25 @@ function KeyboardSettings(props: KeyboardSettingsProps) {
                 <Row>
                   <Col>
                     <Form.Label>
-                      <Title
-                        text={i18n.keyboardSettings.qukeys.holdTimeout}
-                        headingLevel={6}
-                        tooltip={`<h5 class="text-left">${i18n.keyboardSettings.qukeys.holdTimeoutTip1}</h5><ul><li class="text-left">${i18n.keyboardSettings.qukeys.holdTimeoutTip2}</li><li class="text-left">${i18n.keyboardSettings.qukeys.holdTimeoutTip3}</li></ul>`}
-                        tooltipPlacement="bottom"
-                        tooltipSize="wide"
-                      />
+                      <Heading headingLevel={3} renderAs="paragraph-sm" className="flex items-center gap-2">
+                        {i18n.keyboardSettings.qukeys.holdTimeout}
+                        <TooltipProvider delayDuration={200}>
+                          <Tooltip>
+                            <TooltipTrigger className="[&_svg]:text-purple-100 [&_svg]:dark:text-purple-200">
+                              <IconInformation />
+                            </TooltipTrigger>
+                            <TooltipContent className="max-w-xs">
+                              <Heading headingLevel={5} renderAs="h5" className="text-gray-600 dark:text-gray-25 mb-3 leading-6">
+                                {i18n.keyboardSettings.qukeys.holdTimeoutTip1}
+                              </Heading>
+                              <ul>
+                                <li className="text-left">{i18n.keyboardSettings.qukeys.holdTimeoutTip2}</li>
+                                <li className="text-left">{i18n.keyboardSettings.qukeys.holdTimeoutTip3}</li>
+                              </ul>
+                            </TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
+                      </Heading>
                     </Form.Label>
                   </Col>
                 </Row>
@@ -420,13 +431,24 @@ function KeyboardSettings(props: KeyboardSettingsProps) {
                 <Row>
                   <Col>
                     <Form.Label>
-                      <Title
-                        text={i18n.keyboardSettings.qukeys.minHold}
-                        headingLevel={6}
-                        tooltip={`<h5 class="text-left">${i18n.keyboardSettings.qukeys.minHoldTip1}</h5><ul><li class="text-left">${i18n.keyboardSettings.qukeys.minHoldTip2}</li></ul>`}
-                        tooltipPlacement="bottom"
-                        tooltipSize="wide"
-                      />
+                      <Heading headingLevel={3} renderAs="paragraph-sm" className="flex items-center gap-2">
+                        {i18n.keyboardSettings.qukeys.minHold}
+                        <TooltipProvider delayDuration={200}>
+                          <Tooltip>
+                            <TooltipTrigger className="[&_svg]:text-purple-100 [&_svg]:dark:text-purple-200">
+                              <IconInformation />
+                            </TooltipTrigger>
+                            <TooltipContent className="max-w-xs">
+                              <Heading headingLevel={5} renderAs="h5" className="text-gray-600 dark:text-gray-25 mb-3 leading-6">
+                                {i18n.keyboardSettings.qukeys.minHoldTip1}
+                              </Heading>
+                              <ul>
+                                <li className="text-left">{i18n.keyboardSettings.qukeys.minHoldTip2}</li>
+                              </ul>
+                            </TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
+                      </Heading>
                     </Form.Label>
                   </Col>
                 </Row>
@@ -448,13 +470,24 @@ function KeyboardSettings(props: KeyboardSettingsProps) {
                 <Row>
                   <Col>
                     <Form.Label>
-                      <Title
-                        text={i18n.keyboardSettings.qukeys.minPrior}
-                        headingLevel={6}
-                        tooltip={`<h5 class="text-left">${i18n.keyboardSettings.qukeys.minPriorTip1}</h5><ul><li class="text-left">${i18n.keyboardSettings.qukeys.minPriorTip2}</li></ul>`}
-                        tooltipPlacement="bottom"
-                        tooltipSize="wide"
-                      />
+                      <Heading headingLevel={3} renderAs="paragraph-sm" className="flex items-center gap-2">
+                        {i18n.keyboardSettings.qukeys.minPrior}
+                        <TooltipProvider delayDuration={200}>
+                          <Tooltip>
+                            <TooltipTrigger className="[&_svg]:text-purple-100 [&_svg]:dark:text-purple-200">
+                              <IconInformation />
+                            </TooltipTrigger>
+                            <TooltipContent className="max-w-xs">
+                              <Heading headingLevel={5} renderAs="h5" className="text-gray-600 dark:text-gray-25 mb-3 leading-6">
+                                {i18n.keyboardSettings.qukeys.minPriorTip1}
+                              </Heading>
+                              <ul>
+                                <li className="text-left">{i18n.keyboardSettings.qukeys.minPriorTip2}</li>
+                              </ul>
+                            </TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
+                      </Heading>
                     </Form.Label>
                   </Col>
                 </Row>
@@ -476,13 +509,25 @@ function KeyboardSettings(props: KeyboardSettingsProps) {
                 <Row>
                   <Col>
                     <Form.Label>
-                      <Title
-                        text={i18n.keyboardSettings.superkeys.overlap}
-                        headingLevel={6}
-                        tooltip={`<h5 class="text-left">${i18n.keyboardSettings.superkeys.overlapTip1}</h5><ul><li class="text-left">${i18n.keyboardSettings.superkeys.overlapTip2}</li><li class="text-left">${i18n.keyboardSettings.superkeys.overlapTip3}</li></ul>`}
-                        tooltipPlacement="bottom"
-                        tooltipSize="wide"
-                      />
+                      <Heading headingLevel={3} renderAs="paragraph-sm" className="flex items-center gap-2">
+                        {i18n.keyboardSettings.superkeys.overlap}
+                        <TooltipProvider delayDuration={200}>
+                          <Tooltip>
+                            <TooltipTrigger className="[&_svg]:text-purple-100 [&_svg]:dark:text-purple-200">
+                              <IconInformation />
+                            </TooltipTrigger>
+                            <TooltipContent className="max-w-xs">
+                              <Heading headingLevel={5} renderAs="h5" className="text-gray-600 dark:text-gray-25 mb-3 leading-6">
+                                {i18n.keyboardSettings.superkeys.overlapTip1}
+                              </Heading>
+                              <ul>
+                                <li className="text-left">{i18n.keyboardSettings.superkeys.overlapTip2}</li>
+                                <li className="text-left">{i18n.keyboardSettings.superkeys.overlapTip3}</li>
+                              </ul>
+                            </TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
+                      </Heading>
                     </Form.Label>
                   </Col>
                 </Row>
@@ -504,13 +549,25 @@ function KeyboardSettings(props: KeyboardSettingsProps) {
                 <Row>
                   <Col>
                     <Form.Label>
-                      <Title
-                        text={i18n.keyboardSettings.superkeys.timeout}
-                        headingLevel={6}
-                        tooltip={`<h5 class="text-left">${i18n.keyboardSettings.superkeys.timeoutTip1}</h5><ul><li class="text-left">${i18n.keyboardSettings.superkeys.timeoutTip2}</li><li class="text-left">${i18n.keyboardSettings.superkeys.timeoutTip3}</li></ul>`}
-                        tooltipPlacement="bottom"
-                        tooltipSize="wide"
-                      />
+                      <Heading headingLevel={3} renderAs="paragraph-sm" className="flex items-center gap-2">
+                        {i18n.keyboardSettings.superkeys.timeout}
+                        <TooltipProvider delayDuration={200}>
+                          <Tooltip>
+                            <TooltipTrigger className="[&_svg]:text-purple-100 [&_svg]:dark:text-purple-200">
+                              <IconInformation />
+                            </TooltipTrigger>
+                            <TooltipContent className="max-w-xs">
+                              <Heading headingLevel={5} renderAs="h5" className="text-gray-600 dark:text-gray-25 mb-3 leading-6">
+                                {i18n.keyboardSettings.superkeys.timeoutTip1}
+                              </Heading>
+                              <ul>
+                                <li className="text-left">{i18n.keyboardSettings.superkeys.timeoutTip2}</li>
+                                <li className="text-left">{i18n.keyboardSettings.superkeys.timeoutTip3}</li>
+                              </ul>
+                            </TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
+                      </Heading>
                     </Form.Label>
                   </Col>
                 </Row>
@@ -532,13 +589,25 @@ function KeyboardSettings(props: KeyboardSettingsProps) {
                 <Row>
                   <Col>
                     <Form.Label>
-                      <Title
-                        text={i18n.keyboardSettings.superkeys.holdstart}
-                        headingLevel={6}
-                        tooltip={`<h5 class="text-left">${i18n.keyboardSettings.superkeys.chordingTip1}</h5><ul><li class="text-left">${i18n.keyboardSettings.superkeys.chordingTip2}</li><li class="text-left">${i18n.keyboardSettings.superkeys.chordingTip3}</li></ul>`}
-                        tooltipPlacement="bottom"
-                        tooltipSize="wide"
-                      />
+                      <Heading headingLevel={3} renderAs="paragraph-sm" className="flex items-center gap-2">
+                        {i18n.keyboardSettings.superkeys.holdstart}
+                        <TooltipProvider delayDuration={200}>
+                          <Tooltip>
+                            <TooltipTrigger className="[&_svg]:text-purple-100 [&_svg]:dark:text-purple-200">
+                              <IconInformation />
+                            </TooltipTrigger>
+                            <TooltipContent className="max-w-xs">
+                              <Heading headingLevel={5} renderAs="h5" className="text-gray-600 dark:text-gray-25 mb-3 leading-6">
+                                {i18n.keyboardSettings.superkeys.chordingTip1}
+                              </Heading>
+                              <ul>
+                                <li className="text-left">{i18n.keyboardSettings.superkeys.chordingTip2}</li>
+                                <li className="text-left">{i18n.keyboardSettings.superkeys.chordingTip3}</li>
+                              </ul>
+                            </TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
+                      </Heading>
                     </Form.Label>
                   </Col>
                 </Row>

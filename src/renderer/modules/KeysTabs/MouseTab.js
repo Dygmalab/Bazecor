@@ -22,7 +22,7 @@ import { i18n } from "@Renderer/i18n";
 
 import Callout from "@Renderer/components/molecules/Callout/Callout";
 // import MouseEventsReference from "@Renderer/components/atoms/MouseEventsReference";
-import Title from "../../component/Title";
+import Heading from "@Renderer/components/atoms/Heading";
 import { ButtonConfig, ButtonMouse } from "../../component/Button";
 
 const Styles = Styled.div`
@@ -152,8 +152,9 @@ function MouseTab({ isStandardView, keyCode, onAddSpecial, actTab }) {
       <div className="tabContentWrapper">
         {isStandardView ? (
           <>
-            <Title text={i18n.editor.standardView.mouse.title} headingLevel={3} />
-
+            <Heading headingLevel={3} renderAs="h3">
+              {i18n.editor.standardView.mouse.title}
+            </Heading>
             <Callout size="sm" className="mt-4">
               <p>{i18n.editor.standardView.mouse.callOut}</p>
             </Callout>
@@ -162,7 +163,9 @@ function MouseTab({ isStandardView, keyCode, onAddSpecial, actTab }) {
         <div className="mouseWrapper">
           <div className="buttonsRow">
             <div className="clickButtons">
-              <Title text={i18n.mouse.mouseClickTitle} headingLevel={4} />
+              <Heading headingLevel={4} renderAs="h4">
+                {i18n.mouse.mouseClickTitle}
+              </Heading>
               <p className="description">{i18n.mouse.mouseClickDescription}</p>
               <div className="keysButtonsList">
                 <ButtonConfig
@@ -204,7 +207,9 @@ function MouseTab({ isStandardView, keyCode, onAddSpecial, actTab }) {
             {actTab !== "super" ? (
               <>
                 <div className="movementButtons">
-                  <Title text={i18n.mouse.movementTitle} headingLevel={4} />
+                  <Heading headingLevel={4} renderAs="h4">
+                    {i18n.mouse.movementTitle}
+                  </Heading>
                   <p className="description">{i18n.mouse.movementDescription}</p>
                   <div className="keysButtonsList">
                     <div className="mouseButtons mouseButtonsMovement">
@@ -236,7 +241,9 @@ function MouseTab({ isStandardView, keyCode, onAddSpecial, actTab }) {
                   </div>
                 </div>
                 <div className="wheelButtons">
-                  <Title text={i18n.mouse.wheelTitle} headingLevel={4} />
+                  <Heading headingLevel={4} renderAs="h4">
+                    {i18n.mouse.wheelTitle}
+                  </Heading>
                   <p className="description">{i18n.mouse.wheelDescription}</p>
                   <div className="keysButtonsList">
                     <div className="mouseButtons mouseButtonsWheel">

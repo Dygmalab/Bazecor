@@ -4,7 +4,7 @@ import Styled from "styled-components";
 import { i18n } from "@Renderer/i18n";
 
 import Callout from "@Renderer/components/molecules/Callout/Callout";
-import Title from "../../component/Title";
+import Heading from "@Renderer/components/atoms/Heading";
 import { ButtonConfig } from "../../component/Button";
 
 const Styles = Styled.div`
@@ -56,8 +56,9 @@ class LayersTab extends Component {
     return (
       <Styles className={`${isStandardView ? "standardViewTab" : ""} tabsLayer`}>
         <div className="tabContentWrapper">
-          <Title text={i18n.editor.layers.title} headingLevel={isStandardView ? 3 : 4} />
-
+          <Heading headingLevel={isStandardView ? 3 : 4} renderAs={isStandardView ? "h3" : "h4"}>
+            {i18n.editor.layers.title}
+          </Heading>
           {isStandardView ? (
             <Callout
               size="sm"
@@ -71,7 +72,9 @@ class LayersTab extends Component {
             </Callout>
           ) : null}
           <div className="cardButtons">
-            <Title text={i18n.editor.standardView.layers.layerSwitch} headingLevel={4} />
+            <Heading headingLevel={4} renderAs="h4">
+              {i18n.editor.standardView.layers.layerSwitch}
+            </Heading>
             <p>{i18n.editor.standardView.layers.layerSwitchDescription}</p>
             <div className="groupButtons">
               <ButtonConfig
@@ -157,7 +160,9 @@ class LayersTab extends Component {
             </div>
           </div>
           <div className="cardButtons">
-            <Title text={i18n.editor.layers.layerLock} headingLevel={4} />
+            <Heading headingLevel={4} renderAs="h4">
+              {i18n.editor.layers.layerLock}
+            </Heading>
             <p>
               {isStandardView ? i18n.editor.standardView.layers.layerLockDescription : i18n.editor.layers.layerLockDescription}
             </p>

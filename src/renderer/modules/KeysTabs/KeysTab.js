@@ -3,7 +3,7 @@ import Styled from "styled-components";
 
 import { i18n } from "@Renderer/i18n";
 
-import Title from "@Renderer/component/Title";
+import Heading from "@Renderer/components/atoms/Heading";
 import Callout from "@Renderer/components/molecules/Callout/Callout";
 import { KeyPickerReduced } from "@Renderer/modules/KeyPickerKeyboard";
 import ModPicker from "@Renderer/modules/KeyPickerKeyboard/ModPicker";
@@ -85,17 +85,17 @@ class KeysTab extends Component {
         <div className="tabContentWrapper">
           {isStandardView ? (
             <>
-              <Title
-                text={i18n.editor.standardView.keys.standardViewTitle}
-                headingLevel={3}
-                className="counterIndicator counter1"
-              />
+              <Heading headingLevel={3} renderAs="h3" className="counterIndicator counter1">
+                {i18n.editor.standardView.keys.standardViewTitle}
+              </Heading>
               <Callout size="sm" className="mt-4">
                 <p>{i18n.editor.standardView.keys.callOut}</p>
               </Callout>
             </>
           ) : (
-            <Title text={i18n.editor.standardView.keys.keys} headingLevel={4} />
+            <Heading headingLevel={4} renderAs="h4">
+              {i18n.editor.standardView.keys.keys}
+            </Heading>
           )}
           <KeyPickerReduced
             actions={actions}
@@ -117,11 +117,9 @@ class KeysTab extends Component {
             <div
               className={`enhanceKeys ${(superkeyAction == 0 || superkeyAction == 3) && actTab === "super" ? "disabled" : ""}`}
             >
-              <Title
-                text={i18n.editor.standardView.keys.enhanceTitle}
-                headingLevel={3}
-                className="counterIndicator counter2 mt-2"
-              />
+              <Heading renderAs="h3" headingLevel={3} className="counterIndicator counter2 mt-2">
+                {i18n.editor.standardView.keys.enhanceTitle}
+              </Heading>
               <Callout
                 size="sm"
                 className="mt-4 mb-4"
@@ -133,13 +131,17 @@ class KeysTab extends Component {
                 <p>{i18n.editor.standardView.keys.callOutEnhance}</p>
               </Callout>
               <div className="cardButtons cardButtonsModifier">
-                <Title text={i18n.editor.standardView.keys.addModifiers} headingLevel={4} />
+                <Heading renderAs="h4" headingLevel={4}>
+                  {i18n.editor.standardView.keys.addModifiers}
+                </Heading>
                 <p>{i18n.editor.standardView.keys.descriptionModifiers}</p>
                 <ModPicker keyCode={code} onKeySelect={onKeyPress} isStandardView={isStandardView} />
               </div>
               {actTab !== "super" ? (
                 <div className="cardButtons cardButtonsDual">
-                  <Title text={i18n.editor.standardView.keys.addDualFunction} headingLevel={4} />
+                  <Heading headingLevel={4} renderAs="h4">
+                    {i18n.editor.standardView.keys.addDualFunction}
+                  </Heading>
                   <p>{i18n.editor.standardView.keys.dualFunctionDescription}</p>
                   <DualFunctionPicker
                     keyCode={code}

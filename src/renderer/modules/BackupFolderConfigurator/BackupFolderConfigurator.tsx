@@ -20,8 +20,7 @@ import Styled from "styled-components";
 import Form from "react-bootstrap/Form";
 import { i18n } from "@Renderer/i18n";
 import { Button } from "@Renderer/components/atoms/Button";
-import Title from "../../component/Title";
-import { RegularButton } from "../../component/Button";
+import Heading from "@Renderer/components/atoms/Heading";
 
 const Style = Styled.div`
 width: 100%;
@@ -71,7 +70,9 @@ function BackupFolderConfigurator(props: BackupFolderConfiguratorProps) {
   return (
     <Style>
       <div className="backupFolderConfigurator">
-        <Title text={i18n.keyboardSettings.backupFolder.title} headingLevel={6} />
+        <Heading headingLevel={6} renderAs="h6">
+          {i18n.keyboardSettings.backupFolder.title}
+        </Heading>
         <div className="containerInfo">
           <div className="containerInfoInner">
             <Form.Control type="text" value={backupFolder} readOnly />

@@ -23,7 +23,7 @@ import { toast } from "react-toastify";
 import { i18n } from "@Renderer/i18n";
 
 import { IconFloppyDisk } from "@Renderer/components/atoms/Icons";
-import Title from "../../component/Title";
+import Heading from "@Renderer/components/atoms/Heading";
 import DotsProgressBar from "./DotsProgressBar";
 
 import ToastMessage from "../../component/ToastMessage";
@@ -123,7 +123,9 @@ const MacrosMemoryUsage = ({ mem, tMem }) => {
     <Styles
       className={`${memoryUsage > 95 && memoryUsage < 98 ? "memoryWarning" : ""} ${memoryUsage > 99 ? "memoryError" : ""} `}
     >
-      <Title text={i18n.editor.macros.memoryUsage.title} headingLevel={4} />
+      <Heading headingLevel={4} renderAs="h4">
+        {i18n.editor.macros.memoryUsage.title}
+      </Heading>
       <div className="progressIndicator">
         <div className="progressIndicatorBar">
           <DotsProgressBar progressWidth={memoryUsage} />

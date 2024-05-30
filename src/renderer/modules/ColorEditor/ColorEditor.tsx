@@ -20,7 +20,7 @@ import { ColorResult, SketchPicker } from "react-color";
 import Styled from "styled-components";
 
 // Bootstrap components
-import Title from "@Renderer/component/Title";
+import Heading from "Renderer/components/Heading";
 import { ColorButton } from "@Renderer/component/Button";
 
 // Icons
@@ -144,7 +144,9 @@ class ColorEditor extends Component<ColorEditorProps, { displayColorPicker: bool
     return (
       <Styles className="extraPanel">
         <div className="panelTitle">
-          <Title text={i18n.editor.color.colorPalette} headingLevel={4} />
+          <Heading headingLevel={4} renderAs="h4">
+            {i18n.editor.color.colorPalette}
+          </Heading>
         </div>
         <div className="panelTools">
           <ColorPalette colors={colors} selected={selected} onColorSelect={this.selectColor} />

@@ -28,7 +28,7 @@ import { DeviceClass } from "@Renderer/types/devices";
 import { Neuron } from "@Renderer/types/neurons";
 
 import { Banner } from "@Renderer/component/Banner";
-import Title from "@Renderer/component/Title";
+import Heading from "@Renderer/components/atoms/Heading";
 import { IconArrowDownWithLine, IconBluetooth } from "@Renderer/components/atoms/Icons";
 import { PageHeader } from "@Renderer/modules/PageHeader";
 import { i18n, refreshHardware } from "@Renderer/i18n";
@@ -398,7 +398,9 @@ const SelectKeyboard = (props: SelectKeyboardProps) => {
           />
           <div className="card-alert" style={{ marginTop: "16px" }}>
             <Banner icon={<IconBluetooth />} variant="warning">
-              <Title text="Defy owners!" headingLevel={5} />
+              <Heading headingLevel={5} renderAs="h5">
+                Defy owners!
+              </Heading>
               <p
                 style={{ maxWidth: "610px" }}
                 dangerouslySetInnerHTML={{ __html: i18n.keyboardSelect.HIDReminderOfManuallyScan }}
