@@ -62,6 +62,7 @@
     "@electron-forge/maker-dmg": "^7.3.0",
     "@electron-forge/maker-rpm": "^7.3.0",
     "@electron-forge/maker-squirrel": "^7.3.0",
+    "@electron-forge/plugin-auto-unpack-natives": "^7.4.0",
     "@electron-forge/plugin-webpack": "^7.3.0",
     "@electron/universal": "^1.4.1",
     "@playwright/test": "^1.36.0",
@@ -168,7 +169,7 @@
     "sudo-prompt": "^9.2.1",
     "tailwind-merge": "^2.2.0",
     "tailwindcss-animate": "^1.0.7",
-    "uiohook-napi": "^1.5.2",
+    "uiohook-napi": "^1.5.4",
     "update-electron-app": "^3.0.0",
     "usb": "^2.9.0",
     "xstate": "^5.13.0"

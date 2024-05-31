@@ -11,6 +11,7 @@ import mainConfig from "./webpack.main.config";
 const packagerConfig: ForgePackagerOptions = {
   appBundleId: "com.dygmalab.bazecor",
   darwinDarkModeSupport: true,
+  asar: true,
   icon: "./build/logo",
   name: "Bazecor",
   osxUniversal: {
@@ -76,6 +77,10 @@ const config: ForgeConfig = {
         ],
       },
     }),
+    {
+      name: "@electron-forge/plugin-auto-unpack-natives",
+      config: {},
+    },
   ],
   hooks: {
     packageAfterPrune: async (_forgeConfig, buildPath, _electronVersion, platform, _arch) => {
