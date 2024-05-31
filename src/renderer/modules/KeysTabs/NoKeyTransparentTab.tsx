@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 import Styled from "styled-components";
 
 import { i18n } from "@Renderer/i18n";
@@ -6,7 +6,6 @@ import { i18n } from "@Renderer/i18n";
 import Callout from "@Renderer/components/molecules/Callout/Callout";
 import Heading from "@Renderer/components/atoms/Heading";
 import { Button } from "@Renderer/components/atoms/Button";
-import { ButtonConfig } from "../../component/Button";
 
 const Styles = Styled.div`
 width: 100%;
@@ -33,7 +32,12 @@ h4 {
 }
 `;
 
-const NoKeyTransparentTab = ({ keyCode, onKeySelect, isStandardView }) => (
+interface NoKeyTransparentTabProps {
+  keyCode: any;
+  isStandardView: boolean;
+  onKeySelect: (keycode: number) => void;
+}
+const NoKeyTransparentTab = ({ keyCode, onKeySelect, isStandardView }: NoKeyTransparentTabProps) => (
   <Styles className={`${isStandardView ? "standardViewTab" : ""} tabsNoKeysTransparent`}>
     <div className="tabContentWrapper">
       <div className="buttonsRow">
@@ -56,7 +60,7 @@ const NoKeyTransparentTab = ({ keyCode, onKeySelect, isStandardView }) => (
             }}
             size="sm"
             className="max-w-[116px] w-[116px] text-center"
-            selected={keyCode !== undefined && keyCode.base ? keyCode.base + keyCode.modified == 0 : keyCode == 0}
+            selected={keyCode !== undefined && keyCode.base ? keyCode.base + keyCode.modified === 0 : keyCode === 0}
           >
             {i18n.editor.standardView.noKey}
           </Button>
@@ -71,7 +75,7 @@ const NoKeyTransparentTab = ({ keyCode, onKeySelect, isStandardView }) => (
             onClick={() => {
               onKeySelect(65535);
             }}
-            selected={keyCode !== undefined && keyCode.base ? keyCode.base + keyCode.modified == 65535 : keyCode == 65535}
+            selected={keyCode !== undefined && keyCode.base ? keyCode.base + keyCode.modified === 65535 : keyCode === 65535}
             size="sm"
             className="max-w-[116px] w-[116px] text-center"
           >
