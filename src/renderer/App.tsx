@@ -257,7 +257,6 @@ function App() {
           { autoClose: 2000, icon: "" },
         );
       }
-      onKeyboardDisconnect();
     };
     const handleDeviceDisconnection = async (dev: any) => {
       const isFlashing = varFlashing.current;

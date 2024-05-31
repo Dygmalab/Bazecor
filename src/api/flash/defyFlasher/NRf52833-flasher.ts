@@ -19,14 +19,9 @@
 import log from "electron-log/renderer";
 import { num2hexstr } from "../num2hexstr";
 import { serialConnection, rawCommand, noWaitCommand } from "../serialConnection";
+import { PACKET_SIZE, TYPE_DAT, TYPE_ELA, TYPE_ESA } from "../flasherConstants";
 import { HexType } from "../types";
 import ihexDecode from "../ihexDecode";
-
-const PACKET_SIZE = 4096;
-
-const TYPE_DAT = 0x00;
-const TYPE_ESA = 0x02;
-const TYPE_ELA = 0x04;
 
 let serialPort;
 
@@ -138,9 +133,6 @@ const NRf52833 = {
         for (let i = 0; i < currentHex.data.length; i += 1) {
           buffer.writeUInt8(currentHex.data[i], bufferTotal + i);
         }
-        // new Uint8Array(buffer, bufferTotal, currentHex.len).set(
-        //   currentHex.data
-        // );
 
         hexCount += 1;
         bufferTotal += currentHex.len;
@@ -168,15 +160,19 @@ const NRf52833 = {
 
     try {
       // START APPLICATION
-      ans = await rawCommand("S#", serialPort, 1000);
+      noWaitCommand("S#", serialPort);
       if (ans[0] !== 65) log.warn("warning when disconnecting");
     } catch (error) {
       log.warn(error);
     }
 
-    // DISCONNECT
-    finished(undefined, true);
-    serialPort.close();
+    try {
+      // DISCONNECT
+      finished(undefined, true);
+      serialPort.close();
+    } catch (error) {
+      log.warn(error);
+    }
   },
 };
 

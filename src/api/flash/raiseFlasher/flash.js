@@ -21,7 +21,7 @@ import log from "electron-log/renderer";
 import Focus from "../../focus";
 import Hardware from "../../hardware";
 import { delay } from "../delay";
-import { arduino } from "./arduino-flasher";
+import { SAMDFlasher } from "./SAMD-flasher";
 
 /**
  * Create a new flash raise object.
@@ -260,7 +260,7 @@ export class FlashRaise {
       try {
         if (focus.closed) await focus.open(this.currentPort.path, this.currentPort.device, null);
         stateUpdate("neuron", 0);
-        await arduino.flash(filename, stateUpdate, async (err, result) => {
+        await SAMDFlasher.flash(filename, stateUpdate, async (err, result) => {
           if (err) throw new Error(`Flash error ${result}`);
           else {
             stateUpdate("neuron", 100);
