@@ -23,6 +23,7 @@ import { i18n } from "@Renderer/i18n";
 import Callout from "@Renderer/components/molecules/Callout/Callout";
 // import MouseEventsReference from "@Renderer/components/atoms/MouseEventsReference";
 import Heading from "@Renderer/components/atoms/Heading";
+import { Button } from "@Renderer/components/atoms/Button";
 import { ButtonConfig, ButtonMouse } from "../../component/Button";
 
 const Styles = Styled.div`
@@ -168,40 +169,24 @@ function MouseTab({ isStandardView, keyCode, onAddSpecial, actTab }) {
               </Heading>
               <p className="description">{i18n.mouse.mouseClickDescription}</p>
               <div className="keysButtonsList">
-                <ButtonConfig
-                  buttonText={i18n.mouse.clickLeft}
-                  tooltipDelay={100}
-                  onClick={() => handleClick(20545)}
-                  selected={isStandardView ? keyCode === 20545 : false}
-                  onMouseEnter={() => handleClick(20545)}
-                  onMouseLeave={() => handleLeaveAnimations("Trigger OUT - Left")}
-                />
-                <ButtonConfig
-                  buttonText={i18n.mouse.clickMiddle}
-                  tooltipDelay={100}
-                  onClick={() => handleClick(20548)}
-                  selected={isStandardView ? keyCode === 20548 : false}
-                  onMouseEnter={() => handleClick(20545)}
-                  onMouseLeave={() => handleLeaveAnimations("Trigger OUT - Middle")}
-                />
-                <ButtonConfig
-                  buttonText={i18n.mouse.clickRight}
-                  tooltipDelay={100}
-                  onClick={() => handleClick(20546)}
-                  selected={isStandardView ? keyCode === 20546 : false}
-                />
-                <ButtonConfig
-                  buttonText={i18n.mouse.clickBack}
-                  tooltipDelay={100}
-                  onClick={() => handleClick(20552)}
-                  selected={isStandardView ? keyCode === 20552 : false}
-                />
-                <ButtonConfig
-                  buttonText={i18n.mouse.clickForward}
-                  tooltipDelay={100}
-                  onClick={() => handleClick(20560)}
-                  selected={isStandardView ? keyCode === 20560 : false}
-                />
+                <Button onClick={() => handleClick(20545)} selected={isStandardView ? keyCode === 20545 : false}>
+                  {i18n.mouse.clickLeft}
+                </Button>
+                <Button onClick={() => handleClick(20548)} selected={isStandardView ? keyCode === 20548 : false}>
+                  {i18n.mouse.clickMiddle}
+                </Button>
+                <Button onClick={() => handleClick(20546)} selected={isStandardView ? keyCode === 20546 : false}>
+                  {i18n.mouse.clickRight}
+                </Button>
+                <Button onClick={() => handleClick(20552)} selected={isStandardView ? keyCode === 20552 : false}>
+                  {i18n.mouse.clickBack}
+                </Button>
+                <Button onClick={() => handleClick(20552)} selected={isStandardView ? keyCode === 20552 : false}>
+                  {i18n.mouse.clickBack}
+                </Button>
+                <Button onClick={() => handleClick(20560)} selected={isStandardView ? keyCode === 20560 : false}>
+                  {i18n.mouse.clickForward}
+                </Button>
               </div>
             </div>
             {actTab !== "super" ? (
