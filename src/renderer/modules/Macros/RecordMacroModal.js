@@ -5,6 +5,7 @@ import Modal from "react-bootstrap/Modal";
 import { ipcRenderer } from "electron";
 import { i18n } from "@Renderer/i18n";
 
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@Renderer/components/atoms/Dialog";
 import {
   IconRecord,
   IconArrowInBoxDown,
@@ -360,6 +361,89 @@ export default class RecordMacroModal extends React.Component {
           icoPosition="left"
           onClick={this.toggleShow}
         />
+        {/* <Dialog open={showModal} onOpenChange={this.toggleShow} className="modal-recordMacro">
+          <DialogContent className="modal-recordMacro">
+            <DialogHeader>
+              <DialogTitle>{isRecording ? i18n.editor.macros.recordingMacro : i18n.editor.macros.recordMacro}</DialogTitle>
+            </DialogHeader>
+            <div className="px-6 pb-2 mt-2">
+              <div className="recordMacroOptions">
+                <Title text={i18n.editor.macros.delays} headingLevel={5} />
+                <div className="recordMacroButtons">
+                  <ButtonConfig
+                    icoSVG={<IconStopWatchCrossed />}
+                    icoPosition="left"
+                    buttonText={i18n.editor.macros.ignoreDelays}
+                    variation={`buttonConfigMinimal ${!isDelayActive ? "config-active" : ""}`}
+                    onClick={this.setDelayOff}
+                    disabled={isRecording}
+                  />
+                  <ButtonConfig
+                    icoSVG={<IconStopWatch />}
+                    icoPosition="left"
+                    buttonText={i18n.editor.macros.recordDelays}
+                    variation={`buttonConfigMinimal ${isDelayActive ? "config-active" : ""}`}
+                    onClick={this.setDelayOn}
+                    disabled={isRecording}
+                  />
+                </div>
+              </div>
+              <div className="timelineRecordTracking">
+                {recorded.length === 0 ? (
+                  <div className="timelineRecordSequence">...</div>
+                ) : (
+                  <div className={`timelineRecordSequence ${isRecording ? "isRecording" : "isPaused"}`}>
+                    <div className="timelineRecordSequenceInner">
+                      {recorded.map((item, index) => {
+                        let newItem = item.char;
+                        if (item.action === 2) return "";
+                        if (item.action === 6) newItem += "↓";
+                        if (item.action === 7) newItem += "↑";
+                        return newItem;
+                      })}
+                    </div>
+                    <div className="timelinePointeText" />
+                  </div>
+                )}
+
+                <AnimatedTimelineRecording isRecording={isRecording} />
+              </div>
+              <div className="recordMacrosButton">
+                {recorded.length > 0 ? (
+                  <ButtonConfig
+                    tooltip={i18n.editor.macros.recordingDiscard}
+                    icoSVG={<IconUndoRestart />}
+                    variation="undoRecording"
+                    onClick={this.undoRecording}
+                  />
+                ) : (
+                  ""
+                )}
+                <RegularButtonFwRef
+                  icoSVG={<IconPause size="xl" />}
+                  variation={`recordButton ${isRecording ? "isRecording" : ""} ${
+                    recorded.length > 0 && !isRecording ? "isResume" : ""
+                  }`}
+                  onClick={this.toggleIsRecording}
+                  ref={this.buttonRecord}
+                >
+                  {recorded.length === 0 ? i18n.editor.macros.startRecord : isRecording ? "Pause icon" : "Resume"}
+                </RegularButtonFwRef>
+              </div>
+              <div className="tabSaveButton">
+                <RegularButton
+                  buttonText={i18n.editor.macros.textTabs.buttonText}
+                  styles="outline gradient"
+                  icoSVG={<IconArrowInBoxDown />}
+                  icoPosition="right"
+                  disabled={!!(recorded.length === 0 || isRecording)}
+                  onClick={this.sendMacro}
+                />
+              </div>
+              <p className="recordingMessage">{i18n.editor.macros.recordingMessage}</p>
+            </div>
+          </DialogContent>
+        </Dialog> */}
         <Modal
           size="lg"
           show={showModal}

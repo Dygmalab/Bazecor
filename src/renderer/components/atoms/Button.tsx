@@ -25,7 +25,7 @@ const buttonVariants = cva(
         supportive:
           "flex items-center gap-4 justify-start rounded-md py-4 px-6 border-[1px] border-solid border-gray-100 hover:border-gray-200/50 dark:border-gray-600 dark:hover:border-gray-400 bg-gray-100/25 hover:bg-gray-50/80 dark:bg-gray-600/50 hover:dark:bg-gray-600/80 transition-all text-left min-w-36 [&_p]:text-xs [&_p]:text-gray-300 [&_p]:dark:text-gray-100 [&_.buttonIcon]:basis-8",
         config:
-          "border-regular shadow-buttonConfigLight dark:shadow-buttonConfig hover:buttonConfigLightHover dark:hover:shadow-buttonConfigHover text-ssm py-[8px] px-[16px] text-gray-500 hover:text-gray-600 dark:text-gray-25 bg-configButton dark:bg-configButtonDark hover:bg-configButtonHover dark:bg-configButtonDarkHover",
+          "border-regular shadow-buttonConfigLight dark:shadow-buttonConfig hover:buttonConfigLightHover dark:hover:shadow-buttonConfigHover text-ssm py-[8px] px-[16px] text-gray-500 hover:text-gray-600 dark:text-gray-25 bg-configButton dark:bg-configButtonDark hover:bg-configButtonHover dark:hover:bg-configButtonDarkHover aria-pressed:!bg-configButtonActive dark:aria-pressed:!bg-configButtonDarkActive aria-pressed:bg-purple-200 dark:aria-pressed:!bg-purple-300 aria-pressed:!border-purple-200 dark:aria-pressed:!border-none aria-pressed:text-white aria-pressed:!shadow-buttonConfigLightActive",
         short:
           "rounded-md transition-all border-[1px] border-solid border-gray-50 text-gray-500 hover:text-gray-500 bg-gradient-to-r from-gray-25 to-gray-50 dark:text-gray-25 dark:from-gray-600 dark:to-gray-700 dark:border-none",
       },
@@ -73,13 +73,19 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
   icon?: React.ReactNode | null;
   children: React.ReactNode;
   iconDirection?: "left" | "right" | "none";
+  selected?: boolean;
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant, size, asChild = false, icon, iconDirection = "none", children, ...props }, ref) => {
+  ({ className, variant, size, asChild = false, icon, iconDirection = "none", children, selected = false, ...props }, ref) => {
     const Comp = asChild ? Slot : "button";
     return (
-      <Comp className={cn(buttonVariants({ variant, size, iconDirection, className }))} ref={ref} {...props}>
+      <Comp
+        className={cn(buttonVariants({ variant, size, iconDirection, className }))}
+        ref={ref}
+        {...props}
+        aria-pressed={selected}
+      >
         {icon && <div className="buttonIcon flex flex-shrink-0 flex-grow-0 [&_svg]:w-full">{icon}</div>}
         {children}
       </Comp>
