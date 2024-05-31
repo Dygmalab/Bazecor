@@ -59,7 +59,7 @@ const NoKeyTransparentTab = ({ keyCode, onKeySelect, isStandardView }: NoKeyTran
               onKeySelect(0);
             }}
             size="sm"
-            className="max-w-[116px] w-[116px] text-center"
+            className="max-w-[116px] w-[116px] text-center mt-1"
             selected={keyCode !== undefined && keyCode.base ? keyCode.base + keyCode.modified === 0 : keyCode === 0}
           >
             {i18n.editor.standardView.noKey}
@@ -77,7 +77,7 @@ const NoKeyTransparentTab = ({ keyCode, onKeySelect, isStandardView }: NoKeyTran
             }}
             selected={keyCode !== undefined && keyCode.base ? keyCode.base + keyCode.modified === 65535 : keyCode === 65535}
             size="sm"
-            className="max-w-[116px] w-[116px] text-center"
+            className="max-w-[116px] w-[116px] text-center mt-1"
           >
             {i18n.editor.standardView.transparent}
           </Button>

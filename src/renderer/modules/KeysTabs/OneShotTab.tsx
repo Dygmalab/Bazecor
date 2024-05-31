@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 import Styled from "styled-components";
 
 import { i18n } from "@Renderer/i18n";
@@ -36,17 +36,14 @@ h4 {
 }
 `;
 
-class OneShotTab extends Component {
-  constructor(props) {
-    super(props);
-  }
+interface OneShotTabProps {
+  keyCode: any;
+  isStandardView: boolean;
+  onKeySelect: (keycode: number) => void;
+}
 
-  render() {
-    const { keyCode, onKeySelect, isStandardView } = this.props;
-    const OneShotDeltaMod = 49153;
-    const OneShotDeltaLayer = 49161;
-    return (
-      <Styles className={`${isStandardView ? "standardViewTab" : ""} tabsOneShot`}>
+const OneShotTab = ({keyCode, onKeySelect, isStandardView} : OneShotTabProps) => (
+    <Styles className={`${isStandardView ? "standardViewTab" : ""} tabsOneShot`}>
         <div className="tabContentWrapper">
           {isStandardView ? (
             <>
@@ -169,8 +166,6 @@ class OneShotTab extends Component {
           </div>
         </div>
       </Styles>
-    );
-  }
-}
+  )
 
 export default OneShotTab;

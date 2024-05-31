@@ -24,7 +24,6 @@ import { i18n } from "@Renderer/i18n";
 import { LayerType } from "@Renderer/types/neurons";
 
 import { Button } from "@Renderer/components/atoms/Button";
-import { ButtonConfig } from "@Renderer/component/Button";
 import Heading from "@Renderer/components/atoms/Heading";
 
 interface CopyFromDialogProps {
@@ -53,36 +52,21 @@ export function CopyFromDialog(props: CopyFromDialogProps) {
             className={`toggleButtonsInner flex flex-col items-center justify-start gap-1 p-[4px] rounded-regular border-[1px] border-solid border-gray-100/60 bg-white/30 dark:border-transparent dark:bg-gray-900/25 w-full [&_.button-config]:w-full [&_.button-config]:basis-full [&_.button-config]:text-left [&_.button-config.disabled]:opacity-25 [&_.button-config.disabled]:pointer-events-none"}`}
           >
             {layers.map(layer => (
-              <ButtonConfig
+              <Button
                 onClick={() => {
                   setSelectedLayer(layer.id);
                 }}
+                variant="config"
                 selected={layer.id === selectedLayer}
-                key={layer.id}
-                buttonText={`${layer.name} ${layer.id === selectedLayer ? i18n.editor.layers.layerToCopy : ""}`}
                 size="sm"
                 disabled={layer.id === currentLayer}
-              />
+                key={layer.id}
+                className="w-full text-left justify-start"
+              >
+                {layer.name} {layer.id === selectedLayer ? i18n.editor.layers.layerToCopy : ""}
+              </Button>
             ))}
           </div>
-
-          {/* <ListGroup variant="flush">
-            {layers.map(layer => (
-              <ListGroup.Item
-                className={`listitem ${layer.id === currentLayer ? "disabled" : ""} ${
-                  layer.id === selectedLayer ? "selected" : ""
-                }`}
-                key={layer.id}
-                action
-                disabled={layer.id === currentLayer}
-                onClick={() => {
-                  setSelectedLayer(layer.id);
-                }}
-              >
-                {layer.name} {layer.id === selectedLayer ? <span>{i18n.editor.layers.layerToCopy}</span> : ""}
-              </ListGroup.Item>
-            ))}
-          </ListGroup> */}
         </div>
         <DialogFooter>
           <Button
