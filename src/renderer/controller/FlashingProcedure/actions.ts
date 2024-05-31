@@ -2,7 +2,6 @@
 import fs from "fs";
 import path from "path";
 import log from "electron-log/renderer";
-import { emit } from "xstate";
 import { ipcRenderer } from "electron";
 import Device, { State } from "src/api/comms/Device";
 import { SerialPort } from "serialport";
@@ -52,7 +51,7 @@ const stateUpdate = (stage: string, percentage: number, context: Context.Context
     globalProgress =
       leftProgress * 0.2 + rightProgress * 0.2 + resetProgress * 0.2 + neuronProgress * 0.2 + restoreProgress * 0.2;
   }
-  emit({
+  context.stateUpdate({
     type: "increment_event",
     data: {
       globalProgress,

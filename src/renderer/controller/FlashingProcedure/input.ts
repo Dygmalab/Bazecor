@@ -17,6 +17,17 @@ export interface InputType {
   readonly sideLeftBL: boolean;
   readonly sideRightOK: boolean;
   readonly sideRightBL: boolean;
+  readonly stateUpdate: (data: {
+    type: string;
+    data: {
+      globalProgress: number;
+      leftProgress: number;
+      rightProgress: number;
+      resetProgress: number;
+      neuronProgress: number;
+      restoreProgress: number;
+    };
+  }) => void;
 }
 
 export const Input = async (input: InputType): Promise<Context.ContextType> => {
@@ -56,6 +67,7 @@ export const Input = async (input: InputType): Promise<Context.ContextType> => {
     flashSides: undefined,
     bootloader: undefined,
     comPath: undefined,
+    stateUpdate: input.stateUpdate,
   };
 
   return result;

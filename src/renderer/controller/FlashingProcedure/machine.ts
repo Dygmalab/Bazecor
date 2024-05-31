@@ -158,8 +158,7 @@ const FlashDevice = setup({
       },
       on: {
         "increment-event": {
-          actions: assign(({ context, event }) => ({
-            ...context,
+          actions: assign(({ event }) => ({
             globalProgress: event.globalProgress,
             leftProgress: event.leftProgress,
             rightProgress: event.rightProgress,
@@ -198,8 +197,7 @@ const FlashDevice = setup({
       },
       on: {
         "increment-event": {
-          actions: assign(({ context, event }) => ({
-            ...context,
+          actions: assign(({ event }) => ({
             globalProgress: event.globalProgress,
             leftProgress: event.leftProgress,
             rightProgress: event.rightProgress,
@@ -239,8 +237,7 @@ const FlashDevice = setup({
       },
       on: {
         "increment-event": {
-          actions: assign(({ context, event }) => ({
-            ...context,
+          actions: assign(({ event }) => ({
             globalProgress: event.globalProgress,
             leftProgress: event.leftProgress,
             rightProgress: event.rightProgress,
@@ -273,8 +270,7 @@ const FlashDevice = setup({
       },
       on: {
         "increment-event": {
-          actions: assign(({ context, event }) => ({
-            ...context,
+          actions: assign(({ event }) => ({
             globalProgress: event.globalProgress,
             leftProgress: event.leftProgress,
             rightProgress: event.rightProgress,
@@ -310,15 +306,16 @@ const FlashDevice = setup({
       },
       on: {
         "increment-event": {
-          actions: assign(({ context, event }) => ({
-            ...context,
-            globalProgress: event.globalProgress,
-            leftProgress: event.leftProgress,
-            rightProgress: event.rightProgress,
-            resetProgress: event.resetProgress,
-            neuronProgress: event.neuronProgress,
-            restoreProgress: event.restoreProgress,
-          })),
+          actions: [
+            assign(({ event }) => ({
+              globalProgress: event.globalProgress,
+              leftProgress: event.leftProgress,
+              rightProgress: event.rightProgress,
+              resetProgress: event.resetProgress,
+              neuronProgress: event.neuronProgress,
+              restoreProgress: event.restoreProgress,
+            })),
+          ],
         },
       },
     },
@@ -344,8 +341,7 @@ const FlashDevice = setup({
       },
       on: {
         "increment-event": {
-          actions: assign(({ context, event }) => ({
-            ...context,
+          actions: assign(({ event }) => ({
             globalProgress: event.globalProgress,
             leftProgress: event.leftProgress,
             rightProgress: event.rightProgress,
@@ -380,8 +376,7 @@ const FlashDevice = setup({
       },
       on: {
         "increment-event": {
-          actions: assign(({ context, event }) => ({
-            ...context,
+          actions: assign(({ event }) => ({
             globalProgress: event.globalProgress,
             leftProgress: event.leftProgress,
             rightProgress: event.rightProgress,
@@ -414,8 +409,7 @@ const FlashDevice = setup({
       },
       on: {
         "increment-event": {
-          actions: assign(({ context, event }) => ({
-            ...context,
+          actions: assign(({ event }) => ({
             globalProgress: event.globalProgress,
             leftProgress: event.leftProgress,
             rightProgress: event.rightProgress,
@@ -451,8 +445,7 @@ const FlashDevice = setup({
       },
       on: {
         "increment-event": {
-          actions: assign(({ context, event }) => ({
-            ...context,
+          actions: assign(({ event }) => ({
             globalProgress: event.globalProgress,
             leftProgress: event.leftProgress,
             rightProgress: event.rightProgress,
@@ -487,8 +480,7 @@ const FlashDevice = setup({
       },
       on: {
         "increment-event": {
-          actions: assign(({ context, event }) => ({
-            ...context,
+          actions: assign(({ event }) => ({
             globalProgress: event.globalProgress,
             leftProgress: event.leftProgress,
             rightProgress: event.rightProgress,

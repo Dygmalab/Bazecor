@@ -6,7 +6,6 @@ import serial, { isSerialType } from "../api/comms/serial";
 import Device, { State } from "../api/comms/Device";
 import HID from "../api/hid/hid";
 import { isVirtualType } from "../api/comms/virtual";
-import { SerialPort } from "serialport";
 
 type ContextType =
   | {

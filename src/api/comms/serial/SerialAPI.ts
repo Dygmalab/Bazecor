@@ -97,13 +97,16 @@ const checkProperties = async (path: string) => {
 
   await serialport.open((err: Error) => {
     if (err) log.error("error when opening port: ", err);
-    else log.info("connected");
   });
 
   const wless = await rawCommand("hardware.wireless", serialport);
   const lay = await rawCommand("hardware.layout", serialport);
 
-  await serialport.close();
+  try {
+    await serialport.close();
+  } catch (error) {
+    log.warn("Error when closing Serial after checking properties", error);
+  }
 
   return { wireless: wless.includes("true"), layout: lay.includes("ISO") ? "ISO" : "ANSI" };
 };

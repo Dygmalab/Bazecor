@@ -116,7 +116,6 @@ class Device implements DeviceClass {
     this.port = serialport;
     this.type = "serial";
     this.isClosed = false;
-    serialport.pipe(new DelimiterParser({ delimiter: "\r\n" }));
     // Port is loaded, creating message handler
     const parser = this.port.pipe(new DelimiterParser({ delimiter: "\r\n" }));
     parser.on("data", (data: Buffer) => {
@@ -137,11 +136,13 @@ class Device implements DeviceClass {
         this.result += `\r\n${utfData}`;
       }
     });
-    const kbCommands = await Device.help(this);
-    log.info("these are the commands", kbCommands);
-    this.commands = {
-      help: kbCommands,
-    };
+    if (!this.device.bootloader) {
+      const kbCommands = await Device.help(this);
+      log.info("these are the commands", kbCommands);
+      this.commands = {
+        help: kbCommands,
+      };
+    }
   }
 
   async addHID() {
