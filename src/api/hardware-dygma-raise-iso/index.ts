@@ -1,6 +1,6 @@
 /* bazecor-hardware-dygma-raise -- Bazecor support for Dygma Raise
- * Copyright (C) 2018-2019 Keyboardio, Inc.
- * Copyright (C) 2019-2020 DygmaLab SE
+ * Copyright (C) 2018-2019  Keyboardio, Inc.
+ * Copyright (C) 2019-2020  DygmaLab SE
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -16,14 +16,15 @@
  */
 
 import log from "electron-log/renderer";
-import KeymapANSI from "./components/Keymap-ANSI";
+import { DeviceTools } from "@Renderer/DeviceContext";
+import KeymapISO from "./components/Keymap-ISO";
 
-const RaiseANSI = {
+const RaiseISO = {
   info: {
     vendor: "Dygma",
     product: "Raise",
-    keyboardType: "ANSI",
-    displayName: "Dygma Raise ANSI",
+    keyboardType: "ISO",
+    displayName: "Dygma Raise ISO",
     urls: [
       {
         name: "Homepage",
@@ -44,7 +45,7 @@ const RaiseANSI = {
     columns: 22,
   },
   components: {
-    keymap: KeymapANSI,
+    keymap: KeymapISO,
   },
 
   instructions: {
@@ -53,7 +54,7 @@ const RaiseANSI = {
     },
   },
 
-  flash: async (_, filename, flashRaise, stateUpdate) => {
+  flash: async (_: any, filename: any, flashRaise: { updateFirmware: (arg0: any, arg1: any) => any }, stateUpdate: any) => {
     try {
       await flashRaise.updateFirmware(filename, stateUpdate);
       return true;
@@ -63,32 +64,19 @@ const RaiseANSI = {
     }
   },
 
-  isDeviceSupported: async port => {
-    // const focus = Focus.getInstance();
-    // let layout = localStorage.getItem(port.serialNumber);
-    // if (!layout) {
-    //   if (focus._port && focus._port.path === port.path) {
-    //     await focus.open(focus._port, port.device, null);
-    //   } else {
-    //     await focus.open(port.path, port.device, null);
-    //   }
-    //   layout = await focus.command("hardware.layout");
-    //   focus.close();
-    //   localStorage.setItem(port.serialNumber, layout);
-    // }
-    // const result = layout.trim() === "ANSI";
-    // return result;
-    log.info(port);
-    return true;
+  isDeviceSupported: async (path: string) => {
+    const result = await DeviceTools.poll(path);
+
+    return result.layout === "ISO";
   },
 };
 
-const RaiseANSIBootloader = {
+const RaiseISOBootloader = {
   info: {
     vendor: "Dygma",
     product: "Raise",
-    keyboardType: "ANSI",
-    displayName: "Dygma Raise ANSI",
+    keyboardType: "ISO",
+    displayName: "Dygma Raise ISO",
     urls: [
       {
         name: "Homepage",
@@ -106,7 +94,7 @@ const RaiseANSIBootloader = {
       updateInstructions: `To update the firmware, press the button at the bottom. You must not hold any key on the keyboard while the countdown is in progress, nor afterwards, until the flashing is finished. When the countdown reaches zero, the Neuron's light should start a blue pulsing pattern, and flashing will then proceed. `,
     },
   },
-  flash: async (_, filename, flashRaise, stateUpdate) => {
+  flash: async (_: any, filename: any, flashRaise: { updateFirmware: (arg0: any, arg1: any) => any }, stateUpdate: any) => {
     try {
       await flashRaise.updateFirmware(filename, stateUpdate);
       return true;
@@ -117,4 +105,4 @@ const RaiseANSIBootloader = {
   },
 };
 
-export { RaiseANSI, RaiseANSIBootloader };
+export { RaiseISO, RaiseISOBootloader };
