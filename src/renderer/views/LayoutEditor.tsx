@@ -1838,7 +1838,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
         }`}
       >
         <PageHeader
-          text={i18n.app.menu.editor}
+          text="Layout Editor"
           showSaving
           isSaving={isSaving}
           contentSelector={

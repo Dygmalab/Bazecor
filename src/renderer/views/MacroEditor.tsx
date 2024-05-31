@@ -795,7 +795,7 @@ function MacroEditor(props: MacroEditorProps) {
     <Styles className="macroEditor">
       <Container fluid>
         <PageHeader
-          text={i18n.app.menu.macros}
+          text="Macro Editor"
           contentSelector={
             <MacroSelector
               itemList={macros}

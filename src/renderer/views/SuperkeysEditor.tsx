@@ -766,7 +766,7 @@ function SuperkeysEditor(props: SuperkeysEditorProps) {
     <Styles className="superkeys">
       <div className={`px-3 ${isStandardViewSuperkeys ? "standarViewMode" : "singleViewMode"}`}>
         <PageHeader
-          text={i18n.app.menu.superkeys}
+          text="Superkeys Editor"
           showSaving
           contentSelector={
             <SuperkeysSelector

@@ -75,7 +75,7 @@ function FirmwareUpdate(props: FirmwareUpdateProps) {
   return (
     <Styles>
       <Container fluid className="firmware-update center-content">
-        <PageHeader text={i18n.app.menu.firmwareUpdate} />
+        <PageHeader text="Firmware Update" />
         <div className="panel-wrapper">
           {state.context.Block === -1 ? <FirmwareErrorPanel nextBlock={nextBlock} retryBlock={retryBlock} /> : ""}
           {state.context.Block === 0 ? (

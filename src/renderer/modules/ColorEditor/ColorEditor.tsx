@@ -20,7 +20,7 @@ import { ColorResult, SketchPicker } from "react-color";
 import Styled from "styled-components";
 
 // Bootstrap components
-import Heading from "Renderer/components/Heading";
+import Heading from "@Renderer/components/atoms/Heading";
 import { ColorButton } from "@Renderer/component/Button";
 
 // Icons
