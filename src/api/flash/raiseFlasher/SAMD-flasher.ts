@@ -23,7 +23,6 @@ import { serialConnection, rawCommand, noWaitCommand } from "../serialConnection
 import { PACKET_SIZE, TYPE_DAT, TYPE_ELA, TYPE_ESA } from "../flasherConstants";
 import { HexType } from "../types";
 import ihexDecode from "../ihexDecode";
-import { str2ab } from "../str2ab";
 
 let serialPort;
 
@@ -138,7 +137,7 @@ export const SAMDFlasher = {
       }
 
       // Tell the arduino we are writing at memory 20005000, for N bytes.
-      noWaitCommand(str2ab(`S20005000,${num2hexstr(bufferSize, 8)}#`), serialPort);
+      noWaitCommand(`S20005000,${num2hexstr(bufferSize, 8)}#`, serialPort);
 
       // Write our data.
       noWaitCommand(buffer, serialPort);
@@ -157,7 +156,7 @@ export const SAMDFlasher = {
     }
 
     // CLEANUP
-    noWaitCommand(str2ab("WE000ED0C,05FA0004#"), serialPort);
+    noWaitCommand("WE000ED0C,05FA0004#", serialPort);
 
     // DISCONNECT
     try {
