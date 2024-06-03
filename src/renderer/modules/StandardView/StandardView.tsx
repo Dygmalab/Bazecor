@@ -434,7 +434,6 @@ export default class StandardView extends React.Component<StandardViewProps, Sta
                         onLayerPress={onKeySelect}
                         keyCode={keyCode}
                         isStandardView={isStandardView}
-                        actTab={actTab}
                         disableMods={!!((keyIndex === 0 || keyIndex === 3) && actTab === "super")}
                       />
                     </motion.div>

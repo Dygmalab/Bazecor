@@ -40,12 +40,11 @@ h4 {
 interface LayersTabProps {
   keyCode: any;
   isStandardView: boolean;
-  actTab?: string;
   disableMods: boolean;
   onLayerPress: (value: number) => void;
 }
 
-const LayersTab = ({ keyCode, isStandardView, actTab, disableMods, onLayerPress }: LayersTabProps) => {
+const LayersTab = ({ keyCode, isStandardView, disableMods, onLayerPress }: LayersTabProps) => {
   const layerDeltaSwitch = 17450;
   const layerDelta = 17492;
 
