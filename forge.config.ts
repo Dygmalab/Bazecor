@@ -11,7 +11,6 @@ import mainConfig from "./webpack.main.config";
 const packagerConfig: ForgePackagerOptions = {
   appBundleId: "com.dygmalab.bazecor",
   darwinDarkModeSupport: true,
-  asar: true,
   icon: "./build/logo",
   name: "Bazecor",
   osxUniversal: {
@@ -77,10 +76,6 @@ const config: ForgeConfig = {
         ],
       },
     }),
-    {
-      name: "@electron-forge/plugin-auto-unpack-natives",
-      config: {},
-    },
   ],
   hooks: {
     packageAfterPrune: async (_forgeConfig, buildPath, _electronVersion, platform, _arch) => {
@@ -95,7 +90,7 @@ const config: ForgeConfig = {
       packageJson.dependencies = {
         serialport: "^10.0.0",
         usb: "^2.9.0",
-        "uiohook-napi": "^1.5.2",
+        "uiohook-napi": "^1.5.4",
       };
 
       fs.writeFileSync(path.resolve(buildPath, "package.json"), JSON.stringify(packageJson));

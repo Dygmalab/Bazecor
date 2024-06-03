@@ -3,7 +3,7 @@
     "baseUrl": ".",
     "esModuleInterop": true,
     "jsx": "react-jsx",
-    "module": "commonjs",
+    "module": "CommonJS",
     "moduleResolution": "node",
     "forceConsistentCasingInFileNames": true,
     "maxNodeModuleJsDepth": 0,
@@ -16,7 +16,7 @@
     "resolveJsonModule": true,
     "skipLibCheck": true,
     "sourceMap": true,
-    "target": "ESNext"
+    "target": "ES6"
   },
   "include": ["src/**/*"]
 }
