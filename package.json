@@ -45,7 +45,7 @@
   },
   "homepage": "https://github.com/Dygmalab/Bazecor",
   "engines": {
-    "node": "^20.13.0",
+    "node": "^20.13.1",
     "npm": ">=8.11.0"
   },
   "devDependencies": {
