@@ -24,7 +24,7 @@ import Callout from "@Renderer/components/molecules/Callout/Callout";
 // import MouseEventsReference from "@Renderer/components/atoms/MouseEventsReference";
 import Heading from "@Renderer/components/atoms/Heading";
 import { Button } from "@Renderer/components/atoms/Button";
-import { ButtonConfig, ButtonMouse } from "../../component/Button";
+import { ButtonMouse } from "../../component/Button";
 
 const Styles = Styled.div`
 display: flex;
@@ -134,19 +134,26 @@ h4 {
 }
 `;
 
-function MouseTab({ isStandardView, keyCode, onAddSpecial, actTab }) {
-  const [isHovering, setIsHovering] = React.useState(false);
+interface MouseTabProps {
+  isStandardView: boolean;
+  keyCode: any;
+  actTab: string;
+  onAddSpecial: (event: any, value: number) => void;
+}
+
+function MouseTab({ isStandardView, keyCode, onAddSpecial, actTab }: MouseTabProps) {
+  // const [isHovering, setIsHovering] = React.useState(false);
 
   // function to handle button click event and to send data to props.onAddSpecial
-  const handleClick = mouse => {
-    onAddSpecial(mouse, 5);
-    setIsHovering(!isHovering);
+  const handleClick = (event: any) => {
+    onAddSpecial(event, 5);
+    // setIsHovering(!isHovering);
   };
 
-  const handleLeaveAnimations = mouseEvent => {
-    setIsHovering(true);
-    log.info("MouseLeave", mouseEvent);
-  };
+  // const handleLeaveAnimations = mouseEvent => {
+  //   setIsHovering(true);
+  //   log.info("MouseLeave", mouseEvent);
+  // };
 
   return (
     <Styles className={`${isStandardView ? "standardViewTab" : ""} tabsMouse`}>
@@ -168,23 +175,45 @@ function MouseTab({ isStandardView, keyCode, onAddSpecial, actTab }) {
                 {i18n.mouse.mouseClickTitle}
               </Heading>
               <p className="description">{i18n.mouse.mouseClickDescription}</p>
-              <div className="keysButtonsList">
-                <Button onClick={() => handleClick(20545)} selected={isStandardView ? keyCode === 20545 : false}>
+              <div className="grid gap-2 grid-cols-3 max-w-[460px]">
+                <Button
+                  onClick={() => handleClick(20545)}
+                  selected={isStandardView ? keyCode === 20545 : false}
+                  variant="config"
+                  size="sm"
+                >
                   {i18n.mouse.clickLeft}
                 </Button>
-                <Button onClick={() => handleClick(20548)} selected={isStandardView ? keyCode === 20548 : false}>
+                <Button
+                  onClick={() => handleClick(20548)}
+                  selected={isStandardView ? keyCode === 20548 : false}
+                  variant="config"
+                  size="sm"
+                >
                   {i18n.mouse.clickMiddle}
                 </Button>
-                <Button onClick={() => handleClick(20546)} selected={isStandardView ? keyCode === 20546 : false}>
+                <Button
+                  onClick={() => handleClick(20546)}
+                  selected={isStandardView ? keyCode === 20546 : false}
+                  variant="config"
+                  size="sm"
+                >
                   {i18n.mouse.clickRight}
                 </Button>
-                <Button onClick={() => handleClick(20552)} selected={isStandardView ? keyCode === 20552 : false}>
+                <Button
+                  onClick={() => handleClick(20552)}
+                  selected={isStandardView ? keyCode === 20552 : false}
+                  variant="config"
+                  size="sm"
+                >
                   {i18n.mouse.clickBack}
                 </Button>
-                <Button onClick={() => handleClick(20552)} selected={isStandardView ? keyCode === 20552 : false}>
-                  {i18n.mouse.clickBack}
-                </Button>
-                <Button onClick={() => handleClick(20560)} selected={isStandardView ? keyCode === 20560 : false}>
+                <Button
+                  onClick={() => handleClick(20560)}
+                  selected={isStandardView ? keyCode === 20560 : false}
+                  variant="config"
+                  size="sm"
+                >
                   {i18n.mouse.clickForward}
                 </Button>
               </div>
@@ -203,24 +232,28 @@ function MouseTab({ isStandardView, keyCode, onAddSpecial, actTab }) {
                         direction="up"
                         onClick={() => handleClick(20481)}
                         selected={isStandardView ? keyCode === 20481 : false}
+                        disabled={false}
                       />
                       <ButtonMouse
                         eventType="movement"
                         direction="right"
                         onClick={() => handleClick(20488)}
                         selected={isStandardView ? keyCode === 20488 : false}
+                        disabled={false}
                       />
                       <ButtonMouse
                         eventType="movement"
                         direction="down"
                         onClick={() => handleClick(20482)}
                         selected={isStandardView ? keyCode === 20482 : false}
+                        disabled={false}
                       />
                       <ButtonMouse
                         eventType="movement"
                         direction="left"
                         onClick={() => handleClick(20484)}
                         selected={isStandardView ? keyCode === 20484 : false}
+                        disabled={false}
                       />
                     </div>
                   </div>
@@ -237,24 +270,28 @@ function MouseTab({ isStandardView, keyCode, onAddSpecial, actTab }) {
                         direction="up"
                         onClick={() => handleClick(20497)}
                         selected={isStandardView ? keyCode === 20497 : false}
+                        disabled={false}
                       />
                       <ButtonMouse
                         eventType="wheel"
                         direction="right"
                         onClick={() => handleClick(20504)}
                         selected={isStandardView ? keyCode === 20504 : false}
+                        disabled={false}
                       />
                       <ButtonMouse
                         eventType="wheel"
                         direction="down"
                         onClick={() => handleClick(20498)}
                         selected={isStandardView ? keyCode === 20498 : false}
+                        disabled={false}
                       />
                       <ButtonMouse
                         eventType="wheel"
                         direction="left"
                         onClick={() => handleClick(20500)}
                         selected={isStandardView ? keyCode === 20500 : false}
+                        disabled={false}
                       />
                     </div>
                   </div>

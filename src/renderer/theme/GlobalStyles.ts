@@ -1813,7 +1813,7 @@ div.card.card-preferences .card-body {
     display: none;
   }
   .standarViewMode .standardView{
-    padding: 24px 24px 24px 142px;
+    padding: 24px 24px 24px 32px;
   }
 }
 @media screen and (max-width: 1520px){

@@ -41,8 +41,8 @@ const Styles = Styled.div`
     top: 0;
     left: 0;
     background-color: ${({ theme }) => theme.styles.standardView.modalBackground};
-    z-index: 500;
-    padding: 32px 32px 32px 164px;
+    z-index: 50;
+    padding: 32px 32px 32px 32px;
     .standardViewInner {
         // width: 100%;
         // height: 100%;
@@ -85,7 +85,7 @@ const Styles = Styled.div`
 .KeyVisualizer {
   margin-top: 42px;
   margin-bottom: 24px;
-  width: calc(100% + 20px);
+  width: calc(100% + 32px);
   background: ${({ theme }) => theme.styles.standardView.keyVisualizer.background};
   border: ${({ theme }) => theme.styles.standardView.keyVisualizer.border};
   box-shadow: ${({ theme }) => theme.styles.standardView.keyVisualizer.boxShadow};
@@ -137,7 +137,7 @@ const Styles = Styled.div`
 
 @media screen and (max-height: 782px) {
     .standardView {
-        padding: 16px 24px 24px 148px;
+        padding: 16px 24px 24px 32px;
         h3 {
             font-size: 18px;
             .counterIndicator:before {
@@ -157,7 +157,7 @@ const Styles = Styled.div`
 
 @media (max-width: 1460px) and (min-height: 783px) {
   .standardView{
-    padding: 24px 24px 24px 142px;
+    padding: 24px 24px 24px 32px;
     .KeyVisualizer {
       margin-top: 16px;
     }
@@ -191,7 +191,7 @@ const Styles = Styled.div`
 }
 @media screen and (max-height: 719px) {
   .standardView{
-    padding: 24px 24px 24px 112px;
+    padding: 24px 24px 24px 32px;
     .KeyVisualizer {
       margin-top: 16px;
     }
