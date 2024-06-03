@@ -154,9 +154,6 @@ jobs:
       - if: runner.os != 'macOS'
         name: Build for Linux/Windows
         run: yarn run make
-      - if: runner.os != 'macOS'
-        name: Build for Linux/Windows
-        run: yarn run make
       - if: runner.os == 'Windows'
         shell: bash
         name: Get executable into signing folder
