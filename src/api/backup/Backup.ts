@@ -4,7 +4,7 @@ import Store from "electron-store";
 import log from "electron-log/renderer";
 import { Neuron } from "@Renderer/types/neurons";
 import { BackupType } from "@Renderer/types/backups";
-import { VirtualType } from "@Renderer/types/devices";
+import { VirtualType } from "@Renderer/types/virtual";
 import Device from "../comms/Device";
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires

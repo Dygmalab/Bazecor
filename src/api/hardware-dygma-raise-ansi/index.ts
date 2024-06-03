@@ -16,7 +16,6 @@
  */
 
 import log from "electron-log/renderer";
-import { DeviceTools } from "@Renderer/DeviceContext";
 import KeymapANSI from "./components/Keymap-ANSI";
 
 const RaiseANSI = {
@@ -62,12 +61,6 @@ const RaiseANSI = {
       log.error(e);
       return false;
     }
-  },
-
-  isDeviceSupported: async (path: string) => {
-    const result = await DeviceTools.poll(path);
-
-    return result.layout === "ANSI";
   },
 };
 

@@ -16,7 +16,6 @@
  */
 
 import log from "electron-log/renderer";
-import { DeviceTools } from "@Renderer/DeviceContext";
 import KeymapISO from "./components/Keymap-ISO";
 
 const RaiseISO = {
@@ -62,12 +61,6 @@ const RaiseISO = {
       log.error(e);
       return false;
     }
-  },
-
-  isDeviceSupported: async (path: string) => {
-    const result = await DeviceTools.poll(path);
-
-    return result.layout === "ISO";
   },
 };
 

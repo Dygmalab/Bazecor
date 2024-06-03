@@ -21,7 +21,6 @@
  *
  */
 
-import { DeviceTools } from "@Renderer/DeviceContext";
 import KeymapISO from "./components/Keymap-ISO";
 
 const Raise2ISO = {
@@ -75,12 +74,6 @@ const Raise2ISO = {
     } catch (e) {
       return false;
     }
-  },
-
-  isDeviceSupported: async (path: string) => {
-    const result = await DeviceTools.poll(path);
-
-    return result.layout === "ISO";
   },
 };
 

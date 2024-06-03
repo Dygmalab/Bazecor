@@ -1,6 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable no-eval */
-/* eslint-disable no-bitwise */
 import fs from "fs";
 import log from "electron-log/renderer";
 import Hardware from "../../hardware";
@@ -134,6 +132,7 @@ const isDeviceConnected = (device: DeviceType) => {
   if (process.platform !== "linux") return true;
 
   try {
+    // eslint-disable-next-line no-bitwise
     fs.accessSync(device.path, fs.constants.R_OK | fs.constants.W_OK);
   } catch (e) {
     return false;
@@ -142,12 +141,10 @@ const isDeviceConnected = (device: DeviceType) => {
 };
 
 const isDeviceSupported = async (device: DeviceType) => {
-  if (!device.device.isDeviceSupported) {
-    return true;
-  }
-  const supported = await device.device.isDeviceSupported(device.path);
-  // log.info("focus.isDeviceSupported: port=", device, "supported=", supported);
-  return supported;
+  const supported = await checkProperties(device.path);
+  log.info("focus.isDeviceSupported: port=", device.device, "supported=", supported);
+  if (device.device.info.keyboardType === supported.layout || device.device.info.product === "Defy") return supported;
+  return false;
 };
 
 const isSerialType = (device: any): device is any => "path" in device;

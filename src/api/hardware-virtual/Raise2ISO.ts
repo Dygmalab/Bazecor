@@ -1,4 +1,4 @@
-import { VirtualType } from "@Renderer/types/devices";
+import { VirtualType } from "@Renderer/types/virtual";
 
 const Raise2ISO: VirtualType = {
   device: {

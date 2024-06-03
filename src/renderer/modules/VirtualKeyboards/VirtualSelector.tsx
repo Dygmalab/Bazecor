@@ -12,7 +12,7 @@ import { RegularButton } from "@Renderer/component/Button";
 import Title from "@Renderer/component/Title";
 import { i18n } from "@Renderer/i18n";
 
-import { VirtualType } from "@Renderer/types/devices";
+import { VirtualType } from "@Renderer/types/virtual";
 import { BackupType } from "@Renderer/types/backups";
 
 import Hardware from "../../../api/hardware";

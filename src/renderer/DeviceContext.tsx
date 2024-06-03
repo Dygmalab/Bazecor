@@ -1,11 +1,13 @@
 /* eslint-disable no-await-in-loop */
 import React, { useReducer, createContext, useContext, useMemo } from "react";
 import log from "electron-log/renderer";
-import { CountProviderProps, VirtualType } from "./types/devices";
+import { VirtualType } from "./types/virtual";
 import serial, { isSerialType } from "../api/comms/serial";
 import Device, { State } from "../api/comms/Device";
 import HID from "../api/hid/hid";
 import { isVirtualType } from "../api/comms/virtual";
+
+type CountProviderProps = { children: React.ReactNode };
 
 type ContextType =
   | {
@@ -84,6 +86,7 @@ const isDeviceConnected = async (device: Device) => {
 };
 
 const isDeviceSupported = async (device: Device) => {
+  log.info("going to check support: ", device.device, isSerialType(device));
   if (isSerialType(device)) {
     const result = await serial.isDeviceSupported(device);
     return result;
@@ -158,20 +161,10 @@ const disconnect = async (device: Device) => {
   }
 };
 
-type PollType = { wireless: boolean; layout: string };
-
-const poll = async (path: string): Promise<PollType> => {
-  const result: PollType = await serial.checkProperties(path);
-  log.info("Checking sides properties", result);
-
-  return result;
-};
-
 const DeviceTools = {
   list,
   connect,
   disconnect,
-  poll,
 };
 
 export { DeviceProvider, useDevice, DeviceTools };

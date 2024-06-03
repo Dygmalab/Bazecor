@@ -19,6 +19,7 @@ import { SerialPort } from "serialport";
 import HID from "../../api/hid/hid";
 import DeviceMap from "../../api/comms/deviceMap";
 import { DygmaDeviceType } from "./dygmaDefs";
+import { VirtualType } from "./virtual";
 
 export interface DeviceClass {
   type: string;
@@ -81,15 +82,3 @@ export interface DeviceType {
   vendorId: string;
   device?: DygmaDeviceType;
 }
-
-export interface VirtualType {
-  device: DygmaDeviceType;
-  virtual: {
-    [command: string]: {
-      data: string;
-      eraseable: boolean;
-    };
-  };
-}
-
-export type CountProviderProps = { children: React.ReactNode };

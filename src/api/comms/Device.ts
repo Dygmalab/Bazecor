@@ -1,8 +1,8 @@
-/* eslint-disable no-console */
 import { SerialPort } from "serialport";
-import { DeviceClass, DeviceType, VirtualType } from "@Renderer/types/devices";
+import { DeviceClass, DeviceType } from "@Renderer/types/devices";
 import log from "electron-log/renderer";
 import { DygmaDeviceType } from "@Renderer/types/dygmaDefs";
+import { VirtualType } from "@Renderer/types/virtual";
 import HID from "../hid/hid";
 import DeviceMap from "./deviceMap";
 import { ExtHIDInterface } from "./types";
@@ -16,7 +16,6 @@ export type State = {
 };
 
 class Device implements DeviceClass {
-  [x: string]: any;
   type: string;
   path: string;
   manufacturer: string;
@@ -36,7 +35,7 @@ class Device implements DeviceClass {
   isSending: boolean;
   memoryMap: DeviceMap;
   fileData: VirtualType;
-  currentDevice: any;
+  currentDevice: Device;
 
   constructor(parameters: DeviceType | HID | VirtualType, type: string) {
     // constructor for Device
