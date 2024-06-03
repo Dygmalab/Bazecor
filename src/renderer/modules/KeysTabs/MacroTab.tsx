@@ -74,9 +74,6 @@ const MacroTab = ({ macros, selectedMacro, keyCode, onMacrosPress, isStandardVie
     return macrosContainer;
   });
 
-  console.log("MacrosAux: ", macrosAux);
-  console.log("Selected macro", selectedMacro);
-
   return (
     <Styles className={`${isStandardView ? "standardViewTab" : ""} tabsMacro`}>
       <div className="tabContentWrapper">

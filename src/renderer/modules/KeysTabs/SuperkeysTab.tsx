@@ -1,13 +1,12 @@
 import React, { Component } from "react";
-import ReactDOM from "react-dom";
 import Styled from "styled-components";
 
-import Dropdown from "react-bootstrap/Dropdown";
 import { i18n } from "@Renderer/i18n";
 
 import Callout from "@Renderer/components/molecules/Callout/Callout";
 import ListModifier from "@Renderer/components/molecules/ListModifiers/ListModifiers";
 import Heading from "@Renderer/components/atoms/Heading";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@Renderer/components/atoms/Select";
 
 import Keymap, { KeymapDB } from "../../../api/keymap";
 
@@ -210,35 +209,25 @@ class SuperkeysTab extends Component {
           </Heading>
           <div className="superKeyGroup">
             <div className="superKeySelect">
-              <Dropdown
-                value={superkeys[superk.indexOf(KC)] != undefined ? superk[superk.indexOf(KC)] : ""}
-                onSelect={value => {
-                  onKeySelect(parseInt(value));
+              <Select
+                onValueChange={value => {
+                  onKeySelect(parseInt(value, 10));
                 }}
-                className={`custom-dropdown ${superkeys[superk.indexOf(KC)] != undefined ? "active" : ""}`}
               >
-                <Dropdown.Toggle id="dropdown-custom">
-                  <div className="dropdownItemSelected">
-                    <div className="dropdownItem">
-                      {superkeys[superk.indexOf(KC)] != undefined
-                        ? `${superk.indexOf(KC) + 1}. ${superkeys[superk.indexOf(KC)].name}`
-                        : "Select superkey"}
-                    </div>
-                  </div>
-                </Dropdown.Toggle>
-                <Dropdown.Menu>
+                <SelectTrigger className="w-[280px]">
+                  <SelectValue placeholder="Select Superkey" />
+                </SelectTrigger>
+                <SelectContent>
                   {superk.map((x, id) => (
-                    <Dropdown.Item eventKey={x} key={`super-${id}`} disabled={x == -1}>
-                      <div className="dropdownInner">
-                        <div className="dropdownItem">{`${id + 1}. ${superkeys[id].name}`}</div>
-                      </div>
-                    </Dropdown.Item>
+                    <SelectItem value={String(x)} disabled={x === -1} key={`superkeyItem-${id}`}>
+                      {`${id + 1}. ${superkeys[id].name}`}
+                    </SelectItem>
                   ))}
-                </Dropdown.Menu>
-              </Dropdown>
+                </SelectContent>
+              </Select>
             </div>
-            <div className={`superKeyInfo ${superkeys[superk.indexOf(KC)] != undefined ? "animRight" : "animHide"}`}>
-              {superkeys[superk.indexOf(KC)] != undefined ? (
+            <div className={`superKeyInfo ${superkeys[superk.indexOf(KC)] !== undefined ? "animRight" : "animHide"}`}>
+              {superkeys[superk.indexOf(KC)] !== undefined ? (
                 <div className="superkeyHint">
                   <Heading headingLevel={3} renderAs="h3">
                     {superkeys[superk.indexOf(KC)].name}
