@@ -44,7 +44,18 @@ export interface ContextType {
   RaiseBrightness: string | undefined;
   flashSides: SideFlaser | undefined;
   bootloader: boolean | undefined;
-  comPath: string | Buffer | undefined;
+  comPath: string | undefined;
+  stateUpdate: (data: {
+    type: string;
+    data: {
+      globalProgress: number;
+      leftProgress: number;
+      rightProgress: number;
+      resetProgress: number;
+      neuronProgress: number;
+      restoreProgress: number;
+    };
+  }) => void;
 }
 
 export const Context: ContextType = {
@@ -83,4 +94,5 @@ export const Context: ContextType = {
   flashSides: undefined,
   bootloader: undefined,
   comPath: undefined,
+  stateUpdate: undefined,
 };

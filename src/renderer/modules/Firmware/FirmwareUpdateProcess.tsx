@@ -125,6 +125,30 @@ function FirmwareUpdateProcess(props: FirmwareUpdateProcessProps) {
     }
   };
 
+  interface INCtype {
+    type: string;
+    data: {
+      globalProgress: number;
+      leftProgress: number;
+      rightProgress: number;
+      resetProgress: number;
+      neuronProgress: number;
+      restoreProgress: number;
+    };
+  }
+
+  const stateUpdate = (data: INCtype) => {
+    send({
+      type: "increment-event",
+      globalProgress: data.data.globalProgress,
+      leftProgress: data.data.leftProgress,
+      rightProgress: data.data.rightProgress,
+      resetProgress: data.data.resetProgress,
+      neuronProgress: data.data.neuronProgress,
+      restoreProgress: data.data.restoreProgress,
+    });
+  };
+
   const [state, send] = useMachine(
     FlashDevice.provide({
       actions: {
@@ -166,6 +190,7 @@ function FirmwareUpdateProcess(props: FirmwareUpdateProcessProps) {
         sideLeftBL: context.sideLeftBL,
         sideRightOK: context.sideRightOK,
         sideRightBL: context.sideRightBL,
+        stateUpdate,
       },
     },
   );

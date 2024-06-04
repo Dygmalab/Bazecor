@@ -38,7 +38,7 @@ import Store from "@Renderer/utils/Store";
 import { BackupSettingsProps } from "@Renderer/types/preferences";
 import WaitForRestoreDialog from "@Renderer/component/WaitForRestoreDialog";
 import { BackupType } from "@Renderer/types/backups";
-import { VirtualType } from "@Renderer/types/devices";
+import { VirtualType } from "@Renderer/types/virtual";
 import Backup from "../../../api/backup";
 
 const store = Store.getStore();

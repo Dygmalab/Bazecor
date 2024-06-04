@@ -34,6 +34,7 @@ const rendererConfig: Configuration = {
     },
   },
   externals: {
+    "uiohook-napi": "uiohook-napi",
     serialport: "serialport",
     "@serialport": "@serialport",
     usb: "usb",

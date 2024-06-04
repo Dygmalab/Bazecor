@@ -1,7 +1,6 @@
 import log from "electron-log/renderer";
 import { DeviceTools } from "@Renderer/DeviceContext";
 import * as Context from "./context";
-import Focus from "../../../api/focus";
 
 export const RestoreESCKey = async (context: Context.ContextType): Promise<Context.ContextType> => {
   // log.info("Going to restore topmost left key", context.backup, context.deviceState);
@@ -10,9 +9,6 @@ export const RestoreESCKey = async (context: Context.ContextType): Promise<Conte
     const { currentDevice } = context.deviceState;
     // log.info("Checking connected status: ", currentDevice.isClosed);
     if (currentDevice.isClosed) {
-      const focus = Focus.getInstance();
-      // log.info("Checking focus status: ", focus.closed);
-      await focus.close();
       await DeviceTools.connect(currentDevice);
     }
     const keymap = context.backup.backup.find((c: { command: string }) => c.command === "keymap.custom").data;

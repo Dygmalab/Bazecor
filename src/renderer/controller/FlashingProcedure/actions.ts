@@ -2,7 +2,6 @@
 import fs from "fs";
 import path from "path";
 import log from "electron-log/renderer";
-import { emit } from "xstate";
 import { ipcRenderer } from "electron";
 import Device, { State } from "src/api/comms/Device";
 import { SerialPort } from "serialport";
@@ -10,7 +9,6 @@ import { DeviceTools } from "@Renderer/DeviceContext";
 import { BackupType } from "@Renderer/types/backups";
 import { FlashRaise, FlashDefyWireless } from "../../../api/flash";
 import SideFlaser from "../../../api/flash/defyFlasher/sideFlasher";
-import Focus from "../../../api/focus";
 import * as Context from "./context";
 
 const delay = (ms: number) =>
@@ -52,7 +50,7 @@ const stateUpdate = (stage: string, percentage: number, context: Context.Context
     globalProgress =
       leftProgress * 0.2 + rightProgress * 0.2 + resetProgress * 0.2 + neuronProgress * 0.2 + restoreProgress * 0.2;
   }
-  emit({
+  context.stateUpdate({
     type: "increment_event",
     data: {
       globalProgress,
@@ -71,22 +69,12 @@ const restoreSettings = async (
   stateUpd: (state: string, progress: number) => void,
 ) => {
   stateUpd("restore", 0);
-  if (context.bootloader) {
-    stateUpd("restore", 100);
-    return true;
-  }
   log.info(backup);
-  if (backup === undefined || context.backup?.backup.length === 0) {
-    const list = (await DeviceTools.list()) as Device[];
-    const selected = list.find(x => x.productId === context.originalDevice?.device?.info.product);
-    if (selected !== undefined) await DeviceTools.connect(selected);
-    return true;
-  }
-
   try {
     let device: Device | undefined;
     const list = (await DeviceTools.list()) as Device[];
-    const selected = list.find(x => x.productId === context.originalDevice?.device?.info.product);
+    log.info(list);
+    const selected = list.find(x => parseInt(x.productId, 16) === context.originalDevice?.device?.usb.productId);
     if (selected !== undefined) device = await DeviceTools.connect(selected);
     for (let i = 0; i < backup.backup.length; i += 1) {
       const val = backup.backup[i].data;
@@ -108,20 +96,20 @@ export const reconnect = async (context: Context.ContextType) => {
   try {
     const foundDevices = async (isBootloader: boolean) => {
       let result: Device | undefined;
-      await DeviceTools.list().then(devices => {
-        for (const device of devices) {
-          if (
-            isBootloader
-              ? device.device?.bootloader !== undefined &&
-                device.device.bootloader === isBootloader &&
-                context.originalDevice?.device?.info.keyboardType === device.device.info.keyboardType
-              : context.originalDevice?.device?.info.keyboardType === device.device?.info.keyboardType
-          ) {
-            result = device;
-            break;
-          }
+      const devices = await DeviceTools.list();
+
+      for (const device of devices) {
+        if (
+          isBootloader
+            ? device.device?.bootloader !== undefined &&
+              context.originalDevice?.device?.info.product === device.device.info.product
+            : context.originalDevice?.device?.info.keyboardType === device.device?.info.keyboardType &&
+              context.originalDevice?.device?.info.product === device.device.info.product
+        ) {
+          result = device;
+          break;
         }
-      });
+      }
       return result;
     };
     const runnerFindKeyboard = async (findKeyboard: { (): Promise<unknown>; (): any }, times: number) => {
@@ -171,10 +159,11 @@ export const flashSide = async (side: string, context: Context.ContextType) => {
     }
     // Flashing procedure for each side
     await DeviceTools.disconnect(currentDevice);
-    log.info("done closing focus");
+    log.info("done closing serial");
     log.info("Going to flash side:", side);
     const forceFlashSides = false;
     await context.flashSides.flashSide(
+      context.comPath as string,
       side,
       (stage, percentage) => {
         stateUpdate(stage, percentage, context);
@@ -228,23 +217,22 @@ export const uploadDefyWired = async (context: Context.ContextType) => {
 
 export const resetDefy = async (context: Context.ContextType) => {
   let { currentDevice } = context.deviceState as State;
-  log.info("Checking resseting Defy: ", currentDevice, context.originalDevice);
+  log.info("Checking resseting Defy: ", currentDevice.device.bootloader);
   try {
     if (context.flashDefyWireless === undefined) {
       log.info("when creating FDW", context.originalDevice?.device);
       context.flashDefyWireless = new FlashDefyWireless(currentDevice.device, context.deviceState as State);
-      if (context.flashSides === undefined && context.bootloader === false) {
-        context.comPath = (currentDevice.port as SerialPort).path;
-        context.bootloader = currentDevice.device?.bootloader;
-      }
+      context.bootloader = currentDevice.device?.bootloader;
+      context.comPath = (currentDevice.port as SerialPort).path;
     }
-    if (!context.bootloader) {
+    if (!currentDevice.device.bootloader) {
       try {
-        log.info("reset indicators", currentDevice, context.flashDefyWireless, currentDevice.device);
+        log.info("reset indicators", currentDevice.device.bootloader, context.flashDefyWireless, currentDevice.device);
         if (currentDevice.port === undefined || currentDevice.isClosed) {
-          currentDevice = (await DeviceTools.connect(currentDevice)) as Device;
+          context.deviceState.currentDevice = (await DeviceTools.connect(currentDevice)) as Device;
+          currentDevice = context.deviceState.currentDevice;
         }
-        await context.flashDefyWireless.resetKeyboard(currentDevice.port, (stage: string, percentage: number) => {
+        await context.flashDefyWireless.resetKeyboard(currentDevice, (stage: string, percentage: number) => {
           stateUpdate(stage, percentage, context);
         });
       } catch (error) {
@@ -266,10 +254,7 @@ export const uploadDefyWireless = async (context: Context.ContextType) => {
   let result = false;
   try {
     const { currentDevice } = context.deviceState as State;
-    if (!context.device?.bootloader) {
-      await DeviceTools.disconnect(currentDevice);
-    }
-    // log.info(context.originalDevice.device, focus, focus._port, flashDefyWireless);
+    await DeviceTools.disconnect(currentDevice);
     await context.flashDefyWireless?.updateFirmware(
       context.firmwares?.fw,
       context.bootloader,
@@ -339,11 +324,14 @@ export const resetRaise = async (context: Context.ContextType) => {
 export const uploadRaise = async (context: Context.ContextType) => {
   let result = false;
   try {
-    const focus = Focus.getInstance();
-    if (!context.device?.bootloader) {
-      await focus.close();
+    const { currentDevice } = context.deviceState as State;
+    if (context.flashRaise === undefined) {
+      context.flashRaise = new FlashRaise(context.originalDevice?.device);
+      context.comPath = (currentDevice.port as SerialPort).path;
+      context.bootloader = context.device?.bootloader;
     }
-    log.info(context.originalDevice?.device, focus, focus._port, context.flashRaise);
+    await DeviceTools.disconnect(currentDevice);
+    log.info(context.originalDevice?.device, context.flashRaise);
     result = await context.flashRaise?.updateFirmware(context.firmwares?.fw, (stage: string, percentage: number) => {
       stateUpdate(stage, percentage, context);
     });

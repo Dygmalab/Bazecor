@@ -1,6 +1,5 @@
+/* eslint-disable class-methods-use-this */
 /* eslint-disable no-async-promise-executor */
-// @ts-nocheck
-
 /* eslint-disable no-await-in-loop */
 /* bazecor-flash-raise -- Dygma Raise flash helper for Bazecor
  * Copyright (C) 2019, 2020  DygmaLab SE
@@ -18,22 +17,17 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { ipcRenderer } from "electron";
-import fs from "fs";
-import path from "path";
 import log from "electron-log/renderer";
-import { DeviceClass, State } from "@Renderer/types/devices";
+import { DeviceClass } from "@Renderer/types/devices";
 import { DeviceTools } from "@Renderer/DeviceContext";
-import Device from "src/api/comms/Device";
-import Focus from "../../focus";
+import Device, { State } from "src/api/comms/Device";
 import Hardware from "../../hardware";
 import { delay } from "../delay";
 import NRf52833 from "./NRf52833-flasher";
-import formatedDate from "../formatedDate";
 
 class FlashDefyWireless {
   device: any;
-  currentPort: string | null;
+  currentPort: any;
   currentPath: string | null;
   backupFileName: string | null;
   backupFileData: {
@@ -63,105 +57,34 @@ class FlashDefyWireless {
   async foundDevices(hardware: any, message: string, bootloader: boolean) {
     let isFindDevice = false;
     const list = (await DeviceTools.list()) as Device[];
-    console.log("List of Devices without FOCUS!!", list);
-    // await focus.find(...hardware).then(devices => {
-    //   for (const device of devices) {
-    //     log.info(
-    //       "DATA CHECKER: ",
-    //       device,
-    //       this.device,
-    //       device.device.bootloader,
-    //       bootloader,
-    //       this.device.info.keyboardType,
-    //       device.device.info.keyboardType,
-    //     );
-    //     if (
-    //       bootloader
-    //         ? device.device.bootloader !== undefined &&
-    //           device.device.bootloader === bootloader &&
-    //           this.device.info.keyboardType === device.device.info.keyboardType
-    //         : this.device.info.keyboardType === device.device.info.keyboardType
-    //     ) {
-    //       log.info(message);
-    //       this.currentPort = { ...device };
-    //       this.currentPath = device.path;
-    //       isFindDevice = true;
-    //     }
-    //   }
-    // });
-    return isFindDevice;
-  }
-
-  /**
-   * Takes backup settings from keyboard and writes its in backupfile.
-   */
-  async backupSettings() {
-    const focus = Focus.getInstance();
-
-    const commands = [
-      "hardware.keyscan",
-      "led.mode",
-      "keymap.custom",
-      "keymap.default",
-      "keymap.onlyCustom",
-      "led.theme",
-      "palette",
-      "colormap.map",
-      "macros.map",
-      "settings.defaultLayer",
-      "led.brightness",
-      "idleleds.time_limit",
-      "qukeys.holdTimeout",
-      "qukeys.overlapThreshold",
-      "mouse.speed",
-      "mouse.speedDelay",
-      "mouse.accelSpeed",
-      "mouse.accelDelay",
-      "mouse.wheelSpeed",
-      "mouse.wheelDelay",
-      "mouse.speedLimit",
-      "mouse.speedDelay",
-      "superkeys.map",
-      "superkeys.holdstart",
-      "superkeys.waitfor",
-      "superkeys.timeout",
-      "superkeys.repeat",
-      "superkeys.overlap",
-    ];
-    this.backupFileName = `defy-backup-${formatedDate()}.json`;
-
-    try {
-      let errorFlag = false;
-      const errorMessage = "Firmware update failed, because the settings could not be saved";
-      for (const command of commands) {
-        // Ignore the command if it's not supported
-        if (focus.isCommandSupported(command)) {
-          const res = await focus.command(command);
-          this.backupFileData.backup[command] = typeof res === "string" ? res.trim() : res;
-          if (res === undefined || res === "") {
-            errorFlag = true;
-          }
-        }
+    log.verbose("List of Devices: ", list);
+    const detected = list.find(device => {
+      log.info(
+        "DATA CHECKER: ",
+        device,
+        this.device,
+        device.device.bootloader,
+        bootloader,
+        this.device.info.keyboardType,
+        device.device.info.keyboardType,
+      );
+      if (
+        bootloader
+          ? device.device.bootloader !== undefined &&
+            device.device.bootloader === bootloader &&
+            this.device.info.keyboardType === device.device.info.keyboardType
+          : this.device.info.keyboardType === device.device.info.keyboardType
+      ) {
+        log.info("found intended device");
+        this.currentPort = { ...device };
+        this.currentPath = device.path;
+        isFindDevice = true;
+        return device;
       }
-      if (errorFlag) throw new Error(errorMessage);
-    } catch (e) {
-      this.saveBackupFile();
-      throw e;
-    }
-  }
-
-  /**
-   * Saves backup file in directory:
-   * windows: C:\Users\<Your_User_Namer>\AppData\Local\Programs\bazecor,
-   * linux: in directory, where the app is located.
-   */
-  async saveBackupFile() {
-    const userDataPath = await ipcRenderer.invoke("get-userPath", "userData");
-    const route = path.join(userDataPath, `${this.backupFileName}.json`);
-    log.info(`saving file to: ${route}`);
-    fs.writeFile(route, JSON.stringify(this.backupFileData), err => {
-      if (err) throw err;
+      return false;
     });
+    log.info(isFindDevice, detected);
+    return isFindDevice;
   }
 
   /**
@@ -184,11 +107,11 @@ class FlashDefyWireless {
    * @param {*} baud BaudRate to be set
    * @returns {promise} Promise to be returned, that will resolve when the operation is done
    */
-  updatePort = (port, baud) =>
+  updatePort = (port: any, baud: number): Promise<any> =>
     new Promise(resolve => {
       port.update({ baudRate: baud }, () => {
         log.info(`Port update started at: ${new Date(Date.now()).toISOString()}`);
-        resolve();
+        resolve(true);
       });
     });
 
@@ -197,18 +120,17 @@ class FlashDefyWireless {
    * @param {object} port - serial port object for the "path".
    * @returns {promise}
    */
-  async resetKeyboard(backup, stateUpdate) {
-    const focus = Focus.getInstance();
+  async resetKeyboard(currentDevice: Device, stateUpdate: any) {
     log.info("reset start");
     const errorMessage =
       "The firmware update couldn't start because the Defy Bootloader wasn't found. Please check our Help Center for more details or schedule a video call with us.";
-    log.info("loaded backup: ", backup);
-    this.backup = backup;
     return new Promise(async (resolve, reject) => {
       stateUpdate("reset", 10);
-      focus.command("upgrade.neuron").catch(err => {
-        if (err) log.info("answer after shutdown not received");
-      });
+      try {
+        currentDevice.command("upgrade.neuron");
+      } catch (error) {
+        log.info("answer after shutdown not received");
+      }
       log.info("waiting for bootloader");
       await delay(1000);
       stateUpdate("reset", 30);
@@ -216,15 +138,15 @@ class FlashDefyWireless {
         let bootCount = 10;
         while (bootCount > 0) {
           if (await this.foundDevices(Hardware.bootloader, "Bootloader detected", true)) {
-            resolve("Detected Bootloader mode");
-            bootCount = true;
             stateUpdate("reset", 100);
+            bootCount = -1;
+            resolve("Detected Bootloader mode");
             break;
           }
           await delay(300);
           bootCount -= 1;
         }
-        if (bootCount !== true) {
+        if (bootCount === 0) {
           stateUpdate("reset", 100);
           reject(errorMessage);
         }
@@ -240,31 +162,20 @@ class FlashDefyWireless {
    * @param {string} firmware - path to file with firmware.
    * @returns {promise}
    */
-  async updateFirmware(firmware, bootloader, stateUpdate) {
-    if (!bootloader) {
-      const focus = Focus.getInstance();
-      await focus.close();
-    }
+  async updateFirmware(firmware: string[], bootloader: boolean, stateUpdate: any) {
     log.info("Begin update firmware with NRf52833", bootloader);
     return new Promise(async (resolve, reject) => {
-      try {
-        if (!bootloader) {
-          const focus = Focus.getInstance();
-          if (focus.closed) {
-            await focus.open(this.currentPath, this.currentPort.device, null);
-          }
+      const finished = async (err: any, result: any) => {
+        if (err) throw new Error(`Flash error ${result}`);
+        else {
+          stateUpdate("neuron", 100);
+          log.info("End update firmware with NRf52833");
+          resolve(true);
         }
+      };
+      try {
         stateUpdate("neuron", 0);
-        await NRf52833.flash(firmware, stateUpdate, async (err, result) => {
-          if (err) throw new Error(`Flash error ${result}`);
-          else {
-            stateUpdate("neuron", 100);
-            log.info("End update firmware with NRf52833");
-            // await delay(1500);
-            // await this.detectKeyboard();
-            resolve();
-          }
-        });
+        await NRf52833.flash(firmware, stateUpdate, finished, true);
       } catch (e) {
         stateUpdate("neuron", 100);
         reject(e);
@@ -305,7 +216,7 @@ class FlashDefyWireless {
    * @param {number} times - how many times function runs.
    * @param {string} errorMessage - error message if error is.
    */
-  async runnerFindKeyboard(findKeyboard, times, errorMessage) {
+  async runnerFindKeyboard(findKeyboard: { (): Promise<unknown>; (): any }, times: number, errorMessage: string) {
     if (!times) {
       log.error(errorMessage);
       return false;
@@ -315,38 +226,8 @@ class FlashDefyWireless {
       return true;
     }
     log.info(`Keyboard not detected, trying again for ${times} times`);
-    const result = await this.runnerFindKeyboard(findKeyboard, times - 1, errorMessage);
+    const result: any = await this.runnerFindKeyboard(findKeyboard, times - 1, errorMessage);
     return result;
-  }
-
-  /**
-   * Restores settings to keyboard after bootloader flashing
-   */
-  async restoreSettings(backup, stateUpdate) {
-    stateUpdate("restore", 0);
-    const focus = Focus.getInstance();
-    log.info(backup);
-    if (backup === undefined || backup.length === 0) {
-      await focus.open(this.currentPort.path, this.currentPort.device.info, null);
-      return true;
-    }
-    try {
-      await focus.open(this.currentPort.path, this.currentPort.device.info, null);
-      for (let i = 0; i < backup.length; i += 1) {
-        let val = backup[i].data;
-        // Boolean values need to be sent as int
-        if (typeof val === "boolean") {
-          val = +val;
-        }
-        log.info(`Going to send ${backup[i].command} to keyboard`);
-        await focus.command(`${backup[i].command} ${val}`.trim());
-        stateUpdate("restore", (i / backup.length) * 90);
-      }
-      stateUpdate("restore", 100);
-      return true;
-    } catch (e) {
-      return false;
-    }
   }
 }
 

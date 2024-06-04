@@ -9,25 +9,24 @@ import * as Context from "./context";
 const FWMAJORVERSION = "1.x";
 
 export const FocusAPIRead = async (context: Context.ContextType): Promise<Context.ContextType> => {
-  const data = { ...context };
   try {
-    if (context.deviceState === undefined) return data;
+    if (context.deviceState === undefined) return context;
     const { currentDevice } = context.deviceState;
-    data.device.bootloader = currentDevice.device?.bootloader !== undefined ? currentDevice.device.bootloader : false;
-    data.device.info = currentDevice.device.info;
-    if (data.device.bootloader) return data;
+    context.device.bootloader = currentDevice.device?.bootloader !== undefined ? currentDevice.device.bootloader : false;
+    context.device.info = currentDevice.device.info;
+    if (context.device.bootloader) return context;
     log.info("CHECKING CONTEXT DEPENDENCIES: ", context.deviceState);
     const versionData = await currentDevice.noCacheCommand("version");
     // eslint-disable-next-line prefer-destructuring
-    data.device.version = versionData.split(" ")[0];
-    data.device.chipID = (await currentDevice.noCacheCommand("hardware.chip_id")).replace(/\s/g, "");
-    if (Object.keys(data).length === 0 || Object.keys(data.device.info).length === 0) throw new Error("data is empty!");
+    context.device.version = versionData.split(" ")[0];
+    context.device.chipID = (await currentDevice.noCacheCommand("hardware.chip_id")).replace(/\s/g, "");
+    if (Object.keys(context).length === 0 || Object.keys(context.device.info).length === 0) throw new Error("data is empty!");
   } catch (error) {
     log.warn("error when querying the device");
     log.error(error);
     throw new Error(error);
   }
-  return data;
+  return context;
 };
 
 const loadAvailableFirmwareVersions = async (allowBeta: boolean) => {
@@ -84,11 +83,10 @@ export const GitHubRead = async (context: Context.ContextType): Promise<Context.
     const fwReleases = await loadAvailableFirmwareVersions(context.allowBeta);
     finalReleases = fwReleases.filter(
       release =>
-        release.name === context.device.info.product
-      // &&
-      //   (context.device.info.product === "Defy"
-      //     ? SemVer.satisfies(release.version ? release.version : "", FWMAJORVERSION, { includePrerelease: true })
-      //     : true),
+        release.name === context.device.info.product &&
+        (context.device.info.product === "Defy"
+          ? SemVer.satisfies(release.version ? release.version : "", FWMAJORVERSION, { includePrerelease: true })
+          : true),
     );
     finalReleases.sort((a, b) => (SemVer.lt(SemVer.clean(a.version) as string, SemVer.clean(b.version) as string) ? 1 : -1));
     if (context.device.bootloader) {
@@ -97,8 +95,13 @@ export const GitHubRead = async (context: Context.ContextType): Promise<Context.
       data.isBeta = false;
       return data;
     }
-    isUpdated = context.device.version === finalReleases[0].version;
-    isBeta = context.device.version.includes("beta");
+    if (finalReleases.length > 0) {
+      isUpdated = context.device.version === finalReleases[0]?.version;
+      isBeta = context.device.version.includes("beta");
+    } else {
+      isUpdated = true;
+      isBeta = false;
+    }
   } catch (error) {
     log.warn("error when filtering data from GitHub");
     log.error(error);
@@ -203,7 +206,7 @@ export const downloadFirmware = async (
     log.error(error);
     throw new Error(error);
   }
-  console.log("obtained FW's:", { fw: filename, fwSides: filenameSides });
+  console.log("obtained FW's lengths:", filename.length, filenameSides.length);
   const result: { fw: any; fwSides: any } = { fw: filename, fwSides: filenameSides };
 
   return result;

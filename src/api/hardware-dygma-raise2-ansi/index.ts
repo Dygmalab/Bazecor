@@ -62,7 +62,13 @@ const Raise2ANSI = {
     },
   },
 
-  flash: async (_, filename, bootloader, flashDefyWireless, stateUpdate) => {
+  flash: async (
+    _: any,
+    filename: any,
+    bootloader: any,
+    flashDefyWireless: { updateFirmware: (arg0: any, arg1: any, arg2: any) => any },
+    stateUpdate: any,
+  ) => {
     try {
       await flashDefyWireless.updateFirmware(filename, bootloader, stateUpdate);
       return true;
@@ -71,8 +77,6 @@ const Raise2ANSI = {
       return false;
     }
   },
-
-  isDeviceSupported: () => "ANSI",
 };
 
 const Raise2ANSIBootloader = {
@@ -98,7 +102,13 @@ const Raise2ANSIBootloader = {
       updateInstructions: `To update the firmware, press the button at the bottom. You must not hold any key on the keyboard while the countdown is in progress, nor afterwards, until the flashing is finished. When the countdown reaches zero, the Neuron's light should start a blue pulsing pattern, and flashing will then proceed. `,
     },
   },
-  flash: async (_, filename, bootloader, flashDefyWireless, stateUpdate) => {
+  flash: async (
+    _: any,
+    filename: any,
+    bootloader: any,
+    flashDefyWireless: { updateFirmware: (arg0: any, arg1: any, arg2: any) => any },
+    stateUpdate: any,
+  ) => {
     try {
       await flashDefyWireless.updateFirmware(filename, bootloader, stateUpdate);
       return true;

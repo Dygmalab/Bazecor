@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-loop-func */
 /* eslint-disable prefer-destructuring */
 /* eslint-disable no-buffer-constructor */
 /* eslint-disable no-eval */
@@ -6,8 +7,9 @@ import type { PortInfo } from "@serialport/bindings-cpp";
 import log from "electron-log/renderer";
 import { delay } from "./delay";
 import { InfoType } from "./types";
+import Hardware from "../hardware";
 
-const SerialPort = eval("require('serialport')");
+const { SerialPort } = eval("require('serialport')");
 const callbacks: Array<(value: unknown) => void> = [];
 
 function infoFromDevice(convertedData: Uint8Array) {
@@ -45,20 +47,32 @@ function infoFromDevice(convertedData: Uint8Array) {
 }
 
 export const serialConnection = async () => {
-  log.info("starting R2Flaser serial connection");
+  log.info("starting NRF52XXX serial connection");
 
-  let deviceList = await SerialPort.list();
+  let deviceList: PortInfo[];
+  let selectedDev: PortInfo;
   let retry = 5;
-  let selectedDev = deviceList.find((dev: PortInfo) => parseInt(dev.vendorId, 16) === 13807);
+
   while (selectedDev === undefined && retry > 0) {
     await delay(500);
     deviceList = await SerialPort.list();
-    selectedDev = deviceList.find((dev: PortInfo) => parseInt(dev.vendorId, 16) === 13807);
+    for (let i = 0; i < deviceList.length; i += 1) {
+      const result = Hardware.bootloader.findIndex(
+        (hw: any) =>
+          parseInt(deviceList[i].vendorId, 16) === hw.usb.vendorId && parseInt(deviceList[i].productId, 16) === hw.usb.productId,
+      );
+      log.info("hardware check for bootloaders: ", result);
+      if (result >= 0) {
+        selectedDev = deviceList[i];
+        break;
+      }
+    }
     retry -= 1;
   }
-  log.info("Found this device:", deviceList, selectedDev);
+  log.info("SerialConnection Found this device:", selectedDev);
 
-  const serialport = new SerialPort(selectedDev.path, {
+  const serialport = new SerialPort({
+    path: selectedDev.path,
     baudRate: 115200,
     autoOpen: true,
     endOnClose: true,
@@ -83,7 +97,12 @@ export const serialConnection = async () => {
   return serialport;
 };
 
-export async function rawCommand(cmd: string | Buffer, serialPort: typeof SerialPort, ...args: unknown[]): Promise<any> {
+export async function rawCommand(
+  cmd: string | Buffer,
+  serialPort: typeof SerialPort,
+  timeout: number,
+  ...args: unknown[]
+): Promise<any> {
   const req = async (c: string | Buffer, ...args2: unknown[]) => {
     if (args2) log.info(args2);
     if (!serialPort) throw new Error("Device not connected!");
@@ -95,7 +114,7 @@ export async function rawCommand(cmd: string | Buffer, serialPort: typeof Serial
   return new Promise((resolve, reject) => {
     const timer = setTimeout(() => {
       reject(new Error("Communication timeout"));
-    }, 8000);
+    }, timeout);
     req(cmd, ...args).then(data => {
       clearTimeout(timer);
       resolve(data);

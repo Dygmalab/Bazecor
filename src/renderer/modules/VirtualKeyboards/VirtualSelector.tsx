@@ -12,7 +12,7 @@ import { Button } from "@Renderer/components/atoms/Button";
 import Heading from "@Renderer/components/atoms/Heading";
 import { i18n } from "@Renderer/i18n";
 
-import { VirtualType } from "@Renderer/types/devices";
+import { VirtualType } from "@Renderer/types/virtual";
 import { BackupType } from "@Renderer/types/backups";
 
 import Hardware from "../../../api/hardware";

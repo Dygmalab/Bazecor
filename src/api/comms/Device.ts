@@ -1,8 +1,8 @@
-/* eslint-disable no-console */
 import { SerialPort } from "serialport";
-import { DeviceClass, DeviceType, VirtualType } from "@Renderer/types/devices";
+import { DeviceClass, DeviceType } from "@Renderer/types/devices";
 import log from "electron-log/renderer";
 import { DygmaDeviceType } from "@Renderer/types/dygmaDefs";
+import { VirtualType } from "@Renderer/types/virtual";
 import HID from "../hid/hid";
 import DeviceMap from "./deviceMap";
 import { ExtHIDInterface } from "./types";
@@ -16,7 +16,6 @@ export type State = {
 };
 
 class Device implements DeviceClass {
-  [x: string]: any;
   type: string;
   path: string;
   manufacturer: string;
@@ -36,7 +35,7 @@ class Device implements DeviceClass {
   isSending: boolean;
   memoryMap: DeviceMap;
   fileData: VirtualType;
-  currentDevice: any;
+  currentDevice: Device;
 
   constructor(parameters: DeviceType | HID | VirtualType, type: string) {
     // constructor for Device
@@ -116,7 +115,6 @@ class Device implements DeviceClass {
     this.port = serialport;
     this.type = "serial";
     this.isClosed = false;
-    serialport.pipe(new DelimiterParser({ delimiter: "\r\n" }));
     // Port is loaded, creating message handler
     const parser = this.port.pipe(new DelimiterParser({ delimiter: "\r\n" }));
     parser.on("data", (data: Buffer) => {
@@ -137,11 +135,13 @@ class Device implements DeviceClass {
         this.result += `\r\n${utfData}`;
       }
     });
-    const kbCommands = await Device.help(this);
-    log.info("these are the commands", kbCommands);
-    this.commands = {
-      help: kbCommands,
-    };
+    if (!this.device.bootloader) {
+      const kbCommands = await Device.help(this);
+      log.info("these are the commands", kbCommands);
+      this.commands = {
+        help: kbCommands,
+      };
+    }
   }
 
   async addHID() {
@@ -168,7 +168,7 @@ class Device implements DeviceClass {
     log.info("device.request:", command, ...args);
     return new Promise<string>((resolve, reject) => {
       const timer = setTimeout(() => {
-        reject(new Error("Communication timeout"));
+        reject(new Error(`Communication timeout of '${command}' command`));
       }, this.timeout);
       this.serialRequest(command, ...args)
         .then((data: string) => {
@@ -176,8 +176,8 @@ class Device implements DeviceClass {
           resolve(data as string);
         })
         .catch((err: Error) => {
-          log.info("Error sending request from focus", err);
-          reject(new Error("Error sending request from focus"));
+          log.info("Error sending request", err);
+          reject(new Error("Error sending request"));
         });
     });
   }

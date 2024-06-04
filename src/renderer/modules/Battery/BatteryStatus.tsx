@@ -167,13 +167,6 @@ const BatteryStatus = ({ disable }: BatteryStatusProps) => {
       setsRight(rightStatus?.includes("0x") ? 255 : parseInt(rightStatus, 10));
       setIsSavingMode(parseInt(savingMode, 10) > 0);
       setLoading(false);
-
-      // Logs to console
-      // console.log("L Status internal: ", sLeft);
-      // console.log("L Status focus: ", leftStatus);
-      // console.log("L Level internal: ", bLeft);
-      // console.log("R Status: ", sRight);
-      // console.log("R Status focus: ", rightStatus);
     }
   }, [disable, state.currentDevice]);
 

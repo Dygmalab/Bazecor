@@ -1,7 +1,7 @@
 import path from "path";
 import HtmlWebpackPlugin from "html-webpack-plugin";
 
-/* We are basically telling webpack to take index.js from entry. Then check for all file extensions in resolve. 
+/* We are basically telling webpack to take index.js from entry. Then check for all file extensions in resolve.
 After that apply all the rules in module.rules and produce the output and place it in main.js in the public folder. */
 
 // this is for future, is not meant to be used!!! also it is for development mode
@@ -32,6 +32,7 @@ export default {
     alias: {
       Assets: path.resolve(__dirname, "src", "static"),
       Renderer: path.resolve(__dirname, "src", "renderer"),
+      Types: path.resolve(__dirname, "src", "renderer", "types"),
     },
   },
   module: {

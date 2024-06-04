@@ -11,6 +11,7 @@ import mainConfig from "./webpack.main.config";
 const packagerConfig: ForgePackagerOptions = {
   appBundleId: "com.dygmalab.bazecor",
   darwinDarkModeSupport: true,
+  asar: false,
   icon: "./build/logo",
   name: "Bazecor",
   osxUniversal: {
@@ -88,9 +89,9 @@ const config: ForgeConfig = {
       const packageJson = JSON.parse(fs.readFileSync(path.resolve(buildPath, "package.json")).toString());
 
       packageJson.dependencies = {
-        serialport: "^10.0.0",
+        serialport: "^12.0.0",
         usb: "^2.9.0",
-        "uiohook-napi": "^1.5.2",
+        "uiohook-napi": "^1.5.4",
       };
 
       fs.writeFileSync(path.resolve(buildPath, "package.json"), JSON.stringify(packageJson));
@@ -101,9 +102,8 @@ const config: ForgeConfig = {
       });
 
       const prebuilds = globSync(`${buildPath}/**/prebuilds/*`);
-      const matchString = new RegExp(`prebuilds/${platform}`);
       prebuilds.forEach(function (path) {
-        if (!path.match(matchString)) {
+        if (!path.includes(platform)) {
           fs.rmSync(path, { recursive: true });
         }
       });

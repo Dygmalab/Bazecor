@@ -75,7 +75,11 @@ export default class SideFlaser {
       receivedData.push(data.toString("utf-8"));
     });
     log.info("Upgrading the neuron...");
-    await serialport.write("upgrade.neuron\n");
+    try {
+      await serialport.write("upgrade.neuron\n");
+    } catch (error) {
+      log.info("answer after shutdown not received");
+    }
     await delay(10);
     await serialport.close((err: string) => {
       if (err) log.warn("device already disconnected!! no need to close serialport");
@@ -84,6 +88,7 @@ export default class SideFlaser {
   }
 
   async flashSide(
+    path: string,
     side: string,
     stateUpd: (arg0: string, arg1: number) => void,
     wiredOrWireless: string,
@@ -126,15 +131,20 @@ export default class SideFlaser {
         }
       }
 
+      let selectedDev: PortInfo;
       let deviceList: PortInfo[] = await SerialPort.list();
       let retry = 5;
-      let selectedDev = deviceList.find((dev: PortInfo) => parseInt(dev.vendorId as string, 16) === 0x35ef);
-      if (selectedDev === undefined) {
-        while (selectedDev === undefined && retry > 0) {
-          await delay(500);
-          deviceList = await SerialPort.SerialPort.list();
-          selectedDev = deviceList.find((dev: PortInfo) => parseInt(dev.vendorId as string, 16) === 0x35ef);
-          retry -= 1;
+      if (path !== undefined && path !== "") {
+        selectedDev = deviceList.find((dev: PortInfo) => dev.path === path);
+      } else {
+        selectedDev = deviceList.find((dev: PortInfo) => parseInt(dev.vendorId as string, 16) === 0x35ef);
+        if (selectedDev === undefined) {
+          while (selectedDev === undefined && retry > 0) {
+            await delay(500);
+            deviceList = await SerialPort.SerialPort.list();
+            selectedDev = deviceList.find((dev: PortInfo) => parseInt(dev.vendorId as string, 16) === 0x35ef);
+            retry -= 1;
+          }
         }
       }
       if (selectedDev === undefined) throw new Error("Flashable device not found");

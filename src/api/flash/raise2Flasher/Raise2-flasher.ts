@@ -23,7 +23,8 @@ import log from "electron-log/renderer";
 import { num2hexstr } from "../num2hexstr";
 import { serialConnection, rawCommand, noWaitCommand } from "../serialConnection";
 import { InfoType, SealType, HexType } from "../types";
-import { ihexDecode } from "../ihexDecode";
+import ihexDecode from "../ihexDecode";
+import SealWithCRC from "../sealWithCRC";
 
 const PACKET_SIZE = 4096;
 
@@ -32,34 +33,6 @@ const TYPE_ESA = 0x02;
 const TYPE_ELA = 0x04;
 
 let serialPort;
-
-function SealWithCRC(seal: SealType) {
-  // calculate CRC for the seal
-  const data = new Buffer(28);
-  const vals = [
-    `0b${new Array(Math.clz32(seal.bldr_seal_header_t.version)).fill(0).join("") + seal.bldr_seal_header_t.version.toString(2)}`,
-    `0b${new Array(Math.clz32(seal.bldr_seal_header_t.size)).fill(0).join("") + seal.bldr_seal_header_t.size.toString(2)}`,
-    `0b${new Array(Math.clz32(seal.bldr_seal_header_t.crc) - 1).fill(0).join("") + seal.bldr_seal_header_t.crc.toString(2)}`,
-    `0b${new Array(Math.clz32(seal.program_start)).fill(0).join("") + seal.program_start.toString(2)}`,
-    `0b${new Array(Math.clz32(seal.program_size)).fill(0).join("") + seal.program_size.toString(2)}`,
-    `0b${new Array(Math.clz32(seal.program_crc)).fill(0).join("") + seal.program_crc.toString(2)}`,
-    `0b${new Array(Math.clz32(seal.program_version)).fill(0).join("") + seal.program_version.toString(2)}`,
-  ];
-  log.info("checking vals: ", vals);
-  for (let i = 0; i < vals.length; i += 1) {
-    // @ts-ignore
-    data.writeUInt32LE(vals[i], i * 4);
-  }
-  const sealCrc = crc32("CRC-32", data);
-
-  // send the Seal with the calculated CRC in place
-  const bitSeal = `0b${new Array(Math.clz32(sealCrc)).fill(0).join("") + sealCrc.toString(2)}`;
-  // @ts-ignore
-  data.writeUInt32LE(bitSeal, 8);
-
-  log.info("calculated CRC: ", sealCrc, bitSeal, data);
-  return data;
-}
 
 /**
  * Object NRf52833 with flash method.
@@ -81,6 +54,7 @@ const Raise2Flash = {
     lines: string[],
     stateUpdate: (arg0: string, arg1: number) => void,
     finished: (err: Error, result: unknown) => void,
+    erasePairings: boolean,
   ) => {
     // let fileData = fs.readFileSync(firmware, { encoding: "utf8" });
     // fileData = fileData.replace(/(?:\r\n|\r|\n)/g, "");
@@ -138,7 +112,7 @@ const Raise2Flash = {
     serialPort = await serialConnection();
 
     // GET INFO from device
-    const info: InfoType = await rawCommand("I#", serialPort);
+    const info: InfoType = await rawCommand("I#", serialPort, 1000);
     log.info("Result of sending I#: ", info);
 
     const sealData: SealType = {
@@ -157,13 +131,13 @@ const Raise2Flash = {
 
     // SEAL to device
     log.info("sending SEAL");
-    let ans: Buffer = await rawCommand(`S${num2hexstr(28, 8)}#`, serialPort);
+    let ans: Buffer = await rawCommand(`S${num2hexstr(28, 8)}#`, serialPort, 1000);
     if (ans[0] !== 65) {
       log.info("answer to Seal size: ", String.fromCharCode.apply(null, ans));
       log.info(`RAW Command: S${num2hexstr(28, 8)}#`);
       throw Error("error when sending SEAL size");
     }
-    ans = await rawCommand(newSeal, serialPort);
+    ans = await rawCommand(newSeal, serialPort, 1000);
     if (ans[0] !== 65) {
       log.info("answer to Seal data: ", String.fromCharCode.apply(null, ans));
       log.info(`RAW Command: ${newSeal}`);
@@ -172,7 +146,15 @@ const Raise2Flash = {
 
     // ERASE device
     log.info("Erasing...");
-    ans = await rawCommand(`E${num2hexstr(dataObjects[0].address, 8)}#`, serialPort);
+    if (erasePairings) {
+      ans = await rawCommand(`E${num2hexstr(dataObjects[0].address, 8)}#`, serialPort, 20000);
+    } else {
+      ans = await rawCommand(
+        `E${num2hexstr(dataObjects[0].address, 8)},${num2hexstr(0x00072000 - dataObjects[0].address, 8)}#`,
+        serialPort,
+        20000,
+      );
+    }
     if (ans[0] !== 65) {
       log.info("answer to Erase command: ", String.fromCharCode.apply(null, ans));
       log.info(`RAW Command: ${`E${num2hexstr(dataObjects[0].address, 8)}#`}`);
@@ -214,13 +196,13 @@ const Raise2Flash = {
       }
 
       // tell the NRf52833 the size of data being sent.
-      ans = await rawCommand(`U${num2hexstr(bufferSize, 8)}#`, serialPort);
+      ans = await rawCommand(`U${num2hexstr(bufferSize, 8)}#`, serialPort, 1000);
 
       // write our data.
       noWaitCommand(buffer, serialPort);
 
       // copy N bytes to memory location Y -> W function.
-      ans = await rawCommand(`W${num2hexstr(address, 8)},${num2hexstr(bufferSize, 8)}#`, serialPort);
+      ans = await rawCommand(`W${num2hexstr(address, 8)},${num2hexstr(bufferSize, 8)}#`, serialPort, 1000);
 
       // Update External State
       stateUpdate("neuron", (state / stateT) * 100);
@@ -230,11 +212,11 @@ const Raise2Flash = {
     }
 
     log.info("Validating...");
-    ans = await rawCommand("V#", serialPort);
+    ans = await rawCommand("V#", serialPort, 1000);
     if (ans[0] !== 65) throw Error("error when Validating");
 
     // START APPLICATION
-    ans = await rawCommand("F#", serialPort);
+    ans = await rawCommand("F#", serialPort, 1000);
     if (ans[0] !== 65) log.warn("error when disconnecting");
 
     // DISCONNECT

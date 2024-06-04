@@ -1,3 +1,4 @@
+/* eslint-disable no-bitwise */
 /* eslint-disable no-buffer-constructor */
 /* eslint-disable no-await-in-loop */
 /* bazecor-flash-raise -- Dygma Raise flash helper for Bazecor
@@ -25,19 +26,12 @@ import ihexDecode from "../ihexDecode";
 
 let serialPort;
 
-const NRf52833 = {
+export const SAMDFlasher = {
   flash: async (
     lines: string[],
     stateUpdate: (arg0: string, arg1: number) => void,
-    finished: (err: Error, result: unknown) => void,
-    erasePairings: boolean,
+    finished: (state: boolean, result: unknown) => void,
   ) => {
-    // let fileData = fs.readFileSync(firmware, { encoding: "utf8" });
-    // fileData = fileData.replace(/(?:\r\n|\r|\n)/g, "");
-
-    // var lines = fileData.split(":");
-    // lines.splice(0, 1);
-
     const dataObjects: HexType[] = [];
     let total = 0;
     let segment = 0;
@@ -88,29 +82,22 @@ const NRf52833 = {
     serialPort = await serialConnection();
     let ans: Buffer;
 
+    // CLEAR line
+    ans = await rawCommand("N#", serialPort, 1000);
+
     // ERASE device
     log.info("Erasing...");
-    if (erasePairings) {
-      ans = await rawCommand(`E${num2hexstr(dataObjects[0].address, 8)}#`, serialPort, 20000);
-    } else {
-      ans = await rawCommand(
-        `E${num2hexstr(dataObjects[0].address, 8)},${num2hexstr(0x00072000 - dataObjects[0].address, 8)}#`,
-        serialPort,
-        20000,
-      );
+    ans = await rawCommand("X00002000#", serialPort, 20000);
+    log.info("Erased", ans);
+
+    if (address < 2000) {
+      finished(true, `You're attempting to overwrite the bootloader... (0x${num2hexstr(dataObjects[0].address, 8)})`);
+      return;
     }
-    // if (ans[0] !== 65) {
-    //   log.info("answer to Erase command: ", String.fromCharCode.apply(null, ans));
-    //   log.info(
-    //     `RAW Command: ${`E${num2hexstr(dataObjects[0].address, 8)},${num2hexstr(0x00072000 - dataObjects[0].address, 8)}#`}`,
-    //   );
-    //   throw Error("error when Erasing");
-    // }
 
     let state = 1;
     const stateT = totalSaved / 4096;
 
-    log.info("Starting flashing procedure", totalSaved, stateT);
     while (total > 0) {
       let bufferSize = total < PACKET_SIZE ? total : PACKET_SIZE;
 
@@ -129,23 +116,37 @@ const NRf52833 = {
           break;
         }
 
-        // log.info(buffer, bufferTotal, currentHex);
-        for (let i = 0; i < currentHex.data.length; i += 1) {
-          buffer.writeUInt8(currentHex.data[i], bufferTotal + i);
+        // check for Extended linear addressing...
+        if (currentHex.type === TYPE_ELA) {
+          if (bufferTotal > 0) {
+            // break early, we're going to move to a different memory vector.
+            bufferSize = bufferTotal;
+            const t = buffer.slice(0, bufferTotal);
+            buffer = t;
+            break;
+          }
+
+          // set the address if applicable...
+          address = currentHex.address << 16;
         }
+
+        new Uint8Array(buffer, bufferTotal, currentHex.len).set(currentHex.data);
 
         hexCount += 1;
         bufferTotal += currentHex.len;
       }
 
-      // tell the NRf52833 the size of data being sent.
-      ans = await rawCommand(`U${num2hexstr(bufferSize, 8)}#`, serialPort, 1000);
+      // Tell the arduino we are writing at memory 20005000, for N bytes.
+      noWaitCommand(`S20005000,${num2hexstr(bufferSize, 8)}#`, serialPort);
 
-      // write our data.
+      // Write our data.
       noWaitCommand(buffer, serialPort);
 
-      // copy N bytes to memory location Y -> W function.
-      ans = await rawCommand(`W${num2hexstr(address, 8)},${num2hexstr(bufferSize, 8)}#`, serialPort, 1000);
+      // Set our read pointer
+      ans = await rawCommand("Y20005000,0#", serialPort, 1000);
+
+      // Copy N bytes to memory location Y.
+      ans = await rawCommand(`Y${num2hexstr(address, 8)},${num2hexstr(bufferSize, 8)}#`, serialPort, 1000);
 
       // Update External State
       stateUpdate("neuron", (state / stateT) * 100);
@@ -154,20 +155,11 @@ const NRf52833 = {
       address += bufferSize;
     }
 
-    // log.info("Validating...");
-    // ans = await rawCommand("V#", serialPort);
-    // if (ans[0] !== 65) throw Error("error when Validating");
+    // CLEANUP
+    noWaitCommand("WE000ED0C,05FA0004#", serialPort);
 
+    // DISCONNECT
     try {
-      // START APPLICATION
-      noWaitCommand("S#", serialPort);
-      if (ans[0] !== 65) log.warn("warning when disconnecting");
-    } catch (error) {
-      log.warn(error);
-    }
-
-    try {
-      // DISCONNECT
       finished(undefined, true);
       serialPort.close();
     } catch (error) {
@@ -175,5 +167,3 @@ const NRf52833 = {
     }
   },
 };
-
-export default NRf52833;
