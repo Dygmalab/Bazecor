@@ -63,7 +63,7 @@ const FirmwareSelection = setup({
         onDone: {
           target: "LoadGithubFW",
           actions: [
-            assign({ device: ({ event }) => event.output.device }),
+            assign(({ event }) => event.output),
             ({ context }) => {
               log.info("Success: ", context.device);
             },

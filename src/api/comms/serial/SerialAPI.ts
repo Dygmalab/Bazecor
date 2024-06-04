@@ -113,7 +113,7 @@ const find = async () => {
         if (
           parseInt(`0x${device.productId}`, 16) === Hdevice.usb.productId &&
           parseInt(`0x${device.vendorId}`, 16) === Hdevice.usb.vendorId &&
-          (Hdevice.info.keyboardType === "Defy" || Hdevice.info.keyboardType === supported.layout)
+          (Hdevice.info.product === "Defy" || Hdevice.info.keyboardType === supported.layout)
         ) {
           const newPort = { ...device };
           newPort.device = Hdevice;

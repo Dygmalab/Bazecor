@@ -242,16 +242,20 @@ function FirmwareUpdatePanel(props: FirmwareUpdatePanelProps) {
             </div>
             <div className="firmware-sidebar borderRightBottomRadius">
               <div className="buttonActions">
-                <RegularButton
-                  styles={state.context.isUpdated ? "flashingbutton outline transp-bg" : "flashingbutton nooutlined primary"}
-                  buttonText={flashButtonText}
-                  icoSVG={state.context.stateblock === 4 ? <IconLoader /> : null}
-                  icoPosition={state.context.stateblock === 4 ? "right" : null}
-                  disabled={state.context.stateblock === 4}
-                  onClick={() => {
-                    send({ type: "next-event" });
-                  }}
-                />
+                {state.context.firmwareList.length > 0 ? (
+                  <RegularButton
+                    styles={state.context.isUpdated ? "flashingbutton outline transp-bg" : "flashingbutton nooutlined primary"}
+                    buttonText={flashButtonText}
+                    icoSVG={state.context.stateblock === 4 ? <IconLoader /> : null}
+                    icoPosition={state.context.stateblock === 4 ? "right" : null}
+                    disabled={state.context.stateblock === 4}
+                    onClick={() => {
+                      send({ type: "next-event" });
+                    }}
+                  />
+                ) : (
+                  ""
+                )}
 
                 <div className="dropdownCustomFirmware">
                   {/* <FirmwareAdvancedOptions
