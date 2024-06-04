@@ -107,7 +107,7 @@ const find = async () => {
 
   log.info("SerialPort devices find:", serialDevices);
   for (const device of serialDevices) {
-    if (device.vendorId === "35ef" || device.vendorId === "1209") {
+    if (device.vendorId.toLowerCase() === "35ef" || device.vendorId.toLowerCase() === "1209") {
       const supported = await checkProperties(device.path);
       for (const Hdevice of Hardware.serial) {
         if (
