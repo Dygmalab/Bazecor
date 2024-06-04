@@ -1090,7 +1090,7 @@
   resolved "https://registry.yarnpkg.com/@discoveryjs/json-ext/-/json-ext-0.5.7.tgz#1d572bfbbe14b7704e0ba0f39b74815b84870d70"
   integrity sha512-dBVuXR082gk3jsFp7Rd/JI4kytwGHecnCoTtXFb7DB6CNHp4rg5k1bhg0nWdLGLnOV71lmDzGQaLMy8iPLY0pw==
 
-"@electron-forge/cli@^7.3.0":
+"@electron-forge/cli@^7.4.0":
   version "7.4.0"
   resolved "https://registry.yarnpkg.com/@electron-forge/cli/-/cli-7.4.0.tgz#db16f4bc678d1f6cec8890cdf86041e9c8336350"
   integrity sha512-a+zZv3ja/IxkJzNyx4sOHSZv6DPV85S0PEVF6pcRjUpbDL5r+DxjRFsNc0Nq4UIWyFm1nw7RWoPdd9uDst4Tvg==
@@ -1171,7 +1171,7 @@
     fs-extra "^10.0.0"
     which "^2.0.2"
 
-"@electron-forge/maker-dmg@^7.3.0":
+"@electron-forge/maker-dmg@^7.4.0":
   version "7.4.0"
   resolved "https://registry.yarnpkg.com/@electron-forge/maker-dmg/-/maker-dmg-7.4.0.tgz#d951b5dffec757c31a23416a60d61787a56ddce9"
   integrity sha512-xRCMNtnpvQNwrDYvwbVFegnErnIMpHGZANrjwushlH9+Fsu60DFvf5s3AVkgsYdQTqlY7wYRG1mziYZmRlPAIw==
@@ -1182,7 +1182,7 @@
   optionalDependencies:
     electron-installer-dmg "^4.0.0"
 
-"@electron-forge/maker-rpm@^7.3.0":
+"@electron-forge/maker-rpm@^7.4.0":
   version "7.4.0"
   resolved "https://registry.yarnpkg.com/@electron-forge/maker-rpm/-/maker-rpm-7.4.0.tgz#135b7c4b621048ce565b3c92a7577915b43ab371"
   integrity sha512-N64Yh/K/91GzIk28T1jKsCGgYaquDuhXcEJW+TkVyP5tPZ9aTz9SjXLBxAg8WhcroArAZEsVyPOFKthmFzAUuA==
@@ -1192,7 +1192,7 @@
   optionalDependencies:
     electron-installer-redhat "^3.2.0"
 
-"@electron-forge/maker-squirrel@^7.3.0":
+"@electron-forge/maker-squirrel@^7.4.0":
   version "7.4.0"
   resolved "https://registry.yarnpkg.com/@electron-forge/maker-squirrel/-/maker-squirrel-7.4.0.tgz#982f3a7ad9d45258de8f78133eefdd79c90f870e"
   integrity sha512-mCQyufnSNfjffiKho59ZqVg4W601zGOl6h01OyfDwjOU/G4iQtpnnDEOXGe26q7OVT5ORb1WDnfyGgBeJ6Ge7g==
@@ -1210,7 +1210,15 @@
   dependencies:
     "@electron-forge/shared-types" "7.4.0"
 
-"@electron-forge/plugin-webpack@^7.3.0":
+"@electron-forge/plugin-fuses@^7.4.0":
+  version "7.4.0"
+  resolved "https://registry.yarnpkg.com/@electron-forge/plugin-fuses/-/plugin-fuses-7.4.0.tgz#3a3b78bf3c5d2b2d445825b05bce145d116df792"
+  integrity sha512-LKcyIaO0sUkzZdOB1PySjG1R9KAl5Vi453ZQcambBI7RpZtPKozluNd0zlXey1cf7ycTwhzvmrI6ss3LHQyjvw==
+  dependencies:
+    "@electron-forge/plugin-base" "7.4.0"
+    "@electron-forge/shared-types" "7.4.0"
+
+"@electron-forge/plugin-webpack@^7.4.0":
   version "7.4.0"
   resolved "https://registry.yarnpkg.com/@electron-forge/plugin-webpack/-/plugin-webpack-7.4.0.tgz#57e7dac928c1ff4b620b8367092cb7185858ba85"
   integrity sha512-ziMSsLmN84Ki55jPOg2ei2pmqFzcB4xaX/lXiirGRj+o70M/EL6YQSuLNLRjdS/242oO8uvlmdp4uPEmYZmiCw==
@@ -1319,6 +1327,15 @@
     commander "^5.0.0"
     glob "^7.1.6"
     minimatch "^3.0.4"
+
+"@electron/fuses@^1.8.0":
+  version "1.8.0"
+  resolved "https://registry.yarnpkg.com/@electron/fuses/-/fuses-1.8.0.tgz#ad34d3cc4703b1258b83f6989917052cfc1490a0"
+  integrity sha512-zx0EIq78WlY/lBb1uXlziZmDZI4ubcCXIMJ4uGjXzZW0nS19TjSPeXPAjzzTmKQlJUZm0SbmZhPKP7tuQ1SsEw==
+  dependencies:
+    chalk "^4.1.1"
+    fs-extra "^9.0.1"
+    minimist "^1.2.5"
 
 "@electron/get@^2.0.0":
   version "2.0.3"

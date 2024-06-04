@@ -184,8 +184,6 @@ height: 100vh;
     }
   }
 }
-
-
 `;
 
 const SelectKeyboard = (props: SelectKeyboardProps) => {
