@@ -137,13 +137,6 @@ const AdvancedSettings = ({
                 ))}
               </SelectContent>
             </Select>
-            {/* <Select
-              id="selectDefaultLayer"
-              onSelect={selectDefaultLayer}
-              value={defaultLayer}
-              listElements={layersNames}
-              disabled={!connected}
-            /> */}
           </form>
 
           <div className="flex items-center w-full justify-between py-2 mt-3 border-t-[1px] border-gray-50 dark:border-gray-700">
