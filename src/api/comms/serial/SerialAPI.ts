@@ -1,9 +1,7 @@
 /* eslint-disable no-await-in-loop */
 /* eslint-disable no-eval */
-import fs from "fs";
 import log from "electron-log/renderer";
 import type { SerialPort as SP } from "serialport";
-import { AutoDetectTypes } from "@serialport/bindings-cpp";
 import Hardware from "../../hardware";
 import { DeviceType } from "../../../renderer/types/devices";
 
@@ -48,7 +46,7 @@ const checkProperties = async (path: string) => {
   let callbacks: any[] = [];
   let result = "";
 
-  function rawCommand(cmd: string, serialPort: SP<AutoDetectTypes>): Promise<string> {
+  function rawCommand(cmd: string, serialPort: SP): Promise<string> {
     const req = async (c: string) => {
       if (!serialPort) throw new Error("Device not connected!");
       return new Promise<string>(resolve => {
@@ -109,26 +107,28 @@ const find = async () => {
 
   log.info("SerialPort devices find:", serialDevices);
   for (const device of serialDevices) {
-    const supported = await checkProperties(device.path);
-    for (const Hdevice of Hardware.serial) {
-      if (
-        parseInt(`0x${device.productId}`, 16) === Hdevice.usb.productId &&
-        parseInt(`0x${device.vendorId}`, 16) === Hdevice.usb.vendorId &&
-        (Hdevice.info.keyboardType === "Defy" || Hdevice.info.keyboardType === supported.layout)
-      ) {
-        const newPort = { ...device };
-        newPort.device = Hdevice;
-        foundDevices.push(newPort);
+    if (device.vendorId === "35ef" || device.vendorId === "1209") {
+      const supported = await checkProperties(device.path);
+      for (const Hdevice of Hardware.serial) {
+        if (
+          parseInt(`0x${device.productId}`, 16) === Hdevice.usb.productId &&
+          parseInt(`0x${device.vendorId}`, 16) === Hdevice.usb.vendorId &&
+          (Hdevice.info.keyboardType === "Defy" || Hdevice.info.keyboardType === supported.layout)
+        ) {
+          const newPort = { ...device };
+          newPort.device = Hdevice;
+          foundDevices.push(newPort);
+        }
       }
-    }
-    for (const Hdevice of Hardware.bootloader) {
-      if (
-        parseInt(`0x${device.productId}`, 16) === Hdevice.usb.productId &&
-        parseInt(`0x${device.vendorId}`, 16) === Hdevice.usb.vendorId
-      ) {
-        const newPort = { ...device };
-        newPort.device = Hdevice;
-        foundDevices.push(newPort);
+      for (const Hdevice of Hardware.bootloader) {
+        if (
+          parseInt(`0x${device.productId}`, 16) === Hdevice.usb.productId &&
+          parseInt(`0x${device.vendorId}`, 16) === Hdevice.usb.vendorId
+        ) {
+          const newPort = { ...device };
+          newPort.device = Hdevice;
+          foundDevices.push(newPort);
+        }
       }
     }
   }
