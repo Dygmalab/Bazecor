@@ -31,10 +31,12 @@ const buttonVariants = cva(
       },
       size: {
         default: "px-6 py-[14px] text-base",
+        xs: "px-4 py-[7px] text-3xxs",
         md: "px-6 py-[14px]",
         sm: "rounded-md px-3 py-2.5 text-sm",
         lg: "h-11 rounded-md px-8",
         icon: "h-10 w-10 aspect-square",
+        iconXS: "h-9 w-9 aspect-square",
       },
       iconDirection: {
         none: "",
@@ -58,6 +60,11 @@ const buttonVariants = cva(
       {
         variant: "config",
         size: "icon",
+        className: "p-[2px] aspect-square",
+      },
+      {
+        variant: "config",
+        size: "iconXS",
         className: "p-[2px] aspect-square",
       },
     ],

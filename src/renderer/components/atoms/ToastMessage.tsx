@@ -17,7 +17,7 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
 import React from "react";
-import ButtonConfig from "@Renderer/component/Button/ButtonConfig";
+import { Button } from "@Renderer/components/atoms/Button";
 
 /**
  * This ToastMessage function returns a styled body of react-toastfy object
@@ -63,8 +63,12 @@ const ToastMessage: React.FC<ToasMessageProps> = ({
     </div>
     {onClickAction || onClickDismiss ? (
       <div className="toastFooter flex flex-nowrap justify-end pt-0 px-[32px] pb-[24px] ">
-        <ButtonConfig onClick={onClickDismiss} buttonText={clickDismissText} variation="link" size="sm" />
-        <ButtonConfig onClick={onClickAction} buttonText={clickActionText} size="sm" />
+        <Button variation="link" onClick={onClickDismiss} size="sm">
+          {clickDismissText}
+        </Button>
+        <Button variation="primary" onClick={onClickAction} size="sm">
+          {clickActionText}
+        </Button>
       </div>
     ) : (
       ""

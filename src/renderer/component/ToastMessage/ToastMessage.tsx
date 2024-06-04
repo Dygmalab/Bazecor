@@ -20,7 +20,7 @@ import React from "react";
 import Styled from "styled-components";
 import { ThemeProvider } from "react-bootstrap";
 import Dark from "@Renderer/theme/DarkTheme";
-import ButtonConfig from "@Renderer/component/Button/ButtonConfig";
+import { Button } from "@Renderer/components/atoms/Button";
 
 const Style = Styled.div`
 .toastBody {
@@ -107,8 +107,12 @@ const ToastMessage: React.FC<ToasMessageProps> = ({
       </div>
       {onClickAction || onClickDismiss ? (
         <div className="toastFooter">
-          <ButtonConfig onClick={onClickDismiss} buttonText={clickDismissText} variation="link" size="sm" />
-          <ButtonConfig onClick={onClickAction} buttonText={clickActionText} size="sm" />
+          <Button variation="link" onClick={onClickDismiss} size="sm">
+            {clickDismissText}
+          </Button>
+          <Button variation="primary" onClick={onClickAction} size="sm">
+            {clickActionText}
+          </Button>
         </div>
       ) : (
         ""

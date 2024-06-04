@@ -399,7 +399,7 @@ function KeyboardSettings(props: KeyboardSettingsProps) {
                               <IconInformation />
                             </TooltipTrigger>
                             <TooltipContent className="max-w-xs">
-                              <Heading headingLevel={5} renderAs="h5" className="text-gray-600 dark:text-gray-25 mb-3 leading-6">
+                              <Heading headingLevel={4} renderAs="h4" className="text-gray-600 dark:text-gray-25 mb-3 leading-6">
                                 {i18n.keyboardSettings.qukeys.holdTimeoutTip1}
                               </Heading>
                               <ul>
@@ -439,7 +439,7 @@ function KeyboardSettings(props: KeyboardSettingsProps) {
                               <IconInformation />
                             </TooltipTrigger>
                             <TooltipContent className="max-w-xs">
-                              <Heading headingLevel={5} renderAs="h5" className="text-gray-600 dark:text-gray-25 mb-3 leading-6">
+                              <Heading headingLevel={4} renderAs="h4" className="text-gray-600 dark:text-gray-25 mb-3 leading-6">
                                 {i18n.keyboardSettings.qukeys.minHoldTip1}
                               </Heading>
                               <ul>
@@ -478,7 +478,7 @@ function KeyboardSettings(props: KeyboardSettingsProps) {
                               <IconInformation />
                             </TooltipTrigger>
                             <TooltipContent className="max-w-xs">
-                              <Heading headingLevel={5} renderAs="h5" className="text-gray-600 dark:text-gray-25 mb-3 leading-6">
+                              <Heading headingLevel={4} renderAs="h4" className="text-gray-600 dark:text-gray-25 mb-3 leading-6">
                                 {i18n.keyboardSettings.qukeys.minPriorTip1}
                               </Heading>
                               <ul>
@@ -517,7 +517,7 @@ function KeyboardSettings(props: KeyboardSettingsProps) {
                               <IconInformation />
                             </TooltipTrigger>
                             <TooltipContent className="max-w-xs">
-                              <Heading headingLevel={5} renderAs="h5" className="text-gray-600 dark:text-gray-25 mb-3 leading-6">
+                              <Heading headingLevel={4} renderAs="h4" className="text-gray-600 dark:text-gray-25 mb-3 leading-6">
                                 {i18n.keyboardSettings.superkeys.overlapTip1}
                               </Heading>
                               <ul>
@@ -557,7 +557,7 @@ function KeyboardSettings(props: KeyboardSettingsProps) {
                               <IconInformation />
                             </TooltipTrigger>
                             <TooltipContent className="max-w-xs">
-                              <Heading headingLevel={5} renderAs="h5" className="text-gray-600 dark:text-gray-25 mb-3 leading-6">
+                              <Heading headingLevel={4} renderAs="h4" className="text-gray-600 dark:text-gray-25 mb-3 leading-6">
                                 {i18n.keyboardSettings.superkeys.timeoutTip1}
                               </Heading>
                               <ul>
@@ -597,7 +597,7 @@ function KeyboardSettings(props: KeyboardSettingsProps) {
                               <IconInformation />
                             </TooltipTrigger>
                             <TooltipContent className="max-w-xs">
-                              <Heading headingLevel={5} renderAs="h5" className="text-gray-600 dark:text-gray-25 mb-3 leading-6">
+                              <Heading headingLevel={4} renderAs="h4" className="text-gray-600 dark:text-gray-25 mb-3 leading-6">
                                 {i18n.keyboardSettings.superkeys.chordingTip1}
                               </Heading>
                               <ul>
