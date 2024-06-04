@@ -176,8 +176,8 @@ class Device implements DeviceClass {
           resolve(data as string);
         })
         .catch((err: Error) => {
-          log.info("Error sending request from focus", err);
-          reject(new Error("Error sending request from focus"));
+          log.info("Error sending request", err);
+          reject(new Error("Error sending request"));
         });
     });
   }

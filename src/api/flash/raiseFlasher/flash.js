@@ -18,7 +18,6 @@ import { ipcRenderer } from "electron";
 import fs from "fs";
 import path from "path";
 import log from "electron-log/renderer";
-import Focus from "../../focus";
 import Hardware from "../../hardware";
 import { delay } from "../delay";
 import { SAMDFlasher } from "./SAMD-flasher";
@@ -66,33 +65,33 @@ export class FlashRaise {
    * @returns {boolean} if device found - true, if no - false
    */
   async foundDevices(hardware, message, bootloader) {
-    const focus = Focus.getInstance();
+    // const focus = Focus.getInstance();
     let isFindDevice = false;
     log.info("looking at device", this.device);
-    await focus.find(...hardware).then(devices => {
-      for (const device of devices) {
-        log.info(
-          "DATA CHECKER: ",
-          device,
-          this.device,
-          device.device.bootloader,
-          bootloader,
-          this.device.info.keyboardType,
-          device.device.info.keyboardType,
-        );
-        if (
-          bootloader
-            ? device.device.bootloader != undefined &&
-              device.device.bootloader == bootloader &&
-              this.device.info.keyboardType == device.device.info.keyboardType
-            : this.device.info.keyboardType == device.device.info.keyboardType
-        ) {
-          log.info(message);
-          this.currentPort = { ...device };
-          isFindDevice = true;
-        }
-      }
-    });
+    // await focus.find(...hardware).then(devices => {
+    //   for (const device of devices) {
+    //     log.info(
+    //       "DATA CHECKER: ",
+    //       device,
+    //       this.device,
+    //       device.device.bootloader,
+    //       bootloader,
+    //       this.device.info.keyboardType,
+    //       device.device.info.keyboardType,
+    //     );
+    //     if (
+    //       bootloader
+    //         ? device.device.bootloader != undefined &&
+    //           device.device.bootloader == bootloader &&
+    //           this.device.info.keyboardType == device.device.info.keyboardType
+    //         : this.device.info.keyboardType == device.device.info.keyboardType
+    //     ) {
+    //       log.info(message);
+    //       this.currentPort = { ...device };
+    //       isFindDevice = true;
+    //     }
+    //   }
+    // });
     return isFindDevice;
   }
 
@@ -100,7 +99,7 @@ export class FlashRaise {
    * Takes backup settings from keyboard and writes its in backupfile.
    */
   async backupSettings() {
-    const focus = Focus.getInstance();
+    // const focus = Focus.getInstance();
 
     const commands = [
       "hardware.keyscan",
@@ -137,18 +136,18 @@ export class FlashRaise {
     try {
       let errorFlag = false;
       const errorMessage = "Firmware update failed, because the settings could not be saved";
-      for (const command of commands) {
-        // Ignore the command if it's not supported
-        if (!focus.isCommandSupported(command)) {
-          continue;
-        }
+      // for (const command of commands) {
+      //   // Ignore the command if it's not supported
+      //   if (!focus.isCommandSupported(command)) {
+      //     continue;
+      //   }
 
-        const res = await focus.command(command);
-        this.backupFileData.backup[command] = typeof res === "string" ? res.trim() : res;
-        if (res === undefined || res === "") {
-          errorFlag = true;
-        }
-      }
+      //   const res = await focus.command(command);
+      //   this.backupFileData.backup[command] = typeof res === "string" ? res.trim() : res;
+      //   if (res === undefined || res === "") {
+      //     errorFlag = true;
+      //   }
+      // }
       if (errorFlag) throw new Error(errorMessage);
     } catch (e) {
       this.saveBackupFile();
@@ -253,23 +252,23 @@ export class FlashRaise {
    * @returns {promise}
    */
   async updateFirmware(filename, stateUpdate) {
-    const focus = Focus.getInstance();
+    // const focus = Focus.getInstance();
     log.info("Begin update firmware with arduino-flasher");
     // log.info(JSON.stringify(focus));
     return new Promise(async (resolve, reject) => {
       try {
-        if (focus.closed) await focus.open(this.currentPort.path, this.currentPort.device, null);
-        stateUpdate("neuron", 0);
-        await SAMDFlasher.flash(filename, stateUpdate, async (err, result) => {
-          if (err) throw new Error(`Flash error ${result}`);
-          else {
-            stateUpdate("neuron", 100);
-            log.info("End update firmware with arduino-flasher");
-            await delay(1500);
-            await this.detectKeyboard();
-            resolve();
-          }
-        });
+        // if (focus.closed) await focus.open(this.currentPort.path, this.currentPort.device, null);
+        // stateUpdate("neuron", 0);
+        // await SAMDFlasher.flash(filename, stateUpdate, async (err, result) => {
+        //   if (err) throw new Error(`Flash error ${result}`);
+        //   else {
+        //     stateUpdate("neuron", 100);
+        //     log.info("End update firmware with arduino-flasher");
+        //     await delay(1500);
+        //     await this.detectKeyboard();
+        //     resolve();
+        //   }
+        // });
       } catch (e) {
         reject(e);
       }
@@ -327,30 +326,30 @@ export class FlashRaise {
    */
   async restoreSettings(backup, stateUpdate) {
     stateUpdate("restore", 0);
-    let focus = Focus.getInstance();
+    // let focus = Focus.getInstance();
     const errorMessage = "Firmware update failed, because the settings could not be restored";
     log.info(backup);
-    if (backup === undefined || backup.length === 0) {
-      await focus.open(this.currentPort.path, this.currentPort.device.info, null);
-      return true;
-    }
-    try {
-      await focus.open(this.currentPort.path, this.currentPort.device.info, null);
-      for (let i = 0; i < backup.length; i++) {
-        let val = backup[i].data;
-        // Boolean values need to be sent as int
-        if (typeof val === "boolean") {
-          val = +val;
-        }
-        log.info(`Going to send ${backup[i].command} to keyboard`);
-        await focus.command(`${backup[i].command} ${val}`.trim());
-        stateUpdate("restore", (i / backup.length) * 90);
-      }
-      await focus.command("led.mode 0");
-      stateUpdate("restore", 100);
-      return true;
-    } catch (e) {
-      return false;
-    }
+    // if (backup === undefined || backup.length === 0) {
+    //   await focus.open(this.currentPort.path, this.currentPort.device.info, null);
+    //   return true;
+    // }
+    // try {
+    //   await focus.open(this.currentPort.path, this.currentPort.device.info, null);
+    //   for (let i = 0; i < backup.length; i++) {
+    //     let val = backup[i].data;
+    //     // Boolean values need to be sent as int
+    //     if (typeof val === "boolean") {
+    //       val = +val;
+    //     }
+    //     log.info(`Going to send ${backup[i].command} to keyboard`);
+    //     await focus.command(`${backup[i].command} ${val}`.trim());
+    //     stateUpdate("restore", (i / backup.length) * 90);
+    //   }
+    //   await focus.command("led.mode 0");
+    //   stateUpdate("restore", 100);
+    //   return true;
+    // } catch (e) {
+    //   return false;
+    // }
   }
 }

@@ -2,7 +2,7 @@
 import React, { useReducer, createContext, useContext, useMemo } from "react";
 import log from "electron-log/renderer";
 import { VirtualType } from "./types/virtual";
-import serial, { isSerialType } from "../api/comms/serial";
+import serial from "../api/comms/serial";
 import Device, { State } from "../api/comms/Device";
 import HID from "../api/hid/hid";
 import { isVirtualType } from "../api/comms/virtual";
@@ -75,36 +75,23 @@ function useDevice() {
   return context;
 }
 
-const isDeviceConnected = async (device: Device) => {
-  if (isSerialType(device)) {
-    const result = await serial.isDeviceConnected(device);
-    return result;
-  }
-  // const result = await HID.isDeviceConnected(device);
-  // return result;
-  return false;
-};
+// const isDeviceConnected = async (device: Device) => {
+//   log.info(device);
+//   return true;
+// };
 
-const isDeviceSupported = async (device: Device) => {
-  log.info("going to check support: ", device.device, isSerialType(device));
-  if (isSerialType(device)) {
-    const result = await serial.isDeviceSupported(device);
-    return result;
-  }
-  // const result = await HID.isDeviceSupported(device);
-  // return result;
-  return false;
-};
+// const isDeviceSupported = async (device: Device) => {
+//   log.info("going to check support: ", device.device, isSerialType(device));
+//   return false;
+// };
 
 const list = async () => {
   // working with serial
   const serialDevs = await serial.find();
   const finalDevices: Array<Device> = [];
   for (const dev of serialDevs) {
-    const connected = await isDeviceConnected(dev);
-    const supported = await isDeviceSupported(dev);
-    log.info("Checking connected & supported for Serial: ", connected, supported);
-    if (connected && supported) finalDevices.push(new Device(dev, "serial"));
+    log.info("Checking connected & supported for Serial");
+    finalDevices.push(new Device(dev, "serial"));
   }
 
   // working with hid

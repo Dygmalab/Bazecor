@@ -45,7 +45,6 @@ import { showDevtools } from "@Renderer/devMode";
 import Store from "@Renderer/utils/Store";
 import getTranslator from "@Renderer/utils/translator";
 import { Neuron } from "@Types/neurons";
-import Focus from "../api/focus";
 import "../api/keymap";
 import "../api/colormap";
 import { useDevice } from "./DeviceContext";
@@ -54,10 +53,6 @@ import Device from "../api/comms/Device";
 import { HIDNotifdevice } from "./types/hid";
 
 const store = Store.getStore();
-
-const focus = Focus.getInstance();
-focus.debug = true;
-focus.timeout = 5000;
 
 function App() {
   const [pages, setPages] = useState({});

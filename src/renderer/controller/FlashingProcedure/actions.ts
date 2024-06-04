@@ -9,7 +9,6 @@ import { DeviceTools } from "@Renderer/DeviceContext";
 import { BackupType } from "@Renderer/types/backups";
 import { FlashRaise, FlashDefyWireless } from "../../../api/flash";
 import SideFlaser from "../../../api/flash/defyFlasher/sideFlasher";
-import Focus from "../../../api/focus";
 import * as Context from "./context";
 
 const delay = (ms: number) =>
@@ -160,7 +159,7 @@ export const flashSide = async (side: string, context: Context.ContextType) => {
     }
     // Flashing procedure for each side
     await DeviceTools.disconnect(currentDevice);
-    log.info("done closing focus");
+    log.info("done closing serial");
     log.info("Going to flash side:", side);
     const forceFlashSides = false;
     await context.flashSides.flashSide(
@@ -256,7 +255,6 @@ export const uploadDefyWireless = async (context: Context.ContextType) => {
   try {
     const { currentDevice } = context.deviceState as State;
     await DeviceTools.disconnect(currentDevice);
-    // log.info(context.originalDevice.device, focus, focus._port, flashDefyWireless);
     await context.flashDefyWireless?.updateFirmware(
       context.firmwares?.fw,
       context.bootloader,
@@ -326,11 +324,14 @@ export const resetRaise = async (context: Context.ContextType) => {
 export const uploadRaise = async (context: Context.ContextType) => {
   let result = false;
   try {
-    const focus = Focus.getInstance();
-    if (!context.device?.bootloader) {
-      await focus.close();
+    const { currentDevice } = context.deviceState as State;
+    if (context.flashRaise === undefined) {
+      context.flashRaise = new FlashRaise(context.originalDevice?.device);
+      context.comPath = (currentDevice.port as SerialPort).path;
+      context.bootloader = context.device?.bootloader;
     }
-    log.info(context.originalDevice?.device, focus, focus._port, context.flashRaise);
+    await DeviceTools.disconnect(currentDevice);
+    log.info(context.originalDevice?.device, context.flashRaise);
     result = await context.flashRaise?.updateFirmware(context.firmwares?.fw, (stage: string, percentage: number) => {
       stateUpdate(stage, percentage, context);
     });
