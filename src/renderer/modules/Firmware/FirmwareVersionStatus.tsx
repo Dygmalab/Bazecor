@@ -25,6 +25,8 @@ import Heading from "@Renderer/components/atoms/Heading";
 import { Badge } from "@Renderer/components/atoms/Badge";
 import { IconEye } from "@Renderer/components/atoms/Icons";
 
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@Renderer/components/atoms/Select";
+
 import Dropdown from "react-bootstrap/Dropdown";
 import Modal from "react-bootstrap/Modal";
 import Spinner from "react-bootstrap/Spinner";
@@ -170,7 +172,7 @@ const FirmwareVersionStatus = (props: FirmwareVersionStatusProps) => {
               />
             </svg>
 
-            <Title text="Update to the version" headingLevel={6} />
+            <Heading headingLevel={6}>Update to the version</Heading>
             <div className="firmwareVersionContainer">
               <Dropdown
                 onSelect={(value: string) => send({ type: "changeFW-event", selected: parseInt(value, 10) })}
