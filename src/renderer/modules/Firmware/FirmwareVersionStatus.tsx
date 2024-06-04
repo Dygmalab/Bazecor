@@ -21,7 +21,7 @@ import log from "electron-log";
 
 import ReactMarkdown from "react-markdown";
 
-import Title from "@Renderer/component/Title";
+import Heading from "@Renderer/components/atoms/Heading";
 import { Badge } from "@Renderer/components/atoms/Badge";
 import { IconEye } from "@Renderer/components/atoms/Icons";
 
@@ -157,7 +157,7 @@ const FirmwareVersionStatus = (props: FirmwareVersionStatusProps) => {
       <div className={`versionsStatus ${isUpdated && "isUpdated"}`}>
         <div className="versionStatusInner">
           <div className="versionStatusInstalled">
-            <Title text="Installed firmware version" headingLevel={6} />
+            <Heading headingLevel={6}>Installed firmware version</Heading>
             <Badge variant="outline" size="xs">
               {currentlyVersionRunning}
             </Badge>
