@@ -175,7 +175,7 @@ function MouseTab({ isStandardView, keyCode, onAddSpecial, actTab }: MouseTabPro
                 {i18n.mouse.mouseClickTitle}
               </Heading>
               <p className="description">{i18n.mouse.mouseClickDescription}</p>
-              <div className="grid gap-2 grid-cols-3 max-w-[460px]">
+              <div className="grid gap-2 grid-cols-3 max-w-[460px] mt-2">
                 <Button
                   onClick={() => handleClick(20545)}
                   selected={isStandardView ? keyCode === 20545 : false}
@@ -225,7 +225,7 @@ function MouseTab({ isStandardView, keyCode, onAddSpecial, actTab }: MouseTabPro
                     {i18n.mouse.movementTitle}
                   </Heading>
                   <p className="description">{i18n.mouse.movementDescription}</p>
-                  <div className="keysButtonsList">
+                  <div className="keysButtonsList mt-2">
                     <div className="mouseButtons mouseButtonsMovement">
                       <ButtonMouse
                         eventType="movement"
@@ -264,7 +264,7 @@ function MouseTab({ isStandardView, keyCode, onAddSpecial, actTab }: MouseTabPro
                   </Heading>
                   <p className="description">{i18n.mouse.wheelDescription}</p>
                   <div className="keysButtonsList">
-                    <div className="mouseButtons mouseButtonsWheel">
+                    <div className="mouseButtons mouseButtonsWheel mt-2">
                       <ButtonMouse
                         eventType="wheel"
                         direction="up"

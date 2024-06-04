@@ -146,7 +146,7 @@ const OneShotTab = ({ keyCode, onKeySelect, isStandardView }: OneShotTabProps) =
             {i18n.editor.standardView.oneShot.titleLayers}
           </Heading>
           <p className="description">{i18n.editor.standardView.oneShot.layersDescription}</p>
-          <div className="groupButtons flex gap-1">
+          <div className="groupButtons flex gap-1 mt-2">
             <Button
               variant="config"
               onClick={() => onKeySelect(OneShotDeltaLayer + 0)}

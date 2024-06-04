@@ -147,7 +147,7 @@ const Styles = Styled.div`
 .standarViewMode .raiseKeyboard {
   margin: 0 auto;
   margin-top: 24px;
-  max-height: calc(100vh - 240px);
+  max-height: calc(100vh - 250px);
 }
 .singleViewMode.color .raiseKeyboard {
   margin: 0 auto;

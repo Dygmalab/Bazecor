@@ -30,10 +30,12 @@ import { Switch } from "@Renderer/components/atoms/Switch";
 import { IconChip, IconHanger, IconSun, IconMoon, IconScreen, IconKeyboard } from "@Renderer/components/atoms/Icons";
 // import { ToggleButtons } from "@Renderer/component/ToggleButtons";
 import ToggleGroup from "@Renderer/components/molecules/CustomToggleGroup/ToggleGroup";
-import { Select } from "@Renderer/component/Select";
+// import { Select } from "@Renderer/component/Select";
 import { KeyPickerPreview } from "@Renderer/modules/KeyPickerKeyboard";
 import getLanguage from "@Renderer/utils/language";
 import ToastMessage from "@Renderer/component/ToastMessage";
+import ComboBox from "@Renderer/components/molecules/ComboBox/ComboBox";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@Renderer/components/atoms/Select";
 
 import { i18n } from "@Renderer/i18n";
 import Keymap from "../../../api/keymap";
@@ -170,15 +172,23 @@ const GeneralSettings = ({
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <form>
-            <Select
-              id="languageSelector"
-              onSelect={changeLanguage}
-              value={selectedLanguage}
-              listElements={languageElements}
-              disabled={false}
-            />
-          </form>
+          <Select value={selectedLanguage} onValueChange={changeLanguage}>
+            <SelectTrigger className="w-full [&_span]:!flex [&_span]:!gap-3 [&_span]:!items-center">
+              <SelectValue placeholder="Select language" />
+            </SelectTrigger>
+            <SelectContent>
+              {languageElements.map(item => (
+                <SelectItem
+                  value={item.value}
+                  key={`languageItem-${item.index}`}
+                  className="[&_span]:!flex [&_span]:!gap-3 [&_span]:!items-center"
+                >
+                  {item.icon && <img className="h-6 w-6" src={item.icon} alt={`${item.text}`} />}
+                  {item.text}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
           <KeyPickerPreview
             code={code}
             disableMods="disabled"

@@ -122,7 +122,7 @@ const MediaAndLightTab = ({ keyCode, isStandardView, onAddSpecial }: MediaAndLig
               {i18n.editor.superkeys.specialKeys.mediaTitle}
             </Heading>
             <p className="description" dangerouslySetInnerHTML={{ __html: i18n.editor.superkeys.specialKeys.mediaDescription }} />
-            <div className="flex gap-2 mt-1">
+            <div className="flex gap-2 mt-2">
               <TooltipProvider delayDuration={50}>
                 <Tooltip>
                   <TooltipTrigger asChild>
@@ -289,7 +289,7 @@ const MediaAndLightTab = ({ keyCode, isStandardView, onAddSpecial }: MediaAndLig
               {i18n.editor.superkeys.specialKeys.LEDTitle}
             </Heading>
             <p className="description">{i18n.editor.superkeys.specialKeys.LEDDescription}</p>
-            <div className="flex gap-2 mt-1">
+            <div className="flex gap-2 mt-2">
               <TooltipProvider delayDuration={50}>
                 <Tooltip>
                   <TooltipTrigger asChild>
@@ -357,7 +357,7 @@ const MediaAndLightTab = ({ keyCode, isStandardView, onAddSpecial }: MediaAndLig
               {i18n.editor.superkeys.specialKeys.othersTitle}
             </Heading>
             <p className="description">{i18n.editor.superkeys.specialKeys.othersDescription}</p>
-            <div className="flex gap-2 mt-1">
+            <div className="flex gap-2 mt-2">
               <TooltipProvider delayDuration={50}>
                 <Tooltip>
                   <TooltipTrigger asChild>
