@@ -1,6 +1,5 @@
 import React from "react";
-import OverlayTrigger from "react-bootstrap/OverlayTrigger";
-import Tooltip from "react-bootstrap/Tooltip";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@Renderer/components/atoms/Tooltip";
 
 import Styled from "styled-components";
 
@@ -17,12 +16,8 @@ const Style = Styled.div`
   --color-status: ${({ theme }) => theme.styles.batteryIndicator.fillShapeColor};
 }
 &.batterySavingMode {
-    position: absolute;
-    top: 98px;
     color: var(--color-status);
-    left: 50%;
     transform: translate3d(-50%, -4px, 0);
-    transition: 300ms color ease-in-out;
 }
 `;
 
@@ -33,19 +28,18 @@ interface SavingModeIndicatorProps {
 function SavingModeIndicator({ isSavingMode }: SavingModeIndicatorProps) {
   return (
     <Style
-      className={`batterySavingMode ${isSavingMode ? "savingModeEnabled status--saving" : "savingModeDisabled status--default"}`}
+      className={`batterySavingMode absolute top-[98px] left-1/2 transition-all ${isSavingMode ? "savingModeEnabled status--saving" : "savingModeDisabled status--default"}`}
     >
-      <OverlayTrigger
-        key="keySavingModeOverlay"
-        placement="top"
-        overlay={
-          <Tooltip id="tooltip-top-savingMode">
+      <TooltipProvider delayDuration={50}>
+        <Tooltip>
+          <TooltipTrigger>
+            <IconLeaf />
+          </TooltipTrigger>
+          <TooltipContent className="max-w-xs" side="top" size="sm">
             Saving mode <strong>{isSavingMode ? "enabled" : "disabled"}</strong>
-          </Tooltip>
-        }
-      >
-        <IconLeaf />
-      </OverlayTrigger>
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
     </Style>
   );
 }

@@ -6,9 +6,6 @@
 import React, { Component } from "react";
 import Styled, { withTheme } from "styled-components";
 
-// import Tooltip from "react-bootstrap/Tooltip";
-// import OverlayTrigger from "react-bootstrap/OverlayTrigger";
-
 import { RiStopFill } from "react-icons/ri";
 import { IoIosPause, IoIosPlay, IoIosShuffle } from "react-icons/io";
 import { FiMenu } from "react-icons/fi";
@@ -357,22 +354,20 @@ class KeyPicker extends Component {
 
   renderTooltip(tooltips) {
     return (
-      <Tooltip id="select-tooltip" className="longtooltip">
-        <TooltipStyle>
-          {tooltips.map((tip, i) => (
-            <React.Fragment key={`Tip-${i}`}>
-              {i % 2 == 1 || !isNaN(tip[0]) || tip[0] == "-" ? (
-                <p className="ttip-p">{tip}</p>
-              ) : (
-                <>
-                  {i == 0 ? "" : <br />}
-                  <h5 className="ttip-h">{tip}</h5>
-                </>
-              )}
-            </React.Fragment>
-          ))}
-        </TooltipStyle>
-      </Tooltip>
+      <>
+        {tooltips.map((tip, i) => (
+          <React.Fragment key={`Tip-${i}`}>
+            {i % 2 === 1 || !Number.isNaN(tip[0]) || tip[0] === "-" ? (
+              <p className="ttip-p">{tip}</p>
+            ) : (
+              <>
+                {i === 0 ? "" : <br />}
+                <h5 className="ttip-h">{tip}</h5>
+              </>
+            )}
+          </React.Fragment>
+        ))}
+      </>
     );
   }
 
@@ -492,59 +487,67 @@ class KeyPicker extends Component {
         </>
       ),
     };
-    const keyboard = Lang.map((key, id) => (
-      // if (key.tooltip) {
-      //   return (
-      //     <foreignObject key={`id-${key.content.first}-${id}`} x={key.x} y={key.y} width={25} height={25}>
-      //       <OverlayTrigger rootClose placement="top" delay={{ show: 250, hide: 400 }} overlay={this.renderTooltip(key.tooltip)}>
-      //         <MdInfoOutline className="info" />
-      //       </OverlayTrigger>
-      //     </foreignObject>
-      //   );
-      // }
-      <Key
-        key={`id-${key.content.first}-${id}`}
-        id={id}
-        x={key.x}
-        y={key.y}
-        selected={
-          code === null
-            ? false
-            : Array.isArray(key.idArray)
-              ? key.idArray.some(key => key === code.base + code.modified || (key === code.base && key >= 104 && key <= 115))
-              : code.base === key.id &&
-                  (code.base + code.modified < 53267 || code.base + code.modified > 60000) &&
-                  (code.base + code.modified < 17450 || code.base + code.modified > 17501) &&
-                  (code.base + code.modified < 49153 || code.base + code.modified > 49168)
-                ? true
-                : !!(code.modified > 0 && code.base + code.modified === key.id)
-        }
-        clicked={() => {
-          key.mod === disableMods || key.move === disableMove ? () => {} : this.onKeyPress(key.id);
-        }}
-        onKeyPress={this.onKeyPress}
-        centered={key.centered}
-        content={key.content}
-        iconpresent={key.icon}
-        icon={
-          <IconColor
-            color={
-              key.mod === disableMods || key.move === disableMove
-                ? theme.keyboardPicker.keyTextDisabledColor
-                : theme.keyboardPicker.keyIconColor
-            }
-          >
-            {iconlist[key.iconname]}
-          </IconColor>
-        }
-        iconx={key.iconx}
-        icony={key.icony}
-        iconsize={key.iconsize}
-        disabled={key.mod === disableMods || key.move === disableMove || disableAll}
-        idArray={key.idArray}
-        keyCode={code}
-      />
-    ));
+    const keyboard = Lang.map((key, id) => {
+      if (key.tooltip) {
+        return (
+          <foreignObject key={`id-${key.content.first}-${id}`} x={key.x} y={key.y} width={25} height={25}>
+            <TooltipProvider delayDuration={100}>
+              <Tooltip>
+                <TooltipTrigger className="[&_svg]:text-purple-100 [&_svg]:dark:text-purple-200">
+                  <MdInfoOutline className="info" />
+                </TooltipTrigger>
+                <TooltipContent>{this.renderTooltip(key.tooltip)}</TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          </foreignObject>
+        );
+      }
+      return (
+        <Key
+          key={`id-${key.content.first}-${id}`}
+          id={id}
+          x={key.x}
+          y={key.y}
+          selected={
+            code === null
+              ? false
+              : Array.isArray(key.idArray)
+                ? key.idArray.some(key => key === code.base + code.modified || (key === code.base && key >= 104 && key <= 115))
+                : code.base === key.id &&
+                    (code.base + code.modified < 53267 || code.base + code.modified > 60000) &&
+                    (code.base + code.modified < 17450 || code.base + code.modified > 17501) &&
+                    (code.base + code.modified < 49153 || code.base + code.modified > 49168)
+                  ? true
+                  : !!(code.modified > 0 && code.base + code.modified === key.id)
+          }
+          clicked={() => {
+            key.mod === disableMods || key.move === disableMove ? () => {} : this.onKeyPress(key.id);
+          }}
+          onKeyPress={this.onKeyPress}
+          centered={key.centered}
+          content={key.content}
+          iconpresent={key.icon}
+          icon={
+            <IconColor
+              color={
+                key.mod === disableMods || key.move === disableMove
+                  ? theme.keyboardPicker.keyTextDisabledColor
+                  : theme.keyboardPicker.keyIconColor
+              }
+            >
+              {iconlist[key.iconname]}
+            </IconColor>
+          }
+          iconx={key.iconx}
+          icony={key.icony}
+          iconsize={key.iconsize}
+          disabled={key.mod === disableMods || key.move === disableMove || disableAll}
+          idArray={key.idArray}
+          keyCode={code}
+        />
+      );
+    });
+
     const { customModal } = this.state;
     return (
       <Style>

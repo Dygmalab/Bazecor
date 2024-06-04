@@ -34,7 +34,6 @@ import ToggleGroup from "@Renderer/components/molecules/CustomToggleGroup/Toggle
 import { KeyPickerPreview } from "@Renderer/modules/KeyPickerKeyboard";
 import getLanguage from "@Renderer/utils/language";
 import ToastMessage from "@Renderer/component/ToastMessage";
-import ComboBox from "@Renderer/components/molecules/ComboBox/ComboBox";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@Renderer/components/atoms/Select";
 
 import { i18n } from "@Renderer/i18n";
