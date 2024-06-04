@@ -5,8 +5,6 @@ import fs from "fs";
 import path from "path";
 import { globSync } from "glob";
 import { spawnSync } from "child_process";
-import { FusesPlugin } from "@electron-forge/plugin-fuses";
-import { FuseV1Options, FuseVersion } from "@electron/fuses";
 import rendererConfig from "./webpack.renderer.config";
 import mainConfig from "./webpack.main.config";
 
@@ -23,19 +21,19 @@ const packagerConfig: ForgePackagerOptions = {
   appCopyright: "Copyright © 2018, 2023 DygmaLab SL; distributed under the GPLv3",
 };
 
-// if (process.env["NODE_ENV"] !== "development") {
-//   packagerConfig.osxNotarize = {
-//     appleId: process.env["APPLE_ID"] || "",
-//     appleIdPassword: process.env["APPLE_ID_PASSWORD"] || "",
-//     teamId: process.env["APPLE_TEAM_ID"] || "",
-//   };
-//   packagerConfig.osxSign = {
-//     optionsForFile: () => ({
-//       entitlements: "./build/entitlements.plist",
-//       hardenedRuntime: true,
-//     }),
-//   };
-// }
+if (process.env["NODE_ENV"] !== "development") {
+  packagerConfig.osxNotarize = {
+    appleId: process.env["APPLE_ID"] || "",
+    appleIdPassword: process.env["APPLE_ID_PASSWORD"] || "",
+    teamId: process.env["APPLE_TEAM_ID"] || "",
+  };
+  packagerConfig.osxSign = {
+    optionsForFile: () => ({
+      entitlements: "./build/entitlements.plist",
+      hardenedRuntime: true,
+    }),
+  };
+}
 
 const config: ForgeConfig = {
   packagerConfig,
@@ -79,17 +77,6 @@ const config: ForgeConfig = {
         ],
       },
     }),
-    // Fuses are used to enable/disable various Electron functionality
-    // at package time, before code signing the application
-    new FusesPlugin({
-      version: FuseVersion.V1,
-      [FuseV1Options.RunAsNode]: false,
-      [FuseV1Options.EnableCookieEncryption]: true,
-      [FuseV1Options.EnableNodeOptionsEnvironmentVariable]: false,
-      [FuseV1Options.EnableNodeCliInspectArguments]: false,
-      [FuseV1Options.EnableEmbeddedAsarIntegrityValidation]: false,
-      [FuseV1Options.OnlyLoadAppFromAsar]: true,
-    }),
   ],
   hooks: {
     packageAfterPrune: async (_forgeConfig, buildPath, _electronVersion, platform, _arch) => {
@@ -115,9 +102,8 @@ const config: ForgeConfig = {
       });
 
       const prebuilds = globSync(`${buildPath}/**/prebuilds/*`);
-      const matchString = new RegExp(`prebuilds/${platform}`);
       prebuilds.forEach(function (path) {
-        if (!path.match(matchString)) {
+        if (!path.includes(platform)) {
           fs.rmSync(path, { recursive: true });
         }
       });
