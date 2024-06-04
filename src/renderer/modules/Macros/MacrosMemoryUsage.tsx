@@ -17,7 +17,6 @@
 
 import React from "react";
 import Styled from "styled-components";
-import PropTypes from "prop-types";
 
 import { toast } from "react-toastify";
 import { i18n } from "@Renderer/i18n";
@@ -79,14 +78,19 @@ h4 {
 }
 `;
 
-const MacrosMemoryUsage = ({ mem, tMem }) => {
+interface MacrosMemoryUsageProps {
+  mem: number;
+  tMem: number;
+}
+
+const MacrosMemoryUsage = ({ mem, tMem }: MacrosMemoryUsageProps) => {
   const [memoryUsage, setMemoryUsage] = React.useState(mem);
   const [isLoading, setIsLoading] = React.useState(true);
 
   React.useEffect(() => {
     if (mem < 1 || tMem < 1) return;
     // setMemoryUsage(macros.map(m => m.actions).flat().length);
-    setMemoryUsage(((mem / tMem) * 100).toFixed(1));
+    setMemoryUsage(Number(((mem / tMem) * 100).toFixed(1)));
     setIsLoading(false);
     if (mem > tMem * 0.95 && mem < tMem - 20) {
       toast.warn(
@@ -123,7 +127,7 @@ const MacrosMemoryUsage = ({ mem, tMem }) => {
     <Styles
       className={`${memoryUsage > 95 && memoryUsage < 98 ? "memoryWarning" : ""} ${memoryUsage > 99 ? "memoryError" : ""} `}
     >
-      <Heading headingLevel={4} renderAs="h4">
+      <Heading headingLevel={4} renderAs="h4" className="m-0 leading-3">
         {i18n.editor.macros.memoryUsage.title}
       </Heading>
       <div className="progressIndicator">
@@ -134,11 +138,6 @@ const MacrosMemoryUsage = ({ mem, tMem }) => {
       </div>
     </Styles>
   );
-};
-
-MacrosMemoryUsage.propTypes = {
-  mem: PropTypes.number,
-  tMem: PropTypes.number,
 };
 
 export default MacrosMemoryUsage;
