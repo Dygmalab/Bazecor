@@ -22,9 +22,10 @@
  */
 
 import log from "electron-log/renderer";
+import { DygmaDeviceType } from "@Renderer/types/dygmaDefs";
 import KeymapANSI from "./components/Keymap-ANSI";
 
-const Raise2ANSI = {
+const Raise2ANSI: DygmaDeviceType = {
   info: {
     vendor: "Dygma",
     product: "Raise2",
@@ -63,7 +64,6 @@ const Raise2ANSI = {
   },
 
   flash: async (
-    _: any,
     filename: any,
     bootloader: any,
     flashDefyWireless: { updateFirmware: (arg0: any, arg1: any, arg2: any) => any },
@@ -79,7 +79,7 @@ const Raise2ANSI = {
   },
 };
 
-const Raise2ANSIBootloader = {
+const Raise2ANSIBootloader: DygmaDeviceType = {
   info: {
     vendor: "Dygma",
     product: "Raise2",
@@ -103,7 +103,6 @@ const Raise2ANSIBootloader = {
     },
   },
   flash: async (
-    _: any,
     filename: any,
     bootloader: any,
     flashDefyWireless: { updateFirmware: (arg0: any, arg1: any, arg2: any) => any },

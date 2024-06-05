@@ -16,9 +16,10 @@
  */
 
 import log from "electron-log/renderer";
+import { DygmaDeviceType } from "@Renderer/types/dygmaDefs";
 import KeymapDEFY from "./components/Keymap";
 
-const DefyWireless = {
+const DefyWireless: DygmaDeviceType = {
   info: {
     vendor: "Dygma",
     product: "Defy",
@@ -54,7 +55,7 @@ const DefyWireless = {
     },
   },
 
-  flash: async (_, filename, bootloader, flashDefyWireless, stateUpdate) => {
+  flash: async (filename, bootloader, flashDefyWireless, stateUpdate) => {
     try {
       await flashDefyWireless.updateFirmware(filename, bootloader, stateUpdate);
       return true;
@@ -66,7 +67,7 @@ const DefyWireless = {
   isDeviceSupported: async () => true,
 };
 
-const DefyWirelessBootloader = {
+const DefyWirelessBootloader: DygmaDeviceType = {
   info: {
     vendor: "Dygma",
     product: "Defy",
@@ -89,7 +90,7 @@ const DefyWirelessBootloader = {
       updateInstructions: `To update the firmware, press the button at the bottom. You must not hold any key on the keyboard while the countdown is in progress, nor afterwards, until the flashing is finished. When the countdown reaches zero, the Neuron's light should start a blue pulsing pattern, and flashing will then proceed. `,
     },
   },
-  flash: async (_, filename, bootloader, flashDefyWireless, stateUpdate) => {
+  flash: async (filename, bootloader, flashDefyWireless, stateUpdate) => {
     try {
       await flashDefyWireless.updateFirmware(filename, bootloader, stateUpdate);
       return true;

@@ -108,6 +108,8 @@ const list = async () => {
   return finalDevices;
 };
 
+const enumerateSerial = async () => await serial.enumerate();
+
 const connect = async (device: Device | VirtualType) => {
   try {
     if (isVirtualType(device)) {
@@ -150,6 +152,7 @@ const disconnect = async (device: Device) => {
 
 const DeviceTools = {
   list,
+  enumerateSerial,
   connect,
   disconnect,
 };

@@ -2,6 +2,8 @@
 /* eslint-disable no-eval */
 import log from "electron-log/renderer";
 import type { SerialPort as SP } from "serialport";
+import type { PortInfo } from "@serialport/bindings-cpp";
+import { DygmaDeviceType } from "@Renderer/types/dygmaDefs";
 import Hardware from "../../hardware";
 import { DeviceType } from "../../../renderer/types/devices";
 
@@ -42,7 +44,12 @@ const close = async (serialport: SP) => {
   }
 };
 
-const checkProperties = async (path: string) => {
+interface SerialProperties {
+  wireless: boolean;
+  layout: string;
+}
+
+const checkProperties = async (path: string): Promise<SerialProperties> => {
   let callbacks: any[] = [];
   let result = "";
 
@@ -100,14 +107,41 @@ const checkProperties = async (path: string) => {
   return { wireless: wless.includes("true"), layout: lay.includes("ISO") ? "ISO" : "ANSI" };
 };
 
-const find = async () => {
-  const serialDevices = await SerialPort.list();
+interface ExtendedPort extends PortInfo {
+  device: DygmaDeviceType;
+}
+
+const enumerate = async (): Promise<ExtendedPort[]> => {
+  const serialDevices: PortInfo[] = await SerialPort.list();
 
   const foundDevices = [];
 
+  log.info("SerialPort enumerating devices:", serialDevices);
+
+  for (const device of serialDevices) {
+    if ([0x35ef, 0x1209].includes(parseInt(`0x${device.vendorId}`, 16))) {
+      for (const Hdevice of Hardware.bootloader) {
+        if (
+          parseInt(`0x${device.productId}`, 16) === Hdevice.usb.productId &&
+          parseInt(`0x${device.vendorId}`, 16) === Hdevice.usb.vendorId
+        ) {
+          const newPort: ExtendedPort = { ...device, device: Hdevice };
+          foundDevices.push(newPort);
+        }
+      }
+    }
+  }
+  return foundDevices;
+};
+
+const find = async (): Promise<ExtendedPort[]> => {
+  const serialDevices: PortInfo[] = await SerialPort.list();
+
+  const foundDevices: ExtendedPort[] = [];
+
   log.info("SerialPort devices find:", serialDevices);
   for (const device of serialDevices) {
-    if (device.vendorId === "35ef" || device.vendorId === "1209") {
+    if ([0x35ef, 0x1209].includes(parseInt(`0x${device.vendorId}`, 16))) {
       const supported = await checkProperties(device.path);
       for (const Hdevice of Hardware.serial) {
         if (
@@ -115,8 +149,7 @@ const find = async () => {
           parseInt(`0x${device.vendorId}`, 16) === Hdevice.usb.vendorId &&
           (Hdevice.info.product === "Defy" || Hdevice.info.keyboardType === supported.layout)
         ) {
-          const newPort = { ...device };
-          newPort.device = Hdevice;
+          const newPort = { ...device, device: Hdevice };
           foundDevices.push(newPort);
         }
       }
@@ -125,8 +158,7 @@ const find = async () => {
           parseInt(`0x${device.productId}`, 16) === Hdevice.usb.productId &&
           parseInt(`0x${device.vendorId}`, 16) === Hdevice.usb.vendorId
         ) {
-          const newPort = { ...device };
-          newPort.device = Hdevice;
+          const newPort = { ...device, device: Hdevice };
           foundDevices.push(newPort);
         }
       }
@@ -137,11 +169,13 @@ const find = async () => {
   return foundDevices;
 };
 
-const connect = async (device: DeviceType) => {
+type ConnectType = (device: DeviceType) => Promise<SP>;
+
+const connect: ConnectType = async device => {
   const dev = await open(device.path);
   return dev;
 };
 
 const isSerialType = (device: any): device is any => "path" in device;
 
-export { find, connect, DeviceType, checkProperties, isSerialType };
+export { find, ExtendedPort, enumerate, ConnectType, connect, DeviceType, SerialProperties, checkProperties, isSerialType };

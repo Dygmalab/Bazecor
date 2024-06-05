@@ -21,9 +21,11 @@
  *
  */
 
+import log from "electron-log/renderer";
+import { DygmaDeviceType } from "@Renderer/types/dygmaDefs";
 import KeymapISO from "./components/Keymap-ISO";
 
-const Raise2ISO = {
+const Raise2ISO: DygmaDeviceType = {
   info: {
     vendor: "Dygma",
     product: "Raise2",
@@ -62,7 +64,6 @@ const Raise2ISO = {
   },
 
   flash: async (
-    _: any,
     filename: any,
     bootloader: any,
     flashDefyWireless: { updateFirmware: (arg0: any, arg1: any, arg2: any) => any },
@@ -72,12 +73,13 @@ const Raise2ISO = {
       await flashDefyWireless.updateFirmware(filename, bootloader, stateUpdate);
       return true;
     } catch (e) {
+      log.error(e);
       return false;
     }
   },
 };
 
-const Raise2ISOBootloader = {
+const Raise2ISOBootloader: DygmaDeviceType = {
   info: {
     vendor: "Dygma",
     product: "Raise2",
@@ -101,7 +103,6 @@ const Raise2ISOBootloader = {
     },
   },
   flash: async (
-    _: any,
     filename: any,
     bootloader: any,
     flashDefyWireless: { updateFirmware: (arg0: any, arg1: any, arg2: any) => any },
@@ -111,6 +112,7 @@ const Raise2ISOBootloader = {
       await flashDefyWireless.updateFirmware(filename, bootloader, stateUpdate);
       return true;
     } catch (e) {
+      log.error(e);
       return false;
     }
   },

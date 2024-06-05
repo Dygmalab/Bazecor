@@ -16,9 +16,10 @@
  */
 
 import log from "electron-log/renderer";
+import { DygmaDeviceType } from "@Renderer/types/dygmaDefs";
 import KeymapISO from "./components/Keymap-ISO";
 
-const RaiseISO = {
+const RaiseISO: DygmaDeviceType = {
   info: {
     vendor: "Dygma",
     product: "Raise",
@@ -53,7 +54,7 @@ const RaiseISO = {
     },
   },
 
-  flash: async (_: any, filename: any, flashRaise: { updateFirmware: (arg0: any, arg1: any) => any }, stateUpdate: any) => {
+  flash: async (filename: any, flashRaise: { updateFirmware: (arg0: any, arg1: any) => any }, stateUpdate: any) => {
     try {
       await flashRaise.updateFirmware(filename, stateUpdate);
       return true;
@@ -64,7 +65,7 @@ const RaiseISO = {
   },
 };
 
-const RaiseISOBootloader = {
+const RaiseISOBootloader: DygmaDeviceType = {
   info: {
     vendor: "Dygma",
     product: "Raise",
@@ -87,7 +88,7 @@ const RaiseISOBootloader = {
       updateInstructions: `To update the firmware, press the button at the bottom. You must not hold any key on the keyboard while the countdown is in progress, nor afterwards, until the flashing is finished. When the countdown reaches zero, the Neuron's light should start a blue pulsing pattern, and flashing will then proceed. `,
     },
   },
-  flash: async (_: any, filename: any, flashRaise: { updateFirmware: (arg0: any, arg1: any) => any }, stateUpdate: any) => {
+  flash: async (filename: any, flashRaise: { updateFirmware: (arg0: any, arg1: any) => any }, stateUpdate: any) => {
     try {
       await flashRaise.updateFirmware(filename, stateUpdate);
       return true;
