@@ -14,9 +14,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import log from "electron-log/renderer";
+import { DygmaDeviceType } from "@Renderer/types/dygmaDefs";
 import KeymapDEFY from "./components/Keymap";
 
-const DefyWired = {
+const DefyWired: DygmaDeviceType = {
   info: {
     vendor: "Dygma",
     product: "Defy",
@@ -52,12 +53,12 @@ const DefyWired = {
     },
   },
 
-  flash: async (_, filename, filenameSides, flashDefy, stateUpdate) => {
+  flash: async (filename, filenameSides, flashDefy, stateUpdate) => {
     try {
       await flashDefy.updateFirmware(filename, filenameSides, stateUpdate);
       return true;
     } catch (e) {
-      log.info(e);
+      log.error(e);
       return false;
     }
   },
@@ -65,7 +66,7 @@ const DefyWired = {
   isDeviceSupported: async () => true,
 };
 
-const DefyWiredBootloader = {
+const DefyWiredBootloader: DygmaDeviceType = {
   info: {
     vendor: "Dygma",
     product: "Defy",
@@ -88,12 +89,12 @@ const DefyWiredBootloader = {
       updateInstructions: `To update the firmware, press the button at the bottom. You must not hold any key on the keyboard while the countdown is in progress, nor afterwards, until the flashing is finished. When the countdown reaches zero, the Neuron's light should start a blue pulsing pattern, and flashing will then proceed. `,
     },
   },
-  flash: async (_, filename, filenameSides, flashDefy, stateUpdate) => {
+  flash: async (filename, filenameSides, flashDefy, stateUpdate) => {
     try {
       await flashDefy.updateFirmware(filename, filenameSides, stateUpdate);
       return true;
     } catch (e) {
-      log.info(e);
+      log.error(e);
       return false;
     }
   },

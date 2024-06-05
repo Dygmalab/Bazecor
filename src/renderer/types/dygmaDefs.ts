@@ -13,16 +13,16 @@ export type DygmaDeviceType = {
     vendorId: number;
     productId: number;
   };
-  keyboard: {
+  keyboard?: {
     rows: number;
     columns: number;
   };
-  keyboardUnderglow: {
+  keyboardUnderglow?: {
     rows: number;
     columns: number;
   };
-  RGBWMode: boolean;
-  components: {
+  RGBWMode?: boolean;
+  components?: {
     keymap: unknown;
   };
   instructions: {
@@ -35,4 +35,10 @@ export type DygmaDeviceType = {
   path?: string;
   filePath?: string;
   isDeviceSupported?: (port: string) => any;
+  flash?: (
+    filename: any,
+    flash: { updateFirmware: (arg0: any, arg1: any) => any },
+    stateUpdate: any,
+    bootloader?: boolean,
+  ) => any;
 };

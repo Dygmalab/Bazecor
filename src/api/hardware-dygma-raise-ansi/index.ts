@@ -16,9 +16,10 @@
  */
 
 import log from "electron-log/renderer";
+import { DygmaDeviceType } from "@Renderer/types/dygmaDefs";
 import KeymapANSI from "./components/Keymap-ANSI";
 
-const RaiseANSI = {
+const RaiseANSI: DygmaDeviceType = {
   info: {
     vendor: "Dygma",
     product: "Raise",
@@ -31,6 +32,7 @@ const RaiseANSI = {
       },
     ],
   },
+  RGBWMode: false,
   usb: {
     vendorId: 0x1209,
     productId: 0x2201,
@@ -46,16 +48,15 @@ const RaiseANSI = {
   components: {
     keymap: KeymapANSI,
   },
-
   instructions: {
     en: {
       updateInstructions: `To update the firmware, the keyboard needs a special reset. When the countdown starts, press and hold the Escape key. Soon after the countdown finished, the Neuron's light should start a blue pulsing pattern, and the flashing will proceed. At this point, you should release the Escape key.`,
     },
   },
 
-  flash: async (_: any, filename: any, flashRaise: { updateFirmware: (arg0: any, arg1: any) => any }, stateUpdate: any) => {
+  flash: async (filename: any, flash: { updateFirmware: (arg0: any, arg1: any) => any }, stateUpdate: any) => {
     try {
-      await flashRaise.updateFirmware(filename, stateUpdate);
+      await flash.updateFirmware(filename, stateUpdate);
       return true;
     } catch (e) {
       log.error(e);
@@ -64,7 +65,7 @@ const RaiseANSI = {
   },
 };
 
-const RaiseANSIBootloader = {
+const RaiseANSIBootloader: DygmaDeviceType = {
   info: {
     vendor: "Dygma",
     product: "Raise",
@@ -87,7 +88,7 @@ const RaiseANSIBootloader = {
       updateInstructions: `To update the firmware, press the button at the bottom. You must not hold any key on the keyboard while the countdown is in progress, nor afterwards, until the flashing is finished. When the countdown reaches zero, the Neuron's light should start a blue pulsing pattern, and flashing will then proceed. `,
     },
   },
-  flash: async (_: any, filename: any, flashRaise: { updateFirmware: (arg0: any, arg1: any) => any }, stateUpdate: any) => {
+  flash: async (filename: any, flashRaise: { updateFirmware: (arg0: any, arg1: any) => any }, stateUpdate: any) => {
     try {
       await flashRaise.updateFirmware(filename, stateUpdate);
       return true;

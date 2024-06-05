@@ -1,14 +1,23 @@
-import { find, connect, DeviceType, checkProperties, isSerialType } from "./SerialAPI";
+import {
+  find,
+  ExtendedPort,
+  enumerate,
+  ConnectType,
+  connect,
+  DeviceType,
+  SerialProperties,
+  checkProperties,
+  isSerialType,
+} from "./SerialAPI";
 
 interface SerialType {
-  find: () => Array<DeviceType>;
-  connect: () => void;
+  find: () => Promise<ExtendedPort[]>;
+  enumerate: () => Promise<ExtendedPort[]>;
+  connect: ConnectType;
+  checkProperties: (path: string) => Promise<SerialProperties>;
 }
 
-const serial: SerialType | any = {};
-serial.find = find;
-serial.connect = connect;
-serial.checkProperties = checkProperties;
+const serial: SerialType = { find, enumerate, connect, checkProperties };
 
 export default serial;
 export { DeviceType, isSerialType };
