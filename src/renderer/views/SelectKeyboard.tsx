@@ -19,7 +19,6 @@ import React, { useState, useEffect, useCallback } from "react";
 import Styled from "styled-components";
 import { toast } from "react-toastify";
 import { ipcRenderer } from "electron";
-import Container from "react-bootstrap/Container";
 import { useDevice, DeviceTools } from "@Renderer/DeviceContext";
 import log from "electron-log/renderer";
 
@@ -374,7 +373,7 @@ const SelectKeyboard = (props: SelectKeyboardProps) => {
 
   return (
     <Styles>
-      <Container fluid className="keyboard-select center-content">
+      <div className="keyboard-select center-content px-3">
         <PageHeader text={i18n.keyboardSelect.title} />
         <div className="keyboardSelection-wrapper">
           <NeuronConnection
@@ -407,7 +406,7 @@ const SelectKeyboard = (props: SelectKeyboardProps) => {
           </div>
           <VirtualSelector handleVirtualConnect={handleVirtualConnect} />
         </div>
-      </Container>
+      </div>
     </Styles>
   );
 };
