@@ -8,6 +8,9 @@ module.exports = {
       sans: ['"Libre Franklin"', "Helvetica", "Arial", "-apple-system", "BlinkMacSystemFont", "sans-serif"],
     },
     extend: {
+      fontWeight: {
+        medium: "501",
+      },
       fontSize: {
         xxs: "0.625rem", // 10px
         "2xxs": "0.6875rem", // 11px

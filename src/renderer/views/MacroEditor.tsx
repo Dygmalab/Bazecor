@@ -47,7 +47,7 @@ import LogoLoader from "@Renderer/components/atoms/Loader/LogoLoader";
 import { Button } from "@Renderer/components/atoms/Button";
 import { IconFloppyDisk, IconLoader } from "@Renderer/components/atoms/Icons";
 import MacroSelector from "@Renderer/components/organisms/Select/MacroSelector";
-import ToastMessage from "@Renderer/component/ToastMessage";
+import ToastMessage from "@Renderer/components/atoms/ToastMessage";
 import Callout from "@Renderer/components/molecules/Callout/Callout";
 
 // Modules

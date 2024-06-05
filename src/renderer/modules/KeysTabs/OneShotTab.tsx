@@ -65,7 +65,7 @@ const OneShotTab = ({ keyCode, onKeySelect, isStandardView }: OneShotTabProps) =
             {i18n.editor.standardView.oneShot.titleModifiers}
           </Heading>
           <p className="description">{i18n.editor.standardView.oneShot.modifiersDescription}</p>
-          <div className="groupButtons groupButtonsGrid">
+          <div className="groupButtons groupButtonsGrid mt-2">
             <div className="buttonsGrid">
               <Button
                 variant="config"

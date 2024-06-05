@@ -23,9 +23,8 @@ import { i18n } from "@Renderer/i18n";
 
 import { IconFloppyDisk } from "@Renderer/components/atoms/Icons";
 import Heading from "@Renderer/components/atoms/Heading";
+import ToastMessage from "@Renderer/components/atoms/ToastMessage";
 import DotsProgressBar from "./DotsProgressBar";
-
-import ToastMessage from "../../component/ToastMessage";
 
 const Styles = Styled.div`
 margin: 0 24px;

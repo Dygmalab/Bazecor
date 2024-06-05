@@ -32,7 +32,7 @@ import SuperkeysSelector from "@Renderer/components/organisms/Select/SuperkeysSe
 import { Button } from "@Renderer/components/atoms/Button";
 import LogoLoader from "@Renderer/components/atoms/Loader/LogoLoader";
 import ToggleGroupLayoutViewMode from "@Renderer/components/molecules/CustomToggleGroup/ToggleGroupLayoutViewMode";
-import ToastMessage from "@Renderer/component/ToastMessage";
+import ToastMessage from "@Renderer/components/atoms/ToastMessage";
 import { IconFloppyDisk } from "@Renderer/components/atoms/Icons";
 
 // Modules

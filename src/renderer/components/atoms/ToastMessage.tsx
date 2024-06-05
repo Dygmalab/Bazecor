@@ -18,6 +18,7 @@
 // @ts-nocheck
 import React from "react";
 import { Button } from "@Renderer/components/atoms/Button";
+import Heading from "@Renderer/components/atoms/Heading";
 
 /**
  * This ToastMessage function returns a styled body of react-toastfy object
@@ -53,20 +54,25 @@ const ToastMessage: React.FC<ToasMessageProps> = ({
   clickDismissText,
 }) => (
   <div className="toastContentWrapper">
-    <div className={`toastBody flex flex-nowrap py-6 px-8 ${icon ? "hasIcon pl-4" : "noIcon"}`}>
+    <div
+      className={`toastBody flex flex-nowrap py-6 px-8 ${onClickAction ? "yeah" : "meh"} ${icon ? "hasIcon pl-[1rem]" : "noIcon"}`}
+    >
       {icon && <div className="toastIcon w-[32px] [&_svg]:mt-[-6px]">{icon}</div>}
       <div className={`toastBodyInner ${icon ? "pl-[8px]" : ""}`}>
-        {/* {title && <Title text={title} headingLevel={4} />} */}
-        {title}
+        {title && (
+          <Heading text={title} headingLevel={4} renderAs="h4" className="mb-1 -mt-1">
+            {title}
+          </Heading>
+        )}
         <div className="toastContent text-2ssm font-medium leading-snug" dangerouslySetInnerHTML={{ __html: content }} />
       </div>
     </div>
     {onClickAction || onClickDismiss ? (
-      <div className="toastFooter flex flex-nowrap justify-end pt-0 px-[32px] pb-[24px] ">
-        <Button variation="link" onClick={onClickDismiss} size="sm">
+      <div className="toastFooter flex flex-nowrap justify-end pt-0 px-[32px] pb-[24px] gap-2">
+        <Button variant="outline" onClick={onClickDismiss} size="sm">
           {clickDismissText}
         </Button>
-        <Button variation="primary" onClick={onClickAction} size="sm">
+        <Button variant="primary" onClick={onClickAction} size="sm">
           {clickActionText}
         </Button>
       </div>

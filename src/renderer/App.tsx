@@ -37,7 +37,7 @@ import SuperkeysEditor from "@Renderer/views/SuperkeysEditor";
 import Preferences from "@Renderer/views/Preferences";
 import Welcome from "@Renderer/views/Welcome";
 
-import ToastMessage from "@Renderer/component/ToastMessage";
+import ToastMessage from "@Renderer/components/atoms/ToastMessage";
 import { IconBluetooth, IconConnected, IconPlug } from "@Renderer/components/atoms/Icons";
 import BazecorDevtools from "@Renderer/views/BazecorDevtools";
 import { showDevtools } from "@Renderer/devMode";

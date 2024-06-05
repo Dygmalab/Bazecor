@@ -26,7 +26,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@Renderer/components/a
 
 // Own Components
 import { useDevice } from "@Renderer/DeviceContext";
-import ToastMessage from "@Renderer/component/ToastMessage";
+import ToastMessage from "@Renderer/components/atoms/ToastMessage";
 import { i18n } from "@Renderer/i18n";
 import { Button } from "@Renderer/components/atoms/Button";
 

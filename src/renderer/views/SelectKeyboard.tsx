@@ -33,7 +33,7 @@ import { IconArrowDownWithLine, IconBluetooth } from "@Renderer/components/atoms
 import { PageHeader } from "@Renderer/modules/PageHeader";
 import { i18n, refreshHardware } from "@Renderer/i18n";
 import NeuronConnection from "@Renderer/modules/NeuronConnection";
-import ToastMessage from "@Renderer/component/ToastMessage";
+import ToastMessage from "@Renderer/components/atoms/ToastMessage";
 import VirtualSelector from "@Renderer/modules/VirtualKeyboards/VirtualSelector";
 
 import Store from "../utils/Store";

@@ -29,7 +29,7 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Modal from "react-bootstrap/Modal";
 import customCursor from "@Assets/base/cursorBucket.png";
-import ToastMessage from "@Renderer/component/ToastMessage";
+import ToastMessage from "@Renderer/components/atoms/ToastMessage";
 import { CopyFromDialog } from "@Renderer/component/CopyFromDialog";
 import { useDevice } from "@Renderer/DeviceContext";
 

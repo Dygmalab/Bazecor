@@ -23,11 +23,12 @@ import log from "electron-log/renderer";
 import { Link } from "react-router-dom";
 import { PageHeader } from "@Renderer/modules/PageHeader";
 import { useDevice, DeviceTools } from "@Renderer/DeviceContext";
-import { IconHome } from "@Renderer/components/atoms/Icons";
-import { NavigationButton } from "@Renderer/components/molecules/CustomButton/NavigationButton";
+import { IconConnected } from "@Renderer/components/atoms/Icons";
 import { Button } from "@Renderer/components/atoms/Button";
 import HID from "../../api/hid/hid";
 import Device from "../../api/comms/Device";
+import { toast } from "react-toastify";
+import ToastMessage from "@Renderer/components/atoms/ToastMessage";
 
 const BazecorDevtools = () => {
   const { state, dispatch } = useDevice();
@@ -197,6 +198,70 @@ const BazecorDevtools = () => {
     }
   };
 
+  const onClickToastTest = () => {
+    console.log("Test click");
+  };
+
+  const ToastMessageRegular = () => {
+    toast.success(
+      <ToastMessage
+        icon={<IconConnected />}
+        title="Testing success message"
+        content="This is the description field for the toast message. The primary purpose of the application is to allow one to configure their keyboard without having to compile or flash firmware."
+        onClickDismiss={onClickToastTest}
+        clickActionText="Dismiss"
+        onClickAction={onClickToastTest}
+        clickDismissText="Action"
+      />,
+      { autoClose: 100000, icon: "", closeOnClick: false },
+    );
+  };
+
+  const ToastMessageError = () => {
+    toast.error(
+      <ToastMessage
+        icon={<IconConnected />}
+        title="Testing error message"
+        content="This is the description field for the toast message. The primary purpose of the application is to allow one to configure their keyboard without having to compile or flash firmware."
+        onClickDismiss={onClickToastTest}
+        clickActionText="Dismiss"
+        onClickAction={onClickToastTest}
+        clickDismissText="Action"
+      />,
+      { autoClose: 100000, icon: "", closeOnClick: false },
+    );
+  };
+
+  const ToastMessageWarning = () => {
+    toast.warn(
+      <ToastMessage
+        icon={<IconConnected />}
+        title="Testing warning message"
+        content="This is the description field for the toast message. The primary purpose of the application is to allow one to configure their keyboard without having to compile or flash firmware."
+        onClickDismiss={onClickToastTest}
+        clickActionText="Dismiss"
+        onClickAction={onClickToastTest}
+        clickDismissText="Action"
+      />,
+      { autoClose: 100000, icon: "", closeOnClick: false },
+    );
+  };
+
+  const ToastMessageInfo = () => {
+    toast.info(
+      <ToastMessage
+        icon={<IconConnected />}
+        title="Testing warning message"
+        content="This is the description field for the toast message. The primary purpose of the application is to allow one to configure their keyboard without having to compile or flash firmware."
+        onClickDismiss={onClickToastTest}
+        clickActionText="Dismiss"
+        onClickAction={onClickToastTest}
+        clickDismissText="Action"
+      />,
+      { autoClose: 100000, icon: "", closeOnClick: false },
+    );
+  };
+
   return (
     <div className="h-full">
       <div className="px-3 h-full">
@@ -204,48 +269,51 @@ const BazecorDevtools = () => {
         <div className="columns-3 gap-4">
           <div className="w-full py-4">
             <h4>HID Testing Buttons</h4>
-
-            <Button variant="primary" onClick={onGetHIDDevices}>
-              List of HID Devices
-            </Button>
-            <Button variant="primary" onClick={onHIDConnect}>
-              Connect by HID
-            </Button>
-            <Button variant="primary" onClick={onHIDOpen}>
-              Open device
-            </Button>
-            <Button variant="primary" onClick={onHIDReports}>
-              List reports
-            </Button>
-            <Button variant="primary" onClick={onHIDHelp}>
-              Send help
-            </Button>
-            <Button variant="primary" onClick={onHIDGetKeymap}>
-              Get keymap
-            </Button>
-            <Button variant="primary" onClick={onHIDHardcodedKeymap}>
-              Harcoded keymap
-            </Button>
-            <Button variant="primary" onClick={onHIDSetOriginalKeymap}>
-              Restore keymap
-            </Button>
+            <div className="flex gap-4">
+              <Button variant="primary" onClick={onGetHIDDevices}>
+                List of HID Devices
+              </Button>
+              <Button variant="primary" onClick={onHIDConnect}>
+                Connect by HID
+              </Button>
+              <Button variant="primary" onClick={onHIDOpen}>
+                Open device
+              </Button>
+              <Button variant="primary" onClick={onHIDReports}>
+                List reports
+              </Button>
+              <Button variant="primary" onClick={onHIDHelp}>
+                Send help
+              </Button>
+              <Button variant="primary" onClick={onHIDGetKeymap}>
+                Get keymap
+              </Button>
+              <Button variant="primary" onClick={onHIDHardcodedKeymap}>
+                Harcoded keymap
+              </Button>
+              <Button variant="primary" onClick={onHIDSetOriginalKeymap}>
+                Restore keymap
+              </Button>
+            </div>
           </div>
           <div className="w-full py-4">
             <h4>Serial Testing Buttons</h4>
-            <Button variant="primary" onClick={onListSerialDevices}>
-              List of Serial Devices
-            </Button>
-            <Button variant="primary" onClick={() => onSerialConnect(0)}>
-              Connect to Serial Device
-            </Button>
-            <Button variant="primary" onClick={onMessageSend}>
-              Send message
-            </Button>
-            <Button variant="primary" onClick={onSerialDisconnect}>
-              Disconnect
-            </Button>
+            <div className="flex gap-4">
+              <Button variant="primary" onClick={onListSerialDevices}>
+                List of Serial Devices
+              </Button>
+              <Button variant="primary" onClick={() => onSerialConnect(0)}>
+                Connect to Serial Device
+              </Button>
+              <Button variant="primary" onClick={onMessageSend}>
+                Send message
+              </Button>
+              <Button variant="primary" onClick={onSerialDisconnect}>
+                Disconnect
+              </Button>
+            </div>
           </div>
-          <div className="w-full py-4">
+          {/* <div className="w-full py-4">
             <Link to="/device-manager" className="list-link">
               <NavigationButton
                 selected={false}
@@ -255,9 +323,23 @@ const BazecorDevtools = () => {
                 disabled={false}
               />
             </Link>
-          </div>
+          </div> */}
         </div>
-        <div className="columns-2 gap-4">
+        <div className="flex w-full gap-2">
+          <Button variant="primary" size="sm" onClick={ToastMessageRegular}>
+            Test ToastMessage Success
+          </Button>
+          <Button variant="destructive" size="sm" onClick={ToastMessageError}>
+            Test ToastMessage Error
+          </Button>
+          <Button variant="warning" size="sm" onClick={ToastMessageWarning}>
+            Test ToastMessage Warning
+          </Button>
+          <Button variant="short" size="sm" onClick={ToastMessageInfo}>
+            Test ToastMessage info
+          </Button>
+        </div>
+        {/* <div className="columns-2 gap-4">
           <div className="w-full py-4">
             <div>
               <h4>Connection data</h4>
@@ -288,7 +370,7 @@ const BazecorDevtools = () => {
               </ul>
             </div>
           </div>
-        </div>
+        </div> */}
       </div>
     </div>
   );
