@@ -22,9 +22,6 @@ import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import Styled from "styled-components";
 import log from "electron-log/renderer";
-import Container from "react-bootstrap/Container";
-import Dropdown from "react-bootstrap/Dropdown";
-import DropdownButton from "react-bootstrap/DropdownButton";
 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@Renderer/components/atoms/Select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@Renderer/components/atoms/Dialog";
@@ -49,6 +46,7 @@ import { IconFloppyDisk, IconLoader } from "@Renderer/components/atoms/Icons";
 import MacroSelector from "@Renderer/components/organisms/Select/MacroSelector";
 import ToastMessage from "@Renderer/components/atoms/ToastMessage";
 import Callout from "@Renderer/components/molecules/Callout/Callout";
+import Heading from "@Renderer/components/atoms/Heading";
 
 // Modules
 import { PageHeader } from "@Renderer/modules/PageHeader";
@@ -63,7 +61,6 @@ import Keymap, { KeymapDB } from "../../api/keymap";
 
 import Store from "../utils/Store";
 import getLanguage from "../utils/language";
-import Heading from "@Renderer/components/atoms/Heading";
 
 const store = Store.getStore();
 
@@ -733,9 +730,10 @@ function MacroEditor(props: MacroEditorProps) {
   let ListOfDeletes = listToDelete.map(({ layer, pos, key, newKey }) => {
     if (newKey === -1) {
       return (
-        <div key={`${key.keyCode}-${layer}-${pos}-${newKey}`}>
-          <p className="text-left mb-[4px] text-sm text-gray-500 dark:text-gray-100">{`Key in Layer ${layer + 1} and pos ${pos + 1}`}</p>
-        </div>
+        <li
+          key={`${key.keyCode}-${layer}-${pos}-${newKey}`}
+          className="text-left"
+        >{`Key in Layer ${layer + 1} and pos ${pos + 1}`}</li>
       );
     }
     return "";
@@ -745,9 +743,10 @@ function MacroEditor(props: MacroEditorProps) {
       const actions = ["Tap", "Hold", "Tap & hold", "2Tap", "2Tap & hold"];
       if (newKey === -1) {
         return (
-          <div key={`${superIdx}-${pos}-${newKey}`}>
-            <p className="text-left mb-[4px] text-sm text-gray-500 dark:text-gray-100">{`Key in Superkey ${superIdx + 1} and action ${actions[pos]}`}</p>
-          </div>
+          <li
+            key={`${superIdx}-${pos}-${newKey}`}
+            className="text-left"
+          >{`Key in Superkey ${superIdx + 1} and action ${actions[pos]}`}</li>
         );
       }
       return "";
@@ -757,9 +756,7 @@ function MacroEditor(props: MacroEditorProps) {
     listToDeleteM.map(({ macroIdx, pos, newKey }) => {
       if (newKey === -1) {
         return (
-          <div key={`${macroIdx}-${pos}-${newKey}`}>
-            <p className="text-left mb-[4px] text-sm text-gray-500 dark:text-gray-100">{`Key in Macro ${macroIdx + 1} and action ${pos}`}</p>
-          </div>
+          <li key={`${macroIdx}-${pos}-${newKey}`} className="text-left">{`Key in Macro ${macroIdx + 1} and action ${pos}`}</li>
         );
       }
       return "";
@@ -789,7 +786,7 @@ function MacroEditor(props: MacroEditorProps) {
   if (loading) return <LogoLoader centered />;
   return (
     <Styles className="macroEditor">
-      <Container fluid>
+      <div className="px-3">
         <PageHeader
           text="Macro Editor"
           contentSelector={
@@ -851,7 +848,7 @@ function MacroEditor(props: MacroEditorProps) {
             />
           </>
         )}
-      </Container>
+      </div>
 
       <Dialog open={showDeleteModal} onOpenChange={toggleDeleteModal}>
         <DialogContent>
@@ -862,12 +859,14 @@ function MacroEditor(props: MacroEditorProps) {
             {ListOfDeletes && (
               <>
                 <Heading headingLevel={4} renderAs="h4">
-                  Macro used on:
+                  The macro you want to delete is currently in use on:
                 </Heading>
-                <div className="mt-1">{ListOfDeletes}</div>
+                <div className="mt-1 mb-4">
+                  <ul className="mb-[4px] text-ssm list-disc pl-[24px] text-gray-500 dark:text-gray-100">{ListOfDeletes}</ul>
+                </div>
               </>
             )}
-            <p className="mb-2 mt-3">{i18n.editor.macros.deleteModal.body}</p>
+            <p className="mb-2">{i18n.editor.macros.deleteModal.body}</p>
             {ListCombo}
           </div>
           <DialogFooter>

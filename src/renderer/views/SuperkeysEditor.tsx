@@ -22,8 +22,7 @@ import Styled from "styled-components";
 import log from "electron-log/renderer";
 
 // Styling and elements
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
+import Heading from "@Renderer/components/atoms/Heading";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@Renderer/components/atoms/Dialog";
 
 // Components
@@ -754,11 +753,7 @@ function SuperkeysEditor(props: SuperkeysEditorProps) {
   const superName = superkeys.length > 0 && superkeys.length > selectedSuper ? superkeys[selectedSuper].name : "";
 
   const listOfSKK = listToDelete.map(({ layer, pos, superIdx }) => (
-    <Row key={`${layer}-${pos}-${superIdx}`}>
-      <Col xs={12} className="px-0 text-center gridded">
-        <p className="titles alignvert">{`Key in layer ${layer + 1} and pos ${pos}`}</p>
-      </Col>
-    </Row>
+    <li key={`${layer}-${pos}-${superIdx}`} className="titles alignvert">{`Key in layer ${layer + 1} and pos ${pos}`}</li>
   ));
   // if (loading || !Array.isArray(superkeys)) return <LogoLoaderCentered />;
   if (loading || !Array.isArray(superkeys)) return <LogoLoader centered />;
@@ -874,8 +869,20 @@ function SuperkeysEditor(props: SuperkeysEditorProps) {
             <DialogTitle>{i18n.editor.superkeys.deleteModal.title}</DialogTitle>
           </DialogHeader>
           <div className="px-6 pb-2 mt-2">
-            <p>{i18n.editor.superkeys.deleteModal.body}</p>
-            {listOfSKK}
+            {listOfSKK && (
+              <>
+                <Heading headingLevel={4} renderAs="h4">
+                  The superkey you want to delete is currently in use on:
+                </Heading>
+                <div className="mt-1 mb-4">
+                  <ul className="mb-[4px] text-ssm list-disc pl-[24px] text-gray-500 dark:text-gray-100">{listOfSKK}</ul>
+                </div>
+              </>
+            )}
+            <p className="text-sm text-gray-500 dark:text-gray-25">
+              By pressing <strong>Remove</strong> you will replace those superkeys with <strong>NO KEY</strong> on the keyboard
+              layout.
+            </p>
           </div>
           <DialogFooter>
             <Button size="sm" variant="outline" onClick={toggleDeleteModal}>

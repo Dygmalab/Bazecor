@@ -379,7 +379,7 @@ const English = {
       deleteModal: {
         title: "This superkey is in use",
         // prettier-ignore
-        body:"The superkey you want to delete is currently in use, by pressing remove you will replace those superkeys with NO KEY on the keyboard layout. Select how to proceed.",
+        body:"By pressing Remove you will replace those superkeys with NO KEY on the keyboard layout.",
         cancelButton: "Cancel",
         applyButton: "Remove",
       },
