@@ -17,7 +17,7 @@
 
 import { Loader2 } from "lucide-react";
 import React from "react";
-import Modal from "react-bootstrap/Modal";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@Renderer/components/atoms/Dialog";
 
 interface WaitForRestoreDialogProps {
   open: boolean;
@@ -27,14 +27,16 @@ interface WaitForRestoreDialogProps {
 const WaitForRestoreDialog = (props: WaitForRestoreDialogProps): JSX.Element => {
   const { open, title } = props;
   return (
-    <Modal backdrop="static" show={open} size="sm" aria-labelledby="contained-modal-title-vcenter" centered>
-      <Modal.Header closeButton>
-        <Modal.Title className="title">{title}</Modal.Title>
-      </Modal.Header>
-      <Modal.Body className="body self-center">
-        <Loader2 size={60} strokeWidth={3} color="#ca07ad" className="animate-spin" />
-      </Modal.Body>
-    </Modal>
+    <Dialog open={open}>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>{title}</DialogTitle>
+        </DialogHeader>
+        <div className="px-6 pb-2 mt-2">
+          <Loader2 size={60} strokeWidth={3} color="#ca07ad" className="animate-spin" />
+        </div>
+      </DialogContent>
+    </Dialog>
   );
 };
 
