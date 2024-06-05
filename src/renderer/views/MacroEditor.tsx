@@ -22,12 +22,12 @@ import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import Styled from "styled-components";
 import log from "electron-log/renderer";
-import Col from "react-bootstrap/Col";
 import Container from "react-bootstrap/Container";
 import Dropdown from "react-bootstrap/Dropdown";
 import DropdownButton from "react-bootstrap/DropdownButton";
-import Modal from "react-bootstrap/Modal";
-import Row from "react-bootstrap/Row";
+
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@Renderer/components/atoms/Select";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@Renderer/components/atoms/Dialog";
 
 // Types
 import {
@@ -63,6 +63,7 @@ import Keymap, { KeymapDB } from "../../api/keymap";
 
 import Store from "../utils/Store";
 import getLanguage from "../utils/language";
+import Heading from "@Renderer/components/atoms/Heading";
 
 const store = Store.getStore();
 
@@ -732,11 +733,9 @@ function MacroEditor(props: MacroEditorProps) {
   let ListOfDeletes = listToDelete.map(({ layer, pos, key, newKey }) => {
     if (newKey === -1) {
       return (
-        <Row key={`${key.keyCode}-${layer}-${pos}-${newKey}`}>
-          <Col xs={12} className="px-0 text-center gridded">
-            <p className="titles alignvert">{`Key in layer ${layer + 1} and pos ${pos + 1}`}</p>
-          </Col>
-        </Row>
+        <div key={`${key.keyCode}-${layer}-${pos}-${newKey}`}>
+          <p className="text-left mb-[4px] text-sm text-gray-500 dark:text-gray-100">{`Key in Layer ${layer + 1} and pos ${pos + 1}`}</p>
+        </div>
       );
     }
     return "";
@@ -746,11 +745,9 @@ function MacroEditor(props: MacroEditorProps) {
       const actions = ["Tap", "Hold", "Tap & hold", "2Tap", "2Tap & hold"];
       if (newKey === -1) {
         return (
-          <Row key={`${superIdx}-${pos}-${newKey}`}>
-            <Col xs={12} className="px-0 text-center gridded">
-              <p className="titles alignvert">{`Key in Superkey ${superIdx + 1} and action ${actions[pos]}`}</p>
-            </Col>
-          </Row>
+          <div key={`${superIdx}-${pos}-${newKey}`}>
+            <p className="text-left mb-[4px] text-sm text-gray-500 dark:text-gray-100">{`Key in Superkey ${superIdx + 1} and action ${actions[pos]}`}</p>
+          </div>
         );
       }
       return "";
@@ -760,11 +757,9 @@ function MacroEditor(props: MacroEditorProps) {
     listToDeleteM.map(({ macroIdx, pos, newKey }) => {
       if (newKey === -1) {
         return (
-          <Row key={`${macroIdx}-${pos}-${newKey}`}>
-            <Col xs={12} className="px-0 text-center gridded">
-              <p className="titles alignvert">{`Key in Macro ${macroIdx + 1} and action ${pos}`}</p>
-            </Col>
-          </Row>
+          <div key={`${macroIdx}-${pos}-${newKey}`}>
+            <p className="text-left mb-[4px] text-sm text-gray-500 dark:text-gray-100">{`Key in Macro ${macroIdx + 1} and action ${pos}`}</p>
+          </div>
         );
       }
       return "";
@@ -772,22 +767,23 @@ function MacroEditor(props: MacroEditorProps) {
   );
 
   const ListCombo = (
-    <DropdownButton
-      id="Selectlayers"
-      className="selectButton"
-      // drop={"up"}
-      title={macros.length > 0 && selectedList > -1 ? macros[selectedList]?.name : "No Key"}
-      onSelect={UpdateList}
-    >
-      <Dropdown.Item eventKey={(-1).toString()} key={`macro-${-1}`} disabled={false}>
-        No Key
-      </Dropdown.Item>
-      {macros.map(macro => (
-        <Dropdown.Item eventKey={macro.id.toString()} key={`macro-${macro.id}`} disabled={macro.id === -1}>
-          {macro?.name}
-        </Dropdown.Item>
-      ))}
-    </DropdownButton>
+    <>
+      <Select onValueChange={UpdateList}>
+        <SelectTrigger className="w-full">
+          <SelectValue placeholder={macros.length > 0 && selectedList > -1 ? macros[selectedList]?.name : "No Key"} />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value={(-1).toString()} key={`macro-${-1}`} disabled={false}>
+            No Key
+          </SelectItem>
+          {macros.map(macro => (
+            <SelectItem value={macro.id.toString()} key={`macro-${macro.id}`} disabled={macro.id === -1}>
+              {macro?.name ? `#${macro.id + 1}. ${macro?.name}` : `#${macro.id + 1}. No name`}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+    </>
   );
 
   if (loading) return <LogoLoader centered />;
@@ -856,24 +852,34 @@ function MacroEditor(props: MacroEditorProps) {
           </>
         )}
       </Container>
-      <Modal show={showDeleteModal} onHide={toggleDeleteModal} size="lg" aria-labelledby="contained-modal-title-vcenter" centered>
-        <Modal.Header closeButton>
-          <Modal.Title>{i18n.editor.macros.deleteModal.title}</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          {ListOfDeletes}
-          <p>{i18n.editor.macros.deleteModal.body}</p>
-          {ListCombo}
-        </Modal.Body>
-        <Modal.Footer>
-          <Button size="sm" variant="outline" onClick={toggleDeleteModal}>
-            {i18n.editor.macros.deleteModal.cancelButton}
-          </Button>
-          <Button size="sm" variant="secondary" onClick={ActUponDelete}>
-            {i18n.editor.macros.deleteModal.applyButton}
-          </Button>
-        </Modal.Footer>
-      </Modal>
+
+      <Dialog open={showDeleteModal} onOpenChange={toggleDeleteModal}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>{i18n.editor.macros.deleteModal.title}</DialogTitle>
+          </DialogHeader>
+          <div className="px-6 pb-2 mt-2">
+            {ListOfDeletes && (
+              <>
+                <Heading headingLevel={4} renderAs="h4">
+                  Macro used on:
+                </Heading>
+                <div className="mt-1">{ListOfDeletes}</div>
+              </>
+            )}
+            <p className="mb-2 mt-3">{i18n.editor.macros.deleteModal.body}</p>
+            {ListCombo}
+          </div>
+          <DialogFooter>
+            <Button size="sm" variant="outline" onClick={toggleDeleteModal}>
+              {i18n.editor.macros.deleteModal.cancelButton}
+            </Button>
+            <Button size="sm" variant="secondary" onClick={ActUponDelete}>
+              {i18n.editor.macros.deleteModal.applyButton}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </Styles>
   );
 }

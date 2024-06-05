@@ -24,7 +24,7 @@ import log from "electron-log/renderer";
 // Styling and elements
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import Modal from "react-bootstrap/Modal";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@Renderer/components/atoms/Dialog";
 
 // Components
 import Callout from "@Renderer/components/molecules/Callout/Callout";
@@ -868,23 +868,25 @@ function SuperkeysEditor(props: SuperkeysEditorProps) {
         ""
       )}
 
-      <Modal show={showDeleteModal} onHide={toggleDeleteModal} size="lg" aria-labelledby="contained-modal-title-vcenter" centered>
-        <Modal.Header closeButton>
-          <Modal.Title>{i18n.editor.superkeys.deleteModal.title}</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <p>{i18n.editor.superkeys.deleteModal.body}</p>
-          {listOfSKK}
-        </Modal.Body>
-        <Modal.Footer>
-          <Button size="sm" variant="outline" onClick={toggleDeleteModal}>
-            {i18n.editor.superkeys.deleteModal.cancelButton}
-          </Button>
-          <Button size="sm" variant="secondary" onClick={RemoveDeletedSK}>
-            {i18n.editor.superkeys.deleteModal.applyButton}
-          </Button>
-        </Modal.Footer>
-      </Modal>
+      <Dialog open={showDeleteModal} onOpenChange={toggleDeleteModal}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>{i18n.editor.superkeys.deleteModal.title}</DialogTitle>
+          </DialogHeader>
+          <div className="px-6 pb-2 mt-2">
+            <p>{i18n.editor.superkeys.deleteModal.body}</p>
+            {listOfSKK}
+          </div>
+          <DialogFooter>
+            <Button size="sm" variant="outline" onClick={toggleDeleteModal}>
+              {i18n.editor.superkeys.deleteModal.cancelButton}
+            </Button>
+            <Button size="sm" variant="secondary" onClick={RemoveDeletedSK}>
+              {i18n.editor.superkeys.deleteModal.applyButton}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </Styles>
   );
 }

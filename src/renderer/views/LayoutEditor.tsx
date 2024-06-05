@@ -27,7 +27,7 @@ import log from "electron-log/renderer";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import Modal from "react-bootstrap/Modal";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@Renderer/components/atoms/Dialog";
 import customCursor from "@Assets/base/cursorBucket.png";
 import ToastMessage from "@Renderer/components/atoms/ToastMessage";
 import { CopyFromDialog } from "@Renderer/component/CopyFromDialog";
@@ -1940,40 +1940,45 @@ const LayoutEditor = (props: LayoutEditorProps) => {
         />
       </Container>
 
-      <Modal show={showMacroModal} size="lg" onHide={toggleMacroModal} aria-labelledby="contained-modal-title-vcenter" centered>
-        <Modal.Header closeButton>
-          <Modal.Title>{i18n.editor.oldMacroModal.title}</Modal.Title>
-        </Modal.Header>
-        <Modal.Body className="body">
-          <p>{i18n.editor.oldMacroModal.body}</p>
-          <p className="italic">{i18n.editor.oldMacroModal.body2}</p>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="outline" size="sm" onClick={toggleMacroModal}>
-            {i18n.editor.oldMacroModal.cancelButton}
-          </Button>
-          <Button variant="secondary" size="sm" onClick={updateOldMacros}>
-            {i18n.editor.oldMacroModal.cancelButton}
-          </Button>
-        </Modal.Footer>
-      </Modal>
-      <Modal show={showNeuronModal} size="lg" onHide={toggleNeuronModal} aria-labelledby="contained-modal-title-vcenter" centered>
-        <Modal.Header closeButton>
-          <Modal.Title>{i18n.editor.oldNeuronModal.title}</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <p>{i18n.editor.oldNeuronModal.body}</p>
-          <p className="italic">{i18n.editor.oldNeuronModal.body2}</p>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="outline" size="sm" onClick={toggleNeuronModal}>
-            {i18n.editor.oldNeuronModal.cancelButton}
-          </Button>
-          <Button variant="secondary" size="sm" onClick={CloneExistingNeuron}>
-            {i18n.editor.oldNeuronModal.applyButton}
-          </Button>
-        </Modal.Footer>
-      </Modal>
+      <Dialog open={showMacroModal} onOpenChange={toggleMacroModal}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>{i18n.editor.oldMacroModal.title}</DialogTitle>
+          </DialogHeader>
+          <div className="px-6 pb-2 mt-2">
+            <p>{i18n.editor.oldMacroModal.body}</p>
+            <p className="italic">{i18n.editor.oldMacroModal.body2}</p>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" size="sm" onClick={toggleMacroModal}>
+              {i18n.editor.oldMacroModal.cancelButton}
+            </Button>
+            <Button variant="secondary" size="sm" onClick={updateOldMacros}>
+              {i18n.editor.oldMacroModal.cancelButton}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={showNeuronModal} onOpenChange={toggleNeuronModal}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>{i18n.editor.oldNeuronModal.title}</DialogTitle>
+          </DialogHeader>
+          <div className="px-6 pb-2 mt-2">
+            <p>{i18n.editor.oldNeuronModal.body}</p>
+            <p className="italic">{i18n.editor.oldNeuronModal.body2}</p>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" size="sm" onClick={toggleNeuronModal}>
+              {i18n.editor.oldNeuronModal.cancelButton}
+            </Button>
+            <Button variant="secondary" size="sm" onClick={CloneExistingNeuron}>
+              {i18n.editor.oldNeuronModal.applyButton}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
       {modeselect === "keyboard" && isStandardView ? (
         <StandardView
