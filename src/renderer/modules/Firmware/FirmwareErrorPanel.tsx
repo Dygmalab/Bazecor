@@ -23,12 +23,12 @@ import { i18n } from "@Renderer/i18n";
 
 // State machine
 import { IconNoWifi, IconWarning } from "@Renderer/components/atoms/Icons";
+import Heading from "@Renderer/components/atoms/Heading";
 import LogoLoader from "@Renderer/components/atoms/Loader/LogoLoader";
 import FWSelection from "../../controller/FirmwareSelection/machine";
 
 // Visual components
-import Title from "../../component/Title";
-import { RegularButton } from "../../component/Button";
+import { Button } from "@Renderer/components/atoms/Button";
 
 // Visual modules
 import FirmwareNeuronStatus from "./FirmwareNeuronStatus";
@@ -229,7 +229,9 @@ function FirmwareErrorPanel(props: FirmwareErrorPanelType) {
               <div className="firmware-content--inner">
                 {(state.context.error as Error).message.includes("GitHubData") ? (
                   <>
-                    <Title text={i18n.firmwareUpdate.texts.errorTitle} headingLevel={3} type="warning" />
+                    <Heading headingLevel={3} renderAs="h3" className="text-orange-200">
+                      {i18n.firmwareUpdate.texts.errorTitle}
+                    </Heading>
                     <div className="errorListWrapper">
                       <div className="errorListItem">
                         <div className="errorListImage iconWarning">
@@ -241,7 +243,9 @@ function FirmwareErrorPanel(props: FirmwareErrorPanelType) {
                   </>
                 ) : (
                   <>
-                    <Title text="Something went wrong" headingLevel={3} type="warning" />
+                    <Heading headingLevel={3} renderAs="h3" className="text-orange-200">
+                      Something went wrong
+                    </Heading>
                     <div className="errorListWrapper">
                       <div className="errorListItem">
                         <div className="errorListImage iconWarning">
@@ -272,11 +276,9 @@ function FirmwareErrorPanel(props: FirmwareErrorPanelType) {
             <div className="firmware-content borderLeftBottomRadius">
               <div className="wrapperActions">
                 {!handleError ? (
-                  <RegularButton
-                    styles="outline transp-bg flashingbutton nooutlined"
-                    buttonText={i18n.firmwareUpdate.texts.cancelButton}
-                    // onClick={onCancelDialog}
-                  />
+                  <Button variant="outline" onClick={onCancelDialog} size="sm">
+                    {i18n.firmwareUpdate.texts.cancelButton}
+                  </Button>
                 ) : (
                   ""
                 )}
@@ -284,14 +286,16 @@ function FirmwareErrorPanel(props: FirmwareErrorPanelType) {
             </div>
             <div className="firmware-sidebar borderRightBottomRadius">
               <div className="buttonActions">
-                <RegularButton
-                  styles="primary flashingbutton nooutlined"
-                  buttonText={i18n.general.retry}
+                <Button
+                  variant="primary"
+                  size="sm"
                   onClick={() => {
                     send({ type: "retry-event" });
                     retryBlock(state.context);
                   }}
-                />
+                >
+                  {i18n.general.retry}
+                </Button>
               </div>
             </div>
           </div>

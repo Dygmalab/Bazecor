@@ -37,10 +37,10 @@ height: inherit;
   }
 }
 .disclaimerContent {
-  font-size: 15px;
-  margin-top: 32px;
-  line-height: 1.5em;
-  font-weight: 500;
+  // font-size: 15px;
+  // margin-top: 32px;
+  // line-height: 1.5em;
+  // font-weight: 500;
 }
 .panel-wrapper {
   width: 100%;

@@ -23,7 +23,8 @@ import { i18n } from "@Renderer/i18n";
 import StepsProgressBar from "@Renderer/components/atoms/StepsBar/StepsProgressBar";
 import { Progress } from "@Renderer/components/atoms/Progress";
 import CircleLoader from "@Renderer/components/atoms/Loader/CircleLoader";
-import Title from "../../component/Title";
+// import Title from "../../component/Title";
+import Heading from "@Renderer/components/atoms/Heading";
 // import { StepsProgressBar } from "../../component/StepsBar";
 import FirmwareImageHelp from "./FirmwareImageHelp";
 
@@ -222,33 +223,30 @@ const FirmwareProgressStatus = (props: FirmwareProgressStatusType) => {
         </div>
         <div className="process-row process-footer">
           {stepsPosition === 0 ? (
-            <Title
-              text={
-                deviceProduct === "Raise"
-                  ? i18n.firmwareUpdate.texts.flashCardTitle1
-                  : i18n.firmwareUpdate.texts.flashCardTitleDefy1
-              }
-              headingLevel={3}
-              color="success"
-            />
+            <Heading headingLevel={3} renderAs="h4" className="text-green-200">
+              {deviceProduct === "Raise"
+                ? i18n.firmwareUpdate.texts.flashCardTitle1
+                : i18n.firmwareUpdate.texts.flashCardTitleDefy1}
+            </Heading>
           ) : (
-            <Title
-              text={steps[stepsPosition].title}
+            <Heading
               headingLevel={3}
-              color={stepsPosition === steps.length - 1 ? "warning" : "success"}
-            />
+              renderAs="h4"
+              className={stepsPosition === steps.length - 1 ? "text-orange-200" : "text-green-200"}
+            >
+              {steps[stepsPosition].title}
+            </Heading>
           )}
           {stepsPosition === 0 ? (
-            <Title
-              text={
-                deviceProduct === "Raise"
-                  ? i18n.firmwareUpdate.texts.flashCardTitle2
-                  : i18n.firmwareUpdate.texts.progressCardTitleDefy2
-              }
-              headingLevel={6}
-            />
+            <Heading headingLevel={4} renderAs="paragraph-sm">
+              {deviceProduct === "Raise"
+                ? i18n.firmwareUpdate.texts.flashCardTitle2
+                : i18n.firmwareUpdate.texts.progressCardTitleDefy2}
+            </Heading>
           ) : (
-            <Title text={steps[stepsPosition].description} headingLevel={6} />
+            <Heading headingLevel={4} renderAs="paragraph-sm">
+              {steps[stepsPosition].description}
+            </Heading>
           )}
         </div>
       </div>

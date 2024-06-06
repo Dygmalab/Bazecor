@@ -6,8 +6,8 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@R
 import { i18n } from "@Renderer/i18n";
 
 // Visual components
-import Title from "../Title";
-import { IconCheckmarkSm, IconChevronDown, IconCloseXs } from "../Icon";
+import Heading from "@Renderer/components/atoms/Heading";
+import { IconCheckmark, IconChevronDown, IconClose } from "@Renderer/components/atoms/Icons";
 
 const Style = Styled.div`
 width: 100%;
@@ -128,11 +128,10 @@ const AccordionFirmware = ({ items }: any) => {
           <AccordionTrigger className="px-3 py-2 bg-transparent bg-dark:bg-black/5 mb-[-1px]">
             <div className="stepsCompletedStatus text-gray-500 dark:text-gray-100">
               <div className="stepsCompletedHeader">
-                {passedTasks ? <IconCheckmarkSm /> : ""}
-                <Title
-                  text={passedTasks ? i18n.firmwareUpdate.milestones.readyToStart : i18n.firmwareUpdate.milestones.analyzedTasks}
-                  headingLevel={5}
-                />
+                {passedTasks ? <IconCheckmark size="sm" /> : ""}
+                <Heading headingLevel={5} renderAs="h5">
+                  {passedTasks ? i18n.firmwareUpdate.milestones.readyToStart : i18n.firmwareUpdate.milestones.analyzedTasks}
+                </Heading>
               </div>
               <div className="stepsCompleted">
                 <div className={`stepsCompletedLabel ${counterTasks === items.length ? "passed" : "warning"}`}>
@@ -153,7 +152,7 @@ const AccordionFirmware = ({ items }: any) => {
                   } ${item.checked ? "checked" : "warning"}`}
                   key={`itemChecked-${item.id}`}
                 >
-                  <div className="item-checked--icon">{item.checked ? <IconCheckmarkSm /> : <IconCloseXs />}</div>
+                  <div className="item-checked--icon">{item.checked ? <IconCheckmark size="sm" /> : <IconClose />}</div>
                   {textList[index].text}
                 </div>
               ))}

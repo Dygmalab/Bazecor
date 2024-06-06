@@ -26,11 +26,10 @@ import DeviceChecks from "@Renderer/controller/DeviceChecks/machine";
 import { ContextType } from "@Renderer/controller/FlashManager/context";
 
 // Visual components
-import Title from "@Renderer/component/Title";
+import Heading from "@Renderer/components/atoms/Heading";
 import Callout from "@Renderer/components/molecules/Callout/Callout";
-import { RegularButton } from "@Renderer/component/Button";
+import { Button } from "@Renderer/components/atoms/Button";
 import LogoLoader from "@Renderer/components/atoms/Loader/LogoLoader";
-// import AccordionFirmware from "@Renderer/component/Accordion/AccordionFirmware";
 import AccordionFirmware from "@Renderer/components/molecules/CustomAccordion/AccordionFirmware";
 
 import FirmwareNeuronStatus from "./FirmwareNeuronStatus";
@@ -217,25 +216,23 @@ function FirmwareCheckProcessPanel(props: FirmwareCheckProcessPanelType) {
               <div className="firmware-row">
                 <div className="firmware-content borderLeftTopRadius">
                   <div className="firmware-content--inner">
-                    <Title
-                      text={
-                        !state.context.sideLeftOk || !state.context.sideRightOK
-                          ? i18n.firmwareUpdate.texts.errorTitle
-                          : i18n.firmwareUpdate.texts.disclaimerTitle
-                      }
+                    <Heading
                       headingLevel={3}
-                      type={
-                        (!state.context.sideLeftOk || !state.context.sideRightOK ? "warning" : "default") as "warning" | "default"
-                      }
-                    />
+                      renderAs="h3"
+                      className={!state.context.sideLeftOk || !state.context.sideRightOK ? "text-orange-200" : ""}
+                    >
+                      {!state.context.sideLeftOk || !state.context.sideRightOK
+                        ? i18n.firmwareUpdate.texts.errorTitle
+                        : i18n.firmwareUpdate.texts.disclaimerTitle}
+                    </Heading>
                     {state.context.sideLeftOk && state.context.sideRightOK ? (
                       <>
                         <div
-                          className="disclaimerContent"
+                          className="disclaimerContent text-sm mt-2 leading-snug font-medium"
                           dangerouslySetInnerHTML={{ __html: i18n.firmwareUpdate.texts.disclaimerContent }}
                         />
                         <div
-                          className="disclaimerContent"
+                          className="disclaimerContent text-sm mt-2 leading-snug font-medium"
                           dangerouslySetInnerHTML={{ __html: i18n.firmwareUpdate.texts.disclaimerContent3 }}
                         />
                         <Callout size="sm" className="mt-4">
@@ -266,36 +263,34 @@ function FirmwareCheckProcessPanel(props: FirmwareCheckProcessPanelType) {
               <div className="firmware-row">
                 <div className="firmware-content borderLeftBottomRadius">
                   <div className="wrapperActions">
-                    <RegularButton
-                      styles="outline transp-bg flashingbutton nooutlined"
-                      buttonText={
-                        !state.context.sideLeftOk || !state.context.sideRightOK
-                          ? i18n.firmwareUpdate.texts.cancelButton
-                          : i18n.firmwareUpdate.texts.backwds
-                      }
+                    <Button
+                      variant="outline"
                       onClick={() => {
                         send({ type: "cancel-event" });
                         retryBlock(state.context);
                       }}
-                    />
+                    >
+                      {!state.context.sideLeftOk || !state.context.sideRightOK
+                        ? i18n.firmwareUpdate.texts.cancelButton
+                        : i18n.firmwareUpdate.texts.backwds}
+                    </Button>
                   </div>
                 </div>
                 <div className="firmware-sidebar borderRightBottomRadius">
                   <div className="buttonActions">
                     {state.context.sideLeftOk && state.context.sideRightOK && state.context.backup ? (
-                      <RegularButton
-                        styles="primary flashingbutton nooutlined"
-                        buttonText={i18n.firmwareUpdate.texts.letsStart}
-                        onClick={() => send({ type: "pressed-event" })}
-                      />
+                      <Button variant="primary" onClick={() => send({ type: "pressed-event" })}>
+                        {i18n.firmwareUpdate.texts.letsStart}
+                      </Button>
                     ) : (
-                      <RegularButton
-                        styles="primary flashingbutton nooutlined"
-                        buttonText={i18n.general.retry}
+                      <Button
+                        variant="primary"
                         onClick={() => {
                           send({ type: "retry-event" });
                         }}
-                      />
+                      >
+                        {i18n.general.retry}
+                      </Button>
                     )}
                   </div>
                 </div>

@@ -24,9 +24,9 @@ import { i18n } from "@Renderer/i18n";
 import FirmwareSelection from "@Renderer/controller/FirmwareSelection/machine";
 
 // Visual components
-import Title from "@Renderer/component/Title";
+import Heading from "@Renderer/components/atoms/Heading";
 import Callout from "@Renderer/components/molecules/Callout/Callout";
-import { RegularButton } from "@Renderer/component/Button";
+import { Button } from "@Renderer/components/atoms/Button";
 import LogoLoader from "@Renderer/components/atoms/Loader/LogoLoader";
 import { IconLoader } from "@Renderer/components/atoms/Icons";
 
@@ -197,15 +197,11 @@ function FirmwareUpdatePanel(props: FirmwareUpdatePanelProps) {
           <div className="firmware-row">
             <div className="firmware-content borderLeftTopRadius">
               <div className="firmware-content--inner">
-                <Title
-                  text={
-                    state.context.isUpdated
-                      ? i18n.firmwareUpdate.texts.versionUpdatedTitle
-                      : i18n.firmwareUpdate.texts.versionOutdatedTitle
-                  }
-                  headingLevel={3}
-                  type={state.context.isUpdated ? "success" : "warning"}
-                />
+                <Heading headingLevel={3} className={state.context.isUpdated ? "text-green-200" : "text-orange-200"}>
+                  {state.context.isUpdated
+                    ? i18n.firmwareUpdate.texts.versionUpdatedTitle
+                    : i18n.firmwareUpdate.texts.versionOutdatedTitle}
+                </Heading>
                 <Callout
                   className="mt-4"
                   size="sm"
@@ -249,16 +245,15 @@ function FirmwareUpdatePanel(props: FirmwareUpdatePanelProps) {
             <div className="firmware-sidebar borderRightBottomRadius">
               <div className="buttonActions">
                 {state.context.firmwareList.length > 0 ? (
-                  <RegularButton
-                    styles={state.context.isUpdated ? "flashingbutton outline transp-bg" : "flashingbutton nooutlined primary"}
-                    buttonText={flashButtonText}
-                    icoSVG={state.context.stateblock === 4 ? <IconLoader /> : null}
-                    icoPosition={state.context.stateblock === 4 ? "right" : null}
-                    disabled={state.context.stateblock === 4}
+                  <Button
                     onClick={() => {
                       send({ type: "next-event" });
                     }}
-                  />
+                    variant={state.context.isUpdated ? "outline" : "primary"}
+                    disabled={state.context.stateblock === 4}
+                  >
+                    {flashButtonText} {state.context.stateblock === 4 ? <IconLoader /> : null}
+                  </Button>
                 ) : (
                   ""
                 )}

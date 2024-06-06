@@ -363,13 +363,6 @@ function KeyboardSettings(props: KeyboardSettingsProps) {
                           </Tooltip>
                         </TooltipProvider>
                       </Heading>
-                      {/* <Title
-                        text={i18n.keyboardSettings.qukeys.overlapThreshold}
-                        headingLevel={6}
-                        tooltip={`<h5 class="text-left">${i18n.keyboardSettings.qukeys.overlapThresholdTip1}</h5><ul><li class="text-left">${i18n.keyboardSettings.qukeys.overlapThresholdTip2}</li><li class="text-left">${i18n.keyboardSettings.qukeys.overlapThresholdTip3}</li></ul>`}
-                        tooltipPlacement="bottom"
-                        tooltipSize="wide"
-                      /> */}
                     </Form.Label>
                   </Col>
                 </Row>
