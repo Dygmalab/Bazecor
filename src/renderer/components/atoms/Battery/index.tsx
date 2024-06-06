@@ -14,7 +14,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-// import BatteryStatusSide from "./BatteryStatusSide";
+import BatteryStatusSide from "./BatteryStatusSide";
 import DefyBatteryIndicator from "./DefyBatteryIndicator";
 import DefyBatteryIndicatorLeft from "./DefyBatteryIndicatorLeft";
 import DefyBatteryIndicatorRight from "./DefyBatteryIndicatorRight";
@@ -22,7 +22,7 @@ import PileIndicator from "./PileIndicator";
 import SavingModeIndicator from "./SavingModeIndicator";
 
 export {
-  // BatteryStatusSide,
+  BatteryStatusSide,
   DefyBatteryIndicator,
   DefyBatteryIndicatorLeft,
   DefyBatteryIndicatorRight,

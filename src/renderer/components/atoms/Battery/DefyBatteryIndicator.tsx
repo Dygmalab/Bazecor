@@ -62,7 +62,7 @@ const DefyBatteryIndicator = ({ side, batteryLevel, batteryStatus }: DefyBattery
           {side === "left" ? <DefyBatteryIndicatorLeft batteryStatus={batteryStatus} batteryHeight={batteryHeight} /> : ""}
           {side === "right" ? <DefyBatteryIndicatorRight batteryStatus={batteryStatus} batteryHeight={batteryHeight} /> : ""}
           {batteryStatus === 0 ? (
-            <div className="batterySide--percentage absolute top-1/2 left-1/2 w-full font-bold tracking-tight text-center text-xl transform-style-3d translate-x-[50%] translate-y-[50%] text-[#ffffff] dark:text-gray-25">
+            <div className="batterySide--percentage absolute top-1/2 left-1/2 w-full font-bold tracking-tight text-center text-xl transform-style-3d translate-x-[-50%] translate-y-[-50%] text-[#ffffff] dark:text-gray-25">
               {batteryLevel}%
             </div>
           ) : (

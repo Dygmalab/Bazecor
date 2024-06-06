@@ -21,9 +21,8 @@ import Styled from "styled-components";
 import { BatterySettingsProps } from "@Types/wireless";
 
 // Custom components
-import { Card, CardContent, CardHeader } from "@Renderer/components/atoms/Card";
-import Heading from "@Renderer/components/atoms/Heading";
-import { BatteryStatusSide, SavingModeIndicator } from "@Renderer/component/Battery";
+import { Card, CardContent, CardHeader, CardTitle } from "@Renderer/components/atoms/Card";
+import { BatteryStatusSide, SavingModeIndicator } from "@Renderer/components/atoms/Battery";
 
 // Assets
 import { IconBattery } from "@Renderer/components/atoms/Icons";
@@ -49,10 +48,11 @@ function BatterySettings(props: BatterySettingsProps) {
     <Styles>
       <Card className="max-w-2xl mx-auto" variant="default">
         <CardHeader>
-          <Heading headingLevel={3} renderAs="h3">
+          <CardTitle variant="default">
             <IconBattery /> {i18n.wireless.batteryPreferences.battery}
-          </Heading>
+          </CardTitle>
         </CardHeader>
+
         <CardContent className="py-0">
           <div className="battery-defy--indicator">
             <BatteryStatusSide
