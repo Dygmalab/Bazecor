@@ -1,6 +1,5 @@
 /* eslint-disable no-console */
 import React, { useState } from "react";
-import { Dropdown, Modal } from "react-bootstrap";
 import { ipcRenderer } from "electron";
 import { toast } from "react-toastify";
 import path from "path";
@@ -10,6 +9,8 @@ import log from "electron-log/renderer";
 import { IconArrowRight, IconCloudDownload, IconKeyboard, IconUpload } from "@Renderer/components/atoms/Icons";
 import { Button } from "@Renderer/components/atoms/Button";
 import Heading from "@Renderer/components/atoms/Heading";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@Renderer/components/atoms/Select";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@Renderer/components/atoms/Dialog";
 import { i18n } from "@Renderer/i18n";
 
 import { VirtualType } from "@Renderer/types/virtual";
@@ -253,79 +254,65 @@ export default function VirtualSelector(props: VirtualSelectorProps) {
           {i18n.keyboardSelect.virtualKeyboard.buttonText}
         </Button>
       </div>
-      <Modal
-        show={showVirtualKeyboardModal}
-        size="lg"
-        onHide={() => toggleVirtualKeyboardModal()}
-        aria-labelledby="contained-modal-title-vcenter"
-        centered
-      >
-        <Modal.Header closeButton>
-          <Modal.Title>{i18n.keyboardSelect.virtualKeyboard.modaltitle}</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <div className="virtualKeyboards-wrapper">
-            <div className="virtualKeyboards-col">
-              <Heading headingLevel={4} renderAs="h4">
-                <IconCloudDownload /> {i18n.keyboardSelect.virtualKeyboard.newVirtualKeyboardTitle}
-              </Heading>
-              <p>{i18n.keyboardSelect.virtualKeyboard.newVirtualKeyboardDescription}</p>
-              <h3>{i18n.keyboardSelect.virtualKeyboard.newVirtualKeyboardLabel}</h3>
-              <Dropdown className="custom-dropdown" onSelect={selectVirtualKeyboard}>
-                <Dropdown.Toggle id="dropdown-custom">
-                  <div className="dropdownItemSelected">
-                    <div className="dropdownIcon">
-                      <IconKeyboard />
-                    </div>
-                    <div className="dropdownItem">{enumerator[selectedVirtualKeyboard].device.info.displayName}</div>
-                  </div>
-                </Dropdown.Toggle>
-                <Dropdown.Menu className="super-colors virtualKeyboardsMenu">
-                  {enumerator.map((item, index) => (
-                    <Dropdown.Item
-                      eventKey={index.toString()}
-                      key={`${item.device.info.displayName}-dropdown`}
-                      className={`${selectedVirtualKeyboard === index ? "active" : ""}`}
-                    >
-                      <div className="dropdownInner">
-                        <div className="dropdownIcon">
-                          <IconKeyboard />
+
+      <Dialog open={showVirtualKeyboardModal} onOpenChange={() => toggleVirtualKeyboardModal()}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>{i18n.keyboardSelect.virtualKeyboard.modaltitle}</DialogTitle>
+          </DialogHeader>
+          <div className="px-6 pb-6 mt-2">
+            <div className="virtualKeyboards-wrapper">
+              <div className="virtualKeyboards-col">
+                <Heading headingLevel={4} renderAs="h4">
+                  <IconCloudDownload /> {i18n.keyboardSelect.virtualKeyboard.newVirtualKeyboardTitle}
+                </Heading>
+                <p>{i18n.keyboardSelect.virtualKeyboard.newVirtualKeyboardDescription}</p>
+                <h3 className="mb-1">{i18n.keyboardSelect.virtualKeyboard.newVirtualKeyboardLabel}</h3>
+                <Select defaultValue="0" onValueChange={selectVirtualKeyboard}>
+                  <SelectTrigger className="w-full flex gap-2">
+                    <SelectValue placeholder="Keyboard model" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {enumerator.map((item, index) => (
+                      <SelectItem value={index.toString()} key={`${item.device.info.displayName}-dropdown`}>
+                        <div className="flex gap-2">
+                          <IconKeyboard /> <div className="dropdownItem">{item?.device?.info?.displayName}</div>
                         </div>
-                        <div className="dropdownItem">{item?.device?.info?.displayName}</div>
-                      </div>
-                    </Dropdown.Item>
-                  ))}
-                </Dropdown.Menu>
-              </Dropdown>
-              <Button
-                variant="primary"
-                onClick={() => {
-                  let fileName = enumerator[selectedVirtualKeyboard].device.info.product;
-                  fileName =
-                    fileName === "Defy"
-                      ? `Virtual${fileName}`
-                      : `Virtual${fileName}${enumerator[selectedVirtualKeyboard].device.info.keyboardType}`;
-                  newFile(enumerator[selectedVirtualKeyboard], fileName);
-                }}
-              >
-                {i18n.keyboardSelect.virtualKeyboard.createButtonLabel}
-              </Button>
-            </div>
-            <div className="virtualKeyboards-col virtualKeyboards-col--text">
-              <span>OR</span>
-            </div>
-            <div className="virtualKeyboards-col">
-              <Heading headingLevel={4} renderAs="h4">
-                <IconUpload /> {i18n.keyboardSelect.virtualKeyboard.loadVirtualKeyboardTitle}
-              </Heading>
-              <p>{i18n.keyboardSelect.virtualKeyboard.loadVirtualKeyboardDescription}</p>
-              <Button variant="primary" onClick={() => onLoadFile()}>
-                {i18n.general.loadFile}
-              </Button>
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <Button
+                  variant="primary"
+                  className="mt-3"
+                  onClick={() => {
+                    let fileName = enumerator[selectedVirtualKeyboard].device.info.product;
+                    fileName =
+                      fileName === "Defy"
+                        ? `Virtual${fileName}`
+                        : `Virtual${fileName}${enumerator[selectedVirtualKeyboard].device.info.keyboardType}`;
+                    newFile(enumerator[selectedVirtualKeyboard], fileName);
+                  }}
+                >
+                  {i18n.keyboardSelect.virtualKeyboard.createButtonLabel}
+                </Button>
+              </div>
+              <div className="virtualKeyboards-col virtualKeyboards-col--text">
+                <span>OR</span>
+              </div>
+              <div className="virtualKeyboards-col">
+                <Heading headingLevel={4} renderAs="h4">
+                  <IconUpload /> {i18n.keyboardSelect.virtualKeyboard.loadVirtualKeyboardTitle}
+                </Heading>
+                <p>{i18n.keyboardSelect.virtualKeyboard.loadVirtualKeyboardDescription}</p>
+                <Button variant="primary" onClick={() => onLoadFile()}>
+                  {i18n.general.loadFile}
+                </Button>
+              </div>
             </div>
           </div>
-        </Modal.Body>
-      </Modal>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
