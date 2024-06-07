@@ -1608,7 +1608,14 @@ const LayoutEditor = (props: LayoutEditorProps) => {
   };
 
   const refreshLayoutSelectorPosition = (x: number, y: number) => {
-    setLayoutSelectorPosition({ x, y });
+    console.log("isStandard: ", isStandardView);
+    console.log("viewMode: ", viewMode);
+    console.log("modeselect: ", modeselect);
+    if (modeselect === "color") {
+      setLayoutSelectorPosition({ x: 0, y: 0 });
+    } else {
+      setLayoutSelectorPosition({ x, y });
+    }
   };
 
   const configStandardView = () => {
@@ -1634,7 +1641,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
       log.info("Language automatically set to: ", newLanguage);
       setCurrentLanguageLayout(newLanguage || "english");
       setIsStandardView(standardView);
-      setViewMode(standardView ? "standard" : "single");
+      setViewMode(isStandardView ? "standard" : "single");
       setLoading(false);
       setCurrentLayer(0);
       setScanned(true);
@@ -1740,6 +1747,14 @@ const LayoutEditor = (props: LayoutEditorProps) => {
     setShowDefaults(localShowDefaults);
     setCurrentLayer(cLayer);
   }, [keymap, currentLayer, macros, superkeys]);
+
+  useEffect(() => {
+    if (modeselect === "color") {
+      console.log("Is color - change position");
+    } else {
+      setViewMode(isStandardView ? "standard" : "single");
+    }
+  }, [modeselect, viewMode, isStandardView]);
 
   const { Layer, kbtype } = getLayout();
   if (!Layer) {
