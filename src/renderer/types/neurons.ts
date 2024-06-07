@@ -14,7 +14,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { DygmaDeviceType } from "./devices";
+import { DygmaDeviceType } from "./dygmaDefs";
 import { MacrosType } from "./macros";
 import { SuperkeysType } from "./superkeys";
 

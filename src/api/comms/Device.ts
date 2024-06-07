@@ -1,12 +1,19 @@
-/* eslint-disable no-console */
 import { SerialPort } from "serialport";
-import { DeviceClass, DeviceType, DygmaDeviceType, VirtualType } from "@Renderer/types/devices";
+import { DeviceClass, DeviceType } from "@Renderer/types/devices";
 import log from "electron-log/renderer";
+import { DygmaDeviceType } from "@Renderer/types/dygmaDefs";
+import { VirtualType } from "@Renderer/types/virtual";
 import HID from "../hid/hid";
 import DeviceMap from "./deviceMap";
 import { ExtHIDInterface } from "./types";
 // eslint-disable-next-line no-eval
 const { DelimiterParser } = eval('require("@serialport/parser-delimiter")');
+
+export type State = {
+  selected: number;
+  currentDevice: Device;
+  deviceList: Array<Device>;
+};
 
 class Device implements DeviceClass {
   type: string;
@@ -20,14 +27,15 @@ class Device implements DeviceClass {
   timeout: number;
   result: string;
   callbacks: Array<(value: unknown) => void>;
-  device: DygmaDeviceType;
+  device: DygmaDeviceType | undefined;
   port?: HID | SerialPort;
-  commands?: { [key: string]: unknown; help: Array<string> };
+  commands?: { [key: string]: unknown };
   file?: boolean;
   isClosed: boolean;
   isSending: boolean;
   memoryMap: DeviceMap;
   fileData: VirtualType;
+  currentDevice: Device;
 
   constructor(parameters: DeviceType | HID | VirtualType, type: string) {
     // constructor for Device
@@ -57,10 +65,10 @@ class Device implements DeviceClass {
     }
     if (type === "hid") {
       params = parameters as HID;
-      this.path = undefined;
+      this.path = "";
       this.manufacturer = "Dygma";
       this.serialNumber = params.serialNumber;
-      this.pnpId = undefined;
+      this.pnpId = "";
       this.locationId = "";
       this.productId = String(params.connectedDevice.productId);
       this.vendorId = String(params.connectedDevice.vendorId);
@@ -71,11 +79,11 @@ class Device implements DeviceClass {
     if (type === "virtual") {
       params = parameters as VirtualType;
       this.isClosed = false;
-      this.path = undefined;
+      this.path = "";
       this.manufacturer = params.device.info.vendor;
       this.serialNumber = params.virtual["hardware.chip_id"].data;
-      this.pnpId = undefined;
-      this.locationId = undefined;
+      this.pnpId = "";
+      this.locationId = "";
       this.productId = params.device.usb.productId.toString(16);
       this.vendorId = params.device.usb.vendorId.toString(16);
       this.device = params.device;
@@ -107,7 +115,6 @@ class Device implements DeviceClass {
     this.port = serialport;
     this.type = "serial";
     this.isClosed = false;
-    serialport.pipe(new DelimiterParser({ delimiter: "\r\n" }));
     // Port is loaded, creating message handler
     const parser = this.port.pipe(new DelimiterParser({ delimiter: "\r\n" }));
     parser.on("data", (data: Buffer) => {
@@ -128,11 +135,13 @@ class Device implements DeviceClass {
         this.result += `\r\n${utfData}`;
       }
     });
-    const kbCommands = await Device.help(this);
-    log.info("these are the commands", kbCommands);
-    this.commands = {
-      help: kbCommands,
-    };
+    if (!this.device.bootloader) {
+      const kbCommands = await Device.help(this);
+      log.info("these are the commands", kbCommands);
+      this.commands = {
+        help: kbCommands,
+      };
+    }
   }
 
   async addHID() {
@@ -146,7 +155,12 @@ class Device implements DeviceClass {
 
   async close() {
     try {
-      if (this.type === "serial") await this.port.close();
+      if (this.type === "serial")
+        await this.port?.close(err => {
+          if (err) {
+            log.warn("errro when closing device", err);
+          }
+        });
       if (this.type === "hid") await (this.port as HID).connectedDevice.close();
       this.memoryMap = new DeviceMap();
       this.isClosed = true;
@@ -159,7 +173,7 @@ class Device implements DeviceClass {
     log.info("device.request:", command, ...args);
     return new Promise<string>((resolve, reject) => {
       const timer = setTimeout(() => {
-        reject(new Error("Communication timeout"));
+        reject(new Error(`Communication timeout of '${command}' command`));
       }, this.timeout);
       this.serialRequest(command, ...args)
         .then((data: string) => {
@@ -167,8 +181,8 @@ class Device implements DeviceClass {
           resolve(data as string);
         })
         .catch((err: Error) => {
-          log.info("Error sending request from focus", err);
-          reject(new Error("Error sending request from focus"));
+          log.info("Error sending request", err);
+          reject(new Error("Error sending request"));
         });
     });
   }
@@ -242,12 +256,12 @@ class Device implements DeviceClass {
       // if no args and it hits the cache, return the cache
       if (this.memoryMap.has(cmd)) return this.memoryMap.get(cmd);
     }
-    if (args || args.length > 0) {
+    if (args && args.length > 0) {
       // if args and no changes with cache, return cache instead of sending the command to the keyboard
       if (this.memoryMap.isUpdated(cmd, args.join(" "))) return this.memoryMap.get(cmd);
     }
 
-    let result: string;
+    let result = "";
     this.isSending = true;
     try {
       if (this.type === "serial") result = await this.request(cmd, ...args);
@@ -270,7 +284,7 @@ class Device implements DeviceClass {
   async noCacheCommand(cmd: string, ...args: Array<string>) {
     if (this.isClosed || (this.port === undefined && !this.file)) return undefined;
 
-    let result: string;
+    let result = "";
     this.isSending = true;
     try {
       if (this.type === "serial") result = await this.request(cmd, ...args);
@@ -304,11 +318,7 @@ class Device implements DeviceClass {
     });
   }
 
-  addCommands(cmds: string) {
-    Object.assign(this.commands, cmds);
-  }
-
-  static isDevice = (device: DeviceClass | VirtualType): device is DeviceClass => "type" in device;
+  static isDevice = (device: Device | VirtualType): device is Device => "type" in device;
 }
 
 export default Device;

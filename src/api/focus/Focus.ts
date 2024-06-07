@@ -24,7 +24,8 @@ import fs from "fs";
 import type { SerialPort, SerialPortOpenOptions } from "serialport";
 import log from "electron-log/renderer";
 // eslint-disable-next-line import/no-cycle
-import { DygmaDeviceType, VirtualType } from "@Renderer/types/devices";
+import { DygmaDeviceType } from "@Renderer/types/dygmaDefs";
+import { VirtualType } from "@Renderer/types/virtual";
 import { delay } from "../flash/delay";
 import { ctx } from "./Focus.ctx";
 
@@ -64,14 +65,12 @@ export class Focus {
     return new sp.SerialPort(options, openCallback);
   }
 
-  async find(...devices: Array<{ usb: { productId: number; vendorId: number } }>) {
+  async find(...devices: DygmaDeviceType[]) {
     const portList = await this.listSerialPorts();
 
     const foundDevices = [];
 
-    this.debugLog("focus.find: portList:", portList, "devices:", devices);
-    log.info("Passed devices", devices);
-    log.info("Port list from where");
+    log.info("focus.find: portList:", portList, "devices:", devices);
     for (const port of portList) {
       for (const device of devices) {
         if (
@@ -83,7 +82,7 @@ export class Focus {
       }
     }
 
-    this.debugLog("focus.find: foundDevices:", foundDevices);
+    log.info("focus.find: foundDevices:", foundDevices);
 
     return foundDevices;
   }
@@ -112,7 +111,7 @@ export class Focus {
     }
 
     if (this._port !== undefined && this._port.isOpen === false) {
-      this.close();
+      await this.close();
     }
 
     // log.info("Warning! device being opened");
@@ -143,7 +142,7 @@ export class Focus {
       this.parser.on("data", (data: Buffer) => {
         // eslint-disable-next-line no-param-reassign
         const localData = data.toString("utf-8");
-        this.debugLog("focus: incoming data:", localData);
+        log.info("focus: incoming data:", localData);
 
         if (localData === "." || localData.endsWith(".")) {
           const { result } = this;
@@ -240,7 +239,7 @@ export class Focus {
       return true;
     }
     const supported = await device.device.isDeviceSupported(device);
-    this.debugLog("focus.isDeviceSupported: port=", device, "supported=", supported);
+    log.info("focus.isDeviceSupported: port=", device, "supported=", supported);
     return supported;
   }
 
@@ -263,7 +262,7 @@ export class Focus {
   }
 
   request<T>(cmd: string, ...args: unknown[]) {
-    this.debugLog("focus.request:", cmd, ...args);
+    log.info("focus.request:", cmd, ...args);
     return new Promise<T>((resolve, reject) => {
       const timer = setTimeout(() => {
         reject(new Error("Communication timeout"));

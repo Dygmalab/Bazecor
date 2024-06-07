@@ -21,6 +21,7 @@ import log from "electron-log/renderer";
 import Focus from "../../focus";
 import Hardware from "../../hardware";
 import { delay } from "../delay";
+import formatedDate from "../formatedDate";
 import { arduino } from "./arduino-flasher";
 
 /**
@@ -48,18 +49,6 @@ export class FlashRaise {
   }
 
   /**
-   * Formats date for create name of backup file.
-   * @returns {string} formate date for example "2019-07-12-19_40_56"
-   */
-  formatedDate() {
-    const date = new Date();
-    const firstFind = /, /gi;
-    const secondFind = /:/gi;
-    const formatterDate = date.toLocaleString("en-CA", { hour12: false }).replace(firstFind, "-").replace(secondFind, "_");
-    return formatterDate;
-  }
-
-  /**
    * Founds device what connected from Bazecor Hardware api.
    * @param {array} hardware - Array of supported devices by Bazecor api.
    * @param {string} message - Message for backup file.
@@ -68,7 +57,7 @@ export class FlashRaise {
   async foundDevices(hardware, message, bootloader) {
     const focus = Focus.getInstance();
     let isFindDevice = false;
-    log.info("looking at device", this.device);
+    log.info("looking at device", this.device, hardware);
     await focus.find(...hardware).then(devices => {
       for (const device of devices) {
         log.info(
@@ -82,10 +71,10 @@ export class FlashRaise {
         );
         if (
           bootloader
-            ? device.device.bootloader != undefined &&
-              device.device.bootloader == bootloader &&
-              this.device.info.keyboardType == device.device.info.keyboardType
-            : this.device.info.keyboardType == device.device.info.keyboardType
+            ? device.device.bootloader !== undefined &&
+              device.device.bootloader === bootloader &&
+              this.device.info.keyboardType === device.device.info.keyboardType
+            : this.device.info.keyboardType === device.device.info.keyboardType
         ) {
           log.info(message);
           this.currentPort = { ...device };
@@ -132,7 +121,7 @@ export class FlashRaise {
       "superkeys.repeat",
       "superkeys.overlap",
     ];
-    this.backupFileName = `Raise-backup-${this.formatedDate()}.json`;
+    this.backupFileName = `Raise-backup-${formatedDate()}.json`;
 
     try {
       let errorFlag = false;
@@ -203,7 +192,7 @@ export class FlashRaise {
    * @param {object} port - serial port object for the "path".
    * @returns {promise}
    */
-  async resetKeyboard(port, stateUpdate) {
+  resetKeyboard(port, stateUpdate) {
     stateUpdate("reset", 5);
     log.info("reset start", port);
     const errorMessage =
@@ -253,12 +242,14 @@ export class FlashRaise {
    * @returns {promise}
    */
   async updateFirmware(filename, stateUpdate) {
+    await this.foundDevices(Hardware.bootloader, "Bootloader detected", true);
     const focus = Focus.getInstance();
-    log.info("Begin update firmware with arduino-flasher");
+    log.info("Begin update firmware with arduino-flasher", this.currentPort);
     // log.info(JSON.stringify(focus));
     return new Promise(async (resolve, reject) => {
       try {
         if (focus.closed) await focus.open(this.currentPort.path, this.currentPort.device, null);
+
         stateUpdate("neuron", 0);
         await arduino.flash(filename, stateUpdate, async (err, result) => {
           if (err) throw new Error(`Flash error ${result}`);
@@ -331,6 +322,7 @@ export class FlashRaise {
     const errorMessage = "Firmware update failed, because the settings could not be restored";
     log.info(backup);
     if (backup === undefined || backup.length === 0) {
+      this.foundDevices();
       await focus.open(this.currentPort.path, this.currentPort.device.info, null);
       return true;
     }

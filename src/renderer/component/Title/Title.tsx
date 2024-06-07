@@ -163,7 +163,7 @@ interface TitleProps {
   size?: "md" | "lg";
   className?: string;
   color?: "danger" | "error" | "success" | "warning";
-  type?: "danger" | "error" | "success" | "warning";
+  type?: "danger" | "error" | "success" | "warning" | "default";
   tooltip?: undefined | string | HTMLElement;
   tooltipSize?: "wide" | "narrow";
   tooltipIconSize?: "sm" | "md" | "lg";

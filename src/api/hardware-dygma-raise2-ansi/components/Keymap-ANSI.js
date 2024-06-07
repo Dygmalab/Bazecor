@@ -877,15 +877,15 @@ class KeymapANSI extends React.Component {
             height={57}
             x={1069}
             y={keysRowsPosition.row2}
-            fill={getColor(2, 15)}
-            stroke={stroke(2, 15)}
-            strokeWidth={getStrokeWidth(2, 15)}
-            dataLedIndex={getLEDIndex(2, 15)}
-            dataKeyIndex={keyIndex(2, 15)}
+            fill={getColor(1, 15)}
+            stroke={stroke(1, 15)}
+            strokeWidth={getStrokeWidth(1, 15)}
+            dataLedIndex={getLEDIndex(1, 15)}
+            dataKeyIndex={keyIndex(1, 15)}
             dataLayer={layer}
-            contrastText={getContrastText(getColor(2, 15))}
-            centerPrimary={getCenterPrimary(2, 15, 0, 0, true)}
-            centerExtra={getCenterExtra(2, 15, 0, 0, true)}
+            contrastText={getContrastText(getColor(1, 15))}
+            centerPrimary={getCenterPrimary(1, 15, 0, 0, true)}
+            centerExtra={getCenterExtra(1, 15, 0, 0, true)}
           />
           <Key
             keyType="regularKey"
@@ -1124,15 +1124,15 @@ class KeymapANSI extends React.Component {
             height={57}
             x={1023}
             y={keysRowsPosition.row3}
-            fill={getColor(1, 15)}
-            stroke={stroke(1, 15)}
-            strokeWidth={getStrokeWidth(1, 15)}
-            dataLedIndex={getLEDIndex(1, 15)}
-            dataKeyIndex={keyIndex(1, 15)}
+            fill={getColor(2, 15)}
+            stroke={stroke(2, 15)}
+            strokeWidth={getStrokeWidth(2, 15)}
+            dataLedIndex={getLEDIndex(2, 15)}
+            dataKeyIndex={keyIndex(2, 15)}
             dataLayer={layer}
-            contrastText={getContrastText(getColor(1, 15))}
-            centerPrimary={getCenterPrimary(1, 15, 0, 0, true)}
-            centerExtra={getCenterExtra(1, 15, 0, 0, true)}
+            contrastText={getContrastText(getColor(2, 15))}
+            centerPrimary={getCenterPrimary(2, 15, 0, 0, true)}
+            centerExtra={getCenterExtra(2, 15, 0, 0, true)}
           />
           <Key
             keyType="regularKey"
@@ -1143,15 +1143,15 @@ class KeymapANSI extends React.Component {
             height={57}
             x={84}
             y={keysRowsPosition.row4}
-            fill={getColor(3, 0)}
-            stroke={stroke(3, 0)}
-            strokeWidth={getStrokeWidth(3, 0)}
-            dataLedIndex={getLEDIndex(3, 0)}
-            dataKeyIndex={keyIndex(3, 0)}
+            fill={getColor(3, 1)}
+            stroke={stroke(3, 1)}
+            strokeWidth={getStrokeWidth(3, 1)}
+            dataLedIndex={getLEDIndex(3, 1)}
+            dataKeyIndex={keyIndex(3, 1)}
             dataLayer={layer}
-            contrastText={getContrastText(getColor(3, 0))}
-            centerPrimary={getCenterPrimary(3, 0, 0, 0, true)}
-            centerExtra={getCenterExtra(3, 0, 0, 0, true)}
+            contrastText={getContrastText(getColor(3, 1))}
+            centerPrimary={getCenterPrimary(3, 1, 0, 0, true)}
+            centerExtra={getCenterExtra(3, 1, 0, 0, true)}
           />
           <Key
             keyType="regularKey"
@@ -1588,8 +1588,8 @@ class KeymapANSI extends React.Component {
             dataKeyIndex={keyIndex(4, 5)}
             dataLayer={layer}
             contrastText={getContrastText(getColor(4, 5))}
-            centerPrimary={getCenterPrimary(4, 6, 0, 0, true)}
-            centerExtra={getCenterExtra(4, 6, 0, 0, true)}
+            centerPrimary={getCenterPrimary(4, 5, 0, 0, true)}
+            centerExtra={getCenterExtra(4, 5, 0, 0, true)}
           />
 
           <Key
@@ -1608,8 +1608,8 @@ class KeymapANSI extends React.Component {
             dataKeyIndex={keyIndex(4, 6)}
             dataLayer={layer}
             contrastText={getContrastText(getColor(4, 6))}
-            centerPrimary={getCenterPrimary(4, 7, 0, 0, true)}
-            centerExtra={getCenterExtra(4, 7, 0, 0, true)}
+            centerPrimary={getCenterPrimary(4, 6, 0, 0, true)}
+            centerExtra={getCenterExtra(4, 6, 0, 0, true)}
           />
           <Key
             keyType="regularKey"

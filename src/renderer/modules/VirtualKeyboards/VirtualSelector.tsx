@@ -12,7 +12,7 @@ import { RegularButton } from "@Renderer/component/Button";
 import Title from "@Renderer/component/Title";
 import { i18n } from "@Renderer/i18n";
 
-import { VirtualType } from "@Renderer/types/devices";
+import { VirtualType } from "@Renderer/types/virtual";
 import { BackupType } from "@Renderer/types/backups";
 
 import Hardware from "../../../api/hardware";
@@ -154,7 +154,7 @@ export default function VirtualSelector(props: VirtualSelectorProps) {
     }
     log.info("Opening file", filePath);
     // Open the file and load it's contents
-    let file: any;
+    let file: VirtualType | BackupType;
     try {
       file = JSON.parse(fs.readFileSync(filePath).toString("utf-8")) as VirtualType | BackupType;
       // log.info(file);

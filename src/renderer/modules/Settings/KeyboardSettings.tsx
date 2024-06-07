@@ -22,12 +22,12 @@ import Styled from "styled-components";
 import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import Slider from "@appigram/react-rangeslider";
 
 // Custom components
 import { Card, CardContent, CardHeader, CardTitle } from "@Renderer/components/ui/card";
 import { KBDataPref } from "@Renderer/types/preferences";
 import { IconTypo, IconMouse } from "@Renderer/component/Icon";
+import { Slider } from "@Renderer/components/ui/slider";
 import Title from "@Renderer/component/Title";
 
 // Assets
@@ -164,98 +164,98 @@ function KeyboardSettings(props: KeyboardSettingsProps) {
     setLocalKBData(newKBData);
   }, [props, setKbData]);
 
-  const setHoldTimeout = (value: number) => {
+  const setHoldTimeout = (value: number[]) => {
     setLocalKBData(data => ({
       ...data,
-      qukeysHoldTimeout: value,
+      qukeysHoldTimeout: value[0],
     }));
-    setKbData({ ...localKBData, qukeysHoldTimeout: value });
+    setKbData({ ...localKBData, qukeysHoldTimeout: value[0] });
   };
 
-  const setOverlapThreshold = (value: number) => {
+  const setOverlapThreshold = (value: number[]) => {
     setLocalKBData(data => ({
       ...data,
-      qukeysOverlapThreshold: value,
+      qukeysOverlapThreshold: value[0],
     }));
-    setKbData({ ...localKBData, qukeysOverlapThreshold: value });
+    setKbData({ ...localKBData, qukeysOverlapThreshold: value[0] });
   };
 
-  const setMinHold = (value: number) => {
+  const setMinHold = (value: number[]) => {
     setLocalKBData(data => ({
       ...data,
-      qukeysMinHold: value,
+      qukeysMinHold: value[0],
     }));
-    setKbData({ ...localKBData, qukeysMinHold: value });
+    setKbData({ ...localKBData, qukeysMinHold: value[0] });
   };
 
-  const setMinPrior = (value: number) => {
+  const setMinPrior = (value: number[]) => {
     setLocalKBData(data => ({
       ...data,
-      qukeysMinPrior: value,
+      qukeysMinPrior: value[0],
     }));
-    setKbData({ ...localKBData, qukeysMinPrior: value });
+    setKbData({ ...localKBData, qukeysMinPrior: value[0] });
   };
 
-  const setSuperTimeout = (value: number) => {
+  const setSuperTimeout = (value: number[]) => {
     setLocalKBData(data => ({
       ...data,
-      SuperTimeout: value,
+      SuperTimeout: value[0],
     }));
-    setKbData({ ...localKBData, SuperTimeout: value });
+    setKbData({ ...localKBData, SuperTimeout: value[0] });
   };
 
-  const setSuperHoldstart = (value: number) => {
+  const setSuperHoldstart = (value: number[]) => {
     setLocalKBData(data => ({
       ...data,
-      SuperHoldstart: value,
+      SuperHoldstart: value[0],
     }));
-    setKbData({ ...localKBData, SuperHoldstart: value });
+    setKbData({ ...localKBData, SuperHoldstart: value[0] });
   };
 
-  const setSuperOverlapThreshold = (value: number) => {
+  const setSuperOverlapThreshold = (value: number[]) => {
     setLocalKBData(data => ({
       ...data,
-      SuperOverlapThreshold: value,
+      SuperOverlapThreshold: value[0],
     }));
     setKbData({
       ...localKBData,
-      SuperOverlapThreshold: value,
+      SuperOverlapThreshold: value[0],
     });
   };
 
-  const setSpeed = (value: number) => {
+  const setSpeed = (value: number[]) => {
     setLocalKBData(data => ({
       ...data,
-      mouseSpeed: value,
+      mouseSpeed: value[0],
       mouseSpeedDelay: 10,
     }));
-    setKbData({ ...localKBData, mouseSpeed: value, mouseSpeedDelay: 10 });
+    setKbData({ ...localKBData, mouseSpeed: value[0], mouseSpeedDelay: 10 });
   };
 
-  const setAccelSpeed = async (value: number) => {
+  const setAccelSpeed = async (value: number[]) => {
     setLocalKBData(data => ({
       ...data,
-      mouseAccelSpeed: value,
+      mouseAccelSpeed: value[0],
       mouseAccelDelay: 600,
     }));
-    setKbData({ ...localKBData, mouseAccelSpeed: value, mouseAccelDelay: 600 });
+    setKbData({ ...localKBData, mouseAccelSpeed: value[0], mouseAccelDelay: 600 });
   };
 
-  const setWheelSpeed = async (value: number) => {
+  const setWheelSpeed = async (value: number[]) => {
     setLocalKBData(data => ({
       ...data,
-      mouseWheelSpeed: value,
+      mouseWheelSpeed: value[0],
       mouseWheelDelay: 100,
     }));
-    setKbData({ ...localKBData, mouseWheelSpeed: value, mouseWheelDelay: 100 });
+    setKbData({ ...localKBData, mouseWheelSpeed: value[0], mouseWheelDelay: 100 });
   };
 
-  const setSpeedLimit = async (value: number) => {
+  const setSpeedLimit = async (value: number[]) => {
     setLocalKBData(data => ({
       ...data,
-      mouseSpeedLimit: value,
+      mouseSpeedLimit: value[0],
     }));
-    setKbData({ ...localKBData, mouseSpeedLimit: value });
+    setKbData({ ...localKBData, mouseSpeedLimit: value[0] });
   };
 
   const {
@@ -278,7 +278,7 @@ function KeyboardSettings(props: KeyboardSettingsProps) {
         <span className="tagsfix">Slow</span>
       </Col>
       <Col xs={8} md={10} className="px-2">
-        <Slider min={0} max={127} value={mouseSpeed} onChange={setSpeed} />
+        <Slider min={0} max={127} value={[mouseSpeed]} onValueChange={setSpeed} />
       </Col>
       <Col xs={2} md={1} className="p-0 text-center align-self-center">
         <span className="tagsfix">Fast</span>
@@ -292,7 +292,7 @@ function KeyboardSettings(props: KeyboardSettingsProps) {
         <span className="tagsfix">Slow</span>
       </Col>
       <Col xs={8} md={10} className="px-2">
-        <Slider min={0} max={254} value={mouseAccelSpeed} onChange={setAccelSpeed} />
+        <Slider min={0} max={254} value={[mouseAccelSpeed]} onValueChange={setAccelSpeed} />
       </Col>
       <Col xs={2} md={1} className="p-0 text-center align-self-center">
         <span className="tagsfix">Fast</span>
@@ -306,7 +306,7 @@ function KeyboardSettings(props: KeyboardSettingsProps) {
         <span className="tagsfix">Slow</span>
       </Col>
       <Col xs={8} md={10} className="px-2">
-        <Slider min={1} max={15} value={mouseWheelSpeed} onChange={setWheelSpeed} />
+        <Slider min={1} max={15} value={[mouseWheelSpeed]} onValueChange={setWheelSpeed} />
       </Col>
       <Col xs={2} md={1} className="p-0 text-center align-self-center">
         <span className="tagsfix">Fast</span>
@@ -320,7 +320,7 @@ function KeyboardSettings(props: KeyboardSettingsProps) {
         <span className="tagsfix">Slow</span>
       </Col>
       <Col xs={8} md={10} className="px-2">
-        <Slider min={0} max={255} value={mouseSpeedLimit} onChange={setSpeedLimit} />
+        <Slider min={0} max={255} value={[mouseSpeedLimit]} onValueChange={setSpeedLimit} />
       </Col>
       <Col xs={2} md={1} className="p-0 text-center align-self-center">
         <span className="tagsfix">Fast</span>
@@ -358,7 +358,7 @@ function KeyboardSettings(props: KeyboardSettingsProps) {
                     <span className="tagsfix">Less</span>
                   </Col>
                   <Col xs={8} md={10} className="px-2">
-                    <Slider min={0} max={100} value={qukeysOverlapThreshold} onChange={setOverlapThreshold} />
+                    <Slider min={0} max={100} value={[qukeysOverlapThreshold]} onValueChange={setOverlapThreshold} />
                   </Col>
                   <Col xs={2} md={1} className="p-0 text-center align-self-center">
                     <span className="tagsfix">More</span>
@@ -386,7 +386,7 @@ function KeyboardSettings(props: KeyboardSettingsProps) {
                     <span className="tagsfix">Less</span>
                   </Col>
                   <Col xs={8} md={10} className="px-2">
-                    <Slider min={1} max={255} value={qukeysHoldTimeout} onChange={setHoldTimeout} />
+                    <Slider min={1} max={255} value={[qukeysHoldTimeout]} onValueChange={setHoldTimeout} />
                   </Col>
                   <Col xs={2} md={1} className="p-0 text-center align-self-center">
                     <span className="tagsfix">More</span>
@@ -414,7 +414,7 @@ function KeyboardSettings(props: KeyboardSettingsProps) {
                     <span className="tagsfix">Less</span>
                   </Col>
                   <Col xs={8} md={10} className="px-2">
-                    <Slider min={1} max={254} value={qukeysMinHold} onChange={setMinHold} />
+                    <Slider min={1} max={254} value={[qukeysMinHold]} onValueChange={setMinHold} />
                   </Col>
                   <Col xs={2} md={1} className="p-0 text-center align-self-center">
                     <span className="tagsfix">More</span>
@@ -442,7 +442,7 @@ function KeyboardSettings(props: KeyboardSettingsProps) {
                     <span className="tagsfix">Less</span>
                   </Col>
                   <Col xs={8} md={10} className="px-2">
-                    <Slider min={1} max={254} value={qukeysMinPrior} onChange={setMinPrior} />
+                    <Slider min={1} max={254} value={[qukeysMinPrior]} onValueChange={setMinPrior} />
                   </Col>
                   <Col xs={2} md={1} className="p-0 text-center align-self-center">
                     <span className="tagsfix">More</span>
@@ -470,7 +470,7 @@ function KeyboardSettings(props: KeyboardSettingsProps) {
                     <span className="tagsfix">Less</span>
                   </Col>
                   <Col xs={8} md={10} className="px-2">
-                    <Slider min={0} max={80} value={SuperOverlapThreshold} onChange={setSuperOverlapThreshold} />
+                    <Slider min={0} max={80} value={[SuperOverlapThreshold]} onValueChange={setSuperOverlapThreshold} />
                   </Col>
                   <Col xs={2} md={1} className="p-0 text-center align-self-center">
                     <span className="tagsfix">More</span>
@@ -498,7 +498,7 @@ function KeyboardSettings(props: KeyboardSettingsProps) {
                     <span className="tagsfix">Less</span>
                   </Col>
                   <Col xs={8} md={10} className="px-2">
-                    <Slider min={1} max={500} value={SuperTimeout} onChange={setSuperTimeout} />
+                    <Slider min={1} max={500} value={[SuperTimeout]} onValueChange={setSuperTimeout} />
                   </Col>
                   <Col xs={2} md={1} className="p-0 text-center align-self-center">
                     <span className="tagsfix">More</span>
@@ -526,7 +526,7 @@ function KeyboardSettings(props: KeyboardSettingsProps) {
                     <span className="tagsfix">Less</span>
                   </Col>
                   <Col xs={8} md={10} className="px-2">
-                    <Slider min={120} max={500} value={SuperHoldstart} onChange={setSuperHoldstart} />
+                    <Slider min={120} max={500} value={[SuperHoldstart]} onValueChange={setSuperHoldstart} />
                   </Col>
                   <Col xs={2} md={1} className="p-0 text-center align-self-center">
                     <span className="tagsfix">More</span>

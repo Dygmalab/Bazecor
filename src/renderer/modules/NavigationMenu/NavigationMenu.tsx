@@ -37,7 +37,7 @@ import { i18n } from "@Renderer/i18n";
 
 // Types
 import Version from "@Types/version";
-import { DygmaDeviceType } from "@Renderer/types/devices";
+import { DygmaDeviceType } from "@Renderer/types/dygmaDefs";
 import { NavigationMenuProps } from "@Renderer/types/navigation";
 
 import {

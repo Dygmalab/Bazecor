@@ -18,6 +18,8 @@
 import { SerialPort } from "serialport";
 import HID from "../../api/hid/hid";
 import DeviceMap from "../../api/comms/deviceMap";
+import { DygmaDeviceType } from "./dygmaDefs";
+import { VirtualType } from "./virtual";
 
 export interface DeviceClass {
   type: string;
@@ -31,9 +33,9 @@ export interface DeviceClass {
   timeout: number;
   result: string;
   callbacks: Array<(value: unknown) => void>;
-  device: DygmaDeviceType;
+  device: DygmaDeviceType | undefined;
   port?: HID | SerialPort;
-  commands?: { [key: string]: any };
+  commands?: { [key: string]: unknown };
   file?: boolean;
   isClosed: boolean;
   isSending: boolean;
@@ -47,10 +49,9 @@ export interface DeviceClass {
   serialRequest: (cmd: string, ...args: Array<string>) => Promise<string>;
   hidRequest: (cmd: string, ...args: Array<string>) => Promise<string>;
   virtualRequest: (cmd: string, ...args: Array<string>) => Promise<string>;
-  command: (cmd: string, ...args: Array<string>) => Promise<string>;
-  noCacheCommand: (cmd: string, ...args: Array<string>) => Promise<string>;
+  command: (cmd: string, ...args: Array<string>) => Promise<string | undefined>;
+  noCacheCommand: (cmd: string, ...args: Array<string>) => Promise<string | undefined>;
   write_parts: (parts: Array<string>, cb: () => void) => Promise<void>;
-  addCommands: (cmds: string) => void;
 }
 
 export interface USBDeviceDescriptor {
@@ -73,76 +74,11 @@ export interface NonSerialDevice {
 
 export interface DeviceType {
   path: string;
-  manufacturer: string | undefined;
-  serialNumber: string | undefined;
-  pnpId: string | undefined;
-  locationId: string | undefined;
-  productId: string | undefined;
-  vendorId: string | undefined;
+  manufacturer: string;
+  serialNumber: string;
+  pnpId: string;
+  locationId: string;
+  productId: string;
+  vendorId: string;
   device?: DygmaDeviceType;
 }
-
-export interface VirtualType {
-  device: DygmaDeviceType;
-  virtual: {
-    [command: string]: {
-      data: string;
-      eraseable: boolean;
-    };
-  };
-}
-
-export type CountProviderProps = { children: React.ReactNode };
-
-export type Action =
-  | { type: "changeCurrent"; payload: { selected: number; device: DeviceClass } }
-  | { type: "addDevice"; payload: DeviceClass }
-  | { type: "addDevicesList"; payload: DeviceClass[] }
-  | { type: "disconnect"; payload: number };
-
-export type Dispatch = (action: Action) => void;
-
-export type State = {
-  selected: number;
-  currentDevice: DeviceClass;
-  deviceList: Array<DeviceClass>;
-};
-
-export type DygmaDeviceType = {
-  info: {
-    vendor: string;
-    product: string;
-    keyboardType: string;
-    displayName: string;
-    urls: {
-      name: string;
-      url: string;
-    }[];
-  };
-  usb: {
-    vendorId: number;
-    productId: number;
-  };
-  keyboard: {
-    rows: number;
-    columns: number;
-  };
-  keyboardUnderglow: {
-    rows: number;
-    columns: number;
-  };
-  RGBWMode: boolean;
-  components: {
-    keymap: unknown;
-  };
-  instructions: {
-    en: {
-      updateInstructions: string;
-    };
-  };
-  wireless?: boolean;
-  bootloader?: boolean;
-  path?: string;
-  filePath?: string;
-  isDeviceSupported?: (device: DeviceType) => string;
-};

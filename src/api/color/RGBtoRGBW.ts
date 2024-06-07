@@ -1,8 +1,8 @@
 type RGB = {
-  r: number,
-  g: number,
-  b: number
-}
+  r: number;
+  g: number;
+  b: number;
+};
 
 export default function rgb2w(rgb: RGB) {
   const Ri = rgb.r;

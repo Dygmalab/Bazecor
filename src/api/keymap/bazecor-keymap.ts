@@ -16,8 +16,8 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { KeymapType } from "@Renderer/types/layout";
-import Focus from "../focus";
+// import { KeymapType } from "@Renderer/types/layout";
+// import Focus from "../focus";
 
 import KeymapDB from "./db";
 
@@ -61,60 +61,60 @@ class Keymap {
     return R;
   }
 
-  async focus(s: Focus, keymap: KeymapType) {
-    if (keymap && keymap.custom && keymap.custom.length > 0) {
-      const flatten = (arr: any) => [].concat(...arr);
+  // async focus(s: Focus, keymap: KeymapType) {
+  //   if (keymap && keymap.custom && keymap.custom.length > 0) {
+  //     const flatten = (arr: any) => [].concat(...arr);
 
-      if (this.legacyInterface) {
-        const args = flatten(keymap.default.concat(keymap.custom)).map(k => this.db.serialize(k));
+  //     if (this.legacyInterface) {
+  //       const args = flatten(keymap.default.concat(keymap.custom)).map(k => this.db.serialize(k));
 
-        return (await s.request("keymap.map", ...args)) as string;
-      }
+  //       return (await s.request("keymap.map", ...args)) as string;
+  //     }
 
-      const args = flatten(keymap.custom).map(k => this.db.serialize(k));
+  //     const args = flatten(keymap.custom).map(k => this.db.serialize(k));
 
-      await s.request("keymap.onlyCustom", keymap.onlyCustom ? "1" : "0");
-      return s.request("keymap.custom", ...args);
-    }
-    let defaults: string;
-    let custom: string;
-    let onlyCustom: boolean;
+  //     await s.request("keymap.onlyCustom", keymap.onlyCustom ? "1" : "0");
+  //     return s.request("keymap.custom", ...args);
+  //   }
+  //   let defaults: string;
+  //   let custom: string;
+  //   let onlyCustom: boolean;
 
-    if (!this.legacyInterface) {
-      defaults = (await s.request("keymap.default")) as string;
-      custom = (await s.request("keymap.custom")) as string;
-      onlyCustom = Boolean(parseInt(await s.request("keymap.onlyCustom"), 10)) as boolean;
-    }
+  //   if (!this.legacyInterface) {
+  //     defaults = (await s.request("keymap.default")) as string;
+  //     custom = (await s.request("keymap.custom")) as string;
+  //     onlyCustom = Boolean(parseInt(await s.request("keymap.onlyCustom"), 10)) as boolean;
+  //   }
 
-    if (!defaults && !custom) {
-      const localKeymap = ((await s.request("keymap.map")) as string).split(" ").filter(v => v.length > 0);
-      const roLayers = parseInt((await s.request("keymap.roLayers")) || "0", 10);
+  //   if (!defaults && !custom) {
+  //     const localKeymap = ((await s.request("keymap.map")) as string).split(" ").filter(v => v.length > 0);
+  //     const roLayers = parseInt((await s.request("keymap.roLayers")) || "0", 10);
 
-      defaults = localKeymap.slice(0, this._layerSize * roLayers).join(" ");
-      custom = localKeymap.slice(this._layerSize * roLayers, localKeymap.length).join(" ");
+  //     defaults = localKeymap.slice(0, this._layerSize * roLayers).join(" ");
+  //     custom = localKeymap.slice(this._layerSize * roLayers, localKeymap.length).join(" ");
 
-      onlyCustom = false;
-      this.legacyInterface = true;
-    }
-    const defaultKeymap = defaults
-      .split(" ")
-      .filter(v => v.length > 0)
-      .map(k => this.db.parse(parseInt(k, 10)));
-    const customKeymap = custom
-      .split(" ")
-      .filter(v => v.length > 0)
-      .map(k => this.db.parse(parseInt(k, 10)));
+  //     onlyCustom = false;
+  //     this.legacyInterface = true;
+  //   }
+  //   const defaultKeymap = defaults
+  //     .split(" ")
+  //     .filter(v => v.length > 0)
+  //     .map(k => this.db.parse(parseInt(k, 10)));
+  //   const customKeymap = custom
+  //     .split(" ")
+  //     .filter(v => v.length > 0)
+  //     .map(k => this.db.parse(parseInt(k, 10)));
 
-    if (customKeymap.length === 0) {
-      onlyCustom = false;
-    }
+  //   if (customKeymap.length === 0) {
+  //     onlyCustom = false;
+  //   }
 
-    return {
-      onlyCustom,
-      custom: this._chunk(customKeymap, this._layerSize),
-      default: this._chunk(defaultKeymap, this._layerSize),
-    };
-  }
+  //   return {
+  //     onlyCustom,
+  //     custom: this._chunk(customKeymap, this._layerSize),
+  //     default: this._chunk(defaultKeymap, this._layerSize),
+  //   };
+  // }
 }
 
 // class OnlyCustom {
@@ -127,10 +127,10 @@ class Keymap {
 //   }
 // }
 
-const focus = Focus.getInstance();
-focus.addCommands({
-  keymap: new Keymap(),
-});
-focus.addMethod("setLayerSize", "keymap");
+// const focus = Focus.getInstance();
+// focus.addCommands({
+//   keymap: new Keymap(),
+// });
+// focus.addMethod("setLayerSize", "keymap");
 
 export default Keymap;
