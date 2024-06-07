@@ -112,7 +112,7 @@ const Raise2Flash = {
     serialPort = await serialConnection();
 
     // GET INFO from device
-    const info: InfoType = await rawCommand("I#", serialPort, 1000);
+    const info = (await rawCommand("I#", serialPort, 1000)) as InfoType;
     log.info("Result of sending I#: ", info);
 
     const sealData: SealType = {
