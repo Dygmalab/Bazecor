@@ -53,7 +53,6 @@ margin-left:32px;
     padding: 24px;
     h6 {
       margin-top: 6px;
-      margin-bottom: 10px;
     }
   }
   .versionStatusInstalled {
@@ -159,7 +158,7 @@ const FirmwareVersionStatus = (props: FirmwareVersionStatusProps) => {
       <div className={`versionsStatus ${isUpdated && "isUpdated"}`}>
         <div className="versionStatusInner">
           <div className="versionStatusInstalled">
-            <Heading headingLevel={6} className="text-base">
+            <Heading headingLevel={6} className="text-base mb-1">
               Installed firmware version
             </Heading>
             <Badge variant="outline" size="xs">
@@ -174,7 +173,7 @@ const FirmwareVersionStatus = (props: FirmwareVersionStatusProps) => {
               />
             </svg>
 
-            <Heading headingLevel={6} className="text-base">
+            <Heading headingLevel={6} className="text-base mb-1">
               Update to the version
             </Heading>
             <div className="firmwareVersionContainer">

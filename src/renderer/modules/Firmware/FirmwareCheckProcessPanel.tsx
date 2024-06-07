@@ -219,7 +219,7 @@ function FirmwareCheckProcessPanel(props: FirmwareCheckProcessPanelType) {
                     <Heading
                       headingLevel={3}
                       renderAs="h3"
-                      className={!state.context.sideLeftOk || !state.context.sideRightOK ? "text-orange-200" : ""}
+                      variant={!state.context.sideLeftOk || !state.context.sideRightOK ? "warning" : "default"}
                     >
                       {!state.context.sideLeftOk || !state.context.sideRightOK
                         ? i18n.firmwareUpdate.texts.errorTitle

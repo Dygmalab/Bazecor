@@ -223,17 +223,13 @@ const FirmwareProgressStatus = (props: FirmwareProgressStatusType) => {
         </div>
         <div className="process-row process-footer">
           {stepsPosition === 0 ? (
-            <Heading headingLevel={3} renderAs="h4" className="text-green-200">
+            <Heading headingLevel={3} renderAs="h4" variant="success">
               {deviceProduct === "Raise"
                 ? i18n.firmwareUpdate.texts.flashCardTitle1
                 : i18n.firmwareUpdate.texts.flashCardTitleDefy1}
             </Heading>
           ) : (
-            <Heading
-              headingLevel={3}
-              renderAs="h4"
-              className={stepsPosition === steps.length - 1 ? "text-orange-200" : "text-green-200"}
-            >
+            <Heading headingLevel={3} renderAs="h4" variant={stepsPosition === steps.length - 1 ? "warning" : "success"}>
               {steps[stepsPosition].title}
             </Heading>
           )}

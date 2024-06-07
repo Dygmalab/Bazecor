@@ -197,7 +197,7 @@ function FirmwareUpdatePanel(props: FirmwareUpdatePanelProps) {
           <div className="firmware-row">
             <div className="firmware-content borderLeftTopRadius">
               <div className="firmware-content--inner">
-                <Heading headingLevel={3} className={state.context.isUpdated ? "text-green-200" : "text-orange-200"}>
+                <Heading headingLevel={3} variant={state.context.isUpdated ? "success" : "warning"}>
                   {state.context.isUpdated
                     ? i18n.firmwareUpdate.texts.versionUpdatedTitle
                     : i18n.firmwareUpdate.texts.versionOutdatedTitle}

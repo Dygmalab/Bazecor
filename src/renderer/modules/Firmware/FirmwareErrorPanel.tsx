@@ -25,10 +25,10 @@ import { i18n } from "@Renderer/i18n";
 import { IconNoWifi, IconWarning } from "@Renderer/components/atoms/Icons";
 import Heading from "@Renderer/components/atoms/Heading";
 import LogoLoader from "@Renderer/components/atoms/Loader/LogoLoader";
+import { Button } from "@Renderer/components/atoms/Button";
 import FWSelection from "../../controller/FirmwareSelection/machine";
 
 // Visual components
-import { Button } from "@Renderer/components/atoms/Button";
 
 // Visual modules
 import FirmwareNeuronStatus from "./FirmwareNeuronStatus";
@@ -229,7 +229,7 @@ function FirmwareErrorPanel(props: FirmwareErrorPanelType) {
               <div className="firmware-content--inner">
                 {(state.context.error as Error).message.includes("GitHubData") ? (
                   <>
-                    <Heading headingLevel={3} renderAs="h3" className="text-orange-200">
+                    <Heading headingLevel={3} renderAs="h3" variant="warning">
                       {i18n.firmwareUpdate.texts.errorTitle}
                     </Heading>
                     <div className="errorListWrapper">
@@ -243,7 +243,7 @@ function FirmwareErrorPanel(props: FirmwareErrorPanelType) {
                   </>
                 ) : (
                   <>
-                    <Heading headingLevel={3} renderAs="h3" className="text-orange-200">
+                    <Heading headingLevel={3} renderAs="h3" variant="warning">
                       Something went wrong
                     </Heading>
                     <div className="errorListWrapper">
