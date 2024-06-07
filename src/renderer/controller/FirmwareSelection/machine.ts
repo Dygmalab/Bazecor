@@ -17,7 +17,7 @@ const FirmwareSelection = setup({
     onInit: fromPromise<Context.ContextType, Input.InputType>(({ input }) => Input.Input(input)),
     FocusAPIRead: fromPromise<Context.ContextType, Context.ContextType>(({ input }) => Actions.FocusAPIRead(input)),
     GitHubRead: fromPromise<Context.ContextType, Context.ContextType>(({ input }) => Actions.GitHubRead(input)),
-    downloadFirmware: fromPromise<{ fw: any; fwSides: any }, Context.ContextType>(({ input }) =>
+    downloadFirmware: fromPromise<{ fw: Array<string>; fwSides: Uint8Array }, Context.ContextType>(({ input }) =>
       Actions.downloadFirmware(input.typeSelected, input.device.info, input.firmwareList, input.selectedFirmware),
     ),
   },
