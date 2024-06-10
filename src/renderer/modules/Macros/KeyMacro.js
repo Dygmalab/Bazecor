@@ -19,7 +19,7 @@ import {
 } from "@Renderer/components/atoms/Icons";
 import MacroKeyPortal from "@Renderer/components/molecules/Portals/MacroKeyPortal";
 import Heading from "@Renderer/components/atoms/Heading";
-import { ButtonConfig } from "../../component/Button";
+import { Button } from "@Renderer/components/atoms/Button";
 // import { MacroKeyModal } from "../../component/Modal";
 
 const Styles = Styled.div`
@@ -139,6 +139,8 @@ class KeyMacro extends Component {
       isModifier = true;
     }
 
+    console.log("Modifiers: ", modifiers);
+
     return (
       <Styles>
         <div
@@ -188,31 +190,40 @@ class KeyMacro extends Component {
                             <Heading headingLevel={5} renderAs="h5">
                               Edit function
                             </Heading>
-                            <div className="keyFunctionsButtons">
-                              <ButtonConfig
-                                buttonText="Press"
-                                icoPosition="left"
-                                icoSVG={<IconPress size="sm" />}
+                            <div className="keyFunctionsButtons flex gap-1">
+                              <Button
+                                iconDirection="left"
+                                variant="config"
+                                icon={<IconPress size="sm" />}
                                 selected={actionTypes[item.action].name === "Key Press"}
                                 disabled={!!(item.action === 1 || item.action === 2)}
                                 onClick={() => updateAction(item.id, 6)}
-                              />
-                              <ButtonConfig
-                                buttonText="Release"
-                                icoPosition="left"
-                                icoSVG={<IconRelease size="sm" />}
+                                size="sm"
+                              >
+                                Press
+                              </Button>
+                              <Button
+                                iconDirection="left"
+                                variant="config"
+                                icon={<IconRelease size="sm" />}
                                 selected={actionTypes[item.action].name === "Key Release"}
                                 disabled={!!(item.action === 1 || item.action === 2)}
                                 onClick={() => updateAction(item.id, 7)}
-                              />
-                              <ButtonConfig
-                                buttonText="Press & Release"
-                                icoPosition="left"
-                                icoSVG={<IconPressAndRelease size="sm" />}
+                                size="sm"
+                              >
+                                Release
+                              </Button>
+                              <Button
+                                iconDirection="left"
+                                variant="config"
+                                icon={<IconPressAndRelease size="sm" />}
                                 selected={actionTypes[item.action].name === "Key Press & Rel."}
                                 disabled={!!(item.action === 1 || item.action === 2)}
                                 onClick={() => updateAction(item.id, 8)}
-                              />
+                                size="sm"
+                              >
+                                Press & Release
+                              </Button>
                             </div>
                           </div>
 
@@ -220,132 +231,53 @@ class KeyMacro extends Component {
                             <Heading headingLevel={4} renderAs="h4">
                               Add modifier
                             </Heading>
-                            <div className="keyModifiersButtons">
-                              {modifiers.map((elem, id) => {
-                                switch (elem.name) {
-                                  case "LEFT SHIFT":
-                                    return (
-                                      <Dropdown.Item eventKey={id} key={`item-${id}`} className="unstyled">
-                                        <ButtonConfig
-                                          buttonText="L. Shift"
-                                          onClick={e => {
-                                            addModifier(item.id, id);
-                                          }}
-                                        />
-                                      </Dropdown.Item>
-                                    );
-                                  case "RIGHT SHIFT":
-                                    return (
-                                      <Dropdown.Item eventKey={id} key={`item-${id}`} className="unstyled">
-                                        <ButtonConfig
-                                          buttonText="R. Shift"
-                                          onClick={e => {
-                                            addModifier(item.id, id);
-                                          }}
-                                        />
-                                      </Dropdown.Item>
-                                    );
-                                  case "LEFT CTRL":
-                                    return (
-                                      <Dropdown.Item eventKey={id} key={`item-${id}`} className="unstyled">
-                                        <ButtonConfig
-                                          buttonText="L. Ctrl"
-                                          onClick={e => {
-                                            addModifier(item.id, id);
-                                          }}
-                                        />
-                                      </Dropdown.Item>
-                                    );
-                                  case "RIGHT CTRL":
-                                    return (
-                                      <Dropdown.Item eventKey={id} key={`item-${id}`} className="unstyled">
-                                        <ButtonConfig
-                                          buttonText="R. Ctrl"
-                                          onClick={e => {
-                                            addModifier(item.id, id);
-                                          }}
-                                        />
-                                      </Dropdown.Item>
-                                    );
-                                  case "LEFT ALT":
-                                    return (
-                                      <Dropdown.Item eventKey={id} key={`item-${id}`} className="unstyled">
-                                        <ButtonConfig
-                                          buttonText="Alt"
-                                          onClick={e => {
-                                            addModifier(item.id, id);
-                                          }}
-                                        />
-                                      </Dropdown.Item>
-                                    );
-                                  case "RIGHT ALT":
-                                    return (
-                                      <Dropdown.Item eventKey={id} key={`item-${id}`} className="unstyled">
-                                        <ButtonConfig
-                                          buttonText="Alt Gr."
-                                          onClick={e => {
-                                            addModifier(item.id, id);
-                                          }}
-                                        />
-                                      </Dropdown.Item>
-                                    );
-                                  case "LEFT OS":
-                                    return (
-                                      <Dropdown.Item eventKey={id} key={`item-${id}`} className="unstyled">
-                                        <ButtonConfig
-                                          buttonText="L. OS"
-                                          onClick={e => {
-                                            addModifier(item.id, id);
-                                          }}
-                                        />
-                                      </Dropdown.Item>
-                                    );
-                                  case "RIGHT OS":
-                                    return (
-                                      <Dropdown.Item eventKey={id} key={`item-${id}`} className="unstyled">
-                                        <ButtonConfig
-                                          buttonText="R. OS"
-                                          onClick={e => {
-                                            addModifier(item.id, id);
-                                          }}
-                                        />
-                                      </Dropdown.Item>
-                                    );
-
-                                  default:
-                                    return "";
-                                }
-                              })}
+                            <div className="keyModifiersButtons flex gap-2">
+                              {modifiers.map((item, id) => (
+                                <Button
+                                  variant="config"
+                                  size="sm"
+                                  className="w-full text-center"
+                                  onClick={e => {
+                                    addModifier(item.id, id);
+                                  }}
+                                  key={`item-${item.name}`}
+                                >
+                                  {item.name === "LEFT SHIFT" ? "L. Shift" : ""}
+                                  {item.name === "RIGHT SHIFT" ? "R. Shift" : ""}
+                                  {item.name === "LEFT CTRL" ? "L. Ctrl" : ""}
+                                  {item.name === "RIGHT CTRL" ? "R. Ctrl" : ""}
+                                  {item.name === "LEFT ALT" ? "L. Alt" : ""}
+                                  {item.name === "RIGHT ALT" ? "Alt Gr." : ""}
+                                  {item.name === "LEFT OS" ? "L. OS" : ""}
+                                  {item.name === "RIGHT OS" ? "R. OS" : ""}
+                                </Button>
+                              ))}
                             </div>
                           </div>
                         </div>
                         <div className="keyMacroItemOptions">
-                          <Dropdown.Item key="item-clone" className="compact">
-                            <div
-                              onClick={() => {
-                                this.props.onCloneRow(item.id);
-                              }}
-                              className="dropdownInner"
-                            >
-                              <div className="dropdownIcon">
-                                <IconClone />
-                              </div>
-                              <div className="dropdownItem">Clone</div>
-                            </div>
-                          </Dropdown.Item>
-                          <Dropdown.Item key="item-delete" className="compact">
-                            <div
-                              onClick={() => {
-                                this.props.onDeleteRow(item.id);
-                              }}
-                              className="dropdownInner"
-                            >
-                              <div className="dropdownIcon">
-                                <IconDelete />
-                              </div>
-                              <div className="dropdownItem">Delete</div>
-                            </div>
-                          </Dropdown.Item>
+                          <Button
+                            variant="link"
+                            icon={<IconClone />}
+                            iconDirection="left"
+                            size="sm"
+                            onClick={() => {
+                              this.props.onCloneRow(item.id);
+                            }}
+                          >
+                            Clone
+                          </Button>
+                          <Button
+                            variant="link"
+                            iconDirection="left"
+                            icon={<IconDelete />}
+                            size="sm"
+                            onClick={() => {
+                              this.props.onDeleteRow(item.id);
+                            }}
+                          >
+                            Delete
+                          </Button>
                         </div>
                       </Dropdown.Menu>
                     </MacroKeyPortal>
