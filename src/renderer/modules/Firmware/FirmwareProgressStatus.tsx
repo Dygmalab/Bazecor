@@ -17,15 +17,12 @@
 
 import React, { useState, useEffect } from "react";
 import Styled from "styled-components";
-// import ProgressBar from "react-bootstrap/ProgressBar";
 import { i18n } from "@Renderer/i18n";
 
 import StepsProgressBar from "@Renderer/components/atoms/StepsBar/StepsProgressBar";
 import { Progress } from "@Renderer/components/atoms/Progress";
 import CircleLoader from "@Renderer/components/atoms/Loader/CircleLoader";
-// import Title from "../../component/Title";
 import Heading from "@Renderer/components/atoms/Heading";
-// import { StepsProgressBar } from "../../component/StepsBar";
 import FirmwareImageHelp from "./FirmwareImageHelp";
 
 const Style = Styled.div`
