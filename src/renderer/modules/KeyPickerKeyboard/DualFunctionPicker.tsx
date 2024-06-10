@@ -1,73 +1,10 @@
 import React, { useMemo } from "react";
-import Styled from "styled-components";
 
 // Local components
 import Heading from "@Renderer/components/atoms/Heading";
 import { i18n } from "@Renderer/i18n";
 import { Button } from "@Renderer/components/atoms/Button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectFixedValue } from "@Renderer/components/atoms/Select";
-
-const Style = Styled.div`
-.dualFunctionPickerInner {
-  padding: 0 16px 16px 16px;
-  h4 {
-    font-size: 12px;
-  }
-}
-.dropdwonsGroup {
-  display: grid;
-  grid-gap: 4px;
-  grid-template-columns: 1fr 1fr;
-}
-.dropdown-toggle.btn.btn-primary {
-  padding: 8px;
-}
-.dropdown-toggle::after {
-  right: 8px;
-}
-.dropdownInner, .dropdownItemSelected {
-  font-size: inherit;
-  .badge-circle {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background-color: rgba(254,0,124,1);
-    position: absolute;
-    right: -10px;
-    top: -12px;
-    font-size: 11px;
-  }
-}
-.dropdownItemSelected {
-  position: relative;
-}
-.active .dropdownItemSelected .badge-circle {
-  opacity: 1;
-}
-.dualFuntionWrapper {
-  display: flex;
-  grid-gap: 24px;
-  h5 {
-    text-transform: none;
-    font-weight: 600;
-    font-size: 13px;
-    letter-spacing: -0.03em;
-  }
-}
-.groupButtons {
-  max-width: auto;
-}
-.layersButtons {
-    .button-config {
-      width: 40px;
-    }
-}
-.modButtons {
-  .button-config {
-    width: 60px;
-  }
-}
-`;
 
 const DualFunctionPicker = ({ keyCode, onKeySelect, activeTab, isStandardView }) => {
   const modKey = useMemo(
@@ -90,9 +27,9 @@ const DualFunctionPicker = ({ keyCode, onKeySelect, activeTab, isStandardView })
       { name: "Dual Layer 3  ", nameStd: "3", keynum: 51730 },
       { name: "Dual Layer 4  ", nameStd: "4", keynum: 51986 },
       { name: "Dual Layer 5  ", nameStd: "5", keynum: 52242 },
-      { name: "Dual Layer 6  ", keynum: 52498 },
-      { name: "Dual Layer 7  ", keynum: 52754 },
-      { name: "Dual Layer 8  ", keynum: 53010 },
+      { name: "Dual Layer 6  ", nameStd: "6", keynum: 52498 },
+      { name: "Dual Layer 7  ", nameStd: "7", keynum: 52754 },
+      { name: "Dual Layer 8  ", nameStd: "8", keynum: 53010 },
     ],
     [],
   );
@@ -114,11 +51,11 @@ const DualFunctionPicker = ({ keyCode, onKeySelect, activeTab, isStandardView })
   // const disabled = isMod || (isNotNK && isNotDF);
 
   const layers = (
-    <div className="dualFunctionPickerInner">
-      <Heading headingLevel={4} renderAs="h4">
+    <div className="dualFunctionPickerInner pt-0 pr-[16px] pb-[16px] pl-[16px]">
+      <Heading headingLevel={4} renderAs="h4" className="!text-3xxs">
         Add Dual-function
       </Heading>
-      <div className="dropdwonsGroup">
+      <div className="dropdwonsGroup grid grid-cols-2 gap-1">
         <Select
           value={String(keyCode.base + keyCode.modified)}
           onValueChange={value => onKeySelect(parseInt(value, 10) + keyCode.base)}
@@ -183,12 +120,12 @@ const DualFunctionPicker = ({ keyCode, onKeySelect, activeTab, isStandardView })
   );
 
   const layersStdView = (
-    <div className="dualFuntionWrapper">
+    <div className="dualFuntionWrapper flex gap-6">
       <div className="layersButtons">
-        <Heading headingLevel={5} renderAs="h5">
+        <Heading headingLevel={5} renderAs="h5" className="text-ssm">
           {i18n.general.layer}
         </Heading>
-        <div className="groupButtons flex gap-1 mt-2">
+        <div className="groupButtons flex gap-1 mt-2 max-w-[auto]">
           {layerKey.map(item => {
             if (item.nameStd === undefined) return;
             return (
@@ -199,6 +136,7 @@ const DualFunctionPicker = ({ keyCode, onKeySelect, activeTab, isStandardView })
                 onClick={() => onKeySelect(parseInt(item.keynum, 10) + keyCode.base)}
                 selected={!!(keyCode.modified > 0 && item.keynum === keyCode.modified)}
                 disabled={disabled || activeTab === "super"}
+                className="w-[40px]"
               >
                 {item.nameStd}
               </Button>
@@ -207,7 +145,9 @@ const DualFunctionPicker = ({ keyCode, onKeySelect, activeTab, isStandardView })
         </div>
       </div>
       <div className="modButtons">
-        <Heading headingLevel={5}>{i18n.general.modifier}</Heading>
+        <Heading headingLevel={5} renderAs="h5" className="text-ssm">
+          {i18n.general.modifier}
+        </Heading>
         <div className="groupButtons flex gap-1 mt-2">
           {modKey.map(item => {
             if (item.nameStd === undefined) return;
@@ -219,6 +159,7 @@ const DualFunctionPicker = ({ keyCode, onKeySelect, activeTab, isStandardView })
                 onClick={() => onKeySelect(parseInt(item.keynum, 10) + keyCode.base)}
                 selected={!!(keyCode.modified > 0 && item.keynum === keyCode.modified)}
                 disabled={disabled || activeTab === "super"}
+                className="w-[60px]"
               >
                 {item.nameStd}
               </Button>
@@ -229,7 +170,7 @@ const DualFunctionPicker = ({ keyCode, onKeySelect, activeTab, isStandardView })
     </div>
   );
 
-  return <Style>{isStandardView ? layersStdView : layers}</Style>;
+  return <div>{isStandardView ? layersStdView : layers}</div>;
 };
 
 export default DualFunctionPicker;
