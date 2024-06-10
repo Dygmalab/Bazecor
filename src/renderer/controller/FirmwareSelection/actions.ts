@@ -116,7 +116,7 @@ export const GitHubRead = async (context: Context.ContextType): Promise<Context.
 
 const obtainFWFiles = async (type: string, url: string) => {
   let response;
-  let firmware;
+  let firmware: Array<string> | Uint8Array;
   try {
     if (type === "keyscanner.bin") {
       response = await axios.request({
@@ -134,7 +134,7 @@ const obtainFWFiles = async (type: string, url: string) => {
         responseType: "arraybuffer",
         responseEncoding: "binary",
       });
-      firmware = response.data;
+      firmware = response.data as Array<string>;
     }
     if (type === "Wireless_neuron.hex") {
       response = await axios.request({
@@ -144,7 +144,7 @@ const obtainFWFiles = async (type: string, url: string) => {
         responseEncoding: "utf8",
       });
       response = response.data.replace(/(?:\r\n|\r|\n)/g, "");
-      firmware = response.split(":");
+      firmware = response.split(":") as Array<string>;
       firmware.splice(0, 1);
     }
     if (type === "firmware.hex") {
@@ -155,7 +155,7 @@ const obtainFWFiles = async (type: string, url: string) => {
         responseEncoding: "utf8",
       });
       response = response.data.replace(/(?:\r\n|\r|\n)/g, "");
-      firmware = response.split(":");
+      firmware = response.split(":") as Array<string>;
       firmware.splice(0, 1);
     }
   } catch (error) {
@@ -172,33 +172,33 @@ export const downloadFirmware = async (
   info: { product: string; keyboardType: string },
   firmwareList: ReleaseType[],
   selectedFirmware: number,
-): Promise<{ fw: any; fwSides: any }> => {
-  let filename;
-  let filenameSides;
+) => {
+  let filename: Array<string>;
+  let filenameSides: Uint8Array;
   log.info(typeSelected, info, firmwareList, selectedFirmware);
   try {
     if (typeSelected === "default") {
       if (info.product === "Raise") {
-        filename = await obtainFWFiles(
+        filename = (await obtainFWFiles(
           "firmware.hex",
           firmwareList[selectedFirmware].assets.find((asset: { name: string }) => asset.name === "firmware.hex").url,
-        );
+        )) as Array<string>;
       } else {
         if (info.keyboardType === "wireless") {
-          filename = await obtainFWFiles(
+          filename = (await obtainFWFiles(
             "Wireless_neuron.hex",
             firmwareList[selectedFirmware].assets.find((asset: { name: string }) => asset.name === "Wireless_neuron.hex").url,
-          );
+          )) as Array<string>;
         } else {
-          filename = await obtainFWFiles(
+          filename = (await obtainFWFiles(
             "Wired_neuron.uf2",
             firmwareList[selectedFirmware].assets.find((asset: { name: string }) => asset.name === "Wired_neuron.uf2").url,
-          );
+          )) as Array<string>;
         }
-        filenameSides = await obtainFWFiles(
+        filenameSides = (await obtainFWFiles(
           "keyscanner.bin",
           firmwareList[selectedFirmware].assets.find((asset: { name: string }) => asset.name === "keyscanner.bin").url,
-        );
+        )) as Uint8Array;
       }
     }
   } catch (error) {
@@ -206,8 +206,8 @@ export const downloadFirmware = async (
     log.error(error);
     throw new Error(error);
   }
-  console.log("obtained FW's lengths:", filename.length, filenameSides.length);
-  const result: { fw: any; fwSides: any } = { fw: filename, fwSides: filenameSides };
+  log.info("obtained FW's lengths:", filename, filenameSides);
+  const result: { fw: Array<string>; fwSides: Uint8Array } = { fw: filename, fwSides: filenameSides };
 
   return result;
 };

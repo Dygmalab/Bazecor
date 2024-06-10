@@ -5,6 +5,8 @@
 /* eslint-disable no-await-in-loop */
 import type { PortInfo } from "@serialport/bindings-cpp";
 import log from "electron-log/renderer";
+import { DygmaDeviceType } from "@Renderer/types/dygmaDefs";
+import type { SerialPort as SP } from "serialport";
 import { delay } from "./delay";
 import { InfoType } from "./types";
 import Hardware from "../hardware";
@@ -58,7 +60,7 @@ export const serialConnection = async () => {
     deviceList = await SerialPort.list();
     for (let i = 0; i < deviceList.length; i += 1) {
       const result = Hardware.bootloader.findIndex(
-        (hw: any) =>
+        (hw: DygmaDeviceType) =>
           parseInt(deviceList[i].vendorId, 16) === hw.usb.vendorId && parseInt(deviceList[i].productId, 16) === hw.usb.productId,
       );
       log.info("hardware check for bootloaders: ", result);
@@ -103,25 +105,53 @@ export async function rawCommand(
   timeout: number,
   ...args: unknown[]
 ): Promise<any> {
-  const req = async (c: string | Buffer, ...args2: unknown[]) => {
-    if (args2) log.info(args2);
+  const req = (c: string | Buffer, ...args2: unknown[]) => {
+    log.info(c);
     if (!serialPort) throw new Error("Device not connected!");
     return new Promise(resolve => {
       callbacks.push(resolve);
       serialPort.write(c);
     });
   };
-  return new Promise((resolve, reject) => {
+  const result: Buffer = await new Promise((resolve, reject) => {
     const timer = setTimeout(() => {
       reject(new Error("Communication timeout"));
     }, timeout);
-    req(cmd, ...args).then(data => {
-      clearTimeout(timer);
-      resolve(data);
+    req(cmd, ...args).then((data: any) => {
+      log.info("draining");
+      serialPort.drain((err: Error) => {
+        if (err) throw err;
+        clearTimeout(timer);
+        resolve(data);
+      });
     });
   });
+
+  return result;
 }
 
-export function noWaitCommand(cmd: string | Buffer, serialPort: typeof SerialPort) {
-  serialPort.write(cmd);
+export function noWaitCommand(cmd: string | Buffer | ArrayBuffer, serialPort: SP) {
+  if (!(cmd instanceof ArrayBuffer)) {
+    log.info("not InstanceOf ArrayBuffer");
+    serialPort.write(cmd);
+  } else {
+    log.info("it is!!", cmd);
+    const buf = new Uint8Array(cmd);
+
+    let total = buf.length;
+
+    let bufferTotal = 0;
+
+    while (bufferTotal < buf.length) {
+      const bufferSize = total < 200 ? total : 200;
+
+      // closure to ensure our buffer is local.
+      (buf2send => {
+        serialPort.write(Buffer.from(buf2send));
+      })(cmd.slice(bufferTotal, bufferTotal + bufferSize));
+
+      bufferTotal += bufferSize;
+      total -= bufferSize;
+    }
+  }
 }

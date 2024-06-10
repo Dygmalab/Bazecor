@@ -5,9 +5,11 @@ import { FlashRaise, FlashDefyWireless } from "../../../api/flash";
 import SideFlaser from "../../../api/flash/defyFlasher/sideFlasher";
 
 export interface ContextType {
+  [x: string]: any;
   deviceState: State | undefined;
   loadedComms: boolean;
   stateblock: number;
+  erasePairings: boolean;
   globalProgress: number;
   leftProgress: number;
   rightProgress: number;
@@ -62,6 +64,7 @@ export const Context: ContextType = {
   deviceState: undefined,
   loadedComms: false,
   stateblock: 1,
+  erasePairings: false,
   globalProgress: 0,
   leftProgress: 0,
   rightProgress: 0,

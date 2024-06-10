@@ -29,7 +29,7 @@ const FlashDevice = setup({
     reconnect: fromPromise<boolean, Context.ContextType>(({ input }) => Actions.reconnect(input)),
     restoreDefies: fromPromise<boolean, Context.ContextType>(({ input }) => Actions.restoreDefies(input)),
     resetRaise: fromPromise<Context.ContextType, Context.ContextType>(({ input }) => Actions.resetRaise(input)),
-    uploadRaise: fromPromise<boolean, Context.ContextType>(({ input }) => Actions.uploadRaise(input)),
+    uploadRaise: fromPromise<Context.ContextType, Context.ContextType>(({ input }) => Actions.uploadRaise(input)),
     restoreRaise: fromPromise<boolean, Context.ContextType>(({ input }) => Actions.restoreRaise(input)),
   },
   actions: {
@@ -434,9 +434,7 @@ const FlashDevice = setup({
         input: ({ context }) => context,
         onDone: {
           target: "restoreRaiseNeuron",
-          actions: assign({
-            flashResult: ({ event }) => event.output,
-          }),
+          actions: assign(({ event }) => event.output),
         },
         onError: {
           target: "failure",

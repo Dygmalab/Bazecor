@@ -111,16 +111,17 @@ interface ExtendedPort extends PortInfo {
   device: DygmaDeviceType;
 }
 
-const enumerate = async (): Promise<ExtendedPort[]> => {
+const enumerate = async (bootloader: boolean): Promise<ExtendedPort[]> => {
   const serialDevices: PortInfo[] = await SerialPort.list();
 
   const foundDevices = [];
+  const hw = bootloader ? Hardware.bootloader : Hardware.serial;
 
   log.info("SerialPort enumerating devices:", serialDevices);
 
   for (const device of serialDevices) {
     if ([0x35ef, 0x1209].includes(parseInt(`0x${device.vendorId}`, 16))) {
-      for (const Hdevice of Hardware.bootloader) {
+      for (const Hdevice of hw) {
         if (
           parseInt(`0x${device.productId}`, 16) === Hdevice.usb.productId &&
           parseInt(`0x${device.vendorId}`, 16) === Hdevice.usb.vendorId
@@ -142,21 +143,24 @@ const find = async (): Promise<ExtendedPort[]> => {
   log.info("SerialPort devices find:", serialDevices);
   for (const device of serialDevices) {
     if ([0x35ef, 0x1209].includes(parseInt(`0x${device.vendorId}`, 16))) {
+      let foundBootloader = false;
+      for (const Hdevice of Hardware.bootloader) {
+        if (
+          parseInt(`0x${device.productId}`, 16) === Hdevice.usb.productId &&
+          parseInt(`0x${device.vendorId}`, 16) === Hdevice.usb.vendorId
+        ) {
+          const newPort = { ...device, device: Hdevice };
+          foundDevices.push(newPort);
+          foundBootloader = true;
+        }
+      }
+      if (foundBootloader) break;
       const supported = await checkProperties(device.path);
       for (const Hdevice of Hardware.serial) {
         if (
           parseInt(`0x${device.productId}`, 16) === Hdevice.usb.productId &&
           parseInt(`0x${device.vendorId}`, 16) === Hdevice.usb.vendorId &&
           (Hdevice.info.product === "Defy" || Hdevice.info.keyboardType === supported.layout)
-        ) {
-          const newPort = { ...device, device: Hdevice };
-          foundDevices.push(newPort);
-        }
-      }
-      for (const Hdevice of Hardware.bootloader) {
-        if (
-          parseInt(`0x${device.productId}`, 16) === Hdevice.usb.productId &&
-          parseInt(`0x${device.vendorId}`, 16) === Hdevice.usb.vendorId
         ) {
           const newPort = { ...device, device: Hdevice };
           foundDevices.push(newPort);

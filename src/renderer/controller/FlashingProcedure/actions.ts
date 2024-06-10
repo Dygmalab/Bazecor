@@ -7,9 +7,12 @@ import Device, { State } from "src/api/comms/Device";
 import { SerialPort } from "serialport";
 import { DeviceTools } from "@Renderer/DeviceContext";
 import { BackupType } from "@Renderer/types/backups";
-import { FlashRaise, FlashDefyWireless } from "../../../api/flash";
+import { RaiseResetKeyboard, resetKeyboard, updateFirmware } from "../../../api/flash/RaiseTools";
+import NRf52833 from "../../../api/flash/defyFlasher/NRf52833-flasher";
 import SideFlaser from "../../../api/flash/defyFlasher/sideFlasher";
+import { FlashRaise } from "../../../api/flash";
 import * as Context from "./context";
+import Focus from "../../../api/focus";
 
 const delay = (ms: number) =>
   new Promise(res => {
@@ -217,22 +220,21 @@ export const uploadDefyWired = async (context: Context.ContextType) => {
 
 export const resetDefy = async (context: Context.ContextType) => {
   let { currentDevice } = context.deviceState as State;
-  log.info("Checking resseting Defy: ", currentDevice.device.bootloader);
+  log.info("Checking Defy reset: ", currentDevice.device.bootloader);
   try {
-    if (context.flashDefyWireless === undefined) {
-      log.info("when creating FDW", context.originalDevice?.device);
-      context.flashDefyWireless = new FlashDefyWireless(currentDevice.device, context.deviceState as State);
+    if (context.comPath === undefined) {
+      log.info("when creating comPath", context.originalDevice?.device);
       context.bootloader = currentDevice.device?.bootloader;
       context.comPath = (currentDevice.port as SerialPort).path;
     }
     if (!currentDevice.device.bootloader) {
       try {
-        log.info("reset indicators", currentDevice.device.bootloader, context.flashDefyWireless, currentDevice.device);
+        log.info("reset indicators", currentDevice.device.bootloader, currentDevice.device);
         if (currentDevice.port === undefined || currentDevice.isClosed) {
           context.deviceState.currentDevice = (await DeviceTools.connect(currentDevice)) as Device;
           currentDevice = context.deviceState.currentDevice;
         }
-        await context.flashDefyWireless.resetKeyboard(currentDevice, (stage: string, percentage: number) => {
+        await resetKeyboard(currentDevice, (stage: string, percentage: number) => {
           stateUpdate(stage, percentage, context);
         });
       } catch (error) {
@@ -240,7 +242,7 @@ export const resetDefy = async (context: Context.ContextType) => {
         throw new Error(error);
       }
     } else {
-      context.flashDefyWireless.currentPort = context.device?.path as string;
+      context.comPath = context.device?.path as string;
     }
   } catch (error) {
     log.warn("error when resetting Neuron");
@@ -255,14 +257,30 @@ export const uploadDefyWireless = async (context: Context.ContextType) => {
   try {
     const { currentDevice } = context.deviceState as State;
     await DeviceTools.disconnect(currentDevice);
-    await context.flashDefyWireless?.updateFirmware(
-      context.firmwares?.fw,
-      context.bootloader,
-      (stage: string, percentage: number) => {
-        stateUpdate(stage, percentage, context);
-      },
-    );
-    result = true;
+
+    log.info("Begin update firmware with NRf52833", context.bootloader);
+    const finished = async (err: any, rslt: any) => {
+      if (err) throw new Error(`Flash error ${rslt}`);
+      else {
+        stateUpdate("neuron", 100, context);
+        log.info("End update firmware with NRf52833");
+        result = true;
+      }
+    };
+    try {
+      stateUpdate("neuron", 0, context);
+      await NRf52833.flash(
+        context.firmwares?.fw,
+        (stage: string, percentage: number) => {
+          stateUpdate(stage, percentage, context);
+        },
+        finished,
+        context.erasePairings,
+      );
+    } catch (e) {
+      stateUpdate("neuron", 100, context);
+      result = false;
+    }
   } catch (error) {
     log.warn("error when flashing Neuron");
     log.error(error);
@@ -298,7 +316,7 @@ export const resetRaise = async (context: Context.ContextType) => {
     }
     if (!context.bootloader) {
       try {
-        log.info("reset indicators", currentDevice, context.flashRaise, context.originalDevice?.device);
+        log.info("reset indicators", currentDevice.device, context.flashRaise, context.originalDevice?.device);
         if (currentDevice.isClosed) {
           await DeviceTools.disconnect(currentDevice);
           await DeviceTools.connect(context.originalDevice as Device);
@@ -335,12 +353,15 @@ export const uploadRaise = async (context: Context.ContextType) => {
     result = await context.flashRaise?.updateFirmware(context.firmwares?.fw, (stage: string, percentage: number) => {
       stateUpdate(stage, percentage, context);
     });
+    log.info("Result after flashing Raise: ", result);
+    // context.comPath = result.path;
+    // context.bootloader = result.device.bootloader;
   } catch (error) {
     log.warn("error when flashing Neuron");
     log.error(error);
     throw new Error(error);
   }
-  return result;
+  return context;
 };
 
 export const restoreRaise = async (context: Context.ContextType) => {

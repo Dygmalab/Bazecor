@@ -155,7 +155,12 @@ class Device implements DeviceClass {
 
   async close() {
     try {
-      if (this.type === "serial") await this.port?.close();
+      if (this.type === "serial")
+        await this.port?.close(err => {
+          if (err) {
+            log.warn("errro when closing device", err);
+          }
+        });
       if (this.type === "hid") await (this.port as HID).connectedDevice.close();
       this.memoryMap = new DeviceMap();
       this.isClosed = true;

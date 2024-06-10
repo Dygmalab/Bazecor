@@ -108,7 +108,7 @@ const list = async () => {
   return finalDevices;
 };
 
-const enumerateSerial = async () => await serial.enumerate();
+const enumerateSerial = async (bootloader: boolean) => serial.enumerate(bootloader);
 
 const connect = async (device: Device | VirtualType) => {
   try {
