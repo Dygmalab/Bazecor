@@ -1,14 +1,11 @@
-import React, { useState, useMemo } from "react";
+import React, { useMemo } from "react";
 import Styled from "styled-components";
-
-// React Components
-import Dropdown from "react-bootstrap/Dropdown";
 
 // Local components
 import Heading from "@Renderer/components/atoms/Heading";
 import { i18n } from "@Renderer/i18n";
 import { Button } from "@Renderer/components/atoms/Button";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@Renderer/components/atoms/Select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectFixedValue } from "@Renderer/components/atoms/Select";
 
 const Style = Styled.div`
 .dualFunctionPickerInner {
@@ -122,62 +119,65 @@ const DualFunctionPicker = ({ keyCode, onKeySelect, activeTab, isStandardView })
         Add Dual-function
       </Heading>
       <div className="dropdwonsGroup">
-        <Dropdown
-          onSelect={value => onKeySelect(parseInt(value, 10) + keyCode.base)}
-          className={`custom-dropdown ${
-            keyCode.modified > 0 && layerKey.map(i => i.keynum).includes(keyCode.modified) ? "active" : ""
-          }`}
+        <Select
+          value={String(keyCode.base + keyCode.modified)}
+          onValueChange={value => onKeySelect(parseInt(value, 10) + keyCode.base)}
+          disabled={!!(disabled || activeTab === "super")}
         >
-          <Dropdown.Toggle id="dropdown-custom" className="button-config-style" disabled={!!(disabled || activeTab === "super")}>
-            <div className="dropdownItemSelected">
-              <div className="dropdownItem">Layer</div>
-              <div className="badge-circle" />
-            </div>
-          </Dropdown.Toggle>
-          <Dropdown.Menu>
+          <SelectTrigger
+            variant="comboButton"
+            size="sm"
+            className={`w-full pr-[4px] ${
+              keyCode.modified > 0 && layerKey.map(i => i.keynum).includes(keyCode.modified)
+                ? "!bg-configButtonActive dark:!bg-configButtonDarkActive bg-purple-200 dark:!bg-purple-300 !border-purple-200 dark:border-none text-white !shadow-buttonConfigLightActive !text-white [&_svg]:!text-white relative after:absolute after:top-[-4px] after:right-[-2px] after:w-[8px] after:h-[8px] after:rounded-full after:bg-primary/100"
+                : ""
+            } ${disabled || activeTab === "super" ? "!pointer-events-none !opacity-50" : ""}`}
+          >
+            <SelectFixedValue label="Layer" />
+          </SelectTrigger>
+          <SelectContent>
             {layerKey.map(item => (
-              <Dropdown.Item
-                eventKey={item.keynum}
-                key={`itemDualFunctionLayer-${item.keynum}`}
+              <SelectItem
+                value={String(item.keynum)}
                 disabled={item.keynum === -1 || isMod}
-                className={`${keyCode.modified > 0 && item.keynum === keyCode.modified ? "active" : ""}`}
+                key={`itemDualFunctionLayerSelect-${item.keynum}`}
+                className={`${keyCode.modified > 0 && item.keynum === keyCode.modified ? "!bg-purple-200 !dark:bg-purple-300 !text-gray-25 [&>svg]:!text-gray-25" : ""}`}
               >
-                <div className="dropdownInner">
-                  <div className="dropdownItem">{item.name}</div>
-                </div>
-              </Dropdown.Item>
+                {item.name}
+              </SelectItem>
             ))}
-          </Dropdown.Menu>
-        </Dropdown>
+          </SelectContent>
+        </Select>
 
-        <Dropdown
-          onSelect={value => onKeySelect(parseInt(value, 10) + keyCode.base)}
-          className={`custom-dropdown ${
-            keyCode.modified > 0 && modKey.map(i => i.keynum).includes(keyCode.modified) ? "active" : ""
-          }`}
-          disabled={disabled || activeTab === "super"}
+        <Select
+          value={String(keyCode.base + keyCode.modified)}
+          onValueChange={value => onKeySelect(parseInt(value, 10) + keyCode.base)}
+          disabled={!!(disabled || activeTab === "super")}
         >
-          <Dropdown.Toggle id="dropdown-custom" className="button-config-style" disabled={!!(disabled || activeTab === "super")}>
-            <div className="dropdownItemSelected">
-              <div className="dropdownItem">Modifier</div>
-              <div className="badge-circle" />
-            </div>
-          </Dropdown.Toggle>
-          <Dropdown.Menu>
+          <SelectTrigger
+            variant="comboButton"
+            size="sm"
+            className={`w-full pr-[4px] ${
+              keyCode.modified > 0 && modKey.map(i => i.keynum).includes(keyCode.modified)
+                ? "!bg-configButtonActive dark:!bg-configButtonDarkActive bg-purple-200 dark:!bg-purple-300 !border-purple-200 dark:border-none text-white !shadow-buttonConfigLightActive !text-white [&_svg]:!text-white relative after:absolute after:top-[-4px] after:right-[-2px] after:w-[8px] after:h-[8px] after:rounded-full after:bg-primary/100"
+                : ""
+            } ${disabled || activeTab === "super" ? "!pointer-events-none !opacity-50" : ""}`}
+          >
+            <SelectFixedValue label="Modifier" />
+          </SelectTrigger>
+          <SelectContent>
             {modKey.map(item => (
-              <Dropdown.Item
-                eventKey={item.keynum}
-                key={`itemDualFunctionMod-${item.keynum}`}
+              <SelectItem
+                value={String(item.keynum)}
                 disabled={item.keynum === -1 || isMod}
-                className={`${keyCode.modified > 0 && item.keynum === keyCode.modified ? "active" : ""}`}
+                key={`itemDualFunctionLayerSelect-${item.keynum}`}
+                className={`${keyCode.modified > 0 && item.keynum === keyCode.modified ? "!bg-purple-200 !dark:bg-purple-300 !text-gray-25 [&>svg]:!text-gray-25" : ""}`}
               >
-                <div className="dropdownInner">
-                  <div className="dropdownItem">{item.name}</div>
-                </div>
-              </Dropdown.Item>
+                {item.name}
+              </SelectItem>
             ))}
-          </Dropdown.Menu>
-        </Dropdown>
+          </SelectContent>
+        </Select>
       </div>
     </div>
   );

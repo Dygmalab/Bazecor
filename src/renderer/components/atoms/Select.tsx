@@ -13,6 +13,8 @@ const selectVariants = cva("flex w-full items-center justify-between rounded-md"
         "border-[1px] py-[8px] pl-[16px] pr-[10px] border-solid border-gray-100/60 dark:border-gray-600 hover:border-purple-200 data-[state=open]:border-purple-200 dark:data-[state=open]:border-purple-300 hover:dark:border-purple-300 bg-white/50 dark:bg-gray-900/20 hover:border-purple-100 [&_svg]:text-gray-300 [&_svg]:dark:text-gray-300",
       combo:
         "border-[1px] py-[6px] pl-[8px] pr-[2px] border-solid border-gray-100/60 dark:border-gray-600 hover:border-purple-200 data-[state=open]:border-purple-200 dark:data-[state=open]:border-purple-300 hover:dark:border-purple-300 bg-white/50 dark:bg-gray-900/20 hover:border-purple-100 pr-[40px] [&_svg]:text-gray-300 [&_svg]:dark:text-gray-300",
+      comboButton:
+        "border-regular shadow-buttonConfigLight dark:shadow-buttonConfig hover:buttonConfigLightHover dark:hover:shadow-buttonConfigHover text-ssm py-[8px] px-[16px] text-gray-500 hover:text-gray-600 dark:text-gray-25 bg-configButton dark:bg-configButtonDark hover:bg-configButtonHover dark:hover:bg-configButtonDarkHover aria-pressed:!bg-configButtonActive dark:aria-pressed:!bg-configButtonDarkActive aria-pressed:bg-purple-200 dark:aria-pressed:!bg-purple-300 aria-pressed:!border-purple-200 dark:aria-pressed:!border-none aria-pressed:text-white aria-pressed:!shadow-buttonConfigLightActive [&_svg]:text-gray-300 [&_svg]:dark:text-gray-300",
     },
     size: {
       default: "h-[44px]",
@@ -31,6 +33,19 @@ const Select = SelectPrimitive.Root;
 const SelectGroup = SelectPrimitive.Group;
 
 const SelectValue = SelectPrimitive.Value;
+
+interface SelectFixedValueProps {
+  label: string;
+}
+
+const SelectFixedValue = React.forwardRef<HTMLDivElement, SelectFixedValueProps>(({ label, ...props }, forwardedRef) => {
+  const internalLabel: string = label;
+  return (
+    <div {...props} ref={forwardedRef}>
+      {internalLabel}
+    </div>
+  );
+});
 
 const SelectTrigger = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.Trigger>,
@@ -147,6 +162,7 @@ export {
   Select,
   SelectGroup,
   SelectValue,
+  SelectFixedValue,
   SelectTrigger,
   SelectContent,
   SelectLabel,
