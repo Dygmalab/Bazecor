@@ -18,7 +18,6 @@ import LayerSelector from "./LayerSelector";
 import Select from "./Select";
 import SelectKeyboardDropdown from "./SelectKeyboardDropdown";
 import NeuronSelector from "./NeuronSelector";
-import MacroSelector from "./MacroSelector";
 import SelectF13PlusKeys from "./SelectF13PlusKeys";
 import SelectGenericKeys from "./SelectGenericKeys";
 import SelectMacro from "./SelectMacro";
@@ -38,7 +37,6 @@ export {
   LayerSelector,
   Select,
   SelectKeyboardDropdown,
-  MacroSelector,
   NeuronSelector,
   SelectF13PlusKeys,
   SelectGenericKeys,
