@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 
-import Styled, { withTheme } from "styled-components";
+import { withTheme } from "styled-components";
 
-import Dropdown from "react-bootstrap/Dropdown";
+import { Popover, PopoverContent, PopoverTrigger } from "@Renderer/components/atoms/Popover";
 import { FaLinux } from "react-icons/fa";
 import { AiFillWindows } from "react-icons/ai";
 import { i18n } from "@Renderer/i18n";
@@ -17,41 +17,8 @@ import {
   IconDragAndDrop,
   IconDelete,
 } from "@Renderer/components/atoms/Icons";
-import MacroKeyPortal from "@Renderer/components/molecules/Portals/MacroKeyPortal";
 import Heading from "@Renderer/components/atoms/Heading";
 import { Button } from "@Renderer/components/atoms/Button";
-// import { MacroKeyModal } from "../../component/Modal";
-
-const Styles = Styled.div`
-.chip {
-  font-weight: 600;
-  margin: 0;
-  padding: 6px 0 6px 6px;
-  background-color: transparent;
-  font-size: 13px;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  width: 74px;
-  overflow: hidden;
-}
-
-.keyMacroWrapper {
-  display: flex;
-  flex-wrap: wrap;
-  flex-direction: column;
-  position: relative;
-  &:after {
-    position: absolute;
-    content: "";
-    width: 100%;
-    height: 2px;
-    top: 71px;
-    left: 0;
-    background-color: ${({ theme }) => theme.styles.macro.timelineBackground};
-  }
-}
-
-`;
 
 class KeyMacro extends Component {
   constructor(props) {
@@ -139,10 +106,8 @@ class KeyMacro extends Component {
       isModifier = true;
     }
 
-    console.log("Modifiers: ", modifiers);
-
     return (
-      <Styles>
+      <div>
         <div
           ref={provided.innerRef}
           {...provided.draggableProps}
@@ -150,7 +115,7 @@ class KeyMacro extends Component {
           style={this.getItemStyle(snapshot.isDragging, provided.draggableProps.style)}
         >
           <div
-            className={`keyMacroWrapper keyCode-${item.keyCode} ${isModifier ? "isModifier" : ""} ${
+            className={`keyMacroWrapper relative flex flex-wrap flex-col p-0 m-0 after:absolute after:content-[' '] after:w-full after:h-[1px] after:top-[71px] after:left-0 after:bg-white/80 after:dark:bg-[#2B2C43] keyCode-${item.keyCode} ${isModifier ? "isModifier" : ""} ${
               item.action === 1 || item.action === 2 ? "isDelay" : ""
             }`}
           >
@@ -160,7 +125,127 @@ class KeyMacro extends Component {
                   <IconDragAndDrop />
                 </div>
                 <div className="moreOptions">
-                  <Dropdown label={i18n.editor.macros.insertModifiers} value="" size="small" className="keyMacroOptions">
+                  <Popover>
+                    <PopoverTrigger>
+                      <IconThreeDots />
+                    </PopoverTrigger>
+                    <PopoverContent align="start">
+                      <div className="keyMacroMiniDashboard rounded-regular overflow-hidden">
+                        <div className="keyInfo pt-[16px] pb-[12px] pl-[12px] pr-[12px] bg-gray-50/70 dark:bg-gray-800">
+                          <Heading
+                            headingLevel={4}
+                            renderAs="h4"
+                            className="m-0 uppercase !text-ssm text-gray-300 dark:text-gray-500"
+                          >
+                            {item.action === 1 || item.action === 2 ? i18n.editor.macros.delay : i18n.general.key}
+                          </Heading>
+                          <p className="keyValue text-2xl">
+                            {item.symbol} {item.action === 1 || item.action === 2 ? <small>ms</small> : ""}
+                          </p>
+                        </div>
+                        <div className="keyFunctions py-[12px] px-[8px] bg-gray-50/40 dark:bg-gray-800 divide-y divide-y-reverse divide-gray-50 dark:divide-gray-700">
+                          <Heading
+                            headingLevel={5}
+                            renderAs="h5"
+                            className="normal-case tracking-normal font-medium !text-ssm mb-[8px] text-gray-500 dark:text-gray-50"
+                          >
+                            Edit function
+                          </Heading>
+                          <div className="keyFunctionsButtons flex gap-1">
+                            <Button
+                              iconDirection="left"
+                              variant="config"
+                              icon={<IconPress size="sm" />}
+                              selected={actionTypes[item.action].name === "Key Press"}
+                              disabled={!!(item.action === 1 || item.action === 2)}
+                              onClick={() => updateAction(item.id, 6)}
+                              size="sm"
+                            >
+                              Press
+                            </Button>
+                            <Button
+                              iconDirection="left"
+                              variant="config"
+                              icon={<IconRelease size="sm" />}
+                              selected={actionTypes[item.action].name === "Key Release"}
+                              disabled={!!(item.action === 1 || item.action === 2)}
+                              onClick={() => updateAction(item.id, 7)}
+                              size="sm"
+                            >
+                              Release
+                            </Button>
+                            <Button
+                              iconDirection="left"
+                              variant="config"
+                              icon={<IconPressAndRelease size="sm" />}
+                              selected={actionTypes[item.action].name === "Key Press & Rel."}
+                              disabled={!!(item.action === 1 || item.action === 2)}
+                              onClick={() => updateAction(item.id, 8)}
+                              size="sm"
+                            >
+                              Press & Release
+                            </Button>
+                          </div>
+                        </div>
+                        <div className="keyModifiers py-[12px] px-[8px] bg-gray-25/40 dark:bg-gray-700">
+                          <Heading
+                            headingLevel={4}
+                            renderAs="h4"
+                            className="normal-case tracking-normal font-medium !text-ssm mb-[8px] text-gray-500 dark:text-gray-50"
+                          >
+                            Add modifier
+                          </Heading>
+                          <div className="keyModifiersButtons grid grid-cols-4 gap-2">
+                            {modifiers.map((item, id) => (
+                              <Button
+                                variant="config"
+                                size="sm"
+                                className="w-full text-center"
+                                onClick={e => {
+                                  addModifier(item.id, id);
+                                }}
+                                key={`item-${item.name}`}
+                              >
+                                {item.name === "LEFT SHIFT" ? "L. Shift" : ""}
+                                {item.name === "RIGHT SHIFT" ? "R. Shift" : ""}
+                                {item.name === "LEFT CTRL" ? "L. Ctrl" : ""}
+                                {item.name === "RIGHT CTRL" ? "R. Ctrl" : ""}
+                                {item.name === "LEFT ALT" ? "L. Alt" : ""}
+                                {item.name === "RIGHT ALT" ? "Alt Gr." : ""}
+                                {item.name === "LEFT OS" ? "L. OS" : ""}
+                                {item.name === "RIGHT OS" ? "R. OS" : ""}
+                              </Button>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+                      <div className="keyMacroItemOptions">
+                        <Button
+                          variant="link"
+                          icon={<IconClone />}
+                          iconDirection="left"
+                          size="sm"
+                          onClick={() => {
+                            this.props.onCloneRow(item.id);
+                          }}
+                        >
+                          Clone
+                        </Button>
+                        <Button
+                          variant="link"
+                          iconDirection="left"
+                          icon={<IconDelete />}
+                          size="sm"
+                          onClick={() => {
+                            this.props.onDeleteRow(item.id);
+                          }}
+                        >
+                          Delete
+                        </Button>
+                      </div>
+                    </PopoverContent>
+                  </Popover>
+                  {/* <Dropdown label={i18n.editor.macros.insertModifiers} value="" size="small" className="keyMacroOptions">
                     <Dropdown.Toggle variant="primary" id="dropdown-basic" drop="up" align="end">
                       <IconThreeDots />
                     </Dropdown.Toggle>
@@ -281,12 +366,12 @@ class KeyMacro extends Component {
                         </div>
                       </Dropdown.Menu>
                     </MacroKeyPortal>
-                  </Dropdown>
+                  </Dropdown> */}
                 </div>
               </div>
               <div className="bodyDrag">
                 <p
-                  className="chip"
+                  className="chip font-semibold pt-[6px] pr-0 pb-[6px] pl-[6px] bg-transparent text-ssm whitespace-nowrap text-ellipsis overflow-hidden m-0 w-[74px]"
                   style={
                     {
                       // backgroundColor: item.color,
@@ -317,7 +402,7 @@ class KeyMacro extends Component {
             <div className="keyMacro keyMacroFreeSlot" />
           </div>
         </div>
-      </Styles>
+      </div>
     );
   }
 }
