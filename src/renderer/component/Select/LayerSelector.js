@@ -31,7 +31,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@Renderer/components/atoms/DropdownMenu";
-import { KeyboardViewSelector } from "../ToggleButtons";
 import {
   IconArrowsSmallSeparating,
   IconPen,
@@ -275,8 +274,6 @@ class LayerSelector extends React.Component {
         </div>
 
         <ToggleGroupKeyboardViewMode value={editModeActual} onValueChange={editModeFunc} />
-
-        <KeyboardViewSelector listElements={layoutsMode} value={editModeActual} style="flex" editModeFunc={editModeFunc} />
 
         {itemList === undefined || itemList.length === 0 || itemList.length <= selectedItem ? (
           ""

@@ -19,7 +19,6 @@ import Select from "./Select";
 import SelectKeyboardDropdown from "./SelectKeyboardDropdown";
 import NeuronSelector from "./NeuronSelector";
 import MacroSelector from "./MacroSelector";
-import SuperkeysSelector from "./SuperkeysSelector";
 import SelectF13PlusKeys from "./SelectF13PlusKeys";
 import SelectGenericKeys from "./SelectGenericKeys";
 import SelectMacro from "./SelectMacro";
@@ -41,7 +40,6 @@ export {
   SelectKeyboardDropdown,
   MacroSelector,
   NeuronSelector,
-  SuperkeysSelector,
   SelectF13PlusKeys,
   SelectGenericKeys,
   SelectMacro,

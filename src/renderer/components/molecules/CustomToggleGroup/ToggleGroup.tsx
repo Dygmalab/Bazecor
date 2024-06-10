@@ -42,12 +42,14 @@ const ToggleGroup = ({ triggerFunction, value, listElements, variant = "regular"
           onClick={() => {
             triggerFunction(item.value);
           }}
+          variant="config"
           selected={value === item.value}
           icon={item.icon}
           iconDirection="left"
           key={item.index}
           size={size}
           disabled={false}
+          className="shrink grow basis-[0%] text-center"
         >
           {item.name}
         </Button>
