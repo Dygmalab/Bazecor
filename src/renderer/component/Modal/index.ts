@@ -14,10 +14,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import AdvancedBatterySettingsModal from "./AdvancedBatterySettingsModal";
 import AlertModal from "./AlertModal";
 import MacroKeyModal from "./MacroKeyModal";
 import PreviewMacroModal from "./PreviewMacroModal";
 import RecordMacroModal from "../../modules/Macros/RecordMacroModal";
 
-export { AdvancedBatterySettingsModal, AlertModal, MacroKeyModal, PreviewMacroModal, RecordMacroModal };
+export { AlertModal, MacroKeyModal, PreviewMacroModal, RecordMacroModal };

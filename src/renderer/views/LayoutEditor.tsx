@@ -49,7 +49,6 @@ import StandardView from "@Renderer/modules/StandardView";
 // Components
 import LayerSelector from "@Renderer/components/organisms/Select/LayerSelector";
 import { Button } from "@Renderer/components/atoms/Button";
-// import { LayoutViewSelector } from "@Renderer/component/ToggleButtons";
 import ToggleGroupLayoutViewMode from "@Renderer/components/molecules/CustomToggleGroup/ToggleGroupLayoutViewMode";
 import { IconArrowDownWithLine, IconArrowUpWithLine } from "@Renderer/components/atoms/Icons";
 import LoaderLayout from "@Renderer/components/atoms/Loader/loaderLayout";

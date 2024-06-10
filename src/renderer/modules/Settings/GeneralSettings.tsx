@@ -28,9 +28,7 @@ import { flags, languages, languageNames } from "@Renderer/modules/Settings/Gene
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@Renderer/components/atoms/Card";
 import { Switch } from "@Renderer/components/atoms/Switch";
 import { IconChip, IconHanger, IconSun, IconMoon, IconScreen, IconKeyboard } from "@Renderer/components/atoms/Icons";
-// import { ToggleButtons } from "@Renderer/component/ToggleButtons";
 import ToggleGroup from "@Renderer/components/molecules/CustomToggleGroup/ToggleGroup";
-// import { Select } from "@Renderer/component/Select";
 import { KeyPickerPreview } from "@Renderer/modules/KeyPickerKeyboard";
 import getLanguage from "@Renderer/utils/language";
 import ToastMessage from "@Renderer/components/atoms/ToastMessage";

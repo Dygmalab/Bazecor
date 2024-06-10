@@ -4,7 +4,6 @@ import Styled from "styled-components";
 import Title from "@Renderer/component/Title";
 import { IconSettings } from "@Renderer/components/atoms/Icons";
 import { RegularButton } from "@Renderer/component/Button";
-import { AdvancedBatterySettingsModal } from "@Renderer/component/Modal";
 import { i18n } from "@Renderer/i18n";
 import { EnergyManagementProps } from "@Renderer/types/wireless";
 
@@ -56,12 +55,6 @@ function AdvancedBatterySettings(props: EnergyManagementProps) {
           <RegularButton icoSVG={<IconSettings />} styles="short" onClick={() => setShowModal(true)} />
         </div>
       </div>
-      <AdvancedBatterySettingsModal
-        showModal={showModal}
-        setShowModal={setShowModal}
-        wireless={wireless}
-        changeWireless={changeWireless}
-      />
     </Styles>
   );
 }
