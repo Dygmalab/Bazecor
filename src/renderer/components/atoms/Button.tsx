@@ -40,8 +40,8 @@ const buttonVariants = cva(
       },
       iconDirection: {
         none: "",
-        left: "gap-4",
-        right: "gap-4 flex-row-reverse",
+        left: "flex gap-4",
+        right: "flex gap-4 flex-row-reverse",
       },
     },
     compoundVariants: [

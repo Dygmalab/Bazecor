@@ -16,33 +16,8 @@
  */
 
 import React from "react";
-import { ButtonConfig } from "@Renderer/component/Button";
+import { Button } from "@Renderer/components/atoms/Button";
 
-// const Style = Styled.div`
-// &.toggleButtonsContainer {
-//   padding: 4px;
-//   background: ${({ theme }) => theme.styles.toggleButton.background};
-//   border-radius: 6px;
-//   .toggleButtonsInner {
-//     margin-left: -2px;
-//     margin-right: -2px;
-//     .button-config {
-//       margin-left: 2px;
-//       margin-right: 2px;
-//     }
-//   }
-// }
-// &.toggleButtonsContainerFlex {
-//   .toggleButtonsInner {
-//     display: flex;
-//     flex-wrap: nowrap;
-//     .button-config {
-//       flex: auto;
-//       text-align: center;
-//     }
-//   }
-// }
-// `;
 interface ItemButton {
   name: string;
   value: string | number | boolean;
@@ -63,18 +38,19 @@ const ToggleGroup = ({ triggerFunction, value, listElements, variant = "regular"
       className={`toggleButtonsInner flex items-center justify-start gap-1 p-[4px] rounded-regular border-[1px] border-solid border-gray-100/60 bg-white/30 dark:border-transparent dark:bg-gray-900/25 ${variant === "flex" ? "w-fit [&_.button-config]:basis-full [&_.button-config]:text-center" : "w-full [&_.button-config]:flex-1 [&_.button-config]:text-center"}`}
     >
       {listElements.map(item => (
-        <ButtonConfig
+        <Button
           onClick={() => {
             triggerFunction(item.value);
           }}
           selected={value === item.value}
-          icoSVG={item.icon}
-          icoPosition="left"
+          icon={item.icon}
+          iconDirection="left"
           key={item.index}
-          buttonText={item.name}
           size={size}
           disabled={false}
-        />
+        >
+          {item.name}
+        </Button>
       ))}
     </div>
   </div>
