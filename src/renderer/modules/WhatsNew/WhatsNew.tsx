@@ -18,7 +18,7 @@
 import React from "react";
 import Styled from "styled-components";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@Renderer/components/atoms/Accordion";
-import Spinner from "react-bootstrap/Spinner";
+import { IconLoader } from "@Renderer/components/atoms/icons";
 import { i18n } from "@Renderer/i18n";
 
 import Heading from "@Renderer/components/atoms/Heading";
@@ -73,7 +73,7 @@ function WhatsNew() {
             <div>
               {loading && !error ? (
                 <div className="loading marginCenter">
-                  <Spinner className="spinner-border" role="status" animation="border" />
+                  <IconLoader />
                 </div>
               ) : (
                 ""
