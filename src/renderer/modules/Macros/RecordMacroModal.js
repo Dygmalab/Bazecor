@@ -328,7 +328,7 @@ export default class RecordMacroModal extends React.Component {
           className="w-full rounded-regular !text-ssm !text-left !justify-start font-semibold py-[12px] pl-[8px] pr-[12px] bg-gray-25/25 hover:bg-gray-25/100 text-gray-500 hover:text-gray-600 dark:bg-gray-800/40 dark:hover:bg-gray-800/60 dark:text-gray-50 dark:hover:text-gray-25 transition-all relative flex gap-2 items-center mb-[2px] whitespace-nowrap [&_svg]:text-gray-300 [&:hover_svg]:text-primary/100 [&_svg]:transition-all"
           onClick={this.toggleShow}
           icon={<IconRecord />}
-          iconPosition="left"
+          iconDirection="left"
         >
           {i18n.editor.macros.recordMacro}
         </Button>
