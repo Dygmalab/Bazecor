@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback, useMemo, FC } from "react";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectFixedValue } from "@Renderer/components/atoms/select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectFixedValue } from "@Renderer/components/atoms/Select";
 import { KeymapDB } from "../../../../api/keymap";
 
 interface SelectF13PlusKeysProps {
