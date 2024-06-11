@@ -18,7 +18,7 @@ import {
   FirmwareUpdateProcess,
 } from "@Renderer/modules/Firmware";
 
-import LogoLoader from "@Renderer/components/atoms/Loader/LogoLoader";
+import LogoLoader from "@Renderer/components/atoms/loader/LogoLoader";
 import { useDevice } from "@Renderer/DeviceContext";
 
 const Styles = Styled.div`

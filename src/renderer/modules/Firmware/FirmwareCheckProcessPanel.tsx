@@ -29,7 +29,7 @@ import { ContextType } from "@Renderer/controller/FlashManager/context";
 import Heading from "@Renderer/components/atoms/Heading";
 import Callout from "@Renderer/components/molecules/Callout/Callout";
 import { Button } from "@Renderer/components/atoms/Button";
-import LogoLoader from "@Renderer/components/atoms/Loader/LogoLoader";
+import LogoLoader from "@Renderer/components/atoms/loader/LogoLoader";
 import AccordionFirmware from "@Renderer/components/molecules/CustomAccordion/AccordionFirmware";
 
 import FirmwareNeuronStatus from "./FirmwareNeuronStatus";

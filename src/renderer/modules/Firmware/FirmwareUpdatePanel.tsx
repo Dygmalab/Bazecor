@@ -27,7 +27,7 @@ import FirmwareSelection from "@Renderer/controller/FirmwareSelection/machine";
 import Heading from "@Renderer/components/atoms/Heading";
 import Callout from "@Renderer/components/molecules/Callout/Callout";
 import { Button } from "@Renderer/components/atoms/Button";
-import LogoLoader from "@Renderer/components/atoms/Loader/LogoLoader";
+import LogoLoader from "@Renderer/components/atoms/loader/LogoLoader";
 import { IconLoader } from "@Renderer/components/atoms/Icons";
 
 // Visual modules

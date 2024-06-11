@@ -40,7 +40,7 @@ import { SuperkeysType } from "@Renderer/types/superkeys";
 import { MacroActionsType, MacrosType } from "@Renderer/types/macros";
 
 // Components
-import LogoLoader from "@Renderer/components/atoms/Loader/LogoLoader";
+import LogoLoader from "@Renderer/components/atoms/loader/LogoLoader";
 import { Button } from "@Renderer/components/atoms/Button";
 import { IconFloppyDisk, IconLoader } from "@Renderer/components/atoms/Icons";
 import MacroSelector from "@Renderer/components/organisms/Select/MacroSelector";

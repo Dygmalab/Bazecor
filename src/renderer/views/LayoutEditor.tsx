@@ -51,7 +51,7 @@ import LayerSelector from "@Renderer/components/organisms/Select/LayerSelector";
 import { Button } from "@Renderer/components/atoms/Button";
 import ToggleGroupLayoutViewMode from "@Renderer/components/molecules/CustomToggleGroup/ToggleGroupLayoutViewMode";
 import { IconArrowDownWithLine, IconArrowUpWithLine } from "@Renderer/components/atoms/Icons";
-import LoaderLayout from "@Renderer/components/atoms/Loader/loaderLayout";
+import LoaderLayout from "@Renderer/components/atoms/loader/loaderLayout";
 import { i18n } from "@Renderer/i18n";
 
 import Store from "@Renderer/utils/Store";

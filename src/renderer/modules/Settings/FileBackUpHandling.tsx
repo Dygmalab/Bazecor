@@ -31,7 +31,7 @@ import { IconFolder } from "@Renderer/components/atoms/Icons";
 
 // Utils
 import Store from "@Renderer/utils/Store";
-import { Slider } from "@Renderer/components/atoms/Slider";
+import { Slider } from "@Renderer/components/atoms/slider";
 
 const store = Store.getStore();
 

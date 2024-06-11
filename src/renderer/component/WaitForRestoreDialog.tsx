@@ -16,7 +16,7 @@
  */
 
 import React from "react";
-import LogoLoader from "@Renderer/components/atoms/Loader/LogoLoader";
+import LogoLoader from "@Renderer/components/atoms/loader/LogoLoader";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@Renderer/components/atoms/Dialog";
 
 interface WaitForRestoreDialogProps {

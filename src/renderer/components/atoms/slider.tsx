@@ -1,5 +1,4 @@
-// @ts-nocheck
-
+/* eslint-disable react/jsx-props-no-spreading */
 import * as React from "react";
 import { cva, type VariantProps } from "class-variance-authority";
 import * as SliderPrimitive from "@radix-ui/react-slider";

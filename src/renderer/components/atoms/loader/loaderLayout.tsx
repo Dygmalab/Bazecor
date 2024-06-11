@@ -1,5 +1,5 @@
 import React from "react";
-import LogoLoader from "@Renderer/components/atoms/Loader/LogoLoader";
+import LogoLoader from "@Renderer/components/atoms/loader/LogoLoader";
 import Heading from "@Renderer/components/atoms/Heading";
 import log from "electron-log/renderer";
 

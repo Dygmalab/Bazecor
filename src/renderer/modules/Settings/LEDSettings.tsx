@@ -22,7 +22,7 @@ import log from "electron-log/renderer";
 import { Card, CardContent, CardHeader, CardTitle } from "@Renderer/components/atoms/Card";
 import { Switch } from "@Renderer/components/atoms/Switch";
 import { LEDSettingsPreferences } from "@Renderer/types/preferences";
-import { Slider } from "@Renderer/components/atoms/Slider";
+import { Slider } from "@Renderer/components/atoms/slider";
 
 // Assets
 // import { Badge } from "@Renderer/component/Badge";

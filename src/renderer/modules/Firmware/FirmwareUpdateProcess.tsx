@@ -28,7 +28,7 @@ import FlashDevice from "@Renderer/controller/FlashingProcedure/machine";
 // Visual components
 import Heading from "@Renderer/components/atoms/Heading";
 import { Button } from "@Renderer/components/atoms/Button";
-import LogoLoader from "@Renderer/components/atoms/Loader/LogoLoader";
+import LogoLoader from "@Renderer/components/atoms/loader/LogoLoader";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@Renderer/components/atoms/Tooltip";
 import { IconInformation } from "@Renderer/components/atoms/Icons";
 

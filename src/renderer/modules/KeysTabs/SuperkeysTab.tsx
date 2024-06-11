@@ -8,7 +8,7 @@ import ListModifier from "@Renderer/components/molecules/ListModifiers/ListModif
 import Heading from "@Renderer/components/atoms/Heading";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@Renderer/components/atoms/Select";
 
-import Keymap, { KeymapDB } from "../../../api/keymap";
+import { KeymapDB } from "../../../api/keymap";
 
 const Styles = Styled.div`
 display: flex;
@@ -115,16 +115,24 @@ h4 {
 
 `;
 
+interface SuperkeysTabProps {
+  macros: Array<any>;
+  keyCode: any;
+  isStandardView: any;
+  actions: any;
+  onKeySelect: any;
+  superkeys: any;
+}
+
 class SuperkeysTab extends Component {
-  constructor(props) {
+  keymapDB: any;
+  constructor(props: SuperkeysTabProps) {
     super(props);
-    this.state = {
-      keyContent: "Loading...",
-    };
+    this.state = {};
     this.keymapDB = new KeymapDB();
   }
 
-  translateSuperKeyAction = superkeysSelected => {
+  translateSuperKeyAction = (superkeysSelected: number) => {
     let aux;
     if (superkeysSelected === undefined) {
       return null;
@@ -137,9 +145,10 @@ class SuperkeysTab extends Component {
     let translatedAction = "";
     // console.log("Try to translate superkey actions inside SuperKeiItem: ", aux);
 
-    if (aux.extraLabel == "MACRO") {
-      if (this.props.macros.length > parseInt(aux.label) && this.props.macros[parseInt(aux.label)].name.substr(0, 5) != "") {
-        translatedAction = aux.label = this.props.macros[parseInt(aux.label)].name.substr(0, 5).toLowerCase();
+    if (aux.extraLabel === "MACRO") {
+      const { macros } = this.props;
+      if (macros.length > parseInt(aux.label) && macros[parseInt(aux.label)].name.substr(0, 5) !== "") {
+        translatedAction = aux.label = macros[parseInt(aux.label)].name.substr(0, 5).toLowerCase();
       }
     }
     if (aux.label) {

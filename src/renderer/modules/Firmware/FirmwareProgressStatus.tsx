@@ -21,7 +21,7 @@ import { i18n } from "@Renderer/i18n";
 
 import StepsProgressBar from "@Renderer/components/atoms/StepsBar/StepsProgressBar";
 import { Progress } from "@Renderer/components/atoms/Progress";
-import CircleLoader from "@Renderer/components/atoms/Loader/CircleLoader";
+import CircleLoader from "@Renderer/components/atoms/loader/CircleLoader";
 import Heading from "@Renderer/components/atoms/Heading";
 import FirmwareImageHelp from "./FirmwareImageHelp";
 

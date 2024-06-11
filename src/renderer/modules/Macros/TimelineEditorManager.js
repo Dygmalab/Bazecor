@@ -23,7 +23,7 @@ import { i18n } from "@Renderer/i18n";
 import { IconDelete, IconStopWatch } from "@Renderer/components/atoms/Icons";
 import PreviewMacroModal from "@Renderer/components/molecules/CustomModal/ModalPreviewMacro";
 import Heading from "@Renderer/components/atoms/Heading";
-import LogoLoader from "@Renderer/components/atoms/Loader/LogoLoader";
+import LogoLoader from "@Renderer/components/atoms/loader/LogoLoader";
 import { KeymapDB } from "../../../api/keymap";
 
 import TimelineEditorForm from "./TimelineEditorForm";

@@ -29,7 +29,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "
 import Callout from "@Renderer/components/molecules/Callout/Callout";
 import SuperkeysSelector from "@Renderer/components/organisms/Select/SuperkeysSelector";
 import { Button } from "@Renderer/components/atoms/Button";
-import LogoLoader from "@Renderer/components/atoms/Loader/LogoLoader";
+import LogoLoader from "@Renderer/components/atoms/loader/LogoLoader";
 import ToggleGroupLayoutViewMode from "@Renderer/components/molecules/CustomToggleGroup/ToggleGroupLayoutViewMode";
 import ToastMessage from "@Renderer/components/atoms/ToastMessage";
 import { IconFloppyDisk } from "@Renderer/components/atoms/Icons";
