@@ -1,18 +1,16 @@
 import React, { useState, forwardRef } from "react";
+import { SortableKnob } from "react-easy-sort";
 
 import Heading from "@Renderer/components/atoms/Heading";
 import { IconDelete, IconDragAndDrop } from "@Renderer/components/atoms/icons";
-
+import { DeviceListType } from "@Renderer/types/DeviceManager";
 import { DevicePreview } from "@Renderer/modules/DevicePreview";
-
-import { SortableKnob } from "react-easy-sort";
-
 import { Button } from "@Renderer/components/atoms/Button";
-
 import { i18n } from "@Renderer/i18n";
+
 // import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@Renderer/components/ui/dropdown-menu";
 interface CardDeviceProps {
-  device: any;
+  device: DeviceListType;
   filterBy: boolean | "all";
   openDialog: (device: any) => void;
 }
@@ -53,12 +51,12 @@ const CardDevice = forwardRef<HTMLDivElement, CardDeviceProps>(({ device, filter
               {device.name}
             </Heading>
             <Heading headingLevel={4} renderAs="h4" className="text-base text-gray-400 dark:text-gray-50">
-              {device.device.info.displayName}
+              {device.device?.device?.info?.displayName}
             </Heading>
           </>
         ) : (
           <Heading headingLevel={3} renderAs="h3" className="text-gray-600 dark:text-gray-50">
-            {device.device.info.displayName}
+            {device.device?.device?.info?.displayName}
           </Heading>
         )}
         {device.file ? (
@@ -82,7 +80,7 @@ const CardDevice = forwardRef<HTMLDivElement, CardDeviceProps>(({ device, filter
           device.available ? "relative " : "relative -z-[1] [&_canvas]:opacity-25 [&_canvas]:dark:opacity-100"
         }`}
       >
-        <DevicePreview deviceName={device.device.info.displayName} isConnected={isConnected} />
+        <DevicePreview deviceName={device.device?.device?.info?.displayName} isConnected={isConnected} />
       </div>
       <div className="card-footer bg-transparent border-none p-0.5 mt-auto">
         <div className="card-footer--inner flex justify-between items-center rounded-[18px] p-4 bg-gray-25/80 dark:bg-gray-700/70 backdrop-blur-sm">
@@ -113,7 +111,7 @@ const CardDevice = forwardRef<HTMLDivElement, CardDeviceProps>(({ device, filter
                 onClick={() => openDialog(device)}
                 type="button"
               >
-                <IconDelete />
+                {`${(<IconDelete />)}`}
               </button>
             ) : null}
           </div>

@@ -356,7 +356,19 @@ function App() {
         <Routes>
           <Route path="/" element={<Navigate to="/keyboard-select" />} />
           <Route path="/welcome" element={<Welcome device={device} onConnect={onKeyboardConnect} />} />
-          <Route path="/device-manager" element={<DeviceManager />} />
+          <Route
+            path="/device-manager"
+            element={
+              <DeviceManager
+                connected={connected}
+                onConnect={onKeyboardConnect}
+                onDisconnect={onKeyboardDisconnect}
+                device={device}
+                darkMode={darkMode}
+                setLoading={setLoadingData}
+              />
+            }
+          />
           <Route
             path="/keyboard-select"
             element={
