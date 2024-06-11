@@ -24,11 +24,9 @@ import SelectLayersSwitch from "./SelectLayersSwitch";
 import SelectOneShotLayers from "./SelectOneShotLayers";
 import SelectOneShotModifiers from "./SelectOneShotModifiers";
 import SelectSuperKey from "./SelectSuperKey";
-import SelectLayersCustomDropdown from "./SelectLayersCustomDropdown";
 import SelectMacroCustomDropdown from "./SelectMacroCustomDropdown";
 import SelectMouseCustomDropdown from "./SelectMouseCustomDropdown";
 import SelectShotModifierCustomDropdown from "./SelectShotModifierCustomDropdown";
-import SelectSuperKeyCustomDropdown from "../../components/molecules/CustomSelect/SelectSuperKeyCustomDropdown";
 import SelectWirelessDropdown from "./SelectWirelessDropdown";
 
 export {
@@ -42,10 +40,8 @@ export {
   SelectOneShotLayers,
   SelectOneShotModifiers,
   SelectSuperKey,
-  SelectLayersCustomDropdown,
   SelectMacroCustomDropdown,
   SelectMouseCustomDropdown,
   SelectShotModifierCustomDropdown,
-  SelectSuperKeyCustomDropdown,
   SelectWirelessDropdown,
 };
