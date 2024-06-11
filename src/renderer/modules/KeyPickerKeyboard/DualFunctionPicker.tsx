@@ -115,7 +115,7 @@ const DualFunctionPicker = (props: DualFunctionPickerProps) => {
               <SelectItem
                 value={String(item.keynum)}
                 disabled={item.keynum === -1 || isMod}
-                key={`itemDualFunctionLayerSelect-${item.keynum}`}
+                key={`itemDualFunctionModifierSelect-${item.keynum}`}
                 className={`${keyCode.modified > 0 && item.keynum === keyCode.modified ? "!bg-purple-200 !dark:bg-purple-300 !text-gray-25 [&>svg]:!text-gray-25" : ""}`}
               >
                 {item.name}
@@ -141,7 +141,7 @@ const DualFunctionPicker = (props: DualFunctionPickerProps) => {
               <Button
                 variant="config"
                 size="sm"
-                key={`itemDualFunctionLayers-${item.keynum}`}
+                key={`itemDualFunctionLayersButton-${item.keynum}`}
                 onClick={() => onKeySelect(item.keynum + keyCode.base)}
                 selected={!!(keyCode.modified > 0 && item.keynum === keyCode.modified)}
                 disabled={disabled || activeTab === "super"}
@@ -165,7 +165,7 @@ const DualFunctionPicker = (props: DualFunctionPickerProps) => {
               <Button
                 variant="config"
                 size="sm"
-                key={`itemDualFunctionMod-${item.keynum}`}
+                key={`itemDualFunctionModButton-${item.keynum}`}
                 onClick={() => onKeySelect(item.keynum + keyCode.base)}
                 selected={!!(keyCode.modified > 0 && item.keynum === keyCode.modified)}
                 disabled={disabled || activeTab === "super"}

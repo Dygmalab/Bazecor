@@ -588,14 +588,13 @@ class KeyPicker extends Component {
                 </div>
                 <div className="keysButtonsList">
                   <SelectSuperKeyCustomDropdown
-                    action={action}
-                    actions={actions}
-                    selKeys={selKeys}
+                    // action={action}
+                    // actions={actions}
+                    // selKeys={selKeys}
                     onKeySelect={onKeySelect}
                     disabled={disableAll}
                     superkeys={superkeys}
                     keyCode={code}
-                    notifText="BETA"
                   />
                 </div>
               </div>
