@@ -5,7 +5,7 @@ import Styled from "styled-components";
 // Custom components
 import Heading from "@Renderer/components/atoms/Heading";
 import { Button } from "@Renderer/components/atoms/Button";
-import { BatteryStatusSide, SavingModeIndicator } from "@Renderer/components/atoms/Battery";
+import { BatteryStatusSide, SavingModeIndicator } from "@Renderer/components/atoms/battery";
 
 // Assets
 import { IconRefresh, IconBattery } from "@Renderer/components/atoms/icons";

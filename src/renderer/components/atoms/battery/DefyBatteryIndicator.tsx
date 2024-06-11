@@ -16,8 +16,8 @@
 
 import React, { useState, useEffect } from "react";
 
-import DefyBatteryIndicatorLeft from "@Renderer/components/atoms/Battery/DefyBatteryIndicatorLeft";
-import DefyBatteryIndicatorRight from "@Renderer/components/atoms/Battery/DefyBatteryIndicatorRight";
+import DefyBatteryIndicatorLeft from "@Renderer/components/atoms/battery/DefyBatteryIndicatorLeft";
+import DefyBatteryIndicatorRight from "@Renderer/components/atoms/battery/DefyBatteryIndicatorRight";
 
 import { i18n } from "@Renderer/i18n";
 

@@ -22,7 +22,7 @@ import { BatterySettingsProps } from "@Types/wireless";
 
 // Custom components
 import { Card, CardContent, CardHeader, CardTitle } from "@Renderer/components/atoms/Card";
-import { BatteryStatusSide, SavingModeIndicator } from "@Renderer/components/atoms/Battery";
+import { BatteryStatusSide, SavingModeIndicator } from "@Renderer/components/atoms/battery";
 
 // Assets
 import { IconBattery } from "@Renderer/components/atoms/icons";

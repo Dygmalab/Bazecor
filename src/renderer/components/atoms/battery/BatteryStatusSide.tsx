@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 
-import PileIndicator from "@Renderer/components/atoms/Battery/PileIndicator";
-import DefyBatteryIndicator from "@Renderer/components/atoms/Battery/DefyBatteryIndicator";
+import PileIndicator from "@Renderer/components/atoms/battery/PileIndicator";
+import DefyBatteryIndicator from "@Renderer/components/atoms/battery/DefyBatteryIndicator";
 
 interface BatteryStatusSideProps {
   side: "left" | "right";
