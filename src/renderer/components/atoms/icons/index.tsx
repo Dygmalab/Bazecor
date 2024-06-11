@@ -1,3 +1,4 @@
+/* eslint-disable import/extensions */
 /* Bazecor
  * Copyright (C) 2024  Dygmalab, Inc.
  *
@@ -103,7 +104,7 @@ import IconPress from "@Renderer/components/atoms/icons/IconPress";
 import IconPressAndRelease from "@Renderer/components/atoms/icons/IconPressAndRelease";
 import IconRadar from "@Renderer/components/atoms/icons/IconRadar";
 import IconRecord from "@Renderer/components/atoms/icons/IconRecord";
-import IconRefresh from "@Renderer/components/atoms/icons/IconRefresh";
+import IconRefresh from "@Renderer/components/atoms/icons/IconRefresh.tsx";
 import IconRelease from "@Renderer/components/atoms/icons/IconRelease";
 import IconRobot from "@Renderer/components/atoms/icons/IconRobot";
 import IconRobotOffline from "@Renderer/components/atoms/icons/IconRobotOffline";
