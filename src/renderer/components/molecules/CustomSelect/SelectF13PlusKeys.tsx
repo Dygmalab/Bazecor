@@ -19,7 +19,7 @@ import React from "react";
 import Styled from "styled-components";
 import Dropdown from "react-bootstrap/Dropdown";
 
-import { KeymapDB } from "../../../api/keymap";
+import { KeymapDB } from "../../../../api/keymap";
 
 const Style = Styled.div`
 .custom-dropdown {

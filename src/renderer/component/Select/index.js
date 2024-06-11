@@ -18,7 +18,7 @@ import LayerSelector from "./LayerSelector";
 import Select from "./Select";
 import SelectKeyboardDropdown from "./SelectKeyboardDropdown";
 import NeuronSelector from "./NeuronSelector";
-import SelectF13PlusKeys from "./SelectF13PlusKeys";
+import SelectF13PlusKeys from "../../components/molecules/CustomSelect/SelectF13PlusKeys";
 import SelectGenericKeys from "./SelectGenericKeys";
 import SelectMacro from "./SelectMacro";
 import SelectLayersLock from "./SelectLayersLock";
