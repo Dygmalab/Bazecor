@@ -23,7 +23,7 @@ import ReactMarkdown from "react-markdown";
 
 import Heading from "@Renderer/components/atoms/Heading";
 import { Badge } from "@Renderer/components/atoms/Badge";
-import { IconEye } from "@Renderer/components/atoms/Icons";
+import { IconEye } from "@Renderer/components/atoms/icons";
 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@Renderer/components/atoms/Select";
 

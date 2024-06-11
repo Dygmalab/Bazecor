@@ -21,7 +21,7 @@ import Styled from "styled-components";
 import { SuperkeyPickerProps } from "@Renderer/types/superkeys";
 import ListModifier from "@Renderer/components/molecules/ListModifiers/ListModifiers";
 import Heading from "@Renderer/components/atoms/Heading";
-import { IconClose } from "@Renderer/components/atoms/Icons";
+import { IconClose } from "@Renderer/components/atoms/icons";
 
 const Style = Styled.div`
 .superkeyAction {

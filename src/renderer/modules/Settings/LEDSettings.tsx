@@ -27,7 +27,7 @@ import { Slider } from "@Renderer/components/atoms/slider";
 // Assets
 // import { Badge } from "@Renderer/component/Badge";
 import { Badge } from "@Renderer/components/atoms/Badge";
-import { IconFlashlight, IconIridescentWhiteBalance, IconThunder } from "@Renderer/components/atoms/Icons";
+import { IconFlashlight, IconIridescentWhiteBalance, IconThunder } from "@Renderer/components/atoms/icons";
 import Callout from "@Renderer/components/molecules/Callout/Callout";
 import { i18n } from "@Renderer/i18n";
 import Heading from "@Renderer/components/atoms/Heading";

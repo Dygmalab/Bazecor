@@ -19,7 +19,7 @@ import React, { useState, useEffect } from "react";
 import Styled from "styled-components";
 import { i18n } from "@Renderer/i18n";
 
-import StepsProgressBar from "@Renderer/components/atoms/StepsBar/StepsProgressBar";
+import StepsProgressBar from "@Renderer/components/atoms/stepsBar/StepsProgressBar";
 import { Progress } from "@Renderer/components/atoms/Progress";
 import CircleLoader from "@Renderer/components/atoms/loader/CircleLoader";
 import Heading from "@Renderer/components/atoms/Heading";

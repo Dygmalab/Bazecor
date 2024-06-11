@@ -26,7 +26,7 @@ import { SelectKeyboardDropdown } from "@Renderer/component/Select";
 import { i18n } from "@Renderer/i18n";
 
 import "react-toastify/dist/ReactToastify.css";
-import { IconConnected } from "@Renderer/components/atoms/Icons";
+import { IconConnected } from "@Renderer/components/atoms/icons";
 import { NeuronConnectionProps } from "@Renderer/types/selectKeyboard";
 
 const Style = Styled.div`

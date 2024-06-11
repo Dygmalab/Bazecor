@@ -22,7 +22,7 @@ import { useMachine } from "@xstate/react";
 import { i18n } from "@Renderer/i18n";
 
 // State machine
-import { IconNoWifi, IconWarning } from "@Renderer/components/atoms/Icons";
+import { IconNoWifi, IconWarning } from "@Renderer/components/atoms/icons";
 import Heading from "@Renderer/components/atoms/Heading";
 import LogoLoader from "@Renderer/components/atoms/loader/LogoLoader";
 import { Button } from "@Renderer/components/atoms/Button";
@@ -276,7 +276,14 @@ function FirmwareErrorPanel(props: FirmwareErrorPanelType) {
             <div className="firmware-content borderLeftBottomRadius">
               <div className="wrapperActions">
                 {!handleError ? (
-                  <Button variant="outline" onClick={onCancelDialog} size="sm">
+                  <Button
+                    variant="outline"
+                    onClick={() => {
+                      // TODO: refactor this
+                      send({ type: "retry-event" });
+                    }}
+                    size="sm"
+                  >
                     {i18n.firmwareUpdate.texts.cancelButton}
                   </Button>
                 ) : (

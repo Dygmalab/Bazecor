@@ -29,7 +29,7 @@ import NeuronData from "@Renderer/modules/NeuronData";
 import { Neuron } from "@Types/neurons";
 
 // Icons Imports
-import { IconNeuronManager } from "@Renderer/components/atoms/Icons";
+import { IconNeuronManager } from "@Renderer/components/atoms/icons";
 import { NeuronSettingsProps } from "@Renderer/types/preferences";
 
 function NeuronSettings(props: NeuronSettingsProps) {

@@ -30,7 +30,7 @@ import { PageHeader } from "@Renderer/modules/PageHeader";
 import Heading from "@Renderer/components/atoms/Heading";
 import ToastMessage from "@Renderer/components/atoms/ToastMessage";
 import { Button } from "@Renderer/components/atoms/Button";
-import { IconKeyboard, IconFloppyDisk } from "@Renderer/components/atoms/Icons";
+import { IconKeyboard, IconFloppyDisk } from "@Renderer/components/atoms/icons";
 import { DygmaDeviceType } from "@Renderer/types/dygmaDefs";
 
 const Styles = Styled.div`

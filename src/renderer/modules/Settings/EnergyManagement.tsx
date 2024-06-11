@@ -24,7 +24,7 @@ import { SavingMode } from "@Renderer/modules/Battery";
 import { Card, CardContent, CardHeader, CardTitle } from "@Renderer/components/atoms/Card";
 import { Switch } from "@Renderer/components/atoms/Switch";
 import { Badge } from "@Renderer/component/Badge";
-import { IconFlashlight, IconLeaf, IconInformation } from "@Renderer/components/atoms/Icons";
+import { IconFlashlight, IconLeaf, IconInformation } from "@Renderer/components/atoms/icons";
 import Heading from "@Renderer/components/atoms/Heading";
 import { Slider } from "@Renderer/components/atoms/slider";
 import { i18n } from "@Renderer/i18n";

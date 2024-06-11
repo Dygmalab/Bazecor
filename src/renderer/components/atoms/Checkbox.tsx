@@ -1,6 +1,8 @@
+/* eslint-disable react/jsx-props-no-spreading */
 // @ts-nocheck
 
 import * as React from "react";
+import type { ElementRef, ComponentPropsWithoutRef } from "react";
 import * as CheckboxPrimitive from "@radix-ui/react-checkbox";
 import { Check } from "lucide-react";
 
@@ -24,8 +26,8 @@ export interface CheckboxWrapperProps extends React.HTMLAttributes<HTMLDivElemen
 }
 
 const Checkbox = React.forwardRef<
-  React.ElementRef<typeof CheckboxPrimitive.Root>,
-  React.ComponentPropsWithoutRef<typeof CheckboxPrimitive.Root>,
+  ElementRef<typeof CheckboxPrimitive.Root>,
+  ComponentPropsWithoutRef<typeof CheckboxPrimitive.Root>,
   CheckboxWrapperProps
 >(({ className, variant, ...props }, ref) => (
   <CheckboxPrimitive.Root

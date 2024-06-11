@@ -16,7 +16,6 @@
  */
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-nocheck
 import React from "react";
 import Styled from "styled-components";
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
@@ -237,12 +236,21 @@ interface NavigationButtonProps {
 }
 
 function NavigationButton({ selected, showNotif, notifText, buttonText, icoSVG, disabled }: NavigationButtonProps) {
+  const nText = notifText ? (
+    <div className="badge badge-primary absolute font-bold z-[3] text-[9px] right-[2px] top-[2px] py-[4px] px-[6px] bg-primary/100 text-white rounded-2xl">
+      {notifText}
+    </div>
+  ) : (
+    <div className="badge badge-primary absolute font-bold z-[3] text-[9px] right-[2px] top-[2px] py-[4px] px-[6px] bg-primary/100 text-white rounded-2xl">
+      {i18n.app.menu.badgeNew}
+    </div>
+  );
   return (
     <Style>
       <OverlayTrigger
         placement="right"
         overlay={
-          <Tooltip className="tooltipMenu">
+          <Tooltip className="tooltipMenu" id="">
             <div dangerouslySetInnerHTML={{ __html: buttonText }} />
           </Tooltip>
         }
@@ -250,19 +258,7 @@ function NavigationButton({ selected, showNotif, notifText, buttonText, icoSVG, 
         <div className={`menuLink ${selected ? "active" : ""} ${disabled ? "disabled" : ""}`}>
           <div className="menuLinkInner">
             {icoSVG}
-            {showNotif ? (
-              notifText ? (
-                <div className="badge badge-primary absolute font-bold z-[3] text-[9px] right-[2px] top-[2px] py-[4px] px-[6px] bg-primary/100 text-white rounded-2xl">
-                  {notifText}
-                </div>
-              ) : (
-                <div className="badge badge-primary absolute font-bold z-[3] text-[9px] right-[2px] top-[2px] py-[4px] px-[6px] bg-primary/100 text-white rounded-2xl">
-                  {i18n.app.menu.badgeNew}
-                </div>
-              )
-            ) : (
-              ""
-            )}
+            {showNotif ? nText : ""}
             <div className="menuLinkText" dangerouslySetInnerHTML={{ __html: buttonText }} />
           </div>
         </div>

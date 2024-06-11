@@ -20,7 +20,7 @@ import Styled from "styled-components";
 import Dropdown from "react-bootstrap/Dropdown";
 import { i18n } from "@Renderer/i18n";
 
-import { IconMoreVertical } from "@Renderer/components/atoms/Icons";
+import { IconMoreVertical } from "@Renderer/components/atoms/icons";
 import { RegularButton } from "../../component/Button";
 
 const Style = Styled.div`

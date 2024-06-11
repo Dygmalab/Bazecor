@@ -28,7 +28,7 @@ import {
   IconArrowDownWithLine,
   IconFileDownload,
   IconSettings,
-} from "@Renderer/components/atoms/Icons";
+} from "@Renderer/components/atoms/icons";
 import ToggleGroupKeyboardViewMode from "@Renderer/components/molecules/CustomToggleGroup/ToggleGroupKeyboardViewMode";
 
 import {

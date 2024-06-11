@@ -27,7 +27,7 @@ import { useDevice } from "@Renderer/DeviceContext";
 import { flags, languages, languageNames } from "@Renderer/modules/Settings/GeneralSettingsLanguages";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@Renderer/components/atoms/Card";
 import { Switch } from "@Renderer/components/atoms/Switch";
-import { IconChip, IconHanger, IconSun, IconMoon, IconScreen, IconKeyboard } from "@Renderer/components/atoms/Icons";
+import { IconChip, IconHanger, IconSun, IconMoon, IconScreen, IconKeyboard } from "@Renderer/components/atoms/icons";
 import ToggleGroup from "@Renderer/components/molecules/CustomToggleGroup/ToggleGroup";
 import { KeyPickerPreview } from "@Renderer/modules/KeyPickerKeyboard";
 import getLanguage from "@Renderer/utils/language";

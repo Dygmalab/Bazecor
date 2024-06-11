@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-props-no-spreading */
 // @ts-nocheck
 
 import * as React from "react";

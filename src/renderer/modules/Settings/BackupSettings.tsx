@@ -31,7 +31,7 @@ import { i18n } from "@Renderer/i18n";
 import { Button } from "@Renderer/components/atoms/Button";
 
 // Icons Imports
-import { IconArrowDownWithLine, IconFloppyDisk } from "@Renderer/components/atoms/Icons";
+import { IconArrowDownWithLine, IconFloppyDisk } from "@Renderer/components/atoms/icons";
 
 // Utils
 import Store from "@Renderer/utils/Store";

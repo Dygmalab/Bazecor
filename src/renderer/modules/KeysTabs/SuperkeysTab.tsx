@@ -1,3 +1,4 @@
+/* eslint-disable react/no-array-index-key */
 import React, { Component } from "react";
 import Styled from "styled-components";
 
@@ -124,7 +125,7 @@ interface SuperkeysTabProps {
   superkeys: any;
 }
 
-class SuperkeysTab extends Component {
+class SuperkeysTab extends Component<SuperkeysTabProps> {
   keymapDB: any;
   constructor(props: SuperkeysTabProps) {
     super(props);
@@ -147,8 +148,8 @@ class SuperkeysTab extends Component {
 
     if (aux.extraLabel === "MACRO") {
       const { macros } = this.props;
-      if (macros.length > parseInt(aux.label) && macros[parseInt(aux.label)].name.substr(0, 5) !== "") {
-        translatedAction = aux.label = macros[parseInt(aux.label)].name.substr(0, 5).toLowerCase();
+      if (macros.length > parseInt(aux.label, 10) && macros[parseInt(aux.label, 10)].name.substr(0, 5) !== "") {
+        translatedAction = aux.label + macros[parseInt(aux.label, 10)].name.substr(0, 5).toLowerCase();
       }
     }
     if (aux.label) {
@@ -159,11 +160,11 @@ class SuperkeysTab extends Component {
   };
 
   render() {
-    const { keyCode, isStandardView, actions, onKeySelect, superkeys, macros } = this.props;
+    const { keyCode, isStandardView, actions, onKeySelect, superkeys } = this.props;
     const KC = keyCode;
 
     const superk = Array(superkeys.length)
-      .fill()
+      .fill(0)
       .map((_, i) => i + 53980);
 
     const adjactions = actions;

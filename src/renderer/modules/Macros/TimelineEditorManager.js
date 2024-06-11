@@ -20,7 +20,7 @@ import Styled from "styled-components";
 import { Button } from "@Renderer/components/atoms/Button";
 import { i18n } from "@Renderer/i18n";
 
-import { IconDelete, IconStopWatch } from "@Renderer/components/atoms/Icons";
+import { IconDelete, IconStopWatch } from "@Renderer/components/atoms/icons";
 import PreviewMacroModal from "@Renderer/components/molecules/CustomModal/ModalPreviewMacro";
 import Heading from "@Renderer/components/atoms/Heading";
 import LogoLoader from "@Renderer/components/atoms/loader/LogoLoader";

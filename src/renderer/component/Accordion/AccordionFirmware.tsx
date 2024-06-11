@@ -7,7 +7,7 @@ import { i18n } from "@Renderer/i18n";
 
 // Visual components
 import Heading from "@Renderer/components/atoms/Heading";
-import { IconCheckmark, IconChevronDown, IconClose } from "@Renderer/components/atoms/Icons";
+import { IconCheckmark, IconChevronDown, IconClose } from "@Renderer/components/atoms/icons";
 
 const Style = Styled.div`
 width: 100%;

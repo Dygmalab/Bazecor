@@ -16,7 +16,7 @@
  */
 
 import React from "react";
-import { IconLEDNextEffect, IconLEDPreviousEffect, IconLEDToggleEffect } from "@Renderer/components/atoms/Icons";
+import { IconLEDNextEffect, IconLEDPreviousEffect, IconLEDToggleEffect } from "@Renderer/components/atoms/icons";
 
 const LEDEffectsTable = {
   groupName: "LED Effect",

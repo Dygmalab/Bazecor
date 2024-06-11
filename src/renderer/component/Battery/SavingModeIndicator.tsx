@@ -3,7 +3,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@Rende
 
 import Styled from "styled-components";
 
-import { IconLeaf } from "@Renderer/components/atoms/Icons";
+import { IconLeaf } from "@Renderer/components/atoms/icons";
 
 const Style = Styled.div`
 &.status--default {

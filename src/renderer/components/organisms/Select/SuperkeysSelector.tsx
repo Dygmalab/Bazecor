@@ -20,7 +20,7 @@ import { i18n } from "@Renderer/i18n";
 
 import NameModal from "@Renderer/components/molecules/CustomModal/ModalName";
 
-import { IconDelete, IconPen, IconClone, IconAddNew } from "@Renderer/components/atoms/Icons";
+import { IconDelete, IconPen, IconClone, IconAddNew } from "@Renderer/components/atoms/icons";
 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@Renderer/components/atoms/Select";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@Renderer/components/atoms/Tooltip";

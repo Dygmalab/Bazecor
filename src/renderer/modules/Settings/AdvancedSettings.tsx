@@ -27,7 +27,7 @@ import { Button } from "@Renderer/components/atoms/Button";
 import ConfirmationDialog from "@Renderer/component/ConfirmationDialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@Renderer/components/atoms/Select";
 // Icons Imports
-import { IconChip, IconLayers } from "@Renderer/components/atoms/Icons";
+import { IconChip, IconLayers } from "@Renderer/components/atoms/icons";
 import { AdvancedSettingsProps } from "@Renderer/types/preferences";
 
 interface LayerItemProps {

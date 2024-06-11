@@ -16,7 +16,7 @@ import {
   IconStopWatch,
   IconDragAndDrop,
   IconDelete,
-} from "@Renderer/components/atoms/Icons";
+} from "@Renderer/components/atoms/icons";
 import Heading from "@Renderer/components/atoms/Heading";
 import { Button } from "@Renderer/components/atoms/Button";
 

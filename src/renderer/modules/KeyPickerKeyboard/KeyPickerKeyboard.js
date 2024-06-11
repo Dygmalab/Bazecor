@@ -3,7 +3,7 @@ import Styled from "styled-components";
 
 // Internal components
 import ListModifier from "@Renderer/components/molecules/ListModifiers/ListModifiers";
-import { IconKeysPress, IconKeysTapHold, IconKeysHold, IconKeys2Tap, IconKeys2TapHold } from "@Renderer/components/atoms/Icons";
+import { IconKeysPress, IconKeysTapHold, IconKeysHold, IconKeys2Tap, IconKeys2TapHold } from "@Renderer/components/atoms/icons";
 import { KeymapDB } from "../../../api/keymap";
 import { Picker } from ".";
 

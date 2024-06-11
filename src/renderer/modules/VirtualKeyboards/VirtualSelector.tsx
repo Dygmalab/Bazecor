@@ -6,7 +6,7 @@ import path from "path";
 import fs from "fs";
 import log from "electron-log/renderer";
 
-import { IconArrowRight, IconCloudDownload, IconKeyboard, IconUpload } from "@Renderer/components/atoms/Icons";
+import { IconArrowRight, IconCloudDownload, IconKeyboard, IconUpload } from "@Renderer/components/atoms/icons";
 import { Button } from "@Renderer/components/atoms/Button";
 import Heading from "@Renderer/components/atoms/Heading";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@Renderer/components/atoms/Select";

@@ -32,7 +32,7 @@ import { Button } from "@Renderer/components/atoms/Button";
 import LogoLoader from "@Renderer/components/atoms/loader/LogoLoader";
 import ToggleGroupLayoutViewMode from "@Renderer/components/molecules/CustomToggleGroup/ToggleGroupLayoutViewMode";
 import ToastMessage from "@Renderer/components/atoms/ToastMessage";
-import { IconFloppyDisk } from "@Renderer/components/atoms/Icons";
+import { IconFloppyDisk } from "@Renderer/components/atoms/icons";
 
 // Modules
 import { PageHeader } from "@Renderer/modules/PageHeader";

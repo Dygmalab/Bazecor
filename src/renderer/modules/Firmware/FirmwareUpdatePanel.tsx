@@ -28,7 +28,7 @@ import Heading from "@Renderer/components/atoms/Heading";
 import Callout from "@Renderer/components/molecules/Callout/Callout";
 import { Button } from "@Renderer/components/atoms/Button";
 import LogoLoader from "@Renderer/components/atoms/loader/LogoLoader";
-import { IconLoader } from "@Renderer/components/atoms/Icons";
+import { IconLoader } from "@Renderer/components/atoms/icons";
 
 // Visual modules
 import { FirmwareNeuronStatus, FirmwareVersionStatus } from "@Renderer/modules/Firmware";

@@ -77,7 +77,7 @@ import {
   IconWireless,
   IconLEDToggleEffect,
   IconWrench,
-} from "@Renderer/components/atoms/Icons";
+} from "@Renderer/components/atoms/icons";
 
 import { i18n } from "@Renderer/i18n";
 

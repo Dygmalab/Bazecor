@@ -58,7 +58,7 @@ import {
   IconPreferences,
   IconBazecordevtools,
   IconHome,
-} from "@Renderer/components/atoms/Icons";
+} from "@Renderer/components/atoms/icons";
 
 // import {
 //   IconKeyboardSelector,

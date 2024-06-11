@@ -27,7 +27,7 @@ import videoFirmwareUpdateDefyReleaseSRC from "@Assets/videos/release-key-defy.m
 import FirmwareNeuronHelp from "@Renderer/modules/Firmware/FirmwareNeuronHelp";
 import FirmwareDefyUpdatingStatus from "@Renderer/modules/Firmware/FirmwareDefyUpdatingStatus";
 
-import { IconCheckmark } from "@Renderer/components/atoms/Icons";
+import { IconCheckmark } from "@Renderer/components/atoms/icons";
 import { BadgeFirmware } from "@Renderer/component/Badge";
 
 const Style = Styled.div`

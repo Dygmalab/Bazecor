@@ -26,7 +26,7 @@ import Col from "react-bootstrap/Col";
 // Custom components
 import { Card, CardContent, CardHeader, CardTitle } from "@Renderer/components/atoms/Card";
 import { KBDataPref } from "@Renderer/types/preferences";
-import { IconTypo, IconMouse, IconInformation } from "@Renderer/components/atoms/Icons";
+import { IconTypo, IconMouse, IconInformation } from "@Renderer/components/atoms/icons";
 import { Slider } from "@Renderer/components/atoms/slider";
 import Heading from "@Renderer/components/atoms/Heading";
 

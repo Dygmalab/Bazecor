@@ -1,7 +1,7 @@
 import React from "react";
 import Styled from "styled-components";
 
-import { IconRefresh } from "@Renderer/components/atoms/Icons";
+import { IconRefresh } from "@Renderer/components/atoms/icons";
 import { IconWarning, IconCheckmarkSm } from "../Icon";
 
 const Style = Styled.div`

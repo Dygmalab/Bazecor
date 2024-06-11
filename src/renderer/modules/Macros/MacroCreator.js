@@ -33,7 +33,7 @@ import {
   IconNote,
   IconStopWatch,
   IconMagicStick,
-} from "@Renderer/components/atoms/Icons";
+} from "@Renderer/components/atoms/icons";
 import Heading from "@Renderer/components/atoms/Heading";
 import TextTab from "../KeysTabs/TextTab";
 import KeysTab from "../KeysTabs/KeysTab";

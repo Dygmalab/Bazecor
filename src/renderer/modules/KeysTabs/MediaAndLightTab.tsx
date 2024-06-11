@@ -28,7 +28,7 @@ import {
   IconLEDToggleEffect,
   IconSleep,
   IconShutdown,
-} from "@Renderer/components/atoms/Icons";
+} from "@Renderer/components/atoms/icons";
 
 const Styles = Styled.div`
 display: flex;

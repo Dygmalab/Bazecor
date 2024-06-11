@@ -23,7 +23,7 @@ import log from "electron-log/renderer";
 import { Link } from "react-router-dom";
 import { PageHeader } from "@Renderer/modules/PageHeader";
 import { useDevice, DeviceTools } from "@Renderer/DeviceContext";
-import { IconConnected } from "@Renderer/components/atoms/Icons";
+import { IconConnected } from "@Renderer/components/atoms/icons";
 import { Button } from "@Renderer/components/atoms/Button";
 import HID from "../../api/hid/hid";
 import Device from "../../api/comms/Device";

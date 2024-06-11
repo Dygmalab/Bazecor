@@ -6,7 +6,15 @@ import { i18n } from "@Renderer/i18n";
 import { Button } from "@Renderer/components/atoms/Button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectFixedValue } from "@Renderer/components/atoms/Select";
 
-const DualFunctionPicker = ({ keyCode, onKeySelect, activeTab, isStandardView }) => {
+interface DualFunctionPickerProps {
+  keyCode: { base: number; modified: number };
+  onKeySelect: (value: number) => void;
+  activeTab: string;
+  isStandardView: boolean;
+}
+
+const DualFunctionPicker = (props: DualFunctionPickerProps) => {
+  const { keyCode, onKeySelect, activeTab, isStandardView } = props;
   const modKey = useMemo(
     () => [
       { name: "None ", keynum: 0 },
@@ -126,22 +134,23 @@ const DualFunctionPicker = ({ keyCode, onKeySelect, activeTab, isStandardView })
           {i18n.general.layer}
         </Heading>
         <div className="groupButtons flex gap-1 mt-2 max-w-[auto]">
-          {layerKey.map(item => {
-            if (item.nameStd === undefined) return;
-            return (
+          {layerKey.map(item =>
+            item.nameStd === undefined ? (
+              <></>
+            ) : (
               <Button
                 variant="config"
                 size="sm"
                 key={`itemDualFunctionLayers-${item.keynum}`}
-                onClick={() => onKeySelect(parseInt(item.keynum, 10) + keyCode.base)}
+                onClick={() => onKeySelect(item.keynum + keyCode.base)}
                 selected={!!(keyCode.modified > 0 && item.keynum === keyCode.modified)}
                 disabled={disabled || activeTab === "super"}
                 className="w-[40px]"
               >
                 {item.nameStd}
               </Button>
-            );
-          })}
+            ),
+          )}
         </div>
       </div>
       <div className="modButtons">
@@ -149,22 +158,23 @@ const DualFunctionPicker = ({ keyCode, onKeySelect, activeTab, isStandardView })
           {i18n.general.modifier}
         </Heading>
         <div className="groupButtons flex gap-1 mt-2">
-          {modKey.map(item => {
-            if (item.nameStd === undefined) return;
-            return (
+          {modKey.map(item =>
+            item.nameStd === undefined ? (
+              <></>
+            ) : (
               <Button
                 variant="config"
                 size="sm"
                 key={`itemDualFunctionMod-${item.keynum}`}
-                onClick={() => onKeySelect(parseInt(item.keynum, 10) + keyCode.base)}
+                onClick={() => onKeySelect(item.keynum + keyCode.base)}
                 selected={!!(keyCode.modified > 0 && item.keynum === keyCode.modified)}
                 disabled={disabled || activeTab === "super"}
                 className="w-[60px]"
               >
                 {item.nameStd}
               </Button>
-            );
-          })}
+            ),
+          )}
         </div>
       </div>
     </div>

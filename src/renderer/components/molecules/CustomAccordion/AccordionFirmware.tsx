@@ -5,7 +5,7 @@ import { i18n } from "@Renderer/i18n";
 
 // Visual components
 import Heading from "@Renderer/components/atoms/Heading";
-import { IconCheckmark, IconClose } from "@Renderer/components/atoms/Icons";
+import { IconCheckmark, IconClose } from "@Renderer/components/atoms/icons";
 import { Badge } from "@Renderer/components/atoms/Badge";
 
 interface CheckedItem {

@@ -4,7 +4,7 @@ import ReactDom from "react-dom";
 import { i18n } from "@Renderer/i18n";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@Renderer/components/atoms/Dialog";
 import { Button } from "@Renderer/components/atoms/Button";
-import { IconEye } from "@Renderer/components/atoms/Icons";
+import { IconEye } from "@Renderer/components/atoms/icons";
 
 interface PreviewMacroModalProps {
   children: React.ReactNode;

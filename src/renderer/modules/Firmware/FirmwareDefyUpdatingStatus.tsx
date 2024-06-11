@@ -18,7 +18,7 @@
 import React from "react";
 import Styled from "styled-components";
 
-import { DefyLeftSide, DefyRightSide, DefyNeuronStatus } from "@Renderer/components/atoms/SidesStatus";
+import { DefyLeftSide, DefyRightSide, DefyNeuronStatus } from "@Renderer/components/atoms/sidesStatus";
 
 const Style = Styled.div`
 .defySidesUpdatingStatus {

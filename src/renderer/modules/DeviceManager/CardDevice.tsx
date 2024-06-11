@@ -1,7 +1,7 @@
 import React, { useState, forwardRef } from "react";
 
 import Heading from "@Renderer/components/atoms/Heading";
-import { IconDelete, IconDragAndDrop } from "@Renderer/components/atoms/Icons";
+import { IconDelete, IconDragAndDrop } from "@Renderer/components/atoms/icons";
 
 import { DevicePreview } from "@Renderer/modules/DevicePreview";
 

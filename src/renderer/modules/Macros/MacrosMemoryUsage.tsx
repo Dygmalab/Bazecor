@@ -21,7 +21,7 @@ import Styled from "styled-components";
 import { toast } from "react-toastify";
 import { i18n } from "@Renderer/i18n";
 
-import { IconFloppyDisk } from "@Renderer/components/atoms/Icons";
+import { IconFloppyDisk } from "@Renderer/components/atoms/icons";
 import Heading from "@Renderer/components/atoms/Heading";
 import ToastMessage from "@Renderer/components/atoms/ToastMessage";
 import DotsProgressBar from "./DotsProgressBar";

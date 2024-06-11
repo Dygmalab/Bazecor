@@ -38,7 +38,7 @@ import Preferences from "@Renderer/views/Preferences";
 import Welcome from "@Renderer/views/Welcome";
 
 import ToastMessage from "@Renderer/components/atoms/ToastMessage";
-import { IconBluetooth, IconConnected, IconPlug } from "@Renderer/components/atoms/Icons";
+import { IconBluetooth, IconConnected, IconPlug } from "@Renderer/components/atoms/icons";
 import BazecorDevtools from "@Renderer/views/BazecorDevtools";
 import { showDevtools } from "@Renderer/devMode";
 

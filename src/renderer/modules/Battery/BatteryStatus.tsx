@@ -8,7 +8,7 @@ import { Button } from "@Renderer/components/atoms/Button";
 import { BatteryStatusSide, SavingModeIndicator } from "@Renderer/components/atoms/Battery";
 
 // Assets
-import { IconRefresh, IconBattery } from "@Renderer/components/atoms/Icons";
+import { IconRefresh, IconBattery } from "@Renderer/components/atoms/icons";
 
 import { useDevice } from "@Renderer/DeviceContext";
 import LogoLoader from "@Renderer/components/atoms/loader/LogoLoader";

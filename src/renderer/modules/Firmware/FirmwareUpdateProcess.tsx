@@ -30,7 +30,7 @@ import Heading from "@Renderer/components/atoms/Heading";
 import { Button } from "@Renderer/components/atoms/Button";
 import LogoLoader from "@Renderer/components/atoms/loader/LogoLoader";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@Renderer/components/atoms/Tooltip";
-import { IconInformation } from "@Renderer/components/atoms/Icons";
+import { IconInformation } from "@Renderer/components/atoms/icons";
 
 // types
 import { ContextType } from "@Renderer/controller/FlashManager/context";

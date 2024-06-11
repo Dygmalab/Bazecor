@@ -1,4 +1,3 @@
-// @ts-nocheck
 // -*- mode: js-jsx -*-
 /* Bazecor
  * Copyright (C) 2022  Dygmalab, Inc.
@@ -88,7 +87,7 @@ function SelectF13PlusKeys(props: any) {
       <Dropdown
         onSelect={val => onSelect(parseInt(val, 10))}
         drop="down"
-        flip="false"
+        flip={false}
         className={`custom-dropdown dropdown-Fkeys ${disabled ? "disabled" : ""}`}
       >
         <Dropdown.Toggle id="dropdown-Fkeys">
@@ -108,7 +107,7 @@ function SelectF13PlusKeys(props: any) {
             <div className="badge-circle" />
           </div>
         </Dropdown.Toggle>
-        <Dropdown.Menu flip="false">
+        <Dropdown.Menu flip={false}>
           {listElements.map((item: any, index: number) => (
             <Dropdown.Item
               eventKey={item}

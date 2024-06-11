@@ -18,7 +18,7 @@ import React from "react";
 
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@Renderer/components/atoms/Tooltip";
 
-import { IconLeaf } from "@Renderer/components/atoms/Icons";
+import { IconLeaf } from "@Renderer/components/atoms/icons";
 
 interface SavingModeIndicatorProps {
   isSavingMode: boolean;

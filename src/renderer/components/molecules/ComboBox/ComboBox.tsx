@@ -7,8 +7,26 @@ import { Button } from "@Renderer/components/atoms/Button";
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@Renderer/components/atoms/Command";
 import { Popover, PopoverContent, PopoverTrigger } from "@Renderer/components/atoms/Popover";
 
-function ComboBox({ listElements, onChange, value }) {
+interface ComboBoxProps {
+  listElements: Array<{ icon: string; value: string; text: string }>;
+  onChange: (value: string) => void;
+  value: string;
+}
+
+function ComboBox(props: ComboBoxProps) {
+  const { listElements, onChange, value } = props;
   const [open, setOpen] = React.useState(false);
+
+  const iterable = listElements.find(item => item.value === value);
+
+  const element = value ? (
+    <div className="flex gap-3 items-center">
+      {iterable?.icon && <img className="h-6 w-6" src={iterable?.icon} alt={iterable?.value} />}
+      {iterable?.text}
+    </div>
+  ) : (
+    "Select language"
+  );
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -19,16 +37,7 @@ function ComboBox({ listElements, onChange, value }) {
           aria-expanded={open}
           className="w-full justify-between border-[1px] py-[12px] pl-[16px] pr-[10px] border-solid border-gray-100/60 dark:border-gray-600 hover:border-purple-200 data-[state=open]:border-purple-200 dark:data-[state=open]:border-purple-300 hover:dark:border-purple-300 bg-white/50 dark:bg-gray-900/20 hover:border-purple-100 [&_svg]:text-gray-300 [&_svg]:dark:text-gray-300"
         >
-          {value ? (
-            <div className="flex gap-3 items-center">
-              {listElements.find(item => item.value === value)?.icon && (
-                <img className="h-6 w-6" src={listElements.find(item => item.value === value)?.icon} />
-              )}
-              {listElements.find(item => item.value === value)?.text}
-            </div>
-          ) : (
-            "Select language"
-          )}
+          {element}
           <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>

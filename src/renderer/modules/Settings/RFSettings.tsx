@@ -26,7 +26,7 @@ import { Button } from "@Renderer/components/atoms/Button";
 import ToggleGroup from "@Renderer/components/molecules/CustomToggleGroup/ToggleGroup";
 
 // Assets
-import { IconSignal, IconRadar, IconInformation, IconThunder } from "@Renderer/components/atoms/Icons";
+import { IconSignal, IconRadar, IconInformation, IconThunder } from "@Renderer/components/atoms/icons";
 // import { Badge } from "@Renderer/component/Badge";
 import { Badge } from "@Renderer/components/atoms/Badge";
 import { RFSettingsProps } from "@Renderer/types/wireless";

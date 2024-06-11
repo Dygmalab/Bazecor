@@ -13,7 +13,7 @@ import {
   IconUndoRestart,
   IconStopWatch,
   IconStopWatchCrossed,
-} from "@Renderer/components/atoms/Icons";
+} from "@Renderer/components/atoms/icons";
 import Heading from "@Renderer/components/atoms/Heading";
 import AnimatedTimelineRecording from "./AnimatedTimelineRecording";
 

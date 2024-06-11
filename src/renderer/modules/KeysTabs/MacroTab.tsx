@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Styled from "styled-components";
 import { i18n } from "@Renderer/i18n";
 
-import { IconArrowInBoxUp } from "@Renderer/components/atoms/Icons";
+import { IconArrowInBoxUp } from "@Renderer/components/atoms/icons";
 import Callout from "@Renderer/components/molecules/Callout/Callout";
 import { Button } from "@Renderer/components/atoms/Button";
 import Heading from "@Renderer/components/atoms/Heading";
@@ -31,6 +31,7 @@ h4 {
 interface MacroTabProps {
   macros: any;
   selectedMacro: any;
+  // eslint-disable-next-line react/no-unused-prop-types
   keyCode: any;
   isStandardView: boolean;
   onMacrosPress: any;
@@ -42,7 +43,8 @@ interface MacroItem {
   disabled: boolean;
 }
 
-const MacroTab = ({ macros, selectedMacro, keyCode, onMacrosPress, isStandardView }: MacroTabProps) => {
+const MacroTab = (props: MacroTabProps) => {
+  const { macros, selectedMacro, onMacrosPress, isStandardView } = props;
   const [selected, setSelected] = useState(0);
 
   // update value when dropdown is changed
@@ -62,8 +64,8 @@ const MacroTab = ({ macros, selectedMacro, keyCode, onMacrosPress, isStandardVie
     onMacrosPress(selected + 53852);
   };
 
-  const macrosAux = macros.map((item: MacroItem, index) => {
-    const macrosContainer = {};
+  const macrosAux = macros.map((item: MacroItem, index: number) => {
+    const macrosContainer: any = {};
     if (item.name === "") {
       macrosContainer.name = i18n.general.noname;
     } else {

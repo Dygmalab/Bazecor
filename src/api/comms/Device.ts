@@ -6,6 +6,7 @@ import { VirtualType } from "@Renderer/types/virtual";
 import HID from "../hid/hid";
 import DeviceMap from "./deviceMap";
 import { ExtHIDInterface } from "./types";
+import { ExtendedPort } from "./serial/SerialAPI";
 // eslint-disable-next-line no-eval
 const { DelimiterParser } = eval('require("@serialport/parser-delimiter")');
 
@@ -37,7 +38,7 @@ class Device implements DeviceClass {
   fileData: VirtualType;
   currentDevice: Device;
 
-  constructor(parameters: DeviceType | HID | VirtualType, type: string) {
+  constructor(parameters: Device | HID | VirtualType | ExtendedPort, type: string) {
     // constructor for Device
     this.type = type;
     this.timeout = 5000;

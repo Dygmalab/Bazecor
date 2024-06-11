@@ -25,7 +25,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@Renderer/components/a
 import { BatteryStatusSide, SavingModeIndicator } from "@Renderer/components/atoms/Battery";
 
 // Assets
-import { IconBattery } from "@Renderer/components/atoms/Icons";
+import { IconBattery } from "@Renderer/components/atoms/icons";
 import { i18n } from "@Renderer/i18n";
 
 const Styles = Styled.div`

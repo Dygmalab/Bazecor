@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Styled from "styled-components";
 
 import Title from "@Renderer/component/Title";
-import { IconSettings } from "@Renderer/components/atoms/Icons";
+import { IconSettings } from "@Renderer/components/atoms/icons";
 import { RegularButton } from "@Renderer/component/Button";
 import { i18n } from "@Renderer/i18n";
 import { EnergyManagementProps } from "@Renderer/types/wireless";

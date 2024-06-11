@@ -15,7 +15,7 @@
  */
 
 import React, { useState } from "react";
-import { IconPen } from "@Renderer/components/atoms/Icons";
+import { IconPen } from "@Renderer/components/atoms/icons";
 import { motion } from "framer-motion";
 import { i18n } from "@Renderer/i18n";
 import NameModal from "@Renderer/components/molecules/CustomModal/ModalName";

@@ -1,6 +1,6 @@
 import React from "react";
 
-import { IconBluetooth, IconPlug, IconSignal } from "@Renderer/components/atoms/Icons";
+import { IconBluetooth, IconPlug, IconSignal } from "@Renderer/components/atoms/icons";
 import Heading from "@Renderer/components/atoms/Heading";
 import { ConnectionProps } from "@Renderer/types/wireless";
 

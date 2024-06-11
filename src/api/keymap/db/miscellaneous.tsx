@@ -17,7 +17,7 @@
 
 import React from "react";
 
-import { IconShutdown, IconSleep } from "@Renderer/components/atoms/Icons";
+import { IconShutdown, IconSleep } from "@Renderer/components/atoms/icons";
 import { withModifiers } from "./utils";
 
 const MiscellaneousTable = {

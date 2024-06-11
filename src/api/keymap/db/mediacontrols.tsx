@@ -29,7 +29,7 @@ import {
   IconBrightnessMore,
   IconToolsBrightnessLess,
   IconMediaShuffle,
-} from "@Renderer/components/atoms/Icons";
+} from "@Renderer/components/atoms/icons";
 import React from "react";
 
 const MediaControlTable = {

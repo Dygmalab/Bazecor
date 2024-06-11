@@ -19,7 +19,7 @@ import React from "react";
 import Styled from "styled-components";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@Renderer/components/atoms/Accordion";
 import { Neurons } from "@Types/neurons";
-import { IconRobot, IconLayers, IconThunder } from "@Renderer/components/atoms/Icons";
+import { IconRobot, IconLayers, IconThunder } from "@Renderer/components/atoms/icons";
 import NeuronTitle from "../NeuronTitle";
 
 const Style = Styled.div`

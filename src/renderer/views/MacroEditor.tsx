@@ -42,7 +42,7 @@ import { MacroActionsType, MacrosType } from "@Renderer/types/macros";
 // Components
 import LogoLoader from "@Renderer/components/atoms/loader/LogoLoader";
 import { Button } from "@Renderer/components/atoms/Button";
-import { IconFloppyDisk, IconLoader } from "@Renderer/components/atoms/Icons";
+import { IconFloppyDisk, IconLoader } from "@Renderer/components/atoms/icons";
 import MacroSelector from "@Renderer/components/organisms/Select/MacroSelector";
 import ToastMessage from "@Renderer/components/atoms/ToastMessage";
 import Callout from "@Renderer/components/molecules/Callout/Callout";

@@ -29,7 +29,7 @@ import {
   IconOneShot,
   IconThunder,
   IconWireless,
-} from "@Renderer/components/atoms/Icons";
+} from "@Renderer/components/atoms/icons";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@Renderer/components/atoms/Tabs";
 import { KeymapDB } from "../../../api/keymap";
 

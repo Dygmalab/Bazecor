@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Dropdown } from "react-bootstrap";
 
 import Heading from "@Renderer/components/atoms/Heading";
-import { IconSettings } from "@Renderer/components/atoms/Icons";
+import { IconSettings } from "@Renderer/components/atoms/icons";
 
 import { DevicePreview } from "@Renderer/modules/DevicePreview";
 

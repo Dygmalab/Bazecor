@@ -4,7 +4,7 @@ import Styled from "styled-components";
 import Form from "react-bootstrap/Form";
 import { i18n } from "@Renderer/i18n";
 
-import { IconArrowInBoxUp } from "@Renderer/components/atoms/Icons";
+import { IconArrowInBoxUp } from "@Renderer/components/atoms/icons";
 import Callout from "@Renderer/components/molecules/Callout/Callout";
 import { Button } from "@Renderer/components/atoms/Button";
 import Heading from "@Renderer/components/atoms/Heading";
