@@ -22,7 +22,18 @@ import { i18n } from "@Renderer/i18n";
 
 import NameModal from "@Renderer/components/molecules/CustomModal/ModalName";
 
-import { IconDelete, IconKeyboard, IconFlashlight } from "@Renderer/components/atoms/icons";
+import {
+  IconDelete,
+  IconKeyboard,
+  IconFlashlight,
+  IconArrowsSmallSeparating,
+  IconPen,
+  IconClone,
+  IconArrowUpWithLine,
+  IconArrowDownWithLine,
+  IconFileDownload,
+  IconSettings,
+} from "@Renderer/components/atoms/icons";
 import ToggleGroupKeyboardViewMode from "@Renderer/components/molecules/CustomToggleGroup/ToggleGroupKeyboardViewMode";
 import {
   DropdownMenu,
@@ -31,15 +42,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@Renderer/components/atoms/DropdownMenu";
-import {
-  IconArrowsSmallSeparating,
-  IconPen,
-  IconClone,
-  IconArrowUpWithLine,
-  IconArrowDownWithLine,
-  IconFileDownload,
-  IconSettings,
-} from "../Icon";
 
 const Style = Styled.div`
 display: flex;

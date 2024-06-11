@@ -35,6 +35,7 @@ import {
   IconMagicStick,
 } from "@Renderer/components/atoms/icons";
 import Heading from "@Renderer/components/atoms/Heading";
+import RecordMacroModal from "@Renderer/modules/Macros/RecordMacroModal";
 import TextTab from "../KeysTabs/TextTab";
 import KeysTab from "../KeysTabs/KeysTab";
 import LayersTab from "../KeysTabs/LayersTab";
@@ -42,7 +43,6 @@ import MacroTab from "../KeysTabs/MacroTab";
 import DelayTab from "../KeysTabs/DelayTab";
 import MediaAndLightTab from "../KeysTabs/MediaAndLightTab";
 import MouseTab from "../KeysTabs/MouseTab";
-import { RecordMacroModal } from "../../component/Modal";
 
 const Styles = Styled.div`
 .card {

@@ -18,6 +18,7 @@
 import React from "react";
 import Styled from "styled-components";
 import Dropdown from "react-bootstrap/Dropdown";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@Renderer/components/atoms/select";
 
 import { KeymapDB } from "../../../../api/keymap";
 
@@ -84,6 +85,19 @@ function SelectF13PlusKeys(props: any) {
   if (load) return null;
   return (
     <Style>
+      <Select onValueChange={val => onSelect(parseInt(val, 10))} disabled={disabled}>
+        <SelectTrigger className="w-[180px]">
+          <SelectValue placeholder={content.first} />
+        </SelectTrigger>
+        <SelectContent>
+          {listElements.map((item: any, index: number) => (
+            // eslint-disable-next-line react/no-array-index-key
+            <SelectItem value={item} key={`f13Plus-${index}`}>
+              {labelKey(item)}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
       <Dropdown
         onSelect={val => onSelect(parseInt(val, 10))}
         drop="down"

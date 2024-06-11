@@ -22,7 +22,7 @@ import { toast } from "react-toastify";
 import { i18n } from "@Renderer/i18n";
 
 import ToastMessage from "@Renderer/components/atoms/ToastMessage";
-import { IconColorPicker } from "../Icon";
+import { IconColorPicker } from "@Renderer/components/atoms/icons";
 
 const Style = Styled.div`
 .buttonColor {

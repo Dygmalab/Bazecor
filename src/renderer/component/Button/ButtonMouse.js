@@ -18,7 +18,7 @@
 import React from "react";
 import Styled from "styled-components";
 
-import { IconArrowsMouseMovement, IconArrowsMouseWheel } from "../Icon";
+import { IconArrowsMouseMovement, IconArrowsMouseWheel } from "@Renderer/components/atoms/icons";
 
 const Styles = Styled.div`
 width: 55px; 
