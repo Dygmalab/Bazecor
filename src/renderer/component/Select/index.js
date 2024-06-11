@@ -18,8 +18,6 @@ import LayerSelector from "./LayerSelector";
 import Select from "./Select";
 import SelectKeyboardDropdown from "./SelectKeyboardDropdown";
 import NeuronSelector from "./NeuronSelector";
-import SelectF13PlusKeys from "../../components/molecules/CustomSelect/SelectF13PlusKeys";
-import SelectGenericKeys from "./SelectGenericKeys";
 import SelectMacro from "./SelectMacro";
 import SelectLayersLock from "./SelectLayersLock";
 import SelectLayersSwitch from "./SelectLayersSwitch";
@@ -30,7 +28,7 @@ import SelectLayersCustomDropdown from "./SelectLayersCustomDropdown";
 import SelectMacroCustomDropdown from "./SelectMacroCustomDropdown";
 import SelectMouseCustomDropdown from "./SelectMouseCustomDropdown";
 import SelectShotModifierCustomDropdown from "./SelectShotModifierCustomDropdown";
-import SelectSuperKeyCustomDropdown from "./SelectSuperKeyCustomDropdown";
+import SelectSuperKeyCustomDropdown from "../../components/molecules/CustomSelect/SelectSuperKeyCustomDropdown";
 import SelectWirelessDropdown from "./SelectWirelessDropdown";
 
 export {
@@ -38,8 +36,6 @@ export {
   Select,
   SelectKeyboardDropdown,
   NeuronSelector,
-  SelectF13PlusKeys,
-  SelectGenericKeys,
   SelectMacro,
   SelectLayersLock,
   SelectLayersSwitch,

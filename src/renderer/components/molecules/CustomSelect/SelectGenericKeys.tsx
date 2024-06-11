@@ -2,16 +2,25 @@ import React, { useEffect, useState, useCallback, useMemo, FC } from "react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectFixedValue } from "@Renderer/components/atoms/Select";
 import { KeymapDB } from "../../../../api/keymap";
 
-interface SelectF13PlusKeysProps {
+interface SelectGenericKeysProps {
   keyCode: { base: number };
   onSelect: (value: number) => void;
   value: number;
   listElements: number[];
   content?: any;
   disabled?: boolean;
+  label?: string;
 }
 
-const SelectF13PlusKeys: FC<SelectF13PlusKeysProps> = ({ keyCode, onSelect, value, listElements, content, disabled = false }) => {
+const SelectGenericKeys: FC<SelectGenericKeysProps> = ({
+  keyCode,
+  onSelect,
+  value,
+  listElements,
+  content,
+  disabled = false,
+  label = "F13+",
+}) => {
   const [load, setLoad] = useState(true);
   const keymapDB = useMemo(() => new KeymapDB(), []);
 
@@ -43,12 +52,12 @@ const SelectF13PlusKeys: FC<SelectF13PlusKeysProps> = ({ keyCode, onSelect, valu
               : ""
           } ${disabled ? "!pointer-events-none !opacity-50" : ""}`}
         >
-          <SelectFixedValue label="F13+" />
+          <SelectFixedValue label={label} />
         </SelectTrigger>
         <SelectContent>
           {listElements.map((item, index) => (
             // eslint-disable-next-line
-            <SelectItem value={item.toString()} key={`f13Plus-${index}`}>
+            <SelectItem value={item.toString()} key={`${label.replace(/\\s+/g, "")}-${index}`}>
               {labelKey(item)}
             </SelectItem>
           ))}
@@ -58,4 +67,4 @@ const SelectF13PlusKeys: FC<SelectF13PlusKeysProps> = ({ keyCode, onSelect, valu
   );
 };
 
-export default SelectF13PlusKeys;
+export default SelectGenericKeys;

@@ -592,7 +592,7 @@ class KeyPicker extends Component {
                     actions={actions}
                     selKeys={selKeys}
                     onKeySelect={onKeySelect}
-                    disable={disableAll}
+                    disabled={disableAll}
                     superkeys={superkeys}
                     keyCode={code}
                     notifText="BETA"
