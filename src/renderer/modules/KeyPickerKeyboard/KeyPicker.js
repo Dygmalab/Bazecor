@@ -42,12 +42,11 @@ import { Button } from "@Renderer/components/atoms/Button";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@Renderer/components/atoms/Tooltip";
 import {
   SelectMacroCustomDropdown,
-  SelectSuperKeyCustomDropdown,
-  SelectLayersCustomDropdown,
   SelectMouseCustomDropdown,
   SelectShotModifierCustomDropdown,
   SelectWirelessDropdown,
 } from "@Renderer/component/Select";
+import { SelectLayersCustomDropdown, SelectSuperKeyCustomDropdown } from "@Renderer/components/molecules/CustomSelect";
 
 import {
   IconLayers,

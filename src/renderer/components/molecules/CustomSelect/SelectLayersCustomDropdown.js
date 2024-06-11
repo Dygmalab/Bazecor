@@ -181,6 +181,7 @@ class SelectLayersCustomDropdown extends Component {
 
     return (
       <Style>
+        <h1 className="text-3xl">Layers</h1>
         <Dropdown
           value={KC != 0 ? this.layerLock.map(i => i.keynum).includes(KC) : KC}
           onSelect={value => onKeySelect(parseInt(value))}

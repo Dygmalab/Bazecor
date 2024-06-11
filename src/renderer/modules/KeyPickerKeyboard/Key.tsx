@@ -4,7 +4,7 @@
 import React from "react";
 import Styled, { withTheme } from "styled-components";
 import { SegmentedKeyType } from "@Renderer/types/layout";
-import SelectGenericKeys from "@Renderer/components/molecules/CustomSelect/SelectGenericKeys";
+import { SelectGenericKeys } from "@Renderer/components/molecules/CustomSelect";
 
 const Style = Styled.g`
 .keycap {
