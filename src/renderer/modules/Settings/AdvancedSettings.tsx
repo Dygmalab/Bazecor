@@ -24,7 +24,7 @@ import { i18n } from "@Renderer/i18n";
 
 // Own Components
 import { Button } from "@Renderer/components/atoms/Button";
-import ConfirmationDialog from "@Renderer/component/ConfirmationDialog";
+import ConfirmationDialog from "@Renderer/components/molecules/CustomModal/ConfirmationDialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@Renderer/components/atoms/Select";
 // Icons Imports
 import { IconChip, IconLayers } from "@Renderer/components/atoms/icons";

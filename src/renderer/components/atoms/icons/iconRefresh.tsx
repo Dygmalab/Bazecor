@@ -1,6 +1,6 @@
 import * as React from "react";
 
-const IconRefresh = () => {
+function IconRefresh(): JSX.Element {
   const maskHash = `${(Math.random() + 1).toString(36).substring(7)}-Refresh`;
   return (
     <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -25,6 +25,6 @@ const IconRefresh = () => {
       <path d="M20.4 9.4H15.4485L20.4 4.44853V9.4Z" stroke="currentColor" strokeWidth="1.2" />
     </svg>
   );
-};
+}
 
 export default IconRefresh;

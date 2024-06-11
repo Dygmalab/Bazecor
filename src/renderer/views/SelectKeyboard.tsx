@@ -26,7 +26,7 @@ import { DeviceItemsType, SelectKeyboardProps } from "@Renderer/types/selectKeyb
 import { DeviceClass } from "@Renderer/types/devices";
 import { Neuron } from "@Renderer/types/neurons";
 
-import { Banner } from "@Renderer/component/Banner";
+import Banner from "@Renderer/components/atoms/Banner";
 import Heading from "@Renderer/components/atoms/Heading";
 import { IconArrowDownWithLine, IconBluetooth } from "@Renderer/components/atoms/icons";
 import { PageHeader } from "@Renderer/modules/PageHeader";

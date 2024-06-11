@@ -28,7 +28,7 @@ import FirmwareNeuronHelp from "@Renderer/modules/Firmware/FirmwareNeuronHelp";
 import FirmwareDefyUpdatingStatus from "@Renderer/modules/Firmware/FirmwareDefyUpdatingStatus";
 
 import { IconCheckmark } from "@Renderer/components/atoms/icons";
-import { BadgeFirmware } from "@Renderer/component/Badge";
+import BadgeFirmware from "@Renderer/component/Badge/BadgeFirmware";
 
 const Style = Styled.div`
 .updatingRaise {

@@ -30,7 +30,7 @@ import Col from "react-bootstrap/Col";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@Renderer/components/atoms/Dialog";
 import customCursor from "@Assets/base/cursorBucket.png";
 import ToastMessage from "@Renderer/components/atoms/ToastMessage";
-import { CopyFromDialog } from "@Renderer/component/CopyFromDialog";
+import { CopyFromDialog } from "@Renderer/components/molecules/CustomModal/CopyFromDialog";
 import { useDevice } from "@Renderer/DeviceContext";
 
 // Types

@@ -36,7 +36,7 @@ import { IconArrowDownWithLine, IconFloppyDisk } from "@Renderer/components/atom
 // Utils
 import Store from "@Renderer/utils/Store";
 import { BackupSettingsProps } from "@Renderer/types/preferences";
-import WaitForRestoreDialog from "@Renderer/component/WaitForRestoreDialog";
+import WaitForRestoreDialog from "@Renderer/components/molecules/CustomModal/WaitForRestoreDialog";
 import { BackupType } from "@Renderer/types/backups";
 import { VirtualType } from "@Renderer/types/virtual";
 import Backup from "../../../api/backup";

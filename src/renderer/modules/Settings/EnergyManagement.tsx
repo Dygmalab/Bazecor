@@ -23,7 +23,7 @@ import { SavingMode } from "@Renderer/modules/Battery";
 // Custom components
 import { Card, CardContent, CardHeader, CardTitle } from "@Renderer/components/atoms/Card";
 import { Switch } from "@Renderer/components/atoms/Switch";
-import { Badge } from "@Renderer/component/Badge";
+import { Badge } from "@Renderer/components/atoms/Badge";
 import { IconFlashlight, IconLeaf, IconInformation } from "@Renderer/components/atoms/icons";
 import Heading from "@Renderer/components/atoms/Heading";
 import { Slider } from "@Renderer/components/atoms/slider";
@@ -100,7 +100,7 @@ function EnergyManagement(props: EnergyManagementProps) {
             <div className="flex items-center gap-2">
               <IconFlashlight /> {i18n.wireless.energyManagement.settings.trueSleepEnabling}
             </div>
-            <Badge content={i18n.wireless.energyManagement.settings.highBatteryImpact} variation="danger-low" size="sm" />
+            <Badge content={i18n.wireless.energyManagement.settings.highBatteryImpact} variant="danger" size="sm" />
           </CardTitle>
         </CardHeader>
         <CardContent className="pb-3 pt-0">
