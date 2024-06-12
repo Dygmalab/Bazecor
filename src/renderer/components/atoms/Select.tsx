@@ -22,6 +22,13 @@ const selectVariants = cva("flex w-full items-center justify-between rounded-md"
       lg: "h-11 px-5",
     },
   },
+  compoundVariants: [
+    {
+      variant: "comboButton",
+      size: "sm",
+      className: "h-auto",
+    },
+  ],
   defaultVariants: {
     variant: "default",
     size: "default",

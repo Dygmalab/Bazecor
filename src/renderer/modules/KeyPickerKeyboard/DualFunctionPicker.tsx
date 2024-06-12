@@ -81,11 +81,12 @@ const DualFunctionPicker = (props: DualFunctionPickerProps) => {
             <SelectFixedValue label="Layer" />
           </SelectTrigger>
           <SelectContent>
-            {layerKey.map(item => (
+            {layerKey.map((item, index) => (
               <SelectItem
                 value={String(item.keynum)}
                 disabled={item.keynum === -1 || isMod}
-                key={`itemDualFunctionLayerSelect-${item.keynum}`}
+                // eslint-disable-next-line
+                key={`itemDualFunctionLayerSelect-${index}`}
                 className={`${keyCode.modified > 0 && item.keynum === keyCode.modified ? "!bg-purple-200 !dark:bg-purple-300 !text-gray-25 [&>svg]:!text-gray-25" : ""}`}
               >
                 {item.name}
@@ -111,11 +112,12 @@ const DualFunctionPicker = (props: DualFunctionPickerProps) => {
             <SelectFixedValue label="Modifier" />
           </SelectTrigger>
           <SelectContent>
-            {modKey.map(item => (
+            {modKey.map((item, index) => (
               <SelectItem
                 value={String(item.keynum)}
                 disabled={item.keynum === -1 || isMod}
-                key={`itemDualFunctionModifierSelect-${item.keynum}`}
+                // eslint-disable-next-line
+                key={`itemDualFunctionModifierSelect-${index}`}
                 className={`${keyCode.modified > 0 && item.keynum === keyCode.modified ? "!bg-purple-200 !dark:bg-purple-300 !text-gray-25 [&>svg]:!text-gray-25" : ""}`}
               >
                 {item.name}
@@ -134,14 +136,15 @@ const DualFunctionPicker = (props: DualFunctionPickerProps) => {
           {i18n.general.layer}
         </Heading>
         <div className="groupButtons flex gap-1 mt-2 max-w-[auto]">
-          {layerKey.map(item =>
+          {layerKey.map((item, index) =>
             item.nameStd === undefined ? (
               <></>
             ) : (
               <Button
                 variant="config"
                 size="sm"
-                key={`itemDualFunctionLayersButton-${item.keynum}`}
+                // eslint-disable-next-line
+                key={`itemDualFunctionLayerSelectStd-${index}`}
                 onClick={() => onKeySelect(item.keynum + keyCode.base)}
                 selected={!!(keyCode.modified > 0 && item.keynum === keyCode.modified)}
                 disabled={disabled || activeTab === "super"}
@@ -158,14 +161,15 @@ const DualFunctionPicker = (props: DualFunctionPickerProps) => {
           {i18n.general.modifier}
         </Heading>
         <div className="groupButtons flex gap-1 mt-2">
-          {modKey.map(item =>
+          {modKey.map((item, index) =>
             item.nameStd === undefined ? (
               <></>
             ) : (
               <Button
                 variant="config"
                 size="sm"
-                key={`itemDualFunctionModButton-${item.keynum}`}
+                // eslint-disable-next-line
+                key={`itemDualFunctionModifierSelectStd-${index}`}
                 onClick={() => onKeySelect(item.keynum + keyCode.base)}
                 selected={!!(keyCode.modified > 0 && item.keynum === keyCode.modified)}
                 disabled={disabled || activeTab === "super"}
