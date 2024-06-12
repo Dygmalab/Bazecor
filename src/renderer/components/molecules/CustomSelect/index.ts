@@ -19,6 +19,7 @@ import SelectLayersCustomDropdown from "./SelectLayersCustomDropdown";
 import SelectSuperKeyCustomDropdown from "./SelectSuperKeyCustomDropdown";
 import SelectMacroCustomDropdown from "./SelectMacroCustomDropdown";
 import SelectMouseCustomDropdown from "./SelectMouseCustomDropdown";
+import SelectShotModifierCustomDropdown from "./SelectShotModifierCustomDropdown";
 
 export {
   SelectGenericKeys,
@@ -26,4 +27,5 @@ export {
   SelectSuperKeyCustomDropdown,
   SelectMacroCustomDropdown,
   SelectMouseCustomDropdown,
+  SelectShotModifierCustomDropdown,
 };
