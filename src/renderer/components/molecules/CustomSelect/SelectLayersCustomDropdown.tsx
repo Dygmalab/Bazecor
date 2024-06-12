@@ -19,7 +19,6 @@ import React, { FC, useMemo, useCallback } from "react";
 import { Popover, PopoverContent, PopoverTrigger, PopoverButton } from "@Renderer/components/atoms/Popover";
 import Heading from "@Renderer/components/atoms/Heading";
 import { Button } from "@Renderer/components/atoms/Button";
-import { log } from "xstate";
 
 interface SelectLayersCustomDropdownProps {
   action?: any;
