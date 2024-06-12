@@ -20,7 +20,7 @@ export type Action =
   | { type: "changeCurrent"; payload: { selected: number; device: Device } }
   | { type: "addDevice"; payload: Device }
   | { type: "addDevicesList"; payload: Device[] }
-  | { type: "disconnect"; payload: number };
+  | { type: "disconnect"; payload: string };
 
 export type Dispatch = (action: Action) => void;
 
@@ -49,7 +49,12 @@ function deviceReducer(state: State, action: Action) {
       return { ...state, deviceList: newDevices };
     }
     case "disconnect": {
-      const newDevices = state.deviceList.filter(device => device.type !== "virtual");
+      let newDevices = [...state.deviceList];
+      log.info("startedWith:", newDevices, action.payload);
+      newDevices = newDevices.filter(
+        device => device.type !== "virtual" && device.device.chipId !== state.currentDevice.device.chipId,
+      );
+      log.info("endedWith:", newDevices);
       return { ...state, deviceList: newDevices, currentDevice: undefined, selected: -1 };
     }
     default: {

@@ -158,10 +158,10 @@ select:focus {
 .Defy.on {
   @apply bg-cardDefyOnLight dark:bg-cardDefyOnDark;
 }
-.Raise {
+.Raise, .Raise2 {
   @apply bg-cardRaiseOffLight dark:bg-cardRaiseOffDark;
 }
-.Raise.on {
+.Raise.on, .Raise2.on {
   @apply bg-cardRaiseOnLight dark:bg-cardRaiseOnDark;
 }
 

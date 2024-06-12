@@ -29,7 +29,7 @@ import Light from "@Renderer/theme/LightTheme";
 import Dark from "@Renderer/theme/DarkTheme";
 
 import Header from "@Renderer/modules/NavigationMenu";
-import SelectKeyboard from "@Renderer/views/SelectKeyboard";
+// import SelectKeyboard from "@Renderer/views/SelectKeyboard";
 import FirmwareUpdate from "@Renderer/views/FirmwareUpdate";
 import LayoutEditor from "@Renderer/views/LayoutEditor";
 import MacroEditor from "@Renderer/views/MacroEditor";
@@ -168,7 +168,7 @@ function App() {
     setConnected(false);
     device.current = null;
     setPages({});
-    navigate("/keyboard-select");
+    navigate("/device-manager");
   }, [navigate, state.currentDevice]);
 
   const onKeyboardConnect = async (currentDevice: Device): Promise<void> => {
@@ -224,7 +224,7 @@ function App() {
       setConnected(false);
       device.current = null;
       setPages({});
-      navigate("/keyboard-select");
+      navigate("/device-manager");
     }
   };
 
@@ -354,7 +354,7 @@ function App() {
       />
       <div className="main-container">
         <Routes>
-          <Route path="/" element={<Navigate to="/keyboard-select" />} />
+          <Route path="/" element={<Navigate to="/device-manager" />} />
           <Route path="/welcome" element={<Welcome device={device} onConnect={onKeyboardConnect} />} />
           <Route
             path="/device-manager"
@@ -369,7 +369,7 @@ function App() {
               />
             }
           />
-          <Route
+          {/* <Route
             path="/keyboard-select"
             element={
               <SelectKeyboard
@@ -382,7 +382,7 @@ function App() {
                 restoredOk={restoredOk}
               />
             }
-          />
+          /> */}
           <Route
             path="/editor"
             element={

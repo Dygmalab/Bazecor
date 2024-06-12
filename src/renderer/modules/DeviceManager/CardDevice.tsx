@@ -1,4 +1,4 @@
-import React, { useState, forwardRef } from "react";
+import React, { forwardRef } from "react";
 import { SortableKnob } from "react-easy-sort";
 
 import Heading from "@Renderer/components/atoms/Heading";
@@ -13,10 +13,11 @@ interface CardDeviceProps {
   device: DeviceListType;
   filterBy: boolean | "all";
   openDialog: (device: any) => void;
+  handleConnection: (value: number, action: "connect" | "disconnect") => Promise<void>;
 }
 
-const CardDevice = forwardRef<HTMLDivElement, CardDeviceProps>(({ device, filterBy, openDialog }, ref) => {
-  const [isConnected, setIsConnected] = useState(false);
+const CardDevice = forwardRef<HTMLDivElement, CardDeviceProps>((props, ref) => {
+  const { device, filterBy, openDialog, handleConnection } = props;
 
   const filterAttribute = (filter: any) => {
     switch (filter) {
@@ -31,11 +32,19 @@ const CardDevice = forwardRef<HTMLDivElement, CardDeviceProps>(({ device, filter
     }
   };
 
+  const handleSetIsConnected = async () => {
+    if (!device.connected) {
+      await handleConnection(device.index, "connect");
+    } else {
+      await handleConnection(-1, "disconnect");
+    }
+  };
+
   return (
     <div
       ref={ref}
       className={`card-device select-none flex flex-col relative p-0 rounded-[24px] border-2 border-solid bg-cardDeviceTextureLight dark:bg-cardDeviceTextureDark  bg-no-repeat bg-right-top bg-cover overflow-hidden ${
-        isConnected
+        device.connected
           ? "card-connected border-purple-300 dark:border-green-200"
           : "card-disconnected border-gray-100 dark:border-gray-600"
       } ${
@@ -80,17 +89,13 @@ const CardDevice = forwardRef<HTMLDivElement, CardDeviceProps>(({ device, filter
           device.available ? "relative " : "relative -z-[1] [&_canvas]:opacity-25 [&_canvas]:dark:opacity-100"
         }`}
       >
-        <DevicePreview deviceName={device.device?.device?.info?.displayName} isConnected={isConnected} />
+        <DevicePreview deviceName={device.device?.device?.info?.displayName} isConnected={device.connected} />
       </div>
       <div className="card-footer bg-transparent border-none p-0.5 mt-auto">
         <div className="card-footer--inner flex justify-between items-center rounded-[18px] p-4 bg-gray-25/80 dark:bg-gray-700/70 backdrop-blur-sm">
           {device.available ? (
-            <Button
-              variant={`${isConnected ? "outline" : "primary"}`}
-              className="h-[52px]"
-              onClick={() => setIsConnected(!isConnected)}
-            >
-              {isConnected ? i18n.keyboardSelect.disconnect : "Configure"}
+            <Button variant={`${device.connected ? "outline" : "primary"}`} className="h-[52px]" onClick={handleSetIsConnected}>
+              {device.connected ? i18n.keyboardSelect.disconnect : "Configure"}
             </Button>
           ) : (
             // <button
@@ -105,13 +110,14 @@ const CardDevice = forwardRef<HTMLDivElement, CardDeviceProps>(({ device, filter
             <span className="device-status text-sm text-red-100">{i18n.general.offline}</span>
           )}
           <div className="flex gap-2">
-            {!isConnected ? (
+            {!device.connected ? (
               <button
                 className="buttonTogglerInner flex items-center p-0 w-[52px] h-[52px] rounded transition-all justify-center hover:bg-gray-100/50 hover:dark:bg-gray-25/5"
                 onClick={() => openDialog(device)}
                 type="button"
               >
-                {`${(<IconDelete />)}`}
+                <IconDelete />
+                {`${""}`}
               </button>
             ) : null}
           </div>

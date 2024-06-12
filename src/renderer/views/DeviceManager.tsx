@@ -13,7 +13,8 @@ import { Button } from "@Renderer/components/atoms/Button";
 import SortableList, { SortableItem } from "react-easy-sort";
 import { arrayMoveImmutable } from "array-move";
 
-import { i18n, refreshHardware } from "@Renderer/i18n";
+import { i18n } from "@Renderer/i18n";
+// import { i18n, refreshHardware } from "@Renderer/i18n";
 import { AnimatePresence, motion } from "framer-motion";
 import HelpSupportLink from "@Renderer/modules/DeviceManager/HelpSupportLink";
 import {
@@ -28,14 +29,12 @@ import {
 } from "@Renderer/components/atoms/AlertDialog";
 import CardAddDevice from "@Renderer/modules/DeviceManager/CardAddDevice";
 import ToastMessage from "@Renderer/components/atoms/ToastMessage";
-import { DeviceClass } from "@Renderer/types/devices";
 import { useDevice, DeviceTools } from "@Renderer/DeviceContext";
 import { DeviceListType } from "@Renderer/types/DeviceManager";
 import { Neuron } from "@Renderer/types/neurons";
 
 import Store from "../utils/Store";
 import Device from "../../api/comms/Device";
-import { delay } from "../../api/flash/delay";
 
 const store = Store.getStore();
 
@@ -52,17 +51,18 @@ const DeviceManager = (props: DeviceManagerProps) => {
   const { onConnect, onDisconnect, connected, device, darkMode, setLoading } = props;
 
   const { state, dispatch } = useDevice();
+  const [scanned, setScanned] = useState(true);
   const [devicesList, setDevicesList] = useState<Array<DeviceListType>>([]);
   const [activeTab, setActiveTab] = useState<"all" | boolean>("all");
   const [open, setOpen] = useState(false);
   const [selectedDevice, setSelectedDevice] = useState(0);
 
-  const onKeyboardConnect = async () => {
+  const onKeyboardConnect = async (selected: number) => {
     const { deviceList } = state;
     // log.info("trying to connect to:", deviceList, selectedDevice, deviceList[selectedDevice]);
     try {
-      const response = await DeviceTools.connect(deviceList[selectedDevice]);
-      log.info("GOING TO CONNECT TO!!", selectedDevice, response.device);
+      const response = await DeviceTools.connect(deviceList[selected]);
+      log.info("GOING TO CONNECT TO!!", selectedDevice, response.device, device, darkMode);
       dispatch({ type: "changeCurrent", payload: { selected: selectedDevice, device: response } });
       await onConnect(response);
     } catch (err) {
@@ -74,63 +74,91 @@ const DeviceManager = (props: DeviceManagerProps) => {
   };
 
   const handleOnDisconnect = async () => {
-    const newDevices = devicesList.filter(dev => dev.path !== "virtual");
-    setDevicesList(newDevices);
-    setSelectedDevice(0);
+    setScanned(false);
+    const cID = state.currentDevice.device.chipId;
     await DeviceTools.disconnect(state.currentDevice);
-    dispatch({ type: "disconnect", payload: selectedDevice });
+    dispatch({ type: "disconnect", payload: cID });
+    setDevicesList([]);
+    setSelectedDevice(-1);
     await onDisconnect();
   };
 
-  const handleOnDisconnectConnect = async () => {
-    await handleOnDisconnect();
-    await delay(500);
-    await onKeyboardConnect();
-  };
+  // const handleOnDisconnectConnect = async () => {
+  //   await handleOnDisconnect();
+  //   await delay(500);
+  //   await onKeyboardConnect();
+  // };
 
-  const findKeyboards = useCallback(async (): Promise<DeviceClass[]> => {
+  const findKeyboards = useCallback(async (): Promise<DeviceListType[]> => {
     setLoading(true);
-    if (state.currentDevice !== undefined && connected) {
-      setLoading(false);
+    if (connected || (state.currentDevice !== undefined && state.selected >= 0)) {
       const newDev: DeviceListType[] = [];
-      state.deviceList.forEach(item => {
+      state.deviceList.forEach((item, index) => {
+        const neuron = (store.get("neurons") as Neuron[]).find(n => n.id.toLowerCase() === item.device.chipId.toLowerCase());
         newDev.push({
-          name: "",
-          available: false,
-          path: "",
+          name: neuron?.name ? neuron.name : "",
+          available: true,
+          connected: state.selected === index,
+          config: neuron,
           file: false,
           device: item,
-          serialNumber: "",
+          serialNumber: item.device.chipId,
+          index: newDev.length,
         });
       });
+      setLoading(false);
       setDevicesList(newDev);
-      return state.deviceList;
+      if (newDev.length > 0) setScanned(true);
+      log.info("list of already connected devices: ", newDev);
+      return newDev;
     }
     try {
       const list = (await DeviceTools.list()) as Device[];
       dispatch({ type: "addDevicesList", payload: list });
       log.info("Devices Available:", list);
-      setLoading(false);
       const newDev: DeviceListType[] = [];
       list.forEach(item => {
+        const neuron = (store.get("neurons") as Neuron[]).find(n => n.id.toLowerCase() === item.device.chipId.toLowerCase());
         newDev.push({
-          name: "",
-          available: false,
-          path: "",
+          name: neuron?.name ? neuron.name : "",
+          available: true,
+          connected: false,
+          config: neuron,
           file: false,
           device: item,
-          serialNumber: "",
+          serialNumber: item.device.chipId,
+          index: newDev.length,
         });
       });
       setDevicesList(newDev);
-      return list;
+      setLoading(false);
+      if (newDev.length > 0) setScanned(true);
+      return newDev;
     } catch (err) {
       log.info("Error while finding keyboards", err);
       setLoading(false);
       setDevicesList(undefined);
       return undefined;
     }
-  }, [connected, dispatch, setLoading, state.currentDevice, state.deviceList]);
+  }, [connected, dispatch, setLoading, state.currentDevice, state.deviceList, state.selected]);
+
+  const handleConnection = async (deviceNumber: number, action: "connect" | "disconnect") => {
+    // fijar el dispositivo seleccionado de la lista
+    log.info("Handling on connect press", action, deviceNumber);
+
+    switch (action) {
+      case "connect":
+        setSelectedDevice(deviceNumber);
+        await onKeyboardConnect(deviceNumber);
+        break;
+      case "disconnect":
+        await handleOnDisconnect();
+        break;
+      default:
+        log.info("Wrong case", action);
+        break;
+    }
+  };
 
   // const getdevicesList: () => Array<DeviceListType> = useCallback(() => {
   //   const neurons = store.get("neurons") as Neuron[];
@@ -163,7 +191,7 @@ const DeviceManager = (props: DeviceManagerProps) => {
 
   const scanDevices = () => {
     log.info("Scan devices!");
-    findKeyboards();
+    setScanned(false);
   };
 
   const addVirtualDevicesButton = (
@@ -197,15 +225,13 @@ const DeviceManager = (props: DeviceManagerProps) => {
   };
 
   useEffect(() => {
-    const finder = () => findKeyboards();
+    const finder = () => setScanned(false);
 
     const disconnectedfinder = (event: unknown, DygmaDev: string) => {
       log.info("Disconnected: ", DygmaDev);
-      setSelectedDevice(0);
-      findKeyboards();
-      if (state.currentDevice) {
-        state.currentDevice.close();
-      }
+      setDevicesList([]);
+      setSelectedDevice(-1);
+      setScanned(false);
     };
 
     ipcRenderer.on("usb-connected", finder);
@@ -213,10 +239,11 @@ const DeviceManager = (props: DeviceManagerProps) => {
     ipcRenderer.on("hid-connected", finder);
     ipcRenderer.on("hid-disconnected", disconnectedfinder);
 
-    if (!connected) {
-      findKeyboards();
-    } else {
+    if (connected) {
       setSelectedDevice(state.selected);
+      setScanned(false);
+    } else {
+      setScanned(false);
     }
 
     return () => {
@@ -229,10 +256,13 @@ const DeviceManager = (props: DeviceManagerProps) => {
   }, []);
 
   useEffect(() => {
-    if (connected && state.currentDevice) {
-      findKeyboards();
+    if (!scanned) {
+      const find = async () => {
+        await findKeyboards();
+      };
+      find();
     }
-  }, [connected, findKeyboards, state.currentDevice]);
+  }, [findKeyboards, scanned]);
 
   log.info("Current State: ", devicesList, selectedDevice);
 
@@ -307,7 +337,12 @@ const DeviceManager = (props: DeviceManagerProps) => {
                       {item.available === activeTab || activeTab === "all" ? (
                         <motion.div initial={{ opacity: 0, y: -50 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -50 }}>
                           <SortableItem key={item.serialNumber}>
-                            <CardDevice device={item} filterBy={activeTab} openDialog={openDialog} />
+                            <CardDevice
+                              device={item}
+                              filterBy={activeTab}
+                              openDialog={openDialog}
+                              handleConnection={handleConnection}
+                            />
                           </SortableItem>
                         </motion.div>
                       ) : (

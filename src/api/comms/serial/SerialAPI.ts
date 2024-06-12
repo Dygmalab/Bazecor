@@ -47,6 +47,7 @@ const close = async (serialport: SP) => {
 interface SerialProperties {
   wireless: boolean;
   layout: string;
+  chipId: string;
 }
 
 const checkProperties = async (path: string): Promise<SerialProperties> => {
@@ -98,13 +99,14 @@ const checkProperties = async (path: string): Promise<SerialProperties> => {
 
   const wless = await rawCommand("hardware.wireless", serialport);
   const lay = await rawCommand("hardware.layout", serialport);
+  const chipId = await rawCommand("hardware.chip_id", serialport);
 
-  log.info("data when received", wless, lay);
+  log.info("data when received", wless, lay, chipId);
 
   await close(serialport);
   callbacks = [];
 
-  return { wireless: wless.includes("true"), layout: lay.includes("ISO") ? "ISO" : "ANSI" };
+  return { wireless: wless.includes("true"), layout: lay.includes("ISO") ? "ISO" : "ANSI", chipId };
 };
 
 interface ExtendedPort extends PortInfo {
@@ -163,6 +165,8 @@ const find = async (): Promise<ExtendedPort[]> => {
           (Hdevice.info.product === "Defy" || Hdevice.info.keyboardType === supported.layout)
         ) {
           const newPort = { ...device, device: Hdevice };
+          newPort.device.wireless = supported.wireless;
+          newPort.device.chipId = supported.chipId;
           foundDevices.push(newPort);
         }
       }
