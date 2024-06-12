@@ -40,13 +40,12 @@ import { MdKeyboardReturn, MdSpaceBar, MdKeyboardCapslock, MdInfoOutline, MdEjec
 
 import { Button } from "@Renderer/components/atoms/Button";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@Renderer/components/atoms/Tooltip";
+import { SelectMouseCustomDropdown, SelectShotModifierCustomDropdown, SelectWirelessDropdown } from "@Renderer/component/Select";
 import {
+  SelectLayersCustomDropdown,
+  SelectSuperKeyCustomDropdown,
   SelectMacroCustomDropdown,
-  SelectMouseCustomDropdown,
-  SelectShotModifierCustomDropdown,
-  SelectWirelessDropdown,
-} from "@Renderer/component/Select";
-import { SelectLayersCustomDropdown, SelectSuperKeyCustomDropdown } from "@Renderer/components/molecules/CustomSelect";
+} from "@Renderer/components/molecules/CustomSelect";
 
 import {
   IconLayers,
@@ -604,7 +603,7 @@ class KeyPicker extends Component {
                 <IconRobot size="sm" />
               </div>
               <div className="keysButtonsList">
-                <SelectMacroCustomDropdown macros={macros} keyCode={code} onKeySelect={onKeySelect} disable={disableAll} />
+                <SelectMacroCustomDropdown macros={macros} keyCode={code} onKeySelect={onKeySelect} disabled={disableAll} />
               </div>
             </div>
 
