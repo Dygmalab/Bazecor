@@ -24,7 +24,7 @@ import Callout from "@Renderer/components/molecules/Callout/Callout";
 // import MouseEventsReference from "@Renderer/components/atoms/MouseEventsReference";
 import Heading from "@Renderer/components/atoms/Heading";
 import { Button } from "@Renderer/components/atoms/Button";
-import { ButtonMouse } from "../../component/Button";
+import { ButtonMouse } from "@Renderer/component/Button";
 
 const Styles = Styled.div`
 display: flex;

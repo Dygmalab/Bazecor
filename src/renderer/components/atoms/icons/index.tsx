@@ -22,6 +22,7 @@ import IconArrowDownWithLine from "./IconArrowDownWithLine";
 import IconArrowInBoxDown from "./IconArrowInBoxDown";
 import IconArrowInBoxUp from "./IconArrowInBoxUp";
 import IconArrowRight from "./IconArrowRight";
+import IconArrowsMouseMovement from "./IconArrowsMouseMovement";
 import IconArrowsMouseWheel from "./IconArrowsMouseWheel";
 import IconArrowsSmallSeparating from "./IconArrowsSmallSeparating";
 import IconArrowUpWithLine from "./IconArrowUpWithLine";
@@ -138,6 +139,7 @@ export {
   IconArrowInBoxDown,
   IconArrowInBoxUp,
   IconArrowRight,
+  IconArrowsMouseMovement,
   IconArrowsMouseWheel,
   IconArrowsSmallSeparating,
   IconArrowUpWithLine,

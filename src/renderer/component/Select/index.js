@@ -19,19 +19,7 @@ import Select from "./Select";
 import SelectKeyboardDropdown from "./SelectKeyboardDropdown";
 import NeuronSelector from "./NeuronSelector";
 import SelectMacro from "./SelectMacro";
-import SelectOneShotLayers from "./SelectOneShotLayers";
-import SelectOneShotModifiers from "./SelectOneShotModifiers";
 import SelectSuperKey from "./SelectSuperKey";
 import SelectWirelessDropdown from "./SelectWirelessDropdown";
 
-export {
-  LayerSelector,
-  Select,
-  SelectKeyboardDropdown,
-  NeuronSelector,
-  SelectMacro,
-  SelectOneShotLayers,
-  SelectOneShotModifiers,
-  SelectSuperKey,
-  SelectWirelessDropdown,
-};
+export { LayerSelector, Select, SelectKeyboardDropdown, NeuronSelector, SelectMacro, SelectSuperKey, SelectWirelessDropdown };
