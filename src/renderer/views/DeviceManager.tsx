@@ -29,6 +29,7 @@ import {
 } from "@Renderer/components/atoms/AlertDialog";
 import CardAddDevice from "@Renderer/modules/DeviceManager/CardAddDevice";
 import ToastMessage from "@Renderer/components/atoms/ToastMessage";
+import VirtualSelector from "@Renderer/modules/VirtualKeyboards/VirtualSelector";
 import { useDevice, DeviceTools } from "@Renderer/DeviceContext";
 import { DeviceListType } from "@Renderer/types/DeviceManager";
 import { Neuron } from "@Renderer/types/neurons";
@@ -55,6 +56,7 @@ const DeviceManager = (props: DeviceManagerProps) => {
   const [devicesList, setDevicesList] = useState<Array<DeviceListType>>([]);
   const [activeTab, setActiveTab] = useState<"all" | boolean>("all");
   const [open, setOpen] = useState(false);
+  const [openDialogVirtualKB, setOpenDialogVirtualKB] = useState(false);
   const [selectedDevice, setSelectedDevice] = useState(0);
 
   const onKeyboardConnect = async (selected: number) => {
@@ -187,6 +189,7 @@ const DeviceManager = (props: DeviceManagerProps) => {
 
   const addVirtualDevice = () => {
     log.info("Add virtual device!");
+    setOpenDialogVirtualKB(true);
   };
 
   const scanDevices = () => {
@@ -222,6 +225,20 @@ const DeviceManager = (props: DeviceManagerProps) => {
 
   const onSortEnd = (oldIndex: number, newIndex: number) => {
     setDevicesList(array => arrayMoveImmutable(array, oldIndex, newIndex));
+  };
+
+  const delay = (ms: number) =>
+    new Promise(res => {
+      setTimeout(res, ms);
+    });
+  const handleVirtualConnect = async (file: any) => {
+    if (connected) {
+      await handleOnDisconnect();
+      await delay(500);
+    }
+    const response = await DeviceTools.connect(file);
+    dispatch({ type: "changeCurrent", payload: { selected: -1, device: response } });
+    await onConnect(response);
   };
 
   useEffect(() => {
@@ -394,6 +411,13 @@ const DeviceManager = (props: DeviceManagerProps) => {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      <VirtualSelector
+        handleVirtualConnect={handleVirtualConnect}
+        openDialogVirtualKB={openDialogVirtualKB}
+        setOpenDialogVirtualKB={setOpenDialogVirtualKB}
+        showButton={false}
+      />
     </div>
   );
 };

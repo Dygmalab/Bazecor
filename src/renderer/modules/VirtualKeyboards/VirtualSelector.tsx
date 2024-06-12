@@ -10,7 +10,7 @@ import { IconArrowRight, IconCloudDownload, IconKeyboard, IconUpload } from "@Re
 import { Button } from "@Renderer/components/atoms/Button";
 import Heading from "@Renderer/components/atoms/Heading";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@Renderer/components/atoms/Select";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@Renderer/components/atoms/Dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@Renderer/components/atoms/Dialog";
 import { i18n } from "@Renderer/i18n";
 
 import { VirtualType } from "@Renderer/types/virtual";
@@ -26,15 +26,17 @@ const store = Store.getStore();
 
 interface VirtualSelectorProps {
   handleVirtualConnect: (file: any) => void;
+  showButton?: boolean;
+  openDialogVirtualKB?: boolean;
+  setOpenDialogVirtualKB?: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export default function VirtualSelector(props: VirtualSelectorProps) {
-  const [showVirtualKeyboardModal, setShowVirtualKeyboardModal] = useState(false);
   const [selectedVirtualKeyboard, setSelectedVirtualKeyboard] = useState(0);
-  const { handleVirtualConnect } = props;
+  const { handleVirtualConnect, showButton, openDialogVirtualKB, setOpenDialogVirtualKB } = props;
 
   const toggleVirtualKeyboardModal = (): void => {
-    setShowVirtualKeyboardModal(currentValue => !currentValue);
+    setOpenDialogVirtualKB(currentValue => !currentValue);
   };
 
   const selectVirtualKeyboard = (event: string) => {
@@ -240,22 +242,26 @@ export default function VirtualSelector(props: VirtualSelectorProps) {
 
   return (
     <div className="cardButton-wrapper">
-      <div className="cardButton">
-        <Button
-          size="sm"
-          iconDirection="right"
-          onClick={() => {
-            toggleVirtualKeyboardModal();
-          }}
-          icon={<IconArrowRight />}
-          variant="link"
-          className="text-purple-200"
-        >
-          {i18n.keyboardSelect.virtualKeyboard.buttonText}
-        </Button>
-      </div>
+      {showButton ? (
+        <div className="cardButton">
+          <Button
+            size="sm"
+            iconDirection="right"
+            onClick={() => {
+              toggleVirtualKeyboardModal();
+            }}
+            icon={<IconArrowRight />}
+            variant="link"
+            className="text-purple-200"
+          >
+            {i18n.keyboardSelect.virtualKeyboard.buttonText}
+          </Button>
+        </div>
+      ) : (
+        ""
+      )}
 
-      <Dialog open={showVirtualKeyboardModal} onOpenChange={() => toggleVirtualKeyboardModal()}>
+      <Dialog open={openDialogVirtualKB} onOpenChange={() => toggleVirtualKeyboardModal()}>
         <DialogContent>
           <DialogHeader>
             <DialogTitle>{i18n.keyboardSelect.virtualKeyboard.modaltitle}</DialogTitle>

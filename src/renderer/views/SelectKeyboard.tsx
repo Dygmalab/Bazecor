@@ -192,6 +192,7 @@ const SelectKeyboard = (props: SelectKeyboardProps) => {
   const [deviceItems, setDeviceItems] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [scanFoundDevices, setScanFoundDevices] = useState(false);
+  const [openDialogVirtualKB, setOpenDialogVirtualKB] = useState(false);
   const { onConnect, onDisconnect, connected, setLoading, restoredOk } = props;
 
   const loadingHandler = useCallback(
@@ -404,7 +405,12 @@ const SelectKeyboard = (props: SelectKeyboardProps) => {
               />
             </Banner>
           </div>
-          <VirtualSelector handleVirtualConnect={handleVirtualConnect} />
+          <VirtualSelector
+            handleVirtualConnect={handleVirtualConnect}
+            openDialogVirtualKB={openDialogVirtualKB}
+            setOpenDialogVirtualKB={setOpenDialogVirtualKB}
+            showButton
+          />
         </div>
       </div>
     </Styles>
