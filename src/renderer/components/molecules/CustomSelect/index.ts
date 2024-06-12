@@ -18,5 +18,12 @@ import SelectGenericKeys from "./SelectGenericKeys";
 import SelectLayersCustomDropdown from "./SelectLayersCustomDropdown";
 import SelectSuperKeyCustomDropdown from "./SelectSuperKeyCustomDropdown";
 import SelectMacroCustomDropdown from "./SelectMacroCustomDropdown";
+import SelectMouseCustomDropdown from "./SelectMouseCustomDropdown";
 
-export { SelectGenericKeys, SelectLayersCustomDropdown, SelectSuperKeyCustomDropdown, SelectMacroCustomDropdown };
+export {
+  SelectGenericKeys,
+  SelectLayersCustomDropdown,
+  SelectSuperKeyCustomDropdown,
+  SelectMacroCustomDropdown,
+  SelectMouseCustomDropdown,
+};

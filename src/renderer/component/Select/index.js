@@ -22,7 +22,6 @@ import SelectMacro from "./SelectMacro";
 import SelectOneShotLayers from "./SelectOneShotLayers";
 import SelectOneShotModifiers from "./SelectOneShotModifiers";
 import SelectSuperKey from "./SelectSuperKey";
-import SelectMouseCustomDropdown from "./SelectMouseCustomDropdown";
 import SelectShotModifierCustomDropdown from "./SelectShotModifierCustomDropdown";
 import SelectWirelessDropdown from "./SelectWirelessDropdown";
 
@@ -35,7 +34,6 @@ export {
   SelectOneShotLayers,
   SelectOneShotModifiers,
   SelectSuperKey,
-  SelectMouseCustomDropdown,
   SelectShotModifierCustomDropdown,
   SelectWirelessDropdown,
 };

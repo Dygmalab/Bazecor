@@ -40,11 +40,12 @@ import { MdKeyboardReturn, MdSpaceBar, MdKeyboardCapslock, MdInfoOutline, MdEjec
 
 import { Button } from "@Renderer/components/atoms/Button";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@Renderer/components/atoms/Tooltip";
-import { SelectMouseCustomDropdown, SelectShotModifierCustomDropdown, SelectWirelessDropdown } from "@Renderer/component/Select";
+import { SelectShotModifierCustomDropdown, SelectWirelessDropdown } from "@Renderer/component/Select";
 import {
   SelectLayersCustomDropdown,
   SelectSuperKeyCustomDropdown,
   SelectMacroCustomDropdown,
+  SelectMouseCustomDropdown,
 } from "@Renderer/components/molecules/CustomSelect";
 
 import {

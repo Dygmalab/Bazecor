@@ -83,7 +83,7 @@ const SelectLayersCustomDropdown: FC<SelectLayersCustomDropdownProps> = ({
       keyCode.modified > 0 && (layerLock.some(({ keynum }) => keynum === KC) || layerSwitch.some(({ keynum }) => keynum === KC)),
     [KC, keyCode.modified, layerLock, layerSwitch],
   );
-  console.log("Action: ", action);
+
   return (
     <Popover>
       <PopoverTrigger asChild>
