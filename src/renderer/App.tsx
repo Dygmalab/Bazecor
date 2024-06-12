@@ -47,7 +47,7 @@ import getTranslator from "@Renderer/utils/translator";
 import { Neuron } from "@Types/neurons";
 import "../api/keymap";
 import "../api/colormap";
-import { useDevice } from "./DeviceContext";
+import { DeviceTools, useDevice } from "./DeviceContext";
 import DeviceManager from "./views/DeviceManager";
 import Device from "../api/comms/Device";
 import { HIDNotifdevice } from "./types/hid";
@@ -66,7 +66,7 @@ function App() {
   const [fwUpdate, setFwUpdate] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const { state } = useDevice();
+  const { state, dispatch } = useDevice();
   const navigate = useNavigate();
   const varFlashing = React.useRef(false);
   const device: any = React.useRef();
@@ -235,42 +235,51 @@ function App() {
   }, []);
 
   useEffect(() => {
-    const handleDeviceConnection = async (dev: any) => {
+    const handleDeviceConnection = async (dev: USBDevice) => {
       log.verbose("new Device connected to USB", dev);
       const isFlashing = varFlashing.current;
       if (isFlashing) {
         log.verbose("no action due to flashing active");
         return;
       }
-      if (!connected) {
-        toast.success(
-          <ToastMessage
-            icon={<IconConnected />}
-            title={i18n.success.USBdeviceConnected}
-            content={i18n.success.USBdeviceConnectedText}
-          />,
-          { autoClose: 2000, icon: "" },
-        );
+      try {
+        const newDev = await DeviceTools.enumerateDevice(false, dev);
+        dispatch({ type: "addDevice", payload: newDev });
+      } catch (error) {
+        log.error("error when trying to insert newly connected device to DeviceContext", error);
       }
+      toast.success(
+        <ToastMessage
+          icon={<IconConnected />}
+          title={i18n.success.USBdeviceConnected}
+          content={i18n.success.USBdeviceConnectedText}
+        />,
+        { autoClose: 2000, icon: "" },
+      );
     };
-    const handleDeviceDisconnection = async (dev: any) => {
+    const handleDeviceDisconnection = async (dev: USBDevice) => {
       const isFlashing = varFlashing.current;
       log.verbose("Handling device disconnect", isFlashing, dev);
       if (isFlashing) {
         log.verbose("no action due to flashing active");
         return;
       }
-      if (connected) {
-        toast.warn(
-          <ToastMessage
-            icon={<IconPlug />}
-            title={i18n.errors.deviceDisconnected}
-            content={i18n.errors.deviceDisconnectedContent}
-          />,
-          { autoClose: 3000, icon: "" },
-        );
+      try {
+        dispatch({ type: "disconnect", payload: dev.serialNumber });
+      } catch (error) {
+        log.error("error when trying to remove disconnected device from DeviceContext", error);
       }
-      onKeyboardDisconnect();
+      toast.warn(
+        <ToastMessage
+          icon={<IconPlug />}
+          title={i18n.errors.deviceDisconnected}
+          content={i18n.errors.deviceDisconnectedContent}
+        />,
+        { autoClose: 3000, icon: "" },
+      );
+      if (connected) {
+        onKeyboardDisconnect();
+      }
     };
 
     const usbListener = (event: unknown, response: unknown) => handleDeviceDisconnection(JSON.parse(response as string));

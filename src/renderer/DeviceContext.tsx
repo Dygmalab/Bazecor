@@ -42,7 +42,7 @@ function deviceReducer(state: State, action: Action) {
     case "addDevice": {
       const newDevices = state.deviceList;
       newDevices.push(action.payload);
-      return { ...state, deviceList: newDevices };
+      return { ...state, deviceList: newDevices, currentDevice: state.currentDevice, selected: state.selected };
     }
     case "addDevicesList": {
       const newDevices = action.payload;
@@ -50,11 +50,9 @@ function deviceReducer(state: State, action: Action) {
     }
     case "disconnect": {
       let newDevices = [...state.deviceList];
-      log.info("startedWith:", newDevices, action.payload);
       newDevices = newDevices.filter(
-        device => device.type !== "virtual" && device.device.chipId !== state.currentDevice.device.chipId,
+        device => device.type !== "virtual" && device.device.chipId.toLowerCase() !== action.payload.toLowerCase(),
       );
-      log.info("endedWith:", newDevices);
       return { ...state, deviceList: newDevices, currentDevice: undefined, selected: -1 };
     }
     default: {
@@ -113,7 +111,16 @@ const list = async () => {
   return finalDevices;
 };
 
-const enumerateSerial = async (bootloader: boolean) => serial.enumerate(bootloader);
+const enumerateSerial = async (bootloader: boolean) => {
+  const dev = await serial.enumerate(bootloader);
+  return dev;
+};
+
+const enumerateDevice = async (bootloader: boolean, device: USBDevice) => {
+  const dev = await serial.enumerate(bootloader, device);
+  const newDevice = new Device(dev[0], "serial");
+  return newDevice;
+};
 
 const connect = async (device: Device | VirtualType) => {
   try {
@@ -158,6 +165,7 @@ const disconnect = async (device: Device) => {
 const DeviceTools = {
   list,
   enumerateSerial,
+  enumerateDevice,
   connect,
   disconnect,
 };

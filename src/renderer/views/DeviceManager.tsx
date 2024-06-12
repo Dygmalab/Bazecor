@@ -93,7 +93,7 @@ const DeviceManager = (props: DeviceManagerProps) => {
 
   const findKeyboards = useCallback(async (): Promise<DeviceListType[]> => {
     setLoading(true);
-    if (connected || (state.currentDevice !== undefined && state.selected >= 0)) {
+    if (connected || state.deviceList.length > 0) {
       const newDev: DeviceListType[] = [];
       state.deviceList.forEach((item, index) => {
         const neuron = (store.get("neurons") as Neuron[]).find(n => n.id.toLowerCase() === item.device.chipId.toLowerCase());
@@ -242,35 +242,18 @@ const DeviceManager = (props: DeviceManagerProps) => {
   };
 
   useEffect(() => {
-    const finder = () => setScanned(false);
-
-    const disconnectedfinder = (event: unknown, DygmaDev: string) => {
-      log.info("Disconnected: ", DygmaDev);
-      setDevicesList([]);
-      setSelectedDevice(-1);
-      setScanned(false);
-    };
-
-    ipcRenderer.on("usb-connected", finder);
-    ipcRenderer.on("usb-disconnected", disconnectedfinder);
-    ipcRenderer.on("hid-connected", finder);
-    ipcRenderer.on("hid-disconnected", disconnectedfinder);
-
     if (connected) {
       setSelectedDevice(state.selected);
       setScanned(false);
     } else {
       setScanned(false);
     }
-
-    return () => {
-      ipcRenderer.off("usb-connected", finder);
-      ipcRenderer.off("usb-disconnected", disconnectedfinder);
-      ipcRenderer.off("hid-connected", finder);
-      ipcRenderer.off("hid-disconnected", disconnectedfinder);
-    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    if (state.deviceList.length !== devicesList.length) setScanned(false);
+  }, [devicesList.length, state.deviceList]);
 
   useEffect(() => {
     if (!scanned) {
@@ -291,10 +274,10 @@ const DeviceManager = (props: DeviceManagerProps) => {
           <div className="filterHeaderWrapper flex items-center justify-between pt-8 pb-3 mb-3 border-b-[1px] border-gray-100 dark:border-gray-600">
             <div className="filter-header flex items-center gap-4">
               <Heading headingLevel={3} renderAs="h3" className="ml-[2px]">
-                {devicesList.length > 1 ? i18n.deviceManager.myDevices : i18n.deviceManager.myDevice}{" "}
-                <sup className="text-purple-300">{devicesList.length}</sup>
+                {devicesList?.length > 1 ? i18n.deviceManager.myDevices : i18n.deviceManager.myDevice}{" "}
+                <sup className="text-purple-300">{devicesList?.length}</sup>
               </Heading>
-              {devicesList.length > 0 ? (
+              {devicesList?.length > 0 ? (
                 <div className="filter-header--tabs">
                   <ul className="list-none p-0 m-0 flex gap-1">
                     <li>
@@ -342,7 +325,7 @@ const DeviceManager = (props: DeviceManagerProps) => {
             </div>
           </div>
           <div className="flex gap-4 relative">
-            {devicesList.length > 0 ? (
+            {devicesList?.length > 0 ? (
               <div className="devices-container">
                 <SortableList
                   onSortEnd={onSortEnd}

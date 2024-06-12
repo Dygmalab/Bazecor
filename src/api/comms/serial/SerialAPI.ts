@@ -113,11 +113,35 @@ interface ExtendedPort extends PortInfo {
   device: DygmaDeviceType;
 }
 
-const enumerate = async (bootloader: boolean): Promise<ExtendedPort[]> => {
+const enumerate = async (bootloader: boolean, searchDevice?: USBDevice): Promise<ExtendedPort[]> => {
   const serialDevices: PortInfo[] = await SerialPort.list();
 
   const foundDevices = [];
   const hw = bootloader ? Hardware.bootloader : Hardware.serial;
+
+  if (searchDevice !== undefined) {
+    log.info("Enumerating unique device:", searchDevice, serialDevices);
+
+    for (const device of serialDevices) {
+      const vID = parseInt(`0x${device.vendorId}`, 16);
+      const pID = parseInt(`0x${device.productId}`, 16);
+      if (vID === searchDevice.vendorId && pID === searchDevice.productId && device.serialNumber === searchDevice.serialNumber) {
+        const supported = await checkProperties(device.path);
+        const Hdevice = Hardware.serial.find(
+          h =>
+            h.usb.productId === pID &&
+            h.usb.vendorId === vID &&
+            (h.info.keyboardType === supported.layout || h.info.product === "Defy"),
+        );
+        const newPort: ExtendedPort = { ...device, device: Hdevice };
+        log.info("Newly created port: ", newPort, Hdevice, supported);
+        newPort.device.wireless = supported.wireless;
+        newPort.device.chipId = supported.chipId;
+        foundDevices.push(newPort);
+      }
+    }
+    return foundDevices;
+  }
 
   log.info("SerialPort enumerating devices:", serialDevices);
 
