@@ -50,7 +50,6 @@ import { DygmaDeviceType } from "@Renderer/types/dygmaDefs";
 import { NavigationMenuProps } from "@Renderer/types/navigation";
 
 import {
-  IconKeyboardSelector,
   IconKeyboard2Stroke,
   IconMemory,
   IconRobot,
@@ -298,14 +297,6 @@ function NavigationMenu(props: NavigationMenuProps) {
                 </Link>
               </>
             )}
-            <Link to="/keyboard-select" onClick={linkHandler} className={`list-link ${fwUpdate || loading ? "disabled" : ""}`}>
-              <NavigationButton
-                selected={currentPage === "/keyboard-select"}
-                buttonText={i18n.app.menu.selectAKeyboard}
-                icoSVG={<IconKeyboardSelector />}
-                disabled={fwUpdate || loading}
-              />
-            </Link>
           </div>
           <div className="bottomMenu">
             {showDevtools && (
