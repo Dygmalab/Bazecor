@@ -21,7 +21,6 @@ import { toast } from "react-toastify";
 
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@Renderer/components/atoms/Card";
 
-import Container from "react-bootstrap/Container";
 import { useNavigate } from "react-router-dom";
 import { useDevice } from "@Renderer/DeviceContext";
 import { i18n } from "@Renderer/i18n";
@@ -154,7 +153,7 @@ function Welcome(props: WelcomeProps) {
 
   return (
     <Styles>
-      <Container fluid className="welcome center-content">
+      <div className="welcome center-content w-full justify-center px-3">
         <PageHeader text={i18n.welcome.title} />
         <div className="welcomeWrapper">
           <div className="welcomeInner">
@@ -202,7 +201,7 @@ function Welcome(props: WelcomeProps) {
             </Card>
           </div>
         </div>
-      </Container>
+      </div>
     </Styles>
   );
 }

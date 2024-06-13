@@ -4,7 +4,6 @@ import FlashManager from "@Renderer/controller/FlashManager/machine";
 
 // Visual components
 import Styled from "styled-components";
-import Container from "react-bootstrap/Container";
 
 // Extra components
 import { i18n } from "@Renderer/i18n";
@@ -74,7 +73,7 @@ function FirmwareUpdate(props: FirmwareUpdateProps) {
 
   return (
     <Styles>
-      <Container fluid className="firmware-update center-content">
+      <div className="px-3 firmware-update center-content">
         <PageHeader text="Firmware Update" />
         <div className="panel-wrapper">
           {state.context.Block === -1 ? <FirmwareErrorPanel nextBlock={nextBlock} retryBlock={retryBlock} /> : ""}
@@ -108,7 +107,7 @@ function FirmwareUpdate(props: FirmwareUpdateProps) {
             ""
           )}
         </div>
-      </Container>
+      </div>
     </Styles>
   );
 }

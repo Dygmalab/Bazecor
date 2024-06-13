@@ -24,9 +24,6 @@ import { toast } from "react-toastify";
 import { ipcRenderer } from "electron";
 import fs from "fs";
 import log from "electron-log/renderer";
-import Container from "react-bootstrap/Container";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@Renderer/components/atoms/Dialog";
 import customCursor from "@Assets/base/cursorBucket.png";
 import ToastMessage from "@Renderer/components/atoms/ToastMessage";
@@ -1845,9 +1842,8 @@ const LayoutEditor = (props: LayoutEditorProps) => {
 
   return (
     <Styles className="layoutEditor">
-      <Container
-        fluid
-        className={`keyboard-editor ${modeselect} ${isStandardView ? "standarViewMode" : "singleViewMode"} ${
+      <div
+        className={`keyboard-editor px-3 ${modeselect} ${isStandardView ? "standarViewMode" : "singleViewMode"} ${
           typeof selectedPaletteColor === "number" ? "colorSelected" : ""
         }`}
       >
@@ -1894,11 +1890,11 @@ const LayoutEditor = (props: LayoutEditorProps) => {
           }}
           inContext={modified}
         />
-        <Row className="full-height keyboardsWrapper">
-          <Col className="raise-editor layer-col">
-            <Row className="dygma-keyboard-editor editor">{layer}</Row>
+        <div className="w-full full-height keyboardsWrapper">
+          <div className="raise-editor layer-col">
+            <div className="dygma-keyboard-editor editor">{layer}</div>
             {modeselect === "keyboard" && !isStandardView ? (
-              <Row className="ordinary-keyboard-editor m-0">
+              <div className="ordinary-keyboard-editor m-0">
                 <KeyPickerKeyboard
                   onKeySelect={onKeyChange}
                   code={code}
@@ -1915,10 +1911,10 @@ const LayoutEditor = (props: LayoutEditorProps) => {
                   refreshLayoutSelectorPosition={refreshLayoutSelectorPosition}
                   isWireless={isWireless}
                 />
-              </Row>
+              </div>
             ) : null}
-          </Col>
-        </Row>
+          </div>
+        </div>
 
         {/* WHY: We want to hide the selector when we cannot use it (e.g. when color editor is active) */}
         {modeselect === "keyboard" ? (
@@ -1952,7 +1948,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
           layers={copyFromLayerOptions}
           currentLayer={currentLayer}
         />
-      </Container>
+      </div>
 
       <Dialog open={showMacroModal} onOpenChange={toggleMacroModal}>
         <DialogContent>
