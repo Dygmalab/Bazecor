@@ -284,8 +284,7 @@ function App() {
 
     const usbListener = (event: unknown, response: unknown) => handleDeviceDisconnection(JSON.parse(response as string));
     const newUsbConnection = (event: unknown, response: unknown) => handleDeviceConnection(JSON.parse(response as string));
-    const hidListener = (event: unknown, response: unknown) =>
-      handleDeviceDisconnection(JSON.parse(response as string) as HIDNotifdevice);
+    const hidListener = (event: unknown, response: unknown) => handleDeviceDisconnection(JSON.parse(response as string) as any);
 
     const notifyBtDevice = (event: any, hidDev: string) => {
       const localDev: HIDNotifdevice = JSON.parse(hidDev);
@@ -326,7 +325,7 @@ function App() {
       ipcRenderer.off("hid-disconnected", hidListener);
       ipcRenderer.off("hid-connected", notifyBtDevice);
     };
-  }, [connected, navigate, onKeyboardDisconnect]);
+  }, [connected, dispatch, navigate, onKeyboardDisconnect]);
 
   const toggleFwUpdate = async (value: boolean) => {
     log.verbose("toggling fwUpdate to: ", value);

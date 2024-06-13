@@ -337,7 +337,7 @@ const SelectKeyboard = (props: SelectKeyboardProps) => {
     setDeviceItems(newDevices);
     setSelectedPortIndex(0);
     await DeviceTools.disconnect(state.currentDevice);
-    dispatch({ type: "disconnect", payload: selectedPortIndex });
+    // dispatch({ type: "disconnect", payload: selectedPortIndex });
     await onDisconnect();
   };
 
