@@ -114,7 +114,7 @@ import IconShutdown from "./IconShutdown";
 import IconSignal from "./IconSignal";
 import IconSleep from "./IconSleep";
 import IconStopWatch from "./IconStopwatch";
-import IconStopWatchCrossed from "./IconStopwatchCrossed";
+import IconStopwatchCrossed from "./IconStopwatchCrossed";
 import IconSun from "./IconSun";
 import IconThreeDots from "./IconThreeDots";
 import IconThunder from "./IconThunder";
@@ -231,7 +231,7 @@ export {
   IconSignal,
   IconSleep,
   IconStopWatch,
-  IconStopWatchCrossed,
+  IconStopwatchCrossed,
   IconSun,
   IconThreeDots,
   IconThunder,

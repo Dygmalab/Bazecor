@@ -1,6 +1,6 @@
 import * as React from "react";
 
-function IconStopWatchCrossed() {
+function IconStopwatchCrossed() {
   return (
     <svg width={24} height={24} fill="none" xmlns="http://www.w3.org/2000/svg">
       <mask
@@ -27,4 +27,4 @@ function IconStopWatchCrossed() {
   );
 }
 
-export default IconStopWatchCrossed;
+export default IconStopwatchCrossed;

@@ -12,7 +12,7 @@ import {
   IconPause,
   IconUndoRestart,
   IconStopWatch,
-  IconStopWatchCrossed,
+  IconStopwatchCrossed,
 } from "@Renderer/components/atoms/icons";
 import Heading from "@Renderer/components/atoms/Heading";
 import AnimatedTimelineRecording from "./AnimatedTimelineRecording";
@@ -358,7 +358,7 @@ export default class RecordMacroModal extends React.Component {
                     selected={!isDelayActive}
                     className="flex gap-2"
                   >
-                    <IconStopWatchCrossed />
+                    <IconStopwatchCrossed />
                     {i18n.editor.macros.ignoreDelays}
                   </Button>
                   <Button
