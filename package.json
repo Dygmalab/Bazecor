@@ -122,6 +122,7 @@
   },
   "dependencies": {
     "@headlessui/react": "^1.7.17",
+    "@hookform/resolvers": "^3.6.0",
     "@octokit/core": "^4.2.1",
     "@radix-ui/react-accordion": "^1.1.2",
     "@radix-ui/react-alert-dialog": "^1.0.5",
@@ -168,6 +169,7 @@
     "react-color": "^2.19.3",
     "react-dom": "^18.2.0",
     "react-easy-sort": "^1.6.0",
+    "react-hook-form": "^7.51.5",
     "react-icons": "^4.9.0",
     "react-localization": "^1.0.19",
     "react-markdown": "^8.0.7",
@@ -182,7 +184,8 @@
     "uiohook-napi": "^1.5.4",
     "update-electron-app": "^3.0.0",
     "usb": "^2.9.0",
-    "xstate": "^5.13.0"
+    "xstate": "^5.13.0",
+    "zod": "^3.23.8"
   },
   "build": {
     "appId": "com.dygmalab.bazecor",

@@ -4,10 +4,11 @@ import Styled from "styled-components";
 import Form from "react-bootstrap/Form";
 import { i18n } from "@Renderer/i18n";
 
-import { IconArrowInBoxUp } from "@Renderer/components/atoms/icons";
+import { IconArrowInBoxUp } from "@Renderer/components/atoms/Icons";
 import Callout from "@Renderer/components/molecules/Callout/Callout";
 import { Button } from "@Renderer/components/atoms/Button";
 import Heading from "@Renderer/components/atoms/Heading";
+import { Textarea } from "@Renderer/components/atoms/Textarea";
 
 const Styles = Styled.div`
 display: flex;
@@ -55,6 +56,11 @@ class TextTab extends Component {
           <Heading headingLevel={4} renderAs="h4">
             {i18n.editor.macros.textTabs.title}
           </Heading>
+          <Textarea
+            placeholder={i18n.editor.macros.textTabs.placeholder}
+            value={this.props.addText}
+            onChange={this.props.onTextChange}
+          />
           <Form.Control
             type="text"
             placeholder={i18n.editor.macros.textTabs.placeholder}
