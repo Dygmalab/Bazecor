@@ -23,14 +23,12 @@ import ReactMarkdown from "react-markdown";
 
 import Heading from "@Renderer/components/atoms/Heading";
 import { Badge } from "@Renderer/components/atoms/Badge";
-import { IconEye } from "@Renderer/components/atoms/icons";
+import { IconEye, IconLoader } from "@Renderer/components/atoms/icons";
 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@Renderer/components/atoms/Select";
 
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@Renderer/components/atoms/Dialog";
 import { Button } from "@Renderer/components/atoms/Button";
-
-import Spinner from "react-bootstrap/Spinner";
 
 import { ReleaseType } from "@Renderer/types/releases";
 
@@ -216,8 +214,8 @@ const FirmwareVersionStatus = (props: FirmwareVersionStatusProps) => {
             {firmwareList[selectedFirmware].body ? (
               <ReactMarkdown>{firmwareList[selectedFirmware].body}</ReactMarkdown>
             ) : (
-              <div className="loading marginCenter">
-                <Spinner className="spinner-border" role="status" animation="border" />
+              <div className="loading marginCenter flex text-center justify-center">
+                <IconLoader />
               </div>
             )}
           </div>
