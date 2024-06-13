@@ -20,6 +20,7 @@ import SelectSuperKeyCustomDropdown from "./SelectSuperKeyCustomDropdown";
 import SelectMacroCustomDropdown from "./SelectMacroCustomDropdown";
 import SelectMouseCustomDropdown from "./SelectMouseCustomDropdown";
 import SelectShotModifierCustomDropdown from "./SelectShotModifierCustomDropdown";
+import SelectWirelessDropdown from "./SelectWirelessDropdown";
 
 export {
   SelectGenericKeys,
@@ -28,4 +29,5 @@ export {
   SelectMacroCustomDropdown,
   SelectMouseCustomDropdown,
   SelectShotModifierCustomDropdown,
+  SelectWirelessDropdown,
 };

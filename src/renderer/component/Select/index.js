@@ -20,6 +20,5 @@ import SelectKeyboardDropdown from "./SelectKeyboardDropdown";
 import NeuronSelector from "./NeuronSelector";
 import SelectMacro from "./SelectMacro";
 import SelectSuperKey from "./SelectSuperKey";
-import SelectWirelessDropdown from "./SelectWirelessDropdown";
 
-export { LayerSelector, Select, SelectKeyboardDropdown, NeuronSelector, SelectMacro, SelectSuperKey, SelectWirelessDropdown };
+export { LayerSelector, Select, SelectKeyboardDropdown, NeuronSelector, SelectMacro, SelectSuperKey };
