@@ -277,7 +277,7 @@ const DeviceManager = (props: DeviceManagerProps) => {
     <div className="h-full">
       <div className="px-3 h-full">
         <div className="view-wrapper--devices flex h-[inherit] flex-col">
-          <PageHeader text="Device Manager" primaryButton={scanDevicesButton} secondaryButton={addVirtualDevicesButton} />
+          <PageHeader text="Keyboard Manager" primaryButton={scanDevicesButton} secondaryButton={addVirtualDevicesButton} />
           {/* <div className="filterHeaderWrapper flex items-center justify-between pt-8 pb-3 mb-3 border-b-[1px] border-gray-100 dark:border-gray-600"> */}
           <div className="filterHeaderWrapper flex items-center justify-between pt-8 pb-3 mb-3">
             {/* <div className="filter-header flex items-center gap-4">
