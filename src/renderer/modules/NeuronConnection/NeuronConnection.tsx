@@ -22,7 +22,7 @@ import { ToastContainer } from "react-toastify";
 import Heading from "@Renderer/components/atoms/Heading";
 import { Button } from "@Renderer/components/atoms/Button";
 import NeuronStatus from "@Renderer/component/NeuronStatus";
-import { SelectKeyboardDropdown } from "@Renderer/component/Select";
+import { SelectKeyboardDropdown } from "@Renderer/components/molecules/CustomSelect";
 import { i18n } from "@Renderer/i18n";
 
 import "react-toastify/dist/ReactToastify.css";
