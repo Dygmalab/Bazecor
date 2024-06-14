@@ -243,7 +243,8 @@ function App() {
         return;
       }
       try {
-        const newDev = await DeviceTools.enumerateDevice(false, dev);
+        const existingIDs = state.deviceList.map(d => d.serialNumber);
+        const newDev = await DeviceTools.enumerateDevice(false, dev, existingIDs);
         dispatch({ type: "addDevice", payload: newDev });
       } catch (error) {
         log.error("error when trying to insert newly connected device to DeviceContext", error);
@@ -265,7 +266,9 @@ function App() {
         return;
       }
       try {
-        dispatch({ type: "disconnect", payload: dev.serialNumber });
+        const existingIDs = state.deviceList.map(d => d.serialNumber.toLowerCase());
+        const missingSerialN = await DeviceTools.currentSerialN(existingIDs);
+        dispatch({ type: "disconnect", payload: missingSerialN });
       } catch (error) {
         log.error("error when trying to remove disconnected device from DeviceContext", error);
       }
@@ -325,7 +328,7 @@ function App() {
       ipcRenderer.off("hid-disconnected", hidListener);
       ipcRenderer.off("hid-connected", notifyBtDevice);
     };
-  }, [connected, dispatch, navigate, onKeyboardDisconnect]);
+  }, [connected, dispatch, navigate, onKeyboardDisconnect, state.deviceList]);
 
   const toggleFwUpdate = async (value: boolean) => {
     log.verbose("toggling fwUpdate to: ", value);

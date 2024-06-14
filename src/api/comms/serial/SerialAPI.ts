@@ -113,7 +113,7 @@ interface ExtendedPort extends PortInfo {
   device: DygmaDeviceType;
 }
 
-const enumerate = async (bootloader: boolean, searchDevice?: USBDevice): Promise<ExtendedPort[]> => {
+const enumerate = async (bootloader: boolean, searchDevice?: USBDevice, existingIDs?: string[]): Promise<ExtendedPort[]> => {
   const serialDevices: PortInfo[] = await SerialPort.list();
 
   const foundDevices = [];
@@ -125,7 +125,7 @@ const enumerate = async (bootloader: boolean, searchDevice?: USBDevice): Promise
     for (const device of serialDevices) {
       const vID = parseInt(`0x${device.vendorId}`, 16);
       const pID = parseInt(`0x${device.productId}`, 16);
-      if (vID === searchDevice.vendorId && pID === searchDevice.productId && device.serialNumber === searchDevice.serialNumber) {
+      if (vID === searchDevice.vendorId && pID === searchDevice.productId && !existingIDs.includes(device.serialNumber)) {
         const supported = await checkProperties(device.path);
         const Hdevice = Hardware.serial.find(
           h =>
@@ -133,9 +133,9 @@ const enumerate = async (bootloader: boolean, searchDevice?: USBDevice): Promise
             h.usb.vendorId === vID &&
             (h.info.keyboardType === supported.layout || h.info.product === "Defy"),
         );
-        const newPort: ExtendedPort = { ...device, device: Hdevice };
+        const newPort: ExtendedPort = { ...device, device: { ...Hdevice } };
         log.info("Newly created port: ", newPort, Hdevice, supported);
-        newPort.device.wireless = supported.wireless;
+        newPort.device.wireless = newPort.device.info.product === "Defy" ? newPort.device.wireless : supported.wireless;
         newPort.device.chipId = supported.chipId;
         foundDevices.push(newPort);
       }
@@ -152,7 +152,7 @@ const enumerate = async (bootloader: boolean, searchDevice?: USBDevice): Promise
           parseInt(`0x${device.productId}`, 16) === Hdevice.usb.productId &&
           parseInt(`0x${device.vendorId}`, 16) === Hdevice.usb.vendorId
         ) {
-          const newPort: ExtendedPort = { ...device, device: Hdevice };
+          const newPort: ExtendedPort = { ...device, device: { ...Hdevice } };
           foundDevices.push(newPort);
         }
       }
@@ -175,7 +175,7 @@ const find = async (): Promise<ExtendedPort[]> => {
           parseInt(`0x${device.productId}`, 16) === Hdevice.usb.productId &&
           parseInt(`0x${device.vendorId}`, 16) === Hdevice.usb.vendorId
         ) {
-          const newPort = { ...device, device: Hdevice };
+          const newPort = { ...device, device: { ...Hdevice } };
           foundDevices.push(newPort);
           foundBootloader = true;
         }
@@ -188,7 +188,7 @@ const find = async (): Promise<ExtendedPort[]> => {
           parseInt(`0x${device.vendorId}`, 16) === Hdevice.usb.vendorId &&
           (Hdevice.info.product === "Defy" || Hdevice.info.keyboardType === supported.layout)
         ) {
-          const newPort = { ...device, device: Hdevice };
+          const newPort = { ...device, device: { ...Hdevice } };
           newPort.device.wireless = supported.wireless;
           newPort.device.chipId = supported.chipId;
           foundDevices.push(newPort);

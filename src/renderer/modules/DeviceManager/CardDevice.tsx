@@ -1,5 +1,6 @@
 import React, { forwardRef } from "react";
 import { SortableKnob } from "react-easy-sort";
+import log from "electron-log/renderer";
 
 import Heading from "@Renderer/components/atoms/Heading";
 import { IconDelete, IconDragAndDrop } from "@Renderer/components/atoms/icons";
@@ -33,6 +34,7 @@ const CardDevice = forwardRef<HTMLDivElement, CardDeviceProps>((props, ref) => {
   };
 
   const handleSetIsConnected = async () => {
+    log.info("HANDLING CONNECT: ", device.connected, device.index);
     if (!device.connected) {
       await handleConnection(device.index, "connect");
     } else {

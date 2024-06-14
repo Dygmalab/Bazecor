@@ -20,7 +20,7 @@ export type Action =
   | { type: "changeCurrent"; payload: { selected: number; device: Device } }
   | { type: "addDevice"; payload: Device }
   | { type: "addDevicesList"; payload: Device[] }
-  | { type: "disconnect"; payload: string };
+  | { type: "disconnect"; payload: string[] };
 
 export type Dispatch = (action: Action) => void;
 
@@ -30,29 +30,32 @@ function deviceReducer(state: State, action: Action) {
   // log.verbose("Entering DeviceREDUCER!!!", state, action);
   switch (action.type) {
     case "changeCurrent": {
-      if (action.payload.selected < state.deviceList.length && action.payload.selected >= 0) {
-        const deviceList = [...state.deviceList];
-        deviceList[action.payload.selected] = action.payload.device;
-        return { ...state, selected: action.payload.selected, currentDevice: action.payload.device, deviceList };
+      if (action.payload.selected === -1) {
+        // We are working with Virtual keyboards here
+        const newList = [...state.deviceList];
+        newList.push(action.payload.device);
+        log.warn("EXECUTED changeCurrent with selected === -1: ", action.payload, newList);
+        return { selected: newList.length - 1, currentDevice: newList[newList.length - 1], deviceList: newList };
       }
-      const deviceList = [...state.deviceList];
-      deviceList.push(action.payload.device);
-      return { ...state, selected: deviceList.length - 1, currentDevice: action.payload.device, deviceList };
+      const newCurrent = state.deviceList[action.payload.selected];
+      log.warn("EXECUTED changeCurrent: ", action.payload, newCurrent);
+      return { ...state, selected: action.payload.selected, currentDevice: newCurrent };
     }
     case "addDevice": {
-      const newDevices = state.deviceList;
+      const newDevices = [...state.deviceList];
       newDevices.push(action.payload);
+      log.warn("EXECUTED addDevice: ", action.payload, newDevices);
       return { ...state, deviceList: newDevices, currentDevice: state.currentDevice, selected: state.selected };
     }
     case "addDevicesList": {
-      const newDevices = action.payload;
+      const newDevices = [...action.payload];
+      log.warn("EXECUTED addDevicesList: ", action.payload, newDevices);
       return { ...state, deviceList: newDevices };
     }
     case "disconnect": {
       let newDevices = [...state.deviceList];
-      newDevices = newDevices.filter(
-        device => device.type !== "virtual" && device.device.chipId.toLowerCase() !== action.payload.toLowerCase(),
-      );
+      newDevices = newDevices.filter(device => !action.payload.includes(device.serialNumber.toLowerCase()));
+      log.warn("EXECUTED disconnect: ", action.payload, newDevices);
       return { ...state, deviceList: newDevices, currentDevice: undefined, selected: -1 };
     }
     default: {
@@ -116,10 +119,20 @@ const enumerateSerial = async (bootloader: boolean) => {
   return dev;
 };
 
-const enumerateDevice = async (bootloader: boolean, device: USBDevice) => {
-  const dev = await serial.enumerate(bootloader, device);
+const enumerateDevice = async (bootloader: boolean, device: USBDevice, existingIDs: string[]) => {
+  const dev = await serial.enumerate(bootloader, device, existingIDs);
+  // log.info("Data from enum dev:", dev, bootloader, existingIDs);
   const newDevice = new Device(dev[0], "serial");
   return newDevice;
+};
+
+const currentSerialN = async (existingIDs: string[]) => {
+  const result: string[] = [];
+  const SN = (await serial.enumerate(false)).map(port => port.serialNumber.toLowerCase());
+  existingIDs.forEach(id => {
+    if (!SN.includes(id.toLowerCase())) result.push(id.toLowerCase());
+  });
+  return result;
 };
 
 const connect = async (device: Device | VirtualType) => {
@@ -166,6 +179,7 @@ const DeviceTools = {
   list,
   enumerateSerial,
   enumerateDevice,
+  currentSerialN,
   connect,
   disconnect,
 };
