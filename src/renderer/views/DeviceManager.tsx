@@ -59,6 +59,11 @@ const DeviceManager = (props: DeviceManagerProps) => {
   const [openDialogVirtualKB, setOpenDialogVirtualKB] = useState(false);
   const [selectedDevice, setSelectedDevice] = useState(0);
 
+  const delay = (ms: number) =>
+    new Promise(res => {
+      setTimeout(res, ms);
+    });
+
   const onKeyboardConnect = async (selected: number) => {
     const { deviceList } = state;
     // log.info("trying to connect to:", deviceList, selectedDevice, deviceList[selectedDevice]);
@@ -85,11 +90,11 @@ const DeviceManager = (props: DeviceManagerProps) => {
     await onDisconnect();
   };
 
-  // const handleOnDisconnectConnect = async () => {
-  //   await handleOnDisconnect();
-  //   await delay(500);
-  //   await onKeyboardConnect();
-  // };
+  const handleOnDisconnectConnect = async (deviceNumber: number) => {
+    await DeviceTools.disconnect(state.currentDevice);
+    await delay(500);
+    await onKeyboardConnect(deviceNumber);
+  };
 
   const findKeyboards = useCallback(async (): Promise<DeviceListType[]> => {
     setLoading(true);
@@ -151,8 +156,13 @@ const DeviceManager = (props: DeviceManagerProps) => {
 
     switch (action) {
       case "connect":
-        setSelectedDevice(deviceNumber);
-        await onKeyboardConnect(deviceNumber);
+        if (connected && deviceNumber !== state.selected) {
+          setSelectedDevice(deviceNumber);
+          handleOnDisconnectConnect(deviceNumber);
+        } else {
+          setSelectedDevice(deviceNumber);
+          await onKeyboardConnect(deviceNumber);
+        }
         break;
       case "disconnect":
         await handleOnDisconnect();
@@ -228,10 +238,6 @@ const DeviceManager = (props: DeviceManagerProps) => {
     setDevicesList(array => arrayMoveImmutable(array, oldIndex, newIndex));
   };
 
-  const delay = (ms: number) =>
-    new Promise(res => {
-      setTimeout(res, ms);
-    });
   const handleVirtualConnect = async (file: any) => {
     if (connected) {
       await handleOnDisconnect();
