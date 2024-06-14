@@ -18,7 +18,6 @@ import Button from "./Button";
 import ColorButton from "./ColorButton";
 import ColorPicker from "./ColorPicker";
 import LargeButton from "./LargeButton";
-import NavigationButton from "./NavigationButton";
 import RegularButton from "./regularButton";
 import RegularButtonFwRef from "./RegularButtonFwRef";
 import ButtonSettings from "./ButtonSettings";
@@ -30,7 +29,6 @@ export {
   ColorButton,
   ColorPicker,
   LargeButton,
-  NavigationButton,
   RegularButton,
   RegularButtonFwRef,
   ButtonSettings,
