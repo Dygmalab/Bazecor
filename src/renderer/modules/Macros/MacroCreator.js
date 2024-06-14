@@ -659,7 +659,7 @@ class MacroCreator extends Component {
                 </TabsTrigger>
               </TabsList>
             </div>
-            <div className="px-4 py-4 rounded-br-xl bg-gray-25 dark:bg-gray-800">
+            <div className="px-8 pt-4 pb-8 rounded-br-xl bg-gray-25 dark:bg-gray-800">
               <div className="tabContentInner">
                 <Heading headingLevel={3} renderAs="h3">
                   {i18n.general.configure}

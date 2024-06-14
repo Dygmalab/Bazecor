@@ -218,8 +218,15 @@ class MacroManager extends Component {
               scrollPos={this.props.scrollPos}
             />
           ) : (
-            <div className="loading marginCenter">
-              <LogoLoader />
+            <div className="loading marginCenter trackingWrapper flex flex-col justify-center h-full items-center">
+              <div className="m-auto flex flex-wrap">
+                <Heading headingLevel={4} renderAs="h4" className="w-full text-center">
+                  Your macro is currently empty.
+                </Heading>
+                <Heading headingLevel={5} renderAs="paragraph-sm" className="w-full text-center text-gray-300 dark:text-gray-500">
+                  Let&apos;s get started adding new action to your macro!
+                </Heading>
+              </div>
             </div>
           )}
           <div id="portalMacro" />
