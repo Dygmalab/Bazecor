@@ -54,7 +54,9 @@ function deviceReducer(state: State, action: Action) {
     }
     case "disconnect": {
       let newDevices = [...state.deviceList];
-      newDevices = newDevices.filter(device => !action.payload.includes(device.serialNumber.toLowerCase()));
+      newDevices = newDevices.filter(
+        device => device.type === "virtual" && !action.payload.includes(device.serialNumber.toLowerCase()),
+      );
       log.warn("EXECUTED disconnect: ", action.payload, newDevices);
       return { ...state, deviceList: newDevices, currentDevice: undefined, selected: -1 };
     }
