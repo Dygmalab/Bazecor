@@ -32,7 +32,7 @@ const Style = Styled.div`
       color: ${({ theme }) => theme.styles.dropdown.subTitleColor};
     }
   }
-  
+
   .dropdownItem {
     padding-left: 12px;
     flex: 0 0 calc(100% - 24px);
@@ -48,7 +48,7 @@ const Style = Styled.div`
       font-size: 13px;
       font-weight: 600;
       letter-spacing: -0.03em;
-      
+
       margin-bottom: 0;
       small {
         font-size: 12px;
@@ -76,7 +76,16 @@ const Style = Styled.div`
   }
 }
 `;
-function SelectKeyboardDropdown({ selectPort, selectedPortIndex, deviceItems, connected, connectedDevice }) {
+
+interface SelectKeyboardDropdownProps {
+  selectPort: any;
+  deviceItems: any;
+  connected: any;
+  connectedDevice: any;
+}
+
+function SelectKeyboardDropdown(props: SelectKeyboardDropdownProps) {
+  const { selectPort, deviceItems, connected, connectedDevice } = props;
   return (
     <Style>
       <Select onValueChange={selectPort}>

@@ -178,7 +178,6 @@ function NeuronConnection(props: NeuronConnectionProps) {
                 <SelectKeyboardDropdown
                   deviceItems={deviceItems}
                   selectPort={selectPort}
-                  selectedPortIndex={selectedPortIndex}
                   connected={connected}
                   connectedDevice={connectedDeviceIndex}
                 />
