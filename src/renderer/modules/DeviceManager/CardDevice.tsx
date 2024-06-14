@@ -9,7 +9,6 @@ import { DevicePreview } from "@Renderer/modules/DevicePreview";
 import { Button } from "@Renderer/components/atoms/Button";
 import { i18n } from "@Renderer/i18n";
 
-// import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@Renderer/components/ui/dropdown-menu";
 interface CardDeviceProps {
   device: DeviceListType;
   filterBy: boolean | "all";
@@ -55,7 +54,7 @@ const CardDevice = forwardRef<HTMLDivElement, CardDeviceProps>((props, ref) => {
           : "card-offline relative isolate before:absolute before:content-[''] before:w-full before:h-full before:bg-bgCardOfflineLight before:dark:bg-bgCardOfflineDark"
       } ${filterBy !== "all" ? `card-filter-on ${filterAttribute(filterBy)}` : "card-all"}`}
     >
-      <div className="card-header relative bg-transparent border-none pt-6 min-h-[140px]">
+      <div className="card-header relative bg-transparent border-none pt-6 px-6 min-h-[140px]">
         {device.name ? (
           <>
             <Heading headingLevel={3} renderAs="h3" className="text-gray-600 dark:text-gray-50">
@@ -123,21 +122,6 @@ const CardDevice = forwardRef<HTMLDivElement, CardDeviceProps>((props, ref) => {
               </button>
             ) : null}
           </div>
-          {/* <DropdownMenu>
-            <DropdownMenuTrigger className="data-[state=open]:bg-gray-100/50 data-[state=open]:dark:bg-gray-25/5 rounded">
-              <div className="buttonTogglerInner flex items-center p-0 w-[52px] h-[52px] rounded transition-all justify-center hover:bg-gray-100/50 hover:dark:bg-gray-25/5">
-                <IconSettings />
-              </div>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuItem disabled={!isConnected} onClick={handlePreferences}>
-                Settings
-              </DropdownMenuItem>
-              <DropdownMenuItem disabled={isConnected} onClick={() => openDialog(device)}>
-                Forget this device
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu> */}
         </div>
       </div>
     </div>

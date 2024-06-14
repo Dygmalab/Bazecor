@@ -144,7 +144,7 @@ const KeyMacro: React.FC<KeyMacroProps> = ({
         style={getItemStyle(snapshot.isDragging, provided.draggableProps.style)}
       >
         <div
-          className={`keyMacroWrapper relative flex flex-wrap flex-col p-0 m-0 after:absolute after:content-[' '] after:w-full after:h-[1px] after:top-[71px] after:left-0 after:bg-white/80 after:dark:bg-[#2B2C43] keyCode-${item.keyCode} ${isModifier ? "isModifier" : ""} ${
+          className={`keyMacroWrapper relative flex flex-wrap flex-col p-0 !m-0 after:absolute after:content-[' '] after:w-full after:h-[1px] after:top-[71px] after:left-0 after:bg-white/80 after:dark:bg-[#2B2C43] keyCode-${item.keyCode} ${isModifier ? "isModifier" : ""} ${
             item.action === 1 || item.action === 2 ? "isDelay" : ""
           }`}
         >
@@ -153,7 +153,7 @@ const KeyMacro: React.FC<KeyMacroProps> = ({
               <div className="dragable">
                 <IconDragAndDrop />
               </div>
-              <div className="moreOptions flex items-center gap-1 m-0">
+              <div className="moreOptions flex items-center gap-1 !m-0">
                 <Button
                   variant="link"
                   size="icon"
@@ -232,14 +232,15 @@ const KeyMacro: React.FC<KeyMacroProps> = ({
                         >
                           Add modifier
                         </Heading>
-                        <div className="keyModifiersButtons grid grid-cols-4 gap-2">
+                        <div className="keyModifiersButtons grid grid-cols-4 gap-1">
                           {modifiers.map((modifier, id) => (
                             <Button
                               variant="config"
                               size="sm"
                               className="w-full text-center"
                               onClick={() => addModifier(modifier.id, id)}
-                              key={`modifier-${modifier.id}`}
+                              // eslint-disable-next-line
+                              key={`addModifierMacro-${id}`}
                             >
                               {modifier.name === "LEFT SHIFT" ? `L. ${operationSystemIcons.shift}` : ""}
                               {modifier.name === "RIGHT SHIFT" ? `R. ${operationSystemIcons.shift}` : ""}

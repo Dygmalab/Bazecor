@@ -17,7 +17,6 @@
 
 import React, { useState } from "react";
 
-// React Bootstrap components
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@Renderer/components/atoms/Dialog";
 import { i18n } from "@Renderer/i18n";
 import { LayerType } from "@Renderer/types/neurons";

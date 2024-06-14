@@ -635,7 +635,7 @@ class MacroCreator extends Component {
           }
         >
           <div className="tabWrapper grid mt-[3px] grid-cols-[minmax(auto,_240px)_1fr]">
-            <div className="px-4 py-4 rounded-bl-xl bg-gray-50 dark:bg-[#2b2c43]">
+            <div className="px-5 py-4 rounded-bl-xl bg-gray-50 dark:bg-[#2b2c43]">
               <Heading headingLevel={3} renderAs="h3">
                 {i18n.general.actions}
               </Heading>
@@ -682,7 +682,7 @@ class MacroCreator extends Component {
                   <motion.div initial="hidden" animate="visible" variants={tabVariants}>
                     <Tabs defaultValue="tabLayers" orientation="vertical">
                       <div className="grid grid-cols-[minmax(125px,_170px)_auto]">
-                        <div className="pl-0 pr-4 py-3">
+                        <div className="pl-0 pr-5 py-3">
                           <TabsList className="flex flex-col gap-1">
                             <TabsTrigger value="tabLayers" variant="tab">
                               <IconLayers />

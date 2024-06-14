@@ -158,10 +158,12 @@ select:focus {
 .Defy.on {
   @apply bg-cardDefyOnLight dark:bg-cardDefyOnDark;
 }
-.Raise, .Raise2 {
+.Raise,
+.Raise2 {
   @apply bg-cardRaiseOffLight dark:bg-cardRaiseOffDark;
 }
-.Raise.on, .Raise2.on {
+.Raise.on,
+.Raise2.on {
   @apply bg-cardRaiseOnLight dark:bg-cardRaiseOnDark;
 }
 
@@ -695,4 +697,11 @@ select:focus {
     transform: scale(1);
     flex: 0 0 24px;
   }
+}
+
+.tab-item--active:after {
+  right: calc((1.25rem + 3px) * -1);
+}
+.tab-item--active:before {
+  right: calc((1.25rem) * -1);
 }

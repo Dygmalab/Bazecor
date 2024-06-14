@@ -366,7 +366,7 @@ export default class StandardView extends React.Component<StandardViewProps, Sta
                   isStandardView={isStandardView}
                   superkeyAction={actTab === "super" ? keyIndex : 5}
                 />
-                <TabsList className="flex flex-column gap-1 tabsWrapper">
+                <TabsList className="flex flex-col gap-1 tabsWrapper">
                   <TabsTrigger value="tabKeys" variant="tab">
                     <IconKeyboard /> Keys
                   </TabsTrigger>
@@ -495,7 +495,7 @@ export default class StandardView extends React.Component<StandardViewProps, Sta
                   )}
                 </div>
                 <div className="contentFooter">
-                  <div className="d-flex flex gap-4 justify-content-end">
+                  <div className="d-flex flex gap-4 justify-end">
                     <Button onClick={() => closeStandardView(undefined)} variant="outline" size="sm">
                       Discard changes
                     </Button>

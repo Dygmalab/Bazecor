@@ -231,7 +231,7 @@ function NavigationMenu(props: NavigationMenuProps) {
         <div className="brand-image d-lg-block">
           <img alt="Dygma - Bazecor" src={DygmaLogo} className="d-inline-block align-top" />
         </div>
-        <div className="navbar-nav">
+        <div className="navbar-nav flex justify-between">
           <div className="topMenu">
             <Link to="/device-manager" className="list-link">
               <NavigationButton
