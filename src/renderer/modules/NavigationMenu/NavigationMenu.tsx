@@ -24,7 +24,6 @@ import log from "electron-log/renderer";
 import { Octokit } from "@octokit/core";
 import SemVer from "semver";
 
-import { Nav, Navbar, NavbarBrand } from "react-bootstrap";
 import Styled from "styled-components";
 
 import DygmaLogo from "@Assets/logo.svg";
@@ -218,8 +217,8 @@ function NavigationMenu(props: NavigationMenuProps) {
   }
   return (
     <Styles>
-      <Navbar
-        className={`left-navbar sidebar ${
+      <div
+        className={`navbar navbar-expand navbar-light sticky-top left-navbar sidebar fixed top-0 flex flex-col p-[12px] justify-start items-center transition-all ${
           connected &&
           device &&
           state.currentDevice.device.info &&
@@ -228,12 +227,11 @@ function NavigationMenu(props: NavigationMenuProps) {
             ? "isWireless"
             : "wired"
         }`}
-        sticky="top"
       >
-        <NavbarBrand as={Link} onClick={linkHandler} to="/" className="brand-image d-lg-block">
-          <img alt="" src={DygmaLogo} className="d-inline-block align-top" />
-        </NavbarBrand>
-        <Nav>
+        <div className="brand-image d-lg-block">
+          <img alt="Dygma - Bazecor" src={DygmaLogo} className="d-inline-block align-top" />
+        </div>
+        <div className="navbar-nav">
           <div className="topMenu">
             <Link to="/device-manager" className="list-link">
               <NavigationButton
@@ -338,8 +336,8 @@ function NavigationMenu(props: NavigationMenuProps) {
               ""
             )}
           </div>
-        </Nav>
-      </Navbar>
+        </div>
+      </div>
       <AlertDialog open={showAlertModal}>
         <AlertDialogContent>
           <AlertDialogHeader>

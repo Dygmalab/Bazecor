@@ -43,6 +43,7 @@ const Styles = Styled.div`
     background-color: ${({ theme }) => theme.styles.standardView.modalBackground};
     z-index: 50;
     padding: 32px 32px 32px 32px;
+    overflow: overlay;
     .standardViewInner {
         // width: 100%;
         // height: 100%;
