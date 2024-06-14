@@ -136,24 +136,20 @@ const DualFunctionPicker = (props: DualFunctionPickerProps) => {
           {i18n.general.layer}
         </Heading>
         <div className="groupButtons flex gap-1 mt-2 max-w-[auto]">
-          {layerKey.map((item, index) =>
-            item.nameStd === undefined ? (
-              <></>
-            ) : (
-              <Button
-                variant="config"
-                size="sm"
-                // eslint-disable-next-line
-                key={`itemDualFunctionLayerSelectStd-${index}`}
-                onClick={() => onKeySelect(item.keynum + keyCode.base)}
-                selected={!!(keyCode.modified > 0 && item.keynum === keyCode.modified)}
-                disabled={disabled || activeTab === "super"}
-                className="w-[40px]"
-              >
-                {item.nameStd}
-              </Button>
-            ),
-          )}
+          {layerKey.map((item, index) => (
+            <Button
+              variant="config"
+              size="sm"
+              // eslint-disable-next-line
+              key={`itemDualFunctionLayerSelectStd-${index}`}
+              onClick={() => onKeySelect(item.keynum + keyCode.base)}
+              selected={!!(keyCode.modified > 0 && item.keynum === keyCode.modified)}
+              disabled={disabled || activeTab === "super"}
+              className="w-[40px]"
+            >
+              {item.nameStd ? item.nameStd : item.keynum}
+            </Button>
+          ))}
         </div>
       </div>
       <div className="modButtons">
@@ -161,24 +157,20 @@ const DualFunctionPicker = (props: DualFunctionPickerProps) => {
           {i18n.general.modifier}
         </Heading>
         <div className="groupButtons flex gap-1 mt-2">
-          {modKey.map((item, index) =>
-            item.nameStd === undefined ? (
-              <></>
-            ) : (
-              <Button
-                variant="config"
-                size="sm"
-                // eslint-disable-next-line
-                key={`itemDualFunctionModifierSelectStd-${index}`}
-                onClick={() => onKeySelect(item.keynum + keyCode.base)}
-                selected={!!(keyCode.modified > 0 && item.keynum === keyCode.modified)}
-                disabled={disabled || activeTab === "super"}
-                className="w-[60px]"
-              >
-                {item.nameStd}
-              </Button>
-            ),
-          )}
+          {modKey.map((item, index) => (
+            <Button
+              variant="config"
+              size="sm"
+              // eslint-disable-next-line
+              key={`itemDualFunctionModifierSelectStd-${index}`}
+              onClick={() => onKeySelect(item.keynum + keyCode.base)}
+              selected={!!(keyCode.modified > 0 && item.keynum === keyCode.modified)}
+              disabled={disabled || activeTab === "super"}
+              className="w-[60px]"
+            >
+              {item.nameStd ? item.nameStd : item.keynum}
+            </Button>
+          ))}
         </div>
       </div>
     </div>

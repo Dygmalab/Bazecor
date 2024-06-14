@@ -223,7 +223,7 @@ class MacroManager extends Component {
                 <Heading headingLevel={4} renderAs="h4" className="w-full text-center">
                   Your macro is currently empty.
                 </Heading>
-                <Heading headingLevel={5} renderAs="paragraph-sm" className="w-full text-center text-gray-300 dark:text-gray-500">
+                <Heading headingLevel={5} renderAs="paragraph-sm" className="w-full text-center text-gray-400 dark:text-gray-300">
                   Let&apos;s get started adding new action to your macro!
                 </Heading>
               </div>

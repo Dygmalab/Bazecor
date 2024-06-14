@@ -1604,9 +1604,6 @@ const LayoutEditor = (props: LayoutEditorProps) => {
   };
 
   const refreshLayoutSelectorPosition = (x: number, y: number) => {
-    console.log("isStandard: ", isStandardView);
-    console.log("viewMode: ", viewMode);
-    console.log("modeselect: ", modeselect);
     if (modeselect === "color") {
       setLayoutSelectorPosition({ x: 0, y: 0 });
     } else {
@@ -1746,7 +1743,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
 
   useEffect(() => {
     if (modeselect === "color") {
-      console.log("Is color - change position");
+      // console.log("Is color - change position");
     } else {
       setViewMode(isStandardView ? "standard" : "single");
     }
