@@ -21,6 +21,7 @@ import SelectMacroCustomDropdown from "./SelectMacroCustomDropdown";
 import SelectMouseCustomDropdown from "./SelectMouseCustomDropdown";
 import SelectShotModifierCustomDropdown from "./SelectShotModifierCustomDropdown";
 import SelectWirelessDropdown from "./SelectWirelessDropdown";
+import NeuronSelector from "./NeuronSelector";
 
 export {
   SelectGenericKeys,
@@ -30,4 +31,5 @@ export {
   SelectMouseCustomDropdown,
   SelectShotModifierCustomDropdown,
   SelectWirelessDropdown,
+  NeuronSelector,
 };

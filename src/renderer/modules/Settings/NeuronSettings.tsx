@@ -20,7 +20,7 @@ import { i18n } from "@Renderer/i18n";
 
 // Own Components
 import { Card, CardContent, CardHeader, CardTitle } from "@Renderer/components/atoms/Card";
-import { NeuronSelector } from "@Renderer/component/Select";
+import { NeuronSelector } from "@Renderer/components/molecules/CustomSelect";
 import NeuronData from "@Renderer/modules/NeuronData";
 import { Neuron } from "@Types/neurons";
 
