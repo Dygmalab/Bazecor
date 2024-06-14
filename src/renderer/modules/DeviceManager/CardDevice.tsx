@@ -38,6 +38,7 @@ const CardDevice = forwardRef<HTMLDivElement, CardDeviceProps>((props, ref) => {
       await handleConnection(device.index, "connect");
     } else {
       await handleConnection(-1, "disconnect");
+      log.debug(openDialog, IconDelete);
     }
   };
 
@@ -110,7 +111,7 @@ const CardDevice = forwardRef<HTMLDivElement, CardDeviceProps>((props, ref) => {
             // </button>
             <span className="device-status text-sm text-red-100">{i18n.general.offline}</span>
           )}
-          <div className="flex gap-2">
+          {/* <div className="flex gap-2">
             {!device.connected ? (
               <button
                 className="buttonTogglerInner flex items-center p-0 w-[52px] h-[52px] rounded transition-all justify-center hover:bg-gray-100/50 hover:dark:bg-gray-25/5"
@@ -121,7 +122,7 @@ const CardDevice = forwardRef<HTMLDivElement, CardDeviceProps>((props, ref) => {
                 {`${""}`}
               </button>
             ) : null}
-          </div>
+          </div> */}
         </div>
       </div>
     </div>
