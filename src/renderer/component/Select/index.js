@@ -14,11 +14,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import LayerSelector from "./LayerSelector";
-import Select from "./Select";
 import SelectKeyboardDropdown from "./SelectKeyboardDropdown";
 import NeuronSelector from "./NeuronSelector";
-import SelectMacro from "./SelectMacro";
-import SelectSuperKey from "./SelectSuperKey";
 
-export { LayerSelector, Select, SelectKeyboardDropdown, NeuronSelector, SelectMacro, SelectSuperKey };
+export { SelectKeyboardDropdown, NeuronSelector };
