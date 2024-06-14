@@ -77,7 +77,7 @@ const DeviceManager = (props: DeviceManagerProps) => {
 
   const handleOnDisconnect = async () => {
     setScanned(false);
-    const cID = state.currentDevice.device.chipId;
+    const cID = state.currentDevice.device.chipId.toLowerCase();
     await DeviceTools.disconnect(state.currentDevice);
     dispatch({ type: "disconnect", payload: [cID] });
     setDevicesList([]);

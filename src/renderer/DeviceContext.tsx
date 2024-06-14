@@ -139,6 +139,7 @@ const connect = async (device: Device | VirtualType) => {
   try {
     if (isVirtualType(device)) {
       const result = await new Device(device, "virtual");
+      result.device.chipId = result.serialNumber;
       log.verbose(`the device is ${device.type} type, and connected as: ${result}`);
       return result;
     }
