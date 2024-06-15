@@ -265,9 +265,10 @@ function App() {
         log.verbose("no action due to flashing active");
         return;
       }
+      let missingSerialN: string[];
       try {
         const existingIDs = state.deviceList.map(d => d.serialNumber.toLowerCase());
-        const missingSerialN = await DeviceTools.currentSerialN(existingIDs);
+        missingSerialN = await DeviceTools.currentSerialN(existingIDs);
         dispatch({ type: "disconnect", payload: missingSerialN });
       } catch (error) {
         log.error("error when trying to remove disconnected device from DeviceContext", error);
@@ -280,7 +281,7 @@ function App() {
         />,
         { autoClose: 3000, icon: "" },
       );
-      if (connected) {
+      if (connected && missingSerialN.length > 0 && missingSerialN[0] === state.currentDevice?.serialNumber.toLowerCase()) {
         onKeyboardDisconnect();
       }
     };
@@ -328,7 +329,7 @@ function App() {
       ipcRenderer.off("hid-disconnected", hidListener);
       ipcRenderer.off("hid-connected", notifyBtDevice);
     };
-  }, [connected, dispatch, navigate, onKeyboardDisconnect, state.deviceList]);
+  }, [connected, dispatch, navigate, onKeyboardDisconnect, state.currentDevice, state.deviceList]);
 
   const toggleFwUpdate = async (value: boolean) => {
     log.verbose("toggling fwUpdate to: ", value);

@@ -54,11 +54,28 @@ function deviceReducer(state: State, action: Action) {
     }
     case "disconnect": {
       let newDevices = [...state.deviceList];
-      newDevices = newDevices.filter(
-        device => device.type === "virtual" && !action.payload.includes(device.serialNumber.toLowerCase()),
-      );
-      log.warn("EXECUTED disconnect: ", action.payload, newDevices);
-      return { ...state, deviceList: newDevices, currentDevice: undefined, selected: -1 };
+      let newSelected: number = state.selected;
+      newDevices = newDevices.filter((device, index) => {
+        const isVirtual = device.type === "virtual";
+        const isNotPresent = action.payload.includes(device.serialNumber.toLowerCase());
+
+        if (index < state.selected && newSelected > -1) newSelected -= 1;
+        if (isNotPresent && state.selected === index) {
+          log.info("entered with", state.selected, index, isNotPresent, device.serialNumber.toLowerCase());
+          newSelected = -1;
+        }
+
+        return !isVirtual && !isNotPresent;
+      });
+      // newSelected = state.selected >= newDevices.length ? -1 : state.selected;
+      log.warn("EXECUTED disconnect: ", state.deviceList, state.selected, action.payload, newDevices);
+      log.warn("new disconnected device: ", newSelected);
+      return {
+        ...state,
+        deviceList: newDevices,
+        currentDevice: newSelected === -1 ? undefined : newDevices[newSelected],
+        selected: newSelected,
+      };
     }
     default: {
       throw new Error(`Unhandled action type: ${action}`);
@@ -152,11 +169,18 @@ const connect = async (device: Device | VirtualType) => {
         log.verbose(`the device is ${device.type} type, and connected as: ${result}`);
         return device;
       }
-      log.verbose(device.port);
-      const result = await (device.port as HID).connect();
-      await device.addHID();
-      log.verbose(`the device is ${device.type} type, and connected as: ${result}`);
-      return device;
+      if (device.type === "HID") {
+        log.verbose(device.port);
+        const result = await (device.port as HID).connect();
+        await device.addHID();
+        log.verbose(`the device is ${device.type} type, and connected as: ${result}`);
+        return device;
+      }
+      if (device.type === "virtual") {
+        const result = device;
+        result.isClosed = false;
+        return result;
+      }
     }
   } catch (error) {
     log.error(error);
