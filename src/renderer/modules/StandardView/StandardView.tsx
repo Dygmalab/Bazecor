@@ -384,7 +384,7 @@ export default class StandardView extends React.Component<StandardViewProps, Sta
                       <TabsTrigger value="tabSuperKeys" variant="tab">
                         <>
                           <IconThunder /> {i18n.editor.standardView.superkeys.title}{" "}
-                          <div className="badge badge-primary leading-none ml-1 font-bold text-[9px]">BETA</div>
+                          <div className="badge badge-primary leading-none ml-1 font-bold text-[9px] text-white">BETA</div>
                         </>
                       </TabsTrigger>
                       <TabsTrigger value="tabOneShot" variant="tab">

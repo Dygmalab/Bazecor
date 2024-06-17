@@ -217,7 +217,7 @@ class SuperkeysTab extends Component<SuperkeysTabProps> {
           <Heading headingLevel={4} renderAs="h4">
             {i18n.editor.standardView.superkeys.label}
           </Heading>
-          <div className="superKeyGroup">
+          <div className="superKeyGroup mt-1">
             <div className="superKeySelect">
               <Select
                 onValueChange={value => {

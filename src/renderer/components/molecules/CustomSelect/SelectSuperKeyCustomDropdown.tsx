@@ -72,7 +72,7 @@ const SelectSuperKeyCustomDropdown: FC<SelectSuperKeyCustomDropdownProps> = ({
       <SelectTrigger
         variant="comboButton"
         size="sm"
-        className={`w-full pr-[4px] relative before:content-['BETA'] before:bg-primary/100 before:rounded-[12px] before:text-[7px] before:px-[4px] before:py-[3px] before:ml-[-8px] before:leading-none before:order-3 before:absolute before:left-[78px] [&>svg]:order-3 ${
+        className={`w-full pr-[4px] relative before:content-['BETA'] before:bg-primary/100 before:rounded-[12px] before:text-[7px] before:px-[4px] before:py-[3px] before:ml-[-8px] before:leading-none before:order-3 before:absolute before:left-[78px] before:text-white [&>svg]:order-3 ${
           superkeys[superk.indexOf(KC)] !== undefined
             ? "!bg-configButtonActive dark:!bg-configButtonDarkActive bg-purple-200 dark:!bg-purple-300 !border-purple-200 dark:border-none text-white !shadow-buttonConfigLightActive !text-white [&_svg]:!text-white relative after:absolute after:top-[-4px] after:right-[-2px] after:w-[8px] after:h-[8px] after:rounded-full after:bg-primary/100"
             : ""

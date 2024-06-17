@@ -22,7 +22,9 @@ const ToggleGroupKeyboardViewMode = ({ value, onValueChange }: ToggleGroupLayout
             </ToggleGroupItem>
           </div>
         </TooltipTrigger>
-        <TooltipContent className="max-w-xs sm:flex md:flex lg:flex xl:hidden">{i18n.editor.keysEditor}</TooltipContent>
+        <TooltipContent className="max-w-xs sm:flex md:flex lg:flex xl:hidden" size="sm">
+          {i18n.editor.keysEditor}
+        </TooltipContent>
       </Tooltip>
     </TooltipProvider>
     <TooltipProvider delayDuration={200}>
@@ -34,7 +36,9 @@ const ToggleGroupKeyboardViewMode = ({ value, onValueChange }: ToggleGroupLayout
             </ToggleGroupItem>
           </div>
         </TooltipTrigger>
-        <TooltipContent className="max-w-xs sm:flex md:flex lg:flex xl:hidden">{i18n.editor.color.colorEditor}</TooltipContent>
+        <TooltipContent className="max-w-xs sm:flex md:flex lg:flex xl:hidden" size="sm">
+          {i18n.editor.color.colorEditor}
+        </TooltipContent>
       </Tooltip>
     </TooltipProvider>
   </ToggleGroup>
