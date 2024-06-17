@@ -416,10 +416,12 @@ export default class StandardView extends React.Component<StandardViewProps, Sta
                         code={code}
                         onKeyPress={onKeySelect}
                         isStandardView={isStandardView}
-                        superkeyAction={`${actTab === "super" ? keyIndex : 5}`}
+                        superkeyAction={actTab === "super" ? keyIndex : 5}
                         actTab={actTab}
                         selectedlanguage={selectedlanguage}
                         kbtype={kbtype}
+                        action={undefined}
+                        actions={undefined}
                       />
                     </motion.div>
                   </TabsContent>
