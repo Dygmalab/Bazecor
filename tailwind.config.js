@@ -127,17 +127,17 @@ module.exports = {
         gradientDanger: "linear-gradient(180deg, #FE007C 0%, #FE007C 0.01%, #FF6B6B 100%)",
         gradientSuccess: "linear-gradient(180deg, #00CEC5 0%, #00CEC9 0.01%, #55EFC4 100%)",
         gradientWarningLight:
-          "linear-gradient(90deg, rgba(255, 107, 107, 0.05) -10.33%, rgba(255, 159, 67, 0) 41.03%), linear-gradient(rgb(240, 242, 244), rgb(240, 242, 244))",
+          "linear-gradient(90deg, rgba(255, 107, 107, 0.25) -20%, rgba(255, 159, 67, 0.05) 40%), linear-gradient(rgb(240, 242, 244), rgb(240, 242, 244))",
         gradientWarningDark:
-          "linear-gradient(90deg, rgba(255, 107, 107, 0.25) -10.33%, rgba(255, 159, 67, 0) 41.03%), linear-gradient(rgb(37, 39, 59), rgb(37, 39, 59))",
+          "linear-gradient(90deg, rgba(255, 107, 107, 0.25) -10%, rgba(255, 159, 67, 0) 40%), linear-gradient(rgb(37, 39, 59), rgb(37, 39, 59))",
         gradientErrorLight:
-          "linear-gradient(90deg, rgba(255, 4, 90, 0.05) -10.33%, rgba(255, 4, 67, 0.9) 41.03%), linear-gradient(rgb(240, 242, 244), rgb(240, 242, 244))",
+          "linear-gradient(90deg, rgba(255, 4, 90, 0.25) -20%, rgba(255, 4, 67, 0.05) 40%), linear-gradient(rgb(240, 242, 244), rgb(240, 242, 244))",
         gradientErrorDark:
-          "linear-gradient(90deg, rgba(255, 4, 90, 0.25) -10.33%, rgba(255, 4, 90, 0) 41.03%), linear-gradient(rgb(37, 39, 59), rgb(37, 39, 59))",
+          "linear-gradient(90deg, rgba(255, 4, 90, 0.25) -10%, rgba(255, 4, 90, 0) 40%), linear-gradient(rgb(37, 39, 59), rgb(37, 39, 59))",
         gradientSuccessLight:
-          "linear-gradient(90deg, rgba(0, 206, 201, 0.05) -10.33%, rgba(0, 206, 201, 90) 41.03%), linear-gradient(rgb(240, 242, 244), rgb(240, 242, 244))",
+          "linear-gradient(90deg, rgba(0, 206, 201, 0.25) -20%, rgba(0, 206, 201, 0.05) 40%), linear-gradient(rgb(240, 242, 244), rgb(240, 242, 244))",
         gradientSuccessDark:
-          "linear-gradient(90deg, rgba(0, 206, 201, 0.25) -10.33%, rgba(0, 206, 201, 0) 41.03%), linear-gradient(rgb(37, 39, 59), rgb(37, 39, 59))",
+          "linear-gradient(90deg, rgba(0, 206, 201, 0.25) -10%, rgba(0, 206, 201, 0) 40%), linear-gradient(rgb(37, 39, 59), rgb(37, 39, 59))",
       },
       backgroundPosition: {
         position: "left -8rem top -8rem",
