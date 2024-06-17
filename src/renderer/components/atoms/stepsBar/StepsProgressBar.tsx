@@ -98,7 +98,7 @@ const StepsProgressBar = ({ steps, stepActive }: StepsProgressBarProps) => {
                   }}
                 >
                   <div
-                    className={`stepBullet absolute left-0 top-[-4px] z-[2] w-[13px] h-[13px] origin-center rounded-full border-[3px] border-solid  ${index < stepActive ? "completed" : ""}`}
+                    className={`stepBullet absolute left-0 top-[-4px] w-[13px] h-[13px] origin-center rounded-full border-[3px] border-solid z-20 ${index < stepActive ? "completed" : ""}`}
                   />
                 </div>
               ),
@@ -106,7 +106,7 @@ const StepsProgressBar = ({ steps, stepActive }: StepsProgressBarProps) => {
           </div>
           <div className={`progressBar w-full h-[6px] mb-[-6px] rounded-2sm relative progressBar-set${stepActive}`}>
             <div
-              className="progressBarActive absolute left-[-32px] top-0 h-[6px] transition-all duration-1000 ease-in-out rounded-2sm"
+              className="progressBarActive absolute left-[-32px] top-0 h-[6px] transition-all duration-1000 ease-in-out rounded-2sm z-10"
               style={refreshPositionStyle}
             />
           </div>
