@@ -220,11 +220,10 @@ function App() {
     log.verbose("toggled flashing to", !flashing);
 
     // if Flashing is going to be set to false from true
-    if (flashing) {
-      setConnected(false);
-      device.current = null;
-      setPages({});
-      navigate("/device-manager");
+    if (!flashing === false) {
+      const currentID = state.currentDevice.serialNumber.toLowerCase();
+      dispatch({ type: "disconnect", payload: [currentID] });
+      onKeyboardDisconnect();
     }
   };
 

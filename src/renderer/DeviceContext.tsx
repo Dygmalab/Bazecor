@@ -22,6 +22,8 @@ export type Action =
   | { type: "addDevicesList"; payload: Device[] }
   | { type: "disconnect"; payload: string[] };
 
+export type ActionType = "changeCurrent" | "addDevice" | "addDevicesList" | "disconnect";
+
 export type Dispatch = (action: Action) => void;
 
 const DeviceContext = createContext<ContextType>(undefined);
@@ -145,6 +147,12 @@ const enumerateDevice = async (bootloader: boolean, device: USBDevice, existingI
   return newDevice;
 };
 
+const listNonConnected = async (bootloader: boolean, existingIDs: string[]) => {
+  const devs = await serial.enumerate(bootloader, undefined, existingIDs);
+  // log.info("Data from enum dev:", dev, bootloader, existingIDs);
+  return devs;
+};
+
 const currentSerialN = async (existingIDs: string[]) => {
   const result: string[] = [];
   const SN = (await serial.enumerate(false)).map(port => port.serialNumber.toLowerCase());
@@ -206,6 +214,7 @@ const DeviceTools = {
   list,
   enumerateSerial,
   enumerateDevice,
+  listNonConnected,
   currentSerialN,
   connect,
   disconnect,

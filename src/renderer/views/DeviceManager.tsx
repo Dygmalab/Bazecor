@@ -99,11 +99,17 @@ const DeviceManager = (props: DeviceManagerProps) => {
   const findKeyboards = useCallback(async (): Promise<DeviceListType[]> => {
     setLoading(true);
     if (connected || state.deviceList.length > 0) {
-      const newDev: DeviceListType[] = [];
-      state.deviceList.forEach((item, index) => {
+      const toShowDevs: DeviceListType[] = [];
+      let newDeviceList = state.deviceList;
+      const existingIDs = state.deviceList.map(d => d.serialNumber.toLowerCase());
+      const newPorts = await DeviceTools.listNonConnected(false, existingIDs);
+      const newDevs = newPorts.map(dev => new Device(dev, "serial"));
+      newDeviceList = newDeviceList.concat(newDevs);
+      dispatch({ type: "addDevicesList", payload: newDeviceList });
+      newDeviceList.forEach((item, index) => {
         const neurons = store.get("neurons") as Neuron[];
         const neuron = neurons.find(n => n.id.toLowerCase() === item.device?.chipId?.toLowerCase());
-        newDev.push({
+        toShowDevs.push({
           name: neuron?.name ? neuron.name : "",
           available: true,
           connected: state.selected === index,
@@ -111,14 +117,14 @@ const DeviceManager = (props: DeviceManagerProps) => {
           file: item.type === "virtual",
           device: item,
           serialNumber: item.device.chipId,
-          index: newDev.length,
+          index: toShowDevs.length,
         });
       });
       setLoading(false);
-      setDevicesList(newDev);
-      if (newDev.length > 0) setScanned(true);
-      log.info("list of already connected devices: ", newDev);
-      return newDev;
+      setDevicesList(toShowDevs);
+      if (toShowDevs.length > 0) setScanned(true);
+      log.info("list of already connected devices: ", toShowDevs);
+      return toShowDevs;
     }
     try {
       const list = (await DeviceTools.list()) as Device[];
@@ -172,31 +178,6 @@ const DeviceManager = (props: DeviceManagerProps) => {
         break;
     }
   };
-
-  // const getdevicesList: () => Array<DeviceListType> = useCallback(() => {
-  //   const neurons = store.get("neurons") as Neuron[];
-  //   const result = devicesList?.map((dev, index) => {
-  //     // log.info("checking device :", device);
-  //     const devName = dev.device.type === "hid" ? "Bluetooth" : dev.device.type;
-  //     if (dev.device.device.bootloader)
-  //       return {
-  //         index,
-  //         displayName: dev?.device?.device?.info?.displayName as string,
-  //         userName: "",
-  //         path: (dev.path || devName) as string,
-  //       };
-  //     const preparedSN = dev.device.productId === "2201" ? dev.serialNumber.slice(0, 32) : dev.serialNumber;
-  //     const neuron = neurons.find(n => n.id.toLowerCase() === preparedSN.toLowerCase());
-
-  //     return {
-  //       index,
-  //       displayName: dev?.device?.device?.info?.displayName as string,
-  //       userName: neuron ? neuron.name : "",
-  //       path: (dev.path || devName) as string,
-  //     };
-  //   });
-  //   return result;
-  // }, [devicesList]);
 
   const addVirtualDevice = () => {
     log.info("Add virtual device!");

@@ -1030,17 +1030,21 @@ const LayoutEditor = (props: LayoutEditorProps) => {
       return;
     }
 
-    const kmap = keymap.custom.slice();
-    const l = keymap.onlyCustom ? layer : layer - keymap.default.length;
-    kmap[l][keyIndex] = keymapDB.parse(keyCode);
-
-    setModified(true);
-    setKeymap({
-      default: keymap.default,
-      onlyCustom: keymap.onlyCustom,
-      custom: kmap,
-    });
-    startContext();
+    try {
+      const kmap = keymap.custom.slice();
+      const l = keymap.onlyCustom ? layer : layer - keymap.default.length;
+      log.info(kmap, l, keyIndex, keyCode, keymapDB.parse(keyCode));
+      kmap[l][keyIndex] = keymapDB.parse(keyCode);
+      setModified(true);
+      setKeymap({
+        default: keymap.default,
+        onlyCustom: keymap.onlyCustom,
+        custom: kmap,
+      });
+      startContext();
+    } catch (error) {
+      log.error("Error when assigning key to keymap", error);
+    }
   };
 
   /**

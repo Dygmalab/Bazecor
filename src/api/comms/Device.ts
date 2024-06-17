@@ -38,7 +38,7 @@ class Device implements DeviceClass {
   fileData: VirtualType;
   currentDevice: Device;
 
-  constructor(parameters: Device | HID | VirtualType | ExtendedPort, type: string) {
+  constructor(parameters: Device | HID | VirtualType | ExtendedPort, type: "serial" | "hid" | "virtual") {
     // constructor for Device
     this.type = type;
     this.timeout = 5000;

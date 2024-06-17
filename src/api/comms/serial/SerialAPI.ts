@@ -119,13 +119,37 @@ const enumerate = async (bootloader: boolean, searchDevice?: USBDevice, existing
   const foundDevices = [];
   const hw = bootloader ? Hardware.bootloader : Hardware.serial;
 
-  if (searchDevice !== undefined) {
+  if (searchDevice !== undefined && existingIDs !== undefined) {
     log.info("Enumerating unique device:", searchDevice, serialDevices);
 
     for (const device of serialDevices) {
       const vID = parseInt(`0x${device.vendorId}`, 16);
       const pID = parseInt(`0x${device.productId}`, 16);
       if (vID === searchDevice.vendorId && pID === searchDevice.productId && !existingIDs.includes(device.serialNumber)) {
+        const supported = await checkProperties(device.path);
+        const Hdevice = Hardware.serial.find(
+          h =>
+            h.usb.productId === pID &&
+            h.usb.vendorId === vID &&
+            (h.info.keyboardType === supported.layout || h.info.product === "Defy"),
+        );
+        const newPort: ExtendedPort = { ...device, device: { ...Hdevice } };
+        log.info("Newly created port: ", newPort, Hdevice, supported);
+        newPort.device.wireless = newPort.device.info.product === "Defy" ? newPort.device.wireless : supported.wireless;
+        newPort.device.chipId = supported.chipId;
+        foundDevices.push(newPort);
+      }
+    }
+    return foundDevices;
+  }
+
+  if (searchDevice === undefined && existingIDs !== undefined) {
+    log.info("Enumerating non listed devices:", existingIDs, serialDevices);
+
+    for (const device of serialDevices) {
+      const vID = parseInt(`0x${device.vendorId}`, 16);
+      const pID = parseInt(`0x${device.productId}`, 16);
+      if ([0x35ef, 0x1209].includes(vID) && !existingIDs.includes(device.serialNumber.toLowerCase())) {
         const supported = await checkProperties(device.path);
         const Hdevice = Hardware.serial.find(
           h =>
