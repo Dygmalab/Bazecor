@@ -702,7 +702,7 @@ class MacroCreator extends Component {
                             </TabsTrigger>
                           </TabsList>
                         </div>
-                        <div className="px-4 py-2 rounded-md bg-gray-50/40 dark:bg-gray-900/20 mt-[-24px]">
+                        <div className="px-6 py-3 rounded-md bg-gray-50/40 dark:bg-gray-900/20 mt-[-24px]">
                           <TabsContent value="tabLayers">
                             <motion.div initial="hidden" animate="visible" variants={tabVariants}>
                               <LayersTab onLayerPress={this.onLayerPress} />
@@ -724,7 +724,7 @@ class MacroCreator extends Component {
                           </TabsContent>
                           <TabsContent value="tabMouse">
                             <motion.div initial="hidden" animate="visible" variants={tabVariants}>
-                              <MouseTab onAddSpecial={this.onAddSpecial} />
+                              <MouseTab onAddSpecial={this.onAddSpecial} actTab="macro" />
                             </motion.div>
                           </TabsContent>
                         </div>

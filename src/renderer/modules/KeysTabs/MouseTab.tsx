@@ -137,11 +137,11 @@ h4 {
 interface MouseTabProps {
   isStandardView: boolean;
   keyCode: any;
-  actTab: string;
+  actTab?: string;
   onAddSpecial: (event: any, value: number) => void;
 }
 
-function MouseTab({ isStandardView, keyCode, onAddSpecial, actTab }: MouseTabProps) {
+function MouseTab({ isStandardView, keyCode, onAddSpecial, actTab = "standard" }: MouseTabProps) {
   // const [isHovering, setIsHovering] = React.useState(false);
 
   // function to handle button click event and to send data to props.onAddSpecial
@@ -169,7 +169,7 @@ function MouseTab({ isStandardView, keyCode, onAddSpecial, actTab }: MouseTabPro
           </>
         ) : null}
         <div className="mouseWrapper">
-          <div className="buttonsRow">
+          <div className={`buttonsRow ${actTab === "macro" ? "flex flex-col w-full gap-4" : "w-auto"}`}>
             <div className="clickButtons">
               <Heading headingLevel={4} renderAs="h4">
                 {i18n.mouse.mouseClickTitle}
@@ -219,7 +219,7 @@ function MouseTab({ isStandardView, keyCode, onAddSpecial, actTab }: MouseTabPro
               </div>
             </div>
             {actTab !== "super" ? (
-              <>
+              <div className="movementsAndWheels flex gap-4">
                 <div className="movementButtons">
                   <Heading headingLevel={4} renderAs="h4">
                     {i18n.mouse.movementTitle}
@@ -296,7 +296,7 @@ function MouseTab({ isStandardView, keyCode, onAddSpecial, actTab }: MouseTabPro
                     </div>
                   </div>
                 </div>
-              </>
+              </div>
             ) : (
               ""
             )}
