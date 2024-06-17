@@ -19,6 +19,7 @@ type ContextType =
 export type Action =
   | { type: "changeCurrent"; payload: { selected: number; device: Device } }
   | { type: "addDevice"; payload: Device }
+  | { type: "addDevices"; payload: Device[] }
   | { type: "addDevicesList"; payload: Device[] }
   | { type: "disconnect"; payload: string[] };
 
@@ -47,6 +48,12 @@ function deviceReducer(state: State, action: Action) {
       const newDevices = [...state.deviceList];
       newDevices.push(action.payload);
       log.warn("EXECUTED addDevice: ", action.payload, newDevices);
+      return { ...state, deviceList: newDevices, currentDevice: state.currentDevice, selected: state.selected };
+    }
+    case "addDevices": {
+      let newDevices = [...state.deviceList];
+      newDevices = newDevices.concat(action.payload);
+      log.warn("EXECUTED addDevices: ", action.payload, newDevices);
       return { ...state, deviceList: newDevices, currentDevice: state.currentDevice, selected: state.selected };
     }
     case "addDevicesList": {
@@ -143,7 +150,21 @@ const enumerateSerial = async (bootloader: boolean) => {
 const enumerateDevice = async (bootloader: boolean, device: USBDevice, existingIDs: string[]) => {
   const dev = await serial.enumerate(bootloader, device, existingIDs);
   // log.info("Data from enum dev:", dev, bootloader, existingIDs);
-  const newDevice = new Device(dev[0], "serial");
+  const newDevice = dev.map(d => new Device(d, "serial"));
+
+  // const hidDev = await HID.getDevices();
+  // for (const [index, d] of hidDev.entries()) {
+  //   if (!existingIDs.includes(d.productName)) {
+  //     log.verbose("Checking: ", d, existingIDs);
+  //     const hid = new HID();
+  //     const connected = await hid.isDeviceConnected(index);
+  //     const supported = await hid.isDeviceSupported(index);
+  //     log.info("Checking connected & supported for HID: ", connected, supported);
+  //     newDevice.push(new Device(hid, "hid"));
+  //   }
+  // }
+
+  // log.info("Resp enum Dev HID!!", hidDev, newDevice);
   return newDevice;
 };
 
@@ -175,6 +196,16 @@ const currentSerialN = async (existingIDs: string[]) => {
   existingIDs.forEach(id => {
     if (!SN.includes(id.toLowerCase())) result.push(id.toLowerCase());
   });
+  return result;
+};
+
+const currentHIDN = async (existingPNs: string[]) => {
+  const result: string[] = [];
+  const SN = (await HID.getDevices()).map(hid => hid.productName);
+  existingPNs.forEach(id => {
+    if (!SN.includes(id)) result.push(id);
+  });
+  log.info("Parsing HID's: ", existingPNs, SN, result);
   return result;
 };
 
@@ -232,6 +263,7 @@ const DeviceTools = {
   enumerateDevice,
   listNonConnected,
   currentSerialN,
+  currentHIDN,
   connect,
   disconnect,
 };

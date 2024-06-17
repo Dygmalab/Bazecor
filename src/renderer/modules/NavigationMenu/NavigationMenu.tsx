@@ -163,9 +163,9 @@ function NavigationMenu(props: NavigationMenuProps) {
 
   const checkKeyboardMetadata = useCallback(async () => {
     setIsUpdated(true);
-    setDevice(state.currentDevice.device);
-    if (state.currentDevice.device === undefined || state.currentDevice.device.bootloader) return;
-    let parts = await state.currentDevice.command("version");
+    setDevice(state.currentDevice?.device);
+    if (state.currentDevice?.device === undefined || state.currentDevice?.device.bootloader) return;
+    let parts = await state.currentDevice?.command("version");
     parts = parts.split(" ");
     const getVersions: Version = {
       bazecor: parts[0],
@@ -178,7 +178,7 @@ function NavigationMenu(props: NavigationMenuProps) {
     // Getting GitHub Data
     let fwList = [];
     try {
-      fwList = await getGitHubFW(state.currentDevice.device.info.product);
+      fwList = await getGitHubFW(state.currentDevice?.device.info.product);
     } catch (error) {
       log.info("Error when fetching GitHub data");
       log.warn(error);
@@ -186,11 +186,11 @@ function NavigationMenu(props: NavigationMenuProps) {
     }
     // Comparing online Data to FW version
     const semVerCheck = fwList.length > 0 ? SemVer.compare(fwList[0].version, cleanedVersion) : 0;
-    Beta = Beta || state.currentDevice.device.info.product !== "Raise";
+    Beta = Beta || state.currentDevice?.device.info.product !== "Raise";
     setVersions(getVersions);
     setIsUpdated(semVerCheck !== 1);
     setIsBeta(Beta);
-    setVirtual(state.currentDevice.file);
+    setVirtual(state.currentDevice?.file);
     setCheckedVer(true);
   }, [getGitHubFW, state.currentDevice]);
 
@@ -221,8 +221,8 @@ function NavigationMenu(props: NavigationMenuProps) {
         className={`navbar navbar-expand navbar-light sticky-top left-navbar sidebar fixed top-0 flex flex-col p-[12px] justify-start items-center transition-all ${
           connected &&
           device &&
-          state.currentDevice.device.info &&
-          (state.currentDevice.device.info.keyboardType === "wireless" || state.currentDevice.device.wireless) &&
+          state.currentDevice?.device.info &&
+          (state.currentDevice?.device.info.keyboardType === "wireless" || state.currentDevice?.device.wireless) &&
           versions !== null
             ? "isWireless"
             : "wired"
@@ -282,7 +282,7 @@ function NavigationMenu(props: NavigationMenuProps) {
                   to="/firmware-update"
                   onClick={linkHandler}
                   className={`list-link ${
-                    fwUpdate || virtual || state.currentDevice.type === "hid" || loading ? "disabled" : ""
+                    fwUpdate || virtual || state.currentDevice?.type === "hid" || loading ? "disabled" : ""
                   }`}
                 >
                   <NavigationButton
@@ -290,7 +290,7 @@ function NavigationMenu(props: NavigationMenuProps) {
                     showNotif={!isUpdated}
                     buttonText={i18n.app.menu.firmwareUpdate}
                     icoSVG={<IconMemory />}
-                    disabled={fwUpdate || virtual || state.currentDevice.type === "hid" || loading}
+                    disabled={fwUpdate || virtual || state.currentDevice?.type === "hid" || loading}
                   />
                 </Link>
               </>
@@ -317,9 +317,9 @@ function NavigationMenu(props: NavigationMenuProps) {
             </Link>
             {connected &&
             state.currentDevice &&
-            state.currentDevice.device.info &&
-            state.currentDevice.device.info.product !== "Raise" &&
-            (state.currentDevice.device.info.keyboardType === "wireless" || state.currentDevice.device.wireless) &&
+            state.currentDevice?.device.info &&
+            state.currentDevice?.device.info.product !== "Raise" &&
+            (state.currentDevice?.device.info.keyboardType === "wireless" || state.currentDevice?.device.wireless) &&
             versions !== null ? (
               <>
                 {/* <Link to="/wireless" onClick={linkHandler} className={`list-link ${fwUpdate || loading ? "disabled" : ""}`}>

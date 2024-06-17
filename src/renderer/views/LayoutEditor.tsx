@@ -693,11 +693,11 @@ const LayoutEditor = (props: LayoutEditorProps) => {
       return R;
     };
 
-    const paletteData = (await currentDevice.command("palette")) as string;
-    const colorMapData = (await currentDevice.command("colormap.map")) as string;
+    const paletteData = (await currentDevice?.command("palette")) as string;
+    const colorMapData = (await currentDevice?.command("colormap.map")) as string;
 
     const plette =
-      currentDevice.device.RGBWMode !== true
+      currentDevice?.device.RGBWMode !== true
         ? chunk(
             paletteData
               .split(" ")
@@ -744,7 +744,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
 
   const updatePalette = async (device: DeviceClass, plette: PaletteType[]) => {
     let args: string[];
-    if (state.currentDevice.device.RGBWMode !== true) {
+    if (state.currentDevice?.device.RGBWMode !== true) {
       args = flatten(plette.map(color => [color.r, color.g, color.b])).map(v => v.toString());
     } else {
       const paletteAux = plette.map(color => {
@@ -787,7 +787,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
       setScanningStep(2);
       if (!neurons.some(n => n.id === CID) && neurons.length === 0) {
         neuron.id = CID;
-        neuron.name = currentDevice.device.info.product;
+        neuron.name = currentDevice?.device.info.product;
         neuron.layers = store.get("layerNames") !== undefined ? (store.get("layerNames") as Array<LayerType>) : defaultLayerNames;
         neuron.macros = store.get("macros") !== undefined ? (store.get("macros") as Array<MacrosType>) : [];
         neuron.superkeys = store.get("superkeys") !== undefined ? (store.get("superkeys") as Array<SuperkeysType>) : [];
@@ -800,7 +800,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
       const existingRaise = neurons.some(n => n.id.length === 32);
       if (!neurons.some(n => n.id === CID) && neurons.length > 0) {
         neuron.id = CID;
-        neuron.name = currentDevice.device.info.product;
+        neuron.name = currentDevice?.device.info.product;
         neuron.layers = defaultLayerNames;
         neuron.macros = [];
         neuron.superkeys = [];
@@ -813,8 +813,8 @@ const LayoutEditor = (props: LayoutEditorProps) => {
         log.info("Additional neuron", neuron);
         let result;
         if (
-          (currentDevice.device.info.product === "Defy" && !existingDefy) ||
-          (currentDevice.device.info.product === "Raise" && !existingRaise)
+          (currentDevice?.device.info.product === "Defy" && !existingDefy) ||
+          (currentDevice?.device.info.product === "Raise" && !existingRaise)
         ) {
           result = false;
         } else {
@@ -863,7 +863,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
       setLoading(true);
       try {
         // Acquire ChipID from device
-        let chipID = await currentDevice.command("hardware.chip_id");
+        let chipID = await currentDevice?.command("hardware.chip_id");
         setScanningStep(1);
         chipID = chipID.replace(/\s/g, "");
         const neuronData = await AnalizeChipID(chipID);
@@ -884,23 +884,23 @@ const LayoutEditor = (props: LayoutEditorProps) => {
           }
         }
 
-        const device = currentDevice.device.info.product;
-        const wirelessChecker = currentDevice.device.info.keyboardType === "wireless" || currentDevice.device.wireless;
+        const device = currentDevice?.device.info.product;
+        const wirelessChecker = currentDevice?.device.info.keyboardType === "wireless" || currentDevice?.device.wireless;
         if (lang) {
-          const deviceLang = { ...currentDevice.device, language: true };
+          const deviceLang = { ...currentDevice?.device, language: true };
           currentDevice.commands = {};
           currentDevice.commands.keymap = new Keymap(deviceLang);
-          setkeymapDB((currentDevice.commands.keymap as Keymap).db);
+          setkeymapDB((currentDevice?.commands.keymap as Keymap).db);
         }
 
-        // let defLayer = await currentDevice.command("settings.defaultLayer");
+        // let defLayer = await currentDevice?.command("settings.defaultLayer");
         // defLayer = parseInt(defLayer, 10) || 0;
 
         setScanningStep(4);
-        const defaults = (await currentDevice.command("keymap.default")) as string;
+        const defaults = (await currentDevice?.command("keymap.default")) as string;
         setScanningStep(5);
-        const custom = (await currentDevice.command("keymap.custom")) as string;
-        const onlycstm = (await currentDevice.command("keymap.onlyCustom")) as string;
+        const custom = (await currentDevice?.command("keymap.custom")) as string;
+        const onlycstm = (await currentDevice?.command("keymap.onlyCustom")) as string;
         const onlyCustom = Boolean(parseInt(onlycstm, 10));
         const KeyMap: KeymapType = {
           custom: undefined,
@@ -957,7 +957,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
           }
           KeyMap.onlyCustom = true;
           const args = flatten(KeyMap.custom).map(k => keymapDB.serialize(k).toString());
-          await currentDevice.command("keymap.custom", ...args);
+          await currentDevice?.command("keymap.custom", ...args);
         }
 
         // Loading Colors
@@ -967,7 +967,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
 
         // loading Macros
         setScanningStep(7);
-        let raw: string | number[] = (await currentDevice.command("macros.map")) as string;
+        let raw: string | number[] = (await currentDevice?.command("macros.map")) as string;
         if (raw.search(" 0 0") !== -1) {
           raw = raw.split(" 0 0")[0].split(" ").map(Number);
         } else {
@@ -977,7 +977,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
 
         // Loading Superkeys
         setScanningStep(8);
-        const raw2: string = (await currentDevice.command("superkeys.map")) as string;
+        const raw2: string = (await currentDevice?.command("superkeys.map")) as string;
         const parsedSuper = superTranslator(raw2, neuronData.storedSuper);
 
         setScanningStep(9);
@@ -995,7 +995,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
         }
 
         setScanningStep(10);
-        setLedIndexStart(currentDevice.device.info.product === "Raise" ? 80 : 80);
+        setLedIndexStart(currentDevice?.device.info.product === "Raise" ? 80 : 80);
         setNeuronID(chipID);
         setKeymap(KeyMap);
         setShowDefaults(!KeyMap.onlyCustom);
@@ -1146,8 +1146,8 @@ const LayoutEditor = (props: LayoutEditorProps) => {
       setLoading(true);
       setIsSaving(true);
       const args = flatten(keymap.custom).map(k => keymapDB.serialize(k).toString());
-      await currentDevice.command("keymap.custom", ...args);
-      await currentDevice.command("keymap.onlyCustom", keymap.onlyCustom ? "1" : "0");
+      await currentDevice?.command("keymap.custom", ...args);
+      await currentDevice?.command("keymap.onlyCustom", keymap.onlyCustom ? "1" : "0");
       await updateColormap(currentDevice, colorMap);
       await updatePalette(currentDevice, palette);
       setCurrentLayer(currentLayer);
@@ -1370,10 +1370,10 @@ const LayoutEditor = (props: LayoutEditorProps) => {
     const { currentDevice } = state;
     let Layer = null;
     let kbtype = "iso";
-    if (currentDevice.device === null) return { Layer: undefined, kbtype: undefined };
+    if (currentDevice?.device === null) return { Layer: undefined, kbtype: undefined };
     try {
-      Layer = currentDevice.device.components.keymap as React.FC<any>;
-      kbtype = currentDevice.device && currentDevice.device.info.keyboardType === "ISO" ? "iso" : "ansi";
+      Layer = currentDevice?.device.components.keymap as React.FC<any>;
+      kbtype = currentDevice?.device && currentDevice?.device.info.keyboardType === "ISO" ? "iso" : "ansi";
     } catch (error) {
       log.error("Focus lost connection to Raise: ", error);
       return { Layer: undefined, kbtype: undefined };
@@ -1456,7 +1456,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
       localLayerData = localIsReadOnly ? keymap.default[currentLayer] : keymap.custom[currentLayer - keymap.default.length];
     }
     const { currentDevice } = state;
-    const { info } = currentDevice.device;
+    const info = currentDevice?.device.info;
     const data = JSON.stringify(
       {
         device: info,

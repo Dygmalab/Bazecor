@@ -51,6 +51,7 @@ import { DeviceTools, useDevice } from "./DeviceContext";
 import DeviceManager from "./views/DeviceManager";
 import Device from "../api/comms/Device";
 import { HIDNotifdevice } from "./types/hid";
+import HID from "../api/hid/hid";
 
 const store = Store.getStore();
 
@@ -244,7 +245,7 @@ function App() {
       try {
         const existingIDs = state.deviceList.map(d => d.serialNumber);
         const newDev = await DeviceTools.enumerateDevice(false, dev, existingIDs);
-        dispatch({ type: "addDevice", payload: newDev });
+        dispatch({ type: "addDevices", payload: newDev });
       } catch (error) {
         log.error("error when trying to insert newly connected device to DeviceContext", error);
       }
@@ -257,6 +258,7 @@ function App() {
         { autoClose: 2000, icon: "" },
       );
     };
+
     const handleDeviceDisconnection = async (dev: USBDevice) => {
       const isFlashing = varFlashing.current;
       log.verbose("Handling device disconnect", isFlashing, dev);
@@ -264,11 +266,19 @@ function App() {
         log.verbose("no action due to flashing active");
         return;
       }
-      let missingSerialN: string[];
+      let missing: string[];
       try {
-        const existingIDs = state.deviceList.map(d => d.serialNumber.toLowerCase());
-        missingSerialN = await DeviceTools.currentSerialN(existingIDs);
-        dispatch({ type: "disconnect", payload: missingSerialN });
+        const existingIDs = state.deviceList.filter(d => d.type === "serial").map(d => d.serialNumber.toLowerCase());
+        const existingPNs = state.deviceList
+          .filter(d => d.type === "hid")
+          .map(d => ({ PN: (d.port as unknown as HID).connectedDevice.productName, SN: d.serialNumber }));
+        const missingSerialN = await DeviceTools.currentSerialN(existingIDs);
+        const missingPNs = await DeviceTools.currentHIDN(existingPNs.map(x => x.PN));
+        missing = missingSerialN.concat(existingPNs.map(x => (missingPNs.includes(x.PN) ? x.SN : undefined)));
+        dispatch({
+          type: "disconnect",
+          payload: missing,
+        });
       } catch (error) {
         log.error("error when trying to remove disconnected device from DeviceContext", error);
       }
@@ -280,14 +290,14 @@ function App() {
         />,
         { autoClose: 3000, icon: "" },
       );
-      if (connected && missingSerialN.length > 0 && missingSerialN[0] === state.currentDevice?.serialNumber.toLowerCase()) {
+      if (connected && missing.length > 0 && missing.includes(state.currentDevice?.serialNumber.toLowerCase())) {
         onKeyboardDisconnect();
       }
     };
 
     const usbListener = (event: unknown, response: unknown) => handleDeviceDisconnection(JSON.parse(response as string));
     const newUsbConnection = (event: unknown, response: unknown) => handleDeviceConnection(JSON.parse(response as string));
-    const hidListener = (event: unknown, response: unknown) => handleDeviceDisconnection(JSON.parse(response as string) as any);
+    const hidListener = (event: unknown, response: unknown) => handleDeviceDisconnection(JSON.parse(response as string));
 
     const notifyBtDevice = (event: any, hidDev: string) => {
       const localDev: HIDNotifdevice = JSON.parse(hidDev);

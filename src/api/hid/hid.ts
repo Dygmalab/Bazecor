@@ -41,9 +41,9 @@ class HID {
   static getDevices = async (): Promise<HIDDevice[]> => {
     const grantedDevices = await navigator.hid.getDevices();
     const filteredDevices = grantedDevices.filter(dev => dev.vendorId === DygmavendorID && dev.productId === DygmaproductID);
-    const foundDevices = [];
+    const foundDevices: ExtHIDInterface[] = [];
 
-    for (const device of filteredDevices) {
+    filteredDevices.forEach(device => {
       let name;
       let wireless;
       let layout;
@@ -61,7 +61,7 @@ class HID {
           foundDevices.push(newHID);
         }
       }
-    }
+    });
     log.info("Usable found devices:", foundDevices);
     return foundDevices;
   };
@@ -135,6 +135,7 @@ class HID {
       );
       this.serialNumber = chipid;
     } catch (error) {
+      log.warn("Error when checking support: ", error);
       return false;
     }
     return true;
