@@ -11,8 +11,11 @@ interface CardAddDeviceProps {
   scanDevices: () => void;
 }
 
-const CardAddDevice = ({ addVirtualDevice, scanDevices }: CardAddDeviceProps) => (
-  <div className="card-device card-filter-on card-all select-none flex flex-col h-full relative p-0 rounded-[24px] border-2 border-solid border-gray-50 bg-gray-25/50 dark:border-gray-700 dark:bg-gray-700/50 overflow-hidden">
+const CardAddDevice = React.forwardRef<HTMLDivElement, CardAddDeviceProps>(({ addVirtualDevice, scanDevices }, ref) => (
+  <div
+    ref={ref}
+    className="card-device card-filter-on card-all select-none flex flex-col h-full relative p-0 rounded-[24px] border-2 border-solid border-gray-50 bg-gray-25/50 dark:border-gray-700 dark:bg-gray-700/50 overflow-hidden"
+  >
     <div className="card-header relative bg-transparent border-none pt-6 px-6 min-h-[140px]">
       <Heading headingLevel={3} renderAs="h3">
         Add keyboard
@@ -47,6 +50,6 @@ const CardAddDevice = ({ addVirtualDevice, scanDevices }: CardAddDeviceProps) =>
       </div>
     </div>
   </div>
-);
+));
 
 export default CardAddDevice;

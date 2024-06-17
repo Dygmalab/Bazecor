@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import log from "electron-log/renderer";
 import { toast } from "react-toastify";
 
@@ -58,6 +58,7 @@ const DeviceManager = (props: DeviceManagerProps) => {
   const [open, setOpen] = useState(false);
   const [openDialogVirtualKB, setOpenDialogVirtualKB] = useState(false);
   const [selectedDevice, setSelectedDevice] = useState(0);
+  const cardAddDevice = useRef(null);
 
   const delay = (ms: number) =>
     new Promise(res => {
@@ -346,7 +347,7 @@ const DeviceManager = (props: DeviceManagerProps) => {
                   ))}
                   <AnimatePresence mode="popLayout">
                     <motion.div initial={{ opacity: 0, y: -50 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -50 }}>
-                      <CardAddDevice addVirtualDevice={addVirtualDevice} scanDevices={scanDevices} />
+                      <CardAddDevice addVirtualDevice={addVirtualDevice} scanDevices={scanDevices} ref={cardAddDevice} />
                     </motion.div>
                   </AnimatePresence>
                 </SortableList>
