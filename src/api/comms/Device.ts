@@ -75,6 +75,7 @@ class Device implements DeviceClass {
       this.vendorId = String(params.connectedDevice.vendorId);
       const newDevice = params.connectedDevice as ExtHIDInterface;
       this.device = newDevice.device;
+      this.device.chipId = params.serialNumber;
       this.port = params as HID;
     }
     if (type === "virtual") {

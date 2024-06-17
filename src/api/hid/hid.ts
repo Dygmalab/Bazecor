@@ -44,6 +44,16 @@ class HID {
     const foundDevices = [];
 
     for (const device of filteredDevices) {
+      let name;
+      let wireless;
+      let layout;
+      if (device.productName.includes("Raise2")) {
+        const [nme, wless, ly] = device.productName.split(" ")[0].split("-");
+        name = nme;
+        wireless = wless.includes("Wless");
+        layout = ly.includes("A") ? "ANSI" : "ISO";
+        log.info("Raise2 Data", name, wireless, layout);
+      }
       for (const Hdevice of Hardware.serial) {
         if (device.productId === Hdevice.usb.productId && device.vendorId === Hdevice.usb.vendorId) {
           const newHID: ExtHIDInterface = device;

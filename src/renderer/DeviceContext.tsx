@@ -148,9 +148,25 @@ const enumerateDevice = async (bootloader: boolean, device: USBDevice, existingI
 };
 
 const listNonConnected = async (bootloader: boolean, existingIDs: string[]) => {
-  const devs = await serial.enumerate(bootloader, undefined, existingIDs);
+  const finalDevices: Array<Device> = [];
+
+  // Gathering SerialPort Devices
+  const ports = await serial.enumerate(bootloader, undefined, existingIDs);
+  ports.map(dev => finalDevices.push(new Device(dev, "serial")));
   // log.info("Data from enum dev:", dev, bootloader, existingIDs);
-  return devs;
+
+  // Gathering HID Devices
+  const hidDevs = await HID.getDevices();
+  for (const [index, device] of hidDevs.entries()) {
+    log.verbose("Checking: ", device);
+    const hid = new HID();
+    const connected = await hid.isDeviceConnected(index);
+    const supported = await hid.isDeviceSupported(index);
+    log.info("Checking connected & supported for HID: ", connected, supported);
+    if (connected && supported && !existingIDs.includes(hid.serialNumber)) finalDevices.push(new Device(hid, "hid"));
+  }
+
+  return finalDevices;
 };
 
 const currentSerialN = async (existingIDs: string[]) => {
@@ -177,7 +193,7 @@ const connect = async (device: Device | VirtualType) => {
         log.verbose(`the device is ${device.type} type, and connected as: ${result}`);
         return device;
       }
-      if (device.type === "HID") {
+      if (device.type === "hid") {
         log.verbose(device.port);
         const result = await (device.port as HID).connect();
         await device.addHID();

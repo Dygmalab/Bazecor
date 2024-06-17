@@ -102,10 +102,10 @@ const DeviceManager = (props: DeviceManagerProps) => {
       const toShowDevs: DeviceListType[] = [];
       let newDeviceList = state.deviceList;
       const existingIDs = state.deviceList.map(d => d.serialNumber.toLowerCase());
-      const newPorts = await DeviceTools.listNonConnected(false, existingIDs);
-      const newDevs = newPorts.map(dev => new Device(dev, "serial"));
+      const newDevs = await DeviceTools.listNonConnected(false, existingIDs);
       newDeviceList = newDeviceList.concat(newDevs);
       dispatch({ type: "addDevicesList", payload: newDeviceList });
+      log.info("Available Devices: ", newDeviceList);
       newDeviceList.forEach((item, index) => {
         const neurons = store.get("neurons") as Neuron[];
         const neuron = neurons.find(n => n.id.toLowerCase() === item.device?.chipId?.toLowerCase());
@@ -240,8 +240,8 @@ const DeviceManager = (props: DeviceManagerProps) => {
   }, []);
 
   useEffect(() => {
-    if (state.deviceList.length !== devicesList.length) setScanned(false);
-  }, [devicesList.length, state.deviceList]);
+    if (devicesList && state.deviceList.length !== devicesList.length) setScanned(false);
+  }, [devicesList, state.deviceList]);
 
   useEffect(() => {
     if (!scanned) {
