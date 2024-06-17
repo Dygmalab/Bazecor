@@ -413,8 +413,8 @@ export default class RecordMacroModal extends React.Component {
                 )}
 
                 <Button
-                  className={`border-solid border-[3px] border-primary/100 bg-gray-25/50 hover:bg-gray-25/100 dark:bg-gray-700/30 dark:hover:bg-gray-700/60 rounded-[32px] w-[204px] relative z-[3] recordButton backdrop-blur-sm font-bold  ${isRecording ? "isRecording" : ""} ${
-                    recorded.length > 0 && !isRecording ? "isResume text-gray-400 dark:text-gray-700" : "text-primary/100"
+                  className={`border-solid border-[3px] border-primary/100 bg-gray-25/50 hover:bg-gray-25/100 dark:bg-gray-700/30 dark:hover:bg-gray-700/60 rounded-[32px] w-[204px] relative z-[3] recordButton backdrop-blur-sm font-bold !text-primary/100 ${isRecording ? "isRecording" : ""} ${
+                    recorded.length > 0 && !isRecording ? "isResume text-primary/100" : "text-primary/100"
                   }`}
                   onClick={this.toggleIsRecording}
                   ref={this.buttonRecord}

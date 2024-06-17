@@ -18,14 +18,14 @@ const TextTab: React.FC<TextTabProps> = ({ addText, onTextChange, onAddText }) =
       <Callout size="sm" className="mt-2">
         <p>{i18n.editor.macros.textTabs.callout}</p>
       </Callout>
-      <Heading headingLevel={4} renderAs="h4" className="text-lg mt-3 w-full">
+      <Heading headingLevel={4} renderAs="h4" className="text-lg mt-4 w-full">
         {i18n.editor.macros.textTabs.title}
       </Heading>
       <Textarea
         placeholder={i18n.editor.macros.textTabs.placeholder}
         value={addText}
         onChange={onTextChange}
-        className="w-full my-6 p-2"
+        className="w-full mb-6 mt-2 p-2"
       />
     </div>
     <div className="w-full flex justify-end">
