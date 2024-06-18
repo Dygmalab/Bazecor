@@ -63,6 +63,7 @@ const FlashManager = setup({
               device: event.device,
               isUpdated: event.isUpdated,
               isBeta: event.isBeta,
+              erasePairings: event.erasePairings,
             };
           }),
         },
@@ -89,6 +90,7 @@ const FlashManager = setup({
             sideRightOK: event.sideRightOK,
             sideRightBL: event.sideRightBL,
             RaiseBrightness: event.RaiseBrightness,
+            erasePairings: event.erasePairings,
           })),
         },
         "retry-event": {

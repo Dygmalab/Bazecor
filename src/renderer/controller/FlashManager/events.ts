@@ -19,6 +19,7 @@ export interface NEXT {
   readonly sideLeftBL?: boolean;
   readonly sideRightOK?: boolean;
   readonly sideRightBL?: boolean;
+  readonly erasePairings: boolean;
   readonly RaiseBrightness?: string;
 }
 

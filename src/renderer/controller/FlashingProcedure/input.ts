@@ -17,6 +17,7 @@ export interface InputType {
   readonly sideLeftBL: boolean;
   readonly sideRightOK: boolean;
   readonly sideRightBL: boolean;
+  readonly erasePairings: boolean;
   readonly stateUpdate: (data: {
     type: string;
     data: {
@@ -56,7 +57,7 @@ export const Input = async (input: InputType): Promise<Context.ContextType> => {
     retriesLeft: 0,
     retriesNeuron: 0,
     retriesDefyWired: 0,
-    erasePairings: false,
+    erasePairings: input.erasePairings,
     restoreResult: undefined,
     rightResult: undefined,
     leftResult: undefined,

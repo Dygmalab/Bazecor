@@ -21,6 +21,7 @@ export interface ContextType {
   };
   typeSelected: string;
   selectedFirmware: number;
+  erasePairings: boolean;
   isUpdated: boolean;
   isBeta: boolean;
   allowBeta: boolean;
@@ -48,6 +49,7 @@ export const Context: ContextType = {
   },
   typeSelected: "default",
   selectedFirmware: 0,
+  erasePairings: true,
   isUpdated: false,
   isBeta: false,
   allowBeta: false,

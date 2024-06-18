@@ -19,4 +19,9 @@ export interface CHANGEFW {
   readonly selected: number;
 }
 
-export type Events = AutoInit | NEXT | RETRY | CHANGEFW;
+export interface CHANGEPAIRINGERASE {
+  readonly type: "changePairingErase-event";
+  readonly selected: boolean;
+}
+
+export type Events = AutoInit | NEXT | RETRY | CHANGEFW | CHANGEPAIRINGERASE;

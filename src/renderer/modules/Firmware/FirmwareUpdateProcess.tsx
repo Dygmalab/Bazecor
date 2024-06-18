@@ -193,6 +193,7 @@ function FirmwareUpdateProcess(props: FirmwareUpdateProcessProps) {
         sideRightOK: context.sideRightOK,
         sideRightBL: context.sideRightBL,
         stateUpdate,
+        erasePairings: context.erasePairings,
       },
     },
   );

@@ -17,6 +17,7 @@ export interface ContextType {
   sideRightOK: boolean;
   sideRightBL: boolean;
   RaiseBrightness: string;
+  erasePairings: boolean;
 }
 
 export const Context: ContextType = {
@@ -34,4 +35,5 @@ export const Context: ContextType = {
   sideRightOK: false,
   sideRightBL: false,
   RaiseBrightness: "",
+  erasePairings: true,
 };

@@ -31,8 +31,10 @@ import LogoLoader from "@Renderer/components/atoms/loader/LogoLoader";
 import { IconLoader } from "@Renderer/components/atoms/icons";
 
 // Visual modules
+// eslint-disable-next-line import/no-cycle
 import { FirmwareNeuronStatus, FirmwareVersionStatus } from "@Renderer/modules/Firmware";
 import { useDevice } from "@Renderer/DeviceContext";
+import { Switch } from "@Renderer/components/atoms/Switch";
 
 const Style = Styled.div`
 width: 100%;
@@ -231,13 +233,24 @@ function FirmwareUpdatePanel(props: FirmwareUpdatePanelProps) {
           <div className="firmware-row">
             <div className="firmware-content borderLeftBottomRadius">
               {state.context.firmwareList && state.context.firmwareList.length > 0 ? (
-                <FirmwareVersionStatus
-                  currentlyVersionRunning={state.context.device.version}
-                  isUpdated={state.context.isUpdated}
-                  firmwareList={state.context.firmwareList}
-                  selectedFirmware={state.context.selectedFirmware}
-                  send={send}
-                />
+                <>
+                  <FirmwareVersionStatus
+                    currentlyVersionRunning={state.context.device.version}
+                    isUpdated={state.context.isUpdated}
+                    firmwareList={state.context.firmwareList}
+                    selectedFirmware={state.context.selectedFirmware}
+                    send={send}
+                  />
+                  <Switch
+                    id="EraseBTSwitch"
+                    checked={state.context.erasePairings}
+                    onCheckedChange={(checked: boolean) => {
+                      send({ type: "changePairingErase-event", selected: checked });
+                    }}
+                    variant="default"
+                    size="sm"
+                  />
+                </>
               ) : (
                 ""
               )}

@@ -18,6 +18,7 @@ export interface ContextType {
   sideLeftBL: boolean;
   sideRightOK: boolean;
   sideRightBL: boolean;
+  erasePairings: boolean;
   firmwares: {
     fw: any;
     fwSides: any;
@@ -46,6 +47,7 @@ export const Context: ContextType = {
   sideLeftBL: false,
   sideRightOK: true,
   sideRightBL: false,
+  erasePairings: true,
   firmwares: {
     fw: undefined,
     fwSides: undefined,

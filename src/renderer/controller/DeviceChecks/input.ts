@@ -13,6 +13,7 @@ export interface InputType {
     version: string;
     chipID: string;
   };
+  readonly erasePairings: boolean;
   readonly deviceState: State;
   readonly firmwares: {
     fw: any;
@@ -34,6 +35,7 @@ export const Input = async (input: InputType): Promise<Context.ContextType> => {
     sideRightBL: false,
     backup: undefined,
     RaiseBrightness: undefined,
+    erasePairings: input.erasePairings,
   };
 
   return result;

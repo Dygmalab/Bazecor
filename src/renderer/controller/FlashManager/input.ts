@@ -21,6 +21,7 @@ export const Input = async (input: InputType): Promise<Context.ContextType> => {
     sideLeftOk: false,
     sideRightBL: false,
     sideRightOK: false,
+    erasePairings: true,
     RaiseBrightness: "",
   };
 

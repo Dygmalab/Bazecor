@@ -176,7 +176,7 @@ function FirmwareCheckProcessPanel(props: FirmwareCheckProcessPanelType) {
   const { nextBlock, retryBlock, context } = props;
   const { state: deviceState } = useDevice();
   const [state, send] = useMachine(DeviceChecks, {
-    input: { device: context.device, deviceState, firmwares: context.firmwares },
+    input: { device: context.device, deviceState, firmwares: context.firmwares, erasePairings: context.erasePairings },
   });
   const [listItems, setlistItems] = useState<ListItems[]>([]);
   const [loading, setLoading] = useState(true);

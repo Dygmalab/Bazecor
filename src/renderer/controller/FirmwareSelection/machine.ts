@@ -124,6 +124,9 @@ const FirmwareSelection = setup({
         "changeFW-event": {
           actions: [assign({ selectedFirmware: ({ event }) => event.selected })],
         },
+        "changePairingErase-event": {
+          actions: [assign({ erasePairings: ({ event }) => event.selected })],
+        },
       },
     },
     loadingFWFiles: {

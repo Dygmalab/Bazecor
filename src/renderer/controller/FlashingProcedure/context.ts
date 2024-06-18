@@ -64,7 +64,7 @@ export const Context: ContextType = {
   deviceState: undefined,
   loadedComms: false,
   stateblock: 1,
-  erasePairings: false,
+  erasePairings: true,
   globalProgress: 0,
   leftProgress: 0,
   rightProgress: 0,
