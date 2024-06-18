@@ -163,6 +163,11 @@ const BackupSettings = (props: BackupSettingsProps) => {
     }
   };
 
+  const triggerGetLatestBackup = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+    localGetLatestBackup();
+  };
+
   return (
     <Card className="mt-3 max-w-2xl mx-auto" variant="default">
       <CardHeader>
@@ -177,7 +182,7 @@ const BackupSettings = (props: BackupSettingsProps) => {
             <Button variant="short" onClick={GetBackup} disabled={!connected}>
               Restore backup from file...
             </Button>
-            <Button variant="short" onClick={localGetLatestBackup} disabled={!connected}>
+            <Button variant="short" onClick={event => triggerGetLatestBackup(event)} disabled={!connected}>
               Restore from last backup
             </Button>
             <WaitForRestoreDialog title="Restoring Backup" open={performingBackup} />
