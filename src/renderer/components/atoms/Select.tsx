@@ -18,7 +18,7 @@ const selectVariants = cva("flex w-full items-center justify-between rounded-md"
     },
     size: {
       default: "h-[44px]",
-      sm: "h-8 px-2.5 text-[11px] rounded-sm",
+      sm: "h-8 px-2.5 text-[11px] rounded",
       lg: "h-11 px-5",
     },
   },

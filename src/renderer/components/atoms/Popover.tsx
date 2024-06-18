@@ -17,7 +17,7 @@ const popoverTriggerVariants = cva("flex w-full items-center justify-between rou
     },
     size: {
       default: "h-[44px]",
-      sm: "h-8 px-2.5 text-[11px] rounded-sm",
+      sm: "h-8 px-2.5 text-[11px] rounded",
       lg: "h-11 px-5",
     },
   },
@@ -42,7 +42,7 @@ const PopoverButton = React.forwardRef<HTMLDivElement, PopoverButtonProps>(
     <div
       {...props}
       ref={forwardedRef}
-      className={`w-full flex justify-between items-center border-regular rounded-sm shadow-buttonConfigLight dark:shadow-buttonConfig hover:buttonConfigLightHover dark:hover:shadow-buttonConfigHover text-2xxs py-[8px] pl-2.5 pr-[4px] text-gray-500 hover:text-gray-600 dark:text-gray-25 bg-configButton dark:bg-configButtonDark hover:bg-configButtonHover dark:hover:bg-configButtonDarkHover aria-pressed:!bg-configButtonActive dark:aria-pressed:!bg-configButtonDarkActive aria-pressed:bg-purple-200 dark:aria-pressed:!bg-purple-300 aria-pressed:!border-purple-200 dark:aria-pressed:!border-none aria-pressed:text-white aria-pressed:!shadow-buttonConfigLightActive [&_svg]:text-gray-300 [&_svg]:dark:text-gray-300 ${active ? "!bg-configButtonActive dark:!bg-configButtonDarkActive bg-purple-200 dark:!bg-purple-300 !border-purple-200 dark:border-none text-white !shadow-buttonConfigLightActive !text-white [&_svg]:!text-white relative after:absolute after:top-[-4px] after:right-[-2px] after:w-[8px] after:h-[8px] after:rounded-full after:bg-primary/100" : ""} ${disabled ? "!pointer-events-none !opacity-50" : ""}`}
+      className={`w-full flex justify-between items-center border-regular rounded shadow-buttonConfigLight dark:shadow-buttonConfig hover:buttonConfigLightHover dark:hover:shadow-buttonConfigHover text-2xxs py-[8px] pl-2.5 pr-[4px] text-gray-500 hover:text-gray-600 dark:text-gray-25 bg-configButton dark:bg-configButtonDark hover:bg-configButtonHover dark:hover:bg-configButtonDarkHover aria-pressed:!bg-configButtonActive dark:aria-pressed:!bg-configButtonDarkActive aria-pressed:bg-purple-200 dark:aria-pressed:!bg-purple-300 aria-pressed:!border-purple-200 dark:aria-pressed:!border-none aria-pressed:text-white aria-pressed:!shadow-buttonConfigLightActive [&_svg]:text-gray-300 [&_svg]:dark:text-gray-300 ${active ? "!bg-configButtonActive dark:!bg-configButtonDarkActive bg-purple-200 dark:!bg-purple-300 !border-purple-200 dark:border-none text-white !shadow-buttonConfigLightActive !text-white [&_svg]:!text-white relative after:absolute after:top-[-4px] after:right-[-2px] after:w-[8px] after:h-[8px] after:rounded-full after:bg-primary/100" : ""} ${disabled ? "!pointer-events-none !opacity-50" : ""}`}
     >
       <div className="flex">{children}</div>
       <IconArrowsSmallSeparating size="sm" />

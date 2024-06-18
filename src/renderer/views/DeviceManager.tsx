@@ -14,7 +14,7 @@ import { arrayMoveImmutable } from "array-move";
 
 import { i18n } from "@Renderer/i18n";
 // import { i18n, refreshHardware } from "@Renderer/i18n";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion, useInView } from "framer-motion";
 import HelpSupportLink from "@Renderer/modules/DeviceManager/HelpSupportLink";
 import {
   AlertDialog,
@@ -58,7 +58,9 @@ const DeviceManager = (props: DeviceManagerProps) => {
   const [open, setOpen] = useState(false);
   const [openDialogVirtualKB, setOpenDialogVirtualKB] = useState(false);
   const [selectedDevice, setSelectedDevice] = useState(0);
-  const cardAddDevice = useRef(null);
+
+  const ref = useRef(null);
+  const isInView = useInView(ref);
 
   const delay = (ms: number) =>
     new Promise(res => {
@@ -253,6 +255,15 @@ const DeviceManager = (props: DeviceManagerProps) => {
     }
   }, [findKeyboards, scanned]);
 
+  useEffect(() => {
+    console.log("ref: ", ref.current);
+    if (isInView) {
+      log.warn("Is visible");
+    } else {
+      log.warn("Not visible");
+    }
+  }, [isInView, ref]);
+
   log.info("Current State: ", devicesList, selectedDevice);
 
   return (
@@ -347,7 +358,7 @@ const DeviceManager = (props: DeviceManagerProps) => {
                   ))}
                   <AnimatePresence mode="popLayout">
                     <motion.div initial={{ opacity: 0, y: -50 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -50 }}>
-                      <CardAddDevice addVirtualDevice={addVirtualDevice} scanDevices={scanDevices} ref={cardAddDevice} />
+                      <CardAddDevice addVirtualDevice={addVirtualDevice} scanDevices={scanDevices} ref={ref} />
                     </motion.div>
                   </AnimatePresence>
                 </SortableList>
@@ -358,7 +369,7 @@ const DeviceManager = (props: DeviceManagerProps) => {
                   <motion.div initial={{ opacity: 0, y: -50 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -50 }}>
                     <div className="list devices-scroll relative w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 pb-4">
                       <NoDeviceFound />
-                      <CardAddDevice addVirtualDevice={addVirtualDevice} scanDevices={scanDevices} />
+                      <CardAddDevice addVirtualDevice={addVirtualDevice} scanDevices={scanDevices} ref={ref} />
                     </div>
                   </motion.div>
                 </AnimatePresence>
