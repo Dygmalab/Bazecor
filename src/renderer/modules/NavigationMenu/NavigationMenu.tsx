@@ -233,7 +233,7 @@ function NavigationMenu(props: NavigationMenuProps) {
         </div>
         <div className="navbar-nav flex justify-between">
           <div className="topMenu">
-            <Link to="/device-manager" className="list-link">
+            <Link to="/device-manager" onClick={linkHandler} className={`list-link ${loading ? "disabled" : ""}`}>
               <NavigationButton
                 selected={currentPage === "/device-manager"}
                 showNotif={false}
