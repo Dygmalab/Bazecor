@@ -130,13 +130,13 @@ const DualFunctionPicker = (props: DualFunctionPickerProps) => {
   );
 
   const layersStdView = (
-    <div className="dualFuntionWrapper flex gap-6">
+    <div className="dualFuntionWrapper flex flex-wrap gap-6">
       <div className="layersButtons">
         <Heading headingLevel={5} renderAs="h5" className="text-ssm">
           {i18n.general.layer}
         </Heading>
         <div className="groupButtons flex gap-1 mt-2 max-w-[auto]">
-          {layerKey.map((item, index) => (
+          {layerKey.map((item: any, index: number) => (
             <Button
               variant="config"
               size="sm"
