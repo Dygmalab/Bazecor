@@ -637,6 +637,8 @@ select:focus {
   .menuLinkInner svg {
     transform: scale(1);
     flex: 0 0 26px;
+    max-width: 26px;
+    width: 100%;
   }
   .menuLink .badge {
     right: -18px;
@@ -659,6 +661,8 @@ select:focus {
   .menuLinkInner svg {
     transform: scale(1);
     flex: 0 0 30px;
+    max-width: 30px;
+    width: 100%;
   }
   .menuLink .badge {
     right: -18px;
@@ -681,6 +685,8 @@ select:focus {
   .menuLinkInner svg {
     transform: scale(1);
     flex: 0 0 30px;
+    max-width: 30px;
+    width: 100%;
   }
   .menuLink .badge {
     right: -18px;
@@ -696,6 +702,8 @@ select:focus {
   .menuLinkInner svg {
     transform: scale(1);
     flex: 0 0 24px;
+    max-width: 24px;
+    width: 100%;
   }
 }
 
