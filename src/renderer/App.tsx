@@ -305,8 +305,8 @@ function App() {
       toast.success(
         <ToastMessage
           icon={<IconBluetooth />}
-          title="Detected Dgyma Bluetooth Device"
-          content={`Found ${localDev.name} device! to connect, first press scan keyboards button in keyboard selection view`}
+          title="Detected Dygma Bluetooth Device"
+          content={`Found ${localDev.name} device! to connect, first press scan keyboards button in keyboard manager`}
         />,
         { autoClose: 3000, icon: "" },
       );
