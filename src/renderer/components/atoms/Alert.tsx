@@ -55,13 +55,13 @@ AlertTitle.displayName = "AlertTitle";
 
 const AlertDescription = React.forwardRef<HTMLParagraphElement, React.HTMLAttributes<HTMLParagraphElement>>(
   ({ className, ...props }, ref) => (
-    <div ref={ref} className={cn("[&_p]:leading-relaxed [&_p:last-of-type]:mb-0", className)} {...props} />
+    <div ref={ref} className={cn("[&_p]:leading-snug [&_p:last-of-type]:mb-0", className)} {...props} />
   ),
 );
 AlertDescription.displayName = "AlertDescription";
 
 const AlertModal = React.forwardRef<HTMLParagraphElement, React.HTMLAttributes<HTMLParagraphElement>>(
-  ({ className, ...props }, ref) => <div ref={ref} className={cn("text-sm [&_p]:leading-relaxed", className)} {...props} />,
+  ({ className, ...props }, ref) => <div ref={ref} className={cn("text-sm [&_p]:leading-snug", className)} {...props} />,
 );
 AlertDescription.displayName = "AlertDescription";
 

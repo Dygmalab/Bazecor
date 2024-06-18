@@ -231,12 +231,21 @@ function FirmwareCheckProcessPanel(props: FirmwareCheckProcessPanelType) {
                           className="disclaimerContent text-sm mt-2 leading-snug font-medium"
                           dangerouslySetInnerHTML={{ __html: i18n.firmwareUpdate.texts.disclaimerContent }}
                         />
-                        <div
+                        {/* <div
                           className="disclaimerContent text-sm mt-2 leading-snug font-medium"
                           dangerouslySetInnerHTML={{ __html: i18n.firmwareUpdate.texts.disclaimerContent3 }}
-                        />
+                        /> */}
                         <Callout size="sm" className="mt-4">
-                          <p>{i18n.firmwareUpdate.texts.disclaimerContent2}</p>
+                          <ul className="pl-4 list-disc">
+                            {state.context.device.info.keyboardType === "wireless" && (
+                              <li className="text-orange-200 font-semibold mb-2">
+                                ⚠️ The firmware update process will reset your Bluetooth pairings. You&apos;ll need to unpair
+                                (&quot;forget device&quot;) and re-pair.
+                              </li>
+                            )}
+                            <li className=" mb-2">{i18n.firmwareUpdate.texts.disclaimerContent3}</li>
+                            <li className=" mb-2">{i18n.firmwareUpdate.texts.disclaimerContent2}</li>
+                          </ul>
                         </Callout>
                       </>
                     ) : (
