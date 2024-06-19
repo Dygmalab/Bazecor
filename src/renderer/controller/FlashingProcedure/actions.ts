@@ -115,30 +115,26 @@ export const reconnect = async (context: Context.ContextType) => {
       }
       return result;
     };
-    const runnerFindKeyboard = async (findKeyboard: { (): Promise<unknown>; (): any }, times: number) => {
+    const findKeyboard = async () => {
+      await delay(2500);
+      const result = await foundDevices(false);
+      return result;
+    };
+
+    const runnerFindKeyboard = async (functionFindKB: () => Promise<Device>, times: number) => {
       if (!times) {
         log.error("Keyboard not found!");
         return false;
       }
-      if (await findKeyboard()) {
+      if (await functionFindKB()) {
         log.info("Ready to restore");
         return true;
       }
       log.info(`Keyboard not detected, trying again for ${times} times`);
       stateUpdate("reconnect", 10 + 100 * (1 / (5 - times)), context);
-      await runnerFindKeyboard(findKeyboard, times - 1);
+      await runnerFindKeyboard(functionFindKB, times - 1);
       return true;
     };
-    const findKeyboard = async () =>
-      // eslint-disable-next-line no-async-promise-executor
-      new Promise(async resolve => {
-        await delay(2500);
-        if (await foundDevices(false)) {
-          resolve(true);
-        } else {
-          resolve(false);
-        }
-      });
     stateUpdate("reconnect", 10, context);
     reconnected = await runnerFindKeyboard(findKeyboard, 5);
     stateUpdate("reconnect", 100, context);
