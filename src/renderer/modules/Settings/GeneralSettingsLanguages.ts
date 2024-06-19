@@ -38,6 +38,7 @@ import deCH from "@Assets/flags/deCH.png";
 
 // Dygma - Layouts (community/third-party)
 import enXXeurkey from "@Assets/flags/enXXeurkey.png";
+import esLA from "@Assets/flags/esLA.png";
 
 // !!!
 // Sorting order below is based off display language (languageNames).
@@ -60,6 +61,7 @@ const flags = [
   nbNO,
   plPL,
   esES,
+  esLA,
   svSE,
   deCH,
 ];
@@ -81,6 +83,7 @@ const languages = [
   "nb-NO",
   "pl-PL",
   "es-ES",
+  "es-LA",
   "sv-SE",
   "de-CH",
 ];
@@ -102,6 +105,7 @@ const languageNames = [
   "Norwegian",
   "Polish",
   "Spanish",
+  "Spanish (Latin America)",
   "Swedish",
   "Swiss German",
 ];

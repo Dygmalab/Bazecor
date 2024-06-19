@@ -71,6 +71,7 @@ import enXXeurkey from "@Renderer/modules/KeyPickerKeyboard/languages/en/XX-eurk
 import frXXbepo from "@Renderer/modules/KeyPickerKeyboard/languages/fr/XX-bepo.json";
 import frXXoptimot from "@Renderer/modules/KeyPickerKeyboard/languages/fr/XX-optimot.json";
 import frXXergol from "@Renderer/modules/KeyPickerKeyboard/languages/fr/XX-ergol.json";
+import esLatam from "@Renderer/modules/KeyPickerKeyboard/languages/es/LATAM.json";
 
 const languages = {
   // Keycaps
@@ -94,12 +95,14 @@ const languages = {
   "fr-XX-bepo": frXXbepo,
   "fr-XX-optimot": frXXoptimot,
   "fr-XX-ergol": frXXergol,
+  "es-LA": esLatam,
 };
 
 type LangOptions =
   | "en-US"
   | "en-GB"
   | "es-ES"
+  | "es-LA"
   | "de-DE"
   | "fr-FR"
   | "da-DK"
