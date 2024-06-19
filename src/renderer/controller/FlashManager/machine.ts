@@ -55,16 +55,13 @@ const FlashManager = setup({
       on: {
         "next-event": {
           target: "DeviceChecksCard",
-          actions: assign(({ event }) => {
-            log.info(event);
-            return {
-              firmwareList: event.firmwareList,
-              firmwares: event.firmwares,
-              device: event.device,
-              isUpdated: event.isUpdated,
-              isBeta: event.isBeta,
-            };
-          }),
+          actions: assign(({ event }) => ({
+            firmwareList: event.firmwareList,
+            firmwares: event.firmwares,
+            device: event.device,
+            isUpdated: event.isUpdated,
+            isBeta: event.isBeta,
+          })),
         },
         "retry-event": { target: "FWSelectionCard", actions: assign({ Block: () => 0 }) },
         "error-event": { target: "error", actions: assign({ errorCause: ({ event }) => event.error }) },

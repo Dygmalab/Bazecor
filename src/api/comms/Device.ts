@@ -166,6 +166,7 @@ class Device implements DeviceClass {
       if (this.type === "hid") await (this.port as HID).connectedDevice.close();
       this.memoryMap = new DeviceMap();
       this.isClosed = true;
+      this.port = undefined;
     } catch (error) {
       log.error(error);
     }

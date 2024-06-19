@@ -80,7 +80,7 @@ export const serialConnection = async () => {
     endOnClose: true,
   });
   // Switches the port into "flowing mode"
-  serialport.on("data", (data: Buffer) => {
+  serialport.on("data", async (data: Buffer) => {
     if (data.length > 40) {
       log.info("Data:", data);
       log.info("Data length", data.length);
@@ -88,11 +88,21 @@ export const serialConnection = async () => {
 
       const instantResolve = callbacks.shift();
       const block = infoFromDevice(convertedData);
-      instantResolve(block);
+      let count = 0;
+      while (typeof instantResolve !== "function" && count < 5) {
+        await delay(10);
+        count += 1;
+      }
+      if (typeof instantResolve === "function") instantResolve(block);
     } else {
       // log.info('Data:', data);
       const instantResolve = callbacks.shift();
-      instantResolve(new Uint8Array(data));
+      let count = 0;
+      while (typeof instantResolve !== "function" && count < 5) {
+        await delay(10);
+        count += 1;
+      }
+      if (typeof instantResolve === "function") instantResolve(new Uint8Array(data));
     }
   });
 
@@ -106,7 +116,7 @@ export async function rawCommand(
   ...args: unknown[]
 ): Promise<any> {
   const req = (c: string | Buffer, ...args2: unknown[]) => {
-    log.info(c);
+    log.info(c, args2);
     if (!serialPort) throw new Error("Device not connected!");
     return new Promise(resolve => {
       callbacks.push(resolve);

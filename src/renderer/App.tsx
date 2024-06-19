@@ -167,6 +167,8 @@ function App() {
     log.verbose(state.currentDevice?.type, state.currentDevice?.path);
     localStorage.clear();
     setConnected(false);
+    setFlashing(false);
+    setFwUpdate(false);
     device.current = null;
     setPages({});
     navigate("/device-manager");

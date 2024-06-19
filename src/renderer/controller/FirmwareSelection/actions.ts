@@ -15,7 +15,7 @@ export const FocusAPIRead = async (context: Context.ContextType): Promise<Contex
     context.device.bootloader = currentDevice.device?.bootloader !== undefined ? currentDevice.device.bootloader : false;
     context.device.info = currentDevice.device.info;
     if (context.device.bootloader) return context;
-    log.info("CHECKING CONTEXT DEPENDENCIES: ", context.deviceState);
+    log.info("CHECKING CONTEXT DEPENDENCIES: ", context.deviceState.currentDevice.device);
     const versionData = await currentDevice.noCacheCommand("version");
     // eslint-disable-next-line prefer-destructuring
     context.device.version = versionData.split(" ")[0];
@@ -206,7 +206,7 @@ export const downloadFirmware = async (
     log.error(error);
     throw new Error(error);
   }
-  log.info("obtained FW's lengths:", filename, filenameSides);
+  log.info(`obtained FW's lengths for Neuron: ${filename.length} and Sides: ${filenameSides.length}`);
   const result: { fw: Array<string>; fwSides: Uint8Array } = { fw: filename, fwSides: filenameSides };
 
   return result;
