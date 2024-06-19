@@ -30,6 +30,7 @@ import CardAddDevice from "@Renderer/modules/DeviceManager/CardAddDevice";
 import ToastMessage from "@Renderer/components/atoms/ToastMessage";
 import VirtualSelector from "@Renderer/modules/VirtualKeyboards/VirtualSelector";
 import { useDevice, DeviceTools } from "@Renderer/DeviceContext";
+import { IconArrowDownWithLine } from "@Renderer/components/atoms/icons";
 import { DeviceListType } from "@Renderer/types/DeviceManager";
 import { Neuron } from "@Renderer/types/neurons";
 
@@ -45,10 +46,11 @@ interface DeviceManagerProps {
   device: Device;
   darkMode: boolean;
   setLoading: (loading: boolean) => void;
+  restoredOk: boolean;
 }
 
 const DeviceManager = (props: DeviceManagerProps) => {
-  const { onConnect, onDisconnect, connected, device, darkMode, setLoading } = props;
+  const { restoredOk, onConnect, onDisconnect, connected, device, darkMode, setLoading } = props;
 
   const { state, dispatch } = useDevice();
   const [scanned, setScanned] = useState(true);
@@ -263,6 +265,19 @@ const DeviceManager = (props: DeviceManagerProps) => {
       log.warn("Not visible");
     }
   }, [isInView, ref]);
+
+  useEffect(() => {
+    if (!restoredOk) {
+      toast.error(
+        <ToastMessage
+          title="Oops! Layers not restored"
+          content="There was an error loading your configuration. But worry not: reconnect your keyboard and the latest backup will be automatically restored."
+          icon={<IconArrowDownWithLine />}
+        />,
+        { icon: "" },
+      );
+    }
+  }, [restoredOk]);
 
   log.info("Current State: ", devicesList, selectedDevice);
 

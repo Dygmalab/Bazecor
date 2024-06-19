@@ -387,6 +387,7 @@ function App() {
                 device={device}
                 darkMode={darkMode}
                 setLoading={setLoadingData}
+                restoredOk={restoredOk}
               />
             }
           />

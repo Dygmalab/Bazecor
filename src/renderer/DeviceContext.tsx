@@ -245,6 +245,7 @@ const connect = async (device: Device | VirtualType) => {
 };
 
 const disconnect = async (device: Device) => {
+  if (!device) return false;
   try {
     if (!device?.isClosed) {
       await device.close();
