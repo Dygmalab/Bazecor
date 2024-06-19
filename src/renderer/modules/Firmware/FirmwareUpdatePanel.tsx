@@ -184,7 +184,7 @@ function FirmwareUpdatePanel(props: FirmwareUpdatePanelProps) {
       setLoading(false);
     }
     if (state.value === "success") nextBlock(state.context);
-    if (state.value === "failure") errorBlock(state.context.error);
+    if (state.value === "failure") errorBlock(state.context);
   }, [errorBlock, nextBlock, retryBlock, state]);
 
   return (

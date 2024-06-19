@@ -45,8 +45,9 @@ const FirmwareSelection = setup({
     },
     src: "onInit",
   },
-  initial: "LoadDeviceData",
+  initial: "wait",
   states: {
+    wait: {},
     LoadDeviceData: {
       id: "LoadDeviceData",
       entry: [
@@ -145,7 +146,7 @@ const FirmwareSelection = setup({
         },
         onError: {
           target: "failure",
-          actions: [assign({ error: (context, event) => event })],
+          actions: [assign({ error: event => event })],
         },
       },
     },
