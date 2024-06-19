@@ -168,6 +168,11 @@ const BackupSettings = (props: BackupSettingsProps) => {
     localGetLatestBackup();
   };
 
+  const triggerGetBackup = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+    GetBackup();
+  };
+
   return (
     <Card className="mt-3 max-w-2xl mx-auto" variant="default">
       <CardHeader>
@@ -179,7 +184,7 @@ const BackupSettings = (props: BackupSettingsProps) => {
         <form>
           <h3 className="mb-1 text-gray-400 dark:text-gray-100 tracking-tight font-semibold">Backup actions</h3>
           <div className="flex gap-3">
-            <Button variant="short" onClick={GetBackup} disabled={!connected}>
+            <Button variant="short" onClick={event => triggerGetBackup(event)} disabled={!connected}>
               Restore backup from file...
             </Button>
             <Button variant="short" onClick={event => triggerGetLatestBackup(event)} disabled={!connected}>
