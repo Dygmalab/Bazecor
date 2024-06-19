@@ -121,7 +121,6 @@
     "webpack-cli": "^5.1.4"
   },
   "dependencies": {
-    "@headlessui/react": "^1.7.17",
     "@hookform/resolvers": "^3.6.0",
     "@octokit/core": "^4.2.1",
     "@radix-ui/react-accordion": "^1.1.2",
