@@ -2,6 +2,7 @@ import React from "react";
 
 import Styled from "styled-components";
 import { motion } from "framer-motion";
+import log from "electron-log/renderer";
 
 // component
 import { Button } from "@Renderer/components/atoms/Button";
@@ -31,6 +32,9 @@ import {
   IconWireless,
 } from "@Renderer/components/atoms/icons";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@Renderer/components/atoms/Tabs";
+import { MacrosType } from "@Renderer/types/macros";
+import { SuperkeysType } from "@Renderer/types/superkeys";
+import { KeyType, SegmentedKeyType } from "@Renderer/types/layout";
 import { KeymapDB } from "../../../api/keymap";
 
 const Styles = Styled.div`
@@ -221,20 +225,20 @@ const Styles = Styled.div`
 `;
 
 interface StandardViewProps {
-  actions: any[];
+  actions: number[];
   actTab: string;
-  code: any;
+  code: SegmentedKeyType;
   closeStandardView: (stateCode: number) => void;
   handleSave: () => void;
   isStandardView: boolean;
   kbtype: any;
   keyIndex: number;
-  layerData: any[];
-  macros: any[];
+  layerData: KeyType[];
+  macros: MacrosType[];
   onKeySelect: (keycode: number) => void;
   selectedlanguage: string;
   showStandardView: boolean;
-  superkeys: any[];
+  superkeys: SuperkeysType[];
   isWireless: boolean;
 }
 
@@ -251,14 +255,37 @@ export default class StandardView extends React.Component<StandardViewProps, Sta
     this.state = {
       currentTab: undefined,
       stateCode: 0,
-      selected: 0,
+      selected: props.keyIndex !== -1 ? props.layerData[props.keyIndex].keyCode : 0,
     };
     this.keymapDB = new KeymapDB();
   }
 
+  componentDidUpdate(prevProps: StandardViewProps) {
+    const { keyIndex, layerData } = this.props;
+    if (keyIndex !== prevProps.keyIndex) {
+      this.setState({
+        stateCode: keyIndex !== -1 ? layerData[keyIndex].keyCode : 0,
+        selected: keyIndex !== -1 ? layerData[keyIndex].keyCode : 0,
+      });
+    }
+  }
+
+  updateSelected = (newKey: number) => {
+    this.setState({
+      selected: newKey,
+    });
+  };
+
   onAddSpecial = (keycode: number) => {
-    const { onKeySelect } = this.props;
-    onKeySelect(keycode);
+    this.updateSelected(keycode);
+  };
+
+  onApplyChanges = () => {
+    const { onKeySelect, handleSave } = this.props;
+    const { selected } = this.state;
+
+    onKeySelect(selected);
+    handleSave();
   };
 
   parseKey(keycode: number) {
@@ -315,13 +342,11 @@ export default class StandardView extends React.Component<StandardViewProps, Sta
       actTab,
       code,
       closeStandardView,
-      handleSave,
       isStandardView,
       kbtype,
       keyIndex,
       layerData,
       macros,
-      onKeySelect,
       selectedlanguage,
       showStandardView,
       superkeys,
@@ -330,13 +355,16 @@ export default class StandardView extends React.Component<StandardViewProps, Sta
     const { stateCode, selected, currentTab } = this.state;
     let keyCode: number;
     if (actTab === "super") {
-      keyCode = keyIndex !== -1 ? layerData[keyIndex] : 0;
-    } else {
       keyCode = keyIndex !== -1 ? layerData[keyIndex].keyCode : 0;
+    } else {
+      keyCode = selected;
     }
     const selKey = this.parseKey(keyCode);
     const oldKey = this.parseKey(stateCode);
     if (!showStandardView) return null;
+    log.info(
+      `StandardView statecode:${stateCode} selected:${selected} currentTab: ${currentTab} selKey: ${selKey} oldKey: ${oldKey}`,
+    );
 
     const tabVariants = {
       hidden: { opacity: 0 },
@@ -414,7 +442,7 @@ export default class StandardView extends React.Component<StandardViewProps, Sta
                       <KeysTab
                         keyCode={keyCode}
                         code={code}
-                        onKeyPress={onKeySelect}
+                        onKeyPress={this.updateSelected}
                         isStandardView={isStandardView}
                         superkeyAction={actTab === "super" ? keyIndex : 5}
                         actTab={actTab}
@@ -427,14 +455,14 @@ export default class StandardView extends React.Component<StandardViewProps, Sta
                   </TabsContent>
                   <TabsContent value="tabNoKeys" key="tabNoKeys">
                     <motion.div initial="hidden" animate="visible" key="tabKeys" variants={tabVariants}>
-                      <NoKeyTransparentTab keyCode={keyCode} onKeySelect={onKeySelect} isStandardView={isStandardView} />
+                      <NoKeyTransparentTab keyCode={keyCode} onKeySelect={this.updateSelected} isStandardView={isStandardView} />
                     </motion.div>
                   </TabsContent>
 
                   <TabsContent value="tabLayers" key="tabLayers">
                     <motion.div initial="hidden" animate="visible" key="tabKeys" variants={tabVariants}>
                       <LayersTab
-                        onLayerPress={onKeySelect}
+                        onLayerPress={this.updateSelected}
                         keyCode={keyCode}
                         isStandardView={isStandardView}
                         disableMods={!!((keyIndex === 0 || keyIndex === 3) && actTab === "super")}
@@ -446,7 +474,7 @@ export default class StandardView extends React.Component<StandardViewProps, Sta
                       <MacroTab
                         macros={macros}
                         selectedMacro={this.keymapDB.parse(keyCode).extraLabel === "MACRO" ? selected : -1}
-                        onMacrosPress={onKeySelect}
+                        onMacrosPress={this.updateSelected}
                         keyCode={keyCode}
                         isStandardView={isStandardView}
                       />
@@ -459,7 +487,7 @@ export default class StandardView extends React.Component<StandardViewProps, Sta
                           <SuperkeysTab
                             actions={actions}
                             superkeys={superkeys}
-                            onKeySelect={onKeySelect}
+                            onKeySelect={this.updateSelected}
                             macros={macros}
                             keyCode={keyCode}
                             isStandardView={isStandardView}
@@ -468,7 +496,7 @@ export default class StandardView extends React.Component<StandardViewProps, Sta
                       </TabsContent>
                       <TabsContent value="tabOneShot" key="tabOneShot">
                         <motion.div initial="hidden" animate="visible" key="tabKeys" variants={tabVariants}>
-                          <OneShotTab keyCode={keyCode} onKeySelect={onKeySelect} isStandardView={isStandardView} />
+                          <OneShotTab keyCode={keyCode} onKeySelect={this.updateSelected} isStandardView={isStandardView} />
                         </motion.div>
                       </TabsContent>
                     </>
@@ -491,7 +519,7 @@ export default class StandardView extends React.Component<StandardViewProps, Sta
                   {isWireless && (
                     <TabsContent value="tabWireless" key="tabWireless">
                       <motion.div initial="hidden" animate="visible" key="tabKeys" variants={tabVariants}>
-                        <WirelessTab keyCode={keyCode} onKeySelect={onKeySelect} isStandardView={isStandardView} />
+                        <WirelessTab keyCode={keyCode} onKeySelect={this.updateSelected} isStandardView={isStandardView} />
                       </motion.div>
                     </TabsContent>
                   )}
@@ -501,7 +529,7 @@ export default class StandardView extends React.Component<StandardViewProps, Sta
                     <Button onClick={() => closeStandardView(undefined)} variant="outline" size="sm">
                       Discard changes
                     </Button>
-                    <Button onClick={handleSave} variant="secondary" size="sm">
+                    <Button onClick={this.onApplyChanges} variant="secondary" size="sm">
                       {i18n.dialog.applyChanges}
                     </Button>
                   </div>

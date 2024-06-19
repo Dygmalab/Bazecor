@@ -481,7 +481,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
   const [scanned, setScanned] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const { state } = useDevice();
-  const [layerData, setLayerData] = useState([]);
+  const [layerData, setLayerData] = useState<Array<KeyType>>([]);
   const [isReadOnly, setIsReadOnly] = useState(false);
   const [showDefaults, setShowDefaults] = useState(false);
   const [ledIndexStart, setLedIndexStart] = useState(80);
@@ -1633,11 +1633,10 @@ const LayoutEditor = (props: LayoutEditorProps) => {
     // log.info("going to RUN INITIAL USE EFFECT just ONCE");
     const scanner = async () => {
       await scanKeyboard(currentLanguageLayout);
-      const standardView = configStandardView();
       const newLanguage = getLanguage(store.get("settings.language") as string);
       log.info("Language automatically set to: ", newLanguage);
       setCurrentLanguageLayout(newLanguage || "english");
-      setIsStandardView(standardView);
+      setIsStandardView(configStandardView());
       setViewMode(isStandardView ? "standard" : "single");
       setLoading(false);
       setCurrentLayer(0);
