@@ -7,6 +7,7 @@ import HID from "../hid/hid";
 import DeviceMap from "./deviceMap";
 import { ExtHIDInterface } from "./types";
 import { ExtendedPort } from "./serial/SerialAPI";
+import Hardware from "../hardware";
 // eslint-disable-next-line no-eval
 const { DelimiterParser } = eval('require("@serialport/parser-delimiter")');
 
@@ -88,7 +89,7 @@ class Device implements DeviceClass {
       this.locationId = "";
       this.productId = params.device.usb.productId.toString(16);
       this.vendorId = params.device.usb.vendorId.toString(16);
-      this.device = params.device;
+      this.device = Device.getHWFVirtual(params.device);
       this.file = true;
       this.fileData = params;
     }
@@ -98,6 +99,23 @@ class Device implements DeviceClass {
     new Promise(res => {
       setTimeout(res, ms);
     });
+
+  static getHWFVirtual = (dev: DygmaDeviceType) => {
+    let result: DygmaDeviceType;
+    Hardware.serial.forEach(hdev => {
+      if (
+        hdev.info.product === dev.info.product &&
+        hdev.info.vendor === dev.info.vendor &&
+        hdev.info.keyboardType === dev.info.keyboardType
+      ) {
+        result = hdev;
+      } else {
+        result = dev;
+      }
+    });
+
+    return result;
+  };
 
   static help = async (dev: Device) => {
     const data = await dev.request("help");

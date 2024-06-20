@@ -214,21 +214,21 @@ const connect = async (device: Device | VirtualType) => {
     if (isVirtualType(device)) {
       const result = await new Device(device, "virtual");
       result.device.chipId = result.serialNumber;
-      log.verbose(`the device is ${device.type} type, and connected as: ${result}`);
+      log.verbose(`the device is ${result.type} type, and connected as: `, result);
       return result;
     }
     if (Device.isDevice(device)) {
       if (device.type === "serial") {
         const result = await serial.connect(device);
         await device.addPort(result);
-        log.verbose(`the device is ${device.type} type, and connected as: ${result}`);
+        log.verbose(`the device is ${device.type} type, and connected as:`, result);
         return device;
       }
       if (device.type === "hid") {
         log.verbose(device.port);
         const result = await (device.port as HID).connect();
         await device.addHID();
-        log.verbose(`the device is ${device.type} type, and connected as: ${result}`);
+        log.verbose(`the device is ${device.type} type, and connected as: `, result);
         return device;
       }
       if (device.type === "virtual") {
