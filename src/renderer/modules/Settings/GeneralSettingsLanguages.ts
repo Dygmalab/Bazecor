@@ -105,7 +105,7 @@ const languageNames = [
   "Norwegian",
   "Polish",
   "Spanish",
-  "Spanish (Latin America)",
+  "Spanish (Latin American)",
   "Swedish",
   "Swiss German",
 ];
