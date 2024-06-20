@@ -17,11 +17,11 @@
 
 import React from "react";
 import Styled from "styled-components";
-import Dropdown from "react-bootstrap/Dropdown";
 import { i18n } from "@Renderer/i18n";
 
-import { RegularButton } from "../../component/Button";
-import { IconMoreVertical } from "../../component/Icon";
+import { IconMoreVertical } from "@Renderer/components/atoms/icons";
+import { Popover, PopoverContent, PopoverTrigger, PopoverButton } from "@Renderer/components/atoms/Popover";
+import { Button } from "@Renderer/components/atoms/Button";
 
 const Style = Styled.div`
 .button.btn-block{
@@ -68,30 +68,28 @@ function FirmwareAdvancedOptions(props: FirmwareAdvancedOptionsType) {
   const { firmwareFilename, selectFirmware, selectExperimental } = props;
   return (
     <Style>
-      <Dropdown className="dropdownWithContent AdvancedUsers">
-        <Dropdown.Toggle className="buttonToggler">
-          <div className="buttonTogglerInner">
-            {firmwareFilename ? <div className="badge badge-primary animOpacity">1</div> : ""}
-            <IconMoreVertical />
-          </div>
-        </Dropdown.Toggle>
-        <Dropdown.Menu className="dropdownMenu">
+      <Popover>
+        <PopoverTrigger asChild>
+          <PopoverButton>
+            <div className="buttonTogglerInner">
+              {firmwareFilename ? <div className="badge badge-primary animOpacity">1</div> : ""}
+              <IconMoreVertical />
+            </div>
+          </PopoverButton>
+        </PopoverTrigger>
+        <PopoverContent align="start">
           <div className="dropdownMenuPadding">
             <div className="dropdownMenuContent" dangerouslySetInnerHTML={{ __html: i18n.firmwareUpdate.texts.advUsersHTML }} />
-            <RegularButton
-              styles="outline gradient btn-block flashingbutton nooutlined"
-              buttonText={firmwareFilename === "" ? i18n.firmwareUpdate.custom : i18n.firmwareUpdate.rcustom}
-              onClick={selectFirmware}
-            />
-            <RegularButton
-              styles="outline gradient btn-block flashingbutton nooutlined"
-              buttonText="Use Experimental"
-              onClick={selectExperimental}
-            />
+            <Button variant="outline" onClick={selectFirmware} size="sm">
+              {firmwareFilename === "" ? i18n.firmwareUpdate.custom : i18n.firmwareUpdate.rcustom}
+            </Button>
+            <Button variant="secondary" size="sm" onClick={selectExperimental}>
+              Use Experimental
+            </Button>
             {firmwareFilename ? <div className="fileSelected animOpacity">{firmwareFilename}</div> : ""}
           </div>
-        </Dropdown.Menu>
-      </Dropdown>
+        </PopoverContent>
+      </Popover>
     </Style>
   );
 }

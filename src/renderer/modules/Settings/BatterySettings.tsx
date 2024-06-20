@@ -21,12 +21,11 @@ import Styled from "styled-components";
 import { BatterySettingsProps } from "@Types/wireless";
 
 // Custom components
-import { Card, CardContent, CardHeader } from "@Renderer/components/ui/card";
-import Title from "@Renderer/component/Title";
-import { BatteryStatusSide, SavingModeIndicator } from "@Renderer/component/Battery";
+import { Card, CardContent, CardHeader, CardTitle } from "@Renderer/components/atoms/Card";
+import { BatteryStatusSide, SavingModeIndicator } from "@Renderer/components/atoms/battery";
 
 // Assets
-import { IconBattery } from "@Renderer/component/Icon";
+import { IconBattery } from "@Renderer/components/atoms/icons";
 import { i18n } from "@Renderer/i18n";
 
 const Styles = Styled.div`
@@ -49,8 +48,11 @@ function BatterySettings(props: BatterySettingsProps) {
     <Styles>
       <Card className="max-w-2xl mx-auto" variant="default">
         <CardHeader>
-          <Title text={i18n.wireless.batteryPreferences.battery} headingLevel={3} svgICO={<IconBattery />} />
+          <CardTitle variant="default">
+            <IconBattery /> {i18n.wireless.batteryPreferences.battery}
+          </CardTitle>
         </CardHeader>
+
         <CardContent className="py-0">
           <div className="battery-defy--indicator">
             <BatteryStatusSide

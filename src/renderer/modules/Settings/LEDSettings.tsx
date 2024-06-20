@@ -19,17 +19,18 @@ import React, { useEffect, useState } from "react";
 import log from "electron-log/renderer";
 
 // Custom components
-import { Card, CardContent, CardHeader, CardTitle } from "@Renderer/components/ui/card";
-import { Switch } from "@Renderer/components/ui/switch";
+import { Card, CardContent, CardHeader, CardTitle } from "@Renderer/components/atoms/Card";
+import { Switch } from "@Renderer/components/atoms/Switch";
 import { LEDSettingsPreferences } from "@Renderer/types/preferences";
-import { Slider } from "@Renderer/components/ui/slider";
+import { Slider } from "@Renderer/components/atoms/slider";
 
 // Assets
-import { Badge } from "@Renderer/component/Badge";
-import { IconFlashlight, IconIridescentWhiteBalance, IconThunder } from "@Renderer/component/Icon";
-import Callout from "@Renderer/component/Callout";
+// import { Badge } from "@Renderer/component/Badge";
+import { Badge } from "@Renderer/components/atoms/Badge";
+import { IconFlashlight, IconIridescentWhiteBalance, IconThunder } from "@Renderer/components/atoms/icons";
+import Callout from "@Renderer/components/molecules/Callout/Callout";
 import { i18n } from "@Renderer/i18n";
-import Heading from "@Renderer/components/ui/heading";
+import Heading from "@Renderer/components/atoms/Heading";
 
 function LEDSettings(props: LEDSettingsPreferences) {
   const { kbData, wireless, setKbData, setWireless, connected, isWireless } = props;
@@ -108,7 +109,9 @@ function LEDSettings(props: LEDSettingsPreferences) {
       <>
         {isWireless && (
           <div className="max-w-2xl mx-auto mb-3">
-            <Callout content="These wireless configurations only apply when the Saving Mode is NOT active." size="sm" />
+            <Callout size="sm" className="mt-4">
+              <p>These wireless configurations only apply when the Saving Mode is NOT active.</p>
+            </Callout>
           </div>
         )}
         <Card className="max-w-2xl mx-auto" variant="default">
@@ -118,7 +121,9 @@ function LEDSettings(props: LEDSettingsPreferences) {
                 <IconFlashlight /> {i18n.keyboardSettings.led.title} brightness intensity
               </div>{" "}
               {isWireless && (
-                <Badge content={i18n.wireless.energyManagement.settings.highBatteryImpact} variation="danger-low" size="sm" />
+                <Badge variant="danger" size="xs">
+                  {i18n.wireless.energyManagement.settings.highBatteryImpact}
+                </Badge>
               )}
             </CardTitle>
           </CardHeader>
@@ -151,6 +156,7 @@ function LEDSettings(props: LEDSettingsPreferences) {
                         value={[Math.round((brightness * 100) / 255)]}
                         onValueChange={setBrightnessWireless}
                         className="slider-danger"
+                        variant="alert"
                       />
                     </div>
                   </div>
@@ -189,6 +195,7 @@ function LEDSettings(props: LEDSettingsPreferences) {
                         value={[Math.round((brightnessUG * 100) / 255)]}
                         onValueChange={setBrightnessUGWireless}
                         className="slider-danger"
+                        variant="alert"
                       />
                     </div>
                   </div>
@@ -208,7 +215,9 @@ function LEDSettings(props: LEDSettingsPreferences) {
                 <IconFlashlight /> {i18n.keyboardSettings.led.title} timer off
               </div>
               {isWireless && (
-                <Badge content={i18n.wireless.energyManagement.settings.highBatteryImpact} variation="danger-low" size="sm" />
+                <Badge variant="danger" size="xs">
+                  {i18n.wireless.energyManagement.settings.highBatteryImpact}
+                </Badge>
               )}
             </CardTitle>
           </CardHeader>
@@ -236,6 +245,7 @@ function LEDSettings(props: LEDSettingsPreferences) {
                           value={[idleleds / 60]}
                           onValueChange={selectIdleLEDTimeWireless}
                           className="slider-danger"
+                          variant="alert"
                         />
                       </div>
                     </div>
@@ -258,7 +268,9 @@ function LEDSettings(props: LEDSettingsPreferences) {
                   <div className="flex items-center gap-2">
                     <IconIridescentWhiteBalance /> {i18n.wireless.energyManagement.settings.highlightLayerChanging}
                   </div>{" "}
-                  <Badge content={i18n.wireless.energyManagement.settings.lowBatteryImpact} variation="subtle" size="sm" />
+                  <Badge variant="subtle" size="xs">
+                    {i18n.wireless.energyManagement.settings.lowBatteryImpact}
+                  </Badge>
                 </CardTitle>
               </CardHeader>
               <CardContent className="flex flex-row gap-3 justify-between items-center">

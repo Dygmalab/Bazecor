@@ -24,13 +24,10 @@ import { toast } from "react-toastify";
 import { ipcRenderer } from "electron";
 import fs from "fs";
 import log from "electron-log/renderer";
-import Container from "react-bootstrap/Container";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
-import Modal from "react-bootstrap/Modal";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@Renderer/components/atoms/Dialog";
 import customCursor from "@Assets/base/cursorBucket.png";
-import ToastMessage from "@Renderer/component/ToastMessage";
-import { CopyFromDialog } from "@Renderer/component/CopyFromDialog";
+import ToastMessage from "@Renderer/components/atoms/ToastMessage";
+import { CopyFromDialog } from "@Renderer/components/molecules/CustomModal/CopyFromDialog";
 import { useDevice } from "@Renderer/DeviceContext";
 
 // Types
@@ -47,16 +44,16 @@ import { KeyPickerKeyboard } from "@Renderer/modules/KeyPickerKeyboard";
 import StandardView from "@Renderer/modules/StandardView";
 
 // Components
-import { LayerSelector } from "@Renderer/component/Select";
-import { RegularButton } from "@Renderer/component/Button";
-import { LayoutViewSelector } from "@Renderer/component/ToggleButtons";
-import { IconArrowDownWithLine, IconArrowUpWithLine } from "@Renderer/component/Icon";
-import LoaderLayout from "@Renderer/components/loader/loaderLayout";
+import LayerSelector from "@Renderer/components/organisms/Select/LayerSelector";
+import { Button } from "@Renderer/components/atoms/Button";
+import ToggleGroupLayoutViewMode from "@Renderer/components/molecules/CustomToggleGroup/ToggleGroupLayoutViewMode";
+import { IconArrowDownWithLine, IconArrowUpWithLine } from "@Renderer/components/atoms/icons";
+import LoaderLayout from "@Renderer/components/atoms/loader/loaderLayout";
 import { i18n } from "@Renderer/i18n";
 
 import Store from "@Renderer/utils/Store";
 import getLanguage from "@Renderer/utils/language";
-import { ClearLayerDialog } from "@Renderer/modules/LayoutEditor/ClearLayerDialog";
+import { ClearLayerDialog } from "@Renderer/components/molecules/CustomModal/ClearLayerDialog";
 import Keymap, { KeymapDB } from "../../api/keymap";
 import { rgb2w, rgbw2b } from "../../api/color";
 import Backup from "../../api/backup";
@@ -146,7 +143,7 @@ const Styles = Styled.div`
 .standarViewMode .raiseKeyboard {
   margin: 0 auto;
   margin-top: 24px;
-  max-height: calc(100vh - 240px);
+  max-height: calc(100vh - 250px);
 }
 .singleViewMode.color .raiseKeyboard {
   margin: 0 auto;
@@ -472,6 +469,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
     store.get("settings.isStandardView") !== undefined ? (store.get("settings.isStandardView") as boolean) : false,
   );
   const [showStandardView, setShowStandardView] = useState(false);
+  const [viewMode, setViewMode] = useState(store.get("settings.isStandardView") !== undefined ? "standard" : "single");
   const [layoutSelectorPosition, setLayoutSelectorPosition] = useState({
     x: 0,
     y: 0,
@@ -483,7 +481,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
   const [scanned, setScanned] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const { state } = useDevice();
-  const [layerData, setLayerData] = useState([]);
+  const [layerData, setLayerData] = useState<Array<KeyType>>([]);
   const [isReadOnly, setIsReadOnly] = useState(false);
   const [showDefaults, setShowDefaults] = useState(false);
   const [ledIndexStart, setLedIndexStart] = useState(80);
@@ -695,11 +693,11 @@ const LayoutEditor = (props: LayoutEditorProps) => {
       return R;
     };
 
-    const paletteData = (await currentDevice.command("palette")) as string;
-    const colorMapData = (await currentDevice.command("colormap.map")) as string;
+    const paletteData = (await currentDevice?.command("palette")) as string;
+    const colorMapData = (await currentDevice?.command("colormap.map")) as string;
 
     const plette =
-      currentDevice.device.RGBWMode !== true
+      currentDevice?.device.RGBWMode !== true
         ? chunk(
             paletteData
               .split(" ")
@@ -746,7 +744,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
 
   const updatePalette = async (device: DeviceClass, plette: PaletteType[]) => {
     let args: string[];
-    if (state.currentDevice.device.RGBWMode !== true) {
+    if (state.currentDevice?.device.RGBWMode !== true) {
       args = flatten(plette.map(color => [color.r, color.g, color.b])).map(v => v.toString());
     } else {
       const paletteAux = plette.map(color => {
@@ -789,7 +787,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
       setScanningStep(2);
       if (!neurons.some(n => n.id === CID) && neurons.length === 0) {
         neuron.id = CID;
-        neuron.name = currentDevice.device.info.product;
+        neuron.name = currentDevice?.device.info.product;
         neuron.layers = store.get("layerNames") !== undefined ? (store.get("layerNames") as Array<LayerType>) : defaultLayerNames;
         neuron.macros = store.get("macros") !== undefined ? (store.get("macros") as Array<MacrosType>) : [];
         neuron.superkeys = store.get("superkeys") !== undefined ? (store.get("superkeys") as Array<SuperkeysType>) : [];
@@ -802,7 +800,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
       const existingRaise = neurons.some(n => n.id.length === 32);
       if (!neurons.some(n => n.id === CID) && neurons.length > 0) {
         neuron.id = CID;
-        neuron.name = currentDevice.device.info.product;
+        neuron.name = currentDevice?.device.info.product;
         neuron.layers = defaultLayerNames;
         neuron.macros = [];
         neuron.superkeys = [];
@@ -815,8 +813,8 @@ const LayoutEditor = (props: LayoutEditorProps) => {
         log.info("Additional neuron", neuron);
         let result;
         if (
-          (currentDevice.device.info.product === "Defy" && !existingDefy) ||
-          (currentDevice.device.info.product === "Raise" && !existingRaise)
+          (currentDevice?.device.info.product === "Defy" && !existingDefy) ||
+          (currentDevice?.device.info.product === "Raise" && !existingRaise)
         ) {
           result = false;
         } else {
@@ -865,7 +863,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
       setLoading(true);
       try {
         // Acquire ChipID from device
-        let chipID = await currentDevice.command("hardware.chip_id");
+        let chipID = await currentDevice?.command("hardware.chip_id");
         setScanningStep(1);
         chipID = chipID.replace(/\s/g, "");
         const neuronData = await AnalizeChipID(chipID);
@@ -886,23 +884,23 @@ const LayoutEditor = (props: LayoutEditorProps) => {
           }
         }
 
-        const device = currentDevice.device.info.product;
-        const wirelessChecker = currentDevice.device.info.keyboardType === "wireless" || currentDevice.device.wireless;
+        const device = currentDevice?.device.info.product;
+        const wirelessChecker = currentDevice?.device.info.keyboardType === "wireless" || currentDevice?.device.wireless;
         if (lang) {
-          const deviceLang = { ...currentDevice.device, language: true };
+          const deviceLang = { ...currentDevice?.device, language: true };
           currentDevice.commands = {};
           currentDevice.commands.keymap = new Keymap(deviceLang);
-          setkeymapDB((currentDevice.commands.keymap as Keymap).db);
+          setkeymapDB((currentDevice?.commands.keymap as Keymap).db);
         }
 
-        // let defLayer = await currentDevice.command("settings.defaultLayer");
+        // let defLayer = await currentDevice?.command("settings.defaultLayer");
         // defLayer = parseInt(defLayer, 10) || 0;
 
         setScanningStep(4);
-        const defaults = (await currentDevice.command("keymap.default")) as string;
+        const defaults = (await currentDevice?.command("keymap.default")) as string;
         setScanningStep(5);
-        const custom = (await currentDevice.command("keymap.custom")) as string;
-        const onlycstm = (await currentDevice.command("keymap.onlyCustom")) as string;
+        const custom = (await currentDevice?.command("keymap.custom")) as string;
+        const onlycstm = (await currentDevice?.command("keymap.onlyCustom")) as string;
         const onlyCustom = Boolean(parseInt(onlycstm, 10));
         const KeyMap: KeymapType = {
           custom: undefined,
@@ -959,7 +957,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
           }
           KeyMap.onlyCustom = true;
           const args = flatten(KeyMap.custom).map(k => keymapDB.serialize(k).toString());
-          await currentDevice.command("keymap.custom", ...args);
+          await currentDevice?.command("keymap.custom", ...args);
         }
 
         // Loading Colors
@@ -969,7 +967,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
 
         // loading Macros
         setScanningStep(7);
-        let raw: string | number[] = (await currentDevice.command("macros.map")) as string;
+        let raw: string | number[] = (await currentDevice?.command("macros.map")) as string;
         if (raw.search(" 0 0") !== -1) {
           raw = raw.split(" 0 0")[0].split(" ").map(Number);
         } else {
@@ -979,7 +977,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
 
         // Loading Superkeys
         setScanningStep(8);
-        const raw2: string = (await currentDevice.command("superkeys.map")) as string;
+        const raw2: string = (await currentDevice?.command("superkeys.map")) as string;
         const parsedSuper = superTranslator(raw2, neuronData.storedSuper);
 
         setScanningStep(9);
@@ -997,7 +995,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
         }
 
         setScanningStep(10);
-        setLedIndexStart(currentDevice.device.info.product === "Raise" ? 80 : 80);
+        setLedIndexStart(currentDevice?.device.info.product === "Raise" ? 80 : 80);
         setNeuronID(chipID);
         setKeymap(KeyMap);
         setShowDefaults(!KeyMap.onlyCustom);
@@ -1032,17 +1030,21 @@ const LayoutEditor = (props: LayoutEditorProps) => {
       return;
     }
 
-    const kmap = keymap.custom.slice();
-    const l = keymap.onlyCustom ? layer : layer - keymap.default.length;
-    kmap[l][keyIndex] = keymapDB.parse(keyCode);
-
-    setModified(true);
-    setKeymap({
-      default: keymap.default,
-      onlyCustom: keymap.onlyCustom,
-      custom: kmap,
-    });
-    startContext();
+    try {
+      const kmap = keymap.custom.slice();
+      const l = keymap.onlyCustom ? layer : layer - keymap.default.length;
+      log.info(kmap, l, keyIndex, keyCode, keymapDB.parse(keyCode));
+      kmap[l][keyIndex] = keymapDB.parse(keyCode);
+      setModified(true);
+      setKeymap({
+        default: keymap.default,
+        onlyCustom: keymap.onlyCustom,
+        custom: kmap,
+      });
+      startContext();
+    } catch (error) {
+      log.error("Error when assigning key to keymap", error);
+    }
   };
 
   /**
@@ -1095,6 +1097,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
 
     if (isStandardView) {
       setShowStandardView(true);
+      setViewMode("standard");
       // log.info("Show Standard View IF: ", showStandardView);
     }
 
@@ -1143,8 +1146,8 @@ const LayoutEditor = (props: LayoutEditorProps) => {
       setLoading(true);
       setIsSaving(true);
       const args = flatten(keymap.custom).map(k => keymapDB.serialize(k).toString());
-      await currentDevice.command("keymap.custom", ...args);
-      await currentDevice.command("keymap.onlyCustom", keymap.onlyCustom ? "1" : "0");
+      await currentDevice?.command("keymap.custom", ...args);
+      await currentDevice?.command("keymap.onlyCustom", keymap.onlyCustom ? "1" : "0");
       await updateColormap(currentDevice, colorMap);
       await updatePalette(currentDevice, palette);
       setCurrentLayer(currentLayer);
@@ -1367,10 +1370,11 @@ const LayoutEditor = (props: LayoutEditorProps) => {
     const { currentDevice } = state;
     let Layer = null;
     let kbtype = "iso";
-    if (currentDevice.device === null) return { Layer: undefined, kbtype: undefined };
+    if (currentDevice?.device === null) return { Layer: undefined, kbtype: undefined };
     try {
-      Layer = currentDevice.device.components.keymap as React.FC<any>;
-      kbtype = currentDevice.device && currentDevice.device.info.keyboardType === "ISO" ? "iso" : "ansi";
+      Layer = currentDevice?.device.components.keymap as React.FC<any>;
+      kbtype = currentDevice?.device && currentDevice?.device.info.keyboardType === "ISO" ? "iso" : "ansi";
+      log.info("Got Layer: ", Layer, kbtype);
     } catch (error) {
       log.error("Focus lost connection to Raise: ", error);
       return { Layer: undefined, kbtype: undefined };
@@ -1453,7 +1457,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
       localLayerData = localIsReadOnly ? keymap.default[currentLayer] : keymap.custom[currentLayer - keymap.default.length];
     }
     const { currentDevice } = state;
-    const { info } = currentDevice.device;
+    const info = currentDevice?.device.info;
     const data = JSON.stringify(
       {
         device: info,
@@ -1560,6 +1564,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
         setCurrentKeyIndex(-1);
       }
       setShowStandardView(false);
+      setViewMode("single");
     } else {
       setSelectedPaletteColor(null);
     }
@@ -1571,6 +1576,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
 
   const onToggleStandardView = () => {
     setIsStandardView(!isStandardView);
+    setViewMode(!isStandardView ? "standard" : "single");
   };
 
   const closeStandardViewModal = (code: number) => {
@@ -1582,6 +1588,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
     setCurrentKeyIndex(-1);
     setCurrentLedIndex(-1);
     setShowStandardView(false);
+    setViewMode(isStandardView ? "standard" : "single");
     setSelectedPaletteColor(null);
     setIsMultiSelected(false);
     setIsColorButtonSelected(false);
@@ -1602,7 +1609,11 @@ const LayoutEditor = (props: LayoutEditorProps) => {
   };
 
   const refreshLayoutSelectorPosition = (x: number, y: number) => {
-    setLayoutSelectorPosition({ x, y });
+    if (modeselect === "color") {
+      setLayoutSelectorPosition({ x: 0, y: 0 });
+    } else {
+      setLayoutSelectorPosition({ x, y });
+    }
   };
 
   const configStandardView = () => {
@@ -1623,11 +1634,11 @@ const LayoutEditor = (props: LayoutEditorProps) => {
     // log.info("going to RUN INITIAL USE EFFECT just ONCE");
     const scanner = async () => {
       await scanKeyboard(currentLanguageLayout);
-      const standardView = configStandardView();
       const newLanguage = getLanguage(store.get("settings.language") as string);
       log.info("Language automatically set to: ", newLanguage);
       setCurrentLanguageLayout(newLanguage || "english");
-      setIsStandardView(standardView);
+      setIsStandardView(configStandardView());
+      setViewMode(isStandardView ? "standard" : "single");
       setLoading(false);
       setCurrentLayer(0);
       setScanned(true);
@@ -1734,6 +1745,14 @@ const LayoutEditor = (props: LayoutEditorProps) => {
     setCurrentLayer(cLayer);
   }, [keymap, currentLayer, macros, superkeys]);
 
+  useEffect(() => {
+    if (modeselect === "color") {
+      // console.log("Is color - change position");
+    } else {
+      setViewMode(isStandardView ? "standard" : "single");
+    }
+  }, [modeselect, viewMode, isStandardView]);
+
   const { Layer, kbtype } = getLayout();
   if (!Layer) {
     return <div />;
@@ -1824,14 +1843,13 @@ const LayoutEditor = (props: LayoutEditorProps) => {
 
   return (
     <Styles className="layoutEditor">
-      <Container
-        fluid
-        className={`keyboard-editor ${modeselect} ${isStandardView ? "standarViewMode" : "singleViewMode"} ${
+      <div
+        className={`keyboard-editor px-3 ${modeselect} ${isStandardView ? "standarViewMode" : "singleViewMode"} ${
           typeof selectedPaletteColor === "number" ? "colorSelected" : ""
         }`}
       >
         <PageHeader
-          text={i18n.app.menu.editor}
+          text="Layout Editor"
           showSaving
           isSaving={isSaving}
           contentSelector={
@@ -1873,11 +1891,11 @@ const LayoutEditor = (props: LayoutEditorProps) => {
           }}
           inContext={modified}
         />
-        <Row className="full-height keyboardsWrapper">
-          <Col className="raise-editor layer-col">
-            <Row className="dygma-keyboard-editor editor">{layer}</Row>
+        <div className="w-full full-height keyboardsWrapper">
+          <div className="raise-editor layer-col">
+            <div className="dygma-keyboard-editor editor">{layer}</div>
             {modeselect === "keyboard" && !isStandardView ? (
-              <Row className="ordinary-keyboard-editor m-0">
+              <div className="ordinary-keyboard-editor m-0">
                 <KeyPickerKeyboard
                   onKeySelect={onKeyChange}
                   code={code}
@@ -1894,18 +1912,24 @@ const LayoutEditor = (props: LayoutEditorProps) => {
                   refreshLayoutSelectorPosition={refreshLayoutSelectorPosition}
                   isWireless={isWireless}
                 />
-              </Row>
+              </div>
             ) : null}
-          </Col>
-        </Row>
+          </div>
+        </div>
 
         {/* WHY: We want to hide the selector when we cannot use it (e.g. when color editor is active) */}
         {modeselect === "keyboard" ? (
-          <LayoutViewSelector
-            onToggle={onToggleStandardView}
-            isStandardView={isStandardView}
-            tooltip={i18n.editor.superkeys.tooltip}
+          // <LayoutViewSelector
+          //   onToggle={onToggleStandardView}
+          //   isStandardView={isStandardView}
+          //   tooltip={i18n.editor.superkeys.tooltip}
+          //   layoutSelectorPosition={layoutSelectorPosition}
+          // />
+          <ToggleGroupLayoutViewMode
+            value={viewMode}
+            onValueChange={onToggleStandardView}
             layoutSelectorPosition={layoutSelectorPosition}
+            view="layout"
           />
         ) : null}
 
@@ -1925,54 +1949,47 @@ const LayoutEditor = (props: LayoutEditorProps) => {
           layers={copyFromLayerOptions}
           currentLayer={currentLayer}
         />
-      </Container>
+      </div>
 
-      <Modal show={showMacroModal} size="lg" onHide={toggleMacroModal} aria-labelledby="contained-modal-title-vcenter" centered>
-        <Modal.Header closeButton>
-          <Modal.Title>{i18n.editor.oldMacroModal.title}</Modal.Title>
-        </Modal.Header>
-        <Modal.Body className="body">
-          <p>{i18n.editor.oldMacroModal.body}</p>
-          <p className="italic">{i18n.editor.oldMacroModal.body2}</p>
-        </Modal.Body>
-        <Modal.Footer>
-          <RegularButton
-            buttonText={i18n.editor.oldMacroModal.cancelButton}
-            styles="outline transp-bg"
-            size="sm"
-            onClick={toggleMacroModal}
-          />
-          <RegularButton
-            buttonText={i18n.editor.oldMacroModal.applyButton}
-            styles="outline gradient"
-            size="sm"
-            onClick={updateOldMacros}
-          />
-        </Modal.Footer>
-      </Modal>
-      <Modal show={showNeuronModal} size="lg" onHide={toggleNeuronModal} aria-labelledby="contained-modal-title-vcenter" centered>
-        <Modal.Header closeButton>
-          <Modal.Title>{i18n.editor.oldNeuronModal.title}</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <p>{i18n.editor.oldNeuronModal.body}</p>
-          <p className="italic">{i18n.editor.oldNeuronModal.body2}</p>
-        </Modal.Body>
-        <Modal.Footer>
-          <RegularButton
-            buttonText={i18n.editor.oldNeuronModal.cancelButton}
-            styles="outline transp-bg"
-            size="sm"
-            onClick={toggleNeuronModal}
-          />
-          <RegularButton
-            buttonText={i18n.editor.oldNeuronModal.applyButton}
-            styles="outline gradient"
-            size="sm"
-            onClick={CloneExistingNeuron}
-          />
-        </Modal.Footer>
-      </Modal>
+      <Dialog open={showMacroModal} onOpenChange={toggleMacroModal}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>{i18n.editor.oldMacroModal.title}</DialogTitle>
+          </DialogHeader>
+          <div className="px-6 pb-2 mt-2">
+            <p>{i18n.editor.oldMacroModal.body}</p>
+            <p className="italic">{i18n.editor.oldMacroModal.body2}</p>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" size="sm" onClick={toggleMacroModal}>
+              {i18n.editor.oldMacroModal.cancelButton}
+            </Button>
+            <Button variant="secondary" size="sm" onClick={updateOldMacros}>
+              {i18n.editor.oldMacroModal.cancelButton}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={showNeuronModal} onOpenChange={toggleNeuronModal}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>{i18n.editor.oldNeuronModal.title}</DialogTitle>
+          </DialogHeader>
+          <div className="px-6 pb-2 mt-2">
+            <p>{i18n.editor.oldNeuronModal.body}</p>
+            <p className="italic">{i18n.editor.oldNeuronModal.body2}</p>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" size="sm" onClick={toggleNeuronModal}>
+              {i18n.editor.oldNeuronModal.cancelButton}
+            </Button>
+            <Button variant="secondary" size="sm" onClick={CloneExistingNeuron}>
+              {i18n.editor.oldNeuronModal.applyButton}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
       {modeselect === "keyboard" && isStandardView ? (
         <StandardView

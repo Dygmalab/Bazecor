@@ -16,47 +16,9 @@
  */
 
 import React from "react";
-import Styled from "styled-components";
-import Form from "react-bootstrap/Form";
 import { i18n } from "@Renderer/i18n";
-import Title from "../../component/Title";
-import { RegularButton } from "../../component/Button";
-
-const Style = Styled.div`
-width: 100%;
-h6 {
-  letter-spacing: 0;
-  color: ${({ theme }) => theme.styles.backupConfiguratorFolder.headingColor};
-  line-height: 1.5em;
-}
-.containerInfo {
-  display: flex;
-  width: 100%;
-  border-radius: 6px;
-  padding: 2px 0;
-  background: ${({ theme }) => theme.styles.backupConfiguratorFolder.inputBackground};
-  border: 1px solid ${({ theme }) => theme.styles.backupConfiguratorFolder.border};
-  border-radius: 6px;
-  .containerInfoInner {
-    display: flex;
-    width: 100%;
-    .button.short {
-        white-space: nowrap;
-        margin: 0 2px;
-    }
-    .form-control {
-      align-self: center;
-      background: transparent;
-      border: none;
-      box-shadow: none;
-      letter-spacing: -0.03em;
-      font-size: 16px;
-      font-weight: 600;
-      color: ${({ theme }) => theme.styles.backupConfiguratorFolder.inputColor};
-    }
-  }
-}
-`;
+import { Button } from "@Renderer/components/atoms/Button";
+import Heading from "@Renderer/components/atoms/Heading";
 
 interface BackupFolderConfiguratorProps {
   chooseBackupFolder: () => void;
@@ -68,27 +30,26 @@ interface BackupFolderConfiguratorProps {
 function BackupFolderConfigurator(props: BackupFolderConfiguratorProps) {
   const { chooseBackupFolder, getBackup, backupFolder, connected } = props;
   return (
-    <Style>
+    <div className="w-full">
       <div className="backupFolderConfigurator">
-        <Title text={i18n.keyboardSettings.backupFolder.title} headingLevel={6} />
-        <div className="containerInfo">
-          <div className="containerInfoInner">
-            <Form.Control type="text" value={backupFolder} readOnly />
-            <RegularButton
-              onClick={chooseBackupFolder}
-              styles="short"
-              buttonText={i18n.keyboardSettings.backupFolder.selectButtonText}
-            />
-            <RegularButton
-              onClick={getBackup}
-              styles="short"
-              buttonText={i18n.keyboardSettings.backupFolder.restoreButtonText}
-              disabled={!connected}
-            />
+        <Heading headingLevel={6} renderAs="h6" className="tracking-tight leading-[1.5em] text-gray-500 dark:text-gray-100">
+          {i18n.keyboardSettings.backupFolder.title}
+        </Heading>
+        <div className="containerInfo flex w-full rounded-regular py-[2px] px[0] border-[1px] border-gray-100/60 dark:border-gray-600 bg-white/40 dark:bg-gray-900/20">
+          <div className="containerInfoInner flex w-full">
+            <div className="flex items-center bg-transparent border-none font-semibold text-base text-gray-300 dark:text-gray-50">
+              {backupFolder}
+            </div>
+            <Button variant="short" onClick={chooseBackupFolder}>
+              {i18n.keyboardSettings.backupFolder.selectButtonText}
+            </Button>
+            <Button variant="short" onClick={getBackup} disabled={!connected}>
+              {i18n.keyboardSettings.backupFolder.restoreButtonText}
+            </Button>
           </div>
         </div>
       </div>
-    </Style>
+    </div>
   );
 }
 

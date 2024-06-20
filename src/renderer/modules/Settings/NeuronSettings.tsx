@@ -16,20 +16,16 @@
 
 import React, { useState } from "react";
 
-// React Bootstrap Components
-import Form from "react-bootstrap/Form";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
 import { i18n } from "@Renderer/i18n";
 
 // Own Components
-import { Card, CardContent, CardHeader, CardTitle } from "@Renderer/components/ui/card";
-import { NeuronSelector } from "@Renderer/component/Select";
+import { Card, CardContent, CardHeader, CardTitle } from "@Renderer/components/atoms/Card";
+import { NeuronSelector } from "@Renderer/components/molecules/CustomSelect";
 import NeuronData from "@Renderer/modules/NeuronData";
 import { Neuron } from "@Types/neurons";
 
 // Icons Imports
-import { IconNeuronManager } from "@Renderer/component/Icon";
+import { IconNeuronManager } from "@Renderer/components/atoms/icons";
 import { NeuronSettingsProps } from "@Renderer/types/preferences";
 
 function NeuronSettings(props: NeuronSettingsProps) {
@@ -58,7 +54,7 @@ function NeuronSettings(props: NeuronSettingsProps) {
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <Form.Group controlId="backupFolder" className="mb-3">
+        <div className="mb-3">
           <NeuronSelector
             onSelect={localSelectNeuron}
             itemList={neurons}
@@ -67,16 +63,16 @@ function NeuronSettings(props: NeuronSettingsProps) {
             deleteItem={deleteNeuron}
             subtitle={i18n.keyboardSettings.neuronManager.neuronLabel}
           />
-          <Row className="mb-4 mt-4">
-            <Col>
+          <div className="mb-4 mt-4 w-full">
+            <div className="w-full">
               {Array.isArray(neurons) && neurons.length > 0 ? (
                 <NeuronData neurons={neurons} selectedNeuron={localSelection} />
               ) : (
                 ""
               )}
-            </Col>
-          </Row>
-        </Form.Group>
+            </div>
+          </div>
+        </div>
       </CardContent>
     </Card>
   );

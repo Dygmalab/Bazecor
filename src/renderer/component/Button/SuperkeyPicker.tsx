@@ -19,10 +19,9 @@ import React, { useState } from "react";
 import Styled from "styled-components";
 
 import { SuperkeyPickerProps } from "@Renderer/types/superkeys";
-import Title from "../Title";
-import { IconCloseXs } from "../Icon";
-
-import ListModifiers from "../ListModifiers/ListModifiers";
+import ListModifier from "@Renderer/components/molecules/ListModifiers/ListModifiers";
+import Heading from "@Renderer/components/atoms/Heading";
+import { IconClose } from "@Renderer/components/atoms/icons";
 
 const Style = Styled.div`
 .superkeyAction {
@@ -231,20 +230,22 @@ function SuperkeyPicker(props: SuperkeyPickerProps) {
       <div className={`superkeyAction ${elementActive ? "active" : ""}`}>
         <div className={`superkeyTitle ${isStandardViewSuperkeys ? "standard" : "single"}`}>
           {icon}
-          <Title text={title} headingLevel={5} />
+          <Heading headingLevel={5} renderAs="h5">
+            {title}
+          </Heading>
         </div>
         {isStandardViewSuperkeys && <div className="description">{description}</div>}
         <div className="superkeyButtonWrapper">
           {controlDeleteButton && (
             // TODO: Div with click should not exist, use Button instead!!
             <div className="superkeyDeleteButton" aria-hidden="true" onClick={() => updateAction(index, 0)}>
-              <IconCloseXs />
+              <IconClose />
             </div>
           )}
           {/* TODO: Div with click should not exist, use Button instead!! */}
           <div className="superkeyButton" aria-hidden="true" onClick={() => onClick(index)}>
             <div className="superkeyButtonInner">{keyContent}</div>
-            {superkeys[selected] !== undefined ? <ListModifiers keyCode={superkeys[selected].actions[index]} /> : ""}
+            {superkeys[selected] !== undefined ? <ListModifier keyCode={superkeys[selected].actions[index]} /> : ""}
           </div>
         </div>
       </div>

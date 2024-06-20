@@ -6,9 +6,6 @@
 import React, { Component } from "react";
 import Styled, { withTheme } from "styled-components";
 
-import Tooltip from "react-bootstrap/Tooltip";
-import OverlayTrigger from "react-bootstrap/OverlayTrigger";
-
 import { RiStopFill } from "react-icons/ri";
 import { IoIosPause, IoIosPlay, IoIosShuffle } from "react-icons/io";
 import { FiMenu } from "react-icons/fi";
@@ -43,6 +40,8 @@ import { MdKeyboardReturn, MdSpaceBar, MdKeyboardCapslock, MdInfoOutline, MdEjec
 
 import Key from "@Renderer/modules/KeyPickerKeyboard/Key";
 import getLanguage from "@Renderer/modules/KeyPickerKeyboard/KeyPickerLanguage";
+
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@Renderer/components/atoms/Tooltip";
 
 const Style = Styled.div`
 width: 100%;
@@ -131,22 +130,20 @@ class KeyPickerPreview extends Component {
 
   static renderTooltip(tooltips) {
     return (
-      <Tooltip id="select-tooltip" className="longtooltip">
-        <div>
-          {tooltips.map((tip, i) => (
-            <React.Fragment key={`Tip-${i}`}>
-              {i % 2 === 1 || !Number.isNaN(tip[0]) || tip[0] === "-" ? (
-                <p className="ttip-p">{tip}</p>
-              ) : (
-                <>
-                  {i === 0 ? "" : <br />}
-                  <h5 className="ttip-h">{tip}</h5>
-                </>
-              )}
-            </React.Fragment>
-          ))}
-        </div>
-      </Tooltip>
+      <>
+        {tooltips.map((tip, i) => (
+          <React.Fragment key={`Tip-${i}`}>
+            {i % 2 === 1 || !Number.isNaN(tip[0]) || tip[0] === "-" ? (
+              <p className="ttip-p">{tip}</p>
+            ) : (
+              <>
+                {i === 0 ? "" : <br />}
+                <h5 className="ttip-h">{tip}</h5>
+              </>
+            )}
+          </React.Fragment>
+        ))}
+      </>
     );
   }
 
@@ -253,14 +250,14 @@ class KeyPickerPreview extends Component {
       if (key.tooltip) {
         return (
           <foreignObject key={`id-${key.content.first}-${id}`} x={key.x} y={key.y} width={25} height={25}>
-            <OverlayTrigger
-              rootClose
-              placement="top"
-              delay={{ show: 250, hide: 400 }}
-              overlay={KeyPickerPreview.renderTooltip(key.tooltip)}
-            >
-              <MdInfoOutline className="info" />
-            </OverlayTrigger>
+            <TooltipProvider delayDuration={100}>
+              <Tooltip>
+                <TooltipTrigger className="[&_svg]:text-purple-100 [&_svg]:dark:text-purple-200">
+                  <MdInfoOutline className="info" />
+                </TooltipTrigger>
+                <TooltipContent>{KeyPickerPreview.renderTooltip(key.tooltip)}</TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
           </foreignObject>
         );
       }

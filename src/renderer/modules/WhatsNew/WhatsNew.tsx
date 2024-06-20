@@ -17,11 +17,11 @@
 
 import React from "react";
 import Styled from "styled-components";
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@Renderer/components/ui/accordion";
-import Spinner from "react-bootstrap/Spinner";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@Renderer/components/atoms/Accordion";
+import { IconLoader } from "@Renderer/components/atoms/icons";
 import { i18n } from "@Renderer/i18n";
 
-import Title from "../../component/Title";
+import Heading from "@Renderer/components/atoms/Heading";
 
 const Style = Styled.div`
 .card-header:hover {
@@ -73,7 +73,7 @@ function WhatsNew() {
             <div>
               {loading && !error ? (
                 <div className="loading marginCenter">
-                  <Spinner className="spinner-border" role="status" animation="border" />
+                  <IconLoader />
                 </div>
               ) : (
                 ""
@@ -81,8 +81,12 @@ function WhatsNew() {
               {error ? <div className="error">Error</div> : ""}
               {!loading && (
                 <div className="cardContent">
-                  <Title text={`${i18n.firmwareUpdate.texts.whatsNewTitleVersion} ${contentRelease.name}`} headingLevel={3} />
-                  <Title text={datePublished} headingLevel={5} />
+                  <Heading headingLevel={3} renderAs="h3">
+                    {i18n.firmwareUpdate.texts.whatsNewTitleVersion} ${contentRelease.name}
+                  </Heading>
+                  <Heading headingLevel={5} renderAs="h5">
+                    {datePublished}
+                  </Heading>
                   <div className="versionContent" dangerouslySetInnerHTML={{ __html: contentRelease.body }} />
                 </div>
               )}

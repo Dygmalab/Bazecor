@@ -17,21 +17,18 @@
 import React from "react";
 import Styled from "styled-components";
 
-// External components
-import OverlayTrigger from "react-bootstrap/OverlayTrigger";
-import Tooltip from "react-bootstrap/Tooltip";
-
 // Modules
 import { SavingMode } from "@Renderer/modules/Battery";
 
 // Custom components
-import { Card, CardContent, CardHeader, CardTitle } from "@Renderer/components/ui/card";
-import { Switch } from "@Renderer/components/ui/switch";
-import { Badge } from "@Renderer/component/Badge";
-import { IconFlashlight, IconLeaf, IconInformationBubble } from "@Renderer/component/Icon";
-import Heading from "@Renderer/components/ui/heading";
-import { Slider } from "@Renderer/components/ui/slider";
+import { Card, CardContent, CardHeader, CardTitle } from "@Renderer/components/atoms/Card";
+import { Switch } from "@Renderer/components/atoms/Switch";
+import { Badge } from "@Renderer/components/atoms/Badge";
+import { IconFlashlight, IconLeaf, IconInformation } from "@Renderer/components/atoms/icons";
+import Heading from "@Renderer/components/atoms/Heading";
+import { Slider } from "@Renderer/components/atoms/slider";
 import { i18n } from "@Renderer/i18n";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@Renderer/components/atoms/Tooltip";
 
 // Import Types for wireless
 import { EnergyManagementProps } from "@Renderer/types/wireless";
@@ -103,7 +100,7 @@ function EnergyManagement(props: EnergyManagementProps) {
             <div className="flex items-center gap-2">
               <IconFlashlight /> {i18n.wireless.energyManagement.settings.trueSleepEnabling}
             </div>
-            <Badge content={i18n.wireless.energyManagement.settings.highBatteryImpact} variation="danger-low" size="sm" />
+            <Badge content={i18n.wireless.energyManagement.settings.highBatteryImpact} variant="danger" size="sm" />
           </CardTitle>
         </CardHeader>
         <CardContent className="pb-3 pt-0">
@@ -111,19 +108,18 @@ function EnergyManagement(props: EnergyManagementProps) {
             <div className="flex items-center w-full justify-between py-2 border-b-[1px] border-gray-50 dark:border-gray-700">
               <Heading headingLevel={2} renderAs="paragraph-sm" className="flex flex-row gap-2 items-center">
                 Enable true sleep mode
-                <OverlayTrigger
-                  placement="top"
-                  overlay={
-                    <Tooltip id="tooltip-top" className="">
+                <TooltipProvider delayDuration={100}>
+                  <Tooltip>
+                    <TooltipTrigger className="[&_svg]:text-purple-100 [&_svg]:dark:text-purple-200">
+                      <IconInformation />
+                    </TooltipTrigger>
+                    <TooltipContent className="max-w-xs">
                       {i18n.wireless.energyManagement.settings.trueSleepEnablingDesc}
-                    </Tooltip>
-                  }
-                >
-                  <span className="text-purple-100">
-                    <IconInformationBubble />
-                  </span>
-                </OverlayTrigger>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
               </Heading>
+
               <Switch
                 id="TrueSleepSwitch"
                 checked={wireless.true_sleep}

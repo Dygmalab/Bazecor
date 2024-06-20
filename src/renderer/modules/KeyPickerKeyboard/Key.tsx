@@ -4,7 +4,7 @@
 import React from "react";
 import Styled, { withTheme } from "styled-components";
 import { SegmentedKeyType } from "@Renderer/types/layout";
-import { SelectF13PlusKeys, SelectGenericKeys } from "../../component/Select";
+import { SelectGenericKeys } from "@Renderer/components/molecules/CustomSelect";
 
 const Style = Styled.g`
 .keycap {
@@ -466,7 +466,7 @@ function Key(props: KeyProps) {
             style={{ overflow: "visible" }}
           >
             <div xmlns="http://www.w3.org/1999/xhtml">
-              <SelectF13PlusKeys
+              <SelectGenericKeys
                 x={x + ksl[content.type].outb.dx}
                 y={y + ksl[content.type].outb.dy}
                 onSelect={onKeyPress}
@@ -475,6 +475,7 @@ function Key(props: KeyProps) {
                 listElements={idArray}
                 content={content}
                 keyCode={keyCode}
+                label="F13+"
               />
             </div>
           </foreignObject>
@@ -499,6 +500,7 @@ function Key(props: KeyProps) {
                 listElements={idArray}
                 content={content}
                 keyCode={keyCode}
+                label={content.first}
               />
             </div>
           </foreignObject>

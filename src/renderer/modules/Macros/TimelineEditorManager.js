@@ -15,58 +15,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import React, { Component } from "react";
-import PropTypes from "prop-types";
 
 import Styled from "styled-components";
-import Spinner from "react-bootstrap/Spinner";
-import { RegularButton } from "@Renderer/component/Button";
+import { Button } from "@Renderer/components/atoms/Button";
 import { i18n } from "@Renderer/i18n";
 
+import { IconDelete, IconStopWatch } from "@Renderer/components/atoms/icons";
+import PreviewMacroModal from "@Renderer/components/molecules/CustomModal/ModalPreviewMacro";
+import Heading from "@Renderer/components/atoms/Heading";
+import LogoLoader from "@Renderer/components/atoms/loader/LogoLoader";
 import { KeymapDB } from "../../../api/keymap";
 
 import TimelineEditorForm from "./TimelineEditorForm";
-import Title from "../../component/Title";
-import { IconDelete, IconStopWatchXs } from "../../component/Icon";
-import { PreviewMacroModal } from "../../component/Modal";
 
 const Styles = Styled.div`
-background-color: ${({ theme }) => theme.styles.macro.timelineBackground};
-border-radius: 0px;
-margin-top: 0px;
-padding-bottom: 5px;
-.timelineHeader {
-    padding: 24px 32px;
-    display: flex;
-    align-items: baseline;
-    h4 {
-        font-size: 21px;
-        color: ${({ theme }) => theme.styles.macro.colorTitle};
-        margin: 0;
-    }
-    .outline-sm {
-      padding: 2px 12px;
-      border: 1px solid ${({ theme }) => theme.styles.button.previewButton.borderColor};
-      color:  ${({ theme }) => theme.styles.button.previewButton.color};
-      margin-top: 8px;
-      font-size: 13px;
-      transition: 300ms ease-in-out;
-      transition-property: background, color, border;
-      .buttonLabel {
-        align-items: center;
-      }
-      &:hover {
-        border: 1px solid  ${({ theme }) => theme.styles.button.previewButton.borderHover};
-        color: ${({ theme }) => theme.styles.button.previewButton.colorHover};
-        background-color: ${({ theme }) => theme.styles.button.previewButton.backgroundHover};
-      }
-    }
-}
-.timelineClearButton {
-  width: -webkit-fill-available;
-  .buttonLabel {
-    place-content: space-between;
-  }
-}
 .card {
   width: auto;
   height: 100%;
@@ -130,13 +92,7 @@ padding-bottom: 5px;
   color: ${({ theme }) => theme.card.color};
 }
 
-&.timelineWrapper {
-  display: grid;
-  grid-template-columns: minmax(auto,240px) 1fr;
-  margin-top: 24px;
-}
 `;
-
 class MacroManager extends Component {
   constructor(props) {
     super(props);
@@ -184,7 +140,7 @@ class MacroManager extends Component {
       if (code !== null) return `${aux.extraLabel}.${macroName}`;
     }
     if (code === null) return "";
-    if (aux.label === "SPACE") return " ";
+    // if (aux.label === "SPACE") return " ";
     if (React.isValidElement(aux.label)) {
       return aux.extraLabel !== undefined && aux.extraLabel !== "" ? (
         <>
@@ -203,26 +159,30 @@ class MacroManager extends Component {
   render() {
     const { keymapDB, macro, macros, updateActions, clearMacro } = this.props;
     // console.log("Macro on TimelineEditorManager", macro);
+    const macroID = Math.random().toString(36).substring(0, 7);
+
     return (
-      <Styles className="timelineWrapper">
+      <Styles className="timelineWrapper grid mt-4 grid-cols-[minmax(auto,_240px)_1fr] rounded-t-lg pb-[5px] bg-white/80 dark:bg-[#2B2C43]">
         <div className="timelineHeaderWrapper">
-          <div className="timelineHeader">
+          <div className="timelineHeader flex items-baseline px-8 py-6">
             <div className="timelineHeaderContent">
-              <Title text={i18n.editor.macros.timelineTitle} headingLevel={4} />
+              <Heading headingLevel={3} renderAs="h4" className="mb-2">
+                {i18n.editor.macros.timelineTitle}
+              </Heading>
               <div id="portalPreviewMacroModal" ref={this.portal} />
               {this.portal.current !== null ? (
                 <PreviewMacroModal hookref={this.portal}>
                   {macro.actions.length > 0
                     ? macro.actions.map((item, index) => (
                         <span
-                          key={`literal-${index}-${item.id}`}
-                          className={`previewKey action-${item.actions} keyCode-${item.keyCode} ${
+                          key={`literal-${macroID}-${item?.id}-${index}`}
+                          className={`previewKey action-${item.type} keyCode-${item.keyCode} ${
                             item.keyCode > 223 && item.keyCode < 232 && item.action !== 2 ? "isModifier" : ""
                           }`}
                         >
                           {item.type === 2 ? (
                             <>
-                              <IconStopWatchXs /> {item.keyCode}
+                              <IconStopWatch size="xs" /> {item.keyCode}
                             </>
                           ) : (
                             this.parseKey(item.keyCode)
@@ -234,34 +194,39 @@ class MacroManager extends Component {
               ) : (
                 ""
               )}
-              <RegularButton
-                buttonText="Clear Macro"
-                icoSVG={<IconDelete />}
-                styles="outline-sm transp-bg timelineClearButton"
-                icoPosition="right"
+              <Button
+                variant="outline"
+                size="sm"
+                iconDirection="right"
                 onClick={clearMacro}
-              />
+                className="px-[12px] py-[2px] w-full justify-between mt-1"
+              >
+                <IconDelete /> {i18n.editor.macros.clearMacro}
+              </Button>
             </div>
           </div>
         </div>
         <div className="timelineBodyWrapper" ref={this.trackingWidth}>
-          {macro !== null && macro.actions !== null ? (
-            macro.actions.length > 0 ? (
-              <TimelineEditorForm
-                macro={macro}
-                macros={macros}
-                updateActions={updateActions}
-                keymapDB={keymapDB}
-                componentWidth={this.state.componentWidth}
-                updateScroll={this.props.updateScroll}
-                scrollPos={this.props.scrollPos}
-              />
-            ) : (
-              ""
-            )
+          {macro !== null && macro.actions !== null && macro.actions.length > 0 ? (
+            <TimelineEditorForm
+              macro={macro}
+              macros={macros}
+              updateActions={updateActions}
+              keymapDB={keymapDB}
+              componentWidth={this.state.componentWidth}
+              updateScroll={this.props.updateScroll}
+              scrollPos={this.props.scrollPos}
+            />
           ) : (
-            <div className="loading marginCenter">
-              <Spinner className="spinner-border" role="status" />
+            <div className="loading marginCenter trackingWrapper flex flex-col justify-center h-full items-center">
+              <div className="m-auto flex flex-wrap">
+                <Heading headingLevel={4} renderAs="h4" className="w-full text-center">
+                  Your macro is currently empty.
+                </Heading>
+                <Heading headingLevel={5} renderAs="paragraph-sm" className="w-full text-center text-gray-400 dark:text-gray-300">
+                  Let&apos;s get started adding new action to your macro!
+                </Heading>
+              </div>
             </div>
           )}
           <div id="portalMacro" />
@@ -270,15 +235,5 @@ class MacroManager extends Component {
     );
   }
 }
-
-MacroManager.propTypes = {
-  macro: PropTypes.object,
-  macros: PropTypes.array,
-  code: PropTypes.object,
-  keymapDB: PropTypes.object,
-  updateActions: PropTypes.func,
-  updateScroll: PropTypes.func,
-  scrollPos: PropTypes.number,
-};
 
 export default MacroManager;

@@ -56,7 +56,7 @@ export const Input = async (input: InputType): Promise<Context.ContextType> => {
     retriesLeft: 0,
     retriesNeuron: 0,
     retriesDefyWired: 0,
-    erasePairings: false,
+    erasePairings: true,
     restoreResult: undefined,
     rightResult: undefined,
     leftResult: undefined,

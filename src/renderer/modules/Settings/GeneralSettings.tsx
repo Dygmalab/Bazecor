@@ -25,14 +25,14 @@ import { LayerType, Neuron } from "@Renderer/types/neurons";
 // Own Components
 import { useDevice } from "@Renderer/DeviceContext";
 import { flags, languages, languageNames } from "@Renderer/modules/Settings/GeneralSettingsLanguages";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@Renderer/components/ui/card";
-import { Switch } from "@Renderer/components/ui/switch";
-import { IconChip, IconHanger, IconSun, IconMoon, IconScreen, IconKeyboard } from "@Renderer/component/Icon";
-import { ToggleButtons } from "@Renderer/component/ToggleButtons";
-import { Select } from "@Renderer/component/Select";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@Renderer/components/atoms/Card";
+import { Switch } from "@Renderer/components/atoms/Switch";
+import { IconChip, IconHanger, IconSun, IconMoon, IconScreen, IconKeyboard } from "@Renderer/components/atoms/icons";
+import ToggleGroup from "@Renderer/components/molecules/CustomToggleGroup/ToggleGroup";
 import { KeyPickerPreview } from "@Renderer/modules/KeyPickerKeyboard";
 import getLanguage from "@Renderer/utils/language";
-import ToastMessage from "@Renderer/component/ToastMessage";
+import ToastMessage from "@Renderer/components/atoms/ToastMessage";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@Renderer/components/atoms/Select";
 
 import { i18n } from "@Renderer/i18n";
 import Keymap from "../../../api/keymap";
@@ -150,9 +150,13 @@ const GeneralSettings = ({
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <form>
-            <ToggleButtons selectDarkMode={selectDarkMode} value={darkMode} listElements={layoutsModes} styles="flex" size="sm" />
-          </form>
+          <ToggleGroup
+            triggerFunction={selectDarkMode}
+            value={darkMode}
+            listElements={layoutsModes}
+            variant="regular"
+            size="sm"
+          />
         </CardContent>
       </Card>
       <Card className="mt-3 max-w-2xl mx-auto" variant="default">
@@ -165,15 +169,23 @@ const GeneralSettings = ({
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <form>
-            <Select
-              id="languageSelector"
-              onSelect={changeLanguage}
-              value={selectedLanguage}
-              listElements={languageElements}
-              disabled={false}
-            />
-          </form>
+          <Select value={selectedLanguage} onValueChange={changeLanguage}>
+            <SelectTrigger className="w-full [&_span]:!flex [&_span]:!gap-3 [&_span]:!items-center">
+              <SelectValue placeholder="Select language" />
+            </SelectTrigger>
+            <SelectContent>
+              {languageElements.map(item => (
+                <SelectItem
+                  value={item.value}
+                  key={`languageItem-${item.index}`}
+                  className="[&_span]:!flex [&_span]:!gap-3 [&_span]:!items-center"
+                >
+                  {item.icon && <img className="h-6 w-6" src={item.icon} alt={`${item.text}`} />}
+                  {item.text}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
           <KeyPickerPreview
             code={code}
             disableMods="disabled"

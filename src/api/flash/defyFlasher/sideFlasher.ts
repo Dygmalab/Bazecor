@@ -262,18 +262,19 @@ export default class SideFlaser {
         // retry++;
       }
 
-      this.serialport.write("upgrade.keyscanner.finish\n");
+      await this.serialport.write("upgrade.keyscanner.finish\n");
       await readLine();
       await readLine();
 
       if (sideId === 1) {
         log.info("Going to close Serialport!");
         let limit = 10;
-        while (this.serialport !== undefined && this.serialport.isOpen && limit > 0) {
+        while (this.serialport?.isOpen && limit > 0) {
+          await this.serialport.drain();
           await this.serialport.close();
           await this.serialport.removeAllListeners();
           await this.serialport.destroy();
-          this.serialport = undefined;
+          // this.serialport = undefined;
           delay(100);
           limit -= 1;
         }

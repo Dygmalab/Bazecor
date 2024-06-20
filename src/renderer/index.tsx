@@ -20,7 +20,6 @@ import { MemoryRouter } from "react-router-dom";
 import { createRoot } from "react-dom/client";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import "bootstrap-css-only/css/bootstrap.min.css";
 import App from "./App";
 import Error from "./Error";
 import "./theme/styles.css";

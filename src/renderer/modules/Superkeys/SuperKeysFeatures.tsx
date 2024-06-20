@@ -1,7 +1,6 @@
 import React from "react";
 import Styled from "styled-components";
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@Renderer/components/ui/accordion";
-import { Card, CardContent } from "@Renderer/components/ui/card";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@Renderer/components/atoms/Accordion";
 import IconCheckmarkSm from "@Assets/base/icon-checkmark-green.svg";
 import { i18n } from "@Renderer/i18n";
 
@@ -72,7 +71,7 @@ function SuperKeysFeatures() {
     <Style>
       <Accordion type="single" collapsible className="w-full rounded bg-gray-25/80 dark:bg-gray-600 mt-3">
         <AccordionItem value="item-1" className="border-0">
-          <AccordionTrigger className="flex justify-between items-center py-3 mt-0 mb-[-1px] rounded-none text-purple-200 dark:text-gray-25 border-b border-solid border-gray-50 dark:border-gray-600">
+          <AccordionTrigger className="flex justify-between items-center py-3 px-3 mt-0 mb-[-1px] rounded-none text-purple-200 dark:text-gray-25 border-b border-solid border-gray-50 dark:border-gray-600">
             <strong className="text-xs tracking-tight font-semibold">{i18n.editor.superkeys.collapse.title}</strong>
           </AccordionTrigger>
           <AccordionContent className="px-3 py-3 bg-transparent border-0">

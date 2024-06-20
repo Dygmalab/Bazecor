@@ -17,7 +17,7 @@
 
 import React from "react";
 
-import { IconShutdownSm, IconSleepSm } from "@Renderer/component/Icon";
+import { IconShutdown, IconSleep } from "@Renderer/components/atoms/icons";
 import { withModifiers } from "./utils";
 
 const MiscellaneousTable = {
@@ -46,14 +46,14 @@ const MiscellaneousTable = {
     {
       code: 20865,
       labels: {
-        primary: <IconShutdownSm />,
+        primary: <IconShutdown size="sm" />,
         verbose: "Shut Down",
       },
     },
     {
       code: 20866,
       labels: {
-        primary: <IconSleepSm />,
+        primary: <IconSleep size="sm" />,
         verbose: "Sleep",
       },
     },

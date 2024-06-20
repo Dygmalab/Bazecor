@@ -96,19 +96,19 @@ const GlobalStyles = createGlobalStyle<{ theme: DefaultTheme }>`
     opacity: 1;
   }
 
-  button {
-    border: 0;
-    display: inline-block;
-    padding: 12px 24px;
-    font-size: 14px;
-    border-radius: 4px;
-    margin-top: 5px;
-    cursor: pointer;
-    background-color: ${({ theme }) => theme.colors.button.background};
-    color: #FFFFFF;
-    font-family: ${({ theme }) => theme.font};
-    font-weight: 600;
-  }
+  // button {
+  //   border: 0;
+  //   display: inline-block;
+  //   padding: 12px 24px;
+  //   font-size: 14px;
+  //   border-radius: 4px;
+  //   margin-top: 5px;
+  //   cursor: pointer;
+  //   background-color: ${({ theme }) => theme.colors.button.background};
+  //   color: #FFFFFF;
+  //   font-family: ${({ theme }) => theme.font};
+  //   font-weight: 600;
+  // }
 
 
   button.btn-primary, button.btn{
@@ -1196,119 +1196,7 @@ div.card.card-preferences .card-body {
 //
 // Preview macro
 //
-.previewMacro {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  margin-left: -2px;
-  margin-right: -2px;
-  .previewKey {
-    line-height: 2em;
-    font-size: 14px;
-    border-radius: 3px;
-    color: ${({ theme }) => theme.styles.macro.previewColor};
-    border: 1px solid ${({ theme }) => theme.styles.macro.previewColor};
-    padding: 0 6px;
-    margin: 2px;
-  }
-  .action-2 {
-    color: ${({ theme }) => theme.colors.brandDangerLighter};
-    border: 1px solid ${({ theme }) => theme.colors.brandDangerLighter};
-    padding: 0 6px 0 24px;
-    position: relative;
-    margin-left: 2px;
-    margin-right: 2px;
-    margin-bottom: 2px;
-    svg {
-      position: absolute;
-      top: 50%;
-      left: 3px;
-      transform: translate3d(0, -55%, 0);
-    }
-  }
-  .action-8 {
-    margin: 0;
-    border-color: transparent;
-    padding: 0;
-    &.keyCode-40,
-    &.keyCode-41,
-    &.keyCode-42,
-    &.keyCode-43,
-    &.keyCode-57,
-    &.keyCode-58,
-    &.keyCode-59,
-    &.keyCode-60,
-    &.keyCode-61,
-    &.keyCode-62,
-    &.keyCode-63,
-    &.keyCode-64,
-    &.keyCode-65,
-    &.keyCode-66,
-    &.keyCode-67,
-    &.keyCode-68,
-    &.keyCode-69,
-    &.keyCode-70,
-    &.keyCode-71,
-    &.keyCode-72,
-    &.keyCode-73,
-    &.keyCode-74,
-    &.keyCode-75,
-    &.keyCode-76,
-    &.keyCode-77,
-    &.keyCode-78,
-    &.keyCode-79,
-    &.keyCode-80,
-    &.keyCode-81,
-    &.keyCode-82,
-    &.keyCode-83,
-    &.keyCode-88,
-    &.keyCode-101,
-    &.keyCode-104,
-    &.keyCode-105,
-    &.keyCode-106,
-    &.keyCode-107,
-    &.keyCode-108,
-    &.keyCode-109,
-    &.keyCode-110,
-    &.keyCode-111,
-    &.keyCode-112,
-    &.keyCode-113,
-    &.keyCode-114,
-    &.keyCode-115 {
-      border: 1px solid ${({ theme }) => theme.styles.macro.previewColor};
-      padding: 0 6px;
-      margin: 2px;
-    }
-  }
-  .isModifier {
-    color: ${({ theme }) => theme.styles.macro.previewColor};
-    border: 1px solid ${({ theme }) => theme.styles.macro.previewColor};
-    padding: 0 6px;
-    position: relative;
-    margin-right: 3px;
-    margin-bottom: 2px;
-    &.keyCode-229,
-    &.keyCode-225 {
-      border-color: ${({ theme }) => theme.styles.macroKey.shift.background};
-      color:  ${({ theme }) => theme.styles.macroKey.shift.background};
-    }
-    &.keyCode-224,
-    &.keyCode-228 {
-      border-color: ${({ theme }) => theme.styles.macroKey.control.background};
-      color:  ${({ theme }) => theme.styles.macroKey.control.background};
-    }
-    &.keyCode-226,
-    &.keyCode-230 {
-      border-color: ${({ theme }) => theme.styles.macroKey.alt.background};
-      color:  ${({ theme }) => theme.styles.macroKey.alt.background};
-    }
-    &.keyCode-227,
-    &.keyCode-231 {
-      border-color: ${({ theme }) => theme.styles.macroKey.os.background};
-      color:  ${({ theme }) => theme.styles.macroKey.os.background};
-    }
-  }
-}
+
 
 .progress {
   border-radius: 0;
@@ -1322,111 +1210,6 @@ div.card.card-preferences .card-body {
   box-shadow: ${({ theme }) => theme.styles.progress.boxShadow};
   background-color: ${({ theme }) => theme.styles.progress.progressBarBackground};
 }
-
-//
-// Toast
-//
-.Toastify__toast-container {
-  padding: 0;
-  width: 368px;
-  .Toastify__toast-icon {
-    display: none;
-    visibility: hidden;
-  }
-}
-.Toastify__toast--default,
-.Toastify__toast {
-  padding: 0;
-  border-radius: 6px;
-  background: ${({ theme }) => theme.styles.toast.background};
-  box-shadow: ${({ theme }) => theme.styles.toast.boxShadow};
-  position: relative;
-  overflow: visible;
-  color: ${({ theme }) => theme.styles.toast.defaultColorBody};
-  &:after {
-    content: '';
-    background-color: ${({ theme }) => theme.styles.toast.backgroundNoStatus};
-    width: 3px;
-    height: 24px;
-    border-radius: 3px 0px 0px 3px;
-    position: absolute;
-    left: -3px;
-    top: 22px;
-  }
-}
-
-.Toastify__toast--default {
-  .toastIcon,
-  .toastBodyInner h4{
-    color: ${({ theme }) => theme.styles.toast.defaultColorTitle};
-  }
-}
-.Toastify__toast--warning {
-  background: ${({ theme }) => theme.styles.toast.backgroundWarning};
-  &:after {
-    background: ${({ theme }) => theme.colors.gradientWarning};
-  }
-  .toastIcon,
-  .toastBodyInner h4{
-    color: ${({ theme }) => theme.styles.toast.warningColorTitle};
-  }
-}
-.Toastify__toast--error {
-  background: ${({ theme }) => theme.styles.toast.backgroundDanger};
-  &:after {
-    background: ${({ theme }) => theme.colors.gradientDanger};
-  }
-  .toastIcon,
-  .toastBodyInner h4{
-    color: ${({ theme }) => theme.styles.toast.dangerColorTitle};
-  }
-}
-.Toastify__toast--success {
-  background: ${({ theme }) => theme.styles.toast.backgroundSuccess};
-  &:after {
-    background: ${({ theme }) => theme.colors.gradientSuccess};
-  }
-  .toastIcon,
-  .toastBodyInner h4{
-    color: ${({ theme }) => theme.styles.toast.successColorTitle};
-  }
-}
-.Toastify__close-button {
-  position: absolute;
-  top: 8px;
-  right: 8px;
-  background-position: center center;
-  background-repeat: no-repeat;
-  background-image: url('${({ theme }) => theme.styles.modal.closeButton}');
-  width: 24px;
-  height: 24px;
-  opacity: 0.7;
-  svg {
-    display:none;
-  }
-}
-
-.Toastify__progress-bar {
-  margin: 8px 24px;
-  width: calc(100% - 42px);
-  height: 3px;
-  border-radius: 3px;
-  background: ${({ theme }) => theme.styles.toast.backgroundNoStatus};
-  &.Toastify__progress-bar--success {
-    background: ${({ theme }) => theme.styles.toast.successColorTitle};
-  }
-  &.Toastify__progress-bar--warning {
-    background: ${({ theme }) => theme.styles.toast.warningColorTitle};
-  }
-  &.Toastify__progress-bar--error {
-    background: ${({ theme }) => theme.styles.toast.dangerColorTitle};
-  }
-}
-.Toastify__toast-container--top-right {
-  top: 92px;
-  right: 26px;
-}
-
 
 //
 // MACROKEY
@@ -2030,7 +1813,7 @@ div.card.card-preferences .card-body {
     display: none;
   }
   .standarViewMode .standardView{
-    padding: 24px 24px 24px 142px;
+    padding: 24px 24px 24px 32px;
   }
 }
 @media screen and (max-width: 1520px){

@@ -3,15 +3,15 @@ import React, { useEffect, useCallback, useRef, useState } from "react";
 import Styled from "styled-components";
 
 // Custom components
-import Title from "@Renderer/component/Title";
-import { ButtonConfig } from "@Renderer/component/Button";
-import { BatteryStatusSide, SavingModeIndicator } from "@Renderer/component/Battery";
+import Heading from "@Renderer/components/atoms/Heading";
+import { Button } from "@Renderer/components/atoms/Button";
+import { BatteryStatusSide, SavingModeIndicator } from "@Renderer/components/atoms/battery";
 
 // Assets
-import { IconBattery, IconRefresh } from "@Renderer/component/Icon";
+import { IconRefresh, IconBattery } from "@Renderer/components/atoms/icons";
 
 import { useDevice } from "@Renderer/DeviceContext";
-import { LogoLoader } from "@Renderer/component/Loader";
+import LogoLoader from "@Renderer/components/atoms/loader/LogoLoader";
 import { i18n } from "@Renderer/i18n";
 
 const Style = Styled.div`
@@ -223,7 +223,9 @@ const BatteryStatus = ({ disable }: BatteryStatusProps) => {
         </div>
         <div className="dropdown-menu dropdown-menu--battery">
           <div className="dropdown-menu__inner">
-            <Title text={i18n.wireless.batteryPreferences.battery} headingLevel={4} svgICO={<IconBattery />} />
+            <Heading headingLevel={4} renderAs="h4">
+              <IconBattery /> {i18n.wireless.batteryPreferences.battery}
+            </Heading>
             {loading ? (
               <div className="batteryLoader">
                 <LogoLoader width="200" warning={false} error={false} paused={false} />
@@ -243,21 +245,9 @@ const BatteryStatus = ({ disable }: BatteryStatusProps) => {
             )}
             <div className="batterySettingItem batteryUpdateStatus">
               <div className="batterySettingLabel">Force read Battery level</div>
-              <ButtonConfig
-                onClick={forceRetrieveBattery}
-                icoSVG={<IconRefresh />}
-                variation="button-settings"
-                dataAnimate={animateIcon}
-                selected={null}
-                size={null}
-                buttonText={null}
-                tooltip={null}
-                tooltipPlacement={null}
-                tooltipClassName={null}
-                icoPosition={null}
-                tooltipDelay={null}
-                disabled={null}
-              />
+              <Button variant="config" size="icon" onClick={forceRetrieveBattery}>
+                <IconRefresh />
+              </Button>
             </div>
           </div>
         </div>

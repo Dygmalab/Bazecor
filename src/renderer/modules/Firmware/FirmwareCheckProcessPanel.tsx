@@ -26,11 +26,11 @@ import DeviceChecks from "@Renderer/controller/DeviceChecks/machine";
 import { ContextType } from "@Renderer/controller/FlashManager/context";
 
 // Visual components
-import Title from "@Renderer/component/Title";
-import Callout from "@Renderer/component/Callout";
-import { RegularButton } from "@Renderer/component/Button";
-import { FirmwareLoader } from "@Renderer/component/Loader";
-import AccordionFirmware from "@Renderer/component/Accordion/AccordionFirmware";
+import Heading from "@Renderer/components/atoms/Heading";
+import Callout from "@Renderer/components/molecules/Callout/Callout";
+import { Button } from "@Renderer/components/atoms/Button";
+import LogoLoader from "@Renderer/components/atoms/loader/LogoLoader";
+import AccordionFirmware from "@Renderer/components/molecules/CustomAccordion/AccordionFirmware";
 
 import FirmwareNeuronStatus from "./FirmwareNeuronStatus";
 import FirmwareWarningList from "./FirmwareWarningList";
@@ -208,7 +208,7 @@ function FirmwareCheckProcessPanel(props: FirmwareCheckProcessPanelType) {
   return (
     <Style>
       {loading ? (
-        <FirmwareLoader width={undefined} warning={undefined} error={undefined} paused={undefined} />
+        <LogoLoader firmwareLoader />
       ) : (
         <div>
           {state.context.device.info.product !== "Raise" ? (
@@ -216,28 +216,37 @@ function FirmwareCheckProcessPanel(props: FirmwareCheckProcessPanelType) {
               <div className="firmware-row">
                 <div className="firmware-content borderLeftTopRadius">
                   <div className="firmware-content--inner">
-                    <Title
-                      text={
-                        !state.context.sideLeftOk || !state.context.sideRightOK
-                          ? i18n.firmwareUpdate.texts.errorTitle
-                          : i18n.firmwareUpdate.texts.disclaimerTitle
-                      }
+                    <Heading
                       headingLevel={3}
-                      type={
-                        (!state.context.sideLeftOk || !state.context.sideRightOK ? "warning" : "default") as "warning" | "default"
-                      }
-                    />
+                      renderAs="h3"
+                      variant={!state.context.sideLeftOk || !state.context.sideRightOK ? "warning" : "default"}
+                    >
+                      {!state.context.sideLeftOk || !state.context.sideRightOK
+                        ? i18n.firmwareUpdate.texts.errorTitle
+                        : i18n.firmwareUpdate.texts.disclaimerTitle}
+                    </Heading>
                     {state.context.sideLeftOk && state.context.sideRightOK ? (
                       <>
                         <div
-                          className="disclaimerContent"
+                          className="disclaimerContent text-sm mt-2 leading-snug font-medium"
                           dangerouslySetInnerHTML={{ __html: i18n.firmwareUpdate.texts.disclaimerContent }}
                         />
-                        <div
-                          className="disclaimerContent"
+                        {/* <div
+                          className="disclaimerContent text-sm mt-2 leading-snug font-medium"
                           dangerouslySetInnerHTML={{ __html: i18n.firmwareUpdate.texts.disclaimerContent3 }}
-                        />
-                        <Callout content={i18n.firmwareUpdate.texts.disclaimerContent2} size="sm" className="mt-lg" />
+                        /> */}
+                        <Callout size="sm" className="mt-4">
+                          <ul className="pl-4 list-disc">
+                            {state.context.device.info.keyboardType === "wireless" && (
+                              <li className="text-orange-200 font-semibold mb-2">
+                                ⚠️ The firmware update process will reset your Bluetooth pairings. You&apos;ll need to unpair
+                                (&quot;forget device&quot;) and re-pair.
+                              </li>
+                            )}
+                            <li className=" mb-2">{i18n.firmwareUpdate.texts.disclaimerContent3}</li>
+                            <li className=" mb-2">{i18n.firmwareUpdate.texts.disclaimerContent2}</li>
+                          </ul>
+                        </Callout>
                       </>
                     ) : (
                       ""
@@ -263,36 +272,34 @@ function FirmwareCheckProcessPanel(props: FirmwareCheckProcessPanelType) {
               <div className="firmware-row">
                 <div className="firmware-content borderLeftBottomRadius">
                   <div className="wrapperActions">
-                    <RegularButton
-                      styles="outline transp-bg flashingbutton nooutlined"
-                      buttonText={
-                        !state.context.sideLeftOk || !state.context.sideRightOK
-                          ? i18n.firmwareUpdate.texts.cancelButton
-                          : i18n.firmwareUpdate.texts.backwds
-                      }
+                    <Button
+                      variant="outline"
                       onClick={() => {
                         send({ type: "cancel-event" });
                         retryBlock(state.context);
                       }}
-                    />
+                    >
+                      {!state.context.sideLeftOk || !state.context.sideRightOK
+                        ? i18n.firmwareUpdate.texts.cancelButton
+                        : i18n.firmwareUpdate.texts.backwds}
+                    </Button>
                   </div>
                 </div>
                 <div className="firmware-sidebar borderRightBottomRadius">
                   <div className="buttonActions">
                     {state.context.sideLeftOk && state.context.sideRightOK && state.context.backup ? (
-                      <RegularButton
-                        styles="primary flashingbutton nooutlined"
-                        buttonText={i18n.firmwareUpdate.texts.letsStart}
-                        onClick={() => send({ type: "pressed-event" })}
-                      />
+                      <Button variant="primary" onClick={() => send({ type: "pressed-event" })}>
+                        {i18n.firmwareUpdate.texts.letsStart}
+                      </Button>
                     ) : (
-                      <RegularButton
-                        styles="primary flashingbutton nooutlined"
-                        buttonText={i18n.general.retry}
+                      <Button
+                        variant="primary"
                         onClick={() => {
                           send({ type: "retry-event" });
                         }}
-                      />
+                      >
+                        {i18n.general.retry}
+                      </Button>
                     )}
                   </div>
                 </div>

@@ -17,13 +17,13 @@
 
 import React, { useState, useEffect } from "react";
 import Styled from "styled-components";
-import ProgressBar from "react-bootstrap/ProgressBar";
 import { i18n } from "@Renderer/i18n";
 
-import Title from "../../component/Title";
-import { StepsProgressBar } from "../../component/StepsBar";
+import StepsProgressBar from "@Renderer/components/atoms/stepsBar/StepsProgressBar";
+import { Progress } from "@Renderer/components/atoms/Progress";
+import CircleLoader from "@Renderer/components/atoms/loader/CircleLoader";
+import Heading from "@Renderer/components/atoms/Heading";
 import FirmwareImageHelp from "./FirmwareImageHelp";
-import { CircleLoader } from "../../component/Loader";
 
 const Style = Styled.div`
 width: 100%;
@@ -185,9 +185,10 @@ const FirmwareProgressStatus = (props: FirmwareProgressStatusType) => {
         />
         <div className="process-row">
           <StepsProgressBar steps={steps} stepActive={stepsPosition} />
-          <ProgressBar>
+          <Progress variant="animated" value={flashProgress} className="mt-[-6px]" />
+          {/* <ProgressBar>
             <ProgressBar striped animated now={flashProgress} />
-          </ProgressBar>
+          </ProgressBar> */}
           <div
             className={`partialLoader partialLoader--${deviceProduct}`}
             style={{ gridTemplateColumns: `repeat(${steps.length - 3}, 1fr)` }}
@@ -219,33 +220,26 @@ const FirmwareProgressStatus = (props: FirmwareProgressStatusType) => {
         </div>
         <div className="process-row process-footer">
           {stepsPosition === 0 ? (
-            <Title
-              text={
-                deviceProduct === "Raise"
-                  ? i18n.firmwareUpdate.texts.flashCardTitle1
-                  : i18n.firmwareUpdate.texts.flashCardTitleDefy1
-              }
-              headingLevel={3}
-              color="success"
-            />
+            <Heading headingLevel={3} renderAs="h4" variant="success">
+              {deviceProduct === "Raise"
+                ? i18n.firmwareUpdate.texts.flashCardTitle1
+                : i18n.firmwareUpdate.texts.flashCardTitleDefy1}
+            </Heading>
           ) : (
-            <Title
-              text={steps[stepsPosition].title}
-              headingLevel={3}
-              color={stepsPosition === steps.length - 1 ? "warning" : "success"}
-            />
+            <Heading headingLevel={3} renderAs="h4" variant={stepsPosition === steps.length - 1 ? "warning" : "success"}>
+              {steps[stepsPosition].title}
+            </Heading>
           )}
           {stepsPosition === 0 ? (
-            <Title
-              text={
-                deviceProduct === "Raise"
-                  ? i18n.firmwareUpdate.texts.flashCardTitle2
-                  : i18n.firmwareUpdate.texts.progressCardTitleDefy2
-              }
-              headingLevel={6}
-            />
+            <Heading headingLevel={4} renderAs="paragraph-sm">
+              {deviceProduct === "Raise"
+                ? i18n.firmwareUpdate.texts.flashCardTitle2
+                : i18n.firmwareUpdate.texts.progressCardTitleDefy2}
+            </Heading>
           ) : (
-            <Title text={steps[stepsPosition].description} headingLevel={6} />
+            <Heading headingLevel={4} renderAs="paragraph-sm">
+              {steps[stepsPosition].description}
+            </Heading>
           )}
         </div>
       </div>

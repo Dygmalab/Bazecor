@@ -17,8 +17,8 @@
 
 import React from "react";
 import Styled from "styled-components";
+import Heading from "@Renderer/components/atoms/Heading";
 import { PageHeaderType } from "./Types";
-import Title from "../../component/Title";
 import Saving from "../Saving";
 
 const Style = Styled.div`
@@ -27,7 +27,7 @@ flex: 0 0 100%;
 align-self: flex-start;
 // position: sticky;
 // top: 32px;
-z-index: 300;
+z-index: 30;
 &.pageHeaderSticky {
   position: sticky;
   top: 0;
@@ -111,7 +111,9 @@ function PageHeader(props: PageHeaderType) {
     <Style className={`${styles === "pageHeaderFlatBottom" ? "pageHeaderSticky" : ""}`}>
       <div className={`pageHeader ${size && size} ${styles && styles} ${isColorActive ? "extraPanelActive" : ""}`}>
         <div className="pageTitle">
-          <Title text={text} headingLevel={2} />
+          <Heading headingLevel={2} renderAs="h2">
+            {text}
+          </Heading>
         </div>
         <div className="pageTools">
           {contentSelector || ""}

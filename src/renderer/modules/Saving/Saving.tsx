@@ -16,13 +16,7 @@
  */
 
 import React from "react";
-import Styled from "styled-components";
-import { i18n } from "@Renderer/i18n";
-import { RegularButton } from "../../component/Button";
-
-const Style = Styled.div`
-
-`;
+import { Button } from "@Renderer/components/atoms/Button";
 
 interface SavingProps {
   saveContext: () => Promise<void> | void;
@@ -34,22 +28,20 @@ interface SavingProps {
 function Saving(props: SavingProps) {
   const { saveContext, destroyContext, inContext, isSaving } = props;
   return (
-    <Style className="savingButtons">
-      <RegularButton
-        onClick={destroyContext}
-        buttonText={i18n.app.cancelPending.button}
-        styles="outline transp-bg"
-        size="sm"
-        disabled={!inContext || isSaving}
-      />
-      <RegularButton
-        onClick={saveContext}
-        buttonText={isSaving ? i18n.components.save.saving : i18n.components.save.button}
-        styles="primary"
-        size="sm"
-        disabled={!inContext || isSaving}
-      />
-    </Style>
+    <div className="savingButtons flex gap-2">
+      <Button onClick={destroyContext} variant="outline" size="sm" disabled={!inContext || isSaving}>
+        Discard&nbsp;<span className="sm:hidden md:hidden lg:inline-block">changes</span>
+      </Button>
+      <Button onClick={saveContext} variant="primary" size="sm" disabled={!inContext || isSaving}>
+        {isSaving ? (
+          "Saving"
+        ) : (
+          <>
+            Save&nbsp;<span className="sm:hidden md:hidden lg:inline-block">changes</span>
+          </>
+        )}
+      </Button>
+    </div>
   );
 }
 

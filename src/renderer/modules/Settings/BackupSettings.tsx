@@ -22,21 +22,21 @@ import fs from "fs";
 import log from "electron-log/renderer";
 
 // React Bootstrap Components
-import { Card, CardContent, CardHeader, CardTitle } from "@Renderer/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@Renderer/components/atoms/Card";
 
 // Own Components
 import { useDevice } from "@Renderer/DeviceContext";
-import ToastMessage from "@Renderer/component/ToastMessage";
+import ToastMessage from "@Renderer/components/atoms/ToastMessage";
 import { i18n } from "@Renderer/i18n";
-import { RegularButton } from "@Renderer/component/Button";
+import { Button } from "@Renderer/components/atoms/Button";
 
 // Icons Imports
-import { IconArrowDownWithLine, IconFloppyDisk } from "@Renderer/component/Icon";
+import { IconArrowDownWithLine, IconFloppyDisk } from "@Renderer/components/atoms/icons";
 
 // Utils
 import Store from "@Renderer/utils/Store";
 import { BackupSettingsProps } from "@Renderer/types/preferences";
-import WaitForRestoreDialog from "@Renderer/component/WaitForRestoreDialog";
+import WaitForRestoreDialog from "@Renderer/components/molecules/CustomModal/WaitForRestoreDialog";
 import { BackupType } from "@Renderer/types/backups";
 import { VirtualType } from "@Renderer/types/virtual";
 import Backup from "../../../api/backup";
@@ -163,6 +163,16 @@ const BackupSettings = (props: BackupSettingsProps) => {
     }
   };
 
+  const triggerGetLatestBackup = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+    localGetLatestBackup();
+  };
+
+  const triggerGetBackup = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+    GetBackup();
+  };
+
   return (
     <Card className="mt-3 max-w-2xl mx-auto" variant="default">
       <CardHeader>
@@ -174,8 +184,12 @@ const BackupSettings = (props: BackupSettingsProps) => {
         <form>
           <h3 className="mb-1 text-gray-400 dark:text-gray-100 tracking-tight font-semibold">Backup actions</h3>
           <div className="flex gap-3">
-            <RegularButton onClick={GetBackup} styles="short" buttonText="Restore backup from file..." disabled={!connected} />
-            <RegularButton onClick={localGetLatestBackup} styles="short" buttonText="Restore from last backup" />
+            <Button variant="short" onClick={event => triggerGetBackup(event)} disabled={!connected}>
+              Restore backup from file...
+            </Button>
+            <Button variant="short" onClick={event => triggerGetLatestBackup(event)} disabled={!connected}>
+              Restore from last backup
+            </Button>
             <WaitForRestoreDialog title="Restoring Backup" open={performingBackup} />
           </div>
         </form>

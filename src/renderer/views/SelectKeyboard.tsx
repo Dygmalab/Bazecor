@@ -19,7 +19,6 @@ import React, { useState, useEffect, useCallback } from "react";
 import Styled from "styled-components";
 import { toast } from "react-toastify";
 import { ipcRenderer } from "electron";
-import Container from "react-bootstrap/Container";
 import { useDevice, DeviceTools } from "@Renderer/DeviceContext";
 import log from "electron-log/renderer";
 
@@ -27,13 +26,13 @@ import { DeviceItemsType, SelectKeyboardProps } from "@Renderer/types/selectKeyb
 import { DeviceClass } from "@Renderer/types/devices";
 import { Neuron } from "@Renderer/types/neurons";
 
-import { Banner } from "@Renderer/component/Banner";
-import Title from "@Renderer/component/Title";
-import { IconArrowDownWithLine, IconBluetooth } from "@Renderer/component/Icon";
+import Banner from "@Renderer/components/atoms/Banner";
+import Heading from "@Renderer/components/atoms/Heading";
+import { IconArrowDownWithLine, IconBluetooth } from "@Renderer/components/atoms/icons";
 import { PageHeader } from "@Renderer/modules/PageHeader";
 import { i18n, refreshHardware } from "@Renderer/i18n";
 import NeuronConnection from "@Renderer/modules/NeuronConnection";
-import ToastMessage from "@Renderer/component/ToastMessage";
+import ToastMessage from "@Renderer/components/atoms/ToastMessage";
 import VirtualSelector from "@Renderer/modules/VirtualKeyboards/VirtualSelector";
 
 import Store from "../utils/Store";
@@ -193,6 +192,7 @@ const SelectKeyboard = (props: SelectKeyboardProps) => {
   const [deviceItems, setDeviceItems] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [scanFoundDevices, setScanFoundDevices] = useState(false);
+  const [openDialogVirtualKB, setOpenDialogVirtualKB] = useState(false);
   const { onConnect, onDisconnect, connected, setLoading, restoredOk } = props;
 
   const loadingHandler = useCallback(
@@ -337,7 +337,7 @@ const SelectKeyboard = (props: SelectKeyboardProps) => {
     setDeviceItems(newDevices);
     setSelectedPortIndex(0);
     await DeviceTools.disconnect(state.currentDevice);
-    dispatch({ type: "disconnect", payload: selectedPortIndex });
+    // dispatch({ type: "disconnect", payload: selectedPortIndex });
     await onDisconnect();
   };
 
@@ -374,7 +374,7 @@ const SelectKeyboard = (props: SelectKeyboardProps) => {
 
   return (
     <Styles>
-      <Container fluid className="keyboard-select center-content">
+      <div className="keyboard-select center-content px-3">
         <PageHeader text={i18n.keyboardSelect.title} />
         <div className="keyboardSelection-wrapper">
           <NeuronConnection
@@ -396,16 +396,23 @@ const SelectKeyboard = (props: SelectKeyboardProps) => {
           />
           <div className="card-alert" style={{ marginTop: "16px" }}>
             <Banner icon={<IconBluetooth />} variant="warning">
-              <Title text="Defy owners!" headingLevel={5} />
+              <Heading headingLevel={5} renderAs="h5">
+                Defy owners!
+              </Heading>
               <p
                 style={{ maxWidth: "610px" }}
                 dangerouslySetInnerHTML={{ __html: i18n.keyboardSelect.HIDReminderOfManuallyScan }}
               />
             </Banner>
           </div>
-          <VirtualSelector handleVirtualConnect={handleVirtualConnect} />
+          <VirtualSelector
+            handleVirtualConnect={handleVirtualConnect}
+            openDialogVirtualKB={openDialogVirtualKB}
+            setOpenDialogVirtualKB={setOpenDialogVirtualKB}
+            showButton
+          />
         </div>
-      </Container>
+      </div>
     </Styles>
   );
 };

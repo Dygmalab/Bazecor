@@ -22,19 +22,19 @@ import { useMachine } from "@xstate/react";
 import { i18n } from "@Renderer/i18n";
 
 // State machine
+import { IconNoWifi, IconWarning } from "@Renderer/components/atoms/icons";
+import Heading from "@Renderer/components/atoms/Heading";
+import LogoLoader from "@Renderer/components/atoms/loader/LogoLoader";
+import { Button } from "@Renderer/components/atoms/Button";
 import FWSelection from "../../controller/FirmwareSelection/machine";
 
 // Visual components
-import Title from "../../component/Title";
-import { RegularButton } from "../../component/Button";
-import { FirmwareLoader } from "../../component/Loader";
 
 // Visual modules
 import FirmwareNeuronStatus from "./FirmwareNeuronStatus";
 
 // Assets
 // import videoDefyCablesDisconnect from "@Assets/videos/connectCablesDefy.mp4";
-import { IconNoWifi, IconWarning } from "../../component/Icon";
 
 const Style = Styled.div`
 width: 100%;
@@ -221,7 +221,7 @@ function FirmwareErrorPanel(props: FirmwareErrorPanelType) {
   return (
     <Style>
       {!handleError || loading ? (
-        <FirmwareLoader width={undefined} warning={undefined} error={undefined} paused={undefined} />
+        <LogoLoader firmwareLoader />
       ) : (
         <div className="firmware-wrapper">
           <div className="firmware-row">
@@ -229,7 +229,9 @@ function FirmwareErrorPanel(props: FirmwareErrorPanelType) {
               <div className="firmware-content--inner">
                 {(state.context.error as Error).message.includes("GitHubData") ? (
                   <>
-                    <Title text={i18n.firmwareUpdate.texts.errorTitle} headingLevel={3} type="warning" />
+                    <Heading headingLevel={3} renderAs="h3" variant="warning">
+                      {i18n.firmwareUpdate.texts.errorTitle}
+                    </Heading>
                     <div className="errorListWrapper">
                       <div className="errorListItem">
                         <div className="errorListImage iconWarning">
@@ -241,7 +243,9 @@ function FirmwareErrorPanel(props: FirmwareErrorPanelType) {
                   </>
                 ) : (
                   <>
-                    <Title text="Something went wrong" headingLevel={3} type="warning" />
+                    <Heading headingLevel={3} renderAs="h3" variant="warning">
+                      Something went wrong
+                    </Heading>
                     <div className="errorListWrapper">
                       <div className="errorListItem">
                         <div className="errorListImage iconWarning">
@@ -272,11 +276,16 @@ function FirmwareErrorPanel(props: FirmwareErrorPanelType) {
             <div className="firmware-content borderLeftBottomRadius">
               <div className="wrapperActions">
                 {!handleError ? (
-                  <RegularButton
-                    styles="outline transp-bg flashingbutton nooutlined"
-                    buttonText={i18n.firmwareUpdate.texts.cancelButton}
-                    // onClick={onCancelDialog}
-                  />
+                  <Button
+                    variant="outline"
+                    onClick={() => {
+                      // TODO: refactor this
+                      send({ type: "retry-event" });
+                    }}
+                    size="sm"
+                  >
+                    {i18n.firmwareUpdate.texts.cancelButton}
+                  </Button>
                 ) : (
                   ""
                 )}
@@ -284,14 +293,16 @@ function FirmwareErrorPanel(props: FirmwareErrorPanelType) {
             </div>
             <div className="firmware-sidebar borderRightBottomRadius">
               <div className="buttonActions">
-                <RegularButton
-                  styles="primary flashingbutton nooutlined"
-                  buttonText={i18n.general.retry}
+                <Button
+                  variant="primary"
+                  size="sm"
                   onClick={() => {
                     send({ type: "retry-event" });
                     retryBlock(state.context);
                   }}
-                />
+                >
+                  {i18n.general.retry}
+                </Button>
               </div>
             </div>
           </div>

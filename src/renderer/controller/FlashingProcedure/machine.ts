@@ -371,7 +371,7 @@ const FlashDevice = setup({
         },
         onError: {
           target: "failure",
-          actions: assign({ error: ({ event }) => event.error }),
+          actions: assign({ restoreResult: false }),
         },
       },
       on: {

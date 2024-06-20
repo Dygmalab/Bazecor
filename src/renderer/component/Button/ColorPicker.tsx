@@ -19,7 +19,7 @@ import React from "react";
 import Styled from "styled-components";
 
 import { ColorPickerProps } from "@Renderer/types/colorEditor";
-import { IconPlusXs } from "../Icon";
+import { IconPlus } from "@Renderer/components/atoms/icons";
 
 const Style = Styled.div`
 
@@ -140,7 +140,7 @@ function ColorPicker(props: ColorPickerProps) {
       >
         <div className="button-content">
           <div className="colorItem" style={buttonStyle}>
-            {className === "addColorButton" ? <IconPlusXs /> : " "}
+            {className === "addColorButton" ? <IconPlus size="xs" /> : " "}
           </div>
         </div>
       </div>

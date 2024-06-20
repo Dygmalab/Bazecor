@@ -24,15 +24,23 @@ import log from "electron-log/renderer";
 import { Octokit } from "@octokit/core";
 import SemVer from "semver";
 
-import { Nav, Navbar, NavbarBrand } from "react-bootstrap";
 import Styled from "styled-components";
 
 import DygmaLogo from "@Assets/logo.svg";
 import { showDevtools } from "@Renderer/devMode";
 import { useDevice } from "@Renderer/DeviceContext";
-import { AlertModal } from "@Renderer/component/Modal";
+
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@Renderer/components/atoms/AlertDialog";
 import { BatteryStatus } from "@Renderer/modules/Battery";
-import { NavigationButton } from "@Renderer/component/Button";
+import NavigationButton from "@Renderer/components/molecules/CustomButton/NavigationButton";
 import { i18n } from "@Renderer/i18n";
 
 // Types
@@ -41,14 +49,25 @@ import { DygmaDeviceType } from "@Renderer/types/dygmaDefs";
 import { NavigationMenuProps } from "@Renderer/types/navigation";
 
 import {
-  IconKeyboardSelector,
   IconKeyboard2Stroke,
-  IconMemory2Stroke,
-  IconRobot2Stroke,
-  IconThunder2Stroke,
-  IconPreferences2Stroke,
+  IconMemory,
+  IconRobot,
+  IconThunder,
+  IconPreferences,
   IconBazecordevtools,
-} from "../../component/Icon";
+  IconHome,
+} from "@Renderer/components/atoms/icons";
+
+// import {
+//   IconKeyboardSelector,
+//   IconKeyboard2Stroke,
+//   IconMemory2Stroke,
+//   IconRobot2Stroke,
+//   IconThunder2Stroke,
+//   IconPreferences2Stroke,
+//   IconBazecordevtools,
+//   IconHome,
+// } from "@Renderer/component/Icon";
 
 const Styles = Styled.div`
 .disabled {
@@ -72,7 +91,7 @@ const Styles = Styled.div`
   width: var(--sidebarWidth);
   height: 100%;
   position: fixed !important;
-  z-index: 1100;
+  z-index: 49;
   padding: 12px !important;
   background-color: ${({ theme }) => theme.styles.navbar.background};
   display: flex;
@@ -144,9 +163,9 @@ function NavigationMenu(props: NavigationMenuProps) {
 
   const checkKeyboardMetadata = useCallback(async () => {
     setIsUpdated(true);
-    setDevice(state.currentDevice.device);
-    if (state.currentDevice.device === undefined || state.currentDevice.device.bootloader) return;
-    let parts = await state.currentDevice.command("version");
+    setDevice(state.currentDevice?.device);
+    if (state.currentDevice?.device === undefined || state.currentDevice?.device.bootloader) return;
+    let parts = await state.currentDevice?.command("version");
     parts = parts.split(" ");
     const getVersions: Version = {
       bazecor: parts[0],
@@ -159,7 +178,7 @@ function NavigationMenu(props: NavigationMenuProps) {
     // Getting GitHub Data
     let fwList = [];
     try {
-      fwList = await getGitHubFW(state.currentDevice.device.info.product);
+      fwList = await getGitHubFW(state.currentDevice?.device.info.product);
     } catch (error) {
       log.info("Error when fetching GitHub data");
       log.warn(error);
@@ -167,11 +186,11 @@ function NavigationMenu(props: NavigationMenuProps) {
     }
     // Comparing online Data to FW version
     const semVerCheck = fwList.length > 0 ? SemVer.compare(fwList[0].version, cleanedVersion) : 0;
-    Beta = Beta || state.currentDevice.device.info.product !== "Raise";
+    Beta = Beta || state.currentDevice?.device.info.product !== "Raise";
     setVersions(getVersions);
     setIsUpdated(semVerCheck !== 1);
     setIsBeta(Beta);
-    setVirtual(state.currentDevice.file);
+    setVirtual(state.currentDevice?.file);
     setCheckedVer(true);
   }, [getGitHubFW, state.currentDevice]);
 
@@ -198,23 +217,31 @@ function NavigationMenu(props: NavigationMenuProps) {
   }
   return (
     <Styles>
-      <Navbar
-        className={`left-navbar sidebar ${
+      <div
+        className={`navbar navbar-expand navbar-light sticky-top left-navbar sidebar fixed top-0 flex flex-col p-[12px] justify-start items-center transition-all ${
           connected &&
           device &&
-          state.currentDevice.device.info &&
-          (state.currentDevice.device.info.keyboardType === "wireless" || state.currentDevice.device.wireless) &&
+          state.currentDevice?.device.info &&
+          (state.currentDevice?.device.info.keyboardType === "wireless" || state.currentDevice?.device.wireless) &&
           versions !== null
             ? "isWireless"
             : "wired"
         }`}
-        sticky="top"
       >
-        <NavbarBrand as={Link} onClick={linkHandler} to="/" className="brand-image d-lg-block">
-          <img alt="" src={DygmaLogo} className="d-inline-block align-top" />
-        </NavbarBrand>
-        <Nav>
+        <div className="brand-image d-lg-block">
+          <img alt="Dygma - Bazecor" src={DygmaLogo} className="d-inline-block align-top" />
+        </div>
+        <div className="navbar-nav flex justify-between">
           <div className="topMenu">
+            <Link to="/device-manager" onClick={linkHandler} className={`list-link ${loading ? "disabled" : ""}`}>
+              <NavigationButton
+                selected={currentPage === "/device-manager"}
+                showNotif={false}
+                buttonText={i18n.deviceManager.title}
+                icoSVG={<IconHome />}
+                disabled={false}
+              />
+            </Link>
             {connected && (
               <>
                 {pages.keymap && (
@@ -231,7 +258,7 @@ function NavigationMenu(props: NavigationMenuProps) {
                       <NavigationButton
                         selected={currentPage === "/macros"}
                         buttonText={i18n.app.menu.macros}
-                        icoSVG={<IconRobot2Stroke />}
+                        icoSVG={<IconRobot size="lg" />}
                         disabled={fwUpdate || loading}
                       />
                     </Link>
@@ -243,7 +270,7 @@ function NavigationMenu(props: NavigationMenuProps) {
                       <NavigationButton
                         selected={currentPage === "/superkeys"}
                         buttonText={i18n.app.menu.superkeys}
-                        icoSVG={<IconThunder2Stroke />}
+                        icoSVG={<IconThunder size="lg" />}
                         showNotif={isBeta}
                         notifText="BETA"
                         disabled={fwUpdate || !isBeta || loading}
@@ -255,27 +282,19 @@ function NavigationMenu(props: NavigationMenuProps) {
                   to="/firmware-update"
                   onClick={linkHandler}
                   className={`list-link ${
-                    fwUpdate || virtual || state.currentDevice.type === "hid" || loading ? "disabled" : ""
+                    fwUpdate || virtual || state.currentDevice?.type === "hid" || loading ? "disabled" : ""
                   }`}
                 >
                   <NavigationButton
                     selected={currentPage === "/firmware-update"}
                     showNotif={!isUpdated}
                     buttonText={i18n.app.menu.firmwareUpdate}
-                    icoSVG={<IconMemory2Stroke />}
-                    disabled={fwUpdate || virtual || state.currentDevice.type === "hid" || loading}
+                    icoSVG={<IconMemory />}
+                    disabled={fwUpdate || virtual || state.currentDevice?.type === "hid" || loading}
                   />
                 </Link>
               </>
             )}
-            <Link to="/keyboard-select" onClick={linkHandler} className={`list-link ${fwUpdate || loading ? "disabled" : ""}`}>
-              <NavigationButton
-                selected={currentPage === "/keyboard-select"}
-                buttonText={i18n.app.menu.selectAKeyboard}
-                icoSVG={<IconKeyboardSelector />}
-                disabled={fwUpdate || loading}
-              />
-            </Link>
           </div>
           <div className="bottomMenu">
             {showDevtools && (
@@ -292,24 +311,15 @@ function NavigationMenu(props: NavigationMenuProps) {
               <NavigationButton
                 selected={currentPage === "/preferences"}
                 buttonText={i18n.app.menu.preferences}
-                icoSVG={<IconPreferences2Stroke />}
+                icoSVG={<IconPreferences size="lg" />}
                 disabled={fwUpdate || loading}
               />
             </Link>
-            {/* <Link to="/device-manager" className="list-link">
-              <NavigationButton
-                selected={false}
-                showNotif={false}
-                buttonText="Device Manager"
-                icoSVG={<IconHome />}
-                disabled={false}
-              />
-            </Link> */}
             {connected &&
             state.currentDevice &&
-            state.currentDevice.device.info &&
-            state.currentDevice.device.info.product !== "Raise" &&
-            (state.currentDevice.device.info.keyboardType === "wireless" || state.currentDevice.device.wireless) &&
+            state.currentDevice?.device.info &&
+            state.currentDevice?.device.info.product !== "Raise" &&
+            (state.currentDevice?.device.info.keyboardType === "wireless" || state.currentDevice?.device.wireless) &&
             versions !== null ? (
               <>
                 {/* <Link to="/wireless" onClick={linkHandler} className={`list-link ${fwUpdate || loading ? "disabled" : ""}`}>
@@ -326,14 +336,24 @@ function NavigationMenu(props: NavigationMenuProps) {
               ""
             )}
           </div>
-        </Nav>
-      </Navbar>
-      <AlertModal
-        showModal={showAlertModal}
-        setShowModal={setShowAlertModal}
-        title={i18n.errors.alertUnsavedTitle}
-        description={i18n.errors.alertUnsavedDescription}
-      />
+        </div>
+      </div>
+      <AlertDialog open={showAlertModal}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>{i18n.errors.alertUnsavedTitle}</AlertDialogTitle>
+            <AlertDialogDescription>
+              <p>{i18n.errors.alertUnsavedDescription1}</p>
+              <p>{i18n.errors.alertUnsavedDescription2}</p>
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter className="">
+            <AlertDialogAction onClick={() => setShowAlertModal(false)} buttonVariant="secondary">
+              Go back
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </Styles>
   );
 }

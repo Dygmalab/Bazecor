@@ -19,18 +19,17 @@ import React from "react";
 import Styled from "styled-components";
 import { toast } from "react-toastify";
 
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@Renderer/components/ui/card";
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@Renderer/components/atoms/Card";
 
-import Container from "react-bootstrap/Container";
 import { useNavigate } from "react-router-dom";
 import { useDevice } from "@Renderer/DeviceContext";
 import { i18n } from "@Renderer/i18n";
 
 import { PageHeader } from "@Renderer/modules/PageHeader";
-import Title from "@Renderer/component/Title";
-import ToastMessage from "@Renderer/component/ToastMessage";
-import { RegularButton } from "@Renderer/component/Button";
-import { IconKeyboard, IconFloppyDisk } from "@Renderer/component/Icon";
+import Heading from "@Renderer/components/atoms/Heading";
+import ToastMessage from "@Renderer/components/atoms/ToastMessage";
+import { Button } from "@Renderer/components/atoms/Button";
+import { IconKeyboard, IconFloppyDisk } from "@Renderer/components/atoms/icons";
 import { DygmaDeviceType } from "@Renderer/types/dygmaDefs";
 
 const Styles = Styled.div`
@@ -129,22 +128,32 @@ function Welcome(props: WelcomeProps) {
   };
 
   const reconnectButton = state.currentDevice && (
-    <RegularButton onClick={reconnect} buttonText={i18n.welcome.reconnect} styles="outline transp-bg" />
+    <Button onClick={reconnect} variant="outline">
+      {i18n.welcome.reconnect}
+    </Button>
   );
 
   const showDeviceName = () => {
     const name = state.currentDevice?.device?.info?.displayName || device?.info?.displayName;
     return (
       <div className="content">
-        <Title text={name} headingLevel={4} />
-        {state.currentDevice ? <Title text={state.currentDevice?.path} headingLevel={6} /> : ""}
+        <Heading headingLevel={4} renderAs="h4">
+          {name}
+        </Heading>
+        {state.currentDevice ? (
+          <Heading headingLevel={5} renderAs="h6">
+            {state.currentDevice?.path}
+          </Heading>
+        ) : (
+          ""
+        )}
       </div>
     );
   };
 
   return (
     <Styles>
-      <Container fluid className="welcome center-content">
+      <div className="welcome center-content w-full justify-center px-3">
         <PageHeader text={i18n.welcome.title} />
         <div className="welcomeWrapper">
           <div className="welcomeInner">
@@ -159,7 +168,9 @@ function Welcome(props: WelcomeProps) {
               </CardHeader>
               <CardContent>
                 <div>
-                  <Title type="warning" text={i18n.welcome.bootloaderTitle} headingLevel={3} />
+                  <Heading headingLevel={3} renderAs="h3" variant="warning">
+                    {i18n.welcome.bootloaderTitle}
+                  </Heading>
                   <p>{i18n.welcome.description}</p>
 
                   <span className="cardsub">
@@ -177,19 +188,20 @@ function Welcome(props: WelcomeProps) {
               <CardFooter>
                 <div className="firmwareButton">
                   {reconnectButton}
-                  <RegularButton
-                    buttonText={i18n.welcome.gotoUpdate}
-                    styles="primary"
+                  <Button
                     onClick={async () => {
                       navigate("/firmware-update");
                     }}
-                  />
+                    variant="primary"
+                  >
+                    {i18n.welcome.gotoUpdate}
+                  </Button>
                 </div>
               </CardFooter>
             </Card>
           </div>
         </div>
-      </Container>
+      </div>
     </Styles>
   );
 }

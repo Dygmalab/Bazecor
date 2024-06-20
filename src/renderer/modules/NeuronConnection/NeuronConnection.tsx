@@ -19,14 +19,14 @@
 import React from "react";
 import Styled from "styled-components";
 import { ToastContainer } from "react-toastify";
-import Title from "@Renderer/component/Title";
-import { RegularButton } from "@Renderer/component/Button";
+import Heading from "@Renderer/components/atoms/Heading";
+import { Button } from "@Renderer/components/atoms/Button";
 import NeuronStatus from "@Renderer/component/NeuronStatus";
-import { SelectKeyboardDropdown } from "@Renderer/component/Select";
+import { SelectKeyboardDropdown } from "@Renderer/components/molecules/CustomSelect";
 import { i18n } from "@Renderer/i18n";
 
 import "react-toastify/dist/ReactToastify.css";
-import { IconConnected } from "@Renderer/component/Icon";
+import { IconConnected } from "@Renderer/components/atoms/icons";
 import { NeuronConnectionProps } from "@Renderer/types/selectKeyboard";
 
 const Style = Styled.div`
@@ -137,7 +137,9 @@ function NeuronConnection(props: NeuronConnectionProps) {
         />
         {isVirtual ? (
           <div className="neuronInformation">
-            <Title text={i18n.keyboardSelect.selectPrompt} headingLevel={2} />
+            <Heading renderAs="h2" headingLevel={2}>
+              {i18n.keyboardSelect.selectPrompt}
+            </Heading>
             <div className="activeVirtualKeyboard">
               <div className="activeVirtualKeyboardIcon">
                 <IconConnected />
@@ -149,20 +151,19 @@ function NeuronConnection(props: NeuronConnectionProps) {
                 <div className="activeVirtualKeyboardType">Virtual keyboard</div>
               </div>
             </div>
-            <div className="buttons">
-              <RegularButton
-                buttonText={i18n.keyboardSelect.disconnect}
-                styles="secondary"
-                onClick={onDisconnect}
-                disabled={false}
-              />
+            <div className="buttons flex gap-2">
+              <Button variant="secondary" onClick={onDisconnect}>
+                {i18n.keyboardSelect.disconnect}
+              </Button>
             </div>
           </div>
         ) : (
           <div className="neuronInformation">
             {!deviceItems.length && !connected ? (
               <>
-                <Title text={i18n.keyboardSelect.noDevices} headingLevel={2} type="warning" />
+                <Heading renderAs="h2" headingLevel={2} variant="warning">
+                  {i18n.keyboardSelect.noDevices}
+                </Heading>
                 <p className="neuronSubtileText">{i18n.keyboardSelect.noDevicesSubtitle}</p>
               </>
             ) : (
@@ -171,11 +172,12 @@ function NeuronConnection(props: NeuronConnectionProps) {
 
             {deviceItems.length > 0 ? (
               <>
-                <Title text={i18n.keyboardSelect.selectPrompt} headingLevel={2} />
+                <Heading renderAs="h2" headingLevel={2}>
+                  {i18n.keyboardSelect.selectPrompt}
+                </Heading>
                 <SelectKeyboardDropdown
                   deviceItems={deviceItems}
                   selectPort={selectPort}
-                  selectedPortIndex={selectedPortIndex}
                   connected={connected}
                   connectedDevice={connectedDeviceIndex}
                 />
@@ -183,45 +185,44 @@ function NeuronConnection(props: NeuronConnectionProps) {
             ) : (
               ""
             )}
-            <div className="buttons">
-              <RegularButton
-                onClick={scanDevices}
-                buttonText={i18n.keyboardSelect.scan}
-                styles={`${connected || deviceItems.length > 0 ? "outline transp-bg" : "primary"}`}
+            <div className="buttons flex gap-2">
+              <Button
                 disabled={scanFoundDevices}
-              />
+                variant={`${connected || deviceItems.length > 0 ? "outline" : "primary"}`}
+                onClick={scanDevices}
+              >
+                {i18n.keyboardSelect.scan}
+              </Button>
+
               {connected && connectedDeviceIndex === selectedPortIndex ? (
-                <RegularButton
-                  buttonText={i18n.keyboardSelect.disconnect}
-                  styles="secondary"
-                  onClick={onDisconnect}
-                  disabled={false}
-                />
+                <Button variant="purple" onClick={onDisconnect}>
+                  {i18n.keyboardSelect.disconnect}
+                </Button>
               ) : (
                 ""
               )}
               {connected && connectedDeviceIndex !== selectedPortIndex ? (
-                <RegularButton
-                  buttonText={i18n.keyboardSelect.connect}
-                  styles="primary"
-                  onClick={onDisconnectConnect}
-                  disabled={false}
-                />
+                <Button variant="primary" onClick={onDisconnectConnect}>
+                  {i18n.keyboardSelect.connect}
+                </Button>
               ) : (
                 ""
               )}
               {!connected && deviceItems.length > 0 ? (
-                <RegularButton
-                  buttonText={i18n.keyboardSelect.connect}
-                  styles="primary"
-                  onClick={onKeyboardConnect}
-                  disabled={false}
-                />
+                <Button variant="primary" onClick={onKeyboardConnect}>
+                  {i18n.keyboardSelect.connect}
+                </Button>
               ) : (
                 ""
               )}
 
-              {!deviceItems.length ? <RegularButton buttonText={i18n.keyboardSelect.connect} styles="primary" disabled /> : ""}
+              {!deviceItems.length ? (
+                <Button variant="primary" onClick={onKeyboardConnect} disabled>
+                  {i18n.keyboardSelect.connect}
+                </Button>
+              ) : (
+                ""
+              )}
             </div>
           </div>
         )}

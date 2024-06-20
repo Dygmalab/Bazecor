@@ -4,7 +4,6 @@ import FlashManager from "@Renderer/controller/FlashManager/machine";
 
 // Visual components
 import Styled from "styled-components";
-import Container from "react-bootstrap/Container";
 
 // Extra components
 import { i18n } from "@Renderer/i18n";
@@ -18,7 +17,7 @@ import {
   FirmwareUpdateProcess,
 } from "@Renderer/modules/Firmware";
 
-import { FirmwareLoader } from "@Renderer/component/Loader";
+import LogoLoader from "@Renderer/components/atoms/loader/LogoLoader";
 import { useDevice } from "@Renderer/DeviceContext";
 
 const Styles = Styled.div`
@@ -37,10 +36,10 @@ height: inherit;
   }
 }
 .disclaimerContent {
-  font-size: 15px;
-  margin-top: 32px;
-  line-height: 1.5em;
-  font-weight: 500;
+  // font-size: 15px;
+  // margin-top: 32px;
+  // line-height: 1.5em;
+  // font-weight: 500;
 }
 .panel-wrapper {
   width: 100%;
@@ -74,13 +73,14 @@ function FirmwareUpdate(props: FirmwareUpdateProps) {
 
   return (
     <Styles>
-      <Container fluid className="firmware-update center-content">
-        <PageHeader text={i18n.app.menu.firmwareUpdate} />
+      <div className="px-3 firmware-update center-content">
+        <PageHeader text="Firmware Update" />
         <div className="panel-wrapper">
           {state.context.Block === -1 ? <FirmwareErrorPanel nextBlock={nextBlock} retryBlock={retryBlock} /> : ""}
           {state.context.Block === 0 ? (
-            <FirmwareLoader width={undefined} warning={undefined} error={undefined} paused={undefined} />
+            <LogoLoader firmwareLoader />
           ) : (
+            // <FirmwareLoader width={undefined} warning={undefined} error={undefined} paused={undefined} />
             ""
           )}
           {state.context.Block === 1 ? (
@@ -107,7 +107,7 @@ function FirmwareUpdate(props: FirmwareUpdateProps) {
             ""
           )}
         </div>
-      </Container>
+      </div>
     </Styles>
   );
 }

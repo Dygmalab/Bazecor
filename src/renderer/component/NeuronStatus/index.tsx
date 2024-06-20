@@ -17,14 +17,14 @@
 
 import React from "react";
 import Styled, { useTheme } from "styled-components";
-import { IconChip } from "../Icon";
+import { IconChip } from "@Renderer/components/atoms/icons";
 
 const Style = Styled.div`
 align-self: center;
 .neuronStatusInner {
 	width: 320px;
 	height: 360px;
-  background-color: ${({ theme }) => theme.styles.neuronStatus.neuronStatusBackgroundColor}; 
+  background-color: ${({ theme }) => theme.styles.neuronStatus.neuronStatusBackgroundColor};
 	border-radius: 14px;
   display: flex;
   justify-content: center;
@@ -36,12 +36,12 @@ align-self: center;
     border: 1px solid rgba(0, 205, 200, 0.2);
     &:after {
       position: absolute;
-      top: 0; 
+      top: 0;
       left: 0;
       height: 100%;
       width: 100%;
       content: '';
-      background-color: rgba(0, 205, 200, 0.05); 
+      background-color: rgba(0, 205, 200, 0.05);
       z-index: -1;
     }
   }

@@ -684,7 +684,7 @@ const Light: DefaultTheme = {
         svgColorActive: Tokens.colors.brandSecondary,
         svgColorHover: Tokens.colors.gray600,
         lightingOpacity: 0.5,
-        gradient: "linear-gradient(236.53deg, #F0F2F4 1.37%, #D8DBF1 117.2%)",
+        gradient: "linear-gradient(245deg, #F0F2F4 1%, #D8DBF1 117.2%)",
       },
     },
     neuronConnection: {

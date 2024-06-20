@@ -16,20 +16,20 @@
  */
 
 import {
-  IconToolsEjectSm,
-  IconMediaSoundLessSm,
-  IconMediaSoundMoreSm,
-  IconMediaPlayPauseSm,
-  IconMediaStopSm,
-  IconMediaForwardSm,
-  IconMediaSoundMuteSm,
-  IconMediaRewindSm,
-  IconToolsCameraSm,
-  IconToolsCalculatorSm,
-  IconToolsBrightnessMoreSm,
-  IconToolsBrightnessLessSm,
-  IconMediaShuffleSm,
-} from "@Renderer/component/Icon";
+  IconToolsEject,
+  IconMediaSoundLess,
+  IconMediaSoundMore,
+  IconMediaPlayPause,
+  IconMediaStop,
+  IconMediaForward,
+  IconMediaSoundMute,
+  IconMediaRewind,
+  IconToolsCamera,
+  IconToolsCalculator,
+  IconBrightnessMore,
+  IconToolsBrightnessLess,
+  IconMediaShuffle,
+} from "@Renderer/components/atoms/icons";
 import React from "react";
 
 const MediaControlTable = {
@@ -39,7 +39,7 @@ const MediaControlTable = {
       code: 19682,
       labels: {
         top: "",
-        primary: <IconMediaSoundMuteSm />,
+        primary: <IconMediaSoundMute size="sm" />,
         verbose: "Mute",
       },
     },
@@ -47,7 +47,7 @@ const MediaControlTable = {
       code: 22709,
       labels: {
         top: "",
-        primary: <IconMediaForwardSm />,
+        primary: <IconMediaForward size="sm" />,
         verbose: "Next track",
       },
     },
@@ -55,7 +55,7 @@ const MediaControlTable = {
       code: 22710,
       labels: {
         top: "",
-        primary: <IconMediaRewindSm />,
+        primary: <IconMediaRewind size="sm" />,
         verbose: "Prev. track",
       },
     },
@@ -63,7 +63,7 @@ const MediaControlTable = {
       code: 22711,
       labels: {
         top: "",
-        primary: <IconMediaStopSm />,
+        primary: <IconMediaStop size="sm" />,
         verbose: "Stop",
       },
     },
@@ -71,7 +71,7 @@ const MediaControlTable = {
       code: 22733,
       labels: {
         top: "",
-        primary: <IconMediaPlayPauseSm />,
+        primary: <IconMediaPlayPause size="sm" />,
         verbose: "Play / pause",
       },
     },
@@ -79,7 +79,7 @@ const MediaControlTable = {
       code: 23785,
       labels: {
         top: "",
-        primary: <IconMediaSoundMoreSm />,
+        primary: <IconMediaSoundMore size="sm" />,
         verbose: "Volume up",
       },
     },
@@ -87,7 +87,7 @@ const MediaControlTable = {
       code: 23786,
       labels: {
         top: "",
-        primary: <IconMediaSoundLessSm />,
+        primary: <IconMediaSoundLess size="sm" />,
         verbose: "Volume down",
       },
     },
@@ -95,7 +95,7 @@ const MediaControlTable = {
       code: 22712,
       labels: {
         top: "",
-        primary: <IconToolsEjectSm />,
+        primary: <IconToolsEject size="sm" />,
         verbose: "Eject",
       },
     },
@@ -103,7 +103,7 @@ const MediaControlTable = {
       code: 18552,
       labels: {
         top: "",
-        primary: <IconToolsCameraSm />,
+        primary: <IconToolsCamera size="sm" />,
         verbose: "Camera",
       },
     },
@@ -111,7 +111,7 @@ const MediaControlTable = {
       code: 23663,
       labels: {
         top: "Display",
-        primary: <IconToolsBrightnessMoreSm />,
+        primary: <IconBrightnessMore size="sm" />,
         verbose: "Bright +",
       },
     },
@@ -119,7 +119,7 @@ const MediaControlTable = {
       code: 23664,
       labels: {
         top: "Display",
-        primary: <IconToolsBrightnessLessSm />,
+        primary: <IconToolsBrightnessLess size="sm" />,
         verbose: "Bright -",
       },
     },
@@ -127,7 +127,7 @@ const MediaControlTable = {
       code: 18834,
       labels: {
         top: "",
-        primary: <IconToolsCalculatorSm />,
+        primary: <IconToolsCalculator size="sm" />,
         verbose: "Calc",
       },
     },
@@ -135,7 +135,7 @@ const MediaControlTable = {
       code: 22713,
       labels: {
         top: "Shuf.",
-        primary: <IconMediaShuffleSm />,
+        primary: <IconMediaShuffle size="sm" />,
         verbose: "Shuffle",
       },
     },

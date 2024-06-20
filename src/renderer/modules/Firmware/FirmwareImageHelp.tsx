@@ -27,8 +27,8 @@ import videoFirmwareUpdateDefyReleaseSRC from "@Assets/videos/release-key-defy.m
 import FirmwareNeuronHelp from "@Renderer/modules/Firmware/FirmwareNeuronHelp";
 import FirmwareDefyUpdatingStatus from "@Renderer/modules/Firmware/FirmwareDefyUpdatingStatus";
 
-import { IconCheckmarkSm } from "@Renderer/component/Icon";
-import { BadgeFirmware } from "@Renderer/component/Badge";
+import { IconCheckmark } from "@Renderer/components/atoms/icons";
+import BadgeFirmware from "@Renderer/component/Badge/BadgeFirmware";
 
 const Style = Styled.div`
 .updatingRaise {
@@ -193,7 +193,7 @@ const FirmwareImageHelp: React.FC<FirmwareImageHelpProps> = ({
           <div className="videoWrapper">
             <div className="videoInner">
               <div className="firmwareCheck animWaiting" ref={checkSuccess}>
-                <IconCheckmarkSm />
+                <IconCheckmark size="sm" />
               </div>
               {deviceProduct === "Raise" ? (
                 <>

@@ -24,11 +24,11 @@ import { i18n } from "@Renderer/i18n";
 import FirmwareSelection from "@Renderer/controller/FirmwareSelection/machine";
 
 // Visual components
-import Title from "@Renderer/component/Title";
-import Callout from "@Renderer/component/Callout";
-import { RegularButton } from "@Renderer/component/Button";
-import { FirmwareLoader } from "@Renderer/component/Loader";
-import { IconLoader } from "@Renderer/component/Icon";
+import Heading from "@Renderer/components/atoms/Heading";
+import Callout from "@Renderer/components/molecules/Callout/Callout";
+import { Button } from "@Renderer/components/atoms/Button";
+import LogoLoader from "@Renderer/components/atoms/loader/LogoLoader";
+import { IconLoader } from "@Renderer/components/atoms/icons";
 
 // Visual modules
 import { FirmwareNeuronStatus, FirmwareVersionStatus } from "@Renderer/modules/Firmware";
@@ -184,36 +184,38 @@ function FirmwareUpdatePanel(props: FirmwareUpdatePanelProps) {
       setLoading(false);
     }
     if (state.value === "success") nextBlock(state.context);
-    if (state.value === "failure") errorBlock(state.context.error);
+    if (state.value === "failure") errorBlock(state.context);
   }, [errorBlock, nextBlock, retryBlock, state]);
 
   return (
     <Style>
       {loading ? (
-        <FirmwareLoader width={undefined} warning={undefined} error={undefined} paused={undefined} />
+        // <FirmwareLoader />
+        <LogoLoader firmwareLoader />
       ) : (
         <div className="firmware-wrapper home-firmware">
           <div className="firmware-row">
             <div className="firmware-content borderLeftTopRadius">
               <div className="firmware-content--inner">
-                <Title
-                  text={
-                    state.context.isUpdated
-                      ? i18n.firmwareUpdate.texts.versionUpdatedTitle
-                      : i18n.firmwareUpdate.texts.versionOutdatedTitle
-                  }
-                  headingLevel={3}
-                  type={state.context.isUpdated ? "success" : "warning"}
-                />
+                <Heading headingLevel={3} variant={state.context.isUpdated ? "success" : "warning"}>
+                  {state.context.isUpdated
+                    ? i18n.firmwareUpdate.texts.versionUpdatedTitle
+                    : i18n.firmwareUpdate.texts.versionOutdatedTitle}
+                </Heading>
                 <Callout
-                  content={i18n.firmwareUpdate.texts.calloutIntroText}
-                  className="mt-lg"
-                  size="md"
+                  className="mt-4"
+                  size="sm"
                   hasVideo={state.context.device.info.product === "Raise"}
                   media="aVu7EL4LXMI"
                   videoTitle="How to update the Software & Firmware of your Dygma keyboard"
                   videoDuration={state.context.device.info.product === "Raise" ? "2:58" : null}
-                />
+                >
+                  <p>
+                    {i18n.firmwareUpdate.texts.calloutIntroText}
+                    <br />
+                    {i18n.firmwareUpdate.texts.calloutIntroText2}
+                  </p>
+                </Callout>
               </div>
             </div>
             <div className="firmware-sidebar borderRightTopRadius">
@@ -243,16 +245,15 @@ function FirmwareUpdatePanel(props: FirmwareUpdatePanelProps) {
             <div className="firmware-sidebar borderRightBottomRadius">
               <div className="buttonActions">
                 {state.context.firmwareList.length > 0 ? (
-                  <RegularButton
-                    styles={state.context.isUpdated ? "flashingbutton outline transp-bg" : "flashingbutton nooutlined primary"}
-                    buttonText={flashButtonText}
-                    icoSVG={state.context.stateblock === 4 ? <IconLoader /> : null}
-                    icoPosition={state.context.stateblock === 4 ? "right" : null}
-                    disabled={state.context.stateblock === 4}
+                  <Button
                     onClick={() => {
                       send({ type: "next-event" });
                     }}
-                  />
+                    variant={state.context.isUpdated ? "outline" : "primary"}
+                    disabled={state.context.stateblock === 4}
+                  >
+                    {flashButtonText} {state.context.stateblock === 4 ? <IconLoader /> : null}
+                  </Button>
                 ) : (
                   ""
                 )}

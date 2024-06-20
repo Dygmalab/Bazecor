@@ -17,7 +17,7 @@
 
 import React from "react";
 import Styled from "styled-components";
-import { IconSettings } from "../Icon";
+import { IconSettings } from "@Renderer/components/atoms/icons";
 
 const Style = Styled.div`
 .button-settings {
