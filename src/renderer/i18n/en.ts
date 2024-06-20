@@ -29,8 +29,8 @@ const English = {
     dismiss: "Dismiss",
     troubleshooting: "Troubleshooting",
     alertUnsavedTitle: "Unsaved changes",
-    alertUnsavedDescription:
-      "<p style='font-weight:401;'>You have made changes that haven't been saved yet.</p><p>Save or discard them before leaving.</p>",
+    alertUnsavedDescription1: "You have made changes that haven't been saved yet.",
+    alertUnsavedDescription2: "Save or discard them before leaving.",
   },
   success: {
     USBdeviceConnected: "Dygma Device detected through USB!!",
@@ -208,17 +208,19 @@ const English = {
       successFlashTitle: "Your macros have been saved.",
       successFlash: "Successfully sent the macros to the device",
       previewMacro: "Preview macro",
+      clearMacro: "Clear macro",
       deleteModal: {
         title: "This macro is in use on your layout",
         body: "Pick the action to replace it:",
         cancelButton: "Cancel",
         applyButton: "Update Keyboard",
       },
-      callout:
-        "<p>Macros are sequences of events (such as keystrokes, mouse clicks, and delays) that can be played back to help with repetitive strings of texts or tasks. </p><p>They can also be used to replay sequences that are long or difficult to run.</p>",
+      callout1:
+        "Macros are sequences of events (such as keystrokes, mouse clicks, and delays) that can be played back to help with repetitive strings of texts or tasks.",
+      callout2: "They can also be used to replay sequences that are long or difficult to run.",
       textTabs: {
         title: "Text",
-        callout: "<p>Using text you can add an entire sequence of commands using only one key.</p>",
+        callout: "Using text you can add an entire sequence of commands using only one key.",
         placeholder: "Enter text",
         buttonText: "Add to timeline",
       },
@@ -228,7 +230,7 @@ const English = {
         minMaxDescription: "from 1 to 65535 miliseconds",
       },
       macroTab: {
-        callout: "<p>That's right! You can add macros inside macros! 🔥</p>",
+        callout: "That's right! You can add macros inside macros! 🔥",
         label: "Select macro",
       },
       memoryUsage: {
@@ -286,8 +288,9 @@ const English = {
       },
       macros: {
         title: "Macro",
-        callOut:
-          "<p>Oh Yeah!! More superpowers! Here you can add macros to your keys! 🔥</p><p>Not so clear what is macros? Macros are sequences of events (such as keystrokes, mouse clicks, and delays) that can be played back to help with repetitive strings of texts or tasks.</p><p>They can also be used to replay sequences that are long or difficult to run.</p>",
+        callOut1: "Oh Yeah!! More superpowers! Here you can add macros to your keys! 🔥",
+        callOut2:
+          "Not so clear what is macros? Macros are sequences of events (such as keystrokes, mouse clicks, and delays) that can be played back to help with repetitive strings of texts or tasks. They can also be used to replay sequences that are long or difficult to run.",
       },
       mediaAndLED: {
         title: "Media & LED",
@@ -317,8 +320,9 @@ const English = {
       },
       superkeys: {
         title: "Superkeys",
-        callOut:
-          "<p>You are about to create crazy combinations to boost your workflow! 🔥</p><p>Superkeys allow up to 5 different functions in a single key. You activate each function with a tap, hold, tap and hold, double-tap or double-tap and hold.</p>",
+        callout1: "You are about to create crazy combinations to boost your workflow! 🔥",
+        callout2:
+          "Superkeys allow up to 5 different functions in a single key. You activate each function with a tap, hold, tap and hold, double-tap or double-tap and hold.",
         label: "Select Superkey",
       },
       wireless: {
@@ -375,7 +379,7 @@ const English = {
       deleteModal: {
         title: "This superkey is in use",
         // prettier-ignore
-        body:"The superkey you want to delete is currently in use, by pressing remove you will replace those superkeys with NO KEY on the keyboard layout. Select how to proceed.",
+        body:"By pressing Remove you will replace those superkeys with NO KEY on the keyboard layout.",
         cancelButton: "Cancel",
         applyButton: "Remove",
       },
@@ -391,8 +395,9 @@ const English = {
         doubleTapAndHoldLabel: "2Tap & hold",
         doubleTapAndHold: "Tap twice fast and hold to see others keyboards crying.",
       },
-      callout:
-        "<p>Wow! Superpowers, my friend!</p><p>Superkeys allow up to 5 different functions in a single key. You activate each function with a tap, hold, tap and hold, double-tap or double-tap and hold. This allows you to create crazy combinations to boost your workflow.</p>",
+      callout1: "Wow! Superpowers, my friend!",
+      callout2:
+        "Superkeys allow up to 5 different functions in a single key. You activate each function with a tap, hold, tap and hold, double-tap or double-tap and hold. This allows you to create crazy combinations to boost your workflow.",
       tooltip:
         "You can edit keys in two different ways. Advanced users may prefer Single View which is designed for quick key editing.",
       collapse: {
@@ -532,7 +537,10 @@ const English = {
         RFSettingTitle: "RF energy saving settings",
         manageRFSignal: "Manage the power of the radio signal",
         reduceRFFrequency: "Reduce the frequency of data exchange in RF",
-        tooltipRF: `<div style="text-align: left"><strong>High</strong><p>Maximum coverage at the cost of higher energy consumption.</p><strong>Medium</strong><p>Reduced coverage and medium energy consumption</p><strong>Low</strong><p>Designed to conserves battery energy reducing at minimum levels the coverage.</p></div>`,
+        tooltipRF: `<div style="text-align: left"><strong>High</strong><p></p><strong>Medium</strong><p></p><strong>Low</strong><p></p></div>`,
+        tooltipHighConsumptionMessage: "Maximum coverage at the cost of higher energy consumption.",
+        tooltipMediumConsumptionMessage: "Reduced coverage and medium energy consumption.",
+        tooltipLowConsumptionMessage: "Designed to conserves battery energy reducing at minimum levels the coverage.",
       },
     },
     batteryPreferences: {
@@ -685,6 +693,23 @@ const English = {
  You will lose all customizations made.`,
     },
   },
+  deviceManager: {
+    title: "Keyboard <br>Manager",
+    myDevice: "My keyboard",
+    myDevices: "My keyboards",
+    needHelpTitle: "Need help?",
+    needHelpDescription: "Whether it's a bug or any other issue, we are here to help you!",
+    scanDevices: "Scan keyboards",
+    addVirtualDevice: "Add virtual keyboard",
+    checkForDevices: "Check for nearby keyboards",
+    useWithoutKeyboard: "Use without keyboard",
+    noDevicesFound: "No keyboards found!",
+    noDevicesFoundDescription: "[Black metal plays in background]",
+    dialogDeleteTitle: "Are you absolutely sure?",
+    dialogDeleteDescription:
+      "This action can't be undone and will remove the keyboard from your Device List, deleting the names of your layers, macros and superkeys. The rest of your configuration will remain on the keyboard.",
+    ReOrderList: "Re-order list",
+  },
   keyboardSelect: {
     title: "Keyboard Selection",
     unknown: "Unknown",
@@ -693,6 +718,7 @@ const English = {
     noDevicesSubtitle: "[Death metal plays in background]",
     connect: "Connect",
     disconnect: "Disconnect",
+    disconnectFromBazecor: "Disconnect from Bazecor",
     scan: "Scan keyboards",
     installUdevRules: "Fix it",
     permissionError: `Your computer won't let BAZECOR talk to your keyboard. (You do not have read/write permissions to {{path}}.)`,
@@ -728,8 +754,9 @@ const English = {
       letsStart: "Let's start",
       versionUpdatedTitle: "Your firmware is up to date 🤙",
       versionOutdatedTitle: "New update is available",
-      calloutIntroText:
-        "Updating your device firmware is how we implement new cool features and bug fixes.<br><br>Make sure your keyboard is connected directly to your computer using the original Dygma cables; no hubs or KVMs, please 😊",
+      calloutIntroText: "Updating your device firmware is how we implement new cool features and bug fixes.",
+      calloutIntroText2:
+        "Make sure your keyboard is connected directly to your computer using the original Dygma cables; no hubs or KVMs, please 😊",
       neuronUpdatedText: "[Solid as a rock!]",
       neuronOutdatedText: "[Almost is never enough]",
       versionExists: "Device Firmware Update",
@@ -742,11 +769,11 @@ const English = {
       advUsersText2: "If you have installed your own ",
       advUsersText3: ", this update will overwrite it.",
       disclaimerTitle: "Start update process",
-      disclaimerContent: `<strong>Before the update the Neuron will backup your layers and settings after that the update process will begin automatically.</strong>`,
+      disclaimerContent: `Before the update the Neuron will backup your layers and settings after that the update process will begin automatically.`,
       disclaimerContent2:
-        "If the firmware update process isn't successful, don't worry. It won't damage your device, but you will need to repeat the process.",
+        "If the firmware update process isn't successful, don't worry either. It won't damage your device, but you will need to repeat the process.",
       disclaimerContent3:
-        "⚠️ If your layers are not automatically restored, don't worry, you can restore a backup from the preference menu.",
+        "If your layers are not automatically restored, don't worry, you can restore a backup from the preference menu.",
       disclaimerCard3: "Click Next to backup your layers and settings, and start the firmware update process.",
       errorTitle: "Oops! Review the following before continuing",
       errorMissingCables: "Connect both sides using cables and try again.",
@@ -861,10 +888,15 @@ const English = {
     actions: "Actions",
     actionRequired: "Action required",
     add: "Add",
+    all: "All",
+    changes: "changes",
     configure: "Configure",
+    continue: "Continue",
     clone: "Clone",
     create: "Create",
     delete: "Delete",
+    device: "device",
+    discard: "Discard",
     key: "Key",
     layer: "Layer",
     loadFile: "Load file",
@@ -874,10 +906,14 @@ const English = {
     noname: "No name",
     of: "of",
     onOff: "On/Off",
+    offline: "Offline",
+    online: "Online",
     select: "Select",
     record: "Record",
+    reorderList: "Re-order list",
     resume: "Resume",
     retry: "Retry",
+    save: "Save",
   },
 };
 

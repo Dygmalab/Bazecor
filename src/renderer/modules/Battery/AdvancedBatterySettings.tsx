@@ -1,12 +1,10 @@
-import React, { useState } from "react";
+import React from "react";
 import Styled from "styled-components";
 
-import Title from "@Renderer/component/Title";
-import { IconSettings } from "@Renderer/component/Icon";
+import Heading from "@Renderer/components/atoms/Heading";
+import { IconSettings } from "@Renderer/components/atoms/icons";
 import { RegularButton } from "@Renderer/component/Button";
-import { AdvancedBatterySettingsModal } from "@Renderer/component/Modal";
 import { i18n } from "@Renderer/i18n";
-import { EnergyManagementProps } from "@Renderer/types/wireless";
 
 const Styles = Styled.div`
 .settingsWrapper {
@@ -42,26 +40,18 @@ const Styles = Styled.div`
 }
 `;
 
-function AdvancedBatterySettings(props: EnergyManagementProps) {
-  const { wireless, changeWireless } = props;
-  const [showModal, setShowModal] = useState(false);
+function AdvancedBatterySettings() {
   return (
     <Styles>
       <div className="settingsWrapper">
         <div className="settingsContent">
-          <Title text={i18n.wireless.energyManagement.advancedSettings} headingLevel={4} />
+          <Heading headingLevel={4}>{i18n.wireless.energyManagement.advancedSettings}</Heading>
           <p>{i18n.wireless.energyManagement.advancedSettingsDesc}</p>
         </div>
         <div className="settingsActions">
-          <RegularButton icoSVG={<IconSettings />} styles="short" onClick={() => setShowModal(true)} />
+          <RegularButton icoSVG={<IconSettings />} styles="short" />
         </div>
       </div>
-      <AdvancedBatterySettingsModal
-        showModal={showModal}
-        setShowModal={setShowModal}
-        wireless={wireless}
-        changeWireless={changeWireless}
-      />
     </Styles>
   );
 }

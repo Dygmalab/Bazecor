@@ -18,20 +18,16 @@
 import React, { useEffect, useState } from "react";
 import Styled from "styled-components";
 
-// External components
-import Form from "react-bootstrap/Form";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
-
 // Custom components
-import { Card, CardContent, CardHeader, CardTitle } from "@Renderer/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@Renderer/components/atoms/Card";
 import { KBDataPref } from "@Renderer/types/preferences";
-import { IconTypo, IconMouse } from "@Renderer/component/Icon";
-import { Slider } from "@Renderer/components/ui/slider";
-import Title from "@Renderer/component/Title";
+import { IconTypo, IconMouse, IconInformation } from "@Renderer/components/atoms/icons";
+import { Slider } from "@Renderer/components/atoms/slider";
+import Heading from "@Renderer/components/atoms/Heading";
 
 // Assets
 import { i18n } from "@Renderer/i18n";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@Renderer/components/atoms/Tooltip";
 
 const Styles = Styled.div`
 
@@ -273,59 +269,59 @@ function KeyboardSettings(props: KeyboardSettingsProps) {
   } = localKBData;
 
   const mSpeed = (
-    <Row>
-      <Col xs={2} md={1} className="p-0 text-center align-self-center">
+    <div className="w-full flex gap-2">
+      <div className="flex max-w-12 p-0 text-center items-center">
         <span className="tagsfix">Slow</span>
-      </Col>
-      <Col xs={8} md={10} className="px-2">
+      </div>
+      <div className="w-full flex items-center p-0">
         <Slider min={0} max={127} value={[mouseSpeed]} onValueChange={setSpeed} />
-      </Col>
-      <Col xs={2} md={1} className="p-0 text-center align-self-center">
+      </div>
+      <div className="flex max-w-12 p-0 text-center items-center">
         <span className="tagsfix">Fast</span>
-      </Col>
-    </Row>
+      </div>
+    </div>
   );
 
   const mAccelS = (
-    <Row>
-      <Col xs={2} md={1} className="p-0 text-center align-self-center">
+    <div className="w-full flex gap-2">
+      <div className="flex max-w-12 p-0 text-center items-center">
         <span className="tagsfix">Slow</span>
-      </Col>
-      <Col xs={8} md={10} className="px-2">
+      </div>
+      <div className="w-full flex items-center p-0">
         <Slider min={0} max={254} value={[mouseAccelSpeed]} onValueChange={setAccelSpeed} />
-      </Col>
-      <Col xs={2} md={1} className="p-0 text-center align-self-center">
+      </div>
+      <div className="flex max-w-12 p-0 text-center items-center">
         <span className="tagsfix">Fast</span>
-      </Col>
-    </Row>
+      </div>
+    </div>
   );
 
   const mWheelS = (
-    <Row>
-      <Col xs={2} md={1} className="p-0 text-center align-self-center">
+    <div className="w-full flex gap-2">
+      <div className="flex max-w-12 p-0 text-center items-center">
         <span className="tagsfix">Slow</span>
-      </Col>
-      <Col xs={8} md={10} className="px-2">
+      </div>
+      <div className="w-full flex items-center p-0">
         <Slider min={1} max={15} value={[mouseWheelSpeed]} onValueChange={setWheelSpeed} />
-      </Col>
-      <Col xs={2} md={1} className="p-0 text-center align-self-center">
+      </div>
+      <div className="flex max-w-12 p-0 text-center items-center">
         <span className="tagsfix">Fast</span>
-      </Col>
-    </Row>
+      </div>
+    </div>
   );
 
   const mSpeedL = (
-    <Row>
-      <Col xs={2} md={1} className="p-0 text-center align-self-center">
+    <div className="w-full flex gap-2">
+      <div className="flex max-w-12 p-0 text-center items-center">
         <span className="tagsfix">Slow</span>
-      </Col>
-      <Col xs={8} md={10} className="px-2">
+      </div>
+      <div className="w-full flex items-center p-0">
         <Slider min={0} max={255} value={[mouseSpeedLimit]} onValueChange={setSpeedLimit} />
-      </Col>
-      <Col xs={2} md={1} className="p-0 text-center align-self-center">
+      </div>
+      <div className="flex max-w-12 p-0 text-center items-center">
         <span className="tagsfix">Fast</span>
-      </Col>
-    </Row>
+      </div>
+    </div>
   );
 
   if (connected) {
@@ -338,202 +334,272 @@ function KeyboardSettings(props: KeyboardSettingsProps) {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            {qukeysOverlapThreshold >= 0 && (
-              <Form.Group controlId="QukeysOverlap" className="formGroup">
-                <Row>
-                  <Col>
-                    <Form.Label>
-                      <Title
-                        text={i18n.keyboardSettings.qukeys.overlapThreshold}
-                        headingLevel={6}
-                        tooltip={`<h5 class="text-left">${i18n.keyboardSettings.qukeys.overlapThresholdTip1}</h5><ul><li class="text-left">${i18n.keyboardSettings.qukeys.overlapThresholdTip2}</li><li class="text-left">${i18n.keyboardSettings.qukeys.overlapThresholdTip3}</li></ul>`}
-                        tooltipPlacement="bottom"
-                        tooltipSize="wide"
-                      />
-                    </Form.Label>
-                  </Col>
-                </Row>
-                <Row>
-                  <Col xs={2} md={1} className="p-0 text-center align-self-center">
-                    <span className="tagsfix">Less</span>
-                  </Col>
-                  <Col xs={8} md={10} className="px-2">
-                    <Slider min={0} max={100} value={[qukeysOverlapThreshold]} onValueChange={setOverlapThreshold} />
-                  </Col>
-                  <Col xs={2} md={1} className="p-0 text-center align-self-center">
-                    <span className="tagsfix">More</span>
-                  </Col>
-                </Row>
-              </Form.Group>
-            )}
-            {qukeysHoldTimeout >= 0 && (
-              <Form.Group controlId="QukeysOverlap" className="formGroup">
-                <Row>
-                  <Col>
-                    <Form.Label>
-                      <Title
-                        text={i18n.keyboardSettings.qukeys.holdTimeout}
-                        headingLevel={6}
-                        tooltip={`<h5 class="text-left">${i18n.keyboardSettings.qukeys.holdTimeoutTip1}</h5><ul><li class="text-left">${i18n.keyboardSettings.qukeys.holdTimeoutTip2}</li><li class="text-left">${i18n.keyboardSettings.qukeys.holdTimeoutTip3}</li></ul>`}
-                        tooltipPlacement="bottom"
-                        tooltipSize="wide"
-                      />
-                    </Form.Label>
-                  </Col>
-                </Row>
-                <Row>
-                  <Col xs={2} md={1} className="p-0 text-center align-self-center">
-                    <span className="tagsfix">Less</span>
-                  </Col>
-                  <Col xs={8} md={10} className="px-2">
-                    <Slider min={1} max={255} value={[qukeysHoldTimeout]} onValueChange={setHoldTimeout} />
-                  </Col>
-                  <Col xs={2} md={1} className="p-0 text-center align-self-center">
-                    <span className="tagsfix">More</span>
-                  </Col>
-                </Row>
-              </Form.Group>
-            )}
-            {qukeysMinHold >= 0 && (
-              <Form.Group controlId="QukeysMinHold" className="formGroup">
-                <Row>
-                  <Col>
-                    <Form.Label>
-                      <Title
-                        text={i18n.keyboardSettings.qukeys.minHold}
-                        headingLevel={6}
-                        tooltip={`<h5 class="text-left">${i18n.keyboardSettings.qukeys.minHoldTip1}</h5><ul><li class="text-left">${i18n.keyboardSettings.qukeys.minHoldTip2}</li></ul>`}
-                        tooltipPlacement="bottom"
-                        tooltipSize="wide"
-                      />
-                    </Form.Label>
-                  </Col>
-                </Row>
-                <Row>
-                  <Col xs={2} md={1} className="p-0 text-center align-self-center">
-                    <span className="tagsfix">Less</span>
-                  </Col>
-                  <Col xs={8} md={10} className="px-2">
-                    <Slider min={1} max={254} value={[qukeysMinHold]} onValueChange={setMinHold} />
-                  </Col>
-                  <Col xs={2} md={1} className="p-0 text-center align-self-center">
-                    <span className="tagsfix">More</span>
-                  </Col>
-                </Row>
-              </Form.Group>
-            )}
-            {qukeysMinPrior >= 0 && (
-              <Form.Group controlId="QukeysMinHold" className="formGroup">
-                <Row>
-                  <Col>
-                    <Form.Label>
-                      <Title
-                        text={i18n.keyboardSettings.qukeys.minPrior}
-                        headingLevel={6}
-                        tooltip={`<h5 class="text-left">${i18n.keyboardSettings.qukeys.minPriorTip1}</h5><ul><li class="text-left">${i18n.keyboardSettings.qukeys.minPriorTip2}</li></ul>`}
-                        tooltipPlacement="bottom"
-                        tooltipSize="wide"
-                      />
-                    </Form.Label>
-                  </Col>
-                </Row>
-                <Row>
-                  <Col xs={2} md={1} className="p-0 text-center align-self-center">
-                    <span className="tagsfix">Less</span>
-                  </Col>
-                  <Col xs={8} md={10} className="px-2">
-                    <Slider min={1} max={254} value={[qukeysMinPrior]} onValueChange={setMinPrior} />
-                  </Col>
-                  <Col xs={2} md={1} className="p-0 text-center align-self-center">
-                    <span className="tagsfix">More</span>
-                  </Col>
-                </Row>
-              </Form.Group>
-            )}
-            {SuperOverlapThreshold >= 0 && (
-              <Form.Group controlId="SuperOverlap" className="formGroup">
-                <Row>
-                  <Col>
-                    <Form.Label>
-                      <Title
-                        text={i18n.keyboardSettings.superkeys.overlap}
-                        headingLevel={6}
-                        tooltip={`<h5 class="text-left">${i18n.keyboardSettings.superkeys.overlapTip1}</h5><ul><li class="text-left">${i18n.keyboardSettings.superkeys.overlapTip2}</li><li class="text-left">${i18n.keyboardSettings.superkeys.overlapTip3}</li></ul>`}
-                        tooltipPlacement="bottom"
-                        tooltipSize="wide"
-                      />
-                    </Form.Label>
-                  </Col>
-                </Row>
-                <Row>
-                  <Col xs={2} md={1} className="p-0 text-center align-self-center">
-                    <span className="tagsfix">Less</span>
-                  </Col>
-                  <Col xs={8} md={10} className="px-2">
-                    <Slider min={0} max={80} value={[SuperOverlapThreshold]} onValueChange={setSuperOverlapThreshold} />
-                  </Col>
-                  <Col xs={2} md={1} className="p-0 text-center align-self-center">
-                    <span className="tagsfix">More</span>
-                  </Col>
-                </Row>
-              </Form.Group>
-            )}
-            {SuperTimeout >= 0 && (
-              <Form.Group controlId="superTimeout" className="formGroup">
-                <Row>
-                  <Col>
-                    <Form.Label>
-                      <Title
-                        text={i18n.keyboardSettings.superkeys.timeout}
-                        headingLevel={6}
-                        tooltip={`<h5 class="text-left">${i18n.keyboardSettings.superkeys.timeoutTip1}</h5><ul><li class="text-left">${i18n.keyboardSettings.superkeys.timeoutTip2}</li><li class="text-left">${i18n.keyboardSettings.superkeys.timeoutTip3}</li></ul>`}
-                        tooltipPlacement="bottom"
-                        tooltipSize="wide"
-                      />
-                    </Form.Label>
-                  </Col>
-                </Row>
-                <Row>
-                  <Col xs={2} md={1} className="p-0 text-center align-self-center">
-                    <span className="tagsfix">Less</span>
-                  </Col>
-                  <Col xs={8} md={10} className="px-2">
-                    <Slider min={1} max={500} value={[SuperTimeout]} onValueChange={setSuperTimeout} />
-                  </Col>
-                  <Col xs={2} md={1} className="p-0 text-center align-self-center">
-                    <span className="tagsfix">More</span>
-                  </Col>
-                </Row>
-              </Form.Group>
-            )}
-            {SuperHoldstart >= 0 && (
-              <Form.Group controlId="superHoldstart" className="formGroup">
-                <Row>
-                  <Col>
-                    <Form.Label>
-                      <Title
-                        text={i18n.keyboardSettings.superkeys.holdstart}
-                        headingLevel={6}
-                        tooltip={`<h5 class="text-left">${i18n.keyboardSettings.superkeys.chordingTip1}</h5><ul><li class="text-left">${i18n.keyboardSettings.superkeys.chordingTip2}</li><li class="text-left">${i18n.keyboardSettings.superkeys.chordingTip3}</li></ul>`}
-                        tooltipPlacement="bottom"
-                        tooltipSize="wide"
-                      />
-                    </Form.Label>
-                  </Col>
-                </Row>
-                <Row>
-                  <Col xs={2} md={1} className="p-0 text-center align-self-center">
-                    <span className="tagsfix">Less</span>
-                  </Col>
-                  <Col xs={8} md={10} className="px-2">
-                    <Slider min={120} max={500} value={[SuperHoldstart]} onValueChange={setSuperHoldstart} />
-                  </Col>
-                  <Col xs={2} md={1} className="p-0 text-center align-self-center">
-                    <span className="tagsfix">More</span>
-                  </Col>
-                </Row>
-              </Form.Group>
-            )}
+            <div className="flex flex-col gap-4">
+              {qukeysOverlapThreshold >= 0 && (
+                <div className="w-full">
+                  <div className="w-full flex gap-2">
+                    <div className="w-full">
+                      <Heading headingLevel={3} renderAs="paragraph-sm" className="flex items-center gap-2">
+                        {i18n.keyboardSettings.qukeys.overlapThreshold}
+                        <TooltipProvider delayDuration={200}>
+                          <Tooltip>
+                            <TooltipTrigger className="[&_svg]:text-purple-100 [&_svg]:dark:text-purple-200">
+                              <IconInformation />
+                            </TooltipTrigger>
+                            <TooltipContent className="max-w-xs">
+                              <Heading headingLevel={4} renderAs="h4" className="text-gray-600 dark:text-gray-25 mb-3 leading-6">
+                                {i18n.keyboardSettings.qukeys.overlapThresholdTip1}
+                              </Heading>
+                              <ul>
+                                <li className="text-left">{i18n.keyboardSettings.qukeys.overlapThresholdTip2}</li>
+                                <li className="text-left">{i18n.keyboardSettings.qukeys.overlapThresholdTip3}</li>
+                              </ul>
+                            </TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
+                      </Heading>
+                    </div>
+                  </div>
+                  <div className="w-full flex gap-2">
+                    <div className="flex max-w-12 p-0 text-center items-center">
+                      <span className="tagsfix">Less</span>
+                    </div>
+                    <div className="w-full flex items-center p-0">
+                      <Slider min={0} max={100} value={[qukeysOverlapThreshold]} onValueChange={setOverlapThreshold} />
+                    </div>
+                    <div className="flex max-w-12 p-0 text-center items-center">
+                      <span className="tagsfix">More</span>
+                    </div>
+                  </div>
+                </div>
+              )}
+              {qukeysHoldTimeout >= 0 && (
+                <div className="w-full">
+                  <div className="w-full flex gap-2">
+                    <div className="w-full">
+                      <Heading headingLevel={3} renderAs="paragraph-sm" className="flex items-center gap-2">
+                        {i18n.keyboardSettings.qukeys.holdTimeout}
+                        <TooltipProvider delayDuration={200}>
+                          <Tooltip>
+                            <TooltipTrigger className="[&_svg]:text-purple-100 [&_svg]:dark:text-purple-200">
+                              <IconInformation />
+                            </TooltipTrigger>
+                            <TooltipContent className="max-w-xs">
+                              <Heading headingLevel={4} renderAs="h4" className="text-gray-600 dark:text-gray-25 mb-3 leading-6">
+                                {i18n.keyboardSettings.qukeys.holdTimeoutTip1}
+                              </Heading>
+                              <ul>
+                                <li className="text-left">{i18n.keyboardSettings.qukeys.holdTimeoutTip2}</li>
+                                <li className="text-left">{i18n.keyboardSettings.qukeys.holdTimeoutTip3}</li>
+                              </ul>
+                            </TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
+                      </Heading>
+                    </div>
+                  </div>
+                  <div className="w-full flex gap-2">
+                    <div className="flex max-w-12 p-0 text-center items-center">
+                      <span className="tagsfix">Less</span>
+                    </div>
+                    <div className="w-full flex items-center p-0">
+                      <Slider min={1} max={255} value={[qukeysHoldTimeout]} onValueChange={setHoldTimeout} />
+                    </div>
+                    <div className="flex max-w-12 p-0 text-center items-center">
+                      <span className="tagsfix">More</span>
+                    </div>
+                  </div>
+                </div>
+              )}
+              {qukeysMinHold >= 0 && (
+                <div className="w-full">
+                  <div className="w-full flex gap-2">
+                    <div className="w-full">
+                      <Heading headingLevel={3} renderAs="paragraph-sm" className="flex items-center gap-2">
+                        {i18n.keyboardSettings.qukeys.minHold}
+                        <TooltipProvider delayDuration={200}>
+                          <Tooltip>
+                            <TooltipTrigger className="[&_svg]:text-purple-100 [&_svg]:dark:text-purple-200">
+                              <IconInformation />
+                            </TooltipTrigger>
+                            <TooltipContent className="max-w-xs">
+                              <Heading headingLevel={4} renderAs="h4" className="text-gray-600 dark:text-gray-25 mb-3 leading-6">
+                                {i18n.keyboardSettings.qukeys.minHoldTip1}
+                              </Heading>
+                              <ul>
+                                <li className="text-left">{i18n.keyboardSettings.qukeys.minHoldTip2}</li>
+                              </ul>
+                            </TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
+                      </Heading>
+                    </div>
+                  </div>
+                  <div className="w-full flex gap-2">
+                    <div className="flex max-w-12 p-0 text-center items-center">
+                      <span className="tagsfix">Less</span>
+                    </div>
+                    <div className="w-full flex items-center p-0">
+                      <Slider min={1} max={254} value={[qukeysMinHold]} onValueChange={setMinHold} />
+                    </div>
+                    <div className="flex max-w-12 p-0 text-center items-center">
+                      <span className="tagsfix">More</span>
+                    </div>
+                  </div>
+                </div>
+              )}
+              {qukeysMinPrior >= 0 && (
+                <div className="w-full">
+                  <div className="w-full flex gap-2">
+                    <div className="w-full">
+                      <Heading headingLevel={3} renderAs="paragraph-sm" className="flex items-center gap-2">
+                        {i18n.keyboardSettings.qukeys.minPrior}
+                        <TooltipProvider delayDuration={200}>
+                          <Tooltip>
+                            <TooltipTrigger className="[&_svg]:text-purple-100 [&_svg]:dark:text-purple-200">
+                              <IconInformation />
+                            </TooltipTrigger>
+                            <TooltipContent className="max-w-xs">
+                              <Heading headingLevel={4} renderAs="h4" className="text-gray-600 dark:text-gray-25 mb-3 leading-6">
+                                {i18n.keyboardSettings.qukeys.minPriorTip1}
+                              </Heading>
+                              <ul>
+                                <li className="text-left">{i18n.keyboardSettings.qukeys.minPriorTip2}</li>
+                              </ul>
+                            </TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
+                      </Heading>
+                    </div>
+                  </div>
+                  <div className="w-full flex gap-2">
+                    <div className="flex max-w-12 p-0 text-center items-center">
+                      <span className="tagsfix">Less</span>
+                    </div>
+                    <div className="w-full flex items-center p-0">
+                      <Slider min={1} max={254} value={[qukeysMinPrior]} onValueChange={setMinPrior} />
+                    </div>
+                    <div className="flex max-w-12 p-0 text-center items-center">
+                      <span className="tagsfix">More</span>
+                    </div>
+                  </div>
+                </div>
+              )}
+              {SuperOverlapThreshold >= 0 && (
+                <div className="w-full">
+                  <div className="w-full flex gap-2">
+                    <div className="w-full">
+                      <Heading headingLevel={3} renderAs="paragraph-sm" className="flex items-center gap-2">
+                        {i18n.keyboardSettings.superkeys.overlap}
+                        <TooltipProvider delayDuration={200}>
+                          <Tooltip>
+                            <TooltipTrigger className="[&_svg]:text-purple-100 [&_svg]:dark:text-purple-200">
+                              <IconInformation />
+                            </TooltipTrigger>
+                            <TooltipContent className="max-w-xs">
+                              <Heading headingLevel={4} renderAs="h4" className="text-gray-600 dark:text-gray-25 mb-3 leading-6">
+                                {i18n.keyboardSettings.superkeys.overlapTip1}
+                              </Heading>
+                              <ul>
+                                <li className="text-left">{i18n.keyboardSettings.superkeys.overlapTip2}</li>
+                                <li className="text-left">{i18n.keyboardSettings.superkeys.overlapTip3}</li>
+                              </ul>
+                            </TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
+                      </Heading>
+                    </div>
+                  </div>
+                  <div className="w-full flex gap-2">
+                    <div className="flex max-w-12 p-0 text-center items-center">
+                      <span className="tagsfix">Less</span>
+                    </div>
+                    <div className="w-full flex items-center p-0">
+                      <Slider min={0} max={80} value={[SuperOverlapThreshold]} onValueChange={setSuperOverlapThreshold} />
+                    </div>
+                    <div className="flex max-w-12 p-0 text-center items-center">
+                      <span className="tagsfix">More</span>
+                    </div>
+                  </div>
+                </div>
+              )}
+              {SuperTimeout >= 0 && (
+                <div className="w-full">
+                  <div className="w-full flex gap-2">
+                    <div className="w-full">
+                      <Heading headingLevel={3} renderAs="paragraph-sm" className="flex items-center gap-2">
+                        {i18n.keyboardSettings.superkeys.timeout}
+                        <TooltipProvider delayDuration={200}>
+                          <Tooltip>
+                            <TooltipTrigger className="[&_svg]:text-purple-100 [&_svg]:dark:text-purple-200">
+                              <IconInformation />
+                            </TooltipTrigger>
+                            <TooltipContent className="max-w-xs">
+                              <Heading headingLevel={4} renderAs="h4" className="text-gray-600 dark:text-gray-25 mb-3 leading-6">
+                                {i18n.keyboardSettings.superkeys.timeoutTip1}
+                              </Heading>
+                              <ul>
+                                <li className="text-left">{i18n.keyboardSettings.superkeys.timeoutTip2}</li>
+                                <li className="text-left">{i18n.keyboardSettings.superkeys.timeoutTip3}</li>
+                              </ul>
+                            </TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
+                      </Heading>
+                    </div>
+                  </div>
+                  <div className="w-full flex gap-2">
+                    <div className="flex max-w-12 p-0 text-center items-center">
+                      <span className="tagsfix">Less</span>
+                    </div>
+                    <div className="w-full flex items-center p-0">
+                      <Slider min={1} max={500} value={[SuperTimeout]} onValueChange={setSuperTimeout} />
+                    </div>
+                    <div className="flex max-w-12 p-0 text-center items-center">
+                      <span className="tagsfix">More</span>
+                    </div>
+                  </div>
+                </div>
+              )}
+              {SuperHoldstart >= 0 && (
+                <div className="w-full">
+                  <div className="w-full flex gap-2">
+                    <div className="w-full">
+                      <Heading headingLevel={3} renderAs="paragraph-sm" className="flex items-center gap-2">
+                        {i18n.keyboardSettings.superkeys.holdstart}
+                        <TooltipProvider delayDuration={200}>
+                          <Tooltip>
+                            <TooltipTrigger className="[&_svg]:text-purple-100 [&_svg]:dark:text-purple-200">
+                              <IconInformation />
+                            </TooltipTrigger>
+                            <TooltipContent className="max-w-xs">
+                              <Heading headingLevel={4} renderAs="h4" className="text-gray-600 dark:text-gray-25 mb-3 leading-6">
+                                {i18n.keyboardSettings.superkeys.chordingTip1}
+                              </Heading>
+                              <ul>
+                                <li className="text-left">{i18n.keyboardSettings.superkeys.chordingTip2}</li>
+                                <li className="text-left">{i18n.keyboardSettings.superkeys.chordingTip3}</li>
+                              </ul>
+                            </TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
+                      </Heading>
+                    </div>
+                  </div>
+                  <div className="w-full flex gap-2">
+                    <div className="flex max-w-12 p-0 text-center items-center">
+                      <span className="tagsfix">Less</span>
+                    </div>
+                    <div className="w-full flex items-center p-0">
+                      <Slider min={120} max={500} value={[SuperHoldstart]} onValueChange={setSuperHoldstart} />
+                    </div>
+                    <div className="flex max-w-12 p-0 text-center items-center">
+                      <span className="tagsfix">More</span>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
           </CardContent>
         </Card>
         <Card className="mt-3 max-w-2xl mx-auto" variant="default">
@@ -543,46 +609,40 @@ function KeyboardSettings(props: KeyboardSettingsProps) {
             </CardTitle>
           </CardHeader>
           <CardContent className="pb-0">
-            {mouseSpeed >= 0 && (
-              <Form.Group controlId="mouseSpeed" className="formGroup">
-                <Row>
-                  <Col>
-                    <Form.Label>{i18n.keyboardSettings.mouse.speed}</Form.Label>
-                  </Col>
-                </Row>
-                {mSpeed}
-              </Form.Group>
-            )}
-            {mouseAccelSpeed >= 0 && (
-              <Form.Group controlId="mousemAccelS" className="formGroup">
-                <Row>
-                  <Col>
-                    <Form.Label>{i18n.keyboardSettings.mouse.accelSpeed}</Form.Label>
-                  </Col>
-                </Row>
-                {mAccelS}
-              </Form.Group>
-            )}
-            {mouseSpeedLimit >= 0 && (
-              <Form.Group controlId="mouseSpeedL" className="formGroup">
-                <Row>
-                  <Col>
-                    <Form.Label>{i18n.keyboardSettings.mouse.speedLimit}</Form.Label>
-                  </Col>
-                </Row>
-                {mSpeedL}
-              </Form.Group>
-            )}
-            {mouseWheelSpeed >= 0 && (
-              <Form.Group controlId="mousemWheelS" className="formGroup">
-                <Row>
-                  <Col>
-                    <Form.Label>{i18n.keyboardSettings.mouse.wheelSpeed}</Form.Label>
-                  </Col>
-                </Row>
-                {mWheelS}
-              </Form.Group>
-            )}
+            <div className="flex flex-col gap-4">
+              {mouseSpeed >= 0 && (
+                <div className="w-full">
+                  <div className="w-full flex gap-2">
+                    <div className="w-full">{i18n.keyboardSettings.mouse.speed}</div>
+                  </div>
+                  {mSpeed}
+                </div>
+              )}
+              {mouseAccelSpeed >= 0 && (
+                <div className="w-full">
+                  <div className="w-full flex gap-2">
+                    <div className="w-full">{i18n.keyboardSettings.mouse.accelSpeed}</div>
+                  </div>
+                  {mAccelS}
+                </div>
+              )}
+              {mouseSpeedLimit >= 0 && (
+                <div className="w-full">
+                  <div className="w-full flex gap-2">
+                    <div className="w-full">{i18n.keyboardSettings.mouse.speedLimit}</div>
+                  </div>
+                  {mSpeedL}
+                </div>
+              )}
+              {mouseWheelSpeed >= 0 && (
+                <div className="w-full">
+                  <div className="w-full flex gap-2">
+                    <div className="w-full">{i18n.keyboardSettings.mouse.wheelSpeed}</div>
+                  </div>
+                  {mWheelS}
+                </div>
+              )}
+            </div>
           </CardContent>
         </Card>
       </Styles>

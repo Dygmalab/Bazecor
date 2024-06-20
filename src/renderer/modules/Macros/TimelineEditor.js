@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import Styled from "styled-components";
 import log from "electron-log/renderer";
-import ListGroup from "react-bootstrap/ListGroup";
 import { MdUnfoldLess, MdKeyboardArrowUp, MdKeyboardArrowDown, MdTimer } from "react-icons/md";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
@@ -495,7 +494,7 @@ class TimelineEditor extends Component {
           <Droppable droppableId="droppable">
             {provided => (
               <div ref={provided.innerRef}>
-                <ListGroup className="list margin padding border whitebg">
+                <div className="list margin padding border whitebg">
                   {this.state.rows.map((item, index) => (
                     <Draggable key={index} draggableId={String(index)} index={index}>
                       {(provided, snapshot) => (
@@ -512,7 +511,7 @@ class TimelineEditor extends Component {
                     </Draggable>
                   ))}
                   {provided.placeholder}
-                </ListGroup>
+                </div>
               </div>
             )}
           </Droppable>

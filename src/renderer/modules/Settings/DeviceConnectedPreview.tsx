@@ -15,10 +15,10 @@
  */
 
 import React, { useState } from "react";
-import { NameModal } from "@Renderer/component/Modal";
-import { IconPen } from "@Renderer/component/Icon";
+import { IconPen } from "@Renderer/components/atoms/icons";
 import { motion } from "framer-motion";
 import { i18n } from "@Renderer/i18n";
+import NameModal from "@Renderer/components/molecules/CustomModal/ModalName";
 import { DevicePreview } from "../DevicePreview";
 
 interface DeviceConnectedPreviewProps {

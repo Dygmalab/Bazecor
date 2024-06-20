@@ -1,40 +1,12 @@
 /* eslint-disable no-bitwise */
 import React, { useEffect, useState } from "react";
-import Styled from "styled-components";
 import { i18n } from "@Renderer/i18n";
 
 // Components
 import { SegmentedKeyType } from "@Renderer/types/layout";
 import usePrevious from "@Renderer/utils/usePrevious";
-import Title from "../../component/Title";
-import { ButtonConfig } from "../../component/Button";
-
-const Style = Styled.div`
-height: inherit;
-.modPickerInner {
-  padding: 16px;
-  h4 {
-    font-size: 13px;
-  }
-}
-.modPickerInner.modPickerInnerStd {
-  padding: 0;
-}
-.modPickerButtonsList {
-  display: flex;
-  margin-left: -2px;
-  margin-right: -2px;
-  flex-wrap: wrap;
-  .button-config {
-    margin: 4px 2px 0 2px;
-    width: 56px;
-    text-align: center;
-    padding: 7px 4px;
-    // font-size: 12px;
-  }
-}
-
-`;
+import Heading from "@Renderer/components/atoms/Heading";
+import { Button } from "@Renderer/components/atoms/Button";
 
 interface ModPickerProps {
   keyCode: SegmentedKeyType;
@@ -139,50 +111,67 @@ function ModPicker(props: ModPickerProps) {
   }, [keyCode, previousKeyCode]);
 
   return (
-    <Style>
-      <div className={`modPickerInner ${isStandardView ? "modPickerInnerStd" : ""}`}>
-        {!isStandardView ? <Title text={i18n.editor.standardView.keys.addModifier} headingLevel={4} /> : null}
-        <div className="modPickerButtonsList">
-          <ButtonConfig
+    <div className="h-[inherit]">
+      <div className={`modPickerInner ${isStandardView ? "modPickerInnerStd p-0" : "p-[16px]"}`}>
+        {!isStandardView ? (
+          <Heading headingLevel={4} renderAs="h4" className="text-ssm">
+            {i18n.editor.standardView.keys.addModifier}
+          </Heading>
+        ) : null}
+        <div className={`modPickerButtonsList flex gap-1 ${isStandardView ? "" : "flex-wrap [&_button]:w-[64px]"}`}>
+          <Button
+            variant="config"
+            size="sm"
             selected={modifs.includes(0)}
-            buttonText="Shift"
             className="modbutton"
             onClick={() => SelectModif(0)}
             disabled={setModifierVisibility()}
-          />
-          <ButtonConfig
+          >
+            Shift
+          </Button>
+          <Button
+            variant="config"
+            size="sm"
             selected={modifs.includes(1)}
-            buttonText="Ctrl"
             className="modbutton"
             onClick={() => SelectModif(1)}
             disabled={setModifierVisibility()}
-          />
-          <ButtonConfig
+          >
+            Ctrl
+          </Button>
+          <Button
+            variant="config"
+            size="sm"
             selected={modifs.includes(2)}
-            buttonText="Alt"
             className="modbutton"
             onClick={() => SelectModif(2)}
             disabled={setModifierVisibility()}
-          />
-
-          <ButtonConfig
+          >
+            Alt
+          </Button>
+          <Button
+            variant="config"
+            size="sm"
             selected={modifs.includes(3)}
-            buttonText="Alt Gr"
             className="modbutton"
             onClick={() => SelectModif(3)}
             disabled={setModifierVisibility()}
-          />
-
-          <ButtonConfig
+          >
+            Alt Gr
+          </Button>
+          <Button
+            variant="config"
+            size="sm"
             selected={modifs.includes(4)}
-            buttonText="OS"
             className="modbutton"
             onClick={() => SelectModif(4)}
             disabled={setModifierVisibility()}
-          />
+          >
+            OS
+          </Button>
         </div>
       </div>
-    </Style>
+    </div>
   );
 }
 

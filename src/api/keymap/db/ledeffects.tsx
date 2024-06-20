@@ -16,7 +16,7 @@
  */
 
 import React from "react";
-import { IconLEDNextEffectSm, IconLEDPreviousEffectSm, IconLEDToggleEffectSm } from "@Renderer/component/Icon";
+import { IconLEDNextEffect, IconLEDPreviousEffect, IconLEDToggleEffect } from "@Renderer/components/atoms/icons";
 
 const LEDEffectsTable = {
   groupName: "LED Effect",
@@ -25,7 +25,7 @@ const LEDEffectsTable = {
       code: 17152,
       labels: {
         top: "LED",
-        primary: <IconLEDNextEffectSm />,
+        primary: <IconLEDNextEffect size="sm" />,
         verbose: "Next",
       },
     },
@@ -33,14 +33,14 @@ const LEDEffectsTable = {
       code: 17153,
       labels: {
         top: "LED",
-        primary: <IconLEDPreviousEffectSm />,
+        primary: <IconLEDPreviousEffect size="sm" />,
         verbose: "Previous",
       },
     },
     {
       code: 17154,
       labels: {
-        primary: <IconLEDToggleEffectSm />,
+        primary: <IconLEDToggleEffect size="sm" />,
         top: "LED",
         verbose: "Toggle",
       },

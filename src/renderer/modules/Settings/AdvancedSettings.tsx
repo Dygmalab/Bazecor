@@ -16,20 +16,25 @@
 
 import React, { useState } from "react";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@Renderer/components/ui/card";
-import { Switch } from "@Renderer/components/ui/switch";
+import { Card, CardContent, CardHeader, CardTitle } from "@Renderer/components/atoms/Card";
+import { Switch } from "@Renderer/components/atoms/Switch";
 
 import { useDevice } from "@Renderer/DeviceContext";
-import { Select } from "@Renderer/component/Select";
 import { i18n } from "@Renderer/i18n";
 
 // Own Components
-import { RegularButton } from "@Renderer/component/Button";
-import ConfirmationDialog from "@Renderer/component/ConfirmationDialog";
-
+import { Button } from "@Renderer/components/atoms/Button";
+import ConfirmationDialog from "@Renderer/components/molecules/CustomModal/ConfirmationDialog";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@Renderer/components/atoms/Select";
 // Icons Imports
-import { IconChip, IconLayers } from "@Renderer/component/Icon";
+import { IconChip, IconLayers } from "@Renderer/components/atoms/icons";
 import { AdvancedSettingsProps } from "@Renderer/types/preferences";
+
+interface LayerItemProps {
+  text: string;
+  value: number;
+  index: number;
+}
 
 const AdvancedKeyboardSettings = () => {
   const [EEPROMClearConfirmationOpen, setEEPROMClearConfirmationOpen] = useState(false);
@@ -61,12 +66,9 @@ const AdvancedKeyboardSettings = () => {
 
   return (
     <>
-      <RegularButton
-        buttonText={i18n.keyboardSettings.resetEEPROM.button}
-        styles="short danger"
-        onClick={openEEPROMClearConfirmation}
-        disabled={working}
-      />
+      <Button variant="destructive" size="sm" onClick={openEEPROMClearConfirmation} disabled={working}>
+        {i18n.keyboardSettings.resetEEPROM.button}
+      </Button>
       <ConfirmationDialog
         title={i18n.keyboardSettings.resetEEPROM.dialogTitle}
         text={i18n.keyboardSettings.resetEEPROM.dialogContents}
@@ -84,10 +86,7 @@ const AdvancedSettings = ({
   selectDefaultLayer,
   keyboardType,
   neurons,
-  neuronID,
   selectedNeuron,
-  updateTab,
-  toggleBackup,
   onlyCustomLayers,
   onChangeOnlyCustomLayers,
 }: AdvancedSettingsProps) => {
@@ -98,6 +97,8 @@ const AdvancedSettings = ({
     index,
   }));
   layersNames.push({ text: i18n.keyboardSettings.keymap.noDefault, value: 126, index: 126 });
+
+  console.log("defaultLayer: ", defaultLayer);
 
   const normalizeOnlyCustomLayers = (item: string | boolean): boolean => {
     if (typeof item === "string") {
@@ -121,16 +122,21 @@ const AdvancedSettings = ({
         </CardHeader>
         <CardContent>
           <form>
-            <label htmlFor="selectDefaultLayer" className="m-0 text-sm font-semibold tracking-tight">
+            <label htmlFor="selectDefaultLayer" className="mt-0 mb-2 text-sm font-semibold tracking-tight">
               {i18n.keyboardSettings.keymap.defaultLayer}
             </label>
-            <Select
-              id="selectDefaultLayer"
-              onSelect={selectDefaultLayer}
-              value={defaultLayer}
-              listElements={layersNames}
-              disabled={!connected}
-            />
+            <Select value={String(defaultLayer)} onValueChange={e => selectDefaultLayer(e)}>
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Select Macro" />
+              </SelectTrigger>
+              <SelectContent>
+                {layersNames.map((item: LayerItemProps) => (
+                  <SelectItem value={String(item.value)} key={`layerItem-${item.value}`} disabled={!connected}>
+                    {item.text}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </form>
 
           <div className="flex items-center w-full justify-between py-2 mt-3 border-t-[1px] border-gray-50 dark:border-gray-700">

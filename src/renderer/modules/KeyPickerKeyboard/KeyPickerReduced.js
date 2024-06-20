@@ -7,7 +7,7 @@
 import React, { Component } from "react";
 import Styled, { withTheme } from "styled-components";
 
-import OverlayTrigger from "react-bootstrap/OverlayTrigger";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@Renderer/components/atoms/Tooltip";
 
 import { RiStopFill } from "react-icons/ri";
 import { IoIosPause, IoIosPlay, IoIosShuffle } from "react-icons/io";
@@ -41,12 +41,8 @@ import {
 } from "react-icons/ai";
 import { MdKeyboardReturn, MdSpaceBar, MdKeyboardCapslock, MdInfoOutline, MdEject } from "react-icons/md";
 
-import { i18n } from "@Renderer/i18n";
-
 import Key from "@Renderer/modules/KeyPickerKeyboard/Key";
 import getLanguage from "@Renderer/modules/KeyPickerKeyboard/KeyPickerLanguage";
-
-// import SelectSuperKeys from "../../component/Select/SelectSuperKey";
 
 const Style = Styled.div`
 width: 100%;
@@ -394,9 +390,14 @@ class KeyPickerReduced extends Component {
       if (key.tooltip) {
         return (
           <foreignObject key={`id-${key.content.first}-${id}`} x={key.x} y={key.y} width={25} height={25}>
-            <OverlayTrigger rootClose placement="top" delay={{ show: 250, hide: 400 }} overlay={this.renderTooltip(key.tooltip)}>
-              <MdInfoOutline className="info" />
-            </OverlayTrigger>
+            <TooltipProvider delayDuration={100}>
+              <Tooltip>
+                <TooltipTrigger className="[&_svg]:text-purple-100 [&_svg]:dark:text-purple-200">
+                  <MdInfoOutline className="info" />
+                </TooltipTrigger>
+                <TooltipContent>{this.renderTooltip(key.tooltip)}</TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
           </foreignObject>
         );
       }

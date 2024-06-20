@@ -18,9 +18,9 @@
 import React from "react";
 import Styled, { useTheme } from "styled-components";
 
-import { IconWarning } from "@Renderer/component/Icon";
+import { IconWarning } from "@Renderer/components/atoms/icons";
 
-const Style = Styled.div`   
+const Style = Styled.div`
 .lineColor {
   stroke: ${({ theme }) => theme.styles.firmwareUpdateProcess.neuronLineColor};
 }
@@ -39,7 +39,7 @@ const Style = Styled.div`
 .neuronBlinking {
     opacity: 0;
     color: #5C61E7;
-}   
+}
 .neuronSuccess {
     opacity: 0;
     transition: 300ms opacity ease-in-out;
@@ -47,14 +47,14 @@ const Style = Styled.div`
       fill: ${({ theme }) => theme.styles.neuronStatus.connectionSuccessFill};
       stroke-opacity: ${({ theme }) => theme.styles.neuronStatus.connectionStrokeOpacity};
     }
-} 
+}
 .neuronUpdate-2 {
     .neuronBlinking {
         animation-name: neuronBlink;
-        animation-duration: 4.5s; 
+        animation-duration: 4.5s;
         animation-fill-mode: forwards;
     }
-}       
+}
 .neuronUpdate-updating {
     .neuronBlinking {
         opacity: 1;
@@ -63,7 +63,7 @@ const Style = Styled.div`
 .neuronUpdate-success {
     .neuronSuccess {
         opacity: 1;
-    }  
+    }
 }
 .neuronUpdate-error.neuronUpdate-updating {
   .neuronBlinking {
@@ -74,7 +74,7 @@ const Style = Styled.div`
   position: relative;
   .neuronWarning {
       opacity: 1;
-  }  
+  }
   .neuronBlinking {
     opacity: 0;
   }
@@ -112,23 +112,23 @@ const Style = Styled.div`
       color: ${({ theme }) => theme.colors.brandPrimary};
     }
     8% {
-        opacity: 1;  
+        opacity: 1;
     }
     10% {
-      opacity: 0;  
-      color: #5D5FEF; 
+      opacity: 0;
+      color: #5D5FEF;
     }
     11% {
-      opacity: 0;  
+      opacity: 0;
     }
     12% {
         opacity: 1;
     }
     13% {
-        opacity: 0; 
+        opacity: 0;
     }
     14% {
-      opacity: 1; 
+      opacity: 1;
     }
     15% {
         opacity: 0;
@@ -183,10 +183,10 @@ const Style = Styled.div`
     }
     58% {
         opacity: 0;
-    }   
+    }
     59% {
       opacity: 1;
-    }     
+    }
     60% {
       opacity: 0;
     }
@@ -276,7 +276,7 @@ const Style = Styled.div`
     }
     98% {
         opacity: 0;
-    }       
+    }
     100% {
         opacity: 1;
     }

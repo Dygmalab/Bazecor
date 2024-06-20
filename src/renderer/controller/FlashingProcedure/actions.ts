@@ -3,16 +3,15 @@ import fs from "fs";
 import path from "path";
 import log from "electron-log/renderer";
 import { ipcRenderer } from "electron";
-import Device, { State } from "src/api/comms/Device";
 import { SerialPort } from "serialport";
 import { DeviceTools } from "@Renderer/DeviceContext";
 import { BackupType } from "@Renderer/types/backups";
-import { RaiseResetKeyboard, resetKeyboard, updateFirmware } from "../../../api/flash/RaiseTools";
+import Device, { State } from "../../../api/comms/Device";
+import { resetKeyboard } from "../../../api/flash/RaiseTools";
 import NRf52833 from "../../../api/flash/defyFlasher/NRf52833-flasher";
 import SideFlaser from "../../../api/flash/defyFlasher/sideFlasher";
 import { FlashRaise } from "../../../api/flash";
 import * as Context from "./context";
-import Focus from "../../../api/focus";
 
 const delay = (ms: number) =>
   new Promise(res => {
@@ -99,7 +98,7 @@ export const reconnect = async (context: Context.ContextType) => {
   try {
     const foundDevices = async (isBootloader: boolean) => {
       let result: Device | undefined;
-      const devices = await DeviceTools.list();
+      const devices = await DeviceTools.enumerateSerial(false);
 
       for (const device of devices) {
         if (
@@ -109,36 +108,33 @@ export const reconnect = async (context: Context.ContextType) => {
             : context.originalDevice?.device?.info.keyboardType === device.device?.info.keyboardType &&
               context.originalDevice?.device?.info.product === device.device.info.product
         ) {
-          result = device;
+          result = new Device(device, "serial");
+          log.info("found device: ", device);
           break;
         }
       }
       return result;
     };
-    const runnerFindKeyboard = async (findKeyboard: { (): Promise<unknown>; (): any }, times: number) => {
+    const findKeyboard = async () => {
+      await delay(2500);
+      const result = await foundDevices(false);
+      return result;
+    };
+
+    const runnerFindKeyboard = async (functionFindKB: () => Promise<Device>, times: number) => {
       if (!times) {
         log.error("Keyboard not found!");
         return false;
       }
-      if (await findKeyboard()) {
+      if (await functionFindKB()) {
         log.info("Ready to restore");
         return true;
       }
       log.info(`Keyboard not detected, trying again for ${times} times`);
       stateUpdate("reconnect", 10 + 100 * (1 / (5 - times)), context);
-      await runnerFindKeyboard(findKeyboard, times - 1);
+      await runnerFindKeyboard(functionFindKB, times - 1);
       return true;
     };
-    const findKeyboard = async () =>
-      // eslint-disable-next-line no-async-promise-executor
-      new Promise(async resolve => {
-        await delay(2500);
-        if (await foundDevices(false)) {
-          resolve(true);
-        } else {
-          resolve(false);
-        }
-      });
     stateUpdate("reconnect", 10, context);
     reconnected = await runnerFindKeyboard(findKeyboard, 5);
     stateUpdate("reconnect", 100, context);
@@ -175,6 +171,7 @@ export const flashSide = async (side: string, context: Context.ContextType) => {
       forceFlashSides,
     );
     stateUpdate(side, 100, context);
+    await delay(1000);
     result = true;
   } catch (error) {
     log.warn("error when flashing Sides");
@@ -220,7 +217,8 @@ export const uploadDefyWired = async (context: Context.ContextType) => {
 
 export const resetDefy = async (context: Context.ContextType) => {
   let { currentDevice } = context.deviceState as State;
-  log.info("Checking Defy reset: ", currentDevice.device.bootloader);
+  log.info("Checking Defy bootloader: ", currentDevice.device.bootloader, context.bootloader);
+  log.info("Checking Defy compath: ", currentDevice.device.path, context.comPath);
   try {
     if (context.comPath === undefined) {
       log.info("when creating comPath", context.originalDevice?.device);
@@ -229,8 +227,8 @@ export const resetDefy = async (context: Context.ContextType) => {
     }
     if (!currentDevice.device.bootloader) {
       try {
-        log.info("reset indicators", currentDevice.device.bootloader, currentDevice.device);
-        if (currentDevice.port === undefined || currentDevice.isClosed) {
+        log.info("reset PORT check", currentDevice.port, currentDevice.isClosed);
+        if (currentDevice.port === undefined && currentDevice.isClosed) {
           context.deviceState.currentDevice = (await DeviceTools.connect(currentDevice)) as Device;
           currentDevice = context.deviceState.currentDevice;
         }
@@ -349,7 +347,7 @@ export const uploadRaise = async (context: Context.ContextType) => {
       context.bootloader = context.device?.bootloader;
     }
     await DeviceTools.disconnect(currentDevice);
-    log.info(context.originalDevice?.device, context.flashRaise);
+    log.info(context.originalDevice?.device, context.flashRaise !== undefined);
     result = await context.flashRaise?.updateFirmware(context.firmwares?.fw, (stage: string, percentage: number) => {
       stateUpdate(stage, percentage, context);
     });

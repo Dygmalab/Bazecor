@@ -20,20 +20,10 @@ import React, { Component } from "react";
 import Styled from "styled-components";
 
 import { MdUnfoldLess, MdKeyboardArrowUp, MdKeyboardArrowDown, MdTimer } from "react-icons/md";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@Renderer/components/ui/tabs";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@Renderer/components/atoms/Tabs";
 import { motion } from "framer-motion";
 import log from "electron-log/renderer";
 import { i18n } from "@Renderer/i18n";
-import Title from "../../component/Title";
-import TextTab from "../KeysTabs/TextTab";
-import KeysTab from "../KeysTabs/KeysTab";
-import LayersTab from "../KeysTabs/LayersTab";
-import MacroTab from "../KeysTabs/MacroTab";
-import DelayTab from "../KeysTabs/DelayTab";
-import MediaAndLightTab from "../KeysTabs/MediaAndLightTab";
-import MouseTab from "../KeysTabs/MouseTab";
-import { RecordMacroModal } from "../../component/Modal";
-
 import {
   IconKeyboard,
   IconLetterColor,
@@ -43,7 +33,16 @@ import {
   IconNote,
   IconStopWatch,
   IconMagicStick,
-} from "../../component/Icon";
+} from "@Renderer/components/atoms/icons";
+import Heading from "@Renderer/components/atoms/Heading";
+import RecordMacroModal from "@Renderer/modules/Macros/RecordMacroModal";
+import TextTab from "../KeysTabs/TextTab";
+import KeysTab from "../KeysTabs/KeysTab";
+import LayersTab from "../KeysTabs/LayersTab";
+import MacroTab from "../KeysTabs/MacroTab";
+import DelayTab from "../KeysTabs/DelayTab";
+import MediaAndLightTab from "../KeysTabs/MediaAndLightTab";
+import MouseTab from "../KeysTabs/MouseTab";
 
 const Styles = Styled.div`
 .card {
@@ -636,8 +635,10 @@ class MacroCreator extends Component {
           }
         >
           <div className="tabWrapper grid mt-[3px] grid-cols-[minmax(auto,_240px)_1fr]">
-            <div className="px-4 py-4 rounded-bl-xl bg-gray-50 dark:bg-[#2b2c43]">
-              <Title headingLevel={3} text={i18n.general.actions} />
+            <div className="px-5 py-4 rounded-bl-xl bg-gray-50 dark:bg-[#2b2c43]">
+              <Heading headingLevel={3} renderAs="h3">
+                {i18n.general.actions}
+              </Heading>
               <RecordMacroModal onAddRecorded={this.onAddRecorded} keymapDB={this.keymapDB} />
               <TabsList className="flex flex-col gap-1">
                 <TabsTrigger value="tabText" variant="tab">
@@ -658,9 +659,11 @@ class MacroCreator extends Component {
                 </TabsTrigger>
               </TabsList>
             </div>
-            <div className="px-4 py-4 rounded-br-xl bg-gray-25 dark:bg-gray-800">
+            <div className="px-8 pt-4 pb-8 rounded-br-xl bg-gray-25 dark:bg-gray-800">
               <div className="tabContentInner">
-                <Title headingLevel={3} text={i18n.general.configure} />
+                <Heading headingLevel={3} renderAs="h3">
+                  {i18n.general.configure}
+                </Heading>
                 <TabsContent value="tabText">
                   <motion.div initial="hidden" animate="visible" variants={tabVariants}>
                     <TextTab onAddText={this.onAddText} onTextChange={this.onTextChange} addText={this.state.addText} />
@@ -679,7 +682,7 @@ class MacroCreator extends Component {
                   <motion.div initial="hidden" animate="visible" variants={tabVariants}>
                     <Tabs defaultValue="tabLayers" orientation="vertical">
                       <div className="grid grid-cols-[minmax(125px,_170px)_auto]">
-                        <div className="pl-0 pr-4 py-3">
+                        <div className="pl-0 pr-5 py-3">
                           <TabsList className="flex flex-col gap-1">
                             <TabsTrigger value="tabLayers" variant="tab">
                               <IconLayers />
@@ -699,7 +702,7 @@ class MacroCreator extends Component {
                             </TabsTrigger>
                           </TabsList>
                         </div>
-                        <div className="px-4 py-2 rounded-md bg-gray-50/40 dark:bg-gray-900/20 mt-[-24px]">
+                        <div className="px-6 py-3 rounded-md bg-gray-50/40 dark:bg-gray-900/20 mt-[-24px]">
                           <TabsContent value="tabLayers">
                             <motion.div initial="hidden" animate="visible" variants={tabVariants}>
                               <LayersTab onLayerPress={this.onLayerPress} />
@@ -721,7 +724,7 @@ class MacroCreator extends Component {
                           </TabsContent>
                           <TabsContent value="tabMouse">
                             <motion.div initial="hidden" animate="visible" variants={tabVariants}>
-                              <MouseTab onAddSpecial={this.onAddSpecial} />
+                              <MouseTab onAddSpecial={this.onAddSpecial} actTab="macro" />
                             </motion.div>
                           </TabsContent>
                         </div>

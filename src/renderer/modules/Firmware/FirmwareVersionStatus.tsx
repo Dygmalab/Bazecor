@@ -21,15 +21,15 @@ import log from "electron-log";
 
 import ReactMarkdown from "react-markdown";
 
-import Title from "@Renderer/component/Title";
-import { Badge } from "@Renderer/component/Badge";
-import { IconEye } from "@Renderer/component/Icon";
+import Heading from "@Renderer/components/atoms/Heading";
+import { Badge } from "@Renderer/components/atoms/Badge";
+import { IconEye, IconLoader } from "@Renderer/components/atoms/icons";
 
-import Dropdown from "react-bootstrap/Dropdown";
-import Modal from "react-bootstrap/Modal";
-import Spinner from "react-bootstrap/Spinner";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@Renderer/components/atoms/Select";
 
-import { RegularButton } from "@Renderer/component/Button";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@Renderer/components/atoms/Dialog";
+import { Button } from "@Renderer/components/atoms/Button";
+
 import { ReleaseType } from "@Renderer/types/releases";
 
 const Style = Styled.div`
@@ -51,7 +51,6 @@ margin-left:32px;
     padding: 24px;
     h6 {
       margin-top: 6px;
-      margin-bottom: 10px;
     }
   }
   .versionStatusInstalled {
@@ -157,8 +156,12 @@ const FirmwareVersionStatus = (props: FirmwareVersionStatusProps) => {
       <div className={`versionsStatus ${isUpdated && "isUpdated"}`}>
         <div className="versionStatusInner">
           <div className="versionStatusInstalled">
-            <Title text="Installed firmware version" headingLevel={6} />
-            <Badge content={currentlyVersionRunning} />
+            <Heading headingLevel={6} className="text-base mb-1">
+              Installed firmware version
+            </Heading>
+            <Badge variant="outline" size="xs">
+              {currentlyVersionRunning}
+            </Badge>
           </div>
           <div className="versionStatusNext">
             <svg className="caret" width={18} height={27} viewBox="0 0 18 27" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -168,68 +171,56 @@ const FirmwareVersionStatus = (props: FirmwareVersionStatusProps) => {
               />
             </svg>
 
-            <Title text="Update to the version" headingLevel={6} />
+            <Heading headingLevel={6} className="text-base mb-1">
+              Update to the version
+            </Heading>
             <div className="firmwareVersionContainer">
-              <Dropdown
-                onSelect={(value: string) => send({ type: "changeFW-event", selected: parseInt(value, 10) })}
-                className="custom-dropdown sm"
+              <Select
+                value={String(selectedFirmware)}
+                onValueChange={(value: string) => send({ type: "changeFW-event", selected: parseInt(value, 10) })}
               >
-                <div>
-                  <Dropdown.Toggle id="dropdown-custom">
-                    <div className="dropdownItemSelected">
-                      <div className="dropdownItem">{firmwareList[selectedFirmware].version}</div>
-                    </div>
-                  </Dropdown.Toggle>
-                  <Dropdown.Menu>
-                    {firmwareList.map((item, index: number) => (
-                      <Dropdown.Item
-                        eventKey={index.toString(10)}
-                        key={`id-${item.name}-${item.version}`}
-                        className={`${selectedFirmware === index ? "active" : ""}`}
-                        disabled={item === undefined}
-                      >
-                        <div className="dropdownInner">
-                          <div className="dropdownItem">{item.version}</div>
-                        </div>
-                      </Dropdown.Item>
-                    ))}
-                  </Dropdown.Menu>
-                </div>
-              </Dropdown>
+                <SelectTrigger className="w-full" size="sm">
+                  <SelectValue placeholder="Select firmware version" />
+                </SelectTrigger>
+                <SelectContent>
+                  {firmwareList.map((item, index: number) => (
+                    <SelectItem value={index.toString(10)} key={`id-${item.name}-${item.version}`} disabled={item === undefined}>
+                      {item.version}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
 
-              <RegularButton
-                styles="flashingbutton nooutlined btn-link transp-bg"
-                icoSVG={<IconEye />}
+              <Button
+                variant="link"
+                size="iconXS"
                 onClick={() => {
                   setModalFirmwareDetails(true);
                 }}
-              />
+              >
+                <IconEye />
+              </Button>
             </div>
           </div>
         </div>
       </div>
-      <Modal
-        size="lg"
-        show={modalFirmwareDetails}
-        onHide={() => setModalFirmwareDetails(false)}
-        aria-labelledby="contained-modal-title-vcenter"
-        centered
-      >
-        <Modal.Header closeButton>
-          <Modal.Title>{firmwareList[selectedFirmware].version}</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <div className="firmwareModalContent">
+
+      <Dialog open={modalFirmwareDetails} onOpenChange={() => setModalFirmwareDetails(false)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>{firmwareList[selectedFirmware].version}</DialogTitle>
+          </DialogHeader>
+          <div className="px-6 pb-6 mt-2">
             {firmwareList[selectedFirmware].body ? (
               <ReactMarkdown>{firmwareList[selectedFirmware].body}</ReactMarkdown>
             ) : (
-              <div className="loading marginCenter">
-                <Spinner className="spinner-border" role="status" animation="border" />
+              <div className="loading marginCenter flex text-center justify-center">
+                <IconLoader />
               </div>
             )}
           </div>
-        </Modal.Body>
-      </Modal>
+        </DialogContent>
+      </Dialog>
     </Style>
   );
 };

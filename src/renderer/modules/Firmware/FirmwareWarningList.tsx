@@ -19,7 +19,7 @@ import React from "react";
 import Styled from "styled-components";
 import { i18n } from "@Renderer/i18n";
 
-import Title from "@Renderer/component/Title";
+import Heading from "@Renderer/components/atoms/Heading";
 
 import videoDefyCablesDisconnect from "@Assets/videos/connectCablesDefy.mp4";
 
@@ -126,7 +126,9 @@ const FirmwareWarningList = (props: FirmwareWarningListProps) => {
           <div className="warningListWrapper">
             <div className="warningListItem">
               <div className="warningListHeader">
-                <Title text={i18n.firmwareUpdate.texts.bootloaderWarningTitle} headingLevel={4} />{" "}
+                <Heading headingLevel={4} renderAs="h4">
+                  {i18n.firmwareUpdate.texts.bootloaderWarningTitle}
+                </Heading>{" "}
                 <span className="label label-warning">{i18n.general.noActionRequired}</span>
               </div>
               <div className="errorListContent">{i18n.firmwareUpdate.texts.bootloaderWarningMessage}</div>

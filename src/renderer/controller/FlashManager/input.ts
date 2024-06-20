@@ -11,7 +11,6 @@ export const Input = async (input: InputType): Promise<Context.ContextType> => {
     Block: input.Block,
     deviceState: input.deviceState,
     error: undefined,
-    errorCause: undefined,
     firmwareList: [],
     firmwares: undefined,
     device: undefined,

@@ -30,6 +30,7 @@ export type DygmaDeviceType = {
       updateInstructions: string;
     };
   };
+  chipId?: string;
   wireless?: boolean;
   bootloader?: boolean;
   path?: string;

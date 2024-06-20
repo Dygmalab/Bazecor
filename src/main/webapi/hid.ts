@@ -33,6 +33,7 @@ export const configureHID = () => {
 
     window.webContents.session.on("hid-device-removed", (removed_device_event, device) => {
       log.verbose("hid-device-removed FIRED WITH", device);
+      log.warn("hid-device-removed FIREEEEEED", device);
     });
 
     if (details.deviceList && details.deviceList.length > 0) {

@@ -22,20 +22,17 @@ import Styled from "styled-components";
 import log from "electron-log/renderer";
 
 // Styling and elements
-import Container from "react-bootstrap/Container";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
-import Modal from "react-bootstrap/Modal";
+import Heading from "@Renderer/components/atoms/Heading";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@Renderer/components/atoms/Dialog";
 
 // Components
-import Callout from "@Renderer/component/Callout";
-import { LayoutViewSelector } from "@Renderer/component/ToggleButtons";
-import { SuperkeysSelector } from "@Renderer/component/Select";
-import { RegularButton } from "@Renderer/component/Button";
-import { LogoLoaderCentered } from "@Renderer/component/Loader";
-
-import ToastMessage from "@Renderer/component/ToastMessage";
-import { IconFloppyDisk } from "@Renderer/component/Icon";
+import Callout from "@Renderer/components/molecules/Callout/Callout";
+import SuperkeysSelector from "@Renderer/components/organisms/Select/SuperkeysSelector";
+import { Button } from "@Renderer/components/atoms/Button";
+import LogoLoader from "@Renderer/components/atoms/loader/LogoLoader";
+import ToggleGroupLayoutViewMode from "@Renderer/components/molecules/CustomToggleGroup/ToggleGroupLayoutViewMode";
+import ToastMessage from "@Renderer/components/atoms/ToastMessage";
+import { IconFloppyDisk } from "@Renderer/components/atoms/icons";
 
 // Modules
 import { PageHeader } from "@Renderer/modules/PageHeader";
@@ -68,9 +65,9 @@ const Styles = Styled.div`
     margin-left: 15px;
   }
 }
-height: -webkit-fill-available;
-display: flex;
-flex-direction: column;
+  height: -webkit-fill-available;
+  display: flex;
+  flex-direction: column;
   .toggle-button{
     text-align: center;
     padding-bottom: 8px;
@@ -95,6 +92,8 @@ function SuperkeysEditor(props: SuperkeysEditorProps) {
   let keymapDB = new KeymapDB();
   const bkp = new Backup();
   const [isSaving, setIsSaving] = useState(false);
+
+  const [viewMode, setViewMode] = useState("standard");
 
   const flatten = (arr: unknown[]) => [].concat(...arr);
 
@@ -166,6 +165,7 @@ function SuperkeysEditor(props: SuperkeysEditorProps) {
       state.selectedAction = -1;
       setState({ ...state });
     }
+    setViewMode(isStandardViewSuperkeys ? "standard" : "single");
   };
 
   const macroTranslator = (raw: string) => {
@@ -297,10 +297,11 @@ function SuperkeysEditor(props: SuperkeysEditorProps) {
   useEffect(() => {
     try {
       store.set("settings.isStandardViewSuperkeys", state.isStandardView);
+      setViewMode(state.isStandardView ? "standard" : "single");
     } catch (error) {
       log.info("error when setting standard view mode", error);
     }
-  }, [state.isStandardView]);
+  }, [state.isStandardView, viewMode]);
 
   const onKeyChange = (keyCode: number) => {
     const { superkeys, selectedSuper, selectedAction } = state;
@@ -752,18 +753,15 @@ function SuperkeysEditor(props: SuperkeysEditorProps) {
   const superName = superkeys.length > 0 && superkeys.length > selectedSuper ? superkeys[selectedSuper].name : "";
 
   const listOfSKK = listToDelete.map(({ layer, pos, superIdx }) => (
-    <Row key={`${layer}-${pos}-${superIdx}`}>
-      <Col xs={12} className="px-0 text-center gridded">
-        <p className="titles alignvert">{`Key in layer ${layer + 1} and pos ${pos}`}</p>
-      </Col>
-    </Row>
+    <li key={`${layer}-${pos}-${superIdx}`} className="titles alignvert">{`Key in layer ${layer + 1} and pos ${pos}`}</li>
   ));
-  if (loading || !Array.isArray(superkeys)) return <LogoLoaderCentered />;
+  // if (loading || !Array.isArray(superkeys)) return <LogoLoaderCentered />;
+  if (loading || !Array.isArray(superkeys)) return <LogoLoader centered />;
   return (
     <Styles className="superkeys">
-      <Container fluid className={`${isStandardViewSuperkeys ? "standarViewMode" : "singleViewMode"}`}>
+      <div className={`px-3 ${isStandardViewSuperkeys ? "standarViewMode" : "singleViewMode"}`}>
         <PageHeader
-          text={i18n.app.menu.superkeys}
+          text="Superkeys Editor"
           showSaving
           contentSelector={
             <SuperkeysSelector
@@ -784,14 +782,16 @@ function SuperkeysEditor(props: SuperkeysEditorProps) {
         />
 
         <Callout
-          content={i18n.editor.superkeys.callout}
-          className="mt-md"
           size="sm"
+          className="mt-4"
           hasVideo
           media="6Az05_Yl6AU"
           videoTitle="The Greatest Keyboard Feature Of All Time: SUPERKEYS! 🦹‍♀️"
           videoDuration="5:34"
-        />
+        >
+          <p>{i18n.editor.superkeys.callout1}</p>
+          <p>{i18n.editor.superkeys.callout2}</p>
+        </Callout>
 
         <SuperkeyActions
           isStandardViewSuperkeys={isStandardViewSuperkeys}
@@ -807,9 +807,9 @@ function SuperkeysEditor(props: SuperkeysEditorProps) {
         />
 
         {isStandardViewSuperkeys && <SuperKeysFeatures />}
-      </Container>
+      </div>
       {!isStandardViewSuperkeys ? (
-        <Container fluid className="keyboardcontainer" hidden={selectedAction < 0}>
+        <div className="keyboardcontainer" hidden={selectedAction < 0}>
           <KeyPickerKeyboard
             key={JSON.stringify(superkeys) + selectedAction}
             onKeySelect={onKeyChange}
@@ -823,11 +823,14 @@ function SuperkeysEditor(props: SuperkeysEditorProps) {
             selectedlanguage={currentLanguageLayout}
             kbtype={kbtype}
           />
-        </Container>
+        </div>
       ) : (
         ""
       )}
-      <LayoutViewSelector
+
+      <ToggleGroupLayoutViewMode value={viewMode} onValueChange={onToggle} view="superkeys" />
+
+      {/* <LayoutViewSelector
         onToggle={onToggle}
         isStandardView={isStandardViewSuperkeys}
         tooltip={i18n.editor.superkeys.tooltip}
@@ -835,7 +838,7 @@ function SuperkeysEditor(props: SuperkeysEditorProps) {
           x: 0,
           y: 0,
         }}
-      />
+      /> */}
       {isStandardViewSuperkeys ? (
         <StandardView
           showStandardView={showStandardView}
@@ -860,29 +863,37 @@ function SuperkeysEditor(props: SuperkeysEditorProps) {
         ""
       )}
 
-      <Modal show={showDeleteModal} onHide={toggleDeleteModal} size="lg" aria-labelledby="contained-modal-title-vcenter" centered>
-        <Modal.Header closeButton>
-          <Modal.Title>{i18n.editor.superkeys.deleteModal.title}</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <p>{i18n.editor.superkeys.deleteModal.body}</p>
-          {listOfSKK}
-        </Modal.Body>
-        <Modal.Footer>
-          <RegularButton
-            buttonText={i18n.editor.superkeys.deleteModal.cancelButton}
-            styles="outline transp-bg"
-            size="sm"
-            onClick={toggleDeleteModal}
-          />
-          <RegularButton
-            buttonText={i18n.editor.superkeys.deleteModal.applyButton}
-            styles="outline gradient"
-            size="sm"
-            onClick={RemoveDeletedSK}
-          />
-        </Modal.Footer>
-      </Modal>
+      <Dialog open={showDeleteModal} onOpenChange={toggleDeleteModal}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>{i18n.editor.superkeys.deleteModal.title}</DialogTitle>
+          </DialogHeader>
+          <div className="px-6 pb-2 mt-2">
+            {listOfSKK && (
+              <>
+                <Heading headingLevel={4} renderAs="h4">
+                  The superkey you want to delete is currently in use on:
+                </Heading>
+                <div className="mt-1 mb-4">
+                  <ul className="mb-[4px] text-ssm list-disc pl-[24px] text-gray-500 dark:text-gray-100">{listOfSKK}</ul>
+                </div>
+              </>
+            )}
+            <p className="text-sm text-gray-500 dark:text-gray-25">
+              By pressing <strong>Remove</strong> you will replace those superkeys with <strong>NO KEY</strong> on the keyboard
+              layout.
+            </p>
+          </div>
+          <DialogFooter>
+            <Button size="sm" variant="outline" onClick={toggleDeleteModal}>
+              {i18n.editor.superkeys.deleteModal.cancelButton}
+            </Button>
+            <Button size="sm" variant="secondary" onClick={RemoveDeletedSK}>
+              {i18n.editor.superkeys.deleteModal.applyButton}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </Styles>
   );
 }

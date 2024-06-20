@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import Styled from "styled-components";
-import { IconArrowChevronLeft, IconArrowChevronRight } from "@Renderer/component/Icon";
+import { IconArrowChevronLeft, IconArrowChevronRight } from "@Renderer/components/atoms/icons";
 import { i18n } from "@Renderer/i18n";
 
 import TimelineEditorMacroTable from "./TimelineEditorMacroTable";

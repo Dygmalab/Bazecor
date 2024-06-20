@@ -46,15 +46,21 @@ body {
 }
 
 .tw-primary {
-  @apply px-6 py-4 rounded-md bg-linear bg-[length:300%] transition-all relative transform-style-3d before:absolute before:content-[''] before:w-[62px] before:h-[32px] before:bottom-[2px] before:left-[50%] before:bg-linearButton before:opacity-50 before:blur-[2px] before:transform before:translate-x-[-50%] before:translate-y-[0] before:translate-z-[-1px] before:transition-all before:ease-in-out before:duration-300 hover:cursor-pointer hover:bg-right hover:before:blur-lg hover:before:bottom-[-12px] hover:before:opacity-70 hover:before:w-[100px] aria-disabled:bg-buttonDisabled aria-disabled:text-gray-300 aria-disabled:before:content-none aria-disabled:bg-right aria-disabled:cursor-not-allowed text-gray-25 font-semibold tracking-tight;
+  @apply rounded-md bg-linear bg-[length:300%] transition-all relative transform-style-3d before:absolute before:content-[''] before:w-[62px] before:h-[32px] before:bottom-[2px] before:left-[50%] before:bg-linearButton before:opacity-50 before:blur-[2px] before:transform before:translate-x-[-50%] before:translate-y-[0] before:translate-z-[-1px] before:transition-all before:ease-in-out before:duration-300 hover:cursor-pointer hover:bg-right hover:before:blur-lg hover:before:bottom-[-12px] hover:before:opacity-70 hover:before:w-[100px] aria-disabled:bg-buttonDisabled aria-disabled:text-gray-300 aria-disabled:before:content-none aria-disabled:bg-right aria-disabled:cursor-not-allowed text-gray-25 font-semibold tracking-tight;
+}
+.tw-text-primary {
+  color: rgb(254, 0, 124);
+}
+.dark .tw-text-primary {
+  @apply text-gray-25;
 }
 .tw.purple {
-  @apply px-6 py-4 rounded-md bg-purple-300 transition-all relative transform-style-3d before:absolute before:content-[''] before:w-[62px] before:h-[32px] before:bottom-[2px] before:left-[50%] before:bg-linearButton before:opacity-50 before:blur-[2px] before:transform before:translate-x-[-50%] before:translate-y-[0] before:translate-z-[-1px] before:transition-all before:ease-in-out before:duration-300 hover:cursor-pointer hover:bg-right hover:before:blur-lg hover:before:bottom-[-12px] hover:before:opacity-70 hover:before:w-[100px] aria-disabled:bg-buttonDisabled aria-disabled:text-gray-300 aria-disabled:before:content-none aria-disabled:bg-right aria-disabled:cursor-not-allowed text-gray-25 font-semibold tracking-tight;
+  @apply rounded-md bg-purple-300 transition-all relative transform-style-3d before:absolute before:content-[''] before:w-[62px] before:h-[32px] before:bottom-[2px] before:left-[50%] before:bg-linearButton before:opacity-50 before:blur-[2px] before:transform before:translate-x-[-50%] before:translate-y-[0] before:translate-z-[-1px] before:transition-all before:ease-in-out before:duration-300 hover:cursor-pointer hover:bg-right hover:before:blur-lg hover:before:bottom-[-12px] hover:before:opacity-70 hover:before:w-[100px] aria-disabled:bg-buttonDisabled aria-disabled:text-gray-300 aria-disabled:before:content-none aria-disabled:bg-right aria-disabled:cursor-not-allowed text-gray-25 font-semibold tracking-tight;
 }
 .tw-outline {
   outline: none;
   box-shadow: 0px 0px 0px 1px rgba(196, 201, 213, 1) inset;
-  @apply px-6 py-4 text-gray-400 dark:text-gray-25 hover:text-gray-500 dark:hover:text-white hover:bg-transparent dark:hover:bg-gray-300/15 border-[1px] border-solid border-gray-100 dark:border-gray-400 hover:border-gray-300 dark:hover:border-gray-200 rounded-md transition-all hover:cursor-pointer font-semibold tracking-tight;
+  @apply text-gray-400 dark:text-gray-25 hover:text-gray-500 dark:hover:text-white hover:bg-transparent dark:hover:bg-gray-300/15 border-[1px] border-solid border-gray-100 dark:border-gray-400 hover:border-gray-300 dark:hover:border-gray-200 rounded-md transition-all hover:cursor-pointer font-semibold tracking-tight;
 }
 .tw-outline:hover {
   box-shadow: 0px 0px 0px 1px rgba(123, 134, 158, 1) inset;
@@ -66,15 +72,19 @@ body {
   box-shadow: 0px 0px 0px 1px rgba(151, 160, 180, 1) inset;
 }
 
-.tw-secondary {
+/* .tw-secondary {
   @apply px-6 py-4 rounded-md bg-[length:300%] transition-all relative transform-style-3d after:absolute after:content-[''] after:w-[62px] after:h-[32px] after:bottom-[2px] after:left-[50%] after:bg-linearButton after:opacity-50 after:blur-[2px] after:transform after:translate-x-[-50%] after:translate-y-[0] after:translate-z-[-1px] after:transition-all after:ease-in-out after:duration-300 hover:cursor-pointer hover:bg-right hover:after:blur-lg hover:after:bottom-[-12px] hover:after:opacity-70 hover:after:w-[100px] aria-disabled:bg-buttonDisabled aria-disabled:text-gray-300 aria-disabled:after:content-none aria-disabled:bg-right aria-disabled:cursor-not-allowed text-primary dark:text-gray-25 font-semibold tracking-tight;
+} */
+.tw-secondary:after {
+  z-index: -2;
 }
 .tw-secondary:before {
-  @apply px-6 py-4 rounded-md absolute z-[1] top-[0] right-[0] bottom-[0] left-[0];
+  @apply px-6 py-4 rounded-md absolute top-[0] right-[0] bottom-[0] left-[0];
   content: "";
   margin: -1px;
   border: 2px solid transparent;
   border-radius: 0.375rem;
+  z-index: -1;
   background:
     linear-gradient(98.12deg, #f0dde9 0%, #f0f2f4 56.24%) padding-box,
     linear-gradient(75deg, #fe007c, #6b14f6, #6b14f9, #fe007c);
@@ -86,6 +96,10 @@ body {
 }
 .button.button-icon {
   @apply px-4 py-4 rounded-md rounded-md transition-colors text-gray-25 bg-gray-600 hover:cursor-pointer hover:bg-gray-500;
+}
+
+.img-fluid {
+  @apply h-auto block max-w-full;
 }
 
 [type="text"]:focus,
@@ -117,6 +131,11 @@ select:focus {
   @apply text-xl;
 }
 
+.view-wrapper--devices > div {
+  width: 100%;
+  flex: initial;
+}
+
 .tab-item:hover {
   background: linear-gradient(120deg, rgba(238, 241, 248, 0.2), rgba(255, 255, 255, 0.2));
 }
@@ -131,4 +150,566 @@ select:focus {
 .dark .tab-item[data-state="active"],
 .dark .tab-item[data-state="active"]:hover {
   background: linear-gradient(280deg, rgba(240, 242, 244, 0.1), rgba(255, 255, 255, 0)), rgba(18, 19, 36, 0.6);
+}
+
+.Defy {
+  @apply bg-cardDefyOffLight dark:bg-cardDefyOffDark;
+}
+.Defy.on {
+  @apply bg-cardDefyOnLight dark:bg-cardDefyOnDark;
+}
+.Raise,
+.Raise2 {
+  @apply bg-cardRaiseOffLight dark:bg-cardRaiseOffDark;
+}
+.Raise.on,
+.Raise2.on {
+  @apply bg-cardRaiseOnLight dark:bg-cardRaiseOnDark;
+}
+
+.dragged .card-device-knob,
+.dragged .card-device-knob:hover {
+  cursor: grabbing;
+}
+
+/*
+// PREVIEW MACRO
+*/
+.previewMacro {
+  @apply flex flex-wrap items-baseline gap-1;
+}
+.previewMacro .previewKey {
+  @apply text-xs rounded relative text-gray-200 leading-4 border-[1px] border-gray-200 border-solid;
+  padding: 4px 6px;
+}
+.previewMacro .previewKey svg {
+  position: absolute;
+  top: 50%;
+  left: 3px;
+  transform: translate3d(0, -55%, 0);
+}
+.previewMacro .previewKey.action-2 {
+  @apply text-red-100 border-red-100;
+  padding-left: 24px;
+}
+.previewMacro .previewKey.action-8 {
+  margin: 0;
+  border-color: transparent;
+  padding: 0;
+}
+.previewMacro .previewKey.action-8.keyCode-40,
+.previewMacro .previewKey.action-8.keyCode-41,
+.previewMacro .previewKey.action-8.keyCode-42,
+.previewMacro .previewKey.action-8.keyCode-43,
+.previewMacro .previewKey.action-8.keyCode-44,
+.previewMacro .previewKey.action-8.keyCode-57,
+.previewMacro .previewKey.action-8.keyCode-58,
+.previewMacro .previewKey.action-8.keyCode-59,
+.previewMacro .previewKey.action-8.keyCode-60,
+.previewMacro .previewKey.action-8.keyCode-61,
+.previewMacro .previewKey.action-8.keyCode-62,
+.previewMacro .previewKey.action-8.keyCode-63,
+.previewMacro .previewKey.action-8.keyCode-64,
+.previewMacro .previewKey.action-8.keyCode-65,
+.previewMacro .previewKey.action-8.keyCode-66,
+.previewMacro .previewKey.action-8.keyCode-67,
+.previewMacro .previewKey.action-8.keyCode-68,
+.previewMacro .previewKey.action-8.keyCode-69,
+.previewMacro .previewKey.action-8.keyCode-70,
+.previewMacro .previewKey.action-8.keyCode-71,
+.previewMacro .previewKey.action-8.keyCode-72,
+.previewMacro .previewKey.action-8.keyCode-73,
+.previewMacro .previewKey.action-8.keyCode-74,
+.previewMacro .previewKey.action-8.keyCode-75,
+.previewMacro .previewKey.action-8.keyCode-76,
+.previewMacro .previewKey.action-8.keyCode-77,
+.previewMacro .previewKey.action-8.keyCode-78,
+.previewMacro .previewKey.action-8.keyCode-79,
+.previewMacro .previewKey.action-8.keyCode-80,
+.previewMacro .previewKey.action-8.keyCode-81,
+.previewMacro .previewKey.action-8.keyCode-82,
+.previewMacro .previewKey.action-8.keyCode-83,
+.previewMacro .previewKey.action-8.keyCode-88,
+.previewMacro .previewKey.action-8.keyCode-101,
+.previewMacro .previewKey.action-8.keyCode-104,
+.previewMacro .previewKey.action-8.keyCode-105,
+.previewMacro .previewKey.action-8.keyCode-106,
+.previewMacro .previewKey.action-8.keyCode-107,
+.previewMacro .previewKey.action-8.keyCode-108,
+.previewMacro .previewKey.action-8.keyCode-109,
+.previewMacro .previewKey.action-8.keyCode-110,
+.previewMacro .previewKey.action-8.keyCode-111,
+.previewMacro .previewKey.action-8.keyCode-112,
+.previewMacro .previewKey.action-8.keyCode-113,
+.previewMacro .previewKey.action-8.keyCode-114,
+.previewMacro .previewKey.action-8.keyCode-115 {
+  @apply border-[1px] border-gray-200;
+  padding: 4px 6px;
+  margin: 2px;
+}
+.previewMacro .previewKey.isModifier {
+  @apply border-[1px] border-gray-200;
+  padding: 4px 6px;
+}
+/* Shift */
+.previewMacro .previewKey.isModifier.keyCode-229,
+.previewMacro .previewKey.isModifier.keyCode-225 {
+  @apply text-orange-100 border-orange-100 bg-orange-100/5;
+}
+/* Control */
+.previewMacro .previewKey.isModifier.keyCode-224,
+.previewMacro .previewKey.isModifier.keyCode-228 {
+  @apply text-mint-300 border-mint-300 bg-mint-300/5;
+}
+/* Alt */
+.previewMacro .previewKey.isModifier.keyCode-226,
+.previewMacro .previewKey.isModifier.keyCode-230 {
+  @apply text-pink-200 border-pink-200 bg-pink-200/5;
+}
+/* OS */
+.previewMacro .previewKey.isModifier.keyCode-227,
+.previewMacro .previewKey.isModifier.keyCode-231 {
+  @apply text-purple-200 border-purple-200 bg-purple-200/5;
+}
+
+/* LOADER */
+.running {
+  --animation-state: running;
+}
+.paused {
+  --animation-state: running;
+}
+.loader-piece {
+  animation: loadingPieces 300ms linear;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+  animation-play-state: var(--animation-state);
+  --color-base: rgb(108, 92, 231);
+}
+@keyframes loadingPieces {
+  to {
+    opacity: 0.2;
+  }
+}
+.fillShapeColor {
+  fill: var(--color-base);
+}
+.strokeShapeColor {
+  stroke: var(--color-base);
+  stroke-opacity: 0.15;
+}
+.loader-base {
+  animation: loadingScale 300ms linear;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+  transform-origin: center;
+  animation-play-state: var(--animation-state);
+}
+@keyframes loadingScale {
+  to {
+    transform: scale(0.9);
+  }
+}
+.loader-rotating {
+  filter: drop-shadow(0px 4px 6px rgba(100, 135, 220, 0.5));
+}
+
+/*
+// StepsProgressBar
+*/
+.stepBullet {
+  @apply shadow-sm border-gray-100 bg-gray-100 dark:border-gray-600 dark:bg-gray-600;
+  animation: splashBullet 400ms normal forwards ease-in-out;
+  animation-iteration-count: 1;
+}
+.active .stepBullet,
+.active.completed .stepBullet {
+  @apply shadow-md border-purple-200 bg-purple-300 dark:border-green-100 dark:bg-green-200;
+}
+.success .stepBullet,
+.completed .stepBullet {
+  @apply shadow-md border-purple-200 bg-purple-300 dark:border-green-100 dark:bg-green-200;
+}
+.error .active .stepBullet,
+.error .active.completed .stepBullet,
+.error .completed .stepBullet {
+  @apply shadow-sm border-gray-100 bg-gray-100 dark:border-gray-600 dark:bg-gray-600;
+}
+:not(.error) .progressBar .progressBarActive {
+  @apply bg-purple-200 dark:bg-green-200;
+}
+
+@keyframes splashBullet {
+  0% {
+    transform: scale(1) translate3d(0, 0, 0);
+  }
+  25% {
+    transform: scale(0.75) translate3d(0, 0, 0);
+  }
+  80% {
+    transform: scale(1.2) translate3d(0, 0, 0);
+  }
+  100% {
+    transform: scale(1) translate3d(0, 0, 0);
+  }
+}
+
+.custom-progress-striped {
+  background-image: linear-gradient(
+    45deg,
+    rgba(255, 255, 255, 0.15) 25%,
+    transparent 25%,
+    transparent 50%,
+    rgba(255, 255, 255, 0.15) 50%,
+    rgba(255, 255, 255, 0.15) 75%,
+    transparent 75%,
+    transparent
+  );
+  background-size: 1rem 1rem;
+}
+@keyframes stripes {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: -50px 0;
+  }
+}
+
+/*
+// Battery styles
+*/
+.status--default {
+  --color-status: rgb(226, 225, 234);
+}
+.dark .status--default {
+  --color-status: rgba(63, 66, 90, 0.8);
+}
+.status--saving {
+  --color-status: rgb(255, 159, 67);
+}
+.status--charging.status--saving {
+  --color-status: rgb(120, 121, 241);
+}
+.batterySavingMode {
+  color: var(--color-status);
+  transform: translate3d(-50%, -4px, 0);
+}
+
+.battery-indicator--item.status--default,
+.battery-indicator--item.status--disconnected,
+.battery-indicator--item.status--disconnected.status--saving {
+  --color-status: rgb(151, 160, 180);
+}
+.battery-indicator--item.status--saving,
+.battery-indicator--item.status--fault,
+.battery-indicator--item.status--warning {
+  --color-status: rgb(255, 159, 67);
+}
+.battery-indicator--item.status--critical,
+.battery-indicator--item.status--fatal-error {
+  --color-status: rgb(254, 0, 124);
+}
+.battery-indicator--item.status--charging {
+  --color-status: rgb(120, 121, 241);
+}
+@media screen and (max-width: 999px) {
+  .size--sm .battery-item--container .battery-indicator--side {
+    display: none;
+  }
+}
+@media screen and (max-height: 870px) {
+  .size--sm .battery-item--container .battery-indicator--side {
+    display: none;
+  }
+}
+@media screen and (max-width: 999px) {
+  .size--sm .battery-item--container .battery-indicator--side {
+    display: none;
+  }
+}
+@media screen and (max-height: 870px) {
+  .size--sm .battery-item--container .battery-indicator--side {
+    display: none;
+  }
+}
+.battery-indicator--item.size--sm.status--saving,
+.battery-indicator--item.size--sm.status--fault {
+  @apply bg-orange-200/25 dark:bg-orange-200/15;
+}
+.battery-indicator--item.size--sm.status--fatal-error {
+  @apply bg-primary/15;
+}
+.battery-indicator--item.size--sm.status--disconnected,
+.battery-indicator--item.size--sm.status--disconnected.status--saving {
+  @apply bg-gray-50 dark:bg-gray-800;
+}
+.battery-indicator--item.size--lg {
+  --color-stroke: rgb(226, 228, 234);
+}
+.dark .battery-indicator--item.size--lg {
+  --color-stroke: rgba(63, 66, 90, 0.8);
+}
+.battery-indicator--item.size--lg .shapeIndicator {
+  opacity: 0.1;
+}
+.battery-indicator--item.size--lg .shapeFill {
+  opacity: 0.2;
+}
+.dark .battery-indicator--item.size--lg .shapeFill {
+  opacity: 0.5;
+}
+.battery-indicator--item.size--lg.status--default {
+  --color-status: rgb(120, 121, 241);
+}
+.battery-indicator--item.size--lg.status--default .shapeIndicator {
+  opacity: 0;
+}
+.battery-indicator--item.size--lg.status--default .shapeFill {
+  opacity: 0.5;
+}
+.battery-indicator--item.size--lg.status--disconnected,
+.battery-indicator--item.size--lg.status--disconnected.status--saving {
+  --color-stroke: rgb(196, 201, 213);
+  --color-status: rgb(196, 201, 213);
+}
+.dark .battery-indicator--item.size--lg.status--disconnected,
+.dark .battery-indicator--item.size--lg.status--disconnected.status--saving {
+  --color-stroke: rgb(63, 66, 90);
+  --color-status: rgb(63, 66, 90);
+}
+.battery-indicator--item.size--lg.status--disconnected svg,
+.battery-indicator--item.size--lg.status--disconnected.status--saving svg {
+  overflow: visible;
+}
+.battery-indicator--item.size--lg.status--disconnected .fillBaseDisconnected,
+.battery-indicator--item.size--lg.status--disconnected.status--saving .fillBaseDisconnected {
+  opacity: 0.5;
+  color: rgb(196, 201, 213);
+}
+.dark .battery-indicator--item.size--lg.status--disconnected .fillBaseDisconnected,
+.dark .battery-indicator--item.size--lg.status--disconnected.status--saving .fillBaseDisconnected {
+  color: rgb(63, 66, 90);
+}
+.battery-indicator--item.size--lg.status--disconnected .lineDisconnected,
+.battery-indicator--item.size--lg.status--disconnected.status--saving .lineDisconnected {
+  color: rgb(196, 201, 213);
+}
+.dark .battery-indicator--item.size--lg.status--disconnected .lineDisconnected,
+.dark .battery-indicator--item.size--lg.status--disconnected.status--saving .lineDisconnected {
+  color: rgb(63, 66, 90);
+}
+.battery-indicator--item.size--lg.status--saving {
+  --color-status: rgb(255, 159, 67);
+  --color-stroke: rgb(255, 159, 67);
+}
+.battery-indicator--item.size--lg.status--saving .shapeIndicator {
+  opacity: 0.25;
+}
+.battery-indicator--item.size--lg.status--critical:not(.status--saving) .shapeIndicator {
+  opacity: 0.2;
+}
+.battery-indicator--item.size--lg.status--charging,
+.battery-indicator--item.size--lg.status--charging.status--saving {
+  --color-status: rgb(120, 121, 241);
+  --color-stroke: rgb(226, 228, 234);
+}
+.dark .battery-indicator--item.size--lg.status--charging,
+.dark .battery-indicator--item.size--lg.status--charging.status--saving {
+  --color-stroke: rgba(63, 66, 90);
+}
+.battery-indicator--item.size--lg.status--charging .lightningbattery,
+.battery-indicator--item.size--lg.status--charging.status--saving .lightningbattery {
+  color: rgb(120, 121, 241);
+}
+.battery-indicator--item.size--lg.status--charging .shapeIndicator,
+.battery-indicator--item.size--lg.status--charging.status--saving .shapeIndicator {
+  opacity: 0.1;
+}
+.battery-indicator--item.size--lg.status--charging.status--charging-done .lightningbattery {
+  color: rgb(240, 242, 244);
+}
+.battery-indicator--item.size--lg.status--fault {
+  --color-stroke: rgb(255, 159, 67);
+}
+.battery-indicator--item.size--lg.status--fault .shapeIndicator {
+  opacity: 0.1;
+}
+.battery-indicator--item.size--lg.status--fatal-error,
+.battery-indicator--item.size--lg.status--fatal-error.status--saving {
+  --color-status: rgb(254, 0, 124);
+  --color-stroke: rgb(254, 0, 124);
+}
+.battery-indicator--item.size--lg.status--fatal-error .shapeIndicator,
+.battery-indicator--item.size--lg.status--fatal-error.status--saving .shapeIndicator {
+  opacity: 0.1;
+}
+.dark .battery-indicator--item.size--lg.status--fatal-error .shapeIndicator,
+.dark .battery-indicator--item.size--lg.status--fatal-error.status--saving .shapeIndicator {
+  opacity: 0.2;
+}
+
+/*
+// Toast
+*/
+.Toastify__toast-container {
+  @apply p-0 w-[368px];
+}
+.Toastify__toast-container .Toastify__toast-icon {
+  @apply hidden invisible;
+}
+.toastBody.hasIcon .toastBodyInner {
+  width: calc(100% - 32px);
+}
+.Toastify__toast--default,
+.Toastify__toast {
+  @apply p-0 rounded-md shadow-md relative overflow-visible bg-gray-25 dark:bg-gray-800 text-gray-500 dark:text-gray-50 after:content-[''] after:w-[3px] after:h-[24px] after:rounded-l-[3px] after:absolute after:-left-[3px] after:top-[22px];
+}
+.Toastify__toast--default .toastIcon,
+.Toastify__toast--default .toastBodyInner h4 {
+  @apply text-gray-700 dark:text-gray-25;
+}
+.Toastify__toast--warning {
+  @apply bg-gradientWarningLight dark:bg-gradientWarningDark after:bg-gradientWarning;
+}
+.Toastify__toast--warning .toastIcon,
+.Toastify__toast--warning .toastBodyInner h4 {
+  @apply text-orange-200 dark:text-orange-100;
+}
+.Toastify__toast--error {
+  @apply bg-gradientErrorLight dark:bg-gradientErrorDark after:bg-gradientDanger;
+}
+.Toastify__toast--error .toastIcon,
+.Toastify__toast--error .toastBodyInner h4 {
+  @apply text-primary/100;
+}
+.Toastify__toast--success {
+  @apply bg-gradientSuccessLight dark:bg-gradientSuccessDark after:bg-gradientSuccess;
+}
+.Toastify__toast--success .toastIcon,
+.Toastify__toast--success .toastBodyInner h4 {
+  @apply text-green-200;
+}
+.Toastify__close-button {
+  @apply absolute top-[8px] right-[8px] w-[24px] h-[24px] bg-no-repeat opacity-70 bg-center [&_svg]:hidden;
+  background-image: url("../../static/light/X.svg");
+}
+.dark .Toastify__close-button {
+  background-image: url("../../static/dark/X.svg");
+}
+.Toastify__progress-bar {
+  @apply my-[8px] mx-[24px] h-[3px] rounded-sm bg-gray-100 dark:bg-gray-600;
+  width: calc(100% - 42px);
+}
+.Toastify__progress-bar.Toastify__progress-bar--success {
+  @apply bg-green-200;
+}
+.Toastify__progress-bar.Toastify__progress-bar--warning {
+  @apply bg-orange-200 dark:bg-orange-100;
+}
+.Toastify__progress-bar.Toastify__progress-bar--error {
+  @apply bg-primary/100;
+}
+.Toastify__toast-container--top-right {
+  @apply top-[92px] right-[26px];
+}
+
+/*
+// Main Button
+*/
+@media screen and (max-width: 999px) {
+  .menuLinkText {
+    display: none;
+  }
+  .menuLink:after {
+    right: -14px;
+  }
+  .menuLink:before {
+    right: -17px;
+    height: 36px;
+  }
+  .menuLinkInner {
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    padding: 0;
+  }
+  .menuLinkInner svg {
+    transform: scale(1);
+    flex: 0 0 26px;
+    max-width: 26px;
+    width: 100%;
+  }
+  .menuLink .badge {
+    right: -18px;
+  }
+}
+@media screen and (max-width: 860px) {
+  .menuLinkText {
+    display: none;
+  }
+  .menuLink:before {
+    right: -15px;
+    height: 26px;
+  }
+  .menuLinkInner {
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    padding: 0;
+  }
+  .menuLinkInner svg {
+    transform: scale(1);
+    flex: 0 0 30px;
+    max-width: 30px;
+    width: 100%;
+  }
+  .menuLink .badge {
+    right: -18px;
+  }
+}
+@media screen and (max-height: 870px) {
+  .menuLinkText {
+    display: none;
+  }
+  .menuLink:before {
+    right: -15px;
+    height: 36px;
+  }
+  .menuLinkInner {
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    padding: 0;
+  }
+  .menuLinkInner svg {
+    transform: scale(1);
+    flex: 0 0 30px;
+    max-width: 30px;
+    width: 100%;
+  }
+  .menuLink .badge {
+    right: -18px;
+  }
+}
+@media screen and (max-height: 670px) {
+  .menuLink:before {
+    height: 26px;
+  }
+  .menuLink:after {
+    right: -12px;
+  }
+  .menuLinkInner svg {
+    transform: scale(1);
+    flex: 0 0 24px;
+    max-width: 24px;
+    width: 100%;
+  }
+}
+
+.tab-item--active:after {
+  right: calc((1.25rem + 3px) * -1);
+}
+.tab-item--active:before {
+  right: calc((1.25rem) * -1);
 }

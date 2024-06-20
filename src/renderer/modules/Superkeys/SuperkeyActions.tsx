@@ -6,7 +6,7 @@ import Styled from "styled-components";
 import { SuperkeyPicker } from "@Renderer/component/Button";
 
 // Icons
-import { IconKeysPress, IconKeysTapHold, IconKeysHold, IconKeys2Tap, IconKeys2TapHold } from "@Renderer/component/Icon";
+import { IconKeysPress, IconKeysTapHold, IconKeysHold, IconKeys2Tap, IconKeys2TapHold } from "@Renderer/components/atoms/icons";
 
 // API's
 import { i18n } from "@Renderer/i18n";

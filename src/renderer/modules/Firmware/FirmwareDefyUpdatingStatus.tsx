@@ -18,7 +18,7 @@
 import React from "react";
 import Styled from "styled-components";
 
-import { DefyLeftSide, DefyRightSide, DefyNeuronStatus } from "@Renderer/component/SidesStatus";
+import { DefyLeftSide, DefyRightSide, DefyNeuronStatus } from "@Renderer/components/atoms/sidesStatus";
 
 const Style = Styled.div`
 .defySidesUpdatingStatus {
@@ -112,13 +112,13 @@ const FirmwareDefyUpdatingStatus = ({
           <DefyLeftSide
             updating={!!(countdown === 2 && retriesLeft === 1)}
             warning={!!(retriesLeft > 1 && countdown < 3)}
-            success={countdown > 2 ? "success" : ""}
+            success={countdown > 2}
             error={retriesLeft >= 3}
           />
           <DefyRightSide
             updating={!!(countdown === 1 && retriesRight === 1)}
             warning={!!(retriesRight > 1 && countdown < 2)}
-            success={countdown > 1 ? "success" : ""}
+            success={countdown > 1}
             error={retriesRight >= 3}
           />
         </>
@@ -126,7 +126,7 @@ const FirmwareDefyUpdatingStatus = ({
         <DefyNeuronStatus
           updating={!!(countdown >= 3 && countdown < 5)}
           warning={!!((retriesDefyWired > 1 || retriesNeuron > 1) && countdown < 4)}
-          success={countdown >= 5 ? "success" : ""}
+          success={countdown >= 5}
           error={retriesDefyWired >= 3 || retriesNeuron >= 3}
           keyboardType={keyboardType}
         />

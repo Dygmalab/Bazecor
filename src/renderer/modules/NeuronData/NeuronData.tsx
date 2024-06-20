@@ -17,10 +17,10 @@
 
 import React from "react";
 import Styled from "styled-components";
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@Renderer/components/ui/accordion";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@Renderer/components/atoms/Accordion";
 import { Neurons } from "@Types/neurons";
+import { IconRobot, IconLayers, IconThunder } from "@Renderer/components/atoms/icons";
 import NeuronTitle from "../NeuronTitle";
-import { IconRobot, IconLayers, IconThunder } from "../../component/Icon";
 
 const Style = Styled.div`
 .cardContentNeuronData {

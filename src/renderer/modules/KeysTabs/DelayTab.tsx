@@ -1,15 +1,12 @@
 import React from "react";
 import Styled from "styled-components";
 import log from "electron-log/renderer";
-import Form from "react-bootstrap/Form";
-import InputGroup from "react-bootstrap/InputGroup";
 import { i18n } from "@Renderer/i18n";
 
-import Title from "../../component/Title";
-import { RegularButton } from "../../component/Button";
-import { CustomRadioCheckBox } from "../../component/Form";
-
-import { IconArrowInBoxUp, IconMediaShuffle } from "../../component/Icon";
+import CustomRadioCheckBox from "@Renderer/components/molecules/Form/CustomRadioCheckBox";
+import { IconArrowInBoxUp, IconMediaShuffle } from "@Renderer/components/atoms/icons";
+import { Button } from "@Renderer/components/atoms/Button";
+import Heading from "@Renderer/components/atoms/Heading";
 
 const Styles = Styled.div`
 display: flex;
@@ -179,7 +176,9 @@ class DelayTab extends React.Component<DelayTabProps, DelayTabState> {
     return (
       <Styles>
         <div className="tabContentWrapper">
-          <Title text={i18n.editor.macros.delayTabs.title} headingLevel={4} />
+          <Heading renderAs="h4" headingLevel={4}>
+            {i18n.editor.macros.delayTabs.title}
+          </Heading>
           <div className="formWrapper">
             <CustomRadioCheckBox
               label="Fixed value"
@@ -207,8 +206,8 @@ class DelayTab extends React.Component<DelayTabProps, DelayTabState> {
           <div className="inputsWrapper mt-3">
             {fixedSelected ? (
               <div className="inputGroupFixed">
-                <InputGroup>
-                  <Form.Control
+                <div className="input-group max-w-72 relative flex flex-wrap w-full items-stretch">
+                  <input
                     placeholder={i18n.editor.macros.delayTabs.title}
                     min={0}
                     max={65535}
@@ -217,16 +216,19 @@ class DelayTab extends React.Component<DelayTabProps, DelayTabState> {
                       this.updateFixed(e);
                     }}
                     value={fixedValue}
+                    className="form-control"
                   />
-                  <InputGroup.Text>ms</InputGroup.Text>
-                </InputGroup>
+                  <div className="ml-[-1px] py-[1rem] px-4 font-semibold text-gray-300 dark:text-gray-300 bg-gray-25 dark:bg-gray-900/20">
+                    ms
+                  </div>
+                </div>
                 <p className="description">{i18n.editor.macros.delayTabs.minMaxDescription}</p>
               </div>
             ) : (
               <div className="inputGroupRandom">
-                <InputGroup>
-                  <Form.Control
-                    className="inputMin"
+                <div className="input-group max-w-72 relative flex flex-wrap w-full items-stretch">
+                  <input
+                    className="inputMin form-control"
                     placeholder="Min."
                     min={0}
                     type="number"
@@ -235,8 +237,8 @@ class DelayTab extends React.Component<DelayTabProps, DelayTabState> {
                     }}
                     value={randomValue.min}
                   />
-                  <Form.Control
-                    className="inputMax"
+                  <input
+                    className="inputMax form-control"
                     placeholder="Max"
                     min={1}
                     type="number"
@@ -245,8 +247,10 @@ class DelayTab extends React.Component<DelayTabProps, DelayTabState> {
                     }}
                     value={randomValue.max}
                   />
-                  <InputGroup.Text>ms</InputGroup.Text>
-                </InputGroup>
+                  <div className="ml-[-1px] py-[1rem] px-4 font-semibold text-gray-300 dark:text-gray-300 bg-gray-25 dark:bg-gray-900/20">
+                    ms
+                  </div>
+                </div>
                 <div className="inputIcon">
                   <IconMediaShuffle />
                 </div>
@@ -256,13 +260,9 @@ class DelayTab extends React.Component<DelayTabProps, DelayTabState> {
           </div>
         </div>
         <div className="tabSaveButton">
-          <RegularButton
-            buttonText={i18n.editor.macros.textTabs.buttonText}
-            styles="outline gradient"
-            onClick={this.addDelay}
-            icoSVG={<IconArrowInBoxUp />}
-            icoPosition="right"
-          />
+          <Button variant="secondary" iconDirection="right" onClick={this.addDelay}>
+            <IconArrowInBoxUp /> {i18n.editor.macros.textTabs.buttonText}
+          </Button>
         </div>
       </Styles>
     );

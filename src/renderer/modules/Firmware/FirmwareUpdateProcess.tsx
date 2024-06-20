@@ -26,9 +26,11 @@ import { useDevice } from "@Renderer/DeviceContext";
 import FlashDevice from "@Renderer/controller/FlashingProcedure/machine";
 
 // Visual components
-import Title from "@Renderer/component/Title";
-import { RegularButton } from "@Renderer/component/Button";
-import { FirmwareLoader } from "@Renderer/component/Loader";
+import Heading from "@Renderer/components/atoms/Heading";
+import { Button } from "@Renderer/components/atoms/Button";
+import LogoLoader from "@Renderer/components/atoms/loader/LogoLoader";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@Renderer/components/atoms/Tooltip";
+import { IconInformation } from "@Renderer/components/atoms/icons";
 
 // types
 import { ContextType } from "@Renderer/controller/FlashManager/context";
@@ -261,7 +263,7 @@ function FirmwareUpdateProcess(props: FirmwareUpdateProcessProps) {
   return (
     <Style>
       {loading ? (
-        <FirmwareLoader width={undefined} warning={undefined} error={undefined} paused={undefined} />
+        <LogoLoader firmwareLoader />
       ) : (
         <div className="firmware-wrapper upgrade-firmware">
           <div className="firmware-row progress-visualizer">
@@ -285,30 +287,62 @@ function FirmwareUpdateProcess(props: FirmwareUpdateProcessProps) {
           {state.context.stateblock === 1 ? (
             <div className="firmware-footer">
               <div className="holdButton">
-                <RegularButton
-                  styles="flashingbutton nooutlined outline transp-bg"
+                <Button
+                  variant="outline"
                   size="sm"
-                  buttonText={i18n.firmwareUpdate.texts.cancelButton}
                   onClick={() => {
                     retryBlock(state.context);
                   }}
-                />
+                >
+                  {i18n.firmwareUpdate.texts.cancelButton}
+                </Button>
               </div>
               <div className="holdTootip">
-                <Title
-                  text={
-                    state.context.device?.info.product === "Raise"
-                      ? i18n.firmwareUpdate.texts.flashCardHelp
-                      : i18n.firmwareUpdate.texts.flashCardHelpDefy
-                  }
-                  headingLevel={6}
-                  tooltip={
-                    state.context.device?.info.product === "Raise"
-                      ? i18n.firmwareUpdate.texts.flashCardHelpTooltip
-                      : i18n.firmwareUpdate.texts.flashCardHelpTooltipDefy
-                  }
-                  tooltipSize="wide"
-                />
+                <Heading headingLevel={6} className="flex items-center gap-2">
+                  {state.context.device?.info.product === "Raise"
+                    ? i18n.firmwareUpdate.texts.flashCardHelp
+                    : i18n.firmwareUpdate.texts.flashCardHelpDefy}
+                  <TooltipProvider delayDuration={200}>
+                    <Tooltip>
+                      <TooltipTrigger className="[&_svg]:text-purple-100 [&_svg]:dark:text-purple-200">
+                        <IconInformation />
+                      </TooltipTrigger>
+                      <TooltipContent className="max-w-xs">
+                        {state.context.device?.info.product === "Raise" ? (
+                          <>
+                            <div className="text-left [&_p]:text-ssm">
+                              <Heading headingLevel={4} renderAs="h4">
+                                Why do I need to press and hold the key?
+                              </Heading>
+                              <p>
+                                When updating the firmware, we require the user to physically press and hold a key in order for
+                                the Firmware to be loaded. This is for security reasons.
+                              </p>
+                              <p>
+                                The update process is designed so that it will never be triggered accidentally.{" "}
+                                <strong>This makes the keyboard secure against undesired firmware modifications.</strong>
+                              </p>
+                            </div>
+                          </>
+                        ) : (
+                          <div className="text-left [&_p]:text-ssm">
+                            <Heading headingLevel={4} renderAs="h4">
+                              Why do I need to press the key?
+                            </Heading>
+                            <p>
+                              When updating the firmware, we require the user to physically press a key in order for the Firmware
+                              to be loaded. This is for security reasons.
+                            </p>
+                            <p>
+                              The update process is designed so that it will never be triggered accidentally.{" "}
+                              <strong>This makes the keyboard secure against undesired firmware modifications.</strong>
+                            </p>
+                          </div>
+                        )}
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                </Heading>
               </div>
             </div>
           ) : (
@@ -317,39 +351,44 @@ function FirmwareUpdateProcess(props: FirmwareUpdateProcessProps) {
           {state.context.stateblock === 8 ? (
             <div className="firmware-footer">
               <div className="holdButton">
-                <RegularButton
-                  styles="flashingbutton nooutlined outline transp-bg"
+                <Button
+                  variant="outline"
                   size="sm"
-                  buttonText={i18n.firmwareUpdate.texts.cancelButton}
                   onClick={() => {
                     send({ type: "cancel-event" });
                     retryBlock(state.context);
                   }}
-                />
-                <RegularButton
-                  styles="flashingbutton nooutlined primary"
+                >
+                  {i18n.firmwareUpdate.texts.cancelButton}
+                </Button>
+                <Button
+                  variant="primary"
                   size="sm"
-                  buttonText="Retry the flashing procedure"
                   onClick={() => {
                     send({ type: "retry-event" });
                   }}
-                />
+                >
+                  Retry the flashing procedure
+                </Button>
               </div>
               <div className="holdTootip">
-                <Title
-                  text={
-                    state.context.device?.info.product === "Raise"
-                      ? i18n.firmwareUpdate.texts.flashCardHelp
-                      : i18n.firmwareUpdate.texts.flashCardHelpDefy
-                  }
-                  headingLevel={6}
-                  tooltip={
-                    state.context.device?.info.product === "Raise"
-                      ? i18n.firmwareUpdate.texts.flashCardHelpTooltip
-                      : i18n.firmwareUpdate.texts.flashCardHelpTooltipDefy
-                  }
-                  tooltipSize="wide"
-                />
+                <Heading headingLevel={6} className="flex items-center gap-2">
+                  {state.context.device?.info.product === "Raise"
+                    ? i18n.firmwareUpdate.texts.flashCardHelp
+                    : i18n.firmwareUpdate.texts.flashCardHelpDefy}
+                  <TooltipProvider delayDuration={200}>
+                    <Tooltip>
+                      <TooltipTrigger className="[&_svg]:text-purple-100 [&_svg]:dark:text-purple-200">
+                        <IconInformation />
+                      </TooltipTrigger>
+                      <TooltipContent className="max-w-xs">
+                        {state.context.device?.info.product === "Raise"
+                          ? i18n.firmwareUpdate.texts.flashCardHelpTooltip
+                          : i18n.firmwareUpdate.texts.flashCardHelpTooltipDefy}
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                </Heading>
               </div>
             </div>
           ) : (

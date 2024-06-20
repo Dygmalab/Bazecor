@@ -6,7 +6,6 @@ export interface ContextType {
   deviceState: State | undefined;
   backup?: any;
   error: unknown;
-  errorCause: unknown;
   firmwareList: ReleaseType[];
   firmwares: any;
   device: any;
@@ -23,7 +22,6 @@ export const Context: ContextType = {
   Block: 0,
   deviceState: undefined,
   error: undefined,
-  errorCause: undefined,
   firmwareList: [],
   firmwares: undefined,
   device: undefined,

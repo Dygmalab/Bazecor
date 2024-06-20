@@ -1,383 +1,428 @@
-import React, { useState } from "react";
-import Styled from "styled-components";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import log from "electron-log/renderer";
-import { IconDragDots, IconBugWarning, IconRobotOffline, IconPlus, IconRefresh } from "@Renderer/component/Icon";
+import { toast } from "react-toastify";
+
 import { PageHeader } from "@Renderer/modules/PageHeader";
-import { CardDevice } from "@Renderer/component/Card";
-import Title from "@Renderer/component/Title";
-import { Container } from "react-bootstrap";
+import CardDevice from "@Renderer/modules/DeviceManager/CardDevice";
+import NoDeviceFound from "@Renderer/modules/DeviceManager/noDeviceFound";
 
-import { ReOrderDevicesModal } from "@Renderer/component/Modal";
-import Heading from "@Renderer/component/Heading";
-import { LargeButton } from "@Renderer/component/Button";
+// import Heading from "@Renderer/components/atoms/Heading";
+import { Button } from "@Renderer/components/atoms/Button";
 
-const DeviceManagerWrapper = Styled.div`
-  height: 100%;
-  .container-fluid {
-    height: 100%;
-  }
-  .view-wrapper {
-    display: flex;
-    flex-direction: column;
-    height: inherit;
-    > div {
-      width: 100%;
-      flex: initial;
-    }
-  }
-`;
+import SortableList, { SortableItem } from "react-easy-sort";
+import { arrayMoveImmutable } from "array-move";
 
-const FilterHeaderWrapper = Styled.div`
- display: flex;
- align-items: center;
- justify-content: space-between;
- padding-top: 32px;
- padding-bottom: 16px;
- margin-bottom: 32px;
- border-bottom: 1px solid ${({ theme }) => theme.styles.filterHeader.borderColor};
- .filter-header {
-  display: flex;
-  align-items: center;
-  grid-gap: 16px;
- }
- .filter-title {
-  font-size: 1.5em;
-  font-weight: 600;
-  letter-spacing: -0.03em;
-  margin: 0;
-  padding-left: 2px;
-  color: ${({ theme }) => theme.styles.filterHeader.titleColor};
-  sup {
-    color: ${({ theme }) => theme.colors.purple300};
-  }
- }
- .modal-button--trigger {
-  display: flex;
-  align-items: center;
-  color: ${({ theme }) => theme.styles.filterHeader.triggerModalColor};
-  grid-gap: 8px;
-  font-size: 0.8em;
-  transition: 300ms ease-in-out color;
-  padding: 0;
-  background-color: transparent;
-  &:hover {
-    color: ${({ theme }) => theme.styles.filterHeader.triggerModalHover};
-  }
+import { i18n } from "@Renderer/i18n";
+// import { i18n, refreshHardware } from "@Renderer/i18n";
+import { AnimatePresence, motion, useInView } from "framer-motion";
+import HelpSupportLink from "@Renderer/modules/DeviceManager/HelpSupportLink";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@Renderer/components/atoms/AlertDialog";
+import CardAddDevice from "@Renderer/modules/DeviceManager/CardAddDevice";
+import ToastMessage from "@Renderer/components/atoms/ToastMessage";
+import VirtualSelector from "@Renderer/modules/VirtualKeyboards/VirtualSelector";
+import { useDevice, DeviceTools } from "@Renderer/DeviceContext";
+import { IconArrowDownWithLine } from "@Renderer/components/atoms/icons";
+import { DeviceListType } from "@Renderer/types/DeviceManager";
+import { Neuron } from "@Renderer/types/neurons";
+
+import Store from "../utils/Store";
+import Device from "../../api/comms/Device";
+
+const store = Store.getStore();
+
+interface DeviceManagerProps {
+  onConnect: (...args: any[]) => any;
+  onDisconnect: () => void;
+  connected: boolean;
+  device: Device;
+  darkMode: boolean;
+  setLoading: (loading: boolean) => void;
+  restoredOk: boolean;
 }
- .filter-header--tabs ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: flex;
-  grid-gap: 4px;
-  .tab {
-    border-radius: 16px;
-    color: ${({ theme }) => theme.colors.gray25};
-    background-color: ${({ theme }) => theme.styles.filterHeader.tabBackgroundColor};
-    padding: 4px 16px;
-    margin: 0;
-    font-family: "Libre Franklin";
-    font-weight: 600;
-    font-size: 0.8em;
-    transition: 300ms background-color ease-in-out;
-    &:hover {
-      background-color: ${({ theme }) => theme.styles.filterHeader.tabBackgroundHover};
-    }
-    &.tab-active {
-      background-color: ${({ theme }) => theme.styles.filterHeader.tabBackgroundActive};
-    }
-  }
- }
-`;
 
-const DevicesWrapper = Styled.div`
-  display: flex;
-  grid-gap: 16px;
-  position: relative;
-  .devices-scroll {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(340px, 1fr));
-    grid-gap: 16px;
-  }
-  .devices-container--no-devices {
-    border-radius: 6px;
-    background-color: ${({ theme }) => theme.styles.deviceManager.noDevicesBackground};
-    padding: 32px 24px;
-    width: 100%;
-    .devices-inner {
-      display: flex;
-      justify-content: center;
-      flex-direction: column;
-      text-align: center;
-      width: 100%;
-      .devices-title-group {
-        h3 {
-          width: 100%;
-          &:after, &:before {
-            content: none;
-          }
-        }
-        h4 {
-          width: 100%;
-          font-size: 1em;
-          color: ${({ theme }) => theme.styles.neuronConnection.subTitleColor};
-        }
-      }
-    }
-    .devices-icon {
-      margin: 0 auto 16px auto;
-    }
-    .devices-buttons-group {
-      display: flex;
-      align-items: center;
-      grid-gap: 16px;
-      margin-top: 24px;
-      padding-bottom: 24px;
-      justify-content: center;
-      .button {
-        min-width: 280px;
-      }
-    }
-  }
+const DeviceManager = (props: DeviceManagerProps) => {
+  const { restoredOk, onConnect, onDisconnect, connected, device, darkMode, setLoading } = props;
 
-`;
-const HelpMessage = Styled.div`
-  width: 100%;
-  display: flex;
-  justify-content: flex-end;
-  margin-top: auto;
-  .help-wrapper {
-    display: flex;
-    flex-wrap: nowrap;
-    grid-gap: 8px;
-    max-width: 224px;
-    h4, svg, p {
-      transition: 300ms ease-in-out color;
-    }
-    svg {
-      flex: 0 0 24px;
-      color: ${({ theme }) => theme.styles.helpMessage.titleColor};
-    }
-    h4 {
-      font-size: 1em;
-      color: ${({ theme }) => theme.styles.helpMessage.titleColor};
-    }
-    p {
-      color: ${({ theme }) => theme.styles.helpMessage.textColor};
-      font-size: 0.825em;
-    }
-    &:hover {
-      text-decoration: none;
-      h4, svg {
-        color: ${({ theme }) => theme.styles.helpMessage.titleHoverColor};
-      }
-      p {
-        color: ${({ theme }) => theme.styles.helpMessage.textHoverColor};
-      }
-    }
-  }
-`;
-
-const savedDevicesList = [
-  {
-    name: "Captain Pinky Killer",
-    available: true,
-    path: "/dev/tty.usbmodem1301",
-    file: false,
-    device: {
-      info: {
-        displayName: "Dygma Raise ANSI",
-        keyboardType: "ANSI",
-        product: "Raise",
-      },
-    },
-    serialNumber: "BDAA4DC750535254352E3120FF15122ARaise",
-  },
-  {
-    name: "Keeb/Office",
-    available: true,
-    path: "/dev/tty.usbmodem2201",
-    file: false,
-    device: {
-      info: {
-        displayName: "Dygma Defy",
-        keyboardType: "Wireless",
-        product: "Defy",
-      },
-    },
-    serialNumber: "BDAA4DC750535254352E3120FF15122ADefyA",
-  },
-  {
-    name: "Keeb/Home",
-    available: false,
-    path: "/dev/tty.usbmodem2201",
-    file: false,
-    device: {
-      info: {
-        displayName: "Dygma Defy",
-        keyboardType: "Wireless",
-        product: "Defy",
-      },
-    },
-    serialNumber: "BDAA4DC750535254352E3120FF15122ADefyB",
-  },
-  {
-    path: "/backup/Defy",
-    available: true,
-    file: true,
-    device: {
-      info: {
-        displayName: "Dygma Defy",
-        keyboardType: "Wireless",
-        product: "Defy",
-      },
-    },
-    serialNumber: "BDAA4DC750535254352E3120FF15122ADefyVirtual",
-  },
-  {
-    path: "/backup/Defy",
-    available: true,
-    file: true,
-    device: {
-      info: {
-        displayName: "Dygma Defy",
-        keyboardType: "Wireless",
-        product: "Defy",
-      },
-    },
-    serialNumber: "BDAA4DC750535254352E3120FF15122ADefyVirtual2",
-  },
-];
-const DeviceManager = () => {
-  const [listDevices, setListDevices] = useState(savedDevicesList);
-  // const [listDevices, setListDevices] = useState([]);
+  const { state, dispatch } = useDevice();
+  const [scanned, setScanned] = useState(true);
+  const [devicesList, setDevicesList] = useState<Array<DeviceListType>>([]);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [activeTab, setActiveTab] = useState<"all" | boolean>("all");
-  const [showModal, setShowModal] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [openDialogVirtualKB, setOpenDialogVirtualKB] = useState(false);
+  const [selectedDevice, setSelectedDevice] = useState(0);
 
-  const addVirtualDevices = (
-    <button className="sm button outline transp-bg iconOnNone" type="button" onClick={() => log.info("Add virtual device")}>
-      Add virtual device
-    </button>
-  );
-  const scanDevices = (
-    <button className="sm button primary iconOnNone" type="button" onClick={() => log.info("Scan devices")}>
-      Scan devices
-    </button>
-  );
+  const ref = useRef(null);
+  const isInView = useInView(ref);
 
-  const reOrderList = (newList: any) => {
-    setListDevices(newList);
-    setActiveTab("all");
-    setShowModal(false);
+  const delay = (ms: number) =>
+    new Promise(res => {
+      setTimeout(res, ms);
+    });
+
+  const onKeyboardConnect = async (selected: number) => {
+    const { deviceList } = state;
+    // log.info("trying to connect to:", deviceList, selectedDevice, deviceList[selectedDevice]);
+    try {
+      const response = await DeviceTools.connect(deviceList[selected]);
+      log.info("GOING TO CONNECT TO!!", selected, response.device, device, darkMode);
+      dispatch({ type: "changeCurrent", payload: { selected, device: response } });
+      await onConnect(response);
+    } catch (err) {
+      const errorMessage = err.toString();
+      toast.error(<ToastMessage title={errorMessage} />, { icon: "" });
+    }
+    // we use any because i18n indeed has that function defined
+    // refreshHardware(devicesList[selectedDevice]);
   };
 
+  const handleOnDisconnect = async () => {
+    setScanned(false);
+    const cID = state.currentDevice.serialNumber.toLowerCase();
+    await DeviceTools.disconnect(state.currentDevice);
+    dispatch({ type: "disconnect", payload: [cID] });
+    setDevicesList([]);
+    setSelectedDevice(-1);
+    await onDisconnect();
+  };
+
+  const handleOnDisconnectConnect = async (deviceNumber: number) => {
+    await DeviceTools.disconnect(state.currentDevice);
+    await delay(500);
+    await onKeyboardConnect(deviceNumber);
+  };
+
+  const findKeyboards = useCallback(async (): Promise<DeviceListType[]> => {
+    setLoading(true);
+    if (connected || state.deviceList.length > 0) {
+      const toShowDevs: DeviceListType[] = [];
+      let newDeviceList = state.deviceList;
+      const existingIDs = state.deviceList.map(d => d.serialNumber.toLowerCase());
+      const newDevs = await DeviceTools.listNonConnected(false, existingIDs);
+      newDeviceList = newDeviceList.concat(newDevs);
+      dispatch({ type: "addDevicesList", payload: newDeviceList });
+      log.info("Available Devices: ", newDeviceList);
+      newDeviceList.forEach((item, index) => {
+        const neurons = store.get("neurons") as Neuron[];
+        const neuron = neurons.find(n => n.id.toLowerCase() === item.device?.chipId?.toLowerCase());
+        toShowDevs.push({
+          name: neuron?.name ? neuron.name : "",
+          available: true,
+          connected: state.selected === index,
+          config: neuron,
+          file: item.type === "virtual",
+          device: item,
+          serialNumber: item.device.chipId,
+          index: toShowDevs.length,
+        });
+      });
+      setLoading(false);
+      setDevicesList(toShowDevs);
+      if (toShowDevs.length > 0) setScanned(true);
+      log.info("list of already connected devices: ", toShowDevs);
+      return toShowDevs;
+    }
+    try {
+      const list = (await DeviceTools.list()) as Device[];
+      dispatch({ type: "addDevicesList", payload: list });
+      log.info("Devices Available:", list);
+      const newDev: DeviceListType[] = [];
+      list.forEach(item => {
+        const neuron = (store.get("neurons") as Neuron[]).find(n => n.id.toLowerCase() === item.device.chipId.toLowerCase());
+        newDev.push({
+          name: neuron?.name ? neuron.name : "",
+          available: true,
+          connected: false,
+          config: neuron,
+          file: item.type === "virtual",
+          device: item,
+          serialNumber: item.device.chipId,
+          index: newDev.length,
+        });
+      });
+      setDevicesList(newDev);
+      setLoading(false);
+      setScanned(true);
+      return newDev;
+    } catch (err) {
+      log.info("Error while finding keyboards", err);
+      setLoading(false);
+      setDevicesList(undefined);
+      return undefined;
+    }
+  }, [connected, dispatch, setLoading, state.deviceList, state.selected]);
+
+  const handleConnection = async (deviceNumber: number, action: "connect" | "disconnect") => {
+    // fijar el dispositivo seleccionado de la lista
+    log.info("Handling on connect press", action, deviceNumber);
+
+    switch (action) {
+      case "connect":
+        if (connected && deviceNumber !== state.selected) {
+          setSelectedDevice(deviceNumber);
+          handleOnDisconnectConnect(deviceNumber);
+        } else {
+          setSelectedDevice(deviceNumber);
+          await onKeyboardConnect(deviceNumber);
+        }
+        break;
+      case "disconnect":
+        await handleOnDisconnect();
+        break;
+      default:
+        log.info("Wrong case", action);
+        break;
+    }
+  };
+
+  const addVirtualDevice = () => {
+    log.info("Add virtual device!");
+    setOpenDialogVirtualKB(true);
+  };
+
+  const scanDevices = () => {
+    log.info("Scan devices!");
+    setScanned(false);
+  };
+
+  const addVirtualDevicesButton = (
+    // <button className="sm button outline transp-bg iconOnNone" type="button" onClick={addVirtualDevice}>
+    //   {i18n.deviceManager.addVirtualDevice}
+    // </button>
+    <Button variant="outline" size="sm" onClick={addVirtualDevice}>
+      {i18n.deviceManager.addVirtualDevice}
+    </Button>
+  );
+  const scanDevicesButton = (
+    <Button variant="primary" size="sm" className="ml-3" onClick={scanDevices}>
+      {i18n.deviceManager.scanDevices}
+    </Button>
+  );
+
+  const openDialog = (dev: Device) => {
+    log.info(dev);
+    setSelectedDevice(devicesList.findIndex((item: DeviceListType) => item.device === dev));
+    setOpen(true);
+  };
+
+  const forgetDevice = (dev: Device) => {
+    log.info("remove device", dev);
+    const updatedDevices = devicesList.filter(item => item.device !== dev);
+    setDevicesList(updatedDevices);
+  };
+
+  const onSortEnd = (oldIndex: number, newIndex: number) => {
+    setDevicesList(array => arrayMoveImmutable(array, oldIndex, newIndex));
+  };
+
+  const handleVirtualConnect = async (file: any) => {
+    if (connected) {
+      await handleOnDisconnect();
+      await delay(500);
+    }
+    const response = await DeviceTools.connect(file);
+    dispatch({ type: "changeCurrent", payload: { selected: -1, device: response } });
+    await onConnect(response);
+  };
+
+  useEffect(() => {
+    if (connected) {
+      setSelectedDevice(state.selected);
+      setScanned(false);
+    } else {
+      setScanned(false);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    if (devicesList && state.deviceList.length !== devicesList.length) setScanned(false);
+  }, [devicesList, state.deviceList]);
+
+  useEffect(() => {
+    if (!scanned) {
+      const find = async () => {
+        await findKeyboards();
+      };
+      find();
+    }
+  }, [findKeyboards, scanned]);
+
+  useEffect(() => {
+    console.log("ref: ", ref.current);
+    if (isInView) {
+      log.warn("Is visible");
+    } else {
+      log.warn("Not visible");
+    }
+  }, [isInView, ref]);
+
+  useEffect(() => {
+    if (!restoredOk) {
+      toast.error(
+        <ToastMessage
+          title="Oops! Layers not restored"
+          content="There was an error loading your configuration. But worry not: reconnect your keyboard and the latest backup will be automatically restored."
+          icon={<IconArrowDownWithLine />}
+        />,
+        { icon: "" },
+      );
+    }
+  }, [restoredOk]);
+
+  log.info("Current State: ", devicesList, selectedDevice);
+
   return (
-    <DeviceManagerWrapper>
-      <Container fluid>
-        <div className="view-wrapper">
-          <PageHeader text="Device Manager" primaryButton={scanDevices} secondaryButton={addVirtualDevices} />
-          <FilterHeaderWrapper>
-            <div className="filter-header">
-              <h3 className="filter-title">
-                My devices <sup>{listDevices.length}</sup>
-              </h3>
-              {listDevices.length > 0 ? (
+    <div className="h-full">
+      <div className="px-3 h-full">
+        <div className="view-wrapper--devices flex h-[inherit] flex-col">
+          <PageHeader
+            text="Keyboard Manager"
+            primaryButton={scanDevicesButton}
+            secondaryButton={addVirtualDevicesButton}
+            styles="pageHeaderFlatBottom"
+          />
+          {/* <div className="filterHeaderWrapper flex items-center justify-between pt-8 pb-3 mb-3 border-b-[1px] border-gray-100 dark:border-gray-600"> */}
+          <div className="filterHeaderWrapper flex items-center justify-between pt-8 pb-3 mb-3">
+            {/* <div className="filter-header flex items-center gap-4">
+              <Heading headingLevel={3} renderAs="h3" className="ml-[2px]">
+                {devicesList?.length > 1 ? i18n.deviceManager.myDevices : i18n.deviceManager.myDevice}
+                <sup className="text-purple-300">{devicesList?.length}</sup>
+              </Heading>
+              {devicesList?.length > 0 ? (
                 <div className="filter-header--tabs">
-                  <ul>
+                  <ul className="list-none p-0 m-0 flex gap-1">
                     <li>
                       <button
                         type="button"
-                        className={`tab ${activeTab === "all" ? "tab-active" : ""}`}
+                        className={`tab text-gray-25 rounded-[16px] py-1 px-3 m-0 font-semibold tracking-tight text-sm transition-all ${
+                          activeTab === "all"
+                            ? "tab-active bg-purple-300"
+                            : "bg-gray-300 hover:bg-gray-400 dark:bg-gray-600 dark:hover:bg-gray-500"
+                        }`}
                         onClick={() => setActiveTab("all")}
                       >
-                        All
+                        {i18n.general.all}
                       </button>
                     </li>
                     <li>
                       <button
                         type="button"
-                        className={`tab ${activeTab === true ? "tab-active" : ""}`}
+                        className={`tab text-gray-25 rounded-[16px] py-1 px-3 m-0 font-semibold tracking-tight text-sm transition-all ${
+                          activeTab === true
+                            ? "tab-active bg-purple-300"
+                            : "bg-gray-300 hover:bg-gray-400 dark:bg-gray-600 dark:hover:bg-gray-500"
+                        }`}
                         onClick={() => setActiveTab(true)}
                       >
-                        Online
+                        {i18n.general.online}
                       </button>
                     </li>
                     <li>
                       <button
                         type="button"
-                        className={`tab ${activeTab === false ? "tab-active" : ""}`}
+                        className={`tab text-gray-25 rounded-[16px] py-1 px-3 m-0 font-semibold tracking-tight text-sm transition-all ${
+                          activeTab === false
+                            ? "tab-active bg-purple-300"
+                            : "bg-gray-300 hover:bg-gray-400 dark:bg-gray-600 dark:hover:bg-gray-500"
+                        }`}
                         onClick={() => setActiveTab(false)}
                       >
-                        Offline
+                        {i18n.general.offline}
                       </button>
                     </li>
                   </ul>
                 </div>
               ) : null}
-            </div>
-            {listDevices.length > 0 ? (
-              <div className="filter-header--actions">
-                <button type="button" onClick={() => setShowModal(true)} className="modal-button--trigger">
-                  <IconDragDots />
-                  Re-order list
-                </button>
-              </div>
-            ) : null}
-          </FilterHeaderWrapper>
-          <DevicesWrapper>
-            {listDevices.length > 0 ? (
+            </div> */}
+          </div>
+          <div className="flex gap-4 relative">
+            {devicesList?.length > 0 ? (
               <div className="devices-container">
-                <div className="devices-scroll">
-                  {listDevices.map(item => (
-                    <CardDevice key={item.serialNumber} device={item} filterBy={activeTab} />
+                <SortableList
+                  onSortEnd={onSortEnd}
+                  className="list devices-scroll relative w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 pb-4"
+                  draggedItemClassName="dragged"
+                >
+                  {devicesList.map(item => (
+                    <AnimatePresence mode="popLayout" key={item.serialNumber}>
+                      {item.available === activeTab || activeTab === "all" ? (
+                        <motion.div initial={{ opacity: 0, y: -50 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -50 }}>
+                          <SortableItem key={item.serialNumber}>
+                            <CardDevice
+                              device={item}
+                              filterBy={activeTab}
+                              openDialog={openDialog}
+                              handleConnection={handleConnection}
+                            />
+                          </SortableItem>
+                        </motion.div>
+                      ) : (
+                        ""
+                      )}
+                    </AnimatePresence>
                   ))}
-                </div>
+                  <AnimatePresence mode="popLayout">
+                    <motion.div initial={{ opacity: 0, y: -50 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -50 }}>
+                      <CardAddDevice addVirtualDevice={addVirtualDevice} scanDevices={scanDevices} ref={ref} />
+                    </motion.div>
+                  </AnimatePresence>
+                </SortableList>
               </div>
             ) : (
-              <div className="devices-container devices-container--no-devices">
-                <div className="devices-inner">
-                  <div className="devices-icon">
-                    <IconRobotOffline />
-                  </div>
-                  <div className="devices-title-group">
-                    <Heading headingLevel={3} variant="warning">
-                      No devices found!
-                    </Heading>
-                    <Heading headingLevel={4}>[Black metal plays in background]</Heading>
-                  </div>
-                  <div className="devices-buttons-group">
-                    <LargeButton onClick={() => log.info("Add virtual keyboard")} icon={<IconPlus />}>
-                      <Heading headingLevel={4}>Add virtual device</Heading>
-                      <p>Use without a keyboard</p>
-                    </LargeButton>
-                    <LargeButton onClick={() => log.info("Scan devices")} icon={<IconRefresh />}>
-                      <Heading headingLevel={4}>Scan devices</Heading>
-                      <p>Check for nearby devices</p>
-                    </LargeButton>
-                  </div>
-                </div>
+              <div className="devices-container">
+                <AnimatePresence mode="popLayout">
+                  <motion.div initial={{ opacity: 0, y: -50 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -50 }}>
+                    <div className="list devices-scroll relative w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 pb-4">
+                      <NoDeviceFound />
+                      <CardAddDevice addVirtualDevice={addVirtualDevice} scanDevices={scanDevices} ref={ref} />
+                    </div>
+                  </motion.div>
+                </AnimatePresence>
               </div>
             )}
-          </DevicesWrapper>
-          <HelpMessage>
-            <a href="https://support.dygma.com/hc/en-us/requests/new" className="help-wrapper">
-              <IconBugWarning />
-              <div className="help-warning--content">
-                <Title text="Need help?" headingLevel={4} />
-                <p>Whether it&#39;s a bug or any other issue, we are here to help you!</p>
-              </div>
-            </a>
-          </HelpMessage>
+          </div>
+          <HelpSupportLink />
         </div>
-      </Container>
+      </div>
 
-      <ReOrderDevicesModal
-        show={showModal}
-        toggleShow={() => setShowModal(false)}
-        devices={listDevices}
-        handleSave={reOrderList}
+      <AlertDialog
+        open={open}
+        onOpenChange={(isOpen: boolean) => {
+          if (isOpen === true) return;
+          setOpen(false);
+        }}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>{i18n.deviceManager.dialogDeleteTitle}</AlertDialogTitle>
+            <AlertDialogDescription>{i18n.deviceManager.dialogDeleteDescription}</AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel buttonVariant="outline">{i18n.dialog.cancel}</AlertDialogCancel>
+            <AlertDialogAction onClick={() => forgetDevice(devicesList[selectedDevice].device)} buttonVariant="destructive">
+              {i18n.general.continue}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      <VirtualSelector
+        handleVirtualConnect={handleVirtualConnect}
+        openDialogVirtualKB={openDialogVirtualKB}
+        setOpenDialogVirtualKB={setOpenDialogVirtualKB}
+        showButton={false}
       />
-    </DeviceManagerWrapper>
+    </div>
   );
 };
 

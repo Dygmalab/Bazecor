@@ -17,7 +17,7 @@
 
 import React from "react";
 import Styled from "styled-components";
-import Title from "@Renderer/component/Title";
+import Heading from "@Renderer/components/atoms/Heading";
 import { i18n } from "@Renderer/i18n";
 
 const Style = Styled.div`
@@ -41,8 +41,8 @@ function NeuronTitle({ neuronName, neuronID }: NeuronTitleProps) {
   return (
     <Style>
       <div className="backupFolderConfigurator">
-        <Title text={`${i18n.keyboardSettings.neuronManager.nameTitle}: ${neuronName}`} headingLevel={3} />
-        <Title text={`ID: ${neuronID}`} headingLevel={4} />
+        <Heading headingLevel={3} renderAs="h3">{`${i18n.keyboardSettings.neuronManager.nameTitle}: ${neuronName}`}</Heading>
+        <Heading headingLevel={4} renderAs="h4">{`ID: ${neuronID}`}</Heading>
       </div>
     </Style>
   );

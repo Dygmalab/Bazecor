@@ -3,14 +3,8 @@
 import React, { useState, useEffect } from "react";
 import log from "electron-log/renderer";
 
-// Bootstrap components imports
-import Styled from "styled-components";
-import Container from "react-bootstrap/Container";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
-
 // Custom component imports
-import { LogoLoader } from "@Renderer/component/Loader";
+import LogoLoader from "@Renderer/components/atoms/loader/LogoLoader";
 import { PageHeader } from "@Renderer/modules/PageHeader";
 import { BatterySettings, EnergyManagement, RFSettings } from "@Renderer/modules/Settings";
 
@@ -19,22 +13,6 @@ import { WirelessPropsInterface, WirelessInterface } from "@Renderer/types/wirel
 
 import { useDevice } from "@Renderer/DeviceContext";
 import { i18n } from "@Renderer/i18n";
-
-const Styles = Styled.div`
-  height: 100%;
-  .wireless {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    height: 100%;
-  }
-  .wirelessInner {
-    max-width: 960px;
-    width: 100%;
-    margin: auto;
-    padding: 2rem 0;
-  }
-`;
 
 const initialWireless = {
   battery: {
@@ -204,8 +182,8 @@ const Wireless = (props: WirelessPropsInterface) => {
 
   if (loading) <LogoLoader />;
   return (
-    <Styles>
-      <Container fluid className="wireless center-content">
+    <div className="h-full">
+      <div className="px-3 h-full">
         <PageHeader
           text={i18n.wireless.title}
           showSaving
@@ -221,19 +199,19 @@ const Wireless = (props: WirelessPropsInterface) => {
                 <ConnectionStatus connection={0} />
               </Col>
             </Row> */}
-            <Row>
-              <Col lg={6}>
+            <div className="w-full flex columns-3 gap-6">
+              <div>
                 <BatterySettings wireless={wireless} changeWireless={changeWireless} isCharging={false} />
                 <EnergyManagement wireless={wireless} changeWireless={changeWireless} />
-              </Col>
-              <Col lg={6}>
+              </div>
+              <div>
                 <RFSettings wireless={wireless} changeWireless={changeWireless} sendRePair={sendRePairCommand} />
-              </Col>
-            </Row>
+              </div>
+            </div>
           </div>
         </div>
-      </Container>
-    </Styles>
+      </div>
+    </div>
   );
 };
 

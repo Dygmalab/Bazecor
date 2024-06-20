@@ -29,7 +29,7 @@ import Light from "@Renderer/theme/LightTheme";
 import Dark from "@Renderer/theme/DarkTheme";
 
 import Header from "@Renderer/modules/NavigationMenu";
-import SelectKeyboard from "@Renderer/views/SelectKeyboard";
+// import SelectKeyboard from "@Renderer/views/SelectKeyboard";
 import FirmwareUpdate from "@Renderer/views/FirmwareUpdate";
 import LayoutEditor from "@Renderer/views/LayoutEditor";
 import MacroEditor from "@Renderer/views/MacroEditor";
@@ -37,8 +37,8 @@ import SuperkeysEditor from "@Renderer/views/SuperkeysEditor";
 import Preferences from "@Renderer/views/Preferences";
 import Welcome from "@Renderer/views/Welcome";
 
-import ToastMessage from "@Renderer/component/ToastMessage";
-import { IconBluetooth, IconConnected, IconPlug } from "@Renderer/component/Icon";
+import ToastMessage from "@Renderer/components/atoms/ToastMessage";
+import { IconBluetooth, IconConnected, IconPlug } from "@Renderer/components/atoms/icons";
 import BazecorDevtools from "@Renderer/views/BazecorDevtools";
 import { showDevtools } from "@Renderer/devMode";
 
@@ -47,10 +47,11 @@ import getTranslator from "@Renderer/utils/translator";
 import { Neuron } from "@Types/neurons";
 import "../api/keymap";
 import "../api/colormap";
-import { useDevice } from "./DeviceContext";
+import { DeviceTools, useDevice } from "./DeviceContext";
 import DeviceManager from "./views/DeviceManager";
 import Device from "../api/comms/Device";
 import { HIDNotifdevice } from "./types/hid";
+import HID from "../api/hid/hid";
 
 const store = Store.getStore();
 
@@ -66,7 +67,7 @@ function App() {
   const [fwUpdate, setFwUpdate] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const { state } = useDevice();
+  const { state, dispatch } = useDevice();
   const navigate = useNavigate();
   const varFlashing = React.useRef(false);
   const device: any = React.useRef();
@@ -166,9 +167,11 @@ function App() {
     log.verbose(state.currentDevice?.type, state.currentDevice?.path);
     localStorage.clear();
     setConnected(false);
+    setFlashing(false);
+    setFwUpdate(false);
     device.current = null;
     setPages({});
-    navigate("/keyboard-select");
+    navigate("/device-manager");
   }, [navigate, state.currentDevice]);
 
   const onKeyboardConnect = async (currentDevice: Device): Promise<void> => {
@@ -220,11 +223,10 @@ function App() {
     log.verbose("toggled flashing to", !flashing);
 
     // if Flashing is going to be set to false from true
-    if (flashing) {
-      setConnected(false);
-      device.current = null;
-      setPages({});
-      navigate("/keyboard-select");
+    if (!flashing === false) {
+      const currentID = state.currentDevice.serialNumber.toLowerCase();
+      dispatch({ type: "disconnect", payload: [currentID] });
+      onKeyboardDisconnect();
     }
   };
 
@@ -235,48 +237,69 @@ function App() {
   }, []);
 
   useEffect(() => {
-    const handleDeviceConnection = async (dev: any) => {
+    const handleDeviceConnection = async (dev: USBDevice) => {
       log.verbose("new Device connected to USB", dev);
       const isFlashing = varFlashing.current;
       if (isFlashing) {
         log.verbose("no action due to flashing active");
         return;
       }
-      if (!connected) {
-        toast.success(
-          <ToastMessage
-            icon={<IconConnected />}
-            title={i18n.success.USBdeviceConnected}
-            content={i18n.success.USBdeviceConnectedText}
-          />,
-          { autoClose: 2000, icon: "" },
-        );
+      try {
+        const existingIDs = state.deviceList.map(d => d.serialNumber);
+        const newDev = await DeviceTools.enumerateDevice(false, dev, existingIDs);
+        dispatch({ type: "addDevices", payload: newDev });
+      } catch (error) {
+        log.error("error when trying to insert newly connected device to DeviceContext", error);
       }
+      toast.success(
+        <ToastMessage
+          icon={<IconConnected />}
+          title={i18n.success.USBdeviceConnected}
+          content={i18n.success.USBdeviceConnectedText}
+        />,
+        { autoClose: 2000, icon: "" },
+      );
     };
-    const handleDeviceDisconnection = async (dev: any) => {
+
+    const handleDeviceDisconnection = async (dev: USBDevice) => {
       const isFlashing = varFlashing.current;
       log.verbose("Handling device disconnect", isFlashing, dev);
       if (isFlashing) {
         log.verbose("no action due to flashing active");
         return;
       }
-      if (connected) {
-        toast.warn(
-          <ToastMessage
-            icon={<IconPlug />}
-            title={i18n.errors.deviceDisconnected}
-            content={i18n.errors.deviceDisconnectedContent}
-          />,
-          { autoClose: 3000, icon: "" },
-        );
+      let missing: string[];
+      try {
+        const existingIDs = state.deviceList.filter(d => d.type === "serial").map(d => d.serialNumber.toLowerCase());
+        const existingPNs = state.deviceList
+          .filter(d => d.type === "hid")
+          .map(d => ({ PN: (d.port as unknown as HID).connectedDevice.productName, SN: d.serialNumber }));
+        const missingSerialN = await DeviceTools.currentSerialN(existingIDs);
+        const missingPNs = await DeviceTools.currentHIDN(existingPNs.map(x => x.PN));
+        missing = missingSerialN.concat(existingPNs.map(x => (missingPNs.includes(x.PN) ? x.SN : undefined)));
+        dispatch({
+          type: "disconnect",
+          payload: missing,
+        });
+      } catch (error) {
+        log.error("error when trying to remove disconnected device from DeviceContext", error);
       }
-      onKeyboardDisconnect();
+      toast.warn(
+        <ToastMessage
+          icon={<IconPlug />}
+          title={i18n.errors.deviceDisconnected}
+          content={i18n.errors.deviceDisconnectedContent}
+        />,
+        { autoClose: 3000, icon: "" },
+      );
+      if (connected && missing.length > 0 && missing.includes(state.currentDevice?.serialNumber.toLowerCase())) {
+        onKeyboardDisconnect();
+      }
     };
 
     const usbListener = (event: unknown, response: unknown) => handleDeviceDisconnection(JSON.parse(response as string));
     const newUsbConnection = (event: unknown, response: unknown) => handleDeviceConnection(JSON.parse(response as string));
-    const hidListener = (event: unknown, response: unknown) =>
-      handleDeviceDisconnection(JSON.parse(response as string) as HIDNotifdevice);
+    const hidListener = (event: unknown, response: unknown) => handleDeviceDisconnection(JSON.parse(response as string));
 
     const notifyBtDevice = (event: any, hidDev: string) => {
       const localDev: HIDNotifdevice = JSON.parse(hidDev);
@@ -284,8 +307,8 @@ function App() {
       toast.success(
         <ToastMessage
           icon={<IconBluetooth />}
-          title="Detected Dgyma Bluetooth Device"
-          content={`Found ${localDev.name} device! to connect, first press scan keyboards button in keyboard selection view`}
+          title="Detected Dygma Bluetooth Device"
+          content={`Found ${localDev.name} device! to connect, first press scan keyboards button in keyboard manager`}
         />,
         { autoClose: 3000, icon: "" },
       );
@@ -317,7 +340,7 @@ function App() {
       ipcRenderer.off("hid-disconnected", hidListener);
       ipcRenderer.off("hid-connected", notifyBtDevice);
     };
-  }, [connected, navigate, onKeyboardDisconnect]);
+  }, [connected, dispatch, navigate, onKeyboardDisconnect, state.currentDevice, state.deviceList]);
 
   const toggleFwUpdate = async (value: boolean) => {
     log.verbose("toggling fwUpdate to: ", value);
@@ -354,10 +377,23 @@ function App() {
       />
       <div className="main-container">
         <Routes>
-          <Route path="/" element={<Navigate to="/keyboard-select" />} />
+          <Route path="/" element={<Navigate to="/device-manager" />} />
           <Route path="/welcome" element={<Welcome device={device} onConnect={onKeyboardConnect} />} />
-          <Route path="/device-manager" element={<DeviceManager />} />
           <Route
+            path="/device-manager"
+            element={
+              <DeviceManager
+                connected={connected}
+                onConnect={onKeyboardConnect}
+                onDisconnect={onKeyboardDisconnect}
+                device={device}
+                darkMode={darkMode}
+                setLoading={setLoadingData}
+                restoredOk={restoredOk}
+              />
+            }
+          />
+          {/* <Route
             path="/keyboard-select"
             element={
               <SelectKeyboard
@@ -370,7 +406,7 @@ function App() {
                 restoredOk={restoredOk}
               />
             }
-          />
+          /> */}
           <Route
             path="/editor"
             element={

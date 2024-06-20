@@ -19,9 +19,8 @@ import React from "react";
 import Styled from "styled-components";
 import { i18n } from "@Renderer/i18n";
 import { SegmentedKeyType } from "@Renderer/types/layout";
-import Title from "../../component/Title";
-
-import ListModifiers from "../../component/ListModifiers/ListModifiers";
+import ListModifier from "@Renderer/components/molecules/ListModifiers/ListModifiers";
+import Heading from "@Renderer/components/atoms/Heading";
 
 const Style = Styled.div`
 &.KeyVisualizer {
@@ -152,12 +151,14 @@ const KeyVisualizer = (props: KeyVisualizerProps) => {
       >
         {oldValue ? (
           <div className="oldKeyValue">
-            <Title text={`${rows ? rows[superkeyAction].title : "Selected value"}`} headingLevel={4} />
+            <Heading headingLevel={4} renderAs="h4">{`${rows ? rows[superkeyAction].title : "Selected value"}`}</Heading>
             <div className="keySelectedBox">
               <div className="keySelectedValue">{oldValue}</div>
-              <ListModifiers
+              <ListModifier
                 keyCode={
-                  oldKeyCode !== undefined && typeof oldKeyCode !== "number" ? oldKeyCode.base + oldKeyCode.modified : oldKeyCode
+                  oldKeyCode !== undefined && typeof oldKeyCode !== "number"
+                    ? Number(oldKeyCode.base + oldKeyCode.modified)
+                    : Number(oldKeyCode)
                 }
                 size="sm"
               />
@@ -168,11 +169,15 @@ const KeyVisualizer = (props: KeyVisualizerProps) => {
         )}
         {newValue && !isStandardView ? (
           <div className="newKeyValue">
-            <Title text="New value" headingLevel={4} />
+            <Heading headingLevel={4} renderAs="h4">
+              New value
+            </Heading>
             <div className="keySelectedBox">
               <div className="keySelectedValue">{newValue}</div>
-              <ListModifiers
-                keyCode={keyCode !== undefined && typeof keyCode !== "number" ? keyCode.base + keyCode.modified : keyCode}
+              <ListModifier
+                keyCode={
+                  keyCode !== undefined && typeof keyCode !== "number" ? Number(keyCode.base + keyCode.modified) : Number(keyCode)
+                }
               />
             </div>
           </div>
@@ -181,11 +186,15 @@ const KeyVisualizer = (props: KeyVisualizerProps) => {
         )}
         {newValue !== oldValue && isStandardView ? (
           <div className="newKeyValue">
-            <Title text="New value" headingLevel={4} />
+            <Heading headingLevel={4} renderAs="h4">
+              New value
+            </Heading>
             <div className="keySelectedBox">
               <div className="keySelectedValue">{newValue}</div>
-              <ListModifiers
-                keyCode={keyCode !== undefined && typeof keyCode !== "number" ? keyCode.base + keyCode.modified : keyCode}
+              <ListModifier
+                keyCode={
+                  keyCode !== undefined && typeof keyCode !== "number" ? Number(keyCode.base + keyCode.modified) : Number(keyCode)
+                }
               />
             </div>
           </div>

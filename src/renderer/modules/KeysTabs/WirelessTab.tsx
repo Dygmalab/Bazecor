@@ -1,94 +1,78 @@
 import React from "react";
-import Styled from "styled-components";
 
 import { TabLayoutEditorProps } from "@Renderer/types/pages";
 
 import { i18n } from "@Renderer/i18n";
 
-import Title from "@Renderer/component/Title";
-import Callout from "@Renderer/component/Callout";
-import { ButtonConfig } from "@Renderer/component/Button";
+import Heading from "@Renderer/components/atoms/Heading";
+import Callout from "@Renderer/components/molecules/Callout/Callout";
+import { Button } from "@Renderer/components/atoms/Button";
 import { BatteryCodes } from "@Renderer/../hw/battery";
 import { BluetoothCodes } from "@Renderer/../hw/bluetooth";
 
-const Styles = Styled.div`
-width: 100%;
-h3 {
-    margin-bottom: 16px;
-}
-h4 {
-    font-size: 16px;
-    flex: 0 0 100%;
-    width: 100%;
-    margin-top: 24px;
-}
-.description {
-    font-size: 14px;
-    color: ${({ theme }) => theme.styles.macro.descriptionColor};
-    font-weight: 500;
-}
-.keysButtonsList {
-    margin-top: 8px;
-}
-.button-config {
-    max-width: 116px;
-    text-align: center;
-}
-`;
+// const Styles = Styled.div`
+// width: 100%;
+// h4 {
+//     font-size: 16px;
+//     flex: 0 0 100%;
+//     width: 100%;
+//     margin-top: 24px;
+// }
+// `;
 
 function WirelessTab(props: TabLayoutEditorProps) {
   const { keyCode, onKeySelect, isStandardView } = props;
   return (
-    <Styles className={`${isStandardView ? "standardViewTab" : ""} tabsWireless`}>
+    <div className={`${isStandardView ? "standardViewTab" : ""} tabsWireless w-full`}>
       <div className="tabContentWrapper">
         <div className="buttonsRow">
-          <Title text={i18n.app.menu.wireless} headingLevel={3} />
-          <Callout content={i18n.editor.standardView.wireless.callOut} size="sm" />
-          <div className="keysButtonsList">
-            <Title text={i18n.editor.standardView.wireless.batteryPowerStatus} headingLevel={4} />
-            <p className="description">{i18n.editor.standardView.wireless.batteryLevelDescription}</p>
-            <ButtonConfig
-              buttonText={i18n.editor.standardView.wireless.batteryLevel}
+          <Heading renderAs="h3" headingLevel={3} className="mb-[16px]">
+            {i18n.app.menu.wireless}
+          </Heading>
+          <Callout size="sm" className="mt-4">
+            <p>{i18n.editor.standardView.wireless.callOut}</p>
+          </Callout>
+          <div className="keysButtonsList mt-1">
+            <Heading renderAs="h4" headingLevel={4}>
+              {i18n.editor.standardView.wireless.batteryPowerStatus}
+            </Heading>
+            <p className="text-sm font-medium text-gray-400 dark:text-gray-200">
+              {i18n.editor.standardView.wireless.batteryLevelDescription}
+            </p>
+            <Button
+              variant="config"
               onClick={() => {
                 onKeySelect(BatteryCodes.STATUS);
               }}
               selected={isStandardView ? keyCode === BatteryCodes.STATUS : false}
-              size={undefined}
-              tooltip={undefined}
-              tooltipPlacement={undefined}
-              tooltipClassName={undefined}
-              variation={undefined}
-              icoSVG={undefined}
-              icoPosition={undefined}
-              tooltipDelay={undefined}
-              disabled={undefined}
-              dataAnimate={undefined}
-            />
+              className="w-max-[124px] w-[124px] text-center mt-2"
+              size="sm"
+            >
+              {i18n.editor.standardView.wireless.batteryLevel}
+            </Button>
           </div>
           <div className="keysButtonsList">
-            <Title text={i18n.wireless.bluetooth.pairingMode} headingLevel={4} />
-            <p className="description">{i18n.wireless.bluetooth.pairingModeDescription}</p>
-            <ButtonConfig
-              buttonText={i18n.wireless.bluetooth.pair}
+            <Heading renderAs="h4" headingLevel={4}>
+              {i18n.wireless.bluetooth.pairingMode}
+            </Heading>
+            <p className="text-sm font-medium text-gray-400 dark:text-gray-200">
+              {i18n.wireless.bluetooth.pairingModeDescription}
+            </p>
+            <Button
+              variant="config"
               onClick={() => {
                 onKeySelect(BluetoothCodes.PAIRING);
               }}
               selected={isStandardView ? keyCode === BluetoothCodes.PAIRING : false}
-              size={undefined}
-              tooltip={undefined}
-              tooltipPlacement={undefined}
-              tooltipClassName={undefined}
-              variation={undefined}
-              icoSVG={undefined}
-              icoPosition={undefined}
-              tooltipDelay={undefined}
-              disabled={undefined}
-              dataAnimate={undefined}
-            />
+              className="w-max-[124px] w-[124px] text-center mt-2"
+              size="sm"
+            >
+              {i18n.wireless.bluetooth.pair}
+            </Button>
           </div>
         </div>
       </div>
-    </Styles>
+    </div>
   );
 }
 

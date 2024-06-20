@@ -5,12 +5,12 @@ import sendToRenderer from "../utils/sendToRenderer";
 const onDeviceAdded = (added_device_event: any, device: any) => {
   log.verbose("hid-device-added FIRED WITH", device.device);
   // Optionally update details.deviceList
-  if (device.device.vendorID === 13807) sendToRenderer("hid-connected", JSON.stringify(device.device));
+  if (device.device.vendorId === 13807) sendToRenderer("hid-connected", JSON.stringify(device.device));
 };
 
 const onDeviceRemove = (removed_device_event: any, device: any) => {
   log.verbose("hid-device-removed FIRED WITH", device.device);
-  if (device.device.vendorID === 13807) sendToRenderer("hid-disconnected", JSON.stringify(device.device));
+  if (device.device.vendorId === 13807) sendToRenderer("hid-disconnected", JSON.stringify(device.device));
 };
 
 const onDeviceSelect = (event: Event, details: any, callback: any) => {

@@ -16,19 +16,19 @@
 
 import React from "react";
 import { i18n } from "@Renderer/i18n";
-import OverlayTrigger from "react-bootstrap/OverlayTrigger";
-import Tooltip from "react-bootstrap/Tooltip";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@Renderer/components/atoms/Tooltip";
 
 // Custom components
-import { Card, CardContent, CardHeader, CardTitle } from "@Renderer/components/ui/card";
-import Heading from "@Renderer/components/ui/heading";
-import { RegularButton } from "@Renderer/component/Button";
+import { Card, CardContent, CardHeader, CardTitle } from "@Renderer/components/atoms/Card";
+import Heading from "@Renderer/components/atoms/Heading";
+import { Button } from "@Renderer/components/atoms/Button";
 
-import { ToggleButtons } from "@Renderer/component/ToggleButtons";
+import ToggleGroup from "@Renderer/components/molecules/CustomToggleGroup/ToggleGroup";
 
 // Assets
-import { IconSignal, IconRadar, IconInformationBubble, IconThunder } from "@Renderer/component/Icon";
-import { Badge } from "@Renderer/component/Badge";
+import { IconSignal, IconRadar, IconInformation, IconThunder } from "@Renderer/components/atoms/icons";
+// import { Badge } from "@Renderer/component/Badge";
+import { Badge } from "@Renderer/components/atoms/Badge";
 import { RFSettingsProps } from "@Renderer/types/wireless";
 
 function RFSettings(props: RFSettingsProps) {
@@ -65,15 +65,12 @@ function RFSettings(props: RFSettingsProps) {
           </CardTitle>
         </CardHeader>
         <CardContent className="py-0">
-          <Heading headingLevel={2} renderAs="h4">
+          <Heading headingLevel={2} renderAs="h4" className="mb-1">
             {i18n.wireless.RFPreferences.repairChannel}
           </Heading>
-          <RegularButton
-            buttonText={i18n.wireless.RFPreferences.reconnectSides}
-            onClick={sendRePair}
-            styles="outline gradient"
-            size="sm"
-          />
+          <Button onClick={sendRePair} size="sm" variant="secondary">
+            {i18n.wireless.RFPreferences.reconnectSides}
+          </Button>
           <div className="py-3 mb-2 text-sm font-normal tracking-tight text-gray-400 dark:text-gray-100">
             <p>{i18n.wireless.RFPreferences.repairChannelDescription}</p>
           </div>
@@ -85,27 +82,43 @@ function RFSettings(props: RFSettingsProps) {
             <div className="flex items-center gap-2">
               <IconRadar /> {i18n.wireless.RFPreferences.RFRadioSignal}
             </div>{" "}
-            <Badge content={i18n.wireless.energyManagement.settings.lowBatteryImpact} variation="subtle" size="sm" />
+            <Badge variant="subtle" size="sm">
+              {i18n.wireless.energyManagement.settings.lowBatteryImpact}
+            </Badge>
           </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="flex flex-row gap-2 items-center justify-between">
             <Heading headingLevel={2} renderAs="paragraph-sm" className="flex flex-row gap-2 items-center">
               {i18n.wireless.energyManagement.settings.manageRFSignal}
-              <OverlayTrigger
-                placement="top"
-                overlay={
-                  <Tooltip id="tooltip-top" className="">
-                    <div dangerouslySetInnerHTML={{ __html: i18n.wireless.energyManagement.settings.tooltipRF }} />
-                  </Tooltip>
-                }
-              >
-                <span className="text-purple-100">
-                  <IconInformationBubble />
-                </span>
-              </OverlayTrigger>
+              <TooltipProvider delayDuration={200}>
+                <Tooltip>
+                  <TooltipTrigger className="[&_svg]:text-purple-100 [&_svg]:dark:text-purple-200">
+                    <IconInformation />
+                  </TooltipTrigger>
+                  <TooltipContent className="max-w-xs">
+                    <>
+                      <p className="text-left">
+                        <strong>High</strong>
+                        <br />
+                        {i18n.wireless.energyManagement.settings.tooltipHighConsumptionMessage}
+                      </p>
+                      <p className="text-left">
+                        <strong>Medium</strong>
+                        <br />
+                        {i18n.wireless.energyManagement.settings.tooltipMediumConsumptionMessage}
+                      </p>
+                      <p className="text-left">
+                        <strong>Low</strong>
+                        <br />
+                        {i18n.wireless.energyManagement.settings.tooltipLowConsumptionMessage}
+                      </p>
+                    </>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
             </Heading>
-            <ToggleButtons selectDarkMode={setRfPower} value={wireless.rf.power} listElements={RFModes} styles="flex" size="sm" />
+            <ToggleGroup triggerFunction={setRfPower} value={wireless.rf.power} listElements={RFModes} variant="flex" size="sm" />
           </div>
           <div className="rounded-sm bg-gray-100/20 dark:bg-gray-900/20 py-3 px-3 mt-3">
             <p className="flex flex-row gap-2 items-center text-xs text-gray-300 dark:text-gray-100">
