@@ -34,7 +34,7 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@Renderer/components/atoms/Tabs";
 import { MacrosType } from "@Renderer/types/macros";
 import { SuperkeysType } from "@Renderer/types/superkeys";
-import { KeyType, SegmentedKeyType } from "@Renderer/types/layout";
+import { SegmentedKeyType } from "@Renderer/types/layout";
 import { KeymapDB } from "../../../api/keymap";
 
 const Styles = Styled.div`
@@ -233,7 +233,7 @@ interface StandardViewProps {
   isStandardView: boolean;
   kbtype: any;
   keyIndex: number;
-  layerData: KeyType[];
+  layerData: any[];
   macros: MacrosType[];
   onKeySelect: (keycode: number) => void;
   selectedlanguage: string;
