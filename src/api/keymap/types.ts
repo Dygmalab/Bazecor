@@ -22,7 +22,7 @@ export type LanguageType =
   | "en-US"
   | "en-GB"
   | "es-ES"
-  | "es-LA"
+  | "es-MX"
   | "de-DE"
   | "fr-FR"
   | "da-DK"

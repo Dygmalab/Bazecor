@@ -20,7 +20,7 @@
 import { withModifiers } from "../../db/utils";
 import { BaseKeycodeTableType, KeymapCodeTableType } from "../../types";
 
-const esLALetters: KeymapCodeTableType[] = [
+const esMXLetters: KeymapCodeTableType[] = [
   {
     code: 51,
     labels: {
@@ -30,7 +30,7 @@ const esLALetters: KeymapCodeTableType[] = [
   },
 ];
 
-const esLAModifierKeys: KeymapCodeTableType[] = [
+const esMXModifierKeys: KeymapCodeTableType[] = [
   {
     code: 45,
     labels: {
@@ -268,50 +268,50 @@ const altCtrlSpanish: BaseKeycodeTableType = {
 
 const altGrSpanish: BaseKeycodeTableType = altCtrlSpanish;
 
-const esLA = esLALetters.concat(esLAModifierKeys);
+const esMX = esMXLetters.concat(esMXModifierKeys);
 
-const table: BaseKeycodeTableType = { keys: esLA, groupName: "" };
-const tableWithoutModifier: BaseKeycodeTableType = { keys: esLALetters, groupName: "" };
+const table: BaseKeycodeTableType = { keys: esMX, groupName: "" };
+const tableWithoutModifier: BaseKeycodeTableType = { keys: esMXLetters, groupName: "" };
 
-const esLACtrlTable = withModifiers(table, "Control +", "C+", 256);
-const esLALAltTable = withModifiers(table, "Alt +", "A+", 512);
-const esLARAltTable = withModifiers(table, "AltGr +", "AGr+", 1024);
-const esLAShiftTable = withModifiers(tableWithoutModifier, "Shift +", "S+", 2048);
-const esLAGuiTable = withModifiers(table, "Os+", "O+", 4096);
+const esMXCtrlTable = withModifiers(table, "Control +", "C+", 256);
+const esMXLAltTable = withModifiers(table, "Alt +", "A+", 512);
+const esMXRAltTable = withModifiers(table, "AltGr +", "AGr+", 1024);
+const esMXShiftTable = withModifiers(tableWithoutModifier, "Shift +", "S+", 2048);
+const esMXGuiTable = withModifiers(table, "Os+", "O+", 4096);
 
 // Double
 
-const esLACATable = withModifiers(table, "Control + Alt +", "C+A+", 768);
-const esLACAGrTable = withModifiers(table, "Control + AltGr +", "C+AGr+", 1280);
-const esLACSTable = withModifiers(table, "Control + Shift +", "C+S+", 2304);
-const esLACGTable = withModifiers(table, "Control + Os +", "C+O+", 4352);
-const esLAAAGrTable = withModifiers(table, "Alt + AltGr +", "A+AGr+", 1536);
-const esLAASTable = withModifiers(table, "Alt + Shift +", "A+S+", 2560);
-const esLAAGTable = withModifiers(table, "Alt + Os +", "A+O+", 4608);
-const esLAAGrSTable = withModifiers(table, "AltGr + Shift +", "AGr+S+", 3072);
-const esLAAGrGTable = withModifiers(table, "AltGr + Os +", "AGr+O+", 5120);
-const esLASGTable = withModifiers(table, "Shift + Os +", "S+O+", 6144);
+const esMXCATable = withModifiers(table, "Control + Alt +", "C+A+", 768);
+const esMXCAGrTable = withModifiers(table, "Control + AltGr +", "C+AGr+", 1280);
+const esMXCSTable = withModifiers(table, "Control + Shift +", "C+S+", 2304);
+const esMXCGTable = withModifiers(table, "Control + Os +", "C+O+", 4352);
+const esMXAAGrTable = withModifiers(table, "Alt + AltGr +", "A+AGr+", 1536);
+const esMXASTable = withModifiers(table, "Alt + Shift +", "A+S+", 2560);
+const esMXAGTable = withModifiers(table, "Alt + Os +", "A+O+", 4608);
+const esMXAGrSTable = withModifiers(table, "AltGr + Shift +", "AGr+S+", 3072);
+const esMXAGrGTable = withModifiers(table, "AltGr + Os +", "AGr+O+", 5120);
+const esMXSGTable = withModifiers(table, "Shift + Os +", "S+O+", 6144);
 
 // Triple
 
-const esLACAAGTable = withModifiers(table, "Control + Alt + AltGr +", "C+A+AGr+", 1792);
-const esLACASTable = withModifiers(table, "Meh +", "Meh+", 2816);
-const esLACAGTable = withModifiers(table, "Control + Alt + Os +", "C+A+O+", 4864);
-const esLACAGSTable = withModifiers(table, "Control + AltGr + Shift +", "C+AGr+S+", 3328);
-const esLACAGGTable = withModifiers(table, "Control + AltGr + Os +", "C+AGr+O+", 5376);
-const esLACSGTable = withModifiers(table, "Control + Shift + Os +", "C+S+O+", 6400);
-const esLAAAGSTable = withModifiers(table, "Alt + AltGr + Shift +", "A+AGr+S+", 3584);
-const esLAAAGGTable = withModifiers(table, "Alt + AltGr + Os +", "A+AGr+O+", 5632);
-const esLAASGTable = withModifiers(table, "Alt + Shift + Os +", "A+S+O+", 6656);
-const esLAAGSGTable = withModifiers(table, "AltGr + Shift + Os +", "AGr+S+O+", 7168);
+const esMXCAAGTable = withModifiers(table, "Control + Alt + AltGr +", "C+A+AGr+", 1792);
+const esMXCASTable = withModifiers(table, "Meh +", "Meh+", 2816);
+const esMXCAGTable = withModifiers(table, "Control + Alt + Os +", "C+A+O+", 4864);
+const esMXCAGSTable = withModifiers(table, "Control + AltGr + Shift +", "C+AGr+S+", 3328);
+const esMXCAGGTable = withModifiers(table, "Control + AltGr + Os +", "C+AGr+O+", 5376);
+const esMXCSGTable = withModifiers(table, "Control + Shift + Os +", "C+S+O+", 6400);
+const esMXAAGSTable = withModifiers(table, "Alt + AltGr + Shift +", "A+AGr+S+", 3584);
+const esMXAAGGTable = withModifiers(table, "Alt + AltGr + Os +", "A+AGr+O+", 5632);
+const esMXASGTable = withModifiers(table, "Alt + Shift + Os +", "A+S+O+", 6656);
+const esMXAGSGTable = withModifiers(table, "AltGr + Shift + Os +", "AGr+S+O+", 7168);
 
 // Quad
 
-const esLACAAGrSTable = withModifiers(table, "Meh + AltGr +", "M+AGr+", 3840);
-const esLACAAGrGTable = withModifiers(table, "Control + Alt + AltGr + Os +", "C+A+AGr+O+", 5888);
-const esLACAGrSGTable = withModifiers(table, "Control + AltGr + Shift + Os +", "C+AGr+S+O+", 7424);
-const esLAAAGrSGTable = withModifiers(table, "Alt + AltGr + Shift + Os +", "A+AGr+S+O+", 7680);
-const esLAAllModTable = withModifiers(table, "Hyper + AltGr +", "H+AGr+", 7936);
+const esMXCAAGrSTable = withModifiers(table, "Meh + AltGr +", "M+AGr+", 3840);
+const esMXCAAGrGTable = withModifiers(table, "Control + Alt + AltGr + Os +", "C+A+AGr+O+", 5888);
+const esMXCAGrSGTable = withModifiers(table, "Control + AltGr + Shift + Os +", "C+AGr+S+O+", 7424);
+const esMXAAGrSGTable = withModifiers(table, "Alt + AltGr + Shift + Os +", "A+AGr+S+O+", 7680);
+const esMXAllModTable = withModifiers(table, "Hyper + AltGr +", "H+AGr+", 7936);
 
 const DualUseCtrlTable = withModifiers(table, "Control /", "CTRL/", 49169);
 const DualUseShiftTable = withModifiers(table, "Shift /", "SHIFT/", 49425);
@@ -327,41 +327,41 @@ const DualUseLayer6Tables = withModifiers(table, "Layer #6 /", "L#6/", 52498);
 const DualUseLayer7Tables = withModifiers(table, "Layer #7 /", "L#7/", 52754);
 const DualUseLayer8Tables = withModifiers(table, "Layer #8 /", "L#8/", 53010);
 
-const esLAModifiedTables = [
+const esMXModifiedTables = [
   shiftModifierSpanish,
-  esLACtrlTable,
-  esLALAltTable,
-  esLARAltTable,
+  esMXCtrlTable,
+  esMXLAltTable,
+  esMXRAltTable,
   altGrSpanish,
-  esLAShiftTable,
-  esLAGuiTable,
-  esLACATable,
+  esMXShiftTable,
+  esMXGuiTable,
+  esMXCATable,
   altCtrlSpanish,
-  esLACAGrTable,
-  esLACSTable,
-  esLACGTable,
-  esLAASTable,
-  esLAAGTable,
-  esLAAAGrTable,
-  esLASGTable,
-  esLAAGrSTable,
-  esLAAGrGTable,
-  esLACAAGTable,
-  esLACASTable,
-  esLACAGTable,
-  esLACAGSTable,
-  esLACAGGTable,
-  esLACSGTable,
-  esLAAAGSTable,
-  esLAAAGGTable,
-  esLAASGTable,
-  esLAAGSGTable,
-  esLACAAGrSTable,
-  esLACAAGrGTable,
+  esMXCAGrTable,
+  esMXCSTable,
+  esMXCGTable,
+  esMXASTable,
+  esMXAGTable,
+  esMXAAGrTable,
+  esMXSGTable,
+  esMXAGrSTable,
+  esMXAGrGTable,
+  esMXCAAGTable,
+  esMXCASTable,
+  esMXCAGTable,
+  esMXCAGSTable,
+  esMXCAGGTable,
+  esMXCSGTable,
+  esMXAAGSTable,
+  esMXAAGGTable,
+  esMXASGTable,
+  esMXAGSGTable,
+  esMXCAAGrSTable,
+  esMXCAAGrGTable,
   withModifiers(table, "Hyper +", "Hyper+", 6912),
-  esLACAGrSGTable,
-  esLAAAGrSGTable,
-  esLAAllModTable,
+  esMXCAGrSGTable,
+  esMXAAGrSGTable,
+  esMXAllModTable,
   DualUseCtrlTable,
   DualUseShiftTable,
   DualUseAltTable,
@@ -377,4 +377,4 @@ const esLAModifiedTables = [
   DualUseLayer8Tables,
 ];
 
-export { esLA, esLAModifiedTables };
+export { esMX, esMXModifiedTables };
