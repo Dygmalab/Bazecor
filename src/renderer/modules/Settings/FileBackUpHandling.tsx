@@ -67,7 +67,7 @@ const FileBackUpHandling = () => {
   const onSetStoreBackups = (value: number[]) => {
     // console.log("changed backup period to: ", value);
     setStoreBackups(value[0]);
-    store.set("settings.backupFrequency", value);
+    store.set("settings.backupFrequency", value[0]);
   };
 
   return (
