@@ -148,14 +148,14 @@ const shiftModifierSpanish: BaseKeycodeTableType = {
     {
       code: 2093,
       labels: {
-        primary: "'",
+        primary: "?",
       },
       newGroupName: "Shifted Digits",
     },
     {
       code: 2094,
       labels: {
-        primary: "¿",
+        primary: "¡",
       },
       newGroupName: "Shifted Digits",
     },
@@ -266,7 +266,47 @@ const altCtrlSpanish: BaseKeycodeTableType = {
   ],
 };
 
-const altGrSpanish: BaseKeycodeTableType = altCtrlSpanish;
+const altGrSpanish: BaseKeycodeTableType = {
+  groupName: "AltCtrl Spanish",
+  keys: [
+    {
+      code: 1044,
+      labels: {
+        primary: "@",
+      },
+    },
+    {
+      code: 1069,
+      labels: {
+        primary: "\\",
+      },
+    },
+    {
+      code: 1072,
+      labels: {
+        primary: "~",
+      },
+    },
+    {
+      code: 1073,
+      labels: {
+        primary: "`",
+      },
+    },
+    {
+      code: 1076,
+      labels: {
+        primary: "^",
+      },
+    },
+    {
+      code: 1077,
+      labels: {
+        primary: "¬",
+      },
+    },
+  ],
+};
 
 const esMX = esMXLetters.concat(esMXModifierKeys);
 
