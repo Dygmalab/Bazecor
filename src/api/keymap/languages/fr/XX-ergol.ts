@@ -17,7 +17,7 @@
 /**
  * Is an Array of objects of values that have to be modified.
  */
-import { withModifiers, ModifierCodes } from "../../db/utils";
+import { withModifiers } from "../../db/utils";
 import { BaseKeycodeTableType, KeymapCodeTableType } from "../../types";
 
 const symbols: KeymapCodeTableType[] = [
