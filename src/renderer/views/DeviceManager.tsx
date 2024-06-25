@@ -350,7 +350,7 @@ const DeviceManager = (props: DeviceManagerProps) => {
               <div className="devices-container">
                 <SortableList
                   onSortEnd={onSortEnd}
-                  className="list devices-scroll relative w-full grid grid-cols-1 lg:grid-cols-2 gap-4"
+                  className="list devices-scroll relative w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-3 gap-4 pb-4"
                   draggedItemClassName="dragged"
                 >
                   {devicesList.map(item => (
@@ -382,7 +382,7 @@ const DeviceManager = (props: DeviceManagerProps) => {
               <div className="devices-container">
                 <AnimatePresence mode="popLayout">
                   <motion.div initial={{ opacity: 0, y: -50 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -50 }}>
-                    <div className="list devices-scroll relative w-full grid grid-cols-1 lg:grid-cols-2 gap-4">
+                    <div className="list devices-scroll relative w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-3 gap-4 pb-4">
                       <NoDeviceFound />
                       <CardAddDevice addVirtualDevice={addVirtualDevice} scanDevices={scanDevices} ref={ref} />
                     </div>
@@ -391,6 +391,7 @@ const DeviceManager = (props: DeviceManagerProps) => {
               </div>
             )}
           </div>
+          <HelpSupportLink />
         </div>
       </div>
 
@@ -421,9 +422,6 @@ const DeviceManager = (props: DeviceManagerProps) => {
         setOpenDialogVirtualKB={setOpenDialogVirtualKB}
         showButton={false}
       />
-      <div className="absolute bottom-0 right-0">
-        <HelpSupportLink />
-      </div>
     </div>
   );
 };

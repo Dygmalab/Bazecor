@@ -45,7 +45,7 @@ const CardDevice = forwardRef<HTMLDivElement, CardDeviceProps>((props, ref) => {
   return (
     <div
       ref={ref}
-      className={`card-device select-none flex flex-col relative p-0 rounded-[24px] border-2 border-solid bg-cardDeviceTextureLight dark:bg-cardDeviceTextureDark  bg-no-repeat bg-right-top bg-cover overflow-hidden ${
+      className={`card-device select-none flex flex-col relative p-0 rounded-[24px] border-2 border-solid bg-cardDeviceTextureLight dark:bg-cardDeviceTextureDark bg-no-repeat bg-right-top bg-cover overflow-hidden min-h-min h-full ${
         device.connected
           ? "card-connected border-purple-300 dark:border-green-200"
           : "card-disconnected border-gray-100 dark:border-gray-600"
