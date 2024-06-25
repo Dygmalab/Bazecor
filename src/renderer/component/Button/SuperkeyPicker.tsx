@@ -198,8 +198,8 @@ function SuperkeyPicker(props: SuperkeyPickerProps) {
     if (aux.extraLabel === "MACRO") {
       const macroID = superkeys[selected].actions[index] - 53852;
       // console.log("checking macroID", macroID);
-      if (macros.length > macroID && macros[macroID].name.substr(0, 5) !== "") {
-        setKeyContent((aux.label = macros[macroID].name.substr(0, 5).toLowerCase()));
+      if (macros.length > macroID && macros[macroID]?.name?.substr(0, 5) !== "") {
+        setKeyContent((aux.label = macros[macroID]?.name?.substr(0, 5).toLowerCase()));
         return;
       }
       setKeyContent(`${aux.extraLabel} ${aux.label}`);
