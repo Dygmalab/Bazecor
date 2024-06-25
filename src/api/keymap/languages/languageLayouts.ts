@@ -91,6 +91,7 @@ import { jaJP, jaJPModifiedTables } from "./ja/JP";
 import { koKR, koKRModifiedTables } from "./ko/KR";
 import { plPL, plPLModifiedTables } from "./pl/PL";
 import { deCH, deCHModifiedTables } from "./de/CH";
+import { esMX, esMXModifiedTables } from "./es/MX";
 
 // Dygma - Layouts (community/third-party)
 import { enXXeurkey, enXXeurkeyModifiedTables } from "./en/XX-eurkey";
@@ -103,6 +104,7 @@ const supportModifiedTables = {
   // Keycaps
   "en-GB": enGBModifiedTables,
   "es-ES": esESModifiedTables,
+  "es-MX": esMXModifiedTables,
   "de-DE": deDEModifiedTables,
   "fr-FR": frFRModifiedTables,
   "da-DK": daDKModifiedTables,
@@ -129,6 +131,7 @@ const languages: {
   "en-US": undefined,
   "en-GB": enGB,
   "es-ES": esES,
+  "es-MX": esMX,
   "de-DE": deDE,
   "fr-FR": frFR,
   "da-DK": daDK,

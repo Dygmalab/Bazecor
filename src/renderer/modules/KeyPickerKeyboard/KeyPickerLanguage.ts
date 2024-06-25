@@ -71,6 +71,7 @@ import enXXeurkey from "@Renderer/modules/KeyPickerKeyboard/languages/en/XX-eurk
 import frXXbepo from "@Renderer/modules/KeyPickerKeyboard/languages/fr/XX-bepo.json";
 import frXXoptimot from "@Renderer/modules/KeyPickerKeyboard/languages/fr/XX-optimot.json";
 import frXXergol from "@Renderer/modules/KeyPickerKeyboard/languages/fr/XX-ergol.json";
+import esMX from "@Renderer/modules/KeyPickerKeyboard/languages/es/MX.json";
 
 const languages = {
   // Keycaps
@@ -89,6 +90,7 @@ const languages = {
   "ko-KR": koKR,
   "pl-PL": plPL,
   "de-CH": deCH,
+  "es-MX": esMX,
   // Community
   "en-XX-eurkey": enXXeurkey,
   "fr-XX-bepo": frXXbepo,
@@ -100,6 +102,7 @@ type LangOptions =
   | "en-US"
   | "en-GB"
   | "es-ES"
+  | "es-MX"
   | "de-DE"
   | "fr-FR"
   | "da-DK"
