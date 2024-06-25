@@ -1576,6 +1576,8 @@ const LayoutEditor = (props: LayoutEditorProps) => {
 
   const onToggleStandardView = () => {
     setIsStandardView(!isStandardView);
+    setCurrentKeyIndex(-1);
+    setCurrentLedIndex(-1);
     setViewMode(!isStandardView ? "standard" : "single");
   };
 
