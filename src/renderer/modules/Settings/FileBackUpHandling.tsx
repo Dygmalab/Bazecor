@@ -58,7 +58,7 @@ const FileBackUpHandling = () => {
     const resp = await ipcRenderer.invoke("open-dialog", options);
 
     if (!resp.canceled) {
-      // console.log(resp.filePaths);
+      // log.info(resp.filePaths);
       setBackupFolder(resp.filePaths[0]);
       store.set("settings.backupFolder", `${resp.filePaths[0]}`);
       toast.success(
@@ -70,12 +70,12 @@ const FileBackUpHandling = () => {
         { autoClose: 2000, icon: "", toastId: "backupPath" },
       );
     } else {
-      // console.log("user closed backup folder dialog");
+      // log.info("user closed backup folder dialog");
     }
   };
 
   const onSetStoreBackups = (value: number[]) => {
-    // console.log("changed backup period to: ", value);
+    // log.info("changed backup period to: ", value);
     setStoreBackups(value[0]);
     store.set("settings.backupFrequency", value[0]);
     toast.success(
