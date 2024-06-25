@@ -63,7 +63,7 @@ const DualFunctionPicker = (props: DualFunctionPickerProps) => {
       <Heading headingLevel={4} renderAs="h4" className="!text-3xxs">
         Add Dual-function
       </Heading>
-      <div className="dropdwonsGroup grid grid-cols-2 gap-1">
+      <div className="dropdownsGroup grid grid-cols-2 gap-1">
         <Select
           value={String(keyCode.base + keyCode.modified)}
           onValueChange={value => onKeySelect(parseInt(value, 10) + keyCode.base)}
