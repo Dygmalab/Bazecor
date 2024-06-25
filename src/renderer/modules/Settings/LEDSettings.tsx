@@ -287,7 +287,6 @@ function LEDSettings(props: LEDSettingsPreferences) {
                 </span>
                 {`It's essential to note that LEDs can significantly impact battery consumption. To optimize battery life when using
                 your device wirelessly, you can finely adjust LED intensity.`}
-                `
               </p>
             </div>
           </>
