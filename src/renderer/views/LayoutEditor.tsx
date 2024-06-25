@@ -152,7 +152,7 @@ const Styles = Styled.div`
 }
 .singleViewMode.keyboard .raiseKeyboard {
   margin: 0 auto;
-  max-height: 45vh;
+  max-height: 49vh;
 }
 
 .NeuronLine {
