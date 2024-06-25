@@ -46,6 +46,26 @@ interface KeyMacroProps {
   theme: DefaultTheme;
 }
 
+interface OSIconProps {
+  system: string;
+  direction: string;
+}
+
+const OSIcon: React.FC<OSIconProps> = ({ system, direction }) => {
+  if (system === "win32")
+    return (
+      <span>
+        {direction} <AiFillWindows size={16} />
+      </span>
+    );
+  if (system === "darwin") return <span>{direction} ⌘</span>;
+  return (
+    <span>
+      {direction} <FaLinux size={16} />
+    </span>
+  );
+};
+
 const KeyMacro: React.FC<KeyMacroProps> = ({
   provided,
   snapshot,
@@ -72,29 +92,7 @@ const KeyMacro: React.FC<KeyMacroProps> = ({
     [theme.styles.macroKey],
   );
 
-  // const shadeColor = useCallback((color: string, percent: number) => {
-  //   if (color === "transparent") {
-  //     return color;
-  //   }
-  //   let R = parseInt(color.substring(1, 3), 16);
-  //   let G = parseInt(color.substring(3, 5), 16);
-  //   let B = parseInt(color.substring(5, 7), 16);
-
-  //   R = parseInt((R * (100 - percent)) / 100, 10);
-  //   G = parseInt((G * (100 - percent)) / 100, 10);
-  //   B = parseInt((B * (100 - percent)) / 100, 10);
-
-  //   R = Math.round((R * 255) / (R + 5));
-  //   G = Math.round((G * 255) / (G + 5));
-  //   B = Math.round((B * 255) / (B + 5));
-
-  //   const RR = R.toString(16).length === 1 ? `0${R.toString(16)}` : R.toString(16);
-  //   const GG = G.toString(16).length === 1 ? `0${G.toString(16)}` : G.toString(16);
-  //   const BB = B.toString(16).length === 1 ? `0${B.toString(16)}` : B.toString(16);
-
-  //   return `#${RR}${GG}${BB}`;
-  // }, []);
-
+  // const operationSystem = "win32";
   const operationSystem = process.platform;
   const operationSystemIcons = useMemo(() => {
     if (operationSystem === "darwin") {
@@ -248,12 +246,8 @@ const KeyMacro: React.FC<KeyMacroProps> = ({
                               {modifier.name === "RIGHT CTRL" ? `R. ${operationSystemIcons.control}` : ""}
                               {modifier.name === "LEFT ALT" ? operationSystemIcons.alt : ""}
                               {modifier.name === "RIGHT ALT" ? operationSystemIcons.altGr : ""}
-                              {modifier.name === "LEFT OS"
-                                ? `L. ${operationSystemIcons.os.text ? operationSystemIcons.os.text : operationSystemIcons.os.icon}`
-                                : ""}
-                              {modifier.name === "RIGHT OS"
-                                ? `R. ${operationSystemIcons.os.text ? operationSystemIcons.os.text : operationSystemIcons.os.icon}`
-                                : ""}
+                              {modifier.name === "LEFT OS" ? <OSIcon system={operationSystem} direction="L." /> : ""}
+                              {modifier.name === "RIGHT OS" ? <OSIcon system={operationSystem} direction="R." /> : ""}
                             </Button>
                           ))}
                         </div>
