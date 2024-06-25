@@ -113,10 +113,15 @@ interface ExtendedPort extends PortInfo {
   device: DygmaDeviceType;
 }
 
-const enumerate = async (bootloader: boolean, searchDevice?: USBDevice, existingIDs?: string[]): Promise<ExtendedPort[]> => {
+const enumerate = async (
+  bootloader: boolean,
+  searchDevice?: USBDevice,
+  existingIDs?: string[],
+): Promise<{ foundDevices: ExtendedPort[]; validDevices: string[] }> => {
   const serialDevices: PortInfo[] = await SerialPort.list();
 
   const foundDevices = [];
+  const validDevices: string[] = [];
   const hw = bootloader ? Hardware.bootloader : Hardware.serial;
 
   if (searchDevice !== undefined && existingIDs !== undefined) {
@@ -140,7 +145,7 @@ const enumerate = async (bootloader: boolean, searchDevice?: USBDevice, existing
         foundDevices.push(newPort);
       }
     }
-    return foundDevices;
+    return { foundDevices, validDevices };
   }
 
   if (searchDevice === undefined && existingIDs !== undefined) {
@@ -163,8 +168,10 @@ const enumerate = async (bootloader: boolean, searchDevice?: USBDevice, existing
         newPort.device.chipId = supported.chipId;
         foundDevices.push(newPort);
       }
+      if ([0x35ef, 0x1209].includes(vID) && existingIDs.includes(device.serialNumber.toLowerCase()))
+        validDevices.push(device.serialNumber.toLowerCase());
     }
-    return foundDevices;
+    return { foundDevices, validDevices };
   }
 
   log.info("SerialPort enumerating devices:", serialDevices);
@@ -182,7 +189,7 @@ const enumerate = async (bootloader: boolean, searchDevice?: USBDevice, existing
       }
     }
   }
-  return foundDevices;
+  return { foundDevices, validDevices };
 };
 
 const find = async (): Promise<ExtendedPort[]> => {

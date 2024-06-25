@@ -105,10 +105,10 @@ const DeviceManager = (props: DeviceManagerProps) => {
     setLoading(true);
     if (connected || state.deviceList.length > 0) {
       const toShowDevs: DeviceListType[] = [];
-      let newDeviceList = state.deviceList;
       const existingIDs = state.deviceList.map(d => d.serialNumber.toLowerCase());
-      const newDevs = await DeviceTools.listNonConnected(false, existingIDs);
-      newDeviceList = newDeviceList.concat(newDevs);
+      const result = await DeviceTools.listNonConnected(false, existingIDs);
+      let newDeviceList = state.deviceList.filter(x => !result.devicesToRemove.includes(x.serialNumber.toLowerCase()));
+      newDeviceList = newDeviceList.concat(result.finalDevices);
       dispatch({ type: "addDevicesList", payload: newDeviceList });
       log.info("Available Devices: ", newDeviceList);
       newDeviceList.forEach((item, index) => {
@@ -258,7 +258,7 @@ const DeviceManager = (props: DeviceManagerProps) => {
   }, [findKeyboards, scanned]);
 
   useEffect(() => {
-    console.log("ref: ", ref.current);
+    // log.info("ref: ", ref.current);
     if (isInView) {
       log.warn("Is visible");
     } else {
