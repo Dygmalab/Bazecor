@@ -41,7 +41,7 @@ const store = Store.getStore();
 
 interface DeviceManagerProps {
   onConnect: (...args: any[]) => any;
-  onDisconnect: () => Promise<void>;
+  onDisconnect: () => void;
   connected: boolean;
   device: Device;
   darkMode: boolean;
