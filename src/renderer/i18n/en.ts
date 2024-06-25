@@ -41,6 +41,10 @@ const English = {
     preferencesSavedBody: "",
     changesSaved: "Changes saved successfully",
     changesSavedContent: "Your changes were saved successfully on the device!",
+    backupStoragePeriod: "Updated the storage period!!",
+    backupStoragePeriodText: "The storage period was changed to",
+    backupPath: "Backup path updated",
+    backupPathText: "The new path is:",
   },
   components: {
     layer: "Layer {0}",
