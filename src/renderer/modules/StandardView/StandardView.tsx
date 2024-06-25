@@ -277,6 +277,7 @@ export default class StandardView extends React.Component<StandardViewProps, Sta
   };
 
   onAddSpecial = (keycode: number) => {
+    log.info("added Special!", keycode);
     this.updateSelected(keycode);
   };
 
@@ -345,7 +346,6 @@ export default class StandardView extends React.Component<StandardViewProps, Sta
       isStandardView,
       kbtype,
       keyIndex,
-      layerData,
       macros,
       selectedlanguage,
       showStandardView,
@@ -355,16 +355,16 @@ export default class StandardView extends React.Component<StandardViewProps, Sta
     const { stateCode, selected, currentTab } = this.state;
     let keyCode: number;
     if (actTab === "super") {
-      keyCode = keyIndex !== -1 ? layerData[keyIndex].keyCode : 0;
+      keyCode = selected;
     } else {
       keyCode = selected;
     }
     const selKey = this.parseKey(keyCode);
     const oldKey = this.parseKey(stateCode);
     if (!showStandardView) return null;
-    log.info(
-      `StandardView statecode:${stateCode} selected:${selected} currentTab: ${currentTab} selKey: ${selKey} oldKey: ${oldKey}`,
-    );
+    // log.info(
+    //   `StandardView statecode:${stateCode} selected:${selected} actTab: ${actTab} currentTab: ${currentTab} selKey: ${selKey} oldKey: ${oldKey}`,
+    // );
 
     const tabVariants = {
       hidden: { opacity: 0 },
