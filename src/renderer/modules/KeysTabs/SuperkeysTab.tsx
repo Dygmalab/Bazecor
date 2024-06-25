@@ -148,8 +148,8 @@ class SuperkeysTab extends Component<SuperkeysTabProps> {
 
     if (aux.extraLabel === "MACRO") {
       const { macros } = this.props;
-      if (macros.length > parseInt(aux.label, 10) && macros[parseInt(aux.label, 10)].name.substr(0, 5) !== "") {
-        translatedAction = aux.label + macros[parseInt(aux.label, 10)].name.substr(0, 5).toLowerCase();
+      if (macros.length > parseInt(aux.label, 10) && macros[parseInt(aux.label, 10)]?.name?.substr(0, 5) !== "") {
+        translatedAction = `${aux.label} ${macros[parseInt(aux.label, 10)]?.name?.substr(0, 5).toLowerCase()}`;
       }
     }
     if (aux.label) {
