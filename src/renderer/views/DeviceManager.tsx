@@ -41,7 +41,7 @@ const store = Store.getStore();
 
 interface DeviceManagerProps {
   onConnect: (...args: any[]) => any;
-  onDisconnect: () => void;
+  onDisconnect: () => Promise<void>;
   connected: boolean;
   device: Device;
   darkMode: boolean;
@@ -169,7 +169,7 @@ const DeviceManager = (props: DeviceManagerProps) => {
       case "connect":
         if (connected && deviceNumber !== state.selected) {
           setSelectedDevice(deviceNumber);
-          handleOnDisconnectConnect(deviceNumber);
+          await handleOnDisconnectConnect(deviceNumber);
         } else {
           setSelectedDevice(deviceNumber);
           await onKeyboardConnect(deviceNumber);
@@ -282,7 +282,7 @@ const DeviceManager = (props: DeviceManagerProps) => {
   log.info("Current State: ", devicesList, selectedDevice);
 
   return (
-    <div className="h-full">
+    <div className="h-full relative flex flex-col justify-center">
       <div className="px-3 h-full">
         <div className="view-wrapper--devices flex h-[inherit] flex-col">
           <PageHeader
@@ -345,12 +345,12 @@ const DeviceManager = (props: DeviceManagerProps) => {
               ) : null}
             </div> */}
           </div>
-          <div className="flex gap-4 relative">
+          <div className="flex gap-4 relative h-full">
             {devicesList?.length > 0 ? (
               <div className="devices-container">
                 <SortableList
                   onSortEnd={onSortEnd}
-                  className="list devices-scroll relative w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 pb-4"
+                  className="list devices-scroll relative w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-3 gap-4 pb-4"
                   draggedItemClassName="dragged"
                 >
                   {devicesList.map(item => (
@@ -382,7 +382,7 @@ const DeviceManager = (props: DeviceManagerProps) => {
               <div className="devices-container">
                 <AnimatePresence mode="popLayout">
                   <motion.div initial={{ opacity: 0, y: -50 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -50 }}>
-                    <div className="list devices-scroll relative w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 pb-4">
+                    <div className="list devices-scroll relative w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-3 gap-4 pb-4">
                       <NoDeviceFound />
                       <CardAddDevice addVirtualDevice={addVirtualDevice} scanDevices={scanDevices} ref={ref} />
                     </div>
