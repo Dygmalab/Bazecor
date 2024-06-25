@@ -98,7 +98,7 @@ export const reconnect = async (context: Context.ContextType) => {
   try {
     const foundDevices = async (isBootloader: boolean) => {
       let result: Device | undefined;
-      const devices = await DeviceTools.enumerateSerial(false);
+      const devices = (await DeviceTools.enumerateSerial(false)).foundDevices;
 
       for (const device of devices) {
         if (

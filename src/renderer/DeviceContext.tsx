@@ -199,7 +199,7 @@ const listNonConnected = async (bootloader: boolean, existingIDs: string[]) => {
 
 const currentSerialN = async (existingIDs: string[]) => {
   const result: string[] = [];
-  const SN = (await serial.enumerate(false)).foundDevices.map(port => port.serialNumber.toLowerCase());
+  const SN = (await serial.enumerate(false)).foundDevices.map(port => port?.serialNumber?.toLowerCase());
   existingIDs.forEach(id => {
     if (!SN.includes(id.toLowerCase())) result.push(id.toLowerCase());
   });
