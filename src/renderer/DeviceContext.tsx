@@ -148,7 +148,7 @@ const enumerateSerial = async (bootloader: boolean) => {
 };
 
 const enumerateDevice = async (bootloader: boolean, device: USBDevice, existingIDs: string[]) => {
-  const dev = await serial.enumerate(bootloader, device, existingIDs);
+  const dev = (await serial.enumerate(bootloader, device, existingIDs)).foundDevices;
   // log.info("Data from enum dev:", dev, bootloader, existingIDs);
   const newDevice = dev.map(d => new Device(d, "serial"));
 
@@ -168,12 +168,19 @@ const enumerateDevice = async (bootloader: boolean, device: USBDevice, existingI
   return newDevice;
 };
 
+/**
+ * Lists the non connected devices, thus excluding from the search any that already figure as connected.
+ * @param bootloader Boolean value that identifies the type of keyobard being searched for.
+ * @param existingIDs The list of ID's that are already present on the device manager devices list and thus have to be avoided.
+ */
 const listNonConnected = async (bootloader: boolean, existingIDs: string[]) => {
   const finalDevices: Array<Device> = [];
+  const devicesToRemove: Array<string> = [];
 
   // Gathering SerialPort Devices
-  const ports = await serial.enumerate(bootloader, undefined, existingIDs);
-  ports.map(dev => finalDevices.push(new Device(dev, "serial")));
+  const result = await serial.enumerate(bootloader, undefined, existingIDs);
+  result.foundDevices.map(dev => finalDevices.push(new Device(dev, "serial")));
+  existingIDs.forEach(d => (result.validDevices.includes(d) ? undefined : devicesToRemove.push(d)));
   // log.info("Data from enum dev:", dev, bootloader, existingIDs);
 
   // Gathering HID Devices
@@ -187,12 +194,12 @@ const listNonConnected = async (bootloader: boolean, existingIDs: string[]) => {
     if (connected && supported && !existingIDs.includes(hid.serialNumber)) finalDevices.push(new Device(hid, "hid"));
   }
 
-  return finalDevices;
+  return { finalDevices, devicesToRemove };
 };
 
 const currentSerialN = async (existingIDs: string[]) => {
   const result: string[] = [];
-  const SN = (await serial.enumerate(false)).map(port => port.serialNumber.toLowerCase());
+  const SN = (await serial.enumerate(false)).foundDevices.map(port => port?.serialNumber?.toLowerCase());
   existingIDs.forEach(id => {
     if (!SN.includes(id.toLowerCase())) result.push(id.toLowerCase());
   });

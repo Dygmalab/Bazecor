@@ -12,7 +12,11 @@ import {
 
 interface SerialType {
   find: () => Promise<ExtendedPort[]>;
-  enumerate: (bootloader: boolean, device?: USBDevice, existingIDs?: string[]) => Promise<ExtendedPort[]>;
+  enumerate: (
+    bootloader: boolean,
+    device?: USBDevice,
+    existingIDs?: string[],
+  ) => Promise<{ foundDevices: ExtendedPort[]; validDevices: string[] }>;
   connect: ConnectType;
   checkProperties: (path: string) => Promise<SerialProperties>;
 }

@@ -12,7 +12,7 @@ export const findDevice = async (
   log.info("Going to list devices");
   let devices = Hardware[deviceType] as DygmaDeviceType[];
   const bootloader = deviceType === "bootloader";
-  let list: ExtendedPort[] = (await DeviceTools.enumerateSerial(bootloader)) as ExtendedPort[];
+  const list: ExtendedPort[] = (await DeviceTools.enumerateSerial(bootloader)).foundDevices as ExtendedPort[];
   if (deviceType === "serial" && desiredDevice?.info.keyboardType !== undefined) devices = [desiredDevice];
   log.verbose("List of Devices: ", list);
   const detected = list.find(dev => {
@@ -23,7 +23,7 @@ export const findDevice = async (
         `Dev bootloader: ${dev.device.bootloader} & HW: ${bootloader}, Dev KBType: ${device.info.keyboardType} & HW: ${dev.device.info.keyboardType}`,
       );
       if (
-        bootloader
+        found !== true && bootloader
           ? dev.device.bootloader !== undefined &&
             dev.device.bootloader === bootloader &&
             device.usb.vendorId === dev.device.usb.vendorId &&
@@ -33,7 +33,6 @@ export const findDevice = async (
             device.info.keyboardType === dev.device.info.keyboardType
       ) {
         found = true;
-        return;
       }
     });
     return found;

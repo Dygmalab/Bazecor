@@ -57,7 +57,7 @@ class FlashDefyWireless {
   async foundDevices(hardware: any, message: string, bootloader: boolean) {
     let isFindDevice = false;
     log.info("Going to list devices");
-    const list = (await DeviceTools.enumerateSerial(true)) as Device[];
+    const list = (await DeviceTools.enumerateSerial(true)).foundDevices as Device[];
     log.verbose("List of Devices: ", list);
     const detected = list.find(device => {
       log.info(
