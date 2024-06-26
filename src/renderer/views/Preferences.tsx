@@ -150,7 +150,18 @@ const Preferences = (props: PreferencesProps) => {
   const [preferencesState, setPreferencesState] = useState<PrefState>(initialPreferences);
 
   // Destructuring PROPS
-  const { connected, allowBeta, updateAllowBetas, startContext, cancelContext, toggleDarkMode, toggleBackup, setLoading } = props;
+  const {
+    connected,
+    allowBeta,
+    updateAllowBetas,
+    autoUpdate,
+    updateAutoUpdate,
+    startContext,
+    cancelContext,
+    toggleDarkMode,
+    toggleBackup,
+    setLoading,
+  } = props;
   const [activeTab, setActiveTab] = useState(connected ? "Keyboard" : "Application");
 
   const getNeuronData = useCallback(async () => {
@@ -784,6 +795,8 @@ const Preferences = (props: PreferencesProps) => {
                     onChangeVerbose={onChangeVerbose}
                     allowBeta={allowBeta}
                     onChangeAllowBetas={updateAllowBetas}
+                    autoUpdate={autoUpdate}
+                    onChangeAutoUpdate={updateAutoUpdate}
                   />
                 </motion.div>
               </TabsContent>

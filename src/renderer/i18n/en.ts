@@ -500,6 +500,7 @@ const English = {
     verboseFocus: "Verbose logging",
     onlyCustom: "Use only custom layers",
     allowBeta: "Show Beta firmwares",
+    autoUpdate: "Enable AutoUpdate",
     darkMode: {
       label: "Appearance",
       light: "Light",

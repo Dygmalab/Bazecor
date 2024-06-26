@@ -59,6 +59,7 @@ function App() {
   const [pages, setPages] = useState({});
   const [contextBar, setContextBar] = useState(false);
   const [allowBeta, setAllowBeta] = useState(false);
+  const [autoUpdate, setAutoUpdate] = useState(undefined);
   const [darkMode, setDarkMode] = useState(false);
 
   const [connected, setConnected] = useState(false);
@@ -141,12 +142,18 @@ function App() {
         store.set("settings.allowBeta", true);
       }
 
+      let getAutoUpdate: boolean;
+      if (store.has("settings.autoUpdate")) {
+        getAutoUpdate = store.get("settings.autoUpdate") as boolean;
+      }
+
       setDarkMode(isDark);
       setConnected(false);
       device.current = null;
       setPages({});
       setContextBar(false);
       setAllowBeta(getAllowBeta);
+      setAutoUpdate(getAutoUpdate);
       setLoading(true);
       setFwUpdate(false);
       localStorage.clear();
@@ -358,6 +365,12 @@ function App() {
     setAllowBeta(newValue);
   };
 
+  const updateAutoUpdate = (checked: boolean) => {
+    log.info("auto update value changed to:", checked);
+    store.set("settings.autoUpdate", checked);
+    setAutoUpdate(checked);
+  };
+
   const handleSetRestoredOk = (status: boolean) => {
     log.verbose("CHECK RESTORE", status);
     setRestoredOk(status);
@@ -469,6 +482,8 @@ function App() {
                 updateAllowBetas={updateAllowBetas}
                 allowBeta={allowBeta}
                 setLoading={setLoadingData}
+                autoUpdate={autoUpdate}
+                updateAutoUpdate={updateAutoUpdate}
               />
             }
           />
