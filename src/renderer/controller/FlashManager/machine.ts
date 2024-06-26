@@ -121,10 +121,11 @@ const FlashManager = setup({
       invoke: {
         src: "RestoreESCKey",
         input: ({ context, event }) => {
-          if (event.type === "next-event") {
+          if (event.type === "next-event" || event.type === "retry-event") {
             return context;
           }
 
+          log.info("Unexpected event type", event.type);
           throw new Error("Unexpected event type");
         },
         onDone: {
@@ -139,15 +140,13 @@ const FlashManager = setup({
     },
     error: {
       id: "error",
+      type: "final",
       entry: [
         () => {
           log.info("Error Card entry");
         },
         assign({ Block: () => -1 }),
       ],
-      on: {
-        "retry-event": ["retry"],
-      },
     },
     success: { type: "final" },
   },
