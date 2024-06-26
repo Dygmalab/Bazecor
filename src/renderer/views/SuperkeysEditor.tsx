@@ -687,7 +687,7 @@ function SuperkeysEditor(props: SuperkeysEditorProps) {
   };
 
   const closeStandardViewModal = (code: number) => {
-    onKeyChange(code);
+    if (code) onKeyChange(code);
     state.showStandardView = false;
     state.selectedAction = -1;
     setState({ ...state });
@@ -830,15 +830,6 @@ function SuperkeysEditor(props: SuperkeysEditorProps) {
 
       <ToggleGroupLayoutViewMode value={viewMode} onValueChange={onToggle} view="superkeys" />
 
-      {/* <LayoutViewSelector
-        onToggle={onToggle}
-        isStandardView={isStandardViewSuperkeys}
-        tooltip={i18n.editor.superkeys.tooltip}
-        layoutSelectorPosition={{
-          x: 0,
-          y: 0,
-        }}
-      /> */}
       {isStandardViewSuperkeys ? (
         <StandardView
           showStandardView={showStandardView}
