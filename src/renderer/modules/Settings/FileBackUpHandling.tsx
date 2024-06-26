@@ -16,6 +16,7 @@
 
 import React, { useState, useEffect } from "react";
 import { ipcRenderer } from "electron";
+import { toast } from "react-toastify";
 
 // React Bootstrap Components
 import { Card, CardContent, CardHeader, CardTitle } from "@Renderer/components/atoms/Card";
@@ -24,11 +25,12 @@ import { Card, CardContent, CardHeader, CardTitle } from "@Renderer/components/a
 import { i18n } from "@Renderer/i18n";
 
 // Icons Imports
-import { IconFolder } from "@Renderer/components/atoms/icons";
+import { IconFloppyDisk, IconFolder } from "@Renderer/components/atoms/icons";
 
 // Utils
 import Store from "@Renderer/utils/Store";
 import { Slider } from "@Renderer/components/atoms/slider";
+import ToastMessage from "@Renderer/components/atoms/ToastMessage";
 
 const store = Store.getStore();
 
@@ -56,18 +58,34 @@ const FileBackUpHandling = () => {
     const resp = await ipcRenderer.invoke("open-dialog", options);
 
     if (!resp.canceled) {
-      // console.log(resp.filePaths);
+      // log.info(resp.filePaths);
       setBackupFolder(resp.filePaths[0]);
       store.set("settings.backupFolder", `${resp.filePaths[0]}`);
+      toast.success(
+        <ToastMessage
+          icon={<IconFloppyDisk />}
+          title={i18n.success.backupPath}
+          content={`${i18n.success.backupPathText} ${resp.filePaths[0]}`}
+        />,
+        { autoClose: 2000, icon: "", toastId: "backupPath" },
+      );
     } else {
-      // console.log("user closed backup folder dialog");
+      // log.info("user closed backup folder dialog");
     }
   };
 
   const onSetStoreBackups = (value: number[]) => {
-    // console.log("changed backup period to: ", value);
+    // log.info("changed backup period to: ", value);
     setStoreBackups(value[0]);
     store.set("settings.backupFrequency", value[0]);
+    toast.success(
+      <ToastMessage
+        icon={<IconFloppyDisk />}
+        title={i18n.success.backupStoragePeriod}
+        content={`${i18n.success.backupStoragePeriodText} ${value[0]} months`}
+      />,
+      { autoClose: 2000, icon: "", toastId: "backupStoragePeriod" },
+    );
   };
 
   return (
