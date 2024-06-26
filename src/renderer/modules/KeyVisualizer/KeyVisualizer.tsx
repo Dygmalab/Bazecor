@@ -151,7 +151,9 @@ const KeyVisualizer = (props: KeyVisualizerProps) => {
       >
         {oldValue ? (
           <div className="oldKeyValue">
-            <Heading headingLevel={4} renderAs="h4">{`${rows ? rows[superkeyAction].title : "Selected value"}`}</Heading>
+            <Heading headingLevel={4} renderAs="h4">
+              {rows ? <div dangerouslySetInnerHTML={{ __html: rows[superkeyAction].title }} /> : "Selected value"}
+            </Heading>
             <div className="keySelectedBox">
               <div className="keySelectedValue">{oldValue}</div>
               <ListModifier
