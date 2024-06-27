@@ -63,10 +63,12 @@ const store = Store.getStore();
 
 const Styles = Styled.div`
 &.layoutEditor {
-  min=height: 100vh;
+  // min-height: 100vh;
+  height: 100%;
 }
 .keyboard-editor {
-  min-height: 100vh;
+  // min-height: 100vh;
+  height: inherit;
   display: flex;
   flex-flow: column;
   .title-row {
@@ -108,10 +110,13 @@ const Styles = Styled.div`
 }
 .full-height {
   height: 100%;
+  height: inherit;
 }
 .layer-col {
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
 }
 
 .LayerHolder {
@@ -1897,7 +1902,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
           <div className="raise-editor layer-col">
             <div className="dygma-keyboard-editor editor">{layer}</div>
             {modeselect === "keyboard" && !isStandardView ? (
-              <div className="ordinary-keyboard-editor m-0">
+              <div className="ordinary-keyboard-editor m-0 pb-4">
                 <KeyPickerKeyboard
                   onKeySelect={onKeyChange}
                   code={code}

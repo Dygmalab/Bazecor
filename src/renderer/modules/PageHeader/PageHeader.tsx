@@ -24,6 +24,7 @@ import Saving from "../Saving";
 const Style = Styled.div`
 width: 100%;
 flex: 0 0 100%;
+flex: 1;
 align-self: flex-start;
 // position: sticky;
 // top: 32px;

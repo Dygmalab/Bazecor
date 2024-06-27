@@ -368,9 +368,9 @@ class KeymapDEFY extends React.Component {
         strokeLinejoin="round"
         strokeMiterlimit="1.5"
         clipRule="evenodd"
-        viewBox={this.props.showUnderglow || this.props.isStandardView ? "0 0 1270 790" : "0 0 1270 520"}
+        viewBox={this.props.showUnderglow || this.props.isStandardView ? "0 0 1270 790" : "0 0 1270 560"}
         className={this.props.className || "layer"}
-        height={this.props.showUnderglow || this.props.isStandardView ? 790 : 520}
+        height={this.props.showUnderglow || this.props.isStandardView ? 790 : 560}
         width={1270}
       >
         <Neuron
