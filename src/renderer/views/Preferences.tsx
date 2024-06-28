@@ -62,6 +62,7 @@ import { WirelessInterface } from "@Renderer/types/wireless";
 import LogoLoader from "@Renderer/components/atoms/loader/LogoLoader";
 import { Neuron } from "@Renderer/types/neurons";
 import Backup from "../../api/backup";
+import { delay } from "../../api/flash/delay";
 
 const store = Store.getStore();
 
@@ -419,6 +420,7 @@ const Preferences = (props: PreferencesProps) => {
 
   const saveContext = async () => {
     setLoading(true);
+    await delay(250);
 
     try {
       await saveKeymapChanges();
