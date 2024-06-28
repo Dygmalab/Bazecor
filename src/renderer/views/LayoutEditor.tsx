@@ -1379,7 +1379,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
     try {
       Layer = currentDevice?.device.components.keymap as React.FC<any>;
       kbtype = currentDevice?.device && currentDevice?.device.info.keyboardType === "ISO" ? "iso" : "ansi";
-      log.info("Got Layer: ", Layer, kbtype);
+      // log.info("Got Layer: ", Layer, kbtype);
     } catch (error) {
       log.error("Focus lost connection to Raise: ", error);
       return { Layer: undefined, kbtype: undefined };

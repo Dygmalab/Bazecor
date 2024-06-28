@@ -18,7 +18,7 @@ export type State = {
 };
 
 class Device implements DeviceClass {
-  type: string;
+  type: "serial" | "hid" | "virtual";
   path: string;
   manufacturer: string;
   serialNumber: string;
