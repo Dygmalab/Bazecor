@@ -804,18 +804,14 @@ const Preferences = (props: PreferencesProps) => {
               <TabsContent value="Backups">
                 <motion.div initial="hidden" animate="visible" variants={tabVariants}>
                   <FileBackUpHandling />
-                  {connected && state.currentDevice && state.currentDevice.type === "hid" ? (
-                    <p>backup restoration disabled due to bluetooth, please connect the device through USB</p>
-                  ) : (
-                    ""
-                  )}
-                  {connected && state.currentDevice && state.currentDevice.type !== "hid" ? (
+                  {connected && state.currentDevice ? (
                     <BackupSettings
                       connected={connected}
                       neurons={neurons}
                       neuronID={neuronID}
                       toggleBackup={toggleBackup}
                       destroyContext={destroyContext}
+                      enabled={!!(connected && state.currentDevice && state.currentDevice.type !== "hid")}
                     />
                   ) : (
                     ""
