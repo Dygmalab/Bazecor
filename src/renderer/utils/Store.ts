@@ -14,6 +14,7 @@ const schema: Schema<StorageType> = {
       darkMode: { type: "string" },
       showDefaults: { type: "boolean" },
       isStandardView: { type: "boolean" },
+      autoUpdate: { type: "boolean" },
     },
     default: {
       backupFolder: "",
@@ -22,6 +23,7 @@ const schema: Schema<StorageType> = {
       darkMode: "system",
       showDefaults: false,
       isStandardView: true,
+      autoUpdate: undefined,
     },
     required: ["backupFolder", "backupFrequency", "language", "darkMode", "showDefaults"],
   },

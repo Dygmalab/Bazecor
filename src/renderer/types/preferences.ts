@@ -19,8 +19,10 @@ import { WirelessInterface } from "./wireless";
 
 export interface PreferencesProps {
   cancelContext: () => void;
-  updateAllowBetas: (checked: boolean) => void;
   allowBeta: boolean;
+  updateAllowBetas: (checked: boolean) => void;
+  autoUpdate: boolean;
+  updateAutoUpdate: (checked: boolean) => void;
   connected: boolean;
   startContext: () => void;
   toggleDarkMode: (mode: string) => void;

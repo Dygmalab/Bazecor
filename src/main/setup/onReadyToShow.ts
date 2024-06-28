@@ -1,5 +1,6 @@
 import { checkUdev, installUdev } from "../utils/udev";
 import Window from "../managers/Window";
+import autoUpdateOptIn from "../utils/autoUpdateOptIn";
 
 const onReadyToShow = () => {
   const window = Window.getWindow();
@@ -10,6 +11,7 @@ const onReadyToShow = () => {
         installUdev(window);
       }
     }
+    autoUpdateOptIn(window);
   });
 };
 
