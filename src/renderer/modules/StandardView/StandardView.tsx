@@ -252,20 +252,30 @@ export default class StandardView extends React.Component<StandardViewProps, Sta
   keymapDB: KeymapDB;
   constructor(props: StandardViewProps) {
     super(props);
+    const selectedKey =
+      props.actTab !== "super"
+        ? props.keyIndex !== -1
+          ? props.layerData[props.keyIndex].keyCode
+          : 0
+        : props.keyIndex !== -1
+          ? props.layerData[props.keyIndex]
+          : 0;
     this.state = {
       currentTab: undefined,
       stateCode: 0,
-      selected: props.keyIndex !== -1 ? props.layerData[props.keyIndex].keyCode : 0,
+      selected: selectedKey,
     };
     this.keymapDB = new KeymapDB();
   }
 
   componentDidUpdate(prevProps: StandardViewProps) {
-    const { keyIndex, layerData } = this.props;
+    const { keyIndex, layerData, actTab } = this.props;
     if (keyIndex !== prevProps.keyIndex) {
+      const selectedKey =
+        actTab !== "super" ? (keyIndex !== -1 ? layerData[keyIndex].keyCode : 0) : keyIndex !== -1 ? layerData[keyIndex] : 0;
       this.setState({
-        stateCode: keyIndex !== -1 ? layerData[keyIndex].keyCode : 0,
-        selected: keyIndex !== -1 ? layerData[keyIndex].keyCode : 0,
+        stateCode: selectedKey,
+        selected: selectedKey,
       });
     }
   }
@@ -347,6 +357,7 @@ export default class StandardView extends React.Component<StandardViewProps, Sta
       kbtype,
       keyIndex,
       macros,
+      layerData,
       selectedlanguage,
       showStandardView,
       superkeys,
@@ -362,9 +373,9 @@ export default class StandardView extends React.Component<StandardViewProps, Sta
     const selKey = this.parseKey(keyCode);
     const oldKey = this.parseKey(stateCode);
     if (!showStandardView) return null;
-    // log.info(
-    //   `StandardView statecode:${stateCode} selected:${selected} actTab: ${actTab} currentTab: ${currentTab} selKey: ${selKey} oldKey: ${oldKey}`,
-    // );
+    log.info(
+      `StandardView statecode:${stateCode} selected:${selected} actTab: ${actTab} currentTab: ${currentTab} selKey: ${selKey} oldKey: ${oldKey}, layerData: ${layerData}`,
+    );
 
     const tabVariants = {
       hidden: { opacity: 0 },
