@@ -137,7 +137,7 @@ function EnergyManagement(props: EnergyManagementProps) {
                   value={[Math.round(wireless.true_sleep_time / 60)]}
                   onValueChange={setTrueSleepTime}
                   className="slider-danger"
-                  disabled={wireless.true_sleep === true}
+                  disabled={wireless.true_sleep === false}
                 />
               </div>
               <div className="flex justify-between">
