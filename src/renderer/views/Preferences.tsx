@@ -596,6 +596,7 @@ const Preferences = (props: PreferencesProps) => {
   useEffect(() => {
     const init = async () => {
       setLoading(true);
+      updateAutoUpdate(undefined);
       const NID = await getNeuronData();
       if (connected && (state.currentDevice.device.info.keyboardType === "wireless" || state.currentDevice.device.wireless))
         await getWirelessPreferences();

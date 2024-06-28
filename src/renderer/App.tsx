@@ -59,7 +59,7 @@ function App() {
   const [pages, setPages] = useState({});
   const [contextBar, setContextBar] = useState(false);
   const [allowBeta, setAllowBeta] = useState(false);
-  const [autoUpdate, setAutoUpdate] = useState(undefined);
+  const [autoUpdate, setAutoUpdate] = useState<boolean>(undefined);
   const [darkMode, setDarkMode] = useState(false);
 
   const [connected, setConnected] = useState(false);
@@ -367,8 +367,12 @@ function App() {
 
   const updateAutoUpdate = (checked: boolean) => {
     log.info("auto update value changed to:", checked);
-    store.set("settings.autoUpdate", checked);
-    setAutoUpdate(checked);
+    if (checked === undefined) {
+      setAutoUpdate(store.get("settings.autoUpdate"));
+    } else {
+      store.set("settings.autoUpdate", checked);
+      setAutoUpdate(checked);
+    }
   };
 
   const handleSetRestoredOk = (status: boolean) => {
