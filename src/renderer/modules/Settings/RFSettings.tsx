@@ -82,7 +82,7 @@ function RFSettings(props: RFSettingsProps) {
             <div className="flex items-center gap-2">
               <IconRadar /> {i18n.wireless.RFPreferences.RFRadioSignal}
             </div>{" "}
-            <Badge variant="subtle" size="sm">
+            <Badge variant="subtle" size="xs">
               {i18n.wireless.energyManagement.settings.lowBatteryImpact}
             </Badge>
           </CardTitle>
