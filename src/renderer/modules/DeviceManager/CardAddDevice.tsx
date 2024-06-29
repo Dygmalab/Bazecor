@@ -37,10 +37,10 @@ const CardAddDevice = React.forwardRef<HTMLDivElement, CardAddDeviceProps>(({ ad
       <div className="devices-buttons-group flex flex-col items-center justify-center gap-2 mt-6 pb-6 [&_button]:min-w-full">
         <Button variant="primaryIcon" size="md" icon={<IconRefresh />} onClick={scanDevices}>
           <div className="button-content">
-            <Heading headingLevel={4} className="text-[1.125rem]">
+            <Heading headingLevel={4} className="text-[1.125rem] text-gray-25 dark:text-gray-25">
               {i18n.deviceManager.scanDevices}
             </Heading>
-            <p>{i18n.deviceManager.checkForDevices}</p>
+            <p className="!text-gray-25 !dark:text-gray-25">{i18n.deviceManager.checkForDevices}</p>
           </div>
         </Button>
         <Button variant="supportive" size="md" icon={<IconPlus size="md" />} onClick={addVirtualDevice}>

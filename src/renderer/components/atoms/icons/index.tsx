@@ -126,6 +126,7 @@ import IconToolsEject from "./IconToolsEject";
 import IconTypo from "./IconTypo";
 import IconUndoRestart from "./IconUndoRestart";
 import IconUpload from "./IconUpload";
+import IconUSB from "./IconUSB";
 import IconWarning from "./IconWarning";
 import IconWireless from "./IconWireless";
 import IconWrench from "./IconWrench";
@@ -243,6 +244,7 @@ export {
   IconTypo,
   IconUndoRestart,
   IconUpload,
+  IconUSB,
   IconWarning,
   IconWireless,
   IconWrench,

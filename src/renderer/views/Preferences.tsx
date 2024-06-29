@@ -811,6 +811,7 @@ const Preferences = (props: PreferencesProps) => {
                       neuronID={neuronID}
                       toggleBackup={toggleBackup}
                       destroyContext={destroyContext}
+                      enabled={!!(connected && state.currentDevice && state.currentDevice.type !== "hid")}
                     />
                   ) : (
                     ""
