@@ -187,7 +187,7 @@ const BackupSettings = (props: BackupSettingsProps) => {
         ) : (
           <Banner variant="warning" icon={<IconUSB />}>
             <p className="font-semibold tracking-tight text-gray-600 dark:text-gray-25">
-              Backup restoration disabled due to bluetooth, please connect the device through USB.
+              To restore a Backup, please connect the keyboard to the computer via RF or USB.
             </p>
           </Banner>
         )}
