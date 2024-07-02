@@ -15,6 +15,7 @@
  */
 
 import React, { useState } from "react";
+import log from "electron-log/renderer";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@Renderer/components/atoms/Card";
 import { Switch } from "@Renderer/components/atoms/Switch";
@@ -98,7 +99,7 @@ const AdvancedSettings = ({
   }));
   layersNames.push({ text: i18n.keyboardSettings.keymap.noDefault, value: 126, index: 126 });
 
-  console.log("defaultLayer: ", defaultLayer);
+  log.info("defaultLayer: ", defaultLayer);
 
   const normalizeOnlyCustomLayers = (item: string | boolean): boolean => {
     if (typeof item === "string") {
