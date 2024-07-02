@@ -5,12 +5,13 @@ import Callout from "@Renderer/components/molecules/Callout/Callout";
 import { KeyPickerReduced } from "@Renderer/modules/KeyPickerKeyboard";
 import ModPicker from "@Renderer/modules/KeyPickerKeyboard/ModPicker";
 import DualFunctionPicker from "@Renderer/modules/KeyPickerKeyboard/DualFunctionPicker";
+import { SegmentedKeyType } from "@Renderer/types/layout";
 
 interface KeysTabProps {
   action: any;
   actions: any;
-  keyCode: any;
-  code: any;
+  keyCode: SegmentedKeyType;
+  code: SegmentedKeyType;
   isStandardView: boolean;
   actTab: string;
   superkeyAction: number;
@@ -85,7 +86,7 @@ const KeysTab: React.FC<KeysTabProps> = ({
               {i18n.editor.standardView.keys.addModifiers}
             </Heading>
             <p>{i18n.editor.standardView.keys.descriptionModifiers}</p>
-            <ModPicker keyCode={code} onKeySelect={onKeyPress} isStandardView={isStandardView} />
+            <ModPicker keyCode={keyCode} onKeySelect={onKeyPress} isStandardView={isStandardView} />
           </div>
           {actTab !== "super" && (
             <div className="cardButtons cardButtonsDual">
@@ -93,7 +94,7 @@ const KeysTab: React.FC<KeysTabProps> = ({
                 {i18n.editor.standardView.keys.addDualFunction}
               </Heading>
               <p>{i18n.editor.standardView.keys.dualFunctionDescription}</p>
-              <DualFunctionPicker keyCode={code} onKeySelect={onKeyPress} activeTab={actTab} isStandardView={isStandardView} />
+              <DualFunctionPicker keyCode={keyCode} onKeySelect={onKeyPress} activeTab={actTab} isStandardView={isStandardView} />
             </div>
           )}
         </div>

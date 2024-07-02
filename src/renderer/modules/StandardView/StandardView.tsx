@@ -245,14 +245,15 @@ interface StandardViewProps {
 interface StandardViewState {
   currentTab: any;
   stateCode: number;
-  selected: number;
+  selected: SegmentedKeyType;
 }
 
 export default class StandardView extends React.Component<StandardViewProps, StandardViewState> {
   keymapDB: KeymapDB;
   constructor(props: StandardViewProps) {
     super(props);
-    const selectedKey =
+    this.keymapDB = new KeymapDB();
+    const selectedKey: number =
       props.actTab !== "super"
         ? props.keyIndex !== -1
           ? props.layerData[props.keyIndex].keyCode
@@ -263,26 +264,25 @@ export default class StandardView extends React.Component<StandardViewProps, Sta
     this.state = {
       currentTab: undefined,
       stateCode: 0,
-      selected: selectedKey,
+      selected: this.keymapDB.keySegmentator(selectedKey),
     };
-    this.keymapDB = new KeymapDB();
   }
 
   componentDidUpdate(prevProps: StandardViewProps) {
     const { keyIndex, layerData, actTab } = this.props;
     if (keyIndex !== prevProps.keyIndex) {
-      const selectedKey =
+      const selectedKey: number =
         actTab !== "super" ? (keyIndex !== -1 ? layerData[keyIndex].keyCode : 0) : keyIndex !== -1 ? layerData[keyIndex] : 0;
       this.setState({
         stateCode: selectedKey,
-        selected: selectedKey,
+        selected: this.keymapDB.keySegmentator(selectedKey),
       });
     }
   }
 
   updateSelected = (newKey: number) => {
     this.setState({
-      selected: newKey,
+      selected: this.keymapDB.keySegmentator(newKey),
     });
   };
 
@@ -295,7 +295,7 @@ export default class StandardView extends React.Component<StandardViewProps, Sta
     const { onKeySelect, handleSave } = this.props;
     const { selected } = this.state;
 
-    onKeySelect(selected);
+    onKeySelect(selected.base + selected.modified);
     handleSave();
   };
 
@@ -366,9 +366,9 @@ export default class StandardView extends React.Component<StandardViewProps, Sta
     const { stateCode, selected, currentTab } = this.state;
     let keyCode: number;
     if (actTab === "super") {
-      keyCode = selected;
+      keyCode = selected.base + selected.modified;
     } else {
-      keyCode = selected;
+      keyCode = selected.base + selected.modified;
     }
     const selKey = this.parseKey(keyCode);
     const oldKey = this.parseKey(stateCode);
@@ -451,7 +451,7 @@ export default class StandardView extends React.Component<StandardViewProps, Sta
                   <TabsContent value="tabKeys" key="tabKeys">
                     <motion.div initial="hidden" animate="visible" key="tabKeys" variants={tabVariants}>
                       <KeysTab
-                        keyCode={keyCode}
+                        keyCode={selected}
                         code={code}
                         onKeyPress={this.updateSelected}
                         isStandardView={isStandardView}
