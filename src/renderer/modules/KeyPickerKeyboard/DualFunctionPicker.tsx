@@ -135,7 +135,7 @@ const DualFunctionPicker = (props: DualFunctionPickerProps) => {
         <Heading headingLevel={5} renderAs="h5" className="text-ssm">
           {i18n.general.layer}
         </Heading>
-        <div className="groupButtons flex gap-1 mt-2 max-w-[auto]">
+        <div className="p-1 inline-flex flex-nowrap gap-1 mt-2 w-auto rounded-md bg-white dark:bg-gray-900/20">
           {layerKey.map((item: any, index: number) => (
             <Button
               variant="config"
@@ -145,7 +145,7 @@ const DualFunctionPicker = (props: DualFunctionPickerProps) => {
               onClick={() => onKeySelect(item.keynum + keyCode.base)}
               selected={!!(keyCode.modified > 0 && item.keynum === keyCode.modified)}
               disabled={disabled || activeTab === "super"}
-              className="w-[40px]"
+              className={`w-[40px] ${index === 0 ? "hidden" : ""}`}
             >
               {item.nameStd ? item.nameStd : item.keynum}
             </Button>
@@ -156,7 +156,7 @@ const DualFunctionPicker = (props: DualFunctionPickerProps) => {
         <Heading headingLevel={5} renderAs="h5" className="text-ssm">
           {i18n.general.modifier}
         </Heading>
-        <div className="groupButtons flex gap-1 mt-2">
+        <div className="p-1 inline-flex flex-nowrap gap-1 mt-2 w-auto rounded-md bg-white dark:bg-gray-900/20">
           {modKey.map((item, index) => (
             <Button
               variant="config"
@@ -166,7 +166,7 @@ const DualFunctionPicker = (props: DualFunctionPickerProps) => {
               onClick={() => onKeySelect(item.keynum + keyCode.base)}
               selected={!!(keyCode.modified > 0 && item.keynum === keyCode.modified)}
               disabled={disabled || activeTab === "super"}
-              className="w-[60px]"
+              className={`w-[60px] ${index === 0 ? "hidden" : ""}`}
             >
               {item.nameStd ? item.nameStd : item.keynum}
             </Button>

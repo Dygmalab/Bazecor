@@ -65,8 +65,8 @@ const OneShotTab = ({ keyCode, onKeySelect, isStandardView }: OneShotTabProps) =
             {i18n.editor.standardView.oneShot.titleModifiers}
           </Heading>
           <p className="description">{i18n.editor.standardView.oneShot.modifiersDescription}</p>
-          <div className="groupButtons groupButtonsGrid mt-2">
-            <div className="buttonsGrid">
+          <div className="p-0 inline-flex flex-nowrap gap-1 mt-2 w-auto rounded-md bg-transparent">
+            <div className="grid gap-1 p-1 bg-white dark:bg-gray-900/20 rounded-md grid-cols-4">
               <Button
                 variant="config"
                 onClick={() => onKeySelect(OneShotDeltaMod + 0)}
@@ -146,12 +146,12 @@ const OneShotTab = ({ keyCode, onKeySelect, isStandardView }: OneShotTabProps) =
             {i18n.editor.standardView.oneShot.titleLayers}
           </Heading>
           <p className="description">{i18n.editor.standardView.oneShot.layersDescription}</p>
-          <div className="groupButtons flex gap-1 mt-2">
+          <div className="p-1 inline-flex flex-nowrap gap-1 mt-2 w-auto rounded-md bg-white dark:bg-gray-900/20">
             <Button
               variant="config"
               onClick={() => onKeySelect(OneShotDeltaLayer + 0)}
               selected={isStandardView ? keyCode === OneShotDeltaLayer + 0 : false}
-              size="sm"
+              size="icon"
             >
               1
             </Button>
@@ -159,7 +159,7 @@ const OneShotTab = ({ keyCode, onKeySelect, isStandardView }: OneShotTabProps) =
               variant="config"
               onClick={() => onKeySelect(OneShotDeltaLayer + 1)}
               selected={isStandardView ? keyCode === OneShotDeltaLayer + 1 : false}
-              size="sm"
+              size="icon"
             >
               2
             </Button>
@@ -167,7 +167,7 @@ const OneShotTab = ({ keyCode, onKeySelect, isStandardView }: OneShotTabProps) =
               variant="config"
               onClick={() => onKeySelect(OneShotDeltaLayer + 2)}
               selected={isStandardView ? keyCode === OneShotDeltaLayer + 2 : false}
-              size="sm"
+              size="icon"
             >
               3
             </Button>
@@ -175,7 +175,7 @@ const OneShotTab = ({ keyCode, onKeySelect, isStandardView }: OneShotTabProps) =
               variant="config"
               onClick={() => onKeySelect(OneShotDeltaLayer + 3)}
               selected={isStandardView ? keyCode === OneShotDeltaLayer + 3 : false}
-              size="sm"
+              size="icon"
             >
               4
             </Button>
@@ -183,7 +183,7 @@ const OneShotTab = ({ keyCode, onKeySelect, isStandardView }: OneShotTabProps) =
               variant="config"
               onClick={() => onKeySelect(OneShotDeltaLayer + 4)}
               selected={isStandardView ? keyCode === OneShotDeltaLayer + 4 : false}
-              size="sm"
+              size="icon"
             >
               5
             </Button>
@@ -191,7 +191,7 @@ const OneShotTab = ({ keyCode, onKeySelect, isStandardView }: OneShotTabProps) =
               variant="config"
               onClick={() => onKeySelect(OneShotDeltaLayer + 5)}
               selected={isStandardView ? keyCode === OneShotDeltaLayer + 5 : false}
-              size="sm"
+              size="icon"
             >
               6
             </Button>
@@ -199,7 +199,7 @@ const OneShotTab = ({ keyCode, onKeySelect, isStandardView }: OneShotTabProps) =
               variant="config"
               onClick={() => onKeySelect(OneShotDeltaLayer + 6)}
               selected={isStandardView ? keyCode === OneShotDeltaLayer + 6 : false}
-              size="sm"
+              size="icon"
             >
               7
             </Button>
@@ -207,7 +207,7 @@ const OneShotTab = ({ keyCode, onKeySelect, isStandardView }: OneShotTabProps) =
               variant="config"
               onClick={() => onKeySelect(OneShotDeltaLayer + 7)}
               selected={isStandardView ? keyCode === OneShotDeltaLayer + 7 : false}
-              size="sm"
+              size="icon"
             >
               8
             </Button>

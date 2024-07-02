@@ -818,39 +818,6 @@ button:focus-visible,
     font-size: 13px;
     margin-bottom: 8px;
   }
-  .groupButtons {
-    display: inline-flex;
-    padding: 4px 2px;
-    flex-wrap: nowrap;
-    background-color: ${({ theme }) => theme.styles.cardButtons.groupButtonsBackground};
-    border-radius: 6px;
-    max-width: 500px;
-    .button-config {
-      width: 42px;
-      margin: 0 2px;
-      padding: 10px 2px;
-      text-align: center;
-      flex: 1;
-    }
-  }
-  .groupButtons.groupButtonsGrid {
-    background-color: transparent;
-    padding: 0;
-    .buttonsGrid {
-      display: grid;
-      grid-template-columns: repeat(4, 112px);
-      grid-template-rows: repeat(2, 1fr);
-      grid-gap: 4px;
-      padding: 4px;
-      background-color: ${({ theme }) => theme.styles.cardButtons.groupButtonsBackground};
-      border-radius: 6px;
-      .button-config {
-        width: 100%;
-        margin: 0;
-        padding: 8px 2px;
-      }
-    }
-  }
 }
 
 .tooltip {

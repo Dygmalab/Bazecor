@@ -40,10 +40,10 @@ const ToggleGroupLayoutViewMode = ({
       </TooltipProvider>
     </Heading>
     <ToggleGroup type="single" value={value} onValueChange={onValueChange} size="sm">
-      <ToggleGroupItem value="standard">
+      <ToggleGroupItem value="standard" size="sm">
         <IconEditModeStandardView size="sm" /> {i18n.editor.editMode.standardView}
       </ToggleGroupItem>
-      <ToggleGroupItem value="single">
+      <ToggleGroupItem value="single" size="sm">
         <IconEditModeSingleView size="sm" /> {i18n.editor.editMode.singleView}
       </ToggleGroupItem>
     </ToggleGroup>

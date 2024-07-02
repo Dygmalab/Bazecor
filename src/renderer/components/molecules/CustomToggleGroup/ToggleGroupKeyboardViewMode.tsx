@@ -17,7 +17,7 @@ const ToggleGroupKeyboardViewMode = ({ value, onValueChange }: ToggleGroupLayout
       <Tooltip>
         <TooltipTrigger asChild>
           <div>
-            <ToggleGroupItem asChild={false} value="keyboard" className="sm:px-2 md:px-2 lg:px-2 xl:px-[16px]">
+            <ToggleGroupItem asChild={false} value="keyboard" className="sm:px-2 md:px-2 lg:px-2 xl:px-[16px] !rounded-2sm">
               <IconKeyboard /> <span className="sm:hidden md:hidden lg:hidden xl:inline-flex">{i18n.editor.keys}</span>
             </ToggleGroupItem>
           </div>
@@ -31,7 +31,7 @@ const ToggleGroupKeyboardViewMode = ({ value, onValueChange }: ToggleGroupLayout
       <Tooltip>
         <TooltipTrigger asChild>
           <div>
-            <ToggleGroupItem asChild={false} value="color" className="sm:px-2 md:px-2 lg:px-2 xl:px-[16px]">
+            <ToggleGroupItem asChild={false} value="color" className="sm:px-2 md:px-2 lg:px-2 xl:px-[16px] !rounded-2sm">
               <IconFlashlight /> <span className="sm:hidden md:hidden lg:hidden xl:inline-flex">{i18n.editor.color.color}</span>
             </ToggleGroupItem>
           </div>
