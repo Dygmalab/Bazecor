@@ -412,7 +412,7 @@ function SuperkeysEditor(props: SuperkeysEditorProps) {
       return Array(512).fill("65535").join(" ");
     }
     let keyMap = JSON.parse(JSON.stringify(superkeys));
-    // log.info("First", JSON.stringify(keyMap));
+    log.info("First", JSON.stringify(keyMap));
     keyMap = keyMap.map((sky: SuperkeysType) => {
       const sk = sky;
       sk.actions = sk.actions.map(act => {
@@ -422,7 +422,7 @@ function SuperkeysEditor(props: SuperkeysEditorProps) {
       if (sk.actions.length < 5) sk.actions = sk.actions.concat(Array(5 - sk.actions.length).fill(1));
       return sk;
     });
-    // log.info("Third", JSON.parse(JSON.stringify(keyMap)));
+    log.info("Third", JSON.parse(JSON.stringify(keyMap)));
     const mapped = keyMap
       .map((superkey: SuperkeysType) => superkey.actions.filter(act => act !== 0).concat([0]))
       .flat()
@@ -503,12 +503,15 @@ function SuperkeysEditor(props: SuperkeysEditorProps) {
     log.info("Loaded neurons: ", JSON.stringify(localNeurons));
     try {
       store.set("neurons", localNeurons);
-      await currentDevice.command("superkeys.map", superkeyMap(superkeys));
+      const sendSK = superkeyMap(superkeys);
+      log.info("Mod superK", sendSK);
+      await currentDevice.command("superkeys.map", sendSK);
       if (modifiedKeymap) {
         const args = flatten(keymap.custom)
           .map(k => keymapDB.serialize(k))
-          .toString();
-        await currentDevice.command("keymap.custom", ...args);
+          .join(" ");
+        log.info("Mod keymap", args);
+        await currentDevice.command("keymap.custom", args);
       }
       state.modified = false;
       state.modifiedKeymap = false;
