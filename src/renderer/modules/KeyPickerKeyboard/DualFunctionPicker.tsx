@@ -145,7 +145,7 @@ const DualFunctionPicker = (props: DualFunctionPickerProps) => {
               onClick={() => onKeySelect(item.keynum + keyCode.base)}
               selected={!!(keyCode.modified > 0 && item.keynum === keyCode.modified)}
               disabled={disabled || activeTab === "super"}
-              className="w-[40px]"
+              className={`w-[40px] ${index === 0 ? "hidden" : ""}`}
             >
               {item.nameStd ? item.nameStd : item.keynum}
             </Button>
@@ -166,7 +166,7 @@ const DualFunctionPicker = (props: DualFunctionPickerProps) => {
               onClick={() => onKeySelect(item.keynum + keyCode.base)}
               selected={!!(keyCode.modified > 0 && item.keynum === keyCode.modified)}
               disabled={disabled || activeTab === "super"}
-              className="w-[60px]"
+              className={`w-[60px] ${index === 0 ? "hidden" : ""}`}
             >
               {item.nameStd ? item.nameStd : item.keynum}
             </Button>
