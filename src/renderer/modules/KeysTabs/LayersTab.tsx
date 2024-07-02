@@ -74,11 +74,11 @@ const LayersTab = ({ keyCode, isStandardView, disableMods, onLayerPress }: Layer
             {i18n.editor.standardView.layers.layerSwitch}
           </Heading>
           <p>{i18n.editor.standardView.layers.layerSwitchDescription}</p>
-          <div className="groupButtons flex gap-1">
+          <div className="p-1 inline-flex flex-nowrap gap-1 mt-2 w-auto rounded-md bg-white dark:bg-gray-900/20">
             {shiftButtons.map((button, index) => (
               <Button
                 variant="config"
-                size="sm"
+                size="icon"
                 onClick={() => {
                   onLayerPress(layerDeltaSwitch + index);
                 }}
@@ -96,11 +96,11 @@ const LayersTab = ({ keyCode, isStandardView, disableMods, onLayerPress }: Layer
             {i18n.editor.layers.layerLock}
           </Heading>
           <p>{isStandardView ? i18n.editor.standardView.layers.layerLockDescription : i18n.editor.layers.layerLockDescription}</p>
-          <div className="groupButtons flex gap-1">
+          <div className="p-1 inline-flex flex-nowrap gap-1 mt-2 w-auto rounded-md bg-white dark:bg-gray-900/20">
             {lockButtons.map((button, index) => (
               <Button
                 variant="config"
-                size="sm"
+                size="icon"
                 onClick={() => {
                   onLayerPress(layerDelta + index);
                 }}
