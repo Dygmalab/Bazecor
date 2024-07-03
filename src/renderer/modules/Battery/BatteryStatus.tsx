@@ -208,10 +208,10 @@ const BatteryStatus = ({ disable }: BatteryStatusProps) => {
     if (state.currentDevice) {
       await state.currentDevice.noCacheCommand("wireless.battery.forceRead");
     }
+    setAnimateIcon(1);
     setLoading(true);
     await getBatteryStatus();
     setLoading(false);
-    setAnimateIcon(1);
   };
 
   return (
@@ -245,8 +245,15 @@ const BatteryStatus = ({ disable }: BatteryStatusProps) => {
             )}
             <div className="batterySettingItem batteryUpdateStatus">
               <div className="batterySettingLabel">Force read Battery level</div>
-              <Button variant="config" size="icon" onClick={forceRetrieveBattery}>
-                <IconRefresh />
+              <Button
+                variant="config"
+                size="icon"
+                onClick={forceRetrieveBattery}
+                className="p-2 flex justify-center items-center"
+              >
+                <span className={`inline-flex w-6 origin-center ${animateIcon ? "animate-spin" : ""}`}>
+                  <IconRefresh />
+                </span>
               </Button>
             </div>
           </div>
