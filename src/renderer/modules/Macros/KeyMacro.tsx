@@ -156,7 +156,7 @@ const KeyMacro: React.FC<KeyMacroProps> = ({
                   variant="link"
                   size="icon"
                   onClick={() => onDeleteRow(item.id)}
-                  className="w-[24px] h-[24px] bg-tranparent hover:bg-white/20 transition-all"
+                  className="trash-icon w-[24px] h-[24px] bg-tranparent hover:bg-white/20 transition-all"
                 >
                   <IconDelete size="sm" strokeWidth={1.2} />
                 </Button>
