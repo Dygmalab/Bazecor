@@ -716,3 +716,9 @@ select:focus {
 .tab-item--active:before {
   right: calc((1.25rem) * -1);
 }
+.standardView .tab-item--active:after {
+  right: calc((1.25rem + 7px) * -1);
+}
+.standardView .tab-item--active:before {
+  right: calc((1.25rem + 4px) * -1);
+}
