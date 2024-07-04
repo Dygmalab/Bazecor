@@ -87,7 +87,7 @@ const ListModifier = ({ keyCode, size = "md" }: ListModifiersProps) => {
 
   if (keyCode >= 8192) return null;
   return (
-    <div className="listModifiersTags flex flex-wrap my-0 gap-1">
+    <div className="listModifiersTags flex flex-wrap my-0 gap-0.5">
       {isHyper ? (
         <AnimatePresence mode="popLayout">
           <motion.div initial={{ opacity: 0, y: -50 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -50 }}>
