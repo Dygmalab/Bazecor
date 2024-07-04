@@ -96,9 +96,9 @@ const Callout = ({
             </DialogHeader>
             <div className="px-6 pb-4 mt-2">
               <div className="modalContent">
-                <div className="embed-responsive embed-responsive-16by9">
+                <div className="embed-responsive embed-responsive-16by9 w-full aspect-video">
                   <iframe
-                    className="embed-responsive-item"
+                    className="embed-responsive-item w-full h-full"
                     width="560"
                     height="315"
                     src={`https://www.youtube.com/embed/${media}`}
