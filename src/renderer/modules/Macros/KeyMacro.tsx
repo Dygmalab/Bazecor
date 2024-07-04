@@ -178,7 +178,7 @@ const KeyMacro: React.FC<KeyMacroProps> = ({
                           {item.symbol} {item.action === 1 || item.action === 2 ? <small>ms</small> : ""}
                         </p>
                       </div>
-                      <div className="keyFunctions py-[12px] px-[8px] bg-gray-50/40 dark:bg-gray-800 divide-y divide-y-reverse divide-gray-50 dark:divide-gray-700">
+                      <div className="keyFunctions py-[12px] px-[12px] bg-gray-50/40 dark:bg-gray-800 border-t-[1px] border-gray-50 dark:border-gray-700">
                         <Heading
                           headingLevel={5}
                           renderAs="h5"
@@ -222,7 +222,7 @@ const KeyMacro: React.FC<KeyMacroProps> = ({
                           </Button>
                         </div>
                       </div>
-                      <div className="keyModifiers py-[12px] px-[8px] bg-gray-25/40 dark:bg-gray-700">
+                      <div className="keyModifiers py-[12px] px-[12px] bg-gray-25/40 dark:bg-gray-700">
                         <Heading
                           headingLevel={4}
                           renderAs="h4"
