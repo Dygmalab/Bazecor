@@ -253,22 +253,24 @@ const KeyMacro: React.FC<KeyMacroProps> = ({
                         </div>
                       </div>
                     </div>
-                    <div className="keyMacroItemOptions">
+                    <div className="keyMacroItemOptions flex flex-col gap-1 mt-1">
                       <Button
-                        variant="link"
+                        variant="dropdownLink"
                         icon={<IconClone />}
                         iconDirection="left"
                         size="sm"
                         onClick={() => onCloneRow(item.id)}
+                        className="!justify-start"
                       >
                         Clone
                       </Button>
                       <Button
-                        variant="link"
+                        variant="dropdownLink"
                         iconDirection="left"
                         icon={<IconDelete />}
                         size="sm"
                         onClick={() => onDeleteRow(item.id)}
+                        className="!justify-start"
                       >
                         Delete
                       </Button>
