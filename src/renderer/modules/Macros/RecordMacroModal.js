@@ -332,9 +332,13 @@ export default class RecordMacroModal extends React.Component {
         >
           {i18n.editor.macros.recordMacro}
         </Button>
-        <Dialog open={showModal} onOpenChange={this.toggleShow} className="modal modal-recordMacro">
+        <Dialog
+          open={showModal}
+          onOpenChange={this.toggleShow}
+          className="modal modal-recordMacro focus:outline-none focus-visible:outline-none focus:border-none focus-visible:border-none"
+        >
           <DialogContent
-            className="modal-recordMacro"
+            className="modal-recordMacro focus:outline-none focus-visible:outline-none focus:border-none focus-visible:border-none"
             onInteractOutside={e => {
               e.preventDefault();
             }}
