@@ -131,8 +131,9 @@ const LayerSelector: React.FC<any> = ({
               <DropdownMenuItem className="flex gap-2" onSelect={clearFunc}>
                 <IconDelete /> {i18n.editor.layers.clearLayer}
               </DropdownMenuItem>
+              {/* 
               <DropdownMenuSeparator />
-              {/* <DropdownMenuItem className="flex gap-2" onSelect={exportToPdf}>
+              <DropdownMenuItem className="flex gap-2" onSelect={exportToPdf}>
                 <IconFileDownload /> {i18n.editor.layers.exportToPdf}
               </DropdownMenuItem> */}
             </DropdownMenuContent>
