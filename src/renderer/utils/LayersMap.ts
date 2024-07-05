@@ -6,67 +6,67 @@ const defyLayerMap: LayerMap = {
       left: [
         {
           from: 0,
-          to: 6,
+          to: 7,
         },
         {
           from: 16,
-          to: 22,
+          to: 23,
         },
         {
           from: 32,
-          to: 38,
+          to: 39,
         },
         {
           from: 48,
-          to: 53,
+          to: 54,
         },
         {
           from: 64,
-          to: 71,
+          to: 72,
         },
       ],
       right: [
         {
           from: 9,
-          to: 15,
+          to: 16,
         },
         {
           from: 25,
-          to: 31,
+          to: 32,
         },
         {
           from: 41,
-          to: 47,
+          to: 48,
         },
         {
           from: 57,
-          to: 63,
+          to: 64,
         },
         {
           from: 72,
-          to: 79,
+          to: 80,
         },
       ],
     },
     leds: {
       left: {
         from: 0,
-        to: 34,
+        to: 35,
       },
       right: {
         from: 35,
-        to: 69,
+        to: 70,
       },
     },
   },
   underglow: {
     left: {
       from: 70,
-      to: 122,
+      to: 123,
     },
     right: {
       from: 123,
-      to: 175,
+      to: 176,
     },
   },
 };

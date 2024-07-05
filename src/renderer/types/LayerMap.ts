@@ -1,38 +1,21 @@
+type Period = {
+  from: number;
+  to: number;
+};
+
 export type LayerMap = {
   keys: {
     position: {
-      right: [
-        {
-          from: number;
-          to: number;
-        },
-      ];
-      left: [
-        {
-          from: number;
-          to: number;
-        },
-      ];
+      right: Period[];
+      left: Period[];
     };
     leds: {
-      right: {
-        from: number;
-        to: number;
-      };
-      left: {
-        from: number;
-        to: number;
-      };
+      right: Period;
+      left: Period;
     };
   };
   underglow: {
-    right: {
-      from: number;
-      to: number;
-    };
-    left: {
-      from: number;
-      to: number;
-    };
+    right: Period;
+    left: Period;
   };
 };
