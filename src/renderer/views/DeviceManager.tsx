@@ -60,6 +60,7 @@ const DeviceManager = (props: DeviceManagerProps) => {
   const [open, setOpen] = useState(false);
   const [openDialogVirtualKB, setOpenDialogVirtualKB] = useState(false);
   const [selectedDevice, setSelectedDevice] = useState(0);
+  const [showMainButtons, setShowMainButtons] = useState(false);
 
   const ref = useRef(null);
   const isInView = useInView(ref);
@@ -260,9 +261,9 @@ const DeviceManager = (props: DeviceManagerProps) => {
   useEffect(() => {
     // log.info("ref: ", ref.current);
     if (isInView) {
-      log.warn("Is visible");
+      setShowMainButtons(false);
     } else {
-      log.warn("Not visible");
+      setShowMainButtons(true);
     }
   }, [isInView, ref]);
 
@@ -287,8 +288,8 @@ const DeviceManager = (props: DeviceManagerProps) => {
         <div className="view-wrapper--devices flex h-[inherit] flex-col">
           <PageHeader
             text="Keyboard Manager"
-            primaryButton={scanDevicesButton}
-            secondaryButton={addVirtualDevicesButton}
+            primaryButton={showMainButtons ? scanDevicesButton : null}
+            secondaryButton={showMainButtons ? addVirtualDevicesButton : null}
             styles="pageHeaderFlatBottom"
           />
           {/* <div className="filterHeaderWrapper flex items-center justify-between pt-8 pb-3 mb-3 border-b-[1px] border-gray-100 dark:border-gray-600"> */}
@@ -373,7 +374,7 @@ const DeviceManager = (props: DeviceManagerProps) => {
                   ))}
                   <AnimatePresence mode="popLayout">
                     <motion.div initial={{ opacity: 0, y: -50 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -50 }}>
-                      <CardAddDevice addVirtualDevice={addVirtualDevice} scanDevices={scanDevices} ref={ref} />
+                      <CardAddDevice addVirtualDevice={addVirtualDevice} scanDevices={scanDevices} />
                     </motion.div>
                   </AnimatePresence>
                 </SortableList>
@@ -384,14 +385,14 @@ const DeviceManager = (props: DeviceManagerProps) => {
                   <motion.div initial={{ opacity: 0, y: -50 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -50 }}>
                     <div className="list devices-scroll relative w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-3 gap-4 pb-4">
                       <NoDeviceFound />
-                      <CardAddDevice addVirtualDevice={addVirtualDevice} scanDevices={scanDevices} ref={ref} />
+                      <CardAddDevice addVirtualDevice={addVirtualDevice} scanDevices={scanDevices} />
                     </div>
                   </motion.div>
                 </AnimatePresence>
               </div>
             )}
           </div>
-          <HelpSupportLink />
+          <HelpSupportLink ref={ref} />
         </div>
       </div>
 
