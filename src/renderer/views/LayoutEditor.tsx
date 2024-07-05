@@ -1946,6 +1946,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
           onConfirm={k => clearLayer(k.keyCode, k.colorIndex)}
           colors={palette}
           selectedColorIndex={palette.length - 1}
+          keyboardSide="BOTH"
           fillWithNoKey={false}
         />
 

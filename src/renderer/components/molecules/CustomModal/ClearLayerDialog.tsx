@@ -12,6 +12,8 @@ export interface OnConfirmProps {
   colorIndex: number;
 }
 
+type KeyboardSide = "BOTH" | "LEFT" | "RIGHT";
+
 interface ClearLayerDialogProps {
   open: boolean;
   onCancel: () => void;
@@ -19,11 +21,13 @@ interface ClearLayerDialogProps {
   colors?: PaletteType[];
   selectedColorIndex?: number;
   fillWithNoKey?: boolean;
+  keyboardSide?: KeyboardSide;
 }
 
 export const ClearLayerDialog = (props: ClearLayerDialogProps): JSX.Element => {
-  const { open, onCancel, onConfirm, colors, selectedColorIndex, fillWithNoKey } = props;
+  const { open, onCancel, onConfirm, colors, selectedColorIndex, fillWithNoKey, keyboardSide } = props;
   const [useNoKey, setUseNoKey] = useState(fillWithNoKey ?? false);
+  const [chooseYourKeyboardSide, setChooseYourKeyboardSide] = useState(keyboardSide ?? "BOTH");
   const [indexOfSelectedColor, setIndexOfSelectedColor] = useState(selectedColorIndex ?? -1);
   const createLabel = (text: string, forId: string) => (
     <label htmlFor={forId} className="grow m-0 font-semibold">
@@ -33,6 +37,10 @@ export const ClearLayerDialog = (props: ClearLayerDialogProps): JSX.Element => {
 
   const useNoKeyUpdate = (value: boolean) => {
     setUseNoKey(value);
+  };
+
+  const chooseYourKeyboardSideUpdate = (value: KeyboardSide) => {
+    setChooseYourKeyboardSide(value);
   };
 
   return (
@@ -51,6 +59,20 @@ export const ClearLayerDialog = (props: ClearLayerDialogProps): JSX.Element => {
             onColorSelect={idx => setIndexOfSelectedColor(idx)}
             className="ml-3 mt-2 mb-3"
           />
+          <div className="grid items-center w-full justify-between py-2">
+            <div className="mb-4">{createLabel(i18n.editor.modal.clearLayer.entireKeyboard, "chooseYourSideOrFull")}</div>
+            <ToggleGroup
+              triggerFunction={chooseYourKeyboardSideUpdate}
+              value={chooseYourKeyboardSide}
+              listElements={[
+                { value: "BOTH", name: "Full Keyboard", icon: "", index: 0 },
+                { value: "LEFT", name: "Left Side", icon: "", index: 1 },
+                { value: "RIGHT", name: "Right Side", icon: "", index: 2 },
+              ]}
+              variant="flex"
+              size="sm"
+            />
+          </div>
           <div className="grid items-center w-full justify-between py-2">
             <div className="mb-4">{createLabel(i18n.editor.modal.clearLayer.useNoKey, "useNoKeyInstead")}</div>
             <ToggleGroup
