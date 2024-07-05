@@ -74,28 +74,70 @@ const defyLayerMap: LayerMap = {
 const raiseLayerMap: LayerMap = {
   keys: {
     position: {
-      left: [],
-      right: [],
+      left: [
+        {
+          from: 0,
+          to: 7,
+        },
+        {
+          from: 16,
+          to: 23,
+        },
+        {
+          from: 32,
+          to: 39,
+        },
+        {
+          from: 48,
+          to: 55,
+        },
+        {
+          from: 64,
+          to: 72,
+        },
+      ],
+      right: [
+        {
+          from: 9,
+          to: 16,
+        },
+        {
+          from: 24,
+          to: 32,
+        },
+        {
+          from: 41,
+          to: 48,
+        },
+        {
+          from: 57,
+          to: 64,
+        },
+        {
+          from: 72,
+          to: 80,
+        },
+      ],
     },
     leds: {
       left: {
         from: 0,
-        to: 0,
+        to: 33,
       },
       right: {
-        from: 0,
-        to: 0,
+        from: 33,
+        to: 69,
       },
     },
   },
   underglow: {
     left: {
-      from: 0,
-      to: 0,
+      from: 69,
+      to: 99,
     },
     right: {
-      from: 0,
-      to: 0,
+      from: 99,
+      to: 131,
     },
   },
 };
@@ -103,28 +145,70 @@ const raiseLayerMap: LayerMap = {
 const raise2LayerMap: LayerMap = {
   keys: {
     position: {
-      left: [],
-      right: [],
+      left: [
+        {
+          from: 0,
+          to: 7,
+        },
+        {
+          from: 16,
+          to: 23,
+        },
+        {
+          from: 32,
+          to: 39,
+        },
+        {
+          from: 48,
+          to: 55,
+        },
+        {
+          from: 64,
+          to: 72,
+        },
+      ],
+      right: [
+        {
+          from: 9,
+          to: 16,
+        },
+        {
+          from: 24,
+          to: 32,
+        },
+        {
+          from: 41,
+          to: 48,
+        },
+        {
+          from: 57,
+          to: 64,
+        },
+        {
+          from: 72,
+          to: 80,
+        },
+      ],
     },
     leds: {
       left: {
         from: 0,
-        to: 0,
+        to: 33,
       },
       right: {
-        from: 0,
-        to: 0,
+        from: 33,
+        to: 69,
       },
     },
   },
   underglow: {
     left: {
-      from: 0,
-      to: 0,
+      from: 69,
+      to: 105,
     },
     right: {
-      from: 0,
-      to: 0,
+      from: 105,
+      to: 144,
     },
   },
 };

@@ -1230,7 +1230,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
     const idx = keymap.onlyCustom ? currentLayer : currentLayer - keymap.default.length;
     const keyCodeFiller = keymapDB.parse(fillKeyCode);
     const cloneLayer = [...newKeymap[idx]];
-
+    log.info(cloneLayer);
     if (chooseYourKeyboardSide === "LEFT") {
       layerMap.keys.position.left.forEach(value => {
         cloneLayer.fill(keyCodeFiller, value.from, value.to);
@@ -1246,12 +1246,14 @@ const LayoutEditor = (props: LayoutEditorProps) => {
     if (chooseYourKeyboardSide === "BOTH") {
       cloneLayer.fill(keyCodeFiller);
     }
+    log.info(cloneLayer);
 
     newKeymap[idx] = cloneLayer;
 
     startContext();
     if (colorIndex >= 0) {
       const newColormap = colorMap.slice();
+      log.info(newColormap[idx]);
       if (newColormap.length > 0) {
         if (chooseYourKeyboardSide === "LEFT") {
           newColormap[idx].fill(colorIndex, layerMap.keys.leds.left.from, layerMap.keys.leds.left.to);
@@ -1266,6 +1268,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
         if (chooseYourKeyboardSide === "BOTH") {
           newColormap[idx] = Array(newColormap[0].length).fill(colorIndex);
         }
+        log.info(newColormap[idx]);
       }
       setColorMap(newColormap);
     }
