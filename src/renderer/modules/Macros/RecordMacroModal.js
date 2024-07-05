@@ -398,20 +398,24 @@ export default class RecordMacroModal extends React.Component {
 
                 <AnimatedTimelineRecording isRecording={isRecording} />
               </div>
-              <div className="recordMacrosButton flex justify-center gap-2 -mt-6">
+              <div className="recordMacrosButton flex justify-center gap-2 items-center -mt-6">
                 {recorded.length > 0 ? (
-                  <TooltipProvider delayDuration={50}>
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <div>
-                          <Button variant="config" size="icon" onClick={this.undoRecording} className="ml-[-50px]">
-                            <IconUndoRestart />
-                          </Button>
-                        </div>
-                      </TooltipTrigger>
-                      <TooltipContent className="max-w-xs">{i18n.editor.macros.recordingDiscard}</TooltipContent>
-                    </Tooltip>
-                  </TooltipProvider>
+                  <div className="ml-[-50px] relative z-10">
+                    <TooltipProvider delayDuration={50}>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <div>
+                            <Button variant="config" size="icon" onClick={this.undoRecording} className="!rounded-full">
+                              <IconUndoRestart />
+                            </Button>
+                          </div>
+                        </TooltipTrigger>
+                        <TooltipContent className="max-w-xs" size="sm">
+                          {i18n.editor.macros.recordingDiscard}
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                  </div>
                 ) : (
                   ""
                 )}
