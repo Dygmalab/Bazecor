@@ -5,6 +5,7 @@ import { ColorPalette } from "@Renderer/modules/ColorEditor/ColorPalette";
 import { PaletteType } from "@Types/layout";
 import { i18n } from "@Renderer/i18n";
 import ToggleGroup from "@Renderer/components/molecules/CustomToggleGroup/ToggleGroup";
+import Heading from "@Renderer/components/atoms/Heading";
 import { NOKEY_KEY_CODE, TRANS_KEY_CODE } from "../../../../api/keymap/types";
 
 export interface OnConfirmProps {
@@ -43,16 +44,24 @@ export const ClearLayerDialog = (props: ClearLayerDialogProps): JSX.Element => {
         </DialogHeader>
         <div className="px-6 pb-2 mt-2">
           <div className="cursor-pointer flex items-center w-full justify-between py-2">
-            {createLabel(i18n.editor.modal.clearLayer.resetColors, "clearColors")}
+            <Heading renderAs="h4" headingLevel={4}>
+              <small className="text-gray-200 dark:text-gray-500">01.</small>{" "}
+              {createLabel(i18n.editor.modal.clearLayer.resetColors, "clearColors")}
+            </Heading>
           </div>
-          <ColorPalette
-            colors={colors.concat({ r: 0, g: 0, b: 0, rgb: "transparent" })}
-            selected={indexOfSelectedColor}
-            onColorSelect={idx => setIndexOfSelectedColor(idx)}
-            className="ml-3 mt-2 mb-3"
-          />
-          <div className="grid items-center w-full justify-between py-2">
-            <div className="mb-4">{createLabel(i18n.editor.modal.clearLayer.useNoKey, "useNoKeyInstead")}</div>
+          <div className="toggleButtonsInner w-full flex items-center justify-start gap-1 p-[4px] rounded-regular border-[1px] border-solid border-gray-100/60 bg-white/30 dark:border-transparent dark:bg-gray-900/25 w-fit [&_.button-config]:basis-full [&_.button-config]:text-center">
+            <ColorPalette
+              colors={colors.concat({ r: 0, g: 0, b: 0, rgb: "transparent" })}
+              selected={indexOfSelectedColor}
+              onColorSelect={idx => setIndexOfSelectedColor(idx)}
+              className="w-full"
+            />
+          </div>
+          <div className="grid items-center w-full justify-between py-2 mt-2">
+            <Heading renderAs="h4" headingLevel={4} className="mb-2">
+              <small className="text-gray-200 dark:text-gray-500">02.</small>{" "}
+              {createLabel(i18n.editor.modal.clearLayer.useNoKey, "useNoKeyInstead")}
+            </Heading>
             <ToggleGroup
               triggerFunction={useNoKeyUpdate}
               value={useNoKey}
@@ -79,7 +88,7 @@ export const ClearLayerDialog = (props: ClearLayerDialogProps): JSX.Element => {
               })
             }
           >
-            {i18n.dialog.ok}
+            Clear layer
           </Button>
         </DialogFooter>
       </DialogContent>

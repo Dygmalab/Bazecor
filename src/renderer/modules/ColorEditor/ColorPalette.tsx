@@ -2,16 +2,7 @@ import { ColorPicker } from "@Renderer/component/Button";
 import React from "react";
 
 import { ColorPaletteProps } from "@Types/colorPalette";
-import Styled from "styled-components";
 import { Button } from "@Renderer/components/atoms/Button";
-
-const Container = Styled.div`
-      display: grid;
-      grid-auto-columns: auto;
-      grid-auto-flow: column;
-      align-items: center;
-      grid-gap: 4px;
-    `;
 
 export const ColorPalette = (props: ColorPaletteProps) => {
   const { colors, onColorSelect, selected, className } = props;
@@ -20,25 +11,15 @@ export const ColorPalette = (props: ColorPaletteProps) => {
     const menuKey = `color-${idx.toString()}-${data.rgb.toString()}`;
     if (data.rgb === "transparent") {
       return (
-        <>
-          <Button
-            variant="short"
-            key={`${menuKey}-key-${data}`}
-            onClick={() => onColorSelect(idx)}
-            selected={selected === 16}
-            size="xs"
-          >
-            No change
-          </Button>
-          <button
-            type="button"
-            key={`${menuKey}-key-${data}`}
-            onClick={() => onColorSelect(idx)}
-            className="w-[81px] border border-solid !border-[#7b869e] h-8 m-0 p-1 text-gray-300 hover:text-white focus:outline-none focus:!border-[#6c5ce7] focus:shadow-[0_4px_24px_0px_rgba(108,92,231,0.6)]"
-          >
-            No change
-          </button>
-        </>
+        <Button
+          variant="config"
+          key={`${menuKey}-key-${data}`}
+          onClick={() => onColorSelect(idx)}
+          selected={selected === 16}
+          size="xs"
+        >
+          No change
+        </Button>
       );
     }
     const buttonStyle = {
@@ -57,5 +38,9 @@ export const ColorPalette = (props: ColorPaletteProps) => {
       />
     );
   });
-  return <Container className={`colorPalette ${className ?? ""}`.trim()}>{layerButtons}</Container>;
+  return (
+    <div className={`colorPalette items-center grid gap-1 auto-cols-auto grid-flow-col ${className ?? ""}`.trim()}>
+      {layerButtons}
+    </div>
+  );
 };
