@@ -10,6 +10,7 @@ import { NOKEY_KEY_CODE, TRANS_KEY_CODE } from "../../../../api/keymap/types";
 export interface OnConfirmProps {
   keyCode: number;
   colorIndex: number;
+  chooseYourKeyboardSide: KeyboardSide;
 }
 
 type KeyboardSide = "BOTH" | "LEFT" | "RIGHT";
@@ -60,7 +61,9 @@ export const ClearLayerDialog = (props: ClearLayerDialogProps): JSX.Element => {
             className="ml-3 mt-2 mb-3"
           />
           <div className="grid items-center w-full justify-between py-2">
-            <div className="mb-4">{createLabel(i18n.editor.modal.clearLayer.entireKeyboard, "chooseYourSideOrFull")}</div>
+            <div className="mb-4">
+              {createLabel(i18n.editor.modal.clearLayer.chooseYourKeyboardSide, "chooseYourKeyboardSide")}
+            </div>
             <ToggleGroup
               triggerFunction={chooseYourKeyboardSideUpdate}
               value={chooseYourKeyboardSide}
@@ -98,6 +101,7 @@ export const ClearLayerDialog = (props: ClearLayerDialogProps): JSX.Element => {
               onConfirm({
                 keyCode: useNoKey ? NOKEY_KEY_CODE : TRANS_KEY_CODE,
                 colorIndex: indexOfSelectedColor < colors.length ? indexOfSelectedColor : -1,
+                chooseYourKeyboardSide,
               })
             }
           >
