@@ -1223,11 +1223,38 @@ const LayoutEditor = (props: LayoutEditorProps) => {
     });
   };
 
-  const clearLayer = (fillKeyCode = TRANS_KEY_CODE, colorIndex = 15) => {
+  const clearLayer = (fillKeyCode = TRANS_KEY_CODE, colorIndex = 15, chooseYourKeyboardSide = "BOTH") => {
     const newKeymap = keymap.custom.slice();
     const idx = keymap.onlyCustom ? currentLayer : currentLayer - keymap.default.length;
     const keyCodeFiller = keymapDB.parse(fillKeyCode);
-    newKeymap[idx] = new Array(newKeymap[0].length).fill(keyCodeFiller);
+    const cloneLayer = [...newKeymap[idx]];
+    const dygmaKeymap = {
+      left: [
+        0, 1, 2, 3, 4, 5, 6, 16, 17, 18, 19, 20, 21, 22, 32, 33, 34, 35, 36, 37, 38, 48, 49, 50, 51, 52, 53, 64, 65, 66, 67, 68,
+        69, 70, 71,
+      ],
+      right: [
+        9, 10, 11, 12, 13, 14, 15, 25, 26, 27, 28, 29, 30, 31, 41, 42, 43, 44, 45, 46, 47, 58, 59, 60, 61, 62, 63, 72, 73, 74, 75,
+        76, 77, 78, 79,
+      ],
+    };
+    if (chooseYourKeyboardSide === "LEFT") {
+      dygmaKeymap.left.forEach(key => {
+        cloneLayer[key] = keyCodeFiller;
+      });
+    }
+
+    if (chooseYourKeyboardSide === "RIGHT") {
+      dygmaKeymap.right.forEach(key => {
+        cloneLayer[key] = keyCodeFiller;
+      });
+    }
+
+    if (chooseYourKeyboardSide === "BOTH") {
+      cloneLayer.fill(keyCodeFiller);
+    }
+
+    newKeymap[idx] = cloneLayer;
 
     startContext();
     if (colorIndex >= 0) {
@@ -1943,7 +1970,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
         <ClearLayerDialog
           open={clearConfirmationOpen}
           onCancel={cancelClear}
-          onConfirm={k => clearLayer(k.keyCode, k.colorIndex)}
+          onConfirm={k => clearLayer(k.keyCode, k.colorIndex, k.chooseYourKeyboardSide)}
           colors={palette}
           selectedColorIndex={palette.length - 1}
           keyboardSide="BOTH"
