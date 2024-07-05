@@ -54,6 +54,7 @@ import { i18n } from "@Renderer/i18n";
 import Store from "@Renderer/utils/Store";
 import getLanguage from "@Renderer/utils/language";
 import { ClearLayerDialog } from "@Renderer/components/molecules/CustomModal/ClearLayerDialog";
+import getLayerMap from "@Renderer/utils/LayersMap";
 import Keymap, { KeymapDB } from "../../api/keymap";
 import { rgb2w, rgbw2b } from "../../api/color";
 import Backup from "../../api/backup";
@@ -1224,54 +1225,21 @@ const LayoutEditor = (props: LayoutEditorProps) => {
   };
 
   const clearLayer = (fillKeyCode = TRANS_KEY_CODE, colorIndex = 15, chooseYourKeyboardSide = "BOTH") => {
-    log.info(state);
+    const layerMap = getLayerMap(deviceName.toLowerCase());
     const newKeymap = keymap.custom.slice();
     const idx = keymap.onlyCustom ? currentLayer : currentLayer - keymap.default.length;
     const keyCodeFiller = keymapDB.parse(fillKeyCode);
     const cloneLayer = [...newKeymap[idx]];
-    const dygmaMap = {
-      keys: {
-        left: [
-          0, 1, 2, 3, 4, 5, 6, 16, 17, 18, 19, 20, 21, 22, 32, 33, 34, 35, 36, 37, 38, 48, 49, 50, 51, 52, 53, 64, 65, 66, 67, 68,
-          69, 70, 71,
-        ],
-        right: [
-          9, 10, 11, 12, 13, 14, 15, 25, 26, 27, 28, 29, 30, 31, 41, 42, 43, 44, 45, 46, 47, 58, 59, 60, 61, 62, 63, 72, 73, 74,
-          75, 76, 77, 78, 79,
-        ],
-      },
-      leds: {
-        left: {
-          keys: {
-            from: 0,
-            to: 34,
-          },
-          underglow: {
-            from: 70,
-            to: 122,
-          },
-        },
-        right: {
-          keys: {
-            from: 35,
-            to: 69,
-          },
-          underglow: {
-            from: 123,
-            to: 175,
-          },
-        },
-      },
-    };
+
     if (chooseYourKeyboardSide === "LEFT") {
-      dygmaMap.keys.left.forEach(key => {
-        cloneLayer[key] = keyCodeFiller;
+      layerMap.keys.position.left.forEach(value => {
+        cloneLayer.fill(keyCodeFiller, value.from, value.to);
       });
     }
 
     if (chooseYourKeyboardSide === "RIGHT") {
-      dygmaMap.keys.right.forEach(key => {
-        cloneLayer[key] = keyCodeFiller;
+      layerMap.keys.position.right.forEach(value => {
+        cloneLayer.fill(keyCodeFiller, value.from, value.to);
       });
     }
 
@@ -1285,29 +1253,19 @@ const LayoutEditor = (props: LayoutEditorProps) => {
     if (colorIndex >= 0) {
       const newColormap = colorMap.slice();
       if (newColormap.length > 0) {
-        log.info(newColormap[idx]);
         if (chooseYourKeyboardSide === "LEFT") {
-          newColormap[idx] = newColormap[idx].map((elem: number, index: number) =>
-            (dygmaMap.leds.left.keys.from <= index && index <= dygmaMap.leds.left.keys.to) ||
-            (dygmaMap.leds.left.underglow.from <= index && index <= dygmaMap.leds.left.underglow.to)
-              ? colorIndex
-              : elem,
-          );
+          newColormap[idx].fill(colorIndex, layerMap.keys.leds.left.from, layerMap.keys.leds.left.to);
+          newColormap[idx].fill(colorIndex, layerMap.underglow.left.from, layerMap.underglow.left.to);
         }
 
         if (chooseYourKeyboardSide === "RIGHT") {
-          newColormap[idx] = newColormap[idx].map((elem: number, index: number) =>
-            (dygmaMap.leds.right.keys.from <= index && index <= dygmaMap.leds.right.keys.to) ||
-            (dygmaMap.leds.right.underglow.from <= index && index <= dygmaMap.leds.right.underglow.to)
-              ? colorIndex
-              : elem,
-          );
+          newColormap[idx].fill(colorIndex, layerMap.keys.leds.right.from, layerMap.keys.leds.right.to);
+          newColormap[idx].fill(colorIndex, layerMap.underglow.right.from, layerMap.underglow.right.to);
         }
 
         if (chooseYourKeyboardSide === "BOTH") {
           newColormap[idx] = Array(newColormap[0].length).fill(colorIndex);
         }
-        log.info(newColormap[idx]);
       }
       setColorMap(newColormap);
     }
