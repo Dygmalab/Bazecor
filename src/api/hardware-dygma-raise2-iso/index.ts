@@ -47,8 +47,8 @@ const Raise2ISO: DygmaDeviceType = {
     columns: 16,
   },
   keyboardUnderglow: {
-    rows: 5,
-    columns: 29,
+    rows: 3,
+    columns: 59,
   },
   RGBWMode: true,
   bootloader: false,
