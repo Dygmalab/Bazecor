@@ -196,12 +196,14 @@ class KeymapISO extends React.Component {
               rgb: "#ffffff",
             }));
 
+    log.info("colormap", colormap, this.props.colormap);
+
     // console.log("showing BARS", colormap, palette, led_map, no_key_led_map);
     const getColor = (row, col) => {
       const ledIndex =
         col !== undefined ? LedMap[parseInt(row)][parseInt(col)] : NoKeyLedMap[row - LEDS_LEFT_KEYS - LEDS_RIGHT_KEYS];
       const colorIndex = colormap[ledIndex];
-      // log.debug("testing colors", row, col, ledIndex, colorIndex, row - UNDERGLOW);
+      log.info("Row and col", row, NoKeyLedMap.length, colorIndex, colormap);
       const color = palette[colorIndex].rgb;
       return color;
     };

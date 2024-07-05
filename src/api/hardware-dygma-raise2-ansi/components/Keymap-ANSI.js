@@ -187,6 +187,7 @@ class KeymapANSI extends React.Component {
       Array(UNDERGLOW + LEDS_LEFT_KEYS + LEDS_RIGHT_KEYS)
         .fill()
         .map(() => 0);
+
     const palette =
       this.props.palette && this.props.palette.length > 0
         ? this.props.palette
@@ -196,11 +197,13 @@ class KeymapANSI extends React.Component {
               rgb: "#ffffff",
             }));
 
+    log.info("colormap", this.props.colormap);
+
     const getColor = (row, col) => {
       const ledIndex =
         col !== undefined ? LedMap[parseInt(row)][parseInt(col)] : NoKeyLedMap[row - LEDS_LEFT_KEYS - LEDS_RIGHT_KEYS];
       const colorIndex = colormap[ledIndex];
-      // log.info("Row and col", row, NoKeyLedMap.length, colorIndex, colormap);
+      log.info("Row and col", row, NoKeyLedMap.length, colorIndex, colormap);
       const color = palette[colorIndex].rgb;
       return color;
     };
