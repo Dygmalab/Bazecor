@@ -104,8 +104,8 @@ ColorButton.propTypes = {
   onClick: PropTypes.func,
   label: PropTypes.string,
   text: PropTypes.string,
-  icoSVG: PropTypes.object ?? {},
-  color: PropTypes.object ?? {},
+  icoSVG: PropTypes.object ?? null,
+  color: PropTypes.object ?? null,
 };
 
 export default ColorButton;
