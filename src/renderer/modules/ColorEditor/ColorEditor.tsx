@@ -158,6 +158,7 @@ class ColorEditor extends Component<ColorEditorProps, { displayColorPicker: bool
                 text={i18n.editor.color.editColor}
                 icoSVG={<IconColorPalette />}
                 color={colors[selected]}
+                disabled={!colors[selected]}
               />
               {displayColorPicker ? (
                 <div style={popover}>
@@ -175,6 +176,7 @@ class ColorEditor extends Component<ColorEditorProps, { displayColorPicker: bool
                 text={i18n.editor.color.allKeys}
                 icoSVG={<IconKeysLight />}
                 color={colors[selected]}
+                disabled={!colors[selected]}
               />
               <ColorButton
                 onClick={() => {
@@ -184,6 +186,7 @@ class ColorEditor extends Component<ColorEditorProps, { displayColorPicker: bool
                 text={i18n.editor.color.underglow}
                 icoSVG={<IconKeysUnderglow />}
                 color={colors[selected]}
+                disabled={!colors[selected]}
               />
             </div>
           </div>
