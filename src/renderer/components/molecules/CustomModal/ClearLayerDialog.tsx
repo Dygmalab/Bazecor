@@ -68,9 +68,9 @@ export const ClearLayerDialog = (props: ClearLayerDialogProps): JSX.Element => {
               triggerFunction={chooseYourKeyboardSideUpdate}
               value={chooseYourKeyboardSide}
               listElements={[
-                { value: "BOTH", name: "Full Keyboard", icon: "", index: 0 },
-                { value: "LEFT", name: "Left Side", icon: "", index: 1 },
-                { value: "RIGHT", name: "Right Side", icon: "", index: 2 },
+                { value: "BOTH", name: "Full", icon: "", index: 0 },
+                { value: "LEFT", name: "Left", icon: "", index: 1 },
+                { value: "RIGHT", name: "Right", icon: "", index: 2 },
               ]}
               variant="flex"
               size="sm"
