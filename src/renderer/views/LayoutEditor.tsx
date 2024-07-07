@@ -1248,7 +1248,8 @@ const LayoutEditor = (props: LayoutEditorProps) => {
         }
 
         if (chooseYourKeyboardSide === "BOTH") {
-          newColormap[idx] = Array(newColormap[0].length).fill(colorIndex);
+          newColormap[idx].fill(colorIndex, layerMap.keys.leds.left.from, layerMap.keys.leds.left.to);
+          newColormap[idx].fill(colorIndex, layerMap.keys.leds.right.from, layerMap.keys.leds.right.to);
         }
       }
       setColorMap(newColormap);
@@ -1277,7 +1278,8 @@ const LayoutEditor = (props: LayoutEditorProps) => {
         }
 
         if (chooseYourKeyboardSide === "BOTH") {
-          newColormap[idx] = Array(newColormap[0].length).fill(colorIndex);
+          newColormap[idx].fill(colorIndex, layerMap.underglow.left.from, layerMap.underglow.left.to);
+          newColormap[idx].fill(colorIndex, layerMap.underglow.right.from, layerMap.underglow.right.to);
         }
       }
       setColorMap(newColormap);
