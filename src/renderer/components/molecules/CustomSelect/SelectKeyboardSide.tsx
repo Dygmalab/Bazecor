@@ -9,7 +9,7 @@ const createLabel = (text: string, forId: string) => (
 );
 
 type KeyboardSide = {
-  chooseYourKeyboardSide: "BOTH" | "LEFT" | "RIGHT" | "";
+  chooseYourKeyboardSide: "BOTH" | "LEFT" | "RIGHT";
   chooseYourKeyboardSideUpdate: (value: string | number | boolean) => void;
 };
 

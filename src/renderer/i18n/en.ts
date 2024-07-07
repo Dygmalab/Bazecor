@@ -121,6 +121,10 @@ const English = {
       exportToPdf: "Export layouts to pdf",
       layerToCopy: "You will copy the layout of this layer",
     },
+    clear: {
+      title: "Clear keyboard",
+      clearLayer: "Layer",
+    },
     color: {
       color: "Color",
       colorEditor: "Color Editor",
@@ -128,7 +132,7 @@ const English = {
       selectedColor: "Selected color",
       editColor: "Edit Color",
       applyColor: "Apply color",
-      allKeys: "All Keys",
+      allKeys: "Keys",
       underglow: "Underglow",
       selectColorFirst: "Select a color first",
       selectColorFirstContent: "To use the color controls select a color to enable all buttons.",
@@ -255,9 +259,9 @@ const English = {
       },
       clearLayer: {
         title: "Clear layer",
-        resetColors: "Reset underglow and key colors using the selection",
-        useNoKey: "Fill layer with NOKEY instead of TRANS key",
-        chooseYourKeyboardSide: "Choose the entire keyboard (full), left or right side",
+        resetColors: "Reset underglow and key color with:",
+        useNoKey: "Fill layer with:",
+        chooseYourKeyboardSide: "Choose your side:",
       },
     },
     standardView: {
