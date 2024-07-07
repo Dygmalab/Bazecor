@@ -32,7 +32,6 @@ import { Popover, PopoverContent, PopoverTrigger } from "@Renderer/components/at
 import { SelectKeyboardSide } from "@Renderer/components/molecules/CustomSelect/SelectKeyboardSide";
 import { SelectResetKeyType } from "@Renderer/components/molecules/CustomSelect/SelectResetKeyType";
 import { Button } from "@Renderer/components/atoms/Button";
-import log from "electron-log";
 import { NOKEY_KEY_CODE, TRANS_KEY_CODE } from "../../../api/keymap/types";
 
 const Styles = Styled.div`
@@ -105,6 +104,8 @@ class ColorEditor extends Component<
     chooseYourKeyboardSide: "BOTH" | "LEFT" | "RIGHT";
     useNoKey: boolean;
     openClearLayerPopover: boolean;
+    openUnderglowColorPopover: boolean;
+    openKeyColorPopover: boolean;
     clearLayer?: (fillKeyCode?: boolean, chooseYourKeyboardSide?: string) => void;
     changeUnderglowColor?: (colorIndex?: number, chooseYourKeyboardSide?: string) => void;
     changeKeyColor?: (colorIndex?: number, chooseYourKeyboardSide?: string) => void;
@@ -118,8 +119,13 @@ class ColorEditor extends Component<
       chooseYourKeyboardSide: "BOTH",
       useNoKey: false,
       openClearLayerPopover: false,
+      openUnderglowColorPopover: false,
+      openKeyColorPopover: false,
     };
-    log.info(props);
+
+    this.showColorPicker = this.showColorPicker.bind(this);
+    this.selectColor = this.selectColor.bind(this);
+    this.handleChange = this.handleChange.bind(this);
   }
 
   handleChange(color: ColorResult) {
@@ -139,6 +145,14 @@ class ColorEditor extends Component<
     this.setState({ openClearLayerPopover: value });
   };
 
+  setChangeUnderglowColorPopover = (value: boolean) => {
+    this.setState({ openUnderglowColorPopover: value });
+  };
+
+  setChangeKeyColorPopover = (value: boolean) => {
+    this.setState({ openKeyColorPopover: value });
+  };
+
   selectColor(pick: number) {
     const { selected, onColorSelect, onColorButtonSelect } = this.props;
     onColorSelect(pick);
@@ -154,8 +168,15 @@ class ColorEditor extends Component<
   }
 
   render() {
-    const { displayColorPicker, chooseYourKeyboardSide, useNoKey, openClearLayerPopover } = this.state;
-    const { colors, selected, toChangeAllKeysColor, deviceName, clearLayer } = this.props;
+    const {
+      displayColorPicker,
+      chooseYourKeyboardSide,
+      useNoKey,
+      openClearLayerPopover,
+      openKeyColorPopover,
+      openUnderglowColorPopover,
+    } = this.state;
+    const { colors, selected, clearLayer, changeUnderglowColor, changeKeyColor } = this.props;
     const popover = {
       position: "absolute",
       top: "42px",
@@ -167,8 +188,6 @@ class ColorEditor extends Component<
       bottom: "0px",
       left: "0px",
     } as CSSProperties;
-
-    const underglowStart = deviceName === "Defy" ? 70 : 69;
 
     return (
       <Styles className="extraPanel">
@@ -197,26 +216,97 @@ class ColorEditor extends Component<
               ) : null}
             </div>
             <div className="buttonsApplyAll">
-              <ColorButton
-                onClick={() => {
-                  toChangeAllKeysColor(selected, 0, underglowStart);
-                }}
-                label={i18n.editor.color.applyColor}
-                text={i18n.editor.color.allKeys}
-                icoSVG={<IconKeysLight />}
-                color={colors[selected]}
-                disabled={!colors[selected]}
-              />
-              <ColorButton
-                onClick={() => {
-                  toChangeAllKeysColor(selected, underglowStart, 177);
-                }}
-                label={i18n.editor.color.applyColor}
-                text={i18n.editor.color.underglow}
-                icoSVG={<IconKeysUnderglow />}
-                color={colors[selected]}
-                disabled={!colors[selected]}
-              />
+              <Popover open={openKeyColorPopover}>
+                <PopoverTrigger>
+                  <ColorButton
+                    onClick={() => {
+                      this.setChangeKeyColorPopover(true);
+                    }}
+                    label={i18n.editor.color.applyColor}
+                    text={i18n.editor.color.allKeys}
+                    icoSVG={<IconKeysLight />}
+                    color={colors[selected]}
+                    disabled={!colors[selected]}
+                  />
+                </PopoverTrigger>
+                <PopoverContent align="end">
+                  <div className="flex flex-col">
+                    <SelectKeyboardSide
+                      chooseYourKeyboardSide={chooseYourKeyboardSide}
+                      chooseYourKeyboardSideUpdate={this.chooseYourKeyboardSideUpdate}
+                    />
+                    <div className="flex justify-end space-x-2">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => {
+                          this.chooseYourKeyboardSideUpdate("BOTH");
+                          this.setChangeKeyColorPopover(false);
+                        }}
+                      >
+                        {i18n.dialog.cancel}
+                      </Button>
+                      <Button
+                        variant="secondary"
+                        size="sm"
+                        onClick={() => {
+                          changeKeyColor(selected, chooseYourKeyboardSide);
+                          this.chooseYourKeyboardSideUpdate("BOTH");
+                          this.setChangeKeyColorPopover(false);
+                        }}
+                      >
+                        {i18n.dialog.ok}
+                      </Button>
+                    </div>
+                  </div>
+                </PopoverContent>
+              </Popover>
+              <Popover open={openUnderglowColorPopover}>
+                <PopoverTrigger>
+                  <ColorButton
+                    onClick={() => {
+                      this.setChangeUnderglowColorPopover(true);
+                    }}
+                    label={i18n.editor.color.applyColor}
+                    text={i18n.editor.color.underglow}
+                    icoSVG={<IconKeysUnderglow />}
+                    color={colors[selected]}
+                    disabled={!colors[selected]}
+                  />
+                </PopoverTrigger>
+                <PopoverContent align="end">
+                  <div className="flex flex-col">
+                    <SelectKeyboardSide
+                      chooseYourKeyboardSide={chooseYourKeyboardSide}
+                      chooseYourKeyboardSideUpdate={this.chooseYourKeyboardSideUpdate}
+                    />
+                    <div className="flex justify-end space-x-2">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => {
+                          this.chooseYourKeyboardSideUpdate("BOTH");
+                          this.useNoKeyUpdate(false);
+                          this.setChangeUnderglowColorPopover(false);
+                        }}
+                      >
+                        {i18n.dialog.cancel}
+                      </Button>
+                      <Button
+                        variant="secondary"
+                        size="sm"
+                        onClick={() => {
+                          changeUnderglowColor(selected, chooseYourKeyboardSide);
+                          this.chooseYourKeyboardSideUpdate("BOTH");
+                          this.setChangeUnderglowColorPopover(false);
+                        }}
+                      >
+                        {i18n.dialog.ok}
+                      </Button>
+                    </div>
+                  </div>
+                </PopoverContent>
+              </Popover>
               <Popover open={openClearLayerPopover}>
                 <PopoverTrigger>
                   <ColorButton

@@ -122,7 +122,7 @@ const English = {
       layerToCopy: "You will copy the layout of this layer",
     },
     clear: {
-      title: "Clear keyboard",
+      title: "Clear keymap",
       clearLayer: "Layer",
     },
     color: {

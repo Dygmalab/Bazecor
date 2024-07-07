@@ -1241,12 +1241,10 @@ const LayoutEditor = (props: LayoutEditorProps) => {
       if (newColormap.length > 0) {
         if (chooseYourKeyboardSide === "LEFT") {
           newColormap[idx].fill(colorIndex, layerMap.keys.leds.left.from, layerMap.keys.leds.left.to);
-          newColormap[idx].fill(colorIndex, layerMap.underglow.left.from, layerMap.underglow.left.to);
         }
 
         if (chooseYourKeyboardSide === "RIGHT") {
           newColormap[idx].fill(colorIndex, layerMap.keys.leds.right.from, layerMap.keys.leds.right.to);
-          newColormap[idx].fill(colorIndex, layerMap.underglow.right.from, layerMap.underglow.right.to);
         }
 
         if (chooseYourKeyboardSide === "BOTH") {
@@ -1265,18 +1263,16 @@ const LayoutEditor = (props: LayoutEditorProps) => {
     });
   };
   const changeUnderglowColor = (colorIndex = 15, chooseYourKeyboardSide = "BOTH"): void => {
-    const { layerMap, idx, newKeymap } = prepareLayer();
+    const { layerMap, idx } = prepareLayer();
     startContext();
     if (colorIndex >= 0) {
       const newColormap = colorMap.slice();
       if (newColormap.length > 0) {
         if (chooseYourKeyboardSide === "LEFT") {
-          newColormap[idx].fill(colorIndex, layerMap.keys.leds.left.from, layerMap.keys.leds.left.to);
           newColormap[idx].fill(colorIndex, layerMap.underglow.left.from, layerMap.underglow.left.to);
         }
 
         if (chooseYourKeyboardSide === "RIGHT") {
-          newColormap[idx].fill(colorIndex, layerMap.keys.leds.right.from, layerMap.keys.leds.right.to);
           newColormap[idx].fill(colorIndex, layerMap.underglow.right.from, layerMap.underglow.right.to);
         }
 
