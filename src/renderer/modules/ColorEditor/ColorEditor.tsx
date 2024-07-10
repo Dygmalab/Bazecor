@@ -307,7 +307,7 @@ class ColorEditor extends Component<
                   </div>
                 </PopoverContent>
               </Popover>
-              <Popover open={openClearLayerPopover}>
+              {/*<Popover open={openClearLayerPopover}>
                 <PopoverTrigger>
                   <ColorButton
                     onClick={() => {
@@ -353,7 +353,7 @@ class ColorEditor extends Component<
                     </div>
                   </div>
                 </PopoverContent>
-              </Popover>
+              </Popover>*/}
             </div>
           </div>
         </div>
