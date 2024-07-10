@@ -22,6 +22,7 @@ import { serialConnection, rawCommand, noWaitCommand } from "../serialConnection
 import { PACKET_SIZE, TYPE_DAT, TYPE_ELA, TYPE_ESA } from "../flasherConstants";
 import { HexType } from "../types";
 import ihexDecode from "../ihexDecode";
+import { delay } from "../delay";
 
 let serialPort;
 
@@ -160,7 +161,9 @@ const NRf52833 = {
 
     try {
       // START APPLICATION
+      await delay(300);
       noWaitCommand("S#", serialPort);
+      await delay(300);
       if (ans[0] !== 65) log.warn("warning when disconnecting");
     } catch (error) {
       log.warn(error);
