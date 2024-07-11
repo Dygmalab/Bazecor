@@ -15,9 +15,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React, { Component, CSSProperties } from "react";
+import React, { useState, CSSProperties } from "react";
 import { ColorResult, SketchPicker } from "react-color";
-import Styled from "styled-components";
 
 // Bootstrap components
 import Heading from "@Renderer/components/atoms/Heading";
@@ -29,168 +28,98 @@ import { IconColorPalette, IconKeysLight, IconKeysUnderglow } from "@Renderer/co
 import { ColorEditorProps } from "@Renderer/types/colorEditor";
 import { ColorPalette } from "@Renderer/modules/ColorEditor/ColorPalette";
 
-const Styles = Styled.div`
-width: 100%;
-.panelTitle {
-  white-space: nowrap;
-  padding-right: 24px;
-  h4 {
-    color: ${({ theme }) => theme.styles.colorPanel.colorTitle};
-    font-size: 14px;
-    font-weight: 600;
-    letter-spacing: -0.02em;
-    white-space: nowrap;
-    margin: 0;
-  }
-}
-.panelTools {
-  display: flex;
-  flex-wrap: nowrap;
-  justify-content: space-between;
-  width: 100%;
-}
-.buttonsGroup {
-  display: flex;
-  flex-wrap: nowrap;
-  .buttonColor {
-    margin-left: 8px;
-  }
-}
-.buttonEditColor {
-  position: relative;
-}
-.buttonsApplyAll {
-  display: flex;
-  flex-wrap: nowrap;
-}
+const ColorEditor: React.FC<ColorEditorProps> = ({
+  colors,
+  selected,
+  toChangeAllKeysColor,
+  deviceName,
+  onColorPick,
+  onColorSelect,
+  onColorButtonSelect,
+}) => {
+  const [displayColorPicker, setDisplayColorPicker] = useState(false);
 
-.colorPalette {
-  display: grid;
-  grid-auto-columns: auto;
-  grid-auto-flow: column;
-  align-items: center;
-  grid-gap: 4px;
-}
-.sketch-picker {
-  font-weight: 600;
-  input {
-    font-weight: 500;
-    width: 100%;
-    color: #000;
-  }
-}
-
-@media screen and (max-width: 1599px) {
-  .panelTitle {
-    padding-right: 12px;
-  }
-}
-@media screen and (max-width: 1499px) {
-  .panelTitle {
-    display: none;
-  }
-}
-`;
-
-class ColorEditor extends Component<ColorEditorProps, { displayColorPicker: boolean }> {
-  constructor(props: ColorEditorProps) {
-    super(props);
-
-    this.state = {
-      displayColorPicker: false,
-    };
-
-    this.showColorPicker = this.showColorPicker.bind(this);
-    this.selectColor = this.selectColor.bind(this);
-    this.handleChange = this.handleChange.bind(this);
-  }
-
-  handleChange(color: ColorResult) {
-    const { selected, onColorPick } = this.props;
+  const handleChange = (color: ColorResult) => {
     onColorPick(selected, color.rgb.r, color.rgb.g, color.rgb.b);
-  }
+  };
 
-  selectColor(pick: number) {
-    const { selected, onColorSelect, onColorButtonSelect } = this.props;
+  const selectColor = (pick: number) => {
     onColorSelect(pick);
     if (pick === selected) {
       onColorButtonSelect("one_button_click", pick);
-      return;
+    } else {
+      onColorButtonSelect("another_button_click", pick);
     }
-    onColorButtonSelect("another_button_click", pick);
-  }
+  };
 
-  showColorPicker() {
-    this.setState(state => ({ displayColorPicker: !state.displayColorPicker }));
-  }
+  const showColorPicker = () => {
+    setDisplayColorPicker(prev => !prev);
+  };
 
-  render() {
-    const { colors, selected, toChangeAllKeysColor, deviceName } = this.props;
-    const { displayColorPicker } = this.state;
-    const popover = {
-      position: "absolute",
-      top: "42px",
-    } as CSSProperties;
-    const cover = {
-      position: "fixed",
-      top: "0px",
-      right: "0px",
-      bottom: "0px",
-      left: "0px",
-    } as CSSProperties;
+  const popover: CSSProperties = {
+    position: "absolute",
+    top: "42px",
+  };
 
-    const underglowStart = deviceName === "Defy" ? 70 : 69;
+  const cover: CSSProperties = {
+    position: "fixed",
+    top: "0px",
+    right: "0px",
+    bottom: "0px",
+    left: "0px",
+  };
 
-    return (
-      <Styles className="extraPanel w-full flex items-center flex-nowrap min-h-14 rounded-tl-none rounded-tr-none rounded-bl-regular rounded-br-regular mt-0.5 py-3 px-6 bg-gray-25/90 dark:bg-gray-400/15">
-        <div className="panelTitle">
-          <Heading headingLevel={4} renderAs="h4">
-            {i18n.editor.color.colorPalette}
-          </Heading>
-        </div>
-        <div className="panelTools">
-          <ColorPalette colors={colors} selected={selected} onColorSelect={this.selectColor} />
-          <div className="buttonsGroup">
-            <div className="buttonEditColor">
-              <ColorButton
-                onClick={this.showColorPicker}
-                label={i18n.editor.color.selectedColor}
-                text={i18n.editor.color.editColor}
-                icoSVG={<IconColorPalette />}
-                color={colors[selected]}
-              />
-              {displayColorPicker ? (
-                <div style={popover}>
-                  <div style={cover} onClick={this.showColorPicker} aria-hidden="true" />
-                  <SketchPicker color={colors[selected]} onChange={this.handleChange} width="240px" />
-                </div>
-              ) : null}
-            </div>
-            <div className="buttonsApplyAll">
-              <ColorButton
-                onClick={() => {
-                  toChangeAllKeysColor(selected, 0, underglowStart);
-                }}
-                label={i18n.editor.color.applyColor}
-                text={i18n.editor.color.allKeys}
-                icoSVG={<IconKeysLight />}
-                color={colors[selected]}
-              />
-              <ColorButton
-                onClick={() => {
-                  toChangeAllKeysColor(selected, underglowStart, 177);
-                }}
-                label={i18n.editor.color.applyColor}
-                text={i18n.editor.color.underglow}
-                icoSVG={<IconKeysUnderglow />}
-                color={colors[selected]}
-              />
-            </div>
+  const underglowStart = deviceName === "Defy" ? 70 : 69;
+
+  return (
+    <div className="extraPanel w-full flex items-center flex-nowrap min-h-14 rounded-tl-none rounded-tr-none rounded-bl-regular rounded-br-regular mt-0.5 py-3 px-6 bg-gray-25/90 dark:bg-gray-400/15">
+      <div className="panelTitle whitespace-nowrap pr-6 xs:hidden sm:hidden md:hidden lg:hidden xl:inline-flex">
+        <Heading
+          headingLevel={4}
+          renderAs="h4"
+          className="text-sm font-semibold tracking-tight whitespace-nowrap m-0 text-gray-500 dark:text-gray-100"
+        >
+          {i18n.editor.color.colorPalette}
+        </Heading>
+      </div>
+      <div className="panelTools flex flex-nowrap justify-between w-full">
+        <ColorPalette colors={colors} selected={selected} onColorSelect={selectColor} />
+        <div className="buttonsGroup flex flex-nowrap gap-1">
+          <div className="buttonEditColor relative">
+            <ColorButton
+              onClick={showColorPicker}
+              label={i18n.editor.color.selectedColor}
+              text={i18n.editor.color.editColor}
+              icoSVG={<IconColorPalette />}
+              color={colors[selected]}
+            />
+            {displayColorPicker && (
+              <div style={popover}>
+                <div style={cover} onClick={showColorPicker} aria-hidden="true" />
+                <SketchPicker color={colors[selected]} onChange={handleChange} width="240px" />
+              </div>
+            )}
+          </div>
+          <div className="buttonsApplyAll flex flex-nowrap gap-1">
+            <ColorButton
+              onClick={() => toChangeAllKeysColor(selected, 0, underglowStart)}
+              label={i18n.editor.color.applyColor}
+              text={i18n.editor.color.allKeys}
+              icoSVG={<IconKeysLight />}
+              color={colors[selected]}
+            />
+            <ColorButton
+              onClick={() => toChangeAllKeysColor(selected, underglowStart, 177)}
+              label={i18n.editor.color.applyColor}
+              text={i18n.editor.color.underglow}
+              icoSVG={<IconKeysUnderglow />}
+              color={colors[selected]}
+            />
           </div>
         </div>
-      </Styles>
-    );
-  }
-}
+      </div>
+    </div>
+  );
+};
 
 export default ColorEditor;

@@ -717,3 +717,11 @@ select:focus {
 .pageHeader .pageTools {
   width: calc(100% - 12rem);
 }
+.sketch-picker {
+  font-weight: 600;
+}
+.sketch-picker input {
+  font-weight: 500;
+  width: 100%;
+  color: #000;
+}

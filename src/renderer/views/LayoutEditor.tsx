@@ -1936,12 +1936,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
               className={`self-start mt-auto mb-6 pt-4 ${viewMode === "single" ? "absolute" : " "}`}
               style={{ top: layoutSelectorPosition.y, left: layoutSelectorPosition.x }}
             >
-              <ToggleGroupLayoutViewMode
-                value={viewMode}
-                onValueChange={onToggleStandardView}
-                layoutSelectorPosition={layoutSelectorPosition}
-                view="layout"
-              />
+              <ToggleGroupLayoutViewMode value={viewMode} onValueChange={onToggleStandardView} view="layout" />
             </motion.div>
           )}
         </AnimatePresence>

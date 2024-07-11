@@ -17,6 +17,7 @@
 
 import React from "react";
 import Heading from "@Renderer/components/atoms/Heading";
+import { motion, AnimatePresence } from "framer-motion";
 import { PageHeaderType } from "./Types";
 import Saving from "../Saving";
 
@@ -63,7 +64,13 @@ function PageHeader(props: PageHeaderType) {
           ) : null}
         </div>
       </div>
-      {isColorActive ? colorEditor : ""}
+      <AnimatePresence mode="popLayout">
+        {isColorActive && (
+          <motion.div initial={{ opacity: 0, y: 50 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 50 }}>
+            {colorEditor}
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

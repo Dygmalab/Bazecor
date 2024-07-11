@@ -2,15 +2,6 @@ import { ColorPicker } from "@Renderer/component/Button";
 import React from "react";
 
 import { ColorPaletteProps } from "@Types/colorPalette";
-import Styled from "styled-components";
-
-const Container = Styled.div`
-      display: grid;
-      grid-auto-columns: auto;
-      grid-auto-flow: column;
-      align-items: center;
-      grid-gap: 4px;
-    `;
 
 export const ColorPalette = (props: ColorPaletteProps) => {
   const { colors, onColorSelect, selected, className } = props;
@@ -45,5 +36,9 @@ export const ColorPalette = (props: ColorPaletteProps) => {
       />
     );
   });
-  return <Container className={`colorPalette ${className ?? ""}`.trim()}>{layerButtons}</Container>;
+  return (
+    <div className={`colorPalette grid auto-cols-auto grid-flow-col items-center gap-1 ${className ?? ""}`.trim()}>
+      {layerButtons}
+    </div>
+  );
 };
