@@ -47,7 +47,7 @@ import StandardView from "@Renderer/modules/StandardView";
 import LayerSelector from "@Renderer/components/organisms/Select/LayerSelector";
 import { Button } from "@Renderer/components/atoms/Button";
 import ToggleGroupLayoutViewMode from "@Renderer/components/molecules/CustomToggleGroup/ToggleGroupLayoutViewMode";
-import { IconArrowDownWithLine, IconArrowUpWithLine } from "@Renderer/components/atoms/icons";
+import { IconArrowDownWithLine, IconArrowUpWithLine, IconColorPalette } from "@Renderer/components/atoms/icons";
 import LoaderLayout from "@Renderer/components/atoms/loader/loaderLayout";
 import { i18n } from "@Renderer/i18n";
 
@@ -470,6 +470,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
   const [currentLanguageLayout, setCurrentLanguageLayout] = useState("english");
   const [showMacroModal, setShowMacroModal] = useState(false);
   const [showNeuronModal, setShowNeuronModal] = useState(false);
+  const [leftSideModified, setLeftSideModified] = useState(false);
   const [isStandardView, setIsStandardView] = useState(
     store.get("settings.isStandardView") !== undefined ? (store.get("settings.isStandardView") as boolean) : false,
   );
@@ -765,7 +766,22 @@ const LayoutEditor = (props: LayoutEditorProps) => {
   };
 
   const updateColormap = async (device: DeviceClass, colormap: number[][]) => {
+    const { currentDevice } = state;
     const args = flatten(colormap).map(v => v.toString());
+    // check if colormap has the left side updated
+    if (leftSideModified && currentDevice.type === "hid") {
+      toast.warn(
+        <ToastMessage
+          title={i18n.success.btLeftSideColorsChanged}
+          content={i18n.success.btLeftSideColorsChangedContent}
+          icon={<IconColorPalette />}
+        />,
+        {
+          autoClose: 10000,
+          icon: "",
+        },
+      );
+    }
     const result = await device.command("colormap.map", ...args);
     return result;
   };
@@ -1159,6 +1175,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
       setCurrentKeyIndex(currentKeyIndex);
       setCurrentLedIndex(currentLedIndex);
       setModified(false);
+      setLeftSideModified(true);
       setIsMultiSelected(false);
       setSelectedPaletteColor(null);
       setIsColorButtonSelected(false);
@@ -1267,6 +1284,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
   };
 
   const onColorSelect = (colorIndex: number) => {
+    const { currentDevice } = state;
     const isEqualColor = onVerificationColor(colorIndex, currentLayer, currentLedIndex);
     // log.info(
     //   "data from onColorSelect",
@@ -1284,6 +1302,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
     if (!isEqualColor && currentKeyIndex > 0) {
       const colormap = colorMap.slice();
       colormap[currentLayer][currentLedIndex] = colorIndex;
+      if (currentDevice.device.keyboard.ledsLeft.includes(currentLedIndex)) setLeftSideModified(true);
       setIsMultiSelected(true);
       setColorMap(colorMap);
       setSelectedPaletteColor(colorIndex);
@@ -1366,6 +1385,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
   const toChangeAllKeysColor = (colorIndex: number, start: number, end: number) => {
     const colormap = colorMap.slice();
     colormap[currentLayer] = colormap[currentLayer].fill(colorIndex, start, end);
+    setLeftSideModified(true);
     setColorMap(colormap);
     setModified(true);
     startContext();
@@ -1662,6 +1682,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
       const scanner = async () => {
         log.info("Resseting KB Data!!!");
         setModified(false);
+        setLeftSideModified(true);
         setLoading(true);
         setCurrentLayer(previousLayer !== 0 ? previousLayer : 0);
         setPreviousLayer(0);
