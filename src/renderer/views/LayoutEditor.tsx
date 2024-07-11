@@ -1175,7 +1175,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
       setCurrentKeyIndex(currentKeyIndex);
       setCurrentLedIndex(currentLedIndex);
       setModified(false);
-      setLeftSideModified(true);
+      setLeftSideModified(false);
       setIsMultiSelected(false);
       setSelectedPaletteColor(null);
       setIsColorButtonSelected(false);
@@ -1682,7 +1682,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
       const scanner = async () => {
         log.info("Resseting KB Data!!!");
         setModified(false);
-        setLeftSideModified(true);
+        setLeftSideModified(false);
         setLoading(true);
         setCurrentLayer(previousLayer !== 0 ? previousLayer : 0);
         setPreviousLayer(0);
