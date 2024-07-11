@@ -42,7 +42,7 @@ const English = {
     changesSaved: "Changes saved successfully",
     changesSavedContent: "Your changes were saved successfully on the device!",
     btLeftSideColorsChanged: "Left side colors updated on Bluetooth",
-    btLeftSideColorsChangedContent: "Don't worry! Please turn on and off the left side of your keyboard to see the LED changes",
+    btLeftSideColorsChangedContent: "Don't worry! Please turn off and on the left side of your keyboard to see the LED changes",
     backupStoragePeriod: "Updated the storage period!!",
     backupStoragePeriodText: "The storage period was changed to",
     backupPath: "Backup path updated",
