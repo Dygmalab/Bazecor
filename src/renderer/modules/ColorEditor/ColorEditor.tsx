@@ -142,7 +142,7 @@ class ColorEditor extends Component<ColorEditorProps, { displayColorPicker: bool
     const underglowStart = deviceName === "Defy" ? 70 : 69;
 
     return (
-      <Styles className="extraPanel">
+      <Styles className="extraPanel w-full flex items-center flex-nowrap min-h-14 rounded-tl-none rounded-tr-none rounded-bl-regular rounded-br-regular mt-0.5 py-3 px-6 bg-gray-25/90 dark:bg-gray-400/15">
         <div className="panelTitle">
           <Heading headingLevel={4} renderAs="h4">
             {i18n.editor.color.colorPalette}

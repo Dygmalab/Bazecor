@@ -28,7 +28,7 @@ interface SavingProps {
 function Saving(props: SavingProps) {
   const { saveContext, destroyContext, inContext, isSaving } = props;
   return (
-    <div className="savingButtons flex gap-2">
+    <div className="savingButtons flex gap-2 ml-[auto]">
       <Button onClick={destroyContext} variant="outline" size="sm" disabled={!inContext || isSaving}>
         Discard&nbsp;<span className="sm:hidden md:hidden lg:inline-block">changes</span>
       </Button>

@@ -339,6 +339,7 @@ class KeymapISO extends React.Component {
         className={className || "layer"}
         height={showUnderglow || isStandardView ? 705 : 480}
         width={1222}
+        style={showUnderglow || isStandardView ? { height: "100%" } : { height: "auto" }}
       >
         <Neuron
           selectedLED={selectedLED}

@@ -7,27 +7,14 @@ import Heading from "@Renderer/components/atoms/Heading";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@Renderer/components/atoms/Tooltip";
 import { IconEditModeStandardView, IconEditModeSingleView, IconInformation } from "@Renderer/components/atoms/icons";
 
-interface PositionProps {
-  x: number;
-  y: number;
-}
 interface ToggleGroupLayoutViewModeProps {
   value: string;
   onValueChange: () => void;
   view: "layout" | "superkeys";
-  layoutSelectorPosition?: PositionProps;
 }
 
-const ToggleGroupLayoutViewMode = ({
-  value,
-  onValueChange,
-  layoutSelectorPosition = { x: 0, y: 0 },
-  view,
-}: ToggleGroupLayoutViewModeProps) => (
-  <div
-    className={`self-start mt-auto mb-6 pt-4 ${value === "single" && view === "layout" ? "absolute" : " "}`}
-    style={{ top: layoutSelectorPosition.y, left: layoutSelectorPosition.x }}
-  >
+const ToggleGroupLayoutViewMode = ({ value, onValueChange, view }: ToggleGroupLayoutViewModeProps) => (
+  <div className={` ${value === "single" && view === "layout" ? "static" : " "}`}>
     <Heading renderAs="h5" headingLevel={5} className="mb-1 gap-2 flex items-center text-[10px] text-gray-300 dark:text-gray-500">
       {i18n.editor.editMode.title}
       <TooltipProvider delayDuration={200}>
@@ -35,7 +22,9 @@ const ToggleGroupLayoutViewMode = ({
           <TooltipTrigger className="[&_svg]:text-purple-100 [&_svg]:dark:text-purple-200">
             <IconInformation size="sm" />
           </TooltipTrigger>
-          <TooltipContent className="max-w-xs">{i18n.editor.superkeys.tooltip}</TooltipContent>
+          <TooltipContent className="max-w-xs" size="sm">
+            {i18n.editor.superkeys.tooltip}
+          </TooltipContent>
         </Tooltip>
       </TooltipProvider>
     </Heading>

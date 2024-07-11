@@ -831,7 +831,9 @@ function SuperkeysEditor(props: SuperkeysEditorProps) {
         ""
       )}
 
-      <ToggleGroupLayoutViewMode value={viewMode} onValueChange={onToggle} view="superkeys" />
+      <div className="self-start mt-auto mb-6 pt-4">
+        <ToggleGroupLayoutViewMode value={viewMode} onValueChange={onToggle} view="superkeys" />
+      </div>
 
       {isStandardViewSuperkeys ? (
         <StandardView

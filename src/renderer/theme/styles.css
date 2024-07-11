@@ -713,3 +713,7 @@ select:focus {
 .tab-item--active:before {
   right: calc((1.25rem) * -1);
 }
+
+.pageHeader .pageTools {
+  width: calc(100% - 12rem);
+}

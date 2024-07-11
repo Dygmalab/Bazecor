@@ -374,6 +374,7 @@ class KeymapDEFY extends React.Component {
         className={this.props.className || "layer"}
         height={this.props.showUnderglow || this.props.isStandardView ? 790 : 560}
         width={1270}
+        style={this.props.showUnderglow || this.props.isStandardView ? { height: "100%" } : { height: "auto" }}
       >
         <Neuron
           selectedLED={this.props.selectedLED}

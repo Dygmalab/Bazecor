@@ -16,81 +16,9 @@
  */
 
 import React from "react";
-import Styled from "styled-components";
 import Heading from "@Renderer/components/atoms/Heading";
 import { PageHeaderType } from "./Types";
 import Saving from "../Saving";
-
-const Style = Styled.div`
-width: 100%;
-flex: 0 0 100%;
-flex: 1;
-align-self: flex-start;
-// position: sticky;
-// top: 32px;
-z-index: 30;
-&.pageHeaderSticky {
-  position: sticky;
-  top: 0;
-  backdrop-filter: blur(12px);
-  z-index: 12;
-}
-.pageHeader {
-    border-radius: 6px;
-    padding: 10px 24px;
-    margin-top: 20px;
-    display: flex;
-    flex-wrap: nowrap;
-    align-items: center;
-    min-height: 64px;
-    background-color: ${({ theme }) => theme.styles.pageHeader.backgroundColor};
-    // backdrop-filter: blur(6px);
-    &.extraPanelActive {
-      border-bottom-right-radius: 0;
-      border-bottom-left-radius: 0;
-    }
-    h1, h2, h3, h4, h5, h6 {
-        margin: 0;
-    }
-    h2 {
-      color: ${({ theme }) => theme.styles.pageHeader.titleColor};
-      font-size: 20px;
-    }
-    .pageTitle {
-      width: 190px;
-      white-space: nowrap;
-      br {
-        content: ' ';
-      }
-    }
-    .pageTools {
-      width: calc(100% - 190px);
-      display: flex;
-      align-items: center;
-    }
-    .savingButtons {
-      margin-left: auto;
-      .button {
-        padding: 9px 16px;
-        font-size: 14px;
-      }
-      .button + .button {
-        margin-left: 12px;
-      }
-    }
-}
-.extraPanel {
-  border-bottom-right-radius: 6px;
-  border-bottom-left-radius: 6px;
-  padding: 12px 24px;
-  margin-top: 2px;
-  display: flex;
-  flex-wrap: nowrap;
-  align-items: center;
-  min-height: 56px;
-  background-color: ${({ theme }) => theme.styles.pageHeader.backgroundColor};
-}
-`;
 
 function PageHeader(props: PageHeaderType) {
   const {
@@ -109,14 +37,18 @@ function PageHeader(props: PageHeaderType) {
     secondaryButton,
   } = props;
   return (
-    <Style className={`${styles === "pageHeaderFlatBottom" ? "pageHeaderSticky" : ""}`}>
-      <div className={`pageHeader ${size && size} ${styles && styles} ${isColorActive ? "extraPanelActive" : ""}`}>
-        <div className="pageTitle">
-          <Heading headingLevel={2} renderAs="h2">
+    <div
+      className={`w-full flex-1 self-start z-30 ${styles === "pageHeaderFlatBottom" ? "pageHeaderSticky sticky top-0 backdrop-blur-md z-[12]" : ""}`}
+    >
+      <div
+        className={`pageHeader py-2 px-6 mt-4 flex flex-nowrap items-center min-h-16 bg-gray-25/90 dark:bg-gray-400/15 [&_h1]:m-0 [&_h2]:m-0 [&_h3]:m-0 [&_h4]:m-0 [&_h5]:m-0 [&_h6]:m-0 ${size && size} ${styles && styles} ${isColorActive ? "extraPanelActive rounded-tr-regular rounded-tl-regular rounded-br-none rounded-bl-none" : "rounded-regular"}`}
+      >
+        <div className="pageTitle w-48 text-nowrap [&_br]:content-[' ']">
+          <Heading headingLevel={2} renderAs="h2" className="text-purple-200 dark:text-gray-50 text-xl mb-0">
             {text}
           </Heading>
         </div>
-        <div className="pageTools">
+        <div className="pageTools flex items-center">
           {contentSelector || ""}
           {showSaving ? (
             <Saving saveContext={saveContext} destroyContext={destroyContext} inContext={inContext} isSaving={isSaving} />
@@ -124,7 +56,7 @@ function PageHeader(props: PageHeaderType) {
             ""
           )}
           {secondaryButton || primaryButton ? (
-            <div className="savingButtons">
+            <div className="savingButtons ml-[auto] flex gap-2">
               {secondaryButton || ""}
               {primaryButton || ""}
             </div>
@@ -132,7 +64,7 @@ function PageHeader(props: PageHeaderType) {
         </div>
       </div>
       {isColorActive ? colorEditor : ""}
-    </Style>
+    </div>
   );
 }
 

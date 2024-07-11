@@ -29,6 +29,7 @@ import customCursor from "@Assets/base/cursorBucket.png";
 import ToastMessage from "@Renderer/components/atoms/ToastMessage";
 import { CopyFromDialog } from "@Renderer/components/molecules/CustomModal/CopyFromDialog";
 import { useDevice } from "@Renderer/DeviceContext";
+import { motion, AnimatePresence } from "framer-motion";
 
 // Types
 import { LayerType, Neuron } from "@Renderer/types/neurons";
@@ -127,6 +128,7 @@ const Styles = Styled.div`
   max-width: 1640px;
   svg {
     width: 100%;
+    height: auto;
   }
 }
 .standarViewMode .LayerHolder {
@@ -136,7 +138,7 @@ const Styles = Styled.div`
   overflow: visible;
   margin: 0 auto;
   max-width: 100%;
-  height: auto;
+  // height: auto;
   // max-height: 65vh;
   * {
     -webkit-backface-visibility: hidden;
@@ -1902,7 +1904,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
           <div className="raise-editor layer-col">
             <div className="dygma-keyboard-editor editor">{layer}</div>
             {modeselect === "keyboard" && !isStandardView ? (
-              <div className="ordinary-keyboard-editor m-0 pb-4">
+              <div className="ordinary-keyboard-editor m-0 pb-4 xs:mt-6 sm:mt-6 md:mt-6 lg:mt-6">
                 <KeyPickerKeyboard
                   onKeySelect={onKeyChange}
                   code={code}
@@ -1925,20 +1927,24 @@ const LayoutEditor = (props: LayoutEditorProps) => {
         </div>
 
         {/* WHY: We want to hide the selector when we cannot use it (e.g. when color editor is active) */}
-        {modeselect === "keyboard" ? (
-          // <LayoutViewSelector
-          //   onToggle={onToggleStandardView}
-          //   isStandardView={isStandardView}
-          //   tooltip={i18n.editor.superkeys.tooltip}
-          //   layoutSelectorPosition={layoutSelectorPosition}
-          // />
-          <ToggleGroupLayoutViewMode
-            value={viewMode}
-            onValueChange={onToggleStandardView}
-            layoutSelectorPosition={layoutSelectorPosition}
-            view="layout"
-          />
-        ) : null}
+        <AnimatePresence mode="wait">
+          {modeselect === "keyboard" && (
+            <motion.div
+              initial={{ opacity: 0, y: -50 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -50 }}
+              className={`self-start mt-auto mb-6 pt-4 ${viewMode === "single" ? "absolute" : " "}`}
+              style={{ top: layoutSelectorPosition.y, left: layoutSelectorPosition.x }}
+            >
+              <ToggleGroupLayoutViewMode
+                value={viewMode}
+                onValueChange={onToggleStandardView}
+                layoutSelectorPosition={layoutSelectorPosition}
+                view="layout"
+              />
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         <ClearLayerDialog
           open={clearConfirmationOpen}
