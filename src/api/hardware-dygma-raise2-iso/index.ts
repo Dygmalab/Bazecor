@@ -52,8 +52,8 @@ const Raise2ISO: DygmaDeviceType = {
     ledsRight: [...aFN(33, 69)],
   },
   keyboardUnderglow: {
-    rows: 2,
-    columns: 89,
+    rows: 5,
+    columns: 29,
     ledsLeft: [...aFN(69, 105)],
     ledsRight: [...aFN(105, 144)],
   },
