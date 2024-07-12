@@ -390,6 +390,9 @@ const Styles = Styled.div`
 .defy-tR8 .keyContentLabelRotate {
   transform: rotate(-60deg) translate(-47px,8px)
 }
+.keyItem foreignObject {
+  overflow: visible;
+}
 
 `;
 

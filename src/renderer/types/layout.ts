@@ -28,7 +28,7 @@ export interface LayoutEditorProps {
 export interface KeyType {
   keyCode: number;
   label: string | JSX.Element;
-  extraLabel?: string;
+  extraLabel?: string | JSX.Element;
   verbose?: string;
 }
 
