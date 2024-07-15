@@ -68,6 +68,7 @@ import IconKeysUnderglow from "./IconKeysUnderglow";
 import IconLeaf from "./IconLeaf";
 import IconLayers from "./IconLayers";
 import IconLayerShift from "./IconLayerShift";
+import IconLayerLock from "./IconLayerLock";
 import IconLEDNextEffect from "./IconLEDNextEffect";
 import IconLEDPreviousEffect from "./IconLEDPreviousEffect";
 import IconLEDSwitchLeft from "./IconLEDSwitchLeft";
@@ -187,6 +188,7 @@ export {
   IconLeaf,
   IconLayers,
   IconLayerShift,
+  IconLayerLock,
   IconLEDNextEffect,
   IconLEDPreviousEffect,
   IconLEDSwitchLeft,
