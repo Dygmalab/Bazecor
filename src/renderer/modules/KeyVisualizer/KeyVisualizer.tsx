@@ -91,7 +91,6 @@ const Style = Styled.div`
           }
       }
       .keySelectedBox {
-          padding: 8px 16px;
           border: 2px solid ${({ theme }) => theme.styles.keyVisualizer.borderOldValue};
           box-shadow: none;
           min-width: 112px;
@@ -162,7 +161,7 @@ const KeyVisualizer = (props: KeyVisualizerProps) => {
             <Heading headingLevel={4} renderAs="h4">
               {rows ? <div dangerouslySetInnerHTML={{ __html: rows[superkeyAction].title }} /> : "Selected value"}
             </Heading>
-            <div className="keySelectedBox">
+            <div className="keySelectedBox !px-2 !py-2">
               <div className="keySelectedValue">{oldValue}</div>
               <ListModifier
                 keyCode={

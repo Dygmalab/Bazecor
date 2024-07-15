@@ -46,9 +46,6 @@ const Styles = Styled.div`
     margin-left: 16px;
   }
 }
-.inputMax {
-  text-align: right;
-}
 .inputGroupRandom {
   
   .inputMin {
@@ -213,7 +210,7 @@ class DelayTab extends React.Component<DelayTabProps, DelayTabState> {
                     value={randomValue.min}
                   />
                   <input
-                    className="inputMax form-control  w-[120px]"
+                    className="inputMax form-control  w-[120px] !pl-9"
                     placeholder="Max"
                     min={1}
                     type="number"
