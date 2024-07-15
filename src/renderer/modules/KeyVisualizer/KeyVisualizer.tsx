@@ -175,7 +175,7 @@ const KeyVisualizer = (props: KeyVisualizerProps) => {
               New value
             </Heading>
             <div className="keySelectedBox">
-              <div className="keySelectedValue [&_div]:flex">{newValue}</div>
+              <div className="keySelectedValue">{newValue}</div>
               <ListModifier
                 keyCode={
                   keyCode !== undefined && typeof keyCode !== "number" ? Number(keyCode.base + keyCode.modified) : Number(keyCode)
@@ -192,7 +192,7 @@ const KeyVisualizer = (props: KeyVisualizerProps) => {
               New value
             </Heading>
             <div className="keySelectedBox">
-              <div className="keySelectedValue [&_div]:flex">{newValue}</div>
+              <div className="keySelectedValue">{newValue}</div>
               <ListModifier
                 keyCode={
                   keyCode !== undefined && typeof keyCode !== "number" ? Number(keyCode.base + keyCode.modified) : Number(keyCode)
