@@ -259,6 +259,7 @@ const English = {
         title: "Clear layer",
         resetColors: "Reset underglow and key colors using the selection",
         useNoKey: "Fill layer with NOKEY instead of TRANS key",
+        chooseYourKeyboardSide: "Choose the entire keyboard, left or right side",
       },
     },
     standardView: {
