@@ -5,6 +5,7 @@ import { ColorPalette } from "@Renderer/modules/ColorEditor/ColorPalette";
 import { PaletteType } from "@Types/layout";
 import { i18n } from "@Renderer/i18n";
 import ToggleGroup from "@Renderer/components/molecules/CustomToggleGroup/ToggleGroup";
+import Heading from "@Renderer/components/atoms/Heading";
 import { NOKEY_KEY_CODE, TRANS_KEY_CODE } from "../../../../api/keymap/types";
 
 export interface OnConfirmProps {
@@ -52,7 +53,10 @@ export const ClearLayerDialog = (props: ClearLayerDialogProps): JSX.Element => {
         </DialogHeader>
         <div className="px-6 pb-2 mt-2">
           <div className="cursor-pointer flex items-center w-full justify-between py-2">
-            {createLabel(i18n.editor.modal.clearLayer.resetColors, "clearColors")}
+            <Heading renderAs="h4" headingLevel={4}>
+              <small className="text-gray-200 dark:text-gray-500">01.</small>{" "}
+              {createLabel(i18n.editor.modal.clearLayer.resetColors, "clearColors")}
+            </Heading>
           </div>
           <ColorPalette
             colors={colors.concat({ r: 0, g: 0, b: 0, rgb: "transparent" })}
@@ -105,7 +109,7 @@ export const ClearLayerDialog = (props: ClearLayerDialogProps): JSX.Element => {
               })
             }
           >
-            {i18n.dialog.ok}
+            Clear layer
           </Button>
         </DialogFooter>
       </DialogContent>

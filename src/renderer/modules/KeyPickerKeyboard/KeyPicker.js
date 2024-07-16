@@ -663,7 +663,7 @@ class KeyPicker extends Component {
                 <IconMouse size="sm" />
               </div>
               <div className="keysButtonsList">
-                <SelectMouseCustomDropdown keyCode={code} onKeySelect={onKeySelect} disable={disableAll} />
+                <SelectMouseCustomDropdown keyCode={code} onKeySelect={onKeySelect} disable={disableAll} activeTab={activeTab} />
               </div>
             </div>
             {activeTab === "super" ? (

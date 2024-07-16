@@ -46,7 +46,7 @@ const SelectGenericKeys: FC<SelectGenericKeysProps> = ({
         <SelectTrigger
           variant="comboButton"
           size="sm"
-          className={`w-full pr-[4px] ${
+          className={`w-full pr-[4px] !pt-[3px] !pb-[3px] ${
             keyCode.base > 0 && listElements.includes(keyCode.base)
               ? "!bg-configButtonActive dark:!bg-configButtonDarkActive bg-purple-200 dark:!bg-purple-300 !border-purple-200 dark:border-none text-white !shadow-buttonConfigLightActive !text-white [&_svg]:!text-white relative after:absolute after:top-[-4px] after:right-[-2px] after:w-[8px] after:h-[8px] after:rounded-full after:bg-primary/100"
               : ""

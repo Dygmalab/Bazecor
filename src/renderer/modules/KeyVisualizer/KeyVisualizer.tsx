@@ -32,14 +32,21 @@ const Style = Styled.div`
         margin-top: 8px;
     }
     .keySelectedBox {
-        padding: 16px;
+        padding: 16px 6px 16px 16px;
         background: ${({ theme }) => theme.styles.keyVisualizer.background};
         border: ${({ theme }) => theme.styles.keyVisualizer.border};
         box-sizing: border-box;
         box-shadow: ${({ theme }) => theme.styles.keyVisualizer.boxShadow};
         border-radius: 4px;
-        width: 132px;
+        min-width: 162px;
+        max-width: 182px;
         height:82px;
+    }
+    .keySelectedValue {
+      text-overflow: ellipsis;
+      width: 100%;
+      white-space: pre-line;
+      overflow: hidden;
     }
     .listModifiersTags {
       position: relative;
@@ -84,11 +91,11 @@ const Style = Styled.div`
           }
       }
       .keySelectedBox {
-          padding: 8px 16px;
           border: 2px solid ${({ theme }) => theme.styles.keyVisualizer.borderOldValue};
           box-shadow: none;
-          width: 104px;
-          height:52px;
+          min-width: 112px;
+          max-width: 124px;
+          height: 52px;
           font-size: 12px;
       }
     }
@@ -154,7 +161,7 @@ const KeyVisualizer = (props: KeyVisualizerProps) => {
             <Heading headingLevel={4} renderAs="h4">
               {rows ? <div dangerouslySetInnerHTML={{ __html: rows[superkeyAction].title }} /> : "Selected value"}
             </Heading>
-            <div className="keySelectedBox">
+            <div className="keySelectedBox !px-2 !py-2">
               <div className="keySelectedValue">{oldValue}</div>
               <ListModifier
                 keyCode={
