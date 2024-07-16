@@ -54,7 +54,6 @@ import { i18n } from "@Renderer/i18n";
 import Store from "@Renderer/utils/Store";
 import getLanguage from "@Renderer/utils/language";
 import { ClearLayerDialog } from "@Renderer/components/molecules/CustomModal/ClearLayerDialog";
-import getLayerMap from "@Renderer/utils/LayersMap";
 import Keymap, { KeymapDB } from "../../api/keymap";
 import { rgb2w, rgbw2b } from "../../api/color";
 import Backup from "../../api/backup";
@@ -1242,28 +1241,30 @@ const LayoutEditor = (props: LayoutEditorProps) => {
   };
 
   const clearLayer = (fillKeyCode = TRANS_KEY_CODE, colorIndex = 15, chooseYourKeyboardSide = "BOTH") => {
-    const layerMap = getLayerMap(deviceName.toLowerCase());
+    const { currentDevice } = state;
+    const layerMap = { keys: currentDevice.device.keyboard, underglow: currentDevice.device.keyboardUnderglow };
     const newKeymap = keymap.custom.slice();
     const idx = keymap.onlyCustom ? currentLayer : currentLayer - keymap.default.length;
     const keyCodeFiller = keymapDB.parse(fillKeyCode);
     const cloneLayer = [...newKeymap[idx]];
     log.info(cloneLayer);
     if (chooseYourKeyboardSide === "LEFT") {
-      layerMap.keys.position.left.forEach(value => {
-        cloneLayer.fill(keyCodeFiller, value.from, value.to);
+      layerMap.keys.left.forEach(value => {
+        console.log("erasing values: ", value, value[0], value[value.length - 1] + 1);
+        cloneLayer.fill(keyCodeFiller, value[0], value[value.length - 1] + 1);
       });
     }
 
     if (chooseYourKeyboardSide === "RIGHT") {
-      layerMap.keys.position.right.forEach(value => {
-        cloneLayer.fill(keyCodeFiller, value.from, value.to);
+      layerMap.keys.right.forEach(value => {
+        cloneLayer.fill(keyCodeFiller, value[0], value[value.length - 1] + 1);
       });
     }
 
     if (chooseYourKeyboardSide === "BOTH") {
       cloneLayer.fill(keyCodeFiller);
     }
-    log.info(cloneLayer);
+    log.info("new clone layer", cloneLayer);
 
     newKeymap[idx] = cloneLayer;
 
@@ -1273,13 +1274,29 @@ const LayoutEditor = (props: LayoutEditorProps) => {
       log.info(newColormap[idx]);
       if (newColormap.length > 0) {
         if (chooseYourKeyboardSide === "LEFT") {
-          newColormap[idx].fill(colorIndex, layerMap.keys.leds.left.from, layerMap.keys.leds.left.to);
-          newColormap[idx].fill(colorIndex, layerMap.underglow.left.from, layerMap.underglow.left.to);
+          newColormap[idx].fill(
+            colorIndex,
+            layerMap.keys.ledsLeft[0],
+            layerMap.keys.ledsLeft[layerMap.keys.ledsLeft.length - 1] + 1,
+          );
+          newColormap[idx].fill(
+            colorIndex,
+            layerMap.underglow.ledsLeft[0],
+            layerMap.underglow.ledsLeft[layerMap.underglow.ledsLeft.length - 1] + 1,
+          );
         }
 
         if (chooseYourKeyboardSide === "RIGHT") {
-          newColormap[idx].fill(colorIndex, layerMap.keys.leds.right.from, layerMap.keys.leds.right.to);
-          newColormap[idx].fill(colorIndex, layerMap.underglow.right.from, layerMap.underglow.right.to);
+          newColormap[idx].fill(
+            colorIndex,
+            layerMap.keys.ledsRight[0],
+            layerMap.keys.ledsRight[layerMap.keys.ledsRight.length - 1] + 1,
+          );
+          newColormap[idx].fill(
+            colorIndex,
+            layerMap.underglow.ledsRight[0],
+            layerMap.underglow.ledsRight[layerMap.underglow.ledsRight.length - 1] + 1,
+          );
         }
 
         if (chooseYourKeyboardSide === "BOTH") {
