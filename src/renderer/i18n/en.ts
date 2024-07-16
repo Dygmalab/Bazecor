@@ -41,6 +41,8 @@ const English = {
     preferencesSavedBody: "",
     changesSaved: "Changes saved successfully",
     changesSavedContent: "Your changes were saved successfully on the device!",
+    btLeftSideColorsChanged: "Oh, the changes on your LEDs didn't show up!",
+    btLeftSideColorsChangedContent: "Don't worry! Please turn off and on the left side of your keyboard to see the LED changes",
     backupStoragePeriod: "Updated the storage period!!",
     backupStoragePeriodText: "The storage period was changed to",
     backupPath: "Backup path updated",
@@ -257,6 +259,7 @@ const English = {
         title: "Clear layer",
         resetColors: "Reset underglow and key colors using the selection",
         useNoKey: "Fill layer with NOKEY instead of TRANS key",
+        chooseYourKeyboardSide: "Choose the entire keyboard, left or right side",
       },
     },
     standardView: {

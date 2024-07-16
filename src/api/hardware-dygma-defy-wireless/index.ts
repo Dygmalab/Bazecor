@@ -18,6 +18,7 @@
 import log from "electron-log/renderer";
 import { DygmaDeviceType } from "@Renderer/types/dygmaDefs";
 import KeymapDEFY from "./components/Keymap";
+import aFN from "../arrayFillNum";
 
 const DefyWireless: DygmaDeviceType = {
   info: {
@@ -39,10 +40,16 @@ const DefyWireless: DygmaDeviceType = {
   keyboard: {
     rows: 5,
     columns: 16,
+    left: [aFN(0, 7), aFN(16, 23), aFN(32, 39), aFN(48, 54), aFN(64, 72)],
+    right: [aFN(9, 16), aFN(25, 32), aFN(41, 48), aFN(57, 64), aFN(72, 80)],
+    ledsLeft: [...aFN(0, 35)],
+    ledsRight: [...aFN(35, 70)],
   },
   keyboardUnderglow: {
     rows: 2,
     columns: 89,
+    ledsLeft: [...aFN(70, 123)],
+    ledsRight: [...aFN(123, 176)],
   },
   RGBWMode: true,
   components: {

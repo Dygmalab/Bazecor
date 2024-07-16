@@ -11,7 +11,10 @@ import { NOKEY_KEY_CODE, TRANS_KEY_CODE } from "../../../../api/keymap/types";
 export interface OnConfirmProps {
   keyCode: number;
   colorIndex: number;
+  chooseYourKeyboardSide: KeyboardSide;
 }
+
+type KeyboardSide = "BOTH" | "LEFT" | "RIGHT";
 
 interface ClearLayerDialogProps {
   open: boolean;
@@ -20,11 +23,13 @@ interface ClearLayerDialogProps {
   colors?: PaletteType[];
   selectedColorIndex?: number;
   fillWithNoKey?: boolean;
+  keyboardSide?: KeyboardSide;
 }
 
 export const ClearLayerDialog = (props: ClearLayerDialogProps): JSX.Element => {
-  const { open, onCancel, onConfirm, colors, selectedColorIndex, fillWithNoKey } = props;
+  const { open, onCancel, onConfirm, colors, selectedColorIndex, fillWithNoKey, keyboardSide } = props;
   const [useNoKey, setUseNoKey] = useState(fillWithNoKey ?? false);
+  const [chooseYourKeyboardSide, setChooseYourKeyboardSide] = useState(keyboardSide ?? "BOTH");
   const [indexOfSelectedColor, setIndexOfSelectedColor] = useState(selectedColorIndex ?? -1);
   const createLabel = (text: string, forId: string) => (
     <label htmlFor={forId} className="grow m-0 font-semibold">
@@ -34,6 +39,10 @@ export const ClearLayerDialog = (props: ClearLayerDialogProps): JSX.Element => {
 
   const useNoKeyUpdate = (value: boolean) => {
     setUseNoKey(value);
+  };
+
+  const chooseYourKeyboardSideUpdate = (value: KeyboardSide) => {
+    setChooseYourKeyboardSide(value);
   };
 
   return (
@@ -49,19 +58,30 @@ export const ClearLayerDialog = (props: ClearLayerDialogProps): JSX.Element => {
               {createLabel(i18n.editor.modal.clearLayer.resetColors, "clearColors")}
             </Heading>
           </div>
-          <div className="toggleButtonsInner w-full flex items-center justify-start gap-1 p-[4px] rounded-regular border-[1px] border-solid border-gray-100/60 bg-white/30 dark:border-transparent dark:bg-gray-900/25 w-fit [&_.button-config]:basis-full [&_.button-config]:text-center">
-            <ColorPalette
-              colors={colors.concat({ r: 0, g: 0, b: 0, rgb: "transparent" })}
-              selected={indexOfSelectedColor}
-              onColorSelect={idx => setIndexOfSelectedColor(idx)}
-              className="w-full"
+          <ColorPalette
+            colors={colors.concat({ r: 0, g: 0, b: 0, rgb: "transparent" })}
+            selected={indexOfSelectedColor}
+            onColorSelect={idx => setIndexOfSelectedColor(idx)}
+            className="ml-3 mt-2 mb-3"
+          />
+          <div className="grid items-center w-full justify-between py-2">
+            <div className="mb-4">
+              {createLabel(i18n.editor.modal.clearLayer.chooseYourKeyboardSide, "chooseYourKeyboardSide")}
+            </div>
+            <ToggleGroup
+              triggerFunction={chooseYourKeyboardSideUpdate}
+              value={chooseYourKeyboardSide}
+              listElements={[
+                { value: "BOTH", name: "Full Keyboard", icon: "", index: 0 },
+                { value: "LEFT", name: "Left Side", icon: "", index: 1 },
+                { value: "RIGHT", name: "Right Side", icon: "", index: 2 },
+              ]}
+              variant="flex"
+              size="sm"
             />
           </div>
-          <div className="grid items-center w-full justify-between py-2 mt-2">
-            <Heading renderAs="h4" headingLevel={4} className="mb-2">
-              <small className="text-gray-200 dark:text-gray-500">02.</small>{" "}
-              {createLabel(i18n.editor.modal.clearLayer.useNoKey, "useNoKeyInstead")}
-            </Heading>
+          <div className="grid items-center w-full justify-between py-2">
+            <div className="mb-4">{createLabel(i18n.editor.modal.clearLayer.useNoKey, "useNoKeyInstead")}</div>
             <ToggleGroup
               triggerFunction={useNoKeyUpdate}
               value={useNoKey}
@@ -85,6 +105,7 @@ export const ClearLayerDialog = (props: ClearLayerDialogProps): JSX.Element => {
               onConfirm({
                 keyCode: useNoKey ? NOKEY_KEY_CODE : TRANS_KEY_CODE,
                 colorIndex: indexOfSelectedColor < colors.length ? indexOfSelectedColor : -1,
+                chooseYourKeyboardSide,
               })
             }
           >

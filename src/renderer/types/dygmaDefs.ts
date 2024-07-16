@@ -16,10 +16,16 @@ export type DygmaDeviceType = {
   keyboard?: {
     rows: number;
     columns: number;
+    left: number[][];
+    right: number[][];
+    ledsLeft: number[];
+    ledsRight: number[];
   };
   keyboardUnderglow?: {
     rows: number;
     columns: number;
+    ledsLeft: number[];
+    ledsRight: number[];
   };
   RGBWMode?: boolean;
   components?: {
