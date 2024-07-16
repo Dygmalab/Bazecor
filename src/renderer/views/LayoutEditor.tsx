@@ -54,6 +54,7 @@ import { i18n } from "@Renderer/i18n";
 import Store from "@Renderer/utils/Store";
 import getLanguage from "@Renderer/utils/language";
 import { ClearLayerDialog } from "@Renderer/components/molecules/CustomModal/ClearLayerDialog";
+import getLayerMap from "@Renderer/utils/LayersMap";
 import Keymap, { KeymapDB } from "../../api/keymap";
 import { rgb2w, rgbw2b } from "../../api/color";
 import Backup from "../../api/backup";
@@ -1240,17 +1241,51 @@ const LayoutEditor = (props: LayoutEditorProps) => {
     });
   };
 
-  const clearLayer = (fillKeyCode = TRANS_KEY_CODE, colorIndex = 15) => {
+  const clearLayer = (fillKeyCode = TRANS_KEY_CODE, colorIndex = 15, chooseYourKeyboardSide = "BOTH") => {
+    const layerMap = getLayerMap(deviceName.toLowerCase());
     const newKeymap = keymap.custom.slice();
     const idx = keymap.onlyCustom ? currentLayer : currentLayer - keymap.default.length;
     const keyCodeFiller = keymapDB.parse(fillKeyCode);
-    newKeymap[idx] = new Array(newKeymap[0].length).fill(keyCodeFiller);
+    const cloneLayer = [...newKeymap[idx]];
+    log.info(cloneLayer);
+    if (chooseYourKeyboardSide === "LEFT") {
+      layerMap.keys.position.left.forEach(value => {
+        cloneLayer.fill(keyCodeFiller, value.from, value.to);
+      });
+    }
+
+    if (chooseYourKeyboardSide === "RIGHT") {
+      layerMap.keys.position.right.forEach(value => {
+        cloneLayer.fill(keyCodeFiller, value.from, value.to);
+      });
+    }
+
+    if (chooseYourKeyboardSide === "BOTH") {
+      cloneLayer.fill(keyCodeFiller);
+    }
+    log.info(cloneLayer);
+
+    newKeymap[idx] = cloneLayer;
 
     startContext();
     if (colorIndex >= 0) {
       const newColormap = colorMap.slice();
+      log.info(newColormap[idx]);
       if (newColormap.length > 0) {
-        newColormap[idx] = Array(newColormap[0].length).fill(colorIndex);
+        if (chooseYourKeyboardSide === "LEFT") {
+          newColormap[idx].fill(colorIndex, layerMap.keys.leds.left.from, layerMap.keys.leds.left.to);
+          newColormap[idx].fill(colorIndex, layerMap.underglow.left.from, layerMap.underglow.left.to);
+        }
+
+        if (chooseYourKeyboardSide === "RIGHT") {
+          newColormap[idx].fill(colorIndex, layerMap.keys.leds.right.from, layerMap.keys.leds.right.to);
+          newColormap[idx].fill(colorIndex, layerMap.underglow.right.from, layerMap.underglow.right.to);
+        }
+
+        if (chooseYourKeyboardSide === "BOTH") {
+          newColormap[idx] = Array(newColormap[0].length).fill(colorIndex);
+        }
+        log.info(newColormap[idx]);
       }
       setColorMap(newColormap);
     }
@@ -1964,9 +1999,10 @@ const LayoutEditor = (props: LayoutEditorProps) => {
         <ClearLayerDialog
           open={clearConfirmationOpen}
           onCancel={cancelClear}
-          onConfirm={k => clearLayer(k.keyCode, k.colorIndex)}
+          onConfirm={k => clearLayer(k.keyCode, k.colorIndex, k.chooseYourKeyboardSide)}
           colors={palette}
           selectedColorIndex={palette.length - 1}
+          keyboardSide="BOTH"
           fillWithNoKey={false}
         />
 
