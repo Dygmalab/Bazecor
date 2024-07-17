@@ -18,7 +18,13 @@ const FirmwareSelection = setup({
     FocusAPIRead: fromPromise<Context.ContextType, Context.ContextType>(({ input }) => Actions.FocusAPIRead(input)),
     GitHubRead: fromPromise<Context.ContextType, Context.ContextType>(({ input }) => Actions.GitHubRead(input)),
     downloadFirmware: fromPromise<{ fw: Array<string>; fwSides: Uint8Array }, Context.ContextType>(({ input }) =>
-      Actions.downloadFirmware(input.typeSelected, input.device.info, input.firmwareList, input.selectedFirmware),
+      Actions.downloadFirmware(
+        input.typeSelected,
+        input.device.info,
+        input.firmwareList,
+        input.selectedFirmware,
+        input.customFirmwareFolder,
+      ),
     ),
   },
   actions: {
@@ -123,7 +129,20 @@ const FirmwareSelection = setup({
       on: {
         "next-event": ["loadingFWFiles"],
         "changeFW-event": {
-          actions: [assign({ selectedFirmware: ({ event }) => event.selected })],
+          actions: [
+            assign(({ event }) => ({
+              selectedFirmware: event.selected,
+              typeSelected: "default",
+            })),
+          ],
+        },
+        "customFW-event": {
+          actions: [
+            assign(({ event }) => ({
+              customFirmwareFolder: event.selected,
+              typeSelected: "custom",
+            })),
+          ],
         },
       },
     },

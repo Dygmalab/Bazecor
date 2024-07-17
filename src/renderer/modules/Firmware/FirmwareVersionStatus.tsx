@@ -17,13 +17,14 @@
 
 import React, { useState } from "react";
 import Styled from "styled-components";
+import { ipcRenderer } from "electron";
 import log from "electron-log";
 
 import ReactMarkdown from "react-markdown";
 
 import Heading from "@Renderer/components/atoms/Heading";
 import { Badge } from "@Renderer/components/atoms/Badge";
-import { IconEye, IconLoader } from "@Renderer/components/atoms/icons";
+import { IconEye, IconFolder, IconLoader } from "@Renderer/components/atoms/icons";
 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@Renderer/components/atoms/Select";
 
@@ -205,6 +206,23 @@ const FirmwareVersionStatus = (props: FirmwareVersionStatusProps) => {
                 }}
               >
                 <IconEye />
+              </Button>
+              <Button
+                variant="link"
+                size="iconXS"
+                onClick={async () => {
+                  // Read a file that is a backup
+                  const options = {
+                    title: "Select folder with custom firmware",
+                    buttonLabel: "Select",
+                    properties: ["openDirectory"],
+                  };
+                  const folder = (await ipcRenderer.invoke("open-dialog", options)) as Electron.OpenDialogReturnValue;
+                  log.info("received folder: ", folder);
+                  if (!folder.canceled) send({ type: "customFW-event", selected: folder.filePaths[0] });
+                }}
+              >
+                <IconFolder />
               </Button>
             </div>
           </div>

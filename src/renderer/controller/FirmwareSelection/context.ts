@@ -21,6 +21,7 @@ export interface ContextType {
   };
   typeSelected: string;
   selectedFirmware: number;
+  customFirmwareFolder: string;
   isUpdated: boolean;
   isBeta: boolean;
   allowBeta: boolean;
@@ -47,6 +48,7 @@ export const Context: ContextType = {
     fwSides: undefined,
   },
   typeSelected: "default",
+  customFirmwareFolder: undefined,
   selectedFirmware: 0,
   isUpdated: false,
   isBeta: false,

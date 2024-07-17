@@ -30,6 +30,7 @@ export const Input = async (input: InputType): Promise<Context.ContextType> => {
     isUpdated: false,
     isBeta: false,
     typeSelected: "default",
+    customFirmwareFolder: undefined,
     selectedFirmware: 0,
     allowBeta: input.allowBeta,
   };
