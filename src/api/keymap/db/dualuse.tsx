@@ -16,6 +16,7 @@
  */
 import React from "react";
 import DualFunctionTag from "@Renderer/components/molecules/KeyTags/DualFunctionTag";
+import OSKey from "@Renderer/components/molecules/KeyTags/OSKey";
 import { withModifiers } from "./utils";
 
 import { LetterTable } from "./letters";
@@ -28,7 +29,7 @@ import NumpadTable from "./numpad";
 import MiscellaneousTable from "./miscellaneous";
 
 const DualUseModifierTables = [
-  withModifiers(LetterTable, "Control /", "CTRL /", 49169),
+  withModifiers(LetterTable, "Control /", <OSKey renderKey="control" />, 49169),
   withModifiers(DigitTable, "Control /", "CTRL /", 49169),
   withModifiers(PunctuationTable, "Control /", "CTRL /", 49169),
   withModifiers(SpacingTable, "Control /", "CTRL /", 49169),
