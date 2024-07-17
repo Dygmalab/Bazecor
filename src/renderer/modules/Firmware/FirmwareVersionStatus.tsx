@@ -183,11 +183,17 @@ const FirmwareVersionStatus = (props: FirmwareVersionStatusProps) => {
                   <SelectValue placeholder="Select firmware version" />
                 </SelectTrigger>
                 <SelectContent>
-                  {firmwareList.map((item, index: number) => (
-                    <SelectItem value={index.toString(10)} key={`id-${item.name}-${item.version}`} disabled={item === undefined}>
-                      {item.version}
-                    </SelectItem>
-                  ))}
+                  {firmwareList && firmwareList.length > 0
+                    ? firmwareList.map((item, index: number) => (
+                        <SelectItem
+                          value={index.toString(10)}
+                          key={`id-${item.name}-${item.version}`}
+                          disabled={item === undefined}
+                        >
+                          {item.version}
+                        </SelectItem>
+                      ))
+                    : "No version Available"}
                 </SelectContent>
               </Select>
 
@@ -208,11 +214,11 @@ const FirmwareVersionStatus = (props: FirmwareVersionStatusProps) => {
       <Dialog open={modalFirmwareDetails} onOpenChange={() => setModalFirmwareDetails(false)}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>{firmwareList[selectedFirmware].version}</DialogTitle>
+            <DialogTitle>{firmwareList[selectedFirmware]?.version}</DialogTitle>
           </DialogHeader>
           <div className="px-6 pb-6 mt-2">
-            {firmwareList[selectedFirmware].body ? (
-              <ReactMarkdown>{firmwareList[selectedFirmware].body}</ReactMarkdown>
+            {firmwareList[selectedFirmware]?.body ? (
+              <ReactMarkdown>{firmwareList[selectedFirmware]?.body}</ReactMarkdown>
             ) : (
               <div className="loading marginCenter flex text-center justify-center">
                 <IconLoader />

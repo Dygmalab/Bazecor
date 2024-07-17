@@ -230,17 +230,13 @@ function FirmwareUpdatePanel(props: FirmwareUpdatePanelProps) {
           </div>
           <div className="firmware-row">
             <div className="firmware-content borderLeftBottomRadius">
-              {state.context.firmwareList && state.context.firmwareList.length > 0 ? (
-                <FirmwareVersionStatus
-                  currentlyVersionRunning={state.context.device.version}
-                  isUpdated={state.context.isUpdated}
-                  firmwareList={state.context.firmwareList}
-                  selectedFirmware={state.context.selectedFirmware}
-                  send={send}
-                />
-              ) : (
-                ""
-              )}
+              <FirmwareVersionStatus
+                currentlyVersionRunning={state.context.device.version}
+                isUpdated={state.context.isUpdated}
+                firmwareList={state.context.firmwareList}
+                selectedFirmware={state.context.selectedFirmware}
+                send={send}
+              />
             </div>
             <div className="firmware-sidebar borderRightBottomRadius">
               <div className="buttonActions">
