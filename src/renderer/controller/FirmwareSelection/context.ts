@@ -1,5 +1,6 @@
 import { ReleaseType } from "@Renderer/types/releases";
 import { State } from "src/api/comms/Device";
+import { ErrorActorEvent } from "xstate";
 
 export interface ContextType {
   stateblock: number;
@@ -25,7 +26,7 @@ export interface ContextType {
   isBeta: boolean;
   allowBeta: boolean;
   deviceState: State | undefined;
-  error: unknown;
+  error: ErrorActorEvent;
 }
 
 export const Context: ContextType = {

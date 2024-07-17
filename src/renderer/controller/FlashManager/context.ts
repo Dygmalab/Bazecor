@@ -1,11 +1,12 @@
 import { ReleaseType } from "@Renderer/types/releases";
 import { State } from "src/api/comms/Device";
+import { ErrorActorEvent } from "xstate";
 
 export interface ContextType {
   Block: number;
   deviceState: State | undefined;
   backup?: any;
-  error: unknown;
+  error: ErrorActorEvent;
   firmwareList: ReleaseType[];
   firmwares: any;
   device: any;
