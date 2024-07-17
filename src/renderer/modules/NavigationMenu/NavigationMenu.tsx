@@ -281,9 +281,7 @@ function NavigationMenu(props: NavigationMenuProps) {
                 <Link
                   to="/firmware-update"
                   onClick={linkHandler}
-                  className={`list-link ${
-                    fwUpdate || virtual || state.currentDevice?.type === "hid" || loading ? "disabled" : ""
-                  }`}
+                  className={`list-link ${fwUpdate || virtual || loading ? "disabled" : ""}`}
                 >
                   <NavigationButton
                     selected={currentPage === "/firmware-update"}
