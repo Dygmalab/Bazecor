@@ -253,7 +253,7 @@ function FirmwareErrorPanel(props: FirmwareErrorPanelType) {
                         </div>
                         <div className="errorListContent">
                           {state.context?.error
-                            ? (state.context.error as Error).message
+                            ? (state.context?.error?.error as Error)?.message
                             : "Contact our customer for more details"}
                         </div>
                       </div>
