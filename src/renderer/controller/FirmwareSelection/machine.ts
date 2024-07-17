@@ -112,7 +112,7 @@ const FirmwareSelection = setup({
         },
         onError: {
           target: "failure",
-          actions: assign({ error: (context, event) => event }),
+          actions: assign(({ event }) => ({ error: event })),
         },
       },
     },
@@ -165,7 +165,7 @@ const FirmwareSelection = setup({
         },
         onError: {
           target: "failure",
-          actions: [assign({ error: event => event })],
+          actions: [assign({ error: event => event as any })],
         },
       },
     },

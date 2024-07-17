@@ -105,8 +105,7 @@ export const GitHubRead = async (context: Context.ContextType): Promise<Context.
       isBeta = false;
     }
   } catch (error) {
-    log.warn("error when filtering data from GitHub");
-    log.error(error);
+    log.warn("error when filtering data from GitHub", error);
     throw new Error(error);
   }
   log.info("GitHub data acquired!", finalReleases);
