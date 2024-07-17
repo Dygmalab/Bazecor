@@ -290,7 +290,7 @@ function NavigationMenu(props: NavigationMenuProps) {
                     showNotif={!isUpdated}
                     buttonText={i18n.app.menu.firmwareUpdate}
                     icoSVG={<IconMemory />}
-                    disabled={fwUpdate || virtual || state.currentDevice?.type === "hid" || loading}
+                    disabled={fwUpdate || virtual || loading}
                   />
                 </Link>
               </>
