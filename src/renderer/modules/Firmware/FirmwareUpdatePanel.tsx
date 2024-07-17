@@ -184,7 +184,7 @@ function FirmwareUpdatePanel(props: FirmwareUpdatePanelProps) {
       setLoading(false);
     }
     if (state.value === "success") nextBlock(state.context);
-    if (state.value === "failure") errorBlock(state.context);
+    if (state.value === "failure") errorBlock(state.context.error);
   }, [errorBlock, nextBlock, retryBlock, state]);
 
   return (
@@ -241,7 +241,8 @@ function FirmwareUpdatePanel(props: FirmwareUpdatePanelProps) {
             </div>
             <div className="firmware-sidebar borderRightBottomRadius">
               <div className="buttonActions">
-                {state.context.firmwareList.length > 0 ? (
+                {(state.context.firmwareList.length > 0 || state.context.typeSelected === "custom") &&
+                deviceState.currentDevice.type === "serial" ? (
                   <Button
                     onClick={() => {
                       send({ type: "next-event" });
@@ -252,7 +253,11 @@ function FirmwareUpdatePanel(props: FirmwareUpdatePanelProps) {
                     {flashButtonText} {state.context.stateblock === 4 ? <IconLoader /> : null}
                   </Button>
                 ) : (
-                  ""
+                  <>
+                    {deviceState.currentDevice.type === "serial"
+                      ? "No FW available"
+                      : "connected via Bluetooth mode, please use cables."}
+                  </>
                 )}
               </div>
             </div>
