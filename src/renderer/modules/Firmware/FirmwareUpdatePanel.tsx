@@ -236,6 +236,8 @@ function FirmwareUpdatePanel(props: FirmwareUpdatePanelProps) {
                 firmwareList={state.context.firmwareList}
                 selectedFirmware={state.context.selectedFirmware}
                 send={send}
+                deviceProduct={state.context.device.info.product}
+                keyboardType={state.context.device.info.keyboardType}
               />
             </div>
             <div className="firmware-sidebar borderRightBottomRadius">
