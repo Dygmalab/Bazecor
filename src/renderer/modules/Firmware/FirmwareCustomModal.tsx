@@ -152,7 +152,7 @@ export default function FirmwareCustomModal(props: FirmwareCustomModalProps) {
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: -50 }}
                       transition={{ duration: 0.6 }}
-                      className="flex w-full text-center justify-center p-2 mt-6 rounded-lg font-semibold tracking-tight bg-green-200 text-ssm"
+                      className="flex w-full text-center justify-center p-2 mt-6 rounded-lg font-semibold tracking-tight bg-green-200 text-white text-ssm"
                     >
                       Ready for installation
                     </motion.div>
