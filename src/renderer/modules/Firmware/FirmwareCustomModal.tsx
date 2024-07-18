@@ -157,7 +157,7 @@ export default function FirmwareCustomModal(props: FirmwareCustomModalProps) {
           <Button variant="outline" size="md" onClick={cancelProcess}>
             Cancel
           </Button>
-          <Button variant="secondary" size="md" onClick={finishProcess}>
+          <Button variant="secondary" size="md" onClick={finishProcess} disabled={!customFWCheck}>
             Add custom firmware
           </Button>
         </DialogFooter>
