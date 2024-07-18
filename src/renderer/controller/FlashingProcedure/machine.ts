@@ -153,7 +153,7 @@ const FlashDevice = setup({
         },
         onError: {
           target: "failure",
-          actions: assign({ error: ({ event }) => event.error }),
+          actions: [assign({ error: event => event as any })],
         },
       },
       on: {
@@ -192,7 +192,7 @@ const FlashDevice = setup({
         },
         onError: {
           target: "failure",
-          actions: assign({ error: ({ event }) => event.error }),
+          actions: [assign({ error: event => event as any })],
         },
       },
       on: {
@@ -232,7 +232,7 @@ const FlashDevice = setup({
         },
         onError: {
           target: "failure",
-          actions: assign({ error: ({ event }) => event.error }),
+          actions: [assign({ error: event => event as any })],
         },
       },
       on: {
@@ -265,7 +265,7 @@ const FlashDevice = setup({
         },
         onError: {
           target: "failure",
-          actions: assign({ error: ({ event }) => event.error }),
+          actions: [assign({ error: event => event as any })],
         },
       },
       on: {
@@ -301,7 +301,7 @@ const FlashDevice = setup({
         },
         onError: {
           target: "failure",
-          actions: assign({ error: ({ event }) => event.error }),
+          actions: [assign({ error: event => event as any })],
         },
       },
       on: {
@@ -336,7 +336,7 @@ const FlashDevice = setup({
         },
         onError: {
           target: "failure",
-          actions: assign({ error: ({ event }) => event.error }),
+          actions: [assign({ error: event => event as any })],
         },
       },
       on: {
@@ -371,7 +371,7 @@ const FlashDevice = setup({
         },
         onError: {
           target: "failure",
-          actions: assign({ restoreResult: false }),
+          actions: [assign({ error: event => event as any }), assign({ restoreResult: false })],
         },
       },
       on: {
@@ -404,7 +404,7 @@ const FlashDevice = setup({
         },
         onError: {
           target: "failure",
-          actions: assign({ error: ({ event }) => event.error }),
+          actions: [assign({ error: event => event as any })],
         },
       },
       on: {
@@ -438,7 +438,7 @@ const FlashDevice = setup({
         },
         onError: {
           target: "failure",
-          actions: assign({ error: ({ event }) => event.error }),
+          actions: [assign({ error: event => event as any })],
         },
       },
       on: {
@@ -473,7 +473,7 @@ const FlashDevice = setup({
         },
         onError: {
           target: "failure",
-          actions: assign({ error: ({ event }) => event.error }),
+          actions: [assign({ error: event => event as any })],
         },
       },
       on: {
@@ -513,7 +513,7 @@ const FlashDevice = setup({
         }),
       ],
       on: {
-        "retry-event": "#FlahsingProcess",
+        "retry-event": "waitEsc",
         "cancel-event": { target: "success", actions: ["finishFlashing"] },
       },
     },

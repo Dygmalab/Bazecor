@@ -28,7 +28,7 @@ import Heading from "@Renderer/components/atoms/Heading";
 import Callout from "@Renderer/components/molecules/Callout/Callout";
 import { Button } from "@Renderer/components/atoms/Button";
 import LogoLoader from "@Renderer/components/atoms/loader/LogoLoader";
-import { IconLoader } from "@Renderer/components/atoms/icons";
+import { IconLoader, IconUSB, IconWarning } from "@Renderer/components/atoms/icons";
 
 // Visual modules
 import { FirmwareNeuronStatus, FirmwareVersionStatus } from "@Renderer/modules/Firmware";
@@ -184,7 +184,7 @@ function FirmwareUpdatePanel(props: FirmwareUpdatePanelProps) {
       setLoading(false);
     }
     if (state.value === "success") nextBlock(state.context);
-    if (state.value === "failure") errorBlock(state.context);
+    if (state.value === "failure") errorBlock(state.context.error);
   }, [errorBlock, nextBlock, retryBlock, state]);
 
   return (
@@ -244,7 +244,8 @@ function FirmwareUpdatePanel(props: FirmwareUpdatePanelProps) {
             </div>
             <div className="firmware-sidebar borderRightBottomRadius">
               <div className="buttonActions">
-                {state.context.firmwareList.length > 0 ? (
+                {(state.context.firmwareList.length > 0 || state.context.typeSelected === "custom") &&
+                deviceState.currentDevice.type === "serial" ? (
                   <Button
                     onClick={() => {
                       send({ type: "next-event" });
@@ -255,7 +256,34 @@ function FirmwareUpdatePanel(props: FirmwareUpdatePanelProps) {
                     {flashButtonText} {state.context.stateblock === 4 ? <IconLoader /> : null}
                   </Button>
                 ) : (
-                  ""
+                  <>
+                    {deviceState.currentDevice.type === "serial" ? (
+                      <div className="px-4 py-4">
+                        <div className="px-4 py-4 rounded-md bg-gray-25 dark:bg-gray-600/50 flex gap-4 items-center animate-bounce-error">
+                          <div className="inline-flex w-10 h-10 aspect-square items-center justify-center text-orange-900/50 bg-orange-200/50 dark:text-orange-200 dark:bg-orange-200/25 rounded-full">
+                            <IconWarning />
+                          </div>
+                          <div className="flex flex-wrap gap-2 text-gray-400 dark:text-gray-25 text-sm">
+                            No firmware available
+                          </div>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="px-4 py-4">
+                        <div className="px-4 py-4 rounded-md bg-gray-25 dark:bg-gray-600/50 flex gap-4 animate-bounce-error">
+                          <div className="inline-flex w-10 h-10 aspect-square items-center justify-center text-orange-900/50 bg-orange-200/50 dark:text-orange-200 dark:bg-orange-200/25 rounded-full">
+                            <IconUSB />
+                          </div>
+                          <div className="flex flex-wrap gap-2 text-gray-400 dark:text-gray-25 text-sm">
+                            <div className="inline-flex px-2 py-0.5 rounded-xl text-2ssm font-semibold tracking-tight bg-orange-200 text-orange-900 text-gray-25">
+                              Bluetooth connected
+                            </div>
+                            Please plug in the cables to install the firmware.
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </>
                 )}
 
                 <div className="dropdownCustomFirmware">

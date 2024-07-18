@@ -5,7 +5,7 @@ export interface ContextType {
   Block: number;
   deviceState: State | undefined;
   backup?: any;
-  error: unknown;
+  error: any;
   firmwareList: ReleaseType[];
   firmwares: any;
   device: any;
