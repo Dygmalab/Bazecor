@@ -231,13 +231,11 @@ function FirmwareUpdatePanel(props: FirmwareUpdatePanelProps) {
           <div className="firmware-row">
             <div className="firmware-content borderLeftBottomRadius">
               <FirmwareVersionStatus
-                currentlyVersionRunning={state.context.device.version}
+                device={state.context.device}
                 isUpdated={state.context.isUpdated}
                 firmwareList={state.context.firmwareList}
                 selectedFirmware={state.context.selectedFirmware}
                 send={send}
-                deviceProduct={state.context.device.info.product}
-                keyboardType={state.context.device.info.keyboardType}
               />
             </div>
             <div className="firmware-sidebar borderRightBottomRadius">
@@ -255,14 +253,6 @@ function FirmwareUpdatePanel(props: FirmwareUpdatePanelProps) {
                 ) : (
                   ""
                 )}
-
-                <div className="dropdownCustomFirmware">
-                  {/* <FirmwareAdvancedOptions
-                      firmwareFilename={firmwareFilename}
-                      selectFirmware={selectFirmware}
-                      selectExperimental={selectExperimental}
-                    /> */}
-                </div>
               </div>
             </div>
           </div>

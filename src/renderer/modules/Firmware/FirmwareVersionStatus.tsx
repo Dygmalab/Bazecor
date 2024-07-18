@@ -17,30 +17,21 @@
 
 import React, { useState } from "react";
 import Styled from "styled-components";
-import { ipcRenderer } from "electron";
-import log from "electron-log";
 
 import ReactMarkdown from "react-markdown";
-import { motion, AnimatePresence } from "framer-motion";
 
 import Heading from "@Renderer/components/atoms/Heading";
 import { Badge } from "@Renderer/components/atoms/Badge";
-import {
-  IconEye,
-  IconFolder,
-  IconDocumentWithLines,
-  IconLoader,
-  IconMemoryUpload,
-  IconCheckmark,
-} from "@Renderer/components/atoms/icons";
+import { IconEye, IconLoader, IconMemoryUpload } from "@Renderer/components/atoms/icons";
 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@Renderer/components/atoms/Select";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@Renderer/components/atoms/Tooltip";
 
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@Renderer/components/atoms/Dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@Renderer/components/atoms/Dialog";
 import { Button } from "@Renderer/components/atoms/Button";
 
 import { ReleaseType } from "@Renderer/types/releases";
+import FirmwareCustomModal from "./FirmwareCustomModal";
 
 const Style = Styled.div`
 margin-left:32px;
@@ -151,28 +142,28 @@ h6 {
 `;
 
 interface FirmwareVersionStatusProps {
-  currentlyVersionRunning: string;
+  device: {
+    info: {
+      vendor: string;
+      product: string;
+      keyboardType: string;
+      displayName: string;
+    };
+    bootloader: boolean;
+    version: string;
+    chipID: string;
+  };
   isUpdated: boolean;
   firmwareList: ReleaseType[];
   selectedFirmware: any;
   send: (value: unknown) => void;
-  deviceProduct: string;
-  keyboardType: string;
 }
 
 const FirmwareVersionStatus = (props: FirmwareVersionStatusProps) => {
-  const { currentlyVersionRunning, isUpdated, firmwareList, selectedFirmware, send, deviceProduct, keyboardType } = props;
+  const { device, isUpdated, firmwareList, selectedFirmware, send } = props;
   const [modalFirmwareDetails, setModalFirmwareDetails] = useState(false);
-  const [modalCustomFirmware, setModalCustomFirmware] = useState(false);
-  const [customFolder, setCustomFolder] = useState("...");
-  const [customFWReadyToGo, setCustomFWReadyToGo] = useState(false);
-  const [customFWFileError, setCustomFWFileError] = useState(false);
+  const [showCustomFWModal, setShowCustomFWModal] = useState(false);
 
-  const checkAnimation = () => {
-    setTimeout(() => {
-      setCustomFWReadyToGo(true);
-    }, 600);
-  };
   return (
     <Style>
       <div className={`versionsStatus ${isUpdated && "isUpdated"}`}>
@@ -182,7 +173,7 @@ const FirmwareVersionStatus = (props: FirmwareVersionStatusProps) => {
               Installed firmware version
             </Heading>
             <Badge variant="outline" size="xs">
-              {currentlyVersionRunning}
+              {device.version}
             </Badge>
           </div>
           <div className="versionStatusNext">
@@ -248,7 +239,7 @@ const FirmwareVersionStatus = (props: FirmwareVersionStatusProps) => {
                       <Button
                         variant="link"
                         size="iconXS"
-                        onClick={() => setModalCustomFirmware(true)}
+                        onClick={() => setShowCustomFWModal(true)}
                         className="rounded-full hover:bg-purple-300 dark:hover:bg-purple-200"
                       >
                         <IconMemoryUpload />
@@ -281,134 +272,12 @@ const FirmwareVersionStatus = (props: FirmwareVersionStatusProps) => {
           </div>
         </DialogContent>
       </Dialog>
-
-      <Dialog open={modalCustomFirmware} onOpenChange={() => setModalCustomFirmware(false)}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Install a custom firmware</DialogTitle>
-          </DialogHeader>
-          <div className="px-6 pb-6 mt-2">
-            <Heading
-              headingLevel={4}
-              renderAs="h4"
-              className="tracking-tight leading-[1.5em] mb-2 text-gray-500 dark:text-gray-100 flex gap-2 items-center text-md"
-            >
-              <IconFolder /> Firmware folder
-            </Heading>
-            <div className="containerInfo flex w-full rounded-regular py-0.5 pl-4 pr-0.5 border-[1px] border-gray-100/60 dark:border-gray-600 bg-white/40 dark:bg-gray-900/20">
-              <div className="containerInfoInner flex w-full justify-between gap-4">
-                <div className="flex items-center bg-transparent border-none font-semibold text-base text-gray-300 dark:text-gray-50 whitespace-nowrap text-ellipsis overflow-hidden">
-                  {customFolder}
-                </div>
-                <Button
-                  variant="short"
-                  onClick={async () => {
-                    // Read a file that is a backup
-                    const options = {
-                      title: "Select folder with custom firmware",
-                      buttonLabel: "Select",
-                      properties: ["openDirectory"],
-                    };
-                    const folder = (await ipcRenderer.invoke("open-dialog", options)) as Electron.OpenDialogReturnValue;
-                    log.info("received folder: ", folder);
-                    setCustomFolder(folder.filePaths[0]);
-                    checkAnimation();
-                    if (!folder.canceled) send({ type: "customFW-event", selected: folder.filePaths[0] });
-                  }}
-                >
-                  Select folder
-                </Button>
-              </div>
-            </div>
-            <div className="w-full mt-4 p-6 bg-gray-600/25 rounded-sm">
-              <p className="font-semibold tracking-tight mb-2 text-ssm">
-                To successfully install the custom firmware on your device, you must ensure that it contains the file.
-              </p>
-              <ul className="text-ssm">
-                {deviceProduct === "Defy" && keyboardType === "wired" && (
-                  <li className="flex items-center gap-2 justify-between">
-                    <div
-                      className={`flex gap-2 transition-all duration-500 items-center ${customFWFileError && "text-red-100"} ${customFWReadyToGo && "text-green-200"} ${!customFWFileError && !customFWReadyToGo ? "text-gray-100" : ""}`}
-                    >
-                      <IconDocumentWithLines size="sm" /> Wired_neuron.uf2
-                    </div>
-                    <div
-                      className={`rounded-full transition-all duration-500 ${customFWReadyToGo ? "opacity-100 text-green-200" : "opacity-0"}`}
-                    >
-                      <IconCheckmark size="sm" />
-                    </div>
-                  </li>
-                )}
-                {deviceProduct === "Defy" && keyboardType === "wireless" && (
-                  <li className="flex items-center gap-2 justify-between">
-                    <div
-                      className={`flex gap-2 transition-all duration-500 items-center ${customFWFileError && "text-red-100"} ${customFWReadyToGo && "text-green-200"} ${!customFWFileError && !customFWReadyToGo ? "text-gray-100" : ""}`}
-                    >
-                      <IconDocumentWithLines size="sm" /> Wireless_neuron.hex
-                    </div>
-                    <div
-                      className={`rounded-full transition-all duration-500 ${customFWReadyToGo ? "opacity-100 text-green-200" : "opacity-0"}`}
-                    >
-                      <IconCheckmark size="sm" />
-                    </div>
-                  </li>
-                )}
-                {deviceProduct === "Defy" && (
-                  <li className="flex items-center gap-2 justify-between">
-                    <div
-                      className={`flex gap-2 transition-all duration-500 items-center ${customFWFileError && "text-red-100"} ${customFWReadyToGo && "text-green-200"} ${!customFWFileError && !customFWReadyToGo ? "text-gray-100" : ""}`}
-                    >
-                      <IconDocumentWithLines size="sm" /> keyscanner.bin
-                    </div>
-                    <div
-                      className={`rounded-full transition-all duration-500 ${customFWReadyToGo ? "opacity-100 text-green-200" : "opacity-0"}`}
-                    >
-                      <IconCheckmark size="sm" />
-                    </div>
-                  </li>
-                )}
-                {deviceProduct === "Raise" && (
-                  <li className="flex items-center gap-2 justify-between">
-                    <div
-                      className={`flex gap-2 transition-all duration-500 items-center ${customFWFileError && "text-red-100"} ${customFWReadyToGo && "text-green-200"} ${!customFWFileError && !customFWReadyToGo ? "text-gray-100" : ""}`}
-                    >
-                      <IconDocumentWithLines size="sm" /> firmware.hex
-                    </div>
-                    <div
-                      className={`rounded-full transition-all duration-500 ${customFWReadyToGo ? "opacity-100 text-green-200" : "opacity-0"}`}
-                    >
-                      <IconCheckmark size="sm" />
-                    </div>
-                  </li>
-                )}
-              </ul>
-              <AnimatePresence>
-                {customFWReadyToGo ? (
-                  <motion.div
-                    initial={{ opacity: 0, y: 50 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -50 }}
-                    transition={{ duration: 0.6 }}
-                    className="flex w-full text-center justify-center p-2 mt-6 rounded-lg font-semibold tracking-tight bg-green-200 text-ssm"
-                  >
-                    Ready for installation
-                  </motion.div>
-                ) : (
-                  ""
-                )}
-              </AnimatePresence>
-            </div>
-          </div>
-          <DialogFooter>
-            <Button variant="outline" size="md" onClick={() => setModalCustomFirmware(false)}>
-              Cancel
-            </Button>
-            <Button variant="secondary" size="md" onClick={() => setModalCustomFirmware(false)}>
-              Add custom firmware
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+      <FirmwareCustomModal
+        device={device}
+        showCustomFWModal={showCustomFWModal}
+        setShowCustomFWModal={setShowCustomFWModal}
+        send={send}
+      />
     </Style>
   );
 };
