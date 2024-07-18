@@ -220,7 +220,7 @@ const FirmwareVersionStatus = (props: FirmwareVersionStatusProps) => {
                         onClick={() => {
                           setModalFirmwareDetails(true);
                         }}
-                        className="rounded-full hover:bg-purple-300 dark:hover:bg-purple-200"
+                        className="rounded-full hover:bg-purple-300 dark:hover:bg-purple-200 hover:text-gray-25"
                       >
                         <IconEye />
                       </Button>
@@ -240,7 +240,7 @@ const FirmwareVersionStatus = (props: FirmwareVersionStatusProps) => {
                         variant="link"
                         size="iconXS"
                         onClick={() => setShowCustomFWModal(true)}
-                        className="rounded-full hover:bg-purple-300 dark:hover:bg-purple-200"
+                        className="rounded-full hover:bg-purple-300 dark:hover:bg-purple-200 hover:text-gray-25"
                       >
                         <IconMemoryUpload />
                       </Button>

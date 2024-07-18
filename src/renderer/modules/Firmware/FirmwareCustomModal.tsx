@@ -131,27 +131,36 @@ export default function FirmwareCustomModal(props: FirmwareCustomModalProps) {
               </Button>
             </div>
           </div>
-          <div className="w-full mt-4 p-6 bg-gray-600/25 rounded-sm">
-            <p className="font-semibold tracking-tight mb-2 text-ssm">
-              To successfully install the custom firmware on your device, you must ensure that it contains the file.
-            </p>
-            <ul className="text-ssm">{customFolder && validatorResults.map(({ file, valid }) => checkState(file, valid))}</ul>
+          {customFolder && (
             <AnimatePresence>
-              {customFWCheck !== undefined && customFWCheck ? (
-                <motion.div
-                  initial={{ opacity: 0, y: 50 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -50 }}
-                  transition={{ duration: 0.6 }}
-                  className="flex w-full text-center justify-center p-2 mt-6 rounded-lg font-semibold tracking-tight bg-green-200 text-ssm"
-                >
-                  Ready for installation
-                </motion.div>
-              ) : (
-                ""
-              )}
+              <motion.div
+                initial={{ opacity: 0, y: 50 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -50 }}
+                className="w-full mt-4 p-6 bg-white/50 dark:bg-gray-600/25 rounded-sm"
+              >
+                <p className="font-semibold tracking-tight mb-2 text-ssm">
+                  To successfully install the custom firmware on your device, you must ensure that it contains the file.
+                </p>
+                <ul className="text-ssm">{customFolder && validatorResults.map(({ file, valid }) => checkState(file, valid))}</ul>
+                <AnimatePresence>
+                  {customFWCheck !== undefined && customFWCheck ? (
+                    <motion.div
+                      initial={{ opacity: 0, y: 50 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -50 }}
+                      transition={{ duration: 0.6 }}
+                      className="flex w-full text-center justify-center p-2 mt-6 rounded-lg font-semibold tracking-tight bg-green-200 text-ssm"
+                    >
+                      Ready for installation
+                    </motion.div>
+                  ) : (
+                    ""
+                  )}
+                </AnimatePresence>
+              </motion.div>
             </AnimatePresence>
-          </div>
+          )}
         </div>
         <DialogFooter>
           <Button variant="outline" size="md" onClick={cancelProcess}>
