@@ -174,6 +174,8 @@ const obtainFWFiles = async (type: string, url: string) => {
 };
 
 const obtainLocalFWFiles = (customFWPath: string) => {
+  const fromHexString = (hexString: any) => Uint8Array.from(hexString.match(/.{1,2}/g).map((byte: string) => parseInt(byte, 16)));
+
   let result;
   if (customFWPath.includes(".hex")) {
     let fileData = fs.readFileSync(customFWPath, { encoding: "utf8" });
@@ -181,8 +183,13 @@ const obtainLocalFWFiles = (customFWPath: string) => {
     const lines = fileData.split(":");
     lines.splice(0, 1);
     result = lines;
-  } else {
-    result = fs.readFileSync(customFWPath, { encoding: "utf8" });
+  }
+  if (customFWPath.includes(".bin")) {
+    const filedata = fs.readFileSync(customFWPath, { encoding: "hex" });
+    result = fromHexString(filedata);
+  }
+  if (customFWPath.includes(".uf2")) {
+    result = fs.readFileSync(customFWPath, { encoding: "binary" });
   }
   return result;
 };
