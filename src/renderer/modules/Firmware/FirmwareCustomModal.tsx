@@ -36,9 +36,12 @@ export default function FirmwareCustomModal(props: FirmwareCustomModalProps) {
   const [validatorResults, setValidatorResutls] = useState<Array<{ file: string; valid: boolean }>>([]);
 
   const fwFiles: { [key: string]: string[] } = {
-    Raise: ["firmware.hex"],
-    Defy: ["Wireless_neuron.hex", "Wired_neuron.uf2", "keyscanner.bin"],
-    Raise2: ["Wireless_neuron.hex", "keyscanner.bin"],
+    RaiseISO: ["firmware.hex"],
+    RaiseANSI: ["firmware.hex"],
+    Defywireless: ["Wireless_neuron.hex", "keyscanner.bin"],
+    Defywired: ["Wired_neuron.uf2", "keyscanner.bin"],
+    Raise2ANSI: ["Wireless_neuron.hex", "keyscanner.bin"],
+    Raise2ISO: ["Wireless_neuron.hex", "keyscanner.bin"],
   };
 
   const validator = (folder: string) => {
@@ -50,7 +53,7 @@ export default function FirmwareCustomModal(props: FirmwareCustomModalProps) {
     log.info("found files: ", files);
 
     // Get the files required for the current keyboard
-    const filesToCheck = fwFiles[device.info.product];
+    const filesToCheck = fwFiles[device.info.product + device.info.keyboardType];
 
     // Check for each requied file, if it does exist or not in the folder
     filesToCheck.forEach(FTC => {
