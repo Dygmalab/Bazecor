@@ -179,6 +179,7 @@ module.exports = {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
         "bounce-error": "bounce-error 0.2s ease-in-out 0s 3",
+        "spin-fast": "spin 0.4s linear infinite",
       },
     },
   },
