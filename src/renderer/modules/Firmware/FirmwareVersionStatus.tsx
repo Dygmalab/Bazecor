@@ -328,9 +328,9 @@ const FirmwareVersionStatus = (props: FirmwareVersionStatusProps) => {
                 {deviceProduct === "Defy" && keyboardType === "wired" && (
                   <li className="flex items-center gap-2 justify-between">
                     <div
-                      className={`flex gap-2 transition-all duration-500 ${customFWFileError && "text-red-100"} ${customFWReadyToGo && "text-green-200"} ${!customFWFileError && !customFWReadyToGo ? "text-gray-100" : ""}`}
+                      className={`flex gap-2 transition-all duration-500 items-center ${customFWFileError && "text-red-100"} ${customFWReadyToGo && "text-green-200"} ${!customFWFileError && !customFWReadyToGo ? "text-gray-100" : ""}`}
                     >
-                      <IconDocumentWithLines /> Wired_neuron.uf2
+                      <IconDocumentWithLines size="sm" /> Wired_neuron.uf2
                     </div>
                     <div
                       className={`rounded-full transition-all duration-500 ${customFWReadyToGo ? "opacity-100 text-green-200" : "opacity-0"}`}
@@ -342,9 +342,9 @@ const FirmwareVersionStatus = (props: FirmwareVersionStatusProps) => {
                 {deviceProduct === "Defy" && keyboardType === "wireless" && (
                   <li className="flex items-center gap-2 justify-between">
                     <div
-                      className={`flex gap-2 transition-all duration-500 ${customFWFileError && "text-red-100"} ${customFWReadyToGo && "text-green-200"} ${!customFWFileError && !customFWReadyToGo ? "text-gray-100" : ""}`}
+                      className={`flex gap-2 transition-all duration-500 items-center ${customFWFileError && "text-red-100"} ${customFWReadyToGo && "text-green-200"} ${!customFWFileError && !customFWReadyToGo ? "text-gray-100" : ""}`}
                     >
-                      <IconDocumentWithLines /> Wireless_neuron.hex
+                      <IconDocumentWithLines size="sm" /> Wireless_neuron.hex
                     </div>
                     <div
                       className={`rounded-full transition-all duration-500 ${customFWReadyToGo ? "opacity-100 text-green-200" : "opacity-0"}`}
@@ -356,9 +356,9 @@ const FirmwareVersionStatus = (props: FirmwareVersionStatusProps) => {
                 {deviceProduct === "Defy" && (
                   <li className="flex items-center gap-2 justify-between">
                     <div
-                      className={`flex gap-2 transition-all duration-500 ${customFWFileError && "text-red-100"} ${customFWReadyToGo && "text-green-200"} ${!customFWFileError && !customFWReadyToGo ? "text-gray-100" : ""}`}
+                      className={`flex gap-2 transition-all duration-500 items-center ${customFWFileError && "text-red-100"} ${customFWReadyToGo && "text-green-200"} ${!customFWFileError && !customFWReadyToGo ? "text-gray-100" : ""}`}
                     >
-                      <IconDocumentWithLines /> keyscanner.bin
+                      <IconDocumentWithLines size="sm" /> keyscanner.bin
                     </div>
                     <div
                       className={`rounded-full transition-all duration-500 ${customFWReadyToGo ? "opacity-100 text-green-200" : "opacity-0"}`}
@@ -370,9 +370,9 @@ const FirmwareVersionStatus = (props: FirmwareVersionStatusProps) => {
                 {deviceProduct === "Raise" && (
                   <li className="flex items-center gap-2 justify-between">
                     <div
-                      className={`flex gap-2 transition-all duration-500 ${customFWFileError && "text-red-100"} ${customFWReadyToGo && "text-green-200"} ${!customFWFileError && !customFWReadyToGo ? "text-gray-100" : ""}`}
+                      className={`flex gap-2 transition-all duration-500 items-center ${customFWFileError && "text-red-100"} ${customFWReadyToGo && "text-green-200"} ${!customFWFileError && !customFWReadyToGo ? "text-gray-100" : ""}`}
                     >
-                      <IconDocumentWithLines /> firmware.hex
+                      <IconDocumentWithLines size="sm" /> firmware.hex
                     </div>
                     <div
                       className={`rounded-full transition-all duration-500 ${customFWReadyToGo ? "opacity-100 text-green-200" : "opacity-0"}`}
