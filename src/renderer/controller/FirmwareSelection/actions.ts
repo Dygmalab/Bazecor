@@ -86,7 +86,7 @@ export const GitHubRead = async (context: Context.ContextType): Promise<Context.
     finalReleases = fwReleases.filter(
       release =>
         release.name === context.device.info.product &&
-        (context.device.info.product === "Defy"
+        (context.device.info.product !== "Raise"
           ? SemVer.satisfies(release.version ? release.version : "", FWMAJORVERSION, { includePrerelease: true })
           : true),
     );
@@ -214,7 +214,7 @@ export const downloadFirmware = async (
             )) as Array<string>)
           : (obtainLocalFWFiles(path.join(customFirmwareFolder, "firmware.hex")) as Array<string>);
     } else {
-      if (info.keyboardType === "wireless") {
+      if (info.keyboardType === "wireless" || info.product === "Raise2") {
         filename =
           typeSelected === "default"
             ? ((await obtainFWFiles(

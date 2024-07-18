@@ -10,6 +10,7 @@ import Device, { State } from "../../../api/comms/Device";
 import { resetKeyboard } from "../../../api/flash/RaiseTools";
 import NRf52833 from "../../../api/flash/defyFlasher/NRf52833-flasher";
 import SideFlaser from "../../../api/flash/defyFlasher/sideFlasher";
+import Raise2Flash from "../../../api/flash/raise2Flasher/Raise2-flasher";
 import { FlashRaise } from "../../../api/flash";
 import * as Context from "./context";
 
@@ -157,10 +158,10 @@ export const flashSide = async (side: string, context: Context.ContextType) => {
       context.originalDevice = currentDevice;
     }
     // Flashing procedure for each side
+    const forceFlashSides = false;
     await DeviceTools.disconnect(currentDevice);
     log.info("done closing serial");
     log.info("Going to flash side:", side);
-    const forceFlashSides = false;
     await context.flashSides.flashSide(
       context.comPath as string,
       side,
@@ -217,8 +218,8 @@ export const uploadDefyWired = async (context: Context.ContextType) => {
 
 export const resetDefy = async (context: Context.ContextType) => {
   let { currentDevice } = context.deviceState as State;
-  log.info("Checking Defy bootloader: ", currentDevice.device.bootloader, context.bootloader);
-  log.info("Checking Defy compath: ", currentDevice.device.path, context.comPath);
+  log.info(`Checking ${currentDevice.device.info.product} bootloader: `, currentDevice.device.bootloader, context.bootloader);
+  log.info(`Checking ${currentDevice.device.info.product} compath: `, currentDevice.device.path, context.comPath);
   try {
     if (context.comPath === undefined) {
       log.info("when creating comPath", context.originalDevice?.device);
@@ -268,6 +269,43 @@ export const uploadDefyWireless = async (context: Context.ContextType) => {
     try {
       stateUpdate("neuron", 0, context);
       await NRf52833.flash(
+        context.firmwares?.fw,
+        (stage: string, percentage: number) => {
+          stateUpdate(stage, percentage, context);
+        },
+        finished,
+        context.erasePairings,
+      );
+    } catch (e) {
+      stateUpdate("neuron", 100, context);
+      result = false;
+    }
+  } catch (error) {
+    log.warn("error when flashing Neuron");
+    log.error(error);
+    throw new Error(error);
+  }
+  return result;
+};
+
+export const uploadRaise2 = async (context: Context.ContextType) => {
+  let result = false;
+  try {
+    const { currentDevice } = context.deviceState as State;
+    await DeviceTools.disconnect(currentDevice);
+
+    log.info("Begin update firmware with Raise2Flash", context.bootloader);
+    const finished = async (err: any, rslt: any) => {
+      if (err) throw new Error(`Flash error ${rslt}`);
+      else {
+        stateUpdate("neuron", 100, context);
+        log.info("End update firmware with Raise2Flash");
+        result = true;
+      }
+    };
+    try {
+      stateUpdate("neuron", 0, context);
+      await Raise2Flash.flash(
         context.firmwares?.fw,
         (stage: string, percentage: number) => {
           stateUpdate(stage, percentage, context);

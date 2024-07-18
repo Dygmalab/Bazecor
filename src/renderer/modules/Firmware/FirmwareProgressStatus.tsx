@@ -193,7 +193,7 @@ const FirmwareProgressStatus = (props: FirmwareProgressStatusType) => {
             className={`partialLoader partialLoader--${deviceProduct}`}
             style={{ gridTemplateColumns: `repeat(${steps.length - 3}, 1fr)` }}
           >
-            {deviceProduct === "Defy" ? (
+            {deviceProduct !== "Raise" ? (
               <>
                 <CircleLoader radius={13} percentage={rightProgress} active={stepsPosition === 1} />
                 <CircleLoader radius={13} percentage={leftProgress} active={stepsPosition === 2} />
@@ -204,17 +204,23 @@ const FirmwareProgressStatus = (props: FirmwareProgressStatusType) => {
             <CircleLoader
               radius={13}
               percentage={resetProgress}
-              active={!!((deviceProduct === "Raise" && stepsPosition === 1) || (deviceProduct === "Defy" && stepsPosition === 3))}
+              active={
+                !!((deviceProduct === "Raise" && stepsPosition === 1) || (deviceProduct !== "Raise" && stepsPosition === 3))
+              }
             />
             <CircleLoader
               radius={13}
               percentage={neuronProgress}
-              active={!!((deviceProduct === "Raise" && stepsPosition === 2) || (deviceProduct === "Defy" && stepsPosition === 4))}
+              active={
+                !!((deviceProduct === "Raise" && stepsPosition === 2) || (deviceProduct !== "Raise" && stepsPosition === 4))
+              }
             />
             <CircleLoader
               radius={13}
               percentage={restoreProgress}
-              active={!!((deviceProduct === "Raise" && stepsPosition === 3) || (deviceProduct === "Defy" && stepsPosition === 5))}
+              active={
+                !!((deviceProduct === "Raise" && stepsPosition === 3) || (deviceProduct !== "Raise" && stepsPosition === 5))
+              }
             />
           </div>
         </div>
