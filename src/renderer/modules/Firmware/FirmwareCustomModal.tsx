@@ -49,8 +49,10 @@ export default function FirmwareCustomModal(props: FirmwareCustomModalProps) {
     const files = fs.readdirSync(folder);
     log.info("found files: ", files);
 
+    // Get the files required for the current keyboard
     const filesToCheck = fwFiles[device.info.product];
 
+    // Check for each requied file, if it does exist or not in the folder
     filesToCheck.forEach(FTC => {
       const check = files.includes(FTC);
       allValid = allValid && check;
