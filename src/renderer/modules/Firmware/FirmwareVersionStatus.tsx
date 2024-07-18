@@ -157,10 +157,11 @@ interface FirmwareVersionStatusProps {
   firmwareList: ReleaseType[];
   selectedFirmware: any;
   send: (value: unknown) => void;
+  typeSelected: string;
 }
 
 const FirmwareVersionStatus = (props: FirmwareVersionStatusProps) => {
-  const { device, isUpdated, firmwareList, selectedFirmware, send } = props;
+  const { device, isUpdated, firmwareList, selectedFirmware, send, typeSelected } = props;
   const [modalFirmwareDetails, setModalFirmwareDetails] = useState(false);
   const [showCustomFWModal, setShowCustomFWModal] = useState(false);
 
@@ -193,7 +194,7 @@ const FirmwareVersionStatus = (props: FirmwareVersionStatusProps) => {
                 onValueChange={(value: string) => send({ type: "changeFW-event", selected: parseInt(value, 10) })}
               >
                 <SelectTrigger className="w-full" size="sm">
-                  <SelectValue placeholder="Select firmware version" />
+                  {typeSelected === "default" ? <SelectValue placeholder="Select firmware version" /> : "Custom firmware"}
                 </SelectTrigger>
                 <SelectContent>
                   {firmwareList && firmwareList.length > 0
@@ -209,7 +210,6 @@ const FirmwareVersionStatus = (props: FirmwareVersionStatusProps) => {
                     : "No version Available"}
                 </SelectContent>
               </Select>
-
               <TooltipProvider delayDuration={200}>
                 <Tooltip>
                   <TooltipTrigger asChild>
@@ -220,6 +220,7 @@ const FirmwareVersionStatus = (props: FirmwareVersionStatusProps) => {
                         onClick={() => {
                           setModalFirmwareDetails(true);
                         }}
+                        disabled={typeSelected !== "default"}
                         className="rounded-full hover:bg-purple-300 dark:hover:bg-purple-200 hover:text-gray-25"
                       >
                         <IconEye />
