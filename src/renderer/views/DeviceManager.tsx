@@ -61,6 +61,7 @@ const DeviceManager = (props: DeviceManagerProps) => {
   const [openDialogVirtualKB, setOpenDialogVirtualKB] = useState(false);
   const [selectedDevice, setSelectedDevice] = useState(0);
   const [showMainButtons, setShowMainButtons] = useState(false);
+  const [animationLoadingDevice, setAnimationLoadingDevice] = useState(false);
 
   const ref = useRef(null);
   const isInView = useInView(ref);
@@ -193,6 +194,8 @@ const DeviceManager = (props: DeviceManagerProps) => {
   const scanDevices = () => {
     log.info("Scan devices!");
     setScanned(false);
+    setAnimationLoadingDevice(true);
+    setTimeout(() => setAnimationLoadingDevice(false), 800);
   };
 
   const addVirtualDevicesButton = (
@@ -374,7 +377,12 @@ const DeviceManager = (props: DeviceManagerProps) => {
                   ))}
                   <AnimatePresence mode="popLayout">
                     <motion.div initial={{ opacity: 0, y: -50 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -50 }}>
-                      <CardAddDevice addVirtualDevice={addVirtualDevice} scanDevices={scanDevices} />
+                      <CardAddDevice
+                        addVirtualDevice={addVirtualDevice}
+                        scanDevices={scanDevices}
+                        devicesNumber={devicesList.length}
+                        animationLoadingDevice={animationLoadingDevice}
+                      />
                     </motion.div>
                   </AnimatePresence>
                 </SortableList>
@@ -385,7 +393,12 @@ const DeviceManager = (props: DeviceManagerProps) => {
                   <motion.div initial={{ opacity: 0, y: -50 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -50 }}>
                     <div className="list devices-scroll relative w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-3 gap-4 pb-4">
                       <NoDeviceFound />
-                      <CardAddDevice addVirtualDevice={addVirtualDevice} scanDevices={scanDevices} />
+                      <CardAddDevice
+                        addVirtualDevice={addVirtualDevice}
+                        scanDevices={scanDevices}
+                        devicesNumber={devicesList.length}
+                        animationLoadingDevice={animationLoadingDevice}
+                      />
                     </div>
                   </motion.div>
                 </AnimatePresence>
