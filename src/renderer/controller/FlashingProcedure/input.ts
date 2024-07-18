@@ -62,7 +62,7 @@ export const Input = async (input: InputType): Promise<Context.ContextType> => {
     leftResult: undefined,
     resetResult: undefined,
     flashResult: undefined,
-    DefyVariant: undefined,
+    DeviceVariant: undefined,
     flashRaise: undefined,
     flashDefyWireless: undefined,
     flashSides: undefined,
