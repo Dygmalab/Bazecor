@@ -67,8 +67,7 @@ export default function FirmwareCustomModal(props: FirmwareCustomModalProps) {
       }
     });
 
-    if (allValid) setCustomFWCheck(true);
-
+    setCustomFWCheck(allValid);
     setValidatorResutls(result);
   };
 
