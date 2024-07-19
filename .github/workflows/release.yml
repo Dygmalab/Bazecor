@@ -231,8 +231,10 @@ jobs:
         run: |
           mkdir dist
           find ${{ github.workspace }}/artifacts -name '*.exe' -exec cp -v {} ${{ github.workspace }}/dist \;
+          find ${{ github.workspace }}/artifacts -name '*.nupkg' -exec cp -v {} ${{ github.workspace }}/dist \;
           find ${{ github.workspace }}/artifacts -name '*.AppImage' -exec cp -v {} ${{ github.workspace }}/dist \;
           find ${{ github.workspace }}/artifacts -name '*.dmg' -exec cp -v {} ${{ github.workspace }}/dist \;
+          find ${{ github.workspace }}/artifacts -name '*.zip' -exec cp -v {} ${{ github.workspace }}/dist \;
 
       - name: Log dist folder
         run: |

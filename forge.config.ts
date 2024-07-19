@@ -49,6 +49,12 @@ const config: ForgeConfig = {
       },
     },
     {
+      name: "@electron-forge/maker-zip",
+      config: {
+        icon: "./build/logo.icns",
+      },
+    },
+    {
       name: "@reforged/maker-appimage",
       config: {
         options: {

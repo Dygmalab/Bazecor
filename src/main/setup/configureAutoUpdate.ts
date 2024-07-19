@@ -11,11 +11,11 @@ const configureAutoUpdate = () => {
     updateElectronApp({
       updateSource: {
         type: UpdateSourceType.ElectronPublicUpdateService,
-        repo: "Dygmalab/Bazecor",
-        host: "https://github.com/Dygmalab/Bazecor",
+        host: "https://update.electronjs.org",
       },
       updateInterval: "24 hour",
       logger: log,
+      notifyUser: true,
     });
   }
 };
