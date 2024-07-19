@@ -180,6 +180,8 @@ jobs:
           path: |
             out/make/**/*.dmg
             out/make/**/*.AppImage
+            out/make/**/*.zip
+            out/make/**/*.nupkg
             windows_signing/**/*.exe
 
       - name: Show build items
