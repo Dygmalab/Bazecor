@@ -109,7 +109,9 @@ const DeviceManager = (props: DeviceManagerProps) => {
       const toShowDevs: DeviceListType[] = [];
       const existingIDs = state.deviceList.map(d => d.serialNumber.toLowerCase());
       const result = await DeviceTools.listNonConnected(false, existingIDs);
-      let newDeviceList = state.deviceList.filter(x => !result.devicesToRemove.includes(x.serialNumber.toLowerCase()));
+      let newDeviceList = state.deviceList.filter(
+        x => !result.devicesToRemove.includes(x.serialNumber.toLowerCase()) || x.type === "virtual",
+      );
       newDeviceList = newDeviceList.concat(result.finalDevices);
       dispatch({ type: "addDevicesList", payload: newDeviceList });
       log.info("Available Devices: ", newDeviceList);
@@ -297,6 +299,7 @@ const DeviceManager = (props: DeviceManagerProps) => {
           />
           {/* <div className="filterHeaderWrapper flex items-center justify-between pt-8 pb-3 mb-3 border-b-[1px] border-gray-100 dark:border-gray-600"> */}
           <div className="filterHeaderWrapper flex items-center justify-between pt-8 pb-3 mb-3">
+            {/* // To be restored when we activate the persistence of the devices */}
             {/* <div className="filter-header flex items-center gap-4">
               <Heading headingLevel={3} renderAs="h3" className="ml-[2px]">
                 {devicesList?.length > 1 ? i18n.deviceManager.myDevices : i18n.deviceManager.myDevice}
