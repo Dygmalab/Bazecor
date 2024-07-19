@@ -159,7 +159,6 @@ jobs:
         run: |
           find out/make -type f -name '*.exe' -exec bash -c 'mv "$1" "${1// /-}"' _ {} \;
           find out/make -type f -name '*.exe' -exec cp -v {} windows_signing \;
-          find out/make -type f -name '*.nupkg' -exec cp -v {} windows_signing \;
       - if: runner.os == 'Windows'
         name: Sign executable
         shell: bash
@@ -182,8 +181,8 @@ jobs:
             out/make/**/*.dmg
             out/make/**/*.AppImage
             out/make/**/*.zip
+            out/make/**/*.nupkg
             windows_signing/**/*.exe
-            windows_signing/**/*.nupkg
 
       - name: Show build items
         if: runner.os != 'Windows'
