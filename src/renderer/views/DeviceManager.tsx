@@ -105,7 +105,7 @@ const DeviceManager = (props: DeviceManagerProps) => {
 
   const findKeyboards = useCallback(async (): Promise<DeviceListType[]> => {
     setLoading(true);
-    if (connected || state.deviceList.length > 0) {
+    if (connected || state.deviceList?.length > 0) {
       const toShowDevs: DeviceListType[] = [];
       const existingIDs = state.deviceList.map(d => d.serialNumber.toLowerCase());
       const result = await DeviceTools.listNonConnected(false, existingIDs);
@@ -249,7 +249,7 @@ const DeviceManager = (props: DeviceManagerProps) => {
   }, []);
 
   useEffect(() => {
-    if (devicesList && state.deviceList.length !== devicesList.length) setScanned(false);
+    if (state.deviceList?.length !== devicesList?.length) setScanned(false);
   }, [devicesList, state.deviceList]);
 
   useEffect(() => {
@@ -380,7 +380,7 @@ const DeviceManager = (props: DeviceManagerProps) => {
                       <CardAddDevice
                         addVirtualDevice={addVirtualDevice}
                         scanDevices={scanDevices}
-                        devicesNumber={devicesList.length}
+                        devicesNumber={devicesList?.length}
                         animationLoadingDevice={animationLoadingDevice}
                       />
                     </motion.div>
@@ -396,7 +396,7 @@ const DeviceManager = (props: DeviceManagerProps) => {
                       <CardAddDevice
                         addVirtualDevice={addVirtualDevice}
                         scanDevices={scanDevices}
-                        devicesNumber={devicesList.length}
+                        devicesNumber={devicesList?.length}
                         animationLoadingDevice={animationLoadingDevice}
                       />
                     </div>
