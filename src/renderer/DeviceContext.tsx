@@ -186,8 +186,8 @@ const listNonConnected = async (bootloader: boolean, existingIDs: string[]) => {
   const hidDevs = await HID.getDevices();
   for (const [index, device] of hidDevs.entries()) {
     log.verbose("Checking: ", device);
-    if (existingIDs.includes(device?.device?.chipId)) {
-      hidDevicesPresent.push(device.device.chipId);
+    if (existingIDs.includes((device as unknown as Device)?.device?.chipId)) {
+      hidDevicesPresent.push((device as unknown as Device).device.chipId);
       break;
     }
     const hid = new HID();
