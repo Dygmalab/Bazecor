@@ -25,6 +25,7 @@ const packagerConfig: ForgePackagerOptions = {
 if (process.env["NODE_ENV"] !== "development") {
   packagerConfig.osxSign = {
     optionsForFile: () => ({
+      identity: process.env["APPLE_IDENTITY"],
       entitlements: "./build/entitlements.plist",
       hardenedRuntime: true,
     }),
