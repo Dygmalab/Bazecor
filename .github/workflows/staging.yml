@@ -55,14 +55,14 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-20.04, windows-2019, macos-14]
+        os: [ubuntu-20.04, windows-2019, macos-13]
         target_arch: [arm, amd64]
         include:
           - os: ubuntu-20.04
             target_os: linux
           - os: windows-2019
             target_os: windows
-          - os: macOS-14
+          - os: macOS-13
             target_os: darwin
         exclude:
           - os: windows-2019
