@@ -195,7 +195,6 @@
       "category": "Utility"
     },
     "mac": {
-      "entitlements": "./build/entitlements.plist",
       "category": "public.app-category.utilities",
       "target": [
         "default"
