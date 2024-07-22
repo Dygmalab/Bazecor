@@ -248,19 +248,23 @@ const GeneralSettings = ({
                 size="sm"
               />
             </div>
-            <div className="flex items-center w-full justify-between py-2 border-b-[1px] border-gray-50 dark:border-gray-700">
-              <label htmlFor="autoUpdateSwitch" className="m-0 text-sm font-semibold tracking-tight">
-                {i18n.preferences.autoUpdate}
-              </label>
-              <Switch
-                id="autoUpdateSwitch"
-                defaultChecked={false}
-                checked={autoUpdate}
-                onCheckedChange={onChangeAutoUpdate}
-                variant="default"
-                size="sm"
-              />
-            </div>
+            {process.platform !== "linux" ? (
+              <div className="flex items-center w-full justify-between py-2 border-b-[1px] border-gray-50 dark:border-gray-700">
+                <label htmlFor="autoUpdateSwitch" className="m-0 text-sm font-semibold tracking-tight">
+                  {i18n.preferences.autoUpdate}
+                </label>
+                <Switch
+                  id="autoUpdateSwitch"
+                  defaultChecked={false}
+                  checked={autoUpdate}
+                  onCheckedChange={onChangeAutoUpdate}
+                  variant="default"
+                  size="sm"
+                />
+              </div>
+            ) : (
+              ""
+            )}
           </form>
         </CardContent>
       </Card>

@@ -7,7 +7,7 @@ const store = Store.getStore();
 const configureAutoUpdate = () => {
   const autoUpdate = store.get("settings.autoUpdate") as boolean;
 
-  if (autoUpdate === true) {
+  if (autoUpdate === true && process.platform !== "linux") {
     updateElectronApp({
       updateSource: {
         type: UpdateSourceType.ElectronPublicUpdateService,

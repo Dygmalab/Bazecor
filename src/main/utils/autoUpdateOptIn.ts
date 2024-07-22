@@ -1,5 +1,4 @@
 import { BrowserWindow, dialog, MessageBoxOptions } from "electron";
-import log from "electron-log/main";
 import Store from "../managers/Store";
 
 const store = Store.getStore();
@@ -7,7 +6,7 @@ const store = Store.getStore();
 const autoUpdateOptIn = (mainWindow: BrowserWindow) => {
   const autoUpdate = store.get("settings.autoUpdate") as boolean;
 
-  if (autoUpdate === undefined) {
+  if (autoUpdate === undefined && process.platform !== "linux") {
     let dialogOpts: MessageBoxOptions;
     if (process.platform !== "darwin") {
       dialogOpts = {
