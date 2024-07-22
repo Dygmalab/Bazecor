@@ -16,7 +16,6 @@
  */
 import React from "react";
 import DualFunctionTag from "@Renderer/components/molecules/KeyTags/DualFunctionTag";
-import OSKey from "@Renderer/components/molecules/KeyTags/OSKey";
 import { withModifiers } from "./utils";
 
 import { LetterTable } from "./letters";
@@ -29,50 +28,50 @@ import NumpadTable from "./numpad";
 import MiscellaneousTable from "./miscellaneous";
 
 const DualUseModifierTables = [
-  withModifiers(LetterTable, "Control /", <OSKey renderKey="control" />, 49169),
-  withModifiers(DigitTable, "Control /", "CTRL /", 49169),
-  withModifiers(PunctuationTable, "Control /", "CTRL /", 49169),
-  withModifiers(SpacingTable, "Control /", "CTRL /", 49169),
-  withModifiers(NavigationTable, "Control /", "CTRL /", 49169),
-  withModifiers(FunctionKeyTable, "Control /", "CTRL /", 49169),
-  withModifiers(NumpadTable, "Control /", "CTRL /", 49169),
-  withModifiers(MiscellaneousTable, "Control /", "CTRL /", 49169),
+  withModifiers(LetterTable, "Control /", <DualFunctionTag modifier="control" size="sm" />, 49169),
+  withModifiers(DigitTable, "Control /", <DualFunctionTag modifier="control" size="sm" />, 49169),
+  withModifiers(PunctuationTable, "Control /", <DualFunctionTag modifier="control" size="sm" />, 49169),
+  withModifiers(SpacingTable, "Control /", <DualFunctionTag modifier="control" size="sm" />, 49169),
+  withModifiers(NavigationTable, "Control /", <DualFunctionTag modifier="control" size="sm" />, 49169),
+  withModifiers(FunctionKeyTable, "Control /", <DualFunctionTag modifier="control" size="sm" />, 49169),
+  withModifiers(NumpadTable, "Control /", <DualFunctionTag modifier="control" size="sm" />, 49169),
+  withModifiers(MiscellaneousTable, "Control /", <DualFunctionTag modifier="control" size="sm" />, 49169),
 
-  withModifiers(LetterTable, "Shift /", "SHIFT /", 49425),
-  withModifiers(DigitTable, "Shift /", "SHIFT /", 49425),
-  withModifiers(PunctuationTable, "Shift /", "SHIFT /", 49425),
-  withModifiers(SpacingTable, "Shift /", "SHIFT /", 49425),
-  withModifiers(NavigationTable, "Shift /", "SHIFT /", 49425),
-  withModifiers(FunctionKeyTable, "Shift /", "SHIFT /", 49425),
-  withModifiers(NumpadTable, "Shift /", "SHIFT /", 49425),
-  withModifiers(MiscellaneousTable, "Shift /", "SHIFT /", 49425),
+  withModifiers(LetterTable, "Shift /", <DualFunctionTag modifier="shift" size="sm" />, 49425),
+  withModifiers(DigitTable, "Shift /", <DualFunctionTag modifier="shift" size="sm" />, 49425),
+  withModifiers(PunctuationTable, "Shift /", <DualFunctionTag modifier="shift" size="sm" />, 49425),
+  withModifiers(SpacingTable, "Shift /", <DualFunctionTag modifier="shift" size="sm" />, 49425),
+  withModifiers(NavigationTable, "Shift /", <DualFunctionTag modifier="shift" size="sm" />, 49425),
+  withModifiers(FunctionKeyTable, "Shift /", <DualFunctionTag modifier="shift" size="sm" />, 49425),
+  withModifiers(NumpadTable, "Shift /", <DualFunctionTag modifier="shift" size="sm" />, 49425),
+  withModifiers(MiscellaneousTable, "Shift /", <DualFunctionTag modifier="shift" size="sm" />, 49425),
 
-  withModifiers(LetterTable, "Alt /", "ALT /", 49681),
-  withModifiers(DigitTable, "Alt /", "ALT /", 49681),
-  withModifiers(PunctuationTable, "Alt /", "ALT /", 49681),
-  withModifiers(SpacingTable, "Alt /", "ALT /", 49681),
-  withModifiers(NavigationTable, "Alt /", "ALT /", 49681),
-  withModifiers(FunctionKeyTable, "Alt /", "ALT /", 49681),
-  withModifiers(NumpadTable, "Alt /", "ALT /", 49681),
-  withModifiers(MiscellaneousTable, "Alt /", "ALT /", 49681),
+  withModifiers(LetterTable, "Alt /", <DualFunctionTag modifier="alt" size="sm" />, 49681),
+  withModifiers(DigitTable, "Alt /", <DualFunctionTag modifier="alt" size="sm" />, 49681),
+  withModifiers(PunctuationTable, "Alt /", <DualFunctionTag modifier="alt" size="sm" />, 49681),
+  withModifiers(SpacingTable, "Alt /", <DualFunctionTag modifier="alt" size="sm" />, 49681),
+  withModifiers(NavigationTable, "Alt /", <DualFunctionTag modifier="alt" size="sm" />, 49681),
+  withModifiers(FunctionKeyTable, "Alt /", <DualFunctionTag modifier="alt" size="sm" />, 49681),
+  withModifiers(NumpadTable, "Alt /", <DualFunctionTag modifier="alt" size="sm" />, 49681),
+  withModifiers(MiscellaneousTable, "Alt /", <DualFunctionTag modifier="alt" size="sm" />, 49681),
 
-  withModifiers(LetterTable, "Os /", "OS /", 49937),
-  withModifiers(DigitTable, "Os /", "OS /", 49937),
-  withModifiers(PunctuationTable, "Os /", "OS /", 49937),
-  withModifiers(SpacingTable, "Os /", "OS /", 49937),
-  withModifiers(NavigationTable, "Os /", "OS /", 49937),
-  withModifiers(FunctionKeyTable, "Os /", "OS /", 49937),
-  withModifiers(NumpadTable, "Os /", "OS/", 49937),
-  withModifiers(MiscellaneousTable, "Os /", "OS /", 49937),
+  withModifiers(LetterTable, "Os /", <DualFunctionTag modifier="os" size="sm" />, 49937),
+  withModifiers(DigitTable, "Os /", <DualFunctionTag modifier="os" size="sm" />, 49937),
+  withModifiers(PunctuationTable, "Os /", <DualFunctionTag modifier="os" size="sm" />, 49937),
+  withModifiers(SpacingTable, "Os /", <DualFunctionTag modifier="os" size="sm" />, 49937),
+  withModifiers(NavigationTable, "Os /", <DualFunctionTag modifier="os" size="sm" />, 49937),
+  withModifiers(FunctionKeyTable, "Os /", <DualFunctionTag modifier="os" size="sm" />, 49937),
+  withModifiers(NumpadTable, "Os /", <DualFunctionTag modifier="os" size="sm" />, 49937),
+  withModifiers(MiscellaneousTable, "Os /", <DualFunctionTag modifier="os" size="sm" />, 49937),
 
-  withModifiers(LetterTable, "AltGr /", "ALTGR /", 50705),
-  withModifiers(DigitTable, "AltGr /", "ALTGR /", 50705),
-  withModifiers(PunctuationTable, "AltGr /", "ALTGR /", 50705),
-  withModifiers(SpacingTable, "AltGr /", "ALTGR /", 50705),
-  withModifiers(NavigationTable, "AltGr /", "ALTGR /", 50705),
-  withModifiers(FunctionKeyTable, "AltGr /", "ALTGR /", 50705),
-  withModifiers(NumpadTable, "AltGr /", "ALTGR /", 50705),
-  withModifiers(MiscellaneousTable, "AltGr /", "ALTGR /", 50705),
+  withModifiers(LetterTable, "AltGr /", <DualFunctionTag modifier="altGr" size="sm" />, 50705),
+  withModifiers(DigitTable, "AltGr /", <DualFunctionTag modifier="altGr" size="sm" />, 50705),
+  withModifiers(PunctuationTable, "AltGr /", <DualFunctionTag modifier="altGr" size="sm" />, 50705),
+  withModifiers(SpacingTable, "AltGr /", <DualFunctionTag modifier="altGr" size="sm" />, 50705),
+  withModifiers(NavigationTable, "AltGr /", <DualFunctionTag modifier="altGr" size="sm" />, 50705),
+  withModifiers(FunctionKeyTable, "AltGr /", <DualFunctionTag modifier="altGr" size="sm" />, 50705),
+  withModifiers(NumpadTable, "AltGr /", <DualFunctionTag modifier="altGr" size="sm" />, 50705),
+  withModifiers(MiscellaneousTable, "AltGr /", <DualFunctionTag modifier="altGr" size="sm" />, 50705),
 ];
 
 const DualUseLayerTables = [

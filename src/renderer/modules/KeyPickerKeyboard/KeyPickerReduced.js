@@ -42,6 +42,7 @@ import {
 import { MdKeyboardReturn, MdSpaceBar, MdKeyboardCapslock, MdInfoOutline, MdEject } from "react-icons/md";
 
 import Key from "@Renderer/modules/KeyPickerKeyboard/Key";
+import OSKey from "@Renderer/components/molecules/KeyTags/OSKey";
 import getLanguage from "@Renderer/modules/KeyPickerKeyboard/KeyPickerLanguage";
 
 const Style = Styled.div`
@@ -306,7 +307,7 @@ class KeyPickerReduced extends Component {
         os === "win32" ? (
           <AiFillWindows className="biggerWin" />
         ) : os === "darwin" ? (
-          <AiFillApple className="biggerApple" />
+          <OSKey renderKey="os" />
         ) : (
           <FaLinux className="biggerLinux" />
         ),
@@ -446,6 +447,7 @@ class KeyPickerReduced extends Component {
           tabIndex={-1}
           idArray={key.idArray}
           keyCode={code}
+          platform={process.platform}
         />
       );
     });
@@ -454,7 +456,7 @@ class KeyPickerReduced extends Component {
         <div className="KeysWrapper">
           <div className="keysContainer">
             <div className="keysRow keysOrdinaryKeyboard">
-              <svg className="svgStyle" viewBox="0 0 1070 208" preserveAspectRatio="xMidYMin slice">
+              <svg className={`svgStyle ${process.platform}`} viewBox="0 0 1070 208" preserveAspectRatio="xMidYMin slice">
                 {keyboard}
                 <defs>
                   <linearGradient id="paint_gradient" x1="0%" y1="0%" x2="100%" y2="0%">

@@ -38,6 +38,7 @@ import IconClose from "./IconClose";
 import IconCloudDownload from "./IconCloudDownload";
 import IconColorPalette from "./IconColorPalette";
 import IconColorPicker from "./IconColorPicker";
+import IconCommandMacOs from "./IconCommandMacOs";
 import IconConnected from "./IconConnected";
 import IconDelete from "./IconDelete";
 import IconDragAndDrop from "./IconDragAndDrop";
@@ -97,6 +98,7 @@ import IconNoWifi from "./IconNoWifi";
 import IconNoSignal from "./IconNoSignal";
 import IconNull from "./IconNull";
 import IconOneShot from "./IconOneShot";
+import IconOneShotMode from "./IconOneShotMode";
 import IconPause from "./IconPause";
 import IconPen from "./IconPen";
 import IconPlug from "./IconPlug";
@@ -158,6 +160,7 @@ export {
   IconCloudDownload,
   IconColorPalette,
   IconColorPicker,
+  IconCommandMacOs,
   IconConnected,
   IconDelete,
   IconDragAndDrop,
@@ -217,6 +220,7 @@ export {
   IconNoSignal,
   IconNull,
   IconOneShot,
+  IconOneShotMode,
   IconPause,
   IconPen,
   IconPlug,

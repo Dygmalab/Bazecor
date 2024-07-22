@@ -5,6 +5,7 @@ import React from "react";
 import Styled, { withTheme } from "styled-components";
 import { SegmentedKeyType } from "@Renderer/types/layout";
 import { SelectGenericKeys } from "@Renderer/components/molecules/CustomSelect";
+import OSKey from "@Renderer/components/molecules/KeyTags/OSKey";
 
 const Style = Styled.g`
 .keycap {
@@ -365,6 +366,7 @@ interface KeyProps {
   };
   idArray: string;
   disabled: boolean;
+  platform: string;
 }
 
 function Key(props: KeyProps) {
@@ -386,6 +388,7 @@ function Key(props: KeyProps) {
     idArray,
     disabled,
     theme,
+    platform,
   } = props;
 
   return (
@@ -549,7 +552,11 @@ function Key(props: KeyProps) {
               textAnchor="middle"
               className="contentFirst"
             >
-              {content.first}
+              {(content.first === "Ctrl" || content.first === "Alt") && platform === "darwin"
+                ? content.first === "Ctrl"
+                  ? "Crtl ^"
+                  : "⌥"
+                : content.first}
             </text>
             <text
               x={x + ksl[content.type].text.letter.ddx}

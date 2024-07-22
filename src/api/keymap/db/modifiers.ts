@@ -133,45 +133,45 @@ const HyperMehTable = {
 
 const ModifiedModifiersTables = [
   // Single
-  withModifiers(ModifiersTable, "Control +", "C+", 256),
-  withModifiers(ModifiersTable, "Alt +", "A+", 512),
-  withModifiers(ModifiersTable, "AltGr +", "AGr+", 1024),
-  withModifiers(ModifiersTable, "Shift +", "S+", 2048),
-  withModifiers(ModifiersTable, "Os+", "O+", 4096),
+  withModifiers(ModifiersTable, "Control +", "", 256),
+  withModifiers(ModifiersTable, "Alt +", "", 512),
+  withModifiers(ModifiersTable, "AltGr +", "", 1024),
+  withModifiers(ModifiersTable, "Shift +", "", 2048),
+  withModifiers(ModifiersTable, "Os+", "", 4096),
 
   // Double
-  withModifiers(ModifiersTable, "Control + Alt +", "C+A+", 768),
-  withModifiers(ModifiersTable, "Control + AltGr +", "C+AGr+", 1280),
-  withModifiers(ModifiersTable, "Control + Shift +", "C+S+", 2304),
-  withModifiers(ModifiersTable, "Control + Os +", "C+O+", 4352),
-  withModifiers(ModifiersTable, "Alt + AltGr +", "A+AGr+", 1536),
-  withModifiers(ModifiersTable, "Alt + Shift +", "A+S+", 2560),
-  withModifiers(ModifiersTable, "Alt + Os +", "A+O+", 4608),
-  withModifiers(ModifiersTable, "AltGr + Shift +", "AGr+S+", 3072),
-  withModifiers(ModifiersTable, "AltGr + Os +", "AGr+O+", 5120),
-  withModifiers(ModifiersTable, "Shift + Os +", "S+O+", 6144),
+  withModifiers(ModifiersTable, "Control + Alt +", "", 768),
+  withModifiers(ModifiersTable, "Control + AltGr +", "", 1280),
+  withModifiers(ModifiersTable, "Control + Shift +", "", 2304),
+  withModifiers(ModifiersTable, "Control + Os +", "", 4352),
+  withModifiers(ModifiersTable, "Alt + AltGr +", "", 1536),
+  withModifiers(ModifiersTable, "Alt + Shift +", "", 2560),
+  withModifiers(ModifiersTable, "Alt + Os +", "", 4608),
+  withModifiers(ModifiersTable, "AltGr + Shift +", "", 3072),
+  withModifiers(ModifiersTable, "AltGr + Os +", "", 5120),
+  withModifiers(ModifiersTable, "Shift + Os +", "", 6144),
 
   // Triple
-  withModifiers(ModifiersTable, "Control + Alt + AltGr +", "C+A+AGr+", 1792),
-  withModifiers(ModifiersTable, "Meh +", "Meh+", 2816),
-  withModifiers(ModifiersTable, "Control + Alt + Os +", "C+A+O+", 4864),
-  withModifiers(ModifiersTable, "Control + AltGr + Shift +", "C+AGr+S+", 3328),
-  withModifiers(ModifiersTable, "Control + AltGr + Os +", "C+AGr+O+", 5376),
-  withModifiers(ModifiersTable, "Control + Shift + Os +", "C+S+O+", 6400),
-  withModifiers(ModifiersTable, "Alt + AltGr + Shift +", "A+AGr+S+", 3584),
-  withModifiers(ModifiersTable, "Alt + AltGr + Os +", "A+AGr+O+", 5632),
-  withModifiers(ModifiersTable, "Alt + Shift + Os +", "A+S+O+", 6656),
-  withModifiers(ModifiersTable, "AltGr + Shift + Os +", "AGr+S+O+", 7168),
+  withModifiers(ModifiersTable, "Control + Alt + AltGr +", "", 1792),
+  withModifiers(ModifiersTable, "Meh +", "", 2816),
+  withModifiers(ModifiersTable, "Control + Alt + Os +", "", 4864),
+  withModifiers(ModifiersTable, "Control + AltGr + Shift +", "", 3328),
+  withModifiers(ModifiersTable, "Control + AltGr + Os +", "", 5376),
+  withModifiers(ModifiersTable, "Control + Shift + Os +", "", 6400),
+  withModifiers(ModifiersTable, "Alt + AltGr + Shift +", "", 3584),
+  withModifiers(ModifiersTable, "Alt + AltGr + Os +", "", 5632),
+  withModifiers(ModifiersTable, "Alt + Shift + Os +", "", 6656),
+  withModifiers(ModifiersTable, "AltGr + Shift + Os +", "", 7168),
 
   // Quad
-  withModifiers(ModifiersTable, "Meh + AltGr +", "M+AGr+", 3840),
-  withModifiers(ModifiersTable, "Control + Alt + AltGr + Os +", "C+A+AGr+O+", 5888),
+  withModifiers(ModifiersTable, "Meh + AltGr +", "", 3840),
+  withModifiers(ModifiersTable, "Control + Alt + AltGr + Os +", "", 5888),
   withModifiers(ModifiersTable, "Hyper+", "Hyper+", 6912),
-  withModifiers(ModifiersTable, "Control + AltGr + Shift + Os +", "C+AGr+S+O+", 7424),
-  withModifiers(ModifiersTable, "Alt + AltGr + Shift + Os +", "A+AGr+S+O+", 7680),
+  withModifiers(ModifiersTable, "Control + AltGr + Shift + Os +", "", 7424),
+  withModifiers(ModifiersTable, "Alt + AltGr + Shift + Os +", "", 7680),
 
   // All
-  withModifiers(ModifiersTable, "Hyper + AltGr +", "H+AGr+", 7936),
+  withModifiers(ModifiersTable, "Hyper + AltGr +", "", 7936),
 ];
 
 export default ModifiersTable;
