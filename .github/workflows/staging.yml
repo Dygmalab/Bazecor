@@ -146,14 +146,14 @@ jobs:
           security import $APPLE_APPLICATION_CERT_PATH -P "$APPLE_CERT_PASSWORD" -A -t cert -f pkcs12 -k $KEYCHAIN_PATH
           security list-keychain -d user -s $KEYCHAIN_PATH
           # - run: yarn run lint
-      - if: runner.os == 'macOS' && matrix.target_arch == 'arm'
+      - if: runner.os == 'macOS' && matrix.target_arch == 'amd64'
         name: Build for MacOS Intel
         env:
           APPLE_ID: ${{ secrets.APPLEID }}
           APPLE_ID_PASSWORD: ${{ secrets.APPLEIDPASS }}
           APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
         run: yarn run make-mac-intel
-      - if: runner.os == 'macOS'  && matrix.target_arch == 'amd64'
+      - if: runner.os == 'macOS'  && matrix.target_arch == 'arm'
         name: Build for MacOS Arm
         env:
           APPLE_ID: ${{ secrets.APPLEID }}
