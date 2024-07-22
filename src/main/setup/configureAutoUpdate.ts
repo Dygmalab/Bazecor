@@ -12,6 +12,7 @@ const configureAutoUpdate = () => {
       updateSource: {
         type: UpdateSourceType.ElectronPublicUpdateService,
         host: "https://update.electronjs.org",
+        repo: "dygmalab/bazecor",
       },
       updateInterval: "24 hour",
       logger: log,
