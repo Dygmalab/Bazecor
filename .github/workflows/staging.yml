@@ -193,6 +193,7 @@ jobs:
             out/make/**/*.AppImage
             out/make/**/*.zip
             out/make/**/*.nupkg
+            out/make/**/RELEASES*
             windows_signing/**/*.exe
 
       - name: Show build items
