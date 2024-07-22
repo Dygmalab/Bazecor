@@ -198,12 +198,7 @@
       "entitlements": "./build/entitlements.plist",
       "category": "public.app-category.utilities",
       "target": [
-        {
-          "target": [
-            "dmg",
-            "zip"
-          ]
-        }
+        "default"
       ]
     }
   }
