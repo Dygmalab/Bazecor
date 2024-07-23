@@ -267,15 +267,17 @@ function FirmwareUpdatePanel(props: FirmwareUpdatePanelProps) {
                       </div>
                     ) : (
                       <div className="px-4 py-4">
-                        <div className="px-4 py-4 rounded-md bg-gray-25 dark:bg-gray-700 flex items-center gap-4 text-sm animate-bounce-error">
-                          <div className="inline-flex w-10 h-10 aspect-square items-center justify-center text-orange-900/50 bg-orange-200/50 dark:text-orange-200 dark:bg-orange-200/25 rounded-full">
-                            <IconUSB />
+                        <div className="px-4 py-4 rounded-md bg-gray-25 dark:bg-gray-700 flex flex-col items-center gap-2 text-sm animate-bounce-error">
+                          <div className="flex w-full items-center px-2 py-0 rounded-xl text-2xxs font-semibold tracking-tight leading-tight bg-orange-200 text-orange-900 [&_svg]:w-4">
+                            <IconBluetooth /> Your keyboard is connected via BT
                           </div>
-                          <div className="flex flex-wrap gap-2 text-gray-400 dark:text-gray-25 text-ssm">
-                            <div className="flex w-full items-center px-2 py-1 rounded-xl text-2xxs font-semibold tracking-tight leading-tight bg-orange-200 text-orange-900 text-gray-25">
-                              <IconBluetooth /> Your keyboard is connected via BT
+                          <div className="flex gap-4">
+                            <div className="inline-flex w-10 h-10 aspect-square items-center justify-center text-orange-900/50 bg-orange-200/50 dark:text-orange-200 dark:bg-orange-200/25 rounded-full">
+                              <IconUSB />
                             </div>
-                            Please plug the keyboard via USB to update the firmware.
+                            <div className="flex flex-wrap gap-2 text-gray-400 dark:text-gray-25 text-ssm">
+                              Please plug the keyboard via USB to update the firmware.
+                            </div>
                           </div>
                         </div>
                       </div>
