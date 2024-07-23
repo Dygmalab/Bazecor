@@ -369,6 +369,31 @@ interface KeyProps {
   platform: string;
 }
 
+interface KeyLabelProps {
+  content: string;
+  os: string;
+}
+const KeyLabel: React.FC<KeyLabelProps> = ({ content, os }) => {
+  let label;
+  if (os === "darwin") {
+    switch (content) {
+      case "Ctrl":
+        label = "Ctrl ^";
+        break;
+      case "Alt":
+      case "Alt Gr":
+        label = "⌥";
+        break;
+      default:
+        label = content;
+    }
+  } else {
+    label = content;
+  }
+
+  return <>{label}</>;
+};
+
 function Key(props: KeyProps) {
   const {
     id,
@@ -552,11 +577,12 @@ function Key(props: KeyProps) {
               textAnchor="middle"
               className="contentFirst"
             >
-              {(content.first === "Ctrl" || content.first === "Alt") && platform === "darwin"
+              {/* {(content.first === "Ctrl" || content.first === "Alt" || content.firt === "Alt Gr") && platform === "darwin"
                 ? content.first === "Ctrl"
-                  ? "Crtl ^"
+                  ? "Ctrl ^"
                   : "⌥"
-                : content.first}
+                : content.first} */}
+              <KeyLabel content={content.first} os={platform} />
             </text>
             <text
               x={x + ksl[content.type].text.letter.ddx}

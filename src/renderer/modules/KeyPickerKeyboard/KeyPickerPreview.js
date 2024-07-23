@@ -40,6 +40,9 @@ import { MdKeyboardReturn, MdSpaceBar, MdKeyboardCapslock, MdInfoOutline, MdEjec
 
 import Key from "@Renderer/modules/KeyPickerKeyboard/Key";
 import getLanguage from "@Renderer/modules/KeyPickerKeyboard/KeyPickerLanguage";
+import OSKey from "@Renderer/components/molecules/KeyTags/OSKey";
+
+import { getKeyboardLayout } from "@Renderer/utils/getKeyboardLayout";
 
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@Renderer/components/atoms/Tooltip";
 
@@ -153,6 +156,7 @@ class KeyPickerPreview extends Component {
     // let boxShadowMatrix = useTheme().styles.keyPicker.keyMatrixShadow;
 
     const Lang = getLanguage(selectedlanguage);
+    const keyboardLayout = getKeyboardLayout(selectedlanguage);
 
     const os = process.platform;
     const iconlist = {
@@ -294,13 +298,14 @@ class KeyPickerPreview extends Component {
         />
       );
     });
+
     return (
       <Style>
         <div className="max-w-[1080px] mx-auto">
           <div className="px-3 py-3 rounded-md mt-3 flex flex-col w-full bg-gray-25 dark:bg-gray-700/60">
             <h4 className="mt-0 mb-1 uppercase text-xs tracking-wide text-gray-300 dark:text-gray-500">Preview</h4>
             <svg
-              className={`svgStyle ${process.platform} mx-auto w-full max-w-[1170px] overflow-hidden pointer-events-none`}
+              className={`svgStyle ${process.platform} ${keyboardLayout} mx-auto w-full max-w-[1170px] overflow-hidden pointer-events-none`}
               viewBox="0 0 860 180"
               preserveAspectRatio="xMidYMin slice"
             >
