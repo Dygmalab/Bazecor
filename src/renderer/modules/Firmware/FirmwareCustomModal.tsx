@@ -5,10 +5,11 @@ import log from "electron-log";
 import { motion, AnimatePresence } from "framer-motion";
 
 import Heading from "@Renderer/components/atoms/Heading";
-import { IconFolder, IconDocumentWithLines, IconCheckmark } from "@Renderer/components/atoms/icons";
+import { IconFolder, IconDocumentWithLines, IconCheckmark, IconWarning } from "@Renderer/components/atoms/icons";
 
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@Renderer/components/atoms/Dialog";
 import { Button } from "@Renderer/components/atoms/Button";
+import Banner from "@Renderer/components/atoms/Banner";
 import fs from "fs";
 
 interface FirmwareCustomModalProps {
@@ -87,8 +88,16 @@ export default function FirmwareCustomModal(props: FirmwareCustomModalProps) {
       >
         <IconDocumentWithLines size="sm" /> {file}
       </div>
-      <div className={`rounded-full transition-all duration-500 ${valid ? "opacity-100 text-green-200" : "opacity-0"}`}>
-        <IconCheckmark size="sm" />
+      <div className={`rounded-full transition-all duration-500 ${valid === undefined ? "opacity-0" : "opacity-100"}`}>
+        {valid === false ? (
+          <div className="rounded-xl py-0.5 px-2 text-2xxs tracking-tight font-semibold bg-red-200/15 text-red-100">
+            File not found
+          </div>
+        ) : (
+          <span className="text-green-200">
+            <IconCheckmark size="sm" />
+          </span>
+        )}
       </div>
     </li>
   );
@@ -100,10 +109,17 @@ export default function FirmwareCustomModal(props: FirmwareCustomModalProps) {
           <DialogTitle>Install a custom firmware</DialogTitle>
         </DialogHeader>
         <div className="px-6 pb-6 mt-2">
+          <Banner variant="warning" icon={<IconWarning />}>
+            <p className="tracking-tight font-semibold">
+              Installing firmware not created by Dygma is done at your own risk. This action may void your warranty and could
+              potentially harm your device. Dygma is not responsible for any issues or malfunctions that arise from the use of
+              unofficial firmware.
+            </p>
+          </Banner>
           <Heading
             headingLevel={4}
             renderAs="h4"
-            className="tracking-tight leading-[1.5em] mb-2 text-gray-500 dark:text-gray-100 flex gap-2 items-center text-md"
+            className="tracking-tight leading-[1.5em] mb-2 mt-6 text-gray-500 dark:text-gray-100 flex gap-2 items-center text-md"
           >
             <IconFolder /> Firmware folder
           </Heading>
@@ -142,7 +158,9 @@ export default function FirmwareCustomModal(props: FirmwareCustomModalProps) {
                 className="w-full mt-4 p-6 bg-white/50 dark:bg-gray-600/25 rounded-sm"
               >
                 <p className="font-semibold tracking-tight mb-2 text-ssm">
-                  To successfully install the custom firmware on your device, you must ensure that it contains the file.
+                  {device.info.product === "Raise"
+                    ? "To successfully install the custom firmware on your device, you must ensure that the folder contains this file."
+                    : "To successfully install the custom firmware on your device, you must ensure that the folder contains these files."}
                 </p>
                 <ul className="text-ssm">{customFolder && validatorResults.map(({ file, valid }) => checkState(file, valid))}</ul>
                 <AnimatePresence>
@@ -152,7 +170,7 @@ export default function FirmwareCustomModal(props: FirmwareCustomModalProps) {
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: -50 }}
                       transition={{ duration: 0.6 }}
-                      className="flex w-full text-center justify-center p-2 mt-6 rounded-lg font-semibold tracking-tight bg-green-200 text-white text-ssm"
+                      className="flex w-full text-center justify-center p-2 mt-6 rounded-lg font-semibold tracking-tight bg-green-200/15 text-green-200 dark:text-white text-ssm"
                     >
                       Ready for installation
                     </motion.div>

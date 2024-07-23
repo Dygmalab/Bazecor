@@ -14,7 +14,9 @@ const Banner = ({ variant = "info", icon, children }: BannerProps) => (
   >
     <div className="banner-inner flex gap-6">
       {icon && (
-        <div className="banner-icon flex flex-shrink-0 flex-grow-0 basis-10 w-10 h-10 items-center justify-center rounded-full bg-orange-100/35 dark:bg-orange-100/15">
+        <div
+          className={`banner-icon flex flex-shrink-0 flex-grow-0 basis-10 w-10 h-10 items-center justify-center rounded-full bg-orange-100/35 dark:bg-orange-100/15 ${variant === "warning" ? "text-orange-200" : ""}`}
+        >
           {icon}
         </div>
       )}
