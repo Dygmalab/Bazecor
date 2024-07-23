@@ -8,7 +8,7 @@ export type KeymapCodeTableType = {
   labels: {
     primary: string | JSX.Element;
     top?: string | JSX.Element | undefined;
-    verbose?: string | undefined;
+    verbose?: string | JSX.Element | undefined;
   };
   newGroupName?: string;
 };

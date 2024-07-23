@@ -29,7 +29,7 @@ export interface KeyType {
   keyCode: number;
   label: string | JSX.Element;
   extraLabel?: string | JSX.Element;
-  verbose?: string;
+  verbose?: string | JSX.Element;
 }
 
 export interface SegmentedKeyType {
