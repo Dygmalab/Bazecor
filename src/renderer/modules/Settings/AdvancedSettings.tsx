@@ -123,7 +123,7 @@ const AdvancedSettings = ({
         </CardHeader>
         <CardContent>
           <form>
-            <label htmlFor="selectDefaultLayer" className="mt-0 mb-2 text-sm font-semibold tracking-tight">
+            <label htmlFor="selectDefaultLayer" className="flex mt-1 mb-2 text-sm font-semibold tracking-tight">
               {i18n.keyboardSettings.keymap.defaultLayer}
             </label>
             <Select value={String(defaultLayer)} onValueChange={e => selectDefaultLayer(e)}>

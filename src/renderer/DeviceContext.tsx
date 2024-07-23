@@ -65,16 +65,15 @@ function deviceReducer(state: State, action: Action) {
       let newDevices = [...state.deviceList];
       let newSelected: number = state.selected;
       newDevices = newDevices.filter((device, index) => {
-        const isVirtual = device.type === "virtual";
-        const isNotPresent = action.payload.includes(device.serialNumber.toLowerCase());
+        const toRemove = action.payload.includes(device.serialNumber.toLowerCase());
 
         if (index < state.selected && newSelected > -1) newSelected -= 1;
-        if (isNotPresent && state.selected === index) {
-          log.info("entered with", state.selected, index, isNotPresent, device.serialNumber.toLowerCase());
+        if (toRemove && state.selected === index) {
+          log.info("entered with", state.selected, index, toRemove, device.serialNumber.toLowerCase());
           newSelected = -1;
         }
 
-        return !isVirtual && !isNotPresent;
+        return !toRemove;
       });
       // newSelected = state.selected >= newDevices.length ? -1 : state.selected;
       log.warn("EXECUTED disconnect: ", state.deviceList, state.selected, action.payload, newDevices);
@@ -176,23 +175,31 @@ const enumerateDevice = async (bootloader: boolean, device: USBDevice, existingI
 const listNonConnected = async (bootloader: boolean, existingIDs: string[]) => {
   const finalDevices: Array<Device> = [];
   const devicesToRemove: Array<string> = [];
+  const hidDevicesPresent: Array<string> = [];
 
   // Gathering SerialPort Devices
   const result = await serial.enumerate(bootloader, undefined, existingIDs);
   result.foundDevices.map(dev => finalDevices.push(new Device(dev, "serial")));
-  existingIDs.forEach(d => (result.validDevices.includes(d) ? undefined : devicesToRemove.push(d)));
   // log.info("Data from enum dev:", dev, bootloader, existingIDs);
 
   // Gathering HID Devices
   const hidDevs = await HID.getDevices();
   for (const [index, device] of hidDevs.entries()) {
     log.verbose("Checking: ", device);
+    if (existingIDs.includes((device as unknown as Device)?.device?.chipId)) {
+      hidDevicesPresent.push((device as unknown as Device).device.chipId);
+      break;
+    }
     const hid = new HID();
     const connected = await hid.isDeviceConnected(index);
     const supported = await hid.isDeviceSupported(index);
     log.info("Checking connected & supported for HID: ", connected, supported);
     if (connected && supported && !existingIDs.includes(hid.serialNumber)) finalDevices.push(new Device(hid, "hid"));
   }
+
+  existingIDs.forEach(d =>
+    result.validDevices.includes(d) || hidDevicesPresent.includes(d) ? undefined : devicesToRemove.push(d),
+  );
 
   return { finalDevices, devicesToRemove };
 };

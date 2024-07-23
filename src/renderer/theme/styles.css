@@ -272,6 +272,9 @@ select:focus {
   @apply text-purple-200 border-purple-200 bg-purple-200/5;
 }
 
+.isModifier .trash-icon {
+  @apply !text-gray-800;
+}
 /* LOADER */
 .running {
   --animation-state: running;
@@ -729,4 +732,10 @@ select:focus {
 .svgStyle.darwin g.keycap.id-93,
 .svgStyle.darwin g.keycap.id-96 {
   transform: translate(-59px, 0);
+}
+.standardView .tab-item--active:after {
+  right: calc((1.25rem + 7px) * -1);
+}
+.standardView .tab-item--active:before {
+  right: calc((1.25rem + 4px) * -1);
 }

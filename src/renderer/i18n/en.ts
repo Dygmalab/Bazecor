@@ -194,7 +194,7 @@ const English = {
       recordDelays: "Record delays",
       recordMacro: "Record macro",
       recordingMacro: "Recording macro...",
-      recordingDiscard: "Discard record",
+      recordingDiscard: "Discard recording",
       recordingMessage:
         "Did you make a mistake? Don't worry, you can edit the created sequence after adding the recording to the timeline.",
       restore: "Restore All",
@@ -259,6 +259,7 @@ const English = {
         title: "Clear layer",
         resetColors: "Reset underglow and key colors using the selection",
         useNoKey: "Fill layer with NOKEY instead of TRANS key",
+        chooseYourKeyboardSide: "Choose the entire keyboard, left or right side",
       },
     },
     standardView: {

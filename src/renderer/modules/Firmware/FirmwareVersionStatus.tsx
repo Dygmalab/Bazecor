@@ -17,20 +17,21 @@
 
 import React, { useState } from "react";
 import Styled from "styled-components";
-import log from "electron-log";
 
 import ReactMarkdown from "react-markdown";
 
 import Heading from "@Renderer/components/atoms/Heading";
 import { Badge } from "@Renderer/components/atoms/Badge";
-import { IconEye, IconLoader } from "@Renderer/components/atoms/icons";
+import { IconEye, IconLoader, IconMemoryUpload } from "@Renderer/components/atoms/icons";
 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@Renderer/components/atoms/Select";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@Renderer/components/atoms/Tooltip";
 
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@Renderer/components/atoms/Dialog";
 import { Button } from "@Renderer/components/atoms/Button";
 
 import { ReleaseType } from "@Renderer/types/releases";
+import FirmwareCustomModal from "./FirmwareCustomModal";
 
 const Style = Styled.div`
 margin-left:32px;
@@ -141,16 +142,29 @@ h6 {
 `;
 
 interface FirmwareVersionStatusProps {
-  currentlyVersionRunning: string;
+  device: {
+    info: {
+      vendor: string;
+      product: string;
+      keyboardType: string;
+      displayName: string;
+    };
+    bootloader: boolean;
+    version: string;
+    chipID: string;
+  };
   isUpdated: boolean;
   firmwareList: ReleaseType[];
   selectedFirmware: any;
   send: (value: unknown) => void;
+  typeSelected: string;
 }
 
 const FirmwareVersionStatus = (props: FirmwareVersionStatusProps) => {
-  const { currentlyVersionRunning, isUpdated, firmwareList, selectedFirmware, send } = props;
+  const { device, isUpdated, firmwareList, selectedFirmware, send, typeSelected } = props;
   const [modalFirmwareDetails, setModalFirmwareDetails] = useState(false);
+  const [showCustomFWModal, setShowCustomFWModal] = useState(false);
+
   return (
     <Style>
       <div className={`versionsStatus ${isUpdated && "isUpdated"}`}>
@@ -160,7 +174,7 @@ const FirmwareVersionStatus = (props: FirmwareVersionStatusProps) => {
               Installed firmware version
             </Heading>
             <Badge variant="outline" size="xs">
-              {currentlyVersionRunning}
+              {device.version}
             </Badge>
           </div>
           <div className="versionStatusNext">
@@ -180,26 +194,64 @@ const FirmwareVersionStatus = (props: FirmwareVersionStatusProps) => {
                 onValueChange={(value: string) => send({ type: "changeFW-event", selected: parseInt(value, 10) })}
               >
                 <SelectTrigger className="w-full" size="sm">
-                  <SelectValue placeholder="Select firmware version" />
+                  {typeSelected === "default" ? <SelectValue placeholder="Select firmware version" /> : "Custom firmware"}
                 </SelectTrigger>
                 <SelectContent>
-                  {firmwareList.map((item, index: number) => (
-                    <SelectItem value={index.toString(10)} key={`id-${item.name}-${item.version}`} disabled={item === undefined}>
-                      {item.version}
-                    </SelectItem>
-                  ))}
+                  {firmwareList && firmwareList.length > 0
+                    ? firmwareList.map((item, index: number) => (
+                        <SelectItem
+                          value={index.toString(10)}
+                          key={`id-${item.name}-${item.version}`}
+                          disabled={item === undefined}
+                        >
+                          {item.version}
+                        </SelectItem>
+                      ))
+                    : "No version Available"}
                 </SelectContent>
               </Select>
+              <TooltipProvider delayDuration={200}>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <div>
+                      <Button
+                        variant="link"
+                        size="iconXS"
+                        onClick={() => {
+                          setModalFirmwareDetails(true);
+                        }}
+                        disabled={typeSelected !== "default"}
+                        className="rounded-full hover:bg-purple-300 dark:hover:bg-purple-200 hover:text-gray-25"
+                      >
+                        <IconEye />
+                      </Button>
+                    </div>
+                  </TooltipTrigger>
+                  <TooltipContent className="max-w-xs" size="sm">
+                    What&apos;s new
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
 
-              <Button
-                variant="link"
-                size="iconXS"
-                onClick={() => {
-                  setModalFirmwareDetails(true);
-                }}
-              >
-                <IconEye />
-              </Button>
+              <TooltipProvider delayDuration={200}>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <div>
+                      <Button
+                        variant="link"
+                        size="iconXS"
+                        onClick={() => setShowCustomFWModal(true)}
+                        className="rounded-full hover:bg-purple-300 dark:hover:bg-purple-200 hover:text-gray-25"
+                      >
+                        <IconMemoryUpload />
+                      </Button>
+                    </div>
+                  </TooltipTrigger>
+                  <TooltipContent className="max-w-xs" size="sm">
+                    Install a custom firmware
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
             </div>
           </div>
         </div>
@@ -208,11 +260,11 @@ const FirmwareVersionStatus = (props: FirmwareVersionStatusProps) => {
       <Dialog open={modalFirmwareDetails} onOpenChange={() => setModalFirmwareDetails(false)}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>{firmwareList[selectedFirmware].version}</DialogTitle>
+            <DialogTitle>{firmwareList[selectedFirmware]?.version}</DialogTitle>
           </DialogHeader>
           <div className="px-6 pb-6 mt-2">
-            {firmwareList[selectedFirmware].body ? (
-              <ReactMarkdown>{firmwareList[selectedFirmware].body}</ReactMarkdown>
+            {firmwareList[selectedFirmware]?.body ? (
+              <ReactMarkdown>{firmwareList[selectedFirmware]?.body}</ReactMarkdown>
             ) : (
               <div className="loading marginCenter flex text-center justify-center">
                 <IconLoader />
@@ -221,6 +273,12 @@ const FirmwareVersionStatus = (props: FirmwareVersionStatusProps) => {
           </div>
         </DialogContent>
       </Dialog>
+      <FirmwareCustomModal
+        device={device}
+        showCustomFWModal={showCustomFWModal}
+        setShowCustomFWModal={setShowCustomFWModal}
+        send={send}
+      />
     </Style>
   );
 };

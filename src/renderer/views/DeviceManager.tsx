@@ -60,6 +60,8 @@ const DeviceManager = (props: DeviceManagerProps) => {
   const [open, setOpen] = useState(false);
   const [openDialogVirtualKB, setOpenDialogVirtualKB] = useState(false);
   const [selectedDevice, setSelectedDevice] = useState(0);
+  const [showMainButtons, setShowMainButtons] = useState(false);
+  const [animationLoadingDevice, setAnimationLoadingDevice] = useState(false);
 
   const ref = useRef(null);
   const isInView = useInView(ref);
@@ -103,11 +105,13 @@ const DeviceManager = (props: DeviceManagerProps) => {
 
   const findKeyboards = useCallback(async (): Promise<DeviceListType[]> => {
     setLoading(true);
-    if (connected || state.deviceList.length > 0) {
+    if (connected || state.deviceList?.length > 0) {
       const toShowDevs: DeviceListType[] = [];
       const existingIDs = state.deviceList.map(d => d.serialNumber.toLowerCase());
       const result = await DeviceTools.listNonConnected(false, existingIDs);
-      let newDeviceList = state.deviceList.filter(x => !result.devicesToRemove.includes(x.serialNumber.toLowerCase()));
+      let newDeviceList = state.deviceList.filter(
+        x => !result.devicesToRemove.includes(x.serialNumber.toLowerCase()) || x.type === "virtual",
+      );
       newDeviceList = newDeviceList.concat(result.finalDevices);
       dispatch({ type: "addDevicesList", payload: newDeviceList });
       log.info("Available Devices: ", newDeviceList);
@@ -192,6 +196,8 @@ const DeviceManager = (props: DeviceManagerProps) => {
   const scanDevices = () => {
     log.info("Scan devices!");
     setScanned(false);
+    setAnimationLoadingDevice(true);
+    setTimeout(() => setAnimationLoadingDevice(false), 800);
   };
 
   const addVirtualDevicesButton = (
@@ -245,7 +251,7 @@ const DeviceManager = (props: DeviceManagerProps) => {
   }, []);
 
   useEffect(() => {
-    if (devicesList && state.deviceList.length !== devicesList.length) setScanned(false);
+    if (state.deviceList?.length !== devicesList?.length) setScanned(false);
   }, [devicesList, state.deviceList]);
 
   useEffect(() => {
@@ -260,9 +266,9 @@ const DeviceManager = (props: DeviceManagerProps) => {
   useEffect(() => {
     // log.info("ref: ", ref.current);
     if (isInView) {
-      log.warn("Is visible");
+      setShowMainButtons(false);
     } else {
-      log.warn("Not visible");
+      setShowMainButtons(true);
     }
   }, [isInView, ref]);
 
@@ -287,12 +293,13 @@ const DeviceManager = (props: DeviceManagerProps) => {
         <div className="view-wrapper--devices flex h-[inherit] flex-col">
           <PageHeader
             text="Keyboard Manager"
-            primaryButton={scanDevicesButton}
-            secondaryButton={addVirtualDevicesButton}
+            primaryButton={showMainButtons ? scanDevicesButton : null}
+            secondaryButton={showMainButtons ? addVirtualDevicesButton : null}
             styles="pageHeaderFlatBottom"
           />
           {/* <div className="filterHeaderWrapper flex items-center justify-between pt-8 pb-3 mb-3 border-b-[1px] border-gray-100 dark:border-gray-600"> */}
           <div className="filterHeaderWrapper flex items-center justify-between pt-8 pb-3 mb-3">
+            {/* // To be restored when we activate the persistence of the devices */}
             {/* <div className="filter-header flex items-center gap-4">
               <Heading headingLevel={3} renderAs="h3" className="ml-[2px]">
                 {devicesList?.length > 1 ? i18n.deviceManager.myDevices : i18n.deviceManager.myDevice}
@@ -373,7 +380,12 @@ const DeviceManager = (props: DeviceManagerProps) => {
                   ))}
                   <AnimatePresence mode="popLayout">
                     <motion.div initial={{ opacity: 0, y: -50 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -50 }}>
-                      <CardAddDevice addVirtualDevice={addVirtualDevice} scanDevices={scanDevices} ref={ref} />
+                      <CardAddDevice
+                        addVirtualDevice={addVirtualDevice}
+                        scanDevices={scanDevices}
+                        devicesNumber={devicesList?.length}
+                        animationLoadingDevice={animationLoadingDevice}
+                      />
                     </motion.div>
                   </AnimatePresence>
                 </SortableList>
@@ -384,14 +396,19 @@ const DeviceManager = (props: DeviceManagerProps) => {
                   <motion.div initial={{ opacity: 0, y: -50 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -50 }}>
                     <div className="list devices-scroll relative w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-3 gap-4 pb-4">
                       <NoDeviceFound />
-                      <CardAddDevice addVirtualDevice={addVirtualDevice} scanDevices={scanDevices} ref={ref} />
+                      <CardAddDevice
+                        addVirtualDevice={addVirtualDevice}
+                        scanDevices={scanDevices}
+                        devicesNumber={devicesList?.length}
+                        animationLoadingDevice={animationLoadingDevice}
+                      />
                     </div>
                   </motion.div>
                 </AnimatePresence>
               </div>
             )}
           </div>
-          <HelpSupportLink />
+          <HelpSupportLink ref={ref} />
         </div>
       </div>
 

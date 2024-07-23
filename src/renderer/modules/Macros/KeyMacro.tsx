@@ -96,7 +96,7 @@ const KeyMacro: React.FC<KeyMacroProps> = ({
                   variant="link"
                   size="icon"
                   onClick={() => onDeleteRow(item.id)}
-                  className="w-[24px] h-[24px] bg-tranparent hover:bg-white/20 transition-all"
+                  className="trash-icon w-[24px] h-[24px] bg-tranparent hover:bg-white/20 transition-all"
                 >
                   <IconDelete size="sm" strokeWidth={1.2} />
                 </Button>
@@ -118,7 +118,7 @@ const KeyMacro: React.FC<KeyMacroProps> = ({
                           {item.symbol} {item.action === 1 || item.action === 2 ? <small>ms</small> : ""}
                         </p>
                       </div>
-                      <div className="keyFunctions py-[12px] px-[8px] bg-gray-50/40 dark:bg-gray-800 divide-y divide-y-reverse divide-gray-50 dark:divide-gray-700">
+                      <div className="keyFunctions py-[12px] px-[12px] bg-gray-50/40 dark:bg-gray-800 border-t-[1px] border-gray-50 dark:border-gray-700">
                         <Heading
                           headingLevel={5}
                           renderAs="h5"
@@ -162,7 +162,7 @@ const KeyMacro: React.FC<KeyMacroProps> = ({
                           </Button>
                         </div>
                       </div>
-                      <div className="keyModifiers py-[12px] px-[8px] bg-gray-25/40 dark:bg-gray-700">
+                      <div className="keyModifiers py-[12px] px-[12px] bg-gray-25/40 dark:bg-gray-700">
                         <Heading
                           headingLevel={4}
                           renderAs="h4"
@@ -193,22 +193,24 @@ const KeyMacro: React.FC<KeyMacroProps> = ({
                         </div>
                       </div>
                     </div>
-                    <div className="keyMacroItemOptions">
+                    <div className="keyMacroItemOptions flex flex-col gap-1 mt-1">
                       <Button
-                        variant="link"
+                        variant="dropdownLink"
                         icon={<IconClone />}
                         iconDirection="left"
                         size="sm"
                         onClick={() => onCloneRow(item.id)}
+                        className="!justify-start"
                       >
                         Clone
                       </Button>
                       <Button
-                        variant="link"
+                        variant="dropdownLink"
                         iconDirection="left"
                         icon={<IconDelete />}
                         size="sm"
                         onClick={() => onDeleteRow(item.id)}
+                        className="!justify-start"
                       >
                         Delete
                       </Button>

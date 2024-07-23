@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React, { MouseEvent, useCallback, useEffect, useMemo, useState } from "react";
+import React, { MouseEvent, useCallback, useEffect, useLayoutEffect, useMemo, useState, useRef } from "react";
 import Styled from "styled-components";
 import { toast } from "react-toastify";
 import { ipcRenderer } from "electron";
@@ -483,6 +483,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
     x: 0,
     y: 0,
   });
+  const keyboardPosition = useRef(null);
   const [isWireless, setIsWireless] = useState(false);
 
   const [selectedPaletteColor, setSelectedPaletteColor] = useState(-1);
@@ -1243,17 +1244,69 @@ const LayoutEditor = (props: LayoutEditorProps) => {
     });
   };
 
-  const clearLayer = (fillKeyCode = TRANS_KEY_CODE, colorIndex = 15) => {
+  const clearLayer = (fillKeyCode = TRANS_KEY_CODE, colorIndex = 15, chooseYourKeyboardSide = "BOTH") => {
+    const { currentDevice } = state;
+    const layerMap = { keys: currentDevice.device.keyboard, underglow: currentDevice.device.keyboardUnderglow };
     const newKeymap = keymap.custom.slice();
     const idx = keymap.onlyCustom ? currentLayer : currentLayer - keymap.default.length;
     const keyCodeFiller = keymapDB.parse(fillKeyCode);
-    newKeymap[idx] = new Array(newKeymap[0].length).fill(keyCodeFiller);
+    const cloneLayer = [...newKeymap[idx]];
+    log.info(cloneLayer);
+    if (chooseYourKeyboardSide === "LEFT") {
+      layerMap.keys.left.forEach(value => {
+        console.log("erasing values: ", value, value[0], value[value.length - 1] + 1);
+        cloneLayer.fill(keyCodeFiller, value[0], value[value.length - 1] + 1);
+      });
+    }
+
+    if (chooseYourKeyboardSide === "RIGHT") {
+      layerMap.keys.right.forEach(value => {
+        cloneLayer.fill(keyCodeFiller, value[0], value[value.length - 1] + 1);
+      });
+    }
+
+    if (chooseYourKeyboardSide === "BOTH") {
+      cloneLayer.fill(keyCodeFiller);
+    }
+    log.info("new clone layer", cloneLayer);
+
+    newKeymap[idx] = cloneLayer;
 
     startContext();
     if (colorIndex >= 0) {
       const newColormap = colorMap.slice();
+      log.info(newColormap[idx]);
       if (newColormap.length > 0) {
-        newColormap[idx] = Array(newColormap[0].length).fill(colorIndex);
+        if (chooseYourKeyboardSide === "LEFT") {
+          newColormap[idx].fill(
+            colorIndex,
+            layerMap.keys.ledsLeft[0],
+            layerMap.keys.ledsLeft[layerMap.keys.ledsLeft.length - 1] + 1,
+          );
+          newColormap[idx].fill(
+            colorIndex,
+            layerMap.underglow.ledsLeft[0],
+            layerMap.underglow.ledsLeft[layerMap.underglow.ledsLeft.length - 1] + 1,
+          );
+        }
+
+        if (chooseYourKeyboardSide === "RIGHT") {
+          newColormap[idx].fill(
+            colorIndex,
+            layerMap.keys.ledsRight[0],
+            layerMap.keys.ledsRight[layerMap.keys.ledsRight.length - 1] + 1,
+          );
+          newColormap[idx].fill(
+            colorIndex,
+            layerMap.underglow.ledsRight[0],
+            layerMap.underglow.ledsRight[layerMap.underglow.ledsRight.length - 1] + 1,
+          );
+        }
+
+        if (chooseYourKeyboardSide === "BOTH") {
+          newColormap[idx] = Array(newColormap[0].length).fill(colorIndex);
+        }
+        log.info(newColormap[idx]);
       }
       setColorMap(newColormap);
     }
@@ -1638,13 +1691,23 @@ const LayoutEditor = (props: LayoutEditorProps) => {
     );
   };
 
-  const refreshLayoutSelectorPosition = (x: number, y: number) => {
-    if (modeselect === "color") {
-      setLayoutSelectorPosition({ x: 0, y: 0 });
-    } else {
-      setLayoutSelectorPosition({ x, y });
+  const refreshLayoutSelectorPosition = useCallback(
+    (x: number, y: number) => {
+      if (modeselect === "color") {
+        setLayoutSelectorPosition({ x: 0, y: 0 });
+      } else {
+        setLayoutSelectorPosition({ x, y });
+      }
+    },
+    [modeselect],
+  );
+
+  const readKeyboardPosition = useCallback(() => {
+    if (keyboardPosition.current) {
+      const elPosition = keyboardPosition.current.getBoundingClientRect();
+      refreshLayoutSelectorPosition(elPosition.left, elPosition.top - 72);
     }
-  };
+  }, [refreshLayoutSelectorPosition]);
 
   const configStandardView = () => {
     try {
@@ -1776,13 +1839,25 @@ const LayoutEditor = (props: LayoutEditorProps) => {
     setCurrentLayer(cLayer);
   }, [keymap, currentLayer, macros, superkeys]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (modeselect === "color") {
       // console.log("Is color - change position");
     } else {
       setViewMode(isStandardView ? "standard" : "single");
     }
   }, [modeselect, viewMode, isStandardView]);
+
+  // useLayoutEffect(() => {
+  // console.log("Triggered useLayoutEffect: ", keyboardPosition.current);
+  //   if (keyboardPosition.current) {
+  //     readKeyboardPosition();
+  //   }
+  //   window.addEventListener("resize", readKeyboardPosition);
+  //   return () => {
+  //     window.removeEventListener("resize", readKeyboardPosition);
+  //   };
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, []);
 
   const { Layer, kbtype } = getLayout();
   if (!Layer) {
@@ -1852,7 +1927,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
 
   const layer = (
     // TODO: restore fade effect <fade in appear key={currentLayer}>
-    <div className="LayerHolder">
+    <div className="LayerHolder h-[inherit]">
       <Layer
         readOnly={isReadOnly}
         index={currentLayer}
@@ -1924,9 +1999,9 @@ const LayoutEditor = (props: LayoutEditorProps) => {
         />
         <div className="w-full full-height keyboardsWrapper">
           <div className="raise-editor layer-col">
-            <div className="dygma-keyboard-editor editor">{layer}</div>
+            <div className="dygma-keyboard-editor editor h-full">{layer}</div>
             {modeselect === "keyboard" && !isStandardView ? (
-              <div className="ordinary-keyboard-editor m-0 pb-4">
+              <div className="ordinary-keyboard-editor h-[inherit] m-0 pb-4" ref={keyboardPosition}>
                 <KeyPickerKeyboard
                   onKeySelect={onKeyChange}
                   code={code}
@@ -1950,12 +2025,6 @@ const LayoutEditor = (props: LayoutEditorProps) => {
 
         {/* WHY: We want to hide the selector when we cannot use it (e.g. when color editor is active) */}
         {modeselect === "keyboard" ? (
-          // <LayoutViewSelector
-          //   onToggle={onToggleStandardView}
-          //   isStandardView={isStandardView}
-          //   tooltip={i18n.editor.superkeys.tooltip}
-          //   layoutSelectorPosition={layoutSelectorPosition}
-          // />
           <ToggleGroupLayoutViewMode
             value={viewMode}
             onValueChange={onToggleStandardView}
@@ -1967,9 +2036,10 @@ const LayoutEditor = (props: LayoutEditorProps) => {
         <ClearLayerDialog
           open={clearConfirmationOpen}
           onCancel={cancelClear}
-          onConfirm={k => clearLayer(k.keyCode, k.colorIndex)}
+          onConfirm={k => clearLayer(k.keyCode, k.colorIndex, k.chooseYourKeyboardSide)}
           colors={palette}
           selectedColorIndex={palette.length - 1}
+          keyboardSide="BOTH"
           fillWithNoKey={false}
         />
 

@@ -281,7 +281,7 @@ function FirmwareUpdateProcess(props: FirmwareUpdateProcessProps) {
               countdown={state.context.stateblock}
               deviceProduct={state.context.device?.info.product}
               keyboardType={state.context.device?.info.keyboardType}
-              steps={state.context.device?.info.product === "Defy" ? stepsDefy : stepsRaise}
+              steps={state.context.device?.info.product === "Raise" ? stepsRaise : stepsDefy}
             />
           </div>
           {state.context.stateblock === 1 ? (

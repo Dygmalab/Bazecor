@@ -1,5 +1,6 @@
 import type { ForgeConfig, ForgePackagerOptions } from "@electron-forge/shared-types";
 import { MakerSquirrel } from "@electron-forge/maker-squirrel";
+import { MakerZIP } from "@electron-forge/maker-zip";
 import { WebpackPlugin } from "@electron-forge/plugin-webpack";
 import fs from "fs";
 import path from "path";
@@ -22,16 +23,17 @@ const packagerConfig: ForgePackagerOptions = {
 };
 
 if (process.env["NODE_ENV"] !== "development") {
+  packagerConfig.osxSign = {
+    optionsForFile: () => ({
+      identity: process.env["APPLE_IDENTITY"],
+      // entitlements: "./build/entitlements.plist",
+      hardenedRuntime: true,
+    }),
+  };
   packagerConfig.osxNotarize = {
     appleId: process.env["APPLE_ID"] || "",
     appleIdPassword: process.env["APPLE_ID_PASSWORD"] || "",
     teamId: process.env["APPLE_TEAM_ID"] || "",
-  };
-  packagerConfig.osxSign = {
-    optionsForFile: () => ({
-      entitlements: "./build/entitlements.plist",
-      hardenedRuntime: true,
-    }),
   };
 }
 
@@ -40,8 +42,10 @@ const config: ForgeConfig = {
   rebuildConfig: {},
   makers: [
     new MakerSquirrel({
+      name: "bazecor",
       setupIcon: "./build/logo.ico",
     }),
+    new MakerZIP({}, ["darwin"]),
     {
       name: "@electron-forge/maker-dmg",
       config: {

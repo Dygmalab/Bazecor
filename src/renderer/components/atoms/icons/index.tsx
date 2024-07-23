@@ -41,6 +41,7 @@ import IconColorPicker from "./IconColorPicker";
 import IconCommandMacOs from "./IconCommandMacOs";
 import IconConnected from "./IconConnected";
 import IconDelete from "./IconDelete";
+import IconDocumentWithLines from "./IconDocumentWithLines";
 import IconDragAndDrop from "./IconDragAndDrop";
 import IconDragDots from "./IconDragDots";
 import IconEditModeSingleView from "./IconEditModeSingleView";
@@ -87,6 +88,7 @@ import IconMediaSoundMore from "./IconMediaSoundMore";
 import IconMediaSoundMute from "./IconMediaSoundMute";
 import IconMediaStop from "./IconMediaStop";
 import IconMemory from "./IconMemory";
+import IconMemoryUpload from "./IconMemoryUpload";
 import IconMoon from "./IconMoon";
 import IconMoreVertical from "./IconMoreVertical";
 import IconMouse from "./IconMouse";
@@ -163,6 +165,7 @@ export {
   IconCommandMacOs,
   IconConnected,
   IconDelete,
+  IconDocumentWithLines,
   IconDragAndDrop,
   IconDragDots,
   IconEditModeSingleView,
@@ -209,6 +212,7 @@ export {
   IconMediaSoundMute,
   IconMediaStop,
   IconMemory,
+  IconMemoryUpload,
   IconMoon,
   IconMoreVertical,
   IconMouse,

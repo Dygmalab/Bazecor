@@ -60,7 +60,7 @@ const SuperkeysSelector: React.FC<any> = ({
     <div className="flex items-center gap-1">
       <div className="itemListelector dropdownMultipleActions max-w-[350px] min-w-[350px]">
         <Select onValueChange={value => onSelect(parseInt(value, 10))} value={selectedItem}>
-          <SelectTrigger variant="combo" className="pr-[136px]">
+          <SelectTrigger variant="combo" className="pr-[126px]">
             {/* dropdownListInner */}
             <div className="flex flex-nowrap items-center">
               {/* dropdownListNumber */}
@@ -93,12 +93,12 @@ const SuperkeysSelector: React.FC<any> = ({
             ))}
           </SelectContent>
         </Select>
-        <div className="absolute top-[2px] right-[2px] flex gap-0.5">
+        <div className="absolute top-[2px] right-[2px] flex gap-0.5 p-0.5">
           <TooltipProvider delayDuration={50}>
             <Tooltip>
               <TooltipTrigger asChild>
                 <div>
-                  <Button variant="config" size="icon" onClick={toggleShow}>
+                  <Button variant="config" size="icon" onClick={toggleShow} className="!w-[36px] !h-[36px]">
                     <IconPen />
                   </Button>
                 </div>
@@ -113,7 +113,7 @@ const SuperkeysSelector: React.FC<any> = ({
             <Tooltip>
               <TooltipTrigger asChild>
                 <div>
-                  <Button variant="config" size="icon" onClick={cloneItem}>
+                  <Button variant="config" size="icon" onClick={cloneItem} className="!w-[36px] !h-[36px]">
                     <IconClone />
                   </Button>
                 </div>
@@ -128,7 +128,7 @@ const SuperkeysSelector: React.FC<any> = ({
             <Tooltip>
               <TooltipTrigger asChild>
                 <div>
-                  <Button variant="config" size="icon" onClick={deleteItem}>
+                  <Button variant="config" size="icon" onClick={deleteItem} className="!w-[36px] !h-[36px]">
                     <IconDelete />
                   </Button>
                 </div>

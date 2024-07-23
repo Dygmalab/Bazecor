@@ -46,32 +46,18 @@ const Styles = Styled.div`
     margin-left: 16px;
   }
 }
-.inputMax {
-  text-align: right;
-}
 .inputGroupRandom {
-  .inputIcon {
-    position: absolute;
-    top: 50%;
-    left: 95px;
-    transform: translate3d(0, -50%, 0);
-    width: 32px;
-    height: 32px;
-    padding: 4px;
-    border-radius: 50%;
-    z-index: 3;
-    background-color: ${({ theme }) => theme.styles.form.inputGroup.background};
-  }
+  
   .inputMin {
     border-right-color: transparent;
     &:focus {
-      border-right: 1px solid ${({ theme }) => theme.styles.form.inputBorderActive};
+      border-right: none;
     }
   }
   .inputMax {
     border-left-color: transparent;
     &:focus {
-      border-left: 1px solid ${({ theme }) => theme.styles.form.inputBorderActive};
+      border-left: none;
     }
   }
   .form-control {
@@ -224,7 +210,7 @@ class DelayTab extends React.Component<DelayTabProps, DelayTabState> {
                     value={randomValue.min}
                   />
                   <input
-                    className="inputMax form-control  w-[120px]"
+                    className="inputMax form-control  w-[120px] !pl-9"
                     placeholder="Max"
                     min={1}
                     type="number"
@@ -237,10 +223,12 @@ class DelayTab extends React.Component<DelayTabProps, DelayTabState> {
                     ms
                   </div>
                 </div>
-                <div className="inputIcon absolute top-1/2 left-1/2 rounded w-8 h-8 p-1 z-10 bg-gray-25 dark:bg-gray-800/20 transform translate-x-[-50%] before:translate-y-[-50%]">
+                <div className="absolute top-1/2 left-1/2 -mt-4 -ml-4 rounded w-8 h-8 p-1 z-10 bg-gray-25 dark:bg-gray-800/20 origin-center -translate-y-2/4 -translate-x-2/4">
                   <IconMediaShuffle />
                 </div>
-                <p className="description">{i18n.editor.macros.delayTabs.minMaxDescription}</p>
+                <p className="description mt-2 text-sm w-full text-gray-400 dark:text-gray-200">
+                  {i18n.editor.macros.delayTabs.minMaxDescription}
+                </p>
               </div>
             )}
           </div>

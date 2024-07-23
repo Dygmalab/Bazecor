@@ -281,16 +281,14 @@ function NavigationMenu(props: NavigationMenuProps) {
                 <Link
                   to="/firmware-update"
                   onClick={linkHandler}
-                  className={`list-link ${
-                    fwUpdate || virtual || state.currentDevice?.type === "hid" || loading ? "disabled" : ""
-                  }`}
+                  className={`list-link ${fwUpdate || virtual || loading ? "disabled" : ""}`}
                 >
                   <NavigationButton
                     selected={currentPage === "/firmware-update"}
                     showNotif={!isUpdated}
                     buttonText={i18n.app.menu.firmwareUpdate}
                     icoSVG={<IconMemory />}
-                    disabled={fwUpdate || virtual || state.currentDevice?.type === "hid" || loading}
+                    disabled={fwUpdate || virtual || loading}
                   />
                 </Link>
               </>
