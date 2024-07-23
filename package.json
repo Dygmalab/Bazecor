@@ -1,7 +1,7 @@
 {
   "name": "Bazecor",
   "productName": "Bazecor",
-  "version": "1.4.1",
+  "version": "1.4.2",
   "description": "Bazecor desktop app",
   "private": true,
   "repository": {
@@ -61,6 +61,7 @@
     "@electron-forge/maker-dmg": "^7.4.0",
     "@electron-forge/maker-rpm": "^7.4.0",
     "@electron-forge/maker-squirrel": "^7.4.0",
+    "@electron-forge/maker-zip": "^7.4.0",
     "@electron-forge/plugin-webpack": "^7.4.0",
     "@electron/universal": "^1.4.1",
     "@playwright/test": "^1.36.0",
@@ -194,12 +195,9 @@
       "category": "Utility"
     },
     "mac": {
-      "entitlements": "./build/entitlements.plist",
       "category": "public.app-category.utilities",
       "target": [
-        {
-          "target": "dmg"
-        }
+        "default"
       ]
     }
   }
