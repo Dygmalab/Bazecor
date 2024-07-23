@@ -28,6 +28,7 @@ if (process.env["NODE_ENV"] !== "development") {
       app: "com.dygmalab.bazecor",
       identity: process.env["APPLE_IDENTITY"],
       // entitlements: "./build/entitlements.plist",
+      "gatekeeper-assess": false,
       hardenedRuntime: true,
     }),
   };
