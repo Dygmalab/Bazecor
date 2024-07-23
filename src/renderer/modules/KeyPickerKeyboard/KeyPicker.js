@@ -86,6 +86,8 @@ import getLanguage from "@Renderer/modules/KeyPickerKeyboard/KeyPickerLanguage";
 import CustomKeyCodeModal from "@Renderer/components/molecules/CustomModal/ModalCustomKeycode";
 import OSKey from "@Renderer/components/molecules/KeyTags/OSKey";
 
+import { getKeyboardLayout } from "@Renderer/utils/getKeyboardLayout";
+
 const Style = Styled.div`
 width: 100%;
 @media screen and (min-width: 1980px) and (min-height: 980px) {
@@ -395,6 +397,7 @@ class KeyPicker extends Component {
     // let boxShadowMatrix = useTheme().styles.keyPicker.keyMatrixShadow;
 
     const Lang = getLanguage(selectedlanguage);
+    const keyboardLayout = getKeyboardLayout(selectedlanguage);
 
     const os = process.platform;
     const iconlist = {
@@ -556,7 +559,11 @@ class KeyPicker extends Component {
         <div className="KeysWrapper">
           <div className="keysContainer">
             <div className="keysRow keysOrdinaryKeyboard">
-              <svg className={`svgStyle ${process.platform}`} viewBox="0 0 1070 208" preserveAspectRatio="xMidYMin slice">
+              <svg
+                className={`svgStyle ${process.platform} ${keyboardLayout}`}
+                viewBox="0 0 1070 208"
+                preserveAspectRatio="xMidYMin slice"
+              >
                 {keyboard}
                 <defs>
                   <linearGradient id="paint_gradient" x1="0%" y1="0%" x2="100%" y2="0%">

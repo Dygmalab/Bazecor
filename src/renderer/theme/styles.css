@@ -717,20 +717,25 @@ select:focus {
   right: calc((1.25rem) * -1);
 }
 
-.svgStyle.darwin g.keycap.id-91 {
+.svgStyle.darwin.ANSI g.keycap.id-91 {
   transform: translate(0, 0);
 }
-.svgStyle.darwin g.keycap.id-92,
-.svgStyle.darwin g.keycap.id-95 {
+.svgStyle.darwin.ANSI g.keycap.id-92,
+.svgStyle.darwin.ANSI g.keycap.id-95,
+.svgStyle.darwin.ISO g.keycap.id-93,
+.svgStyle.darwin.ISO g.keycap.id-96 {
   transform: translate(59px, 0);
 }
-.svgStyle.darwin g.keycap.id-92 .whitespace-nowrap,
-.svgStyle.darwin g.keycap.id-96 .whitespace-nowrap {
+.svgStyle.darwin.ANSI g.keycap.id-92 .whitespace-nowrap,
+.svgStyle.darwin.ANSI g.keycap.id-96 .whitespace-nowrap,
+.svgStyle.darwin.ISO g.keycap.id-97 .whitespace-nowrap,
+.svgStyle.darwin.ISO g.keycap.id-93 .whitespace-nowrap {
   padding-top: 5px;
 }
-
-.svgStyle.darwin g.keycap.id-93,
-.svgStyle.darwin g.keycap.id-96 {
+.svgStyle.darwin.ANSI g.keycap.id-93,
+.svgStyle.darwin.ANSI g.keycap.id-96,
+.svgStyle.darwin.ISO g.keycap.id-94,
+.svgStyle.darwin.ISO g.keycap.id-97 {
   transform: translate(-59px, 0);
 }
 .standardView .tab-item--active:after {

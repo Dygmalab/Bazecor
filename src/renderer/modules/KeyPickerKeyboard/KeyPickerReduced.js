@@ -44,6 +44,7 @@ import { MdKeyboardReturn, MdSpaceBar, MdKeyboardCapslock, MdInfoOutline, MdEjec
 import Key from "@Renderer/modules/KeyPickerKeyboard/Key";
 import OSKey from "@Renderer/components/molecules/KeyTags/OSKey";
 import getLanguage from "@Renderer/modules/KeyPickerKeyboard/KeyPickerLanguage";
+import { getKeyboardLayout } from "@Renderer/utils/getKeyboardLayout";
 
 const Style = Styled.div`
 width: 100%;
@@ -293,6 +294,7 @@ class KeyPickerReduced extends Component {
     // let boxShadowMatrix = useTheme().styles.keyPicker.keyMatrixShadow;
 
     const Lang = getLanguage(selectedlanguage);
+    const keyboardLayout = getKeyboardLayout(selectedlanguage);
 
     const os = process.platform;
     const iconlist = {
@@ -456,7 +458,11 @@ class KeyPickerReduced extends Component {
         <div className="KeysWrapper">
           <div className="keysContainer">
             <div className="keysRow keysOrdinaryKeyboard">
-              <svg className={`svgStyle ${process.platform}`} viewBox="0 0 1070 208" preserveAspectRatio="xMidYMin slice">
+              <svg
+                className={`svgStyle ${process.platform} ${keyboardLayout}`}
+                viewBox="0 0 1070 208"
+                preserveAspectRatio="xMidYMin slice"
+              >
                 {keyboard}
                 <defs>
                   <linearGradient id="paint_gradient" x1="0%" y1="0%" x2="100%" y2="0%">
