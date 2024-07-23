@@ -22,7 +22,7 @@ import LabelModifier from "../../atoms/LabelModifier";
 
 interface ListModifiersProps {
   keyCode: number;
-  size?: "xs" | "sm" | "md";
+  size?: "sm" | "md";
 }
 type Modifier = 0 | 1 | 2 | 3 | 4;
 
@@ -112,7 +112,8 @@ const ListModifier = ({ keyCode, size = "md" }: ListModifiersProps) => {
           {parseModifs(keyCode).includes(0) === true && !isMeh && !isHyper ? (
             <AnimatePresence mode="popLayout">
               <motion.div initial={{ opacity: 0, y: -50 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -50 }}>
-                <LabelModifier label={size === "xs" ? "S" : "Shift"} size={size} />
+                {/* <LabelModifier label={size === "xs" ? "S" : "Shift"} size={size} /> */}
+                <LabelModifier label="shift" size={size} />
               </motion.div>
             </AnimatePresence>
           ) : (
@@ -121,7 +122,8 @@ const ListModifier = ({ keyCode, size = "md" }: ListModifiersProps) => {
           {parseModifs(keyCode).includes(1) === true && !isMeh && !isHyper ? (
             <AnimatePresence mode="popLayout">
               <motion.div initial={{ opacity: 0, y: -50 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -50 }}>
-                <LabelModifier label={size === "xs" ? "C" : "Ctrl"} size={size} />
+                {/* <LabelModifier label={size === "xs" ? "C" : "Ctrl"} size={size} /> */}
+                <LabelModifier label="control" size={size} />
               </motion.div>
             </AnimatePresence>
           ) : (
@@ -130,7 +132,8 @@ const ListModifier = ({ keyCode, size = "md" }: ListModifiersProps) => {
           {parseModifs(keyCode).includes(2) === true && !isMeh && !isHyper ? (
             <AnimatePresence mode="popLayout">
               <motion.div initial={{ opacity: 0, y: -50 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -50 }}>
-                <LabelModifier label={size === "xs" ? "A" : "Alt"} size={size} />
+                {/* <LabelModifier label={size === "xs" ? "A" : "Alt"} size={size} /> */}
+                <LabelModifier label="alt" size={size} />
               </motion.div>
             </AnimatePresence>
           ) : (
@@ -139,7 +142,8 @@ const ListModifier = ({ keyCode, size = "md" }: ListModifiersProps) => {
           {parseModifs(keyCode).includes(3) === true ? (
             <AnimatePresence mode="popLayout">
               <motion.div initial={{ opacity: 0, y: -50 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -50 }}>
-                <LabelModifier label={size === "xs" ? "Agr" : "Alt Gr."} size={size} />
+                {/* <LabelModifier label={size === "xs" ? "Agr" : "Alt Gr."} size={size} /> */}
+                <LabelModifier label="altGr" size={size} />
               </motion.div>
             </AnimatePresence>
           ) : (
@@ -148,7 +152,7 @@ const ListModifier = ({ keyCode, size = "md" }: ListModifiersProps) => {
           {parseModifs(keyCode).includes(4) === true && !isMeh && !isHyper ? (
             <AnimatePresence mode="popLayout">
               <motion.div initial={{ opacity: 0, y: -50 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -50 }}>
-                <LabelModifier label="OS" size={size} />
+                <LabelModifier label="os" size={size} />
               </motion.div>
             </AnimatePresence>
           ) : (

@@ -19,12 +19,19 @@ import React, { FC, useMemo, useCallback } from "react";
 import { Popover, PopoverContent, PopoverTrigger, PopoverButton } from "@Renderer/components/atoms/Popover";
 import Heading from "@Renderer/components/atoms/Heading";
 import { Button } from "@Renderer/components/atoms/Button";
-import { i18n } from "@Renderer/i18n";
+import OSKey from "@Renderer/components/molecules/KeyTags/OSKey";
+import { IconOneShotMode } from "@Renderer/components/atoms/icons";
 
 interface SelectShotModifierCustomDropdownProps {
   keyCode: { base: number; modified: number };
   onKeySelect: (value: number) => void;
   disable?: boolean;
+}
+
+interface OneShotKey {
+  name: "control" | "shift" | "alt" | "os" | "altGr";
+  direction?: "Left" | "Right";
+  keynum: number;
 }
 
 const SelectShotModifierCustomDropdown: FC<SelectShotModifierCustomDropdownProps> = ({
@@ -46,16 +53,16 @@ const SelectShotModifierCustomDropdown: FC<SelectShotModifierCustomDropdownProps
     [],
   );
 
-  const oneShotModifiers = useMemo(
+  const oneShotModifiers: OneShotKey[] = useMemo(
     () => [
-      { name: i18n.editor.standardView.oneShot.leftControl, keynum: 49153 },
-      { name: i18n.editor.standardView.oneShot.leftShift, keynum: 49154 },
-      { name: i18n.editor.standardView.oneShot.leftAlt, keynum: 49155 },
-      { name: i18n.editor.standardView.oneShot.leftOS, keynum: 49156 },
-      { name: i18n.editor.standardView.oneShot.rightControl, keynum: 49157 },
-      { name: i18n.editor.standardView.oneShot.rightShift, keynum: 49158 },
-      { name: i18n.editor.standardView.oneShot.altGr, keynum: 49159 },
-      { name: i18n.editor.standardView.oneShot.rightOS, keynum: 49160 },
+      { name: "shift", direction: "Left", keynum: 49154 },
+      { name: "control", direction: "Left", keynum: 49153 },
+      { name: "os", direction: "Left", keynum: 49156 },
+      { name: "alt", direction: "Left", keynum: 49155 },
+      { name: "shift", direction: "Right", keynum: 49158 },
+      { name: "control", direction: "Right", keynum: 49157 },
+      { name: "os", direction: "Right", keynum: 49160 },
+      { name: "altGr", direction: undefined, keynum: 49159 },
     ],
     [],
   );
@@ -84,8 +91,11 @@ const SelectShotModifierCustomDropdown: FC<SelectShotModifierCustomDropdownProps
       <PopoverContent align="start">
         <div className="large-dropdown-inner p-2 rounded-sm bg-gray-25/40 dark:bg-gray-800">
           <div className="dropdown-group">
-            <Heading headingLevel={5} renderAs="h5" className="my-1 text-gray-200 dark:text-gray-300">
-              OneShot <span className="text-gray-400 dark:text-gray-50">Layer</span>
+            <Heading headingLevel={5} renderAs="h5" className="felx gap-2 items-center my-1 text-gray-200 dark:text-gray-300">
+              <IconOneShotMode />{" "}
+              <span>
+                OneShot <span className="text-gray-400 dark:text-gray-50">Layer</span>
+              </span>
             </Heading>
             <div className="dropdown-group-buttons flex rounded-sm p-[3px] gap-[3px] bg-white/100 dark:bg-gray-900/20">
               {oneShotLayers.map(item => (
@@ -105,8 +115,11 @@ const SelectShotModifierCustomDropdown: FC<SelectShotModifierCustomDropdownProps
           </div>
 
           <div className="dropdown-group pt-2 mt-2 border-t border-gray-50 dark:border-gray-700">
-            <Heading headingLevel={5} renderAs="h5" className="my-1 text-gray-200 dark:text-gray-300">
-              OneShot <span className="text-gray-400 dark:text-gray-50">Modifiers</span>
+            <Heading headingLevel={5} renderAs="h5" className="flex gap-2 items-center my-1 text-gray-200 dark:text-gray-300">
+              <IconOneShotMode mode="modifier" />{" "}
+              <span>
+                OneShot <span className="text-gray-400 dark:text-gray-50">Modifiers</span>
+              </span>
             </Heading>
             <div className="dropdown-group-buttons grid grid-cols-4 rounded-sm p-[3px] gap-[3px] bg-white/100 dark:bg-gray-900/20">
               {oneShotModifiers.map(item => (
@@ -117,9 +130,9 @@ const SelectShotModifierCustomDropdown: FC<SelectShotModifierCustomDropdownProps
                   selected={item.keynum === KC}
                   disabled={item.keynum === -1}
                   key={`oneShotModifier-${item.keynum}`}
-                  className="shrink grow basis-[0%]"
+                  className="shrink grow basis-[0%] items-center"
                 >
-                  {item.name}
+                  <OSKey renderKey={item.name} direction={item.direction} size="sm" />
                 </Button>
               ))}
             </div>

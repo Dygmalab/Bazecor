@@ -388,6 +388,12 @@ class KeyPickerKeyboard extends Component {
       return macroN;
     }
     if (React.isValidElement(this.keymapDB.parse(keycode).label)) return this.keymapDB.parse(keycode).label;
+    if (React.isValidElement(this.keymapDB.parse(keycode).extraLabel))
+      return (
+        <div>
+          {this.keymapDB.parse(keycode).extraLabel} {this.keymapDB.parse(keycode).label}
+        </div>
+      );
     return this.props.code !== null
       ? this.keymapDB.parse(keycode).extraLabel != undefined
         ? `${this.keymapDB.parse(keycode).extraLabel}.${this.keymapDB.parse(keycode).label}`

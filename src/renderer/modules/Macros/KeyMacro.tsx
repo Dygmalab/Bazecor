@@ -1,8 +1,6 @@
 import React, { useMemo, useCallback } from "react";
 import { withTheme, DefaultTheme } from "styled-components";
 import { Popover, PopoverContent, PopoverTrigger } from "@Renderer/components/atoms/Popover";
-import { FaLinux } from "react-icons/fa";
-import { AiFillWindows } from "react-icons/ai";
 import { i18n } from "@Renderer/i18n";
 import {
   IconClone,
@@ -16,6 +14,7 @@ import {
 } from "@Renderer/components/atoms/icons";
 import Heading from "@Renderer/components/atoms/Heading";
 import { Button } from "@Renderer/components/atoms/Button";
+import OSKey from "@Renderer/components/molecules/KeyTags/OSKey";
 
 interface Modifier {
   id: number;
@@ -46,26 +45,6 @@ interface KeyMacroProps {
   theme: DefaultTheme;
 }
 
-interface OSIconProps {
-  system: string;
-  direction: string;
-}
-
-const OSIcon: React.FC<OSIconProps> = ({ system, direction }) => {
-  if (system === "win32")
-    return (
-      <span>
-        {direction} <AiFillWindows size={16} />
-      </span>
-    );
-  if (system === "darwin") return <span>{direction} ⌘</span>;
-  return (
-    <span>
-      {direction} <FaLinux size={16} />
-    </span>
-  );
-};
-
 const KeyMacro: React.FC<KeyMacroProps> = ({
   provided,
   snapshot,
@@ -91,45 +70,6 @@ const KeyMacro: React.FC<KeyMacroProps> = ({
     }),
     [theme.styles.macroKey],
   );
-
-  // const operationSystem = "win32";
-  const operationSystem = process.platform;
-  const operationSystemIcons = useMemo(() => {
-    if (operationSystem === "darwin") {
-      return {
-        shift: "Shift",
-        control: "Control ^",
-        os: {
-          icon: false,
-          text: "⌘",
-        },
-        alt: "⌥",
-        altGr: "Right ⌥",
-      };
-    }
-    if (operationSystem === "win32") {
-      return {
-        shift: "Shift",
-        control: "Control",
-        os: {
-          icon: <AiFillWindows />,
-          text: false,
-        },
-        alt: "Alt",
-        altGr: "Alt Gr.",
-      };
-    }
-    return {
-      shift: "Shift",
-      control: "Control",
-      os: {
-        icon: <FaLinux />,
-        text: false,
-      },
-      alt: "Alt",
-      altGr: "Alt Gr.",
-    };
-  }, [operationSystem]);
 
   const isModifier = useMemo(() => item.keyCode > 223 && item.keyCode < 232 && item.action !== 2, [item]);
 
@@ -240,14 +180,14 @@ const KeyMacro: React.FC<KeyMacroProps> = ({
                               // eslint-disable-next-line
                               key={`addModifierMacro-${id}`}
                             >
-                              {modifier.name === "LEFT SHIFT" ? `L. ${operationSystemIcons.shift}` : ""}
-                              {modifier.name === "RIGHT SHIFT" ? `R. ${operationSystemIcons.shift}` : ""}
-                              {modifier.name === "LEFT CTRL" ? `L. ${operationSystemIcons.control}` : ""}
-                              {modifier.name === "RIGHT CTRL" ? `R. ${operationSystemIcons.control}` : ""}
-                              {modifier.name === "LEFT ALT" ? operationSystemIcons.alt : ""}
-                              {modifier.name === "RIGHT ALT" ? operationSystemIcons.altGr : ""}
-                              {modifier.name === "LEFT OS" ? <OSIcon system={operationSystem} direction="L." /> : ""}
-                              {modifier.name === "RIGHT OS" ? <OSIcon system={operationSystem} direction="R." /> : ""}
+                              {modifier.name === "LEFT SHIFT" ? <OSKey renderKey="shift" direction="Left" /> : ""}
+                              {modifier.name === "RIGHT SHIFT" ? <OSKey renderKey="shift" direction="Right" /> : ""}
+                              {modifier.name === "LEFT CTRL" ? <OSKey renderKey="control" direction="Left" /> : ""}
+                              {modifier.name === "RIGHT CTRL" ? <OSKey renderKey="control" direction="Right" /> : ""}
+                              {modifier.name === "LEFT OS" ? <OSKey renderKey="os" direction="Left" /> : ""}
+                              {modifier.name === "RIGHT OS" ? <OSKey renderKey="os" direction="Right" /> : ""}
+                              {modifier.name === "LEFT ALT" ? <OSKey renderKey="alt" direction="Left" /> : ""}
+                              {modifier.name === "RIGHT ALT" ? <OSKey renderKey="altGr" /> : ""}
                             </Button>
                           ))}
                         </div>

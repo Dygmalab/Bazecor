@@ -84,6 +84,7 @@ import { i18n } from "@Renderer/i18n";
 import Key from "@Renderer/modules/KeyPickerKeyboard/Key";
 import getLanguage from "@Renderer/modules/KeyPickerKeyboard/KeyPickerLanguage";
 import CustomKeyCodeModal from "@Renderer/components/molecules/CustomModal/ModalCustomKeycode";
+import OSKey from "@Renderer/components/molecules/KeyTags/OSKey";
 
 const Style = Styled.div`
 width: 100%;
@@ -407,7 +408,7 @@ class KeyPicker extends Component {
       Win: (
         <>
           {os === "win32" ? <AiFillWindows className="biggerWin" /> : ""}
-          {os === "darwin" ? <AiFillApple className="biggerApple" /> : ""}
+          {os === "darwin" ? <OSKey renderKey="os" /> : ""}
           {os !== "win32" && os !== "darwin" ? <FaLinux className="biggerLinux" /> : ""}
         </>
       ),
@@ -544,6 +545,7 @@ class KeyPicker extends Component {
           disabled={key.mod === disableMods || key.move === disableMove || disableAll}
           idArray={key.idArray}
           keyCode={code}
+          platform={process.platform}
         />
       );
     });
@@ -554,7 +556,7 @@ class KeyPicker extends Component {
         <div className="KeysWrapper">
           <div className="keysContainer">
             <div className="keysRow keysOrdinaryKeyboard">
-              <svg className="svgStyle" viewBox="0 0 1070 208" preserveAspectRatio="xMidYMin slice">
+              <svg className={`svgStyle ${process.platform}`} viewBox="0 0 1070 208" preserveAspectRatio="xMidYMin slice">
                 {keyboard}
                 <defs>
                   <linearGradient id="paint_gradient" x1="0%" y1="0%" x2="100%" y2="0%">

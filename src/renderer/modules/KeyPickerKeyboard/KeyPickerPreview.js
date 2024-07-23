@@ -166,7 +166,7 @@ class KeyPickerPreview extends Component {
       Win: (
         <>
           {os === "win32" ? <AiFillWindows className="biggerWin" /> : ""}
-          {os === "darwin" ? <AiFillApple className="biggerApple" /> : ""}
+          {os === "darwin" ? <OSKey renderKey="os" /> : ""}
           {os !== "win32" && os !== "darwin" ? <FaLinux className="biggerLinux" /> : ""}
         </>
       ),
@@ -290,6 +290,7 @@ class KeyPickerPreview extends Component {
           disabled={key.mod === disableMods || key.move === disableMove || disableAll}
           idArray={key.idArray}
           keyCode={code}
+          platform={process.platform}
         />
       );
     });
@@ -299,7 +300,7 @@ class KeyPickerPreview extends Component {
           <div className="px-3 py-3 rounded-md mt-3 flex flex-col w-full bg-gray-25 dark:bg-gray-700/60">
             <h4 className="mt-0 mb-1 uppercase text-xs tracking-wide text-gray-300 dark:text-gray-500">Preview</h4>
             <svg
-              className="mx-auto w-full max-w-[1170px] overflow-hidden pointer-events-none"
+              className={`svgStyle ${process.platform} mx-auto w-full max-w-[1170px] overflow-hidden pointer-events-none`}
               viewBox="0 0 860 180"
               preserveAspectRatio="xMidYMin slice"
             >

@@ -7,6 +7,7 @@ import { SegmentedKeyType } from "@Renderer/types/layout";
 import usePrevious from "@Renderer/utils/usePrevious";
 import Heading from "@Renderer/components/atoms/Heading";
 import { Button } from "@Renderer/components/atoms/Button";
+import OSKey from "@Renderer/components/molecules/KeyTags/OSKey";
 
 interface ModPickerProps {
   keyCode: SegmentedKeyType;
@@ -118,56 +119,58 @@ function ModPicker(props: ModPickerProps) {
             {i18n.editor.standardView.keys.addModifier}
           </Heading>
         ) : null}
-        <div className={`modPickerButtonsList flex gap-1 ${isStandardView ? "" : "flex-wrap [&_button]:w-[64px]"}`}>
+        <div
+          className={`modPickerButtonsList gap-1 ${isStandardView ? "flex [&_button]:w-16" : "grid grid-cols-3 [&_button]:w-full"}`}
+        >
           <Button
             variant="config"
             size="sm"
             selected={modifs.includes(0)}
-            className="modbutton"
+            className={`modbutton ${!isStandardView && "!text-3xxs"}`}
             onClick={() => SelectModif(0)}
             disabled={setModifierVisibility()}
           >
-            Shift
+            <OSKey renderKey="shift" size={`${isStandardView ? "md" : "sm"}`} />
           </Button>
           <Button
             variant="config"
             size="sm"
             selected={modifs.includes(1)}
-            className="modbutton"
+            className={`modbutton ${!isStandardView && "!text-3xxs"}`}
             onClick={() => SelectModif(1)}
             disabled={setModifierVisibility()}
           >
-            Ctrl
-          </Button>
-          <Button
-            variant="config"
-            size="sm"
-            selected={modifs.includes(2)}
-            className="modbutton"
-            onClick={() => SelectModif(2)}
-            disabled={setModifierVisibility()}
-          >
-            Alt
-          </Button>
-          <Button
-            variant="config"
-            size="sm"
-            selected={modifs.includes(3)}
-            className="modbutton"
-            onClick={() => SelectModif(3)}
-            disabled={setModifierVisibility()}
-          >
-            Alt Gr
+            <OSKey renderKey="control" size={`${isStandardView ? "sm" : "sm"}`} />
           </Button>
           <Button
             variant="config"
             size="sm"
             selected={modifs.includes(4)}
-            className="modbutton"
+            className={`modbutton ${!isStandardView && "!text-3xxs"}`}
             onClick={() => SelectModif(4)}
             disabled={setModifierVisibility()}
           >
-            OS
+            <OSKey renderKey="os" size={`${isStandardView ? "md" : "sm"}`} />
+          </Button>
+          <Button
+            variant="config"
+            size="sm"
+            selected={modifs.includes(2)}
+            className={`modbutton ${!isStandardView && "!text-3xxs"}`}
+            onClick={() => SelectModif(2)}
+            disabled={setModifierVisibility()}
+          >
+            <OSKey renderKey="alt" size={`${isStandardView ? "md" : "sm"}`} />
+          </Button>
+          <Button
+            variant="config"
+            size="sm"
+            selected={modifs.includes(3)}
+            className={`modbutton ${!isStandardView && "!text-3xxs"}`}
+            onClick={() => SelectModif(3)}
+            disabled={setModifierVisibility()}
+          >
+            <OSKey renderKey="altGr" size={`${isStandardView ? "sm" : "sm"}`} />
           </Button>
         </div>
       </div>

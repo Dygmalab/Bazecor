@@ -17,10 +17,11 @@
  */
 
 import React from "react";
+import OSKey from "@Renderer/components/molecules/KeyTags/OSKey";
 
 interface LabelModifierProps {
-  label?: string;
-  size?: "xs" | "sm" | "md";
+  label?: "control" | "shift" | "os" | "alt" | "altGr" | "Hyper" | "Meh";
+  size?: "sm" | "md";
 }
 
 const LabelModifier = ({ label, size = "md" }: LabelModifierProps) => (
@@ -32,7 +33,7 @@ const LabelModifier = ({ label, size = "md" }: LabelModifierProps) => (
     } 
     ${size === "sm" ? "text-gray-200 bg-gray-600/60 px-[3px] py-[6px] text-[10px]" : ""}`}
   >
-    {label}
+    {label === "Hyper" || label === "Meh" ? label : <OSKey renderKey={label} size={size} />}
   </div>
 );
 

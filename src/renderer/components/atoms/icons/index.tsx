@@ -38,6 +38,7 @@ import IconClose from "./IconClose";
 import IconCloudDownload from "./IconCloudDownload";
 import IconColorPalette from "./IconColorPalette";
 import IconColorPicker from "./IconColorPicker";
+import IconCommandMacOs from "./IconCommandMacOs";
 import IconConnected from "./IconConnected";
 import IconDelete from "./IconDelete";
 import IconDocumentWithLines from "./IconDocumentWithLines";
@@ -68,6 +69,8 @@ import IconKeysTapHold from "./IconKeysTapHold";
 import IconKeysUnderglow from "./IconKeysUnderglow";
 import IconLeaf from "./IconLeaf";
 import IconLayers from "./IconLayers";
+import IconLayerShift from "./IconLayerShift";
+import IconLayerLock from "./IconLayerLock";
 import IconLEDNextEffect from "./IconLEDNextEffect";
 import IconLEDPreviousEffect from "./IconLEDPreviousEffect";
 import IconLEDSwitchLeft from "./IconLEDSwitchLeft";
@@ -97,6 +100,7 @@ import IconNoWifi from "./IconNoWifi";
 import IconNoSignal from "./IconNoSignal";
 import IconNull from "./IconNull";
 import IconOneShot from "./IconOneShot";
+import IconOneShotMode from "./IconOneShotMode";
 import IconPause from "./IconPause";
 import IconPen from "./IconPen";
 import IconPlug from "./IconPlug";
@@ -158,6 +162,7 @@ export {
   IconCloudDownload,
   IconColorPalette,
   IconColorPicker,
+  IconCommandMacOs,
   IconConnected,
   IconDelete,
   IconDocumentWithLines,
@@ -188,6 +193,8 @@ export {
   IconKeysUnderglow,
   IconLeaf,
   IconLayers,
+  IconLayerShift,
+  IconLayerLock,
   IconLEDNextEffect,
   IconLEDPreviousEffect,
   IconLEDSwitchLeft,
@@ -217,6 +224,7 @@ export {
   IconNoSignal,
   IconNull,
   IconOneShot,
+  IconOneShotMode,
   IconPause,
   IconPen,
   IconPlug,

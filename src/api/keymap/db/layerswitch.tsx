@@ -14,230 +14,233 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import React from "react";
+import LayerTag from "@Renderer/components/molecules/KeyTags/LayerTag";
+import { BaseKeycodeTableType } from "../types";
 
-const LockLayerTable = {
+const LockLayerTable: BaseKeycodeTableType = {
   groupName: "Lock layer to",
   keys: [
     {
       code: 17408,
       labels: {
-        primary: "1",
-        top: "LockTo",
+        top: <LayerTag type="lock" layerNumber={1} />,
+        primary: "",
       },
     },
     {
       code: 17409,
       labels: {
-        primary: "2",
-        top: "LockTo",
+        top: <LayerTag type="lock" layerNumber={2} />,
+        primary: "",
       },
     },
     {
       code: 17410,
       labels: {
-        primary: "3",
-        top: "LockTo",
+        top: <LayerTag type="lock" layerNumber={3} />,
+        primary: "",
       },
     },
     {
       code: 17411,
       labels: {
-        primary: "4",
-        top: "LockTo",
+        top: <LayerTag type="lock" layerNumber={4} />,
+        primary: "",
       },
     },
     {
       code: 17412,
       labels: {
-        primary: "5",
-        top: "LockTo",
+        top: <LayerTag type="lock" layerNumber={5} />,
+        primary: "",
       },
     },
     {
       code: 17413,
       labels: {
-        primary: "6",
-        top: "LockTo",
+        top: <LayerTag type="lock" layerNumber={6} />,
+        primary: "",
       },
     },
     {
       code: 17414,
       labels: {
-        primary: "7",
-        top: "LockTo",
+        top: <LayerTag type="lock" layerNumber={7} />,
+        primary: "",
       },
     },
     {
       code: 17415,
       labels: {
-        primary: "8",
-        top: "LockTo",
+        top: <LayerTag type="lock" layerNumber={8} />,
+        primary: "",
       },
     },
     {
       code: 17416,
       labels: {
-        primary: "9",
-        top: "LockTo",
+        top: <LayerTag type="lock" layerNumber={9} />,
+        primary: "",
       },
     },
     {
       code: 17417,
       labels: {
-        primary: "10",
-        top: "LockTo",
+        top: <LayerTag type="lock" layerNumber={10} />,
+        primary: "",
       },
     },
   ],
 };
 
-const ShiftToLayerTable = {
+const ShiftToLayerTable: BaseKeycodeTableType = {
   groupName: "Shift to layer",
   keys: [
     {
       code: 17450,
       labels: {
-        primary: "1",
-        top: "SHIFT",
+        top: <LayerTag type="shift" layerNumber={1} />,
+        primary: "",
       },
     },
     {
       code: 17451,
       labels: {
-        primary: "2",
-        top: "SHIFT",
+        top: <LayerTag type="shift" layerNumber={2} />,
+        primary: "",
       },
     },
     {
       code: 17452,
       labels: {
-        primary: "3",
-        top: "SHIFT",
+        top: <LayerTag type="shift" layerNumber={3} />,
+        primary: "",
       },
     },
     {
       code: 17453,
       labels: {
-        primary: "4",
-        top: "SHIFT",
+        top: <LayerTag type="shift" layerNumber={4} />,
+        primary: "",
       },
     },
     {
       code: 17454,
       labels: {
-        primary: "5",
-        top: "SHIFT",
+        top: <LayerTag type="shift" layerNumber={5} />,
+        primary: "",
       },
     },
     {
       code: 17455,
       labels: {
-        primary: "6",
-        top: "SHIFT",
+        top: <LayerTag type="shift" layerNumber={6} />,
+        primary: "",
       },
     },
     {
       code: 17456,
       labels: {
-        primary: "7",
-        top: "SHIFT",
+        top: <LayerTag type="shift" layerNumber={7} />,
+        primary: "",
       },
     },
     {
       code: 17457,
       labels: {
-        primary: "8",
-        top: "SHIFT",
+        top: <LayerTag type="shift" layerNumber={8} />,
+        primary: "",
       },
     },
     {
       code: 17458,
       labels: {
-        primary: "9",
-        top: "SHIFT",
+        top: <LayerTag type="shift" layerNumber={9} />,
+        primary: "",
       },
     },
     {
       code: 17459,
       labels: {
-        primary: "10",
-        top: "SHIFT",
+        top: <LayerTag type="shift" layerNumber={10} />,
+        primary: "",
       },
     },
   ],
 };
 
-const MoveToLayerTable = {
+const MoveToLayerTable: BaseKeycodeTableType = {
   groupName: "Move to layer",
   keys: [
     {
       code: 17492,
       labels: {
-        primary: "1",
-        top: "LOCK",
+        top: <LayerTag type="lock" layerNumber={1} />,
+        primary: "",
       },
     },
     {
       code: 17493,
       labels: {
-        primary: "2",
-        top: "LOCK",
+        top: <LayerTag type="lock" layerNumber={2} />,
+        primary: "",
       },
     },
     {
       code: 17494,
       labels: {
-        primary: "3",
-        top: "LOCK",
+        top: <LayerTag type="lock" layerNumber={3} />,
+        primary: "",
       },
     },
     {
       code: 17495,
       labels: {
-        primary: "4",
-        top: "LOCK",
+        top: <LayerTag type="lock" layerNumber={4} />,
+        primary: "",
       },
     },
     {
       code: 17496,
       labels: {
-        primary: "5",
-        top: "LOCK",
+        top: <LayerTag type="lock" layerNumber={5} />,
+        primary: "",
       },
     },
     {
       code: 17497,
       labels: {
-        primary: "6",
-        top: "LOCK",
+        top: <LayerTag type="lock" layerNumber={6} />,
+        primary: "",
       },
     },
     {
       code: 17498,
       labels: {
-        primary: "7",
-        top: "LOCK",
+        top: <LayerTag type="lock" layerNumber={7} />,
+        primary: "",
       },
     },
     {
       code: 17499,
       labels: {
-        primary: "8",
-        top: "LOCK",
+        top: <LayerTag type="lock" layerNumber={8} />,
+        primary: "",
       },
     },
     {
       code: 17500,
       labels: {
-        primary: "9",
-        top: "LOCK",
+        top: <LayerTag type="lock" layerNumber={9} />,
+        primary: "",
       },
     },
     {
       code: 17501,
       labels: {
-        primary: "10",
-        top: "LOCK",
+        top: <LayerTag type="lock" layerNumber={10} />,
+        primary: "",
       },
     },
   ],
