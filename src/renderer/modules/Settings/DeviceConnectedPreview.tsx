@@ -25,9 +25,15 @@ interface DeviceConnectedPreviewProps {
   deviceName?: string | boolean;
   deviceDisplayName?: string;
   nameChange: (data: string) => void;
+  deviceKeyboardType?: string;
 }
 
-const DeviceConnectedPreview = ({ deviceName, deviceDisplayName, nameChange }: DeviceConnectedPreviewProps) => {
+const DeviceConnectedPreview = ({
+  deviceName,
+  deviceDisplayName,
+  deviceKeyboardType,
+  nameChange,
+}: DeviceConnectedPreviewProps) => {
   const [showModal, setShowModal] = useState(false);
   const handleSave = (data: string) => {
     setShowModal(false);
@@ -52,19 +58,21 @@ const DeviceConnectedPreview = ({ deviceName, deviceDisplayName, nameChange }: D
       {deviceName ? (
         <>
           <button onClick={() => setShowModal(true)} type="button" className="p-0 text-left">
-            <h4 className="tracking-tight font-semibold text-2xl text-gray-700 dark:text-gray-25 ">
+            <h4 className="tracking-tight font-semibold text-2xl text-gray-700 dark:text-gray-25">
               {deviceName}{" "}
               <span className="inline-block mr-2 align-[2px]">
                 <IconPen />
               </span>
             </h4>
           </button>
-          <h5 className="tracking-tight font-semibold text-base text-gray-500 dark:text-gray-50">{deviceDisplayName}</h5>
+          <h5 className="tracking-tight font-semibold text-base text-gray-500 dark:text-gray-50">
+            {deviceDisplayName.includes("Raise2") ? `Dygma Raise 2 ${deviceKeyboardType}` : deviceDisplayName}
+          </h5>
         </>
       ) : (
         <button onClick={() => setShowModal(true)} type="button" className="p-0 text-left">
           <h4 className="tracking-tight font-semibold text-2xl text-gray-700 dark:text-gray-25">
-            {deviceDisplayName}{" "}
+            {deviceDisplayName.includes("Raise2") ? `Dygma Raise 2 ${deviceKeyboardType}` : deviceDisplayName}
             <span className="inline-block mr-2 align-[2px]">
               <IconPen />
             </span>

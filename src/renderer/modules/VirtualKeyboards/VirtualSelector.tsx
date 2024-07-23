@@ -6,7 +6,7 @@ import path from "path";
 import fs from "fs";
 import log from "electron-log/renderer";
 
-import { IconArrowRight, IconCloudDownload, IconKeyboard, IconUpload } from "@Renderer/components/atoms/icons";
+import { IconArrowRight, IconCloudDownload, IconFolder, IconKeyboard, IconUpload } from "@Renderer/components/atoms/icons";
 import { Button } from "@Renderer/components/atoms/Button";
 import Heading from "@Renderer/components/atoms/Heading";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@Renderer/components/atoms/Select";
@@ -16,6 +16,7 @@ import { i18n } from "@Renderer/i18n";
 import { VirtualType } from "@Renderer/types/virtual";
 import { BackupType } from "@Renderer/types/backups";
 
+import ToastMessage from "@Renderer/components/atoms/ToastMessage";
 import Hardware from "../../../api/hardware";
 import { RaiseISO, RaiseANSI, DefyWired, DefyWireless, Raise2ANSI, Raise2ISO, enumerator } from "../../../api/hardware-virtual";
 import Store from "../../utils/Store";
@@ -104,10 +105,7 @@ export default function VirtualSelector(props: VirtualSelectorProps) {
     const newPath = await ipcRenderer.invoke("save-dialog", options);
     log.info("Save file to", newPath);
     if (newPath === undefined) {
-      toast.warning("Path not defined! aborting...", {
-        autoClose: 2000,
-        icon: "",
-      });
+      toast.warn(<ToastMessage title="Path not defined! aborting..." icon={<IconFolder />} />, { autoClose: 3000, icon: "" });
       return undefined;
     }
     // Save the virtual KB in the specified location
@@ -207,7 +205,7 @@ export default function VirtualSelector(props: VirtualSelectorProps) {
     const newPath = await ipcRenderer.invoke("save-dialog", options);
     log.info("Save file to", newPath);
     if (newPath === undefined) {
-      toast.warning("Path not defined! aborting...");
+      toast.warn(<ToastMessage title="Path not defined! aborting..." icon={<IconFolder />} />, { autoClose: 3000, icon: "" });
       return;
     }
     log.info("Exchange focus for file access");
@@ -269,7 +267,7 @@ export default function VirtualSelector(props: VirtualSelectorProps) {
           <div className="px-6 pb-6 mt-2">
             <div className="virtualKeyboards-wrapper">
               <div className="virtualKeyboards-col">
-                <Heading headingLevel={4} renderAs="h4">
+                <Heading headingLevel={4} renderAs="h4" className="flex items-center gap-2">
                   <IconCloudDownload /> {i18n.keyboardSelect.virtualKeyboard.newVirtualKeyboardTitle}
                 </Heading>
                 <p>{i18n.keyboardSelect.virtualKeyboard.newVirtualKeyboardDescription}</p>
@@ -282,7 +280,12 @@ export default function VirtualSelector(props: VirtualSelectorProps) {
                     {enumerator.map((item, index) => (
                       <SelectItem value={index.toString()} key={`${item.device.info.displayName}-dropdown`}>
                         <div className="flex gap-2">
-                          <IconKeyboard /> <div className="dropdownItem">{item?.device?.info?.displayName}</div>
+                          <IconKeyboard />{" "}
+                          <div className="dropdownItem">
+                            {item?.device?.info?.displayName.includes("Raise2")
+                              ? `Dygma Raise 2 ${item?.device?.info?.keyboardType}`
+                              : item?.device?.info?.displayName}
+                          </div>
                         </div>
                       </SelectItem>
                     ))}
@@ -307,7 +310,7 @@ export default function VirtualSelector(props: VirtualSelectorProps) {
                 <span>OR</span>
               </div>
               <div className="virtualKeyboards-col">
-                <Heading headingLevel={4} renderAs="h4">
+                <Heading headingLevel={4} renderAs="h4" className="flex items-center gap-2">
                   <IconUpload /> {i18n.keyboardSelect.virtualKeyboard.loadVirtualKeyboardTitle}
                 </Heading>
                 <p>{i18n.keyboardSelect.virtualKeyboard.loadVirtualKeyboardDescription}</p>

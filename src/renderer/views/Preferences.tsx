@@ -675,6 +675,7 @@ const Preferences = (props: PreferencesProps) => {
                     deviceName={neurons.find(x => x.id === neuronID) ? neurons.find(x => x.id === neuronID).name : ""}
                     deviceDisplayName={state.currentDevice.device.info.displayName}
                     nameChange={updateNeuronName}
+                    deviceKeyboardType={state.currentDevice.device.info.keyboardType}
                   />
                   <h4 className="uppercase text-xs dark:text-gray-300 pb-2 mb-1 mt-3 border-solid border-b border-gray-300/30 dark:border-gray-300/30">
                     Device settings
