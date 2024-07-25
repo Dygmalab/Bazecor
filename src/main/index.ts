@@ -8,6 +8,9 @@ import { addUSBListeners, removeUSBListeners } from "./setup/configureUSB";
 import { removeIPCs } from "./setup/configureIPCs";
 import configureAutoUpdate from "./setup/configureAutoUpdate";
 
+if (process.env.NODE_ENV === "development") {
+  log.transports.console.level = "debug";
+}
 log.initialize();
 configureAutoUpdate();
 log.info(app.getPath("userData"));

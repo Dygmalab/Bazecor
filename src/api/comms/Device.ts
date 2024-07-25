@@ -120,14 +120,14 @@ class Device implements DeviceClass {
   static help = async (dev: Device) => {
     const data = await dev.request("help");
     const result = data.split(/\r?\n/).filter(v => v.length > 0);
-    // log.info("requesting to fill help: ", dev, result);
+    log.debug("requesting to fill help: ", dev, result);
     return result;
   };
 
   static HIDhelp = async (dev: Device) => {
     const data = await dev.hidRequest("help");
     const result = data.split(/\r?\n/).filter(v => v.length > 0);
-    // log.info("requesting to fill help: ", dev, result);
+    log.debug("requesting to fill help: ", dev, result);
     return result;
   };
 
@@ -139,7 +139,7 @@ class Device implements DeviceClass {
     const parser = this.port.pipe(new DelimiterParser({ delimiter: "\r\n" }));
     parser.on("data", (data: Buffer) => {
       const utfData = data.toString("utf-8");
-      log.info("addport: incoming data:", utfData);
+      log.debug("addport: incoming data:", utfData);
 
       if (utfData === "." || utfData.endsWith(".")) {
         const { result } = this;
@@ -157,7 +157,7 @@ class Device implements DeviceClass {
     });
     if (!this.device.bootloader) {
       const kbCommands = await Device.help(this);
-      log.info("these are the commands", kbCommands);
+      log.debug("these are the commands", kbCommands);
       this.commands = {
         help: kbCommands,
       };
@@ -167,7 +167,7 @@ class Device implements DeviceClass {
   async addHID() {
     const kbCommands = await Device.HIDhelp(this);
     this.isClosed = false;
-    log.info("these are the commands", kbCommands);
+    log.debug("these are the commands", kbCommands);
     this.commands = {
       help: kbCommands,
     };
@@ -178,7 +178,7 @@ class Device implements DeviceClass {
       if (this.type === "serial")
         await this.port?.close(err => {
           if (err) {
-            log.warn("errro when closing device", err);
+            log.warn("Error when closing device", err);
           }
         });
       if (this.type === "hid") await (this.port as HID).connectedDevice.close();
@@ -191,7 +191,7 @@ class Device implements DeviceClass {
   }
 
   request(command: string, ...args: Array<string>) {
-    log.info("device.request:", command, ...args);
+    log.debug("device.request:", command, ...args);
     return new Promise<string>((resolve, reject) => {
       const timer = setTimeout(() => {
         reject(new Error(`Communication timeout of '${command}' command`));
@@ -202,14 +202,14 @@ class Device implements DeviceClass {
           resolve(data as string);
         })
         .catch((err: Error) => {
-          log.info("Error sending request", err);
+          log.warn("Error sending request", err);
           reject(new Error("Error sending request"));
         });
     });
   }
 
   async serialRequest(cmd: string, ...args: string[]) {
-    log.info("performing request");
+    log.debug("performing request");
     if (!this.port) throw new Error("Device not connected!");
 
     let request = cmd;
@@ -240,30 +240,29 @@ class Device implements DeviceClass {
         returnValue = rxData;
       },
       (err: Error) => {
-        log.error(err);
-        log.info("now closing device");
+        log.warn("now closing device", err);
         try {
           (this.port as HID).close();
         } catch (error) {
-          log.info("error when closing the device: ", error);
+          log.warn("error when closing the device: ", error);
         }
       },
     );
-    log.info("device.hid.request:", cmd, ...args, "retured: ", returnValue);
+    log.debug("device.hid.request:", cmd, ...args, "retured: ", returnValue);
     return returnValue;
   }
 
   async virtualRequest(cmd: string, ...args: string[]) {
-    log.info("performing virtual request");
+    log.debug("performing virtual request");
     if (args.length > 0 && this.fileData.virtual[cmd].eraseable) {
       this.fileData.virtual[cmd].data = args.join(" ");
     }
-    log.info(`reading virtual data from ${cmd}: `, this.fileData.virtual[cmd]);
+    log.debug(`reading virtual data from ${cmd}: `, this.fileData.virtual[cmd]);
     let result = "";
     if (this.fileData.virtual[cmd] !== undefined) {
       result = this.fileData.virtual[cmd].data;
     }
-    log.info(result);
+    log.debug("Virtual Comms result: ", result);
     return new Promise<string>(resolve => {
       resolve(result);
     });
@@ -289,7 +288,7 @@ class Device implements DeviceClass {
       if (this.type === "hid") result = await this.hidRequest(cmd, ...args);
       if (this.type === "virtual") result = await this.virtualRequest(cmd, ...args);
     } catch (error) {
-      log.info("Error when handling request", error);
+      log.warn("Error when handling request", error);
       result = error;
     }
     if (!args || args.length === 0) {
@@ -312,7 +311,7 @@ class Device implements DeviceClass {
       if (this.type === "hid") result = await this.hidRequest(cmd, ...args);
       if (this.type === "virtual") result = await this.virtualRequest(cmd, ...args);
     } catch (error) {
-      log.info("Error when handling request", error);
+      log.warn("Error when handling request", error);
       result = error;
     }
     if (!args || args.length === 0) {
