@@ -332,24 +332,6 @@ class KeymapANSI extends React.Component {
         height={showUnderglow || isStandardView ? 705 : 480}
         width={1222}
       >
-        <Neuron
-          selectedLED={selectedLED}
-          visibility={!!(showUnderglow || isStandardView)}
-          clickAble={!(isStandardView && !showUnderglow)}
-          color="#b4b4b4"
-          id="neuron_led"
-          onClick={e => {
-            setUndeglowIndex(144, e);
-          }}
-          className="key"
-          fill={getColor(144)}
-          stroke={stroke(144)}
-          strokeWidth={getStrokeWidth(144)}
-          dataLedIndex={getLEDIndex(144)}
-          dataKeyIndex={keyIndex(144)}
-          dataLayer={layer}
-        />
-
         <g id="keyshapes">
           <Key
             keyType="regularKey"
