@@ -18,6 +18,7 @@
 import React, { Component, CSSProperties } from "react";
 import { ColorResult, SketchPicker } from "react-color";
 import Styled from "styled-components";
+import log from "electron-log/renderer";
 
 // Bootstrap components
 import Heading from "@Renderer/components/atoms/Heading";
@@ -25,14 +26,16 @@ import { ColorButton } from "@Renderer/component/Button";
 
 // Icons
 import { i18n } from "@Renderer/i18n";
-import { IconColorPalette, IconDelete, IconKeysLight, IconKeysUnderglow } from "@Renderer/components/atoms/icons";
+import { IconChevronDown, IconColorPalette, IconKeysLight, IconKeysUnderglow } from "@Renderer/components/atoms/icons";
 import { ColorEditorProps } from "@Renderer/types/colorEditor";
 import { ColorPalette } from "@Renderer/modules/ColorEditor/ColorPalette";
-import { Popover, PopoverContent, PopoverTrigger } from "@Renderer/components/atoms/Popover";
-import { SelectKeyboardSide } from "@Renderer/components/molecules/CustomSelect/SelectKeyboardSide";
-import { SelectResetKeyType } from "@Renderer/components/molecules/CustomSelect/SelectResetKeyType";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@Renderer/components/atoms/DropdownMenu";
 import { Button } from "@Renderer/components/atoms/Button";
-import { NOKEY_KEY_CODE, TRANS_KEY_CODE } from "../../../api/keymap/types";
 
 const Styles = Styled.div`
 width: 100%;
@@ -97,30 +100,12 @@ width: 100%;
 }
 `;
 
-class ColorEditor extends Component<
-  ColorEditorProps,
-  {
-    displayColorPicker: boolean;
-    chooseYourKeyboardSide: "BOTH" | "LEFT" | "RIGHT";
-    useNoKey: boolean;
-    openClearLayerPopover: boolean;
-    openUnderglowColorPopover: boolean;
-    openKeyColorPopover: boolean;
-    clearLayer?: (fillKeyCode?: boolean, chooseYourKeyboardSide?: string) => void;
-    changeUnderglowColor?: (colorIndex?: number, chooseYourKeyboardSide?: string) => void;
-    changeKeyColor?: (colorIndex?: number, chooseYourKeyboardSide?: string) => void;
-  }
-> {
+class ColorEditor extends Component<ColorEditorProps, { displayColorPicker: boolean }> {
   constructor(props: ColorEditorProps) {
     super(props);
 
     this.state = {
       displayColorPicker: false,
-      chooseYourKeyboardSide: "BOTH",
-      useNoKey: false,
-      openClearLayerPopover: false,
-      openUnderglowColorPopover: false,
-      openKeyColorPopover: false,
     };
 
     this.showColorPicker = this.showColorPicker.bind(this);
@@ -132,26 +117,6 @@ class ColorEditor extends Component<
     const { selected, onColorPick } = this.props;
     onColorPick(selected, color.rgb.r, color.rgb.g, color.rgb.b);
   }
-
-  chooseYourKeyboardSideUpdate = (value: string) => {
-    this.setState({ chooseYourKeyboardSide: value as "BOTH" | "LEFT" | "RIGHT" });
-  };
-
-  useNoKeyUpdate = (value: boolean) => {
-    this.setState({ useNoKey: value });
-  };
-
-  setClearLayerPopover = (value: boolean) => {
-    this.setState({ openClearLayerPopover: value });
-  };
-
-  setChangeUnderglowColorPopover = (value: boolean) => {
-    this.setState({ openUnderglowColorPopover: value });
-  };
-
-  setChangeKeyColorPopover = (value: boolean) => {
-    this.setState({ openKeyColorPopover: value });
-  };
 
   selectColor(pick: number) {
     const { selected, onColorSelect, onColorButtonSelect } = this.props;
@@ -168,15 +133,8 @@ class ColorEditor extends Component<
   }
 
   render() {
-    const {
-      displayColorPicker,
-      chooseYourKeyboardSide,
-      useNoKey,
-      openClearLayerPopover,
-      openKeyColorPopover,
-      openUnderglowColorPopover,
-    } = this.state;
-    const { colors, selected, clearLayer, changeUnderglowColor, changeKeyColor } = this.props;
+    const { colors, selected, toChangeAllKeysColor, deviceName } = this.props;
+    const { displayColorPicker } = this.state;
     const popover = {
       position: "absolute",
       top: "42px",
@@ -188,6 +146,8 @@ class ColorEditor extends Component<
       bottom: "0px",
       left: "0px",
     } as CSSProperties;
+
+    const underglowStart = deviceName === "Defy" ? 70 : 69;
 
     return (
       <Styles className="extraPanel">
@@ -216,144 +176,51 @@ class ColorEditor extends Component<
               ) : null}
             </div>
             <div className="buttonsApplyAll">
-              <Popover open={openKeyColorPopover}>
-                <PopoverTrigger>
-                  <ColorButton
-                    onClick={() => {
-                      this.setChangeKeyColorPopover(true);
-                    }}
-                    label={i18n.editor.color.applyColor}
-                    text={i18n.editor.color.allKeys}
-                    icoSVG={<IconKeysLight />}
-                    color={colors[selected]}
-                    disabled={!colors[selected]}
-                  />
-                </PopoverTrigger>
-                <PopoverContent align="end">
-                  <div className="flex flex-col">
-                    <SelectKeyboardSide
-                      chooseYourKeyboardSide={chooseYourKeyboardSide}
-                      chooseYourKeyboardSideUpdate={this.chooseYourKeyboardSideUpdate}
-                    />
-                    <div className="flex justify-end space-x-2">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => {
-                          this.chooseYourKeyboardSideUpdate("BOTH");
-                          this.setChangeKeyColorPopover(false);
-                        }}
-                      >
-                        {i18n.dialog.cancel}
-                      </Button>
-                      <Button
-                        variant="secondary"
-                        size="sm"
-                        onClick={() => {
-                          changeKeyColor(selected, chooseYourKeyboardSide);
-                          this.chooseYourKeyboardSideUpdate("BOTH");
-                          this.setChangeKeyColorPopover(false);
-                        }}
-                      >
-                        {i18n.dialog.ok}
-                      </Button>
-                    </div>
-                  </div>
-                </PopoverContent>
-              </Popover>
-              <Popover open={openUnderglowColorPopover}>
-                <PopoverTrigger>
-                  <ColorButton
-                    onClick={() => {
-                      this.setChangeUnderglowColorPopover(true);
-                    }}
-                    label={i18n.editor.color.applyColor}
-                    text={i18n.editor.color.underglow}
-                    icoSVG={<IconKeysUnderglow />}
-                    color={colors[selected]}
-                    disabled={!colors[selected]}
-                  />
-                </PopoverTrigger>
-                <PopoverContent align="end">
-                  <div className="flex flex-col">
-                    <SelectKeyboardSide
-                      chooseYourKeyboardSide={chooseYourKeyboardSide}
-                      chooseYourKeyboardSideUpdate={this.chooseYourKeyboardSideUpdate}
-                    />
-                    <div className="flex justify-end space-x-2">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => {
-                          this.chooseYourKeyboardSideUpdate("BOTH");
-                          this.useNoKeyUpdate(false);
-                          this.setChangeUnderglowColorPopover(false);
-                        }}
-                      >
-                        {i18n.dialog.cancel}
-                      </Button>
-                      <Button
-                        variant="secondary"
-                        size="sm"
-                        onClick={() => {
-                          changeUnderglowColor(selected, chooseYourKeyboardSide);
-                          this.chooseYourKeyboardSideUpdate("BOTH");
-                          this.setChangeUnderglowColorPopover(false);
-                        }}
-                      >
-                        {i18n.dialog.ok}
-                      </Button>
-                    </div>
-                  </div>
-                </PopoverContent>
-              </Popover>
-              {/*<Popover open={openClearLayerPopover}>
-                <PopoverTrigger>
-                  <ColorButton
-                    onClick={() => {
-                      this.setClearLayerPopover(true);
-                    }}
-                    label={i18n.editor.clear.title}
-                    text={i18n.editor.clear.clearLayer}
-                    icoSVG={<IconDelete />}
-                    disabled={false}
-                  />
-                </PopoverTrigger>
-                <PopoverContent align="end">
-                  <div className="flex flex-col">
-                    <SelectKeyboardSide
-                      chooseYourKeyboardSide={chooseYourKeyboardSide}
-                      chooseYourKeyboardSideUpdate={this.chooseYourKeyboardSideUpdate}
-                    />
-                    <SelectResetKeyType useNoKey={useNoKey} useNoKeyUpdate={this.useNoKeyUpdate} />
-                    <div className="flex justify-end space-x-2">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => {
-                          this.chooseYourKeyboardSideUpdate("BOTH");
-                          this.useNoKeyUpdate(false);
-                          this.setClearLayerPopover(false);
-                        }}
-                      >
-                        {i18n.dialog.cancel}
-                      </Button>
-                      <Button
-                        variant="secondary"
-                        size="sm"
-                        onClick={() => {
-                          clearLayer(useNoKey ? NOKEY_KEY_CODE : TRANS_KEY_CODE, chooseYourKeyboardSide);
-                          this.chooseYourKeyboardSideUpdate("BOTH");
-                          this.useNoKeyUpdate(false);
-                          this.setClearLayerPopover(false);
-                        }}
-                      >
-                        {i18n.dialog.ok}
-                      </Button>
-                    </div>
-                  </div>
-                </PopoverContent>
-              </Popover>*/}
+              <div className="flex items-center">
+                <ColorButton
+                  onClick={() => {
+                    toChangeAllKeysColor(selected, 0, underglowStart);
+                  }}
+                  label={i18n.editor.color.applyColor}
+                  text={i18n.editor.color.allKeys}
+                  icoSVG={<IconKeysLight />}
+                  color={colors[selected]}
+                  disabled={!colors[selected]}
+                />
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="outline" className="rounded-l-none border-l-0 px-2">
+                      <IconChevronDown />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent>
+                    <DropdownMenuItem onClick={() => log.info("Left")}>Left</DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => log.info("Right")}>Right</DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
+              <div className="flex items-center">
+                <ColorButton
+                  onClick={() => {
+                    toChangeAllKeysColor(selected, underglowStart, 177);
+                  }}
+                  label={i18n.editor.color.applyColor}
+                  text={i18n.editor.color.underglow}
+                  icoSVG={<IconKeysUnderglow />}
+                  color={colors[selected]}
+                />
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="outline" className="rounded-l-none border-l-0 px-2">
+                      <IconChevronDown />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent>
+                    <DropdownMenuItem>Left</DropdownMenuItem>
+                    <DropdownMenuItem>Right</DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
             </div>
           </div>
         </div>

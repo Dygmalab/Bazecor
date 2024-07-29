@@ -20,17 +20,18 @@ import { PaletteType } from "./layout";
 export interface ColorEditorProps {
   colors: PaletteType[];
   disabled: boolean;
-  onColorSelect: (colorIndex: number) => void;
-  colorButtonIsSelected: boolean;
-  onColorPick: (colorIndex: number, r: number, g: number, b: number) => void;
   selected: number;
+  deviceName: string;
+  colorButtonIsSelected: boolean;
   isColorButtonSelected: boolean;
+  onColorSelect: (colorIndex: number) => void;
+  onColorPick: (colorIndex: number, r: number, g: number, b: number) => void;
   onColorButtonSelect: (action: string, colorIndex: number) => void;
   toChangeAllKeysColor: (colorIndex: number, start: number, end: number) => void;
-  deviceName: string;
   clearLayer?: (fillKeyCode?: number, chooseYourKeyboardSide?: string) => void;
   changeUnderglowColor?: (colorIndex?: number, chooseYourKeyboardSide?: string) => void;
   changeKeyColor?: (colorIndex?: number, chooseYourKeyboardSide?: string) => void;
+  applyColorMapChange?: (mapIndex: number, chooseYourKeyboardSide: string, colorIndex: number) => void;
 }
 
 export interface ColorPickerProps {
