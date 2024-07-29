@@ -100,6 +100,8 @@ function Key(props: KeyShapeProps) {
       : setHyperApplied(false);
   }, [centerPrimary, centerExtra]);
 
+  console.log("selectedKey: ", selectedKey);
+
   return (
     <>
       {keyType == "regularKey" ? (

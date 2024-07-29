@@ -74,8 +74,8 @@ const OSKey = ({ renderKey, direction, size = "md" }: OSKeyProps) => {
           md: "Shift",
         },
         control: {
-          sm: "CTRL ^",
-          md: "Control ^",
+          sm: "Ctrl ⌃",
+          md: "Ctrl ⌃",
         },
         os: {
           sm: <IconCommandMacOs />,
@@ -98,12 +98,12 @@ const OSKey = ({ renderKey, direction, size = "md" }: OSKeyProps) => {
           md: "Shift",
         },
         control: {
-          sm: "CTRL",
-          md: "Control",
+          sm: "Ctrl",
+          md: "Ctrl",
         },
         os: {
-          sm: <AiFillWindows />,
-          md: <AiFillWindows />,
+          sm: <AiFillWindows size={16} />,
+          md: <AiFillWindows size={16} />,
         },
         alt: {
           sm: "Alt",
@@ -121,8 +121,8 @@ const OSKey = ({ renderKey, direction, size = "md" }: OSKeyProps) => {
         md: "Shift",
       },
       control: {
-        sm: "CTRL",
-        md: "Control",
+        sm: "Ctrl",
+        md: "Ctrl",
       },
       os: {
         sm: <FaLinux />,
