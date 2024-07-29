@@ -40,7 +40,7 @@ export interface ContextType {
   originalDevice: Device | undefined;
   backup: BackupType | undefined;
   error: unknown;
-  DefyVariant: string | undefined;
+  DeviceVariant: string | undefined;
   flashRaise: FlashRaise | undefined;
   flashDefyWireless: FlashDefyWireless | undefined;
   RaiseBrightness: string | undefined;
@@ -91,7 +91,7 @@ export const Context: ContextType = {
   originalDevice: undefined,
   backup: undefined,
   error: undefined,
-  DefyVariant: undefined,
+  DeviceVariant: undefined,
   flashRaise: undefined,
   flashDefyWireless: undefined,
   flashSides: undefined,

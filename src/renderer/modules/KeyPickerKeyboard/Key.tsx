@@ -5,6 +5,7 @@ import React from "react";
 import Styled, { withTheme } from "styled-components";
 import { SegmentedKeyType } from "@Renderer/types/layout";
 import { SelectGenericKeys } from "@Renderer/components/molecules/CustomSelect";
+import OSKey from "@Renderer/components/molecules/KeyTags/OSKey";
 
 const Style = Styled.g`
 .keycap {
@@ -365,7 +366,33 @@ interface KeyProps {
   };
   idArray: string;
   disabled: boolean;
+  platform: string;
 }
+
+interface KeyLabelProps {
+  content: string;
+  os: string;
+}
+const KeyLabel: React.FC<KeyLabelProps> = ({ content, os }) => {
+  let label;
+  if (os === "darwin") {
+    switch (content) {
+      case "Ctrl":
+        label = "Ctrl ^";
+        break;
+      case "Alt":
+      case "Alt Gr":
+        label = "⌥";
+        break;
+      default:
+        label = content;
+    }
+  } else {
+    label = content;
+  }
+
+  return <>{label}</>;
+};
 
 function Key(props: KeyProps) {
   const {
@@ -386,6 +413,7 @@ function Key(props: KeyProps) {
     idArray,
     disabled,
     theme,
+    platform,
   } = props;
 
   return (
@@ -549,7 +577,12 @@ function Key(props: KeyProps) {
               textAnchor="middle"
               className="contentFirst"
             >
-              {content.first}
+              {/* {(content.first === "Ctrl" || content.first === "Alt" || content.firt === "Alt Gr") && platform === "darwin"
+                ? content.first === "Ctrl"
+                  ? "Ctrl ^"
+                  : "⌥"
+                : content.first} */}
+              <KeyLabel content={content.first} os={platform} />
             </text>
             <text
               x={x + ksl[content.type].text.letter.ddx}

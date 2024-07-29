@@ -366,6 +366,7 @@ class KeyPickerKeyboard extends Component {
 
   updateSelectorPosition = () => {
     const elPosition = this.layoutSelectorWatcherPosition.current.getBoundingClientRect();
+    console.log(elPosition.left, elPosition.top);
     if (this.props.refreshLayoutSelectorPosition) {
       this.props.refreshLayoutSelectorPosition(elPosition.left, elPosition.top - 102);
     }
@@ -387,6 +388,12 @@ class KeyPickerKeyboard extends Component {
       return macroN;
     }
     if (React.isValidElement(this.keymapDB.parse(keycode).label)) return this.keymapDB.parse(keycode).label;
+    if (React.isValidElement(this.keymapDB.parse(keycode).extraLabel))
+      return (
+        <div>
+          {this.keymapDB.parse(keycode).extraLabel} {this.keymapDB.parse(keycode).label}
+        </div>
+      );
     return this.props.code !== null
       ? this.keymapDB.parse(keycode).extraLabel != undefined
         ? `${this.keymapDB.parse(keycode).extraLabel}.${this.keymapDB.parse(keycode).label}`

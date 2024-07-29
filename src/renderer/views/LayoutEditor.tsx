@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React, { MouseEvent, useCallback, useEffect, useMemo, useState } from "react";
+import React, { MouseEvent, useCallback, useEffect, useLayoutEffect, useMemo, useState, useRef } from "react";
 import Styled from "styled-components";
 import { toast } from "react-toastify";
 import { ipcRenderer } from "electron";
@@ -47,14 +47,13 @@ import StandardView from "@Renderer/modules/StandardView";
 import LayerSelector from "@Renderer/components/organisms/Select/LayerSelector";
 import { Button } from "@Renderer/components/atoms/Button";
 import ToggleGroupLayoutViewMode from "@Renderer/components/molecules/CustomToggleGroup/ToggleGroupLayoutViewMode";
-import { IconArrowDownWithLine, IconArrowUpWithLine } from "@Renderer/components/atoms/icons";
+import { IconArrowDownWithLine, IconArrowUpWithLine, IconColorPalette } from "@Renderer/components/atoms/icons";
 import LoaderLayout from "@Renderer/components/atoms/loader/loaderLayout";
 import { i18n } from "@Renderer/i18n";
 
 import Store from "@Renderer/utils/Store";
 import getLanguage from "@Renderer/utils/language";
 import { ClearLayerDialog } from "@Renderer/components/molecules/CustomModal/ClearLayerDialog";
-import getLayerMap from "@Renderer/utils/LayersMap";
 import Keymap, { KeymapDB } from "../../api/keymap";
 import { rgb2w, rgbw2b } from "../../api/color";
 import Backup from "../../api/backup";
@@ -391,6 +390,9 @@ const Styles = Styled.div`
 .defy-tR8 .keyContentLabelRotate {
   transform: rotate(-60deg) translate(-47px,8px)
 }
+.keyItem foreignObject {
+  overflow: visible;
+}
 
 `;
 
@@ -471,6 +473,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
   const [currentLanguageLayout, setCurrentLanguageLayout] = useState("english");
   const [showMacroModal, setShowMacroModal] = useState(false);
   const [showNeuronModal, setShowNeuronModal] = useState(false);
+  const [leftSideModified, setLeftSideModified] = useState(false);
   const [isStandardView, setIsStandardView] = useState(
     store.get("settings.isStandardView") !== undefined ? (store.get("settings.isStandardView") as boolean) : false,
   );
@@ -480,6 +483,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
     x: 0,
     y: 0,
   });
+  const keyboardPosition = useRef(null);
   const [isWireless, setIsWireless] = useState(false);
 
   const [selectedPaletteColor, setSelectedPaletteColor] = useState(-1);
@@ -766,7 +770,22 @@ const LayoutEditor = (props: LayoutEditorProps) => {
   };
 
   const updateColormap = async (device: DeviceClass, colormap: number[][]) => {
+    const { currentDevice } = state;
     const args = flatten(colormap).map(v => v.toString());
+    // check if colormap has the left side updated
+    if (leftSideModified && currentDevice.type === "hid") {
+      toast.warn(
+        <ToastMessage
+          title={i18n.success.btLeftSideColorsChanged}
+          content={i18n.success.btLeftSideColorsChangedContent}
+          icon={<IconColorPalette />}
+        />,
+        {
+          autoClose: 10000,
+          icon: "",
+        },
+      );
+    }
     const result = await device.command("colormap.map", ...args);
     return result;
   };
@@ -1160,6 +1179,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
       setCurrentKeyIndex(currentKeyIndex);
       setCurrentLedIndex(currentLedIndex);
       setModified(false);
+      setLeftSideModified(false);
       setIsMultiSelected(false);
       setSelectedPaletteColor(null);
       setIsColorButtonSelected(false);
@@ -1224,24 +1244,31 @@ const LayoutEditor = (props: LayoutEditorProps) => {
     });
   };
 
-  const prepareLayer = () => {
-    const layerMap = getLayerMap(deviceName.toLowerCase());
+  const clearLayer = (fillKeyCode = TRANS_KEY_CODE, colorIndex = 15, chooseYourKeyboardSide = "BOTH") => {
+    const { currentDevice } = state;
+    const layerMap = { keys: currentDevice.device.keyboard, underglow: currentDevice.device.keyboardUnderglow };
     const newKeymap = keymap.custom.slice();
     const idx = keymap.onlyCustom ? currentLayer : currentLayer - keymap.default.length;
     const cloneLayer = [...newKeymap[idx]];
 
-    return { layerMap, newKeymap, idx, cloneLayer };
-  };
+    log.info(cloneLayer);
+    if (chooseYourKeyboardSide === "LEFT") {
+      layerMap.keys.left.forEach(value => {
+        console.log("erasing values: ", value, value[0], value[value.length - 1] + 1);
+        cloneLayer.fill(keyCodeFiller, value[0], value[value.length - 1] + 1);
+      });
+    }
 
-  const changeKeyColor = (colorIndex = 15, chooseYourKeyboardSide = "BOTH"): void => {
-    const { layerMap, idx, newKeymap } = prepareLayer();
-    startContext();
-    if (colorIndex >= 0) {
-      const newColormap = colorMap.slice();
-      if (newColormap.length > 0) {
-        if (chooseYourKeyboardSide === "LEFT") {
-          newColormap[idx].fill(colorIndex, layerMap.keys.leds.left.from, layerMap.keys.leds.left.to);
-        }
+    if (chooseYourKeyboardSide === "RIGHT") {
+      layerMap.keys.right.forEach(value => {
+        cloneLayer.fill(keyCodeFiller, value[0], value[value.length - 1] + 1);
+      });
+    }
+
+    if (chooseYourKeyboardSide === "BOTH") {
+      cloneLayer.fill(keyCodeFiller);
+    }
+    log.info("new clone layer", cloneLayer);
 
         if (chooseYourKeyboardSide === "RIGHT") {
           newColormap[idx].fill(colorIndex, layerMap.keys.leds.right.from, layerMap.keys.leds.right.to);
@@ -1270,11 +1297,29 @@ const LayoutEditor = (props: LayoutEditorProps) => {
       const newColormap = colorMap.slice();
       if (newColormap.length > 0) {
         if (chooseYourKeyboardSide === "LEFT") {
-          newColormap[idx].fill(colorIndex, layerMap.underglow.left.from, layerMap.underglow.left.to);
+          newColormap[idx].fill(
+            colorIndex,
+            layerMap.keys.ledsLeft[0],
+            layerMap.keys.ledsLeft[layerMap.keys.ledsLeft.length - 1] + 1,
+          );
+          newColormap[idx].fill(
+            colorIndex,
+            layerMap.underglow.ledsLeft[0],
+            layerMap.underglow.ledsLeft[layerMap.underglow.ledsLeft.length - 1] + 1,
+          );
         }
 
         if (chooseYourKeyboardSide === "RIGHT") {
-          newColormap[idx].fill(colorIndex, layerMap.underglow.right.from, layerMap.underglow.right.to);
+          newColormap[idx].fill(
+            colorIndex,
+            layerMap.keys.ledsRight[0],
+            layerMap.keys.ledsRight[layerMap.keys.ledsRight.length - 1] + 1,
+          );
+          newColormap[idx].fill(
+            colorIndex,
+            layerMap.underglow.ledsRight[0],
+            layerMap.underglow.ledsRight[layerMap.underglow.ledsRight.length - 1] + 1,
+          );
         }
 
         if (chooseYourKeyboardSide === "BOTH") {
@@ -1344,6 +1389,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
   };
 
   const onColorSelect = (colorIndex: number) => {
+    const { currentDevice } = state;
     const isEqualColor = onVerificationColor(colorIndex, currentLayer, currentLedIndex);
     // log.info(
     //   "data from onColorSelect",
@@ -1361,6 +1407,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
     if (!isEqualColor && currentKeyIndex > 0) {
       const colormap = colorMap.slice();
       colormap[currentLayer][currentLedIndex] = colorIndex;
+      if (currentDevice.device.keyboard.ledsLeft.includes(currentLedIndex)) setLeftSideModified(true);
       setIsMultiSelected(true);
       setColorMap(colorMap);
       setSelectedPaletteColor(colorIndex);
@@ -1443,6 +1490,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
   const toChangeAllKeysColor = (colorIndex: number, start: number, end: number) => {
     const colormap = colorMap.slice();
     colormap[currentLayer] = colormap[currentLayer].fill(colorIndex, start, end);
+    setLeftSideModified(true);
     setColorMap(colormap);
     setModified(true);
     startContext();
@@ -1692,13 +1740,23 @@ const LayoutEditor = (props: LayoutEditorProps) => {
     );
   };
 
-  const refreshLayoutSelectorPosition = (x: number, y: number) => {
-    if (modeselect === "color") {
-      setLayoutSelectorPosition({ x: 0, y: 0 });
-    } else {
-      setLayoutSelectorPosition({ x, y });
+  const refreshLayoutSelectorPosition = useCallback(
+    (x: number, y: number) => {
+      if (modeselect === "color") {
+        setLayoutSelectorPosition({ x: 0, y: 0 });
+      } else {
+        setLayoutSelectorPosition({ x, y });
+      }
+    },
+    [modeselect],
+  );
+
+  const readKeyboardPosition = useCallback(() => {
+    if (keyboardPosition.current) {
+      const elPosition = keyboardPosition.current.getBoundingClientRect();
+      refreshLayoutSelectorPosition(elPosition.left, elPosition.top - 72);
     }
-  };
+  }, [refreshLayoutSelectorPosition]);
 
   const configStandardView = () => {
     try {
@@ -1739,6 +1797,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
       const scanner = async () => {
         log.info("Resseting KB Data!!!");
         setModified(false);
+        setLeftSideModified(false);
         setLoading(true);
         setCurrentLayer(previousLayer !== 0 ? previousLayer : 0);
         setPreviousLayer(0);
@@ -1829,13 +1888,25 @@ const LayoutEditor = (props: LayoutEditorProps) => {
     setCurrentLayer(cLayer);
   }, [keymap, currentLayer, macros, superkeys]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (modeselect === "color") {
       // console.log("Is color - change position");
     } else {
       setViewMode(isStandardView ? "standard" : "single");
     }
   }, [modeselect, viewMode, isStandardView]);
+
+  // useLayoutEffect(() => {
+  // console.log("Triggered useLayoutEffect: ", keyboardPosition.current);
+  //   if (keyboardPosition.current) {
+  //     readKeyboardPosition();
+  //   }
+  //   window.addEventListener("resize", readKeyboardPosition);
+  //   return () => {
+  //     window.removeEventListener("resize", readKeyboardPosition);
+  //   };
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, []);
 
   const { Layer, kbtype } = getLayout();
   if (!Layer) {
@@ -1905,7 +1976,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
 
   const layer = (
     // TODO: restore fade effect <fade in appear key={currentLayer}>
-    <div className="LayerHolder">
+    <div className="LayerHolder h-[inherit]">
       <Layer
         readOnly={isReadOnly}
         index={currentLayer}
@@ -1980,9 +2051,9 @@ const LayoutEditor = (props: LayoutEditorProps) => {
         />
         <div className="w-full full-height keyboardsWrapper">
           <div className="raise-editor layer-col">
-            <div className="dygma-keyboard-editor editor">{layer}</div>
+            <div className="dygma-keyboard-editor editor h-full">{layer}</div>
             {modeselect === "keyboard" && !isStandardView ? (
-              <div className="ordinary-keyboard-editor m-0 pb-4">
+              <div className="ordinary-keyboard-editor h-[inherit] m-0 pb-4" ref={keyboardPosition}>
                 <KeyPickerKeyboard
                   onKeySelect={onKeyChange}
                   code={code}
@@ -2006,12 +2077,6 @@ const LayoutEditor = (props: LayoutEditorProps) => {
 
         {/* WHY: We want to hide the selector when we cannot use it (e.g. when color editor is active) */}
         {modeselect === "keyboard" ? (
-          // <LayoutViewSelector
-          //   onToggle={onToggleStandardView}
-          //   isStandardView={isStandardView}
-          //   tooltip={i18n.editor.superkeys.tooltip}
-          //   layoutSelectorPosition={layoutSelectorPosition}
-          // />
           <ToggleGroupLayoutViewMode
             value={viewMode}
             onValueChange={onToggleStandardView}

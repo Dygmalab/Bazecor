@@ -26,7 +26,6 @@ import {
   IconClone,
   IconArrowUpWithLine,
   IconArrowDownWithLine,
-  IconFileDownload,
   IconSettings,
 } from "@Renderer/components/atoms/icons";
 import ToggleGroupKeyboardViewMode from "@Renderer/components/molecules/CustomToggleGroup/ToggleGroupKeyboardViewMode";
@@ -67,6 +66,10 @@ const LayerSelector: React.FC<any> = ({
     toggleShow();
     updateItem(data);
   };
+
+  // For future implementations use exportToPdf function
+  // eslint-disable-next-line
+  const exportToPdfInternal = exportToPdf;
 
   return (
     <div className="flex items-center gap-1">
@@ -128,10 +131,11 @@ const LayerSelector: React.FC<any> = ({
               <DropdownMenuItem className="flex gap-2" onSelect={clearFunc}>
                 <IconDelete /> {i18n.editor.layers.clearLayer}
               </DropdownMenuItem>
+              {/* 
               <DropdownMenuSeparator />
               <DropdownMenuItem className="flex gap-2" onSelect={exportToPdf}>
                 <IconFileDownload /> {i18n.editor.layers.exportToPdf}
-              </DropdownMenuItem>
+              </DropdownMenuItem> */}
             </DropdownMenuContent>
           </DropdownMenu>
         </div>

@@ -19,6 +19,7 @@ import React, { FC, useMemo, useCallback } from "react";
 import { Popover, PopoverContent, PopoverTrigger, PopoverButton } from "@Renderer/components/atoms/Popover";
 import Heading from "@Renderer/components/atoms/Heading";
 import { Button } from "@Renderer/components/atoms/Button";
+import { IconLayerLock, IconLayerShift } from "@Renderer/components/atoms/icons";
 
 interface SelectLayersCustomDropdownProps {
   action?: any;
@@ -100,8 +101,11 @@ const SelectLayersCustomDropdown: FC<SelectLayersCustomDropdownProps> = ({
                 : ""
             }`}
           >
-            <Heading headingLevel={5} renderAs="h5" className="my-1 text-gray-200 dark:text-gray-300">
-              Layer <span className="text-gray-400 dark:text-gray-50">Shift</span>
+            <Heading headingLevel={5} renderAs="h5" className="my-1 flex gap-2 items-center text-gray-200 dark:text-gray-300">
+              <IconLayerShift />{" "}
+              <span>
+                Layer <span className="text-gray-400 dark:text-gray-50">Shift</span>
+              </span>
             </Heading>
             <div className="dropdown-group-buttons flex rounded-sm p-[3px] gap-[3px] bg-white/100 dark:bg-gray-900/20">
               {layerSwitch.map((item, id) => (
@@ -124,8 +128,11 @@ const SelectLayersCustomDropdown: FC<SelectLayersCustomDropdownProps> = ({
             </div>
           </div>
           <div className="dropdown-group pt-2 mt-2 border-t border-gray-50 dark:border-gray-700">
-            <Heading headingLevel={5} renderAs="h5" className="my-1 text-gray-200 dark:text-gray-300">
-              Layer <span className="text-gray-400 dark:text-gray-50">Lock</span>
+            <Heading headingLevel={5} renderAs="h5" className="my-1 flex gap-2 items-center text-gray-200 dark:text-gray-300">
+              <IconLayerLock />{" "}
+              <span>
+                Layer <span className="text-gray-400 dark:text-gray-50">Lock</span>
+              </span>
             </Heading>
             <div className="dropdown-group-buttons rounded-sm flex p-[3px] gap-[3px] bg-white/100 dark:bg-gray-900/20">
               {layerLock.map((item, id) => (

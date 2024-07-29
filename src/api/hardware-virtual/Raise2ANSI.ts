@@ -1,4 +1,5 @@
 import { VirtualType } from "@Renderer/types/virtual";
+import aFN from "../arrayFillNum";
 
 const Raise2ANSI: VirtualType = {
   device: {
@@ -21,10 +22,16 @@ const Raise2ANSI: VirtualType = {
     keyboard: {
       rows: 5,
       columns: 16,
+      left: [aFN(0, 7), aFN(16, 23), aFN(32, 39), aFN(48, 55), aFN(64, 72)],
+      right: [aFN(9, 16), aFN(24, 32), aFN(41, 48), aFN(57, 64), aFN(72, 80)],
+      ledsLeft: [...aFN(0, 33)],
+      ledsRight: [...aFN(33, 69)],
     },
     keyboardUnderglow: {
-      rows: 5,
-      columns: 29,
+      rows: 29,
+      columns: 5,
+      ledsLeft: [...aFN(69, 105)],
+      ledsRight: [...aFN(105, 144)],
     },
     RGBWMode: true,
     bootloader: false,

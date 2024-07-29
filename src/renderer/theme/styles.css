@@ -272,6 +272,9 @@ select:focus {
   @apply text-purple-200 border-purple-200 bg-purple-200/5;
 }
 
+.isModifier .trash-icon {
+  @apply !text-gray-800;
+}
 /* LOADER */
 .running {
   --animation-state: running;
@@ -712,4 +715,32 @@ select:focus {
 }
 .tab-item--active:before {
   right: calc((1.25rem) * -1);
+}
+
+.svgStyle.darwin.ANSI g.keycap.id-91 {
+  transform: translate(0, 0);
+}
+.svgStyle.darwin.ANSI g.keycap.id-92,
+.svgStyle.darwin.ANSI g.keycap.id-95,
+.svgStyle.darwin.ISO g.keycap.id-93,
+.svgStyle.darwin.ISO g.keycap.id-96 {
+  transform: translate(59px, 0);
+}
+.svgStyle.darwin.ANSI g.keycap.id-92 .whitespace-nowrap,
+.svgStyle.darwin.ANSI g.keycap.id-96 .whitespace-nowrap,
+.svgStyle.darwin.ISO g.keycap.id-97 .whitespace-nowrap,
+.svgStyle.darwin.ISO g.keycap.id-93 .whitespace-nowrap {
+  padding-top: 5px;
+}
+.svgStyle.darwin.ANSI g.keycap.id-93,
+.svgStyle.darwin.ANSI g.keycap.id-96,
+.svgStyle.darwin.ISO g.keycap.id-94,
+.svgStyle.darwin.ISO g.keycap.id-97 {
+  transform: translate(-59px, 0);
+}
+.standardView .tab-item--active:after {
+  right: calc((1.25rem + 7px) * -1);
+}
+.standardView .tab-item--active:before {
+  right: calc((1.25rem + 4px) * -1);
 }

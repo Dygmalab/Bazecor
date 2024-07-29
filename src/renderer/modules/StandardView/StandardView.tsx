@@ -330,7 +330,7 @@ export default class StandardView extends React.Component<StandardViewProps, Sta
       }
     }
 
-    if (React.isValidElement(aux.label))
+    if (React.isValidElement(aux.label) || React.isValidElement(aux.extraLabel))
       return aux.extraLabel !== undefined ? (
         <>
           {aux.extraLabel}

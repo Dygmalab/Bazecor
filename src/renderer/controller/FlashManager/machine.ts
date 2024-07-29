@@ -140,13 +140,15 @@ const FlashManager = setup({
     },
     error: {
       id: "error",
-      type: "final",
       entry: [
         () => {
           log.info("Error Card entry");
         },
         assign({ Block: () => -1 }),
       ],
+      on: {
+        "retry-event": ["retry"],
+      },
     },
     success: { type: "final" },
   },

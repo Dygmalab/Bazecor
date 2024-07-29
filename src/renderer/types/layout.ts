@@ -28,8 +28,8 @@ export interface LayoutEditorProps {
 export interface KeyType {
   keyCode: number;
   label: string | JSX.Element;
-  extraLabel?: string;
-  verbose?: string;
+  extraLabel?: string | JSX.Element;
+  verbose?: string | JSX.Element;
 }
 
 export interface SegmentedKeyType {

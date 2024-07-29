@@ -154,6 +154,7 @@ function MouseTab({ isStandardView, keyCode, onAddSpecial, actTab = "standard" }
   //   setIsHovering(true);
   //   log.info("MouseLeave", mouseEvent);
   // };
+  console.log("actTab: ", actTab);
 
   return (
     <Styles className={`${isStandardView ? "standardViewTab" : ""} tabsMouse`}>
@@ -164,7 +165,11 @@ function MouseTab({ isStandardView, keyCode, onAddSpecial, actTab = "standard" }
               {i18n.editor.standardView.mouse.title}
             </Heading>
             <Callout size="sm" className="mt-4">
-              <p>{i18n.editor.standardView.mouse.callOut}</p>
+              {actTab === "super" ? (
+                <p>Enhance your Superkey by adding mouse function click on it.</p>
+              ) : (
+                <p>{i18n.editor.standardView.mouse.callOut}</p>
+              )}
             </Callout>
           </>
         ) : null}

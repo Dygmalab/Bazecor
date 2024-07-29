@@ -23,7 +23,7 @@ function withModifiers(
     groupName: string;
   },
   groupName: string,
-  top: string,
+  top: string | JSX.Element,
   base: number,
 ) {
   return {

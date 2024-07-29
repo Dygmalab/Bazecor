@@ -35,6 +35,7 @@ interface KeyShapeProps {
   dataLayer: number;
   centerPrimary: boolean;
   centerExtra: boolean;
+  selectedKey: any;
 }
 
 function Key(props: KeyShapeProps) {
@@ -53,6 +54,7 @@ function Key(props: KeyShapeProps) {
     dataLayer,
     centerPrimary,
     centerExtra,
+    selectedKey,
   } = props;
   const xShape2 = x + 4;
   const yShape2 = y;

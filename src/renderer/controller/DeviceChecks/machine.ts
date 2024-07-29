@@ -83,7 +83,7 @@ const DeviceChecks = setup({
         },
         onError: {
           target: "failure",
-          actions: assign({ error: ({ event }) => event.error }),
+          actions: [assign({ error: event => event as any })],
         },
       },
       on: {
@@ -125,6 +125,7 @@ const DeviceChecks = setup({
           ],
         },
         onError: "failure",
+        actions: [assign({ error: event => event as any })],
       },
     },
     RSideCheck: {
@@ -152,6 +153,7 @@ const DeviceChecks = setup({
           ],
         },
         onError: "failure",
+        actions: [assign({ error: event => event as any })],
       },
     },
     validateStatus: {
@@ -182,7 +184,7 @@ const DeviceChecks = setup({
         },
         onError: {
           target: "failure",
-          actions: assign({ error: ({ event }) => event.error }),
+          actions: [assign({ error: event => event as any })],
         },
       },
       on: {

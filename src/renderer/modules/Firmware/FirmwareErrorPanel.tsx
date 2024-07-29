@@ -217,7 +217,7 @@ function FirmwareErrorPanel(props: FirmwareErrorPanelType) {
     }
   }, [nextBlock, state, state.context]);
 
-  log.info(state.context.error);
+  log.info("Checking incomming error to FW-E-P", state.context.error);
   return (
     <Style>
       {!handleError || loading ? (
@@ -227,7 +227,7 @@ function FirmwareErrorPanel(props: FirmwareErrorPanelType) {
           <div className="firmware-row">
             <div className="firmware-content borderLeftTopRadius">
               <div className="firmware-content--inner">
-                {(state.context.error as Error).message.includes("GitHubData") ? (
+                {(state.context?.error?.error as Error)?.message.includes("Failed to fetch") ? (
                   <>
                     <Heading headingLevel={3} renderAs="h3" variant="warning">
                       {i18n.firmwareUpdate.texts.errorTitle}
@@ -253,7 +253,7 @@ function FirmwareErrorPanel(props: FirmwareErrorPanelType) {
                         </div>
                         <div className="errorListContent">
                           {state.context?.error
-                            ? (state.context.error as Error).message
+                            ? (state.context?.error?.error as Error)?.message
                             : "Contact our customer for more details"}
                         </div>
                       </div>

@@ -6,6 +6,7 @@ import { i18n } from "@Renderer/i18n";
 import Callout from "@Renderer/components/molecules/Callout/Callout";
 import Heading from "@Renderer/components/atoms/Heading";
 import { Button } from "@Renderer/components/atoms/Button";
+import { IconLayerLock, IconLayerShift } from "@Renderer/components/atoms/icons";
 
 const Styles = Styled.div`
 display: flex;
@@ -70,8 +71,8 @@ const LayersTab = ({ keyCode, isStandardView, disableMods, onLayerPress }: Layer
           </Callout>
         ) : null}
         <div className="cardButtons">
-          <Heading headingLevel={4} renderAs="h4">
-            {i18n.editor.standardView.layers.layerSwitch}
+          <Heading headingLevel={4} renderAs="h4" className="flex gap-2 items-center">
+            <IconLayerShift /> {i18n.editor.standardView.layers.layerSwitch}
           </Heading>
           <p>{i18n.editor.standardView.layers.layerSwitchDescription}</p>
           <div className="p-1 inline-flex flex-nowrap gap-1 mt-2 w-auto rounded-md bg-white dark:bg-gray-900/20">
@@ -92,8 +93,8 @@ const LayersTab = ({ keyCode, isStandardView, disableMods, onLayerPress }: Layer
           </div>
         </div>
         <div className="cardButtons">
-          <Heading headingLevel={4} renderAs="h4">
-            {i18n.editor.layers.layerLock}
+          <Heading headingLevel={4} renderAs="h4" className="flex gap-2 items-center">
+            <IconLayerLock /> {i18n.editor.layers.layerLock}
           </Heading>
           <p>{isStandardView ? i18n.editor.standardView.layers.layerLockDescription : i18n.editor.layers.layerLockDescription}</p>
           <div className="p-1 inline-flex flex-nowrap gap-1 mt-2 w-auto rounded-md bg-white dark:bg-gray-900/20">

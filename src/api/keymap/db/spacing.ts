@@ -68,45 +68,45 @@ const SpacingTable = {
 
 const ModifiedSpacingTables = [
   // Single
-  withModifiers(SpacingTable, "Control +", "C+", 256),
-  withModifiers(SpacingTable, "Alt +", "A+", 512),
-  withModifiers(SpacingTable, "AltGr +", "AGr+", 1024),
-  withModifiers(SpacingTable, "Shift +", "S+", 2048),
-  withModifiers(SpacingTable, "Os+", "O+", 4096),
+  withModifiers(SpacingTable, "Control +", "", 256),
+  withModifiers(SpacingTable, "Alt +", "", 512),
+  withModifiers(SpacingTable, "AltGr +", "", 1024),
+  withModifiers(SpacingTable, "Shift +", "", 2048),
+  withModifiers(SpacingTable, "Os+", "", 4096),
 
   // Double
-  withModifiers(SpacingTable, "Control + Alt +", "C+A+", 768),
-  withModifiers(SpacingTable, "Control + AltGr +", "C+AGr+", 1280),
-  withModifiers(SpacingTable, "Control + Shift +", "C+S+", 2304),
-  withModifiers(SpacingTable, "Control + Os +", "C+O+", 4352),
-  withModifiers(SpacingTable, "Alt + AltGr +", "A+AGr+", 1536),
-  withModifiers(SpacingTable, "Alt + Shift +", "A+S+", 2560),
-  withModifiers(SpacingTable, "Alt + Os +", "A+O+", 4608),
-  withModifiers(SpacingTable, "AltGr + Shift +", "AGr+S+", 3072),
-  withModifiers(SpacingTable, "AltGr + Os +", "AGr+O+", 5120),
-  withModifiers(SpacingTable, "Shift + Os +", "S+O+", 6144),
+  withModifiers(SpacingTable, "Control + Alt +", "", 768),
+  withModifiers(SpacingTable, "Control + AltGr +", "", 1280),
+  withModifiers(SpacingTable, "Control + Shift +", "", 2304),
+  withModifiers(SpacingTable, "Control + Os +", "", 4352),
+  withModifiers(SpacingTable, "Alt + AltGr +", "", 1536),
+  withModifiers(SpacingTable, "Alt + Shift +", "", 2560),
+  withModifiers(SpacingTable, "Alt + Os +", "", 4608),
+  withModifiers(SpacingTable, "AltGr + Shift +", "", 3072),
+  withModifiers(SpacingTable, "AltGr + Os +", "", 5120),
+  withModifiers(SpacingTable, "Shift + Os +", "", 6144),
 
   // Triple
-  withModifiers(SpacingTable, "Control + Alt + AltGr +", "C+A+AGr+", 1792),
-  withModifiers(SpacingTable, "Meh +", "Meh+", 2816),
-  withModifiers(SpacingTable, "Control + Alt + Os +", "C+A+O+", 4864),
-  withModifiers(SpacingTable, "Control + AltGr + Shift +", "C+AGr+S+", 3328),
-  withModifiers(SpacingTable, "Control + AltGr + Os +", "C+AGr+O+", 5376),
-  withModifiers(SpacingTable, "Control + Shift + Os +", "C+S+O+", 6400),
-  withModifiers(SpacingTable, "Alt + AltGr + Shift +", "A+AGr+S+", 3584),
-  withModifiers(SpacingTable, "Alt + AltGr + Os +", "A+AGr+O+", 5632),
-  withModifiers(SpacingTable, "Alt + Shift + Os +", "A+S+O+", 6656),
-  withModifiers(SpacingTable, "AltGr + Shift + Os +", "AGr+S+O+", 7168),
+  withModifiers(SpacingTable, "Control + Alt + AltGr +", "", 1792),
+  withModifiers(SpacingTable, "Meh +", "", 2816),
+  withModifiers(SpacingTable, "Control + Alt + Os +", "", 4864),
+  withModifiers(SpacingTable, "Control + AltGr + Shift +", "", 3328),
+  withModifiers(SpacingTable, "Control + AltGr + Os +", "", 5376),
+  withModifiers(SpacingTable, "Control + Shift + Os +", "", 6400),
+  withModifiers(SpacingTable, "Alt + AltGr + Shift +", "", 3584),
+  withModifiers(SpacingTable, "Alt + AltGr + Os +", "", 5632),
+  withModifiers(SpacingTable, "Alt + Shift + Os +", "", 6656),
+  withModifiers(SpacingTable, "AltGr + Shift + Os +", "", 7168),
 
   // Quad
-  withModifiers(SpacingTable, "Meh + AltGr +", "M+AGr+", 3840),
-  withModifiers(SpacingTable, "Control + Alt + AltGr + Os +", "C+A+AGr+O+", 5888),
-  withModifiers(SpacingTable, "Hyper +", "Hyper+", 6912),
-  withModifiers(SpacingTable, "Control + AltGr + Shift + Os +", "C+AGr+S+O+", 7424),
-  withModifiers(SpacingTable, "Alt + AltGr + Shift + Os +", "A+AGr+S+O+", 7680),
+  withModifiers(SpacingTable, "Meh + AltGr +", "", 3840),
+  withModifiers(SpacingTable, "Control + Alt + AltGr + Os +", "", 5888),
+  withModifiers(SpacingTable, "Hyper +", "", 6912),
+  withModifiers(SpacingTable, "Control + AltGr + Shift + Os +", "", 7424),
+  withModifiers(SpacingTable, "Alt + AltGr + Shift + Os +", "", 7680),
 
   // All
-  withModifiers(SpacingTable, "Hyper + AltGr +", "H+AGr+", 7936),
+  withModifiers(SpacingTable, "Hyper + AltGr +", "", 7936),
 ];
 
 export default SpacingTable;

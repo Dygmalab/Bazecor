@@ -19,4 +19,9 @@ export interface CHANGEFW {
   readonly selected: number;
 }
 
-export type Events = AutoInit | NEXT | RETRY | CHANGEFW;
+export interface CUSTOMFW {
+  readonly type: "customFW-event";
+  readonly selected: string;
+}
+
+export type Events = AutoInit | NEXT | RETRY | CHANGEFW | CUSTOMFW;

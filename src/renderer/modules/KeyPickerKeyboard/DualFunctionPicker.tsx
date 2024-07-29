@@ -5,6 +5,7 @@ import Heading from "@Renderer/components/atoms/Heading";
 import { i18n } from "@Renderer/i18n";
 import { Button } from "@Renderer/components/atoms/Button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectFixedValue } from "@Renderer/components/atoms/Select";
+import OSKey from "@Renderer/components/molecules/KeyTags/OSKey";
 
 interface DualFunctionPickerProps {
   keyCode: { base: number; modified: number };
@@ -13,16 +14,22 @@ interface DualFunctionPickerProps {
   isStandardView: boolean;
 }
 
+interface ModKey {
+  name: string;
+  nameStd?: "control" | "shift" | "alt" | "os" | "altGr";
+  keynum: number;
+}
+
 const DualFunctionPicker = (props: DualFunctionPickerProps) => {
   const { keyCode, onKeySelect, activeTab, isStandardView } = props;
-  const modKey = useMemo(
+  const modKey: ModKey[] = useMemo(
     () => [
       { name: "None ", keynum: 0 },
-      { name: "Dual Control ", nameStd: "Ctrl", keynum: 49169 },
-      { name: "Dual Shift   ", nameStd: "Shift", keynum: 49425 },
-      { name: "Dual Alt     ", nameStd: "Alt", keynum: 49681 },
-      { name: "Dual OS  ", nameStd: "OS", keynum: 49937 },
-      { name: "Dual Alt Gr  ", nameStd: "Alt Gr.", keynum: 50705 },
+      { name: "Dual Shift   ", nameStd: "shift", keynum: 49425 },
+      { name: "Dual Control ", nameStd: "control", keynum: 49169 },
+      { name: "Dual OS  ", nameStd: "os", keynum: 49937 },
+      { name: "Dual Alt     ", nameStd: "alt", keynum: 49681 },
+      { name: "Dual Alt Gr  ", nameStd: "altGr", keynum: 50705 },
     ],
     [],
   );
@@ -105,7 +112,7 @@ const DualFunctionPicker = (props: DualFunctionPickerProps) => {
             size="sm"
             className={`w-full pr-[4px] ${
               keyCode.modified > 0 && modKey.map(i => i.keynum).includes(keyCode.modified)
-                ? "!bg-configButtonActive dark:!bg-configButtonDarkActive bg-purple-200 dark:!bg-purple-300 !border-purple-200 dark:border-none text-white !shadow-buttonConfigLightActive !text-white [&_svg]:!text-white relative after:absolute after:top-[-4px] after:right-[-2px] after:w-[8px] after:h-[8px] after:rounded-full after:bg-primary/100"
+                ? "!bg-configButtonActive dark:!bg-configButtonDarkActive bg-purple-200 dark:!bg-purple-300 !border-purple-200 dark:border-none !shadow-buttonConfigLightActive !text-white [&_svg]:!text-white relative after:absolute after:top-[-4px] after:right-[-2px] after:w-[8px] after:h-[8px] after:rounded-full after:bg-primary/100"
                 : ""
             } ${disabled || activeTab === "super" ? "!pointer-events-none !opacity-50" : ""}`}
           >
@@ -120,7 +127,17 @@ const DualFunctionPicker = (props: DualFunctionPickerProps) => {
                 key={`itemDualFunctionModifierSelect-${index}`}
                 className={`${keyCode.modified > 0 && item.keynum === keyCode.modified ? "!bg-purple-200 !dark:bg-purple-300 !text-gray-25 [&>svg]:!text-gray-25" : ""}`}
               >
-                {item.name}
+                {index > 0 ? (
+                  <div className="flex whitespace-nowrap gap-0.5 items-center">
+                    Dual{" "}
+                    <OSKey
+                      renderKey={item.nameStd ? item.nameStd : "shift"}
+                      size={item.nameStd === "control" || item.nameStd === "altGr" ? "sm" : "md"}
+                    />
+                  </div>
+                ) : (
+                  item.name
+                )}
               </SelectItem>
             ))}
           </SelectContent>
@@ -168,7 +185,10 @@ const DualFunctionPicker = (props: DualFunctionPickerProps) => {
               disabled={disabled || activeTab === "super"}
               className={`w-[60px] ${index === 0 ? "hidden" : ""}`}
             >
-              {item.nameStd ? item.nameStd : item.keynum}
+              <OSKey
+                renderKey={item.nameStd ? item.nameStd : "shift"}
+                size={item.nameStd === "control" || item.nameStd === "altGr" ? "sm" : "md"}
+              />
             </Button>
           ))}
         </div>

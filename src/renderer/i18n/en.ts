@@ -41,6 +41,8 @@ const English = {
     preferencesSavedBody: "",
     changesSaved: "Changes saved successfully",
     changesSavedContent: "Your changes were saved successfully on the device!",
+    btLeftSideColorsChanged: "Oh, the changes on your LEDs didn't show up!",
+    btLeftSideColorsChangedContent: "Don't worry! Please turn off and on the left side of your keyboard to see the LED changes",
     backupStoragePeriod: "Updated the storage period!!",
     backupStoragePeriodText: "The storage period was changed to",
     backupPath: "Backup path updated",
@@ -196,7 +198,7 @@ const English = {
       recordDelays: "Record delays",
       recordMacro: "Record macro",
       recordingMacro: "Recording macro...",
-      recordingDiscard: "Discard record",
+      recordingDiscard: "Discard recording",
       recordingMessage:
         "Did you make a mistake? Don't worry, you can edit the created sequence after adding the recording to the timeline.",
       restore: "Restore All",
