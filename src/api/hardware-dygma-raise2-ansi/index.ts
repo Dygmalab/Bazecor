@@ -31,7 +31,7 @@ const Raise2ANSI: DygmaDeviceType = {
     vendor: "Dygma",
     product: "Raise2",
     keyboardType: "ANSI",
-    displayName: "Dygma Raise2 ANSI",
+    displayName: "Dygma Raise 2 ANSI",
     urls: [
       {
         name: "Homepage",
