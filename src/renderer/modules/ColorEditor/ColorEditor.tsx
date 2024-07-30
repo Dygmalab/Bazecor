@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, CSSProperties } from "react";
 import { ColorResult, SketchPicker } from "react-color";
 import Styled from "styled-components";
 
@@ -93,8 +93,6 @@ const ColorEditor = ({
   onColorButtonSelect,
 }: ColorEditorProps) => {
   const [displayColorPicker, setDisplayColorPicker] = useState(false);
-  const [openColorKeysPopover, setOpenColorKeysPopover] = useState(false);
-  const [openColorUnderglowPopover, setOpenColorUnderglowPopover] = useState(false);
 
   const handleChange = useCallback(
     (color: ColorResult) => {
