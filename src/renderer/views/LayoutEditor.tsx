@@ -54,10 +54,10 @@ import { i18n } from "@Renderer/i18n";
 import Store from "@Renderer/utils/Store";
 import getLanguage from "@Renderer/utils/language";
 import { ClearLayerDialog } from "@Renderer/components/molecules/CustomModal/ClearLayerDialog";
+import BlankTable from "../../api/keymap/db/blanks";
 import Keymap, { KeymapDB } from "../../api/keymap";
 import { rgb2w, rgbw2b } from "../../api/color";
 import Backup from "../../api/backup";
-import { TRANS_KEY_CODE } from "../../api/keymap/types";
 
 const store = Store.getStore();
 
@@ -1236,13 +1236,96 @@ const LayoutEditor = (props: LayoutEditorProps) => {
     });
   };
 
-  const clearLayer = (fillKeyCode = TRANS_KEY_CODE, colorIndex = 15, chooseYourKeyboardSide = "BOTH") => {
+  const applyColorMapChangeBL = (side: string, colorIndex: number) => {
+    const { currentDevice } = state;
+    const idx = keymap.onlyCustom ? currentLayer : currentLayer - keymap.default.length;
+    const layerMap = { keys: currentDevice.device.keyboard, underglow: currentDevice.device.keyboardUnderglow };
+    const newColormap = colorMap.slice();
+
+    log.info(newColormap[idx]);
+    if (newColormap.length > 0) {
+      if (side === "LEFT") {
+        newColormap[idx].fill(
+          colorIndex,
+          layerMap.keys.ledsLeft[0],
+          layerMap.keys.ledsLeft[layerMap.keys.ledsLeft.length - 1] + 1,
+        );
+      }
+
+      if (side === "RIGHT") {
+        newColormap[idx].fill(
+          colorIndex,
+          layerMap.keys.ledsRight[0],
+          layerMap.keys.ledsRight[layerMap.keys.ledsRight.length - 1] + 1,
+        );
+      }
+
+      if (side === "BOTH") {
+        newColormap[idx].fill(
+          colorIndex,
+          layerMap.keys.ledsLeft[0],
+          layerMap.keys.ledsLeft[layerMap.keys.ledsLeft.length - 1] + 1,
+        );
+        newColormap[idx].fill(
+          colorIndex,
+          layerMap.keys.ledsRight[0],
+          layerMap.keys.ledsRight[layerMap.keys.ledsRight.length - 1] + 1,
+        );
+      }
+      log.info(newColormap[idx]);
+    }
+    setColorMap(newColormap);
+  };
+
+  const applyColorMapChangeUG = (side: string, colorIndex: number) => {
+    const { currentDevice } = state;
+    const idx = keymap.onlyCustom ? currentLayer : currentLayer - keymap.default.length;
+    const layerMap = { keys: currentDevice.device.keyboard, underglow: currentDevice.device.keyboardUnderglow };
+    const newColormap = colorMap.slice();
+
+    log.info(newColormap[idx]);
+    if (newColormap.length > 0) {
+      if (side === "LEFT") {
+        newColormap[idx].fill(
+          colorIndex,
+          layerMap.underglow.ledsLeft[0],
+          layerMap.underglow.ledsLeft[layerMap.underglow.ledsLeft.length - 1] + 1,
+        );
+      }
+
+      if (side === "RIGHT") {
+        newColormap[idx].fill(
+          colorIndex,
+          layerMap.underglow.ledsRight[0],
+          layerMap.underglow.ledsRight[layerMap.underglow.ledsRight.length - 1] + 1,
+        );
+      }
+
+      if (side === "BOTH") {
+        newColormap[idx].fill(
+          colorIndex,
+          layerMap.underglow.ledsLeft[0],
+          layerMap.underglow.ledsLeft[layerMap.underglow.ledsLeft.length - 1] + 1,
+        );
+        newColormap[idx].fill(
+          colorIndex,
+          layerMap.underglow.ledsRight[0],
+          layerMap.underglow.ledsRight[layerMap.underglow.ledsRight.length - 1] + 1,
+        );
+      }
+      log.info(newColormap[idx]);
+    }
+    setColorMap(newColormap);
+  };
+
+  const clearLayer = (fillKeyCode = BlankTable.keys[1].code, colorIndex = 15, chooseYourKeyboardSide = "BOTH") => {
     const { currentDevice } = state;
     const layerMap = { keys: currentDevice.device.keyboard, underglow: currentDevice.device.keyboardUnderglow };
     const newKeymap = keymap.custom.slice();
     const idx = keymap.onlyCustom ? currentLayer : currentLayer - keymap.default.length;
     const keyCodeFiller = keymapDB.parse(fillKeyCode);
     const cloneLayer = [...newKeymap[idx]];
+
     log.info(cloneLayer);
     if (chooseYourKeyboardSide === "LEFT") {
       layerMap.keys.left.forEach(value => {
@@ -1261,46 +1344,12 @@ const LayoutEditor = (props: LayoutEditorProps) => {
       cloneLayer.fill(keyCodeFiller);
     }
     log.info("new clone layer", cloneLayer);
-
     newKeymap[idx] = cloneLayer;
 
     startContext();
     if (colorIndex >= 0) {
-      const newColormap = colorMap.slice();
-      log.info(newColormap[idx]);
-      if (newColormap.length > 0) {
-        if (chooseYourKeyboardSide === "LEFT") {
-          newColormap[idx].fill(
-            colorIndex,
-            layerMap.keys.ledsLeft[0],
-            layerMap.keys.ledsLeft[layerMap.keys.ledsLeft.length - 1] + 1,
-          );
-          newColormap[idx].fill(
-            colorIndex,
-            layerMap.underglow.ledsLeft[0],
-            layerMap.underglow.ledsLeft[layerMap.underglow.ledsLeft.length - 1] + 1,
-          );
-        }
-
-        if (chooseYourKeyboardSide === "RIGHT") {
-          newColormap[idx].fill(
-            colorIndex,
-            layerMap.keys.ledsRight[0],
-            layerMap.keys.ledsRight[layerMap.keys.ledsRight.length - 1] + 1,
-          );
-          newColormap[idx].fill(
-            colorIndex,
-            layerMap.underglow.ledsRight[0],
-            layerMap.underglow.ledsRight[layerMap.underglow.ledsRight.length - 1] + 1,
-          );
-        }
-
-        if (chooseYourKeyboardSide === "BOTH") {
-          newColormap[idx] = Array(newColormap[0].length).fill(colorIndex);
-        }
-        log.info(newColormap[idx]);
-      }
-      setColorMap(newColormap);
+      applyColorMapChangeBL(chooseYourKeyboardSide, colorIndex);
+      applyColorMapChangeUG(chooseYourKeyboardSide, colorIndex);
     }
     setClearConfirmationOpen(false);
     setModified(true);
@@ -1947,6 +1996,8 @@ const LayoutEditor = (props: LayoutEditorProps) => {
               isColorButtonSelected={isColorButtonSelected}
               onColorButtonSelect={onColorButtonSelect}
               toChangeAllKeysColor={toChangeAllKeysColor}
+              applyColorMapChangeBL={applyColorMapChangeBL}
+              applyColorMapChangeUG={applyColorMapChangeUG}
               deviceName={deviceName}
             />
           }

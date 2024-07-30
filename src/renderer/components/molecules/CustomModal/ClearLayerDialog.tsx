@@ -4,9 +4,10 @@ import { Button } from "@Renderer/components/atoms/Button";
 import { ColorPalette } from "@Renderer/modules/ColorEditor/ColorPalette";
 import { PaletteType } from "@Types/layout";
 import { i18n } from "@Renderer/i18n";
-import ToggleGroup from "@Renderer/components/molecules/CustomToggleGroup/ToggleGroup";
+import { SelectKeyboardSide } from "@Renderer/components/molecules/CustomSelect/SelectKeyboardSide";
+import { SelectResetKeyType } from "@Renderer/components/molecules/CustomSelect/SelectResetKeyType";
 import Heading from "@Renderer/components/atoms/Heading";
-import { NOKEY_KEY_CODE, TRANS_KEY_CODE } from "../../../../api/keymap/types";
+import BlankTable from "../../../../api/keymap/db/blanks";
 
 export interface OnConfirmProps {
   keyCode: number;
@@ -64,35 +65,11 @@ export const ClearLayerDialog = (props: ClearLayerDialogProps): JSX.Element => {
             onColorSelect={idx => setIndexOfSelectedColor(idx)}
             className="ml-3 mt-2 mb-3"
           />
-          <div className="grid items-center w-full justify-between py-2">
-            <div className="mb-4">
-              {createLabel(i18n.editor.modal.clearLayer.chooseYourKeyboardSide, "chooseYourKeyboardSide")}
-            </div>
-            <ToggleGroup
-              triggerFunction={chooseYourKeyboardSideUpdate}
-              value={chooseYourKeyboardSide}
-              listElements={[
-                { value: "BOTH", name: "Full Keyboard", icon: "", index: 0 },
-                { value: "LEFT", name: "Left Side", icon: "", index: 1 },
-                { value: "RIGHT", name: "Right Side", icon: "", index: 2 },
-              ]}
-              variant="flex"
-              size="sm"
-            />
-          </div>
-          <div className="grid items-center w-full justify-between py-2">
-            <div className="mb-4">{createLabel(i18n.editor.modal.clearLayer.useNoKey, "useNoKeyInstead")}</div>
-            <ToggleGroup
-              triggerFunction={useNoKeyUpdate}
-              value={useNoKey}
-              listElements={[
-                { value: false, name: "Transparent", icon: "", index: 0 },
-                { value: true, name: "No Key", icon: "", index: 1 },
-              ]}
-              variant="flex"
-              size="sm"
-            />
-          </div>
+          <SelectKeyboardSide
+            chooseYourKeyboardSide={chooseYourKeyboardSide}
+            chooseYourKeyboardSideUpdate={chooseYourKeyboardSideUpdate}
+          />
+          <SelectResetKeyType useNoKey={useNoKey} useNoKeyUpdate={useNoKeyUpdate} />
         </div>
         <DialogFooter>
           <Button variant="outline" size="md" onClick={onCancel}>
@@ -103,7 +80,7 @@ export const ClearLayerDialog = (props: ClearLayerDialogProps): JSX.Element => {
             size="md"
             onClick={() =>
               onConfirm({
-                keyCode: useNoKey ? NOKEY_KEY_CODE : TRANS_KEY_CODE,
+                keyCode: useNoKey ? BlankTable.keys[0].code : BlankTable.keys[1].code,
                 colorIndex: indexOfSelectedColor < colors.length ? indexOfSelectedColor : -1,
                 chooseYourKeyboardSide,
               })
