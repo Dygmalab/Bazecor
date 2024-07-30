@@ -1244,8 +1244,9 @@ const LayoutEditor = (props: LayoutEditorProps) => {
     });
   };
 
-  const applyColorMapChange = (idx: number, side: string, colorIndex: number) => {
+  const applyColorMapChangeBL = (side: string, colorIndex: number) => {
     const { currentDevice } = state;
+    const idx = keymap.onlyCustom ? currentLayer : currentLayer - keymap.default.length;
     const layerMap = { keys: currentDevice.device.keyboard, underglow: currentDevice.device.keyboardUnderglow };
     const newColormap = colorMap.slice();
 
@@ -1257,6 +1258,42 @@ const LayoutEditor = (props: LayoutEditorProps) => {
           layerMap.keys.ledsLeft[0],
           layerMap.keys.ledsLeft[layerMap.keys.ledsLeft.length - 1] + 1,
         );
+      }
+
+      if (side === "RIGHT") {
+        newColormap[idx].fill(
+          colorIndex,
+          layerMap.keys.ledsRight[0],
+          layerMap.keys.ledsRight[layerMap.keys.ledsRight.length - 1] + 1,
+        );
+      }
+
+      if (side === "BOTH") {
+        newColormap[idx].fill(
+          colorIndex,
+          layerMap.keys.ledsLeft[0],
+          layerMap.keys.ledsLeft[layerMap.keys.ledsLeft.length - 1] + 1,
+        );
+        newColormap[idx].fill(
+          colorIndex,
+          layerMap.keys.ledsRight[0],
+          layerMap.keys.ledsRight[layerMap.keys.ledsRight.length - 1] + 1,
+        );
+      }
+      log.info(newColormap[idx]);
+    }
+    setColorMap(newColormap);
+  };
+
+  const applyColorMapChangeUG = (side: string, colorIndex: number) => {
+    const { currentDevice } = state;
+    const idx = keymap.onlyCustom ? currentLayer : currentLayer - keymap.default.length;
+    const layerMap = { keys: currentDevice.device.keyboard, underglow: currentDevice.device.keyboardUnderglow };
+    const newColormap = colorMap.slice();
+
+    log.info(newColormap[idx]);
+    if (newColormap.length > 0) {
+      if (side === "LEFT") {
         newColormap[idx].fill(
           colorIndex,
           layerMap.underglow.ledsLeft[0],
@@ -1267,18 +1304,22 @@ const LayoutEditor = (props: LayoutEditorProps) => {
       if (side === "RIGHT") {
         newColormap[idx].fill(
           colorIndex,
-          layerMap.keys.ledsRight[0],
-          layerMap.keys.ledsRight[layerMap.keys.ledsRight.length - 1] + 1,
-        );
-        newColormap[idx].fill(
-          colorIndex,
           layerMap.underglow.ledsRight[0],
           layerMap.underglow.ledsRight[layerMap.underglow.ledsRight.length - 1] + 1,
         );
       }
 
       if (side === "BOTH") {
-        newColormap[idx] = Array(newColormap[0].length).fill(colorIndex);
+        newColormap[idx].fill(
+          colorIndex,
+          layerMap.underglow.ledsLeft[0],
+          layerMap.underglow.ledsLeft[layerMap.underglow.ledsLeft.length - 1] + 1,
+        );
+        newColormap[idx].fill(
+          colorIndex,
+          layerMap.underglow.ledsRight[0],
+          layerMap.underglow.ledsRight[layerMap.underglow.ledsRight.length - 1] + 1,
+        );
       }
       log.info(newColormap[idx]);
     }
@@ -1315,7 +1356,8 @@ const LayoutEditor = (props: LayoutEditorProps) => {
 
     startContext();
     if (colorIndex >= 0) {
-      applyColorMapChange(idx, chooseYourKeyboardSide, colorIndex);
+      applyColorMapChangeBL(chooseYourKeyboardSide, colorIndex);
+      applyColorMapChangeUG(chooseYourKeyboardSide, colorIndex);
     }
     setClearConfirmationOpen(false);
     setModified(true);
@@ -1973,7 +2015,8 @@ const LayoutEditor = (props: LayoutEditorProps) => {
               isColorButtonSelected={isColorButtonSelected}
               onColorButtonSelect={onColorButtonSelect}
               toChangeAllKeysColor={toChangeAllKeysColor}
-              applyColorMapChange={applyColorMapChange}
+              applyColorMapChangeBL={applyColorMapChangeBL}
+              applyColorMapChangeUG={applyColorMapChangeUG}
               deviceName={deviceName}
             />
           }

@@ -18,7 +18,6 @@
 import React, { Component, CSSProperties } from "react";
 import { ColorResult, SketchPicker } from "react-color";
 import Styled from "styled-components";
-import log from "electron-log/renderer";
 
 // Bootstrap components
 import Heading from "@Renderer/components/atoms/Heading";
@@ -133,7 +132,7 @@ class ColorEditor extends Component<ColorEditorProps, { displayColorPicker: bool
   }
 
   render() {
-    const { colors, selected, toChangeAllKeysColor, deviceName } = this.props;
+    const { colors, selected, toChangeAllKeysColor, deviceName, applyColorMapChangeBL, applyColorMapChangeUG } = this.props;
     const { displayColorPicker } = this.state;
     const popover = {
       position: "absolute",
@@ -194,8 +193,12 @@ class ColorEditor extends Component<ColorEditorProps, { displayColorPicker: bool
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent>
-                    <DropdownMenuItem onClick={() => log.info("Left")}>Left</DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => log.info("Right")}>Right</DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => (selected >= 0 ? applyColorMapChangeBL("LEFT", selected) : "")}>
+                      Left
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => (selected >= 0 ? applyColorMapChangeBL("RIGHT", selected) : "")}>
+                      Right
+                    </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
               </div>
@@ -208,6 +211,7 @@ class ColorEditor extends Component<ColorEditorProps, { displayColorPicker: bool
                   text={i18n.editor.color.underglow}
                   icoSVG={<IconKeysUnderglow />}
                   color={colors[selected]}
+                  disabled={!colors[selected]}
                 />
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
@@ -216,8 +220,12 @@ class ColorEditor extends Component<ColorEditorProps, { displayColorPicker: bool
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent>
-                    <DropdownMenuItem>Left</DropdownMenuItem>
-                    <DropdownMenuItem>Right</DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => (selected >= 0 ? applyColorMapChangeUG("LEFT", selected) : "")}>
+                      Left
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => (selected >= 0 ? applyColorMapChangeUG("RIGHT", selected) : "")}>
+                      Right
+                    </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
               </div>

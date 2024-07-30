@@ -31,7 +31,8 @@ export interface ColorEditorProps {
   clearLayer?: (fillKeyCode?: number, chooseYourKeyboardSide?: string) => void;
   changeUnderglowColor?: (colorIndex?: number, chooseYourKeyboardSide?: string) => void;
   changeKeyColor?: (colorIndex?: number, chooseYourKeyboardSide?: string) => void;
-  applyColorMapChange?: (mapIndex: number, chooseYourKeyboardSide: string, colorIndex: number) => void;
+  applyColorMapChangeBL?: (chooseYourKeyboardSide: string, colorIndex: number) => void;
+  applyColorMapChangeUG?: (chooseYourKeyboardSide: string, colorIndex: number) => void;
 }
 
 export interface ColorPickerProps {
