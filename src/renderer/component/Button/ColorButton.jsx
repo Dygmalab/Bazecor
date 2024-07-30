@@ -66,7 +66,7 @@ const Style = Styled.div`
 }
 `;
 
-function ColorButton({ selected, onClick, label, text, icoSVG, color, disabled = true }) {
+function ColorButton({ selected, onClick, label, text, icoSVG, color, hasDropdown = false, disabled = true }) {
   const colorToastMessage = () => {
     toast.warn(
       <ToastMessage
@@ -82,7 +82,7 @@ function ColorButton({ selected, onClick, label, text, icoSVG, color, disabled =
     <Style>
       <div
         onClick={disabled ? colorToastMessage : onClick}
-        className={`${selected ? "active" : ""} button button-config buttonColor`}
+        className={`${selected ? "active" : ""} button button-config buttonColor ${hasDropdown ? "!rounded-tr-none !rounded-br-none border-r border-r-gray-100 dark:border-r-gray-500" : ""}`}
         disabled={disabled}
       >
         <div className="buttonIcon">
