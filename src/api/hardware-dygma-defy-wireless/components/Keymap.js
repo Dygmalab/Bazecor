@@ -377,7 +377,7 @@ class KeymapDEFY extends React.Component {
       >
         <Neuron
           selectedLED={this.props.selectedLED}
-          visibility={!!(this.props.showUnderglow || this.props.isStandardView)}
+          visibility={false}
           clickAble={!(this.props.isStandardView && !this.props.showUnderglow)}
           color="#b4b4b4"
           id="neuron_led"
