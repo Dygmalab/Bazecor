@@ -7,7 +7,7 @@ const Raise2ISO: VirtualType = {
       vendor: "Dygma",
       product: "Raise2",
       keyboardType: "ISO",
-      displayName: "Dygma Raise2 ISO",
+      displayName: "Dygma Raise 2 ISO",
       urls: [
         {
           name: "Homepage",
