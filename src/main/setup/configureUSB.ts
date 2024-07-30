@@ -26,6 +26,8 @@ const webusb = new WebUSB({
   allowAllDevices: true,
 });
 
+log.info(webusb.getDevices());
+
 export const onUSBDisconnect = async (event: USBConnectionEvent) => {
   const { device } = event;
   if (device) {

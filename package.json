@@ -181,7 +181,7 @@
     "tailwindcss-animate": "^1.0.7",
     "uiohook-napi": "^1.5.4",
     "update-electron-app": "^3.0.0",
-    "usb": "^2.9.0",
+    "usb": "^2.13.0",
     "xstate": "^5.13.0",
     "zod": "^3.23.8"
   },
