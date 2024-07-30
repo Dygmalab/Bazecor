@@ -10,7 +10,7 @@ import { IconEditModeStandardView, IconEditModeSingleView, IconInformation } fro
 interface ToggleGroupLayoutViewModeProps {
   value: string;
   onValueChange: () => void;
-  viewMode?: "keyboard" | "color";
+  viewMode?: "keyboard" | "color" | "superkeys";
 }
 
 const ToggleGroupLayoutViewMode = ({ value, onValueChange, viewMode }: ToggleGroupLayoutViewModeProps) => (
