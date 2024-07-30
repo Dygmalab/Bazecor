@@ -36,7 +36,7 @@ const English = {
     USBdeviceConnected: "Dygma Device detected through USB!!",
     USBdeviceConnectedText: "A device with Dygma's ID's was recently connected to your computer",
     languageSaved: "Key picker language has been changed to ",
-    pairedSuccesfully: "Your device has ben succesfully re-paired",
+    pairedSuccesfully: "Your device has been succesfully re-paired",
     preferencesSaved: "Your preferences have been saved.",
     preferencesSavedBody: "",
     changesSaved: "Changes saved successfully",
