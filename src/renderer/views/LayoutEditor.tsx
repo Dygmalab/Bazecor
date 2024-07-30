@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React, { MouseEvent, useCallback, useEffect, useLayoutEffect, useMemo, useState, useRef } from "react";
+import React, { MouseEvent, useCallback, useEffect, useLayoutEffect, useMemo, useState } from "react";
 import Styled from "styled-components";
 import { toast } from "react-toastify";
 import { ipcRenderer } from "electron";
@@ -64,7 +64,7 @@ const store = Store.getStore();
 const Styles = Styled.div`
 &.layoutEditor {
   // min-height: 100vh;
-  height: 100%;
+  // height: 100%;
 }
 .keyboard-editor {
   // min-height: 100vh;
@@ -108,15 +108,11 @@ const Styles = Styled.div`
     margin-left: 4px;
   }
 }
-.full-height {
-  height: 100%;
-  height: inherit;
-}
 .layer-col {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  height: 100%;
+  // height: 100%;
 }
 
 .LayerHolder {
@@ -136,7 +132,8 @@ const Styles = Styled.div`
   overflow: visible;
   margin: 0 auto;
   max-width: 100%;
-  height: auto;
+  // height: auto;
+  flex: 1;
   // max-height: 65vh;
   * {
     -webkit-backface-visibility: hidden;
@@ -157,7 +154,7 @@ const Styles = Styled.div`
 }
 .singleViewMode.keyboard .raiseKeyboard {
   margin: 0 auto;
-  max-height: 49vh;
+  max-height: 40vh;
 }
 
 .NeuronLine {
@@ -479,11 +476,6 @@ const LayoutEditor = (props: LayoutEditorProps) => {
   );
   const [showStandardView, setShowStandardView] = useState(false);
   const [viewMode, setViewMode] = useState(store.get("settings.isStandardView") !== undefined ? "standard" : "single");
-  const [layoutSelectorPosition, setLayoutSelectorPosition] = useState({
-    x: 0,
-    y: 0,
-  });
-  const keyboardPosition = useRef(null);
   const [isWireless, setIsWireless] = useState(false);
 
   const [selectedPaletteColor, setSelectedPaletteColor] = useState(-1);
@@ -1691,24 +1683,6 @@ const LayoutEditor = (props: LayoutEditorProps) => {
     );
   };
 
-  const refreshLayoutSelectorPosition = useCallback(
-    (x: number, y: number) => {
-      if (modeselect === "color") {
-        setLayoutSelectorPosition({ x: 0, y: 0 });
-      } else {
-        setLayoutSelectorPosition({ x, y });
-      }
-    },
-    [modeselect],
-  );
-
-  const readKeyboardPosition = useCallback(() => {
-    if (keyboardPosition.current) {
-      const elPosition = keyboardPosition.current.getBoundingClientRect();
-      refreshLayoutSelectorPosition(elPosition.left, elPosition.top - 72);
-    }
-  }, [refreshLayoutSelectorPosition]);
-
   const configStandardView = () => {
     try {
       const preferencesStandardView = store.get("settings.isStandardView", true) as boolean;
@@ -1847,18 +1821,6 @@ const LayoutEditor = (props: LayoutEditorProps) => {
     }
   }, [modeselect, viewMode, isStandardView]);
 
-  // useLayoutEffect(() => {
-  // console.log("Triggered useLayoutEffect: ", keyboardPosition.current);
-  //   if (keyboardPosition.current) {
-  //     readKeyboardPosition();
-  //   }
-  //   window.addEventListener("resize", readKeyboardPosition);
-  //   return () => {
-  //     window.removeEventListener("resize", readKeyboardPosition);
-  //   };
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, []);
-
   const { Layer, kbtype } = getLayout();
   if (!Layer) {
     return <div />;
@@ -1927,7 +1889,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
 
   const layer = (
     // TODO: restore fade effect <fade in appear key={currentLayer}>
-    <div className="LayerHolder h-[inherit]">
+    <div className="LayerHolder">
       <Layer
         readOnly={isReadOnly}
         index={currentLayer}
@@ -1950,7 +1912,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
   return (
     <Styles className="layoutEditor">
       <div
-        className={`keyboard-editor px-3 ${modeselect} ${isStandardView ? "standarViewMode" : "singleViewMode"} ${
+        className={`keyboard-editor min-h-screen px-3 ${modeselect} ${isStandardView ? "standarViewMode" : "singleViewMode"} ${
           typeof selectedPaletteColor === "number" ? "colorSelected" : ""
         }`}
       >
@@ -1997,11 +1959,12 @@ const LayoutEditor = (props: LayoutEditorProps) => {
           }}
           inContext={modified}
         />
-        <div className="w-full full-height keyboardsWrapper">
+        <div className="w-full flex-1 keyboardsWrapper">
           <div className="raise-editor layer-col">
-            <div className="dygma-keyboard-editor editor h-full">{layer}</div>
+            <div className="dygma-keyboard-editor editor">{layer}</div>
             {modeselect === "keyboard" && !isStandardView ? (
-              <div className="ordinary-keyboard-editor h-[inherit] m-0 pb-4" ref={keyboardPosition}>
+              <div className="ordinary-keyboard-editor m-0 pb-4">
+                <ToggleGroupLayoutViewMode value={viewMode} onValueChange={onToggleStandardView} viewMode={modeselect} />
                 <KeyPickerKeyboard
                   onKeySelect={onKeyChange}
                   code={code}
@@ -2014,8 +1977,6 @@ const LayoutEditor = (props: LayoutEditorProps) => {
                   actTab="editor"
                   selectedlanguage={currentLanguageLayout}
                   kbtype={kbtype}
-                  layoutSelectorPosition={layoutSelectorPosition}
-                  refreshLayoutSelectorPosition={refreshLayoutSelectorPosition}
                   isWireless={isWireless}
                 />
               </div>
@@ -2024,13 +1985,8 @@ const LayoutEditor = (props: LayoutEditorProps) => {
         </div>
 
         {/* WHY: We want to hide the selector when we cannot use it (e.g. when color editor is active) */}
-        {modeselect === "keyboard" ? (
-          <ToggleGroupLayoutViewMode
-            value={viewMode}
-            onValueChange={onToggleStandardView}
-            layoutSelectorPosition={layoutSelectorPosition}
-            view="layout"
-          />
+        {modeselect === "keyboard" && isStandardView ? (
+          <ToggleGroupLayoutViewMode value={viewMode} onValueChange={onToggleStandardView} />
         ) : null}
 
         <ClearLayerDialog

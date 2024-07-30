@@ -830,7 +830,7 @@ function SuperkeysEditor(props: SuperkeysEditorProps) {
       ) : (
         ""
       )}
-      <ToggleGroupLayoutViewMode value={viewMode} onValueChange={onToggle} view="superkeys" />
+      <ToggleGroupLayoutViewMode value={viewMode} onValueChange={onToggle} viewMode="superkeys" />
 
       {isStandardViewSuperkeys ? (
         <StandardView

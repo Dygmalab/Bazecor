@@ -1793,11 +1793,11 @@ div.card.card-preferences .card-body {
 
 
 /* Layout Editor view responsive - Raise */
-@media screen and (max-height: 900px) {
-  .keyboard.singleViewMode .LayerHolder {
-    max-height: 342px;
-  }
-}
+// @media screen and (max-height: 900px) {
+//   .keyboard.singleViewMode .LayerHolder {
+//     max-height: 342px;
+//   }
+// }
 @media (min-height: 962px) {
   // body .layoutEditor .singleViewMode.keyboard .keyboardsWrapper {
   //   height: calc(100vh - 104px);

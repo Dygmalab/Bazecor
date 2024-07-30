@@ -7,26 +7,15 @@ import Heading from "@Renderer/components/atoms/Heading";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@Renderer/components/atoms/Tooltip";
 import { IconEditModeStandardView, IconEditModeSingleView, IconInformation } from "@Renderer/components/atoms/icons";
 
-interface PositionProps {
-  x: number;
-  y: number;
-}
 interface ToggleGroupLayoutViewModeProps {
   value: string;
   onValueChange: () => void;
-  view: "layout" | "superkeys";
-  layoutSelectorPosition?: PositionProps;
+  viewMode?: "keyboard" | "color" | "superkeys";
 }
 
-const ToggleGroupLayoutViewMode = ({
-  value,
-  onValueChange,
-  layoutSelectorPosition = { x: 0, y: 0 },
-  view,
-}: ToggleGroupLayoutViewModeProps) => (
+const ToggleGroupLayoutViewMode = ({ value, onValueChange, viewMode }: ToggleGroupLayoutViewModeProps) => (
   <div
-    className={`self-start mt-auto mb-6 pt-4 ${value === "single" && view === "layout" ? "absolute" : " "}`}
-    style={{ top: layoutSelectorPosition.y, left: layoutSelectorPosition.x }}
+    className={`self-start mt-auto ${viewMode === "keyboard" && value === "single" ? "-mt-8 -mb-2 pt-1" : "mt-auto mb-6 pt-4"}`}
   >
     <Heading renderAs="h5" headingLevel={5} className="mb-1 gap-2 flex items-center text-[10px] text-gray-300 dark:text-gray-500">
       {i18n.editor.editMode.title}
