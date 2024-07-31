@@ -9,15 +9,15 @@ SUBSYSTEMS=="usb", ATTRS{idVendor}=="1209", ATTRS{idProduct}=="2200", MODE="0660
 # bootloader mode
 SUBSYSTEMS=="usb", ATTRS{idVendor}=="1209", ATTRS{idProduct}=="2201", MODE="0660", TAG+="uaccess"
 
-# Dygma Defy
-SUBSYSTEMS=="usb", ATTRS{idVendor}=="35ef", ATTRS{idProduct}=="0010", MODE="0660", TAG+="uaccess"
+# Dygma USB Keyboards Vendor ID
+SUBSYSTEMS=="usb", ATTRS{idVendor}=="35ef", MODE="0660", TAG+="uaccess"
 # bootloader mode
-SUBSYSTEMS=="usb", ATTRS{idVendor}=="35ef", ATTRS{idProduct}=="0011", MODE="0660", TAG+="uaccess"
+SUBSYSTEMS=="usb", ATTRS{idVendor}=="35ef", MODE="0660", TAG+="uaccess"
 
-# Dygma Defy wireless
-KERNEL=="hidraw*", ATTRS{idVendor}=="35ef", ATTRS{idProduct}=="0010", MODE="0660", TAG+="uaccess"
+# Dygma HID Keyboards Vendor ID
+KERNEL=="hidraw*", ATTRS{idVendor}=="35ef", MODE="0660", TAG+="uaccess"
 # bootloader mode
-KERNEL=="hidraw*", ATTRS{idVendor}=="35ef", ATTRS{idProduct}=="0011", MODE="0660", TAG+="uaccess"
+KERNEL=="hidraw*", ATTRS{idVendor}=="35ef", MODE="0660", TAG+="uaccess"
 `;
 
 const filename = "/etc/udev/rules.d/60-dygma.rules";
