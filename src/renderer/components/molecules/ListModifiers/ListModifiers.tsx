@@ -22,7 +22,7 @@ import LabelModifier from "../../atoms/LabelModifier";
 
 interface ListModifiersProps {
   keyCode: number;
-  size?: "sm" | "md";
+  size?: "xs" | "sm" | "md";
 }
 type Modifier = 0 | 1 | 2 | 3 | 4;
 

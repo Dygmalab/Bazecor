@@ -8,28 +8,33 @@ type OperationSystemKey = "shift" | "control" | "os" | "alt" | "altGr";
 interface OSKeyProps {
   renderKey: OperationSystemKey;
   direction?: "Left" | "Right";
-  size?: "sm" | "md";
+  size?: "xs" | "sm" | "md";
 }
 
 // Define the type for the icons object
 interface OperationSystemIcons {
   shift: {
+    xs: string;
     sm: string;
     md: string;
   };
   control: {
+    xs: string;
     sm: string;
     md: string;
   };
   os: {
+    xs: React.ReactNode;
     sm: React.ReactNode;
     md: React.ReactNode;
   };
   alt: {
+    xs: string;
     sm: string;
     md: string;
   };
   altGr: {
+    xs: string;
     sm: string;
     md: string;
   };
@@ -70,22 +75,27 @@ const OSKey = ({ renderKey, direction, size = "md" }: OSKeyProps) => {
     if (operationSystem === "darwin") {
       return {
         shift: {
+          xs: "s",
           sm: "Shift",
           md: "Shift",
         },
         control: {
+          xs: "c",
           sm: "CTRL ^",
           md: "Control ^",
         },
         os: {
+          xs: <IconCommandMacOs />,
           sm: <IconCommandMacOs />,
           md: <IconCommandMacOs />,
         },
         alt: {
+          xs: "⌥",
           sm: "⌥",
           md: "⌥",
         },
         altGr: {
+          xs: "R.⌥",
           sm: "R. ⌥",
           md: "Right ⌥",
         },
@@ -94,22 +104,27 @@ const OSKey = ({ renderKey, direction, size = "md" }: OSKeyProps) => {
     if (operationSystem === "win32") {
       return {
         shift: {
+          xs: "s",
           sm: "Shift",
           md: "Shift",
         },
         control: {
+          xs: "c",
           sm: "CTRL",
           md: "Control",
         },
         os: {
+          xs: <AiFillWindows />,
           sm: <AiFillWindows />,
           md: <AiFillWindows />,
         },
         alt: {
+          xs: "a",
           sm: "Alt",
           md: "Alt",
         },
         altGr: {
+          xs: "aGr",
           sm: "Alt Gr.",
           md: "Alt Gr.",
         },
@@ -117,22 +132,27 @@ const OSKey = ({ renderKey, direction, size = "md" }: OSKeyProps) => {
     }
     return {
       shift: {
+        xs: "s",
         sm: "Shift",
         md: "Shift",
       },
       control: {
+        xs: "c",
         sm: "CTRL",
         md: "Control",
       },
       os: {
+        xs: <FaLinux />,
         sm: <FaLinux />,
         md: <FaLinux />,
       },
       alt: {
+        xs: "a",
         sm: "Alt",
         md: "Alt",
       },
       altGr: {
+        xs: "aGr",
         sm: "Alt Gr.",
         md: "Alt Gr.",
       },
