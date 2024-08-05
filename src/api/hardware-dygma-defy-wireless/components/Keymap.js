@@ -1009,6 +1009,7 @@ class KeymapDEFY extends React.Component {
             contrastText={getContrastText(getColor(2, 1))}
             centerPrimary={getCenterPrimary(2, 1, 0, 0, true)}
             centerExtra={getCenterExtra(2, 1, 0, 0, true)}
+            keyCode={getLabel(2, 1).keyCode}
           />
           <Key
             keyType="regularKey"
