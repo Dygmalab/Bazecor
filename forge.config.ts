@@ -57,9 +57,8 @@ const config: ForgeConfig = {
     },
     new MakerAppImage({
       options: {
+        name: "Bazecor",
         bin: "Bazecor",
-        // Human-friendly name of the application.
-        productName: "Dygma device configurator",
         genericName: "Bazecor",
         categories: ["Utility"],
         icon: "./build/logo.png",
