@@ -157,6 +157,7 @@ function LEDSettings(props: LEDSettingsPreferences) {
                         onValueChange={setBrightnessWireless}
                         className="slider-danger"
                         variant="alert"
+                        dataPlacement="bottom"
                       />
                     </div>
                   </div>
@@ -196,6 +197,7 @@ function LEDSettings(props: LEDSettingsPreferences) {
                         onValueChange={setBrightnessUGWireless}
                         className="slider-danger"
                         variant="alert"
+                        dataPlacement="bottom"
                       />
                     </div>
                   </div>
@@ -246,6 +248,7 @@ function LEDSettings(props: LEDSettingsPreferences) {
                           onValueChange={selectIdleLEDTimeWireless}
                           className="slider-danger"
                           variant="alert"
+                          dataPlacement="bottom"
                         />
                       </div>
                     </div>
