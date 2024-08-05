@@ -1,6 +1,7 @@
 import type { ForgeConfig, ForgePackagerOptions } from "@electron-forge/shared-types";
 import { MakerSquirrel } from "@electron-forge/maker-squirrel";
 import { MakerZIP } from "@electron-forge/maker-zip";
+import { MakerAppImage } from "@reforged/maker-appimage";
 import { WebpackPlugin } from "@electron-forge/plugin-webpack";
 import fs from "fs";
 import path from "path";
@@ -54,16 +55,16 @@ const config: ForgeConfig = {
         icon: "./build/logo.icns",
       },
     },
-    {
-      name: "@reforged/maker-appimage",
-      config: {
-        options: {
-          bin: "Bazecor",
-          categories: ["Utility"],
-          icon: "./build/logo.png",
-        },
+    new MakerAppImage({
+      options: {
+        bin: "Bazecor",
+        // Human-friendly name of the application.
+        productName: "Dygma device configurator",
+        genericName: "Bazecor",
+        categories: ["Utility"],
+        icon: "/build/logo.png",
       },
-    },
+    }),
   ],
   plugins: [
     new WebpackPlugin({

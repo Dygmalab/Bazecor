@@ -32,7 +32,7 @@ const createWindow = () => {
     minWidth: 650,
     minHeight: 570,
     resizable: true,
-    icon: path.join("../renderer/static", "/logo.png"),
+    icon: path.join("../../build", "/logo.png"),
     show: false,
     backgroundColor: "#2e2c29",
     webPreferences: {
