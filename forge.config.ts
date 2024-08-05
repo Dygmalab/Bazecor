@@ -62,7 +62,7 @@ const config: ForgeConfig = {
         productName: "Dygma device configurator",
         genericName: "Bazecor",
         categories: ["Utility"],
-        icon: "/build/logo.png",
+        icon: "./build/logo.png",
       },
     }),
   ],
