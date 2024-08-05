@@ -1,3 +1,4 @@
+/* eslint-disable no-nested-ternary */
 // -*- mode: js-jsx -*-
 /* Bazecor
  * Copyright (C) 2022  Dygmalab, Inc.
@@ -19,6 +20,8 @@ import React, { useState, useEffect } from "react";
 import Styled from "styled-components";
 import { useMachine } from "@xstate/react";
 import { i18n } from "@Renderer/i18n";
+import Store from "@Renderer/utils/Store";
+import fs from "fs";
 
 // State machine
 import FirmwareSelection from "@Renderer/controller/FirmwareSelection/machine";
@@ -28,7 +31,7 @@ import Heading from "@Renderer/components/atoms/Heading";
 import Callout from "@Renderer/components/molecules/Callout/Callout";
 import { Button } from "@Renderer/components/atoms/Button";
 import LogoLoader from "@Renderer/components/atoms/loader/LogoLoader";
-import { IconBluetooth, IconLoader, IconUSB, IconWarning } from "@Renderer/components/atoms/icons";
+import { IconBluetooth, IconFolder, IconLoader, IconUSB, IconWarning } from "@Renderer/components/atoms/icons";
 
 // Visual modules
 import { FirmwareNeuronStatus, FirmwareVersionStatus } from "@Renderer/modules/Firmware";
@@ -169,12 +172,16 @@ interface FirmwareUpdatePanelProps {
   allowBeta: boolean;
 }
 
+const store = Store.getStore();
+
 function FirmwareUpdatePanel(props: FirmwareUpdatePanelProps) {
   const { nextBlock, retryBlock, errorBlock, allowBeta } = props;
   const { state: deviceState } = useDevice();
   const [loading, setLoading] = useState(true);
   const [state, send] = useMachine(FirmwareSelection, { input: { allowBeta, deviceState } });
 
+  const backupFolder = store.get("settings.backupFolder") as string;
+  const folderIsValid = fs.existsSync(backupFolder);
   let flashButtonText = state.context.stateblock === 4 ? "Processing..." : "";
   if (flashButtonText === "")
     flashButtonText = state.context.isUpdated ? i18n.firmwareUpdate.flashing.buttonUpdated : i18n.firmwareUpdate.flashing.button;
@@ -254,7 +261,23 @@ function FirmwareUpdatePanel(props: FirmwareUpdatePanelProps) {
                   </Button>
                 ) : (
                   <>
-                    {deviceState.currentDevice.type === "serial" ? (
+                    {!folderIsValid ? (
+                      <div className="px-4 py-4">
+                        <div className="px-4 py-4 rounded-md bg-gray-25 dark:bg-gray-700 flex flex-col items-center gap-2 text-sm animate-bounce-error">
+                          <div className="flex w-full items-center px-2 py-0 rounded-xl text-2xxs font-semibold tracking-tight leading-tight bg-orange-200 text-orange-900 [&_svg]:w-4">
+                            <IconFolder /> Backup folder is not valid
+                          </div>
+                          <div className="flex gap-4">
+                            <div className="inline-flex w-10 h-10 aspect-square items-center justify-center text-orange-900/50 bg-orange-200/50 dark:text-orange-200 dark:bg-orange-200/25 rounded-full">
+                              <IconUSB />
+                            </div>
+                            <div className="flex flex-wrap gap-2 text-gray-400 dark:text-gray-25 text-ssm">
+                              Check the current Backup folder configured in preferences.
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    ) : deviceState.currentDevice.type === "serial" ? (
                       <div className="px-4 py-4">
                         <div className="px-4 py-4 rounded-md bg-gray-25 dark:bg-gray-600/50 flex gap-4 items-center animate-bounce-error">
                           <div className="inline-flex w-10 h-10 aspect-square items-center justify-center text-orange-900/50 bg-orange-200/50 dark:text-orange-200 dark:bg-orange-200/25 rounded-full">
