@@ -1,5 +1,6 @@
 import { BrowserWindow, app } from "electron";
 import windowStateKeeper from "electron-window-state";
+import path from "path";
 import { configureNativeTheme } from "./setup/theme";
 import { configureIPCs } from "./setup/configureIPCs";
 import configureRedirect from "./setup/configureRedirect";
@@ -31,7 +32,7 @@ const createWindow = () => {
     minWidth: 650,
     minHeight: 570,
     resizable: true,
-    icon: "../static/logo.png",
+    icon: path.join(__dirname, "/static/logo.png"),
     show: false,
     backgroundColor: "#2e2c29",
     webPreferences: {
