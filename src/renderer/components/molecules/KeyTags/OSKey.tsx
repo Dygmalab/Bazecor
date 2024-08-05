@@ -2,6 +2,7 @@ import React, { useMemo } from "react";
 import { FaLinux } from "react-icons/fa";
 import { AiFillWindows } from "react-icons/ai";
 import { IconCommandMacOs } from "@Renderer/components/atoms/icons";
+import { OperationSystemIcons } from "@Types/layout";
 
 type OperationSystemKey = "shift" | "control" | "os" | "alt" | "altGr";
 
@@ -9,35 +10,6 @@ interface OSKeyProps {
   renderKey: OperationSystemKey;
   direction?: "Left" | "Right";
   size?: "xs" | "sm" | "md";
-}
-
-// Define the type for the icons object
-interface OperationSystemIcons {
-  shift: {
-    xs: string;
-    sm: string;
-    md: string;
-  };
-  control: {
-    xs: string;
-    sm: string;
-    md: string;
-  };
-  os: {
-    xs: React.ReactNode;
-    sm: React.ReactNode;
-    md: React.ReactNode;
-  };
-  alt: {
-    xs: string;
-    sm: string;
-    md: string;
-  };
-  altGr: {
-    xs: string;
-    sm: string;
-    md: string;
-  };
 }
 
 // const GuiLabels: { [key: string]: string } = {
@@ -85,7 +57,7 @@ const OSKey = ({ renderKey, direction, size = "md" }: OSKeyProps) => {
           md: "Control ^",
         },
         os: {
-          xs: <IconCommandMacOs />,
+          xs: "⌘",
           sm: <IconCommandMacOs />,
           md: <IconCommandMacOs />,
         },
@@ -95,7 +67,7 @@ const OSKey = ({ renderKey, direction, size = "md" }: OSKeyProps) => {
           md: "⌥",
         },
         altGr: {
-          xs: "R.⌥",
+          xs: "r.⌥",
           sm: "R. ⌥",
           md: "Right ⌥",
         },
@@ -114,7 +86,7 @@ const OSKey = ({ renderKey, direction, size = "md" }: OSKeyProps) => {
           md: "Control",
         },
         os: {
-          xs: <AiFillWindows />,
+          xs: <AiFillWindows size={10} />,
           sm: <AiFillWindows />,
           md: <AiFillWindows />,
         },
@@ -142,7 +114,7 @@ const OSKey = ({ renderKey, direction, size = "md" }: OSKeyProps) => {
         md: "Control",
       },
       os: {
-        xs: <FaLinux />,
+        xs: <FaLinux size={10} />,
         sm: <FaLinux />,
         md: <FaLinux />,
       },
