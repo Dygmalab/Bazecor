@@ -116,7 +116,7 @@ const Styles = Styled.div`
   flex: 0 0 100%;
   margin: 0 auto;
   min-width: 680px;
-  max-width: 1640px;
+  // max-width: 1640px;
   svg {
     width: 100%;
   }
