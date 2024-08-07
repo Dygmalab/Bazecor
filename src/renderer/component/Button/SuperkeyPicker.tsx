@@ -205,7 +205,7 @@ function SuperkeyPicker(props: SuperkeyPickerProps) {
       setKeyContent(`${aux.extraLabel} ${aux.label}`);
       return;
     }
-    if (React.isValidElement(aux.label)) {
+    if (React.isValidElement(aux.label) || React.isValidElement(aux.extraLabel)) {
       setKeyContent(
         aux.extraLabel !== undefined && aux.extraLabel !== "" ? (
           <>
