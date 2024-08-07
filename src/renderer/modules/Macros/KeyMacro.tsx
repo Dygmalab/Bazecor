@@ -29,7 +29,7 @@ interface Item {
   id: number;
   keyCode: number;
   action: number;
-  symbol: string;
+  symbol: string | JSX.Element;
 }
 
 interface KeyMacroProps {
