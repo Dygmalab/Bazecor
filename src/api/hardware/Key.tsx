@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import ListModifiersKey from "@Renderer/components/molecules/ListModifiers/ListModifiersKey";
 
 interface KeyShapeProps {
@@ -36,6 +36,7 @@ interface KeyShapeProps {
   centerPrimary: boolean;
   centerExtra: boolean;
   selectedKey: any;
+  keyCode: number;
 }
 
 function Key(props: KeyShapeProps) {
@@ -55,50 +56,18 @@ function Key(props: KeyShapeProps) {
     centerPrimary,
     centerExtra,
     selectedKey,
+    keyCode,
   } = props;
   const xShape2 = x + 4;
   const yShape2 = y;
   const widthShape2 = width - 8;
   const heightShape2 = height - 8;
-  const setExtralabel = React.useRef(null);
 
-  const [extraLabelClass, setExtraLabelClass] = React.useState(false);
-  const [color, setColor] = React.useState("rgb(255,255,255)");
-  const [altApplied, setAltApplied] = React.useState(false);
-  const [altGrApplied, setAltGrApplied] = React.useState(false);
-  const [ctrlApplied, setCtrlApplied] = React.useState(false);
-  const [osApplied, setOsApplied] = React.useState(false);
-  const [shiftApplied, setShiftApplied] = React.useState(false);
-  const [mehApplied, setMehApplied] = React.useState(false);
-  const [hyperApplied, setHyperApplied] = React.useState(false);
+  const [color, setColor] = useState("rgb(255,255,255)");
 
-  React.useEffect(() => {
+  useEffect(() => {
     setColor(fill);
   }, [fill]);
-
-  React.useEffect(() => {
-    if (
-      setExtralabel.current.innerText === "LED" ||
-      setExtralabel.current.innerText === "SUPER" ||
-      setExtralabel.current.innerText === "MACRO" ||
-      setExtralabel.current.innerText === "OSL"
-    ) {
-      setExtraLabelClass(true);
-    } else {
-      setExtraLabelClass(false);
-    }
-    setExtralabel.current.innerText.includes("C+") ? setCtrlApplied(true) : setCtrlApplied(false);
-    setExtralabel.current.innerText.includes("A+") ? setAltApplied(true) : setAltApplied(false);
-    setExtralabel.current.innerText.includes("AG") ? setAltGrApplied(true) : setAltGrApplied(false);
-    setExtralabel.current.innerText.includes("O+") ? setOsApplied(true) : setOsApplied(false);
-    setExtralabel.current.innerText.includes("S+") ? setShiftApplied(true) : setShiftApplied(false);
-    setExtralabel.current.innerText.includes("Meh+") || setExtralabel.current.innerText.includes("M+")
-      ? setMehApplied(true)
-      : setMehApplied(false);
-    setExtralabel.current.innerText.includes("Hyper+") || setExtralabel.current.innerText.includes("H+")
-      ? setHyperApplied(true)
-      : setHyperApplied(false);
-  }, [centerPrimary, centerExtra]);
 
   return (
     <>
@@ -111,9 +80,6 @@ function Key(props: KeyShapeProps) {
           data-key-index={dataKeyIndex}
           data-layer={dataLayer}
         >
-          {/* <g xmlns="http://www.w3.org/2000/svg" filter={`url(#filter${id}01)`} className="shadowHover">
-            <rect x={x} y={y} width={width} height={height} rx="4" className="keyBase" />
-          </g> */}
           <g className="shadowHover">
             <rect x={x} y={y + 4} width={width} height={height} rx="4" fill={color} />
           </g>
@@ -177,38 +143,13 @@ function Key(props: KeyShapeProps) {
             <foreignObject x={xShape2} y={yShape2} width={widthShape2} height={heightShape2}>
               <div xmlns="http://www.w3.org/1999/xhtml" className="keyContentLabel">
                 <ul>
-                  <li
-                    ref={setExtralabel}
-                    className={`${extraLabelClass ? "extraLabel" : ""} ${
-                      altApplied || altGrApplied || ctrlApplied || osApplied || shiftApplied || mehApplied || hyperApplied
-                        ? "hidden-extraLabel"
-                        : ""
-                    }`}
-                  >
-                    {centerExtra}
-                  </li>
-                  <li
-                    className={`labelClass ${
-                      altApplied || altGrApplied || ctrlApplied || osApplied || shiftApplied || mehApplied || hyperApplied
-                        ? "labelClass-withModifiers"
-                        : ""
-                    }`}
-                  >
-                    {centerPrimary}
-                  </li>
+                  <li className="extraLabel">{centerExtra}</li>
+                  <li className="labelClass">{centerPrimary}</li>
                 </ul>
               </div>
             </foreignObject>
             <foreignObject x={x} y={y} width={width + 6} height={height}>
-              <ListModifiersKey
-                mehApplied={mehApplied}
-                hyperApplied={hyperApplied}
-                altApplied={altApplied}
-                altGrApplied={altGrApplied}
-                ctrlApplied={ctrlApplied}
-                shiftApplied={shiftApplied}
-                osApplied={osApplied}
-              />
+              <ListModifiersKey keyCode={keyCode} size="xs" />
             </foreignObject>
           </g>
         </g>
@@ -297,38 +238,13 @@ function Key(props: KeyShapeProps) {
           <foreignObject x={42} y={1} width={widthShape2 - 52} height={heightShape2}>
             <div xmlns="http://www.w3.org/1999/xhtml" className="keyContentLabel">
               <ul>
-                <li
-                  ref={setExtralabel}
-                  className={`${extraLabelClass ? "extraLabel" : ""} ${
-                    altApplied || altGrApplied || ctrlApplied || osApplied || shiftApplied || mehApplied || hyperApplied
-                      ? "hidden-extraLabel"
-                      : ""
-                  }`}
-                >
-                  {centerExtra}
-                </li>
-                <li
-                  className={`labelClass ${
-                    altApplied || altGrApplied || ctrlApplied || osApplied || shiftApplied || mehApplied || hyperApplied
-                      ? "labelClass-withModifiers"
-                      : ""
-                  }`}
-                >
-                  {centerPrimary}
-                </li>
+                <li className="extraLabel">{centerExtra}</li>
+                <li className="labelClass">{centerPrimary}</li>
               </ul>
             </div>
           </foreignObject>
           <foreignObject x={40} y={1} width={widthShape2 - 52} height={height}>
-            <ListModifiersKey
-              mehApplied={mehApplied}
-              hyperApplied={hyperApplied}
-              altApplied={altApplied}
-              altGrApplied={altGrApplied}
-              ctrlApplied={ctrlApplied}
-              shiftApplied={shiftApplied}
-              osApplied={osApplied}
-            />
+            <ListModifiersKey keyCode={keyCode} size="xs" />
           </foreignObject>
         </g>
       ) : (
@@ -416,38 +332,13 @@ function Key(props: KeyShapeProps) {
           <foreignObject x={3} y={1} width={widthShape2 - 52} height={heightShape2}>
             <div xmlns="http://www.w3.org/1999/xhtml" className="keyContentLabel">
               <ul>
-                <li
-                  ref={setExtralabel}
-                  className={`${extraLabelClass ? "extraLabel" : ""} ${
-                    altApplied || altGrApplied || ctrlApplied || osApplied || shiftApplied || mehApplied || hyperApplied
-                      ? "hidden-extraLabel"
-                      : ""
-                  }`}
-                >
-                  {centerExtra}
-                </li>
-                <li
-                  className={`labelClass ${
-                    altApplied || altGrApplied || ctrlApplied || osApplied || shiftApplied || mehApplied || hyperApplied
-                      ? "labelClass-withModifiers"
-                      : ""
-                  }`}
-                >
-                  {centerPrimary}
-                </li>
+                <li className="extraLabel">{centerExtra}</li>
+                <li className="labelClass">{centerPrimary}</li>
               </ul>
             </div>
           </foreignObject>
           <foreignObject x={0} y={1} width={width - 52} height={height}>
-            <ListModifiersKey
-              mehApplied={mehApplied}
-              hyperApplied={hyperApplied}
-              altApplied={altApplied}
-              altGrApplied={altGrApplied}
-              ctrlApplied={ctrlApplied}
-              shiftApplied={shiftApplied}
-              osApplied={osApplied}
-            />
+            <ListModifiersKey keyCode={keyCode} size="xs" />
           </foreignObject>
         </g>
       ) : (
@@ -545,38 +436,13 @@ function Key(props: KeyShapeProps) {
           <foreignObject x={3} y={0} width={widthShape2 - 6} height={49}>
             <div xmlns="http://www.w3.org/1999/xhtml" className="keyContentLabel">
               <ul>
-                <li
-                  ref={setExtralabel}
-                  className={`${extraLabelClass ? "extraLabel" : ""} ${
-                    altApplied || altGrApplied || ctrlApplied || osApplied || shiftApplied || mehApplied || hyperApplied
-                      ? "hidden-extraLabel"
-                      : ""
-                  }`}
-                >
-                  {centerExtra}
-                </li>
-                <li
-                  className={`labelClass ${
-                    altApplied || altGrApplied || ctrlApplied || osApplied || shiftApplied || mehApplied || hyperApplied
-                      ? "labelClass-withModifiers"
-                      : ""
-                  }`}
-                >
-                  {centerPrimary}
-                </li>
+                <li className="extraLabel">{centerExtra}</li>
+                <li className="labelClass">{centerPrimary}</li>
               </ul>
             </div>
           </foreignObject>
           <foreignObject x={0} y={1} width={width} height={60}>
-            <ListModifiersKey
-              mehApplied={mehApplied}
-              hyperApplied={hyperApplied}
-              altApplied={altApplied}
-              altGrApplied={altGrApplied}
-              ctrlApplied={ctrlApplied}
-              shiftApplied={shiftApplied}
-              osApplied={osApplied}
-            />
+            <ListModifiersKey keyCode={keyCode} size="xs" />
           </foreignObject>
         </g>
       ) : (
@@ -666,38 +532,13 @@ function Key(props: KeyShapeProps) {
           <foreignObject x={3} y={1} width={widthShape2} height={heightShape2}>
             <div xmlns="http://www.w3.org/1999/xhtml" className="keyContentLabel">
               <ul>
-                <li
-                  ref={setExtralabel}
-                  className={`${extraLabelClass ? "extraLabel" : ""} ${
-                    altApplied || altGrApplied || ctrlApplied || osApplied || shiftApplied || mehApplied || hyperApplied
-                      ? "hidden-extraLabel"
-                      : ""
-                  }`}
-                >
-                  {centerExtra}
-                </li>
-                <li
-                  className={`labelClass ${
-                    altApplied || altGrApplied || ctrlApplied || osApplied || shiftApplied || mehApplied || hyperApplied
-                      ? "labelClass-withModifiers"
-                      : ""
-                  }`}
-                >
-                  {centerPrimary}
-                </li>
+                <li className="extraLabel">{centerExtra}</li>
+                <li className="labelClass">{centerPrimary}</li>
               </ul>
             </div>
           </foreignObject>
           <foreignObject x={0} y={1} width={width} height={height}>
-            <ListModifiersKey
-              mehApplied={mehApplied}
-              hyperApplied={hyperApplied}
-              altApplied={altApplied}
-              altGrApplied={altGrApplied}
-              ctrlApplied={ctrlApplied}
-              shiftApplied={shiftApplied}
-              osApplied={osApplied}
-            />
+            <ListModifiersKey keyCode={keyCode} size="xs" />
           </foreignObject>
         </g>
       ) : (
@@ -787,38 +628,13 @@ function Key(props: KeyShapeProps) {
             <foreignObject x={3} y={1} width={widthShape2} height={heightShape2}>
               <div xmlns="http://www.w3.org/1999/xhtml" className="keyContentLabel">
                 <ul>
-                  <li
-                    ref={setExtralabel}
-                    className={`${extraLabelClass ? "extraLabel" : ""} ${
-                      altApplied || altGrApplied || ctrlApplied || osApplied || shiftApplied || mehApplied || hyperApplied
-                        ? "hidden-extraLabel"
-                        : ""
-                    }`}
-                  >
-                    {centerExtra}
-                  </li>
-                  <li
-                    className={`labelClass ${
-                      altApplied || altGrApplied || ctrlApplied || osApplied || shiftApplied || mehApplied || hyperApplied
-                        ? "labelClass-withModifiers"
-                        : ""
-                    }`}
-                  >
-                    {centerPrimary}
-                  </li>
+                  <li className="extraLabel">{centerExtra}</li>
+                  <li className="labelClass">{centerPrimary}</li>
                 </ul>
               </div>
             </foreignObject>
             <foreignObject x={0} y={1} width={width} height={height}>
-              <ListModifiersKey
-                mehApplied={mehApplied}
-                hyperApplied={hyperApplied}
-                altApplied={altApplied}
-                altGrApplied={altGrApplied}
-                ctrlApplied={ctrlApplied}
-                shiftApplied={shiftApplied}
-                osApplied={osApplied}
-              />
+              <ListModifiersKey keyCode={keyCode} size="xs" />
             </foreignObject>
           </g>
         </g>
@@ -908,38 +724,13 @@ function Key(props: KeyShapeProps) {
             <foreignObject x={3} y={1} width={widthShape2} height={heightShape2}>
               <div xmlns="http://www.w3.org/1999/xhtml" className="keyContentLabel">
                 <ul>
-                  <li
-                    ref={setExtralabel}
-                    className={`${extraLabelClass ? "extraLabel" : ""} ${
-                      altApplied || altGrApplied || ctrlApplied || osApplied || shiftApplied || mehApplied || hyperApplied
-                        ? "hidden-extraLabel"
-                        : ""
-                    }`}
-                  >
-                    {centerExtra}
-                  </li>
-                  <li
-                    className={`labelClass ${
-                      altApplied || altGrApplied || ctrlApplied || osApplied || shiftApplied || mehApplied || hyperApplied
-                        ? "labelClass-withModifiers"
-                        : ""
-                    }`}
-                  >
-                    {centerPrimary}
-                  </li>
+                  <li className="extraLabel">{centerExtra}</li>
+                  <li className="labelClass">{centerPrimary}</li>
                 </ul>
               </div>
             </foreignObject>
             <foreignObject x={0} y={1} width={width} height={height}>
-              <ListModifiersKey
-                mehApplied={mehApplied}
-                hyperApplied={hyperApplied}
-                altApplied={altApplied}
-                altGrApplied={altGrApplied}
-                ctrlApplied={ctrlApplied}
-                shiftApplied={shiftApplied}
-                osApplied={osApplied}
-              />
+              <ListModifiersKey keyCode={keyCode} size="xs" />
             </foreignObject>
           </g>
         </g>
@@ -1030,38 +821,13 @@ function Key(props: KeyShapeProps) {
             <foreignObject x={3} y={1} width={widthShape2} height={heightShape2}>
               <div xmlns="http://www.w3.org/1999/xhtml" className="keyContentLabel">
                 <ul>
-                  <li
-                    ref={setExtralabel}
-                    className={`${extraLabelClass ? "extraLabel" : ""} ${
-                      altApplied || altGrApplied || ctrlApplied || osApplied || shiftApplied || mehApplied || hyperApplied
-                        ? "hidden-extraLabel"
-                        : ""
-                    }`}
-                  >
-                    {centerExtra}
-                  </li>
-                  <li
-                    className={`labelClass ${
-                      altApplied || altGrApplied || ctrlApplied || osApplied || shiftApplied || mehApplied || hyperApplied
-                        ? "labelClass-withModifiers"
-                        : ""
-                    }`}
-                  >
-                    {centerPrimary}
-                  </li>
+                  <li className="extraLabel">{centerExtra}</li>
+                  <li className="labelClass">{centerPrimary}</li>
                 </ul>
               </div>
             </foreignObject>
             <foreignObject x={0} y={1} width={width} height={height}>
-              <ListModifiersKey
-                mehApplied={mehApplied}
-                hyperApplied={hyperApplied}
-                altApplied={altApplied}
-                altGrApplied={altGrApplied}
-                ctrlApplied={ctrlApplied}
-                shiftApplied={shiftApplied}
-                osApplied={osApplied}
-              />
+              <ListModifiersKey keyCode={keyCode} size="xs" />
             </foreignObject>
           </g>
         </g>
@@ -1151,38 +917,13 @@ function Key(props: KeyShapeProps) {
             <foreignObject x={16} y={1} width={widthShape2} height={heightShape2}>
               <div xmlns="http://www.w3.org/1999/xhtml" className="keyContentLabel">
                 <ul>
-                  <li
-                    ref={setExtralabel}
-                    className={`${extraLabelClass ? "extraLabel" : ""} ${
-                      altApplied || altGrApplied || ctrlApplied || osApplied || shiftApplied || mehApplied || hyperApplied
-                        ? "hidden-extraLabel"
-                        : ""
-                    }`}
-                  >
-                    {centerExtra}
-                  </li>
-                  <li
-                    className={`labelClass ${
-                      altApplied || altGrApplied || ctrlApplied || osApplied || shiftApplied || mehApplied || hyperApplied
-                        ? "labelClass-withModifiers"
-                        : ""
-                    }`}
-                  >
-                    {centerPrimary}
-                  </li>
+                  <li className="extraLabel">{centerExtra}</li>
+                  <li className="labelClass">{centerPrimary}</li>
                 </ul>
               </div>
             </foreignObject>
             <foreignObject x={12} y={1} width={width} height={height}>
-              <ListModifiersKey
-                mehApplied={mehApplied}
-                hyperApplied={hyperApplied}
-                altApplied={altApplied}
-                altGrApplied={altGrApplied}
-                ctrlApplied={ctrlApplied}
-                shiftApplied={shiftApplied}
-                osApplied={osApplied}
-              />
+              <ListModifiersKey keyCode={keyCode} size="xs" />
             </foreignObject>
           </g>
         </g>
@@ -1272,38 +1013,13 @@ function Key(props: KeyShapeProps) {
             <foreignObject x={3} y={1} width={widthShape2} height={heightShape2}>
               <div xmlns="http://www.w3.org/1999/xhtml" className="keyContentLabel">
                 <ul>
-                  <li
-                    ref={setExtralabel}
-                    className={`${extraLabelClass ? "extraLabel" : ""} ${
-                      altApplied || altGrApplied || ctrlApplied || osApplied || shiftApplied || mehApplied || hyperApplied
-                        ? "hidden-extraLabel"
-                        : ""
-                    }`}
-                  >
-                    {centerExtra}
-                  </li>
-                  <li
-                    className={`labelClass ${
-                      altApplied || altGrApplied || ctrlApplied || osApplied || shiftApplied || mehApplied || hyperApplied
-                        ? "labelClass-withModifiers"
-                        : ""
-                    }`}
-                  >
-                    {centerPrimary}
-                  </li>
+                  <li className="extraLabel">{centerExtra}</li>
+                  <li className="labelClass">{centerPrimary}</li>
                 </ul>
               </div>
             </foreignObject>
             <foreignObject x={0} y={1} width={width} height={height}>
-              <ListModifiersKey
-                mehApplied={mehApplied}
-                hyperApplied={hyperApplied}
-                altApplied={altApplied}
-                altGrApplied={altGrApplied}
-                ctrlApplied={ctrlApplied}
-                shiftApplied={shiftApplied}
-                osApplied={osApplied}
-              />
+              <ListModifiersKey keyCode={keyCode} size="xs" />
             </foreignObject>
           </g>
         </g>
@@ -1393,38 +1109,13 @@ function Key(props: KeyShapeProps) {
             <foreignObject x={3} y={1} width={widthShape2} height={heightShape2}>
               <div xmlns="http://www.w3.org/1999/xhtml" className="keyContentLabel">
                 <ul>
-                  <li
-                    ref={setExtralabel}
-                    className={`${extraLabelClass ? "extraLabel" : ""} ${
-                      altApplied || altGrApplied || ctrlApplied || osApplied || shiftApplied || mehApplied || hyperApplied
-                        ? "hidden-extraLabel"
-                        : ""
-                    }`}
-                  >
-                    {centerExtra}
-                  </li>
-                  <li
-                    className={`labelClass ${
-                      altApplied || altGrApplied || ctrlApplied || osApplied || shiftApplied || mehApplied || hyperApplied
-                        ? "labelClass-withModifiers"
-                        : ""
-                    }`}
-                  >
-                    {centerPrimary}
-                  </li>
+                  <li className="extraLabel">{centerExtra}</li>
+                  <li className="labelClass">{centerPrimary}</li>
                 </ul>
               </div>
             </foreignObject>
             <foreignObject x={0} y={1} width={width} height={height}>
-              <ListModifiersKey
-                mehApplied={mehApplied}
-                hyperApplied={hyperApplied}
-                altApplied={altApplied}
-                altGrApplied={altGrApplied}
-                ctrlApplied={ctrlApplied}
-                shiftApplied={shiftApplied}
-                osApplied={osApplied}
-              />
+              <ListModifiersKey keyCode={keyCode} size="xs" />
             </foreignObject>
           </g>
         </g>
@@ -1514,38 +1205,13 @@ function Key(props: KeyShapeProps) {
             <foreignObject x={3} y={1} width={widthShape2} height={heightShape2}>
               <div xmlns="http://www.w3.org/1999/xhtml" className="keyContentLabel">
                 <ul>
-                  <li
-                    ref={setExtralabel}
-                    className={`${extraLabelClass ? "extraLabel" : ""} ${
-                      altApplied || altGrApplied || ctrlApplied || osApplied || shiftApplied || mehApplied || hyperApplied
-                        ? "hidden-extraLabel"
-                        : ""
-                    }`}
-                  >
-                    {centerExtra}
-                  </li>
-                  <li
-                    className={`labelClass ${
-                      altApplied || altGrApplied || ctrlApplied || osApplied || shiftApplied || mehApplied || hyperApplied
-                        ? "labelClass-withModifiers"
-                        : ""
-                    }`}
-                  >
-                    {centerPrimary}
-                  </li>
+                  <li className="extraLabel">{centerExtra}</li>
+                  <li className="labelClass">{centerPrimary}</li>
                 </ul>
               </div>
             </foreignObject>
             <foreignObject x={0} y={1} width={width} height={height}>
-              <ListModifiersKey
-                mehApplied={mehApplied}
-                hyperApplied={hyperApplied}
-                altApplied={altApplied}
-                altGrApplied={altGrApplied}
-                ctrlApplied={ctrlApplied}
-                shiftApplied={shiftApplied}
-                osApplied={osApplied}
-              />
+              <ListModifiersKey keyCode={keyCode} size="xs" />
             </foreignObject>
           </g>
         </g>
@@ -1635,38 +1301,13 @@ function Key(props: KeyShapeProps) {
             <foreignObject x={3} y={1} width={widthShape2} height={heightShape2}>
               <div xmlns="http://www.w3.org/1999/xhtml" className="keyContentLabel">
                 <ul>
-                  <li
-                    ref={setExtralabel}
-                    className={`${extraLabelClass ? "extraLabel" : ""} ${
-                      altApplied || altGrApplied || ctrlApplied || osApplied || shiftApplied || mehApplied || hyperApplied
-                        ? "hidden-extraLabel"
-                        : ""
-                    }`}
-                  >
-                    {centerExtra}
-                  </li>
-                  <li
-                    className={`labelClass ${
-                      altApplied || altGrApplied || ctrlApplied || osApplied || shiftApplied || mehApplied || hyperApplied
-                        ? "labelClass-withModifiers"
-                        : ""
-                    }`}
-                  >
-                    {centerPrimary}
-                  </li>
+                  <li className="extraLabel">{centerExtra}</li>
+                  <li className="labelClass">{centerPrimary}</li>
                 </ul>
               </div>
             </foreignObject>
             <foreignObject x={0} y={1} width={width} height={height}>
-              <ListModifiersKey
-                mehApplied={mehApplied}
-                hyperApplied={hyperApplied}
-                altApplied={altApplied}
-                altGrApplied={altGrApplied}
-                ctrlApplied={ctrlApplied}
-                shiftApplied={shiftApplied}
-                osApplied={osApplied}
-              />
+              <ListModifiersKey keyCode={keyCode} size="xs" />
             </foreignObject>
           </g>
         </g>
@@ -1756,38 +1397,13 @@ function Key(props: KeyShapeProps) {
             <foreignObject x={3} y={1} width={widthShape2} height={heightShape2}>
               <div xmlns="http://www.w3.org/1999/xhtml" className="keyContentLabel">
                 <ul>
-                  <li
-                    ref={setExtralabel}
-                    className={`${extraLabelClass ? "extraLabel" : ""} ${
-                      altApplied || altGrApplied || ctrlApplied || osApplied || shiftApplied || mehApplied || hyperApplied
-                        ? "hidden-extraLabel"
-                        : ""
-                    }`}
-                  >
-                    {centerExtra}
-                  </li>
-                  <li
-                    className={`labelClass ${
-                      altApplied || altGrApplied || ctrlApplied || osApplied || shiftApplied || mehApplied || hyperApplied
-                        ? "labelClass-withModifiers"
-                        : ""
-                    }`}
-                  >
-                    {centerPrimary}
-                  </li>
+                  <li className="extraLabel">{centerExtra}</li>
+                  <li className="labelClass">{centerPrimary}</li>
                 </ul>
               </div>
             </foreignObject>
             <foreignObject x={0} y={1} width={width} height={height}>
-              <ListModifiersKey
-                mehApplied={mehApplied}
-                hyperApplied={hyperApplied}
-                altApplied={altApplied}
-                altGrApplied={altGrApplied}
-                ctrlApplied={ctrlApplied}
-                shiftApplied={shiftApplied}
-                osApplied={osApplied}
-              />
+              <ListModifiersKey keyCode={keyCode} size="xs" />
             </foreignObject>
           </g>
         </g>
@@ -1877,38 +1493,13 @@ function Key(props: KeyShapeProps) {
             <foreignObject x={3} y={1} width={widthShape2} height={heightShape2}>
               <div xmlns="http://www.w3.org/1999/xhtml" className="keyContentLabel">
                 <ul>
-                  <li
-                    ref={setExtralabel}
-                    className={`${extraLabelClass ? "extraLabel" : ""} ${
-                      altApplied || altGrApplied || ctrlApplied || osApplied || shiftApplied || mehApplied || hyperApplied
-                        ? "hidden-extraLabel"
-                        : ""
-                    }`}
-                  >
-                    {centerExtra}
-                  </li>
-                  <li
-                    className={`labelClass ${
-                      altApplied || altGrApplied || ctrlApplied || osApplied || shiftApplied || mehApplied || hyperApplied
-                        ? "labelClass-withModifiers"
-                        : ""
-                    }`}
-                  >
-                    {centerPrimary}
-                  </li>
+                  <li className="extraLabel">{centerExtra}</li>
+                  <li className="labelClass">{centerPrimary}</li>
                 </ul>
               </div>
             </foreignObject>
             <foreignObject x={0} y={1} width={width} height={height}>
-              <ListModifiersKey
-                mehApplied={mehApplied}
-                hyperApplied={hyperApplied}
-                altApplied={altApplied}
-                altGrApplied={altGrApplied}
-                ctrlApplied={ctrlApplied}
-                shiftApplied={shiftApplied}
-                osApplied={osApplied}
-              />
+              <ListModifiersKey keyCode={keyCode} size="xs" />
             </foreignObject>
           </g>
         </g>
@@ -1998,38 +1589,13 @@ function Key(props: KeyShapeProps) {
             <foreignObject x={3} y={1} width={widthShape2} height={heightShape2}>
               <div xmlns="http://www.w3.org/1999/xhtml" className="keyContentLabel">
                 <ul>
-                  <li
-                    ref={setExtralabel}
-                    className={`${extraLabelClass ? "extraLabel" : ""} ${
-                      altApplied || altGrApplied || ctrlApplied || osApplied || shiftApplied || mehApplied || hyperApplied
-                        ? "hidden-extraLabel"
-                        : ""
-                    }`}
-                  >
-                    {centerExtra}
-                  </li>
-                  <li
-                    className={`labelClass ${
-                      altApplied || altGrApplied || ctrlApplied || osApplied || shiftApplied || mehApplied || hyperApplied
-                        ? "labelClass-withModifiers"
-                        : ""
-                    }`}
-                  >
-                    {centerPrimary}
-                  </li>
+                  <li className="extraLabel">{centerExtra}</li>
+                  <li className="labelClass">{centerPrimary}</li>
                 </ul>
               </div>
             </foreignObject>
             <foreignObject x={0} y={1} width={width} height={height}>
-              <ListModifiersKey
-                mehApplied={mehApplied}
-                hyperApplied={hyperApplied}
-                altApplied={altApplied}
-                altGrApplied={altGrApplied}
-                ctrlApplied={ctrlApplied}
-                shiftApplied={shiftApplied}
-                osApplied={osApplied}
-              />
+              <ListModifiersKey keyCode={keyCode} size="xs" />
             </foreignObject>
           </g>
         </g>
@@ -2119,38 +1685,13 @@ function Key(props: KeyShapeProps) {
             <foreignObject x={3} y={1} width={widthShape2} height={heightShape2}>
               <div xmlns="http://www.w3.org/1999/xhtml" className="keyContentLabel">
                 <ul>
-                  <li
-                    ref={setExtralabel}
-                    className={`${extraLabelClass ? "extraLabel" : ""} ${
-                      altApplied || altGrApplied || ctrlApplied || osApplied || shiftApplied || mehApplied || hyperApplied
-                        ? "hidden-extraLabel"
-                        : ""
-                    }`}
-                  >
-                    {centerExtra}
-                  </li>
-                  <li
-                    className={`labelClass ${
-                      altApplied || altGrApplied || ctrlApplied || osApplied || shiftApplied || mehApplied || hyperApplied
-                        ? "labelClass-withModifiers"
-                        : ""
-                    }`}
-                  >
-                    {centerPrimary}
-                  </li>
+                  <li className="extraLabel">{centerExtra}</li>
+                  <li className="labelClass">{centerPrimary}</li>
                 </ul>
               </div>
             </foreignObject>
             <foreignObject x={0} y={1} width={width} height={height}>
-              <ListModifiersKey
-                mehApplied={mehApplied}
-                hyperApplied={hyperApplied}
-                altApplied={altApplied}
-                altGrApplied={altGrApplied}
-                ctrlApplied={ctrlApplied}
-                shiftApplied={shiftApplied}
-                osApplied={osApplied}
-              />
+              <ListModifiersKey keyCode={keyCode} size="xs" />
             </foreignObject>
           </g>
         </g>
@@ -2240,38 +1781,13 @@ function Key(props: KeyShapeProps) {
             <foreignObject x={3} y={1} width={widthShape2} height={heightShape2}>
               <div xmlns="http://www.w3.org/1999/xhtml" className="keyContentLabel">
                 <ul>
-                  <li
-                    ref={setExtralabel}
-                    className={`${extraLabelClass ? "extraLabel" : ""} ${
-                      altApplied || altGrApplied || ctrlApplied || osApplied || shiftApplied || mehApplied || hyperApplied
-                        ? "hidden-extraLabel"
-                        : ""
-                    }`}
-                  >
-                    {centerExtra}
-                  </li>
-                  <li
-                    className={`labelClass ${
-                      altApplied || altGrApplied || ctrlApplied || osApplied || shiftApplied || mehApplied || hyperApplied
-                        ? "labelClass-withModifiers"
-                        : ""
-                    }`}
-                  >
-                    {centerPrimary}
-                  </li>
+                  <li className="extraLabel">{centerExtra}</li>
+                  <li className="labelClass">{centerPrimary}</li>
                 </ul>
               </div>
             </foreignObject>
             <foreignObject x={0} y={1} width={width} height={height}>
-              <ListModifiersKey
-                mehApplied={mehApplied}
-                hyperApplied={hyperApplied}
-                altApplied={altApplied}
-                altGrApplied={altGrApplied}
-                ctrlApplied={ctrlApplied}
-                shiftApplied={shiftApplied}
-                osApplied={osApplied}
-              />
+              <ListModifiersKey keyCode={keyCode} size="xs" />
             </foreignObject>
           </g>
         </g>
@@ -2361,38 +1877,13 @@ function Key(props: KeyShapeProps) {
             <foreignObject x={3} y={1} width={widthShape2} height={heightShape2}>
               <div xmlns="http://www.w3.org/1999/xhtml" className="keyContentLabel">
                 <ul>
-                  <li
-                    ref={setExtralabel}
-                    className={`${extraLabelClass ? "extraLabel" : ""} ${
-                      altApplied || altGrApplied || ctrlApplied || osApplied || shiftApplied || mehApplied || hyperApplied
-                        ? "hidden-extraLabel"
-                        : ""
-                    }`}
-                  >
-                    {centerExtra}
-                  </li>
-                  <li
-                    className={`labelClass ${
-                      altApplied || altGrApplied || ctrlApplied || osApplied || shiftApplied || mehApplied || hyperApplied
-                        ? "labelClass-withModifiers"
-                        : ""
-                    }`}
-                  >
-                    {centerPrimary}
-                  </li>
+                  <li className="extraLabel">{centerExtra}</li>
+                  <li className="labelClass">{centerPrimary}</li>
                 </ul>
               </div>
             </foreignObject>
             <foreignObject x={0} y={1} width={width} height={height}>
-              <ListModifiersKey
-                mehApplied={mehApplied}
-                hyperApplied={hyperApplied}
-                altApplied={altApplied}
-                altGrApplied={altGrApplied}
-                ctrlApplied={ctrlApplied}
-                shiftApplied={shiftApplied}
-                osApplied={osApplied}
-              />
+              <ListModifiersKey keyCode={keyCode} size="xs" />
             </foreignObject>
           </g>
         </g>
@@ -2482,38 +1973,13 @@ function Key(props: KeyShapeProps) {
             <foreignObject x={3} y={1} width={widthShape2} height={heightShape2}>
               <div xmlns="http://www.w3.org/1999/xhtml" className="keyContentLabel">
                 <ul>
-                  <li
-                    ref={setExtralabel}
-                    className={`${extraLabelClass ? "extraLabel" : ""} ${
-                      altApplied || altGrApplied || ctrlApplied || osApplied || shiftApplied || mehApplied || hyperApplied
-                        ? "hidden-extraLabel"
-                        : ""
-                    }`}
-                  >
-                    {centerExtra}
-                  </li>
-                  <li
-                    className={`labelClass ${
-                      altApplied || altGrApplied || ctrlApplied || osApplied || shiftApplied || mehApplied || hyperApplied
-                        ? "labelClass-withModifiers"
-                        : ""
-                    }`}
-                  >
-                    {centerPrimary}
-                  </li>
+                  <li className="extraLabel">{centerExtra}</li>
+                  <li className="labelClass">{centerPrimary}</li>
                 </ul>
               </div>
             </foreignObject>
             <foreignObject x={0} y={1} width={width} height={height}>
-              <ListModifiersKey
-                mehApplied={mehApplied}
-                hyperApplied={hyperApplied}
-                altApplied={altApplied}
-                altGrApplied={altGrApplied}
-                ctrlApplied={ctrlApplied}
-                shiftApplied={shiftApplied}
-                osApplied={osApplied}
-              />
+              <ListModifiersKey keyCode={keyCode} size="xs" />
             </foreignObject>
           </g>
         </g>

@@ -21,7 +21,7 @@ import OSKey from "@Renderer/components/molecules/KeyTags/OSKey";
 
 interface LabelModifierProps {
   label?: "control" | "shift" | "os" | "alt" | "altGr" | "Hyper" | "Meh";
-  size?: "sm" | "md";
+  size?: "xs" | "sm" | "md";
 }
 
 const LabelModifier = ({ label, size = "md" }: LabelModifierProps) => (

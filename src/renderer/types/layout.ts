@@ -54,3 +54,30 @@ export interface ColormapType {
   palette: PaletteType[];
   colorMap: number[][];
 }
+export interface OperationSystemIcons {
+  shift: {
+    xs: string;
+    sm: string;
+    md: string;
+  };
+  control: {
+    xs: string;
+    sm: string;
+    md: string;
+  };
+  os: {
+    xs: React.ReactNode;
+    sm: React.ReactNode;
+    md: React.ReactNode;
+  };
+  alt: {
+    xs: string;
+    sm: string;
+    md: string;
+  };
+  altGr: {
+    xs: string;
+    sm: string;
+    md: string;
+  };
+}
