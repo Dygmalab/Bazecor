@@ -314,7 +314,7 @@ export default class StandardView extends React.Component<StandardViewProps, Sta
         macroName = "*NotFound*";
       }
       if (keycode >= 53852 && keycode <= 53852 + 128) {
-        if (code !== null) return `${aux.extraLabel}.${macroName}`;
+        if (code !== null) return `${aux.extraLabel} ${macroName}`;
       }
     }
 
@@ -326,7 +326,7 @@ export default class StandardView extends React.Component<StandardViewProps, Sta
         superName = "*NotFound*";
       }
       if (keycode >= 53980 && keycode <= 53980 + 128) {
-        if (code !== null) return `${aux.extraLabel}.${superName}`;
+        if (code !== null) return `${aux.extraLabel} ${superName}`;
       }
     }
 
@@ -342,7 +342,7 @@ export default class StandardView extends React.Component<StandardViewProps, Sta
       );
     let result;
     if (code !== null) {
-      result = aux.extraLabel !== undefined ? `${aux.extraLabel} ${aux.label}`.trim() : aux.label;
+      result = aux.extraLabel !== undefined ? `${aux.label}`.trim() : aux.label;
     }
     return result;
   }
