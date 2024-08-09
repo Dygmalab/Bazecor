@@ -1814,16 +1814,16 @@ div.card.card-preferences .card-body {
     grid-template-columns: minmax(160px,340px) minmax(840px,auto);
   }
 }
-@media (min-width: 1800px) and (min-height: 980px) {
-  body .layoutEditor .KeysWrapper {
-    max-width: 1160px;
-  }
-}
-@media (min-width: 1980px) and (min-height: 980px) {
-  body .layoutEditor .LayerHolder {
-    max-width: 1580px;
-  }
-}
+// @media (min-width: 1800px) and (min-height: 980px) {
+//   body .layoutEditor .KeysWrapper {
+//     max-width: 1160px;
+//   }
+// }
+// @media (min-width: 1980px) and (min-height: 980px) {
+//   body .layoutEditor .LayerHolder {
+//     max-width: 1580px;
+//   }
+// }
 @media (min-width: 2220px) and (min-height: 980px) {
   body .layoutEditor .LayerHolder {
     max-width: 2220px;

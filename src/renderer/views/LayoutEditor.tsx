@@ -62,10 +62,6 @@ import Backup from "../../api/backup";
 const store = Store.getStore();
 
 const Styles = Styled.div`
-&.layoutEditor {
-  // min-height: 100vh;
-  // height: 100%;
-}
 .keyboard-editor {
   // min-height: 100vh;
   height: inherit;
@@ -120,7 +116,7 @@ const Styles = Styled.div`
   flex: 0 0 100%;
   margin: 0 auto;
   min-width: 680px;
-  max-width: 1640px;
+  // max-width: 1640px;
   svg {
     width: 100%;
   }
@@ -1951,7 +1947,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
         darkMode={darkMode}
         style={{ width: "50vw" }}
         showUnderglow={modeselect !== "keyboard"}
-        className="raiseKeyboard layer"
+        className="raiseKeyboard layer h-auto"
         isStandardView={isStandardView}
       />
     </div>
@@ -1959,9 +1955,9 @@ const LayoutEditor = (props: LayoutEditorProps) => {
   );
 
   return (
-    <Styles className="layoutEditor">
+    <Styles className="layoutEditor h-full">
       <div
-        className={`keyboard-editor min-h-screen px-3 ${modeselect} ${isStandardView ? "standarViewMode" : "singleViewMode"} ${
+        className={`keyboard-editor h-[inherit] px-3 ${modeselect} ${modeselect === "color" ? "[&_.raiseKeyboard]:h-auto" : ""} ${isStandardView ? "standarViewMode" : "singleViewMode"} ${
           typeof selectedPaletteColor === "number" ? "colorSelected" : ""
         }`}
       >
@@ -2010,8 +2006,8 @@ const LayoutEditor = (props: LayoutEditorProps) => {
           }}
           inContext={modified}
         />
-        <div className="w-full flex-1 keyboardsWrapper">
-          <div className="raise-editor layer-col">
+        <div className="w-full h-[inherit] keyboardsWrapper">
+          <div className="raise-editor layer-col h-full">
             <div className="dygma-keyboard-editor editor">{layer}</div>
             {modeselect === "keyboard" && !isStandardView ? (
               <div className="ordinary-keyboard-editor m-0 pb-4">
