@@ -136,6 +136,7 @@ const DeviceManager = (props: DeviceManagerProps) => {
       return toShowDevs;
     }
     try {
+      log.warn("First time device Listing");
       const list = (await DeviceTools.list()) as Device[];
       dispatch({ type: "addDevicesList", payload: list });
       log.info("Devices Available:", list);

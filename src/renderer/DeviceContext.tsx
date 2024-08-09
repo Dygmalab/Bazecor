@@ -64,6 +64,7 @@ function deviceReducer(state: State, action: Action) {
     case "disconnect": {
       let newDevices = [...state.deviceList];
       let newSelected: number = state.selected;
+      log.warn("Disconnecting: ", action.payload, " from :", newDevices);
       newDevices = newDevices.filter((device, index) => {
         const toRemove = action.payload.includes(device.serialNumber.toLowerCase());
 
@@ -135,7 +136,9 @@ const list = async () => {
     const connected = await hid.isDeviceConnected(index);
     const supported = await hid.isDeviceSupported(index);
     log.info("Checking connected & supported for HID: ", connected, supported);
-    if (connected && supported) finalDevices.push(new Device(hid, "hid"));
+    if (connected && supported) {
+      finalDevices.push(new Device(hid, "hid"));
+    }
   }
 
   return finalDevices;
@@ -193,7 +196,7 @@ const listNonConnected = async (bootloader: boolean, existingIDs: string[]) => {
     const hid = new HID();
     const connected = await hid.isDeviceConnected(index);
     const supported = await hid.isDeviceSupported(index);
-    log.info("Checking connected & supported for HID: ", connected, supported);
+    log.info("Checking connected & supported for HID: ", connected, supported, hid);
     if (connected && supported && !existingIDs.includes(hid.serialNumber)) finalDevices.push(new Device(hid, "hid"));
   }
 
