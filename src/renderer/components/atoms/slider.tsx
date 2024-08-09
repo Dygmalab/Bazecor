@@ -22,24 +22,29 @@ const sliderVariants = cva(
   },
 );
 
-const Slider = React.forwardRef<
-  React.ElementRef<typeof SliderPrimitive.Root>,
-  React.ComponentPropsWithoutRef<typeof SliderPrimitive.Root> & VariantProps<typeof sliderVariants>
->(({ className, variant, ...props }, ref) => {
-  const internalValue = props.value || props.defaultValue;
-  return (
-    <SliderPrimitive.Root ref={ref} className={cn(sliderVariants({ variant }), className)} {...props}>
-      <SliderPrimitive.Track className="track ">
-        <SliderPrimitive.Range className="range" />
-      </SliderPrimitive.Track>
-      <SliderPrimitive.Thumb className="thumb block h-4 w-4 rounded-full border-[3px] ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50">
-        <span className="thumbValue absolute bg-gray-25 dark:bg-gray-600 text-gray-600 dark:text-gray-25 shadow-lg text-ssm rounded-sm p-[6px] top-[-36px] left-[50%] translate-x-[-50%] transition-all opacity-0 group-hover:opacity-100">
-          {internalValue}
-        </span>
-      </SliderPrimitive.Thumb>
-    </SliderPrimitive.Root>
-  );
-});
+interface SliderProps extends React.ComponentPropsWithoutRef<typeof SliderPrimitive.Root> {
+  dataPlacement?: "top" | "bottom";
+}
+
+const Slider = React.forwardRef<React.ElementRef<typeof SliderPrimitive.Root>, SliderProps & VariantProps<typeof sliderVariants>>(
+  ({ className, variant, dataPlacement = "top", ...props }, ref) => {
+    const internalValue = props.value || props.defaultValue;
+    return (
+      <SliderPrimitive.Root ref={ref} className={cn(sliderVariants({ variant }), className)} {...props}>
+        <SliderPrimitive.Track className="track ">
+          <SliderPrimitive.Range className="range" />
+        </SliderPrimitive.Track>
+        <SliderPrimitive.Thumb className="thumb block h-4 w-4 rounded-full border-[3px] ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50">
+          <span
+            className={`thumbValue absolute bg-gray-25 dark:bg-gray-600 text-gray-600 dark:text-gray-25 shadow-lg text-ssm rounded-sm p-[6px] left-[50%] translate-x-[-50%] transition-all opacity-0 group-hover:opacity-100 ${dataPlacement === "top" ? "top-[-36px]" : "bottom-[-36px]"}`}
+          >
+            {internalValue}
+          </span>
+        </SliderPrimitive.Thumb>
+      </SliderPrimitive.Root>
+    );
+  },
+);
 Slider.displayName = SliderPrimitive.Root.displayName;
 
 export { Slider };
