@@ -342,7 +342,7 @@ export default class StandardView extends React.Component<StandardViewProps, Sta
       );
     let result;
     if (code !== null) {
-      result = aux.extraLabel !== undefined ? `${aux.extraLabel}.${aux.label}` : aux.label;
+      result = aux.extraLabel !== undefined ? `${aux.extraLabel} ${aux.label}`.trim() : aux.label;
     }
     return result;
   }
@@ -373,9 +373,9 @@ export default class StandardView extends React.Component<StandardViewProps, Sta
     const selKey = this.parseKey(keyCode);
     const oldKey = this.parseKey(stateCode);
     if (!showStandardView) return null;
-    log.info(
-      `StandardView statecode:${stateCode} selected:${selected} actTab: ${actTab} currentTab: ${currentTab} selKey: ${selKey} oldKey: ${oldKey}, layerData: ${layerData}`,
-    );
+    // log.info(
+    //   `StandardView statecode:${stateCode} selected:${selected} actTab: ${actTab} currentTab: ${currentTab} selKey: ${selKey} oldKey: ${oldKey}, layerData: ${layerData}`,
+    // );
 
     const tabVariants = {
       hidden: { opacity: 0 },
