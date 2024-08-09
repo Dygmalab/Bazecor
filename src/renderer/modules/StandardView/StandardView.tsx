@@ -342,7 +342,10 @@ export default class StandardView extends React.Component<StandardViewProps, Sta
       );
     let result;
     if (code !== null) {
-      result = aux.extraLabel !== undefined ? `${aux.label}`.trim() : aux.label;
+      result =
+        aux.extraLabel !== undefined && !(aux.extraLabel as string).includes("+")
+          ? `${aux.extraLabel} ${aux.label}`.trim()
+          : aux.label;
     }
     return result;
   }

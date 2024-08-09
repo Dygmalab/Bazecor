@@ -220,7 +220,9 @@ function SuperkeyPicker(props: SuperkeyPickerProps) {
       return;
     }
     if (aux.label) {
-      setKeyContent(aux.extraLabel !== undefined && aux.extraLabel !== "" ? `${aux.extraLabel} ${aux.label}` : aux.label);
+      setKeyContent(
+        aux.extraLabel !== undefined && !(aux.extraLabel as string).includes("+") ? `${aux.extraLabel} ${aux.label}` : aux.label,
+      );
     }
   }, [index, keymapDB, macros, selected, superkeys, action]);
 

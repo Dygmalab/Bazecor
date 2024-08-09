@@ -329,7 +329,7 @@ class KeyPickerKeyboard extends Component {
       keynum < 256 ||
       (keynum > 53851 && keynum < 53852 + 128) ||
       (keynum > 49152 && keynum < 49161) ||
-      keynum == 65535 ||
+      keynum === 65535 ||
       disable
     ) {
       activeTab = "editor";
@@ -368,11 +368,17 @@ class KeyPickerKeyboard extends Component {
       macroN = `MACRO\n${this.props.macros[keycode - 53852] ? this.props.macros[keycode - 53852].name : keycode - 53852}`;
       return macroN;
     }
-    if (React.isValidElement(this.keymapDB.parse(keycode).label)) return this.keymapDB.parse(keycode).label;
-    if (React.isValidElement(this.keymapDB.parse(keycode).extraLabel)) return <div>{this.keymapDB.parse(keycode).label}</div>;
+    if (React.isValidElement(this.keymapDB.parse(keycode).label) || React.isValidElement(this.keymapDB.parse(keycode).extraLabel))
+      return (
+        <>
+          {this.keymapDB.parse(keycode).extraLabel}
+          <br />
+          {this.keymapDB.parse(keycode).label}
+        </>
+      );
     return this.props.code !== null
-      ? this.keymapDB.parse(keycode).extraLabel != undefined
-        ? `${this.keymapDB.parse(keycode).label}`.trim()
+      ? this.keymapDB.parse(keycode).extraLabel !== undefined && !this.keymapDB.parse(keycode).extraLabel.includes("+")
+        ? `${this.keymapDB.parse(keycode).extraLabel} ${this.keymapDB.parse(keycode).label}`.trim()
         : this.keymapDB.parse(keycode).label
       : "";
   }
@@ -404,8 +410,8 @@ class KeyPickerKeyboard extends Component {
     let translatedAction = "";
     // console.log("Try to translate superkey actions inside SuperKeiItem: ", aux);
 
-    if (aux.extraLabel == "MACRO") {
-      if (this.props.macros.length > parseInt(aux.label) && this.props.macros[parseInt(aux.label)].name.substr(0, 5) != "") {
+    if (aux.extraLabel === "MACRO") {
+      if (this.props.macros.length > parseInt(aux.label) && this.props.macros[parseInt(aux.label)].name.substr(0, 5) !== "") {
         translatedAction = aux.label = this.props.macros[parseInt(aux.label)].name.substr(0, 5).toLowerCase();
       }
     }
