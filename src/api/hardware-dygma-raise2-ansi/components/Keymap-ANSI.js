@@ -296,13 +296,19 @@ class KeymapANSI extends React.Component {
     const topsArr = ["LEDEFF.", "SCadet", "Steno", "M.Btn", "Leader", "Numpad", "Media", "OSL", "Mouse", "M.Wheel", "M.Warp"];
     const topsArrTransfer = ["SHIFTTO", "LockTo"];
     const getCenterExtra = (row, col, xCord, yCord, smallKey = false) =>
-      getLabel(row, col).extraLabel !== ""
-        ? topsArr.includes(getLabel(row, col).extraLabel)
-          ? getLabel(row, col).extraLabel && getDivideKeys(getLabel(row, col).extraLabel, xCord, yCord - 5, smallKey)
-          : getLabel(row, col).extraLabel && getDivideKeys(getLabel(row, col).extraLabel, xCord, String(+yCord - 5), smallKey)
-        : getLabel(row, col).extraLabel === getLabel(row, col).extraLabel.toLowerCase().endsWith("to")
-          ? getLabel(row, col).extraLabel && getDivideKeys(getLabel(row, col).extraLabel, xCord, yCord - 5, smallKey)
+      React.isValidElement(getLabel(row, col).extraLabel)
+        ? getLabel(row, col).extraLabel
+        : getLabel(row, col).extraLabel?.includes("+")
+          ? ""
           : getLabel(row, col).extraLabel;
+    // const getCenterExtra = (row, col, xCord, yCord, smallKey = false) =>
+    //   getLabel(row, col).extraLabel !== ""
+    //     ? topsArr.includes(getLabel(row, col).extraLabel)
+    //       ? getLabel(row, col).extraLabel && getDivideKeys(getLabel(row, col).extraLabel, xCord, yCord - 5, smallKey)
+    //       : getLabel(row, col).extraLabel && getDivideKeys(getLabel(row, col).extraLabel, xCord, String(+yCord - 5), smallKey)
+    //     : getLabel(row, col).extraLabel === getLabel(row, col).extraLabel.toLowerCase().endsWith("to")
+    //       ? getLabel(row, col).extraLabel && getDivideKeys(getLabel(row, col).extraLabel, xCord, yCord - 5, smallKey)
+    //       : getLabel(row, col).extraLabel;
 
     const getCenterPrimary = (row, col, xCord, yCord, smallKey = false) =>
       getLabel(row, col).extraLabel !== ""
