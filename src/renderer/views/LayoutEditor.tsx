@@ -18,8 +18,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React, { MouseEvent, useCallback, useEffect, useLayoutEffect, useMemo, useState } from "react";
+import React, { MouseEvent, useCallback, useEffect, useLayoutEffect, useMemo, useState, useRef } from "react";
 import Styled from "styled-components";
+import { motion } from "framer-motion";
 import { toast } from "react-toastify";
 import { ipcRenderer } from "electron";
 import fs from "fs";
@@ -486,6 +487,8 @@ const LayoutEditor = (props: LayoutEditorProps) => {
   const [scanningStep, setScanningStep] = useState(0);
   const [keymapDB, setkeymapDB] = useState(new KeymapDB());
   const { darkMode, cancelContext, setLoading, onDisconnect, startContext, inContext, restoredOk, handleSetRestoredOk } = props;
+
+  const layoutEditorContainerRef = useRef(null);
 
   const onLayerNameChange = (newName: string) => {
     const slicedLayerNames = layerNames.slice();
@@ -1956,10 +1959,11 @@ const LayoutEditor = (props: LayoutEditorProps) => {
 
   return (
     <Styles className="layoutEditor h-full">
-      <div
+      <motion.div
         className={`keyboard-editor h-[inherit] px-3 ${modeselect} ${modeselect === "color" ? "[&_.raiseKeyboard]:h-auto" : ""} ${isStandardView ? "standarViewMode" : "singleViewMode"} ${
           typeof selectedPaletteColor === "number" ? "colorSelected" : ""
         }`}
+        ref={layoutEditorContainerRef}
       >
         <PageHeader
           text="Layout Editor"
@@ -2009,32 +2013,26 @@ const LayoutEditor = (props: LayoutEditorProps) => {
         <div className="w-full h-[inherit] keyboardsWrapper">
           <div className="raise-editor layer-col h-full">
             <div className="dygma-keyboard-editor editor">{layer}</div>
-            {modeselect === "keyboard" && !isStandardView ? (
-              <div className="ordinary-keyboard-editor m-0 pb-4">
-                <ToggleGroupLayoutViewMode value={viewMode} onValueChange={onToggleStandardView} viewMode={modeselect} />
-                <KeyPickerKeyboard
-                  onKeySelect={onKeyChange}
-                  code={code}
-                  macros={macros}
-                  superkeys={superkeys}
-                  actions={actions}
-                  action={0}
-                  superName={superName}
-                  keyIndex={currentKeyIndex}
-                  actTab="editor"
-                  selectedlanguage={currentLanguageLayout}
-                  kbtype={kbtype}
-                  isWireless={isWireless}
-                />
-              </div>
-            ) : null}
+
+            <div className="ordinary-keyboard-editor m-0 pb-4">
+              <KeyPickerKeyboard
+                onKeySelect={onKeyChange}
+                code={code}
+                macros={macros}
+                superkeys={superkeys}
+                actions={actions}
+                action={0}
+                superName={superName}
+                keyIndex={currentKeyIndex}
+                actTab="editor"
+                selectedlanguage={currentLanguageLayout}
+                kbtype={kbtype}
+                isWireless={isWireless}
+                dragLimits={layoutEditorContainerRef}
+              />
+            </div>
           </div>
         </div>
-
-        {/* WHY: We want to hide the selector when we cannot use it (e.g. when color editor is active) */}
-        {modeselect === "keyboard" && isStandardView ? (
-          <ToggleGroupLayoutViewMode value={viewMode} onValueChange={onToggleStandardView} />
-        ) : null}
 
         <ClearLayerDialog
           open={clearConfirmationOpen}
@@ -2053,7 +2051,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
           layers={copyFromLayerOptions}
           currentLayer={currentLayer}
         />
-      </div>
+      </motion.div>
 
       <Dialog open={showMacroModal} onOpenChange={toggleMacroModal}>
         <DialogContent>
@@ -2094,28 +2092,6 @@ const LayoutEditor = (props: LayoutEditorProps) => {
           </DialogFooter>
         </DialogContent>
       </Dialog>
-
-      {modeselect === "keyboard" && isStandardView ? (
-        <StandardView
-          showStandardView={showStandardView}
-          closeStandardView={closeStandardViewModal}
-          handleSave={handleSaveStandardView}
-          onKeySelect={onKeyChange}
-          macros={macros}
-          superkeys={superkeys}
-          actions={actions}
-          keyIndex={currentKeyIndex}
-          code={code}
-          layerData={layerData}
-          actTab="editor"
-          selectedlanguage={currentLanguageLayout}
-          kbtype={kbtype}
-          isStandardView={isStandardView}
-          isWireless={isWireless}
-        />
-      ) : (
-        ""
-      )}
     </Styles>
   );
 };

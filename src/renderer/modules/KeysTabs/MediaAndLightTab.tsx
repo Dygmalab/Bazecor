@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import Styled from "styled-components";
 import { i18n } from "@Renderer/i18n";
 
@@ -103,6 +103,13 @@ const MediaAndLightTab = ({ keyCode, isStandardView, onAddSpecial }: MediaAndLig
     onAddSpecial(special, 5);
   };
 
+  const KC = useMemo(() => {
+    if (keyCode?.base !== undefined && keyCode?.modified !== undefined) {
+      return keyCode.base + keyCode.modified;
+    }
+    return undefined;
+  }, [keyCode]);
+
   return (
     <Styles className={`${isStandardView ? "standardViewTab" : ""} tabsMediaAndLED`}>
       <div className="tabContentWrapper">
@@ -131,7 +138,8 @@ const MediaAndLightTab = ({ keyCode, isStandardView, onAddSpecial }: MediaAndLig
                         variant="config"
                         size="icon"
                         onClick={() => handleAddSpecial(22733)}
-                        selected={isStandardView ? keyCode === 22733 : false}
+                        // selected={isStandardView ? keyCode === 22733 : false}
+                        selected={KC === 22733}
                       >
                         <IconMediaPlayPause size="sm" />
                       </Button>
@@ -151,7 +159,8 @@ const MediaAndLightTab = ({ keyCode, isStandardView, onAddSpecial }: MediaAndLig
                         variant="config"
                         size="icon"
                         onClick={() => handleAddSpecial(22711)}
-                        selected={isStandardView ? keyCode === 22711 : false}
+                        // selected={isStandardView ? keyCode === 22711 : false}
+                        selected={KC === 22711}
                       >
                         <IconMediaStop size="sm" />
                       </Button>
@@ -171,7 +180,8 @@ const MediaAndLightTab = ({ keyCode, isStandardView, onAddSpecial }: MediaAndLig
                         variant="config"
                         size="icon"
                         onClick={() => handleAddSpecial(22710)}
-                        selected={isStandardView ? keyCode === 22710 : false}
+                        // selected={isStandardView ? keyCode === 22710 : false}
+                        selected={KC === 22710}
                       >
                         <IconMediaRewind size="sm" />
                       </Button>
@@ -191,7 +201,8 @@ const MediaAndLightTab = ({ keyCode, isStandardView, onAddSpecial }: MediaAndLig
                         variant="config"
                         size="icon"
                         onClick={() => handleAddSpecial(22709)}
-                        selected={isStandardView ? keyCode === 22709 : false}
+                        // selected={isStandardView ? keyCode === 22709 : false}
+                        selected={KC === 22709}
                       >
                         <IconMediaForward size="sm" />
                       </Button>
@@ -211,7 +222,8 @@ const MediaAndLightTab = ({ keyCode, isStandardView, onAddSpecial }: MediaAndLig
                         variant="config"
                         size="icon"
                         onClick={() => handleAddSpecial(22713)}
-                        selected={isStandardView ? keyCode === 22713 : false}
+                        // selected={isStandardView ? keyCode === 22713 : false}
+                        selected={KC === 22713}
                       >
                         <IconMediaShuffle size="sm" />
                       </Button>
@@ -231,7 +243,8 @@ const MediaAndLightTab = ({ keyCode, isStandardView, onAddSpecial }: MediaAndLig
                         variant="config"
                         size="icon"
                         onClick={() => handleAddSpecial(19682)}
-                        selected={isStandardView ? keyCode === 19682 : false}
+                        // selected={isStandardView ? keyCode === 19682 : false}
+                        selected={KC === 19682}
                       >
                         <IconMediaSoundMute size="sm" />
                       </Button>
@@ -251,7 +264,8 @@ const MediaAndLightTab = ({ keyCode, isStandardView, onAddSpecial }: MediaAndLig
                         variant="config"
                         size="icon"
                         onClick={() => handleAddSpecial(23786)}
-                        selected={isStandardView ? keyCode === 23786 : false}
+                        // selected={isStandardView ? keyCode === 23786 : false}
+                        selected={KC === 23786}
                       >
                         <IconMediaSoundLess size="sm" />
                       </Button>
@@ -271,7 +285,8 @@ const MediaAndLightTab = ({ keyCode, isStandardView, onAddSpecial }: MediaAndLig
                         variant="config"
                         size="icon"
                         onClick={() => handleAddSpecial(23785)}
-                        selected={isStandardView ? keyCode === 23785 : false}
+                        // selected={isStandardView ? keyCode === 23785 : false}
+                        selected={KC === 23785}
                       >
                         <IconMediaSoundMore size="sm" />
                       </Button>
@@ -298,7 +313,8 @@ const MediaAndLightTab = ({ keyCode, isStandardView, onAddSpecial }: MediaAndLig
                         variant="config"
                         size="icon"
                         onClick={() => handleAddSpecial(17154)}
-                        selected={isStandardView ? keyCode === 17154 : false}
+                        // selected={isStandardView ? keyCode === 17154 : false}
+                        selected={KC === 17154}
                       >
                         <IconLEDToggleEffect size="sm" />
                       </Button>
@@ -317,7 +333,8 @@ const MediaAndLightTab = ({ keyCode, isStandardView, onAddSpecial }: MediaAndLig
                         variant="config"
                         size="icon"
                         onClick={() => handleAddSpecial(17153)}
-                        selected={isStandardView ? keyCode === 17153 : false}
+                        // selected={isStandardView ? keyCode === 17153 : false}
+                        selected={KC === 17153}
                       >
                         <IconLEDPreviousEffect size="sm" />
                       </Button>
@@ -338,6 +355,7 @@ const MediaAndLightTab = ({ keyCode, isStandardView, onAddSpecial }: MediaAndLig
                         size="icon"
                         onClick={() => handleAddSpecial(17152)}
                         selected={isStandardView ? keyCode === 17152 : false}
+                        selected={KC === 17152}
                       >
                         <IconLEDNextEffect size="sm" />
                       </Button>
@@ -366,7 +384,8 @@ const MediaAndLightTab = ({ keyCode, isStandardView, onAddSpecial }: MediaAndLig
                         variant="config"
                         size="icon"
                         onClick={() => handleAddSpecial(22712)}
-                        selected={isStandardView ? keyCode === 22712 : false}
+                        // selected={isStandardView ? keyCode === 22712 : false}
+                        selected={KC === 22712}
                       >
                         <IconToolsEject size="sm" />
                       </Button>
@@ -386,6 +405,7 @@ const MediaAndLightTab = ({ keyCode, isStandardView, onAddSpecial }: MediaAndLig
                         size="icon"
                         onClick={() => handleAddSpecial(18834)}
                         selected={isStandardView ? keyCode === 18834 : false}
+                        selected={KC === 18834}
                       >
                         <IconToolsCalculator size="sm" />
                       </Button>
@@ -405,7 +425,8 @@ const MediaAndLightTab = ({ keyCode, isStandardView, onAddSpecial }: MediaAndLig
                         variant="config"
                         size="icon"
                         onClick={() => handleAddSpecial(18552)}
-                        selected={isStandardView ? keyCode === 18552 : false}
+                        // selected={isStandardView ? keyCode === 18552 : false}
+                        selected={KC === 18552}
                       >
                         <IconToolsCamera size="sm" />
                       </Button>
@@ -425,7 +446,8 @@ const MediaAndLightTab = ({ keyCode, isStandardView, onAddSpecial }: MediaAndLig
                         variant="config"
                         size="icon"
                         onClick={() => handleAddSpecial(23664)}
-                        selected={isStandardView ? keyCode === 23664 : false}
+                        // selected={isStandardView ? keyCode === 23664 : false}
+                        selected={KC === 23664}
                       >
                         <IconToolsBrightnessLess size="sm" />
                       </Button>
@@ -445,7 +467,8 @@ const MediaAndLightTab = ({ keyCode, isStandardView, onAddSpecial }: MediaAndLig
                         variant="config"
                         size="icon"
                         onClick={() => handleAddSpecial(23663)}
-                        selected={isStandardView ? keyCode === 23663 : false}
+                        // selected={isStandardView ? keyCode === 23663 : false}
+                        selected={KC === 23663}
                       >
                         <IconBrightnessMore size="sm" />
                       </Button>
@@ -464,7 +487,8 @@ const MediaAndLightTab = ({ keyCode, isStandardView, onAddSpecial }: MediaAndLig
                         variant="config"
                         size="icon"
                         onClick={() => handleAddSpecial(20866)}
-                        selected={isStandardView ? keyCode === 20866 : false}
+                        // selected={isStandardView ? keyCode === 20866 : false}
+                        selected={KC === 20866}
                       >
                         <IconSleep size="sm" />
                       </Button>
@@ -484,7 +508,8 @@ const MediaAndLightTab = ({ keyCode, isStandardView, onAddSpecial }: MediaAndLig
                         variant="config"
                         size="icon"
                         onClick={() => handleAddSpecial(20865)}
-                        selected={isStandardView ? keyCode === 20865 : false}
+                        // selected={isStandardView ? keyCode === 20865 : false}
+                        selected={KC === 20865}
                       >
                         <IconShutdown size="sm" />
                       </Button>

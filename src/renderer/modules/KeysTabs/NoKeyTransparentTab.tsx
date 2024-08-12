@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import Styled from "styled-components";
 
 import { i18n } from "@Renderer/i18n";
@@ -37,54 +37,62 @@ interface NoKeyTransparentTabProps {
   isStandardView: boolean;
   onKeySelect: (keycode: number) => void;
 }
-const NoKeyTransparentTab = ({ keyCode, onKeySelect, isStandardView }: NoKeyTransparentTabProps) => (
-  <Styles className={`${isStandardView ? "standardViewTab" : ""} tabsNoKeysTransparent`}>
-    <div className="tabContentWrapper">
-      <div className="buttonsRow">
-        <Heading renderAs="h3" headingLevel={3}>
-          {i18n.editor.standardView.noKeyTransparent}{" "}
-        </Heading>
-        <Callout size="sm" className="mt-4">
-          <p>{i18n.editor.standardView.callOut}</p>
-        </Callout>
+const NoKeyTransparentTab = ({ keyCode, onKeySelect, isStandardView }: NoKeyTransparentTabProps) => {
+  const KC = useMemo(() => {
+    if (keyCode?.base !== undefined && keyCode?.modified !== undefined) {
+      return keyCode.base + keyCode.modified;
+    }
+    return undefined;
+  }, [keyCode]);
+  return (
+    <Styles className={`${isStandardView ? "standardViewTab" : ""} tabsNoKeysTransparent`}>
+      <div className="tabContentWrapper">
+        <div className="buttonsRow">
+          <Heading renderAs="h3" headingLevel={3}>
+            {i18n.editor.standardView.noKeyTransparent}{" "}
+          </Heading>
+          <Callout size="sm" className="mt-4">
+            <p>{i18n.editor.standardView.callOut}</p>
+          </Callout>
 
-        <div className="keysButtonsList">
-          <Heading renderAs="h4" headingLevel={4}>
-            {i18n.editor.standardView.noKey}
-          </Heading>
-          <p className="description">{i18n.editor.standardView.noKeyDescription}</p>
-          <Button
-            variant="config"
-            onClick={() => {
-              onKeySelect(0);
-            }}
-            size="sm"
-            className="max-w-[124px] w-[124px] text-center mt-1"
-            selected={keyCode !== undefined && keyCode.base ? keyCode.base + keyCode.modified === 0 : keyCode === 0}
-          >
-            {i18n.editor.standardView.noKey}
-          </Button>
-        </div>
-        <div className="keysButtonsList">
-          <Heading headingLevel={4} renderAs="h4">
-            {i18n.editor.standardView.transparent}
-          </Heading>
-          <p className="description">{i18n.editor.standardView.transparentDescription}</p>
-          <Button
-            variant="config"
-            onClick={() => {
-              onKeySelect(65535);
-            }}
-            selected={keyCode !== undefined && keyCode.base ? keyCode.base + keyCode.modified === 65535 : keyCode === 65535}
-            size="sm"
-            className="max-w-[124px] w-[124px] text-center mt-1"
-          >
-            {i18n.editor.standardView.transparent}
-          </Button>
+          <div className="keysButtonsList">
+            <Heading renderAs="h4" headingLevel={4}>
+              {i18n.editor.standardView.noKey}
+            </Heading>
+            <p className="description">{i18n.editor.standardView.noKeyDescription}</p>
+            <Button
+              variant="config"
+              onClick={() => {
+                onKeySelect(0);
+              }}
+              size="sm"
+              className="max-w-[124px] w-[124px] text-center mt-1"
+              selected={KC === 0}
+            >
+              {i18n.editor.standardView.noKey}
+            </Button>
+          </div>
+          <div className="keysButtonsList">
+            <Heading headingLevel={4} renderAs="h4">
+              {i18n.editor.standardView.transparent}
+            </Heading>
+            <p className="description">{i18n.editor.standardView.transparentDescription}</p>
+            <Button
+              variant="config"
+              onClick={() => {
+                onKeySelect(65535);
+              }}
+              selected={KC === 65535}
+              size="sm"
+              className="max-w-[124px] w-[124px] text-center mt-1"
+            >
+              {i18n.editor.standardView.transparent}
+            </Button>
+          </div>
         </div>
       </div>
-    </div>
-  </Styles>
-);
+    </Styles>
+  );
+};
 
 export default NoKeyTransparentTab;

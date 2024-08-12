@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React from "react";
+import React, { useMemo } from "react";
 import Styled from "styled-components";
 import log from "electron-log/renderer";
 import { i18n } from "@Renderer/i18n";
@@ -154,7 +154,14 @@ function MouseTab({ isStandardView, keyCode, onAddSpecial, actTab = "standard" }
   //   setIsHovering(true);
   //   log.info("MouseLeave", mouseEvent);
   // };
-  console.log("actTab: ", actTab);
+  // console.log("actTab: ", actTab);
+
+  const KC = useMemo(() => {
+    if (keyCode?.base !== undefined && keyCode?.modified !== undefined) {
+      return keyCode.base + keyCode.modified;
+    }
+    return undefined;
+  }, [keyCode]);
 
   return (
     <Styles className={`${isStandardView ? "standardViewTab" : ""} tabsMouse`}>
@@ -183,7 +190,7 @@ function MouseTab({ isStandardView, keyCode, onAddSpecial, actTab = "standard" }
               <div className="grid gap-2 grid-cols-3 max-w-[460px] mt-2">
                 <Button
                   onClick={() => handleClick(20545)}
-                  selected={isStandardView ? keyCode === 20545 : false}
+                  selected={isStandardView ? KC === 20545 : false}
                   variant="config"
                   size="sm"
                 >
@@ -191,23 +198,23 @@ function MouseTab({ isStandardView, keyCode, onAddSpecial, actTab = "standard" }
                 </Button>
                 <Button
                   onClick={() => handleClick(20548)}
-                  selected={isStandardView ? keyCode === 20548 : false}
+                  selected={isStandardView ? KC === 20548 : false}
                   variant="config"
                   size="sm"
                 >
                   {i18n.mouse.clickMiddle}
                 </Button>
                 <Button
-                  onClick={() => handleClick(20546)}
-                  selected={isStandardView ? keyCode === 20546 : false}
                   variant="config"
+                  onClick={() => handleClick(20546)}
+                  selected={isStandardView ? KC === 20546 : false}
                   size="sm"
                 >
                   {i18n.mouse.clickRight}
                 </Button>
                 <Button
                   onClick={() => handleClick(20552)}
-                  selected={isStandardView ? keyCode === 20552 : false}
+                  selected={isStandardView ? KC === 20552 : false}
                   variant="config"
                   size="sm"
                 >
@@ -215,7 +222,7 @@ function MouseTab({ isStandardView, keyCode, onAddSpecial, actTab = "standard" }
                 </Button>
                 <Button
                   onClick={() => handleClick(20560)}
-                  selected={isStandardView ? keyCode === 20560 : false}
+                  selected={isStandardView ? KC === 20560 : false}
                   variant="config"
                   size="sm"
                 >
@@ -236,28 +243,28 @@ function MouseTab({ isStandardView, keyCode, onAddSpecial, actTab = "standard" }
                         eventType="movement"
                         direction="up"
                         onClick={() => handleClick(20481)}
-                        selected={isStandardView ? keyCode === 20481 : false}
+                        selected={isStandardView ? KC === 20481 : false}
                         disabled={false}
                       />
                       <ButtonMouse
                         eventType="movement"
                         direction="right"
                         onClick={() => handleClick(20488)}
-                        selected={isStandardView ? keyCode === 20488 : false}
+                        selected={isStandardView ? KC === 20488 : false}
                         disabled={false}
                       />
                       <ButtonMouse
                         eventType="movement"
                         direction="down"
                         onClick={() => handleClick(20482)}
-                        selected={isStandardView ? keyCode === 20482 : false}
+                        selected={isStandardView ? KC === 20482 : false}
                         disabled={false}
                       />
                       <ButtonMouse
                         eventType="movement"
                         direction="left"
                         onClick={() => handleClick(20484)}
-                        selected={isStandardView ? keyCode === 20484 : false}
+                        selected={isStandardView ? KC === 20484 : false}
                         disabled={false}
                       />
                     </div>
@@ -274,28 +281,28 @@ function MouseTab({ isStandardView, keyCode, onAddSpecial, actTab = "standard" }
                         eventType="wheel"
                         direction="up"
                         onClick={() => handleClick(20497)}
-                        selected={isStandardView ? keyCode === 20497 : false}
+                        selected={isStandardView ? KC === 20497 : false}
                         disabled={false}
                       />
                       <ButtonMouse
                         eventType="wheel"
                         direction="right"
                         onClick={() => handleClick(20504)}
-                        selected={isStandardView ? keyCode === 20504 : false}
+                        selected={isStandardView ? KC === 20504 : false}
                         disabled={false}
                       />
                       <ButtonMouse
                         eventType="wheel"
                         direction="down"
                         onClick={() => handleClick(20498)}
-                        selected={isStandardView ? keyCode === 20498 : false}
+                        selected={isStandardView ? KC === 20498 : false}
                         disabled={false}
                       />
                       <ButtonMouse
                         eventType="wheel"
                         direction="left"
                         onClick={() => handleClick(20500)}
-                        selected={isStandardView ? keyCode === 20500 : false}
+                        selected={isStandardView ? KC === 20500 : false}
                         disabled={false}
                       />
                     </div>

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 
 import { TabLayoutEditorProps } from "@Renderer/types/pages";
 
@@ -22,6 +22,14 @@ import { BluetoothCodes } from "@Renderer/../hw/bluetooth";
 
 function WirelessTab(props: TabLayoutEditorProps) {
   const { keyCode, onKeySelect, isStandardView } = props;
+
+  const KC = useMemo(() => {
+    if (keyCode?.base !== undefined && keyCode?.modified !== undefined) {
+      return keyCode.base + keyCode.modified;
+    }
+    return undefined;
+  }, [keyCode]);
+
   return (
     <div className={`${isStandardView ? "standardViewTab" : ""} tabsWireless w-full`}>
       <div className="tabContentWrapper">
@@ -44,7 +52,7 @@ function WirelessTab(props: TabLayoutEditorProps) {
               onClick={() => {
                 onKeySelect(BatteryCodes.STATUS);
               }}
-              selected={isStandardView ? keyCode === BatteryCodes.STATUS : false}
+              selected={isStandardView ? KC === BatteryCodes.STATUS : false}
               className="w-max-[124px] w-[124px] text-center mt-2"
               size="sm"
             >
@@ -63,7 +71,7 @@ function WirelessTab(props: TabLayoutEditorProps) {
               onClick={() => {
                 onKeySelect(BluetoothCodes.PAIRING);
               }}
-              selected={isStandardView ? keyCode === BluetoothCodes.PAIRING : false}
+              selected={isStandardView ? KC === BluetoothCodes.PAIRING : false}
               className="w-max-[124px] w-[124px] text-center mt-2"
               size="sm"
             >
