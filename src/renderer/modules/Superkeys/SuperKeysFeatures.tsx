@@ -69,7 +69,7 @@ h5 {
 function SuperKeysFeatures() {
   return (
     <Style>
-      <Accordion type="single" defaultValue="item-1" collapsible className="w-full rounded bg-gray-25/80 dark:bg-gray-600 mt-3">
+      <Accordion type="single" collapsible className="w-full rounded bg-gray-25/80 dark:bg-gray-600 mt-3">
         <AccordionItem value="item-1" className="border-0">
           <AccordionTrigger className="flex justify-between items-center py-3 px-3 mt-0 mb-[-1px] rounded-none text-purple-200 dark:text-gray-25 border-none">
             <strong className="text-xs tracking-tight font-semibold">{i18n.editor.superkeys.collapse.title}</strong>

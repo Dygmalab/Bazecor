@@ -115,16 +115,16 @@ const MediaAndLightTab = ({ keyCode, isStandardView, onAddSpecial }: MediaAndLig
       <div className="tabContentWrapper">
         {isStandardView ? (
           <>
-            <Heading headingLevel={3} renderAs="h3">
+            {/* <Heading headingLevel={3} renderAs="h3">
               {i18n.editor.standardView.mediaAndLED.title}
-            </Heading>
+            </Heading> */}
             <Callout size="sm" className="mt-4">
               <p>{i18n.editor.standardView.mediaAndLED.callOut}</p>
             </Callout>
           </>
         ) : null}
         <div className="buttonsRow">
-          <div className="mediaButtons">
+          <div className="mediaButtons flex-1">
             <Heading headingLevel={4} renderAs="h4">
               {i18n.editor.superkeys.specialKeys.mediaTitle}
             </Heading>
@@ -299,7 +299,7 @@ const MediaAndLightTab = ({ keyCode, isStandardView, onAddSpecial }: MediaAndLig
               </TooltipProvider>
             </div>
           </div>
-          <div className="LEDButtons">
+          <div className="LEDButtons flex-1">
             <Heading headingLevel={4} renderAs="h4">
               {i18n.editor.superkeys.specialKeys.LEDTitle}
             </Heading>
@@ -370,7 +370,7 @@ const MediaAndLightTab = ({ keyCode, isStandardView, onAddSpecial }: MediaAndLig
           </div>
         </div>
         <div className="buttonsRow">
-          <div className="othersButtons">
+          <div className="othersButtons flex-1">
             <Heading headingLevel={4} renderAs="h4">
               {i18n.editor.superkeys.specialKeys.othersTitle}
             </Heading>

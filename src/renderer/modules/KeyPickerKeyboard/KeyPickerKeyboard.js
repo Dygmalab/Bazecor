@@ -160,62 +160,23 @@ width: -webkit-fill-available;
 }
 
 .singleViewWrapper {
-  margin-top: 16px;
-  display: grid;
-  grid-template-columns: minmax(160px, 250px) minmax(840px, auto);
-  grid-gap: 24px;
   .newKeyValue h4 span { display: none; }
   .modPickerButtonsList .button-config{
     font-size: 12px;
   }
   .keyBoardPickerWrapper {
-    // flex: 0 0 calc(100% - 270px);
-    width: 100%;
-    background: ${({ theme }) => theme.styles.keyboardPicker.keyBoardPickerBackground};
     box-shadow: ${({ theme }) => theme.styles.keyboardPicker.keyEnhanceWrapperBoxShadow};
-    border-radius: 6px;
-    padding: 10px 20px;
+    
   }
 
 }
 
-@media screen and (max-width: 1240px) {
-  // .singleViewWrapper {
-  //   grid-template-columns: 1fr;
-  //   grid-gap: 24px;
-  // }
-  // .keyEnhanceWrapper {
-  //   order: 2;
-  // }
-  // .KeyVisualizer {
-  //   display: none;
-  // }
-  // .ModPicker {
-  //   width: 100%;
-  // }
-}
-
-
-
-.keyEnhanceWrapper {
-  background: ${({ theme }) => theme.styles.keyboardPicker.keyEnhanceWrapperBackground};
-  border: ${({ theme }) => theme.styles.keyboardPicker.keyEnhanceWrapperBackground};
-  box-sizing: border-box;
-  box-shadow: ;
-  border-radius: 6px;
-}
 .keyEnhanceInner {
   display: flex;
   flex-wrap: wrap;
   height: 100%;
 }
 .ModPicker {
-  background: ${({ theme }) => theme.styles.keyboardPicker.modPickerBackground};
-  box-shadow:  ${({ theme }) => theme.styles.keyboardPicker.modPickerBoxShadow};
-  border-radius: 6px;
-  margin-left: ${({ theme }) => theme.styles.keyboardPicker.modPickerAlignAdjust};
-  margin-right: ${({ theme }) => theme.styles.keyboardPicker.modPickerAlignAdjust};
-  margin-bottom: ${({ theme }) => theme.styles.keyboardPicker.modPickerAlignAdjust};
   flex: 0 0 100%;
   &.ModPickerScroll {
     overflow: auto;
@@ -498,21 +459,23 @@ class KeyPickerKeyboard extends Component {
       visible: { opacity: 1, transition: { duration: 0.5 } },
     };
 
-    //console.log("dragLimits: ", dragLimits);
+    console.log("Action: ", action);
 
     return (
       <Style>
-        <motion.div
-          drag
-          dragConstraints={dragLimits}
-          whileTap={{ cursor: "grabbing" }}
-          style={{
-            position: "absolute",
-            zIndex: 99,
-          }}
-        >
-          <KeyVisualizer newValue={selKey} keyCode={code} disable={disable} />
-        </motion.div>
+        {actTab !== "super" && (
+          <motion.div
+            drag
+            dragConstraints={dragLimits}
+            whileTap={{ cursor: "grabbing" }}
+            style={{
+              position: "absolute",
+              zIndex: 99,
+            }}
+          >
+            <KeyVisualizer newValue={selKey} keyCode={code} disable={disable} />
+          </motion.div>
+        )}
         <Tabs
           defaultValue="tabKeys"
           orientation="vertical"
@@ -523,52 +486,52 @@ class KeyPickerKeyboard extends Component {
             })
           }
         >
-          <div className="singleViewWrapper">
+          <div className="singleViewWrapper flex gap-[20px] mt-4">
             <div className="keyEnhanceWrapper">
               <div className="keyEnhanceInner">
-                <TabsList className="flex flex-col gap-1 tabsWrapper">
-                  <TabsTrigger value="tabKeys" variant="tab">
+                <TabsList className="flex flex-col gap-0.5 tabsWrapper min-w-48">
+                  <TabsTrigger value="tabKeys" variant="tab" className="text-ssm [&_svg]:w-[20px] py-2">
                     <IconKeyboard /> Keys
                   </TabsTrigger>
-                  <TabsTrigger value="tabNoKeys" variant="tab">
+                  <TabsTrigger value="tabNoKeys" variant="tab" className="text-ssm [&_svg]:w-[20px] py-2">
                     <IconNoKey /> {i18n.editor.standardView.noKeyTransparent}
                   </TabsTrigger>
-                  <TabsTrigger value="tabLayers" variant="tab">
-                    <IconLayers /> {i18n.editor.standardView.layers.title}
+                  <TabsTrigger value="tabLayers" variant="tab" className="text-ssm [&_svg]:w-[20px] py-2">
+                    <IconLayers size="sm" /> {i18n.editor.standardView.layers.title}
                   </TabsTrigger>
-                  <TabsTrigger value="tabMacro" variant="tab">
+                  <TabsTrigger value="tabMacro" variant="tab" className="text-ssm [&_svg]:w-[20px] py-2">
                     <IconRobot /> {i18n.editor.standardView.macros.title}
                   </TabsTrigger>
                   {actTab !== "super" ? (
                     <>
-                      <TabsTrigger value="tabSuperKeys" variant="tab">
+                      <TabsTrigger value="tabSuperKeys" variant="tab" className="text-ssm [&_svg]:w-[20px] py-2">
                         <>
-                          <IconThunder /> {i18n.editor.standardView.superkeys.title}{" "}
+                          <IconThunder size="sm" /> {i18n.editor.standardView.superkeys.title}{" "}
                           <div className="badge badge-primary leading-none ml-1 font-bold text-[9px] text-white">BETA</div>
                         </>
                       </TabsTrigger>
-                      <TabsTrigger value="tabOneShot" variant="tab">
-                        <IconOneShot /> {i18n.editor.standardView.oneShot.title}
+                      <TabsTrigger value="tabOneShot" variant="tab" className="text-ssm [&_svg]:w-[20px] py-2">
+                        <IconOneShot size="sm" /> {i18n.editor.standardView.oneShot.title}
                       </TabsTrigger>
                     </>
                   ) : (
                     ""
                   )}
-                  <TabsTrigger value="tabMedia" variant="tab">
-                    <IconNote /> {i18n.editor.standardView.mediaAndLED.title}
+                  <TabsTrigger value="tabMedia" variant="tab" className="text-ssm [&_svg]:w-[20px] py-2">
+                    <IconNote size="sm" /> {i18n.editor.standardView.mediaAndLED.title}
                   </TabsTrigger>
-                  <TabsTrigger value="tabMouse" variant="tab">
-                    <IconMouse /> {i18n.editor.standardView.mouse.title}
+                  <TabsTrigger value="tabMouse" variant="tab" className="text-ssm [&_svg]:w-[20px] py-2">
+                    <IconMouse size="sm" /> {i18n.editor.standardView.mouse.title}
                   </TabsTrigger>
                   {isWireless && (
-                    <TabsTrigger value="tabWireless" variant="tab">
-                      <IconWireless size="md" strokeWidth={1.2} /> {i18n.app.menu.wireless}
+                    <TabsTrigger value="tabWireless" variant="tab" className="text-ssm [&_svg]:w-[20px] py-2">
+                      <IconWireless size="sm" strokeWidth={1.2} /> {i18n.app.menu.wireless}
                     </TabsTrigger>
                   )}
                 </TabsList>
               </div>
             </div>
-            <div className="keyBoardPickerWrapper">
+            <div className="keyBoardPickerWrapper w-full rounded-regular py-4 px-8 bg-gray-25 dark:bg-[#25273B] shadow-lg">
               <TabsContent value="tabKeys">
                 <motion.div initial="hidden" animate="visible" key="tabKeys" variants={tabVariants}>
                   <>
@@ -594,14 +557,14 @@ class KeyPickerKeyboard extends Component {
                       }`}
                     >
                       {!superkeys[superk.indexOf(KC)] || !this.props.macros[KC - 53852] ? (
-                        <>
+                        <div className="flex gap-2 flex-col lg:flex-row lg:gap-4 py-4">
                           <ModPicker key={code} keyCode={code} onKeySelect={onKeySelect} />
                           {actTab === "editor" ? (
                             <DualFunctionPicker keyCode={code} onKeySelect={onKeySelect} activeTab={activeTab} />
                           ) : (
                             <></>
                           )}
-                        </>
+                        </div>
                       ) : (
                         ""
                       )}
@@ -620,7 +583,7 @@ class KeyPickerKeyboard extends Component {
                     onLayerPress={onKeySelect}
                     keyCode={code}
                     isStandardView
-                    disableMods={!!((keyIndex === 0 || keyIndex === 3) && actTab === "super")}
+                    disableMods={!!((action === 0 || action === 3) && actTab === "super")}
                   />
                 </motion.div>
               </TabsContent>

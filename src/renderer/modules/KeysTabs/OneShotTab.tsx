@@ -60,176 +60,178 @@ const OneShotTab = ({ keyCode, onKeySelect, isStandardView }: OneShotTabProps) =
       <div className="tabContentWrapper">
         {isStandardView ? (
           <>
-            <Heading headingLevel={3} renderAs="h3">
+            {/* <Heading headingLevel={3} renderAs="h3">
               {i18n.editor.standardView.oneShot.title}
-            </Heading>
+            </Heading> */}
             <Callout size="sm" className="mt-4">
               <p>{i18n.editor.standardView.callOut}</p>
             </Callout>
           </>
         ) : null}
 
-        <div className="cardButtons">
-          <Heading headingLevel={4} renderAs="h4" className="flex gap-2 items-center">
-            <IconOneShotMode mode="modifier" /> {i18n.editor.standardView.oneShot.titleModifiers}
-          </Heading>
-          <p className="description">{i18n.editor.standardView.oneShot.modifiersDescription}</p>
-          <div className="p-0 inline-flex flex-nowrap gap-1 mt-2 w-auto rounded-md bg-transparent">
-            <div className="grid gap-1 p-1 bg-white dark:bg-gray-900/20 rounded-md grid-cols-4">
-              <Button
-                variant="config"
-                onClick={() => onKeySelect(OneShotDeltaMod + 1)}
-                // selected={OneShotDeltaMod === OneShotDeltaMod + 1}
-                selected={KC === OneShotDeltaMod + 1}
-                size="sm"
-              >
-                <OSKey renderKey="shift" direction="Left" size="sm" />
-              </Button>
-              <Button
-                variant="config"
-                onClick={() => onKeySelect(OneShotDeltaMod + 0)}
-                // selected={isStandardView ? keyCode === OneShotDeltaMod + 0 : false}
-                selected={KC === OneShotDeltaMod + 0}
-                size="sm"
-              >
-                <OSKey renderKey="control" direction="Left" size="sm" />
-              </Button>
-              <Button
-                variant="config"
-                onClick={() => onKeySelect(OneShotDeltaMod + 3)}
-                // selected={isStandardView ? keyCode === OneShotDeltaMod + 3 : false}
-                selected={KC === OneShotDeltaMod + 3}
-                size="sm"
-              >
-                <OSKey renderKey="os" direction="Left" size="sm" />
-              </Button>
-              <Button
-                variant="config"
-                onClick={() => onKeySelect(OneShotDeltaMod + 2)}
-                // selected={isStandardView ? keyCode === OneShotDeltaMod + 2 : false}
-                selected={KC === OneShotDeltaMod + 2}
-                size="sm"
-              >
-                <OSKey renderKey="alt" direction="Left" size="sm" />
-              </Button>
+        <div className="flex gap-1">
+          <div className="flex-1 py-2">
+            <Heading headingLevel={4} renderAs="h4" className="flex gap-2 items-center">
+              <IconOneShotMode mode="modifier" /> {i18n.editor.standardView.oneShot.titleModifiers}
+            </Heading>
+            <p className="description text-ssm text-gray-400">{i18n.editor.standardView.oneShot.modifiersDescription}</p>
+            <div className="p-0 inline-flex flex-nowrap gap-1 mt-2 w-auto rounded-md bg-transparent">
+              <div className="grid gap-1 p-1 bg-white dark:bg-gray-900/20 rounded-md grid-cols-4">
+                <Button
+                  variant="config"
+                  onClick={() => onKeySelect(OneShotDeltaMod + 1)}
+                  // selected={OneShotDeltaMod === OneShotDeltaMod + 1}
+                  selected={KC === OneShotDeltaMod + 1}
+                  size="sm"
+                >
+                  <OSKey renderKey="shift" direction="Left" size="sm" />
+                </Button>
+                <Button
+                  variant="config"
+                  onClick={() => onKeySelect(OneShotDeltaMod + 0)}
+                  // selected={isStandardView ? keyCode === OneShotDeltaMod + 0 : false}
+                  selected={KC === OneShotDeltaMod + 0}
+                  size="sm"
+                >
+                  <OSKey renderKey="control" direction="Left" size="sm" />
+                </Button>
+                <Button
+                  variant="config"
+                  onClick={() => onKeySelect(OneShotDeltaMod + 3)}
+                  // selected={isStandardView ? keyCode === OneShotDeltaMod + 3 : false}
+                  selected={KC === OneShotDeltaMod + 3}
+                  size="sm"
+                >
+                  <OSKey renderKey="os" direction="Left" size="sm" />
+                </Button>
+                <Button
+                  variant="config"
+                  onClick={() => onKeySelect(OneShotDeltaMod + 2)}
+                  // selected={isStandardView ? keyCode === OneShotDeltaMod + 2 : false}
+                  selected={KC === OneShotDeltaMod + 2}
+                  size="sm"
+                >
+                  <OSKey renderKey="alt" direction="Left" size="sm" />
+                </Button>
 
-              <Button
-                variant="config"
-                onClick={() => onKeySelect(OneShotDeltaMod + 5)}
-                // selected={isStandardView ? keyCode === OneShotDeltaMod + 5 : false}
-                selected={KC === OneShotDeltaMod + 5}
-                size="sm"
-              >
-                <OSKey renderKey="shift" direction="Right" size="sm" />
-              </Button>
-              <Button
-                variant="config"
-                onClick={() => onKeySelect(OneShotDeltaMod + 4)}
-                // selected={isStandardView ? keyCode === OneShotDeltaMod + 4 : false}
-                selected={KC === OneShotDeltaMod + 4}
-                size="sm"
-              >
-                <OSKey renderKey="control" direction="Right" size="sm" />
-              </Button>
-              <Button
-                variant="config"
-                onClick={() => onKeySelect(OneShotDeltaMod + 7)}
-                // selected={isStandardView ? keyCode === OneShotDeltaMod + 7 : false}
-                selected={KC === OneShotDeltaMod + 7}
-                size="sm"
-              >
-                <OSKey renderKey="os" direction="Right" size="sm" />
-              </Button>
-              <Button
-                variant="config"
-                onClick={() => onKeySelect(OneShotDeltaMod + 6)}
-                // selected={isStandardView ? keyCode === OneShotDeltaMod + 6 : false}
-                selected={KC === OneShotDeltaMod + 6}
-                size="sm"
-              >
-                <OSKey renderKey="altGr" size="sm" />
-              </Button>
+                <Button
+                  variant="config"
+                  onClick={() => onKeySelect(OneShotDeltaMod + 5)}
+                  // selected={isStandardView ? keyCode === OneShotDeltaMod + 5 : false}
+                  selected={KC === OneShotDeltaMod + 5}
+                  size="sm"
+                >
+                  <OSKey renderKey="shift" direction="Right" size="sm" />
+                </Button>
+                <Button
+                  variant="config"
+                  onClick={() => onKeySelect(OneShotDeltaMod + 4)}
+                  // selected={isStandardView ? keyCode === OneShotDeltaMod + 4 : false}
+                  selected={KC === OneShotDeltaMod + 4}
+                  size="sm"
+                >
+                  <OSKey renderKey="control" direction="Right" size="sm" />
+                </Button>
+                <Button
+                  variant="config"
+                  onClick={() => onKeySelect(OneShotDeltaMod + 7)}
+                  // selected={isStandardView ? keyCode === OneShotDeltaMod + 7 : false}
+                  selected={KC === OneShotDeltaMod + 7}
+                  size="sm"
+                >
+                  <OSKey renderKey="os" direction="Right" size="sm" />
+                </Button>
+                <Button
+                  variant="config"
+                  onClick={() => onKeySelect(OneShotDeltaMod + 6)}
+                  // selected={isStandardView ? keyCode === OneShotDeltaMod + 6 : false}
+                  selected={KC === OneShotDeltaMod + 6}
+                  size="sm"
+                >
+                  <OSKey renderKey="altGr" size="sm" />
+                </Button>
+              </div>
             </div>
           </div>
-        </div>
-        <div className="cardButtons">
-          <Heading headingLevel={4} renderAs="h4" className="flex gap-2 items-center">
-            <IconOneShotMode /> {i18n.editor.standardView.oneShot.titleLayers}
-          </Heading>
-          <p className="description">{i18n.editor.standardView.oneShot.layersDescription}</p>
-          <div className="p-1 inline-flex flex-nowrap gap-1 mt-2 w-auto rounded-md bg-white dark:bg-gray-900/20">
-            <Button
-              variant="config"
-              onClick={() => onKeySelect(OneShotDeltaLayer + 0)}
-              // selected={isStandardView ? keyCode === OneShotDeltaLayer + 0 : false}
-              selected={KC === OneShotDeltaLayer + 0}
-              size="icon"
-            >
-              1
-            </Button>
-            <Button
-              variant="config"
-              onClick={() => onKeySelect(OneShotDeltaLayer + 1)}
-              // selected={isStandardView ? keyCode === OneShotDeltaLayer + 1 : false}
-              selected={KC === OneShotDeltaLayer + 1}
-              size="icon"
-            >
-              2
-            </Button>
-            <Button
-              variant="config"
-              onClick={() => onKeySelect(OneShotDeltaLayer + 2)}
-              // selected={isStandardView ? keyCode === OneShotDeltaLayer + 2 : false}
-              selected={KC === OneShotDeltaLayer + 2}
-              size="icon"
-            >
-              3
-            </Button>
-            <Button
-              variant="config"
-              onClick={() => onKeySelect(OneShotDeltaLayer + 3)}
-              // selected={isStandardView ? keyCode === OneShotDeltaLayer + 3 : false}
-              selected={KC === OneShotDeltaLayer + 3}
-              size="icon"
-            >
-              4
-            </Button>
-            <Button
-              variant="config"
-              onClick={() => onKeySelect(OneShotDeltaLayer + 4)}
-              // selected={isStandardView ? keyCode === OneShotDeltaLayer + 4 : false}
-              selected={KC === OneShotDeltaLayer + 4}
-              size="icon"
-            >
-              5
-            </Button>
-            <Button
-              variant="config"
-              onClick={() => onKeySelect(OneShotDeltaLayer + 5)}
-              // selected={isStandardView ? keyCode === OneShotDeltaLayer + 5 : false}
-              selected={KC === OneShotDeltaLayer + 5}
-              size="icon"
-            >
-              6
-            </Button>
-            <Button
-              variant="config"
-              onClick={() => onKeySelect(OneShotDeltaLayer + 6)}
-              // selected={isStandardView ? keyCode === OneShotDeltaLayer + 6 : false}
-              selected={KC === OneShotDeltaLayer + 6}
-              size="icon"
-            >
-              7
-            </Button>
-            <Button
-              variant="config"
-              onClick={() => onKeySelect(OneShotDeltaLayer + 7)}
-              // selected={isStandardView ? keyCode === OneShotDeltaLayer + 7 : false}
-              selected={KC === OneShotDeltaLayer + 7}
-              size="icon"
-            >
-              8
-            </Button>
+          <div className="flex-1 py-2">
+            <Heading headingLevel={4} renderAs="h4" className="flex gap-2 items-center">
+              <IconOneShotMode /> {i18n.editor.standardView.oneShot.titleLayers}
+            </Heading>
+            <p className="description text-ssm text-gray-400">{i18n.editor.standardView.oneShot.layersDescription}</p>
+            <div className="p-1 inline-flex flex-nowrap gap-1 mt-2 w-auto rounded-md bg-white dark:bg-gray-900/20">
+              <Button
+                variant="config"
+                onClick={() => onKeySelect(OneShotDeltaLayer + 0)}
+                // selected={isStandardView ? keyCode === OneShotDeltaLayer + 0 : false}
+                selected={KC === OneShotDeltaLayer + 0}
+                size="icon"
+              >
+                1
+              </Button>
+              <Button
+                variant="config"
+                onClick={() => onKeySelect(OneShotDeltaLayer + 1)}
+                // selected={isStandardView ? keyCode === OneShotDeltaLayer + 1 : false}
+                selected={KC === OneShotDeltaLayer + 1}
+                size="icon"
+              >
+                2
+              </Button>
+              <Button
+                variant="config"
+                onClick={() => onKeySelect(OneShotDeltaLayer + 2)}
+                // selected={isStandardView ? keyCode === OneShotDeltaLayer + 2 : false}
+                selected={KC === OneShotDeltaLayer + 2}
+                size="icon"
+              >
+                3
+              </Button>
+              <Button
+                variant="config"
+                onClick={() => onKeySelect(OneShotDeltaLayer + 3)}
+                // selected={isStandardView ? keyCode === OneShotDeltaLayer + 3 : false}
+                selected={KC === OneShotDeltaLayer + 3}
+                size="icon"
+              >
+                4
+              </Button>
+              <Button
+                variant="config"
+                onClick={() => onKeySelect(OneShotDeltaLayer + 4)}
+                // selected={isStandardView ? keyCode === OneShotDeltaLayer + 4 : false}
+                selected={KC === OneShotDeltaLayer + 4}
+                size="icon"
+              >
+                5
+              </Button>
+              <Button
+                variant="config"
+                onClick={() => onKeySelect(OneShotDeltaLayer + 5)}
+                // selected={isStandardView ? keyCode === OneShotDeltaLayer + 5 : false}
+                selected={KC === OneShotDeltaLayer + 5}
+                size="icon"
+              >
+                6
+              </Button>
+              <Button
+                variant="config"
+                onClick={() => onKeySelect(OneShotDeltaLayer + 6)}
+                // selected={isStandardView ? keyCode === OneShotDeltaLayer + 6 : false}
+                selected={KC === OneShotDeltaLayer + 6}
+                size="icon"
+              >
+                7
+              </Button>
+              <Button
+                variant="config"
+                onClick={() => onKeySelect(OneShotDeltaLayer + 7)}
+                // selected={isStandardView ? keyCode === OneShotDeltaLayer + 7 : false}
+                selected={KC === OneShotDeltaLayer + 7}
+                size="icon"
+              >
+                8
+              </Button>
+            </div>
           </div>
         </div>
       </div>

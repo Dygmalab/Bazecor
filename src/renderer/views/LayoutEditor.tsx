@@ -2011,26 +2011,30 @@ const LayoutEditor = (props: LayoutEditorProps) => {
           inContext={modified}
         />
         <div className="w-full h-[inherit] keyboardsWrapper">
-          <div className="raise-editor layer-col h-full">
+          {/* <div className="raise-editor layer-col h-full"> // Set keyboard on bottom */}
+          <div className="raise-editor layer-col">
             <div className="dygma-keyboard-editor editor">{layer}</div>
-
-            <div className="ordinary-keyboard-editor m-0 pb-4">
-              <KeyPickerKeyboard
-                onKeySelect={onKeyChange}
-                code={code}
-                macros={macros}
-                superkeys={superkeys}
-                actions={actions}
-                action={0}
-                superName={superName}
-                keyIndex={currentKeyIndex}
-                actTab="editor"
-                selectedlanguage={currentLanguageLayout}
-                kbtype={kbtype}
-                isWireless={isWireless}
-                dragLimits={layoutEditorContainerRef}
-              />
-            </div>
+            {modeselect === "keyboard" ? (
+              <div className="ordinary-keyboard-editor m-0 pb-4">
+                <KeyPickerKeyboard
+                  onKeySelect={onKeyChange}
+                  code={code}
+                  macros={macros}
+                  superkeys={superkeys}
+                  actions={actions}
+                  action={0}
+                  superName={superName}
+                  keyIndex={currentKeyIndex}
+                  actTab="editor"
+                  selectedlanguage={currentLanguageLayout}
+                  kbtype={kbtype}
+                  isWireless={isWireless}
+                  dragLimits={layoutEditorContainerRef}
+                />
+              </div>
+            ) : (
+              ""
+            )}
           </div>
         </div>
 

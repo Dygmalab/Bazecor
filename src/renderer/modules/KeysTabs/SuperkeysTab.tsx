@@ -200,9 +200,9 @@ class SuperkeysTab extends Component<SuperkeysTabProps> {
     return (
       <Styles className={`${isStandardView ? "standardViewTab" : ""} tabsSuperkeys`}>
         <div className="tabContentWrapper">
-          <Heading headingLevel={3} renderAs="h3">
+          {/* <Heading headingLevel={3} renderAs="h3">
             {i18n.editor.standardView.superkeys.title}
-          </Heading>
+          </Heading> */}
           <Callout
             size="sm"
             className="mt-4"

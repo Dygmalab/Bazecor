@@ -113,15 +113,13 @@ function ModPicker(props: ModPickerProps) {
 
   return (
     <div className="h-[inherit]">
-      <div className={`modPickerInner ${isStandardView ? "modPickerInnerStd p-0" : "p-[16px]"}`}>
+      <div className={`modPickerInner ${isStandardView ? "modPickerInnerStd p-0" : "px-4"}`}>
         {!isStandardView ? (
           <Heading headingLevel={4} renderAs="h4" className="text-ssm">
             {i18n.editor.standardView.keys.addModifier}
           </Heading>
         ) : null}
-        <div
-          className={`modPickerButtonsList gap-1 ${isStandardView ? "flex [&_button]:w-16" : "grid grid-cols-3 [&_button]:w-full"}`}
-        >
+        <div className={`modPickerButtonsList gap-1 ${isStandardView ? "flex [&_button]:w-16" : "flex [&_button]:w-full"}`}>
           <Button
             variant="config"
             size="sm"

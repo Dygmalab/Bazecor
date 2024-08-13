@@ -449,7 +449,7 @@ const English = {
         up: "Up",
         down: "Down",
         mediaTitle: "Media",
-        mediaDescription: "Skip boring songs, turn the sound louder. <br>Harder, better, faster, stronger!",
+        mediaDescription: "Skip boring songs, turn the sound louder.",
         LEDTitle: "LED",
         LEDDescription: "Turn the RGB lighting On or Off and control the cycle through the lights effects.",
         othersTitle: "Others",

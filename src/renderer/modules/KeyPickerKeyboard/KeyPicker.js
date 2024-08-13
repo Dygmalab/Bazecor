@@ -583,52 +583,52 @@ class KeyPicker extends Component {
                   </filter>
                 </defs>
               </svg>
-            </div>
-          </div>
-        </div>
-        <div className={`KeysWrapper KeysWrapperSpecialKeys ${activeTab} ${isWireless ? "isWireless" : "notWireless"}`}>
-          <div className="keysContainer keysContainerGrid">
-            <div className="keysRow keysCustom">
-              <div className="keyIcon">
-                <h4>Cust.</h4>
-              </div>
-              <div className="keysButtonsList flex gap-2">
-                <TooltipProvider delayDuration={100}>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <div className="basis-full">
-                        <Button
-                          variant="config"
-                          disabled={disableAll}
-                          selected={keyCode.base + keyCode.modified >= 20000}
-                          onClick={() => {
-                            this.toggleModal();
-                          }}
-                          size="iconXS"
-                          className="basis-full !w-full"
-                        >
-                          <IconWrench size="sm" />
-                        </Button>
-                      </div>
-                    </TooltipTrigger>
-                    <TooltipContent size="sm" className="max-w-xs">
-                      {i18n.editor.superkeys.specialKeys.custom}
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
-                <CustomKeyCodeModal
-                  show={customModal}
-                  name={(keyCode.base + keyCode.modified).toString(16)}
-                  toggleShow={this.toggleModal}
-                  handleSave={data => {
-                    // console.log("CustomKey selected key", data);
-                    onKeySelect(parseInt(data, 16));
-                    this.toggleModal();
-                  }}
-                  modalTitle={i18n.editor.modal.customKeyCodeModal.title}
-                  modalMessage={i18n.editor.modal.customKeyCodeModal.message}
-                  labelInput={i18n.editor.modal.customKeyCodeModal.labelInput}
-                />
+              <div
+                className={`KeysWrapper KeysWrapperSpecialKeys ${activeTab} ${isWireless ? "isWireless" : "notWireless"} absolute top-1 right-1`}
+              >
+                <div className="keysRow keysCustom">
+                  <div className="keyIcon">
+                    <h4>Cust.</h4>
+                  </div>
+                  <div className="keysButtonsList flex gap-2">
+                    <TooltipProvider delayDuration={100}>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <div className="basis-full">
+                            <Button
+                              variant="config"
+                              disabled={disableAll}
+                              selected={keyCode.base + keyCode.modified >= 20000}
+                              onClick={() => {
+                                this.toggleModal();
+                              }}
+                              size="iconXS"
+                              className="w-6 h-6"
+                            >
+                              <IconWrench size="sm" />
+                            </Button>
+                          </div>
+                        </TooltipTrigger>
+                        <TooltipContent size="sm" className="max-w-xs">
+                          {i18n.editor.superkeys.specialKeys.custom}
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                    <CustomKeyCodeModal
+                      show={customModal}
+                      name={(keyCode.base + keyCode.modified).toString(16)}
+                      toggleShow={this.toggleModal}
+                      handleSave={data => {
+                        // console.log("CustomKey selected key", data);
+                        onKeySelect(parseInt(data, 16));
+                        this.toggleModal();
+                      }}
+                      modalTitle={i18n.editor.modal.customKeyCodeModal.title}
+                      modalMessage={i18n.editor.modal.customKeyCodeModal.message}
+                      labelInput={i18n.editor.modal.customKeyCodeModal.labelInput}
+                    />
+                  </div>
+                </div>
               </div>
             </div>
           </div>

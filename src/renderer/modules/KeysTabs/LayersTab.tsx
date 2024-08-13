@@ -9,32 +9,9 @@ import { Button } from "@Renderer/components/atoms/Button";
 import { IconLayerLock, IconLayerShift } from "@Renderer/components/atoms/icons";
 
 const Styles = Styled.div`
-display: flex;
-flex-wrap: wrap;
-height: inherit;
 h4 {
     font-size: 16px;
     flex: 0 0 100%;
-}
-.cardButtons {
-  margin-top: 8px;
-}
-
-.tabContentWrapper {
-  width: 100%;
-}
-&.tabsLayer {
-  .cardButtons {
-      border-bottom-left-radius: 0;
-      border-bottom-right-radius: 0;
-  }
-  .cardButtons + .cardButtons {
-      margin-top: 2px;
-      border-bottom-left-radius: 6px;
-      border-bottom-right-radius: 6px;
-      border-top-left-radius: 0;
-      border-top-right-radius: 0;
-  }
 }
 `;
 
@@ -90,13 +67,14 @@ const LayersTab = ({ keyCode, isStandardView, disableMods, onLayerPress }: Layer
   //     keyCode?.modified > 0 && (layerLock.some(({ keynum }) => keynum === KC) || layerSwitch.some(({ keynum }) => keynum === KC)),
   //   [KC, keyCode?.modified, layerLock, layerSwitch],
   // );
+  console.log("disableMods: ", disableMods);
 
   return (
-    <Styles className={`${isStandardView ? "standardViewTab" : ""} tabsLayer`}>
-      <div className="tabContentWrapper">
-        <Heading headingLevel={isStandardView ? 3 : 4} renderAs={isStandardView ? "h3" : "h4"}>
+    <Styles className={`flex flex-wrap h-[inherit] ${isStandardView ? "standardViewTab" : ""} tabsLayer`}>
+      <div className="tabContentWrapper w-full">
+        {/* <Heading headingLevel={isStandardView ? 3 : 4} renderAs={isStandardView ? "h3" : "h4"}>
           {i18n.editor.layers.title}
-        </Heading>
+        </Heading> */}
         {isStandardView ? (
           <Callout
             size="sm"
@@ -109,49 +87,53 @@ const LayersTab = ({ keyCode, isStandardView, disableMods, onLayerPress }: Layer
             <p>{i18n.editor.standardView.layers.callOut}</p>
           </Callout>
         ) : null}
-        <div className="cardButtons">
-          <Heading headingLevel={4} renderAs="h4" className="flex gap-2 items-center">
-            <IconLayerShift /> {i18n.editor.standardView.layers.layerSwitch}
-          </Heading>
-          <p>{i18n.editor.standardView.layers.layerSwitchDescription}</p>
-          <div className="p-1 inline-flex flex-nowrap gap-1 mt-2 w-auto rounded-md bg-white dark:bg-gray-900/20">
-            {layerSwitch.map((button, index) => (
-              <Button
-                variant="config"
-                size="icon"
-                onClick={() => {
-                  onLayerPress(button.keynum);
-                }}
-                selected={keyCode?.modified > 0 && button.keynum === KC}
-                // selected={layerDeltaSwitch + index === keyCode}
-                disabled={disableMods}
-                key={`buttonShift-${button.keynum}`}
-              >
-                {index + 1}
-              </Button>
-            ))}
+        <div className="flex gap-1">
+          <div className={`flex-1 py-2 ${disableMods ? "opacity-50 pointer-events-none" : ""}`}>
+            <Heading headingLevel={4} renderAs="h4" className="flex gap-2 items-center">
+              <IconLayerShift /> {i18n.editor.standardView.layers.layerSwitch}
+            </Heading>
+            <p className="text-ssm text-gray-400">{i18n.editor.standardView.layers.layerSwitchDescription}</p>
+            <div className="p-1 inline-flex flex-nowrap gap-1 mt-2 w-auto rounded-md bg-white dark:bg-gray-900/20">
+              {layerSwitch.map((button, index) => (
+                <Button
+                  variant="config"
+                  size="icon"
+                  onClick={() => {
+                    onLayerPress(button.keynum);
+                  }}
+                  selected={keyCode?.modified > 0 && button.keynum === KC}
+                  // selected={layerDeltaSwitch + index === keyCode}
+                  disabled={disableMods}
+                  key={`buttonShift-${button.keynum}`}
+                >
+                  {index + 1}
+                </Button>
+              ))}
+            </div>
           </div>
-        </div>
-        <div className="cardButtons">
-          <Heading headingLevel={4} renderAs="h4" className="flex gap-2 items-center">
-            <IconLayerLock /> {i18n.editor.layers.layerLock}
-          </Heading>
-          <p>{isStandardView ? i18n.editor.standardView.layers.layerLockDescription : i18n.editor.layers.layerLockDescription}</p>
-          <div className="p-1 inline-flex flex-nowrap gap-1 mt-2 w-auto rounded-md bg-white dark:bg-gray-900/20">
-            {layerLock.map((button, index) => (
-              <Button
-                variant="config"
-                size="icon"
-                onClick={() => {
-                  onLayerPress(button.keynum);
-                }}
-                selected={keyCode?.modified > 0 && button.keynum === KC}
-                // selected={keyCode.modified > 0 && layerDelta + index === KC}
-                key={`buttonLock-${button.keynum}`}
-              >
-                {index + 1}
-              </Button>
-            ))}
+          <div className="flex-1 py-2">
+            <Heading headingLevel={4} renderAs="h4" className="flex gap-2 items-center">
+              <IconLayerLock /> {i18n.editor.layers.layerLock}
+            </Heading>
+            <p className="text-ssm text-gray-400">
+              {isStandardView ? i18n.editor.standardView.layers.layerLockDescription : i18n.editor.layers.layerLockDescription}
+            </p>
+            <div className="p-1 inline-flex flex-nowrap gap-1 mt-2 w-auto rounded-md bg-white dark:bg-gray-900/20">
+              {layerLock.map((button, index) => (
+                <Button
+                  variant="config"
+                  size="icon"
+                  onClick={() => {
+                    onLayerPress(button.keynum);
+                  }}
+                  selected={keyCode?.modified > 0 && button.keynum === KC}
+                  // selected={keyCode.modified > 0 && layerDelta + index === KC}
+                  key={`buttonLock-${button.keynum}`}
+                >
+                  {index + 1}
+                </Button>
+              ))}
+            </div>
           </div>
         </div>
       </div>

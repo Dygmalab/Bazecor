@@ -34,9 +34,9 @@ function WirelessTab(props: TabLayoutEditorProps) {
     <div className={`${isStandardView ? "standardViewTab" : ""} tabsWireless w-full`}>
       <div className="tabContentWrapper">
         <div className="buttonsRow">
-          <Heading renderAs="h3" headingLevel={3} className="mb-[16px]">
+          {/* <Heading renderAs="h3" headingLevel={3} className="mb-[16px]">
             {i18n.app.menu.wireless}
-          </Heading>
+          </Heading> */}
           <Callout size="sm" className="mt-4">
             <p>{i18n.editor.standardView.wireless.callOut}</p>
           </Callout>

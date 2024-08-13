@@ -48,46 +48,47 @@ const NoKeyTransparentTab = ({ keyCode, onKeySelect, isStandardView }: NoKeyTran
     <Styles className={`${isStandardView ? "standardViewTab" : ""} tabsNoKeysTransparent`}>
       <div className="tabContentWrapper">
         <div className="buttonsRow">
-          <Heading renderAs="h3" headingLevel={3}>
+          {/* <Heading renderAs="h3" headingLevel={3}>
             {i18n.editor.standardView.noKeyTransparent}{" "}
-          </Heading>
+          </Heading> */}
           <Callout size="sm" className="mt-4">
             <p>{i18n.editor.standardView.callOut}</p>
           </Callout>
-
-          <div className="keysButtonsList">
-            <Heading renderAs="h4" headingLevel={4}>
-              {i18n.editor.standardView.noKey}
-            </Heading>
-            <p className="description">{i18n.editor.standardView.noKeyDescription}</p>
-            <Button
-              variant="config"
-              onClick={() => {
-                onKeySelect(0);
-              }}
-              size="sm"
-              className="max-w-[124px] w-[124px] text-center mt-1"
-              selected={KC === 0}
-            >
-              {i18n.editor.standardView.noKey}
-            </Button>
-          </div>
-          <div className="keysButtonsList">
-            <Heading headingLevel={4} renderAs="h4">
-              {i18n.editor.standardView.transparent}
-            </Heading>
-            <p className="description">{i18n.editor.standardView.transparentDescription}</p>
-            <Button
-              variant="config"
-              onClick={() => {
-                onKeySelect(65535);
-              }}
-              selected={KC === 65535}
-              size="sm"
-              className="max-w-[124px] w-[124px] text-center mt-1"
-            >
-              {i18n.editor.standardView.transparent}
-            </Button>
+          <div className="flex gap-6">
+            <div className="keysButtonsList">
+              <Heading renderAs="h4" headingLevel={4}>
+                {i18n.editor.standardView.noKey}
+              </Heading>
+              <p className="description">{i18n.editor.standardView.noKeyDescription}</p>
+              <Button
+                variant="config"
+                onClick={() => {
+                  onKeySelect(0);
+                }}
+                size="sm"
+                className="max-w-[124px] w-[124px] text-center mt-1"
+                selected={KC === 0}
+              >
+                {i18n.editor.standardView.noKey}
+              </Button>
+            </div>
+            <div className="keysButtonsList">
+              <Heading headingLevel={4} renderAs="h4">
+                {i18n.editor.standardView.transparent}
+              </Heading>
+              <p className="description">{i18n.editor.standardView.transparentDescription}</p>
+              <Button
+                variant="config"
+                onClick={() => {
+                  onKeySelect(65535);
+                }}
+                selected={KC === 65535}
+                size="sm"
+                className="max-w-[124px] w-[124px] text-center mt-1"
+              >
+                {i18n.editor.standardView.transparent}
+              </Button>
+            </div>
           </div>
         </div>
       </div>
