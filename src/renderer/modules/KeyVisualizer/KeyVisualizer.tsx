@@ -22,6 +22,8 @@ import { SegmentedKeyType } from "@Renderer/types/layout";
 import ListModifier from "@Renderer/components/molecules/ListModifiers/ListModifiers";
 import Heading from "@Renderer/components/atoms/Heading";
 
+import { IconDragAndDrop } from "@Renderer/components/atoms/icons";
+
 const Style = Styled.div`
 &.KeyVisualizer {
     padding: 16px;
@@ -150,7 +152,7 @@ const KeyVisualizer = (props: KeyVisualizerProps) => {
   ];
 
   return (
-    <Style className="KeyVisualizer">
+    <Style className="KeyVisualizer !p-0 rounded-regular bg-gray-25 dark:bg-gray-600">
       <div
         className={`KeyVisualizerInner ${newValue !== oldValue && isStandardView ? "showConnection" : ""} ${
           disable ? "disable" : ""
@@ -178,16 +180,22 @@ const KeyVisualizer = (props: KeyVisualizerProps) => {
         )}
         {newValue && !isStandardView ? (
           <div className="newKeyValue">
-            <Heading headingLevel={4} renderAs="h4">
-              New value
-            </Heading>
-            <div className="keySelectedBox">
-              <div className="keySelectedValue">{newValue}</div>
-              <ListModifier
-                keyCode={
-                  keyCode !== undefined && typeof keyCode !== "number" ? Number(keyCode.base + keyCode.modified) : Number(keyCode)
-                }
-              />
+            <div className="!p-0 bg-gray-50 dark:bg-gray-700 rounded-t-regular">
+              <Heading headingLevel={4} renderAs="h4" className="text-ssm m-0 !p-2 leading-none flex gap-2 items-center">
+                <IconDragAndDrop /> New value
+              </Heading>
+            </div>
+            <div className="p-2">
+              <div className="keySelectedBox">
+                <div className="keySelectedValue">{newValue}</div>
+                <ListModifier
+                  keyCode={
+                    keyCode !== undefined && typeof keyCode !== "number"
+                      ? Number(keyCode.base + keyCode.modified)
+                      : Number(keyCode)
+                  }
+                />
+              </div>
             </div>
           </div>
         ) : (

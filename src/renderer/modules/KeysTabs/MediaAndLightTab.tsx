@@ -34,12 +34,7 @@ const Styles = Styled.div`
 display: flex;
 flex-wrap: wrap;
 height: inherit;
-h4 {
-    font-size: 16px;
-    flex: 0 0 100%;
-    width: 100%;
-    margin-top: 24px;
-}
+
 .callOut {
     width: 100%;
     flex: 0 0 100%;
@@ -47,20 +42,6 @@ h4 {
 .w100 {
     width: 100%;
     flex: 0 0 100%;
-}
-.description {
-    font-size: 14px;
-    color: ${({ theme }) => theme.styles.macro.descriptionColor};
-    flex: 0 0 100%;
-    width: 100%;
-}
-
-.keysButtonsList {
-    display: flex;
-    flex-grow: 1;
-    flex: 100%;
-    margin-left: -8px;
-    margin-right: -8px;
 }
 
 .buttonsRow {
@@ -96,9 +77,10 @@ interface MediaAndLightTabProps {
   keyCode: any;
   isStandardView: boolean;
   onAddSpecial: (event: any, value: number) => void;
+  disabled?: boolean;
 }
 
-const MediaAndLightTab = ({ keyCode, isStandardView, onAddSpecial }: MediaAndLightTabProps) => {
+const MediaAndLightTab = ({ keyCode, isStandardView, onAddSpecial, disabled }: MediaAndLightTabProps) => {
   const handleAddSpecial = (special: number) => {
     onAddSpecial(special, 5);
   };
@@ -111,25 +93,30 @@ const MediaAndLightTab = ({ keyCode, isStandardView, onAddSpecial }: MediaAndLig
   }, [keyCode]);
 
   return (
-    <Styles className={`${isStandardView ? "standardViewTab" : ""} tabsMediaAndLED`}>
+    <Styles
+      className={`${isStandardView ? "standardViewTab" : ""} tabsMediaAndLED ${disabled ? "opacity-50 pointer-events-none" : ""}`}
+    >
       <div className="tabContentWrapper">
         {isStandardView ? (
           <>
             {/* <Heading headingLevel={3} renderAs="h3">
               {i18n.editor.standardView.mediaAndLED.title}
             </Heading> */}
-            <Callout size="sm" className="mt-4">
+            <Callout size="sm" className="mt-0">
               <p>{i18n.editor.standardView.mediaAndLED.callOut}</p>
             </Callout>
           </>
         ) : null}
-        <div className="buttonsRow">
-          <div className="mediaButtons flex-1">
-            <Heading headingLevel={4} renderAs="h4">
+        <div className="buttonsRow py-2">
+          <div className="mediaButtons flex-1 py-2">
+            <Heading headingLevel={4} renderAs="h4" className="m-0 text-base">
               {i18n.editor.superkeys.specialKeys.mediaTitle}
             </Heading>
-            <p className="description" dangerouslySetInnerHTML={{ __html: i18n.editor.superkeys.specialKeys.mediaDescription }} />
-            <div className="flex gap-2 mt-2">
+            <p
+              className="description text-ssm font-medium text-gray-400 dark:text-gray-200"
+              dangerouslySetInnerHTML={{ __html: i18n.editor.superkeys.specialKeys.mediaDescription }}
+            />
+            <div className="flex gap-1 mt-2">
               <TooltipProvider delayDuration={50}>
                 <Tooltip>
                   <TooltipTrigger asChild>
@@ -299,12 +286,14 @@ const MediaAndLightTab = ({ keyCode, isStandardView, onAddSpecial }: MediaAndLig
               </TooltipProvider>
             </div>
           </div>
-          <div className="LEDButtons flex-1">
-            <Heading headingLevel={4} renderAs="h4">
+          <div className="LEDButtons flex-1 py-2">
+            <Heading headingLevel={4} renderAs="h4" className="m-0 text-base">
               {i18n.editor.superkeys.specialKeys.LEDTitle}
             </Heading>
-            <p className="description">{i18n.editor.superkeys.specialKeys.LEDDescription}</p>
-            <div className="flex gap-2 mt-2">
+            <p className="description text-ssm font-medium text-gray-400 dark:text-gray-200">
+              {i18n.editor.superkeys.specialKeys.LEDDescription}
+            </p>
+            <div className="flex gap-1 mt-2">
               <TooltipProvider delayDuration={50}>
                 <Tooltip>
                   <TooltipTrigger asChild>
@@ -369,13 +358,15 @@ const MediaAndLightTab = ({ keyCode, isStandardView, onAddSpecial }: MediaAndLig
             </div>
           </div>
         </div>
-        <div className="buttonsRow">
-          <div className="othersButtons flex-1">
-            <Heading headingLevel={4} renderAs="h4">
+        <div className="buttonsRow py-2">
+          <div className="othersButtons flex-1 py-2">
+            <Heading headingLevel={4} renderAs="h4" className="m-0 text-base">
               {i18n.editor.superkeys.specialKeys.othersTitle}
             </Heading>
-            <p className="description">{i18n.editor.superkeys.specialKeys.othersDescription}</p>
-            <div className="flex gap-2 mt-2">
+            <p className="description text-ssm font-medium text-gray-400 dark:text-gray-200">
+              {i18n.editor.superkeys.specialKeys.othersDescription}
+            </p>
+            <div className="flex gap-1 mt-2">
               <TooltipProvider delayDuration={50}>
                 <Tooltip>
                   <TooltipTrigger asChild>

@@ -1,5 +1,4 @@
 import React, { useMemo } from "react";
-import Styled from "styled-components";
 
 import { i18n } from "@Renderer/i18n";
 
@@ -8,21 +7,15 @@ import Heading from "@Renderer/components/atoms/Heading";
 import { Button } from "@Renderer/components/atoms/Button";
 import { IconLayerLock, IconLayerShift } from "@Renderer/components/atoms/icons";
 
-const Styles = Styled.div`
-h4 {
-    font-size: 16px;
-    flex: 0 0 100%;
-}
-`;
-
 interface LayersTabProps {
   keyCode: any;
   isStandardView: boolean;
   disableMods: boolean;
   onLayerPress: (value: number) => void;
+  disabled?: boolean;
 }
 
-const LayersTab = ({ keyCode, isStandardView, disableMods, onLayerPress }: LayersTabProps) => {
+const LayersTab = ({ keyCode, isStandardView, disableMods, onLayerPress, disabled }: LayersTabProps) => {
   const layerLock = useMemo(
     () => [
       { name: "Layer Lock 1", keynum: 17492 },
@@ -70,7 +63,9 @@ const LayersTab = ({ keyCode, isStandardView, disableMods, onLayerPress }: Layer
   console.log("disableMods: ", disableMods);
 
   return (
-    <Styles className={`flex flex-wrap h-[inherit] ${isStandardView ? "standardViewTab" : ""} tabsLayer`}>
+    <div
+      className={`flex flex-wrap h-[inherit] ${isStandardView ? "standardViewTab" : ""} ${disabled ? "opacity-50 pointer-events-none" : ""} tabsLayer`}
+    >
       <div className="tabContentWrapper w-full">
         {/* <Heading headingLevel={isStandardView ? 3 : 4} renderAs={isStandardView ? "h3" : "h4"}>
           {i18n.editor.layers.title}
@@ -78,7 +73,7 @@ const LayersTab = ({ keyCode, isStandardView, disableMods, onLayerPress }: Layer
         {isStandardView ? (
           <Callout
             size="sm"
-            className="mt-4"
+            className="mt-0"
             hasVideo
             media="wsx0OtkKXXg"
             videoTitle="This 60% keyboard can have +2500 keys!"
@@ -87,12 +82,14 @@ const LayersTab = ({ keyCode, isStandardView, disableMods, onLayerPress }: Layer
             <p>{i18n.editor.standardView.layers.callOut}</p>
           </Callout>
         ) : null}
-        <div className="flex gap-1">
+        <div className="flex py-2 flex-wrap gap-1">
           <div className={`flex-1 py-2 ${disableMods ? "opacity-50 pointer-events-none" : ""}`}>
-            <Heading headingLevel={4} renderAs="h4" className="flex gap-2 items-center">
+            <Heading headingLevel={4} renderAs="h4" className="flex gap-2 items-center w-full text-base">
               <IconLayerShift /> {i18n.editor.standardView.layers.layerSwitch}
             </Heading>
-            <p className="text-ssm text-gray-400">{i18n.editor.standardView.layers.layerSwitchDescription}</p>
+            <p className="text-ssm font-medium text-gray-400 dark:text-gray-200">
+              {i18n.editor.standardView.layers.layerSwitchDescription}
+            </p>
             <div className="p-1 inline-flex flex-nowrap gap-1 mt-2 w-auto rounded-md bg-white dark:bg-gray-900/20">
               {layerSwitch.map((button, index) => (
                 <Button
@@ -112,10 +109,10 @@ const LayersTab = ({ keyCode, isStandardView, disableMods, onLayerPress }: Layer
             </div>
           </div>
           <div className="flex-1 py-2">
-            <Heading headingLevel={4} renderAs="h4" className="flex gap-2 items-center">
+            <Heading headingLevel={4} renderAs="h4" className="flex gap-2 items-center w-full text-base">
               <IconLayerLock /> {i18n.editor.layers.layerLock}
             </Heading>
-            <p className="text-ssm text-gray-400">
+            <p className="text-ssm font-medium text-gray-400 dark:text-gray-200">
               {isStandardView ? i18n.editor.standardView.layers.layerLockDescription : i18n.editor.layers.layerLockDescription}
             </p>
             <div className="p-1 inline-flex flex-nowrap gap-1 mt-2 w-auto rounded-md bg-white dark:bg-gray-900/20">
@@ -137,7 +134,7 @@ const LayersTab = ({ keyCode, isStandardView, disableMods, onLayerPress }: Layer
           </div>
         </div>
       </div>
-    </Styles>
+    </div>
   );
 };
 

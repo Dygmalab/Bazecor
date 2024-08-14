@@ -42,9 +42,10 @@ interface OneShotTabProps {
   keyCode: any;
   isStandardView: boolean;
   onKeySelect: (keycode: number) => void;
+  disabled?: boolean;
 }
 
-const OneShotTab = ({ keyCode, onKeySelect, isStandardView }: OneShotTabProps) => {
+const OneShotTab = ({ keyCode, onKeySelect, isStandardView, disabled }: OneShotTabProps) => {
   const OneShotDeltaMod = 49153;
   const OneShotDeltaLayer = 49161;
 
@@ -56,25 +57,29 @@ const OneShotTab = ({ keyCode, onKeySelect, isStandardView }: OneShotTabProps) =
   }, [keyCode]);
 
   return (
-    <Styles className={`${isStandardView ? "standardViewTab" : ""} tabsOneShot`}>
+    <Styles
+      className={`${isStandardView ? "standardViewTab" : ""} tabsOneShot ${disabled ? "opacity-50 pointer-events-none" : ""}`}
+    >
       <div className="tabContentWrapper">
         {isStandardView ? (
           <>
             {/* <Heading headingLevel={3} renderAs="h3">
               {i18n.editor.standardView.oneShot.title}
             </Heading> */}
-            <Callout size="sm" className="mt-4">
+            <Callout size="sm" className="mt-0">
               <p>{i18n.editor.standardView.callOut}</p>
             </Callout>
           </>
         ) : null}
 
-        <div className="flex gap-1">
-          <div className="flex-1 py-2">
+        <div className="flex flex-wrap gap-1 py-2">
+          <div className="flex-1 py-2 min-w-80">
             <Heading headingLevel={4} renderAs="h4" className="flex gap-2 items-center">
               <IconOneShotMode mode="modifier" /> {i18n.editor.standardView.oneShot.titleModifiers}
             </Heading>
-            <p className="description text-ssm text-gray-400">{i18n.editor.standardView.oneShot.modifiersDescription}</p>
+            <p className="description text-ssm font-medium text-gray-400 dark:text-gray-200">
+              {i18n.editor.standardView.oneShot.modifiersDescription}
+            </p>
             <div className="p-0 inline-flex flex-nowrap gap-1 mt-2 w-auto rounded-md bg-transparent">
               <div className="grid gap-1 p-1 bg-white dark:bg-gray-900/20 rounded-md grid-cols-4">
                 <Button
@@ -157,7 +162,9 @@ const OneShotTab = ({ keyCode, onKeySelect, isStandardView }: OneShotTabProps) =
             <Heading headingLevel={4} renderAs="h4" className="flex gap-2 items-center">
               <IconOneShotMode /> {i18n.editor.standardView.oneShot.titleLayers}
             </Heading>
-            <p className="description text-ssm text-gray-400">{i18n.editor.standardView.oneShot.layersDescription}</p>
+            <p className="description text-ssm font-medium text-gray-400 dark:text-gray-200">
+              {i18n.editor.standardView.oneShot.layersDescription}
+            </p>
             <div className="p-1 inline-flex flex-nowrap gap-1 mt-2 w-auto rounded-md bg-white dark:bg-gray-900/20">
               <Button
                 variant="config"

@@ -22,4 +22,5 @@ export interface TabLayoutEditorProps {
   keyCode: number;
   onKeySelect: (key: number) => void;
   isStandardView: boolean;
+  disabled?: boolean;
 }

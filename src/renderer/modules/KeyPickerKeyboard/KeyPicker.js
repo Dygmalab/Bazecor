@@ -120,10 +120,6 @@ width: 100%;
     max-width: 1170px;
     margin: 6px auto;
 }
-.keysOrdinaryKeyboard {
-  position: relative;
-  z-index: 4;
-}
 
 
 .KeysWrapper {
@@ -142,11 +138,6 @@ width: 100%;
   background: ${({ theme }) => theme.styles.keyboardPicker.keysRowBackground};
   box-shadow: ${({ theme }) => theme.styles.keyboardPicker.keysRowBoxShadow};
   border-radius: 6px;
-  padding: 5px;
-  padding-left: 3px;
-  &.keysOrdinaryKeyboard {
-    padding: 12px 24px;
-  }
   .keyIcon {
     flex: 0 0 32px;
     text-align: center;
@@ -558,7 +549,7 @@ class KeyPicker extends Component {
       <Style>
         <div className="KeysWrapper">
           <div className="keysContainer">
-            <div className="keysRow keysOrdinaryKeyboard">
+            <div className="keysRow keysOrdinaryKeyboard relative z-[4] p-3">
               <svg
                 className={`svgStyle ${process.platform} ${keyboardLayout}`}
                 viewBox="0 0 1070 208"

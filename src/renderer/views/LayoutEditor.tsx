@@ -151,7 +151,10 @@ const Styles = Styled.div`
 }
 .singleViewMode.keyboard .raiseKeyboard {
   margin: 0 auto;
-  max-height: 40vh;
+  max-height: 44vh;
+}
+.singleViewMode.keyboard .raiseKeyboard.svg-defy {
+  max-height: 49vh;
 }
 
 .NeuronLine {
@@ -1950,7 +1953,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
         darkMode={darkMode}
         style={{ width: "50vw" }}
         showUnderglow={modeselect !== "keyboard"}
-        className="raiseKeyboard layer h-auto"
+        className={`svg-${deviceName.toLowerCase()} raiseKeyboard layer h-auto`}
         isStandardView={isStandardView}
       />
     </div>

@@ -81,7 +81,7 @@ function SuperKeysFeatures() {
                   <h6>Tap</h6>
                   <ul>
                     <li className="active">Keys</li>
-                    <li>Modifiers</li>
+                    <li className="active">Modifiers</li>
                     <li className="active">Macros</li>
                     <li className="active">Media & LED</li>
                     <li className="active">Mouse Clicks</li>
@@ -126,7 +126,7 @@ function SuperKeysFeatures() {
                   <h6>2Tap</h6>
                   <ul>
                     <li className="active">Keys</li>
-                    <li>Modifiers</li>
+                    <li className="active">Modifiers</li>
                     <li className="active">Macros</li>
                     <li className="active">Media & LED</li>
                     <li className="active">Mouse Clicks</li>

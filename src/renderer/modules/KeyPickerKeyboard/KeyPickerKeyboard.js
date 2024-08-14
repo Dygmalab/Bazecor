@@ -186,54 +186,54 @@ width: -webkit-fill-available;
   }
 }
 
-.superkeyHint {
-  padding: 8px;
-}
-.superkeyItem {
-  display: flex;
-  flex-wrap: nowrap;
-  align-items: center;
-  border-radius: 3px;
-  padding: 4px;
-  justify-content: space-between;
-  background-color: ${({ theme }) => theme.styles.standardView.superkeys.item.background};
-}
-.superkeyItem + .superkeyItem  {
-  margin-top: 1px;
-}
-.superkeyTitle {
-  flex: 0 0 62px;
-  padding-right: 18px;
-}
-.superkeyTitle h5.actionTitle {
-  font-size: 8px;
-  text-transform: uppercase;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  margin: 4px 0 1px 0;
-  color: ${({ theme }) => theme.styles.standardView.superkeys.item.titleColor};
-}
-.superKey {
-  position: relative;
-  align-self: center;
-  padding: 4px;
-  flex: 0 0 calc(100% - 62px);
-  text-align: center;
-  font-size: 10px;
-  font-weight: 700;
-  border: 1px solid ${({ theme }) => theme.styles.standardView.superkeys.key.border};
-  border-radius: 3px;
-  background-color: ${({ theme }) => theme.styles.standardView.superkeys.key.background};
-  .listModifiersTags .labelModifier {
-    font-size: 8px;
-    padding: 3px 8px;
-  }
-}
-.superKey > div{
-  position: absolute;
-  bottom: -12px;
-  left: 12px;
-}
+// .superkeyHint {
+//   padding: 8px;
+// }
+// .superkeyItem {
+//   display: flex;
+//   flex-wrap: nowrap;
+//   align-items: center;
+//   border-radius: 3px;
+//   padding: 4px;
+//   justify-content: space-between;
+//   background-color: ${({ theme }) => theme.styles.standardView.superkeys.item.background};
+// }
+// .superkeyItem + .superkeyItem  {
+//   margin-top: 1px;
+// }
+// .superkeyTitle {
+//   flex: 0 0 62px;
+//   padding-right: 18px;
+// }
+// .superkeyTitle h5.actionTitle {
+//   font-size: 8px;
+//   text-transform: uppercase;
+//   font-weight: 700;
+//   letter-spacing: 0.04em;
+//   margin: 4px 0 1px 0;
+//   color: ${({ theme }) => theme.styles.standardView.superkeys.item.titleColor};
+// }
+// .superKey {
+//   position: relative;
+//   align-self: center;
+//   padding: 4px;
+//   flex: 0 0 calc(100% - 62px);
+//   text-align: center;
+//   font-size: 10px;
+//   font-weight: 700;
+//   border: 1px solid ${({ theme }) => theme.styles.standardView.superkeys.key.border};
+//   border-radius: 3px;
+//   background-color: ${({ theme }) => theme.styles.standardView.superkeys.key.background};
+//   .listModifiersTags .labelModifier {
+//     font-size: 8px;
+//     padding: 3px 8px;
+//   }
+// }
+// .superKey > div{
+//   position: absolute;
+//   bottom: -12px;
+//   left: 12px;
+// }
 
 `;
 
@@ -574,7 +574,7 @@ class KeyPickerKeyboard extends Component {
               </TabsContent>
               <TabsContent value="tabNoKeys">
                 <motion.div initial="hidden" animate="visible" key="tabNoKeys" variants={tabVariants}>
-                  <NoKeyTransparentTab keyCode={code} onKeySelect={onKeySelect} isStandardView />
+                  <NoKeyTransparentTab keyCode={code} onKeySelect={onKeySelect} isStandardView disabled={disable} />
                 </motion.div>
               </TabsContent>
               <TabsContent value="tabLayers" key="tabLayers">
@@ -584,6 +584,7 @@ class KeyPickerKeyboard extends Component {
                     keyCode={code}
                     isStandardView
                     disableMods={!!((action === 0 || action === 3) && actTab === "super")}
+                    disabled={disable}
                   />
                 </motion.div>
               </TabsContent>
@@ -596,6 +597,7 @@ class KeyPickerKeyboard extends Component {
                       onMacrosPress={onKeySelect}
                       keyCode={code}
                       isStandardView
+                      disabled={disable}
                     />
                     {this.props.macros[KC - 53852] ? (
                       <div className="ball-container">
@@ -626,6 +628,7 @@ class KeyPickerKeyboard extends Component {
                           macros={macros}
                           keyCode={code}
                           isStandardView
+                          disabled={disable}
                         />
                         {/* {superkeys[superk.indexOf(KC)] ? (
                           <div className="superkeyHint">
@@ -649,25 +652,25 @@ class KeyPickerKeyboard extends Component {
                   </TabsContent>
                   <TabsContent value="tabOneShot" key="tabOneShot">
                     <motion.div initial="hidden" animate="visible" key="tabKeys" variants={tabVariants}>
-                      <OneShotTab keyCode={code} onKeySelect={onKeySelect} isStandardView />
+                      <OneShotTab keyCode={code} onKeySelect={onKeySelect} isStandardView disabled={disable} />
                     </motion.div>
                   </TabsContent>
                 </>
               )}
               <TabsContent value="tabMedia" key="tabMedia">
                 <motion.div initial="hidden" animate="visible" key="tabKeys" variants={tabVariants}>
-                  <MediaAndLightTab onAddSpecial={onKeySelect} keyCode={code} isStandardView />
+                  <MediaAndLightTab onAddSpecial={onKeySelect} keyCode={code} isStandardView disabled={disable} />
                 </motion.div>
               </TabsContent>
               <TabsContent value="tabMouse" key="tabMouse">
                 <motion.div initial="hidden" animate="visible" key="tabKeys" variants={tabVariants}>
-                  <MouseTab onAddSpecial={onKeySelect} keyCode={code} isStandardView actTab={actTab} />
+                  <MouseTab onAddSpecial={onKeySelect} keyCode={code} isStandardView actTab={actTab} disabled={disable} />
                 </motion.div>
               </TabsContent>
               {isWireless && (
                 <TabsContent value="tabWireless" key="tabWireless">
                   <motion.div initial="hidden" animate="visible" key="tabKeys" variants={tabVariants}>
-                    <WirelessTab keyCode={code} onKeySelect={onKeySelect} isStandardView />
+                    <WirelessTab keyCode={code} onKeySelect={onKeySelect} isStandardView disabled={disable} />
                   </motion.div>
                 </TabsContent>
               )}

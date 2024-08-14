@@ -1753,9 +1753,9 @@ div.card.card-preferences .card-body {
       grid-template-columns: 1fr;
       grid-gap: 24px;
     }
-    .keyEnhanceWrapper {
-      order: 2;
-    }
+    // .keyEnhanceWrapper {
+    //   order: 2;
+    // }
     .KeyVisualizer {
       display: none;
     }
