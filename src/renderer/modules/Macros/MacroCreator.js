@@ -705,7 +705,7 @@ class MacroCreator extends Component {
                         <div className="px-6 py-3 rounded-md bg-gray-50/40 dark:bg-gray-900/20 mt-[-24px]">
                           <TabsContent value="tabLayers">
                             <motion.div initial="hidden" animate="visible" variants={tabVariants}>
-                              <LayersTab onLayerPress={this.onLayerPress} />
+                              <LayersTab onKeySelect={this.onLayerPress} />
                             </motion.div>
                           </TabsContent>
                           <TabsContent value="tabMacro">
