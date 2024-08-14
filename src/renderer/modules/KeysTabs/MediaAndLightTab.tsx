@@ -343,7 +343,7 @@ const MediaAndLightTab = ({ keyCode, isStandardView, onAddSpecial, disabled }: M
                         variant="config"
                         size="icon"
                         onClick={() => handleAddSpecial(17152)}
-                        selected={isStandardView ? keyCode === 17152 : false}
+                        // selected={isStandardView ? keyCode === 17152 : false}
                         selected={KC === 17152}
                       >
                         <IconLEDNextEffect size="sm" />
@@ -395,7 +395,7 @@ const MediaAndLightTab = ({ keyCode, isStandardView, onAddSpecial, disabled }: M
                         variant="config"
                         size="icon"
                         onClick={() => handleAddSpecial(18834)}
-                        selected={isStandardView ? keyCode === 18834 : false}
+                        // selected={isStandardView ? keyCode === 18834 : false}
                         selected={KC === 18834}
                       >
                         <IconToolsCalculator size="sm" />

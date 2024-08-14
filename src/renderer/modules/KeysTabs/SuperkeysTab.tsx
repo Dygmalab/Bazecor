@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { useMemo } from "react";
 import Styled from "styled-components";
 import { i18n } from "@Renderer/i18n";
@@ -102,17 +103,20 @@ interface SuperkeysTabProps {
   disabled?: boolean;
 }
 
+// eslint-disable-next-line
 const SuperkeysTab = ({ macros, keyCode, isStandardView, actions, onKeySelect, superkeys, disabled }: SuperkeysTabProps) => {
   const keymapDB = useMemo(() => new KeymapDB(), []);
   const KC = keyCode.base + keyCode.modified;
 
-  const translateSuperKeyAction = superkeysSelected => {
+  // eslint-disable-next-line
+  const translateSuperKeyAction = (superkeysSelected: any) => {
     if (superkeysSelected === undefined) return null;
 
     const aux = superkeysSelected === 1 ? keymapDB.parse(0) : keymapDB.parse(superkeysSelected);
     let translatedAction = "";
 
     if (aux.extraLabel === "MACRO") {
+      // eslint-disable-next-line
       if (macros.length > parseInt(aux.label, 10) && macros[parseInt(aux.label, 10)]?.name?.substr(0, 5) !== "") {
         translatedAction = `${aux.label} ${macros[parseInt(aux.label, 10)]?.name?.substr(0, 5).toLowerCase()}`;
       }

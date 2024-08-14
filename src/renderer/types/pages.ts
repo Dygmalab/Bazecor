@@ -19,7 +19,7 @@ export default interface Pages {
   colormap: boolean;
 }
 export interface TabLayoutEditorProps {
-  keyCode: number;
+  keyCode: number | { base: number; modified: number } | undefined;
   onKeySelect: (key: number) => void;
   isStandardView: boolean;
   disabled?: boolean;

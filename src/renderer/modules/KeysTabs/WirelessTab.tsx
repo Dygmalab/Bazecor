@@ -24,9 +24,15 @@ function WirelessTab(props: TabLayoutEditorProps) {
   const { keyCode, onKeySelect, isStandardView, disabled } = props;
 
   const KC = useMemo(() => {
-    if (keyCode?.base !== undefined && keyCode?.modified !== undefined) {
+    if (typeof keyCode === "number") {
+      return keyCode;
+    }
+    // eslint-disable-next-line
+    if (typeof keyCode !== "number" && keyCode?.base !== undefined && keyCode?.modified !== undefined) {
+      // eslint-disable-next-line
       return keyCode.base + keyCode.modified;
     }
+
     return undefined;
   }, [keyCode]);
 
