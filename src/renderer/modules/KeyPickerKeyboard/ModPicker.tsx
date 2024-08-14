@@ -113,10 +113,15 @@ function ModPicker(props: ModPickerProps) {
 
   return (
     <div className="h-[inherit]">
-      <div className={`modPickerInner ${isStandardView ? "modPickerInnerStd p-0" : "px-4"}`}>
+      <div className={`modPickerInner ${isStandardView ? "modPickerInnerStd p-0" : "px-3"}`}>
         {!isStandardView ? (
-          <Heading headingLevel={4} renderAs="h4" className="text-ssm">
-            {i18n.editor.standardView.keys.addModifier}
+          <Heading
+            headingLevel={4}
+            renderAs="h4"
+            className={`!text-base ${setModifierVisibility() ? "opacity-50" : "opacity-100"}`}
+          >
+            {/* {i18n.editor.standardView.keys.addModifier} */}
+            Add shortcuts
           </Heading>
         ) : null}
         <div className={`modPickerButtonsList gap-1 ${isStandardView ? "flex [&_button]:w-16" : "flex [&_button]:w-full"}`}>

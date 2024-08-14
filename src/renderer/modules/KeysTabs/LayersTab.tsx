@@ -1,21 +1,55 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useState } from "react";
+import { motion } from "framer-motion";
 
 import { i18n } from "@Renderer/i18n";
 
 import Callout from "@Renderer/components/molecules/Callout/Callout";
 import Heading from "@Renderer/components/atoms/Heading";
 import { Button } from "@Renderer/components/atoms/Button";
-import { IconLayerLock, IconLayerShift } from "@Renderer/components/atoms/icons";
+import { IconLayerLock, IconLayerShift, IconLayers, IconOneShot } from "@Renderer/components/atoms/icons";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@Renderer/components/atoms/Tabs";
+import OneShotTab from "@Renderer/modules/KeysTabs/OneShotTab";
+import { Picker } from "../KeyPickerKeyboard";
+import DualFunctionPicker from "../KeyPickerKeyboard/DualFunctionPicker";
 
 interface LayersTabProps {
   keyCode: any;
   isStandardView: boolean;
   disableMods: boolean;
-  onLayerPress: (value: number) => void;
+  onKeySelect: (value: number) => void;
   disabled?: boolean;
+  actions?: any;
+  action?: any;
+  baseCode?: any;
+  modCode?: any;
+  activeTab?: any;
+  selectedlanguage?: any;
+  selKeys?: any;
+  superkeys?: any;
+  kbtype?: any;
+  macros?: any;
+  isWireless?: any;
 }
 
-const LayersTab = ({ keyCode, isStandardView, disableMods, onLayerPress, disabled }: LayersTabProps) => {
+const LayersTab = ({
+  keyCode,
+  isStandardView,
+  disableMods,
+  onKeySelect,
+  disabled,
+  actions,
+  action,
+  baseCode,
+  modCode,
+  activeTab,
+  selectedlanguage,
+  selKeys,
+  superkeys,
+  kbtype,
+  macros,
+  isWireless,
+}: LayersTabProps) => {
+  const [activeLayerTab, setActiveLayerTab] = useState(disableMods ? "lLock" : "lShift");
   const layerLock = useMemo(
     () => [
       { name: "Layer Lock 1", keynum: 17492 },
@@ -60,79 +94,154 @@ const LayersTab = ({ keyCode, isStandardView, disableMods, onLayerPress, disable
   //     keyCode?.modified > 0 && (layerLock.some(({ keynum }) => keynum === KC) || layerSwitch.some(({ keynum }) => keynum === KC)),
   //   [KC, keyCode?.modified, layerLock, layerSwitch],
   // );
-  console.log("disableMods: ", disableMods);
+  // console.log("disableMods: ", disableMods);
+
+  // const handleTabChange = (value: any) => {
+  //   console.log(value);
+  //   setActiveLayerTab(value);
+  // };
+
+  // Render variables
+  const tabVariants = {
+    hidden: { opacity: 0 },
+    visible: { opacity: 1, transition: { duration: 0.5 } },
+  };
 
   return (
     <div
       className={`flex flex-wrap h-[inherit] ${isStandardView ? "standardViewTab" : ""} ${disabled ? "opacity-50 pointer-events-none" : ""} tabsLayer`}
     >
       <div className="tabContentWrapper w-full">
-        {/* <Heading headingLevel={isStandardView ? 3 : 4} renderAs={isStandardView ? "h3" : "h4"}>
+        <Tabs orientation="horizontal" defaultValue={activeLayerTab}>
+          {/* <Heading headingLevel={isStandardView ? 3 : 4} renderAs={isStandardView ? "h3" : "h4"}>
           {i18n.editor.layers.title}
         </Heading> */}
-        {isStandardView ? (
-          <Callout
-            size="sm"
-            className="mt-0"
-            hasVideo
-            media="wsx0OtkKXXg"
-            videoTitle="This 60% keyboard can have +2500 keys!"
-            videoDuration="6:50"
-          >
-            <p>{i18n.editor.standardView.layers.callOut}</p>
-          </Callout>
-        ) : null}
-        <div className="flex py-2 flex-wrap gap-1">
-          <div className={`flex-1 py-2 ${disableMods ? "opacity-50 pointer-events-none" : ""}`}>
-            <Heading headingLevel={4} renderAs="h4" className="flex gap-2 items-center w-full text-base">
-              <IconLayerShift /> {i18n.editor.standardView.layers.layerSwitch}
-            </Heading>
-            <p className="text-ssm font-medium text-gray-400 dark:text-gray-200">
-              {i18n.editor.standardView.layers.layerSwitchDescription}
-            </p>
-            <div className="p-1 inline-flex flex-nowrap gap-1 mt-2 w-auto rounded-md bg-white dark:bg-gray-900/20">
-              {layerSwitch.map((button, index) => (
-                <Button
-                  variant="config"
-                  size="icon"
-                  onClick={() => {
-                    onLayerPress(button.keynum);
-                  }}
-                  selected={keyCode?.modified > 0 && button.keynum === KC}
-                  // selected={layerDeltaSwitch + index === keyCode}
-                  disabled={disableMods}
-                  key={`buttonShift-${button.keynum}`}
-                >
-                  {index + 1}
-                </Button>
-              ))}
-            </div>
+          {/* {isStandardView ? (
+            <Callout
+              size="sm"
+              className="mt-0"
+              hasVideo
+              media="wsx0OtkKXXg"
+              videoTitle="This 60% keyboard can have +2500 keys!"
+              videoDuration="6:50"
+            >
+              <p>{i18n.editor.standardView.layers.callOut}</p>
+            </Callout>
+          ) : null} */}
+          <div className="w-full flex gap-1 flex-row">
+            <TabsList className="flex flex-row gap-1">
+              <TabsTrigger value="lShift" variant="tab-horizontal" className="text-ssm [&_svg]:w-[20px] py-2 text-nowrap">
+                <IconLayerShift /> {i18n.editor.standardView.layers.layerSwitch}
+              </TabsTrigger>
+              <TabsTrigger value="lLock" variant="tab-horizontal" className="text-ssm [&_svg]:w-[20px] py-2 text-nowrap">
+                <IconLayerLock /> {i18n.editor.layers.layerLock}
+              </TabsTrigger>
+              {activeTab !== "super" ? (
+                <>
+                  <TabsTrigger value="lOneShot" variant="tab-horizontal" className="text-ssm [&_svg]:w-[20px] py-2 text-nowrap">
+                    <>
+                      <IconOneShot size="sm" /> OneShot{" "}
+                      <div className="badge badge-primary leading-none ml-1 font-bold text-[9px] text-white">PRO</div>
+                    </>
+                  </TabsTrigger>
+                  <TabsTrigger value="lDual" variant="tab-horizontal" className="text-ssm [&_svg]:w-[20px] py-2 text-nowrap">
+                    <>
+                      <IconLayers size="sm" /> Dual function{" "}
+                      <div className="badge badge-primary leading-none ml-1 font-bold text-[9px] text-white">PRO</div>
+                    </>
+                  </TabsTrigger>
+                </>
+              ) : (
+                ""
+              )}
+            </TabsList>
           </div>
-          <div className="flex-1 py-2">
-            <Heading headingLevel={4} renderAs="h4" className="flex gap-2 items-center w-full text-base">
-              <IconLayerLock /> {i18n.editor.layers.layerLock}
-            </Heading>
-            <p className="text-ssm font-medium text-gray-400 dark:text-gray-200">
-              {isStandardView ? i18n.editor.standardView.layers.layerLockDescription : i18n.editor.layers.layerLockDescription}
-            </p>
-            <div className="p-1 inline-flex flex-nowrap gap-1 mt-2 w-auto rounded-md bg-white dark:bg-gray-900/20">
-              {layerLock.map((button, index) => (
-                <Button
-                  variant="config"
-                  size="icon"
-                  onClick={() => {
-                    onLayerPress(button.keynum);
-                  }}
-                  selected={keyCode?.modified > 0 && button.keynum === KC}
-                  // selected={keyCode.modified > 0 && layerDelta + index === KC}
-                  key={`buttonLock-${button.keynum}`}
-                >
-                  {index + 1}
-                </Button>
-              ))}
-            </div>
+          <div className="flex py-2 flex-col">
+            <TabsContent value="lShift" className="w-full">
+              <motion.div initial="hidden" animate="visible" variants={tabVariants}>
+                <p className="text-ssm font-medium text-gray-400 dark:text-gray-200">
+                  {i18n.editor.standardView.layers.layerSwitchDescription}
+                </p>
+                <div className={`flex-1 py-2 ${disableMods ? "opacity-50 pointer-events-none" : ""}`}>
+                  <div className="p-1 inline-flex flex-nowrap gap-1 mt-2 w-auto rounded-md bg-white dark:bg-gray-900/20">
+                    {layerSwitch.map((button, index) => (
+                      <Button
+                        variant="config"
+                        size="icon"
+                        onClick={() => {
+                          onKeySelect(button.keynum);
+                        }}
+                        selected={keyCode?.modified > 0 && button.keynum === KC}
+                        // selected={layerDeltaSwitch + index === keyCode}
+                        disabled={disableMods}
+                        key={`buttonShift-${button.keynum}`}
+                      >
+                        {index + 1}
+                      </Button>
+                    ))}
+                  </div>
+                </div>
+              </motion.div>
+            </TabsContent>
+            <TabsContent value="lLock" className="w-full">
+              <motion.div initial="hidden" animate="visible" variants={tabVariants}>
+                <p className="text-ssm font-medium text-gray-400 dark:text-gray-200">
+                  {i18n.editor.standardView.layers.layerSwitchDescription}
+                </p>
+                <div className="flex-1 py-2">
+                  <div className="p-1 inline-flex flex-nowrap gap-1 mt-2 w-auto rounded-md bg-white dark:bg-gray-900/20">
+                    {layerLock.map((button, index) => (
+                      <Button
+                        variant="config"
+                        size="icon"
+                        onClick={() => {
+                          onKeySelect(button.keynum);
+                        }}
+                        selected={keyCode?.modified > 0 && button.keynum === KC}
+                        // selected={keyCode.modified > 0 && layerDelta + index === KC}
+                        key={`buttonLock-${button.keynum}`}
+                      >
+                        {index + 1}
+                      </Button>
+                    ))}
+                  </div>
+                </div>
+              </motion.div>
+            </TabsContent>
+            <TabsContent value="lOneShot" key="lOneShot">
+              <motion.div initial="hidden" animate="visible" key="lOneShot" variants={tabVariants}>
+                <OneShotTab keyCode={keyCode} onKeySelect={onKeySelect} isStandardView disabled={disabled} />
+              </motion.div>
+            </TabsContent>
+            <TabsContent value="lDual">
+              <motion.div initial="hidden" animate="visible" key="tabDualFunction" variants={tabVariants}>
+                <>
+                  <Picker
+                    actions={actions}
+                    action={action}
+                    disable={disabled}
+                    baseCode={baseCode}
+                    modCode={modCode}
+                    onKeySelect={onKeySelect}
+                    activeTab={activeTab}
+                    selectedlanguage={selectedlanguage}
+                    selKeys={selKeys}
+                    superkeys={superkeys}
+                    kbtype={kbtype}
+                    keyCode={keyCode}
+                    macros={macros}
+                    isWireless={isWireless}
+                  />
+                  <div className={`ModPicker ${macros[KC - 53852] ? "ModPickerScrollHidden" : ""} ${disabled ? "disable" : ""}`}>
+                    <div className="flex gap-2 flex-col lg:flex-row lg:gap-4 py-4">
+                      <DualFunctionPicker keyCode={keyCode} onKeySelect={onKeySelect} activeTab={activeTab} isStandardView />
+                    </div>
+                  </div>
+                </>
+              </motion.div>
+            </TabsContent>
           </div>
-        </div>
+        </Tabs>
       </div>
     </div>
   );

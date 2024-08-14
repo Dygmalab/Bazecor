@@ -28,9 +28,9 @@ const NoKeyTransparentTab = ({ keyCode, onKeySelect, isStandardView, disabled }:
           {/* <Heading renderAs="h3" headingLevel={3}>
             {i18n.editor.standardView.noKeyTransparent}{" "}
           </Heading> */}
-          <Callout size="sm" className="mt-0">
+          {/* <Callout size="sm" className="mt-0">
             <p>{i18n.editor.standardView.callOut}</p>
-          </Callout>
+          </Callout> */}
           <div className="flex flex-wrap py-2 gap-1">
             <div className="keysButtonsList flex-1 py-2">
               <Heading renderAs="h4" headingLevel={4} className="my-0 w-full text-base">

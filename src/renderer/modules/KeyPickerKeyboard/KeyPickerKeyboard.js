@@ -478,13 +478,7 @@ class KeyPickerKeyboard extends Component {
               <div className="keyEnhanceInner">
                 <TabsList className="flex flex-col gap-0.5 tabsWrapper min-w-48">
                   <TabsTrigger value="tabKeys" variant="tab" className="text-ssm [&_svg]:w-[20px] py-2">
-                    <IconKeyboard /> Keys
-                  </TabsTrigger>
-                  <TabsTrigger value="tabDualFunction" variant="tab" className="text-ssm [&_svg]:w-[20px] py-2">
-                    <IconKeyboard /> Dual function
-                  </TabsTrigger>
-                  <TabsTrigger value="tabNoKeys" variant="tab" className="text-ssm [&_svg]:w-[20px] py-2">
-                    <IconNoKey /> {i18n.editor.standardView.noKeyTransparent}
+                    <IconKeyboard /> Keys & Shortcuts
                   </TabsTrigger>
                   <TabsTrigger value="tabLayers" variant="tab" className="text-ssm [&_svg]:w-[20px] py-2">
                     <IconLayers size="sm" /> {i18n.editor.standardView.layers.title}
@@ -499,9 +493,6 @@ class KeyPickerKeyboard extends Component {
                           <IconThunder size="sm" /> {i18n.editor.standardView.superkeys.title}{" "}
                           <div className="badge badge-primary leading-none ml-1 font-bold text-[9px] text-white">BETA</div>
                         </>
-                      </TabsTrigger>
-                      <TabsTrigger value="tabOneShot" variant="tab" className="text-ssm [&_svg]:w-[20px] py-2">
-                        <IconOneShot size="sm" /> {i18n.editor.standardView.oneShot.title}
                       </TabsTrigger>
                     </>
                   ) : (
@@ -542,7 +533,7 @@ class KeyPickerKeyboard extends Component {
                       isWireless={isWireless}
                     />
                     <div
-                      className={`ModPicker ${this.props.macros[KC - 53852] ? "ModPickerScrollHidden" : ""} ${
+                      className={`ModPicker w-full bg-gray-25 dark:bg-gray-600/50 rounded-b-regular ${this.props.macros[KC - 53852] ? "ModPickerScrollHidden" : ""} ${
                         disable ? "disable" : ""
                       }`}
                     >
@@ -554,61 +545,31 @@ class KeyPickerKeyboard extends Component {
                         ""
                       )}
                     </div>
-                  </>
-                </motion.div>
-              </TabsContent>
-              <TabsContent value="tabDualFunction">
-                <motion.div initial="hidden" animate="visible" key="tabDualFunction" variants={tabVariants}>
-                  <>
-                    <Picker
-                      actions={actions}
-                      action={action}
-                      disable={disable}
-                      baseCode={code.base}
-                      modCode={code.modified}
-                      onKeySelect={onKeySelect}
-                      activeTab={activeTab}
-                      selectedlanguage={selectedlanguage}
-                      selKeys={selKeys}
-                      superkeys={superkeys}
-                      kbtype={kbtype}
-                      keyCode={code}
-                      macros={macros}
-                      isWireless={isWireless}
-                    />
-                    <div
-                      className={`ModPicker ${this.props.macros[KC - 53852] ? "ModPickerScrollHidden" : ""} ${
-                        disable ? "disable" : ""
-                      }`}
-                    >
-                      {!superkeys[superk.indexOf(KC)] || !this.props.macros[KC - 53852] ? (
-                        <div className="flex gap-2 flex-col lg:flex-row lg:gap-4 py-4">
-                          {actTab === "editor" ? (
-                            <DualFunctionPicker keyCode={code} onKeySelect={onKeySelect} activeTab={activeTab} />
-                          ) : (
-                            <></>
-                          )}
-                        </div>
-                      ) : (
-                        ""
-                      )}
+                    <div className="w-full px-3">
+                      <NoKeyTransparentTab keyCode={code} onKeySelect={onKeySelect} isStandardView disabled={disable} />
                     </div>
                   </>
-                </motion.div>
-              </TabsContent>
-              <TabsContent value="tabNoKeys">
-                <motion.div initial="hidden" animate="visible" key="tabNoKeys" variants={tabVariants}>
-                  <NoKeyTransparentTab keyCode={code} onKeySelect={onKeySelect} isStandardView disabled={disable} />
                 </motion.div>
               </TabsContent>
               <TabsContent value="tabLayers" key="tabLayers">
                 <motion.div initial="hidden" animate="visible" key="tabKeys" variants={tabVariants}>
                   <LayersTab
-                    onLayerPress={onKeySelect}
-                    keyCode={code}
                     isStandardView
                     disableMods={!!((action === 0 || action === 3) && actTab === "super")}
                     disabled={disable}
+                    actions={actions}
+                    action={action}
+                    baseCode={code.base}
+                    modCode={code.modified}
+                    onKeySelect={onKeySelect}
+                    activeTab={activeTab}
+                    selectedlanguage={selectedlanguage}
+                    selKeys={selKeys}
+                    superkeys={superkeys}
+                    kbtype={kbtype}
+                    keyCode={code}
+                    macros={macros}
+                    isWireless={isWireless}
                   />
                 </motion.div>
               </TabsContent>
@@ -672,11 +633,6 @@ class KeyPickerKeyboard extends Component {
                           ""
                         )} */}
                       </div>
-                    </motion.div>
-                  </TabsContent>
-                  <TabsContent value="tabOneShot" key="tabOneShot">
-                    <motion.div initial="hidden" animate="visible" key="tabKeys" variants={tabVariants}>
-                      <OneShotTab keyCode={code} onKeySelect={onKeySelect} isStandardView disabled={disable} />
                     </motion.div>
                   </TabsContent>
                 </>

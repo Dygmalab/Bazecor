@@ -66,9 +66,9 @@ const OneShotTab = ({ keyCode, onKeySelect, isStandardView, disabled }: OneShotT
             {/* <Heading headingLevel={3} renderAs="h3">
               {i18n.editor.standardView.oneShot.title}
             </Heading> */}
-            <Callout size="sm" className="mt-0">
+            {/* <Callout size="sm" className="mt-0">
               <p>{i18n.editor.standardView.callOut}</p>
-            </Callout>
+            </Callout> */}
           </>
         ) : null}
 
