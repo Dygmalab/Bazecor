@@ -545,9 +545,13 @@ class KeyPickerKeyboard extends Component {
                         ""
                       )}
                     </div>
-                    <div className="w-full px-3">
-                      <NoKeyTransparentTab keyCode={code} onKeySelect={onKeySelect} isStandardView disabled={disable} />
-                    </div>
+                    {actTab !== "super" ? (
+                      <div className="w-full px-3">
+                        <NoKeyTransparentTab keyCode={code} onKeySelect={onKeySelect} isStandardView disabled={disable} />
+                      </div>
+                    ) : (
+                      ""
+                    )}
                   </>
                 </motion.div>
               </TabsContent>
@@ -562,9 +566,8 @@ class KeyPickerKeyboard extends Component {
                     baseCode={code.base}
                     modCode={code.modified}
                     onKeySelect={onKeySelect}
-                    activeTab={activeTab}
+                    activeTab={actTab}
                     selectedlanguage={selectedlanguage}
-                    selKeys={selKeys}
                     superkeys={superkeys}
                     kbtype={kbtype}
                     keyCode={code}

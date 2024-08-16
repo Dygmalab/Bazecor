@@ -120,22 +120,13 @@ width: 100%;
     max-width: 1170px;
     margin: 6px auto;
 }
-
-
-.KeysWrapper {
-  max-width: 1080px;
-  margin: auto;
-}
-.keysContainer + .keysContainer {
-  margin-top: 4px;
-}
 .KeysWrapperSpecialKeys {
   margin-top: 4px;
 }
 .keysRow {
   display: flex;
   flex-wrap: nowrap;
-  background: ${({ theme }) => theme.styles.keyboardPicker.keysRowBackground};
+  // background: ${({ theme }) => theme.styles.keyboardPicker.keysRowBackground};
   box-shadow: ${({ theme }) => theme.styles.keyboardPicker.keysRowBoxShadow};
   .keyIcon {
     flex: 0 0 32px;
@@ -548,7 +539,7 @@ class KeyPicker extends Component {
       <Style>
         <div className="KeysWrapper">
           <div className="keysContainer">
-            <div className="keysRow keysOrdinaryKeyboard relative z-[4] p-3 rounded-t-regular">
+            <div className=" flex flex-wrap bg-white dark:bg-gray-700/60 keysOrdinaryKeyboard relative z-[4] p-3 rounded-t-regular [&_svg]:mx-auto [&_svg]:max-w-6xl">
               <svg
                 className={`svgStyle ${process.platform} ${keyboardLayout}`}
                 viewBox="0 0 1070 208"

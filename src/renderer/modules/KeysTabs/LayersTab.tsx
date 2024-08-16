@@ -1,11 +1,10 @@
-// @ts-nocheck
 import React, { useMemo, useState } from "react";
 import { motion } from "framer-motion";
 
 import { i18n } from "@Renderer/i18n";
 
-import Callout from "@Renderer/components/molecules/Callout/Callout";
-import Heading from "@Renderer/components/atoms/Heading";
+// import Callout from "@Renderer/components/molecules/Callout/Callout";
+// import Heading from "@Renderer/components/atoms/Heading";
 import { Button } from "@Renderer/components/atoms/Button";
 import { IconLayerLock, IconLayerShift, IconLayers, IconOneShot } from "@Renderer/components/atoms/icons";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@Renderer/components/atoms/Tabs";
@@ -25,7 +24,7 @@ interface LayersTabProps {
   modCode?: any;
   activeTab?: any;
   selectedlanguage?: any;
-  selKeys?: any;
+  // selKeys?: any;
   superkeys?: any;
   kbtype?: any;
   macros?: any;
@@ -44,7 +43,7 @@ const LayersTab = ({
   modCode,
   activeTab,
   selectedlanguage,
-  selKeys,
+  // selKeys,
   superkeys,
   kbtype,
   macros,
@@ -131,13 +130,18 @@ const LayersTab = ({
           ) : null} */}
           <div className="w-full flex gap-1 flex-row">
             <TabsList className="flex flex-row gap-1">
-              <TabsTrigger value="lShift" variant="tab-horizontal" className="text-ssm [&_svg]:w-[20px] py-2 text-nowrap">
+              <TabsTrigger
+                value="lShift"
+                variant="tab-horizontal"
+                disabled={disableMods}
+                className="text-ssm [&_svg]:w-[20px] py-2 text-nowrap"
+              >
                 <IconLayerShift /> {i18n.editor.standardView.layers.layerSwitch}
               </TabsTrigger>
               <TabsTrigger value="lLock" variant="tab-horizontal" className="text-ssm [&_svg]:w-[20px] py-2 text-nowrap">
                 <IconLayerLock /> {i18n.editor.layers.layerLock}
               </TabsTrigger>
-              {activeTab !== "super" ? (
+              {activeTab !== "super" && activeTab !== "macro" ? (
                 <>
                   <TabsTrigger value="lOneShot" variant="tab-horizontal" className="text-ssm [&_svg]:w-[20px] py-2 text-nowrap">
                     <>
@@ -209,38 +213,46 @@ const LayersTab = ({
                 </div>
               </motion.div>
             </TabsContent>
-            <TabsContent value="lOneShot" key="lOneShot">
-              <motion.div initial="hidden" animate="visible" key="lOneShot" variants={tabVariants}>
-                <OneShotTab keyCode={keyCode} onKeySelect={onKeySelect} isStandardView disabled={disabled} />
-              </motion.div>
-            </TabsContent>
-            <TabsContent value="lDual">
-              <motion.div initial="hidden" animate="visible" key="tabDualFunction" variants={tabVariants}>
-                <>
-                  <Picker
-                    actions={actions}
-                    action={action}
-                    disable={disabled}
-                    baseCode={baseCode}
-                    modCode={modCode}
-                    onKeySelect={onKeySelect}
-                    activeTab={activeTab}
-                    selectedlanguage={selectedlanguage}
-                    selKeys={selKeys}
-                    superkeys={superkeys}
-                    kbtype={kbtype}
-                    keyCode={keyCode}
-                    macros={macros}
-                    isWireless={isWireless}
-                  />
-                  <div className={`ModPicker ${macros[KC - 53852] ? "ModPickerScrollHidden" : ""} ${disabled ? "disable" : ""}`}>
-                    <div className="flex gap-2 flex-col lg:flex-row lg:gap-4 py-4">
-                      <DualFunctionPicker keyCode={keyCode} onKeySelect={onKeySelect} activeTab={activeTab} isStandardView />
-                    </div>
-                  </div>
-                </>
-              </motion.div>
-            </TabsContent>
+            {activeTab !== "super" && activeTab !== "macro" ? (
+              <>
+                <TabsContent value="lOneShot" key="lOneShot">
+                  <motion.div initial="hidden" animate="visible" key="lOneShot" variants={tabVariants}>
+                    <OneShotTab keyCode={keyCode} onKeySelect={onKeySelect} isStandardView disabled={disabled} />
+                  </motion.div>
+                </TabsContent>
+                <TabsContent value="lDual">
+                  <motion.div initial="hidden" animate="visible" key="tabDualFunction" variants={tabVariants}>
+                    <>
+                      <Picker
+                        actions={actions}
+                        action={action}
+                        disable={disabled}
+                        baseCode={baseCode}
+                        modCode={modCode}
+                        onKeySelect={onKeySelect}
+                        activeTab={activeTab}
+                        selectedlanguage={selectedlanguage}
+                        // selKeys={selKeys}
+                        superkeys={superkeys}
+                        kbtype={kbtype}
+                        keyCode={keyCode}
+                        macros={macros}
+                        isWireless={isWireless}
+                      />
+                      <div
+                        className={`ModPicker ${macros[KC - 53852] ? "ModPickerScrollHidden" : ""} ${disabled ? "disable" : ""}`}
+                      >
+                        <div className="flex gap-2 flex-col lg:flex-row lg:gap-4 py-4">
+                          <DualFunctionPicker keyCode={keyCode} onKeySelect={onKeySelect} activeTab={activeTab} isStandardView />
+                        </div>
+                      </div>
+                    </>
+                  </motion.div>
+                </TabsContent>
+              </>
+            ) : (
+              ""
+            )}
           </div>
         </Tabs>
       </div>

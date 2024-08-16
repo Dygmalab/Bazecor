@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { useMemo } from "react";
 import Styled from "styled-components";
 import { i18n } from "@Renderer/i18n";
@@ -115,14 +114,14 @@ const SuperkeysTab = ({ macros, keyCode, isStandardView, actions, onKeySelect, s
     const aux = superkeysSelected === 1 ? keymapDB.parse(0) : keymapDB.parse(superkeysSelected);
     let translatedAction = "";
 
-    if (aux.extraLabel === "MACRO") {
-      // eslint-disable-next-line
+    if (aux.extraLabel === "MACRO" && typeof aux.label === "string") {
       if (macros.length > parseInt(aux.label, 10) && macros[parseInt(aux.label, 10)]?.name?.substr(0, 5) !== "") {
         translatedAction = `${aux.label} ${macros[parseInt(aux.label, 10)]?.name?.substr(0, 5).toLowerCase()}`;
       }
     }
     if (aux.label) {
-      translatedAction = (aux.extraLabel !== undefined && !aux.extraLabel.includes("+") ? `${aux.extraLabel} ` : "") + aux.label;
+      // translatedAction = (aux.extraLabel !== undefined && !aux.extraLabel.includes("+") ? `${aux.extraLabel} ` : "") + aux.label;
+      translatedAction = (aux.extraLabel !== undefined ? `${aux.extraLabel} ` : "") + aux.label;
     }
     return translatedAction;
   };
@@ -175,12 +174,12 @@ const SuperkeysTab = ({ macros, keyCode, isStandardView, actions, onKeySelect, s
 
   return (
     <Styles
-      className={`${isStandardView ? "standardViewTab" : ""} tabsSuperkeys ${disabled ? "opacity-50 pointer-events-none" : ""}`}
+      className={`w-full ${isStandardView ? "standardViewTab" : ""} tabsSuperkeys ${disabled ? "opacity-50 pointer-events-none" : ""}`}
     >
-      <div className="tabContentWrapper">
+      <div className="tabContentWrapper w-full">
         <Callout
           size="sm"
-          className="mt-0"
+          className="mt-0 w-full"
           hasVideo
           media="6Az05_Yl6AU"
           videoTitle="The Greatest Keyboard Feature Of All Time: SUPERKEYS! 🦹‍♀️"
