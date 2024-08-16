@@ -477,18 +477,39 @@ class KeyPickerKeyboard extends Component {
             <div className="keyEnhanceWrapper">
               <div className="keyEnhanceInner">
                 <TabsList className="flex flex-col gap-0.5 tabsWrapper min-w-48">
-                  <TabsTrigger value="tabKeys" variant="tab" className="text-ssm [&_svg]:w-[20px] py-2">
+                  <TabsTrigger value="tabKeys" variant="tab" className="text-ssm [&_svg]:w-[20px] py-2" disabled={disable}>
                     <IconKeyboard /> Keys & Shortcuts
                   </TabsTrigger>
-                  <TabsTrigger value="tabLayers" variant="tab" className="text-ssm [&_svg]:w-[20px] py-2">
+                  <TabsTrigger value="tabLayers" variant="tab" className="text-ssm [&_svg]:w-[20px] py-2" disabled={disable}>
                     <IconLayers size="sm" /> {i18n.editor.standardView.layers.title}
                   </TabsTrigger>
-                  <TabsTrigger value="tabMacro" variant="tab" className="text-ssm [&_svg]:w-[20px] py-2">
+                  {actTab !== "super" && actTab !== "macro" ? (
+                    <>
+                      <TabsTrigger
+                        value="tabModifiers"
+                        variant="tab"
+                        className="text-ssm [&_svg]:w-[20px] py-2"
+                        disabled={disable}
+                      >
+                        <>
+                          <IconThunder size="sm" /> Special Modifiers
+                        </>
+                      </TabsTrigger>
+                    </>
+                  ) : (
+                    ""
+                  )}
+                  <TabsTrigger value="tabMacro" variant="tab" className="text-ssm [&_svg]:w-[20px] py-2" disabled={disable}>
                     <IconRobot /> {i18n.editor.standardView.macros.title}
                   </TabsTrigger>
                   {actTab !== "super" ? (
                     <>
-                      <TabsTrigger value="tabSuperKeys" variant="tab" className="text-ssm [&_svg]:w-[20px] py-2">
+                      <TabsTrigger
+                        value="tabSuperKeys"
+                        variant="tab"
+                        className="text-ssm [&_svg]:w-[20px] py-2"
+                        disabled={disable}
+                      >
                         <>
                           <IconThunder size="sm" /> {i18n.editor.standardView.superkeys.title}{" "}
                           <div className="badge badge-primary leading-none ml-1 font-bold text-[9px] text-white">BETA</div>
@@ -498,14 +519,14 @@ class KeyPickerKeyboard extends Component {
                   ) : (
                     ""
                   )}
-                  <TabsTrigger value="tabMedia" variant="tab" className="text-ssm [&_svg]:w-[20px] py-2">
+                  <TabsTrigger value="tabMedia" variant="tab" className="text-ssm [&_svg]:w-[20px] py-2" disabled={disable}>
                     <IconNote size="sm" /> {i18n.editor.standardView.mediaAndLED.title}
                   </TabsTrigger>
-                  <TabsTrigger value="tabMouse" variant="tab" className="text-ssm [&_svg]:w-[20px] py-2">
+                  <TabsTrigger value="tabMouse" variant="tab" className="text-ssm [&_svg]:w-[20px] py-2" disabled={disable}>
                     <IconMouse size="sm" /> {i18n.editor.standardView.mouse.title}
                   </TabsTrigger>
                   {isWireless && (
-                    <TabsTrigger value="tabWireless" variant="tab" className="text-ssm [&_svg]:w-[20px] py-2">
+                    <TabsTrigger value="tabWireless" variant="tab" className="text-ssm [&_svg]:w-[20px] py-2" disabled={disable}>
                       <IconWireless size="sm" strokeWidth={1.2} /> {i18n.app.menu.wireless}
                     </TabsTrigger>
                   )}
@@ -576,6 +597,15 @@ class KeyPickerKeyboard extends Component {
                   />
                 </motion.div>
               </TabsContent>
+              {actTab !== "super" && actTab !== "macro" ? (
+                <TabsContent value="tabModifiers" key="tabModifiers">
+                  <motion.div initial="hidden" animate="visible" key="tabKeys" variants={tabVariants}>
+                    Modifiers
+                  </motion.div>
+                </TabsContent>
+              ) : (
+                ""
+              )}
               <TabsContent value="tabMacro" key="tabMacro">
                 <motion.div initial="hidden" animate="visible" key="tabKeys" variants={tabVariants}>
                   <>

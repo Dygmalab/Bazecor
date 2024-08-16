@@ -540,6 +540,11 @@ class KeyPicker extends Component {
         <div className="KeysWrapper">
           <div className="keysContainer">
             <div className=" flex flex-wrap bg-white dark:bg-gray-700/60 keysOrdinaryKeyboard relative z-[4] p-3 rounded-t-regular [&_svg]:mx-auto [&_svg]:max-w-6xl">
+              {disableAll && (
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-25 tracking-tight text-xl text-nowrap">
+                  Select a key in the keyboard above to start
+                </div>
+              )}
               <svg
                 className={`svgStyle ${process.platform} ${keyboardLayout}`}
                 viewBox="0 0 1070 208"

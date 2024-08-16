@@ -3,12 +3,13 @@ import { motion } from "framer-motion";
 
 import { i18n } from "@Renderer/i18n";
 
-// import Callout from "@Renderer/components/molecules/Callout/Callout";
-// import Heading from "@Renderer/components/atoms/Heading";
+import Callout from "@Renderer/components/molecules/Callout/Callout";
 import { Button } from "@Renderer/components/atoms/Button";
 import { IconLayerLock, IconLayerShift, IconLayers, IconOneShot } from "@Renderer/components/atoms/icons";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@Renderer/components/atoms/Tabs";
 import OneShotTab from "@Renderer/modules/KeysTabs/OneShotTab";
+import { Separator } from "@Renderer/components/atoms/separator";
+import Heading from "@Renderer/components/atoms/Heading";
 import { Picker } from "../KeyPickerKeyboard";
 import DualFunctionPicker from "../KeyPickerKeyboard/DualFunctionPicker";
 
@@ -114,22 +115,62 @@ const LayersTab = ({
       <div className="tabContentWrapper w-full">
         <Tabs orientation="horizontal" defaultValue={activeLayerTab}>
           {/* <Heading headingLevel={isStandardView ? 3 : 4} renderAs={isStandardView ? "h3" : "h4"}>
-          {i18n.editor.layers.title}
-        </Heading> */}
-          {/* {isStandardView ? (
+            {i18n.editor.layers.title}
+          </Heading> */}
+          {isStandardView ? (
             <Callout
               size="sm"
-              className="mt-0"
+              className="mt-0 mb-4"
               hasVideo
               media="wsx0OtkKXXg"
               videoTitle="This 60% keyboard can have +2500 keys!"
               videoDuration="6:50"
             >
-              <p>{i18n.editor.standardView.layers.callOut}</p>
+              <p>You can navigate between layers in different ways, adding layer shift or layer lock.</p>
             </Callout>
-          ) : null} */}
+          ) : null}
           <div className="w-full flex gap-1 flex-row">
-            <TabsList className="flex flex-row gap-1">
+            <div className="rounded-regular flex flex-col gap-2 p-3 bg-gray-700">
+              <Heading renderAs="h4" headingLevel={3} className="text-base">
+                <small>01.</small> Layer
+              </Heading>
+              <div className="flex gap-1">
+                {layerSwitch.map((button, index) => (
+                  <Button
+                    variant="config"
+                    size="icon"
+                    onClick={() => {
+                      onKeySelect(button.keynum);
+                    }}
+                    selected={keyCode?.modified > 0 && button.keynum === KC}
+                    // selected={layerDeltaSwitch + index === keyCode}
+                    disabled={disableMods}
+                    key={`buttonShift-${button.keynum}`}
+                  >
+                    {index + 1}
+                  </Button>
+                ))}
+              </div>
+              <Separator />
+
+              <div className="rounded-sm flex flex-col gap-1 bg-gray-600/50 p-2">
+                <Heading renderAs="h4" headingLevel={3} className="text-base">
+                  <small>02.</small> Advanced options
+                </Heading>
+                <div className="rounded-sm flex gap-1 bg-gray-800/20 p-2">
+                  <Button className="flex-1" variant="config" size="sm">
+                    Turn into layer lock
+                  </Button>
+                  <Button className="flex-1" variant="config" size="sm">
+                    Add a key on tap
+                  </Button>
+                  <Button className="flex-1" variant="config" size="sm">
+                    Turn into a OneShot layer
+                  </Button>
+                </div>
+              </div>
+            </div>
+            <TabsList className="hidden flex flex-row gap-1">
               <TabsTrigger
                 value="lShift"
                 variant="tab-horizontal"
@@ -161,7 +202,7 @@ const LayersTab = ({
               )}
             </TabsList>
           </div>
-          <div className="flex py-2 flex-col">
+          <div className="flex py-2 flex-col hidden">
             <TabsContent value="lShift" className="w-full">
               <motion.div initial="hidden" animate="visible" variants={tabVariants}>
                 <p className="text-ssm font-medium text-gray-400 dark:text-gray-200">
