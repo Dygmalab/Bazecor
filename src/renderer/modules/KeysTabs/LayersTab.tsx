@@ -114,16 +114,17 @@ const LayersTab = ({
   const handleLayer = (layerNumber: number) => {
     const layerItem = findLayerType(undefined, activeLayerTab, layerNumber);
     console.log("Layer inside handle: ", layerItem);
-    if (activeLayerNumber > 8) {
+    setActiveLayerNumber(layerNumber);
+    if (layerNumber > 8) {
       setDisableOneShot(true);
+      setDisableOneShotButtons(true);
     } else {
       setDisableOneShot(false);
+      setDisableOneShotButtons(false);
     }
     if (layerItem && layerItem.type !== "layerDual") {
       onKeySelect(layerItem.keynum);
     }
-
-    setActiveLayerNumber(layerNumber);
   };
 
   useEffect(() => {
@@ -220,7 +221,7 @@ const LayersTab = ({
                     className="flex-1"
                     variant="config"
                     size="sm"
-                    onClick={() => setActiveLayerTab("layerLock")}
+                    onClick={() => setActiveLayerTab(previous => (previous === "layerLock" ? "layerShift" : "layerLock"))}
                     selected={activeLayerTab === "layerLock"}
                   >
                     Turn into layer lock
@@ -229,7 +230,7 @@ const LayersTab = ({
                     className="flex-1"
                     variant="config"
                     size="sm"
-                    onClick={() => setActiveLayerTab("layerDual")}
+                    onClick={() => setActiveLayerTab(previous => (previous === "layerDual" ? "layerShift" : "layerDual"))}
                     selected={activeLayerTab === "layerDual"}
                   >
                     Add a key on tap
@@ -240,7 +241,7 @@ const LayersTab = ({
                     size="sm"
                     disabled={disableOneShot}
                     onClick={() => {
-                      setActiveLayerTab("layerShot");
+                      setActiveLayerTab(previous => (previous === "layerShot" ? "layerShift" : "layerShot"));
                       setDisableOneShotButtons(true);
                     }}
                     selected={activeLayerTab === "layerShot"}
