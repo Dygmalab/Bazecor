@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useState, useEffect, useLayoutEffect } from "react";
 import { motion } from "framer-motion";
 
 import { i18n } from "@Renderer/i18n";
@@ -8,8 +8,9 @@ import { Button } from "@Renderer/components/atoms/Button";
 import { IconLayerLock, IconLayerShift, IconLayers, IconOneShot } from "@Renderer/components/atoms/icons";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@Renderer/components/atoms/Tabs";
 import OneShotTab from "@Renderer/modules/KeysTabs/OneShotTab";
-import { Separator } from "@Renderer/components/atoms/separator";
+import { Separator } from "@Renderer/components/atoms/Separator";
 import Heading from "@Renderer/components/atoms/Heading";
+import findLayerType from "@Renderer/utils/findLayerType";
 import { Picker } from "../KeyPickerKeyboard";
 import DualFunctionPicker from "../KeyPickerKeyboard/DualFunctionPicker";
 
@@ -50,35 +51,37 @@ const LayersTab = ({
   macros,
   isWireless,
 }: LayersTabProps) => {
-  const [activeLayerTab, setActiveLayerTab] = useState(disableMods ? "lLock" : "lShift");
+  const [disableOneShot, setDisableOneShot] = useState<boolean>(false);
+  const [disableOneShotButtons, setDisableOneShotButtons] = useState<boolean>(false);
+
   const layerLock = useMemo(
     () => [
-      { name: "Layer Lock 1", keynum: 17492 },
-      { name: "Layer Lock 2", keynum: 17493 },
-      { name: "Layer Lock 3", keynum: 17494 },
-      { name: "Layer Lock 4", keynum: 17495 },
-      { name: "Layer Lock 5", keynum: 17496 },
-      { name: "Layer Lock 6", keynum: 17497 },
-      { name: "Layer Lock 7", keynum: 17498 },
-      { name: "Layer Lock 8", keynum: 17499 },
-      { name: "Layer Lock 9", keynum: 17500 },
-      { name: "Layer Lock 10", keynum: 17501 },
+      { layer: 1, type: "layerLock", name: "Layer Lock 1", keynum: 17492 },
+      { layer: 2, type: "layerLock", name: "Layer Lock 2", keynum: 17493 },
+      { layer: 3, type: "layerLock", name: "Layer Lock 3", keynum: 17494 },
+      { layer: 4, type: "layerLock", name: "Layer Lock 4", keynum: 17495 },
+      { layer: 5, type: "layerLock", name: "Layer Lock 5", keynum: 17496 },
+      { layer: 6, type: "layerLock", name: "Layer Lock 6", keynum: 17497 },
+      { layer: 7, type: "layerLock", name: "Layer Lock 7", keynum: 17498 },
+      { layer: 8, type: "layerLock", name: "Layer Lock 8", keynum: 17499 },
+      { layer: 9, type: "layerLock", name: "Layer Lock 9", keynum: 17500 },
+      { layer: 10, type: "layerLock", name: "Layer Lock 10", keynum: 17501 },
     ],
     [],
   );
 
   const layerSwitch = useMemo(
     () => [
-      { name: "Layer Shift 1", keynum: 17450 },
-      { name: "Layer Shift 2", keynum: 17451 },
-      { name: "Layer Shift 3", keynum: 17452 },
-      { name: "Layer Shift 4", keynum: 17453 },
-      { name: "Layer Shift 5", keynum: 17454 },
-      { name: "Layer Shift 6", keynum: 17455 },
-      { name: "Layer Shift 7", keynum: 17456 },
-      { name: "Layer Shift 8", keynum: 17457 },
-      { name: "Layer Shift 9", keynum: 17458 },
-      { name: "Layer Shift 10", keynum: 17459 },
+      { layer: 1, type: "layerShift", name: "Layer Shift 1", keynum: 17450 },
+      { layer: 2, type: "layerShift", name: "Layer Shift 2", keynum: 17451 },
+      { layer: 3, type: "layerShift", name: "Layer Shift 3", keynum: 17452 },
+      { layer: 4, type: "layerShift", name: "Layer Shift 4", keynum: 17453 },
+      { layer: 5, type: "layerShift", name: "Layer Shift 5", keynum: 17454 },
+      { layer: 6, type: "layerShift", name: "Layer Shift 6", keynum: 17455 },
+      { layer: 7, type: "layerShift", name: "Layer Shift 7", keynum: 17456 },
+      { layer: 8, type: "layerShift", name: "Layer Shift 8", keynum: 17457 },
+      { layer: 9, type: "layerShift", name: "Layer Shift 9", keynum: 17458 },
+      { layer: 10, type: "layerShift", name: "Layer Shift 10", keynum: 17459 },
     ],
     [],
   );
@@ -90,17 +93,71 @@ const LayersTab = ({
     return undefined;
   }, [keyCode]);
 
-  // const isActive = useMemo(
-  //   () =>
-  //     keyCode?.modified > 0 && (layerLock.some(({ keynum }) => keynum === KC) || layerSwitch.some(({ keynum }) => keynum === KC)),
-  //   [KC, keyCode?.modified, layerLock, layerSwitch],
-  // );
-  // console.log("disableMods: ", disableMods);
+  let keyNumInternal: number;
+  if (typeof KC === "number" && KC < 51217) {
+    keyNumInternal = KC;
+  } else if (typeof KC === "number" && KC > 51217) {
+    keyNumInternal = keyCode.modified;
+  } else {
+    keyNumInternal = 0;
+  }
 
-  // const handleTabChange = (value: any) => {
-  //   console.log(value);
-  //   setActiveLayerTab(value);
-  // };
+  const layerInfo = findLayerType(keyNumInternal);
+
+  const [activeLayerNumber, setActiveLayerNumber] = useState<number>(0);
+  const [activeLayerTab, setActiveLayerTab] = useState<string>("");
+
+  console.log("What layer is: ", layerInfo);
+  console.log("KC: ", KC);
+  console.log("KeyCode modified: ", keyCode.modified);
+
+  const handleLayer = (layerNumber: number) => {
+    const layerItem = findLayerType(undefined, activeLayerTab, layerNumber);
+    console.log("Layer inside handle: ", layerItem);
+    if (activeLayerNumber > 8) {
+      setDisableOneShot(true);
+    } else {
+      setDisableOneShot(false);
+    }
+    if (layerItem && layerItem.type !== "layerDual") {
+      onKeySelect(layerItem.keynum);
+    }
+
+    setActiveLayerNumber(layerNumber);
+  };
+
+  useEffect(() => {
+    // Call the custom hook inside the useEffect
+    const layerItem = findLayerType(undefined, activeLayerTab, activeLayerNumber);
+    console.log("Layer inside useEffect: ", layerItem);
+    if (activeLayerNumber > 8) {
+      setDisableOneShot(true);
+    } else {
+      setDisableOneShot(false);
+    }
+    if (layerItem && layerItem.type !== "layerDual") {
+      onKeySelect(layerItem.keynum);
+    }
+    // if (layer.type === "layerShift") {
+    //   onKeySelect(layer.keynum);
+    // }
+  }, [activeLayerTab]);
+
+  useEffect(() => {
+    const layerItem = findLayerType(keyNumInternal);
+    if (layerItem) {
+      setActiveLayerTab(layerItem?.type);
+      setActiveLayerNumber(layerItem?.layer);
+      if (layerItem.type === "layerShot") {
+        setDisableOneShotButtons(true);
+      } else {
+        setDisableOneShotButtons(false);
+      }
+    } else {
+      setActiveLayerTab("layerShift");
+      setActiveLayerNumber(0);
+    }
+  }, [keyNumInternal]);
 
   // Render variables
   const tabVariants = {
@@ -140,11 +197,12 @@ const LayersTab = ({
                     variant="config"
                     size="icon"
                     onClick={() => {
-                      onKeySelect(button.keynum);
+                      // onKeySelect(button.keynum);
+                      handleLayer(index + 1);
                     }}
-                    selected={keyCode?.modified > 0 && button.keynum === KC}
+                    selected={index + 1 === activeLayerNumber}
                     // selected={layerDeltaSwitch + index === keyCode}
-                    disabled={disableMods}
+                    disabled={disableMods || (index > 7 && disableOneShotButtons)}
                     key={`buttonShift-${button.keynum}`}
                   >
                     {index + 1}
@@ -158,19 +216,41 @@ const LayersTab = ({
                   <small>02.</small> Advanced options
                 </Heading>
                 <div className="rounded-sm flex gap-1 bg-gray-800/20 p-2">
-                  <Button className="flex-1" variant="config" size="sm">
+                  <Button
+                    className="flex-1"
+                    variant="config"
+                    size="sm"
+                    onClick={() => setActiveLayerTab("layerLock")}
+                    selected={activeLayerTab === "layerLock"}
+                  >
                     Turn into layer lock
                   </Button>
-                  <Button className="flex-1" variant="config" size="sm">
+                  <Button
+                    className="flex-1"
+                    variant="config"
+                    size="sm"
+                    onClick={() => setActiveLayerTab("layerDual")}
+                    selected={activeLayerTab === "layerDual"}
+                  >
                     Add a key on tap
                   </Button>
-                  <Button className="flex-1" variant="config" size="sm">
+                  <Button
+                    className="flex-1"
+                    variant="config"
+                    size="sm"
+                    disabled={disableOneShot}
+                    onClick={() => {
+                      setActiveLayerTab("layerShot");
+                      setDisableOneShotButtons(true);
+                    }}
+                    selected={activeLayerTab === "layerShot"}
+                  >
                     Turn into a OneShot layer
                   </Button>
                 </div>
               </div>
             </div>
-            <TabsList className="hidden flex flex-row gap-1">
+            <TabsList className="flex flex-row gap-1">
               <TabsTrigger
                 value="lShift"
                 variant="tab-horizontal"
@@ -202,7 +282,7 @@ const LayersTab = ({
               )}
             </TabsList>
           </div>
-          <div className="flex py-2 flex-col hidden">
+          <div className="flex py-2 flex-col">
             <TabsContent value="lShift" className="w-full">
               <motion.div initial="hidden" animate="visible" variants={tabVariants}>
                 <p className="text-ssm font-medium text-gray-400 dark:text-gray-200">
