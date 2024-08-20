@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { toast } from "react-toastify";
 import Styled from "styled-components";
 import log from "electron-log/renderer";
@@ -137,6 +137,7 @@ function MacroEditor(props: MacroEditorProps) {
   };
   const [state, setState] = useState(initialState);
   const { state: deviceState } = useDevice();
+  const timelineRef = useRef(null);
 
   const superTranslator = (raw: string) => {
     const { neurons, neuronIdx } = state;
@@ -835,6 +836,7 @@ function MacroEditor(props: MacroEditorProps) {
               updateActions={updateActions}
               updateScroll={updateScroll}
               scrollPos={scrollPos}
+              ref={timelineRef}
             />
             <MacroCreator
               macro={{ ...macros[selectedMacro] }}
@@ -845,6 +847,7 @@ function MacroEditor(props: MacroEditorProps) {
               keymapDB={keymapDB}
               selectedlanguage={currentLanguageLayout}
               kbtype={kbtype}
+              triggerDeleteLastItem={timelineRef.current}
             />
           </>
         )}

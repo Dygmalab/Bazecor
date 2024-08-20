@@ -86,6 +86,7 @@ display: flex;
 class MacroForm extends Component {
   constructor(props) {
     super(props);
+    this.timelineEditorMacroTable = React.createRef();
   }
 
   wheelPosStart = () => {
@@ -123,6 +124,7 @@ class MacroForm extends Component {
           componentWidth={componentWidth}
           updateScroll={updateScroll}
           scrollPos={scrollPos}
+          ref={this.timelineEditorMacroTable}
         />
         <div className="goEnd" onClick={this.wheelPosEnd}>
           <IconArrowChevronRight />
