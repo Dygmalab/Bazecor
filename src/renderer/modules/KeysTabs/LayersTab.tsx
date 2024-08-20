@@ -1,5 +1,5 @@
-import React, { useMemo, useState, useEffect, useLayoutEffect } from "react";
-import { motion } from "framer-motion";
+import React, { useMemo, useState, useEffect } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 
 import { i18n } from "@Renderer/i18n";
 
@@ -127,6 +127,14 @@ const LayersTab = ({
     }
   };
 
+  const handleDual = key => {
+    console.log("Key: ", key);
+    const layerItem = findLayerType(undefined, activeLayerTab, activeLayerNumber);
+    if (layerItem && layerItem.type === "layerDual") {
+      onKeySelect(layerItem.keynum + key);
+    }
+  };
+
   useEffect(() => {
     // Call the custom hook inside the useEffect
     const layerItem = findLayerType(undefined, activeLayerTab, activeLayerNumber);
@@ -249,6 +257,28 @@ const LayersTab = ({
                     Turn into a OneShot layer
                   </Button>
                 </div>
+                <AnimatePresence>
+                  <motion.div>
+                    {activeLayerTab === "layerDual" && (
+                      <Picker
+                        actions={actions}
+                        action={action}
+                        disable={disabled}
+                        baseCode={baseCode}
+                        modCode={modCode}
+                        onKeySelect={handleDual}
+                        activeTab={activeTab}
+                        selectedlanguage={selectedlanguage}
+                        // selKeys={selKeys}
+                        superkeys={superkeys}
+                        kbtype={kbtype}
+                        keyCode={keyCode}
+                        macros={macros}
+                        isWireless={isWireless}
+                      />
+                    )}
+                  </motion.div>
+                </AnimatePresence>
               </div>
             </div>
             <TabsList className="flex flex-row gap-1">
