@@ -36,6 +36,7 @@ import { Picker } from ".";
 import ModPicker from "./ModPicker";
 import KeyVisualizer from "../KeyVisualizer";
 import DualFunctionPicker from "./DualFunctionPicker";
+import ModifiersTab from "../KeysTabs/ModifiersTab";
 
 // Icons
 
@@ -600,7 +601,23 @@ class KeyPickerKeyboard extends Component {
               {actTab !== "super" && actTab !== "macro" ? (
                 <TabsContent value="tabModifiers" key="tabModifiers">
                   <motion.div initial="hidden" animate="visible" key="tabKeys" variants={tabVariants}>
-                    Modifiers
+                    <ModifiersTab
+                      isStandardView
+                      disableMods={!!((action === 0 || action === 3) && actTab === "super")}
+                      disabled={disable}
+                      actions={actions}
+                      action={action}
+                      baseCode={code.base}
+                      modCode={code.modified}
+                      onKeySelect={onKeySelect}
+                      activeTab={actTab}
+                      selectedlanguage={selectedlanguage}
+                      superkeys={superkeys}
+                      kbtype={kbtype}
+                      keyCode={code}
+                      macros={macros}
+                      isWireless={isWireless}
+                    />
                   </motion.div>
                 </TabsContent>
               ) : (
