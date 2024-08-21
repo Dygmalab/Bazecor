@@ -3,7 +3,7 @@ import Styled from "styled-components";
 import { motion } from "framer-motion";
 
 // Internal components
-import ListModifier from "@Renderer/components/molecules/ListModifiers/ListModifiers";
+// import ListModifier from "@Renderer/components/molecules/ListModifiers/ListModifiers";
 import {
   IconKeysPress,
   IconKeysTapHold,
@@ -11,31 +11,28 @@ import {
   IconKeys2Tap,
   IconKeys2TapHold,
   IconKeyboard,
-  IconNoKey,
   IconMouse,
   IconLayers,
   IconRobot,
   IconNote,
-  IconOneShot,
   IconThunder,
+  IconSplitView,
   IconWireless,
 } from "@Renderer/components/atoms/icons";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@Renderer/components/atoms/Tabs";
 import { i18n } from "@Renderer/i18n";
 import NoKeyTransparentTab from "@Renderer/modules/KeysTabs/NoKeyTransparentTab";
+// eslint-disable-next-line
 import LayersTab from "@Renderer/modules/KeysTabs/LayersTab";
 import MacroTab from "@Renderer/modules/KeysTabs/MacroTab";
 import SuperkeysTab from "@Renderer/modules/KeysTabs/SuperkeysTab";
 import MediaAndLightTab from "@Renderer/modules/KeysTabs/MediaAndLightTab";
-import OneShotTab from "@Renderer/modules/KeysTabs/OneShotTab";
 import MouseTab from "@Renderer/modules/KeysTabs/MouseTab";
 import WirelessTab from "@Renderer/modules/KeysTabs/WirelessTab";
 import { KeymapDB } from "../../../api/keymap";
 import { Picker } from ".";
 
 import ModPicker from "./ModPicker";
-import KeyVisualizer from "../KeyVisualizer";
-import DualFunctionPicker from "./DualFunctionPicker";
 import ModifiersTab from "../KeysTabs/ModifiersTab";
 
 // Icons
@@ -484,7 +481,7 @@ class KeyPickerKeyboard extends Component {
                   <TabsTrigger value="tabLayers" variant="tab" className="text-ssm [&_svg]:w-[20px] py-2" disabled={disable}>
                     <IconLayers size="sm" /> {i18n.editor.standardView.layers.title}
                   </TabsTrigger>
-                  {actTab !== "super" && actTab !== "macro" ? (
+                  {actTab === "editor" ? (
                     <>
                       <TabsTrigger
                         value="tabModifiers"
@@ -493,7 +490,7 @@ class KeyPickerKeyboard extends Component {
                         disabled={disable}
                       >
                         <>
-                          <IconThunder size="sm" /> Special Modifiers
+                          <IconSplitView size="sm" /> Advanced Modifiers
                         </>
                       </TabsTrigger>
                     </>
@@ -598,12 +595,11 @@ class KeyPickerKeyboard extends Component {
                   />
                 </motion.div>
               </TabsContent>
-              {actTab !== "super" && actTab !== "macro" ? (
+              {actTab === "editor" ? (
                 <TabsContent value="tabModifiers" key="tabModifiers">
                   <motion.div initial="hidden" animate="visible" key="tabKeys" variants={tabVariants}>
                     <ModifiersTab
                       isStandardView
-                      disableMods={!!((action === 0 || action === 3) && actTab === "super")}
                       disabled={disable}
                       actions={actions}
                       action={action}

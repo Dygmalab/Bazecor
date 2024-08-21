@@ -176,61 +176,8 @@ const LayersTab = ({
         ) : null}
         <div className="w-full flex gap-1 flex-row">
           <div className="w-full rounded-regular flex flex-col gap-2 p-3 bg-white dark:bg-gray-700">
-            <Heading renderAs="h4" headingLevel={3} className="text-base">
-              <small className="text-2xxs text-gray-200 dark:text-gray-500">01.</small>{" "}
-              <span className="inline-flex mr-1">Layer</span>
-              <TooltipProvider delayDuration={200}>
-                <Tooltip>
-                  <TooltipTrigger className="[&_svg]:text-purple-100 [&_svg]:dark:text-purple-200">
-                    <IconInformation />
-                  </TooltipTrigger>
-                  <TooltipContent className="max-w-md">
-                    <Heading headingLevel={4} renderAs="h4" className="text-gray-600 dark:text-gray-25 mb-1 leading-6 text-base">
-                      Layer Shift Navigation (Default value)
-                    </Heading>
-                    <p className="description text-ssm font-medium text-gray-400 dark:text-gray-200">
-                      Hold down a key to temporarily activate a layer and switch back once you release it. This is useful for
-                      quick actions, such as accessing navigation keys or shortcuts without permanently leaving your current
-                      layer.
-                    </p>
-                    <Heading
-                      headingLevel={4}
-                      renderAs="h4"
-                      className="text-gray-600 dark:text-gray-25 mb-1 mt-2 leading-6 text-base"
-                    >
-                      Layer Lock Navigation
-                    </Heading>
-                    <p className="description text-ssm font-medium text-gray-400 dark:text-gray-200">
-                      Tap a designated key to lock into a specific layer, staying in that layer until you decide to switch back.
-                      It&apos;s ideal for extended tasks like video editing or gaming. Ensure you set up a return key to revert to
-                      the previous layer easily.
-                    </p>
-                    <Heading
-                      headingLevel={4}
-                      renderAs="h4"
-                      className="text-gray-600 dark:text-gray-25 mb-1 mt-2 leading-6 text-base"
-                    >
-                      Dual Function Navigation (Add a key on tap)
-                    </Heading>
-                    <p className="description text-ssm font-medium text-gray-400 dark:text-gray-200">
-                      Assign a key with dual functions where a tap performs one action (like space or enter), but holding it
-                      activates a specific layer. This allows for efficient layer access without sacrificing key real estate.
-                    </p>
-                    <Heading
-                      headingLevel={4}
-                      renderAs="h4"
-                      className="text-gray-600 dark:text-gray-25 mb-1 mt-2 text-base leading-6"
-                    >
-                      One Shot Layer Navigation
-                    </Heading>
-                    <p className="description text-ssm font-medium text-gray-400 dark:text-gray-200">
-                      Tap a key to enter a layer for a single action; after that action, the software automatically returns to the
-                      previous layer. You can also hold the key to stay in the layer temporarily or double-tap it to lock in and
-                      then unlock by tapping the key again.
-                    </p>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
+            <Heading renderAs="h4" headingLevel={3} className="text-base flex">
+              <small className="text-2xxs text-gray-200 dark:text-gray-500">01.</small> <span className="inline-flex">Layer</span>
             </Heading>
             <div className="flex gap-1">
               {layers.map((button, index) => (
@@ -252,8 +199,64 @@ const LayersTab = ({
             </div>
             <Separator />
             <div className="rounded-regular flex flex-col gap-2 bg-gray-25/50 dark:bg-gray-600/50 p-2">
-              <Heading renderAs="h4" headingLevel={3} className="text-base">
+              <Heading renderAs="h4" headingLevel={3} className="text-base flex">
                 <small className="text-2xxs text-gray-200 dark:text-gray-500">02.</small> Advanced options
+                <TooltipProvider delayDuration={200}>
+                  <Tooltip>
+                    <TooltipTrigger className="[&_svg]:text-purple-100 [&_svg]:dark:text-purple-200 inline-flex">
+                      <IconInformation />
+                    </TooltipTrigger>
+                    <TooltipContent className="max-w-md">
+                      <Heading
+                        headingLevel={4}
+                        renderAs="h4"
+                        className="text-gray-600 dark:text-gray-25 mb-1 leading-6 text-base"
+                      >
+                        Layer Shift Navigation (Default value)
+                      </Heading>
+                      <p className="description text-ssm font-medium text-gray-400 dark:text-gray-200">
+                        Hold down a key to temporarily activate a layer and switch back once you release it. This is useful for
+                        quick actions, such as accessing navigation keys or shortcuts without permanently leaving your current
+                        layer.
+                      </p>
+                      <Heading
+                        headingLevel={4}
+                        renderAs="h4"
+                        className="text-gray-600 dark:text-gray-25 mb-1 mt-2 leading-6 text-base"
+                      >
+                        Layer Lock Navigation
+                      </Heading>
+                      <p className="description text-ssm font-medium text-gray-400 dark:text-gray-200">
+                        Tap a designated key to lock into a specific layer, staying in that layer until you decide to switch back.
+                        It&apos;s ideal for extended tasks like video editing or gaming. Ensure you set up a return key to revert
+                        to the previous layer easily.
+                      </p>
+                      <Heading
+                        headingLevel={4}
+                        renderAs="h4"
+                        className="text-gray-600 dark:text-gray-25 mb-1 mt-2 leading-6 text-base"
+                      >
+                        Dual Function Navigation (Add a key on tap)
+                      </Heading>
+                      <p className="description text-ssm font-medium text-gray-400 dark:text-gray-200">
+                        Assign a key with dual functions where a tap performs one action (like space or enter), but holding it
+                        activates a specific layer. This allows for efficient layer access without sacrificing key real estate.
+                      </p>
+                      <Heading
+                        headingLevel={4}
+                        renderAs="h4"
+                        className="text-gray-600 dark:text-gray-25 mb-1 mt-2 text-base leading-6"
+                      >
+                        One Shot Layer Navigation
+                      </Heading>
+                      <p className="description text-ssm font-medium text-gray-400 dark:text-gray-200">
+                        Tap a key to enter a layer for a single action; after that action, the software automatically returns to
+                        the previous layer. You can also hold the key to stay in the layer temporarily or double-tap it to lock in
+                        and then unlock by tapping the key again.
+                      </p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
               </Heading>
               <div className="rounded-regular flex gap-1 bg-gray-25/75 border border-gray-50 dark:border-none dark:bg-gray-800/20 p-1">
                 <Button

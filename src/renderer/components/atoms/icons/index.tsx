@@ -119,6 +119,7 @@ import IconSettings from "./IconSettings";
 import IconShutdown from "./IconShutdown";
 import IconSignal from "./IconSignal";
 import IconSleep from "./IconSleep";
+import IconSplitView from "./IconSplitView";
 import IconStopWatch from "./IconStopwatch";
 import IconStopwatchCrossed from "./IconStopwatchCrossed";
 import IconSun from "./IconSun";
@@ -243,6 +244,7 @@ export {
   IconShutdown,
   IconSignal,
   IconSleep,
+  IconSplitView,
   IconStopWatch,
   IconStopwatchCrossed,
   IconSun,
