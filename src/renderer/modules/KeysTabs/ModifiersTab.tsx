@@ -270,10 +270,10 @@ const ModifiersTab = ({
                         Dual Function Modifier (Add key on tap)
                       </Heading>
                       <p className="description text-ssm font-medium text-gray-400 dark:text-gray-200">
-                        A Dual Function Modifier is a key that performs two functions based on how it's used. When you tap the
-                        key, it acts like a regular key (e.g., space or enter), but when you hold it down, it acts as a modifier
-                        key (like Shift, Ctrl, or Alt). This allows you to maximize the utility of a single key, enabling more
-                        efficient and flexible keyboard use.
+                        A Dual Function Modifier is a key that performs two functions based on how it&apos;s used. When you tap
+                        the key, it acts like a regular key (e.g., space or enter), but when you hold it down, it acts as a
+                        modifier key (like Shift, Ctrl, or Alt). This allows you to maximize the utility of a single key, enabling
+                        more efficient and flexible keyboard use.
                       </p>
                       <Heading
                         headingLevel={4}
