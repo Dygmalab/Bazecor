@@ -15,7 +15,7 @@
  */
 
 export interface CustomRCBProps {
-  label: string;
+  label: string | JSX.Element;
   type: string;
   id: string | number;
   name: string;

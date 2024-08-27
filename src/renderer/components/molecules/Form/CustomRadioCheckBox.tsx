@@ -29,7 +29,7 @@ function CustomRadioCheckBox(props: CustomRCBProps) {
   const { label, type, id, name, tooltip, className, onClick, disabled, checked } = props;
   return (
     <div className={`customCheckbox ${className}`}>
-      <div className="flex flex-nowrap items-center mt-3 hover:cursor-pointer" id={`input-${id}`}>
+      <div className="flex flex-nowrap items-center hover:cursor-pointer" id={`input-${id}`}>
         <Checkbox
           id={`input-${id}-${type}`}
           name={name}

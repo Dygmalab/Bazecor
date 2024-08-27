@@ -148,7 +148,7 @@ class DelayTab extends React.Component<DelayTabProps, DelayTabState> {
           <Heading renderAs="h4" headingLevel={4} className="flex w-full">
             {i18n.editor.macros.delayTabs.title}
           </Heading>
-          <div className="formWrapper">
+          <div className="formWrapper mt-3">
             <CustomRadioCheckBox
               label="Fixed value"
               checked={fixedSelected}

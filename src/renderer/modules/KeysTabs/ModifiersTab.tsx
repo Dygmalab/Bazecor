@@ -4,13 +4,13 @@ import { toast } from "react-toastify";
 
 import Callout from "@Renderer/components/molecules/Callout/Callout";
 import { Button } from "@Renderer/components/atoms/Button";
-import { Separator } from "@Renderer/components/atoms/Separator";
 import Heading from "@Renderer/components/atoms/Heading";
 import findModifierType from "@Renderer/utils/findModifierType";
 import OSKey from "@Renderer/components/molecules/KeyTags/OSKey";
-import { IconCheckmark, IconInformation, IconWarning } from "@Renderer/components/atoms/icons";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@Renderer/components/atoms/Tooltip";
+import { IconWarning } from "@Renderer/components/atoms/icons";
+import { Popover, PopoverContent, PopoverTrigger, PopoverButton } from "@Renderer/components/atoms/Popover";
 import ToastMessage from "@Renderer/components/atoms/ToastMessage";
+import CustomRadioCheckBox from "@Renderer/components/molecules/Form/CustomRadioCheckBox";
 // eslint-disable-next-line
 import { Picker } from "../KeyPickerKeyboard";
 
@@ -98,6 +98,19 @@ const ModifiersTab = ({
       },
     );
   };
+  const triggerToastDisabledDual = () => {
+    toast.warn(
+      <ToastMessage
+        icon={<IconWarning />}
+        title="Not available on this modifier"
+        content="Action not available on Right Shift, Right Control and Right OS, please select another modifier."
+      />,
+      {
+        autoClose: 3000,
+        icon: "",
+      },
+    );
+  };
 
   const handleDual = (keyBase: number, modifier?: string) => {
     const modifierItem = findModifierType(undefined, activeModifierTab, modifier || activeModifier);
@@ -158,14 +171,14 @@ const ModifiersTab = ({
             </p>
           </Callout>
         ) : null}
-        <div className="w-full flex gap-1 flex-row">
-          <div className="w-full rounded-regular flex flex-col gap-2 p-3 bg-white dark:bg-gray-700">
-            <Heading renderAs="h4" headingLevel={3} className="text-base flex">
-              <small className="text-2xxs text-gray-200 dark:text-gray-500">01.</small>{" "}
-              <span className="inline-flex">Modifier</span>
-            </Heading>
-            <div className="flex gap-1">
-              <div className="grid gap-1 p-1 bg-white dark:bg-gray-900/20 rounded-md grid-cols-4">
+
+        <div className="w-full flex flex-col gap-2">
+          <div className="w-full flex flex-row gap-6">
+            <div className="flex flex-col gap-2">
+              <Heading renderAs="h4" headingLevel={3} className="text-base flex">
+                <span className="inline-flex">Modifier</span>
+              </Heading>
+              <div className="flex gap-1">
                 <Button
                   variant="config"
                   onClick={() => {
@@ -173,6 +186,7 @@ const ModifiersTab = ({
                   }}
                   selected={activeModifier === "shift"}
                   size="sm"
+                  className="min-w-20"
                 >
                   <OSKey renderKey="shift" direction="Left" size="sm" />
                 </Button>
@@ -183,6 +197,7 @@ const ModifiersTab = ({
                   }}
                   selected={activeModifier === "control"}
                   size="sm"
+                  className="min-w-20"
                 >
                   <OSKey renderKey="control" direction="Left" size="sm" />
                 </Button>
@@ -193,6 +208,7 @@ const ModifiersTab = ({
                   }}
                   selected={activeModifier === "os"}
                   size="sm"
+                  className="min-w-20"
                 >
                   <OSKey renderKey="os" direction="Left" size="sm" />
                 </Button>
@@ -203,10 +219,10 @@ const ModifiersTab = ({
                   }}
                   selected={activeModifier === "alt"}
                   size="sm"
+                  className="min-w-20"
                 >
                   <OSKey renderKey="alt" direction="Left" size="sm" />
                 </Button>
-
                 <Button
                   variant="config"
                   onClick={() => {
@@ -215,6 +231,7 @@ const ModifiersTab = ({
                   selected={activeModifier === "rshift"}
                   disabled={activeModifierTab === "dualModifier"}
                   size="sm"
+                  className="min-w-20"
                 >
                   <OSKey renderKey="shift" direction="Right" size="sm" />
                 </Button>
@@ -226,6 +243,7 @@ const ModifiersTab = ({
                   selected={activeModifier === "rcontrol"}
                   disabled={activeModifierTab === "dualModifier"}
                   size="sm"
+                  className="min-w-20"
                 >
                   <OSKey renderKey="control" direction="Right" size="sm" />
                 </Button>
@@ -237,6 +255,7 @@ const ModifiersTab = ({
                   selected={activeModifier === "ros"}
                   disabled={activeModifierTab === "dualModifier"}
                   size="sm"
+                  className="min-w-20"
                 >
                   <OSKey renderKey="os" direction="Right" size="sm" />
                 </Button>
@@ -247,129 +266,147 @@ const ModifiersTab = ({
                   }}
                   selected={activeModifier === "altGr"}
                   size="sm"
+                  className="min-w-20"
                 >
                   <OSKey renderKey="altGr" size="sm" />
                 </Button>
               </div>
             </div>
-            <Separator />
-            <div className="rounded-regular flex flex-col gap-2 bg-gray-25/50 dark:bg-gray-600/50 p-2">
-              <Heading renderAs="h4" headingLevel={3} className="text-base flex">
-                <small className="text-2xxs text-gray-200 dark:text-gray-500">02.</small> Advanced options
-                <TooltipProvider delayDuration={200}>
-                  <Tooltip>
-                    <TooltipTrigger className="[&_svg]:text-purple-100 [&_svg]:dark:text-purple-200 inline-flex">
-                      <IconInformation />
-                    </TooltipTrigger>
-                    <TooltipContent className="max-w-md">
-                      <Heading
-                        headingLevel={4}
-                        renderAs="h4"
-                        className="text-gray-600 dark:text-gray-25 mb-1 leading-6 text-base"
-                      >
-                        Dual Function Modifier (Add key on tap)
-                      </Heading>
-                      <p className="description text-ssm font-medium text-gray-400 dark:text-gray-200">
-                        A Dual Function Modifier is a key that performs two functions based on how it&apos;s used. When you tap
-                        the key, it acts like a regular key (e.g., space or enter), but when you hold it down, it acts as a
-                        modifier key (like Shift, Ctrl, or Alt). This allows you to maximize the utility of a single key, enabling
-                        more efficient and flexible keyboard use.
-                      </p>
-                      <Heading
-                        headingLevel={4}
-                        renderAs="h4"
-                        className="text-gray-600 dark:text-gray-25 mt-2 mb-1 leading-6 text-base"
-                      >
-                        One Shot Modifier
-                      </Heading>
-                      <p className="description text-ssm font-medium text-gray-400 dark:text-gray-200">
-                        A One Shot Modifier allows you to temporarily activate a modifier key with a single tap. Once tapped, the
-                        modifier stays active for the next key press, then automatically deactivates. This is useful for executing
-                        a quick shortcut or command without needing to hold down the modifier key.
-                      </p>
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
-              </Heading>
-              <div className="rounded-regular flex gap-1 bg-gray-25/75 border border-gray-50 dark:border-none dark:bg-gray-800/20 p-1">
-                <Button
-                  className="flex-1"
-                  variant="config"
-                  size="sm"
-                  onClick={() => {
-                    if (activeModifier === "") {
-                      triggerToast();
-                    } else {
-                      // setActiveModifierTab(previous => (previous === "dualModifier" ? "None" : "dualModifier"));
-                      setActiveModifierTab("dualModifier");
-                    }
-                  }}
-                  selected={activeModifierTab === "dualModifier"}
-                  disabled={activeModifier === "ros" || activeModifier === "rcontrol" || activeModifier === "rshift"}
-                >
-                  {activeModifierTab === "dualModifier" ? (
-                    <IconCheckmark />
-                  ) : (
-                    <div className="h-[20px] w-[20px] relative after:absolute after:rounded-full after:content-[' '] after:w-3 after:h-3 after:left-1/2 after:top-1/2 after:-translate-x-1/2 after:-translate-y-1/2 after:border-2 after:border-gray-200 after:bg-gray-300/20 dark:after:border-gray-200 dark:after:bg-gray-500/50" />
-                  )}{" "}
-                  <div className="pl-1">Add a key on tap</div>
-                  <div className="badge bg-gray-400/50 leading-none ml-1 px-1 py-0.5 font-bold text-[8px] text-white rounded-md">
-                    PRO
-                  </div>
-                </Button>
-                <Button
-                  className="flex-1"
-                  variant="config"
-                  size="sm"
-                  onClick={() => {
-                    if (activeModifier === "") {
-                      triggerToast();
-                    } else {
-                      // setActiveModifierTab(previous => (previous === "oneShotModifier" ? "None" : "oneShotModifier"));
-                      setActiveModifierTab("oneShotModifier");
-                    }
-                  }}
-                  selected={activeModifierTab === "oneShotModifier"}
-                >
-                  {activeModifierTab === "oneShotModifier" ? (
-                    <IconCheckmark />
-                  ) : (
-                    <div className="h-[20px] w-[20px] relative after:absolute after:rounded-full after:content-[' '] after:w-3 after:h-3 after:left-1/2 after:top-1/2 after:-translate-x-1/2 after:-translate-y-1/2 after:border-2 after:border-gray-200 after:bg-gray-300/20 dark:after:border-gray-200 dark:after:bg-gray-500/50" />
-                  )}{" "}
-                  <div className="pl-1">Turn into a OneShot modifier</div>
-                  <div className="badge bg-gray-400/50 leading-none ml-1 px-1 py-0.5 font-bold text-[8px] text-white rounded-md">
-                    PRO
-                  </div>
-                </Button>
-              </div>
-              <AnimatePresence>
-                <motion.div>
-                  {activeModifierTab === "dualModifier" && (
-                    <>
-                      <Separator className="mt-2 mb-2" />
-                      <Heading renderAs="h4" headingLevel={3} className="text-base mb-2">
-                        <small className="text-2xxs text-gray-200 dark:text-gray-500">03.</small> Key
-                      </Heading>
-                      <Picker
-                        actions={actions}
-                        action={action}
-                        disable={disabled}
-                        baseCode={baseCode}
-                        modCode={modCode}
-                        onKeySelect={handleDual}
-                        activeTab={activeTab}
-                        selectedlanguage={selectedlanguage}
-                        // selKeys={selKeys}
-                        superkeys={superkeys}
-                        kbtype={kbtype}
-                        keyCode={keyCode}
-                        macros={macros}
-                        isWireless={isWireless}
-                      />
-                    </>
-                  )}
-                </motion.div>
-              </AnimatePresence>
+            <AnimatePresence>
+              <motion.div className="flex flex-col gap-2">
+                {activeModifierTab === "dualModifier" && (
+                  <>
+                    <Heading renderAs="h4" headingLevel={3} className="text-base flex">
+                      <span className="inline-flex">Key on tap</span>
+                    </Heading>
+                    <Popover defaultOpen={activeModifierTab === "dualModifier"}>
+                      <PopoverTrigger asChild>
+                        <PopoverButton active disabled={false}>
+                          Key
+                        </PopoverButton>
+                      </PopoverTrigger>
+                      <PopoverContent sideOffset={5} align="center" side="top" className="w-[920px] max-w-full">
+                        <div className="w-full p-2 rounded-sm bg-gray-25/40 dark:bg-gray-800">
+                          <div className="dropdown-group">
+                            <Heading
+                              headingLevel={5}
+                              renderAs="h5"
+                              className="my-1 flex gap-2 items-center text-gray-200 dark:text-gray-300"
+                            >
+                              <span>
+                                Select <span className="text-gray-400 dark:text-gray-50">key</span>
+                              </span>
+                            </Heading>
+                            <Picker
+                              actions={actions}
+                              action={action}
+                              disable={disabled}
+                              baseCode={baseCode}
+                              modCode={modCode}
+                              onKeySelect={handleDual}
+                              activeTab={activeTab}
+                              selectedlanguage={selectedlanguage}
+                              // selKeys={selKeys}
+                              superkeys={superkeys}
+                              kbtype={kbtype}
+                              keyCode={keyCode}
+                              macros={macros}
+                              isWireless={isWireless}
+                            />
+                          </div>
+                        </div>
+                      </PopoverContent>
+                    </Popover>
+                  </>
+                )}
+              </motion.div>
+            </AnimatePresence>
+          </div>
+          <div className="flex flex-col gap-2 mt-3">
+            <Heading renderAs="h4" headingLevel={3} className="text-base flex">
+              Advanced options
+            </Heading>
+            <div className="flex gap-6">
+              <CustomRadioCheckBox
+                label={
+                  <>
+                    <div className="pl-0.5">Add a key on tap</div>
+                    <div className="badge bg-gray-400/50 leading-none ml-1 px-1 py-0.5 font-bold text-[8px] text-white rounded-md">
+                      PRO
+                    </div>
+                  </>
+                }
+                checked={activeModifierTab === "dualModifier"}
+                onClick={() => {
+                  if (activeModifier === "") {
+                    triggerToast();
+                  } else if (activeModifier === "ros" || activeModifier === "rcontrol" || activeModifier === "rshift") {
+                    triggerToastDisabledDual();
+                  } else {
+                    // setActiveModifierTab(previous => (previous === "dualModifier" ? "None" : "dualModifier"));
+                    setActiveModifierTab("dualModifier");
+                  }
+                }}
+                type="radio"
+                name="addDualFuncionModifier"
+                id="addDualFuncionModifier"
+                tooltip={
+                  <>
+                    <Heading headingLevel={4} renderAs="h4" className="text-gray-600 dark:text-gray-25 mb-1 leading-6 text-base">
+                      Dual Function Modifier (Add key on tap)
+                    </Heading>
+                    <p className="description text-ssm font-medium text-gray-400 dark:text-gray-200">
+                      A Dual Function Modifier is a key that performs two functions based on how it&apos;s used. When you tap the
+                      key, it acts like a regular key (e.g., space or enter), but when you hold it down, it acts as a modifier key
+                      (like Shift, Ctrl, or Alt). This allows you to maximize the utility of a single key, enabling more efficient
+                      and flexible keyboard use.
+                    </p>
+                  </>
+                }
+                className=""
+                disabled={false}
+              />
+              <CustomRadioCheckBox
+                label={
+                  <>
+                    <div className="pl-0.5">Turn into a OneShot modifier</div>
+                    <div className="badge bg-gray-400/50 leading-none ml-1 px-1 py-0.5 font-bold text-[8px] text-white rounded-md">
+                      PRO
+                    </div>
+                  </>
+                }
+                checked={activeModifierTab === "oneShotModifier"}
+                onClick={() => {
+                  if (activeModifier === "") {
+                    triggerToast();
+                  } else {
+                    // setActiveModifierTab(previous => (previous === "dualModifier" ? "None" : "dualModifier"));
+                    console.log("Irrrraaaaahhh!!");
+                    setActiveModifierTab("oneShotModifier");
+                  }
+                }}
+                type="radio"
+                name="addOneShotModifier"
+                id="addOneShotModifier"
+                tooltip={
+                  <>
+                    <Heading
+                      headingLevel={4}
+                      renderAs="h4"
+                      className="text-gray-600 dark:text-gray-25 mt-2 mb-1 leading-6 text-base"
+                    >
+                      One Shot Modifier
+                    </Heading>
+                    <p className="description text-ssm font-medium text-gray-400 dark:text-gray-200">
+                      A One Shot Modifier allows you to temporarily activate a modifier key with a single tap. Once tapped, the
+                      modifier stays active for the next key press, then automatically deactivates. This is useful for executing a
+                      quick shortcut or command without needing to hold down the modifier key.
+                    </p>
+                  </>
+                }
+                className=""
+                disabled={false}
+              />
             </div>
           </div>
         </div>
