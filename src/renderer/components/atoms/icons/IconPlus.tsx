@@ -1,7 +1,7 @@
 import * as React from "react";
 
 interface IconPlusProps {
-  size: "xs" | "md";
+  size?: "xs" | "md";
 }
 
 const IconPlus = ({ size = "md" }: IconPlusProps) => (

@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useEffect } from "react";
+import React, { useMemo, useState, useEffect, useCallback } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { toast } from "react-toastify";
 
@@ -7,10 +7,12 @@ import { Button } from "@Renderer/components/atoms/Button";
 import Heading from "@Renderer/components/atoms/Heading";
 import findModifierType from "@Renderer/utils/findModifierType";
 import OSKey from "@Renderer/components/molecules/KeyTags/OSKey";
-import { IconWarning } from "@Renderer/components/atoms/icons";
-import { Popover, PopoverContent, PopoverTrigger, PopoverButton } from "@Renderer/components/atoms/Popover";
+import { IconWarning, IconPen, IconPlus } from "@Renderer/components/atoms/icons";
+import { Popover, PopoverContent, PopoverTrigger } from "@Renderer/components/atoms/Popover";
 import ToastMessage from "@Renderer/components/atoms/ToastMessage";
 import CustomRadioCheckBox from "@Renderer/components/molecules/Form/CustomRadioCheckBox";
+import { Separator } from "@Renderer/components/atoms/Separator";
+import { KeymapDB } from "../../../api/keymap";
 // eslint-disable-next-line
 import { Picker } from "../KeyPickerKeyboard";
 
@@ -52,6 +54,7 @@ const ModifiersTab = ({
   const [activeModifier, setActiveModifier] = useState<string>("");
   const [activeModifierTab, setActiveModifierTab] = useState<string>("None");
   const [internalKeyBase, setInternalKeyBase] = useState<number>(0);
+  const [openKeysPopover, setOpenKeysPopover] = useState<boolean>(false);
 
   const KC = useMemo(() => {
     if (keyCode?.base !== undefined && keyCode?.modified !== undefined) {
@@ -117,6 +120,7 @@ const ModifiersTab = ({
     setInternalKeyBase(keyBase);
     if (modifierItem && modifierItem.type === "dualModifier") {
       onKeySelect(modifierItem.keynum + keyBase);
+      setOpenKeysPopover(false);
     }
   };
 
@@ -158,6 +162,78 @@ const ModifiersTab = ({
     // eslint-disable-next-line
   }, [keyNumInternal]);
 
+  const modifiersButtons = useMemo(
+    () => [
+      {
+        id: 1,
+        label: "Shift",
+        identifier: "shift",
+        renderElement: <OSKey renderKey="shift" direction="Left" size="sm" />,
+        dualDisabled: false,
+      },
+      {
+        id: 2,
+        label: "Control",
+        identifier: "control",
+        renderElement: <OSKey renderKey="control" direction="Left" size="sm" />,
+        dualDisabled: false,
+      },
+      {
+        id: 3,
+        label: "OS",
+        identifier: "os",
+        renderElement: <OSKey renderKey="os" direction="Left" size="sm" />,
+        dualDisabled: false,
+      },
+      {
+        id: 4,
+        label: "Alt",
+        identifier: "alt",
+        renderElement: <OSKey renderKey="alt" direction="Left" size="sm" />,
+        dualDisabled: false,
+      },
+      {
+        id: 5,
+        label: "Right Shift",
+        identifier: "rshift",
+        renderElement: <OSKey renderKey="shift" direction="Right" size="sm" />,
+        dualDisabled: true,
+      },
+      {
+        id: 6,
+        label: "Right Control",
+        identifier: "rcontrol",
+        renderElement: <OSKey renderKey="control" direction="Right" size="sm" />,
+        dualDisabled: true,
+      },
+      {
+        id: 7,
+        label: "Right OS",
+        identifier: "ros",
+        renderElement: <OSKey renderKey="os" direction="Right" size="sm" />,
+        dualDisabled: true,
+      },
+      {
+        id: 7,
+        label: "Alt Gr.",
+        identifier: "altGr",
+        renderElement: <OSKey renderKey="altGr" size="sm" />,
+        dualDisabled: false,
+      },
+    ],
+    [],
+  );
+
+  const keymapDB = useMemo(() => new KeymapDB(), []);
+
+  const labelKey = useCallback(
+    (id: number): string => {
+      const aux = keymapDB.parse(id);
+      return String(aux.label);
+    },
+    [keymapDB],
+  );
+
   return (
     <div
       className={`flex flex-wrap h-[inherit] ${isStandardView ? "standardViewTab" : ""} ${disabled ? "opacity-50 pointer-events-none" : ""} tabsLayer`}
@@ -173,119 +249,72 @@ const ModifiersTab = ({
         ) : null}
 
         <div className="w-full flex flex-col gap-2">
-          <div className="w-full flex flex-row gap-6">
+          <div className="w-full flex flex-row flex-wrap gap-6">
             <div className="flex flex-col gap-2">
-              <Heading renderAs="h4" headingLevel={3} className="text-base flex">
-                <span className="inline-flex">Modifier</span>
+              <Heading renderAs="h4" headingLevel={3} className="text-base flex leading-6 gap-1">
+                Modifier{" "}
+                {activeModifierTab === "dualModifier" && (
+                  <span className="text-gray-400 dark:text-gray-300">
+                    Shift on hold <small>(Dual function)</small>
+                  </span>
+                )}
+                {activeModifierTab === "oneShotModifier" && <span className="text-gray-400 dark:text-gray-300">OneShot</span>}
               </Heading>
-              <div className="flex gap-1">
-                <Button
-                  variant="config"
-                  onClick={() => {
-                    handleModifier("shift");
-                  }}
-                  selected={activeModifier === "shift"}
-                  size="sm"
-                  className="min-w-20"
-                >
-                  <OSKey renderKey="shift" direction="Left" size="sm" />
-                </Button>
-                <Button
-                  variant="config"
-                  onClick={() => {
-                    handleModifier("control");
-                  }}
-                  selected={activeModifier === "control"}
-                  size="sm"
-                  className="min-w-20"
-                >
-                  <OSKey renderKey="control" direction="Left" size="sm" />
-                </Button>
-                <Button
-                  variant="config"
-                  onClick={() => {
-                    handleModifier("os");
-                  }}
-                  selected={activeModifier === "os"}
-                  size="sm"
-                  className="min-w-20"
-                >
-                  <OSKey renderKey="os" direction="Left" size="sm" />
-                </Button>
-                <Button
-                  variant="config"
-                  onClick={() => {
-                    handleModifier("alt");
-                  }}
-                  selected={activeModifier === "alt"}
-                  size="sm"
-                  className="min-w-20"
-                >
-                  <OSKey renderKey="alt" direction="Left" size="sm" />
-                </Button>
-                <Button
-                  variant="config"
-                  onClick={() => {
-                    handleModifier("rshift");
-                  }}
-                  selected={activeModifier === "rshift"}
-                  disabled={activeModifierTab === "dualModifier"}
-                  size="sm"
-                  className="min-w-20"
-                >
-                  <OSKey renderKey="shift" direction="Right" size="sm" />
-                </Button>
-                <Button
-                  variant="config"
-                  onClick={() => {
-                    handleModifier("rcontrol");
-                  }}
-                  selected={activeModifier === "rcontrol"}
-                  disabled={activeModifierTab === "dualModifier"}
-                  size="sm"
-                  className="min-w-20"
-                >
-                  <OSKey renderKey="control" direction="Right" size="sm" />
-                </Button>
-                <Button
-                  variant="config"
-                  onClick={() => {
-                    handleModifier("ros");
-                  }}
-                  selected={activeModifier === "ros"}
-                  disabled={activeModifierTab === "dualModifier"}
-                  size="sm"
-                  className="min-w-20"
-                >
-                  <OSKey renderKey="os" direction="Right" size="sm" />
-                </Button>
-                <Button
-                  variant="config"
-                  onClick={() => {
-                    handleModifier("altGr");
-                  }}
-                  selected={activeModifier === "altGr"}
-                  size="sm"
-                  className="min-w-20"
-                >
-                  <OSKey renderKey="altGr" size="sm" />
-                </Button>
+              <div className="flex flex-wrap gap-1">
+                {modifiersButtons.map(button => (
+                  <Button
+                    variant="config"
+                    onClick={() => {
+                      handleModifier(button.identifier);
+                    }}
+                    selected={activeModifier === button.identifier}
+                    disabled={activeModifierTab === "dualModifier" && button.dualDisabled}
+                    size="sm"
+                    className="min-w-20 text-ssm h-9"
+                  >
+                    {button.renderElement}
+                  </Button>
+                ))}
               </div>
             </div>
             <AnimatePresence>
               <motion.div className="flex flex-col gap-2">
                 {activeModifierTab === "dualModifier" && (
                   <>
-                    <Heading renderAs="h4" headingLevel={3} className="text-base flex">
-                      <span className="inline-flex">Key on tap</span>
+                    <Heading renderAs="h4" headingLevel={3} className="text-base flex leading-6 gap-1">
+                      Key <span className="text-gray-400 dark:text-gray-300"> on tap</span>
                     </Heading>
-                    <Popover defaultOpen={activeModifierTab === "dualModifier"}>
-                      <PopoverTrigger asChild>
-                        <PopoverButton active disabled={false}>
-                          Key
-                        </PopoverButton>
+                    <Popover open={openKeysPopover} onOpenChange={setOpenKeysPopover}>
+                      <PopoverTrigger asChild className="">
+                        {/* <PopoverButton active={!!labelKey(keyCode.base)} disabled={false}>
+                          <div className="flex items-center gap-2 min-w-8">
+                            {labelKey(keyCode.base) && labelKey(keyCode.base) !== "KEY" ? labelKey(keyCode.base) : ""}
+                            <IconPen size="xs" />
+                          </div>
+                        </PopoverButton> */}
+                        <Button
+                          variant="config"
+                          selected={!!(labelKey(keyCode.base) && labelKey(keyCode.base) !== "KEY")}
+                          size="sm"
+                          className="min-w-20 h-9 flex gap-2 justify-between"
+                        >
+                          {labelKey(keyCode.base) && labelKey(keyCode.base) !== "KEY" ? (
+                            labelKey(keyCode.base)
+                          ) : (
+                            <IconPlus size="xs" />
+                          )}
+                          <div className="flex gap-2">
+                            <Separator orientation="vertical" className="bg-gray-50 dark:bg-gray-50 h-[auto] opacity-20" />
+                            <IconPen size="xs" />
+                          </div>
+                        </Button>
                       </PopoverTrigger>
-                      <PopoverContent sideOffset={5} align="center" side="top" className="w-[920px] max-w-full">
+                      <PopoverContent
+                        sideOffset={5}
+                        align="center"
+                        side="top"
+                        className="md:w-[720px] lg:w-[820px] xl:w-[920px] max-w-full"
+                      >
                         <div className="w-full p-2 rounded-sm bg-gray-25/40 dark:bg-gray-800">
                           <div className="dropdown-group">
                             <Heading
@@ -326,7 +355,7 @@ const ModifiersTab = ({
             <Heading renderAs="h4" headingLevel={3} className="text-base flex">
               Advanced options
             </Heading>
-            <div className="flex gap-6">
+            <div className="flex flex-wrap gap-6">
               <CustomRadioCheckBox
                 label={
                   <>
@@ -345,6 +374,7 @@ const ModifiersTab = ({
                   } else {
                     // setActiveModifierTab(previous => (previous === "dualModifier" ? "None" : "dualModifier"));
                     setActiveModifierTab("dualModifier");
+                    setOpenKeysPopover(true);
                   }
                 }}
                 type="radio"
