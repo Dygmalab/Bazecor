@@ -285,13 +285,7 @@ const ModifiersTab = ({
                       Key <span className="text-gray-400 dark:text-gray-300"> on tap</span>
                     </Heading>
                     <Popover open={openKeysPopover} onOpenChange={setOpenKeysPopover}>
-                      <PopoverTrigger asChild className="">
-                        {/* <PopoverButton active={!!labelKey(keyCode.base)} disabled={false}>
-                          <div className="flex items-center gap-2 min-w-8">
-                            {labelKey(keyCode.base) && labelKey(keyCode.base) !== "KEY" ? labelKey(keyCode.base) : ""}
-                            <IconPen size="xs" />
-                          </div>
-                        </PopoverButton> */}
+                      <PopoverTrigger asChild>
                         <Button
                           variant="config"
                           selected={!!(labelKey(keyCode.base) && labelKey(keyCode.base) !== "KEY")}
@@ -411,7 +405,6 @@ const ModifiersTab = ({
                     triggerToast();
                   } else {
                     // setActiveModifierTab(previous => (previous === "dualModifier" ? "None" : "dualModifier"));
-                    console.log("Irrrraaaaahhh!!");
                     setActiveModifierTab("oneShotModifier");
                   }
                 }}

@@ -1,13 +1,15 @@
-import React, { useMemo, useState, useEffect } from "react";
+import React, { useMemo, useState, useEffect, useCallback } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 
 import Callout from "@Renderer/components/molecules/Callout/Callout";
 import { Button } from "@Renderer/components/atoms/Button";
-import { Separator } from "@Renderer/components/atoms/Separator";
 import Heading from "@Renderer/components/atoms/Heading";
 import findLayerType from "@Renderer/utils/findLayerType";
-import { IconCheckmark, IconInformation } from "@Renderer/components/atoms/icons";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@Renderer/components/atoms/Tooltip";
+import { IconInformation, IconPlus, IconPen } from "@Renderer/components/atoms/icons";
+import { Popover, PopoverContent, PopoverTrigger } from "@Renderer/components/atoms/Popover";
+import CustomRadioCheckBox from "@Renderer/components/molecules/Form/CustomRadioCheckBox";
+import { Separator } from "@Renderer/components/atoms/Separator";
+import { KeymapDB } from "../../../api/keymap";
 // eslint-disable-next-line
 import { Picker } from "../KeyPickerKeyboard";
 
@@ -52,6 +54,7 @@ const LayersTab = ({
 }: LayersTabProps) => {
   const [disableOneShot, setDisableOneShot] = useState<boolean>(false);
   const [disableOneShotButtons, setDisableOneShotButtons] = useState<boolean>(false);
+  const [openKeysPopover, setOpenKeysPopover] = useState<boolean>(false);
 
   const layers = useMemo(
     () => [
@@ -114,6 +117,7 @@ const LayersTab = ({
     const layerItem = findLayerType(undefined, activeLayerTab, activeLayerNumber);
     if (layerItem && layerItem.type === "layerDual") {
       onKeySelect(layerItem.keynum + keyBase);
+      setOpenKeysPopover(false);
     }
   };
 
@@ -151,6 +155,16 @@ const LayersTab = ({
     // eslint-disable-next-line
   }, [keyNumInternal]);
 
+  const keymapDB = useMemo(() => new KeymapDB(), []);
+
+  const labelKey = useCallback(
+    (id: number): string => {
+      const aux = keymapDB.parse(id);
+      return String(aux.label);
+    },
+    [keymapDB],
+  );
+
   return (
     <div
       className={`flex flex-wrap h-[inherit] ${isStandardView ? "standardViewTab" : ""} ${disabled ? "opacity-50 pointer-events-none" : ""} tabsLayer`}
@@ -174,182 +188,221 @@ const LayersTab = ({
             </p>
           </Callout>
         ) : null}
-        <div className="w-full flex gap-1 flex-row">
-          <div className="w-full rounded-regular flex flex-col gap-2 p-3 bg-white dark:bg-gray-700">
-            <Heading renderAs="h4" headingLevel={3} className="text-base flex">
-              <small className="text-2xxs text-gray-200 dark:text-gray-500">01.</small> <span className="inline-flex">Layer</span>
-            </Heading>
-            <div className="flex gap-1">
-              {layers.map((button, index) => (
-                <Button
-                  variant="config"
-                  size="icon"
-                  onClick={() => {
-                    handleLayer(index + 1);
-                  }}
-                  selected={index + 1 === activeLayerNumber}
-                  // selected={layerDeltaSwitch + index === keyCode}
-                  // disabled={(disableMods || (index > 7 && disableOneShotButtons)}
-                  disabled={index > 7 && disableOneShotButtons}
-                  key={`buttonLayerID-${button.layer}`}
-                >
-                  {index + 1}
-                </Button>
-              ))}
-            </div>
-            <Separator />
-            <div className="rounded-regular flex flex-col gap-2 bg-gray-25/50 dark:bg-gray-600/50 p-2">
-              <Heading renderAs="h4" headingLevel={3} className="text-base flex">
-                <small className="text-2xxs text-gray-200 dark:text-gray-500">02.</small> Advanced options
-                <TooltipProvider delayDuration={200}>
-                  <Tooltip>
-                    <TooltipTrigger className="[&_svg]:text-purple-100 [&_svg]:dark:text-purple-200 inline-flex">
-                      <IconInformation />
-                    </TooltipTrigger>
-                    <TooltipContent className="max-w-md">
-                      <Heading
-                        headingLevel={4}
-                        renderAs="h4"
-                        className="text-gray-600 dark:text-gray-25 mb-1 leading-6 text-base"
-                      >
-                        Layer Shift Navigation (Default value)
-                      </Heading>
-                      <p className="description text-ssm font-medium text-gray-400 dark:text-gray-200">
-                        Hold down a key to temporarily activate a layer and switch back once you release it. This is useful for
-                        quick actions, such as accessing navigation keys or shortcuts without permanently leaving your current
-                        layer.
-                      </p>
-                      <Heading
-                        headingLevel={4}
-                        renderAs="h4"
-                        className="text-gray-600 dark:text-gray-25 mb-1 mt-2 leading-6 text-base"
-                      >
-                        Layer Lock Navigation
-                      </Heading>
-                      <p className="description text-ssm font-medium text-gray-400 dark:text-gray-200">
-                        Tap a designated key to lock into a specific layer, staying in that layer until you decide to switch back.
-                        It&apos;s ideal for extended tasks like video editing or gaming. Ensure you set up a return key to revert
-                        to the previous layer easily.
-                      </p>
-                      <Heading
-                        headingLevel={4}
-                        renderAs="h4"
-                        className="text-gray-600 dark:text-gray-25 mb-1 mt-2 leading-6 text-base"
-                      >
-                        Dual Function Navigation (Add a key on tap)
-                      </Heading>
-                      <p className="description text-ssm font-medium text-gray-400 dark:text-gray-200">
-                        Assign a key with dual functions where a tap performs one action (like space or enter), but holding it
-                        activates a specific layer. This allows for efficient layer access without sacrificing key real estate.
-                      </p>
-                      <Heading
-                        headingLevel={4}
-                        renderAs="h4"
-                        className="text-gray-600 dark:text-gray-25 mb-1 mt-2 text-base leading-6"
-                      >
-                        One Shot Layer Navigation
-                      </Heading>
-                      <p className="description text-ssm font-medium text-gray-400 dark:text-gray-200">
-                        Tap a key to enter a layer for a single action; after that action, the software automatically returns to
-                        the previous layer. You can also hold the key to stay in the layer temporarily or double-tap it to lock in
-                        and then unlock by tapping the key again.
-                      </p>
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
+        <div className="w-full flex flex-col gap-2">
+          <div className="w-full flex flex-row flex-wrap gap-6">
+            <div className="flex flex-col gap-2">
+              <Heading renderAs="h4" headingLevel={3} className="text-base flex leading-6 gap-1">
+                Layer{" "}
+                {activeLayerTab === "layerShift" && activeLayerNumber > 0 ? (
+                  <span className="text-gray-400 dark:text-gray-300">Shift on hold</span>
+                ) : (
+                  ""
+                )}
+                {activeLayerTab === "layerLock" && <span className="text-gray-400 dark:text-gray-300">Lock on tap</span>}
+                {activeLayerTab === "layerDual" && (
+                  <span className="text-gray-400 dark:text-gray-300">
+                    Shift on hold <small>(Dual-function)</small>
+                  </span>
+                )}
+                {activeLayerTab === "layerShot" && <span className="text-gray-400 dark:text-gray-300">OneShot</span>}
               </Heading>
-              <div className="rounded-regular flex gap-1 bg-gray-25/75 border border-gray-50 dark:border-none dark:bg-gray-800/20 p-1">
-                <Button
-                  className="flex-1"
-                  variant="config"
-                  size="sm"
-                  // onClick={() => setActiveLayerTab(previous => (previous === "layerLock" ? "layerShift" : "layerLock"))}
-                  onClick={() => {
-                    if (activeTab === "super" && disableMods) {
-                      return;
-                    }
-                    setActiveLayerTab(previous => (previous === "layerLock" ? "layerShift" : "layerLock"));
-                  }}
-                  selected={activeLayerTab === "layerLock"}
-                >
-                  {activeLayerTab === "layerLock" ? (
-                    <IconCheckmark />
-                  ) : (
-                    <div className="h-[20px] w-[20px] relative after:absolute after:rounded-full after:content-[' '] after:w-3 after:h-3 after:left-1/2 after:top-1/2 after:-translate-x-1/2 after:-translate-y-1/2 after:border-2 after:border-gray-200 after:bg-gray-300/20 dark:after:border-gray-200 dark:after:bg-gray-500/50" />
-                  )}{" "}
-                  Turn into layer lock
-                </Button>
-                {activeTab === "editor" && (
+              <div className="flex gap-1">
+                {layers.map((button, index) => (
+                  <Button
+                    variant="config"
+                    size="icon"
+                    onClick={() => {
+                      handleLayer(index + 1);
+                    }}
+                    selected={index + 1 === activeLayerNumber}
+                    disabled={index > 7 && disableOneShotButtons}
+                    key={`buttonLayerID-${button.layer}`}
+                    className="h-9 aspect-square"
+                  >
+                    {index + 1}
+                  </Button>
+                ))}
+              </div>
+            </div>
+            <AnimatePresence>
+              <motion.div className="flex flex-col gap-2">
+                {activeLayerTab === "layerDual" && (
                   <>
-                    <Button
-                      className="flex-1"
-                      variant="config"
-                      size="sm"
-                      onClick={() => setActiveLayerTab(previous => (previous === "layerDual" ? "layerShift" : "layerDual"))}
-                      selected={activeLayerTab === "layerDual"}
-                    >
-                      {activeLayerTab === "layerDual" ? (
-                        <IconCheckmark />
-                      ) : (
-                        <div className="h-[20px] w-[20px] relative after:absolute after:rounded-full after:content-[' '] after:w-3 after:h-3 after:left-1/2 after:top-1/2 after:-translate-x-1/2 after:-translate-y-1/2 after:border-2 after:border-gray-200 after:bg-gray-300/20 dark:after:border-gray-200 dark:after:bg-gray-500/50" />
-                      )}{" "}
-                      <div className="pl-1">Add a key on tap</div>
-                      <div className="badge bg-gray-400/50 leading-none ml-1 px-1 py-0.5 font-bold text-[8px] text-white rounded-md">
-                        PRO
-                      </div>
-                    </Button>
-                    <Button
-                      className="flex-1"
-                      variant="config"
-                      size="sm"
-                      disabled={disableOneShot}
-                      onClick={() => {
-                        setActiveLayerTab(previous => (previous === "layerShot" ? "layerShift" : "layerShot"));
-                        setDisableOneShotButtons(true);
-                      }}
-                      selected={activeLayerTab === "layerShot"}
-                    >
-                      {activeLayerTab === "layerShot" ? (
-                        <IconCheckmark />
-                      ) : (
-                        <div className="h-[20px] w-[20px] relative after:absolute after:rounded-full after:content-[' '] after:w-3 after:h-3 after:left-1/2 after:top-1/2 after:-translate-x-1/2 after:-translate-y-1/2 after:border-2 after:border-gray-200 after:bg-gray-300/20 dark:after:border-gray-200 dark:after:bg-gray-500/50" />
-                      )}{" "}
-                      <div className="pl-1">Turn into a OneShot layer</div>
-                      <div className="badge bg-gray-400/50 leading-none ml-1 px-1 py-0.5 font-bold text-[8px] text-white rounded-md">
-                        PRO
-                      </div>
-                    </Button>
+                    <Heading renderAs="h4" headingLevel={3} className="text-base flex leading-6 gap-1">
+                      Key <span className="text-gray-400 dark:text-gray-300"> on tap</span>
+                    </Heading>
+                    <Popover open={openKeysPopover} onOpenChange={setOpenKeysPopover}>
+                      <PopoverTrigger asChild>
+                        <Button
+                          variant="config"
+                          selected={!!(labelKey(keyCode.base) && labelKey(keyCode.base) !== "KEY")}
+                          size="sm"
+                          className="min-w-20 h-9 flex gap-2 justify-between"
+                        >
+                          {labelKey(keyCode.base) && labelKey(keyCode.base) !== "KEY" ? (
+                            labelKey(keyCode.base)
+                          ) : (
+                            <IconPlus size="xs" />
+                          )}
+                          <div className="flex gap-2">
+                            <Separator orientation="vertical" className="bg-gray-50 dark:bg-gray-50 h-[auto] opacity-20" />
+                            <IconPen size="xs" />
+                          </div>
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent
+                        sideOffset={5}
+                        align="center"
+                        side="top"
+                        className="md:w-[720px] lg:w-[820px] xl:w-[920px] max-w-full"
+                      >
+                        <div className="w-full p-2 rounded-sm bg-gray-25/40 dark:bg-gray-800">
+                          <div className="dropdown-group">
+                            <Heading
+                              headingLevel={5}
+                              renderAs="h5"
+                              className="my-1 flex gap-2 items-center text-gray-200 dark:text-gray-300"
+                            >
+                              <span>
+                                Select <span className="text-gray-400 dark:text-gray-50">key</span>
+                              </span>
+                            </Heading>
+                            <Picker
+                              actions={actions}
+                              action={action}
+                              disable={disabled}
+                              baseCode={baseCode}
+                              modCode={modCode}
+                              onKeySelect={handleDual}
+                              activeTab={activeTab}
+                              selectedlanguage={selectedlanguage}
+                              // selKeys={selKeys}
+                              superkeys={superkeys}
+                              kbtype={kbtype}
+                              keyCode={keyCode}
+                              macros={macros}
+                              isWireless={isWireless}
+                            />
+                          </div>
+                        </div>
+                      </PopoverContent>
+                    </Popover>
                   </>
                 )}
-              </div>
-              <AnimatePresence>
-                <motion.div>
-                  {activeLayerTab === "layerDual" && (
-                    <>
-                      <Separator className="mt-2 mb-2" />
-                      <Heading renderAs="h4" headingLevel={3} className="text-base mb-2">
-                        <small className="text-2xxs text-gray-200 dark:text-gray-500">03.</small> Key
-                      </Heading>
-                      <Picker
-                        actions={actions}
-                        action={action}
-                        disable={disabled}
-                        baseCode={baseCode}
-                        modCode={modCode}
-                        onKeySelect={handleDual}
-                        activeTab={activeTab}
-                        selectedlanguage={selectedlanguage}
-                        // selKeys={selKeys}
-                        superkeys={superkeys}
-                        kbtype={kbtype}
-                        keyCode={keyCode}
-                        macros={macros}
-                        isWireless={isWireless}
-                      />
-                    </>
-                  )}
-                </motion.div>
-              </AnimatePresence>
+              </motion.div>
+            </AnimatePresence>
+          </div>
+          <div className="flex flex-col gap-2 mt-3">
+            <Heading renderAs="h4" headingLevel={3} className="text-base flex">
+              Advanced options
+            </Heading>
+            <div className="flex flex-wrap gap-6">
+              <CustomRadioCheckBox
+                label={
+                  <>
+                    <div className="pl-0.5">Turn into layer lock</div>
+                  </>
+                }
+                onClick={() => {
+                  if (activeTab === "super" && disableMods) {
+                    return;
+                  }
+                  setActiveLayerTab(previous => (previous === "layerLock" ? "layerShift" : "layerLock"));
+                }}
+                checked={activeLayerTab === "layerLock"}
+                type="radio"
+                name="turnIntoLockLayer"
+                id="turnIntoLockLayer"
+                tooltip={
+                  <>
+                    <Heading headingLevel={4} renderAs="h4" className="text-gray-600 dark:text-gray-25 mb-1 leading-6 text-base">
+                      Layer Lock Navigation
+                    </Heading>
+                    <p className="description text-ssm font-medium text-gray-400 dark:text-gray-200">
+                      Tap a designated key to lock into a specific layer, staying in that layer until you decide to switch back.
+                      It&apos;s ideal for extended tasks like video editing or gaming. Ensure you set up a return key to revert to
+                      the previous layer easily.
+                    </p>
+                  </>
+                }
+                disabled={false}
+                className=""
+              />
+              {activeTab === "editor" && (
+                <>
+                  <CustomRadioCheckBox
+                    label={
+                      <>
+                        <div className="pl-0.5">Add key on tap</div>
+                        <div className="badge bg-gray-400/50 leading-none ml-1 px-1 py-0.5 font-bold text-[8px] text-white rounded-md">
+                          PRO
+                        </div>
+                      </>
+                    }
+                    onClick={() => {
+                      setActiveLayerTab(previous => (previous === "layerDual" ? "layerShift" : "layerDual"));
+                      setOpenKeysPopover(true);
+                    }}
+                    checked={activeLayerTab === "layerDual"}
+                    type="radio"
+                    name="addDualFunctionLayer"
+                    id="addDualFunctionLayer"
+                    tooltip={
+                      <>
+                        <Heading
+                          headingLevel={4}
+                          renderAs="h4"
+                          className="text-gray-600 dark:text-gray-25 mt-2 mb-1 leading-6 text-base"
+                        >
+                          Dual Function Navigation (Add a key on tap)
+                        </Heading>
+                        <p className="description text-ssm font-medium text-gray-400 dark:text-gray-200">
+                          Assign a key with dual functions where a tap performs one action (like space or enter), but holding it
+                          activates a specific layer. This allows for efficient layer access without sacrificing key real estate.
+                        </p>
+                      </>
+                    }
+                    disabled={false}
+                    className=""
+                  />
+                  <CustomRadioCheckBox
+                    label={
+                      <>
+                        <div className="pl-0.5">Turn into OneShot layer</div>
+                        <div className="badge bg-gray-400/50 leading-none ml-1 px-1 py-0.5 font-bold text-[8px] text-white rounded-md">
+                          PRO
+                        </div>
+                      </>
+                    }
+                    disabled={disableOneShot}
+                    onClick={() => {
+                      setActiveLayerTab(previous => (previous === "layerShot" ? "layerShift" : "layerShot"));
+                      setDisableOneShotButtons(true);
+                    }}
+                    checked={activeLayerTab === "layerShot"}
+                    type="radio"
+                    name="addOneShotLayer"
+                    id="addOneShotLayer"
+                    tooltip={
+                      <>
+                        <Heading
+                          headingLevel={4}
+                          renderAs="h4"
+                          className="text-gray-600 dark:text-gray-25 mt-2 mb-1 leading-6 text-base"
+                        >
+                          OneShot layer Navigation
+                        </Heading>
+                        <p className="description text-ssm font-medium text-gray-400 dark:text-gray-200">
+                          Tap a key to enter a layer for a single action; after that action, the software automatically returns to
+                          the previous layer. You can also hold the key to stay in the layer temporarily or double-tap it to lock
+                          in and then unlock by tapping the key again.
+                        </p>
+                      </>
+                    }
+                    className=""
+                  />
+                </>
+              )}
             </div>
           </div>
         </div>
