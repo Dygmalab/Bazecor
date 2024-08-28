@@ -1,12 +1,14 @@
 import React, { useMemo, useState, useEffect, useCallback } from "react";
 import { AnimatePresence, motion } from "framer-motion";
+import { toast } from "react-toastify";
 
 import Callout from "@Renderer/components/molecules/Callout/Callout";
 import { Button } from "@Renderer/components/atoms/Button";
 import Heading from "@Renderer/components/atoms/Heading";
 import findLayerType from "@Renderer/utils/findLayerType";
-import { IconInformation, IconPlus, IconPen } from "@Renderer/components/atoms/icons";
+import { IconWarning, IconPlus, IconPen } from "@Renderer/components/atoms/icons";
 import { Popover, PopoverContent, PopoverTrigger } from "@Renderer/components/atoms/Popover";
+import ToastMessage from "@Renderer/components/atoms/ToastMessage";
 import CustomRadioCheckBox from "@Renderer/components/molecules/Form/CustomRadioCheckBox";
 import { Separator } from "@Renderer/components/atoms/Separator";
 import { KeymapDB } from "../../../api/keymap";
@@ -71,6 +73,16 @@ const LayersTab = ({
     ],
     [],
   );
+
+  const triggerToast = () => {
+    toast.warn(
+      <ToastMessage icon={<IconWarning />} title="Select a layer first" content="Please select a layer before proceeding." />,
+      {
+        autoClose: 3000,
+        icon: "",
+      },
+    );
+  };
 
   const KC = useMemo(() => {
     if (keyCode?.base !== undefined && keyCode?.modified !== undefined) {
@@ -307,7 +319,11 @@ const LayersTab = ({
                   if (activeTab === "super" && disableMods) {
                     return;
                   }
-                  setActiveLayerTab(previous => (previous === "layerLock" ? "layerShift" : "layerLock"));
+                  if (activeLayerNumber > 0) {
+                    setActiveLayerTab(previous => (previous === "layerLock" ? "layerShift" : "layerLock"));
+                  } else {
+                    triggerToast();
+                  }
                 }}
                 checked={activeLayerTab === "layerLock"}
                 type="radio"
@@ -340,8 +356,12 @@ const LayersTab = ({
                       </>
                     }
                     onClick={() => {
-                      setActiveLayerTab(previous => (previous === "layerDual" ? "layerShift" : "layerDual"));
-                      setOpenKeysPopover(true);
+                      if (activeLayerNumber > 0) {
+                        setActiveLayerTab(previous => (previous === "layerDual" ? "layerShift" : "layerDual"));
+                        setOpenKeysPopover(true);
+                      } else {
+                        triggerToast();
+                      }
                     }}
                     checked={activeLayerTab === "layerDual"}
                     type="radio"
@@ -376,8 +396,12 @@ const LayersTab = ({
                     }
                     disabled={disableOneShot}
                     onClick={() => {
-                      setActiveLayerTab(previous => (previous === "layerShot" ? "layerShift" : "layerShot"));
-                      setDisableOneShotButtons(true);
+                      if (activeLayerNumber > 0) {
+                        setActiveLayerTab(previous => (previous === "layerShot" ? "layerShift" : "layerShot"));
+                        setDisableOneShotButtons(true);
+                      } else {
+                        triggerToast();
+                      }
                     }}
                     checked={activeLayerTab === "layerShot"}
                     type="radio"
