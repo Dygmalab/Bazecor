@@ -549,26 +549,28 @@ class KeyPickerKeyboard extends Component {
                       macros={macros}
                       isWireless={isWireless}
                     />
-                    <div
-                      className={`ModPicker w-full bg-gray-25 dark:bg-gray-600/50 rounded-b-regular ${this.props.macros[KC - 53852] ? "ModPickerScrollHidden" : ""} ${
-                        disable ? "disable" : ""
-                      }`}
-                    >
-                      {!superkeys[superk.indexOf(KC)] || !this.props.macros[KC - 53852] ? (
-                        <div className="flex gap-2 flex-col lg:flex-row lg:gap-4 py-4">
-                          <ModPicker key={code} keyCode={code} onKeySelect={onKeySelect} />
+                    <div className="w-full flex flex-wrap items-center justify-between gap-6 mt-4">
+                      <div
+                        className={`flex ${this.props.macros[KC - 53852] ? "ModPickerScrollHidden" : ""} ${
+                          disable ? "disable" : ""
+                        }`}
+                      >
+                        {!superkeys[superk.indexOf(KC)] || !this.props.macros[KC - 53852] ? (
+                          <div className="flex gap-2 flex-col lg:flex-row lg:gap-4">
+                            <ModPicker key={code} keyCode={code} onKeySelect={onKeySelect} />
+                          </div>
+                        ) : (
+                          ""
+                        )}
+                      </div>
+                      {actTab !== "super" ? (
+                        <div className="flex">
+                          <NoKeyTransparentTab keyCode={code} onKeySelect={onKeySelect} isStandardView disabled={disable} />
                         </div>
                       ) : (
                         ""
                       )}
                     </div>
-                    {actTab !== "super" ? (
-                      <div className="w-full px-3">
-                        <NoKeyTransparentTab keyCode={code} onKeySelect={onKeySelect} isStandardView disabled={disable} />
-                      </div>
-                    ) : (
-                      ""
-                    )}
                   </>
                 </motion.div>
               </TabsContent>

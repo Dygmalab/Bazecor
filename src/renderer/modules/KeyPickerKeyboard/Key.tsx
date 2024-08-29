@@ -378,7 +378,7 @@ const KeyLabel: React.FC<KeyLabelProps> = ({ content, os }) => {
   if (os === "darwin") {
     switch (content) {
       case "Ctrl":
-        label = "Ctrl ^";
+        label = "Ctrl ˆ";
         break;
       case "Alt":
       case "Alt Gr":
@@ -577,11 +577,6 @@ function Key(props: KeyProps) {
               textAnchor="middle"
               className="contentFirst"
             >
-              {/* {(content.first === "Ctrl" || content.first === "Alt" || content.firt === "Alt Gr") && platform === "darwin"
-                ? content.first === "Ctrl"
-                  ? "Ctrl ^"
-                  : "⌥"
-                : content.first} */}
               <KeyLabel content={content.first} os={platform} />
             </text>
             <text

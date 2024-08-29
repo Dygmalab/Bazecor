@@ -54,7 +54,7 @@ const LayersTab = ({
   isWireless,
   triggerDeleteLastItem,
 }: LayersTabProps) => {
-  const [disableOneShot, setDisableOneShot] = useState<boolean>(false);
+  // const [disableOneShot, setDisableOneShot] = useState<boolean>(false);
   const [disableOneShotButtons, setDisableOneShotButtons] = useState<boolean>(false);
   const [openKeysPopover, setOpenKeysPopover] = useState<boolean>(false);
 
@@ -127,10 +127,10 @@ const LayersTab = ({
     // console.log("Layer inside handle: ", layerItem);
     setActiveLayerNumber(layerNumber);
     if (layerNumber > 8) {
-      setDisableOneShot(true);
+      // setDisableOneShot(true);
       setDisableOneShotButtons(true);
     } else {
-      setDisableOneShot(false);
+      // setDisableOneShot(false);
       setDisableOneShotButtons(false);
     }
     if (layerItem && layerItem.type !== "layerDual") {
@@ -149,11 +149,11 @@ const LayersTab = ({
   useEffect(() => {
     const layerItem = findLayerType(undefined, activeLayerTab, activeLayerNumber);
 
-    if (activeLayerNumber > 8) {
-      setDisableOneShot(true);
-    } else {
-      setDisableOneShot(false);
-    }
+    // if (activeLayerNumber > 8) {
+    //   setDisableOneShot(true);
+    // } else {
+    //   setDisableOneShot(false);
+    // }
     if (macros && activeTab === "macro" && layerItem && triggerDeleteLastItem) {
       triggerDeleteLastItem.timelineEditorForm.current.timelineEditorMacroTable.current.onDeleteRow(macros.actions.length - 1);
     }
@@ -299,7 +299,8 @@ const LayersTab = ({
                               baseCode={baseCode}
                               modCode={modCode}
                               onKeySelect={handleDual}
-                              activeTab={activeTab}
+                              // activeTab={activeTab}
+                              activeTab="dualFunction"
                               selectedlanguage={selectedlanguage}
                               // selKeys={selKeys}
                               superkeys={superkeys}
@@ -407,7 +408,7 @@ const LayersTab = ({
                         </div>
                       </>
                     }
-                    // disabled={disableOneShot}
+                    disabled={false}
                     onClick={() => {
                       if (activeLayerNumber > 0 && activeLayerNumber <= 8) {
                         setActiveLayerTab(previous => (previous === "layerShot" ? "layerShift" : "layerShot"));

@@ -33,8 +33,30 @@ const NoKeyTransparentTab = ({ keyCode, onKeySelect, isStandardView, disabled }:
           {/* <Callout size="sm" className="mt-0">
             <p>{i18n.editor.standardView.callOut}</p>
           </Callout> */}
-          <Heading headingLevel={3} renderAs="h3" className="flex items-center w-full mt-4 mb-1 gap-2 text-base">
-            {i18n.editor.standardView.noKey}/{i18n.editor.standardView.transparent}
+
+          <div className="flex flex-wrap gap-1 items-center">
+            <Button
+              variant="config"
+              onClick={() => {
+                onKeySelect(0);
+              }}
+              size="sm"
+              className="max-w-[102px] w-[102px] h-9 text-ssm text-center"
+              selected={KC === 0}
+            >
+              {i18n.editor.standardView.noKey}
+            </Button>
+            <Button
+              variant="config"
+              onClick={() => {
+                onKeySelect(65535);
+              }}
+              selected={KC === 65535}
+              size="sm"
+              className="max-w-[102px] w-[102px] h-9 text-ssm text-center"
+            >
+              {i18n.editor.standardView.transparent}
+            </Button>
             <TooltipProvider delayDuration={200}>
               <Tooltip>
                 <TooltipTrigger className="[&_svg]:text-purple-100 [&_svg]:dark:text-purple-200">
@@ -47,7 +69,7 @@ const NoKeyTransparentTab = ({ keyCode, onKeySelect, isStandardView, disabled }:
                   <p className="description text-ssm font-medium text-gray-400 dark:text-gray-200">
                     {i18n.editor.standardView.noKeyDescription}
                   </p>
-                  <Heading headingLevel={4} renderAs="h4" className="my-0 w-full text-base">
+                  <Heading headingLevel={4} renderAs="h4" className="my-0 w-full text-base mt-3">
                     {i18n.editor.standardView.transparent}
                   </Heading>
                   <p className="description text-ssm font-medium text-gray-400 dark:text-gray-200">
@@ -56,34 +78,6 @@ const NoKeyTransparentTab = ({ keyCode, onKeySelect, isStandardView, disabled }:
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>
-          </Heading>
-          <div className="flex flex-wrap gap-1">
-            <div className="keysButtonsList">
-              <Button
-                variant="config"
-                onClick={() => {
-                  onKeySelect(0);
-                }}
-                size="sm"
-                className="max-w-[124px] w-[124px] text-center mt-1"
-                selected={KC === 0}
-              >
-                {i18n.editor.standardView.noKey}
-              </Button>
-            </div>
-            <div className="keysButtonsList">
-              <Button
-                variant="config"
-                onClick={() => {
-                  onKeySelect(65535);
-                }}
-                selected={KC === 65535}
-                size="sm"
-                className="max-w-[124px] w-[124px] text-center mt-1"
-              >
-                {i18n.editor.standardView.transparent}
-              </Button>
-            </div>
           </div>
         </div>
       </div>
