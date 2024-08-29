@@ -473,9 +473,10 @@ class KeyPicker extends Component {
       ),
     };
     const keyboard = Lang.map((key, id) => {
-      // if (id === 91 || id === 92) {
-      //   console.log("KEY: ", key);
-      // }
+      if (id === 91 || id === 92) {
+        console.log("KEY: ", key);
+        console.log("KEY mod: ", key.mod);
+      }
       if (key.tooltip) {
         return (
           <foreignObject key={`id-${key.content.first}-${id}`} x={key.x} y={key.y} width={25} height={25}>
