@@ -25,7 +25,6 @@ interface ModifiersTabProps {
   action?: any;
   baseCode?: any;
   modCode?: any;
-  activeTab?: any;
   selectedlanguage?: any;
   // selKeys?: any;
   superkeys?: any;
@@ -43,7 +42,6 @@ const ModifiersTab = ({
   action,
   baseCode,
   modCode,
-  activeTab,
   selectedlanguage,
   // selKeys,
   superkeys,
