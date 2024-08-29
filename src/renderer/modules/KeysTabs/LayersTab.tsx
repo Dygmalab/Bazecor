@@ -76,7 +76,20 @@ const LayersTab = ({
 
   const triggerToast = () => {
     toast.warn(
-      <ToastMessage icon={<IconWarning />} title="Select a layer first" content="Please select a layer before proceeding." />,
+      <ToastMessage icon={<IconWarning />} title="Select a layer first" content="Please select a layer to continue." />,
+      {
+        autoClose: 3000,
+        icon: "",
+      },
+    );
+  };
+  const triggerToastOneShot = () => {
+    toast.warn(
+      <ToastMessage
+        icon={<IconWarning />}
+        title="Action not available"
+        content="OneShot Layer 9 and OneShot Layer 10 are currently unavailable. Please select a different layer to continue."
+      />,
       {
         autoClose: 3000,
         icon: "",
@@ -227,7 +240,7 @@ const LayersTab = ({
                       handleLayer(index + 1);
                     }}
                     selected={index + 1 === activeLayerNumber}
-                    disabled={index > 7 && disableOneShotButtons}
+                    disabled={index > 7 && disableOneShotButtons && activeLayerTab === "layerShot"}
                     key={`buttonLayerID-${button.layer}`}
                     className="h-9 aspect-square"
                   >
@@ -394,11 +407,13 @@ const LayersTab = ({
                         </div>
                       </>
                     }
-                    disabled={disableOneShot}
+                    // disabled={disableOneShot}
                     onClick={() => {
-                      if (activeLayerNumber > 0) {
+                      if (activeLayerNumber > 0 && activeLayerNumber <= 8) {
                         setActiveLayerTab(previous => (previous === "layerShot" ? "layerShift" : "layerShot"));
                         setDisableOneShotButtons(true);
+                      } else if (activeLayerNumber >= 9) {
+                        triggerToastOneShot();
                       } else {
                         triggerToast();
                       }

@@ -457,8 +457,6 @@ class KeyPickerKeyboard extends Component {
       visible: { opacity: 1, transition: { duration: 0.5 } },
     };
 
-    console.log("Action: ", action);
-
     return (
       <Style>
         <Tabs
