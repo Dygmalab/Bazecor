@@ -473,10 +473,10 @@ class KeyPickerKeyboard extends Component {
             <div className="keyEnhanceWrapper">
               <div className="keyEnhanceInner">
                 <TabsList className="flex flex-col gap-0.5 tabsWrapper min-w-48">
-                  <TabsTrigger value="tabKeys" variant="tab" className="text-ssm [&_svg]:w-[20px] py-2" disabled={disable}>
+                  <TabsTrigger value="tabKeys" variant="tab" className="text-sm [&_svg]:w-[20px] py-2" disabled={disable}>
                     <IconKeyboard /> Keys & Shortcuts
                   </TabsTrigger>
-                  <TabsTrigger value="tabLayers" variant="tab" className="text-ssm [&_svg]:w-[20px] py-2" disabled={disable}>
+                  <TabsTrigger value="tabLayers" variant="tab" className="text-sm [&_svg]:w-[20px] py-2" disabled={disable}>
                     <IconLayers size="sm" /> {i18n.editor.standardView.layers.title}
                   </TabsTrigger>
                   {actTab === "editor" ? (
@@ -484,7 +484,7 @@ class KeyPickerKeyboard extends Component {
                       <TabsTrigger
                         value="tabModifiers"
                         variant="tab"
-                        className="text-ssm [&_svg]:w-[20px] py-2"
+                        className="text-sm [&_svg]:w-[20px] py-2"
                         disabled={disable}
                       >
                         <>
@@ -495,15 +495,15 @@ class KeyPickerKeyboard extends Component {
                   ) : (
                     ""
                   )}
-                  <TabsTrigger value="tabMacro" variant="tab" className="text-ssm [&_svg]:w-[20px] py-2" disabled={disable}>
-                    <IconRobot /> {i18n.editor.standardView.macros.title}
+                  <TabsTrigger value="tabMacro" variant="tab" className="text-sm [&_svg]:w-[20px] py-2" disabled={disable}>
+                    <IconRobot size="sm" /> Macros
                   </TabsTrigger>
                   {actTab !== "super" ? (
                     <>
                       <TabsTrigger
                         value="tabSuperKeys"
                         variant="tab"
-                        className="text-ssm [&_svg]:w-[20px] py-2"
+                        className="text-sm [&_svg]:w-[20px] py-2"
                         disabled={disable}
                       >
                         <>
@@ -515,14 +515,14 @@ class KeyPickerKeyboard extends Component {
                   ) : (
                     ""
                   )}
-                  <TabsTrigger value="tabMedia" variant="tab" className="text-ssm [&_svg]:w-[20px] py-2" disabled={disable}>
+                  <TabsTrigger value="tabMedia" variant="tab" className="text-sm [&_svg]:w-[20px] py-2" disabled={disable}>
                     <IconNote size="sm" /> {i18n.editor.standardView.mediaAndLED.title}
                   </TabsTrigger>
-                  <TabsTrigger value="tabMouse" variant="tab" className="text-ssm [&_svg]:w-[20px] py-2" disabled={disable}>
+                  <TabsTrigger value="tabMouse" variant="tab" className="text-sm [&_svg]:w-[20px] py-2" disabled={disable}>
                     <IconMouse size="sm" /> {i18n.editor.standardView.mouse.title}
                   </TabsTrigger>
                   {isWireless && (
-                    <TabsTrigger value="tabWireless" variant="tab" className="text-ssm [&_svg]:w-[20px] py-2" disabled={disable}>
+                    <TabsTrigger value="tabWireless" variant="tab" className="text-sm [&_svg]:w-[20px] py-2" disabled={disable}>
                       <IconWireless size="sm" strokeWidth={1.2} /> {i18n.app.menu.wireless}
                     </TabsTrigger>
                   )}
