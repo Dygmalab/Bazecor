@@ -19,12 +19,11 @@
  */
 
 import React, { useEffect, useState, useCallback } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 import { Link, useLocation } from "react-router-dom";
 import log from "electron-log/renderer";
 import { Octokit } from "@octokit/core";
 import SemVer from "semver";
-
-import Styled from "styled-components";
 
 import DygmaLogo from "@Assets/logo.svg";
 import { showDevtools } from "@Renderer/devMode";
@@ -57,72 +56,6 @@ import {
   IconBazecordevtools,
   IconHome,
 } from "@Renderer/components/atoms/icons";
-
-// import {
-//   IconKeyboardSelector,
-//   IconKeyboard2Stroke,
-//   IconMemory2Stroke,
-//   IconRobot2Stroke,
-//   IconThunder2Stroke,
-//   IconPreferences2Stroke,
-//   IconBazecordevtools,
-//   IconHome,
-// } from "@Renderer/component/Icon";
-
-const Styles = Styled.div`
-.disabled {
-  pointer-events: none;
-}
-.brand-image {
-  margin: 20px 0 32px 0;
-  padding: 0 !important;
-  display: block;
-  width: 100%;
-  text-align: center;
-  -webkit-app-region: drag;
-  img {
-    display: block;
-    margin: 0 auto;
-    width: 42px;
-    aspect-ratio: 1;
-  }
-}
-.left-navbar {
-  width: var(--sidebarWidth);
-  height: 100%;
-  position: fixed !important;
-  z-index: 49;
-  padding: 12px !important;
-  background-color: ${({ theme }) => theme.styles.navbar.background};
-  display: flex;
-  flex-direction: column;
-  .navbar-nav {
-    flex-wrap: wrap;
-    height: inherit;
-    .bottomMenu {
-      margin-top: auto;
-    }
-    .topMenu,
-    .bottomMenu {
-      width: 100%;
-    }
-  }
-}
-.list-link {
-  display: flex;
-  &:hover {
-    text-decoration: none;
-  }
-}
-.list-link+.list-link {
-  margin-top: 8px;
-}
-.select {
-  background-color: ${({ theme }) => theme.card.backgroundActive};
-  border-radius: 8px;
-  width: 100%;
-}
-`;
 
 function NavigationMenu(props: NavigationMenuProps) {
   const { state } = useDevice();
@@ -215,10 +148,14 @@ function NavigationMenu(props: NavigationMenuProps) {
       // alert("you have pending changes! save or discard them before leaving.");
     }
   }
+  const linkVariants = {
+    hidden: { opacity: 0, x: -50 },
+    visible: { opacity: 1, x: 0 },
+  };
   return (
-    <Styles>
+    <div>
       <div
-        className={`navbar navbar-expand navbar-light sticky-top left-navbar sidebar fixed top-0 flex flex-col p-[12px] justify-start items-center transition-all ${
+        className={`navbar navbar-expand navbar-light sticky-top left-navbar bg-gray-25 dark:bg-[#0B0219] sidebar fixed top-0 h-full flex flex-col p-[12px] justify-start items-center transition-all z-[49] ${
           connected &&
           device &&
           state.currentDevice?.device.info &&
@@ -228,12 +165,91 @@ function NavigationMenu(props: NavigationMenuProps) {
             : "wired"
         }`}
       >
-        <div className="brand-image d-lg-block">
-          <img alt="Dygma - Bazecor" src={DygmaLogo} className="d-inline-block align-top" />
+        <div className="brand-image block mt-5 mb-8 mx-0 w-full text-center">
+          <img alt="Dygma - Bazecor" src={DygmaLogo} className="block mx-auto my-0 w-10 aspect-square align-top" />
         </div>
-        <div className="navbar-nav flex justify-between">
-          <div className="topMenu">
-            <Link to="/device-manager" onClick={linkHandler} className={`list-link ${loading ? "disabled" : ""}`}>
+        <div className="navbar-nav flex flex-wrap h-[inherit] justify-between">
+          <div className="topMenu w-full flex flex-col gap-0.5">
+            <AnimatePresence mode="popLayout">
+              {connected && pages.keymap && (
+                <motion.div initial={linkVariants.hidden} animate={linkVariants.visible} exit={linkVariants.hidden}>
+                  <Link
+                    to="/editor"
+                    onClick={linkHandler}
+                    className={`list-link flex hover:no-underline ${fwUpdate || loading ? "disabled pointer-events-none" : ""}`}
+                  >
+                    <NavigationButton
+                      selected={currentPage === "/editor"}
+                      buttonText={i18n.app.menu.editor}
+                      icoSVG={<IconKeyboard2Stroke />}
+                      disabled={fwUpdate || loading}
+                    />
+                  </Link>
+                </motion.div>
+              )}
+            </AnimatePresence>
+            <AnimatePresence mode="popLayout">
+              {connected && pages.keymap && (
+                <motion.div initial={linkVariants.hidden} animate={linkVariants.visible} exit={linkVariants.hidden}>
+                  <Link
+                    to="/macros"
+                    onClick={linkHandler}
+                    className={`list-link flex hover:no-underline ${fwUpdate || loading ? "disabled pointer-events-none" : ""}`}
+                  >
+                    <NavigationButton
+                      selected={currentPage === "/macros"}
+                      buttonText={i18n.app.menu.macros}
+                      icoSVG={<IconRobot size="lg" />}
+                      disabled={fwUpdate || loading}
+                    />
+                  </Link>
+                </motion.div>
+              )}
+            </AnimatePresence>
+            <AnimatePresence mode="popLayout">
+              {connected && pages.keymap && (
+                <motion.div initial={linkVariants.hidden} animate={linkVariants.visible} exit={linkVariants.hidden}>
+                  <Link
+                    to="/superkeys"
+                    onClick={linkHandler}
+                    className={`list-link flex hover:no-underline ${fwUpdate || !isBeta || loading ? "disabled pointer-events-none" : ""}`}
+                  >
+                    <NavigationButton
+                      selected={currentPage === "/superkeys"}
+                      buttonText={i18n.app.menu.superkeys}
+                      icoSVG={<IconThunder size="lg" />}
+                      showNotif={isBeta}
+                      notifText="BETA"
+                      disabled={fwUpdate || !isBeta || loading}
+                    />
+                  </Link>
+                </motion.div>
+              )}
+            </AnimatePresence>
+            <AnimatePresence mode="popLayout">
+              {connected && (
+                <motion.div initial={linkVariants.hidden} animate={linkVariants.visible} exit={linkVariants.hidden}>
+                  <Link
+                    to="/firmware-update"
+                    onClick={linkHandler}
+                    className={`list-link flex hover:no-underline ${fwUpdate || virtual || loading ? "disabled pointer-events-none" : ""}`}
+                  >
+                    <NavigationButton
+                      selected={currentPage === "/firmware-update"}
+                      showNotif={!isUpdated}
+                      buttonText={i18n.app.menu.firmwareUpdate}
+                      icoSVG={<IconMemory />}
+                      disabled={fwUpdate || virtual || loading}
+                    />
+                  </Link>
+                </motion.div>
+              )}
+            </AnimatePresence>
+            <Link
+              to="/device-manager"
+              onClick={linkHandler}
+              className={`list-link flex hover:no-underline ${loading ? "disabled pointer-events-none" : ""}`}
+            >
               <NavigationButton
                 selected={currentPage === "/device-manager"}
                 showNotif={false}
@@ -242,61 +258,14 @@ function NavigationMenu(props: NavigationMenuProps) {
                 disabled={false}
               />
             </Link>
-            {connected && (
-              <>
-                {pages.keymap && (
-                  <>
-                    <Link to="/editor" onClick={linkHandler} className={`list-link ${fwUpdate || loading ? "disabled" : ""}`}>
-                      <NavigationButton
-                        selected={currentPage === "/editor"}
-                        buttonText={i18n.app.menu.editor}
-                        icoSVG={<IconKeyboard2Stroke />}
-                        disabled={fwUpdate || loading}
-                      />
-                    </Link>
-                    <Link to="/macros" onClick={linkHandler} className={`list-link ${fwUpdate || loading ? "disabled" : ""}`}>
-                      <NavigationButton
-                        selected={currentPage === "/macros"}
-                        buttonText={i18n.app.menu.macros}
-                        icoSVG={<IconRobot size="lg" />}
-                        disabled={fwUpdate || loading}
-                      />
-                    </Link>
-                    <Link
-                      to="/superkeys"
-                      onClick={linkHandler}
-                      className={`list-link ${fwUpdate || !isBeta || loading ? "disabled" : ""}`}
-                    >
-                      <NavigationButton
-                        selected={currentPage === "/superkeys"}
-                        buttonText={i18n.app.menu.superkeys}
-                        icoSVG={<IconThunder size="lg" />}
-                        showNotif={isBeta}
-                        notifText="BETA"
-                        disabled={fwUpdate || !isBeta || loading}
-                      />
-                    </Link>
-                  </>
-                )}
-                <Link
-                  to="/firmware-update"
-                  onClick={linkHandler}
-                  className={`list-link ${fwUpdate || virtual || loading ? "disabled" : ""}`}
-                >
-                  <NavigationButton
-                    selected={currentPage === "/firmware-update"}
-                    showNotif={!isUpdated}
-                    buttonText={i18n.app.menu.firmwareUpdate}
-                    icoSVG={<IconMemory />}
-                    disabled={fwUpdate || virtual || loading}
-                  />
-                </Link>
-              </>
-            )}
           </div>
-          <div className="bottomMenu">
+          <div className="bottomMenu w-full flex flex-col mt-auto">
             {showDevtools && (
-              <Link to="/bazecordevtools" onClick={linkHandler} className={`list-link ${fwUpdate || loading ? "disabled" : ""}`}>
+              <Link
+                to="/bazecordevtools"
+                onClick={linkHandler}
+                className={`list-link flex hover:no-underline ${fwUpdate || loading ? "disabled pointer-events-none" : ""}`}
+              >
                 <NavigationButton
                   selected={currentPage === "/bazecordevtools"}
                   buttonText="Dev tools"
@@ -305,7 +274,11 @@ function NavigationMenu(props: NavigationMenuProps) {
                 />
               </Link>
             )}
-            <Link to="/preferences" onClick={linkHandler} className={`list-link ${fwUpdate || loading ? "disabled" : ""}`}>
+            <Link
+              to="/preferences"
+              onClick={linkHandler}
+              className={`list-link flex hover:no-underline ${fwUpdate || loading ? "disabled pointer-events-none" : ""}`}
+            >
               <NavigationButton
                 selected={currentPage === "/preferences"}
                 buttonText={i18n.app.menu.preferences}
@@ -320,7 +293,7 @@ function NavigationMenu(props: NavigationMenuProps) {
             (state.currentDevice?.device.info.keyboardType === "wireless" || state.currentDevice?.device.wireless) &&
             versions !== null ? (
               <>
-                {/* <Link to="/wireless" onClick={linkHandler} className={`list-link ${fwUpdate || loading ? "disabled" : ""}`}>
+                {/* <Link to="/wireless" onClick={linkHandler} className={`list-link flex hover:no-underline${fwUpdate || loading ? "disabled" : ""}`}>
                   <NavigationButton
                     selected={currentPage === "/wireless"}
                     buttonText={i18n.app.menu.wireless}
@@ -352,7 +325,7 @@ function NavigationMenu(props: NavigationMenuProps) {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-    </Styles>
+    </div>
   );
 }
 

@@ -41,6 +41,10 @@ body {
   overflow: overlay;
 }
 
+.left-navbar {
+  width: var(--sidebarWidth);
+}
+
 .outline {
   outline-style: initial;
 }
