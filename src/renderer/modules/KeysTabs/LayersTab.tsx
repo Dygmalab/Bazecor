@@ -225,11 +225,12 @@ const LayersTab = ({
                 )}
                 {activeLayerTab === "layerLock" && <span className="text-gray-400 dark:text-gray-300">Lock on tap</span>}
                 {activeLayerTab === "layerDual" && (
-                  <span className="text-gray-400 dark:text-gray-300">
-                    Shift on hold <small>(Dual-function)</small>
+                  <span className="text-gray-400 dark:text-gray-300 gap-1 inline-flex leading-6 align-text-bottom">
+                    Shift on hold <small className="leading-[inherit]">(Dual-function)</small>
                   </span>
                 )}
-                {activeLayerTab === "layerShot" && <span className="text-gray-400 dark:text-gray-300">OneShot</span>}
+                {activeLayerTab === "layerShot" && <span className="text-gray-400 dark:text-gray-300">OneShot</span>}{" "}
+                <small> </small>
               </Heading>
               <div className="flex gap-1">
                 {layers.map((button, index) => (
@@ -361,14 +362,7 @@ const LayersTab = ({
               {activeTab === "editor" && (
                 <>
                   <CustomRadioCheckBox
-                    label={
-                      <>
-                        <div className="pl-0.5">Add key on tap</div>
-                        <div className="badge bg-gray-400/50 leading-none ml-1 px-1 py-0.5 font-bold text-[8px] text-white rounded-md">
-                          PRO
-                        </div>
-                      </>
-                    }
+                    label={<div className="pl-0.5">Add a key on tap</div>}
                     onClick={() => {
                       if (activeLayerNumber > 0) {
                         setActiveLayerTab(previous => (previous === "layerDual" ? "layerShift" : "layerDual"));
@@ -388,7 +382,7 @@ const LayersTab = ({
                           renderAs="h4"
                           className="text-gray-600 dark:text-gray-25 mt-2 mb-1 leading-6 text-base"
                         >
-                          Dual Function Navigation (Add a key on tap)
+                          Add a key on tap (Dual Function Navigation)
                         </Heading>
                         <p className="description text-ssm font-medium text-gray-400 dark:text-gray-200">
                           Assign a key with dual functions where a tap performs one action (like space or enter), but holding it
@@ -400,14 +394,7 @@ const LayersTab = ({
                     className=""
                   />
                   <CustomRadioCheckBox
-                    label={
-                      <>
-                        <div className="pl-0.5">Turn into OneShot layer</div>
-                        <div className="badge bg-gray-400/50 leading-none ml-1 px-1 py-0.5 font-bold text-[8px] text-white rounded-md">
-                          PRO
-                        </div>
-                      </>
-                    }
+                    label={<div className="pl-0.5">Turn into OneShot layer</div>}
                     disabled={false}
                     onClick={() => {
                       if (activeLayerNumber > 0 && activeLayerNumber <= 8) {

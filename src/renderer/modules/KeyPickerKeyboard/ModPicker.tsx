@@ -114,7 +114,7 @@ function ModPicker(props: ModPickerProps) {
 
   return (
     <div className="h-[inherit]">
-      <div className={`modPickerInner flex flex-wrap gap-2 ${isStandardView ? "modPickerInnerStd p-0" : "px-0"}`}>
+      <div className={`modPickerInner flex flex-wrap gap-6 ${isStandardView ? "modPickerInnerStd p-0" : "px-0"}`}>
         {!isStandardView ? (
           <Heading
             headingLevel={4}
@@ -141,7 +141,7 @@ function ModPicker(props: ModPickerProps) {
             </TooltipProvider>
           </Heading>
         ) : null}
-        <div className="modPickerButtonsList flex gap-2 items-center">
+        <div className="modPickerButtonsList flex gap-6 items-center">
           <CustomRadioCheckBox
             label={<OSKey renderKey="shift" size={`${isStandardView ? "md" : "sm"}`} />}
             onClick={() => SelectModif(0)}

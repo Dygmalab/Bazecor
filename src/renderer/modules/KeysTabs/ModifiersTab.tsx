@@ -172,7 +172,7 @@ const ModifiersTab = ({
         id: 1,
         label: "Shift",
         identifier: "shift",
-        renderElement: <OSKey renderKey="shift" direction="Left" size="sm" />,
+        renderElement: <OSKey renderKey="shift" size="sm" />,
         dualDisabled: false,
         keyNumMod: 225,
       },
@@ -180,7 +180,7 @@ const ModifiersTab = ({
         id: 2,
         label: "Control",
         identifier: "control",
-        renderElement: <OSKey renderKey="control" direction="Left" size="sm" />,
+        renderElement: <OSKey renderKey="control" size="sm" />,
         dualDisabled: false,
         keyNumMod: 224,
       },
@@ -188,7 +188,7 @@ const ModifiersTab = ({
         id: 3,
         label: "OS",
         identifier: "os",
-        renderElement: <OSKey renderKey="os" direction="Left" size="sm" />,
+        renderElement: <OSKey renderKey="os" size="sm" />,
         dualDisabled: false,
         keyNumMod: 227,
       },
@@ -196,7 +196,7 @@ const ModifiersTab = ({
         id: 4,
         label: "Alt",
         identifier: "alt",
-        renderElement: <OSKey renderKey="alt" direction="Left" size="sm" />,
+        renderElement: <OSKey renderKey="alt" size="sm" />,
         dualDisabled: false,
         keyNumMod: 226,
       },
@@ -204,7 +204,7 @@ const ModifiersTab = ({
         id: 5,
         label: "Right Shift",
         identifier: "rshift",
-        renderElement: <OSKey renderKey="shift" direction="Right" size="sm" />,
+        renderElement: <OSKey renderKey="shift" size="sm" />,
         dualDisabled: true,
         keyNumMod: 229,
       },
@@ -212,7 +212,7 @@ const ModifiersTab = ({
         id: 6,
         label: "Right Control",
         identifier: "rcontrol",
-        renderElement: <OSKey renderKey="control" direction="Right" size="sm" />,
+        renderElement: <OSKey renderKey="control" size="sm" />,
         dualDisabled: true,
         keyNumMod: 228,
       },
@@ -220,7 +220,7 @@ const ModifiersTab = ({
         id: 7,
         label: "Right OS",
         identifier: "ros",
-        renderElement: <OSKey renderKey="os" direction="Right" size="sm" />,
+        renderElement: <OSKey renderKey="os" size="sm" />,
         dualDisabled: true,
         keyNumMod: 231,
       },
@@ -267,27 +267,31 @@ const ModifiersTab = ({
               <Heading renderAs="h4" headingLevel={3} className="text-base flex leading-6 gap-1">
                 Modifier{" "}
                 {activeModifierTab === "dualModifier" && (
-                  <span className="text-gray-400 dark:text-gray-300">
-                    Shift on hold <small>(Dual function)</small>
+                  <span className="text-gray-400 dark:text-gray-300 gap-1 inline-flex leading-6 align-text-bottom">
+                    Shift on hold <small className="leading-[inherit]">(Dual-function)</small>
                   </span>
                 )}
                 {activeModifierTab === "oneShotModifier" && <span className="text-gray-400 dark:text-gray-300">OneShot</span>}
               </Heading>
-              <div className="flex flex-wrap gap-1">
-                {modifiersButtons.map(button => (
-                  <Button
-                    variant="config"
-                    onClick={() => {
-                      handleModifier(button.identifier);
-                    }}
-                    selected={activeModifier === button.identifier}
-                    disabled={activeModifierTab === "dualModifier" && button.dualDisabled}
-                    size="sm"
-                    className="min-w-20 text-ssm h-9"
-                    key={`button-key-${button.identifier}`}
-                  >
-                    {button.renderElement}
-                  </Button>
+              <div className="flex flex-wrap gap-1 items-center">
+                {modifiersButtons.map((button, index) => (
+                  <>
+                    {index === 0 && <span className="text-sm mr-1 text-gray-500 dark:text-gray-300">Left</span>}
+                    {index === 4 && <span className="text-sm ml-2 mr-1 text-gray-500 dark:text-gray-300">Right</span>}
+                    <Button
+                      variant="config"
+                      onClick={() => {
+                        handleModifier(button.identifier);
+                      }}
+                      selected={activeModifier === button.identifier}
+                      disabled={activeModifierTab === "dualModifier" && button.dualDisabled}
+                      size="sm"
+                      className="min-w-16 text-ssm h-9"
+                      key={`button-key-${button.identifier}`}
+                    >
+                      {button.renderElement}
+                    </Button>
+                  </>
                 ))}
               </div>
             </div>
@@ -366,14 +370,7 @@ const ModifiersTab = ({
             </Heading>
             <div className="flex flex-wrap gap-6">
               <CustomRadioCheckBox
-                label={
-                  <>
-                    <div className="pl-0.5">Add a key on tap</div>
-                    <div className="badge bg-gray-400/50 leading-none ml-1 px-1 py-0.5 font-bold text-[8px] text-white rounded-md">
-                      PRO
-                    </div>
-                  </>
-                }
+                label={<div className="pl-0.5">Add a key on tap</div>}
                 checked={activeModifierTab === "dualModifier"}
                 onClick={() => {
                   if (activeModifier === "") {
@@ -392,7 +389,7 @@ const ModifiersTab = ({
                 tooltip={
                   <>
                     <Heading headingLevel={4} renderAs="h4" className="text-gray-600 dark:text-gray-25 mb-1 leading-6 text-base">
-                      Dual Function Modifier (Add key on tap)
+                      Add key on tap (Dual-function)
                     </Heading>
                     <p className="description text-ssm font-medium text-gray-400 dark:text-gray-200">
                       A Dual Function Modifier is a key that performs two functions based on how it&apos;s used. When you tap the
@@ -406,14 +403,7 @@ const ModifiersTab = ({
                 disabled={false}
               />
               <CustomRadioCheckBox
-                label={
-                  <>
-                    <div className="pl-0.5">Turn into a OneShot modifier</div>
-                    <div className="badge bg-gray-400/50 leading-none ml-1 px-1 py-0.5 font-bold text-[8px] text-white rounded-md">
-                      PRO
-                    </div>
-                  </>
-                }
+                label={<div className="pl-0.5">Turn into a OneShot modifier</div>}
                 checked={activeModifierTab === "oneShotModifier"}
                 onClick={() => {
                   if (activeModifier === "") {
@@ -428,11 +418,7 @@ const ModifiersTab = ({
                 id="addOneShotModifier"
                 tooltip={
                   <>
-                    <Heading
-                      headingLevel={4}
-                      renderAs="h4"
-                      className="text-gray-600 dark:text-gray-25 mt-2 mb-1 leading-6 text-base"
-                    >
+                    <Heading headingLevel={4} renderAs="h4" className="text-gray-600 dark:text-gray-25 mb-1 leading-6 text-base">
                       One Shot Modifier
                     </Heading>
                     <p className="description text-ssm font-medium text-gray-400 dark:text-gray-200">

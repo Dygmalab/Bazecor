@@ -43,7 +43,9 @@ function CustomRadioCheckBox(props: CustomRCBProps) {
             renderAs="paragraph-sm"
             className={`flex items-center ${tooltip ? "gap-2 [&_.tooltipIcon]:text-purple-200" : ""}`}
           >
-            {label}
+            <div className={`flex items-center ${disabled ? "hover:cursor-not-allowed opacity-50" : "hover:cursor-pointer"}`}>
+              {label}
+            </div>
             {tooltip && (
               <TooltipProvider delayDuration={200}>
                 <Tooltip>
