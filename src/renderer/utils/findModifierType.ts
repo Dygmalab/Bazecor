@@ -20,6 +20,14 @@ const findModifierType = (keynum?: number, type?: string, modifier?: string): Mo
     { keynum: OneShotDeltaMod + 4, type: "oneShotModifier", modifier: "rcontrol" },
     { keynum: OneShotDeltaMod + 7, type: "oneShotModifier", modifier: "ros" },
     { keynum: OneShotDeltaMod + 6, type: "oneShotModifier", modifier: "altGr" },
+    { keynum: 224, type: "None", modifier: "control" },
+    { keynum: 225, type: "None", modifier: "shift" },
+    { keynum: 226, type: "None", modifier: "alt" },
+    { keynum: 227, type: "None", modifier: "os" },
+    { keynum: 228, type: "None", modifier: "rcontrol" },
+    { keynum: 229, type: "None", modifier: "rshift" },
+    { keynum: 230, type: "None", modifier: "altGr" },
+    { keynum: 231, type: "None", modifier: "ros" },
   ];
 
   if (keynum !== undefined) {

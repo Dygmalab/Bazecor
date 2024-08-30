@@ -125,6 +125,7 @@ const ModifiersTab = ({
   const handleModifier = (modifier: string) => {
     const modifierItem = findModifierType(undefined, activeModifierTab, modifier);
     setActiveModifier(modifier);
+    // console.log(modifierItem);
     if (modifierItem && modifierItem.type !== "dualModifier") {
       onKeySelect(modifierItem.keynum);
     }
@@ -135,12 +136,14 @@ const ModifiersTab = ({
 
   useEffect(() => {
     const modifierItem = findModifierType(undefined, activeModifierTab, activeModifier);
+    // console.log("Run useEffect activeModifierTab: ", activeModifierTab);
     if (modifierItem && modifierItem.type !== "dualModifier") {
       onKeySelect(modifierItem.keynum);
     }
     if (modifierItem && modifierItem.type === "dualModifier") {
       onKeySelect(keyCode.base + modifierItem.keynum);
     }
+
     // if (!modifierItem && activeModifierTab === "dualModifier") {
     //   onKeySelect(0);
     // }
@@ -149,14 +152,17 @@ const ModifiersTab = ({
 
   useEffect(() => {
     const modifierItem = findModifierType(keyNumInternal);
+    // console.log("Run useEffect keyNumInternal: ", keyNumInternal);
+    // console.log("Run useEffect modifierItem: ", modifierItem);
+
     if (modifierItem) {
       setActiveModifierTab(modifierItem?.type);
       setActiveModifier(modifierItem?.modifier);
     } else {
       setActiveModifierTab("None");
       setActiveModifier("");
-      setInternalKeyBase(0);
     }
+
     // eslint-disable-next-line
   }, [keyNumInternal]);
 
@@ -168,6 +174,7 @@ const ModifiersTab = ({
         identifier: "shift",
         renderElement: <OSKey renderKey="shift" direction="Left" size="sm" />,
         dualDisabled: false,
+        keyNumMod: 225,
       },
       {
         id: 2,
@@ -175,6 +182,7 @@ const ModifiersTab = ({
         identifier: "control",
         renderElement: <OSKey renderKey="control" direction="Left" size="sm" />,
         dualDisabled: false,
+        keyNumMod: 224,
       },
       {
         id: 3,
@@ -182,6 +190,7 @@ const ModifiersTab = ({
         identifier: "os",
         renderElement: <OSKey renderKey="os" direction="Left" size="sm" />,
         dualDisabled: false,
+        keyNumMod: 227,
       },
       {
         id: 4,
@@ -189,6 +198,7 @@ const ModifiersTab = ({
         identifier: "alt",
         renderElement: <OSKey renderKey="alt" direction="Left" size="sm" />,
         dualDisabled: false,
+        keyNumMod: 226,
       },
       {
         id: 5,
@@ -196,6 +206,7 @@ const ModifiersTab = ({
         identifier: "rshift",
         renderElement: <OSKey renderKey="shift" direction="Right" size="sm" />,
         dualDisabled: true,
+        keyNumMod: 229,
       },
       {
         id: 6,
@@ -203,6 +214,7 @@ const ModifiersTab = ({
         identifier: "rcontrol",
         renderElement: <OSKey renderKey="control" direction="Right" size="sm" />,
         dualDisabled: true,
+        keyNumMod: 228,
       },
       {
         id: 7,
@@ -210,6 +222,7 @@ const ModifiersTab = ({
         identifier: "ros",
         renderElement: <OSKey renderKey="os" direction="Right" size="sm" />,
         dualDisabled: true,
+        keyNumMod: 231,
       },
       {
         id: 7,
@@ -217,6 +230,7 @@ const ModifiersTab = ({
         identifier: "altGr",
         renderElement: <OSKey renderKey="altGr" size="sm" />,
         dualDisabled: false,
+        keyNumMod: 230,
       },
     ],
     [],
@@ -231,6 +245,7 @@ const ModifiersTab = ({
     },
     [keymapDB],
   );
+  console.log("keycode: ", keyCode);
 
   return (
     <div
@@ -269,6 +284,7 @@ const ModifiersTab = ({
                     disabled={activeModifierTab === "dualModifier" && button.dualDisabled}
                     size="sm"
                     className="min-w-20 text-ssm h-9"
+                    key={`button-key-${button.identifier}`}
                   >
                     {button.renderElement}
                   </Button>
@@ -365,8 +381,8 @@ const ModifiersTab = ({
                   } else if (activeModifier === "ros" || activeModifier === "rcontrol" || activeModifier === "rshift") {
                     triggerToastDisabledDual();
                   } else {
-                    // setActiveModifierTab(previous => (previous === "dualModifier" ? "None" : "dualModifier"));
-                    setActiveModifierTab("dualModifier");
+                    setActiveModifierTab(previous => (previous === "dualModifier" ? "None" : "dualModifier"));
+                    // setActiveModifierTab("dualModifier");
                     setOpenKeysPopover(true);
                   }
                 }}
@@ -403,8 +419,8 @@ const ModifiersTab = ({
                   if (activeModifier === "") {
                     triggerToast();
                   } else {
-                    // setActiveModifierTab(previous => (previous === "dualModifier" ? "None" : "dualModifier"));
-                    setActiveModifierTab("oneShotModifier");
+                    setActiveModifierTab(previous => (previous === "oneShotModifier" ? "None" : "oneShotModifier"));
+                    // setActiveModifierTab("oneShotModifier");
                   }
                 }}
                 type="radio"
