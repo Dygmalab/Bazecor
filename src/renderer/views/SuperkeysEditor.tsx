@@ -782,6 +782,8 @@ function SuperkeysEditor(props: SuperkeysEditorProps) {
           destroyContext={destroyThisContext}
           inContext={modified}
           isSaving={isSaving}
+          saveButtonRef={props.saveButtonRef}
+          discardChangesButtonRef={props.discardChangesButtonRef}
         />
 
         <Callout

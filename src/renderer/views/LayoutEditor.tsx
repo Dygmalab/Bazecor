@@ -482,7 +482,18 @@ const LayoutEditor = (props: LayoutEditorProps) => {
   const [ledIndexStart, setLedIndexStart] = useState(80);
   const [scanningStep, setScanningStep] = useState(0);
   const [keymapDB, setkeymapDB] = useState(new KeymapDB());
-  const { darkMode, cancelContext, setLoading, onDisconnect, startContext, inContext, restoredOk, handleSetRestoredOk } = props;
+  const {
+    darkMode,
+    cancelContext,
+    setLoading,
+    onDisconnect,
+    startContext,
+    inContext,
+    restoredOk,
+    handleSetRestoredOk,
+    saveButtonRef,
+    discardChangesButtonRef,
+  } = props;
 
   const layoutEditorContainerRef = useRef(null);
 
@@ -1927,6 +1938,8 @@ const LayoutEditor = (props: LayoutEditorProps) => {
             cancelContext();
           }}
           inContext={modified}
+          saveButtonRef={saveButtonRef}
+          discardChangesButtonRef={discardChangesButtonRef}
         />
         <div className="w-full h-[inherit] keyboardsWrapper">
           {/* <div className="raise-editor layer-col h-full"> // Set keyboard on bottom */}

@@ -20,7 +20,7 @@
 
 import React, { useEffect, useState, useCallback } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import log from "electron-log/renderer";
 import { Octokit } from "@octokit/core";
 import SemVer from "semver";
@@ -29,15 +29,17 @@ import DygmaLogo from "@Assets/logo.svg";
 import { showDevtools } from "@Renderer/devMode";
 import { useDevice } from "@Renderer/DeviceContext";
 
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@Renderer/components/atoms/AlertDialog";
+// import {
+//   AlertDialog,
+//   AlertDialogAction,
+//   AlertDialogContent,
+//   AlertDialogDescription,
+//   AlertDialogFooter,
+//   AlertDialogHeader,
+//   AlertDialogTitle,
+// } from "@Renderer/components/atoms/AlertDialog";
+import { Button } from "@Renderer/components/atoms/Button";
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@Renderer/components/atoms/Dialog";
 import { BatteryStatus } from "@Renderer/modules/Battery";
 import NavigationButton from "@Renderer/components/molecules/CustomButton/NavigationButton";
 import { i18n } from "@Renderer/i18n";
@@ -68,7 +70,9 @@ function NavigationMenu(props: NavigationMenuProps) {
   const [virtual, setVirtual] = useState(false);
   const location = useLocation();
   const currentPage = location.pathname;
-  const { connected, pages, fwUpdate, flashing, allowBeta, modified, loading } = props;
+  const [targetURL, setTargetURL] = useState<string | null>(null);
+  const navigate = useNavigate();
+  const { connected, pages, fwUpdate, flashing, allowBeta, modified, loading, saveButtonRef, discardChangesButtonRef } = props;
 
   const getGitHubFW = useCallback(
     async (product: any) => {
@@ -144,10 +148,35 @@ function NavigationMenu(props: NavigationMenuProps) {
   function linkHandler(event: React.MouseEvent<HTMLElement>) {
     if (modified) {
       event.preventDefault();
+      console.log(event.target);
+      console.log("saveButtonRef :", saveButtonRef.current);
+      console.log(" discardChangesButtonRef: ", discardChangesButtonRef.current);
+      const linkElement = event.currentTarget as HTMLAnchorElement; // Assuming the link is an <a> tag
+      const relativePath = new URL(linkElement.href).pathname;
+      setTargetURL(relativePath); // Store the target URL
+      console.log(relativePath);
       setShowAlertModal(true);
       // alert("you have pending changes! save or discard them before leaving.");
     }
   }
+  const discardChangesAndRedirect = () => {
+    if (discardChangesButtonRef.current) {
+      discardChangesButtonRef.current.click();
+      setShowAlertModal(false);
+      if (targetURL) {
+        navigate(targetURL); // Redirect to the stored URL
+      }
+    }
+  };
+  const saveChangesAndRedirect = () => {
+    if (saveButtonRef.current) {
+      saveButtonRef.current.click();
+      setShowAlertModal(false);
+      if (targetURL) {
+        navigate(targetURL); // Redirect to the stored URL
+      }
+    }
+  };
   const linkVariants = {
     hidden: { opacity: 0, x: -50 },
     visible: { opacity: 1, x: 0 },
@@ -309,7 +338,7 @@ function NavigationMenu(props: NavigationMenuProps) {
           </div>
         </div>
       </div>
-      <AlertDialog open={showAlertModal}>
+      {/* <AlertDialog open={showAlertModal}>
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>{i18n.errors.alertUnsavedTitle}</AlertDialogTitle>
@@ -324,7 +353,27 @@ function NavigationMenu(props: NavigationMenuProps) {
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
-      </AlertDialog>
+      </AlertDialog> */}
+
+      <Dialog open={showAlertModal} onOpenChange={() => setShowAlertModal(false)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>{i18n.errors.alertUnsavedTitle}</DialogTitle>
+          </DialogHeader>
+          <div className="px-6 pb-2 mt-2">
+            <p>{i18n.errors.alertUnsavedDescription1}</p>
+            <p>{i18n.errors.alertUnsavedDescription2}</p>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" size="md" onClick={discardChangesAndRedirect}>
+              {i18n.general.discard} {i18n.general.changes}
+            </Button>
+            <Button variant="secondary" size="md" onClick={saveChangesAndRedirect}>
+              {i18n.general.save} {i18n.general.changes}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

@@ -20,7 +20,7 @@ import { HeaderInterface } from "@Renderer/types/navigation";
 import NavigationMenu from "./NavigationMenu";
 
 function Header(props: HeaderInterface) {
-  const { connected, pages, flashing, fwUpdate, allowBeta, modified, loading } = props;
+  const { connected, pages, flashing, fwUpdate, allowBeta, modified, loading, saveButtonRef, discardChangesButtonRef } = props;
 
   return (
     <NavigationMenu
@@ -31,6 +31,8 @@ function Header(props: HeaderInterface) {
       allowBeta={allowBeta}
       modified={modified}
       loading={loading}
+      saveButtonRef={saveButtonRef}
+      discardChangesButtonRef={discardChangesButtonRef}
     />
   );
 }

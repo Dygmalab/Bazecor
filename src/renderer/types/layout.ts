@@ -23,6 +23,8 @@ export interface LayoutEditorProps {
   inContext: boolean;
   restoredOk: boolean;
   handleSetRestoredOk: (status: boolean) => void;
+  saveButtonRef: React.RefObject<HTMLButtonElement>;
+  discardChangesButtonRef: React.RefObject<HTMLButtonElement>;
 }
 
 export interface KeyType {

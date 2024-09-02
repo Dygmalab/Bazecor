@@ -23,16 +23,24 @@ interface SavingProps {
   destroyContext: () => Promise<void> | void;
   inContext: boolean;
   isSaving: boolean;
+  saveButtonRef?: React.RefObject<HTMLButtonElement>;
+  discardChangesButtonRef?: React.RefObject<HTMLButtonElement>;
 }
 
 function Saving(props: SavingProps) {
-  const { saveContext, destroyContext, inContext, isSaving } = props;
+  const { saveContext, destroyContext, inContext, isSaving, saveButtonRef, discardChangesButtonRef } = props;
   return (
     <div className="savingButtons flex gap-2">
-      <Button onClick={destroyContext} variant="outline" size="sm" disabled={!inContext || isSaving}>
+      <Button
+        onClick={destroyContext}
+        variant="outline"
+        size="sm"
+        disabled={!inContext || isSaving}
+        ref={discardChangesButtonRef}
+      >
         Discard&nbsp;<span className="sm:hidden md:hidden lg:inline-block">changes</span>
       </Button>
-      <Button onClick={saveContext} variant="primary" size="sm" disabled={!inContext || isSaving}>
+      <Button onClick={saveContext} variant="primary" size="sm" disabled={!inContext || isSaving} ref={saveButtonRef}>
         {isSaving ? (
           "Saving"
         ) : (

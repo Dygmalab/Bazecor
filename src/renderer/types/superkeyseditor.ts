@@ -23,6 +23,8 @@ export interface SuperkeysEditorProps {
   startContext: () => void;
   cancelContext: () => void;
   setLoading: (lding: boolean) => void;
+  saveButtonRef?: React.RefObject<HTMLButtonElement>;
+  discardChangesButtonRef?: React.RefObject<HTMLButtonElement>;
 }
 
 export interface SuperkeysEditorInitialStateType {

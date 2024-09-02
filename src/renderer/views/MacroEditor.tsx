@@ -810,6 +810,8 @@ function MacroEditor(props: MacroEditorProps) {
           saveContext={writeMacros}
           destroyContext={destroyThisContext}
           inContext={modified}
+          saveButtonRef={props.saveButtonRef}
+          discardChangesButtonRef={props.discardChangesButtonRef}
         />
 
         <Callout
