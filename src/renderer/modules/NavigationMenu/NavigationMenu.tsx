@@ -29,15 +29,6 @@ import DygmaLogo from "@Assets/logo.svg";
 import { showDevtools } from "@Renderer/devMode";
 import { useDevice } from "@Renderer/DeviceContext";
 
-// import {
-//   AlertDialog,
-//   AlertDialogAction,
-//   AlertDialogContent,
-//   AlertDialogDescription,
-//   AlertDialogFooter,
-//   AlertDialogHeader,
-//   AlertDialogTitle,
-// } from "@Renderer/components/atoms/AlertDialog";
 import { Button } from "@Renderer/components/atoms/Button";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@Renderer/components/atoms/Dialog";
 import { BatteryStatus } from "@Renderer/modules/Battery";
@@ -148,15 +139,10 @@ function NavigationMenu(props: NavigationMenuProps) {
   function linkHandler(event: React.MouseEvent<HTMLElement>) {
     if (modified) {
       event.preventDefault();
-      console.log(event.target);
-      console.log("saveButtonRef :", saveButtonRef.current);
-      console.log(" discardChangesButtonRef: ", discardChangesButtonRef.current);
-      const linkElement = event.currentTarget as HTMLAnchorElement; // Assuming the link is an <a> tag
+      const linkElement = event.currentTarget as HTMLAnchorElement;
       const relativePath = new URL(linkElement.href).pathname;
-      setTargetURL(relativePath); // Store the target URL
-      console.log(relativePath);
+      setTargetURL(relativePath);
       setShowAlertModal(true);
-      // alert("you have pending changes! save or discard them before leaving.");
     }
   }
   const discardChangesAndRedirect = () => {
@@ -338,37 +324,21 @@ function NavigationMenu(props: NavigationMenuProps) {
           </div>
         </div>
       </div>
-      {/* <AlertDialog open={showAlertModal}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>{i18n.errors.alertUnsavedTitle}</AlertDialogTitle>
-            <AlertDialogDescription>
-              <p>{i18n.errors.alertUnsavedDescription1}</p>
-              <p>{i18n.errors.alertUnsavedDescription2}</p>
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter className="">
-            <AlertDialogAction onClick={() => setShowAlertModal(false)} buttonVariant="secondary">
-              Go back
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog> */}
 
       <Dialog open={showAlertModal} onOpenChange={() => setShowAlertModal(false)}>
-        <DialogContent>
+        <DialogContent className="max-w-96">
           <DialogHeader>
             <DialogTitle>{i18n.errors.alertUnsavedTitle}</DialogTitle>
           </DialogHeader>
-          <div className="px-6 pb-2 mt-2">
-            <p>{i18n.errors.alertUnsavedDescription1}</p>
-            <p>{i18n.errors.alertUnsavedDescription2}</p>
+          <div className="px-6 pb-0 -mb-4 mt-2">
+            <p className="text-ssm text-gray-400 dark:text-gray-50 mb-0.5">{i18n.errors.alertUnsavedDescription1}</p>
+            <p className="text-ssm text-gray-400 dark:text-gray-50">{i18n.errors.alertUnsavedDescription2}</p>
           </div>
           <DialogFooter>
-            <Button variant="outline" size="md" onClick={discardChangesAndRedirect}>
+            <Button variant="outline" size="sm" onClick={discardChangesAndRedirect}>
               {i18n.general.discard} {i18n.general.changes}
             </Button>
-            <Button variant="secondary" size="md" onClick={saveChangesAndRedirect}>
+            <Button variant="secondary" size="sm" onClick={saveChangesAndRedirect}>
               {i18n.general.save} {i18n.general.changes}
             </Button>
           </DialogFooter>
