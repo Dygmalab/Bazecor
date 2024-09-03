@@ -18,8 +18,10 @@ import {
   IconThunder,
   IconSplitView,
   IconWireless,
+  IconWrench,
 } from "@Renderer/components/atoms/icons";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@Renderer/components/atoms/Tabs";
+import { Button } from "@Renderer/components/atoms/Button";
 import { i18n } from "@Renderer/i18n";
 import NoKeyTransparentTab from "@Renderer/modules/KeysTabs/NoKeyTransparentTab";
 // eslint-disable-next-line
@@ -29,6 +31,9 @@ import SuperkeysTab from "@Renderer/modules/KeysTabs/SuperkeysTab";
 import MediaAndLightTab from "@Renderer/modules/KeysTabs/MediaAndLightTab";
 import MouseTab from "@Renderer/modules/KeysTabs/MouseTab";
 import WirelessTab from "@Renderer/modules/KeysTabs/WirelessTab";
+import CustomKeyCodeModal from "@Renderer/components/molecules/CustomModal/ModalCustomKeycode";
+import { Separator } from "@Renderer/components/atoms/Separator";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@Renderer/components/atoms/Tooltip";
 import { KeymapDB } from "../../../api/keymap";
 import { Picker } from ".";
 
@@ -269,6 +274,7 @@ class KeyPickerKeyboard extends Component {
       pastkeyindex: props.keyIndex,
       superName: props.superName,
       currentTab: undefined,
+      customModal: false,
     };
 
     this.parseAction = this.parseAction.bind(this);
@@ -407,9 +413,15 @@ class KeyPickerKeyboard extends Component {
     }
     return translatedAction;
   };
+  toggleModal = () => {
+    const { customModal: cModal } = this.state;
+    this.setState({ customModal: !cModal });
+    console.log("Cliked!", this.customModal);
+  };
 
   render() {
-    const { action, actions, showKB, modifs, superName, disable, Keymap, layoutSelectorPosition, currentTab } = this.state;
+    const { action, actions, showKB, modifs, superName, disable, Keymap, layoutSelectorPosition, currentTab, customModal } =
+      this.state;
     const { selectedlanguage, kbtype, macros, actTab, superkeys, code, onKeySelect, isWireless, keyIndex, dragLimits } =
       this.props;
     const activeTab = actTab !== undefined ? actTab : this.state.activeTab;
@@ -564,8 +576,47 @@ class KeyPickerKeyboard extends Component {
                         )}
                       </div>
                       {actTab !== "super" ? (
-                        <div className="flex">
+                        <div className="flex flex-wrap gap-2 items-center">
                           <NoKeyTransparentTab keyCode={code} onKeySelect={onKeySelect} isStandardView disabled={disable} />
+                          <Separator orientation="vertical" className="mx-1 bg-gray-100 dark:bg-gray-600 block h-9" />
+                          <div className="flex gap-2">
+                            <TooltipProvider delayDuration={100}>
+                              <Tooltip>
+                                <TooltipTrigger asChild>
+                                  <div className="basis-full">
+                                    <Button
+                                      variant="config"
+                                      disabled={false}
+                                      selected={code.base + code.modified >= 20000}
+                                      onClick={() => {
+                                        this.toggleModal();
+                                      }}
+                                      size="icon"
+                                      className="w-9 h-9"
+                                    >
+                                      <IconWrench size="sm" />
+                                    </Button>
+                                  </div>
+                                </TooltipTrigger>
+                                <TooltipContent size="sm" className="max-w-xs">
+                                  {i18n.editor.superkeys.specialKeys.custom}
+                                </TooltipContent>
+                              </Tooltip>
+                            </TooltipProvider>
+                            <CustomKeyCodeModal
+                              show={customModal}
+                              name={(code.base + code.modified).toString(16)}
+                              toggleShow={this.toggleModal}
+                              handleSave={data => {
+                                // console.log("CustomKey selected key", data);
+                                onKeySelect(parseInt(data, 16));
+                                this.toggleModal();
+                              }}
+                              modalTitle={i18n.editor.modal.customKeyCodeModal.title}
+                              modalMessage={i18n.editor.modal.customKeyCodeModal.message}
+                              labelInput={i18n.editor.modal.customKeyCodeModal.labelInput}
+                            />
+                          </div>
                         </div>
                       ) : (
                         ""

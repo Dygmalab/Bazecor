@@ -23,7 +23,7 @@ const NoKeyTransparentTab = ({ keyCode, onKeySelect, isStandardView, disabled }:
   }, [keyCode]);
   return (
     <div
-      className={`w-full ${isStandardView ? "standardViewTab" : ""} tabsNoKeysTransparent ${disabled ? "opacity-50 pointer-events-none" : ""}`}
+      className={`${isStandardView ? "standardViewTab" : ""} tabsNoKeysTransparent ${disabled ? "opacity-50 pointer-events-none" : ""}`}
     >
       <div className="tabContentWrapper">
         <div className="buttonsRow">
@@ -35,6 +35,27 @@ const NoKeyTransparentTab = ({ keyCode, onKeySelect, isStandardView, disabled }:
           </Callout> */}
 
           <div className="flex flex-wrap gap-1 items-center">
+            <TooltipProvider delayDuration={200}>
+              <Tooltip>
+                <TooltipTrigger className="[&_svg]:text-purple-100 [&_svg]:dark:text-purple-200">
+                  <IconInformation />
+                </TooltipTrigger>
+                <TooltipContent className="max-w-xs">
+                  <Heading headingLevel={4} renderAs="h4" className="my-0 w-full text-base">
+                    {i18n.editor.standardView.noKey}
+                  </Heading>
+                  <p className="description text-ssm font-medium text-gray-400 dark:text-gray-200">
+                    {i18n.editor.standardView.noKeyDescription}
+                  </p>
+                  <Heading headingLevel={4} renderAs="h4" className="my-0 w-full text-base mt-3">
+                    {i18n.editor.standardView.transparent}
+                  </Heading>
+                  <p className="description text-ssm font-medium text-gray-400 dark:text-gray-200">
+                    {i18n.editor.standardView.transparentDescription}
+                  </p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
             <Button
               variant="config"
               onClick={() => {
@@ -57,27 +78,6 @@ const NoKeyTransparentTab = ({ keyCode, onKeySelect, isStandardView, disabled }:
             >
               {i18n.editor.standardView.transparent}
             </Button>
-            <TooltipProvider delayDuration={200}>
-              <Tooltip>
-                <TooltipTrigger className="[&_svg]:text-purple-100 [&_svg]:dark:text-purple-200">
-                  <IconInformation />
-                </TooltipTrigger>
-                <TooltipContent className="max-w-xs">
-                  <Heading headingLevel={4} renderAs="h4" className="my-0 w-full text-base">
-                    {i18n.editor.standardView.noKey}
-                  </Heading>
-                  <p className="description text-ssm font-medium text-gray-400 dark:text-gray-200">
-                    {i18n.editor.standardView.noKeyDescription}
-                  </p>
-                  <Heading headingLevel={4} renderAs="h4" className="my-0 w-full text-base mt-3">
-                    {i18n.editor.standardView.transparent}
-                  </Heading>
-                  <p className="description text-ssm font-medium text-gray-400 dark:text-gray-200">
-                    {i18n.editor.standardView.transparentDescription}
-                  </p>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
           </div>
         </div>
       </div>
