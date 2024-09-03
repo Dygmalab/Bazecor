@@ -222,7 +222,7 @@ jobs:
       - name: Install node_modules # we do this so we can use semantic-release
         if: steps.cache-node-modules.outputs.cache-hit != 'true'
         run: yarn install --frozen-lockfile --network-timeout 300000 # sometimes yarn takes time, therefore, we increase the timeout
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4.1.7
         with:
           name: artifacts
           path: ${{ github.workspace }}/artifacts
