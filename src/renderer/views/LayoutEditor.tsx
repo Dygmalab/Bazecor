@@ -149,10 +149,20 @@ const Styles = Styled.div`
 }
 .singleViewMode.keyboard .raiseKeyboard {
   margin: 0 auto;
-  max-height: 44vh;
+  // max-height: 44vh;
+  height: 100%;
+  svg {
+    height: 100%;
+  }
 }
 .singleViewMode.keyboard .raiseKeyboard.svg-defy {
-  max-height: 49vh;
+  // max-height: 49vh;
+}
+.keyboard-editor.keyboard .dygma-keyboard-editor.editor {
+  height: calc(100vh - 370px - 124px);
+}
+.keyboard-editor.keyboard .dygma-keyboard-editor.editor .LayerHolder{
+  height: 100%;
 }
 
 .NeuronLine {
@@ -169,7 +179,6 @@ const Styles = Styled.div`
     cursor: pointer;
   }
 }
-
 
 .keyBase {
   fill: ${({ theme }) => theme.styles.raiseKeyboard.keyBase};
@@ -1943,7 +1952,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
         />
         <div className="w-full h-[inherit] keyboardsWrapper">
           {/* <div className="raise-editor layer-col h-full"> // Set keyboard on bottom */}
-          <div className="raise-editor layer-col">
+          <div className="raise-editor layer-col h-[inherit]">
             <div className="dygma-keyboard-editor editor">{layer}</div>
             {modeselect === "keyboard" ? (
               <div className="ordinary-keyboard-editor m-0 pb-4">

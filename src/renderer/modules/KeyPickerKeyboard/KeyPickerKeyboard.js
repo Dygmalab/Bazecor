@@ -529,7 +529,7 @@ class KeyPickerKeyboard extends Component {
                 </TabsList>
               </div>
             </div>
-            <div className="keyBoardPickerWrapper w-full rounded-regular py-4 px-8 bg-gray-25 dark:bg-[#25273B] shadow-lg">
+            <div className="keyBoardPickerWrapper w-full rounded-regular py-4 px-8 bg-gray-25 dark:bg-[#25273B] shadow-lg h-[370px] overflow-auto">
               <TabsContent value="tabKeys">
                 <motion.div initial="hidden" animate="visible" key="tabKeys" variants={tabVariants}>
                   <>

@@ -38,46 +38,7 @@ import {
 } from "react-icons/ai";
 import { MdKeyboardReturn, MdSpaceBar, MdKeyboardCapslock, MdInfoOutline, MdEject } from "react-icons/md";
 
-import { Button } from "@Renderer/components/atoms/Button";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@Renderer/components/atoms/Tooltip";
-import {
-  SelectLayersCustomDropdown,
-  SelectSuperKeyCustomDropdown,
-  SelectMacroCustomDropdown,
-  SelectMouseCustomDropdown,
-  SelectShotModifierCustomDropdown,
-  SelectWirelessDropdown,
-} from "@Renderer/components/molecules/CustomSelect";
-
-import {
-  IconLayers,
-  IconLEDNextEffect,
-  IconLEDPreviousEffect,
-  IconMediaForward,
-  IconMediaPlayPause,
-  IconMediaRewind,
-  IconMediaShuffle,
-  IconMediaSoundLess,
-  IconMediaSoundMore,
-  IconMediaSoundMute,
-  IconMediaStop,
-  IconNull,
-  IconNote,
-  IconMouse,
-  IconOneShot,
-  IconThunder,
-  IconToolsCalculator,
-  IconToolsCamera,
-  IconToolsEject,
-  IconToolsBrightnessLess,
-  IconBrightnessMore,
-  IconSleep,
-  IconShutdown,
-  IconRobot,
-  IconWireless,
-  IconLEDToggleEffect,
-  IconWrench,
-} from "@Renderer/components/atoms/icons";
 
 import { i18n } from "@Renderer/i18n";
 
