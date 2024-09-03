@@ -376,7 +376,8 @@ const ModifiersTab = ({
                   if (activeModifier === "") {
                     triggerToast();
                   } else if (activeModifier === "ros" || activeModifier === "rcontrol" || activeModifier === "rshift") {
-                    triggerToastDisabledDual();
+                    // triggerToastDisabledDual();
+                    console.log("Action disabled!");
                   } else {
                     setActiveModifierTab(previous => (previous === "dualModifier" ? "None" : "dualModifier"));
                     // setActiveModifierTab("dualModifier");
@@ -400,7 +401,7 @@ const ModifiersTab = ({
                   </>
                 }
                 className=""
-                disabled={false}
+                disabled={activeModifier === "ros" || activeModifier === "rcontrol" || activeModifier === "rshift"}
               />
               <CustomRadioCheckBox
                 label={<div className="pl-0.5">Turn into a OneShot modifier</div>}
