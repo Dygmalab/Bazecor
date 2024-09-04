@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import Styled from "styled-components";
 import { motion } from "framer-motion";
+// import log from "electron-log/renderer";
 
 // Internal components
 // import ListModifier from "@Renderer/components/molecules/ListModifiers/ListModifiers";
@@ -281,10 +282,11 @@ class KeyPickerKeyboard extends Component {
     this.changeTab = this.changeTab.bind(this);
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps, prevState) {
     let selectdual = 0;
     const disable = this.props.keyIndex === -1;
     const keynum = this.props.code != null ? this.props.code.modified + this.props.code.base : 0;
+    const keynumOld = prevProps.code != null ? prevProps.code.modified + prevProps.code.base : 0;
     if (keynum >= 51218 && keynum <= 53266) {
       selectdual = (this.props.code.modified >>> 8) << 8;
       if (selectdual >= 51218 - 18) {
@@ -330,8 +332,15 @@ class KeyPickerKeyboard extends Component {
     } else {
       activeTab = "super";
     }
+    if (keynumOld !== keynum) {
+      // log.info("This kenumOld : ", prevState.currentTab, this.state.currentTab, keynumOld, keynum);
+      this.setState({
+        currentTab: prevState.currentTab,
+      });
+    }
     if (JSON.stringify(this.state.actions) !== JSON.stringify(tempActions) || prevProps.keyIndex !== this.props.keyIndex) {
       this.setState({
+        currentTab: prevState.currentTab,
         action: this.props.keyIndex !== this.state.pastkeyindex ? 0 : this.state.action,
         actions: tempActions,
         selectdual,
@@ -416,7 +425,6 @@ class KeyPickerKeyboard extends Component {
   toggleModal = () => {
     const { customModal: cModal } = this.state;
     this.setState({ customModal: !cModal });
-    console.log("Cliked!", this.customModal);
   };
 
   render() {

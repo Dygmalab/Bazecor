@@ -57,6 +57,7 @@ const LayersTab = ({
   // const [disableOneShot, setDisableOneShot] = useState<boolean>(false);
   const [disableOneShotButtons, setDisableOneShotButtons] = useState<boolean>(false);
   const [openKeysPopover, setOpenKeysPopover] = useState<boolean>(false);
+  const [KC, setKC] = useState<number>(0);
 
   const layers = useMemo(
     () => [
@@ -97,15 +98,16 @@ const LayersTab = ({
     );
   };
 
-  const KC = useMemo(() => {
+  useEffect(() => {
     if (keyCode?.base !== undefined && keyCode?.modified !== undefined) {
-      return keyCode.base + keyCode.modified;
+      setKC(keyCode.base + keyCode.modified);
+    } else {
+      setKC(undefined);
     }
-    return undefined;
   }, [keyCode]);
 
   let keyNumInternal: number;
-  if (typeof KC === "number" && KC < 51217) {
+  if (typeof KC === "number" && KC <= 51217) {
     keyNumInternal = KC;
   } else if (typeof KC === "number" && KC > 51217) {
     keyNumInternal = keyCode.modified;

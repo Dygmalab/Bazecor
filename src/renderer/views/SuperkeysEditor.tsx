@@ -814,7 +814,6 @@ function SuperkeysEditor(props: SuperkeysEditorProps) {
 
       <div className="keyboardcontainer" hidden={selectedAction < 0}>
         <KeyPickerKeyboard
-          key={JSON.stringify(superkeys) + selectedAction}
           onKeySelect={onKeyChange}
           code={code}
           macros={macros}

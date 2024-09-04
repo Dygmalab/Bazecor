@@ -28,7 +28,6 @@ import {
 import {
   AiFillForward,
   AiFillWindows,
-  AiFillApple,
   AiOutlineArrowDown,
   AiOutlineArrowLeft,
   AiOutlineArrowRight,
@@ -44,7 +43,6 @@ import { i18n } from "@Renderer/i18n";
 
 import Key from "@Renderer/modules/KeyPickerKeyboard/Key";
 import getLanguage from "@Renderer/modules/KeyPickerKeyboard/KeyPickerLanguage";
-import CustomKeyCodeModal from "@Renderer/components/molecules/CustomModal/ModalCustomKeycode";
 import OSKey from "@Renderer/components/molecules/KeyTags/OSKey";
 
 import { getKeyboardLayout } from "@Renderer/utils/getKeyboardLayout";
