@@ -1442,11 +1442,17 @@ const LayoutEditor = (props: LayoutEditorProps) => {
       }
       setLayerNames(lNames);
     }
+    const parsedKeymap = data.keymap.map(key => {
+      let localKey = key;
+      if (typeof localKey.extraLabel === "object" || typeof localKey.label === "object")
+        localKey = keymapDB.parse(localKey.keyCode);
+      return localKey;
+    });
     if (data.keymap.length > 0 && data.colormap.length > 0) {
       if (keymap.onlyCustom) {
         if (currentLayer >= 0) {
           const newKeymap = keymap.custom.slice();
-          newKeymap[currentLayer] = data.keymap.slice();
+          newKeymap[currentLayer] = parsedKeymap;
           const newColormap = colorMap.slice();
           newColormap[currentLayer] = data.colormap.slice();
           setKeymap({
@@ -1459,7 +1465,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
       } else if (currentLayer >= keymap.default.length) {
         const defLength = keymap.default.length;
         const newKeymap = keymap.custom.slice();
-        newKeymap[currentLayer - defLength] = data.keymap;
+        newKeymap[currentLayer - defLength] = parsedKeymap;
         const newColormap = colorMap.slice();
         newColormap[currentLayer - defLength] = data.colormap.slice();
 
