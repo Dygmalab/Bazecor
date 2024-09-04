@@ -72,7 +72,7 @@ const MacroTab = (props: MacroTabProps) => {
       macrosContainer.name = item.name;
     }
     macrosContainer.value = index;
-    macrosContainer.disabled = index + 1 === selectedMacro;
+    macrosContainer.disabled = index === selectedMacro;
     return macrosContainer;
   });
 
