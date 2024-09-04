@@ -225,7 +225,7 @@ const LayersTab = ({
                 ) : (
                   ""
                 )}
-                {activeLayerTab === "layerLock" && (
+                {activeLayerTab === "layerLock" && activeLayerNumber !== 0 && (
                   <>
                     Layer <span className="text-gray-400 dark:text-gray-300">Lock on tap</span>
                   </>

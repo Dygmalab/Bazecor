@@ -245,7 +245,6 @@ const ModifiersTab = ({
     },
     [keymapDB],
   );
-  console.log("keycode: ", keyCode);
 
   return (
     <div
@@ -265,7 +264,7 @@ const ModifiersTab = ({
           <div className="w-full flex flex-row flex-wrap gap-6">
             <div className="flex flex-col gap-2">
               <Heading renderAs="h4" headingLevel={3} className="text-base flex leading-6 gap-1">
-                {activeModifierTab === "" && <>Select a Modifier</>}
+                {activeModifierTab === "None" && <>Select a Modifier</>}
                 {activeModifierTab === "dualModifier" && (
                   <>
                     Modifier{" "}
