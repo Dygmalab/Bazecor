@@ -255,8 +255,8 @@ const ModifiersTab = ({
         {isStandardView ? (
           <Callout size="sm" className="mt-0 mb-4">
             <p>
-              Dual Function keys(Add key on tap) act differently when tapped or held, while One Shot Modifiers apply a modifier
-              with a single tap for the next key press. These features streamline your workflow and enhance efficiency.
+              Sunercharge your modifiers. Add a key on tap so the modifier acts like a normal keypress when you tap it, or turn it
+              into a OneShot modifier.
             </p>
           </Callout>
         ) : null}
@@ -265,13 +265,20 @@ const ModifiersTab = ({
           <div className="w-full flex flex-row flex-wrap gap-6">
             <div className="flex flex-col gap-2">
               <Heading renderAs="h4" headingLevel={3} className="text-base flex leading-6 gap-1">
-                Modifier{" "}
+                {activeModifierTab === "" && <>Select a Modifier</>}
                 {activeModifierTab === "dualModifier" && (
-                  <span className="text-gray-400 dark:text-gray-300 gap-1 inline-flex leading-6 align-text-bottom">
-                    Shift on hold <small className="leading-[inherit]">(Dual-function)</small>
-                  </span>
+                  <>
+                    Modifier{" "}
+                    <span className="text-gray-400 dark:text-gray-300 gap-1 inline-flex leading-6 align-text-bottom">
+                      on hold
+                    </span>
+                  </>
                 )}
-                {activeModifierTab === "oneShotModifier" && <span className="text-gray-400 dark:text-gray-300">OneShot</span>}
+                {activeModifierTab === "oneShotModifier" && (
+                  <>
+                    Modifier <span className="text-gray-400 dark:text-gray-300">OneShot</span>
+                  </>
+                )}
               </Heading>
               <div className="flex flex-wrap gap-1 items-center">
                 {modifiersButtons.map((button, index) => (
@@ -393,10 +400,8 @@ const ModifiersTab = ({
                       Add key on tap (Dual-function)
                     </Heading>
                     <p className="description text-ssm font-medium text-gray-400 dark:text-gray-200">
-                      A Dual Function Modifier is a key that performs two functions based on how it&apos;s used. When you tap the
-                      key, it acts like a regular key (e.g., space or enter), but when you hold it down, it acts as a modifier key
-                      (like Shift, Ctrl, or Alt). This allows you to maximize the utility of a single key, enabling more efficient
-                      and flexible keyboard use.
+                      Tap the key to perform a normal keypress (like space or enter) or hold it to use the selected modifier as
+                      usual. This allows you to easily access your modifiers without sacrificing key real estate.
                     </p>
                   </>
                 }
@@ -420,12 +425,12 @@ const ModifiersTab = ({
                 tooltip={
                   <>
                     <Heading headingLevel={4} renderAs="h4" className="text-gray-600 dark:text-gray-25 mb-1 leading-6 text-base">
-                      One Shot Modifier
+                      OneShot Modifier
                     </Heading>
                     <p className="description text-ssm font-medium text-gray-400 dark:text-gray-200">
-                      A One Shot Modifier allows you to temporarily activate a modifier key with a single tap. Once tapped, the
-                      modifier stays active for the next key press, then automatically deactivates. This is useful for executing a
-                      quick shortcut or command without needing to hold down the modifier key.
+                      Tap the key to use the selected modifier for a single keypress; after that keypress, the software
+                      automatically deactivates the modifier. You can also hold the key to use the modifier normally. Double-tap
+                      it to lock the modifier; tap it again to unlock it.
                     </p>
                   </>
                 }

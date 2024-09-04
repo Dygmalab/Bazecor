@@ -122,7 +122,7 @@ function ModPicker(props: ModPickerProps) {
             className={`flex items-center gap-2 ${setModifierVisibility() ? "opacity-50" : "opacity-100"}`}
           >
             {/* {i18n.editor.standardView.keys.addModifier} */}
-            Add shortcuts
+            Create a shortcut
             <TooltipProvider delayDuration={200}>
               <Tooltip>
                 <TooltipTrigger className="[&_svg]:text-purple-100 [&_svg]:dark:text-purple-200">
@@ -130,11 +130,12 @@ function ModPicker(props: ModPickerProps) {
                 </TooltipTrigger>
                 <TooltipContent className="max-w-xs">
                   <Heading headingLevel={4} renderAs="h4" className="text-gray-600 dark:text-gray-25 mb-1 leading-6 text-base">
-                    Modifiers
+                    Create a shortcut
                   </Heading>
                   <p className="description text-ssm font-medium text-gray-400 dark:text-gray-200">
-                    Modifiers are special keys (like Ctrl, Shift, and Alt) that change the function of other keys or mouse actions
-                    when pressed together. They allow you to perform shortcuts and access additional features quickly.
+                    Add modifiers to create a shortcut. Modifiers are special keys (like Ctrl, Shift, and Alt) that change the
+                    function of other keys or mouse actions when pressed together. For example, CTRL+C to copy text or CTRL+V to
+                    paste it.
                   </p>
                 </TooltipContent>
               </Tooltip>

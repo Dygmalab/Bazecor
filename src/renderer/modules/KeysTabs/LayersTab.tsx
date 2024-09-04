@@ -208,8 +208,8 @@ const LayersTab = ({
             videoDuration="6:50"
           >
             <p>
-              You can navigate between layers in various ways: simply select the layer you want to shift to, or enhance
-              functionality by adding a Layer Lock, setting up Dual Function keys, or activating a One Shot Layer.
+              Easily access your layers. Select the layer you want to shift to and enhance its functionality by turning it into a
+              Layer Lock, choosing a key on tap, or activating a OneShot Layer.
             </p>
           </Callout>
         ) : null}
@@ -217,20 +217,32 @@ const LayersTab = ({
           <div className="w-full flex flex-row flex-wrap gap-6">
             <div className="flex flex-col gap-2">
               <Heading renderAs="h4" headingLevel={3} className="text-base flex leading-6 gap-1">
-                Layer{" "}
+                {activeLayerNumber === 0 && <>Select a layer</>}
                 {activeLayerTab === "layerShift" && activeLayerNumber > 0 ? (
-                  <span className="text-gray-400 dark:text-gray-300">Shift on hold</span>
+                  <>
+                    Layer <span className="text-gray-400 dark:text-gray-300">Shift on hold</span>
+                  </>
                 ) : (
                   ""
                 )}
-                {activeLayerTab === "layerLock" && <span className="text-gray-400 dark:text-gray-300">Lock on tap</span>}
-                {activeLayerTab === "layerDual" && (
-                  <span className="text-gray-400 dark:text-gray-300 gap-1 inline-flex leading-6 align-text-bottom">
-                    Shift on hold <small className="leading-[inherit]">(Dual-function)</small>
-                  </span>
+                {activeLayerTab === "layerLock" && (
+                  <>
+                    Layer <span className="text-gray-400 dark:text-gray-300">Lock on tap</span>
+                  </>
                 )}
-                {activeLayerTab === "layerShot" && <span className="text-gray-400 dark:text-gray-300">OneShot</span>}{" "}
-                <small> </small>
+                {activeLayerTab === "layerDual" && (
+                  <>
+                    Layer{" "}
+                    <span className="text-gray-400 dark:text-gray-300 gap-1 inline-flex leading-6 align-text-bottom">
+                      Shift on hold
+                    </span>
+                  </>
+                )}
+                {activeLayerTab === "layerShot" && (
+                  <>
+                    Layer <span className="text-gray-400 dark:text-gray-300">OneShot</span>
+                  </>
+                )}
               </Heading>
               <div className="flex gap-1">
                 {layers.map((button, index) => (
@@ -347,12 +359,11 @@ const LayersTab = ({
                 tooltip={
                   <>
                     <Heading headingLevel={4} renderAs="h4" className="text-gray-600 dark:text-gray-25 mb-1 leading-6 text-base">
-                      Layer Lock Navigation
+                      Layer Lock
                     </Heading>
                     <p className="description text-ssm font-medium text-gray-400 dark:text-gray-200">
-                      Tap a designated key to lock into a specific layer, staying in that layer until you decide to switch back.
-                      It&apos;s ideal for extended tasks like video editing or gaming. Ensure you set up a return key to revert to
-                      the previous layer easily.
+                      Tap the key to move permanently to the selected layer. This is ideal for extended tasks like video editing
+                      or gaming. Ensure you set up another Layer Lock in the target layer to easily return to the previous layer.
                     </p>
                   </>
                 }
@@ -382,11 +393,11 @@ const LayersTab = ({
                           renderAs="h4"
                           className="text-gray-600 dark:text-gray-25 mt-2 mb-1 leading-6 text-base"
                         >
-                          Add a key on tap (Dual Function Navigation)
+                          Add a key on tap (Dual-Function)
                         </Heading>
                         <p className="description text-ssm font-medium text-gray-400 dark:text-gray-200">
-                          Assign a key with dual functions where a tap performs one action (like space or enter), but holding it
-                          activates a specific layer. This allows for efficient layer access without sacrificing key real estate.
+                          Tap the key to perform a normal keypress (like space or enter) or hold it to shift to the selected
+                          layer. This allows for efficient layer access without sacrificing key real estate.
                         </p>
                       </>
                     }
@@ -420,9 +431,10 @@ const LayersTab = ({
                           OneShot layer Navigation
                         </Heading>
                         <p className="description text-ssm font-medium text-gray-400 dark:text-gray-200">
-                          Tap a key to enter a layer for a single action; after that action, the software automatically returns to
-                          the previous layer. You can also hold the key to stay in the layer temporarily or double-tap it to lock
-                          in and then unlock by tapping the key again.
+                          Tap the key to enter the selected layer for a single keypress; after that keypress, the software
+                          automatically returns to the previous layer. You can also hold the key to stay in the layer while you
+                          hold it. Double-tap it to lock into the layer; go back to the previous layer by tapping the key again.
+                          It&apos;s crucial that the same key in the target layer is set up as TRANSPARENT.
                         </p>
                       </>
                     }

@@ -51,7 +51,7 @@ function WirelessTab(props: TabLayoutEditorProps) {
           <div className="flex flex-wrap gap-1 py-2">
             <div className="flex-1 py-2">
               <Heading renderAs="h4" headingLevel={4} className="text-base">
-                {i18n.editor.standardView.wireless.batteryPowerStatus}
+                {i18n.editor.standardView.wireless.batteryLevel}
               </Heading>
               <p className="text-ssm font-medium text-gray-400 dark:text-gray-200">
                 {i18n.editor.standardView.wireless.batteryLevelDescription}
