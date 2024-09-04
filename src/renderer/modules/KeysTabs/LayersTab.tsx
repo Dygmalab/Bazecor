@@ -408,7 +408,7 @@ const LayersTab = ({
                   />
                   <CustomRadioCheckBox
                     label={<div className="pl-0.5">Turn into OneShot layer</div>}
-                    disabled={false}
+                    disabled={activeLayerNumber >= 9}
                     onClick={() => {
                       if (activeLayerNumber > 0 && activeLayerNumber <= 8) {
                         setActiveLayerTab(previous => (previous === "layerShot" ? "layerShift" : "layerShot"));
