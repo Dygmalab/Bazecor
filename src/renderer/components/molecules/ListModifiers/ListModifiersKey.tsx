@@ -1,5 +1,7 @@
+/* eslint-disable no-bitwise */
 import React, { useState, useEffect, useMemo } from "react";
 import { AnimatePresence, motion } from "framer-motion";
+import { KeymapDB } from "../../../../api/keymap";
 import OSKey from "../KeyTags/OSKey";
 
 interface ListModifiersProps {
@@ -10,6 +12,7 @@ type Modifier = number;
 
 const ListModifiersKey = ({ keyCode, size = "xs" }: ListModifiersProps) => {
   const [modifiersState, setModifiersState] = useState({ isMeh: false, isHyper: false });
+  const [db] = useState(new KeymapDB());
   // const [isMeh, setIsMeh] = useState(false);
   // const [isHyper, setIsHyper] = useState(false);
 
@@ -17,27 +20,22 @@ const ListModifiersKey = ({ keyCode, size = "xs" }: ListModifiersProps) => {
   const parseModifs = (keycode: number): Modifier[] => {
     const modifs: Modifier[] = [];
 
-    // eslint-disable-next-line
     if (keycode & 0b100000000) {
       // Ctrl Decoder
       modifs.push(1);
     }
-    // eslint-disable-next-line
     if (keycode & 0b1000000000) {
       // Alt Decoder
       modifs.push(2);
     }
-    // eslint-disable-next-line
     if (keycode & 0b10000000000) {
       // AltGr Decoder
       modifs.push(3);
     }
-    // eslint-disable-next-line
     if (keycode & 0b100000000000) {
       // Shift Decoder
       modifs.push(0);
     }
-    // eslint-disable-next-line
     if (keycode & 0b1000000000000) {
       // Win Decoder
       modifs.push(4);
@@ -47,34 +45,13 @@ const ListModifiersKey = ({ keyCode, size = "xs" }: ListModifiersProps) => {
 
   const modifiers = useMemo(() => parseModifs(keyCode), [keyCode]);
 
-  // useEffect(() => {
-  //   if (
-  //     parseModifs(keyCode).includes(0) === true &&
-  //     parseModifs(keyCode).includes(1) === true &&
-  //     parseModifs(keyCode).includes(2) === true &&
-  //     parseModifs(keyCode).includes(4) === true
-  //   ) {
-  //     setIsHyper(true);
-  //   } else {
-  //     setIsHyper(false);
-  //   }
-  //   if (
-  //     parseModifs(keyCode).includes(0) === true &&
-  //     parseModifs(keyCode).includes(1) === true &&
-  //     parseModifs(keyCode).includes(2) === true &&
-  //     parseModifs(keyCode).includes(4) === false
-  //   ) {
-  //     setIsMeh(true);
-  //   } else {
-  //     setIsMeh(false);
-  //   }
-  // }, [keyCode]);
-
   useEffect(() => {
     const isHyper = [0, 1, 2, 4].every(mod => modifiers.includes(mod));
     const isMeh = [0, 1, 2].every(mod => modifiers.includes(mod)) && !modifiers.includes(4);
     setModifiersState({ isMeh, isHyper });
   }, [modifiers]);
+
+  const altVisual = db.parse(keyCode).label !== db.parse(keyCode & 0b11111111).label;
 
   if (keyCode >= 8192) return null;
   return (
@@ -141,7 +118,7 @@ const ListModifiersKey = ({ keyCode, size = "xs" }: ListModifiersProps) => {
         )}
         {typeof keyCode === "number" ? (
           <>
-            {parseModifs(keyCode).includes(3) === true ? (
+            {parseModifs(keyCode).includes(3) === true && (!altVisual || parseModifs(keyCode).length > 1) ? (
               <AnimatePresence mode="popLayout">
                 <motion.div initial={{ opacity: 0, y: -50 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -50 }}>
                   <li className="inline-flex items-center h-[12px] font-semibold tracking-tight leading-3 py-0 px-[3px] m-0 text-[10px] text-gray-25 dark:text-gray-600 bg-gray-600/60 dark:bg-gray-25/60 shadow-sm rounded-[3px] [&_>div]:!h-[12px] [&_>div]:!inline-table">
@@ -163,7 +140,10 @@ const ListModifiersKey = ({ keyCode, size = "xs" }: ListModifiersProps) => {
             ) : (
               ""
             )}
-            {parseModifs(keyCode).includes(0) === true && !modifiersState.isMeh && !modifiersState.isHyper ? (
+            {parseModifs(keyCode).includes(0) === true &&
+            !modifiersState.isMeh &&
+            !modifiersState.isHyper &&
+            (!altVisual || parseModifs(keyCode).length > 1) ? (
               <AnimatePresence mode="popLayout">
                 <motion.div initial={{ opacity: 0, y: -50 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -50 }}>
                   <li className="inline-flex items-center h-[12px] font-semibold tracking-tight leading-3 py-0 px-[3px] m-0 text-[10px] text-gray-25 dark:text-gray-600 bg-gray-600/60 dark:bg-gray-25/60 shadow-sm rounded-[3px] [&_>div]:!h-[12px] [&_>div]:!inline-table">
