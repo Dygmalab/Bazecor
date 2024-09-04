@@ -91,60 +91,70 @@ const ShiftedDigitTable = {
       labels: {
         primary: "!",
       },
+      alt: true,
     },
     {
       code: 2079,
       labels: {
         primary: "@",
       },
+      alt: true,
     },
     {
       code: 2080,
       labels: {
         primary: "#",
       },
+      alt: true,
     },
     {
       code: 2081,
       labels: {
         primary: "$",
       },
+      alt: true,
     },
     {
       code: 2082,
       labels: {
         primary: "%",
       },
+      alt: true,
     },
     {
       code: 2083,
       labels: {
         primary: "^",
       },
+      alt: true,
     },
     {
       code: 2084,
       labels: {
         primary: "&",
       },
+      alt: true,
     },
     {
       code: 2085,
       labels: {
         primary: "*",
       },
+      alt: true,
     },
     {
       code: 2086,
       labels: {
         primary: "(",
       },
+      alt: true,
     },
     {
       code: 2087,
       labels: {
         primary: ")",
       },
+      alt: true,
     },
   ],
 };

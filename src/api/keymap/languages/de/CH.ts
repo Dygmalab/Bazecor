@@ -111,84 +111,98 @@ const altCtrlSwissGerman: BaseKeycodeTableType = {
       labels: {
         primary: "¦",
       },
+      alt: true,
     },
     {
       code: 799,
       labels: {
         primary: "@",
       },
+      alt: true,
     },
     {
       code: 800,
       labels: {
         primary: "#",
       },
+      alt: true,
     },
     {
       code: 803,
       labels: {
         primary: "¬",
       },
+      alt: true,
     },
     {
       code: 804,
       labels: {
         primary: "|",
       },
+      alt: true,
     },
     {
       code: 805,
       labels: {
         primary: "¢",
       },
+      alt: true,
     },
     {
       code: 813,
       labels: {
         primary: "´",
       },
+      alt: true,
     },
     {
       code: 814,
       labels: {
         primary: "~",
       },
+      alt: true,
     },
     {
       code: 776,
       labels: {
         primary: "€",
       },
+      alt: true,
     },
     {
       code: 815,
       labels: {
         primary: "[",
       },
+      alt: true,
     },
     {
       code: 816,
       labels: {
         primary: "]",
       },
+      alt: true,
     },
     {
       code: 817,
       labels: {
         primary: "}",
       },
+      alt: true,
     },
     {
       code: 820,
       labels: {
         primary: "{",
       },
+      alt: true,
     },
     {
       code: 868,
       labels: {
         primary: "\\",
       },
+      alt: true,
     },
   ],
 };
@@ -201,84 +215,98 @@ const altGrSwissGerman: BaseKeycodeTableType = {
       labels: {
         primary: "¦",
       },
+      alt: true,
     },
     {
       code: 1055,
       labels: {
         primary: "@",
       },
+      alt: true,
     },
     {
       code: 1056,
       labels: {
         primary: "#",
       },
+      alt: true,
     },
     {
       code: 1059,
       labels: {
         primary: "¬",
       },
+      alt: true,
     },
     {
       code: 1060,
       labels: {
         primary: "|",
       },
+      alt: true,
     },
     {
       code: 1061,
       labels: {
         primary: "¢",
       },
+      alt: true,
     },
     {
       code: 1069,
       labels: {
         primary: "´",
       },
+      alt: true,
     },
     {
       code: 1070,
       labels: {
         primary: "~",
       },
+      alt: true,
     },
     {
       code: 1032,
       labels: {
         primary: "€",
       },
+      alt: true,
     },
     {
       code: 1071,
       labels: {
         primary: "[",
       },
+      alt: true,
     },
     {
       code: 1072,
       labels: {
         primary: "]",
       },
+      alt: true,
     },
     {
       code: 1073,
       labels: {
         primary: "}",
       },
+      alt: true,
     },
     {
       code: 1076,
       labels: {
         primary: "{",
       },
+      alt: true,
     },
     {
       code: 1124,
       labels: {
         primary: "\\",
       },
+      alt: true,
     },
   ],
 };
@@ -291,126 +319,147 @@ const shiftModifierSwissGerman: BaseKeycodeTableType = {
       labels: {
         primary: "°",
       },
+      alt: true,
     },
     {
       code: 2078,
       labels: {
         primary: "+",
       },
+      alt: true,
     },
     {
       code: 2079,
       labels: {
         primary: '"',
       },
+      alt: true,
     },
     {
       code: 2080,
       labels: {
         primary: "*",
       },
+      alt: true,
     },
     {
       code: 2081,
       labels: {
         primary: "ç",
       },
+      alt: true,
     },
     {
       code: 2083,
       labels: {
         primary: "&",
       },
+      alt: true,
     },
     {
       code: 2084,
       labels: {
         primary: "/",
       },
+      alt: true,
     },
     {
       code: 2085,
       labels: {
         primary: "(",
       },
+      alt: true,
     },
     {
       code: 2086,
       labels: {
         primary: ")",
       },
+      alt: true,
     },
     {
       code: 2087,
       labels: {
         primary: "=",
       },
+      alt: true,
     },
     {
       code: 2093,
       labels: {
         primary: "?",
       },
+      alt: true,
     },
     {
       code: 2094,
       labels: {
         primary: "`",
       },
+      alt: true,
     },
     {
       code: 2095,
       labels: {
         primary: "È",
       },
+      alt: true,
     },
     {
       code: 2096,
       labels: {
         primary: "!",
       },
+      alt: true,
     },
     {
       code: 2097,
       labels: {
         primary: "£",
       },
+      alt: true,
     },
     {
       code: 2099,
       labels: {
         primary: "É",
       },
+      alt: true,
     },
     {
       code: 2100,
       labels: {
         primary: "À",
       },
+      alt: true,
     },
     {
       code: 2102,
       labels: {
         primary: ";",
       },
+      alt: true,
     },
     {
       code: 2103,
       labels: {
         primary: ":",
       },
+      alt: true,
     },
     {
       code: 2104,
       labels: {
         primary: "_",
       },
+      alt: true,
     },
     {
       code: 2148,
       labels: {
         primary: ">",
       },
+      alt: true,
     },
   ],
 };

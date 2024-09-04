@@ -11,54 +11,63 @@ const altGRPolish: BaseKeycodeTableType = {
       labels: {
         primary: "Ą",
       },
+      alt: true,
     },
     {
       code: 1030,
       labels: {
         primary: "Ć",
       },
+      alt: true,
     },
     {
       code: 1032,
       labels: {
         primary: "Ę",
       },
+      alt: true,
     },
     {
       code: 1039,
       labels: {
         primary: "Ł",
       },
+      alt: true,
     },
     {
       code: 1041,
       labels: {
         primary: "Ń",
       },
+      alt: true,
     },
     {
       code: 1042,
       labels: {
         primary: "Ó",
       },
+      alt: true,
     },
     {
       code: 1046,
       labels: {
         primary: "Ś",
       },
+      alt: true,
     },
     {
       code: 1051,
       labels: {
         primary: "Ź",
       },
+      alt: true,
     },
     {
       code: 1053,
       labels: {
         primary: "Ż",
       },
+      alt: true,
     },
   ],
 };

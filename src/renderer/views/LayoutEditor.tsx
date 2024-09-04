@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React, { MouseEvent, useCallback, useEffect, useLayoutEffect, useMemo, useState } from "react";
+import React, { MouseEvent, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import Styled from "styled-components";
 import { toast } from "react-toastify";
 import { ipcRenderer } from "electron";
@@ -476,7 +476,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
 
   const [selectedPaletteColor, setSelectedPaletteColor] = useState(-1);
 
-  const [scanned, setScanned] = useState(false);
+  const scanned = useRef(false);
   const [isSaving, setIsSaving] = useState(false);
   const { state } = useDevice();
   const [layerData, setLayerData] = useState<Array<KeyType>>([]);
@@ -1020,7 +1020,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
         setDeviceName(device);
         setIsWireless(wirelessChecker);
         setShowMacroModal(showMM);
-        setScanned(true);
+        scanned.current = true;
         setLoading(false);
         setScanningStep(0);
       } catch (e) {
@@ -1046,7 +1046,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
     try {
       const kmap = keymap.custom.slice();
       const l = keymap.onlyCustom ? layer : layer - keymap.default.length;
-      log.info(kmap, l, keyIndex, keyCode, keymapDB.parse(keyCode));
+      // log.info(kmap, l, keyIndex, keyCode, keymapDB.parse(keyCode));
       kmap[l][keyIndex] = keymapDB.parse(keyCode);
       setModified(true);
       setKeymap({
@@ -1759,9 +1759,9 @@ const LayoutEditor = (props: LayoutEditorProps) => {
       setViewMode(isStandardView ? "standard" : "single");
       setLoading(false);
       setCurrentLayer(0);
-      setScanned(true);
+      scanned.current = true;
     };
-    if (!scanned) {
+    if (!scanned.current) {
       scanner();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -1769,7 +1769,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
 
   useEffect(() => {
     // log.info("Running Scanner on changes useEffect: ", inContext, modified, !scanned, !inContext && modified && !scanned);
-    if (!inContext && modified && !scanned) {
+    if (!inContext && modified && !scanned.current) {
       const scanner = async () => {
         log.info("Resseting KB Data!!!");
         setModified(false);
@@ -1785,6 +1785,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
           onlyCustom: false,
         });
         setPalette([]);
+        scanned.current = true;
         await scanKeyboard(currentLanguageLayout);
         setLoading(false);
       };
@@ -2007,7 +2008,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
           saveContext={onApply}
           destroyContext={() => {
             log.info("cancelling context: ", props);
-            setScanned(false);
+            scanned.current = false;
             cancelContext();
           }}
           inContext={modified}

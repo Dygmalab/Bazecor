@@ -149,7 +149,7 @@ function Key(props: KeyShapeProps) {
               </div>
             </foreignObject>
             <foreignObject x={x} y={y} width={width + 6} height={height}>
-              <ListModifiersKey keyCode={keyCode} size="xs" />
+              <ListModifiersKey keyCode={keyCode} size="xs" selectedKey={selectedKey} />
             </foreignObject>
           </g>
         </g>
@@ -244,7 +244,7 @@ function Key(props: KeyShapeProps) {
             </div>
           </foreignObject>
           <foreignObject x={40} y={1} width={widthShape2 - 52} height={height}>
-            <ListModifiersKey keyCode={keyCode} size="xs" />
+            <ListModifiersKey keyCode={keyCode} size="xs" selectedKey={selectedKey} />
           </foreignObject>
         </g>
       ) : (
@@ -338,7 +338,7 @@ function Key(props: KeyShapeProps) {
             </div>
           </foreignObject>
           <foreignObject x={0} y={1} width={width - 52} height={height}>
-            <ListModifiersKey keyCode={keyCode} size="xs" />
+            <ListModifiersKey keyCode={keyCode} size="xs" selectedKey={selectedKey} />
           </foreignObject>
         </g>
       ) : (
@@ -442,7 +442,7 @@ function Key(props: KeyShapeProps) {
             </div>
           </foreignObject>
           <foreignObject x={0} y={1} width={width} height={60}>
-            <ListModifiersKey keyCode={keyCode} size="xs" />
+            <ListModifiersKey keyCode={keyCode} size="xs" selectedKey={selectedKey} />
           </foreignObject>
         </g>
       ) : (
@@ -538,7 +538,7 @@ function Key(props: KeyShapeProps) {
             </div>
           </foreignObject>
           <foreignObject x={0} y={1} width={width} height={height}>
-            <ListModifiersKey keyCode={keyCode} size="xs" />
+            <ListModifiersKey keyCode={keyCode} size="xs" selectedKey={selectedKey} />
           </foreignObject>
         </g>
       ) : (
@@ -634,7 +634,7 @@ function Key(props: KeyShapeProps) {
               </div>
             </foreignObject>
             <foreignObject x={0} y={1} width={width} height={height}>
-              <ListModifiersKey keyCode={keyCode} size="xs" />
+              <ListModifiersKey keyCode={keyCode} size="xs" selectedKey={selectedKey} />
             </foreignObject>
           </g>
         </g>
@@ -730,7 +730,7 @@ function Key(props: KeyShapeProps) {
               </div>
             </foreignObject>
             <foreignObject x={0} y={1} width={width} height={height}>
-              <ListModifiersKey keyCode={keyCode} size="xs" />
+              <ListModifiersKey keyCode={keyCode} size="xs" selectedKey={selectedKey} />
             </foreignObject>
           </g>
         </g>
@@ -827,7 +827,7 @@ function Key(props: KeyShapeProps) {
               </div>
             </foreignObject>
             <foreignObject x={0} y={1} width={width} height={height}>
-              <ListModifiersKey keyCode={keyCode} size="xs" />
+              <ListModifiersKey keyCode={keyCode} size="xs" selectedKey={selectedKey} />
             </foreignObject>
           </g>
         </g>
@@ -923,7 +923,7 @@ function Key(props: KeyShapeProps) {
               </div>
             </foreignObject>
             <foreignObject x={12} y={1} width={width} height={height}>
-              <ListModifiersKey keyCode={keyCode} size="xs" />
+              <ListModifiersKey keyCode={keyCode} size="xs" selectedKey={selectedKey} />
             </foreignObject>
           </g>
         </g>
@@ -1019,7 +1019,7 @@ function Key(props: KeyShapeProps) {
               </div>
             </foreignObject>
             <foreignObject x={0} y={1} width={width} height={height}>
-              <ListModifiersKey keyCode={keyCode} size="xs" />
+              <ListModifiersKey keyCode={keyCode} size="xs" selectedKey={selectedKey} />
             </foreignObject>
           </g>
         </g>
@@ -1115,7 +1115,7 @@ function Key(props: KeyShapeProps) {
               </div>
             </foreignObject>
             <foreignObject x={0} y={1} width={width} height={height}>
-              <ListModifiersKey keyCode={keyCode} size="xs" />
+              <ListModifiersKey keyCode={keyCode} size="xs" selectedKey={selectedKey} />
             </foreignObject>
           </g>
         </g>
@@ -1211,7 +1211,7 @@ function Key(props: KeyShapeProps) {
               </div>
             </foreignObject>
             <foreignObject x={0} y={1} width={width} height={height}>
-              <ListModifiersKey keyCode={keyCode} size="xs" />
+              <ListModifiersKey keyCode={keyCode} size="xs" selectedKey={selectedKey} />
             </foreignObject>
           </g>
         </g>
@@ -1307,7 +1307,7 @@ function Key(props: KeyShapeProps) {
               </div>
             </foreignObject>
             <foreignObject x={0} y={1} width={width} height={height}>
-              <ListModifiersKey keyCode={keyCode} size="xs" />
+              <ListModifiersKey keyCode={keyCode} size="xs" selectedKey={selectedKey} />
             </foreignObject>
           </g>
         </g>
@@ -1403,7 +1403,7 @@ function Key(props: KeyShapeProps) {
               </div>
             </foreignObject>
             <foreignObject x={0} y={1} width={width} height={height}>
-              <ListModifiersKey keyCode={keyCode} size="xs" />
+              <ListModifiersKey keyCode={keyCode} size="xs" selectedKey={selectedKey} />
             </foreignObject>
           </g>
         </g>
@@ -1499,7 +1499,7 @@ function Key(props: KeyShapeProps) {
               </div>
             </foreignObject>
             <foreignObject x={0} y={1} width={width} height={height}>
-              <ListModifiersKey keyCode={keyCode} size="xs" />
+              <ListModifiersKey keyCode={keyCode} size="xs" selectedKey={selectedKey} />
             </foreignObject>
           </g>
         </g>
@@ -1595,7 +1595,7 @@ function Key(props: KeyShapeProps) {
               </div>
             </foreignObject>
             <foreignObject x={0} y={1} width={width} height={height}>
-              <ListModifiersKey keyCode={keyCode} size="xs" />
+              <ListModifiersKey keyCode={keyCode} size="xs" selectedKey={selectedKey} />
             </foreignObject>
           </g>
         </g>
@@ -1691,7 +1691,7 @@ function Key(props: KeyShapeProps) {
               </div>
             </foreignObject>
             <foreignObject x={0} y={1} width={width} height={height}>
-              <ListModifiersKey keyCode={keyCode} size="xs" />
+              <ListModifiersKey keyCode={keyCode} size="xs" selectedKey={selectedKey} />
             </foreignObject>
           </g>
         </g>
@@ -1787,7 +1787,7 @@ function Key(props: KeyShapeProps) {
               </div>
             </foreignObject>
             <foreignObject x={0} y={1} width={width} height={height}>
-              <ListModifiersKey keyCode={keyCode} size="xs" />
+              <ListModifiersKey keyCode={keyCode} size="xs" selectedKey={selectedKey} />
             </foreignObject>
           </g>
         </g>
@@ -1883,7 +1883,7 @@ function Key(props: KeyShapeProps) {
               </div>
             </foreignObject>
             <foreignObject x={0} y={1} width={width} height={height}>
-              <ListModifiersKey keyCode={keyCode} size="xs" />
+              <ListModifiersKey keyCode={keyCode} size="xs" selectedKey={selectedKey} />
             </foreignObject>
           </g>
         </g>
@@ -1979,7 +1979,7 @@ function Key(props: KeyShapeProps) {
               </div>
             </foreignObject>
             <foreignObject x={0} y={1} width={width} height={height}>
-              <ListModifiersKey keyCode={keyCode} size="xs" />
+              <ListModifiersKey keyCode={keyCode} size="xs" selectedKey={selectedKey} />
             </foreignObject>
           </g>
         </g>

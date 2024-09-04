@@ -363,144 +363,168 @@ const altCtrlJapanese: BaseKeycodeTableType = {
       labels: {
         primary: "ロ",
       },
+      alt: true,
     },
     {
       code: 798,
       labels: {
         primary: "ヌ",
       },
+      alt: true,
     },
     {
       code: 799,
       labels: {
         primary: "フ",
       },
+      alt: true,
     },
     {
       code: 800,
       labels: {
         primary: "ア",
       },
+      alt: true,
     },
     {
       code: 801,
       labels: {
         primary: "ウ",
       },
+      alt: true,
     },
     {
       code: 802,
       labels: {
         primary: "エ",
       },
+      alt: true,
     },
     {
       code: 803,
       labels: {
         primary: "オ",
       },
+      alt: true,
     },
     {
       code: 804,
       labels: {
         primary: "ヤ",
       },
+      alt: true,
     },
     {
       code: 805,
       labels: {
         primary: "ユ",
       },
+      alt: true,
     },
     {
       code: 806,
       labels: {
         primary: "ヨ",
       },
+      alt: true,
     },
     {
       code: 807,
       labels: {
         primary: "ワ",
       },
+      alt: true,
     },
     {
       code: 813,
       labels: {
         primary: "ホ",
       },
+      alt: true,
     },
     {
       code: 814,
       labels: {
         primary: "ヘ",
       },
+      alt: true,
     },
     {
       code: 788,
       labels: {
         primary: "タ",
       },
+      alt: true,
     },
     {
       code: 794,
       labels: {
         primary: "テ",
       },
+      alt: true,
     },
     {
       code: 776,
       labels: {
         primary: "イ",
       },
+      alt: true,
     },
     {
       code: 789,
       labels: {
         primary: "ス",
       },
+      alt: true,
     },
     {
       code: 791,
       labels: {
         primary: "カ",
       },
+      alt: true,
     },
     {
       code: 796,
       labels: {
         primary: "ン",
       },
+      alt: true,
     },
     {
       code: 792,
       labels: {
         primary: "ナ",
       },
+      alt: true,
     },
     {
       code: 780,
       labels: {
         primary: "ニ",
       },
+      alt: true,
     },
     {
       code: 786,
       labels: {
         primary: "ラ",
       },
+      alt: true,
     },
     {
       code: 787,
       labels: {
         primary: "セ",
       },
+      alt: true,
     },
     {
       code: 817,
       labels: {
         primary: "ム",
       },
+      alt: true,
       newGroupName: "Letters",
     },
     {
@@ -508,126 +532,147 @@ const altCtrlJapanese: BaseKeycodeTableType = {
       labels: {
         primary: "チ",
       },
+      alt: true,
     },
     {
       code: 790,
       labels: {
         primary: "ト",
       },
+      alt: true,
     },
     {
       code: 775,
       labels: {
         primary: "シ",
       },
+      alt: true,
     },
     {
       code: 777,
       labels: {
         primary: "ハ",
       },
+      alt: true,
     },
     {
       code: 778,
       labels: {
         primary: "キ",
       },
+      alt: true,
     },
     {
       code: 779,
       labels: {
         primary: "ク",
       },
+      alt: true,
     },
     {
       code: 781,
       labels: {
         primary: "マ",
       },
+      alt: true,
     },
     {
       code: 782,
       labels: {
         primary: "ノ",
       },
+      alt: true,
     },
     {
       code: 783,
       labels: {
         primary: "リ",
       },
+      alt: true,
     },
     {
       code: 819,
       labels: {
         primary: "レ",
       },
+      alt: true,
     },
     {
       code: 820,
       labels: {
         primary: "ケ",
       },
+      alt: true,
     },
     {
       code: 797,
       labels: {
         primary: "ツ",
       },
+      alt: true,
     },
     {
       code: 795,
       labels: {
         primary: "サ",
       },
+      alt: true,
     },
     {
       code: 774,
       labels: {
         primary: "ソ",
       },
+      alt: true,
     },
     {
       code: 793,
       labels: {
         primary: "ヒ",
       },
+      alt: true,
     },
     {
       code: 773,
       labels: {
         primary: "コ",
       },
+      alt: true,
     },
     {
       code: 785,
       labels: {
         primary: "ミ",
       },
+      alt: true,
     },
     {
       code: 784,
       labels: {
         primary: "モ",
       },
+      alt: true,
     },
     {
       code: 822,
       labels: {
         primary: "ネ",
       },
+      alt: true,
     },
     {
       code: 823,
       labels: {
         primary: "ル",
       },
+      alt: true,
     },
     {
       code: 824,
       labels: {
         primary: "メ",
       },
+      alt: true,
     },
   ],
 };
@@ -640,144 +685,168 @@ const altGRJapanese: BaseKeycodeTableType = {
       labels: {
         primary: "ロ",
       },
+      alt: true,
     },
     {
       code: 1054,
       labels: {
         primary: "ヌ",
       },
+      alt: true,
     },
     {
       code: 1055,
       labels: {
         primary: "フ",
       },
+      alt: true,
     },
     {
       code: 1056,
       labels: {
         primary: "ア",
       },
+      alt: true,
     },
     {
       code: 1057,
       labels: {
         primary: "ウ",
       },
+      alt: true,
     },
     {
       code: 1058,
       labels: {
         primary: "エ",
       },
+      alt: true,
     },
     {
       code: 1059,
       labels: {
         primary: "オ",
       },
+      alt: true,
     },
     {
       code: 1060,
       labels: {
         primary: "ヤ",
       },
+      alt: true,
     },
     {
       code: 1061,
       labels: {
         primary: "ユ",
       },
+      alt: true,
     },
     {
       code: 1062,
       labels: {
         primary: "ヨ",
       },
+      alt: true,
     },
     {
       code: 1063,
       labels: {
         primary: "ワ",
       },
+      alt: true,
     },
     {
       code: 1069,
       labels: {
         primary: "ホ",
       },
+      alt: true,
     },
     {
       code: 1070,
       labels: {
         primary: "ヘ",
       },
+      alt: true,
     },
     {
       code: 1044,
       labels: {
         primary: "タ",
       },
+      alt: true,
     },
     {
       code: 1050,
       labels: {
         primary: "テ",
       },
+      alt: true,
     },
     {
       code: 1032,
       labels: {
         primary: "イ",
       },
+      alt: true,
     },
     {
       code: 1045,
       labels: {
         primary: "ス",
       },
+      alt: true,
     },
     {
       code: 1047,
       labels: {
         primary: "カ",
       },
+      alt: true,
     },
     {
       code: 1052,
       labels: {
         primary: "ン",
       },
+      alt: true,
     },
     {
       code: 1048,
       labels: {
         primary: "ナ",
       },
+      alt: true,
     },
     {
       code: 1036,
       labels: {
         primary: "ニ",
       },
+      alt: true,
     },
     {
       code: 1042,
       labels: {
         primary: "ラ",
       },
+      alt: true,
     },
     {
       code: 1043,
       labels: {
         primary: "セ",
       },
+      alt: true,
     },
     {
       code: 1073,
       labels: {
         primary: "ム",
       },
+      alt: true,
       newGroupName: "Letters",
     },
     {
@@ -785,126 +854,147 @@ const altGRJapanese: BaseKeycodeTableType = {
       labels: {
         primary: "チ",
       },
+      alt: true,
     },
     {
       code: 1046,
       labels: {
         primary: "ト",
       },
+      alt: true,
     },
     {
       code: 1031,
       labels: {
         primary: "シ",
       },
+      alt: true,
     },
     {
       code: 1033,
       labels: {
         primary: "ハ",
       },
+      alt: true,
     },
     {
       code: 1034,
       labels: {
         primary: "キ",
       },
+      alt: true,
     },
     {
       code: 1035,
       labels: {
         primary: "ク",
       },
+      alt: true,
     },
     {
       code: 1037,
       labels: {
         primary: "マ",
       },
+      alt: true,
     },
     {
       code: 1038,
       labels: {
         primary: "ノ",
       },
+      alt: true,
     },
     {
       code: 1039,
       labels: {
         primary: "リ",
       },
+      alt: true,
     },
     {
       code: 1075,
       labels: {
         primary: "レ",
       },
+      alt: true,
     },
     {
       code: 1076,
       labels: {
         primary: "ケ",
       },
+      alt: true,
     },
     {
       code: 1053,
       labels: {
         primary: "ツ",
       },
+      alt: true,
     },
     {
       code: 1051,
       labels: {
         primary: "サ",
       },
+      alt: true,
     },
     {
       code: 1030,
       labels: {
         primary: "ソ",
       },
+      alt: true,
     },
     {
       code: 1049,
       labels: {
         primary: "ヒ",
       },
+      alt: true,
     },
     {
       code: 1029,
       labels: {
         primary: "コ",
       },
+      alt: true,
     },
     {
       code: 1041,
       labels: {
         primary: "ミ",
       },
+      alt: true,
     },
     {
       code: 1040,
       labels: {
         primary: "モ",
       },
+      alt: true,
     },
     {
       code: 1078,
       labels: {
         primary: "ネ",
       },
+      alt: true,
     },
     {
       code: 1079,
       labels: {
         primary: "ル",
       },
+      alt: true,
     },
     {
       code: 1080,
       labels: {
         primary: "メ",
       },
+      alt: true,
     },
   ],
 };
@@ -917,96 +1007,112 @@ const shiftModifierJapanese: BaseKeycodeTableType = {
       labels: {
         primary: "ぁ",
       },
+      alt: true,
     },
     {
       code: 2081,
       labels: {
         primary: "ぅ",
       },
+      alt: true,
     },
     {
       code: 2082,
       labels: {
         primary: "ぇ",
       },
+      alt: true,
     },
     {
       code: 2083,
       labels: {
         primary: "ぉ",
       },
+      alt: true,
     },
     {
       code: 2084,
       labels: {
         primary: "ゃ",
       },
+      alt: true,
     },
     {
       code: 2085,
       labels: {
         primary: "ゅ",
       },
+      alt: true,
     },
     {
       code: 2086,
       labels: {
         primary: "ょ",
       },
+      alt: true,
     },
     {
       code: 2087,
       labels: {
         primary: "を",
       },
+      alt: true,
     },
     {
       code: 2093,
       labels: {
         primary: "ー",
       },
+      alt: true,
     },
     {
       code: 2056,
       labels: {
         primary: "ぃ",
       },
+      alt: true,
     },
     {
       code: 2095,
       labels: {
         primary: "「",
       },
+      alt: true,
     },
     {
       code: 2096,
       labels: {
         primary: "」",
       },
+      alt: true,
     },
     {
       code: 2077,
       labels: {
         primary: "っ",
       },
+      alt: true,
     },
     {
       code: 2102,
       labels: {
         primary: "、",
       },
+      alt: true,
     },
     {
       code: 2103,
       labels: {
         primary: "。",
       },
+      alt: true,
     },
     {
       code: 2104,
       labels: {
         primary: "・",
       },
+      alt: true,
     },
   ],
 };
