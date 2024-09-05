@@ -1182,6 +1182,17 @@
   optionalDependencies:
     electron-installer-dmg "^4.0.0"
 
+"@electron-forge/maker-flatpak@^7.4.0":
+  version "7.4.0"
+  resolved "https://registry.yarnpkg.com/@electron-forge/maker-flatpak/-/maker-flatpak-7.4.0.tgz#1397e9549276878a970ecfa9e2fd03dbf6a9ec3f"
+  integrity sha512-YWmPBr8bbzEMD4Drar8KXE0A7phopcWWo/i1br44Aeg5soygmcWgatUYe1a5jKDPOgXiV7TfJUwhXbljYAhlFw==
+  dependencies:
+    "@electron-forge/maker-base" "7.4.0"
+    "@electron-forge/shared-types" "7.4.0"
+    fs-extra "^10.0.0"
+  optionalDependencies:
+    "@malept/electron-installer-flatpak" "^0.11.4"
+
 "@electron-forge/maker-rpm@^7.4.0":
   version "7.4.0"
   resolved "https://registry.npmjs.org/@electron-forge/maker-rpm/-/maker-rpm-7.4.0.tgz"
@@ -1932,6 +1943,18 @@
   integrity sha512-1DpKU0Z5ThltBwjNySMC14g0CkbyhCaz9FkhxqNsZI6uAPJXFS8cMXlBKo26FJ8ZuW6S9GCMcR9IO5k2X5/9Fg==
   dependencies:
     cross-spawn "^7.0.1"
+
+"@malept/electron-installer-flatpak@^0.11.4":
+  version "0.11.4"
+  resolved "https://registry.yarnpkg.com/@malept/electron-installer-flatpak/-/electron-installer-flatpak-0.11.4.tgz#420bce6a71ffbeafaf134ef8ee2ba0e0db62f133"
+  integrity sha512-ZdwhT4WeeJWdnsmALUtQ7bn4pzYVh0Vg+4NnF1S3n3OACc9IWg+B+LxI5gT3XSXIrxogouqkjM6gD8S592awyA==
+  dependencies:
+    "@malept/flatpak-bundler" "^0.4.0"
+    debug "^4.1.1"
+    electron-installer-common "^0.10.0"
+    lodash "^4.17.15"
+    semver "^7.1.1"
+    yargs "^16.0.0"
 
 "@malept/flatpak-bundler@^0.4.0":
   version "0.4.0"
@@ -6133,7 +6156,7 @@ electron-forge-maker-appimage@^24.13.3:
   dependencies:
     app-builder-lib "24.13.3"
 
-electron-installer-common@^0.10.2:
+electron-installer-common@^0.10.0, electron-installer-common@^0.10.2:
   version "0.10.3"
   resolved "https://registry.yarnpkg.com/electron-installer-common/-/electron-installer-common-0.10.3.tgz#40f9db644ca60eb28673d545b67ee0113aef4444"
   integrity sha512-mYbP+6i+nHMIm0WZHXgGdmmXMe+KXncl6jZYQNcCF9C1WsNA9C5SZ2VP4TLQMSIoFO+X4ugkMEA5uld1bmyEvA==
