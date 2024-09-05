@@ -338,6 +338,7 @@ class KeymapDB {
       label: key.labels.primary,
       extraLabel: key.labels.top,
       verbose: key.labels.verbose,
+      alt: key.alt,
     };
   }
 

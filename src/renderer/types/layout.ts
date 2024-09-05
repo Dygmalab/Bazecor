@@ -32,6 +32,7 @@ export interface KeyType {
   label: string | JSX.Element;
   extraLabel?: string | JSX.Element;
   verbose?: string | JSX.Element;
+  alt?: boolean;
 }
 
 export interface SegmentedKeyType {
