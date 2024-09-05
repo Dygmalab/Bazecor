@@ -1,7 +1,7 @@
 import type { ForgeConfig, ForgePackagerOptions } from "@electron-forge/shared-types";
 import { MakerSquirrel } from "@electron-forge/maker-squirrel";
 import { MakerZIP } from "@electron-forge/maker-zip";
-import { MakerFlatpak } from "@electron-forge/maker-flatpak"
+import { MakerFlatpak } from "@electron-forge/maker-flatpak";
 import { WebpackPlugin } from "@electron-forge/plugin-webpack";
 import fs from "fs";
 import path from "path";
@@ -65,27 +65,29 @@ const config: ForgeConfig = {
         },
       },
     },
-    new MakerFlatpak({ options: {
-      id: "io.github.Dygmalab.Bazecor",
-      genericName: "Graphical configurator for Dygma products",
-      categories: ["Utility"],
-      runtimeVersion: "21.08",
-      baseVersion: "21.08",
-      files: [],
-      modules: [
-        {
-          name: "zypak",
-          sources: [
-            {
-              type: "git",
-              url: "https://github.com/refi64/zypak",
-              tag: "v2022.04"
-            }
-          ]
-        }
-      ],
-      icon: `./build/logo.png`
-    }})
+    new MakerFlatpak({
+      options: {
+        id: "io.github.Dygmalab.Bazecor",
+        genericName: "Graphical configurator for Dygma products",
+        categories: ["Utility"],
+        runtimeVersion: "23.08",
+        baseVersion: "23.08",
+        files: [],
+        modules: [
+          {
+            name: "zypak",
+            sources: [
+              {
+                type: "git",
+                url: "https://github.com/refi64/zypak",
+                tag: "v2024.01.17",
+              },
+            ],
+          },
+        ],
+        icon: `/build/logo.png`,
+      },
+    }),
   ],
   plugins: [
     new WebpackPlugin({
