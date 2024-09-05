@@ -85,7 +85,7 @@ const config: ForgeConfig = {
             ],
           },
         ],
-        icon: `/build/logo.png`,
+        icon: `./build/logo.png`,
       },
     }),
   ],
