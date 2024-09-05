@@ -46,8 +46,9 @@ export interface SuperkeyPickerProps {
   keymapDB: KeymapDB;
   onClick: (id: number) => void;
   index: number;
-  icon: JSX.Element;
+  icon?: JSX.Element;
   title: string;
   description: string;
   elementActive: boolean;
+  variant?: "subtle" | "regular";
 }

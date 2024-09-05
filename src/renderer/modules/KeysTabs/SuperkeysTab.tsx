@@ -5,6 +5,7 @@ import Callout from "@Renderer/components/molecules/Callout/Callout";
 import ListModifier from "@Renderer/components/molecules/ListModifiers/ListModifiers";
 import Heading from "@Renderer/components/atoms/Heading";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@Renderer/components/atoms/Select";
+import { SuperkeyPicker } from "@Renderer/component/Button";
 import { KeymapDB } from "../../../api/keymap";
 
 const Styles = Styled.div`
@@ -60,18 +61,12 @@ h4 {
   box-shadow: ${({ theme }) => theme.styles.standardView.superkeys.item.boxShadow};
 }
 
-.superkeyItem + .superkeyItem  {
-  margin-top: 1px;
-}
-.superkeyTitle {
-  padding-right: 24px;
-}
 .superkeyTitle h5.actionTitle {
   font-size: 11px;
   text-transform: uppercase;
   font-weight: 700;
   letter-spacing: 0.04em;
-  margin: 4px 0 1px 0;
+  margin: 0;
   color: ${({ theme }) => theme.styles.standardView.superkeys.item.titleColor};
 }
 .superkeyTitle p {
@@ -105,25 +100,6 @@ interface SuperkeysTabProps {
 const SuperkeysTab = ({ macros, keyCode, isStandardView, actions, onKeySelect, superkeys, disabled }: SuperkeysTabProps) => {
   const keymapDB = useMemo(() => new KeymapDB(), []);
   const KC = keyCode.base + keyCode.modified;
-
-  // eslint-disable-next-line
-  const translateSuperKeyAction = (superkeysSelected: any) => {
-    if (superkeysSelected === undefined) return null;
-
-    const aux = superkeysSelected === 1 ? keymapDB.parse(0) : keymapDB.parse(superkeysSelected);
-    let translatedAction = "";
-
-    if (aux.extraLabel === "MACRO" && typeof aux.label === "string") {
-      if (macros.length > parseInt(aux.label, 10) && macros[parseInt(aux.label, 10)]?.name?.substr(0, 5) !== "") {
-        translatedAction = `${aux.label} ${macros[parseInt(aux.label, 10)]?.name?.substr(0, 5).toLowerCase()}`;
-      }
-    }
-    if (aux.label) {
-      // translatedAction = (aux.extraLabel !== undefined && !aux.extraLabel.includes("+") ? `${aux.extraLabel} ` : "") + aux.label;
-      translatedAction = (aux.extraLabel !== undefined ? `${aux.extraLabel} ` : "") + aux.label;
-    }
-    return translatedAction;
-  };
 
   const superk = useMemo(
     () =>
@@ -167,10 +143,6 @@ const SuperkeysTab = ({ macros, keyCode, isStandardView, actions, onKeySelect, s
     [],
   );
 
-  // console.log("Superkey - KC: ", KC);
-  // console.log("superk: ", superk);
-  // console.log("Eita: ", superk.indexOf(KC));
-
   return (
     <Styles
       className={`w-full ${isStandardView ? "standardViewTab" : ""} tabsSuperkeys ${disabled ? "opacity-50 pointer-events-none" : ""}`}
@@ -211,20 +183,38 @@ const SuperkeysTab = ({ macros, keyCode, isStandardView, actions, onKeySelect, s
           </div>
           <div className={`superKeyInfo ${superkeys[superk.indexOf(KC)] !== undefined ? "flex animRight" : "animHide"}`}>
             {superkeys[superk.indexOf(KC)] !== undefined ? (
-              <div className="superkeyHint p-4 flex gap-0.5">
+              <div className="superkeyHint p-4 flex flex-wrap gap-0.5">
                 {superKeysActions.map((item, index) => (
-                  // eslint-disable-next-line
-                  <div className="superkeyItem flex flex-col justify-between gap-1" key={`superHint-${index}`}>
-                    <div className="superkeyTitle text-left">
-                      <h5 className="flex w-full actionTitle text-left">{item.title}</h5>
-                    </div>
-                    <div className="superKey w-28 text-xs p-2">
-                      {translateSuperKeyAction(superkeys[superk.indexOf(KC)].actions[index])}
-                      <div className="scale-90 absolute -left-2 -bottom-3">
-                        <ListModifier keyCode={superkeys[superk.indexOf(KC)].actions[index]} />
+                  <>
+                    <SuperkeyPicker
+                      index={index}
+                      key={`superHint-${index + 10}`}
+                      selected={superk.indexOf(KC)}
+                      superkeys={superkeys}
+                      icon={<></>}
+                      title={item.title}
+                      description=""
+                      elementActive={false}
+                      isStandardViewSuperkeys={false}
+                      onClick={() => console.log("onClick")}
+                      macros={macros}
+                      keymapDB={keymapDB}
+                      updateAction={() => console.log("update action")}
+                      variant="subtle"
+                    />
+
+                    {/* <div className="superkeyItem flex flex-col justify-between gap-1" key={`superHint-${index}`}>
+                      <div className="flex w-full superkeyTitle text-center justify-center">
+                        <h5 className="flex w-full actionTitle text-center">{item.title}</h5>
                       </div>
-                    </div>
-                  </div>
+                      <div className="superKey w-28 text-xs p-2">
+                        {translateSuperKeyAction(superkeys[superk.indexOf(KC)].actions[index])}
+                        <div className="scale-90 absolute -left-2 -bottom-3">
+                          <ListModifier keyCode={superkeys[superk.indexOf(KC)].actions[index]} />
+                        </div>
+                      </div>
+                    </div> */}
+                  </>
                 ))}
               </div>
             ) : null}

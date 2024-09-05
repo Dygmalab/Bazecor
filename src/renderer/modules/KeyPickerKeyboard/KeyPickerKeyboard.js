@@ -595,7 +595,7 @@ class KeyPickerKeyboard extends Component {
                                     <Button
                                       variant="config"
                                       disabled={false}
-                                      selected={code.base + code.modified >= 20000}
+                                      // selected={code.base + code.modified >= 20000}
                                       onClick={() => {
                                         this.toggleModal();
                                       }}
