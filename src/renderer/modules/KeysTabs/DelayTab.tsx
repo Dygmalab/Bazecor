@@ -36,7 +36,6 @@ const Styles = Styled.div`
         border-bottom-left-radius: 0;
         border-color: ${({ theme }) => theme.styles.form.inputBorderSolid};
     }
-
 }
 
 .formWrapper {

@@ -30,16 +30,15 @@ h4 {
 }
 .superkeyHint {
     border-radius: 6px;
-    margin-top: -12px;
-    max-width: 762px;
+    margin-top: -8px;
     background-color: ${({ theme }) => theme.styles.standardView.superkeys.info.background};
     position: relative;
 }
 .superkeyHint:after {
   content: "";
   position: absolute;
-  top: 28px;
-  left: -12px;
+  top: -8px;
+  left: 10px;
   background-color: ${({ theme }) => theme.styles.standardView.superkeys.info.background};
   width: 24px;
   height: 24px;
@@ -189,7 +188,7 @@ const SuperkeysTab = ({ macros, keyCode, isStandardView, actions, onKeySelect, s
           <p>{i18n.editor.standardView.superkeys.callout2}</p>
         </Callout>
 
-        <div className="superKeyGroup flex gap-1 flex-wrap py-4">
+        <div className="superKeyGroup flex flex-col flex-wrap gap-3 py-4">
           <div>
             <Heading headingLevel={4} renderAs="h4" className="!mt-0 mb-1 text-base">
               {i18n.editor.standardView.superkeys.label}
@@ -210,18 +209,14 @@ const SuperkeysTab = ({ macros, keyCode, isStandardView, actions, onKeySelect, s
               </Select>
             </div>
           </div>
-          <div className={`superKeyInfo ${superkeys[superk.indexOf(KC)] !== undefined ? "animRight" : "animHide"}`}>
+          <div className={`superKeyInfo ${superkeys[superk.indexOf(KC)] !== undefined ? "flex animRight" : "animHide"}`}>
             {superkeys[superk.indexOf(KC)] !== undefined ? (
-              <div className="superkeyHint p-4">
-                <Heading headingLevel={3} renderAs="h3">
-                  {superkeys[superk.indexOf(KC)].name}
-                </Heading>
+              <div className="superkeyHint p-4 flex gap-0.5">
                 {superKeysActions.map((item, index) => (
                   // eslint-disable-next-line
-                  <div className="superkeyItem flex justify-between items-center" key={`superHint-${index}`}>
-                    <div className="superkeyTitle">
-                      <h5 className="actionTitle">{item.title}</h5>
-                      {/* <p>{item.description}</p> */}
+                  <div className="superkeyItem flex flex-col justify-between gap-1" key={`superHint-${index}`}>
+                    <div className="superkeyTitle text-left">
+                      <h5 className="flex w-full actionTitle text-left">{item.title}</h5>
                     </div>
                     <div className="superKey w-28 text-xs p-2">
                       {translateSuperKeyAction(superkeys[superk.indexOf(KC)].actions[index])}
