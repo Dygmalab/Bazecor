@@ -38,7 +38,9 @@ jobs:
           node-version: 20.13.1
       - run: npm install -g yarn
       - if: runner.os == 'Linux'
-        run: sudo apt update && sudo apt install libudev-dev
+        run: |
+          sudo apt update && sudo apt install libudev-dev flatpak flatpak-builder elfutils
+          flatpak remote-add --user --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
       - name: Cache node_modules
         id: cache-node-modules
         uses: actions/cache@v4
