@@ -107,12 +107,14 @@ const symbolsS: KeymapCodeTableType[] = [
     labels: {
       primary: "#",
     },
+    alt: true,
   },
   {
     code: 30,
     labels: {
       primary: "1",
     },
+    alt: true,
     newGroupName: "Digits",
   },
   {
@@ -120,6 +122,7 @@ const symbolsS: KeymapCodeTableType[] = [
     labels: {
       primary: "2",
     },
+    alt: true,
     newGroupName: "Digits",
   },
   {
@@ -127,6 +130,7 @@ const symbolsS: KeymapCodeTableType[] = [
     labels: {
       primary: "3",
     },
+    alt: true,
     newGroupName: "Digits",
   },
   {
@@ -134,6 +138,7 @@ const symbolsS: KeymapCodeTableType[] = [
     labels: {
       primary: "4",
     },
+    alt: true,
     newGroupName: "Digits",
   },
   {
@@ -141,6 +146,7 @@ const symbolsS: KeymapCodeTableType[] = [
     labels: {
       primary: "5",
     },
+    alt: true,
     newGroupName: "Digits",
   },
   {
@@ -148,6 +154,7 @@ const symbolsS: KeymapCodeTableType[] = [
     labels: {
       primary: "6",
     },
+    alt: true,
     newGroupName: "Digits",
   },
   {
@@ -155,6 +162,7 @@ const symbolsS: KeymapCodeTableType[] = [
     labels: {
       primary: "7",
     },
+    alt: true,
     newGroupName: "Digits",
   },
   {
@@ -162,6 +170,7 @@ const symbolsS: KeymapCodeTableType[] = [
     labels: {
       primary: "8",
     },
+    alt: true,
     newGroupName: "Digits",
   },
   {
@@ -169,6 +178,7 @@ const symbolsS: KeymapCodeTableType[] = [
     labels: {
       primary: "9",
     },
+    alt: true,
     newGroupName: "Digits",
   },
   {
@@ -176,6 +186,7 @@ const symbolsS: KeymapCodeTableType[] = [
     labels: {
       primary: "0",
     },
+    alt: true,
     newGroupName: "Digits",
   },
   {
@@ -183,12 +194,14 @@ const symbolsS: KeymapCodeTableType[] = [
     labels: {
       primary: "°",
     },
+    alt: true,
   },
   {
     code: 46,
     labels: {
       primary: "`",
     },
+    alt: true,
   },
 ];
 
@@ -428,36 +441,42 @@ const lettersS: KeymapCodeTableType[] = [
     labels: {
       primary: "B",
     },
+    alt: true,
   },
   {
     code: 26,
     labels: {
       primary: "É",
     },
+    alt: true,
   },
   {
     code: 8,
     labels: {
       primary: "P",
     },
+    alt: true,
   },
   {
     code: 21,
     labels: {
       primary: "O",
     },
+    alt: true,
   },
   {
     code: 23,
     labels: {
       primary: "È",
     },
+    alt: true,
   },
   {
     code: 28,
     labels: {
       primary: "!",
     },
+    alt: true,
     newGroupName: "Punctuation",
   },
   {
@@ -465,30 +484,35 @@ const lettersS: KeymapCodeTableType[] = [
     labels: {
       primary: "V",
     },
+    alt: true,
   },
   {
     code: 12,
     labels: {
       primary: "D",
     },
+    alt: true,
   },
   {
     code: 18,
     labels: {
       primary: "L",
     },
+    alt: true,
   },
   {
     code: 19,
     labels: {
       primary: "J",
     },
+    alt: true,
   },
   {
     code: 47,
     labels: {
       primary: "Z",
     },
+    alt: true,
     newGroupName: "Letters",
   },
   {
@@ -496,6 +520,7 @@ const lettersS: KeymapCodeTableType[] = [
     labels: {
       primary: "W",
     },
+    alt: true,
     newGroupName: "Letters",
   },
   // Second row
@@ -504,30 +529,35 @@ const lettersS: KeymapCodeTableType[] = [
     labels: {
       primary: "A",
     },
+    alt: true,
   },
   {
     code: 22,
     labels: {
       primary: "U",
     },
+    alt: true,
   },
   {
     code: 7,
     labels: {
       primary: "I",
     },
+    alt: true,
   },
   {
     code: 9,
     labels: {
       primary: "E",
     },
+    alt: true,
   },
   {
     code: 10,
     labels: {
       primary: ";",
     },
+    alt: true,
     newGroupName: "Punctuation",
   },
   {
@@ -535,30 +565,35 @@ const lettersS: KeymapCodeTableType[] = [
     labels: {
       primary: "C",
     },
+    alt: true,
   },
   {
     code: 13,
     labels: {
       primary: "T",
     },
+    alt: true,
   },
   {
     code: 14,
     labels: {
       primary: "S",
     },
+    alt: true,
   },
   {
     code: 15,
     labels: {
       primary: "R",
     },
+    alt: true,
   },
   {
     code: 51,
     labels: {
       primary: "N",
     },
+    alt: true,
     newGroupName: "Letters",
   },
   {
@@ -566,6 +601,7 @@ const lettersS: KeymapCodeTableType[] = [
     labels: {
       primary: "M",
     },
+    alt: true,
     newGroupName: "Letters",
   },
   {
@@ -573,6 +609,7 @@ const lettersS: KeymapCodeTableType[] = [
     labels: {
       primary: "Ç",
     },
+    alt: true,
     newGroupName: "Letters",
   },
   // Third row
@@ -581,6 +618,7 @@ const lettersS: KeymapCodeTableType[] = [
     labels: {
       primary: "Ê",
     },
+    alt: true,
     newGroupName: "Letters",
   },
   {
@@ -588,24 +626,28 @@ const lettersS: KeymapCodeTableType[] = [
     labels: {
       primary: "À",
     },
+    alt: true,
   },
   {
     code: 27,
     labels: {
       primary: "Y",
     },
+    alt: true,
   },
   {
     code: 6,
     labels: {
       primary: "X",
     },
+    alt: true,
   },
   {
     code: 25,
     labels: {
       primary: ":",
     },
+    alt: true,
     newGroupName: "Punctuation",
   },
   {
@@ -613,12 +655,14 @@ const lettersS: KeymapCodeTableType[] = [
     labels: {
       primary: "K",
     },
+    alt: true,
   },
   {
     code: 17,
     labels: {
       primary: "?",
     },
+    alt: true,
     newGroupName: "Punctuation",
   },
   {
@@ -632,6 +676,7 @@ const lettersS: KeymapCodeTableType[] = [
     labels: {
       primary: "G",
     },
+    alt: true,
     newGroupName: "Letters",
   },
   {
@@ -639,6 +684,7 @@ const lettersS: KeymapCodeTableType[] = [
     labels: {
       primary: "H",
     },
+    alt: true,
     newGroupName: "Letters",
   },
   {
@@ -646,6 +692,7 @@ const lettersS: KeymapCodeTableType[] = [
     labels: {
       primary: "F",
     },
+    alt: true,
     newGroupName: "Letters",
   },
 ];
@@ -659,78 +706,91 @@ const tableAGr: BaseKeycodeTableType = {
       labels: {
         primary: "–",
       },
+      alt: true,
     },
     {
       code: 30,
       labels: {
         primary: "—",
       },
+      alt: true,
     },
     {
       code: 31,
       labels: {
         primary: "<",
       },
+      alt: true,
     },
     {
       code: 32,
       labels: {
         primary: ">",
       },
+      alt: true,
     },
     {
       code: 33,
       labels: {
         primary: "[",
       },
+      alt: true,
     },
     {
       code: 34,
       labels: {
         primary: "]",
       },
+      alt: true,
     },
     {
       code: 35,
       labels: {
         primary: "^",
       },
+      alt: true,
     },
     {
       code: 36,
       labels: {
         primary: "±",
       },
+      alt: true,
     },
     {
       code: 37,
       labels: {
         primary: "−",
       },
+      alt: true,
     },
     {
       code: 38,
       labels: {
         primary: "÷",
       },
+      alt: true,
     },
     {
       code: 39,
       labels: {
         primary: "×",
       },
+      alt: true,
     },
     {
       code: 45,
       labels: {
         primary: "≠",
       },
+      alt: true,
     },
     {
       code: 46,
       labels: {
         primary: "‰",
       },
+      alt: true,
     },
     // First row
     {
@@ -738,66 +798,77 @@ const tableAGr: BaseKeycodeTableType = {
       labels: {
         primary: "|",
       },
+      alt: true,
     },
     {
       code: 26,
       labels: {
         primary: "´",
       },
+      alt: true,
     },
     {
       code: 8,
       labels: {
         primary: "&",
       },
+      alt: true,
     },
     {
       code: 21,
       labels: {
         primary: "œ",
       },
+      alt: true,
     },
     {
       code: 23,
       labels: {
         primary: "`",
       },
+      alt: true,
     },
     {
       code: 28,
       labels: {
         primary: "¡",
       },
+      alt: true,
     },
     {
       code: 24,
       labels: {
         primary: "ˇ",
       },
+      alt: true,
     },
     {
       code: 12,
       labels: {
         primary: "∞",
       },
+      alt: true,
     },
     {
       code: 18,
       labels: {
         primary: "/",
       },
+      alt: true,
     },
     {
       code: 19,
       labels: {
         primary: "j",
       },
+      alt: true,
     },
     {
       code: 47,
       labels: {
         primary: "–",
       },
+      alt: true,
       newGroupName: "Letters",
     },
     {
@@ -805,6 +876,7 @@ const tableAGr: BaseKeycodeTableType = {
       labels: {
         primary: "w",
       },
+      alt: true,
       newGroupName: "Letters",
     },
     // Second row
@@ -813,30 +885,35 @@ const tableAGr: BaseKeycodeTableType = {
       labels: {
         primary: "æ",
       },
+      alt: true,
     },
     {
       code: 22,
       labels: {
         primary: "ù",
       },
+      alt: true,
     },
     {
       code: 7,
       labels: {
         primary: "¨",
       },
+      alt: true,
     },
     {
       code: 9,
       labels: {
         primary: "€",
       },
+      alt: true,
     },
     {
       code: 10,
       labels: {
         primary: "'",
       },
+      alt: true,
       newGroupName: "Punctuation",
     },
     {
@@ -844,30 +921,35 @@ const tableAGr: BaseKeycodeTableType = {
       labels: {
         primary: "¸",
       },
+      alt: true,
     },
     {
       code: 13,
       labels: {
         primary: "ᵉ",
       },
+      alt: true,
     },
     {
       code: 14,
       labels: {
         primary: "ß",
       },
+      alt: true,
     },
     {
       code: 15,
       labels: {
         primary: "˘",
       },
+      alt: true,
     },
     {
       code: 51,
       labels: {
         primary: "~",
       },
+      alt: true,
       newGroupName: "Letters",
     },
     {
@@ -875,6 +957,7 @@ const tableAGr: BaseKeycodeTableType = {
       labels: {
         primary: "¯",
       },
+      alt: true,
       newGroupName: "Letters",
     },
     {
@@ -882,6 +965,7 @@ const tableAGr: BaseKeycodeTableType = {
       labels: {
         primary: "ç",
       },
+      alt: true,
       newGroupName: "Letters",
     },
     // Third row
@@ -890,6 +974,7 @@ const tableAGr: BaseKeycodeTableType = {
       labels: {
         primary: "/",
       },
+      alt: true,
       newGroupName: "Letters",
     },
     {
@@ -897,36 +982,42 @@ const tableAGr: BaseKeycodeTableType = {
       labels: {
         primary: "\\",
       },
+      alt: true,
     },
     {
       code: 27,
       labels: {
         primary: "{",
       },
+      alt: true,
     },
     {
       code: 6,
       labels: {
         primary: "}",
       },
+      alt: true,
     },
     {
       code: 25,
       labels: {
         primary: "…",
       },
+      alt: true,
     },
     {
       code: 5,
       labels: {
         primary: "~",
       },
+      alt: true,
     },
     {
       code: 17,
       labels: {
         primary: "¿",
       },
+      alt: true,
       newGroupName: "Punctuation",
     },
     {
@@ -934,12 +1025,14 @@ const tableAGr: BaseKeycodeTableType = {
       labels: {
         primary: "°",
       },
+      alt: true,
     },
     {
       code: 54,
       labels: {
         primary: "µ",
       },
+      alt: true,
       newGroupName: "Letters",
     },
     {
@@ -947,6 +1040,7 @@ const tableAGr: BaseKeycodeTableType = {
       labels: {
         primary: ".",
       },
+      alt: true,
       newGroupName: "Letters",
     },
     {
@@ -954,6 +1048,7 @@ const tableAGr: BaseKeycodeTableType = {
       labels: {
         primary: "˛",
       },
+      alt: true,
       newGroupName: "Letters",
     },
   ],
@@ -967,78 +1062,91 @@ const tableAGrS: BaseKeycodeTableType = {
       labels: {
         primary: "¶",
       },
+      alt: true,
     },
     {
       code: 30,
       labels: {
         primary: "„",
       },
+      alt: true,
     },
     {
       code: 31,
       labels: {
         primary: "“",
       },
+      alt: true,
     },
     {
       code: 32,
       labels: {
         primary: "”",
       },
+      alt: true,
     },
     {
       code: 33,
       labels: {
         primary: "⩽",
       },
+      alt: true,
     },
     {
       code: 34,
       labels: {
         primary: "⩾",
       },
+      alt: true,
     },
     {
       code: 35,
       labels: {
         primary: "^",
       },
+      alt: true,
     },
     {
       code: 36,
       labels: {
         primary: "¬",
       },
+      alt: true,
     },
     {
       code: 37,
       labels: {
         primary: "¼",
       },
+      alt: true,
     },
     {
       code: 38,
       labels: {
         primary: "½",
       },
+      alt: true,
     },
     {
       code: 39,
       labels: {
         primary: "¾",
       },
+      alt: true,
     },
     {
       code: 45,
       labels: {
         primary: "′",
       },
+      alt: true,
     },
     {
       code: 46,
       labels: {
         primary: "″",
       },
+      alt: true,
     },
     // First row
     {
@@ -1046,66 +1154,77 @@ const tableAGrS: BaseKeycodeTableType = {
       labels: {
         primary: "_",
       },
+      alt: true,
     },
     {
       code: 26,
       labels: {
         primary: "´",
       },
+      alt: true,
     },
     {
       code: 8,
       labels: {
         primary: "§",
       },
+      alt: true,
     },
     {
       code: 21,
       labels: {
         primary: "Œ",
       },
+      alt: true,
     },
     {
       code: 23,
       labels: {
         primary: "`",
       },
+      alt: true,
     },
     {
       code: 28,
       labels: {
         primary: "¡",
       },
+      alt: true,
     },
     {
       code: 24,
       labels: {
         primary: "ˇ",
       },
+      alt: true,
     },
     {
       code: 12,
       labels: {
         primary: "∞",
       },
+      alt: true,
     },
     {
       code: 18,
       labels: {
         primary: "£",
       },
+      alt: true,
     },
     {
       code: 19,
       labels: {
         primary: "J",
       },
+      alt: true,
     },
     {
       code: 47,
       labels: {
         primary: "–",
       },
+      alt: true,
       newGroupName: "Letters",
     },
     {
@@ -1113,6 +1232,7 @@ const tableAGrS: BaseKeycodeTableType = {
       labels: {
         primary: "W",
       },
+      alt: true,
       newGroupName: "Letters",
     },
     // Second row
@@ -1121,30 +1241,35 @@ const tableAGrS: BaseKeycodeTableType = {
       labels: {
         primary: "Æ",
       },
+      alt: true,
     },
     {
       code: 22,
       labels: {
         primary: "Ù",
       },
+      alt: true,
     },
     {
       code: 7,
       labels: {
         primary: "˙",
       },
+      alt: true,
     },
     {
       code: 9,
       labels: {
         primary: "¤",
       },
+      alt: true,
     },
     {
       code: 10,
       labels: {
         primary: ",",
       },
+      alt: true,
       newGroupName: "Punctuation",
     },
     {
@@ -1152,30 +1277,35 @@ const tableAGrS: BaseKeycodeTableType = {
       labels: {
         primary: "©",
       },
+      alt: true,
     },
     {
       code: 13,
       labels: {
         primary: "™",
       },
+      alt: true,
     },
     {
       code: 14,
       labels: {
         primary: "ſ",
       },
+      alt: true,
     },
     {
       code: 15,
       labels: {
         primary: "®",
       },
+      alt: true,
     },
     {
       code: 51,
       labels: {
         primary: "~",
       },
+      alt: true,
       newGroupName: "Letters",
     },
     {
@@ -1183,6 +1313,7 @@ const tableAGrS: BaseKeycodeTableType = {
       labels: {
         primary: "¯",
       },
+      alt: true,
       newGroupName: "Letters",
     },
     {
@@ -1190,6 +1321,7 @@ const tableAGrS: BaseKeycodeTableType = {
       labels: {
         primary: "Ç",
       },
+      alt: true,
       newGroupName: "Letters",
     },
     // Third row
@@ -1198,6 +1330,7 @@ const tableAGrS: BaseKeycodeTableType = {
       labels: {
         primary: "^",
       },
+      alt: true,
       newGroupName: "Letters",
     },
     {
@@ -1205,24 +1338,28 @@ const tableAGrS: BaseKeycodeTableType = {
       labels: {
         primary: "‚",
       },
+      alt: true,
     },
     {
       code: 27,
       labels: {
         primary: "‘",
       },
+      alt: true,
     },
     {
       code: 6,
       labels: {
         primary: "’",
       },
+      alt: true,
     },
     {
       code: 25,
       labels: {
         primary: "·",
       },
+      alt: true,
       newGroupName: "Punctuation",
     },
     {
@@ -1230,12 +1367,14 @@ const tableAGrS: BaseKeycodeTableType = {
       labels: {
         primary: "‑",
       },
+      alt: true,
     },
     {
       code: 17,
       labels: {
         primary: "̉",
       },
+      alt: true,
       newGroupName: "Punctuation",
     },
     {
@@ -1243,12 +1382,14 @@ const tableAGrS: BaseKeycodeTableType = {
       labels: {
         primary: "̛",
       },
+      alt: true,
     },
     {
       code: 54,
       labels: {
         primary: "†",
       },
+      alt: true,
       newGroupName: "Letters",
     },
     {
@@ -1256,6 +1397,7 @@ const tableAGrS: BaseKeycodeTableType = {
       labels: {
         primary: "‡",
       },
+      alt: true,
       newGroupName: "Letters",
     },
     {
@@ -1263,6 +1405,7 @@ const tableAGrS: BaseKeycodeTableType = {
       labels: {
         primary: "˛",
       },
+      alt: true,
       newGroupName: "Letters",
     },
   ],

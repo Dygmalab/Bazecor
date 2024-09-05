@@ -111,66 +111,77 @@ const ShiftedPunctuationTable = {
       labels: {
         primary: "_",
       },
+      alt: true,
     },
     {
       code: 2094,
       labels: {
         primary: "+",
       },
+      alt: true,
     },
     {
       code: 2095,
       labels: {
         primary: "{",
       },
+      alt: true,
     },
     {
       code: 2096,
       labels: {
         primary: "}",
       },
+      alt: true,
     },
     {
       code: 2097,
       labels: {
         primary: "|",
       },
+      alt: true,
     },
     {
       code: 2099,
       labels: {
         primary: ":",
       },
+      alt: true,
     },
     {
       code: 2100,
       labels: {
         primary: '"',
       },
+      alt: true,
     },
     {
       code: 2101,
       labels: {
         primary: "~",
       },
+      alt: true,
     },
     {
       code: 2102,
       labels: {
         primary: "<",
       },
+      alt: true,
     },
     {
       code: 2103,
       labels: {
         primary: ">",
       },
+      alt: true,
     },
     {
       code: 2104,
       labels: {
         primary: "?",
       },
+      alt: true,
     },
     {
       code: 2148,
@@ -178,6 +189,7 @@ const ShiftedPunctuationTable = {
         primary: "Alt. |",
         verbose: "Non-US |",
       },
+      alt: true,
     },
   ],
 };
@@ -224,5 +236,5 @@ const ModifiedPunctuationTables = [
   // All
   withModifiers(PunctuationTable, "Hyper + AltGr +", "", 7936),
 ];
-
-export { PunctuationTable as default, ModifiedPunctuationTables };
+export default PunctuationTable;
+export { ModifiedPunctuationTables };

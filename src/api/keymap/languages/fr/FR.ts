@@ -205,78 +205,91 @@ const altCtrlFrench: BaseKeycodeTableType = {
       labels: {
         primary: "~",
       },
+      alt: true,
     },
     {
       code: 800,
       labels: {
         primary: "#",
       },
+      alt: true,
     },
     {
       code: 801,
       labels: {
         primary: "{",
       },
+      alt: true,
     },
     {
       code: 802,
       labels: {
         primary: "[",
       },
+      alt: true,
     },
     {
       code: 803,
       labels: {
         primary: "|",
       },
+      alt: true,
     },
     {
       code: 804,
       labels: {
         primary: "`",
       },
+      alt: true,
     },
     {
       code: 805,
       labels: {
         primary: "\\",
       },
+      alt: true,
     },
     {
       code: 806,
       labels: {
         primary: "^",
       },
+      alt: true,
     },
     {
       code: 807,
       labels: {
         primary: "@",
       },
+      alt: true,
     },
     {
       code: 813,
       labels: {
         primary: "]",
       },
+      alt: true,
     },
     {
       code: 814,
       labels: {
         primary: "}",
       },
+      alt: true,
     },
     {
       code: 776,
       labels: {
         primary: "€",
       },
+      alt: true,
     },
     {
       code: 816,
       labels: {
         primary: "¤",
       },
+      alt: true,
     },
   ],
 };
@@ -289,78 +302,91 @@ const altGRFrench: BaseKeycodeTableType = {
       labels: {
         primary: "~",
       },
+      alt: true,
     },
     {
       code: 1056,
       labels: {
         primary: "#",
       },
+      alt: true,
     },
     {
       code: 1057,
       labels: {
         primary: "{",
       },
+      alt: true,
     },
     {
       code: 1058,
       labels: {
         primary: "[",
       },
+      alt: true,
     },
     {
       code: 1059,
       labels: {
         primary: "|",
       },
+      alt: true,
     },
     {
       code: 1060,
       labels: {
         primary: "`",
       },
+      alt: true,
     },
     {
       code: 1061,
       labels: {
         primary: "\\",
       },
+      alt: true,
     },
     {
       code: 1062,
       labels: {
         primary: "^",
       },
+      alt: true,
     },
     {
       code: 1063,
       labels: {
         primary: "@",
       },
+      alt: true,
     },
     {
       code: 1069,
       labels: {
         primary: "]",
       },
+      alt: true,
     },
     {
       code: 1070,
       labels: {
         primary: "}",
       },
+      alt: true,
     },
     {
       code: 1032,
       labels: {
         primary: "€",
       },
+      alt: true,
     },
     {
       code: 1072,
       labels: {
         primary: "¤",
       },
+      alt: true,
     },
   ],
 };
@@ -373,6 +399,7 @@ const shiftModifierFrench: BaseKeycodeTableType = {
       labels: {
         primary: "1",
       },
+      alt: true,
       newGroupName: "Digits",
     },
     {
@@ -380,6 +407,7 @@ const shiftModifierFrench: BaseKeycodeTableType = {
       labels: {
         primary: "2",
       },
+      alt: true,
       newGroupName: "Digits",
     },
     {
@@ -387,6 +415,7 @@ const shiftModifierFrench: BaseKeycodeTableType = {
       labels: {
         primary: "3",
       },
+      alt: true,
       newGroupName: "Digits",
     },
     {
@@ -394,6 +423,7 @@ const shiftModifierFrench: BaseKeycodeTableType = {
       labels: {
         primary: "4",
       },
+      alt: true,
       newGroupName: "Digits",
     },
     {
@@ -401,6 +431,7 @@ const shiftModifierFrench: BaseKeycodeTableType = {
       labels: {
         primary: "5",
       },
+      alt: true,
       newGroupName: "Digits",
     },
     {
@@ -408,6 +439,7 @@ const shiftModifierFrench: BaseKeycodeTableType = {
       labels: {
         primary: "6",
       },
+      alt: true,
       newGroupName: "Digits",
     },
     {
@@ -415,6 +447,7 @@ const shiftModifierFrench: BaseKeycodeTableType = {
       labels: {
         primary: "7",
       },
+      alt: true,
       newGroupName: "Digits",
     },
     {
@@ -422,6 +455,7 @@ const shiftModifierFrench: BaseKeycodeTableType = {
       labels: {
         primary: "8",
       },
+      alt: true,
       newGroupName: "Digits",
     },
     {
@@ -429,6 +463,7 @@ const shiftModifierFrench: BaseKeycodeTableType = {
       labels: {
         primary: "9",
       },
+      alt: true,
       newGroupName: "Digits",
     },
     {
@@ -436,6 +471,7 @@ const shiftModifierFrench: BaseKeycodeTableType = {
       labels: {
         primary: "0",
       },
+      alt: true,
       newGroupName: "Digits",
     },
     {
@@ -443,66 +479,77 @@ const shiftModifierFrench: BaseKeycodeTableType = {
       labels: {
         primary: "°",
       },
+      alt: true,
     },
     {
       code: 2095,
       labels: {
         primary: "¨",
       },
+      alt: true,
     },
     {
       code: 2096,
       labels: {
         primary: "£",
       },
+      alt: true,
     },
     {
       code: 2097,
       labels: {
         primary: "µ",
       },
+      alt: true,
     },
     {
       code: 2099,
       labels: {
         primary: "M",
       },
+      alt: true,
     },
     {
       code: 2100,
       labels: {
         primary: "%",
       },
+      alt: true,
     },
     {
       code: 2064,
       labels: {
         primary: "?",
       },
+      alt: true,
     },
     {
       code: 2102,
       labels: {
         primary: ".",
       },
+      alt: true,
     },
     {
       code: 2103,
       labels: {
         primary: "/",
       },
+      alt: true,
     },
     {
       code: 2104,
       labels: {
         primary: "§",
       },
+      alt: true,
     },
     {
       code: 2148,
       labels: {
         primary: ">",
       },
+      alt: true,
     },
   ],
 };

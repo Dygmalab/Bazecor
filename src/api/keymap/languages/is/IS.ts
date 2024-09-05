@@ -99,84 +99,98 @@ const altCtrlIcelandic: BaseKeycodeTableType = {
       labels: {
         primary: "€",
       },
+      alt: true,
     },
     {
       code: 784,
       labels: {
         primary: "µ",
       },
+      alt: true,
     },
     {
       code: 788,
       labels: {
         primary: "@",
       },
+      alt: true,
     },
     {
       code: 802,
       labels: {
         primary: "€",
       },
+      alt: true,
     },
     {
       code: 804,
       labels: {
         primary: "{",
       },
+      alt: true,
     },
     {
       code: 805,
       labels: {
         primary: "[",
       },
+      alt: true,
     },
     {
       code: 806,
       labels: {
         primary: "]",
       },
+      alt: true,
     },
     {
       code: 807,
       labels: {
         primary: "}",
       },
+      alt: true,
     },
     {
       code: 813,
       labels: {
         primary: "\\",
       },
+      alt: true,
     },
     {
       code: 816,
       labels: {
         primary: "~",
       },
+      alt: true,
     },
     {
       code: 817,
       labels: {
         primary: "`",
       },
+      alt: true,
     },
     {
       code: 820,
       labels: {
         primary: "^",
       },
+      alt: true,
     },
     {
       code: 821,
       labels: {
         primary: "°",
       },
+      alt: true,
     },
     {
       code: 868,
       labels: {
         primary: "|",
       },
+      alt: true,
     },
   ],
 };
@@ -189,84 +203,98 @@ const altGRIcelandic: BaseKeycodeTableType = {
       labels: {
         primary: "€",
       },
+      alt: true,
     },
     {
       code: 1040,
       labels: {
         primary: "µ",
       },
+      alt: true,
     },
     {
       code: 1044,
       labels: {
         primary: "@",
       },
+      alt: true,
     },
     {
       code: 1058,
       labels: {
         primary: "€",
       },
+      alt: true,
     },
     {
       code: 1060,
       labels: {
         primary: "{",
       },
+      alt: true,
     },
     {
       code: 1061,
       labels: {
         primary: "[",
       },
+      alt: true,
     },
     {
       code: 1062,
       labels: {
         primary: "]",
       },
+      alt: true,
     },
     {
       code: 1063,
       labels: {
         primary: "}",
       },
+      alt: true,
     },
     {
       code: 1069,
       labels: {
         primary: "\\",
       },
+      alt: true,
     },
     {
       code: 1072,
       labels: {
         primary: "~",
       },
+      alt: true,
     },
     {
       code: 1073,
       labels: {
         primary: "`",
       },
+      alt: true,
     },
     {
       code: 1076,
       labels: {
         primary: "^",
       },
+      alt: true,
     },
     {
       code: 1077,
       labels: {
         primary: "°",
       },
+      alt: true,
     },
     {
       code: 1124,
       labels: {
         primary: "|",
       },
+      alt: true,
     },
   ],
 };
@@ -279,48 +307,56 @@ const shiftModifierIcelandic: BaseKeycodeTableType = {
       labels: {
         primary: '"',
       },
+      alt: true,
     },
     {
       code: 2081,
       labels: {
         primary: "$",
       },
+      alt: true,
     },
     {
       code: 2083,
       labels: {
         primary: "&",
       },
+      alt: true,
     },
     {
       code: 2084,
       labels: {
         primary: "/",
       },
+      alt: true,
     },
     {
       code: 2085,
       labels: {
         primary: "(",
       },
+      alt: true,
     },
     {
       code: 2086,
       labels: {
         primary: ")",
       },
+      alt: true,
     },
     {
       code: 2087,
       labels: {
         primary: "=",
       },
+      alt: true,
     },
     {
       code: 2094,
       labels: {
         primary: "_",
       },
+      alt: true,
     },
 
     {
@@ -328,42 +364,49 @@ const shiftModifierIcelandic: BaseKeycodeTableType = {
       labels: {
         primary: "?",
       },
+      alt: true,
     },
     {
       code: 2097,
       labels: {
         primary: "*",
       },
+      alt: true,
     },
     {
       code: 2100,
       labels: {
         primary: "'",
       },
+      alt: true,
     },
     {
       code: 2101,
       labels: {
         primary: "¨",
       },
+      alt: true,
     },
     {
       code: 2102,
       labels: {
         primary: ";",
       },
+      alt: true,
     },
     {
       code: 2103,
       labels: {
         primary: ":",
       },
+      alt: true,
     },
     {
       code: 2148,
       labels: {
         primary: ">",
       },
+      alt: true,
     },
   ],
 };

@@ -1,20 +1,19 @@
 /* eslint-disable no-bitwise */
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect } from "react";
+import log from "electron-log/renderer";
 import { AnimatePresence, motion } from "framer-motion";
-import { KeymapDB } from "../../../../api/keymap";
+import { KeyType } from "@Renderer/types/layout";
 import OSKey from "../KeyTags/OSKey";
 
 interface ListModifiersProps {
   keyCode: number;
   size?: "xs" | "sm" | "md";
+  selectedKey: KeyType;
 }
 type Modifier = number;
 
-const ListModifiersKey = ({ keyCode, size = "xs" }: ListModifiersProps) => {
-  const [modifiersState, setModifiersState] = useState({ isMeh: false, isHyper: false });
-  const [db] = useState(new KeymapDB());
-  // const [isMeh, setIsMeh] = useState(false);
-  // const [isHyper, setIsHyper] = useState(false);
+const ListModifiersKey = ({ keyCode, size = "xs", selectedKey }: ListModifiersProps) => {
+  const [modifiersState, setModifiersState] = useState({ isMeh: false, isHyper: false, altVisual: false });
 
   // Define a type for modifiers
   const parseModifs = (keycode: number): Modifier[] => {
@@ -43,33 +42,37 @@ const ListModifiersKey = ({ keyCode, size = "xs" }: ListModifiersProps) => {
     return modifs;
   };
 
-  const modifiers = useMemo(() => parseModifs(keyCode), [keyCode]);
+  const [modifiers, setModifiers] = useState(parseModifs(keyCode));
 
   useEffect(() => {
-    const isHyper = [0, 1, 2, 4].every(mod => modifiers.includes(mod));
-    const isMeh = [0, 1, 2].every(mod => modifiers.includes(mod)) && !modifiers.includes(4);
-    setModifiersState({ isMeh, isHyper });
-  }, [modifiers]);
+    if (keyCode >= 256 && keyCode < 8192) {
+      log.info("New Data: ", selectedKey);
+      const mods = parseModifs(keyCode);
+      setModifiers(mods);
+      const altVisual = selectedKey.alt;
+      const isHyper = [0, 1, 2, 4].every(mod => mods.includes(mod));
+      const isMeh = [0, 1, 2].every(mod => mods.includes(mod)) && !mods.includes(4);
+      setModifiersState({ isMeh, isHyper, altVisual });
+    }
+  }, [keyCode, selectedKey]);
 
-  const altVisual = db.parse(keyCode).label !== db.parse(keyCode & 0b11111111).label;
-
-  if (keyCode >= 8192) return null;
+  if (keyCode >= 8192 || keyCode < 256) return null;
   return (
     <div xmlns="http://www.w3.org/1999/xhtml" className="keyContentModifiers">
       <ul
         className={`flex flex-wrap gap-[1px] list-none absolute mr-[-1px] leading-none ${
-          (parseModifs(keyCode).includes(2) === true &&
-            parseModifs(keyCode).includes(3) === true &&
-            parseModifs(keyCode).includes(4) === true &&
-            parseModifs(keyCode).includes(0) === true) ||
-          (parseModifs(keyCode).includes(1) === true &&
-            parseModifs(keyCode).includes(3) === true &&
-            parseModifs(keyCode).includes(4) === true &&
-            parseModifs(keyCode).includes(0) === true) ||
-          (parseModifs(keyCode).includes(1) === true &&
-            parseModifs(keyCode).includes(2) === true &&
-            parseModifs(keyCode).includes(3) === true &&
-            parseModifs(keyCode).includes(4) === true)
+          (modifiers.includes(2) === true &&
+            modifiers.includes(3) === true &&
+            modifiers.includes(4) === true &&
+            modifiers.includes(0) === true) ||
+          (modifiers.includes(1) === true &&
+            modifiers.includes(3) === true &&
+            modifiers.includes(4) === true &&
+            modifiers.includes(0) === true) ||
+          (modifiers.includes(1) === true &&
+            modifiers.includes(2) === true &&
+            modifiers.includes(3) === true &&
+            modifiers.includes(4) === true)
             ? "ml-[1px] bottom-[2px]"
             : "ml-[6px] bottom-[6px]"
         }`}
@@ -105,7 +108,7 @@ const ListModifiersKey = ({ keyCode, size = "xs" }: ListModifiersProps) => {
         ) : (
           ""
         )}
-        {parseModifs(keyCode).includes(2) === true && !modifiersState.isMeh && !modifiersState.isHyper ? (
+        {modifiers.includes(2) === true && !modifiersState.isMeh && !modifiersState.isHyper ? (
           <AnimatePresence mode="popLayout">
             <motion.div initial={{ opacity: 0, y: -50 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -50 }}>
               <li className="inline-flex items-center h-[12px] font-semibold tracking-tight leading-3 py-0 px-[3px] m-0 text-[10px] text-gray-25 dark:text-gray-600 bg-gray-600/60 dark:bg-gray-25/60 shadow-sm rounded-[3px] [&_>div]:!h-[12px] [&_>div]:!inline-table ">
@@ -118,7 +121,7 @@ const ListModifiersKey = ({ keyCode, size = "xs" }: ListModifiersProps) => {
         )}
         {typeof keyCode === "number" ? (
           <>
-            {parseModifs(keyCode).includes(3) === true && (!altVisual || parseModifs(keyCode).length > 1) ? (
+            {modifiers.includes(3) === true && (!modifiersState.altVisual || modifiers.length > 1) ? (
               <AnimatePresence mode="popLayout">
                 <motion.div initial={{ opacity: 0, y: -50 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -50 }}>
                   <li className="inline-flex items-center h-[12px] font-semibold tracking-tight leading-3 py-0 px-[3px] m-0 text-[10px] text-gray-25 dark:text-gray-600 bg-gray-600/60 dark:bg-gray-25/60 shadow-sm rounded-[3px] [&_>div]:!h-[12px] [&_>div]:!inline-table">
@@ -129,7 +132,7 @@ const ListModifiersKey = ({ keyCode, size = "xs" }: ListModifiersProps) => {
             ) : (
               ""
             )}
-            {parseModifs(keyCode).includes(1) === true && !modifiersState.isMeh && !modifiersState.isHyper ? (
+            {modifiers.includes(1) === true && !modifiersState.isMeh && !modifiersState.isHyper ? (
               <AnimatePresence mode="popLayout">
                 <motion.div initial={{ opacity: 0, y: -50 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -50 }}>
                   <li className="inline-flex items-center h-[12px] font-semibold tracking-tight leading-3 py-0 px-[3px] m-0 text-[10px] text-gray-25 dark:text-gray-600 bg-gray-600/60 dark:bg-gray-25/60 shadow-sm rounded-[3px] [&_>div]:!h-[12px] [&_>div]:!inline-table">
@@ -140,10 +143,10 @@ const ListModifiersKey = ({ keyCode, size = "xs" }: ListModifiersProps) => {
             ) : (
               ""
             )}
-            {parseModifs(keyCode).includes(0) === true &&
+            {modifiers.includes(0) === true &&
             !modifiersState.isMeh &&
             !modifiersState.isHyper &&
-            (!altVisual || parseModifs(keyCode).length > 1) ? (
+            (!modifiersState.altVisual || modifiers.length > 1) ? (
               <AnimatePresence mode="popLayout">
                 <motion.div initial={{ opacity: 0, y: -50 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -50 }}>
                   <li className="inline-flex items-center h-[12px] font-semibold tracking-tight leading-3 py-0 px-[3px] m-0 text-[10px] text-gray-25 dark:text-gray-600 bg-gray-600/60 dark:bg-gray-25/60 shadow-sm rounded-[3px] [&_>div]:!h-[12px] [&_>div]:!inline-table">
@@ -154,7 +157,7 @@ const ListModifiersKey = ({ keyCode, size = "xs" }: ListModifiersProps) => {
             ) : (
               ""
             )}
-            {parseModifs(keyCode).includes(4) === true && !modifiersState.isMeh && !modifiersState.isHyper ? (
+            {modifiers.includes(4) === true && !modifiersState.isMeh && !modifiersState.isHyper ? (
               <AnimatePresence mode="popLayout">
                 <motion.div initial={{ opacity: 0, y: -50 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -50 }}>
                   <li className="badge-modifier os inline-flex items-center h-[12px] font-semibold tracking-tight leading-3 py-0 px-[3px] m-0 text-[10px] text-gray-25 dark:text-gray-600 bg-gray-600/60 dark:bg-gray-25/60 shadow-sm rounded-[3px] [&_>div]:!h-[12px] [&_>div]:!inline-table">
