@@ -128,7 +128,7 @@ const NumpadTable = {
     {
       code: 83,
       labels: {
-        primary: "NUMLOCK",
+        primary: "NUM LOCK",
         verbose: "Num Lock",
       },
     },

@@ -211,7 +211,6 @@ const Styles = Styled.div`
       padding: 0;
       margin: 0;
       color: ${({ theme }) => theme.styles.raiseKeyboard.contentColor};
-      width: 100%;
       li {
         overflow-wrap: break-word;
         word-wrap: break-word;
