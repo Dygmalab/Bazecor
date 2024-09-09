@@ -597,7 +597,8 @@ class KeyPickerKeyboard extends Component {
                                       disabled={false}
                                       // selected={code.base + code.modified >= 20000}
                                       onClick={() => {
-                                        this.toggleModal();
+                                        // this.toggleModal();
+                                        this.setState({ customModal: true });
                                       }}
                                       size="icon"
                                       className="w-9 h-9"
@@ -611,19 +612,6 @@ class KeyPickerKeyboard extends Component {
                                 </TooltipContent>
                               </Tooltip>
                             </TooltipProvider>
-                            <CustomKeyCodeModal
-                              show={customModal}
-                              name={(code.base + code.modified).toString(16)}
-                              toggleShow={this.toggleModal}
-                              handleSave={data => {
-                                // console.log("CustomKey selected key", data);
-                                onKeySelect(parseInt(data, 16));
-                                this.toggleModal();
-                              }}
-                              modalTitle={i18n.editor.modal.customKeyCodeModal.title}
-                              modalMessage={i18n.editor.modal.customKeyCodeModal.message}
-                              labelInput={i18n.editor.modal.customKeyCodeModal.labelInput}
-                            />
                           </div>
                         </div>
                       ) : (
@@ -762,6 +750,19 @@ class KeyPickerKeyboard extends Component {
             </div>
           </div>
         </Tabs>
+        <CustomKeyCodeModal
+          show={customModal}
+          name={(code.base + code.modified).toString(16)}
+          toggleShow={() => this.setState({ customModal: false })}
+          handleSave={data => {
+            // console.log("CustomKey selected key", data);
+            onKeySelect(parseInt(data, 16));
+            this.toggleModal();
+          }}
+          modalTitle={i18n.editor.modal.customKeyCodeModal.title}
+          modalMessage={i18n.editor.modal.customKeyCodeModal.message}
+          labelInput={i18n.editor.modal.customKeyCodeModal.labelInput}
+        />
       </Style>
     );
   }
