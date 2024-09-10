@@ -332,23 +332,19 @@ class TimelineEditorMacroTable extends Component {
         case 4:
         case 5:
           km = this.keymapDB.parse(action.keyCode);
-          if (km.extraLabel !== undefined) {
-            if (km.extraLabel === "MACRO") {
-              const mName = macros[km.keyCode - 53852].name;
-              txt = `M. ${mName}`;
-            } else if (React.isValidElement(km.label)) {
-              txt = km.extraLabel ? (
-                <>
-                  {km.extraLabel.substr(0, 3)}. {km.label}
-                </>
-              ) : (
-                km.label
-              );
-            } else {
-              txt = `${km.extraLabel} ${km.label}`;
-            }
+          if (km.extraLabel === "MACRO") {
+            const mName = macros[km.keyCode - 53852].name;
+            txt = `M. ${mName}`;
+          } else if (React.isValidElement(km.label) || React.isValidElement(km.extraLabel)) {
+            txt = km.extraLabel ? (
+              <>
+                {km.extraLabel} {km.label}
+              </>
+            ) : (
+              km.label
+            );
           } else {
-            txt = km.label;
+            txt = `${km.extraLabel} ${km.label}`;
           }
           return {
             symbol: txt,
@@ -363,7 +359,17 @@ class TimelineEditorMacroTable extends Component {
         case 7:
         case 8:
           km = this.keymapDB.parse(action.keyCode);
-          txt = km.extraLabel ? `${km.extraLabel} ${km.label}` : km.label;
+          if (React.isValidElement(km.label) || React.isValidElement(km.extraLabel)) {
+            txt = km.extraLabel ? (
+              <>
+                {km.extraLabel} {km.label}
+              </>
+            ) : (
+              km.label
+            );
+          } else {
+            txt = km.extraLabel ? `${km.extraLabel} ${km.label}` : km.label;
+          }
           return {
             symbol: txt,
             keyCode: action.keyCode,
@@ -402,7 +408,7 @@ class TimelineEditorMacroTable extends Component {
   updateRows(rows) {
     const { updateActions } = this.props;
     log.info("TiEMTa updaterows", rows);
-    const texted = rows.map(k => this.keymapDB.parse(k.keyCode).label).join(" ");
+    const texted = rows.map(k => this.keymapDB.parse(k.keyCode).label);
     const newRows = rows.map((item, index) => {
       const aux = item;
       aux.id = index;

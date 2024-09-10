@@ -1,33 +1,22 @@
-// -*- mode: js-jsx -*-
-/* Bazecor
- * Copyright (C) 2022  Dygmalab, Inc.
- *
- * This program is free software: you can redistribute it and/or modify it under
- * the terms of the GNU General Public License as published by the Free Software
- * Foundation, version 3.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
-
-import React, { Component, CSSProperties } from "react";
+import React, { useState, useCallback, CSSProperties } from "react";
 import { ColorResult, SketchPicker } from "react-color";
 import Styled from "styled-components";
 
-// Bootstrap components
 import Heading from "@Renderer/components/atoms/Heading";
 import { ColorButton } from "@Renderer/component/Button";
 
 // Icons
 import { i18n } from "@Renderer/i18n";
-import { IconColorPalette, IconKeysLight, IconKeysUnderglow } from "@Renderer/components/atoms/icons";
+import { IconChevronDown, IconColorPalette, IconKeysLight, IconKeysUnderglow } from "@Renderer/components/atoms/icons";
 import { ColorEditorProps } from "@Renderer/types/colorEditor";
 import { ColorPalette } from "@Renderer/modules/ColorEditor/ColorPalette";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@Renderer/components/atoms/DropdownMenu";
+import { Button } from "@Renderer/components/atoms/Button";
 
 const Styles = Styled.div`
 width: 100%;
@@ -92,81 +81,84 @@ width: 100%;
 }
 `;
 
-class ColorEditor extends Component<ColorEditorProps, { displayColorPicker: boolean }> {
-  constructor(props: ColorEditorProps) {
-    super(props);
+const ColorEditor = ({
+  colors,
+  selected,
+  toChangeAllKeysColor,
+  deviceName,
+  applyColorMapChangeBL,
+  applyColorMapChangeUG,
+  onColorPick,
+  onColorSelect,
+  onColorButtonSelect,
+}: ColorEditorProps) => {
+  const [displayColorPicker, setDisplayColorPicker] = useState(false);
 
-    this.state = {
-      displayColorPicker: false,
-    };
+  const handleChange = useCallback(
+    (color: ColorResult) => {
+      onColorPick(selected, color.rgb.r, color.rgb.g, color.rgb.b);
+    },
+    [selected, onColorPick],
+  );
 
-    this.showColorPicker = this.showColorPicker.bind(this);
-    this.selectColor = this.selectColor.bind(this);
-    this.handleChange = this.handleChange.bind(this);
-  }
+  const selectColor = useCallback(
+    (pick: number) => {
+      onColorSelect(pick);
+      if (pick === selected) {
+        onColorButtonSelect("one_button_click", pick);
+        return;
+      }
+      onColorButtonSelect("another_button_click", pick);
+    },
+    [selected, onColorSelect, onColorButtonSelect],
+  );
 
-  handleChange(color: ColorResult) {
-    const { selected, onColorPick } = this.props;
-    onColorPick(selected, color.rgb.r, color.rgb.g, color.rgb.b);
-  }
+  const showColorPicker = useCallback(() => {
+    setDisplayColorPicker(!displayColorPicker);
+  }, [displayColorPicker]);
 
-  selectColor(pick: number) {
-    const { selected, onColorSelect, onColorButtonSelect } = this.props;
-    onColorSelect(pick);
-    if (pick === selected) {
-      onColorButtonSelect("one_button_click", pick);
-      return;
-    }
-    onColorButtonSelect("another_button_click", pick);
-  }
+  const popover = {
+    position: "absolute",
+    top: "42px",
+  } as CSSProperties;
+  const cover = {
+    position: "fixed",
+    top: "0px",
+    right: "0px",
+    bottom: "0px",
+    left: "0px",
+  } as CSSProperties;
 
-  showColorPicker() {
-    this.setState(state => ({ displayColorPicker: !state.displayColorPicker }));
-  }
+  const underglowStart = deviceName === "Defy" ? 70 : 69;
 
-  render() {
-    const { colors, selected, toChangeAllKeysColor, deviceName } = this.props;
-    const { displayColorPicker } = this.state;
-    const popover = {
-      position: "absolute",
-      top: "42px",
-    } as CSSProperties;
-    const cover = {
-      position: "fixed",
-      top: "0px",
-      right: "0px",
-      bottom: "0px",
-      left: "0px",
-    } as CSSProperties;
-
-    const underglowStart = deviceName === "Defy" ? 70 : 69;
-
-    return (
-      <Styles className="extraPanel">
-        <div className="panelTitle">
-          <Heading headingLevel={4} renderAs="h4">
-            {i18n.editor.color.colorPalette}
-          </Heading>
-        </div>
-        <div className="panelTools">
-          <ColorPalette colors={colors} selected={selected} onColorSelect={this.selectColor} />
-          <div className="buttonsGroup">
-            <div className="buttonEditColor">
-              <ColorButton
-                onClick={this.showColorPicker}
-                label={i18n.editor.color.selectedColor}
-                text={i18n.editor.color.editColor}
-                icoSVG={<IconColorPalette />}
-                color={colors[selected]}
-              />
-              {displayColorPicker ? (
-                <div style={popover}>
-                  <div style={cover} onClick={this.showColorPicker} aria-hidden="true" />
-                  <SketchPicker color={colors[selected]} onChange={this.handleChange} width="240px" />
-                </div>
-              ) : null}
-            </div>
-            <div className="buttonsApplyAll">
+  return (
+    <Styles className="extraPanel">
+      <div className="panelTitle">
+        <Heading headingLevel={4} renderAs="h4">
+          {i18n.editor.color.colorPalette}
+        </Heading>
+      </div>
+      <div className="panelTools">
+        <ColorPalette colors={colors} selected={selected} onColorSelect={selectColor} />
+        <div className="buttonsGroup">
+          <div className="buttonEditColor">
+            <ColorButton
+              onClick={showColorPicker}
+              label={i18n.editor.color.selectedColor}
+              text={i18n.editor.color.editColor}
+              icoSVG={<IconColorPalette />}
+              color={colors[selected]}
+              disabled={!colors[selected]}
+            />
+            {displayColorPicker ? (
+              <div style={popover}>
+                <div style={cover} onClick={showColorPicker} aria-hidden="true" />
+                <SketchPicker color={colors[selected]} onChange={handleChange} width="240px" />
+              </div>
+            ) : null}
+          </div>
+          <div className="buttonsApplyAll">
+            <div className="flex">
               <ColorButton
                 onClick={() => {
                   toChangeAllKeysColor(selected, 0, underglowStart);
@@ -175,7 +167,31 @@ class ColorEditor extends Component<ColorEditorProps, { displayColorPicker: bool
                 text={i18n.editor.color.allKeys}
                 icoSVG={<IconKeysLight />}
                 color={colors[selected]}
+                disabled={!colors[selected]}
+                hasDropdown
               />
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    variant="config"
+                    size="sm"
+                    className="rounded-l-none border-l-0 py-0.5 px-2 [&_svg]:w-4"
+                    disabled={!colors[selected]}
+                  >
+                    <IconChevronDown />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuItem onClick={() => (selected >= 0 ? applyColorMapChangeBL("LEFT", selected) : "")}>
+                    Left
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => (selected >= 0 ? applyColorMapChangeBL("RIGHT", selected) : "")}>
+                    Right
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
+            <div className="flex">
               <ColorButton
                 onClick={() => {
                   toChangeAllKeysColor(selected, underglowStart, 177);
@@ -184,13 +200,35 @@ class ColorEditor extends Component<ColorEditorProps, { displayColorPicker: bool
                 text={i18n.editor.color.underglow}
                 icoSVG={<IconKeysUnderglow />}
                 color={colors[selected]}
+                disabled={!colors[selected]}
+                hasDropdown
               />
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    variant="config"
+                    size="sm"
+                    className="rounded-l-none border-l-0 py-0.5 px-2 [&_svg]:w-4"
+                    disabled={!colors[selected]}
+                  >
+                    <IconChevronDown />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuItem onClick={() => (selected >= 0 ? applyColorMapChangeUG("LEFT", selected) : "")}>
+                    Left
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => (selected >= 0 ? applyColorMapChangeUG("RIGHT", selected) : "")}>
+                    Right
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
           </div>
         </div>
-      </Styles>
-    );
-  }
-}
+      </div>
+    </Styles>
+  );
+};
 
 export default ColorEditor;

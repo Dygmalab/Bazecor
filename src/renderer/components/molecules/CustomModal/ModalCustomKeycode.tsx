@@ -10,6 +10,7 @@ import {
 } from "@Renderer/components/atoms/Dialog";
 
 import { Button } from "@Renderer/components/atoms/Button";
+import Heading from "@Renderer/components/atoms/Heading";
 
 interface CustomKeyCodeModalProps {
   modalTitle: string;
@@ -49,39 +50,38 @@ const CustomKeyCodeModal = ({
       <DialogContent>
         <DialogHeader>
           <DialogTitle>{modalTitle}</DialogTitle>
-          <DialogDescription>
-            <span className="font-lg tracking-tight font-semibold text-gray-400 dark:text-gray-25">{modalMessage}</span>
+        </DialogHeader>
+        <div className="px-6 pb-2 mt-2">
+          <Heading headingLevel={3} renderAs="paragraph" className="mb-6">
+            {modalMessage}
             <a className="text-purple-300 dark:text-purple-200" href="https://usb.org/sites/default/files/hut1_21.pdf">
               HID Usage Tables
             </a>
             .
-          </DialogDescription>
-        </DialogHeader>
-        <div className="px-4 py-4">
-          <p className="h2 text-2xl">Available pages:</p>
-          <ul>
+          </Heading>
+          <Heading headingLevel={3} renderAs="h4" className="mb-1">
+            Available pages:
+          </Heading>
+          <ul className="text-sm text-gray-500 dark:text-gray-200">
             <li>Keyboard Page, section 10: 0x0000</li>
             <li>Consumer Page, section 15: 0x4800</li>
           </ul>
-          <br />
-          <span className="font-md tracking-tight font-semibold text-gray-400 dark:text-gray-25">
+          <Heading headingLevel={3} renderAs="paragraph-sm" className="text-gray-500 dark:text-gray-200 mt-2">
             For example, for the Media Play/Pause key, which is code CD on the Consumer Page, do the following: 0x4800 + 0x00CD =
             0x48CD
-          </span>
-        </div>
-        <div className="px-4 pb-3">
+          </Heading>
           <form
-            className="flex flex-col"
+            className="flex flex-col mt-4"
             onSubmit={e => {
               e.preventDefault();
               handleSave(typeof internalName === "string" ? internalName : "");
             }}
           >
-            <label htmlFor="changeKeyCode" className="font-xs tracking-tight font-semibold text-gray-400 dark:text-gray-25">
+            <label htmlFor="changeKeyCode" className="flex mt-1 mb-2 text-sm font-semibold tracking-tight">
               {labelInput}
             </label>
             <div className="grid grid-flow-col grid-cols-12">
-              <div className="self-center col-start-1 col-span-1 row-start-1 z-10 !p-4 form-input-xl text-gray-300 select-none border-r border-gray-500">
+              <div className="self-center col-start-1 col-span-1 row-start-1 z-10 !p-4 text-gray-300 select-none border-r border-gray-500">
                 0x
               </div>
               <input

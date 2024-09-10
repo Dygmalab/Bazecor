@@ -144,45 +144,45 @@ const NumpadTable = {
 
 const ModifiedNumpadTables = [
   // Single
-  withModifiers(NumpadTable, "Control +", "C+", 256),
-  withModifiers(NumpadTable, "Alt +", "A+", 512),
-  withModifiers(NumpadTable, "AltGr +", "AGr+", 1024),
-  withModifiers(NumpadTable, "Shift +", "S+", 2048),
-  withModifiers(NumpadTable, "Os+", "O+", 4096),
+  withModifiers(NumpadTable, "Control +", "", 256),
+  withModifiers(NumpadTable, "Alt +", "", 512),
+  withModifiers(NumpadTable, "AltGr +", "", 1024),
+  withModifiers(NumpadTable, "Shift +", "", 2048),
+  withModifiers(NumpadTable, "Os+", "", 4096),
 
   // Double
-  withModifiers(NumpadTable, "Control + Alt +", "C+A+", 768),
-  withModifiers(NumpadTable, "Control + AltGr +", "C+AGr+", 1280),
-  withModifiers(NumpadTable, "Control + Shift +", "C+S+", 2304),
-  withModifiers(NumpadTable, "Control + Os +", "C+O+", 4352),
-  withModifiers(NumpadTable, "Alt + AltGr +", "A+AGr+", 1536),
-  withModifiers(NumpadTable, "Alt + Shift +", "A+S+", 2560),
-  withModifiers(NumpadTable, "Alt + Os +", "A+O+", 4608),
-  withModifiers(NumpadTable, "AltGr + Shift +", "AGr+S+", 3072),
-  withModifiers(NumpadTable, "AltGr + Os +", "AGr+O+", 5120),
-  withModifiers(NumpadTable, "Shift + Os +", "S+O+", 6144),
+  withModifiers(NumpadTable, "Control + Alt +", "", 768),
+  withModifiers(NumpadTable, "Control + AltGr +", "", 1280),
+  withModifiers(NumpadTable, "Control + Shift +", "", 2304),
+  withModifiers(NumpadTable, "Control + Os +", "", 4352),
+  withModifiers(NumpadTable, "Alt + AltGr +", "", 1536),
+  withModifiers(NumpadTable, "Alt + Shift +", "", 2560),
+  withModifiers(NumpadTable, "Alt + Os +", "", 4608),
+  withModifiers(NumpadTable, "AltGr + Shift +", "", 3072),
+  withModifiers(NumpadTable, "AltGr + Os +", "", 5120),
+  withModifiers(NumpadTable, "Shift + Os +", "", 6144),
 
   // Triple
-  withModifiers(NumpadTable, "Control + Alt + AltGr +", "C+A+AGr+", 1792),
-  withModifiers(NumpadTable, "Meh +", "Meh+", 2816),
-  withModifiers(NumpadTable, "Control + Alt + Os +", "C+A+O+", 4864),
-  withModifiers(NumpadTable, "Control + AltGr + Shift +", "C+AGr+S+", 3328),
-  withModifiers(NumpadTable, "Control + AltGr + Os +", "C+AGr+O+", 5376),
-  withModifiers(NumpadTable, "Control + Shift + Os +", "C+S+O+", 6400),
-  withModifiers(NumpadTable, "Alt + AltGr + Shift +", "A+AGr+S+", 3584),
-  withModifiers(NumpadTable, "Alt + AltGr + Os +", "A+AGr+O+", 5632),
-  withModifiers(NumpadTable, "Alt + Shift + Os +", "A+S+O+", 6656),
-  withModifiers(NumpadTable, "AltGr + Shift + Os +", "AGr+S+O+", 7168),
+  withModifiers(NumpadTable, "Control + Alt + AltGr +", "", 1792),
+  withModifiers(NumpadTable, "Meh +", "", 2816),
+  withModifiers(NumpadTable, "Control + Alt + Os +", "", 4864),
+  withModifiers(NumpadTable, "Control + AltGr + Shift +", "", 3328),
+  withModifiers(NumpadTable, "Control + AltGr + Os +", "", 5376),
+  withModifiers(NumpadTable, "Control + Shift + Os +", "", 6400),
+  withModifiers(NumpadTable, "Alt + AltGr + Shift +", "", 3584),
+  withModifiers(NumpadTable, "Alt + AltGr + Os +", "", 5632),
+  withModifiers(NumpadTable, "Alt + Shift + Os +", "", 6656),
+  withModifiers(NumpadTable, "AltGr + Shift + Os +", "", 7168),
 
   // Quad
-  withModifiers(NumpadTable, "Meh + AltGr +", "M+AGr+", 3840),
-  withModifiers(NumpadTable, "Control + Alt + AltGr + Os +", "C+A+AGr+O+", 5888),
-  withModifiers(NumpadTable, "Hyper +", "Hyper+", 6912),
-  withModifiers(NumpadTable, "Control + AltGr + Shift + Os +", "C+AGr+S+O+", 7424),
-  withModifiers(NumpadTable, "Alt + AltGr + Shift + Os +", "A+AGr+S+O+", 7680),
+  withModifiers(NumpadTable, "Meh + AltGr +", "", 3840),
+  withModifiers(NumpadTable, "Control + Alt + AltGr + Os +", "", 5888),
+  withModifiers(NumpadTable, "Hyper +", "", 6912),
+  withModifiers(NumpadTable, "Control + AltGr + Shift + Os +", "", 7424),
+  withModifiers(NumpadTable, "Alt + AltGr + Shift + Os +", "", 7680),
 
   // All
-  withModifiers(NumpadTable, "Hyper + AltGr +", "H+AGr+", 7936),
+  withModifiers(NumpadTable, "Hyper + AltGr +", "", 7936),
 ];
 
 export { NumpadTable as default, ModifiedNumpadTables };

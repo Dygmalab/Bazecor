@@ -66,9 +66,7 @@ const Style = Styled.div`
 }
 `;
 
-function ColorButton({ selected, onClick, label, text, icoSVG, color }) {
-  const [disabled, setDisabled] = React.useState(true);
-
+function ColorButton({ selected, onClick, label, text, icoSVG, color, hasDropdown = false, disabled = true }) {
   const colorToastMessage = () => {
     toast.warn(
       <ToastMessage
@@ -79,17 +77,12 @@ function ColorButton({ selected, onClick, label, text, icoSVG, color }) {
       { icon: "" },
     );
   };
-  React.useEffect(() => {
-    if (color) {
-      setDisabled(false);
-    }
-  }, [color]);
 
   return (
     <Style>
       <div
         onClick={disabled ? colorToastMessage : onClick}
-        className={`${selected ? "active" : ""} button button-config buttonColor`}
+        className={`${selected ? "active" : ""} button button-config buttonColor ${hasDropdown ? "!rounded-tr-none !rounded-br-none border-r border-r-gray-100 dark:border-r-gray-500" : ""}`}
         disabled={disabled}
       >
         <div className="buttonIcon">
@@ -106,12 +99,13 @@ function ColorButton({ selected, onClick, label, text, icoSVG, color }) {
 }
 
 ColorButton.propTypes = {
+  disabled: PropTypes.bool,
   selected: PropTypes.bool,
   onClick: PropTypes.func,
   label: PropTypes.string,
   text: PropTypes.string,
-  icoSVG: PropTypes.object,
-  color: PropTypes.object,
+  icoSVG: PropTypes.object ?? null,
+  color: PropTypes.object ?? null,
 };
 
 export default ColorButton;

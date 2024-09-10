@@ -194,6 +194,57 @@ class KeymapDB {
     return modified;
   }
 
+  appliedModifs(keycode: number) {
+    type ModifsType = {
+      mehApplied: boolean;
+      hyperApplied: boolean;
+      altApplied: boolean;
+      altGrApplied: boolean;
+      ctrlApplied: boolean;
+      shiftApplied: boolean;
+      osApplied: boolean;
+    };
+
+    const result: ModifsType = {
+      mehApplied: false,
+      hyperApplied: false,
+      altApplied: false,
+      altGrApplied: false,
+      ctrlApplied: false,
+      shiftApplied: false,
+      osApplied: false,
+    };
+    if (keycode & 0b100000000) {
+      // Ctrl Decoder
+      result.ctrlApplied = true;
+    }
+    if (keycode & 0b1000000000) {
+      // Alt Decoder
+      result.altApplied = true;
+    }
+    if (keycode & 0b10000000000) {
+      // AltGr Decoder
+      result.altGrApplied = true;
+    }
+    if (keycode & 0b100000000000) {
+      // Shift Decoder
+      result.shiftApplied = true;
+    }
+    if (keycode & 0b1000000000000) {
+      // Win Decoder
+      result.osApplied = true;
+    }
+    if (keycode & 0b0101100000000) {
+      // Meh Decoder
+      result.mehApplied = true;
+    }
+    if (keycode & 0b1101100000000) {
+      // Hyper Decoder
+      result.hyperApplied = true;
+    }
+    return result;
+  }
+
   keySegmentator(keyCode: number) {
     let code = { base: 0, modified: 0 };
     const modified = this.parseModifs(keyCode);
@@ -287,6 +338,7 @@ class KeymapDB {
       label: key.labels.primary,
       extraLabel: key.labels.top,
       verbose: key.labels.verbose,
+      alt: key.alt,
     };
   }
 

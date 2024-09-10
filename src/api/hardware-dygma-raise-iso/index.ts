@@ -18,6 +18,7 @@
 import log from "electron-log/renderer";
 import { DygmaDeviceType } from "@Renderer/types/dygmaDefs";
 import KeymapISO from "./components/Keymap-ISO";
+import aFN from "../arrayFillNum";
 
 const RaiseISO: DygmaDeviceType = {
   info: {
@@ -39,10 +40,16 @@ const RaiseISO: DygmaDeviceType = {
   keyboard: {
     rows: 5,
     columns: 16,
+    left: [aFN(0, 7), aFN(16, 23), aFN(32, 39), aFN(48, 55), aFN(64, 72)],
+    right: [aFN(9, 16), aFN(24, 32), aFN(41, 48), aFN(57, 64), aFN(72, 80)],
+    ledsLeft: [...aFN(0, 33)],
+    ledsRight: [...aFN(33, 69)],
   },
   keyboardUnderglow: {
     rows: 6,
     columns: 22,
+    ledsLeft: [...aFN(69, 99)],
+    ledsRight: [...aFN(99, 131)],
   },
   components: {
     keymap: KeymapISO,

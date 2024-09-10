@@ -6,7 +6,7 @@ import FlashManager from "@Renderer/controller/FlashManager/machine";
 import Styled from "styled-components";
 
 // Extra components
-import { i18n } from "@Renderer/i18n";
+// import { i18n } from "@Renderer/i18n";
 
 // Bazecor components
 import { PageHeader } from "@Renderer/modules/PageHeader";

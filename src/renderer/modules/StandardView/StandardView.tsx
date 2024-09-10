@@ -314,7 +314,7 @@ export default class StandardView extends React.Component<StandardViewProps, Sta
         macroName = "*NotFound*";
       }
       if (keycode >= 53852 && keycode <= 53852 + 128) {
-        if (code !== null) return `${aux.extraLabel}.${macroName}`;
+        if (code !== null) return `${aux.extraLabel} ${macroName}`;
       }
     }
 
@@ -326,11 +326,11 @@ export default class StandardView extends React.Component<StandardViewProps, Sta
         superName = "*NotFound*";
       }
       if (keycode >= 53980 && keycode <= 53980 + 128) {
-        if (code !== null) return `${aux.extraLabel}.${superName}`;
+        if (code !== null) return `${aux.extraLabel} ${superName}`;
       }
     }
 
-    if (React.isValidElement(aux.label))
+    if (React.isValidElement(aux.label) || React.isValidElement(aux.extraLabel))
       return aux.extraLabel !== undefined ? (
         <>
           {aux.extraLabel}
@@ -342,7 +342,10 @@ export default class StandardView extends React.Component<StandardViewProps, Sta
       );
     let result;
     if (code !== null) {
-      result = aux.extraLabel !== undefined ? `${aux.extraLabel}.${aux.label}` : aux.label;
+      result =
+        aux.extraLabel !== undefined && !(aux.extraLabel as string).includes("+")
+          ? `${aux.extraLabel} ${aux.label}`.trim()
+          : aux.label;
     }
     return result;
   }
@@ -373,9 +376,9 @@ export default class StandardView extends React.Component<StandardViewProps, Sta
     const selKey = this.parseKey(keyCode);
     const oldKey = this.parseKey(stateCode);
     if (!showStandardView) return null;
-    log.info(
-      `StandardView statecode:${stateCode} selected:${selected} actTab: ${actTab} currentTab: ${currentTab} selKey: ${selKey} oldKey: ${oldKey}, layerData: ${layerData}`,
-    );
+    // log.info(
+    //   `StandardView statecode:${stateCode} selected:${selected} actTab: ${actTab} currentTab: ${currentTab} selKey: ${selKey} oldKey: ${oldKey}, layerData: ${layerData}`,
+    // );
 
     const tabVariants = {
       hidden: { opacity: 0 },

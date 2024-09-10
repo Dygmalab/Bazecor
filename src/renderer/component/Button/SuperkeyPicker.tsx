@@ -205,7 +205,7 @@ function SuperkeyPicker(props: SuperkeyPickerProps) {
       setKeyContent(`${aux.extraLabel} ${aux.label}`);
       return;
     }
-    if (React.isValidElement(aux.label)) {
+    if (React.isValidElement(aux.label) || React.isValidElement(aux.extraLabel)) {
       setKeyContent(
         aux.extraLabel !== undefined && aux.extraLabel !== "" ? (
           <>
@@ -220,7 +220,9 @@ function SuperkeyPicker(props: SuperkeyPickerProps) {
       return;
     }
     if (aux.label) {
-      setKeyContent(aux.extraLabel !== undefined && aux.extraLabel !== "" ? `${aux.extraLabel} ${aux.label}` : aux.label);
+      setKeyContent(
+        aux.extraLabel !== undefined && !(aux.extraLabel as string).includes("+") ? `${aux.extraLabel} ${aux.label}` : aux.label,
+      );
     }
   }, [index, keymapDB, macros, selected, superkeys, action]);
 

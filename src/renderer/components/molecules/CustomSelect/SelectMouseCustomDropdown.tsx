@@ -25,9 +25,15 @@ interface SelectMouseCustomDropdownProps {
   keyCode: { base: number; modified: number };
   onKeySelect: (value: number) => void;
   disable?: boolean;
+  activeTab?: string;
 }
 
-const SelectMouseCustomDropdown: FC<SelectMouseCustomDropdownProps> = ({ keyCode, onKeySelect, disable = false }) => {
+const SelectMouseCustomDropdown: FC<SelectMouseCustomDropdownProps> = ({
+  keyCode,
+  onKeySelect,
+  disable = false,
+  activeTab = "layout",
+}) => {
   const mouseClick = useMemo(
     () => [
       { name: i18n.editor.superkeys.specialKeys.left, keynum: 20545 },
@@ -103,46 +109,52 @@ const SelectMouseCustomDropdown: FC<SelectMouseCustomDropdownProps> = ({ keyCode
               ))}
             </div>
           </div>
-          <div className="dropdown-group pt-2 mt-2 border-t border-gray-50 dark:border-gray-700">
-            <Heading headingLevel={5} renderAs="h5" className="my-1 text-gray-200 dark:text-gray-300">
-              Mouse <span className="text-gray-400 dark:text-gray-50">Movement</span>
-            </Heading>
-            <div className="dropdown-group-buttons flex rounded-sm p-[3px] gap-[3px] bg-white/100 dark:bg-gray-900/20">
-              {mouseMovement.map(item => (
-                <Button
-                  variant="config"
-                  size="sm"
-                  onClick={() => handleClick(item.keynum)}
-                  selected={item.keynum === KC}
-                  disabled={item.keynum === -1}
-                  key={`mouseMovement-${item.keynum}`}
-                  className="shrink grow basis-[0%]"
-                >
-                  {item.name}
-                </Button>
-              ))}
-            </div>
-          </div>
-          <div className="dropdown-group pt-2 mt-2 border-t border-gray-50 dark:border-gray-700">
-            <Heading headingLevel={5} renderAs="h5" className="my-1 text-gray-200 dark:text-gray-300">
-              Mouse <span className="text-gray-400 dark:text-gray-50">Wheel</span>
-            </Heading>
-            <div className="dropdown-group-buttons flex rounded-sm p-[3px] gap-[3px] bg-white/100 dark:bg-gray-900/20">
-              {mouseWheel.map(item => (
-                <Button
-                  variant="config"
-                  size="sm"
-                  onClick={() => handleClick(item.keynum)}
-                  selected={item.keynum === KC}
-                  disabled={item.keynum === -1}
-                  key={`mouseWheel-${item.keynum}`}
-                  className="shrink grow basis-[0%]"
-                >
-                  {item.name}
-                </Button>
-              ))}
-            </div>
-          </div>
+          {activeTab !== "super" ? (
+            <>
+              <div className="dropdown-group pt-2 mt-2 border-t border-gray-50 dark:border-gray-700">
+                <Heading headingLevel={5} renderAs="h5" className="my-1 text-gray-200 dark:text-gray-300">
+                  Mouse <span className="text-gray-400 dark:text-gray-50">Movement</span>
+                </Heading>
+                <div className="dropdown-group-buttons flex rounded-sm p-[3px] gap-[3px] bg-white/100 dark:bg-gray-900/20">
+                  {mouseMovement.map(item => (
+                    <Button
+                      variant="config"
+                      size="sm"
+                      onClick={() => handleClick(item.keynum)}
+                      selected={item.keynum === KC}
+                      disabled={item.keynum === -1}
+                      key={`mouseMovement-${item.keynum}`}
+                      className="shrink grow basis-[0%]"
+                    >
+                      {item.name}
+                    </Button>
+                  ))}
+                </div>
+              </div>
+              <div className="dropdown-group pt-2 mt-2 border-t border-gray-50 dark:border-gray-700">
+                <Heading headingLevel={5} renderAs="h5" className="my-1 text-gray-200 dark:text-gray-300">
+                  Mouse <span className="text-gray-400 dark:text-gray-50">Wheel</span>
+                </Heading>
+                <div className="dropdown-group-buttons flex rounded-sm p-[3px] gap-[3px] bg-white/100 dark:bg-gray-900/20">
+                  {mouseWheel.map(item => (
+                    <Button
+                      variant="config"
+                      size="sm"
+                      onClick={() => handleClick(item.keynum)}
+                      selected={item.keynum === KC}
+                      disabled={item.keynum === -1}
+                      key={`mouseWheel-${item.keynum}`}
+                      className="shrink grow basis-[0%]"
+                    >
+                      {item.name}
+                    </Button>
+                  ))}
+                </div>
+              </div>
+            </>
+          ) : (
+            ""
+          )}
         </div>
       </PopoverContent>
     </Popover>

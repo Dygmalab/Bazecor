@@ -18,7 +18,13 @@ const FirmwareSelection = setup({
     FocusAPIRead: fromPromise<Context.ContextType, Context.ContextType>(({ input }) => Actions.FocusAPIRead(input)),
     GitHubRead: fromPromise<Context.ContextType, Context.ContextType>(({ input }) => Actions.GitHubRead(input)),
     downloadFirmware: fromPromise<{ fw: Array<string>; fwSides: Uint8Array }, Context.ContextType>(({ input }) =>
-      Actions.downloadFirmware(input.typeSelected, input.device.info, input.firmwareList, input.selectedFirmware),
+      Actions.downloadFirmware(
+        input.typeSelected,
+        input.device.info,
+        input.firmwareList,
+        input.selectedFirmware,
+        input.customFirmwareFolder,
+      ),
     ),
   },
   actions: {
@@ -76,7 +82,7 @@ const FirmwareSelection = setup({
             () => {
               log.warn("error");
             },
-            assign({ error: (_context, event) => event }),
+            assign({ error: event => event as any }),
           ],
         },
       },
@@ -106,7 +112,7 @@ const FirmwareSelection = setup({
         },
         onError: {
           target: "failure",
-          actions: assign({ error: (context, event) => event }),
+          actions: [assign({ error: event => event as any })],
         },
       },
     },
@@ -123,7 +129,20 @@ const FirmwareSelection = setup({
       on: {
         "next-event": ["loadingFWFiles"],
         "changeFW-event": {
-          actions: [assign({ selectedFirmware: ({ event }) => event.selected })],
+          actions: [
+            assign(({ event }) => ({
+              selectedFirmware: event.selected,
+              typeSelected: "default",
+            })),
+          ],
+        },
+        "customFW-event": {
+          actions: [
+            assign(({ event }) => ({
+              customFirmwareFolder: event.selected,
+              typeSelected: "custom",
+            })),
+          ],
         },
       },
     },
@@ -146,7 +165,7 @@ const FirmwareSelection = setup({
         },
         onError: {
           target: "failure",
-          actions: [assign({ error: event => event })],
+          actions: [assign({ error: event => event as any })],
         },
       },
     },

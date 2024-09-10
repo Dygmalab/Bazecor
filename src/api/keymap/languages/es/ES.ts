@@ -101,6 +101,8 @@ const shiftModifierSpanish: BaseKeycodeTableType = {
       labels: {
         primary: '"',
       },
+      alt: true,
+
       newGroupName: "Shifted Digits",
     },
     {
@@ -108,6 +110,8 @@ const shiftModifierSpanish: BaseKeycodeTableType = {
       labels: {
         primary: "·",
       },
+      alt: true,
+
       newGroupName: "Shifted Digits",
     },
     {
@@ -115,6 +119,8 @@ const shiftModifierSpanish: BaseKeycodeTableType = {
       labels: {
         primary: "&",
       },
+      alt: true,
+
       newGroupName: "Shifted Digits",
     },
     {
@@ -122,6 +128,8 @@ const shiftModifierSpanish: BaseKeycodeTableType = {
       labels: {
         primary: "/",
       },
+      alt: true,
+
       newGroupName: "Shifted Digits",
     },
     {
@@ -129,6 +137,8 @@ const shiftModifierSpanish: BaseKeycodeTableType = {
       labels: {
         primary: "(",
       },
+      alt: true,
+
       newGroupName: "Shifted Digits",
     },
     {
@@ -136,6 +146,8 @@ const shiftModifierSpanish: BaseKeycodeTableType = {
       labels: {
         primary: ")",
       },
+      alt: true,
+
       newGroupName: "Shifted Digits",
     },
     {
@@ -143,6 +155,8 @@ const shiftModifierSpanish: BaseKeycodeTableType = {
       labels: {
         primary: "=",
       },
+      alt: true,
+
       newGroupName: "Shifted Digits",
     },
     {
@@ -150,6 +164,8 @@ const shiftModifierSpanish: BaseKeycodeTableType = {
       labels: {
         primary: "?",
       },
+      alt: true,
+
       newGroupName: "Shifted Digits",
     },
     {
@@ -157,6 +173,8 @@ const shiftModifierSpanish: BaseKeycodeTableType = {
       labels: {
         primary: "¿",
       },
+      alt: true,
+
       newGroupName: "Shifted Digits",
     },
     {
@@ -164,12 +182,14 @@ const shiftModifierSpanish: BaseKeycodeTableType = {
       labels: {
         primary: "^",
       },
+      alt: true,
     },
     {
       code: 2096,
       labels: {
         primary: "*",
       },
+      alt: true,
     },
     {
       code: 2097,
@@ -177,6 +197,7 @@ const shiftModifierSpanish: BaseKeycodeTableType = {
         primary: "Ç",
         top: "S+",
       },
+      alt: true,
     },
     {
       code: 2099,
@@ -184,42 +205,49 @@ const shiftModifierSpanish: BaseKeycodeTableType = {
         primary: "Ñ",
         top: "S+",
       },
+      alt: true,
     },
     {
       code: 2100,
       labels: {
         primary: "¨",
       },
+      alt: true,
     },
     {
       code: 2101,
       labels: {
         primary: "ª",
       },
+      alt: true,
     },
     {
       code: 2102,
       labels: {
         primary: ";",
       },
+      alt: true,
     },
     {
       code: 2103,
       labels: {
         primary: ":",
       },
+      alt: true,
     },
     {
       code: 2104,
       labels: {
         primary: "_",
       },
+      alt: true,
     },
     {
       code: 2148,
       labels: {
         primary: ">",
       },
+      alt: true,
     },
   ],
 };
@@ -232,72 +260,84 @@ const altCtrlSpanish: BaseKeycodeTableType = {
       labels: {
         primary: "|",
       },
+      alt: true,
     },
     {
       code: 799,
       labels: {
         primary: "@",
       },
+      alt: true,
     },
     {
       code: 800,
       labels: {
         primary: "#",
       },
+      alt: true,
     },
     {
       code: 801,
       labels: {
         primary: "~",
       },
+      alt: true,
     },
     {
       code: 802,
       labels: {
         primary: "€",
       },
+      alt: true,
     },
     {
       code: 803,
       labels: {
         primary: "¬",
       },
+      alt: true,
     },
     {
       code: 776,
       labels: {
         primary: "€",
       },
+      alt: true,
     },
     {
       code: 815,
       labels: {
         primary: "[",
       },
+      alt: true,
     },
     {
       code: 816,
       labels: {
         primary: "]",
       },
+      alt: true,
     },
     {
       code: 817,
       labels: {
         primary: "}",
       },
+      alt: true,
     },
     {
       code: 820,
       labels: {
         primary: "{",
       },
+      alt: true,
     },
     {
       code: 821,
       labels: {
         primary: "\\",
       },
+      alt: true,
     },
   ],
 };
@@ -310,72 +350,85 @@ const altGrSpanish: BaseKeycodeTableType = {
       labels: {
         primary: "|",
       },
+      alt: true,
     },
     {
       code: 1055,
       labels: {
         primary: "@",
       },
+      alt: true,
     },
     {
       code: 1056,
       labels: {
         primary: "#",
       },
+      alt: true,
     },
     {
       code: 1057,
       labels: {
         primary: "~",
       },
+      alt: true,
     },
     {
       code: 1058,
       labels: {
         primary: "€",
       },
+      alt: true,
     },
     {
       code: 1059,
       labels: {
         primary: "¬",
       },
+      alt: true,
     },
     {
       code: 1032,
       labels: {
         primary: "€",
       },
+      alt: true,
     },
     {
       code: 1071,
       labels: {
         primary: "[",
       },
+      alt: true,
     },
     {
       code: 1072,
       labels: {
         primary: "]",
       },
+      alt: true,
     },
     {
       code: 1073,
       labels: {
         primary: "}",
       },
+      alt: true,
     },
+
     {
       code: 1076,
       labels: {
         primary: "{",
       },
+      alt: true,
     },
     {
       code: 1077,
       labels: {
         primary: "\\",
       },
+      alt: true,
     },
   ],
 };

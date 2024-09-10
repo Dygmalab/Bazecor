@@ -147,7 +147,7 @@ const FirmwareNeuronStatus = (props: FirmwareNeuronStatusType) => {
   const neuronImage = useTheme().styles.firmwareUpdatePanel.neuronDefyWirelessImage;
   return (
     <Style>
-      {deviceProduct === "Defy" && keyboardType === "wireless" ? (
+      {(deviceProduct === "Defy" && keyboardType === "wireless") || deviceProduct === "Raise2" ? (
         <div className={`neuronDefyWrapper ${isUpdated && "isUpdated"} ${status || ""}`}>
           <div className="neuronDefyContainer">
             {icon ? <div className={`neuronIcon ${status || ""}`}>{icon}</div> : ""}

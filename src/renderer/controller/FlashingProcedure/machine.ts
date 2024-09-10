@@ -26,6 +26,7 @@ const FlashDevice = setup({
     uploadDefyWired: fromPromise<Context.ContextType, Context.ContextType>(({ input }) => Actions.uploadDefyWired(input)),
     resetDefy: fromPromise<Context.ContextType, Context.ContextType>(({ input }) => Actions.resetDefy(input)),
     uploadDefyWireless: fromPromise<boolean, Context.ContextType>(({ input }) => Actions.uploadDefyWireless(input)),
+    uploadRaise2: fromPromise<boolean, Context.ContextType>(({ input }) => Actions.uploadRaise2(input)),
     reconnect: fromPromise<boolean, Context.ContextType>(({ input }) => Actions.reconnect(input)),
     restoreDefies: fromPromise<boolean, Context.ContextType>(({ input }) => Actions.restoreDefies(input)),
     resetRaise: fromPromise<Context.ContextType, Context.ContextType>(({ input }) => Actions.resetRaise(input)),
@@ -49,11 +50,12 @@ const FlashDevice = setup({
     doNotFlashSidesWi: ({ context }) =>
       context.device?.bootloader === true &&
       context.device.info.product !== "Raise" &&
-      context.device.info.keyboardType === "wireless",
+      (context.device.info.keyboardType === "wireless" || context.device.info.product === "Raise2"),
     doNotWaitForESC: ({ context }) =>
       (context.device?.bootloader === true || context.sideLeftBL === true) && context.loadedComms === true,
-    isDefywired: ({ context }) => context.DefyVariant === "Defywired",
-    isDefywireless: ({ context }) => context.DefyVariant === "Defywireless",
+    isDefywired: ({ context }) => context.DeviceVariant === "Defywired",
+    isDefywireless: ({ context }) => context.DeviceVariant === "Defywireless",
+    isRaise2: ({ context }) => context.DeviceVariant === "Raise2ISO" || context.DeviceVariant === "Raise2ANSI",
   },
 }).createMachine({
   /** @xstate-layout N4IgpgJg5mDOIC5QDEA2BDAFrAlgOygAUAnAewGM5YA6Ad3RwBcBRWcgYmYGUBhQgJW5dmAEQDaABgC6iUAAdSuRjlJ5ZIAB6IATAA4ArNQkB2bQE4zxgIzbz+gCxWANCACeiAGz7t1KxI8AzB4S+pYeZtoeAL5RLmhYuAQkFFTUAGYYsJj8OFCYjFw4EGDsXACqPDxCkjJIIApKKmp1Wgh6hibmljZ2ji7ubdoB1NrGuh66Elb6umb60-YxcRjY+ERklLA0GehZOXkFRSXM-PwA8vw16g1MTeqt7UamFta2c31uiPa6PgG6s5FdAF7KZvEsQPFVkkNqkdlkADJgNKHYqlCpVLhcK51G7KVT3TzmaihKxWMz+AzGay6fo6CT2ajGen2YKkrx+YzgyGJdYpLbpTKYRHIwqok7nS7Sa6KW74lqEszEsyk8kTfRUqw0z4IIJWaheazeMwg-QBKzRWIQlY85KbbaCgByYAArmQ8GjKtUpTiZXjmqBWhFhlYAgEJCEzcZvKTaQgyRJqCzNWb2nNSdouda1rbYY6XW7OKcLtj5L67vKEEHfKHw6arFHtDHtdp7AmIqbjKqJKHO-pMwlszD+cQ4IxSCP4ehXGBiLAPRisd7S405QHEDZzfrjN8ycaIkz7LHtCFiQEqQYph5zzZ+1DeXbqCPYGOJ1OZ3PxcWl-Uy6vNOuJCBEZ6y8cIAkbMxgVjXQ9RBZUvDCb59AkMxbxtIdtgYVBXRKQQABV+AATRLH8V39f82gMJ4uleXpnG1H4Ex+M9jSCfwLUtPBSGKeA6m5Qc+V45dZXI1oAFoPFjCS0IEh96CYVhyGlMiCQQextFjdVjGrPw5g8IZZgCPtLX46FBIFXZMEIdBGEwLgwFQMByBfZSRNU+wWSMIZ7G8cDjxBDxJO1YJg2PJlOjJTVUJMrMzIfOFslyfJRTAVy-VUmxDAcetAPDVsPG+Q9mxPcZjxDMwPBsQJzRkuLc0s4UUVSn0VIrFkEzGbt7DMAx7GBbtY01bS9CpSDlX+CCAlq+96qyJ1XT-XFyzXBBjAKkZw0q8DvCGGZBpgxlAOBKMbAkbQHGM5YBzq-kZzIYg0uWii-HVRl1PUsYgR6-RY1DXR9Uq+kurDFkLSuu8c2HUdxzASdp1nR6-1aF7tO3FtRn+AJvv2nxsvCDUrG6qZpshzCcGwkdEdE9cqK8f4r2CD61WgxtqDNExgX0U1AhMEmMOoWBnXIO0qYyoy9T0d7zumYxgSKgZ-MZGC9CGaYwyMxYYiiIA */
@@ -153,7 +155,7 @@ const FlashDevice = setup({
         },
         onError: {
           target: "failure",
-          actions: assign({ error: ({ event }) => event.error }),
+          actions: [assign({ error: event => event as any })],
         },
       },
       on: {
@@ -186,13 +188,13 @@ const FlashDevice = setup({
         onDone: {
           actions: [
             assign(({ event }) => event.output),
-            assign({ DefyVariant: ({ context }) => `${context.device?.info.product}${context.device?.info.keyboardType}` }),
+            assign({ DeviceVariant: ({ context }) => `${context.device?.info.product}${context.device?.info.keyboardType}` }),
             raise({ type: "internal-event" }),
           ],
         },
         onError: {
           target: "failure",
-          actions: assign({ error: ({ event }) => event.error }),
+          actions: [assign({ error: event => event as any })],
         },
       },
       on: {
@@ -209,6 +211,7 @@ const FlashDevice = setup({
         "*": [
           { target: "flashDefyWired", guard: "isDefywired" },
           { target: "resetDefyWireless", guard: "isDefywireless" },
+          { target: "resetRaise2", guard: "isRaise2" },
         ],
       },
     },
@@ -232,7 +235,7 @@ const FlashDevice = setup({
         },
         onError: {
           target: "failure",
-          actions: assign({ error: ({ event }) => event.error }),
+          actions: [assign({ error: event => event as any })],
         },
       },
       on: {
@@ -265,7 +268,7 @@ const FlashDevice = setup({
         },
         onError: {
           target: "failure",
-          actions: assign({ error: ({ event }) => event.error }),
+          actions: [assign({ error: event => event as any })],
         },
       },
       on: {
@@ -301,7 +304,7 @@ const FlashDevice = setup({
         },
         onError: {
           target: "failure",
-          actions: assign({ error: ({ event }) => event.error }),
+          actions: [assign({ error: event => event as any })],
         },
       },
       on: {
@@ -336,7 +339,7 @@ const FlashDevice = setup({
         },
         onError: {
           target: "failure",
-          actions: assign({ error: ({ event }) => event.error }),
+          actions: [assign({ error: event => event as any })],
         },
       },
       on: {
@@ -371,7 +374,7 @@ const FlashDevice = setup({
         },
         onError: {
           target: "failure",
-          actions: assign({ restoreResult: false }),
+          actions: [assign({ error: event => event as any }), assign({ restoreResult: false })],
         },
       },
       on: {
@@ -384,6 +387,77 @@ const FlashDevice = setup({
             neuronProgress: event.neuronProgress,
             restoreProgress: event.restoreProgress,
           })),
+        },
+      },
+    },
+    resetRaise2: {
+      id: "resetRaise2",
+      entry: [
+        () => {
+          log.info(`Resetting Neuron!`);
+        },
+        assign({ stateblock: () => 4 }),
+      ],
+      invoke: {
+        src: "resetDefy",
+        input: ({ context }) => context,
+        onDone: {
+          target: "flashRaise2",
+          actions: assign(({ event }) => event.output),
+        },
+        onError: {
+          target: "failure",
+          actions: [assign({ error: event => event as any })],
+        },
+      },
+      on: {
+        "increment-event": {
+          actions: assign(({ event }) => ({
+            globalProgress: event.globalProgress,
+            leftProgress: event.leftProgress,
+            rightProgress: event.rightProgress,
+            resetProgress: event.resetProgress,
+            neuronProgress: event.neuronProgress,
+            restoreProgress: event.restoreProgress,
+          })),
+        },
+      },
+    },
+    flashRaise2: {
+      id: "flashRaise2",
+      entry: [
+        ({ context }) => {
+          log.info(`Flashing Neuron! for ${context.retriesNeuron} times`);
+        },
+        assign({ stateblock: () => 5 }),
+        assign({ retriesNeuron: ({ context }) => context.retriesNeuron + 1 }),
+      ],
+      invoke: {
+        src: "uploadRaise2",
+        input: ({ context }) => context,
+        onDone: {
+          target: "reconnectDefy",
+          actions: assign({
+            resetResult: ({ event }) => event.output,
+          }),
+        },
+        onError: {
+          target: "failure",
+          actions: [assign({ error: event => event as any })],
+        },
+      },
+      on: {
+        "increment-event": {
+          actions: [
+            assign(({ event }) => ({
+              globalProgress: event.globalProgress,
+              leftProgress: event.leftProgress,
+              rightProgress: event.rightProgress,
+              resetProgress: event.resetProgress,
+              neuronProgress: event.neuronProgress,
+              restoreProgress: event.restoreProgress,
+            })),
+          ],
         },
       },
     },
@@ -404,7 +478,7 @@ const FlashDevice = setup({
         },
         onError: {
           target: "failure",
-          actions: assign({ error: ({ event }) => event.error }),
+          actions: [assign({ error: event => event as any })],
         },
       },
       on: {
@@ -438,7 +512,7 @@ const FlashDevice = setup({
         },
         onError: {
           target: "failure",
-          actions: assign({ error: ({ event }) => event.error }),
+          actions: [assign({ error: event => event as any })],
         },
       },
       on: {
@@ -473,7 +547,7 @@ const FlashDevice = setup({
         },
         onError: {
           target: "failure",
-          actions: assign({ error: ({ event }) => event.error }),
+          actions: [assign({ error: event => event as any })],
         },
       },
       on: {
@@ -513,7 +587,7 @@ const FlashDevice = setup({
         }),
       ],
       on: {
-        "retry-event": "#FlahsingProcess",
+        "retry-event": "waitEsc",
         "cancel-event": { target: "success", actions: ["finishFlashing"] },
       },
     },

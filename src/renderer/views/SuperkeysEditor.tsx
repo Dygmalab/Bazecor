@@ -761,8 +761,8 @@ function SuperkeysEditor(props: SuperkeysEditorProps) {
   // if (loading || !Array.isArray(superkeys)) return <LogoLoaderCentered />;
   if (loading || !Array.isArray(superkeys)) return <LogoLoader centered />;
   return (
-    <Styles className="superkeys">
-      <div className={`px-3 ${isStandardViewSuperkeys ? "standarViewMode" : "singleViewMode"}`}>
+    <Styles className="superkeys px-3">
+      <div className={`${isStandardViewSuperkeys ? "standarViewMode" : "singleViewMode"}`}>
         <PageHeader
           text="Superkeys Editor"
           showSaving
@@ -830,8 +830,7 @@ function SuperkeysEditor(props: SuperkeysEditorProps) {
       ) : (
         ""
       )}
-
-      <ToggleGroupLayoutViewMode value={viewMode} onValueChange={onToggle} view="superkeys" />
+      <ToggleGroupLayoutViewMode value={viewMode} onValueChange={onToggle} viewMode="superkeys" />
 
       {isStandardViewSuperkeys ? (
         <StandardView

@@ -3,10 +3,24 @@ import fs from "fs";
 import * as sudo from "sudo-prompt";
 import log from "electron-log/main";
 
-const udevRulesToWrite =
-  'SUBSYSTEMS=="usb", ATTRS{idVendor}=="1209", ATTRS{idProduct}=="2201", MODE="0666"\nSUBSYSTEMS=="usb", ATTRS{idVendor}=="1209", ATTRS{idProduct}=="2200", MODE="0666"\nSUBSYSTEMS=="usb", ATTRS{idVendor}=="35ef", MODE="0666"\nKERNEL=="hidraw*", ATTRS{idVendor}=="35ef", MODE="0666"';
+const udevRulesToWrite =`\
+# Dygma Raise
+SUBSYSTEMS=="usb", ATTRS{idVendor}=="1209", ATTRS{idProduct}=="2200", MODE="0660", TAG+="uaccess"
+# bootloader mode
+SUBSYSTEMS=="usb", ATTRS{idVendor}=="1209", ATTRS{idProduct}=="2201", MODE="0660", TAG+="uaccess"
 
-const filename = "/etc/udev/rules.d/10-dygma.rules";
+# Dygma USB Keyboards Vendor ID
+SUBSYSTEMS=="usb", ATTRS{idVendor}=="35ef", MODE="0660", TAG+="uaccess"
+# bootloader mode
+SUBSYSTEMS=="usb", ATTRS{idVendor}=="35ef", MODE="0660", TAG+="uaccess"
+
+# Dygma HID Keyboards Vendor ID
+KERNEL=="hidraw*", ATTRS{idVendor}=="35ef", MODE="0660", TAG+="uaccess"
+# bootloader mode
+KERNEL=="hidraw*", ATTRS{idVendor}=="35ef", MODE="0660", TAG+="uaccess"
+`;
+
+const filename = "/etc/udev/rules.d/60-dygma.rules";
 
 const checkUdev = () => {
   try {

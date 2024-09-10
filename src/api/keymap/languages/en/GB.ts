@@ -49,18 +49,21 @@ const shiftModifier: BaseKeycodeTableType = {
       labels: {
         primary: "¬",
       },
+      alt: true,
     },
     {
       code: ModifierCodes.SHIFT + 31,
       labels: {
         primary: '"',
       },
+      alt: true,
     },
     {
       code: ModifierCodes.SHIFT + 32,
       labels: {
         primary: "£",
       },
+      alt: true,
     },
     // R2
     {
@@ -68,12 +71,14 @@ const shiftModifier: BaseKeycodeTableType = {
       labels: {
         primary: "@",
       },
+      alt: true,
     },
     {
       code: ModifierCodes.SHIFT + 49,
       labels: {
         primary: "~",
       },
+      alt: true,
     },
     // R1
     {
@@ -81,6 +86,7 @@ const shiftModifier: BaseKeycodeTableType = {
       labels: {
         primary: "|",
       },
+      alt: true,
     },
   ],
 };
@@ -94,12 +100,14 @@ const altCtrlModifier: BaseKeycodeTableType = {
       labels: {
         primary: "¦",
       },
+      alt: true,
     },
     {
       code: ModifierCodes.CONTROL_ALT + 33,
       labels: {
         primary: "€",
       },
+      alt: true,
     },
     // R3
     {
@@ -107,24 +115,28 @@ const altCtrlModifier: BaseKeycodeTableType = {
       labels: {
         primary: "É",
       },
+      alt: true,
     },
     {
       code: ModifierCodes.CONTROL_ALT + 24,
       labels: {
         primary: "Ú",
       },
+      alt: true,
     },
     {
       code: ModifierCodes.CONTROL_ALT + 12,
       labels: {
         primary: "Í",
       },
+      alt: true,
     },
     {
       code: ModifierCodes.CONTROL_ALT + 18,
       labels: {
         primary: "Ó",
       },
+      alt: true,
     },
     // R2
     {
@@ -132,6 +144,7 @@ const altCtrlModifier: BaseKeycodeTableType = {
       labels: {
         primary: "Á",
       },
+      alt: true,
     },
   ],
 };
@@ -145,12 +158,14 @@ const altGrModifier: BaseKeycodeTableType = {
       labels: {
         primary: "¦",
       },
+      alt: true,
     },
     {
       code: ModifierCodes.ALTGR + 33,
       labels: {
         primary: "€",
       },
+      alt: true,
     },
     // R3
     {
@@ -158,24 +173,28 @@ const altGrModifier: BaseKeycodeTableType = {
       labels: {
         primary: "É",
       },
+      alt: true,
     },
     {
       code: ModifierCodes.ALTGR + 24,
       labels: {
         primary: "Ú",
       },
+      alt: true,
     },
     {
       code: ModifierCodes.ALTGR + 12,
       labels: {
         primary: "Í",
       },
+      alt: true,
     },
     {
       code: ModifierCodes.ALTGR + 18,
       labels: {
         primary: "Ó",
       },
+      alt: true,
     },
     // R2
     {
@@ -183,6 +202,7 @@ const altGrModifier: BaseKeycodeTableType = {
       labels: {
         primary: "Á",
       },
+      alt: true,
     },
   ],
 };

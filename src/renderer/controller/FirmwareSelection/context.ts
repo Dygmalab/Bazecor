@@ -1,5 +1,6 @@
 import { ReleaseType } from "@Renderer/types/releases";
 import { State } from "src/api/comms/Device";
+import { ErrorActorEvent } from "xstate";
 
 export interface ContextType {
   stateblock: number;
@@ -21,11 +22,12 @@ export interface ContextType {
   };
   typeSelected: string;
   selectedFirmware: number;
+  customFirmwareFolder: string;
   isUpdated: boolean;
   isBeta: boolean;
   allowBeta: boolean;
   deviceState: State | undefined;
-  error: unknown;
+  error: ErrorActorEvent;
 }
 
 export const Context: ContextType = {
@@ -47,6 +49,7 @@ export const Context: ContextType = {
     fwSides: undefined,
   },
   typeSelected: "default",
+  customFirmwareFolder: undefined,
   selectedFirmware: 0,
   isUpdated: false,
   isBeta: false,

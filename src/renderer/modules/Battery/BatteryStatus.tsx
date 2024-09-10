@@ -67,9 +67,6 @@ const Style = Styled.div`
   }
 }
 .batterySettingItem {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
   margin-top: 0.5rem;
   padding-top: 0.5rem;
   .custom-switch {
@@ -208,10 +205,10 @@ const BatteryStatus = ({ disable }: BatteryStatusProps) => {
     if (state.currentDevice) {
       await state.currentDevice.noCacheCommand("wireless.battery.forceRead");
     }
+    setAnimateIcon(1);
     setLoading(true);
     await getBatteryStatus();
     setLoading(false);
-    setAnimateIcon(1);
   };
 
   return (
@@ -223,7 +220,7 @@ const BatteryStatus = ({ disable }: BatteryStatusProps) => {
         </div>
         <div className="dropdown-menu dropdown-menu--battery">
           <div className="dropdown-menu__inner">
-            <Heading headingLevel={4} renderAs="h4">
+            <Heading headingLevel={4} renderAs="h4" className="flex gap-2 items-center mb-2">
               <IconBattery /> {i18n.wireless.batteryPreferences.battery}
             </Heading>
             {loading ? (
@@ -243,11 +240,18 @@ const BatteryStatus = ({ disable }: BatteryStatusProps) => {
                 <SavingModeIndicator isSavingMode={isSavingMode} />
               </div>
             )}
-            <div className="batterySettingItem batteryUpdateStatus">
-              <div className="batterySettingLabel">Force read Battery level</div>
-              <Button variant="config" size="icon" onClick={forceRetrieveBattery}>
-                <IconRefresh />
+            <div className="batterySettingItem batteryUpdateStatus flex gap-2 items-center justify-start">
+              <Button
+                variant="config"
+                size="icon"
+                onClick={forceRetrieveBattery}
+                className="p-2 flex justify-center items-center"
+              >
+                <span className={`inline-flex w-6 origin-center ${animateIcon ? "animate-spin" : ""}`}>
+                  <IconRefresh />
+                </span>
               </Button>
+              <div className="batterySettingLabel">Force read</div>
             </div>
           </div>
         </div>

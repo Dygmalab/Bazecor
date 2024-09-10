@@ -1793,11 +1793,11 @@ div.card.card-preferences .card-body {
 
 
 /* Layout Editor view responsive - Raise */
-@media screen and (max-height: 900px) {
-  .keyboard.singleViewMode .LayerHolder {
-    max-height: 342px;
-  }
-}
+// @media screen and (max-height: 900px) {
+//   .keyboard.singleViewMode .LayerHolder {
+//     max-height: 342px;
+//   }
+// }
 @media (min-height: 962px) {
   // body .layoutEditor .singleViewMode.keyboard .keyboardsWrapper {
   //   height: calc(100vh - 104px);
@@ -1814,16 +1814,16 @@ div.card.card-preferences .card-body {
     grid-template-columns: minmax(160px,340px) minmax(840px,auto);
   }
 }
-@media (min-width: 1800px) and (min-height: 980px) {
-  body .layoutEditor .KeysWrapper {
-    max-width: 1160px;
-  }
-}
-@media (min-width: 1980px) and (min-height: 980px) {
-  body .layoutEditor .LayerHolder {
-    max-width: 1580px;
-  }
-}
+// @media (min-width: 1800px) and (min-height: 980px) {
+//   body .layoutEditor .KeysWrapper {
+//     max-width: 1160px;
+//   }
+// }
+// @media (min-width: 1980px) and (min-height: 980px) {
+//   body .layoutEditor .LayerHolder {
+//     max-width: 1580px;
+//   }
+// }
 @media (min-width: 2220px) and (min-height: 980px) {
   body .layoutEditor .LayerHolder {
     max-width: 2220px;

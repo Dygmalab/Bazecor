@@ -81,7 +81,7 @@ function NeuronData(props: Neurons) {
           className="w-full mt-3 border-[1px] border-solid border-gray-50 dark:border-gray-600 bg-transparent dark:bg-gray-900/20 rounded"
         >
           <AccordionItem value="item-1" className="border-b border-solid border-gray-50 dark:border-gray-600">
-            <AccordionTrigger className="flex justify-between items-center py-3 mt-0 mb-[-1px] rounded-none text-purple-200 dark:text-gray-25 border-b border-solid border-gray-50 dark:border-gray-600">
+            <AccordionTrigger className="flex justify-between items-center py-3 px-2 mt-0 mb-[-1px] rounded-none text-purple-200 dark:text-gray-25 border-b border-solid border-gray-50 dark:border-gray-600">
               <div className="flex gap-3 items-center">
                 <IconLayers />
                 <strong className="font-base">Layers</strong>
@@ -98,7 +98,7 @@ function NeuronData(props: Neurons) {
             </AccordionContent>
           </AccordionItem>
           <AccordionItem value="item-2" className="border-0">
-            <AccordionTrigger className="flex justify-between items-center py-3 mt-0 mb-[-1px] rounded-none text-purple-200 dark:text-gray-25 border-b border-solid border-gray-50 dark:border-gray-600">
+            <AccordionTrigger className="flex justify-between items-center py-3 px-2 mt-0 mb-[-1px] rounded-none text-purple-200 dark:text-gray-25 border-b border-solid border-gray-50 dark:border-gray-600">
               <div className="flex gap-3 items-center">
                 <IconRobot />
                 <strong className="font-base">Macro</strong>
@@ -115,7 +115,7 @@ function NeuronData(props: Neurons) {
             </AccordionContent>
           </AccordionItem>
           <AccordionItem value="item-3" className="border-0">
-            <AccordionTrigger className="flex justify-between items-center py-3 mt-0 mb-[-1px] rounded-none text-purple-200 dark:text-gray-25 border-b border-solid border-gray-50 dark:border-gray-600">
+            <AccordionTrigger className="flex justify-between items-center py-3 px-2 mt-0 mb-[-1px] rounded-none text-purple-200 dark:text-gray-25 border-b border-solid border-gray-50 dark:border-gray-600">
               <div className="flex gap-3 items-center">
                 <IconThunder />
                 <strong className="font-base">Superkeys</strong>

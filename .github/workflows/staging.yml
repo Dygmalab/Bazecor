@@ -25,14 +25,14 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - os: macos-12
+          - os: macos-13
           - os: windows-2019
           - os: ubuntu-20.04
     steps:
-      - uses: actions/setup-python@v4
+      - uses: actions/setup-python@v5
         with:
           python-version: "3.10"
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: 20.13.1
@@ -41,7 +41,7 @@ jobs:
         run: sudo apt update && sudo apt install libudev-dev
       - name: Cache node_modules
         id: cache-node-modules
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: node_modules
           key: ${{ runner.os }}-${{ hashFiles('package.json', 'yarn.lock') }}
@@ -51,26 +51,35 @@ jobs:
       - run: yarn run test
 
   build:
+    name: Bazecor ${{ matrix.target_os }}_${{ matrix.target_arch }} binaries
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-20.04, windows-2019, macos-13]
+        target_arch: [arm, amd64]
+        include:
+          - os: ubuntu-20.04
+            target_os: linux
+          - os: windows-2019
+            target_os: windows
+          - os: macOS-13
+            target_os: darwin
+        exclude:
+          - os: windows-2019
+            target_arch: arm
+          - os: ubuntu-20.04
+            target_arch: arm
     runs-on: ${{ matrix.os }}
     needs: [testing]
     permissions:
       contents: write # to be able to publish a GitHub release
       issues: write # to be able to comment on released issues
       pull-requests: write # to be able to comment on released pull requests
-
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - os: macos-12
-          - os: windows-2019
-          - os: ubuntu-20.04
-
     steps:
-      - uses: actions/setup-python@v4
+      - uses: actions/setup-python@v5
         with:
           python-version: "3.10"
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: 20.13.1
@@ -79,7 +88,7 @@ jobs:
         run: sudo apt update && sudo apt install libudev-dev
       - if: runner.os == 'Windows'
         name: Set up Java
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           distribution: "temurin"
           java-version: "17"
@@ -93,19 +102,19 @@ jobs:
           cp jsign.jar windows_signing/jsign.jar
       - if: runner.os == 'Windows'
         name: Setup GCloud Auth
-        uses: "google-github-actions/auth@v1"
+        uses: "google-github-actions/auth@v2"
         with:
           credentials_json: "${{ secrets.GCP_SIGNER_SERVICE_ACCOUNT }}"
       - if: runner.os == 'Windows'
         name: "Set up GCloud SDK"
-        uses: "google-github-actions/setup-gcloud@v1"
+        uses: "google-github-actions/setup-gcloud@v2"
         env:
           CLOUDSDK_PYTHON: ${{ env.pythonLocation }}${{ '\python' }}
         with:
           version: ">= 416.0.0"
       - name: Cache node_modules
         id: cache-node-modules
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: node_modules
           key: ${{ runner.os }}-${{ hashFiles('package.json', 'yarn.lock') }}
@@ -137,14 +146,14 @@ jobs:
           security import $APPLE_APPLICATION_CERT_PATH -P "$APPLE_CERT_PASSWORD" -A -t cert -f pkcs12 -k $KEYCHAIN_PATH
           security list-keychain -d user -s $KEYCHAIN_PATH
           # - run: yarn run lint
-      - if: runner.os == 'macOS'
+      - if: runner.os == 'macOS' && matrix.target_arch == 'amd64'
         name: Build for MacOS Intel
         env:
           APPLE_ID: ${{ secrets.APPLEID }}
           APPLE_ID_PASSWORD: ${{ secrets.APPLEIDPASS }}
           APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
         run: yarn run make-mac-intel
-      - if: runner.os == 'macOS'
+      - if: runner.os == 'macOS'  && matrix.target_arch == 'arm'
         name: Build for MacOS Arm
         env:
           APPLE_ID: ${{ secrets.APPLEID }}
@@ -176,12 +185,15 @@ jobs:
             --certfile "dygma_cert.pem" --tsmode RFC3161 --tsaurl http://timestamp.digicert.com $EXE_FILE
           cd ..
       - name: Upload build
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
-          name: artifacts
+          name: Bazecor-${{ matrix.os }}-${{ matrix.target_arch }}
           path: |
             out/make/**/*.dmg
             out/make/**/*.AppImage
+            out/make/**/*.zip
+            out/make/**/*.nupkg
+            out/make/**/RELEASES*
             windows_signing/**/*.exe
 
       - name: Show build items
