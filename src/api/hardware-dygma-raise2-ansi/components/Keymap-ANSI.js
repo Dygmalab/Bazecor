@@ -3765,30 +3765,64 @@ class KeymapANSI extends React.Component {
               dataLayer={layer}
               path="M2.61.775A4 4 0 0 1 8.025 2.41c.347.647.68 1.23.996 1.721l.043.066 17.13 28.988a4 4 0 0 1-6.888 4.07L2.254 8.399A34 34 0 0 1 .974 6.19 4 4 0 0 1 2.61.775"
             />
-          </g>
-
-          {rightUnderglowLEDSs.map(index => (
             <UnderGlowStrip
-              key={`underglow_${index + 121}`}
-              id={`underglow_${index + 121}`}
-              x={1220}
-              y={index * 15}
+              key="underglow_173"
+              id="underglow_173"
+              x={1163}
+              y={200.4}
               onClick={e => {
-                setUndeglowIndex(index + 121, e);
+                setUndeglowIndex(173, e);
               }}
               selectedLED={selectedLED}
               visibility={!!(showUnderglow || isStandardView)}
               clickAble={!(isStandardView && !showUnderglow)}
-              fill={getColor(index + 121)}
-              stroke={stroke(index + 121)}
-              strokeWidth={getStrokeWidth(index + 121)}
-              dataLedIndex={getLEDIndex(index + 121)}
-              dataKeyIndex={keyIndex(index + 121)}
+              fill={getColor(173)}
+              stroke={stroke(173)}
+              strokeWidth={getStrokeWidth(173)}
+              dataLedIndex={getLEDIndex(173)}
+              dataKeyIndex={keyIndex(173)}
               dataLayer={layer}
-              path="M0.800018 4.69995C0.800018 2.49081 2.59088 0.699951 4.80002 0.699951H52.9C55.1091 0.699951 56.9 2.49081 56.9 4.69995C56.9 6.90909 55.1091 8.69995 52.9 8.69995H4.80002C2.59088 8.69995 0.800018 6.90909 0.800018 4.69995Z"
+              path="M4 .46a4 4 0 0 1 4 4V18a65.5 65.5 0 0 0 3.6 21.432 4 4 0 1 1-7.56 2.616A73.5 73.5 0 0 1 0 18V4.46a4 4 0 0 1 4-4"
             />
-          ))}
-
+            <UnderGlowStrip
+              key="underglow_174"
+              id="underglow_174"
+              x={1163}
+              y={152.2}
+              onClick={e => {
+                setUndeglowIndex(174, e);
+              }}
+              selectedLED={selectedLED}
+              visibility={!!(showUnderglow || isStandardView)}
+              clickAble={!(isStandardView && !showUnderglow)}
+              fill={getColor(174)}
+              stroke={stroke(174)}
+              strokeWidth={getStrokeWidth(174)}
+              dataLedIndex={getLEDIndex(174)}
+              dataKeyIndex={keyIndex(174)}
+              dataLayer={layer}
+              path="M4 .22a4 4 0 0 1 4 4v36.24a4 4 0 0 1-8 0V4.22a4 4 0 0 1 4-4"
+            />
+            <UnderGlowStrip
+              key="underglow_175"
+              id="underglow_175"
+              x={1163}
+              y={106.7}
+              onClick={e => {
+                setUndeglowIndex(175, e);
+              }}
+              selectedLED={selectedLED}
+              visibility={!!(showUnderglow || isStandardView)}
+              clickAble={!(isStandardView && !showUnderglow)}
+              fill={getColor(175)}
+              stroke={stroke(175)}
+              strokeWidth={getStrokeWidth(175)}
+              dataLedIndex={getLEDIndex(175)}
+              dataKeyIndex={keyIndex(175)}
+              dataLayer={layer}
+              path="M4 .7a4 4 0 0 1 4 4v33.52a4 4 0 1 1-8 0V4.7a4 4 0 0 1 4-4"
+            />
+          </g>
           {/* End Right side */}
         </g>
       </svg>
