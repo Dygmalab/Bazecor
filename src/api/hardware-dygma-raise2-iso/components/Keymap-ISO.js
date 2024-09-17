@@ -203,7 +203,7 @@ class KeymapISO extends React.Component {
       const ledIndex =
         col !== undefined ? LedMap[parseInt(row)][parseInt(col)] : NoKeyLedMap[row - LEDS_LEFT_KEYS - LEDS_RIGHT_KEYS];
       const colorIndex = colormap[ledIndex];
-      log.info("Row and col", row, NoKeyLedMap.length, colorIndex, colormap);
+      // log.info("Row and col", row, NoKeyLedMap.length, colorIndex, colormap);
       const color = palette[colorIndex].rgb;
       return color;
     };
@@ -342,6 +342,52 @@ class KeymapISO extends React.Component {
             getDivideKeys(getLabel(row, col).label, String(+xCord + 10), yCord, smallKey)
           : getLabel(row, col).label && getDivideKeys(getLabel(row, col).label, xCord, String(yCord + 2), smallKey);
 
+    const genKey = (kRow, kCol, kX, kY) => (
+      <Key
+        keyType="regularKey"
+        id={`R${kRow}C${kCol}_keyshape`}
+        onClick={onClick}
+        className="key"
+        width={57}
+        height={57}
+        x={kX}
+        y={kY}
+        fill={getColor(kRow, kCol)}
+        stroke={stroke(kRow, kCol)}
+        strokeWidth={getStrokeWidth(kRow, kCol)}
+        dataLedIndex={getLEDIndex(kRow, kCol)}
+        dataKeyIndex={keyIndex(kRow, kCol)}
+        dataLayer={layer}
+        contrastText={getContrastText(getColor(kRow, kCol))}
+        centerPrimary={getCenterPrimary(kRow, kCol, 0, 0, true)}
+        centerExtra={getCenterExtra(kRow, kCol, 0, 0, true)}
+        keyCode={getLabel(kRow, kCol).keyCode}
+        selectedKey={getLabel(kRow, kCol)}
+      />
+    );
+
+    const genUG = (ugPos, x, y, path) => (
+      <UnderGlowStrip
+        key={`underglow_${ugPos}`}
+        id={`underglow_${ugPos}`}
+        x={x}
+        y={y}
+        onClick={e => {
+          setUndeglowIndex(ugPos, e);
+        }}
+        selectedLED={selectedLED}
+        visibility={!!(showUnderglow || isStandardView)}
+        clickAble={!(isStandardView && !showUnderglow)}
+        fill={getColor(ugPos)}
+        stroke={stroke(ugPos)}
+        strokeWidth={getStrokeWidth(ugPos)}
+        dataLedIndex={getLEDIndex(ugPos)}
+        dataKeyIndex={keyIndex(ugPos)}
+        dataLayer={layer}
+        path={path}
+      />
+    );
+
     return (
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -356,90 +402,10 @@ class KeymapISO extends React.Component {
         width={1222}
       >
         <g id="keyshapes">
-          <Key
-            keyType="regularKey"
-            id="R0C0_keyshape"
-            onClick={onClick}
-            className="key"
-            width={57}
-            height={57}
-            x={84}
-            y={keysRowsPosition.row1}
-            fill={getColor(0, 0)}
-            stroke={stroke(0, 0)}
-            strokeWidth={getStrokeWidth(0, 0)}
-            dataLedIndex={getLEDIndex(0, 0)}
-            dataKeyIndex={keyIndex(0, 0)}
-            dataLayer={layer}
-            contrastText={getContrastText(getColor(0, 0))}
-            centerPrimary={getCenterPrimary(0, 0, 0, 0, true)}
-            centerExtra={getCenterExtra(0, 0, 0, 0, true)}
-            keyCode={getLabel(0, 0).keyCode}
-            selectedKey={getLabel(0, 0)}
-          />
-          <Key
-            keyType="regularKey"
-            id="R0C1_keyshape"
-            onClick={onClick}
-            className="key"
-            width={57}
-            height={57}
-            x={151}
-            y={keysRowsPosition.row1}
-            fill={getColor(0, 1)}
-            stroke={stroke(0, 1)}
-            strokeWidth={getStrokeWidth(0, 1)}
-            dataLedIndex={getLEDIndex(0, 1)}
-            dataKeyIndex={keyIndex(0, 1)}
-            dataLayer={layer}
-            contrastText={getContrastText(getColor(0, 1))}
-            centerPrimary={getCenterPrimary(0, 1, 0, 0, true)}
-            centerExtra={getCenterExtra(0, 1, 0, 0, true)}
-            keyCode={getLabel(0, 1).keyCode}
-            selectedKey={getLabel(0, 1)}
-          />
-          <Key
-            keyType="regularKey"
-            id="R0C2_keyshape"
-            onClick={onClick}
-            className="key"
-            width={57}
-            height={57}
-            x={218}
-            y={keysRowsPosition.row1}
-            fill={getColor(0, 2)}
-            stroke={stroke(0, 2)}
-            strokeWidth={getStrokeWidth(0, 2)}
-            dataLedIndex={getLEDIndex(0, 2)}
-            dataKeyIndex={keyIndex(0, 2)}
-            dataLayer={layer}
-            contrastText={getContrastText(getColor(0, 2))}
-            centerPrimary={getCenterPrimary(0, 2, 0, 0, true)}
-            centerExtra={getCenterExtra(0, 2, 0, 0, true)}
-            keyCode={getLabel(0, 2).keyCode}
-            selectedKey={getLabel(0, 2)}
-          />
-          <Key
-            keyType="regularKey"
-            id="R0C3_keyshape"
-            onClick={onClick}
-            className="key"
-            width={57}
-            height={57}
-            x={285}
-            y={keysRowsPosition.row1}
-            fill={getColor(0, 3)}
-            stroke={stroke(0, 3)}
-            strokeWidth={getStrokeWidth(0, 3)}
-            dataLedIndex={getLEDIndex(0, 3)}
-            dataKeyIndex={keyIndex(0, 3)}
-            dataLayer={layer}
-            contrastText={getContrastText(getColor(0, 3))}
-            centerPrimary={getCenterPrimary(0, 3, 0, 0, true)}
-            centerExtra={getCenterExtra(0, 3, 0, 0, true)}
-            keyCode={getLabel(0, 3).keyCode}
-            selectedKey={getLabel(0, 3)}
-          />
+          {genKey(0, 0, 84, keysRowsPosition.row1)}
+          {genKey(0, 1, 151, keysRowsPosition.row1)}
+          {genKey(0, 2, 218, keysRowsPosition.row1)}
+          {genKey(0, 3, 285, keysRowsPosition.row1)}
           <Key
             keyType="regularKey"
             id="R0C4_keyshape"
@@ -1811,747 +1777,111 @@ class KeymapISO extends React.Component {
         <g id="Areas">
           {/* Left side */}
           <g id="underglow-left-side">
-            <UnderGlowStrip
-              key="underglow_69"
-              id="underglow_69"
-              x={53}
-              y={86}
-              onClick={e => {
-                setUndeglowIndex(69, e);
-              }}
-              selectedLED={selectedLED}
-              visibility={!!(showUnderglow || isStandardView)}
-              clickAble={!(isStandardView && !showUnderglow)}
-              fill={getColor(69)}
-              stroke={stroke(69)}
-              strokeWidth={getStrokeWidth(69)}
-              dataLedIndex={getLEDIndex(69)}
-              dataKeyIndex={keyIndex(69)}
-              dataLayer={layer}
-              path="M4.28.4a4 4 0 0 1 4 4v27.7a4 4 0 0 1-8 0V4.4a4 4 0 0 1 4-4"
-            />
-            <UnderGlowStrip
-              key="underglow_70"
-              id="underglow_70"
-              x={53}
-              y={49}
-              onClick={e => {
-                setUndeglowIndex(70, e);
-              }}
-              selectedLED={selectedLED}
-              visibility={!!(showUnderglow || isStandardView)}
-              clickAble={!(isStandardView && !showUnderglow)}
-              fill={getColor(70)}
-              stroke={stroke(70)}
-              strokeWidth={getStrokeWidth(70)}
-              dataLedIndex={getLEDIndex(70)}
-              dataKeyIndex={keyIndex(70)}
-              dataLayer={layer}
-              path="M4.28.37a4 4 0 0 1 4 4V29.5a4 4 0 0 1-8 0V4.37a4 4 0 0 1 4-4"
-            />
-            <UnderGlowStrip
-              key="underglow_71"
-              id="underglow_71"
-              x={53}
-              y={12}
-              onClick={e => {
-                setUndeglowIndex(71, e);
-              }}
-              selectedLED={selectedLED}
-              visibility={!!(showUnderglow || isStandardView)}
-              clickAble={!(isStandardView && !showUnderglow)}
-              fill={getColor(71)}
-              stroke={stroke(71)}
-              strokeWidth={getStrokeWidth(71)}
-              dataLedIndex={getLEDIndex(71)}
-              dataKeyIndex={keyIndex(71)}
-              dataLayer={layer}
-              path="M33.64 3.998A4 4 0 0 1 29.642 8 21.37 21.37 0 0 0 8.28 29.37a4 4 0 0 1-8 0A29.37 29.37 0 0 1 29.639 0a4 4 0 0 1 4.001 3.998"
-            />
-            <UnderGlowStrip
-              key="underglow_72"
-              id="underglow_72"
-              x={90}
-              y={12}
-              onClick={e => {
-                setUndeglowIndex(72, e);
-              }}
-              selectedLED={selectedLED}
-              visibility={!!(showUnderglow || isStandardView)}
-              clickAble={!(isStandardView && !showUnderglow)}
-              fill={getColor(72)}
-              stroke={stroke(72)}
-              strokeWidth={getStrokeWidth(72)}
-              dataLedIndex={getLEDIndex(72)}
-              dataKeyIndex={keyIndex(72)}
-              dataLayer={layer}
-              path="M.65 4a4 4 0 0 1 4-4h35.13a4 4 0 1 1 0 8H4.65a4 4 0 0 1-4-4"
-            />
-            <UnderGlowStrip
-              key="underglow_73"
-              id="underglow_73"
-              x={139}
-              y={12}
-              onClick={e => {
-                setUndeglowIndex(73, e);
-              }}
-              selectedLED={selectedLED}
-              visibility={!!(showUnderglow || isStandardView)}
-              clickAble={!(isStandardView && !showUnderglow)}
-              fill={getColor(73)}
-              stroke={stroke(73)}
-              strokeWidth={getStrokeWidth(73)}
-              dataLedIndex={getLEDIndex(73)}
-              dataKeyIndex={keyIndex(73)}
-              dataLayer={layer}
-              path="M.78 4a4 4 0 0 1 4-4h38.38a4 4 0 1 1 0 8H4.78a4 4 0 0 1-4-4"
-            />
-            <UnderGlowStrip
-              key="underglow_74"
-              id="underglow_74"
-              x={188}
-              y={12}
-              onClick={e => {
-                setUndeglowIndex(74, e);
-              }}
-              selectedLED={selectedLED}
-              visibility={!!(showUnderglow || isStandardView)}
-              clickAble={!(isStandardView && !showUnderglow)}
-              fill={getColor(74)}
-              stroke={stroke(74)}
-              strokeWidth={getStrokeWidth(74)}
-              dataLedIndex={getLEDIndex(74)}
-              dataKeyIndex={keyIndex(74)}
-              dataLayer={layer}
-              path="M.16 4a4 4 0 0 1 4-4h38.37a4 4 0 1 1 0 8H4.16a4 4 0 0 1-4-4"
-            />
-            <UnderGlowStrip
-              key="underglow_75"
-              id="underglow_75"
-              x={238}
-              y={12}
-              onClick={e => {
-                setUndeglowIndex(75, e);
-              }}
-              selectedLED={selectedLED}
-              visibility={!!(showUnderglow || isStandardView)}
-              clickAble={!(isStandardView && !showUnderglow)}
-              fill={getColor(75)}
-              stroke={stroke(75)}
-              strokeWidth={getStrokeWidth(75)}
-              dataLedIndex={getLEDIndex(75)}
-              dataKeyIndex={keyIndex(75)}
-              dataLayer={layer}
-              path="M.53 4a4 4 0 0 1 4-4H42.9a4 4 0 1 1 0 8H4.53a4 4 0 0 1-4-4"
-            />
-            <UnderGlowStrip
-              key="underglow_76"
-              id="underglow_76"
-              x={288}
-              y={12}
-              onClick={e => {
-                setUndeglowIndex(76, e);
-              }}
-              selectedLED={selectedLED}
-              visibility={!!(showUnderglow || isStandardView)}
-              clickAble={!(isStandardView && !showUnderglow)}
-              fill={getColor(76)}
-              stroke={stroke(76)}
-              strokeWidth={getStrokeWidth(76)}
-              dataLedIndex={getLEDIndex(76)}
-              dataKeyIndex={keyIndex(76)}
-              dataLayer={layer}
-              path="M.34 4a4 4 0 0 1 4-4h37.72a4 4 0 0 1 0 8H4.34a4 4 0 0 1-4-4"
-            />
-            <UnderGlowStrip
-              key="underglow_77"
-              id="underglow_77"
-              x={339}
-              y={12}
-              onClick={e => {
-                setUndeglowIndex(77, e);
-              }}
-              selectedLED={selectedLED}
-              visibility={!!(showUnderglow || isStandardView)}
-              clickAble={!(isStandardView && !showUnderglow)}
-              fill={getColor(77)}
-              stroke={stroke(77)}
-              strokeWidth={getStrokeWidth(77)}
-              dataLedIndex={getLEDIndex(77)}
-              dataKeyIndex={keyIndex(77)}
-              dataLayer={layer}
-              path="M.28 4a4 4 0 0 1 4-4h39.18a4 4 0 1 1 0 8H4.28a4 4 0 0 1-4-4"
-            />
-            <UnderGlowStrip
-              key="underglow_78"
-              id="underglow_78"
-              x={390}
-              y={12}
-              onClick={e => {
-                setUndeglowIndex(78, e);
-              }}
-              selectedLED={selectedLED}
-              visibility={!!(showUnderglow || isStandardView)}
-              clickAble={!(isStandardView && !showUnderglow)}
-              fill={getColor(78)}
-              stroke={stroke(78)}
-              strokeWidth={getStrokeWidth(78)}
-              dataLedIndex={getLEDIndex(78)}
-              dataKeyIndex={keyIndex(78)}
-              dataLayer={layer}
-              path="M.46 4a4 4 0 0 1 4-4h37.56a4 4 0 0 1 0 8H4.46a4 4 0 0 1-4-4"
-            />
-            <UnderGlowStrip
-              key="underglow_79"
-              id="underglow_79"
-              x={440}
-              y={12}
-              onClick={e => {
-                setUndeglowIndex(79, e);
-              }}
-              selectedLED={selectedLED}
-              visibility={!!(showUnderglow || isStandardView)}
-              clickAble={!(isStandardView && !showUnderglow)}
-              fill={getColor(79)}
-              stroke={stroke(79)}
-              strokeWidth={getStrokeWidth(79)}
-              dataLedIndex={getLEDIndex(79)}
-              dataKeyIndex={keyIndex(79)}
-              dataLayer={layer}
-              path="M.02 4a4 4 0 0 1 4-4h38.37a4 4 0 1 1 0 8H4.02a4 4 0 0 1-4-4"
-            />
-            <UnderGlowStrip
-              key="underglow_80"
-              id="underglow_80"
-              x={490}
-              y={12}
-              onClick={e => {
-                setUndeglowIndex(80, e);
-              }}
-              selectedLED={selectedLED}
-              visibility={!!(showUnderglow || isStandardView)}
-              clickAble={!(isStandardView && !showUnderglow)}
-              fill={getColor(80)}
-              stroke={stroke(80)}
-              strokeWidth={getStrokeWidth(80)}
-              dataLedIndex={getLEDIndex(80)}
-              dataKeyIndex={keyIndex(80)}
-              dataLayer={layer}
-              path="M.39 4a4 4 0 0 1 4-4h39.56a4 4 0 1 1 0 8H4.39a4 4 0 0 1-4-4"
-            />
-            <UnderGlowStrip
-              key="underglow_81"
-              id="underglow_81"
-              x={542}
-              y={12}
-              onClick={e => {
-                setUndeglowIndex(81, e);
-              }}
-              selectedLED={selectedLED}
-              visibility={!!(showUnderglow || isStandardView)}
-              clickAble={!(isStandardView && !showUnderglow)}
-              fill={getColor(81)}
-              stroke={stroke(81)}
-              strokeWidth={getStrokeWidth(81)}
-              dataLedIndex={getLEDIndex(81)}
-              dataKeyIndex={keyIndex(81)}
-              dataLayer={layer}
-              path="M.95 4a4 4 0 0 1 4-4h13.39a8.94 8.94 0 0 1 8.94 8.94V21a4 4 0 0 1-8 0V8.94a.94.94 0 0 0-.94-.94H4.95a4 4 0 0 1-4-4"
-            />
-            <UnderGlowStrip
-              key="underglow_82"
-              id="underglow_82"
-              x={561}
-              y={41}
-              onClick={e => {
-                setUndeglowIndex(82, e);
-              }}
-              selectedLED={selectedLED}
-              visibility={!!(showUnderglow || isStandardView)}
-              clickAble={!(isStandardView && !showUnderglow)}
-              fill={getColor(82)}
-              stroke={stroke(82)}
-              strokeWidth={getStrokeWidth(82)}
-              dataLedIndex={getLEDIndex(82)}
-              dataKeyIndex={keyIndex(82)}
-              dataLayer={layer}
-              path="M4.28 0a4 4 0 0 1 4 4v18.97a4 4 0 0 1-8 0V4a4 4 0 0 1 4-4"
-            />
-            <UnderGlowStrip
-              key="underglow_83"
-              id="underglow_83"
-              x={561}
-              y={72}
-              onClick={e => {
-                setUndeglowIndex(83, e);
-              }}
-              selectedLED={selectedLED}
-              visibility={!!(showUnderglow || isStandardView)}
-              clickAble={!(isStandardView && !showUnderglow)}
-              fill={getColor(83)}
-              stroke={stroke(83)}
-              strokeWidth={getStrokeWidth(83)}
-              dataLedIndex={getLEDIndex(83)}
-              dataKeyIndex={keyIndex(83)}
-              dataLayer={layer}
-              path="M4.28.8a4 4 0 0 1 4 4V30a4 4 0 0 1-8 0V4.8a4 4 0 0 1 4-4"
-            />
-            <UnderGlowStrip
-              key="underglow_84"
-              id="underglow_84"
-              x={541}
-              y={98}
-              onClick={e => {
-                setUndeglowIndex(84, e);
-              }}
-              selectedLED={selectedLED}
-              visibility={!!(showUnderglow || isStandardView)}
-              clickAble={!(isStandardView && !showUnderglow)}
-              fill={getColor(84)}
-              stroke={stroke(84)}
-              strokeWidth={getStrokeWidth(84)}
-              dataLedIndex={getLEDIndex(84)}
-              dataKeyIndex={keyIndex(84)}
-              dataLayer={layer}
-              path="M6.55 0C3.217 0 .523 2.717.526 6.05.53 11.12.5 16.188.5 21.26a4 4 0 0 0 8 0V9a1 1 0 0 1 1-1h2.74a4 4 0 0 0 0-8z"
-            />
-            <UnderGlowStrip
-              key="underglow_85"
-              id="underglow_85"
-              x={541}
-              y={126}
-              onClick={e => {
-                setUndeglowIndex(85, e);
-              }}
-              selectedLED={selectedLED}
-              visibility={!!(showUnderglow || isStandardView)}
-              clickAble={!(isStandardView && !showUnderglow)}
-              fill={getColor(85)}
-              stroke={stroke(85)}
-              strokeWidth={getStrokeWidth(85)}
-              dataLedIndex={getLEDIndex(85)}
-              dataKeyIndex={keyIndex(85)}
-              dataLayer={layer}
-              path="M4.72.86a4 4 0 0 1 4 4v18.93a4 4 0 0 1-8 0V4.86a4 4 0 0 1 4-4"
-            />
-            <UnderGlowStrip
-              key="underglow_86"
-              id="underglow_86"
-              x={541}
-              y={158}
-              onClick={e => {
-                setUndeglowIndex(86, e);
-              }}
-              selectedLED={selectedLED}
-              visibility={!!(showUnderglow || isStandardView)}
-              clickAble={!(isStandardView && !showUnderglow)}
-              fill={getColor(86)}
-              stroke={stroke(86)}
-              strokeWidth={getStrokeWidth(86)}
-              dataLedIndex={getLEDIndex(86)}
-              dataKeyIndex={keyIndex(86)}
-              dataLayer={layer}
-              path="M.76 4a4 4 0 0 1 4-4h8.09a8.79 8.79 0 0 1 8.79 8.803V9v-.2 11.6a4 4 0 1 1-8 0V8.792A.79.79 0 0 0 12.85 8H4.76a4 4 0 0 1-4-4"
-            />
-            <UnderGlowStrip
-              key="underglow_87"
-              id="underglow_87"
-              x={554}
-              y={187}
-              onClick={e => {
-                setUndeglowIndex(87, e);
-              }}
-              selectedLED={selectedLED}
-              visibility={!!(showUnderglow || isStandardView)}
-              clickAble={!(isStandardView && !showUnderglow)}
-              fill={getColor(87)}
-              stroke={stroke(87)}
-              strokeWidth={getStrokeWidth(87)}
-              dataLedIndex={getLEDIndex(87)}
-              dataKeyIndex={keyIndex(87)}
-              dataLayer={layer}
-              path="M4.6.69a4 4 0 0 1 4 4v21.06a4 4 0 0 1-8 0V4.69a4 4 0 0 1 4-4"
-            />
-            <UnderGlowStrip
-              key="underglow_88"
-              id="underglow_88"
-              x={554}
-              y={220}
-              onClick={e => {
-                setUndeglowIndex(88, e);
-              }}
-              selectedLED={selectedLED}
-              visibility={!!(showUnderglow || isStandardView)}
-              clickAble={!(isStandardView && !showUnderglow)}
-              fill={getColor(88)}
-              stroke={stroke(88)}
-              strokeWidth={getStrokeWidth(88)}
-              dataLedIndex={getLEDIndex(88)}
-              dataKeyIndex={keyIndex(88)}
-              dataLayer={layer}
-              path="M4.6.75a4 4 0 0 1 4 4v7.65a1.6 1.6 0 0 0 1.6 1.6h17.08a4 4 0 0 1 0 8H10.2a9.6 9.6 0 0 1-9.6-9.6V4.75a4 4 0 0 1 4-4"
-            />
-            <UnderGlowStrip
-              key="underglow_89"
-              id="underglow_89"
-              x={576}
-              y={245}
-              onClick={e => {
-                setUndeglowIndex(89, e);
-              }}
-              selectedLED={selectedLED}
-              visibility={!!(showUnderglow || isStandardView)}
-              clickAble={!(isStandardView && !showUnderglow)}
-              fill={getColor(89)}
-              stroke={stroke(89)}
-              strokeWidth={getStrokeWidth(89)}
-              dataLedIndex={getLEDIndex(89)}
-              dataKeyIndex={keyIndex(89)}
-              dataLayer={layer}
-              path="M4.28.78a4 4 0 0 1 4 4v40.18a4 4 0 0 1-8 0V4.78a4 4 0 0 1 4-4"
-            />
-            <UnderGlowStrip
-              key="underglow_90"
-              id="underglow_90"
-              x={557}
-              y={298}
-              onClick={e => {
-                setUndeglowIndex(90, e);
-              }}
-              selectedLED={selectedLED}
-              visibility={!!(showUnderglow || isStandardView)}
-              clickAble={!(isStandardView && !showUnderglow)}
-              fill={getColor(90)}
-              stroke={stroke(90)}
-              strokeWidth={getStrokeWidth(90)}
-              dataLedIndex={getLEDIndex(90)}
-              dataKeyIndex={keyIndex(90)}
-              dataLayer={layer}
-              path="M9.56 8a1.14 1.14 0 0 0-1.14 1.14v24.5a4 4 0 1 1-8 0V9.14A9.14 9.14 0 0 1 9.56 0h13.72a4 4 0 1 1 0 8z"
-            />
-            <UnderGlowStrip
-              key="underglow_91"
-              id="underglow_91"
-              x={557}
-              y={340}
-              onClick={e => {
-                setUndeglowIndex(91, e);
-              }}
-              selectedLED={selectedLED}
-              visibility={!!(showUnderglow || isStandardView)}
-              clickAble={!(isStandardView && !showUnderglow)}
-              fill={getColor(91)}
-              stroke={stroke(91)}
-              strokeWidth={getStrokeWidth(91)}
-              dataLedIndex={getLEDIndex(91)}
-              dataKeyIndex={keyIndex(91)}
-              dataLayer={layer}
-              path="M4.42.28a4 4 0 0 1 4 4v29.93a4 4 0 0 1-8 0V4.28a4 4 0 0 1 4-4"
-            />
-            <UnderGlowStrip
-              key="underglow_92"
-              id="underglow_92"
-              x={557}
-              y={382}
-              onClick={e => {
-                setUndeglowIndex(92, e);
-              }}
-              selectedLED={selectedLED}
-              visibility={!!(showUnderglow || isStandardView)}
-              clickAble={!(isStandardView && !showUnderglow)}
-              fill={getColor(92)}
-              stroke={stroke(92)}
-              strokeWidth={getStrokeWidth(92)}
-              dataLedIndex={getLEDIndex(92)}
-              dataKeyIndex={keyIndex(92)}
-              dataLayer={layer}
-              path="M4.42-.01a4 4 0 0 1 4 4v25.44a4 4 0 0 1-8 0V3.99a4 4 0 0 1 4-4"
-            />
-            <UnderGlowStrip
-              key="underglow_93"
-              id="underglow_93"
-              x={528}
-              y={420}
-              onClick={e => {
-                setUndeglowIndex(93, e);
-              }}
-              selectedLED={selectedLED}
-              visibility={!!(showUnderglow || isStandardView)}
-              clickAble={!(isStandardView && !showUnderglow)}
-              fill={getColor(93)}
-              stroke={stroke(93)}
-              strokeWidth={getStrokeWidth(93)}
-              dataLedIndex={getLEDIndex(93)}
-              dataKeyIndex={keyIndex(93)}
-              dataLayer={layer}
-              path="M33.42.43a4 4 0 0 1 4 4v20.11a8.66 8.66 0 0 1-8.66 8.66H4.36a4 4 0 1 1 0-8h24.4a.66.66 0 0 0 .66-.66V4.43a4 4 0 0 1 4-4"
-            />
-            <UnderGlowStrip
-              key="underglow_94"
-              id="underglow_94"
-              x={479.5}
-              y={444.8}
-              onClick={e => {
-                setUndeglowIndex(94, e);
-              }}
-              selectedLED={selectedLED}
-              visibility={!!(showUnderglow || isStandardView)}
-              clickAble={!(isStandardView && !showUnderglow)}
-              fill={getColor(94)}
-              stroke={stroke(94)}
-              strokeWidth={getStrokeWidth(94)}
-              dataLedIndex={getLEDIndex(94)}
-              dataKeyIndex={keyIndex(94)}
-              dataLayer={layer}
-              path="M.35 4.2a4 4 0 0 1 4-4h35.56a4 4 0 0 1 0 8H4.35a4 4 0 0 1-4-4"
-            />
-            <UnderGlowStrip
-              key="underglow_95"
-              id="underglow_95"
-              x={456}
-              y={447}
-              onClick={e => {
-                setUndeglowIndex(95, e);
-              }}
-              selectedLED={selectedLED}
-              visibility={!!(showUnderglow || isStandardView)}
-              clickAble={!(isStandardView && !showUnderglow)}
-              fill={getColor(95)}
-              stroke={stroke(95)}
-              strokeWidth={getStrokeWidth(95)}
-              dataLedIndex={getLEDIndex(95)}
-              dataKeyIndex={keyIndex(95)}
-              dataLayer={layer}
-              path="M18.647 2.365a4 4 0 0 1-1.082 5.552 16 16 0 0 0-6.56 9.303v.001l-2.489 9.767a4 4 0 1 1-7.752-1.976l2.49-9.773a24 24 0 0 1 9.84-13.956 4 4 0 0 1 5.553 1.082"
-            />
-            <UnderGlowStrip
-              key="underglow_96"
-              id="underglow_96"
-              x={446}
-              y={480}
-              onClick={e => {
-                setUndeglowIndex(96, e);
-              }}
-              selectedLED={selectedLED}
-              visibility={!!(showUnderglow || isStandardView)}
-              clickAble={!(isStandardView && !showUnderglow)}
-              fill={getColor(96)}
-              stroke={stroke(96)}
-              strokeWidth={getStrokeWidth(96)}
-              dataLedIndex={getLEDIndex(96)}
-              dataKeyIndex={keyIndex(96)}
-              dataLayer={layer}
-              path="M11.65.944a4 4 0 0 1 2.886 4.866l-5.71 22.36a4 4 0 1 1-7.752-1.98l5.71-22.36A4 4 0 0 1 11.65.944"
-            />
-            <UnderGlowStrip
-              key="underglow_97"
-              id="underglow_97"
-              x={438}
-              y={515}
-              onClick={e => {
-                setUndeglowIndex(97, e);
-              }}
-              selectedLED={selectedLED}
-              visibility={!!(showUnderglow || isStandardView)}
-              clickAble={!(isStandardView && !showUnderglow)}
-              fill={getColor(97)}
-              stroke={stroke(97)}
-              strokeWidth={getStrokeWidth(97)}
-              dataLedIndex={getLEDIndex(97)}
-              dataKeyIndex={keyIndex(97)}
-              dataLayer={layer}
-              path="M10.98.904a4 4 0 0 1 2.886 4.866l-5.76 22.55a4 4 0 0 1-7.752-1.98l5.76-22.55A4 4 0 0 1 10.98.904"
-            />
-            <UnderGlowStrip
-              key="underglow_98"
-              id="underglow_98"
-              x={428}
-              y={550}
-              onClick={e => {
-                setUndeglowIndex(98, e);
-              }}
-              selectedLED={selectedLED}
-              visibility={!!(showUnderglow || isStandardView)}
-              clickAble={!(isStandardView && !showUnderglow)}
-              fill={getColor(98)}
-              stroke={stroke(98)}
-              strokeWidth={getStrokeWidth(98)}
-              dataLedIndex={getLEDIndex(98)}
-              dataKeyIndex={keyIndex(98)}
-              dataLayer={layer}
-              path="M12.09.714a4 4 0 0 1 2.886 4.866l-6.23 24.4A4 4 0 1 1 .994 28l6.23-24.4A4 4 0 0 1 12.09.714"
-            />
-            <UnderGlowStrip
-              key="underglow_99"
-              id="underglow_99"
-              x={418}
-              y={586}
-              onClick={e => {
-                setUndeglowIndex(99, e);
-              }}
-              selectedLED={selectedLED}
-              visibility={!!(showUnderglow || isStandardView)}
-              clickAble={!(isStandardView && !showUnderglow)}
-              fill={getColor(99)}
-              stroke={stroke(99)}
-              strokeWidth={getStrokeWidth(99)}
-              dataLedIndex={getLEDIndex(99)}
-              dataKeyIndex={keyIndex(99)}
-              dataLayer={layer}
-              path="M12.78.165a4 4 0 0 1 2.886 4.865l-7.35 28.76a4 4 0 0 1-7.751-1.98l7.35-28.76A4 4 0 0 1 12.78.165"
-            />
-            <UnderGlowStrip
-              key="underglow_100"
-              id="underglow_100"
-              x={408}
-              y={627}
-              onClick={e => {
-                setUndeglowIndex(100, e);
-              }}
-              selectedLED={selectedLED}
-              visibility={!!(showUnderglow || isStandardView)}
-              clickAble={!(isStandardView && !showUnderglow)}
-              fill={getColor(100)}
-              stroke={stroke(100)}
-              strokeWidth={getStrokeWidth(100)}
-              dataLedIndex={getLEDIndex(100)}
-              dataKeyIndex={keyIndex(100)}
-              dataLayer={layer}
-              path="M12.37.894a4 4 0 0 1 2.886 4.865l-6.9 27.03a4 4 0 0 1-7.752-1.978l6.9-27.03A4 4 0 0 1 12.37.894"
-            />
-            <UnderGlowStrip
-              key="underglow_101"
-              id="underglow_101"
-              x={374}
-              y={666}
-              onClick={e => {
-                setUndeglowIndex(101, e);
-              }}
-              selectedLED={selectedLED}
-              visibility={!!(showUnderglow || isStandardView)}
-              clickAble={!(isStandardView && !showUnderglow)}
-              fill={getColor(101)}
-              stroke={stroke(101)}
-              strokeWidth={getStrokeWidth(101)}
-              dataLedIndex={getLEDIndex(101)}
-              dataKeyIndex={keyIndex(101)}
-              dataLayer={layer}
-              path="M36.346 1.106a4 4 0 0 1 2.878 4.87l-.446 1.734-.002.008A27.84 27.84 0 0 1 11.802 28.73H4.18a4 4 0 0 1 0-8H11.8A19.84 19.84 0 0 0 31.022 5.75l.002-.008.452-1.758a4 4 0 0 1 4.87-2.878"
-            />
-            <UnderGlowStrip
-              key="underglow_102"
-              id="underglow_102"
-              x={329.2}
-              y={686}
-              onClick={e => {
-                setUndeglowIndex(102, e);
-              }}
-              selectedLED={selectedLED}
-              visibility={!!(showUnderglow || isStandardView)}
-              clickAble={!(isStandardView && !showUnderglow)}
-              fill={getColor(102)}
-              stroke={stroke(102)}
-              strokeWidth={getStrokeWidth(102)}
-              dataLedIndex={getLEDIndex(102)}
-              dataKeyIndex={keyIndex(102)}
-              dataLayer={layer}
-              path="M.26 4.73a4 4 0 0 1 4-4h32.49a4 4 0 0 1 0 8H4.26a4 4 0 0 1-4-4"
-            />
-            <UnderGlowStrip
-              key="underglow_103"
-              id="underglow_103"
-              x={284.4}
-              y={686}
-              onClick={e => {
-                setUndeglowIndex(103, e);
-              }}
-              selectedLED={selectedLED}
-              visibility={!!(showUnderglow || isStandardView)}
-              clickAble={!(isStandardView && !showUnderglow)}
-              fill={getColor(103)}
-              stroke={stroke(103)}
-              strokeWidth={getStrokeWidth(103)}
-              dataLedIndex={getLEDIndex(103)}
-              dataKeyIndex={keyIndex(103)}
-              dataLayer={layer}
-              path="M.44 4.73a4 4 0 0 1 4-4H37a4 4 0 0 1 0 8H4.44a4 4 0 0 1-4-4"
-            />
-            <UnderGlowStrip
-              key="underglow_104"
-              id="underglow_104"
-              x={240}
-              y={686}
-              onClick={e => {
-                setUndeglowIndex(104, e);
-              }}
-              selectedLED={selectedLED}
-              visibility={!!(showUnderglow || isStandardView)}
-              clickAble={!(isStandardView && !showUnderglow)}
-              fill={getColor(104)}
-              stroke={stroke(104)}
-              strokeWidth={getStrokeWidth(104)}
-              dataLedIndex={getLEDIndex(104)}
-              dataKeyIndex={keyIndex(104)}
-              dataLayer={layer}
-              path="M.95 4.73a4 4 0 0 1 4-4h32.74a4 4 0 0 1 0 8H4.95a4 4 0 0 1-4-4"
-            />
-            <UnderGlowStrip
-              key="underglow_105"
-              id="underglow_105"
-              x={194.8}
-              y={686}
-              onClick={e => {
-                setUndeglowIndex(105, e);
-              }}
-              selectedLED={selectedLED}
-              visibility={!!(showUnderglow || isStandardView)}
-              clickAble={!(isStandardView && !showUnderglow)}
-              fill={getColor(105)}
-              stroke={stroke(105)}
-              strokeWidth={getStrokeWidth(105)}
-              dataLedIndex={getLEDIndex(105)}
-              dataKeyIndex={keyIndex(105)}
-              dataLayer={layer}
-              path="M.88 4.73a4 4 0 0 1 4-4h33.07a4 4 0 0 1 0 8H4.88a4 4 0 0 1-4-4"
-            />
-            <UnderGlowStrip
-              key="underglow_106"
-              id="underglow_106"
-              x={150.2}
-              y={686}
-              onClick={e => {
-                setUndeglowIndex(106, e);
-              }}
-              selectedLED={selectedLED}
-              visibility={!!(showUnderglow || isStandardView)}
-              clickAble={!(isStandardView && !showUnderglow)}
-              fill={getColor(106)}
-              stroke={stroke(106)}
-              strokeWidth={getStrokeWidth(106)}
-              dataLedIndex={getLEDIndex(106)}
-              dataKeyIndex={keyIndex(106)}
-              dataLayer={layer}
-              path="M.27 4.73a4 4 0 0 1 4-4h32.55a4 4 0 1 1 0 8H4.27a4 4 0 0 1-4-4"
-            />
-            <UnderGlowStrip
-              key="underglow_107"
-              id="underglow_107"
-              x={105.7}
-              y={686}
-              onClick={e => {
-                setUndeglowIndex(107, e);
-              }}
-              selectedLED={selectedLED}
-              visibility={!!(showUnderglow || isStandardView)}
-              clickAble={!(isStandardView && !showUnderglow)}
-              fill={getColor(107)}
-              stroke={stroke(107)}
-              strokeWidth={getStrokeWidth(107)}
-              dataLedIndex={getLEDIndex(107)}
-              dataKeyIndex={keyIndex(107)}
-              dataLayer={layer}
-              path="M.72 4.73a4 4 0 0 1 4-4h32.75a4 4 0 0 1 0 8H4.72a4 4 0 0 1-4-4"
-            />
+            {genUG(69, 53, 86, "M4.28.4a4 4 0 0 1 4 4v27.7a4 4 0 0 1-8 0V4.4a4 4 0 0 1 4-4")}
+            {genUG(70, 53, 49, "M4.28.37a4 4 0 0 1 4 4V29.5a4 4 0 0 1-8 0V4.37a4 4 0 0 1 4-4")}
+            {genUG(
+              71,
+              53,
+              12,
+              "M33.64 3.998A4 4 0 0 1 29.642 8 21.37 21.37 0 0 0 8.28 29.37a4 4 0 0 1-8 0A29.37 29.37 0 0 1 29.639 0a4 4 0 0 1 4.001 3.998",
+            )}
+            {genUG(72, 90, 12, "M.65 4a4 4 0 0 1 4-4h35.13a4 4 0 1 1 0 8H4.65a4 4 0 0 1-4-4")}
+            {genUG(73, 139, 12, "M.78 4a4 4 0 0 1 4-4h38.38a4 4 0 1 1 0 8H4.78a4 4 0 0 1-4-4")}
+            {genUG(74, 188, 12, "M.16 4a4 4 0 0 1 4-4h38.37a4 4 0 1 1 0 8H4.16a4 4 0 0 1-4-4")}
+            {genUG(75, 238, 12, "M.53 4a4 4 0 0 1 4-4H42.9a4 4 0 1 1 0 8H4.53a4 4 0 0 1-4-4")}
+            {genUG(76, 288, 12, "M.34 4a4 4 0 0 1 4-4h37.72a4 4 0 0 1 0 8H4.34a4 4 0 0 1-4-4")}
+            {genUG(77, 339, 12, "M.28 4a4 4 0 0 1 4-4h39.18a4 4 0 1 1 0 8H4.28a4 4 0 0 1-4-4")}
+            {genUG(78, 390, 12, "M.46 4a4 4 0 0 1 4-4h37.56a4 4 0 0 1 0 8H4.46a4 4 0 0 1-4-4")}
+            {genUG(79, 440, 12, "M.02 4a4 4 0 0 1 4-4h38.37a4 4 0 1 1 0 8H4.02a4 4 0 0 1-4-4")}
+            {genUG(80, 490, 12, "M.39 4a4 4 0 0 1 4-4h39.56a4 4 0 1 1 0 8H4.39a4 4 0 0 1-4-4")}
+            {genUG(
+              81,
+              542,
+              12,
+              "M.95 4a4 4 0 0 1 4-4h13.39a8.94 8.94 0 0 1 8.94 8.94V21a4 4 0 0 1-8 0V8.94a.94.94 0 0 0-.94-.94H4.95a4 4 0 0 1-4-4",
+            )}
+            {genUG(82, 561, 41, "M4.28 0a4 4 0 0 1 4 4v18.97a4 4 0 0 1-8 0V4a4 4 0 0 1 4-4")}
+            {genUG(83, 561, 72, "M4.28.8a4 4 0 0 1 4 4V30a4 4 0 0 1-8 0V4.8a4 4 0 0 1 4-4")}
+            {genUG(
+              84,
+              541,
+              98,
+              "M6.55 0C3.217 0 .523 2.717.526 6.05.53 11.12.5 16.188.5 21.26a4 4 0 0 0 8 0V9a1 1 0 0 1 1-1h2.74a4 4 0 0 0 0-8z",
+            )}
+            {genUG(85, 541, 126, "M4.72.86a4 4 0 0 1 4 4v18.93a4 4 0 0 1-8 0V4.86a4 4 0 0 1 4-4")}
+            {genUG(
+              86,
+              541,
+              158,
+              "M.76 4a4 4 0 0 1 4-4h8.09a8.79 8.79 0 0 1 8.79 8.803V9v-.2 11.6a4 4 0 1 1-8 0V8.792A.79.79 0 0 0 12.85 8H4.76a4 4 0 0 1-4-4",
+            )}
+            {genUG(87, 554, 187, "M4.6.69a4 4 0 0 1 4 4v21.06a4 4 0 0 1-8 0V4.69a4 4 0 0 1 4-4")}
+            {genUG(
+              88,
+              554,
+              220,
+              "M4.6.75a4 4 0 0 1 4 4v7.65a1.6 1.6 0 0 0 1.6 1.6h17.08a4 4 0 0 1 0 8H10.2a9.6 9.6 0 0 1-9.6-9.6V4.75a4 4 0 0 1 4-4",
+            )}
+            {genUG(89, 576, 245, "M4.28.78a4 4 0 0 1 4 4v40.18a4 4 0 0 1-8 0V4.78a4 4 0 0 1 4-4")}
+            {genUG(
+              90,
+              557,
+              298,
+              "M9.56 8a1.14 1.14 0 0 0-1.14 1.14v24.5a4 4 0 1 1-8 0V9.14A9.14 9.14 0 0 1 9.56 0h13.72a4 4 0 1 1 0 8z",
+            )}
+            {genUG(91, 557, 340, "M4.42.28a4 4 0 0 1 4 4v29.93a4 4 0 0 1-8 0V4.28a4 4 0 0 1 4-4")}
+            {genUG(92, 557, 382, "M4.42-.01a4 4 0 0 1 4 4v25.44a4 4 0 0 1-8 0V3.99a4 4 0 0 1 4-4")}
+            {genUG(
+              93,
+              528,
+              420,
+              "M33.42.43a4 4 0 0 1 4 4v20.11a8.66 8.66 0 0 1-8.66 8.66H4.36a4 4 0 1 1 0-8h24.4a.66.66 0 0 0 .66-.66V4.43a4 4 0 0 1 4-4",
+            )}
+            {genUG(94, 479.5, 444.8, "M.35 4.2a4 4 0 0 1 4-4h35.56a4 4 0 0 1 0 8H4.35a4 4 0 0 1-4-4")}
+            {genUG(
+              95,
+              456,
+              447,
+              "M18.647 2.365a4 4 0 0 1-1.082 5.552 16 16 0 0 0-6.56 9.303v.001l-2.489 9.767a4 4 0 1 1-7.752-1.976l2.49-9.773a24 24 0 0 1 9.84-13.956 4 4 0 0 1 5.553 1.082",
+            )}
+            {genUG(
+              96,
+              446,
+              480,
+              "M11.65.944a4 4 0 0 1 2.886 4.866l-5.71 22.36a4 4 0 1 1-7.752-1.98l5.71-22.36A4 4 0 0 1 11.65.944",
+            )}
+            {genUG(
+              97,
+              438,
+              515,
+              "M10.98.904a4 4 0 0 1 2.886 4.866l-5.76 22.55a4 4 0 0 1-7.752-1.98l5.76-22.55A4 4 0 0 1 10.98.904",
+            )}
+            {genUG(98, 428, 550, "M12.09.714a4 4 0 0 1 2.886 4.866l-6.23 24.4A4 4 0 1 1 .994 28l6.23-24.4A4 4 0 0 1 12.09.714")}
+            {genUG(
+              99,
+              418,
+              586,
+              "M12.78.165a4 4 0 0 1 2.886 4.865l-7.35 28.76a4 4 0 0 1-7.751-1.98l7.35-28.76A4 4 0 0 1 12.78.165",
+            )}
+            {genUG(
+              100,
+              408,
+              627,
+              "M12.37.894a4 4 0 0 1 2.886 4.865l-6.9 27.03a4 4 0 0 1-7.752-1.978l6.9-27.03A4 4 0 0 1 12.37.894",
+            )}
+            {genUG(
+              101,
+              374,
+              666,
+              "M36.346 1.106a4 4 0 0 1 2.878 4.87l-.446 1.734-.002.008A27.84 27.84 0 0 1 11.802 28.73H4.18a4 4 0 0 1 0-8H11.8A19.84 19.84 0 0 0 31.022 5.75l.002-.008.452-1.758a4 4 0 0 1 4.87-2.878",
+            )}
+            {genUG(102, 329.2, 686, "M.26 4.73a4 4 0 0 1 4-4h32.49a4 4 0 0 1 0 8H4.26a4 4 0 0 1-4-4")}
+            {genUG(103, 284.4, 686, "M.44 4.73a4 4 0 0 1 4-4H37a4 4 0 0 1 0 8H4.44a4 4 0 0 1-4-4")}
+            {genUG(104, 240, 686, "M.95 4.73a4 4 0 0 1 4-4h32.74a4 4 0 0 1 0 8H4.95a4 4 0 0 1-4-4")}
+            {genUG(105, 194.8, 686, "M.88 4.73a4 4 0 0 1 4-4h33.07a4 4 0 0 1 0 8H4.88a4 4 0 0 1-4-4")}
+            {genUG(106, 150.2, 686, "M.27 4.73a4 4 0 0 1 4-4h32.55a4 4 0 1 1 0 8H4.27a4 4 0 0 1-4-4")}
+            {genUG(107, 105.7, 686, "M.72 4.73a4 4 0 0 1 4-4h32.75a4 4 0 0 1 0 8H4.72a4 4 0 0 1-4-4")}
+
             <UnderGlowStrip
               key="underglow_108"
               id="underglow_108"

@@ -203,7 +203,7 @@ class KeymapANSI extends React.Component {
       const ledIndex =
         col !== undefined ? LedMap[parseInt(row)][parseInt(col)] : NoKeyLedMap[row - LEDS_LEFT_KEYS - LEDS_RIGHT_KEYS];
       const colorIndex = colormap[ledIndex];
-      log.info("Row and col", row, NoKeyLedMap.length, colorIndex, colormap);
+      // log.info("Row and col", row, NoKeyLedMap.length, colorIndex, colormap);
       const color = palette[colorIndex].rgb;
       return color;
     };
