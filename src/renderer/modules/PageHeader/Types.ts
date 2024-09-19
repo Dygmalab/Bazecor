@@ -14,4 +14,6 @@ export interface PageHeaderType {
   isSaving?: boolean;
   primaryButton?: React.ReactNode;
   secondaryButton?: React.ReactNode;
+  saveButtonRef?: React.RefObject<HTMLButtonElement>;
+  discardChangesButtonRef?: React.RefObject<HTMLButtonElement>;
 }

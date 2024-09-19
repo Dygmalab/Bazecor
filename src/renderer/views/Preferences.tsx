@@ -162,6 +162,8 @@ const Preferences = (props: PreferencesProps) => {
     toggleDarkMode,
     toggleBackup,
     setLoading,
+    saveButtonRef,
+    discardChangesButtonRef,
   } = props;
   const [activeTab, setActiveTab] = useState(connected ? "Keyboard" : "Application");
 
@@ -658,6 +660,8 @@ const Preferences = (props: PreferencesProps) => {
         inContext={modified}
         isSaving={localloading}
         styles="pageHeaderFlatBottom"
+        saveButtonRef={saveButtonRef}
+        discardChangesButtonRef={discardChangesButtonRef}
       />
       <div className="flex w-full mx-auto mt-4">
         <Tabs

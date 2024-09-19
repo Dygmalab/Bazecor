@@ -45,8 +45,8 @@ function Picker(props: PickerProps) {
         base: actions[action] > 255 ? baseCode : actions[action],
         modified: modCode,
       }}
-      disableMods={[0, 3].includes(action) && activeTab === "disabled"}
-      disableMove={![0, 3].includes(action) && activeTab === "super"}
+      disableMods={([0, 3].includes(action) && activeTab === "disabled") || activeTab === "dualFunction"}
+      disableMove={(![0, 3].includes(action) && activeTab === "super") || activeTab === "dualFunction"}
       disableAll={disable}
       selectedlanguage={selectedlanguage}
       kbtype={kbtype}

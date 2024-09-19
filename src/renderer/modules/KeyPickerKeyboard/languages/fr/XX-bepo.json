@@ -1522,7 +1522,9 @@
       "second": "",
       "third": "",
       "fourth": ""
-    }
+    },
+    "mod": true,
+    "tap": true
   },
   {
     "id": 226,
@@ -1591,7 +1593,9 @@
       "second": "",
       "third": "",
       "fourth": ""
-    }
+    },
+    "mod": true,
+    "tap": true
   },
   {
     "id": 101,

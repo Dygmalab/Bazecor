@@ -69,7 +69,6 @@ const Style = Styled.div`
     }
     .superkeyButtonWrapper {
         position: relative;
-        align-self: self-end;
         margin-top: auto;
         &:hover {
             .superkeyDeleteButton {
@@ -171,6 +170,7 @@ function SuperkeyPicker(props: SuperkeyPickerProps) {
     macros,
     keymapDB,
     updateAction,
+    variant = "regular",
   } = props;
   const [controlDeleteButton, setControlDeleteButton] = React.useState(false);
   const [keyContent, setKeyContent] = useState<string | JSX.Element>("Loading...");
@@ -229,23 +229,27 @@ function SuperkeyPicker(props: SuperkeyPickerProps) {
   if (superkeys === null) return null;
   return (
     <Style>
-      <div className={`superkeyAction ${elementActive ? "active" : ""}`}>
+      <div className={`superkeyAction ${elementActive ? "active" : ""} ${variant === "subtle" ? "!py-2" : ""}`}>
         <div className={`superkeyTitle ${isStandardViewSuperkeys ? "standard" : "single"}`}>
-          {icon}
-          <Heading headingLevel={5} renderAs="h5">
+          {variant === "regular" && icon}
+          <Heading headingLevel={5} renderAs="h5" className={`${variant === "subtle" ? "my-0 !text-2xxs" : ""}`}>
             {title}
           </Heading>
         </div>
         {isStandardViewSuperkeys && <div className="description">{description}</div>}
         <div className="superkeyButtonWrapper">
-          {controlDeleteButton && (
+          {controlDeleteButton && variant === "regular" && (
             // TODO: Div with click should not exist, use Button instead!!
             <div className="superkeyDeleteButton" aria-hidden="true" onClick={() => updateAction(index, 0)}>
               <IconClose />
             </div>
           )}
           {/* TODO: Div with click should not exist, use Button instead!! */}
-          <div className="superkeyButton" aria-hidden="true" onClick={() => onClick(index)}>
+          <div
+            className={`superkeyButton ${variant === "subtle" ? "!mt-0 pointer-events-none" : ""}`}
+            aria-hidden="true"
+            onClick={() => onClick(index)}
+          >
             <div className="superkeyButtonInner">{keyContent}</div>
             {superkeys[selected] !== undefined ? <ListModifier keyCode={superkeys[selected].actions[index]} /> : ""}
           </div>

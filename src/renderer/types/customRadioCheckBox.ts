@@ -15,12 +15,12 @@
  */
 
 export interface CustomRCBProps {
-  label: string;
+  label: string | JSX.Element;
   type: string;
   id: string | number;
   name: string;
-  tooltip: any;
-  className: string;
+  tooltip?: any;
+  className?: string;
   onClick: (checked: boolean) => void;
   disabled: boolean;
   checked: boolean;

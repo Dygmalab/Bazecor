@@ -273,7 +273,7 @@ const English = {
       noKeyDescription: "There's no function or character assigned to that key.",
       transparent: "Transparent",
       trans: "Trans.",
-      transparentDescription: "The key triggers the function assigned to the same key from the previous layer.",
+      transparentDescription: "The key triggers the function assigned to the same key on the previous layer.",
       keys: {
         keys: "Keys",
         standardViewTitle: "Select a key",
@@ -301,15 +301,16 @@ const English = {
         title: "Macro",
         callOut1: "Oh Yeah!! More superpowers! Here you can add macros to your keys! 🔥",
         callOut2:
-          "Not so clear what is macros? Macros are sequences of events (such as keystrokes, mouse clicks, and delays) that can be played back to help with repetitive strings of texts or tasks. They can also be used to replay sequences that are long or difficult to run.",
+          "Not so clear what macros are? Macros are sequences of events (such as keystrokes, mouse clicks, and delays) that can be played back to help with repetitive strings of texts or keypresses.",
       },
       mediaAndLED: {
         title: "Media & LED",
-        callOut: "Put your hands up! Control the media and RGB lighting behaviour using keys shortcuts.",
+        callOut: "Put your hands up! Easily control your media, RGB lighting and much more.",
       },
       mouse: {
         title: "Mouse",
-        callOut: "Add mouse events in your keys. You can assign any mouse events, such as clicks, moves and mouse wheel actions.",
+        callOut:
+          "Control your mouse with your keyboard. You can assign any mouse event, such as clicks, cursor movements and mouse wheel actions.",
       },
       oneShot: {
         title: "OneShot",
@@ -337,11 +338,11 @@ const English = {
         label: "Select Superkey",
       },
       wireless: {
-        callOut:
-          "With battery and wireless features at your fingertips, you're in complete control of your device's performance and connectivity.",
+        callOut: "Control your keyboard's performance and connectivity. ",
         batteryPowerStatus: "Battery power status",
-        batteryLevel: "Battery level",
-        batteryLevelDescription: "Check your power status in real time turning your device into a visual battery monitor.",
+        batteryLevel: "Battery Level",
+        batteryLevelDescription:
+          "Assign this key to check the charge of your battery in real time thanks to the LED indicators on the keyboard.",
         savingModeDescription: "Faster and convenient way to toggle Energy saving mode on and off.",
       },
     },
@@ -449,7 +450,7 @@ const English = {
         up: "Up",
         down: "Down",
         mediaTitle: "Media",
-        mediaDescription: "Skip boring songs, turn the sound louder. <br>Harder, better, faster, stronger!",
+        mediaDescription: "Skip boring songs, turn the sound louder.",
         LEDTitle: "LED",
         LEDDescription: "Turn the RGB lighting On or Off and control the cycle through the lights effects.",
         othersTitle: "Others",
@@ -518,9 +519,9 @@ const English = {
   wireless: {
     title: "Wireless",
     bluetooth: {
-      pairingMode: "Pairing mode",
-      pairingModeButton: "Bluetooth Pairing Mode",
-      pairingModeDescription: "Activate Pairing Mode for easy device connection.",
+      pairingMode: "Bluetooth Pairing Mode",
+      pairingModeButton: "Bluetooth Pairing",
+      pairingModeDescription: "Assign this key to activate Bluetooth pairing mode and easily connect to multiple devices.",
       pair: "Pair",
     },
     energyManagement: {

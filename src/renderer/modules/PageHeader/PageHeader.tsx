@@ -107,6 +107,8 @@ function PageHeader(props: PageHeaderType) {
     isSaving,
     primaryButton,
     secondaryButton,
+    saveButtonRef,
+    discardChangesButtonRef,
   } = props;
   return (
     <Style className={`${styles === "pageHeaderFlatBottom" ? "pageHeaderSticky" : ""}`}>
@@ -119,7 +121,14 @@ function PageHeader(props: PageHeaderType) {
         <div className="pageTools">
           {contentSelector || ""}
           {showSaving ? (
-            <Saving saveContext={saveContext} destroyContext={destroyContext} inContext={inContext} isSaving={isSaving} />
+            <Saving
+              saveContext={saveContext}
+              destroyContext={destroyContext}
+              inContext={inContext}
+              isSaving={isSaving}
+              saveButtonRef={saveButtonRef}
+              discardChangesButtonRef={discardChangesButtonRef}
+            />
           ) : (
             ""
           )}
