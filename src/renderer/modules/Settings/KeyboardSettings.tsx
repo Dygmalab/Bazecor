@@ -353,6 +353,7 @@ function KeyboardSettings(props: KeyboardSettingsProps) {
                               <ul>
                                 <li className="text-left">{i18n.keyboardSettings.qukeys.overlapThresholdTip2}</li>
                                 <li className="text-left">{i18n.keyboardSettings.qukeys.overlapThresholdTip3}</li>
+                                <li className="text-left">{i18n.keyboardSettings.qukeys.overlapThresholdTipDefault}</li>
                               </ul>
                             </TooltipContent>
                           </Tooltip>
@@ -391,6 +392,7 @@ function KeyboardSettings(props: KeyboardSettingsProps) {
                               <ul>
                                 <li className="text-left">{i18n.keyboardSettings.qukeys.holdTimeoutTip2}</li>
                                 <li className="text-left">{i18n.keyboardSettings.qukeys.holdTimeoutTip3}</li>
+                                <li className="text-left">{i18n.keyboardSettings.qukeys.holdTimeoutTipDefault}</li>
                               </ul>
                             </TooltipContent>
                           </Tooltip>
@@ -428,6 +430,7 @@ function KeyboardSettings(props: KeyboardSettingsProps) {
                               </Heading>
                               <ul>
                                 <li className="text-left">{i18n.keyboardSettings.qukeys.minHoldTip2}</li>
+                                <li className="text-left">{i18n.keyboardSettings.qukeys.minHoldTipDefault}</li>
                               </ul>
                             </TooltipContent>
                           </Tooltip>
@@ -465,6 +468,7 @@ function KeyboardSettings(props: KeyboardSettingsProps) {
                               </Heading>
                               <ul>
                                 <li className="text-left">{i18n.keyboardSettings.qukeys.minPriorTip2}</li>
+                                <li className="text-left">{i18n.keyboardSettings.qukeys.minPriorTipDefault}</li>
                               </ul>
                             </TooltipContent>
                           </Tooltip>
@@ -503,6 +507,7 @@ function KeyboardSettings(props: KeyboardSettingsProps) {
                               <ul>
                                 <li className="text-left">{i18n.keyboardSettings.superkeys.overlapTip2}</li>
                                 <li className="text-left">{i18n.keyboardSettings.superkeys.overlapTip3}</li>
+                                <li className="text-left">{i18n.keyboardSettings.superkeys.overlapTipDefault}</li>
                               </ul>
                             </TooltipContent>
                           </Tooltip>
@@ -541,6 +546,7 @@ function KeyboardSettings(props: KeyboardSettingsProps) {
                               <ul>
                                 <li className="text-left">{i18n.keyboardSettings.superkeys.timeoutTip2}</li>
                                 <li className="text-left">{i18n.keyboardSettings.superkeys.timeoutTip3}</li>
+                                <li className="text-left">{i18n.keyboardSettings.superkeys.timeoutTipDefault}</li>
                               </ul>
                             </TooltipContent>
                           </Tooltip>
@@ -579,6 +585,7 @@ function KeyboardSettings(props: KeyboardSettingsProps) {
                               <ul>
                                 <li className="text-left">{i18n.keyboardSettings.superkeys.chordingTip2}</li>
                                 <li className="text-left">{i18n.keyboardSettings.superkeys.chordingTip3}</li>
+                                <li className="text-left">{i18n.keyboardSettings.superkeys.chordingTipDefault}</li>
                               </ul>
                             </TooltipContent>
                           </Tooltip>
