@@ -17,7 +17,7 @@ const alertVariants = cva("relative w-full rounded-lg", {
       callout: "flex [&>svg]:absolute [&_svg]:left-[-18px] [&_svg]:top-4",
     },
     size: {
-      sm: "text-xs px-[24px] py-[16px]",
+      sm: "text-xs px-[24px] py-[8px]",
       md: "text-sm",
       lg: "text-base",
     },

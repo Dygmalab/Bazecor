@@ -476,7 +476,7 @@ export default class StandardView extends React.Component<StandardViewProps, Sta
                   <TabsContent value="tabLayers" key="tabLayers">
                     <motion.div initial="hidden" animate="visible" key="tabKeys" variants={tabVariants}>
                       <LayersTab
-                        onLayerPress={this.updateSelected}
+                        onKeySelect={this.updateSelected}
                         keyCode={keyCode}
                         isStandardView={isStandardView}
                         disableMods={!!((keyIndex === 0 || keyIndex === 3) && actTab === "super")}

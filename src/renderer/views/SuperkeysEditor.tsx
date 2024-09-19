@@ -782,6 +782,8 @@ function SuperkeysEditor(props: SuperkeysEditorProps) {
           destroyContext={destroyThisContext}
           inContext={modified}
           isSaving={isSaving}
+          saveButtonRef={props.saveButtonRef}
+          discardChangesButtonRef={props.discardChangesButtonRef}
         />
 
         <Callout
@@ -808,53 +810,23 @@ function SuperkeysEditor(props: SuperkeysEditorProps) {
           changeAction={changeAction}
           keymapDB={keymapDB}
         />
-
-        {isStandardViewSuperkeys && <SuperKeysFeatures />}
       </div>
-      {!isStandardViewSuperkeys ? (
-        <div className="keyboardcontainer" hidden={selectedAction < 0}>
-          <KeyPickerKeyboard
-            key={JSON.stringify(superkeys) + selectedAction}
-            onKeySelect={onKeyChange}
-            code={code}
-            macros={macros}
-            superkeys={superkeys}
-            actions={actions}
-            action={selectedAction}
-            actTab="super"
-            superName={superName}
-            selectedlanguage={currentLanguageLayout}
-            kbtype={kbtype}
-          />
-        </div>
-      ) : (
-        ""
-      )}
-      <ToggleGroupLayoutViewMode value={viewMode} onValueChange={onToggle} viewMode="superkeys" />
 
-      {isStandardViewSuperkeys ? (
-        <StandardView
-          showStandardView={showStandardView}
-          closeStandardView={closeStandardViewModal}
-          handleSave={handleSaveStandardView}
+      <div className="keyboardcontainer" hidden={selectedAction < 0}>
+        <KeyPickerKeyboard
           onKeySelect={onKeyChange}
+          code={code}
           macros={macros}
           superkeys={superkeys}
-          actions={selectedAction > -1 ? superkeys[selectedSuper].actions : []}
-          keyIndex={selectedAction}
-          code={code}
-          layerData={selectedAction > -1 ? superkeys[selectedSuper].actions : []}
+          actions={actions}
+          action={selectedAction}
           actTab="super"
+          superName={superName}
           selectedlanguage={currentLanguageLayout}
           kbtype={kbtype}
-          isStandardView={isStandardViewSuperkeys}
-          isWireless={
-            deviceState?.currentDevice?.device?.info?.keyboardType === "wireless" || deviceState?.currentDevice?.device?.wireless
-          }
         />
-      ) : (
-        ""
-      )}
+      </div>
+      <SuperKeysFeatures />
 
       <Dialog open={showDeleteModal} onOpenChange={toggleDeleteModal}>
         <DialogContent>

@@ -18,8 +18,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React, { MouseEvent, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import React, { MouseEvent, useCallback, useEffect, useMemo, useState, useRef } from "react";
 import Styled from "styled-components";
+import { motion } from "framer-motion";
 import { toast } from "react-toastify";
 import { ipcRenderer } from "electron";
 import fs from "fs";
@@ -41,12 +42,10 @@ import { DeviceClass } from "@Renderer/types/devices";
 import { PageHeader } from "@Renderer/modules/PageHeader";
 import ColorEditor from "@Renderer/modules/ColorEditor";
 import { KeyPickerKeyboard } from "@Renderer/modules/KeyPickerKeyboard";
-import StandardView from "@Renderer/modules/StandardView";
 
 // Components
 import LayerSelector from "@Renderer/components/organisms/Select/LayerSelector";
 import { Button } from "@Renderer/components/atoms/Button";
-import ToggleGroupLayoutViewMode from "@Renderer/components/molecules/CustomToggleGroup/ToggleGroupLayoutViewMode";
 import { IconArrowDownWithLine, IconArrowUpWithLine, IconColorPalette } from "@Renderer/components/atoms/icons";
 import LoaderLayout from "@Renderer/components/atoms/loader/loaderLayout";
 import { i18n } from "@Renderer/i18n";
@@ -150,7 +149,20 @@ const Styles = Styled.div`
 }
 .singleViewMode.keyboard .raiseKeyboard {
   margin: 0 auto;
-  max-height: 40vh;
+  // max-height: 44vh;
+  height: 100%;
+  svg {
+    height: 100%;
+  }
+}
+.singleViewMode.keyboard .raiseKeyboard.svg-defy {
+  // max-height: 49vh;
+}
+.keyboard-editor.keyboard .dygma-keyboard-editor.editor {
+  height: calc(100vh - 370px - 124px);
+}
+.keyboard-editor.keyboard .dygma-keyboard-editor.editor .LayerHolder{
+  height: 100%;
 }
 
 .NeuronLine {
@@ -167,7 +179,6 @@ const Styles = Styled.div`
     cursor: pointer;
   }
 }
-
 
 .keyBase {
   fill: ${({ theme }) => theme.styles.raiseKeyboard.keyBase};
@@ -200,7 +211,6 @@ const Styles = Styled.div`
       padding: 0;
       margin: 0;
       color: ${({ theme }) => theme.styles.raiseKeyboard.contentColor};
-      width: 100%;
       li {
         overflow-wrap: break-word;
         word-wrap: break-word;
@@ -467,11 +477,6 @@ const LayoutEditor = (props: LayoutEditorProps) => {
   const [showMacroModal, setShowMacroModal] = useState(false);
   const [showNeuronModal, setShowNeuronModal] = useState(false);
   const [leftSideModified, setLeftSideModified] = useState(false);
-  const [isStandardView, setIsStandardView] = useState(
-    store.get("settings.isStandardView") !== undefined ? (store.get("settings.isStandardView") as boolean) : false,
-  );
-  const [showStandardView, setShowStandardView] = useState(false);
-  const [viewMode, setViewMode] = useState(store.get("settings.isStandardView") !== undefined ? "standard" : "single");
   const [isWireless, setIsWireless] = useState(false);
 
   const [selectedPaletteColor, setSelectedPaletteColor] = useState(-1);
@@ -485,7 +490,20 @@ const LayoutEditor = (props: LayoutEditorProps) => {
   const [ledIndexStart, setLedIndexStart] = useState(80);
   const [scanningStep, setScanningStep] = useState(0);
   const [keymapDB, setkeymapDB] = useState(new KeymapDB());
-  const { darkMode, cancelContext, setLoading, onDisconnect, startContext, inContext, restoredOk, handleSetRestoredOk } = props;
+  const {
+    darkMode,
+    cancelContext,
+    setLoading,
+    onDisconnect,
+    startContext,
+    inContext,
+    restoredOk,
+    handleSetRestoredOk,
+    saveButtonRef,
+    discardChangesButtonRef,
+  } = props;
+
+  const layoutEditorContainerRef = useRef(null);
 
   const onLayerNameChange = (newName: string) => {
     const slicedLayerNames = layerNames.slice();
@@ -1108,25 +1126,6 @@ const LayoutEditor = (props: LayoutEditorProps) => {
     const keyIndex = parseInt(currentTarget.getAttribute("data-key-index"), 10);
     const ledIndex = parseInt(currentTarget.getAttribute("data-led-index"), 10);
 
-    if (isStandardView) {
-      setShowStandardView(true);
-      setViewMode("standard");
-      // log.info("Show Standard View IF: ", showStandardView);
-    }
-
-    if (keyIndex === currentKeyIndex && !isStandardView) {
-      if (event.ctrlKey || (event.shiftKey && !isColorButtonSelected)) {
-        onCtrlShiftPress(layer, ledIndex);
-        return;
-      }
-      setSelectedPaletteColor(null);
-      setIsMultiSelected(false);
-      setIsColorButtonSelected(false);
-      setCurrentKeyIndex(-1);
-      setCurrentLedIndex(-1);
-      return;
-    }
-
     setCurrentLayer(layer);
     if (colorMap.length > 0 && layer >= 0 && layer < colorMap.length) {
       setCurrentKeyIndex(keyIndex);
@@ -1683,41 +1682,11 @@ const LayoutEditor = (props: LayoutEditorProps) => {
     layerNames !== undefined && layerNames.length > index ? layerNames[index]?.name : defaultLayerNames[index]?.name;
 
   const modeSelectToggle = (data: ModeType) => {
-    if (isStandardView) {
-      if (currentLedIndex > ledIndexStart) {
-        setCurrentKeyIndex(-1);
-      }
-      setShowStandardView(false);
-      setViewMode("single");
-    } else {
-      setSelectedPaletteColor(null);
-    }
+    setSelectedPaletteColor(null);
     if (data === "keyboard") {
       setCurrentLedIndex(-1);
     }
     setModeselect(data);
-  };
-
-  const onToggleStandardView = () => {
-    setIsStandardView(!isStandardView);
-    setCurrentKeyIndex(-1);
-    setCurrentLedIndex(-1);
-    setViewMode(!isStandardView ? "standard" : "single");
-  };
-
-  const closeStandardViewModal = (code: number) => {
-    if (code !== undefined) onKeyChange(code);
-    setShowStandardView(false);
-  };
-
-  const handleSaveStandardView = () => {
-    setCurrentKeyIndex(-1);
-    setCurrentLedIndex(-1);
-    setShowStandardView(false);
-    setViewMode(isStandardView ? "standard" : "single");
-    setSelectedPaletteColor(null);
-    setIsMultiSelected(false);
-    setIsColorButtonSelected(false);
   };
 
   const exportToPdf = () => {
@@ -1734,20 +1703,6 @@ const LayoutEditor = (props: LayoutEditorProps) => {
     );
   };
 
-  const configStandardView = () => {
-    try {
-      const preferencesStandardView = store.get("settings.isStandardView", true) as boolean;
-      log.info("preferencesStandardView: ", preferencesStandardView);
-      if (preferencesStandardView !== null) {
-        return preferencesStandardView;
-      }
-      return true;
-    } catch (e) {
-      log.info(e);
-      return true;
-    }
-  };
-
   useEffect(() => {
     // log.info("going to RUN INITIAL USE EFFECT just ONCE");
     const scanner = async () => {
@@ -1755,8 +1710,6 @@ const LayoutEditor = (props: LayoutEditorProps) => {
       const newLanguage = getLanguage(store.get("settings.language") as string);
       log.info("Language automatically set to: ", newLanguage);
       setCurrentLanguageLayout(newLanguage || "english");
-      setIsStandardView(configStandardView());
-      setViewMode(isStandardView ? "standard" : "single");
       setLoading(false);
       setCurrentLayer(0);
       scanned.current = true;
@@ -1792,11 +1745,6 @@ const LayoutEditor = (props: LayoutEditorProps) => {
       scanner();
     }
   }, [currentLanguageLayout, inContext, keymap.custom, modified, previousLayer, scanKeyboard, scanned, setLoading]);
-
-  useEffect(() => {
-    // log.info("Running StandardView useEffect", isStandardView);
-    store.set("settings.isStandardView", isStandardView);
-  }, [isStandardView]);
 
   useEffect(() => {
     // log.info("Running LayerData useEffect");
@@ -1864,14 +1812,6 @@ const LayoutEditor = (props: LayoutEditorProps) => {
     setShowDefaults(localShowDefaults);
     setCurrentLayer(cLayer);
   }, [keymap, currentLayer, macros, superkeys]);
-
-  useLayoutEffect(() => {
-    if (modeselect === "color") {
-      // console.log("Is color - change position");
-    } else {
-      setViewMode(isStandardView ? "standard" : "single");
-    }
-  }, [modeselect, viewMode, isStandardView]);
 
   const { Layer, kbtype } = getLayout();
   if (!Layer) {
@@ -1954,8 +1894,8 @@ const LayoutEditor = (props: LayoutEditorProps) => {
         darkMode={darkMode}
         style={{ width: "50vw" }}
         showUnderglow={modeselect !== "keyboard"}
-        className="raiseKeyboard layer h-auto"
-        isStandardView={isStandardView}
+        className={`svg-${deviceName.toLowerCase()} raiseKeyboard layer h-auto`}
+        isStandardView={false}
       />
     </div>
     // </fade>
@@ -1963,10 +1903,11 @@ const LayoutEditor = (props: LayoutEditorProps) => {
 
   return (
     <Styles className="layoutEditor h-full">
-      <div
-        className={`keyboard-editor h-[inherit] px-3 ${modeselect} ${modeselect === "color" ? "[&_.raiseKeyboard]:h-auto" : ""} ${isStandardView ? "standarViewMode" : "singleViewMode"} ${
+      <motion.div
+        className={`keyboard-editor h-[inherit] px-3 ${modeselect} ${modeselect === "color" ? "[&_.raiseKeyboard]:h-auto" : ""} singleViewMode ${
           typeof selectedPaletteColor === "number" ? "colorSelected" : ""
         }`}
+        ref={layoutEditorContainerRef}
       >
         <PageHeader
           text="Layout Editor"
@@ -2012,13 +1953,15 @@ const LayoutEditor = (props: LayoutEditorProps) => {
             cancelContext();
           }}
           inContext={modified}
+          saveButtonRef={saveButtonRef}
+          discardChangesButtonRef={discardChangesButtonRef}
         />
         <div className="w-full h-[inherit] keyboardsWrapper">
-          <div className="raise-editor layer-col h-full">
+          {/* <div className="raise-editor layer-col h-full"> // Set keyboard on bottom */}
+          <div className="raise-editor layer-col h-[inherit]">
             <div className="dygma-keyboard-editor editor">{layer}</div>
-            {modeselect === "keyboard" && !isStandardView ? (
+            {modeselect === "keyboard" ? (
               <div className="ordinary-keyboard-editor m-0 pb-4">
-                <ToggleGroupLayoutViewMode value={viewMode} onValueChange={onToggleStandardView} viewMode={modeselect} />
                 <KeyPickerKeyboard
                   onKeySelect={onKeyChange}
                   code={code}
@@ -2032,16 +1975,14 @@ const LayoutEditor = (props: LayoutEditorProps) => {
                   selectedlanguage={currentLanguageLayout}
                   kbtype={kbtype}
                   isWireless={isWireless}
+                  dragLimits={layoutEditorContainerRef}
                 />
               </div>
-            ) : null}
+            ) : (
+              ""
+            )}
           </div>
         </div>
-
-        {/* WHY: We want to hide the selector when we cannot use it (e.g. when color editor is active) */}
-        {modeselect === "keyboard" && isStandardView ? (
-          <ToggleGroupLayoutViewMode value={viewMode} onValueChange={onToggleStandardView} />
-        ) : null}
 
         <ClearLayerDialog
           open={clearConfirmationOpen}
@@ -2060,7 +2001,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
           layers={copyFromLayerOptions}
           currentLayer={currentLayer}
         />
-      </div>
+      </motion.div>
 
       <Dialog open={showMacroModal} onOpenChange={toggleMacroModal}>
         <DialogContent>
@@ -2101,28 +2042,6 @@ const LayoutEditor = (props: LayoutEditorProps) => {
           </DialogFooter>
         </DialogContent>
       </Dialog>
-
-      {modeselect === "keyboard" && isStandardView ? (
-        <StandardView
-          showStandardView={showStandardView}
-          closeStandardView={closeStandardViewModal}
-          handleSave={handleSaveStandardView}
-          onKeySelect={onKeyChange}
-          macros={macros}
-          superkeys={superkeys}
-          actions={actions}
-          keyIndex={currentKeyIndex}
-          code={code}
-          layerData={layerData}
-          actTab="editor"
-          selectedlanguage={currentLanguageLayout}
-          kbtype={kbtype}
-          isStandardView={isStandardView}
-          isWireless={isWireless}
-        />
-      ) : (
-        ""
-      )}
     </Styles>
   );
 };

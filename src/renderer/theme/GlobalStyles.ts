@@ -1753,9 +1753,9 @@ div.card.card-preferences .card-body {
       grid-template-columns: 1fr;
       grid-gap: 24px;
     }
-    .keyEnhanceWrapper {
-      order: 2;
-    }
+    // .keyEnhanceWrapper {
+    //   order: 2;
+    // }
     .KeyVisualizer {
       display: none;
     }
@@ -1833,13 +1833,6 @@ div.card.card-preferences .card-body {
   }
   body .layoutEditor .KeysWrapper {
     max-width: 100%;
-  }
-  .svgStyle {
-      max-width: 100%!important;
-      width: 100%;
-  }
-  #standardViewCointainer-tabpane-tabKeys .svgStyle {
-    max-width: 1640px!important;
   }
 }
 

@@ -1,15 +1,45 @@
 import React, { Component } from "react";
 import Styled from "styled-components";
+import { motion } from "framer-motion";
+// import log from "electron-log/renderer";
 
 // Internal components
-import ListModifier from "@Renderer/components/molecules/ListModifiers/ListModifiers";
-import { IconKeysPress, IconKeysTapHold, IconKeysHold, IconKeys2Tap, IconKeys2TapHold } from "@Renderer/components/atoms/icons";
+// import ListModifier from "@Renderer/components/molecules/ListModifiers/ListModifiers";
+import {
+  IconKeysPress,
+  IconKeysTapHold,
+  IconKeysHold,
+  IconKeys2Tap,
+  IconKeys2TapHold,
+  IconKeyboard,
+  IconMouse,
+  IconLayers,
+  IconRobot,
+  IconNote,
+  IconThunder,
+  IconSplitView,
+  IconWireless,
+  IconWrench,
+} from "@Renderer/components/atoms/icons";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@Renderer/components/atoms/Tabs";
+import { Button } from "@Renderer/components/atoms/Button";
+import { i18n } from "@Renderer/i18n";
+import NoKeyTransparentTab from "@Renderer/modules/KeysTabs/NoKeyTransparentTab";
+// eslint-disable-next-line
+import LayersTab from "@Renderer/modules/KeysTabs/LayersTab";
+import MacroTab from "@Renderer/modules/KeysTabs/MacroTab";
+import SuperkeysTab from "@Renderer/modules/KeysTabs/SuperkeysTab";
+import MediaAndLightTab from "@Renderer/modules/KeysTabs/MediaAndLightTab";
+import MouseTab from "@Renderer/modules/KeysTabs/MouseTab";
+import WirelessTab from "@Renderer/modules/KeysTabs/WirelessTab";
+import CustomKeyCodeModal from "@Renderer/components/molecules/CustomModal/ModalCustomKeycode";
+import { Separator } from "@Renderer/components/atoms/Separator";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@Renderer/components/atoms/Tooltip";
 import { KeymapDB } from "../../../api/keymap";
 import { Picker } from ".";
 
 import ModPicker from "./ModPicker";
-import KeyVisualizer from "../KeyVisualizer";
-import DualFunctionPicker from "./DualFunctionPicker";
+import ModifiersTab from "../KeysTabs/ModifiersTab";
 
 // Icons
 
@@ -134,62 +164,23 @@ width: -webkit-fill-available;
 }
 
 .singleViewWrapper {
-  margin-top: 16px;
-  display: grid;
-  grid-template-columns: minmax(160px, 250px) minmax(840px, auto);
-  grid-gap: 24px;
   .newKeyValue h4 span { display: none; }
   .modPickerButtonsList .button-config{
     font-size: 12px;
   }
   .keyBoardPickerWrapper {
-    // flex: 0 0 calc(100% - 270px);
-    width: 100%;
-    background: ${({ theme }) => theme.styles.keyboardPicker.keyBoardPickerBackground};
     box-shadow: ${({ theme }) => theme.styles.keyboardPicker.keyEnhanceWrapperBoxShadow};
-    border-radius: 6px;
-    padding: 10px 20px;
+    
   }
 
 }
 
-@media screen and (max-width: 1240px) {
-  // .singleViewWrapper {
-  //   grid-template-columns: 1fr;
-  //   grid-gap: 24px;
-  // }
-  // .keyEnhanceWrapper {
-  //   order: 2;
-  // }
-  // .KeyVisualizer {
-  //   display: none;
-  // }
-  // .ModPicker {
-  //   width: 100%;
-  // }
-}
-
-
-
-.keyEnhanceWrapper {
-  background: ${({ theme }) => theme.styles.keyboardPicker.keyEnhanceWrapperBackground};
-  border: ${({ theme }) => theme.styles.keyboardPicker.keyEnhanceWrapperBackground};
-  box-sizing: border-box;
-  box-shadow: ;
-  border-radius: 6px;
-}
 .keyEnhanceInner {
   display: flex;
   flex-wrap: wrap;
   height: 100%;
 }
 .ModPicker {
-  background: ${({ theme }) => theme.styles.keyboardPicker.modPickerBackground};
-  box-shadow:  ${({ theme }) => theme.styles.keyboardPicker.modPickerBoxShadow};
-  border-radius: 6px;
-  margin-left: ${({ theme }) => theme.styles.keyboardPicker.modPickerAlignAdjust};
-  margin-right: ${({ theme }) => theme.styles.keyboardPicker.modPickerAlignAdjust};
-  margin-bottom: ${({ theme }) => theme.styles.keyboardPicker.modPickerAlignAdjust};
   flex: 0 0 100%;
   &.ModPickerScroll {
     overflow: auto;
@@ -199,54 +190,54 @@ width: -webkit-fill-available;
   }
 }
 
-.superkeyHint {
-  padding: 8px;
-}
-.superkeyItem {
-  display: flex;
-  flex-wrap: nowrap;
-  align-items: center;
-  border-radius: 3px;
-  padding: 4px;
-  justify-content: space-between;
-  background-color: ${({ theme }) => theme.styles.standardView.superkeys.item.background};
-}
-.superkeyItem + .superkeyItem  {
-  margin-top: 1px;
-}
-.superkeyTitle {
-  flex: 0 0 62px;
-  padding-right: 18px;
-}
-.superkeyTitle h5.actionTitle {
-  font-size: 8px;
-  text-transform: uppercase;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  margin: 4px 0 1px 0;
-  color: ${({ theme }) => theme.styles.standardView.superkeys.item.titleColor};
-}
-.superKey {
-  position: relative;
-  align-self: center;
-  padding: 4px;
-  flex: 0 0 calc(100% - 62px);
-  text-align: center;
-  font-size: 10px;
-  font-weight: 700;
-  border: 1px solid ${({ theme }) => theme.styles.standardView.superkeys.key.border};
-  border-radius: 3px;
-  background-color: ${({ theme }) => theme.styles.standardView.superkeys.key.background};
-  .listModifiersTags .labelModifier {
-    font-size: 8px;
-    padding: 3px 8px;
-  }
-}
-.superKey > div{
-  position: absolute;
-  bottom: -12px;
-  left: 12px;
-}
+// .superkeyHint {
+//   padding: 8px;
+// }
+// .superkeyItem {
+//   display: flex;
+//   flex-wrap: nowrap;
+//   align-items: center;
+//   border-radius: 3px;
+//   padding: 4px;
+//   justify-content: space-between;
+//   background-color: ${({ theme }) => theme.styles.standardView.superkeys.item.background};
+// }
+// .superkeyItem + .superkeyItem  {
+//   margin-top: 1px;
+// }
+// .superkeyTitle {
+//   flex: 0 0 62px;
+//   padding-right: 18px;
+// }
+// .superkeyTitle h5.actionTitle {
+//   font-size: 8px;
+//   text-transform: uppercase;
+//   font-weight: 700;
+//   letter-spacing: 0.04em;
+//   margin: 4px 0 1px 0;
+//   color: ${({ theme }) => theme.styles.standardView.superkeys.item.titleColor};
+// }
+// .superKey {
+//   position: relative;
+//   align-self: center;
+//   padding: 4px;
+//   flex: 0 0 calc(100% - 62px);
+//   text-align: center;
+//   font-size: 10px;
+//   font-weight: 700;
+//   border: 1px solid ${({ theme }) => theme.styles.standardView.superkeys.key.border};
+//   border-radius: 3px;
+//   background-color: ${({ theme }) => theme.styles.standardView.superkeys.key.background};
+//   .listModifiersTags .labelModifier {
+//     font-size: 8px;
+//     padding: 3px 8px;
+//   }
+// }
+// .superKey > div{
+//   position: absolute;
+//   bottom: -12px;
+//   left: 12px;
+// }
 
 `;
 
@@ -283,16 +274,19 @@ class KeyPickerKeyboard extends Component {
       showKB: false,
       pastkeyindex: props.keyIndex,
       superName: props.superName,
+      currentTab: undefined,
+      customModal: false,
     };
 
     this.parseAction = this.parseAction.bind(this);
     this.changeTab = this.changeTab.bind(this);
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps, prevState) {
     let selectdual = 0;
     const disable = this.props.keyIndex === -1;
     const keynum = this.props.code != null ? this.props.code.modified + this.props.code.base : 0;
+    const keynumOld = prevProps.code != null ? prevProps.code.modified + prevProps.code.base : 0;
     if (keynum >= 51218 && keynum <= 53266) {
       selectdual = (this.props.code.modified >>> 8) << 8;
       if (selectdual >= 51218 - 18) {
@@ -338,8 +332,15 @@ class KeyPickerKeyboard extends Component {
     } else {
       activeTab = "super";
     }
+    if (keynumOld !== keynum) {
+      // log.info("This kenumOld : ", prevState.currentTab, this.state.currentTab, keynumOld, keynum);
+      this.setState({
+        currentTab: prevState.currentTab,
+      });
+    }
     if (JSON.stringify(this.state.actions) !== JSON.stringify(tempActions) || prevProps.keyIndex !== this.props.keyIndex) {
       this.setState({
+        currentTab: prevState.currentTab,
         action: this.props.keyIndex !== this.state.pastkeyindex ? 0 : this.state.action,
         actions: tempActions,
         selectdual,
@@ -421,10 +422,16 @@ class KeyPickerKeyboard extends Component {
     }
     return translatedAction;
   };
+  toggleModal = () => {
+    const { customModal: cModal } = this.state;
+    this.setState({ customModal: !cModal });
+  };
 
   render() {
-    const { action, actions, showKB, modifs, superName, disable, Keymap, layoutSelectorPosition } = this.state;
-    const { selectedlanguage, kbtype, macros, actTab, superkeys, code, onKeySelect, isWireless } = this.props;
+    const { action, actions, showKB, modifs, superName, disable, Keymap, layoutSelectorPosition, currentTab, customModal } =
+      this.state;
+    const { selectedlanguage, kbtype, macros, actTab, superkeys, code, onKeySelect, isWireless, keyIndex, dragLimits } =
+      this.props;
     const activeTab = actTab !== undefined ? actTab : this.state.activeTab;
     const selKey = this.parseKey(code.base + code.modified);
     const selKeys = actions.map((a, i) => this.parseAction(i));
@@ -464,74 +471,298 @@ class KeyPickerKeyboard extends Component {
       },
     ];
 
+    // Render variables
+    const tabVariants = {
+      hidden: { opacity: 0 },
+      visible: { opacity: 1, transition: { duration: 0.5 } },
+    };
+
     return (
       <Style>
-        <div className="singleViewWrapper">
-          <div className="keyEnhanceWrapper">
-            <div className="keyEnhanceInner">
-              <KeyVisualizer newValue={selKey} keyCode={code} disable={disable} />
-              <div
-                className={`ModPicker ${this.props.macros[KC - 53852] ? "ModPickerScrollHidden" : ""} ${
-                  disable ? "disable" : ""
-                }`}
-              >
-                {superkeys[superk.indexOf(KC)] ? (
-                  <div className="superkeyHint">
-                    {superKeysActions.map((item, index) => (
-                      <div className="superkeyItem" key={`superHint-${index}`}>
-                        <div className="superkeyTitle">
-                          <h5 className="actionTitle">{item.title}</h5>
-                        </div>
-                        <div className="superKey">
-                          {this.translateSuperKeyAction(superkeys[superk.indexOf(KC)].actions[index])}
-                          <ListModifier keyCode={superkeys[superk.indexOf(KC)].actions[index]} />
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                ) : this.props.macros[KC - 53852] ? (
-                  <div className="ball-container">
-                    <h5 className="ball-title">Preview macro</h5>
-                    <div className="ball-inner">
-                      {this.props.macros[KC - 53852].macro.split(" ").map((data, index) => (
-                        <div className="ball" key={`LtrIdx-${index}`}>
-                          {data}
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                ) : (
-                  <>
-                    <ModPicker key={code} keyCode={code} onKeySelect={onKeySelect} />
-                    {actTab == "editor" ? (
-                      <DualFunctionPicker keyCode={code} onKeySelect={onKeySelect} activeTab={activeTab} />
-                    ) : (
-                      <></>
-                    )}
-                  </>
-                )}
+        <Tabs
+          defaultValue="tabKeys"
+          orientation="vertical"
+          value={currentTab}
+          onChange={index =>
+            this.setState({
+              currentTab: index,
+            })
+          }
+        >
+          <div className="singleViewWrapper flex gap-[20px] mt-4">
+            <div className="keyEnhanceWrapper">
+              <div className="keyEnhanceInner">
+                <TabsList className="flex flex-col gap-0.5 tabsWrapper min-w-48">
+                  <TabsTrigger value="tabKeys" variant="tab" className="text-sm [&_svg]:w-[20px] py-2" disabled={disable}>
+                    <IconKeyboard /> Keys & Shortcuts
+                  </TabsTrigger>
+                  <TabsTrigger value="tabLayers" variant="tab" className="text-sm [&_svg]:w-[20px] py-2" disabled={disable}>
+                    <IconLayers size="sm" /> {i18n.editor.standardView.layers.title}
+                  </TabsTrigger>
+                  {actTab === "editor" ? (
+                    <>
+                      <TabsTrigger
+                        value="tabModifiers"
+                        variant="tab"
+                        className="text-sm [&_svg]:w-[20px] py-2"
+                        disabled={disable}
+                      >
+                        <>
+                          <IconSplitView size="sm" /> Advanced Modifiers
+                        </>
+                      </TabsTrigger>
+                    </>
+                  ) : (
+                    ""
+                  )}
+                  <TabsTrigger value="tabMacro" variant="tab" className="text-sm [&_svg]:w-[20px] py-2" disabled={disable}>
+                    <IconRobot size="sm" /> Macros
+                  </TabsTrigger>
+                  {actTab !== "super" ? (
+                    <>
+                      <TabsTrigger
+                        value="tabSuperKeys"
+                        variant="tab"
+                        className="text-sm [&_svg]:w-[20px] py-2"
+                        disabled={disable}
+                      >
+                        <>
+                          <IconThunder size="sm" /> {i18n.editor.standardView.superkeys.title}{" "}
+                          <div className="badge badge-primary leading-none ml-1 font-bold text-[9px] text-white">BETA</div>
+                        </>
+                      </TabsTrigger>
+                    </>
+                  ) : (
+                    ""
+                  )}
+                  <TabsTrigger value="tabMedia" variant="tab" className="text-sm [&_svg]:w-[20px] py-2" disabled={disable}>
+                    <IconNote size="sm" /> {i18n.editor.standardView.mediaAndLED.title}
+                  </TabsTrigger>
+                  <TabsTrigger value="tabMouse" variant="tab" className="text-sm [&_svg]:w-[20px] py-2" disabled={disable}>
+                    <IconMouse size="sm" /> {i18n.editor.standardView.mouse.title}
+                  </TabsTrigger>
+                  {isWireless && (
+                    <TabsTrigger value="tabWireless" variant="tab" className="text-sm [&_svg]:w-[20px] py-2" disabled={disable}>
+                      <IconWireless size="sm" strokeWidth={1.2} /> {i18n.app.menu.wireless}
+                    </TabsTrigger>
+                  )}
+                </TabsList>
               </div>
             </div>
+            <div className="keyBoardPickerWrapper w-full rounded-regular py-4 px-8 bg-gray-25 dark:bg-[#25273B] shadow-lg h-[370px] overflow-auto">
+              <TabsContent value="tabKeys">
+                <motion.div initial="hidden" animate="visible" key="tabKeys" variants={tabVariants}>
+                  <>
+                    <Picker
+                      actions={actions}
+                      action={action}
+                      disable={disable}
+                      baseCode={code.base}
+                      modCode={code.modified}
+                      onKeySelect={onKeySelect}
+                      activeTab={activeTab}
+                      selectedlanguage={selectedlanguage}
+                      selKeys={selKeys}
+                      superkeys={superkeys}
+                      kbtype={kbtype}
+                      keyCode={code}
+                      macros={macros}
+                      isWireless={isWireless}
+                    />
+                    <div className="w-full flex flex-wrap items-center justify-between gap-6 mt-4">
+                      <div
+                        className={`flex ${this.props.macros[KC - 53852] ? "ModPickerScrollHidden" : ""} ${
+                          disable ? "disable" : ""
+                        }`}
+                      >
+                        {!superkeys[superk.indexOf(KC)] || !this.props.macros[KC - 53852] ? (
+                          <div className="flex gap-2 flex-col lg:flex-row lg:gap-4">
+                            <ModPicker key={code} keyCode={code} onKeySelect={onKeySelect} />
+                          </div>
+                        ) : (
+                          ""
+                        )}
+                      </div>
+                      {actTab !== "super" ? (
+                        <div className="flex flex-wrap gap-2 items-center">
+                          <NoKeyTransparentTab keyCode={code} onKeySelect={onKeySelect} isStandardView disabled={disable} />
+                          <Separator orientation="vertical" className="mx-1 bg-gray-100 dark:bg-gray-600 block h-9" />
+                          <div className="flex gap-2">
+                            <TooltipProvider delayDuration={100}>
+                              <Tooltip>
+                                <TooltipTrigger asChild>
+                                  <div className="basis-full">
+                                    <Button
+                                      variant="config"
+                                      disabled={false}
+                                      // selected={code.base + code.modified >= 20000}
+                                      onClick={() => {
+                                        // this.toggleModal();
+                                        this.setState({ customModal: true });
+                                      }}
+                                      size="icon"
+                                      className="w-9 h-9"
+                                    >
+                                      <IconWrench size="sm" />
+                                    </Button>
+                                  </div>
+                                </TooltipTrigger>
+                                <TooltipContent size="sm" className="max-w-xs">
+                                  {i18n.editor.superkeys.specialKeys.custom}
+                                </TooltipContent>
+                              </Tooltip>
+                            </TooltipProvider>
+                          </div>
+                        </div>
+                      ) : (
+                        ""
+                      )}
+                    </div>
+                  </>
+                </motion.div>
+              </TabsContent>
+              <TabsContent value="tabLayers" key="tabLayers">
+                <motion.div initial="hidden" animate="visible" key="tabKeys" variants={tabVariants}>
+                  <LayersTab
+                    isStandardView
+                    disableMods={!!((action === 0 || action === 3) && actTab === "super")}
+                    disabled={disable}
+                    actions={actions}
+                    action={action}
+                    baseCode={code.base}
+                    modCode={code.modified}
+                    onKeySelect={onKeySelect}
+                    activeTab={actTab}
+                    selectedlanguage={selectedlanguage}
+                    superkeys={superkeys}
+                    kbtype={kbtype}
+                    keyCode={code}
+                    macros={macros}
+                    isWireless={isWireless}
+                  />
+                </motion.div>
+              </TabsContent>
+              {actTab === "editor" ? (
+                <TabsContent value="tabModifiers" key="tabModifiers">
+                  <motion.div initial="hidden" animate="visible" key="tabKeys" variants={tabVariants}>
+                    <ModifiersTab
+                      isStandardView
+                      disabled={disable}
+                      actions={actions}
+                      action={action}
+                      baseCode={code.base}
+                      modCode={code.modified}
+                      onKeySelect={onKeySelect}
+                      activeTab={actTab}
+                      selectedlanguage={selectedlanguage}
+                      superkeys={superkeys}
+                      kbtype={kbtype}
+                      keyCode={code}
+                      macros={macros}
+                      isWireless={isWireless}
+                    />
+                  </motion.div>
+                </TabsContent>
+              ) : (
+                ""
+              )}
+              <TabsContent value="tabMacro" key="tabMacro">
+                <motion.div initial="hidden" animate="visible" key="tabKeys" variants={tabVariants}>
+                  <>
+                    <MacroTab
+                      macros={macros}
+                      selectedMacro={this.keymapDB.parse(code).extraLabel === "MACRO" ? code : -1}
+                      onMacrosPress={onKeySelect}
+                      keyCode={code}
+                      isStandardView
+                      disabled={disable}
+                    />
+                    {this.props.macros[KC - 53852] ? (
+                      <div className="ball-container">
+                        <h5 className="ball-title">Preview macro</h5>
+                        <div className="ball-inner">
+                          {this.props.macros[KC - 53852].macro.split(" ").map((data, index) => (
+                            <div className="ball" key={`LtrIdx-${index}`}>
+                              {data}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    ) : (
+                      ""
+                    )}
+                  </>
+                </motion.div>
+              </TabsContent>
+              {actTab !== "super" && (
+                <>
+                  <TabsContent value="tabSuperKeys" key="tabSuperKeys">
+                    <motion.div initial="hidden" animate="visible" key="tabKeys" variants={tabVariants}>
+                      <div className="">
+                        <SuperkeysTab
+                          actions={actions}
+                          superkeys={superkeys}
+                          onKeySelect={onKeySelect}
+                          macros={macros}
+                          keyCode={code}
+                          isStandardView
+                          disabled={disable}
+                        />
+                        {/* {superkeys[superk.indexOf(KC)] ? (
+                          <div className="superkeyHint">
+                            {superKeysActions.map((item, index) => (
+                              <div className="superkeyItem" key={`superHint-${index}`}>
+                                <div className="superkeyTitle">
+                                  <h5 className="actionTitle">{item.title}</h5>
+                                </div>
+                                <div className="superKey">
+                                  {this.translateSuperKeyAction(superkeys[superk.indexOf(KC)].actions[index])}
+                                  <ListModifier keyCode={superkeys[superk.indexOf(KC)].actions[index]} />
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        ) : (
+                          ""
+                        )} */}
+                      </div>
+                    </motion.div>
+                  </TabsContent>
+                </>
+              )}
+              <TabsContent value="tabMedia" key="tabMedia">
+                <motion.div initial="hidden" animate="visible" key="tabKeys" variants={tabVariants}>
+                  <MediaAndLightTab onAddSpecial={onKeySelect} keyCode={code} isStandardView disabled={disable} />
+                </motion.div>
+              </TabsContent>
+              <TabsContent value="tabMouse" key="tabMouse">
+                <motion.div initial="hidden" animate="visible" key="tabKeys" variants={tabVariants}>
+                  <MouseTab onAddSpecial={onKeySelect} keyCode={code} isStandardView actTab={actTab} disabled={disable} />
+                </motion.div>
+              </TabsContent>
+              {isWireless && (
+                <TabsContent value="tabWireless" key="tabWireless">
+                  <motion.div initial="hidden" animate="visible" key="tabKeys" variants={tabVariants}>
+                    <WirelessTab keyCode={code} onKeySelect={onKeySelect} isStandardView disabled={disable} />
+                  </motion.div>
+                </TabsContent>
+              )}
+            </div>
           </div>
-          <div className="keyBoardPickerWrapper">
-            <Picker
-              actions={actions}
-              action={action}
-              disable={disable}
-              baseCode={code.base}
-              modCode={code.modified}
-              onKeySelect={onKeySelect}
-              activeTab={activeTab}
-              selectedlanguage={selectedlanguage}
-              selKeys={selKeys}
-              superkeys={superkeys}
-              kbtype={kbtype}
-              keyCode={code}
-              macros={macros}
-              isWireless={isWireless}
-            />
-          </div>
-        </div>
+        </Tabs>
+        <CustomKeyCodeModal
+          show={customModal}
+          name={(code.base + code.modified).toString(16)}
+          toggleShow={() => this.setState({ customModal: false })}
+          handleSave={data => {
+            // console.log("CustomKey selected key", data);
+            onKeySelect(parseInt(data, 16));
+            this.toggleModal();
+          }}
+          modalTitle={i18n.editor.modal.customKeyCodeModal.title}
+          modalMessage={i18n.editor.modal.customKeyCodeModal.message}
+          labelInput={i18n.editor.modal.customKeyCodeModal.labelInput}
+        />
       </Style>
     );
   }

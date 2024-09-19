@@ -99,6 +99,7 @@ class MacroManager extends Component {
 
     this.trackingWidth = React.createRef();
     this.portal = React.createRef();
+    this.timelineEditorForm = React.createRef();
 
     this.state = {
       componentWidth: 0,
@@ -216,6 +217,7 @@ class MacroManager extends Component {
               componentWidth={this.state.componentWidth}
               updateScroll={this.props.updateScroll}
               scrollPos={this.props.scrollPos}
+              ref={this.timelineEditorForm}
             />
           ) : (
             <div className="loading marginCenter trackingWrapper flex flex-col justify-center h-full items-center">

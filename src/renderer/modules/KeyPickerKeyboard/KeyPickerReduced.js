@@ -425,7 +425,7 @@ class KeyPickerReduced extends Component {
               : false
           }
           clicked={() => {
-            key.mod == disableMods || key.move == disableMove ? {} : this.onKeyPress(key.id);
+            (key.mod === disableMods && key.tap !== true) || key.move == disableMove ? {} : this.onKeyPress(key.id);
           }}
           onKeyPress={this.onKeyPress}
           centered={key.centered}
@@ -445,7 +445,7 @@ class KeyPickerReduced extends Component {
           iconx={key.iconx}
           icony={key.icony}
           iconsize={key.iconsize}
-          disabled={key.mod == disableMods || key.move == disableMove || disableAll}
+          disabled={(key.mod === disableMods && key.tap !== true) || key.move == disableMove || disableAll}
           tabIndex={-1}
           idArray={key.idArray}
           keyCode={code}

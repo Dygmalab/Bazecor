@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import { Routes, Navigate, Route, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { ThemeProvider } from "styled-components";
@@ -67,6 +67,9 @@ function App() {
   const [restoredOk, setRestoredOk] = useState(true);
   const [fwUpdate, setFwUpdate] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  const saveButtonRef = useRef(null);
+  const discardChangesButtonRef = useRef(null);
 
   const { state, dispatch } = useDevice();
   const navigate = useNavigate();
@@ -391,6 +394,8 @@ function App() {
         allowBeta={allowBeta}
         modified={contextBar}
         loading={loading}
+        saveButtonRef={saveButtonRef}
+        discardChangesButtonRef={discardChangesButtonRef}
       />
       <div className="main-container">
         <Routes>
@@ -436,6 +441,8 @@ function App() {
                 inContext={contextBar}
                 restoredOk={restoredOk}
                 handleSetRestoredOk={handleSetRestoredOk}
+                saveButtonRef={saveButtonRef}
+                discardChangesButtonRef={discardChangesButtonRef}
               />
             }
           />
@@ -447,6 +454,8 @@ function App() {
                 startContext={startContext}
                 cancelContext={cancelContext}
                 setLoading={setLoadingData}
+                saveButtonRef={saveButtonRef}
+                discardChangesButtonRef={discardChangesButtonRef}
               />
             }
           />
@@ -458,6 +467,8 @@ function App() {
                 startContext={startContext}
                 cancelContext={cancelContext}
                 setLoading={setLoadingData}
+                saveButtonRef={saveButtonRef}
+                discardChangesButtonRef={discardChangesButtonRef}
               />
             }
           />
@@ -488,6 +499,8 @@ function App() {
                 setLoading={setLoadingData}
                 autoUpdate={autoUpdate}
                 updateAutoUpdate={updateAutoUpdate}
+                saveButtonRef={saveButtonRef}
+                discardChangesButtonRef={discardChangesButtonRef}
               />
             }
           />

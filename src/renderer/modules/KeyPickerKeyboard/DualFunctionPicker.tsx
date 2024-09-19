@@ -66,7 +66,7 @@ const DualFunctionPicker = (props: DualFunctionPickerProps) => {
   // const disabled = isMod || (isNotNK && isNotDF);
 
   const layers = (
-    <div className="dualFunctionPickerInner pt-0 pr-[16px] pb-[16px] pl-[16px]">
+    <div className="dualFunctionPickerInner px-4">
       <Heading headingLevel={4} renderAs="h4" className="!text-3xxs">
         Add Dual-function
       </Heading>
