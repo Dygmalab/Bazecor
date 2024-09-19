@@ -101,7 +101,7 @@ function NeuronData(props: Neurons) {
             <AccordionTrigger className="flex justify-between items-center py-3 px-2 mt-0 mb-[-1px] rounded-none text-purple-200 dark:text-gray-25 border-b border-solid border-gray-50 dark:border-gray-600">
               <div className="flex gap-3 items-center">
                 <IconRobot />
-                <strong className="font-base">Macro</strong>
+                <strong className="font-base">Macros</strong>
               </div>
             </AccordionTrigger>
             <AccordionContent className="bg-gray-25/20 dark:bg-gray-900/50 px-3 py-3">

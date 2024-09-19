@@ -254,7 +254,7 @@ const ModifiersTab = ({
         {isStandardView ? (
           <Callout size="sm" className="mt-0 mb-4">
             <p>
-              Sunercharge your modifiers. Add a key on tap so the modifier acts like a normal keypress when you tap it, or turn it
+              Supercharge your modifiers. Add a key on tap so the modifier acts like a normal keypress when you tap it, or turn it
               into a OneShot modifier.
             </p>
           </Callout>
