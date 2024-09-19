@@ -108,6 +108,31 @@ const ListModifiersKey = ({ keyCode, size = "xs", selectedKey }: ListModifiersPr
         ) : (
           ""
         )}
+        {modifiers.includes(0) === true &&
+        !modifiersState.isMeh &&
+        !modifiersState.isHyper &&
+        (!modifiersState.altVisual || modifiers.length > 1) ? (
+          <AnimatePresence mode="popLayout">
+            <motion.div initial={{ opacity: 0, y: -50 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -50 }}>
+              <li className="inline-flex items-center h-[12px] font-semibold tracking-tight leading-3 py-0 px-[3px] m-0 text-[10px] text-gray-25 dark:text-gray-600 bg-gray-600/60 dark:bg-gray-25/60 shadow-sm rounded-[3px] [&_>div]:!h-[12px] [&_>div]:!inline-table">
+                <OSKey renderKey="shift" size={size} />
+              </li>
+            </motion.div>
+          </AnimatePresence>
+        ) : (
+          ""
+        )}
+        {modifiers.includes(1) === true && !modifiersState.isMeh && !modifiersState.isHyper ? (
+          <AnimatePresence mode="popLayout">
+            <motion.div initial={{ opacity: 0, y: -50 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -50 }}>
+              <li className="inline-flex items-center h-[12px] font-semibold tracking-tight leading-3 py-0 px-[3px] m-0 text-[10px] text-gray-25 dark:text-gray-600 bg-gray-600/60 dark:bg-gray-25/60 shadow-sm rounded-[3px] [&_>div]:!h-[12px] [&_>div]:!inline-table">
+                <OSKey renderKey="control" size={size} />
+              </li>
+            </motion.div>
+          </AnimatePresence>
+        ) : (
+          ""
+        )}
         {modifiers.includes(2) === true && !modifiersState.isMeh && !modifiersState.isHyper ? (
           <AnimatePresence mode="popLayout">
             <motion.div initial={{ opacity: 0, y: -50 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -50 }}>
@@ -132,31 +157,7 @@ const ListModifiersKey = ({ keyCode, size = "xs", selectedKey }: ListModifiersPr
             ) : (
               ""
             )}
-            {modifiers.includes(1) === true && !modifiersState.isMeh && !modifiersState.isHyper ? (
-              <AnimatePresence mode="popLayout">
-                <motion.div initial={{ opacity: 0, y: -50 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -50 }}>
-                  <li className="inline-flex items-center h-[12px] font-semibold tracking-tight leading-3 py-0 px-[3px] m-0 text-[10px] text-gray-25 dark:text-gray-600 bg-gray-600/60 dark:bg-gray-25/60 shadow-sm rounded-[3px] [&_>div]:!h-[12px] [&_>div]:!inline-table">
-                    <OSKey renderKey="control" size={size} />
-                  </li>
-                </motion.div>
-              </AnimatePresence>
-            ) : (
-              ""
-            )}
-            {modifiers.includes(0) === true &&
-            !modifiersState.isMeh &&
-            !modifiersState.isHyper &&
-            (!modifiersState.altVisual || modifiers.length > 1) ? (
-              <AnimatePresence mode="popLayout">
-                <motion.div initial={{ opacity: 0, y: -50 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -50 }}>
-                  <li className="inline-flex items-center h-[12px] font-semibold tracking-tight leading-3 py-0 px-[3px] m-0 text-[10px] text-gray-25 dark:text-gray-600 bg-gray-600/60 dark:bg-gray-25/60 shadow-sm rounded-[3px] [&_>div]:!h-[12px] [&_>div]:!inline-table">
-                    <OSKey renderKey="shift" size={size} />
-                  </li>
-                </motion.div>
-              </AnimatePresence>
-            ) : (
-              ""
-            )}
+
             {modifiers.includes(4) === true && !modifiersState.isMeh && !modifiersState.isHyper ? (
               <AnimatePresence mode="popLayout">
                 <motion.div initial={{ opacity: 0, y: -50 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -50 }}>
