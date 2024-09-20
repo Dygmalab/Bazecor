@@ -134,7 +134,7 @@ const MediaControlTable = {
     {
       code: 22713,
       labels: {
-        top: "Shuf.",
+        top: "",
         primary: <IconMediaShuffle size="sm" />,
         verbose: "Shuffle",
       },

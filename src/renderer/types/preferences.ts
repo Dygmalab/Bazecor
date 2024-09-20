@@ -28,6 +28,8 @@ export interface PreferencesProps {
   toggleDarkMode: (mode: string) => void;
   toggleBackup: (value: boolean) => void;
   setLoading: (lding: boolean) => void;
+  saveButtonRef?: React.RefObject<HTMLButtonElement>;
+  discardChangesButtonRef?: React.RefObject<HTMLButtonElement>;
 }
 
 export interface KBDataPref {

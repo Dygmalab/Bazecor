@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import Styled from "styled-components";
 import { i18n } from "@Renderer/i18n";
 
@@ -34,12 +34,7 @@ const Styles = Styled.div`
 display: flex;
 flex-wrap: wrap;
 height: inherit;
-h4 {
-    font-size: 16px;
-    flex: 0 0 100%;
-    width: 100%;
-    margin-top: 24px;
-}
+
 .callOut {
     width: 100%;
     flex: 0 0 100%;
@@ -47,20 +42,6 @@ h4 {
 .w100 {
     width: 100%;
     flex: 0 0 100%;
-}
-.description {
-    font-size: 14px;
-    color: ${({ theme }) => theme.styles.macro.descriptionColor};
-    flex: 0 0 100%;
-    width: 100%;
-}
-
-.keysButtonsList {
-    display: flex;
-    flex-grow: 1;
-    flex: 100%;
-    margin-left: -8px;
-    margin-right: -8px;
 }
 
 .buttonsRow {
@@ -96,33 +77,46 @@ interface MediaAndLightTabProps {
   keyCode: any;
   isStandardView: boolean;
   onAddSpecial: (event: any, value: number) => void;
+  disabled?: boolean;
 }
 
-const MediaAndLightTab = ({ keyCode, isStandardView, onAddSpecial }: MediaAndLightTabProps) => {
+const MediaAndLightTab = ({ keyCode, isStandardView, onAddSpecial, disabled }: MediaAndLightTabProps) => {
   const handleAddSpecial = (special: number) => {
     onAddSpecial(special, 5);
   };
 
+  const KC = useMemo(() => {
+    if (keyCode?.base !== undefined && keyCode?.modified !== undefined) {
+      return keyCode.base + keyCode.modified;
+    }
+    return undefined;
+  }, [keyCode]);
+
   return (
-    <Styles className={`${isStandardView ? "standardViewTab" : ""} tabsMediaAndLED`}>
+    <Styles
+      className={`${isStandardView ? "standardViewTab" : ""} tabsMediaAndLED ${disabled ? "opacity-50 pointer-events-none" : ""}`}
+    >
       <div className="tabContentWrapper">
         {isStandardView ? (
           <>
-            <Heading headingLevel={3} renderAs="h3">
+            {/* <Heading headingLevel={3} renderAs="h3">
               {i18n.editor.standardView.mediaAndLED.title}
-            </Heading>
-            <Callout size="sm" className="mt-4">
+            </Heading> */}
+            <Callout size="sm" className="mt-0">
               <p>{i18n.editor.standardView.mediaAndLED.callOut}</p>
             </Callout>
           </>
         ) : null}
-        <div className="buttonsRow">
-          <div className="mediaButtons">
-            <Heading headingLevel={4} renderAs="h4">
+        <div className="buttonsRow py-2">
+          <div className="mediaButtons flex-1 py-2">
+            <Heading headingLevel={4} renderAs="h4" className="m-0 text-base">
               {i18n.editor.superkeys.specialKeys.mediaTitle}
             </Heading>
-            <p className="description" dangerouslySetInnerHTML={{ __html: i18n.editor.superkeys.specialKeys.mediaDescription }} />
-            <div className="flex gap-2 mt-2">
+            <p
+              className="description text-ssm font-medium text-gray-400 dark:text-gray-200"
+              dangerouslySetInnerHTML={{ __html: i18n.editor.superkeys.specialKeys.mediaDescription }}
+            />
+            <div className="flex gap-1 mt-2">
               <TooltipProvider delayDuration={50}>
                 <Tooltip>
                   <TooltipTrigger asChild>
@@ -131,7 +125,8 @@ const MediaAndLightTab = ({ keyCode, isStandardView, onAddSpecial }: MediaAndLig
                         variant="config"
                         size="icon"
                         onClick={() => handleAddSpecial(22733)}
-                        selected={isStandardView ? keyCode === 22733 : false}
+                        // selected={isStandardView ? keyCode === 22733 : false}
+                        selected={KC === 22733}
                       >
                         <IconMediaPlayPause size="sm" />
                       </Button>
@@ -151,7 +146,8 @@ const MediaAndLightTab = ({ keyCode, isStandardView, onAddSpecial }: MediaAndLig
                         variant="config"
                         size="icon"
                         onClick={() => handleAddSpecial(22711)}
-                        selected={isStandardView ? keyCode === 22711 : false}
+                        // selected={isStandardView ? keyCode === 22711 : false}
+                        selected={KC === 22711}
                       >
                         <IconMediaStop size="sm" />
                       </Button>
@@ -171,7 +167,8 @@ const MediaAndLightTab = ({ keyCode, isStandardView, onAddSpecial }: MediaAndLig
                         variant="config"
                         size="icon"
                         onClick={() => handleAddSpecial(22710)}
-                        selected={isStandardView ? keyCode === 22710 : false}
+                        // selected={isStandardView ? keyCode === 22710 : false}
+                        selected={KC === 22710}
                       >
                         <IconMediaRewind size="sm" />
                       </Button>
@@ -191,7 +188,8 @@ const MediaAndLightTab = ({ keyCode, isStandardView, onAddSpecial }: MediaAndLig
                         variant="config"
                         size="icon"
                         onClick={() => handleAddSpecial(22709)}
-                        selected={isStandardView ? keyCode === 22709 : false}
+                        // selected={isStandardView ? keyCode === 22709 : false}
+                        selected={KC === 22709}
                       >
                         <IconMediaForward size="sm" />
                       </Button>
@@ -211,7 +209,8 @@ const MediaAndLightTab = ({ keyCode, isStandardView, onAddSpecial }: MediaAndLig
                         variant="config"
                         size="icon"
                         onClick={() => handleAddSpecial(22713)}
-                        selected={isStandardView ? keyCode === 22713 : false}
+                        // selected={isStandardView ? keyCode === 22713 : false}
+                        selected={KC === 22713}
                       >
                         <IconMediaShuffle size="sm" />
                       </Button>
@@ -231,7 +230,8 @@ const MediaAndLightTab = ({ keyCode, isStandardView, onAddSpecial }: MediaAndLig
                         variant="config"
                         size="icon"
                         onClick={() => handleAddSpecial(19682)}
-                        selected={isStandardView ? keyCode === 19682 : false}
+                        // selected={isStandardView ? keyCode === 19682 : false}
+                        selected={KC === 19682}
                       >
                         <IconMediaSoundMute size="sm" />
                       </Button>
@@ -251,7 +251,8 @@ const MediaAndLightTab = ({ keyCode, isStandardView, onAddSpecial }: MediaAndLig
                         variant="config"
                         size="icon"
                         onClick={() => handleAddSpecial(23786)}
-                        selected={isStandardView ? keyCode === 23786 : false}
+                        // selected={isStandardView ? keyCode === 23786 : false}
+                        selected={KC === 23786}
                       >
                         <IconMediaSoundLess size="sm" />
                       </Button>
@@ -271,7 +272,8 @@ const MediaAndLightTab = ({ keyCode, isStandardView, onAddSpecial }: MediaAndLig
                         variant="config"
                         size="icon"
                         onClick={() => handleAddSpecial(23785)}
-                        selected={isStandardView ? keyCode === 23785 : false}
+                        // selected={isStandardView ? keyCode === 23785 : false}
+                        selected={KC === 23785}
                       >
                         <IconMediaSoundMore size="sm" />
                       </Button>
@@ -284,12 +286,14 @@ const MediaAndLightTab = ({ keyCode, isStandardView, onAddSpecial }: MediaAndLig
               </TooltipProvider>
             </div>
           </div>
-          <div className="LEDButtons">
-            <Heading headingLevel={4} renderAs="h4">
+          <div className="LEDButtons flex-1 py-2">
+            <Heading headingLevel={4} renderAs="h4" className="m-0 text-base">
               {i18n.editor.superkeys.specialKeys.LEDTitle}
             </Heading>
-            <p className="description">{i18n.editor.superkeys.specialKeys.LEDDescription}</p>
-            <div className="flex gap-2 mt-2">
+            <p className="description text-ssm font-medium text-gray-400 dark:text-gray-200">
+              {i18n.editor.superkeys.specialKeys.LEDDescription}
+            </p>
+            <div className="flex gap-1 mt-2">
               <TooltipProvider delayDuration={50}>
                 <Tooltip>
                   <TooltipTrigger asChild>
@@ -298,7 +302,8 @@ const MediaAndLightTab = ({ keyCode, isStandardView, onAddSpecial }: MediaAndLig
                         variant="config"
                         size="icon"
                         onClick={() => handleAddSpecial(17154)}
-                        selected={isStandardView ? keyCode === 17154 : false}
+                        // selected={isStandardView ? keyCode === 17154 : false}
+                        selected={KC === 17154}
                       >
                         <IconLEDToggleEffect size="sm" />
                       </Button>
@@ -317,7 +322,8 @@ const MediaAndLightTab = ({ keyCode, isStandardView, onAddSpecial }: MediaAndLig
                         variant="config"
                         size="icon"
                         onClick={() => handleAddSpecial(17153)}
-                        selected={isStandardView ? keyCode === 17153 : false}
+                        // selected={isStandardView ? keyCode === 17153 : false}
+                        selected={KC === 17153}
                       >
                         <IconLEDPreviousEffect size="sm" />
                       </Button>
@@ -337,7 +343,8 @@ const MediaAndLightTab = ({ keyCode, isStandardView, onAddSpecial }: MediaAndLig
                         variant="config"
                         size="icon"
                         onClick={() => handleAddSpecial(17152)}
-                        selected={isStandardView ? keyCode === 17152 : false}
+                        // selected={isStandardView ? keyCode === 17152 : false}
+                        selected={KC === 17152}
                       >
                         <IconLEDNextEffect size="sm" />
                       </Button>
@@ -351,13 +358,15 @@ const MediaAndLightTab = ({ keyCode, isStandardView, onAddSpecial }: MediaAndLig
             </div>
           </div>
         </div>
-        <div className="buttonsRow">
-          <div className="othersButtons">
-            <Heading headingLevel={4} renderAs="h4">
+        <div className="buttonsRow py-2">
+          <div className="othersButtons flex-1 py-2">
+            <Heading headingLevel={4} renderAs="h4" className="m-0 text-base">
               {i18n.editor.superkeys.specialKeys.othersTitle}
             </Heading>
-            <p className="description">{i18n.editor.superkeys.specialKeys.othersDescription}</p>
-            <div className="flex gap-2 mt-2">
+            <p className="description text-ssm font-medium text-gray-400 dark:text-gray-200">
+              {i18n.editor.superkeys.specialKeys.othersDescription}
+            </p>
+            <div className="flex gap-1 mt-2">
               <TooltipProvider delayDuration={50}>
                 <Tooltip>
                   <TooltipTrigger asChild>
@@ -366,7 +375,8 @@ const MediaAndLightTab = ({ keyCode, isStandardView, onAddSpecial }: MediaAndLig
                         variant="config"
                         size="icon"
                         onClick={() => handleAddSpecial(22712)}
-                        selected={isStandardView ? keyCode === 22712 : false}
+                        // selected={isStandardView ? keyCode === 22712 : false}
+                        selected={KC === 22712}
                       >
                         <IconToolsEject size="sm" />
                       </Button>
@@ -385,7 +395,8 @@ const MediaAndLightTab = ({ keyCode, isStandardView, onAddSpecial }: MediaAndLig
                         variant="config"
                         size="icon"
                         onClick={() => handleAddSpecial(18834)}
-                        selected={isStandardView ? keyCode === 18834 : false}
+                        // selected={isStandardView ? keyCode === 18834 : false}
+                        selected={KC === 18834}
                       >
                         <IconToolsCalculator size="sm" />
                       </Button>
@@ -405,7 +416,8 @@ const MediaAndLightTab = ({ keyCode, isStandardView, onAddSpecial }: MediaAndLig
                         variant="config"
                         size="icon"
                         onClick={() => handleAddSpecial(18552)}
-                        selected={isStandardView ? keyCode === 18552 : false}
+                        // selected={isStandardView ? keyCode === 18552 : false}
+                        selected={KC === 18552}
                       >
                         <IconToolsCamera size="sm" />
                       </Button>
@@ -425,7 +437,8 @@ const MediaAndLightTab = ({ keyCode, isStandardView, onAddSpecial }: MediaAndLig
                         variant="config"
                         size="icon"
                         onClick={() => handleAddSpecial(23664)}
-                        selected={isStandardView ? keyCode === 23664 : false}
+                        // selected={isStandardView ? keyCode === 23664 : false}
+                        selected={KC === 23664}
                       >
                         <IconToolsBrightnessLess size="sm" />
                       </Button>
@@ -445,7 +458,8 @@ const MediaAndLightTab = ({ keyCode, isStandardView, onAddSpecial }: MediaAndLig
                         variant="config"
                         size="icon"
                         onClick={() => handleAddSpecial(23663)}
-                        selected={isStandardView ? keyCode === 23663 : false}
+                        // selected={isStandardView ? keyCode === 23663 : false}
+                        selected={KC === 23663}
                       >
                         <IconBrightnessMore size="sm" />
                       </Button>
@@ -464,7 +478,8 @@ const MediaAndLightTab = ({ keyCode, isStandardView, onAddSpecial }: MediaAndLig
                         variant="config"
                         size="icon"
                         onClick={() => handleAddSpecial(20866)}
-                        selected={isStandardView ? keyCode === 20866 : false}
+                        // selected={isStandardView ? keyCode === 20866 : false}
+                        selected={KC === 20866}
                       >
                         <IconSleep size="sm" />
                       </Button>
@@ -484,7 +499,8 @@ const MediaAndLightTab = ({ keyCode, isStandardView, onAddSpecial }: MediaAndLig
                         variant="config"
                         size="icon"
                         onClick={() => handleAddSpecial(20865)}
-                        selected={isStandardView ? keyCode === 20865 : false}
+                        // selected={isStandardView ? keyCode === 20865 : false}
+                        selected={KC === 20865}
                       >
                         <IconShutdown size="sm" />
                       </Button>

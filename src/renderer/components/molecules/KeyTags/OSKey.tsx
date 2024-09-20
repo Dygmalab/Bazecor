@@ -53,8 +53,8 @@ const OSKey = ({ renderKey, direction, size = "md" }: OSKeyProps) => {
         },
         control: {
           xs: "c",
-          sm: "CTRL ^",
-          md: "Control ^",
+          sm: "CTRL ˆ",
+          md: "Control ˆ",
         },
         os: {
           xs: "⌘",

@@ -273,7 +273,7 @@ const English = {
       noKeyDescription: "There's no function or character assigned to that key.",
       transparent: "Transparent",
       trans: "Trans.",
-      transparentDescription: "The key triggers the function assigned to the same key from the previous layer.",
+      transparentDescription: "The key triggers the function assigned to the same key on the previous layer.",
       keys: {
         keys: "Keys",
         standardViewTitle: "Select a key",
@@ -301,15 +301,16 @@ const English = {
         title: "Macro",
         callOut1: "Oh Yeah!! More superpowers! Here you can add macros to your keys! 🔥",
         callOut2:
-          "Not so clear what is macros? Macros are sequences of events (such as keystrokes, mouse clicks, and delays) that can be played back to help with repetitive strings of texts or tasks. They can also be used to replay sequences that are long or difficult to run.",
+          "Not so clear what macros are? Macros are sequences of events (such as keystrokes, mouse clicks, and delays) that can be played back to help with repetitive strings of texts or keypresses.",
       },
       mediaAndLED: {
         title: "Media & LED",
-        callOut: "Put your hands up! Control the media and RGB lighting behaviour using keys shortcuts.",
+        callOut: "Put your hands up! Easily control your media, RGB lighting and much more.",
       },
       mouse: {
         title: "Mouse",
-        callOut: "Add mouse events in your keys. You can assign any mouse events, such as clicks, moves and mouse wheel actions.",
+        callOut:
+          "Control your mouse with your keyboard. You can assign any mouse event, such as clicks, cursor movements and mouse wheel actions.",
       },
       oneShot: {
         title: "OneShot",
@@ -337,11 +338,11 @@ const English = {
         label: "Select Superkey",
       },
       wireless: {
-        callOut:
-          "With battery and wireless features at your fingertips, you're in complete control of your device's performance and connectivity.",
+        callOut: "Control your keyboard's performance and connectivity. ",
         batteryPowerStatus: "Battery power status",
-        batteryLevel: "Battery level",
-        batteryLevelDescription: "Check your power status in real time turning your device into a visual battery monitor.",
+        batteryLevel: "Battery Level",
+        batteryLevelDescription:
+          "Assign this key to check the charge of your battery in real time thanks to the LED indicators on the keyboard.",
         savingModeDescription: "Faster and convenient way to toggle Energy saving mode on and off.",
       },
     },
@@ -449,7 +450,7 @@ const English = {
         up: "Up",
         down: "Down",
         mediaTitle: "Media",
-        mediaDescription: "Skip boring songs, turn the sound louder. <br>Harder, better, faster, stronger!",
+        mediaDescription: "Skip boring songs, turn the sound louder.",
         LEDTitle: "LED",
         LEDDescription: "Turn the RGB lighting On or Off and control the cycle through the lights effects.",
         othersTitle: "Others",
@@ -518,9 +519,9 @@ const English = {
   wireless: {
     title: "Wireless",
     bluetooth: {
-      pairingMode: "Pairing mode",
-      pairingModeButton: "Bluetooth Pairing Mode",
-      pairingModeDescription: "Activate Pairing Mode for easy device connection.",
+      pairingMode: "Bluetooth Pairing Mode",
+      pairingModeButton: "Bluetooth Pairing",
+      pairingModeDescription: "Assign this key to activate Bluetooth pairing mode and easily connect to multiple devices.",
       pair: "Pair",
     },
     energyManagement: {
@@ -552,7 +553,7 @@ const English = {
         tooltipRF: `<div style="text-align: left"><strong>High</strong><p></p><strong>Medium</strong><p></p><strong>Low</strong><p></p></div>`,
         tooltipHighConsumptionMessage: "Maximum coverage at the cost of higher energy consumption.",
         tooltipMediumConsumptionMessage: "Reduced coverage and medium energy consumption.",
-        tooltipLowConsumptionMessage: "Designed to conserves battery energy reducing at minimum levels the coverage.",
+        tooltipLowConsumptionMessage: "Designed to conserve battery via reducing to minimum levels the coverage.",
       },
     },
     batteryPreferences: {
@@ -635,22 +636,23 @@ const English = {
         "High values let you press the next key before releasing the Dual-Function key without triggering the hold function.",
       overlapThresholdTip3:
         "Low values will mean that you’ll trigger the hold function whenever pressing a key without having totally released a Dual-Function key.",
-      overlapThresholdTip4:
-        "If you change it to Less, you will nearly always affect the subsequent pressed key with the dual function as it will be counting as double pressing instead of chording.",
+      overlapThresholdTipDefault: "Default value: 80",
       overlapThresholdsub: " - Percentage from 0 to 100",
       holdTimeoutTip1: "This setting determines the amount of time it takes for the “hold” function to activate.",
       holdTimeoutTip2: "With a high value, it’ll take more time to activate the hold function.",
       holdTimeoutTip3: "With a low value, you might trigger the hold function if you linger on the key too much while typing.",
-      holdTimeoutTip4: "If the slider is at 'High', it'll take a bit more time for the hold function to activate.",
+      holdTimeoutTipDefault: "Default value: 250",
       minHold: "Dual-Function Keys - Minimum Hold time",
       minHoldsub: " - From 0 to 254 milliseconds",
       minHoldTip1: "Set the minimum length of time a qukey must be held before it can resolve to its alternate key value",
       minHoldTip2:
         "If a qukey is pressed and released in less than this number of milliseconds, it will always produce its primary key value",
+      minHoldTipDefault: "",
       minPrior: "Dual-Function Keys - Minimum Prior Interval",
       minPriorsub: " - From 0 to 254 milliseconds",
       minPriorTip1: "Set the minimum interval between the previous keypress and the qukey press",
       minPriorTip2: "to make the qukey eligible to become its alternate keycode",
+      minPriorTipDefault: "",
     },
     superkeys: {
       title: "Typing",
@@ -658,12 +660,11 @@ const English = {
       timeoutTip1: "This setting determines how much a Superkey waits for the next tap.",
       timeoutTip2: "With a low value, you need to be fast pressing the next tap, or the Superkey will output the previous tap.",
       timeoutTip3: "With a high value, it will take more time for the Superkey to output the second tap.",
-      timeoutTip4:
-        "If you choose a fast typing speed, you might activate those actions by mistake if you 'linger' too much on the key.",
+      timeoutTipDefault: "Default value: 250",
       chordingTip1: "This setting determines the amount of time it takes for the “hold” function to activate.",
       chordingTip2: "With a high value, it’ll take more time to activate the hold function.",
       chordingTip3: "With a low value, you might trigger the hold function if you linger on the key too much while typing.",
-      chordingTip4: "If the slider is at 'High', it'll take a bit more time for the hold function to activate.",
+      chordingTipDefault: "Default value: 200",
       repeat:
         "Adjust repeat time interval between the emission of held keys after waitfor period. (this doesn't affect all keys)",
       repeatsub: " - time from 0 to 254 milliseconds",
@@ -675,23 +676,24 @@ const English = {
       overlapTip1: "This setting determines the overlap between the current and the next key press when using superkeys.",
       overlapTip2: "With a low value, you will be able to chord better as it will not overlap the key presses.",
       overlapTip3: "With a high value, the overlap is more responsive so it detects the superkey as being intercepted easier.",
+      overlapTipDefault: "Default value: 20",
     },
     mouse: {
       title: "Mouse keys",
       subtitle1: "MOUSE SPEED",
-      speed: "Cursor speed",
+      speed: "Cursor speed - Default: 20",
       speedsub: " - From 0 to 254 pixels",
       speedDelay: "Delay between steps (the higher the number, the slower the mouse movement)",
       speedDelaysub: " - From 0 to 65,534 milliseconds",
-      speedLimit: "Maximum cursor speed",
+      speedLimit: "Maximum cursor speed - Default: 127",
       speedLimitsub: " - From 0 to 254 pixels",
       subtitle2: "MOUSE ACCELERATION",
-      accelSpeed: "Cursor acceleration",
+      accelSpeed: "Cursor acceleration - Default: 20",
       accelSpeedsub: " - From 0 to 254 pixels",
       accelDelay: "Acceleration delay between steps (the higher the number, the slower the mouse movement)",
       accelDelaysub: " - From 0 to 65,534 milliseconds",
       subtitle3: "WHEEL SPEED",
-      wheelSpeed: "Wheel speed",
+      wheelSpeed: "Wheel speed - Default: 2",
       wheelSpeedsub: " - From 0 to 254 pixels",
       wheelDelay: "Wheel delay between steps (the higher the number, the slower the mouse movement)",
       wheelDelaysub: " - From 0 to 65,534 milliseconds",

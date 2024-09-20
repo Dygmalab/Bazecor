@@ -84,7 +84,7 @@ const KeyMacro: React.FC<KeyMacroProps> = ({
         <div
           className={`keyMacroWrapper relative flex flex-wrap flex-col p-0 !m-0 after:absolute after:content-[' '] after:w-full after:h-[1px] after:top-[71px] after:left-0 after:bg-white/80 after:dark:bg-[#2B2C43] keyCode-${item.keyCode} ${isModifier ? "isModifier" : ""} ${
             item.action === 1 || item.action === 2 ? "isDelay" : ""
-          }`}
+          } item-id-${item.id}`}
         >
           <div className="keyMacro">
             <div className="headerDrag">

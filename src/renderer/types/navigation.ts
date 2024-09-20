@@ -24,6 +24,8 @@ export interface NavigationMenuProps {
   modified: boolean;
   loading: boolean;
   pages: Pages | object;
+  saveButtonRef: React.RefObject<HTMLButtonElement>;
+  discardChangesButtonRef: React.RefObject<HTMLButtonElement>;
 }
 
 export interface HeaderInterface {
@@ -34,4 +36,6 @@ export interface HeaderInterface {
   modified: boolean;
   loading: boolean;
   pages: Pages | object;
+  saveButtonRef: React.RefObject<HTMLButtonElement>;
+  discardChangesButtonRef: React.RefObject<HTMLButtonElement>;
 }

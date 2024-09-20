@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import Styled from "styled-components";
 import { i18n } from "@Renderer/i18n";
 
 import { IconArrowInBoxUp } from "@Renderer/components/atoms/icons";
@@ -9,25 +8,6 @@ import Heading from "@Renderer/components/atoms/Heading";
 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@Renderer/components/atoms/Select";
 
-const Styles = Styled.div`
-display: flex;
-flex-wrap: wrap;
-height: inherit;
-h4 {
-    font-size: 16px;
-    flex: 0 0 100%;
-    width: 100%;
-    margin-top: 24px;
-}
-.w100 {
-    width: 100%;
-    flex: 0 0 100%;
-}
-.dropdown {
-    max-width: 290px;
-}
-`;
-
 interface MacroTabProps {
   macros: any;
   selectedMacro: any;
@@ -35,6 +15,7 @@ interface MacroTabProps {
   keyCode: any;
   isStandardView: boolean;
   onMacrosPress: any;
+  disabled?: boolean;
 }
 
 interface MacroItem {
@@ -44,7 +25,7 @@ interface MacroItem {
 }
 
 const MacroTab = (props: MacroTabProps) => {
-  const { macros, selectedMacro, onMacrosPress, isStandardView } = props;
+  const { macros, selectedMacro, onMacrosPress, isStandardView, disabled } = props;
   const [selected, setSelected] = useState(0);
 
   // update value when dropdown is changed
@@ -77,16 +58,18 @@ const MacroTab = (props: MacroTabProps) => {
   });
 
   return (
-    <Styles className={`${isStandardView ? "standardViewTab" : ""} tabsMacro`}>
+    <div
+      className={`flex flex-wrap h-[inherit] ${isStandardView ? "standardViewTab" : ""} tabsMacro ${disabled ? "opacity-50 pointer-events-none" : ""}`}
+    >
       <div className="tabContentWrapper">
         {isStandardView ? (
           <>
-            <Heading headingLevel={3} renderAs="h3">
+            {/* <Heading headingLevel={3} renderAs="h3">
               {i18n.editor.standardView.macros.title}
-            </Heading>
+            </Heading> */}
             <Callout
               size="sm"
-              className="mt-4"
+              className="mt-0"
               hasVideo
               media="MfTUvFrHLsE"
               videoTitle="13 Time-saving MACROS For Your Keyboard"
@@ -97,14 +80,15 @@ const MacroTab = (props: MacroTabProps) => {
             </Callout>
           </>
         ) : (
-          <Callout size="sm" className="mt-4">
+          <Callout size="sm" className="mt-0">
             <p>{i18n.editor.macros.macroTab.callout}</p>
           </Callout>
         )}
-        <Heading headingLevel={4} renderAs="h4">
-          {i18n.editor.macros.macroTab.label}
-        </Heading>
-        <div className="w100 mt-1">
+
+        <div className="w-full py-4">
+          <Heading headingLevel={4} renderAs="h4" className="!mt-0 !mb-1 !text-base">
+            {i18n.editor.macros.macroTab.label}
+          </Heading>
           <Select
             // value={
             //   macrosAux.length > 0 && macrosAux[selected] !== undefined && macrosAux[selected].text
@@ -133,7 +117,7 @@ const MacroTab = (props: MacroTabProps) => {
           </Button>
         </div>
       ) : null}
-    </Styles>
+    </div>
   );
 };
 

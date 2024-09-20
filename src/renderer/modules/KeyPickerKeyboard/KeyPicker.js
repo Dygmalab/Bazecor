@@ -28,7 +28,6 @@ import {
 import {
   AiFillForward,
   AiFillWindows,
-  AiFillApple,
   AiOutlineArrowDown,
   AiOutlineArrowLeft,
   AiOutlineArrowRight,
@@ -38,52 +37,12 @@ import {
 } from "react-icons/ai";
 import { MdKeyboardReturn, MdSpaceBar, MdKeyboardCapslock, MdInfoOutline, MdEject } from "react-icons/md";
 
-import { Button } from "@Renderer/components/atoms/Button";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@Renderer/components/atoms/Tooltip";
-import {
-  SelectLayersCustomDropdown,
-  SelectSuperKeyCustomDropdown,
-  SelectMacroCustomDropdown,
-  SelectMouseCustomDropdown,
-  SelectShotModifierCustomDropdown,
-  SelectWirelessDropdown,
-} from "@Renderer/components/molecules/CustomSelect";
-
-import {
-  IconLayers,
-  IconLEDNextEffect,
-  IconLEDPreviousEffect,
-  IconMediaForward,
-  IconMediaPlayPause,
-  IconMediaRewind,
-  IconMediaShuffle,
-  IconMediaSoundLess,
-  IconMediaSoundMore,
-  IconMediaSoundMute,
-  IconMediaStop,
-  IconNull,
-  IconNote,
-  IconMouse,
-  IconOneShot,
-  IconThunder,
-  IconToolsCalculator,
-  IconToolsCamera,
-  IconToolsEject,
-  IconToolsBrightnessLess,
-  IconBrightnessMore,
-  IconSleep,
-  IconShutdown,
-  IconRobot,
-  IconWireless,
-  IconLEDToggleEffect,
-  IconWrench,
-} from "@Renderer/components/atoms/icons";
 
 import { i18n } from "@Renderer/i18n";
 
 import Key from "@Renderer/modules/KeyPickerKeyboard/Key";
 import getLanguage from "@Renderer/modules/KeyPickerKeyboard/KeyPickerLanguage";
-import CustomKeyCodeModal from "@Renderer/components/molecules/CustomModal/ModalCustomKeycode";
 import OSKey from "@Renderer/components/molecules/KeyTags/OSKey";
 
 import { getKeyboardLayout } from "@Renderer/utils/getKeyboardLayout";
@@ -120,33 +79,14 @@ width: 100%;
     max-width: 1170px;
     margin: 6px auto;
 }
-.keysOrdinaryKeyboard {
-  position: relative;
-  z-index: 4;
-}
-
-
-.KeysWrapper {
-  max-width: 1080px;
-  margin: auto;
-}
-.keysContainer + .keysContainer {
-  margin-top: 4px;
-}
 .KeysWrapperSpecialKeys {
   margin-top: 4px;
 }
 .keysRow {
   display: flex;
   flex-wrap: nowrap;
-  background: ${({ theme }) => theme.styles.keyboardPicker.keysRowBackground};
+  // background: ${({ theme }) => theme.styles.keyboardPicker.keysRowBackground};
   box-shadow: ${({ theme }) => theme.styles.keyboardPicker.keysRowBoxShadow};
-  border-radius: 6px;
-  padding: 5px;
-  padding-left: 3px;
-  &.keysOrdinaryKeyboard {
-    padding: 12px 24px;
-  }
   .keyIcon {
     flex: 0 0 32px;
     text-align: center;
@@ -558,7 +498,12 @@ class KeyPicker extends Component {
       <Style>
         <div className="KeysWrapper">
           <div className="keysContainer">
-            <div className="keysRow keysOrdinaryKeyboard">
+            <div className=" flex flex-wrap bg-white dark:bg-gray-700/60 keysOrdinaryKeyboard relative z-[4] p-3 rounded-t-regular [&_svg]:mx-auto [&_svg]:max-w-6xl">
+              {disableAll && (
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-25 tracking-tight text-xl text-nowrap">
+                  Select a key in the keyboard above to start
+                </div>
+              )}
               <svg
                 className={`svgStyle ${process.platform} ${keyboardLayout}`}
                 viewBox="0 0 1070 208"
@@ -583,615 +528,53 @@ class KeyPicker extends Component {
                   </filter>
                 </defs>
               </svg>
-            </div>
-          </div>
-        </div>
-        <div className={`KeysWrapper KeysWrapperSpecialKeys ${activeTab} ${isWireless ? "isWireless" : "notWireless"}`}>
-          <div className="keysContainer keysContainerGrid">
-            {activeTab === "super" ? (
-              ""
-            ) : (
-              <div className="keysRow keysSuperkeys keyRowsDropdowns">
-                <div className="keyIcon">
-                  <IconThunder size="sm" />
+              {/* <div
+                className={`KeysWrapper KeysWrapperSpecialKeys ${activeTab} ${isWireless ? "isWireless" : "notWireless"} absolute top-1 right-1`}
+              >
+                <div className="keysRow keysCustom">
+                  <div className="keyIcon">
+                    <h4>Cust.</h4>
+                  </div>
+                  <div className="keysButtonsList flex gap-2">
+                    <TooltipProvider delayDuration={100}>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <div className="basis-full">
+                            <Button
+                              variant="config"
+                              disabled={disableAll}
+                              selected={keyCode.base + keyCode.modified >= 20000}
+                              onClick={() => {
+                                this.toggleModal();
+                              }}
+                              size="iconXS"
+                              className="w-6 h-6"
+                            >
+                              <IconWrench size="sm" />
+                            </Button>
+                          </div>
+                        </TooltipTrigger>
+                        <TooltipContent size="sm" className="max-w-xs">
+                          {i18n.editor.superkeys.specialKeys.custom}
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                    <CustomKeyCodeModal
+                      show={customModal}
+                      name={(keyCode.base + keyCode.modified).toString(16)}
+                      toggleShow={this.toggleModal}
+                      handleSave={data => {
+                        // console.log("CustomKey selected key", data);
+                        onKeySelect(parseInt(data, 16));
+                        this.toggleModal();
+                      }}
+                      modalTitle={i18n.editor.modal.customKeyCodeModal.title}
+                      modalMessage={i18n.editor.modal.customKeyCodeModal.message}
+                      labelInput={i18n.editor.modal.customKeyCodeModal.labelInput}
+                    />
+                  </div>
                 </div>
-                <div className="keysButtonsList">
-                  <SelectSuperKeyCustomDropdown
-                    // action={action}
-                    // actions={actions}
-                    // selKeys={selKeys}
-                    onKeySelect={onKeySelect}
-                    disabled={disableAll}
-                    superkeys={superkeys}
-                    keyCode={code}
-                  />
-                </div>
-              </div>
-            )}
-
-            <div className="keysRow keysMacros keyRowsDropdowns">
-              <div className="keyIcon">
-                <IconRobot size="sm" />
-              </div>
-              <div className="keysButtonsList">
-                <SelectMacroCustomDropdown macros={macros} keyCode={code} onKeySelect={onKeySelect} disabled={disableAll} />
-              </div>
-            </div>
-
-            <div className="keysRow keysLayerLock keyRowsDropdowns">
-              <div className="keyIcon">
-                <IconLayers size="sm" />
-              </div>
-              <div className="keysButtonsList">
-                <SelectLayersCustomDropdown
-                  action={action}
-                  activeTab={activeTab}
-                  keyCode={code}
-                  disable={disableAll}
-                  onKeySelect={onKeySelect}
-                  disableMods={disableMods}
-                />
-              </div>
-            </div>
-            {isWireless && (
-              <div className="keysRow keysWireless keyRowsDropdowns">
-                <div className="keyIcon">
-                  <IconWireless size="sm" />
-                </div>
-                <div className="keysButtonsList">
-                  <SelectWirelessDropdown
-                    action={action}
-                    activeTab={activeTab}
-                    keyCode={code}
-                    onKeySelect={onKeySelect}
-                    disable={disableAll}
-                  />
-                </div>
-              </div>
-            )}
-            {activeTab === "super" ? (
-              ""
-            ) : (
-              <div className="keysRow keysOSM keyRowsDropdowns">
-                <div className="keyIcon">
-                  <IconOneShot size="sm" />
-                </div>
-                <div className="keysButtonsList">
-                  <SelectShotModifierCustomDropdown
-                    action={action}
-                    activeTab={activeTab}
-                    keyCode={code}
-                    disable={disableAll}
-                    onKeySelect={onKeySelect}
-                  />
-                </div>
-              </div>
-            )}
-            <div className="keysRow keysMouseEvents">
-              <div className="keyIcon">
-                <IconMouse size="sm" />
-              </div>
-              <div className="keysButtonsList">
-                <SelectMouseCustomDropdown keyCode={code} onKeySelect={onKeySelect} disable={disableAll} activeTab={activeTab} />
-              </div>
-            </div>
-            {activeTab === "super" ? (
-              ""
-            ) : (
-              <div className="keysRow keysNoKey keyRowsDropdowns">
-                <div className="keyIcon">
-                  <IconNull size="sm" />
-                </div>
-                <div className="keysButtonsList flex gap-2">
-                  <Button
-                    variant="config"
-                    disabled={disableAll}
-                    onClick={() => {
-                      onKeySelect(0);
-                    }}
-                    size="xs"
-                    className="px-[12px] text-center basis-full"
-                    selected={keyCode.base + keyCode.modified === 0}
-                  >
-                    {i18n.editor.superkeys.specialKeys.noKey}
-                  </Button>
-                  <Button
-                    variant="config"
-                    disabled={disableAll}
-                    onClick={() => {
-                      onKeySelect(65535);
-                    }}
-                    size="xs"
-                    className="px-[12px] text-center basis-full"
-                    selected={keyCode.base + keyCode.modified === 65535}
-                  >
-                    {i18n.editor.standardView.trans}
-                  </Button>
-                </div>
-              </div>
-            )}
-
-            <div className="keysRow keysMedia">
-              <div className="keyIcon">
-                <IconNote size="sm" />
-              </div>
-              <div className="keysButtonsList flex gap-2">
-                <TooltipProvider delayDuration={100}>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <div className="basis-full">
-                        <Button
-                          variant="config"
-                          disabled={disableAll}
-                          selected={keyCode.base + keyCode.modified === 22733}
-                          onClick={() => {
-                            onKeySelect(22733);
-                          }}
-                          size="iconXS"
-                          className="basis-full !w-full"
-                        >
-                          <IconMediaPlayPause size="sm" />
-                        </Button>
-                      </div>
-                    </TooltipTrigger>
-                    <TooltipContent size="sm" className="max-w-xs">
-                      {i18n.editor.superkeys.specialKeys.playPause}
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
-                <TooltipProvider delayDuration={100}>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <div className="basis-full">
-                        <Button
-                          variant="config"
-                          disabled={disableAll}
-                          selected={keyCode.base + keyCode.modified === 22711}
-                          onClick={() => {
-                            onKeySelect(22711);
-                          }}
-                          size="iconXS"
-                          className="basis-full !w-full"
-                        >
-                          <IconMediaStop size="sm" />
-                        </Button>
-                      </div>
-                    </TooltipTrigger>
-                    <TooltipContent size="sm" className="max-w-xs">
-                      {i18n.editor.superkeys.specialKeys.stop}
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
-                <TooltipProvider delayDuration={100}>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <div className="basis-full">
-                        <Button
-                          variant="config"
-                          disabled={disableAll}
-                          selected={keyCode.base + keyCode.modified === 22710}
-                          onClick={() => {
-                            onKeySelect(22710);
-                          }}
-                          size="iconXS"
-                          className="basis-full !w-full"
-                        >
-                          <IconMediaRewind size="sm" />
-                        </Button>
-                      </div>
-                    </TooltipTrigger>
-                    <TooltipContent size="sm" className="max-w-xs">
-                      {i18n.editor.superkeys.specialKeys.rewind}
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
-                <TooltipProvider delayDuration={100}>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <div className="basis-full">
-                        <Button
-                          variant="config"
-                          disabled={disableAll}
-                          selected={keyCode.base + keyCode.modified === 22709}
-                          onClick={() => {
-                            onKeySelect(22709);
-                          }}
-                          size="iconXS"
-                          className="basis-full !w-full"
-                        >
-                          <IconMediaForward size="sm" />
-                        </Button>
-                      </div>
-                    </TooltipTrigger>
-                    <TooltipContent size="sm" className="max-w-xs">
-                      {i18n.editor.superkeys.specialKeys.forward}
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
-                <TooltipProvider delayDuration={100}>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <div className="basis-full">
-                        <Button
-                          variant="config"
-                          disabled={disableAll}
-                          selected={keyCode.base + keyCode.modified === 22713}
-                          onClick={() => {
-                            onKeySelect(22713);
-                          }}
-                          size="iconXS"
-                          className="basis-full !w-full"
-                        >
-                          <IconMediaShuffle size="sm" />
-                        </Button>
-                      </div>
-                    </TooltipTrigger>
-                    <TooltipContent size="sm" className="max-w-xs">
-                      {i18n.editor.superkeys.specialKeys.shuffle}
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
-                <TooltipProvider delayDuration={100}>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <div className="basis-full">
-                        <Button
-                          variant="config"
-                          disabled={disableAll}
-                          selected={keyCode.base + keyCode.modified === 19682}
-                          onClick={() => {
-                            onKeySelect(19682);
-                          }}
-                          size="iconXS"
-                          className="basis-full !w-full"
-                        >
-                          <IconMediaSoundMute size="sm" />
-                        </Button>
-                      </div>
-                    </TooltipTrigger>
-                    <TooltipContent size="sm" className="max-w-xs">
-                      {i18n.editor.superkeys.specialKeys.mute}
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
-                <TooltipProvider delayDuration={100}>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <div className="basis-full">
-                        <Button
-                          variant="config"
-                          disabled={disableAll}
-                          selected={keyCode.base + keyCode.modified === 23786}
-                          onClick={() => {
-                            onKeySelect(23786);
-                          }}
-                          size="iconXS"
-                          className="basis-full !w-full"
-                        >
-                          <IconMediaSoundLess size="sm" />
-                        </Button>
-                      </div>
-                    </TooltipTrigger>
-                    <TooltipContent size="sm" className="max-w-xs">
-                      {i18n.editor.superkeys.specialKeys.soundLess}
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
-                <TooltipProvider delayDuration={100}>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <div className="basis-full">
-                        <Button
-                          variant="config"
-                          disabled={disableAll}
-                          selected={keyCode.base + keyCode.modified === 23785}
-                          onClick={() => {
-                            onKeySelect(23785);
-                          }}
-                          size="iconXS"
-                          className="basis-full !w-full"
-                        >
-                          <IconMediaSoundMore size="sm" />
-                        </Button>
-                      </div>
-                    </TooltipTrigger>
-                    <TooltipContent size="sm" className="max-w-xs">
-                      {i18n.editor.superkeys.specialKeys.soundMore}
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
-              </div>
-            </div>
-
-            <div className="keysRow keysTools">
-              <div className="keyIcon">
-                <IconWrench size="sm" />
-              </div>
-              <div className="keysButtonsList flex gap-2">
-                <TooltipProvider delayDuration={100}>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <div className="basis-full">
-                        <Button
-                          variant="config"
-                          disabled={disableAll}
-                          selected={keyCode.base + keyCode.modified === 22712}
-                          onClick={() => {
-                            onKeySelect(22712);
-                          }}
-                          size="iconXS"
-                          className="basis-full !w-full"
-                        >
-                          <IconToolsEject size="sm" />
-                        </Button>
-                      </div>
-                    </TooltipTrigger>
-                    <TooltipContent size="sm" className="max-w-xs">
-                      {i18n.editor.superkeys.specialKeys.eject}
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
-                <TooltipProvider delayDuration={100}>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <div className="basis-full">
-                        <Button
-                          variant="config"
-                          disabled={disableAll}
-                          selected={keyCode.base + keyCode.modified === 18834}
-                          onClick={() => {
-                            onKeySelect(18834);
-                          }}
-                          size="iconXS"
-                          className="basis-full !w-full"
-                        >
-                          <IconToolsCalculator size="sm" />
-                        </Button>
-                      </div>
-                    </TooltipTrigger>
-                    <TooltipContent size="sm" className="max-w-xs">
-                      {i18n.editor.superkeys.specialKeys.calculator}
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
-                <TooltipProvider delayDuration={100}>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <div className="basis-full">
-                        <Button
-                          variant="config"
-                          disabled={disableAll}
-                          selected={keyCode.base + keyCode.modified === 18552}
-                          onClick={() => {
-                            onKeySelect(18552);
-                          }}
-                          size="iconXS"
-                          className="basis-full !w-full"
-                        >
-                          <IconToolsCamera size="sm" />
-                        </Button>
-                      </div>
-                    </TooltipTrigger>
-                    <TooltipContent size="sm" className="max-w-xs">
-                      {i18n.editor.superkeys.specialKeys.camera}
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
-                <TooltipProvider delayDuration={100}>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <div className="basis-full">
-                        <Button
-                          variant="config"
-                          disabled={disableAll}
-                          selected={keyCode.base + keyCode.modified === 23664}
-                          onClick={() => {
-                            onKeySelect(23664);
-                          }}
-                          size="iconXS"
-                          className="basis-full !w-full"
-                        >
-                          <IconToolsBrightnessLess size="sm" />
-                        </Button>
-                      </div>
-                    </TooltipTrigger>
-                    <TooltipContent size="sm" className="max-w-xs">
-                      {i18n.editor.superkeys.specialKeys.brightnessLess}
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
-                <TooltipProvider delayDuration={100}>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <div className="basis-full">
-                        <Button
-                          variant="config"
-                          disabled={disableAll}
-                          selected={keyCode.base + keyCode.modified === 23663}
-                          onClick={() => {
-                            onKeySelect(23663);
-                          }}
-                          size="iconXS"
-                          className="basis-full !w-full"
-                        >
-                          <IconBrightnessMore size="sm" />
-                        </Button>
-                      </div>
-                    </TooltipTrigger>
-                    <TooltipContent size="sm" className="max-w-xs">
-                      {i18n.editor.superkeys.specialKeys.brightnessMore}
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
-
-                <TooltipProvider delayDuration={100}>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <div className="basis-full">
-                        <Button
-                          variant="config"
-                          disabled={disableAll}
-                          selected={keyCode.base + keyCode.modified === 20866}
-                          onClick={() => {
-                            onKeySelect(20866);
-                          }}
-                          size="iconXS"
-                          className="basis-full !w-full"
-                        >
-                          <IconSleep size="sm" />
-                        </Button>
-                      </div>
-                    </TooltipTrigger>
-                    <TooltipContent size="sm" className="max-w-xs">
-                      {i18n.editor.superkeys.specialKeys.sleep}
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
-
-                <TooltipProvider delayDuration={100}>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <div className="basis-full">
-                        <Button
-                          variant="config"
-                          disabled={disableAll}
-                          selected={keyCode.base + keyCode.modified === 20865}
-                          onClick={() => {
-                            onKeySelect(20865);
-                          }}
-                          size="iconXS"
-                          className="basis-full !w-full"
-                        >
-                          <IconShutdown size="sm" />
-                        </Button>
-                      </div>
-                    </TooltipTrigger>
-                    <TooltipContent size="sm" className="max-w-xs">
-                      {i18n.editor.superkeys.specialKeys.shutdown}
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
-              </div>
-            </div>
-
-            <div className="keysRow keysLED">
-              <div className="keyIcon">
-                <h4>LED</h4>
-              </div>
-              <div className="keysButtonsList">
-                <TooltipProvider delayDuration={100}>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <div className="basis-full">
-                        <Button
-                          variant="config"
-                          disabled={disableAll}
-                          selected={keyCode.base + keyCode.modified === 17154}
-                          onClick={() => {
-                            onKeySelect(17154);
-                          }}
-                          size="iconXS"
-                          className="basis-full !w-full"
-                        >
-                          <IconLEDToggleEffect size="sm" />
-                        </Button>
-                      </div>
-                    </TooltipTrigger>
-                    <TooltipContent size="sm" className="max-w-xs">
-                      {i18n.editor.superkeys.specialKeys.ledToggleTootip}
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
-                <TooltipProvider delayDuration={100}>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <div className="basis-full">
-                        <Button
-                          variant="config"
-                          disabled={disableAll}
-                          selected={keyCode.base + keyCode.modified === 17153}
-                          onClick={() => {
-                            onKeySelect(17153);
-                          }}
-                          size="iconXS"
-                          className="basis-full !w-full"
-                        >
-                          <IconLEDPreviousEffect size="sm" />
-                        </Button>
-                      </div>
-                    </TooltipTrigger>
-                    <TooltipContent size="sm" className="max-w-xs">
-                      {i18n.editor.superkeys.specialKeys.ledPreviousEffectTootip}
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
-                <TooltipProvider delayDuration={100}>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <div className="basis-full">
-                        <Button
-                          variant="config"
-                          disabled={disableAll}
-                          selected={keyCode.base + keyCode.modified === 17152}
-                          onClick={() => {
-                            onKeySelect(17152);
-                          }}
-                          size="iconXS"
-                          className="basis-full !w-full"
-                        >
-                          <IconLEDNextEffect size="sm" />
-                        </Button>
-                      </div>
-                    </TooltipTrigger>
-                    <TooltipContent size="sm" className="max-w-xs">
-                      {i18n.editor.superkeys.specialKeys.ledNextEffectTootip}
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
-              </div>
-            </div>
-            <div className="keysRow keysCustom">
-              <div className="keyIcon">
-                <h4>Cust.</h4>
-              </div>
-              <div className="keysButtonsList flex gap-2">
-                <TooltipProvider delayDuration={100}>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <div className="basis-full">
-                        <Button
-                          variant="config"
-                          disabled={disableAll}
-                          selected={keyCode.base + keyCode.modified >= 20000}
-                          onClick={() => {
-                            this.toggleModal();
-                          }}
-                          size="iconXS"
-                          className="basis-full !w-full"
-                        >
-                          <IconWrench size="sm" />
-                        </Button>
-                      </div>
-                    </TooltipTrigger>
-                    <TooltipContent size="sm" className="max-w-xs">
-                      {i18n.editor.superkeys.specialKeys.custom}
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
-                <CustomKeyCodeModal
-                  show={customModal}
-                  name={(keyCode.base + keyCode.modified).toString(16)}
-                  toggleShow={this.toggleModal}
-                  handleSave={data => {
-                    // console.log("CustomKey selected key", data);
-                    onKeySelect(parseInt(data, 16));
-                    this.toggleModal();
-                  }}
-                  modalTitle={i18n.editor.modal.customKeyCodeModal.title}
-                  modalMessage={i18n.editor.modal.customKeyCodeModal.message}
-                  labelInput={i18n.editor.modal.customKeyCodeModal.labelInput}
-                />
-              </div>
+              </div> */}
             </div>
           </div>
         </div>
