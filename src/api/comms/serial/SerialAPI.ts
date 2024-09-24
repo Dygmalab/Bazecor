@@ -130,6 +130,15 @@ const enumerate = async (
     for (const device of serialDevices) {
       const vID = parseInt(`0x${device.vendorId}`, 16);
       const pID = parseInt(`0x${device.productId}`, 16);
+      const Bdevice = Hardware.bootloader.find(h => h.usb.productId === pID && h.usb.vendorId === vID);
+      if (Bdevice) {
+        // Special treatment for Raise Bootloader
+        const newPort: ExtendedPort = { ...device, device: { ...Bdevice } };
+        log.info("Detected Bootloader: ", newPort, Bdevice, true);
+        foundDevices.push(newPort);
+        // eslint-disable-next-line no-continue
+        continue;
+      }
       if (vID === searchDevice.vendorId && pID === searchDevice.productId && !existingIDs.includes(device.serialNumber)) {
         const supported = await checkProperties(device.path);
         const Hdevice = Hardware.serial.find(
@@ -154,6 +163,15 @@ const enumerate = async (
     for (const device of serialDevices) {
       const vID = parseInt(`0x${device.vendorId}`, 16);
       const pID = parseInt(`0x${device.productId}`, 16);
+      const Bdevice = Hardware.bootloader.find(h => h.usb.productId === pID && h.usb.vendorId === vID);
+      if (Bdevice) {
+        // Special treatment for Raise Bootloader
+        const newPort: ExtendedPort = { ...device, device: { ...Bdevice } };
+        log.info("Detected Bootloader: ", newPort, Bdevice, true);
+        foundDevices.push(newPort);
+        // eslint-disable-next-line no-continue
+        continue;
+      }
       if ([0x35ef, 0x1209].includes(vID) && !existingIDs.includes(device.serialNumber.toLowerCase())) {
         const supported = await checkProperties(device.path);
         const Hdevice = Hardware.serial.find(
