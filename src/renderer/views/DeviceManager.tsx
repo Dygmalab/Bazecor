@@ -89,7 +89,7 @@ const DeviceManager = (props: DeviceManagerProps) => {
 
   const handleOnDisconnect = async () => {
     setScanned(false);
-    const cID = state.currentDevice.serialNumber.toLowerCase();
+    const cID = state.currentDevice.serialNumber?.toLowerCase();
     await DeviceTools.disconnect(state.currentDevice);
     dispatch({ type: "disconnect", payload: [cID] });
     setDevicesList([]);
@@ -107,17 +107,22 @@ const DeviceManager = (props: DeviceManagerProps) => {
     setLoading(true);
     if (connected || state.deviceList?.length > 0) {
       const toShowDevs: DeviceListType[] = [];
-      const existingIDs = state.deviceList.map(d => d.serialNumber.toLowerCase());
+      const existingIDs = state.deviceList.map(d => d.serialNumber?.toLowerCase());
       const result = await DeviceTools.listNonConnected(false, existingIDs);
       let newDeviceList = state.deviceList.filter(
-        x => !result.devicesToRemove.includes(x.serialNumber.toLowerCase()) || x.type === "virtual",
+        x => !result.devicesToRemove.includes(x.serialNumber?.toLowerCase()) || x.type === "virtual",
       );
       newDeviceList = newDeviceList.concat(result.finalDevices);
+      newDeviceList = newDeviceList.map((dev, i) => {
+        const localDev = dev;
+        localDev.serialNumber = dev.serialNumber !== undefined ? dev.serialNumber : `RaiseBootloader${i}`;
+        return localDev;
+      });
       dispatch({ type: "addDevicesList", payload: newDeviceList });
       log.info("Available Devices: ", newDeviceList);
       newDeviceList.forEach((item, index) => {
         const neurons = store.get("neurons") as Neuron[];
-        const neuron = neurons.find(n => n.id.toLowerCase() === item.device?.chipId?.toLowerCase());
+        const neuron = neurons.find(n => n.id?.toLowerCase() === item.device?.chipId?.toLowerCase());
         toShowDevs.push({
           name: neuron?.name ? neuron.name : "",
           available: true,
