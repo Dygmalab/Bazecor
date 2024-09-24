@@ -67,7 +67,9 @@ const CardDevice = forwardRef<HTMLDivElement, CardDeviceProps>((props, ref) => {
           </>
         ) : (
           <Heading headingLevel={3} renderAs="h3" className="text-gray-600 dark:text-gray-50">
-            {device.device?.device?.info?.displayName}
+            {device.device?.device?.bootloader === true
+              ? `${device.device?.device?.info?.vendor} ${device.device?.device?.info?.product} Bootloader`
+              : device.device?.device?.info?.displayName}
           </Heading>
         )}
         {device.file ? (
