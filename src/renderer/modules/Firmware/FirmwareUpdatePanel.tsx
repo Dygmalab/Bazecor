@@ -33,6 +33,7 @@ import { IconBluetooth, IconLoader, IconUSB, IconWarning } from "@Renderer/compo
 // Visual modules
 import { FirmwareNeuronStatus, FirmwareVersionStatus } from "@Renderer/modules/Firmware";
 import { useDevice } from "@Renderer/DeviceContext";
+import Backup from "../../../api/backup";
 
 const Style = Styled.div`
 width: 100%;
@@ -173,6 +174,7 @@ function FirmwareUpdatePanel(props: FirmwareUpdatePanelProps) {
   const { nextBlock, retryBlock, errorBlock, allowBeta } = props;
   const { state: deviceState } = useDevice();
   const [loading, setLoading] = useState(true);
+  const [isValidBkpFolder, setIsValidBkpFolder] = useState(Backup.backupFolderValid());
   const [state, send] = useMachine(FirmwareSelection, { input: { allowBeta, deviceState } });
 
   let flashButtonText = state.context.stateblock === 4 ? "Processing..." : "";
@@ -185,6 +187,7 @@ function FirmwareUpdatePanel(props: FirmwareUpdatePanelProps) {
     }
     if (state.value === "success") nextBlock(state.context);
     if (state.value === "failure") errorBlock(state.context.error);
+    setIsValidBkpFolder(Backup.backupFolderValid());
   }, [errorBlock, nextBlock, retryBlock, state]);
 
   return (
@@ -242,7 +245,8 @@ function FirmwareUpdatePanel(props: FirmwareUpdatePanelProps) {
             <div className="firmware-sidebar borderRightBottomRadius">
               <div className="buttonActions">
                 {(state.context.firmwareList.length > 0 || state.context.typeSelected === "custom") &&
-                deviceState.currentDevice.type === "serial" ? (
+                deviceState.currentDevice.type === "serial" &&
+                isValidBkpFolder ? (
                   <Button
                     onClick={() => {
                       send({ type: "next-event" });
@@ -254,10 +258,24 @@ function FirmwareUpdatePanel(props: FirmwareUpdatePanelProps) {
                   </Button>
                 ) : (
                   <>
-                    {deviceState.currentDevice.type === "serial" ? (
+                    {!isValidBkpFolder ? (
                       <div className="px-4 py-4">
                         <div className="px-4 py-4 rounded-md bg-gray-25 dark:bg-gray-600/50 flex gap-4 items-center animate-bounce-error">
-                          <div className="inline-flex w-10 h-10 aspect-square items-center justify-center text-orange-900/50 bg-orange-200/50 dark:text-orange-200 dark:bg-orange-200/25 rounded-full">
+                          <div className="inline-flex w-10 h-10 p-2 aspect-square items-center justify-center text-orange-900/50 bg-orange-200/50 dark:text-orange-200 dark:bg-orange-200/25 rounded-full">
+                            <IconWarning />
+                          </div>
+                          <div className="flex flex-wrap gap-2 text-gray-400 dark:text-gray-25 text-sm">
+                            Backup path is no longer valid, please modify.
+                          </div>
+                        </div>
+                      </div>
+                    ) : (
+                      ""
+                    )}
+                    {deviceState.currentDevice.type === "serial" && isValidBkpFolder ? (
+                      <div className="px-4 py-4">
+                        <div className="px-4 py-4 rounded-md bg-gray-25 dark:bg-gray-600/50 flex gap-4 items-center animate-bounce-error">
+                          <div className="inline-flex w-10 h-10 p-2 aspect-square items-center justify-center text-orange-900/50 bg-orange-200/50 dark:text-orange-200 dark:bg-orange-200/25 rounded-full">
                             <IconWarning />
                           </div>
                           <div className="flex flex-wrap gap-2 text-gray-400 dark:text-gray-25 text-sm">
@@ -266,6 +284,9 @@ function FirmwareUpdatePanel(props: FirmwareUpdatePanelProps) {
                         </div>
                       </div>
                     ) : (
+                      ""
+                    )}
+                    {deviceState.currentDevice.type !== "serial" && isValidBkpFolder ? (
                       <div className="px-4 py-4">
                         <div className="px-4 py-4 rounded-md bg-gray-25 dark:bg-gray-700 flex flex-col items-center gap-2 text-sm animate-bounce-error">
                           <div className="flex w-full items-center px-2 py-0 rounded-xl text-2xxs font-semibold tracking-tight leading-tight bg-orange-200 text-orange-900 [&_svg]:w-4">
@@ -281,6 +302,8 @@ function FirmwareUpdatePanel(props: FirmwareUpdatePanelProps) {
                           </div>
                         </div>
                       </div>
+                    ) : (
+                      ""
                     )}
                   </>
                 )}

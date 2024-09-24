@@ -60,6 +60,16 @@ export default class Backup {
     return validCommands;
   }
 
+  static backupFolderValid = () => {
+    const folder = store.get("settings.backupFolder") as string;
+    try {
+      const stats = fs.statSync(folder);
+      return stats.isDirectory();
+    } catch (error) {
+      return false;
+    }
+  };
+
   /**
    * The function is desgned to make a backup of the whole configuration pertaining the Raise keyboard
    *
