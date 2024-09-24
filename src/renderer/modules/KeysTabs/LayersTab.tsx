@@ -376,10 +376,13 @@ const LayersTab = ({
                 <>
                   <CustomRadioCheckBox
                     label={<div className="pl-0.5">Add a key on tap</div>}
+                    disabled={activeLayerNumber >= 9}
                     onClick={() => {
-                      if (activeLayerNumber > 0) {
+                      if (activeLayerNumber > 0 && activeLayerNumber <= 8) {
                         setActiveLayerTab(previous => (previous === "layerDual" ? "layerShift" : "layerDual"));
                         setOpenKeysPopover(true);
+                      } else if (activeLayerNumber >= 9) {
+                        triggerToastOneShot();
                       } else {
                         triggerToast();
                       }
@@ -403,7 +406,6 @@ const LayersTab = ({
                         </p>
                       </>
                     }
-                    disabled={false}
                     className=""
                   />
                   <CustomRadioCheckBox
