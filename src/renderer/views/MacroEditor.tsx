@@ -126,6 +126,7 @@ function MacroEditor(props: MacroEditorProps) {
     listToDelete: [],
     listToDeleteS: [],
     listToDeleteM: [],
+    futureMacros: [],
     selectedList: -1,
     usedMemory: 0,
     totalMemory: 0,
@@ -375,12 +376,16 @@ function MacroEditor(props: MacroEditorProps) {
 
   function toggleDeleteModal() {
     state.showDeleteModal = false;
+    state.futureMacros = [];
+    state.listToDelete = [];
+    state.listToDeleteS = [];
+    state.listToDeleteM = [];
     setState({ ...state });
   }
 
-  function ActUponDelete() {
+  function ActUponDelete(localstate?: MacroEditorInitialStateType) {
     const { selectedList, listToDelete, listToDeleteS, listToDeleteM, keymap, superkeys } = state;
-    let { macros } = state;
+    let macros = localstate ? localstate.futureMacros : state.futureMacros;
     log.info("Checking list to delete macros", listToDeleteM, macros);
     for (let i = 0; i < listToDelete.length; i += 1) {
       if (listToDelete[i].newKey === -1) {
@@ -418,6 +423,7 @@ function MacroEditor(props: MacroEditorProps) {
     state.keymap = keymap;
     state.superkeys = superkeys;
     state.macros = macros;
+    state.modified = true;
     setState({ ...state });
     toggleDeleteModal();
   }
@@ -427,7 +433,7 @@ function MacroEditor(props: MacroEditorProps) {
     setState({ ...state });
   }
 
-  function updateKeyboard(keyboardIdx: number) {
+  function updateKeyboard(keyboardIdx: number, localMacros: MacrosType[]) {
     const { macros, superkeys, keymap } = state;
     let customKeymapList: ListToDeleteType[] = [];
     let customSuperList: ListToDeleteSType[] = [];
@@ -456,16 +462,25 @@ function MacroEditor(props: MacroEditorProps) {
             .filter(elem => elem.actions[elem.pos].keyCode === macroID),
         )
         .flat();
-      customKeymapList = customKeymapList.concat(filteredKeys);
+      customKeymapList = [...filteredKeys];
       customSuperList = customSuperList.concat(superkeyList);
       customMacrosList = customMacrosList.concat(macrosList);
     }
 
+    log.info("result of macro exploration: ", macros, customKeymapList, customSuperList, customMacrosList);
+
+    state.futureMacros = localMacros;
     state.listToDelete = customKeymapList;
     state.listToDeleteS = customSuperList;
     state.listToDeleteM = customMacrosList;
-    state.showDeleteModal = customKeymapList.length > 0 || customSuperList.length > 0 || customMacrosList.length > 0;
+    state.showDeleteModal =
+      customKeymapList.filter(c => c.newKey === -1).length > 0 || customSuperList.length > 0 || customMacrosList.length > 0;
     setState({ ...state });
+
+    if (!state.showDeleteModal) ActUponDelete(state);
+    if (keyboardIdx >= macros.length - 1) {
+      changeSelected(macros.length - 2);
+    }
   }
 
   function deleteMacro() {
@@ -481,11 +496,7 @@ function MacroEditor(props: MacroEditorProps) {
       item.id = idx;
       return item;
     });
-    if (selected >= macros.length - 1) {
-      changeSelected(macros.length - 2);
-    }
-    updateKeyboard(selected);
-    updateMacros(localMacros);
+    updateKeyboard(selected, localMacros);
   }
 
   function addMacro(name: string) {
@@ -710,6 +721,8 @@ function MacroEditor(props: MacroEditorProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const { saveButtonRef, discardChangesButtonRef } = props;
+
   const {
     macros,
     maxMacros,
@@ -810,8 +823,8 @@ function MacroEditor(props: MacroEditorProps) {
           saveContext={writeMacros}
           destroyContext={destroyThisContext}
           inContext={modified}
-          saveButtonRef={props.saveButtonRef}
-          discardChangesButtonRef={props.discardChangesButtonRef}
+          saveButtonRef={saveButtonRef}
+          discardChangesButtonRef={discardChangesButtonRef}
         />
 
         <Callout
@@ -878,7 +891,7 @@ function MacroEditor(props: MacroEditorProps) {
             <Button size="sm" variant="outline" onClick={toggleDeleteModal}>
               {i18n.editor.macros.deleteModal.cancelButton}
             </Button>
-            <Button size="sm" variant="secondary" onClick={ActUponDelete}>
+            <Button size="sm" variant="secondary" onClick={() => ActUponDelete()}>
               {i18n.editor.macros.deleteModal.applyButton}
             </Button>
           </DialogFooter>
