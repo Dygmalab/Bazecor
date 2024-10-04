@@ -5,7 +5,7 @@ import { cn } from "@Renderer/utils";
 import { buttonVariants } from "@Renderer/components/atoms/Button";
 
 interface ButtonVariantProps {
-  buttonVariant: "default" | "destructive" | "outline" | "link" | "secondary" | "ghost";
+  buttonVariant: "default" | "primary" | "destructive" | "outline" | "link" | "secondary" | "ghost";
 }
 
 const AlertDialog = AlertDialogPrimitive.Root;

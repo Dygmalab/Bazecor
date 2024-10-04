@@ -1,4 +1,4 @@
-import React, { forwardRef } from "react";
+import React, { forwardRef, useState } from "react";
 import { SortableKnob } from "react-easy-sort";
 import log from "electron-log/renderer";
 
@@ -8,6 +8,18 @@ import { DeviceListType } from "@Renderer/types/DeviceManager";
 import { DevicePreview } from "@Renderer/modules/DevicePreview";
 import { Button } from "@Renderer/components/atoms/Button";
 import { i18n } from "@Renderer/i18n";
+import Store from "@Renderer/utils/Store";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@Renderer/components/atoms/AlertDialog";
+import { Switch } from "@Renderer/components/atoms/Switch";
 
 interface CardDeviceProps {
   device: DeviceListType;
@@ -16,8 +28,12 @@ interface CardDeviceProps {
   handleConnection: (value: number, action: "connect" | "disconnect") => Promise<void>;
 }
 
+const store = Store.getStore();
+
 const CardDevice = forwardRef<HTMLDivElement, CardDeviceProps>((props, ref) => {
   const { device, filterBy, openDialog, handleConnection } = props;
+  const [open, setOpen] = useState(false);
+  const [notShow, setNotShow] = useState<boolean>(store.get("settings.hideBluetoothExperimental"));
 
   const filterAttribute = (filter: any) => {
     switch (filter) {
@@ -40,6 +56,11 @@ const CardDevice = forwardRef<HTMLDivElement, CardDeviceProps>((props, ref) => {
       await handleConnection(-1, "disconnect");
       log.debug(openDialog, IconDelete);
     }
+  };
+
+  const handleSetNotShow = (newValue: boolean) => {
+    setNotShow(newValue);
+    store.set("settings.hideBluetoothExperimental", newValue);
   };
 
   return (
@@ -98,7 +119,11 @@ const CardDevice = forwardRef<HTMLDivElement, CardDeviceProps>((props, ref) => {
       <div className="card-footer bg-transparent border-none p-0.5 mt-auto">
         <div className="card-footer--inner flex justify-between items-center rounded-[18px] p-4 bg-gray-25/80 dark:bg-gray-700/70 backdrop-blur-sm">
           {device.available ? (
-            <Button variant={`${device.connected ? "outline" : "primary"}`} className="h-[52px]" onClick={handleSetIsConnected}>
+            <Button
+              variant={`${device.connected ? "outline" : "primary"}`}
+              className="h-[52px]"
+              onClick={!device.connected && device.device.type === "hid" && !notShow ? () => setOpen(true) : handleSetIsConnected}
+            >
               {device.connected ? i18n.keyboardSelect.disconnect : "Configure"}
             </Button>
           ) : (
@@ -127,6 +152,40 @@ const CardDevice = forwardRef<HTMLDivElement, CardDeviceProps>((props, ref) => {
           </div> */}
         </div>
       </div>
+      <AlertDialog
+        open={open}
+        onOpenChange={(isOpen: boolean) => {
+          if (isOpen === true) return;
+          setOpen(false);
+        }}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>{i18n.deviceManager.dialogBluetoothExperimentalTitle}</AlertDialogTitle>
+            <AlertDialogDescription>{i18n.deviceManager.dialogBluetoothExperimentalDescription}</AlertDialogDescription>
+            <AlertDialogDescription>{i18n.deviceManager.dialogBluetoothExperimentalDisclaimer}</AlertDialogDescription>
+            <div className="flex items-center w-full justify-between py-2 mt-3 bg-gray-50 dark:bg-gray-700 rounded-md px-2">
+              <label htmlFor="customSwitch" className="m-0 text-sm font-semibold tracking-tight">
+                {`Don't ask me again`}
+              </label>
+              <Switch
+                id="customSwitch"
+                defaultChecked={false}
+                checked={notShow}
+                onCheckedChange={() => handleSetNotShow(!notShow)}
+                variant="default"
+                size="sm"
+              />
+            </div>
+          </AlertDialogHeader>
+          <AlertDialogFooter className="!justify-between">
+            <AlertDialogCancel buttonVariant="outline">{`I'll use USB`}</AlertDialogCancel>
+            <AlertDialogAction onClick={handleSetIsConnected} buttonVariant="primary">
+              {`Ok, let's go!`}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 });

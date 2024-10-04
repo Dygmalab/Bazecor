@@ -719,9 +719,13 @@ const English = {
     useWithoutKeyboard: "Use without keyboard",
     noDevicesFound: "No keyboards found!",
     noDevicesFoundDescription: "[Black metal plays in background]",
-    dialogDeleteTitle: "Are you absolutely sure?",
     dialogDeleteDescription:
       "This action can't be undone and will remove the keyboard from your Device List, deleting the names of your layers, macros and superkeys. The rest of your configuration will remain on the keyboard.",
+    dialogDeleteTitle: "",
+    dialogBluetoothExperimentalTitle: "IMPORTANT",
+    dialogBluetoothExperimentalDescription:
+      "Bazecor over Bluetooth is still an experimental feature; it doesn't work on all computers yet, and changes might not always be saved correctly to your keyboard.",
+    dialogBluetoothExperimentalDisclaimer: "If you experience these issues, please connect your neuron via USB to your computer.",
     ReOrderList: "Re-order list",
   },
   keyboardSelect: {
