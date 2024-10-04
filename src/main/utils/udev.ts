@@ -3,7 +3,7 @@ import fs from "fs";
 import * as sudo from "sudo-prompt";
 import log from "electron-log/main";
 
-const udevRulesToWrite =`\
+const udevRulesToWrite = `\
 # Dygma Raise
 SUBSYSTEMS=="usb", ATTRS{idVendor}=="1209", ATTRS{idProduct}=="2200", MODE="0660", TAG+="uaccess"
 # bootloader mode
@@ -44,7 +44,7 @@ const installUdev = (mainWindow: BrowserWindow) => {
   };
   const dialogOpts: MessageBoxOptions = {
     type: "question",
-    buttons: ["Cancel", "Install"],
+    buttons: ["Ignore", "Install"],
     cancelId: 0,
     defaultId: 1,
     title: "Udev rules Installation",
