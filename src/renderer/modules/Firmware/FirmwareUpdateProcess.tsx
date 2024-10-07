@@ -206,7 +206,7 @@ function FirmwareUpdateProcess(props: FirmwareUpdateProcessProps) {
   }, [nextBlock, state]);
 
   const stepsDefy = [
-    { step: 1, title: i18n.firmwareUpdate.texts.flashCardTitle1, description: i18n.firmwareUpdate.texts.flashCardTitle2 },
+    { step: 1, title: i18n.firmwareUpdate.texts.flashCardTitle1, description: i18n.firmwareUpdate.texts.flashCardTitleDefy2 },
     {
       step: 2,
       title: i18n.firmwareUpdate.texts.progressCardStatusDefy1,

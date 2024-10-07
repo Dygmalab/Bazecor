@@ -725,7 +725,7 @@ const English = {
     dialogBluetoothExperimentalTitle: "IMPORTANT",
     dialogBluetoothExperimentalDescription:
       "Bazecor over Bluetooth is still an experimental feature; it doesn't work on all computers yet, and changes might not always be saved correctly to your keyboard.",
-    dialogBluetoothExperimentalDisclaimer: "If you experience these issues, please connect your neuron via USB to your computer.",
+    dialogBluetoothExperimentalDisclaimer: "If you experience these issues, please connect your neuron via USB to the computer.",
     ReOrderList: "Re-order list",
   },
   keyboardSelect: {
@@ -798,8 +798,9 @@ const English = {
       errorDuringProcessTitle: "Firmware update error!",
       errorDuringProcessDescription: "Something went wrong! Please, retry the flashing procedure. 🫠",
       flashCardTitle1: "Press and hold the top left key to start the firmware update.",
-      flashCardTitleDefy1: "Don't hold the key, just press & release to start the firmware update.",
+      flashCardTitleDefy1: "Tap the Top Left Key to start the firmware update.",
       flashCardTitle2: "Release the key when the software prompts",
+      flashCardTitleDefy2: "Don't hold the key, just press & release",
       flashCardHelp: "Why do I need to press and hold a key when updating the device firmware?",
       flashCardHelpDefy: "Why do I need to press a key when updating the device firmware?",
       flashCardHelpTooltip:
