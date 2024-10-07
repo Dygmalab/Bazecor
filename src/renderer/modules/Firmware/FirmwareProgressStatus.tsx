@@ -240,7 +240,7 @@ const FirmwareProgressStatus = (props: FirmwareProgressStatusType) => {
             <Heading headingLevel={4} renderAs="paragraph-sm">
               {deviceProduct === "Raise"
                 ? i18n.firmwareUpdate.texts.flashCardTitle2
-                : i18n.firmwareUpdate.texts.progressCardTitleDefy2}
+                : i18n.firmwareUpdate.texts.flashCardTitleDefy2}
             </Heading>
           ) : (
             <Heading headingLevel={4} renderAs="paragraph-sm">
