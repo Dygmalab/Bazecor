@@ -1683,6 +1683,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
 
   const modeSelectToggle = (data: ModeType) => {
     setSelectedPaletteColor(null);
+    setIsColorButtonSelected(false);
     if (data === "keyboard") {
       setCurrentLedIndex(-1);
     }

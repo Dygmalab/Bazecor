@@ -16,7 +16,6 @@
  */
 
 import React from "react";
-import Styled from "styled-components";
 import { toast } from "react-toastify";
 
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@Renderer/components/atoms/Card";
@@ -31,78 +30,6 @@ import ToastMessage from "@Renderer/components/atoms/ToastMessage";
 import { Button } from "@Renderer/components/atoms/Button";
 import { IconKeyboard, IconFloppyDisk } from "@Renderer/components/atoms/icons";
 import { DygmaDeviceType } from "@Renderer/types/dygmaDefs";
-
-const Styles = Styled.div`
-height: inherit;
-.main-container {
-  overflow: hidden;
-  height: 100vh;
-}
-.welcome {
-  height: 100%;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  &.center-content {
-    height: 100vh;
-  }
-}
-.welcomeInner {
-    max-width: 960px;
-    width: 100%;
-    margin: auto;
-}
-.disclaimerContent {
-  font-size: 15px;
-  margin-top: 32px;
-  line-height: 1.5em;
-  font-weight: 500;
-}
-.card {
-    padding: 0;
-
-}
-.card-header {
-    padding: 24px 32px;
-    background-color: transparent;
-}
-.card-body {
-    padding: 24px 32px;
-    font-size: 14px;
-    font-weight: 401;
-    border-radius: 16px;
-    h3 {
-        margin-bottom: 16px;
-    }
-    ul {
-        margin: 0;
-    }
-    a {
-        color: ${({ theme }) => theme.styles.dropdown.dropdownMenu.linkColor};
-    }
-}
-.card-footer {
-    padding: 24px 32px;
-    border: none;
-    background-color: ${({ theme }) => theme.styles.standardView.footerBackground};
-}
-.firmwareButton {
-    display: flex;
-    justify-content: flex-end;
-    grid-gap: 8px;
-}
-
-.keyboardSelected {
-    display: flex;
-    grid-gap: 16px;
-    align-items: center;
-    justify-content: space-between;
-    h6 {
-        opacity: 0.6;
-        margin: 0;
-    }
-}
-`;
 
 interface WelcomeProps {
   onConnect: (currentDevice: unknown, file: null) => void;
@@ -152,57 +79,55 @@ function Welcome(props: WelcomeProps) {
   };
 
   return (
-    <Styles>
-      <div className="welcome center-content w-full justify-center px-3">
-        <PageHeader text={i18n.welcome.title} />
-        <div className="welcomeWrapper">
-          <div className="welcomeInner">
-            <Card className="welcomeCard">
-              <CardHeader>
-                <CardTitle className="keyboardSelected">
-                  {showDeviceName()}
-                  <div className="icon">
-                    <IconKeyboard />
-                  </div>
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div>
-                  <Heading headingLevel={3} renderAs="h3" variant="warning">
-                    {i18n.welcome.bootloaderTitle}
-                  </Heading>
-                  <p>{i18n.welcome.description}</p>
+    <div className="h-full w-full overflow-hidden justify-center px-3">
+      <PageHeader text={i18n.welcome.title} />
+      <div className="flex flex-col items-center justify-center h-4/5">
+        <div className="welcomeInner">
+          <Card className="welcomeCard">
+            <CardHeader className="p-6 pb-0">
+              <CardTitle className="keyboardSelected justify-between">
+                {showDeviceName()}
+                <div className="icon">
+                  <IconKeyboard />
+                </div>
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="p-6">
+              <div>
+                <Heading headingLevel={3} renderAs="h3" variant="warning">
+                  {i18n.welcome.bootloaderTitle}
+                </Heading>
+                <p>{i18n.welcome.description}</p>
 
-                  <span className="cardsub">
-                    <ul style={{ lineHeight: "2rem" }}>
-                      <li>This process will revert your keyboard&apos;s configuration back to factory settings.</li>
-                      <li>
-                        {"Before proceeding, we recommend that you "}
-                        <a href="https://support.dygma.com/hc/en-us/articles/360014262298">export and save your layers</a>.
-                      </li>
-                      <li>To exit Bootloader Mode, unplug and replug the USB-C cable to your Neuron.</li>
-                    </ul>
-                  </span>
-                </div>
-              </CardContent>
-              <CardFooter>
-                <div className="firmwareButton">
-                  {reconnectButton}
-                  <Button
-                    onClick={async () => {
-                      navigate("/firmware-update");
-                    }}
-                    variant="primary"
-                  >
-                    {i18n.welcome.gotoUpdate}
-                  </Button>
-                </div>
-              </CardFooter>
-            </Card>
-          </div>
+                <span className="cardsub">
+                  <ul style={{ lineHeight: "2rem" }}>
+                    <li>This process will revert your keyboard&apos;s configuration back to factory settings.</li>
+                    <li>
+                      {"Before proceeding, we recommend that you "}
+                      <a href="https://support.dygma.com/hc/en-us/articles/360014262298">export and save your layers</a>.
+                    </li>
+                    <li>To exit Bootloader Mode, unplug and replug the USB-C cable to your Neuron.</li>
+                  </ul>
+                </span>
+              </div>
+            </CardContent>
+            <CardFooter>
+              <div className="firmwareButton w-full flex justify-between">
+                {reconnectButton}
+                <Button
+                  onClick={async () => {
+                    navigate("/firmware-update");
+                  }}
+                  variant="primary"
+                >
+                  {i18n.welcome.gotoUpdate}
+                </Button>
+              </div>
+            </CardFooter>
+          </Card>
         </div>
       </div>
-    </Styles>
+    </div>
   );
 }
 

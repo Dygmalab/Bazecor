@@ -376,10 +376,13 @@ const LayersTab = ({
                 <>
                   <CustomRadioCheckBox
                     label={<div className="pl-0.5">Add a key on tap</div>}
+                    disabled={activeLayerNumber >= 9}
                     onClick={() => {
-                      if (activeLayerNumber > 0) {
+                      if (activeLayerNumber > 0 && activeLayerNumber <= 8) {
                         setActiveLayerTab(previous => (previous === "layerDual" ? "layerShift" : "layerDual"));
                         setOpenKeysPopover(true);
+                      } else if (activeLayerNumber >= 9) {
+                        triggerToastOneShot();
                       } else {
                         triggerToast();
                       }
@@ -400,10 +403,12 @@ const LayersTab = ({
                         <p className="description text-ssm font-medium text-gray-400 dark:text-gray-200">
                           Tap the key to perform a normal keypress (like space or enter) or hold it to shift to the selected
                           layer. This allows for efficient layer access without sacrificing key real estate.
+                          <br />
+                          <br />
+                          Add key on tap only works for layers 1 to 8.
                         </p>
                       </>
                     }
-                    disabled={false}
                     className=""
                   />
                   <CustomRadioCheckBox
@@ -436,7 +441,9 @@ const LayersTab = ({
                           Tap the key to enter the selected layer for a single keypress; after that keypress, the software
                           automatically returns to the previous layer. You can also hold the key to stay in the layer while you
                           hold it. Double-tap it to lock into the layer; go back to the previous layer by tapping the key again.
-                          It&apos;s crucial that the same key in the target layer is set up as TRANSPARENT.
+                          <br />
+                          <br />
+                          OneShot layers only work for layers 1 to 8.
                         </p>
                       </>
                     }

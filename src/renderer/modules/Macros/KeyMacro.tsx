@@ -176,7 +176,7 @@ const KeyMacro: React.FC<KeyMacroProps> = ({
                               variant="config"
                               size="sm"
                               className="w-full text-center"
-                              onClick={() => addModifier(modifier.id, id)}
+                              onClick={() => addModifier(item.id, id)}
                               // eslint-disable-next-line
                               key={`addModifierMacro-${id}`}
                             >

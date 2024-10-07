@@ -49,7 +49,7 @@ const ListModifiersKey = ({ keyCode, size = "xs", selectedKey }: ListModifiersPr
       log.info("New Data: ", selectedKey);
       const mods = parseModifs(keyCode);
       setModifiers(mods);
-      const altVisual = selectedKey.alt;
+      const altVisual = selectedKey?.alt;
       const isHyper = [0, 1, 2, 4].every(mod => mods.includes(mod));
       const isMeh = [0, 1, 2].every(mod => mods.includes(mod)) && !mods.includes(4);
       setModifiersState({ isMeh, isHyper, altVisual });

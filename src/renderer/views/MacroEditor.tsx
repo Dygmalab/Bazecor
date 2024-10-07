@@ -1,5 +1,3 @@
-/* eslint-disable react/jsx-no-bind */
-/* eslint-disable no-console */
 /* eslint-disable no-bitwise */
 /* Bazecor -- Kaleidoscope Command Center
  * Copyright (C) 2018, 2019  Keyboardio, Inc.
@@ -126,6 +124,7 @@ function MacroEditor(props: MacroEditorProps) {
     listToDelete: [],
     listToDeleteS: [],
     listToDeleteM: [],
+    futureMacros: [],
     selectedList: -1,
     usedMemory: 0,
     totalMemory: 0,
@@ -217,7 +216,7 @@ function MacroEditor(props: MacroEditorProps) {
     return mapped;
   };
 
-  function macrosMap(macros: MacrosType[]) {
+  const macrosMap = (macros: MacrosType[]) => {
     const { macrosEraser } = state;
     log.info(
       "Macros map function",
@@ -257,9 +256,9 @@ function MacroEditor(props: MacroEditorProps) {
       .join(" ");
     log.info("MACROS GOING TO BE SAVED", result);
     return result;
-  }
+  };
 
-  function addToActions(actions: MacroActionsType[]) {
+  const addToActions = (actions: MacroActionsType[]) => {
     const { startContext } = props;
     const { macros, selectedMacro } = state;
 
@@ -269,10 +268,10 @@ function MacroEditor(props: MacroEditorProps) {
     state.modified = true;
     setState({ ...state });
     startContext();
-  }
+  };
 
   // Define updateActions function to update the actions of the selected macro
-  function updateActions(actions: MacroActionsType[]) {
+  const updateActions = (actions: MacroActionsType[]) => {
     const { startContext } = props;
     const { macros, selectedMacro, modified } = state;
 
@@ -287,9 +286,9 @@ function MacroEditor(props: MacroEditorProps) {
       state.macros = macrosList;
       setState({ ...state });
     }
-  }
+  };
 
-  function saveName(data: string) {
+  const saveName = (data: string) => {
     const { startContext } = props;
     const { macros, selectedMacro } = state;
     const localMacros = [...macros];
@@ -298,28 +297,28 @@ function MacroEditor(props: MacroEditorProps) {
     state.modified = true;
     setState({ ...state });
     startContext();
-  }
+  };
 
-  function updateScroll(scrollPos: number) {
+  const updateScroll = (scrollPos: number) => {
     state.scrollPos = scrollPos;
     setState({ ...state });
-  }
+  };
 
-  function changeSelected(id: number) {
+  const changeSelected = (id: number) => {
     state.selectedMacro = id < 0 ? 0 : id;
     setState({ ...state });
-  }
+  };
 
-  function updateMacros(recievedMacros: MacrosType[]) {
+  const updateMacros = (recievedMacros: MacrosType[]) => {
     const { startContext } = props;
     state.macros = recievedMacros;
     state.modified = true;
     state.usedMemory = recievedMacros.map(m => m.actions).flat().length;
     setState({ ...state });
     startContext();
-  }
+  };
 
-  function duplicateMacro() {
+  const duplicateMacro = () => {
     const { macros, maxMacros, selectedMacro } = state;
     if (macros.length >= maxMacros) {
       return;
@@ -331,9 +330,9 @@ function MacroEditor(props: MacroEditorProps) {
     macros.push(aux);
     updateMacros(macros);
     changeSelected(aux.id);
-  }
+  };
 
-  async function writeMacros() {
+  const writeMacros = async () => {
     const { macros, neurons, neuronIdx, keymap, superkeys } = state;
     const { setLoading, cancelContext } = props;
     const { currentDevice } = deviceState;
@@ -371,16 +370,21 @@ function MacroEditor(props: MacroEditorProps) {
       setLoading(false);
       setIsSaving(false);
     }
-  }
+  };
 
-  function toggleDeleteModal() {
+  const toggleDeleteModal = () => {
     state.showDeleteModal = false;
+    state.futureMacros = [];
+    state.listToDelete = [];
+    state.listToDeleteS = [];
+    state.listToDeleteM = [];
     setState({ ...state });
-  }
+  };
 
-  function ActUponDelete() {
+  function ActUponDelete(localstate?: MacroEditorInitialStateType) {
     const { selectedList, listToDelete, listToDeleteS, listToDeleteM, keymap, superkeys } = state;
-    let { macros } = state;
+    const { startContext } = props;
+    let macros = localstate ? localstate.futureMacros : state.futureMacros;
     log.info("Checking list to delete macros", listToDeleteM, macros);
     for (let i = 0; i < listToDelete.length; i += 1) {
       if (listToDelete[i].newKey === -1) {
@@ -414,20 +418,27 @@ function MacroEditor(props: MacroEditorProps) {
       newMacro.actions = macro.actions.filter(x => x !== undefined);
       return newMacro;
     });
+    macros = macros.map((macro, idx) => {
+      const item = { ...macro };
+      item.id = idx;
+      return item;
+    });
     log.info("result!", macros);
     state.keymap = keymap;
     state.superkeys = superkeys;
     state.macros = macros;
+    state.modified = true;
     setState({ ...state });
+    startContext();
     toggleDeleteModal();
   }
 
-  function UpdateList(data: string) {
+  const UpdateList = (data: string) => {
     state.selectedList = parseInt(data, 10);
     setState({ ...state });
-  }
+  };
 
-  function updateKeyboard(keyboardIdx: number) {
+  function updateKeyboard(keyboardIdx: number, localMacros: MacrosType[]) {
     const { macros, superkeys, keymap } = state;
     let customKeymapList: ListToDeleteType[] = [];
     let customSuperList: ListToDeleteSType[] = [];
@@ -456,19 +467,28 @@ function MacroEditor(props: MacroEditorProps) {
             .filter(elem => elem.actions[elem.pos].keyCode === macroID),
         )
         .flat();
-      customKeymapList = customKeymapList.concat(filteredKeys);
+      customKeymapList = [...filteredKeys];
       customSuperList = customSuperList.concat(superkeyList);
       customMacrosList = customMacrosList.concat(macrosList);
     }
 
+    log.info("result of macro exploration: ", macros, customKeymapList, customSuperList, customMacrosList);
+
+    state.futureMacros = localMacros;
     state.listToDelete = customKeymapList;
     state.listToDeleteS = customSuperList;
     state.listToDeleteM = customMacrosList;
-    state.showDeleteModal = customKeymapList.length > 0 || customSuperList.length > 0 || customMacrosList.length > 0;
+    state.showDeleteModal =
+      customKeymapList.filter(c => c.newKey === -1).length > 0 || customSuperList.length > 0 || customMacrosList.length > 0;
     setState({ ...state });
+
+    if (!state.showDeleteModal) ActUponDelete(state);
+    if (keyboardIdx >= macros.length - 1) {
+      changeSelected(macros.length - 2);
+    }
   }
 
-  function deleteMacro() {
+  const deleteMacro = () => {
     const { macros, selectedMacro } = state;
     if (macros.length === 0) {
       return;
@@ -481,14 +501,10 @@ function MacroEditor(props: MacroEditorProps) {
       item.id = idx;
       return item;
     });
-    if (selected >= macros.length - 1) {
-      changeSelected(macros.length - 2);
-    }
-    updateKeyboard(selected);
-    updateMacros(localMacros);
-  }
+    updateKeyboard(selected, localMacros);
+  };
 
-  function addMacro(name: string) {
+  const addMacro = (name: string) => {
     const { macros, maxMacros } = state;
     if (macros.length >= maxMacros) {
       return;
@@ -503,9 +519,9 @@ function MacroEditor(props: MacroEditorProps) {
     });
     updateMacros(aux);
     changeSelected(newID);
-  }
+  };
 
-  function clearMacro() {
+  const clearMacro = () => {
     const { macros, selectedMacro } = state;
     if (macros.length === 0) {
       return;
@@ -513,9 +529,9 @@ function MacroEditor(props: MacroEditorProps) {
     const localMacros = JSON.parse(JSON.stringify(macros)) as MacrosType[];
     localMacros[selectedMacro].actions = [];
     updateMacros(localMacros);
-  }
+  };
 
-  function macroTranslator(raw: string) {
+  const macroTranslator = (raw: string) => {
     const { storedMacros } = state;
     const macrosArray = raw.split(" 0 0")[0].split(" ").map(Number);
 
@@ -588,7 +604,7 @@ function MacroEditor(props: MacroEditorProps) {
         macro: macro.actions.map(k => keymapDB.parse(k.keyCode as number).label).join(" "),
       };
     });
-  }
+  };
 
   const loadMacros = async () => {
     const { onDisconnect, cancelContext, setLoading } = props;
@@ -710,6 +726,8 @@ function MacroEditor(props: MacroEditorProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const { saveButtonRef, discardChangesButtonRef } = props;
+
   const {
     macros,
     maxMacros,
@@ -719,6 +737,7 @@ function MacroEditor(props: MacroEditorProps) {
     listToDelete,
     listToDeleteS,
     listToDeleteM,
+    futureMacros,
     usedMemory,
     totalMemory,
     showDeleteModal,
@@ -774,7 +793,7 @@ function MacroEditor(props: MacroEditorProps) {
           <SelectItem value={(-1).toString()} key={`macro-${-1}`} disabled={false}>
             No Key
           </SelectItem>
-          {macros.map(macro => (
+          {futureMacros.map(macro => (
             <SelectItem value={macro.id.toString()} key={`macro-${macro.id}`} disabled={macro.id === -1}>
               {macro?.name ? `#${macro.id + 1}. ${macro?.name}` : `#${macro.id + 1}. No name`}
             </SelectItem>
@@ -810,8 +829,8 @@ function MacroEditor(props: MacroEditorProps) {
           saveContext={writeMacros}
           destroyContext={destroyThisContext}
           inContext={modified}
-          saveButtonRef={props.saveButtonRef}
-          discardChangesButtonRef={props.discardChangesButtonRef}
+          saveButtonRef={saveButtonRef}
+          discardChangesButtonRef={discardChangesButtonRef}
         />
 
         <Callout
@@ -878,7 +897,7 @@ function MacroEditor(props: MacroEditorProps) {
             <Button size="sm" variant="outline" onClick={toggleDeleteModal}>
               {i18n.editor.macros.deleteModal.cancelButton}
             </Button>
-            <Button size="sm" variant="secondary" onClick={ActUponDelete}>
+            <Button size="sm" variant="secondary" onClick={() => ActUponDelete()}>
               {i18n.editor.macros.deleteModal.applyButton}
             </Button>
           </DialogFooter>

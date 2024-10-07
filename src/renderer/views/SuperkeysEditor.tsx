@@ -661,20 +661,21 @@ function SuperkeysEditor(props: SuperkeysEditorProps) {
 
   const deleteSuperkey = () => {
     const { superkeys, selectedSuper } = state;
-    if (superkeys.length > 0) {
-      let aux = JSON.parse(JSON.stringify(superkeys));
-      const selected = selectedSuper;
-      aux.splice(selected, 1);
-      aux = aux.map((item: SuperkeysType, index: number) => {
-        const newItem = item;
-        newItem.id = index;
-        return newItem;
-      });
-      if (selected >= superkeys.length - 1) {
-        checkKBSuperkeys(aux, aux.length - 1, aux.length + 53980);
-      } else {
-        checkKBSuperkeys(aux, selected, selected + 53980);
-      }
+    if (!Array.isArray(superkeys) || superkeys.length <= 0 || selectedSuper < 0) {
+      return;
+    }
+    let aux = JSON.parse(JSON.stringify(superkeys));
+    const selected = selectedSuper;
+    aux.splice(selected, 1);
+    aux = aux.map((item: SuperkeysType, index: number) => {
+      const newItem = item;
+      newItem.id = index;
+      return newItem;
+    });
+    if (selected >= superkeys.length - 1) {
+      checkKBSuperkeys(aux, aux.length - 1, aux.length + 53980);
+    } else {
+      checkKBSuperkeys(aux, selected, selected + 53980);
     }
   };
 

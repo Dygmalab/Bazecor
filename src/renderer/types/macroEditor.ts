@@ -43,6 +43,7 @@ export interface MacroEditorInitialStateType {
   listToDelete: ListToDeleteType[];
   listToDeleteS: ListToDeleteSType[];
   listToDeleteM: ListToDeleteMType[];
+  futureMacros: MacrosType[];
   selectedList: number;
   usedMemory: number;
   totalMemory: number;
