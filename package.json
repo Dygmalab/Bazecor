@@ -81,7 +81,7 @@
     "@typescript-eslint/eslint-plugin": "^5.0.0",
     "@typescript-eslint/parser": "^5.0.0",
     "@vercel/webpack-asset-relocator-loader": "1.7.3",
-    "@vitest/coverage-v8": "^1.2.2",
+    "@vitest/coverage-v8": "^2.1.2",
     "@xpd/tailwind-3dtransforms": "^1.0.3",
     "assertron": "^11.5.0",
     "autoprefixer": "^10.4.16",
@@ -117,8 +117,8 @@
     "ts-loader": "^9.2.2",
     "ts-node": "^10.0.0",
     "typescript": "^5.4.5",
-    "vite": "^4.5.5",
-    "vitest": "^1.2.2",
+    "vite": "^5.4.8",
+    "vitest": "^2.1.2",
     "webpack-cli": "^5.1.4"
   },
   "dependencies": {
