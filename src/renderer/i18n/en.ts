@@ -725,7 +725,8 @@ const English = {
     dialogBluetoothExperimentalTitle: "IMPORTANT",
     dialogBluetoothExperimentalDescription:
       "Bazecor over Bluetooth is still an experimental feature; it doesn't work on all computers yet, and changes might not always be saved correctly to your keyboard.",
-    dialogBluetoothExperimentalDisclaimer: "If you experience these issues, please connect your neuron via USB to the computer.",
+    dialogBluetoothExperimentalDisclaimer:
+      "If you experience these issues, please connect your keyboard wired or via RF to the computer.",
     ReOrderList: "Re-order list",
   },
   keyboardSelect: {

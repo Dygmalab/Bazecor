@@ -179,7 +179,7 @@ const CardDevice = forwardRef<HTMLDivElement, CardDeviceProps>((props, ref) => {
             </div>
           </AlertDialogHeader>
           <AlertDialogFooter className="!justify-between">
-            <AlertDialogCancel buttonVariant="outline">{`I'll use USB`}</AlertDialogCancel>
+            <AlertDialogCancel buttonVariant="outline">Cancel</AlertDialogCancel>
             <AlertDialogAction onClick={handleSetIsConnected} buttonVariant="primary">
               {`Ok, let's go!`}
             </AlertDialogAction>
