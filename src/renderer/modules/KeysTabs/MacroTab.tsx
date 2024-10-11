@@ -57,6 +57,7 @@ const MacroTab = (props: MacroTabProps) => {
     return macrosContainer;
   });
 
+  const currentlySelectedMacroIndex = macros.length > 0 && props.keyCode.modified === 53852 ? String(props.keyCode.base) : undefined;
   return (
     <div
       className={`flex flex-wrap h-[inherit] ${isStandardView ? "standardViewTab" : ""} tabsMacro ${disabled ? "opacity-50 pointer-events-none" : ""}`}
@@ -90,11 +91,7 @@ const MacroTab = (props: MacroTabProps) => {
             {i18n.editor.macros.macroTab.label}
           </Heading>
           <Select
-            // value={
-            //   macrosAux.length > 0 && macrosAux[selected] !== undefined && macrosAux[selected].text
-            //     ? macrosAux[selected].value
-            //     : "Loading"
-            // }
+            value={currentlySelectedMacroIndex}
             onValueChange={isStandardView ? changeSelectedStd : changeSelected}
           >
             <SelectTrigger className="w-[280px]">
