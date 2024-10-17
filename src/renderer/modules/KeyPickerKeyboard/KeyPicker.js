@@ -39,8 +39,6 @@ import { MdKeyboardReturn, MdSpaceBar, MdKeyboardCapslock, MdInfoOutline, MdEjec
 
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@Renderer/components/atoms/Tooltip";
 
-import { i18n } from "@Renderer/i18n";
-
 import Key from "@Renderer/modules/KeyPickerKeyboard/Key";
 import getLanguage from "@Renderer/modules/KeyPickerKeyboard/KeyPickerLanguage";
 import OSKey from "@Renderer/components/molecules/KeyTags/OSKey";
@@ -266,16 +264,6 @@ width: 100%;
 const IconColor = Styled.span`
     color: ${props => props.color};
 `;
-const TooltipStyle = Styled.div`
-text-align: left;
-.ttip-p {
-  margin: 0;
-}
-.ttip-h {
-  margin: 0;
-  font-size: 1.3em;
-}
-`;
 
 class KeyPicker extends Component {
   constructor(props) {
@@ -315,26 +303,7 @@ class KeyPicker extends Component {
   }
 
   render() {
-    const {
-      action,
-      actions,
-      code,
-      disableMods,
-      disableMove,
-      disableAll,
-      selectedlanguage,
-      superkeys,
-      selKeys,
-      kbtype,
-      macros,
-      keyCode,
-      onKeySelect,
-      activeTab,
-      isWireless,
-      theme,
-    } = this.props;
-
-    // let boxShadowMatrix = useTheme().styles.keyPicker.keyMatrixShadow;
+    const { code, disableMods, disableMove, disableAll, selectedlanguage, theme } = this.props;
 
     const Lang = getLanguage(selectedlanguage);
     const keyboardLayout = getKeyboardLayout(selectedlanguage);
@@ -493,16 +462,17 @@ class KeyPicker extends Component {
       );
     });
 
-    const { customModal } = this.state;
     return (
       <Style>
         <div className="KeysWrapper">
           <div className="keysContainer">
             <div className=" flex flex-wrap bg-white dark:bg-gray-700/60 keysOrdinaryKeyboard relative z-[4] p-3 rounded-t-regular [&_svg]:mx-auto [&_svg]:max-w-6xl">
-              {disableAll && (
+              {disableAll ? (
                 <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-25 tracking-tight text-xl text-nowrap">
                   Select a key in the keyboard above to start
                 </div>
+              ) : (
+                ""
               )}
               <svg
                 className={`svgStyle ${process.platform} ${keyboardLayout}`}
@@ -528,53 +498,6 @@ class KeyPicker extends Component {
                   </filter>
                 </defs>
               </svg>
-              {/* <div
-                className={`KeysWrapper KeysWrapperSpecialKeys ${activeTab} ${isWireless ? "isWireless" : "notWireless"} absolute top-1 right-1`}
-              >
-                <div className="keysRow keysCustom">
-                  <div className="keyIcon">
-                    <h4>Cust.</h4>
-                  </div>
-                  <div className="keysButtonsList flex gap-2">
-                    <TooltipProvider delayDuration={100}>
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <div className="basis-full">
-                            <Button
-                              variant="config"
-                              disabled={disableAll}
-                              selected={keyCode.base + keyCode.modified >= 20000}
-                              onClick={() => {
-                                this.toggleModal();
-                              }}
-                              size="iconXS"
-                              className="w-6 h-6"
-                            >
-                              <IconWrench size="sm" />
-                            </Button>
-                          </div>
-                        </TooltipTrigger>
-                        <TooltipContent size="sm" className="max-w-xs">
-                          {i18n.editor.superkeys.specialKeys.custom}
-                        </TooltipContent>
-                      </Tooltip>
-                    </TooltipProvider>
-                    <CustomKeyCodeModal
-                      show={customModal}
-                      name={(keyCode.base + keyCode.modified).toString(16)}
-                      toggleShow={this.toggleModal}
-                      handleSave={data => {
-                        // console.log("CustomKey selected key", data);
-                        onKeySelect(parseInt(data, 16));
-                        this.toggleModal();
-                      }}
-                      modalTitle={i18n.editor.modal.customKeyCodeModal.title}
-                      modalMessage={i18n.editor.modal.customKeyCodeModal.message}
-                      labelInput={i18n.editor.modal.customKeyCodeModal.labelInput}
-                    />
-                  </div>
-                </div>
-              </div> */}
             </div>
           </div>
         </div>

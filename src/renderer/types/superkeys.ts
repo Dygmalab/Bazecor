@@ -25,7 +25,6 @@ export interface SuperkeysType {
 }
 
 export interface SuperKeyActionsProps {
-  isStandardViewSuperkeys: boolean;
   superkeys: SuperkeysType[];
   selected: number;
   selectedAction: number;
@@ -38,7 +37,6 @@ export interface SuperKeyActionsProps {
 }
 
 export interface SuperkeyPickerProps {
-  isStandardViewSuperkeys: boolean;
   superkeys: SuperkeysType[];
   selected: number;
   macros: MacrosType[];

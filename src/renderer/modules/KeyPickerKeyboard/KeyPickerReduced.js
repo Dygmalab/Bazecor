@@ -31,7 +31,6 @@ import {
 import {
   AiFillForward,
   AiFillWindows,
-  AiFillApple,
   AiOutlineArrowDown,
   AiOutlineArrowLeft,
   AiOutlineArrowRight,
@@ -273,23 +272,7 @@ class KeyPickerReduced extends Component {
   };
 
   render() {
-    const {
-      action,
-      actions,
-      code,
-      disableMods,
-      disableMove,
-      disableAll,
-      selectedlanguage,
-      superkeys,
-      selKeys,
-      kbtype,
-      macros,
-      keyCode,
-      onKeySelect,
-      activeTab,
-      showSelected,
-    } = this.props;
+    const { code, disableMods, disableMove, disableAll, selectedlanguage, showSelected } = this.props;
 
     // let boxShadowMatrix = useTheme().styles.keyPicker.keyMatrixShadow;
 

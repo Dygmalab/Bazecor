@@ -75,7 +75,7 @@ height: inherit;
 
 interface MediaAndLightTabProps {
   keyCode: any;
-  isStandardView: boolean;
+
   onAddSpecial: (event: any, value: number) => void;
   disabled?: boolean;
 }

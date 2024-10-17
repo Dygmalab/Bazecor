@@ -10,7 +10,7 @@ import { IconInformation } from "@Renderer/components/atoms/icons";
 
 interface NoKeyTransparentTabProps {
   keyCode: any;
-  isStandardView: boolean;
+
   onKeySelect: (keycode: number) => void;
   disabled?: boolean;
 }

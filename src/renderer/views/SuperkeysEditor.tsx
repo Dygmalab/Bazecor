@@ -141,7 +141,6 @@ function SuperkeysEditor(props: SuperkeysEditorProps) {
     futureSK: [],
     futureSSK: 0,
     currentLanguageLayout: getLanguage(store.get("settings.language") as string),
-    isStandardView: store.get("settings.isStandardView") as boolean,
     showStandardView: false,
     loading: true,
   };
@@ -742,10 +741,8 @@ function SuperkeysEditor(props: SuperkeysEditorProps) {
     superkeys,
     macros,
     selectedAction,
-    isStandardView: isStandardViewSuperkeys,
     listToDelete,
     modified,
-    showStandardView,
     showDeleteModal,
     loading,
   } = state;
@@ -763,7 +760,7 @@ function SuperkeysEditor(props: SuperkeysEditorProps) {
   if (loading || !Array.isArray(superkeys)) return <LogoLoader centered />;
   return (
     <Styles className="superkeys px-3">
-      <div className={`${isStandardViewSuperkeys ? "standarViewMode" : "singleViewMode"}`}>
+      <div className="singleViewMode">
         <PageHeader
           text="Superkeys Editor"
           showSaving
@@ -800,7 +797,6 @@ function SuperkeysEditor(props: SuperkeysEditorProps) {
         </Callout>
 
         <SuperkeyActions
-          isStandardViewSuperkeys={isStandardViewSuperkeys}
           superkeys={superkeys}
           selected={selectedSuper}
           selectedAction={selectedAction}
@@ -819,12 +815,10 @@ function SuperkeysEditor(props: SuperkeysEditorProps) {
           code={code}
           macros={macros}
           superkeys={superkeys}
-          actions={actions}
-          action={selectedAction}
           actTab="super"
-          superName={superName}
           selectedlanguage={currentLanguageLayout}
-          kbtype={kbtype}
+          keyIndex={0}
+          isWireless={false}
         />
       </div>
       <SuperKeysFeatures />

@@ -89,7 +89,6 @@ const Styles = Styled.div`
 `;
 
 interface MouseTabProps {
-  isStandardView: boolean;
   keyCode: any;
   actTab?: string;
   onAddSpecial: (event: any, value: number) => void;

@@ -45,7 +45,7 @@ export interface SuperkeysEditorInitialStateType {
   futureSK: SuperkeysType[];
   futureSSK: number;
   currentLanguageLayout: string;
-  isStandardView: boolean;
+
   showStandardView: boolean;
   loading: boolean;
 }

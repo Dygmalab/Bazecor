@@ -1,11 +1,13 @@
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import Styled from "styled-components";
 import { i18n } from "@Renderer/i18n";
 import Callout from "@Renderer/components/molecules/Callout/Callout";
-import ListModifier from "@Renderer/components/molecules/ListModifiers/ListModifiers";
 import Heading from "@Renderer/components/atoms/Heading";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@Renderer/components/atoms/Select";
 import { SuperkeyPicker } from "@Renderer/component/Button";
+import { MacrosType } from "@Renderer/types/macros";
+import { SegmentedKeyType } from "@Renderer/types/layout";
+import { SuperkeysType } from "@Renderer/types/superkeys";
 import { KeymapDB } from "../../../api/keymap";
 
 const Styles = Styled.div`
@@ -87,35 +89,18 @@ h4 {
 `;
 
 interface SuperkeysTabProps {
-  macros: Array<any>;
-  keyCode: any;
-  isStandardView: any;
-  actions: any;
-  onKeySelect: any;
-  superkeys: any;
+  macros: Array<MacrosType>;
+  keyCode: SegmentedKeyType;
+  onKeySelect: (key: number) => void;
+  superkeys: Array<SuperkeysType>;
   disabled?: boolean;
 }
 
 // eslint-disable-next-line
-const SuperkeysTab = ({ macros, keyCode, isStandardView, actions, onKeySelect, superkeys, disabled }: SuperkeysTabProps) => {
+const SuperkeysTab = ({ macros, keyCode, onKeySelect, superkeys, disabled }: SuperkeysTabProps) => {
   const keymapDB = useMemo(() => new KeymapDB(), []);
-  const KC = keyCode.base + keyCode.modified;
-
-  const superk = useMemo(
-    () =>
-      Array(superkeys.length)
-        .fill(0)
-        .map((_, i) => i + 53980),
-    [superkeys],
-  );
-
-  // const adjustedActions = useMemo(() => {
-  //   const adjactions = [...actions];
-  //   while (adjactions.length < 5) {
-  //     adjactions.push(0);
-  //   }
-  //   return adjactions;
-  // }, [actions]);
+  const [oldKC, setOldKC] = useState(-1);
+  const selected = useRef(-1);
 
   const superKeysActions = useMemo(
     () => [
@@ -143,10 +128,21 @@ const SuperkeysTab = ({ macros, keyCode, isStandardView, actions, onKeySelect, s
     [],
   );
 
+  const handleSelect = (value: string) => {
+    selected.current = parseInt(value, 10);
+    onKeySelect(selected.current + 53980);
+  };
+
+  useEffect(() => {
+    const KC = keyCode.base + keyCode.modified;
+    if (KC !== oldKC) {
+      setOldKC(keyCode.base + keyCode.modified);
+      selected.current = KC >= 53980 ? keyCode.base : -1;
+    }
+  }, [keyCode, oldKC]);
+
   return (
-    <Styles
-      className={`w-full ${isStandardView ? "standardViewTab" : ""} tabsSuperkeys ${disabled ? "opacity-50 pointer-events-none" : ""}`}
-    >
+    <Styles className={`w-full  tabsSuperkeys ${disabled ? "opacity-50 pointer-events-none" : ""}`}>
       <div className="tabContentWrapper w-full">
         <Callout
           size="sm"
@@ -166,14 +162,14 @@ const SuperkeysTab = ({ macros, keyCode, isStandardView, actions, onKeySelect, s
               {i18n.editor.standardView.superkeys.label}
             </Heading>
             <div className="superKeySelect">
-              <Select onValueChange={value => onKeySelect(parseInt(value, 10))} value={superk.indexOf(KC) >= 0 ? String(KC) : undefined}>
+              <Select onValueChange={value => handleSelect(value)} value={String(selected.current)}>
                 <SelectTrigger className="w-[280px]">
                   <SelectValue placeholder="Select Superkey" />
                 </SelectTrigger>
                 <SelectContent>
-                  {superk.map((x, id) => (
+                  {superkeys.map((x, id) => (
                     // eslint-disable-next-line
-                    <SelectItem value={String(x)} disabled={x === -1} key={`superkeyItem-${id}`}>
+                    <SelectItem value={String(id)} disabled={x.id === selected.current} key={`superkeyItem-${x}-${String(id)}`}>
                       {`${id + 1}. ${superkeys[id].name}`}
                     </SelectItem>
                   ))}
@@ -181,39 +177,26 @@ const SuperkeysTab = ({ macros, keyCode, isStandardView, actions, onKeySelect, s
               </Select>
             </div>
           </div>
-          <div className={`superKeyInfo ${superkeys[superk.indexOf(KC)] !== undefined ? "flex animRight" : "animHide"}`}>
-            {superkeys[superk.indexOf(KC)] !== undefined ? (
+          <div className={`superKeyInfo ${superkeys[selected.current] !== undefined ? "flex animRight" : "animHide"}`}>
+            {superkeys[selected.current] !== undefined ? (
               <div className="superkeyHint p-4 flex flex-wrap gap-0.5">
                 {superKeysActions.map((item, index) => (
                   <>
                     <SuperkeyPicker
                       index={index}
-                      key={`superHint-${index + 10}`}
-                      selected={superk.indexOf(KC)}
+                      key={`superHint-${item.title}${String(index)}`}
+                      selected={selected.current}
                       superkeys={superkeys}
                       icon={<></>}
                       title={item.title}
                       description=""
                       elementActive={false}
-                      isStandardViewSuperkeys={false}
                       onClick={() => console.log("onClick")}
                       macros={macros}
                       keymapDB={keymapDB}
                       updateAction={() => console.log("update action")}
                       variant="subtle"
                     />
-
-                    {/* <div className="superkeyItem flex flex-col justify-between gap-1" key={`superHint-${index}`}>
-                      <div className="flex w-full superkeyTitle text-center justify-center">
-                        <h5 className="flex w-full actionTitle text-center">{item.title}</h5>
-                      </div>
-                      <div className="superKey w-28 text-xs p-2">
-                        {translateSuperKeyAction(superkeys[superk.indexOf(KC)].actions[index])}
-                        <div className="scale-90 absolute -left-2 -bottom-3">
-                          <ListModifier keyCode={superkeys[superk.indexOf(KC)].actions[index]} />
-                        </div>
-                      </div>
-                    </div> */}
                   </>
                 ))}
               </div>

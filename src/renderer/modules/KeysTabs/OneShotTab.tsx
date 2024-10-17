@@ -40,7 +40,7 @@ h4 {
 
 interface OneShotTabProps {
   keyCode: any;
-  isStandardView: boolean;
+
   onKeySelect: (keycode: number) => void;
   disabled?: boolean;
 }

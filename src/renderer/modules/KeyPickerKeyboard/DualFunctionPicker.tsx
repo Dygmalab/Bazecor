@@ -11,7 +11,6 @@ interface DualFunctionPickerProps {
   keyCode: { base: number; modified: number };
   onKeySelect: (value: number) => void;
   activeTab: string;
-  isStandardView: boolean;
 }
 
 interface ModKey {

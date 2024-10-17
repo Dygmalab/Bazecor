@@ -123,7 +123,7 @@ interface KeyVisualizerProps {
   oldKeyCode: number | SegmentedKeyType;
   newValue: string | JSX.Element;
   oldValue: string | JSX.Element;
-  isStandardView: boolean;
+
   superkeyAction: number;
   disable?: boolean;
 }

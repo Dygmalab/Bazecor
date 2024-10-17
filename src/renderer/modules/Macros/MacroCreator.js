@@ -719,6 +719,7 @@ class MacroCreator extends Component {
                                 macros={this.props.macros}
                                 selectedMacro={this.props.selected}
                                 onMacrosPress={this.onMacrosPress}
+                                actTab="super"
                               />
                             </motion.div>
                           </TabsContent>
