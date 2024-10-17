@@ -1,23 +1,22 @@
-/* eslint-disable no-bitwise */
 export default function colorMatrixCalc(color: string, opacity: number) {
-  function parseColor(color: string): { r: number, g: number, b: number } {
-    const hex_regex = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i;
-    const rgb_regex = /^rgb\(([\d]+), ([\d]+), ([\d]+)\)$/i;
+  function parseColor(input: string): { r: number; g: number; b: number } {
+    const hexRegex = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i;
+    const rgbRegex = /^rgb\(([\d]+), ([\d]+), ([\d]+)\)$/i;
 
-    if (hex_regex.test(color)) {
-      const result = hex_regex.exec(color);
+    if (hexRegex.test(input)) {
+      const result = hexRegex.exec(input);
       return {
         r: parseInt(result[1], 16),
         g: parseInt(result[2], 16),
         b: parseInt(result[3], 16),
       };
     }
-    if (rgb_regex.test(color)) {
-      const result = rgb_regex.exec(color);
+    if (rgbRegex.test(input)) {
+      const result = rgbRegex.exec(input);
       return {
-        r: parseInt(result[1]),
-        g: parseInt(result[2]),
-        b: parseInt(result[3]),
+        r: parseInt(result[1], 10),
+        g: parseInt(result[2], 10),
+        b: parseInt(result[3], 10),
       };
     }
 
@@ -26,8 +25,10 @@ export default function colorMatrixCalc(color: string, opacity: number) {
   }
 
   const parsedColor = parseColor(color);
-  return `0 0 0 0 ${(parsedColor.r / 255).toFixed(2)} ` +
+  return (
+    `0 0 0 0 ${(parsedColor.r / 255).toFixed(2)} ` +
     `0 0 0 0 ${(parsedColor.g / 255).toFixed(2)} ` +
     `0 0 0 0 ${(parsedColor.b / 255).toFixed(2)} ` +
-    `0 0 0 ${opacity} 0`;
+    `0 0 0 ${opacity} 0`
+  );
 }
