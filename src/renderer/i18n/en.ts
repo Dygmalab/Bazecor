@@ -628,9 +628,9 @@ const English = {
     },
     qukeys: {
       title: "DUAL FUNCTION KEY PARAMETERS",
-      holdTimeout: "Dual-Function Keys - Hold timeout",
+      holdTimeout: "Add Key on Tap - Hold timeout",
       holdTimeoutsub: " - From 0 to 65,534 milliseconds",
-      overlapThreshold: "Dual-Function Keys- Overlap Threshold",
+      overlapThreshold: "Add Key on Tap - Overlap Threshold",
       overlapThresholdTip1: "This setting adjusts how much chording you are allowed without triggering the hold function.",
       overlapThresholdTip2:
         "High values let you press the next key before releasing the Dual-Function key without triggering the hold function.",
@@ -641,18 +641,21 @@ const English = {
       holdTimeoutTip1: "This setting determines the amount of time it takes for the “hold” function to activate.",
       holdTimeoutTip2: "With a high value, it’ll take more time to activate the hold function.",
       holdTimeoutTip3: "With a low value, you might trigger the hold function if you linger on the key too much while typing.",
+      holdTimeoutTip4:
+        "Note: Pressing another key at the same time triggers the hold function for this key. Adjust the Overlap Threshold and Minimum Hold Time to adjust that behavior.",
       holdTimeoutTipDefault: "Default value: 250",
-      minHold: "Dual-Function Keys - Minimum Hold time",
-      minHoldsub: " - From 0 to 254 milliseconds",
-      minHoldTip1: "Set the minimum length of time a qukey must be held before it can resolve to its alternate key value",
+      minHold: "Add Key on Tap - Minimum Hold time",
+      minHoldsub: "Low values will",
+      minHoldTip1: "Set the minimum interval between keypresses to be eligible to trigger the hold function.",
       minHoldTip2:
-        "If a qukey is pressed and released in less than this number of milliseconds, it will always produce its primary key value",
-      minHoldTipDefault: "",
-      minPrior: "Dual-Function Keys - Minimum Prior Interval",
+        "If the value is high, the hold function won't be triggered if you press this key shortly after pressing another key.",
+      minHoldTipDefault: "Default value: 50",
+      minPrior: "Add Key on Tap - Minimum Prior Interval",
       minPriorsub: " - From 0 to 254 milliseconds",
-      minPriorTip1: "Set the minimum interval between the previous keypress and the qukey press",
-      minPriorTip2: "to make the qukey eligible to become its alternate keycode",
-      minPriorTipDefault: "",
+      minPriorTip1: "Set the minimum interval between keypresses to be eligible to trigger the hold function.",
+      minPriorTip2:
+        "If the value is high, the hold function won't be triggered if you press this key shortly after pressing another key.",
+      minPriorTipDefault: "Default value: 75",
     },
     superkeys: {
       title: "Typing",
@@ -672,10 +675,11 @@ const English = {
       waitforsub: " - time from 0 to 65,534 milliseconds",
       holdstart: "Superkeys - Hold timeout",
       holdstartsub: " - time from 0 to 65,534 milliseconds",
-      overlap: "Superkeys - OverlapThreshold",
-      overlapTip1: "This setting determines the overlap between the current and the next key press when using superkeys.",
+      overlap: "Superkeys - Overlap Threshold",
+      overlapTip1: "This setting adjusts how much chording you are allowed without triggering the hold function of the Superkey.",
       overlapTip2: "With a low value, you will be able to chord better as it will not overlap the key presses.",
-      overlapTip3: "With a high value, the overlap is more responsive so it detects the superkey as being intercepted easier.",
+      overlapTip3:
+        "With a high value, the overlap is more responsive, so it detects the superkey as being intercepted more easily.",
       overlapTipDefault: "Default value: 20",
     },
     mouse: {
