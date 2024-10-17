@@ -553,7 +553,7 @@ const English = {
         tooltipRF: `<div style="text-align: left"><strong>High</strong><p></p><strong>Medium</strong><p></p><strong>Low</strong><p></p></div>`,
         tooltipHighConsumptionMessage: "Maximum coverage at the cost of higher energy consumption.",
         tooltipMediumConsumptionMessage: "Reduced coverage and medium energy consumption.",
-        tooltipLowConsumptionMessage: "Designed to conserve battery via reducing to minimum levels the coverage.",
+        tooltipLowConsumptionMessage: "Minimum coverage but increased battery life.",
       },
     },
     batteryPreferences: {
