@@ -4,6 +4,12 @@ export interface RgbColor {
   b: number;
 }
 
+/**
+ * Parse the supplied color to it's component R, G, B values.
+ * @param {string} color A color in Hex or Rgb format
+ * @param {RgbColor} fallback The color to use if the supplied color cannot be parsed.
+ * @returns {RgbColor} The color converted to an object containing the three color values.
+ */
 export function parseColor(color: string, fallback: RgbColor): RgbColor {
   const hexRegex = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i;
   const rgbRegex = /^rgb\(([\d]+), ([\d]+), ([\d]+)\)$/i;
