@@ -1,20 +1,21 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { i18n } from "@Renderer/i18n";
+import log from "electron-log/renderer";
 
 import { IconArrowInBoxUp } from "@Renderer/components/atoms/icons";
-import Callout from "@Renderer/components/molecules/Callout/Callout";
 import { Button } from "@Renderer/components/atoms/Button";
 import Heading from "@Renderer/components/atoms/Heading";
 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@Renderer/components/atoms/Select";
+import { SegmentedKeyType } from "@Renderer/types/layout";
+import { MacrosType } from "@Renderer/types/macros";
 
 interface MacroTabProps {
-  macros: any;
-  selectedMacro: any;
-  // eslint-disable-next-line react/no-unused-prop-types
-  keyCode: any;
-  isStandardView: boolean;
-  onMacrosPress: any;
+  macros: MacrosType[];
+  selectedMacro: number;
+  onMacrosPress: (value: number) => void;
+  actTab: string;
+  keyCode?: SegmentedKeyType;
   disabled?: boolean;
 }
 
@@ -25,27 +26,25 @@ interface MacroItem {
 }
 
 const MacroTab = (props: MacroTabProps) => {
-  const { macros, selectedMacro, onMacrosPress, isStandardView, disabled } = props;
-  const [selected, setSelected] = useState(0);
+  const { macros, selectedMacro, onMacrosPress, disabled, keyCode, actTab } = props;
+  const [oldKC, setOldKC] = useState(-1);
+  const [selected, setSelected] = useState(-1);
+
+  // sendMacro function to props onMacrosPress function to send macro to MacroCreator
+  const sendMacro = (sel: number) => {
+    log.info("sending macro number", sel);
+    onMacrosPress(sel + 53852);
+  };
 
   // update value when dropdown is changed
   const changeSelected = (newValue: string) => {
+    log.info("changing selected macro", newValue);
     const parseSelected = parseInt(newValue, 10);
     setSelected(parseSelected);
+    if (actTab === "editor") sendMacro(parseSelected);
   };
 
-  const changeSelectedStd = (newValue: string) => {
-    const parseSelected = parseInt(newValue, 10);
-    setSelected(parseSelected);
-    onMacrosPress(parseSelected + 53852);
-  };
-
-  // sendMacro function to props onMacrosPress function to send macro to MacroCreator
-  const sendMacro = () => {
-    onMacrosPress(selected + 53852);
-  };
-
-  const macrosAux = macros.map((item: MacroItem, index: number) => {
+  const macrosAux = macros.map((item: any, index: number) => {
     const macrosContainer: any = {};
     if (item.name === "") {
       macrosContainer.name = i18n.general.noname;
@@ -57,43 +56,26 @@ const MacroTab = (props: MacroTabProps) => {
     return macrosContainer;
   });
 
-  const currentlySelectedMacroIndex = macros.length > 0 && props.keyCode.modified === 53852 ? String(props.keyCode.base) : undefined;
-  return (
-    <div
-      className={`flex flex-wrap h-[inherit] ${isStandardView ? "standardViewTab" : ""} tabsMacro ${disabled ? "opacity-50 pointer-events-none" : ""}`}
-    >
-      <div className="tabContentWrapper">
-        {isStandardView ? (
-          <>
-            {/* <Heading headingLevel={3} renderAs="h3">
-              {i18n.editor.standardView.macros.title}
-            </Heading> */}
-            <Callout
-              size="sm"
-              className="mt-0"
-              hasVideo
-              media="MfTUvFrHLsE"
-              videoTitle="13 Time-saving MACROS For Your Keyboard"
-              videoDuration="5:24"
-            >
-              <p>{i18n.editor.standardView.macros.callOut1}</p>
-              <p>{i18n.editor.standardView.macros.callOut2}</p>
-            </Callout>
-          </>
-        ) : (
-          <Callout size="sm" className="mt-0">
-            <p>{i18n.editor.macros.macroTab.callout}</p>
-          </Callout>
-        )}
+  useEffect(() => {
+    setSelected(macros.length > 0 && keyCode && keyCode.modified === 53852 ? keyCode.base : -1);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [keyCode]);
 
+  useEffect(() => {
+    if (keyCode && keyCode.base + keyCode.modified !== oldKC && !(keyCode.modified === 53852)) {
+      setOldKC(keyCode.base + keyCode.modified);
+      setSelected(-1);
+    }
+  }, [keyCode, oldKC]);
+
+  return (
+    <div className={`h-[inherit] tabsMacro ${disabled ? "opacity-50 pointer-events-none" : ""}`}>
+      <div className="h-fit flex flex-wrap flex-initial">
         <div className="w-full py-4">
           <Heading headingLevel={4} renderAs="h4" className="!mt-0 !mb-1 !text-base">
             {i18n.editor.macros.macroTab.label}
           </Heading>
-          <Select
-            value={currentlySelectedMacroIndex}
-            onValueChange={isStandardView ? changeSelectedStd : changeSelected}
-          >
+          <Select value={String(selected)} onValueChange={changeSelected}>
             <SelectTrigger className="w-[280px]">
               <SelectValue placeholder="Select Macro" />
             </SelectTrigger>
@@ -106,14 +88,16 @@ const MacroTab = (props: MacroTabProps) => {
             </SelectContent>
           </Select>
         </div>
+        {actTab === "super" ? (
+          <div className="mt-auto ml-auto">
+            <Button variant="secondary" onClick={() => sendMacro(selected)} iconDirection="right">
+              <IconArrowInBoxUp /> {i18n.editor.macros.textTabs.buttonText}
+            </Button>
+          </div>
+        ) : (
+          ""
+        )}
       </div>
-      {!isStandardView ? (
-        <div className="tabSaveButton">
-          <Button variant="secondary" onClick={sendMacro} iconDirection="right">
-            <IconArrowInBoxUp /> {i18n.editor.macros.textTabs.buttonText}
-          </Button>
-        </div>
-      ) : null}
     </div>
   );
 };

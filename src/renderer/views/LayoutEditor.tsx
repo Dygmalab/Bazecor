@@ -450,6 +450,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
 
   const bkp = new Backup();
 
+  const [mouseWheel, setMouseWheel] = useState(0);
   const [currentLayer, setCurrentLayer] = useState(0);
   const [previousLayer, setPreviousLayer] = useState(0);
   const [layerNames, setLayerNames] = useState([]);
@@ -1709,7 +1710,19 @@ const LayoutEditor = (props: LayoutEditorProps) => {
     );
   };
 
+  const resetScroll = () => {
+    setMouseWheel(0);
+  };
+
+  const updateScroll = useCallback((e: WheelEvent) => {
+    // log.info("Scroll WHEEL event!", e);
+    const direction = e.deltaY > 0 ? 1 : -1;
+    setMouseWheel(direction);
+  }, []);
+
   useEffect(() => {
+    window.addEventListener("mousewheel", updateScroll);
+
     // log.info("going to RUN INITIAL USE EFFECT just ONCE");
     const scanner = async () => {
       await scanKeyboard(currentLanguageLayout);
@@ -1720,9 +1733,14 @@ const LayoutEditor = (props: LayoutEditorProps) => {
       setCurrentLayer(0);
       scanned.current = true;
     };
+
     if (!scanned.current) {
       scanner();
     }
+
+    return () => {
+      window.removeEventListener("mousewheel", updateScroll);
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -1819,7 +1837,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
     setCurrentLayer(cLayer);
   }, [keymap, currentLayer, macros, superkeys]);
 
-  const { Layer, kbtype } = getLayout();
+  const { Layer } = getLayout();
   if (!Layer) {
     return <div />;
   }
@@ -1867,18 +1885,6 @@ const LayoutEditor = (props: LayoutEditorProps) => {
     const tempkey = keymapDB.parse(layerData[currentKeyIndex].keyCode);
     // log.info("Key to be used in render", tempkey);
     code = keymapDB.keySegmentator(tempkey.keyCode);
-  }
-  let actions = [code !== null ? code.base + code.modified : 0, 0, 0, 0, 0];
-  let superName = "";
-  if (code !== null) {
-    if (
-      code.modified + code.base > 53980 &&
-      code.modified + code.base < 54108 &&
-      superkeys[code.base + code.modified - 53980] !== undefined
-    ) {
-      actions = superkeys[code.base + code.modified - 53980].actions;
-      superName = superkeys[code.base + code.modified - 53980].name;
-    }
   }
 
   // log.info("execution that may not render");
@@ -1969,19 +1975,16 @@ const LayoutEditor = (props: LayoutEditorProps) => {
             {modeselect === "keyboard" ? (
               <div className="ordinary-keyboard-editor m-0 pb-4">
                 <KeyPickerKeyboard
+                  mouseWheel={mouseWheel}
+                  resetScroll={resetScroll}
                   onKeySelect={onKeyChange}
                   code={code}
                   macros={macros}
                   superkeys={superkeys}
-                  actions={actions}
-                  action={0}
-                  superName={superName}
                   keyIndex={currentKeyIndex}
                   actTab="editor"
                   selectedlanguage={currentLanguageLayout}
-                  kbtype={kbtype}
                   isWireless={isWireless}
-                  dragLimits={layoutEditorContainerRef}
                 />
               </div>
             ) : (

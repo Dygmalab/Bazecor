@@ -21,6 +21,6 @@ export default interface Pages {
 export interface TabLayoutEditorProps {
   keyCode: number | { base: number; modified: number } | undefined;
   onKeySelect: (key: number) => void;
-  isStandardView: boolean;
+
   disabled?: boolean;
 }

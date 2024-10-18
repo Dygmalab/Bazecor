@@ -163,8 +163,6 @@ function SuperkeyPicker(props: SuperkeyPickerProps) {
     index,
     icon,
     title,
-    description,
-    isStandardViewSuperkeys,
     elementActive,
     superkeys,
     macros,
@@ -230,13 +228,12 @@ function SuperkeyPicker(props: SuperkeyPickerProps) {
   return (
     <Style>
       <div className={`superkeyAction ${elementActive ? "active" : ""} ${variant === "subtle" ? "!py-2" : ""}`}>
-        <div className={`superkeyTitle ${isStandardViewSuperkeys ? "standard" : "single"}`}>
+        <div className="superkeyTitle single">
           {variant === "regular" && icon}
           <Heading headingLevel={5} renderAs="h5" className={`${variant === "subtle" ? "my-0 !text-2xxs" : ""}`}>
             {title}
           </Heading>
         </div>
-        {isStandardViewSuperkeys && <div className="description">{description}</div>}
         <div className="superkeyButtonWrapper">
           {controlDeleteButton && variant === "regular" && (
             // TODO: Div with click should not exist, use Button instead!!

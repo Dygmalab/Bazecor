@@ -1,8 +1,8 @@
 import React, { useMemo, useState, useEffect, useCallback } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { toast } from "react-toastify";
+import log from "electron-log/renderer";
 
-import Callout from "@Renderer/components/molecules/Callout/Callout";
 import { Button } from "@Renderer/components/atoms/Button";
 import Heading from "@Renderer/components/atoms/Heading";
 import findModifierType from "@Renderer/utils/findModifierType";
@@ -12,42 +12,28 @@ import { Popover, PopoverContent, PopoverTrigger } from "@Renderer/components/at
 import ToastMessage from "@Renderer/components/atoms/ToastMessage";
 import CustomRadioCheckBox from "@Renderer/components/molecules/Form/CustomRadioCheckBox";
 import { Separator } from "@Renderer/components/atoms/Separator";
+import { SegmentedKeyType } from "@Renderer/types/layout";
 import { KeymapDB } from "../../../api/keymap";
 // eslint-disable-next-line
 import { Picker } from "../KeyPickerKeyboard";
 
 interface ModifiersTabProps {
-  keyCode: any;
-  isStandardView: boolean;
+  keyCode: SegmentedKeyType;
   onKeySelect: (value: number) => void;
   disabled?: boolean;
-  actions?: any;
-  action?: any;
-  baseCode?: any;
-  modCode?: any;
-  selectedlanguage?: any;
-  // selKeys?: any;
-  superkeys?: any;
-  kbtype?: any;
-  macros?: any;
-  isWireless?: any;
+  baseCode?: number;
+  modCode?: number;
+  selectedlanguage?: string;
 }
 
 const ModifiersTab = ({
   keyCode,
-  isStandardView,
+
   onKeySelect,
   disabled,
-  actions,
-  action,
   baseCode,
   modCode,
   selectedlanguage,
-  // selKeys,
-  superkeys,
-  kbtype,
-  macros,
-  isWireless,
 }: ModifiersTabProps) => {
   const [activeModifier, setActiveModifier] = useState<string>("");
   const [activeModifierTab, setActiveModifierTab] = useState<string>("None");
@@ -82,29 +68,12 @@ const ModifiersTab = ({
     keyNumInternal = 0;
   }
 
-  // useEffect(() => {
-  //   console.log("activeModifier: ", activeModifier);
-  // }, [activeModifier]);
-
   const triggerToast = () => {
     toast.warn(
       <ToastMessage
         icon={<IconWarning />}
         title="Select a modifier first"
         content="Please select a modifier key before proceeding. Modifiers, like Shift or Ctrl, are required to complete this action."
-      />,
-      {
-        autoClose: 3000,
-        icon: "",
-      },
-    );
-  };
-  const triggerToastDisabledDual = () => {
-    toast.warn(
-      <ToastMessage
-        icon={<IconWarning />}
-        title="Not available on this modifier"
-        content="Action not available on Right Shift, Right Control and Right OS, please select another modifier."
       />,
       {
         autoClose: 3000,
@@ -125,7 +94,6 @@ const ModifiersTab = ({
   const handleModifier = (modifier: string) => {
     const modifierItem = findModifierType(undefined, activeModifierTab, modifier);
     setActiveModifier(modifier);
-    // console.log(modifierItem);
     if (modifierItem && modifierItem.type !== "dualModifier") {
       onKeySelect(modifierItem.keynum);
     }
@@ -136,24 +104,17 @@ const ModifiersTab = ({
 
   useEffect(() => {
     const modifierItem = findModifierType(undefined, activeModifierTab, activeModifier);
-    // console.log("Run useEffect activeModifierTab: ", activeModifierTab);
     if (modifierItem && modifierItem.type !== "dualModifier") {
       onKeySelect(modifierItem.keynum);
     }
     if (modifierItem && modifierItem.type === "dualModifier") {
       onKeySelect(keyCode.base + modifierItem.keynum);
     }
-
-    // if (!modifierItem && activeModifierTab === "dualModifier") {
-    //   onKeySelect(0);
-    // }
     // eslint-disable-next-line
   }, [activeModifierTab]);
 
   useEffect(() => {
     const modifierItem = findModifierType(keyNumInternal);
-    // console.log("Run useEffect keyNumInternal: ", keyNumInternal);
-    // console.log("Run useEffect modifierItem: ", modifierItem);
 
     if (modifierItem) {
       setActiveModifierTab(modifierItem?.type);
@@ -247,19 +208,8 @@ const ModifiersTab = ({
   );
 
   return (
-    <div
-      className={`flex flex-wrap h-[inherit] ${isStandardView ? "standardViewTab" : ""} ${disabled ? "opacity-50 pointer-events-none" : ""} tabsLayer`}
-    >
+    <div className={`flex flex-wrap h-[inherit] ${disabled ? "opacity-50 pointer-events-none" : ""} tabsLayer`}>
       <div className="tabContentWrapper w-full">
-        {isStandardView ? (
-          <Callout size="sm" className="mt-0 mb-4">
-            <p>
-              Supercharge your modifiers. Add a key on tap so the modifier acts like a normal keypress when you tap it, or turn it
-              into a OneShot modifier.
-            </p>
-          </Callout>
-        ) : null}
-
         <div className="w-full flex flex-col gap-2">
           <div className="w-full flex flex-row flex-wrap gap-6">
             <div className="flex flex-col gap-2">
@@ -281,7 +231,7 @@ const ModifiersTab = ({
               </Heading>
               <div className="flex flex-wrap gap-1 items-center">
                 {modifiersButtons.map((button, index) => (
-                  <>
+                  <div key={`keyIs ${button} + ${String(index)}`}>
                     {index === 0 && <span className="text-sm mr-1 text-gray-500 dark:text-gray-300">Left</span>}
                     {index === 4 && <span className="text-sm ml-2 mr-1 text-gray-500 dark:text-gray-300">Right</span>}
                     <Button
@@ -297,7 +247,7 @@ const ModifiersTab = ({
                     >
                       {button.renderElement}
                     </Button>
-                  </>
+                  </div>
                 ))}
               </div>
             </div>
@@ -345,21 +295,13 @@ const ModifiersTab = ({
                               </span>
                             </Heading>
                             <Picker
-                              actions={actions}
-                              action={action}
                               disable={disabled}
+                              disableMods
+                              disableMove={false}
                               baseCode={baseCode}
                               modCode={modCode}
                               onKeySelect={handleDual}
-                              // activeTab={activeTab}
-                              activeTab="dualFunction"
                               selectedlanguage={selectedlanguage}
-                              // selKeys={selKeys}
-                              superkeys={superkeys}
-                              kbtype={kbtype}
-                              keyCode={keyCode}
-                              macros={macros}
-                              isWireless={isWireless}
                             />
                           </div>
                         </div>
@@ -383,7 +325,7 @@ const ModifiersTab = ({
                     triggerToast();
                   } else if (activeModifier === "ros" || activeModifier === "rcontrol" || activeModifier === "rshift") {
                     // triggerToastDisabledDual();
-                    console.log("Action disabled!");
+                    log.info("Action disabled!");
                   } else {
                     setActiveModifierTab(previous => (previous === "dualModifier" ? "None" : "dualModifier"));
                     // setActiveModifierTab("dualModifier");

@@ -10,11 +10,11 @@ import { IconInformation } from "@Renderer/components/atoms/icons";
 
 interface NoKeyTransparentTabProps {
   keyCode: any;
-  isStandardView: boolean;
+
   onKeySelect: (keycode: number) => void;
   disabled?: boolean;
 }
-const NoKeyTransparentTab = ({ keyCode, onKeySelect, isStandardView, disabled }: NoKeyTransparentTabProps) => {
+const NoKeyTransparentTab = ({ keyCode, onKeySelect, disabled }: NoKeyTransparentTabProps) => {
   const KC = useMemo(() => {
     if (keyCode?.base !== undefined && keyCode?.modified !== undefined) {
       return keyCode.base + keyCode.modified;
@@ -22,18 +22,9 @@ const NoKeyTransparentTab = ({ keyCode, onKeySelect, isStandardView, disabled }:
     return undefined;
   }, [keyCode]);
   return (
-    <div
-      className={`${isStandardView ? "standardViewTab" : ""} tabsNoKeysTransparent ${disabled ? "opacity-50 pointer-events-none" : ""}`}
-    >
+    <div className={`tabsNoKeysTransparent ${disabled ? "opacity-50 pointer-events-none" : ""}`}>
       <div className="tabContentWrapper">
         <div className="buttonsRow">
-          {/* <Heading renderAs="h3" headingLevel={3}>
-            {i18n.editor.standardView.noKeyTransparent}{" "}
-          </Heading> */}
-          {/* <Callout size="sm" className="mt-0">
-            <p>{i18n.editor.standardView.callOut}</p>
-          </Callout> */}
-
           <div className="flex flex-wrap gap-1 items-center">
             <TooltipProvider delayDuration={200}>
               <Tooltip>

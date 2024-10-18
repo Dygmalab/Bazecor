@@ -2,10 +2,7 @@ import React, { useMemo } from "react";
 import Styled from "styled-components";
 import { i18n } from "@Renderer/i18n";
 
-import log from "electron-log/renderer";
-
 import Heading from "@Renderer/components/atoms/Heading";
-import Callout from "@Renderer/components/molecules/Callout/Callout";
 import { Button } from "@Renderer/components/atoms/Button";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@Renderer/components/atoms/Tooltip";
 
@@ -75,12 +72,12 @@ height: inherit;
 
 interface MediaAndLightTabProps {
   keyCode: any;
-  isStandardView: boolean;
+
   onAddSpecial: (event: any, value: number) => void;
   disabled?: boolean;
 }
 
-const MediaAndLightTab = ({ keyCode, isStandardView, onAddSpecial, disabled }: MediaAndLightTabProps) => {
+const MediaAndLightTab = ({ keyCode, onAddSpecial, disabled }: MediaAndLightTabProps) => {
   const handleAddSpecial = (special: number) => {
     onAddSpecial(special, 5);
   };
@@ -93,20 +90,8 @@ const MediaAndLightTab = ({ keyCode, isStandardView, onAddSpecial, disabled }: M
   }, [keyCode]);
 
   return (
-    <Styles
-      className={`${isStandardView ? "standardViewTab" : ""} tabsMediaAndLED ${disabled ? "opacity-50 pointer-events-none" : ""}`}
-    >
+    <Styles className={`tabsMediaAndLED ${disabled ? "opacity-50 pointer-events-none" : ""}`}>
       <div className="tabContentWrapper">
-        {isStandardView ? (
-          <>
-            {/* <Heading headingLevel={3} renderAs="h3">
-              {i18n.editor.standardView.mediaAndLED.title}
-            </Heading> */}
-            <Callout size="sm" className="mt-0">
-              <p>{i18n.editor.standardView.mediaAndLED.callOut}</p>
-            </Callout>
-          </>
-        ) : null}
         <div className="buttonsRow py-2">
           <div className="mediaButtons flex-1 py-2">
             <Heading headingLevel={4} renderAs="h4" className="m-0 text-base">

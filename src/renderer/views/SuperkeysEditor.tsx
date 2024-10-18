@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import Styled from "styled-components";
 import log from "electron-log/renderer";
@@ -30,7 +30,6 @@ import Callout from "@Renderer/components/molecules/Callout/Callout";
 import SuperkeysSelector from "@Renderer/components/organisms/Select/SuperkeysSelector";
 import { Button } from "@Renderer/components/atoms/Button";
 import LogoLoader from "@Renderer/components/atoms/loader/LogoLoader";
-import ToggleGroupLayoutViewMode from "@Renderer/components/molecules/CustomToggleGroup/ToggleGroupLayoutViewMode";
 import ToastMessage from "@Renderer/components/atoms/ToastMessage";
 import { IconFloppyDisk } from "@Renderer/components/atoms/icons";
 
@@ -38,7 +37,6 @@ import { IconFloppyDisk } from "@Renderer/components/atoms/icons";
 import { PageHeader } from "@Renderer/modules/PageHeader";
 import { SuperKeysFeatures, SuperkeyActions } from "@Renderer/modules/Superkeys";
 import { KeyPickerKeyboard } from "@Renderer/modules/KeyPickerKeyboard";
-import StandardView from "@Renderer/modules/StandardView";
 
 // Types
 import { SuperkeysEditorInitialStateType, SuperkeysEditorProps } from "@Renderer/types/superkeyseditor";
@@ -92,8 +90,7 @@ function SuperkeysEditor(props: SuperkeysEditorProps) {
   let keymapDB = new KeymapDB();
   const bkp = new Backup();
   const [isSaving, setIsSaving] = useState(false);
-
-  const [viewMode, setViewMode] = useState("standard");
+  const [mouseWheel, setMouseWheel] = useState(0);
 
   const flatten = (arr: unknown[]) => [].concat(...arr);
 
@@ -141,32 +138,11 @@ function SuperkeysEditor(props: SuperkeysEditorProps) {
     futureSK: [],
     futureSSK: 0,
     currentLanguageLayout: getLanguage(store.get("settings.language") as string),
-    isStandardView: store.get("settings.isStandardView") as boolean,
     showStandardView: false,
     loading: true,
   };
   const [state, setState] = useState(initialState);
   const { state: deviceState } = useDevice();
-
-  const handleSaveStandardView = () => {
-    state.showStandardView = false;
-    state.selectedAction = -1;
-    setState({ ...state });
-  };
-
-  const onToggle = () => {
-    const { isStandardView: isStandardViewSuperkeys } = state;
-    if (isStandardViewSuperkeys) {
-      state.isStandardView = false;
-      state.selectedAction = -1;
-      setState({ ...state });
-    } else {
-      state.isStandardView = true;
-      state.selectedAction = -1;
-      setState({ ...state });
-    }
-    setViewMode(isStandardViewSuperkeys ? "standard" : "single");
-  };
 
   const macroTranslator = (raw: string) => {
     const { storedMacros } = state;
@@ -293,15 +269,6 @@ function SuperkeysEditor(props: SuperkeysEditorProps) {
     log.info("final superkeys", finalSuper);
     return finalSuper;
   };
-
-  useEffect(() => {
-    try {
-      store.set("settings.isStandardViewSuperkeys", state.isStandardView);
-      setViewMode(state.isStandardView ? "standard" : "single");
-    } catch (error) {
-      log.info("error when setting standard view mode", error);
-    }
-  }, [state.isStandardView, viewMode]);
 
   const onKeyChange = (keyCode: number) => {
     const { superkeys, selectedSuper, selectedAction } = state;
@@ -441,22 +408,17 @@ function SuperkeysEditor(props: SuperkeysEditorProps) {
   };
 
   const changeAction = (id: number) => {
-    const { isStandardView: isStandardViewSuperkeys, selectedAction } = state;
-    if (isStandardViewSuperkeys) {
-      state.selectedAction = id < 0 ? 0 : id;
-      state.showStandardView = true;
+    const { selectedAction } = state;
+
+    if (id === selectedAction) {
+      // Some action is already selected
+      state.selectedAction = -1;
       setState({ ...state });
-    } else {
-      if (id === selectedAction) {
-        // Some action is already selected
-        state.selectedAction = -1;
-        setState({ ...state });
-        return;
-      }
-      state.selectedAction = id < 0 ? 0 : id;
-      state.showStandardView = false;
-      setState({ ...state });
+      return;
     }
+    state.selectedAction = id < 0 ? 0 : id;
+    state.showStandardView = false;
+    setState({ ...state });
   };
 
   const updateSuper = (newSuper: SuperkeysType[], newID: number) => {
@@ -642,23 +604,6 @@ function SuperkeysEditor(props: SuperkeysEditorProps) {
     toggleDeleteModal();
   };
 
-  // Manage Standard/Single view
-  const configStandarView = async () => {
-    try {
-      const preferencesStandardView = store.get("settings.isStandardView") as boolean;
-      // log.info("Preferences StandardView", preferencesStandardViewJSON);
-      if (preferencesStandardView !== null) {
-        state.isStandardView = preferencesStandardView;
-        setState({ ...state });
-      } else {
-        state.isStandardView = true;
-        setState({ ...state });
-      }
-    } catch (e) {
-      log.info("error to set isStandardView");
-    }
-  };
-
   const deleteSuperkey = () => {
     const { superkeys, selectedSuper } = state;
     if (!Array.isArray(superkeys) || superkeys.length <= 0 || selectedSuper < 0) {
@@ -690,13 +635,6 @@ function SuperkeysEditor(props: SuperkeysEditorProps) {
     changeSelected(aux.id);
   };
 
-  const closeStandardViewModal = (code: number) => {
-    if (code) onKeyChange(code);
-    state.showStandardView = false;
-    state.selectedAction = -1;
-    setState({ ...state });
-  };
-
   const addSuperkey = (SKname: string) => {
     const { superkeys, maxSuperKeys } = state;
     // log.info("TEST", superkeys.length, maxSuperKeys);
@@ -713,16 +651,31 @@ function SuperkeysEditor(props: SuperkeysEditorProps) {
     }
   };
 
+  const resetScroll = () => {
+    setMouseWheel(0);
+  };
+
+  const updateScroll = useCallback((e: WheelEvent) => {
+    // log.info("Scroll WHEEL event!", e);
+    const direction = e.deltaY > 0 ? 1 : -1;
+    setMouseWheel(direction);
+  }, []);
+
   useEffect(() => {
+    window.addEventListener("mousewheel", updateScroll);
+
     const getInitialData = async () => {
       const { setLoading } = props;
       log.info("initial load of superkeys", setLoading);
       await loadSuperkeys();
-      await configStandarView();
       setState({ ...state, loading: false });
       setLoading(false);
     };
     getInitialData();
+
+    return () => {
+      window.removeEventListener("mousewheel", updateScroll);
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -730,31 +683,26 @@ function SuperkeysEditor(props: SuperkeysEditorProps) {
     const { setLoading } = props;
     setState({ ...state, loading: true });
     await loadSuperkeys();
-    await configStandarView();
     setState({ ...state, loading: false });
     setLoading(false);
   };
 
+  const { saveButtonRef, discardChangesButtonRef } = props;
+
   const {
     currentLanguageLayout,
-    kbtype,
     selectedSuper,
     superkeys,
     macros,
     selectedAction,
-    isStandardView: isStandardViewSuperkeys,
     listToDelete,
     modified,
-    showStandardView,
     showDeleteModal,
     loading,
   } = state;
 
   const tempkey = keymapDB.parse(superkeys[selectedSuper] !== undefined ? superkeys[selectedSuper].actions[selectedAction] : 0);
   const code = keymapDB.keySegmentator(tempkey.keyCode);
-  // log.info(selectedSuper, JSON.stringify(code), JSON.stringify(superkeys));
-  const actions = superkeys.length > 0 && superkeys.length > selectedSuper ? superkeys[selectedSuper].actions : [];
-  const superName = superkeys.length > 0 && superkeys.length > selectedSuper ? superkeys[selectedSuper].name : "";
 
   const listOfSKK = listToDelete.map(({ layer, pos, superIdx }) => (
     <li key={`${layer}-${pos}-${superIdx}`} className="titles alignvert">{`Key in layer ${layer + 1} and pos ${pos}`}</li>
@@ -763,7 +711,7 @@ function SuperkeysEditor(props: SuperkeysEditorProps) {
   if (loading || !Array.isArray(superkeys)) return <LogoLoader centered />;
   return (
     <Styles className="superkeys px-3">
-      <div className={`${isStandardViewSuperkeys ? "standarViewMode" : "singleViewMode"}`}>
+      <div className="singleViewMode">
         <PageHeader
           text="Superkeys Editor"
           showSaving
@@ -783,8 +731,8 @@ function SuperkeysEditor(props: SuperkeysEditorProps) {
           destroyContext={destroyThisContext}
           inContext={modified}
           isSaving={isSaving}
-          saveButtonRef={props.saveButtonRef}
-          discardChangesButtonRef={props.discardChangesButtonRef}
+          saveButtonRef={saveButtonRef}
+          discardChangesButtonRef={discardChangesButtonRef}
         />
 
         <Callout
@@ -800,7 +748,6 @@ function SuperkeysEditor(props: SuperkeysEditorProps) {
         </Callout>
 
         <SuperkeyActions
-          isStandardViewSuperkeys={isStandardViewSuperkeys}
           superkeys={superkeys}
           selected={selectedSuper}
           selectedAction={selectedAction}
@@ -819,12 +766,12 @@ function SuperkeysEditor(props: SuperkeysEditorProps) {
           code={code}
           macros={macros}
           superkeys={superkeys}
-          actions={actions}
-          action={selectedAction}
           actTab="super"
-          superName={superName}
           selectedlanguage={currentLanguageLayout}
-          kbtype={kbtype}
+          keyIndex={1}
+          isWireless={false}
+          mouseWheel={mouseWheel}
+          resetScroll={resetScroll}
         />
       </div>
       <SuperKeysFeatures />

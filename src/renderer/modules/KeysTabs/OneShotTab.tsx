@@ -3,7 +3,6 @@ import Styled from "styled-components";
 
 import { i18n } from "@Renderer/i18n";
 
-import Callout from "@Renderer/components/molecules/Callout/Callout";
 import Heading from "@Renderer/components/atoms/Heading";
 import { Button } from "@Renderer/components/atoms/Button";
 import OSKey from "@Renderer/components/molecules/KeyTags/OSKey";
@@ -40,12 +39,12 @@ h4 {
 
 interface OneShotTabProps {
   keyCode: any;
-  isStandardView: boolean;
+
   onKeySelect: (keycode: number) => void;
   disabled?: boolean;
 }
 
-const OneShotTab = ({ keyCode, onKeySelect, isStandardView, disabled }: OneShotTabProps) => {
+const OneShotTab = ({ keyCode, onKeySelect, disabled }: OneShotTabProps) => {
   const OneShotDeltaMod = 49153;
   const OneShotDeltaLayer = 49161;
 
@@ -57,21 +56,8 @@ const OneShotTab = ({ keyCode, onKeySelect, isStandardView, disabled }: OneShotT
   }, [keyCode]);
 
   return (
-    <Styles
-      className={`${isStandardView ? "standardViewTab" : ""} tabsOneShot ${disabled ? "opacity-50 pointer-events-none" : ""}`}
-    >
+    <Styles className={`tabsOneShot ${disabled ? "opacity-50 pointer-events-none" : ""}`}>
       <div className="tabContentWrapper">
-        {isStandardView ? (
-          <>
-            {/* <Heading headingLevel={3} renderAs="h3">
-              {i18n.editor.standardView.oneShot.title}
-            </Heading> */}
-            {/* <Callout size="sm" className="mt-0">
-              <p>{i18n.editor.standardView.callOut}</p>
-            </Callout> */}
-          </>
-        ) : null}
-
         <div className="flex flex-wrap gap-1 py-2">
           <div className="flex-1 py-2 min-w-80">
             <Heading headingLevel={4} renderAs="h4" className="flex gap-2 items-center">
@@ -85,7 +71,6 @@ const OneShotTab = ({ keyCode, onKeySelect, isStandardView, disabled }: OneShotT
                 <Button
                   variant="config"
                   onClick={() => onKeySelect(OneShotDeltaMod + 1)}
-                  // selected={OneShotDeltaMod === OneShotDeltaMod + 1}
                   selected={KC === OneShotDeltaMod + 1}
                   size="sm"
                 >
@@ -94,7 +79,6 @@ const OneShotTab = ({ keyCode, onKeySelect, isStandardView, disabled }: OneShotT
                 <Button
                   variant="config"
                   onClick={() => onKeySelect(OneShotDeltaMod + 0)}
-                  // selected={isStandardView ? keyCode === OneShotDeltaMod + 0 : false}
                   selected={KC === OneShotDeltaMod + 0}
                   size="sm"
                 >
@@ -103,7 +87,6 @@ const OneShotTab = ({ keyCode, onKeySelect, isStandardView, disabled }: OneShotT
                 <Button
                   variant="config"
                   onClick={() => onKeySelect(OneShotDeltaMod + 3)}
-                  // selected={isStandardView ? keyCode === OneShotDeltaMod + 3 : false}
                   selected={KC === OneShotDeltaMod + 3}
                   size="sm"
                 >
@@ -112,7 +95,6 @@ const OneShotTab = ({ keyCode, onKeySelect, isStandardView, disabled }: OneShotT
                 <Button
                   variant="config"
                   onClick={() => onKeySelect(OneShotDeltaMod + 2)}
-                  // selected={isStandardView ? keyCode === OneShotDeltaMod + 2 : false}
                   selected={KC === OneShotDeltaMod + 2}
                   size="sm"
                 >
@@ -122,7 +104,6 @@ const OneShotTab = ({ keyCode, onKeySelect, isStandardView, disabled }: OneShotT
                 <Button
                   variant="config"
                   onClick={() => onKeySelect(OneShotDeltaMod + 5)}
-                  // selected={isStandardView ? keyCode === OneShotDeltaMod + 5 : false}
                   selected={KC === OneShotDeltaMod + 5}
                   size="sm"
                 >
@@ -131,7 +112,6 @@ const OneShotTab = ({ keyCode, onKeySelect, isStandardView, disabled }: OneShotT
                 <Button
                   variant="config"
                   onClick={() => onKeySelect(OneShotDeltaMod + 4)}
-                  // selected={isStandardView ? keyCode === OneShotDeltaMod + 4 : false}
                   selected={KC === OneShotDeltaMod + 4}
                   size="sm"
                 >
@@ -140,7 +120,6 @@ const OneShotTab = ({ keyCode, onKeySelect, isStandardView, disabled }: OneShotT
                 <Button
                   variant="config"
                   onClick={() => onKeySelect(OneShotDeltaMod + 7)}
-                  // selected={isStandardView ? keyCode === OneShotDeltaMod + 7 : false}
                   selected={KC === OneShotDeltaMod + 7}
                   size="sm"
                 >
@@ -149,7 +128,6 @@ const OneShotTab = ({ keyCode, onKeySelect, isStandardView, disabled }: OneShotT
                 <Button
                   variant="config"
                   onClick={() => onKeySelect(OneShotDeltaMod + 6)}
-                  // selected={isStandardView ? keyCode === OneShotDeltaMod + 6 : false}
                   selected={KC === OneShotDeltaMod + 6}
                   size="sm"
                 >
@@ -169,7 +147,6 @@ const OneShotTab = ({ keyCode, onKeySelect, isStandardView, disabled }: OneShotT
               <Button
                 variant="config"
                 onClick={() => onKeySelect(OneShotDeltaLayer + 0)}
-                // selected={isStandardView ? keyCode === OneShotDeltaLayer + 0 : false}
                 selected={KC === OneShotDeltaLayer + 0}
                 size="icon"
               >
@@ -178,7 +155,6 @@ const OneShotTab = ({ keyCode, onKeySelect, isStandardView, disabled }: OneShotT
               <Button
                 variant="config"
                 onClick={() => onKeySelect(OneShotDeltaLayer + 1)}
-                // selected={isStandardView ? keyCode === OneShotDeltaLayer + 1 : false}
                 selected={KC === OneShotDeltaLayer + 1}
                 size="icon"
               >
@@ -187,7 +163,6 @@ const OneShotTab = ({ keyCode, onKeySelect, isStandardView, disabled }: OneShotT
               <Button
                 variant="config"
                 onClick={() => onKeySelect(OneShotDeltaLayer + 2)}
-                // selected={isStandardView ? keyCode === OneShotDeltaLayer + 2 : false}
                 selected={KC === OneShotDeltaLayer + 2}
                 size="icon"
               >
@@ -196,7 +171,6 @@ const OneShotTab = ({ keyCode, onKeySelect, isStandardView, disabled }: OneShotT
               <Button
                 variant="config"
                 onClick={() => onKeySelect(OneShotDeltaLayer + 3)}
-                // selected={isStandardView ? keyCode === OneShotDeltaLayer + 3 : false}
                 selected={KC === OneShotDeltaLayer + 3}
                 size="icon"
               >
@@ -205,7 +179,6 @@ const OneShotTab = ({ keyCode, onKeySelect, isStandardView, disabled }: OneShotT
               <Button
                 variant="config"
                 onClick={() => onKeySelect(OneShotDeltaLayer + 4)}
-                // selected={isStandardView ? keyCode === OneShotDeltaLayer + 4 : false}
                 selected={KC === OneShotDeltaLayer + 4}
                 size="icon"
               >
@@ -214,7 +187,6 @@ const OneShotTab = ({ keyCode, onKeySelect, isStandardView, disabled }: OneShotT
               <Button
                 variant="config"
                 onClick={() => onKeySelect(OneShotDeltaLayer + 5)}
-                // selected={isStandardView ? keyCode === OneShotDeltaLayer + 5 : false}
                 selected={KC === OneShotDeltaLayer + 5}
                 size="icon"
               >
@@ -223,7 +195,6 @@ const OneShotTab = ({ keyCode, onKeySelect, isStandardView, disabled }: OneShotT
               <Button
                 variant="config"
                 onClick={() => onKeySelect(OneShotDeltaLayer + 6)}
-                // selected={isStandardView ? keyCode === OneShotDeltaLayer + 6 : false}
                 selected={KC === OneShotDeltaLayer + 6}
                 size="icon"
               >
@@ -232,7 +203,6 @@ const OneShotTab = ({ keyCode, onKeySelect, isStandardView, disabled }: OneShotT
               <Button
                 variant="config"
                 onClick={() => onKeySelect(OneShotDeltaLayer + 7)}
-                // selected={isStandardView ? keyCode === OneShotDeltaLayer + 7 : false}
                 selected={KC === OneShotDeltaLayer + 7}
                 size="icon"
               >

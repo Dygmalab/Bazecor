@@ -21,7 +21,7 @@ import { BluetoothCodes } from "@Renderer/../hw/bluetooth";
 // `;
 
 function WirelessTab(props: TabLayoutEditorProps) {
-  const { keyCode, onKeySelect, isStandardView, disabled } = props;
+  const { keyCode, onKeySelect, disabled } = props;
 
   const KC = useMemo(() => {
     if (typeof keyCode === "number") {
@@ -37,9 +37,7 @@ function WirelessTab(props: TabLayoutEditorProps) {
   }, [keyCode]);
 
   return (
-    <div
-      className={`${isStandardView ? "standardViewTab" : ""} tabsWireless w-full ${disabled ? "opacity-50 pointer-events-none" : ""}`}
-    >
+    <div className={`tabsWireless w-full ${disabled ? "opacity-50 pointer-events-none" : ""}`}>
       <div className="tabContentWrapper">
         <div className="buttonsRow">
           {/* <Heading renderAs="h3" headingLevel={3} className="mb-[16px]">
@@ -61,7 +59,7 @@ function WirelessTab(props: TabLayoutEditorProps) {
                 onClick={() => {
                   onKeySelect(BatteryCodes.STATUS);
                 }}
-                selected={isStandardView ? KC === BatteryCodes.STATUS : false}
+                selected={KC === BatteryCodes.STATUS}
                 className="w-max-[124px] w-[124px] text-center mt-2"
                 size="sm"
               >
@@ -80,7 +78,7 @@ function WirelessTab(props: TabLayoutEditorProps) {
                 onClick={() => {
                   onKeySelect(BluetoothCodes.PAIRING);
                 }}
-                selected={isStandardView ? KC === BluetoothCodes.PAIRING : false}
+                selected={KC === BluetoothCodes.PAIRING}
                 className="w-max-[124px] w-[124px] text-center mt-2"
                 size="sm"
               >

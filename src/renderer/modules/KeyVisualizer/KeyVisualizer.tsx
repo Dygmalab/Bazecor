@@ -123,13 +123,13 @@ interface KeyVisualizerProps {
   oldKeyCode: number | SegmentedKeyType;
   newValue: string | JSX.Element;
   oldValue: string | JSX.Element;
-  isStandardView: boolean;
+
   superkeyAction: number;
   disable?: boolean;
 }
 
 const KeyVisualizer = (props: KeyVisualizerProps) => {
-  const { keyCode, oldKeyCode, newValue, oldValue, isStandardView, superkeyAction, disable } = props;
+  const { keyCode, oldKeyCode, newValue, oldValue, superkeyAction, disable } = props;
   const rows = [
     {
       title: `<strong>${i18n.editor.superkeys.actions.tapLabel}:</strong> Selected value`,
@@ -153,11 +153,7 @@ const KeyVisualizer = (props: KeyVisualizerProps) => {
 
   return (
     <Style className="KeyVisualizer !p-0 rounded-regular bg-gray-25 dark:bg-gray-600">
-      <div
-        className={`KeyVisualizerInner ${newValue !== oldValue && isStandardView ? "showConnection" : ""} ${
-          disable ? "disable" : ""
-        }`}
-      >
+      <div className={`KeyVisualizerInner ${newValue !== oldValue} ${disable ? "disable" : ""}`}>
         {oldValue ? (
           <div className="oldKeyValue">
             <Heading headingLevel={4} renderAs="h4">
@@ -178,7 +174,7 @@ const KeyVisualizer = (props: KeyVisualizerProps) => {
         ) : (
           ""
         )}
-        {newValue && !isStandardView ? (
+        {newValue ? (
           <div className="newKeyValue">
             <div className="!p-0 bg-gray-50 dark:bg-gray-700 rounded-t-regular">
               <Heading headingLevel={4} renderAs="h4" className="text-ssm m-0 !p-2 leading-none flex gap-2 items-center">
@@ -196,23 +192,6 @@ const KeyVisualizer = (props: KeyVisualizerProps) => {
                   }
                 />
               </div>
-            </div>
-          </div>
-        ) : (
-          ""
-        )}
-        {newValue !== oldValue && isStandardView ? (
-          <div className="newKeyValue">
-            <Heading headingLevel={4} renderAs="h4">
-              New value
-            </Heading>
-            <div className="keySelectedBox">
-              <div className="keySelectedValue">{newValue}</div>
-              <ListModifier
-                keyCode={
-                  keyCode !== undefined && typeof keyCode !== "number" ? Number(keyCode.base + keyCode.modified) : Number(keyCode)
-                }
-              />
             </div>
           </div>
         ) : (

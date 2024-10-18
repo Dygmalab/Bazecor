@@ -14,7 +14,6 @@ const schema: Schema<StorageType> = {
       darkMode: { type: "string" },
       hideBluetoothExperimental: { type: "boolean" },
       showDefaults: { type: "boolean" },
-      isStandardView: { type: "boolean" },
       autoUpdate: { type: "boolean" },
     },
     default: {
@@ -24,7 +23,6 @@ const schema: Schema<StorageType> = {
       darkMode: "system",
       hideBluetoothExperimental: false,
       showDefaults: false,
-      isStandardView: true,
       autoUpdate: undefined,
     },
     required: [],

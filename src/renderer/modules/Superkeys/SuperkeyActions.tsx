@@ -22,7 +22,7 @@ const Style = Styled.div`
 `;
 
 function SuperkeyActions(props: SuperKeyActionsProps) {
-  const { isStandardViewSuperkeys, superkeys, selected, selectedAction, macros, updateAction, changeAction, keymapDB } = props;
+  const { superkeys, selected, selectedAction, macros, updateAction, changeAction, keymapDB } = props;
   const rows = [
     {
       id: 0,
@@ -70,7 +70,6 @@ function SuperkeyActions(props: SuperKeyActionsProps) {
                 title={item.title}
                 description={item.description}
                 elementActive={selectedAction === item.id}
-                isStandardViewSuperkeys={isStandardViewSuperkeys}
                 onClick={changeAction}
                 macros={macros}
                 keymapDB={keymapDB}

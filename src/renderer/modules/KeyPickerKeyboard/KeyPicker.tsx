@@ -35,17 +35,14 @@ import {
   AiOutlineBackward,
   AiOutlineForward,
 } from "react-icons/ai";
-import { MdKeyboardReturn, MdSpaceBar, MdKeyboardCapslock, MdInfoOutline, MdEject } from "react-icons/md";
-
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@Renderer/components/atoms/Tooltip";
-
-import { i18n } from "@Renderer/i18n";
+import { MdKeyboardReturn, MdSpaceBar, MdKeyboardCapslock, MdEject } from "react-icons/md";
 
 import Key from "@Renderer/modules/KeyPickerKeyboard/Key";
-import getLanguage from "@Renderer/modules/KeyPickerKeyboard/KeyPickerLanguage";
+import getLanguage, { LangOptions } from "@Renderer/modules/KeyPickerKeyboard/KeyPickerLanguage";
 import OSKey from "@Renderer/components/molecules/KeyTags/OSKey";
 
 import { getKeyboardLayout } from "@Renderer/utils/getKeyboardLayout";
+import { SegmentedKeyType } from "@Renderer/types/layout";
 
 const Style = Styled.div`
 width: 100%;
@@ -266,81 +263,40 @@ width: 100%;
 const IconColor = Styled.span`
     color: ${props => props.color};
 `;
-const TooltipStyle = Styled.div`
-text-align: left;
-.ttip-p {
-  margin: 0;
-}
-.ttip-h {
-  margin: 0;
-  font-size: 1.3em;
-}
-`;
 
-class KeyPicker extends Component {
-  constructor(props) {
+type Props = {
+  onKeySelect: (value: number) => void;
+  code: SegmentedKeyType;
+  disableMods: boolean;
+  disableMove: boolean;
+  disableAll: boolean;
+  selectedlanguage: string;
+  theme: any;
+};
+
+class KeyPicker extends Component<Props> {
+  constructor(props: Props) {
     super(props);
-
-    this.state = { customModal: false };
     this.onKeyPress = this.onKeyPress.bind(this);
   }
 
-  toggleModal = () => {
-    const { customModal: cModal } = this.state;
-    this.setState({ customModal: !cModal });
-  };
-
-  onKeyPress = keycode => {
+  onKeyPress = (keycode: number) => {
     const { onKeySelect } = this.props;
     onKeySelect(keycode);
   };
 
-  renderTooltip(tooltips) {
-    return (
-      <>
-        {tooltips.map((tip, i) => (
-          <React.Fragment key={`Tip-${i}`}>
-            {i % 2 === 1 || !Number.isNaN(tip[0]) || tip[0] === "-" ? (
-              <p className="ttip-p">{tip}</p>
-            ) : (
-              <>
-                {i === 0 ? "" : <br />}
-                <h5 className="ttip-h">{tip}</h5>
-              </>
-            )}
-          </React.Fragment>
-        ))}
-      </>
-    );
-  }
-
   render() {
-    const {
-      action,
-      actions,
-      code,
-      disableMods,
-      disableMove,
-      disableAll,
-      selectedlanguage,
-      superkeys,
-      selKeys,
-      kbtype,
-      macros,
-      keyCode,
-      onKeySelect,
-      activeTab,
-      isWireless,
-      theme,
-    } = this.props;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { code, disableMods, disableMove, disableAll, selectedlanguage, theme } = this.props;
 
-    // let boxShadowMatrix = useTheme().styles.keyPicker.keyMatrixShadow;
-
-    const Lang = getLanguage(selectedlanguage);
+    const Lang = getLanguage(selectedlanguage as LangOptions);
     const keyboardLayout = getKeyboardLayout(selectedlanguage);
 
     const os = process.platform;
-    const iconlist = {
+    type IconListType = {
+      [index: string]: JSX.Element;
+    };
+    const iconlist: IconListType = {
       Backspace: <BsBackspace />,
       Enter: <MdKeyboardReturn />,
       Space: <MdSpaceBar />,
@@ -431,78 +387,69 @@ class KeyPicker extends Component {
         </>
       ),
     };
-    const keyboard = Lang.map((key, id) => {
-      if (key.tooltip) {
-        return (
-          <foreignObject key={`id-${key.content.first}-${id}`} x={key.x} y={key.y} width={25} height={25}>
-            <TooltipProvider delayDuration={100}>
-              <Tooltip>
-                <TooltipTrigger className="[&_svg]:text-purple-100 [&_svg]:dark:text-purple-200">
-                  <MdInfoOutline className="info" />
-                </TooltipTrigger>
-                <TooltipContent>{this.renderTooltip(key.tooltip)}</TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-          </foreignObject>
-        );
-      }
-      return (
-        <Key
-          key={`id-${key.content.first}-${id}`}
-          id={id}
-          x={key.x}
-          y={key.y}
-          selected={
-            code === null
-              ? false
-              : Array.isArray(key.idArray)
-                ? key.idArray.some(key => key === code.base + code.modified || (key === code.base && key >= 104 && key <= 115))
-                : code.base === key.id &&
-                    (code.base + code.modified < 53267 || code.base + code.modified > 60000) &&
-                    (code.base + code.modified < 17450 || code.base + code.modified > 17501) &&
-                    (code.base + code.modified < 49153 || code.base + code.modified > 49168)
-                  ? true
-                  : !!(code.modified > 0 && code.base + code.modified === key.id)
-          }
-          clicked={() => {
-            key.mod === disableMods || key.move === disableMove ? () => {} : this.onKeyPress(key.id);
-          }}
-          onKeyPress={this.onKeyPress}
-          centered={key.centered}
-          content={key.content}
-          iconpresent={key.icon}
-          icon={
-            <IconColor
-              color={
-                key.mod === disableMods || key.move === disableMove
-                  ? theme.keyboardPicker.keyTextDisabledColor
-                  : theme.keyboardPicker.keyIconColor
-              }
-            >
-              {iconlist[key.iconname]}
-            </IconColor>
-          }
-          iconx={key.iconx}
-          icony={key.icony}
-          iconsize={key.iconsize}
-          disabled={key.mod === disableMods || key.move === disableMove || disableAll}
-          idArray={key.idArray}
-          keyCode={code}
-          platform={process.platform}
-        />
-      );
-    });
 
-    const { customModal } = this.state;
+    const returnData = (key: any) => {
+      const KeyIsKey =
+        code.base === key.id &&
+        (code.base + code.modified < 53267 || code.base + code.modified > 60000) &&
+        (code.base + code.modified < 17450 || code.base + code.modified > 17501) &&
+        (code.base + code.modified < 49153 || code.base + code.modified > 49168)
+          ? true
+          : !!(code.modified > 0 && code.base + code.modified === key.id);
+      const keyArray = Array.isArray(key.idArray)
+        ? key.idArray.some(
+            (Lkey: any) => Lkey === code.base + code.modified || (Lkey === code.base && Lkey >= 104 && Lkey <= 115),
+          )
+        : KeyIsKey;
+      return keyArray;
+    };
+
+    const keyboard = Lang.map((key, id) => (
+      <Key
+        key={`id-${key.content.first}-${String(id)}`}
+        id={id}
+        x={key.x}
+        y={key.y}
+        selected={code === null ? false : returnData(key)}
+        clicked={() => {
+          if (!(key.mod === true && key.mod === disableMods)) this.onKeyPress(key.id);
+        }}
+        onKeyPress={this.onKeyPress}
+        centered={key.centered}
+        content={key.content}
+        iconpresent={key.icon}
+        icon={
+          <IconColor
+            color={
+              key.mod === true && key.mod === disableMods
+                ? theme.keyboardPicker.keyTextDisabledColor
+                : theme.keyboardPicker.keyIconColor
+            }
+          >
+            {iconlist[key.iconname]}
+          </IconColor>
+        }
+        iconx={key.iconx}
+        icony={key.icony}
+        iconsize={key.iconsize}
+        disabled={key.mod === disableMods || disableAll}
+        idArray={key.idArray}
+        keyCode={code}
+        platform={process.platform}
+      />
+    ));
+
     return (
       <Style>
         <div className="KeysWrapper">
           <div className="keysContainer">
             <div className=" flex flex-wrap bg-white dark:bg-gray-700/60 keysOrdinaryKeyboard relative z-[4] p-3 rounded-t-regular [&_svg]:mx-auto [&_svg]:max-w-6xl">
-              {disableAll && (
+              {disableAll ? (
                 <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-25 tracking-tight text-xl text-nowrap">
                   Select a key in the keyboard above to start
                 </div>
+              ) : (
+                ""
               )}
               <svg
                 className={`svgStyle ${process.platform} ${keyboardLayout}`}
@@ -528,53 +475,6 @@ class KeyPicker extends Component {
                   </filter>
                 </defs>
               </svg>
-              {/* <div
-                className={`KeysWrapper KeysWrapperSpecialKeys ${activeTab} ${isWireless ? "isWireless" : "notWireless"} absolute top-1 right-1`}
-              >
-                <div className="keysRow keysCustom">
-                  <div className="keyIcon">
-                    <h4>Cust.</h4>
-                  </div>
-                  <div className="keysButtonsList flex gap-2">
-                    <TooltipProvider delayDuration={100}>
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <div className="basis-full">
-                            <Button
-                              variant="config"
-                              disabled={disableAll}
-                              selected={keyCode.base + keyCode.modified >= 20000}
-                              onClick={() => {
-                                this.toggleModal();
-                              }}
-                              size="iconXS"
-                              className="w-6 h-6"
-                            >
-                              <IconWrench size="sm" />
-                            </Button>
-                          </div>
-                        </TooltipTrigger>
-                        <TooltipContent size="sm" className="max-w-xs">
-                          {i18n.editor.superkeys.specialKeys.custom}
-                        </TooltipContent>
-                      </Tooltip>
-                    </TooltipProvider>
-                    <CustomKeyCodeModal
-                      show={customModal}
-                      name={(keyCode.base + keyCode.modified).toString(16)}
-                      toggleShow={this.toggleModal}
-                      handleSave={data => {
-                        // console.log("CustomKey selected key", data);
-                        onKeySelect(parseInt(data, 16));
-                        this.toggleModal();
-                      }}
-                      modalTitle={i18n.editor.modal.customKeyCodeModal.title}
-                      modalMessage={i18n.editor.modal.customKeyCodeModal.message}
-                      labelInput={i18n.editor.modal.customKeyCodeModal.labelInput}
-                    />
-                  </div>
-                </div>
-              </div> */}
             </div>
           </div>
         </div>

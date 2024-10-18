@@ -2,8 +2,6 @@ import React, { useMemo } from "react";
 
 // Local components
 import Heading from "@Renderer/components/atoms/Heading";
-import { i18n } from "@Renderer/i18n";
-import { Button } from "@Renderer/components/atoms/Button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectFixedValue } from "@Renderer/components/atoms/Select";
 import OSKey from "@Renderer/components/molecules/KeyTags/OSKey";
 
@@ -11,7 +9,6 @@ interface DualFunctionPickerProps {
   keyCode: { base: number; modified: number };
   onKeySelect: (value: number) => void;
   activeTab: string;
-  isStandardView: boolean;
 }
 
 interface ModKey {
@@ -21,7 +18,7 @@ interface ModKey {
 }
 
 const DualFunctionPicker = (props: DualFunctionPickerProps) => {
-  const { keyCode, onKeySelect, activeTab, isStandardView } = props;
+  const { keyCode, onKeySelect, activeTab } = props;
   const modKey: ModKey[] = useMemo(
     () => [
       { name: "None ", keynum: 0 },
@@ -146,57 +143,7 @@ const DualFunctionPicker = (props: DualFunctionPickerProps) => {
     </div>
   );
 
-  const layersStdView = (
-    <div className="dualFuntionWrapper flex flex-wrap gap-6">
-      <div className="layersButtons">
-        <Heading headingLevel={5} renderAs="h5" className="text-ssm">
-          {i18n.general.layer}
-        </Heading>
-        <div className="p-1 inline-flex flex-nowrap gap-1 mt-2 w-auto rounded-md bg-white dark:bg-gray-900/20">
-          {layerKey.map((item: any, index: number) => (
-            <Button
-              variant="config"
-              size="sm"
-              // eslint-disable-next-line
-              key={`itemDualFunctionLayerSelectStd-${index}`}
-              onClick={() => onKeySelect(item.keynum + keyCode.base)}
-              selected={!!(keyCode.modified > 0 && item.keynum === keyCode.modified)}
-              disabled={disabled || activeTab === "super"}
-              className={`w-[40px] ${index === 0 ? "hidden" : ""}`}
-            >
-              {item.nameStd ? item.nameStd : item.keynum}
-            </Button>
-          ))}
-        </div>
-      </div>
-      <div className="modButtons">
-        <Heading headingLevel={5} renderAs="h5" className="text-ssm">
-          {i18n.general.modifier}
-        </Heading>
-        <div className="p-1 inline-flex flex-nowrap gap-1 mt-2 w-auto rounded-md bg-white dark:bg-gray-900/20">
-          {modKey.map((item, index) => (
-            <Button
-              variant="config"
-              size="sm"
-              // eslint-disable-next-line
-              key={`itemDualFunctionModifierSelectStd-${index}`}
-              onClick={() => onKeySelect(item.keynum + keyCode.base)}
-              selected={!!(keyCode.modified > 0 && item.keynum === keyCode.modified)}
-              disabled={disabled || activeTab === "super"}
-              className={`w-[60px] ${index === 0 ? "hidden" : ""}`}
-            >
-              <OSKey
-                renderKey={item.nameStd ? item.nameStd : "shift"}
-                size={item.nameStd === "control" || item.nameStd === "altGr" ? "sm" : "md"}
-              />
-            </Button>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-
-  return <div>{isStandardView ? layersStdView : layers}</div>;
+  return <div>{layers}</div>;
 };
 
 export default DualFunctionPicker;

@@ -1,3 +1,4 @@
+/* eslint-disable import/no-cycle */
 /* Bazecor -- Kaleidoscope Command Center
  * Copyright (C) 2024  Dygma Lab S.L.
  *
@@ -22,41 +23,19 @@ import { PickerProps } from "@Renderer/types/keyPicker";
 import { KeyPicker } from ".";
 
 function Picker(props: PickerProps) {
-  const {
-    action,
-    actions,
-    onKeySelect,
-    activeTab,
-    selectedlanguage,
-    kbtype,
-    baseCode,
-    modCode,
-    disable,
-    macros,
-    superkeys,
-    keyCode,
-    isWireless,
-  } = props;
+  const { onKeySelect, selectedlanguage, baseCode, modCode, disable, disableMods, disableMove } = props;
 
   return (
     <KeyPicker
       onKeySelect={(e: any) => onKeySelect(e)}
       code={{
-        base: actions[action] > 255 ? baseCode : actions[action],
+        base: baseCode,
         modified: modCode,
       }}
-      disableMods={([0, 3].includes(action) && activeTab === "disabled") || activeTab === "dualFunction"}
-      disableMove={(![0, 3].includes(action) && activeTab === "super") || activeTab === "dualFunction"}
+      disableMods={disableMods}
+      disableMove={disableMove}
       disableAll={disable}
       selectedlanguage={selectedlanguage}
-      kbtype={kbtype}
-      keyCode={keyCode}
-      macros={macros}
-      superkeys={superkeys}
-      activeTab={activeTab}
-      action={action}
-      actions={actions}
-      isWireless={isWireless}
     />
   );
 }
