@@ -1220,10 +1220,10 @@ const LayoutEditor = (props: LayoutEditorProps) => {
     const newColormap = colorMap.slice();
     if (newColormap.length > 0) newColormap[currentLayer] = colorMap[layer >= 0 ? layer : currentLayer].slice();
 
-    startContext();
     setColorMap(newColormap);
     setCopyFromOpen(false);
     setModified(true);
+    startContext();
     setKeymap({
       default: keymap.default,
       onlyCustom: keymap.onlyCustom,
@@ -1270,6 +1270,8 @@ const LayoutEditor = (props: LayoutEditorProps) => {
       log.info(newColormap[idx]);
     }
     setColorMap(newColormap);
+    setModified(true);
+    startContext();
   };
 
   const applyColorMapChangeUG = (side: string, colorIndex: number) => {
@@ -1311,6 +1313,8 @@ const LayoutEditor = (props: LayoutEditorProps) => {
       log.info(newColormap[idx]);
     }
     setColorMap(newColormap);
+    setModified(true);
+    startContext();
   };
 
   const clearLayer = (fillKeyCode = BlankTable.keys[1].code, colorIndex = 15, chooseYourKeyboardSide = "BOTH") => {
@@ -1348,6 +1352,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
     }
     setClearConfirmationOpen(false);
     setModified(true);
+    startContext();
     setKeymap({
       default: keymap.default,
       onlyCustom: keymap.onlyCustom,
