@@ -1270,6 +1270,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
       log.info(newColormap[idx]);
     }
     setColorMap(newColormap);
+    setModified(true);
   };
 
   const applyColorMapChangeUG = (side: string, colorIndex: number) => {
@@ -1311,6 +1312,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
       log.info(newColormap[idx]);
     }
     setColorMap(newColormap);
+    setModified(true);
   };
 
   const clearLayer = (fillKeyCode = BlankTable.keys[1].code, colorIndex = 15, chooseYourKeyboardSide = "BOTH") => {
