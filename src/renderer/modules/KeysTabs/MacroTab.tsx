@@ -1,5 +1,6 @@
-import React, { useRef, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { i18n } from "@Renderer/i18n";
+import log from "electron-log/renderer";
 
 import { IconArrowInBoxUp } from "@Renderer/components/atoms/icons";
 import { Button } from "@Renderer/components/atoms/Button";
@@ -26,19 +27,21 @@ interface MacroItem {
 
 const MacroTab = (props: MacroTabProps) => {
   const { macros, selectedMacro, onMacrosPress, disabled, keyCode, actTab } = props;
-  const selected = useRef(-1);
   const [oldKC, setOldKC] = useState(-1);
+  const [selected, setSelected] = useState(-1);
 
   // sendMacro function to props onMacrosPress function to send macro to MacroCreator
-  const sendMacro = () => {
-    onMacrosPress(selected.current + 53852);
+  const sendMacro = (sel: number) => {
+    log.info("sending macro number", sel);
+    onMacrosPress(sel + 53852);
   };
 
   // update value when dropdown is changed
   const changeSelected = (newValue: string) => {
+    log.info("changing selected macro", newValue);
     const parseSelected = parseInt(newValue, 10);
-    selected.current = parseSelected;
-    if (actTab === "editor") sendMacro();
+    setSelected(parseSelected);
+    if (actTab === "editor") sendMacro(parseSelected);
   };
 
   const macrosAux = macros.map((item: any, index: number) => {
@@ -53,13 +56,15 @@ const MacroTab = (props: MacroTabProps) => {
     return macrosContainer;
   });
 
-  const currentlySelectedMacroIndex =
-    macros.length > 0 && keyCode && keyCode.modified === 53852 ? String(keyCode.base) : selected.current;
+  useEffect(() => {
+    setSelected(macros.length > 0 && keyCode && keyCode.modified === 53852 ? keyCode.base : -1);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [keyCode]);
 
   useEffect(() => {
-    if (keyCode.base + keyCode.modified !== oldKC) {
+    if (keyCode && keyCode.base + keyCode.modified !== oldKC && !(keyCode.modified === 53852)) {
       setOldKC(keyCode.base + keyCode.modified);
-      selected.current = -1;
+      setSelected(-1);
     }
   }, [keyCode, oldKC]);
 
@@ -70,7 +75,7 @@ const MacroTab = (props: MacroTabProps) => {
           <Heading headingLevel={4} renderAs="h4" className="!mt-0 !mb-1 !text-base">
             {i18n.editor.macros.macroTab.label}
           </Heading>
-          <Select value={String(currentlySelectedMacroIndex)} onValueChange={changeSelected}>
+          <Select value={String(selected)} onValueChange={changeSelected}>
             <SelectTrigger className="w-[280px]">
               <SelectValue placeholder="Select Macro" />
             </SelectTrigger>
@@ -85,7 +90,7 @@ const MacroTab = (props: MacroTabProps) => {
         </div>
         {actTab === "super" ? (
           <div className="mt-auto ml-auto">
-            <Button variant="secondary" onClick={sendMacro} iconDirection="right">
+            <Button variant="secondary" onClick={() => sendMacro(selected)} iconDirection="right">
               <IconArrowInBoxUp /> {i18n.editor.macros.textTabs.buttonText}
             </Button>
           </div>

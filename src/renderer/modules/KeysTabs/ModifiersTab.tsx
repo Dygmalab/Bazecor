@@ -296,6 +296,8 @@ const ModifiersTab = ({
                             </Heading>
                             <Picker
                               disable={disabled}
+                              disableMods
+                              disableMove={false}
                               baseCode={baseCode}
                               modCode={modCode}
                               onKeySelect={handleDual}

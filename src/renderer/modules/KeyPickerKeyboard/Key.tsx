@@ -1,11 +1,9 @@
 /* eslint-disable eqeqeq */
 /* eslint-disable react/jsx-filename-extension */
-// @ts-nocheck
 import React from "react";
 import Styled, { withTheme } from "styled-components";
 import { SegmentedKeyType } from "@Renderer/types/layout";
 import { SelectGenericKeys } from "@Renderer/components/molecules/CustomSelect";
-import OSKey from "@Renderer/components/molecules/KeyTags/OSKey";
 
 const Style = Styled.g`
 .keycap {
@@ -364,9 +362,10 @@ interface KeyProps {
     third: string;
     fourth: string;
   };
-  idArray: string;
+  idArray: string | number[];
   disabled: boolean;
   platform: string;
+  theme?: any;
 }
 
 interface KeyLabelProps {
@@ -495,12 +494,9 @@ function Key(props: KeyProps) {
           >
             <div xmlns="http://www.w3.org/1999/xhtml">
               <SelectGenericKeys
-                x={x + ksl[content.type].outb.dx}
-                y={y + ksl[content.type].outb.dy}
                 onSelect={onKeyPress}
-                selected={selected}
                 value={id}
-                listElements={idArray}
+                listElements={idArray as number[]}
                 content={content}
                 keyCode={keyCode}
                 label="F13+"
@@ -520,12 +516,9 @@ function Key(props: KeyProps) {
           >
             <div xmlns="http://www.w3.org/1999/xhtml">
               <SelectGenericKeys
-                x={x + ksl[content.type].outb.dx}
-                y={y + ksl[content.type].outb.dy}
                 onSelect={onKeyPress}
-                selected={selected}
                 value={id}
-                listElements={idArray}
+                listElements={idArray as number[]}
                 content={content}
                 keyCode={keyCode}
                 label={content.first}

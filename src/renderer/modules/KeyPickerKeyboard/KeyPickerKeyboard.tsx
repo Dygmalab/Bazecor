@@ -1,3 +1,4 @@
+/* eslint-disable import/no-cycle */
 import React, { useEffect, useRef, useState } from "react";
 import Styled from "styled-components";
 import { motion } from "framer-motion";
@@ -19,7 +20,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@Renderer/components/a
 import { Button } from "@Renderer/components/atoms/Button";
 import { i18n } from "@Renderer/i18n";
 import NoKeyTransparentTab from "@Renderer/modules/KeysTabs/NoKeyTransparentTab";
-// eslint-disable-next-line
 import LayersTab from "@Renderer/modules/KeysTabs/LayersTab";
 import MacroTab from "@Renderer/modules/KeysTabs/MacroTab";
 import SuperkeysTab from "@Renderer/modules/KeysTabs/SuperkeysTab";
@@ -291,6 +291,32 @@ function KeyPickerKeyboard(props: Props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const detectTab = (keyCode: number) => {
+    let tab = "";
+    if (keyCode < 256 || keyCode === 65535) tab = "tabKeys";
+    if (keyCode >= 256 && keyCode <= 8192) tab = "tabKeys";
+    if (keyCode >= 17408 && keyCode <= 17501) tab = "tabLayers";
+    if (keyCode >= 49161 && keyCode <= 49168) tab = "tabLayers";
+    if (keyCode >= 51218 && keyCode <= 53266) tab = "tabLayers";
+    if (keyCode >= 49153 && keyCode <= 49160) tab = "tabModifiers";
+    if (keyCode >= 49169 && keyCode <= 50961) tab = "tabModifiers";
+    if (keyCode >= 17152 && keyCode <= 17154) tab = "tabMedia";
+    if ([19682, 18552, 18834, 20865, 20866].includes(keyCode)) tab = "tabMedia";
+    if (keyCode >= 22709 && keyCode <= 22733) tab = "tabMedia";
+    if (keyCode >= 23663 && keyCode <= 23786) tab = "tabMedia";
+    if (keyCode >= 20481 && keyCode <= 20488) tab = "tabMouse";
+    if (keyCode >= 20497 && keyCode <= 20504) tab = "tabMouse";
+    if (keyCode >= 20545 && keyCode <= 20560) tab = "tabMouse";
+    if (keyCode >= 53852 && keyCode <= 53979) tab = "tabMacro";
+    if (keyCode >= 53980 && keyCode <= 54109) tab = "tabSuperKeys";
+    if (keyCode >= 54108 && keyCode <= 54112) tab = "tabWireless";
+
+    log.info("detectedTab", keyCode, tab);
+
+    if (state.currentTab === "tabModifiers" && tab === "tabKeys" && keyCode > 223) tab = "tabModifiers";
+    return tab;
+  };
+
   useEffect(() => {
     const keynum = code != null ? code.modified + code.base : 0;
     const keynumOld = prevProps.current.code != null ? prevProps.current.code.modified + prevProps.current.code.base : 0;
@@ -299,7 +325,8 @@ function KeyPickerKeyboard(props: Props) {
       const localdisable = keyIndex === -1;
       // log.info("This kenumOld : ", keynumOld, keynum, localdisable, keyIndex);
       const lstate = { ...state };
-      lstate.disable = localdisable;
+      lstate.disable = actTab === "super" ? false : localdisable;
+      lstate.currentTab = detectTab(keynum);
       setState(lstate);
       prevState.current = state;
     }
@@ -308,7 +335,7 @@ function KeyPickerKeyboard(props: Props) {
   }, [props, code, keyIndex, state]);
 
   useEffect(() => {
-    if (mouseWheel !== 0) {
+    if (!disable && mouseWheel !== 0) {
       if (mouseWheel === 1) {
         const lstate = { ...state };
         const indexTab = tabs.indexOf(lstate.currentTab);
@@ -325,9 +352,9 @@ function KeyPickerKeyboard(props: Props) {
         setState(lstate);
       }
     }
-  }, [state, mouseWheel, tabs, resetScroll]);
+  }, [state, mouseWheel, tabs, resetScroll, disable]);
 
-  const changeTab = (tab: any) => {
+  const changeTab = (tab: string) => {
     log.info("Check tab change value", tab);
     const lstate = { ...state };
     lstate.currentTab = tab;
@@ -410,6 +437,8 @@ function KeyPickerKeyboard(props: Props) {
                   <Picker
                     key={`${disable}`}
                     disable={disable}
+                    disableMods={false}
+                    disableMove={false}
                     baseCode={code.base}
                     modCode={code.modified}
                     onKeySelect={onKeySelect}

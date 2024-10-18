@@ -98,7 +98,7 @@ const languages = {
   "fr-XX-ergol": frXXergol,
 };
 
-type LangOptions =
+export type LangOptions =
   | "en-US"
   | "en-GB"
   | "es-ES"

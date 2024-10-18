@@ -35,15 +35,14 @@ import {
   AiOutlineBackward,
   AiOutlineForward,
 } from "react-icons/ai";
-import { MdKeyboardReturn, MdSpaceBar, MdKeyboardCapslock, MdInfoOutline, MdEject } from "react-icons/md";
-
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@Renderer/components/atoms/Tooltip";
+import { MdKeyboardReturn, MdSpaceBar, MdKeyboardCapslock, MdEject } from "react-icons/md";
 
 import Key from "@Renderer/modules/KeyPickerKeyboard/Key";
-import getLanguage from "@Renderer/modules/KeyPickerKeyboard/KeyPickerLanguage";
+import getLanguage, { LangOptions } from "@Renderer/modules/KeyPickerKeyboard/KeyPickerLanguage";
 import OSKey from "@Renderer/components/molecules/KeyTags/OSKey";
 
 import { getKeyboardLayout } from "@Renderer/utils/getKeyboardLayout";
+import { SegmentedKeyType } from "@Renderer/types/layout";
 
 const Style = Styled.div`
 width: 100%;
@@ -265,51 +264,39 @@ const IconColor = Styled.span`
     color: ${props => props.color};
 `;
 
-class KeyPicker extends Component {
-  constructor(props) {
-    super(props);
+type Props = {
+  onKeySelect: (value: number) => void;
+  code: SegmentedKeyType;
+  disableMods: boolean;
+  disableMove: boolean;
+  disableAll: boolean;
+  selectedlanguage: string;
+  theme: any;
+};
 
-    this.state = { customModal: false };
+class KeyPicker extends Component<Props> {
+  constructor(props: Props) {
+    super(props);
     this.onKeyPress = this.onKeyPress.bind(this);
   }
 
-  toggleModal = () => {
-    const { customModal: cModal } = this.state;
-    this.setState({ customModal: !cModal });
-  };
-
-  onKeyPress = keycode => {
+  onKeyPress = (keycode: number) => {
     const { onKeySelect } = this.props;
     onKeySelect(keycode);
   };
 
-  renderTooltip(tooltips) {
-    return (
-      <>
-        {tooltips.map((tip, i) => (
-          <React.Fragment key={`Tip-${i}`}>
-            {i % 2 === 1 || !Number.isNaN(tip[0]) || tip[0] === "-" ? (
-              <p className="ttip-p">{tip}</p>
-            ) : (
-              <>
-                {i === 0 ? "" : <br />}
-                <h5 className="ttip-h">{tip}</h5>
-              </>
-            )}
-          </React.Fragment>
-        ))}
-      </>
-    );
-  }
-
   render() {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { code, disableMods, disableMove, disableAll, selectedlanguage, theme } = this.props;
 
-    const Lang = getLanguage(selectedlanguage);
+    const Lang = getLanguage(selectedlanguage as LangOptions);
     const keyboardLayout = getKeyboardLayout(selectedlanguage);
 
     const os = process.platform;
-    const iconlist = {
+    type IconListType = {
+      [index: string]: JSX.Element;
+    };
+    const iconlist: IconListType = {
       Backspace: <BsBackspace />,
       Enter: <MdKeyboardReturn />,
       Space: <MdSpaceBar />,
@@ -400,67 +387,57 @@ class KeyPicker extends Component {
         </>
       ),
     };
-    const keyboard = Lang.map((key, id) => {
-      if (key.tooltip) {
-        return (
-          <foreignObject key={`id-${key.content.first}-${id}`} x={key.x} y={key.y} width={25} height={25}>
-            <TooltipProvider delayDuration={100}>
-              <Tooltip>
-                <TooltipTrigger className="[&_svg]:text-purple-100 [&_svg]:dark:text-purple-200">
-                  <MdInfoOutline className="info" />
-                </TooltipTrigger>
-                <TooltipContent>{this.renderTooltip(key.tooltip)}</TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-          </foreignObject>
-        );
-      }
-      return (
-        <Key
-          key={`id-${key.content.first}-${id}`}
-          id={id}
-          x={key.x}
-          y={key.y}
-          selected={
-            code === null
-              ? false
-              : Array.isArray(key.idArray)
-                ? key.idArray.some(key => key === code.base + code.modified || (key === code.base && key >= 104 && key <= 115))
-                : code.base === key.id &&
-                    (code.base + code.modified < 53267 || code.base + code.modified > 60000) &&
-                    (code.base + code.modified < 17450 || code.base + code.modified > 17501) &&
-                    (code.base + code.modified < 49153 || code.base + code.modified > 49168)
-                  ? true
-                  : !!(code.modified > 0 && code.base + code.modified === key.id)
-          }
-          clicked={() => {
-            key.mod === disableMods || key.move === disableMove ? () => {} : this.onKeyPress(key.id);
-          }}
-          onKeyPress={this.onKeyPress}
-          centered={key.centered}
-          content={key.content}
-          iconpresent={key.icon}
-          icon={
-            <IconColor
-              color={
-                key.mod === disableMods || key.move === disableMove
-                  ? theme.keyboardPicker.keyTextDisabledColor
-                  : theme.keyboardPicker.keyIconColor
-              }
-            >
-              {iconlist[key.iconname]}
-            </IconColor>
-          }
-          iconx={key.iconx}
-          icony={key.icony}
-          iconsize={key.iconsize}
-          disabled={key.mod === disableMods || key.move === disableMove || disableAll}
-          idArray={key.idArray}
-          keyCode={code}
-          platform={process.platform}
-        />
-      );
-    });
+
+    const returnData = (key: any) => {
+      const KeyIsKey =
+        code.base === key.id &&
+        (code.base + code.modified < 53267 || code.base + code.modified > 60000) &&
+        (code.base + code.modified < 17450 || code.base + code.modified > 17501) &&
+        (code.base + code.modified < 49153 || code.base + code.modified > 49168)
+          ? true
+          : !!(code.modified > 0 && code.base + code.modified === key.id);
+      const keyArray = Array.isArray(key.idArray)
+        ? key.idArray.some(
+            (Lkey: any) => Lkey === code.base + code.modified || (Lkey === code.base && Lkey >= 104 && Lkey <= 115),
+          )
+        : KeyIsKey;
+      return keyArray;
+    };
+
+    const keyboard = Lang.map((key, id) => (
+      <Key
+        key={`id-${key.content.first}-${String(id)}`}
+        id={id}
+        x={key.x}
+        y={key.y}
+        selected={code === null ? false : returnData(key)}
+        clicked={() => {
+          if (!(key.mod === true && key.mod === disableMods)) this.onKeyPress(key.id);
+        }}
+        onKeyPress={this.onKeyPress}
+        centered={key.centered}
+        content={key.content}
+        iconpresent={key.icon}
+        icon={
+          <IconColor
+            color={
+              key.mod === true && key.mod === disableMods
+                ? theme.keyboardPicker.keyTextDisabledColor
+                : theme.keyboardPicker.keyIconColor
+            }
+          >
+            {iconlist[key.iconname]}
+          </IconColor>
+        }
+        iconx={key.iconx}
+        icony={key.icony}
+        iconsize={key.iconsize}
+        disabled={key.mod === disableMods || disableAll}
+        idArray={key.idArray}
+        keyCode={code}
+        platform={process.platform}
+      />
+    ));
 
     return (
       <Style>

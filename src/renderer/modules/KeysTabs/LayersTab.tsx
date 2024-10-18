@@ -1,3 +1,4 @@
+/* eslint-disable import/no-cycle */
 import React, { useMemo, useState, useEffect, useCallback } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { toast } from "react-toastify";
@@ -260,6 +261,8 @@ const LayersTab = ({
                               modCode={keyCode.modified}
                               onKeySelect={handleDual}
                               selectedlanguage={selectedlanguage}
+                              disableMods
+                              disableMove={false}
                             />
                           </div>
                         </div>

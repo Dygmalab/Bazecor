@@ -1,3 +1,4 @@
+/* eslint-disable import/no-cycle */
 /* Bazecor -- Kaleidoscope Command Center
  * Copyright (C) 2024  Dygma Lab S.L.
  *
@@ -22,7 +23,7 @@ import { PickerProps } from "@Renderer/types/keyPicker";
 import { KeyPicker } from ".";
 
 function Picker(props: PickerProps) {
-  const { onKeySelect, selectedlanguage, baseCode, modCode, disable } = props;
+  const { onKeySelect, selectedlanguage, baseCode, modCode, disable, disableMods, disableMove } = props;
 
   return (
     <KeyPicker
@@ -31,8 +32,8 @@ function Picker(props: PickerProps) {
         base: baseCode,
         modified: modCode,
       }}
-      disableMods={false}
-      disableMove={false}
+      disableMods={disableMods}
+      disableMove={disableMove}
       disableAll={disable}
       selectedlanguage={selectedlanguage}
     />

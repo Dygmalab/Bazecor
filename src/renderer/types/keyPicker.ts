@@ -20,4 +20,6 @@ export interface PickerProps {
   baseCode: number;
   modCode: number;
   disable: boolean;
+  disableMods: boolean;
+  disableMove: boolean;
 }

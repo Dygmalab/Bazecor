@@ -1,3 +1,4 @@
+/* eslint-disable import/no-cycle */
 /* Bazecor
  * Copyright (C) 2022  Dygmalab, Inc.
  *
