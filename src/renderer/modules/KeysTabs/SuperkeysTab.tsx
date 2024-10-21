@@ -166,7 +166,7 @@ const SuperkeysTab = ({ macros, keyCode, isStandardView, actions, onKeySelect, s
               {i18n.editor.standardView.superkeys.label}
             </Heading>
             <div className="superKeySelect">
-              <Select onValueChange={value => onKeySelect(parseInt(value, 10))}>
+              <Select onValueChange={value => onKeySelect(parseInt(value, 10))} value={superk.indexOf(KC) >= 0 ? String(KC) : undefined}>
                 <SelectTrigger className="w-[280px]">
                   <SelectValue placeholder="Select Superkey" />
                 </SelectTrigger>
