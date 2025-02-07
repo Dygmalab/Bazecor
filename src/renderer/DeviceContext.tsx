@@ -1,7 +1,7 @@
 /* eslint-disable no-await-in-loop */
 import React, { useReducer, createContext, useContext, useMemo } from "react";
 import log from "electron-log/renderer";
-import { VirtualType } from "./types/virtual";
+import { VirtualType } from "@Types/virtual";
 import serial from "../api/comms/serial";
 import Device, { State } from "../api/comms/Device";
 import HID from "../api/hid/hid";

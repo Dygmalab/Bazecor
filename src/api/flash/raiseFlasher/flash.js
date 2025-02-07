@@ -20,7 +20,7 @@ import path from "path";
 import log from "electron-log/renderer";
 import Focus from "../../focus";
 import Hardware from "../../hardware";
-import { delay } from "../delay";
+import { delay } from "../../../main/utils/delay";
 import formatedDate from "../formatedDate";
 import { arduino } from "./arduino-flasher";
 
@@ -248,7 +248,9 @@ export class FlashRaise {
     // log.info(JSON.stringify(focus));
     return new Promise(async (resolve, reject) => {
       try {
-        if (focus.closed) await focus.open(this.currentPort.path, this.currentPort.device, null);
+        if (focus.closed) {
+          await focus.open(this.currentPort.path, this.currentPort.device);
+        }
 
         stateUpdate("neuron", 0);
         await arduino.flash(filename, stateUpdate, async (err, result) => {
@@ -323,11 +325,11 @@ export class FlashRaise {
     log.info(backup);
     if (backup === undefined || backup.length === 0) {
       this.foundDevices();
-      await focus.open(this.currentPort.path, this.currentPort.device.info, null);
+      await focus.open(this.currentPort.path, this.currentPort.device.info);
       return true;
     }
     try {
-      await focus.open(this.currentPort.path, this.currentPort.device.info, null);
+      await focus.open(this.currentPort.path, this.currentPort.device.info);
       for (let i = 0; i < backup.length; i++) {
         let val = backup[i].data;
         // Boolean values need to be sent as int

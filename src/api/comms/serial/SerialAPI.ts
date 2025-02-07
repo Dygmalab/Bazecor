@@ -4,8 +4,8 @@ import log from "electron-log/renderer";
 import type { SerialPort as SP } from "serialport";
 import type { PortInfo } from "@serialport/bindings-cpp";
 import { DygmaDeviceType } from "@Renderer/types/dygmaDefs";
+import { DeviceType } from "@Types/devices";
 import Hardware from "../../hardware";
-import { DeviceType } from "../../../renderer/types/devices";
 
 const { SerialPort } = eval('require("serialport")');
 const { DelimiterParser } = eval('require("@serialport/parser-delimiter")');
@@ -51,7 +51,7 @@ interface SerialProperties {
 }
 
 const checkProperties = async (path: string): Promise<SerialProperties> => {
-  let callbacks: any[] = [];
+  let callbacks: ((value: string | PromiseLike<string>) => void)[] = [];
   let result = "";
 
   function rawCommand(cmd: string, serialPort: SP): Promise<string> {

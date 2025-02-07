@@ -1,42 +1,45 @@
-import { DygmaDeviceType } from "@Renderer/types/dygmaDefs";
-import { DeviceTools } from "@Renderer/DeviceContext";
 import log from "electron-log/renderer";
+import { DeviceTools } from "@Renderer/DeviceContext";
+import { DygmaDeviceType } from "@Renderer/types/dygmaDefs";
 import { ExtendedPort } from "../comms/serial/SerialAPI";
 import Hardware from "../hardware";
 
+function getDeviceList(deviceType: "serial" | "nonSerial" | "bootloader", desiredDevice?: DygmaDeviceType): DygmaDeviceType[] {
+  if (deviceType === "serial" && desiredDevice?.info.keyboardType !== undefined) {
+    return [desiredDevice];
+  }
+  return Hardware[deviceType];
+}
+
 export const findDevice = async (
   deviceType: "serial" | "nonSerial" | "bootloader",
-  message: string,
   desiredDevice?: DygmaDeviceType,
-) => {
-  log.info("Going to list devices");
-  let devices = Hardware[deviceType] as DygmaDeviceType[];
-  const bootloader = deviceType === "bootloader";
-  const list: ExtendedPort[] = (await DeviceTools.enumerateSerial(bootloader)).foundDevices as ExtendedPort[];
-  if (deviceType === "serial" && desiredDevice?.info.keyboardType !== undefined) devices = [desiredDevice];
-  log.verbose("List of Devices: ", list);
-  const detected = list.find(dev => {
-    log.info("Searching for Device");
-    let found = false;
-    devices.forEach(device => {
+): Promise<ExtendedPort> => {
+  log.info(`Going to list devices for type: ${deviceType}`);
+  const lookupDevices: DygmaDeviceType[] = getDeviceList(deviceType, desiredDevice);
+
+  const isBootloader = deviceType === "bootloader";
+  const hwDevices: ExtendedPort[] = (await DeviceTools.enumerateSerial(isBootloader)).foundDevices;
+  log.verbose("List of Devices: ", hwDevices);
+
+  const matchingDevice: ExtendedPort = hwDevices.find(hwDevice =>
+    lookupDevices.some(lookupDevice => {
       log.info(
-        `Dev bootloader: ${dev.device.bootloader} & HW: ${bootloader}, Dev KBType: ${device.info.keyboardType} & HW: ${dev.device.info.keyboardType}`,
+        `Bootloader - Lookup: ${isBootloader} & HW: ${hwDevice.device.bootloader} | KBType - Lookup: ${lookupDevice.info.keyboardType} & HW: ${hwDevice.device.info.keyboardType}`,
       );
-      if (
-        found !== true && bootloader
-          ? dev.device.bootloader !== undefined &&
-            dev.device.bootloader === bootloader &&
-            device.usb.vendorId === dev.device.usb.vendorId &&
-            device.usb.productId === dev.device.usb.productId
-          : device.usb.vendorId === dev.device.usb.vendorId &&
-            device.usb.productId === dev.device.usb.productId &&
-            device.info.keyboardType === dev.device.info.keyboardType
-      ) {
-        found = true;
+
+      if (lookupDevice.usb.vendorId !== hwDevice.device.usb.vendorId) {
+        return false;
       }
-    });
-    return found;
-  });
-  log.info(message, detected);
-  return detected;
+      if (lookupDevice.usb.productId !== hwDevice.device.usb.productId) {
+        return false;
+      }
+      if (isBootloader) {
+        return hwDevice.device.bootloader === true;
+      }
+      return lookupDevice.info.keyboardType === hwDevice.device.info.keyboardType;
+    }),
+  );
+  log.info(`${deviceType === "serial" ? "keyboard" : deviceType} detected`, matchingDevice);
+  return matchingDevice;
 };

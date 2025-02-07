@@ -53,6 +53,7 @@ import newLanguageLayout from "./languages/newLanguageLayout";
 import Store from "../../renderer/utils/Store";
 import getLanguage from "../../renderer/utils/language";
 import { BaseKeycodeTableType, KeymapCodeTableType, LanguageType } from "./types";
+import { preserveModifiers } from "@Renderer/utils/preserveModifiers";
 
 const store = Store.getStore();
 
@@ -164,27 +165,7 @@ class KeymapDB {
   }
 
   parseModifs(keycode: number) {
-    let modified = 0;
-    if (keycode & 0b100000000) {
-      // Ctrl Decoder
-      modified += 256;
-    }
-    if (keycode & 0b1000000000) {
-      // Alt Decoder
-      modified += 512;
-    }
-    if (keycode & 0b10000000000) {
-      // AltGr Decoder
-      modified += 1024;
-    }
-    if (keycode & 0b100000000000) {
-      // Shift Decoder
-      modified += 2048;
-    }
-    if (keycode & 0b1000000000000) {
-      // Win Decoder
-      modified += 4096;
-    }
+    const modified = preserveModifiers(keycode);
     if (keycode > 49152) {
       if (keycode < 51218) {
         return modified + 49169;
@@ -194,59 +175,7 @@ class KeymapDB {
     return modified;
   }
 
-  appliedModifs(keycode: number) {
-    type ModifsType = {
-      mehApplied: boolean;
-      hyperApplied: boolean;
-      altApplied: boolean;
-      altGrApplied: boolean;
-      ctrlApplied: boolean;
-      shiftApplied: boolean;
-      osApplied: boolean;
-    };
-
-    const result: ModifsType = {
-      mehApplied: false,
-      hyperApplied: false,
-      altApplied: false,
-      altGrApplied: false,
-      ctrlApplied: false,
-      shiftApplied: false,
-      osApplied: false,
-    };
-    if (keycode & 0b100000000) {
-      // Ctrl Decoder
-      result.ctrlApplied = true;
-    }
-    if (keycode & 0b1000000000) {
-      // Alt Decoder
-      result.altApplied = true;
-    }
-    if (keycode & 0b10000000000) {
-      // AltGr Decoder
-      result.altGrApplied = true;
-    }
-    if (keycode & 0b100000000000) {
-      // Shift Decoder
-      result.shiftApplied = true;
-    }
-    if (keycode & 0b1000000000000) {
-      // Win Decoder
-      result.osApplied = true;
-    }
-    if (keycode & 0b0101100000000) {
-      // Meh Decoder
-      result.mehApplied = true;
-    }
-    if (keycode & 0b1101100000000) {
-      // Hyper Decoder
-      result.hyperApplied = true;
-    }
-    return result;
-  }
-
-  keySegmentator(keyCode: number) {
-    let code = { base: 0, modified: 0 };
+  keySegmentor(keyCode: number) {
     const modified = this.parseModifs(keyCode);
     switch (true) {
       case keyCode < 256:
@@ -256,62 +185,48 @@ class KeymapDB {
       case MouseWheelTable.keys.map(r => r.code).includes(keyCode):
       case MouseButtonTable.keys.map(r => r.code).includes(keyCode):
         // Regular keys KeyCode
-        code = { base: keyCode, modified: 0 };
-        break;
+        return  { base: keyCode, modified: 0 };
       case keyCode < 8192:
-        // Reguar key with Modifier KeyCode
-        code = { base: keyCode - modified, modified };
-        break;
+        // Regular key with Modifier KeyCode
+        return { base: keyCode - modified, modified };
       case keyCode < 17152:
         // Yet to review
-        code = { base: keyCode, modified: 0 };
-        break;
+        return { base: keyCode, modified: 0 };
       case LEDEffectsTable.keys.map(r => r.code).includes(keyCode):
         // LED effect keys
-        code = { base: keyCode, modified: 0 };
-        break;
+        return { base: keyCode, modified: 0 };
       case ShiftToLayerTable.keys.map(r => r.code).includes(keyCode):
         // Layer switch keys
-        code = { base: keyCode - 17450, modified: 17450 };
-        break;
+        return { base: keyCode - 17450, modified: 17450 };
       case LockLayerTable.keys.map(r => r.code).includes(keyCode):
         // Layer Move not used keys
-        code = { base: keyCode - 17408, modified: 17408 };
-        break;
+        return { base: keyCode - 17408, modified: 17408 };
       case MoveToLayerTable.keys.map(r => r.code).includes(keyCode):
         // Layer Lock keys
-        code = { base: keyCode - 17492, modified: 17492 };
-        break;
+        return { base: keyCode - 17492, modified: 17492 };
       case OneShotModifierTable.keys.map(r => r.code).includes(keyCode):
       case OneShotLayerTable.keys.map(r => r.code).includes(keyCode):
       case keyCode < 49169:
         // Yet to review
-        code = { base: 0, modified: keyCode };
-        break;
+        return { base: 0, modified: keyCode };
       case keyCode < 53266:
         // Dual Function Keycode
-        code = { base: keyCode - modified, modified };
-        break;
+        return { base: keyCode - modified, modified };
       case TapDanceTable.keys.map(r => r.code).includes(keyCode):
       case LeaderTable.keys.map(r => r.code).includes(keyCode):
       case StenoTable.keys.map(r => r.code).includes(keyCode):
       case SpaceCadetTable.keys.map(r => r.code).includes(keyCode):
         // Multiple special keys
-        code = { base: 0, modified: keyCode };
-        break;
+        return { base: 0, modified: keyCode };
       case MacrosTable.keys.map(r => r.code).includes(keyCode):
         // Macros keys
-        code = { base: keyCode - 53852, modified: 53852 };
-        break;
+        return { base: keyCode - 53852, modified: 53852 };
       case SuperKeyTable.keys.map(r => r.code).includes(keyCode):
         // Superkeys keys
-        code = { base: keyCode - 53980, modified: 53980 };
-        break;
+        return { base: keyCode - 53980, modified: 53980 };
       default:
-        code = { base: keyCode, modified: 0 };
-        break;
+        return { base: keyCode, modified: 0 };
     }
-    return code;
   }
 
   parse(keyCode: number) {

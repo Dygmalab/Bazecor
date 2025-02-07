@@ -19,7 +19,7 @@ import log from "electron-log/renderer";
 import fs from "fs";
 import * as path from "path";
 import SideFlaser from "./sideFlasher";
-import { delay } from "../delay";
+import { delay } from "../../../main/utils/delay";
 
 /**
  * Object rp2040 with flash method.

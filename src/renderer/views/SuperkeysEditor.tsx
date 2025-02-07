@@ -516,7 +516,7 @@ function SuperkeysEditor(props: SuperkeysEditorProps) {
 
   const tempKC = superkeys[selectedSuper] !== undefined ? superkeys[selectedSuper].actions[selectedAction] : -1;
   const tempkey = tempKC === -1 ? keymapDB.parse(0) : keymapDB.parse(tempKC);
-  const code = keymapDB.keySegmentator(tempkey.keyCode);
+  const code = keymapDB.keySegmentor(tempkey.keyCode);
 
   const listOfSKK = listToDelete.map(({ layer, pos, superIdx }) => (
     <li key={`${layer}-${pos}-${superIdx}`} className="titles alignvert">{`Key in layer ${layer + 1} and pos ${pos}`}</li>

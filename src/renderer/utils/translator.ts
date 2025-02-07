@@ -30,7 +30,7 @@ const translator: { [key: string]: string } = {
  * @param {string} localLanguage Local language
  * @param {string} defaultLanguage Default language
  */
-function getTranslator(localLanguage: string, defaultLanguage = "en-US") {
+function getTranslator(localLanguage: string, defaultLanguage: string = "en-US") {
   const language = localLanguage || defaultLanguage;
 
   if (translator[language] !== undefined) {

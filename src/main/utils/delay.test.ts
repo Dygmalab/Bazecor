@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi, Mock } from 'vitest';
-import delay from "./delay";
+import { delay } from "./delay";
 
 describe('delayed execution', () => {
   let mock: Mock;

@@ -12,12 +12,8 @@ import NRf52833 from "../../../api/flash/defyFlasher/NRf52833-flasher";
 import SideFlaser from "../../../api/flash/defyFlasher/sideFlasher";
 import Raise2Flash from "../../../api/flash/raise2Flasher/Raise2-flasher";
 import { FlashRaise } from "../../../api/flash";
+import { delay } from "../../../main/utils/delay";
 import * as Context from "./context";
-
-const delay = (ms: number) =>
-  new Promise(res => {
-    setTimeout(res, ms);
-  });
 
 const stateUpdate = (stage: string, percentage: number, context: Context.ContextType) => {
   log.info(stage, percentage);

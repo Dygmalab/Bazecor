@@ -2,7 +2,7 @@ import { ipcMain, app, dialog, shell, nativeTheme, systemPreferences } from "ele
 import { uIOhook } from "uiohook-napi";
 import log from "electron-log/main";
 import { sendKeyUp, sendkeyDown } from "./configureCaptureKeys";
-import listDrivesHandler from "../utils/listDrivesHandler";
+import { listDrivesHandler } from "../utils/listDrivesHandler";
 import GlobalRecording from "../managers/GlobalRecording";
 import Window from "../managers/Window";
 

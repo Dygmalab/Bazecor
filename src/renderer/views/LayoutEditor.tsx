@@ -1657,7 +1657,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
   if (currentKeyIndex !== -1 && currentKeyIndex < ledIndexStart) {
     const tempkey = keymapDB.parse(layerData[currentKeyIndex].keyCode);
     // log.info("Key to be used in render", tempkey);
-    code = keymapDB.keySegmentator(tempkey.keyCode);
+    code = keymapDB.keySegmentor(tempkey.keyCode);
   }
 
   // log.info("execution that may not render");

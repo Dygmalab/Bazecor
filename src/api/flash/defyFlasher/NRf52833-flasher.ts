@@ -22,7 +22,7 @@ import { serialConnection, rawCommand, noWaitCommand } from "../serialConnection
 import { PACKET_SIZE, TYPE_DAT, TYPE_ELA, TYPE_ESA } from "../flasherConstants";
 import { HexType } from "../types";
 import ihexDecode from "../ihexDecode";
-import { delay } from "../delay";
+import { delay } from "../../../main/utils/delay";
 
 let serialPort;
 

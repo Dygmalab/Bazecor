@@ -1,5 +1,5 @@
 import log from "electron-log/renderer";
-import serial, { isSerialType, DeviceType } from "./serial";
+import serial, { DeviceType, isSerialType } from "./serial";
 import hid from "./hid";
 
 class DeviceTalker {
@@ -19,8 +19,7 @@ class DeviceTalker {
       log.verbose(`the device is ${device.type} type, and connected as: ${result}`);
       return result;
     }
-    const result = hid.connect(device);
-    return result;
+    return hid.connect(device);
   };
 }
 

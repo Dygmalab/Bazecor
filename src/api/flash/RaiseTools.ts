@@ -2,7 +2,7 @@
 import log from "electron-log/renderer";
 import type { SerialPort as SP } from "serialport";
 import { DygmaDeviceType } from "@Renderer/types/dygmaDefs";
-import { delay } from "./delay";
+import { delay } from "../../main/utils/delay";
 import { findDevice } from "./findDevice";
 import Device from "../comms/Device";
 import { arduino } from "./raiseFlasher/arduino-flasher";
@@ -59,7 +59,7 @@ export const RaiseResetKeyboard = async (port: SP, stateUpdate: (state: string, 
     let bootCount = 6;
     while (bootCount > 0) {
       stateUpdate("reset", 20 + (10 - bootCount) * 8);
-      const newPort = await findDevice("bootloader", "Bootloader detected");
+      const newPort = await findDevice("bootloader");
       if (newPort) {
         stateUpdate("reset", 100);
         result = newPort;
@@ -101,7 +101,7 @@ export const resetKeyboard = async (currentDevice: Device, stateUpdate: any) => 
     try {
       let bootCount = 10;
       while (bootCount > 0) {
-        if (await findDevice("bootloader", "Bootloader detected")) {
+        if (await findDevice("bootloader")) {
           stateUpdate("reset", 100);
           bootCount = -1;
           resolve("Detected Bootloader mode");
@@ -130,7 +130,7 @@ export const detectKeyboard = async (stateUpdate: any, device: DygmaDeviceType) 
   try {
     let searchFor = 10;
     while (searchFor > 0) {
-      const newPort = await findDevice("serial", "Keyboard detected", device);
+      const newPort = await findDevice("serial", device);
       if (newPort) {
         stateUpdate("reset", 100);
         searchFor = -1;
@@ -158,7 +158,9 @@ export const updateFirmware = async (filename: string[], stateUpdate: any, path:
   stateUpdate("neuron", 0);
 
   const focus = Focus.getInstance();
-  if (focus.closed || focus._port === undefined) await focus.open(path, device, null);
+  if (focus.closed || focus._port === undefined) {
+    await focus.open(path, device);
+  }
   await new Promise((resolve, reject) => {
     arduino.flash(filename, stateUpdate, async (err: any, result: any) => {
       if (err) reject(new Error(`Flash error ${result}`));

@@ -95,11 +95,6 @@ class Device implements DeviceClass {
     }
   }
 
-  static delay = (ms: number) =>
-    new Promise(res => {
-      setTimeout(res, ms);
-    });
-
   static getHWFVirtual = (dev: DygmaDeviceType) => {
     let result: DygmaDeviceType;
     Hardware.serial.forEach(hdev => {

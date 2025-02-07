@@ -13,13 +13,14 @@ export default defineConfig({
   },
   test: {
 		coverage: {
+      provider: "v8",
 			exclude: ['**/*.{spec,test,unit,accept,integrate,system,perf,stress}.{ts,tsx}']
 		},
 		include: [
 			// '**/*.{system,perf,stress}.ts',
 			'**/*.{spec,test,unit,accept,integrate}.{ts,tsx}'
 		],
-    global: true,
+    globals: true,
     environment: 'jsdom',
     setupFiles: './tests/setup.ts',
 	}

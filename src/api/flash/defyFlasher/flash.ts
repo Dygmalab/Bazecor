@@ -22,7 +22,7 @@ import { DeviceClass } from "@Renderer/types/devices";
 import { DeviceTools } from "@Renderer/DeviceContext";
 import Device, { State } from "src/api/comms/Device";
 import Hardware from "../../hardware";
-import { delay } from "../delay";
+import { delay } from "../../../main/utils/delay";
 import NRf52833 from "./NRf52833-flasher";
 
 class FlashDefyWireless {

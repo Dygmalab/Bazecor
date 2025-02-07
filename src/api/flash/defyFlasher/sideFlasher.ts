@@ -33,7 +33,7 @@
 import { crc32 } from "easy-crc";
 import log from "electron-log/renderer";
 import type { PortInfo } from "@serialport/bindings-cpp";
-import { delay } from "../delay";
+import { delay } from "../../../main/utils/delay";
 
 const { SerialPort } = eval('require("serialport")');
 const { DelimiterParser } = eval('require("@serialport/parser-delimiter")');

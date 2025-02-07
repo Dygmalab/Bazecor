@@ -7,7 +7,7 @@ import type { PortInfo } from "@serialport/bindings-cpp";
 import log from "electron-log/renderer";
 import { DygmaDeviceType } from "@Renderer/types/dygmaDefs";
 import type { SerialPort as SP } from "serialport";
-import { delay } from "./delay";
+import { delay } from "../../main/utils/delay";
 import { InfoType } from "./types";
 import Hardware from "../hardware";
 
