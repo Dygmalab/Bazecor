@@ -273,7 +273,7 @@ function MacroEditor(props: MacroEditorProps) {
     const { selectedList, listToDelete, listToDeleteS, listToDeleteM, keymap, superkeys } = state;
     const { startContext } = props;
     let macros = localstate ? localstate.futureMacros : state.futureMacros;
-    log.info("Checking list to delete macros", listToDeleteM, macros);
+    // log.info("Checking list to delete macros", listToDeleteM, macros);
     for (let i = 0; i < listToDelete.length; i += 1) {
       if (listToDelete[i].newKey === -1) {
         keymap.custom[listToDelete[i].layer][listToDelete[i].pos] = keymapDB.parse(
@@ -311,7 +311,7 @@ function MacroEditor(props: MacroEditorProps) {
       item.id = idx;
       return item;
     });
-    log.info("result!", macros);
+    // log.info("result!", macros);
     state.keymap = keymap;
     state.superkeys = superkeys;
     state.macros = macros;
@@ -360,7 +360,7 @@ function MacroEditor(props: MacroEditorProps) {
       customMacrosList = customMacrosList.concat(macrosList);
     }
 
-    log.info("result of macro exploration: ", macros, customKeymapList, customSuperList, customMacrosList);
+    // log.info("result of macro exploration: ", macros, customKeymapList, customSuperList, customMacrosList);
 
     state.futureMacros = localMacros;
     state.listToDelete = customKeymapList;

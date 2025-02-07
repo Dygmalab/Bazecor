@@ -134,18 +134,4 @@ export default class Colormap {
     const args = this._flatten(colormap).map(v => v.toString());
     return await s.request("colormap.map", ...args);
   }
-
-  // async focus(s, palette, colormap) {
-  //   if (!palette && !colormap) {
-  //     return this._pull(s);
-  //   }
-
-  //   if (palette) await this._updatePalette(s, palette);
-  //   if (colormap) await this._updateColormap(s, colormap);
-  // }
 }
-
-// const focus = Focus.getInstance();
-// focus.addCommands({ colormap: new Colormap() });
-// focus.addMethod("setLayerSize", "colormap");
-// focus.addMethod("setLEDMode", "colormap");

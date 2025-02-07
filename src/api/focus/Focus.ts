@@ -19,14 +19,10 @@
  */
 import log from "electron-log/renderer";
 import { spawn } from "child_process";
-import type { SerialPortOpenOptions } from "serialport";
-import { SerialPort } from "serialport";
+import type { SerialPort, SerialPortOpenOptions } from "serialport";
 import type { AutoDetectTypes, PortInfo } from "@serialport/bindings-cpp";
-import { DelimiterParser } from "@serialport/parser-delimiter";
 import { DygmaDeviceType } from "@Renderer/types/dygmaDefs";
-import { VirtualType } from "@Renderer/types/virtual";
 import { delay } from "../../main/utils/delay";
-import { ctx } from "./Focus.ctx";
 
 // TODO: any reason we can't import directly?
 const sp = eval('require("serialport")');
@@ -55,14 +51,14 @@ export class Focus {
   commands: CommandOverrides = { help: this._help };
 
   protected async listSerialPorts(): Promise<PortInfo[]> {
-    return SerialPort.list();
+    return sp.SerialPort.list();
   }
 
   protected createSerialPort<T extends AutoDetectTypes>(
     options: SerialPortOpenOptions<T>,
     openCallback?: ErrorCallback,
   ): SerialPort<T> {
-    return new SerialPort(options, openCallback);
+    return new sp.SerialPort(options, openCallback);
   }
 
   async find(...devices: DygmaDeviceType[]) {
@@ -92,7 +88,7 @@ export class Focus {
   callbacks: Array<(value: unknown) => void>;
   supportedCommands: Array<string>;
   _port: SerialPort;
-  parser: DelimiterParser;
+  parser: typeof DelimiterParser;
 
   async open(path: string, info: DygmaDeviceType): Promise<SerialPort> {
     if (this._port !== undefined && this._port.isOpen === false) {
