@@ -1,3 +1,11 @@
+/**
+ * Parses a string of space separated base 10 integers representing palette index values into arrays of the specified length.
+ * Example: parseColormapRaw("1 2 3 4 5 6", 2) => [ [1, 2], [3, 4], [5, 6] ]
+ *
+ * @param {string} colormap A string of space separated index values
+ * @param {number} ColorLayerSize The length of the chunk to create
+ * @returns {number[][]} The values contained within the supplied colormap parsed to numbers and grouped into arrays of ColorLayerSize length.
+ */
 export const parseColormapRaw = (colormap: string, ColorLayerSize: number): number[][] =>
   colormap
     .split(" ")

@@ -4,7 +4,14 @@ import { KeymapDB } from "../keymap";
 
 const macrosEraser = (tMem: number) => Array(tMem).fill("255").join(" ");
 
-export const parseMacrosRaw = (raw: string, storedMacros?: MacrosType[]) => {
+/**
+ * Parses a string of space separated base 10 8-bit integers representing key types and key codes values into an array of macros.
+ *
+ * @param {string} raw A string of space separated 8-bit integers
+ * @param {MacrosType[]} storedMacros An array of existing macros, used to populate the name field
+ * @returns {MacrosType[]} A list of the macros defined.
+ */
+export const parseMacrosRaw = (raw: string, storedMacros?: MacrosType[]): MacrosType[] => {
   const keymapDB = new KeymapDB();
   const macrosArray = raw.split(" 0 0")[0].split(" ").map(Number);
 
@@ -88,7 +95,14 @@ export const parseMacrosRaw = (raw: string, storedMacros?: MacrosType[]) => {
   });
 };
 
-export const serializeMacros = (macros: MacrosType[], tMem: number) => {
+/**
+ * Serializes an array of macros into a string of space separated 8-bit numbers.
+ *
+ * @param {MacrosType[]} macros An array of macros to serialize
+ * @param {number} tMem The total memory available on the device to store the macros within
+ * @returns {string} The serialized macros
+ */
+export const serializeMacros = (macros: MacrosType[], tMem: number): string => {
   // log.info(
   //   "Macros map function",
   //   macros,

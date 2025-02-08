@@ -1,7 +1,14 @@
 import log from "electron-log/renderer";
 import { SuperkeysType } from "@Renderer/types/superkeys";
 
-export const parseSuperkeysRaw = (raw: string, stored: SuperkeysType[]) => {
+/**
+ * Parses a string of space separated base 10 8-bit integers representing superkeys into an array of superkeys.
+ *
+ * @param {string} raw A string of space separated 8-bit integers
+ * @param {SuperkeysType[]} stored An array of existing superkeys, used to populate the name field
+ * @returns {SuperkeysType[]} A list of the superkeys defined.
+ */
+export const parseSuperkeysRaw = (raw: string, stored: SuperkeysType[]): SuperkeysType[] => {
   const superArray = raw.split(" 0 0")[0].split(" ").map(Number);
 
   let superkey: number[] = [];
@@ -47,7 +54,13 @@ export const parseSuperkeysRaw = (raw: string, stored: SuperkeysType[]) => {
   return finalSuper;
 };
 
-export const serializeSuperkeys = (superkeys: SuperkeysType[]) => {
+/**
+ * Serializes an array of superkeys into a string of space separated 8-bit numbers.
+ *
+ * @param {SuperkeysType[]} superkeys An array of superkeys to serialize
+ * @returns {string} The serialized superkeys
+ */
+export const serializeSuperkeys = (superkeys: SuperkeysType[]): string => {
   if (
     superkeys.length === 0 ||
     (superkeys.length === 1 && superkeys[0].actions.length === 0) ||
