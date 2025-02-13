@@ -17,6 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+// NOTE: This file is only used to flash the OG Raise
 import log from "electron-log/renderer";
 import { spawn } from "child_process";
 import type { SerialPort, SerialPortOpenOptions } from "serialport";
