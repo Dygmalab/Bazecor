@@ -27,7 +27,7 @@ import ToastMessage from "@Renderer/components/atoms/ToastMessage";
 import DotsProgressBar from "./DotsProgressBar";
 
 const Styles = Styled.div`
-margin: 0 24px 0 0;
+margin: 0 0 0 24px;
 border: 1px solid ${({ theme }) => theme.styles.memoryUsage.borderColor};
 border-radius: 4px;
 padding: 6px 12px;

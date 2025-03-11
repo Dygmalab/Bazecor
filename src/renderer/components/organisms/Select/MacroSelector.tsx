@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { i18n } from "@Renderer/i18n";
 
 import NameModal from "@Renderer/components/molecules/CustomModal/ModalName";
@@ -77,7 +77,7 @@ const MacroSelector: React.FC<MacroSelectorProps> = ({
   const toggleShowAdd = () => setShowAdd(!showAdd);
   const [macroLength, setMacroLength] = useState(0);
 
-  useState(() => {
+  useEffect(() => {
     if (
       !Array.isArray(itemList) ||
       selectedItem < 0 ||
@@ -90,7 +90,7 @@ const MacroSelector: React.FC<MacroSelectorProps> = ({
     } else {
       setMacroLength(itemList[selectedItem].actions.length);
     }
-  });
+  }, [itemList, selectedItem]);
 
   const handleSave = (data: string) => {
     toggleShow();
