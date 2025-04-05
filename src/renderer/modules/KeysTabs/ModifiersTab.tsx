@@ -345,6 +345,9 @@ const ModifiersTab = ({
                       Tap the key to perform a normal keypress (like space or enter) or hold it to use the selected modifier as
                       usual. This allows you to easily access your modifiers without sacrificing key real estate.
                     </p>
+                    <p className="description text-ssm font-medium text-gray-400 dark:text-gray-200">
+                      Right modifiers can&apos;t be used in combination with Add a Key on Tap, except Right ALT.
+                    </p>
                   </>
                 }
                 className=""

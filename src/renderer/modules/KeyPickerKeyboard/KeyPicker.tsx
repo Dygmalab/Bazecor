@@ -3,8 +3,8 @@
  * Made by Alejandro Parcet González From Dygma S.L.
  */
 
-import React, { Component } from "react";
-import Styled, { withTheme } from "styled-components";
+import React from "react";
+import Styled, { useTheme } from "styled-components";
 
 import { RiStopFill } from "react-icons/ri";
 import { IoIosPause, IoIosPlay, IoIosShuffle } from "react-icons/io";
@@ -268,219 +268,211 @@ type Props = {
   onKeySelect: (value: number) => void;
   code: SegmentedKeyType;
   disableMods: boolean;
-  disableMove: boolean;
+  disableMove?: boolean;
   disableAll: boolean;
   selectedlanguage: string;
-  theme: any;
 };
 
-class KeyPicker extends Component<Props> {
-  constructor(props: Props) {
-    super(props);
-    this.onKeyPress = this.onKeyPress.bind(this);
+const KeyPicker = (props: Props) => {
+  const { onKeySelect, code, disableMods, disableAll, selectedlanguage, disableMove } = props;
+  if (disableMove) {
+    //
   }
+  const theme = useTheme();
 
-  onKeyPress = (keycode: number) => {
-    const { onKeySelect } = this.props;
+  const onKeyPress = (keycode: number) => {
     onKeySelect(keycode);
   };
 
-  render() {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { code, disableMods, disableMove, disableAll, selectedlanguage, theme } = this.props;
+  const Lang = getLanguage(selectedlanguage as LangOptions);
+  const keyboardLayout = getKeyboardLayout(selectedlanguage);
 
-    const Lang = getLanguage(selectedlanguage as LangOptions);
-    const keyboardLayout = getKeyboardLayout(selectedlanguage);
+  const os = process.platform;
+  type IconListType = {
+    [index: string]: JSX.Element;
+  };
+  const iconlist: IconListType = {
+    Backspace: <BsBackspace />,
+    Enter: <MdKeyboardReturn />,
+    Space: <MdSpaceBar />,
+    CapsLock: <MdKeyboardCapslock />,
+    Tab: <ImTab />,
+    Shift: <BsShift />,
+    App: <FiMenu />,
+    Win: (
+      <>
+        {os === "win32" ? <AiFillWindows className="biggerWin" /> : ""}
+        {os === "darwin" ? <OSKey renderKey="os" /> : ""}
+        {os !== "win32" && os !== "darwin" ? <FaLinux className="biggerLinux" /> : ""}
+      </>
+    ),
+    ArrUp: <AiOutlineArrowUp className="bigger" />,
+    ArrDwn: <AiOutlineArrowDown className="bigger" />,
+    ArrLeft: <AiOutlineArrowLeft className="bigger" />,
+    ArrRight: <AiOutlineArrowRight className="bigger" />,
+    LDToggl: (
+      <>
+        <BsFillBrightnessAltLowFill className="bigger" />
+        <CgToggleOff className="" />
+      </>
+    ),
+    LDForward: (
+      <>
+        <BsFillBrightnessAltLowFill className="bigger" />
+        <AiOutlineForward className="" />
+      </>
+    ),
+    VolAdd: <FaVolumeUp className="bigger" />,
+    VolSub: <FaVolumeDown className="bigger" />,
+    VolMute: <FaVolumeMute className="bigger" />,
+    Pause: <IoIosPause className="bigger" />,
+    Play: <IoIosPlay className="bigger" />,
+    Stop: <RiStopFill className="bigger" />,
+    Eject: <MdEject className="bigger" />,
+    Shuffle: <IoIosShuffle className="bigger" />,
+    Forward: <AiFillForward className="bigger" />,
+    Backward: <AiOutlineBackward className="bigger" />,
+    Cancel: <TiCancel className="bigger" />,
+    ScrlUp: (
+      <>
+        <BiMouseAlt className="bigger" />
+        <BiArrowFromBottom className="" />
+      </>
+    ),
+    ScrlDwn: (
+      <>
+        <BiMouseAlt className="bigger" />
+        <BiArrowFromTop className="" />
+      </>
+    ),
+    ScrlLeft: (
+      <>
+        <BiMouseAlt className="bigger" />
+        <BiArrowFromRight className="" />
+      </>
+    ),
+    ScrlRight: (
+      <>
+        <BiMouseAlt className="bigger" />
+        <BiArrowFromLeft className="" />
+      </>
+    ),
+    MvUp: (
+      <>
+        <BiMouseAlt className="bigger" />
+        <BiUpArrowCircle className="" />
+      </>
+    ),
+    MvDwn: (
+      <>
+        <BiMouseAlt className="bigger" />
+        <BiDownArrowCircle className="" />
+      </>
+    ),
+    MvLeft: (
+      <>
+        <BiMouseAlt className="bigger" />
+        <BiLeftArrowCircle className="" />
+      </>
+    ),
+    MvRight: (
+      <>
+        <BiMouseAlt className="bigger" />
+        <BiRightArrowCircle className="" />
+      </>
+    ),
+  };
 
-    const os = process.platform;
-    type IconListType = {
-      [index: string]: JSX.Element;
-    };
-    const iconlist: IconListType = {
-      Backspace: <BsBackspace />,
-      Enter: <MdKeyboardReturn />,
-      Space: <MdSpaceBar />,
-      CapsLock: <MdKeyboardCapslock />,
-      Tab: <ImTab />,
-      Shift: <BsShift />,
-      App: <FiMenu />,
-      Win: (
-        <>
-          {os === "win32" ? <AiFillWindows className="biggerWin" /> : ""}
-          {os === "darwin" ? <OSKey renderKey="os" /> : ""}
-          {os !== "win32" && os !== "darwin" ? <FaLinux className="biggerLinux" /> : ""}
-        </>
-      ),
-      ArrUp: <AiOutlineArrowUp className="bigger" />,
-      ArrDwn: <AiOutlineArrowDown className="bigger" />,
-      ArrLeft: <AiOutlineArrowLeft className="bigger" />,
-      ArrRight: <AiOutlineArrowRight className="bigger" />,
-      LDToggl: (
-        <>
-          <BsFillBrightnessAltLowFill className="bigger" />
-          <CgToggleOff className="" />
-        </>
-      ),
-      LDForward: (
-        <>
-          <BsFillBrightnessAltLowFill className="bigger" />
-          <AiOutlineForward className="" />
-        </>
-      ),
-      VolAdd: <FaVolumeUp className="bigger" />,
-      VolSub: <FaVolumeDown className="bigger" />,
-      VolMute: <FaVolumeMute className="bigger" />,
-      Pause: <IoIosPause className="bigger" />,
-      Play: <IoIosPlay className="bigger" />,
-      Stop: <RiStopFill className="bigger" />,
-      Eject: <MdEject className="bigger" />,
-      Shuffle: <IoIosShuffle className="bigger" />,
-      Forward: <AiFillForward className="bigger" />,
-      Backward: <AiOutlineBackward className="bigger" />,
-      Cancel: <TiCancel className="bigger" />,
-      ScrlUp: (
-        <>
-          <BiMouseAlt className="bigger" />
-          <BiArrowFromBottom className="" />
-        </>
-      ),
-      ScrlDwn: (
-        <>
-          <BiMouseAlt className="bigger" />
-          <BiArrowFromTop className="" />
-        </>
-      ),
-      ScrlLeft: (
-        <>
-          <BiMouseAlt className="bigger" />
-          <BiArrowFromRight className="" />
-        </>
-      ),
-      ScrlRight: (
-        <>
-          <BiMouseAlt className="bigger" />
-          <BiArrowFromLeft className="" />
-        </>
-      ),
-      MvUp: (
-        <>
-          <BiMouseAlt className="bigger" />
-          <BiUpArrowCircle className="" />
-        </>
-      ),
-      MvDwn: (
-        <>
-          <BiMouseAlt className="bigger" />
-          <BiDownArrowCircle className="" />
-        </>
-      ),
-      MvLeft: (
-        <>
-          <BiMouseAlt className="bigger" />
-          <BiLeftArrowCircle className="" />
-        </>
-      ),
-      MvRight: (
-        <>
-          <BiMouseAlt className="bigger" />
-          <BiRightArrowCircle className="" />
-        </>
-      ),
-    };
+  const returnData = (key: any) => {
+    const KeyIsKey =
+      code.base === key.id &&
+      (code.base + code.modified < 53267 || code.base + code.modified > 60000) &&
+      (code.base + code.modified < 17450 || code.base + code.modified > 17501) &&
+      (code.base + code.modified < 49153 || code.base + code.modified > 49168)
+        ? true
+        : !!(code.modified > 0 && code.base + code.modified === key.id);
+    const keyArray = Array.isArray(key.idArray)
+      ? key.idArray.some((Lkey: any) => Lkey === code.base + code.modified || (Lkey === code.base && Lkey >= 104 && Lkey <= 115))
+      : KeyIsKey;
+    return keyArray;
+  };
 
-    const returnData = (key: any) => {
-      const KeyIsKey =
-        code.base === key.id &&
-        (code.base + code.modified < 53267 || code.base + code.modified > 60000) &&
-        (code.base + code.modified < 17450 || code.base + code.modified > 17501) &&
-        (code.base + code.modified < 49153 || code.base + code.modified > 49168)
-          ? true
-          : !!(code.modified > 0 && code.base + code.modified === key.id);
-      const keyArray = Array.isArray(key.idArray)
-        ? key.idArray.some(
-            (Lkey: any) => Lkey === code.base + code.modified || (Lkey === code.base && Lkey >= 104 && Lkey <= 115),
-          )
-        : KeyIsKey;
-      return keyArray;
-    };
+  const keyboard = Lang.map((key, id) => (
+    <Key
+      key={`id-${key.content.first}-${String(id)}`}
+      id={id}
+      x={key.x}
+      y={key.y}
+      selected={code === null ? false : returnData(key)}
+      clicked={() => {
+        if (!(key.mod === true && key.mod === disableMods)) onKeyPress(key.id);
+      }}
+      onKeyPress={onKeyPress}
+      centered={key.centered}
+      content={key.content}
+      iconpresent={!!key.icon}
+      icon={
+        <IconColor
+          color={
+            key.mod === true && key.mod === disableMods
+              ? theme.keyboardPicker.keyTextDisabledColor
+              : theme.keyboardPicker.keyIconColor
+          }
+        >
+          {iconlist[key.iconname]}
+        </IconColor>
+      }
+      iconx={key.iconx}
+      icony={key.icony}
+      iconsize={key.iconsize}
+      disabled={key.mod === disableMods || disableAll}
+      idArray={key.idArray}
+      keyCode={code}
+      platform={process.platform}
+    />
+  ));
 
-    const keyboard = Lang.map((key, id) => (
-      <Key
-        key={`id-${key.content.first}-${String(id)}`}
-        id={id}
-        x={key.x}
-        y={key.y}
-        selected={code === null ? false : returnData(key)}
-        clicked={() => {
-          if (!(key.mod === true && key.mod === disableMods)) this.onKeyPress(key.id);
-        }}
-        onKeyPress={this.onKeyPress}
-        centered={key.centered}
-        content={key.content}
-        iconpresent={!!key.icon}
-        icon={
-          <IconColor
-            color={
-              key.mod === true && key.mod === disableMods
-                ? theme.keyboardPicker.keyTextDisabledColor
-                : theme.keyboardPicker.keyIconColor
-            }
-          >
-            {iconlist[key.iconname]}
-          </IconColor>
-        }
-        iconx={key.iconx}
-        icony={key.icony}
-        iconsize={key.iconsize}
-        disabled={key.mod === disableMods || disableAll}
-        idArray={key.idArray}
-        keyCode={code}
-        platform={process.platform}
-      />
-    ));
-
-    return (
-      <Style>
-        <div className="KeysWrapper">
-          <div className="keysContainer">
-            <div className=" flex flex-wrap bg-white dark:bg-gray-700/60 keysOrdinaryKeyboard relative z-[4] p-3 rounded-t-regular [&_svg]:mx-auto [&_svg]:max-w-6xl">
-              {disableAll ? (
-                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-25 tracking-tight text-xl text-nowrap">
-                  Select a key in the keyboard above to start
-                </div>
-              ) : (
-                ""
-              )}
-              <svg
-                className={`svgStyle ${process.platform} ${keyboardLayout}`}
-                viewBox="0 0 1070 208"
-                preserveAspectRatio="xMidYMin slice"
-              >
-                {keyboard}
-                <defs>
-                  <linearGradient id="paint_gradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                    <stop offset="5%" stopColor="#fff" />
-                    <stop offset="95%" stopColor="#fff" stopOpacity={0} />
-                  </linearGradient>
-                  <filter id="filter0_d_2211_181319" x="0%" y="0%" width="200%" height="200%">
-                    <feOffset result="offOut" in="SourceGraphic" dx="0" dy="-2" />
-                    <feColorMatrix
-                      result="matrixOut"
-                      in="offOut"
-                      type="matrix"
-                      values="0 0 0 0 0.552941 0 0 0 0 0.517647 0 0 0 0 0.737255 0 0 0 0.1 0"
-                    />
-                    <feGaussianBlur result="blurOut" in="matrixOut" stdDeviation="0" />
-                    <feBlend in="SourceGraphic" in2="blurOut" mode="normal" />
-                  </filter>
-                </defs>
-              </svg>
-            </div>
+  return (
+    <Style>
+      <div className="KeysWrapper">
+        <div className="keysContainer">
+          <div className=" flex flex-wrap bg-white dark:bg-gray-700/60 keysOrdinaryKeyboard relative z-[4] p-3 rounded-t-regular [&_svg]:mx-auto [&_svg]:max-w-6xl">
+            {disableAll ? (
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-25 tracking-tight text-xl text-nowrap">
+                Select a key in the keyboard above to start
+              </div>
+            ) : (
+              ""
+            )}
+            <svg
+              className={`svgStyle ${process.platform} ${keyboardLayout}`}
+              viewBox="0 0 1070 208"
+              preserveAspectRatio="xMidYMin slice"
+            >
+              {keyboard}
+              <defs>
+                <linearGradient id="paint_gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="5%" stopColor="#fff" />
+                  <stop offset="95%" stopColor="#fff" stopOpacity={0} />
+                </linearGradient>
+                <filter id="filter0_d_2211_181319" x="0%" y="0%" width="200%" height="200%">
+                  <feOffset result="offOut" in="SourceGraphic" dx="0" dy="-2" />
+                  <feColorMatrix
+                    result="matrixOut"
+                    in="offOut"
+                    type="matrix"
+                    values="0 0 0 0 0.552941 0 0 0 0 0.517647 0 0 0 0 0.737255 0 0 0 0.1 0"
+                  />
+                  <feGaussianBlur result="blurOut" in="matrixOut" stdDeviation="0" />
+                  <feBlend in="SourceGraphic" in2="blurOut" mode="normal" />
+                </filter>
+              </defs>
+            </svg>
           </div>
         </div>
-      </Style>
-    );
-  }
-}
+      </div>
+    </Style>
+  );
+};
 
-export default withTheme(KeyPicker);
+export default KeyPicker;

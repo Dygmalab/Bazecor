@@ -62,7 +62,7 @@ const SelectShotModifierCustomDropdown: FC<SelectShotModifierCustomDropdownProps
       { name: "shift", direction: "Right", keynum: 49158 },
       { name: "control", direction: "Right", keynum: 49157 },
       { name: "os", direction: "Right", keynum: 49160 },
-      { name: "altGr", direction: undefined, keynum: 49159 },
+      { name: "altGr", direction: "Right", keynum: 49159 },
     ],
     [],
   );

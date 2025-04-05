@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import log from "electron-log/renderer";
 import Styled from "styled-components";
 
-import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 import { MacroActionsType, MacrosType, RowsRepresentation } from "@Renderer/types/macros";
 import { actionTypes, createConversion, modifiers, revertConversion } from "./utils";
 import { KeymapDB } from "../../../api/keymap";
@@ -255,7 +255,7 @@ const TimelineEditorMacroTable = (props: Props) => {
     return <></>;
   }
   return (
-    <Styles className="trackingWrapper" style={cssObjectWidth} ref={horizontalWheel} id="hwTracker">
+    <Styles className="trackingWrapper" style={cssObjectWidth} ref={horizontalWheel as any} id="hwTracker">
       <DragDropContext onDragEnd={onDragEnd}>
         <Droppable droppableId="droppable" direction="horizontal">
           {provided => (

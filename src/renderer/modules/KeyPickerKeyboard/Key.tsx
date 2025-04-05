@@ -2,7 +2,7 @@
 /* eslint-disable eqeqeq */
 /* eslint-disable react/jsx-filename-extension */
 import React from "react";
-import Styled, { withTheme } from "styled-components";
+import Styled, { useTheme } from "styled-components";
 import { SegmentedKeyType } from "@Renderer/types/layout";
 import { SelectGenericKeys } from "@Renderer/components/molecules/CustomSelect";
 
@@ -371,14 +371,14 @@ export interface KeyProps {
   idArray: string | number[];
   disabled?: boolean;
   platform?: string;
-  theme?: any;
 }
 
 interface KeyLabelProps {
   content: string;
   os: string;
 }
-const KeyLabel: React.FC<KeyLabelProps> = ({ content, os }) => {
+const KeyLabel = (props: KeyLabelProps) => {
+  const { content, os } = props;
   let label;
   if (os === "darwin") {
     switch (content) {
@@ -399,7 +399,7 @@ const KeyLabel: React.FC<KeyLabelProps> = ({ content, os }) => {
   return <>{label}</>;
 };
 
-function Key(props: KeyProps) {
+const Key = (props: KeyProps) => {
   const {
     id,
     keyCode,
@@ -417,7 +417,6 @@ function Key(props: KeyProps) {
     content,
     idArray,
     disabled,
-    theme,
     platform,
     iconname,
     tooltip,
@@ -425,6 +424,7 @@ function Key(props: KeyProps) {
     move,
     tap,
   } = props;
+  const theme = useTheme();
 
   return (
     <Style>
@@ -681,6 +681,6 @@ function Key(props: KeyProps) {
       </g>
     </Style>
   );
-}
+};
 
-export default withTheme(Key);
+export default Key;

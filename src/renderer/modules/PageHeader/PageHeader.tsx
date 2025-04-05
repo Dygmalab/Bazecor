@@ -112,7 +112,9 @@ function PageHeader(props: PageHeaderType) {
   } = props;
   return (
     <Style className={`${styles === "pageHeaderFlatBottom" ? "pageHeaderSticky" : ""}`}>
-      <div className={`pageHeader ${size && size} ${styles && styles} ${isColorActive ? "extraPanelActive" : ""}`}>
+      <div
+        className={`pageHeader ${size !== undefined && size} ${styles !== undefined && styles} ${isColorActive ?? "extraPanelActive"}`}
+      >
         <div className="pageTitle">
           <Heading headingLevel={2} renderAs="h2">
             {text}
@@ -140,7 +142,7 @@ function PageHeader(props: PageHeaderType) {
           ) : null}
         </div>
       </div>
-      {isColorActive ? colorEditor : ""}
+      {isColorActive && (colorEditor as any)}
     </Style>
   );
 }

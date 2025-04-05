@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-props-no-spreading */
 import * as React from "react";
 import { Slot } from "@radix-ui/react-slot";
 import { cva, type VariantProps } from "class-variance-authority";
@@ -85,6 +86,21 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
   children: React.ReactNode;
   iconDirection?: "left" | "right" | "none";
   selected?: boolean;
+  variant?:
+    | "default"
+    | "destructive"
+    | "outline"
+    | "primary"
+    | "primaryIcon"
+    | "secondary"
+    | "purple"
+    | "ghost"
+    | "link"
+    | "dropdownLink"
+    | "supportive"
+    | "config"
+    | "short";
+  size?: "default" | "xs" | "md" | "sm" | "lg" | "icon" | "iconXS";
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(

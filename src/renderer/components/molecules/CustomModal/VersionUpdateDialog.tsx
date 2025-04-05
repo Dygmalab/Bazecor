@@ -17,7 +17,7 @@
 
 import React, { useEffect, useState } from "react";
 import { Octokit } from "@octokit/core";
-import log from "electron-log/renderer";
+// import log from "electron-log/renderer";
 import SemVer from "semver";
 import parse, { domToReact } from "html-react-parser";
 
@@ -122,7 +122,7 @@ export function VersionUpdateDialog(props: VersionUpdateProps) {
         oldVersion !== undefined
           ? releases.filter(r => SemVer.compare(r.version, oldVersion) > 0 && SemVer.compare(r.version, version) <= 0)
           : releases.filter(r => SemVer.compare(r.version, version) === 0);
-      log.info("Data from Dialog: ", releases, version, oldVersion, parsedData);
+      // log.info("Data from Dialog: ", releases, version, oldVersion, parsedData);
       setData(parsedData);
     }
     fetchData();

@@ -580,6 +580,7 @@ function SuperkeysEditor(props: SuperkeysEditorProps) {
           code={code}
           macros={macros}
           superkeys={superkeys}
+          action={selectedAction}
           actTab="super"
           selectedlanguage={currentLanguageLayout}
           keyIndex={tempKC}

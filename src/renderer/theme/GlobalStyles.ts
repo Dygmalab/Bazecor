@@ -24,7 +24,7 @@ const GlobalStyles = createGlobalStyle<{ theme: DefaultTheme }>`
 
   #root {
     display: grid;
-    --sidebarWidth: ${({ theme }) => theme.sidebarWidthMedium}px;
+    --sidebarWidth: ${({ theme }: { theme: DefaultTheme }) => theme.sidebarWidthMedium}px;
     grid-template-columns: var(--sidebarWidth) auto;
   }
 
@@ -42,7 +42,7 @@ const GlobalStyles = createGlobalStyle<{ theme: DefaultTheme }>`
     padding-right: 17px;
   }
   .wrapperBackground {
-    background: ${({ theme }) => theme.styles.wrapper.background};
+    background: ${({ theme }: { theme: DefaultTheme }) => theme.styles.wrapper.background};
     padding-bottom: 8px;
     margin-bottom: 32px;
     border-radius: 0 0 16px 16px;
@@ -62,7 +62,7 @@ const GlobalStyles = createGlobalStyle<{ theme: DefaultTheme }>`
   }
 
   a {
-    color: ${({ theme }) => theme.colors.link.text};
+    color: ${({ theme }: { theme: DefaultTheme }) => theme.colors.link.text};
     cursor: pointer;
   }
 
@@ -80,7 +80,7 @@ const GlobalStyles = createGlobalStyle<{ theme: DefaultTheme }>`
 }
 
 .loading {
-  color: ${({ theme }) => theme.colors.purple300};
+  color: ${({ theme }: { theme: DefaultTheme }) => theme.colors.purple300};
   &.text-center {
     display: flex;
     width: 100%;
@@ -104,47 +104,47 @@ const GlobalStyles = createGlobalStyle<{ theme: DefaultTheme }>`
   //   border-radius: 4px;
   //   margin-top: 5px;
   //   cursor: pointer;
-  //   background-color: ${({ theme }) => theme.colors.button.background};
+  //   background-color: ${({ theme }: { theme: DefaultTheme }) => theme.colors.button.background};
   //   color: #FFFFFF;
-  //   font-family: ${({ theme }) => theme.font};
+  //   font-family: ${({ theme }: { theme: DefaultTheme }) => theme.font};
   //   font-weight: 600;
   // }
 
 
   button.btn-primary, button.btn{
-    background-color: ${({ theme }) => theme.colors.button.background};
-    color: ${({ theme }) => theme.colors.button.text};
+    background-color: ${({ theme }: { theme: DefaultTheme }) => theme.colors.button.background};
+    color: ${({ theme }: { theme: DefaultTheme }) => theme.colors.button.text};
     border: none;
   }
   .btn-primary:hover {
-    color: ${({ theme }) => theme.colors.button.text};
-    background-color: ${({ theme }) => theme.colors.button.hover};
+    color: ${({ theme }: { theme: DefaultTheme }) => theme.colors.button.text};
+    background-color: ${({ theme }: { theme: DefaultTheme }) => theme.colors.button.hover};
     border: none;
   }
   .btn-primary:disabled, &.btn-primary.disabled {
-    color: ${({ theme }) => theme.colors.button.text};
-    background-color: ${({ theme }) => theme.colors.button.disabled};
+    color: ${({ theme }: { theme: DefaultTheme }) => theme.colors.button.text};
+    background-color: ${({ theme }: { theme: DefaultTheme }) => theme.colors.button.disabled};
     border: none;
   }
   .btn-primary:not(:disabled):not(.disabled).active {
-    color: ${({ theme }) => theme.colors.button.text};
-    background-color: ${({ theme }) => theme.colors.button.active};
+    color: ${({ theme }: { theme: DefaultTheme }) => theme.colors.button.text};
+    background-color: ${({ theme }: { theme: DefaultTheme }) => theme.colors.button.active};
     border: none;
   }
   .btn-primary.focus, .btn-primary:focus{
-    color: ${({ theme }) => theme.colors.button.text};
-    background-color: ${({ theme }) => theme.colors.button.hover};
-    border-color: ${({ theme }) => theme.colors.button.background};
+    color: ${({ theme }: { theme: DefaultTheme }) => theme.colors.button.text};
+    background-color: ${({ theme }: { theme: DefaultTheme }) => theme.colors.button.hover};
+    border-color: ${({ theme }: { theme: DefaultTheme }) => theme.colors.button.background};
     box-shadow: none;
   }
   .btn-primary:not(:disabled):not(.disabled).active, .btn-primary:not(:disabled):not(.disabled):active, .show>.btn-primary.dropdown-toggle  {
-    color: ${({ theme }) => theme.colors.button.text};
-    background-color: ${({ theme }) => theme.colors.button.active};
-    border-color: ${({ theme }) => theme.colors.button.background};
-    box-shadow: ${({ theme }) => theme.colors.button.boxShadow};
+    color: ${({ theme }: { theme: DefaultTheme }) => theme.colors.button.text};
+    background-color: ${({ theme }: { theme: DefaultTheme }) => theme.colors.button.active};
+    border-color: ${({ theme }: { theme: DefaultTheme }) => theme.colors.button.background};
+    box-shadow: ${({ theme }: { theme: DefaultTheme }) => theme.colors.button.boxShadow};
   }
   .btn-primary:not(:disabled):not(.disabled).active:focus, .btn-primary:not(:disabled):not(.disabled):active:focus, .show>.btn-primary.dropdown-toggle:focus {
-    box-shadow: ${({ theme }) => theme.colors.button.boxShadow};
+    box-shadow: ${({ theme }: { theme: DefaultTheme }) => theme.colors.button.boxShadow};
 }
 
 svg text{
@@ -227,7 +227,7 @@ svg text{
 //
 
 .simpleAccordion {
-  background-color: ${({ theme }) => theme.styles.accordion.background};
+  background-color: ${({ theme }: { theme: DefaultTheme }) => theme.styles.accordion.background};
   border-radius: 3px;
   margin-top: 24px;
   .card {
@@ -235,7 +235,7 @@ svg text{
   }
   .card .card-header {
     background: transparent;
-    color: ${({ theme }) => theme.colors.purple300};
+    color: ${({ theme }: { theme: DefaultTheme }) => theme.colors.purple300};
     font-size: 13px;
     font-weight: 600;
   }
@@ -246,7 +246,7 @@ svg text{
       height: 8px;
       display: inline-block;
       margin-left: 8px;
-      background: url(${({ theme }) => theme.styles.collpase.iconBackground});
+      background: url(${({ theme }: { theme: DefaultTheme }) => theme.styles.collpase.iconBackground});
     }
   }
   .cardContent {
@@ -298,7 +298,7 @@ button:focus, button:focus-within,
 }
 button:focus-visible,
 .button:focus-visible {
-  outline: 2px solid ${({ theme }) => theme.accessibility.focusWithinColor};
+  outline: 2px solid ${({ theme }: { theme: DefaultTheme }) => theme.accessibility.focusWithinColor};
 }
 .button[disabled]:hover {
   cursor: not-allowed;
@@ -315,7 +315,7 @@ button:focus-visible,
 }
 .button.primary {
   color: #fff;
-  background: ${({ theme }) => theme.styles.button.primary.backgroundColor};
+  background: ${({ theme }: { theme: DefaultTheme }) => theme.styles.button.primary.backgroundColor};
   position: relative;
   background-size: 300%;
   transition: background-position .3s ease-in-out;
@@ -326,46 +326,46 @@ button:focus-visible,
 }
 .button.secondary {
   color: #fff;
-  background: ${({ theme }) => theme.colors.purple300};
+  background: ${({ theme }: { theme: DefaultTheme }) => theme.colors.purple300};
   transition: 300ms background ease-in-out;
   &:hover {
-    background: ${({ theme }) => theme.colors.purple200};
+    background: ${({ theme }: { theme: DefaultTheme }) => theme.colors.purple200};
   }
 }
 .button.primary[disabled],
 .button.secondary[disabled] {
-  background: ${({ theme }) => theme.styles.button.primary.disabledBackgroundColor};
-  color: ${({ theme }) => theme.styles.button.primary.disabledTextColor};
+  background: ${({ theme }: { theme: DefaultTheme }) => theme.styles.button.primary.disabledBackgroundColor};
+  color: ${({ theme }: { theme: DefaultTheme }) => theme.styles.button.primary.disabledTextColor};
 }
 .button.danger {
-  background: ${({ theme }) => theme.styles.button.danger.backgroundColor};
-  color: ${({ theme }) => theme.styles.button.danger.color};
+  background: ${({ theme }: { theme: DefaultTheme }) => theme.styles.button.danger.backgroundColor};
+  color: ${({ theme }: { theme: DefaultTheme }) => theme.styles.button.danger.color};
 }
 .button.danger:hover {
-  background: ${({ theme }) => theme.styles.button.danger.backgroundColorHover};
-  color: ${({ theme }) => theme.styles.button.danger.color};
+  background: ${({ theme }: { theme: DefaultTheme }) => theme.styles.button.danger.backgroundColorHover};
+  color: ${({ theme }: { theme: DefaultTheme }) => theme.styles.button.danger.color};
 }
 .button.outline {
-  color: ${({ theme }) => theme.styles.button.outline.color};
-  border: 1px solid ${({ theme }) => theme.styles.button.outline.borderColor};
-  box-shadow: 0px 0px 0px 1px ${({ theme }) => theme.styles.button.outline.borderColor} inset;
+  color: ${({ theme }: { theme: DefaultTheme }) => theme.styles.button.outline.color};
+  border: 1px solid ${({ theme }: { theme: DefaultTheme }) => theme.styles.button.outline.borderColor};
+  box-shadow: 0px 0px 0px 1px ${({ theme }: { theme: DefaultTheme }) => theme.styles.button.outline.borderColor} inset;
   transition-property: border, box-shadow, background;
   transition: 300ms ease-in-out;
 }
 .button.outline:hover {
-  border: 1px solid ${({ theme }) => theme.styles.button.outline.borderColorHover};
-  box-shadow: 0px 0px 0px 1px ${({ theme }) => theme.styles.button.outline.boxShadowColorHover} inset;
+  border: 1px solid ${({ theme }: { theme: DefaultTheme }) => theme.styles.button.outline.borderColorHover};
+  box-shadow: 0px 0px 0px 1px ${({ theme }: { theme: DefaultTheme }) => theme.styles.button.outline.boxShadowColorHover} inset;
   background-color: rgba(255,255,255,0.05);
 }
 .button.outline[disabled] {
-  opacity: ${({ theme }) => theme.styles.button.outline.disabledOpacity};
-  color: ${({ theme }) => theme.styles.button.outline.disabledTextColor};
-  border: 1px solid ${({ theme }) => theme.styles.button.outline.disabledBorderColor};
-  box-shadow: 0px 0px 0px 1px ${({ theme }) => theme.styles.button.outline.disabledBoxShadowColor} inset;
+  opacity: ${({ theme }: { theme: DefaultTheme }) => theme.styles.button.outline.disabledOpacity};
+  color: ${({ theme }: { theme: DefaultTheme }) => theme.styles.button.outline.disabledTextColor};
+  border: 1px solid ${({ theme }: { theme: DefaultTheme }) => theme.styles.button.outline.disabledBorderColor};
+  box-shadow: 0px 0px 0px 1px ${({ theme }: { theme: DefaultTheme }) => theme.styles.button.outline.disabledBoxShadowColor} inset;
 }
 
 .button.outline.gradient {
-  color: ${({ theme }) => theme.styles.button.outlineGradient.color};
+  color: ${({ theme }: { theme: DefaultTheme }) => theme.styles.button.outlineGradient.color};
   border: none;
   box-shadow: none;
   transition-property: border, box-shadow, background;
@@ -384,7 +384,7 @@ button:focus-visible,
   top: 0; right: 0; bottom: 0; left: 0;
   margin: -1px;
   border-radius: 6px;
-  background: ${({ theme }) => theme.styles.button.outlineGradient.background};
+  background: ${({ theme }: { theme: DefaultTheme }) => theme.styles.button.outlineGradient.background};
   border: 2px solid transparent;
   background-position: 308% 0;
   background-size: 149%;
@@ -409,7 +409,7 @@ button:focus-visible,
 .button.primary:not([disabled]) .buttonFX,
 .button.outline.gradient .buttonFX {
   filter: blur(2px);
-  background: ${({ theme }) => theme.colors.gradient};
+  background: ${({ theme }: { theme: DefaultTheme }) => theme.colors.gradient};
 }
 .button.primary:not([disabled]):hover .buttonFX,
 .button.outline.gradient:hover .buttonFX {
@@ -424,33 +424,33 @@ button:focus-visible,
   font-weight: 600;
   letter-spacing: -0.03em;
   padding: 8px 16px;
-  border: ${({ theme }) => theme.styles.button.config.border};
-  color: ${({ theme }) => theme.styles.button.config.color};
-  background: ${({ theme }) => theme.styles.button.config.background};
+  border: ${({ theme }: { theme: DefaultTheme }) => theme.styles.button.config.border};
+  color: ${({ theme }: { theme: DefaultTheme }) => theme.styles.button.config.color};
+  background: ${({ theme }: { theme: DefaultTheme }) => theme.styles.button.config.background};
   border: none;
   border-radius: 6px;
-  box-shadow: ${({ theme }) => theme.styles.button.config.boxShadow};
+  box-shadow: ${({ theme }: { theme: DefaultTheme }) => theme.styles.button.config.boxShadow};
   transition-property: background, box-shadow, color
   transition: 300ms ease-in-out;
 }
 .button-config.buttonConfigMinimal {
   padding: 9px 16px 9px 12px;
-  border: 1px solid ${({ theme }) => theme.styles.button.configMinimal.border};
-  color: ${({ theme }) => theme.styles.button.configMinimal.color};
-  background: ${({ theme }) => theme.styles.button.configMinimal.background};
+  border: 1px solid ${({ theme }: { theme: DefaultTheme }) => theme.styles.button.configMinimal.border};
+  color: ${({ theme }: { theme: DefaultTheme }) => theme.styles.button.configMinimal.color};
+  background: ${({ theme }: { theme: DefaultTheme }) => theme.styles.button.configMinimal.background};
   box-shadow: none;
   &:hover {
     background: inherit!important;
   }
   &.config-active {
-    border: 1px solid ${({ theme }) => theme.styles.button.configMinimal.borderActive};
-    color: ${({ theme }) => theme.styles.button.configMinimal.colorActive};
-    background: ${({ theme }) => theme.styles.button.configMinimal.backgroundActive};
+    border: 1px solid ${({ theme }: { theme: DefaultTheme }) => theme.styles.button.configMinimal.borderActive};
+    color: ${({ theme }: { theme: DefaultTheme }) => theme.styles.button.configMinimal.colorActive};
+    background: ${({ theme }: { theme: DefaultTheme }) => theme.styles.button.configMinimal.backgroundActive};
     svg {
-      color: ${({ theme }) => theme.styles.button.configMinimal.iconColorActive};
+      color: ${({ theme }: { theme: DefaultTheme }) => theme.styles.button.configMinimal.iconColorActive};
     }
     &:hover {
-      background: ${({ theme }) => theme.styles.button.configMinimal.backgroundActive}!important;
+      background: ${({ theme }: { theme: DefaultTheme }) => theme.styles.button.configMinimal.backgroundActive}!important;
     }
   }
 }
@@ -464,17 +464,17 @@ button:focus-visible,
 .btn-primary.button-config:not([disabled]):hover,
 .button-config:not([disabled]):hover {
   cursor: pointer;
-  color: ${({ theme }) => theme.styles.button.config.colorHover};
-  background: ${({ theme }) => theme.styles.button.config.backgroundHover};
-  box-shadow: ${({ theme }) => theme.styles.button.config.boxShadowHover};
+  color: ${({ theme }: { theme: DefaultTheme }) => theme.styles.button.config.colorHover};
+  background: ${({ theme }: { theme: DefaultTheme }) => theme.styles.button.config.backgroundHover};
+  box-shadow: ${({ theme }: { theme: DefaultTheme }) => theme.styles.button.config.boxShadowHover};
 }
 .btn-primary.button-config.active:not([disabled]),
 .btn-primary.button-config.active:not([disabled]):hover,
 .button-config.active:not([disabled]),
 .button-config.active:not([disabled]):hover {
-  color: ${({ theme }) => theme.styles.button.config.colorActive};
-  background: ${({ theme }) => theme.styles.button.config.backgroundActive};
-  box-shadow: ${({ theme }) => theme.styles.button.config.boxShadowActive};
+  color: ${({ theme }: { theme: DefaultTheme }) => theme.styles.button.config.colorActive};
+  background: ${({ theme }: { theme: DefaultTheme }) => theme.styles.button.config.backgroundActive};
+  box-shadow: ${({ theme }: { theme: DefaultTheme }) => theme.styles.button.config.boxShadowActive};
 }
 
 .button-config[disabled] {
@@ -509,11 +509,11 @@ button:focus-visible,
   justify-content: center;
   box-shadow: none;
   border-radius: 4px;
-  color: ${({ theme }) => theme.styles.button.settings.color};
-  background: ${({ theme }) => theme.styles.button.settings.background};
+  color: ${({ theme }: { theme: DefaultTheme }) => theme.styles.button.settings.color};
+  background: ${({ theme }: { theme: DefaultTheme }) => theme.styles.button.settings.background};
   &:hover {
-    color: ${({ theme }) => theme.styles.button.settings.colorHover};
-    background: ${({ theme }) => theme.styles.button.settings.backgroundHover};
+    color: ${({ theme }: { theme: DefaultTheme }) => theme.styles.button.settings.colorHover};
+    background: ${({ theme }: { theme: DefaultTheme }) => theme.styles.button.settings.backgroundHover};
   }
 }
 
@@ -522,25 +522,25 @@ button:focus-visible,
   padding: 6px 16px;
   border-radius: 4px;
   line-height: 2em;
-  color: ${({ theme }) => theme.styles.button.short.color};
-  border: ${({ theme }) => theme.styles.button.short.border};
-  background: ${({ theme }) => theme.styles.button.short.background};
+  color: ${({ theme }: { theme: DefaultTheme }) => theme.styles.button.short.color};
+  border: ${({ theme }: { theme: DefaultTheme }) => theme.styles.button.short.border};
+  background: ${({ theme }: { theme: DefaultTheme }) => theme.styles.button.short.background};
 }
 .button.short:hover {
-  background: ${({ theme }) => theme.styles.button.short.backgroundHover};
+  background: ${({ theme }: { theme: DefaultTheme }) => theme.styles.button.short.backgroundHover};
 }
 .button.short.danger {
-  background: ${({ theme }) => theme.styles.button.danger.backgroundColor};
-  color: ${({ theme }) => theme.styles.button.danger.color};
+  background: ${({ theme }: { theme: DefaultTheme }) => theme.styles.button.danger.backgroundColor};
+  color: ${({ theme }: { theme: DefaultTheme }) => theme.styles.button.danger.color};
 }
 .button.short.danger:hover {
-  background: ${({ theme }) => theme.styles.button.danger.backgroundColorHover};
-  color: ${({ theme }) => theme.styles.button.danger.color};
+  background: ${({ theme }: { theme: DefaultTheme }) => theme.styles.button.danger.backgroundColorHover};
+  color: ${({ theme }: { theme: DefaultTheme }) => theme.styles.button.danger.color};
 }
 .activeVirtualKeyboard,
 .dropdown-toggle.btn.btn-primary {
-  background: ${({ theme }) => theme.styles.dropdown.backgroundButtonColor};
-  border: 1px solid ${({ theme }) => theme.styles.dropdown.borderButtonColor};
+  background: ${({ theme }: { theme: DefaultTheme }) => theme.styles.dropdown.backgroundButtonColor};
+  border: 1px solid ${({ theme }: { theme: DefaultTheme }) => theme.styles.dropdown.borderButtonColor};
   border-radius: 6px;
   width: 100%;
   padding: 12px 16px;
@@ -552,13 +552,13 @@ button:focus-visible,
 .dropdown.active .dropdown-toggle.btn.btn-primary,
 .dropdown.show .dropdown-toggle.btn.btn-primary,
 .dropdown-toggle.btn.btn-primary:hover {
-  border: 1px solid ${({ theme }) => theme.styles.dropdown.borderButtonActive};
-  background: ${({ theme }) => theme.styles.dropdown.backgroundButtonColor};
+  border: 1px solid ${({ theme }: { theme: DefaultTheme }) => theme.styles.dropdown.borderButtonActive};
+  background: ${({ theme }: { theme: DefaultTheme }) => theme.styles.dropdown.backgroundButtonColor};
   box-shadow: none;
 }
 .dropdown-toggle.btn.btn-primary:focus-visible {
-  //border: 1px solid ${({ theme }) => theme.styles.dropdown.borderButtonFocus};
-  background: ${({ theme }) => theme.styles.dropdown.backgroundButtonColor};
+  //border: 1px solid ${({ theme }: { theme: DefaultTheme }) => theme.styles.dropdown.borderButtonFocus};
+  background: ${({ theme }: { theme: DefaultTheme }) => theme.styles.dropdown.backgroundButtonColor};
   box-shadow: none;
   outline: auto;
 }
@@ -568,15 +568,15 @@ button:focus-visible,
   box-shadow: none;
 }
 .dropdown-toggle.btn.btn-primary:focus-visible {
-  //border: 1px solid ${({ theme }) => theme.styles.dropdown.borderButtonFocus};
-  background: ${({ theme }) => theme.styles.dropdown.backgroundButtonColor};
+  //border: 1px solid ${({ theme }: { theme: DefaultTheme }) => theme.styles.dropdown.borderButtonFocus};
+  background: ${({ theme }: { theme: DefaultTheme }) => theme.styles.dropdown.backgroundButtonColor};
   box-shadow: none;
   outline: auto;
 }
 
 .dropdown-toggle.btn.btn-primary:hover {
-  background: ${({ theme }) => theme.styles.dropdown.backgroundButtonHover};
-  border: 1px solid ${({ theme }) => theme.styles.dropdown.borderButtonHover};
+  background: ${({ theme }: { theme: DefaultTheme }) => theme.styles.dropdown.backgroundButtonHover};
+  border: 1px solid ${({ theme }: { theme: DefaultTheme }) => theme.styles.dropdown.borderButtonHover};
   box-shadow: none;
 }
 
@@ -586,31 +586,31 @@ button:focus-visible,
 .dropdown-toggle.btn.btn-primary.button-config-style {
   font-size: 12px;
   font-weight: 600;
-  border: ${({ theme }) => theme.styles.button.config.border};
-  color: ${({ theme }) => theme.styles.button.config.color};
-  background: ${({ theme }) => theme.styles.button.config.background};
+  border: ${({ theme }: { theme: DefaultTheme }) => theme.styles.button.config.border};
+  color: ${({ theme }: { theme: DefaultTheme }) => theme.styles.button.config.color};
+  background: ${({ theme }: { theme: DefaultTheme }) => theme.styles.button.config.background};
   border: none;
-  box-shadow: ${({ theme }) => theme.styles.button.config.boxShadow};
+  box-shadow: ${({ theme }: { theme: DefaultTheme }) => theme.styles.button.config.boxShadow};
   transition: background 300ms ease-in-out;
 }
 .dropdown-toggle.btn.btn-primary.button-config-style:not([disabled]):hover {
   cursor: pointer;
-  color: ${({ theme }) => theme.styles.button.config.colorHover};
-  background: ${({ theme }) => theme.styles.button.config.backgroundHover};
-  box-shadow: ${({ theme }) => theme.styles.button.config.boxShadowHover};
+  color: ${({ theme }: { theme: DefaultTheme }) => theme.styles.button.config.colorHover};
+  background: ${({ theme }: { theme: DefaultTheme }) => theme.styles.button.config.backgroundHover};
+  box-shadow: ${({ theme }: { theme: DefaultTheme }) => theme.styles.button.config.boxShadowHover};
   border: none;
 }
 .dropdown-toggle.btn.btn-primary.button-config-style:not([disabled]):focus-visible {
-  background: ${({ theme }) => theme.styles.button.config.backgroundHover};
-  box-shadow: ${({ theme }) => theme.styles.button.config.boxShadowHover};
+  background: ${({ theme }: { theme: DefaultTheme }) => theme.styles.button.config.backgroundHover};
+  box-shadow: ${({ theme }: { theme: DefaultTheme }) => theme.styles.button.config.boxShadowHover};
   outline: auto;
 }
 .show .dropdown-toggle.btn.btn-primary.button-config-style {border: none;}
 .active .dropdown-toggle.btn.btn-primary.button-config-style:not([disabled]),
 .active .dropdown-toggle.btn.btn-primary.button-config-style:not([disabled]):hover {
-  color: ${({ theme }) => theme.styles.button.config.colorActive};
-  background: ${({ theme }) => theme.styles.button.config.backgroundActive};
-  box-shadow: ${({ theme }) => theme.styles.button.config.boxShadowActive};
+  color: ${({ theme }: { theme: DefaultTheme }) => theme.styles.button.config.colorActive};
+  background: ${({ theme }: { theme: DefaultTheme }) => theme.styles.button.config.backgroundActive};
+  box-shadow: ${({ theme }: { theme: DefaultTheme }) => theme.styles.button.config.boxShadowActive};
   border: none;
 }
 
@@ -640,8 +640,8 @@ button:focus-visible,
 
 .dropdown-menu {
   padding: 14px 8px;
-  background: ${({ theme }) => theme.styles.dropdown.dropdownMenu.backgroundColor};
-  box-shadow: ${({ theme }) => theme.styles.dropdown.dropdownMenu.boxShadow};
+  background: ${({ theme }: { theme: DefaultTheme }) => theme.styles.dropdown.dropdownMenu.backgroundColor};
+  box-shadow: ${({ theme }: { theme: DefaultTheme }) => theme.styles.dropdown.dropdownMenu.boxShadow};
   border-radius: 6px;
   border: none;
 }
@@ -649,18 +649,18 @@ button:focus-visible,
   padding: 8px;
   border-radius: 6px;
   margin: 2px 0;
-  color: ${({ theme }) => theme.styles.dropdown.dropdownMenu.itemTextColor};
+  color: ${({ theme }: { theme: DefaultTheme }) => theme.styles.dropdown.dropdownMenu.itemTextColor};
   font-weight: 600;
   font-size: 14px;
 }
 .dropdown-item:hover {
-  color: ${({ theme }) => theme.styles.dropdown.dropdownMenu.itemTextColorHover};
-  background: ${({ theme }) => theme.styles.dropdown.dropdownMenu.itemBackgroundColorHover};
+  color: ${({ theme }: { theme: DefaultTheme }) => theme.styles.dropdown.dropdownMenu.itemTextColorHover};
+  background: ${({ theme }: { theme: DefaultTheme }) => theme.styles.dropdown.dropdownMenu.itemBackgroundColorHover};
 }
 .dropdown-item.active,
 .dropdown-item.active:hover {
   color: #fff;
-  background: ${({ theme }) => theme.styles.dropdown.dropdownMenu.itemBackgroundColorActive};
+  background: ${({ theme }: { theme: DefaultTheme }) => theme.styles.dropdown.dropdownMenu.itemBackgroundColorActive};
 }
 
 .dropdown-menu .dropdown-item.active h3,
@@ -687,7 +687,7 @@ button:focus-visible,
   font-weight: 600;
   letter-spacing: -0.03em;
   position: relative;
-  color: ${({ theme }) => theme.styles.dropdown.selector.numberColor};
+  color: ${({ theme }: { theme: DefaultTheme }) => theme.styles.dropdown.selector.numberColor};
 }
 .dropdownListNumber:after {
   content: '';
@@ -697,7 +697,7 @@ button:focus-visible,
   right: 0;
   top: 50%;
   transform: translate3d(0, -50%, 0);
-  background-color: ${({ theme }) => theme.styles.dropdown.selector.separatorColor};
+  background-color: ${({ theme }: { theme: DefaultTheme }) => theme.styles.dropdown.selector.separatorColor};
 }
 .dropdownListItem {
   display: flex;
@@ -717,16 +717,16 @@ button:focus-visible,
   right: 24px;
   top: 50%;
   transform: translate3d(0,-50%, 0) scale(0.8);
-  color: ${({ theme }) => theme.styles.dropdown.selector.arrowsColor};
+  color: ${({ theme }: { theme: DefaultTheme }) => theme.styles.dropdown.selector.arrowsColor};
 }
 .dropdownListItemLabel {
   letter-spacing: -0.03em;
   font-size: 11px;
-  color: ${({ theme }) => theme.styles.dropdown.selector.labelColor};
+  color: ${({ theme }: { theme: DefaultTheme }) => theme.styles.dropdown.selector.labelColor};
 }
 .dropdownListItemSelected {
   font-size: 13px;
-  color: ${({ theme }) => theme.styles.dropdown.selector.color}
+  color: ${({ theme }: { theme: DefaultTheme }) => theme.styles.dropdown.selector.color}
 }
 
 .dropdownMultipleActions .dropdownActions {
@@ -750,14 +750,14 @@ button:focus-visible,
   border: none;
   text-align: center;
   border-radius: 4px;
-  color: ${({ theme }) => theme.styles.button.settings.color};
-  background: ${({ theme }) => theme.styles.button.settings.background};
+  color: ${({ theme }: { theme: DefaultTheme }) => theme.styles.button.settings.color};
+  background: ${({ theme }: { theme: DefaultTheme }) => theme.styles.button.settings.background};
 }
 .dropdown.show .dropdown-toggle.btn.btn-primary.button-settings,
 .dropdown-toggle.btn.btn-primary.button-settings:hover {
   border: none;
-  color: ${({ theme }) => theme.styles.button.settings.colorHover};
-  background: ${({ theme }) => theme.styles.button.settings.backgroundHover};
+  color: ${({ theme }: { theme: DefaultTheme }) => theme.styles.button.settings.colorHover};
+  background: ${({ theme }: { theme: DefaultTheme }) => theme.styles.button.settings.backgroundHover};
 }
 .dropdownInner {
   display: flex;
@@ -783,10 +783,10 @@ button:focus-visible,
 .dropdownWithContent {
   .dropdownMenuPadding {
     padding: 8px 4px;
-    color: ${({ theme }) => theme.styles.dropdown.dropdownMenu.textColor};
+    color: ${({ theme }: { theme: DefaultTheme }) => theme.styles.dropdown.dropdownMenu.textColor};
     font-size: 12px;
     a {
-      color: ${({ theme }) => theme.styles.dropdown.dropdownMenu.linkColor};
+      color: ${({ theme }: { theme: DefaultTheme }) => theme.styles.dropdown.dropdownMenu.linkColor};
     }
     .button {
       white-space: nowrap;
@@ -802,18 +802,18 @@ button:focus-visible,
 
 .cardButtons {
   border-radius: 6px;
-  background-color: ${({ theme }) => theme.styles.cardButtons.background};
+  background-color: ${({ theme }: { theme: DefaultTheme }) => theme.styles.cardButtons.background};
   flex: 0 0 100%;
   padding: 24px 16px 20px 16px;
   h4 {
     font-size: 14px;
-    color: ${({ theme }) => theme.styles.cardButtons.titleColor};
+    color: ${({ theme }: { theme: DefaultTheme }) => theme.styles.cardButtons.titleColor};
   }
   h5 {
-    color: ${({ theme }) => theme.styles.cardButtons.subTitleColor};
+    color: ${({ theme }: { theme: DefaultTheme }) => theme.styles.cardButtons.subTitleColor};
   }
   p {
-    color: ${({ theme }) => theme.styles.cardButtons.color};
+    color: ${({ theme }: { theme: DefaultTheme }) => theme.styles.cardButtons.color};
     font-weight: 395;
     font-size: 13px;
     margin-bottom: 8px;
@@ -825,8 +825,8 @@ button:focus-visible,
 }
 .tooltip .tooltip-inner{
   padding: 12px;
-  font-family: ${({ theme }) => theme.font};
-  /* background-color: ${({ theme }) => theme.styles.card.background}; */
+  font-family: ${({ theme }: { theme: DefaultTheme }) => theme.font};
+  /* background-color: ${({ theme }: { theme: DefaultTheme }) => theme.styles.card.background}; */
   font-weight: 601;
   font-size: 13px;
   letter-spacing: -0.02em;
@@ -864,10 +864,10 @@ div.card {
   border: none;
   box-shadow: none;
   border-radius: 14px;
-  background-color: ${({ theme }) => theme.styles.card.background};
+  background-color: ${({ theme }: { theme: DefaultTheme }) => theme.styles.card.background};
   &.card-preferences--battery {
     padding: 1rem 1.5rem;
-    background-color: ${({ theme }) => theme.styles.card.cardBattery.backgroundColor};
+    background-color: ${({ theme }: { theme: DefaultTheme }) => theme.styles.card.cardBattery.backgroundColor};
     border-radius: 0.375rem;
     .card-title {
       display: flex;
@@ -881,7 +881,7 @@ div.card {
       line-height: 1.5em;
       margin-bottom: 0;
       font-weight: 401;
-      color: ${({ theme }) => theme.styles.form.formLabelTextcolor};
+      color: ${({ theme }: { theme: DefaultTheme }) => theme.styles.form.formLabelTextcolor};
     }
     .custom-switch {
       width: 60px;
@@ -905,24 +905,24 @@ div.card-body {
 }
 
 div.card.card-preferences .card-title {
-  color: ${({ theme }) => theme.styles.card.cardTitleColor};
+  color: ${({ theme }: { theme: DefaultTheme }) => theme.styles.card.cardTitleColor};
 }
 div.card.card-preferences .card-title svg {
-  color: ${({ theme }) => theme.colors.gray500};
+  color: ${({ theme }: { theme: DefaultTheme }) => theme.colors.gray500};
 }
 div.card.card-preferences .card-body {
   padding-top: 0;
 }
 
 .modal-backdrop.show {
-  background-color: ${({ theme }) => theme.styles.modal.backdropColor};
+  background-color: ${({ theme }: { theme: DefaultTheme }) => theme.styles.modal.backdropColor};
   opacity: 1;
 }
 .modal .modal-content {
   transform: translateX(64px);
   border: none;
   border-radius: 6px;
-  background-color: ${({ theme }) => theme.styles.modal.background};
+  background-color: ${({ theme }: { theme: DefaultTheme }) => theme.styles.modal.background};
 }
 .modal.with-drag .modal-content {
   transform: none; //Fix drap position in chrome
@@ -939,7 +939,7 @@ div.card.card-preferences .card-body {
   opacity: 1;
   background-position: center center;
   background-repeat: no-repeat;
-  background-image: url('${({ theme }) => theme.styles.modal.closeButton}');
+  background-image: url('${({ theme }: { theme: DefaultTheme }) => theme.styles.modal.closeButton}');
 }
 .modal .modal-header .close span{
   opacity: 0;
@@ -949,32 +949,32 @@ div.card.card-preferences .card-body {
   .modalInner {
     padding: 16px 24px;
     border-radius: 6px;
-    background-color: ${({ theme }) => theme.styles.modal.backgroundInner};
+    background-color: ${({ theme }: { theme: DefaultTheme }) => theme.styles.modal.backgroundInner};
   }
 }
 .modal .modal-body .form-control {
   font-weight: 600;
   font-size: 16px;
   height: calc(1.5em + 1.5rem + 2px);
-   color: ${({ theme }) => theme.styles.form.inputColor};
-  background: ${({ theme }) => theme.styles.form.inputBackgroundColor};
-  border: 1px solid ${({ theme }) => theme.styles.form.inputBorder};
+   color: ${({ theme }: { theme: DefaultTheme }) => theme.styles.form.inputColor};
+  background: ${({ theme }: { theme: DefaultTheme }) => theme.styles.form.inputBackgroundColor};
+  border: 1px solid ${({ theme }: { theme: DefaultTheme }) => theme.styles.form.inputBorder};
 }
 .modal .modal-body .form-control:focus {
-  background: ${({ theme }) => theme.styles.form.inputBackgroundColorActive};
-  border: 1px solid ${({ theme }) => theme.styles.form.inputBorderActive};
+  background: ${({ theme }: { theme: DefaultTheme }) => theme.styles.form.inputBackgroundColorActive};
+  border: 1px solid ${({ theme }: { theme: DefaultTheme }) => theme.styles.form.inputBorderActive};
   box-shadow: none;
 }
 .modal .modal-footer {
   border: none;
   border-radius: 6px;
-  background-color: ${({ theme }) => theme.styles.modal.footerBackground};
+  background-color: ${({ theme }: { theme: DefaultTheme }) => theme.styles.modal.footerBackground};
   padding: 24px 32px;
 }
 .modal .modal-title {
   letter-spacing: -0.03em;
   font-weight:600;
-  color: ${({ theme }) => theme.styles.modal.titleColor};
+  color: ${({ theme }: { theme: DefaultTheme }) => theme.styles.modal.titleColor};
 }
 @media (min-width: 1200px) {
   .modal-xl {
@@ -1020,9 +1020,9 @@ div.card.card-preferences .card-body {
     text-align: center;
     .button.outline.gradient[disabled] {
       opacity: 1;
-      color: ${({ theme }) => theme.styles.macro.tabSaveButtonColor};
+      color: ${({ theme }: { theme: DefaultTheme }) => theme.styles.macro.tabSaveButtonColor};
       &:before {
-        background: ${({ theme }) => theme.styles.macro.tabSaveButtonBorder};
+        background: ${({ theme }: { theme: DefaultTheme }) => theme.styles.macro.tabSaveButtonBorder};
       }
       .buttonFX {
         display: none;
@@ -1044,9 +1044,9 @@ div.card.card-preferences .card-body {
     padding: 2px;
   }
   .recordButton {
-    border: 3px solid ${({ theme }) => theme.styles.button.recordButton.borderColor};
-    background:  ${({ theme }) => theme.styles.button.recordButton.background};
-    color: ${({ theme }) => theme.styles.button.recordButton.color};
+    border: 3px solid ${({ theme }: { theme: DefaultTheme }) => theme.styles.button.recordButton.borderColor};
+    background:  ${({ theme }: { theme: DefaultTheme }) => theme.styles.button.recordButton.background};
+    color: ${({ theme }: { theme: DefaultTheme }) => theme.styles.button.recordButton.color};
     backdrop-filter: blur(5px);
     border-radius: 32px;
     width: 204px;
@@ -1057,7 +1057,7 @@ div.card.card-preferences .card-body {
       display: none;
     }
     &.isResume {
-      border: 3px solid ${({ theme }) => theme.styles.button.recordButton.borderColorResume};
+      border: 3px solid ${({ theme }: { theme: DefaultTheme }) => theme.styles.button.recordButton.borderColorResume};
     }
     &.isRecording {
       svg {
@@ -1068,7 +1068,7 @@ div.card.card-preferences .card-body {
       }
     }
     &:hover {
-      background:  ${({ theme }) => theme.styles.button.recordButton.backgroundHover};
+      background:  ${({ theme }: { theme: DefaultTheme }) => theme.styles.button.recordButton.backgroundHover};
     }
     .buttonLabel {
       justify-content: center;
@@ -1076,15 +1076,15 @@ div.card.card-preferences .card-body {
   }
   .recordMacroOptions {
     padding: 12px;
-    background-color: ${({ theme }) => theme.styles.macro.recordMacroOptionsBackground};
+    background-color: ${({ theme }: { theme: DefaultTheme }) => theme.styles.macro.recordMacroOptionsBackground};
     display: flex;
     align-items: center;
     justify-content: center;
     flex-wrap: nowrap;
-    box-shadow: ${({ theme }) => theme.styles.macro.recordMacroOptionsBoxShadow};
+    box-shadow: ${({ theme }: { theme: DefaultTheme }) => theme.styles.macro.recordMacroOptionsBoxShadow};
     h5 {
       letter-spacing: 0.2em;
-      color: ${({ theme }) => theme.styles.macro.recordMacroOptionsTitle};
+      color: ${({ theme }: { theme: DefaultTheme }) => theme.styles.macro.recordMacroOptionsTitle};
       margin-right: 8px;
       margin-bottom: 0;
     }
@@ -1102,7 +1102,7 @@ div.card.card-preferences .card-body {
 }
 .timelineRecordTracking {
   padding: 12px 0;
-  background-color: ${({ theme }) => theme.styles.macro.timelineRecordTrackingBackground};
+  background-color: ${({ theme }: { theme: DefaultTheme }) => theme.styles.macro.timelineRecordTrackingBackground};
   position: relative;
   width: 100%;
   overflow: hidden;
@@ -1128,7 +1128,7 @@ div.card.card-preferences .card-body {
     position: absolute;
     height: 62px;
     width: 1px;
-    background-color: ${({ theme }) => theme.styles.macro.timelinePointeText};
+    background-color: ${({ theme }: { theme: DefaultTheme }) => theme.styles.macro.timelinePointeText};
     top: 50%;
     right: -2px;
     transform: translate(0, -50%);
@@ -1145,9 +1145,9 @@ div.card.card-preferences .card-body {
   .keySpecial {
     padding: 6px;
     border-radius: 3px;
-    color: ${({ theme }) => theme.styles.macro.specialKeyColor};
+    color: ${({ theme }: { theme: DefaultTheme }) => theme.styles.macro.specialKeyColor};
     margin: 0 3px;
-    border: 1px solid ${({ theme }) => theme.styles.macro.specialKeyColor};
+    border: 1px solid ${({ theme }: { theme: DefaultTheme }) => theme.styles.macro.specialKeyColor};
     font-size: 13px;
   }
 }
@@ -1155,7 +1155,7 @@ div.card.card-preferences .card-body {
   text-align: center;
   margin: 32px auto;
   max-width: 550px;
-  color: ${({ theme }) => theme.styles.macro.recordingMessageColor};
+  color: ${({ theme }: { theme: DefaultTheme }) => theme.styles.macro.recordingMessageColor};
   font-size: 14px;
   font-weight: 395;
 }
@@ -1168,14 +1168,14 @@ div.card.card-preferences .card-body {
 .progress {
   border-radius: 0;
   height: 6px;
-  background-color: ${({ theme }) => theme.styles.progress.progressBackground};
+  background-color: ${({ theme }: { theme: DefaultTheme }) => theme.styles.progress.progressBackground};
   overflow: visible;
 }
 .progress-bar {
   height: 6px;
   border-radius: 3px;
-  box-shadow: ${({ theme }) => theme.styles.progress.boxShadow};
-  background-color: ${({ theme }) => theme.styles.progress.progressBarBackground};
+  box-shadow: ${({ theme }: { theme: DefaultTheme }) => theme.styles.progress.boxShadow};
+  background-color: ${({ theme }: { theme: DefaultTheme }) => theme.styles.progress.progressBarBackground};
 }
 
 //
@@ -1183,7 +1183,7 @@ div.card.card-preferences .card-body {
 //
 .keyMacro {
   border-radius: 4px;
-  background: ${({ theme }) => theme.styles.macroKey.background};
+  background: ${({ theme }: { theme: DefaultTheme }) => theme.styles.macroKey.background};
   padding: 3px;
   width: 100px;
   height: 64px;
@@ -1192,8 +1192,8 @@ div.card.card-preferences .card-body {
   flex-wrap: wrap;
   .headerDrag {
       border-radius: 4px 4px 0px 0px;
-      background-color:  ${({ theme }) => theme.styles.macroKey.backgroundHeader};
-      border-bottom: 1px solid ${({ theme }) => theme.styles.macroKey.borderColor};
+      background-color:  ${({ theme }: { theme: DefaultTheme }) => theme.styles.macroKey.backgroundHeader};
+      border-bottom: 1px solid ${({ theme }: { theme: DefaultTheme }) => theme.styles.macroKey.borderColor};
       display: flex;
       flex-wrap: nowrap;
       justify-content: space-between;
@@ -1203,11 +1203,11 @@ div.card.card-preferences .card-body {
       flex: 0 0 100%;
   }
   .dragable {
-    color:  ${({ theme }) => theme.styles.macroKey.iconDragColor};
+    color:  ${({ theme }: { theme: DefaultTheme }) => theme.styles.macroKey.iconDragColor};
     padding: 0 6px;
   }
   .actionicon {
-    color:  ${({ theme }) => theme.styles.macroKey.actionIconColor};
+    color:  ${({ theme }: { theme: DefaultTheme }) => theme.styles.macroKey.actionIconColor};
   }
   .bodyDrag {
       display: flex;
@@ -1230,26 +1230,26 @@ div.card.card-preferences .card-body {
   .keyMacroMiniDashboard {
     border-radius: 6px;
     overflow: hidden;
-    border: ${({ theme }) => theme.styles.macro.keyMacroMiniDashboardBorder};
+    border: ${({ theme }: { theme: DefaultTheme }) => theme.styles.macro.keyMacroMiniDashboardBorder};
   }
     .keyInfo {
       padding: 16px 12px 12px 12px;
-      background: ${({ theme }) => theme.styles.macro.keyInfoBackground};
+      background: ${({ theme }: { theme: DefaultTheme }) => theme.styles.macro.keyInfoBackground};
       h4 {
           font-weight: 600;
           text-transform: uppercase;
           margin: 0;
           font-size: 13px;
           font-weight: 500;
-          color: ${({ theme }) => theme.styles.macro.keyInfoTitle};
+          color: ${({ theme }: { theme: DefaultTheme }) => theme.styles.macro.keyInfoTitle};
       }
     }
     .keyFunctions {
-        border-top: 1px solid ${({ theme }) => theme.styles.macro.keyFunctionsBorder};
+        border-top: 1px solid ${({ theme }: { theme: DefaultTheme }) => theme.styles.macro.keyFunctionsBorder};
         padding: 12px 8px;
-        background: ${({ theme }) => theme.styles.macro.keyInfoBackground};
+        background: ${({ theme }: { theme: DefaultTheme }) => theme.styles.macro.keyInfoBackground};
         h5 {
-            color: ${({ theme }) => theme.styles.macro.keyFunctionTile};
+            color: ${({ theme }: { theme: DefaultTheme }) => theme.styles.macro.keyFunctionTile};
             font-size: 13px;
             font-weight: 500;
             text-transform: none;
@@ -1265,13 +1265,13 @@ div.card.card-preferences .card-body {
       margin-right: -2px;
     }
     .button-config {
-      color: ${({ theme }) => theme.styles.button.config.color};
+      color: ${({ theme }: { theme: DefaultTheme }) => theme.styles.button.config.color};
       white-space: nowrap;
       margin: 0 2px;
       flex-grow: 1;
       text-align: center;
       &:hover {
-        color: ${({ theme }) => theme.styles.button.config.colorHover};
+        color: ${({ theme }: { theme: DefaultTheme }) => theme.styles.button.config.colorHover};
       }
       &.active {
         color: #fff;
@@ -1279,9 +1279,9 @@ div.card.card-preferences .card-body {
     }
     .keyModifiers {
       padding: 12px 8px;
-      background: ${({ theme }) => theme.styles.macro.keyMacroMiniDashboardBackground};
+      background: ${({ theme }: { theme: DefaultTheme }) => theme.styles.macro.keyMacroMiniDashboardBackground};
       h4 {
-          color: ${({ theme }) => theme.styles.macro.keyFunctionTile};
+          color: ${({ theme }: { theme: DefaultTheme }) => theme.styles.macro.keyFunctionTile};
           font-size: 13px;
           font-weight: 500;
           text-transform: none;
@@ -1290,7 +1290,7 @@ div.card.card-preferences .card-body {
       }
     }
     .keyValue {
-      color: ${({ theme }) => theme.styles.macro.keyValueColor};
+      color: ${({ theme }: { theme: DefaultTheme }) => theme.styles.macro.keyValueColor};
       font-size: 24px;
       font-weight: 600;
       text-transform: capitalize;
@@ -1330,13 +1330,13 @@ div.card.card-preferences .card-body {
   }
   .keyMacroOptions {
     .dropdown-toggle.btn.btn-primary{
-      color: ${({ theme }) => theme.styles.macroKey.dropdownIconColor};
+      color: ${({ theme }: { theme: DefaultTheme }) => theme.styles.macroKey.dropdownIconColor};
       border: none;
     }
     &.show {
     .dropdown-toggle.btn.btn-primary {
       color: #fff;
-      background-color: ${({ theme }) => theme.styles.macroKey.dropdownIconColor};
+      background-color: ${({ theme }: { theme: DefaultTheme }) => theme.styles.macroKey.dropdownIconColor};
       border: none;
     }
   }
@@ -1344,53 +1344,53 @@ div.card.card-preferences .card-body {
 .isModifier {
 .keyMacroOptions {
   .dropdown-toggle.btn.btn-primary{
-    color: ${({ theme }) => theme.styles.macroKey.dropdownIconColorModifier};
+    color: ${({ theme }: { theme: DefaultTheme }) => theme.styles.macroKey.dropdownIconColorModifier};
   }
 }
 .keyMacro {
   order: 2;
   // width: 86px;
-  color: ${({ theme }) => theme.styles.macroKey.colorModifier};
+  color: ${({ theme }: { theme: DefaultTheme }) => theme.styles.macroKey.colorModifier};
   .headerDrag {
     order: 2;
     border-radius: 0px 0px 4px 4px;
-    background-color: ${({ theme }) => theme.styles.macroKey.backgroundHeaderModifier};
+    background-color: ${({ theme }: { theme: DefaultTheme }) => theme.styles.macroKey.backgroundHeaderModifier};
     border-bottom: none;
-    border-top: 1px solid ${({ theme }) => theme.styles.macroKey.borderColorModifier};
+    border-top: 1px solid ${({ theme }: { theme: DefaultTheme }) => theme.styles.macroKey.borderColorModifier};
   }
   .bodyDrag {
     order: 1;
   }
   .dragable {
-    color:  ${({ theme }) => theme.styles.macroKey.iconDragColorModifier};
+    color:  ${({ theme }: { theme: DefaultTheme }) => theme.styles.macroKey.iconDragColorModifier};
   }
 }
 .keyMacroFreeSlot {
   order: 1;
 }
 .actionicon {
-  color:  ${({ theme }) => theme.styles.macroKey.actionColorModifier};
+  color:  ${({ theme }: { theme: DefaultTheme }) => theme.styles.macroKey.actionColorModifier};
 }
 
 // Shift modifiers
 &.keyCode-229,
 &.keyCode-225 {
   .keyMacro {
-    background: ${({ theme }) => theme.styles.macroKey.shift.background};
-    color:  ${({ theme }) => theme.styles.macroKey.shift.color};
+    background: ${({ theme }: { theme: DefaultTheme }) => theme.styles.macroKey.shift.background};
+    color:  ${({ theme }: { theme: DefaultTheme }) => theme.styles.macroKey.shift.color};
   }
   .keyMacroFreeSlot {
     background: transparent;
   }
   .actionicon {
-    color:  ${({ theme }) => theme.styles.macroKey.shift.actionColor};
+    color:  ${({ theme }: { theme: DefaultTheme }) => theme.styles.macroKey.shift.actionColor};
   }
 }
 // Control modifiers
 &.keyCode-224,
 &.keyCode-228 {
   .keyMacro {
-    background: ${({ theme }) => theme.styles.macroKey.control.background};
+    background: ${({ theme }: { theme: DefaultTheme }) => theme.styles.macroKey.control.background};
   }
   .keyMacroFreeSlot {
     background: transparent;
@@ -1400,7 +1400,7 @@ div.card.card-preferences .card-body {
 &.keyCode-226,
 &.keyCode-230 {
   .keyMacro {
-    background: ${({ theme }) => theme.styles.macroKey.alt.background};
+    background: ${({ theme }: { theme: DefaultTheme }) => theme.styles.macroKey.alt.background};
   }
   .keyMacroFreeSlot {
     background: transparent;
@@ -1410,7 +1410,7 @@ div.card.card-preferences .card-body {
 &.keyCode-227,
 &.keyCode-231 {
   .keyMacro {
-    background: ${({ theme }) => theme.styles.macroKey.os.background};
+    background: ${({ theme }: { theme: DefaultTheme }) => theme.styles.macroKey.os.background};
   }
   .keyMacroFreeSlot {
     background: transparent;
@@ -1420,24 +1420,24 @@ div.card.card-preferences .card-body {
 .isDelay {
 .keyMacroOptions {
   .dropdown-toggle.btn.btn-primary{
-    color: ${({ theme }) => theme.styles.macroKey.dropdownIconColorModifier};
+    color: ${({ theme }: { theme: DefaultTheme }) => theme.styles.macroKey.dropdownIconColorModifier};
   }
 }
 .keyMacro {
-  background:  ${({ theme }) => theme.styles.macroKey.delay.background};
-  color: ${({ theme }) => theme.styles.macroKey.delay.color};
+  background:  ${({ theme }: { theme: DefaultTheme }) => theme.styles.macroKey.delay.background};
+  color: ${({ theme }: { theme: DefaultTheme }) => theme.styles.macroKey.delay.color};
   .headerDrag {
-    border-bottom: 1px solid ${({ theme }) => theme.styles.macroKey.delay.borderColor};
+    border-bottom: 1px solid ${({ theme }: { theme: DefaultTheme }) => theme.styles.macroKey.delay.borderColor};
   }
 }
 .keyMacroFreeSlot {
   background: transparent;
 }
 .dragable {
-  color:  ${({ theme }) => theme.styles.macroKey.iconDragColorModifier};
+  color:  ${({ theme }: { theme: DefaultTheme }) => theme.styles.macroKey.iconDragColorModifier};
 }
 .actionicon {
-  color:  ${({ theme }) => theme.styles.macroKey.delay.actionIconColor};
+  color:  ${({ theme }: { theme: DefaultTheme }) => theme.styles.macroKey.delay.actionIconColor};
 }
 }
 
@@ -1447,14 +1447,14 @@ div.card.card-preferences .card-body {
 //
 .form-label {
   font-size: 14px;
-  color: ${({ theme }) => theme.styles.form.formLabelTextcolor};
+  color: ${({ theme }: { theme: DefaultTheme }) => theme.styles.form.formLabelTextcolor};
   margin-bottom: .25rem;
 }
 .custom-control.custom-switch .custom-control-label::before {
   width: 60px;
   height: 32px;
   border-radius: 30px;
-  background: ${({ theme }) => theme.styles.switch.background};
+  background: ${({ theme }: { theme: DefaultTheme }) => theme.styles.switch.background};
   border: none;
   box-shadow: none;
 }
@@ -1465,55 +1465,55 @@ div.card.card-preferences .card-body {
   width:24px;
   height:24px;
   border-radius: 50%;
-  background-color: ${({ theme }) => theme.styles.switch.thumbBackground};
-  border: 1px solid ${({ theme }) => theme.styles.switch.thumbBorderColor};
-  box-shadow: ${({ theme }) => theme.styles.switch.thumbBoxShadow};
+  background-color: ${({ theme }: { theme: DefaultTheme }) => theme.styles.switch.thumbBackground};
+  border: 1px solid ${({ theme }: { theme: DefaultTheme }) => theme.styles.switch.thumbBorderColor};
+  box-shadow: ${({ theme }: { theme: DefaultTheme }) => theme.styles.switch.thumbBoxShadow};
   top: 8px;
   left: -32px;
 }
 .custom-control.custom-switch .custom-control-input:checked~.custom-control-label::before {
-  background-color: ${({ theme }) => theme.styles.switch.backgroundActive};
+  background-color: ${({ theme }: { theme: DefaultTheme }) => theme.styles.switch.backgroundActive};
   border: none;
 }
 .custom-control.custom-switch .custom-control-input:checked~.custom-control-label::after {
   transform: translateX(28px);
-  background-color: ${({ theme }) => theme.styles.switch.thumbBackgroundActive};
-  border: 1px solid ${({ theme }) => theme.styles.switch.thumbBorderColorActive};
-  box-shadow: ${({ theme }) => theme.styles.switch.thumbBoxShadowActive};
+  background-color: ${({ theme }: { theme: DefaultTheme }) => theme.styles.switch.thumbBackgroundActive};
+  border: 1px solid ${({ theme }: { theme: DefaultTheme }) => theme.styles.switch.thumbBorderColorActive};
+  box-shadow: ${({ theme }: { theme: DefaultTheme }) => theme.styles.switch.thumbBoxShadowActive};
 }
 
 .rangeslider {
   height: 6px;
   border-radius: 3px;
-  background-color: ${({ theme }) => theme.styles.slider.trackColor};
+  background-color: ${({ theme }: { theme: DefaultTheme }) => theme.styles.slider.trackColor};
 }
 .rangeslider, .rangeslider .rangeslider__fill {
   box-shadow: none;
 }
 .rangeslider-horizontal .rangeslider__fill {
   height: 100%;
-  background-color: ${({ theme }) => theme.styles.slider.progressColor};
+  background-color: ${({ theme }: { theme: DefaultTheme }) => theme.styles.slider.progressColor};
   border-radius: 3px;
   top: 0;
   box-shadow: none;
 }
 .rangeslider-horizontal.slider-danger .rangeslider__fill {
-  background-color: ${({ theme }) => theme.colors.brandPrimary};
+  background-color: ${({ theme }: { theme: DefaultTheme }) => theme.colors.brandPrimary};
 }
 
 .rangeslider-horizontal .rangeslider__handle {
-  background: ${({ theme }) => theme.styles.slider.handleBackgroundColor};
-  border: 3px solid ${({ theme }) => theme.styles.slider.handleBorderColor};
+  background: ${({ theme }: { theme: DefaultTheme }) => theme.styles.slider.handleBackgroundColor};
+  border: 3px solid ${({ theme }: { theme: DefaultTheme }) => theme.styles.slider.handleBorderColor};
   box-sizing: border-box;
-  box-shadow: 0px 4px 12px ${({ theme }) => theme.styles.slider.handleBoxShadow};
+  box-shadow: 0px 4px 12px ${({ theme }: { theme: DefaultTheme }) => theme.styles.slider.handleBoxShadow};
   width: 18px;
   height: 18px;
   border-radius: 50%;
   font-weight: 600;
 }
 .rangeslider-horizontal.slider-danger .rangeslider__handle {
-  background-color: ${({ theme }) => theme.colors.brandPrimary};
-  box-shadow: 0px 4px 12px ${({ theme }) => theme.colors.brandPrimary};
+  background-color: ${({ theme }: { theme: DefaultTheme }) => theme.colors.brandPrimary};
+  box-shadow: 0px 4px 12px ${({ theme }: { theme: DefaultTheme }) => theme.colors.brandPrimary};
 }
 .rangeslider-horizontal .rangeslider__handle:after {
   content: none;
@@ -1532,7 +1532,7 @@ div.card.card-preferences .card-body {
   }
 }
 .tagsfix {
-  color: ${({ theme }) => theme.styles.slider.labelColor};
+  color: ${({ theme }: { theme: DefaultTheme }) => theme.styles.slider.labelColor};
   font-weight: 200;
   font-size: 13px;
   font-weight: 600;
@@ -1561,7 +1561,7 @@ div.card.card-preferences .card-body {
 }
 @media screen and (min-width: 1000px) {
   #root {
-    --sidebarWidth: ${({ theme }) => theme.sidebarWidthLarge}px;
+    --sidebarWidth: ${({ theme }: { theme: DefaultTheme }) => theme.sidebarWidthLarge}px;
   }
   .bs-tooltip-right.tooltipMenu {
     display: none!important;
@@ -1581,7 +1581,7 @@ div.card.card-preferences .card-body {
 
 @media screen and (max-height: 870px) {
   #root {
-    --sidebarWidth: ${({ theme }) => theme.sidebarWidthMedium}px;
+    --sidebarWidth: ${({ theme }: { theme: DefaultTheme }) => theme.sidebarWidthMedium}px;
   }
   div.main-container {
     padding-left: 8px;
@@ -1594,7 +1594,7 @@ div.card.card-preferences .card-body {
 
 @media screen and (max-height: 670px) {
   #root {
-    --sidebarWidth: ${({ theme }) => theme.sidebarWidthSmall}px;
+    --sidebarWidth: ${({ theme }: { theme: DefaultTheme }) => theme.sidebarWidthSmall}px;
   }
 }
 
@@ -1680,17 +1680,17 @@ div.card.card-preferences .card-body {
 //
 .customCheckbox {
   .form-check::before {
-    border: 2px solid ${({ theme }) => theme.styles.customCheckbox.borderColor};
+    border: 2px solid ${({ theme }: { theme: DefaultTheme }) => theme.styles.customCheckbox.borderColor};
   }
   .form-check::after {
-    background-color: ${({ theme }) => theme.styles.customCheckbox.background};
+    background-color: ${({ theme }: { theme: DefaultTheme }) => theme.styles.customCheckbox.background};
   }
   &.active {
     .form-check::before {
-      border: 2px solid ${({ theme }) => theme.styles.customCheckbox.borderColorActive};
+      border: 2px solid ${({ theme }: { theme: DefaultTheme }) => theme.styles.customCheckbox.borderColorActive};
     }
     .form-check::after {
-      background-color: ${({ theme }) => theme.styles.customCheckbox.backgroundActive};
+      background-color: ${({ theme }: { theme: DefaultTheme }) => theme.styles.customCheckbox.backgroundActive};
     }
   }
 }
@@ -1841,26 +1841,26 @@ div.card.card-preferences .card-body {
   grid-gap: 32px;
 }
 .virtualKeyboards-col {
-  background: ${({ theme }) => theme.styles.virtualKeyboard.cardBackground};
-  border: 1px solid ${({ theme }) => theme.styles.virtualKeyboard.cardBorder};
+  background: ${({ theme }: { theme: DefaultTheme }) => theme.styles.virtualKeyboard.cardBackground};
+  border: 1px solid ${({ theme }: { theme: DefaultTheme }) => theme.styles.virtualKeyboard.cardBorder};
   border-radius: 14px;
   padding: 32px;
   flex: 1;
   h4 {
-    color: ${({ theme }) => theme.styles.virtualKeyboard.cardTitleColor};
+    color: ${({ theme }: { theme: DefaultTheme }) => theme.styles.virtualKeyboard.cardTitleColor};
   }
   p {
-    font-family: ${({ theme }) => theme.font};
+    font-family: ${({ theme }: { theme: DefaultTheme }) => theme.font};
     font-weight: 401;
     font-size: 15px;
-    color: ${({ theme }) => theme.styles.virtualKeyboard.cardTextColor};
+    color: ${({ theme }: { theme: DefaultTheme }) => theme.styles.virtualKeyboard.cardTextColor};
     margin-top: 16px;
     margin-bottom: 24px;
   }
   label {
     font-weight: 700;
     font-size: 14px;
-    color: ${({ theme }) => theme.styles.virtualKeyboard.labelTextColor};
+    color: ${({ theme }: { theme: DefaultTheme }) => theme.styles.virtualKeyboard.labelTextColor};
     margin: 0;
   }
 }
@@ -1870,17 +1870,17 @@ div.card.card-preferences .card-body {
   position: relative;
   border: none;
   padding: 0;
-  background-color: ${({ theme }) => theme.styles.virtualKeyboard.orLineColor};
+  background-color: ${({ theme }: { theme: DefaultTheme }) => theme.styles.virtualKeyboard.orLineColor};
   span {
     position: absolute;
     top: 32px;
     left: 50%;
     transform: translateX(-50%);
     padding: 4px 6px;
-    color: ${({ theme }) => theme.styles.virtualKeyboard.orTextColor};
+    color: ${({ theme }: { theme: DefaultTheme }) => theme.styles.virtualKeyboard.orTextColor};
     font-weight: 700;
     font-size: 12px;
-    background-color: ${({ theme }) => theme.styles.virtualKeyboard.orBgColor};
+    background-color: ${({ theme }: { theme: DefaultTheme }) => theme.styles.virtualKeyboard.orBgColor};
   }
 }
 .virtualKeyboards-wrapper {
@@ -1899,9 +1899,9 @@ div.card.card-preferences .card-body {
       text-transform: capitalize;
     }
     .dropdownItemSelected {
-      color: ${({ theme }) => theme.styles.dropdown.textButtonColor};
+      color: ${({ theme }: { theme: DefaultTheme }) => theme.styles.dropdown.textButtonColor};
       &:hover {
-        color: ${({ theme }) => theme.styles.dropdown.textButtonHover};
+        color: ${({ theme }: { theme: DefaultTheme }) => theme.styles.dropdown.textButtonHover};
       }
     }
     .dropdownIcon + .dropdownItem {
