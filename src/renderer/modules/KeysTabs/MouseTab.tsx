@@ -136,7 +136,7 @@ function MouseTab({ keyCode, onAddSpecial, actTab = "standard", disabled }: Mous
                 </Button>
               </div>
             </div>
-            {actTab !== "super" ? (
+            {actTab === "editor" ? (
               <div className="movementsAndWheels flex gap-4">
                 <div className="movementButtons">
                   <Heading headingLevel={4} renderAs="h4" className="m-0 text-base">

@@ -44,9 +44,12 @@ const HeadingVariants = cva(
 export interface HeadingVariantsProps extends React.HTMLAttributes<HTMLHeadingElement>, VariantProps<typeof HeadingVariants> {
   headingLevel?: 1 | 2 | 3 | 4 | 5 | 6;
   children: React.ReactNode;
+  renderAs?: "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "paragraph" | "paragraph-sm" | "display-lg" | "display-md" | "display-sm";
+  variant?: "default" | "warning" | "success" | "info" | "danger";
+  className?: string;
 }
 
-const Heading: React.FC<HeadingVariantsProps> = ({ className, variant, renderAs, headingLevel = 3, children, ...props }) => {
+const Heading: React.FC<HeadingVariantsProps> = ({ className, variant, renderAs, headingLevel = 3, children }) => {
   const Tag = `h${headingLevel}` as keyof JSX.IntrinsicElements;
   return React.createElement(Tag, { className: cn(HeadingVariants({ variant, renderAs, className })) }, children);
 };

@@ -1,11 +1,11 @@
-import { ReactNode } from "react";
+import { ReactElement, ReactNode } from "react";
 
 export interface PageHeaderType {
   size?: number;
   text: string;
   styles?: string;
   contentSelector?: ReactNode | undefined;
-  colorEditor?: ReactNode | undefined;
+  colorEditor?: ReactElement | undefined;
   isColorActive?: boolean;
   showSaving?: boolean;
   saveContext?: () => Promise<void> | void;

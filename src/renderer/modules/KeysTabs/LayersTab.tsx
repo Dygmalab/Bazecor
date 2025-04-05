@@ -2,7 +2,7 @@
 import React, { useMemo, useState, useEffect, useCallback } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { toast } from "react-toastify";
-// import log from "electron-log/renderer";
+import log from "electron-log/renderer";
 
 import { Button } from "@Renderer/components/atoms/Button";
 import Heading from "@Renderer/components/atoms/Heading";
@@ -13,6 +13,7 @@ import ToastMessage from "@Renderer/components/atoms/ToastMessage";
 import CustomRadioCheckBox from "@Renderer/components/molecules/Form/CustomRadioCheckBox";
 import { Separator } from "@Renderer/components/atoms/Separator";
 import { SegmentedKeyType } from "@Renderer/types/layout";
+import { MacrosType } from "@Renderer/types/macros";
 import { KeymapDB } from "../../../api/keymap";
 import { Picker } from "../KeyPickerKeyboard";
 
@@ -22,7 +23,8 @@ interface LayersTabProps {
   disabled?: boolean;
   activeTab?: string;
   selectedlanguage?: string;
-  macros?: any;
+  macro?: MacrosType;
+  action?: number;
   triggerDeleteLastItem?: any;
 }
 
@@ -32,7 +34,8 @@ const LayersTab = ({
   disabled,
   activeTab,
   selectedlanguage,
-  macros,
+  macro,
+  action,
   triggerDeleteLastItem,
 }: LayersTabProps) => {
   const [disableOneShotButtons, setDisableOneShotButtons] = useState<boolean>(false);
@@ -131,23 +134,26 @@ const LayersTab = ({
   };
 
   const handleSetActiveLayerTab = (value: "layerLock" | "layerShift" | "layerShot" | "layerDual") => {
-    setActiveLayerTab(value);
-    const layerItem = findLayerType(undefined, value, activeLayerNumber);
+    log.info("handleSetActiveLayerTab", value, activeTab, action);
+    const localSKcheck = activeTab === "super" && (action === 0 || action === 3) ? "layerLock" : value;
+    setActiveLayerTab(localSKcheck);
+    const layerItem = findLayerType(undefined, localSKcheck, activeLayerNumber);
     onKeySelect(layerItem.keynum);
   };
 
   useEffect(() => {
     const layerItem = findLayerType(undefined, activeLayerTab, activeLayerNumber);
-    if (macros && activeTab === "macro" && layerItem && triggerDeleteLastItem) {
-      triggerDeleteLastItem.timelineEditorForm.current.timelineEditorMacroTable.current.onDeleteRow(macros.actions.length - 1);
+    if (macro && activeTab === "macro" && layerItem && triggerDeleteLastItem) {
+      triggerDeleteLastItem.timelineEditorForm.current.timelineEditorMacroTable.current.onDeleteRow(macro.actions.length - 1);
     }
     // eslint-disable-next-line
   }, [activeLayerTab]);
 
   useEffect(() => {
     const layerItem = findLayerType(keyNumInternal);
+    log.info("useEffect keyNumInternal", keyNumInternal, layerItem);
     if (layerItem) {
-      setActiveLayerTab(layerItem?.type);
+      setActiveLayerTab(activeTab === "super" && (action === 0 || action === 3) ? "layerLock" : layerItem?.type);
       setActiveLayerNumber(layerItem?.layer);
       if (layerItem.type === "layerShot") {
         setDisableOneShotButtons(true);
@@ -155,7 +161,7 @@ const LayersTab = ({
         setDisableOneShotButtons(false);
       }
     } else {
-      setActiveLayerTab("layerShift");
+      setActiveLayerTab(activeTab === "super" && (action === 0 || action === 3) ? "layerLock" : "layerShift");
       setActiveLayerNumber(0);
     }
     // eslint-disable-next-line

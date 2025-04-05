@@ -160,7 +160,17 @@ const BackupSettings = (props: BackupSettingsProps) => {
       log.info("Restored latest backup");
     } catch (error) {
       log.error(error);
-      alert(`The loaded backup could not be restored`);
+      toast.warn(
+        <ToastMessage
+          title="Could not restore backup"
+          content={`Could not restore backup: ${error}`}
+          icon={<IconArrowDownWithLine />}
+        />,
+        {
+          autoClose: 2000,
+          icon: "",
+        },
+      );
     }
   };
 
@@ -172,6 +182,70 @@ const BackupSettings = (props: BackupSettingsProps) => {
   const triggerGetBackup = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
     GetBackup();
+  };
+
+  const triggerExportBackup = async (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+    const options = {
+      title: "Export most recent backup",
+      buttonLabel: "Export",
+      filters: [
+        { name: "Json", extensions: ["json"] },
+        { name: i18n.dialog.allFiles, extensions: ["*"] },
+      ],
+    };
+
+    const resp = await ipcRenderer.invoke("save-dialog", options);
+
+    if (!resp.canceled) {
+      log.info("Response: ", resp);
+      try {
+        const backup = await Backup.getLatestBackup(backupFolder, neuronID, state.currentDevice);
+        log.info("Backup found", backup, resp);
+        if (backup === undefined) {
+          toast.error(
+            <ToastMessage
+              title="No backup found"
+              content="No backup found in the backup folder"
+              icon={<IconArrowDownWithLine />}
+            />,
+            {
+              autoClose: 2000,
+              icon: "",
+            },
+          );
+          return;
+        }
+        fs.writeFileSync(resp, JSON.stringify(backup));
+        log.info("Backup exported to", resp);
+        toast.success(
+          <ToastMessage
+            title="Backup exported"
+            content="The backup was exported successfully"
+            icon={<IconArrowDownWithLine />}
+          />,
+          {
+            autoClose: 2000,
+            icon: "",
+          },
+        );
+      } catch (e) {
+        log.error(e);
+        toast.warn(
+          <ToastMessage
+            title="Could not export backup"
+            content={`Could not export backup: ${e}`}
+            icon={<IconArrowDownWithLine />}
+          />,
+          {
+            autoClose: 2000,
+            icon: "",
+          },
+        );
+      }
+    } else {
+      log.info("user closed SaveDialog");
+    }
   };
 
   return (
@@ -194,11 +268,14 @@ const BackupSettings = (props: BackupSettingsProps) => {
         <form className={`${enabled ? "" : "opacity-30 mt-4"}`}>
           <h3 className="mb-1 text-gray-400 dark:text-gray-100 tracking-tight font-semibold">Backup actions</h3>
           <div className="flex gap-3">
-            <Button variant="short" onClick={event => triggerGetBackup(event)} disabled={!connected}>
-              Restore backup from file...
-            </Button>
             <Button variant="short" onClick={event => triggerGetLatestBackup(event)} disabled={!connected}>
-              Restore from last backup
+              Restore last backup
+            </Button>
+            <Button variant="short" onClick={event => triggerGetBackup(event)} disabled={!connected}>
+              Load backup
+            </Button>
+            <Button variant="short" onClick={event => triggerExportBackup(event)} disabled={!connected}>
+              Export backup
             </Button>
             <WaitForRestoreDialog title="Restoring Backup" open={performingBackup} />
           </div>

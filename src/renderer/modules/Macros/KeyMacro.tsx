@@ -1,5 +1,5 @@
 import React, { useMemo, useCallback, useState } from "react";
-import { withTheme, DefaultTheme } from "styled-components";
+import { useTheme, DefaultTheme } from "styled-components";
 import { Popover, PopoverContent, PopoverTrigger } from "@Renderer/components/atoms/Popover";
 import { i18n } from "@Renderer/i18n";
 import {
@@ -39,22 +39,13 @@ interface KeyMacroProps {
   onDeleteRow: (id: number) => void;
   onCloneRow: (id: number) => void;
   editDelay: (id: number, delay: number | number[]) => void;
-  theme: DefaultTheme;
+  theme?: DefaultTheme;
 }
 
-const KeyMacro: React.FC<KeyMacroProps> = ({
-  provided,
-  snapshot,
-  item,
-  modifiers,
-  addModifier,
-  actionTypes,
-  updateAction,
-  onDeleteRow,
-  onCloneRow,
-  editDelay,
-  theme,
-}) => {
+const KeyMacro = (props: KeyMacroProps) => {
+  const { provided, snapshot, item, modifiers, addModifier, actionTypes, updateAction, onDeleteRow, onCloneRow, editDelay } =
+    props;
+  const theme = useTheme();
   const getItemStyle = useCallback(
     (isDragging: boolean, draggableStyle: any) => ({
       ...draggableStyle,
@@ -288,4 +279,4 @@ const KeyMacro: React.FC<KeyMacroProps> = ({
   );
 };
 
-export default withTheme(KeyMacro);
+export default KeyMacro;

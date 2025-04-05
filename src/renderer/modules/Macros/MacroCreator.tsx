@@ -35,6 +35,7 @@ import {
 } from "@Renderer/components/atoms/icons";
 import Heading from "@Renderer/components/atoms/Heading";
 import RecordMacroModal from "@Renderer/modules/Macros/RecordMacroModal";
+import { MacroActionsType, MacrosType, RowsRepresentation } from "@Renderer/types/macros";
 import TextTab from "../KeysTabs/TextTab";
 import KeysTab from "../KeysTabs/KeysTab";
 import LayersTab from "../KeysTabs/LayersTab";
@@ -43,7 +44,6 @@ import DelayTab from "../KeysTabs/DelayTab";
 import MediaAndLightTab from "../KeysTabs/MediaAndLightTab";
 import MouseTab from "../KeysTabs/MouseTab";
 import { KeymapDB } from "../../../api/keymap";
-import { MacroActionsType, MacrosType, RowsRepresentation } from "@Renderer/types/macros";
 import { LanguageType } from "../../../api/keymap/types";
 import { addModToKey, assignColor, createConversion, revertConversion } from "./utils";
 
@@ -207,15 +207,15 @@ const MacroCreator = (props: Props) => {
     }
   }, [macro.actions, macros, props]);
 
-  const updateRows = (rows: RowsRepresentation[]) => {
-    log.info("Macro creator updaterows", rows);
-    const newRows = rows.map((item, index) => {
+  const updateRows = (nRows: RowsRepresentation[]) => {
+    log.info("Macro creator updaterows", nRows, rows);
+    const newRows = nRows.map((item, index) => {
       const aux = item;
       aux.id = index;
       return aux;
     });
     setRows(newRows);
-    addToActions(revertConversion(rows));
+    addToActions(revertConversion(nRows));
   };
 
   const onAddText = () => {
@@ -445,7 +445,7 @@ const MacroCreator = (props: Props) => {
               </TabsContent>
               <TabsContent value="tabKeys">
                 <motion.div initial="hidden" animate="visible" variants={tabVariants}>
-                  <KeysTab onKeyPress={onKeyPress} selectedlanguage={selectedlanguage} actTab={""} superkeyAction={0} />
+                  <KeysTab onKeyPress={onKeyPress} selectedlanguage={selectedlanguage} actTab="" superkeyAction={0} />
                 </motion.div>
               </TabsContent>
               <TabsContent value="tabSpecial">
@@ -478,7 +478,7 @@ const MacroCreator = (props: Props) => {
                             <LayersTab
                               onKeySelect={onLayerPress}
                               activeTab="macro"
-                              macros={macros[selected]}
+                              macro={macros[selected]}
                               triggerDeleteLastItem={triggerDeleteLastItem}
                             />
                           </motion.div>

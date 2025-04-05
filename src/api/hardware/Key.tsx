@@ -37,6 +37,7 @@ interface KeyShapeProps {
   centerExtra: boolean;
   selectedKey: any;
   keyCode: number;
+  hidden?: boolean;
 }
 
 function Key(props: KeyShapeProps) {
@@ -57,6 +58,7 @@ function Key(props: KeyShapeProps) {
     centerExtra,
     selectedKey,
     keyCode,
+    hidden,
   } = props;
   const xShape2 = x + 4;
   const yShape2 = y;
@@ -79,6 +81,7 @@ function Key(props: KeyShapeProps) {
           data-led-index={dataLedIndex}
           data-key-index={dataKeyIndex}
           data-layer={dataLayer}
+          style={{ display: hidden ? "none" : "initial" }}
         >
           <g className="shadowHover">
             <rect x={x} y={y + 4} width={width} height={height} rx="4" fill={color} />
@@ -166,6 +169,7 @@ function Key(props: KeyShapeProps) {
           data-key-index={dataKeyIndex}
           data-layer={dataLayer}
           transform={`translate(${x},${y})`}
+          style={{ display: hidden ? "none" : "initial" }}
         >
           <g className="shadowHover" transform={`translate(${0},${3})`}>
             <path
@@ -260,6 +264,7 @@ function Key(props: KeyShapeProps) {
           data-key-index={dataKeyIndex}
           data-layer={dataLayer}
           transform={`translate(${x},${y})`}
+          style={{ display: hidden ? "none" : "initial" }}
         >
           <g className="shadowHover" transform={`translate(${0},${3})`}>
             <path
@@ -354,6 +359,7 @@ function Key(props: KeyShapeProps) {
           data-key-index={dataKeyIndex}
           data-layer={dataLayer}
           transform={`translate(${x},${y})`}
+          style={{ display: hidden ? "none" : "initial" }}
         >
           <g className="shadowHover" transform={`translate(${0},${3})`}>
             <path
@@ -459,6 +465,7 @@ function Key(props: KeyShapeProps) {
           data-key-index={dataKeyIndex}
           data-layer={dataLayer}
           transform={`translate(${x},${y})`}
+          style={{ display: hidden ? "none" : "initial" }}
         >
           <g className="shadowHover" transform={`translate(${0},${3})`}>
             <path
@@ -553,6 +560,7 @@ function Key(props: KeyShapeProps) {
           data-key-index={dataKeyIndex}
           data-layer={dataLayer}
           transform={`translate(${x},${y})`}
+          style={{ display: hidden ? "none" : "initial" }}
         >
           <g className="shadowHover" transform={`translate(${0},${3})`}>
             <path
@@ -650,6 +658,7 @@ function Key(props: KeyShapeProps) {
           data-key-index={dataKeyIndex}
           data-layer={dataLayer}
           transform={`translate(${x},${y})`}
+          style={{ display: hidden ? "none" : "initial" }}
         >
           <g className="shadowHover" transform={`translate(${0},${3})`}>
             <path
@@ -747,6 +756,7 @@ function Key(props: KeyShapeProps) {
           data-key-index={dataKeyIndex}
           data-layer={dataLayer}
           transform={`translate(${x},${y})`}
+          style={{ display: hidden ? "none" : "initial" }}
         >
           <g className="shadowHover" transform={`translate(${0},${3})`}>
             <path
@@ -843,6 +853,7 @@ function Key(props: KeyShapeProps) {
           data-key-index={dataKeyIndex}
           data-layer={dataLayer}
           transform={`translate(${x},${y})`}
+          style={{ display: hidden ? "none" : "initial" }}
         >
           <g className="shadowHover" transform={`translate(${0},${3})`}>
             <path
@@ -939,6 +950,7 @@ function Key(props: KeyShapeProps) {
           data-key-index={dataKeyIndex}
           data-layer={dataLayer}
           transform={`translate(${x},${y})`}
+          style={{ display: hidden ? "none" : "initial" }}
         >
           <g className="shadowHover" transform={`translate(${0},${3})`}>
             <path
@@ -1035,6 +1047,7 @@ function Key(props: KeyShapeProps) {
           data-key-index={dataKeyIndex}
           data-layer={dataLayer}
           transform={`translate(${x},${y})`}
+          style={{ display: hidden ? "none" : "initial" }}
         >
           <g className="shadowHover" transform={`translate(${0},${3})`}>
             <path
@@ -1131,6 +1144,7 @@ function Key(props: KeyShapeProps) {
           data-key-index={dataKeyIndex}
           data-layer={dataLayer}
           transform={`translate(${x},${y})`}
+          style={{ display: hidden ? "none" : "initial" }}
         >
           <g className="shadowHover" transform={`translate(${0},${3})`}>
             <path
@@ -1227,6 +1241,7 @@ function Key(props: KeyShapeProps) {
           data-key-index={dataKeyIndex}
           data-layer={dataLayer}
           transform={`translate(${x},${y})`}
+          style={{ display: hidden ? "none" : "initial" }}
         >
           <g className="shadowHover" transform={`translate(${0},${3})`}>
             <path
@@ -1323,6 +1338,7 @@ function Key(props: KeyShapeProps) {
           data-key-index={dataKeyIndex}
           data-layer={dataLayer}
           transform={`translate(${x},${y})`}
+          style={{ display: hidden ? "none" : "initial" }}
         >
           <g className="shadowHover" transform={`translate(${0},${3})`}>
             <path
@@ -1419,6 +1435,7 @@ function Key(props: KeyShapeProps) {
           data-key-index={dataKeyIndex}
           data-layer={dataLayer}
           transform={`translate(${x},${y})`}
+          style={{ display: hidden ? "none" : "initial" }}
         >
           <g className="shadowHover" transform={`translate(${0},${3})`}>
             <path
@@ -1515,6 +1532,7 @@ function Key(props: KeyShapeProps) {
           data-key-index={dataKeyIndex}
           data-layer={dataLayer}
           transform={`translate(${x},${y})`}
+          style={{ display: hidden ? "none" : "initial" }}
         >
           <g className="shadowHover" transform={`translate(${0},${3})`}>
             <path
@@ -1611,6 +1629,7 @@ function Key(props: KeyShapeProps) {
           data-key-index={dataKeyIndex}
           data-layer={dataLayer}
           transform={`translate(${x},${y})`}
+          style={{ display: hidden ? "none" : "initial" }}
         >
           <g className="shadowHover" transform={`translate(${0},${3})`}>
             <path
@@ -1707,6 +1726,7 @@ function Key(props: KeyShapeProps) {
           data-key-index={dataKeyIndex}
           data-layer={dataLayer}
           transform={`translate(${x},${y})`}
+          style={{ display: hidden ? "none" : "initial" }}
         >
           <g className="shadowHover" transform={`translate(${0},${3})`}>
             <path
@@ -1803,6 +1823,7 @@ function Key(props: KeyShapeProps) {
           data-key-index={dataKeyIndex}
           data-layer={dataLayer}
           transform={`translate(${x},${y})`}
+          style={{ display: hidden ? "none" : "initial" }}
         >
           <g className="shadowHover" transform={`translate(${0},${3})`}>
             <path
@@ -1899,6 +1920,7 @@ function Key(props: KeyShapeProps) {
           data-key-index={dataKeyIndex}
           data-layer={dataLayer}
           transform={`translate(${x},${y})`}
+          style={{ display: hidden ? "none" : "initial" }}
         >
           <g className="shadowHover" transform={`translate(${0},${3})`}>
             <path
