@@ -23,7 +23,7 @@ import log from "electron-log/renderer";
 import { num2hexstr } from "../num2hexstr";
 import { serialConnection, rawCommand, noWaitCommand } from "../serialConnection";
 import { InfoType, SealType, HexType } from "../types";
-import ihexDecode from "../ihexDecode";
+import { decodeHexLine } from "../decodeHexLine";
 import SealWithCRC from "../sealWithCRC";
 
 const PACKET_SIZE = 4096;
@@ -69,7 +69,7 @@ const Raise2Flash = {
     const auxData = [];
 
     for (let i = 0; i < lines.length; i += 1) {
-      const hex = ihexDecode(lines[i]);
+      const hex = decodeHexLine(lines[i]);
 
       if (hex.type === TYPE_ESA) {
         segment = parseInt(hex.str.substring(8, 8 + hex.len * 2), 16) * 16;
