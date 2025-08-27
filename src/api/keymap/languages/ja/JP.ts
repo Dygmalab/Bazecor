@@ -30,282 +30,283 @@ const jaJPLetters: KeymapCodeTableType[] = [
   {
     code: 30,
     labels: {
-      primary: "ぬ",
+      primary: "1 ぬ",
     },
     newGroupName: "Letters",
   },
   {
     code: 31,
     labels: {
-      primary: "ふ",
+      primary: "2 ふ",
     },
     newGroupName: "Letters",
   },
   {
     code: 32,
     labels: {
-      primary: "あ",
+      primary: "3 あ",
     },
     newGroupName: "Letters",
   },
   {
     code: 33,
     labels: {
-      primary: "う",
+      primary: "4 う",
     },
     newGroupName: "Letters",
   },
   {
     code: 34,
     labels: {
-      primary: "え",
+      primary: "5 え",
     },
     newGroupName: "Letters",
   },
   {
     code: 35,
     labels: {
-      primary: "お",
+      primary: "6 お",
     },
     newGroupName: "Letters",
   },
   {
     code: 36,
     labels: {
-      primary: "や",
+      primary: "7 や",
     },
     newGroupName: "Letters",
   },
   {
     code: 37,
     labels: {
-      primary: "ゆ",
+      primary: "8 ゆ",
     },
     newGroupName: "Letters",
   },
   {
     code: 38,
     labels: {
-      primary: "よ",
+      primary: "9 よ",
     },
     newGroupName: "Letters",
   },
   {
     code: 39,
     labels: {
-      primary: "わ",
+      primary: "0 わ",
+      top: "を",
     },
     newGroupName: "Letters",
   },
   {
     code: 45,
     labels: {
-      primary: "ほ",
+      primary: "- ほ",
     },
   },
   {
     code: 46,
     labels: {
-      primary: "へ",
+      primary: "^ へ",
     },
   },
   {
     code: 20,
     labels: {
-      primary: "た",
+      primary: "Q た",
     },
   },
   {
     code: 26,
     labels: {
-      primary: "て",
+      primary: "W て",
     },
   },
   {
     code: 8,
     labels: {
-      primary: "い",
+      primary: "E い",
     },
   },
   {
     code: 21,
     labels: {
-      primary: "す",
+      primary: "R す",
     },
   },
   {
     code: 23,
     labels: {
-      primary: "か",
+      primary: "T か",
     },
   },
   {
     code: 28,
     labels: {
-      primary: "ん",
+      primary: "Y ん",
     },
   },
   {
     code: 24,
     labels: {
-      primary: "な",
+      primary: "U な",
     },
   },
   {
     code: 12,
     labels: {
-      primary: "に",
+      primary: "I に",
     },
   },
   {
     code: 18,
     labels: {
-      primary: "ら",
+      primary: "O ら",
     },
   },
   {
     code: 19,
     labels: {
-      primary: "せ",
+      primary: "P せ",
     },
   },
   {
     code: 49,
     labels: {
-      primary: "む",
+      primary: "] む",
     },
     newGroupName: "Letters",
   },
   {
     code: 4,
     labels: {
-      primary: "ち",
+      primary: "A ち",
     },
   },
   {
     code: 22,
     labels: {
-      primary: "と",
+      primary: "S と",
     },
   },
   {
     code: 7,
     labels: {
-      primary: "し",
+      primary: "D し",
     },
   },
   {
     code: 9,
     labels: {
-      primary: "は",
+      primary: "F は",
     },
   },
   {
     code: 10,
     labels: {
-      primary: "き",
+      primary: "G き",
     },
   },
   {
     code: 11,
     labels: {
-      primary: "く",
+      primary: "H く",
     },
   },
   {
     code: 13,
     labels: {
-      primary: "ま",
+      primary: "J ま",
     },
   },
   {
     code: 14,
     labels: {
-      primary: "の",
+      primary: "K の",
     },
   },
   {
     code: 15,
     labels: {
-      primary: "り",
+      primary: "L り",
     },
   },
   {
     code: 51,
     labels: {
-      primary: "れ",
+      primary: "; れ",
     },
   },
   {
     code: 52,
     labels: {
-      primary: "け",
+      primary: ": け",
     },
   },
   {
     code: 29,
     labels: {
-      primary: "つ",
+      primary: "Z つ",
     },
   },
   {
     code: 27,
     labels: {
-      primary: "さ",
+      primary: "X さ",
     },
   },
   {
     code: 6,
     labels: {
-      primary: "そ",
+      primary: "C そ",
     },
   },
   {
     code: 25,
     labels: {
-      primary: "ひ",
+      primary: "V ひ",
     },
   },
   {
     code: 5,
     labels: {
-      primary: "こ",
+      primary: "B こ",
     },
   },
   {
     code: 17,
     labels: {
-      primary: "み",
+      primary: "N み",
     },
   },
   {
     code: 16,
     labels: {
-      primary: "も",
+      primary: "M も",
     },
   },
   {
     code: 54,
     labels: {
-      primary: "ね",
+      primary: ", ね",
     },
   },
   {
     code: 55,
     labels: {
-      primary: "る",
+      primary: ". る",
     },
   },
   {
     code: 56,
     labels: {
-      primary: "め",
+      primary: "/ め",
     },
   },
   {
     code: 135,
     labels: {
-      primary: "\\ろ",
+      primary: "\\ ろ",
     },
     newGroupName: "Punctuation",
   },
@@ -344,13 +345,13 @@ const jaJPModifierKeys: KeymapCodeTableType[] = [
   {
     code: 47,
     labels: {
-      primary: "゛",
+      primary: "@ ゛",
     },
   },
   {
     code: 48,
     labels: {
-      primary: "゜",
+      primary: "[ ゜",
     },
   },
 ];
