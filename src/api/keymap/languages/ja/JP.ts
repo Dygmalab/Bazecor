@@ -321,7 +321,7 @@ const jaJPLetters: KeymapCodeTableType[] = [
   {
     code: 137,
     labels: {
-      primary: "ー ¥",
+      primary: "¥ ー",
     },
     newGroupName: "Punctuation",
   },
