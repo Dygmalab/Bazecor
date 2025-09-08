@@ -36,6 +36,7 @@ import koKR from "@Assets/flags/koKR.png";
 import plPL from "@Assets/flags/plPL.png";
 import deCH from "@Assets/flags/deCH.png";
 import ruRU from "@Assets/flags/ruRU.png";
+import bgBG from "@Assets/flags/bgBG.png";
 
 // Dygma - Layouts (community/third-party)
 import enXXeurkey from "@Assets/flags/enXXeurkey.png";
@@ -68,6 +69,8 @@ const flags = [
   esMX,
   svSE,
   deCH,
+  bgBG, // Bulgarian
+  bgBG, // Bulgarian (Phonetic Traditional)
 ];
 
 const languages = [
@@ -92,6 +95,8 @@ const languages = [
   "es-MX",
   "sv-SE",
   "de-CH",
+  "bg-BG",
+  "bg-BG-phonetic",
 ];
 
 const languageNames = [
@@ -116,6 +121,8 @@ const languageNames = [
   "Spanish (Latin American)",
   "Swedish",
   "Swiss German",
+  "Bulgarian",
+  "Bulgarian (Phonetic Traditional)",
 ];
 
 export { flags, languages, languageNames };

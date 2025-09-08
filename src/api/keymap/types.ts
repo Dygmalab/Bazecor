@@ -37,4 +37,6 @@ export type LanguageType =
   | "en-XX-eurkey"
   | "fr-XX-bepo"
   | "fr-XX-optimot"
-  | "fr-XX-ergol";
+  | "fr-XX-ergol"
+  | "bg-BG"
+  | "bg-BG-phonetic";
