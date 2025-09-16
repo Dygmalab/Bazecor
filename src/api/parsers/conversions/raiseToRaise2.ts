@@ -1,9 +1,16 @@
 import { PaletteType } from "@Renderer/types/layout";
 import { rgb2w } from "../../color";
 
-export const convertKeymapRtoR2 = (layer: number[], keyboardType: string) => {
+/**
+ * Converts a keymap layer from the original Raise format to the Raise 2 format.
+ * It adjusts the thumb cluster and handles layout differences for ANSI keyboards.
+ * @param {number[]} layer The keymap layer to convert.
+ * @param {string} keyboardType The type of keyboard layout (e.g., 'ANSI', 'ISO').
+ * @returns {number[]} The converted keymap layer.
+ */
+export const convertKeymapRtoR2 = (layer: number[], keyboardType: string): number[] => {
   let localLayer = [...layer];
-  // restoring thumbcluster
+  // restoring thumb cluster
   const preT = localLayer.slice(0, 69);
   const remT = localLayer[69];
   const movT = localLayer.slice(70, 72);
@@ -30,7 +37,15 @@ export const convertKeymapRtoR2 = (layer: number[], keyboardType: string) => {
   return localLayer;
 };
 
-export const convertColormapRtoR2 = (layer: number[], keyboardType: string, backupKeyboardType: string) => {
+/**
+ * Converts a colormap layer from the original Raise format to the Raise 2 format.
+ * It extends the colormap and adjusts colors for ANSI layouts.
+ * @param {number[]} layer The colormap layer to convert.
+ * @param {string} keyboardType The primary keyboard layout type.
+ * @param {string} backupKeyboardType The backup keyboard layout type.
+ * @returns {number[]} The converted colormap layer.
+ */
+export const convertColormapRtoR2 = (layer: number[], keyboardType: string, backupKeyboardType: string): number[] => {
   const color = layer[130];
   const rest = layer.slice(0, -1);
   const result = rest.concat(new Array(45).fill(color));
@@ -56,7 +71,12 @@ export const convertColormapRtoR2 = (layer: number[], keyboardType: string, back
   return result;
 };
 
-export const convertPaletteRtoR2 = (color: PaletteType) => {
+/**
+ * Converts a palette color from the original Raise format to the Raise 2 format (RGBW).
+ * @param {PaletteType} color The color object to convert.
+ * @returns {number[]} An array containing the [r, g, b, w] values.
+ */
+export const convertPaletteRtoR2 = (color: PaletteType): number[] => {
   const rgbw = rgb2w(color);
   return [rgbw.r, rgbw.g, rgbw.b, rgbw.w];
 };

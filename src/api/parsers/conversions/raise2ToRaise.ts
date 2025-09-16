@@ -1,8 +1,15 @@
 import { PaletteType } from "@Renderer/types/layout";
 
-export const convertKeymapR2toR = (layer: number[], keyboardType: string) => {
+/**
+ * Converts a keymap layer from Raise 2 format to the original Raise format.
+ * It adjusts the thumb cluster and handles layout differences for ANSI keyboards.
+ * @param {number[]} layer The keymap layer to convert.
+ * @param {string} keyboardType The type of keyboard layout (e.g., 'ANSI', 'ISO').
+ * @returns {number[]} The converted keymap layer.
+ */
+export const convertKeymapR2toR = (layer: number[], keyboardType: string): number[] => {
   let localLayer = [...layer];
-  // restoring thumbcluster
+  // restoring thumb cluster
   const preT = localLayer.slice(0, 69);
   const movT = localLayer.slice(69, 71);
   const remT = localLayer[71];
@@ -29,7 +36,15 @@ export const convertKeymapR2toR = (layer: number[], keyboardType: string) => {
   return localLayer;
 };
 
-export const convertColormapR2toR = (layer: number[], keyboardType: string, backupKeyboardType: string) => {
+/**
+ * Converts a colormap layer from Raise 2 format to the original Raise format.
+ * It truncates the color map and adjusts colors for ANSI layouts.
+ * @param {number[]} layer The colormap layer to convert.
+ * @param {string} keyboardType The primary keyboard layout type.
+ * @param {string} backupKeyboardType The backup keyboard layout type.
+ * @returns {number[]} The converted colormap layer.
+ */
+export const convertColormapR2toR = (layer: number[], keyboardType: string, backupKeyboardType: string): number[] => {
   const rest = layer.slice(0, 132);
   const result = rest;
 
@@ -54,7 +69,13 @@ export const convertColormapR2toR = (layer: number[], keyboardType: string, back
   return result;
 };
 
-export const convertPaletteR2toR = (color: PaletteType) => {
+/**
+ * Converts a palette color from Raise 2 format (RGB) to the original Raise format.
+ * This function essentially extracts the RGB values.
+ * @param {PaletteType} color The color object to convert.
+ * @returns {number[]} An array containing the [r, g, b] values.
+ */
+export const convertPaletteR2toR = (color: PaletteType): number[] => {
   const rgb = color;
   return [rgb.r, rgb.g, rgb.b];
 };
