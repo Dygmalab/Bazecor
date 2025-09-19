@@ -31,10 +31,11 @@ export default class Backup {
   }
 
   /**
-   * Function that returns the list of available commands excluding the ones that do not return usefull information for the backup
-   * @returns An array with strings that contain the serial commands that are capable of returing the keyboard configuration
+   * Returns a list of device commands relevant for creating a backup.
+   * @param {Device} device The device to get commands from.
+   * @returns {Promise<string[]>} A promise that resolves to an array of command strings.
    */
-  static async Commands(device: Device) {
+  static async Commands(device: Device): Promise<string[]> {
     const notRequired = [
       "eeprom",
       "hardware",
@@ -71,7 +72,11 @@ export default class Backup {
     return validCommands;
   }
 
-  static backupFolderValid = () => {
+  /**
+   * Checks if the configured backup folder is a valid directory.
+   * @returns {boolean} True if the backup folder is a valid directory, false otherwise.
+   */
+  static backupFolderValid = (): boolean => {
     const folder = store.get("settings.backupFolder") as string;
     try {
       const stats = fs.statSync(folder);
@@ -82,17 +87,14 @@ export default class Backup {
   };
 
   /**
-   * The function is desgned to make a backup of the whole configuration pertaining the Raise keyboard
-   *
-   * To achieve this it uses both the list of commands provided by the caller and the neuron ID which
-   * will help the function retrieve the current neuron configuration stored locally, so it can be added
-   * to the backup
-   *
-   * @param {Array<string>} commands The required list of commands to be executed on the keyboard, they are retrieved using the Backup.commands function of this same module, you can add or remove from that list as needed.
-   * @param {string} neuronID This parameter contains the neuronID obtained from the Raise, so the corresponding local settings can be retrieved.
-   * @returns {Backup} Backup The function returns the full made backup, so it can be stored wherever is needed, and changed if the module requires it.
+   * Creates a backup of the connected device\'s configuration.
+   * It executes a list of commands on the device and combines the output with local neuron configuration.
+   * @param {string[]} commands The list of commands to execute on the device for the backup.
+   * @param {string} neuronID The ID of the neuron associated with the device to back up local settings.
+   * @param {Device} device The device to back up.
+   * @returns {Promise<BackupType | undefined>} A promise that resolves to the backup object, or undefined for virtual devices.
    */
-  async DoBackup(commands: string[], neuronID: string, device: Device) {
+  async DoBackup(commands: string[], neuronID: string, device: Device): Promise<BackupType | undefined> {
     if (device.file !== false) return undefined;
     const backup: BackupType = {
       neuronID: undefined,
@@ -133,13 +135,14 @@ export default class Backup {
   }
 
   /**
-   * This function physically stores the backup file passed as a variable, the backup is stored in the settings.backupFolder and it uses the following file format
-   *
-   * RaiseBackup-YYYYMMDDhhmmss.json
-   * @param {*} localBackup The backup data object to be stored locally
-   * @returns True when the function has successfully stored the backup locally, and false if something fails, an error log will be also pushed to the console
+   * Saves a backup object to a file.
+   * For physical devices, it saves to the backup folder with a timestamped filename.
+   * For virtual devices (file-based), it updates the existing file.
+   * @param {BackupType} backup The backup data object to be stored.
+   * @param {Device} device The device associated with the backup.
+   * @returns {boolean} True if the backup was saved successfully, otherwise throws an error.
    */
-  static SaveBackup(backup: BackupType, device: Device) {
+  static SaveBackup(backup: BackupType, device: Device): boolean {
     const localBackup = { ...backup };
     if (device.file !== false) {
       const file = JSON.parse(fs.readFileSync(device.fileData.device.filePath).toString("utf-8"));
@@ -193,13 +196,23 @@ export default class Backup {
       }
       return true;
     } catch (error) {
-      log.warn("Error ocurred when saving backup to folder");
+      log.warn("Error occurred when saving backup to folder");
       throw new Error(error);
     }
   }
 
-  static restoreBackup = async (neurons: Neuron[], neuronID: string, backup: BackupType, device: Device) => {
-    let data = [];
+  /**
+   * Restores a backup to a device.
+   * This includes updating local neuron settings and sending commands to the device.
+   * It handles compatibility conversions between different device models (e.g., Raise to Raise2).
+   * @param {Neuron[]} neurons The current list of all neurons.
+   * @param {string} neuronID The ID of the neuron to restore.
+   * @param {BackupType} backup The backup object to restore.
+   * @param {Device} device The device to restore the backup to.
+   * @returns {Promise<boolean>} A promise that resolves to true on success, false on failure.
+   */
+  static restoreBackup = async (neurons: Neuron[], neuronID: string, backup: BackupType, device: Device): Promise<boolean> => {
+    let data: any[];
     if (Array.isArray(backup)) {
       data = backup;
     } else {
@@ -243,7 +256,13 @@ export default class Backup {
     return false;
   };
 
-  static restoreVirtual = async (virtual: VirtualType, device: Device) => {
+  /**
+   * Restores settings to a virtual (file-based) device.
+   * @param {VirtualType} virtual The virtual device data to restore.
+   * @param {Device} device The virtual device instance.
+   * @returns {Promise<boolean>} A promise that resolves to true on success, false on failure.
+   */
+  static restoreVirtual = async (virtual: VirtualType, device: Device): Promise<boolean> => {
     if (device) {
       try {
         log.info("Restoring all settings");
@@ -268,7 +287,14 @@ export default class Backup {
     return false;
   };
 
-  static getLatestBackup = async (backupFolder: string, neuronID: string, device: Device) => {
+  /**
+   * Finds and loads the most recent backup file for a specific neuron.
+   * @param {string} backupFolder The root folder where backups are stored.
+   * @param {string} neuronID The ID of the neuron to find the latest backup for.
+   * @param {Device} device The device associated with the neuron.
+   * @returns {Promise<any | undefined>} A promise that resolves to the parsed backup object, or undefined if not found or an error occurs.
+   */
+  static getLatestBackup = async (backupFolder: string, neuronID: string, device: Device): Promise<any | undefined> => {
     try {
       // creating folder path with current device
       const folderPath = path
@@ -299,7 +325,13 @@ export default class Backup {
     }
   };
 
-  static convertRaiseToRaise2 = (backup: BackupType, dev: Device) => {
+  /**
+   * Converts a backup from a Raise device to be compatible with a Raise2 device.
+   * @param {BackupType} backup The Raise backup object.
+   * @param {Device} dev The target Raise2 device.
+   * @returns {any[]} The converted backup data.
+   */
+  static convertRaiseToRaise2 = (backup: BackupType, dev: Device): any[] => {
     log.info("converting Raise Backup to Raise2");
     const bkpDev = backup.neuron.device;
     const keyLayerSize = 80;
@@ -338,7 +370,13 @@ export default class Backup {
     return localBackup.backup;
   };
 
-  static convertRaise2ToRaise = (backup: BackupType, dev: Device) => {
+  /**
+   * Converts a backup from a Raise2 device to be compatible with a Raise device.
+   * @param {BackupType} backup The Raise2 backup object.
+   * @param {Device} dev The target Raise device.
+   * @returns {any[]} The converted backup data.
+   */
+  static convertRaise2ToRaise = (backup: BackupType, dev: Device): any[] => {
     log.info("converting Raise2 Backup to Raise");
     const bkpDev = backup.neuron.device;
     const keyLayerSize = 80;
@@ -378,5 +416,10 @@ export default class Backup {
     return localBackup.backup;
   };
 
+  /**
+   * Type guard to check if an object is a BackupType.
+   * @param {any} backup The object to check.
+   * @returns {boolean} True if the object has a \'backup\' property.
+   */
   static isBackupType = (backup: any): backup is any => "backup" in backup;
 }

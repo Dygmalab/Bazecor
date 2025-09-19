@@ -10,7 +10,12 @@ import Hardware from "../../hardware";
 const { SerialPort } = eval('require("serialport")');
 const { DelimiterParser } = eval('require("@serialport/parser-delimiter")');
 
-const open = async (path: string) => {
+/**
+ * Opens a serial port connection to a device at the specified path.
+ * @param {string} path - The system path of the serial port to open.
+ * @returns {Promise<SP>} A promise that resolves with the SerialPort object.
+ */
+const open = async (path: string): Promise<SP> => {
   const serialport: SP = new SerialPort({
     path,
     baudRate: 115200,
@@ -27,7 +32,12 @@ const open = async (path: string) => {
   return serialport;
 };
 
-const close = async (serialport: SP) => {
+/**
+ * Closes and cleans up a serial port connection.
+ * @param {SP} serialport - The SerialPort object to close.
+ * @returns {Promise<void>}
+ */
+const close = async (serialport: SP): Promise<void> => {
   try {
     // destroy connection
     await serialport.drain();
@@ -40,7 +50,7 @@ const close = async (serialport: SP) => {
       }
     }
   } catch (error) {
-    log.info("catched error when closing", error);
+    log.info("caught error when closing", error);
   }
 };
 
@@ -50,6 +60,12 @@ interface SerialProperties {
   chipId: string;
 }
 
+/**
+ * Connects to a device to query its properties.
+ * It sends serial commands to determine if the device is wireless, its layout (ANSI/ISO), and its chip ID.
+ * @param {string} path - The system path of the serial port.
+ * @returns {Promise<SerialProperties>} A promise that resolves with the device's properties.
+ */
 const checkProperties = async (path: string): Promise<SerialProperties> => {
   let callbacks: ((value: string | PromiseLike<string>) => void)[] = [];
   let result = "";
@@ -113,6 +129,17 @@ interface ExtendedPort extends PortInfo {
   device: DygmaDeviceType;
 }
 
+/**
+ * Scans for connected serial devices and identifies them as Dygma products.
+ * This function can operate in different modes:
+ * - Full scan: Enumerates all connected Dygma devices.
+ * - Specific device search: Looks for a new device matching a given USB device profile.
+ * - Scan for unlisted devices: Finds devices that are not in the provided list of existing IDs.
+ * @param {boolean} bootloader - If true, scans for devices in bootloader mode.
+ * @param {USBDevice} [searchDevice] - An optional USBDevice profile to look for a specific new device.
+ * @param {string[]} [existingIDs] - An optional array of serial numbers for devices that are already known.
+ * @returns {Promise<{ foundDevices: ExtendedPort[]; validDevices: string[] }>} A promise that resolves with an object containing `foundDevices` (newly detected) and `validDevices` (known devices that are still connected).
+ */
 const enumerate = async (
   bootloader: boolean,
   searchDevice?: USBDevice,
@@ -210,6 +237,11 @@ const enumerate = async (
   return { foundDevices, validDevices };
 };
 
+/**
+ * Finds all connected Dygma devices, in either serial or bootloader mode.
+ * It enriches the device information with properties like wireless capability and chip ID.
+ * @returns {Promise<ExtendedPort[]>} A promise that resolves with an array of found Dygma devices.
+ */
 const find = async (): Promise<ExtendedPort[]> => {
   const serialDevices: PortInfo[] = await SerialPort.list();
 
@@ -252,11 +284,21 @@ const find = async (): Promise<ExtendedPort[]> => {
 
 type ConnectType = (device: DeviceType) => Promise<SP>;
 
-const connect: ConnectType = async device => {
+/**
+ * Establishes a serial connection to a specified device.
+ * @param {DeviceType} device - The device to connect to, containing a `path` property.
+ * @returns {Promise<SP>} A promise that resolves with the SerialPort object for the connection.
+ */
+const connect: ConnectType = async (device: DeviceType): Promise<SP> => {
   const dev = await open(device.path);
   return dev;
 };
 
+/**
+ * Type guard to check if a device object is a serial device.
+ * @param {any} device - The device object to check.
+ * @returns {device is { path: unknown }} True if the device has a `path` property, false otherwise.
+ */
 const isSerialType = (device: any): device is any => "path" in device;
 
 export { find, ExtendedPort, enumerate, ConnectType, connect, DeviceType, SerialProperties, checkProperties, isSerialType };

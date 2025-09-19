@@ -13,7 +13,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-const macro = (index: number) => ({
+
+/**
+ * Generates a macro key definition object.
+ * @param {number} index - The index of the macro.
+ * @returns {{code: number, labels: {primary: string, top: string}}} The macro key definition.
+ */
+const macro = (index: number): { code: number; labels: { primary: string; top: string } } => ({
   code: 53852 + index,
   labels: {
     primary: (index + 1).toString(),
@@ -21,10 +27,16 @@ const macro = (index: number) => ({
   },
 });
 
+/**
+ * An array of 128 macro key definitions.
+ */
 const macros = Array(128)
   .fill(0)
   .map((_, index) => macro(index));
 
+/**
+ * An object containing the group of macro keys for the keymap.
+ */
 const MacrosTable = {
   groupName: "Macros",
   keys: macros,
