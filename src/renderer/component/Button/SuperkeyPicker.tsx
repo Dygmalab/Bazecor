@@ -21,7 +21,8 @@ import Styled from "styled-components";
 import { SuperkeyPickerProps } from "@Renderer/types/superkeys";
 import ListModifier from "@Renderer/components/molecules/ListModifiers/ListModifiers";
 import Heading from "@Renderer/components/atoms/Heading";
-import { IconClose } from "@Renderer/components/atoms/icons";
+import { IconClose, IconThunder } from "@Renderer/components/atoms/icons";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@Renderer/components/atoms/Tooltip";
 
 const Style = Styled.div`
 .superkeyAction {
@@ -31,12 +32,71 @@ const Style = Styled.div`
     flex-flow: column;
     align-items: start;
     height: 100%;
+    position: relative;
+    z-index: 0;
     color: ${({ theme }) => theme.styles.superkeyAction.color};
     padding: 24px 16px;
     border-radius: 3px;
+    border: 1px solid transparent;
     background-color: ${({ theme }) => theme.styles.superkeyAction.background};
-    &.active {
-        background-color: ${({ theme }) => theme.styles.superkeyAction.backgroundActive};
+  &.active {
+      background-color: ${({ theme }) => theme.styles.superkeyAction.backgroundActive};
+  }
+  /* Keep identical active background across all tiles; special highlight only adds a non-intrusive gradient frame */
+  &.highlight::after {
+      content: "";
+      position: absolute;
+      inset: -1px; /* extend 1px to simulate outer ring */
+      border-radius: 4px; /* slightly larger to sit outside */
+      padding: 2px; /* frame thickness */
+      background: linear-gradient(75deg, #fe007c, #6b14f6, #6b14f9, #fe007c);
+      z-index: 1;
+      pointer-events: none;
+      -webkit-mask: 
+        linear-gradient(#000 0 0) content-box,
+        linear-gradient(#000 0 0);
+      -webkit-mask-composite: xor;
+              mask-composite: exclude; /* show only the ring */
+  }
+  .dark &.highlight::after {
+      background: linear-gradient(90deg, rgb(254, 0, 124) 0%, rgb(107, 20, 249) 100%);
+  }
+    .skBadge {
+        position: absolute;
+        top: 14px;
+        right: 14px;
+        opacity: 0.85;
+        width: 20px;
+        height: 20px;
+        color: ${({ theme }) => theme.colors.brandPrimary};
+        --skBadgeColor: ${({ theme }) => theme.colors.brandPrimary};
+        pointer-events: auto;
+        cursor: help;
+    }
+    .skBadge svg {
+        width: 20px;
+        height: 20px;
+        transform-origin: center;
+        will-change: transform, filter;
+        animation: thunderPulse 1400ms ease-in-out infinite;
+    }
+    @keyframes thunderPulse {
+        0%, 100% {
+            transform: scale(1);
+            filter: drop-shadow(0 0 0 var(--skBadgeColor)) brightness(1);
+        }
+        45% {
+            transform: scale(1.08);
+            filter: drop-shadow(0 0 8px var(--skBadgeColor)) brightness(1.1);
+        }
+        50% {
+            transform: scale(1.15);
+            filter: drop-shadow(0 0 12px var(--skBadgeColor)) brightness(1.2);
+        }
+        55% {
+            transform: scale(1.08);
+            filter: drop-shadow(0 0 8px var(--skBadgeColor)) brightness(1.1);
+        }
     }
     h5 {
         color: ${({ theme }) => theme.styles.superkeyAction.titleColor};
@@ -227,7 +287,21 @@ function SuperkeyPicker(props: SuperkeyPickerProps) {
   if (superkeys === null) return null;
   return (
     <Style>
-      <div className={`superkeyAction ${elementActive ? "active" : ""} ${variant === "subtle" ? "!py-2" : ""}`}>
+      <div className={`superkeyAction ${elementActive ? "active" : ""} ${[0,1].includes(index) && variant === "regular" ? "highlight" : ""} ${variant === "subtle" ? "!py-2" : ""}`}>
+        {[0,1].includes(index) && variant === "regular" && (
+          <TooltipProvider delayDuration={50}>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <div className="skBadge">
+                  <IconThunder size="lg" />
+                </div>
+              </TooltipTrigger>
+              <TooltipContent className="max-w-xs" side="bottom" size="sm">
+               Fast Superkeys are enabled when you only set up TAP and HOLD actions. Any other combination will be a normal Superkey.
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        )}
         <div className="superkeyTitle single">
           {variant === "regular" && icon}
           <Heading headingLevel={5} renderAs="h5" className={`${variant === "subtle" ? "my-0 !text-2xxs" : ""}`}>

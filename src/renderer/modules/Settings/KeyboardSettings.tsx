@@ -24,6 +24,7 @@ import { KBDataPref } from "@Renderer/types/preferences";
 import { IconTypo, IconMouse, IconInformation } from "@Renderer/components/atoms/icons";
 import { Slider } from "@Renderer/components/atoms/slider";
 import Heading from "@Renderer/components/atoms/Heading";
+import Store from "@Renderer/utils/Store";
 
 // Assets
 import { i18n } from "@Renderer/i18n";
@@ -154,6 +155,9 @@ interface KeyboardSettingsProps {
 function KeyboardSettings(props: KeyboardSettingsProps) {
   const { kbData, setKbData, connected } = props;
   const [localKBData, setLocalKBData] = useState(kbData);
+  const store = Store.getStore();
+  const sk20 = Boolean(store.get("capabilities.sk20"));
+  const labelWithFastSuper = (text: string) => (sk20 ? text.replace("Add Key on Tap", "Fast Superkeys") : text);
 
   useEffect(() => {
     const { kbData: newKBData } = props;
@@ -340,7 +344,7 @@ function KeyboardSettings(props: KeyboardSettingsProps) {
                   <div className="w-full flex gap-2">
                     <div className="w-full">
                       <Heading headingLevel={3} renderAs="paragraph-sm" className="flex items-center gap-2">
-                        {i18n.keyboardSettings.qukeys.holdTimeout}
+                        {labelWithFastSuper(i18n.keyboardSettings.qukeys.holdTimeout)}
                         <TooltipProvider delayDuration={200}>
                           <Tooltip>
                             <TooltipTrigger className="[&_svg]:text-purple-100 [&_svg]:dark:text-purple-200">
@@ -380,7 +384,7 @@ function KeyboardSettings(props: KeyboardSettingsProps) {
                   <div className="w-full flex gap-2">
                     <div className="w-full">
                       <Heading headingLevel={3} renderAs="paragraph-sm" className="flex items-center gap-2">
-                        {i18n.keyboardSettings.qukeys.overlapThreshold}
+                        {labelWithFastSuper(i18n.keyboardSettings.qukeys.overlapThreshold)}
                         <TooltipProvider delayDuration={200}>
                           <Tooltip>
                             <TooltipTrigger className="[&_svg]:text-purple-100 [&_svg]:dark:text-purple-200">
@@ -419,7 +423,7 @@ function KeyboardSettings(props: KeyboardSettingsProps) {
                   <div className="w-full flex gap-2">
                     <div className="w-full">
                       <Heading headingLevel={3} renderAs="paragraph-sm" className="flex items-center gap-2">
-                        {i18n.keyboardSettings.qukeys.minHold}
+                        {labelWithFastSuper(i18n.keyboardSettings.qukeys.minHold)}
                         <TooltipProvider delayDuration={200}>
                           <Tooltip>
                             <TooltipTrigger className="[&_svg]:text-purple-100 [&_svg]:dark:text-purple-200">
@@ -457,7 +461,7 @@ function KeyboardSettings(props: KeyboardSettingsProps) {
                   <div className="w-full flex gap-2">
                     <div className="w-full">
                       <Heading headingLevel={3} renderAs="paragraph-sm" className="flex items-center gap-2">
-                        {i18n.keyboardSettings.qukeys.minPrior}
+                        {labelWithFastSuper(i18n.keyboardSettings.qukeys.minPrior)}
                         <TooltipProvider delayDuration={200}>
                           <Tooltip>
                             <TooltipTrigger className="[&_svg]:text-purple-100 [&_svg]:dark:text-purple-200">
