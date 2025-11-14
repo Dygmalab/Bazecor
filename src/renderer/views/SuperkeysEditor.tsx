@@ -205,6 +205,8 @@ function SuperkeysEditor(props: SuperkeysEditorProps) {
       state.keymap = keymap;
       state.kbtype = kbtype;
       setState({ ...state });
+      // Ensure the first action is fully selected and its content displayed
+      changeAction(0);
       cancelContext();
       setLoading(false);
     } catch (e) {
@@ -275,6 +277,7 @@ function SuperkeysEditor(props: SuperkeysEditorProps) {
     const { setLoading, cancelContext } = props;
     const { superkeys, modifiedKeymap, keymap, neurons, neuronID } = state;
     setIsSaving(true);
+    setLoading(true);
     const { currentDevice } = deviceState;
     const localNeurons = [...neurons];
     const nIdx = localNeurons.findIndex(n => n.id === neuronID);
@@ -282,11 +285,13 @@ function SuperkeysEditor(props: SuperkeysEditorProps) {
     log.info("Loaded neurons: ", JSON.stringify(localNeurons));
     try {
       store.set("neurons", localNeurons);
+      // Send superkeys map first (Superkeys Editor requirement)
       const sendSK = serializeSuperkeys(superkeys);
-      log.info("Mod superK", sendSK);
       await currentDevice.command("superkeys.map", sendSK);
-      if (modifiedKeymap) {
-        await currentDevice.command("keymap.custom", serializeKeymap(keymap.custom));
+      // Then match LayoutEditor.onApply keymap save path (force send without cache)
+      if (keymap && keymap.custom) {
+        await currentDevice?.noCacheCommand("keymap.custom", serializeKeymap(keymap.custom));
+        await currentDevice?.noCacheCommand("keymap.onlyCustom", keymap.onlyCustom ? "1" : "0");
       }
       state.modified = false;
       state.modifiedKeymap = false;
@@ -559,6 +564,7 @@ function SuperkeysEditor(props: SuperkeysEditorProps) {
         >
           <p>{i18n.editor.superkeys.callout1}</p>
           <p>{i18n.editor.superkeys.callout2}</p>
+          <p>{i18n.editor.superkeys.callout3}</p>
         </Callout>
 
         <SuperkeyActions

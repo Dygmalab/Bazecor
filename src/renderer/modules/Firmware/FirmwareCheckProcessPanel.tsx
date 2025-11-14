@@ -227,14 +227,6 @@ function FirmwareCheckProcessPanel(props: FirmwareCheckProcessPanelType) {
                     </Heading>
                     {state.context.sideLeftOk && state.context.sideRightOK ? (
                       <>
-                        <div
-                          className="disclaimerContent text-sm mt-2 leading-snug font-medium"
-                          dangerouslySetInnerHTML={{ __html: i18n.firmwareUpdate.texts.disclaimerContent }}
-                        />
-                        {/* <div
-                          className="disclaimerContent text-sm mt-2 leading-snug font-medium"
-                          dangerouslySetInnerHTML={{ __html: i18n.firmwareUpdate.texts.disclaimerContent3 }}
-                        /> */}
                         <Callout size="sm" className="mt-4">
                           <ul className="pl-4 list-disc">
                             {state.context.device.info.keyboardType === "wireless" && (
@@ -243,7 +235,7 @@ function FirmwareCheckProcessPanel(props: FirmwareCheckProcessPanelType) {
                                 (&quot;forget device&quot;) and re-pair.
                               </li>
                             )}
-                            <li className=" mb-2">{i18n.firmwareUpdate.texts.disclaimerContent3}</li>
+                            {/* <li className=" mb-2">{i18n.firmwareUpdate.texts.disclaimerContent3}</li> */}
                             <li className=" mb-2">{i18n.firmwareUpdate.texts.disclaimerContent2}</li>
                           </ul>
                         </Callout>

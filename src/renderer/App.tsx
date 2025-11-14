@@ -192,6 +192,20 @@ function App() {
     navigate("/device-manager");
   }, [navigate, state.currentDevice]);
 
+  // Helpers to detect SK 2.0 capable firmware based on semver thresholds per product
+  const extractSemver = (text: string): [number, number, number] | null => {
+    if (!text) return null;
+    const m = text.match(/(\d+)\.(\d+)\.(\d+)/);
+    if (!m) return null;
+    return [parseInt(m[1], 10), parseInt(m[2], 10), parseInt(m[3], 10)];
+  };
+
+  const compareSemver = (a: [number, number, number], b: [number, number, number]) => {
+    if (a[0] !== b[0]) return a[0] - b[0];
+    if (a[1] !== b[1]) return a[1] - b[1];
+    return a[2] - b[2];
+  };
+
   const onKeyboardConnect = async (currentDevice: Device): Promise<void> => {
     log.verbose("Connecting to", currentDevice.type, currentDevice.device);
 
@@ -203,7 +217,30 @@ function App() {
       return;
     }
 
-    log.verbose("VERSION: ", await currentDevice.command("version"));
+    // Read FW version and log SK 2.0 detection depending on product thresholds
+    try {
+      const versionStr = (await currentDevice.command("version")) as string;
+      log.verbose("VERSION: ", versionStr);
+      const semver = extractSemver(versionStr);
+      const product = currentDevice?.device?.info?.product as string;
+      if (semver && product) {
+        const defyMin: [number, number, number] = [2, 2, 0];
+        const raise2Min: [number, number, number] = [1, 4, 0];
+        const isDefy = product === "Defy";
+        const isRaise2 = product === "Raise2";
+        const detected =
+          (isDefy && compareSemver(semver, defyMin) >= 0) || (isRaise2 && compareSemver(semver, raise2Min) >= 0);
+        store.set("capabilities.sk20", detected);
+        if (detected) {
+          log.info("SK 2.0 detected");
+        }
+      } else {
+        store.set("capabilities.sk20", false);
+      }
+    } catch (e) {
+      log.warn("Error reading or parsing firmware version", e);
+      store.set("capabilities.sk20", false);
+    }
 
     setConnected(true);
     device.current = currentDevice;
@@ -239,13 +276,6 @@ function App() {
     setFlashing(!flashing);
     varFlashing.current = !flashing;
     log.verbose("toggled flashing to", !flashing);
-
-    // if Flashing is going to be set to false from true
-    if (!flashing === false) {
-      const currentID = state.currentDevice.serialNumber.toLowerCase();
-      dispatch({ type: "disconnect", payload: [currentID] });
-      onKeyboardDisconnect();
-    }
   };
 
   useEffect(() => {

@@ -343,9 +343,8 @@ const English = {
       },
       superkeys: {
         title: "Superkeys",
-        callout1: "You are about to create crazy combinations to boost your workflow! 🔥",
-        callout2:
-          "Superkeys allow up to 5 different functions in a single key. You activate each function with a tap, hold, tap and hold, double-tap or double-tap and hold.",
+        callout1: "Superkeys allow up to 5 different functions in a single key! 🔥",
+        callout2: "You activate each function with a tap, hold, tap and hold, double-tap or double-tap and hold.",
         label: "Select Superkey",
       },
       wireless: {
@@ -418,9 +417,10 @@ const English = {
         doubleTapAndHoldLabel: "2Tap & hold",
         doubleTapAndHold: "Tap twice fast and hold to see others keyboards crying.",
       },
-      callout1: "Wow! Superpowers, my friend!",
+      callout1: "Superkeys allow up to 5 different functions in a single key.",
       callout2:
-        "Superkeys allow up to 5 different functions in a single key. You activate each function with a tap, hold, tap and hold, double-tap or double-tap and hold. This allows you to create crazy combinations to boost your workflow.",
+        "Use only TAP and HOLD to get Fast Superkeys, ideal for layers and modifiers. Use all five functions for shortcuts, macros or media keys.",
+      callout3: "Update your firmware to get the most out of Superkeys.", 
       tooltip:
         "You can edit keys in two different ways. Advanced users may prefer Single View which is designed for quick key editing.",
       collapse: {
@@ -646,9 +646,9 @@ const English = {
       overlapThreshold: "Add Key on Tap - Overlap Threshold",
       overlapThresholdTip1: "This setting adjusts how much chording you are allowed without triggering the hold function.",
       overlapThresholdTip2:
-        "High values let you press the next key before releasing the Dual-Function key without triggering the hold function.",
+        "High values let you press another key before fully releasing the previous one without triggering the hold function.",
       overlapThresholdTip3:
-        "Low values will mean that you’ll trigger the hold function whenever pressing a key without having totally released a Dual-Function key.",
+        "Low values will mean that you'll trigger the hold function whenever pressing another key without releasing the previous one.",
       overlapThresholdTipDefault: "Default value: 80",
       overlapThresholdsub: " - Percentage from 0 to 100",
       holdTimeoutTip1: "This setting determines the amount of time it takes for the “hold” function to activate.",

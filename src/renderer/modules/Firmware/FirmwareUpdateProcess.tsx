@@ -19,8 +19,10 @@ import React, { useState, useEffect } from "react";
 import Styled from "styled-components";
 import log from "electron-log/renderer";
 import { useMachine } from "@xstate/react";
+import { useNavigate } from "react-router-dom";
 import { i18n } from "@Renderer/i18n";
-import { useDevice } from "@Renderer/DeviceContext";
+import { useDevice, DeviceTools } from "@Renderer/DeviceContext";
+import { toast } from "react-toastify";
 
 // State machine
 import FlashDevice from "@Renderer/controller/FlashingProcedure/machine";
@@ -39,6 +41,14 @@ import { BackupType } from "@Renderer/types/backups";
 
 // Visual modules
 import FirmwareProgressStatus from "./FirmwareProgressStatus";
+import Store from "@Renderer/utils/Store";
+import Backup from "../../../api/backup";
+import WaitForRestoreDialog from "@Renderer/components/molecules/CustomModal/WaitForRestoreDialog";
+import RestorePromptDialog from "@Renderer/components/molecules/CustomModal/RestorePromptDialog";
+import ToastMessage from "@Renderer/components/atoms/ToastMessage";
+import { IconArrowDownWithLine } from "@Renderer/components/atoms/icons";
+import { Neuron } from "@Renderer/types/neurons";
+import Device from "../../../api/comms/Device";
 
 const Style = Styled.div`
 width: 100%;
@@ -111,8 +121,12 @@ interface FirmwareUpdateProcessProps {
 
 function FirmwareUpdateProcess(props: FirmwareUpdateProcessProps) {
   const { nextBlock, retryBlock, context, toggleFlashing, toggleFwUpdate, onDisconnect, setRestoredOk } = props;
-  const { state: deviceState } = useDevice();
+  const { state: deviceState, dispatch } = useDevice();
+  const navigate = useNavigate();
   const [toggledFlashing, sendToggledFlashing] = useState(false);
+  const [performingRestore, setPerformingRestore] = useState(false);
+  const [readyForRestore, setReadyForRestore] = useState(false);
+  const [checkingReconnect, setCheckingReconnect] = useState(false);
 
   // keypress handler to handle keyboard actions.
   const handleKeyDown = (event: KeyboardEvent) => {
@@ -169,14 +183,15 @@ function FirmwareUpdateProcess(props: FirmwareUpdateProcessProps) {
           toggleFwUpdate(true);
           sendToggledFlashing(true);
         },
-        finishFlashing: async () => {
+        finishFlashing: async ({ context }) => {
           if (!toggledFlashing) return;
-          setRestoredOk(state.context.restoreResult as boolean);
+          // Use machine context provided to the action to avoid stale state
+          setRestoredOk(!!(context as any).restoreResult);
           sendToggledFlashing(false);
           log.info("closing flashin process");
           toggleFlashing();
           toggleFwUpdate(false);
-          onDisconnect();
+          navigate("/editor");
         },
       },
     }),
@@ -204,6 +219,53 @@ function FirmwareUpdateProcess(props: FirmwareUpdateProcessProps) {
     }
     if (state.value === "success") nextBlock(state.context);
   }, [nextBlock, state]);
+
+  // Ensure serial reconnection is ready before showing the Restore popup
+  useEffect(() => {
+    const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+    const checkReconnect = async () => {
+      try {
+        setCheckingReconnect(true);
+        setReadyForRestore(false);
+        // If the currentDevice is already a ready Serial Neuron, we can proceed immediately
+        if (
+          deviceState.currentDevice &&
+          deviceState.currentDevice.type === "serial" &&
+          !deviceState.currentDevice?.device?.bootloader &&
+          !deviceState.currentDevice.isClosed
+        ) {
+          setReadyForRestore(true);
+          return;
+        }
+        // Try up to 10 times with backoff to allow OS to enumerate ports and device to be responsive
+        for (let i = 0; i < 10; i += 1) {
+          try {
+            const list = await DeviceTools.list();
+            const target = list.find(
+              (d: any) => d.type === "serial" && d.device?.info?.product === state.context.device?.info?.product,
+            );
+            if (target) {
+              setReadyForRestore(true);
+              break;
+            }
+          } catch (e) {
+            // ignore and retry
+          }
+          await sleep(750);
+        }
+      } finally {
+        setCheckingReconnect(false);
+      }
+    };
+
+    if (state.context.stateblock === 7) {
+      checkReconnect();
+    } else {
+      setReadyForRestore(false);
+      setCheckingReconnect(false);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [state.context.stateblock]);
 
   const stepsDefy = [
     { step: 1, title: i18n.firmwareUpdate.texts.flashCardTitle1, description: i18n.firmwareUpdate.texts.flashCardTitleDefy2 },
@@ -394,6 +456,115 @@ function FirmwareUpdateProcess(props: FirmwareUpdateProcessProps) {
           ) : (
             ""
           )}
+          {/* Manual Restore Prompt after flashing completes, only after reconnection ready */}
+          <RestorePromptDialog
+            open={state.value === "reportSucess" && readyForRestore}
+            disabled={performingRestore}
+            onRestore={async () => {
+              try {
+                setPerformingRestore(true);
+                const store = Store.getStore();
+                const backupFolder = store.get("settings.backupFolder") as string;
+                let connected: Device | undefined;
+                let connectedWasNew = false;
+                let ok = false;
+                try {
+                  // Prefer reusing currentDevice if it's a live serial connection matching product
+                  if (
+                    deviceState.currentDevice &&
+                    deviceState.currentDevice.type === "serial" &&
+                    !deviceState.currentDevice.isClosed &&
+                    (deviceState.currentDevice.device?.info?.product === context.device?.info?.product)
+                  ) {
+                    connected = deviceState.currentDevice as Device;
+                  } else {
+                    // Find and connect to the updated device over Serial
+                    const list = await DeviceTools.list();
+                    const target = list.find(
+                      d => d.type === "serial" && d.device?.info?.product === context.device?.info?.product,
+                    );
+                    if (!target) throw new Error("Keyboard not found after update");
+                    // If a different serial device connection is still open, close it first to free the COM port
+                    try {
+                      if (
+                        deviceState.currentDevice &&
+                        deviceState.currentDevice.type === "serial" &&
+                        !deviceState.currentDevice.isClosed
+                      ) {
+                        const currPath = (deviceState.currentDevice.port as any)?.path || deviceState.currentDevice.device?.path;
+                        const tgtPath = (target as any)?.device?.path;
+                        if (currPath && tgtPath && currPath !== tgtPath) {
+                          await DeviceTools.disconnect(deviceState.currentDevice as Device);
+                        }
+                      }
+                    } catch (e) {
+                      // ignore disconnect errors
+                    }
+                    // Connect with retry to avoid transient EACCES/EBUSY after device reboot
+                    const maxTries = 6;
+                    let lastErr: any;
+                    for (let i = 0; i < maxTries; i += 1) {
+                      try {
+                        connected = (await DeviceTools.connect(target)) as Device;
+                        lastErr = undefined;
+                        break;
+                      } catch (err: any) {
+                        lastErr = err;
+                        const msg = String(err?.message || err);
+                        if (/denied|busy|EBUSY|EACCES/i.test(msg)) {
+                          await new Promise(r => setTimeout(r, 800));
+                          continue;
+                        }
+                        throw err;
+                      }
+                    }
+                    if (!connected) throw lastErr || new Error("Could not open serial port");
+                    connectedWasNew = true;
+                  }
+                  let chipID = await connected.command("hardware.chip_id");
+                  chipID = (chipID as string).replace(/\s/g, "");
+                  const neurons = store.get("neurons") as Neuron[];
+                  const loadedFile = await Backup.getLatestBackup(backupFolder, chipID, connected);
+                  ok = await Backup.restoreBackup(neurons, chipID, loadedFile, connected);
+                  if (ok) {
+                    toast.success(
+                      <ToastMessage title="Backup restored successfully" content="Your backup was restored successfully to the device!" icon={<IconArrowDownWithLine />} />,
+                      { autoClose: 2000, icon: "" },
+                    );
+                  } else {
+                    toast.warn(
+                      <ToastMessage title="Could not restore backup" content="Could not restore latest backup" icon={<IconArrowDownWithLine />} />,
+                      { autoClose: 2500, icon: "" },
+                    );
+                  }
+                } finally {
+                  // If we opened a new connection, adopt it into DeviceContext as the current device
+                  if (connected && connectedWasNew) {
+                    try {
+                      dispatch({ type: "addDevice", payload: connected });
+                      dispatch({ type: "changeCurrent", payload: { selected: deviceState.deviceList.length, device: connected } });
+                    } catch (e) {
+                      // if context update fails, we still keep the port open to avoid COM conflicts
+                    }
+                  }
+                }
+                setPerformingRestore(false);
+                if (ok) {
+                  setReadyForRestore(false);
+                  send({ type: "finish-event", restoreResult: true } as any);
+                }
+              } catch (e) {
+                log.error(e);
+                setPerformingRestore(false);
+                toast.warn(
+                  <ToastMessage title="Could not restore backup" content={`Error: ${e}`} icon={<IconArrowDownWithLine />} />,
+                  { autoClose: 2500, icon: "" },
+                );
+                // Do not finish on error; keep popup open to allow retry
+              }
+            }}
+          />
+          <WaitForRestoreDialog title="Restoring Backup" open={performingRestore} />
         </div>
       )}
     </Style>

@@ -339,7 +339,8 @@ const FlashDevice = setup({
         src: "reconnect",
         input: ({ context }) => context,
         onDone: {
-          target: "restoreDefy",
+          // Skip auto-restore: go directly to success report step
+          target: "reportSucess",
           actions: [assign({ flashResult: ({ event }) => event.output })],
         },
         onError: {
@@ -512,7 +513,8 @@ const FlashDevice = setup({
         src: "uploadRaise",
         input: ({ context }) => context,
         onDone: {
-          target: "restoreRaiseNeuron",
+          // Skip auto-restore: go directly to success report step
+          target: "reportSucess",
           actions: assign(({ event }) => event.output),
         },
         onError: {
@@ -578,8 +580,11 @@ const FlashDevice = setup({
           stateblock: () => 7,
         }),
       ],
-      after: {
-        3000: { target: "success", actions: ["finishFlashing"] },
+      on: {
+        "finish-event": {
+          target: "success",
+          actions: [assign({ restoreResult: ({ event }) => (event as any).restoreResult }), "finishFlashing"],
+        },
       },
     },
     failure: {
