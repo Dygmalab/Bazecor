@@ -34,6 +34,7 @@ import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "
 import { BatteryStatus } from "@Renderer/modules/Battery";
 import NavigationButton from "@Renderer/components/molecules/CustomButton/NavigationButton";
 import { i18n } from "@Renderer/i18n";
+import Store from "@Renderer/utils/Store";
 
 // Types
 import Version from "@Types/version";
@@ -64,6 +65,8 @@ function NavigationMenu(props: NavigationMenuProps) {
   const [targetURL, setTargetURL] = useState<string | null>(null);
   const navigate = useNavigate();
   const { connected, pages, fwUpdate, flashing, allowBeta, modified, loading, saveButtonRef, discardChangesButtonRef } = props;
+  const store = Store.getStore();
+  const sk20 = Boolean(store.get("capabilities.sk20"));
 
   const getGitHubFW = useCallback(
     async (product: any) => {
@@ -233,7 +236,7 @@ function NavigationMenu(props: NavigationMenuProps) {
                       selected={currentPage === "/superkeys"}
                       buttonText={i18n.app.menu.superkeys}
                       icoSVG={<IconThunder size="lg" />}
-                      showNotif={isBeta}
+                      showNotif={isBeta && !sk20}
                       notifText="BETA"
                       disabled={fwUpdate || !isBeta || loading}
                     />

@@ -19,9 +19,9 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - os: macos-12
-          - os: windows-2019
-          - os: ubuntu-20.04
+          - os: macos-13
+          - os: windows-2022
+          - os: ubuntu-22.04
 
     steps:
       - uses: actions/setup-python@v4

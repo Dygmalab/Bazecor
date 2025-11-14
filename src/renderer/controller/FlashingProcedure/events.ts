@@ -23,6 +23,11 @@ export interface CANCEL {
   readonly type: "cancel-event";
 }
 
+export interface FINISH {
+  readonly type: "finish-event";
+  readonly restoreResult: boolean;
+}
+
 export interface INC {
   readonly type: "increment-event";
   readonly globalProgress: number;
@@ -33,4 +38,4 @@ export interface INC {
   readonly restoreProgress: number;
 }
 
-export type Events = AutoInit | INTERNAL | ESCPRESSED | AUTOPRESSED | RETRY | CANCEL | INC;
+export type Events = AutoInit | INTERNAL | ESCPRESSED | AUTOPRESSED | RETRY | CANCEL | INC | FINISH;
