@@ -22,6 +22,8 @@ import {
 const glob = require(`glob`);
 const store = Store.getStore();
 
+type BackupCmd = { command: string; data: string };
+
 export default class Backup {
   neurons: Neuron[];
 
@@ -199,11 +201,11 @@ export default class Backup {
   }
 
   static restoreBackup = async (neurons: Neuron[], neuronID: string, backup: BackupType, device: Device) => {
-    let data = [];
+    let data: BackupCmd[] = [];
     if (Array.isArray(backup)) {
-      data = backup;
+      data = backup as unknown as BackupCmd[];
     } else {
-      data = backup.backup;
+      data = (backup as BackupType).backup as unknown as BackupCmd[];
       const localNeurons = [...neurons];
       const index = localNeurons.findIndex(n => n.id === neuronID);
       localNeurons[index] = backup.neuron;
@@ -215,10 +217,39 @@ export default class Backup {
       data = Backup.convertRaiseToRaise2(backup, device);
     if (device.device.info.product === "Raise" && backup.neuron.device.info.product === "Raise2")
       data = Backup.convertRaise2ToRaise(backup, device);
+    // Reorder to ensure superkeys are restored before keymap
+    try {
+      const keymapIdx = data.findIndex((c: BackupCmd) => typeof c.command === "string" && c.command === "keymap.custom");
+      if (keymapIdx > -1) {
+        const toMoveIdxs: number[] = [];
+        for (let i = keymapIdx + 1; i < data.length; i += 1) {
+            const cmd = data[i]?.command;
+            if (typeof cmd === "string" && /^superkeys?\.map$/i.test(cmd)) {
+            toMoveIdxs.push(i);
+          }
+        }
+        if (toMoveIdxs.length > 0) {
+          const toMove = toMoveIdxs.map(i => data[i]);
+          const skip = new Set(toMoveIdxs);
+          const reordered: BackupCmd[] = [];
+          for (let i = 0; i < data.length; i += 1) {
+            if (i === keymapIdx) {
+              for (const item of toMove) reordered.push(item);
+            }
+            if (!skip.has(i)) {
+              reordered.push(data[i]);
+            }
+          }
+          data = reordered;
+        }
+      }
+    } catch (reorderErr) {
+      log.warn("Reordering backup commands failed: ", reorderErr);
+    }
     if (device) {
       try {
         for (let i = 0; i < data.length; i += 1) {
-          let val = data[i].data;
+          let val: unknown = data[i].data;
           // Boolean values needs to be sent as int
           if (typeof val === "boolean") {
             val = +val;
@@ -229,7 +260,7 @@ export default class Backup {
           }
           log.info(`Going to send ${data[i].command} to keyboard`);
           // eslint-disable-next-line no-await-in-loop
-          await device.command(data[i].command, val.trim());
+          await device.command(data[i].command, String(val).trim());
         }
         await device.noCacheCommand("led.mode 0");
         log.info("Restoring all settings");

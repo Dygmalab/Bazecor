@@ -9,6 +9,8 @@ import { MacrosType } from "@Renderer/types/macros";
 import { SegmentedKeyType } from "@Renderer/types/layout";
 import { SuperkeysType } from "@Renderer/types/superkeys";
 import { KeymapDB } from "../../../api/keymap";
+import { Button } from "@Renderer/components/atoms/Button";
+import { useNavigate } from "react-router-dom";
 
 const Styles = Styled.div`
   display: flex;
@@ -37,7 +39,7 @@ h4 {
     background-color: ${({ theme }) => theme.styles.standardView.superkeys.info.background};
     position: relative;
 }
-.superkeyHint:after {
+.superkeyHint:before {
   content: "";
   position: absolute;
   top: -8px;
@@ -101,6 +103,7 @@ const SuperkeysTab = ({ macros, keyCode, onKeySelect, superkeys, disabled }: Sup
   const keymapDB = useMemo(() => new KeymapDB(), []);
   const [oldKC, setOldKC] = useState(-1);
   const selected = useRef(-1);
+  const navigate = useNavigate();
 
   const superKeysActions = useMemo(
     () => [
@@ -133,6 +136,15 @@ const SuperkeysTab = ({ macros, keyCode, onKeySelect, superkeys, disabled }: Sup
     onKeySelect(selected.current + 53980);
   };
 
+  const goToSuperkeysEditor = () => {
+    const link = document.querySelector('a[href="/superkeys"]') as HTMLAnchorElement | null;
+    if (link) {
+      link.click();
+      return;
+    }
+    navigate("/superkeys");
+  };
+
   useEffect(() => {
     const KC = keyCode.base + keyCode.modified;
     if (KC !== oldKC) {
@@ -161,20 +173,30 @@ const SuperkeysTab = ({ macros, keyCode, onKeySelect, superkeys, disabled }: Sup
             <Heading headingLevel={4} renderAs="h4" className="!mt-0 mb-1 text-base">
               {i18n.editor.standardView.superkeys.label}
             </Heading>
-            <div className="superKeySelect">
-              <Select onValueChange={value => handleSelect(value)} value={String(selected.current)}>
-                <SelectTrigger className="w-[280px]">
-                  <SelectValue placeholder="Select Superkey" />
-                </SelectTrigger>
-                <SelectContent>
-                  {superkeys.map((x, id) => (
-                    // eslint-disable-next-line
-                    <SelectItem value={String(id)} disabled={x.id === selected.current} key={`superkeyItem-${x}-${String(id)}`}>
-                      {`${id + 1}. ${superkeys[id].name}`}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+            <div className="flex items-center gap-3">
+              <div className="superKeySelect">
+                <Select onValueChange={value => handleSelect(value)} value={String(selected.current)}>
+                  <SelectTrigger className="w-[280px]">
+                    <SelectValue placeholder="Select Superkey" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {superkeys.map((x, id) => (
+                      // eslint-disable-next-line
+                      <SelectItem value={String(id)} disabled={x.id === selected.current} key={`superkeyItem-${x}-${String(id)}`}>
+                        {`${id + 1}. ${superkeys[id].name}`}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <Button
+                variant="short"
+                size="lg"
+                onClick={goToSuperkeysEditor}
+                disabled={disabled || (document.querySelector('a[href="/superkeys"]') as HTMLAnchorElement | null)?.classList.contains("disabled")}
+              >
+                Create and Edit Superkeys
+              </Button>
             </div>
           </div>
           <div className={`superKeyInfo ${superkeys[selected.current] !== undefined ? "flex animRight" : "animHide"}`}>

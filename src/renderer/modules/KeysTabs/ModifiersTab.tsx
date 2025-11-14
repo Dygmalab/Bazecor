@@ -16,6 +16,7 @@ import { SegmentedKeyType } from "@Renderer/types/layout";
 import { KeymapDB } from "../../../api/keymap";
 // eslint-disable-next-line
 import { Picker } from "../KeyPickerKeyboard";
+import Store from "@Renderer/utils/Store";
 
 interface ModifiersTabProps {
   keyCode: SegmentedKeyType;
@@ -39,6 +40,8 @@ const ModifiersTab = ({
   const [activeModifierTab, setActiveModifierTab] = useState<string>("None");
   const [internalKeyBase, setInternalKeyBase] = useState<number>(keyCode.base);
   const [openKeysPopover, setOpenKeysPopover] = useState<boolean>(false);
+  const store = Store.getStore();
+  const sk20 = Boolean(store.get("capabilities.sk20"));
 
   const KC = useMemo(() => {
     if (keyCode?.base !== undefined && keyCode?.modified !== undefined) {
@@ -214,7 +217,7 @@ const ModifiersTab = ({
         <div className="w-full flex flex-col gap-2">
           <div className="w-full flex flex-row flex-wrap gap-6">
             <div className="flex flex-col gap-2">
-              <Heading renderAs="h4" headingLevel={3} className="text-base flex leading-6 gap-1">
+              <Heading renderAs="h4" headingLevel={3} className="text-base flex leading-6 gap-1 pt-4">
                 {activeModifierTab === "None" && <>Select a Modifier</>}
                 {activeModifierTab === "dualModifier" && (
                   <>
@@ -254,7 +257,7 @@ const ModifiersTab = ({
             </div>
             <AnimatePresence>
               <motion.div className="flex flex-col gap-2">
-                {activeModifierTab === "dualModifier" && (
+                {!sk20 && activeModifierTab === "dualModifier" && (
                   <>
                     <Heading renderAs="h4" headingLevel={3} className="text-base flex leading-6 gap-1">
                       Key <span className="text-gray-400 dark:text-gray-300"> on tap</span>
@@ -313,46 +316,45 @@ const ModifiersTab = ({
               </motion.div>
             </AnimatePresence>
           </div>
-          <div className="flex flex-col gap-2 mt-3">
-            <Heading renderAs="h4" headingLevel={3} className="text-base flex">
-              Advanced options
-            </Heading>
+          <div className="flex flex-col gap-2 mt-1">
             <div className="flex flex-wrap gap-6">
-              <CustomRadioCheckBox
-                label={<div className="pl-0.5">Add a key on tap</div>}
-                checked={activeModifierTab === "dualModifier"}
-                onClick={() => {
-                  if (activeModifier === "") {
-                    triggerToast();
-                  } else if (activeModifier === "ros" || activeModifier === "rcontrol" || activeModifier === "rshift") {
-                    // triggerToastDisabledDual();
-                    log.info("Action disabled!");
-                  } else {
-                    setActiveModifierTab(previous => (previous === "dualModifier" ? "None" : "dualModifier"));
-                    // setActiveModifierTab("dualModifier");
-                    setOpenKeysPopover(true);
+              {!sk20 && (
+                <CustomRadioCheckBox
+                  label={<div className="pl-0.5">Add a key on tap</div>}
+                  checked={activeModifierTab === "dualModifier"}
+                  onClick={() => {
+                    if (activeModifier === "") {
+                      triggerToast();
+                    } else if (activeModifier === "ros" || activeModifier === "rcontrol" || activeModifier === "rshift") {
+                      // triggerToastDisabledDual();
+                      log.info("Action disabled!");
+                    } else {
+                      setActiveModifierTab(previous => (previous === "dualModifier" ? "None" : "dualModifier"));
+                      // setActiveModifierTab("dualModifier");
+                      setOpenKeysPopover(true);
+                    }
+                  }}
+                  type="radio"
+                  name="addDualFuncionModifier"
+                  id="addDualFuncionModifier"
+                  tooltip={
+                    <>
+                      <Heading headingLevel={4} renderAs="h4" className="text-gray-600 dark:text-gray-25 mb-1 leading-6 text-base">
+                        Add key on tap (Dual-function)
+                      </Heading>
+                      <p className="description text-ssm font-medium text-gray-400 dark:text-gray-200">
+                        Tap the key to perform a normal keypress (like space or enter) or hold it to use the selected modifier as
+                        usual. This allows you to easily access your modifiers without sacrificing key real estate.
+                      </p>
+                      <p className="description text-ssm font-medium text-gray-400 dark:text-gray-200">
+                        Right modifiers can&apos;t be used in combination with Add a Key on Tap, except Right ALT.
+                      </p>
+                    </>
                   }
-                }}
-                type="radio"
-                name="addDualFuncionModifier"
-                id="addDualFuncionModifier"
-                tooltip={
-                  <>
-                    <Heading headingLevel={4} renderAs="h4" className="text-gray-600 dark:text-gray-25 mb-1 leading-6 text-base">
-                      Add key on tap (Dual-function)
-                    </Heading>
-                    <p className="description text-ssm font-medium text-gray-400 dark:text-gray-200">
-                      Tap the key to perform a normal keypress (like space or enter) or hold it to use the selected modifier as
-                      usual. This allows you to easily access your modifiers without sacrificing key real estate.
-                    </p>
-                    <p className="description text-ssm font-medium text-gray-400 dark:text-gray-200">
-                      Right modifiers can&apos;t be used in combination with Add a Key on Tap, except Right ALT.
-                    </p>
-                  </>
-                }
-                className=""
-                disabled={activeModifier === "ros" || activeModifier === "rcontrol" || activeModifier === "rshift"}
-              />
+                  className="self-start mt-0"
+                  disabled={activeModifier === "ros" || activeModifier === "rcontrol" || activeModifier === "rshift"}
+                />
+              )}
               <CustomRadioCheckBox
                 label={<div className="pl-0.5">Turn into a OneShot modifier</div>}
                 checked={activeModifierTab === "oneShotModifier"}
@@ -379,7 +381,7 @@ const ModifiersTab = ({
                     </p>
                   </>
                 }
-                className=""
+                className="self-start mt-0"
                 disabled={false}
               />
             </div>

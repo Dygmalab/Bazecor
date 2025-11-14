@@ -87,9 +87,7 @@ function SuperKeysFeatures() {
                     <li className="active">Mouse Clicks</li>
                     <li className="active">Layer Lock</li>
                     <li>Layer Shift</li>
-                    <li>Dual-function</li>
                     <li>OneShot</li>
-                    <li>Superkeys</li>
                   </ul>
                 </div>
                 <div className="gridSuperKeysItem">
@@ -102,9 +100,7 @@ function SuperKeysFeatures() {
                     <li className="active">Mouse Clicks</li>
                     <li className="active">Layer Lock</li>
                     <li className="active">Layer Shift</li>
-                    <li>Dual-function</li>
                     <li>OneShot</li>
-                    <li>Superkeys</li>
                   </ul>
                 </div>
                 <div className="gridSuperKeysItem">
@@ -117,9 +113,7 @@ function SuperKeysFeatures() {
                     <li className="active">Mouse Clicks</li>
                     <li className="active">Layer Lock</li>
                     <li className="active">Layer Shift</li>
-                    <li>Dual-function</li>
                     <li>OneShot</li>
-                    <li>Superkeys</li>
                   </ul>
                 </div>
                 <div className="gridSuperKeysItem">
@@ -132,9 +126,7 @@ function SuperKeysFeatures() {
                     <li className="active">Mouse Clicks</li>
                     <li className="active">Layer Lock</li>
                     <li>Layer Shift</li>
-                    <li>Dual-function</li>
                     <li>OneShot</li>
-                    <li>Superkeys</li>
                   </ul>
                 </div>
                 <div className="gridSuperKeysItem">
@@ -147,9 +139,7 @@ function SuperKeysFeatures() {
                     <li className="active">Mouse Clicks</li>
                     <li className="active">Layer Lock</li>
                     <li className="active">Layer Shift</li>
-                    <li>Dual-function</li>
                     <li>OneShot</li>
-                    <li>Superkeys</li>
                   </ul>
                 </div>
               </div>

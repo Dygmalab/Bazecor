@@ -24,8 +24,8 @@ jobs:
       matrix:
         include:
           - os: macos-13
-          - os: windows-2019
-          - os: ubuntu-20.04
+          - os: windows-2022
+          - os: ubuntu-22.04
     steps:
       - uses: actions/setup-python@v4
         with:
@@ -61,8 +61,8 @@ jobs:
       matrix:
         include:
           - os: macos-13
-          - os: windows-2019
-          - os: ubuntu-20.04
+          - os: windows-2022
+          - os: ubuntu-22.04
 
     steps:
       - uses: actions/setup-python@v4
@@ -196,7 +196,7 @@ jobs:
   release:
     # here we only download the previous artifacts and upload them with release name, just for clarification
     needs: [build]
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     permissions:
       contents: write # to be able to publish a GitHub release
       issues: write # to be able to comment on released issues
