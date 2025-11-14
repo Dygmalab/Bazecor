@@ -12,7 +12,6 @@ import {
   IconRobot,
   IconNote,
   IconThunder,
-  IconSplitView,
   IconWireless,
   IconWrench,
 } from "@Renderer/components/atoms/icons";
@@ -37,6 +36,7 @@ import { Picker } from ".";
 
 import ModPicker from "./ModPicker";
 import ModifiersTab from "../KeysTabs/ModifiersTab";
+import Store from "@Renderer/utils/Store";
 
 // Icons
 
@@ -287,6 +287,8 @@ function KeyPickerKeyboard(props: Props) {
   const [state, setState] = useState<State>(initialState);
   const prevState = useRef(state);
   const [keymapDB] = useState(new KeymapDB());
+  const store = Store.getStore();
+  const sk20 = Boolean(store.get("capabilities.sk20"));
 
   const { tabs, disable, currentTab, customModal } = state;
 
@@ -294,7 +296,6 @@ function KeyPickerKeyboard(props: Props) {
     const tabList = [];
     tabList.push("tabKeys");
     tabList.push("tabLayers");
-    if (actTab === "editor") tabList.push("tabModifiers");
     tabList.push("tabMacro");
     if (actTab !== "super") tabList.push("tabSuperKeys");
     tabList.push("tabMedia");
@@ -303,6 +304,11 @@ function KeyPickerKeyboard(props: Props) {
 
     const lstate = { ...state };
     lstate.tabs = tabList;
+    // Enable editing by default in Superkeys context; otherwise depend on keyIndex
+    lstate.disable = actTab === "super" ? false : keyIndex === -1;
+    // Initialize current tab based on the initial key
+    const initialKeyNum = code != null ? code.modified + code.base : -1;
+    lstate.currentTab = detectTab(initialKeyNum);
     setState(lstate);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -314,8 +320,8 @@ function KeyPickerKeyboard(props: Props) {
     if (keyCode >= 17408 && keyCode <= 17501) tab = "tabLayers";
     if (keyCode >= 49161 && keyCode <= 49168) tab = "tabLayers";
     if (keyCode >= 51218 && keyCode <= 53266) tab = "tabLayers";
-    if (keyCode >= 49153 && keyCode <= 49160) tab = "tabModifiers";
-    if (keyCode >= 49169 && keyCode <= 50961) tab = "tabModifiers";
+    if (keyCode >= 49153 && keyCode <= 49160) tab = "tabLayers";
+    if (keyCode >= 49169 && keyCode <= 50961) tab = "tabLayers";
     if (keyCode >= 17152 && keyCode <= 17154) tab = "tabMedia";
     if ([19682, 18552, 18834, 20865, 20866].includes(keyCode)) tab = "tabMedia";
     if (keyCode >= 22709 && keyCode <= 22733) tab = "tabMedia";
@@ -328,8 +334,8 @@ function KeyPickerKeyboard(props: Props) {
     if (keyCode >= 54108 && keyCode <= 54112) tab = "tabWireless";
 
     log.info("detectedTab", keyCode, tab);
-
-    if (state.currentTab === "tabModifiers" && tab === "tabKeys" && keyCode > 223) tab = "tabModifiers";
+    if (state.currentTab === "tabLayers" && tab === "tabKeys" && keyCode > 223) tab = "tabLayers";
+    /* keep Advanced Modifiers enabled regardless of sk20 */
     return tab;
   };
 
@@ -407,19 +413,8 @@ function KeyPickerKeyboard(props: Props) {
                   <IconKeyboard /> Keys & Shortcuts
                 </TabsTrigger>
                 <TabsTrigger value="tabLayers" variant="tab" className="text-sm [&_svg]:w-[20px] py-2" disabled={disable}>
-                  <IconLayers size="sm" /> {i18n.editor.standardView.layers.title}
+                  <IconLayers size="sm" /> Layers and Modifiers
                 </TabsTrigger>
-                {actTab === "editor" ? (
-                  <>
-                    <TabsTrigger value="tabModifiers" variant="tab" className="text-sm [&_svg]:w-[20px] py-2" disabled={disable}>
-                      <>
-                        <IconSplitView size="sm" /> Advanced Modifiers
-                      </>
-                    </TabsTrigger>
-                  </>
-                ) : (
-                  ""
-                )}
                 <TabsTrigger value="tabMacro" variant="tab" className="text-sm [&_svg]:w-[20px] py-2" disabled={disable}>
                   <IconRobot size="sm" /> Macros
                 </TabsTrigger>
@@ -427,8 +422,10 @@ function KeyPickerKeyboard(props: Props) {
                   <>
                     <TabsTrigger value="tabSuperKeys" variant="tab" className="text-sm [&_svg]:w-[20px] py-2" disabled={disable}>
                       <>
-                        <IconThunder size="sm" /> {i18n.editor.standardView.superkeys.title}{" "}
-                        <div className="badge badge-primary leading-none ml-1 font-bold text-[9px] text-white">BETA</div>
+                        <IconThunder size="sm" /> {i18n.editor.standardView.superkeys.title}
+                        {!sk20 && (
+                          <div className="badge badge-primary leading-none ml-1 font-bold text-[9px] text-white">BETA</div>
+                        )}
                       </>
                     </TabsTrigger>
                   </>
@@ -524,11 +521,7 @@ function KeyPickerKeyboard(props: Props) {
                   macro={macros[KC - 53852]}
                   action={action}
                 />
-              </motion.div>
-            </TabsContent>
-            {actTab === "editor" ? (
-              <TabsContent value="tabModifiers" key="tabModifiers">
-                <motion.div initial="hidden" animate="visible" key="tabKeys" variants={tabVariants}>
+                <div className="mt-6">
                   <ModifiersTab
                     disabled={disable}
                     baseCode={code.base}
@@ -537,11 +530,9 @@ function KeyPickerKeyboard(props: Props) {
                     selectedlanguage={selectedlanguage}
                     keyCode={code}
                   />
-                </motion.div>
-              </TabsContent>
-            ) : (
-              ""
-            )}
+                </div>
+              </motion.div>
+            </TabsContent>
             <TabsContent value="tabMacro" key="tabMacro">
               <motion.div initial="hidden" animate="visible" key="tabKeys" variants={tabVariants}>
                 <>

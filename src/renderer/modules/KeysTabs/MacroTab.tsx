@@ -5,10 +5,12 @@ import log from "electron-log/renderer";
 import { IconArrowInBoxUp } from "@Renderer/components/atoms/icons";
 import { Button } from "@Renderer/components/atoms/Button";
 import Heading from "@Renderer/components/atoms/Heading";
+import Callout from "@Renderer/components/molecules/Callout/Callout";
 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@Renderer/components/atoms/Select";
 import { SegmentedKeyType } from "@Renderer/types/layout";
 import { MacrosType } from "@Renderer/types/macros";
+import { useNavigate } from "react-router-dom";
 
 interface MacroTabProps {
   macros: MacrosType[];
@@ -29,6 +31,7 @@ const MacroTab = (props: MacroTabProps) => {
   const { macros, selectedMacro, onMacrosPress, disabled, keyCode, actTab } = props;
   const [oldKC, setOldKC] = useState(-1);
   const [selected, setSelected] = useState(-1);
+  const navigate = useNavigate();
 
   // sendMacro function to props onMacrosPress function to send macro to MacroCreator
   const sendMacro = (sel: number) => {
@@ -56,6 +59,15 @@ const MacroTab = (props: MacroTabProps) => {
     return macrosContainer;
   });
 
+  const goToMacroEditor = () => {
+    const link = document.querySelector('a[href="/macros"]') as HTMLAnchorElement | null;
+    if (link) {
+      link.click();
+      return;
+    }
+    navigate("/macros");
+  };
+
   useEffect(() => {
     setSelected(macros.length > 0 && keyCode && keyCode.modified === 53852 ? keyCode.base : -1);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -71,22 +83,39 @@ const MacroTab = (props: MacroTabProps) => {
   return (
     <div className={`h-[inherit] tabsMacro ${disabled ? "opacity-50" : ""}`}>
       <div className="h-fit flex flex-wrap flex-initial">
+        <Callout size="sm" className="mt-0 w-full">
+          <p>{i18n.editor.macros.callout1}</p>
+          <p>{i18n.editor.macros.callout2}</p>
+        </Callout>
         <div className="w-full py-4">
           <Heading headingLevel={4} renderAs="h4" className="!mt-0 !mb-1 !text-base">
             {i18n.editor.macros.macroTab.label}
           </Heading>
-          <Select value={String(selected)} onValueChange={changeSelected}>
-            <SelectTrigger className="w-[280px]">
-              <SelectValue placeholder="Select Macro" />
-            </SelectTrigger>
-            <SelectContent>
-              {macrosAux.map((item: MacroItem) => (
-                <SelectItem value={String(item.value)} disabled={item.disabled} key={`macroItem-${item.value}`}>
-                  {item.name}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+          <div className="flex items-center gap-3">
+            <Select value={String(selected)} onValueChange={changeSelected}>
+              <SelectTrigger className="w-[280px]">
+                <SelectValue placeholder="Select Macro" />
+              </SelectTrigger>
+              <SelectContent>
+                {macrosAux.map((item: MacroItem) => (
+                  <SelectItem value={String(item.value)} disabled={item.disabled} key={`macroItem-${item.value}`}>
+                    {item.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <Button
+              variant="short"
+              size="lg"
+              onClick={goToMacroEditor}
+              disabled={
+                !!disabled ||
+                (document.querySelector('a[href="/macros"]') as HTMLAnchorElement | null)?.classList.contains("disabled")
+              }
+            >
+              Create and Edit Macros
+            </Button>
+          </div>
         </div>
         {actTab === "super" ? (
           <div className="mt-auto ml-auto">

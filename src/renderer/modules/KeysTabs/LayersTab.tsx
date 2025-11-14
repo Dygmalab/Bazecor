@@ -16,6 +16,7 @@ import { SegmentedKeyType } from "@Renderer/types/layout";
 import { MacrosType } from "@Renderer/types/macros";
 import { KeymapDB } from "../../../api/keymap";
 import { Picker } from "../KeyPickerKeyboard";
+import Store from "@Renderer/utils/Store";
 
 interface LayersTabProps {
   keyCode?: SegmentedKeyType;
@@ -47,6 +48,8 @@ const LayersTab = ({
     findLayerType(keyCode ? keyCode.base + keyCode.modified : 17492)?.type,
   );
   const [KC, setKC] = useState<number>(0);
+  const store = Store.getStore();
+  const sk20 = Boolean(store.get("capabilities.sk20"));
 
   const layers = useMemo(
     () => [
@@ -183,7 +186,7 @@ const LayersTab = ({
         <div className="w-full flex flex-col gap-2">
           <div className="w-full flex flex-row flex-wrap gap-6">
             <div className="flex flex-col gap-2">
-              <Heading renderAs="h4" headingLevel={3} className="text-base flex leading-6 gap-1">
+              <Heading renderAs="h4" headingLevel={3} className="text-base flex leading-6 gap-1 pt-2">
                 {activeLayerNumber === 0 && <>Select a layer</>}
                 {activeLayerTab === "layerShift" && activeLayerNumber > 0 ? (
                   <>
@@ -234,7 +237,7 @@ const LayersTab = ({
             </div>
             <AnimatePresence>
               <motion.div className="flex flex-col gap-2">
-                {activeLayerTab === "layerDual" && (
+                {!sk20 && activeLayerTab === "layerDual" && (
                   <>
                     <Heading renderAs="h4" headingLevel={3} className="text-base flex leading-6 gap-1">
                       Key <span className="text-gray-400 dark:text-gray-300"> on tap</span>
@@ -293,10 +296,7 @@ const LayersTab = ({
               </motion.div>
             </AnimatePresence>
           </div>
-          <div className="flex flex-col gap-2 mt-3">
-            <Heading renderAs="h4" headingLevel={3} className="text-base flex">
-              Advanced options
-            </Heading>
+          <div className="flex flex-col gap-2 mt-1 mb-1">
             <div className="flex flex-wrap gap-6">
               <CustomRadioCheckBox
                 label={
@@ -331,43 +331,45 @@ const LayersTab = ({
               />
               {activeTab === "editor" && (
                 <>
-                  <CustomRadioCheckBox
-                    label={<div className="pl-0.5">Add a key on tap</div>}
-                    disabled={activeLayerNumber >= 9}
-                    onClick={value => {
-                      if (activeLayerNumber > 0 && activeLayerNumber <= 8) {
-                        handleSetActiveLayerTab(value ? "layerDual" : "layerShift");
-                        setOpenKeysPopover(true);
-                      } else if (activeLayerNumber >= 9) {
-                        triggerToastOneShot();
-                      } else {
-                        triggerToast();
+                  {!sk20 && (
+                    <CustomRadioCheckBox
+                      label={<div className="pl-0.5">Add a key on tap</div>}
+                      disabled={activeLayerNumber >= 9}
+                      onClick={value => {
+                        if (activeLayerNumber > 0 && activeLayerNumber <= 8) {
+                          handleSetActiveLayerTab(value ? "layerDual" : "layerShift");
+                          setOpenKeysPopover(true);
+                        } else if (activeLayerNumber >= 9) {
+                          triggerToastOneShot();
+                        } else {
+                          triggerToast();
+                        }
+                      }}
+                      checked={activeLayerTab === "layerDual"}
+                      type="radio"
+                      name="addDualFunctionLayer"
+                      id="addDualFunctionLayer"
+                      tooltip={
+                        <>
+                          <Heading
+                            headingLevel={4}
+                            renderAs="h4"
+                            className="text-gray-600 dark:text-gray-25 mt-2 mb-1 leading-6 text-base"
+                          >
+                            Add a key on tap (Dual-Function)
+                          </Heading>
+                          <p className="description text-ssm font-medium text-gray-400 dark:text-gray-200">
+                            Tap the key to perform a normal keypress (like space or enter) or hold it to shift to the selected
+                            layer. This allows for efficient layer access without sacrificing key real estate.
+                            <br />
+                            <br />
+                            Add key on tap only works for layers 1 to 8.
+                          </p>
+                        </>
                       }
-                    }}
-                    checked={activeLayerTab === "layerDual"}
-                    type="radio"
-                    name="addDualFunctionLayer"
-                    id="addDualFunctionLayer"
-                    tooltip={
-                      <>
-                        <Heading
-                          headingLevel={4}
-                          renderAs="h4"
-                          className="text-gray-600 dark:text-gray-25 mt-2 mb-1 leading-6 text-base"
-                        >
-                          Add a key on tap (Dual-Function)
-                        </Heading>
-                        <p className="description text-ssm font-medium text-gray-400 dark:text-gray-200">
-                          Tap the key to perform a normal keypress (like space or enter) or hold it to shift to the selected
-                          layer. This allows for efficient layer access without sacrificing key real estate.
-                          <br />
-                          <br />
-                          Add key on tap only works for layers 1 to 8.
-                        </p>
-                      </>
-                    }
-                    className=""
-                  />
+                      className=""
+                    />
+                  )}
                   <CustomRadioCheckBox
                     label={<div className="pl-0.5">Turn into OneShot layer</div>}
                     disabled={activeLayerNumber >= 9}
