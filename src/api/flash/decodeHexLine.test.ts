@@ -1,7 +1,7 @@
 import { describe, expect, test } from "vitest";
-import iHexDecode from "./ihexDecode";
+import { decodeHexLine } from "./decodeHexLine";
 
-describe(`${iHexDecode.name}()`, () => {
+describe(`${decodeHexLine.name}()`, () => {
   test.each([
     {
       name: "Valid data record",
@@ -169,7 +169,7 @@ describe(`${iHexDecode.name}()`, () => {
       },
     },
   ])(`$name - input: '$line'`, ({ name, line, expected }) => {
-    const result = iHexDecode(line);
+    const result = decodeHexLine(line);
 
     // Use toStrictEqual for deep comparison of objects and Uint8Array content
     expect(result).toStrictEqual(expected);
