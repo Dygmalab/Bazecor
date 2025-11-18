@@ -17,6 +17,10 @@ export type State = {
   deviceList: Array<Device>;
 };
 
+/**
+ * Represents a connected Dygma device, handling communication over serial, HID, or from a virtual file.
+ * @implements {DeviceClass}
+ */
 class Device implements DeviceClass {
   type: "serial" | "hid" | "virtual";
   path: string;
@@ -39,6 +43,11 @@ class Device implements DeviceClass {
   fileData: VirtualType;
   currentDevice: Device;
 
+  /**
+   * Creates an instance of a Device.
+   * @param {Device | HID | VirtualType | ExtendedPort} parameters - The device parameters from various sources.
+   * @param {"serial" | "hid" | "virtual"} type - The type of the device connection.
+   */
   constructor(parameters: Device | HID | VirtualType | ExtendedPort, type: "serial" | "hid" | "virtual") {
     // constructor for Device
     this.type = type;
@@ -95,7 +104,12 @@ class Device implements DeviceClass {
     }
   }
 
-  static getHWFVirtual = (dev: DygmaDeviceType) => {
+  /**
+   * Gets the hardware definition for a virtual device by matching it with known hardware configurations.
+   * @param {DygmaDeviceType} dev - The virtual device configuration.
+   * @returns {DygmaDeviceType} The corresponding hardware device definition.
+   */
+  static getHWFVirtual = (dev: DygmaDeviceType): DygmaDeviceType => {
     let result: DygmaDeviceType;
     Hardware.serial.forEach(hdev => {
       if (
@@ -112,21 +126,36 @@ class Device implements DeviceClass {
     return result;
   };
 
-  static help = async (dev: Device) => {
+  /**
+   * Retrieves the list of available commands from a serial device.
+   * @param {Device} dev - The device instance.
+   * @returns {Promise<string[]>} A promise that resolves to an array of commands.
+   */
+  static help = async (dev: Device): Promise<string[]> => {
     const data = await dev.request("help");
     const result = data.split(/\r?\n/).filter(v => v.length > 0);
     log.debug("requesting to fill help: ", dev, result);
     return result;
   };
 
-  static HIDhelp = async (dev: Device) => {
+  /**
+   * Retrieves the list of available commands from an HID device.
+   * @param {Device} dev - The device instance.
+   * @returns {Promise<string[]>} A promise that resolves to an array of commands.
+   */
+  static HIDhelp = async (dev: Device): Promise<string[]> => {
     const data = await dev.hidRequest("help");
     const result = data.split(/\r?\n/).filter(v => v.length > 0);
     log.debug("requesting to fill help: ", dev, result);
     return result;
   };
 
-  async addPort(serialport: SerialPort) {
+  /**
+   * Attaches a serial port to the device instance, sets up data handling, and fetches available commands.
+   * @param {SerialPort} serialport - The serial port to attach.
+   * @returns {Promise<void>}
+   */
+  async addPort(serialport: SerialPort): Promise<void> {
     this.port = serialport;
     this.type = "serial";
     this.isClosed = false;
@@ -159,7 +188,11 @@ class Device implements DeviceClass {
     }
   }
 
-  async addHID() {
+  /**
+   * Configures the device as an HID device and fetches its commands.
+   * @returns {Promise<void>}
+   */
+  async addHID(): Promise<void> {
     const kbCommands = await Device.HIDhelp(this);
     this.isClosed = false;
     log.debug("these are the commands", kbCommands);
@@ -168,7 +201,11 @@ class Device implements DeviceClass {
     };
   }
 
-  async close() {
+  /**
+   * Closes the connection to the device and clears the memory map.
+   * @returns {Promise<void>}
+   */
+  async close(): Promise<void> {
     try {
       if (this.type === "serial")
         await this.port?.close(err => {
@@ -185,7 +222,13 @@ class Device implements DeviceClass {
     }
   }
 
-  request(command: string, ...args: Array<string>) {
+  /**
+   * Sends a command to a serial device and returns the response, with a timeout.
+   * @param {string} command - The command to send.
+   * @param {...string} args - Arguments for the command.
+   * @returns {Promise<string>} A promise that resolves with the device's response.
+   */
+  request(command: string, ...args: Array<string>): Promise<string> {
     log.debug("device.request:", command, ...args);
     return new Promise<string>((resolve, reject) => {
       const timer = setTimeout(() => {
@@ -203,7 +246,14 @@ class Device implements DeviceClass {
     });
   }
 
-  async serialRequest(cmd: string, ...args: string[]) {
+  /**
+   * Sends a command and its arguments to the serial port.
+   * @param {string} cmd - The command to send.
+   * @param {...string} args - Arguments for the command.
+   * @returns {Promise<string>} A promise that resolves with the device's response.
+   * @throws {Error} If the device is not connected.
+   */
+  async serialRequest(cmd: string, ...args: string[]): Promise<string> {
     log.debug("performing request");
     if (!this.port) throw new Error("Device not connected!");
 
@@ -219,7 +269,14 @@ class Device implements DeviceClass {
     });
   }
 
-  async hidRequest(cmd: string, ...args: Array<string>) {
+  /**
+   * Sends a command and its arguments to an HID device.
+   * @param {string} cmd - The command to send.
+   * @param {...string} args - Arguments for the command.
+   * @returns {Promise<string>} A promise that resolves with the device's response.
+   * @throws {Error} If the device is not connected.
+   */
+  async hidRequest(cmd: string, ...args: Array<string>): Promise<string> {
     if (this.port === undefined) throw new Error("Device not connected!");
 
     let request = cmd;
@@ -247,7 +304,13 @@ class Device implements DeviceClass {
     return returnValue;
   }
 
-  async virtualRequest(cmd: string, ...args: string[]) {
+  /**
+   * Simulates sending a command to a virtual device by reading from or writing to the virtual data object.
+   * @param {string} cmd - The command to execute.
+   * @param {...string} args - Arguments for the command.
+   * @returns {Promise<string>} A promise that resolves with the virtual data.
+   */
+  async virtualRequest(cmd: string, ...args: string[]): Promise<string> {
     log.debug("performing virtual request");
     if (args.length > 0 && this.fileData.virtual[cmd].eraseable) {
       this.fileData.virtual[cmd].data = args.join(" ");
@@ -263,7 +326,13 @@ class Device implements DeviceClass {
     });
   }
 
-  async command(cmd: string, ...args: Array<string>) {
+  /**
+   * Sends a command to the device, using a cache to avoid redundant requests.
+   * @param {string} cmd - The command to send.
+   * @param {...string} args - Arguments for the command.
+   * @returns {Promise<string | undefined>} The result of the command, or undefined if the device is closed.
+   */
+  async command(cmd: string, ...args: Array<string>): Promise<string | undefined> {
     if (this.isClosed || (this.port === undefined && !this.file)) return undefined;
 
     // HashMap cache to improve performance
@@ -296,7 +365,13 @@ class Device implements DeviceClass {
     return result;
   }
 
-  async noCacheCommand(cmd: string, ...args: Array<string>) {
+  /**
+   * Sends a command to the device, bypassing the cache.
+   * @param {string} cmd - The command to send.
+   * @param {...string} args - Arguments for the command.
+   * @returns {Promise<string | undefined>} The result of the command, or undefined if the device is closed.
+   */
+  async noCacheCommand(cmd: string, ...args: Array<string>): Promise<string | undefined> {
     if (this.isClosed || (this.port === undefined && !this.file)) return undefined;
 
     let result = "";
@@ -319,7 +394,13 @@ class Device implements DeviceClass {
     return result;
   }
 
-  async write_parts(parts: Array<string>, cb: () => void) {
+  /**
+   * Writes an array of strings to the serial port sequentially, ensuring each part is sent before the next.
+   * @param {Array<string>} parts - The array of string parts to write.
+   * @param {() => void} cb - A callback to execute when all parts have been written.
+   * @returns {Promise<void>}
+   */
+  async write_parts(parts: Array<string>, cb: () => void): Promise<void> {
     if (!parts || parts.length === 0) {
       cb();
       return;
@@ -333,6 +414,11 @@ class Device implements DeviceClass {
     });
   }
 
+  /**
+   * A type guard to check if an object is a Device instance.
+   * @param {Device | VirtualType} device - The object to check.
+   * @returns {device is Device} True if the object is a Device instance.
+   */
   static isDevice = (device: Device | VirtualType): device is Device => "type" in device;
 }
 

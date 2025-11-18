@@ -27,16 +27,20 @@ type BackupCmd = { command: string; data: string };
 export default class Backup {
   neurons: Neuron[];
 
+  /**
+   * @constructor
+   */
   constructor() {
     this.neurons = store.get("neurons") as Neuron[];
     this.DoBackup = this.DoBackup.bind(this);
   }
 
   /**
-   * Function that returns the list of available commands excluding the ones that do not return usefull information for the backup
-   * @returns An array with strings that contain the serial commands that are capable of returing the keyboard configuration
+   * Returns the list of available commands excluding the ones that do not return useful information for the backup.
+   * @param {Device} device The device to get the commands from.
+   * @returns {Promise<string[]>} An array with strings that contain the serial commands that are capable of returning the keyboard configuration.
    */
-  static async Commands(device: Device) {
+  static async Commands(device: Device): Promise<string[]> {
     const notRequired = [
       "eeprom",
       "hardware",
@@ -73,7 +77,11 @@ export default class Backup {
     return validCommands;
   }
 
-  static backupFolderValid = () => {
+  /**
+   * Checks if the backup folder set in the application settings is a valid directory.
+   * @returns {boolean} True if the backup folder is a valid directory, false otherwise.
+   */
+  static backupFolderValid = (): boolean => {
     const folder = store.get("settings.backupFolder") as string;
     try {
       const stats = fs.statSync(folder);
@@ -84,17 +92,17 @@ export default class Backup {
   };
 
   /**
-   * The function is desgned to make a backup of the whole configuration pertaining the Raise keyboard
+   * Creates a backup of the entire keyboard configuration.
    *
-   * To achieve this it uses both the list of commands provided by the caller and the neuron ID which
-   * will help the function retrieve the current neuron configuration stored locally, so it can be added
-   * to the backup
+   * It executes a list of commands on the device and retrieves the current neuron configuration
+   * to create a complete backup object.
    *
-   * @param {Array<string>} commands The required list of commands to be executed on the keyboard, they are retrieved using the Backup.commands function of this same module, you can add or remove from that list as needed.
-   * @param {string} neuronID This parameter contains the neuronID obtained from the Raise, so the corresponding local settings can be retrieved.
-   * @returns {Backup} Backup The function returns the full made backup, so it can be stored wherever is needed, and changed if the module requires it.
+   * @param {string[]} commands The list of commands to execute on the keyboard.
+   * @param {string} neuronID The ID of the neuron to back up.
+   * @param {Device} device The device to back up.
+   * @returns {Promise<BackupType | undefined>} A promise that resolves with the backup object, or undefined if the device is a file.
    */
-  async DoBackup(commands: string[], neuronID: string, device: Device) {
+  async DoBackup(commands: string[], neuronID: string, device: Device): Promise<BackupType | undefined> {
     if (device.file !== false) return undefined;
     const backup: BackupType = {
       neuronID: undefined,
@@ -135,13 +143,13 @@ export default class Backup {
   }
 
   /**
-   * This function physically stores the backup file passed as a variable, the backup is stored in the settings.backupFolder and it uses the following file format
-   *
-   * RaiseBackup-YYYYMMDDhhmmss.json
-   * @param {*} localBackup The backup data object to be stored locally
-   * @returns True when the function has successfully stored the backup locally, and false if something fails, an error log will be also pushed to the console
+   * Saves the backup object to a file in the settings.backupFolder.
+   * The file format is RaiseBackup-YYYYMMDDhhmmss.json.
+   * @param {BackupType} backup The backup data object to be stored locally.
+   * @param {Device} device The device the backup is for.
+   * @returns {boolean} True if the backup was saved successfully, otherwise throws an error.
    */
-  static SaveBackup(backup: BackupType, device: Device) {
+  static SaveBackup(backup: BackupType, device: Device): boolean {
     const localBackup = { ...backup };
     if (device.file !== false) {
       const file = JSON.parse(fs.readFileSync(device.fileData.device.filePath).toString("utf-8"));
@@ -200,7 +208,15 @@ export default class Backup {
     }
   }
 
-  static restoreBackup = async (neurons: Neuron[], neuronID: string, backup: BackupType, device: Device) => {
+  /**
+   * Restores a backup to a device. It handles converting the backup if it's from a different keyboard model.
+   * @param {Neuron[]} neurons The list of all neurons.
+   * @param {string} neuronID The ID of the neuron to restore.
+   * @param {BackupType} backup The backup object to restore.
+   * @param {Device} device The device to restore the backup to.
+   * @returns {Promise<boolean>} A promise that resolves to true if the restore was successful, false otherwise.
+   */
+  static restoreBackup = async (neurons: Neuron[], neuronID: string, backup: BackupType, device: Device): Promise<boolean> => {
     let data: BackupCmd[] = [];
     if (Array.isArray(backup)) {
       data = backup as unknown as BackupCmd[];
@@ -223,8 +239,8 @@ export default class Backup {
       if (keymapIdx > -1) {
         const toMoveIdxs: number[] = [];
         for (let i = keymapIdx + 1; i < data.length; i += 1) {
-            const cmd = data[i]?.command;
-            if (typeof cmd === "string" && /^superkeys?\.map$/i.test(cmd)) {
+          const cmd = data[i]?.command;
+          if (typeof cmd === "string" && /^superkeys?\.map$/i.test(cmd)) {
             toMoveIdxs.push(i);
           }
         }
@@ -274,7 +290,13 @@ export default class Backup {
     return false;
   };
 
-  static restoreVirtual = async (virtual: VirtualType, device: Device) => {
+  /**
+   * Restores settings from a virtual backup file to a device.
+   * @param {VirtualType} virtual The virtual backup object.
+   * @param {Device} device The device to restore the settings to.
+   * @returns {Promise<boolean>} A promise that resolves to true if the restore was successful, false otherwise.
+   */
+  static restoreVirtual = async (virtual: VirtualType, device: Device): Promise<boolean> => {
     if (device) {
       try {
         log.info("Restoring all settings");
@@ -299,7 +321,14 @@ export default class Backup {
     return false;
   };
 
-  static getLatestBackup = async (backupFolder: string, neuronID: string, device: Device) => {
+  /**
+   * Finds and returns the latest backup file for a given device and neuron ID.
+   * @param {string} backupFolder The folder where backups are stored.
+   * @param {string} neuronID The ID of the neuron.
+   * @param {Device} device The device.
+   * @returns {Promise<any | undefined>} A promise that resolves with the loaded backup object, or undefined if no backup is found or an error occurs.
+   */
+  static getLatestBackup = async (backupFolder: string, neuronID: string, device: Device): Promise<any | undefined> => {
     try {
       // creating folder path with current device
       const folderPath = path
@@ -330,7 +359,13 @@ export default class Backup {
     }
   };
 
-  static convertRaiseToRaise2 = (backup: BackupType, dev: Device) => {
+  /**
+   * Converts a backup from a Raise keyboard to a Raise 2 keyboard format.
+   * @param {BackupType} backup The backup object to convert.
+   * @param {Device} dev The destination device (Raise 2).
+   * @returns {BackupCmd[]} The converted backup data.
+   */
+  static convertRaiseToRaise2 = (backup: BackupType, dev: Device): BackupCmd[] => {
     log.info("converting Raise Backup to Raise2");
     const bkpDev = backup.neuron.device;
     const keyLayerSize = 80;
@@ -369,7 +404,13 @@ export default class Backup {
     return localBackup.backup;
   };
 
-  static convertRaise2ToRaise = (backup: BackupType, dev: Device) => {
+  /**
+   * Converts a backup from a Raise 2 keyboard to a Raise keyboard format.
+   * @param {BackupType} backup The backup object to convert.
+   * @param {Device} dev The destination device (Raise).
+   * @returns {BackupCmd[]} The converted backup data.
+   */
+  static convertRaise2ToRaise = (backup: BackupType, dev: Device): BackupCmd[] => {
     log.info("converting Raise2 Backup to Raise");
     const bkpDev = backup.neuron.device;
     const keyLayerSize = 80;
@@ -409,5 +450,10 @@ export default class Backup {
     return localBackup.backup;
   };
 
+  /**
+   * Type guard to check if an object is a BackupType.
+   * @param {any} backup The object to check.
+   * @returns {boolean} True if the object has a 'backup' property.
+   */
   static isBackupType = (backup: any): backup is any => "backup" in backup;
 }

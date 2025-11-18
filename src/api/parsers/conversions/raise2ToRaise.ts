@@ -1,6 +1,15 @@
 import { PaletteType } from "@Renderer/types/layout";
 
-export const convertKeymapR2toR = (layer: number[], keyboardType: string) => {
+/**
+ * Converts a keymap layer from a Raise 2 keyboard layout to a Raise 1 layout.
+ * This involves rearranging the thumb cluster keys and handling layout-specific differences
+ * for ANSI keyboards, such as the Enter and Left Shift keys.
+ *
+ * @param {number[]} layer - An array of numbers representing a keymap layer from a Raise 2.
+ * @param {string} keyboardType - The keyboard type of the target device (e.g., "ANSI"), used to handle layout-specific key swaps.
+ * @returns {number[]} The converted keymap layer compatible with a Raise 1 keyboard.
+ */
+export const convertKeymapR2toR = (layer: number[], keyboardType: string): number[] => {
   let localLayer = [...layer];
   // restoring thumbcluster
   const preT = localLayer.slice(0, 69);
@@ -29,7 +38,17 @@ export const convertKeymapR2toR = (layer: number[], keyboardType: string) => {
   return localLayer;
 };
 
-export const convertColormapR2toR = (layer: number[], keyboardType: string, backupKeyboardType: string) => {
+/**
+ * Converts a colormap layer from a Raise 2 keyboard layout to a Raise 1 layout.
+ * It truncates the layer to the appropriate size and performs specific color index swaps
+ * to match the physical layout differences, especially for ANSI keyboards.
+ *
+ * @param {number[]} layer - An array of numbers representing a colormap layer from a Raise 2.
+ * @param {string} keyboardType - The keyboard type of the target device (e.g., "ANSI").
+ * @param {string} backupKeyboardType - The keyboard type of the source backup device (e.g., "ISO").
+ * @returns {number[]} The converted colormap layer compatible with a Raise 1 keyboard.
+ */
+export const convertColormapR2toR = (layer: number[], keyboardType: string, backupKeyboardType: string): number[] => {
   const rest = layer.slice(0, 132);
   const result = rest;
 
@@ -54,7 +73,13 @@ export const convertColormapR2toR = (layer: number[], keyboardType: string, back
   return result;
 };
 
-export const convertPaletteR2toR = (color: PaletteType) => {
+/**
+ * Converts a single color object from a Raise 2 palette to the array format used by Raise 1.
+ *
+ * @param {PaletteType} color - A color object with `r`, `g`, and `b` properties.
+ * @returns {number[]} An array containing the `r`, `g`, and `b` values: `[r, g, b]`.
+ */
+export const convertPaletteR2toR = (color: PaletteType): number[] => {
   const rgb = color;
   return [rgb.r, rgb.g, rgb.b];
 };

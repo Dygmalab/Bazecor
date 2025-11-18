@@ -25,6 +25,9 @@ import Hardware from "../../hardware";
 import { delay } from "../../../main/utils/delay";
 import NRf52833 from "./NRf52833-flasher";
 
+/**
+ * Handles the wireless flashing process for the Dygma Defy keyboard.
+ */
 class FlashDefyWireless {
   device: any;
   currentPort: any;
@@ -39,6 +42,10 @@ class FlashDefyWireless {
   backup: string[];
   currentDevice: DeviceClass;
 
+  /**
+   * @param {any} device - The device to be flashed.
+   * @param {State} deviceState - The current state of the device.
+   */
   constructor(device: any, deviceState: State) {
     this.device = device;
     this.currentPort = null;
@@ -54,7 +61,14 @@ class FlashDefyWireless {
     this.currentDevice = deviceState.currentDevice;
   }
 
-  async foundDevices(hardware: any, message: string, bootloader: boolean) {
+  /**
+   * Finds and identifies connected Dygma devices.
+   * @param {any} hardware - The hardware information to look for.
+   * @param {string} message - A message to log.
+   * @param {boolean} bootloader - Whether to look for a device in bootloader mode.
+   * @returns {Promise<boolean>} - True if a device was found, false otherwise.
+   */
+  async foundDevices(hardware: any, message: string, bootloader: boolean): Promise<boolean> {
     let isFindDevice = false;
     log.info("Going to list devices");
     const list = (await DeviceTools.enumerateSerial(true)).foundDevices as Device[];
@@ -89,12 +103,12 @@ class FlashDefyWireless {
   }
 
   /**
-   * Returns a Promise to be awaited that sets the DTR flag of the port
-   * @param {*} port Port to be used on the set dtr function
-   * @param {*} state State of the DTR flag to be set on the port
-   * @returns {promise} that will resolve when the function has successfully setted the DTR flag
+   * Sets the DTR (Data Terminal Ready) flag on the serial port.
+   * @param {any} port - The port to set the DTR flag on.
+   * @param {any} state - The state to set the DTR flag to.
+   * @returns {Promise<boolean>} - A promise that resolves when the DTR flag has been set.
    */
-  setDTR = (port: any, state: any) =>
+  setDTR = (port: any, state: any): Promise<boolean> =>
     new Promise(resolve => {
       port.set({ dtr: state }, () => {
         log.info(`DTR set to ${state} at ${new Date(Date.now()).toISOString()}`);
@@ -103,10 +117,10 @@ class FlashDefyWireless {
     });
 
   /**
-   * Update the baud rate of the port with a Promise
-   * @param {*} port Port to be updated
-   * @param {*} baud BaudRate to be set
-   * @returns {promise} Promise to be returned, that will resolve when the operation is done
+   * Updates the baud rate of the serial port.
+   * @param {any} port - The port to update.
+   * @param {number} baud - The new baud rate.
+   * @returns {Promise<any>} - A promise that resolves when the port has been updated.
    */
   updatePort = (port: any, baud: number): Promise<any> =>
     new Promise(resolve => {
@@ -117,11 +131,12 @@ class FlashDefyWireless {
     });
 
   /**
-   * Resets keyboard at the baud rate of 1200bps. Keyboard is restarted with the bootloader
-   * @param {object} port - serial port object for the "path".
-   * @returns {promise}
+   * Resets the keyboard into bootloader mode.
+   * @param {Device} currentDevice - The current device instance.
+   * @param {any} stateUpdate - A function to call with state updates.
+   * @returns {Promise<string>} - A promise that resolves when the keyboard is in bootloader mode, or rejects with an error.
    */
-  async resetKeyboard(currentDevice: Device, stateUpdate: any) {
+  async resetKeyboard(currentDevice: Device, stateUpdate: any): Promise<string> {
     log.info("reset start");
     const errorMessage =
       "The firmware update couldn't start because the Defy Bootloader wasn't found. Please check our Help Center for more details or schedule a video call with us.";
@@ -158,12 +173,13 @@ class FlashDefyWireless {
   }
 
   /**
-   * Updates firmware of bootloader
-   * @param {object} port - serial port object for the "path".
-   * @param {string} firmware - path to file with firmware.
-   * @returns {promise}
+   * Updates the firmware of the device.
+   * @param {string[]} firmware - An array of paths to the firmware files.
+   * @param {boolean} bootloader - Whether the device is in bootloader mode.
+   * @param {any} stateUpdate - A function to call with state updates.
+   * @returns {Promise<boolean>} - A promise that resolves when the firmware has been updated, or rejects with an error.
    */
-  async updateFirmware(firmware: string[], bootloader: boolean, stateUpdate: any) {
+  async updateFirmware(firmware: string[], bootloader: boolean, stateUpdate: any): Promise<boolean> {
     log.info("Begin update firmware with NRf52833", bootloader);
     return new Promise(async (resolve, reject) => {
       const finished = async (err: any, result: any) => {
@@ -185,9 +201,10 @@ class FlashDefyWireless {
   }
 
   /**
-   * Detects keyboard after firmware of bootloader
+   * Detects the keyboard after a firmware update.
+   * @returns {Promise<void>}
    */
-  async detectKeyboard() {
+  async detectKeyboard(): Promise<void> {
     const timeouts = 2500; // time to wait for keyboard
     const findTimes = 5;
     const errorMessage =
@@ -212,12 +229,17 @@ class FlashDefyWireless {
   }
 
   /**
-   * Runs the function several times
-   * @param {function} findKeyboard - function that will run several times.
-   * @param {number} times - how many times function runs.
-   * @param {string} errorMessage - error message if error is.
+   * Runs a function multiple times until it succeeds or the number of tries is exhausted.
+   * @param {Function} findKeyboard - The function to run.
+   * @param {number} times - The number of times to try.
+   * @param {string} errorMessage - The error message to throw if the function fails.
+   * @returns {Promise<boolean>} - True if the function succeeded, false otherwise.
    */
-  async runnerFindKeyboard(findKeyboard: { (): Promise<unknown>; (): any }, times: number, errorMessage: string) {
+  async runnerFindKeyboard(
+    findKeyboard: { (): Promise<unknown>; (): any },
+    times: number,
+    errorMessage: string,
+  ): Promise<boolean> {
     if (!times) {
       log.error(errorMessage);
       return false;
