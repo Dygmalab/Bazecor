@@ -19,6 +19,7 @@
 
 import React, { useState, useEffect } from "react";
 import ListModifiersKey from "@Renderer/components/molecules/ListModifiers/ListModifiersKey";
+import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from "@Renderer/components/atoms/Tooltip";
 
 interface KeyShapeProps {
   keyType: string;
@@ -38,6 +39,7 @@ interface KeyShapeProps {
   selectedKey: any;
   keyCode: number;
   hidden?: boolean;
+  customLabel?: string;
 }
 
 function Key(props: KeyShapeProps) {
@@ -59,6 +61,7 @@ function Key(props: KeyShapeProps) {
     selectedKey,
     keyCode,
     hidden,
+    customLabel,
   } = props;
   const xShape2 = x + 4;
   const yShape2 = y;
@@ -71,7 +74,7 @@ function Key(props: KeyShapeProps) {
     setColor(fill);
   }, [fill]);
 
-  return (
+  const keyContent = (
     <>
       {keyType == "regularKey" ? (
         <g
@@ -155,6 +158,14 @@ function Key(props: KeyShapeProps) {
               <ListModifiersKey keyCode={keyCode} size="xs" selectedKey={selectedKey} />
             </foreignObject>
           </g>
+          {customLabel && (
+            <circle
+              cx={x + width - 8}
+              cy={y + 8}
+              r={4}
+              className="fill-purple-500"
+            />
+          )}
         </g>
       ) : (
         ""
@@ -2025,5 +2036,22 @@ function Key(props: KeyShapeProps) {
       </defs>
     </>
   );
+
+  if (customLabel) {
+    return (
+      <TooltipProvider delayDuration={300}>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <g style={{ cursor: "context-menu" }}>{keyContent}</g>
+          </TooltipTrigger>
+          <TooltipContent side="top" size="sm">
+            {customLabel}
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
+    );
+  }
+
+  return keyContent;
 }
 export default Key;

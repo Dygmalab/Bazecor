@@ -5,6 +5,7 @@ import { sendKeyUp, sendkeyDown } from "./configureCaptureKeys";
 import { listDrivesHandler } from "../utils/listDrivesHandler";
 import GlobalRecording from "../managers/GlobalRecording";
 import Window from "../managers/Window";
+import { configureKeyLabelsIPCs, removeKeyLabelsIPCs } from "./configureKeyLabelsIpc";
 
 const removeIPCs = () => {
   ipcMain.removeHandler("start-recording");
@@ -19,6 +20,7 @@ const removeIPCs = () => {
   ipcMain.removeHandler("openExternal");
   ipcMain.removeHandler("get-NativeTheme");
   ipcMain.removeHandler("ask-for-accessibility");
+  removeKeyLabelsIPCs();
 };
 
 const configureIPCs = () => {
@@ -111,6 +113,8 @@ const configureIPCs = () => {
     }
     return false;
   });
+
+  configureKeyLabelsIPCs();
 };
 
 export { configureIPCs, removeIPCs };
