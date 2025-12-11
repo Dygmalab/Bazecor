@@ -21,6 +21,7 @@ import log from "electron-log/renderer";
 import Neuron from "../../hardware/Neuron";
 import Key from "../../hardware/Key";
 import UnderGlowStrip from "../../hardware/UnderGlowStrip";
+import KeyContextMenu from "@Renderer/components/molecules/KeyContextMenu";
 
 const XX = 255;
 const LEDS_LEFT_KEYS = 33;
@@ -172,6 +173,13 @@ class KeymapANSI extends React.Component {
     const keyIndex = (row, col) => (col !== undefined ? row * 16 + col : row + 11);
 
     const getLabel = (row, col) => keymap[keyIndex(row, col)];
+
+    // Get custom label from KeyLabelsContext (passed as prop from LayoutEditor)
+    const { getLabel: getCustomLabel, layer: currentLayerIndex } = this.props;
+    const getKeyCustomLabel = (row, col) => {
+      if (!getCustomLabel) return undefined;
+      return getCustomLabel(keyIndex(row, col), currentLayerIndex);
+    };
 
     const isSelected = (row, col) => {
       const selectIndex = keyIndex(row, col);
@@ -336,7 +344,8 @@ class KeymapANSI extends React.Component {
           : getLabel(row, col).label && getDivideKeys(getLabel(row, col).label, xCord, String(yCord + 7), smallKey);
 
     const genKey = (kRow, kCol, kX, kY) => (
-      <Key
+      <KeyContextMenu keyPosition={keyIndex(kRow, kCol)} layer={layer}>
+            <Key
         keyType="regularKey"
         id={`R${kRow}C${kCol}_keyshape`}
         onClick={onClick}
@@ -357,6 +366,7 @@ class KeymapANSI extends React.Component {
         keyCode={getLabel(kRow, kCol).keyCode}
         selectedKey={getLabel(kRow, kCol)}
       />
+          </KeyContextMenu>
     );
 
     const genUG = (ugPos, x, y, path) => (
@@ -401,7 +411,8 @@ class KeymapANSI extends React.Component {
           {genKey(0, 1, 151, keysRowsPosition.row1)}
           {genKey(0, 2, 218, keysRowsPosition.row1)}
           {genKey(0, 3, 285, keysRowsPosition.row1)}
-          <Key
+          <KeyContextMenu keyPosition={keyIndex(0, 4)} layer={layer}>
+            <Key
             keyType="regularKey"
             id="R0C4_keyshape"
             onClick={onClick}
@@ -420,9 +431,12 @@ class KeymapANSI extends React.Component {
             centerPrimary={getCenterPrimary(0, 4, 0, 0, true)}
             centerExtra={getCenterExtra(0, 4, 0, 0, true)}
             keyCode={getLabel(0, 4).keyCode}
+            customLabel={getKeyCustomLabel(0, 4)}
             selectedKey={getLabel(0, 4)}
           />
-          <Key
+          </KeyContextMenu>
+          <KeyContextMenu keyPosition={keyIndex(0, 5)} layer={layer}>
+            <Key
             keyType="regularKey"
             id="R0C5_keyshape"
             onClick={onClick}
@@ -441,9 +455,12 @@ class KeymapANSI extends React.Component {
             centerPrimary={getCenterPrimary(0, 5, 0, 0, true)}
             centerExtra={getCenterExtra(0, 5, 0, 0, true)}
             keyCode={getLabel(0, 5).keyCode}
+            customLabel={getKeyCustomLabel(0, 5)}
             selectedKey={getLabel(0, 5)}
           />
-          <Key
+          </KeyContextMenu>
+          <KeyContextMenu keyPosition={keyIndex(0, 6)} layer={layer}>
+            <Key
             keyType="regularKey"
             id="R0C6_keyshape"
             onClick={onClick}
@@ -462,9 +479,12 @@ class KeymapANSI extends React.Component {
             centerPrimary={getCenterPrimary(0, 6, 0, 0, true)}
             centerExtra={getCenterExtra(0, 6, 0, 0, true)}
             keyCode={getLabel(0, 6).keyCode}
+            customLabel={getKeyCustomLabel(0, 6)}
             selectedKey={getLabel(0, 6)}
           />
-          <Key
+          </KeyContextMenu>
+          <KeyContextMenu keyPosition={keyIndex(0, 9)} layer={layer}>
+            <Key
             keyType="regularKey"
             id="R0C9_keyshape"
             onClick={onClick}
@@ -483,9 +503,12 @@ class KeymapANSI extends React.Component {
             centerPrimary={getCenterPrimary(0, 9, 0, 0, true)}
             centerExtra={getCenterExtra(0, 9, 0, 0, true)}
             keyCode={getLabel(0, 9).keyCode}
+            customLabel={getKeyCustomLabel(0, 9)}
             selectedKey={getLabel(0, 9)}
           />
-          <Key
+          </KeyContextMenu>
+          <KeyContextMenu keyPosition={keyIndex(0, 10)} layer={layer}>
+            <Key
             keyType="regularKey"
             id="R0C10_keyshape"
             onClick={onClick}
@@ -504,9 +527,12 @@ class KeymapANSI extends React.Component {
             centerPrimary={getCenterPrimary(0, 10, 0, 0, true)}
             centerExtra={getCenterExtra(0, 10, 0, 0, true)}
             keyCode={getLabel(0, 10).keyCode}
+            customLabel={getKeyCustomLabel(0, 10)}
             selectedKey={getLabel(0, 10)}
           />
-          <Key
+          </KeyContextMenu>
+          <KeyContextMenu keyPosition={keyIndex(0, 11)} layer={layer}>
+            <Key
             keyType="regularKey"
             id="R0C11_keyshape"
             onClick={onClick}
@@ -525,9 +551,12 @@ class KeymapANSI extends React.Component {
             centerPrimary={getCenterPrimary(0, 11, 0, 0, true)}
             centerExtra={getCenterExtra(0, 11, 0, 0, true)}
             keyCode={getLabel(0, 11).keyCode}
+            customLabel={getKeyCustomLabel(0, 11)}
             selectedKey={getLabel(0, 11)}
           />
-          <Key
+          </KeyContextMenu>
+          <KeyContextMenu keyPosition={keyIndex(0, 12)} layer={layer}>
+            <Key
             keyType="regularKey"
             id="R0C12_keyshape"
             onClick={onClick}
@@ -546,9 +575,12 @@ class KeymapANSI extends React.Component {
             centerPrimary={getCenterPrimary(0, 12, 0, 0, true)}
             centerExtra={getCenterExtra(0, 12, 0, 0, true)}
             keyCode={getLabel(0, 12).keyCode}
+            customLabel={getKeyCustomLabel(0, 12)}
             selectedKey={getLabel(0, 12)}
           />
-          <Key
+          </KeyContextMenu>
+          <KeyContextMenu keyPosition={keyIndex(0, 13)} layer={layer}>
+            <Key
             keyType="regularKey"
             id="R0C13_keyshape"
             onClick={onClick}
@@ -567,9 +599,12 @@ class KeymapANSI extends React.Component {
             centerPrimary={getCenterPrimary(0, 13, 0, 0, true)}
             centerExtra={getCenterExtra(0, 13, 0, 0, true)}
             keyCode={getLabel(0, 13).keyCode}
+            customLabel={getKeyCustomLabel(0, 13)}
             selectedKey={getLabel(0, 13)}
           />
-          <Key
+          </KeyContextMenu>
+          <KeyContextMenu keyPosition={keyIndex(0, 14)} layer={layer}>
+            <Key
             keyType="regularKey"
             id="R0C14_keyshape"
             onClick={onClick}
@@ -588,9 +623,12 @@ class KeymapANSI extends React.Component {
             centerPrimary={getCenterPrimary(0, 14, 0, 0, true)}
             centerExtra={getCenterExtra(0, 14, 0, 0, true)}
             keyCode={getLabel(0, 14).keyCode}
+            customLabel={getKeyCustomLabel(0, 14)}
             selectedKey={getLabel(0, 14)}
           />
-          <Key
+          </KeyContextMenu>
+          <KeyContextMenu keyPosition={keyIndex(0, 15)} layer={layer}>
+            <Key
             keyType="regularKey"
             id="R0C15_keyshape"
             onClick={onClick}
@@ -609,9 +647,12 @@ class KeymapANSI extends React.Component {
             centerPrimary={getCenterPrimary(0, 15, 0, 0, true)}
             centerExtra={getCenterExtra(0, 15, 0, 0, true)}
             keyCode={getLabel(0, 15).keyCode}
+            customLabel={getKeyCustomLabel(0, 15)}
             selectedKey={getLabel(0, 15)}
           />
-          <Key
+          </KeyContextMenu>
+          <KeyContextMenu keyPosition={keyIndex(1, 0)} layer={layer}>
+            <Key
             keyType="regularKey"
             id="R1C0_keyshape"
             onClick={onClick}
@@ -630,9 +671,12 @@ class KeymapANSI extends React.Component {
             centerPrimary={getCenterPrimary(1, 0, 0, 0, true)}
             centerExtra={getCenterExtra(1, 0, 0, 0, true)}
             keyCode={getLabel(1, 0).keyCode}
+            customLabel={getKeyCustomLabel(1, 0)}
             selectedKey={getLabel(1, 0)}
           />
-          <Key
+          </KeyContextMenu>
+          <KeyContextMenu keyPosition={keyIndex(1, 1)} layer={layer}>
+            <Key
             keyType="regularKey"
             id="R1C1_keyshape"
             onClick={onClick}
@@ -651,9 +695,12 @@ class KeymapANSI extends React.Component {
             centerPrimary={getCenterPrimary(1, 1, 0, 0, true)}
             centerExtra={getCenterExtra(1, 1, 0, 0, true)}
             keyCode={getLabel(1, 1).keyCode}
+            customLabel={getKeyCustomLabel(1, 1)}
             selectedKey={getLabel(1, 1)}
           />
-          <Key
+          </KeyContextMenu>
+          <KeyContextMenu keyPosition={keyIndex(1, 2)} layer={layer}>
+            <Key
             keyType="regularKey"
             id="R1C2_keyshape"
             onClick={onClick}
@@ -672,9 +719,12 @@ class KeymapANSI extends React.Component {
             centerPrimary={getCenterPrimary(1, 2, 0, 0, true)}
             centerExtra={getCenterExtra(1, 2, 0, 0, true)}
             keyCode={getLabel(1, 2).keyCode}
+            customLabel={getKeyCustomLabel(1, 2)}
             selectedKey={getLabel(1, 2)}
           />
-          <Key
+          </KeyContextMenu>
+          <KeyContextMenu keyPosition={keyIndex(1, 3)} layer={layer}>
+            <Key
             keyType="regularKey"
             id="R1C3_keyshape"
             onClick={onClick}
@@ -693,9 +743,12 @@ class KeymapANSI extends React.Component {
             centerPrimary={getCenterPrimary(1, 3, 0, 0, true)}
             centerExtra={getCenterExtra(1, 3, 0, 0, true)}
             keyCode={getLabel(1, 3).keyCode}
+            customLabel={getKeyCustomLabel(1, 3)}
             selectedKey={getLabel(1, 3)}
           />
-          <Key
+          </KeyContextMenu>
+          <KeyContextMenu keyPosition={keyIndex(1, 4)} layer={layer}>
+            <Key
             keyType="regularKey"
             id="R1C4_keyshape"
             onClick={onClick}
@@ -714,9 +767,12 @@ class KeymapANSI extends React.Component {
             centerPrimary={getCenterPrimary(1, 4, 0, 0, true)}
             centerExtra={getCenterExtra(1, 4, 0, 0, true)}
             keyCode={getLabel(1, 4).keyCode}
+            customLabel={getKeyCustomLabel(1, 4)}
             selectedKey={getLabel(1, 4)}
           />
-          <Key
+          </KeyContextMenu>
+          <KeyContextMenu keyPosition={keyIndex(1, 5)} layer={layer}>
+            <Key
             keyType="regularKey"
             id="R1C5_keyshape"
             onClick={onClick}
@@ -735,9 +791,12 @@ class KeymapANSI extends React.Component {
             centerPrimary={getCenterPrimary(1, 5, 0, 0, true)}
             centerExtra={getCenterExtra(1, 5, 0, 0, true)}
             keyCode={getLabel(1, 5).keyCode}
+            customLabel={getKeyCustomLabel(1, 5)}
             selectedKey={getLabel(1, 5)}
           />
-          <Key
+          </KeyContextMenu>
+          <KeyContextMenu keyPosition={keyIndex(1, 8)} layer={layer}>
+            <Key
             keyType="regularKey"
             id="R1C8_keyshape"
             onClick={onClick}
@@ -756,9 +815,12 @@ class KeymapANSI extends React.Component {
             centerPrimary={getCenterPrimary(1, 8, 0, 0, true)}
             centerExtra={getCenterExtra(1, 8, 0, 0, true)}
             keyCode={getLabel(1, 8).keyCode}
+            customLabel={getKeyCustomLabel(1, 8)}
             selectedKey={getLabel(1, 8)}
           />
-          <Key
+          </KeyContextMenu>
+          <KeyContextMenu keyPosition={keyIndex(1, 9)} layer={layer}>
+            <Key
             keyType="regularKey"
             id="R1C9_keyshape"
             onClick={onClick}
@@ -777,9 +839,12 @@ class KeymapANSI extends React.Component {
             centerPrimary={getCenterPrimary(1, 9, 0, 0, true)}
             centerExtra={getCenterExtra(1, 9, 0, 0, true)}
             keyCode={getLabel(1, 9).keyCode}
+            customLabel={getKeyCustomLabel(1, 9)}
             selectedKey={getLabel(1, 9)}
           />
-          <Key
+          </KeyContextMenu>
+          <KeyContextMenu keyPosition={keyIndex(1, 10)} layer={layer}>
+            <Key
             keyType="regularKey"
             id="R1C10_keyshape"
             onClick={onClick}
@@ -798,9 +863,12 @@ class KeymapANSI extends React.Component {
             centerPrimary={getCenterPrimary(1, 10, 0, 0, true)}
             centerExtra={getCenterExtra(1, 10, 0, 0, true)}
             keyCode={getLabel(1, 10).keyCode}
+            customLabel={getKeyCustomLabel(1, 10)}
             selectedKey={getLabel(1, 10)}
           />
-          <Key
+          </KeyContextMenu>
+          <KeyContextMenu keyPosition={keyIndex(1, 11)} layer={layer}>
+            <Key
             keyType="regularKey"
             id="R1C11_keyshape"
             onClick={onClick}
@@ -819,9 +887,12 @@ class KeymapANSI extends React.Component {
             centerPrimary={getCenterPrimary(1, 11, 0, 0, true)}
             centerExtra={getCenterExtra(1, 11, 0, 0, true)}
             keyCode={getLabel(1, 11).keyCode}
+            customLabel={getKeyCustomLabel(1, 11)}
             selectedKey={getLabel(1, 11)}
           />
-          <Key
+          </KeyContextMenu>
+          <KeyContextMenu keyPosition={keyIndex(1, 12)} layer={layer}>
+            <Key
             keyType="regularKey"
             id="R1C12_keyshape"
             onClick={onClick}
@@ -840,9 +911,12 @@ class KeymapANSI extends React.Component {
             centerPrimary={getCenterPrimary(1, 12, 0, 0, true)}
             centerExtra={getCenterExtra(1, 12, 0, 0, true)}
             keyCode={getLabel(1, 12).keyCode}
+            customLabel={getKeyCustomLabel(1, 12)}
             selectedKey={getLabel(1, 12)}
           />
-          <Key
+          </KeyContextMenu>
+          <KeyContextMenu keyPosition={keyIndex(1, 13)} layer={layer}>
+            <Key
             keyType="regularKey"
             id="R1C13_keyshape"
             onClick={onClick}
@@ -861,9 +935,12 @@ class KeymapANSI extends React.Component {
             centerPrimary={getCenterPrimary(1, 13, 0, 0, true)}
             centerExtra={getCenterExtra(1, 13, 0, 0, true)}
             keyCode={getLabel(1, 13).keyCode}
+            customLabel={getKeyCustomLabel(1, 13)}
             selectedKey={getLabel(1, 13)}
           />
-          <Key
+          </KeyContextMenu>
+          <KeyContextMenu keyPosition={keyIndex(1, 14)} layer={layer}>
+            <Key
             keyType="regularKey"
             id="R1C14_keyshape"
             onClick={onClick}
@@ -882,9 +959,12 @@ class KeymapANSI extends React.Component {
             centerPrimary={getCenterPrimary(1, 14, 0, 0, true)}
             centerExtra={getCenterExtra(1, 14, 0, 0, true)}
             keyCode={getLabel(1, 14).keyCode}
+            customLabel={getKeyCustomLabel(1, 14)}
             selectedKey={getLabel(1, 14)}
           />
-          <Key
+          </KeyContextMenu>
+          <KeyContextMenu keyPosition={keyIndex(1, 15)} layer={layer}>
+            <Key
             keyType="regularKey"
             id="R1C15_keyshape"
             onClick={onClick}
@@ -903,9 +983,12 @@ class KeymapANSI extends React.Component {
             centerPrimary={getCenterPrimary(1, 15, 0, 0, true)}
             centerExtra={getCenterExtra(1, 15, 0, 0, true)}
             keyCode={getLabel(1, 15).keyCode}
+            customLabel={getKeyCustomLabel(1, 15)}
             selectedKey={getLabel(1, 15)}
           />
-          <Key
+          </KeyContextMenu>
+          <KeyContextMenu keyPosition={keyIndex(2, 0)} layer={layer}>
+            <Key
             keyType="regularKey"
             id="R2C0_keyshape"
             onClick={onClick}
@@ -924,9 +1007,12 @@ class KeymapANSI extends React.Component {
             centerPrimary={getCenterPrimary(2, 0, 0, 0, true)}
             centerExtra={getCenterExtra(2, 0, 0, 0, true)}
             keyCode={getLabel(2, 0).keyCode}
+            customLabel={getKeyCustomLabel(2, 0)}
             selectedKey={getLabel(2, 0)}
           />
-          <Key
+          </KeyContextMenu>
+          <KeyContextMenu keyPosition={keyIndex(2, 1)} layer={layer}>
+            <Key
             keyType="regularKey"
             id="R2C1_keyshape"
             onClick={onClick}
@@ -945,9 +1031,12 @@ class KeymapANSI extends React.Component {
             centerPrimary={getCenterPrimary(2, 1, 0, 0, true)}
             centerExtra={getCenterExtra(2, 1, 0, 0, true)}
             keyCode={getLabel(2, 1).keyCode}
+            customLabel={getKeyCustomLabel(2, 1)}
             selectedKey={getLabel(2, 1)}
           />
-          <Key
+          </KeyContextMenu>
+          <KeyContextMenu keyPosition={keyIndex(2, 2)} layer={layer}>
+            <Key
             keyType="regularKey"
             id="R2C2_keyshape"
             onClick={onClick}
@@ -966,9 +1055,12 @@ class KeymapANSI extends React.Component {
             centerPrimary={getCenterPrimary(2, 2, 0, 0, true)}
             centerExtra={getCenterExtra(2, 2, 0, 0, true)}
             keyCode={getLabel(2, 2).keyCode}
+            customLabel={getKeyCustomLabel(2, 2)}
             selectedKey={getLabel(2, 2)}
           />
-          <Key
+          </KeyContextMenu>
+          <KeyContextMenu keyPosition={keyIndex(2, 3)} layer={layer}>
+            <Key
             keyType="regularKey"
             id="R2C3_keyshape"
             onClick={onClick}
@@ -987,9 +1079,12 @@ class KeymapANSI extends React.Component {
             centerPrimary={getCenterPrimary(2, 3, 0, 0, true)}
             centerExtra={getCenterExtra(2, 3, 0, 0, true)}
             keyCode={getLabel(2, 3).keyCode}
+            customLabel={getKeyCustomLabel(2, 3)}
             selectedKey={getLabel(2, 3)}
           />
-          <Key
+          </KeyContextMenu>
+          <KeyContextMenu keyPosition={keyIndex(2, 4)} layer={layer}>
+            <Key
             keyType="regularKey"
             id="R2C4_keyshape"
             onClick={onClick}
@@ -1008,9 +1103,12 @@ class KeymapANSI extends React.Component {
             centerPrimary={getCenterPrimary(2, 4, 0, 0, true)}
             centerExtra={getCenterExtra(2, 4, 0, 0, true)}
             keyCode={getLabel(2, 4).keyCode}
+            customLabel={getKeyCustomLabel(2, 4)}
             selectedKey={getLabel(2, 4)}
           />
-          <Key
+          </KeyContextMenu>
+          <KeyContextMenu keyPosition={keyIndex(2, 5)} layer={layer}>
+            <Key
             keyType="regularKey"
             id="R2C5_keyshape"
             onClick={onClick}
@@ -1029,9 +1127,12 @@ class KeymapANSI extends React.Component {
             centerPrimary={getCenterPrimary(2, 5, 0, 0, true)}
             centerExtra={getCenterExtra(2, 5, 0, 0, true)}
             keyCode={getLabel(2, 5).keyCode}
+            customLabel={getKeyCustomLabel(2, 5)}
             selectedKey={getLabel(2, 5)}
           />
-          <Key
+          </KeyContextMenu>
+          <KeyContextMenu keyPosition={keyIndex(2, 9)} layer={layer}>
+            <Key
             keyType="regularKey"
             id="R2C9_keyshape"
             onClick={onClick}
@@ -1050,9 +1151,12 @@ class KeymapANSI extends React.Component {
             centerPrimary={getCenterPrimary(2, 9, 0, 0, true)}
             centerExtra={getCenterExtra(2, 9, 0, 0, true)}
             keyCode={getLabel(2, 9).keyCode}
+            customLabel={getKeyCustomLabel(2, 9)}
             selectedKey={getLabel(2, 9)}
           />
-          <Key
+          </KeyContextMenu>
+          <KeyContextMenu keyPosition={keyIndex(2, 10)} layer={layer}>
+            <Key
             keyType="regularKey"
             id="R2C10_keyshape"
             onClick={onClick}
@@ -1071,9 +1175,12 @@ class KeymapANSI extends React.Component {
             centerPrimary={getCenterPrimary(2, 10, 0, 0, true)}
             centerExtra={getCenterExtra(2, 10, 0, 0, true)}
             keyCode={getLabel(2, 10).keyCode}
+            customLabel={getKeyCustomLabel(2, 10)}
             selectedKey={getLabel(2, 10)}
           />
-          <Key
+          </KeyContextMenu>
+          <KeyContextMenu keyPosition={keyIndex(2, 11)} layer={layer}>
+            <Key
             keyType="regularKey"
             id="R2C11_keyshape"
             onClick={onClick}
@@ -1092,9 +1199,12 @@ class KeymapANSI extends React.Component {
             centerPrimary={getCenterPrimary(2, 11, 0, 0, true)}
             centerExtra={getCenterExtra(2, 11, 0, 0, true)}
             keyCode={getLabel(2, 11).keyCode}
+            customLabel={getKeyCustomLabel(2, 11)}
             selectedKey={getLabel(2, 11)}
           />
-          <Key
+          </KeyContextMenu>
+          <KeyContextMenu keyPosition={keyIndex(2, 12)} layer={layer}>
+            <Key
             keyType="regularKey"
             id="R2C12_keyshape"
             onClick={onClick}
@@ -1113,9 +1223,12 @@ class KeymapANSI extends React.Component {
             centerPrimary={getCenterPrimary(2, 12, 0, 0, true)}
             centerExtra={getCenterExtra(2, 12, 0, 0, true)}
             keyCode={getLabel(2, 12).keyCode}
+            customLabel={getKeyCustomLabel(2, 12)}
             selectedKey={getLabel(2, 12)}
           />
-          <Key
+          </KeyContextMenu>
+          <KeyContextMenu keyPosition={keyIndex(2, 13)} layer={layer}>
+            <Key
             keyType="regularKey"
             id="R2C13_keyshape"
             onClick={onClick}
@@ -1134,9 +1247,12 @@ class KeymapANSI extends React.Component {
             centerPrimary={getCenterPrimary(2, 13, 0, 0, true)}
             centerExtra={getCenterExtra(2, 13, 0, 0, true)}
             keyCode={getLabel(2, 13).keyCode}
+            customLabel={getKeyCustomLabel(2, 13)}
             selectedKey={getLabel(2, 13)}
           />
-          <Key
+          </KeyContextMenu>
+          <KeyContextMenu keyPosition={keyIndex(2, 14)} layer={layer}>
+            <Key
             keyType="regularKey"
             id="R2C14_keyshape"
             onClick={onClick}
@@ -1155,9 +1271,12 @@ class KeymapANSI extends React.Component {
             centerPrimary={getCenterPrimary(2, 14, 0, 0, true)}
             centerExtra={getCenterExtra(2, 14, 0, 0, true)}
             keyCode={getLabel(2, 14).keyCode}
+            customLabel={getKeyCustomLabel(2, 14)}
             selectedKey={getLabel(2, 14)}
           />
-          <Key
+          </KeyContextMenu>
+          <KeyContextMenu keyPosition={keyIndex(2, 15)} layer={layer}>
+            <Key
             keyType="regularKey"
             id="R2C15_keyshape"
             onClick={onClick}
@@ -1176,9 +1295,12 @@ class KeymapANSI extends React.Component {
             centerPrimary={getCenterPrimary(2, 15, 0, 0, true)}
             centerExtra={getCenterExtra(2, 15, 0, 0, true)}
             keyCode={getLabel(2, 15).keyCode}
+            customLabel={getKeyCustomLabel(2, 15)}
             selectedKey={getLabel(2, 15)}
           />
-          <Key
+          </KeyContextMenu>
+          <KeyContextMenu keyPosition={keyIndex(3, 1)} layer={layer}>
+            <Key
             keyType="regularKey"
             id="R3C0_keyshape"
             onClick={onClick}
@@ -1197,9 +1319,12 @@ class KeymapANSI extends React.Component {
             centerPrimary={getCenterPrimary(3, 1, 0, 0, true)}
             centerExtra={getCenterExtra(3, 1, 0, 0, true)}
             keyCode={getLabel(3, 1).keyCode}
+            customLabel={getKeyCustomLabel(3, 1)}
             selectedKey={getLabel(3, 1)}
           />
-          <Key
+          </KeyContextMenu>
+          <KeyContextMenu keyPosition={keyIndex(3, 2)} layer={layer}>
+            <Key
             keyType="regularKey"
             id="R3C2_keyshape"
             onClick={onClick}
@@ -1218,9 +1343,12 @@ class KeymapANSI extends React.Component {
             centerPrimary={getCenterPrimary(3, 2, 0, 0, true)}
             centerExtra={getCenterExtra(3, 2, 0, 0, true)}
             keyCode={getLabel(3, 2).keyCode}
+            customLabel={getKeyCustomLabel(3, 2)}
             selectedKey={getLabel(3, 2)}
           />
-          <Key
+          </KeyContextMenu>
+          <KeyContextMenu keyPosition={keyIndex(3, 3)} layer={layer}>
+            <Key
             keyType="regularKey"
             id="R3C3_keyshape"
             onClick={onClick}
@@ -1239,9 +1367,12 @@ class KeymapANSI extends React.Component {
             centerPrimary={getCenterPrimary(3, 3, 0, 0, true)}
             centerExtra={getCenterExtra(3, 3, 0, 0, true)}
             keyCode={getLabel(3, 3).keyCode}
+            customLabel={getKeyCustomLabel(3, 3)}
             selectedKey={getLabel(3, 3)}
           />
-          <Key
+          </KeyContextMenu>
+          <KeyContextMenu keyPosition={keyIndex(3, 4)} layer={layer}>
+            <Key
             keyType="regularKey"
             id="R3C4_keyshape"
             onClick={onClick}
@@ -1260,9 +1391,12 @@ class KeymapANSI extends React.Component {
             centerPrimary={getCenterPrimary(3, 4, 0, 0, true)}
             centerExtra={getCenterExtra(3, 4, 0, 0, true)}
             keyCode={getLabel(3, 4).keyCode}
+            customLabel={getKeyCustomLabel(3, 4)}
             selectedKey={getLabel(3, 4)}
           />
-          <Key
+          </KeyContextMenu>
+          <KeyContextMenu keyPosition={keyIndex(3, 5)} layer={layer}>
+            <Key
             keyType="regularKey"
             id="R3C5_keyshape"
             onClick={onClick}
@@ -1281,9 +1415,12 @@ class KeymapANSI extends React.Component {
             centerPrimary={getCenterPrimary(3, 5, 0, 0, true)}
             centerExtra={getCenterExtra(3, 5, 0, 0, true)}
             keyCode={getLabel(3, 5).keyCode}
+            customLabel={getKeyCustomLabel(3, 5)}
             selectedKey={getLabel(3, 5)}
           />
-          <Key
+          </KeyContextMenu>
+          <KeyContextMenu keyPosition={keyIndex(3, 6)} layer={layer}>
+            <Key
             keyType="regularKey"
             id="R3C6_keyshape"
             onClick={onClick}
@@ -1302,9 +1439,12 @@ class KeymapANSI extends React.Component {
             centerPrimary={getCenterPrimary(3, 6, 0, 0, true)}
             centerExtra={getCenterExtra(3, 6, 0, 0, true)}
             keyCode={getLabel(3, 6).keyCode}
+            customLabel={getKeyCustomLabel(3, 6)}
             selectedKey={getLabel(3, 6)}
           />
-          <Key
+          </KeyContextMenu>
+          <KeyContextMenu keyPosition={keyIndex(3, 10)} layer={layer}>
+            <Key
             keyType="regularKey"
             id="R3C10_keyshape"
             onClick={onClick}
@@ -1323,9 +1463,12 @@ class KeymapANSI extends React.Component {
             centerPrimary={getCenterPrimary(3, 10, 0, 0, true)}
             centerExtra={getCenterExtra(3, 10, 0, 0, true)}
             keyCode={getLabel(3, 10).keyCode}
+            customLabel={getKeyCustomLabel(3, 10)}
             selectedKey={getLabel(3, 10)}
           />
-          <Key
+          </KeyContextMenu>
+          <KeyContextMenu keyPosition={keyIndex(3, 11)} layer={layer}>
+            <Key
             keyType="regularKey"
             id="R3C11_keyshape"
             onClick={onClick}
@@ -1344,9 +1487,12 @@ class KeymapANSI extends React.Component {
             centerPrimary={getCenterPrimary(3, 11, 0, 0, true)}
             centerExtra={getCenterExtra(3, 11, 0, 0, true)}
             keyCode={getLabel(3, 11).keyCode}
+            customLabel={getKeyCustomLabel(3, 11)}
             selectedKey={getLabel(3, 11)}
           />
-          <Key
+          </KeyContextMenu>
+          <KeyContextMenu keyPosition={keyIndex(3, 12)} layer={layer}>
+            <Key
             keyType="regularKey"
             id="R3C12_keyshape"
             onClick={onClick}
@@ -1365,9 +1511,12 @@ class KeymapANSI extends React.Component {
             centerPrimary={getCenterPrimary(3, 12, 0, 0, true)}
             centerExtra={getCenterExtra(3, 12, 0, 0, true)}
             keyCode={getLabel(3, 12).keyCode}
+            customLabel={getKeyCustomLabel(3, 12)}
             selectedKey={getLabel(3, 12)}
           />
-          <Key
+          </KeyContextMenu>
+          <KeyContextMenu keyPosition={keyIndex(3, 13)} layer={layer}>
+            <Key
             keyType="regularKey"
             id="R3C13_keyshape"
             onClick={onClick}
@@ -1386,9 +1535,12 @@ class KeymapANSI extends React.Component {
             centerPrimary={getCenterPrimary(3, 13, 0, 0, true)}
             centerExtra={getCenterExtra(3, 13, 0, 0, true)}
             keyCode={getLabel(3, 13).keyCode}
+            customLabel={getKeyCustomLabel(3, 13)}
             selectedKey={getLabel(3, 13)}
           />
-          <Key
+          </KeyContextMenu>
+          <KeyContextMenu keyPosition={keyIndex(3, 14)} layer={layer}>
+            <Key
             keyType="regularKey"
             id="R3C14_keyshape"
             onClick={onClick}
@@ -1407,9 +1559,12 @@ class KeymapANSI extends React.Component {
             centerPrimary={getCenterPrimary(3, 14, 0, 0, true)}
             centerExtra={getCenterExtra(3, 14, 0, 0, true)}
             keyCode={getLabel(3, 14).keyCode}
+            customLabel={getKeyCustomLabel(3, 14)}
             selectedKey={getLabel(3, 14)}
           />
-          <Key
+          </KeyContextMenu>
+          <KeyContextMenu keyPosition={keyIndex(3, 15)} layer={layer}>
+            <Key
             keyType="regularKey"
             id="R3C15_keyshape"
             onClick={onClick}
@@ -1428,9 +1583,12 @@ class KeymapANSI extends React.Component {
             centerPrimary={getCenterPrimary(3, 15, 0, 0, true)}
             centerExtra={getCenterExtra(3, 15, 0, 0, true)}
             keyCode={getLabel(3, 15).keyCode}
+            customLabel={getKeyCustomLabel(3, 15)}
             selectedKey={getLabel(3, 15)}
           />
-          <Key
+          </KeyContextMenu>
+          <KeyContextMenu keyPosition={keyIndex(4, 0)} layer={layer}>
+            <Key
             keyType="regularKey"
             id="R4C0_keyshape"
             onClick={onClick}
@@ -1449,9 +1607,12 @@ class KeymapANSI extends React.Component {
             centerPrimary={getCenterPrimary(4, 0, 0, 0, true)}
             centerExtra={getCenterExtra(4, 0, 0, 0, true)}
             keyCode={getLabel(4, 0).keyCode}
+            customLabel={getKeyCustomLabel(4, 0)}
             selectedKey={getLabel(4, 0)}
           />
-          <Key
+          </KeyContextMenu>
+          <KeyContextMenu keyPosition={keyIndex(4, 1)} layer={layer}>
+            <Key
             keyType="regularKey"
             id="R4C1_keyshape"
             onClick={onClick}
@@ -1470,9 +1631,12 @@ class KeymapANSI extends React.Component {
             centerPrimary={getCenterPrimary(4, 1, 0, 0, true)}
             centerExtra={getCenterExtra(4, 1, 0, 0, true)}
             keyCode={getLabel(4, 1).keyCode}
+            customLabel={getKeyCustomLabel(4, 1)}
             selectedKey={getLabel(4, 1)}
           />
-          <Key
+          </KeyContextMenu>
+          <KeyContextMenu keyPosition={keyIndex(4, 2)} layer={layer}>
+            <Key
             keyType="regularKey"
             id="R4C2_keyshape"
             onClick={onClick}
@@ -1491,9 +1655,12 @@ class KeymapANSI extends React.Component {
             centerPrimary={getCenterPrimary(4, 2, 0, 0, true)}
             centerExtra={getCenterExtra(4, 2, 0, 0, true)}
             keyCode={getLabel(4, 2).keyCode}
+            customLabel={getKeyCustomLabel(4, 2)}
             selectedKey={getLabel(4, 2)}
           />
-          <Key
+          </KeyContextMenu>
+          <KeyContextMenu keyPosition={keyIndex(4, 3)} layer={layer}>
+            <Key
             keyType="regularKey"
             id="R4C3_keyshape"
             onClick={onClick}
@@ -1512,9 +1679,12 @@ class KeymapANSI extends React.Component {
             centerPrimary={getCenterPrimary(4, 3, 0, 0, true)}
             centerExtra={getCenterExtra(4, 3, 0, 0, true)}
             keyCode={getLabel(4, 3).keyCode}
+            customLabel={getKeyCustomLabel(4, 3)}
             selectedKey={getLabel(4, 3)}
           />
-          <Key
+          </KeyContextMenu>
+          <KeyContextMenu keyPosition={keyIndex(4, 4)} layer={layer}>
+            <Key
             keyType="regularKey"
             id="R4C4_keyshape"
             onClick={onClick}
@@ -1533,9 +1703,12 @@ class KeymapANSI extends React.Component {
             centerPrimary={getCenterPrimary(4, 4, 0, 0, true)}
             centerExtra={getCenterExtra(4, 4, 0, 0, true)}
             keyCode={getLabel(4, 4).keyCode}
+            customLabel={getKeyCustomLabel(4, 4)}
             selectedKey={getLabel(4, 4)}
           />
-          <Key
+          </KeyContextMenu>
+          <KeyContextMenu keyPosition={keyIndex(4, 10)} layer={layer}>
+            <Key
             keyType="regularKey"
             id="R4C10_keyshape"
             onClick={onClick}
@@ -1554,9 +1727,12 @@ class KeymapANSI extends React.Component {
             centerPrimary={getCenterPrimary(4, 10, 0, 0, true)}
             centerExtra={getCenterExtra(4, 10, 0, 0, true)}
             keyCode={getLabel(4, 10).keyCode}
+            customLabel={getKeyCustomLabel(4, 10)}
             selectedKey={getLabel(4, 10)}
           />
-          <Key
+          </KeyContextMenu>
+          <KeyContextMenu keyPosition={keyIndex(4, 11)} layer={layer}>
+            <Key
             keyType="regularKey"
             id="R4C11_keyshape"
             onClick={onClick}
@@ -1575,9 +1751,12 @@ class KeymapANSI extends React.Component {
             centerPrimary={getCenterPrimary(4, 11, 0, 0, true)}
             centerExtra={getCenterExtra(4, 11, 0, 0, true)}
             keyCode={getLabel(4, 11).keyCode}
+            customLabel={getKeyCustomLabel(4, 11)}
             selectedKey={getLabel(4, 11)}
           />
-          <Key
+          </KeyContextMenu>
+          <KeyContextMenu keyPosition={keyIndex(4, 12)} layer={layer}>
+            <Key
             keyType="regularKey"
             id="R4C12_keyshape"
             onClick={onClick}
@@ -1596,9 +1775,12 @@ class KeymapANSI extends React.Component {
             centerPrimary={getCenterPrimary(4, 12, 0, 0, true)}
             centerExtra={getCenterExtra(4, 12, 0, 0, true)}
             keyCode={getLabel(4, 12).keyCode}
+            customLabel={getKeyCustomLabel(4, 12)}
             selectedKey={getLabel(4, 12)}
           />
-          <Key
+          </KeyContextMenu>
+          <KeyContextMenu keyPosition={keyIndex(4, 13)} layer={layer}>
+            <Key
             keyType="regularKey"
             id="R4C13_keyshape"
             onClick={onClick}
@@ -1617,9 +1799,12 @@ class KeymapANSI extends React.Component {
             centerPrimary={getCenterPrimary(4, 13, 0, 0, true)}
             centerExtra={getCenterExtra(4, 13, 0, 0, true)}
             keyCode={getLabel(4, 13).keyCode}
+            customLabel={getKeyCustomLabel(4, 13)}
             selectedKey={getLabel(4, 13)}
           />
-          <Key
+          </KeyContextMenu>
+          <KeyContextMenu keyPosition={keyIndex(4, 14)} layer={layer}>
+            <Key
             keyType="regularKey"
             id="R4C14_keyshape"
             onClick={onClick}
@@ -1638,9 +1823,12 @@ class KeymapANSI extends React.Component {
             centerPrimary={getCenterPrimary(4, 14, 0, 0, true)}
             centerExtra={getCenterExtra(4, 14, 0, 0, true)}
             keyCode={getLabel(4, 14).keyCode}
+            customLabel={getKeyCustomLabel(4, 14)}
             selectedKey={getLabel(4, 14)}
           />
-          <Key
+          </KeyContextMenu>
+          <KeyContextMenu keyPosition={keyIndex(4, 15)} layer={layer}>
+            <Key
             keyType="regularKey"
             id="R4C15_keyshape"
             onClick={onClick}
@@ -1659,10 +1847,13 @@ class KeymapANSI extends React.Component {
             centerPrimary={getCenterPrimary(4, 15, 0, 0, true)}
             centerExtra={getCenterExtra(4, 15, 0, 0, true)}
             keyCode={getLabel(4, 15).keyCode}
+            customLabel={getKeyCustomLabel(4, 15)}
             selectedKey={getLabel(4, 15)}
           />
+          </KeyContextMenu>
 
-          <Key
+          <KeyContextMenu keyPosition={keyIndex(4, 5)} layer={layer}>
+            <Key
             keyType="t5"
             id="R4C6_keyshape"
             onClick={onClick}
@@ -1681,10 +1872,13 @@ class KeymapANSI extends React.Component {
             centerPrimary={getCenterPrimary(4, 5, 0, 0, true)}
             centerExtra={getCenterExtra(4, 5, 0, 0, true)}
             keyCode={getLabel(4, 5).keyCode}
+            customLabel={getKeyCustomLabel(4, 5)}
             selectedKey={getLabel(4, 5)}
           />
+          </KeyContextMenu>
 
-          <Key
+          <KeyContextMenu keyPosition={keyIndex(4, 6)} layer={layer}>
+            <Key
             keyType="regularKey"
             id="R4C7_keyshape"
             onClick={onClick}
@@ -1703,9 +1897,12 @@ class KeymapANSI extends React.Component {
             centerPrimary={getCenterPrimary(4, 6, 0, 0, true)}
             centerExtra={getCenterExtra(4, 6, 0, 0, true)}
             keyCode={getLabel(4, 6).keyCode}
+            customLabel={getKeyCustomLabel(4, 6)}
             selectedKey={getLabel(4, 6)}
           />
-          <Key
+          </KeyContextMenu>
+          <KeyContextMenu keyPosition={keyIndex(4, 8)} layer={layer}>
+            <Key
             keyType="regularKey"
             id="R4C8_keyshape"
             onClick={onClick}
@@ -1724,9 +1921,12 @@ class KeymapANSI extends React.Component {
             centerPrimary={getCenterPrimary(4, 8, 0, 0, true)}
             centerExtra={getCenterExtra(4, 8, 0, 0, true)}
             keyCode={getLabel(4, 8).keyCode}
+            customLabel={getKeyCustomLabel(4, 8)}
             selectedKey={getLabel(4, 8)}
           />
-          <Key
+          </KeyContextMenu>
+          <KeyContextMenu keyPosition={keyIndex(4, 9)} layer={layer}>
+            <Key
             keyType="t8"
             id="R4C9_keyshape"
             onClick={onClick}
@@ -1745,8 +1945,10 @@ class KeymapANSI extends React.Component {
             centerPrimary={getCenterPrimary(4, 9, 0, 0, true)}
             centerExtra={getCenterExtra(4, 9, 0, 0, true)}
             keyCode={getLabel(4, 9).keyCode}
+            customLabel={getKeyCustomLabel(4, 9)}
             selectedKey={getLabel(4, 9)}
           />
+          </KeyContextMenu>
         </g>
         <g id="Areas">
           {/* Left side */}

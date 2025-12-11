@@ -30,6 +30,10 @@ import customCursor from "@Assets/base/cursorBucket.png";
 import ToastMessage from "@Renderer/components/atoms/ToastMessage";
 import { CopyFromDialog } from "@Renderer/components/molecules/CustomModal/CopyFromDialog";
 import { useDevice } from "@Renderer/DeviceContext";
+import { KeyLabelsProvider, useKeyLabels } from "@Renderer/contexts/KeyLabelsContext";
+import { KeyLabelDialogProvider } from "@Renderer/components/molecules/KeyContextMenu";
+import KeyLabelsPanel from "@Renderer/components/organisms/KeyLabelsPanel";
+import { Tag } from "lucide-react";
 
 // Types
 import { LayerType, Neuron } from "@Renderer/types/neurons";
@@ -70,6 +74,22 @@ import {
 } from "../../api/parsers";
 
 const store = Store.getStore();
+
+// Wrapper component that provides getLabel to the Layer component
+interface KeyboardLayerWithLabelsProps {
+  Layer: React.FC<any>;
+  layerProps: Record<string, any>;
+  currentLayer: number;
+}
+
+function KeyboardLayerWithLabels({ Layer, layerProps, currentLayer }: KeyboardLayerWithLabelsProps) {
+  const { getLabel } = useKeyLabels();
+  return (
+    <div className="LayerHolder">
+      <Layer {...layerProps} getLabel={getLabel} layer={currentLayer} />
+    </div>
+  );
+}
 
 const Styles = Styled.div`
 .keyboard-editor {
@@ -490,6 +510,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
   const [showNeuronModal, setShowNeuronModal] = useState(false);
   const [leftSideModified, setLeftSideModified] = useState(false);
   const [isWireless, setIsWireless] = useState(false);
+  const [labelsPanelOpen, setLabelsPanelOpen] = useState(false);
 
   const [selectedPaletteColor, setSelectedPaletteColor] = useState(-1);
 
@@ -1664,167 +1685,186 @@ const LayoutEditor = (props: LayoutEditorProps) => {
   if (layerData === undefined || layerData.length < 1) return <LoaderLayout steps={scanningStep} />;
   // log.info("GOING TO RENDER!!!");
 
+  // Props for the Layer component - extracted so KeyboardLayerWithLabels can spread them
+  const layerProps = {
+    readOnly: isReadOnly,
+    index: currentLayer,
+    keymap: layerData,
+    onKeySelect,
+    selectedKey: currentKeyIndex,
+    selectedLED: currentLedIndex,
+    palette,
+    colormap: colorMap[currentLayer],
+    darkMode,
+    style: { width: "50vw" },
+    showUnderglow: modeselect !== "keyboard",
+    className: `svg-${deviceName.toLowerCase()} raiseKeyboard layer h-auto`,
+    isStandardView: false,
+  };
+
+  // Use wrapper component that can access KeyLabels context
   const layer = (
     // TODO: restore fade effect <fade in appear key={currentLayer}>
-    <div className="LayerHolder">
-      <Layer
-        readOnly={isReadOnly}
-        index={currentLayer}
-        keymap={layerData}
-        onKeySelect={onKeySelect}
-        selectedKey={currentKeyIndex}
-        selectedLED={currentLedIndex}
-        palette={palette}
-        colormap={colorMap[currentLayer]}
-        darkMode={darkMode}
-        style={{ width: "50vw" }}
-        showUnderglow={modeselect !== "keyboard"}
-        className={`svg-${deviceName.toLowerCase()} raiseKeyboard layer h-auto`}
-        isStandardView={false}
-      />
-    </div>
+    <KeyboardLayerWithLabels Layer={Layer} layerProps={layerProps} currentLayer={currentLayer} />
     // </fade>
   );
 
   return (
-    <Styles className="layoutEditor h-full">
-      <motion.div
-        className={`keyboard-editor h-[inherit] px-3 ${modeselect} ${modeselect === "color" ? "[&_.raiseKeyboard]:h-auto" : ""} singleViewMode ${
-          typeof selectedPaletteColor === "number" ? "colorSelected" : ""
-        }`}
-        ref={layoutEditorContainerRef}
-      >
-        <PageHeader
-          text="Layout Editor"
-          showSaving
-          isSaving={isSaving}
-          contentSelector={
-            <LayerSelector
-              onSelect={selectLayer}
-              itemList={layerMenu}
-              selectedItem={currentLayer}
-              subtitle={i18n.editor.layers.title}
-              updateItem={onLayerNameChange}
-              exportFunc={toExport}
-              importFunc={toImport}
-              clearFunc={confirmClear}
-              copyFunc={copyFromDialog}
-              editModeActual={modeselect}
-              editModeFunc={modeSelectToggle}
-              exportToPdf={exportToPdf}
-            />
-          }
-          colorEditor={
-            <ColorEditor
-              colors={palette}
-              disabled={isReadOnly || currentLayer > colorMap.length}
-              onColorSelect={onColorSelect}
-              colorButtonIsSelected={isColorButtonSelected}
-              onColorPick={onColorPick}
-              selected={selectedPaletteColor}
-              isColorButtonSelected={isColorButtonSelected}
-              onColorButtonSelect={onColorButtonSelect}
-              toChangeAllKeysColor={toChangeAllKeysColor}
-              applyColorMapChangeBL={applyColorMapChangeBL}
-              applyColorMapChangeUG={applyColorMapChangeUG}
-              deviceName={deviceName}
-            />
-          }
-          isColorActive={modeselect !== "keyboard"}
-          saveContext={onApply}
-          destroyContext={() => {
-            log.info("cancelling context: ", props);
-            scanned.current = false;
-            cancelContext();
-          }}
-          inContext={modified}
-          saveButtonRef={saveButtonRef}
-          discardChangesButtonRef={discardChangesButtonRef}
-        />
-        <div className="w-full h-[inherit] keyboardsWrapper">
-          {/* <div className="raise-editor layer-col h-full"> // Set keyboard on bottom */}
-          <div className="raise-editor layer-col h-[inherit]">
-            <div className="dygma-keyboard-editor editor">{layer}</div>
-            {modeselect === "keyboard" ? (
-              <div className="ordinary-keyboard-editor m-0 pb-4">
-                <KeyPickerKeyboard
-                  mouseWheel={mouseWheel}
-                  resetScroll={resetScroll}
-                  onKeySelect={onKeyChange}
-                  code={code}
-                  macros={macros}
-                  superkeys={superkeys}
-                  keyIndex={currentKeyIndex}
-                  actTab="editor"
-                  selectedlanguage={currentLanguageLayout}
-                  isWireless={isWireless}
+    <KeyLabelsProvider deviceId={neuronID}>
+      <KeyLabelDialogProvider>
+        <Styles className="layoutEditor h-full">
+          <motion.div
+            className={`keyboard-editor h-[inherit] px-3 ${modeselect} ${modeselect === "color" ? "[&_.raiseKeyboard]:h-auto" : ""} singleViewMode ${
+              typeof selectedPaletteColor === "number" ? "colorSelected" : ""
+            }`}
+            ref={layoutEditorContainerRef}
+          >
+            <PageHeader
+              text="Layout Editor"
+              showSaving
+              isSaving={isSaving}
+              contentSelector={
+                <LayerSelector
+                  onSelect={selectLayer}
+                  itemList={layerMenu}
+                  selectedItem={currentLayer}
+                  subtitle={i18n.editor.layers.title}
+                  updateItem={onLayerNameChange}
+                  exportFunc={toExport}
+                  importFunc={toImport}
+                  clearFunc={confirmClear}
+                  copyFunc={copyFromDialog}
+                  editModeActual={modeselect}
+                  editModeFunc={modeSelectToggle}
+                  exportToPdf={exportToPdf}
                 />
+              }
+              colorEditor={
+                <ColorEditor
+                  colors={palette}
+                  disabled={isReadOnly || currentLayer > colorMap.length}
+                  onColorSelect={onColorSelect}
+                  colorButtonIsSelected={isColorButtonSelected}
+                  onColorPick={onColorPick}
+                  selected={selectedPaletteColor}
+                  isColorButtonSelected={isColorButtonSelected}
+                  onColorButtonSelect={onColorButtonSelect}
+                  toChangeAllKeysColor={toChangeAllKeysColor}
+                  applyColorMapChangeBL={applyColorMapChangeBL}
+                  applyColorMapChangeUG={applyColorMapChangeUG}
+                  deviceName={deviceName}
+                />
+              }
+              isColorActive={modeselect !== "keyboard"}
+              secondaryButton={
+                <Button variant="outline" size="sm" onClick={() => setLabelsPanelOpen(true)}>
+                  <Tag className="w-4 h-4 mr-1" />
+                  Labels
+                </Button>
+              }
+              saveContext={onApply}
+              destroyContext={() => {
+                log.info("cancelling context: ", props);
+                scanned.current = false;
+                cancelContext();
+              }}
+              inContext={modified}
+              saveButtonRef={saveButtonRef}
+              discardChangesButtonRef={discardChangesButtonRef}
+            />
+            <div className="w-full h-[inherit] keyboardsWrapper">
+              {/* <div className="raise-editor layer-col h-full"> // Set keyboard on bottom */}
+              <div className="raise-editor layer-col h-[inherit]">
+                <div className="dygma-keyboard-editor editor">{layer}</div>
+                {modeselect === "keyboard" ? (
+                  <div className="ordinary-keyboard-editor m-0 pb-4">
+                    <KeyPickerKeyboard
+                      mouseWheel={mouseWheel}
+                      resetScroll={resetScroll}
+                      onKeySelect={onKeyChange}
+                      code={code}
+                      macros={macros}
+                      superkeys={superkeys}
+                      keyIndex={currentKeyIndex}
+                      actTab="editor"
+                      selectedlanguage={currentLanguageLayout}
+                      isWireless={isWireless}
+                    />
+                  </div>
+                ) : (
+                  ""
+                )}
               </div>
-            ) : (
-              ""
-            )}
-          </div>
-        </div>
+            </div>
 
-        <ClearLayerDialog
-          open={clearConfirmationOpen}
-          onCancel={cancelClear}
-          onConfirm={k => clearLayer(k.keyCode, k.colorIndex, k.chooseYourKeyboardSide)}
-          colors={palette}
-          selectedColorIndex={palette.length - 1}
-          keyboardSide="BOTH"
-          fillWithNoKey={false}
-        />
+            <ClearLayerDialog
+              open={clearConfirmationOpen}
+              onCancel={cancelClear}
+              onConfirm={k => clearLayer(k.keyCode, k.colorIndex, k.chooseYourKeyboardSide)}
+              colors={palette}
+              selectedColorIndex={palette.length - 1}
+              keyboardSide="BOTH"
+              fillWithNoKey={false}
+            />
 
-        <CopyFromDialog
-          open={copyFromOpen}
-          onCopy={copyFromLayer}
-          onCancel={cancelCopyFrom}
-          layers={copyFromLayerOptions}
-          currentLayer={currentLayer}
-        />
-      </motion.div>
+            <CopyFromDialog
+              open={copyFromOpen}
+              onCopy={copyFromLayer}
+              onCancel={cancelCopyFrom}
+              layers={copyFromLayerOptions}
+              currentLayer={currentLayer}
+            />
 
-      <Dialog open={showMacroModal} onOpenChange={toggleMacroModal}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>{i18n.editor.oldMacroModal.title}</DialogTitle>
-          </DialogHeader>
-          <div className="px-6 pb-2 mt-2">
-            <p>{i18n.editor.oldMacroModal.body}</p>
-            <p className="italic">{i18n.editor.oldMacroModal.body2}</p>
-          </div>
-          <DialogFooter>
-            <Button variant="outline" size="sm" onClick={toggleMacroModal}>
-              {i18n.editor.oldMacroModal.cancelButton}
-            </Button>
-            <Button variant="secondary" size="sm" onClick={updateOldMacros}>
-              {i18n.editor.oldMacroModal.cancelButton}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+            <KeyLabelsPanel
+              open={labelsPanelOpen}
+              onOpenChange={setLabelsPanelOpen}
+              deviceId={neuronID}
+              totalLayers={keymap.custom.length}
+            />
+          </motion.div>
 
-      <Dialog open={showNeuronModal} onOpenChange={toggleNeuronModal}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>{i18n.editor.oldNeuronModal.title}</DialogTitle>
-          </DialogHeader>
-          <div className="px-6 pb-2 mt-2">
-            <p>{i18n.editor.oldNeuronModal.body}</p>
-            <p className="italic">{i18n.editor.oldNeuronModal.body2}</p>
-          </div>
-          <DialogFooter>
-            <Button variant="outline" size="sm" onClick={toggleNeuronModal}>
-              {i18n.editor.oldNeuronModal.cancelButton}
-            </Button>
-            <Button variant="secondary" size="sm" onClick={CloneExistingNeuron}>
-              {i18n.editor.oldNeuronModal.applyButton}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-    </Styles>
+          <Dialog open={showMacroModal} onOpenChange={toggleMacroModal}>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>{i18n.editor.oldMacroModal.title}</DialogTitle>
+              </DialogHeader>
+              <div className="px-6 pb-2 mt-2">
+                <p>{i18n.editor.oldMacroModal.body}</p>
+                <p className="italic">{i18n.editor.oldMacroModal.body2}</p>
+              </div>
+              <DialogFooter>
+                <Button variant="outline" size="sm" onClick={toggleMacroModal}>
+                  {i18n.editor.oldMacroModal.cancelButton}
+                </Button>
+                <Button variant="secondary" size="sm" onClick={updateOldMacros}>
+                  {i18n.editor.oldMacroModal.cancelButton}
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+
+          <Dialog open={showNeuronModal} onOpenChange={toggleNeuronModal}>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>{i18n.editor.oldNeuronModal.title}</DialogTitle>
+              </DialogHeader>
+              <div className="px-6 pb-2 mt-2">
+                <p>{i18n.editor.oldNeuronModal.body}</p>
+                <p className="italic">{i18n.editor.oldNeuronModal.body2}</p>
+              </div>
+              <DialogFooter>
+                <Button variant="outline" size="sm" onClick={toggleNeuronModal}>
+                  {i18n.editor.oldNeuronModal.cancelButton}
+                </Button>
+                <Button variant="secondary" size="sm" onClick={CloneExistingNeuron}>
+                  {i18n.editor.oldNeuronModal.applyButton}
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+        </Styles>
+      </KeyLabelDialogProvider>
+    </KeyLabelsProvider>
   );
 };
 
