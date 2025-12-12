@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
 import Styled from "styled-components";
 import log from "electron-log/renderer";
@@ -51,6 +51,8 @@ import { useDevice } from "@Renderer/DeviceContext";
 import { i18n } from "@Renderer/i18n";
 import Store from "@Renderer/utils/Store";
 import getLanguage from "@Renderer/utils/language";
+import useHistory from "@Renderer/utils/useHistory";
+import useUndoRedoKeys from "@Renderer/utils/useUndoRedoKeys";
 import Keymap, { KeymapDB } from "../../api/keymap";
 import Backup from "../../api/backup";
 import { parseMacrosRaw, parseSuperkeysRaw, serializeKeymap, serializeSuperkeys } from "../../api/parsers";
@@ -91,6 +93,7 @@ const Styles = Styled.div`
 const MAX_SUPERKEYS = 70;
 
 function SuperkeysEditor(props: SuperkeysEditorProps) {
+  const { startContext } = props;
   let keymapDB = new KeymapDB();
   const bkp = new Backup();
   const [isSaving, setIsSaving] = useState(false);
@@ -122,12 +125,31 @@ function SuperkeysEditor(props: SuperkeysEditorProps) {
   const [showLimitModal, setShowLimitModal] = useState(false);
   const { state: deviceState } = useDevice();
 
+  // Undo/Redo for superkeys
+  const superkeysHistory = useHistory<SuperkeysType[]>([]);
+  useUndoRedoKeys(superkeysHistory.undo, superkeysHistory.redo, !isSaving);
+  const prevSuperkeysHistoryState = useRef(superkeysHistory.state);
+
+  // Sync history state back to component state on undo/redo
+  useEffect(() => {
+    if (superkeysHistory.state !== prevSuperkeysHistoryState.current && superkeysHistory.state.length > 0) {
+      prevSuperkeysHistoryState.current = superkeysHistory.state;
+      setState(prev => ({
+        ...prev,
+        superkeys: superkeysHistory.state,
+        modified: true,
+      }));
+      startContext();
+    }
+  }, [superkeysHistory.state, startContext]);
+
   const onKeyChange = (keyCode: number) => {
     const { superkeys, selectedSuper, selectedAction } = state;
     const { startContext } = props;
-    const newData = superkeys;
+    const newData = JSON.parse(JSON.stringify(superkeys));
     newData[selectedSuper].actions[selectedAction] = keyCode;
     log.info("keyCode: ", keyCode);
+    superkeysHistory.setState(newData);
     state.superkeys = newData;
     state.modified = true;
     setState({ ...state });
@@ -203,6 +225,7 @@ function SuperkeysEditor(props: SuperkeysEditorProps) {
       const parsedMacros = parseMacrosRaw(macrosRaw, state.storedMacros);
       const supersRaw = await currentDevice.command("superkeys.map");
       const parsedSuper = parseSuperkeysRaw(supersRaw, state.storedSuper);
+      superkeysHistory.reset(parsedSuper);
       state.modified = false;
       state.macros = parsedMacros;
       state.superkeys = parsedSuper;
@@ -248,6 +271,7 @@ function SuperkeysEditor(props: SuperkeysEditorProps) {
   const updateSuper = (newSuper: SuperkeysType[], newID: number) => {
     const { startContext } = props;
     // log.info("launched update super using data:", newSuper, newID);
+    superkeysHistory.setState(newSuper);
     state.superkeys = newSuper;
     state.selectedSuper = newID;
     state.modified = true;
@@ -259,8 +283,9 @@ function SuperkeysEditor(props: SuperkeysEditorProps) {
     const { startContext } = props;
     const { superkeys, selectedSuper } = state;
     // log.info("launched update action using data:", newAction);
-    const newData = superkeys;
+    const newData = JSON.parse(JSON.stringify(superkeys));
     newData[selectedSuper].actions[actionNumber] = newAction;
+    superkeysHistory.setState(newData);
     state.superkeys = newData;
     state.selectedAction = actionNumber;
     state.modified = true;
@@ -271,8 +296,10 @@ function SuperkeysEditor(props: SuperkeysEditorProps) {
   const saveName = (name: string) => {
     const { startContext } = props;
     const { superkeys, selectedSuper } = state;
-    superkeys[selectedSuper].name = name;
-    state.superkeys = superkeys;
+    const newSuperkeys = JSON.parse(JSON.stringify(superkeys));
+    newSuperkeys[selectedSuper].name = name;
+    superkeysHistory.setState(newSuperkeys);
+    state.superkeys = newSuperkeys;
     state.modified = true;
     setState({ ...state });
     startContext();
@@ -568,6 +595,10 @@ function SuperkeysEditor(props: SuperkeysEditorProps) {
           isSaving={isSaving}
           saveButtonRef={saveButtonRef}
           discardChangesButtonRef={discardChangesButtonRef}
+          onUndo={superkeysHistory.undo}
+          onRedo={superkeysHistory.redo}
+          canUndo={superkeysHistory.canUndo}
+          canRedo={superkeysHistory.canRedo}
         />
 
         <Callout

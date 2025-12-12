@@ -55,6 +55,8 @@ import TimelineEditorManager from "@Renderer/modules/Macros/TimelineEditorManage
 // Tools
 import { useDevice } from "@Renderer/DeviceContext";
 import { i18n } from "@Renderer/i18n";
+import useHistory from "@Renderer/utils/useHistory";
+import useUndoRedoKeys from "@Renderer/utils/useUndoRedoKeys";
 import Backup from "../../api/backup";
 import Keymap, { KeymapDB } from "../../api/keymap";
 
@@ -113,6 +115,7 @@ const Styles = Styled.div`
 `;
 
 function MacroEditor(props: MacroEditorProps) {
+  const { startContext } = props;
   let keymapDB = new KeymapDB();
   const bkp = new Backup();
   const [isSaving, setIsSaving] = useState(false);
@@ -146,6 +149,25 @@ function MacroEditor(props: MacroEditorProps) {
   const { state: deviceState } = useDevice();
   const timelineRef = useRef(null);
 
+  // Undo/Redo for macros
+  const macrosHistory = useHistory<MacrosType[]>([]);
+  useUndoRedoKeys(macrosHistory.undo, macrosHistory.redo, !isSaving);
+  const prevMacrosHistoryState = useRef(macrosHistory.state);
+
+  // Sync history state back to component state on undo/redo
+  useEffect(() => {
+    if (macrosHistory.state !== prevMacrosHistoryState.current && macrosHistory.state.length > 0) {
+      prevMacrosHistoryState.current = macrosHistory.state;
+      setState(prev => ({
+        ...prev,
+        macros: macrosHistory.state,
+        usedMemory: macrosHistory.state.map(m => m.actions).flat().length,
+        modified: true,
+      }));
+      startContext();
+    }
+  }, [macrosHistory.state, startContext]);
+
   const limitActions = (actions: MacroActionsType[]) => {
     if (deviceState.currentDevice.device.info.product !== "Raise") {
       return actions.slice(0, 100);
@@ -159,6 +181,7 @@ function MacroEditor(props: MacroEditorProps) {
 
     const macrosList: MacrosType[] = JSON.parse(JSON.stringify(macros));
     macrosList[selectedMacro].actions = limitActions(macrosList[selectedMacro].actions.concat(actions));
+    macrosHistory.setState(macrosList);
     state.macros = macrosList;
     state.modified = true;
     setState({ ...state });
@@ -172,6 +195,7 @@ function MacroEditor(props: MacroEditorProps) {
 
     const macrosList = JSON.parse(JSON.stringify(macros));
     macrosList[selectedMacro].actions = limitActions(JSON.parse(JSON.stringify(actions)));
+    macrosHistory.setState(macrosList);
     if (!modified) {
       state.macros = macrosList;
       state.modified = true;
@@ -188,6 +212,7 @@ function MacroEditor(props: MacroEditorProps) {
     const { macros, selectedMacro } = state;
     const localMacros = [...macros];
     localMacros[selectedMacro].name = data;
+    macrosHistory.setState(localMacros);
     state.macros = localMacros;
     state.modified = true;
     setState({ ...state });
@@ -206,6 +231,7 @@ function MacroEditor(props: MacroEditorProps) {
 
   const updateMacros = (recievedMacros: MacrosType[]) => {
     const { startContext } = props;
+    macrosHistory.setState(recievedMacros);
     state.macros = recievedMacros;
     state.modified = true;
     state.usedMemory = recievedMacros.map(m => m.actions).flat().length;
@@ -474,6 +500,7 @@ function MacroEditor(props: MacroEditorProps) {
       const parsedMacros = parseMacrosRaw(macrosRaw, state.storedMacros);
       const supersRaw = await currentDevice.command("superkeys.map");
       const parsedSuper = parseSuperkeysRaw(supersRaw, state.storedSuper);
+      macrosHistory.reset(parsedMacros);
       state.macros = parsedMacros;
       state.superkeys = parsedSuper;
       state.keymap = keymap;
@@ -739,6 +766,10 @@ function MacroEditor(props: MacroEditorProps) {
           inContext={modified}
           saveButtonRef={saveButtonRef}
           discardChangesButtonRef={discardChangesButtonRef}
+          onUndo={macrosHistory.undo}
+          onRedo={macrosHistory.redo}
+          canUndo={macrosHistory.canUndo}
+          canRedo={macrosHistory.canRedo}
         />
 
         <Callout

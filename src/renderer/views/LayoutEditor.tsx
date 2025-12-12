@@ -52,6 +52,8 @@ import { i18n } from "@Renderer/i18n";
 
 import Store from "@Renderer/utils/Store";
 import getLanguage from "@Renderer/utils/language";
+import useHistory from "@Renderer/utils/useHistory";
+import useUndoRedoKeys from "@Renderer/utils/useUndoRedoKeys";
 import { ClearLayerDialog } from "@Renderer/components/molecules/CustomModal/ClearLayerDialog";
 import { DygmaDeviceInfoType } from "@Renderer/types/dygmaDefs";
 import BlankTable from "../../api/keymap/db/blanks";
@@ -468,13 +470,20 @@ const LayoutEditor = (props: LayoutEditorProps) => {
   const [neuronID, setNeuronID] = useState("");
   const [currentKeyIndex, setCurrentKeyIndex] = useState(-1);
   const [currentLedIndex, setCurrentLedIndex] = useState(-1);
-  const [keymap, setKeymap] = useState<KeymapType>({
+  const keymapHistory = useHistory<KeymapType>({
     custom: [],
     default: [],
     onlyCustom: false,
   });
-  const [palette, setPalette] = useState([]);
-  const [colorMap, setColorMap] = useState([]);
+  const paletteHistory = useHistory<PaletteType[]>([]);
+  const colorMapHistory = useHistory<number[][]>([]);
+
+  const keymap = keymapHistory.state;
+  const setKeymap = keymapHistory.setState;
+  const palette = paletteHistory.state;
+  const setPalette = paletteHistory.setState;
+  const colorMap = colorMapHistory.state;
+  const setColorMap = colorMapHistory.setState;
   const [macros, setMacros] = useState<MacrosType[]>();
   const [superkeys, setSuperkeys] = useState<SuperkeysType[]>();
 
@@ -516,6 +525,31 @@ const LayoutEditor = (props: LayoutEditorProps) => {
   } = props;
 
   const layoutEditorContainerRef = useRef(null);
+
+  // Undo/Redo keyboard shortcuts - dispatch based on current mode
+  const handleUndo = useCallback(() => {
+    if (modeselect === "keyboard") {
+      keymapHistory.undo();
+    } else {
+      colorMapHistory.undo();
+      paletteHistory.undo();
+    }
+    setModified(true);
+    startContext();
+  }, [modeselect, keymapHistory, colorMapHistory, paletteHistory, startContext]);
+
+  const handleRedo = useCallback(() => {
+    if (modeselect === "keyboard") {
+      keymapHistory.redo();
+    } else {
+      colorMapHistory.redo();
+      paletteHistory.redo();
+    }
+    setModified(true);
+    startContext();
+  }, [modeselect, keymapHistory, colorMapHistory, paletteHistory, startContext]);
+
+  useUndoRedoKeys(handleUndo, handleRedo, !isSaving);
 
   const onLayerNameChange = (newName: string) => {
     const slicedLayerNames = layerNames.slice();
@@ -788,10 +822,10 @@ const LayoutEditor = (props: LayoutEditorProps) => {
         setScanningStep(10);
         setLedIndexStart(currentDevice?.device.info.product === "Raise" ? 80 : 80);
         setNeuronID(chipID);
-        setKeymap(KeyMap);
+        keymapHistory.reset(KeyMap);
+        paletteHistory.reset(plette);
+        colorMapHistory.reset(colormap.colorMap);
         setShowDefaults(!KeyMap.onlyCustom);
-        setPalette(plette);
-        setColorMap(colormap.colorMap);
         setMacros(parsedMacros);
         setSuperkeys(parsedSuper);
         setNeuronID(chipID);
@@ -809,7 +843,19 @@ const LayoutEditor = (props: LayoutEditorProps) => {
         onDisconnect();
       }
     },
-    [state, setLoading, AnalizeChipID, restoredOk, getColormap, handleSetRestoredOk, keymapDB, onDisconnect],
+    [
+      state,
+      setLoading,
+      AnalizeChipID,
+      restoredOk,
+      getColormap,
+      handleSetRestoredOk,
+      keymapDB,
+      onDisconnect,
+      keymapHistory,
+      paletteHistory,
+      colorMapHistory,
+    ],
   );
 
   const onKeyChange = (keyCode: number) => {
@@ -822,9 +868,8 @@ const LayoutEditor = (props: LayoutEditorProps) => {
     }
 
     try {
-      const kmap = keymap.custom.slice();
       const l = keymap.onlyCustom ? layer : layer - keymap.default.length;
-      // log.info(kmap, l, keyIndex, keyCode, keymapDB.parse(keyCode));
+      const kmap = keymap.custom.map((layerKeys, idx) => (idx === l ? [...layerKeys] : layerKeys));
       kmap[l][keyIndex] = keymapDB.parse(keyCode);
       setModified(true);
       setKeymap({
@@ -871,7 +916,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
   const onButtonKeyboardColorChange = (cLayer: number, layer: number, ledIndex: number) => {
     const isEqualColor = onVerificationColor(selectedPaletteColor, cLayer, ledIndex);
     if (!(!modified && isEqualColor)) {
-      const colormap = colorMap.slice();
+      const colormap = colorMap.map((layerColors, idx) => (idx === cLayer ? [...layerColors] : layerColors));
       colormap[cLayer][ledIndex] = selectedPaletteColor;
       setSelectedPaletteColor(colorMap[layer][ledIndex]);
       setColorMap(colormap);
@@ -999,7 +1044,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
     const { currentDevice } = state;
     const idx = keymap.onlyCustom ? currentLayer : currentLayer - keymap.default.length;
     const layerMap = { keys: currentDevice.device.keyboard, underglow: currentDevice.device.keyboardUnderglow };
-    const newColormap = colorMap.slice();
+    const newColormap = colorMap.map((layerColors, i) => (i === idx ? [...layerColors] : layerColors));
 
     log.info(newColormap[idx]);
     if (newColormap.length > 0) {
@@ -1042,7 +1087,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
     const { currentDevice } = state;
     const idx = keymap.onlyCustom ? currentLayer : currentLayer - keymap.default.length;
     const layerMap = { keys: currentDevice.device.keyboard, underglow: currentDevice.device.keyboardUnderglow };
-    const newColormap = colorMap.slice();
+    const newColormap = colorMap.map((layerColors, i) => (i === idx ? [...layerColors] : layerColors));
 
     log.info(newColormap[idx]);
     if (newColormap.length > 0) {
@@ -1161,11 +1206,11 @@ const LayoutEditor = (props: LayoutEditorProps) => {
     if (currentLayer < 0 || currentLayer >= colorMap.length) return;
 
     if (!isEqualColor && currentKeyIndex >= 0) {
-      const colormap = colorMap.slice();
+      const colormap = colorMap.map((layerColors, idx) => (idx === currentLayer ? [...layerColors] : layerColors));
       colormap[currentLayer][currentLedIndex] = colorIndex;
       if (currentDevice.device.keyboard.ledsLeft.includes(currentLedIndex)) setLeftSideModified(true);
       setIsMultiSelected(true);
-      setColorMap(colorMap);
+      setColorMap(colormap);
       setSelectedPaletteColor(colorIndex);
       setModified(true);
       startContext();
@@ -1261,8 +1306,8 @@ const LayoutEditor = (props: LayoutEditorProps) => {
   };
 
   const toChangeAllKeysColor = (colorIndex: number, start: number, end: number) => {
-    const colormap = colorMap.slice();
-    colormap[currentLayer] = colormap[currentLayer].fill(colorIndex, start, end);
+    const colormap = colorMap.map((layerColors, idx) => (idx === currentLayer ? [...layerColors] : layerColors));
+    colormap[currentLayer].fill(colorIndex, start, end);
     setLeftSideModified(true);
     setColorMap(colormap);
     setModified(true);
@@ -1541,6 +1586,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
       };
       scanner();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentLanguageLayout, inContext, keymap.custom, modified, previousLayer, scanKeyboard, scanned, setLoading]);
 
   useEffect(() => {
@@ -1570,6 +1616,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
         if (key.extraLabel === "MACRO") {
           const MNumber = key.keyCode - 53852;
           if (
+            macros &&
             macros[MNumber] !== undefined &&
             macros[MNumber].name !== undefined &&
             macros[MNumber].name.substring(0, 5) !== "" &&
@@ -1584,7 +1631,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
       });
     }
 
-    if (localLayerData !== undefined && superkeys.length > 0) {
+    if (localLayerData !== undefined && superkeys && superkeys.length > 0) {
       localLayerData = localLayerData.map(key => {
         const newSKey = key;
         if (key.extraLabel === "SUPER") {
@@ -1740,6 +1787,10 @@ const LayoutEditor = (props: LayoutEditorProps) => {
           inContext={modified}
           saveButtonRef={saveButtonRef}
           discardChangesButtonRef={discardChangesButtonRef}
+          onUndo={handleUndo}
+          onRedo={handleRedo}
+          canUndo={modeselect === "keyboard" ? keymapHistory.canUndo : colorMapHistory.canUndo || paletteHistory.canUndo}
+          canRedo={modeselect === "keyboard" ? keymapHistory.canRedo : colorMapHistory.canRedo || paletteHistory.canRedo}
         />
         <div className="w-full h-[inherit] keyboardsWrapper">
           {/* <div className="raise-editor layer-col h-full"> // Set keyboard on bottom */}
