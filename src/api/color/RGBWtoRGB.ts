@@ -3,7 +3,7 @@ import { RGB, RGBW } from "./types";
 
 /**
  * Convert a RGBW color to RGB
- * @param {RGBW} color - A RGBW color from the
+ * @param {RGBW} color - A RGBW color
  * @returns {RGB} - The color converted to RGB
  */
 export function rgbw2b(color: RGBW): RGB {
