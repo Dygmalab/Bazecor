@@ -8,7 +8,7 @@ import fs from "fs";
 import { ReleaseType } from "@Renderer/types/releases";
 import * as Context from "./context";
 
-const FWMAJORVERSION = "*"; // Major version restriction of the firmware to be downloaded
+const FWMAJORVERSION = "<3.0.0"; // Major version restriction of the firmware to be downloaded (excludes 3.x and above)
 
 export const FocusAPIRead = async (context: Context.ContextType): Promise<Context.ContextType> => {
   try {
@@ -16,6 +16,7 @@ export const FocusAPIRead = async (context: Context.ContextType): Promise<Contex
     const { currentDevice } = context.deviceState;
     context.device.bootloader = currentDevice.device?.bootloader !== undefined ? currentDevice.device.bootloader : false;
     context.device.info = currentDevice.device.info;
+    context.device.sides = currentDevice.device?.sides || 2;
     if (context.device.bootloader) return context;
     log.info("CHECKING CONTEXT DEPENDENCIES: ", context.deviceState.currentDevice.device);
     const versionData = await currentDevice.noCacheCommand("version");
@@ -86,12 +87,11 @@ export const GitHubRead = async (context: Context.ContextType): Promise<Context.
   let isBeta;
   try {
     const fwReleases = await loadAvailableFirmwareVersions(context.allowBeta);
+    const productName = context.device.info.product;
     finalReleases = fwReleases.filter(
       release =>
-        release.name === context.device.info.product &&
-        (context.device.info.product !== "Raise"
-          ? SemVer.satisfies(release.version ? release.version : "", FWMAJORVERSION, { includePrerelease: true })
-          : true),
+        release.name === productName &&
+        (productName !== "Raise" ? SemVer.satisfies(release.version ? release.version : "", FWMAJORVERSION, { includePrerelease: true }) : true),
     );
     finalReleases.sort((a, b) => (SemVer.lt(SemVer.clean(a.version) as string, SemVer.clean(b.version) as string) ? 1 : -1));
     if (context.device.bootloader) {
@@ -155,6 +155,16 @@ const obtainFWFiles = async (type: string, url: string) => {
       firmware = response.split(":") as Array<string>;
       firmware.splice(0, 1);
     }
+    if (type === "Wireless_neuron.bin") {
+      log.info("getting Wireless_neuron.bin");
+      response = await axios.request({
+        method: "GET",
+        url,
+        responseType: "arraybuffer",
+        responseEncoding: "binary",
+      });
+      firmware = new Uint8Array(response.data);
+    }
     if (type === "firmware.hex") {
       log.info("getting firmware.hex");
       response = await axios.request({
@@ -177,8 +187,6 @@ const obtainFWFiles = async (type: string, url: string) => {
 };
 
 const obtainLocalFWFiles = (customFWPath: string) => {
-  const fromHexString = (hexString: any) => Uint8Array.from(hexString.match(/.{1,2}/g).map((byte: string) => parseInt(byte, 16)));
-
   let result;
   if (customFWPath.includes(".hex")) {
     let fileData = fs.readFileSync(customFWPath, { encoding: "utf8" });
@@ -188,8 +196,9 @@ const obtainLocalFWFiles = (customFWPath: string) => {
     result = lines;
   }
   if (customFWPath.includes(".bin")) {
-    const filedata = fs.readFileSync(customFWPath, { encoding: "hex" });
-    result = fromHexString(filedata);
+    // Read binary file directly as Uint8Array
+    const filedata = fs.readFileSync(customFWPath);
+    result = new Uint8Array(filedata);
   }
   if (customFWPath.includes(".uf2")) {
     result = customFWPath;
@@ -208,29 +217,34 @@ export const downloadFirmware = async (
   let filenameSides: Uint8Array;
   log.info("Data to download FW: ", typeSelected, info, firmwareList, selectedFirmware);
   try {
-    if (info.product === "Raise") {
+    const productName = info.product;
+    const firmwareAssets = firmwareList[selectedFirmware]?.assets ?? [];
+
+    if (productName === "Raise") {
       filename =
         typeSelected === "default"
           ? ((await obtainFWFiles(
               "firmware.hex",
-              firmwareList[selectedFirmware].assets.find((asset: { name: string }) => asset.name === "firmware.hex").url,
+              firmwareAssets.find((asset: { name: string }) => asset.name === "firmware.hex").url,
             )) as Array<string>)
           : (obtainLocalFWFiles(path.join(customFirmwareFolder, "firmware.hex")) as Array<string>);
     } else {
-      if (info.keyboardType === "wireless" || info.product === "Raise2") {
+      if (info.keyboardType === "wireless" || productName === "Raise2") {
+        // For Sonsei, use .bin file; for others use .hex
+        const neuronFile = productName === "Sonsei" ? "Wireless_neuron.bin" : "Wireless_neuron.hex";
         filename =
           typeSelected === "default"
             ? ((await obtainFWFiles(
-                "Wireless_neuron.hex",
-                firmwareList[selectedFirmware].assets.find((asset: { name: string }) => asset.name === "Wireless_neuron.hex").url,
+                neuronFile,
+                firmwareAssets.find((asset: { name: string }) => asset.name === neuronFile).url,
               )) as Array<string>)
-            : (obtainLocalFWFiles(path.join(customFirmwareFolder, "Wireless_neuron.hex")) as Array<string>);
+            : (obtainLocalFWFiles(path.join(customFirmwareFolder, neuronFile)) as Array<string>);
       } else {
         filename =
           typeSelected === "default"
             ? ((await obtainFWFiles(
                 "Wired_neuron.uf2",
-                firmwareList[selectedFirmware].assets.find((asset: { name: string }) => asset.name === "Wired_neuron.uf2").url,
+                firmwareAssets.find((asset: { name: string }) => asset.name === "Wired_neuron.uf2").url,
               )) as Array<string>)
             : [obtainLocalFWFiles(path.join(customFirmwareFolder, "Wired_neuron.uf2")) as string];
       }
@@ -238,7 +252,7 @@ export const downloadFirmware = async (
         typeSelected === "default"
           ? ((await obtainFWFiles(
               "keyscanner.bin",
-              firmwareList[selectedFirmware].assets.find((asset: { name: string }) => asset.name === "keyscanner.bin").url,
+              firmwareAssets.find((asset: { name: string }) => asset.name === "keyscanner.bin").url,
             )) as Uint8Array)
           : new Uint8Array(obtainLocalFWFiles(path.join(customFirmwareFolder, "keyscanner.bin")) as any);
     }

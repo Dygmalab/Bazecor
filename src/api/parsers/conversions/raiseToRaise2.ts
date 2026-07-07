@@ -1,5 +1,4 @@
 import { PaletteType } from "@Renderer/types/layout";
-import { rgb2w } from "../../color";
 
 export const convertKeymapRtoR2 = (layer: number[], keyboardType: string) => {
   let localLayer = [...layer];
@@ -31,32 +30,44 @@ export const convertKeymapRtoR2 = (layer: number[], keyboardType: string) => {
 };
 
 export const convertColormapRtoR2 = (layer: number[], keyboardType: string, backupKeyboardType: string) => {
-  const color = layer[130];
-  const rest = layer.slice(0, -1);
-  const result = rest.concat(new Array(45).fill(color));
-
-  if (keyboardType === "ANSI") {
-    // Move enter (31<>47)
-    const symbolC = result[40];
-    const enterC = result[48];
-
-    result[40] = enterC;
-    result[48] = symbolC;
+  // Raise 1: 69 keyboard + 30 UG left + 33 UG right = 132 total
+  // Raise 2: 69 keyboard + 53 UG left + 54 UG right = 176 total
+  
+  // Ensure we only take the first 132 LEDs (one layer from Raise 1)
+  const raise1Layer = layer.slice(0, 132);
+  
+  const keyboardLEDs = raise1Layer.slice(0, 69); // Keep keyboard LEDs as-is
+  const ugLeftR1 = raise1Layer.slice(69, 99);    // 30 LEDs underglow left Raise 1
+  const ugRightR1 = raise1Layer.slice(99, 132);  // 33 LEDs underglow right Raise 1
+  
+  // Interpolate underglow left from 30 to 53 LEDs
+  const ugLeftR2 = [];
+  for (let i = 0; i < 53; i++) {
+    const sourceIndex = Math.floor((i / 53) * 30);
+    ugLeftR2.push(ugLeftR1[sourceIndex] !== undefined ? ugLeftR1[sourceIndex] : 15);
   }
-
-  if (keyboardType === "ANSI" && backupKeyboardType === "ISO") {
-    // Move shift (48<>49)
-    const shiftC = result[19];
-    const extraC = result[20];
-
-    result[19] = extraC;
-    result[20] = shiftC;
+  
+  // Interpolate underglow right from 33 to 54 LEDs
+  const ugRightR2 = [];
+  for (let i = 0; i < 54; i++) {
+    const sourceIndex = Math.floor((i / 54) * 33);
+    ugRightR2.push(ugRightR1[sourceIndex] !== undefined ? ugRightR1[sourceIndex] : 15);
   }
+  
+  const result = keyboardLEDs.concat(ugLeftR2).concat(ugRightR2);
+
+  // Note: We don't swap colors for ANSI/ISO differences because the colormap
+  // indices don't directly correspond to keymap positions. The led_map in the
+  // component handles the mapping from key positions to LED indices.
 
   return result;
 };
 
 export const convertPaletteRtoR2 = (color: PaletteType) => {
-  const rgbw = rgb2w(color);
-  return [rgbw.r, rgbw.g, rgbw.b, rgbw.w];
+  return {
+    r: color.r,
+    g: color.g,
+    b: color.b,
+    rgb: `rgb(${color.r}, ${color.g}, ${color.b})`,
+  };
 };

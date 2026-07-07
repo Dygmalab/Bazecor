@@ -109,21 +109,41 @@ const DeviceChecks = setup({
       invoke: {
         src: "GetLSideData",
         input: ({ context }) => context,
-        onDone: {
-          target: "RSideCheck",
-          actions: [
-            assign(({ event }) => {
-              log.info(event);
-              return {
-                sideLeftOk: event.output.leftSideConn,
-                sideLeftBL: event.output.leftSideBoot,
-              };
-            }),
-            assign({
-              stateblock: () => 2,
-            }),
-          ],
-        },
+        onDone: [
+          {
+            target: "validateStatus",
+            guard: ({ context }) => context.device.sides === 1,
+            actions: [
+              assign(({ event }) => {
+                log.info(event);
+                return {
+                  sideLeftOk: event.output.leftSideConn,
+                  sideLeftBL: event.output.leftSideBoot,
+                  sideRightOK: true,
+                  sideRightBL: false,
+                };
+              }),
+              assign({
+                stateblock: () => 3,
+              }),
+            ],
+          },
+          {
+            target: "RSideCheck",
+            actions: [
+              assign(({ event }) => {
+                log.info(event);
+                return {
+                  sideLeftOk: event.output.leftSideConn,
+                  sideLeftBL: event.output.leftSideBoot,
+                };
+              }),
+              assign({
+                stateblock: () => 2,
+              }),
+            ],
+          },
+        ],
         onError: "failure",
         actions: [assign({ error: event => event as any })],
       },

@@ -13,10 +13,13 @@ import {
   convertKeymapRtoR2,
   convertPaletteR2toR,
   convertPaletteRtoR2,
+  convertKeymapDefyToSonsei,
+  convertColormapDefyToSonsei,
   parseColormapRaw,
   parseKeymapRaw,
   parsePaletteRaw,
 } from "../parsers";
+import { rgb2w } from "../color";
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const glob = require(`glob`);
@@ -53,7 +56,6 @@ export default class Backup {
       "led.setMultiple",
       "led.getMultiple",
       "led.setAll",
-      "led.fade",
       "macros.trigger",
       "macros.memory",
       "upgrade",
@@ -217,6 +219,8 @@ export default class Backup {
       data = Backup.convertRaiseToRaise2(backup, device);
     if (device.device.info.product === "Raise" && backup.neuron.device.info.product === "Raise2")
       data = Backup.convertRaise2ToRaise(backup, device);
+    if (device.device.info.product === "Sonsei" && backup.neuron.device.info.product === "Defy")
+      data = Backup.convertDefyToSonsei(backup, device);
     // Reorder to ensure superkeys are restored before keymap
     try {
       const keymapIdx = data.findIndex((c: BackupCmd) => typeof c.command === "string" && c.command === "keymap.custom");
@@ -279,13 +283,88 @@ export default class Backup {
       try {
         log.info("Restoring all settings");
         const data = virtual.virtual;
+        
+        // Check if we need to convert between different keyboard families
+        const virtualProduct = virtual.device.info.product;
+        const deviceProduct = device.device.info.product;
+        const needsRaiseConversion = (virtualProduct === "Raise" && deviceProduct === "Raise2") || 
+                                      (virtualProduct === "Raise2" && deviceProduct === "Raise");
+        const needsDefySonseiConversion = virtualProduct === "Defy" && deviceProduct === "Sonsei";
+        
         for (const command in data) {
           if (data[command].eraseable === true) {
             // eslint-disable-next-line no-await-in-loop
             if (!(command.includes("wireless") || command.includes("led"))) {
+              let commandData = data[command].data.trim();
+              
+              // Convert keymap, colormap and palette between Raise and Raise2
+              if (needsRaiseConversion) {
+                const keyboardType = device.device.info.keyboardType;
+                const backupKeyboardType = virtual.device.info.keyboardType;
+                
+                if (command === "keymap.custom") {
+                  const keyLayerSize = 80;
+                  const custom = parseKeymapRaw(commandData, keyLayerSize);
+                  if (virtualProduct === "Raise" && deviceProduct === "Raise2") {
+                    const keymapFinal = custom.map((layer: number[]) => convertKeymapRtoR2(layer, keyboardType));
+                    commandData = keymapFinal.flat().map(k => k.toString()).join(" ");
+                  } else if (virtualProduct === "Raise2" && deviceProduct === "Raise") {
+                    const keymapFinal = custom.map((layer: number[]) => convertKeymapR2toR(layer, keyboardType));
+                    commandData = keymapFinal.flat().map(k => k.toString()).join(" ");
+                  }
+                } else if (command === "colormap.map") {
+                  const sourceLayerSize = virtual.device.keyboardUnderglow.rows * virtual.device.keyboardUnderglow.columns;
+                  const colormap = parseColormapRaw(commandData, sourceLayerSize);
+                  if (virtualProduct === "Raise" && deviceProduct === "Raise2") {
+                    const colormapFinal = colormap.map((layer: number[]) =>
+                      convertColormapRtoR2(layer, keyboardType, backupKeyboardType),
+                    );
+                    commandData = colormapFinal.flat().map(k => k.toString()).join(" ");
+                  } else if (virtualProduct === "Raise2" && deviceProduct === "Raise") {
+                    const colormapFinal = colormap.map((layer: number[]) =>
+                      convertColormapR2toR(layer, keyboardType, backupKeyboardType),
+                    );
+                    commandData = colormapFinal.flat().map(k => k.toString()).join(" ");
+                  }
+                } else if (command === "palette") {
+                  const isSourceRGBW = virtualProduct === "Raise2";
+                  const palette = parsePaletteRaw(commandData, isSourceRGBW);
+                  if (virtualProduct === "Raise" && deviceProduct === "Raise2") {
+                    const paletteFinal = palette.map(color => {
+                      const rgbw = rgb2w(color);
+                      return [rgbw.r, rgbw.g, rgbw.b, rgbw.w];
+                    });
+                    commandData = paletteFinal.flat().map(v => v.toString()).join(" ");
+                  } else if (virtualProduct === "Raise2" && deviceProduct === "Raise") {
+                    const paletteFinal = palette.map(color => [color.r, color.g, color.b]);
+                    commandData = paletteFinal.flat().map(v => v.toString()).join(" ");
+                  }
+                }
+              }
+              
+              // Convert keymap/colormap/palette between Defy and Sonsei
+              if (needsDefySonseiConversion) {
+                if (command === "keymap.custom") {
+                  const keyLayerSize = 80;
+                  const custom = parseKeymapRaw(commandData, keyLayerSize);
+                  const keymapFinal = custom.map((layer: number[]) => convertKeymapDefyToSonsei(layer));
+                  commandData = keymapFinal.flat().map(k => k.toString()).join(" ");
+                } else if (command === "colormap.map") {
+                  const colorLayerSize = virtual.device.keyboardUnderglow.rows * virtual.device.keyboardUnderglow.columns;
+                  const colormap = parseColormapRaw(commandData, colorLayerSize);
+                  const colormapFinal = colormap.map((layer: number[]) => convertColormapDefyToSonsei(layer));
+                  commandData = colormapFinal.flat().map(k => k.toString()).join(" ");
+                } else if (command === "palette") {
+                  // Defy uses RGBW, Sonsei uses RGB
+                  const palette = parsePaletteRaw(commandData, true);
+                  const paletteFinal = palette.map(color => [color.r, color.g, color.b]);
+                  commandData = paletteFinal.flat().map(v => v.toString()).join(" ");
+                }
+              }
+              
               log.warn(`Going to send ${command} to keyboard`);
               // eslint-disable-next-line no-await-in-loop
-              await device.command(command, data[command].data.trim());
+              await device.command(command, commandData);
             }
           }
         }
@@ -330,6 +409,43 @@ export default class Backup {
     }
   };
 
+  static convertDefyToSonsei = (backup: BackupType, dev: Device) => {
+    log.info("converting Defy Backup to Sonsei");
+    const defyKeyLayerSize = 80;
+    const defyColorLayerSize = 178;
+
+    const localBackup: BackupType = JSON.parse(JSON.stringify(backup));
+    localBackup.neuron.device = dev.device;
+
+    const keymapIndex = localBackup.backup.findIndex(c => c.command === "keymap.custom");
+    const paletteIndex = localBackup.backup.findIndex(c => c.command === "palette");
+    const colormapIndex = localBackup.backup.findIndex(c => c.command === "colormap.map");
+
+    const custom = parseKeymapRaw(localBackup.backup[keymapIndex].data, defyKeyLayerSize);
+    const colormap = parseColormapRaw(localBackup.backup[colormapIndex].data, defyColorLayerSize);
+    const palette = parsePaletteRaw(localBackup.backup[paletteIndex].data, true);
+
+    const keymapFinal = custom.map((layer: number[]) => convertKeymapDefyToSonsei(layer));
+    const colormapFinal = colormap.map((layer: number[]) => convertColormapDefyToSonsei(layer));
+    const paletteFinal = palette.map(color => convertPaletteR2toR(color));
+
+    localBackup.backup[colormapIndex].data = colormapFinal
+      .flat()
+      .map(k => k.toString())
+      .join(" ");
+    localBackup.backup[keymapIndex].data = keymapFinal
+      .flat()
+      .map(k => k.toString())
+      .join(" ");
+    localBackup.backup[paletteIndex].data = paletteFinal
+      .flat()
+      .map(v => v.toString())
+      .join(" ");
+
+    log.info("Final Backup:", localBackup.backup);
+    return localBackup.backup;
+  };
+
   static convertRaiseToRaise2 = (backup: BackupType, dev: Device) => {
     log.info("converting Raise Backup to Raise2");
     const bkpDev = backup.neuron.device;
@@ -361,6 +477,10 @@ export default class Backup {
       .map(k => k.toString())
       .join(" ");
     localBackup.backup[paletteIndex].data = paletteFinal
+      .map(color => {
+        const rgbw = rgb2w(color);
+        return [rgbw.r, rgbw.g, rgbw.b, rgbw.w];
+      })
       .flat()
       .map(v => v.toString())
       .join(" ");
@@ -401,6 +521,7 @@ export default class Backup {
       .map(k => k.toString())
       .join(" ");
     localBackup.backup[paletteIndex].data = paletteFinal
+      .map(color => [color.r, color.g, color.b])
       .flat()
       .map(v => v.toString())
       .join(" ");

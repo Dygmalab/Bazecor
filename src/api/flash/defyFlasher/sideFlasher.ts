@@ -34,6 +34,7 @@ import { crc32 } from "easy-crc";
 import log from "electron-log/renderer";
 import type { PortInfo } from "@serialport/bindings-cpp";
 import { delay } from "../../../main/utils/delay";
+import { parseSealFromBinary } from "../parseSeal";
 
 const { SerialPort } = eval('require("serialport")');
 const { DelimiterParser } = eval('require("@serialport/parser-delimiter")');
@@ -96,19 +97,6 @@ export default class SideFlaser {
   ) {
     let receivedData: string[] = [];
 
-    const recoverSeal = (bin: Buffer) => {
-      const uint = new Uint32Array(new Uint8Array(bin).buffer);
-      return {
-        version: uint[0],
-        size: uint[1],
-        crc: uint[2],
-        programStart: uint[3],
-        programSize: uint[4],
-        programCrc: uint[5],
-        programVersion: uint[6],
-      };
-    };
-
     async function readLine() {
       while (receivedData.length === 0) await delay(1);
       return receivedData.pop();
@@ -116,7 +104,7 @@ export default class SideFlaser {
     try {
       // Update process
       // log.info(this.firmwareSides);
-      const seal = recoverSeal(this.firmwareSides.slice(0, 28));
+      const seal = parseSealFromBinary(new Uint8Array(this.firmwareSides.slice(0, 32)));
       // log.info("This is the seal from the FW file");
       // eslint-disable-next-line no-console
       console.info("This is the seal from the FW File");
@@ -198,8 +186,11 @@ export default class SideFlaser {
         };
       }
 
+      log.info("Sending getInfo command...");
       this.serialport.write("upgrade.keyscanner.getInfo\n");
+      log.info("Waiting for first getInfo response...");
       await readLine();
+      log.info("Waiting for second getInfo response...");
       ans = await readLine();
       log.info("Received Info from Side: ", ans);
       ans = (ans as string).split(" ");
@@ -217,33 +208,83 @@ export default class SideFlaser {
       // eslint-disable-next-line no-console
       console.table(info);
 
+      // Clear buffer before getWriteSize - read any residual data
+      log.info("Clearing buffer before getWriteSize...");
+      while (receivedData.length > 0) {
+        const cleared = receivedData.shift();
+        log.info("Cleared from buffer:", cleared);
+      }
+      
+      // Get write size from keyscanner
+      log.info("Sending getWriteSize command...");
+      this.serialport.write("upgrade.keyscanner.getWriteSize\n");
+      
+      let PACKET_SIZE = 256; // Default size
+      
+      // Wait a bit for response
+      await delay(50);
+      
+      // Check if we got a response
+      if (receivedData.length > 0) {
+        const firstLine = receivedData.shift();
+        log.info("First line after getWriteSize:", firstLine);
+        
+        // Parse response - format is "2048 true " or just "." if command doesn't exist
+        if (firstLine && firstLine.trim() !== ".") {
+          const parts = firstLine.trim().split(" ");
+          const parsedSize = parseInt(parts[0], 10);
+          
+          if (!isNaN(parsedSize) && parsedSize > 0) {
+            PACKET_SIZE = parsedSize;
+            log.info(`Using packet size ${PACKET_SIZE} from device`);
+            
+            // Read the "true" line if it's separate
+            if (parts.length === 1 && receivedData.length > 0) {
+              const trueLine = receivedData.shift();
+              log.info("True line:", trueLine);
+            }
+          } else {
+            log.info("Invalid response, using default 256");
+          }
+        } else {
+          log.info("Command not supported (got '.'), using default 256");
+        }
+      } else {
+        log.info("No response from getWriteSize, using default 256");
+      }
+
       // Write Firmware FOR Loop
       let step = 0;
-      const totalsteps = this.firmwareSides.length / 256;
-      log.info("CRC check is ", info.programCrc !== seal.programCrc, ", info:", info.programCrc, "seal:", seal.programCrc);
-      if (info.programCrc !== seal.programCrc || isItBootloader === true || forceFlashSides) {
+      const totalsteps = this.firmwareSides.length / PACKET_SIZE;
+      log.info("CRC check is ", info.programCrc !== seal.program_crc, ", info:", info.programCrc, "seal:", seal.program_crc);
+      log.info("isItBootloader:", isItBootloader, "forceFlashSides:", forceFlashSides);
+      
+      const needsUpdate = info.programCrc !== seal.program_crc || forceFlashSides;
+      log.info("Condition check: needsUpdate?", needsUpdate);
+      
+      if (needsUpdate) {
+        log.info("Starting flash loop. Total firmware size:", this.firmwareSides.length, "Total steps:", totalsteps);
         let validate = "false";
+        log.info("Entering flash loop, firmware length:", this.firmwareSides.length, "packet size:", PACKET_SIZE);
         // while (validate !== "true" && retry < 3) {
         // log.info("retry count: ", retry);
-        for (let i = 0; i < this.firmwareSides.length; i += 256) {
-          // log.info(`Addres ${i} of ${this.firmwareSides.length}`);
-          this.serialport.write("upgrade.keyscanner.sendWrite ");
-          if (wiredOrWireless !== "wired") await delay(20);
-          const writeAction = new Uint8Array(new Uint32Array([info.flashStart + i, 256]).buffer);
-          const data = this.firmwareSides.slice(i, i + 256);
+        for (let i = 0; i < this.firmwareSides.length; i += PACKET_SIZE) {
+          log.info(`Flashing chunk ${step + 1}/${Math.ceil(totalsteps)} - Address ${i} of ${this.firmwareSides.length}`);
+          const chunkSize = Math.min(PACKET_SIZE, this.firmwareSides.length - i);
+          const writeAction = new Uint8Array(new Uint32Array([info.flashStart + i, chunkSize]).buffer);
+          const data = this.firmwareSides.slice(i, i + chunkSize);
           const crc = new Uint8Array(new Uint32Array([crc32("CRC-32", data)]).buffer);
           const blob = new Uint8Array(writeAction.length + data.length + crc.length);
           blob.set(writeAction);
           blob.set(data, writeAction.length);
           blob.set(crc, data.length + writeAction.length);
           const buffer = Buffer.from(blob);
-          // log.info("write sent: ", buffer);
-          // log.info("write sent, %", (step / totalsteps) * 100);
+          
+          this.serialport.write("upgrade.keyscanner.sendWrite ");
           this.serialport.write(buffer);
           if (wiredOrWireless !== "wired") await delay(20);
           let ack = (await readLine()) as string;
           ack += (await readLine()) as string;
-          // log.info("ack received: ", ack);
           if (!ack.includes("true") || ack.includes("false")) {
             let retries = 3;
             if (wiredOrWireless !== "wired") await delay(100);
@@ -270,6 +311,8 @@ export default class SideFlaser {
         validate += (await readLine()) as string;
         log.info("result of validation", validate);
         // retry++;
+      } else {
+        log.info("Skipping flash - firmware already up to date (CRC matches)");
       }
 
       await this.serialport.write("upgrade.keyscanner.finish\n");

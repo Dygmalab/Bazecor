@@ -123,7 +123,7 @@ describe("findDevices", () => {
 
     expect(await findDevice("bootloader", undefined)).toEqual(connectedDevices[1]);
 
-    expect(log.info).toHaveBeenCalledTimes(11);
+    expect(log.info).toHaveBeenCalledTimes(12);
     expect(log.info).toHaveBeenCalledWith("Going to list devices for type: bootloader");
     expect(log.info).toHaveBeenCalledWith("Bootloader - Lookup: true & HW: undefined | KBType - Lookup: ANSI & HW: wired");
     expect(log.info).toHaveBeenCalledWith("Bootloader - Lookup: true & HW: undefined | KBType - Lookup: ISO & HW: wired");

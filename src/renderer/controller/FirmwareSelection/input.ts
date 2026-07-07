@@ -20,6 +20,7 @@ export const Input = async (input: InputType): Promise<Context.ContextType> => {
       bootloader: false,
       version: "",
       chipID: "",
+      sides: 2,
     },
     error: undefined,
     firmwareList: [],

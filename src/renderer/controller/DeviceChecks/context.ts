@@ -13,6 +13,7 @@ export interface ContextType {
     bootloader: boolean;
     version: string;
     chipID: string;
+    sides?: number;
   };
   sideLeftOk: boolean;
   sideLeftBL: boolean;

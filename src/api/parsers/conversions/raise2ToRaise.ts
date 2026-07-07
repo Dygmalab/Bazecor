@@ -55,6 +55,10 @@ export const convertColormapR2toR = (layer: number[], keyboardType: string, back
 };
 
 export const convertPaletteR2toR = (color: PaletteType) => {
-  const rgb = color;
-  return [rgb.r, rgb.g, rgb.b];
+  return {
+    r: color.r,
+    g: color.g,
+    b: color.b,
+    rgb: `rgb(${color.r}, ${color.g}, ${color.b})`
+  };
 };

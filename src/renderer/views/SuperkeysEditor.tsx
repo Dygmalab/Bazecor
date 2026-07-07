@@ -24,6 +24,7 @@ import log from "electron-log/renderer";
 // Styling and elements
 import Heading from "@Renderer/components/atoms/Heading";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@Renderer/components/atoms/Dialog";
+import SuperkeysLimitDialog from "@Renderer/components/molecules/CustomModal/SuperkeysLimitDialog";
 
 // Components
 import Callout from "@Renderer/components/molecules/Callout/Callout";
@@ -36,6 +37,7 @@ import { IconFloppyDisk } from "@Renderer/components/atoms/icons";
 // Modules
 import { PageHeader } from "@Renderer/modules/PageHeader";
 import { SuperKeysFeatures, SuperkeyActions } from "@Renderer/modules/Superkeys";
+import MacrosMemoryUsage from "@Renderer/modules/Macros/MacrosMemoryUsage";
 import { KeyPickerKeyboard } from "@Renderer/modules/KeyPickerKeyboard";
 
 // Types
@@ -86,6 +88,8 @@ const Styles = Styled.div`
 }
 `;
 
+const MAX_SUPERKEYS = 70;
+
 function SuperkeysEditor(props: SuperkeysEditorProps) {
   let keymapDB = new KeymapDB();
   const bkp = new Backup();
@@ -115,6 +119,7 @@ function SuperkeysEditor(props: SuperkeysEditorProps) {
     loading: true,
   };
   const [state, setState] = useState(initialState);
+  const [showLimitModal, setShowLimitModal] = useState(false);
   const { state: deviceState } = useDevice();
 
   const onKeyChange = (keyCode: number) => {
@@ -442,6 +447,16 @@ function SuperkeysEditor(props: SuperkeysEditorProps) {
     }
   };
 
+  const checkLimit = () => {
+    const { superkeys } = state;
+    // Check if we've reached the limit of superkeys.
+    if (superkeys.length >= MAX_SUPERKEYS) {
+      setShowLimitModal(true);
+      return true; // Limit reached
+    }
+    return false; // Limit not reached
+  };
+
   const duplicateSuperkey = () => {
     const { superkeys, selectedSuper } = state;
     const aux = { ...superkeys[selectedSuper] };
@@ -454,19 +469,16 @@ function SuperkeysEditor(props: SuperkeysEditorProps) {
   };
 
   const addSuperkey = (SKname: string) => {
-    const { superkeys, maxSuperKeys } = state;
-    // log.info("TEST", superkeys.length, maxSuperKeys);
-    if (superkeys.length < maxSuperKeys) {
-      const aux: SuperkeysType[] = JSON.parse(JSON.stringify(superkeys));
-      const newID = aux.length;
-      aux.push({
-        actions: [0, 0, 0, 0, 0],
-        name: SKname,
-        id: newID,
-        superkey: "",
-      });
-      updateSuper(aux, newID);
-    }
+    const { superkeys } = state;
+    const aux: SuperkeysType[] = JSON.parse(JSON.stringify(superkeys));
+    const newID = aux.length;
+    aux.push({
+      actions: [0, 0, 0, 0, 0],
+      name: SKname,
+      id: newID,
+      superkey: "",
+    });
+    updateSuper(aux, newID);
   };
 
   const resetScroll = () => {
@@ -535,16 +547,20 @@ function SuperkeysEditor(props: SuperkeysEditorProps) {
           text="Superkeys Editor"
           showSaving
           contentSelector={
-            <SuperkeysSelector
-              itemList={superkeys}
-              selectedItem={selectedSuper}
-              subtitle="Superkeys"
-              onSelect={changeSelected}
-              addItem={addSuperkey}
-              deleteItem={deleteSuperkey}
-              updateItem={saveName}
-              cloneItem={duplicateSuperkey}
-            />
+            <>
+              <SuperkeysSelector
+                itemList={superkeys}
+                selectedItem={selectedSuper}
+                subtitle="Superkeys"
+                onSelect={changeSelected}
+                addItem={addSuperkey}
+                deleteItem={deleteSuperkey}
+                updateItem={saveName}
+                cloneItem={duplicateSuperkey}
+                checkLimit={checkLimit}
+              />
+              <MacrosMemoryUsage context="superkeys" mem={superkeys.length} tMem={70} />
+            </>
           }
           saveContext={writeSuper}
           destroyContext={destroyThisContext}
@@ -628,6 +644,8 @@ function SuperkeysEditor(props: SuperkeysEditorProps) {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      <SuperkeysLimitDialog open={showLimitModal} onClose={() => setShowLimitModal(false)} />
     </Styles>
   );
 }

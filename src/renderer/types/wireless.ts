@@ -65,6 +65,7 @@ export interface BatterySettingsProps {
   wireless: WirelessInterface;
   changeWireless: (wireless: WirelessInterface) => void;
   isCharging: boolean;
+  deviceType?: string;
 }
 
 export interface EnergyManagementProps {

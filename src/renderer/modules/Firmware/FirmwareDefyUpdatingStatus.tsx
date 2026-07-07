@@ -95,6 +95,7 @@ interface FirmwareDefyUpdatingStatusProps {
   retriesRight: number;
   retriesDefyWired: number;
   retriesNeuron: number;
+  deviceSides?: number;
 }
 
 const FirmwareDefyUpdatingStatus = ({
@@ -104,23 +105,26 @@ const FirmwareDefyUpdatingStatus = ({
   retriesRight,
   retriesDefyWired,
   retriesNeuron,
+  deviceSides = 2,
 }: FirmwareDefyUpdatingStatusProps) => (
   <Style>
     <div className={`defySidesUpdatingStatus defySidesUpdatingStatus-${countdown}`}>
       {countdown <= 2 ? (
         <>
           <DefyLeftSide
-            updating={!!(countdown === 2 && retriesLeft === 1)}
+            updating={!!(deviceSides === 1 ? countdown === 1 : countdown === 2) && retriesLeft === 1}
             warning={!!(retriesLeft > 1 && countdown < 3)}
             success={countdown > 2}
             error={retriesLeft >= 3}
           />
-          <DefyRightSide
-            updating={!!(countdown === 1 && retriesRight === 1)}
-            warning={!!(retriesRight > 1 && countdown < 2)}
-            success={countdown > 1}
-            error={retriesRight >= 3}
-          />
+          {deviceSides > 1 && (
+            <DefyRightSide
+              updating={!!(countdown === 1 && retriesRight === 1)}
+              warning={!!(retriesRight > 1 && countdown < 2)}
+              success={countdown > 1}
+              error={retriesRight >= 3}
+            />
+          )}
         </>
       ) : (
         <DefyNeuronStatus

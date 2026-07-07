@@ -409,6 +409,7 @@ export interface EditorSuperkeys {
   tooltip: string;
   collapse: Collapse;
   specialKeys: SpecialKeys;
+  memoryUsage: MemoryUsage;
 }
 
 export interface Actions {
@@ -531,6 +532,8 @@ export interface Milestones {
   checkRightSide: string;
   checkLeftSideBL: string;
   checkRightSideBL: string;
+  checkConnectivity: string;
+  checkBootloaderStatus: string;
   checkBackup: string;
 }
 
@@ -700,6 +703,7 @@ export interface Qukeys {
   holdTimeoutTip2: string;
   holdTimeoutTip3: string;
   holdTimeoutTip4: string;
+  superkeysAffectsNote: string;
 }
 
 export interface ResetEEPROM {

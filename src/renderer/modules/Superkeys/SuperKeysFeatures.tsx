@@ -127,6 +127,7 @@ function SuperKeysFeatures() {
                     <li className="active">Layer Lock</li>
                     <li>Layer Shift</li>
                     <li>OneShot</li>
+                    <li>Only affects superkeys with anything beyond Hold.</li>
                   </ul>
                 </div>
                 <div className="gridSuperKeysItem">

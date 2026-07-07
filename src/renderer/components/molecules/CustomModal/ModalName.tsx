@@ -45,6 +45,7 @@ const NameModal = ({ modalTitle, show, toggleShow, name, handleSave, labelInput 
               value={typeof internalName === "string" ? internalName : ""}
               onChange={event => setInternalName(event.target.value)}
               className="form-input form-input-xl"
+              autoFocus
             />
           </form>
         </div>
