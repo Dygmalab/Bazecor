@@ -18,6 +18,7 @@
 import React from "react";
 import Styled, { useTheme } from "styled-components";
 import { i18n } from "@Renderer/i18n";
+import DygmaChipIcon from "../../../static/DygmaChipIcon.svg";
 
 const Style = Styled.div`
 height: 100%;
@@ -68,46 +69,19 @@ height: 100%;
   }
 }
 .neuronDefyContainer {
-  width: 154px;
+  width: 200px;
   margin: auto;
   position: relative;
   isolation: isolate;
   color: rgb(var(--color));
-}
-.neuronDefyLight {
-  position: absolute;
-  z-index: 2;
-  left: -40px;
-  top: -6px;
-  filter: blur(3px);
-  opacity: 0.5;
-}
-.neuronDefyLightAnimate {
-  position: absolute;
-  z-index: -1;
-  filter: blur(18px);
-  left: -15px;
-  top: -24px;
-  mix-blend-mode: hard-light;
-  transform-origin: center center;
-  animation: loopLightNeuron 8s infinite linear alternate;
-  opacity: 0.8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 .image-neuron-defy {
-  filter: drop-shadow(0 0 14px rgba(var(--color), 0.5));
-}
-.shapeNeuronBackground {
-  position: absolute;
-  z-index: -1;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  opacity: 0.25;
-}
-@keyframes loopLightNeuron {
-  to {
-    transform: translateX(120px) scale(0.8);
-  }
+  width: 90%;
+  height: auto;
+  max-width: 125px;
 }
 .neuronIcon {
   position: absolute;
@@ -144,49 +118,13 @@ const FirmwareNeuronStatus = (props: FirmwareNeuronStatusType) => {
   const { isUpdated, status, deviceProduct, keyboardType, icon } = props;
   const connectionColorMatrixSucess = useTheme().styles.firmwareUpdatePanel.neuronLightMatrixSuccess;
   const connectionColorMatrixWarning = useTheme().styles.firmwareUpdatePanel.neuronLightMatrixWarning;
-  const neuronImage = useTheme().styles.firmwareUpdatePanel.neuronDefyWirelessImage;
   return (
     <Style>
-      {(deviceProduct === "Defy" && keyboardType === "wireless") || deviceProduct === "Raise2" ? (
+      {(deviceProduct === "Defy" && keyboardType === "wireless") || deviceProduct === "Sonsei" || deviceProduct === "Raise2" ? (
         <div className={`neuronDefyWrapper ${isUpdated && "isUpdated"} ${status || ""}`}>
           <div className="neuronDefyContainer">
             {icon ? <div className={`neuronIcon ${status || ""}`}>{icon}</div> : ""}
-            <svg
-              width="166"
-              height="11"
-              viewBox="0 0 166 11"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-              className="neuronDefyLight"
-            >
-              <path d="M82.835 0L0 5.76191L82.835 11L166 5.76191L82.835 0Z" fill="currentColor" />
-            </svg>
-            <svg
-              width="67"
-              height="58"
-              viewBox="0 0 67 58"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-              className="neuronDefyLightAnimate"
-            >
-              <g>
-                <path d="M0.148477 57.4629L33.3145 0.0177244L66.4805 57.4629L0.148477 57.4629Z" fill="currentColor" />
-              </g>
-            </svg>
-            <img alt="Defy-Neuron" src={neuronImage} className="img-fluid image-neuron-defy" />
-            <svg
-              width="159"
-              height="68"
-              viewBox="0 0 159 68"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-              className="shapeNeuronBackground"
-            >
-              <path
-                d="M158.113 15V52.1307C158.113 60.4114 151.419 67.1308 143.131 67.1308L77.6641 67.1307C75.1887 67.1307 72.3371 66.5867 69.3555 65.8374C66.9626 65.2361 64.3793 64.4736 61.7353 63.6931C61.0719 63.4973 60.4046 63.3004 59.7356 63.1045C52.9681 61.1237 45.9348 59.2394 39.5999 59.2394H14.9948C6.70947 59.2394 0 52.5226 0 44.2394V15C0 6.71573 6.71573 0 15 0L143.113 5.83843e-06C151.398 6.20055e-06 158.113 6.71574 158.113 15Z"
-                fill="currentColor"
-              />
-            </svg>
+            <img alt="Dygma-Chip" src={DygmaChipIcon} className="img-fluid image-neuron-defy" />
           </div>
         </div>
       ) : (

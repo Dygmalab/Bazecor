@@ -49,6 +49,11 @@ const createWindow = () => {
     removeHIDListeners();
   });
 
+  mainWindow.webContents.on("did-finish-load", () => {
+    // Open the DevTools when the content is fully loaded
+    // mainWindow.webContents.openDevTools();
+  });
+
   configureIPCs();
   mainWindowState.manage(mainWindow);
 
@@ -57,10 +62,7 @@ const createWindow = () => {
 
   Window.getInstance(); // init Windows manager
   Window.setWindow(mainWindow);
-  if (!app.isPackaged) {
-    // Open the DevTools if we are in development mode
-    mainWindow.webContents.openDevTools();
-  }
+  
 
   configureNativeTheme();
   configureRedirect();

@@ -24,6 +24,8 @@ export interface SealType {
     size: number /* Size of the Seal */;
     crc: number /* CRC of the Seal (computed with the crc initialized to 0) */;
   };
+  /* Device identification (version 2 only) */
+  device_id?: number;
   /* The Seal */
   program_start: number;
   program_size: number;

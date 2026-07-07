@@ -227,7 +227,7 @@ class KeymapDEFY extends React.Component {
             .map(() => ({
               rgb: "#ffffff",
             }));
-    // console.log("showing BARS", colormap, palette, led_map, no_key_led_map);
+    console.log("Defy Wireless - showing BARS", "colormap length:", colormap.length, "palette length:", palette.length, "max colorIndex:", Math.max(...colormap));
 
     const getColor = (row, col) => {
       const ledIndex = col !== undefined ? led_map[parseInt(row)][parseInt(col)] : no_key_led_map[row - UNDERGLOW];
@@ -235,6 +235,11 @@ class KeymapDEFY extends React.Component {
 
       // console.log("testing colors", row, col, ledIndex, colorIndex, row - UNDERGLOW);
 
+      // Ensure colorIndex is within palette bounds
+      if (colorIndex === undefined || colorIndex >= palette.length) {
+        console.warn(`Defy Wireless - colorIndex ${colorIndex} out of bounds for palette length ${palette.length} at ledIndex ${ledIndex}`);
+        return "#000000";
+      }
       const color = palette[colorIndex].rgb;
       return color;
     };

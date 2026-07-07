@@ -17,7 +17,16 @@ import { VirtualType } from "@Renderer/types/virtual";
 import { BackupType } from "@Renderer/types/backups";
 
 import Hardware from "../../../api/hardware";
-import { RaiseISO, RaiseANSI, DefyWired, DefyWireless, Raise2ANSI, Raise2ISO, enumerator } from "../../../api/hardware-virtual";
+import {
+  RaiseISO,
+  RaiseANSI,
+  DefyWired,
+  DefyWireless,
+  Raise2ANSI,
+  Raise2ISO,
+  SonseiWireless,
+  enumerator,
+} from "../../../api/hardware-virtual";
 import Store from "../../utils/Store";
 import { isVirtualType } from "../../../api/comms/virtual";
 import Backup from "../../../api/backup";
@@ -54,34 +63,42 @@ export default function VirtualSelector(props: VirtualSelectorProps) {
         backup.neuron.device.usb.vendorId === hardwareDevice.usb.vendorId &&
         backup.neuron.device.info.keyboardType === hardwareDevice.info.keyboardType
       ) {
-        if (hardwareDevice.info.keyboardType === "ANSI") {
-          if (hardwareDevice.info.product === "Raise2") {
+        const { product, keyboardType } = hardwareDevice.info;
+
+        if (product === "Sonsei") {
+          vk = { ...SonseiWireless };
+          fileName = "VirtualSonsei";
+        } else if (product === "Defy" && keyboardType === "wired") {
+          vk = { ...DefyWired };
+          fileName = "VirtualDefy";
+        } else if (product === "Defy" && keyboardType === "wireless") {
+          vk = { ...DefyWireless };
+          fileName = "VirtualDefy";
+        } else if (keyboardType === "ANSI") {
+          if (product === "Raise2") {
             vk = { ...Raise2ANSI };
             fileName = "VirtualRaise2ANSI";
           } else {
             vk = { ...RaiseANSI };
             fileName = "VirtualRaiseANSI";
           }
-        }
-        if (hardwareDevice.info.keyboardType === "ISO") {
-          if (hardwareDevice.info.product === "Raise2") {
+        } else if (keyboardType === "ISO") {
+          if (product === "Raise2") {
             vk = { ...Raise2ISO };
             fileName = "VirtualRaise2ISO";
           } else {
             vk = { ...RaiseISO };
             fileName = "VirtualRaiseISO";
           }
-          vk = { ...RaiseISO };
-        }
-        if (hardwareDevice.info.keyboardType === "wired") {
+        } else if (keyboardType === "wired") {
           vk = { ...DefyWired };
           fileName = "VirtualDefy";
-        }
-        if (hardwareDevice.info.keyboardType === "wireless") {
+        } else if (keyboardType === "wireless") {
           vk = { ...DefyWireless };
           fileName = "VirtualDefy";
         }
-        vk.device.components = hardwareDevice.components;
+
+        if (vk) vk.device.components = hardwareDevice.components;
       }
     });
 
@@ -293,10 +310,10 @@ export default function VirtualSelector(props: VirtualSelectorProps) {
                   className="mt-3"
                   onClick={() => {
                     let fileName = enumerator[selectedVirtualKeyboard].device.info.product as string;
-                    fileName =
-                      fileName === "Defy"
-                        ? `Virtual${fileName}`
-                        : `Virtual${fileName}${enumerator[selectedVirtualKeyboard].device.info.keyboardType}`;
+                    const usesProductOnly = ["Defy", "Sonsei"].includes(fileName);
+                    fileName = usesProductOnly
+                      ? `Virtual${fileName}`
+                      : `Virtual${fileName}${enumerator[selectedVirtualKeyboard].device.info.keyboardType}`;
                     newFile(enumerator[selectedVirtualKeyboard], fileName);
                   }}
                 >

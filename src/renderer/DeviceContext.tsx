@@ -57,8 +57,42 @@ function deviceReducer(state: State, action: Action) {
       return { ...state, deviceList: newDevices, currentDevice: state.currentDevice, selected: state.selected };
     }
     case "addDevicesList": {
-      const newDevices = [...action.payload];
+      // Deduplicate devices by chipId, keeping only the open (not closed) instance
+      const deviceMap = new Map<string, Device>();
+      
+      action.payload.forEach(device => {
+        const chipId = device.device?.chipId;
+        if (!chipId) {
+          // If no chipId, add device as-is (shouldn't happen but handle gracefully)
+          deviceMap.set(device.serialNumber, device);
+          return;
+        }
+        
+        const existing = deviceMap.get(chipId);
+        if (!existing) {
+          // First time seeing this chipId
+          deviceMap.set(chipId, device);
+        } else {
+          // Duplicate found - keep the one that is NOT closed
+          if (device.isClosed === false && existing.isClosed === true) {
+            // New device is open, existing is closed - replace with new
+            deviceMap.set(chipId, device);
+            log.info(`Replacing closed device with open device for chipId: ${chipId}`);
+          } else if (device.isClosed === true && existing.isClosed === false) {
+            // New device is closed, existing is open - keep existing
+            log.info(`Keeping open device, ignoring closed duplicate for chipId: ${chipId}`);
+          } else {
+            // Both same state, keep the first one
+            log.info(`Duplicate device found for chipId: ${chipId}, keeping first instance`);
+          }
+        }
+      });
+      
+      const newDevices = Array.from(deviceMap.values());
       log.warn("EXECUTED addDevicesList: ", action.payload, newDevices);
+      if (action.payload.length !== newDevices.length) {
+        log.info(`Removed ${action.payload.length - newDevices.length} duplicate device(s)`);
+      }
       return { ...state, deviceList: newDevices };
     }
     case "disconnect": {

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 
 import PileIndicator from "@Renderer/components/atoms/battery/PileIndicator";
 import DefyBatteryIndicator from "@Renderer/components/atoms/battery/DefyBatteryIndicator";
+import SonseiBatteryIndicator from "@Renderer/components/atoms/battery/SonseiBatteryIndicator";
 
 interface BatteryStatusSideProps {
   side: "left" | "right";
@@ -9,9 +10,10 @@ interface BatteryStatusSideProps {
   batteryStatus: number;
   isSavingMode: boolean;
   size: "sm" | "lg";
+  deviceType?: string;
 }
 
-const BatteryStatusSide: React.FC<BatteryStatusSideProps> = ({ side, batteryLevel, isSavingMode, batteryStatus, size }) => {
+const BatteryStatusSide: React.FC<BatteryStatusSideProps> = ({ side, batteryLevel, isSavingMode, batteryStatus, size, deviceType }) => {
   const [loading, setLoading] = useState(true);
   const [sideFirstLetter, setSideFirstLetter] = useState("");
   const [sideStatus, setSideStatus] = useState("status--default");
@@ -53,19 +55,32 @@ const BatteryStatusSide: React.FC<BatteryStatusSideProps> = ({ side, batteryLeve
   }, [batteryLevel, batteryStatus, isSavingMode]);
 
   if (loading) return null;
+
+  const isSonsei = deviceType?.toLowerCase().includes("sonsei");
+
+  if (isSonsei && side === "right") {
+    return null;
+  }
+
   return (
     <div>
       <div
-        className={`battery-indicator--item size--${size} ${size === "sm" ? "p-1 rounded-sm bg-gray-50 dark:bg-gray-800" : ""} item--${side} ${sideStatus} ${batteryStatus === 1 ? "origin-center animate-pulse" : ""} ${isSavingMode && "status--saving"}`}
+        className={`battery-indicator--item size--${size} ${size === "sm" ? "p-1 rounded-sm bg-gray-50 dark:bg-gray-800" : ""} item--${side} ${sideStatus} ${batteryStatus === 1 && !isSonsei ? "origin-center animate-pulse" : ""} ${isSavingMode && "status--saving"}`}
       >
-        <div className="battery-item--container flex gap-2 items-center" style={{ color: "var(--color-status)" }}>
-          {size === "sm" ? (
+        <div className={`battery-item--container flex gap-2 items-center ${size === "sm" && isSonsei ? "justify-center" : ""}`} style={{ color: "var(--color-status)" }}>
+          {size === "sm" && !isSonsei ? (
             <div className="battery-indicator--side text-gray-400 text-[0.5rem] font-semibold uppercase">{sideFirstLetter}</div>
           ) : (
             ""
           )}
           {size === "sm" ? <PileIndicator batteryLevel={batteryLevel} batteryStatus={batteryStatus} /> : ""}
-          {size === "lg" ? <DefyBatteryIndicator side={side} batteryLevel={batteryLevel} batteryStatus={batteryStatus} /> : ""}
+          {size === "sm" && isSonsei && !Number.isNaN(batteryLevel) && batteryLevel > 0 ? (
+            <div className="battery-percentage-sonsei text-gray-400 text-[0.6rem] font-semibold">{batteryLevel}%</div>
+          ) : (
+            ""
+          )}
+          {size === "lg" && isSonsei ? <SonseiBatteryIndicator batteryLevel={batteryLevel} batteryStatus={batteryStatus} /> : ""}
+          {size === "lg" && !isSonsei ? <DefyBatteryIndicator side={side} batteryLevel={batteryLevel} batteryStatus={batteryStatus} /> : ""}
         </div>
       </div>
     </div>

@@ -44,8 +44,10 @@ const Style = Styled.div`
       }
   }
   .errorListContent {
-      max-width: 200px;
       color: ${({ theme }) => theme.styles.firmwareErrorPanel.textColor}
+  }
+  .errorListItem:has(.errorListImage) .errorListContent {
+      max-width: 200px;
   }
   .errorListDescription {
     margin-top: 0.5rem;
@@ -97,32 +99,44 @@ interface FirmwareWarningListProps {
   leftSideOK: boolean;
   rightSideOK: boolean;
   leftSideBL: boolean;
+  deviceProduct?: string;
 }
 
 const FirmwareWarningList = (props: FirmwareWarningListProps) => {
-  const { leftSideOK, rightSideOK, leftSideBL } = props;
+  const { leftSideOK, rightSideOK, leftSideBL, deviceProduct } = props;
+  const isSonsei = deviceProduct === "Sonsei";
   return (
     <Style>
       <>
         {!leftSideOK || !rightSideOK ? (
           <div className="errorListWrapper">
             <div className="errorListItem">
-              <div className="errorListImage">
-                <video width={162} height={162} autoPlay loop className="img-center img-fluid">
-                  <track kind="captions" />
-                  <source src={videoDefyCablesDisconnect} type="video/mp4" />
-                </video>
-              </div>
+              {!isSonsei && (
+                <div className="errorListImage">
+                  <video width={162} height={162} autoPlay loop className="img-center img-fluid">
+                    <track kind="captions" />
+                    <source src={videoDefyCablesDisconnect} type="video/mp4" />
+                  </video>
+                </div>
+              )}
               <div className="errorListContent">
                 <span className="label label-error">{i18n.general.actionRequired}</span>
-                <div className="errorListDescription">{i18n.firmwareUpdate.texts.errorMissingCables}</div>
+                <div className="errorListDescription">
+                  {isSonsei ? (
+                    <>
+                      Please take a screenshot and email <em>support@dygma.com</em>
+                    </>
+                  ) : (
+                    i18n.firmwareUpdate.texts.errorMissingCables
+                  )}
+                </div>
               </div>
             </div>
           </div>
         ) : (
           ""
         )}
-        {leftSideBL ? (
+        {leftSideBL && !isSonsei ? (
           <div className="warningListWrapper">
             <div className="warningListItem">
               <div className="warningListHeader">

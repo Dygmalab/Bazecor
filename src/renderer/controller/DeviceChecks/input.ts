@@ -12,6 +12,7 @@ export interface InputType {
     bootloader: boolean;
     version: string;
     chipID: string;
+    sides?: number;
   };
   readonly deviceState: State;
   readonly firmwares: {

@@ -226,10 +226,14 @@ function App() {
       if (semver && product) {
         const defyMin: [number, number, number] = [2, 2, 0];
         const raise2Min: [number, number, number] = [1, 4, 0];
+        const sonseiMin: [number, number, number] = [0, 0, 0];
         const isDefy = product === "Defy";
         const isRaise2 = product === "Raise2";
+        const isSonsei = product === "Sonsei";
         const detected =
-          (isDefy && compareSemver(semver, defyMin) >= 0) || (isRaise2 && compareSemver(semver, raise2Min) >= 0);
+          (isDefy && compareSemver(semver, defyMin) >= 0) ||
+          (isRaise2 && compareSemver(semver, raise2Min) >= 0) ||
+          (isSonsei && compareSemver(semver, sonseiMin) >= 0);
         store.set("capabilities.sk20", detected);
         if (detected) {
           log.info("SK 2.0 detected");

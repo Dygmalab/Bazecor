@@ -8,6 +8,7 @@ import closeButton from "@Assets/light/X.svg";
 import IconPlusXS from "@Assets/light/plusIcon.svg";
 import RaiseFirmwareUpgrade from "@Assets/light/raiseFirmwareupgrade.svg";
 import DefyFirmwareUpgrade from "@Assets/light/defyFirmwareupgrade.svg";
+import SonseiFrameFirmwareUpgrade from "@Assets/light/sonseiFrameFirmwareupgrade.svg";
 import neuronDefyWirelessImage from "@Assets/base/neuron-defy--white.png";
 import mouseWheelBackground from "@Assets/light/mouseWheel.png";
 import oldToNew from "@Assets/light/oldValueToNewValue.svg";
@@ -530,6 +531,7 @@ const Light: DefaultTheme = {
     firmwareUpdateProcess: {
       raiseSVG: RaiseFirmwareUpgrade,
       defySVG: DefyFirmwareUpgrade,
+      sonseiFrameSVG: SonseiFrameFirmwareUpgrade,
       processFooterBackground: settingColorOpacity(Tokens.colors.gray25, 0.8),
       processImageBackground: settingColorOpacity(Tokens.colors.gray25, 0.5),
       processNeuronBackground: settingColorOpacity(Tokens.colors.gray25, 0.8),

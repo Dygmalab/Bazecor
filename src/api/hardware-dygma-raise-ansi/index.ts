@@ -34,6 +34,7 @@ const RaiseANSI: DygmaDeviceType = {
     ],
   },
   RGBWMode: false,
+  hasRF: false,
   usb: {
     vendorId: 0x1209,
     productId: 0x2201,
@@ -50,7 +51,7 @@ const RaiseANSI: DygmaDeviceType = {
     rows: 6,
     columns: 22,
     ledsLeft: [...aFN(69, 99)],
-    ledsRight: [...aFN(99, 131)],
+    ledsRight: [...aFN(99, 132)],
   },
   components: {
     keymap: KeymapANSI,

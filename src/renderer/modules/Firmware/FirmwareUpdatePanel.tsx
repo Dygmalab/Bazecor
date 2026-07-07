@@ -216,7 +216,9 @@ function FirmwareUpdatePanel(props: FirmwareUpdatePanelProps) {
                   <p>
                     {i18n.firmwareUpdate.texts.calloutIntroText}
                     <br />
-                    {i18n.firmwareUpdate.texts.calloutIntroText2}
+                    {state.context.device.info.product === "Sonsei" 
+                      ? i18n.firmwareUpdate.texts.calloutIntroText3 
+                      : i18n.firmwareUpdate.texts.calloutIntroText2}
                   </p>
                 </Callout>
               </div>

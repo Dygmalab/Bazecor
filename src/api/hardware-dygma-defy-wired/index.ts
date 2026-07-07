@@ -46,10 +46,12 @@ const DefyWired: DygmaDeviceType = {
   keyboardUnderglow: {
     rows: 2,
     columns: 89,
-    ledsLeft: [...aFN(70, 123)],
-    ledsRight: [...aFN(123, 176)],
+    ledsLeft: [...aFN(70, 124)],
+    ledsRight: [...aFN(124, 178)],
   },
   RGBWMode: true,
+  hasRF: false,
+  sides: 2,
   components: {
     keymap: KeymapDEFY,
   },
@@ -91,6 +93,7 @@ const DefyWiredBootloader: DygmaDeviceType = {
     productId: 0x0011,
   },
   bootloader: true,
+  sides: 2,
   instructions: {
     en: {
       updateInstructions: `To update the firmware, press the button at the bottom. You must not hold any key on the keyboard while the countdown is in progress, nor afterwards, until the flashing is finished. When the countdown reaches zero, the Neuron's light should start a blue pulsing pattern, and flashing will then proceed. `,

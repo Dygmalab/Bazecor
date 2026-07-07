@@ -22,12 +22,17 @@ import { IconLeaf } from "@Renderer/components/atoms/icons";
 
 interface SavingModeIndicatorProps {
   isSavingMode: boolean;
+  deviceType?: string;
 }
 
-function SavingModeIndicator({ isSavingMode }: SavingModeIndicatorProps) {
+function SavingModeIndicator({ isSavingMode, deviceType }: SavingModeIndicatorProps) {
+  const isSonsei = deviceType?.toLowerCase().includes("sonsei");
+  const positionClass = isSonsei ? "bottom-[2px]" : "top-[98px]";
+  const colorClass = isSonsei && isSavingMode ? "text-gray-900 dark:text-gray-900" : "";
+
   return (
     <div
-      className={`batterySavingMode absolute top-[98px] left-1/2 transition-colors ${isSavingMode ? "savingModeEnabled status--saving" : "savingModeDisabled status--default"}`}
+      className={`batterySavingMode absolute ${positionClass} left-1/2 transition-colors ${isSavingMode ? "savingModeEnabled status--saving" : "savingModeDisabled status--default"} ${colorClass}`}
     >
       <TooltipProvider>
         <Tooltip>

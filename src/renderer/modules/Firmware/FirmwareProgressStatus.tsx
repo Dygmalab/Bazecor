@@ -145,6 +145,7 @@ interface FirmwareProgressStatusType {
   restoreProgress: any;
   deviceProduct: any;
   keyboardType: any;
+  deviceSides?: number;
   steps: any;
 }
 
@@ -163,6 +164,7 @@ const FirmwareProgressStatus = (props: FirmwareProgressStatusType) => {
     restoreProgress,
     deviceProduct,
     keyboardType,
+    deviceSides,
     steps,
   } = props;
   const [stepsPosition, setStepsPosition] = useState(0);
@@ -182,6 +184,7 @@ const FirmwareProgressStatus = (props: FirmwareProgressStatusType) => {
           retriesRight={retriesRight}
           retriesNeuron={retriesNeuron}
           retriesDefyWired={retriesDefyWired}
+          deviceSides={deviceSides}
         />
         <div className="process-row">
           <StepsProgressBar steps={steps} stepActive={stepsPosition} />
@@ -195,8 +198,18 @@ const FirmwareProgressStatus = (props: FirmwareProgressStatusType) => {
           >
             {deviceProduct !== "Raise" ? (
               <>
-                <CircleLoader radius={13} percentage={rightProgress} active={stepsPosition === 1} />
-                <CircleLoader radius={13} percentage={leftProgress} active={stepsPosition === 2} />
+                {deviceSides !== 1 && <CircleLoader radius={13} percentage={rightProgress} active={stepsPosition === 1} />}
+                <CircleLoader
+                  radius={13}
+                  percentage={leftProgress}
+                  active={
+                    deviceProduct === "Sonsei"
+                      ? stepsPosition === 1
+                      : deviceSides === 1
+                        ? stepsPosition === 1
+                        : stepsPosition === 2
+                  }
+                />
               </>
             ) : (
               ""
@@ -205,21 +218,30 @@ const FirmwareProgressStatus = (props: FirmwareProgressStatusType) => {
               radius={13}
               percentage={resetProgress}
               active={
-                !!((deviceProduct === "Raise" && stepsPosition === 1) || (deviceProduct !== "Raise" && stepsPosition === 3))
+                (deviceProduct === "Raise" && stepsPosition === 1) ||
+                (deviceProduct === "Sonsei" && stepsPosition === 2) ||
+                (deviceProduct !== "Raise" && deviceProduct !== "Sonsei" && deviceSides === 1 && stepsPosition === 1) ||
+                (deviceProduct !== "Raise" && deviceProduct !== "Sonsei" && deviceSides !== 1 && stepsPosition === 3)
               }
             />
             <CircleLoader
               radius={13}
               percentage={neuronProgress}
               active={
-                !!((deviceProduct === "Raise" && stepsPosition === 2) || (deviceProduct !== "Raise" && stepsPosition === 4))
+                (deviceProduct === "Raise" && stepsPosition === 2) ||
+                (deviceProduct === "Sonsei" && stepsPosition === 3) ||
+                (deviceProduct !== "Raise" && deviceProduct !== "Sonsei" && deviceSides === 1 && stepsPosition === 2) ||
+                (deviceProduct !== "Raise" && deviceProduct !== "Sonsei" && deviceSides !== 1 && stepsPosition === 4)
               }
             />
             <CircleLoader
               radius={13}
               percentage={restoreProgress}
               active={
-                !!((deviceProduct === "Raise" && stepsPosition === 3) || (deviceProduct !== "Raise" && stepsPosition === 5))
+                (deviceProduct === "Raise" && stepsPosition === 3) ||
+                (deviceProduct === "Sonsei" && stepsPosition === 4) ||
+                (deviceProduct !== "Raise" && deviceProduct !== "Sonsei" && deviceSides === 1 && stepsPosition === 3) ||
+                (deviceProduct !== "Raise" && deviceProduct !== "Sonsei" && deviceSides !== 1 && stepsPosition === 5)
               }
             />
           </div>

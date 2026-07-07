@@ -201,7 +201,7 @@ const Wireless = (props: WirelessPropsInterface) => {
             </Row> */}
             <div className="w-full flex columns-3 gap-6">
               <div>
-                <BatterySettings wireless={wireless} changeWireless={changeWireless} isCharging={false} />
+                <BatterySettings wireless={wireless} changeWireless={changeWireless} isCharging={false} deviceType={state.currentDevice?.device?.info?.product || ""} />
                 <EnergyManagement wireless={wireless} changeWireless={changeWireless} />
               </div>
               <div>

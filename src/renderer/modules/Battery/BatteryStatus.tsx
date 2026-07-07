@@ -31,8 +31,12 @@ const Style = Styled.div`
 .battery-indicator--container {
   display: flex;
   grid-gap: 3px;
+  width: 100%;
+  max-width: 100%;
+  overflow: hidden;
   > div {
     flex: 1;
+    min-width: 0;
   }
 }
 .battery-defy--indicator {
@@ -133,7 +137,8 @@ const BatteryStatus = ({ disable }: BatteryStatusProps) => {
     });
 
   const getBatteryStatus = useCallback(async () => {
-    if (state.currentDevice && !disable && !state.currentDevice.isSending) {
+    // Skip battery polling if device is in bootloader mode or disabled
+    if (state.currentDevice && !disable && !state.currentDevice.isSending && !state.currentDevice.device.bootloader) {
       let left = "";
       let right = "";
       let leftStatus = "";
@@ -211,12 +216,15 @@ const BatteryStatus = ({ disable }: BatteryStatusProps) => {
     setLoading(false);
   };
 
+  const deviceType = state.currentDevice?.device?.info?.product || "";
+  const isSonsei = deviceType?.toLowerCase().includes("sonsei");
+
   return (
     <Style>
-      <div className="battery-indicator--wrapper" ref={target}>
-        <div className="battery-indicator--container">
-          <BatteryStatusSide side="left" batteryLevel={bLeft} isSavingMode={isSavingMode} batteryStatus={sLeft} size="sm" />
-          <BatteryStatusSide side="right" batteryLevel={bRight} isSavingMode={isSavingMode} batteryStatus={sRight} size="sm" />
+      <div className={`battery-indicator--wrapper ${isSonsei ? "pointer-events-none" : ""}`} ref={target}>
+        <div className={`battery-indicator--container ${isSonsei ? "battery-sonsei" : "battery-dual"}`}>
+          <BatteryStatusSide side="left" batteryLevel={bLeft} isSavingMode={isSavingMode} batteryStatus={sLeft} size="sm" deviceType={deviceType} />
+          <BatteryStatusSide side="right" batteryLevel={bRight} isSavingMode={isSavingMode} batteryStatus={sRight} size="sm" deviceType={deviceType} />
         </div>
         <div className="dropdown-menu dropdown-menu--battery">
           <div className="dropdown-menu__inner">
@@ -229,15 +237,16 @@ const BatteryStatus = ({ disable }: BatteryStatusProps) => {
               </div>
             ) : (
               <div className="battery-defy--indicator">
-                <BatteryStatusSide side="left" batteryLevel={bLeft} isSavingMode={isSavingMode} batteryStatus={sLeft} size="lg" />
+                <BatteryStatusSide side="left" batteryLevel={bLeft} isSavingMode={isSavingMode} batteryStatus={sLeft} size="lg" deviceType={deviceType} />
                 <BatteryStatusSide
                   side="right"
                   batteryLevel={bRight}
                   isSavingMode={isSavingMode}
                   batteryStatus={sRight}
                   size="lg"
+                  deviceType={deviceType}
                 />
-                <SavingModeIndicator isSavingMode={isSavingMode} />
+                <SavingModeIndicator isSavingMode={isSavingMode} deviceType={deviceType} />
               </div>
             )}
             <div className="batterySettingItem batteryUpdateStatus flex gap-2 items-center justify-start">

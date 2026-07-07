@@ -18,6 +18,8 @@ import BatteryStatusSide from "./BatteryStatusSide";
 import DefyBatteryIndicator from "./DefyBatteryIndicator";
 import DefyBatteryIndicatorLeft from "./DefyBatteryIndicatorLeft";
 import DefyBatteryIndicatorRight from "./DefyBatteryIndicatorRight";
+import SonseiBatteryIndicator from "./SonseiBatteryIndicator";
+import SonseiBatteryIndicatorLeft from "./SonseiBatteryIndicatorLeft";
 import PileIndicator from "./PileIndicator";
 import SavingModeIndicator from "./SavingModeIndicator";
 
@@ -26,6 +28,8 @@ export {
   DefyBatteryIndicator,
   DefyBatteryIndicatorLeft,
   DefyBatteryIndicatorRight,
+  SonseiBatteryIndicator,
+  SonseiBatteryIndicatorLeft,
   PileIndicator,
   SavingModeIndicator,
 };

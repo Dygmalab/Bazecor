@@ -189,7 +189,12 @@ function FirmwareCheckProcessPanel(props: FirmwareCheckProcessPanelType) {
   }, [state.context, state, nextBlock]);
 
   useEffect(() => {
-    const newValue: ListItems[] = ["sideLeftOk", "sideLeftBL", "sideRightOK", "sideRightBL", "backup"].map(
+    const hasTwoSides = context.device.sides === 2;
+    const checkItems = hasTwoSides
+      ? ["sideLeftOk", "sideLeftBL", "sideRightOK", "sideRightBL", "backup"]
+      : ["sideLeftOk", "sideLeftBL", "backup"];
+
+    const newValue: ListItems[] = checkItems.map(
       (text: "sideLeftOk" | "sideLeftBL" | "sideRightOK" | "sideRightBL" | "backup", index) => {
         let checked = false;
         if (text === "backup") {
@@ -203,7 +208,7 @@ function FirmwareCheckProcessPanel(props: FirmwareCheckProcessPanelType) {
     );
     // console.log("Setting checks", newValue);
     setlistItems(newValue);
-  }, [state]);
+  }, [state, context.device.sides]);
 
   return (
     <Style>
@@ -222,7 +227,9 @@ function FirmwareCheckProcessPanel(props: FirmwareCheckProcessPanelType) {
                       variant={!state.context.sideLeftOk || !state.context.sideRightOK ? "warning" : "default"}
                     >
                       {!state.context.sideLeftOk || !state.context.sideRightOK
-                        ? i18n.firmwareUpdate.texts.errorTitle
+                        ? state.context.device.info.product === "Sonsei"
+                          ? "Contact Customer Support"
+                          : i18n.firmwareUpdate.texts.errorTitle
                         : i18n.firmwareUpdate.texts.disclaimerTitle}
                     </Heading>
                     {state.context.sideLeftOk && state.context.sideRightOK ? (
@@ -247,8 +254,17 @@ function FirmwareCheckProcessPanel(props: FirmwareCheckProcessPanelType) {
                       leftSideOK={state.context.sideLeftOk}
                       rightSideOK={state.context.sideRightOK}
                       leftSideBL={state.context.sideLeftBL}
+                      deviceProduct={state.context.device.info.product}
                     />
-                    {state.context.device.info.product !== "Raise" ? <AccordionFirmware items={listItems} /> : ""}
+                    {state.context.device.info.product !== "Raise" &&
+                    !(
+                      state.context.device.info.product === "Sonsei" &&
+                      (!state.context.sideLeftOk || !state.context.sideRightOK)
+                    ) ? (
+                      <AccordionFirmware items={listItems} deviceSides={state.context.device.sides} />
+                    ) : (
+                      ""
+                    )}
                   </div>
                 </div>
                 <div className="firmware-sidebar borderRightTopRadius">
