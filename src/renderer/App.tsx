@@ -44,6 +44,7 @@ import { showDevtools } from "@Renderer/devMode";
 
 import Store from "@Renderer/utils/Store";
 import { VersionUpdateDialog } from "@Renderer/components/molecules/CustomModal/VersionUpdateDialog";
+import UdevPolkitErrorDialog from "@Renderer/components/molecules/CustomModal/UdevPolkitErrorDialog";
 import getTranslator from "@Renderer/utils/translator";
 import { Neuron } from "@Types/neurons";
 import { version } from "../../package.json";
@@ -71,6 +72,7 @@ function App() {
   const [loading, setLoading] = useState(false);
   const [notifyNewVersion, setNotifyNewVersion] = useState(false);
   const [oldSettings] = useState(store.get("settings"));
+  const [udevErrorModal, setUdevErrorModal] = useState<{ errorMessage: string; command: string } | null>(null);
 
   const saveButtonRef = useRef(null);
   const discardChangesButtonRef = useRef(null);
@@ -380,17 +382,22 @@ function App() {
     };
 
     // Setting up function to receive O.S. dark theme changes
+    const udevPolkitErrorListener = (_: unknown, payload: { errorMessage: string; command: string }) =>
+      setUdevErrorModal(payload);
+
     ipcRenderer.on("darkTheme-update", darkThemeListener);
     ipcRenderer.on("usb-disconnected", usbListener);
     ipcRenderer.on("usb-connected", newUsbConnection);
     ipcRenderer.on("hid-disconnected", hidListener);
     ipcRenderer.on("hid-connected", notifyBtDevice);
+    ipcRenderer.on("udev-polkit-error", udevPolkitErrorListener);
     return () => {
       ipcRenderer.off("darkTheme-update", darkThemeListener);
       ipcRenderer.off("usb-disconnected", usbListener);
       ipcRenderer.off("usb-connected", newUsbConnection);
       ipcRenderer.off("hid-disconnected", hidListener);
       ipcRenderer.off("hid-connected", notifyBtDevice);
+      ipcRenderer.off("udev-polkit-error", udevPolkitErrorListener);
     };
   }, [connected, dispatch, navigate, onKeyboardDisconnect, state.currentDevice, state.deviceList]);
 
@@ -557,6 +564,12 @@ function App() {
         oldVersion={oldSettings.version}
         handleUpdate={handleUpdateVersion}
         onCancel={() => setNotifyNewVersion(false)}
+      />
+      <UdevPolkitErrorDialog
+        open={udevErrorModal !== null}
+        errorMessage={udevErrorModal?.errorMessage ?? ""}
+        command={udevErrorModal?.command ?? ""}
+        onClose={() => setUdevErrorModal(null)}
       />
     </ThemeProvider>
   );

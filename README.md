@@ -62,10 +62,15 @@ winget install python.python.3.10.0
 npm install -g node-gyp
 ```
 
-If you are using WSL (with ubuntu), you will also need `libudev-dev`:
+If you are using WSL (with ubuntu), you will also need `flatpak-builder` and `libudev-dev` and configure flatpak if you haven't done so:
 
-```sm
-sudo apt-get install libudev-dev
+```sh
+# Install system dependencies 
+sudo apt update
+sudo apt install flatpak-builder libudev-dev
+
+# Add User-level Flathub remote
+flatpak remote-add --user flathub https://dl.flathub.org/repo/flathub.flatpakrepo
 ```
 
 ## Additional Information

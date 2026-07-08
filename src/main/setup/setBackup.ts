@@ -45,7 +45,7 @@ const setBackup = () => {
   log.verbose("** Checking backup folder value **");
   log.verbose(bfolder);
   if (bfolder === "" || bfolder === undefined) {
-    const defaultPath = path.join(app.getPath("home"), "Dygma", "Backups");
+    const defaultPath = path.join(app.getPath("documents"), "Dygma", "Backups");
     log.verbose(defaultPath);
     store.set("settings.backupFolder", defaultPath);
     try {

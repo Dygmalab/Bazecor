@@ -33,7 +33,11 @@ jobs:
           node-version: 22.14.0
       - run: npm install -g yarn
       - if: runner.os == 'Linux'
-        run: sudo apt update && sudo apt install libudev-dev
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y flatpak-builder libudev-dev
+          flatpak remote-add --user --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
+          appstreamcli validate build/com.dygma.bazecor.metainfo.xml
       - name: Cache node_modules
         id: cache-node-modules
         uses: actions/cache@v3
