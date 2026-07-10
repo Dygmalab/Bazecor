@@ -4,7 +4,7 @@ import { crc32 } from "easy-crc";
 import { parseSealFromBinary, validateSealCRC } from "./parseSeal";
 import { decodeHexLine } from "./decodeHexLine";
 import { HexType } from "./types";
-``
+
 const FIRST_SECTOR_SIZE = 4096;
 const KEYSCANNER_SONSEI_DEVICE_ID = 0x4f53534b; // "KSSO" - Keyscanner Sonsei
 // TODO: Define NEURON_SONSEI_DEVICE_ID when Neuron SEAL is implemented
