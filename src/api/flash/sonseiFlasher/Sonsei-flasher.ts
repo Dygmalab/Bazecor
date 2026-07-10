@@ -24,7 +24,7 @@ import { num2hexstr } from "../num2hexstr";
 import { serialConnection, rawCommand, noWaitCommand } from "../serialConnection";
 import { delay } from "../../../main/utils/delay";
 import { InfoType, SealType, HexType } from "../types";
-import ihexDecode from "../ihexDecode";
+import { decodeHexLine } from "../decodeHexLine";
 import SealWithCRC from "../sealWithCRC";
 import { parseSealFromBinary } from "../parseSeal";
 
@@ -104,7 +104,7 @@ const SonshiFlash = {
       const auxData = [];
 
       for (let i = 0; i < lines.length; i += 1) {
-        const hex = ihexDecode(lines[i]);
+        const hex = decodeHexLine(lines[i]);
 
         if (hex.type === TYPE_ESA) {
           segment = parseInt(hex.str.substring(8, 8 + hex.len * 2), 16) * 16;
