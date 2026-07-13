@@ -381,9 +381,10 @@ function App() {
       }
     };
 
-    // Setting up function to receive O.S. dark theme changes
     const udevPolkitErrorListener = (_: unknown, payload: { errorMessage: string; command: string }) =>
       setUdevErrorModal(payload);
+
+    // Setting up function to receive O.S. dark theme changes
 
     ipcRenderer.on("darkTheme-update", darkThemeListener);
     ipcRenderer.on("usb-disconnected", usbListener);
