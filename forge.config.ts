@@ -117,14 +117,11 @@ const config: ForgeConfig = {
           ],
 
           finishArgs: [
-            "--allow=per-app-dev-shm",
             "--device=all",
             "--env=ELECTRON_OZONE_PLATFORM_HINT=auto",
             "--env=XCURSOR_PATH=/run/host/user-share/icons:/run/host/share/icons",
             "--filesystem=/run/udev:ro",
-            "--filesystem=~/Dygma",
             "--filesystem=host-etc",
-            "--filesystem=xdg-documents",
             "--share=ipc",
             "--share=network",
             "--socket=fallback-x11",
