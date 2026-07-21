@@ -32,6 +32,24 @@ import Callout from "@Renderer/components/molecules/Callout/Callout";
 import { i18n } from "@Renderer/i18n";
 import Heading from "@Renderer/components/atoms/Heading";
 
+const componentToHex = (component: number) =>
+  Math.max(0, Math.min(255, Math.round(component)))
+    .toString(16)
+    .padStart(2, "0");
+
+const rgbToHex = (color: { r: number; g: number; b: number }) =>
+  `#${componentToHex(color.r)}${componentToHex(color.g)}${componentToHex(color.b)}`;
+
+const hexToRgb = (hex: string) => {
+  const normalized = hex.replace("#", "");
+
+  return {
+    r: parseInt(normalized.slice(0, 2), 16),
+    g: parseInt(normalized.slice(2, 4), 16),
+    b: parseInt(normalized.slice(4, 6), 16),
+  };
+};
+
 function LEDSettings(props: LEDSettingsPreferences) {
   const { kbData, wireless, setKbData, setWireless, connected, isWireless, hasUnderglow = true } = props;
   const [localKBData, setLocalKBData] = useState(kbData);
@@ -93,6 +111,26 @@ function LEDSettings(props: LEDSettingsPreferences) {
     setWireless({ ...localWireless, fade: checked ? 1 : 0 });
   };
 
+  const setCapsLockIndicatorEnabled = (checked: boolean) => {
+    const nextKBData = {
+      ...localKBData,
+      capsLockIndicatorEnabled: checked,
+    };
+
+    setLocalKBData(nextKBData);
+    setKbData(nextKBData);
+  };
+
+  const setCapsLockIndicatorColor = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const nextKBData = {
+      ...localKBData,
+      capsLockIndicatorColor: hexToRgb(event.target.value),
+    };
+
+    setLocalKBData(nextKBData);
+    setKbData(nextKBData);
+  };
+
   useEffect(() => {
     const { kbData: newKBData, wireless: newWireless } = props;
     log.log("checking for changes", newKBData, newWireless);
@@ -101,7 +139,14 @@ function LEDSettings(props: LEDSettingsPreferences) {
     setLocalWireless(newWireless);
   }, [props]);
 
-  const { ledBrightness, ledBrightnessUG, ledIdleTimeLimit } = localKBData;
+  const {
+    ledBrightness,
+    ledBrightnessUG,
+    ledIdleTimeLimit,
+    capsLockIndicatorSupported,
+    capsLockIndicatorEnabled,
+    capsLockIndicatorColor,
+  } = localKBData;
   const { idleleds, brightness, brightnessUG, fade } = localWireless;
 
   if (connected) {
@@ -212,6 +257,49 @@ function LEDSettings(props: LEDSettingsPreferences) {
             )}
           </CardContent>
         </Card>
+        {capsLockIndicatorSupported && (
+          <Card className="mt-3 max-w-2xl mx-auto" variant="default">
+            <CardHeader>
+              <CardTitle className="flex flex-row items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <IconFlashlight /> Caps Lock indicator
+                </div>
+                {isWireless && (
+                  <Badge variant="subtle" size="xs">
+                    {i18n.wireless.energyManagement.settings.lowBatteryImpact}
+                  </Badge>
+                )}
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="flex flex-row gap-3 justify-between items-center">
+              <div className="flex flex-col">
+                <Heading headingLevel={2} renderAs="paragraph-sm" className="tracking-normal">
+                  Highlight Caps Lock when active
+                </Heading>
+                <p className="text-sm font-normal text-gray-300 dark:text-gray-100">
+                  Change the Caps Lock key color while the host reports Caps Lock as enabled.
+                </p>
+              </div>
+              <div className="flex flex-row items-center gap-3">
+                <input
+                  aria-label="Caps Lock indicator color"
+                  type="color"
+                  className="h-8 w-10 cursor-pointer rounded border border-gray-100 bg-transparent p-0 dark:border-gray-600"
+                  value={rgbToHex(capsLockIndicatorColor)}
+                  onChange={setCapsLockIndicatorColor}
+                  disabled={!capsLockIndicatorEnabled}
+                />
+                <Switch
+                  id="CapsLockIndicatorSwitch"
+                  checked={capsLockIndicatorEnabled}
+                  onCheckedChange={setCapsLockIndicatorEnabled}
+                  variant="default"
+                  size="sm"
+                />
+              </div>
+            </CardContent>
+          </Card>
+        )}
         <Card className="mt-3 max-w-2xl mx-auto" variant="default">
           <CardHeader>
             <CardTitle className="flex flex-row items-center justify-between">

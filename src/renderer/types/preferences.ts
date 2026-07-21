@@ -59,6 +59,13 @@ export interface KBDataPref {
   mouseWheelDelay: number;
   mouseSpeedLimit: number;
   showDefaults: boolean;
+  capsLockIndicatorSupported: boolean;
+  capsLockIndicatorEnabled: boolean;
+  capsLockIndicatorColor: {
+    r: number;
+    g: number;
+    b: number;
+  };
 }
 
 export interface PrefState {

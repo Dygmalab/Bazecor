@@ -48,9 +48,7 @@ import {
   IconKeyboard,
   IconLogoDygma,
   IconSignal,
-  IconNeuronManager,
   IconChip,
-  IconWrench,
 } from "@Renderer/components/atoms/icons";
 
 import Store from "@Renderer/utils/Store";
@@ -65,11 +63,7 @@ import { delay } from "../../api/flash/delay";
 
 const store = Store.getStore();
 const sk20Raw = store.get("capabilities.sk20");
-const sk20 =
-  sk20Raw === true ||
-  sk20Raw === "true" ||
-  sk20Raw === 1 ||
-  sk20Raw === "1";
+const sk20 = sk20Raw === true || sk20Raw === "true" || sk20Raw === 1 || sk20Raw === "1";
 
 const initialWireless = {
   battery: {
@@ -131,6 +125,13 @@ const initialKBData = {
   mouseWheelDelay: 100,
   mouseSpeedLimit: 1,
   showDefaults: false,
+  capsLockIndicatorSupported: false,
+  capsLockIndicatorEnabled: false,
+  capsLockIndicatorColor: {
+    r: 255,
+    g: 80,
+    b: 0,
+  },
 };
 
 const initialPreferences = {
@@ -174,7 +175,17 @@ const Preferences = (props: PreferencesProps) => {
 
   const getNeuronData = useCallback(async () => {
     let localNeuronID = "";
-    const newKbData: KBDataPref = initialKBData;
+    const newKbData: KBDataPref = {
+      ...initialKBData,
+      keymap: {
+        ...initialKBData.keymap,
+        custom: [],
+        default: [],
+      },
+      capsLockIndicatorColor: {
+        ...initialKBData.capsLockIndicatorColor,
+      },
+    };
 
     if (state.currentDevice) {
       await state.currentDevice.command("hardware.chip_id").then((neuronID: string) => {
@@ -203,6 +214,33 @@ const Preferences = (props: PreferencesProps) => {
       await state.currentDevice.command("idleleds.time_limit").then((limit: string) => {
         newKbData.ledIdleTimeLimit = limit ? parseInt(limit, 10) : -1;
       });
+
+      const cachedHelp = state.currentDevice.commands?.help;
+      const supportedCommands = Array.isArray(cachedHelp)
+        ? (cachedHelp as string[])
+        : (((await state.currentDevice.command("help")) as string | undefined) ?? "")
+            .split(/\r?\n/)
+            .filter(command => command.length > 0);
+      newKbData.capsLockIndicatorSupported =
+        supportedCommands.includes("led.capsLockIndicator.enabled") && supportedCommands.includes("led.capsLockIndicator.color");
+
+      if (newKbData.capsLockIndicatorSupported) {
+        await state.currentDevice.command("led.capsLockIndicator.enabled").then((enabled: string) => {
+          newKbData.capsLockIndicatorEnabled = enabled ? parseInt(enabled, 10) > 0 : false;
+        });
+
+        await state.currentDevice.command("led.capsLockIndicator.color").then((color: string | undefined) => {
+          const colorComponents = (color ?? "")
+            .split(/\s+/)
+            .slice(0, 3)
+            .map(value => parseInt(value, 10));
+          const [r, g, b] = colorComponents;
+
+          if (colorComponents.length === 3 && colorComponents.every(value => Number.isFinite(value))) {
+            newKbData.capsLockIndicatorColor = { r, g, b };
+          }
+        });
+      }
 
       newKbData.showDefaults =
         store.get("settings.showDefaults") === undefined ? false : (store.get("settings.showDefaults") as boolean);
@@ -388,6 +426,15 @@ const Preferences = (props: PreferencesProps) => {
       await state.currentDevice.command("led.brightnessUG", kbData.ledBrightnessUG.toString());
       if (kbData.ledIdleTimeLimit >= 0)
         await state.currentDevice.command("idleleds.time_limit", kbData.ledIdleTimeLimit.toString());
+      if (kbData.capsLockIndicatorSupported) {
+        await state.currentDevice.command("led.capsLockIndicator.enabled", kbData.capsLockIndicatorEnabled ? "1" : "0");
+        await state.currentDevice.command(
+          "led.capsLockIndicator.color",
+          kbData.capsLockIndicatorColor.r.toString(),
+          kbData.capsLockIndicatorColor.g.toString(),
+          kbData.capsLockIndicatorColor.b.toString(),
+        );
+      }
       store.set("settings.showDefaults", kbData.showDefaults);
       // QUKEYS
       await state.currentDevice.command("qukeys.holdTimeout", kbData.qukeysHoldTimeout.toString());
@@ -810,7 +857,12 @@ const Preferences = (props: PreferencesProps) => {
                     <>
                       <TabsContent value="Battery">
                         <motion.div initial="hidden" animate="visible" variants={tabVariants}>
-                          <BatterySettings wireless={wireless} changeWireless={updateWireless} isCharging={false} deviceType={state.currentDevice.device.info.product as string} />
+                          <BatterySettings
+                            wireless={wireless}
+                            changeWireless={updateWireless}
+                            isCharging={false}
+                            deviceType={state.currentDevice.device.info.product as string}
+                          />
                           <EnergyManagement wireless={wireless} changeWireless={updateWireless} updateTab={handleTabChange} />
                         </motion.div>
                       </TabsContent>
