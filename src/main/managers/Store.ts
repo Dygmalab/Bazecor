@@ -17,6 +17,7 @@ const schema: Schema<StorageType> = {
       autoUpdate: { type: "boolean" },
       verbose: { type: "boolean" },
       version: { type: "string" },
+      runInBackground: { type: "boolean" },
     },
     default: {
       backupFolder: "",
@@ -158,11 +159,35 @@ const schema: Schema<StorageType> = {
     },
     default: [],
   },
+  lens: {
+    type: "object",
+    properties: {
+      enabled: { type: "boolean" },
+      opacity: { type: "number" },
+      showUnderglow: { type: "boolean" },
+      layout: { type: "string" },
+      layerNames: { type: "array", items: { type: "string" } },
+      overlayMode: { type: "boolean" },
+      overlayAutoShow: { type: "boolean" },
+      resizeMode: { type: "boolean" },
+      keyboard: {
+        type: "object",
+        properties: {
+          backupFolder: { type: "string" },
+          neuronID: { type: "string" },
+          product: { type: "string" },
+        },
+      },
+      migratedFromStandalone: { type: "boolean" },
+    },
+    default: {},
+  },
 };
 
 export const STORE_KEYS: { [key: string]: keyof StorageType } = {
   settings: "settings",
   neurons: "neurons",
+  lens: "lens",
 };
 
 class Store {

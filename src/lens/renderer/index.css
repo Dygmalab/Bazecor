@@ -1,0 +1,418 @@
+html,
+body {
+  height: 100%;
+  overflow: hidden;
+}
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, sans-serif;
+  background: radial-gradient(1200px 600px at 50% -10%, #1b2230, #0d1016);
+  color: #e5e7eb;
+}
+.app {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+}
+.centered {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  font-size: 16px;
+  color: #9aa4b2;
+}
+.toolbar {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  flex-shrink: 0;
+  gap: 12px;
+  align-items: center;
+  min-height: 58px;
+  padding: 10px 0 10px 18px;
+  background: rgba(23, 25, 29, 0.92);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.45);
+  -webkit-app-region: drag;
+  user-select: none;
+}
+.toolbar-left {
+  position: relative;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  -webkit-app-region: no-drag;
+}
+.toolbar-end {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  -webkit-app-region: no-drag;
+}
+.layout-select {
+  font-size: 14px;
+  font-weight: 700;
+  color: #2388ff;
+  background: rgba(18, 23, 31, 0.82);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 16px;
+  padding: 6px 10px;
+  cursor: pointer;
+  outline: none;
+}
+.layout-select:hover {
+  background: rgba(30, 38, 50, 0.9);
+}
+.layout-select option {
+  color: #1a1a1a;
+  background: #fff;
+}
+.layer-pill {
+  display: block;
+  box-sizing: border-box;
+  max-width: min(220px, 42vw);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 17px;
+  font-weight: 700;
+  color: #2388ff;
+  background: rgba(18, 23, 31, 0.82);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  padding: 7px 16px;
+  border-radius: 24px;
+  cursor: pointer;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 1px 4px rgba(0, 0, 0, 0.35);
+}
+.layer-pill:hover,
+.layer-pill[aria-expanded="true"] {
+  border-color: rgba(35, 136, 255, 0.45);
+  background: rgba(20, 28, 39, 0.95);
+}
+.toolbar-actions {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 5px 8px;
+  background: rgba(22, 24, 29, 0.94);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 26px;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+.window-controls {
+  display: flex;
+  align-items: stretch;
+  height: 58px;
+}
+.wc-btn {
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 100%;
+  padding: 0;
+  background: transparent;
+  border: none;
+  color: rgba(255, 255, 255, 0.6);
+  cursor: pointer;
+  border-radius: 0;
+  transition: background 0.1s, color 0.1s;
+}
+.wc-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+.wc-close:hover {
+  background: #c42b1c;
+  color: #fff;
+}
+.icon-button {
+  display: grid;
+  place-items: center;
+  width: 39px;
+  height: 39px;
+  padding: 0;
+  color: #eef2f7;
+  background: transparent;
+  border: 0;
+  border-radius: 20px;
+  cursor: pointer;
+}
+.icon-button:hover {
+  background: rgba(255, 255, 255, 0.07);
+}
+.icon-button.active {
+  color: #2388ff;
+}
+.icon-button:focus-visible,
+.layer-pill:focus-visible,
+.popover input:focus-visible {
+  outline: 3px solid rgba(35, 136, 255, 0.5);
+  outline-offset: 2px;
+}
+.popover {
+  position: absolute;
+  z-index: 20;
+  color: #f4f7fb;
+  background: rgba(13, 17, 23, 0.94);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 26px;
+  box-shadow: 0 22px 60px rgba(0, 0, 0, 0.48), inset 0 1px 0 rgba(255, 255, 255, 0.09);
+  backdrop-filter: blur(18px);
+}
+.popover h2 {
+  margin: 0;
+  font-size: 18px;
+  line-height: 1.1;
+}
+.layer-popover {
+  top: 55px;
+  left: -10px;
+  width: min(440px, calc(100vw - 36px));
+  box-sizing: border-box;
+  padding: 22px 22px 24px;
+}
+.layer-popover::before,
+.opacity-popover::before {
+  content: "";
+  position: absolute;
+  top: -10px;
+  width: 20px;
+  height: 20px;
+  background: rgba(13, 17, 23, 0.94);
+  border-left: 1px solid rgba(255, 255, 255, 0.18);
+  border-top: 1px solid rgba(255, 255, 255, 0.18);
+  transform: rotate(45deg);
+}
+.layer-popover::before {
+  left: 42px;
+}
+.layer-row {
+  display: grid;
+  grid-template-columns: 104px minmax(0, 1fr);
+  gap: 16px;
+  align-items: center;
+  margin-top: 13px;
+  color: #a7adb7;
+  font-size: 17px;
+  font-weight: 700;
+}
+.layer-row.active {
+  color: #ffffff;
+}
+.layer-row input {
+  min-width: 0;
+  height: 38px;
+  box-sizing: border-box;
+  padding: 5px 12px;
+  color: #f4f7fb;
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid transparent;
+  border-radius: 8px;
+  font: inherit;
+  font-weight: 650;
+}
+.layer-row input::placeholder {
+  color: rgba(244, 247, 251, 0.52);
+}
+.layer-row.active input {
+  border-color: #2388ff;
+  box-shadow: 0 0 0 3px rgba(35, 136, 255, 0.26);
+}
+.opacity-popover {
+  top: 65px;
+  right: 18px;
+  width: min(380px, calc(100vw - 36px));
+  box-sizing: border-box;
+  padding: 24px 28px 28px;
+}
+.opacity-popover::before {
+  right: 20px;
+}
+.popover-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 18px;
+  margin-bottom: 18px;
+}
+.popover-title span {
+  color: #a7adb7;
+  font-size: 20px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+.opacity-popover input[type="range"] {
+  display: block;
+  width: 100%;
+  height: 22px;
+  margin: 0;
+  accent-color: #2388ff;
+}
+.range-dots {
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  padding: 0 17px;
+  margin-top: -2px;
+}
+.range-dots span {
+  width: 3px;
+  height: 3px;
+  justify-self: center;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.28);
+}
+.board {
+  flex: 1;
+  min-height: 0;
+  padding: 8px 18px 16px;
+}
+.board.dimmed {
+  opacity: 0.4;
+}
+.keyboard-sizer {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+body.overlay {
+  overflow: hidden;
+  background: transparent !important;
+}
+body.overlay .app {
+  background: transparent !important;
+}
+body.overlay .board {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent !important;
+  padding: 0;
+}
+/* No overlay-specific sizing for .keyboard-sizer/.keyboard-view/svg below —
+   they just inherit the base 100%/100% rules. The window itself is locked to
+   the active keyboard's exact aspect ratio (KEYBOARD_ASPECT_RATIO in
+   src/lens/main/overlay-window.ts), so filling 100%x100% here never needs a
+   separate shrink-to-fit calc — a second, independently-tuned sizing formula
+   (this used to have its own max-width/padding-bottom guess) is exactly what
+   kept leaving a gap between the window edges and the visible keyboard, since
+   the two never agreed to the pixel. */
+body.overlay .toolbar {
+  display: none;
+}
+body.overlay .keyboard-view {
+  background: transparent !important;
+}
+body.overlay svg {
+  background: transparent !important;
+}
+body.overlay .layer-label {
+  display: none;
+}
+.keyboard-view {
+  width: 100%;
+  height: 100%;
+  background: transparent;
+}
+.keyboard-view svg {
+  height: 100%;
+}
+
+/* Blurred, LED-colored halo bleeding out past each key's edges, matching
+   Bazecor's own .shadowHover/.shadowMiddle (src/api/hardware/Key.tsx +
+   LayoutEditor.tsx) — drawn behind the key face in KeyboardView.tsx/
+   DefyKeyboardView.tsx/Raise2KeyboardView.tsx. */
+.key-shadow-hover {
+  filter: blur(16px);
+  opacity: 0.2;
+}
+.key-shadow-middle {
+  filter: blur(18px);
+  opacity: 0.4;
+}
+
+/* ── Resize Mode (overlay + resize-mode body classes) ───────────────── */
+/* Resize Mode keeps the window non-click-through the whole time it's on (so
+   hover can even be detected and dragging works), but the blue frame/glow/
+   handles themselves only reveal once the cursor is actually over the
+   keyboard (.app.hovered, set from App.tsx's onMouseEnter/onMouseLeave) —
+   otherwise they sit on screen permanently even when nobody's about to
+   resize anything. */
+body.overlay.resize-mode .app.hovered .board {
+  cursor: grab;
+}
+body.overlay.resize-mode .app.hovered .board:active {
+  cursor: grabbing;
+}
+
+/* Keys: maintain full opacity, add highlight only while hovered */
+body.overlay.resize-mode .keyboard-view {
+  opacity: 1;
+  filter: none;
+  transition: filter 0.3s ease;
+}
+body.overlay.resize-mode .app.hovered .keyboard-view {
+  filter: drop-shadow(0 0 10px rgba(35, 136, 255, 0.4));
+}
+
+/* Resize frame container — hidden until hovered. */
+.resize-frame {
+  display: none;
+}
+body.overlay.resize-mode .resize-frame {
+  display: block;
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 100;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+body.overlay.resize-mode .app.hovered .resize-frame {
+  opacity: 1;
+}
+
+/* Border inside resize frame */
+.resize-border {
+  position: absolute;
+  inset: 2px;
+  border: 2.5px solid rgba(35, 136, 255, 0.65);
+  border-radius: 4px;
+  pointer-events: none;
+}
+
+/* Freeze all hover transitions while resizing, and keep the frame/glow shown
+   even if a fast drag briefly carries the cursor outside the keyboard. */
+body.resizing .keyboard-view,
+body.resizing .resize-frame {
+  transition: none !important;
+}
+body.overlay.resize-mode.resizing .keyboard-view {
+  opacity: 1;
+  filter: drop-shadow(0 0 10px rgba(35, 136, 255, 0.4));
+}
+body.overlay.resize-mode.resizing .resize-frame {
+  opacity: 1;
+}
+
+/* Individual resize handles */
+.resize-handle {
+  position: absolute;
+  pointer-events: none;
+  -webkit-app-region: no-drag;
+  background: transparent;
+}
+body.overlay.resize-mode .app.hovered .resize-handle {
+  pointer-events: all;
+}
+.resize-n  { top: 0;    left: 10px;  right: 10px; height: 6px; cursor: n-resize;  }
+.resize-s  { bottom: 0; left: 10px;  right: 10px; height: 6px; cursor: s-resize;  }
+.resize-e  { right: 0;  top: 10px; bottom: 10px;  width:  6px; cursor: e-resize;  }
+.resize-w  { left: 0;   top: 10px; bottom: 10px;  width:  6px; cursor: w-resize;  }
+.resize-nw { top: 0;    left: 0;   width: 14px; height: 14px;  cursor: nw-resize; }
+.resize-ne { top: 0;    right: 0;  width: 14px; height: 14px;  cursor: ne-resize; }
+.resize-sw { bottom: 0; left: 0;   width: 14px; height: 14px;  cursor: sw-resize; }
+.resize-se { bottom: 0; right: 0;  width: 14px; height: 14px;  cursor: se-resize; }

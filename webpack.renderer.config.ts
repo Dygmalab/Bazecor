@@ -20,7 +20,10 @@ rules.push({
 });
 
 const rendererConfig: Configuration = {
-  target: "electron-renderer",
+  // No explicit `target` here: the Forge webpack plugin derives it per entry point
+  // from its `nodeIntegration` flag (main_window → electron-renderer, lens_window →
+  // web, since the overlay runs with nodeIntegration disabled). A hardcoded target
+  // would override that for every window.
   module: {
     rules,
   },

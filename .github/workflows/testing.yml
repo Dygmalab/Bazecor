@@ -36,7 +36,7 @@ jobs:
       - if: runner.os == 'Linux'
         run: |
           sudo apt-get update
-          sudo apt-get install -y flatpak-builder libudev-dev
+          sudo apt-get install -y flatpak-builder libudev-dev libusb-1.0-0-dev
           flatpak remote-add --user --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
           appstreamcli validate build/com.dygma.bazecor.metainfo.xml
       - name: Cache node_modules

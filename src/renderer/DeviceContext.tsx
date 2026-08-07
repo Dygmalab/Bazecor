@@ -89,10 +89,26 @@ function deviceReducer(state: State, action: Action) {
       });
       
       const newDevices = Array.from(deviceMap.values());
-      log.warn("EXECUTED addDevicesList: ", action.payload, newDevices);
       if (action.payload.length !== newDevices.length) {
         log.info(`Removed ${action.payload.length - newDevices.length} duplicate device(s)`);
       }
+
+      // Bail out with the same state reference when the resulting list is
+      // unchanged (e.g. repeated scans while no keyboard is connected), so
+      // consumers whose effects/useCallback depend on state.deviceList don't
+      // re-run and re-dispatch in a tight loop.
+      const isSameDeviceList =
+        newDevices.length === state.deviceList.length &&
+        newDevices.every(device =>
+          state.deviceList.some(
+            existing => existing.serialNumber === device.serialNumber && existing.isClosed === device.isClosed,
+          ),
+        );
+      if (isSameDeviceList) {
+        return state;
+      }
+
+      log.warn("EXECUTED addDevicesList: ", action.payload, newDevices);
       return { ...state, deviceList: newDevices };
     }
     case "disconnect": {

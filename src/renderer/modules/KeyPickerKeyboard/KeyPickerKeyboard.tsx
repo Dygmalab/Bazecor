@@ -13,6 +13,7 @@ import {
   IconNote,
   IconThunder,
   IconWireless,
+  IconLens,
   IconWrench,
 } from "@Renderer/components/atoms/icons";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@Renderer/components/atoms/Tabs";
@@ -25,6 +26,7 @@ import SuperkeysTab from "@Renderer/modules/KeysTabs/SuperkeysTab";
 import MediaAndLightTab from "@Renderer/modules/KeysTabs/MediaAndLightTab";
 import MouseTab from "@Renderer/modules/KeysTabs/MouseTab";
 import WirelessTab from "@Renderer/modules/KeysTabs/WirelessTab";
+import LayerLensTab from "@Renderer/modules/KeysTabs/LayerLensTab";
 import CustomKeyCodeModal from "@Renderer/components/molecules/CustomModal/ModalCustomKeycode";
 import { Separator } from "@Renderer/components/atoms/Separator";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@Renderer/components/atoms/Tooltip";
@@ -289,6 +291,13 @@ function KeyPickerKeyboard(props: Props) {
   const [keymapDB] = useState(new KeymapDB());
   const store = Store.getStore();
   const sk20 = Boolean(store.get("capabilities.sk20"));
+  // Layer Lens is available for Sonsei (fw >= 1.0.0) and Defy (fw >= 2.3.0) — see App.tsx,
+  // which writes capabilities.lens on connect. Raise2 and Raise (Raise1) never set the flag,
+  // so the Layer Lens tab stays hidden for them in both the Layout Editor and Superkeys view.
+  const lensCapabilityRaw = store.get("capabilities.lens");
+  const isLensAvailable =
+    lensCapabilityRaw === true || lensCapabilityRaw === "true" || lensCapabilityRaw === 1 || lensCapabilityRaw === "1";
+  log.info(`[Lens] KeyPickerKeyboard render -> capabilities.lens: ${lensCapabilityRaw}, showLayerLensTab: ${isLensAvailable}`);
 
   const { tabs, disable, currentTab, customModal } = state;
 
@@ -301,6 +310,7 @@ function KeyPickerKeyboard(props: Props) {
     tabList.push("tabMedia");
     tabList.push("tabMouse");
     if (isWireless) tabList.push("tabWireless");
+    if (isLensAvailable) tabList.push("tabLayerLens");
 
     const lstate = { ...state };
     lstate.tabs = tabList;
@@ -331,7 +341,8 @@ function KeyPickerKeyboard(props: Props) {
     if (keyCode >= 20545 && keyCode <= 20560) tab = "tabMouse";
     if (keyCode >= 53852 && keyCode <= 53979) tab = "tabMacro";
     if (keyCode >= 53980 && keyCode <= 54109) tab = "tabSuperKeys";
-    if (keyCode >= 54108 && keyCode <= 54112) tab = "tabWireless";
+    if (keyCode >= 54108 && keyCode <= 54111) tab = "tabWireless";
+    if (keyCode >= 54112 && keyCode <= 54114) tab = "tabLayerLens";
 
     log.info("detectedTab", keyCode, tab);
     if (state.currentTab === "tabLayers" && tab === "tabKeys" && keyCode > 223) tab = "tabLayers";
@@ -441,6 +452,11 @@ function KeyPickerKeyboard(props: Props) {
                 {isWireless && (
                   <TabsTrigger value="tabWireless" variant="tab" className="text-sm [&_svg]:w-[20px] py-2" disabled={disable}>
                     <IconWireless size="sm" strokeWidth={1.2} /> {i18n.app.menu.wireless}
+                  </TabsTrigger>
+                )}
+                {isLensAvailable && (
+                  <TabsTrigger value="tabLayerLens" variant="tab" className="text-sm [&_svg]:w-[20px] py-2" disabled={disable}>
+                    <IconLens size="sm" /> {i18n.editor.standardView.layerLens.title}
                   </TabsTrigger>
                 )}
               </TabsList>
@@ -592,6 +608,13 @@ function KeyPickerKeyboard(props: Props) {
               <TabsContent value="tabWireless" key="tabWireless">
                 <motion.div initial="hidden" animate="visible" key="tabKeys" variants={tabVariants}>
                   <WirelessTab keyCode={code} onKeySelect={onKeySelect} disabled={disable} />
+                </motion.div>
+              </TabsContent>
+            )}
+            {isLensAvailable && (
+              <TabsContent value="tabLayerLens" key="tabLayerLens">
+                <motion.div initial="hidden" animate="visible" key="tabLayerLens" variants={tabVariants}>
+                  <LayerLensTab keyCode={code} onKeySelect={onKeySelect} disabled={disable} activeTab={actTab} action={action} />
                 </motion.div>
               </TabsContent>
             )}

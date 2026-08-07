@@ -1,14 +1,14 @@
 /* eslint-disable no-await-in-loop */
 /* eslint-disable no-eval */
 import log from "electron-log/renderer";
-import type { SerialPort as SP } from "serialport";
+import { SerialPort } from "serialport";
+import { DelimiterParser } from "@serialport/parser-delimiter";
 import type { PortInfo } from "@serialport/bindings-cpp";
 import { DygmaDeviceType } from "@Renderer/types/dygmaDefs";
 import { DeviceType } from "@Types/devices";
 import Hardware from "../../hardware";
 
-const { SerialPort } = eval('require("serialport")');
-const { DelimiterParser } = eval('require("@serialport/parser-delimiter")');
+type SP = SerialPort;
 
 const open = async (path: string) => {
   const serialport: SP = new SerialPort({
