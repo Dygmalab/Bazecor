@@ -477,6 +477,12 @@ export default class Backup {
     }
   };
 
+  /**
+   * Converts a backup from a Defy keyboard to a Sonsei keyboard format.
+   * @param {BackupType} backup The backup object to convert.
+   * @param {Device} dev The destination device (Raise 2).
+   * @returns {BackupCmd[]} The converted backup data.
+   */
   static convertDefyToSonsei = (backup: BackupType, dev: Device) => {
     log.info("converting Defy Backup to Sonsei");
     const defyKeyLayerSize = 80;

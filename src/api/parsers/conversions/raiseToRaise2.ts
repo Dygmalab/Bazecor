@@ -38,7 +38,17 @@ export const convertKeymapRtoR2 = (layer: number[], keyboardType: string): numbe
   return localLayer;
 };
 
-export const convertColormapRtoR2 = (layer: number[], keyboardType: string, backupKeyboardType: string) => {
+/**
+ * Converts a colormap layer from a Raise 1 keyboard layout to a Raise 2 layout.
+ * It expands the colormap to fit the Raise 2's larger LED count and performs specific
+ * color index swaps to match the physical layout differences, especially for ANSI keyboards.
+ *
+ * @param {number[]} layer - An array of numbers representing a colormap layer from a Raise 1.
+ * @param {string} keyboardType - The keyboard type of the target device (e.g., "ANSI").
+ * @param {string} backupKeyboardType - The keyboard type of the source backup device (e.g., "ISO").
+ * @returns {number[]} The converted colormap layer compatible with a Raise 2 keyboard.
+ */
+export const convertColormapRtoR2 = (layer: number[], keyboardType: string, backupKeyboardType: string): number[] => {
   // Raise 1: 69 keyboard + 30 UG left + 33 UG right = 132 total
   // Raise 2: 69 keyboard + 53 UG left + 54 UG right = 176 total
 
