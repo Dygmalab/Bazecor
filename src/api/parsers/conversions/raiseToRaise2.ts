@@ -1,6 +1,15 @@
 import { PaletteType } from "@Renderer/types/layout";
 
-export const convertKeymapRtoR2 = (layer: number[], keyboardType: string) => {
+/**
+ * Converts a keymap layer from a Raise 1 keyboard layout to a Raise 2 layout.
+ * This involves rearranging the thumb cluster keys and handling layout-specific differences
+ * for ANSI keyboards, such as the Enter and Left Shift keys.
+ *
+ * @param {number[]} layer - An array of numbers representing a keymap layer from a Raise 1.
+ * @param {string} keyboardType - The keyboard type of the target device (e.g., "ANSI"), used to handle layout-specific key swaps.
+ * @returns {number[]} The converted keymap layer compatible with a Raise 2 keyboard.
+ */
+export const convertKeymapRtoR2 = (layer: number[], keyboardType: string): number[] => {
   let localLayer = [...layer];
   // restoring thumbcluster
   const preT = localLayer.slice(0, 69);

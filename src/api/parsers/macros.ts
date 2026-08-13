@@ -2,9 +2,21 @@
 import { MacroActionsType, MacrosType } from "@Renderer/types/macros";
 import { KeymapDB } from "../keymap";
 
-const macrosEraser = (tMem: number) => Array(tMem).fill("255").join(" ");
+/**
+ * Generates a string to erase the macros memory on the keyboard.
+ * @param {number} tMem - The total memory size for macros.
+ * @returns {string} A space-separated string of "255"s.
+ */
+const macrosEraser = (tMem: number): string => Array(tMem).fill("255").join(" ");
 
-export const parseMacrosRaw = (raw: string, storedMacros?: MacrosType[]) => {
+/**
+ * Parses a raw string of macro data from the keyboard into a structured array of macro objects.
+ * It translates the numeric codes into human-readable action types and key codes.
+ * @param {string} raw - The raw string data from the keyboard.
+ * @param {MacrosType[]} [storedMacros] - Optional array of previously stored macros to retrieve names and other metadata.
+ * @returns {MacrosType[]} An array of parsed macro objects.
+ */
+export const parseMacrosRaw = (raw: string, storedMacros?: MacrosType[]): MacrosType[] => {
   const keymapDB = new KeymapDB();
   const macrosArray = raw.split(" 0 0")[0].split(" ").map(Number);
 
@@ -88,7 +100,13 @@ export const parseMacrosRaw = (raw: string, storedMacros?: MacrosType[]) => {
   });
 };
 
-export const serializeMacros = (macros: MacrosType[], tMem: number) => {
+/**
+ * Serializes an array of macro objects into a raw string format that can be sent to the keyboard.
+ * @param {MacrosType[]} macros - The array of macro objects to serialize.
+ * @param {number} tMem - The total memory size for macros, used to create an eraser string if no macros are provided.
+ * @returns {string} The serialized raw string representation of the macros.
+ */
+export const serializeMacros = (macros: MacrosType[], tMem: number): string => {
   // log.info(
   //   "Macros map function",
   //   macros,
