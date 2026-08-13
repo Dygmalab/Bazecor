@@ -17,6 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+// NOTE: This file is only used to flash the OG Raise
 import log from "electron-log/renderer";
 import { spawn } from "child_process";
 import { SerialPort, SerialPortOpenOptions } from "serialport";
@@ -31,13 +32,20 @@ type AnyFunction = (...args: unknown[]) => unknown;
 
 type CommandOverrides = Record<string, AnyFunction | { focus: AnyFunction; [k: string]: AnyFunction }>;
 
+/**
+ * Manages the connection and communication with a Dygma device over the Focus protocol.
+ */
 export class Focus {
   private static instance: Focus;
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   private constructor() {}
 
-  public static getInstance() {
+  /**
+   * Gets the singleton instance of the Focus class.
+   * @returns {Focus} The singleton instance.
+   */
+  public static getInstance(): Focus {
     if (!Focus.instance) {
       Focus.instance = new Focus();
     }
@@ -49,10 +57,22 @@ export class Focus {
   closed = true;
   commands: CommandOverrides = { help: this._help };
 
+  /**
+   * Lists available serial ports.
+   * @returns {Promise<PortInfo[]>} A promise that resolves with a list of serial ports.
+   * @protected
+   */
   protected async listSerialPorts(): Promise<PortInfo[]> {
     return SerialPort.list();
   }
 
+  /**
+   * Creates a new serial port instance.
+   * @param {SerialPortOpenOptions<T>} options - The options for creating the serial port.
+   * @param {ErrorCallback} [openCallback] - A callback to handle opening errors.
+   * @returns {SerialPort<T>} The created serial port.
+   * @protected
+   */
   protected createSerialPort<T extends AutoDetectTypes>(
     options: SerialPortOpenOptions<T>,
     openCallback?: ErrorCallback,
@@ -60,7 +80,12 @@ export class Focus {
     return new SerialPort(options, openCallback);
   }
 
-  async find(...devices: DygmaDeviceType[]) {
+  /**
+   * Finds Dygma devices among the available serial ports.
+   * @param {...DygmaDeviceType[]} devices - The Dygma device types to search for.
+   * @returns {Promise<any[]>} A promise that resolves with an array of found devices.
+   */
+  async find(...devices: DygmaDeviceType[]): Promise<any[]> {
     const portList = await this.listSerialPorts();
 
     const foundDevices = [];
@@ -89,6 +114,12 @@ export class Focus {
   _port: SerialPort;
   parser: DelimiterParser;
 
+  /**
+   * Opens a connection to a device at the specified path.
+   * @param {string} path - The path to the serial port.
+   * @param {DygmaDeviceType} info - Information about the device.
+   * @returns {Promise<SerialPort>} A promise that resolves with the opened serial port.
+   */
   async open(path: string, info: DygmaDeviceType): Promise<SerialPort> {
     if (this._port !== undefined && this._port.isOpen === false) {
       await this.close();
@@ -161,6 +192,10 @@ export class Focus {
     return this._port;
   }
 
+  /**
+   * Clears the current communication context.
+   * @private
+   */
   private clearContext() {
     this.result = "";
     this.callbacks = [];
@@ -168,7 +203,11 @@ export class Focus {
     this.supportedCommands = [];
   }
 
-  async close() {
+  /**
+   * Closes the connection to the device.
+   * @returns {Promise<any>} A promise that resolves when the connection is closed.
+   */
+  async close(): Promise<void> {
     let result;
     try {
       if (this._port) {
@@ -190,7 +229,12 @@ export class Focus {
     return result;
   }
 
-  async isDeviceSupported(device: { device: { isDeviceSupported?: (device: unknown) => Promise<boolean> } }) {
+  /**
+   * Checks if a device is supported.
+   * @param {object} device - The device to check.
+   * @returns {Promise<boolean>} A promise that resolves with true if the device is supported, false otherwise.
+   */
+  async isDeviceSupported(device: { device: { isDeviceSupported?: (device: unknown) => Promise<boolean> } }): Promise<boolean> {
     if (!device.device.isDeviceSupported) {
       return true;
     }
@@ -199,11 +243,23 @@ export class Focus {
     return supported;
   }
 
-  isCommandSupported(cmd: string) {
+  /**
+   * Checks if a command is supported by the connected device.
+   * @param {string} cmd - The command to check.
+   * @returns {boolean} True if the command is supported, false otherwise.
+   */
+  isCommandSupported(cmd: string): boolean {
     return this.supportedCommands.indexOf(cmd) !== -1;
   }
 
-  request<T>(cmd: string, ...args: unknown[]) {
+  /**
+   * Sends a request to the device and waits for a response.
+   * @template T
+   * @param {string} cmd - The command to send.
+   * @param {...unknown[]} args - The arguments for the command.
+   * @returns {Promise<T>} A promise that resolves with the response from the device.
+   */
+  request<T>(cmd: string, ...args: unknown[]): Promise<T> {
     log.info("focus.request:", cmd, ...args);
     return new Promise<T>((resolve, reject) => {
       const timer = setTimeout(() => {
@@ -221,7 +277,14 @@ export class Focus {
     });
   }
 
-  private async _request(cmd: string, ...args: unknown[]) {
+  /**
+   * Sends a request to the device.
+   * @param {string} cmd - The command to send.
+   * @param {...unknown[]} args - The arguments for the command.
+   * @returns {Promise<unknown>} A promise that resolves when the request has been sent.
+   * @private
+   */
+  private async _request(cmd: string, ...args: unknown[]): Promise<unknown> {
     log.info("performing request");
     if (!this._port) throw new Error("Device not connected!");
 
@@ -237,7 +300,13 @@ export class Focus {
     });
   }
 
-  async command(cmd: string, ...args: unknown[]) {
+  /**
+   * Sends a command to the device, handling any command overrides.
+   * @param {string} cmd - The command to send.
+   * @param {...unknown[]} args - The arguments for the command.
+   * @returns {Promise<unknown>} A promise that resolves with the result of the command.
+   */
+  async command(cmd: string, ...args: unknown[]): Promise<unknown> {
     const override = this.commands[cmd];
     if (typeof override === "function") {
       return override(this, ...args);
@@ -248,7 +317,13 @@ export class Focus {
     return this.request(cmd, ...args);
   }
 
-  private async _help(s: Focus) {
+  /**
+   * Retrieves the list of supported commands from the device.
+   * @param {Focus} s - The Focus instance.
+   * @returns {Promise<string[]>} A promise that resolves with an array of supported commands.
+   * @private
+   */
+  private async _help(s: Focus): Promise<string[]> {
     const data = await s.request<string>("help");
     return data.split(/\r?\n/).filter((v: string) => v.length > 0);
   }

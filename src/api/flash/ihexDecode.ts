@@ -2,9 +2,11 @@ import hex2byte from "./hex2byte";
 import { HexType } from "./types";
 
 /**
- * Decodes hex line to object.
- * @param {string} line - One line from hex file.
- * @returns {object} Щbject for use in firmware.
+ * Decodes a single line from an Intel HEX file into a structured object.
+ * This object contains the byte count, address, record type, and the data payload as a Uint8Array.
+ *
+ * @param {string} line - One line from a .hex file, without the leading colon.
+ * @returns {HexType} An object representing the decoded line, structured for use in firmware flashing.
  */
 export default function ihexDecode(line: string): HexType {
   let offset = 0;
