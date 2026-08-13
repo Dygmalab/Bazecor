@@ -98,6 +98,9 @@ out/
 # old webpack output folder
 dist
 
+# Legacy standalone Dygma Lens binary (not used by the app; overlay is an internal window)
+src/lens-bin/
+
 #editor's configuration
 .idea
 /test-results/

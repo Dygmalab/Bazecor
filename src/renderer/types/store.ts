@@ -1,3 +1,5 @@
+import type { LensStoreState } from "../../lens/shared/types";
+
 export interface StorageType {
   settings: {
     backupFolder: string;
@@ -7,6 +9,8 @@ export interface StorageType {
     hideBluetoothExperimental?: boolean;
     showDefaults: boolean;
     version: string;
+    runInBackground?: boolean;
   };
   neurons: unknown[];
+  lens?: LensStoreState;
 }

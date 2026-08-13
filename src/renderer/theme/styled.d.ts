@@ -487,6 +487,7 @@ declare module "styled-components" {
       firmwareUpdateProcess: {
         raiseSVG: string;
         defySVG: string;
+        sonseiFrameSVG: string;
         processFooterBackground: string;
         processImageBackground: string;
         processNeuronBackground: string;

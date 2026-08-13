@@ -48,12 +48,14 @@ const setBackup = () => {
     const defaultPath = path.join(app.getPath("home"), "Dygma", "Backups");
     log.verbose(defaultPath);
     store.set("settings.backupFolder", defaultPath);
-    fs.mkdir(defaultPath, { recursive: true }, err => {
-      if (err) {
-        log.error(err);
+    try {
+      if (!fs.existsSync(defaultPath)) {
+        fs.mkdirSync(defaultPath, { recursive: true });
+        log.verbose("Backup directory created successfully!");
       }
-      log.verbose("Directory created successfully!");
-    });
+    } catch (err) {
+      log.error("Failed to create backup directory:", err);
+    }
   } else if (bfrequency > 0 && bfrequency < 13) {
     log.verbose(`** Going to erase backups older than: ${bfrequency} months **`);
     deleteOldFiles(bfolder, bfrequency);

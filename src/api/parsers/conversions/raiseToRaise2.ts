@@ -1,5 +1,4 @@
 import { PaletteType } from "@Renderer/types/layout";
-import { rgb2w } from "../../color";
 
 /**
  * Converts a keymap layer from a Raise 1 keyboard layout to a Raise 2 layout.
@@ -39,49 +38,45 @@ export const convertKeymapRtoR2 = (layer: number[], keyboardType: string): numbe
   return localLayer;
 };
 
-/**
- * Converts a colormap layer from a Raise 1 keyboard layout to a Raise 2 layout.
- * It expands the colormap to fit the Raise 2's larger LED count and performs specific
- * color index swaps to match the physical layout differences, especially for ANSI keyboards.
- *
- * @param {number[]} layer - An array of numbers representing a colormap layer from a Raise 1.
- * @param {string} keyboardType - The keyboard type of the target device (e.g., "ANSI").
- * @param {string} backupKeyboardType - The keyboard type of the source backup device (e.g., "ISO").
- * @returns {number[]} The converted colormap layer compatible with a Raise 2 keyboard.
- */
-export const convertColormapRtoR2 = (layer: number[], keyboardType: string, backupKeyboardType: string): number[] => {
-  const color = layer[130];
-  const rest = layer.slice(0, -1);
-  const result = rest.concat(new Array(45).fill(color));
+export const convertColormapRtoR2 = (layer: number[], keyboardType: string, backupKeyboardType: string) => {
+  // Raise 1: 69 keyboard + 30 UG left + 33 UG right = 132 total
+  // Raise 2: 69 keyboard + 53 UG left + 54 UG right = 176 total
 
-  if (keyboardType === "ANSI") {
-    // Move enter (31<>47)
-    const symbolC = result[40];
-    const enterC = result[48];
+  // Ensure we only take the first 132 LEDs (one layer from Raise 1)
+  const raise1Layer = layer.slice(0, 132);
 
-    result[40] = enterC;
-    result[48] = symbolC;
+  const keyboardLEDs = raise1Layer.slice(0, 69); // Keep keyboard LEDs as-is
+  const ugLeftR1 = raise1Layer.slice(69, 99);    // 30 LEDs underglow left Raise 1
+  const ugRightR1 = raise1Layer.slice(99, 132);  // 33 LEDs underglow right Raise 1
+
+  // Interpolate underglow left from 30 to 53 LEDs
+  const ugLeftR2 = [];
+  for (let i = 0; i < 53; i++) {
+    const sourceIndex = Math.floor((i / 53) * 30);
+    ugLeftR2.push(ugLeftR1[sourceIndex] !== undefined ? ugLeftR1[sourceIndex] : 15);
   }
 
-  if (keyboardType === "ANSI" && backupKeyboardType === "ISO") {
-    // Move shift (48<>49)
-    const shiftC = result[19];
-    const extraC = result[20];
-
-    result[19] = extraC;
-    result[20] = shiftC;
+  // Interpolate underglow right from 33 to 54 LEDs
+  const ugRightR2 = [];
+  for (let i = 0; i < 54; i++) {
+    const sourceIndex = Math.floor((i / 54) * 33);
+    ugRightR2.push(ugRightR1[sourceIndex] !== undefined ? ugRightR1[sourceIndex] : 15);
   }
+
+  const result = keyboardLEDs.concat(ugLeftR2).concat(ugRightR2);
+
+  // Note: We don't swap colors for ANSI/ISO differences because the colormap
+  // indices don't directly correspond to keymap positions. The led_map in the
+  // component handles the mapping from key positions to LED indices.
 
   return result;
 };
 
-/**
- * Converts a single RGB color object from a Raise 1 palette to the RGBW array format used by Raise 2.
- *
- * @param {PaletteType} color - An RGB color object with `r`, `g`, and `b` properties.
- * @returns {number[]} An array containing the `r`, `g`, `b`, and `w` values: `[r, g, b, w]`.
- */
-export const convertPaletteRtoR2 = (color: PaletteType): number[] => {
-  const rgbw = rgb2w(color);
-  return [rgbw.r, rgbw.g, rgbw.b, rgbw.w];
+export const convertPaletteRtoR2 = (color: PaletteType) => {
+  return {
+    r: color.r,
+    g: color.g,
+    b: color.b,
+    rgb: `rgb(${color.r}, ${color.g}, ${color.b})`,
+  };
 };

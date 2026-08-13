@@ -74,6 +74,10 @@ export const getDevices = () => {
 };
 
 export const configureUSB = () => {
+  // The main window can now be destroyed and recreated (background mode), so
+  // this can run more than once per app lifetime — guard against Electron's
+  // "second handler" error on the re-registration.
+  ipcMain.removeHandler("usb-devices");
   ipcMain.handle("usb-devices", () => {
     const devices = getDeviceList();
     return devices;

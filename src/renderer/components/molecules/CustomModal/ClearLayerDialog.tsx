@@ -25,10 +25,11 @@ interface ClearLayerDialogProps {
   selectedColorIndex?: number;
   fillWithNoKey?: boolean;
   keyboardSide?: KeyboardSide;
+  deviceSides?: number;
 }
 
 export const ClearLayerDialog = (props: ClearLayerDialogProps): JSX.Element => {
-  const { open, onCancel, onConfirm, colors, selectedColorIndex, fillWithNoKey, keyboardSide } = props;
+  const { open, onCancel, onConfirm, colors, selectedColorIndex, fillWithNoKey, keyboardSide, deviceSides = 2 } = props;
   const [useNoKey, setUseNoKey] = useState(fillWithNoKey ?? false);
   const [chooseYourKeyboardSide, setChooseYourKeyboardSide] = useState(keyboardSide ?? "BOTH");
   const [indexOfSelectedColor, setIndexOfSelectedColor] = useState(selectedColorIndex ?? -1);
@@ -65,10 +66,12 @@ export const ClearLayerDialog = (props: ClearLayerDialogProps): JSX.Element => {
             onColorSelect={idx => setIndexOfSelectedColor(idx)}
             className="ml-3 mt-2 mb-3"
           />
-          <SelectKeyboardSide
-            chooseYourKeyboardSide={chooseYourKeyboardSide}
-            chooseYourKeyboardSideUpdate={chooseYourKeyboardSideUpdate}
-          />
+          {deviceSides > 1 && (
+            <SelectKeyboardSide
+              chooseYourKeyboardSide={chooseYourKeyboardSide}
+              chooseYourKeyboardSideUpdate={chooseYourKeyboardSideUpdate}
+            />
+          )}
           <SelectResetKeyType useNoKey={useNoKey} useNoKeyUpdate={useNoKeyUpdate} />
         </div>
         <DialogFooter>

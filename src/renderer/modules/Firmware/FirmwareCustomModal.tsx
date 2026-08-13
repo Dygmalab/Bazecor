@@ -41,6 +41,7 @@ export default function FirmwareCustomModal(props: FirmwareCustomModalProps) {
     RaiseANSI: ["firmware.hex"],
     Defywireless: ["Wireless_neuron.hex", "keyscanner.bin"],
     Defywired: ["Wired_neuron.uf2", "keyscanner.bin"],
+    Sonseiwireless: ["Wireless_neuron.bin", "keyscanner.bin"],
     Raise2ANSI: ["Wireless_neuron.hex", "keyscanner.bin"],
     Raise2ISO: ["Wireless_neuron.hex", "keyscanner.bin"],
   };

@@ -22,6 +22,8 @@ export interface ColorEditorProps {
   disabled: boolean;
   selected: number;
   deviceName: string;
+  deviceSides?: number;
+  hasUnderglow?: boolean;
   colorButtonIsSelected: boolean;
   isColorButtonSelected: boolean;
   onColorSelect: (colorIndex: number) => void;

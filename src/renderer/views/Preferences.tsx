@@ -37,6 +37,8 @@ import {
   RFSettings,
   BatterySettings,
   EnergyManagement,
+  LayerLensSettings,
+  LayerLensOnboarding,
 } from "@Renderer/modules/Settings";
 
 import { PageHeader } from "@Renderer/modules/PageHeader";
@@ -51,6 +53,7 @@ import {
   IconNeuronManager,
   IconChip,
   IconWrench,
+  IconLens,
 } from "@Renderer/components/atoms/icons";
 
 import Store from "@Renderer/utils/Store";
@@ -64,6 +67,12 @@ import Backup from "../../api/backup";
 import { delay } from "../../api/flash/delay";
 
 const store = Store.getStore();
+const sk20Raw = store.get("capabilities.sk20");
+const sk20 =
+  sk20Raw === true ||
+  sk20Raw === "true" ||
+  sk20Raw === 1 ||
+  sk20Raw === "1";
 
 const initialWireless = {
   battery: {
@@ -166,6 +175,13 @@ const Preferences = (props: PreferencesProps) => {
   } = props;
   const [activeTab, setActiveTab] = useState(connected ? "Keyboard" : "Application");
 
+  // Layer Lens is available for Sonsei (fw >= 1.0.0) and Defy (fw >= 2.3.0). The
+  // capability is written to the store on connect (see App.tsx onKeyboardConnect).
+  // Raise2 and Raise (Raise1) never set this flag, so the nav item stays hidden.
+  const lensCapabilityRaw = store.get("capabilities.lens");
+  const isLensAvailable =
+    lensCapabilityRaw === true || lensCapabilityRaw === "true" || lensCapabilityRaw === 1 || lensCapabilityRaw === "1";
+
   const getNeuronData = useCallback(async () => {
     let localNeuronID = "";
     const newKbData: KBDataPref = initialKBData;
@@ -212,9 +228,18 @@ const Preferences = (props: PreferencesProps) => {
         newKbData.qukeysOverlapThreshold = overlapThresholdParsed;
       });
 
-      await state.currentDevice.command("qukeys.minimumHoldTime").then((minimumHoldTime: string) => {
+      await state.currentDevice.command("qukeys.minimumHoldTime").then(async (minimumHoldTime: string) => {
         const minHoldParsed = minimumHoldTime ? parseInt(minimumHoldTime, 10) : undefined;
-        newKbData.qukeysMinHold = minHoldParsed;
+        let clampedMinHold = minHoldParsed;
+
+        if (typeof minHoldParsed === "number" && minHoldParsed > 255) {
+          clampedMinHold = 255;
+          if (state.currentDevice) {
+            await state.currentDevice.command("qukeys.minimumHoldTime", "255");
+          }
+        }
+
+        newKbData.qukeysMinHold = clampedMinHold;
       });
 
       await state.currentDevice.command("qukeys.minimumPriorInterval").then((minimumPriorInterval: string) => {
@@ -237,6 +262,21 @@ const Preferences = (props: PreferencesProps) => {
         const overlapThreshold = overlap ? parseInt(overlap, 10) : 80;
         newKbData.SuperOverlapThreshold = overlapThreshold;
       });
+
+      if (sk20) {
+        const fastHold = newKbData.qukeysHoldTimeout;
+        const superHold = newKbData.SuperHoldstart;
+
+        if (typeof fastHold === "number" && typeof superHold === "number" && fastHold >= 0 && superHold >= 0) {
+          const mergedHold = fastHold < superHold ? fastHold : superHold;
+          newKbData.qukeysHoldTimeout = mergedHold;
+          newKbData.SuperHoldstart = mergedHold;
+        } else if (typeof superHold === "number" && superHold >= 0) {
+          newKbData.qukeysHoldTimeout = superHold;
+        } else {
+          newKbData.SuperHoldstart = fastHold;
+        }
+      }
 
       // MOUSE variables commands
       await state.currentDevice.command("mouse.speed").then((speed: string) => {
@@ -362,7 +402,13 @@ const Preferences = (props: PreferencesProps) => {
       // QUKEYS
       await state.currentDevice.command("qukeys.holdTimeout", kbData.qukeysHoldTimeout.toString());
       await state.currentDevice.command("qukeys.overlapThreshold", kbData.qukeysOverlapThreshold.toString());
-      await state.currentDevice.command("qukeys.minimumHoldTime", kbData.qukeysMinHold ? kbData.qukeysMinHold.toString() : "");
+
+      let minHoldValueToSend = "";
+      if (typeof kbData.qukeysMinHold === "number" && kbData.qukeysMinHold > 0) {
+        const clamped = kbData.qukeysMinHold > 255 ? 255 : kbData.qukeysMinHold;
+        minHoldValueToSend = clamped.toString();
+      }
+      await state.currentDevice.command("qukeys.minimumHoldTime", minHoldValueToSend);
       await state.currentDevice.command(
         "qukeys.minimumPriorInterval",
         kbData.qukeysMinPrior ? kbData.qukeysMinPrior.toString() : "",
@@ -688,7 +734,7 @@ const Preferences = (props: PreferencesProps) => {
                     Device settings
                   </h4>
                   <TabsTrigger value="Keyboard" variant="tab">
-                    <IconKeyboard /> Typing and Keys
+                    <IconKeyboard /> Keys and Layers
                   </TabsTrigger>
                   <TabsTrigger value="LED" variant="tab">
                     <IconFlashlight /> LED
@@ -696,19 +742,18 @@ const Preferences = (props: PreferencesProps) => {
                   {(state.currentDevice.device.info.keyboardType === "wireless" || state.currentDevice.device.wireless) && (
                     <>
                       <TabsTrigger value="Battery" variant="tab">
-                        <IconBattery /> Battery Management
+                        <IconBattery /> Battery
                       </TabsTrigger>
                       {/* <TabsTrigger value="Bluetooth" variant="tab">
                         <IconBluetooth /> Bluetooth Settings
                       </TabsTrigger> */}
-                      <TabsTrigger value="RF" variant="tab">
-                        <IconSignal /> RF Settings
-                      </TabsTrigger>
+                      {state.currentDevice.device.hasRF && (
+                        <TabsTrigger value="RF" variant="tab">
+                          <IconSignal /> RF Settings
+                        </TabsTrigger>
+                      )}
                     </>
                   )}
-                  <TabsTrigger value="Advanced" variant="tab">
-                    <IconWrench /> Advanced
-                  </TabsTrigger>
                 </>
               ) : null}
               <h4
@@ -721,16 +766,21 @@ const Preferences = (props: PreferencesProps) => {
               <TabsTrigger value="Application" variant="tab">
                 <IconLogoDygma /> Application
               </TabsTrigger>
+              {isLensAvailable && (
+                <TabsTrigger value="LayerLens" variant="tab">
+                  <IconLens /> Layer Lens
+                </TabsTrigger>
+              )}
               <TabsTrigger value="Backups" variant="tab">
                 <IconFloppyDisk /> Backups
               </TabsTrigger>
-              {connected && state.currentDevice ? (
+              {/* {connected && state.currentDevice ? (
                 <TabsTrigger value="NeuronManager" variant="tab">
                   <IconNeuronManager /> Neuron Manager
                 </TabsTrigger>
               ) : (
                 ""
-              )}
+              )} */}
             </TabsList>
             <div className="rounded-xl bg-gray-25/50 dark:bg-gray-400/15 px-4 py-3 w-full">
               {connected && state.currentDevice ? (
@@ -738,44 +788,6 @@ const Preferences = (props: PreferencesProps) => {
                   <TabsContent value="Keyboard" className="w-full">
                     <motion.div initial="hidden" animate="visible" variants={tabVariants}>
                       <KeyboardSettings kbData={kbData} setKbData={updateKBData} connected={connected} />
-                    </motion.div>
-                  </TabsContent>
-                  <TabsContent value="LED">
-                    <motion.div initial="hidden" animate="visible" variants={tabVariants}>
-                      <LEDSettings
-                        kbData={kbData}
-                        wireless={wireless}
-                        setKbData={updateKBData}
-                        setWireless={updateWireless}
-                        connected={connected}
-                        isWireless={
-                          state.currentDevice.device.info.keyboardType === "wireless" || state.currentDevice.device.wireless
-                        }
-                      />
-                    </motion.div>
-                  </TabsContent>
-                  {(state.currentDevice.device.info.keyboardType === "wireless" || state.currentDevice.device.wireless) && (
-                    <>
-                      <TabsContent value="Battery">
-                        <motion.div initial="hidden" animate="visible" variants={tabVariants}>
-                          <BatterySettings wireless={wireless} changeWireless={updateWireless} isCharging={false} />
-                          <EnergyManagement wireless={wireless} changeWireless={updateWireless} updateTab={handleTabChange} />
-                        </motion.div>
-                      </TabsContent>
-                      {/* <TabsContent value="Bluetooth">
-                        <motion.div initial="hidden" animate="visible" variants={tabVariants}>
-                          Bluetooth Settings
-                        </motion.div>
-                      </TabsContent> */}
-                      <TabsContent value="RF">
-                        <motion.div initial="hidden" animate="visible" variants={tabVariants}>
-                          <RFSettings wireless={wireless} changeWireless={updateWireless} sendRePair={sendRePairCommand} />
-                        </motion.div>
-                      </TabsContent>
-                    </>
-                  )}
-                  <TabsContent value="Advanced">
-                    <motion.div initial="hidden" animate="visible" variants={tabVariants}>
                       <AdvancedSettings
                         connected={connected}
                         defaultLayer={defaultLayer}
@@ -791,6 +803,46 @@ const Preferences = (props: PreferencesProps) => {
                       />
                     </motion.div>
                   </TabsContent>
+                  <TabsContent value="LED">
+                    <motion.div initial="hidden" animate="visible" variants={tabVariants}>
+                      <LEDSettings
+                        kbData={kbData}
+                        wireless={wireless}
+                        setKbData={updateKBData}
+                        setWireless={updateWireless}
+                        connected={connected}
+                        isWireless={
+                          state.currentDevice.device.info.keyboardType === "wireless" || state.currentDevice.device.wireless
+                        }
+                        hasUnderglow={
+                          (state.currentDevice.device.keyboardUnderglow?.ledsLeft?.length || 0) > 0 ||
+                          (state.currentDevice.device.keyboardUnderglow?.ledsRight?.length || 0) > 0
+                        }
+                      />
+                    </motion.div>
+                  </TabsContent>
+                  {(state.currentDevice.device.info.keyboardType === "wireless" || state.currentDevice.device.wireless) && (
+                    <>
+                      <TabsContent value="Battery">
+                        <motion.div initial="hidden" animate="visible" variants={tabVariants}>
+                          <BatterySettings wireless={wireless} changeWireless={updateWireless} isCharging={false} deviceType={state.currentDevice.device.info.product as string} />
+                          <EnergyManagement wireless={wireless} changeWireless={updateWireless} updateTab={handleTabChange} />
+                        </motion.div>
+                      </TabsContent>
+                      {/* <TabsContent value="Bluetooth">
+                        <motion.div initial="hidden" animate="visible" variants={tabVariants}>
+                          Bluetooth Settings
+                        </motion.div>
+                      </TabsContent> */}
+                      {state.currentDevice.device.hasRF && (
+                        <TabsContent value="RF">
+                          <motion.div initial="hidden" animate="visible" variants={tabVariants}>
+                            <RFSettings wireless={wireless} changeWireless={updateWireless} sendRePair={sendRePairCommand} />
+                          </motion.div>
+                        </TabsContent>
+                      )}
+                    </>
+                  )}
                 </>
               ) : null}
               <TabsContent value="Application">
@@ -811,6 +863,14 @@ const Preferences = (props: PreferencesProps) => {
                   />
                 </motion.div>
               </TabsContent>
+              {isLensAvailable && (
+                <TabsContent value="LayerLens">
+                  <motion.div initial="hidden" animate="visible" variants={tabVariants}>
+                    <LayerLensOnboarding />
+                    <LayerLensSettings />
+                  </motion.div>
+                </TabsContent>
+              )}
               <TabsContent value="Backups">
                 <motion.div initial="hidden" animate="visible" variants={tabVariants}>
                   <FileBackUpHandling />

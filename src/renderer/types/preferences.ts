@@ -78,6 +78,7 @@ export interface LEDSettingsPreferences {
   setWireless: (data: WirelessInterface) => void;
   connected: boolean;
   isWireless: boolean;
+  hasUnderglow?: boolean;
 }
 
 export interface AdvancedSettingsProps {

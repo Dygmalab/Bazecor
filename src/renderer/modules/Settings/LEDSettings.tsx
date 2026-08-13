@@ -33,7 +33,7 @@ import { i18n } from "@Renderer/i18n";
 import Heading from "@Renderer/components/atoms/Heading";
 
 function LEDSettings(props: LEDSettingsPreferences) {
-  const { kbData, wireless, setKbData, setWireless, connected, isWireless } = props;
+  const { kbData, wireless, setKbData, setWireless, connected, isWireless, hasUnderglow = true } = props;
   const [localKBData, setLocalKBData] = useState(kbData);
   const [localWireless, setLocalWireless] = useState(wireless);
 
@@ -168,46 +168,48 @@ function LEDSettings(props: LEDSettingsPreferences) {
                 </div>
               </div>
             </div>
-            <div className={`${isWireless ? "px-3 py-3 bg-gray-100/20 dark:bg-gray-900/15 rounded mt-3" : "mt-4"}`}>
-              <Heading headingLevel={2} renderAs="paragraph-sm" className={`tracking-normal ${isWireless && "mb-2"}`}>
-                {i18n.keyboardSettings.led.brightnessUG}
-              </Heading>
-              <div className="flex flex-col">
-                <div className="flex w-full gap-2 items-center">
-                  {isWireless && <div className="min-w-16 mb-0 text-sm text-gray-400 dark:text-gray-100">Wired</div>}
-                  <div className="block w-full relative">
-                    <Slider
-                      min={0}
-                      max={100}
-                      step={1}
-                      value={[Math.round((ledBrightnessUG * 100) / 255)]}
-                      onValueChange={setBrightnessUG}
-                    />
-                  </div>
-                </div>
-                {isWireless && (
+            {hasUnderglow && (
+              <div className={`${isWireless ? "px-3 py-3 bg-gray-100/20 dark:bg-gray-900/15 rounded mt-3" : "mt-4"}`}>
+                <Heading headingLevel={2} renderAs="paragraph-sm" className={`tracking-normal ${isWireless && "mb-2"}`}>
+                  {i18n.keyboardSettings.led.brightnessUG}
+                </Heading>
+                <div className="flex flex-col">
                   <div className="flex w-full gap-2 items-center">
-                    <div className="min-w-16 mb-0 text-sm text-gray-400 dark:text-gray-100">Wireless</div>
+                    {isWireless && <div className="min-w-16 mb-0 text-sm text-gray-400 dark:text-gray-100">Wired</div>}
                     <div className="block w-full relative">
                       <Slider
                         min={0}
                         max={100}
                         step={1}
-                        value={[Math.round((brightnessUG * 100) / 255)]}
-                        onValueChange={setBrightnessUGWireless}
-                        className="slider-danger"
-                        variant="alert"
-                        dataPlacement="bottom"
+                        value={[Math.round((ledBrightnessUG * 100) / 255)]}
+                        onValueChange={setBrightnessUG}
                       />
                     </div>
                   </div>
-                )}
-                <div className={`flex justify-between ${isWireless && "pl-[4.5rem]"}`}>
-                  <span className="text-xs text-gray-300 dark:text-gray-200">0%</span>
-                  <span className="text-xs text-gray-300 dark:text-gray-200">100%</span>
+                  {isWireless && (
+                    <div className="flex w-full gap-2 items-center">
+                      <div className="min-w-16 mb-0 text-sm text-gray-400 dark:text-gray-100">Wireless</div>
+                      <div className="block w-full relative">
+                        <Slider
+                          min={0}
+                          max={100}
+                          step={1}
+                          value={[Math.round((brightnessUG * 100) / 255)]}
+                          onValueChange={setBrightnessUGWireless}
+                          className="slider-danger"
+                          variant="alert"
+                          dataPlacement="bottom"
+                        />
+                      </div>
+                    </div>
+                  )}
+                  <div className={`flex justify-between ${isWireless && "pl-[4.5rem]"}`}>
+                    <span className="text-xs text-gray-300 dark:text-gray-200">0%</span>
+                    <span className="text-xs text-gray-300 dark:text-gray-200">100%</span>
+                  </div>
                 </div>
               </div>
-            </div>
+            )}
           </CardContent>
         </Card>
         <Card className="mt-3 max-w-2xl mx-auto" variant="default">

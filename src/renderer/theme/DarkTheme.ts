@@ -8,6 +8,7 @@ import closeButton from "@Assets/dark/X.svg";
 import IconPlusXS from "@Assets/dark/plusIcon.svg";
 import RaiseFirmwareUpgrade from "@Assets/dark/raiseFirmwareupgrade.svg";
 import DefyFirmwareUpgrade from "@Assets/dark/defyFirmwareupgrade.svg";
+import SonseiFrameFirmwareUpgrade from "@Assets/dark/sonseiFrameFirmwareupgrade.svg";
 import neuronDefyWirelessImage from "@Assets/base/neuron-defy--black.png";
 import mouseWheelBackgroundDark from "@Assets/dark/mouseWheel.png";
 import oldToNew from "@Assets/dark/oldValueToNewValue.svg";
@@ -536,6 +537,7 @@ const Dark: DefaultTheme = {
     firmwareUpdateProcess: {
       raiseSVG: RaiseFirmwareUpgrade,
       defySVG: DefyFirmwareUpgrade,
+      sonseiFrameSVG: SonseiFrameFirmwareUpgrade,
       processFooterBackground: Tokens.colors.gray800,
       processImageBackground: settingColorOpacity(Tokens.colors.gray100, 0.05),
       processNeuronBackground: Tokens.colors.gray800,

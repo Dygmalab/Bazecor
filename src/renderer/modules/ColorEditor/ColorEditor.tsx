@@ -86,6 +86,8 @@ const ColorEditor = ({
   selected,
   toChangeAllKeysColor,
   deviceName,
+  deviceSides = 2,
+  hasUnderglow = true,
   applyColorMapChangeBL,
   applyColorMapChangeUG,
   onColorPick,
@@ -168,62 +170,68 @@ const ColorEditor = ({
                 icoSVG={<IconKeysLight />}
                 color={colors[selected]}
                 disabled={!colors[selected]}
-                hasDropdown
+                hasDropdown={deviceSides > 1}
               />
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button
-                    variant="config"
-                    size="sm"
-                    className="rounded-l-none border-l-0 py-0.5 px-2 [&_svg]:w-4"
-                    disabled={!colors[selected]}
-                  >
-                    <IconChevronDown />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
-                  <DropdownMenuItem onClick={() => (selected >= 0 ? applyColorMapChangeBL("LEFT", selected) : "")}>
-                    Left
-                  </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => (selected >= 0 ? applyColorMapChangeBL("RIGHT", selected) : "")}>
-                    Right
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
+              {deviceSides > 1 && (
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button
+                      variant="config"
+                      size="sm"
+                      className="rounded-l-none border-l-0 py-0.5 px-2 [&_svg]:w-4"
+                      disabled={!colors[selected]}
+                    >
+                      <IconChevronDown />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end">
+                    <DropdownMenuItem onClick={() => (selected >= 0 ? applyColorMapChangeBL("LEFT", selected) : "")}>
+                      Left
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => (selected >= 0 ? applyColorMapChangeBL("RIGHT", selected) : "")}>
+                      Right
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              )}
             </div>
-            <div className="flex">
-              <ColorButton
-                onClick={() => {
-                  toChangeAllKeysColor(selected, underglowStart, 177);
-                }}
-                label={i18n.editor.color.applyColor}
-                text={i18n.editor.color.underglow}
-                icoSVG={<IconKeysUnderglow />}
-                color={colors[selected]}
-                disabled={!colors[selected]}
-                hasDropdown
-              />
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button
-                    variant="config"
-                    size="sm"
-                    className="rounded-l-none border-l-0 py-0.5 px-2 [&_svg]:w-4"
-                    disabled={!colors[selected]}
-                  >
-                    <IconChevronDown />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
-                  <DropdownMenuItem onClick={() => (selected >= 0 ? applyColorMapChangeUG("LEFT", selected) : "")}>
-                    Left
-                  </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => (selected >= 0 ? applyColorMapChangeUG("RIGHT", selected) : "")}>
-                    Right
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </div>
+            {hasUnderglow && (
+              <div className="flex">
+                <ColorButton
+                  onClick={() => {
+                    toChangeAllKeysColor(selected, underglowStart, 177);
+                  }}
+                  label={i18n.editor.color.applyColor}
+                  text={i18n.editor.color.underglow}
+                  icoSVG={<IconKeysUnderglow />}
+                  color={colors[selected]}
+                  disabled={!colors[selected]}
+                  hasDropdown={deviceSides > 1}
+                />
+                {deviceSides > 1 && (
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button
+                        variant="config"
+                        size="sm"
+                        className="rounded-l-none border-l-0 py-0.5 px-2 [&_svg]:w-4"
+                        disabled={!colors[selected]}
+                      >
+                        <IconChevronDown />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      <DropdownMenuItem onClick={() => (selected >= 0 ? applyColorMapChangeUG("LEFT", selected) : "")}>
+                        Left
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => (selected >= 0 ? applyColorMapChangeUG("RIGHT", selected) : "")}>
+                        Right
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                )}
+              </div>
+            )}
           </div>
         </div>
       </div>

@@ -8,8 +8,7 @@ import DeviceMap from "./deviceMap";
 import { ExtHIDInterface } from "./types";
 import { ExtendedPort } from "./serial/SerialAPI";
 import Hardware from "../hardware";
-// eslint-disable-next-line no-eval
-const { DelimiterParser } = eval('require("@serialport/parser-delimiter")');
+import { DelimiterParser } from "@serialport/parser-delimiter";
 
 export type State = {
   selected: number;

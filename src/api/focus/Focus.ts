@@ -20,14 +20,13 @@
 // NOTE: This file is only used to flash the OG Raise
 import log from "electron-log/renderer";
 import { spawn } from "child_process";
-import type { SerialPort, SerialPortOpenOptions } from "serialport";
+import { SerialPort, SerialPortOpenOptions } from "serialport";
 import type { AutoDetectTypes, PortInfo } from "@serialport/bindings-cpp";
 import { DygmaDeviceType } from "@Renderer/types/dygmaDefs";
 import { delay } from "../../main/utils/delay";
+import { DelimiterParser } from "@serialport/parser-delimiter";
 
 // TODO: any reason we can't import directly?
-const sp = eval('require("serialport")');
-const { DelimiterParser } = eval('require("@serialport/parser-delimiter")');
 
 type AnyFunction = (...args: unknown[]) => unknown;
 
@@ -64,7 +63,7 @@ export class Focus {
    * @protected
    */
   protected async listSerialPorts(): Promise<PortInfo[]> {
-    return sp.SerialPort.list();
+    return SerialPort.list();
   }
 
   /**
@@ -78,7 +77,7 @@ export class Focus {
     options: SerialPortOpenOptions<T>,
     openCallback?: ErrorCallback,
   ): SerialPort<T> {
-    return new sp.SerialPort(options, openCallback);
+    return new SerialPort(options, openCallback);
   }
 
   /**
@@ -113,7 +112,7 @@ export class Focus {
   callbacks: Array<(value: unknown) => void>;
   supportedCommands: Array<string>;
   _port: SerialPort;
-  parser: typeof DelimiterParser;
+  parser: DelimiterParser;
 
   /**
    * Opens a connection to a device at the specified path.

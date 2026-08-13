@@ -23,6 +23,8 @@ import { useNavigate } from "react-router-dom";
 import { i18n } from "@Renderer/i18n";
 import { useDevice, DeviceTools } from "@Renderer/DeviceContext";
 import { toast } from "react-toastify";
+import { ipcRenderer } from "electron";
+import fs from "fs";
 
 // State machine
 import FlashDevice from "@Renderer/controller/FlashingProcedure/machine";
@@ -234,10 +236,12 @@ function FirmwareUpdateProcess(props: FirmwareUpdateProcessProps) {
           !deviceState.currentDevice?.device?.bootloader &&
           !deviceState.currentDevice.isClosed
         ) {
+          await sleep(2000);
           setReadyForRestore(true);
           return;
         }
         // Try up to 10 times with backoff to allow OS to enumerate ports and device to be responsive
+        let deviceFound = false;
         for (let i = 0; i < 10; i += 1) {
           try {
             const list = await DeviceTools.list();
@@ -245,13 +249,17 @@ function FirmwareUpdateProcess(props: FirmwareUpdateProcessProps) {
               (d: any) => d.type === "serial" && d.device?.info?.product === state.context.device?.info?.product,
             );
             if (target) {
-              setReadyForRestore(true);
+              deviceFound = true;
               break;
             }
           } catch (e) {
             // ignore and retry
           }
           await sleep(750);
+        }
+        if (deviceFound) {
+          await sleep(2000);
+          setReadyForRestore(true);
         }
       } finally {
         setCheckingReconnect(false);
@@ -289,14 +297,77 @@ function FirmwareUpdateProcess(props: FirmwareUpdateProcessProps) {
       title: i18n.firmwareUpdate.texts.progressCardStatusDefy4,
       description: i18n.firmwareUpdate.texts.progressCardBarDefy4,
     },
-    {
-      step: 6,
-      title: i18n.firmwareUpdate.texts.progressCardStatusDefy5,
-      description: i18n.firmwareUpdate.texts.progressCardBarDefy5,
-    },
+    // {
+    //   step: 6,
+    //   title: i18n.firmwareUpdate.texts.progressCardStatusDefy5,
+    //   description: i18n.firmwareUpdate.texts.progressCardBarDefy5,
+    // },
     {
       step: 7,
       title: i18n.firmwareUpdate.texts.progressCardStatusDefy6,
+      description: i18n.firmwareUpdate.texts.progressCardBarSuccess,
+    },
+    {
+      step: 8,
+      title: i18n.firmwareUpdate.texts.errorDuringProcessTitle,
+      description: i18n.firmwareUpdate.texts.errorDuringProcessDescription,
+    },
+  ];
+
+  const stepsDefySingleSide = [
+    { step: 1, title: i18n.firmwareUpdate.texts.flashCardTitle1, description: i18n.firmwareUpdate.texts.flashCardTitleDefy2 },
+    {
+      step: 3,
+      title: i18n.firmwareUpdate.texts.progressCardStatusDefy2,
+      description: i18n.firmwareUpdate.texts.progressCardBarDefy2,
+    },
+    {
+      step: 4,
+      title: i18n.firmwareUpdate.texts.progressCardStatusDefy3,
+      description: i18n.firmwareUpdate.texts.progressCardBarDefy3,
+    },
+    {
+      step: 5,
+      title: i18n.firmwareUpdate.texts.progressCardStatusDefy4,
+      description: i18n.firmwareUpdate.texts.progressCardBarDefy4,
+    },
+    // {
+    //   step: 6,
+    //   title: i18n.firmwareUpdate.texts.progressCardStatusDefy5,
+    //   description: i18n.firmwareUpdate.texts.progressCardBarDefy5,
+    // },
+    {
+      step: 7,
+      title: i18n.firmwareUpdate.texts.progressCardStatusDefy6,
+      description: i18n.firmwareUpdate.texts.progressCardBarSuccess,
+    },
+    {
+      step: 8,
+      title: i18n.firmwareUpdate.texts.errorDuringProcessTitle,
+      description: i18n.firmwareUpdate.texts.errorDuringProcessDescription,
+    },
+  ];
+
+  const stepsSonsei = [
+    { step: 1, title: i18n.firmwareUpdate.texts.flashCardTitle1, description: i18n.firmwareUpdate.texts.flashCardTitleDefy2 },
+    {
+      step: 3,
+      title: i18n.firmwareUpdate.texts.progressCardStatusSonsei1,
+      description: i18n.firmwareUpdate.texts.progressCardBarSonsei1,
+    },
+    {
+      step: 4,
+      title: i18n.firmwareUpdate.texts.progressCardStatusSonsei2,
+      description: i18n.firmwareUpdate.texts.progressCardBarSonsei2,
+    },
+    {
+      step: 5,
+      title: i18n.firmwareUpdate.texts.progressCardStatusSonsei3,
+      description: i18n.firmwareUpdate.texts.progressCardBarSonsei3,
+    },
+    {
+      step: 7,
+      title: i18n.firmwareUpdate.texts.progressCardStatusSonsei5,
       description: i18n.firmwareUpdate.texts.progressCardBarSuccess,
     },
     {
@@ -343,7 +414,16 @@ function FirmwareUpdateProcess(props: FirmwareUpdateProcessProps) {
               countdown={state.context.stateblock}
               deviceProduct={state.context.device?.info.product}
               keyboardType={state.context.device?.info.keyboardType}
-              steps={state.context.device?.info.product === "Raise" ? stepsRaise : stepsDefy}
+              deviceSides={state.context.device?.sides}
+              steps={
+                state.context.device?.info.product === "Raise"
+                  ? stepsRaise
+                  : state.context.device?.info.product === "Sonsei"
+                    ? stepsSonsei
+                    : state.context.device?.sides === 1
+                      ? stepsDefySingleSide
+                      : stepsDefy
+              }
             />
           </div>
           {state.context.stateblock === 1 ? (
@@ -460,6 +540,15 @@ function FirmwareUpdateProcess(props: FirmwareUpdateProcessProps) {
           <RestorePromptDialog
             open={state.value === "reportSucess" && readyForRestore}
             disabled={performingRestore}
+            onClose={() => {
+              setReadyForRestore(false);
+              if (!toggledFlashing) return;
+              sendToggledFlashing(false);
+              log.info("closing flashing process from dialog close");
+              toggleFlashing();
+              toggleFwUpdate(false);
+              navigate("/editor");
+            }}
             onRestore={async () => {
               try {
                 setPerformingRestore(true);

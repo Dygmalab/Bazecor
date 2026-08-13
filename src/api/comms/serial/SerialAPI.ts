@@ -1,14 +1,14 @@
 /* eslint-disable no-await-in-loop */
 /* eslint-disable no-eval */
 import log from "electron-log/renderer";
-import type { SerialPort as SP } from "serialport";
+import { SerialPort } from "serialport";
+import { DelimiterParser } from "@serialport/parser-delimiter";
 import type { PortInfo } from "@serialport/bindings-cpp";
 import { DygmaDeviceType } from "@Renderer/types/dygmaDefs";
 import { DeviceType } from "@Types/devices";
 import Hardware from "../../hardware";
 
-const { SerialPort } = eval('require("serialport")');
-const { DelimiterParser } = eval('require("@serialport/parser-delimiter")');
+type SP = SerialPort;
 
 /**
  * Opens a serial port at the specified path.
@@ -173,11 +173,11 @@ const enumerate = async (
           h =>
             h.usb.productId === pID &&
             h.usb.vendorId === vID &&
-            (h.info.keyboardType === supported.layout || h.info.product === "Defy"),
+            (h.info.keyboardType === supported.layout || h.info.product === "Defy" || h.info.product === "Sonsei"),
         );
         const newPort: ExtendedPort = { ...device, device: { ...Hdevice } };
         log.info("Newly created port: ", newPort, Hdevice, supported);
-        newPort.device.wireless = newPort.device.info.product === "Defy" ? newPort.device.wireless : supported.wireless;
+        newPort.device.wireless = ["Defy", "Sonsei"].includes(newPort.device.info.product) ? newPort.device.wireless : supported.wireless;
         newPort.device.chipId = supported.chipId;
         foundDevices.push(newPort);
       }
@@ -206,11 +206,11 @@ const enumerate = async (
           h =>
             h.usb.productId === pID &&
             h.usb.vendorId === vID &&
-            (h.info.keyboardType === supported.layout || h.info.product === "Defy"),
+            (h.info.keyboardType === supported.layout || h.info.product === "Defy" || h.info.product === "Sonsei"),
         );
         const newPort: ExtendedPort = { ...device, device: { ...Hdevice } };
         log.info("Newly created port: ", newPort, Hdevice, supported);
-        newPort.device.wireless = newPort.device.info.product === "Defy" ? newPort.device.wireless : supported.wireless;
+        newPort.device.wireless = ["Defy", "Sonsei"].includes(newPort.device.info.product) ? newPort.device.wireless : supported.wireless;
         newPort.device.chipId = supported.chipId;
         foundDevices.push(newPort);
       }
@@ -267,7 +267,7 @@ const find = async (): Promise<ExtendedPort[]> => {
         if (
           parseInt(`0x${device.productId}`, 16) === Hdevice.usb.productId &&
           parseInt(`0x${device.vendorId}`, 16) === Hdevice.usb.vendorId &&
-          (Hdevice.info.product === "Defy" || Hdevice.info.keyboardType === supported.layout)
+          (Hdevice.info.product === "Defy" || Hdevice.info.product === "Sonsei" || Hdevice.info.keyboardType === supported.layout)
         ) {
           const newPort = { ...device, device: { ...Hdevice } };
           newPort.device.wireless = supported.wireless;

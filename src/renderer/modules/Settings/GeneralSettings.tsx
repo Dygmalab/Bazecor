@@ -15,6 +15,7 @@
  */
 
 import React, { useState, useEffect } from "react";
+import { ipcRenderer } from "electron";
 import Styled from "styled-components";
 import { toast } from "react-toastify";
 import log from "electron-log/renderer";
@@ -84,13 +85,19 @@ const GeneralSettings = ({
   const { state } = useDevice();
 
   useEffect(() => {
-    setSelectedLanguage(getLanguage(store.get("settings.language") as string));
+    const storedLanguage = store.get("settings.language") as string;
+    setSelectedLanguage(getLanguage(storedLanguage));
+    // Sync on mount too: Lens may already be running (background mode, or the
+    // overlay was enabled in a previous session) with no way to have learned
+    // the current language otherwise.
+    if (storedLanguage) ipcRenderer.invoke("lens:set-layout", storedLanguage).catch(() => {});
   }, []);
 
   const changeLanguage = (language: LangOptions) => {
     try {
       setSelectedLanguage(language);
       store.set("settings.language", `${language}`);
+      ipcRenderer.invoke("lens:set-layout", language).catch(() => {});
       if (state.currentDevice && !state.currentDevice.isClosed) {
         const deviceLang = { ...state.currentDevice.device, language: true };
         state.currentDevice.commands.keymap = new Keymap(deviceLang);

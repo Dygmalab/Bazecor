@@ -65,9 +65,6 @@ function RFSettings(props: RFSettingsProps) {
           </CardTitle>
         </CardHeader>
         <CardContent className="py-0">
-          <Heading headingLevel={2} renderAs="h4" className="mb-1">
-            {i18n.wireless.RFPreferences.repairChannel}
-          </Heading>
           <Button onClick={sendRePair} size="sm" variant="secondary">
             {i18n.wireless.RFPreferences.reconnectSides}
           </Button>

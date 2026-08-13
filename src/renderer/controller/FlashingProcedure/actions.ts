@@ -11,6 +11,7 @@ import { resetKeyboard } from "../../../api/flash/RaiseTools";
 import NRf52833 from "../../../api/flash/defyFlasher/NRf52833-flasher";
 import SideFlaser from "../../../api/flash/defyFlasher/sideFlasher";
 import Raise2Flash from "../../../api/flash/raise2Flasher/Raise2-flasher";
+import SonseiFlash from "../../../api/flash/sonseiFlasher/Sonsei-flasher";
 import { FlashRaise } from "../../../api/flash";
 import { delay } from "../../../main/utils/delay";
 import * as Context from "./context";
@@ -50,7 +51,7 @@ const stateUpdate = (stage: string, percentage: number, context: Context.Context
       leftProgress * 0.2 + rightProgress * 0.2 + resetProgress * 0.2 + neuronProgress * 0.2 + restoreProgress * 0.2;
   }
   context.stateUpdate({
-    type: "increment_event",
+    type: "increment-event",
     data: {
       globalProgress,
       leftProgress,
@@ -320,6 +321,43 @@ export const uploadRaise2 = async (context: Context.ContextType) => {
     }
   } catch (error) {
     log.warn("error when flashing Neuron");
+    log.error(error);
+    throw new Error(error);
+  }
+  return result;
+};
+
+export const uploadSonsei = async (context: Context.ContextType) => {
+  let result = false;
+  try {
+    const { currentDevice } = context.deviceState as State;
+    await DeviceTools.disconnect(currentDevice);
+
+    log.info("Begin update firmware with SonseiFlash", context.bootloader);
+    const finished = async (err: any, rslt: any) => {
+      if (err) throw new Error(`Flash error ${rslt}`);
+      else {
+        stateUpdate("neuron", 100, context);
+        log.info("End update firmware with SonseiFlash");
+        result = true;
+      }
+    };
+    try {
+      stateUpdate("neuron", 0, context);
+      await SonseiFlash.flash(
+        context.firmwares?.fw,
+        (stage: string, percentage: number) => {
+          stateUpdate(stage, percentage, context);
+        },
+        finished,
+        context.erasePairings,
+      );
+    } catch (e) {
+      stateUpdate("neuron", 100, context);
+      result = false;
+    }
+  } catch (error) {
+    log.warn("error when flashing Sonshi Neuron");
     log.error(error);
     throw new Error(error);
   }

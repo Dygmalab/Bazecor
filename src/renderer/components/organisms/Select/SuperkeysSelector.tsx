@@ -40,11 +40,28 @@ const SuperkeysSelector: React.FC<any> = ({
   updateItem,
   cloneItem,
   subtitle,
+  checkLimit,
 }) => {
   const [show, setShow] = useState(false);
   const toggleShow = () => setShow(!show);
   const [showAdd, setShowAdd] = useState(false);
   const toggleShowAdd = () => setShowAdd(!showAdd);
+
+  const handleAddClick = () => {
+    // Check limit before opening the modal
+    if (checkLimit && checkLimit()) {
+      return; // Limit reached, don't open modal
+    }
+    toggleShowAdd();
+  };
+
+  const handleCloneClick = () => {
+    // Check limit before cloning
+    if (checkLimit && checkLimit()) {
+      return; // Limit reached, don't clone
+    }
+    cloneItem();
+  };
 
   const handleSave = (data: string) => {
     toggleShow();
@@ -113,7 +130,7 @@ const SuperkeysSelector: React.FC<any> = ({
             <Tooltip>
               <TooltipTrigger asChild>
                 <div>
-                  <Button variant="config" size="icon" onClick={cloneItem} className="!w-[36px] !h-[36px]">
+                  <Button variant="config" size="icon" onClick={handleCloneClick} className="!w-[36px] !h-[36px]">
                     <IconClone />
                   </Button>
                 </div>
@@ -144,7 +161,7 @@ const SuperkeysSelector: React.FC<any> = ({
         <Tooltip>
           <TooltipTrigger asChild>
             <div>
-              <Button variant="secondary" size="icon" onClick={toggleShowAdd}>
+              <Button variant="secondary" size="icon" onClick={handleAddClick}>
                 <IconAddNew />
               </Button>
             </div>

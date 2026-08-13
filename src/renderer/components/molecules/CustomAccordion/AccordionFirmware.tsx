@@ -15,29 +15,20 @@ interface CheckedItem {
 }
 interface AccordionFirmwareProps {
   items: CheckedItem[];
+  deviceSides?: number;
 }
 
-const AccordionFirmware = ({ items }: AccordionFirmwareProps) => {
+const AccordionFirmware = ({ items, deviceSides = 2 }: AccordionFirmwareProps) => {
   const [passedTasks, SetPassedTasks] = useState(true);
   const [counterTasks, SetCounterTasks] = useState(0);
 
-  const textList = [
-    {
-      text: i18n.firmwareUpdate.milestones.checkLeftSide,
-    },
-    {
-      text: i18n.firmwareUpdate.milestones.checkLeftSideBL,
-    },
-    {
-      text: i18n.firmwareUpdate.milestones.checkRightSide,
-    },
-    {
-      text: i18n.firmwareUpdate.milestones.checkRightSideBL,
-    },
-    {
-      text: i18n.firmwareUpdate.milestones.checkBackup,
-    },
-  ];
+  const textMap: Record<string, string> = {
+    sideLeftOk: deviceSides === 1 ? i18n.firmwareUpdate.milestones.checkConnectivity : i18n.firmwareUpdate.milestones.checkLeftSide,
+    sideLeftBL: deviceSides === 1 ? i18n.firmwareUpdate.milestones.checkBootloaderStatus : i18n.firmwareUpdate.milestones.checkLeftSideBL,
+    sideRightOK: i18n.firmwareUpdate.milestones.checkRightSide,
+    sideRightBL: i18n.firmwareUpdate.milestones.checkRightSideBL,
+    backup: i18n.firmwareUpdate.milestones.checkBackup,
+  };
 
   useEffect(() => {
     items.forEach((item: CheckedItem, index: number) => {
@@ -98,7 +89,7 @@ const AccordionFirmware = ({ items }: AccordionFirmwareProps) => {
                   <div className="item-checked--icon w-[10px] [&_svg]:max-w-full text-xs">
                     {item.checked ? <IconCheckmark size="sm" /> : <IconClose />}
                   </div>
-                  {textList[index].text}
+                  {textMap[item.text] || item.text}
                 </div>
               ))}
             </div>

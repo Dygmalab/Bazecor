@@ -14,6 +14,7 @@ export interface ContextType {
     bootloader: boolean;
     version: string;
     chipID: string;
+    sides?: number;
   };
   firmwareList: ReleaseType[];
   firmwares: {
@@ -42,6 +43,7 @@ export const Context: ContextType = {
     bootloader: false,
     version: "",
     chipID: "",
+    sides: 2,
   },
   firmwareList: [],
   firmwares: {

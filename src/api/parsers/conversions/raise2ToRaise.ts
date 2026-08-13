@@ -73,13 +73,11 @@ export const convertColormapR2toR = (layer: number[], keyboardType: string, back
   return result;
 };
 
-/**
- * Converts a single color object from a Raise 2 palette to the array format used by Raise 1.
- *
- * @param {PaletteType} color - A color object with `r`, `g`, and `b` properties.
- * @returns {number[]} An array containing the `r`, `g`, and `b` values: `[r, g, b]`.
- */
-export const convertPaletteR2toR = (color: PaletteType): number[] => {
-  const rgb = color;
-  return [rgb.r, rgb.g, rgb.b];
+export const convertPaletteR2toR = (color: PaletteType) => {
+  return {
+    r: color.r,
+    g: color.g,
+    b: color.b,
+    rgb: `rgb(${color.r}, ${color.g}, ${color.b})`
+  };
 };

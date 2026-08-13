@@ -2,11 +2,19 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
   <dict>
+    <!-- osx-sign defaults (previously applied implicitly when no entitlements file
+         was passed) — kept explicit so passing this file doesn't drop any of them. -->
     <key>com.apple.security.cs.allow-jit</key>
-    <true/> 
+    <true/>
+    <key>com.apple.security.cs.allow-unsigned-executable-memory</key>
+    <true/>
     <key>com.apple.security.cs.allow-dyld-environment-variables</key>
     <true/>
     <key>com.apple.security.cs.disable-library-validation</key>
+    <true/>
+    <!-- Required for node-hid to open the keyboard's raw HID interface (usage page
+         0xFF00) for the Lens overlay under Hardened Runtime. -->
+    <key>com.apple.security.device.usb</key>
     <true/>
   </dict>
 </plist>

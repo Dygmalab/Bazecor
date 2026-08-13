@@ -741,14 +741,7 @@ function MacroEditor(props: MacroEditorProps) {
           discardChangesButtonRef={discardChangesButtonRef}
         />
 
-        <Callout
-          size="sm"
-          className="mt-4"
-          hasVideo
-          media="MfTUvFrHLsE"
-          videoTitle="13 Time-saving MACROS For Your Keyboard"
-          videoDuration="5:24"
-        >
+        <Callout size="sm" className="mt-4">
           <p>{i18n.editor.macros.callout1}</p>
           <p>{i18n.editor.macros.callout2}</p>
         </Callout>

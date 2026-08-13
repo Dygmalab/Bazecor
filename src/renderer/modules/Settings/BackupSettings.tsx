@@ -114,6 +114,14 @@ const BackupSettings = (props: BackupSettingsProps) => {
     }
   };
 
+  const isBackupCompatible = (backupProduct: string, connectedProduct: string): boolean => {
+    if (backupProduct === connectedProduct) return true;
+    const raiseFamily = ["Raise", "Raise2"];
+    if (raiseFamily.includes(backupProduct) && raiseFamily.includes(connectedProduct)) return true;
+    if (backupProduct === "Defy" && connectedProduct === "Sonsei") return true;
+    return false;
+  };
+
   const GetBackup = async () => {
     const options = {
       title: i18n.keyboardSettings.backupFolder.restoreTitle,
@@ -132,13 +140,40 @@ const BackupSettings = (props: BackupSettingsProps) => {
       let loadedFile;
       try {
         loadedFile = JSON.parse(fs.readFileSync(resp.filePaths[0], "utf-8"));
+
+        const connectedProduct = state.currentDevice.device.info.product;
+
         if (loadedFile.virtual !== undefined) {
+          const backupProduct = (loadedFile as VirtualType).device.info.product;
+          if (!isBackupCompatible(backupProduct, connectedProduct)) {
+            toast.error(
+              <ToastMessage
+                title="Incompatible backup"
+                content={`Cannot import a ${backupProduct} backup into a ${connectedProduct} keyboard.`}
+                icon={<IconArrowDownWithLine />}
+              />,
+              { autoClose: 4000, icon: "" },
+            );
+            return;
+          }
           await localRestoreVirtual(loadedFile as VirtualType);
           await destroyContext();
           log.info("Restored Virtual backup");
           return;
         }
         if (loadedFile.backup !== undefined || loadedFile[0].command !== undefined) {
+          const backupProduct = loadedFile.neuron?.device?.info?.product;
+          if (backupProduct && !isBackupCompatible(backupProduct, connectedProduct)) {
+            toast.error(
+              <ToastMessage
+                title="Incompatible backup"
+                content={`Cannot import a ${backupProduct} backup into a ${connectedProduct} keyboard.`}
+                icon={<IconArrowDownWithLine />}
+              />,
+              { autoClose: 4000, icon: "" },
+            );
+            return;
+          }
           await localRestoreBackup(loadedFile);
           await destroyContext();
           log.info("Restored normal backup");
@@ -182,6 +217,83 @@ const BackupSettings = (props: BackupSettingsProps) => {
   const triggerGetBackup = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
     GetBackup();
+  };
+
+  const restoreDefaultBackup = async () => {
+    try {
+      openPerformingBackup();
+      toggleBackup(true);
+
+      const { product, keyboardType } = state.currentDevice.device.info;
+      let backupFileName = "";
+
+      if (product === "Sonsei") {
+        backupFileName = "Sonsei.json";
+      } else if (product === "Defy") {
+        if (keyboardType === "wireless" || state.currentDevice.device.wireless) {
+          backupFileName = "Defy-wireless-backup.json";
+        } else {
+          backupFileName = "Defy-wired-backup.json";
+        }
+      } else if (product === "Raise2") {
+        backupFileName = keyboardType === "ISO" ? "Raise2ISO.json" : "Raise2ANSI.json";
+      } else if (product === "Raise") {
+        backupFileName = keyboardType === "ISO" ? "RaiseISO.json" : "RaiseANSI.json";
+      }
+
+      if (!backupFileName) {
+        throw new Error("Unknown keyboard type");
+      }
+
+      const defaultBackupPath = await ipcRenderer.invoke("get-defaultBackupPath", backupFileName);
+      log.info("Loading default backup from:", defaultBackupPath);
+
+      const loadedFile = JSON.parse(fs.readFileSync(defaultBackupPath, "utf-8"));
+
+      if (loadedFile.virtual !== undefined) {
+        await localRestoreVirtual(loadedFile as VirtualType);
+        await destroyContext();
+        log.info("Restored default Virtual backup");
+      } else if (loadedFile.backup !== undefined || loadedFile[0]?.command !== undefined) {
+        await localRestoreBackup(loadedFile);
+        await destroyContext();
+        log.info("Restored default backup");
+      }
+
+      toast.success(
+        <ToastMessage
+          title="Default backup restored"
+          content="The default backup was restored successfully to the device!"
+          icon={<IconArrowDownWithLine />}
+        />,
+        {
+          autoClose: 2000,
+          icon: "",
+        },
+      );
+      closePerformingBackup();
+      toggleBackup(false);
+    } catch (error) {
+      log.error("Error restoring default backup:", error);
+      closePerformingBackup();
+      toggleBackup(false);
+      toast.error(
+        <ToastMessage
+          title="Could not restore default backup"
+          content={`Error: ${error.message}`}
+          icon={<IconArrowDownWithLine />}
+        />,
+        {
+          autoClose: 2000,
+          icon: "",
+        },
+      );
+    }
+  };
+
+  const triggerRestoreDefault = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+    restoreDefaultBackup();
   };
 
   const triggerExportBackup = async (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -266,16 +378,18 @@ const BackupSettings = (props: BackupSettingsProps) => {
           </Banner>
         )}
         <form className={`${enabled ? "" : "opacity-30 mt-4"}`}>
-          <h3 className="mb-1 text-gray-400 dark:text-gray-100 tracking-tight font-semibold">Backup actions</h3>
           <div className="flex gap-3">
-            <Button variant="short" onClick={event => triggerGetLatestBackup(event)} disabled={!connected}>
-              Restore last backup
+            <Button variant="short" className="flex-1" onClick={event => triggerGetLatestBackup(event)} disabled={!connected}>
+              Restore last
             </Button>
-            <Button variant="short" onClick={event => triggerGetBackup(event)} disabled={!connected}>
-              Load backup
+            <Button variant="short" className="flex-1" onClick={event => triggerGetBackup(event)} disabled={!connected}>
+              Load
             </Button>
-            <Button variant="short" onClick={event => triggerExportBackup(event)} disabled={!connected}>
-              Export backup
+            <Button variant="short" className="flex-1" onClick={event => triggerExportBackup(event)} disabled={!connected}>
+              Export
+            </Button>
+            <Button variant="short" className="flex-1" onClick={event => triggerRestoreDefault(event)} disabled={!connected}>
+              Restore Default
             </Button>
             <WaitForRestoreDialog title="Restoring Backup" open={performingBackup} />
           </div>

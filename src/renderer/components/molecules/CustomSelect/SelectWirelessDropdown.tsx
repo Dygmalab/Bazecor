@@ -6,10 +6,12 @@ import { i18n } from "@Renderer/i18n";
 import { SelectWirelessDropdownProps, WirelessButton } from "@Renderer/types/wireless";
 import { BluetoothCodes } from "@Renderer/../hw/bluetooth";
 import { BatteryCodes } from "@Renderer/../hw/battery";
+import { OverlayCodes } from "@Renderer/../hw/overlay";
 
 enum WirelessButtonOrder {
   BATTERY_LEVEL = 0,
   PAIRING_MODE = 1,
+  OVERLAY = 2,
 }
 
 const SelectWirelessDropdown: React.FC<SelectWirelessDropdownProps> = ({ keyCode, onKeySelect, disable }) => {
@@ -17,6 +19,7 @@ const SelectWirelessDropdown: React.FC<SelectWirelessDropdownProps> = ({ keyCode
     () => [
       { name: i18n.editor.standardView.wireless.batteryLevel, keynum: BatteryCodes.STATUS },
       { name: i18n.wireless.bluetooth.pairingModeButton, keynum: BluetoothCodes.PAIRING },
+      { name: "Overlay", keynum: OverlayCodes.OVERLAY_KEY },
     ],
     [],
   );
@@ -31,6 +34,10 @@ const SelectWirelessDropdown: React.FC<SelectWirelessDropdownProps> = ({ keyCode
 
   const handlePairingModeClick = useCallback(() => {
     onKeySelect(WirelessButtons[WirelessButtonOrder.PAIRING_MODE].keynum);
+  }, [onKeySelect, WirelessButtons]);
+
+  const handleOverlayClick = useCallback(() => {
+    onKeySelect(WirelessButtons[WirelessButtonOrder.OVERLAY].keynum);
   }, [onKeySelect, WirelessButtons]);
 
   return (
@@ -75,6 +82,24 @@ const SelectWirelessDropdown: React.FC<SelectWirelessDropdownProps> = ({ keyCode
                 className="w-full text-center"
               >
                 {WirelessButtons[WirelessButtonOrder.PAIRING_MODE].name}
+              </Button>
+            </div>
+          </div>
+          <div className="dropdown-group pt-2 mt-2 border-t border-gray-50 dark:border-gray-700">
+            <Heading headingLevel={5} renderAs="h5" className="my-1 text-gray-200 dark:text-gray-300">
+              Overlay <span className="text-gray-400 dark:text-gray-50">Show keyboard overlay</span>
+            </Heading>
+            <div className="dropdown-group-buttons rounded-sm flex p-[3px] gap-[3px] bg-white/100 dark:bg-gray-900/20">
+              <Button
+                variant="config"
+                size="sm"
+                onClick={handleOverlayClick}
+                selected={WirelessButtons[WirelessButtonOrder.OVERLAY].keynum === KC}
+                disabled={WirelessButtons[WirelessButtonOrder.OVERLAY].keynum === -1}
+                key={`buttonWirelessSingleViewOverlay-${WirelessButtonOrder.OVERLAY}`}
+                className="w-full text-center"
+              >
+                {WirelessButtons[WirelessButtonOrder.OVERLAY].name}
               </Button>
             </div>
           </div>
