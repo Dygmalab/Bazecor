@@ -25,6 +25,8 @@ interface ModifiersTabProps {
   baseCode?: number;
   modCode?: number;
   selectedlanguage?: string;
+  activeTab?: string;
+  action?: number;
 }
 
 const ModifiersTab = ({
@@ -35,7 +37,12 @@ const ModifiersTab = ({
   baseCode,
   modCode,
   selectedlanguage,
+  activeTab,
+  action,
 }: ModifiersTabProps) => {
+  // OneShot modifiers rely on their own tap/hold/double-tap timing, which conflicts
+  // with the Tap action slot of a Superkey, so it's not offered there.
+  const isSuperkeyTap = activeTab === "super" && action === 0;
   const [activeModifier, setActiveModifier] = useState<string>("");
   const [activeModifierTab, setActiveModifierTab] = useState<string>("None");
   const [internalKeyBase, setInternalKeyBase] = useState<number>(keyCode.base);
@@ -355,35 +362,41 @@ const ModifiersTab = ({
                   disabled={activeModifier === "ros" || activeModifier === "rcontrol" || activeModifier === "rshift"}
                 />
               )}
-              <CustomRadioCheckBox
-                label={<div className="pl-0.5">Turn into a OneShot modifier</div>}
-                checked={activeModifierTab === "oneShotModifier"}
-                onClick={() => {
-                  if (activeModifier === "") {
-                    triggerToast();
-                  } else {
-                    setActiveModifierTab(previous => (previous === "oneShotModifier" ? "None" : "oneShotModifier"));
-                    // setActiveModifierTab("oneShotModifier");
+              {!isSuperkeyTap && (
+                <CustomRadioCheckBox
+                  label={<div className="pl-0.5">Turn into a OneShot modifier</div>}
+                  checked={activeModifierTab === "oneShotModifier"}
+                  onClick={() => {
+                    if (activeModifier === "") {
+                      triggerToast();
+                    } else {
+                      setActiveModifierTab(previous => (previous === "oneShotModifier" ? "None" : "oneShotModifier"));
+                      // setActiveModifierTab("oneShotModifier");
+                    }
+                  }}
+                  type="radio"
+                  name="addOneShotModifier"
+                  id="addOneShotModifier"
+                  tooltip={
+                    <>
+                      <Heading
+                        headingLevel={4}
+                        renderAs="h4"
+                        className="text-gray-600 dark:text-gray-25 mb-1 leading-6 text-base"
+                      >
+                        OneShot Modifier
+                      </Heading>
+                      <p className="description text-ssm font-medium text-gray-400 dark:text-gray-200">
+                        Tap the key to use the selected modifier for a single keypress; after that keypress, the software
+                        automatically deactivates the modifier. You can also hold the key to use the modifier normally. Double-tap
+                        it to lock the modifier; tap it again to unlock it.
+                      </p>
+                    </>
                   }
-                }}
-                type="radio"
-                name="addOneShotModifier"
-                id="addOneShotModifier"
-                tooltip={
-                  <>
-                    <Heading headingLevel={4} renderAs="h4" className="text-gray-600 dark:text-gray-25 mb-1 leading-6 text-base">
-                      OneShot Modifier
-                    </Heading>
-                    <p className="description text-ssm font-medium text-gray-400 dark:text-gray-200">
-                      Tap the key to use the selected modifier for a single keypress; after that keypress, the software
-                      automatically deactivates the modifier. You can also hold the key to use the modifier normally. Double-tap
-                      it to lock the modifier; tap it again to unlock it.
-                    </p>
-                  </>
-                }
-                className="self-start mt-0"
-                disabled={false}
-              />
+                  className="self-start mt-0"
+                  disabled={false}
+                />
+              )}
             </div>
           </div>
         </div>

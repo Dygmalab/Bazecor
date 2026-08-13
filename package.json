@@ -1,7 +1,7 @@
 {
   "name": "Bazecor",
   "productName": "Bazecor",
-  "version": "1.9.0",
+  "version": "1.10.0",
   "description": "Bazecor desktop app",
   "private": true,
   "repository": {
@@ -170,6 +170,7 @@
     "html-react-parser": "^5.2.2",
     "lucide-react": "^0.307.0",
     "moment": "^2.30.1",
+    "node-hid": "^3.1.1",
     "prop-types": "^15.8.1",
     "react": "^18.2.0",
     "react-color": "^2.19.3",
@@ -192,6 +193,9 @@
     "xstate": "^5.13.0",
     "zod": "^3.23.8"
   },
+  "optionalDependencies": {
+    "node-mac-permissions": "^2.5.0"
+  },
   "build": {
     "appId": "com.dygmalab.bazecor",
     "artifactName": "${productName}-${version}.${ext}",
@@ -207,5 +211,9 @@
         "default"
       ]
     }
-  }
+  },
+  "resolutions": {
+    "node-hid/node-addon-api": "^8.5.0"
+  },
+  "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"
 }

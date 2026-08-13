@@ -18,7 +18,7 @@ const packagerConfig: ForgePackagerOptions = {
   osxUniversal: {
     x64ArchFiles: "*",
   },
-  extraResource: ["NEWS.md", "src/defaultBackups"],
+  extraResource: ["NEWS.md", "src/defaultBackups", "build/logo.png"],
   appCopyright: "Copyright © 2018, 2023 DygmaLab SL; distributed under the GPLv3",
 };
 
@@ -27,7 +27,7 @@ if (process.env["NODE_ENV"] !== "development") {
     optionsForFile: () => ({
       app: "com.dygmalab.bazecor",
       identity: process.env["APPLE_IDENTITY"],
-      // entitlements: "./build/entitlements.plist",
+      entitlements: "./build/entitlements.plist",
       "gatekeeper-assess": false,
       hardenedRuntime: true,
     }),
@@ -76,8 +76,22 @@ const config: ForgeConfig = {
             html: "./src/renderer/index.html",
             js: "./src/renderer/index.tsx",
             name: "main_window",
+            // The main window runs with nodeIntegration enabled (see createWindow.ts),
+            // so its bundle must target electron-renderer and may use require().
+            nodeIntegration: true,
             preload: {
               js: "./src/preload/preload.ts",
+            },
+          },
+          {
+            html: "./src/lens/renderer/index.html",
+            js: "./src/lens/renderer/main.tsx",
+            name: "lens_window",
+            // The overlay is context-isolated with no node integration: its bundle
+            // targets plain `web` (no require()) and talks to main via the preload.
+            nodeIntegration: false,
+            preload: {
+              js: "./src/lens/preload/preload.ts",
             },
           },
         ],
@@ -98,7 +112,15 @@ const config: ForgeConfig = {
         serialport: "^12.0.0",
         usb: "^2.9.0",
         "uiohook-napi": "^1.5.4",
+        "node-hid": "^3.1.1",
       };
+
+      if (platform === "darwin") {
+        // N-API prebuilt module used to check/request the Input Monitoring
+        // permission Layer Lens needs (its package.json restricts it to darwin,
+        // so it can't go in the common dependency list above).
+        packageJson.dependencies["node-mac-permissions"] = "^2.5.0";
+      }
 
       fs.writeFileSync(path.resolve(buildPath, "package.json"), JSON.stringify(packageJson));
       spawnSync("npm", ["install", "--omit=dev"], {

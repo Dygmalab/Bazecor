@@ -35,13 +35,12 @@ import log from "electron-log/renderer";
 import type { PortInfo } from "@serialport/bindings-cpp";
 import { delay } from "../../../main/utils/delay";
 import { parseSealFromBinary } from "../parseSeal";
-
-const { SerialPort } = eval('require("serialport")');
-const { DelimiterParser } = eval('require("@serialport/parser-delimiter")');
+import { SerialPort } from "serialport";
+import { DelimiterParser } from "@serialport/parser-delimiter";
 
 export default class SideFlaser {
   firmwareSides: Buffer;
-  serialport: typeof SerialPort;
+  serialport: SerialPort;
   constructor(firmwareSides: Buffer) {
     this.firmwareSides = firmwareSides;
     this.serialport = undefined;
@@ -82,7 +81,7 @@ export default class SideFlaser {
       log.info("answer after shutdown not received");
     }
     await delay(10);
-    await serialport.close((err: string) => {
+    await serialport.close((err: Error | null | undefined) => {
       if (err) log.warn("device already disconnected!! no need to close serialport");
       else log.info("port closed successfully");
     });
@@ -132,7 +131,7 @@ export default class SideFlaser {
         if (selectedDev === undefined) {
           while (selectedDev === undefined && retry > 0) {
             await delay(500);
-            deviceList = await SerialPort.SerialPort.list();
+            deviceList = await SerialPort.list();
             selectedDev = deviceList.find((dev: PortInfo) => parseInt(dev.vendorId as string, 16) === 0x35ef);
             retry -= 1;
           }

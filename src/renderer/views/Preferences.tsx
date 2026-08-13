@@ -37,6 +37,8 @@ import {
   RFSettings,
   BatterySettings,
   EnergyManagement,
+  LayerLensSettings,
+  LayerLensOnboarding,
 } from "@Renderer/modules/Settings";
 
 import { PageHeader } from "@Renderer/modules/PageHeader";
@@ -51,6 +53,7 @@ import {
   IconNeuronManager,
   IconChip,
   IconWrench,
+  IconLens,
 } from "@Renderer/components/atoms/icons";
 
 import Store from "@Renderer/utils/Store";
@@ -171,6 +174,13 @@ const Preferences = (props: PreferencesProps) => {
     discardChangesButtonRef,
   } = props;
   const [activeTab, setActiveTab] = useState(connected ? "Keyboard" : "Application");
+
+  // Layer Lens is available for Sonsei (fw >= 1.0.0) and Defy (fw >= 2.3.0). The
+  // capability is written to the store on connect (see App.tsx onKeyboardConnect).
+  // Raise2 and Raise (Raise1) never set this flag, so the nav item stays hidden.
+  const lensCapabilityRaw = store.get("capabilities.lens");
+  const isLensAvailable =
+    lensCapabilityRaw === true || lensCapabilityRaw === "true" || lensCapabilityRaw === 1 || lensCapabilityRaw === "1";
 
   const getNeuronData = useCallback(async () => {
     let localNeuronID = "";
@@ -756,6 +766,11 @@ const Preferences = (props: PreferencesProps) => {
               <TabsTrigger value="Application" variant="tab">
                 <IconLogoDygma /> Application
               </TabsTrigger>
+              {isLensAvailable && (
+                <TabsTrigger value="LayerLens" variant="tab">
+                  <IconLens /> Layer Lens
+                </TabsTrigger>
+              )}
               <TabsTrigger value="Backups" variant="tab">
                 <IconFloppyDisk /> Backups
               </TabsTrigger>
@@ -848,6 +863,14 @@ const Preferences = (props: PreferencesProps) => {
                   />
                 </motion.div>
               </TabsContent>
+              {isLensAvailable && (
+                <TabsContent value="LayerLens">
+                  <motion.div initial="hidden" animate="visible" variants={tabVariants}>
+                    <LayerLensOnboarding />
+                    <LayerLensSettings />
+                  </motion.div>
+                </TabsContent>
+              )}
               <TabsContent value="Backups">
                 <motion.div initial="hidden" animate="visible" variants={tabVariants}>
                   <FileBackUpHandling />

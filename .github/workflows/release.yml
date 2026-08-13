@@ -36,7 +36,7 @@ jobs:
           node-version: 22.14.0
       - run: npm install -g yarn
       - if: runner.os == 'Linux'
-        run: sudo apt update && sudo apt install libudev-dev
+        run: sudo apt update && sudo apt install -y libudev-dev libusb-1.0-0-dev
       - name: Cache node_modules
         id: cache-node-modules
         uses: actions/cache@v3
@@ -74,7 +74,7 @@ jobs:
           node-version: 22.14.0
       - run: npm install -g yarn
       - if: runner.os == 'Linux'
-        run: sudo apt update && sudo apt install libudev-dev
+        run: sudo apt update && sudo apt install -y libudev-dev libusb-1.0-0-dev
       - if: runner.os == 'Windows'
         name: Set up Java
         uses: actions/setup-java@v3

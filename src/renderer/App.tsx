@@ -85,7 +85,11 @@ function App() {
     log.verbose("Retrieving settings: ", oldSettings);
     const locale = await ipcRenderer.invoke("get-Locale");
     if (store.get("settings.language") !== undefined) {
-      i18n.setLanguage(store.get("settings.language").toString());
+      const storedLanguage = store.get("settings.language").toString();
+      i18n.setLanguage(storedLanguage);
+      // Lens may already be enabled from a previous session (background mode)
+      // by the time this renders, with no other chance to learn the language.
+      ipcRenderer.invoke("lens:set-layout", storedLanguage).catch(() => {});
     }
 
     // when moving from other version, config may for superkeys may contain wrong data (wrong legnth, nulls)
@@ -238,12 +242,32 @@ function App() {
         if (detected) {
           log.info("SK 2.0 detected");
         }
+
+        // Layer Lens is available for Sonsei (fw >= 1.0.0), Defy (fw >= 2.3.0, when
+        // the overlay HID feature shipped in Defy firmware), and Raise2 (fw >= 1.4.0,
+        // reusing the same minimum as the SK 2.0 threshold above). Raise (Raise1)
+        // never exposes Lens, regardless of firmware.
+        const sonseiLensMin: [number, number, number] = [1, 0, 0];
+        const defyLensMin: [number, number, number] = [2, 3, 0];
+        const raise2LensMin: [number, number, number] = [1, 4, 0];
+        const lensAvailable =
+          (isSonsei && compareSemver(semver, sonseiLensMin) >= 0) ||
+          (isDefy && compareSemver(semver, defyLensMin) >= 0) ||
+          (isRaise2 && compareSemver(semver, raise2LensMin) >= 0);
+        store.set("capabilities.lens", lensAvailable);
+        log.info(
+          `[Lens] capability check -> product: ${product}, firmware: ${semver.join(".")}, isSonsei: ${isSonsei}, isDefy: ${isDefy}, isRaise2: ${isRaise2}, lensAvailable: ${lensAvailable}`,
+        );
       } else {
         store.set("capabilities.sk20", false);
+        store.set("capabilities.lens", false);
+        log.info(`[Lens] capability disabled (missing semver or product). semver: ${semver}, product: ${product}`);
       }
     } catch (e) {
       log.warn("Error reading or parsing firmware version", e);
       store.set("capabilities.sk20", false);
+      store.set("capabilities.lens", false);
+      log.info("[Lens] capability disabled due to firmware version read/parse error");
     }
 
     setConnected(true);
@@ -280,6 +304,11 @@ function App() {
     setFlashing(!flashing);
     varFlashing.current = !flashing;
     log.verbose("toggled flashing to", !flashing);
+    // Layer Lens holds a raw HID handle on the keyboard and re-enumerates the HID
+    // bus every couple of seconds. Both have to stop for the duration of a flash,
+    // or the board (which reboots into its bootloader and is driven over serial on
+    // the same USB device) can hang mid-update.
+    ipcRenderer.send("lens:set-flashing", !flashing);
   };
 
   useEffect(() => {

@@ -30,7 +30,7 @@ import LEDEffectsTable from "./db/ledeffects";
 import MacrosTable from "./db/macros";
 import SuperKeyTable from "./db/superkeys";
 import TapDanceTable from "./db/tapdance";
-import { Battery, Bluetooth, Energy, RF } from "./db/wireless";
+import { Battery, Bluetooth, Energy, RF, Overlay } from "./db/wireless";
 import NumpadTable, { ModifiedNumpadTables } from "./db/numpad";
 import FunctionKeyTable, { ModifiedFunctionKeyTables } from "./db/fxs";
 
@@ -90,6 +90,7 @@ const defaultBaseKeyCodeTable: BaseKeycodeTableType[] = [
   Bluetooth,
   Energy,
   RF,
+  Overlay,
   BlankTable,
 ];
 

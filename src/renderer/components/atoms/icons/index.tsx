@@ -71,6 +71,7 @@ import IconLeaf from "./IconLeaf";
 import IconLayers from "./IconLayers";
 import IconLayerShift from "./IconLayerShift";
 import IconLayerLock from "./IconLayerLock";
+import IconLens from "./IconLens";
 import IconLEDNextEffect from "./IconLEDNextEffect";
 import IconLEDPreviousEffect from "./IconLEDPreviousEffect";
 import IconLEDSwitchLeft from "./IconLEDSwitchLeft";
@@ -197,6 +198,7 @@ export {
   IconLayers,
   IconLayerShift,
   IconLayerLock,
+  IconLens,
   IconLEDNextEffect,
   IconLEDPreviousEffect,
   IconLEDSwitchLeft,
