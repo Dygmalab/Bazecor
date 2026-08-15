@@ -1111,7 +1111,7 @@
   optionalDependencies:
     electron-installer-dmg "^5.0.1"
 
-"@electron-forge/maker-flatpak@^7.7.0":
+"@electron-forge/maker-flatpak@^7.11.2":
   version "7.11.2"
   resolved "https://registry.yarnpkg.com/@electron-forge/maker-flatpak/-/maker-flatpak-7.11.2.tgz#defa8690c4cd63e903a420b10d5c04487234cd57"
   integrity sha512-tc/lw1NVB8AGIVEozccFK4BR1oj9GTdV2tH+HDD6WSqvB4mjBKVKWjeR+8En3I546dnI/qWodtSN/OiL2ZTqIQ==
