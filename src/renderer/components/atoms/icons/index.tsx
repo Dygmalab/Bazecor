@@ -132,6 +132,8 @@ import IconToolsCalculator from "./IconToolsCalculator";
 import IconToolsCamera from "./IconToolsCamera";
 import IconToolsEject from "./IconToolsEject";
 import IconTypo from "./IconTypo";
+import IconUndo from "./IconUndo";
+import IconRedo from "./IconRedo";
 import IconUndoRestart from "./IconUndoRestart";
 import IconUpload from "./IconUpload";
 import IconUSB from "./IconUSB";
@@ -259,6 +261,8 @@ export {
   IconToolsCamera,
   IconToolsEject,
   IconTypo,
+  IconUndo,
+  IconRedo,
   IconUndoRestart,
   IconUpload,
   IconUSB,

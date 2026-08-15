@@ -16,4 +16,8 @@ export interface PageHeaderType {
   secondaryButton?: React.ReactNode;
   saveButtonRef?: React.RefObject<HTMLButtonElement>;
   discardChangesButtonRef?: React.RefObject<HTMLButtonElement>;
+  onUndo?: () => void;
+  onRedo?: () => void;
+  canUndo?: boolean;
+  canRedo?: boolean;
 }

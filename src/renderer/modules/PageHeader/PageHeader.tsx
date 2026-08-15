@@ -18,6 +18,8 @@
 import React from "react";
 import Styled from "styled-components";
 import Heading from "@Renderer/components/atoms/Heading";
+import { Button } from "@Renderer/components/atoms/Button";
+import { IconUndo, IconRedo } from "@Renderer/components/atoms/icons";
 import { PageHeaderType } from "./Types";
 import Saving from "../Saving";
 
@@ -109,6 +111,10 @@ function PageHeader(props: PageHeaderType) {
     secondaryButton,
     saveButtonRef,
     discardChangesButtonRef,
+    onUndo,
+    onRedo,
+    canUndo,
+    canRedo,
   } = props;
   return (
     <Style className={`${styles === "pageHeaderFlatBottom" ? "pageHeaderSticky" : ""}`}>
@@ -122,6 +128,28 @@ function PageHeader(props: PageHeaderType) {
         </div>
         <div className="pageTools">
           {contentSelector || ""}
+          {onUndo && onRedo && (
+            <div className="flex gap-1 mr-2">
+              <Button
+                onClick={onUndo}
+                variant="ghost"
+                size="icon"
+                disabled={!canUndo || isSaving}
+                title="Undo (Ctrl+Z)"
+              >
+                <IconUndo />
+              </Button>
+              <Button
+                onClick={onRedo}
+                variant="ghost"
+                size="icon"
+                disabled={!canRedo || isSaving}
+                title="Redo (Ctrl+Y)"
+              >
+                <IconRedo />
+              </Button>
+            </div>
+          )}
           {showSaving ? (
             <Saving
               saveContext={saveContext}
