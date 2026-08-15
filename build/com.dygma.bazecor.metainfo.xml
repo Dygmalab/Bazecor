@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>com.dygma.bazecor</id>
+  <categories>
+    <category>Utility</category>
+  </categories>
+  <content_rating type="oars-1.1"></content_rating>
+  <developer id="com.dygma">
+    <name>Dygma Lab S.L.</name>
+  </developer>
+  <launchable type="desktop-id">com.dygma.bazecor.desktop</launchable>
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_group>Dygma</project_group>
+  <project_license>GPL-3.0-only</project_license>
+  <requires>
+    <control>keyboard</control>
+    <control>pointing</control>
+    <display_length compare="ge">768</display_length>
+  </requires>
+  <update_contact>contact@dygma.com</update_contact>
+  <url type="bugtracker">https://github.com/Dygmalab/Bazecor/issues</url>
+  <url type="contact">https://dygma.com/pages/contact-us</url>
+  <url type="contribute">https://github.com/Dygmalab/Bazecor?tab=contributing-ov-file</url>
+  <url type="homepage">https://dygma.com/</url>
+  <url type="vcs-browser">https://github.com/Dygmalab/Bazecor</url>
+  <name>Bazecor</name>
+  <summary>Configurator for Dygma Raise and Defy keyboards</summary>
+  <description>
+    <p>Bazecor is the graphical configurator for the Dygma Raise and Defy keyboards. While still heavily under development, it&#39;s at a stage where it is already usable.</p>
+    <p>The primary purpose of the application is to allow one to configure their keyboard without having to compile or flash firmware, by storing the configuration on the keyboard itself, in EEPROM. There are no external tools required, just Bazecor itself.</p>
+    <p>Features:</p>
+    <ul>
+      <li>
+        <em>Layout Editor:</em> Edit keymaps on-the-fly, copy layers, and set defaults.
+      </li>
+      <li>
+        <em>Macro Editor:</em> Create, manage, and backup macros.
+      </li>
+      <li>
+        <em>Colormap Editor:</em> Customize per-key and underglow LED lighting.
+      </li>
+      <li>
+        <em>Firmware Upgrade:</em> Update keyboard firmware directly from the app.
+      </li>
+    </ul>
+  </description>
+  <screenshots>
+    <screenshot type="default">
+      <image type="source">https://raw.githubusercontent.com/Dygmalab/Bazecor/refs/heads/development/data/screenshot.png</image>
+    </screenshot>
+  </screenshots>
+  <releases>
+    <release version="1.9.0" date="2026-06-22">
+      <url type="details">https://github.com/Dygmalab/Bazecor/releases/tag/v1.9.0</url>
+    </release>
+  </releases>
+  <keywords>
+    <keyword>keyboard</keyword>
+    <keyword>configuration</keyword>
+    <keyword>firmware</keyword>
+    <keyword>dygma</keyword>
+    <keyword>raise</keyword>
+    <keyword>defy</keyword>
+    <keyword>keymap</keyword>
+    <keyword>layout</keyword>
+    <keyword>macro</keyword>
+    <keyword>ergonomic</keyword>
+    <keyword>customization</keyword>
+  </keywords>
+</component>
