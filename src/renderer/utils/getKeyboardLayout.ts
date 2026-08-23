@@ -19,6 +19,8 @@ const keyboardTypeMap: { [locale: string]: "ANSI" | "ISO" } = {
   "es-MX": "ISO",
   "sv-SE": "ISO",
   "de-CH": "ISO",
+  "bg-BG": "ISO",
+  "bg-BG-phonetic": "ISO",
   // Add other mappings as needed
 };
 
