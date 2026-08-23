@@ -108,7 +108,7 @@
     "eslint-plugin-react": "^7.32.2",
     "eslint-plugin-react-hooks": "^4.6.0",
     "fork-ts-checker-webpack-plugin": "^9.0.2",
-    "glob": "^10.4.1",
+    "glob": "^10.5.0",
     "html-webpack-plugin": "^5.5.1",
     "jsdom": "^25.0.1",
     "node-loader": "^2.0.0",
