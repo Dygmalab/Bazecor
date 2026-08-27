@@ -31,9 +31,25 @@ if (require("electron-squirrel-startup")) {
 // A second launch (e.g. from the login item while already tray-resident) must
 // focus the existing instance instead of spawning a second overlay/tray.
 if (!app.requestSingleInstanceLock()) {
-  app.quit();
+  // exit() rather than quit(): this runs before "ready", and a quit() requested
+  // that early is not guaranteed to take — the app carries on to ready and
+  // becomes exactly the second copy the lock exists to prevent (a second tray, a
+  // second overlay, a second HID listener fighting the first for the keyboard).
+  // The primary instance has already been handed our argv by then, so there is
+  // nothing left for this process to do.
+  app.exit(0);
 } else {
-  app.on("second-instance", () => {
+  app.on("second-instance", (_event, argv) => {
+    // Relaunching with a flag is how the outside world drives Layer Lens: the
+    // single-instance lock hands the arguments to the running app, so
+    // `Bazecor --toggle-lens` from a keybind, a script, or a desktop shell
+    // toggles the overlay instead of opening a second copy. Worth having on
+    // every platform, but it is the only route on Wayland, where a global
+    // shortcut registered by the app never fires.
+    if (argv.includes("--toggle-lens")) {
+      overlayController.toggleOverlay();
+      return;
+    }
     openMainWindow();
   });
 }

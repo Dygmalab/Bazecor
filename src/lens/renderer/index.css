@@ -383,6 +383,14 @@ body.overlay.resize-mode .app.hovered .resize-frame {
   border-radius: 4px;
   pointer-events: none;
 }
+/* Linux: Resize Mode makes the window focusable, and the compositor draws its
+   own border on the focused window in the WM theme's color and corner
+   rounding — our hardcoded frame would just clash with it (visibly so on
+   Hyprland, where a window rule keeps the inactive border invisible). The
+   hover glow on .keyboard-view stays as the resize-mode affordance. */
+body.platform-linux .resize-border {
+  display: none;
+}
 
 /* Freeze all hover transitions while resizing, and keep the frame/glow shown
    even if a fast drag briefly carries the cursor outside the keyboard. */

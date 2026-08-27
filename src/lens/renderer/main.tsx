@@ -13,6 +13,11 @@ window.addEventListener(
   { passive: false },
 );
 
+// Linux: the compositor draws the Resize Mode frame instead of our own (see
+// ".resize-border" in index.css) — its border follows the WM theme's color and
+// corner rounding, which our hardcoded frame can't.
+document.body.classList.toggle("platform-linux", navigator.userAgent.includes("Linux"));
+
 const root = document.getElementById("root");
 if (!root) throw new Error("Missing #root");
 
