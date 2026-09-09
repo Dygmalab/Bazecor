@@ -1,4 +1,5 @@
 import type { ForgeConfig, ForgePackagerOptions } from "@electron-forge/shared-types";
+import MakerFlatpak from "@electron-forge/maker-flatpak";
 import { MakerSquirrel } from "@electron-forge/maker-squirrel";
 import { MakerZIP } from "@electron-forge/maker-zip";
 import { WebpackPlugin } from "@electron-forge/plugin-webpack";
@@ -64,6 +65,72 @@ const config: ForgeConfig = {
         },
       },
     },
+    new MakerFlatpak(
+      {
+        options: {
+          id: "com.dygma.bazecor",
+          bin: "Bazecor",
+          productName: "Bazecor",
+          genericName: "Dygma Keyboard Configurator",
+          description: "Configurator for Dygma Raise and Defy keyboards.",
+          icon: "./build/logo.png",
+          categories: ["Utility"],
+          base: "org.electronjs.Electron2.BaseApp",
+          baseFlatpakref: "https://flathub.org/repo/appstream/org.electronjs.Electron2.BaseApp.flatpakref",
+          baseVersion: "25.08",
+          runtime: "org.freedesktop.Platform",
+          runtimeVersion: "25.08",
+          sdk: "org.freedesktop.Sdk",
+          modules: [
+            {
+              name: "eudev",
+              sources: [
+                {
+                  type: "git",
+                  url: "https://github.com/eudev-project/eudev",
+                  tag: "v3.2.14",
+                  commit: "9e7c4e744b9e7813af9acee64b5e8549ea1fbaa3",
+                },
+              ],
+              cleanup: [
+                "/include",
+                "/etc",
+                "/libexec",
+                "/sbin",
+                "/lib/pkgconfig",
+                "/man",
+                "/share/aclocal",
+                "/share/doc",
+                "/share/gtk-doc",
+                "/share/man",
+                "/share/pkgconfig",
+                "*.la",
+                "*.a",
+              ],
+            },
+          ],
+
+          files: [
+            ["build/com.dygma.bazecor.desktop", "/app/share/applications/com.dygma.bazecor.desktop"],
+            ["build/com.dygma.bazecor.metainfo.xml", "/app/share/metainfo/com.dygma.bazecor.metainfo.xml"],
+            ["build/logo.png", "/app/share/icons/hicolor/512x512/apps/com.dygma.bazecor.png"],
+          ],
+
+          finishArgs: [
+            "--device=all",
+            "--env=ELECTRON_OZONE_PLATFORM_HINT=auto",
+            "--env=XCURSOR_PATH=/run/host/user-share/icons:/run/host/share/icons",
+            "--filesystem=/run/udev:ro",
+            "--filesystem=host-etc",
+            "--share=ipc",
+            "--share=network",
+            "--socket=fallback-x11",
+            "--socket=wayland",
+          ],
+        },
+      },
+      ["linux"],
+    ),
   ],
   plugins: [
     new WebpackPlugin({
@@ -100,6 +167,16 @@ const config: ForgeConfig = {
   ],
   hooks: {
     packageAfterPrune: async (_forgeConfig, buildPath, _electronVersion, platform, _arch) => {
+      const rootYarnRc = path.resolve(__dirname, ".yarnrc");
+      if (fs.existsSync(rootYarnRc)) {
+        fs.copyFileSync(rootYarnRc, path.resolve(buildPath, ".yarnrc"));
+      }
+
+      const rootYarnLock = path.resolve(__dirname, "yarn.lock");
+      if (fs.existsSync(rootYarnLock)) {
+        fs.copyFileSync(rootYarnLock, path.resolve(buildPath, "yarn.lock"));
+      }
+
       /**
        * Serialport, usb and uiohook-napi are problematic libraries to run in Electron.
        * When Electron app is been built, these libraries are not included properly in the final executable.
@@ -123,7 +200,7 @@ const config: ForgeConfig = {
       }
 
       fs.writeFileSync(path.resolve(buildPath, "package.json"), JSON.stringify(packageJson));
-      spawnSync("npm", ["install", "--omit=dev"], {
+      spawnSync("yarn", ["install", "--production"], {
         cwd: buildPath,
         stdio: "inherit",
         shell: true,
