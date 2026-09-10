@@ -20,13 +20,16 @@
 
 import React, { MouseEvent, useCallback, useEffect, useMemo, useState, useRef } from "react";
 import Styled from "styled-components";
+
+import { keyboardCanvasStyles } from "@Renderer/modules/KeyboardCanvas/keyboardCanvasStyles";
+import { comboBadgeStyles } from "@Renderer/modules/KeyboardCanvas/comboBadges";
+import { ComboType } from "@Renderer/types/combos";
 import { motion } from "framer-motion";
 import { toast } from "react-toastify";
 import { ipcRenderer } from "electron";
 import fs from "fs";
 import log from "electron-log/renderer";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@Renderer/components/atoms/Dialog";
-import customCursor from "@Assets/base/cursorBucket.png";
 import ToastMessage from "@Renderer/components/atoms/ToastMessage";
 import { CopyFromDialog } from "@Renderer/components/molecules/CustomModal/CopyFromDialog";
 import { useDevice } from "@Renderer/DeviceContext";
@@ -63,6 +66,7 @@ import {
   convertKeymapRtoR2,
   parseColormapRaw,
   parseKeymapRaw,
+  parseCombosRaw,
   parseMacrosRaw,
   parsePaletteRaw,
   parseSuperkeysRaw,
@@ -121,292 +125,7 @@ const Styles = Styled.div`
   // height: 100%;
 }
 
-.LayerHolder {
-  display: flex;
-  flex: 0 0 100%;
-  margin: 0 auto;
-  min-width: 680px;
-  // max-width: 1640px;
-  svg {
-    width: 100%;
-  }
-}
-.standarViewMode .LayerHolder {
-  margin-top: 24px;
-}
-.raiseKeyboard {
-  overflow: visible;
-  margin: 0 auto;
-  max-width: 100%;
-  // height: auto;
-  flex: 1;
-  // max-height: 65vh;
-  * {
-    -webkit-backface-visibility: hidden;
-    // -webkit-transform: translateZ(0) scale(1.0, 1.0);
-    //transform: translateZ(0);
-  }
-}
-
-.standarViewMode .raiseKeyboard {
-  margin: 0 auto;
-  margin-top: 24px;
-  max-height: calc(100vh - 250px);
-}
-.singleViewMode.color .raiseKeyboard {
-  margin: 0 auto;
-  margin-top: 24px;
-  max-height: calc(100vh - 300px);
-}
-.singleViewMode.keyboard .raiseKeyboard {
-  margin: 0 auto;
-  // max-height: 44vh;
-  height: 100%;
-  svg {
-    height: 100%;
-  }
-}
-.singleViewMode.keyboard .raiseKeyboard.svg-defy {
-  // max-height: 49vh;
-}
-.keyboard-editor.keyboard .dygma-keyboard-editor.editor {
-  height: calc(100vh - 370px - 124px);
-}
-.keyboard-editor.keyboard .dygma-keyboard-editor.editor .LayerHolder{
-  height: 100%;
-}
-
-.NeuronLine {
-  stroke: ${({ theme }) => theme.styles.neuronStatus.lineStrokeColor};
-}
-#neuronWrapper {
-  &.keyOnFocus .keyOpacity{
-    stroke-opacity: 0.4;
-  }
-  &.keyOnHold .keyOpacity{
-    stroke-opacity: 0.2;
-  }
-  .neuronLights:hover {
-    cursor: pointer;
-  }
-}
-
-.keyBase {
-  fill: ${({ theme }) => theme.styles.raiseKeyboard.keyBase};
-}
-.keyColorOpacity {
-  fill-opacity: ${({ theme }) => theme.styles.raiseKeyboard.keyColorOpacity};
-}
-.keyItem {
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: -0.03em;
-  .keyContentLabel {
-    height: inherit;
-    display: flex;
-    align-items: center;
-    padding: 3px;
-    flex-wrap: wrap;
-    line-height: 1.1em;
-    position: relative;
-    -webkit-backface-visibility: hidden;
-    -webkit-transform: translateZ(0) scale(1.0, 1.0);
-    transform: translateZ(0);
-    * {
-      -webkit-backface-visibility: hidden;
-      -webkit-transform: translateZ(0) scale(1.0, 1.0);
-      transform: translateZ(0);
-    }
-    ul {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-      color: ${({ theme }) => theme.styles.raiseKeyboard.contentColor};
-      li {
-        overflow-wrap: break-word;
-        word-wrap: break-word;
-        hyphens: auto;
-      }
-    }
-    .labelClass-withModifiers {
-      margin-bottom: 8px;
-    }
-    .extraLabel {
-      font-size: 9px;
-      font-weight: 700;
-      letter-spacing: 0.025em;
-    }
-    .hidden-extraLabel {
-      display: none;
-    }
-    tspan {
-      display: inline-block;
-    }
-  }
-  tspan {
-    text-anchor: start;
-  }
-  .shadowHover {
-    //transition: all 300ms ease-in-out;
-    filter: blur(16px);
-    opacity: 0.2;
-  }
-  .shadowMiddle {
-    filter: blur(18px);
-    opacity: 0.4;
-  }
-  &.keyOnFocus {
-    .baseShape {
-      filter: drop-shadow(0px 4px 0px ${({ theme }) => theme.styles.raiseKeyboard.keyShadow});
-    }
-    .keyOpacityInternal {
-      stroke-opacity: 0.7;
-      stroke: ${({ theme }) => theme.styles.raiseKeyboard.keyOnFocusBorder};
-    }
-    .keyOpacity{
-      stroke-opacity: 0.2;
-      stroke: ${({ theme }) => theme.styles.raiseKeyboard.keyOnFocusBorder};
-    }
-    .shadowHover {
-      filter: blur(16px);
-      opacity: 0.6;
-    }
-    .keyAnimation {
-      //animation: pulse-black 2s linear infinite;
-    }
-  }
-  &:hover {
-    cursor: pointer;
-    .shadowHover {
-      // filter: blur(16px);
-      // opacity: 0.6;
-    }
-  }
-}
-.keyContentModifiers {
-  .labelModifier {
-    display: flex;
-    flex-wrap: wrap;
-    position: absolute;
-    bottom: 6px;
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    margin-left: 6px;
-    margin-right: -1px;
-    &.extraBottom {
-      margin-left: 1px;
-      li {
-        margin-left: 1px;
-        margin-right: 0;
-      }
-    }
-    li {
-      padding: 0px 3px;
-      border-radius: 3px;
-
-      display: inline-block;
-      margin: 1px;
-
-      font-size: 10px;
-      font-weight: 600;
-      letter-spacing: -0.03em;
-      color: ${({ theme }) => theme.styles.raiseKeyboard.modifier.color};
-      background: ${({ theme }) => theme.styles.raiseKeyboard.modifier.background};
-      box-shadow: ${({ theme }) => theme.styles.raiseKeyboard.modifier.boxShadow};
-    }
-  }
-}
-.keyAnimation {
-  stroke-opacity: 0;
-  stroke-linecap: round;
-}
-// @keyframes pulse-black {
-//   from {
-//     stroke-opacity: 0;
-//   }
-//   to {
-//     stroke-opacity: 0.8;
-//   }
-// }
-.underGlowStrip {
-  .underGlowStripStroke {
-      stroke-opacity: 0.5;
-  }
-  .underGlowStripShadow {
-    //transition: all 300ms ease-in-out;
-    filter: blur(12px);
-    opacity: 0.8;
-  }
-  &.keyOnFocus {
-    // filter: drop-shadow(0px 1px 1px white);
-    .underGlowStripShadow {
-      filter: blur(4px);
-      opacity: 1;
-    }
-    .underGlowStripStroke {
-      stroke-opacity: 0.8;
-      stroke: ${({ theme }) => theme.styles.raiseKeyboard.keyOnFocusBorder};
-    }
-  }
-  &.clickAble:hover {
-    cursor: pointer;
-    .underGlowStripShadow {
-      filter: blur(4px);
-      opacity: 1;
-    }
-  }
-}
-.layoutEditor.color.colorSelected .keyItem:hover,
-.layoutEditor.color.colorSelected .underGlowStrip:hover {
-  cursor: url(${customCursor}) 12 12, auto;
-}
-
-.defy-t2 .keyContentLabelRotate {
-  transform: rotate(3deg) translate(1px,-1px);
-}
-.defy-t3 .keyContentLabelRotate {
-  transform: rotate(10deg) translate(9px, -1px);
-}
-.defy-t4 .keyContentLabelRotate {
-  transform: rotate(37deg) translate(26px,-18px);
-}
-.defy-t6 .keyContentLabelRotate {
-  transform: rotate(5deg) translate(2px,-5px);
-}
-.defy-t7 .keyContentLabelRotate {
-  transform: rotate(15deg) translate(12px,-5px);
-}
-.defy-t8 .keyContentLabelRotate {
-  transform: rotate(54deg) translate(52px,-77px);
-}
-
-
-.defy-tR2 .keyContentLabelRotate {
-  transform: rotate(-5deg) translate(5px,1px);
-}
-
-.defy-tR2 .keyContentLabelRotate {
-  transform: rotate(-5deg) translate(5px,1px);
-}
-.defy-tR3 .keyContentLabelRotate {
-  transform: rotate(-25deg) translate(-2px,18px);
-}
-.defy-tR4 .keyContentLabelRotate {
-  transform: rotate(-54deg) translate(-36px,26px);
-}
-.defy-tR6 .keyContentLabelRotate {
-  transform: rotate(-8deg) translate(4px,4px);
-}
-.defy-tR7 .keyContentLabelRotate {
-  transform: rotate(-46deg) translate(-24px,24px);
-}
-.defy-tR8 .keyContentLabelRotate {
-  transform: rotate(-60deg) translate(-47px,8px)
-}
-.keyItem foreignObject {
-  overflow: visible;
-}
+${keyboardCanvasStyles}
 
 `;
 
@@ -477,6 +196,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
   const [colorMap, setColorMap] = useState([]);
   const [macros, setMacros] = useState<MacrosType[]>();
   const [superkeys, setSuperkeys] = useState<SuperkeysType[]>();
+  const [combos, setCombos] = useState<ComboType[]>([]);
 
   const [modified, setModified] = useState(false);
   const [modeselect, setModeselect] = useState<ModeType>("keyboard");
@@ -537,8 +257,13 @@ const LayoutEditor = (props: LayoutEditorProps) => {
 
     // For underglow, prefer using ledsLeft/ledsRight arrays if available and not empty, otherwise fall back to rows * columns
     let underglowLEDs = 0;
-    if (currentDevice.device.keyboardUnderglow.ledsLeft?.length > 0 || currentDevice.device.keyboardUnderglow.ledsRight?.length > 0) {
-      underglowLEDs = (currentDevice.device.keyboardUnderglow.ledsLeft?.length || 0) + (currentDevice.device.keyboardUnderglow.ledsRight?.length || 0);
+    if (
+      currentDevice.device.keyboardUnderglow.ledsLeft?.length > 0 ||
+      currentDevice.device.keyboardUnderglow.ledsRight?.length > 0
+    ) {
+      underglowLEDs =
+        (currentDevice.device.keyboardUnderglow.ledsLeft?.length || 0) +
+        (currentDevice.device.keyboardUnderglow.ledsRight?.length || 0);
     } else {
       underglowLEDs = currentDevice.device.keyboardUnderglow.rows * currentDevice.device.keyboardUnderglow.columns;
     }
@@ -782,6 +507,17 @@ const LayoutEditor = (props: LayoutEditorProps) => {
         const rawSuper = (await currentDevice?.command("superkeys.map")) as string;
         const parsedSuper = parseSuperkeysRaw(rawSuper, neuronData.storedSuper);
 
+        // Loading Combos, to badge the keys that belong to one. Firmware that
+        // predates the feature answers with nothing, and that is not an error
+        // worth failing the whole layout load over.
+        try {
+          const rawCombos = (await currentDevice?.command("combos.map")) as string;
+          setCombos(rawCombos && rawCombos.trim().length > 0 ? parseCombosRaw(rawCombos) : []);
+        } catch (error) {
+          log.info("[LayoutEditor] combos.map unavailable; no combo badges will be shown");
+          setCombos([]);
+        }
+
         setScanningStep(9);
         let showMM = false;
         if (KeyMap.custom) {
@@ -835,8 +571,17 @@ const LayoutEditor = (props: LayoutEditorProps) => {
     try {
       const kmap = keymap.custom.slice();
       const l = keymap.onlyCustom ? layer : layer - keymap.default.length;
-      // log.info(kmap, l, keyIndex, keyCode, keymapDB.parse(keyCode));
-      kmap[l][keyIndex] = keymapDB.parse(keyCode);
+      const parsedKey = keymapDB.parse(keyCode);
+      log.info(
+        `[KeyAssign] layer=${layer} storedLayer=${l} keyIndex=${keyIndex} keyCode=${keyCode} onlyCustom=${keymap.onlyCustom} parsed=`,
+        parsedKey,
+      );
+      if (l < 0 || !kmap[l]) {
+        log.error(
+          `[KeyAssign] target layer ${l} does not exist in the custom keymap (onlyCustom=${keymap.onlyCustom}); the key will NOT be stored`,
+        );
+      }
+      kmap[l][keyIndex] = parsedKey;
       setModified(true);
       setKeymap({
         default: keymap.default,
@@ -933,7 +678,9 @@ const LayoutEditor = (props: LayoutEditorProps) => {
     try {
       setLoading(true);
       setIsSaving(true);
-      await currentDevice?.command("keymap.custom", serializeKeymap(keymap.custom));
+      const serializedKeymap = serializeKeymap(keymap.custom);
+      log.info(`[KeyAssign] sending keymap.custom (${serializedKeymap.split(" ").length} codes)`);
+      await currentDevice?.command("keymap.custom", serializedKeymap);
       await currentDevice?.command("keymap.onlyCustom", keymap.onlyCustom ? "1" : "0");
       await updateColormap(currentDevice, colorMap);
       await updatePalette(currentDevice, palette);
@@ -1699,6 +1446,9 @@ const LayoutEditor = (props: LayoutEditorProps) => {
 
   return (
     <Styles className="layoutEditor h-full">
+      {/* One rule per key that belongs to a combo; see comboBadges.ts for why
+       * this is a stylesheet rather than a prop on the key component. */}
+      <style>{comboBadgeStyles(combos)}</style>
       <motion.div
         className={`keyboard-editor h-[inherit] px-3 ${modeselect} ${modeselect === "color" ? "[&_.raiseKeyboard]:h-auto" : ""} singleViewMode ${
           typeof selectedPaletteColor === "number" ? "colorSelected" : ""

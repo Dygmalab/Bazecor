@@ -17,6 +17,7 @@ import { KeymapDB } from "../../../api/keymap";
 // eslint-disable-next-line
 import { Picker } from "../KeyPickerKeyboard";
 import Store from "@Renderer/utils/Store";
+import { CapsWordCodes } from "../../../hw/capsword";
 
 interface ModifiersTabProps {
   keyCode: SegmentedKeyType;
@@ -253,6 +254,29 @@ const ModifiersTab = ({
                     </Button>
                   </div>
                 ))}
+              </div>
+            </div>
+            <div className="basis-full flex flex-col gap-2">
+              <Heading renderAs="h4" headingLevel={3} className="text-base flex leading-6 gap-1">
+                CapsWord
+              </Heading>
+              <div className="flex flex-wrap gap-2 items-center">
+                <Button
+                  variant="config"
+                  onClick={() => {
+                    log.info(`[CapsWord] assigning key: ${CapsWordCodes.CAPS_WORD} (previous keycode ${KC})`);
+                    onKeySelect(CapsWordCodes.CAPS_WORD);
+                  }}
+                  selected={KC === CapsWordCodes.CAPS_WORD}
+                  size="sm"
+                  className="min-w-16 text-ssm h-9"
+                >
+                  CapsWord
+                </Button>
+                <p className="description text-ssm font-medium text-gray-400 dark:text-gray-300 max-w-md">
+                  Capitalises what you type until the word ends -- on a space, enter, tab or punctuation, after a period of
+                  inactivity, or by pressing the key again.
+                </p>
               </div>
             </div>
             <AnimatePresence>

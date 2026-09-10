@@ -51,6 +51,10 @@ export interface KBDataPref {
   SuperWaitfor: number;
   SuperHoldstart: number;
   SuperOverlapThreshold: number;
+  autoshiftTimeout: number;
+  capswordTimeout: number;
+  /** Combos match window, in ms. */
+  combosWindow: number;
   mouseSpeed: number;
   mouseSpeedDelay: number;
   mouseAccelSpeed: number;

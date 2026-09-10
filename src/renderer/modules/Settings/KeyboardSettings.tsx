@@ -21,7 +21,14 @@ import Styled from "styled-components";
 // Custom components
 import { Card, CardContent, CardHeader, CardTitle } from "@Renderer/components/atoms/Card";
 import { KBDataPref } from "@Renderer/types/preferences";
-import { IconTypo, IconMouse, IconInformation } from "@Renderer/components/atoms/icons";
+import {
+  IconTypo,
+  IconMouse,
+  IconInformation,
+  IconThunder,
+  IconLayerShift,
+  IconKeyboard,
+} from "@Renderer/components/atoms/icons";
 import { Slider } from "@Renderer/components/atoms/slider";
 import Heading from "@Renderer/components/atoms/Heading";
 import Store from "@Renderer/utils/Store";
@@ -157,11 +164,7 @@ function KeyboardSettings(props: KeyboardSettingsProps) {
   const [localKBData, setLocalKBData] = useState(kbData);
   const store = Store.getStore();
   const sk20Raw = store.get("capabilities.sk20");
-  const sk20 =
-    sk20Raw === true ||
-    sk20Raw === "true" ||
-    sk20Raw === 1 ||
-    sk20Raw === "1";
+  const sk20 = sk20Raw === true || sk20Raw === "true" || sk20Raw === 1 || sk20Raw === "1";
   const labelWithFastSuper = (text: string) => (sk20 ? text.replace("Add Key on Tap", "Superkeys") : text);
 
   useEffect(() => {
@@ -223,6 +226,21 @@ function KeyboardSettings(props: KeyboardSettingsProps) {
     setKbData({ ...localKBData, SuperHoldstart: value[0] });
   };
 
+  const setAutoshiftTimeout = (value: number[]) => {
+    setLocalKBData(data => ({ ...data, autoshiftTimeout: value[0] }));
+    setKbData({ ...localKBData, autoshiftTimeout: value[0] });
+  };
+
+  const setCombosWindow = (value: number[]) => {
+    setLocalKBData(data => ({ ...data, combosWindow: value[0] }));
+    setKbData({ ...localKBData, combosWindow: value[0] });
+  };
+
+  const setCapswordTimeout = (value: number[]) => {
+    setLocalKBData(data => ({ ...data, capswordTimeout: value[0] }));
+    setKbData({ ...localKBData, capswordTimeout: value[0] });
+  };
+
   // const setSuperOverlapThreshold = (value: number[]) => {
   //   setLocalKBData(data => ({
   //     ...data,
@@ -277,6 +295,9 @@ function KeyboardSettings(props: KeyboardSettingsProps) {
     SuperTimeout,
     SuperHoldstart,
     // SuperOverlapThreshold,
+    autoshiftTimeout,
+    capswordTimeout,
+    combosWindow,
     mouseSpeed,
     mouseAccelSpeed,
     mouseWheelSpeed,
@@ -397,7 +418,9 @@ function KeyboardSettings(props: KeyboardSettingsProps) {
                   <div className="w-full flex gap-2">
                     <div className="w-full">
                       <Heading headingLevel={3} renderAs="paragraph-sm" className="flex items-center gap-2">
-                        {sk20 ? labelWithFastSuper(i18n.keyboardSettings.qukeys.overlapThreshold).replace("Superkeys - ", "").trim() : labelWithFastSuper(i18n.keyboardSettings.qukeys.overlapThreshold)}
+                        {sk20
+                          ? labelWithFastSuper(i18n.keyboardSettings.qukeys.overlapThreshold).replace("Superkeys - ", "").trim()
+                          : labelWithFastSuper(i18n.keyboardSettings.qukeys.overlapThreshold)}
                         <TooltipProvider delayDuration={200}>
                           <Tooltip>
                             <TooltipTrigger className="[&_svg]:text-purple-100 [&_svg]:dark:text-purple-200">
@@ -410,9 +433,7 @@ function KeyboardSettings(props: KeyboardSettingsProps) {
                               <ul className="list-disc pl-4">
                                 <li className="text-left">{i18n.keyboardSettings.qukeys.overlapThresholdTip2}</li>
                                 <li className="text-left">{i18n.keyboardSettings.qukeys.overlapThresholdTip3}</li>
-                                {sk20 && (
-                                  <li className="text-left">{i18n.keyboardSettings.qukeys.superkeysAffectsNote}</li>
-                                )}
+                                {sk20 && <li className="text-left">{i18n.keyboardSettings.qukeys.superkeysAffectsNote}</li>}
                                 <li className="text-left">{i18n.keyboardSettings.qukeys.overlapThresholdTipDefault}</li>
                               </ul>
                             </TooltipContent>
@@ -439,7 +460,9 @@ function KeyboardSettings(props: KeyboardSettingsProps) {
                   <div className="w-full flex gap-2">
                     <div className="w-full">
                       <Heading headingLevel={3} renderAs="paragraph-sm" className="flex items-center gap-2">
-                        {sk20 ? labelWithFastSuper(i18n.keyboardSettings.qukeys.minHold).replace("Superkeys - ", "").trim() : labelWithFastSuper(i18n.keyboardSettings.qukeys.minHold)}
+                        {sk20
+                          ? labelWithFastSuper(i18n.keyboardSettings.qukeys.minHold).replace("Superkeys - ", "").trim()
+                          : labelWithFastSuper(i18n.keyboardSettings.qukeys.minHold)}
                         <TooltipProvider delayDuration={200}>
                           <Tooltip>
                             <TooltipTrigger className="[&_svg]:text-purple-100 [&_svg]:dark:text-purple-200">
@@ -451,9 +474,7 @@ function KeyboardSettings(props: KeyboardSettingsProps) {
                               </Heading>
                               <ul className="list-disc pl-4">
                                 <li className="text-left">{i18n.keyboardSettings.qukeys.minHoldTip2}</li>
-                                {sk20 && (
-                                  <li className="text-left">{i18n.keyboardSettings.qukeys.superkeysAffectsNote}</li>
-                                )}
+                                {sk20 && <li className="text-left">{i18n.keyboardSettings.qukeys.superkeysAffectsNote}</li>}
                                 <li className="text-left">{i18n.keyboardSettings.qukeys.minHoldTipDefault}</li>
                               </ul>
                             </TooltipContent>
@@ -480,7 +501,9 @@ function KeyboardSettings(props: KeyboardSettingsProps) {
                   <div className="w-full flex gap-2">
                     <div className="w-full">
                       <Heading headingLevel={3} renderAs="paragraph-sm" className="flex items-center gap-2">
-                        {sk20 ? labelWithFastSuper(i18n.keyboardSettings.qukeys.minPrior).replace("Superkeys - ", "").trim() : labelWithFastSuper(i18n.keyboardSettings.qukeys.minPrior)}
+                        {sk20
+                          ? labelWithFastSuper(i18n.keyboardSettings.qukeys.minPrior).replace("Superkeys - ", "").trim()
+                          : labelWithFastSuper(i18n.keyboardSettings.qukeys.minPrior)}
                         <TooltipProvider delayDuration={200}>
                           <Tooltip>
                             <TooltipTrigger className="[&_svg]:text-purple-100 [&_svg]:dark:text-purple-200">
@@ -492,9 +515,7 @@ function KeyboardSettings(props: KeyboardSettingsProps) {
                               </Heading>
                               <ul className="list-disc pl-4">
                                 <li className="text-left">{i18n.keyboardSettings.qukeys.minPriorTip2}</li>
-                                {sk20 && (
-                                  <li className="text-left">{i18n.keyboardSettings.qukeys.superkeysAffectsNote}</li>
-                                )}
+                                {sk20 && <li className="text-left">{i18n.keyboardSettings.qukeys.superkeysAffectsNote}</li>}
                                 <li className="text-left">{i18n.keyboardSettings.qukeys.minPriorTipDefault}</li>
                               </ul>
                             </TooltipContent>
@@ -599,7 +620,9 @@ function KeyboardSettings(props: KeyboardSettingsProps) {
                   <div className="w-full flex gap-2">
                     <div className="w-full">
                       <Heading headingLevel={3} renderAs="paragraph-sm" className="flex items-center gap-2">
-                        {sk20 ? i18n.keyboardSettings.superkeys.timeout.replace("Superkeys - ", "") : i18n.keyboardSettings.superkeys.timeout}
+                        {sk20
+                          ? i18n.keyboardSettings.superkeys.timeout.replace("Superkeys - ", "")
+                          : i18n.keyboardSettings.superkeys.timeout}
                         <TooltipProvider delayDuration={200}>
                           <Tooltip>
                             <TooltipTrigger className="[&_svg]:text-purple-100 [&_svg]:dark:text-purple-200">
@@ -634,6 +657,142 @@ function KeyboardSettings(props: KeyboardSettingsProps) {
                   </div>
                 </div>
               )}
+            </div>
+          </CardContent>
+        </Card>
+        <Card className="mt-3 max-w-2xl mx-auto" variant="default">
+          <CardHeader>
+            <CardTitle>
+              <IconThunder /> {i18n.keyboardSettings.autoshift.title}
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            {/* No on/off switch: Autoshift is always enabled. A key only behaves
+             * differently once it is actually assigned as autoshiftable in the
+             * Layout Editor, so a global toggle added a second place to look
+             * when a key "did nothing". */}
+            <div className="flex flex-col gap-4">
+              <div className="w-full">
+                <div className="w-full flex gap-2">
+                  <div className="w-full">
+                    <Heading headingLevel={3} renderAs="paragraph-sm" className="flex items-center gap-2">
+                      {i18n.keyboardSettings.autoshift.holdTimeout}
+                      <TooltipProvider delayDuration={200}>
+                        <Tooltip>
+                          <TooltipTrigger className="[&_svg]:text-purple-100 [&_svg]:dark:text-purple-200">
+                            <IconInformation />
+                          </TooltipTrigger>
+                          <TooltipContent className="max-w-xs">{i18n.keyboardSettings.autoshift.holdTimeoutTip}</TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                    </Heading>
+                  </div>
+                  <div className="flex items-center text-right">
+                    <span className="tagsfix whitespace-nowrap">{autoshiftTimeout} ms</span>
+                  </div>
+                </div>
+                <div className="w-full flex gap-2">
+                  <div className="flex max-w-12 p-0 text-center items-center">
+                    <span className="tagsfix">Less</span>
+                  </div>
+                  <div className="w-full flex items-center p-0">
+                    <Slider min={50} max={2000} step={5} value={[autoshiftTimeout]} onValueChange={setAutoshiftTimeout} />
+                  </div>
+                  <div className="flex max-w-12 p-0 text-center items-center">
+                    <span className="tagsfix">More</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+        <Card className="mt-3 max-w-2xl mx-auto" variant="default">
+          <CardHeader>
+            <CardTitle>
+              <IconKeyboard /> {i18n.keyboardSettings.combos.title}
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="flex flex-col gap-4">
+              <div className="w-full">
+                <div className="w-full flex gap-2">
+                  <div className="w-full">
+                    <Heading headingLevel={3} renderAs="paragraph-sm" className="flex items-center gap-2">
+                      {i18n.keyboardSettings.combos.window}
+                      <TooltipProvider delayDuration={200}>
+                        <Tooltip>
+                          <TooltipTrigger className="[&_svg]:text-purple-100 [&_svg]:dark:text-purple-200">
+                            <IconInformation />
+                          </TooltipTrigger>
+                          <TooltipContent className="max-w-xs">{i18n.keyboardSettings.combos.windowTip}</TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                    </Heading>
+                  </div>
+                  <div className="flex items-center text-right">
+                    <span className="tagsfix whitespace-nowrap">{combosWindow} ms</span>
+                  </div>
+                </div>
+                <div className="w-full flex gap-2">
+                  <div className="flex max-w-12 p-0 text-center items-center">
+                    <span className="tagsfix">Stricter</span>
+                  </div>
+                  <div className="w-full flex items-center p-0">
+                    {/* Bounds mirror CombosDygma::MIN/MAX_MATCH_WINDOW_MS; the
+                     * firmware clamps anything outside them anyway. */}
+                    <Slider min={5} max={500} step={5} value={[combosWindow]} onValueChange={setCombosWindow} />
+                  </div>
+                  <div className="flex max-w-12 p-0 text-center items-center">
+                    <span className="tagsfix">Looser</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+        <Card className="mt-3 max-w-2xl mx-auto" variant="default">
+          <CardHeader>
+            <CardTitle>
+              <IconLayerShift /> {i18n.keyboardSettings.capsword.title}
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            {/* Always enabled; the CapsWord key has to be assigned to do
+             * anything, which is toggle enough. */}
+            <div className="flex flex-col gap-4">
+              <div className="w-full">
+                <div className="w-full flex gap-2">
+                  <div className="w-full">
+                    <Heading headingLevel={3} renderAs="paragraph-sm" className="flex items-center gap-2">
+                      {i18n.keyboardSettings.capsword.idleTimeout}
+                      <TooltipProvider delayDuration={200}>
+                        <Tooltip>
+                          <TooltipTrigger className="[&_svg]:text-purple-100 [&_svg]:dark:text-purple-200">
+                            <IconInformation />
+                          </TooltipTrigger>
+                          <TooltipContent className="max-w-xs">{i18n.keyboardSettings.capsword.idleTimeoutTip}</TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                    </Heading>
+                  </div>
+                  <div className="flex items-center text-right">
+                    <span className="tagsfix whitespace-nowrap">
+                      {capswordTimeout === 0 ? i18n.keyboardSettings.capsword.idleDisabled : `${capswordTimeout / 1000} s`}
+                    </span>
+                  </div>
+                </div>
+                <div className="w-full flex gap-2">
+                  <div className="flex max-w-12 p-0 text-center items-center">
+                    <span className="tagsfix">Never</span>
+                  </div>
+                  <div className="w-full flex items-center p-0">
+                    <Slider min={0} max={30000} step={500} value={[capswordTimeout]} onValueChange={setCapswordTimeout} />
+                  </div>
+                  <div className="flex max-w-12 p-0 text-center items-center">
+                    <span className="tagsfix">Longer</span>
+                  </div>
+                </div>
+              </div>
             </div>
           </CardContent>
         </Card>

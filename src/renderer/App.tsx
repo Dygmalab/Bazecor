@@ -34,6 +34,7 @@ import FirmwareUpdate from "@Renderer/views/FirmwareUpdate";
 import LayoutEditor from "@Renderer/views/LayoutEditor";
 import MacroEditor from "@Renderer/views/MacroEditor";
 import SuperkeysEditor from "@Renderer/views/SuperkeysEditor";
+import ComboEditor from "@Renderer/views/ComboEditor";
 import Preferences from "@Renderer/views/Preferences";
 import Welcome from "@Renderer/views/Welcome";
 
@@ -533,6 +534,20 @@ function App() {
             path="/superkeys"
             element={
               <SuperkeysEditor
+                onDisconnect={onKeyboardDisconnect}
+                startContext={startContext}
+                cancelContext={cancelContext}
+                setLoading={setLoadingData}
+                saveButtonRef={saveButtonRef}
+                discardChangesButtonRef={discardChangesButtonRef}
+              />
+            }
+          />
+          <Route
+            path="/combos"
+            element={
+              <ComboEditor
+                darkMode={darkMode}
                 onDisconnect={onKeyboardDisconnect}
                 startContext={startContext}
                 cancelContext={cancelContext}

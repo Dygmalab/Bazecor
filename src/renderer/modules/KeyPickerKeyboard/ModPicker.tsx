@@ -1,5 +1,6 @@
 /* eslint-disable no-bitwise */
 import React, { useEffect, useState } from "react";
+import log from "electron-log/renderer";
 
 // Components
 import { SegmentedKeyType } from "@Renderer/types/layout";
@@ -9,15 +10,21 @@ import OSKey from "@Renderer/components/molecules/KeyTags/OSKey";
 import { IconInformation } from "@Renderer/components/atoms/icons";
 import CustomRadioCheckBox from "@Renderer/components/molecules/Form/CustomRadioCheckBox";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@Renderer/components/atoms/Tooltip";
+import { autoshiftBaseCode, canBeAutoshifted, isAutoshift, toAutoshift } from "../../../hw/autoshift";
 
 interface ModPickerProps {
   keyCode: SegmentedKeyType;
   onKeySelect: (key: number) => void;
   isStandardView: boolean;
+  /* Combo and superkey ACTIONS reach the chain with the INJECTED flag, which
+   * the Autoshift plugin filters out -- and the Combos plugin refuses an
+   * Autoshift code as an action outright. Offering the checkbox there would
+   * let the user build something the firmware silently drops. */
+  allowAutoshift?: boolean;
 }
 
 function ModPicker(props: ModPickerProps) {
-  const { keyCode, onKeySelect, isStandardView } = props;
+  const { keyCode, onKeySelect, isStandardView, allowAutoshift = true } = props;
   const [modifs, setModifs] = useState([]);
   const previousKeyCode = usePrevious({ base: keyCode.base, modified: keyCode.modified });
 
@@ -76,6 +83,21 @@ function ModPicker(props: ModPickerProps) {
     }
     setModifs(mod);
     onKeySelect(keyCode.base + applyModif(mod));
+  }
+
+  /* Autoshift replaces the whole keycode rather than adding flags, so it is
+   * derived from the current code instead of kept in state. */
+  const currentCode = keyCode === undefined ? 0 : keyCode.base + keyCode.modified;
+  const autoshifted = isAutoshift(currentCode);
+  const plainCode = autoshifted ? autoshiftBaseCode(currentCode) : currentCode;
+  const autoshiftAvailable = autoshifted || canBeAutoshifted(plainCode);
+
+  function toggleAutoshift() {
+    const next = autoshifted ? plainCode : toAutoshift(plainCode);
+    log.info(
+      `[Autoshift] toggle: currentCode=${currentCode} autoshifted=${autoshifted} plainCode=${plainCode} available=${autoshiftAvailable} -> emitting ${next}`,
+    );
+    onKeySelect(next);
   }
 
   function setModifierVisibility() {
@@ -187,6 +209,33 @@ function ModPicker(props: ModPickerProps) {
             name="addModAltGr"
             id="addModAltGr"
             disabled={setModifierVisibility()}
+          />
+        </div>
+        <div className="autoshiftPicker flex items-center" hidden={!allowAutoshift}>
+          <CustomRadioCheckBox
+            label={<div className="pl-0.5">Make it Autoshiftable</div>}
+            onClick={() => toggleAutoshift()}
+            checked={autoshifted}
+            type="checkbox"
+            name="makeAutoshiftable"
+            id="makeAutoshiftable"
+            disabled={!autoshiftAvailable}
+            tooltip={
+              <>
+                <Heading headingLevel={4} renderAs="h4" className="text-gray-600 dark:text-gray-25 mb-1 leading-6 text-base">
+                  Autoshift
+                </Heading>
+                <p className="description text-ssm font-medium text-gray-400 dark:text-gray-200">
+                  Tap the key to type its normal character, or hold it to type the shifted one. Holding A gives you a capital A
+                  without reaching for Shift.
+                </p>
+                <p className="description text-ssm font-medium text-gray-400 dark:text-gray-200">
+                  Only available for letters, digits and punctuation -- keys with no distinct shifted form cannot be autoshifted.
+                  Note that the key loses its hold-to-repeat behaviour, since hold now types the capital.
+                </p>
+              </>
+            }
+            className="mt-0"
           />
         </div>
       </div>

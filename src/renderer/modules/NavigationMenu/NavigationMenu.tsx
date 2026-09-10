@@ -245,6 +245,26 @@ function NavigationMenu(props: NavigationMenuProps) {
               )}
             </AnimatePresence>
             <AnimatePresence mode="popLayout">
+              {connected && pages.keymap && (
+                <motion.div initial={linkVariants.hidden} animate={linkVariants.visible} exit={linkVariants.hidden}>
+                  <Link
+                    to="/combos"
+                    onClick={linkHandler}
+                    className={`list-link flex hover:no-underline ${fwUpdate || loading ? "disabled pointer-events-none" : ""}`}
+                  >
+                    <NavigationButton
+                      selected={currentPage === "/combos"}
+                      buttonText="Combo Editor"
+                      icoSVG={<IconKeyboard2Stroke />}
+                      showNotif
+                      notifText="BETA"
+                      disabled={fwUpdate || loading}
+                    />
+                  </Link>
+                </motion.div>
+              )}
+            </AnimatePresence>
+            <AnimatePresence mode="popLayout">
               {connected && (
                 <motion.div initial={linkVariants.hidden} animate={linkVariants.visible} exit={linkVariants.hidden}>
                   <Link

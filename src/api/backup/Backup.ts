@@ -70,6 +70,12 @@ export default class Backup {
       "settings.ledDriver",
       "wireless.battery.left",
       "wireless.battery.right",
+      // Read-only diagnostic dumps. They report live plugin state -- current
+      // state machine, counters, whether CapsWord is active right now -- which
+      // is not configuration, and replaying it on restore does nothing.
+      "autoshift.state",
+      "capsword.state",
+      "combos.state",
     ];
     const commands = await device.command("help");
     const validCommands = commands.split(/\r?\n/).filter(c => !notRequired.some(v => c.includes(v)));

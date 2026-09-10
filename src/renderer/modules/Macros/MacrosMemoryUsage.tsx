@@ -80,15 +80,22 @@ h4 {
 interface MacrosMemoryUsageProps {
   mem: number;
   tMem: number;
-  context?: "macros" | "superkeys";
+  context?: "macros" | "superkeys" | "combos";
 }
 
 const MacrosMemoryUsage = ({ mem, tMem, context = "macros" }: MacrosMemoryUsageProps) => {
   const [memoryUsage, setMemoryUsage] = React.useState(mem);
   const [isLoading, setIsLoading] = React.useState(true);
 
-  const i18nMemoryUsage =
-    context === "superkeys" ? i18n.editor.superkeys.memoryUsage : i18n.editor.macros.memoryUsage;
+  const i18nMemoryUsage = React.useMemo(
+    () =>
+      ({
+        superkeys: i18n.editor.superkeys.memoryUsage,
+        combos: i18n.editor.combos.memoryUsage,
+        macros: i18n.editor.macros.memoryUsage,
+      })[context],
+    [context],
+  );
 
   React.useEffect(() => {
     if (mem < 1 || tMem < 1) return;
@@ -97,21 +104,13 @@ const MacrosMemoryUsage = ({ mem, tMem, context = "macros" }: MacrosMemoryUsageP
     setIsLoading(false);
     if (mem > tMem * 0.95 && mem < tMem - 20) {
       toast.warn(
-        <ToastMessage
-          title={i18nMemoryUsage.alertTitle}
-          content={i18nMemoryUsage.alertBody}
-          icon={<IconFloppyDisk />}
-        />,
+        <ToastMessage title={i18nMemoryUsage.alertTitle} content={i18nMemoryUsage.alertBody} icon={<IconFloppyDisk />} />,
         { icon: "" },
       );
     }
     if (mem > tMem - 20) {
       toast.error(
-        <ToastMessage
-          title={i18nMemoryUsage.errorTitle}
-          content={i18nMemoryUsage.alertBody}
-          icon={<IconFloppyDisk />}
-        />,
+        <ToastMessage title={i18nMemoryUsage.errorTitle} content={i18nMemoryUsage.alertBody} icon={<IconFloppyDisk />} />,
         {
           position: "top-right",
           autoClose: false,
@@ -124,7 +123,7 @@ const MacrosMemoryUsage = ({ mem, tMem, context = "macros" }: MacrosMemoryUsageP
         },
       );
     }
-  }, [mem, tMem]);
+  }, [mem, tMem, i18nMemoryUsage]);
   if (isLoading) return null;
   return (
     <Styles
