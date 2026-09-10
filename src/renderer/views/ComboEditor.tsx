@@ -432,7 +432,10 @@ function ComboEditor(props: ComboEditorProps) {
               cloneItem={cloneCombo}
               checkLimit={overLimit}
             />
-            <MacrosMemoryUsage context="combos" mem={combos.length} tMem={MAX_COMBOS} />
+            {/* warningOffset defaults to 20, which is sized for the macro buffer;
+             * against 32 combo slots that would raise the "out of space"
+             * error at 12. */}
+            <MacrosMemoryUsage context="combos" mem={combos.length} tMem={MAX_COMBOS} warningOffset={2} />
           </>
         }
         saveContext={onApply}

@@ -100,7 +100,7 @@ const Style = Styled.div`
   }
 }
 @media screen and (max-height: 870px) {
-  .battery-indicator--container {
+  .battery-indicator--container.battery-dual {
     > div {
       flex: 0 0 50%;
     }

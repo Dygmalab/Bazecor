@@ -37,10 +37,10 @@ const rendererConfig: Configuration = {
     },
   },
   externals: {
-    "uiohook-napi": "uiohook-napi",
-    serialport: "serialport",
-    "@serialport": "@serialport",
-    usb: "usb",
+    "uiohook-napi": "commonjs uiohook-napi",
+    serialport: "commonjs serialport",
+    "@serialport": "commonjs @serialport",
+    usb: "commonjs usb",
   },
 };
 

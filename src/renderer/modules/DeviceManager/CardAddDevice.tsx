@@ -1,7 +1,7 @@
 import React from "react";
 
 import Heading from "@Renderer/components/atoms/Heading";
-import { IconPlus, IconRefresh, IconBluetooth } from "@Renderer/components/atoms/icons";
+import { IconPlus, IconRefresh } from "@Renderer/components/atoms/icons";
 import { Button } from "@Renderer/components/atoms/Button";
 
 import { i18n } from "@Renderer/i18n";
@@ -27,15 +27,6 @@ const CardAddDevice = React.forwardRef<HTMLDivElement, CardAddDeviceProps>(
           <p className="text-gray-600 dark:text-gray-300 text-base font-semibold tracking-tight pt-2 pb-4">
             Start setting up your new keyboard
           </p>
-          <div className="card-alert mt-3 mb-3 flex gap-2">
-            <div className="text-gray-500 dark:text-gray-100 flex-shrink-0 flex-grow-0 basis-[24px]">
-              <IconBluetooth />
-            </div>
-            <p className="w-full text-xs text-gray-500 dark:text-gray-100">
-              <strong>To use Bazecor on bluetooth</strong>, make sure the keyboard is connected via BT to the computer and{" "}
-              <strong> click on scan keyboards once.</strong>
-            </p>
-          </div>
         </div>
         <div className="devices-buttons-group flex flex-col items-center justify-center gap-2 mt-6 pb-6 [&_button]:min-w-full">
           <Button

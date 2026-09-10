@@ -156,14 +156,7 @@ const SuperkeysTab = ({ macros, keyCode, onKeySelect, superkeys, disabled }: Sup
   return (
     <Styles className={`w-full  tabsSuperkeys ${disabled ? "opacity-50 pointer-events-none" : ""}`}>
       <div className="tabContentWrapper w-full">
-        <Callout
-          size="sm"
-          className="mt-0 w-full"
-          hasVideo
-          media="6Az05_Yl6AU"
-          videoTitle="The Greatest Keyboard Feature Of All Time: SUPERKEYS! 🦹‍♀️"
-          videoDuration="5:34"
-        >
+        <Callout size="sm" className="mt-0 w-full">
           <p>{i18n.editor.standardView.superkeys.callout1}</p>
           <p>{i18n.editor.standardView.superkeys.callout2}</p>
         </Callout>

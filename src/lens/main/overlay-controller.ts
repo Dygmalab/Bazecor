@@ -39,7 +39,17 @@ import {
 } from "./overlay-window";
 
 const LAYER_CHANGE_AUTO_HIDE_MS = 3000;
+// How long the overlay is held on screen but fully transparent before the
+// layer-change auto-show fades it in, so the renderer has repainted the new
+// active layer by the time anything is visible. See showOverlay()'s fadeDelayMs.
+// Long enough to cover a slow repaint, still under the delay that would make the
+// auto-show feel like it lags behind the layer key.
+const LAYER_PAINT_SETTLE_MS = 230;
 const TOGGLE_SHORTCUT = "CommandOrControl+Alt+L";
+// Upper bound on a firmware flash. If the renderer never sends the matching
+// "flashing finished" (crash, reload, an abort path we don't cover), Lens comes
+// back on its own rather than staying dead until the app restarts.
+const FLASHING_WATCHDOG_MS = 15 * 60 * 1000;
 
 class OverlayController {
   private hid = new RawHidListener();
@@ -77,6 +87,10 @@ class OverlayController {
 
   // Shown at most once per enable so the 2s HID retry loop can't spam dialogs.
   private permissionDialogShown = false;
+
+  private flashing = false;
+
+  private flashingWatchdog: ReturnType<typeof setTimeout> | null = null;
 
   isEnabled(): boolean {
     return this.enabled;
@@ -140,7 +154,9 @@ class OverlayController {
     }
     this.registerShortcut();
     this.checkMacosPermission();
-    this.hid.startWithRetry();
+    // Enabling Lens in the middle of a firmware update must not re-open the
+    // keyboard; setFlashing(false) starts the listener once the flash is done.
+    if (!this.flashing) this.hid.startWithRetry();
   }
 
   disable(): void {
@@ -158,6 +174,38 @@ class OverlayController {
     if (this.hidPermissionDenied) {
       this.hidPermissionDenied = false;
       broadcastState(this.getState());
+    }
+  }
+
+  /**
+   * Called by the Bazecor renderer around a firmware update. While flashing, Lens
+   * must let go of the keyboard completely: the flasher talks to the same USB
+   * device over serial and the board reboots in and out of its bootloader, so an
+   * open HID handle (plus node-hid's periodic enumeration) can stall the flash.
+   *
+   * Independent of enable/disable — a flash suspends the listener even if the
+   * user's Lens toggle is on, and resuming only restarts it if Lens is still
+   * enabled by then.
+   */
+  setFlashing(v: boolean): void {
+    if (this.flashing === v) return;
+    this.flashing = v;
+    this.clearFlashingWatchdog();
+    if (v) {
+      this.hid.suspend();
+      this.flashingWatchdog = setTimeout(() => {
+        log.warn("[Lens] Flashing watchdog fired — no 'flashing finished' received, resuming Lens");
+        this.setFlashing(false);
+      }, FLASHING_WATCHDOG_MS);
+    } else if (this.enabled) {
+      this.hid.resume();
+    }
+  }
+
+  private clearFlashingWatchdog(): void {
+    if (this.flashingWatchdog) {
+      clearTimeout(this.flashingWatchdog);
+      this.flashingWatchdog = null;
     }
   }
 
@@ -193,6 +241,7 @@ class OverlayController {
   /** Called on app quit. */
   shutdown(): void {
     globalShortcut.unregister(TOGGLE_SHORTCUT);
+    this.clearFlashingWatchdog();
     this.clearLayerChangeHideTimer();
     stopFade();
     this.hid.stop();
@@ -289,16 +338,25 @@ class OverlayController {
     this.reloadModel();
   }
 
+  /** Tray "Toggle Layer Lens" and the Ctrl+Alt+L shortcut. Deliberately the same
+   * behaviour as the Lens key's own TAP (onOverlayTapAction) — the two are the
+   * user's two ways of saying "show/hide it now" and must stay interchangeable. */
   toggleOverlay(): void {
     if (!this.enabled || !overlayAlive()) return;
+    this.clearLayerChangeHideTimer();
+    this.layerAutoShowActive = false;
     // Toggle off what's actually on screen, not off `overlayActive`: the two
     // can legitimately differ (the overlay starts hidden when the user left it
     // hidden, and the Lens key's TAP hides it without touching overlayActive),
     // and toggling the flag alone would waste the first press on a window
     // that's already hidden.
-    const next = !isOverlayVisible();
-    this.overlayActive = next;
-    this.setUserVisible(next);
+    //
+    // overlayActive itself is never cleared here. It's the master switch for the
+    // Lens key gestures (see enable()), so hiding the overlay from the tray used
+    // to kill LENS TAP / LENS HOLD until the tray showed it again — a hidden
+    // overlay must stay summonable from the keyboard.
+    this.overlayActive = true;
+    this.setUserVisible(!isOverlayVisible());
   }
 
   /**
@@ -459,11 +517,15 @@ class OverlayController {
       // Only Lens' own layer-change auto-show is allowed to auto-hide on release.
       return;
     }
+    this.clearLayerChangeHideTimer();
     this.layerAutoShowActive = true;
-    showOverlay();
+    // The caller has only just handed the renderer the new layer over IPC. Hold
+    // the overlay transparent for a beat before fading it in, so what appears is
+    // already the layer being switched to rather than the one being left behind
+    // — see showOverlay()'s fadeDelayMs.
+    showOverlay(LAYER_PAINT_SETTLE_MS);
     // Fallback in case the layer never reverts to the default layer (e.g. a locked
     // layer switch instead of a momentary hold) — don't leave Lens on screen forever.
-    this.clearLayerChangeHideTimer();
     this.layerChangeHideTimer = setTimeout(() => {
       this.layerChangeHideTimer = null;
       this.layerAutoShowActive = false;
@@ -544,6 +606,14 @@ export function setResizeMode(v: boolean): LensSettings {
   const s = setLensSettings({ resizeMode: v });
   applyResizeModeLive(s.resizeMode);
   if (v) overlayController.ensureVisible();
+  broadcastSettings(s);
+  return s;
+}
+
+/** Shared by the tray menu and the lens:set-overlay-auto-show IPC handler, so
+ * both paths persist and broadcast the change the same way. */
+export function setOverlayAutoShow(v: boolean): LensSettings {
+  const s = setLensSettings({ overlayAutoShow: v });
   broadcastSettings(s);
   return s;
 }

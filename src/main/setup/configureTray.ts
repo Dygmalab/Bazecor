@@ -6,8 +6,8 @@ import log from "electron-log/main";
 import Window from "../managers/Window";
 import createWindow from "../createWindow";
 import { markAppQuitting } from "../managers/AppLifecycle";
-import { getLensSettings, getRunInBackground, setRunInBackground } from "../../lens/main/lens-settings";
-import { overlayController, setResizeMode } from "../../lens/main/overlay-controller";
+import { getLensSettings, getRunInBackground, onLensSettingsChanged, setRunInBackground } from "../../lens/main/lens-settings";
+import { overlayController, setOverlayAutoShow, setResizeMode } from "../../lens/main/overlay-controller";
 
 let tray: Tray | null = null;
 
@@ -18,7 +18,47 @@ export function openMainWindow(): void {
     win.focus();
   } else {
     createWindow();
+    // Coming back from background mode the app is still an accessory (createWindow
+    // restores the Dock icon, but macOS doesn't bring an accessory app forward on
+    // its own), so the new window would otherwise open behind everything else.
+    if (process.platform === "darwin") app.focus({ steal: true });
   }
+}
+
+// Checkmark state the currently installed menu was built with, so refreshTrayMenu()
+// can skip the rebuild when nothing it shows has changed.
+let menuAutoShow: boolean | null = null;
+
+/** Rebuilt (not mutated) rather than updated in place: Electron menu items are
+ * immutable once the menu has been set on the tray. */
+function buildTrayMenu(): Menu {
+  menuAutoShow = getLensSettings().overlayAutoShow;
+  return Menu.buildFromTemplate([
+    { label: "Open Bazecor", click: () => openMainWindow() },
+    { label: "Toggle Layer Lens", click: () => overlayController.toggleOverlay() },
+    { label: "Toggle Resize Mode", click: () => setResizeMode(!getLensSettings().resizeMode) },
+    {
+      label: "Show only on layer change",
+      type: "checkbox",
+      checked: menuAutoShow,
+      click: () => setOverlayAutoShow(!getLensSettings().overlayAutoShow),
+    },
+    { type: "separator" },
+    {
+      label: "Quit",
+      click: () => {
+        markAppQuitting();
+        app.quit();
+      },
+    },
+  ]);
+}
+
+/** Keeps the menu's checkmark in sync with the same settings changed from
+ * Preferences (or by the tray item itself). */
+function refreshTrayMenu(): void {
+  if (!tray || getLensSettings().overlayAutoShow === menuAutoShow) return;
+  tray.setContextMenu(buildTrayMenu());
 }
 
 function createTray(): void {
@@ -34,21 +74,7 @@ function createTray(): void {
   }
   tray = new Tray(icon);
   tray.setToolTip("Bazecor");
-  tray.setContextMenu(
-    Menu.buildFromTemplate([
-      { label: "Open Bazecor", click: () => openMainWindow() },
-      { label: "Toggle Layer Lens", click: () => overlayController.toggleOverlay() },
-      { label: "Toggle Resize Mode", click: () => setResizeMode(!getLensSettings().resizeMode) },
-      { type: "separator" },
-      {
-        label: "Quit",
-        click: () => {
-          markAppQuitting();
-          app.quit();
-        },
-      },
-    ]),
-  );
+  tray.setContextMenu(buildTrayMenu());
   tray.on("double-click", () => openMainWindow());
 }
 
@@ -101,6 +127,7 @@ export function applyRunInBackground(v: boolean): void {
 }
 
 const configureTray = () => {
+  onLensSettingsChanged(refreshTrayMenu);
   app.on("before-quit", event => {
     // main/index.ts's own before-quit handler runs first (registered earlier)
     // and may have already cancelled this on macOS (Cmd+Q redirected to a

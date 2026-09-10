@@ -791,7 +791,7 @@ const English = {
     needHelpDescription: "Whether it's a bug or any other issue, we are here to help you!",
     scanDevices: "Scan keyboards",
     addVirtualDevice: "Add virtual keyboard",
-    checkForDevices: "Check for nearby keyboards",
+    checkForDevices: "Check for connected keyboards",
     useWithoutKeyboard: "Use without keyboard",
     noDevicesFound: "No keyboards found!",
     noDevicesFoundDescription: "[Black metal plays in background]",

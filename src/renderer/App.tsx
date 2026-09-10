@@ -305,6 +305,11 @@ function App() {
     setFlashing(!flashing);
     varFlashing.current = !flashing;
     log.verbose("toggled flashing to", !flashing);
+    // Layer Lens holds a raw HID handle on the keyboard and re-enumerates the HID
+    // bus every couple of seconds. Both have to stop for the duration of a flash,
+    // or the board (which reboots into its bootloader and is driven over serial on
+    // the same USB device) can hang mid-update.
+    ipcRenderer.send("lens:set-flashing", !flashing);
   };
 
   useEffect(() => {

@@ -2,8 +2,16 @@ import { app, ipcMain, shell } from "electron";
 import log from "electron-log/main";
 import type { LensKeyboardRef, LensSettings, LensState } from "../shared/types";
 import { MACOS_INPUT_MONITORING_SETTINGS_URL, isSupportedLensProduct } from "../shared/constants";
-import { getLensSettings, getRunInBackground, isRunInBackgroundUnset, setLensKeyboard, setLensSettings } from "./lens-settings";
-import { overlayController, setResizeMode } from "./overlay-controller";
+import {
+  getLensSettings,
+  getOnboardingCollapsed,
+  getRunInBackground,
+  isRunInBackgroundUnset,
+  setLensKeyboard,
+  setLensSettings,
+  setOnboardingCollapsed,
+} from "./lens-settings";
+import { overlayController, setOverlayAutoShow, setResizeMode } from "./overlay-controller";
 import {
   applyOpacityLive,
   applyOverlayMode,
@@ -73,10 +81,13 @@ export function registerLensIpc(onRunInBackgroundChange: (v: boolean) => void): 
     return s;
   });
 
-  ipcMain.handle("lens:set-overlay-auto-show", (_, v: boolean): LensSettings => {
-    const s = setLensSettings({ overlayAutoShow: v });
-    broadcastSettings(s);
-    return s;
+  ipcMain.handle("lens:set-overlay-auto-show", (_, v: boolean): LensSettings => setOverlayAutoShow(v));
+
+  ipcMain.handle("lens:get-onboarding-collapsed", (): boolean => getOnboardingCollapsed());
+
+  ipcMain.handle("lens:set-onboarding-collapsed", (_, v: boolean): boolean => {
+    setOnboardingCollapsed(v);
+    return getOnboardingCollapsed();
   });
 
   // macOS: opens System Settings → Privacy & Security → Input Monitoring (used by
@@ -114,6 +125,14 @@ export function registerLensIpc(onRunInBackgroundChange: (v: boolean) => void): 
     log.info(`[Lens] lens:backup-saved accepted for ${keyboard.product} (neuronID: ${keyboard.neuronID}) -> stored`);
     setLensKeyboard(keyboard);
     overlayController.reloadForSavedBackup(keyboard.product);
+  });
+
+  // Fired by the Bazecor renderer (App.tsx toggleFlashing) at both ends of a
+  // firmware update. Lens releases the keyboard for the whole flash — see
+  // OverlayController.setFlashing().
+  ipcMain.on("lens:set-flashing", (_, v: boolean) => {
+    log.info(`[Lens] lens:set-flashing ${v}`);
+    overlayController.setFlashing(!!v);
   });
 
   // Overlay drag / resize in Resize Mode.

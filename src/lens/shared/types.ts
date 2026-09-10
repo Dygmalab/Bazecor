@@ -71,6 +71,10 @@ export interface LensStoreState extends LensSettings {
    * Lens reads the ref for whichever keyboard is currently the active device. */
   keyboards?: Record<string, LensKeyboardRef>;
   migratedFromStandalone?: boolean;
+  /** Whether the "First time using Layer Lens" instructions card in Preferences
+   * is folded away. Persisted so the user only has to dismiss it once.
+   * Undefined on a fresh install, which counts as "expanded". */
+  onboardingCollapsed?: boolean;
 }
 
 export interface LensState {

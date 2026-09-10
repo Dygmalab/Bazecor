@@ -484,6 +484,7 @@ export default class Backup {
       .map(k => k.toString())
       .join(" ");
     localBackup.backup[paletteIndex].data = paletteFinal
+      .map(color => [color.r, color.g, color.b])
       .flat()
       .map(v => v.toString())
       .join(" ");

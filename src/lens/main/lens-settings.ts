@@ -44,6 +44,7 @@ function readState(): LensStoreState {
     migratedFromStandalone: raw?.migratedFromStandalone,
     overlayBounds: raw?.overlayBounds,
     overlayShown: raw?.overlayShown,
+    onboardingCollapsed: raw?.onboardingCollapsed,
   };
 }
 
@@ -55,11 +56,24 @@ export function getLensSettings(): LensSettings {
   return sanitizeLensSettings(readState());
 }
 
+const settingsListeners: Array<(s: LensSettings) => void> = [];
+
+/**
+ * Notified after every setLensSettings() write, whoever made it (Preferences,
+ * the tray, the overlay, the shortcut). Used by the tray to keep its menu's
+ * checkmarks in sync with settings changed elsewhere.
+ */
+export function onLensSettingsChanged(cb: (s: LensSettings) => void): void {
+  settingsListeners.push(cb);
+}
+
 export function setLensSettings(updates: Partial<LensSettings>): LensSettings {
   const state = readState();
   const next: LensStoreState = { ...state, ...sanitizeLensSettings({ ...state, ...updates }) };
   writeState(next);
-  return sanitizeLensSettings(next);
+  const settings = sanitizeLensSettings(next);
+  for (const cb of settingsListeners) cb(settings);
+  return settings;
 }
 
 function isValidRef(kb: LensKeyboardRef | undefined): kb is LensKeyboardRef {
@@ -127,6 +141,15 @@ export function getLastOverlayShown(): boolean {
 
 export function setLastOverlayShown(shown: boolean): void {
   writeState({ ...readState(), overlayShown: shown });
+}
+
+/** Folded state of the Preferences onboarding card (see LensStoreState). */
+export function getOnboardingCollapsed(): boolean {
+  return readState().onboardingCollapsed === true;
+}
+
+export function setOnboardingCollapsed(v: boolean): void {
+  writeState({ ...readState(), onboardingCollapsed: v });
 }
 
 export function isLegacyLensMigrated(): boolean {

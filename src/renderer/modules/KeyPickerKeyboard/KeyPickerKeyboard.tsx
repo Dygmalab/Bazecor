@@ -567,6 +567,8 @@ function KeyPickerKeyboard(props: Props) {
                     onKeySelect={onKeySelect}
                     selectedlanguage={selectedlanguage}
                     keyCode={code}
+                    activeTab={actTab}
+                    action={action}
                   />
                 </div>
               </motion.div>

@@ -113,6 +113,11 @@ export class RawHidListener extends EventEmitter<RawHidEvents> {
 
   private activeProduct: LensProduct | null = null;
 
+  // Set while Bazecor is flashing firmware. The board reboots into (and out of)
+  // its bootloader during that window, so both our open HID handle and the 2s
+  // HID.devices() enumeration have to get out of the way — see suspend().
+  private suspended = false;
+
   // Debounces per (source, eventType) pair so bouncy/duplicate packets from a
   // single physical press can't fire the same handler twice in quick succession.
   private shouldEmit(source: string, eventType: number): boolean {
@@ -164,6 +169,43 @@ export class RawHidListener extends EventEmitter<RawHidEvents> {
       .finally(() => this.scheduleScan());
   }
 
+  /**
+   * Releases the keyboard for the duration of a firmware flash.
+   *
+   * Flashing power-cycles the Neuron and its keyscanner sides, and the flasher
+   * drives the board over its serial/CDC interface on the same composite USB
+   * device we hold a HID handle on. Keeping that handle open — and re-enumerating
+   * every device with node-hid's blocking HID.devices() every 2s while the board
+   * is dropping off and re-appearing on the bus — is enough to stall the flash
+   * (it hangs waiting on a keyscanner response that never arrives). So we close
+   * the handle and park the scan loop entirely until resume().
+   */
+  suspend(): void {
+    if (this.suspended) return;
+    this.suspended = true;
+    log.info("[Lens/HID] Suspending — releasing the keyboard while firmware flashing runs");
+    if (this.scanTimer) {
+      clearTimeout(this.scanTimer);
+      this.scanTimer = null;
+    }
+    this.closeDevice();
+    // Forget everything: after a flash the board re-enumerates on a new HID path,
+    // so a stale `seen` entry would keep us from treating it as newly connected.
+    this.seen.clear();
+    this.activePath = null;
+    this.activeProduct = null;
+    this.running = false;
+    this.emit("disconnected");
+  }
+
+  /** Re-attaches to the keyboard once flashing is over. Safe to call unpaired. */
+  resume(): void {
+    if (!this.suspended) return;
+    this.suspended = false;
+    log.info("[Lens/HID] Resuming after firmware flashing");
+    this.startWithRetry();
+  }
+
   // scan() can throw past its own try/catches — e.g. a listener registered on
   // "connected"/"active-changed" (overlay-controller.ts) throwing synchronously
   // during setActive(). Previously that rejected this callback before reaching
@@ -171,7 +213,7 @@ export class RawHidListener extends EventEmitter<RawHidEvents> {
   // loop died silently and permanently — no more layer-change/overlay events,
   // ever, until the app restarted. Always reschedule regardless of outcome.
   private scheduleScan(): void {
-    if (this.scanTimer) return;
+    if (this.scanTimer || this.suspended) return;
     this.scanTimer = setTimeout(async () => {
       this.scanTimer = null;
       try {
@@ -190,6 +232,9 @@ export class RawHidListener extends EventEmitter<RawHidEvents> {
    * to the most-recently-seen board still present).
    */
   private async scan(): Promise<void> {
+    // Never touch the HID bus mid-flash, including via the re-scan onDeviceError()
+    // fires when the board drops off as it reboots into the bootloader.
+    if (this.suspended) return;
     const HID = await this.loadHid();
     if (!HID) return;
 
@@ -387,6 +432,10 @@ export class RawHidListener extends EventEmitter<RawHidEvents> {
 
   stop(): void {
     this.running = false;
+    // A stop() while suspended (Lens disabled mid-flash) wins: clearing the flag
+    // makes the later resume() a no-op instead of restarting a listener the user
+    // just turned off. enable() calls startWithRetry() again on its own.
+    this.suspended = false;
     if (this.scanTimer) {
       clearTimeout(this.scanTimer);
       this.scanTimer = null;

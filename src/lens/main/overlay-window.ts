@@ -195,11 +195,16 @@ const FADE_IN_DURATION_MS = 80;
 const FADE_OUT_DURATION_MS = 150;
 const FADE_INTERVAL_MS = 16;
 let fadeTimer: ReturnType<typeof setInterval> | null = null;
+let fadeDelayTimer: ReturnType<typeof setTimeout> | null = null;
 
 export function stopFade(): void {
   if (fadeTimer) {
     clearInterval(fadeTimer);
     fadeTimer = null;
+  }
+  if (fadeDelayTimer) {
+    clearTimeout(fadeDelayTimer);
+    fadeDelayTimer = null;
   }
 }
 
@@ -318,7 +323,18 @@ export function destroyOverlayWindow(): void {
   overlayLockedBounds = null;
 }
 
-export function showOverlay(): void {
+/**
+ * `fadeDelayMs` holds the window on screen at zero opacity for that long before
+ * the fade-in starts. A hidden window's renderer has no live compositor and
+ * produces no frames, so anything pushed to it while hidden (most importantly a
+ * new active layer) does not actually repaint until the window is back on
+ * screen — fading in straight away plays the first frames of the reveal on
+ * stale content, which then visibly swaps mid-fade. Presenting it fully
+ * transparent first gives the renderer somewhere to repaint, invisibly, and the
+ * fade then reveals content that is already correct. Callers that aren't
+ * changing the content (Lens key TAP/HOLD, session restore) leave it at 0.
+ */
+export function showOverlay(fadeDelayMs = 0): void {
   const win = getWin();
   if (!win) return;
   overlayVisible = true;
@@ -327,10 +343,21 @@ export function showOverlay(): void {
   // never tears it down, so reapplying it on every show causes a visible flash.
   if (settings.overlayMode && !overlayStyleApplied) applyOverlayMode(true);
   const target = overlayStyleApplied ? settings.opacity : 1.0;
+  stopFade();
   win.setOpacity(0);
   if (overlayStyleApplied) win.showInactive();
   else win.show();
-  fadeWindowOpacity(target, FADE_IN_DURATION_MS);
+  if (fadeDelayMs <= 0) {
+    fadeWindowOpacity(target, FADE_IN_DURATION_MS);
+    return;
+  }
+  fadeDelayTimer = setTimeout(() => {
+    fadeDelayTimer = null;
+    // hideOverlay() may have won the race while we waited (its own fade calls
+    // stopFade(), but re-check rather than fade a window on its way out).
+    if (!getWin() || !overlayVisible) return;
+    fadeWindowOpacity(target, FADE_IN_DURATION_MS);
+  }, fadeDelayMs);
 }
 
 export function hideOverlay(): void {

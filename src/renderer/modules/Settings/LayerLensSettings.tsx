@@ -19,7 +19,7 @@ import { ipcRenderer } from "electron";
 import { Card, CardContent, CardHeader, CardTitle } from "@Renderer/components/atoms/Card";
 import { Switch } from "@Renderer/components/atoms/Switch";
 import { Slider } from "@Renderer/components/atoms/slider";
-import { IconLens, IconInformation } from "@Renderer/components/atoms/icons";
+import { IconSettings, IconInformation } from "@Renderer/components/atoms/icons";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@Renderer/components/atoms/Tooltip";
 
 interface LensSettingsShape {
@@ -102,11 +102,10 @@ const LayerLensSettings = () => {
   };
 
   return (
-    // Width kept in sync with LayerLensOnboarding above it — see its comment.
-    <Card className="mt-3 max-w-[60.48rem] mx-auto" variant="default">
+    <Card className="mt-3 max-w-2xl mx-auto" variant="default">
       <CardHeader>
         <CardTitle variant="default">
-          <IconLens /> Settings
+          <IconSettings /> Settings
         </CardTitle>
       </CardHeader>
       <CardContent>
@@ -150,7 +149,9 @@ const LayerLensSettings = () => {
                     </span>
                   </TooltipTrigger>
                   <TooltipContent>
-                    <p className="max-w-xs">Shows a keyboard overlay with the active layer. Toggle it anytime with Ctrl+Alt+L.</p>
+                    <p className="max-w-xs">
+                      Shows a keyboard overlay with the active layer. Toggle it anytime with a LENS TAP / LENS HOLD key.
+                    </p>
                   </TooltipContent>
                 </Tooltip>
               </div>

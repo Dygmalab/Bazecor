@@ -559,7 +559,7 @@ function SuperkeysEditor(props: SuperkeysEditorProps) {
                 cloneItem={duplicateSuperkey}
                 checkLimit={checkLimit}
               />
-              <MacrosMemoryUsage context="superkeys" mem={superkeys.length} tMem={70} />
+              <MacrosMemoryUsage context="superkeys" mem={superkeys.length} tMem={MAX_SUPERKEYS} warningOffset={0} />
             </>
           }
           saveContext={writeSuper}
@@ -570,14 +570,7 @@ function SuperkeysEditor(props: SuperkeysEditorProps) {
           discardChangesButtonRef={discardChangesButtonRef}
         />
 
-        <Callout
-          size="sm"
-          className="mt-4"
-          hasVideo
-          media="6Az05_Yl6AU"
-          videoTitle="The Greatest Keyboard Feature Of All Time: SUPERKEYS! 🦹‍♀️"
-          videoDuration="5:34"
-        >
+        <Callout size="sm" className="mt-4">
           <p>{i18n.editor.superkeys.callout1}</p>
           <p>{i18n.editor.superkeys.callout2}</p>
           <p>{i18n.editor.superkeys.callout3}</p>

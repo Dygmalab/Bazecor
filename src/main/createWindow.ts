@@ -1,4 +1,4 @@
-import { BrowserWindow } from "electron";
+import { app, BrowserWindow } from "electron";
 import windowStateKeeper from "electron-window-state";
 import path from "path";
 import { configureNativeTheme } from "./setup/theme";
@@ -18,6 +18,13 @@ declare const MAIN_WINDOW_WEBPACK_ENTRY: string;
 declare const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: string;
 
 const createWindow = () => {
+  // Undoes the accessory-app switch onClose.ts makes in background mode: with a
+  // real window on screen again Bazecor belongs in the Dock (and needs to be
+  // able to take focus) rather than living in the tray alone.
+  if (process.platform === "darwin" && !app.dock?.isVisible()) {
+    app.dock?.show();
+  }
+
   // Create the browser window.
   const mainWindowState = windowStateKeeper({
     defaultWidth: 1200,

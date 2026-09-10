@@ -81,9 +81,10 @@ interface MacrosMemoryUsageProps {
   mem: number;
   tMem: number;
   context?: "macros" | "superkeys" | "combos";
+  warningOffset?: number;
 }
 
-const MacrosMemoryUsage = ({ mem, tMem, context = "macros" }: MacrosMemoryUsageProps) => {
+const MacrosMemoryUsage = ({ mem, tMem, context = "macros", warningOffset = 20 }: MacrosMemoryUsageProps) => {
   const [memoryUsage, setMemoryUsage] = React.useState(mem);
   const [isLoading, setIsLoading] = React.useState(true);
 
@@ -102,13 +103,13 @@ const MacrosMemoryUsage = ({ mem, tMem, context = "macros" }: MacrosMemoryUsageP
     // setMemoryUsage(macros.map(m => m.actions).flat().length);
     setMemoryUsage(Number(((mem / tMem) * 100).toFixed(1)));
     setIsLoading(false);
-    if (mem > tMem * 0.95 && mem < tMem - 20) {
+    if (mem > tMem * 0.95 && mem < tMem - warningOffset) {
       toast.warn(
         <ToastMessage title={i18nMemoryUsage.alertTitle} content={i18nMemoryUsage.alertBody} icon={<IconFloppyDisk />} />,
         { icon: "" },
       );
     }
-    if (mem > tMem - 20) {
+    if (mem >= tMem - warningOffset) {
       toast.error(
         <ToastMessage title={i18nMemoryUsage.errorTitle} content={i18nMemoryUsage.alertBody} icon={<IconFloppyDisk />} />,
         {
@@ -123,7 +124,7 @@ const MacrosMemoryUsage = ({ mem, tMem, context = "macros" }: MacrosMemoryUsageP
         },
       );
     }
-  }, [mem, tMem, i18nMemoryUsage]);
+  }, [mem, tMem, warningOffset, i18nMemoryUsage]);
   if (isLoading) return null;
   return (
     <Styles

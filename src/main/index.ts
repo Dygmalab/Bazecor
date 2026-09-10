@@ -50,7 +50,11 @@ app.on("ready", async () => {
   // Login-item launches pass --hidden (or wasOpenedAsHidden on macOS): start
   // tray-resident with the overlay available but no main window.
   const startHidden = process.argv.includes("--hidden") || app.getLoginItemSettings().wasOpenedAsHidden;
-  if (!(startHidden && getRunInBackground())) {
+  if (startHidden && getRunInBackground()) {
+    // No window to go with it, so no Dock icon either — the tray icon is the
+    // only entry point until createWindow() brings it back.
+    app.dock?.hide();
+  } else {
     createWindow();
   }
   // we do not want a menu on top of the window
@@ -70,7 +74,11 @@ app.on("before-quit", event => {
   // OS-level trigger. Redirect it to a normal window close instead, which
   // mac's onClose.ts already handles correctly (close the window, leave the
   // app + overlay running, same as clicking the red button or Cmd+W).
-  if (process.platform === "darwin" && !isAppQuitting()) {
+  //
+  // Only when background mode is actually on, though: without it there is no
+  // tray icon to bring Bazecor back, so swallowing the quit would strand the
+  // app running with no way to reach or close it.
+  if (process.platform === "darwin" && !isAppQuitting() && getRunInBackground()) {
     event.preventDefault();
     const win = Window.getWindow();
     if (win && !win.isDestroyed()) win.close();
