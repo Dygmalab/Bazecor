@@ -24,9 +24,9 @@
   <url type="homepage">https://dygma.com/</url>
   <url type="vcs-browser">https://github.com/Dygmalab/Bazecor</url>
   <name>Bazecor</name>
-  <summary>Configurator for Dygma Raise and Defy keyboards</summary>
+  <summary>Configurator for Dygma keyboards</summary>
   <description>
-    <p>Bazecor is the graphical configurator for the Dygma Raise and Defy keyboards. While still heavily under development, it&#39;s at a stage where it is already usable.</p>
+    <p>Bazecor is the graphical configurator for the Dygma keyboards. While still heavily under development, it&#39;s at a stage where it is already usable.</p>
     <p>The primary purpose of the application is to allow one to configure their keyboard without having to compile or flash firmware, by storing the configuration on the keyboard itself, in EEPROM. There are no external tools required, just Bazecor itself.</p>
     <p>Features:</p>
     <ul>
@@ -53,6 +53,15 @@
     <release version="1.10.0" date="2026-08-05">
       <url type="details">https://github.com/Dygmalab/Bazecor/releases/tag/v1.10.0</url>
     </release>
+    <release version="1.9.2" date="2026-07-31">
+      <url type="details">https://github.com/Dygmalab/Bazecor/releases/tag/v1.9.2</url>
+    </release>
+    <release version="1.9.1" date="2026-07-27">
+      <url type="details">https://github.com/Dygmalab/Bazecor/releases/tag/v1.9.1</url>
+    </release>
+    <release version="1.9.0" date="2026-06-22">
+      <url type="details">https://github.com/Dygmalab/Bazecor/releases/tag/v1.9.0</url>
+    </release>
   </releases>
   <keywords>
     <keyword>keyboard</keyword>
@@ -61,6 +70,7 @@
     <keyword>dygma</keyword>
     <keyword>raise</keyword>
     <keyword>defy</keyword>
+    <keyword>sonsei</keyword>
     <keyword>keymap</keyword>
     <keyword>layout</keyword>
     <keyword>macro</keyword>
