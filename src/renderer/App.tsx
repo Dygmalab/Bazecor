@@ -243,13 +243,15 @@ function App() {
           log.info("SK 2.0 detected");
         }
 
-        // Layer Lens is available for Sonsei (fw >= 1.0.0), Defy (fw >= 2.3.0, when
-        // the overlay HID feature shipped in Defy firmware), and Raise2 (fw >= 1.4.0,
-        // reusing the same minimum as the SK 2.0 threshold above). Raise (Raise1)
-        // never exposes Lens, regardless of firmware.
+        // Layer Lens needs the firmware to report overlay/layer packets over raw HID,
+        // which shipped for Sonsei in 1.0.0 and lands for Defy in 2.3.0 and Raise2 in
+        // 1.5.0 — both still unreleased at the time of writing (latest published are
+        // Defy 2.2.1 and Raise2 1.4.1), so Lens stays hidden on those boards until
+        // their firmware is out. Raise (Raise1) never exposes Lens, whatever the
+        // firmware.
         const sonseiLensMin: [number, number, number] = [1, 0, 0];
         const defyLensMin: [number, number, number] = [2, 3, 0];
-        const raise2LensMin: [number, number, number] = [1, 4, 0];
+        const raise2LensMin: [number, number, number] = [1, 5, 0];
         const lensAvailable =
           (isSonsei && compareSemver(semver, sonseiLensMin) >= 0) ||
           (isDefy && compareSemver(semver, defyLensMin) >= 0) ||

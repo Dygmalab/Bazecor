@@ -72,6 +72,9 @@ export interface EnergyManagementProps {
   wireless: WirelessInterface;
   changeWireless: (wireless: WirelessInterface) => void;
   updateTab?: (value: string) => void;
+  /** Bazecor `info.product`. Gates the True sleep card, which the Sonsei doesn't
+   * expose — see supportsTrueSleep() in utils/deviceCapabilities. */
+  deviceType?: string;
 }
 
 export interface AdvancedEnergyManagementProps {

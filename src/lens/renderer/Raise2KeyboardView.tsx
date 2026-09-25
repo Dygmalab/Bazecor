@@ -4,7 +4,7 @@ import { RAISE2_ANSI_KEYS, RAISE2_ANSI_SVG_W, RAISE2_ANSI_VIEW_Y, RAISE2_ANSI_VI
 import { RAISE2_ISO_KEYS, RAISE2_ISO_SVG_W, RAISE2_ISO_VIEW_Y, RAISE2_ISO_VIEW_H } from "./geometry-raise2-iso";
 import { RAISE2_THUMB_PATHS } from "./raise2-thumb-paths";
 import { RAISE2_ISO_ENTER_PATH } from "./raise2-iso-enter-path";
-import { decodeKey, superkeyIndex, layoutOverrides, shiftOverrides } from "./keycodes";
+import { decodeKey, superkeyIndex, layoutOverrides, symbolOverrides } from "./keycodes";
 import { keyLabel, fg } from "./key-label";
 
 interface Props {
@@ -36,7 +36,7 @@ export const Raise2KeyboardView: React.FC<Props> = ({ model, activeLayer, layout
   const thumbPaths = isIso ? { ...RAISE2_THUMB_PATHS, ...RAISE2_ISO_ENTER_PATH } : RAISE2_THUMB_PATHS;
 
   const overrides = layoutOverrides(layout);
-  const shiftSymbols = shiftOverrides(layout);
+  const symbols = symbolOverrides(layout);
   const layer = Math.min(activeLayer, model.keymap.length - 1);
   const keymapLayer = model.keymap[layer] ?? [];
   const colormapLayer = model.colormap[layer] ?? [];
@@ -57,7 +57,7 @@ export const Raise2KeyboardView: React.FC<Props> = ({ model, activeLayer, layout
       const name = model.superkeyNames?.[sk] || `SK${sk + 1}`;
       return { primary: "SUPER", subtitle: name, hold: "" };
     }
-    return decodeKey(code, overrides, names, macroNames, shiftSymbols);
+    return decodeKey(code, overrides, names, macroNames, symbols);
   }
 
   function renderKey(key: (typeof RAISE2_ANSI_KEYS)[0]) {
