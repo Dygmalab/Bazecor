@@ -12,9 +12,9 @@ export function rgbw2b(color: RGBW): RGB {
   const sanitizedB = sanitizeIntensity(color.b);
   const sanitizedW = sanitizeIntensity(color.w);
 
-  const r = sanitizeIntensity(sanitizedW + sanitizedR);
-  const g = sanitizeIntensity(sanitizedW + sanitizedG);
-  const b = sanitizeIntensity(sanitizedW + sanitizedB);
+  const r = sanitizeIntensity(sanitizedR + sanitizedW);
+  const g = sanitizeIntensity(sanitizedG + sanitizedW);
+  const b = sanitizeIntensity(sanitizedB + sanitizedW);
 
   return { r, g, b, rgb: `rgb(${r}, ${g}, ${b})` };
 }
