@@ -28,6 +28,10 @@ const English = {
     exportFailed: "Export failed!",
     preferenceFailOnSave: "Whoops, Something Went Wrong!",
     preferenceFailOnSaveBody: "Please try again.",
+    rgbwProfileApplyFailed: "The color profile was not saved. Check the keyboard connection and try again.",
+    rgbwProfilePaletteRestored: "The color profile was not saved. The previous palette was restored, so you can try again.",
+    rgbwProfilePaletteUnknown:
+      "The color profile was not saved, and the keyboard palette may be partially updated. Reconnect the keyboard before retrying.",
     dismiss: "Dismiss",
     troubleshooting: "Troubleshooting",
     alertUnsavedTitle: "Unsaved changes",
@@ -635,6 +639,26 @@ const English = {
       brightnessUG: "LED underglow brightness",
       idleDisabled: "Disabled",
       idleTimeLimit: "Time before LEDs turn off",
+      colorRendering: {
+        title: "Color rendering",
+        profileLabel: "Profile",
+        help: "Saving a changed profile updates all custom palette colors. Applies in wired and wireless modes.",
+        fallback: "The saved profile is not supported. Choose a profile and save to replace it.",
+        profiles: {
+          efficient: {
+            label: "Efficient",
+            description: "Uses the white LED for the common part of each color. Matches the original conversion.",
+          },
+          balanced: {
+            label: "Balanced",
+            description: "Uses more white LED contribution than Vivid.",
+          },
+          vivid: {
+            label: "Vivid",
+            description: "Keeps more of the common component in RGB LEDs.",
+          },
+        },
+      },
       idle: {
         oneMinute: "1 minute",
         twoMinutes: "2 minutes",

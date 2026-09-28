@@ -1,5 +1,6 @@
 import { PaletteType } from "@Renderer/types/layout";
 import { rgb2w } from "../../color";
+import type { RGBWConversionProfile } from "../../color";
 
 export const convertKeymapRtoR2 = (layer: number[], keyboardType: string) => {
   let localLayer = [...layer];
@@ -56,7 +57,7 @@ export const convertColormapRtoR2 = (layer: number[], keyboardType: string, back
   return result;
 };
 
-export const convertPaletteRtoR2 = (color: PaletteType) => {
-  const rgbw = rgb2w(color);
+export const convertPaletteRtoR2 = (color: PaletteType, profile?: RGBWConversionProfile) => {
+  const rgbw = rgb2w(color, profile);
   return [rgbw.r, rgbw.g, rgbw.b, rgbw.w];
 };

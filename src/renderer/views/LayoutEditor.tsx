@@ -56,7 +56,7 @@ import { ClearLayerDialog } from "@Renderer/components/molecules/CustomModal/Cle
 import { DygmaDeviceInfoType } from "@Renderer/types/dygmaDefs";
 import BlankTable from "../../api/keymap/db/blanks";
 import Keymap, { KeymapDB } from "../../api/keymap";
-import { rgb2w } from "../../api/color";
+import { rgb2w, resolveRgbwProfileId, rgbwProfiles } from "../../api/color";
 import Backup from "../../api/backup";
 import {
   convertColormapRtoR2,
@@ -554,8 +554,10 @@ const LayoutEditor = (props: LayoutEditorProps) => {
     if (state.currentDevice?.device.RGBWMode !== true) {
       args = flatten(plette.map(color => [color.r, color.g, color.b])).map(v => v.toString());
     } else {
+      const neurons = store.get("neurons") as Neuron[];
+      const profileId = resolveRgbwProfileId(neurons.find(neuron => neuron.id === neuronID)?.rgbwProfileId).id;
       const paletteAux = plette.map(color => {
-        const aux = rgb2w({ r: color.r, g: color.g, b: color.b });
+        const aux = rgb2w({ r: color.r, g: color.g, b: color.b }, rgbwProfiles[profileId]);
         return aux;
       });
       args = flatten(paletteAux.map(color => [color.r, color.g, color.b, color.w])).map(v => v.toString());

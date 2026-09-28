@@ -483,6 +483,9 @@ export interface Errors {
   exportFailed: string;
   preferenceFailOnSave: string;
   preferenceFailOnSaveBody: string;
+  rgbwProfileApplyFailed: string;
+  rgbwProfilePaletteRestored: string;
+  rgbwProfilePaletteUnknown: string;
   dismiss: string;
   troubleshooting: string;
   alertUnsavedTitle: string;
@@ -637,6 +640,17 @@ export interface LED {
   brightnessUG: string;
   idleDisabled: string;
   idleTimeLimit: string;
+  colorRendering: {
+    title: string;
+    profileLabel: string;
+    help: string;
+    fallback: string;
+    profiles: {
+      efficient: { label: string; description: string };
+      balanced: { label: string; description: string };
+      vivid: { label: string; description: string };
+    };
+  };
   idle: Idle;
 }
 

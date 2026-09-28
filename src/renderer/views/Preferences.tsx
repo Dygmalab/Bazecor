@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import { ipcRenderer } from "electron";
 import { motion } from "framer-motion";
 import log from "electron-log/renderer";
@@ -60,8 +60,11 @@ import { KBDataPref, PrefState, PreferencesProps } from "@Renderer/types/prefere
 import { WirelessInterface } from "@Renderer/types/wireless";
 import LogoLoader from "@Renderer/components/atoms/loader/LogoLoader";
 import { Neuron } from "@Renderer/types/neurons";
+import { applyRgbwProfile } from "@Renderer/utils/applyRgbwProfile";
 import Backup from "../../api/backup";
 import { delay } from "../../api/flash/delay";
+import { defaultRgbwProfileId, resolveRgbwProfileId } from "../../api/color";
+import type { RGBWProfileId, RGBWProfileResolution } from "../../api/color";
 
 const store = Store.getStore();
 const sk20Raw = store.get("capabilities.sk20");
@@ -145,10 +148,27 @@ const initialPreferences = {
 
 const Preferences = (props: PreferencesProps) => {
   const { state } = useDevice();
+  const currentDeviceRef = useRef(state.currentDevice);
+  currentDeviceRef.current = state.currentDevice;
 
   const [bkp] = useState(new Backup());
   const [modified, setModified] = useState(false);
   const [localloading, setLocalLoading] = useState(true);
+  const isSavingRef = useRef(false);
+  const [isSaving, setIsSaving] = useState(false);
+  const [rgbwProfileState, setRgbwProfileState] = useState<{
+    committed: RGBWProfileId;
+    pending: RGBWProfileId;
+    stored: string | undefined;
+    status: RGBWProfileResolution["status"];
+    modified: boolean;
+  }>({
+    committed: defaultRgbwProfileId,
+    pending: defaultRgbwProfileId,
+    stored: undefined,
+    status: "missing",
+    modified: false,
+  });
 
   // Keyboard & App Prefrerences data storage
   const [wireless, setWireless] = useState<WirelessInterface>(initialWireless);
@@ -293,11 +313,21 @@ const Preferences = (props: PreferencesProps) => {
         ...prevKbData,
         ...newKbData,
       }));
+      const latestNeurons = (store.get("neurons") as Array<Neuron>) ?? [];
+      const storedProfileId = latestNeurons.find(neuron => neuron.id === localNeuronID)?.rgbwProfileId;
+      const resolvedProfile = resolveRgbwProfileId(storedProfileId);
+      setRgbwProfileState({
+        committed: resolvedProfile.id,
+        pending: resolvedProfile.id,
+        stored: storedProfileId,
+        status: resolvedProfile.status,
+        modified: false,
+      });
       setPreferencesState(prevPreferencesState => ({
         ...prevPreferencesState,
         neuronID: localNeuronID,
         darkMode: store.get("settings.darkMode") as string,
-        neurons: store.get("neurons") as Array<Neuron>,
+        neurons: latestNeurons,
       }));
     }
     return localNeuronID;
@@ -456,12 +486,51 @@ const Preferences = (props: PreferencesProps) => {
   };
 
   const saveContext = async () => {
+    if (isSavingRef.current) return;
+    isSavingRef.current = true;
+    setIsSaving(true);
     setLoading(true);
-    await delay(250);
+    const capturedDevice = state.currentDevice;
+    const capturedNeuronId = preferencesState.neuronID;
+    const { pending: profileId, stored: previousProfileId } = rgbwProfileState;
+    let userFacingError = i18n.errors.preferenceFailOnSaveBody;
+    let retainProfileSelection = false;
 
     try {
+      await delay(250);
       await saveKeymapChanges();
       await saveWirelessChanges();
+
+      if (rgbwProfileState.modified) {
+        retainProfileSelection = true;
+        const result = await applyRgbwProfile({
+          device: capturedDevice,
+          getCurrentDevice: () => currentDeviceRef.current,
+          targetNeuronId: capturedNeuronId,
+          previousProfileId,
+          profileId,
+          getNeurons: () => (store.get("neurons") as Neuron[]) ?? [],
+          setNeurons: neurons => store.set("neurons", neurons),
+        });
+        if (!result.ok) {
+          if ("recovery" in result && result.recovery === "restored") {
+            userFacingError = i18n.errors.rgbwProfilePaletteRestored;
+          } else if ("recovery" in result && result.recovery === "failed") {
+            userFacingError = i18n.errors.rgbwProfilePaletteUnknown;
+          } else {
+            userFacingError = i18n.errors.rgbwProfileApplyFailed;
+          }
+          throw new Error(`RGBW profile apply failed: ${"reason" in result ? result.reason : "unknown"}`);
+        }
+        retainProfileSelection = false;
+        setRgbwProfileState(current => ({
+          ...current,
+          committed: profileId,
+          stored: profileId,
+          status: "known",
+          modified: false,
+        }));
+      }
 
       const commands = await Backup.Commands(state.currentDevice);
       const backup = await bkp.DoBackup(commands, preferencesState.neuronID, state.currentDevice);
@@ -479,26 +548,39 @@ const Preferences = (props: PreferencesProps) => {
       });
     } catch (error) {
       log.error(error);
-      toast.error(
-        <ToastMessage
-          title={i18n.errors.preferenceFailOnSave}
-          content={i18n.errors.preferenceFailOnSaveBody}
-          icon={<IconFloppyDisk />}
-        />,
-        {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          icon: "",
-        },
-      );
+      toast.error(<ToastMessage title={i18n.errors.preferenceFailOnSave} content={userFacingError} icon={<IconFloppyDisk />} />, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        icon: "",
+      });
+    } finally {
+      try {
+        if (!retainProfileSelection) await destroyContext();
+      } finally {
+        isSavingRef.current = false;
+        setIsSaving(false);
+        setLoading(false);
+      }
     }
-    await destroyContext();
-    setLoading(false);
+  };
+
+  const selectRgbwProfile = (profileId: RGBWProfileId) => {
+    if (isSavingRef.current) return;
+    const profileChanged = profileId !== rgbwProfileState.committed || rgbwProfileState.status === "invalid";
+    setRgbwProfileState(current => ({
+      ...current,
+      pending: profileId,
+      modified: profileId !== current.committed || current.status === "invalid",
+    }));
+    if (profileChanged && !modified) {
+      setModified(true);
+      startContext();
+    }
   };
 
   const updateKBData = (newKbData: KBDataPref) => {
@@ -698,7 +780,7 @@ const Preferences = (props: PreferencesProps) => {
         saveContext={saveContext}
         destroyContext={destroyContext}
         inContext={modified}
-        isSaving={localloading}
+        isSaving={localloading || isSaving}
         styles="pageHeaderFlatBottom"
         saveButtonRef={saveButtonRef}
         discardChangesButtonRef={discardChangesButtonRef}
@@ -787,6 +869,11 @@ const Preferences = (props: PreferencesProps) => {
                         isWireless={
                           state.currentDevice.device.info.keyboardType === "wireless" || state.currentDevice.device.wireless
                         }
+                        isRgbw={state.currentDevice.device.RGBWMode === true}
+                        rgbwProfileId={rgbwProfileState.pending}
+                        rgbwProfileStatus={rgbwProfileState.status}
+                        onRgbwProfileChange={selectRgbwProfile}
+                        rgbwProfileDisabled={isSaving}
                       />
                     </motion.div>
                   </TabsContent>

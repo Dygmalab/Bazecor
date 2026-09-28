@@ -16,6 +16,7 @@
 
 import { Neuron } from "./neurons";
 import { WirelessInterface } from "./wireless";
+import type { RGBWProfileId, RGBWProfileResolution } from "../../api/color";
 
 export interface PreferencesProps {
   cancelContext: () => void;
@@ -78,6 +79,11 @@ export interface LEDSettingsPreferences {
   setWireless: (data: WirelessInterface) => void;
   connected: boolean;
   isWireless: boolean;
+  isRgbw: boolean;
+  rgbwProfileId: RGBWProfileId;
+  rgbwProfileStatus: RGBWProfileResolution["status"];
+  onRgbwProfileChange: (profileId: RGBWProfileId) => void;
+  rgbwProfileDisabled: boolean;
 }
 
 export interface AdvancedSettingsProps {

@@ -29,6 +29,7 @@ export interface Neuron {
   layers: Array<LayerType>;
   macros: Array<MacrosType>;
   superkeys: Array<SuperkeysType>;
+  rgbwProfileId?: string;
   device?: DygmaDeviceType;
 }
 

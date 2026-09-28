@@ -6,6 +6,7 @@ import { BackupType } from "@Renderer/types/backups";
 import { VirtualType } from "@Renderer/types/virtual";
 import Store from "../../renderer/utils/Store";
 import Device from "../comms/Device";
+import { resolveRgbwProfileId, rgbwProfiles } from "../color";
 import {
   convertColormapR2toR,
   convertColormapRtoR2,
@@ -96,6 +97,7 @@ export default class Backup {
    */
   async DoBackup(commands: string[], neuronID: string, device: Device) {
     if (device.file !== false) return undefined;
+    this.neurons = store.get("neurons") as Neuron[];
     const backup: BackupType = {
       neuronID: undefined,
       neuron: undefined,
@@ -350,7 +352,8 @@ export default class Backup {
     const colormapFinal = colormap.map((layer: number[]) =>
       convertColormapRtoR2(layer, dev.device.info.keyboardType, backup.neuron.device.info.keyboardType),
     );
-    const paletteFinal = palette.map(color => convertPaletteRtoR2(color));
+    const profile = rgbwProfiles[resolveRgbwProfileId(localBackup.neuron.rgbwProfileId).id];
+    const paletteFinal = palette.map(color => convertPaletteRtoR2(color, profile));
 
     localBackup.backup[colormapIndex].data = colormapFinal
       .flat()

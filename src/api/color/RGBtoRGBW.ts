@@ -1,25 +1,7 @@
+import { rgbwProfiles } from "./profiles";
+import type { RGBWConversionProfile } from "./profiles";
 import { sanitizeIntensity } from "./sanitizeIntensity";
-import { RGB, RGBW } from "./types";
-
-/**
- * Base extraction factor - how much of the gray component goes to white LED. Scaled based on saturation.
- */
-const BASE_WHITE_EXTRACTION = 0.5;
-
-/**
- * For low-saturation colors (white, gray), we extract to the white LED.
- * This ensures pure white uses the white LED for clean, efficient white light.
- * Value of 1.0 means 100% extraction for maximum brightness and efficiency.
- * Examples:
- * - Pure white (#FFFFFF) with 1.0 factor will be translated to RGBW(0, 0, 0, 255)
- * - Pure white (#FFFFFF) with 0.95 factor will be translated to RGBW(13, 13, 13, 242)
- */
-const WHITE_EXTRACTION_FOR_GRAYS = 0.95;
-
-/**
- * Saturation threshold below which we treat the color as "gray/white" and use higher white extraction.
- */
-const GRAY_SATURATION_THRESHOLD = 0.15;
+import type { RGB, RGBW } from "./types";
 
 /**
  * Convert an RGB color to RGBW.
@@ -30,9 +12,10 @@ const GRAY_SATURATION_THRESHOLD = 0.15;
  * in the RGB channels.
  *
  * @param {RGB} color - A RGB color
+ * @param {RGBWConversionProfile} profile - White extraction settings
  * @returns {RGBW} - The color converted to RGBW
  */
-export function rgb2w(color: RGB): RGBW {
+export function rgb2w(color: RGB, profile: RGBWConversionProfile = rgbwProfiles.efficient): RGBW {
   const sanitizedR = sanitizeIntensity(color.r);
   const sanitizedG = sanitizeIntensity(color.g);
   const sanitizedB = sanitizeIntensity(color.b);
@@ -45,12 +28,13 @@ export function rgb2w(color: RGB): RGBW {
   // - Low saturation (gray/white): use high extraction (mostly white LED)
   // - High saturation (colors): use lower extraction (preserve RGB color)
   let extractionFactor: number;
-  if (saturation <= GRAY_SATURATION_THRESHOLD) {
-    extractionFactor = WHITE_EXTRACTION_FOR_GRAYS;
+  if (saturation <= profile.graySaturationThreshold) {
+    extractionFactor = profile.whiteExtractionForGrays;
   } else {
     // Start at the gray extraction factor so crossing the threshold does not cause a jump.
-    const saturationScale = 1 - (saturation - GRAY_SATURATION_THRESHOLD) / (1 - GRAY_SATURATION_THRESHOLD);
-    extractionFactor = BASE_WHITE_EXTRACTION + (WHITE_EXTRACTION_FOR_GRAYS - BASE_WHITE_EXTRACTION) * saturationScale;
+    const saturationScale = 1 - (saturation - profile.graySaturationThreshold) / (1 - profile.graySaturationThreshold);
+    extractionFactor =
+      profile.baseWhiteExtraction + (profile.whiteExtractionForGrays - profile.baseWhiteExtraction) * saturationScale;
   }
 
   const w = Math.round(minVal * extractionFactor);

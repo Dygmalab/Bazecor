@@ -1,6 +1,20 @@
 import { expect, test, describe } from "vitest";
 import { rgb2w } from "./RGBtoRGBW";
 import { rgbw2b } from "./RGBWtoRGB";
+import { rgbwProfiles } from "./profiles";
+import type { RGBWConversionProfile } from "./profiles";
+
+const zeroExtractionProfile: RGBWConversionProfile = Object.freeze({
+  baseWhiteExtraction: 0,
+  whiteExtractionForGrays: 0,
+  graySaturationThreshold: 0.15,
+});
+
+const fullExtractionProfile: RGBWConversionProfile = Object.freeze({
+  baseWhiteExtraction: 1,
+  whiteExtractionForGrays: 1,
+  graySaturationThreshold: 0.15,
+});
 
 describe("rgb2w", () => {
   test.each([
@@ -27,7 +41,7 @@ describe("rgb2w", () => {
     { input: { r: 255, g: 217, b: 217 }, expected: { r: 49, g: 11, b: 11, w: 206 } },
     { input: { r: 255, g: 216, b: 216 }, expected: { r: 50, g: 11, b: 11, w: 205 } },
   ])("rgb2w($input) = $expected", ({ input, expected }) => {
-    expect(rgb2w(input)).toEqual(expected);
+    expect(rgb2w(input, rgbwProfiles.vivid)).toEqual(expected);
   });
 
   test.each([
@@ -35,8 +49,8 @@ describe("rgb2w", () => {
     { below: { r: 217, g: 255, b: 217 }, above: { r: 216, g: 255, b: 216 } },
     { below: { r: 217, g: 217, b: 255 }, above: { r: 216, g: 216, b: 255 } },
   ])("keeps LED changes small across the gray threshold for $below", ({ below, above }) => {
-    const belowThreshold = rgb2w(below);
-    const aboveThreshold = rgb2w(above);
+    const belowThreshold = rgb2w(below, rgbwProfiles.vivid);
+    const aboveThreshold = rgb2w(above, rgbwProfiles.vivid);
 
     for (const channel of ["r", "g", "b", "w"] as const) {
       expect(Math.abs(belowThreshold[channel] - aboveThreshold[channel])).toBeLessThanOrEqual(2);
@@ -116,7 +130,7 @@ describe("rgb2w", () => {
 
   test("mint green preserves color with moderate white", () => {
     // #99FFCC = rgb(153, 255, 204) - a mint green (40% saturation)
-    const mint = rgb2w({ r: 153, g: 255, b: 204 });
+    const mint = rgb2w({ r: 153, g: 255, b: 204 }, rgbwProfiles.vivid);
 
     // Should have moderate white
     expect(mint.w).toBeGreaterThan(50);
@@ -148,7 +162,7 @@ describe("rgb2w", () => {
   });
 
   test("light pink has some white but keeps pink tint", () => {
-    const lightPink = rgb2w({ r: 255, g: 204, b: 204 });
+    const lightPink = rgb2w({ r: 255, g: 204, b: 204 }, rgbwProfiles.vivid);
     // Should have moderate white
     expect(lightPink.w).toBeGreaterThan(80);
     // Red should be higher than green/blue
@@ -170,5 +184,105 @@ describe("rgb2w", () => {
     expect(result.g).toBeLessThanOrEqual(255);
     expect(result.b).toBeLessThanOrEqual(255);
     expect(result.w).toBeLessThanOrEqual(255);
+  });
+
+  test("the omitted profile matches explicit Efficient conversion across a grid", () => {
+    const levels = [0, 64, 128, 216, 255];
+    const gridInputs = levels.flatMap(r => levels.flatMap(g => levels.map(b => ({ r, g, b }))));
+
+    for (const input of gridInputs) {
+      const implicit = rgb2w(input);
+      const explicit = rgb2w(input, rgbwProfiles.efficient);
+
+      expect(explicit).toEqual(implicit);
+    }
+  });
+
+  test.each([
+    {
+      profile: zeroExtractionProfile,
+      mint: { r: 153, g: 255, b: 204, w: 0 },
+      white: { r: 255, g: 255, b: 255, w: 0 },
+    },
+    {
+      profile: fullExtractionProfile,
+      mint: { r: 0, g: 102, b: 51, w: 153 },
+      white: { r: 0, g: 0, b: 0, w: 255 },
+    },
+  ])("uses a synthetic extraction profile", ({ profile, mint, white }) => {
+    expect(rgb2w({ r: 153, g: 255, b: 204 }, profile)).toEqual(mint);
+    expect(rgb2w({ r: 255, g: 255, b: 255 }, profile)).toEqual(white);
+  });
+
+  test("uses base and gray extraction independently", () => {
+    const profile: RGBWConversionProfile = {
+      baseWhiteExtraction: 0,
+      whiteExtractionForGrays: 0.95,
+      graySaturationThreshold: 0.15,
+    };
+
+    expect(rgb2w({ r: 153, g: 255, b: 204 }, profile)).toEqual({ r: 50, g: 152, b: 101, w: 103 });
+  });
+
+  test("uses the profile saturation threshold", () => {
+    const profile: RGBWConversionProfile = {
+      baseWhiteExtraction: 0.5,
+      whiteExtractionForGrays: 0.95,
+      graySaturationThreshold: 0.5,
+    };
+    const input = { r: 200, g: 120, b: 120 };
+
+    expect(rgb2w(input, rgbwProfiles.vivid)).toEqual({ r: 102, g: 22, b: 22, w: 98 });
+    expect(rgb2w(input, profile)).toEqual({ r: 86, g: 6, b: 6, w: 114 });
+  });
+
+  test("profile calls are order-independent and do not mutate caller inputs", () => {
+    const input = Object.freeze({ r: 153, g: 255, b: 204 });
+    const zeroBefore = { ...zeroExtractionProfile };
+    const fullBefore = { ...fullExtractionProfile };
+
+    expect(rgb2w(input, zeroExtractionProfile)).toEqual({ r: 153, g: 255, b: 204, w: 0 });
+    expect(rgb2w(input, rgbwProfiles.vivid)).toEqual({ r: 28, g: 130, b: 79, w: 125 });
+    expect(rgb2w(input, fullExtractionProfile)).toEqual({ r: 0, g: 102, b: 51, w: 153 });
+    expect(rgb2w(input, rgbwProfiles.vivid)).toEqual({ r: 28, g: 130, b: 79, w: 125 });
+    expect(zeroExtractionProfile).toEqual(zeroBefore);
+    expect(fullExtractionProfile).toEqual(fullBefore);
+    expect(input).toEqual({ r: 153, g: 255, b: 204 });
+  });
+
+  test.each([zeroExtractionProfile, fullExtractionProfile])(
+    "keeps explicit-profile outputs integral, in range, and reversible",
+    profile => {
+      const levels = [0, 1, 64, 128, 254, 255];
+      for (const r of levels) {
+        for (const g of levels) {
+          for (const b of levels) {
+            const output = rgb2w({ r, g, b }, profile);
+            for (const channel of Object.values(output)) {
+              expect(Number.isInteger(channel)).toBe(true);
+              expect(channel).toBeGreaterThanOrEqual(0);
+              expect(channel).toBeLessThanOrEqual(255);
+            }
+            expect(rgbw2b(output)).toEqual({ r, g, b, rgb: `rgb(${r}, ${g}, ${b})` });
+          }
+        }
+      }
+    },
+  );
+
+  test.each([
+    { input: { r: 255, g: 255, b: 255 }, efficient: [0, 0, 0, 255], balanced: [0, 0, 0, 255], vivid: [13, 13, 13, 242] },
+    { input: { r: 128, g: 128, b: 128 }, efficient: [0, 0, 0, 128], balanced: [0, 0, 0, 128], vivid: [6, 6, 6, 122] },
+    { input: { r: 153, g: 255, b: 204 }, efficient: [0, 102, 51, 153], balanced: [16, 118, 67, 137], vivid: [28, 130, 79, 125] },
+    { input: { r: 255, g: 204, b: 229 }, efficient: [51, 0, 25, 204], balanced: [53, 2, 27, 202], vivid: [67, 16, 41, 188] },
+    { input: { r: 200, g: 120, b: 120 }, efficient: [80, 0, 0, 120], balanced: [93, 13, 13, 107], vivid: [102, 22, 22, 98] },
+  ])("uses the exact production profile outputs for $input", ({ input, efficient, balanced, vivid }) => {
+    const asTuple = (profile: RGBWConversionProfile) => {
+      const result = rgb2w(input, profile);
+      return [result.r, result.g, result.b, result.w];
+    };
+    expect(asTuple(rgbwProfiles.efficient)).toEqual(efficient);
+    expect(asTuple(rgbwProfiles.balanced)).toEqual(balanced);
+    expect(asTuple(rgbwProfiles.vivid)).toEqual(vivid);
   });
 });

@@ -23,6 +23,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@Renderer/components/a
 import { Switch } from "@Renderer/components/atoms/Switch";
 import { LEDSettingsPreferences } from "@Renderer/types/preferences";
 import { Slider } from "@Renderer/components/atoms/slider";
+import { Button } from "@Renderer/components/atoms/Button";
 
 // Assets
 // import { Badge } from "@Renderer/component/Badge";
@@ -31,9 +32,13 @@ import { IconFlashlight, IconIridescentWhiteBalance, IconThunder } from "@Render
 import Callout from "@Renderer/components/molecules/Callout/Callout";
 import { i18n } from "@Renderer/i18n";
 import Heading from "@Renderer/components/atoms/Heading";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@Renderer/components/atoms/Select";
+import { rgbwProfiles } from "../../../api/color";
+import type { RGBWProfileId } from "../../../api/color";
 
 function LEDSettings(props: LEDSettingsPreferences) {
   const { kbData, wireless, setKbData, setWireless, connected, isWireless } = props;
+  const { isRgbw, rgbwProfileId, rgbwProfileStatus, onRgbwProfileChange, rgbwProfileDisabled } = props;
   const [localKBData, setLocalKBData] = useState(kbData);
   const [localWireless, setLocalWireless] = useState(wireless);
 
@@ -262,6 +267,54 @@ function LEDSettings(props: LEDSettingsPreferences) {
             )}
           </CardContent>
         </Card>
+
+        {isRgbw && (
+          <Card className="mt-3 max-w-2xl mx-auto" variant="default">
+            <CardHeader>
+              <CardTitle>{i18n.keyboardSettings.led.colorRendering.title}</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <label htmlFor="rgbw-profile" className="block text-sm font-medium mb-2">
+                {i18n.keyboardSettings.led.colorRendering.profileLabel}
+              </label>
+              <Select
+                value={rgbwProfileId}
+                onValueChange={value => onRgbwProfileChange(value as RGBWProfileId)}
+                disabled={rgbwProfileDisabled}
+              >
+                <SelectTrigger id="rgbw-profile" className="w-full">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {(Object.keys(rgbwProfiles) as RGBWProfileId[]).map(profileId => (
+                    <SelectItem key={profileId} value={profileId}>
+                      {i18n.keyboardSettings.led.colorRendering.profiles[profileId].label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <p className="mt-2 text-sm text-gray-400 dark:text-gray-100">
+                {i18n.keyboardSettings.led.colorRendering.profiles[rgbwProfileId].description}
+              </p>
+              <p className="mt-1 text-xs text-gray-300 dark:text-gray-200">{i18n.keyboardSettings.led.colorRendering.help}</p>
+              {rgbwProfileStatus === "invalid" && (
+                <Callout size="sm" className="mt-3">
+                  <p>{i18n.keyboardSettings.led.colorRendering.fallback}</p>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    className="mt-2"
+                    onClick={() => onRgbwProfileChange("efficient")}
+                    disabled={rgbwProfileDisabled}
+                  >
+                    Use {i18n.keyboardSettings.led.colorRendering.profiles.efficient.label}
+                  </Button>
+                </Callout>
+              )}
+            </CardContent>
+          </Card>
+        )}
 
         {isWireless && (
           <>

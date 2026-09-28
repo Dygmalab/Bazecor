@@ -38,6 +38,7 @@ const schema: Schema<StorageType> = {
       properties: {
         id: { type: "string" },
         name: { type: "string" },
+        rgbwProfileId: { type: "string" },
         layers: {
           type: "array",
           items: {
