@@ -5,14 +5,18 @@ import log from "electron-log/main";
 
 const udevRulesToWrite = `\
 # Dygma Raise
-SUBSYSTEMS=="usb", ATTRS{idVendor}=="1209", ATTRS{idProduct}=="2200", MODE="0660", TAG+="uaccess"
+#
+# SUBSYSTEM!="input" keeps uaccess off the keyboard's raw evdev node
+# (/dev/input/eventX), which the plain vendor/product match below would
+# otherwise also tag, exposing raw keystrokes to any local process.
+SUBSYSTEMS=="usb", ATTRS{idVendor}=="1209", ATTRS{idProduct}=="2200", SUBSYSTEM!="input", MODE="0660", TAG+="uaccess"
 # bootloader mode
-SUBSYSTEMS=="usb", ATTRS{idVendor}=="1209", ATTRS{idProduct}=="2201", MODE="0660", TAG+="uaccess"
+SUBSYSTEMS=="usb", ATTRS{idVendor}=="1209", ATTRS{idProduct}=="2201", SUBSYSTEM!="input", MODE="0660", TAG+="uaccess"
 
 # Dygma USB Keyboards Vendor ID
-SUBSYSTEMS=="usb", ATTRS{idVendor}=="35ef", MODE="0660", TAG+="uaccess"
+SUBSYSTEMS=="usb", ATTRS{idVendor}=="35ef", SUBSYSTEM!="input", MODE="0660", TAG+="uaccess"
 # bootloader mode
-SUBSYSTEMS=="usb", ATTRS{idVendor}=="35ef", MODE="0660", TAG+="uaccess"
+SUBSYSTEMS=="usb", ATTRS{idVendor}=="35ef", SUBSYSTEM!="input", MODE="0660", TAG+="uaccess"
 
 # Dygma HID Keyboards Vendor ID
 KERNEL=="hidraw*", ATTRS{idVendor}=="35ef", MODE="0660", TAG+="uaccess"
@@ -75,4 +79,4 @@ const installUdev = (mainWindow: BrowserWindow) => {
   });
 };
 
-export { checkUdev, installUdev };
+export { checkUdev, installUdev, udevRulesToWrite };
