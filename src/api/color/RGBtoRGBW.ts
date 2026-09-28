@@ -48,8 +48,9 @@ export function rgb2w(color: RGB): RGBW {
   if (saturation <= GRAY_SATURATION_THRESHOLD) {
     extractionFactor = WHITE_EXTRACTION_FOR_GRAYS;
   } else {
+    // Start at the gray extraction factor so crossing the threshold does not cause a jump.
     const saturationScale = 1 - (saturation - GRAY_SATURATION_THRESHOLD) / (1 - GRAY_SATURATION_THRESHOLD);
-    extractionFactor = BASE_WHITE_EXTRACTION + (WHITE_EXTRACTION_FOR_GRAYS - BASE_WHITE_EXTRACTION) * saturationScale * 0.3;
+    extractionFactor = BASE_WHITE_EXTRACTION + (WHITE_EXTRACTION_FOR_GRAYS - BASE_WHITE_EXTRACTION) * saturationScale;
   }
 
   const w = Math.round(minVal * extractionFactor);
@@ -58,6 +59,6 @@ export function rgb2w(color: RGB): RGBW {
     r: sanitizedR - w,
     g: sanitizedG - w,
     b: sanitizedB - w,
-    w: w,
+    w,
   };
 }
