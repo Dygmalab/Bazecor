@@ -173,6 +173,17 @@ jobs:
         env:
           DEBUG: "@malept/flatpak-bundler" # print flatpak-builder output, otherwise failures only show the exit code
         run: yarn run make
+      - if: runner.os == 'Linux'
+        name: Rename flatpak bundle
+        # match the AppImage naming: Bazecor-<version>-x64.flatpak
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          FLATPAK=$(find out/make -type f -name '*.flatpak')
+          if [ "$(echo "$FLATPAK" | grep -c .)" -ne 1 ]; then
+            echo "Expected exactly one .flatpak in out/make, found: '$FLATPAK'"
+            exit 1
+          fi
+          mv -v "$FLATPAK" "$(dirname "$FLATPAK")/Bazecor-${VERSION}-x64.flatpak"
       - if: runner.os == 'Windows'
         shell: bash
         name: Get executable into signing folder
