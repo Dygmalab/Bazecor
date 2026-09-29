@@ -170,6 +170,8 @@ jobs:
         run: yarn run make-mac-arm
       - if: runner.os != 'macOS'
         name: Build for Linux/Windows
+        env:
+          DEBUG: "@malept/flatpak-bundler" # print flatpak-builder output, otherwise failures only show the exit code
         run: yarn run make
       - if: runner.os == 'Windows'
         shell: bash

@@ -76,7 +76,6 @@ const config: ForgeConfig = {
           icon: "./build/logo.png",
           categories: ["Utility"],
           base: "org.electronjs.Electron2.BaseApp",
-          baseFlatpakref: "https://flathub.org/repo/appstream/org.electronjs.Electron2.BaseApp.flatpakref",
           baseVersion: "25.08",
           runtime: "org.freedesktop.Platform",
           runtimeVersion: "25.08",
