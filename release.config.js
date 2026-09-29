@@ -28,6 +28,10 @@ module.exports = {
           },
           {
             path: "@semantic-release/exec",
+            cmd: "mv dist/*.flatpak dist/bazecor-v${nextRelease.version}.flatpak",
+          },
+          {
+            path: "@semantic-release/exec",
             cmd: "sha256sum * > sha256sums.txt",
             execCwd: "dist",
           },
@@ -48,6 +52,10 @@ module.exports = {
           {
             path: "dist/bazecor-v${nextRelease.version}.AppImage",
             name: "bazecor-v${nextRelease.version}.AppImage",
+          },
+          {
+            path: "dist/bazecor-v${nextRelease.version}.flatpak",
+            name: "bazecor-v${nextRelease.version}.flatpak",
           },
           {
             path: "dist/sha256sums.txt",
