@@ -3,7 +3,7 @@ import type { KeyboardModel } from "../shared/types";
 import { SONSEI_KEYS } from "./geometry-sonsei";
 import { DefyKeyboardView } from "./DefyKeyboardView";
 import { Raise2KeyboardView } from "./Raise2KeyboardView";
-import { decodeKey, superkeyIndex, layoutOverrides, shiftOverrides } from "./keycodes";
+import { decodeKey, superkeyIndex, layoutOverrides, symbolOverrides } from "./keycodes";
 import { keyLabel, fg, fitFontSize, splitLongWord } from "./key-label";
 import { DEFY_THUMB_ROTATION } from "./defy-thumb-paths";
 
@@ -66,7 +66,7 @@ export const KeyboardView: React.FC<Props> = ({ model, activeLayer, layout, laye
   }
 
   const overrides = layoutOverrides(layout);
-  const shiftSymbols = shiftOverrides(layout);
+  const symbols = symbolOverrides(layout);
   const layer = Math.min(activeLayer, model.keymap.length - 1);
   const keymapLayer = model.keymap[layer] ?? [];
   const colormapLayer = model.colormap[layer] ?? [];
@@ -87,7 +87,7 @@ export const KeyboardView: React.FC<Props> = ({ model, activeLayer, layout, laye
       const name = model.superkeyNames?.[sk] || `SK${sk + 1}`;
       return { primary: "SUPER", subtitle: name, hold: "" };
     }
-    return decodeKey(code, overrides, names, macroNames, shiftSymbols);
+    return decodeKey(code, overrides, names, macroNames, symbols);
   }
 
   function renderKey(key: (typeof SONSEI_KEYS)[0]) {

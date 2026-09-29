@@ -1,4 +1,5 @@
 import type { DecodedKey, FunctionIconName } from "../shared/types";
+import type { SymbolOverrides } from "./layouts";
 
 /* Firmware keycode → display label decoding for the Lens overlay.
  *
@@ -210,7 +211,8 @@ const FUNCTION: Record<number, FunctionIconName> = {
   20866: "sleep",
 };
 
-export { layoutOverrides, shiftOverrides } from "./layouts";
+export { layoutOverrides, shiftOverrides, altGrOverrides, symbolOverrides } from "./layouts";
+export type { SymbolOverrides } from "./layouts";
 
 // Layer key codes — verified against Bazecor src/api/keymap/db/layerswitch.tsx
 const LAYER_LOCK_MIN = 17408; // LockLayerTable  layer 1-10
@@ -262,6 +264,11 @@ const SUPERKEY_MAX = 54107;
 /* eslint-disable no-bitwise -- decoding firmware keycodes is inherently bit-mask work */
 // Modifier flag bits per Bazecor's withModifiers() offsets (db/utils.ts):
 // Control +256, Alt +512, AltGr +1024, Shift +2048, OS +4096.
+// Plain Shift, and the two combos Bazecor's language tables give real symbols to:
+// AltGr alone (base 1024) and Ctrl+Alt (base 768), its Windows equivalent.
+const SHIFT_MOD_FLAG = 0x08;
+const ALTGR_MOD_FLAGS = [0x04, 0x03];
+
 function modBitsToArray(modByte: number): string[] {
   const mods: string[] = [];
   if (modByte & 0x01) mods.push("Ctrl");
@@ -337,7 +344,7 @@ export function decodeKey(
   layout: Record<number, string> = {},
   layerNames: string[] = [],
   macroNames: string[] = [],
-  shiftSymbols: Record<number, string> | null = null,
+  symbols: SymbolOverrides = { shift: null, altGr: null },
 ): DecodedKey {
   if (code === 0) return { primary: "NO", subtitle: "KEY", hold: "" };
   if (code === 1 || code === 65535) return { primary: "TRANS", hold: "" };
@@ -378,8 +385,15 @@ export function decodeKey(
     // AltGr/OS combos, which really are shortcuts and should keep showing the
     // chip — and why it's null instead of guessing on layouts with no
     // transcribed shift table yet).
-    if (modFlags === 0x08 && shiftSymbols?.[baseCode]) {
-      return { primary: shiftSymbols[baseCode], hold: "" };
+    if (modFlags === SHIFT_MOD_FLAG && symbols.shift?.[baseCode]) {
+      return { primary: symbols.shift[baseCode], hold: "" };
+    }
+    // AltGr (and its Ctrl+Alt equivalent) on a Spanish layout likewise produces a
+    // specific character — "@", "€", "{" — which Bazecor's key picker shows bare,
+    // with no "AGr+" tag. Same scoping rule as Shift above: only these two exact
+    // combos, never AltGr stacked with Shift/OS, which really are shortcuts.
+    if (ALTGR_MOD_FLAGS.includes(modFlags) && symbols.altGr?.[baseCode]) {
+      return { primary: symbols.altGr[baseCode], hold: "" };
     }
     const baseLabel = baseLabelFor(baseCode, layout);
     if (baseLabel) return { primary: baseLabel, hold: "", modifiers: modBitsToArray(modFlags) };

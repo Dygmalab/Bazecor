@@ -12,6 +12,7 @@ import { BatterySettings, EnergyManagement, RFSettings } from "@Renderer/modules
 import { WirelessPropsInterface, WirelessInterface } from "@Renderer/types/wireless";
 
 import { useDevice } from "@Renderer/DeviceContext";
+import { supportsTrueSleep } from "@Renderer/utils/deviceCapabilities";
 import { i18n } from "@Renderer/i18n";
 
 const initialWireless = {
@@ -172,7 +173,10 @@ const Wireless = (props: WirelessPropsInterface) => {
       await state.currentDevice.command("led.brightnessUG.wireless", wireless.brightnessUG.toString());
       await state.currentDevice.command("led.fade", wireless.fade.toString());
       await state.currentDevice.command("idleleds.wireless", wireless.idleleds.toString());
-      await state.currentDevice.command("idleleds.true_sleep", wireless.true_sleep ? "1" : "0");
+      await state.currentDevice.command(
+        "idleleds.true_sleep",
+        supportsTrueSleep(state.currentDevice.device?.info?.product as string) && wireless.true_sleep ? "1" : "0",
+      );
       await state.currentDevice.command("idleleds.true_sleep_time", wireless.true_sleep_time.toString());
 
       setIsSaving(false);
@@ -202,7 +206,11 @@ const Wireless = (props: WirelessPropsInterface) => {
             <div className="w-full flex columns-3 gap-6">
               <div>
                 <BatterySettings wireless={wireless} changeWireless={changeWireless} isCharging={false} deviceType={state.currentDevice?.device?.info?.product || ""} />
-                <EnergyManagement wireless={wireless} changeWireless={changeWireless} />
+                <EnergyManagement
+                  wireless={wireless}
+                  changeWireless={changeWireless}
+                  deviceType={state.currentDevice?.device?.info?.product as string}
+                />
               </div>
               <div>
                 <RFSettings wireless={wireless} changeWireless={changeWireless} sendRePair={sendRePairCommand} />

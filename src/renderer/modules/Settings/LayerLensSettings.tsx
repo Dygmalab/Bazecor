@@ -18,6 +18,7 @@ import React, { useState, useEffect } from "react";
 import { ipcRenderer } from "electron";
 import { Card, CardContent, CardHeader, CardTitle } from "@Renderer/components/atoms/Card";
 import { Switch } from "@Renderer/components/atoms/Switch";
+import { Badge } from "@Renderer/components/atoms/Badge";
 import { Slider } from "@Renderer/components/atoms/slider";
 import { IconSettings, IconInformation } from "@Renderer/components/atoms/icons";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@Renderer/components/atoms/Tooltip";
@@ -104,8 +105,13 @@ const LayerLensSettings = () => {
   return (
     <Card className="mt-3 max-w-2xl mx-auto" variant="default">
       <CardHeader>
-        <CardTitle variant="default">
-          <IconSettings /> Settings
+        <CardTitle variant="default" className="flex flex-row items-center justify-between">
+          <div className="flex items-center gap-2">
+            <IconSettings /> Settings
+          </div>
+          <Badge variant="subtle" size="xs">
+            Beta
+          </Badge>
         </CardTitle>
       </CardHeader>
       <CardContent>

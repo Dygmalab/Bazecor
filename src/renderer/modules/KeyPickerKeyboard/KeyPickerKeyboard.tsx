@@ -291,9 +291,10 @@ function KeyPickerKeyboard(props: Props) {
   const [keymapDB] = useState(new KeymapDB());
   const store = Store.getStore();
   const sk20 = Boolean(store.get("capabilities.sk20"));
-  // Layer Lens is available for Sonsei (fw >= 1.0.0) and Defy (fw >= 2.3.0) — see App.tsx,
-  // which writes capabilities.lens on connect. Raise2 and Raise (Raise1) never set the flag,
-  // so the Layer Lens tab stays hidden for them in both the Layout Editor and Superkeys view.
+  // Layer Lens is available for Sonsei (fw >= 1.0.0), Defy (fw >= 2.3.0) and Raise2
+  // (fw >= 1.5.0) — see App.tsx, which writes capabilities.lens on connect. Raise
+  // (Raise1) never sets the flag, so the Layer Lens tab stays hidden for it in both
+  // the Layout Editor and the Superkeys view.
   const lensCapabilityRaw = store.get("capabilities.lens");
   const isLensAvailable =
     lensCapabilityRaw === true || lensCapabilityRaw === "true" || lensCapabilityRaw === 1 || lensCapabilityRaw === "1";
