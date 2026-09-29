@@ -2,6 +2,7 @@ import { BrowserWindow, dialog, MessageBoxOptions } from "electron";
 import fs from "fs";
 import * as sudo from "sudo-prompt";
 import log from "electron-log/main";
+import path from "path";
 
 const udevRulesToWrite = `\
 # Dygma Raise
@@ -20,21 +21,46 @@ KERNEL=="hidraw*", ATTRS{idVendor}=="35ef", MODE="0660", TAG+="uaccess"
 KERNEL=="hidraw*", ATTRS{idVendor}=="35ef", MODE="0660", TAG+="uaccess"
 `;
 
-const filename = "/etc/udev/rules.d/60-dygma.rules";
+const udevRuleFilename = "60-dygma.rules";
+
+// https://www.freedesktop.org/software/systemd/man/latest/udev.html
+const udevRuleDirLookup = [
+  "/usr/lib/udev/rules.d/", // system rules
+  "/usr/local/lib/udev/rules.d/", // system rules (alternative)
+  "/run/udev/rules.d/", // volatile runtime rules
+  "/etc/udev/rules.d", // local administration rules
+  "/run/host/etc/udev/rules.d", // FYI: flatpak-builder `--filesystem=host-etc` bind-mounts `/etc/` to `/run/host/etc/`.
+];
+
+const hostUdevRuleFilePath = path.join("/etc/udev/rules.d", udevRuleFilename);
 
 const checkUdev = () => {
   try {
-    if (fs.existsSync(filename)) {
-      const currentUdevRules = fs.readFileSync(filename, "utf-8");
-      if (currentUdevRules.trim() !== udevRulesToWrite.trim()) {
-        return false;
+    for (const dir of udevRuleDirLookup) {
+      const filename = path.join(dir, udevRuleFilename);
+      if (fs.existsSync(filename)) {
+        const currentUdevRules = fs.readFileSync(filename, "utf-8");
+        if (currentUdevRules.trim() === udevRulesToWrite.trim()) {
+          return true;
+        }
       }
-      return true;
     }
   } catch (err) {
     log.error(err);
   }
   return false;
+};
+
+const showMissingPolkitErrorDialog = (mainWindow: BrowserWindow, error: any) => {
+  log.verbose(`stdout: ${error.message}`);
+
+  const command = `sudo tee ${hostUdevRuleFilePath} > /dev/null << 'UDEV_RULES_EOF'
+${udevRulesToWrite}
+UDEV_RULES_EOF
+sudo udevadm control --reload-rules
+sudo udevadm trigger`;
+
+  mainWindow.webContents.send("udev-polkit-error", { errorMessage: error.message, command });
 };
 
 const installUdev = (mainWindow: BrowserWindow) => {
@@ -54,20 +80,11 @@ const installUdev = (mainWindow: BrowserWindow) => {
   dialog.showMessageBox(mainWindow, dialogOpts).then(response => {
     if (response.response === 1) {
       sudo.exec(
-        `echo '${udevRulesToWrite}' > ${filename} && udevadm control --reload-rules && udevadm trigger`,
+        `echo '${udevRulesToWrite}' > ${hostUdevRuleFilePath} && udevadm control --reload-rules && udevadm trigger`,
         options,
         error => {
-          if (error !== null) {
-            log.verbose(`stdout: ${error.message}`);
-            const errorOpts: MessageBoxOptions = {
-              type: "error",
-              buttons: ["Ok"],
-              defaultId: 0,
-              title: "Error when launching sudo prompt",
-              message: "An error happened when launching a sudo prompt window",
-              detail: `Your linux distribution lacks a polkit agent, installing polkit-1-auth-agent, policykit-1-gnome, or polkit-kde-1 (depending on your desktop manager) will solve this problem\n\n${error.message}`,
-            };
-            dialog.showMessageBox(mainWindow, errorOpts);
+          if (error !== undefined) {
+            showMissingPolkitErrorDialog(mainWindow, error);
           }
         },
       );

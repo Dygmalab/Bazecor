@@ -1,0 +1,10 @@
+[Desktop Entry]
+Version=1.5
+Type=Application
+Name=Bazecor
+Comment=Configurator for Dygma keyboards.
+Exec=Bazecor %U
+Icon=com.dygma.bazecor
+Categories=Utility;
+Terminal=false
+Keywords=keyboard;configuration;firmware;dygma;raise;defy;sonsei;keymap;layout;macro;ergonomic;customization;
