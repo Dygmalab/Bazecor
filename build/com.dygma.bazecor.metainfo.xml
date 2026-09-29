@@ -12,9 +12,11 @@
   <metadata_license>CC0-1.0</metadata_license>
   <project_group>Dygma</project_group>
   <project_license>GPL-3.0-only</project_license>
-  <requires>
+  <supports>
     <control>keyboard</control>
     <control>pointing</control>
+  </supports>
+  <requires>
     <display_length compare="ge">768</display_length>
   </requires>
   <update_contact>contact@dygma.com</update_contact>
