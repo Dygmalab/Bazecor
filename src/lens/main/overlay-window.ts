@@ -2,6 +2,7 @@ import { BrowserWindow, screen } from "electron";
 import log from "electron-log/main";
 import LensOverlay from "../../main/managers/LensOverlay";
 import Window from "../../main/managers/Window";
+import { isAppQuitting } from "../../main/managers/AppLifecycle";
 import type { KeyboardModel, LensSettings, LensState } from "../shared/types";
 import { getLensSettings, getOverlayBounds, setOverlayBounds } from "./lens-settings";
 
@@ -139,6 +140,64 @@ function preventOverlayResize(e: { preventDefault(): void }): void {
   e.preventDefault();
 }
 
+// ── Linux (Wayland/tiling WMs) resize handling ────────────────────────────────
+// The overlay must MAP with fixed-size hints (resizable=false): min==max size is
+// what makes Hyprland and other tiling compositors auto-float it instead of
+// tiling it into the layout. But those same hints are exactly what blocks
+// compositor-side resizing — Hyprland clamps every resize to min==max — and the
+// in-app resize handles can't cover for it there: they drive win.setBounds()
+// from screenX/screenY math, and Wayland neither lets a client position itself
+// nor reports global pointer coordinates. So on Linux the compositor owns
+// move/resize: map with fixed-size hints, then once the surface is actually
+// mapped lift them (while Resize Mode is on) so SUPER+drag / resizewindow work,
+// and re-pin them before every hide so the NEXT map floats again.
+const LINUX = process.platform === "linux";
+let linuxResizableTimer: ReturnType<typeof setTimeout> | null = null;
+
+function cancelLinuxResizableSync(): void {
+  if (linuxResizableTimer) {
+    clearTimeout(linuxResizableTimer);
+    linuxResizableTimer = null;
+  }
+}
+
+/** Lifts the fixed-size mapping hints shortly after the overlay is shown (the
+ * delay lets the surface actually map first — float/tile is decided at map
+ * time, when the hints must still be in place). No-op off Linux.
+ *
+ * The delay is a race against the compositor: win.isVisible() flips
+ * immediately on show, but the Wayland surface only maps a few frames later —
+ * and on a busy main process (cold start with a device scan in flight) that
+ * has been observed to take >250ms, after which a too-early lift gets the
+ * overlay tiled into the layout instead of floated. 1s loses only "resize
+ * available a beat after the overlay appears", so err far on the late side.
+ * (A compositor window rule floating the overlay by title — "Dygma Lens" —
+ * makes this race harmless entirely; see the Linux note above.) */
+function scheduleLinuxResizableSync(): void {
+  if (!LINUX) return;
+  cancelLinuxResizableSync();
+  linuxResizableTimer = setTimeout(() => {
+    linuxResizableTimer = null;
+    const win = getWin();
+    if (win && !win.isDestroyed() && overlayStyleApplied && win.isVisible()) {
+      win.setResizable(getLensSettings().resizeMode);
+    }
+  }, 1000);
+}
+
+/** Linux replacement for guardOverlayBounds: instead of snapping external
+ * resizes back, adopt them — the compositor is the one driving them here. Only
+ * the size is trusted: Wayland position readback is not meaningful. */
+function adoptExternalResize(): void {
+  const win = getWin();
+  if (!win || !overlayStyleApplied) return;
+  const b = win.getBounds();
+  if (overlayLockedBounds) {
+    overlayLockedBounds = { ...overlayLockedBounds, width: b.width, height: b.height };
+  }
+  schedulePersistBounds();
+}
+
 export function applyOverlayMode(enabled: boolean): void {
   const win = getWin();
   if (!win) return;
@@ -160,11 +219,21 @@ export function applyOverlayMode(enabled: boolean): void {
     win.setAlwaysOnTop(true, "screen-saver");
     // Resize Mode wanting mouse events means the window can't be click-through.
     win.setIgnoreMouseEvents(!settings.resizeMode, { forward: true });
+    // Fixed-size at map on every platform: on Linux it's what floats the
+    // overlay on tiling compositors (see the Linux block above, which lifts it
+    // again after mapping); on Windows/macOS it stays locked for good and the
+    // in-app handles do the resizing.
     win.setResizable(false);
     win.removeListener("will-resize", preventOverlayResize);
     win.removeListener("resize", guardOverlayBounds);
-    win.on("will-resize", preventOverlayResize);
-    win.on("resize", guardOverlayBounds);
+    win.removeListener("resize", adoptExternalResize);
+    if (LINUX) {
+      win.on("resize", adoptExternalResize);
+      scheduleLinuxResizableSync();
+    } else {
+      win.on("will-resize", preventOverlayResize);
+      win.on("resize", guardOverlayBounds);
+    }
     win.webContents
       .executeJavaScript(
         `document.body.classList.add('overlay');${
@@ -175,8 +244,10 @@ export function applyOverlayMode(enabled: boolean): void {
     if (overlayBounds) win.setBounds(overlayBounds);
   } else {
     overlayLockedBounds = null;
+    cancelLinuxResizableSync();
     win.removeListener("will-resize", preventOverlayResize);
     win.removeListener("resize", guardOverlayBounds);
+    win.removeListener("resize", adoptExternalResize);
     overlayBounds = win.getBounds();
     persistOverlayBounds();
     win.setOpacity(1.0);
@@ -189,6 +260,50 @@ export function applyOverlayMode(enabled: boolean): void {
     win.webContents.executeJavaScript(`document.body.classList.remove('overlay','resize-mode');`).catch(() => {});
     if (normalBounds) win.setBounds(normalBounds);
   }
+}
+
+// Consecutive renderer reloads allowed before giving up (reset by a load that
+// completes) — see the render-process-gone handler in createOverlayWindow.
+const MAX_OVERLAY_RELOADS = 3;
+let overlayReloadAttempts = 0;
+
+// Repaint nudges fired after a show, and the gap between them.
+const FIRST_FRAME_KICKS = 4;
+const FIRST_FRAME_KICK_MS = 60;
+let firstFrameTimer: ReturnType<typeof setTimeout> | null = null;
+
+/**
+ * Makes sure the window actually gets a frame drawn into it after being shown.
+ *
+ * A Wayland surface is mapped only once the client commits a frame to it, and a
+ * window coming back from hide() has nothing dirty to draw — React's tree is
+ * unchanged, so no repaint is scheduled and the compositor is handed nothing.
+ * Electron still reports the window as shown (its renderer even reports
+ * document.visibilityState "visible"), so everything downstream believes Lens is
+ * up while the screen stays empty, and the next press "toggles" an invisible
+ * window back off. That is what made the Lens key feel like it needed three or
+ * four presses.
+ *
+ * invalidate() forces the repaint. It is repeated a few times across the first
+ * frames because a single one occasionally still lands before the surface is
+ * ready to take it — the calls are cheap, and a redundant repaint of an
+ * already-visible overlay costs nothing visible.
+ */
+function forceFirstFrames(win: BrowserWindow): void {
+  if (firstFrameTimer) {
+    clearTimeout(firstFrameTimer);
+    firstFrameTimer = null;
+  }
+  let kicks = 0;
+  const kick = (): void => {
+    firstFrameTimer = null;
+    const w = getWin();
+    if (!w || w.isDestroyed() || w !== win) return;
+    w.webContents.invalidate();
+    kicks += 1;
+    if (kicks < FIRST_FRAME_KICKS) firstFrameTimer = setTimeout(kick, FIRST_FRAME_KICK_MS);
+  };
+  kick();
 }
 
 const FADE_IN_DURATION_MS = 80;
@@ -271,6 +386,49 @@ export function createOverlayWindow(onReady: () => void, showOnStart: boolean): 
   LensOverlay.setWindow(w);
   w.loadURL(LENS_WINDOW_WEBPACK_ENTRY);
 
+  // The overlay's renderer process has been observed dying (a clean exit, no
+  // crash dump) while the window sits hidden for a few minutes, leaving a
+  // zombie BrowserWindow that show() can't bring back — no renderer means no
+  // frames, so the surface never maps and the Lens key summons nothing.
+  // Reload to spawn a fresh renderer: the window object itself is fine, and
+  // the page refetches its state on mount (App.tsx) while did-finish-load
+  // below re-applies the injected overlay classes. The logged reason/exitCode
+  // is Chromium's own verdict on why the process went away.
+  w.webContents.on("render-process-gone", (_e, details) => {
+    // On the way out the renderer legitimately goes away; reloading it there
+    // just races the shutdown (and a renderer that can no longer launch answers
+    // every reload with another "gone", which is a spin, not a recovery).
+    if (isAppQuitting() || w.isDestroyed()) return;
+    if (overlayReloadAttempts >= MAX_OVERLAY_RELOADS) {
+      log.error(
+        `[Lens] Overlay renderer gone (${details.reason}) and ${overlayReloadAttempts} reloads have not stuck — leaving it alone. Toggle Layer Lens off and on to rebuild it.`,
+      );
+      return;
+    }
+    overlayReloadAttempts += 1;
+    log.warn(`[Lens] Overlay renderer gone (reason: ${details.reason}, exitCode: ${details.exitCode}) -> reloading`);
+    w.webContents.reload();
+  });
+
+  // A renderer reload (crash recovery, webpack live-reload in dev) resets the
+  // <body> classes applyOverlayMode/applyResizeModeLive injected, leaving the
+  // overlay rendering its window-mode chrome. Re-inject the current mode after
+  // every load (the first one included — harmlessly redundant there).
+  w.webContents.on("did-finish-load", () => {
+    // A load that completes is a renderer that stuck, so the budget above is
+    // spent per incident rather than for the lifetime of the window.
+    overlayReloadAttempts = 0;
+    if (!overlayStyleApplied) return;
+    const settings = getLensSettings();
+    w.webContents
+      .executeJavaScript(
+        `document.body.classList.add('overlay');document.body.classList.${
+          settings.resizeMode ? "add" : "remove"
+        }('resize-mode');`,
+      )
+      .catch(() => {});
+  });
+
   w.once("ready-to-show", () => {
     log.info(`[Lens] Overlay window ready-to-show (showOnStart=${showOnStart})`);
     overlayVisible = showOnStart;
@@ -287,6 +445,13 @@ export function createOverlayWindow(onReady: () => void, showOnStart: boolean): 
   // through destroyOverlayWindow(), which persists explicitly before destroy()).
   // destroy() itself never emits "close", so the two paths don't double-save.
   w.on("close", () => {
+    // Nothing in Bazecor closes this window — disable() destroys it, and
+    // destroy() emits no "close" — so arriving here means something outside
+    // did: the app quitting, or (on Wayland, where Resize Mode makes the
+    // overlay focusable and so closable) a compositor-side close aimed at it.
+    // That used to leave the Lens key and the tray item silently dead; the
+    // gestures rebuild the window now, but log it so the cause is visible.
+    log.info("[Lens] Overlay window is closing");
     if (overlayStyleApplied) {
       overlayBounds = w.getBounds();
       persistOverlayBounds();
@@ -304,6 +469,11 @@ export function createOverlayWindow(onReady: () => void, showOnStart: boolean): 
 
 export function destroyOverlayWindow(): void {
   stopFade();
+  cancelLinuxResizableSync();
+  if (firstFrameTimer) {
+    clearTimeout(firstFrameTimer);
+    firstFrameTimer = null;
+  }
   if (persistBoundsTimer) {
     clearTimeout(persistBoundsTimer);
     persistBoundsTimer = null;
@@ -345,8 +515,13 @@ export function showOverlay(fadeDelayMs = 0): void {
   const target = overlayStyleApplied ? settings.opacity : 1.0;
   stopFade();
   win.setOpacity(0);
+  // Linux: re-pin the fixed-size hints for this map (a hidden window may still
+  // carry a previous lift), then lift them again once mapped.
+  if (LINUX && overlayStyleApplied && win.isResizable()) win.setResizable(false);
   if (overlayStyleApplied) win.showInactive();
   else win.show();
+  forceFirstFrames(win);
+  if (overlayStyleApplied) scheduleLinuxResizableSync();
   if (fadeDelayMs <= 0) {
     fadeWindowOpacity(target, FADE_IN_DURATION_MS);
     return;
@@ -364,8 +539,13 @@ export function hideOverlay(): void {
   const win = getWin();
   if (!win) return;
   overlayVisible = false;
+  cancelLinuxResizableSync();
   fadeWindowOpacity(0, FADE_OUT_DURATION_MS, () => {
-    getWin()?.hide();
+    const w = getWin();
+    if (!w) return;
+    // Linux: back to fixed-size while hidden so the next map floats again.
+    if (LINUX && overlayStyleApplied && w.isResizable()) w.setResizable(false);
+    w.hide();
   });
 }
 
@@ -380,6 +560,9 @@ export function applyResizeModeLive(v: boolean): void {
   const win = getWin();
   if (!win || !overlayStyleApplied) return;
   win.setIgnoreMouseEvents(!v, { forward: true });
+  // Linux: the compositor does the resizing (see the Linux block above), so the
+  // fixed-size hints follow Resize Mode directly while the window is mapped.
+  if (LINUX && win.isVisible()) win.setResizable(v);
   win.webContents
     .executeJavaScript(v ? `document.body.classList.add('resize-mode');` : `document.body.classList.remove('resize-mode');`)
     .catch(() => {});
