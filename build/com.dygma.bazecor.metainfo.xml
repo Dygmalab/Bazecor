@@ -50,6 +50,9 @@
     </screenshot>
   </screenshots>
   <releases>
+    <release version="1.11.0" date="2026-09-29">
+      <url type="details">https://github.com/Dygmalab/Bazecor/releases/tag/v1.11.0</url>
+    </release>
     <release version="1.10.0" date="2026-08-05">
       <url type="details">https://github.com/Dygmalab/Bazecor/releases/tag/v1.10.0</url>
     </release>

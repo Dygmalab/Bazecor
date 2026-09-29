@@ -121,6 +121,7 @@ const config: ForgeConfig = {
             "--env=ELECTRON_OZONE_PLATFORM_HINT=auto",
             "--env=XCURSOR_PATH=/run/host/user-share/icons:/run/host/share/icons",
             "--filesystem=/run/udev:ro",
+            "--filesystem=~/Dygma:create",
             "--filesystem=host-etc",
             "--share=ipc",
             "--share=network",

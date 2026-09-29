@@ -83,7 +83,7 @@ const installUdev = (mainWindow: BrowserWindow) => {
         `echo '${udevRulesToWrite}' > ${hostUdevRuleFilePath} && udevadm control --reload-rules && udevadm trigger`,
         options,
         error => {
-          if (error !== undefined) {
+          if (error) {
             showMissingPolkitErrorDialog(mainWindow, error);
           }
         },
