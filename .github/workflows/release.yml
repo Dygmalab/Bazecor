@@ -40,7 +40,7 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y flatpak-builder libudev-dev libusb-1.0-0-dev
           flatpak remote-add --user --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
-          appstreamcli validate build/com.dygma.bazecor.metainfo.xml
+          bash build/validate-metainfo.sh
       - name: Cache node_modules
         id: cache-node-modules
         uses: actions/cache@v3
@@ -82,7 +82,7 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y flatpak-builder libudev-dev libusb-1.0-0-dev
           flatpak remote-add --user --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
-          appstreamcli validate build/com.dygma.bazecor.metainfo.xml
+          bash build/validate-metainfo.sh
       - if: runner.os == 'Windows'
         name: Set up Java
         uses: actions/setup-java@v3
@@ -159,7 +159,20 @@ jobs:
         run: yarn run make-mac-arm
       - if: runner.os != 'macOS'
         name: Build for Linux/Windows
+        env:
+          DEBUG: "@malept/flatpak-bundler" # print flatpak-builder output, otherwise failures only show the exit code
         run: yarn run make
+      - if: runner.os == 'Linux'
+        name: Rename flatpak bundle
+        # match the AppImage naming: Bazecor-<version>-x64.flatpak
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          FLATPAK=$(find out/make -type f -name '*.flatpak')
+          if [ "$(echo "$FLATPAK" | grep -c .)" -ne 1 ]; then
+            echo "Expected exactly one .flatpak in out/make, found: '$FLATPAK'"
+            exit 1
+          fi
+          mv -v "$FLATPAK" "$(dirname "$FLATPAK")/Bazecor-${VERSION}-x64.flatpak"
       - if: runner.os == 'Windows'
         shell: bash
         name: Get executable into signing folder
@@ -188,6 +201,7 @@ jobs:
           path: |
             out/make/**/*.dmg
             out/make/**/*.AppImage
+            out/make/**/*.flatpak
             out/make/**/*.zip
             out/make/**/*.nupkg
             windows_signing/**/*.exe

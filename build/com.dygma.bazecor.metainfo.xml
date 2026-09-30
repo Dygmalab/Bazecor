@@ -12,9 +12,11 @@
   <metadata_license>CC0-1.0</metadata_license>
   <project_group>Dygma</project_group>
   <project_license>GPL-3.0-only</project_license>
-  <requires>
+  <supports>
     <control>keyboard</control>
     <control>pointing</control>
+  </supports>
+  <requires>
     <display_length compare="ge">768</display_length>
   </requires>
   <update_contact>contact@dygma.com</update_contact>
@@ -50,6 +52,9 @@
     </screenshot>
   </screenshots>
   <releases>
+    <release version="1.11.0" date="2026-09-29">
+      <url type="details">https://github.com/Dygmalab/Bazecor/releases/tag/v1.11.0</url>
+    </release>
     <release version="1.10.0" date="2026-08-05">
       <url type="details">https://github.com/Dygmalab/Bazecor/releases/tag/v1.10.0</url>
     </release>
