@@ -6,6 +6,14 @@ export interface PaletteColor {
   rgb: string;
 }
 
+/** One enabled combo, as far as the overlay needs it. */
+export interface LensCombo {
+  /** Physical key offsets, the same index the keymap layers use. */
+  positions: number[];
+  /** Layer filter, or COMBO_LAYER_ANY for every layer. */
+  layer: number;
+}
+
 export interface KeyboardModel {
   /** Bazecor product name this model was parsed from (e.g. "Sonsei", "Defy").
    * Drives which keyboard geometry the renderer draws. */
@@ -22,6 +30,8 @@ export interface KeyboardModel {
   superkeyNames: string[];
   macroNames: string[];
   layerNames: string[];
+  /** Combos from `combos.map`. Empty on firmware without the Combos plugin. */
+  combos: LensCombo[];
 }
 
 /** Reference to the backup folder Lens reads the keyboard model from. */

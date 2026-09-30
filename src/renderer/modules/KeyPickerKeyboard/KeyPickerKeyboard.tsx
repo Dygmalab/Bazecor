@@ -258,6 +258,9 @@ interface Props {
   isWireless: boolean;
   /* Passed straight to ModPicker; see the note on its own prop. */
   allowAutoshift?: boolean;
+  /* Show mouse movement and wheel keys, which the Mouse tab otherwise keeps to
+   * the Layout Editor. */
+  fullMouse?: boolean;
 }
 
 interface State {
@@ -281,6 +284,7 @@ function KeyPickerKeyboard(props: Props) {
     mouseWheel,
     resetScroll,
     allowAutoshift = true,
+    fullMouse = false,
   } = props;
   const prevProps = useRef(props);
   const overflowRef = React.createRef<HTMLElement>();
@@ -626,7 +630,7 @@ function KeyPickerKeyboard(props: Props) {
             </TabsContent>
             <TabsContent value="tabMouse" key="tabMouse">
               <motion.div initial="hidden" animate="visible" key="tabKeys" variants={tabVariants}>
-                <MouseTab onAddSpecial={onKeySelect} keyCode={code} actTab={actTab} disabled={disable} />
+                <MouseTab onAddSpecial={onKeySelect} keyCode={code} actTab={fullMouse ? "editor" : actTab} disabled={disable} />
               </motion.div>
             </TabsContent>
             {isWireless && (

@@ -1,4 +1,4 @@
-import type { PaletteColor } from "../shared/types";
+import type { LensCombo, PaletteColor } from "../shared/types";
 
 export function parseKeymap(raw: string, keysPerLayer: number): number[][] {
   const nums = raw.trim().split(/\s+/).map(Number);
@@ -51,6 +51,34 @@ export function parseSuperkeys(raw: string): number[][] {
   const out: number[][] = [];
   for (let i = 0; i + ACTIONS_PER_SUPERKEY <= nums.length; i += ACTIONS_PER_SUPERKEY) {
     out.push(nums.slice(i, i + ACTIONS_PER_SUPERKEY));
+  }
+  return out;
+}
+
+/* `combos.map` wire format (Bazecor src/api/parsers/combos.ts): a count, then
+ * a fixed 32 records of [p0, p1, p2, p3, layer, flags, action]. */
+const COMBO_MEMBERS = 4;
+const COMBO_FIELDS = COMBO_MEMBERS + 3;
+const COMBO_POSITION_UNUSED = 255;
+const COMBO_FLAG_ENABLED = 0x01;
+
+/** Enabled combos with at least one key, in list order (combo N is index N-1). */
+export function parseCombos(raw: string): LensCombo[] {
+  if (!raw.trim()) return [];
+  const nums = raw.trim().split(/\s+/).map(Number);
+  const count = nums[0];
+  if (!Number.isFinite(count) || count <= 0) return [];
+
+  const out: LensCombo[] = [];
+  for (let i = 0; i < count; i += 1) {
+    const base = 1 + i * COMBO_FIELDS;
+    if (base + COMBO_FIELDS > nums.length) break;
+    const positions = nums.slice(base, base + COMBO_MEMBERS).filter(p => p !== COMBO_POSITION_UNUSED);
+    const layer = nums[base + COMBO_MEMBERS];
+    const flags = nums[base + COMBO_MEMBERS + 1];
+    // Disabled combos keep their slot so the numbering matches Bazecor's "C<n>".
+    // eslint-disable-next-line no-bitwise
+    out.push({ positions: flags & COMBO_FLAG_ENABLED ? positions : [], layer });
   }
   return out;
 }

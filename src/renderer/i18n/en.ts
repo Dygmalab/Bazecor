@@ -505,6 +505,16 @@ const English = {
         alertTitle: "You are almost out of Combos",
         alertBody: "Everything will still work perfectly but consider deleting Combos you don't use to continue adding more.",
       },
+      breakModal: {
+        title: "This key breaks a combo",
+        superkey: "Only Superkeys with TAP and HOLD actions, where HOLD is a modifier or a layer change, can be part of a combo.",
+        lens: "Lens keys cannot be part of a combo.",
+        affected: "The following combo will stop working while this key is here:",
+        superkeyHint: "To keep the combo working, remove the complex Superkey from this position.",
+        lensHint: "To keep the combo working, remove the Lens key from this position.",
+        undo: "Undo change",
+        keep: "Keep it anyway",
+      },
     },
     oldMacroModal: {
       title: "Update your macros",

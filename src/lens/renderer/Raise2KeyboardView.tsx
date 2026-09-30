@@ -5,7 +5,7 @@ import { RAISE2_ISO_KEYS, RAISE2_ISO_SVG_W, RAISE2_ISO_VIEW_Y, RAISE2_ISO_VIEW_H
 import { RAISE2_THUMB_PATHS } from "./raise2-thumb-paths";
 import { RAISE2_ISO_ENTER_PATH } from "./raise2-iso-enter-path";
 import { decodeKey, superkeyIndex, layoutOverrides, symbolOverrides } from "./keycodes";
-import { keyLabel, fg } from "./key-label";
+import { keyLabel, fg, comboBadge, comboBadgeNearLabel, comboNumbersForLayer } from "./key-label";
 
 interface Props {
   model: KeyboardModel;
@@ -43,6 +43,7 @@ export const Raise2KeyboardView: React.FC<Props> = ({ model, activeLayer, layout
   const { palette } = model;
   const names = model.layerNames?.length ? model.layerNames : (layerNames ?? []);
   const macroNames = model.macroNames ?? [];
+  const comboNumbers = comboNumbersForLayer(model.combos, layer);
 
   function getColor(ledIndex: number) {
     const pi = colormapLayer[ledIndex] ?? 0;
@@ -64,6 +65,7 @@ export const Raise2KeyboardView: React.FC<Props> = ({ model, activeLayer, layout
     const color = getColor(key.ledIndex);
     const label = getLabel(key.index);
     const fgColor = fg(color.r, color.g, color.b);
+    const comboNumber = comboNumbers.get(key.index);
     const { x, y, w, h } = key;
 
     // Non-rect keys (thumb wings, ISO's tall Enter): draw the editor silhouette
@@ -88,6 +90,7 @@ export const Raise2KeyboardView: React.FC<Props> = ({ model, activeLayer, layout
             <path d={thumb.inner} fill="url(#lens-key-sheen)" fillOpacity="0.45" />
           </g>
           {keyLabel(lcx, lcy, 0, h, label, fgColor)}
+          {comboNumber !== undefined && comboBadgeNearLabel(comboNumber, lcx, lcy)}
         </g>
       );
     }
@@ -103,6 +106,7 @@ export const Raise2KeyboardView: React.FC<Props> = ({ model, activeLayer, layout
         <rect x={x + 4} y={y} width={w - 8} height={h - 8} rx={4} fill={color.css} />
         <rect x={x + 4} y={y} width={w - 8} height={h - 8} rx={4} fill="url(#lens-key-sheen)" fillOpacity="0.45" />
         {keyLabel(cx, cy, y, h, label, fgColor)}
+        {comboNumber !== undefined && comboBadge(comboNumber, x + w - 1, y - 3)}
       </g>
     );
   }

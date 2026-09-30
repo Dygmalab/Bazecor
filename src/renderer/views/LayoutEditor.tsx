@@ -56,6 +56,7 @@ import { i18n } from "@Renderer/i18n";
 import Store from "@Renderer/utils/Store";
 import getLanguage from "@Renderer/utils/language";
 import { ClearLayerDialog } from "@Renderer/components/molecules/CustomModal/ClearLayerDialog";
+import { ComboBreakDialog } from "@Renderer/components/molecules/CustomModal/ComboBreakDialog";
 import { DygmaDeviceInfoType } from "@Renderer/types/dygmaDefs";
 import BlankTable from "../../api/keymap/db/blanks";
 import Keymap, { KeymapDB } from "../../api/keymap";
@@ -72,6 +73,7 @@ import {
   parseSuperkeysRaw,
   serializeKeymap,
 } from "../../api/parsers";
+import { ComboBreakReason, comboBreakReason, combosAtPosition } from "../../api/parsers/combos";
 
 const store = Store.getStore();
 
@@ -197,6 +199,14 @@ const LayoutEditor = (props: LayoutEditorProps) => {
   const [macros, setMacros] = useState<MacrosType[]>();
   const [superkeys, setSuperkeys] = useState<SuperkeysType[]>();
   const [combos, setCombos] = useState<ComboType[]>([]);
+  /* Set while the break-combo warning is up; holds what "Undo" puts back. */
+  const [comboBreak, setComboBreak] = useState<{
+    reason: ComboBreakReason;
+    comboIndex: number;
+    layer: number;
+    keyIndex: number;
+    previousKeyCode: number;
+  } | null>(null);
 
   const [modified, setModified] = useState(false);
   const [modeselect, setModeselect] = useState<ModeType>("keyboard");
@@ -403,6 +413,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
           layerNames: finalNeuron.layers,
           storedMacros: finalNeuron.macros,
           storedSuper: finalNeuron.superkeys,
+          storedCombos: finalNeuron.combos ?? [],
         };
         log.info("connected to: ", neuronData.neuronID);
         setLayerNames(finalNeuron.layers);
@@ -512,7 +523,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
         // worth failing the whole layout load over.
         try {
           const rawCombos = (await currentDevice?.command("combos.map")) as string;
-          setCombos(rawCombos && rawCombos.trim().length > 0 ? parseCombosRaw(rawCombos) : []);
+          setCombos(rawCombos && rawCombos.trim().length > 0 ? parseCombosRaw(rawCombos, neuronData.storedCombos) : []);
         } catch (error) {
           log.info("[LayoutEditor] combos.map unavailable; no combo badges will be shown");
           setCombos([]);
@@ -559,15 +570,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
     [state, setLoading, AnalizeChipID, restoredOk, getColormap, handleSetRestoredOk, keymapDB, onDisconnect],
   );
 
-  const onKeyChange = (keyCode: number) => {
-    // Keys can only change on the custom layers
-    const layer = currentLayer;
-    const keyIndex = currentKeyIndex;
-
-    if (keyIndex === -1) {
-      return;
-    }
-
+  const assignKey = (layer: number, keyIndex: number, keyCode: number) => {
     try {
       const kmap = keymap.custom.slice();
       const l = keymap.onlyCustom ? layer : layer - keymap.default.length;
@@ -592,6 +595,36 @@ const LayoutEditor = (props: LayoutEditorProps) => {
     } catch (error) {
       log.error("Error when assigning key to keymap", error);
     }
+  };
+
+  const onKeyChange = (keyCode: number) => {
+    // Keys can only change on the custom layers
+    const layer = currentLayer;
+    const keyIndex = currentKeyIndex;
+
+    if (keyIndex === -1) {
+      return;
+    }
+
+    const l = keymap.onlyCustom ? layer : layer - keymap.default.length;
+    const previousKeyCode = keymap.custom[l]?.[keyIndex]?.keyCode;
+
+    assignKey(layer, keyIndex, keyCode);
+
+    /* Warn when the new key stops a saved combo from firing. Only on an actual
+     * change, so re-picking the same key does not nag again. */
+    if (previousKeyCode === undefined || previousKeyCode === keyCode) return;
+    const reason = comboBreakReason(keyCode, superkeys);
+    if (!reason) return;
+    const [comboIndex] = combosAtPosition(combos, keyIndex, layer);
+    if (comboIndex === undefined) return;
+
+    setComboBreak({ reason, comboIndex, layer, keyIndex, previousKeyCode });
+  };
+
+  const undoComboBreak = () => {
+    if (comboBreak) assignKey(comboBreak.layer, comboBreak.keyIndex, comboBreak.previousKeyCode);
+    setComboBreak(null);
   };
 
   /**
@@ -1541,6 +1574,15 @@ const LayoutEditor = (props: LayoutEditorProps) => {
           keyboardSide="BOTH"
           fillWithNoKey={false}
           deviceSides={state.currentDevice.device?.sides || 2}
+        />
+
+        <ComboBreakDialog
+          open={comboBreak !== null}
+          reason={comboBreak?.reason ?? null}
+          comboIndex={comboBreak?.comboIndex ?? null}
+          combos={combos}
+          onUndo={undoComboBreak}
+          onKeep={() => setComboBreak(null)}
         />
 
         <CopyFromDialog

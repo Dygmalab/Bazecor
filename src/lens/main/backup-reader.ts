@@ -2,7 +2,15 @@ import fs from "fs";
 import path from "path";
 import type { KeyboardModel, LensKeyboardRef } from "../shared/types";
 import { SONSEI_KEYS_PER_LAYER, SONSEI_COLOR_LAYER_SIZE, getProductSpec } from "../shared/constants";
-import { parseKeymap, parsePaletteRGB, parsePaletteRGBW, parseColormap, parseSuperkeys, parseNames } from "./parsers";
+import {
+  parseKeymap,
+  parsePaletteRGB,
+  parsePaletteRGBW,
+  parseColormap,
+  parseSuperkeys,
+  parseNames,
+  parseCombos,
+} from "./parsers";
 
 interface BazecorNeuronLayer {
   id: number;
@@ -44,6 +52,7 @@ export function parseBackupToModel(backupRaw: string, product: string, keyboardT
   const colormapRaw = getCommandData(backup, "colormap.map");
   const defaultLayerRaw = getCommandData(backup, "settings.defaultLayer");
   const superkeysRaw = getCommandData(backup, "superkeys.map");
+  const combosRaw = getCommandData(backup, "combos.map");
 
   // Names are stored in backup.neuron (Bazecor electron-store), not in Focus commands.
   // Sort by id to guarantee index alignment with keymap codes.
@@ -77,6 +86,7 @@ export function parseBackupToModel(backupRaw: string, product: string, keyboardT
     superkeyNames,
     macroNames,
     layerNames,
+    combos: parseCombos(combosRaw),
   };
 }
 

@@ -27,6 +27,10 @@ export const MAX_COMBOS = 32;
 export const MAX_COMBO_MEMBERS = 4;
 export const MIN_COMBO_MEMBERS = 2;
 
+/** How many keys the editor lets a combo have. Lower than the firmware's slot
+ * count on purpose; the wire format still carries MAX_COMBO_MEMBERS slots. */
+export const MAX_COMBO_KEYS = 3;
+
 export interface ComboType {
   /** Position in the list, and the value the selector dropdown works with. */
   id: number;

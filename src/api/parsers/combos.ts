@@ -23,6 +23,8 @@ import {
   MAX_COMBO_MEMBERS,
   MAX_COMBOS,
 } from "@Renderer/types/combos";
+import { SuperkeysType } from "@Renderer/types/superkeys";
+import { OverlayCodes } from "../../hw/overlay";
 
 /* Wire format of `combos.map`, matching CombosDygma::onFocusEvent:
  *
@@ -130,3 +132,72 @@ export const claimedPositions = (combos: ComboType[], exceptIndex?: number): Set
 
   return claimed;
 };
+
+/* ------------------------------------------------------------------------ */
+/* Keys a combo member cannot be                                             */
+/* ------------------------------------------------------------------------ */
+
+const LENS_KEYS: number[] = [OverlayCodes.OVERLAY_KEY, OverlayCodes.OVERLAY_TAP, OverlayCodes.OVERLAY_HOLD];
+
+const SUPERKEY_FIRST = 53980;
+const SUPERKEY_COUNT = 128;
+
+/* Lock, Shift and Move to layer: ten layers each, same bases as KeymapDB. */
+const LAYER_KEY_BASES = [17408, 17450, 17492];
+const LAYER_KEY_COUNT = 10;
+
+/* Modifier keycodes: the eight HID modifiers, optionally carrying more
+ * modifiers in the flag bits above them (Hyper, Meh, Ctrl+Shift...). */
+const MODIFIER_FIRST = 224;
+const MODIFIER_LAST = 231;
+const MODIFIER_FLAGS_LIMIT = 0x2000;
+
+const isModifierKey = (code: number) => {
+  const base = code % 256;
+  return code < MODIFIER_FLAGS_LIMIT && base >= MODIFIER_FIRST && base <= MODIFIER_LAST;
+};
+
+const isLayerKey = (code: number) => LAYER_KEY_BASES.some(base => code >= base && code < base + LAYER_KEY_COUNT);
+
+/* What an unset superkey action reads as: 0 in the editor, 1 once serialised,
+ * 65535 on a blank EEPROM. */
+const isUnsetAction = (action: number | undefined) => !action || action === 1 || action === 65535;
+
+/**
+ * A superkey the firmware runs as a Qukey: TAP and HOLD set, the other three
+ * actions empty, and a modifier or a layer change on HOLD.
+ */
+export const isQukeySuperkey = (superkey: SuperkeysType | undefined): boolean => {
+  if (!superkey) return false;
+  const [tap, hold, ...rest] = superkey.actions;
+  if (isUnsetAction(tap) || isUnsetAction(hold)) return false;
+  if (!rest.every(isUnsetAction)) return false;
+  return isModifierKey(hold) || isLayerKey(hold);
+};
+
+export type ComboBreakReason = "lens" | "superkey";
+
+/**
+ * Why `keyCode` would stop a combo it sits in from firing, or null if it
+ * would not.
+ *
+ * Lens keys and superkeys break a combo, except a superkey that behaves as a
+ * Qukey. Qukeys, autoshift and CapsWord are fine.
+ */
+export const comboBreakReason = (keyCode: number, superkeys: SuperkeysType[] = []): ComboBreakReason | null => {
+  if (LENS_KEYS.includes(keyCode)) return "lens";
+
+  if (keyCode >= SUPERKEY_FIRST && keyCode < SUPERKEY_FIRST + SUPERKEY_COUNT) {
+    return isQukeySuperkey(superkeys[keyCode - SUPERKEY_FIRST]) ? null : "superkey";
+  }
+
+  return null;
+};
+
+/** Indexes of the combos that use `position` on `layer`. */
+export const combosAtPosition = (combos: ComboType[], position: number, layer: number): number[] =>
+  combos.reduce<number[]>((found, combo, index) => {
+    const onLayer = combo.layer === COMBO_LAYER_ANY || combo.layer === layer;
+    if (onLayer && comboMembers(combo).includes(position)) found.push(index);
+    return found;
+  }, []);

@@ -3,7 +3,7 @@ import type { DecodedKey, KeyboardModel } from "../shared/types";
 import { DEFY_KEYS, DEFY_SVG_W, DEFY_VIEW_Y, DEFY_VIEW_H } from "./geometry-defy";
 import { DEFY_THUMB_PATHS, DEFY_THUMB_ROTATION, DEFY_THUMB_CENTER } from "./defy-thumb-paths";
 import { decodeKey, superkeyIndex, layoutOverrides, symbolOverrides } from "./keycodes";
-import { keyLabel, fg } from "./key-label";
+import { keyLabel, fg, comboBadge, comboBadgeNearLabel, comboNumbersForLayer } from "./key-label";
 
 interface Props {
   model: KeyboardModel;
@@ -29,6 +29,7 @@ export const DefyKeyboardView: React.FC<Props> = ({ model, activeLayer, layout, 
   const { palette } = model;
   const names = model.layerNames?.length ? model.layerNames : (layerNames ?? []);
   const macroNames = model.macroNames ?? [];
+  const comboNumbers = comboNumbersForLayer(model.combos, layer);
 
   function getColor(ledIndex: number) {
     const pi = colormapLayer[ledIndex] ?? 0;
@@ -50,6 +51,7 @@ export const DefyKeyboardView: React.FC<Props> = ({ model, activeLayer, layout, 
     const color = getColor(key.ledIndex);
     const label = getLabel(key.index);
     const fgColor = fg(color.r, color.g, color.b);
+    const comboNumber = comboNumbers.get(key.index);
     const { x, y, w, h } = key;
 
     // Thumb keys: draw the editor silhouette (outer bezel + inset color face) in a
@@ -74,6 +76,7 @@ export const DefyKeyboardView: React.FC<Props> = ({ model, activeLayer, layout, 
             <path d={thumb.inner} fill="url(#lens-key-sheen)" fillOpacity="0.45" />
           </g>
           {keyLabel(lcx, lcy, 0, h, label, fgColor, rotation)}
+          {comboNumber !== undefined && comboBadgeNearLabel(comboNumber, lcx, lcy, rotation)}
         </g>
       );
     }
@@ -89,6 +92,7 @@ export const DefyKeyboardView: React.FC<Props> = ({ model, activeLayer, layout, 
         <rect x={x + 4} y={y} width={w - 8} height={h - 8} rx={4} fill={color.css} />
         <rect x={x + 4} y={y} width={w - 8} height={h - 8} rx={4} fill="url(#lens-key-sheen)" fillOpacity="0.45" />
         {keyLabel(cx, cy, y, h, label, fgColor)}
+        {comboNumber !== undefined && comboBadge(comboNumber, x + w - 1, y - 3)}
       </g>
     );
   }

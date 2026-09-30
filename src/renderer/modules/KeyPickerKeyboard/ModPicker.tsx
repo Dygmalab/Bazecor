@@ -211,33 +211,37 @@ function ModPicker(props: ModPickerProps) {
             disabled={setModifierVisibility()}
           />
         </div>
-        <div className="autoshiftPicker flex items-center" hidden={!allowAutoshift}>
-          <CustomRadioCheckBox
-            label={<div className="pl-0.5">Make it Autoshiftable</div>}
-            onClick={() => toggleAutoshift()}
-            checked={autoshifted}
-            type="checkbox"
-            name="makeAutoshiftable"
-            id="makeAutoshiftable"
-            disabled={!autoshiftAvailable}
-            tooltip={
-              <>
-                <Heading headingLevel={4} renderAs="h4" className="text-gray-600 dark:text-gray-25 mb-1 leading-6 text-base">
-                  Autoshift
-                </Heading>
-                <p className="description text-ssm font-medium text-gray-400 dark:text-gray-200">
-                  Tap the key to type its normal character, or hold it to type the shifted one. Holding A gives you a capital A
-                  without reaching for Shift.
-                </p>
-                <p className="description text-ssm font-medium text-gray-400 dark:text-gray-200">
-                  Only available for letters, digits and punctuation -- keys with no distinct shifted form cannot be autoshifted.
-                  Note that the key loses its hold-to-repeat behaviour, since hold now types the capital.
-                </p>
-              </>
-            }
-            className="mt-0"
-          />
-        </div>
+        {/* Rendered conditionally rather than with `hidden`: the `flex` class
+         * overrides the attribute's display:none and the checkbox stayed visible. */}
+        {allowAutoshift && (
+          <div className="autoshiftPicker flex items-center">
+            <CustomRadioCheckBox
+              label={<div className="pl-0.5">Make it Autoshiftable</div>}
+              onClick={() => toggleAutoshift()}
+              checked={autoshifted}
+              type="checkbox"
+              name="makeAutoshiftable"
+              id="makeAutoshiftable"
+              disabled={!autoshiftAvailable}
+              tooltip={
+                <>
+                  <Heading headingLevel={4} renderAs="h4" className="text-gray-600 dark:text-gray-25 mb-1 leading-6 text-base">
+                    Autoshift
+                  </Heading>
+                  <p className="description text-ssm font-medium text-gray-400 dark:text-gray-200">
+                    Tap the key to type its normal character, or hold it to type the shifted one. Holding A gives you a capital A
+                    without reaching for Shift.
+                  </p>
+                  <p className="description text-ssm font-medium text-gray-400 dark:text-gray-200">
+                    Only available for letters, digits and punctuation -- keys with no distinct shifted form cannot be
+                    autoshifted. Note that the key loses its hold-to-repeat behaviour, since hold now types the capital.
+                  </p>
+                </>
+              }
+              className="mt-0"
+            />
+          </div>
+        )}
       </div>
     </div>
   );

@@ -27,7 +27,7 @@ import { Button } from "@Renderer/components/atoms/Button";
 import Heading from "@Renderer/components/atoms/Heading";
 import LogoLoader from "@Renderer/components/atoms/loader/LogoLoader";
 import ToastMessage from "@Renderer/components/atoms/ToastMessage";
-import { IconDelete, IconPlus } from "@Renderer/components/atoms/icons";
+import { IconClose, IconDelete, IconPlus } from "@Renderer/components/atoms/icons";
 import Callout from "@Renderer/components/molecules/Callout/Callout";
 import { PageHeader } from "@Renderer/modules/PageHeader";
 import { KeyPickerKeyboard } from "@Renderer/modules/KeyPickerKeyboard";
@@ -39,21 +39,24 @@ import Store from "@Renderer/utils/Store";
 import getLanguage from "@Renderer/utils/language";
 import { KeymapType, PaletteType, SegmentedKeyType } from "@Renderer/types/layout";
 import { Neuron } from "@Renderer/types/neurons";
+import { MacrosType } from "@Renderer/types/macros";
 import {
   COMBO_FLAG_ENABLED,
   COMBO_POSITION_UNUSED,
   ComboEditorProps,
   ComboType,
-  MAX_COMBO_MEMBERS,
+  MAX_COMBO_KEYS,
   MAX_COMBOS,
   MIN_COMBO_MEMBERS,
 } from "@Renderer/types/combos";
 
 import { KeymapDB } from "../../api/keymap";
+import Backup from "../../api/backup";
 import { claimedPositions, comboMembers, emptyCombo, parseCombosRaw, serializeCombos } from "../../api/parsers/combos";
-import { parseColormapRaw, parseKeymapRaw, parsePaletteRaw } from "../../api/parsers";
+import { parseColormapRaw, parseKeymapRaw, parseMacrosRaw, parsePaletteRaw } from "../../api/parsers";
 
 const store = Store.getStore();
+const bkp = new Backup();
 
 /* The very same rules the Layout Editor uses, so the board renders identically
  * in both views. The device SVGs emit bare class names and carry no styling of
@@ -85,9 +88,13 @@ function ComboEditor(props: ComboEditorProps) {
   const [combos, setCombos] = useState<ComboType[]>([]);
   const [selected, setSelected] = useState<number>(0);
   const [pickTarget, setPickTarget] = useState<PickTarget>(null);
+  /* The optional third slot, opened from the hover "+" before it holds a key. */
+  const [extraSlot, setExtraSlot] = useState(false);
   const [keymap, setKeymap] = useState<KeymapType>({ custom: [], default: [], onlyCustom: true });
   const [palette, setPalette] = useState<PaletteType[]>([]);
   const [colormap, setColormap] = useState<number[]>([]);
+  const [macros, setMacros] = useState<MacrosType[]>([]);
+  const [isWireless, setIsWireless] = useState(false);
   const [deviceName, setDeviceName] = useState("");
   const [neuronID, setNeuronID] = useState("");
   const [modified, setModified] = useState(false);
@@ -123,6 +130,7 @@ function ComboEditor(props: ComboEditorProps) {
 
       setSupported(true);
       setDeviceName(currentDevice.device.info.product ?? "");
+      setIsWireless(currentDevice.device.info.keyboardType === "wireless" || Boolean(currentDevice.device.wireless));
 
       /* Names live in the neuron store, keyed by chip id, exactly as superkey
        * names do -- the firmware blob has no room for them. */
@@ -134,6 +142,11 @@ function ComboEditor(props: ComboEditorProps) {
       const neuron = neurons.find(n => n.id === chipID);
 
       setCombos(parseCombosRaw(raw, neuron?.combos ?? []));
+
+      /* Macros, so the result picker can offer them. Names come from the
+       * neuron store, as in the Macro Editor. */
+      const macrosRaw = (await currentDevice.command("macros.map")) as string;
+      setMacros(macrosRaw ? parseMacrosRaw(macrosRaw, neuron?.macros ?? []) : []);
 
       const keymapRaw = (await currentDevice.command("keymap.custom")) as string;
       const keymapDefault = (await currentDevice.command("keymap.default")) as string;
@@ -202,6 +215,12 @@ function ComboEditor(props: ComboEditorProps) {
         neurons[index].combos = combos;
         store.set("neurons", neurons);
       }
+
+      /* Same as the other editors: a backup after every save. Lens reads the
+       * combos it badges from the newest backup, and is told to reload by it. */
+      const commands = await Backup.Commands(currentDevice);
+      const backup = await bkp.DoBackup(commands, neuronID, currentDevice);
+      Backup.SaveBackup(backup, currentDevice);
 
       setModified(false);
       cancelContext();
@@ -294,6 +313,11 @@ function ComboEditor(props: ComboEditorProps) {
     setPickTarget(null);
   };
 
+  /* An empty extra slot belongs to the combo being edited, not to the next one. */
+  useEffect(() => {
+    setExtraSlot(false);
+  }, [selected, combos.length]);
+
   const clearSlot = (slot: number) => {
     const combo = combos[selected];
     if (!combo) return;
@@ -302,11 +326,39 @@ function ComboEditor(props: ComboEditorProps) {
     updateCombo(selected, { ...combo, positions });
   };
 
+  /* Drops the slot entirely rather than just emptying it, shifting any later
+   * keys up so the combo never ends up with a gap. */
+  const removeSlot = (slot: number) => {
+    const combo = combos[selected];
+    if (!combo) return;
+    const positions = combo.positions.filter((_, i) => i !== slot).concat([COMBO_POSITION_UNUSED]);
+    updateCombo(selected, { ...combo, positions });
+    setExtraSlot(false);
+    if (pickTarget?.kind === "member" && pickTarget.slot >= slot) setPickTarget(null);
+  };
+
   /* A key may belong to at most one combo. Everything claimed elsewhere is
    * greyed out on the keyboard below, which is also what guarantees no combo
    * can ever be a subset of another -- the firmware fires on match, so a
    * subset would always win and the longer combo could never trigger. */
   const unavailable = useMemo(() => claimedPositions(combos, selected), [combos, selected]);
+
+  /* Two slots always, the third once opened or filled. A combo read back from
+   * the keyboard with a key in a later slot keeps it visible, so nothing the
+   * firmware holds is ever hidden from the user. */
+  const visibleSlots = useMemo(() => {
+    const positions = combos[selected]?.positions ?? [];
+    let lastUsed = -1;
+    positions.forEach((position, slot) => {
+      if (position !== COMBO_POSITION_UNUSED) lastUsed = slot;
+    });
+    return Math.max(MIN_COMBO_MEMBERS, lastUsed + 1, extraSlot ? MAX_COMBO_KEYS : 0);
+  }, [combos, selected, extraSlot]);
+
+  const addSlot = () => {
+    setExtraSlot(true);
+    setPickTarget({ kind: "member", slot: visibleSlots });
+  };
 
   const onKeyboardKeySelect = (event: React.MouseEvent<Element>) => {
     if (!pickTarget || pickTarget.kind !== "member") return;
@@ -338,7 +390,7 @@ function ComboEditor(props: ComboEditorProps) {
      * last slot rather than wrapping, so a two-key combo does not quietly
      * re-arm the slot the user just filled. */
     const nextSlot = pickTarget.slot + 1;
-    setPickTarget(nextSlot < MAX_COMBO_MEMBERS ? { kind: "member", slot: nextSlot } : null);
+    setPickTarget(nextSlot < visibleSlots ? { kind: "member", slot: nextSlot } : null);
   };
 
   const onActionKeySelect = (keyCode: number) => {
@@ -378,12 +430,15 @@ function ComboEditor(props: ComboEditorProps) {
    * this working across all eight device SVGs without touching any of them. */
   const unavailableStyles = useMemo(() => {
     if (!pickTarget || pickTarget.kind !== "member") return "";
-    return Array.from(unavailable)
+    /* Keys this combo already uses are greyed too: the same key twice in one
+     * combo could never be satisfied. */
+    const own = combos[selected] ? comboMembers(combos[selected]) : [];
+    return Array.from(new Set([...unavailable, ...own]))
       .map(
         position => `.comboKeyboard [data-key-index="${position}"] { opacity: 0.3; pointer-events: none; filter: grayscale(1); }`,
       )
       .join("\n");
-  }, [unavailable, pickTarget]);
+  }, [unavailable, pickTarget, combos, selected]);
 
   const KeyboardComponent = state.currentDevice?.device?.components?.keymap as React.FC<any> | undefined;
 
@@ -458,47 +513,79 @@ function ComboEditor(props: ComboEditorProps) {
       {/* [k1] + [k2] + ... = [action]                                      */}
       {/* ---------------------------------------------------------------- */}
       {combo ? (
-        <div className="mt-6 rounded-regular bg-gray-25/50 dark:bg-gray-400/15 p-4">
-          <div className="flex flex-wrap items-center gap-3">
-            {combo.positions.map((position, slot) => (
-              <React.Fragment key={SLOT_KEYS[slot]}>
-                {slot > 0 && <span className="text-lg text-gray-400 dark:text-gray-300">+</span>}
-                <Button
-                  variant="config"
-                  size="sm"
-                  selected={pickTarget?.kind === "member" && pickTarget.slot === slot}
-                  className="min-w-20 h-12 text-ssm"
-                  onClick={() => setPickTarget({ kind: "member", slot })}
-                  onContextMenu={event => {
-                    event.preventDefault();
-                    clearSlot(slot);
-                  }}
-                >
-                  {position === COMBO_POSITION_UNUSED ? <IconPlus size="xs" /> : labelForPosition(position)}
-                </Button>
-              </React.Fragment>
-            ))}
+        <div className="group mt-6 rounded-regular bg-gray-25/50 dark:bg-gray-400/15 p-4">
+          {/* Equal side columns keep the slot row centred whatever the Delete
+           * button on the right measures. */}
+          <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-3">
+            <div />
 
-            <span className="text-lg text-gray-400 dark:text-gray-300 px-2">=</span>
+            <div className="flex items-center gap-4">
+              {combo.positions.slice(0, visibleSlots).map((position, slot) => (
+                <React.Fragment key={SLOT_KEYS[slot]}>
+                  {slot > 0 && <span className="text-lg text-gray-400 dark:text-gray-300">+</span>}
+                  <span className="relative">
+                    <Button
+                      variant="config"
+                      size="sm"
+                      selected={pickTarget?.kind === "member" && pickTarget.slot === slot}
+                      className="min-w-20 h-12 text-ssm"
+                      onClick={() => setPickTarget({ kind: "member", slot })}
+                      onContextMenu={event => {
+                        event.preventDefault();
+                        clearSlot(slot);
+                      }}
+                    >
+                      {position === COMBO_POSITION_UNUSED ? <IconPlus size="xs" /> : labelForPosition(position)}
+                    </Button>
+                    {slot >= MIN_COMBO_MEMBERS && (
+                      <button
+                        type="button"
+                        title="Remove this key"
+                        aria-label="Remove this key"
+                        className="absolute -top-2 -right-2 flex items-center justify-center w-5 h-5 rounded-full bg-gray-100 text-gray-600 hover:bg-primary hover:text-white dark:bg-gray-500 dark:text-gray-25 dark:hover:bg-primary transition-colors"
+                        onClick={() => removeSlot(slot)}
+                      >
+                        <IconClose />
+                      </button>
+                    )}
+                    {/* The add button rides on the last slot's corner, out of
+                     * the flow, so revealing it never shifts the row. */}
+                    {slot === visibleSlots - 1 && visibleSlots < MAX_COMBO_KEYS && (
+                      <button
+                        type="button"
+                        title="Add a third key"
+                        aria-label="Add a third key"
+                        className="absolute -top-2 -right-2 flex items-center justify-center w-5 h-5 rounded-full bg-gray-100 text-gray-600 hover:bg-purple-200 hover:text-white dark:bg-gray-500 dark:text-gray-25 dark:hover:bg-purple-200 opacity-0 group-hover:opacity-100 focus-visible:opacity-100 transition-all"
+                        onClick={addSlot}
+                      >
+                        <IconPlus size="xs" />
+                      </button>
+                    )}
+                  </span>
+                </React.Fragment>
+              ))}
 
-            <Button
-              variant="config"
-              size="sm"
-              selected={pickTarget?.kind === "action"}
-              className="min-w-24 h-12 text-ssm"
-              onClick={() => setPickTarget({ kind: "action" })}
-            >
-              {combo.action ? actionLabel(combo) : <IconPlus size="xs" />}
-            </Button>
+              <span className="text-lg text-gray-400 dark:text-gray-300">=</span>
 
-            <div className="ml-auto">
+              <Button
+                variant="config"
+                size="sm"
+                selected={pickTarget?.kind === "action"}
+                className="min-w-24 h-12 text-ssm"
+                onClick={() => setPickTarget({ kind: "action" })}
+              >
+                {combo.action ? actionLabel(combo) : <IconPlus size="xs" />}
+              </Button>
+            </div>
+
+            <div className="justify-self-end">
               <Button variant="config" size="sm" onClick={() => deleteCombo(selected)}>
                 <IconDelete size="sm" /> Delete
               </Button>
             </div>
           </div>
 
-          <div className="mt-2 text-ssm text-gray-400 dark:text-gray-300">
+          <div className="mt-3 text-center text-ssm text-gray-400 dark:text-gray-300">
             {incomplete ? (
               <span>
                 A combo needs at least {MIN_COMBO_MEMBERS} keys and a resulting key before it does anything. Right-click a slot to
@@ -510,7 +597,7 @@ function ComboEditor(props: ComboEditorProps) {
           </div>
         </div>
       ) : (
-        <div className="mt-6 text-ssm text-gray-400 dark:text-gray-300">No combos yet. Add one to get started.</div>
+        <div className="mt-6 text-center text-ssm text-gray-400 dark:text-gray-300">No combos yet. Add one to get started.</div>
       )}
 
       {/* ---------------------------------------------------------------- */}
@@ -525,25 +612,29 @@ function ComboEditor(props: ComboEditorProps) {
             <KeyPickerKeyboard
               onKeySelect={onActionKeySelect}
               code={{ base: combo?.action ?? 0, modified: 0 } as SegmentedKeyType}
-              macros={[]}
+              macros={macros}
               superkeys={[]}
               action={0}
               actTab="super"
               selectedlanguage={currentLanguageLayout}
               keyIndex={0}
-              isWireless={false}
+              isWireless={isWireless}
               mouseWheel={0}
               resetScroll={() => {}}
               allowAutoshift={false}
+              fullMouse
             />
           </>
         ) : (
           <>
-            <Heading headingLevel={4} renderAs="paragraph-sm" className="mb-2">
+            <Heading headingLevel={4} renderAs="paragraph-sm" className="mb-2 text-center">
               {pickTarget?.kind === "member"
                 ? "Pick a key for the highlighted slot"
                 : "Click a slot above, then pick its key here"}
             </Heading>
+            <p className="mb-2 text-center text-ssm font-semibold text-gray-400 dark:text-gray-200">
+              Combos use where the keys sit on the keyboard, not what they type, so a combo works on every layer.
+            </p>
             {KeyboardComponent && layerData.length > 0 ? (
               <div
                 className={`comboKeyboard LayerHolder ${pickTarget?.kind === "member" ? "" : "opacity-60 pointer-events-none"}`}
