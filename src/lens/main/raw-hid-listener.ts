@@ -7,7 +7,6 @@ import {
   PACKET_TYPE_LAYER,
   PACKET_TYPE_OVERLAY_TAP,
   PACKET_TYPE_OVERLAY_HOLD,
-  SONSEI_RAW_HID_REPORT_ID,
   LENS_PRODUCTS,
   productForUsbIds,
   type LensProduct,
@@ -105,6 +104,11 @@ export class RawHidListener extends EventEmitter<RawHidEvents> {
   private lastEventTime: Record<string, number> = {};
 
   private enumLogged = false;
+
+  // One-shot so the 2s scan loop can't spam the log with either diagnostic.
+  private relaxedMatchLogged = false;
+
+  private dygmaEnumLogged = false;
 
   // path -> {product, firstSeen}. Rebuilt from HID enumeration each scan.
   private seen = new Map<string, SeenDevice>();
@@ -227,6 +231,36 @@ export class RawHidListener extends EventEmitter<RawHidEvents> {
   }
 
   /**
+   * Picks the raw HID / vendor collection of every supported board out of a full
+   * HID enumeration.
+   *
+   * The overlay firmware reports on Dygma's vendor usage page (0xff00), and every
+   * board we have checked declares it with usage 0x01, so that exact pair is what
+   * we look for first. When it finds nothing we retry on the usage page alone:
+   * the Defy's *wired* Neuron was reported as invisible to Lens, and a vendor
+   * collection declaring a different usage id is the one cause we can cover from
+   * this side — the strict filter would silently skip it while the board is
+   * plugged in and working. Anything outside 0xff00 stays excluded: those are the
+   * board's real keyboard/consumer collections, which we must never open.
+   */
+  private matchSupportedDevices(devices: HidDeviceInfo[]): HidDeviceInfo[] {
+    const onVendorPage = devices.filter(
+      d => d.path && d.usagePage === 0xff00 && productForUsbIds(d.vendorId ?? 0, d.productId ?? 0) !== null,
+    );
+    const strict = onVendorPage.filter(d => d.usage === 0x01);
+    if (strict.length > 0 || onVendorPage.length === 0) return strict;
+
+    if (!this.relaxedMatchLogged) {
+      this.relaxedMatchLogged = true;
+      log.info(
+        `[Lens/HID] No 0xff00/0x01 collection found, falling back to usagePage 0xff00 with any usage: ` +
+          `${JSON.stringify(onVendorPage.map(d => ({ product: d.product, usage: `0x${(d.usage ?? 0).toString(16)}` })))}`,
+      );
+    }
+    return onVendorPage;
+  }
+
+  /**
    * Enumerates supported keyboards, updates the connected set, and re-picks the
    * active device (last connected wins; on removal of the active one, falls back
    * to the most-recently-seen board still present).
@@ -246,11 +280,8 @@ export class RawHidListener extends EventEmitter<RawHidEvents> {
       return;
     }
 
-    // Keep only the raw HID / vendor collection (usagePage 0xff00, usage 0x01) of
-    // supported boards — the same interface the overlay firmware reports on.
-    const matches = devices.filter(
-      d => d.path && d.usagePage === 0xff00 && d.usage === 0x01 && productForUsbIds(d.vendorId ?? 0, d.productId ?? 0) !== null,
-    );
+    this.logDygmaEnumOnce(devices);
+    const matches = this.matchSupportedDevices(devices);
 
     const now = Date.now();
     const present = new Set<string>();
@@ -380,11 +411,10 @@ export class RawHidListener extends EventEmitter<RawHidEvents> {
     this.device = null;
   }
 
-  private logNoDeviceOnce(devices: HidDeviceInfo[]): void {
-    if (this.enumLogged) return;
-    this.enumLogged = true;
+  /** Every collection a Dygma board exposes, as the log wants to see it. */
+  private static describeDygmaDevices(devices: HidDeviceInfo[]) {
     const vendorIds = new Set(LENS_PRODUCTS.map(p => p.vendorId));
-    const dygma = devices
+    return devices
       .filter(d => vendorIds.has(d.vendorId ?? 0))
       .map(d => ({
         productId: `0x${(d.productId ?? 0).toString(16)}`,
@@ -394,8 +424,28 @@ export class RawHidListener extends EventEmitter<RawHidEvents> {
         product: d.product,
         hasPath: !!d.path,
       }));
+  }
+
+  /**
+   * Dumps every Dygma collection once per listener run, whether or not a board
+   * matched. The "nothing found" dump below only fires when no board matched at
+   * all, which is no help for a board that enumerates but never delivers overlay
+   * packets — the Defy wired Neuron report. This is the line to ask a user for.
+   */
+  private logDygmaEnumOnce(devices: HidDeviceInfo[]): void {
+    if (this.dygmaEnumLogged) return;
+    const dygma = RawHidListener.describeDygmaDevices(devices);
+    if (dygma.length === 0) return;
+    this.dygmaEnumLogged = true;
+    log.info(`[Lens/HID] Dygma HID collections enumerated: ${JSON.stringify(dygma)}`);
+  }
+
+  private logNoDeviceOnce(devices: HidDeviceInfo[]): void {
+    if (this.enumLogged) return;
+    this.enumLogged = true;
+    const dygma = RawHidListener.describeDygmaDevices(devices);
     log.info(
-      `[Lens/HID] No supported keyboard found (want usagePage=0xff00 usage=0x01). ` +
+      `[Lens/HID] No supported keyboard found (want usagePage=0xff00). ` +
         `Enumerated ${devices.length} HID devices, ${dygma.length} with a Dygma VID: ${JSON.stringify(dygma)}`,
     );
   }
@@ -403,9 +453,14 @@ export class RawHidListener extends EventEmitter<RawHidEvents> {
   private onData(buf: Buffer): void {
     if (buf.length < OVERLAY_PACKET_SIZE) return;
 
-    // USB HID prepends the report ID at buf[0]; BLE HID does not.
-    const base = buf[0] === SONSEI_RAW_HID_REPORT_ID ? 1 : 0;
-    if (buf[base] !== OVERLAY_MAGIC_BYTE) return;
+    // USB HID prepends the report ID at buf[0] (SONSEI_RAW_HID_REPORT_ID on every
+    // board checked so far); BLE HID does not. Locate the payload by the magic byte
+    // rather than by that one report ID, so a board whose vendor interface uses a
+    // different one still decodes instead of having every packet dropped here.
+    let base: number;
+    if (buf[0] === OVERLAY_MAGIC_BYTE) base = 0;
+    else if (buf[1] === OVERLAY_MAGIC_BYTE) base = 1;
+    else return;
 
     const packetType = buf[base + 1];
 
@@ -432,6 +487,11 @@ export class RawHidListener extends EventEmitter<RawHidEvents> {
 
   stop(): void {
     this.running = false;
+    // Re-log the one-shot diagnostics next time the listener runs, so a user who
+    // toggles Lens off and on gets a fresh enumeration dump instead of silence.
+    this.dygmaEnumLogged = false;
+    this.relaxedMatchLogged = false;
+    this.enumLogged = false;
     // A stop() while suspended (Lens disabled mid-flash) wins: clearing the flag
     // makes the later resume() a no-op instead of restarting a listener the user
     // just turned off. enable() calls startWithRetry() again on its own.

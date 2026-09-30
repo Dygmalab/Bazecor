@@ -310,12 +310,22 @@ export const SHIFT_US: Record<number, string> = {
   54: "<",
   55: ">",
   56: "?",
+  // Bazecor's ShiftedPunctuationTable (code 2148) labels the ISO <> key "Alt. |"
+  // (verbose "Non-US |") — the only shifted key there whose label isn't a bare symbol.
+  100: "Alt. |",
 };
 
 // From src/api/keymap/languages/es/ES.ts's shiftModifierSpanish table.
 export const SHIFT_ES_ES: Record<number, string> = {
+  // 30/33/34 (Shift+1/4/5) are absent from shiftModifierSpanish, so Bazecor falls
+  // through to the default ShiftedDigitTable for them — which happens to be right
+  // for Spanish too. Transcribed here explicitly, or Lens would show "1" + an "S"
+  // chip where Bazecor shows "!".
+  30: "!",
   31: '"',
   32: "·",
+  33: "$",
+  34: "%",
   35: "&",
   36: "/",
   37: "(",
@@ -340,8 +350,12 @@ export const SHIFT_ES_ES: Record<number, string> = {
 // split out any further (its language picker only offers "es-MX" for all of
 // Latin America, same physical layout).
 export const SHIFT_ES_MX: Record<number, string> = {
+  // Same default-table fallthrough as es-ES above.
+  30: "!",
   31: '"',
   32: "#",
+  33: "$",
+  34: "%",
   35: "&",
   36: "/",
   37: "(",
@@ -368,10 +382,72 @@ const SHIFT_LAYOUTS: Record<string, Record<number, string>> = {
   "es-MX": SHIFT_ES_MX,
 };
 
+/* AltGr symbol tables: the character AltGr + key actually produces, transcribed
+ * from each language's `altGr*` table in src/api/keymap/languages/**. Bazecor's
+ * KeymapDB applies these *after* its generic "AltGr +" table (they sit later in
+ * the language's `*ModifiedTables` array, and db.ts's last-write-wins fill), so
+ * the key picker shows the bare character with no "AGr+" tag — which is why Lens
+ * has to special-case them the same way it does Shift.
+ *
+ * Bazecor pairs every altGr table with an identical altCtrl one (Ctrl+Alt, base
+ * 768, same base codes and same symbols — AltGr's Windows equivalent), so one
+ * table serves both combos here; see ALTGR_MOD_FLAGS in keycodes.ts.
+ *
+ * en-US has none: Bazecor ships no AltGr overrides for it, so AltGr keys keep
+ * showing the base label + an "AltGr" chip, exactly as the key picker does. */
+
+// From src/api/keymap/languages/es/ES.ts's altGrSpanish / altCtrlSpanish tables.
+export const ALTGR_ES_ES: Record<number, string> = {
+  8: "€", // AltGr+E
+  30: "|",
+  31: "@",
+  32: "#",
+  33: "~",
+  34: "€",
+  35: "¬",
+  47: "[",
+  48: "]",
+  49: "}",
+  52: "{",
+  53: "\\",
+};
+
+// From src/api/keymap/languages/es/MX.ts's altGrSpanish / altCtrlSpanish tables.
+export const ALTGR_ES_MX: Record<number, string> = {
+  20: "@", // AltGr+Q
+  45: "\\",
+  48: "~",
+  49: "`",
+  52: "^",
+  53: "¬",
+};
+
+const ALTGR_LAYOUTS: Record<string, Record<number, string>> = {
+  "es-ES": ALTGR_ES_ES,
+  "es-MX": ALTGR_ES_MX,
+};
+
 /** Shift-row symbol table for `layout`, or `null` if this layout doesn't have
  * one transcribed yet — callers should fall back to showing the base key +
  * a "S" chip rather than guessing with another layout's symbols (showing the
  * US "@" for Shift+2 on a Spanish board was the actual bug this avoids). */
 export function shiftOverrides(layout: string): Record<number, string> | null {
   return SHIFT_LAYOUTS[layout] ?? null;
+}
+
+/** AltGr (and Ctrl+Alt) symbol table for `layout`, or `null` when the layout has
+ * none — same fall-back-to-a-chip contract as shiftOverrides above. */
+export function altGrOverrides(layout: string): Record<number, string> | null {
+  return ALTGR_LAYOUTS[layout] ?? null;
+}
+
+/** Both modifier symbol tables for `layout`, as one object to thread through
+ * decodeKey() instead of a growing list of positional arguments. */
+export interface SymbolOverrides {
+  shift: Record<number, string> | null;
+  altGr: Record<number, string> | null;
+}
+
+export function symbolOverrides(layout: string): SymbolOverrides {
+  return { shift: shiftOverrides(layout), altGr: altGrOverrides(layout) };
 }

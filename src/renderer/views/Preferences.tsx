@@ -57,8 +57,10 @@ import {
 } from "@Renderer/components/atoms/icons";
 
 import Store from "@Renderer/utils/Store";
+import { supportsTrueSleep } from "@Renderer/utils/deviceCapabilities";
 import { useDevice } from "@Renderer/DeviceContext";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@Renderer/components/atoms/Tabs";
+import { Badge } from "@Renderer/components/atoms/Badge";
 import { KBDataPref, PrefState, PreferencesProps } from "@Renderer/types/preferences";
 import { WirelessInterface } from "@Renderer/types/wireless";
 import LogoLoader from "@Renderer/components/atoms/loader/LogoLoader";
@@ -174,9 +176,10 @@ const Preferences = (props: PreferencesProps) => {
   } = props;
   const [activeTab, setActiveTab] = useState(connected ? "Keyboard" : "Application");
 
-  // Layer Lens is available for Sonsei (fw >= 1.0.0) and Defy (fw >= 2.3.0). The
-  // capability is written to the store on connect (see App.tsx onKeyboardConnect).
-  // Raise2 and Raise (Raise1) never set this flag, so the nav item stays hidden.
+  // Layer Lens is available for Sonsei (fw >= 1.0.0), Defy (fw >= 2.3.0) and Raise2
+  // (fw >= 1.5.0). The capability is written to the store on connect (see App.tsx
+  // onKeyboardConnect). Raise (Raise1) never sets this flag, so the nav item stays
+  // hidden for it whatever the firmware.
   const lensCapabilityRaw = store.get("capabilities.lens");
   const isLensAvailable =
     lensCapabilityRaw === true || lensCapabilityRaw === "true" || lensCapabilityRaw === 1 || lensCapabilityRaw === "1";
@@ -341,6 +344,7 @@ const Preferences = (props: PreferencesProps) => {
 
   const getWirelessPreferences = useCallback(async () => {
     const newWireless = { ...initialWireless };
+    const hasTrueSleep = supportsTrueSleep(state.currentDevice?.device?.info?.product as string);
     setLoading(true);
     // Battery commands
     if (state.currentDevice) {
@@ -375,7 +379,10 @@ const Preferences = (props: PreferencesProps) => {
         newWireless.idleleds = idleleds ? parseInt(idleleds, 10) : 0;
       });
       await state.currentDevice.command("idleleds.true_sleep").then((trueSleep: string) => {
-        newWireless.true_sleep = trueSleep ? parseInt(trueSleep, 10) === 1 : false;
+        // Boards that don't expose true sleep (Sonsei) always read as off, whatever
+        // the firmware reports — the card is hidden for them, so a stale "1" would
+        // be a setting the user can neither see nor turn back off.
+        newWireless.true_sleep = hasTrueSleep && trueSleep ? parseInt(trueSleep, 10) === 1 : false;
       });
       await state.currentDevice.command("idleleds.true_sleep_time").then((trueSleepTime: string) => {
         newWireless.true_sleep_time = trueSleepTime ? parseInt(trueSleepTime, 10) : 0;
@@ -469,6 +476,7 @@ const Preferences = (props: PreferencesProps) => {
 
   const saveWirelessChanges = async () => {
     if (state.currentDevice) {
+      const hasTrueSleep = supportsTrueSleep(state.currentDevice.device.info.product as string);
       // Commands to be sent to the keyboard
       await state.currentDevice.command("wireless.battery.savingMode", wireless.battery.savingMode ? "1" : "0");
       await state.currentDevice.command("wireless.bluetooth.deviceName", wireless.bluetooth.deviceName);
@@ -484,7 +492,7 @@ const Preferences = (props: PreferencesProps) => {
       await state.currentDevice.command("led.brightnessUG.wireless", wireless.brightnessUG.toString());
       await state.currentDevice.command("led.fade", wireless.fade.toString());
       await state.currentDevice.command("idleleds.wireless", wireless.idleleds.toString());
-      await state.currentDevice.command("idleleds.true_sleep", wireless.true_sleep ? "1" : "0");
+      await state.currentDevice.command("idleleds.true_sleep", hasTrueSleep && wireless.true_sleep ? "1" : "0");
       await state.currentDevice.command("idleleds.true_sleep_time", wireless.true_sleep_time.toString());
     }
   };
@@ -806,6 +814,9 @@ const Preferences = (props: PreferencesProps) => {
               {isLensAvailable && (
                 <TabsTrigger value="LayerLens" variant="tab">
                   <IconLens /> Layer Lens
+                  <Badge variant="subtle" size="xs">
+                    Beta
+                  </Badge>
                 </TabsTrigger>
               )}
               <TabsTrigger value="Backups" variant="tab">
@@ -868,7 +879,13 @@ const Preferences = (props: PreferencesProps) => {
                             isCharging={false}
                             deviceType={state.currentDevice.device.info.product as string}
                           />
-                          <EnergyManagement wireless={wireless} changeWireless={updateWireless} updateTab={handleTabChange} />
+                          <EnergyManagement
+                            wireless={wireless}
+                            changeWireless={updateWireless}
+                            updateTab={handleTabChange}
+                            deviceType={state.currentDevice.device.info.product as string}
+                          />
+
                         </motion.div>
                       </TabsContent>
                       {/* <TabsContent value="Bluetooth">

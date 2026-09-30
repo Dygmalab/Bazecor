@@ -2,7 +2,7 @@ import React from "react";
 import type { DecodedKey, KeyboardModel } from "../shared/types";
 import { DEFY_KEYS, DEFY_SVG_W, DEFY_VIEW_Y, DEFY_VIEW_H } from "./geometry-defy";
 import { DEFY_THUMB_PATHS, DEFY_THUMB_ROTATION, DEFY_THUMB_CENTER } from "./defy-thumb-paths";
-import { decodeKey, superkeyIndex, layoutOverrides, shiftOverrides } from "./keycodes";
+import { decodeKey, superkeyIndex, layoutOverrides, symbolOverrides } from "./keycodes";
 import { keyLabel, fg } from "./key-label";
 
 interface Props {
@@ -22,7 +22,7 @@ interface Props {
  */
 export const DefyKeyboardView: React.FC<Props> = ({ model, activeLayer, layout, layerNames }) => {
   const overrides = layoutOverrides(layout);
-  const shiftSymbols = shiftOverrides(layout);
+  const symbols = symbolOverrides(layout);
   const layer = Math.min(activeLayer, model.keymap.length - 1);
   const keymapLayer = model.keymap[layer] ?? [];
   const colormapLayer = model.colormap[layer] ?? [];
@@ -43,7 +43,7 @@ export const DefyKeyboardView: React.FC<Props> = ({ model, activeLayer, layout, 
       const name = model.superkeyNames?.[sk] || `SK${sk + 1}`;
       return { primary: "SUPER", subtitle: name, hold: "" };
     }
-    return decodeKey(code, overrides, names, macroNames, shiftSymbols);
+    return decodeKey(code, overrides, names, macroNames, symbols);
   }
 
   function renderKey(key: (typeof DEFY_KEYS)[0]) {

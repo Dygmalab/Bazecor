@@ -32,6 +32,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@Rende
 
 // Import Types for wireless
 import { EnergyManagementProps } from "@Renderer/types/wireless";
+import { supportsTrueSleep } from "@Renderer/utils/deviceCapabilities";
 
 const Styles = Styled.div`
 .card {
@@ -63,7 +64,10 @@ const Styles = Styled.div`
 `;
 
 function EnergyManagement(props: EnergyManagementProps) {
-  const { wireless, changeWireless, updateTab } = props;
+  const { wireless, changeWireless, updateTab, deviceType } = props;
+  // The Sonsei has no user-facing true sleep: the card is hidden and the setting
+  // is pinned off on save (see Preferences/Wireless).
+  const showTrueSleep = supportsTrueSleep(deviceType);
 
   const setTrueSleep = async (checked: boolean) => {
     const newWireless = { ...wireless };
@@ -94,73 +98,75 @@ function EnergyManagement(props: EnergyManagementProps) {
           <SavingMode wireless={wireless} changeWireless={changeWireless} />
         </CardContent>
       </Card>
-      <Card className="mt-3 max-w-2xl mx-auto" variant="default">
-        <CardHeader>
-          <CardTitle className="flex flex-row items-center justify-between">
-            <div className="flex items-center gap-2">
-              <IconFlashlight /> {i18n.wireless.energyManagement.settings.trueSleepEnabling}
-            </div>
-            <Badge variant="danger" size="xs">
-              {i18n.wireless.energyManagement.settings.highBatteryImpact}
-            </Badge>
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="pb-3 pt-0">
-          <div className="flex flex-col">
-            <div className="flex items-center w-full justify-between py-2 border-b-[1px] border-gray-50 dark:border-gray-700">
-              <Heading headingLevel={2} renderAs="paragraph-sm" className="flex flex-row gap-2 items-center">
-                Enable true sleep mode
-                <TooltipProvider delayDuration={100}>
-                  <Tooltip>
-                    <TooltipTrigger className="[&_svg]:text-purple-100 [&_svg]:dark:text-purple-200">
-                      <IconInformation />
-                    </TooltipTrigger>
-                    <TooltipContent className="max-w-xs">
-                      {i18n.wireless.energyManagement.settings.trueSleepEnablingDesc}
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
-              </Heading>
+      {showTrueSleep && (
+        <Card className="mt-3 max-w-2xl mx-auto" variant="default">
+          <CardHeader>
+            <CardTitle className="flex flex-row items-center justify-between">
+              <div className="flex items-center gap-2">
+                <IconFlashlight /> {i18n.wireless.energyManagement.settings.trueSleepEnabling}
+              </div>
+              <Badge variant="danger" size="xs">
+                {i18n.wireless.energyManagement.settings.highBatteryImpact}
+              </Badge>
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="pb-3 pt-0">
+            <div className="flex flex-col">
+              <div className="flex items-center w-full justify-between py-2 border-b-[1px] border-gray-50 dark:border-gray-700">
+                <Heading headingLevel={2} renderAs="paragraph-sm" className="flex flex-row gap-2 items-center">
+                  Enable true sleep mode
+                  <TooltipProvider delayDuration={100}>
+                    <Tooltip>
+                      <TooltipTrigger className="[&_svg]:text-purple-100 [&_svg]:dark:text-purple-200">
+                        <IconInformation />
+                      </TooltipTrigger>
+                      <TooltipContent className="max-w-xs">
+                        {i18n.wireless.energyManagement.settings.trueSleepEnablingDesc}
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                </Heading>
 
-              <Switch
-                id="TrueSleepSwitch"
-                checked={wireless.true_sleep}
-                onCheckedChange={setTrueSleep}
-                variant="default"
-                size="sm"
-              />
-            </div>
-            <div className={`flex flex-col pt-3 ${!wireless.true_sleep ? "opacity-50 pointer-events-none" : "opacity-100"}`}>
-              <div className="block w-full relative">
-                <Slider
-                  min={1}
-                  max={60}
-                  step={1}
-                  value={[Math.round(wireless.true_sleep_time / 60)]}
-                  onValueChange={setTrueSleepTime}
-                  className="slider-danger"
-                  disabled={wireless.true_sleep === false}
+                <Switch
+                  id="TrueSleepSwitch"
+                  checked={wireless.true_sleep}
+                  onCheckedChange={setTrueSleep}
+                  variant="default"
+                  size="sm"
                 />
               </div>
-              <div className="flex justify-between">
-                <span className="text-xs text-gray-300 dark:text-gray-200">1 min</span>
-                <span className="text-xs text-gray-300 dark:text-gray-200">60 min</span>
+              <div className={`flex flex-col pt-3 ${!wireless.true_sleep ? "opacity-50 pointer-events-none" : "opacity-100"}`}>
+                <div className="block w-full relative">
+                  <Slider
+                    min={1}
+                    max={60}
+                    step={1}
+                    value={[Math.round(wireless.true_sleep_time / 60)]}
+                    onValueChange={setTrueSleepTime}
+                    className="slider-danger"
+                    disabled={wireless.true_sleep === false}
+                  />
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-xs text-gray-300 dark:text-gray-200">1 min</span>
+                  <span className="text-xs text-gray-300 dark:text-gray-200">60 min</span>
+                </div>
+              </div>
+              <div className="mt-3 text-sm font-semibold tracking-tight text-gray-500 dark:text-gray-100">
+                The timer will only begin when the LEDs turn off. Your LED off time is currently{" "}
+                <button
+                  type="button"
+                  className="p-0 m-0 decoration-1 text-purple-300 hover:text-purple-300 dark:text-purple-200 dark:hover:text-purple-100 inline-block"
+                  value="Application"
+                  onClick={setApplicationTab}
+                >
+                  {wireless.idleleds > 0 ? `set to ${wireless.idleleds / 60}min` : "deactivated"}
+                </button>
               </div>
             </div>
-            <div className="mt-3 text-sm font-semibold tracking-tight text-gray-500 dark:text-gray-100">
-              The timer will only begin when the LEDs turn off. Your LED off time is currently{" "}
-              <button
-                type="button"
-                className="p-0 m-0 decoration-1 text-purple-300 hover:text-purple-300 dark:text-purple-200 dark:hover:text-purple-100 inline-block"
-                value="Application"
-                onClick={setApplicationTab}
-              >
-                {wireless.idleleds > 0 ? `set to ${wireless.idleleds / 60}min` : "deactivated"}
-              </button>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+          </CardContent>
+        </Card>
+      )}
     </Styles>
   );
 }
