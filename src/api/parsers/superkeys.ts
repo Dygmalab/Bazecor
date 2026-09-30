@@ -1,7 +1,16 @@
 import log from "electron-log/renderer";
 import { SuperkeysType } from "@Renderer/types/superkeys";
 
-export const parseSuperkeysRaw = (raw: string, stored: SuperkeysType[]) => {
+/**
+ * Parses a raw string of superkey data from the keyboard into an array of SuperkeysType objects.
+ * It splits the raw string, groups the numbers into individual superkeys, and merges them with
+ * previously stored superkey data to retain names.
+ *
+ * @param {string} raw - The raw, space-separated string of superkey actions from the keyboard.
+ * @param {SuperkeysType[]} stored - An array of previously stored superkeys to retrieve names from.
+ * @returns {SuperkeysType[]} An array of parsed superkey objects. Returns an empty array if the raw data is invalid or empty.
+ */
+export const parseSuperkeysRaw = (raw: string, stored: SuperkeysType[]): SuperkeysType[] => {
   const superArray = raw.split(" 0 0")[0].split(" ").map(Number);
 
   let superkey: number[] = [];
@@ -47,7 +56,15 @@ export const parseSuperkeysRaw = (raw: string, stored: SuperkeysType[]) => {
   return finalSuper;
 };
 
-export const serializeSuperkeys = (superkeys: SuperkeysType[]) => {
+/**
+ * Serializes an array of superkey objects into a raw string format that can be sent to the keyboard.
+ * If the input array is empty, it returns a string that erases the superkey memory on the device.
+ * It also pads each superkey to have exactly 5 actions.
+ *
+ * @param {SuperkeysType[]} superkeys - The array of superkey objects to serialize.
+ * @returns {string} The serialized raw string representation of the superkeys.
+ */
+export const serializeSuperkeys = (superkeys: SuperkeysType[]): string => {
   if (
     superkeys.length === 0 ||
     (superkeys.length === 1 && superkeys[0].actions.length === 0) ||

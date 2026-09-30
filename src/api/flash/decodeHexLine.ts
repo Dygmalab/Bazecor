@@ -1,4 +1,9 @@
-function hex2byte(hex: string) {
+/**
+ * Converts a hexadecimal string into an array of bytes.
+ * @param {string} hex - The hexadecimal string to convert.
+ * @returns {number[]} An array of numbers representing the bytes.
+ */
+function hex2byte(hex: string): number[] {
   const bytes = [];
 
   for (let i = 0; i < hex.length; i += 2) bytes.push(parseInt(hex.substring(i, i + 2), 16));
@@ -7,11 +12,13 @@ function hex2byte(hex: string) {
 }
 
 /**
- * Decodes hex line to object.
- * @param line - One line from hex file.
- * @returns Struct for use in firmware.
+ * Decodes a single line from an Intel HEX file into a structured object.
+ * This object contains the byte count, address, record type, and the data payload as a Uint8Array.
+ *
+ * @param {string} line - One line from a .hex file, without the leading colon.
+ * @returns {{str: string, len: number, address: number, type: number, data: Uint8Array}} An object representing the decoded line, structured for use in firmware flashing.
  */
-export function decodeHexLine(line: string) {
+export function decodeHexLine(line: string): { str: string; len: number; address: number; type: number; data: Uint8Array } {
   let offset = 0;
 
   const byteCount = parseInt(line.substring(offset, offset + 2), 16);

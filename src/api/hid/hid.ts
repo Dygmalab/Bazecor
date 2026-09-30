@@ -12,13 +12,22 @@ const DygmaUsagePage = 65280;
 type ReceiverHandler = (dataReceived: string) => void;
 type ErrorHandler = (err: Error) => void;
 
+/**
+ * Custom error class for HID-related errors.
+ */
 class HIDError extends Error {
+  /**
+   * @param {string} message - The error message.
+   */
   constructor(message: string) {
     super(message);
     this.name = "HIDError";
   }
 }
 
+/**
+ * Manages communication with Dygma HID devices.
+ */
 class HID {
   connectedDevice: HIDDevice;
   private devices: Array<HIDDevice>;
@@ -27,6 +36,9 @@ class HID {
   private static decoder: TextDecoder;
   serialNumber: string;
 
+  /**
+   * Initializes a new instance of the HID class.
+   */
   constructor() {
     this.connectedDevice = null;
     this.devices = [];
@@ -38,6 +50,10 @@ class HID {
     }
   }
 
+  /**
+   * Retrieves a list of connected Dygma HID devices.
+   * @returns {Promise<HIDDevice[]>} A promise that resolves with an array of HID devices.
+   */
   static getDevices = async (): Promise<HIDDevice[]> => {
     const grantedDevices = await navigator.hid.getDevices();
     const filteredDevices = grantedDevices.filter(
@@ -76,7 +92,13 @@ class HID {
     return foundDevices;
   };
 
-  connectDevice = async (index: number) => {
+  /**
+   * Connects to a specific HID device by its index.
+   * @param {number} index - The index of the device to connect to.
+   * @returns {Promise<HIDDevice>} A promise that resolves with the connected device.
+   * @throws {HIDError} If the device is already connected, no device is found, or the connection fails.
+   */
+  connectDevice = async (index: number): Promise<HIDDevice> => {
     // if we are already connected, we do not care and connect again
     log.info("Trying to connect HID");
     if (this.connectedDevice) {
@@ -123,7 +145,12 @@ class HID {
     }
   };
 
-  isDeviceConnected = (index: number) => {
+  /**
+   * Checks if a device at a given index is connected.
+   * @param {number} index - The index of the device to check.
+   * @returns {boolean} True if the device is connected, false otherwise.
+   */
+  isDeviceConnected = (index: number): boolean => {
     // if (process.platform !== "linux") return true;
     // try {
     //   fs.accessSync(device.path, fs.constants.R_OK | fs.constants.W_OK);
@@ -134,7 +161,12 @@ class HID {
     return true;
   };
 
-  isDeviceSupported = async (index: number) => {
+  /**
+   * Checks if a device is supported by attempting to connect and retrieve its chip ID.
+   * @param {number} index - The index of the device to check.
+   * @returns {Promise<boolean>} A promise that resolves with true if the device is supported, false otherwise.
+   */
+  isDeviceSupported = async (index: number): Promise<boolean> => {
     // if (!device.device.isDeviceSupported) {
     log.info("checking if device is supported: ", index);
     try {
@@ -158,7 +190,11 @@ class HID {
     return true;
   };
 
-  connect = async () => {
+  /**
+   * Opens a connection to the device.
+   * @returns {Promise<void>}
+   */
+  connect = async (): Promise<void> => {
     try {
       await this.open();
     } catch (error) {
@@ -166,7 +202,12 @@ class HID {
     }
   };
 
-  open = async () => {
+  /**
+   * Opens the connected HID device.
+   * @returns {Promise<void>}
+   * @throws {HIDError} If no device is connected.
+   */
+  open = async (): Promise<void> => {
     if (this.isConnected() && !this.isOpen()) {
       await this.connectedDevice.open();
       log.info("Device open");
@@ -178,7 +219,12 @@ class HID {
     }
   };
 
-  close = async () => {
+  /**
+   * Closes the connection to the HID device.
+   * @returns {Promise<void>}
+   * @throws {HIDError} If the device is not open.
+   */
+  close = async (): Promise<void> => {
     if (this.isOpen()) {
       await this.connectedDevice.close();
     } else {
@@ -186,16 +232,29 @@ class HID {
     }
   };
 
-  isConnected = () => {
+  /**
+   * Checks if a device is connected.
+   * @returns {boolean} True if a device is connected, false otherwise.
+   */
+  isConnected = (): boolean => {
     if (this.connectedDevice) {
       return true;
     }
     return false;
   };
 
-  isOpen = () => this.isConnected() && this.connectedDevice.opened;
+  /**
+   * Checks if the connected device is open.
+   * @returns {boolean} True if the device is open, false otherwise.
+   */
+  isOpen = (): boolean => this.isConnected() && this.connectedDevice.opened;
 
-  static purgeUselessCharsEnd = (str: string) => {
+  /**
+   * Removes null characters and trailing whitespace from a string.
+   * @param {string} str - The string to purge.
+   * @returns {string} The purged string.
+   */
+  static purgeUselessCharsEnd = (str: string): string => {
     // we remove null char and whitespaces from the end of the data received
     const nullCharacterRegex = new RegExp("\u0000", "g");
     const strWithoutNull = str.replace(nullCharacterRegex, "").trimEnd();
@@ -209,7 +268,15 @@ class HID {
     return rejoined;
   };
 
-  sendData = async (dataToSend: string, receiverHandler: ReceiverHandler, errorHandler: ErrorHandler) => {
+  /**
+   * Sends data to the HID device and handles the response.
+   * @param {string} dataToSend - The data to send.
+   * @param {ReceiverHandler} receiverHandler - The callback to handle the received data.
+   * @param {ErrorHandler} errorHandler - The callback to handle errors.
+   * @returns {Promise<void>}
+   * @throws {HIDError} If the device is not open.
+   */
+  sendData = async (dataToSend: string, receiverHandler: ReceiverHandler, errorHandler: ErrorHandler): Promise<void> => {
     const maxData = 200;
     this.dataReceived = "";
     const encodedData = HID.encoder.encode(dataToSend);
@@ -265,7 +332,13 @@ class HID {
       .catch(err => errorHandler(err));
   };
 
-  private sendChunkData = async (data: Uint8Array) => {
+  /**
+   * Sends a chunk of data to the HID device.
+   * @param {Uint8Array} data - The data chunk to send.
+   * @returns {Promise<void>}
+   * @private
+   */
+  private sendChunkData = async (data: Uint8Array): Promise<void> => {
     await this.connectedDevice.sendReport(HIDReportID, data);
   };
 }

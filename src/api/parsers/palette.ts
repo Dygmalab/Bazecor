@@ -1,6 +1,14 @@
 import { rgbw2b } from "../color";
 
-export const parsePaletteRaw = (palette: string, isRGBW: boolean) =>
+/**
+ * Parses a raw palette string from the keyboard into an array of color objects.
+ * It handles both RGB and RGBW color formats based on the `isRGBW` flag.
+ *
+ * @param {string} palette - The raw, space-separated string of color values from the keyboard.
+ * @param {boolean} isRGBW - If true, the function parses 4 values (RGBW) per color and converts them to RGB. If false, it parses 3 values (RGB) per color.
+ * @returns {Array<{r: number, g: number, b: number, rgb: string}>} An array of color objects, each containing r, g, b components and a CSS rgb string.
+ */
+export const parsePaletteRaw = (palette: string, isRGBW: boolean): Array<{ r: number; g: number; b: number; rgb: string }> =>
   isRGBW
     ? palette
         .split(" ")
