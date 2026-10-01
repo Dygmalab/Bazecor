@@ -21,6 +21,7 @@ import Styled from "styled-components";
 // Custom components
 import { Card, CardContent, CardHeader, CardTitle } from "@Renderer/components/atoms/Card";
 import { KBDataPref } from "@Renderer/types/preferences";
+import { MAX_COMBO_IDLE_TIME, MAX_COMBO_WINDOW, MIN_COMBO_WINDOW } from "@Renderer/types/combos";
 import {
   IconTypo,
   IconMouse,
@@ -236,6 +237,11 @@ function KeyboardSettings(props: KeyboardSettingsProps) {
     setKbData({ ...localKBData, combosWindow: value[0] });
   };
 
+  const setCombosIdleTime = (value: number[]) => {
+    setLocalKBData(data => ({ ...data, combosIdleTime: value[0] }));
+    setKbData({ ...localKBData, combosIdleTime: value[0] });
+  };
+
   const setCapswordTimeout = (value: number[]) => {
     setLocalKBData(data => ({ ...data, capswordTimeout: value[0] }));
     setKbData({ ...localKBData, capswordTimeout: value[0] });
@@ -298,6 +304,7 @@ function KeyboardSettings(props: KeyboardSettingsProps) {
     autoshiftTimeout,
     capswordTimeout,
     combosWindow,
+    combosIdleTime,
     mouseSpeed,
     mouseAccelSpeed,
     mouseWheelSpeed,
@@ -740,10 +747,57 @@ function KeyboardSettings(props: KeyboardSettingsProps) {
                   <div className="w-full flex items-center p-0">
                     {/* Bounds mirror CombosDygma::MIN/MAX_MATCH_WINDOW_MS; the
                      * firmware clamps anything outside them anyway. */}
-                    <Slider min={5} max={500} step={5} value={[combosWindow]} onValueChange={setCombosWindow} />
+                    <Slider
+                      min={MIN_COMBO_WINDOW}
+                      max={MAX_COMBO_WINDOW}
+                      step={5}
+                      value={[combosWindow]}
+                      onValueChange={setCombosWindow}
+                    />
                   </div>
                   <div className="flex max-w-12 p-0 text-center items-center">
                     <span className="tagsfix">Looser</span>
+                  </div>
+                </div>
+              </div>
+              <div className="w-full">
+                <div className="w-full flex gap-2">
+                  <div className="w-full">
+                    <Heading headingLevel={3} renderAs="paragraph-sm" className="flex items-center gap-2">
+                      {i18n.keyboardSettings.combos.idleTime}
+                      <TooltipProvider delayDuration={200}>
+                        <Tooltip>
+                          <TooltipTrigger className="[&_svg]:text-purple-100 [&_svg]:dark:text-purple-200">
+                            <IconInformation />
+                          </TooltipTrigger>
+                          <TooltipContent className="max-w-xs">{i18n.keyboardSettings.combos.idleTimeTip}</TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                    </Heading>
+                  </div>
+                  <div className="flex items-center text-right">
+                    <span className="tagsfix whitespace-nowrap">
+                      {combosIdleTime === 0 ? i18n.keyboardSettings.combos.idleTimeDisabled : `${combosIdleTime} ms`}
+                    </span>
+                  </div>
+                </div>
+                <div className="w-full flex gap-2">
+                  <div className="flex max-w-12 p-0 text-center items-center">
+                    <span className="tagsfix">Off</span>
+                  </div>
+                  <div className="w-full flex items-center p-0">
+                    {/* Bounds mirror CombosDygma::MAX_IDLE_TIME_MS; 0 turns the
+                     * requirement off. */}
+                    <Slider
+                      min={0}
+                      max={MAX_COMBO_IDLE_TIME}
+                      step={10}
+                      value={[combosIdleTime]}
+                      onValueChange={setCombosIdleTime}
+                    />
+                  </div>
+                  <div className="flex max-w-12 p-0 text-center items-center">
+                    <span className="tagsfix">Safer</span>
                   </div>
                 </div>
               </div>

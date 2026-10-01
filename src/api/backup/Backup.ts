@@ -20,6 +20,7 @@ import {
   parseKeymapRaw,
   parsePaletteRaw,
 } from "../parsers";
+import { isLegacyCombosReply, upgradeLegacyCombosReply } from "../parsers/combos";
 import { rgb2w } from "../color";
 import { isSupportedLensProduct } from "../../lens/shared/constants";
 
@@ -268,6 +269,7 @@ export default class Backup {
     } catch (reorderErr) {
       log.warn("Reordering backup commands failed: ", reorderErr);
     }
+    data = await Backup.adaptCombosToDevice(data, device);
     if (device) {
       try {
         for (let i = 0; i < data.length; i += 1) {
@@ -453,6 +455,37 @@ export default class Backup {
       log.error(error);
       return undefined;
     }
+  };
+
+  /**
+   * A backup from the first combos firmware stores `combos.map` with four keys
+   * per combo. Restoring it onto the current firmware -- which is what the
+   * firmware update flow does right after flashing -- has to convert it first,
+   * or every record lands misaligned. The keyboard is asked which format it
+   * speaks, so restoring onto the old firmware still sends the old blob.
+   */
+  static adaptCombosToDevice = async <T extends { command: string; data: unknown }>(
+    data: T[],
+    device: Device | undefined,
+  ): Promise<T[]> => {
+    const index = data.findIndex(c => c.command === "combos.map");
+    if (index < 0 || !device) return data;
+
+    const stored = String(data[index].data ?? "");
+    if (!isLegacyCombosReply(stored)) return data;
+
+    try {
+      const current = (await device.command("combos.map")) as string;
+      if (!current || current.trim().length === 0 || isLegacyCombosReply(current)) return data;
+    } catch (error) {
+      log.warn("[Combos] could not read combos.map before restoring; sending the backup as is", error);
+      return data;
+    }
+
+    log.info("[Combos] converting a 4-key combos.map backup to the current 6-key format");
+    const adapted = data.slice();
+    adapted[index] = { ...data[index], data: upgradeLegacyCombosReply(stored) };
+    return adapted;
   };
 
   static convertDefyToSonsei = (backup: BackupType, dev: Device) => {

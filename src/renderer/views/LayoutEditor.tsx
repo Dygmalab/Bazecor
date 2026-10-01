@@ -73,7 +73,7 @@ import {
   parseSuperkeysRaw,
   serializeKeymap,
 } from "../../api/parsers";
-import { ComboBreakReason, comboBreakReason, combosAtPosition } from "../../api/parsers/combos";
+import { ComboBreakReason, comboBreakReason, combosAtPosition, isLegacyCombosReply } from "../../api/parsers/combos";
 
 const store = Store.getStore();
 
@@ -202,7 +202,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
   /* Set while the break-combo warning is up; holds what "Undo" puts back. */
   const [comboBreak, setComboBreak] = useState<{
     reason: ComboBreakReason;
-    comboIndex: number;
+    comboIndexes: number[];
     layer: number;
     keyIndex: number;
     previousKeyCode: number;
@@ -520,10 +520,13 @@ const LayoutEditor = (props: LayoutEditorProps) => {
 
         // Loading Combos, to badge the keys that belong to one. Firmware that
         // predates the feature answers with nothing, and that is not an error
-        // worth failing the whole layout load over.
+        // worth failing the whole layout load over. Neither is the 4-key
+        // format of the first combos firmware: it is not badged at all rather
+        // than misread.
         try {
           const rawCombos = (await currentDevice?.command("combos.map")) as string;
-          setCombos(rawCombos && rawCombos.trim().length > 0 ? parseCombosRaw(rawCombos, neuronData.storedCombos) : []);
+          const usable = rawCombos && rawCombos.trim().length > 0 && !isLegacyCombosReply(rawCombos);
+          setCombos(usable ? parseCombosRaw(rawCombos, neuronData.storedCombos) : []);
         } catch (error) {
           log.info("[LayoutEditor] combos.map unavailable; no combo badges will be shown");
           setCombos([]);
@@ -616,10 +619,11 @@ const LayoutEditor = (props: LayoutEditorProps) => {
     if (previousKeyCode === undefined || previousKeyCode === keyCode) return;
     const reason = comboBreakReason(keyCode, superkeys);
     if (!reason) return;
-    const [comboIndex] = combosAtPosition(combos, keyIndex, layer);
-    if (comboIndex === undefined) return;
+    /* A key can be in several combos on this layer; every one of them breaks. */
+    const comboIndexes = combosAtPosition(combos, keyIndex, layer);
+    if (comboIndexes.length === 0) return;
 
-    setComboBreak({ reason, comboIndex, layer, keyIndex, previousKeyCode });
+    setComboBreak({ reason, comboIndexes, layer, keyIndex, previousKeyCode });
   };
 
   const undoComboBreak = () => {
@@ -1479,9 +1483,10 @@ const LayoutEditor = (props: LayoutEditorProps) => {
 
   return (
     <Styles className="layoutEditor h-full">
-      {/* One rule per key that belongs to a combo; see comboBadges.ts for why
-       * this is a stylesheet rather than a prop on the key component. */}
-      <style>{comboBadgeStyles(combos)}</style>
+      {/* One rule per key that belongs to a combo on the layer shown; see
+       * comboBadges.ts for why this is a stylesheet rather than a prop on the
+       * key component. */}
+      <style>{comboBadgeStyles(combos, currentLayer)}</style>
       <motion.div
         className={`keyboard-editor h-[inherit] px-3 ${modeselect} ${modeselect === "color" ? "[&_.raiseKeyboard]:h-auto" : ""} singleViewMode ${
           typeof selectedPaletteColor === "number" ? "colorSelected" : ""
@@ -1579,7 +1584,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
         <ComboBreakDialog
           open={comboBreak !== null}
           reason={comboBreak?.reason ?? null}
-          comboIndex={comboBreak?.comboIndex ?? null}
+          comboIndexes={comboBreak?.comboIndexes ?? []}
           combos={combos}
           onUndo={undoComboBreak}
           onKeep={() => setComboBreak(null)}

@@ -55,6 +55,8 @@ export interface KBDataPref {
   capswordTimeout: number;
   /** Combos match window, in ms. */
   combosWindow: number;
+  /** How long the keyboard must be idle before a combo can start, in ms. 0 = off. */
+  combosIdleTime: number;
   mouseSpeed: number;
   mouseSpeedDelay: number;
   mouseAccelSpeed: number;

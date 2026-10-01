@@ -17,9 +17,9 @@ import log from "electron-log/renderer";
 
 import {
   COMBO_FLAG_ENABLED,
-  COMBO_LAYER_ANY,
   COMBO_POSITION_UNUSED,
   ComboType,
+  LEGACY_COMBO_MEMBERS,
   MAX_COMBO_MEMBERS,
   MAX_COMBOS,
 } from "@Renderer/types/combos";
@@ -29,17 +29,74 @@ import { OverlayCodes } from "../../hw/overlay";
 /* Wire format of `combos.map`, matching CombosDygma::onFocusEvent:
  *
  *     count, then MAX_COMBOS records of
- *     [ p0, p1, p2, p3, layer, flags, action ]
+ *     [ p0, p1, p2, p3, p4, p5, layer, flags, action ]
  *
  * The record count is fixed so the firmware can write straight into its array
- * without tracking how much of the blob it has consumed. */
+ * without tracking how much of the blob it has consumed. That also makes the
+ * record size recoverable from the reply length, which is how the 4-member
+ * format of the first combos firmware is told apart. */
 const FIELDS_PER_COMBO = MAX_COMBO_MEMBERS + 3;
+const LEGACY_FIELDS_PER_COMBO = LEGACY_COMBO_MEMBERS + 3;
+const LEGACY_COMBO_LAYER_ANY = 255;
 
-export const emptyCombo = (id = 0, name = ""): ComboType => ({
+const toNumbers = (raw: string): number[] =>
+  raw
+    .trim()
+    .split(/\s+/)
+    .filter(v => v.length > 0)
+    .map(v => parseInt(v, 10));
+
+/**
+ * True when `raw` is a `combos.map` reply from the first combos firmware: four
+ * members per combo and a layer value of 255 meaning "every layer". Writing
+ * the current format to it would misalign every record, so the editor refuses
+ * to and asks for a firmware update instead.
+ */
+export const isLegacyCombosReply = (raw: string): boolean => {
+  if (!raw || raw.trim().length === 0) return false;
+  return toNumbers(raw).length === 1 + MAX_COMBOS * LEGACY_FIELDS_PER_COMBO;
+};
+
+/**
+ * Rewrites a 4-key `combos.map` reply into the current 6-key format, so a
+ * backup taken on the first combos firmware can be restored onto the current
+ * one. The firmware update flow does exactly that -- backup, flash, restore --
+ * and sending the old blob verbatim would misalign every record.
+ *
+ * The old "every layer" value has no equivalent any more: such a combo is
+ * placed on layer 0, where most of them were meant to be used. Anything that
+ * is not a legacy reply is returned untouched.
+ */
+export const upgradeLegacyCombosReply = (raw: string): string => {
+  if (!isLegacyCombosReply(raw)) return raw;
+
+  const values = toNumbers(raw);
+  const out: number[] = [values[0]];
+
+  for (let i = 0; i < MAX_COMBOS; i += 1) {
+    const base = 1 + i * LEGACY_FIELDS_PER_COMBO;
+    const positions = values.slice(base, base + LEGACY_COMBO_MEMBERS);
+    const layer = values[base + LEGACY_COMBO_MEMBERS];
+    const flags = values[base + LEGACY_COMBO_MEMBERS + 1];
+    const action = values[base + LEGACY_COMBO_MEMBERS + 2];
+
+    out.push(
+      ...positions,
+      ...new Array<number>(MAX_COMBO_MEMBERS - LEGACY_COMBO_MEMBERS).fill(COMBO_POSITION_UNUSED),
+      layer === LEGACY_COMBO_LAYER_ANY ? 0 : layer,
+      flags,
+      action,
+    );
+  }
+
+  return out.join(" ");
+};
+
+export const emptyCombo = (id = 0, name = "", layer = 0): ComboType => ({
   id,
   name,
   positions: new Array<number>(MAX_COMBO_MEMBERS).fill(COMBO_POSITION_UNUSED),
-  layer: COMBO_LAYER_ANY,
+  layer,
   flags: COMBO_FLAG_ENABLED,
   action: 0,
 });
@@ -55,11 +112,7 @@ export const parseCombosRaw = (raw: string, stored: ComboType[] = []): ComboType
     return [];
   }
 
-  const values = raw
-    .trim()
-    .split(" ")
-    .filter(v => v.length > 0)
-    .map(v => parseInt(v, 10));
+  const values = toNumbers(raw);
 
   if (values.length < 1 || Number.isNaN(values[0])) {
     log.warn("Discarded combos: unparseable reply", raw);
@@ -102,7 +155,7 @@ export const serializeCombos = (combos: ComboType[]): string => {
       values.push(combo.positions[m] ?? COMBO_POSITION_UNUSED);
     }
 
-    values.push(combo.layer ?? COMBO_LAYER_ANY);
+    values.push(combo.layer ?? 0);
     values.push(combo.flags ?? 0);
     values.push(combo.action ?? 0);
   }
@@ -115,22 +168,55 @@ export const comboMembers = (combo: ComboType): number[] =>
   combo.positions.filter(p => p !== COMBO_POSITION_UNUSED && p !== undefined);
 
 /**
- * Every physical key claimed by any combo, optionally ignoring one of them.
+ * The other combo on the same layer with exactly the same keys as combo
+ * `index`, or -1.
  *
- * A key may belong to at most one combo. Beyond avoiding an ambiguous chord,
- * this is what keeps one combo from being a subset of another: the firmware
- * fires on match, so a subset would always win and the longer combo could
- * never trigger.
+ * A key may belong to any number of combos, and one combo may even be a subset
+ * of another: the firmware waits while a longer combo could still complete,
+ * so pressing all the keys fires the longer one. The only conflict left is an
+ * exact duplicate -- the same keys on the same layer -- where the firmware
+ * always fires the one listed first and the other can never trigger.
  */
-export const claimedPositions = (combos: ComboType[], exceptIndex?: number): Set<number> => {
-  const claimed = new Set<number>();
+export const duplicateComboIndex = (combos: ComboType[], index: number): number => {
+  const combo = combos[index];
+  if (!combo) return -1;
 
-  combos.forEach((combo, index) => {
-    if (index === exceptIndex) return;
-    comboMembers(combo).forEach(position => claimed.add(position));
+  const members = comboMembers(combo);
+  if (members.length === 0) return -1;
+
+  const key = members
+    .slice()
+    .sort((a, b) => a - b)
+    .join(",");
+
+  return combos.findIndex((other, otherIndex) => {
+    if (otherIndex === index || other.layer !== combo.layer) return false;
+    const otherMembers = comboMembers(other);
+    return (
+      otherMembers.length === members.length &&
+      otherMembers
+        .slice()
+        .sort((a, b) => a - b)
+        .join(",") === key
+    );
   });
+};
 
-  return claimed;
+/**
+ * Indexes of the other combos on the same layer that share at least one key
+ * with combo `index`. Purely informative: sharing keys is allowed.
+ */
+export const overlappingComboIndexes = (combos: ComboType[], index: number): number[] => {
+  const combo = combos[index];
+  if (!combo) return [];
+
+  const members = comboMembers(combo);
+
+  return combos.reduce<number[]>((found, other, otherIndex) => {
+    if (otherIndex === index || other.layer !== combo.layer) return found;
+    if (comboMembers(other).some(position => members.includes(position))) found.push(otherIndex);
+    return found;
+  }, []);
 };
 
 /* ------------------------------------------------------------------------ */
@@ -194,10 +280,10 @@ export const comboBreakReason = (keyCode: number, superkeys: SuperkeysType[] = [
   return null;
 };
 
-/** Indexes of the combos that use `position` on `layer`. */
+/** Indexes of the combos that use `position` on `layer`. A combo works on its
+ * own layer only, so a key can be in different combos on different layers. */
 export const combosAtPosition = (combos: ComboType[], position: number, layer: number): number[] =>
   combos.reduce<number[]>((found, combo, index) => {
-    const onLayer = combo.layer === COMBO_LAYER_ANY || combo.layer === layer;
-    if (onLayer && comboMembers(combo).includes(position)) found.push(index);
+    if (combo.layer === layer && comboMembers(combo).includes(position)) found.push(index);
     return found;
   }, []);

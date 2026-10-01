@@ -127,6 +127,7 @@ const initialKBData = {
   autoshiftTimeout: 175,
   capswordTimeout: 5000,
   combosWindow: 10,
+  combosIdleTime: 100,
   mouseSpeed: 1,
   mouseSpeedDelay: 2,
   mouseAccelSpeed: 1,
@@ -290,6 +291,12 @@ const Preferences = (props: PreferencesProps) => {
         log.info(`[Combos] focus combos.window ->`, JSON.stringify(window));
         if (!window) log.warn("[Combos] empty reply: this firmware does not support combos.window");
         newKbData.combosWindow = window ? parseInt(window, 10) : 10;
+      });
+
+      await state.currentDevice.command("combos.idleTime").then((idleTime: string) => {
+        log.info(`[Combos] focus combos.idleTime ->`, JSON.stringify(idleTime));
+        if (!idleTime) log.warn("[Combos] empty reply: this firmware does not support combos.idleTime");
+        newKbData.combosIdleTime = idleTime ? parseInt(idleTime, 10) : 100;
       });
 
       if (sk20) {
@@ -461,8 +468,9 @@ const Preferences = (props: PreferencesProps) => {
       await state.currentDevice.command("capsword.enabled", "1");
       await state.currentDevice.command("capsword.timeout", kbData.capswordTimeout.toString());
       // COMBOS
-      log.info(`[Combos] saving window=${kbData.combosWindow}`);
+      log.info(`[Combos] saving window=${kbData.combosWindow} idleTime=${kbData.combosIdleTime}`);
       await state.currentDevice.command("combos.window", kbData.combosWindow.toString());
+      await state.currentDevice.command("combos.idleTime", kbData.combosIdleTime.toString());
       // MOUSE KEYS
       await state.currentDevice.command("mouse.speed", kbData.mouseSpeed.toString());
       await state.currentDevice.command("mouse.speedDelay", kbData.mouseSpeedDelay.toString());

@@ -24,9 +24,9 @@ import { ComboBreakReason } from "../../../../api/parsers/combos";
 interface ComboBreakDialogProps {
   open: boolean;
   reason: ComboBreakReason | null;
-  /** Index into `combos` of the combo the new key breaks. A key belongs to
-   * one combo at most, so there is never more than one. */
-  comboIndex: number | null;
+  /** Indexes into `combos` of the combos the new key breaks: every combo that
+   * uses this key on this layer, since a key may belong to several. */
+  comboIndexes: number[];
   combos: ComboType[];
   onUndo: () => void;
   onKeep: () => void;
@@ -34,10 +34,9 @@ interface ComboBreakDialogProps {
 
 /** Warns that the key just assigned sits in a combo that can no longer fire. */
 export const ComboBreakDialog = (props: ComboBreakDialogProps): JSX.Element => {
-  const { open, reason, comboIndex, combos, onUndo, onKeep } = props;
+  const { open, reason, comboIndexes, combos, onUndo, onKeep } = props;
   const strings = i18n.editor.combos.breakModal;
   const isLens = reason === "lens";
-  const name = comboIndex !== null ? combos[comboIndex]?.name : "";
 
   return (
     <Dialog open={open} onOpenChange={onKeep}>
@@ -47,13 +46,15 @@ export const ComboBreakDialog = (props: ComboBreakDialogProps): JSX.Element => {
         </DialogHeader>
         <div className="px-6 pb-2 mt-2 flex flex-col gap-3">
           <p>{isLens ? strings.lens : strings.superkey}</p>
-          {comboIndex !== null && (
+          {comboIndexes.length > 0 && (
             <div>
               <p>{strings.affected}</p>
-              <p className="mt-1 font-semibold">
-                C{comboIndex + 1}
-                {name ? ` · ${name}` : ""}
-              </p>
+              {comboIndexes.map(index => (
+                <p key={`combo-break-${index}`} className="mt-1 font-semibold">
+                  C{index + 1}
+                  {combos[index]?.name ? ` · ${combos[index].name}` : ""}
+                </p>
+              ))}
             </div>
           )}
           <p className="text-gray-400 dark:text-gray-200">{isLens ? strings.lensHint : strings.superkeyHint}</p>

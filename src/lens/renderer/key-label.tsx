@@ -1,5 +1,6 @@
 import React from "react";
 import type { DecodedKey, FunctionIconName, LensCombo } from "../shared/types";
+import { COMBO_LAYER_ANY } from "../shared/types";
 
 /* Shared key-face text rendering for every Lens keyboard view (Sonsei, Defy,
  * Raise2). Draws the decoded label — primary line, optional second line
@@ -439,31 +440,31 @@ export function keyLabel(
 /* Combo membership                                                          */
 /* ------------------------------------------------------------------------ */
 
-const COMBO_LAYER_ANY = 255;
 const COMBO_BADGE_H = 12;
 const COMBO_BADGE_FS = 8;
 
 /**
- * Key offset -> combo number ("C<n>", 1-based) for the combos that apply on
- * `layer`. Combos are bound to physical positions, so an all-layers combo
- * badges the same keys on every layer.
+ * Key offset -> combo badge text for the combos that apply on `layer`: "C1",
+ * or "C1 C4" for a key in several combos. Each combo works on its own layer
+ * only (old backups excepted, see COMBO_LAYER_ANY).
  */
-export function comboNumbersForLayer(combos: LensCombo[] | undefined, layer: number): Map<number, number> {
-  const out = new Map<number, number>();
+export function comboNumbersForLayer(combos: LensCombo[] | undefined, layer: number): Map<number, string> {
+  const numbers = new Map<number, number[]>();
   (combos ?? []).forEach((combo, index) => {
     if (combo.layer !== COMBO_LAYER_ANY && combo.layer !== layer) return;
-    combo.positions.forEach(position => out.set(position, index + 1));
+    combo.positions.forEach(position => numbers.set(position, (numbers.get(position) ?? []).concat([index + 1])));
   });
+  const out = new Map<number, string>();
+  numbers.forEach((list, position) => out.set(position, list.map(n => `C${n}`).join(" ")));
   return out;
 }
 
 /**
  * The "C<n>" chip Bazecor's Layout Editor draws on a key that belongs to a
  * combo (see src/renderer/modules/KeyboardCanvas/comboBadges.ts), with its
- * top-right corner at (right, top).
+ * top-right corner at (right, top). `text` comes from comboNumbersForLayer.
  */
-export function comboBadge(comboNumber: number, right: number, top: number, transform?: string): JSX.Element {
-  const text = `C${comboNumber}`;
+export function comboBadge(text: string, right: number, top: number, transform?: string): JSX.Element {
   const w = 6 + text.length * 5;
   return (
     <g transform={transform} pointerEvents="none">
@@ -498,7 +499,7 @@ export function comboBadge(comboNumber: number, right: number, top: number, tran
  * bounding-box corner can fall outside the shape. Anchored to the label
  * centre instead and turned with it, so it always sits on the key face.
  */
-export function comboBadgeNearLabel(comboNumber: number, cx: number, cy: number, rotation = 0): JSX.Element {
+export function comboBadgeNearLabel(text: string, cx: number, cy: number, rotation = 0): JSX.Element {
   const transform = rotation ? `rotate(${rotation},${cx},${cy})` : undefined;
-  return comboBadge(comboNumber, cx + 22, cy - 22, transform);
+  return comboBadge(text, cx + 22, cy - 22, transform);
 }

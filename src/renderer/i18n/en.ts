@@ -509,7 +509,7 @@ const English = {
         title: "This key breaks a combo",
         superkey: "Only Superkeys with TAP and HOLD actions, where HOLD is a modifier or a layer change, can be part of a combo.",
         lens: "Lens keys cannot be part of a combo.",
-        affected: "The following combo will stop working while this key is here:",
+        affected: "These combos will stop working while this key is here:",
         superkeyHint: "To keep the combo working, remove the complex Superkey from this position.",
         lensHint: "To keep the combo working, remove the Lens key from this position.",
         undo: "Undo change",
@@ -652,7 +652,11 @@ const English = {
       title: "Combos",
       window: "How simultaneous a chord has to be",
       windowTip:
-        "All the keys of a combo have to go down within this window. Shorter means fewer combos fire by accident while you type fast; longer means a combo is easier to hit deliberately. Set up the combos themselves in the Combo Editor.",
+        "All the keys of a combo have to go down within this window. Shorter means fewer combos fire by accident while you type fast; longer means a combo is easier to hit deliberately. When one combo's keys are all part of a longer combo, the shorter one only fires once this window closes. Set up the combos themselves in the Combo Editor.",
+      idleTime: "Pause needed before a combo",
+      idleTimeTip:
+        "A combo only starts if you have not typed anything for this long, so rolling over keys while typing fast does not fire one by accident. Modifiers, layer keys and one-shot keys do not count as typing, so Ctrl or a layer key held right before a combo still works. Set it to Off to allow combos at any time.",
+      idleTimeDisabled: "Off",
     },
     defaultLabel: "default",
     backupFolder: {

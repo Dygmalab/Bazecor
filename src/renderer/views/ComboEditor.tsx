@@ -29,6 +29,7 @@ import LogoLoader from "@Renderer/components/atoms/loader/LogoLoader";
 import ToastMessage from "@Renderer/components/atoms/ToastMessage";
 import { IconClose, IconDelete, IconPlus } from "@Renderer/components/atoms/icons";
 import Callout from "@Renderer/components/molecules/Callout/Callout";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@Renderer/components/atoms/Select";
 import { PageHeader } from "@Renderer/modules/PageHeader";
 import { KeyPickerKeyboard } from "@Renderer/modules/KeyPickerKeyboard";
 import SuperkeysSelector from "@Renderer/components/organisms/Select/SuperkeysSelector";
@@ -37,7 +38,7 @@ import MacrosMemoryUsage from "@Renderer/modules/Macros/MacrosMemoryUsage";
 import { useDevice } from "@Renderer/DeviceContext";
 import Store from "@Renderer/utils/Store";
 import getLanguage from "@Renderer/utils/language";
-import { KeymapType, PaletteType, SegmentedKeyType } from "@Renderer/types/layout";
+import { KeymapType, KeyType, PaletteType, SegmentedKeyType } from "@Renderer/types/layout";
 import { Neuron } from "@Renderer/types/neurons";
 import { MacrosType } from "@Renderer/types/macros";
 import {
@@ -45,14 +46,22 @@ import {
   COMBO_POSITION_UNUSED,
   ComboEditorProps,
   ComboType,
-  MAX_COMBO_KEYS,
+  MAX_COMBO_MEMBERS,
   MAX_COMBOS,
   MIN_COMBO_MEMBERS,
 } from "@Renderer/types/combos";
 
 import { KeymapDB } from "../../api/keymap";
 import Backup from "../../api/backup";
-import { claimedPositions, comboMembers, emptyCombo, parseCombosRaw, serializeCombos } from "../../api/parsers/combos";
+import {
+  comboMembers,
+  duplicateComboIndex,
+  emptyCombo,
+  isLegacyCombosReply,
+  overlappingComboIndexes,
+  parseCombosRaw,
+  serializeCombos,
+} from "../../api/parsers/combos";
 import { parseColormapRaw, parseKeymapRaw, parseMacrosRaw, parsePaletteRaw } from "../../api/parsers";
 
 const store = Store.getStore();
@@ -76,7 +85,7 @@ const Styles = Styled.div`
 
 /* Fixed identities for the member slots. The slot count is a firmware
  * constant, so these are stable keys rather than array indexes. */
-const SLOT_KEYS = ["slot-a", "slot-b", "slot-c", "slot-d"];
+const SLOT_KEYS = ["slot-a", "slot-b", "slot-c", "slot-d", "slot-e", "slot-f"];
 
 /** Which slot of the selected combo the keyboard below is currently feeding. */
 type PickTarget = { kind: "member"; slot: number } | { kind: "action" } | null;
@@ -88,11 +97,15 @@ function ComboEditor(props: ComboEditorProps) {
   const [combos, setCombos] = useState<ComboType[]>([]);
   const [selected, setSelected] = useState<number>(0);
   const [pickTarget, setPickTarget] = useState<PickTarget>(null);
-  /* The optional third slot, opened from the hover "+" before it holds a key. */
-  const [extraSlot, setExtraSlot] = useState(false);
+  /* How many slots the user has opened from the hover "+", including ones that
+   * do not hold a key yet. Slots that hold a key are always shown. */
+  const [openSlots, setOpenSlots] = useState(0);
   const [keymap, setKeymap] = useState<KeymapType>({ custom: [], default: [], onlyCustom: true });
   const [palette, setPalette] = useState<PaletteType[]>([]);
-  const [colormap, setColormap] = useState<number[]>([]);
+  /* One colormap per custom layer, so the board shows the colours of the
+   * layer the selected combo lives on. */
+  const [colormaps, setColormaps] = useState<number[][]>([]);
+  const [layerNames, setLayerNames] = useState<string[]>([]);
   const [macros, setMacros] = useState<MacrosType[]>([]);
   const [isWireless, setIsWireless] = useState(false);
   const [deviceName, setDeviceName] = useState("");
@@ -101,6 +114,9 @@ function ComboEditor(props: ComboEditorProps) {
   const [isSaving, setIsSaving] = useState(false);
   const [loadingData, setLoadingData] = useState(true);
   const [supported, setSupported] = useState(true);
+  /* The first combos firmware: four keys per combo and combos on every layer.
+   * Its blob has a different shape, so it is not edited at all. */
+  const [legacyFirmware, setLegacyFirmware] = useState(false);
 
   const keymapDB = useMemo(() => new KeymapDB(), []);
   const currentLanguageLayout = getLanguage(store.get("settings.language") as string) || "en-US";
@@ -128,7 +144,16 @@ function ComboEditor(props: ComboEditorProps) {
         return;
       }
 
+      if (isLegacyCombosReply(raw)) {
+        log.warn("[Combos] combos.map has the 4-key format of an older firmware; not editing it");
+        setLegacyFirmware(true);
+        setSupported(false);
+        setLoadingData(false);
+        return;
+      }
+
       setSupported(true);
+      setLegacyFirmware(false);
       setDeviceName(currentDevice.device.info.product ?? "");
       setIsWireless(currentDevice.device.info.keyboardType === "wireless" || Boolean(currentDevice.device.wireless));
 
@@ -142,6 +167,7 @@ function ComboEditor(props: ComboEditorProps) {
       const neuron = neurons.find(n => n.id === chipID);
 
       setCombos(parseCombosRaw(raw, neuron?.combos ?? []));
+      setLayerNames((neuron?.layers ?? []).map(layer => layer?.name ?? ""));
 
       /* Macros, so the result picker can offer them. Names come from the
        * neuron store, as in the Macro Editor. */
@@ -177,7 +203,7 @@ function ComboEditor(props: ComboEditorProps) {
       const parsedColormap = parseColormapRaw(colormapRaw, keyboardLEDs + underglowLEDs);
 
       setPalette(parsedPalette);
-      setColormap(parsedColormap[0] ?? []);
+      setColormaps(parsedColormap);
     } catch (error) {
       log.error("[Combos] failed to load", error);
       setSupported(false);
@@ -271,7 +297,9 @@ function ComboEditor(props: ComboEditorProps) {
 
   const addCombo = (name?: string) => {
     if (overLimit()) return;
-    const list = renumber(combos.concat([emptyCombo(combos.length, name || i18n.editor.combos.newCombo)]));
+    /* A new combo starts on the layer the user is looking at. */
+    const layer = combos[selected]?.layer ?? 0;
+    const list = renumber(combos.concat([emptyCombo(combos.length, name || i18n.editor.combos.newCombo, layer)]));
     commit(list, list.length - 1);
     setPickTarget(null);
   };
@@ -281,11 +309,12 @@ function ComboEditor(props: ComboEditorProps) {
     const source = combos[selected];
     if (!source) return;
 
-    /* Positions are deliberately NOT copied: a key belongs to one combo only,
-     * so a clone that kept them would be invalid the moment it existed. The
-     * action is what is worth carrying over. */
+    /* Everything is copied, keys included. The usual reason to clone is the
+     * same chord on another layer: change the copy's layer and it is done.
+     * Until then it duplicates the source, which the editor points out. */
     const copy: ComboType = {
       ...emptyCombo(combos.length, `Copy of ${source.name}`),
+      positions: source.positions.slice(),
       layer: source.layer,
       flags: source.flags,
       action: source.action,
@@ -313,10 +342,16 @@ function ComboEditor(props: ComboEditorProps) {
     setPickTarget(null);
   };
 
-  /* An empty extra slot belongs to the combo being edited, not to the next one. */
+  /* Opened empty slots belong to the combo being edited, not to the next one. */
   useEffect(() => {
-    setExtraSlot(false);
+    setOpenSlots(0);
   }, [selected, combos.length]);
+
+  const changeLayer = (layer: number) => {
+    const combo = combos[selected];
+    if (!combo || combo.layer === layer) return;
+    updateCombo(selected, { ...combo, layer });
+  };
 
   const clearSlot = (slot: number) => {
     const combo = combos[selected];
@@ -326,6 +361,32 @@ function ComboEditor(props: ComboEditorProps) {
     updateCombo(selected, { ...combo, positions });
   };
 
+  /* A key may belong to any number of combos, so nothing is greyed out for
+   * being used elsewhere. The firmware resolves overlaps itself: while a longer
+   * combo can still complete it waits, so pressing every key of the longer one
+   * fires the longer one. The one conflict it cannot resolve is the same keys
+   * on the same layer twice -- the first listed always wins -- and that is
+   * pointed out below the slots instead of being prevented. */
+  const duplicateOf = useMemo(() => duplicateComboIndex(combos, selected), [combos, selected]);
+  const overlapsWith = useMemo(() => overlappingComboIndexes(combos, selected), [combos, selected]);
+
+  /* Two slots always, more once opened or filled, up to the firmware's six. A
+   * combo read back from the keyboard with a key in a later slot keeps it
+   * visible, so nothing the firmware holds is ever hidden from the user. */
+  const visibleSlots = useMemo(() => {
+    const positions = combos[selected]?.positions ?? [];
+    let lastUsed = -1;
+    positions.forEach((position, slot) => {
+      if (position !== COMBO_POSITION_UNUSED) lastUsed = slot;
+    });
+    return Math.min(MAX_COMBO_MEMBERS, Math.max(MIN_COMBO_MEMBERS, lastUsed + 1, openSlots));
+  }, [combos, selected, openSlots]);
+
+  const addSlot = () => {
+    setOpenSlots(visibleSlots + 1);
+    setPickTarget({ kind: "member", slot: visibleSlots });
+  };
+
   /* Drops the slot entirely rather than just emptying it, shifting any later
    * keys up so the combo never ends up with a gap. */
   const removeSlot = (slot: number) => {
@@ -333,31 +394,8 @@ function ComboEditor(props: ComboEditorProps) {
     if (!combo) return;
     const positions = combo.positions.filter((_, i) => i !== slot).concat([COMBO_POSITION_UNUSED]);
     updateCombo(selected, { ...combo, positions });
-    setExtraSlot(false);
+    setOpenSlots(Math.max(0, visibleSlots - 1));
     if (pickTarget?.kind === "member" && pickTarget.slot >= slot) setPickTarget(null);
-  };
-
-  /* A key may belong to at most one combo. Everything claimed elsewhere is
-   * greyed out on the keyboard below, which is also what guarantees no combo
-   * can ever be a subset of another -- the firmware fires on match, so a
-   * subset would always win and the longer combo could never trigger. */
-  const unavailable = useMemo(() => claimedPositions(combos, selected), [combos, selected]);
-
-  /* Two slots always, the third once opened or filled. A combo read back from
-   * the keyboard with a key in a later slot keeps it visible, so nothing the
-   * firmware holds is ever hidden from the user. */
-  const visibleSlots = useMemo(() => {
-    const positions = combos[selected]?.positions ?? [];
-    let lastUsed = -1;
-    positions.forEach((position, slot) => {
-      if (position !== COMBO_POSITION_UNUSED) lastUsed = slot;
-    });
-    return Math.max(MIN_COMBO_MEMBERS, lastUsed + 1, extraSlot ? MAX_COMBO_KEYS : 0);
-  }, [combos, selected, extraSlot]);
-
-  const addSlot = () => {
-    setExtraSlot(true);
-    setPickTarget({ kind: "member", slot: visibleSlots });
   };
 
   const onKeyboardKeySelect = (event: React.MouseEvent<Element>) => {
@@ -366,13 +404,6 @@ function ComboEditor(props: ComboEditorProps) {
     const { currentTarget } = event;
     const keyIndex = parseInt(currentTarget.getAttribute("data-key-index"), 10);
     if (Number.isNaN(keyIndex)) return;
-
-    if (unavailable.has(keyIndex)) {
-      toast.warn(<ToastMessage title="Key already in a combo" content="A key can only belong to one combo at a time." />, {
-        autoClose: 3000,
-      });
-      return;
-    }
 
     const combo = combos[selected];
     if (!combo) return;
@@ -404,11 +435,32 @@ function ComboEditor(props: ComboEditorProps) {
   /* Render helpers                                                          */
   /* ---------------------------------------------------------------------- */
 
-  const layerData = useMemo(() => {
-    if (keymap.custom.length > 0) return keymap.custom[0];
-    if (keymap.default.length > 0) return keymap.default[0];
-    return [];
-  }, [keymap]);
+  /* Layers are numbered the way the firmware numbers them, which is also how
+   * the Layout Editor does: the default layers first unless only custom
+   * layers are in use. Only custom layers are offered, as in the Layout
+   * Editor's layer list. */
+  const customOffset = keymap.onlyCustom ? 0 : keymap.default.length;
+
+  const layerLabel = useCallback((layer: number) => `${layer + 1}: ${layerNames[layer] || `L${layer + 1}`}`, [layerNames]);
+
+  const layerOptions = useMemo(() => {
+    const options = keymap.custom.map((_, index) => index + customOffset);
+    /* Never hide what the keyboard holds: a combo stored on a layer that is
+     * not in the list still shows its own layer. */
+    const current = combos[selected]?.layer;
+    if (current !== undefined && !options.includes(current)) options.push(current);
+    return options;
+  }, [keymap, customOffset, combos, selected]);
+
+  const comboLayer = combos[selected]?.layer ?? customOffset;
+
+  const layerData = useMemo((): KeyType[] => {
+    if (keymap.onlyCustom) return keymap.custom[comboLayer] ?? keymap.custom[0] ?? [];
+    if (comboLayer < keymap.default.length) return keymap.default[comboLayer] ?? [];
+    return keymap.custom[comboLayer - keymap.default.length] ?? keymap.custom[0] ?? keymap.default[0] ?? [];
+  }, [keymap, comboLayer]);
+
+  const colormap = colormaps[comboLayer - customOffset] ?? colormaps[0] ?? [];
 
   const labelForPosition = (position: number): string => {
     if (position === COMBO_POSITION_UNUSED || !layerData[position]) return "";
@@ -427,18 +479,18 @@ function ComboEditor(props: ComboEditorProps) {
 
   /* Greying is done with CSS keyed on data-key-index, which the shared
    * api/hardware/Key component puts on every key of every board. That keeps
-   * this working across all eight device SVGs without touching any of them. */
+   * this working across all eight device SVGs without touching any of them.
+   * Only this combo's own keys are greyed: the same key twice in one combo
+   * could never be satisfied. Keys used by other combos stay available. */
   const unavailableStyles = useMemo(() => {
     if (!pickTarget || pickTarget.kind !== "member") return "";
-    /* Keys this combo already uses are greyed too: the same key twice in one
-     * combo could never be satisfied. */
     const own = combos[selected] ? comboMembers(combos[selected]) : [];
-    return Array.from(new Set([...unavailable, ...own]))
+    return own
       .map(
         position => `.comboKeyboard [data-key-index="${position}"] { opacity: 0.3; pointer-events: none; filter: grayscale(1); }`,
       )
       .join("\n");
-  }, [unavailable, pickTarget, combos, selected]);
+  }, [pickTarget, combos, selected]);
 
   const KeyboardComponent = state.currentDevice?.device?.components?.keymap as React.FC<any> | undefined;
 
@@ -449,10 +501,17 @@ function ComboEditor(props: ComboEditorProps) {
       <div className="px-3">
         <PageHeader text="Combo Editor" contentSelector={false} showSaving={false} />
         <Callout size="sm" className="mt-4">
-          <p>
-            This keyboard&apos;s firmware does not support combos yet. Update the firmware to a build that includes the Combos
-            plugin and reconnect.
-          </p>
+          {legacyFirmware ? (
+            <p>
+              This keyboard runs an early version of combos, with up to four keys and combos shared by every layer. Update the
+              firmware to edit combos with up to six keys, one layer each.
+            </p>
+          ) : (
+            <p>
+              This keyboard&apos;s firmware does not support combos yet. Update the firmware to a build that includes the Combos
+              plugin and reconnect.
+            </p>
+          )}
         </Callout>
       </div>
     );
@@ -506,7 +565,10 @@ function ComboEditor(props: ComboEditorProps) {
           A combo fires a single action when you press several keys at once. Pick the keys on the keyboard below, then choose what
           they should do.
         </p>
-        <p>A key can only belong to one combo — keys already used are greyed out.</p>
+        <p>
+          Each combo belongs to one layer, so the same keys can do something different on each layer. A key can be part of several
+          combos: when every key of a longer combo is pressed, the longer one fires.
+        </p>
       </Callout>
 
       {/* ---------------------------------------------------------------- */}
@@ -517,9 +579,25 @@ function ComboEditor(props: ComboEditorProps) {
           {/* Equal side columns keep the slot row centred whatever the Delete
            * button on the right measures. */}
           <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-3">
-            <div />
+            <div className="justify-self-start">
+              <Heading headingLevel={4} renderAs="paragraph-sm" className="mb-1">
+                Layer
+              </Heading>
+              <Select value={String(comboLayer)} onValueChange={value => changeLayer(parseInt(value, 10))}>
+                <SelectTrigger className="min-w-40">
+                  <SelectValue placeholder="Layer" />
+                </SelectTrigger>
+                <SelectContent>
+                  {layerOptions.map(layer => (
+                    <SelectItem value={String(layer)} key={`combo-layer-${layer}`}>
+                      {layerLabel(layer)}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
 
-            <div className="flex items-center gap-4">
+            <div className="flex flex-wrap items-center justify-center gap-4">
               {combo.positions.slice(0, visibleSlots).map((position, slot) => (
                 <React.Fragment key={SLOT_KEYS[slot]}>
                   {slot > 0 && <span className="text-lg text-gray-400 dark:text-gray-300">+</span>}
@@ -550,11 +628,11 @@ function ComboEditor(props: ComboEditorProps) {
                     )}
                     {/* The add button rides on the last slot's corner, out of
                      * the flow, so revealing it never shifts the row. */}
-                    {slot === visibleSlots - 1 && visibleSlots < MAX_COMBO_KEYS && (
+                    {slot === visibleSlots - 1 && visibleSlots < MAX_COMBO_MEMBERS && (
                       <button
                         type="button"
-                        title="Add a third key"
-                        aria-label="Add a third key"
+                        title="Add another key"
+                        aria-label="Add another key"
                         className="absolute -top-2 -right-2 flex items-center justify-center w-5 h-5 rounded-full bg-gray-100 text-gray-600 hover:bg-purple-200 hover:text-white dark:bg-gray-500 dark:text-gray-25 dark:hover:bg-purple-200 opacity-0 group-hover:opacity-100 focus-visible:opacity-100 transition-all"
                         onClick={addSlot}
                       >
@@ -584,6 +662,21 @@ function ComboEditor(props: ComboEditorProps) {
               </Button>
             </div>
           </div>
+
+          {duplicateOf >= 0 ? (
+            <div className="mt-3 text-center text-ssm font-semibold text-orange-200">
+              C{duplicateOf + 1}
+              {combos[duplicateOf]?.name ? ` · ${combos[duplicateOf].name}` : ""} uses exactly these keys on this layer. Only the
+              one listed first can fire: change the keys or the layer of one of them.
+            </div>
+          ) : (
+            overlapsWith.length > 0 && (
+              <div className="mt-3 text-center text-ssm text-gray-400 dark:text-gray-300">
+                Shares keys with {overlapsWith.map(index => `C${index + 1}`).join(", ")} on this layer. When all the keys of a
+                longer combo are down, the longer one fires.
+              </div>
+            )
+          )}
 
           <div className="mt-3 text-center text-ssm text-gray-400 dark:text-gray-300">
             {incomplete ? (
@@ -633,7 +726,8 @@ function ComboEditor(props: ComboEditorProps) {
                 : "Click a slot above, then pick its key here"}
             </Heading>
             <p className="mb-2 text-center text-ssm font-semibold text-gray-400 dark:text-gray-200">
-              Combos use where the keys sit on the keyboard, not what they type, so a combo works on every layer.
+              This combo only works on layer {combo ? layerLabel(combo.layer) : ""}, shown below. It uses where the keys sit on
+              the keyboard, not what they type.
             </p>
             {KeyboardComponent && layerData.length > 0 ? (
               <div

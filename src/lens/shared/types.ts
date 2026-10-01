@@ -6,11 +6,15 @@ export interface PaletteColor {
   rgb: string;
 }
 
+/** `LensCombo.layer` for a combo on every layer. Only backups from the first
+ * combos firmware have these; current firmware binds each combo to one layer. */
+export const COMBO_LAYER_ANY = -1;
+
 /** One enabled combo, as far as the overlay needs it. */
 export interface LensCombo {
   /** Physical key offsets, the same index the keymap layers use. */
   positions: number[];
-  /** Layer filter, or COMBO_LAYER_ANY for every layer. */
+  /** The layer the combo works on, or COMBO_LAYER_ANY. */
   layer: number;
 }
 

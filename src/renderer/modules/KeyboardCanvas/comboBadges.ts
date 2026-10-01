@@ -53,20 +53,41 @@ export const comboBadgeBaseStyles = `
 `;
 
 /**
- * The generated half: one rule per key that is in a combo.
+ * The badge text for every key in a combo on `layer`: "C1", or "C1 C4" for a
+ * key that belongs to several. A combo works on its own layer only, so the
+ * same key can carry different badges on different layers.
+ */
+export const comboBadgeLabels = (combos: ComboType[], layer: number): Map<number, string> => {
+  const numbers = new Map<number, number[]>();
+
+  combos.forEach((combo, index) => {
+    if (combo.layer !== layer) return;
+    comboMembers(combo).forEach(position => {
+      numbers.set(position, (numbers.get(position) ?? []).concat([index + 1]));
+    });
+  });
+
+  const labels = new Map<number, string>();
+  numbers.forEach((list, position) => labels.set(position, list.map(n => `C${n}`).join(" ")));
+  return labels;
+};
+
+/**
+ * The generated half: one rule per key that is in a combo on `layer`.
  *
  * `scope` narrows the rules to one view's container so a badge cannot leak
  * into another keyboard rendered on the same page. Positions come straight
  * from the firmware blob, so a key that is in a combo the user has not saved
  * yet is not badged -- which is the honest thing to show.
+ *
+ * One rule per key rather than per membership: `content` does not stack, so
+ * with one rule per combo a key in two of them would only show the last.
  */
-export const comboBadgeStyles = (combos: ComboType[], scope = ".layoutEditor"): string => {
+export const comboBadgeStyles = (combos: ComboType[], layer: number, scope = ".layoutEditor"): string => {
   const rules: string[] = [];
 
-  combos.forEach((combo, index) => {
-    comboMembers(combo).forEach(position => {
-      rules.push(`${scope} [data-key-index="${position}"] .keyContentLabel::after { content: "C${index + 1}"; }`);
-    });
+  comboBadgeLabels(combos, layer).forEach((label, position) => {
+    rules.push(`${scope} [data-key-index="${position}"] .keyContentLabel::after { content: "${label}"; }`);
   });
 
   return rules.join("\n");

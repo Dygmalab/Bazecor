@@ -17,19 +17,27 @@
 /** Slot value meaning "no key assigned here yet". */
 export const COMBO_POSITION_UNUSED = 255;
 
-/** `layer` value meaning "this combo works on every layer". */
-export const COMBO_LAYER_ANY = 255;
-
 export const COMBO_FLAG_ENABLED = 0x01;
 
 /** Firmware limits, mirrored from CombosDygma.h. */
 export const MAX_COMBOS = 32;
-export const MAX_COMBO_MEMBERS = 4;
+export const MAX_COMBO_MEMBERS = 6;
 export const MIN_COMBO_MEMBERS = 2;
 
-/** How many keys the editor lets a combo have. Lower than the firmware's slot
- * count on purpose; the wire format still carries MAX_COMBO_MEMBERS slots. */
-export const MAX_COMBO_KEYS = 3;
+/** Member slots per record in the first combos firmware, which also had a
+ * "every layer" value (255) that no longer exists. Kept only to recognise
+ * that firmware's `combos.map` reply. */
+export const LEGACY_COMBO_MEMBERS = 4;
+
+/** Match window bounds, mirrored from CombosDygma::MIN/MAX_MATCH_WINDOW_MS. */
+export const MIN_COMBO_WINDOW = 5;
+export const MAX_COMBO_WINDOW = 500;
+export const DEFAULT_COMBO_WINDOW = 10;
+
+/** Idle time bounds, mirrored from CombosDygma::DEFAULT/MAX_IDLE_TIME_MS. 0
+ * turns the requirement off. */
+export const MAX_COMBO_IDLE_TIME = 1000;
+export const DEFAULT_COMBO_IDLE_TIME = 100;
 
 export interface ComboType {
   /** Position in the list, and the value the selector dropdown works with. */
@@ -39,7 +47,8 @@ export interface ComboType {
   name: string;
   /** Physical key offsets (KeyAddr::toInt()); COMBO_POSITION_UNUSED for empty. */
   positions: number[];
-  /** Layer filter, or COMBO_LAYER_ANY. */
+  /** The one layer the combo works on, as the firmware numbers layers. The
+   * same keys can be a different combo on another layer. */
   layer: number;
   flags: number;
   /** The resulting key, as a raw Bazecor keycode. */
