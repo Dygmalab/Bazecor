@@ -91,10 +91,16 @@ function applyLoginItem(enabled: boolean): void {
   if (process.platform === "linux") {
     try {
       if (enabled) {
+        // The Linux build ships as an AppImage, which runs from a temporary
+        // mount: process.execPath there is /tmp/.mount_XXXXXX/..., a path that
+        // differs every run and is gone once the app exits. Writing that into
+        // the autostart entry produces one that silently never starts anything.
+        // $APPIMAGE is the real file on disk, set by the AppImage runtime.
+        const exe = process.env.APPIMAGE || process.execPath;
         fs.mkdirSync(path.dirname(LINUX_AUTOSTART_FILE), { recursive: true });
         fs.writeFileSync(
           LINUX_AUTOSTART_FILE,
-          `[Desktop Entry]\nType=Application\nName=Bazecor\nExec=${process.execPath} --hidden\nX-GNOME-Autostart-enabled=true\n`,
+          `[Desktop Entry]\nType=Application\nName=Bazecor\nExec=${exe} --hidden\nX-GNOME-Autostart-enabled=true\n`,
         );
       } else {
         fs.rmSync(LINUX_AUTOSTART_FILE, { force: true });
