@@ -81,12 +81,17 @@ const Styles = Styled.div`
     min-width: 0;
     max-width: 1170px;
   }
+
+  /* The theme colours of a focused key, for the generated rules that light
+   * the selected combo's keys: that stylesheet is plain CSS and cannot reach
+   * the theme itself. */
+  --combo-key-border: ${({ theme }) => theme.styles.raiseKeyboard.keyOnFocusBorder};
+  --combo-key-shadow: ${({ theme }) => theme.styles.raiseKeyboard.keyShadow};
 `;
 
 /* Fixed identities for the member slots. The slot count is a firmware
  * constant, so these are stable keys rather than array indexes. */
 const SLOT_KEYS = ["slot-a", "slot-b", "slot-c", "slot-d", "slot-e", "slot-f"];
-
 /** Which slot of the selected combo the keyboard below is currently feeding. */
 type PickTarget = { kind: "member"; slot: number } | { kind: "action" } | null;
 
@@ -477,19 +482,40 @@ function ComboEditor(props: ComboEditorProps) {
   const memberCount = combo ? comboMembers(combo).length : 0;
   const incomplete = combo && (memberCount < MIN_COMBO_MEMBERS || !combo.action);
 
-  /* Greying is done with CSS keyed on data-key-index, which the shared
-   * api/hardware/Key component puts on every key of every board. That keeps
-   * this working across all eight device SVGs without touching any of them.
-   * Only this combo's own keys are greyed: the same key twice in one combo
-   * could never be satisfied. Keys used by other combos stay available. */
-  const unavailableStyles = useMemo(() => {
-    if (!pickTarget || pickTarget.kind !== "member") return "";
+  /* The selected combo's keys are lit on the board, done with CSS keyed on
+   * data-key-index, which the shared api/hardware/Key component puts on every
+   * key of every board. That keeps this working across all eight device SVGs
+   * without touching any of them. A lit key looks exactly like the selected
+   * key of the Layout Editor: these are the shared `keyOnFocus` rules,
+   * repeated per key because the boards only set that class on the one key
+   * their `selectedKey` names.
+   *
+   * While nothing is being picked the rest of the board is dimmed, so the
+   * combo reads at a glance. While a slot is being picked the other keys stay
+   * at full strength, as they are all valid picks, and the combo's own keys
+   * stop taking clicks: the same key twice in one combo could never be
+   * satisfied. Keys used by other combos stay available.
+   *
+   * The selectors lead with `.comboEditor` so they outrank the shared
+   * keyOnFocus rules, and the dimming rule comes first so the member rules,
+   * of equal weight, override it. */
+  const highlightStyles = useMemo(() => {
     const own = combos[selected] ? comboMembers(combos[selected]) : [];
-    return own
-      .map(
-        position => `.comboKeyboard [data-key-index="${position}"] { opacity: 0.3; pointer-events: none; filter: grayscale(1); }`,
-      )
-      .join("\n");
+    const picking = pickTarget?.kind === "member";
+    const rules = [
+      `.comboEditor .comboKeyboard.comboIdle .keyItem, .comboEditor .comboKeyboard.comboIdle #neuronWrapper { opacity: 0.4; }`,
+    ];
+    own.forEach(position => {
+      const key = `.comboEditor .comboKeyboard .keyItem[data-key-index="${position}"]`;
+      rules.push(
+        `${key} { opacity: 1;${picking ? " pointer-events: none;" : ""} }`,
+        `${key} .baseShape { filter: drop-shadow(0px 4px 0px var(--combo-key-shadow)); }`,
+        `${key} .keyOpacityInternal { stroke-opacity: 0.7; stroke: var(--combo-key-border); }`,
+        `${key} .keyOpacity { stroke-opacity: 0.2; stroke: var(--combo-key-border); }`,
+        `${key} .shadowHover { filter: blur(16px); opacity: 0.6; }`,
+      );
+    });
+    return rules.join("\n");
   }, [pickTarget, combos, selected]);
 
   const KeyboardComponent = state.currentDevice?.device?.components?.keymap as React.FC<any> | undefined;
@@ -524,7 +550,7 @@ function ComboEditor(props: ComboEditorProps) {
    * `.raiseKeyboard` are what centre it and let the SVG fill the width. */
   return (
     <Styles className="comboEditor px-3">
-      <style>{unavailableStyles}</style>
+      <style>{highlightStyles}</style>
 
       <PageHeader
         text="Combo Editor"
@@ -575,7 +601,7 @@ function ComboEditor(props: ComboEditorProps) {
       {/* [k1] + [k2] + ... = [action]                                      */}
       {/* ---------------------------------------------------------------- */}
       {combo ? (
-        <div className="group mt-6 rounded-regular bg-gray-25/50 dark:bg-gray-400/15 p-4">
+        <div className="mt-6 rounded-regular bg-gray-25/50 dark:bg-gray-400/15 p-4">
           {/* Equal side columns keep the slot row centred whatever the Delete
            * button on the right measures. */}
           <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-3">
@@ -615,33 +641,36 @@ function ComboEditor(props: ComboEditorProps) {
                     >
                       {position === COMBO_POSITION_UNUSED ? <IconPlus size="xs" /> : labelForPosition(position)}
                     </Button>
+                    {/* The first two slots are the minimum a combo needs, so
+                     * only the ones after them can be dropped. */}
                     {slot >= MIN_COMBO_MEMBERS && (
                       <button
                         type="button"
                         title="Remove this key"
                         aria-label="Remove this key"
-                        className="absolute -top-2 -right-2 flex items-center justify-center w-5 h-5 rounded-full bg-gray-100 text-gray-600 hover:bg-primary hover:text-white dark:bg-gray-500 dark:text-gray-25 dark:hover:bg-primary transition-colors"
+                        className="absolute -top-2 -right-2 z-10 flex items-center justify-center w-5 h-5 rounded-full bg-gray-100 text-gray-600 hover:bg-primary hover:text-white dark:bg-gray-500 dark:text-gray-25 dark:hover:bg-primary transition-colors"
                         onClick={() => removeSlot(slot)}
                       >
                         <IconClose />
                       </button>
                     )}
-                    {/* The add button rides on the last slot's corner, out of
-                     * the flow, so revealing it never shifts the row. */}
-                    {slot === visibleSlots - 1 && visibleSlots < MAX_COMBO_MEMBERS && (
-                      <button
-                        type="button"
-                        title="Add another key"
-                        aria-label="Add another key"
-                        className="absolute -top-2 -right-2 flex items-center justify-center w-5 h-5 rounded-full bg-gray-100 text-gray-600 hover:bg-purple-200 hover:text-white dark:bg-gray-500 dark:text-gray-25 dark:hover:bg-purple-200 opacity-0 group-hover:opacity-100 focus-visible:opacity-100 transition-all"
-                        onClick={addSlot}
-                      >
-                        <IconPlus size="xs" />
-                      </button>
-                    )}
                   </span>
                 </React.Fragment>
               ))}
+
+              {/* The add button sits beside the last slot, in the flow, so it
+               * never shares a corner with that slot's remove button. */}
+              {visibleSlots < MAX_COMBO_MEMBERS && (
+                <button
+                  type="button"
+                  title="Add another key"
+                  aria-label="Add another key"
+                  className="flex items-center justify-center w-8 h-8 rounded-full border border-dashed border-gray-300 text-gray-400 hover:border-purple-200 hover:bg-purple-200 hover:text-white dark:border-gray-400 dark:text-gray-200 dark:hover:border-purple-200 dark:hover:bg-purple-200 transition-colors"
+                  onClick={addSlot}
+                >
+                  <IconPlus size="xs" />
+                </button>
+              )}
 
               <span className="text-lg text-gray-400 dark:text-gray-300">=</span>
 
@@ -731,7 +760,7 @@ function ComboEditor(props: ComboEditorProps) {
             </p>
             {KeyboardComponent && layerData.length > 0 ? (
               <div
-                className={`comboKeyboard LayerHolder ${pickTarget?.kind === "member" ? "" : "opacity-60 pointer-events-none"}`}
+                className={`comboKeyboard LayerHolder ${pickTarget?.kind === "member" ? "" : "comboIdle pointer-events-none"}`}
               >
                 <KeyboardComponent
                   readOnly={false}
