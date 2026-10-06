@@ -14,6 +14,15 @@ import { getRunInBackground } from "../lens/main/lens-settings";
 import { overlayController } from "../lens/main/overlay-controller";
 import { isAppQuitting } from "./managers/AppLifecycle";
 
+// Electron 34 can decommit pooled pages at 4 KiB-aligned addresses on Linux
+// ARM64 systems with 16 KiB pages, causing mmap(EINVAL) and a renderer SIGTRAP.
+// Apply before app readiness so renderer processes inherit the V8 workaround.
+// https://github.com/electron/electron/issues/45560
+if (process.platform === "linux" && process.arch === "arm64" && process.versions.electron?.startsWith("34.")) {
+  const jsFlags = app.commandLine.getSwitchValue("js-flags");
+  app.commandLine.appendSwitch("js-flags", [jsFlags, "--nodecommit_pooled_pages"].filter(Boolean).join(" "));
+}
+
 if (process.env.NODE_ENV === "development") {
   log.transports.console.level = "verbose";
 } else {
