@@ -2,7 +2,7 @@
 import log from "electron-log/renderer";
 import { crc32 } from "easy-crc";
 import { parseSealFromBinary, validateSealCRC } from "./parseSeal";
-import ihexDecode from "./ihexDecode";
+import { decodeHexLine } from "./decodeHexLine";
 import { HexType } from "./types";
 
 const FIRST_SECTOR_SIZE = 4096;
@@ -107,7 +107,7 @@ export function validateSonseiNeuronSeal(lines: string[]): SealValidationResult 
     const auxData = [];
 
     for (let i = 0; i < lines.length; i += 1) {
-      const hex = ihexDecode(lines[i]);
+      const hex = decodeHexLine(lines[i]);
 
       if (hex.type === TYPE_ESA) {
         segment = parseInt(hex.str.substring(8, 8 + hex.len * 2), 16) * 16;
