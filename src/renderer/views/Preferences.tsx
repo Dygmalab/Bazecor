@@ -69,12 +69,6 @@ import Backup from "../../api/backup";
 import { delay } from "../../api/flash/delay";
 
 const store = Store.getStore();
-const sk20Raw = store.get("capabilities.sk20");
-const sk20 =
-  sk20Raw === true ||
-  sk20Raw === "true" ||
-  sk20Raw === 1 ||
-  sk20Raw === "1";
 
 const initialWireless = {
   battery: {
@@ -266,6 +260,9 @@ const Preferences = (props: PreferencesProps) => {
         newKbData.SuperOverlapThreshold = overlapThreshold;
       });
 
+      // Read here rather than at module load: it changes when the keyboard (or its firmware) does
+      const sk20Raw = store.get("capabilities.sk20");
+      const sk20 = sk20Raw === true || sk20Raw === "true" || sk20Raw === 1 || sk20Raw === "1";
       if (sk20) {
         const fastHold = newKbData.qukeysHoldTimeout;
         const superHold = newKbData.SuperHoldstart;

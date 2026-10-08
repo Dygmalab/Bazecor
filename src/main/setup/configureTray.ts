@@ -7,7 +7,13 @@ import Window from "../managers/Window";
 import createWindow from "../createWindow";
 import { markAppQuitting } from "../managers/AppLifecycle";
 import { getLensSettings, getRunInBackground, onLensSettingsChanged, setRunInBackground } from "../../lens/main/lens-settings";
-import { overlayController, setOverlayAutoShow, setResizeMode } from "../../lens/main/overlay-controller";
+import {
+  overlayController,
+  setOverlayAutoShow,
+  setOverlayAutoShowDuration,
+  setOverlayOpacity,
+  setResizeMode,
+} from "../../lens/main/overlay-controller";
 
 let tray: Tray | null = null;
 
@@ -28,11 +34,57 @@ export function openMainWindow(): void {
 // Checkmark state the currently installed menu was built with, so refreshTrayMenu()
 // can skip the rebuild when nothing it shows has changed.
 let menuAutoShow: boolean | null = null;
+let menuOpacity: number | null = null;
+let menuAutoShowDuration: number | null = null;
+
+// 1s..5s. Preferences' slider goes further (up to 10s, in half seconds); the tray keeps to the common values
+const AUTO_SHOW_DURATION_STEPS_S = [1, 2, 3, 4, 5];
+
+/** Layer change display time submenu. Same as the opacity one: the title shows the exact
+ * value and the closest step gets the check. Disabled, like in Preferences, while
+ * "Show only on layer change" is off, since it has no effect then. */
+function buildAutoShowDurationMenu(durationMs: number, autoShow: boolean): Electron.MenuItemConstructorOptions {
+  const seconds = durationMs / 1000;
+  const lastStep = AUTO_SHOW_DURATION_STEPS_S[AUTO_SHOW_DURATION_STEPS_S.length - 1];
+  const closestStep = Math.min(lastStep, Math.max(AUTO_SHOW_DURATION_STEPS_S[0], Math.round(seconds)));
+  return {
+    label: `Layer change display time (${seconds}s)`,
+    enabled: autoShow,
+    submenu: AUTO_SHOW_DURATION_STEPS_S.map(step => ({
+      label: `${step}s`,
+      type: "radio",
+      checked: step === closestStep,
+      click: () => setOverlayAutoShowDuration(step * 1000),
+    })),
+  };
+}
+
+// 10%..100%, matching the range of the opacity slider in Preferences
+const OPACITY_STEPS = Array.from({ length: 10 }, (_, i) => (i + 1) * 10);
+
+/** Opacity submenu. Preferences sets any value with its slider, so the title shows the
+ * exact one and the closest step gets the check. */
+function buildOpacityMenu(opacity: number): Electron.MenuItemConstructorOptions {
+  const percent = Math.round(opacity * 100);
+  const closestStep = Math.min(100, Math.max(10, Math.round(percent / 10) * 10));
+  return {
+    label: `Opacity (${percent}%)`,
+    submenu: OPACITY_STEPS.map(step => ({
+      label: `${step}%`,
+      type: "radio",
+      checked: step === closestStep,
+      click: () => setOverlayOpacity(step / 100),
+    })),
+  };
+}
 
 /** Rebuilt (not mutated) rather than updated in place: Electron menu items are
  * immutable once the menu has been set on the tray. */
 function buildTrayMenu(): Menu {
-  menuAutoShow = getLensSettings().overlayAutoShow;
+  const settings = getLensSettings();
+  menuAutoShow = settings.overlayAutoShow;
+  menuOpacity = settings.opacity;
+  menuAutoShowDuration = settings.overlayAutoShowDuration;
   return Menu.buildFromTemplate([
     { label: "Open Bazecor", click: () => openMainWindow() },
     { label: "Toggle Layer Lens", click: () => overlayController.toggleOverlay() },
@@ -43,6 +95,8 @@ function buildTrayMenu(): Menu {
       checked: menuAutoShow,
       click: () => setOverlayAutoShow(!getLensSettings().overlayAutoShow),
     },
+    buildAutoShowDurationMenu(menuAutoShowDuration, menuAutoShow),
+    buildOpacityMenu(menuOpacity),
     { type: "separator" },
     {
       label: "Quit",
@@ -54,11 +108,28 @@ function buildTrayMenu(): Menu {
   ]);
 }
 
-/** Keeps the menu's checkmark in sync with the same settings changed from
- * Preferences (or by the tray item itself). */
-function refreshTrayMenu(): void {
-  if (!tray || getLensSettings().overlayAutoShow === menuAutoShow) return;
+/** Keeps the menu's checkmarks in sync with the same settings changed from
+ * Preferences (or by the tray items themselves). */
+function rebuildTrayMenuIfChanged(): void {
+  if (!tray) return;
+  const { overlayAutoShow, opacity, overlayAutoShowDuration } = getLensSettings();
+  if (overlayAutoShow === menuAutoShow && opacity === menuOpacity && overlayAutoShowDuration === menuAutoShowDuration) {
+    return;
+  }
   tray.setContextMenu(buildTrayMenu());
+}
+
+// Dragging the opacity slider in Preferences changes the setting on every step;
+// rebuild once it settles instead of on each one.
+const TRAY_REFRESH_DEBOUNCE_MS = 200;
+let refreshTimer: ReturnType<typeof setTimeout> | null = null;
+
+function refreshTrayMenu(): void {
+  if (refreshTimer) clearTimeout(refreshTimer);
+  refreshTimer = setTimeout(() => {
+    refreshTimer = null;
+    rebuildTrayMenuIfChanged();
+  }, TRAY_REFRESH_DEBOUNCE_MS);
 }
 
 function createTray(): void {

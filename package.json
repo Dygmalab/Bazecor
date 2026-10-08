@@ -22,6 +22,7 @@
     "make-mac-intel": "electron-forge make --platform=darwin --arch=x64",
     "make-mac-arm": "electron-forge make --platform=darwin --arch=arm64",
     "make-lin": "electron-forge make --platform=linux",
+    "make-flatpak": "cross-env BAZECOR_FLATPAK=true electron-forge make --platform=linux --targets=flatpak",
     "lint": "eslint --ext .ts,.tsx,.js,.jsx .",
     "typeCheck": "tsc --noEmit --skipLibCheck && eslint",
     "prettier": "prettier --write \"./**/*.{js,json,css,scss,md}\"",

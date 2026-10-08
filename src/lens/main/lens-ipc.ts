@@ -11,15 +11,14 @@ import {
   setLensSettings,
   setOnboardingCollapsed,
 } from "./lens-settings";
-import { overlayController, setOverlayAutoShow, setResizeMode } from "./overlay-controller";
 import {
-  applyOpacityLive,
-  applyOverlayMode,
-  broadcastSettings,
-  overlayMove,
-  overlayMoveBy,
-  overlayResize,
-} from "./overlay-window";
+  overlayController,
+  setOverlayAutoShow,
+  setOverlayAutoShowDuration,
+  setOverlayOpacity,
+  setResizeMode,
+} from "./overlay-controller";
+import { applyOverlayMode, broadcastSettings, overlayMove, overlayMoveBy, overlayResize } from "./overlay-window";
 
 let registered = false;
 
@@ -45,12 +44,7 @@ export function registerLensIpc(onRunInBackgroundChange: (v: boolean) => void): 
     return s;
   });
 
-  ipcMain.handle("lens:set-opacity", (_, v: number): LensSettings => {
-    const s = setLensSettings({ opacity: v });
-    applyOpacityLive(s.opacity);
-    broadcastSettings(s);
-    return s;
-  });
+  ipcMain.handle("lens:set-opacity", (_, v: number): LensSettings => setOverlayOpacity(v));
 
   ipcMain.handle("lens:set-resize-mode", (_, v: boolean): LensSettings => setResizeMode(v));
 
@@ -82,6 +76,8 @@ export function registerLensIpc(onRunInBackgroundChange: (v: boolean) => void): 
   });
 
   ipcMain.handle("lens:set-overlay-auto-show", (_, v: boolean): LensSettings => setOverlayAutoShow(v));
+
+  ipcMain.handle("lens:set-overlay-auto-show-duration", (_, v: number): LensSettings => setOverlayAutoShowDuration(v));
 
   ipcMain.handle("lens:get-onboarding-collapsed", (): boolean => getOnboardingCollapsed());
 

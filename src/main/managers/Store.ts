@@ -169,6 +169,7 @@ const schema: Schema<StorageType> = {
       layerNames: { type: "array", items: { type: "string" } },
       overlayMode: { type: "boolean" },
       overlayAutoShow: { type: "boolean" },
+      overlayAutoShowDuration: { type: "number" },
       resizeMode: { type: "boolean" },
       keyboard: {
         type: "object",

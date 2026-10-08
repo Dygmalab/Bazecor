@@ -27,6 +27,7 @@ interface LensSettingsShape {
   enabled: boolean;
   opacity: number;
   overlayAutoShow: boolean;
+  overlayAutoShowDuration: number;
   resizeMode: boolean;
 }
 
@@ -37,16 +38,19 @@ interface LensStateShape {
 const LayerLensSettings = () => {
   const [lensEnabled, setLensEnabled] = useState(false);
   const [layerLensOnChange, setLayerLensOnChange] = useState(false);
+  // In seconds; the main process stores it in ms
+  const [autoShowDuration, setAutoShowDuration] = useState([3]);
   const [resizeMode, setResizeModeState] = useState(false);
-  const [overlayTransparency, setOverlayTransparency] = useState([85]);
+  const [overlayOpacity, setOverlayOpacity] = useState([85]);
   const [runInBackground, setRunInBackground] = useState(false);
   const [hidPermissionDenied, setHidPermissionDenied] = useState(false);
 
   const applySettings = (s: Partial<LensSettingsShape>) => {
     if (typeof s.enabled === "boolean") setLensEnabled(s.enabled);
     if (typeof s.overlayAutoShow === "boolean") setLayerLensOnChange(s.overlayAutoShow);
+    if (typeof s.overlayAutoShowDuration === "number") setAutoShowDuration([s.overlayAutoShowDuration / 1000]);
     if (typeof s.resizeMode === "boolean") setResizeModeState(s.resizeMode);
-    if (typeof s.opacity === "number") setOverlayTransparency([Math.round(s.opacity * 100)]);
+    if (typeof s.opacity === "number") setOverlayOpacity([Math.round(s.opacity * 100)]);
   };
 
   useEffect(() => {
@@ -87,13 +91,17 @@ const LayerLensSettings = () => {
     ipcRenderer.invoke("lens:set-overlay-auto-show", checked).catch(() => {});
   };
 
+  const handleAutoShowDurationCommit = (value: number[]) => {
+    ipcRenderer.invoke("lens:set-overlay-auto-show-duration", Math.round(value[0] * 1000)).catch(() => {});
+  };
+
   const handleResizeMode = (checked: boolean) => {
     setResizeModeState(checked);
     ipcRenderer.invoke("lens:set-resize-mode", checked).catch(() => {});
   };
 
-  const handleOverlayTransparency = (value: number[]) => {
-    setOverlayTransparency(value);
+  const handleOverlayOpacity = (value: number[]) => {
+    setOverlayOpacity(value);
     ipcRenderer.invoke("lens:set-opacity", value[0] / 100).catch(() => {});
   };
 
@@ -198,6 +206,39 @@ const LayerLensSettings = () => {
               />
             </div>
 
+            <div className={`py-3 border-b-[1px] border-gray-50 dark:border-gray-700 ${layerLensOnChange ? "" : "opacity-50"}`}>
+              <div className="flex items-center gap-1.5 mb-3">
+                <label htmlFor="autoShowDurationSlider" className="block text-sm font-semibold tracking-tight">
+                  Layer change display time
+                </label>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <span className="inline-flex cursor-help text-purple-100 dark:text-purple-200">
+                      <IconInformation size="sm" />
+                    </span>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p className="max-w-xs">
+                      How long Layer Lens stays on screen after switching to a different layer. It still hides right away when you
+                      go back to the default layer.
+                    </p>
+                  </TooltipContent>
+                </Tooltip>
+              </div>
+              <Slider
+                id="autoShowDurationSlider"
+                value={autoShowDuration}
+                onValueChange={setAutoShowDuration}
+                onValueCommit={handleAutoShowDurationCommit}
+                min={1}
+                max={10}
+                step={0.5}
+                disabled={!layerLensOnChange}
+                className="w-full"
+              />
+              <div className="text-xs text-gray-500 dark:text-gray-400 mt-1 text-right">{autoShowDuration[0].toFixed(1)} s</div>
+            </div>
+
             <div className="flex items-center w-full justify-between py-2 border-b-[1px] border-gray-50 dark:border-gray-700">
               <div className="flex items-center gap-1.5">
                 <label htmlFor="resizeModeSwitch" className="m-0 text-sm font-semibold tracking-tight">
@@ -250,8 +291,8 @@ const LayerLensSettings = () => {
 
             <div className="py-3">
               <div className="flex items-center gap-1.5 mb-3">
-                <label htmlFor="overlayTransparencySlider" className="block text-sm font-semibold tracking-tight">
-                  Overlay transparency
+                <label htmlFor="overlayOpacitySlider" className="block text-sm font-semibold tracking-tight">
+                  Overlay opacity
                 </label>
                 <Tooltip>
                   <TooltipTrigger asChild>
@@ -261,21 +302,21 @@ const LayerLensSettings = () => {
                   </TooltipTrigger>
                   <TooltipContent>
                     <p className="max-w-xs">
-                      Controls how see-through the Layer Lens overlay is, so it blends with whatever is behind it.
+                      Controls how opaque the Layer Lens overlay is. Lower values let it blend with whatever is behind it.
                     </p>
                   </TooltipContent>
                 </Tooltip>
               </div>
               <Slider
-                id="overlayTransparencySlider"
-                value={overlayTransparency}
-                onValueChange={handleOverlayTransparency}
+                id="overlayOpacitySlider"
+                value={overlayOpacity}
+                onValueChange={handleOverlayOpacity}
                 min={10}
                 max={100}
                 step={1}
                 className="w-full"
               />
-              <div className="text-xs text-gray-500 dark:text-gray-400 mt-1 text-right">{overlayTransparency[0]}%</div>
+              <div className="text-xs text-gray-500 dark:text-gray-400 mt-1 text-right">{overlayOpacity[0]}%</div>
             </div>
           </TooltipProvider>
         </form>

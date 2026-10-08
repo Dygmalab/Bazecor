@@ -179,13 +179,38 @@ function combineMods(mods: string[]): string {
     .join("+");
 }
 
-function lum(r: number, g: number, b: number) {
-  return 0.299 * r + 0.587 * g + 0.114 * b;
+const DARK_TEXT = "#111";
+const LIGHT_TEXT = "#fff";
+// Relative luminance of DARK_TEXT / LIGHT_TEXT
+const DARK_TEXT_LUMINANCE = 0.0056;
+const LIGHT_TEXT_LUMINANCE = 1;
+// The key face is covered by the white lens-key-sheen gradient (fillOpacity 0.45, about 0.3 where the
+// label sits), so the text actually sits on a lighter color than the LED one
+const SHEEN_ALPHA = 0.3;
+
+function channelToLinear(c: number) {
+  const s = c / 255;
+  return s <= 0.03928 ? s / 12.92 : ((s + 0.055) / 1.055) ** 2.4;
 }
 
-/** Foreground (text) color with enough contrast against the key's LED color. */
+/** WCAG relative luminance */
+function relativeLuminance(r: number, g: number, b: number) {
+  return 0.2126 * channelToLinear(r) + 0.7152 * channelToLinear(g) + 0.0722 * channelToLinear(b);
+}
+
+function contrastRatio(l1: number, l2: number) {
+  return (Math.max(l1, l2) + 0.05) / (Math.min(l1, l2) + 0.05);
+}
+
+/**
+ * Foreground (text) color with enough contrast against the key's LED color: whichever of dark/light
+ * text has the higher WCAG contrast against the face as drawn. A plain brightness threshold put light
+ * text on saturated mid-tones (red, blue, magenta), where it is barely readable.
+ */
 export function fg(r: number, g: number, b: number): string {
-  return lum(r, g, b) > 128 ? "#111" : "#eee";
+  const [faceR, faceG, faceB] = [r, g, b].map(c => c + (255 - c) * SHEEN_ALPHA);
+  const face = relativeLuminance(faceR, faceG, faceB);
+  return contrastRatio(face, DARK_TEXT_LUMINANCE) >= contrastRatio(face, LIGHT_TEXT_LUMINANCE) ? DARK_TEXT : LIGHT_TEXT;
 }
 
 /** Shrink a line's font so Bazecor's longer labels ("BACKSPACE", "PAGE DOWN")
