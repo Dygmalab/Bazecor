@@ -80,8 +80,9 @@ class Device implements DeviceClass {
       this.productId = String(params.connectedDevice.productId);
       this.vendorId = String(params.connectedDevice.vendorId);
       const newDevice = params.connectedDevice as ExtHIDInterface;
-      this.device = newDevice.device;
-      this.device.chipId = params.serialNumber;
+      // Copy: newDevice.device is the shared hardware definition, setting chipId on it would hand
+      // this keyboard's chip ID to every other device of the same model
+      this.device = { ...newDevice.device, chipId: params.serialNumber };
       this.port = params as HID;
     }
     if (type === "virtual") {

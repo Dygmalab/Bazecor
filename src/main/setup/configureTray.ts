@@ -37,8 +37,9 @@ let menuAutoShow: boolean | null = null;
 let menuOpacity: number | null = null;
 let menuAutoShowDuration: number | null = null;
 
-// 1s..5s. Preferences' slider goes further (up to 10s, in half seconds); the tray keeps to the common values
-const AUTO_SHOW_DURATION_STEPS_S = [1, 2, 3, 4, 5];
+// 2s..10s every 2s, up to the same maximum as Preferences' slider (which also allows the values in between)
+const AUTO_SHOW_DURATION_STEP_S = 2;
+const AUTO_SHOW_DURATION_STEPS_S = [2, 4, 6, 8, 10];
 
 /** Layer change display time submenu. Same as the opacity one: the title shows the exact
  * value and the closest step gets the check. Disabled, like in Preferences, while
@@ -46,7 +47,10 @@ const AUTO_SHOW_DURATION_STEPS_S = [1, 2, 3, 4, 5];
 function buildAutoShowDurationMenu(durationMs: number, autoShow: boolean): Electron.MenuItemConstructorOptions {
   const seconds = durationMs / 1000;
   const lastStep = AUTO_SHOW_DURATION_STEPS_S[AUTO_SHOW_DURATION_STEPS_S.length - 1];
-  const closestStep = Math.min(lastStep, Math.max(AUTO_SHOW_DURATION_STEPS_S[0], Math.round(seconds)));
+  const closestStep = Math.min(
+    lastStep,
+    Math.max(AUTO_SHOW_DURATION_STEPS_S[0], Math.round(seconds / AUTO_SHOW_DURATION_STEP_S) * AUTO_SHOW_DURATION_STEP_S),
+  );
   return {
     label: `Layer change display time (${seconds}s)`,
     enabled: autoShow,
