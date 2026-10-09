@@ -180,6 +180,56 @@ const LayerLensSettings = () => {
 
             <div className="flex items-center w-full justify-between py-2 border-b-[1px] border-gray-50 dark:border-gray-700">
               <div className="flex items-center gap-1.5">
+                <label htmlFor="runInBackgroundSwitch" className="m-0 text-sm font-semibold tracking-tight">
+                  Keep running in background
+                </label>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <span className="inline-flex cursor-help text-purple-100 dark:text-purple-200">
+                      <IconInformation size="sm" />
+                    </span>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p className="max-w-xs">
+                      Keeps Bazecor in the system tray when you close its window (and starts it at login), so Layer Lens stays
+                      available at all times.
+                    </p>
+                  </TooltipContent>
+                </Tooltip>
+              </div>
+              <Switch
+                id="runInBackgroundSwitch"
+                checked={runInBackground}
+                onCheckedChange={handleRunInBackground}
+                variant="default"
+                size="sm"
+              />
+            </div>
+
+            <div className="flex items-center w-full justify-between py-2 border-b-[1px] border-gray-50 dark:border-gray-700">
+              <div className="flex items-center gap-1.5">
+                <label htmlFor="resizeModeSwitch" className="m-0 text-sm font-semibold tracking-tight">
+                  Resize Mode
+                </label>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <span className="inline-flex cursor-help text-purple-100 dark:text-purple-200">
+                      <IconInformation size="sm" />
+                    </span>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p className="max-w-xs">
+                      Lets you click, drag, and resize the Layer Lens overlay, instead of it staying click-through. You can also
+                      toggle this from the system tray icon.
+                    </p>
+                  </TooltipContent>
+                </Tooltip>
+              </div>
+              <Switch id="resizeModeSwitch" checked={resizeMode} onCheckedChange={handleResizeMode} variant="default" size="sm" />
+            </div>
+
+            <div className="flex items-center w-full justify-between py-2 border-b-[1px] border-gray-50 dark:border-gray-700">
+              <div className="flex items-center gap-1.5">
                 <label htmlFor="layerLensOnChangeSwitch" className="m-0 text-sm font-semibold tracking-tight">
                   Show only on layer change
                 </label>
@@ -237,56 +287,6 @@ const LayerLensSettings = () => {
                 className="w-full"
               />
               <div className="text-xs text-gray-500 dark:text-gray-400 mt-1 text-right">{autoShowDuration[0].toFixed(1)} s</div>
-            </div>
-
-            <div className="flex items-center w-full justify-between py-2 border-b-[1px] border-gray-50 dark:border-gray-700">
-              <div className="flex items-center gap-1.5">
-                <label htmlFor="resizeModeSwitch" className="m-0 text-sm font-semibold tracking-tight">
-                  Resize Mode
-                </label>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <span className="inline-flex cursor-help text-purple-100 dark:text-purple-200">
-                      <IconInformation size="sm" />
-                    </span>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p className="max-w-xs">
-                      Lets you click, drag, and resize the Layer Lens overlay, instead of it staying click-through. You can also
-                      toggle this from the system tray icon.
-                    </p>
-                  </TooltipContent>
-                </Tooltip>
-              </div>
-              <Switch id="resizeModeSwitch" checked={resizeMode} onCheckedChange={handleResizeMode} variant="default" size="sm" />
-            </div>
-
-            <div className="flex items-center w-full justify-between py-2 border-b-[1px] border-gray-50 dark:border-gray-700">
-              <div className="flex items-center gap-1.5">
-                <label htmlFor="runInBackgroundSwitch" className="m-0 text-sm font-semibold tracking-tight">
-                  Keep running in background
-                </label>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <span className="inline-flex cursor-help text-purple-100 dark:text-purple-200">
-                      <IconInformation size="sm" />
-                    </span>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p className="max-w-xs">
-                      Keeps Bazecor in the system tray when you close its window (and starts it at login), so Layer Lens stays
-                      available at all times.
-                    </p>
-                  </TooltipContent>
-                </Tooltip>
-              </div>
-              <Switch
-                id="runInBackgroundSwitch"
-                checked={runInBackground}
-                onCheckedChange={handleRunInBackground}
-                variant="default"
-                size="sm"
-              />
             </div>
 
             <div className="py-3">
