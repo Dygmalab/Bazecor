@@ -137,8 +137,10 @@ class HID {
   isDeviceSupported = async (index: number) => {
     // if (!device.device.isDeviceSupported) {
     log.info("checking if device is supported: ", index);
+    let openedHere = false;
     try {
       await this.connectDevice(index);
+      openedHere = !this.isOpen();
       await this.open();
       let chipid = "";
       await this.sendData(
@@ -150,9 +152,14 @@ class HID {
           log.info(err);
         },
       );
+      // A keyboard that doesn't answer over HID (e.g. it is already being used over serial) can't be
+      // identified, so it can't be matched with the instance already listed: it would show up twice
+      if (!chipid.trim()) throw new HIDError("No chip ID received");
       this.serialNumber = chipid;
     } catch (error) {
       log.warn("Error when checking support: ", error);
+      // Only release a handle this check opened, never one already in use
+      if (openedHere && this.isOpen()) await this.connectedDevice.close().catch(() => {});
       return false;
     }
     return true;
@@ -216,13 +223,14 @@ class HID {
     const chunks = Math.ceil(encodedData.length / maxData);
     let startIndex;
     let endIndex;
-    if (!this.isOpen) {
+    if (!this.isOpen()) {
       throw new HIDError("No open device");
     }
     // we declare the handler here so we can use it when we resolve the promise
     let receiveDataHandler: (event: HIDInputReportEvent) => void;
+    let timeout: ReturnType<typeof setTimeout>;
     const allDataReceived = new Promise((resolve, reject) => {
-      const timeout = setTimeout(() => {
+      timeout = setTimeout(() => {
         if (this.connectedDevice) {
           this.connectedDevice.removeEventListener("inputreport", receiveDataHandler);
         }
@@ -249,13 +257,24 @@ class HID {
     });
     const buffer = new ArrayBuffer(maxData);
     let bufferView;
-    for (let i = 0; i < chunks; i += 1) {
-      startIndex = maxData * i;
-      endIndex = maxData * i + maxData;
-      bufferView = new Uint8Array(buffer);
-      bufferView.fill(0);
-      bufferView.set(encodedData.slice(startIndex, endIndex), 0);
-      this.sendChunkData(bufferView);
+    try {
+      for (let i = 0; i < chunks; i += 1) {
+        startIndex = maxData * i;
+        endIndex = maxData * i + maxData;
+        bufferView = new Uint8Array(buffer);
+        bufferView.fill(0);
+        bufferView.set(encodedData.slice(startIndex, endIndex), 0);
+        // eslint-disable-next-line no-await-in-loop
+        await this.sendChunkData(bufferView);
+      }
+    } catch (err) {
+      // e.g. NotAllowedError when the OS refuses the write (the keyboard is busy over serial). Report it
+      // through errorHandler like any other failure instead of leaving an unhandled rejection
+      clearTimeout(timeout);
+      this.connectedDevice.removeEventListener("inputreport", receiveDataHandler);
+      allDataReceived.catch(() => {});
+      errorHandler(err);
+      return undefined;
     }
     return allDataReceived
       .then((totalDataReceived: string) => {

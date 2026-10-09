@@ -9,8 +9,12 @@ export const LENS_DEFAULTS: LensSettings = {
   layerNames: [],
   overlayMode: true,
   overlayAutoShow: true,
+  overlayAutoShowDuration: 3000,
   resizeMode: false,
 };
+
+export const AUTO_SHOW_DURATION_MIN_MS = 1000;
+export const AUTO_SHOW_DURATION_MAX_MS = 10000;
 
 function clamp(v: number, min: number, max: number): number {
   return Math.max(min, Math.min(max, v));
@@ -25,6 +29,11 @@ export function sanitizeLensSettings(s: Partial<LensSettings>): LensSettings {
     layerNames: Array.isArray(s.layerNames) ? s.layerNames : LENS_DEFAULTS.layerNames,
     overlayMode: typeof s.overlayMode === "boolean" ? s.overlayMode : LENS_DEFAULTS.overlayMode,
     overlayAutoShow: typeof s.overlayAutoShow === "boolean" ? s.overlayAutoShow : LENS_DEFAULTS.overlayAutoShow,
+    overlayAutoShowDuration: clamp(
+      typeof s.overlayAutoShowDuration === "number" ? s.overlayAutoShowDuration : LENS_DEFAULTS.overlayAutoShowDuration,
+      AUTO_SHOW_DURATION_MIN_MS,
+      AUTO_SHOW_DURATION_MAX_MS,
+    ),
     resizeMode: typeof s.resizeMode === "boolean" ? s.resizeMode : LENS_DEFAULTS.resizeMode,
   };
 }

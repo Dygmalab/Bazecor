@@ -41,6 +41,9 @@ export interface LensSettings {
   layerNames: string[];
   overlayMode: boolean;
   overlayAutoShow: boolean;
+  /** How long (ms) the layer-change auto-show keeps the overlay up when the layer
+   * doesn't return to the default one (e.g. a locked layer switch). */
+  overlayAutoShowDuration: number;
   /** When true, the overlay's resize frame and drag surface are active, so the
    * window can be repositioned/resized. Toggled from Preferences or the tray. */
   resizeMode: boolean;

@@ -29,7 +29,7 @@ import {
 import CardAddDevice from "@Renderer/modules/DeviceManager/CardAddDevice";
 import ToastMessage from "@Renderer/components/atoms/ToastMessage";
 import VirtualSelector from "@Renderer/modules/VirtualKeyboards/VirtualSelector";
-import { useDevice, DeviceTools } from "@Renderer/DeviceContext";
+import { useDevice, DeviceTools, dedupeDevicesByChipId } from "@Renderer/DeviceContext";
 import { IconArrowDownWithLine } from "@Renderer/components/atoms/icons";
 import { DeviceListType } from "@Renderer/types/DeviceManager";
 import { Neuron } from "@Renderer/types/neurons";
@@ -89,9 +89,13 @@ const DeviceManager = (props: DeviceManagerProps) => {
 
   const handleOnDisconnect = async () => {
     setScanned(false);
-    const cID = state.currentDevice.serialNumber?.toLowerCase();
-    await DeviceTools.disconnect(state.currentDevice);
-    dispatch({ type: "disconnect", payload: [cID] });
+    // Nothing to close if it is already gone (e.g. a stale card still offering "Disconnect"); the UI
+    // is still reset below so it matches
+    if (state.currentDevice) {
+      const cID = state.currentDevice.serialNumber?.toLowerCase();
+      await DeviceTools.disconnect(state.currentDevice);
+      dispatch({ type: "disconnect", payload: [cID] });
+    }
     setDevicesList([]);
     setSelectedDevice(-1);
     await onDisconnect();
@@ -112,7 +116,8 @@ const DeviceManager = (props: DeviceManagerProps) => {
       let newDeviceList = state.deviceList.filter(
         x => !result.devicesToRemove.includes(x.serialNumber?.toLowerCase()) || x.type === "virtual",
       );
-      newDeviceList = newDeviceList.concat(result.finalDevices);
+      // Deduped here too, not only in the reducer: the cards below are built from this list
+      newDeviceList = dedupeDevicesByChipId(newDeviceList.concat(result.finalDevices));
       newDeviceList = newDeviceList.map((dev, i) => {
         const localDev = dev;
         localDev.serialNumber = dev.serialNumber !== undefined ? dev.serialNumber : `RaiseBootloader${i}`;
@@ -141,7 +146,7 @@ const DeviceManager = (props: DeviceManagerProps) => {
       return toShowDevs;
     }
     try {
-      const list = (await DeviceTools.list()) as Device[];
+      const list = dedupeDevicesByChipId((await DeviceTools.list()) as Device[]);
       dispatch({ type: "addDevicesList", payload: list });
       log.info("Devices Available:", list);
       const newDev: DeviceListType[] = [];
@@ -259,13 +264,32 @@ const DeviceManager = (props: DeviceManagerProps) => {
     if (state.deviceList?.length !== devicesList?.length) setScanned(false);
   }, [devicesList, state.deviceList]);
 
+  // One scan at a time: parallel scans probed the same HID device at once. A scan requested while another
+  // runs (e.g. findKeyboards changing after a disconnect, so the old scan still sees the keyboard as
+  // connected) is not dropped: it runs again once the current one ends, with the latest state.
+  const scanInProgress = useRef(false);
+  const rescanRequested = useRef(false);
+  const latestFindKeyboards = useRef(findKeyboards);
+  latestFindKeyboards.current = findKeyboards;
   useEffect(() => {
-    if (!scanned) {
-      const find = async () => {
-        await findKeyboards();
-      };
-      find();
+    if (scanned) return;
+    if (scanInProgress.current) {
+      rescanRequested.current = true;
+      return;
     }
+    const runScans = async () => {
+      scanInProgress.current = true;
+      try {
+        do {
+          rescanRequested.current = false;
+          // eslint-disable-next-line no-await-in-loop
+          await latestFindKeyboards.current();
+        } while (rescanRequested.current);
+      } finally {
+        scanInProgress.current = false;
+      }
+    };
+    runScans();
   }, [findKeyboards, scanned]);
 
   useEffect(() => {

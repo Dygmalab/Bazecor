@@ -77,12 +77,11 @@ const configureIPCs = () => {
   ipcMain.handle("get-userPath", (event, path) => app.getPath(path));
 
   ipcMain.handle("get-defaultBackupPath", (event, fileName) => {
-    const appPath = app.getAppPath();
-    const isPackaged = !appPath.includes("webpack");
-    const defaultBackupPath = isPackaged
-      ? path.join(appPath, "..", "defaultBackups", fileName)
-      : path.join(appPath, "src", "defaultBackups", fileName);
-    log.info("Default backup path requested:", defaultBackupPath, "isPackaged:", isPackaged);
+    // defaultBackups is shipped as an extraResource, so it lives next to the app in resourcesPath
+    const defaultBackupPath = app.isPackaged
+      ? path.join(process.resourcesPath, "defaultBackups", fileName)
+      : path.join(app.getAppPath(), "src", "defaultBackups", fileName);
+    log.info("Default backup path requested:", defaultBackupPath, "isPackaged:", app.isPackaged);
     return defaultBackupPath;
   });
 

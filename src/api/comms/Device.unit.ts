@@ -141,15 +141,21 @@ describe("Device", () => {
       expect(dev.device?.chipId).toBe("SN_HID_123");
     });
 
-    it("should crash in the HID constructor if the device info is missing (problematic behavior)", () => {
-      // NOTE: This test verifies a crash point in Device.ts constructor.
-      // If params.connectedDevice.device is undefined, the constructor attempts to do:
-      // `this.device = newDevice.device;` followed by `this.device.chipId = ...`
-      // which throws a TypeError since it tries to assign properties on undefined.
+    it("should not write the chip ID into the shared hardware definition of an HID device", () => {
+      const mockHidInstance = new HID();
+      const hardwareDefinition = (mockHidInstance as any).connectedDevice.device;
+      const dev = new Device(mockHidInstance as any, "hid");
+
+      expect(dev.device?.chipId).toBe("SN_HID_123");
+      expect(dev.device).not.toBe(hardwareDefinition);
+      expect(hardwareDefinition.chipId).toBeUndefined();
+    });
+
+    it("should not crash in the HID constructor if the device info is missing", () => {
       const mockHidInstance = new HID();
       delete (mockHidInstance as any).connectedDevice.device;
 
-      expect(() => new Device(mockHidInstance as any, "hid")).toThrow(TypeError);
+      expect(() => new Device(mockHidInstance as any, "hid")).not.toThrow();
     });
 
     it("should initialize a virtual device correctly", () => {

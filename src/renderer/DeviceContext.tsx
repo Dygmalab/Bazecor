@@ -29,6 +29,42 @@ export type Dispatch = (action: Action) => void;
 
 const DeviceContext = createContext<ContextType>(undefined);
 
+/**
+ * The same keyboard can be found more than once, e.g. over serial and over HID: keep one instance per
+ * chip ID, preferring the open (connected) one. Chip IDs are compared normalized, since serial and HID
+ * report them with different whitespace.
+ */
+export function dedupeDevicesByChipId(devices: Device[]): Device[] {
+  const deviceMap = new Map<string, Device>();
+
+  devices.forEach(device => {
+    const chipId = device.device?.chipId?.trim().toLowerCase();
+    if (!chipId) {
+      // If no chipId, add device as-is (shouldn't happen but handle gracefully)
+      deviceMap.set(device.serialNumber, device);
+      return;
+    }
+
+    const existing = deviceMap.get(chipId);
+    if (!existing) {
+      // First time seeing this chipId
+      deviceMap.set(chipId, device);
+    } else if (device.isClosed === false && existing.isClosed === true) {
+      // Duplicate found - keep the one that is NOT closed
+      deviceMap.set(chipId, device);
+      log.info(`Replacing closed device with open device for chipId: ${chipId}`);
+    } else {
+      log.info(`Duplicate device found for chipId: ${chipId}, keeping the existing instance`);
+    }
+  });
+
+  const newDevices = Array.from(deviceMap.values());
+  if (devices.length !== newDevices.length) {
+    log.info(`Removed ${devices.length - newDevices.length} duplicate device(s)`);
+  }
+  return newDevices;
+}
+
 function deviceReducer(state: State, action: Action) {
   // log.verbose("Entering DeviceREDUCER!!!", state, action);
   switch (action.type) {
@@ -57,41 +93,7 @@ function deviceReducer(state: State, action: Action) {
       return { ...state, deviceList: newDevices, currentDevice: state.currentDevice, selected: state.selected };
     }
     case "addDevicesList": {
-      // Deduplicate devices by chipId, keeping only the open (not closed) instance
-      const deviceMap = new Map<string, Device>();
-      
-      action.payload.forEach(device => {
-        const chipId = device.device?.chipId;
-        if (!chipId) {
-          // If no chipId, add device as-is (shouldn't happen but handle gracefully)
-          deviceMap.set(device.serialNumber, device);
-          return;
-        }
-        
-        const existing = deviceMap.get(chipId);
-        if (!existing) {
-          // First time seeing this chipId
-          deviceMap.set(chipId, device);
-        } else {
-          // Duplicate found - keep the one that is NOT closed
-          if (device.isClosed === false && existing.isClosed === true) {
-            // New device is open, existing is closed - replace with new
-            deviceMap.set(chipId, device);
-            log.info(`Replacing closed device with open device for chipId: ${chipId}`);
-          } else if (device.isClosed === true && existing.isClosed === false) {
-            // New device is closed, existing is open - keep existing
-            log.info(`Keeping open device, ignoring closed duplicate for chipId: ${chipId}`);
-          } else {
-            // Both same state, keep the first one
-            log.info(`Duplicate device found for chipId: ${chipId}, keeping first instance`);
-          }
-        }
-      });
-      
-      const newDevices = Array.from(deviceMap.values());
-      if (action.payload.length !== newDevices.length) {
-        log.info(`Removed ${action.payload.length - newDevices.length} duplicate device(s)`);
-      }
+      const newDevices = dedupeDevicesByChipId(action.payload);
 
       // Bail out with the same state reference when the resulting list is
       // unchanged (e.g. repeated scans while no keyboard is connected), so
