@@ -2,9 +2,14 @@ import { sanitizeIntensity } from "./sanitizeIntensity";
 import { RGB, RGBW } from "./types";
 
 /**
- * Convert a RGBW color to RGB
- * @param {RGBW} color - A RGBW color
- * @returns {RGB} - The color converted to RGB
+ * Converts an RGBW color object to an RGB color object.
+ *
+ * This is achieved by adding the white component (W) to each of the
+ * R, G, and B channels. The resulting values are then sanitized to ensure
+ * they are within the valid intensity range (0-255).
+ *
+ * @param {RGBW} color - An object representing the RGBW color with `r`, `g`, `b`, and `w` properties.
+ * @returns {RGB} The resulting RGB color object with `r`, `g`, `b`, and a CSS `rgb` string property.
  */
 export function rgbw2b(color: RGBW): RGB {
   const sanitizedR = sanitizeIntensity(color.r);

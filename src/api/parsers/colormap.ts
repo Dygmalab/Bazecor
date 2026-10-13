@@ -1,3 +1,12 @@
+/**
+ * Parses a raw colormap string from the keyboard into a 2D array representing color layers.
+ * The raw string is a space-separated list of numbers, which are grouped into layers
+ * based on the provided layer size.
+ *
+ * @param {string} colormap - The raw, space-separated string of color values from the keyboard.
+ * @param {number} ColorLayerSize - The number of color values per layer, used to chunk the data correctly.
+ * @returns {number[][]} A 2D array where each sub-array represents a single color layer.
+ */
 export const parseColormapRaw = (colormap: string, ColorLayerSize: number): number[][] =>
   colormap
     .split(" ")
