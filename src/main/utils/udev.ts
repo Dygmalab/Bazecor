@@ -32,14 +32,17 @@ const udevRuleDirLookup = [
   "/run/host/etc/udev/rules.d", // FYI: flatpak-builder `--filesystem=host-etc` bind-mounts `/etc/` to `/run/host/etc/`.
 ];
 
-const hostUdevRuleFilePath = path.join("/etc/udev/rules.d", udevRuleFilename);
+// Keep this top-level `filename` (full path) and `udevRulesToWrite`: the AUR bazecor-git PKGBUILD appends
+// `process.stdout.write(filename)` / `process.stdout.write(udevRulesToWrite)` to this file and runs it with
+// ts-node to package the rules, so renaming either breaks that build.
+const filename = path.join("/etc/udev/rules.d", udevRuleFilename);
 
 const checkUdev = () => {
   try {
     for (const dir of udevRuleDirLookup) {
-      const filename = path.join(dir, udevRuleFilename);
-      if (fs.existsSync(filename)) {
-        const currentUdevRules = fs.readFileSync(filename, "utf-8");
+      const rulePath = path.join(dir, udevRuleFilename);
+      if (fs.existsSync(rulePath)) {
+        const currentUdevRules = fs.readFileSync(rulePath, "utf-8");
         if (currentUdevRules.trim() === udevRulesToWrite.trim()) {
           return true;
         }
@@ -54,7 +57,7 @@ const checkUdev = () => {
 const showMissingPolkitErrorDialog = (mainWindow: BrowserWindow, error: any) => {
   log.verbose(`stdout: ${error.message}`);
 
-  const command = `sudo tee ${hostUdevRuleFilePath} > /dev/null << 'UDEV_RULES_EOF'
+  const command = `sudo tee ${filename} > /dev/null << 'UDEV_RULES_EOF'
 ${udevRulesToWrite}
 UDEV_RULES_EOF
 sudo udevadm control --reload-rules
@@ -80,7 +83,7 @@ const installUdev = (mainWindow: BrowserWindow) => {
   dialog.showMessageBox(mainWindow, dialogOpts).then(response => {
     if (response.response === 1) {
       sudo.exec(
-        `echo '${udevRulesToWrite}' > ${hostUdevRuleFilePath} && udevadm control --reload-rules && udevadm trigger`,
+        `echo '${udevRulesToWrite}' > ${filename} && udevadm control --reload-rules && udevadm trigger`,
         options,
         error => {
           if (error) {

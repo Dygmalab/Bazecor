@@ -161,6 +161,7 @@ jobs:
         name: Build for Linux/Windows
         env:
           DEBUG: "@malept/flatpak-bundler" # print flatpak-builder output, otherwise failures only show the exit code
+          BAZECOR_FLATPAK: "true" # the flatpak maker is opt-in, see forge.config.ts
         run: yarn run make
       - if: runner.os == 'Linux'
         name: Rename flatpak bundle

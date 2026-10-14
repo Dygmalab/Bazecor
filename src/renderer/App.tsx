@@ -58,6 +58,74 @@ import HID from "../api/hid/hid";
 
 const store = Store.getStore();
 
+// Helpers to detect SK 2.0 capable firmware based on semver thresholds per product
+const extractSemver = (text: string): [number, number, number] | null => {
+  if (!text) return null;
+  const m = text.match(/(\d+)\.(\d+)\.(\d+)/);
+  if (!m) return null;
+  return [parseInt(m[1], 10), parseInt(m[2], 10), parseInt(m[3], 10)];
+};
+
+const compareSemver = (a: [number, number, number], b: [number, number, number]) => {
+  if (a[0] !== b[0]) return a[0] - b[0];
+  if (a[1] !== b[1]) return a[1] - b[1];
+  return a[2] - b[2];
+};
+
+// Reads the FW version and stores the capabilities that depend on it (SK 2.0, Layer Lens).
+// Runs on connect and again after a firmware update, since the keyboard stays connected through it.
+const detectFirmwareCapabilities = async (currentDevice: Device) => {
+  try {
+    const versionStr = (await currentDevice.noCacheCommand("version")) as string;
+    log.verbose("VERSION: ", versionStr);
+    const semver = extractSemver(versionStr);
+    const product = currentDevice?.device?.info?.product as string;
+    if (semver && product) {
+      const defyMin: [number, number, number] = [2, 2, 0];
+      const raise2Min: [number, number, number] = [1, 4, 0];
+      const sonseiMin: [number, number, number] = [0, 0, 0];
+      const isDefy = product === "Defy";
+      const isRaise2 = product === "Raise2";
+      const isSonsei = product === "Sonsei";
+      const detected =
+        (isDefy && compareSemver(semver, defyMin) >= 0) ||
+        (isRaise2 && compareSemver(semver, raise2Min) >= 0) ||
+        (isSonsei && compareSemver(semver, sonseiMin) >= 0);
+      store.set("capabilities.sk20", detected);
+      if (detected) {
+        log.info("SK 2.0 detected");
+      }
+
+      // Layer Lens needs the firmware to report overlay/layer packets over raw HID,
+      // which shipped for Sonsei in 1.0.0 and lands for Defy in 2.3.0 and Raise2 in
+      // 1.5.0 — both still unreleased at the time of writing (latest published are
+      // Defy 2.2.1 and Raise2 1.4.1), so Lens stays hidden on those boards until
+      // their firmware is out. Raise (Raise1) never exposes Lens, whatever the
+      // firmware.
+      const sonseiLensMin: [number, number, number] = [1, 0, 0];
+      const defyLensMin: [number, number, number] = [2, 3, 0];
+      const raise2LensMin: [number, number, number] = [1, 5, 0];
+      const lensAvailable =
+        (isSonsei && compareSemver(semver, sonseiLensMin) >= 0) ||
+        (isDefy && compareSemver(semver, defyLensMin) >= 0) ||
+        (isRaise2 && compareSemver(semver, raise2LensMin) >= 0);
+      store.set("capabilities.lens", lensAvailable);
+      log.info(
+        `[Lens] capability check -> product: ${product}, firmware: ${semver.join(".")}, isSonsei: ${isSonsei}, isDefy: ${isDefy}, isRaise2: ${isRaise2}, lensAvailable: ${lensAvailable}`,
+      );
+    } else {
+      store.set("capabilities.sk20", false);
+      store.set("capabilities.lens", false);
+      log.info(`[Lens] capability disabled (missing semver or product). semver: ${semver}, product: ${product}`);
+    }
+  } catch (e) {
+    log.warn("Error reading or parsing firmware version", e);
+    store.set("capabilities.sk20", false);
+    store.set("capabilities.lens", false);
+    log.info("[Lens] capability disabled due to firmware version read/parse error");
+  }
+};
+
 function App() {
   const [pages, setPages] = useState({});
   const [contextBar, setContextBar] = useState(false);
@@ -198,20 +266,6 @@ function App() {
     navigate("/device-manager");
   }, [navigate, state.currentDevice]);
 
-  // Helpers to detect SK 2.0 capable firmware based on semver thresholds per product
-  const extractSemver = (text: string): [number, number, number] | null => {
-    if (!text) return null;
-    const m = text.match(/(\d+)\.(\d+)\.(\d+)/);
-    if (!m) return null;
-    return [parseInt(m[1], 10), parseInt(m[2], 10), parseInt(m[3], 10)];
-  };
-
-  const compareSemver = (a: [number, number, number], b: [number, number, number]) => {
-    if (a[0] !== b[0]) return a[0] - b[0];
-    if (a[1] !== b[1]) return a[1] - b[1];
-    return a[2] - b[2];
-  };
-
   const onKeyboardConnect = async (currentDevice: Device): Promise<void> => {
     log.verbose("Connecting to", currentDevice.type, currentDevice.device);
 
@@ -223,56 +277,7 @@ function App() {
       return;
     }
 
-    // Read FW version and log SK 2.0 detection depending on product thresholds
-    try {
-      const versionStr = (await currentDevice.command("version")) as string;
-      log.verbose("VERSION: ", versionStr);
-      const semver = extractSemver(versionStr);
-      const product = currentDevice?.device?.info?.product as string;
-      if (semver && product) {
-        const defyMin: [number, number, number] = [2, 2, 0];
-        const raise2Min: [number, number, number] = [1, 4, 0];
-        const sonseiMin: [number, number, number] = [0, 0, 0];
-        const isDefy = product === "Defy";
-        const isRaise2 = product === "Raise2";
-        const isSonsei = product === "Sonsei";
-        const detected =
-          (isDefy && compareSemver(semver, defyMin) >= 0) ||
-          (isRaise2 && compareSemver(semver, raise2Min) >= 0) ||
-          (isSonsei && compareSemver(semver, sonseiMin) >= 0);
-        store.set("capabilities.sk20", detected);
-        if (detected) {
-          log.info("SK 2.0 detected");
-        }
-
-        // Layer Lens needs the firmware to report overlay/layer packets over raw HID,
-        // which shipped for Sonsei in 1.0.0 and lands for Defy in 2.3.0 and Raise2 in
-        // 1.5.0 — both still unreleased at the time of writing (latest published are
-        // Defy 2.2.1 and Raise2 1.4.1), so Lens stays hidden on those boards until
-        // their firmware is out. Raise (Raise1) never exposes Lens, whatever the
-        // firmware.
-        const sonseiLensMin: [number, number, number] = [1, 0, 0];
-        const defyLensMin: [number, number, number] = [2, 3, 0];
-        const raise2LensMin: [number, number, number] = [1, 5, 0];
-        const lensAvailable =
-          (isSonsei && compareSemver(semver, sonseiLensMin) >= 0) ||
-          (isDefy && compareSemver(semver, defyLensMin) >= 0) ||
-          (isRaise2 && compareSemver(semver, raise2LensMin) >= 0);
-        store.set("capabilities.lens", lensAvailable);
-        log.info(
-          `[Lens] capability check -> product: ${product}, firmware: ${semver.join(".")}, isSonsei: ${isSonsei}, isDefy: ${isDefy}, isRaise2: ${isRaise2}, lensAvailable: ${lensAvailable}`,
-        );
-      } else {
-        store.set("capabilities.sk20", false);
-        store.set("capabilities.lens", false);
-        log.info(`[Lens] capability disabled (missing semver or product). semver: ${semver}, product: ${product}`);
-      }
-    } catch (e) {
-      log.warn("Error reading or parsing firmware version", e);
-      store.set("capabilities.sk20", false);
-      store.set("capabilities.lens", false);
-      log.info("[Lens] capability disabled due to firmware version read/parse error");
-    }
+    await detectFirmwareCapabilities(currentDevice);
 
     setConnected(true);
     device.current = currentDevice;
@@ -437,6 +442,29 @@ function App() {
     log.verbose("toggling fwUpdate to: ", value);
     setFwUpdate(value);
   };
+
+  // The keyboard stays "connected" through a firmware update, so onKeyboardConnect doesn't run again:
+  // refresh the version-dependent capabilities once the update is over
+  const wasUpdatingFw = useRef(false);
+  // Capabilities are read from the store while rendering, so re-render once they change
+  const [, setCapabilitiesRefresh] = useState(0);
+  useEffect(() => {
+    if (fwUpdate) {
+      wasUpdatingFw.current = true;
+      return;
+    }
+    if (!wasUpdatingFw.current) return;
+    if (!connected) {
+      // A later connection goes through onKeyboardConnect, which detects them anyway
+      wasUpdatingFw.current = false;
+      return;
+    }
+    const { currentDevice } = state;
+    // Wait until the context holds the reconnected keyboard
+    if (!currentDevice || currentDevice.isClosed || currentDevice.device?.bootloader) return;
+    wasUpdatingFw.current = false;
+    detectFirmwareCapabilities(currentDevice).then(() => setCapabilitiesRefresh(n => n + 1));
+  }, [fwUpdate, connected, state]);
 
   const setLoadingData = (isLoading: boolean) => {
     setLoading(isLoading);

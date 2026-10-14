@@ -23,6 +23,7 @@ import {
 import { readLatestModel } from "./backup-reader";
 import {
   applyAspectRatioFor,
+  applyOpacityLive,
   applyResizeModeLive,
   broadcastSettings,
   broadcastState,
@@ -38,7 +39,6 @@ import {
   stopFade,
 } from "./overlay-window";
 
-const LAYER_CHANGE_AUTO_HIDE_MS = 3000;
 // How long the overlay is held on screen but fully transparent before the
 // layer-change auto-show fades it in, so the renderer has repainted the new
 // active layer by the time anything is visible. See showOverlay()'s fadeDelayMs.
@@ -511,7 +511,8 @@ class OverlayController {
 
   private onLayerChangeAutoShow(): void {
     if (!this.overlayActive || !overlayAlive()) return;
-    if (!getLensSettings().overlayAutoShow) return;
+    const { overlayAutoShow, overlayAutoShowDuration } = getLensSettings();
+    if (!overlayAutoShow) return;
     if (isOverlayVisible()) {
       // Already visible for some other reason (e.g. a manual TAP) — leave it alone.
       // Only Lens' own layer-change auto-show is allowed to auto-hide on release.
@@ -530,7 +531,7 @@ class OverlayController {
       this.layerChangeHideTimer = null;
       this.layerAutoShowActive = false;
       hideOverlay();
-    }, LAYER_CHANGE_AUTO_HIDE_MS);
+    }, overlayAutoShowDuration);
   }
 
   private async showInputMonitoringDialog(): Promise<void> {
@@ -614,6 +615,23 @@ export function setResizeMode(v: boolean): LensSettings {
  * both paths persist and broadcast the change the same way. */
 export function setOverlayAutoShow(v: boolean): LensSettings {
   const s = setLensSettings({ overlayAutoShow: v });
+  broadcastSettings(s);
+  return s;
+}
+
+/** Shared by the tray menu and the lens:set-overlay-auto-show-duration IPC
+ * handler, so both paths persist and broadcast the change the same way. */
+export function setOverlayAutoShowDuration(ms: number): LensSettings {
+  const s = setLensSettings({ overlayAutoShowDuration: ms });
+  broadcastSettings(s);
+  return s;
+}
+
+/** Shared by the tray menu and the lens:set-opacity IPC handler, so both paths
+ * persist, apply and broadcast the change the same way. */
+export function setOverlayOpacity(v: number): LensSettings {
+  const s = setLensSettings({ opacity: v });
+  applyOpacityLive(s.opacity);
   broadcastSettings(s);
   return s;
 }

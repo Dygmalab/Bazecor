@@ -101,7 +101,13 @@ export const GitHubRead = async (context: Context.ContextType): Promise<Context.
       return data;
     }
     if (finalReleases.length > 0) {
-      isUpdated = context.device.version === finalReleases[0]?.version;
+      // Release names aren't consistent about the "v" prefix ("Defy v2.2.1" vs "Sonsei 1.1.0"), while the
+      // firmware always reports it, so compare as semver instead of as plain strings
+      const latestVersion = finalReleases[0].version;
+      isUpdated =
+        SemVer.valid(context.device.version) && SemVer.valid(latestVersion)
+          ? SemVer.gte(context.device.version, latestVersion)
+          : context.device.version === latestVersion;
       isBeta = context.device.version.includes("beta");
     } else {
       isUpdated = true;
