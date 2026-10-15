@@ -1,4 +1,4 @@
-import { app, Menu } from "electron";
+import { app, autoUpdater, Menu, powerMonitor } from "electron";
 import log from "electron-log/main";
 import createWindow from "./createWindow";
 import { setTheme } from "./setup/theme";
@@ -12,7 +12,7 @@ import configureLens from "./setup/configureLens";
 import configureTray, { openMainWindow } from "./setup/configureTray";
 import { getRunInBackground } from "../lens/main/lens-settings";
 import { overlayController } from "../lens/main/overlay-controller";
-import { isAppQuitting } from "./managers/AppLifecycle";
+import { isAppQuitting, markAppQuitting } from "./managers/AppLifecycle";
 
 if (process.env.NODE_ENV === "development") {
   log.transports.console.level = "verbose";
@@ -47,6 +47,16 @@ app.on("ready", async () => {
   setTheme();
   configureLens();
   configureTray();
+  // Logout/restart/shutdown (NSWorkspaceWillPowerOffNotification on macOS) is
+  // a real quit, not a Dock "Quit" to redirect into a window close: mark it so
+  // the before-quit handler below lets it through instead of cancelling it.
+  powerMonitor.on("shutdown", () => {
+    log.info("System shutdown requested, quitting");
+    markAppQuitting();
+  });
+  // Same for "Restart" on an auto-update: quitAndInstall() goes through
+  // before-quit too, and swallowing it would leave the update uninstalled.
+  autoUpdater.on("before-quit-for-update", () => markAppQuitting());
   // Login-item launches pass --hidden (or wasOpenedAsHidden on macOS): start
   // tray-resident with the overlay available but no main window.
   const startHidden = process.argv.includes("--hidden") || app.getLoginItemSettings().wasOpenedAsHidden;
@@ -77,11 +87,16 @@ app.on("before-quit", event => {
   //
   // Only when background mode is actually on, though: without it there is no
   // tray icon to bring Bazecor back, so swallowing the quit would strand the
-  // app running with no way to reach or close it.
-  if (process.platform === "darwin" && !isAppQuitting() && getRunInBackground()) {
+  // app running with no way to reach or close it. And only while there is a
+  // window to close: tray-resident, the only quits left are ours (already
+  // marked) or the system's (logout/restart/shutdown), and swallowing those
+  // makes macOS abort the whole shutdown with "Bazecor interrupted it".
+  // System shutdowns with a window open are let through by the powerMonitor
+  // "shutdown" handler below, which marks the quit before this runs.
+  const win = Window.getWindow();
+  if (process.platform === "darwin" && !isAppQuitting() && getRunInBackground() && win && !win.isDestroyed()) {
     event.preventDefault();
-    const win = Window.getWindow();
-    if (win && !win.isDestroyed()) win.close();
+    win.close();
     return;
   }
   removeUSBListeners();

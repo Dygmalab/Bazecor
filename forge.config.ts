@@ -40,6 +40,10 @@ if (process.env["NODE_ENV"] !== "development") {
   };
 }
 
+// The flatpak needs flatpak-builder and eu-strip on the build machine, which most people building Bazecor
+// themselves don't have, so it is only made when asked for: CI sets this, and so does `yarn make-flatpak`
+const buildFlatpak = process.env.BAZECOR_FLATPAK === "true";
+
 const config: ForgeConfig = {
   packagerConfig,
   rebuildConfig: {},
@@ -65,72 +69,77 @@ const config: ForgeConfig = {
         },
       },
     },
-    new MakerFlatpak(
-      {
-        options: {
-          id: "com.dygma.bazecor",
-          bin: "Bazecor",
-          productName: "Bazecor",
-          genericName: "Dygma Keyboard Configurator",
-          description: "Configurator for Dygma Raise and Defy keyboards.",
-          icon: "./build/logo.png",
-          categories: ["Utility"],
-          base: "org.electronjs.Electron2.BaseApp",
-          baseVersion: "25.08",
-          runtime: "org.freedesktop.Platform",
-          runtimeVersion: "25.08",
-          sdk: "org.freedesktop.Sdk",
-          modules: [
+    // Opt-in, see buildFlatpak
+    ...(buildFlatpak
+      ? [
+          new MakerFlatpak(
             {
-              name: "eudev",
-              sources: [
-                {
-                  type: "git",
-                  url: "https://github.com/eudev-project/eudev",
-                  tag: "v3.2.14",
-                  commit: "9e7c4e744b9e7813af9acee64b5e8549ea1fbaa3",
-                },
-              ],
-              cleanup: [
-                "/include",
-                "/etc",
-                "/libexec",
-                "/sbin",
-                "/lib/pkgconfig",
-                "/man",
-                "/share/aclocal",
-                "/share/doc",
-                "/share/gtk-doc",
-                "/share/man",
-                "/share/pkgconfig",
-                "*.la",
-                "*.a",
-              ],
+              options: {
+                id: "com.dygma.bazecor",
+                bin: "Bazecor",
+                productName: "Bazecor",
+                genericName: "Dygma Keyboard Configurator",
+                description: "Configurator for Dygma Raise and Defy keyboards.",
+                icon: "./build/logo.png",
+                categories: ["Utility"],
+                base: "org.electronjs.Electron2.BaseApp",
+                baseVersion: "25.08",
+                runtime: "org.freedesktop.Platform",
+                runtimeVersion: "25.08",
+                sdk: "org.freedesktop.Sdk",
+                modules: [
+                  {
+                    name: "eudev",
+                    sources: [
+                      {
+                        type: "git",
+                        url: "https://github.com/eudev-project/eudev",
+                        tag: "v3.2.14",
+                        commit: "9e7c4e744b9e7813af9acee64b5e8549ea1fbaa3",
+                      },
+                    ],
+                    cleanup: [
+                      "/include",
+                      "/etc",
+                      "/libexec",
+                      "/sbin",
+                      "/lib/pkgconfig",
+                      "/man",
+                      "/share/aclocal",
+                      "/share/doc",
+                      "/share/gtk-doc",
+                      "/share/man",
+                      "/share/pkgconfig",
+                      "*.la",
+                      "*.a",
+                    ],
+                  },
+                ],
+
+                files: [
+                  ["build/com.dygma.bazecor.desktop", "/app/share/applications/com.dygma.bazecor.desktop"],
+                  ["build/com.dygma.bazecor.metainfo.xml", "/app/share/metainfo/com.dygma.bazecor.metainfo.xml"],
+                  ["build/logo.png", "/app/share/icons/hicolor/512x512/apps/com.dygma.bazecor.png"],
+                ],
+
+                finishArgs: [
+                  "--device=all",
+                  "--env=ELECTRON_OZONE_PLATFORM_HINT=auto",
+                  "--env=XCURSOR_PATH=/run/host/user-share/icons:/run/host/share/icons",
+                  "--filesystem=/run/udev:ro",
+                  "--filesystem=~/Dygma:create",
+                  "--filesystem=host-etc",
+                  "--share=ipc",
+                  "--share=network",
+                  "--socket=fallback-x11",
+                  "--socket=wayland",
+                ],
+              },
             },
-          ],
-
-          files: [
-            ["build/com.dygma.bazecor.desktop", "/app/share/applications/com.dygma.bazecor.desktop"],
-            ["build/com.dygma.bazecor.metainfo.xml", "/app/share/metainfo/com.dygma.bazecor.metainfo.xml"],
-            ["build/logo.png", "/app/share/icons/hicolor/512x512/apps/com.dygma.bazecor.png"],
-          ],
-
-          finishArgs: [
-            "--device=all",
-            "--env=ELECTRON_OZONE_PLATFORM_HINT=auto",
-            "--env=XCURSOR_PATH=/run/host/user-share/icons:/run/host/share/icons",
-            "--filesystem=/run/udev:ro",
-            "--filesystem=~/Dygma:create",
-            "--filesystem=host-etc",
-            "--share=ipc",
-            "--share=network",
-            "--socket=fallback-x11",
-            "--socket=wayland",
-          ],
-        },
-      },
-      ["linux"],
-    ),
+            ["linux"],
+          ),
+        ]
+      : []),
   ],
   plugins: [
     new WebpackPlugin({

@@ -10,6 +10,9 @@ import { ExtendedPort } from "./serial/SerialAPI";
 import Hardware from "../hardware";
 import { DelimiterParser } from "@serialport/parser-delimiter";
 
+// The battery is polled every few seconds, so its traffic would flood the logs
+const isSilentCommand = (cmd?: string) => cmd?.startsWith("wireless.battery") ?? false;
+
 export type State = {
   selected: number;
   currentDevice: Device;
@@ -28,6 +31,8 @@ class Device implements DeviceClass {
   timeout: number;
   result: string;
   callbacks: Array<(value: unknown) => void>;
+  // Command of each pending callback, in the same order, so responses can be matched to what was asked
+  pendingCommands: Array<string>;
   device: DygmaDeviceType | undefined;
   port?: HID | SerialPort;
   commands?: { [key: string]: unknown };
@@ -44,6 +49,7 @@ class Device implements DeviceClass {
     this.timeout = 5000;
     this.port = undefined;
     this.callbacks = [];
+    this.pendingCommands = [];
     this.result = "";
     this.commands = undefined;
     this.file = false;
@@ -74,8 +80,9 @@ class Device implements DeviceClass {
       this.productId = String(params.connectedDevice.productId);
       this.vendorId = String(params.connectedDevice.vendorId);
       const newDevice = params.connectedDevice as ExtHIDInterface;
-      this.device = newDevice.device;
-      this.device.chipId = params.serialNumber;
+      // Copy: newDevice.device is the shared hardware definition, setting chipId on it would hand
+      // this keyboard's chip ID to every other device of the same model
+      this.device = { ...newDevice.device, chipId: params.serialNumber };
       this.port = params as HID;
     }
     if (type === "virtual") {
@@ -133,11 +140,12 @@ class Device implements DeviceClass {
     const parser = this.port.pipe(new DelimiterParser({ delimiter: "\r\n" }));
     parser.on("data", (data: Buffer) => {
       const utfData = data.toString("utf-8");
-      log.debug("addport: incoming data:", utfData);
+      if (!isSilentCommand(this.pendingCommands[0])) log.debug("addport: incoming data:", utfData);
 
       if (utfData === "." || utfData.endsWith(".")) {
         const { result } = this;
         const resolve = this.callbacks.shift();
+        this.pendingCommands.shift();
 
         this.result = "";
         if (resolve) {
@@ -185,7 +193,7 @@ class Device implements DeviceClass {
   }
 
   request(command: string, ...args: Array<string>) {
-    log.debug("device.request:", command, ...args);
+    if (!isSilentCommand(command)) log.debug("device.request:", command, ...args);
     return new Promise<string>((resolve, reject) => {
       const timer = setTimeout(() => {
         reject(new Error(`Communication timeout of '${command}' command`));
@@ -203,7 +211,7 @@ class Device implements DeviceClass {
   }
 
   async serialRequest(cmd: string, ...args: string[]) {
-    log.debug("performing request");
+    if (!isSilentCommand(cmd)) log.debug("performing request");
     if (!this.port) throw new Error("Device not connected!");
 
     let request = cmd;
@@ -214,6 +222,7 @@ class Device implements DeviceClass {
 
     return new Promise<string>(resolve => {
       this.callbacks.push(resolve);
+      this.pendingCommands.push(cmd);
       (this.port as SerialPort).write(request);
     });
   }
@@ -242,7 +251,7 @@ class Device implements DeviceClass {
         }
       },
     );
-    log.debug("device.hid.request:", cmd, ...args, "retured: ", returnValue);
+    if (!isSilentCommand(cmd)) log.debug("device.hid.request:", cmd, ...args, "retured: ", returnValue);
     return returnValue;
   }
 

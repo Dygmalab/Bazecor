@@ -46,8 +46,11 @@ To do a production build, use `yarn run make`, or limit it to a particular OS:
 | macOS   | x64          | `yarn run make-mac-intel` |
 | macOS   | arm64        | `yarn run make-mac-arm`   |
 | Linux   |              | `yarn run make-lin`       |
+| Linux   | Flatpak      | `yarn run make-flatpak`   |
 
 See the `scripts` section of `package.json` for more scripts.
+
+`make-lin` builds the AppImage. The Flatpak is only built by `make-flatpak` (or with `BAZECOR_FLATPAK=true`), since it needs `flatpak-builder` and `eu-strip` (from `elfutils`) installed, and the Flathub remote configured as shown below.
 
 ### Development on Windows
 
@@ -62,7 +65,7 @@ winget install python.python.3.10.0
 npm install -g node-gyp
 ```
 
-If you are using WSL (with ubuntu), you will also need `flatpak-builder` and `libudev-dev` and configure flatpak if you haven't done so:
+If you are using WSL (with ubuntu), you will also need `libudev-dev`. To build the Flatpak, you will also need `flatpak-builder` and to configure flatpak if you haven't done so:
 
 ```sh
 # Install system dependencies 

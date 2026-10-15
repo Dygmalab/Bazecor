@@ -96,8 +96,10 @@ function NavigationMenu(props: NavigationMenuProps) {
     setIsUpdated(true);
     setDevice(state.currentDevice?.device);
     if (state.currentDevice?.device === undefined || state.currentDevice?.device.bootloader) return;
-    let parts = await state.currentDevice?.command("version");
-    parts = parts.split(" ");
+    // No cache: after a firmware update the cached answer would be the old version
+    const versionData = await state.currentDevice?.noCacheCommand("version");
+    if (typeof versionData !== "string") return;
+    const parts = versionData.split(" ");
     const getVersions: Version = {
       bazecor: parts[0],
       kaleidoscope: parts[1],
@@ -126,10 +128,20 @@ function NavigationMenu(props: NavigationMenuProps) {
   }, [getGitHubFW, state.currentDevice]);
 
   useEffect(() => {
-    if (!flashing && connected && !loading && !checkedVer) {
+    if (!flashing && !fwUpdate && connected && !loading && !checkedVer) {
       checkKeyboardMetadata();
     }
-  }, [flashing, connected, loading, checkKeyboardMetadata, checkedVer]);
+  }, [flashing, fwUpdate, connected, loading, checkKeyboardMetadata, checkedVer]);
+
+  // The keyboard stays connected through a firmware update (and may be swapped for the reconnected one),
+  // so check the version again afterwards to refresh the update badge
+  useEffect(() => {
+    if (fwUpdate) setCheckedVer(false);
+  }, [fwUpdate]);
+
+  useEffect(() => {
+    setCheckedVer(false);
+  }, [state.currentDevice]);
 
   useEffect(() => {
     if (checkedVer && !connected) {
