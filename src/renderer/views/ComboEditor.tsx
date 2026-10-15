@@ -29,6 +29,7 @@ import LogoLoader from "@Renderer/components/atoms/loader/LogoLoader";
 import ToastMessage from "@Renderer/components/atoms/ToastMessage";
 import { IconClose, IconDelete, IconPlus } from "@Renderer/components/atoms/icons";
 import Callout from "@Renderer/components/molecules/Callout/Callout";
+import ListModifier from "@Renderer/components/molecules/ListModifiers/ListModifiers";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@Renderer/components/atoms/Select";
 import { PageHeader } from "@Renderer/modules/PageHeader";
 import { KeyPickerKeyboard } from "@Renderer/modules/KeyPickerKeyboard";
@@ -306,7 +307,9 @@ function ComboEditor(props: ComboEditorProps) {
     const layer = combos[selected]?.layer ?? 0;
     const list = renumber(combos.concat([emptyCombo(combos.length, name || i18n.editor.combos.newCombo, layer)]));
     commit(list, list.length - 1);
-    setPickTarget(null);
+    /* A new combo has no keys yet, so the first slot is armed straight away:
+     * the next click on the board is its first key. */
+    setPickTarget({ kind: "member", slot: 0 });
   };
 
   const cloneCombo = () => {
@@ -490,19 +493,24 @@ function ComboEditor(props: ComboEditorProps) {
    * repeated per key because the boards only set that class on the one key
    * their `selectedKey` names.
    *
-   * While nothing is being picked the rest of the board is dimmed, so the
-   * combo reads at a glance. While a slot is being picked the other keys stay
-   * at full strength, as they are all valid picks, and the combo's own keys
-   * stop taking clicks: the same key twice in one combo could never be
-   * satisfied. Keys used by other combos stay available.
+   * Three levels of brightness. The combo's own keys are always at full
+   * strength. While a slot is being picked the rest of the board sits at
+   * 70%, bright enough to read as clickable, and the key under the pointer
+   * comes up to full; the combo's own keys stop taking clicks, as the same
+   * key twice in one combo could never be satisfied. While nothing is being
+   * picked the rest of the board drops to 40%, so the combo reads at a
+   * glance. Keys used by other combos stay available.
    *
    * The selectors lead with `.comboEditor` so they outrank the shared
-   * keyOnFocus rules, and the dimming rule comes first so the member rules,
-   * of equal weight, override it. */
+   * keyOnFocus rules, and the dimming rules come first so the member rules,
+   * of equal weight, override them. */
   const highlightStyles = useMemo(() => {
     const own = combos[selected] ? comboMembers(combos[selected]) : [];
     const picking = pickTarget?.kind === "member";
     const rules = [
+      `.comboEditor .comboKeyboard .keyItem, .comboEditor .comboKeyboard #neuronWrapper { transition: opacity 150ms ease-in-out; }`,
+      `.comboEditor .comboKeyboard.comboPicking .keyItem, .comboEditor .comboKeyboard.comboPicking #neuronWrapper { opacity: 0.7; }`,
+      `.comboEditor .comboKeyboard.comboPicking .keyItem:hover { opacity: 1; }`,
       `.comboEditor .comboKeyboard.comboIdle .keyItem, .comboEditor .comboKeyboard.comboIdle #neuronWrapper { opacity: 0.4; }`,
     ];
     own.forEach(position => {
@@ -681,7 +689,16 @@ function ComboEditor(props: ComboEditorProps) {
                 className="min-w-24 h-12 text-ssm"
                 onClick={() => setPickTarget({ kind: "action" })}
               >
-                {combo.action ? actionLabel(combo) : <IconPlus size="xs" />}
+                {combo.action ? (
+                  /* The modifiers ride along as the same badges the Layout
+                   * Editor shows, as the label alone ("A") hides them. */
+                  <span className="flex flex-col items-center gap-0.5">
+                    <span>{actionLabel(combo)}</span>
+                    <ListModifier keyCode={combo.action} size="xs" />
+                  </span>
+                ) : (
+                  <IconPlus size="xs" />
+                )}
               </Button>
             </div>
 
@@ -733,7 +750,7 @@ function ComboEditor(props: ComboEditorProps) {
             </Heading>
             <KeyPickerKeyboard
               onKeySelect={onActionKeySelect}
-              code={{ base: combo?.action ?? 0, modified: 0 } as SegmentedKeyType}
+              code={keymapDB.keySegmentor(combo?.action ?? 0) as SegmentedKeyType}
               macros={macros}
               superkeys={[]}
               action={0}
@@ -760,7 +777,7 @@ function ComboEditor(props: ComboEditorProps) {
             </p>
             {KeyboardComponent && layerData.length > 0 ? (
               <div
-                className={`comboKeyboard LayerHolder ${pickTarget?.kind === "member" ? "" : "comboIdle pointer-events-none"}`}
+                className={`comboKeyboard LayerHolder ${pickTarget?.kind === "member" ? "comboPicking" : "comboIdle pointer-events-none"}`}
               >
                 <KeyboardComponent
                   readOnly={false}
