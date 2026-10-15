@@ -176,6 +176,9 @@ const TWO_LINE: Record<number, [string, string]> = {
   54112: ["LENS", "SK-LENS"],
   54113: ["LENS", "TAP"],
   54114: ["LENS", "HOLD"],
+
+  // CapsWord (db/autoshift.ts)
+  54371: ["CAPS", "WORD"],
 };
 
 const ONE_SHOT_MOD: Record<number, string> = {
@@ -260,6 +263,11 @@ const MACRO_MIN = 53852; // 53852 + index (128 macros)
 const MACRO_MAX = 53979;
 const SUPERKEY_MIN = 53980; // 53980 + index (128 superkeys)
 const SUPERKEY_MAX = 54107;
+
+// Autoshift — src/hw/autoshift.ts: 54115 + base HID keycode. Bazecor's DB tags
+// these "SHIFT" over the base key's own label.
+const AUTOSHIFT_MIN = 54115;
+const AUTOSHIFT_MAX = 54370;
 
 /* eslint-disable no-bitwise -- decoding firmware keycodes is inherently bit-mask work */
 // Modifier flag bits per Bazecor's withModifiers() offsets (db/utils.ts):
@@ -362,6 +370,11 @@ export function decodeKey(
   if (dualMod) return dualMod;
 
   if (code >= SUPERKEY_MIN && code <= SUPERKEY_MAX) return { primary: `SK${code - SUPERKEY_MIN + 1}`, hold: "" };
+
+  if (code >= AUTOSHIFT_MIN && code <= AUTOSHIFT_MAX) {
+    const base = baseLabelFor(code - AUTOSHIFT_MIN, layout);
+    return { primary: "SHIFT", subtitle: base || `#${code - AUTOSHIFT_MIN}`, hold: "" };
+  }
 
   if (code >= MACRO_MIN && code <= MACRO_MAX) {
     const idx = code - MACRO_MIN;

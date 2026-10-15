@@ -122,6 +122,10 @@ const initialKBData = {
   SuperWaitfor: 500,
   SuperHoldstart: 0,
   SuperOverlapThreshold: 0,
+  autoshiftTimeout: 175,
+  capswordTimeout: 5000,
+  combosWindow: 10,
+  combosIdleTime: 100,
   mouseSpeed: 1,
   mouseSpeedDelay: 2,
   mouseAccelSpeed: 1,
@@ -258,6 +262,39 @@ const Preferences = (props: PreferencesProps) => {
       await state.currentDevice.command("superkeys.overlap").then((overlap: string) => {
         const overlapThreshold = overlap ? parseInt(overlap, 10) : 80;
         newKbData.SuperOverlapThreshold = overlapThreshold;
+      });
+
+      /* AUTOSHIFT / CAPSWORD variables commands.
+       *
+       * An empty reply here means the firmware on the device does not know the
+       * command at all -- i.e. it predates these features. That is the single
+       * most useful thing to see in the log when a newly assigned Autoshift or
+       * CapsWord key does nothing on the keyboard, so log the raw reply rather
+       * than only the parsed value. */
+      /* autoshift.enabled / capsword.enabled are no longer read: both features
+       * are always on, so the stored value is not a setting the user can
+       * disagree with. It is still written on save, to re-enable a keyboard
+       * that an earlier build left switched off. */
+      await state.currentDevice.command("autoshift.timeout").then((timeout: string) => {
+        log.info(`[Autoshift] focus autoshift.timeout ->`, JSON.stringify(timeout));
+        newKbData.autoshiftTimeout = timeout ? parseInt(timeout, 10) : 175;
+      });
+
+      await state.currentDevice.command("capsword.timeout").then((timeout: string) => {
+        log.info(`[CapsWord] focus capsword.timeout ->`, JSON.stringify(timeout));
+        newKbData.capswordTimeout = timeout ? parseInt(timeout, 10) : 5000;
+      });
+
+      await state.currentDevice.command("combos.window").then((window: string) => {
+        log.info(`[Combos] focus combos.window ->`, JSON.stringify(window));
+        if (!window) log.warn("[Combos] empty reply: this firmware does not support combos.window");
+        newKbData.combosWindow = window ? parseInt(window, 10) : 10;
+      });
+
+      await state.currentDevice.command("combos.idleTime").then((idleTime: string) => {
+        log.info(`[Combos] focus combos.idleTime ->`, JSON.stringify(idleTime));
+        if (!idleTime) log.warn("[Combos] empty reply: this firmware does not support combos.idleTime");
+        newKbData.combosIdleTime = idleTime ? parseInt(idleTime, 10) : 100;
       });
 
       // Read here rather than at module load: it changes when the keyboard (or its firmware) does
@@ -423,6 +460,18 @@ const Preferences = (props: PreferencesProps) => {
       await state.currentDevice.command("superkeys.waitfor", kbData.SuperWaitfor.toString());
       await state.currentDevice.command("superkeys.holdstart", kbData.SuperHoldstart.toString());
       await state.currentDevice.command("superkeys.overlap", kbData.SuperOverlapThreshold.toString());
+      // AUTOSHIFT -- always enabled; only the hold time is configurable.
+      log.info(`[Autoshift] saving timeout=${kbData.autoshiftTimeout}`);
+      await state.currentDevice.command("autoshift.enabled", "1");
+      await state.currentDevice.command("autoshift.timeout", kbData.autoshiftTimeout.toString());
+      // CAPSWORD -- likewise.
+      log.info(`[CapsWord] saving timeout=${kbData.capswordTimeout}`);
+      await state.currentDevice.command("capsword.enabled", "1");
+      await state.currentDevice.command("capsword.timeout", kbData.capswordTimeout.toString());
+      // COMBOS
+      log.info(`[Combos] saving window=${kbData.combosWindow} idleTime=${kbData.combosIdleTime}`);
+      await state.currentDevice.command("combos.window", kbData.combosWindow.toString());
+      await state.currentDevice.command("combos.idleTime", kbData.combosIdleTime.toString());
       // MOUSE KEYS
       await state.currentDevice.command("mouse.speed", kbData.mouseSpeed.toString());
       await state.currentDevice.command("mouse.speedDelay", kbData.mouseSpeedDelay.toString());
@@ -833,13 +882,19 @@ const Preferences = (props: PreferencesProps) => {
                     <>
                       <TabsContent value="Battery">
                         <motion.div initial="hidden" animate="visible" variants={tabVariants}>
-                          <BatterySettings wireless={wireless} changeWireless={updateWireless} isCharging={false} deviceType={state.currentDevice.device.info.product as string} />
+                          <BatterySettings
+                            wireless={wireless}
+                            changeWireless={updateWireless}
+                            isCharging={false}
+                            deviceType={state.currentDevice.device.info.product as string}
+                          />
                           <EnergyManagement
                             wireless={wireless}
                             changeWireless={updateWireless}
                             updateTab={handleTabChange}
                             deviceType={state.currentDevice.device.info.product as string}
                           />
+
                         </motion.div>
                       </TabsContent>
                       {/* <TabsContent value="Bluetooth">

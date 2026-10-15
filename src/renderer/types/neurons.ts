@@ -17,6 +17,7 @@
 import { DygmaDeviceType } from "./dygmaDefs";
 import { MacrosType } from "./macros";
 import { SuperkeysType } from "./superkeys";
+import { ComboType } from "./combos";
 
 export interface LayerType {
   id: number;
@@ -29,6 +30,8 @@ export interface Neuron {
   layers: Array<LayerType>;
   macros: Array<MacrosType>;
   superkeys: Array<SuperkeysType>;
+  /** Optional: neurons stored before combos existed simply do not have it. */
+  combos?: Array<ComboType>;
   device?: DygmaDeviceType;
 }
 

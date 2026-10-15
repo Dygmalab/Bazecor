@@ -6,6 +6,18 @@ export interface PaletteColor {
   rgb: string;
 }
 
+/** `LensCombo.layer` for a combo on every layer. Only backups from the first
+ * combos firmware have these; current firmware binds each combo to one layer. */
+export const COMBO_LAYER_ANY = -1;
+
+/** One enabled combo, as far as the overlay needs it. */
+export interface LensCombo {
+  /** Physical key offsets, the same index the keymap layers use. */
+  positions: number[];
+  /** The layer the combo works on, or COMBO_LAYER_ANY. */
+  layer: number;
+}
+
 export interface KeyboardModel {
   /** Bazecor product name this model was parsed from (e.g. "Sonsei", "Defy").
    * Drives which keyboard geometry the renderer draws. */
@@ -22,6 +34,8 @@ export interface KeyboardModel {
   superkeyNames: string[];
   macroNames: string[];
   layerNames: string[];
+  /** Combos from `combos.map`. Empty on firmware without the Combos plugin. */
+  combos: LensCombo[];
 }
 
 /** Reference to the backup folder Lens reads the keyboard model from. */
