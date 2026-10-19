@@ -1,4 +1,5 @@
-import type { PaletteColor } from "../shared/types";
+import type { LensCombo, PaletteColor } from "../shared/types";
+import { COMBO_LAYER_ANY } from "../shared/types";
 
 export function parseKeymap(raw: string, keysPerLayer: number): number[][] {
   const nums = raw.trim().split(/\s+/).map(Number);
@@ -51,6 +52,44 @@ export function parseSuperkeys(raw: string): number[][] {
   const out: number[][] = [];
   for (let i = 0; i + ACTIONS_PER_SUPERKEY <= nums.length; i += ACTIONS_PER_SUPERKEY) {
     out.push(nums.slice(i, i + ACTIONS_PER_SUPERKEY));
+  }
+  return out;
+}
+
+/* `combos.map` wire format (Bazecor src/api/parsers/combos.ts): a count, then
+ * a fixed 32 records of [p0..p5, layer, flags, action]. Backups taken with
+ * the first combos firmware carry four positions instead, and there layer 255
+ * meant "every layer". The record count is fixed, so the reply length says
+ * which format it is. */
+const MAX_COMBOS = 32;
+const COMBO_MEMBERS = 6;
+const LEGACY_COMBO_MEMBERS = 4;
+const LEGACY_COMBO_LAYER_ANY = 255;
+const COMBO_POSITION_UNUSED = 255;
+const COMBO_FLAG_ENABLED = 0x01;
+
+/** Enabled combos with at least one key, in list order (combo N is index N-1). */
+export function parseCombos(raw: string): LensCombo[] {
+  if (!raw.trim()) return [];
+  const nums = raw.trim().split(/\s+/).map(Number);
+  const count = nums[0];
+  if (!Number.isFinite(count) || count <= 0) return [];
+
+  const legacy = nums.length === 1 + MAX_COMBOS * (LEGACY_COMBO_MEMBERS + 3);
+  const members = legacy ? LEGACY_COMBO_MEMBERS : COMBO_MEMBERS;
+  const fields = members + 3;
+
+  const out: LensCombo[] = [];
+  for (let i = 0; i < count; i += 1) {
+    const base = 1 + i * fields;
+    if (base + fields > nums.length) break;
+    const positions = nums.slice(base, base + members).filter(p => p !== COMBO_POSITION_UNUSED);
+    const storedLayer = nums[base + members];
+    const flags = nums[base + members + 1];
+    const layer = legacy && storedLayer === LEGACY_COMBO_LAYER_ANY ? COMBO_LAYER_ANY : storedLayer;
+    // Disabled combos keep their slot so the numbering matches Bazecor's "C<n>".
+    // eslint-disable-next-line no-bitwise
+    out.push({ positions: flags & COMBO_FLAG_ENABLED ? positions : [], layer });
   }
   return out;
 }

@@ -18,6 +18,7 @@
  */
 
 import { KeyType } from "@Renderer/types/layout";
+import { preserveModifiers } from "@Renderer/utils/preserveModifiers";
 import BlankTable from "./db/blanks";
 import { LetterTable, ModifiedLetterTables } from "./db/letters";
 import DigitTable, { ModifiedDigitTables } from "./db/digits";
@@ -31,6 +32,7 @@ import MacrosTable from "./db/macros";
 import SuperKeyTable from "./db/superkeys";
 import TapDanceTable from "./db/tapdance";
 import { Battery, Bluetooth, Energy, RF, Overlay } from "./db/wireless";
+import { CapsWord } from "./db/autoshift";
 import NumpadTable, { ModifiedNumpadTables } from "./db/numpad";
 import FunctionKeyTable, { ModifiedFunctionKeyTables } from "./db/fxs";
 
@@ -53,7 +55,7 @@ import newLanguageLayout from "./languages/newLanguageLayout";
 import Store from "../../renderer/utils/Store";
 import getLanguage from "../../renderer/utils/language";
 import { BaseKeycodeTableType, KeymapCodeTableType, LanguageType } from "./types";
-import { preserveModifiers } from "@Renderer/utils/preserveModifiers";
+import { AUTOSHIFT_MAX_BASE, AUTOSHIFT_MIN_BASE, toAutoshift } from "../../hw/autoshift";
 
 const store = Store.getStore();
 
@@ -91,6 +93,7 @@ const defaultBaseKeyCodeTable: BaseKeycodeTableType[] = [
   Energy,
   RF,
   Overlay,
+  CapsWord,
   BlankTable,
 ];
 
@@ -163,6 +166,30 @@ class KeymapDB {
         this.keymapCodeTable[key.code] = value;
       }
     }
+
+    this.addAutoshiftCodes();
+  }
+
+  /* One entry per autoshiftable base key, derived from the table that was just
+   * built so the labels follow the selected layout. Autoshift has no picker
+   * group of its own -- these exist purely so a key already set to autoshift
+   * renders with its own character rather than as a raw "#54119". */
+  addAutoshiftCodes() {
+    for (let baseCode = AUTOSHIFT_MIN_BASE; baseCode <= AUTOSHIFT_MAX_BASE; baseCode += 1) {
+      const base = this.keymapCodeTable[baseCode];
+
+      if (base) {
+        this.keymapCodeTable[toAutoshift(baseCode)] = {
+          code: toAutoshift(baseCode),
+          labels: {
+            /* Keycaps are narrow: "AUTOSHIFT" overflows the key. */
+            top: "SHIFT",
+            primary: base.labels.primary,
+            verbose: `Autoshift ${base.labels.verbose ?? base.labels.primary}`,
+          },
+        };
+      }
+    }
   }
 
   parseModifs(keycode: number) {
@@ -186,7 +213,7 @@ class KeymapDB {
       case MouseWheelTable.keys.map(r => r.code).includes(keyCode):
       case MouseButtonTable.keys.map(r => r.code).includes(keyCode):
         // Regular keys KeyCode
-        return  { base: keyCode, modified: 0 };
+        return { base: keyCode, modified: 0 };
       case keyCode < 8192:
         // Regular key with Modifier KeyCode
         return { base: keyCode - modified, modified };

@@ -357,7 +357,8 @@ const English = {
       },
       layerLens: {
         title: "Layer Lens",
-        callOut:"Layer Lens is the on-screen overlay that shows your keyboard's active layer. 🔍 Assign these keys to control when it pops up.",
+        callOut:
+          "Layer Lens is the on-screen overlay that shows your keyboard's active layer. 🔍 Assign these keys to control when it pops up.",
         toggleLayerLens: "LENS TAP",
         toggleLayerLensDescription: "Tap to show Layer Lens, tap again to hide it.\n ",
         holdLayerLens: "LENS HOLD",
@@ -480,11 +481,39 @@ const English = {
       memoryUsage: {
         title: "Superkeys Memory Usage",
         errorTitle: "You exceeded the maximum capacity of Superkeys.",
-        errordBody:
-          "Please decrease the number of Superkeys until the Memory Usage indicator is no longer red.",
+        errordBody: "Please decrease the number of Superkeys until the Memory Usage indicator is no longer red.",
         alertTitle: "You are almost out of Superkeys",
-        alertBody:
-          "Everything will still work perfectly but consider deleting Superkeys you don't use to continue adding more.",
+        alertBody: "Everything will still work perfectly but consider deleting Superkeys you don't use to continue adding more.",
+      },
+    },
+    combos: {
+      add: "Add new combo",
+      newCombo: "New combo",
+      createModal: {
+        createNew: "Name your new combo",
+        rename: "Rename combo",
+        inputLabel: "Combo name",
+      },
+      deleteModal: {
+        title: "Delete combo",
+        body: "Are you sure you want to delete this combo? This action cannot be undone.",
+      },
+      memoryUsage: {
+        title: "Combos Memory Usage",
+        errorTitle: "You exceeded the maximum capacity of Combos.",
+        errordBody: "Please decrease the number of Combos until the Memory Usage indicator is no longer red.",
+        alertTitle: "You are almost out of Combos",
+        alertBody: "Everything will still work perfectly but consider deleting Combos you don't use to continue adding more.",
+      },
+      breakModal: {
+        title: "This key breaks a combo",
+        superkey: "Only Superkeys with TAP and HOLD actions, where HOLD is a modifier or a layer change, can be part of a combo.",
+        lens: "Lens keys cannot be part of a combo.",
+        affected: "These combos will stop working while this key is here:",
+        superkeyHint: "To keep the combo working, remove the complex Superkey from this position.",
+        lensHint: "To keep the combo working, remove the Lens key from this position.",
+        undo: "Undo change",
+        keep: "Keep it anyway",
       },
     },
     oldMacroModal: {
@@ -606,6 +635,29 @@ const English = {
   },
   keyboardSettings: {
     advanced: "Advanced",
+    autoshift: {
+      title: "Autoshift",
+      holdTimeout: "Hold time before the shifted character",
+      holdTimeoutTip:
+        "How long a key has to be held before it types its shifted character. Shorter feels faster but makes accidental capitals more likely.",
+    },
+    capsword: {
+      title: "CapsWord",
+      idleTimeout: "Turn off after inactivity",
+      idleTimeoutTip:
+        "CapsWord switches itself off after this long without typing, so it never stays on unnoticed. Set it to the minimum to disable the timeout entirely.",
+      idleDisabled: "Never",
+    },
+    combos: {
+      title: "Combos",
+      window: "How simultaneous a chord has to be",
+      windowTip:
+        "All the keys of a combo have to go down within this window. Shorter means fewer combos fire by accident while you type fast; longer means a combo is easier to hit deliberately. When one combo's keys are all part of a longer combo, the shorter one only fires once this window closes. Set up the combos themselves in the Combo Editor.",
+      idleTime: "Pause needed before a combo",
+      idleTimeTip:
+        "A combo only starts if you have not typed anything for this long, so rolling over keys while typing fast does not fire one by accident. Modifiers, layer keys and one-shot keys do not count as typing, so Ctrl or a layer key held right before a combo still works. Set it to Off to allow combos at any time.",
+      idleTimeDisabled: "Off",
+    },
     defaultLabel: "default",
     backupFolder: {
       header: "Backups Actions",

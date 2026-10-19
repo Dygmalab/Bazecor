@@ -1,5 +1,6 @@
 import { VirtualType } from "@Renderer/types/virtual";
 import aFN from "../arrayFillNum";
+import { virtualFeatures } from "./features";
 
 const Raise2ISO: VirtualType = {
   device: {
@@ -47,6 +48,7 @@ const Raise2ISO: VirtualType = {
     },
   },
   virtual: {
+    ...virtualFeatures,
     version: {
       data: "v1.0.0 7622bb53 c9d9b7b-dirty",
       eraseable: false,
@@ -228,7 +230,7 @@ const Raise2ISO: VirtualType = {
       eraseable: false,
     },
     help: {
-      data: "version\r\nkeymap.custom\r\nkeymap.default\r\nkeymap.onlyCustom\r\nsettings.defaultLayer\r\nsettings.valid?\r\nsettings.version\r\nsettings.crc\r\neeprom.contents\r\neeprom.free\r\nled.at\r\nled.setAll\r\nled.mode\r\nled.brightness\r\nled.theme\r\npalette\r\ncolormap.map\r\nidleleds.time_limit\r\nhardware.version\r\nhardware.side_power\r\nhardware.side_ver\r\nhardware.sled_ver\r\nhardware.sled_current\r\nhardware.layout\r\nhardware.joint\r\nhardware.keyscan\r\nhardware.crc_errors\r\nhardware.firmware\r\nhardware.chip_id\r\nqukeys.holdTimeout\r\nqukeys.overlapThreshold\r\nsuperkeys.map\r\nsuperkeys.waitfor\r\nsuperkeys.timeout\r\nsuperkeys.repeat\r\nsuperkeys.holdstart\r\nsuperkeys.overlap\r\nmacros.map\r\nmacros.trigger\r\nhelp\r\nmouse.speed\r\nmouse.speedDelay\r\nmouse.accelSpeed\r\nmouse.accelDelay\r\nmouse.wheelSpeed\r\nmouse.wheelDelay\r\nmouse.speedLimit\r\nlayer.activate\r\nlayer.deactivate\r\nlayer.isActive\r\nlayer.moveTo\r\nlayer.state",
+      data: "version\r\nkeymap.custom\r\nkeymap.default\r\nkeymap.onlyCustom\r\nsettings.defaultLayer\r\nsettings.valid?\r\nsettings.version\r\nsettings.crc\r\neeprom.contents\r\neeprom.free\r\nled.at\r\nled.setAll\r\nled.mode\r\nled.brightness\r\nled.theme\r\npalette\r\ncolormap.map\r\nidleleds.time_limit\r\nhardware.version\r\nhardware.side_power\r\nhardware.side_ver\r\nhardware.sled_ver\r\nhardware.sled_current\r\nhardware.layout\r\nhardware.joint\r\nhardware.keyscan\r\nhardware.crc_errors\r\nhardware.firmware\r\nhardware.chip_id\r\nqukeys.holdTimeout\r\nqukeys.overlapThreshold\r\nsuperkeys.map\r\nsuperkeys.waitfor\r\nsuperkeys.timeout\r\nsuperkeys.repeat\r\nsuperkeys.holdstart\r\nsuperkeys.overlap\r\nmacros.map\r\nmacros.trigger\r\nhelp\r\nmouse.speed\r\nmouse.speedDelay\r\nmouse.accelSpeed\r\nmouse.accelDelay\r\nmouse.wheelSpeed\r\nmouse.wheelDelay\r\nmouse.speedLimit\r\nlayer.activate\r\nlayer.deactivate\r\nlayer.isActive\r\nlayer.moveTo\r\nlayer.state\r\ncombos.map\r\ncombos.window\r\ncombos.idleTime\r\nautoshift.enabled\r\nautoshift.timeout\r\ncapsword.enabled\r\ncapsword.timeout\r\ncapsword.continuation",
       eraseable: false,
     },
     "mouse.speed": {

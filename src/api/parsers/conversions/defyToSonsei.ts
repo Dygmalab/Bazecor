@@ -148,3 +148,44 @@ const COLORMAP_INDEX_MAP = buildColormapIndexMap();
 export const convertColormapDefyToSonsei = (layer: number[]): number[] => {
   return COLORMAP_INDEX_MAP.map(defyLed => (defyLed === -1 ? 0 : layer[defyLed]));
 };
+
+// ── Sonsei → Defy ────────────────────────────────────────────────────────────
+// The same correspondence read the other way. Both maps above are one-to-one, so
+// inverting them is exact; the Defy keys and LEDs the Sonsei lacks (inner
+// columns, the lower thumb keys, the underglow) get the same fill values the
+// Defy → Sonsei direction uses.
+
+export const DEFY_KEYS_PER_LAYER = 5 * DEFY_COLS;
+export const DEFY_LEDS_PER_LAYER = 178;
+export const SONSEI_KEYS_PER_LAYER = 5 * SONSEI_COLS;
+export const SONSEI_LEDS_PER_LAYER = COLORMAP_INDEX_MAP.length;
+
+const invert = (map: number[], size: number): number[] => {
+  const inverse: number[] = new Array(size).fill(-1);
+  map.forEach((source, target) => {
+    if (source !== -1) inverse[source] = target;
+  });
+  return inverse;
+};
+
+const SONSEI_KEY_FOR_DEFY = invert(KEYMAP_INDEX_MAP, DEFY_KEYS_PER_LAYER);
+const SONSEI_LED_FOR_DEFY = invert(COLORMAP_INDEX_MAP, DEFY_LEDS_PER_LAYER);
+
+export const convertKeymapSonseiToDefy = (layer: number[]): number[] =>
+  SONSEI_KEY_FOR_DEFY.map(sonseiIdx => (sonseiIdx === -1 ? NO_KEY : layer[sonseiIdx]));
+
+export const convertColormapSonseiToDefy = (layer: number[]): number[] =>
+  SONSEI_LED_FOR_DEFY.map(sonseiLed => (sonseiLed === -1 ? 0 : layer[sonseiLed]));
+
+// Combo members are physical key offsets (KeyAddr::toInt()), the same index
+// space as a keymap layer, so they move with the keymap maps. null: the key has
+// no counterpart on the other board.
+export const convertKeyPositionDefyToSonsei = (position: number): number | null => {
+  const sonseiIdx = position >= 0 && position < DEFY_KEYS_PER_LAYER ? SONSEI_KEY_FOR_DEFY[position] : -1;
+  return sonseiIdx === -1 ? null : sonseiIdx;
+};
+
+export const convertKeyPositionSonseiToDefy = (position: number): number | null => {
+  const defyIdx = KEYMAP_INDEX_MAP[position] ?? -1;
+  return defyIdx === -1 ? null : defyIdx;
+};

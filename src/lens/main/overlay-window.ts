@@ -29,6 +29,30 @@ function getWin(): BrowserWindow | null {
   return LensOverlay.getWindow();
 }
 
+// ── Window opacity ────────────────────────────────────────────────────────────
+// BrowserWindow.setOpacity() only exists on Windows and macOS: on Linux it does
+// nothing and getOpacity() always reports 1, so the Opacity setting and the
+// show/hide fades had no effect there. On Linux the overlay page applies the
+// opacity to its own root element instead (the window is transparent, so the
+// result looks the same). Every opacity change in this file goes through these
+// two helpers.
+const NATIVE_WINDOW_OPACITY = process.platform !== "linux";
+// What the page was last told on Linux; a new window's page starts at 1.
+let pageOpacity = 1;
+
+function setWindowOpacity(win: BrowserWindow, v: number): void {
+  if (NATIVE_WINDOW_OPACITY) {
+    win.setOpacity(v);
+    return;
+  }
+  pageOpacity = v;
+  if (!win.isDestroyed()) win.webContents.send("lens:opacity", v);
+}
+
+function getWindowOpacity(win: BrowserWindow): number {
+  return NATIVE_WINDOW_OPACITY ? win.getOpacity() : pageOpacity;
+}
+
 // ── Overlay bounds persistence ────────────────────────────────────────────────
 // The overlay's position/size live in `overlayBounds` only for the session; on
 // app restart they'd reset to the centered default. Persist them (debounced on
@@ -147,7 +171,7 @@ export function applyOverlayMode(enabled: boolean): void {
   if (enabled) {
     normalBounds = win.getBounds();
     overlayLockedBounds = { ...(overlayBounds ?? normalBounds) };
-    win.setOpacity(settings.opacity);
+    setWindowOpacity(win, settings.opacity);
     // macOS: follow the user to whatever Space/full-screen app they're on, so
     // showing the overlay never switches Spaces. Joining a full-screen Space as
     // an auxiliary window only works while the window itself is not
@@ -159,7 +183,12 @@ export function applyOverlayMode(enabled: boolean): void {
     }
     win.setAlwaysOnTop(true, "screen-saver");
     // Resize Mode wanting mouse events means the window can't be click-through.
-    win.setIgnoreMouseEvents(!settings.resizeMode, { forward: true });
+    // No `forward: true`: nothing in the overlay reacts to the mouse while it is
+    // click-through (all hover/drag handling is Resize Mode only), and on Windows
+    // Electron forwards by installing a global low-level mouse hook on the main
+    // thread — every mouse event in the system then waits on Bazecor's main
+    // thread, so any busy moment there stutters every mouse.
+    win.setIgnoreMouseEvents(!settings.resizeMode);
     win.setResizable(false);
     win.removeListener("will-resize", preventOverlayResize);
     win.removeListener("resize", guardOverlayBounds);
@@ -179,7 +208,7 @@ export function applyOverlayMode(enabled: boolean): void {
     win.removeListener("resize", guardOverlayBounds);
     overlayBounds = win.getBounds();
     persistOverlayBounds();
-    win.setOpacity(1.0);
+    setWindowOpacity(win, 1.0);
     win.setAlwaysOnTop(false);
     if (process.platform === "darwin") {
       win.setVisibleOnAllWorkspaces(false, { skipTransformProcessType: true });
@@ -216,7 +245,7 @@ function fadeWindowOpacity(target: number, duration: number, onComplete?: () => 
   const win = getWin();
   if (!win) return;
   stopFade();
-  const start = win.getOpacity();
+  const start = getWindowOpacity(win);
   const startTime = Date.now();
   fadeTimer = setInterval(() => {
     const w = getWin();
@@ -225,7 +254,7 @@ function fadeWindowOpacity(target: number, duration: number, onComplete?: () => 
       return;
     }
     const t = Math.min(1, (Date.now() - startTime) / duration);
-    w.setOpacity(start + (target - start) * t);
+    setWindowOpacity(w, start + (target - start) * t);
     if (t >= 1) {
       stopFade();
       onComplete?.();
@@ -269,6 +298,7 @@ export function createOverlayWindow(onReady: () => void, showOnStart: boolean): 
   });
 
   LensOverlay.setWindow(w);
+  pageOpacity = 1;
   w.loadURL(LENS_WINDOW_WEBPACK_ENTRY);
 
   w.once("ready-to-show", () => {
@@ -282,6 +312,14 @@ export function createOverlayWindow(onReady: () => void, showOnStart: boolean): 
   });
 
   w.webContents.setVisualZoomLevelLimits(1, 1);
+
+  // Linux: a page (re)load starts back at opacity 1, so hand it the current
+  // value again — see setWindowOpacity().
+  if (!NATIVE_WINDOW_OPACITY) {
+    w.webContents.on("did-finish-load", () => {
+      if (!w.isDestroyed()) w.webContents.send("lens:opacity", pageOpacity);
+    });
+  }
 
   // Fires on app quit (and any other path that closes the window without going
   // through destroyOverlayWindow(), which persists explicitly before destroy()).
@@ -344,7 +382,7 @@ export function showOverlay(fadeDelayMs = 0): void {
   if (settings.overlayMode && !overlayStyleApplied) applyOverlayMode(true);
   const target = overlayStyleApplied ? settings.opacity : 1.0;
   stopFade();
-  win.setOpacity(0);
+  setWindowOpacity(win, 0);
   if (overlayStyleApplied) win.showInactive();
   else win.show();
   if (fadeDelayMs <= 0) {
@@ -370,7 +408,8 @@ export function hideOverlay(): void {
 }
 
 export function applyOpacityLive(v: number): void {
-  if (overlayStyleApplied) getWin()?.setOpacity(v);
+  const win = getWin();
+  if (win && overlayStyleApplied) setWindowOpacity(win, v);
 }
 
 /** Resize Mode makes the overlay's resize/move surface active, so it stops
@@ -379,7 +418,8 @@ export function applyOpacityLive(v: number): void {
 export function applyResizeModeLive(v: boolean): void {
   const win = getWin();
   if (!win || !overlayStyleApplied) return;
-  win.setIgnoreMouseEvents(!v, { forward: true });
+  // No `forward: true`, see applyOverlayMode().
+  win.setIgnoreMouseEvents(!v);
   win.webContents
     .executeJavaScript(v ? `document.body.classList.add('resize-mode');` : `document.body.classList.remove('resize-mode');`)
     .catch(() => {});

@@ -1,5 +1,6 @@
 import { EventEmitter } from "events";
 import log from "electron-log/main";
+import { usb, type Device as UsbDevice } from "usb";
 import {
   OVERLAY_MAGIC_BYTE,
   OVERLAY_PACKET_SIZE,
@@ -31,7 +32,8 @@ interface NodeHidDevice {
 }
 
 interface NodeHidModule {
-  devices(): HidDeviceInfo[];
+  devices(vendorId?: number, productId?: number): HidDeviceInfo[];
+  devicesAsync?(vendorId: number, productId: number): Promise<HidDeviceInfo[]>;
   HID: new (path: string, options?: { nonExclusive: boolean }) => NodeHidDevice;
 }
 
@@ -71,7 +73,35 @@ type RawHidEvents = {
   "permission-denied": [];
 };
 
-const SCAN_INTERVAL_MS = 2000;
+// HID enumeration is not free, and running an unfiltered one every 2s made
+// users' mice (USB and Bluetooth alike) stutter while Lens was on:
+//   * Windows: hidapi opens every HID collection on the system and asks each
+//     one for its manufacturer/product/serial strings — real requests to the
+//     device, over the air for Bluetooth ones.
+//   * macOS: an unfiltered IOHIDManager match makes IOKit build a device
+//     reference for every HID service, mice and keyboards included.
+//   * Linux (hidraw): only sysfs/udev reads, no device traffic.
+// So enumeration is filtered to Dygma's vendor ID — on Windows every other
+// device then only gets a cached attributes lookup, on macOS the vendor ID goes
+// into the IOKit matching dictionary so nothing else is touched at all — and it
+// runs off the main thread.
+//
+// It is also event-driven, and never runs while a board is open: on Windows even
+// the filtered enumeration still asks the Dygma board itself for its strings,
+// which must not happen periodically while the user is typing on it. A scan
+// runs on USB hotplug, on the open board's "error" (unplug), on system resume
+// and when Bazecor saves a backup for a board other than the one open. Polling
+// only remains while no board is open, as the way to notice one that connects
+// over Bluetooth, which raises no USB event.
+const IDLE_SCAN_INTERVAL_MS = 3000;
+// No board open, but Dygma collections enumerate (firmware without Lens, or an
+// open that failed, e.g. macOS Input Monitoring). Each scan touches that board,
+// so retry only occasionally; a firmware update re-enumerates it anyway.
+const UNUSABLE_SCAN_INTERVAL_MS = 30000;
+// The HID collections appear a moment after the USB attach (longer on the first
+// plug, while Windows installs the driver), so rescan a few times.
+const HOTPLUG_RESCAN_DELAYS_MS = [300, 1500, 4000];
+const LENS_VENDOR_IDS = [...new Set(LENS_PRODUCTS.map(p => p.vendorId))];
 
 const DEBOUNCE_MS: Record<number, number> = {
   0x00: 80, // RELEASE
@@ -101,6 +131,22 @@ export class RawHidListener extends EventEmitter<RawHidEvents> {
 
   private scanTimer: ReturnType<typeof setTimeout> | null = null;
 
+  private hotplugTimers: ReturnType<typeof setTimeout>[] = [];
+
+  private hotplugAttached = false;
+
+  // Between startWithRetry() and stop(). Checked after the enumeration await in
+  // scan() so a scan still running when Lens is turned off can't reopen the board.
+  private watching = false;
+
+  private scanInFlight: Promise<void> | null = null;
+
+  private rescanQueued = false;
+
+  // The last enumeration found Dygma collections (usable or not). Sets the idle
+  // poll cadence, see UNUSABLE_SCAN_INTERVAL_MS.
+  private dygmaPresent = false;
+
   private lastEventTime: Record<string, number> = {};
 
   private enumLogged = false;
@@ -118,8 +164,8 @@ export class RawHidListener extends EventEmitter<RawHidEvents> {
   private activeProduct: LensProduct | null = null;
 
   // Set while Bazecor is flashing firmware. The board reboots into (and out of)
-  // its bootloader during that window, so both our open HID handle and the 2s
-  // HID.devices() enumeration have to get out of the way — see suspend().
+  // its bootloader during that window, so both our open HID handle and the
+  // periodic HID enumeration have to get out of the way — see suspend().
   private suspended = false;
 
   // Debounces per (source, eventType) pair so bouncy/duplicate packets from a
@@ -166,11 +212,42 @@ export class RawHidListener extends EventEmitter<RawHidEvents> {
     }
   }
 
-  /** Begin watching; keeps scanning on an interval until stop(). */
+  /** Begin watching; keeps scanning (on USB hotplug and on an interval) until stop(). */
   startWithRetry(): void {
-    this.scan()
-      .catch(err => log.warn("[Lens/HID] Initial scan() failed:", err))
-      .finally(() => this.scheduleScan());
+    this.watching = true;
+    this.attachHotplug();
+    this.scanNow();
+  }
+
+  private onUsbHotplug = (device: UsbDevice): void => {
+    if (!LENS_VENDOR_IDS.includes(device.deviceDescriptor?.idVendor)) return;
+    this.clearHotplugTimers();
+    this.hotplugTimers = HOTPLUG_RESCAN_DELAYS_MS.map(ms => setTimeout(() => this.scanNow(), ms));
+  };
+
+  private attachHotplug(): void {
+    if (this.hotplugAttached) return;
+    try {
+      usb.on("attach", this.onUsbHotplug);
+      usb.on("detach", this.onUsbHotplug);
+      this.hotplugAttached = true;
+    } catch (err) {
+      // Polling still finds the board, just not as quickly.
+      log.warn("[Lens/HID] USB hotplug events unavailable, relying on polling:", err);
+    }
+  }
+
+  private detachHotplug(): void {
+    this.clearHotplugTimers();
+    if (!this.hotplugAttached) return;
+    this.hotplugAttached = false;
+    usb.off("attach", this.onUsbHotplug);
+    usb.off("detach", this.onUsbHotplug);
+  }
+
+  private clearHotplugTimers(): void {
+    this.hotplugTimers.forEach(t => clearTimeout(t));
+    this.hotplugTimers = [];
   }
 
   /**
@@ -179,8 +256,8 @@ export class RawHidListener extends EventEmitter<RawHidEvents> {
    * Flashing power-cycles the Neuron and its keyscanner sides, and the flasher
    * drives the board over its serial/CDC interface on the same composite USB
    * device we hold a HID handle on. Keeping that handle open — and re-enumerating
-   * every device with node-hid's blocking HID.devices() every 2s while the board
-   * is dropping off and re-appearing on the bus — is enough to stall the flash
+   * HID devices while the board is dropping off and re-appearing on the bus — is
+   * enough to stall the flash
    * (it hangs waiting on a keyscanner response that never arrives). So we close
    * the handle and park the scan loop entirely until resume().
    */
@@ -192,6 +269,7 @@ export class RawHidListener extends EventEmitter<RawHidEvents> {
       clearTimeout(this.scanTimer);
       this.scanTimer = null;
     }
+    this.clearHotplugTimers();
     this.closeDevice();
     // Forget everything: after a flash the board re-enumerates on a new HID path,
     // so a stale `seen` entry would keep us from treating it as newly connected.
@@ -210,24 +288,62 @@ export class RawHidListener extends EventEmitter<RawHidEvents> {
     this.startWithRetry();
   }
 
-  // scan() can throw past its own try/catches — e.g. a listener registered on
-  // "connected"/"active-changed" (overlay-controller.ts) throwing synchronously
-  // during setActive(). Previously that rejected this callback before reaching
-  // scheduleScan() below, and since scanTimer was already nulled, the polling
-  // loop died silently and permanently — no more layer-change/overlay events,
-  // ever, until the app restarted. Always reschedule regardless of outcome.
-  private scheduleScan(): void {
-    if (this.scanTimer || this.suspended) return;
-    this.scanTimer = setTimeout(async () => {
-      this.scanTimer = null;
-      try {
-        await this.scan();
-      } catch (err) {
-        log.warn("[Lens/HID] scan() failed, will retry:", err);
-      } finally {
+  /** Re-checks the connected boards now, e.g. when Bazecor talks to a board other
+   * than the one open. No-op while stopped or suspended. */
+  rescan(): void {
+    if (!this.watching || this.suspended) return;
+    this.scanNow();
+  }
+
+  /**
+   * Runs one scan, never two at once (enumeration is async): a request arriving
+   * mid-scan queues a single follow-up. Every scan, whatever triggered it,
+   * re-arms the poll timer at the cadence its outcome calls for.
+   *
+   * scan() can throw past its own try/catches — e.g. a listener registered on
+   * "connected"/"active-changed" (overlay-controller.ts) throwing synchronously
+   * during setActive(). That once killed the polling loop silently and for good
+   * (no more layer-change/overlay events until the app restarted), so the timer
+   * is re-armed regardless of outcome.
+   */
+  private scanNow(): void {
+    if (this.scanInFlight) {
+      this.rescanQueued = true;
+      return;
+    }
+    this.scanInFlight = this.scan()
+      .catch(err => log.warn("[Lens/HID] scan() failed, will retry:", err))
+      .finally(() => {
+        this.scanInFlight = null;
+        if (this.rescanQueued) {
+          this.rescanQueued = false;
+          this.scanNow();
+          return;
+        }
         this.scheduleScan();
-      }
-    }, SCAN_INTERVAL_MS);
+      });
+  }
+
+  private scheduleScan(): void {
+    if (this.scanTimer) {
+      clearTimeout(this.scanTimer);
+      this.scanTimer = null;
+    }
+    // A board is open: no polling at all, see the note on IDLE_SCAN_INTERVAL_MS.
+    if (this.suspended || !this.watching || this.device) return;
+    const delay = this.dygmaPresent ? UNUSABLE_SCAN_INTERVAL_MS : IDLE_SCAN_INTERVAL_MS;
+    this.scanTimer = setTimeout(() => {
+      this.scanTimer = null;
+      this.scanNow();
+    }, delay);
+  }
+
+  /** Every HID collection carrying a supported vendor ID. */
+  private static async enumerate(HID: NodeHidModule): Promise<HidDeviceInfo[]> {
+    const lists = await Promise.all(
+      LENS_VENDOR_IDS.map(vid => (HID.devicesAsync ? HID.devicesAsync(vid, 0) : Promise.resolve(HID.devices(vid, 0)))),
+    );
+    return lists.flat();
   }
 
   /**
@@ -274,11 +390,14 @@ export class RawHidListener extends EventEmitter<RawHidEvents> {
 
     let devices: HidDeviceInfo[];
     try {
-      devices = HID.devices();
+      devices = await RawHidListener.enumerate(HID);
     } catch (err) {
       log.warn("[Lens/HID] devices() enumeration failed:", err);
       return;
     }
+    // Lens may have been turned off, or a flash started, while we waited.
+    if (this.suspended || !this.watching) return;
+    this.dygmaPresent = devices.length > 0;
 
     this.logDygmaEnumOnce(devices);
     const matches = this.matchSupportedDevices(devices);
@@ -396,10 +515,9 @@ export class RawHidListener extends EventEmitter<RawHidEvents> {
     this.running = false;
     this.emit("disconnected");
     // Re-evaluate immediately: another board may still be connected, or the same
-    // one may re-enumerate. Fire-and-forget, but never leave it unhandled — this
-    // is called from a "device error" event, exactly the moment a listener
-    // downstream is most likely to hit unexpected state.
-    this.scan().catch(err => log.warn("[Lens/HID] Re-scan after device error failed:", err));
+    // one may re-enumerate. With nothing open any more, this also restarts the
+    // idle poll.
+    this.scanNow();
   }
 
   private closeDevice(): void {
@@ -446,7 +564,7 @@ export class RawHidListener extends EventEmitter<RawHidEvents> {
     const dygma = RawHidListener.describeDygmaDevices(devices);
     log.info(
       `[Lens/HID] No supported keyboard found (want usagePage=0xff00). ` +
-        `Enumerated ${devices.length} HID devices, ${dygma.length} with a Dygma VID: ${JSON.stringify(dygma)}`,
+        `Enumerated ${dygma.length} HID collections with a Dygma VID: ${JSON.stringify(dygma)}`,
     );
   }
 
@@ -487,6 +605,10 @@ export class RawHidListener extends EventEmitter<RawHidEvents> {
 
   stop(): void {
     this.running = false;
+    this.watching = false;
+    this.rescanQueued = false;
+    this.dygmaPresent = false;
+    this.detachHotplug();
     // Re-log the one-shot diagnostics next time the listener runs, so a user who
     // toggles Lens off and on gets a fresh enumeration dump instead of silence.
     this.dygmaEnumLogged = false;
