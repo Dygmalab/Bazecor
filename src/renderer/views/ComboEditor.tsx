@@ -27,7 +27,7 @@ import { Button } from "@Renderer/components/atoms/Button";
 import Heading from "@Renderer/components/atoms/Heading";
 import LogoLoader from "@Renderer/components/atoms/loader/LogoLoader";
 import ToastMessage from "@Renderer/components/atoms/ToastMessage";
-import { IconClose, IconDelete, IconPlus } from "@Renderer/components/atoms/icons";
+import { IconClose, IconPlus } from "@Renderer/components/atoms/icons";
 import Callout from "@Renderer/components/molecules/Callout/Callout";
 import ListModifier from "@Renderer/components/molecules/ListModifiers/ListModifiers";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@Renderer/components/atoms/Select";
@@ -42,6 +42,7 @@ import getLanguage from "@Renderer/utils/language";
 import { KeymapType, KeyType, PaletteType, SegmentedKeyType } from "@Renderer/types/layout";
 import { Neuron } from "@Renderer/types/neurons";
 import { MacrosType } from "@Renderer/types/macros";
+import { SuperkeysType } from "@Renderer/types/superkeys";
 import {
   COMBO_FLAG_ENABLED,
   COMBO_POSITION_UNUSED,
@@ -55,6 +56,7 @@ import {
 import { KeymapDB } from "../../api/keymap";
 import Backup from "../../api/backup";
 import {
+  comboBreakReason,
   comboMembers,
   duplicateComboIndex,
   emptyCombo,
@@ -63,7 +65,7 @@ import {
   parseCombosRaw,
   serializeCombos,
 } from "../../api/parsers/combos";
-import { parseColormapRaw, parseKeymapRaw, parseMacrosRaw, parsePaletteRaw } from "../../api/parsers";
+import { parseColormapRaw, parseKeymapRaw, parseMacrosRaw, parsePaletteRaw, parseSuperkeysRaw } from "../../api/parsers";
 
 const store = Store.getStore();
 const bkp = new Backup();
@@ -113,6 +115,9 @@ function ComboEditor(props: ComboEditorProps) {
   const [colormaps, setColormaps] = useState<number[][]>([]);
   const [layerNames, setLayerNames] = useState<string[]>([]);
   const [macros, setMacros] = useState<MacrosType[]>([]);
+  /* Only to tell complex superkeys, which cannot be a combo member, from the
+   * ones the firmware runs as Qukeys, which can. See comboBreakReason(). */
+  const [superkeys, setSuperkeys] = useState<SuperkeysType[]>([]);
   const [isWireless, setIsWireless] = useState(false);
   const [deviceName, setDeviceName] = useState("");
   const [neuronID, setNeuronID] = useState("");
@@ -179,6 +184,9 @@ function ComboEditor(props: ComboEditorProps) {
        * neuron store, as in the Macro Editor. */
       const macrosRaw = (await currentDevice.command("macros.map")) as string;
       setMacros(macrosRaw ? parseMacrosRaw(macrosRaw, neuron?.macros ?? []) : []);
+
+      const superkeysRaw = (await currentDevice.command("superkeys.map")) as string;
+      setSuperkeys(superkeysRaw ? parseSuperkeysRaw(superkeysRaw, neuron?.superkeys ?? []) : []);
 
       const keymapRaw = (await currentDevice.command("keymap.custom")) as string;
       const keymapDefault = (await currentDevice.command("keymap.default")) as string;
@@ -339,6 +347,22 @@ function ComboEditor(props: ComboEditorProps) {
     setPickTarget(null);
   };
 
+  /* Empties the combo -- its keys and its result -- but keeps it where it is,
+   * with its name and layer, and arms the first slot so the next click on the
+   * board starts rebuilding it. Deleting the combo itself is the selector's
+   * job, next to its name. */
+  const clearCombo = () => {
+    const current = combos[selected];
+    if (!current) return;
+    updateCombo(selected, {
+      ...current,
+      positions: new Array<number>(MAX_COMBO_MEMBERS).fill(COMBO_POSITION_UNUSED),
+      action: 0,
+    });
+    setOpenSlots(0);
+    setPickTarget({ kind: "member", slot: 0 });
+  };
+
   const renameCombo = (name: string) => {
     const combo = combos[selected];
     if (!combo) return;
@@ -406,32 +430,6 @@ function ComboEditor(props: ComboEditorProps) {
     if (pickTarget?.kind === "member" && pickTarget.slot >= slot) setPickTarget(null);
   };
 
-  const onKeyboardKeySelect = (event: React.MouseEvent<Element>) => {
-    if (!pickTarget || pickTarget.kind !== "member") return;
-
-    const { currentTarget } = event;
-    const keyIndex = parseInt(currentTarget.getAttribute("data-key-index"), 10);
-    if (Number.isNaN(keyIndex)) return;
-
-    const combo = combos[selected];
-    if (!combo) return;
-
-    const positions = combo.positions.slice();
-
-    /* The same key twice in one combo would never be satisfiable. */
-    if (positions.includes(keyIndex)) return;
-
-    positions[pickTarget.slot] = keyIndex;
-    updateCombo(selected, { ...combo, positions });
-
-    /* Advance to the next slot instead of clearing the selection: a combo is
-     * several keys, and picking them is one continuous gesture. Stops at the
-     * last slot rather than wrapping, so a two-key combo does not quietly
-     * re-arm the slot the user just filled. */
-    const nextSlot = pickTarget.slot + 1;
-    setPickTarget(nextSlot < visibleSlots ? { kind: "member", slot: nextSlot } : null);
-  };
-
   const onActionKeySelect = (keyCode: number) => {
     const combo = combos[selected];
     if (!combo) return;
@@ -469,6 +467,47 @@ function ComboEditor(props: ComboEditorProps) {
   }, [keymap, comboLayer]);
 
   const colormap = colormaps[comboLayer - customOffset] ?? colormaps[0] ?? [];
+
+  /* Keys of this layer holding a complex superkey: the firmware can't use one
+   * as a combo member (the superkey takes the key over), so the board doesn't
+   * offer them while a slot is being picked. Superkeys that run as Qukeys
+   * (TAP + a modifier or layer on HOLD) are fine and stay selectable. */
+  const blockedPositions = useMemo(() => {
+    const blocked = new Set<number>();
+    layerData.forEach((key, position) => {
+      if (key && comboBreakReason(key.keyCode, superkeys) === "superkey") blocked.add(position);
+    });
+    return blocked;
+  }, [layerData, superkeys]);
+
+  const onKeyboardKeySelect = (event: React.MouseEvent<Element>) => {
+    if (!pickTarget || pickTarget.kind !== "member") return;
+
+    const { currentTarget } = event;
+    const keyIndex = parseInt(currentTarget.getAttribute("data-key-index"), 10);
+    if (Number.isNaN(keyIndex)) return;
+
+    const current = combos[selected];
+    if (!current) return;
+
+    const positions = current.positions.slice();
+
+    /* The same key twice in one combo would never be satisfiable. */
+    if (positions.includes(keyIndex)) return;
+    /* The board already takes no clicks on these; this covers anything that
+     * gets past the styling. */
+    if (blockedPositions.has(keyIndex)) return;
+
+    positions[pickTarget.slot] = keyIndex;
+    updateCombo(selected, { ...current, positions });
+
+    /* Advance to the next slot instead of clearing the selection: a combo is
+     * several keys, and picking them is one continuous gesture. Stops at the
+     * last slot rather than wrapping, so a two-key combo does not quietly
+     * re-arm the slot the user just filled. */
+    const nextSlot = pickTarget.slot + 1;
+    setPickTarget(nextSlot < visibleSlots ? { kind: "member", slot: nextSlot } : null);
+  };
 
   const labelForPosition = (position: number): string => {
     if (position === COMBO_POSITION_UNUSED || !layerData[position]) return "";
@@ -513,6 +552,16 @@ function ComboEditor(props: ComboEditorProps) {
       `.comboEditor .comboKeyboard.comboPicking .keyItem:hover { opacity: 1; }`,
       `.comboEditor .comboKeyboard.comboIdle .keyItem, .comboEditor .comboKeyboard.comboIdle #neuronWrapper { opacity: 0.4; }`,
     ];
+    /* Complex superkeys: greyed out and unclickable while picking. Before the
+     * member rules, so a combo that already holds one (saved before this check
+     * existed) still shows that key lit. */
+    if (picking) {
+      blockedPositions.forEach(position => {
+        rules.push(
+          `.comboEditor .comboKeyboard.comboPicking .keyItem[data-key-index="${position}"] { opacity: 0.15; pointer-events: none; }`,
+        );
+      });
+    }
     own.forEach(position => {
       const key = `.comboEditor .comboKeyboard .keyItem[data-key-index="${position}"]`;
       rules.push(
@@ -524,7 +573,7 @@ function ComboEditor(props: ComboEditorProps) {
       );
     });
     return rules.join("\n");
-  }, [pickTarget, combos, selected]);
+  }, [pickTarget, combos, selected, blockedPositions]);
 
   const KeyboardComponent = state.currentDevice?.device?.components?.keymap as React.FC<any> | undefined;
 
@@ -610,7 +659,7 @@ function ComboEditor(props: ComboEditorProps) {
       {/* ---------------------------------------------------------------- */}
       {combo ? (
         <div className="mt-6 rounded-regular bg-gray-25/50 dark:bg-gray-400/15 p-4">
-          {/* Equal side columns keep the slot row centred whatever the Delete
+          {/* Equal side columns keep the slot row centred whatever the Clear
            * button on the right measures. */}
           <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-3">
             <div className="justify-self-start">
@@ -702,9 +751,11 @@ function ComboEditor(props: ComboEditorProps) {
               </Button>
             </div>
 
-            <div className="justify-self-end">
-              <Button variant="config" size="sm" onClick={() => deleteCombo(selected)}>
-                <IconDelete size="sm" /> Delete
+            {/* Right after the result rather than at the far edge, so it reads
+             * as part of the combo it clears. */}
+            <div className="justify-self-start ml-6">
+              <Button variant="config" size="sm" className="gap-2" onClick={clearCombo}>
+                <IconClose /> Clear
               </Button>
             </div>
           </div>
@@ -775,6 +826,12 @@ function ComboEditor(props: ComboEditorProps) {
               This combo only works on layer {combo ? layerLabel(combo.layer) : ""}, shown below. It uses where the keys sit on
               the keyboard, not what they type.
             </p>
+            {pickTarget?.kind === "member" && blockedPositions.size > 0 && (
+              <p className="mb-2 text-center text-ssm text-gray-400 dark:text-gray-300">
+                Keys holding a superkey are greyed out: a superkey can&apos;t be part of a combo, unless it only has TAP and a
+                modifier or layer on HOLD.
+              </p>
+            )}
             {KeyboardComponent && layerData.length > 0 ? (
               <div
                 className={`comboKeyboard LayerHolder ${pickTarget?.kind === "member" ? "comboPicking" : "comboIdle pointer-events-none"}`}

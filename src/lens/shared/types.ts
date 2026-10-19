@@ -77,7 +77,7 @@ export interface LensStoreState extends LensSettings {
   /** Saved overlay window bounds (updated on move/resize/close). */
   overlayBounds?: OverlayBounds;
   /** Whether the overlay was on screen the last time the user deliberately
-   * showed or hid it (Lens key TAP, Ctrl+Alt+L, tray). Restored on the next
+   * showed or hid it (Lens key TAP, tray). Restored on the next
    * launch so Lens never reappears after the user hid it. Undefined on a fresh
    * install, which counts as "show it once Lens gets enabled". */
   overlayShown?: boolean;

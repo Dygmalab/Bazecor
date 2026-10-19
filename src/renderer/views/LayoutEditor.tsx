@@ -62,6 +62,7 @@ import BlankTable from "../../api/keymap/db/blanks";
 import Keymap, { KeymapDB } from "../../api/keymap";
 import { rgb2w } from "../../api/color";
 import Backup from "../../api/backup";
+import { confirmBox } from "../utils/messageBox";
 import {
   convertColormapRtoR2,
   convertKeymapRtoR2,
@@ -386,10 +387,13 @@ const LayoutEditor = (props: LayoutEditorProps) => {
         ) {
           result = false;
         } else {
-          // TODO: replacethis with proper popup
-          // eslint-disable-next-line no-alert
-          result = window.confirm(
-            "A new Neuron was detected and new settings need to be created. The names of the layers, macros and Superkeys are empty. If you want to copy the names of your default Neuron (first in the list) click ‘Ok’. If you prefer to reset all names click ‘Cancel’.",
+          // Not window.confirm: it leaves the window without keyboard focus on
+          // Windows, so the name fields of the editors stopped taking input.
+          // Every new virtual keyboard comes through here (a new chip id).
+          result = await confirmBox(
+            "A new Neuron was detected and new settings need to be created. The names of the layers, macros and Superkeys are empty. Do you want to copy the names of your default Neuron (first in the list), or start with all names empty?",
+            "Copy names",
+            "Start empty",
           );
         }
         // var result = await userAction;

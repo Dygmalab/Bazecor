@@ -6,6 +6,7 @@ declare global {
       onModel(cb: (m: KeyboardModel) => void): () => void;
       onActiveLayer(cb: (l: number) => void): () => void;
       onSettings(cb: (s: LensSettings) => void): () => void;
+      onOpacity(cb: (v: number) => void): () => void;
       getState(): Promise<LensState>;
       getSettings(): Promise<LensSettings>;
       setOpacity(v: number): Promise<LensSettings>;

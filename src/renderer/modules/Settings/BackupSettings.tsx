@@ -41,6 +41,7 @@ import { BackupType } from "@Renderer/types/backups";
 import { VirtualType } from "@Renderer/types/virtual";
 import Banner from "@Renderer/components/atoms/Banner";
 import Backup from "../../../api/backup";
+import { alertBox } from "../../utils/messageBox";
 
 const store = Store.getStore();
 
@@ -118,7 +119,8 @@ const BackupSettings = (props: BackupSettingsProps) => {
     if (backupProduct === connectedProduct) return true;
     const raiseFamily = ["Raise", "Raise2"];
     if (raiseFamily.includes(backupProduct) && raiseFamily.includes(connectedProduct)) return true;
-    if (backupProduct === "Defy" && connectedProduct === "Sonsei") return true;
+    const defySonsei = ["Defy", "Sonsei"];
+    if (defySonsei.includes(backupProduct) && defySonsei.includes(connectedProduct)) return true;
     return false;
   };
 
@@ -180,7 +182,7 @@ const BackupSettings = (props: BackupSettingsProps) => {
         }
       } catch (e) {
         log.error(e);
-        alert("The file is not a valid global backup");
+        await alertBox("The file is not a valid global backup");
       }
     } else {
       log.info("user closed SaveDialog");

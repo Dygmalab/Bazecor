@@ -67,6 +67,7 @@ import LogoLoader from "@Renderer/components/atoms/loader/LogoLoader";
 import { Neuron } from "@Renderer/types/neurons";
 import Backup from "../../api/backup";
 import { delay } from "../../api/flash/delay";
+import { confirmBox } from "../utils/messageBox";
 
 const store = Store.getStore();
 
@@ -649,8 +650,8 @@ const Preferences = (props: PreferencesProps) => {
     applyNeurons(neuronsToChangeName);
   };
 
-  const deleteNeuron = (toDelete: number) => {
-    const result = window.confirm(i18n.keyboardSettings.neuronManager.deleteNeuron);
+  const deleteNeuron = async (toDelete: number) => {
+    const result = await confirmBox(i18n.keyboardSettings.neuronManager.deleteNeuron);
     if (result) {
       const newNeurons = JSON.parse(JSON.stringify(preferencesState.neurons));
       newNeurons.splice(toDelete, 1);

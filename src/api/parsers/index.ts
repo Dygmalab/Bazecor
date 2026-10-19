@@ -12,12 +12,30 @@ import {
   overlappingComboIndexes,
   isLegacyCombosReply,
   comboMembers,
+  remapComboPositions,
 } from "./combos";
 
 // Converters
 import { convertKeymapRtoR2, convertColormapRtoR2, convertPaletteRtoR2 } from "./conversions/raiseToRaise2";
-import { convertKeymapR2toR, convertColormapR2toR, convertPaletteR2toR } from "./conversions/raise2ToRaise";
-import { convertKeymapDefyToSonsei, convertColormapDefyToSonsei } from "./conversions/defyToSonsei";
+import {
+  convertKeymapR2toR,
+  convertColormapR2toR,
+  convertPaletteR2toR,
+  stripRaise2OnlyKeys,
+  stripRaise2OnlySuperkeyActions,
+} from "./conversions/raise2ToRaise";
+import {
+  convertKeymapDefyToSonsei,
+  convertColormapDefyToSonsei,
+  convertKeymapSonseiToDefy,
+  convertColormapSonseiToDefy,
+  convertKeyPositionDefyToSonsei,
+  convertKeyPositionSonseiToDefy,
+  DEFY_KEYS_PER_LAYER,
+  DEFY_LEDS_PER_LAYER,
+  SONSEI_KEYS_PER_LAYER,
+  SONSEI_LEDS_PER_LAYER,
+} from "./conversions/defyToSonsei";
 
 export {
   parseKeymapRaw,
@@ -35,12 +53,23 @@ export {
   overlappingComboIndexes,
   isLegacyCombosReply,
   comboMembers,
+  remapComboPositions,
   convertKeymapRtoR2,
   convertColormapRtoR2,
   convertPaletteRtoR2,
   convertKeymapR2toR,
   convertColormapR2toR,
   convertPaletteR2toR,
+  stripRaise2OnlyKeys,
+  stripRaise2OnlySuperkeyActions,
   convertKeymapDefyToSonsei,
   convertColormapDefyToSonsei,
+  convertKeymapSonseiToDefy,
+  convertColormapSonseiToDefy,
+  convertKeyPositionDefyToSonsei,
+  convertKeyPositionSonseiToDefy,
+  DEFY_KEYS_PER_LAYER,
+  DEFY_LEDS_PER_LAYER,
+  SONSEI_KEYS_PER_LAYER,
+  SONSEI_LEDS_PER_LAYER,
 };

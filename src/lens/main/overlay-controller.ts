@@ -1,6 +1,5 @@
-import { dialog, globalShortcut, powerMonitor, shell } from "electron";
+import { dialog, powerMonitor, shell } from "electron";
 import log from "electron-log/main";
-import GlobalRecording from "../../main/managers/GlobalRecording";
 import type { KeyboardModel, LensSettings, LensState } from "../shared/types";
 import {
   OVERLAY_EVENT_TAP,
@@ -45,7 +44,6 @@ import {
 // Long enough to cover a slow repaint, still under the delay that would make the
 // auto-show feel like it lags behind the layer key.
 const LAYER_PAINT_SETTLE_MS = 230;
-const TOGGLE_SHORTCUT = "CommandOrControl+Alt+L";
 // Upper bound on a firmware flash. If the renderer never sends the matching
 // "flashing finished" (crash, reload, an abort path we don't cover), Lens comes
 // back on its own rather than staying dead until the app restarts.
@@ -58,9 +56,9 @@ class OverlayController {
 
   private enabled = false;
 
-  // Master on/off the user can flip with the shortcut without disabling the
-  // whole feature: while inactive the window stays hidden and HID overlay
-  // gestures are ignored (mirrors standalone Lens's overlayActive flag).
+  // Master switch for the Lens key gestures, separate from the feature toggle:
+  // while inactive the window stays hidden and HID overlay gestures are ignored
+  // (mirrors standalone Lens's overlayActive flag).
   private overlayActive = false;
 
   private currentModel: KeyboardModel | null = null;
@@ -85,7 +83,7 @@ class OverlayController {
 
   private hidPermissionDenied = false;
 
-  // Shown at most once per enable so the 2s HID retry loop can't spam dialogs.
+  // Shown at most once per enable so the HID retry loop can't spam dialogs.
   private permissionDialogShown = false;
 
   private flashing = false;
@@ -152,7 +150,6 @@ class OverlayController {
         broadcastSettings(getLensSettings());
       }, showOnStart);
     }
-    this.registerShortcut();
     this.checkMacosPermission();
     // Enabling Lens in the middle of a firmware update must not re-open the
     // keyboard; setFlashing(false) starts the listener once the flash is done.
@@ -163,7 +160,6 @@ class OverlayController {
     if (!this.enabled) return;
     this.enabled = false;
     log.info("[Lens] Disabling overlay");
-    globalShortcut.unregister(TOGGLE_SHORTCUT);
     this.clearLayerChangeHideTimer();
     this.holdKeyActive = false;
     this.layerAutoShowActive = false;
@@ -240,7 +236,6 @@ class OverlayController {
 
   /** Called on app quit. */
   shutdown(): void {
-    globalShortcut.unregister(TOGGLE_SHORTCUT);
     this.clearFlashingWatchdog();
     this.clearLayerChangeHideTimer();
     stopFade();
@@ -336,11 +331,14 @@ class OverlayController {
     log.info(`[Lens] backup for ${product} -> adopting as active board`);
     this.currentProduct = product;
     this.reloadModel();
+    // The listener never polls while a board is open, so a second board that
+    // came up over Bluetooth (no USB hotplug event) is only noticed here.
+    if (this.enabled && !this.flashing && this.hid.getActiveProduct() !== product) this.hid.rescan();
   }
 
-  /** Tray "Toggle Layer Lens" and the Ctrl+Alt+L shortcut. Deliberately the same
-   * behaviour as the Lens key's own TAP (onOverlayTapAction) — the two are the
-   * user's two ways of saying "show/hide it now" and must stay interchangeable. */
+  /** Tray "Toggle Layer Lens". Deliberately the same behaviour as the Lens key's
+   * own TAP (onOverlayTapAction) — the two are the user's two ways of saying
+   * "show/hide it now" and must stay interchangeable. */
   toggleOverlay(): void {
     if (!this.enabled || !overlayAlive()) return;
     this.clearLayerChangeHideTimer();
@@ -360,7 +358,7 @@ class OverlayController {
   }
 
   /**
-   * Applies an explicit user show/hide (Lens key TAP, Ctrl+Alt+L, tray, Resize
+   * Applies an explicit user show/hide (Lens key TAP, tray, Resize
    * Mode): remembers the choice so the next launch restores it, and defers the
    * reveal while there's no keyboard model to draw — the overlay floats over
    * everything, so the "Waiting for Bazecor…" placeholder must never be what
@@ -391,15 +389,6 @@ class OverlayController {
     this.setUserVisible(true);
   }
 
-  private registerShortcut(): void {
-    if (globalShortcut.isRegistered(TOGGLE_SHORTCUT)) return;
-    globalShortcut.register(TOGGLE_SHORTCUT, () => {
-      // Don't fire while a macro is being recorded (uiohook is capturing keys).
-      if (GlobalRecording.getInstance().getRecording()) return;
-      this.toggleOverlay();
-    });
-  }
-
   private wireHidEvents(): void {
     if (this.hidWired) return;
     this.hidWired = true;
@@ -407,10 +396,14 @@ class OverlayController {
     // A laptop suspend/resume (most likely while Lens sits hidden for a long
     // stretch — exactly when nobody notices) typically drops and re-enumerates
     // USB HID devices at the OS level. The scan loop would eventually pick the
-    // board back up on its own next 2s tick, but force an immediate rescan on
-    // resume anyway so overlay/layer-change events aren't left dead for even
-    // one extra cycle right when the user comes back.
+    // board back up on its own, but force an immediate rescan on resume anyway
+    // so overlay/layer-change events aren't left dead for even one extra cycle
+    // right when the user comes back.
+    //
+    // This handler outlives disable() (events are wired once), so it must not
+    // restart a listener the user turned off, nor touch the bus mid-flash.
     powerMonitor.on("resume", () => {
+      if (!this.enabled || this.flashing) return;
       log.info("[Lens/HID] System resumed from sleep — forcing a rescan");
       this.hid.startWithRetry();
     });

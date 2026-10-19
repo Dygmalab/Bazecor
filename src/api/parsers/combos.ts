@@ -92,6 +92,50 @@ export const upgradeLegacyCombosReply = (raw: string): string => {
   return out.join(" ");
 };
 
+/**
+ * Moves every combo member of a `combos.map` reply to another keyboard's key
+ * positions, for restoring a backup onto a different board (Defy <-> Sonsei).
+ * `mapPosition` returns null for a key the target does not have; a combo with
+ * such a member cannot keep its meaning, so its keys are cleared rather than
+ * leaving a combo that fires on the wrong keys, or on keys that do not exist.
+ * The record stays in place -- layer, action and the name stored with the
+ * neuron included -- so the user can reassign its keys in the editor.
+ *
+ * Works on both record sizes, so a legacy reply is still legacy afterwards and
+ * adaptCombosToDevice() can upgrade it as usual. Anything unrecognised is
+ * returned untouched.
+ */
+export const remapComboPositions = (raw: string, mapPosition: (position: number) => number | null): string => {
+  if (!raw || raw.trim().length === 0) return raw;
+
+  const values = toNumbers(raw);
+  const fieldsPerCombo = (values.length - 1) / MAX_COMBOS;
+  if (fieldsPerCombo !== FIELDS_PER_COMBO && fieldsPerCombo !== LEGACY_FIELDS_PER_COMBO) {
+    log.warn("[Combos] unrecognised combos.map reply, restoring it unconverted");
+    return raw;
+  }
+  const members = fieldsPerCombo - 3;
+
+  const out = values.slice();
+  for (let i = 0; i < MAX_COMBOS; i += 1) {
+    const base = 1 + i * fieldsPerCombo;
+    const mapped = values
+      .slice(base, base + members)
+      .map(position => (position === COMBO_POSITION_UNUSED ? position : mapPosition(position)));
+
+    if (mapped.some(position => position === null)) {
+      log.info(`[Combos] combo ${i} uses a key the target keyboard does not have; clearing its keys`);
+      out.fill(COMBO_POSITION_UNUSED, base, base + members);
+    } else {
+      mapped.forEach((position, m) => {
+        out[base + m] = position as number;
+      });
+    }
+  }
+
+  return out.join(" ");
+};
+
 export const emptyCombo = (id = 0, name = "", layer = 0): ComboType => ({
   id,
   name,

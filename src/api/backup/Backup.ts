@@ -5,6 +5,7 @@ import log from "electron-log/renderer";
 import { Neuron } from "@Renderer/types/neurons";
 import { BackupType } from "@Renderer/types/backups";
 import { VirtualType } from "@Renderer/types/virtual";
+import { PaletteType } from "@Renderer/types/layout";
 import Store from "../../renderer/utils/Store";
 import Device from "../comms/Device";
 import {
@@ -16,9 +17,20 @@ import {
   convertPaletteRtoR2,
   convertKeymapDefyToSonsei,
   convertColormapDefyToSonsei,
+  convertKeymapSonseiToDefy,
+  convertColormapSonseiToDefy,
+  convertKeyPositionDefyToSonsei,
+  convertKeyPositionSonseiToDefy,
+  DEFY_KEYS_PER_LAYER,
+  DEFY_LEDS_PER_LAYER,
+  SONSEI_KEYS_PER_LAYER,
+  SONSEI_LEDS_PER_LAYER,
   parseColormapRaw,
   parseKeymapRaw,
   parsePaletteRaw,
+  remapComboPositions,
+  stripRaise2OnlyKeys,
+  stripRaise2OnlySuperkeyActions,
 } from "../parsers";
 import { isLegacyCombosReply, upgradeLegacyCombosReply } from "../parsers/combos";
 import { rgb2w } from "../color";
@@ -29,6 +41,74 @@ const glob = require(`glob`);
 const store = Store.getStore();
 
 type BackupCmd = { command: string; data: string };
+
+// Backed up even when `help` does not list it (see Commands below).
+const UNLISTED_BACKUP_COMMANDS = ["led.brightnessUG"];
+
+type ConversionSpec = {
+  from: string;
+  to: string;
+  sourceKeys: number;
+  sourceLeds: number;
+  sourceRGBW: boolean;
+  keymap: (layer: number[]) => number[];
+  colormap: (layer: number[]) => number[];
+  palette: (color: PaletteType) => number[];
+  keyPosition: (position: number) => number | null;
+};
+
+const DEFY_TO_SONSEI: ConversionSpec = {
+  from: "Defy",
+  to: "Sonsei",
+  sourceKeys: DEFY_KEYS_PER_LAYER,
+  sourceLeds: DEFY_LEDS_PER_LAYER,
+  sourceRGBW: true,
+  keymap: convertKeymapDefyToSonsei,
+  colormap: convertColormapDefyToSonsei,
+  palette: color => {
+    const rgb = convertPaletteR2toR(color);
+    return [rgb.r, rgb.g, rgb.b];
+  },
+  keyPosition: convertKeyPositionDefyToSonsei,
+};
+
+const SONSEI_TO_DEFY: ConversionSpec = {
+  from: "Sonsei",
+  to: "Defy",
+  sourceKeys: SONSEI_KEYS_PER_LAYER,
+  sourceLeds: SONSEI_LEDS_PER_LAYER,
+  sourceRGBW: false,
+  keymap: convertKeymapSonseiToDefy,
+  colormap: convertColormapSonseiToDefy,
+  palette: color => {
+    const rgbw = rgb2w(color);
+    return [rgbw.r, rgbw.g, rgbw.b, rgbw.w];
+  },
+  keyPosition: convertKeyPositionSonseiToDefy,
+};
+
+const DEFY_SONSEI_CONVERSIONS = [DEFY_TO_SONSEI, SONSEI_TO_DEFY];
+
+const findDefySonseiConversion = (from: string | undefined, to: string | undefined) =>
+  DEFY_SONSEI_CONVERSIONS.find(c => c.from === from && c.to === to);
+
+/** Rewrites one command's data for the target board, or returns it untouched
+ * when the command carries nothing layout-specific. */
+const convertDefySonseiCommand = (spec: ConversionSpec, command: string, data: string): string => {
+  const join = (values: number[]) => values.map(v => v.toString()).join(" ");
+  switch (command) {
+    case "keymap.custom":
+      return join(parseKeymapRaw(data, spec.sourceKeys).flatMap(layer => spec.keymap(layer)));
+    case "colormap.map":
+      return join(parseColormapRaw(data, spec.sourceLeds).flatMap(layer => spec.colormap(layer)));
+    case "palette":
+      return join(parsePaletteRaw(data, spec.sourceRGBW).flatMap(color => spec.palette(color)));
+    case "combos.map":
+      return remapComboPositions(data, spec.keyPosition);
+    default:
+      return data;
+  }
+};
 
 export default class Backup {
   neurons: Neuron[];
@@ -79,8 +159,14 @@ export default class Backup {
       "combos.state",
     ];
     const commands = await device.command("help");
-    const validCommands = commands.split(/\r?\n/).filter(c => !notRequired.some(v => c.includes(v)));
-    if (!validCommands.includes("led.brightnessUG")) validCommands.push("led.brightnessUG");
+    // A blank line in `help` used to end up in every backup as an empty command.
+    const validCommands = commands
+      .split(/\r?\n/)
+      .filter(c => c.trim().length > 0)
+      .filter(c => !notRequired.some(v => c.includes(v)));
+    UNLISTED_BACKUP_COMMANDS.forEach(c => {
+      if (!validCommands.includes(c)) validCommands.push(c);
+    });
     return validCommands;
   }
 
@@ -233,13 +319,20 @@ export default class Backup {
       localNeurons[index].id = neuronID;
       store.set("neurons", localNeurons);
     }
-    log.info("Checking if statement:", device.device.info.product === "Raise2", backup.neuron.device.info.product === "Raise");
-    if (device.device.info.product === "Raise2" && backup.neuron.device.info.product === "Raise")
-      data = Backup.convertRaiseToRaise2(backup, device);
-    if (device.device.info.product === "Raise" && backup.neuron.device.info.product === "Raise2")
-      data = Backup.convertRaise2ToRaise(backup, device);
-    if (device.device.info.product === "Sonsei" && backup.neuron.device.info.product === "Defy")
-      data = Backup.convertDefyToSonsei(backup, device);
+    const targetProduct = device.device.info.product;
+    const sourceProduct = backup.neuron?.device?.info?.product;
+    log.info(`Restoring a ${sourceProduct ?? "unknown"} backup onto a ${targetProduct}`);
+    if (targetProduct === "Raise2" && sourceProduct === "Raise") data = Backup.convertRaiseToRaise2(backup, device);
+    if (targetProduct === "Raise" && sourceProduct === "Raise2") data = Backup.convertRaise2ToRaise(backup, device);
+    if (targetProduct === "Sonsei" && sourceProduct === "Defy") data = Backup.convertDefyToSonsei(backup, device);
+    if (targetProduct === "Defy" && sourceProduct === "Sonsei") data = Backup.convertSonseiToDefy(backup, device);
+    // A command the keyboard does not know may never be answered, and a request
+    // that times out leaves its reply callback queued in Device, shifting every
+    // later reply onto the wrong command -- so the rest of the restore silently
+    // goes wrong. Another board's backup carries some (the Defy's wireless.rf.*
+    // on a Sonsei), so only send what the target lists in `help`.
+    if (sourceProduct && sourceProduct !== targetProduct) data = await Backup.keepSupportedCommands(data, device);
+    data = data.filter(c => typeof c.command === "string" && c.command.trim().length > 0);
     // Reorder to ensure superkeys are restored before keymap
     try {
       const keymapIdx = data.findIndex((c: BackupCmd) => typeof c.command === "string" && c.command === "keymap.custom");
@@ -310,13 +403,22 @@ export default class Backup {
         const needsRaiseConversion =
           (virtualProduct === "Raise" && deviceProduct === "Raise2") ||
           (virtualProduct === "Raise2" && deviceProduct === "Raise");
-        const needsDefySonseiConversion = virtualProduct === "Defy" && deviceProduct === "Sonsei";
+        const defySonseiConversion = findDefySonseiConversion(virtualProduct, deviceProduct);
+        // Same reason as in restoreBackup: never send another board's commands
+        // the target does not know.
+        const supported = virtualProduct !== deviceProduct ? await Backup.supportedCommands(device) : null;
 
         for (const command in data) {
-          if (data[command].eraseable === true) {
+          if (supported && !supported.has(command)) {
+            log.info(`Skipping ${command}: not supported by the connected keyboard`);
+          } else if (data[command].eraseable === true) {
             // eslint-disable-next-line no-await-in-loop
             if (!(command.includes("wireless") || command.includes("led"))) {
               let commandData = data[command].data.trim();
+
+              if (command === "superkeys.map" && virtualProduct === "Raise2" && deviceProduct === "Raise") {
+                commandData = stripRaise2OnlySuperkeyActions(commandData);
+              }
 
               // Convert keymap, colormap and palette between Raise and Raise2
               if (needsRaiseConversion) {
@@ -333,7 +435,9 @@ export default class Backup {
                       .map(k => k.toString())
                       .join(" ");
                   } else if (virtualProduct === "Raise2" && deviceProduct === "Raise") {
-                    const keymapFinal = custom.map((layer: number[]) => convertKeymapR2toR(layer, keyboardType));
+                    const keymapFinal = custom.map((layer: number[]) =>
+                      stripRaise2OnlyKeys(convertKeymapR2toR(layer, keyboardType)),
+                    );
                     commandData = keymapFinal
                       .flat()
                       .map(k => k.toString())
@@ -381,33 +485,9 @@ export default class Backup {
                 }
               }
 
-              // Convert keymap/colormap/palette between Defy and Sonsei
-              if (needsDefySonseiConversion) {
-                if (command === "keymap.custom") {
-                  const keyLayerSize = 80;
-                  const custom = parseKeymapRaw(commandData, keyLayerSize);
-                  const keymapFinal = custom.map((layer: number[]) => convertKeymapDefyToSonsei(layer));
-                  commandData = keymapFinal
-                    .flat()
-                    .map(k => k.toString())
-                    .join(" ");
-                } else if (command === "colormap.map") {
-                  const colorLayerSize = virtual.device.keyboardUnderglow.rows * virtual.device.keyboardUnderglow.columns;
-                  const colormap = parseColormapRaw(commandData, colorLayerSize);
-                  const colormapFinal = colormap.map((layer: number[]) => convertColormapDefyToSonsei(layer));
-                  commandData = colormapFinal
-                    .flat()
-                    .map(k => k.toString())
-                    .join(" ");
-                } else if (command === "palette") {
-                  // Defy uses RGBW, Sonsei uses RGB
-                  const palette = parsePaletteRaw(commandData, true);
-                  const paletteFinal = palette.map(color => [color.r, color.g, color.b]);
-                  commandData = paletteFinal
-                    .flat()
-                    .map(v => v.toString())
-                    .join(" ");
-                }
+              // Convert keymap/colormap/palette/combos between Defy and Sonsei
+              if (defySonseiConversion) {
+                commandData = convertDefySonseiCommand(defySonseiConversion, command, commandData);
               }
 
               log.warn(`Going to send ${command} to keyboard`);
@@ -488,43 +568,56 @@ export default class Backup {
     return adapted;
   };
 
-  static convertDefyToSonsei = (backup: BackupType, dev: Device) => {
-    log.info("converting Defy Backup to Sonsei");
-    const defyKeyLayerSize = 80;
-    const defyColorLayerSize = 178;
+  /** The commands `device` lists in `help`, or null when they can't be read. */
+  static supportedCommands = async (device: Device): Promise<Set<string> | null> => {
+    let help: string | undefined;
+    try {
+      help = await device.command("help");
+    } catch (error) {
+      log.warn("Could not read the keyboard's command list", error);
+      return null;
+    }
+    const supported = new Set(
+      String(help ?? "")
+        .split(/\r?\n/)
+        .map(c => c.trim())
+        .filter(c => c.length > 0),
+    );
+    if (supported.size === 0) return null;
+    UNLISTED_BACKUP_COMMANDS.forEach(c => supported.add(c));
+    return supported;
+  };
 
+  /**
+   * Drops the commands `device` does not list in `help`. Keeps everything when
+   * `help` can't be read, rather than restoring nothing.
+   */
+  static keepSupportedCommands = async (data: BackupCmd[], device: Device): Promise<BackupCmd[]> => {
+    const supported = await Backup.supportedCommands(device);
+    if (!supported) return data;
+    return data.filter(c => {
+      if (supported.has(c.command)) return true;
+      log.info(`Skipping ${c.command}: not supported by the connected keyboard`);
+      return false;
+    });
+  };
+
+  /** Moves a Defy <-> Sonsei backup onto the other board's layout: keymap,
+   * colormap, palette (RGBW vs RGB) and combo key positions. */
+  private static convertDefySonsei = (backup: BackupType, dev: Device, spec: ConversionSpec) => {
+    log.info(`converting ${spec.from} Backup to ${spec.to}`);
     const localBackup: BackupType = JSON.parse(JSON.stringify(backup));
     localBackup.neuron.device = dev.device;
-
-    const keymapIndex = localBackup.backup.findIndex(c => c.command === "keymap.custom");
-    const paletteIndex = localBackup.backup.findIndex(c => c.command === "palette");
-    const colormapIndex = localBackup.backup.findIndex(c => c.command === "colormap.map");
-
-    const custom = parseKeymapRaw(localBackup.backup[keymapIndex].data, defyKeyLayerSize);
-    const colormap = parseColormapRaw(localBackup.backup[colormapIndex].data, defyColorLayerSize);
-    const palette = parsePaletteRaw(localBackup.backup[paletteIndex].data, true);
-
-    const keymapFinal = custom.map((layer: number[]) => convertKeymapDefyToSonsei(layer));
-    const colormapFinal = colormap.map((layer: number[]) => convertColormapDefyToSonsei(layer));
-    const paletteFinal = palette.map(color => convertPaletteR2toR(color));
-
-    localBackup.backup[colormapIndex].data = colormapFinal
-      .flat()
-      .map(k => k.toString())
-      .join(" ");
-    localBackup.backup[keymapIndex].data = keymapFinal
-      .flat()
-      .map(k => k.toString())
-      .join(" ");
-    localBackup.backup[paletteIndex].data = paletteFinal
-      .map(color => [color.r, color.g, color.b])
-      .flat()
-      .map(v => v.toString())
-      .join(" ");
-
+    localBackup.backup = localBackup.backup.map(c =>
+      typeof c.data === "string" ? { ...c, data: convertDefySonseiCommand(spec, c.command, c.data) } : c,
+    );
     log.info("Final Backup:", localBackup.backup);
     return localBackup.backup;
   };
+
+  static convertDefyToSonsei = (backup: BackupType, dev: Device) => Backup.convertDefySonsei(backup, dev, DEFY_TO_SONSEI);
+
+  static convertSonseiToDefy = (backup: BackupType, dev: Device) => Backup.convertDefySonsei(backup, dev, SONSEI_TO_DEFY);
 
   static convertRaiseToRaise2 = (backup: BackupType, dev: Device) => {
     log.info("converting Raise Backup to Raise2");
@@ -586,11 +679,19 @@ export default class Backup {
     const palette = parsePaletteRaw(localBackup.backup[paletteIndex].data, true);
     const colormap = parseColormapRaw(localBackup.backup[colormapIndex].data, colorLayerSize);
 
-    const keymapFinal = custom.map((layer: number[]) => convertKeymapR2toR(layer, dev.device.info.keyboardType));
+    // The Raise 1 firmware lacks Lens, Autoshift, CapsWord and the wireless keys.
+    const keymapFinal = custom.map((layer: number[]) =>
+      stripRaise2OnlyKeys(convertKeymapR2toR(layer, dev.device.info.keyboardType)),
+    );
     const colormapFinal = colormap.map((layer: number[]) =>
       convertColormapR2toR(layer, dev.device.info.keyboardType, backup.neuron.device.info.keyboardType),
     );
     const paletteFinal = palette.map(color => convertPaletteR2toR(color));
+
+    const superkeysIndex = localBackup.backup.findIndex(c => c.command === "superkeys.map");
+    if (superkeysIndex > -1 && typeof localBackup.backup[superkeysIndex].data === "string") {
+      localBackup.backup[superkeysIndex].data = stripRaise2OnlySuperkeyActions(localBackup.backup[superkeysIndex].data);
+    }
 
     localBackup.backup[colormapIndex].data = colormapFinal
       .flat()
