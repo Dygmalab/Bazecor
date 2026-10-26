@@ -214,7 +214,7 @@ const FUNCTION: Record<number, FunctionIconName> = {
   20866: "sleep",
 };
 
-export { layoutOverrides, shiftOverrides, altGrOverrides, symbolOverrides } from "./layouts";
+export { layoutOverrides, symbolOverrides } from "./layouts";
 export type { SymbolOverrides } from "./layouts";
 
 // Layer key codes — verified against Bazecor src/api/keymap/db/layerswitch.tsx
@@ -272,11 +272,6 @@ const AUTOSHIFT_MAX = 54370;
 /* eslint-disable no-bitwise -- decoding firmware keycodes is inherently bit-mask work */
 // Modifier flag bits per Bazecor's withModifiers() offsets (db/utils.ts):
 // Control +256, Alt +512, AltGr +1024, Shift +2048, OS +4096.
-// Plain Shift, and the two combos Bazecor's language tables give real symbols to:
-// AltGr alone (base 1024) and Ctrl+Alt (base 768), its Windows equivalent.
-const SHIFT_MOD_FLAG = 0x08;
-const ALTGR_MOD_FLAGS = [0x04, 0x03];
-
 function modBitsToArray(modByte: number): string[] {
   const mods: string[] = [];
   if (modByte & 0x01) mods.push("Ctrl");
@@ -294,9 +289,9 @@ export function superkeyIndex(code: number): number | null {
 
 /** Tap-label for a plain HID code inside a compound key (dual-use, key+modifier). */
 function baseLabelFor(code: number, layout: Record<number, string>): string {
-  if (layout[code]) return layout[code];
-  if (BASE[code] !== undefined) return BASE[code];
   const twoLine = TWO_LINE[code];
+  if (layout[code]) return twoLine ? `${twoLine[0]} ${layout[code]}` : layout[code];
+  if (BASE[code] !== undefined) return BASE[code];
   if (twoLine) return twoLine[1] ? `${twoLine[0]} ${twoLine[1]}` : twoLine[0];
   return "";
 }
@@ -352,13 +347,17 @@ export function decodeKey(
   layout: Record<number, string> = {},
   layerNames: string[] = [],
   macroNames: string[] = [],
-  symbols: SymbolOverrides = { shift: null, altGr: null },
+  symbols: SymbolOverrides = {},
 ): DecodedKey {
   if (code === 0) return { primary: "NO", subtitle: "KEY", hold: "" };
   if (code === 1 || code === 65535) return { primary: "TRANS", hold: "" };
-  if (layout[code]) return { primary: layout[code], hold: "" };
-  if (BASE[code] !== undefined) return { primary: BASE[code], hold: "" };
   const twoLine = TWO_LINE[code];
+  if (layout[code]) {
+    // A language relabelling a key Bazecor tags (de-DE's numpad decimal is
+    // "Num" over ",") keeps the tag and swaps only the label under it.
+    return twoLine ? { primary: twoLine[0], subtitle: layout[code], hold: "" } : { primary: layout[code], hold: "" };
+  }
+  if (BASE[code] !== undefined) return { primary: BASE[code], hold: "" };
   if (twoLine) return twoLine[1] ? { primary: twoLine[0], subtitle: twoLine[1], hold: "" } : { primary: twoLine[0], hold: "" };
   if (ONE_SHOT_MOD[code]) return { primary: ONE_SHOT_MOD[code], hold: "1shot" };
   if (FUNCTION[code]) return { primary: "", hold: "", icon: FUNCTION[code] };
@@ -392,22 +391,11 @@ export function decodeKey(
   const modFlags = (code >> 8) & 0xff;
   const baseCode = code & 0xff;
   if (modFlags !== 0) {
-    // Shift alone on a symbol-row key produces a specific character — show
-    // that character, not the unshifted key + a "S" chip (see shiftOverrides
-    // in layouts.ts for why this is scoped to plain Shift only, not Ctrl/Alt/
-    // AltGr/OS combos, which really are shortcuts and should keep showing the
-    // chip — and why it's null instead of guessing on layouts with no
-    // transcribed shift table yet).
-    if (modFlags === SHIFT_MOD_FLAG && symbols.shift?.[baseCode]) {
-      return { primary: symbols.shift[baseCode], hold: "" };
-    }
-    // AltGr (and its Ctrl+Alt equivalent) on a Spanish layout likewise produces a
-    // specific character — "@", "€", "{" — which Bazecor's key picker shows bare,
-    // with no "AGr+" tag. Same scoping rule as Shift above: only these two exact
-    // combos, never AltGr stacked with Shift/OS, which really are shortcuts.
-    if (ALTGR_MOD_FLAGS.includes(modFlags) && symbols.altGr?.[baseCode]) {
-      return { primary: symbols.altGr[baseCode], hold: "" };
-    }
+    // A combo the layout gives a real character to (Shift+2 → '"' on es-ES,
+    // AltGr+E → "€") shows that character bare, as Bazecor's key picker does —
+    // see symbolOverrides in layouts.ts. Every other combo really is a
+    // shortcut, and keeps the base key + modifier chips.
+    if (symbols[code]) return { primary: symbols[code], hold: "" };
     const baseLabel = baseLabelFor(baseCode, layout);
     if (baseLabel) return { primary: baseLabel, hold: "", modifiers: modBitsToArray(modFlags) };
   }
