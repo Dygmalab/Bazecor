@@ -49,9 +49,11 @@ type ConversionSpec = {
   from: string;
   to: string;
   sourceKeys: number;
+  targetKeys: number;
   sourceLeds: number;
   sourceRGBW: boolean;
-  keymap: (layer: number[]) => number[];
+  // currentLayer: the same layer as it is now on the target board, for the keys the source lacks
+  keymap: (layer: number[], currentLayer?: number[]) => number[];
   colormap: (layer: number[]) => number[];
   palette: (color: PaletteType) => number[];
   keyPosition: (position: number) => number | null;
@@ -61,6 +63,7 @@ const DEFY_TO_SONSEI: ConversionSpec = {
   from: "Defy",
   to: "Sonsei",
   sourceKeys: DEFY_KEYS_PER_LAYER,
+  targetKeys: SONSEI_KEYS_PER_LAYER,
   sourceLeds: DEFY_LEDS_PER_LAYER,
   sourceRGBW: true,
   keymap: convertKeymapDefyToSonsei,
@@ -76,6 +79,7 @@ const SONSEI_TO_DEFY: ConversionSpec = {
   from: "Sonsei",
   to: "Defy",
   sourceKeys: SONSEI_KEYS_PER_LAYER,
+  targetKeys: DEFY_KEYS_PER_LAYER,
   sourceLeds: SONSEI_LEDS_PER_LAYER,
   sourceRGBW: false,
   keymap: convertKeymapSonseiToDefy,
@@ -93,12 +97,18 @@ const findDefySonseiConversion = (from: string | undefined, to: string | undefin
   DEFY_SONSEI_CONVERSIONS.find(c => c.from === from && c.to === to);
 
 /** Rewrites one command's data for the target board, or returns it untouched
- * when the command carries nothing layout-specific. */
-const convertDefySonseiCommand = (spec: ConversionSpec, command: string, data: string): string => {
+ * when the command carries nothing layout-specific. `currentKeymap` is the
+ * target's keymap before the restore, see readTargetKeymap. */
+const convertDefySonseiCommand = (
+  spec: ConversionSpec,
+  command: string,
+  data: string,
+  currentKeymap?: number[][],
+): string => {
   const join = (values: number[]) => values.map(v => v.toString()).join(" ");
   switch (command) {
     case "keymap.custom":
-      return join(parseKeymapRaw(data, spec.sourceKeys).flatMap(layer => spec.keymap(layer)));
+      return join(parseKeymapRaw(data, spec.sourceKeys).flatMap((layer, i) => spec.keymap(layer, currentKeymap?.[i])));
     case "colormap.map":
       return join(parseColormapRaw(data, spec.sourceLeds).flatMap(layer => spec.colormap(layer)));
     case "palette":
@@ -324,8 +334,8 @@ export default class Backup {
     log.info(`Restoring a ${sourceProduct ?? "unknown"} backup onto a ${targetProduct}`);
     if (targetProduct === "Raise2" && sourceProduct === "Raise") data = Backup.convertRaiseToRaise2(backup, device);
     if (targetProduct === "Raise" && sourceProduct === "Raise2") data = Backup.convertRaise2ToRaise(backup, device);
-    if (targetProduct === "Sonsei" && sourceProduct === "Defy") data = Backup.convertDefyToSonsei(backup, device);
-    if (targetProduct === "Defy" && sourceProduct === "Sonsei") data = Backup.convertSonseiToDefy(backup, device);
+    if (targetProduct === "Sonsei" && sourceProduct === "Defy") data = await Backup.convertDefyToSonsei(backup, device);
+    if (targetProduct === "Defy" && sourceProduct === "Sonsei") data = await Backup.convertSonseiToDefy(backup, device);
     // A command the keyboard does not know may never be answered, and a request
     // that times out leaves its reply callback queued in Device, shifting every
     // later reply onto the wrong command -- so the rest of the restore silently
@@ -407,6 +417,7 @@ export default class Backup {
         // Same reason as in restoreBackup: never send another board's commands
         // the target does not know.
         const supported = virtualProduct !== deviceProduct ? await Backup.supportedCommands(device) : null;
+        const currentKeymap = defySonseiConversion ? await Backup.readTargetKeymap(device, defySonseiConversion) : undefined;
 
         for (const command in data) {
           if (supported && !supported.has(command)) {
@@ -487,7 +498,7 @@ export default class Backup {
 
               // Convert keymap/colormap/palette/combos between Defy and Sonsei
               if (defySonseiConversion) {
-                commandData = convertDefySonseiCommand(defySonseiConversion, command, commandData);
+                commandData = convertDefySonseiCommand(defySonseiConversion, command, commandData, currentKeymap);
               }
 
               log.warn(`Going to send ${command} to keyboard`);
@@ -602,14 +613,28 @@ export default class Backup {
     });
   };
 
+  /** The keymap on `dev` before the restore, split into layers of the target
+   * board's size, so the keys the source board lacks keep their current value
+   * instead of turning transparent. Undefined when it can't be read. */
+  private static readTargetKeymap = async (dev: Device, spec: ConversionSpec): Promise<number[][] | undefined> => {
+    try {
+      const raw = (await dev.noCacheCommand("keymap.custom")) as string;
+      return raw ? parseKeymapRaw(raw, spec.targetKeys) : undefined;
+    } catch (error) {
+      log.warn(`Could not read the ${spec.to} keymap; keys the ${spec.from} lacks will be transparent`, error);
+      return undefined;
+    }
+  };
+
   /** Moves a Defy <-> Sonsei backup onto the other board's layout: keymap,
    * colormap, palette (RGBW vs RGB) and combo key positions. */
-  private static convertDefySonsei = (backup: BackupType, dev: Device, spec: ConversionSpec) => {
+  private static convertDefySonsei = async (backup: BackupType, dev: Device, spec: ConversionSpec) => {
     log.info(`converting ${spec.from} Backup to ${spec.to}`);
+    const currentKeymap = await Backup.readTargetKeymap(dev, spec);
     const localBackup: BackupType = JSON.parse(JSON.stringify(backup));
     localBackup.neuron.device = dev.device;
     localBackup.backup = localBackup.backup.map(c =>
-      typeof c.data === "string" ? { ...c, data: convertDefySonseiCommand(spec, c.command, c.data) } : c,
+      typeof c.data === "string" ? { ...c, data: convertDefySonseiCommand(spec, c.command, c.data, currentKeymap) } : c,
     );
     log.info("Final Backup:", localBackup.backup);
     return localBackup.backup;

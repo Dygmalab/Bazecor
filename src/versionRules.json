@@ -1,0 +1,41 @@
+{
+  "firmwareDropdown": {
+    "description": "Firmware versions offered in the FW update dropdown, as semver ranges per product. The rule used is the one with the highest fromBazecor that is <= the running Bazecor version. A product missing from a rule shows every version. Custom firmware is never filtered.",
+    "rules": [
+      {
+        "fromBazecor": "0.0.0",
+        "ranges": {
+          "Defy": "<3.0.0",
+          "Raise2": "<3.0.0",
+          "Sonsei": "<3.0.0"
+        }
+      },
+      {
+        "fromBazecor": "1.12.0",
+        "ranges": {
+          "Defy": ">=3.0.0 <4.0.0",
+          "Raise2": ">=2.0.0 <3.0.0",
+          "Sonsei": ">=2.0.0 <3.0.0"
+        }
+      }
+    ]
+  },
+  "features": {
+    "sk20": {
+      "description": "Superkeys 2.0: Bazecor shows the SK 2.0 UI instead of the legacy dual-function/superkeys UI.",
+      "minFirmware": {
+        "Defy": "2.2.0",
+        "Raise2": "1.4.0",
+        "Sonsei": "0.0.0"
+      }
+    },
+    "lens": {
+      "description": "Layer Lens: needs the firmware to report overlay/layer packets over raw HID. Raise never exposes it.",
+      "minFirmware": {
+        "Defy": "2.3.0",
+        "Raise2": "1.5.0",
+        "Sonsei": "1.0.0"
+      }
+    }
+  }
+}

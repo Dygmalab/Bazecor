@@ -38,6 +38,19 @@ describe("Sonsei -> Defy", () => {
     expect(defy.filter(k => k === NO_KEY)).toHaveLength(DEFY_KEYS_PER_LAYER - SONSEI_KEYS.length);
   });
 
+  test("Defy keys the Sonsei lacks keep the Defy's current value when given", () => {
+    const sonsei = range(SONSEI_KEYS_PER_LAYER).map(i => 1000 + i);
+    const currentDefy = range(DEFY_KEYS_PER_LAYER).map(i => 5000 + i);
+    const transparent = convertKeymapSonseiToDefy(sonsei);
+    const kept = convertKeymapSonseiToDefy(sonsei, currentDefy);
+    kept.forEach((key, i) => {
+      // Keys with a Sonsei counterpart come from the backup; the rest stay as they were.
+      expect(key).toBe(transparent[i] === NO_KEY ? currentDefy[i] : transparent[i]);
+    });
+    // Row 0, col 6: the inner left key the Sonsei drops.
+    expect(kept[6]).toBe(5006);
+  });
+
   test("round trips back to the same Sonsei layer", () => {
     const keys = range(SONSEI_KEYS_PER_LAYER).map(i => (SONSEI_GAP.includes(i) ? NO_KEY : 2000 + i));
     expect(convertKeymapDefyToSonsei(convertKeymapSonseiToDefy(keys))).toEqual(keys);

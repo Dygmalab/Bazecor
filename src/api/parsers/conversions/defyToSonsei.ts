@@ -151,9 +151,10 @@ export const convertColormapDefyToSonsei = (layer: number[]): number[] => {
 
 // ── Sonsei → Defy ────────────────────────────────────────────────────────────
 // The same correspondence read the other way. Both maps above are one-to-one, so
-// inverting them is exact; the Defy keys and LEDs the Sonsei lacks (inner
-// columns, the lower thumb keys, the underglow) get the same fill values the
-// Defy → Sonsei direction uses.
+// inverting them is exact. The Defy keys the Sonsei lacks (inner columns, the
+// lower thumb keys) keep what the Defy already has there when its current layer
+// is given, and are left transparent otherwise; the LEDs it lacks (including the
+// underglow) get the same fill value the Defy → Sonsei direction uses.
 
 export const DEFY_KEYS_PER_LAYER = 5 * DEFY_COLS;
 export const DEFY_LEDS_PER_LAYER = 178;
@@ -171,8 +172,10 @@ const invert = (map: number[], size: number): number[] => {
 const SONSEI_KEY_FOR_DEFY = invert(KEYMAP_INDEX_MAP, DEFY_KEYS_PER_LAYER);
 const SONSEI_LED_FOR_DEFY = invert(COLORMAP_INDEX_MAP, DEFY_LEDS_PER_LAYER);
 
-export const convertKeymapSonseiToDefy = (layer: number[]): number[] =>
-  SONSEI_KEY_FOR_DEFY.map(sonseiIdx => (sonseiIdx === -1 ? NO_KEY : layer[sonseiIdx]));
+export const convertKeymapSonseiToDefy = (layer: number[], currentDefyLayer?: number[]): number[] =>
+  SONSEI_KEY_FOR_DEFY.map((sonseiIdx, defyIdx) =>
+    sonseiIdx === -1 ? (currentDefyLayer?.[defyIdx] ?? NO_KEY) : layer[sonseiIdx],
+  );
 
 export const convertColormapSonseiToDefy = (layer: number[]): number[] =>
   SONSEI_LED_FOR_DEFY.map(sonseiLed => (sonseiLed === -1 ? 0 : layer[sonseiLed]));
