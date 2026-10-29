@@ -44,7 +44,7 @@ import BazecorDevtools from "@Renderer/views/BazecorDevtools";
 import { showDevtools } from "@Renderer/devMode";
 
 import Store from "@Renderer/utils/Store";
-import { hasFirmwareFeature } from "@Renderer/utils/versionRules";
+import { hasFirmwareFeature, VERSION_FEATURES } from "@Renderer/utils/versionRules";
 import { VersionUpdateDialog } from "@Renderer/components/molecules/CustomModal/VersionUpdateDialog";
 import UdevPolkitErrorDialog from "@Renderer/components/molecules/CustomModal/UdevPolkitErrorDialog";
 import getTranslator from "@Renderer/utils/translator";
@@ -60,27 +60,24 @@ import HID from "../api/hid/hid";
 
 const store = Store.getStore();
 
-// Reads the FW version and stores the capabilities that depend on it (SK 2.0, Layer Lens).
-// Runs on connect and again after a firmware update, since the keyboard stays connected through it.
+// Reads the FW version and stores, as capabilities.<feature>, every capability that depends on it
+// (SK 2.0, Layer Lens, Combos, Autoshift, CapsWord). Runs on connect and again after a firmware
+// update, since the keyboard stays connected through it.
 // The minimum FW per product for each capability lives in src/versionRules.json.
 const detectFirmwareCapabilities = async (currentDevice: Device) => {
   try {
     const versionStr = (await currentDevice.noCacheCommand("version")) as string;
     log.verbose("VERSION: ", versionStr);
     const product = currentDevice?.device?.info?.product as string;
-    const sk20 = hasFirmwareFeature("sk20", product, versionStr);
-    store.set("capabilities.sk20", sk20);
-    if (sk20) {
-      log.info("SK 2.0 detected");
-    }
-    const lensAvailable = hasFirmwareFeature("lens", product, versionStr);
-    store.set("capabilities.lens", lensAvailable);
-    log.info(`[Lens] capability check -> product: ${product}, firmware: ${versionStr}, lensAvailable: ${lensAvailable}`);
+    VERSION_FEATURES.forEach(feature => {
+      const available = hasFirmwareFeature(feature, product, versionStr);
+      store.set(`capabilities.${feature}`, available);
+      log.info(`[Capabilities] ${feature} -> product: ${product}, firmware: ${versionStr}, available: ${available}`);
+    });
   } catch (e) {
     log.warn("Error reading or parsing firmware version", e);
-    store.set("capabilities.sk20", false);
-    store.set("capabilities.lens", false);
-    log.info("[Lens] capability disabled due to firmware version read/parse error");
+    VERSION_FEATURES.forEach(feature => store.set(`capabilities.${feature}`, false));
+    log.info("[Capabilities] all disabled due to firmware version read/parse error");
   }
 };
 

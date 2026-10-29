@@ -102,8 +102,20 @@ app.on("before-quit", event => {
   removeUSBListeners();
 });
 
-app.on("will-quit", () => {
-  overlayController.shutdown();
+// The quit is held until the Lens HID device is really closed: quitting with a
+// node-hid read still in flight aborts the process on macOS. The second
+// app.quit() goes through before-quit again, already marked as quitting.
+let hidReleased = false;
+app.on("will-quit", event => {
+  if (hidReleased) return;
+  event.preventDefault();
+  overlayController
+    .shutdown()
+    .catch(err => log.warn("Error shutting down the Lens overlay", err))
+    .finally(() => {
+      hidReleased = true;
+      app.quit();
+    });
 });
 
 // NOTE: with the Lens overlay window alive this event never fires — the real

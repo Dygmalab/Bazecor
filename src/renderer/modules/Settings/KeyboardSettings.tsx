@@ -167,6 +167,10 @@ function KeyboardSettings(props: KeyboardSettingsProps) {
   const sk20Raw = store.get("capabilities.sk20");
   const sk20 = sk20Raw === true || sk20Raw === "true" || sk20Raw === 1 || sk20Raw === "1";
   const labelWithFastSuper = (text: string) => (sk20 ? text.replace("Add Key on Tap", "Superkeys") : text);
+  // Firmware older than the one that ships these features doesn't know their commands
+  const autoshift = Boolean(store.get("capabilities.autoshift"));
+  const combos = Boolean(store.get("capabilities.combos"));
+  const capsword = Boolean(store.get("capabilities.capsword"));
 
   useEffect(() => {
     const { kbData: newKBData } = props;
@@ -667,189 +671,195 @@ function KeyboardSettings(props: KeyboardSettingsProps) {
             </div>
           </CardContent>
         </Card>
-        <Card className="mt-3 max-w-2xl mx-auto" variant="default">
-          <CardHeader>
-            <CardTitle>
-              <IconThunder /> {i18n.keyboardSettings.autoshift.title}
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            {/* No on/off switch: Autoshift is always enabled. A key only behaves
-             * differently once it is actually assigned as autoshiftable in the
-             * Layout Editor, so a global toggle added a second place to look
-             * when a key "did nothing". */}
-            <div className="flex flex-col gap-4">
-              <div className="w-full">
-                <div className="w-full flex gap-2">
-                  <div className="w-full">
-                    <Heading headingLevel={3} renderAs="paragraph-sm" className="flex items-center gap-2">
-                      {i18n.keyboardSettings.autoshift.holdTimeout}
-                      <TooltipProvider delayDuration={200}>
-                        <Tooltip>
-                          <TooltipTrigger className="[&_svg]:text-purple-100 [&_svg]:dark:text-purple-200">
-                            <IconInformation />
-                          </TooltipTrigger>
-                          <TooltipContent className="max-w-xs">{i18n.keyboardSettings.autoshift.holdTimeoutTip}</TooltipContent>
-                        </Tooltip>
-                      </TooltipProvider>
-                    </Heading>
+        {autoshift && (
+          <Card className="mt-3 max-w-2xl mx-auto" variant="default">
+            <CardHeader>
+              <CardTitle>
+                <IconThunder /> {i18n.keyboardSettings.autoshift.title}
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              {/* No on/off switch: Autoshift is always enabled. A key only behaves
+               * differently once it is actually assigned as autoshiftable in the
+               * Layout Editor, so a global toggle added a second place to look
+               * when a key "did nothing". */}
+              <div className="flex flex-col gap-4">
+                <div className="w-full">
+                  <div className="w-full flex gap-2">
+                    <div className="w-full">
+                      <Heading headingLevel={3} renderAs="paragraph-sm" className="flex items-center gap-2">
+                        {i18n.keyboardSettings.autoshift.holdTimeout}
+                        <TooltipProvider delayDuration={200}>
+                          <Tooltip>
+                            <TooltipTrigger className="[&_svg]:text-purple-100 [&_svg]:dark:text-purple-200">
+                              <IconInformation />
+                            </TooltipTrigger>
+                            <TooltipContent className="max-w-xs">{i18n.keyboardSettings.autoshift.holdTimeoutTip}</TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
+                      </Heading>
+                    </div>
+                    <div className="flex items-center text-right">
+                      <span className="tagsfix whitespace-nowrap">{autoshiftTimeout} ms</span>
+                    </div>
                   </div>
-                  <div className="flex items-center text-right">
-                    <span className="tagsfix whitespace-nowrap">{autoshiftTimeout} ms</span>
-                  </div>
-                </div>
-                <div className="w-full flex gap-2">
-                  <div className="flex max-w-12 p-0 text-center items-center">
-                    <span className="tagsfix">Less</span>
-                  </div>
-                  <div className="w-full flex items-center p-0">
-                    <Slider min={50} max={2000} step={5} value={[autoshiftTimeout]} onValueChange={setAutoshiftTimeout} />
-                  </div>
-                  <div className="flex max-w-12 p-0 text-center items-center">
-                    <span className="tagsfix">More</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-        <Card className="mt-3 max-w-2xl mx-auto" variant="default">
-          <CardHeader>
-            <CardTitle>
-              <IconKeyboard /> {i18n.keyboardSettings.combos.title}
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="flex flex-col gap-4">
-              <div className="w-full">
-                <div className="w-full flex gap-2">
-                  <div className="w-full">
-                    <Heading headingLevel={3} renderAs="paragraph-sm" className="flex items-center gap-2">
-                      {i18n.keyboardSettings.combos.window}
-                      <TooltipProvider delayDuration={200}>
-                        <Tooltip>
-                          <TooltipTrigger className="[&_svg]:text-purple-100 [&_svg]:dark:text-purple-200">
-                            <IconInformation />
-                          </TooltipTrigger>
-                          <TooltipContent className="max-w-xs">{i18n.keyboardSettings.combos.windowTip}</TooltipContent>
-                        </Tooltip>
-                      </TooltipProvider>
-                    </Heading>
-                  </div>
-                  <div className="flex items-center text-right">
-                    <span className="tagsfix whitespace-nowrap">{combosWindow} ms</span>
-                  </div>
-                </div>
-                <div className="w-full flex gap-2">
-                  <div className="flex max-w-12 p-0 text-center items-center">
-                    <span className="tagsfix">Stricter</span>
-                  </div>
-                  <div className="w-full flex items-center p-0">
-                    {/* Bounds mirror CombosDygma::MIN/MAX_MATCH_WINDOW_MS; the
-                     * firmware clamps anything outside them anyway. */}
-                    <Slider
-                      min={MIN_COMBO_WINDOW}
-                      max={MAX_COMBO_WINDOW}
-                      step={5}
-                      value={[combosWindow]}
-                      onValueChange={setCombosWindow}
-                    />
-                  </div>
-                  <div className="flex max-w-12 p-0 text-center items-center">
-                    <span className="tagsfix">Looser</span>
+                  <div className="w-full flex gap-2">
+                    <div className="flex max-w-12 p-0 text-center items-center">
+                      <span className="tagsfix">Less</span>
+                    </div>
+                    <div className="w-full flex items-center p-0">
+                      <Slider min={50} max={2000} step={5} value={[autoshiftTimeout]} onValueChange={setAutoshiftTimeout} />
+                    </div>
+                    <div className="flex max-w-12 p-0 text-center items-center">
+                      <span className="tagsfix">More</span>
+                    </div>
                   </div>
                 </div>
               </div>
-              <div className="w-full">
-                <div className="w-full flex gap-2">
-                  <div className="w-full">
-                    <Heading headingLevel={3} renderAs="paragraph-sm" className="flex items-center gap-2">
-                      {i18n.keyboardSettings.combos.idleTime}
-                      <TooltipProvider delayDuration={200}>
-                        <Tooltip>
-                          <TooltipTrigger className="[&_svg]:text-purple-100 [&_svg]:dark:text-purple-200">
-                            <IconInformation />
-                          </TooltipTrigger>
-                          <TooltipContent className="max-w-xs">{i18n.keyboardSettings.combos.idleTimeTip}</TooltipContent>
-                        </Tooltip>
-                      </TooltipProvider>
-                    </Heading>
+            </CardContent>
+          </Card>
+        )}
+        {combos && (
+          <Card className="mt-3 max-w-2xl mx-auto" variant="default">
+            <CardHeader>
+              <CardTitle>
+                <IconKeyboard /> {i18n.keyboardSettings.combos.title}
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="flex flex-col gap-4">
+                <div className="w-full">
+                  <div className="w-full flex gap-2">
+                    <div className="w-full">
+                      <Heading headingLevel={3} renderAs="paragraph-sm" className="flex items-center gap-2">
+                        {i18n.keyboardSettings.combos.window}
+                        <TooltipProvider delayDuration={200}>
+                          <Tooltip>
+                            <TooltipTrigger className="[&_svg]:text-purple-100 [&_svg]:dark:text-purple-200">
+                              <IconInformation />
+                            </TooltipTrigger>
+                            <TooltipContent className="max-w-xs">{i18n.keyboardSettings.combos.windowTip}</TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
+                      </Heading>
+                    </div>
+                    <div className="flex items-center text-right">
+                      <span className="tagsfix whitespace-nowrap">{combosWindow} ms</span>
+                    </div>
                   </div>
-                  <div className="flex items-center text-right">
-                    <span className="tagsfix whitespace-nowrap">
-                      {combosIdleTime === 0 ? i18n.keyboardSettings.combos.idleTimeDisabled : `${combosIdleTime} ms`}
-                    </span>
+                  <div className="w-full flex gap-2">
+                    <div className="flex max-w-12 p-0 text-center items-center">
+                      <span className="tagsfix">Stricter</span>
+                    </div>
+                    <div className="w-full flex items-center p-0">
+                      {/* Bounds mirror CombosDygma::MIN/MAX_MATCH_WINDOW_MS; the
+                       * firmware clamps anything outside them anyway. */}
+                      <Slider
+                        min={MIN_COMBO_WINDOW}
+                        max={MAX_COMBO_WINDOW}
+                        step={5}
+                        value={[combosWindow]}
+                        onValueChange={setCombosWindow}
+                      />
+                    </div>
+                    <div className="flex max-w-12 p-0 text-center items-center">
+                      <span className="tagsfix">Looser</span>
+                    </div>
                   </div>
                 </div>
-                <div className="w-full flex gap-2">
-                  <div className="flex max-w-12 p-0 text-center items-center">
-                    <span className="tagsfix">Off</span>
+                <div className="w-full">
+                  <div className="w-full flex gap-2">
+                    <div className="w-full">
+                      <Heading headingLevel={3} renderAs="paragraph-sm" className="flex items-center gap-2">
+                        {i18n.keyboardSettings.combos.idleTime}
+                        <TooltipProvider delayDuration={200}>
+                          <Tooltip>
+                            <TooltipTrigger className="[&_svg]:text-purple-100 [&_svg]:dark:text-purple-200">
+                              <IconInformation />
+                            </TooltipTrigger>
+                            <TooltipContent className="max-w-xs">{i18n.keyboardSettings.combos.idleTimeTip}</TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
+                      </Heading>
+                    </div>
+                    <div className="flex items-center text-right">
+                      <span className="tagsfix whitespace-nowrap">
+                        {combosIdleTime === 0 ? i18n.keyboardSettings.combos.idleTimeDisabled : `${combosIdleTime} ms`}
+                      </span>
+                    </div>
                   </div>
-                  <div className="w-full flex items-center p-0">
-                    {/* Bounds mirror CombosDygma::MAX_IDLE_TIME_MS; 0 turns the
-                     * requirement off. */}
-                    <Slider
-                      min={0}
-                      max={MAX_COMBO_IDLE_TIME}
-                      step={10}
-                      value={[combosIdleTime]}
-                      onValueChange={setCombosIdleTime}
-                    />
-                  </div>
-                  <div className="flex max-w-12 p-0 text-center items-center">
-                    <span className="tagsfix">Safer</span>
+                  <div className="w-full flex gap-2">
+                    <div className="flex max-w-12 p-0 text-center items-center">
+                      <span className="tagsfix">Off</span>
+                    </div>
+                    <div className="w-full flex items-center p-0">
+                      {/* Bounds mirror CombosDygma::MAX_IDLE_TIME_MS; 0 turns the
+                       * requirement off. */}
+                      <Slider
+                        min={0}
+                        max={MAX_COMBO_IDLE_TIME}
+                        step={10}
+                        value={[combosIdleTime]}
+                        onValueChange={setCombosIdleTime}
+                      />
+                    </div>
+                    <div className="flex max-w-12 p-0 text-center items-center">
+                      <span className="tagsfix">Safer</span>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          </CardContent>
-        </Card>
-        <Card className="mt-3 max-w-2xl mx-auto" variant="default">
-          <CardHeader>
-            <CardTitle>
-              <IconLayerShift /> {i18n.keyboardSettings.capsword.title}
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            {/* Always enabled; the CapsWord key has to be assigned to do
-             * anything, which is toggle enough. */}
-            <div className="flex flex-col gap-4">
-              <div className="w-full">
-                <div className="w-full flex gap-2">
-                  <div className="w-full">
-                    <Heading headingLevel={3} renderAs="paragraph-sm" className="flex items-center gap-2">
-                      {i18n.keyboardSettings.capsword.idleTimeout}
-                      <TooltipProvider delayDuration={200}>
-                        <Tooltip>
-                          <TooltipTrigger className="[&_svg]:text-purple-100 [&_svg]:dark:text-purple-200">
-                            <IconInformation />
-                          </TooltipTrigger>
-                          <TooltipContent className="max-w-xs">{i18n.keyboardSettings.capsword.idleTimeoutTip}</TooltipContent>
-                        </Tooltip>
-                      </TooltipProvider>
-                    </Heading>
+            </CardContent>
+          </Card>
+        )}
+        {capsword && (
+          <Card className="mt-3 max-w-2xl mx-auto" variant="default">
+            <CardHeader>
+              <CardTitle>
+                <IconLayerShift /> {i18n.keyboardSettings.capsword.title}
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              {/* Always enabled; the CapsWord key has to be assigned to do
+               * anything, which is toggle enough. */}
+              <div className="flex flex-col gap-4">
+                <div className="w-full">
+                  <div className="w-full flex gap-2">
+                    <div className="w-full">
+                      <Heading headingLevel={3} renderAs="paragraph-sm" className="flex items-center gap-2">
+                        {i18n.keyboardSettings.capsword.idleTimeout}
+                        <TooltipProvider delayDuration={200}>
+                          <Tooltip>
+                            <TooltipTrigger className="[&_svg]:text-purple-100 [&_svg]:dark:text-purple-200">
+                              <IconInformation />
+                            </TooltipTrigger>
+                            <TooltipContent className="max-w-xs">{i18n.keyboardSettings.capsword.idleTimeoutTip}</TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
+                      </Heading>
+                    </div>
+                    <div className="flex items-center text-right">
+                      <span className="tagsfix whitespace-nowrap">
+                        {capswordTimeout === 0 ? i18n.keyboardSettings.capsword.idleDisabled : `${capswordTimeout / 1000} s`}
+                      </span>
+                    </div>
                   </div>
-                  <div className="flex items-center text-right">
-                    <span className="tagsfix whitespace-nowrap">
-                      {capswordTimeout === 0 ? i18n.keyboardSettings.capsword.idleDisabled : `${capswordTimeout / 1000} s`}
-                    </span>
-                  </div>
-                </div>
-                <div className="w-full flex gap-2">
-                  <div className="flex max-w-12 p-0 text-center items-center">
-                    <span className="tagsfix">Never</span>
-                  </div>
-                  <div className="w-full flex items-center p-0">
-                    <Slider min={0} max={30000} step={500} value={[capswordTimeout]} onValueChange={setCapswordTimeout} />
-                  </div>
-                  <div className="flex max-w-12 p-0 text-center items-center">
-                    <span className="tagsfix">Longer</span>
+                  <div className="w-full flex gap-2">
+                    <div className="flex max-w-12 p-0 text-center items-center">
+                      <span className="tagsfix">Never</span>
+                    </div>
+                    <div className="w-full flex items-center p-0">
+                      <Slider min={0} max={30000} step={500} value={[capswordTimeout]} onValueChange={setCapswordTimeout} />
+                    </div>
+                    <div className="flex max-w-12 p-0 text-center items-center">
+                      <span className="tagsfix">Longer</span>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          </CardContent>
-        </Card>
+            </CardContent>
+          </Card>
+        )}
         <Card className="mt-3 max-w-2xl mx-auto" variant="default">
           <CardHeader>
             <CardTitle>

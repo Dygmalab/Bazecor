@@ -300,6 +300,7 @@ function KeyPickerKeyboard(props: Props) {
   const [keymapDB] = useState(new KeymapDB());
   const store = Store.getStore();
   const sk20 = Boolean(store.get("capabilities.sk20"));
+  const autoshiftAvailable = Boolean(store.get("capabilities.autoshift"));
   // Layer Lens is available for Sonsei (fw >= 1.0.0), Defy (fw >= 2.3.0) and Raise2
   // (fw >= 1.5.0) — see App.tsx, which writes capabilities.lens on connect. Raise
   // (Raise1) never sets the flag, so the Layer Lens tab stays hidden for it in both
@@ -509,7 +510,7 @@ function KeyPickerKeyboard(props: Props) {
                             keyCode={code}
                             onKeySelect={onKeySelect}
                             isStandardView={false}
-                            allowAutoshift={allowAutoshift}
+                            allowAutoshift={allowAutoshift && autoshiftAvailable}
                           />
                         </div>
                       ) : (

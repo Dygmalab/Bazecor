@@ -234,12 +234,12 @@ class OverlayController {
     this.showInputMonitoringDialog();
   }
 
-  /** Called on app quit. */
-  shutdown(): void {
+  /** Called on app quit. Resolves once the HID device is really closed, see RawHidListener.release(). */
+  async shutdown(): Promise<void> {
     this.clearFlashingWatchdog();
     this.clearLayerChangeHideTimer();
     stopFade();
-    this.hid.stop();
+    await this.hid.release();
   }
 
   /**

@@ -527,13 +527,18 @@ const LayoutEditor = (props: LayoutEditorProps) => {
         // worth failing the whole layout load over. Neither is the 4-key
         // format of the first combos firmware: it is not badged at all rather
         // than misread.
-        try {
-          const rawCombos = (await currentDevice?.command("combos.map")) as string;
-          const usable = rawCombos && rawCombos.trim().length > 0 && !isLegacyCombosReply(rawCombos);
-          setCombos(usable ? parseCombosRaw(rawCombos, neuronData.storedCombos) : []);
-        } catch (error) {
-          log.info("[LayoutEditor] combos.map unavailable; no combo badges will be shown");
+        // Firmware older than the one that ships combos is not asked at all (see capabilities.combos).
+        if (!store.get("capabilities.combos")) {
           setCombos([]);
+        } else {
+          try {
+            const rawCombos = (await currentDevice?.command("combos.map")) as string;
+            const usable = rawCombos && rawCombos.trim().length > 0 && !isLegacyCombosReply(rawCombos);
+            setCombos(usable ? parseCombosRaw(rawCombos, neuronData.storedCombos) : []);
+          } catch (error) {
+            log.info("[LayoutEditor] combos.map unavailable; no combo badges will be shown");
+            setCombos([]);
+          }
         }
 
         setScanningStep(9);

@@ -29,7 +29,13 @@ interface NodeHidDevice {
   on(event: "data", cb: (buf: Buffer) => void): void;
   on(event: "error", cb: (err: unknown) => void): void;
   close(): void;
+  // Set by node-hid once the native handle is really closed (see release())
+  _closed?: boolean;
 }
+
+// How long release() waits for node-hid to close the device. An interrupted read
+// returns within 50 ms (node-hid's hid_read_timeout slice), so this is plenty.
+const RELEASE_TIMEOUT_MS = 500;
 
 interface NodeHidModule {
   devices(vendorId?: number, productId?: number): HidDeviceInfo[];
@@ -626,5 +632,26 @@ export class RawHidListener extends EventEmitter<RawHidEvents> {
     this.seen.clear();
     this.activePath = null;
     this.activeProduct = null;
+  }
+
+  /**
+   * stop(), then wait until node-hid has really closed the device. Its close()
+   * only interrupts the read in flight; the handle is closed later, from that
+   * read's callback. If the process exits first, the callback runs while Node
+   * is tearing down, node-hid throws a C++ exception and the process aborts
+   * (the macOS crash on Quit). Call this before letting the app quit.
+   */
+  async release(): Promise<void> {
+    const { device } = this;
+    this.stop();
+    if (!device) return;
+    const deadline = Date.now() + RELEASE_TIMEOUT_MS;
+    while (!device._closed && Date.now() < deadline) {
+      // eslint-disable-next-line no-await-in-loop
+      await new Promise(resolve => {
+        setTimeout(resolve, 10);
+      });
+    }
+    if (!device._closed) log.warn("[Lens/HID] Device still open after release timeout; quitting anyway");
   }
 }

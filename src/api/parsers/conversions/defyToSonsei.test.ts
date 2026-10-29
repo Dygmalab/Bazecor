@@ -7,6 +7,7 @@ import {
   convertKeymapSonseiToDefy,
   convertKeyPositionDefyToSonsei,
   convertKeyPositionSonseiToDefy,
+  DEFY_FIRST_UNDERGLOW_LED,
   DEFY_KEYS_PER_LAYER,
   DEFY_LEDS_PER_LAYER,
   SONSEI_KEYS_PER_LAYER,
@@ -49,6 +50,24 @@ describe("Sonsei -> Defy", () => {
     });
     // Row 0, col 6: the inner left key the Sonsei drops.
     expect(kept[6]).toBe(5006);
+  });
+
+  test("the Defy LEDs the Sonsei lacks keep their current palette slots", () => {
+    const sonsei = range(SONSEI_LEDS_PER_LAYER).map(() => 3);
+    const currentDefy = range(DEFY_LEDS_PER_LAYER).map(i => 4 + (i % 12));
+    const defy = convertColormapSonseiToDefy(sonsei, currentDefy, 15);
+    expect(defy.slice(DEFY_FIRST_UNDERGLOW_LED)).toEqual(currentDefy.slice(DEFY_FIRST_UNDERGLOW_LED));
+    // Defy LED 6: row 0, col 6, the inner left key the Sonsei drops.
+    expect(defy[6]).toBe(currentDefy[6]);
+    // A key both boards have takes the backup's slot.
+    expect(defy[0]).toBe(3);
+  });
+
+  test("without the Defy's current layer, key LEDs get 0 and the underglow the fallback colour", () => {
+    const sonsei = range(SONSEI_LEDS_PER_LAYER).map(() => 3);
+    const defy = convertColormapSonseiToDefy(sonsei, undefined, 15);
+    expect(defy.slice(DEFY_FIRST_UNDERGLOW_LED).every(c => c === 15)).toBe(true);
+    expect(defy[6]).toBe(0);
   });
 
   test("round trips back to the same Sonsei layer", () => {

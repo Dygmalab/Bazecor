@@ -20,6 +20,8 @@ import { version as bazecorVersion } from "../../../package.json";
 
 type ProductVersions = Record<string, string>;
 export type VersionFeature = keyof typeof versionRules.features;
+/** Every feature in versionRules.json; App.tsx stores each one as `capabilities.<feature>`. */
+export const VERSION_FEATURES = Object.keys(versionRules.features) as VersionFeature[];
 
 // Prerelease tags are dropped so a 1.12.0 beta build already gets the 1.12.0 rules
 const coerced = (text: string) => SemVer.coerce(text)?.version;

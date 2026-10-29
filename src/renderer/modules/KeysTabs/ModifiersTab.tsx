@@ -50,6 +50,7 @@ const ModifiersTab = ({
   const [openKeysPopover, setOpenKeysPopover] = useState<boolean>(false);
   const store = Store.getStore();
   const sk20 = Boolean(store.get("capabilities.sk20"));
+  const capsword = Boolean(store.get("capabilities.capsword"));
 
   const KC = useMemo(() => {
     if (keyCode?.base !== undefined && keyCode?.modified !== undefined) {
@@ -263,29 +264,31 @@ const ModifiersTab = ({
                 ))}
               </div>
             </div>
-            <div className="basis-full flex flex-col gap-2">
-              <Heading renderAs="h4" headingLevel={3} className="text-base flex leading-6 gap-1">
-                CapsWord
-              </Heading>
-              <div className="flex flex-wrap gap-2 items-center">
-                <Button
-                  variant="config"
-                  onClick={() => {
-                    log.info(`[CapsWord] assigning key: ${CapsWordCodes.CAPS_WORD} (previous keycode ${KC})`);
-                    onKeySelect(CapsWordCodes.CAPS_WORD);
-                  }}
-                  selected={KC === CapsWordCodes.CAPS_WORD}
-                  size="sm"
-                  className="min-w-16 text-ssm h-9"
-                >
+            {capsword && (
+              <div className="basis-full flex flex-col gap-2">
+                <Heading renderAs="h4" headingLevel={3} className="text-base flex leading-6 gap-1">
                   CapsWord
-                </Button>
-                <p className="description text-ssm font-medium text-gray-400 dark:text-gray-300 max-w-md">
-                  Capitalises what you type until the word ends -- on a space, enter, tab or punctuation, after a period of
-                  inactivity, or by pressing the key again.
-                </p>
+                </Heading>
+                <div className="flex flex-wrap gap-2 items-center">
+                  <Button
+                    variant="config"
+                    onClick={() => {
+                      log.info(`[CapsWord] assigning key: ${CapsWordCodes.CAPS_WORD} (previous keycode ${KC})`);
+                      onKeySelect(CapsWordCodes.CAPS_WORD);
+                    }}
+                    selected={KC === CapsWordCodes.CAPS_WORD}
+                    size="sm"
+                    className="min-w-16 text-ssm h-9"
+                  >
+                    CapsWord
+                  </Button>
+                  <p className="description text-ssm font-medium text-gray-400 dark:text-gray-300 max-w-md">
+                    Capitalises what you type until the word ends -- on a space, enter, tab or punctuation, after a period of
+                    inactivity, or by pressing the key again.
+                  </p>
+                </div>
               </div>
-            </div>
+            )}
             <AnimatePresence>
               <motion.div className="flex flex-col gap-2">
                 {!sk20 && activeModifierTab === "dualModifier" && (
@@ -370,7 +373,11 @@ const ModifiersTab = ({
                   id="addDualFuncionModifier"
                   tooltip={
                     <>
-                      <Heading headingLevel={4} renderAs="h4" className="text-gray-600 dark:text-gray-25 mb-1 leading-6 text-base">
+                      <Heading
+                        headingLevel={4}
+                        renderAs="h4"
+                        className="text-gray-600 dark:text-gray-25 mb-1 leading-6 text-base"
+                      >
                         Add key on tap (Dual-function)
                       </Heading>
                       <p className="description text-ssm font-medium text-gray-400 dark:text-gray-200">

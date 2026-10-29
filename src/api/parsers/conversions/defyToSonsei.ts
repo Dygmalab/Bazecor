@@ -153,13 +153,16 @@ export const convertColormapDefyToSonsei = (layer: number[]): number[] => {
 // The same correspondence read the other way. Both maps above are one-to-one, so
 // inverting them is exact. The Defy keys the Sonsei lacks (inner columns, the
 // lower thumb keys) keep what the Defy already has there when its current layer
-// is given, and are left transparent otherwise; the LEDs it lacks (including the
-// underglow) get the same fill value the Defy → Sonsei direction uses.
+// is given, and are left transparent otherwise. Likewise the LEDs it lacks (the
+// keys above and the underglow) keep the palette slots the Defy's current layer
+// gives them; without it, key LEDs get 0 and the underglow `underglowColor`.
 
 export const DEFY_KEYS_PER_LAYER = 5 * DEFY_COLS;
 export const DEFY_LEDS_PER_LAYER = 178;
 export const SONSEI_KEYS_PER_LAYER = 5 * SONSEI_COLS;
 export const SONSEI_LEDS_PER_LAYER = COLORMAP_INDEX_MAP.length;
+// Defy LEDs 0-69 sit under the keys (see the led_map above); 70 onwards is the underglow strip.
+export const DEFY_FIRST_UNDERGLOW_LED = 70;
 
 const invert = (map: number[], size: number): number[] => {
   const inverse: number[] = new Array(size).fill(-1);
@@ -177,8 +180,11 @@ export const convertKeymapSonseiToDefy = (layer: number[], currentDefyLayer?: nu
     sonseiIdx === -1 ? (currentDefyLayer?.[defyIdx] ?? NO_KEY) : layer[sonseiIdx],
   );
 
-export const convertColormapSonseiToDefy = (layer: number[]): number[] =>
-  SONSEI_LED_FOR_DEFY.map(sonseiLed => (sonseiLed === -1 ? 0 : layer[sonseiLed]));
+export const convertColormapSonseiToDefy = (layer: number[], currentDefyLayer?: number[], underglowColor = 0): number[] =>
+  SONSEI_LED_FOR_DEFY.map((sonseiLed, defyLed) => {
+    if (sonseiLed !== -1) return layer[sonseiLed];
+    return currentDefyLayer?.[defyLed] ?? (defyLed >= DEFY_FIRST_UNDERGLOW_LED ? underglowColor : 0);
+  });
 
 // Combo members are physical key offsets (KeyAddr::toInt()), the same index
 // space as a keymap layer, so they move with the keymap maps. null: the key has

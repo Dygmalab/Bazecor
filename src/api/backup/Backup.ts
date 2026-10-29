@@ -33,6 +33,7 @@ import {
   stripRaise2OnlySuperkeyActions,
 } from "../parsers";
 import { isLegacyCombosReply, upgradeLegacyCombosReply } from "../parsers/combos";
+import { fitPaletteToFormat } from "../parsers/palette";
 import { rgb2w } from "../color";
 import { isSupportedLensProduct } from "../../lens/shared/constants";
 
@@ -45,16 +46,26 @@ type BackupCmd = { command: string; data: string };
 // Backed up even when `help` does not list it (see Commands below).
 const UNLISTED_BACKUP_COMMANDS = ["led.brightnessUG"];
 
+// Keyboards whose palette is RGBW; the rest (Sonsei, Raise) take plain RGB.
+const RGBW_PALETTE_PRODUCTS = ["Defy", "Raise2"];
+
+/** `data` as the target keyboard expects it: only `palette` can arrive in the wrong format. */
+const fitCommandToDevice = (command: string, data: string, product: string | undefined): string =>
+  command === "palette" && product ? fitPaletteToFormat(data, RGBW_PALETTE_PRODUCTS.includes(product)) : data;
+
 type ConversionSpec = {
   from: string;
   to: string;
   sourceKeys: number;
   targetKeys: number;
   sourceLeds: number;
+  targetLeds: number;
   sourceRGBW: boolean;
-  // currentLayer: the same layer as it is now on the target board, for the keys the source lacks
+  // The target has an underglow strip the source lacks; the restore keeps its current colours
+  targetUnderglow: boolean;
+  // currentLayer: the same layer as it is now on the target board, for the keys / LEDs the source lacks
   keymap: (layer: number[], currentLayer?: number[]) => number[];
-  colormap: (layer: number[]) => number[];
+  colormap: (layer: number[], currentLayer?: number[], underglowColor?: number) => number[];
   palette: (color: PaletteType) => number[];
   keyPosition: (position: number) => number | null;
 };
@@ -65,7 +76,9 @@ const DEFY_TO_SONSEI: ConversionSpec = {
   sourceKeys: DEFY_KEYS_PER_LAYER,
   targetKeys: SONSEI_KEYS_PER_LAYER,
   sourceLeds: DEFY_LEDS_PER_LAYER,
+  targetLeds: SONSEI_LEDS_PER_LAYER,
   sourceRGBW: true,
+  targetUnderglow: false,
   keymap: convertKeymapDefyToSonsei,
   colormap: convertColormapDefyToSonsei,
   palette: color => {
@@ -81,7 +94,9 @@ const SONSEI_TO_DEFY: ConversionSpec = {
   sourceKeys: SONSEI_KEYS_PER_LAYER,
   targetKeys: DEFY_KEYS_PER_LAYER,
   sourceLeds: SONSEI_LEDS_PER_LAYER,
+  targetLeds: DEFY_LEDS_PER_LAYER,
   sourceRGBW: false,
+  targetUnderglow: true,
   keymap: convertKeymapSonseiToDefy,
   colormap: convertColormapSonseiToDefy,
   palette: color => {
@@ -96,23 +111,46 @@ const DEFY_SONSEI_CONVERSIONS = [DEFY_TO_SONSEI, SONSEI_TO_DEFY];
 const findDefySonseiConversion = (from: string | undefined, to: string | undefined) =>
   DEFY_SONSEI_CONVERSIONS.find(c => c.from === from && c.to === to);
 
+/** What the restore needs to know about the target board for the parts of it
+ * the source board lacks; see Backup.conversionTarget. */
+type ConversionTarget = {
+  // The target's keymap before the restore
+  keymap?: number[][];
+  // The target's colormap before the restore, read only when it has an underglow to keep
+  colormap?: number[][];
+  // The palette slot for the target's underglow when its colormap can't be read
+  underglowColor?: number;
+};
+
+// A Dygma palette holds 16 colours
+const PALETTE_SIZE = 16;
+
+/** A backup's palette as colours. It is put in the source board's format
+ * first, as some backups carry the other one (see fitPaletteToFormat). */
+const parseSourcePalette = (spec: ConversionSpec, palette: string) =>
+  parsePaletteRaw(fitPaletteToFormat(palette, spec.sourceRGBW), spec.sourceRGBW);
+
+/** The last slot of a backup's palette, which is usually black. */
+const lastPaletteIndex = (spec: ConversionSpec, palette: string | undefined): number => {
+  const colors = palette ? parseSourcePalette(spec, palette).length : 0;
+  return (colors > 0 ? colors : PALETTE_SIZE) - 1;
+};
+
 /** Rewrites one command's data for the target board, or returns it untouched
- * when the command carries nothing layout-specific. `currentKeymap` is the
- * target's keymap before the restore, see readTargetKeymap. */
-const convertDefySonseiCommand = (
-  spec: ConversionSpec,
-  command: string,
-  data: string,
-  currentKeymap?: number[][],
-): string => {
+ * when the command carries nothing layout-specific. */
+const convertDefySonseiCommand = (spec: ConversionSpec, command: string, data: string, target: ConversionTarget = {}): string => {
   const join = (values: number[]) => values.map(v => v.toString()).join(" ");
   switch (command) {
     case "keymap.custom":
-      return join(parseKeymapRaw(data, spec.sourceKeys).flatMap((layer, i) => spec.keymap(layer, currentKeymap?.[i])));
+      return join(parseKeymapRaw(data, spec.sourceKeys).flatMap((layer, i) => spec.keymap(layer, target.keymap?.[i])));
     case "colormap.map":
-      return join(parseColormapRaw(data, spec.sourceLeds).flatMap(layer => spec.colormap(layer)));
+      return join(
+        parseColormapRaw(data, spec.sourceLeds).flatMap((layer, i) =>
+          spec.colormap(layer, target.colormap?.[i], target.underglowColor),
+        ),
+      );
     case "palette":
-      return join(parsePaletteRaw(data, spec.sourceRGBW).flatMap(color => spec.palette(color)));
+      return join(parseSourcePalette(spec, data).flatMap(color => spec.palette(color)));
     case "combos.map":
       return remapComboPositions(data, spec.keyPosition);
     default:
@@ -339,10 +377,13 @@ export default class Backup {
     // A command the keyboard does not know may never be answered, and a request
     // that times out leaves its reply callback queued in Device, shifting every
     // later reply onto the wrong command -- so the rest of the restore silently
-    // goes wrong. Another board's backup carries some (the Defy's wireless.rf.*
-    // on a Sonsei), so only send what the target lists in `help`.
-    if (sourceProduct && sourceProduct !== targetProduct) data = await Backup.keepSupportedCommands(data, device);
+    // goes wrong. Worse, older firmware hangs on an unknown command whose
+    // arguments overflow its serial buffer (combos.map after a downgrade), and
+    // every command after it times out. Another board's backup or a newer
+    // firmware's backup carries some, so only send what the target lists in `help`.
+    data = await Backup.keepSupportedCommands(data, device);
     data = data.filter(c => typeof c.command === "string" && c.command.trim().length > 0);
+    data = data.map(c => (typeof c.data === "string" ? { ...c, data: fitCommandToDevice(c.command, c.data, targetProduct) } : c));
     // Reorder to ensure superkeys are restored before keymap
     try {
       const keymapIdx = data.findIndex((c: BackupCmd) => typeof c.command === "string" && c.command === "keymap.custom");
@@ -414,10 +455,12 @@ export default class Backup {
           (virtualProduct === "Raise" && deviceProduct === "Raise2") ||
           (virtualProduct === "Raise2" && deviceProduct === "Raise");
         const defySonseiConversion = findDefySonseiConversion(virtualProduct, deviceProduct);
-        // Same reason as in restoreBackup: never send another board's commands
-        // the target does not know.
-        const supported = virtualProduct !== deviceProduct ? await Backup.supportedCommands(device) : null;
-        const currentKeymap = defySonseiConversion ? await Backup.readTargetKeymap(device, defySonseiConversion) : undefined;
+        // Same reason as in restoreBackup: never send commands the target does
+        // not know, whether they come from another board or a newer firmware.
+        const supported = await Backup.supportedCommands(device);
+        const conversionTarget = defySonseiConversion
+          ? await Backup.conversionTarget(device, defySonseiConversion, data.palette?.data)
+          : undefined;
 
         for (const command in data) {
           if (supported && !supported.has(command)) {
@@ -498,8 +541,9 @@ export default class Backup {
 
               // Convert keymap/colormap/palette/combos between Defy and Sonsei
               if (defySonseiConversion) {
-                commandData = convertDefySonseiCommand(defySonseiConversion, command, commandData, currentKeymap);
+                commandData = convertDefySonseiCommand(defySonseiConversion, command, commandData, conversionTarget);
               }
+              commandData = fitCommandToDevice(command, commandData, deviceProduct);
 
               log.warn(`Going to send ${command} to keyboard`);
               // eslint-disable-next-line no-await-in-loop
@@ -581,15 +625,22 @@ export default class Backup {
 
   /** The commands `device` lists in `help`, or null when they can't be read. */
   static supportedCommands = async (device: Device): Promise<Set<string> | null> => {
-    let help: string | undefined;
+    let help: unknown;
     try {
-      help = await device.command("help");
+      // Not from the cache: after a firmware update the cached list belongs to
+      // the firmware that was replaced.
+      help = await device.noCacheCommand("help");
     } catch (error) {
       log.warn("Could not read the keyboard's command list", error);
       return null;
     }
+    // Device returns the Error itself when the request fails.
+    if (typeof help !== "string") {
+      log.warn("Could not read the keyboard's command list", help);
+      return null;
+    }
     const supported = new Set(
-      String(help ?? "")
+      help
         .split(/\r?\n/)
         .map(c => c.trim())
         .filter(c => c.length > 0),
@@ -603,7 +654,7 @@ export default class Backup {
    * Drops the commands `device` does not list in `help`. Keeps everything when
    * `help` can't be read, rather than restoring nothing.
    */
-  static keepSupportedCommands = async (data: BackupCmd[], device: Device): Promise<BackupCmd[]> => {
+  static keepSupportedCommands = async <T extends { command: string }>(data: T[], device: Device): Promise<T[]> => {
     const supported = await Backup.supportedCommands(device);
     if (!supported) return data;
     return data.filter(c => {
@@ -626,15 +677,43 @@ export default class Backup {
     }
   };
 
+  /** The colormap on `dev` before the restore, split into layers of the target
+   * board's size, so the LEDs the source lacks (underglow included) keep the
+   * palette slots they have now.
+   * Undefined when it can't be read. */
+  private static readTargetColormap = async (dev: Device, spec: ConversionSpec): Promise<number[][] | undefined> => {
+    try {
+      const raw = (await dev.noCacheCommand("colormap.map")) as string;
+      return raw ? parseColormapRaw(raw, spec.targetLeds) : undefined;
+    } catch (error) {
+      log.warn(`Could not read the ${spec.to} colormap; its underglow will take the palette's last colour`, error);
+      return undefined;
+    }
+  };
+
+  /** The target board's current keymap and, when it has an underglow, its
+   * current colormap. The palette's last slot (usually black) is the underglow
+   * colour for layers the current colormap doesn't cover. */
+  private static conversionTarget = async (
+    dev: Device,
+    spec: ConversionSpec,
+    palette: string | undefined,
+  ): Promise<ConversionTarget> => ({
+    keymap: await Backup.readTargetKeymap(dev, spec),
+    colormap: spec.targetUnderglow ? await Backup.readTargetColormap(dev, spec) : undefined,
+    underglowColor: spec.targetUnderglow ? lastPaletteIndex(spec, palette) : undefined,
+  });
+
   /** Moves a Defy <-> Sonsei backup onto the other board's layout: keymap,
    * colormap, palette (RGBW vs RGB) and combo key positions. */
   private static convertDefySonsei = async (backup: BackupType, dev: Device, spec: ConversionSpec) => {
     log.info(`converting ${spec.from} Backup to ${spec.to}`);
-    const currentKeymap = await Backup.readTargetKeymap(dev, spec);
+    const palette = backup.backup.find(c => c.command === "palette")?.data;
+    const target = await Backup.conversionTarget(dev, spec, typeof palette === "string" ? palette : undefined);
     const localBackup: BackupType = JSON.parse(JSON.stringify(backup));
     localBackup.neuron.device = dev.device;
     localBackup.backup = localBackup.backup.map(c =>
-      typeof c.data === "string" ? { ...c, data: convertDefySonseiCommand(spec, c.command, c.data, currentKeymap) } : c,
+      typeof c.data === "string" ? { ...c, data: convertDefySonseiCommand(spec, c.command, c.data, target) } : c,
     );
     log.info("Final Backup:", localBackup.backup);
     return localBackup.backup;

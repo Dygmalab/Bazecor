@@ -95,8 +95,10 @@ export function registerLensIpc(onRunInBackgroundChange: (v: boolean) => void): 
   // Full process relaunch — needed on macOS for a fresh Input Monitoring grant to
   // take effect. With "run in background" on, closing the window doesn't restart
   // the process, so the settings UI offers an explicit restart instead.
-  ipcMain.on("lens:relaunch", () => {
+  ipcMain.on("lens:relaunch", async () => {
     log.info("[Lens] Relaunching Bazecor (requested from Lens settings)");
+    // app.exit() skips will-quit, so release the HID device here (see main/index.ts)
+    await overlayController.shutdown().catch(err => log.warn("[Lens] Error shutting down before relaunch", err));
     app.relaunch();
     app.exit(0);
   });

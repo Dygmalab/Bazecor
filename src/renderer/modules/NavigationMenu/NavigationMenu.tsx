@@ -68,6 +68,7 @@ function NavigationMenu(props: NavigationMenuProps) {
   const { connected, pages, fwUpdate, flashing, allowBeta, modified, loading, saveButtonRef, discardChangesButtonRef } = props;
   const store = Store.getStore();
   const sk20 = Boolean(store.get("capabilities.sk20"));
+  const combos = Boolean(store.get("capabilities.combos"));
 
   const getGitHubFW = useCallback(
     async (product: any) => {
@@ -88,7 +89,9 @@ function NavigationMenu(props: NavigationMenuProps) {
         if (!releaseData[1].includes("beta") || allowBeta) releases.push(newRelease);
       });
       // Same filter as the FW update dropdown, so the update badge never points to a hidden version
-      const finalReleases = releases.filter(release => release.name === product && isFirmwareInDropdown(product, release.version));
+      const finalReleases = releases.filter(
+        release => release.name === product && isFirmwareInDropdown(product, release.version),
+      );
       finalReleases.sort((a, b) => (SemVer.lt(SemVer.clean(a.version), SemVer.clean(b.version)) ? 1 : -1));
       // log.info("data retrieved: ", finalReleases);
       return finalReleases;
@@ -261,7 +264,7 @@ function NavigationMenu(props: NavigationMenuProps) {
               )}
             </AnimatePresence>
             <AnimatePresence mode="popLayout">
-              {connected && pages.keymap && (
+              {connected && pages.keymap && combos && (
                 <motion.div initial={linkVariants.hidden} animate={linkVariants.visible} exit={linkVariants.hidden}>
                   <Link
                     to="/combos"

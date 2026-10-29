@@ -1,21 +1,21 @@
 {
   "firmwareDropdown": {
-    "description": "Firmware versions offered in the FW update dropdown, as semver ranges per product. The rule used is the one with the highest fromBazecor that is <= the running Bazecor version. A product missing from a rule shows every version. Custom firmware is never filtered.",
+    "description": "Firmware versions offered in the FW update dropdown, as semver ranges per product. The rule used is the one with the highest fromBazecor that is <= the running Bazecor version. A product missing from a rule shows every version. Custom firmware is never filtered. Upper bounds end in -0 (e.g. <2.0.0-0) so the next major's betas are hidden too: in semver 2.0.0-beta.1 is lower than 2.0.0.",
     "rules": [
       {
         "fromBazecor": "0.0.0",
         "ranges": {
-          "Defy": "<3.0.0",
-          "Raise2": "<3.0.0",
-          "Sonsei": "<3.0.0"
+          "Defy": "<3.0.0-0",
+          "Raise2": "<2.0.0-0",
+          "Sonsei": "<2.0.0-0"
         }
       },
       {
-        "fromBazecor": "1.12.0",
+        "fromBazecor": "1.13.0",
         "ranges": {
-          "Defy": ">=3.0.0 <4.0.0",
-          "Raise2": ">=2.0.0 <3.0.0",
-          "Sonsei": ">=2.0.0 <3.0.0"
+          "Defy": "<4.0.0-0",
+          "Raise2": "<3.0.0-0",
+          "Sonsei": "<3.0.0-0"
         }
       }
     ]
@@ -35,6 +35,30 @@
         "Defy": "2.3.0",
         "Raise2": "1.5.0",
         "Sonsei": "1.0.0"
+      }
+    },
+    "combos": {
+      "description": "Combos: the Combo Editor, the combo settings card and the combo badges in the Layout Editor. Hidden on older firmware.",
+      "minFirmware": {
+        "Defy": "2.4.0",
+        "Raise2": "1.6.0",
+        "Sonsei": "1.2.0"
+      }
+    },
+    "autoshift": {
+      "description": "Autoshift: the Autoshift settings card and the 'Make it Autoshiftable' checkbox in the key picker. Hidden on older firmware.",
+      "minFirmware": {
+        "Defy": "2.4.0",
+        "Raise2": "1.6.0",
+        "Sonsei": "1.2.0"
+      }
+    },
+    "capsword": {
+      "description": "CapsWord: the CapsWord settings card and the CapsWord key in Layers & modifiers. Hidden on older firmware.",
+      "minFirmware": {
+        "Defy": "2.4.0",
+        "Raise2": "1.6.0",
+        "Sonsei": "1.2.0"
       }
     }
   }
