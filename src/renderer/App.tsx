@@ -34,6 +34,7 @@ import FirmwareUpdate from "@Renderer/views/FirmwareUpdate";
 import LayoutEditor from "@Renderer/views/LayoutEditor";
 import MacroEditor from "@Renderer/views/MacroEditor";
 import SuperkeysEditor from "@Renderer/views/SuperkeysEditor";
+import ComboEditor from "@Renderer/views/ComboEditor";
 import Preferences from "@Renderer/views/Preferences";
 import Welcome from "@Renderer/views/Welcome";
 
@@ -43,6 +44,7 @@ import BazecorDevtools from "@Renderer/views/BazecorDevtools";
 import { showDevtools } from "@Renderer/devMode";
 
 import Store from "@Renderer/utils/Store";
+import { hasFirmwareFeature, VERSION_FEATURES } from "@Renderer/utils/versionRules";
 import { VersionUpdateDialog } from "@Renderer/components/molecules/CustomModal/VersionUpdateDialog";
 import UdevPolkitErrorDialog from "@Renderer/components/molecules/CustomModal/UdevPolkitErrorDialog";
 import getTranslator from "@Renderer/utils/translator";
@@ -58,71 +60,24 @@ import HID from "../api/hid/hid";
 
 const store = Store.getStore();
 
-// Helpers to detect SK 2.0 capable firmware based on semver thresholds per product
-const extractSemver = (text: string): [number, number, number] | null => {
-  if (!text) return null;
-  const m = text.match(/(\d+)\.(\d+)\.(\d+)/);
-  if (!m) return null;
-  return [parseInt(m[1], 10), parseInt(m[2], 10), parseInt(m[3], 10)];
-};
-
-const compareSemver = (a: [number, number, number], b: [number, number, number]) => {
-  if (a[0] !== b[0]) return a[0] - b[0];
-  if (a[1] !== b[1]) return a[1] - b[1];
-  return a[2] - b[2];
-};
-
-// Reads the FW version and stores the capabilities that depend on it (SK 2.0, Layer Lens).
-// Runs on connect and again after a firmware update, since the keyboard stays connected through it.
+// Reads the FW version and stores, as capabilities.<feature>, every capability that depends on it
+// (SK 2.0, Layer Lens, Combos, Autoshift, CapsWord). Runs on connect and again after a firmware
+// update, since the keyboard stays connected through it.
+// The minimum FW per product for each capability lives in src/versionRules.json.
 const detectFirmwareCapabilities = async (currentDevice: Device) => {
   try {
     const versionStr = (await currentDevice.noCacheCommand("version")) as string;
     log.verbose("VERSION: ", versionStr);
-    const semver = extractSemver(versionStr);
     const product = currentDevice?.device?.info?.product as string;
-    if (semver && product) {
-      const defyMin: [number, number, number] = [2, 2, 0];
-      const raise2Min: [number, number, number] = [1, 4, 0];
-      const sonseiMin: [number, number, number] = [0, 0, 0];
-      const isDefy = product === "Defy";
-      const isRaise2 = product === "Raise2";
-      const isSonsei = product === "Sonsei";
-      const detected =
-        (isDefy && compareSemver(semver, defyMin) >= 0) ||
-        (isRaise2 && compareSemver(semver, raise2Min) >= 0) ||
-        (isSonsei && compareSemver(semver, sonseiMin) >= 0);
-      store.set("capabilities.sk20", detected);
-      if (detected) {
-        log.info("SK 2.0 detected");
-      }
-
-      // Layer Lens needs the firmware to report overlay/layer packets over raw HID,
-      // which shipped for Sonsei in 1.0.0 and lands for Defy in 2.3.0 and Raise2 in
-      // 1.5.0 — both still unreleased at the time of writing (latest published are
-      // Defy 2.2.1 and Raise2 1.4.1), so Lens stays hidden on those boards until
-      // their firmware is out. Raise (Raise1) never exposes Lens, whatever the
-      // firmware.
-      const sonseiLensMin: [number, number, number] = [1, 0, 0];
-      const defyLensMin: [number, number, number] = [2, 3, 0];
-      const raise2LensMin: [number, number, number] = [1, 5, 0];
-      const lensAvailable =
-        (isSonsei && compareSemver(semver, sonseiLensMin) >= 0) ||
-        (isDefy && compareSemver(semver, defyLensMin) >= 0) ||
-        (isRaise2 && compareSemver(semver, raise2LensMin) >= 0);
-      store.set("capabilities.lens", lensAvailable);
-      log.info(
-        `[Lens] capability check -> product: ${product}, firmware: ${semver.join(".")}, isSonsei: ${isSonsei}, isDefy: ${isDefy}, isRaise2: ${isRaise2}, lensAvailable: ${lensAvailable}`,
-      );
-    } else {
-      store.set("capabilities.sk20", false);
-      store.set("capabilities.lens", false);
-      log.info(`[Lens] capability disabled (missing semver or product). semver: ${semver}, product: ${product}`);
-    }
+    VERSION_FEATURES.forEach(feature => {
+      const available = hasFirmwareFeature(feature, product, versionStr);
+      store.set(`capabilities.${feature}`, available);
+      log.info(`[Capabilities] ${feature} -> product: ${product}, firmware: ${versionStr}, available: ${available}`);
+    });
   } catch (e) {
     log.warn("Error reading or parsing firmware version", e);
-    store.set("capabilities.sk20", false);
-    store.set("capabilities.lens", false);
-    log.info("[Lens] capability disabled due to firmware version read/parse error");
+    VERSION_FEATURES.forEach(feature => store.set(`capabilities.${feature}`, false));
+    log.info("[Capabilities] all disabled due to firmware version read/parse error");
   }
 };
 
@@ -576,6 +531,20 @@ function App() {
             path="/superkeys"
             element={
               <SuperkeysEditor
+                onDisconnect={onKeyboardDisconnect}
+                startContext={startContext}
+                cancelContext={cancelContext}
+                setLoading={setLoadingData}
+                saveButtonRef={saveButtonRef}
+                discardChangesButtonRef={discardChangesButtonRef}
+              />
+            }
+          />
+          <Route
+            path="/combos"
+            element={
+              <ComboEditor
+                darkMode={darkMode}
                 onDisconnect={onKeyboardDisconnect}
                 startContext={startContext}
                 cancelContext={cancelContext}

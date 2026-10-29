@@ -4,7 +4,7 @@ import { SONSEI_KEYS } from "./geometry-sonsei";
 import { DefyKeyboardView } from "./DefyKeyboardView";
 import { Raise2KeyboardView } from "./Raise2KeyboardView";
 import { decodeKey, superkeyIndex, layoutOverrides, symbolOverrides } from "./keycodes";
-import { keyLabel, fg, fitFontSize, splitLongWord } from "./key-label";
+import { keyLabel, fg, fitFontSize, splitLongWord, comboBadge, comboBadgeNearLabel, comboNumbersForLayer } from "./key-label";
 import { DEFY_THUMB_ROTATION } from "./defy-thumb-paths";
 
 interface Props {
@@ -73,6 +73,7 @@ export const KeyboardView: React.FC<Props> = ({ model, activeLayer, layout, laye
   const { palette } = model;
   const names = model.layerNames?.length ? model.layerNames : (layerNames ?? []);
   const macroNames = model.macroNames ?? [];
+  const comboNumbers = comboNumbersForLayer(model.combos, layer);
 
   function getColor(ledIndex: number) {
     const pi = colormapLayer[ledIndex] ?? 0;
@@ -95,6 +96,7 @@ export const KeyboardView: React.FC<Props> = ({ model, activeLayer, layout, laye
     const label = getLabel(key.index);
     const fgColor = fg(color.r, color.g, color.b);
     const hasSub = Boolean(label.subtitle);
+    const comboNumber = comboNumbers.get(key.index);
 
     const thumbPath = THUMB_PATHS[key.index];
     if (thumbPath) {
@@ -194,6 +196,7 @@ export const KeyboardView: React.FC<Props> = ({ model, activeLayer, layout, laye
           <path d={thumbPath} fill={color.css} />
           <path d={thumbPath} fill="url(#lens-key-sheen)" fillOpacity="0.45" />
           {thumbLabel}
+          {comboNumber !== undefined && comboBadgeNearLabel(comboNumber, tx, ty, tr)}
         </g>
       );
     }
@@ -211,6 +214,7 @@ export const KeyboardView: React.FC<Props> = ({ model, activeLayer, layout, laye
         <rect x={x + 4} y={y} width={w - 8} height={h - 8} rx={4} fill={color.css} />
         <rect x={x + 4} y={y} width={w - 8} height={h - 8} rx={4} fill="url(#lens-key-sheen)" fillOpacity="0.45" />
         {keyLabel(cx, cy, y, h, label, fgColor)}
+        {comboNumber !== undefined && comboBadge(comboNumber, x + w - 1, y - 3)}
       </g>
     );
   }

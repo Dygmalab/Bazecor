@@ -14,6 +14,7 @@ import Raise2Flash from "../../../api/flash/raise2Flasher/Raise2-flasher";
 import SonseiFlash from "../../../api/flash/sonseiFlasher/Sonsei-flasher";
 import { FlashRaise } from "../../../api/flash";
 import { delay } from "../../../main/utils/delay";
+import Backup from "../../../api/backup";
 import * as Context from "./context";
 
 const stateUpdate = (stage: string, percentage: number, context: Context.ContextType) => {
@@ -78,11 +79,19 @@ const restoreSettings = async (
 
     const selected = list.find(x => parseInt(x.productId, 16) === context.originalDevice?.device?.usb.productId);
     if (selected !== undefined) device = await DeviceTools.connect(selected);
-    for (let i = 0; i < backup.backup.length; i += 1) {
-      const val = backup.backup[i].data;
-      log.info(`Going to send ${backup.backup[i].command} to keyboard`);
-      await device?.command(`${backup.backup[i].command} ${val}`.trim());
-      stateUpd("restore", (i / backup.backup.length) * 90);
+    /* The backup was taken on the firmware being replaced. On a downgrade it
+     * carries commands the flashed firmware does not know, and an unknown
+     * command with a long argument list (combos.map) hangs older firmware, so
+     * only what the keyboard lists in `help` is sent. A combos table in the old
+     * 4-key format also has to be converted for the new one. */
+    let commands = backup.backup;
+    if (device) commands = await Backup.keepSupportedCommands(commands, device);
+    commands = await Backup.adaptCombosToDevice(commands, device);
+    for (let i = 0; i < commands.length; i += 1) {
+      const val = commands[i].data;
+      log.info(`Going to send ${commands[i].command} to keyboard`);
+      await device?.command(`${commands[i].command} ${val}`.trim());
+      stateUpd("restore", (i / commands.length) * 90);
     }
     await device?.command("led.mode 0");
     stateUpd("restore", 100);

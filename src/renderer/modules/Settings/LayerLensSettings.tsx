@@ -67,7 +67,7 @@ const LayerLensSettings = () => {
       .then((s: LensStateShape) => setHidPermissionDenied(!!s.hidPermissionDenied))
       .catch(() => {});
 
-    // Keep in sync with changes made elsewhere (overlay window, tray, shortcut).
+    // Keep in sync with changes made elsewhere (overlay window, tray).
     const onSettings = (_: unknown, s: LensSettingsShape) => applySettings(s);
     const onState = (_: unknown, s: LensStateShape) => setHidPermissionDenied(!!s.hidPermissionDenied);
     ipcRenderer.on("lens:settings", onSettings);
@@ -231,7 +231,7 @@ const LayerLensSettings = () => {
             <div className="flex items-center w-full justify-between py-2 border-b-[1px] border-gray-50 dark:border-gray-700">
               <div className="flex items-center gap-1.5">
                 <label htmlFor="layerLensOnChangeSwitch" className="m-0 text-sm font-semibold tracking-tight">
-                  Show only on layer change
+                  Show on layer change
                 </label>
                 <Tooltip>
                   <TooltipTrigger asChild>

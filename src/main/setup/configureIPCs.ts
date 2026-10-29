@@ -14,6 +14,7 @@ const removeIPCs = () => {
   ipcMain.removeHandler("open-dialog");
   ipcMain.removeHandler("is-devtools-opened");
   ipcMain.removeHandler("save-dialog");
+  ipcMain.removeHandler("show-message-box");
   ipcMain.removeHandler("manage-devtools");
   ipcMain.removeHandler("get-userPath");
   ipcMain.removeHandler("get-Locale");
@@ -57,6 +58,21 @@ const configureIPCs = () => {
     const window = Window.getWindow();
     const data = dialog.showSaveDialogSync(window, options);
     return data;
+  });
+
+  // The renderer's replacement for window.alert/window.confirm. Those block the
+  // renderer and, on Windows, leave it without keyboard focus once closed: every
+  // text field then ignores typing until the window is refocused by hand, which
+  // is how new superkeys/combos ended up unnamed. A main-process message box
+  // parented to the window doesn't, and focus is handed back explicitly anyway.
+  ipcMain.handle("show-message-box", async (event, options: Electron.MessageBoxOptions) => {
+    const window = Window.getWindow();
+    const result = window ? await dialog.showMessageBox(window, options) : await dialog.showMessageBox(options);
+    if (window && !window.isDestroyed()) {
+      window.focus();
+      window.webContents.focus();
+    }
+    return result;
   });
 
   ipcMain.handle("is-devtools-opened", async () => {

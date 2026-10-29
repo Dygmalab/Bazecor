@@ -8,6 +8,7 @@ import DeviceMap from "./deviceMap";
 import { ExtHIDInterface } from "./types";
 import { ExtendedPort } from "./serial/SerialAPI";
 import Hardware from "../hardware";
+import { addMissingVirtualCommands } from "../hardware-virtual";
 import { DelimiterParser } from "@serialport/parser-delimiter";
 
 // The battery is polled every few seconds, so its traffic would flood the logs
@@ -97,6 +98,10 @@ class Device implements DeviceClass {
       this.vendorId = params.device.usb.vendorId.toString(16);
       this.device = Device.getHWFVirtual(params.device);
       this.file = true;
+      // A file saved before Combos (or any later feature) existed would make
+      // the editors believe the firmware lacks it.
+      const added = addMissingVirtualCommands(params);
+      if (added.length > 0) log.info("Virtual keyboard: added commands its file predates:", added.join(", "));
       this.fileData = params;
     }
   }
@@ -257,7 +262,9 @@ class Device implements DeviceClass {
 
   async virtualRequest(cmd: string, ...args: string[]) {
     log.debug("performing virtual request");
-    if (args.length > 0 && this.fileData.virtual[cmd].eraseable) {
+    // A command the file doesn't have (another board's feature) used to throw
+    // here on write; ignore the write, as a keyboard ignores a command it lacks.
+    if (args.length > 0 && this.fileData.virtual[cmd]?.eraseable) {
       this.fileData.virtual[cmd].data = args.join(" ");
     }
     log.debug(`reading virtual data from ${cmd}: `, this.fileData.virtual[cmd]);

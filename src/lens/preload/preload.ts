@@ -20,6 +20,14 @@ contextBridge.exposeInMainWorld("lens", {
     return () => ipcRenderer.removeListener("lens:settings", listener);
   },
 
+  /** Linux only: the main process can't set the window's opacity there, so the
+   * page applies it itself (see overlay-window.ts setWindowOpacity). */
+  onOpacity(cb: (v: number) => void): () => void {
+    const listener = (_: Electron.IpcRendererEvent, v: number) => cb(v);
+    ipcRenderer.on("lens:opacity", listener);
+    return () => ipcRenderer.removeListener("lens:opacity", listener);
+  },
+
   getState(): Promise<LensState> {
     return ipcRenderer.invoke("lens:get-state");
   },

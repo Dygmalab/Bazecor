@@ -41,6 +41,15 @@ const SuperkeysSelector: React.FC<any> = ({
   cloneItem,
   subtitle,
   checkLimit,
+  /* The dropdown itself is generic -- only the wording is not. Callers that
+   * are not the Superkeys Editor override these three, so the "add" tooltip
+   * and the name dialog talk about the right kind of item. */
+  itemLabel = "superkey",
+  createTitle = i18n.editor.superkeys.createModal.createNew,
+  /* Defaults to createTitle, which is what the Superkeys Editor has always
+   * shown for both dialogs. */
+  renameTitle = createTitle,
+  inputLabel = i18n.editor.superkeys.createModal.inputLabel,
 }) => {
   const [show, setShow] = useState(false);
   const toggleShow = () => setShow(!show);
@@ -167,7 +176,7 @@ const SuperkeysSelector: React.FC<any> = ({
             </div>
           </TooltipTrigger>
           <TooltipContent className="max-w-xs" side="bottom" size="sm">
-            {i18n.general.new} superkey
+            {i18n.general.new} {itemLabel}
           </TooltipContent>
         </Tooltip>
       </TooltipProvider>
@@ -180,8 +189,8 @@ const SuperkeysSelector: React.FC<any> = ({
           name={itemList[selectedItem]?.name}
           toggleShow={toggleShow}
           handleSave={handleSave}
-          modalTitle={i18n.editor.superkeys.createModal.createNew}
-          labelInput={i18n.editor.superkeys.createModal.inputLabel}
+          modalTitle={renameTitle}
+          labelInput={inputLabel}
         />
       )}
       <NameModal
@@ -189,8 +198,8 @@ const SuperkeysSelector: React.FC<any> = ({
         name=""
         toggleShow={toggleShowAdd}
         handleSave={handleAdd}
-        modalTitle={i18n.editor.superkeys.createModal.createNew}
-        labelInput={i18n.editor.superkeys.createModal.inputLabel}
+        modalTitle={createTitle}
+        labelInput={inputLabel}
       />
     </div>
   );

@@ -13,6 +13,13 @@ window.addEventListener(
   { passive: false },
 );
 
+// Linux has no native window opacity, so the main process sends it here and the
+// whole page is faded instead (the window itself is transparent). Registered
+// before the first render so the value sent on ready-to-show is never missed.
+window.lens.onOpacity(v => {
+  document.documentElement.style.opacity = String(v);
+});
+
 const root = document.getElementById("root");
 if (!root) throw new Error("Missing #root");
 
