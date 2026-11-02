@@ -6,9 +6,8 @@ import path from "path";
 import fs from "fs";
 
 import { ReleaseType } from "@Renderer/types/releases";
+import { isFirmwareInDropdown } from "@Renderer/utils/versionRules";
 import * as Context from "./context";
-
-const FWMAJORVERSION = "<3.0.0"; // Major version restriction of the firmware to be downloaded (excludes 3.x and above)
 
 export const FocusAPIRead = async (context: Context.ContextType): Promise<Context.ContextType> => {
   try {
@@ -39,6 +38,8 @@ const loadAvailableFirmwareVersions = async (allowBeta: boolean) => {
     const data = await octokit.request("GET /repos/{owner}/{repo}/releases", {
       owner: "Dygmalab",
       repo: "Firmware-release",
+      // GitHub returns 30 releases by default, counting every product, so older versions would drop off the list
+      per_page: 100,
       headers: {
         "X-GitHub-Api-Version": "2022-11-28",
       },
@@ -88,10 +89,9 @@ export const GitHubRead = async (context: Context.ContextType): Promise<Context.
   try {
     const fwReleases = await loadAvailableFirmwareVersions(context.allowBeta);
     const productName = context.device.info.product;
+    // Allowed FW range per product lives in src/versionRules.json
     finalReleases = fwReleases.filter(
-      release =>
-        release.name === productName &&
-        (productName !== "Raise" ? SemVer.satisfies(release.version ? release.version : "", FWMAJORVERSION, { includePrerelease: true }) : true),
+      release => release.name === productName && isFirmwareInDropdown(productName, release.version),
     );
     finalReleases.sort((a, b) => (SemVer.lt(SemVer.clean(a.version) as string, SemVer.clean(b.version) as string) ? 1 : -1));
     if (context.device.bootloader) {

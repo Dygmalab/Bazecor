@@ -29,6 +29,7 @@ import {
 } from "../../../api/hardware-virtual";
 import Store from "../../utils/Store";
 import { isVirtualType } from "../../../api/comms/virtual";
+import { alertBox, confirmBox } from "../../utils/messageBox";
 import Backup from "../../../api/backup";
 
 const store = Store.getStore();
@@ -182,11 +183,11 @@ export default function VirtualSelector(props: VirtualSelectorProps) {
       if (!isVirtualType(file) && !Backup.isBackupType(file)) throw Error("not a valid file, no virtual or backup objects");
     } catch (e) {
       log.error(e);
-      window.alert(i18n.keyboardSelect.virtualKeyboard.errorLoadingFile);
+      await alertBox(i18n.keyboardSelect.virtualKeyboard.errorLoadingFile);
       return;
     }
     if (!isVirtualType(file) && Backup.isBackupType(file)) {
-      if (!window.confirm(i18n.keyboardSelect.virtualKeyboard.backupTransform)) {
+      if (!(await confirmBox(i18n.keyboardSelect.virtualKeyboard.backupTransform))) {
         return;
       }
       file = await convertBackupToVK(file);

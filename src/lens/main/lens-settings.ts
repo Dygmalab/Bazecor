@@ -69,7 +69,7 @@ const settingsListeners: Array<(s: LensSettings) => void> = [];
 
 /**
  * Notified after every setLensSettings() write, whoever made it (Preferences,
- * the tray, the overlay, the shortcut). Used by the tray to keep its menu's
+ * the tray, the overlay). Used by the tray to keep its menu's
  * checkmarks in sync with settings changed elsewhere.
  */
 export function onLensSettingsChanged(cb: (s: LensSettings) => void): void {
@@ -141,7 +141,7 @@ export function setOverlayBounds(bounds: OverlayBounds): void {
 /**
  * Last deliberate visibility of the overlay (see LensStoreState.overlayShown).
  * Only the explicit show/hide paths write it — the momentary ones (Lens key
- * HOLD, "show only on layer change") must not, or a layer switch right before
+ * HOLD, "show on layer change") must not, or a layer switch right before
  * quitting would decide how Lens comes back next launch.
  */
 export function getLastOverlayShown(): boolean {

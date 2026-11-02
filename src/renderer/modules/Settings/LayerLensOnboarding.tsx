@@ -45,7 +45,7 @@ const steps: Step[] = [
   {
     title: "Show it your way",
     description:
-      'Turn on "Show only on layer change" to automatically reveal the overlay for a few seconds every time you switch layers.',
+      'Turn on "Show on layer change" to automatically reveal the overlay for a few seconds every time you switch layers.',
     image: showItYourWay,
   },
   {

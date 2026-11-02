@@ -24,6 +24,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import log from "electron-log/renderer";
 import { Octokit } from "@octokit/core";
 import SemVer from "semver";
+import { isFirmwareInDropdown } from "@Renderer/utils/versionRules";
 
 import DygmaLogo from "@Assets/logo.svg";
 import { showDevtools } from "@Renderer/devMode";
@@ -67,6 +68,7 @@ function NavigationMenu(props: NavigationMenuProps) {
   const { connected, pages, fwUpdate, flashing, allowBeta, modified, loading, saveButtonRef, discardChangesButtonRef } = props;
   const store = Store.getStore();
   const sk20 = Boolean(store.get("capabilities.sk20"));
+  const combos = Boolean(store.get("capabilities.combos"));
 
   const getGitHubFW = useCallback(
     async (product: any) => {
@@ -75,6 +77,8 @@ function NavigationMenu(props: NavigationMenuProps) {
       const data = await octokit.request("GET /repos/{owner}/{repo}/releases", {
         owner: "Dygmalab",
         repo: "Firmware-release",
+        // GitHub returns 30 releases by default, counting every product, so older versions would drop off the list
+        per_page: 100,
         headers: {
           "X-GitHub-Api-Version": "2022-11-28",
         },
@@ -84,7 +88,10 @@ function NavigationMenu(props: NavigationMenuProps) {
         const newRelease = { name: releaseData[0], version: releaseData[1] };
         if (!releaseData[1].includes("beta") || allowBeta) releases.push(newRelease);
       });
-      const finalReleases = releases.filter(release => release.name === product);
+      // Same filter as the FW update dropdown, so the update badge never points to a hidden version
+      const finalReleases = releases.filter(
+        release => release.name === product && isFirmwareInDropdown(product, release.version),
+      );
       finalReleases.sort((a, b) => (SemVer.lt(SemVer.clean(a.version), SemVer.clean(b.version)) ? 1 : -1));
       // log.info("data retrieved: ", finalReleases);
       return finalReleases;
@@ -251,6 +258,26 @@ function NavigationMenu(props: NavigationMenuProps) {
                       showNotif={isBeta && !sk20}
                       notifText="BETA"
                       disabled={fwUpdate || !isBeta || loading}
+                    />
+                  </Link>
+                </motion.div>
+              )}
+            </AnimatePresence>
+            <AnimatePresence mode="popLayout">
+              {connected && pages.keymap && combos && (
+                <motion.div initial={linkVariants.hidden} animate={linkVariants.visible} exit={linkVariants.hidden}>
+                  <Link
+                    to="/combos"
+                    onClick={linkHandler}
+                    className={`list-link flex hover:no-underline ${fwUpdate || loading ? "disabled pointer-events-none" : ""}`}
+                  >
+                    <NavigationButton
+                      selected={currentPage === "/combos"}
+                      buttonText="Combo Editor"
+                      icoSVG={<IconKeyboard2Stroke />}
+                      showNotif
+                      notifText="BETA"
+                      disabled={fwUpdate || loading}
                     />
                   </Link>
                 </motion.div>

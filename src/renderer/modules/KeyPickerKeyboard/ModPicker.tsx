@@ -1,5 +1,6 @@
 /* eslint-disable no-bitwise */
 import React, { useEffect, useState } from "react";
+import log from "electron-log/renderer";
 
 // Components
 import { SegmentedKeyType } from "@Renderer/types/layout";
@@ -9,15 +10,21 @@ import OSKey from "@Renderer/components/molecules/KeyTags/OSKey";
 import { IconInformation } from "@Renderer/components/atoms/icons";
 import CustomRadioCheckBox from "@Renderer/components/molecules/Form/CustomRadioCheckBox";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@Renderer/components/atoms/Tooltip";
+import { autoshiftBaseCode, canBeAutoshifted, isAutoshift, toAutoshift } from "../../../hw/autoshift";
 
 interface ModPickerProps {
   keyCode: SegmentedKeyType;
   onKeySelect: (key: number) => void;
   isStandardView: boolean;
+  /* Combo and superkey ACTIONS reach the chain with the INJECTED flag, which
+   * the Autoshift plugin filters out -- and the Combos plugin refuses an
+   * Autoshift code as an action outright. Offering the checkbox there would
+   * let the user build something the firmware silently drops. */
+  allowAutoshift?: boolean;
 }
 
 function ModPicker(props: ModPickerProps) {
-  const { keyCode, onKeySelect, isStandardView } = props;
+  const { keyCode, onKeySelect, isStandardView, allowAutoshift = true } = props;
   const [modifs, setModifs] = useState([]);
   const previousKeyCode = usePrevious({ base: keyCode.base, modified: keyCode.modified });
 
@@ -78,6 +85,21 @@ function ModPicker(props: ModPickerProps) {
     onKeySelect(keyCode.base + applyModif(mod));
   }
 
+  /* Autoshift replaces the whole keycode rather than adding flags, so it is
+   * derived from the current code instead of kept in state. */
+  const currentCode = keyCode === undefined ? 0 : keyCode.base + keyCode.modified;
+  const autoshifted = isAutoshift(currentCode);
+  const plainCode = autoshifted ? autoshiftBaseCode(currentCode) : currentCode;
+  const autoshiftAvailable = autoshifted || canBeAutoshifted(plainCode);
+
+  function toggleAutoshift() {
+    const next = autoshifted ? plainCode : toAutoshift(plainCode);
+    log.info(
+      `[Autoshift] toggle: currentCode=${currentCode} autoshifted=${autoshifted} plainCode=${plainCode} available=${autoshiftAvailable} -> emitting ${next}`,
+    );
+    onKeySelect(next);
+  }
+
   function setModifierVisibility() {
     if (
       // (keyCode != undefined &&
@@ -121,8 +143,6 @@ function ModPicker(props: ModPickerProps) {
             renderAs="paragraph-sm"
             className={`flex items-center gap-2 ${setModifierVisibility() ? "opacity-50" : "opacity-100"}`}
           >
-            {/* {i18n.editor.standardView.keys.addModifier} */}
-            Create a shortcut
             <TooltipProvider delayDuration={200}>
               <Tooltip>
                 <TooltipTrigger className="[&_svg]:text-purple-100 [&_svg]:dark:text-purple-200">
@@ -140,6 +160,8 @@ function ModPicker(props: ModPickerProps) {
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>
+            {/* {i18n.editor.standardView.keys.addModifier} */}
+            Create a shortcut
           </Heading>
         ) : null}
         <div className="modPickerButtonsList flex gap-6 items-center">
@@ -189,6 +211,35 @@ function ModPicker(props: ModPickerProps) {
             disabled={setModifierVisibility()}
           />
         </div>
+        {/* Rendered conditionally rather than with `hidden`: the `flex` class
+         * overrides the attribute's display:none and the checkbox stayed visible. */}
+        {allowAutoshift && (
+          <div className="autoshiftPicker flex items-center ml-12">
+            <CustomRadioCheckBox
+              label={<div className="pl-0.5">Autoshift</div>}
+              onClick={() => toggleAutoshift()}
+              checked={autoshifted}
+              type="checkbox"
+              name="makeAutoshiftable"
+              id="makeAutoshiftable"
+              disabled={!autoshiftAvailable}
+              tooltip={
+                <>
+                  <Heading headingLevel={4} renderAs="h4" className="text-gray-600 dark:text-gray-25 mb-1 leading-6 text-base">
+                    Autoshift
+                  </Heading>
+                  <p className="description text-ssm font-medium text-gray-400 dark:text-gray-200">
+                    Holding the key will output its shifted variant. For example, holding A will output capital A.
+                  </p>
+                  <p className="description text-ssm font-medium text-gray-400 dark:text-gray-200">
+                    It only works for letters, numbers and punctuation.
+                  </p>
+                </>
+              }
+              className="mt-0"
+            />
+          </div>
+        )}
       </div>
     </div>
   );

@@ -148,3 +148,53 @@ const COLORMAP_INDEX_MAP = buildColormapIndexMap();
 export const convertColormapDefyToSonsei = (layer: number[]): number[] => {
   return COLORMAP_INDEX_MAP.map(defyLed => (defyLed === -1 ? 0 : layer[defyLed]));
 };
+
+// ── Sonsei → Defy ────────────────────────────────────────────────────────────
+// The same correspondence read the other way. Both maps above are one-to-one, so
+// inverting them is exact. The Defy keys the Sonsei lacks (inner columns, the
+// lower thumb keys) keep what the Defy already has there when its current layer
+// is given, and are left transparent otherwise. Likewise the LEDs it lacks (the
+// keys above and the underglow) keep the palette slots the Defy's current layer
+// gives them; without it, key LEDs get 0 and the underglow `underglowColor`.
+
+export const DEFY_KEYS_PER_LAYER = 5 * DEFY_COLS;
+export const DEFY_LEDS_PER_LAYER = 178;
+export const SONSEI_KEYS_PER_LAYER = 5 * SONSEI_COLS;
+export const SONSEI_LEDS_PER_LAYER = COLORMAP_INDEX_MAP.length;
+// Defy LEDs 0-69 sit under the keys (see the led_map above); 70 onwards is the underglow strip.
+export const DEFY_FIRST_UNDERGLOW_LED = 70;
+
+const invert = (map: number[], size: number): number[] => {
+  const inverse: number[] = new Array(size).fill(-1);
+  map.forEach((source, target) => {
+    if (source !== -1) inverse[source] = target;
+  });
+  return inverse;
+};
+
+const SONSEI_KEY_FOR_DEFY = invert(KEYMAP_INDEX_MAP, DEFY_KEYS_PER_LAYER);
+const SONSEI_LED_FOR_DEFY = invert(COLORMAP_INDEX_MAP, DEFY_LEDS_PER_LAYER);
+
+export const convertKeymapSonseiToDefy = (layer: number[], currentDefyLayer?: number[]): number[] =>
+  SONSEI_KEY_FOR_DEFY.map((sonseiIdx, defyIdx) =>
+    sonseiIdx === -1 ? (currentDefyLayer?.[defyIdx] ?? NO_KEY) : layer[sonseiIdx],
+  );
+
+export const convertColormapSonseiToDefy = (layer: number[], currentDefyLayer?: number[], underglowColor = 0): number[] =>
+  SONSEI_LED_FOR_DEFY.map((sonseiLed, defyLed) => {
+    if (sonseiLed !== -1) return layer[sonseiLed];
+    return currentDefyLayer?.[defyLed] ?? (defyLed >= DEFY_FIRST_UNDERGLOW_LED ? underglowColor : 0);
+  });
+
+// Combo members are physical key offsets (KeyAddr::toInt()), the same index
+// space as a keymap layer, so they move with the keymap maps. null: the key has
+// no counterpart on the other board.
+export const convertKeyPositionDefyToSonsei = (position: number): number | null => {
+  const sonseiIdx = position >= 0 && position < DEFY_KEYS_PER_LAYER ? SONSEI_KEY_FOR_DEFY[position] : -1;
+  return sonseiIdx === -1 ? null : sonseiIdx;
+};
+
+export const convertKeyPositionSonseiToDefy = (position: number): number | null => {
+  const defyIdx = KEYMAP_INDEX_MAP[position] ?? -1;
+  return defyIdx === -1 ? null : defyIdx;
+};

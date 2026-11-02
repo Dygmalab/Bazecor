@@ -24,9 +24,14 @@ interface LabelModifierProps {
   size?: "xs" | "sm" | "md";
 }
 
+/* The xs badge is the one drawn on the keys of the Layout Editor board
+ * (ListModifiersKey), so a key shown outside the board reads the same. */
+const xsClasses =
+  "inline-flex items-center h-[12px] font-semibold tracking-tight leading-3 py-0 px-[3px] m-0 text-[10px] text-gray-25 dark:text-gray-600 bg-gray-600/60 dark:bg-gray-25/60 shadow-sm rounded-[3px]";
+
 const LabelModifier = ({ label, size = "md" }: LabelModifierProps) => (
   <div
-    className={`font-semibold tracking-tight rounded-xl backdrop-blur-sm ${
+    className={`font-semibold tracking-tight ${size === "xs" ? xsClasses : "rounded-xl backdrop-blur-sm"} ${
       size === "md"
         ? "border-[1px] border-solid border-gray-800/10 dark:border-gray-800/50 text-gray-25 dark:text-gray-50 bg-gray-400/50 px-[8px] py-[4px] text-[11px]"
         : ""

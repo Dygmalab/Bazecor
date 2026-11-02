@@ -357,7 +357,8 @@ const English = {
       },
       layerLens: {
         title: "Layer Lens",
-        callOut:"Layer Lens is the on-screen overlay that shows your keyboard's active layer. 🔍 Assign these keys to control when it pops up.",
+        callOut:
+          "Layer Lens is the on-screen overlay that shows your keyboard's active layer. 🔍 Assign these keys to control when it pops up.",
         toggleLayerLens: "LENS TAP",
         toggleLayerLensDescription: "Tap to show Layer Lens, tap again to hide it.\n ",
         holdLayerLens: "LENS HOLD",
@@ -480,11 +481,39 @@ const English = {
       memoryUsage: {
         title: "Superkeys Memory Usage",
         errorTitle: "You exceeded the maximum capacity of Superkeys.",
-        errordBody:
-          "Please decrease the number of Superkeys until the Memory Usage indicator is no longer red.",
+        errordBody: "Please decrease the number of Superkeys until the Memory Usage indicator is no longer red.",
         alertTitle: "You are almost out of Superkeys",
-        alertBody:
-          "Everything will still work perfectly but consider deleting Superkeys you don't use to continue adding more.",
+        alertBody: "Everything will still work perfectly but consider deleting Superkeys you don't use to continue adding more.",
+      },
+    },
+    combos: {
+      add: "Add new combo",
+      newCombo: "New combo",
+      createModal: {
+        createNew: "Name your new combo",
+        rename: "Rename combo",
+        inputLabel: "Combo name",
+      },
+      deleteModal: {
+        title: "Delete combo",
+        body: "Are you sure you want to delete this combo? This action cannot be undone.",
+      },
+      memoryUsage: {
+        title: "Combos Memory Usage",
+        errorTitle: "You exceeded the maximum capacity of Combos.",
+        errordBody: "Please decrease the number of Combos until the Memory Usage indicator is no longer red.",
+        alertTitle: "You are almost out of Combos",
+        alertBody: "Everything will still work perfectly but consider deleting Combos you don't use to continue adding more.",
+      },
+      breakModal: {
+        title: "This key breaks a combo",
+        superkey: "Only Superkeys with TAP and HOLD actions, where HOLD is a modifier or a layer change, can be part of a combo.",
+        lens: "Lens keys cannot be part of a combo.",
+        affected: "These combos will stop working while this key is here:",
+        superkeyHint: "To keep the combo working, remove the complex Superkey from this position.",
+        lensHint: "To keep the combo working, remove the Lens key from this position.",
+        undo: "Undo change",
+        keep: "Keep it anyway",
       },
     },
     oldMacroModal: {
@@ -606,6 +635,29 @@ const English = {
   },
   keyboardSettings: {
     advanced: "Advanced",
+    autoshift: {
+      title: "Autoshift",
+      holdTimeout: "Hold time before the shifted character",
+      holdTimeoutTip:
+        "Determines how long you need to hold a key to get its shifted version. The shorter, the faster it feels, but it increases the chances of getting accidental triggers.",
+    },
+    capsword: {
+      title: "CapsWord",
+      idleTimeout: "Turn off after inactivity",
+      idleTimeoutTip:
+        "CapsWord will turn off after the set amount of time. Set it to never if you want to disable the timeout entirely.",
+      idleDisabled: "Never",
+    },
+    combos: {
+      title: "Combos",
+      window: "How simultaneous a chord has to be",
+      windowTip:
+        "Determines the amount of time you have to press all the keys of a combo at once. The looser, the easier it is to trigger a combo, but it increases the risk of accidental triggers and adds a small delay when typing.",
+      idleTime: "Pause needed before a combo",
+      idleTimeTip:
+        "A combo will not start until this amount of time has elapsed since the last keypress. The lower the time, the snappier it will feel, but the higher the risk of accidental triggers.",
+      idleTimeDisabled: "Off",
+    },
     defaultLabel: "default",
     backupFolder: {
       header: "Backups Actions",

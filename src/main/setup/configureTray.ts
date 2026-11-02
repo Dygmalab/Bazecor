@@ -43,7 +43,7 @@ const AUTO_SHOW_DURATION_STEPS_S = [2, 4, 6, 8, 10];
 
 /** Layer change display time submenu. Same as the opacity one: the title shows the exact
  * value and the closest step gets the check. Disabled, like in Preferences, while
- * "Show only on layer change" is off, since it has no effect then. */
+ * "Show on layer change" is off, since it has no effect then. */
 function buildAutoShowDurationMenu(durationMs: number, autoShow: boolean): Electron.MenuItemConstructorOptions {
   const seconds = durationMs / 1000;
   const lastStep = AUTO_SHOW_DURATION_STEPS_S[AUTO_SHOW_DURATION_STEPS_S.length - 1];
@@ -94,7 +94,7 @@ function buildTrayMenu(): Menu {
     { label: "Toggle Layer Lens", click: () => overlayController.toggleOverlay() },
     { label: "Toggle Resize Mode", click: () => setResizeMode(!getLensSettings().resizeMode) },
     {
-      label: "Show only on layer change",
+      label: "Show on layer change",
       type: "checkbox",
       checked: menuAutoShow,
       click: () => setOverlayAutoShow(!getLensSettings().overlayAutoShow),

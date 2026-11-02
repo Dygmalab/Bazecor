@@ -97,16 +97,12 @@ function Welcome(props: WelcomeProps) {
                 <Heading headingLevel={3} renderAs="h3" variant="warning">
                   {i18n.welcome.bootloaderTitle}
                 </Heading>
-                <p>{i18n.welcome.description}</p>
 
                 <span className="cardsub">
                   <ul style={{ lineHeight: "2rem" }}>
                     <li>This process will revert your keyboard&apos;s configuration back to factory settings.</li>
-                    <li>
-                      {"Before proceeding, we recommend that you "}
-                      <a href="https://support.dygma.com/hc/en-us/articles/360014262298">export and save your layers</a>.
-                    </li>
-                    <li>To exit Bootloader Mode, unplug and replug the USB-C cable to your Neuron.</li>
+                    <li>After the update, please restore a previous backup from Settings &gt; Backups.</li>
+                    <li>To exit Bootloader Mode, unplug and replug the keyboard.</li>
                   </ul>
                 </span>
               </div>

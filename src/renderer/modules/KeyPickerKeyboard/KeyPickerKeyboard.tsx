@@ -33,12 +33,14 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@Rende
 import { SegmentedKeyType } from "@Renderer/types/layout";
 import { MacrosType } from "@Renderer/types/macros";
 import { SuperkeysType } from "@Renderer/types/superkeys";
+import Store from "@Renderer/utils/Store";
 import { KeymapDB } from "../../../api/keymap";
 import { Picker } from ".";
 
 import ModPicker from "./ModPicker";
+import { AutoshiftCodes } from "../../../hw/autoshift";
+import { CapsWordCodes } from "../../../hw/capsword";
 import ModifiersTab from "../KeysTabs/ModifiersTab";
-import Store from "@Renderer/utils/Store";
 
 // Icons
 
@@ -254,6 +256,11 @@ interface Props {
   actTab: string;
   selectedlanguage: string;
   isWireless: boolean;
+  /* Passed straight to ModPicker; see the note on its own prop. */
+  allowAutoshift?: boolean;
+  /* Show mouse movement and wheel keys, which the Mouse tab otherwise keeps to
+   * the Layout Editor. */
+  fullMouse?: boolean;
 }
 
 interface State {
@@ -276,6 +283,8 @@ function KeyPickerKeyboard(props: Props) {
     keyIndex,
     mouseWheel,
     resetScroll,
+    allowAutoshift = true,
+    fullMouse = false,
   } = props;
   const prevProps = useRef(props);
   const overflowRef = React.createRef<HTMLElement>();
@@ -291,6 +300,7 @@ function KeyPickerKeyboard(props: Props) {
   const [keymapDB] = useState(new KeymapDB());
   const store = Store.getStore();
   const sk20 = Boolean(store.get("capabilities.sk20"));
+  const autoshiftAvailable = Boolean(store.get("capabilities.autoshift"));
   // Layer Lens is available for Sonsei (fw >= 1.0.0), Defy (fw >= 2.3.0) and Raise2
   // (fw >= 1.5.0) — see App.tsx, which writes capabilities.lens on connect. Raise
   // (Raise1) never sets the flag, so the Layer Lens tab stays hidden for it in both
@@ -344,8 +354,20 @@ function KeyPickerKeyboard(props: Props) {
     if (keyCode >= 53980 && keyCode <= 54109) tab = "tabSuperKeys";
     if (keyCode >= 54108 && keyCode <= 54111) tab = "tabWireless";
     if (keyCode >= 54112 && keyCode <= 54114) tab = "tabLayerLens";
+    /* Autoshift is an ordinary key with a property, so it belongs on the Keys
+     * tab; CapsWord is assigned from Layers & modifiers. Without these two the
+     * lookup falls through with an empty string and the picker ends up with no
+     * active tab at all, which looks like the panel closing. */
+    if (keyCode >= AutoshiftCodes.AUTOSHIFT_FIRST && keyCode <= AutoshiftCodes.AUTOSHIFT_LAST) tab = "tabKeys";
+    if (keyCode === CapsWordCodes.CAPS_WORD) tab = "tabLayers";
 
     log.info("detectedTab", keyCode, tab);
+
+    /* Any keycode we do not recognise would otherwise blank the tab strip. */
+    if (tab === "") {
+      log.warn("[KeyPicker] no tab matched keycode, falling back to tabKeys", keyCode);
+      tab = "tabKeys";
+    }
     if (state.currentTab === "tabLayers" && tab === "tabKeys" && keyCode > 223) tab = "tabLayers";
     /* keep Advanced Modifiers enabled regardless of sk20 */
     return tab;
@@ -484,7 +506,12 @@ function KeyPickerKeyboard(props: Props) {
                     <div className={`flex ${macros[KC - 53852] ? "ModPickerScrollHidden" : ""} ${disable ? "disable" : ""}`}>
                       {!superkeys[superk.indexOf(KC)] || !macros[KC - 53852] ? (
                         <div className="flex gap-2 flex-col lg:flex-row lg:gap-4">
-                          <ModPicker keyCode={code} onKeySelect={onKeySelect} isStandardView={false} />
+                          <ModPicker
+                            keyCode={code}
+                            onKeySelect={onKeySelect}
+                            isStandardView={false}
+                            allowAutoshift={allowAutoshift && autoshiftAvailable}
+                          />
                         </div>
                       ) : (
                         ""
@@ -604,7 +631,7 @@ function KeyPickerKeyboard(props: Props) {
             </TabsContent>
             <TabsContent value="tabMouse" key="tabMouse">
               <motion.div initial="hidden" animate="visible" key="tabKeys" variants={tabVariants}>
-                <MouseTab onAddSpecial={onKeySelect} keyCode={code} actTab={actTab} disabled={disable} />
+                <MouseTab onAddSpecial={onKeySelect} keyCode={code} actTab={fullMouse ? "editor" : actTab} disabled={disable} />
               </motion.div>
             </TabsContent>
             {isWireless && (
