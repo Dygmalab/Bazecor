@@ -283,8 +283,7 @@ const ModifiersTab = ({
                     CapsWord
                   </Button>
                   <p className="description text-ssm font-medium text-gray-400 dark:text-gray-300 max-w-md">
-                    Capitalises what you type until the word ends -- on a space, enter, tab or punctuation, after a period of
-                    inactivity, or by pressing the key again.
+                    After you press this key, the next word will be capitalized. You can also deactivate it by pressing the key again.
                   </p>
                 </div>
               </div>

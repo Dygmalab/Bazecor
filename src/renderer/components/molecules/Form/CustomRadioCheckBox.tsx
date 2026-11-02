@@ -30,22 +30,12 @@ function CustomRadioCheckBox(props: CustomRCBProps) {
   return (
     <div className={`customCheckbox ${className}`}>
       <div className="flex flex-nowrap items-center hover:cursor-pointer" id={`input-${id}`}>
-        <Checkbox
-          id={`input-${id}-${type}`}
-          name={name}
-          disabled={disabled || false}
-          checked={checked}
-          onCheckedChange={onClick}
-        />
-        <Label className="pl-2 flex items-center mb-0" htmlFor={`input-${id}-${type}`}>
+        <Label className="pr-2 flex items-center mb-0" htmlFor={`input-${id}-${type}`}>
           <Heading
             headingLevel={6}
             renderAs="paragraph-sm"
             className={`flex items-center ${tooltip ? "gap-2 [&_.tooltipIcon]:text-purple-200" : ""}`}
           >
-            <div className={`flex items-center ${disabled ? "hover:cursor-not-allowed opacity-50" : "hover:cursor-pointer"}`}>
-              {label}
-            </div>
             {tooltip && (
               <TooltipProvider delayDuration={200}>
                 <Tooltip>
@@ -56,8 +46,18 @@ function CustomRadioCheckBox(props: CustomRCBProps) {
                 </Tooltip>
               </TooltipProvider>
             )}
+            <div className={`flex items-center ${disabled ? "hover:cursor-not-allowed opacity-50" : "hover:cursor-pointer"}`}>
+              {label}
+            </div>
           </Heading>
         </Label>
+        <Checkbox
+          id={`input-${id}-${type}`}
+          name={name}
+          disabled={disabled || false}
+          checked={checked}
+          onCheckedChange={onClick}
+        />
       </div>
     </div>
   );

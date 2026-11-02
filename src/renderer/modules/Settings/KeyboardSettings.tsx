@@ -410,16 +410,19 @@ function KeyboardSettings(props: KeyboardSettingsProps) {
                         </TooltipProvider>
                       </Heading>
                     </div>
+                    <div className="flex items-center text-right">
+                      <span className="tagsfix whitespace-nowrap">{qukeysHoldTimeout} ms</span>
+                    </div>
                   </div>
                   <div className="w-full flex gap-2">
                     <div className="flex max-w-12 p-0 text-center items-center">
-                      <span className="tagsfix">Less</span>
+                      <span className="tagsfix">Faster</span>
                     </div>
                     <div className="w-full flex items-center p-0">
                       <Slider min={1} max={255} value={[qukeysHoldTimeout]} onValueChange={setHoldTimeout} />
                     </div>
                     <div className="flex max-w-12 p-0 text-center items-center">
-                      <span className="tagsfix">More</span>
+                      <span className="tagsfix">Safer</span>
                     </div>
                   </div>
                 </div>
@@ -452,16 +455,19 @@ function KeyboardSettings(props: KeyboardSettingsProps) {
                         </TooltipProvider>
                       </Heading>
                     </div>
+                    <div className="flex items-center text-right">
+                      <span className="tagsfix whitespace-nowrap">{qukeysOverlapThreshold}%</span>
+                    </div>
                   </div>
                   <div className="w-full flex gap-2">
                     <div className="flex max-w-12 p-0 text-center items-center">
-                      <span className="tagsfix">Less</span>
+                      <span className="tagsfix">Faster</span>
                     </div>
                     <div className="w-full flex items-center p-0">
                       <Slider min={0} max={100} value={[qukeysOverlapThreshold]} onValueChange={setOverlapThreshold} />
                     </div>
                     <div className="flex max-w-12 p-0 text-center items-center">
-                      <span className="tagsfix">More</span>
+                      <span className="tagsfix">Safer</span>
                     </div>
                   </div>
                 </div>
@@ -493,16 +499,19 @@ function KeyboardSettings(props: KeyboardSettingsProps) {
                         </TooltipProvider>
                       </Heading>
                     </div>
+                    <div className="flex items-center text-right">
+                      <span className="tagsfix whitespace-nowrap">{qukeysMinHold} ms</span>
+                    </div>
                   </div>
                   <div className="w-full flex gap-2">
                     <div className="flex max-w-12 p-0 text-center items-center">
-                      <span className="tagsfix">Less</span>
+                      <span className="tagsfix">Faster</span>
                     </div>
                     <div className="w-full flex items-center p-0">
                       <Slider min={1} max={254} value={[qukeysMinHold]} onValueChange={setMinHold} />
                     </div>
                     <div className="flex max-w-12 p-0 text-center items-center">
-                      <span className="tagsfix">More</span>
+                      <span className="tagsfix">Safer</span>
                     </div>
                   </div>
                 </div>
@@ -534,16 +543,19 @@ function KeyboardSettings(props: KeyboardSettingsProps) {
                         </TooltipProvider>
                       </Heading>
                     </div>
+                    <div className="flex items-center text-right">
+                      <span className="tagsfix whitespace-nowrap">{qukeysMinPrior} ms</span>
+                    </div>
                   </div>
                   <div className="w-full flex gap-2">
                     <div className="flex max-w-12 p-0 text-center items-center">
-                      <span className="tagsfix">Less</span>
+                      <span className="tagsfix">Faster</span>
                     </div>
                     <div className="w-full flex items-center p-0">
                       <Slider min={1} max={254} value={[qukeysMinPrior]} onValueChange={setMinPrior} />
                     </div>
                     <div className="flex max-w-12 p-0 text-center items-center">
-                      <span className="tagsfix">More</span>
+                      <span className="tagsfix">Safer</span>
                     </div>
                   </div>
                 </div>
@@ -573,16 +585,19 @@ function KeyboardSettings(props: KeyboardSettingsProps) {
                         </TooltipProvider>
                       </Heading>
                     </div>
+                    <div className="flex items-center text-right">
+                      <span className="tagsfix whitespace-nowrap">{SuperHoldstart} ms</span>
+                    </div>
                   </div>
                   <div className="w-full flex gap-2">
                     <div className="flex max-w-12 p-0 text-center items-center">
-                      <span className="tagsfix">Less</span>
+                      <span className="tagsfix">Faster</span>
                     </div>
                     <div className="w-full flex items-center p-0">
                       <Slider min={120} max={500} value={[SuperHoldstart]} onValueChange={setSuperHoldstart} />
                     </div>
                     <div className="flex max-w-12 p-0 text-center items-center">
-                      <span className="tagsfix">More</span>
+                      <span className="tagsfix">Safer</span>
                     </div>
                   </div>
                 </div>
@@ -654,16 +669,19 @@ function KeyboardSettings(props: KeyboardSettingsProps) {
                         </TooltipProvider>
                       </Heading>
                     </div>
+                    <div className="flex items-center text-right">
+                      <span className="tagsfix whitespace-nowrap">{SuperTimeout} ms</span>
+                    </div>
                   </div>
                   <div className="w-full flex gap-2">
                     <div className="flex max-w-12 p-0 text-center items-center">
-                      <span className="tagsfix">Less</span>
+                      <span className="tagsfix">Faster</span>
                     </div>
                     <div className="w-full flex items-center p-0">
                       <Slider min={1} max={500} value={[SuperTimeout]} onValueChange={setSuperTimeout} />
                     </div>
                     <div className="flex max-w-12 p-0 text-center items-center">
-                      <span className="tagsfix">More</span>
+                      <span className="tagsfix">Safer</span>
                     </div>
                   </div>
                 </div>
@@ -705,13 +723,13 @@ function KeyboardSettings(props: KeyboardSettingsProps) {
                   </div>
                   <div className="w-full flex gap-2">
                     <div className="flex max-w-12 p-0 text-center items-center">
-                      <span className="tagsfix">Less</span>
+                      <span className="tagsfix">Faster</span>
                     </div>
                     <div className="w-full flex items-center p-0">
                       <Slider min={50} max={2000} step={5} value={[autoshiftTimeout]} onValueChange={setAutoshiftTimeout} />
                     </div>
                     <div className="flex max-w-12 p-0 text-center items-center">
-                      <span className="tagsfix">More</span>
+                      <span className="tagsfix">Safer</span>
                     </div>
                   </div>
                 </div>
@@ -804,7 +822,7 @@ function KeyboardSettings(props: KeyboardSettingsProps) {
                       />
                     </div>
                     <div className="flex max-w-12 p-0 text-center items-center">
-                      <span className="tagsfix">Safer</span>
+                      <span className="tagsfix">Faster</span>
                     </div>
                   </div>
                 </div>
@@ -872,6 +890,9 @@ function KeyboardSettings(props: KeyboardSettingsProps) {
                 <div className="w-full">
                   <div className="w-full flex gap-2">
                     <div className="w-full">{i18n.keyboardSettings.mouse.speed}</div>
+                    <div className="flex items-center text-right">
+                      <span className="tagsfix whitespace-nowrap">{mouseSpeed}</span>
+                    </div>
                   </div>
                   {mSpeed}
                 </div>
@@ -880,6 +901,9 @@ function KeyboardSettings(props: KeyboardSettingsProps) {
                 <div className="w-full">
                   <div className="w-full flex gap-2">
                     <div className="w-full">{i18n.keyboardSettings.mouse.accelSpeed}</div>
+                    <div className="flex items-center text-right">
+                      <span className="tagsfix whitespace-nowrap">{mouseAccelSpeed}</span>
+                    </div>
                   </div>
                   {mAccelS}
                 </div>
@@ -888,6 +912,9 @@ function KeyboardSettings(props: KeyboardSettingsProps) {
                 <div className="w-full">
                   <div className="w-full flex gap-2">
                     <div className="w-full">{i18n.keyboardSettings.mouse.speedLimit}</div>
+                    <div className="flex items-center text-right">
+                      <span className="tagsfix whitespace-nowrap">{mouseSpeedLimit}</span>
+                    </div>
                   </div>
                   {mSpeedL}
                 </div>
@@ -896,6 +923,9 @@ function KeyboardSettings(props: KeyboardSettingsProps) {
                 <div className="w-full">
                   <div className="w-full flex gap-2">
                     <div className="w-full">{i18n.keyboardSettings.mouse.wheelSpeed}</div>
+                    <div className="flex items-center text-right">
+                      <span className="tagsfix whitespace-nowrap">{mouseWheelSpeed}</span>
+                    </div>
                   </div>
                   {mWheelS}
                 </div>

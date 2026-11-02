@@ -143,8 +143,6 @@ function ModPicker(props: ModPickerProps) {
             renderAs="paragraph-sm"
             className={`flex items-center gap-2 ${setModifierVisibility() ? "opacity-50" : "opacity-100"}`}
           >
-            {/* {i18n.editor.standardView.keys.addModifier} */}
-            Create a shortcut
             <TooltipProvider delayDuration={200}>
               <Tooltip>
                 <TooltipTrigger className="[&_svg]:text-purple-100 [&_svg]:dark:text-purple-200">
@@ -162,6 +160,8 @@ function ModPicker(props: ModPickerProps) {
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>
+            {/* {i18n.editor.standardView.keys.addModifier} */}
+            Create a shortcut
           </Heading>
         ) : null}
         <div className="modPickerButtonsList flex gap-6 items-center">
@@ -214,9 +214,9 @@ function ModPicker(props: ModPickerProps) {
         {/* Rendered conditionally rather than with `hidden`: the `flex` class
          * overrides the attribute's display:none and the checkbox stayed visible. */}
         {allowAutoshift && (
-          <div className="autoshiftPicker flex items-center">
+          <div className="autoshiftPicker flex items-center ml-12">
             <CustomRadioCheckBox
-              label={<div className="pl-0.5">Make it Autoshiftable</div>}
+              label={<div className="pl-0.5">Autoshift</div>}
               onClick={() => toggleAutoshift()}
               checked={autoshifted}
               type="checkbox"
@@ -229,12 +229,10 @@ function ModPicker(props: ModPickerProps) {
                     Autoshift
                   </Heading>
                   <p className="description text-ssm font-medium text-gray-400 dark:text-gray-200">
-                    Tap the key to type its normal character, or hold it to type the shifted one. Holding A gives you a capital A
-                    without reaching for Shift.
+                    Holding the key will output its shifted variant. For example, holding A will output capital A.
                   </p>
                   <p className="description text-ssm font-medium text-gray-400 dark:text-gray-200">
-                    Only available for letters, digits and punctuation -- keys with no distinct shifted form cannot be
-                    autoshifted. Note that the key loses its hold-to-repeat behaviour, since hold now types the capital.
+                    It only works for letters, numbers and punctuation.
                   </p>
                 </>
               }

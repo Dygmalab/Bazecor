@@ -639,23 +639,23 @@ const English = {
       title: "Autoshift",
       holdTimeout: "Hold time before the shifted character",
       holdTimeoutTip:
-        "How long a key has to be held before it types its shifted character. Shorter feels faster but makes accidental capitals more likely.",
+        "Determines how long you need to hold a key to get its shifted version. The shorter, the faster it feels, but it increases the chances of getting accidental triggers.",
     },
     capsword: {
       title: "CapsWord",
       idleTimeout: "Turn off after inactivity",
       idleTimeoutTip:
-        "CapsWord switches itself off after this long without typing, so it never stays on unnoticed. Set it to the minimum to disable the timeout entirely.",
+        "CapsWord will turn off after the set amount of time. Set it to never if you want to disable the timeout entirely.",
       idleDisabled: "Never",
     },
     combos: {
       title: "Combos",
       window: "How simultaneous a chord has to be",
       windowTip:
-        "All the keys of a combo have to go down within this window. Shorter means fewer combos fire by accident while you type fast; longer means a combo is easier to hit deliberately. When one combo's keys are all part of a longer combo, the shorter one only fires once this window closes. Set up the combos themselves in the Combo Editor.",
+        "Determines the amount of time you have to press all the keys of a combo at once. The looser, the easier it is to trigger a combo, but it increases the risk of accidental triggers and adds a small delay when typing.",
       idleTime: "Pause needed before a combo",
       idleTimeTip:
-        "A combo only starts if you have not typed anything for this long, so rolling over keys while typing fast does not fire one by accident. Modifiers, layer keys and one-shot keys do not count as typing, so Ctrl or a layer key held right before a combo still works. Set it to Off to allow combos at any time.",
+        "A combo will not start until this amount of time has elapsed since the last keypress. The lower the time, the snappier it will feel, but the higher the risk of accidental triggers.",
       idleTimeDisabled: "Off",
     },
     defaultLabel: "default",

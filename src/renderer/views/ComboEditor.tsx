@@ -645,12 +645,10 @@ function ComboEditor(props: ComboEditorProps) {
 
       <Callout size="sm" className="mt-4">
         <p>
-          A combo fires a single action when you press several keys at once. Pick the keys on the keyboard below, then choose what
-          they should do.
+          Combos let you press up to 6 keys at once to trigger a single action. Keys can be shared between combos, and you can have different combos in different layers.
         </p>
         <p>
-          Each combo belongs to one layer, so the same keys can do something different on each layer. A key can be part of several
-          combos: when every key of a longer combo is pressed, the longer one fires.
+          To create a combo, select the layer, choose the keys and configure the output.
         </p>
       </Callout>
 
@@ -760,19 +758,12 @@ function ComboEditor(props: ComboEditorProps) {
             </div>
           </div>
 
-          {duplicateOf >= 0 ? (
+          {duplicateOf >= 0 && (
             <div className="mt-3 text-center text-ssm font-semibold text-orange-200">
               C{duplicateOf + 1}
               {combos[duplicateOf]?.name ? ` · ${combos[duplicateOf].name}` : ""} uses exactly these keys on this layer. Only the
               one listed first can fire: change the keys or the layer of one of them.
             </div>
-          ) : (
-            overlapsWith.length > 0 && (
-              <div className="mt-3 text-center text-ssm text-gray-400 dark:text-gray-300">
-                Shares keys with {overlapsWith.map(index => `C${index + 1}`).join(", ")} on this layer. When all the keys of a
-                longer combo are down, the longer one fires.
-              </div>
-            )
           )}
 
           <div className="mt-3 text-center text-ssm text-gray-400 dark:text-gray-300">
@@ -796,8 +787,8 @@ function ComboEditor(props: ComboEditorProps) {
       <div className="mt-6">
         {pickTarget?.kind === "action" ? (
           <>
-            <Heading headingLevel={4} renderAs="paragraph-sm" className="mb-2">
-              Choose what the combo types
+            <Heading headingLevel={4} renderAs="paragraph-sm" className="mb-2 text-center">
+              Choose the output for the combo
             </Heading>
             <KeyPickerKeyboard
               onKeySelect={onActionKeySelect}
@@ -819,17 +810,12 @@ function ComboEditor(props: ComboEditorProps) {
           <>
             <Heading headingLevel={4} renderAs="paragraph-sm" className="mb-2 text-center">
               {pickTarget?.kind === "member"
-                ? "Pick a key for the highlighted slot"
-                : "Click a slot above, then pick its key here"}
+                ? "Pick a key"
+                : "Select a slot above, then assign a key"}
             </Heading>
-            <p className="mb-2 text-center text-ssm font-semibold text-gray-400 dark:text-gray-200">
-              This combo only works on layer {combo ? layerLabel(combo.layer) : ""}, shown below. It uses where the keys sit on
-              the keyboard, not what they type.
-            </p>
             {pickTarget?.kind === "member" && blockedPositions.size > 0 && (
               <p className="mb-2 text-center text-ssm text-gray-400 dark:text-gray-300">
-                Keys holding a superkey are greyed out: a superkey can&apos;t be part of a combo, unless it only has TAP and a
-                modifier or layer on HOLD.
+                Note: Superkeys can&apos;t be part of a combo unless it only has TAP and a modifier or layer on HOLD
               </p>
             )}
             {KeyboardComponent && layerData.length > 0 ? (
