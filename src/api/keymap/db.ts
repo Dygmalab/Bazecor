@@ -37,7 +37,7 @@ import NumpadTable, { ModifiedNumpadTables } from "./db/numpad";
 import FunctionKeyTable, { ModifiedFunctionKeyTables } from "./db/fxs";
 
 import MediaControlTable from "./db/mediacontrols";
-import { MouseMovementTable, MouseWheelTable, MouseButtonTable } from "./db/mousecontrols";
+import { MouseMovementTable, MouseWheelTable, MouseButtonTable, MouseSpeedTable } from "./db/mousecontrols";
 import MiscellaneousTable, { ModifiedMiscellaneousTables } from "./db/miscellaneous";
 
 import { OneShotModifierTable, OneShotLayerTable } from "./db/oneshot";
@@ -82,6 +82,7 @@ const defaultBaseKeyCodeTable: BaseKeycodeTableType[] = [
   MouseMovementTable,
   MouseButtonTable,
   MouseWheelTable,
+  MouseSpeedTable,
 
   OneShotModifierTable,
   OneShotLayerTable,
@@ -212,6 +213,7 @@ class KeymapDB {
       case MouseMovementTable.keys.map(r => r.code).includes(keyCode):
       case MouseWheelTable.keys.map(r => r.code).includes(keyCode):
       case MouseButtonTable.keys.map(r => r.code).includes(keyCode):
+      case MouseSpeedTable.keys.map(r => r.code).includes(keyCode):
         // Regular keys KeyCode
         return { base: keyCode, modified: 0 };
       case keyCode < 8192:
