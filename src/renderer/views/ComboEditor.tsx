@@ -766,16 +766,11 @@ function ComboEditor(props: ComboEditorProps) {
             </div>
           )}
 
-          <div className="mt-3 text-center text-ssm text-gray-400 dark:text-gray-300">
-            {incomplete ? (
-              <span>
-                A combo needs at least {MIN_COMBO_MEMBERS} keys and a resulting key before it does anything. Right-click a slot to
-                clear it.
-              </span>
-            ) : (
-              <span>Right-click a slot to clear it.</span>
-            )}
-          </div>
+          {incomplete && (
+            <div className="mt-3 text-center text-ssm text-gray-400 dark:text-gray-300">
+              A combo needs at least {MIN_COMBO_MEMBERS} keys and a resulting key before it does anything.
+            </div>
+          )}
         </div>
       ) : (
         <div className="mt-6 text-center text-ssm text-gray-400 dark:text-gray-300">No combos yet. Add one to get started.</div>
@@ -813,11 +808,9 @@ function ComboEditor(props: ComboEditorProps) {
                 ? "Pick a key"
                 : "Select a slot above, then assign a key"}
             </Heading>
-            {pickTarget?.kind === "member" && blockedPositions.size > 0 && (
-              <p className="mb-2 text-center text-ssm text-gray-400 dark:text-gray-300">
-                Note: Superkeys can&apos;t be part of a combo unless it only has TAP and a modifier or layer on HOLD
-              </p>
-            )}
+            <p className="mb-2 text-center text-ssm text-gray-400 dark:text-gray-300">
+              Note: Superkeys can&apos;t be part of a combo unless configured only with TAP and a modifier or layer on HOLD.
+            </p>
             {KeyboardComponent && layerData.length > 0 ? (
               <div
                 className={`comboKeyboard LayerHolder ${pickTarget?.kind === "member" ? "comboPicking" : "comboIdle pointer-events-none"}`}

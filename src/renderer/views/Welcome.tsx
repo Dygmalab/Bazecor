@@ -97,7 +97,6 @@ function Welcome(props: WelcomeProps) {
                 <Heading headingLevel={3} renderAs="h3" variant="warning">
                   {i18n.welcome.bootloaderTitle}
                 </Heading>
-                <p>{i18n.welcome.description}</p>
 
                 <span className="cardsub">
                   <ul style={{ lineHeight: "2rem" }}>
