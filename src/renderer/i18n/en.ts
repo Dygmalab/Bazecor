@@ -165,6 +165,7 @@ const English = {
       "Mouse button": "Mouse button",
       "Mouse wheel": "Mouse wheel",
       "Mouse warp": "Mouse warp",
+      "Mouse speed": "Mouse speed",
       "OneShot modifiers": "OneShot modifiers",
       "OneShot layers": "OneShot layers",
       TapDance: "TapDance",
@@ -787,6 +788,24 @@ const English = {
       wheelSpeedsub: " - From 0 to 254 pixels",
       wheelDelay: "Wheel delay between steps (the higher the number, the slower the mouse movement)",
       wheelDelaysub: " - From 0 to 65,534 milliseconds",
+      cursorSpeed: "Cursor speed",
+      cursorSpeedTip:
+        "How fast the cursor moves while a mouse arrow is held. Holding a speed key picks Slow or Fast; with none held the cursor moves at Medium. Pixels assume the default pointer speed of your OS.",
+      wheelSpeedModes: "Wheel speed",
+      wheelSpeedModesTip:
+        "How fast the wheel scrolls while a wheel key is held, for each speed key. Every press scrolls one notch right away.",
+      speedSlow: "Slow",
+      speedMedium: "Medium",
+      speedFast: "Fast",
+      ramp: "Start ramp",
+      rampTip: "Time the cursor takes to reach its speed after an arrow is pressed. At 0 it starts at full speed.",
+      rampInstant: "Instant",
+      boostDistance: "Boost distance",
+      boostDistanceTip:
+        "How far one tap of the Boost key throws the cursor, towards the arrows held. Taps add up, so a few of them cross the screen.",
+      boostOff: "Off",
+      boostTime: "Boost duration",
+      boostTimeTip: "How long the cursor glides to cover the boost distance. At 0 it jumps at once.",
     },
     advancedOps: "Advanced keyboard settings & operations",
     resetEEPROM: {
@@ -996,6 +1015,13 @@ const English = {
     movementDescription: "Control move using keys.",
     wheelTitle: "Wheel",
     wheelDescription: "Control the wheel using keys.",
+    speedTitle: "Speed & Boost",
+    speedDescription:
+      "Hold a speed key to change how fast the cursor and the wheel move. Tap Boost with an arrow to throw the cursor far.",
+    speedSlow: "Slow",
+    speedMedium: "Medium",
+    speedFast: "Fast",
+    boost: "Boost",
   },
   welcome: {
     bootloaderTitle: "Your device is currently on Bootloader Mode",

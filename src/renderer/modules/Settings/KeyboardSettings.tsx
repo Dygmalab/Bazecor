@@ -154,6 +154,196 @@ const Styles = Styled.div`
   }
 `;
 
+/* Slider bounds of the mouse keys rework settings. They mirror what the firmware stores
+ * (MouseKeysDygma: speeds in steps of 10 px/s up to 2550, boost time in steps of 4 ms);
+ * the firmware clamps anything outside them anyway. */
+const MOUSE_SPEED = { min: 10, max: 2550, step: 10 };
+const MOUSE_WHEEL = { min: 1, max: 60, step: 1 };
+const MOUSE_RAMP = { min: 0, max: 250, step: 5 };
+const MOUSE_BOOST_DISTANCE = { min: 0, max: 3000, step: 10 };
+const MOUSE_BOOST_TIME = { min: 0, max: 400, step: 4 };
+
+interface SettingTipProps {
+  label: string;
+  tip: string;
+}
+
+function SettingTip({ label, tip }: SettingTipProps) {
+  return (
+    <Heading headingLevel={3} renderAs="paragraph-sm" className="flex items-center gap-2">
+      {label}
+      <TooltipProvider delayDuration={200}>
+        <Tooltip>
+          <TooltipTrigger className="[&_svg]:text-purple-100 [&_svg]:dark:text-purple-200">
+            <IconInformation />
+          </TooltipTrigger>
+          <TooltipContent className="max-w-xs">{tip}</TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
+    </Heading>
+  );
+}
+
+interface SettingSliderProps {
+  label: React.ReactNode;
+  display: string;
+  value: number;
+  bounds: { min: number; max: number; step: number };
+  minLabel: string;
+  maxLabel: string;
+  onValueChange: (value: number[]) => void;
+}
+
+function SettingSlider({ label, display, value, bounds, minLabel, maxLabel, onValueChange }: SettingSliderProps) {
+  return (
+    <div className="w-full">
+      <div className="w-full flex gap-2">
+        <div className="w-full">
+          {/* A plain label names one value of the group heading above it */}
+          {typeof label === "string" ? (
+            <span className="text-ssm font-medium text-gray-400 dark:text-gray-200">{label}</span>
+          ) : (
+            label
+          )}
+        </div>
+        <div className="flex items-center text-right">
+          <span className="tagsfix whitespace-nowrap">{display}</span>
+        </div>
+      </div>
+      <div className="w-full flex gap-2">
+        <div className="flex max-w-12 p-0 text-center items-center">
+          <span className="tagsfix">{minLabel}</span>
+        </div>
+        <div className="w-full flex items-center p-0">
+          <Slider min={bounds.min} max={bounds.max} step={bounds.step} value={[value]} onValueChange={onValueChange} />
+        </div>
+        <div className="flex max-w-12 p-0 text-center items-center">
+          <span className="tagsfix">{maxLabel}</span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+interface MouseKeysCardProps {
+  kbData: KBDataPref;
+  setSetting: (field: keyof KBDataPref) => (value: number[]) => void;
+}
+
+/* Mouse keys rework firmware (capabilities.mousekeys): constant speeds picked with the
+ * Slow / Medium / Fast keys, and the Boost key. */
+function MouseKeysCard({ kbData, setSetting }: MouseKeysCardProps) {
+  const t = i18n.keyboardSettings.mouse;
+  const {
+    mouseSpeedSlow,
+    mouseSpeedMedium,
+    mouseSpeedFast,
+    mouseWheelSlow,
+    mouseWheelMedium,
+    mouseWheelFast,
+    mouseRamp,
+    mouseBoostDistance,
+    mouseBoostTime,
+  } = kbData;
+
+  return (
+    <Card className="mt-3 max-w-2xl mx-auto" variant="default">
+      <CardHeader>
+        <CardTitle>
+          <IconMouse /> {t.title}
+        </CardTitle>
+      </CardHeader>
+      <CardContent>
+        <div className="flex flex-col gap-4">
+          <SettingTip label={t.cursorSpeed} tip={t.cursorSpeedTip} />
+          <SettingSlider
+            label={t.speedSlow}
+            display={`${mouseSpeedSlow} px/s`}
+            value={mouseSpeedSlow}
+            bounds={MOUSE_SPEED}
+            minLabel="Slower"
+            maxLabel="Faster"
+            onValueChange={setSetting("mouseSpeedSlow")}
+          />
+          <SettingSlider
+            label={t.speedMedium}
+            display={`${mouseSpeedMedium} px/s`}
+            value={mouseSpeedMedium}
+            bounds={MOUSE_SPEED}
+            minLabel="Slower"
+            maxLabel="Faster"
+            onValueChange={setSetting("mouseSpeedMedium")}
+          />
+          <SettingSlider
+            label={t.speedFast}
+            display={`${mouseSpeedFast} px/s`}
+            value={mouseSpeedFast}
+            bounds={MOUSE_SPEED}
+            minLabel="Slower"
+            maxLabel="Faster"
+            onValueChange={setSetting("mouseSpeedFast")}
+          />
+          <SettingSlider
+            label={<SettingTip label={t.ramp} tip={t.rampTip} />}
+            display={mouseRamp === 0 ? t.rampInstant : `${mouseRamp} ms`}
+            value={mouseRamp}
+            bounds={MOUSE_RAMP}
+            minLabel="Sharper"
+            maxLabel="Smoother"
+            onValueChange={setSetting("mouseRamp")}
+          />
+          <SettingTip label={t.wheelSpeedModes} tip={t.wheelSpeedModesTip} />
+          <SettingSlider
+            label={t.speedSlow}
+            display={`${mouseWheelSlow} /s`}
+            value={mouseWheelSlow}
+            bounds={MOUSE_WHEEL}
+            minLabel="Slower"
+            maxLabel="Faster"
+            onValueChange={setSetting("mouseWheelSlow")}
+          />
+          <SettingSlider
+            label={t.speedMedium}
+            display={`${mouseWheelMedium} /s`}
+            value={mouseWheelMedium}
+            bounds={MOUSE_WHEEL}
+            minLabel="Slower"
+            maxLabel="Faster"
+            onValueChange={setSetting("mouseWheelMedium")}
+          />
+          <SettingSlider
+            label={t.speedFast}
+            display={`${mouseWheelFast} /s`}
+            value={mouseWheelFast}
+            bounds={MOUSE_WHEEL}
+            minLabel="Slower"
+            maxLabel="Faster"
+            onValueChange={setSetting("mouseWheelFast")}
+          />
+          <SettingSlider
+            label={<SettingTip label={t.boostDistance} tip={t.boostDistanceTip} />}
+            display={mouseBoostDistance === 0 ? t.boostOff : `${mouseBoostDistance} px`}
+            value={mouseBoostDistance}
+            bounds={MOUSE_BOOST_DISTANCE}
+            minLabel="Off"
+            maxLabel="Farther"
+            onValueChange={setSetting("mouseBoostDistance")}
+          />
+          <SettingSlider
+            label={<SettingTip label={t.boostTime} tip={t.boostTimeTip} />}
+            display={mouseBoostTime === 0 ? t.rampInstant : `${mouseBoostTime} ms`}
+            value={mouseBoostTime}
+            bounds={MOUSE_BOOST_TIME}
+            minLabel="Snappier"
+            maxLabel="Smoother"
+            onValueChange={setSetting("mouseBoostTime")}
+          />
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
+
 interface KeyboardSettingsProps {
   kbData: KBDataPref;
   setKbData: (data: KBDataPref) => void;
@@ -171,6 +361,7 @@ function KeyboardSettings(props: KeyboardSettingsProps) {
   const autoshift = Boolean(store.get("capabilities.autoshift"));
   const combos = Boolean(store.get("capabilities.combos"));
   const capsword = Boolean(store.get("capabilities.capsword"));
+  const mouseKeys = Boolean(store.get("capabilities.mousekeys"));
 
   useEffect(() => {
     const { kbData: newKBData } = props;
@@ -295,6 +486,11 @@ function KeyboardSettings(props: KeyboardSettingsProps) {
       mouseSpeedLimit: value[0],
     }));
     setKbData({ ...localKBData, mouseSpeedLimit: value[0] });
+  };
+
+  const setMouseKeysSetting = (field: keyof KBDataPref) => (value: number[]) => {
+    setLocalKBData(data => ({ ...data, [field]: value[0] }));
+    setKbData({ ...localKBData, [field]: value[0] });
   };
 
   const {
@@ -878,61 +1074,65 @@ function KeyboardSettings(props: KeyboardSettingsProps) {
             </CardContent>
           </Card>
         )}
-        <Card className="mt-3 max-w-2xl mx-auto" variant="default">
-          <CardHeader>
-            <CardTitle>
-              <IconMouse /> {i18n.keyboardSettings.mouse.title}
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="pb-0">
-            <div className="flex flex-col gap-4">
-              {mouseSpeed >= 0 && (
-                <div className="w-full">
-                  <div className="w-full flex gap-2">
-                    <div className="w-full">{i18n.keyboardSettings.mouse.speed}</div>
-                    <div className="flex items-center text-right">
-                      <span className="tagsfix whitespace-nowrap">{mouseSpeed}</span>
+        {mouseKeys ? (
+          <MouseKeysCard kbData={localKBData} setSetting={setMouseKeysSetting} />
+        ) : (
+          <Card className="mt-3 max-w-2xl mx-auto" variant="default">
+            <CardHeader>
+              <CardTitle>
+                <IconMouse /> {i18n.keyboardSettings.mouse.title}
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="pb-0">
+              <div className="flex flex-col gap-4">
+                {mouseSpeed >= 0 && (
+                  <div className="w-full">
+                    <div className="w-full flex gap-2">
+                      <div className="w-full">{i18n.keyboardSettings.mouse.speed}</div>
+                      <div className="flex items-center text-right">
+                        <span className="tagsfix whitespace-nowrap">{mouseSpeed}</span>
+                      </div>
                     </div>
+                    {mSpeed}
                   </div>
-                  {mSpeed}
-                </div>
-              )}
-              {mouseAccelSpeed >= 0 && (
-                <div className="w-full">
-                  <div className="w-full flex gap-2">
-                    <div className="w-full">{i18n.keyboardSettings.mouse.accelSpeed}</div>
-                    <div className="flex items-center text-right">
-                      <span className="tagsfix whitespace-nowrap">{mouseAccelSpeed}</span>
+                )}
+                {mouseAccelSpeed >= 0 && (
+                  <div className="w-full">
+                    <div className="w-full flex gap-2">
+                      <div className="w-full">{i18n.keyboardSettings.mouse.accelSpeed}</div>
+                      <div className="flex items-center text-right">
+                        <span className="tagsfix whitespace-nowrap">{mouseAccelSpeed}</span>
+                      </div>
                     </div>
+                    {mAccelS}
                   </div>
-                  {mAccelS}
-                </div>
-              )}
-              {mouseSpeedLimit >= 0 && (
-                <div className="w-full">
-                  <div className="w-full flex gap-2">
-                    <div className="w-full">{i18n.keyboardSettings.mouse.speedLimit}</div>
-                    <div className="flex items-center text-right">
-                      <span className="tagsfix whitespace-nowrap">{mouseSpeedLimit}</span>
+                )}
+                {mouseSpeedLimit >= 0 && (
+                  <div className="w-full">
+                    <div className="w-full flex gap-2">
+                      <div className="w-full">{i18n.keyboardSettings.mouse.speedLimit}</div>
+                      <div className="flex items-center text-right">
+                        <span className="tagsfix whitespace-nowrap">{mouseSpeedLimit}</span>
+                      </div>
                     </div>
+                    {mSpeedL}
                   </div>
-                  {mSpeedL}
-                </div>
-              )}
-              {mouseWheelSpeed >= 0 && (
-                <div className="w-full">
-                  <div className="w-full flex gap-2">
-                    <div className="w-full">{i18n.keyboardSettings.mouse.wheelSpeed}</div>
-                    <div className="flex items-center text-right">
-                      <span className="tagsfix whitespace-nowrap">{mouseWheelSpeed}</span>
+                )}
+                {mouseWheelSpeed >= 0 && (
+                  <div className="w-full">
+                    <div className="w-full flex gap-2">
+                      <div className="w-full">{i18n.keyboardSettings.mouse.wheelSpeed}</div>
+                      <div className="flex items-center text-right">
+                        <span className="tagsfix whitespace-nowrap">{mouseWheelSpeed}</span>
+                      </div>
                     </div>
+                    {mWheelS}
                   </div>
-                  {mWheelS}
-                </div>
-              )}
-            </div>
-          </CardContent>
-        </Card>
+                )}
+              </div>
+            </CardContent>
+          </Card>
+        )}
       </Styles>
     );
   }

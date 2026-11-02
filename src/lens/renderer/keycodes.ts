@@ -158,6 +158,10 @@ const TWO_LINE: Record<number, [string, string]> = {
   20518: ["M.Warp", "SW"],
   20521: ["M.Warp", "NE"],
   20522: ["M.Warp", "SE"],
+  20609: ["M.Speed", "SLOW"],
+  20610: ["M.Speed", "MEDIUM"],
+  20612: ["M.Speed", "FAST"],
+  20616: ["Mouse", "BOOST"],
 
   // LED effects (db/ledeffects.tsx)
   17152: ["LED", "NEXT"],

@@ -174,6 +174,7 @@ export interface Groups {
   "Mouse button": string;
   "Mouse wheel": string;
   "Mouse warp": string;
+  "Mouse speed": string;
   "OneShot modifiers": string;
   "OneShot layers": string;
   TapDance: string;
@@ -674,6 +675,21 @@ export interface KeyboardSettingsMouse {
   wheelSpeedsub: string;
   wheelDelay: string;
   wheelDelaysub: string;
+  cursorSpeed: string;
+  cursorSpeedTip: string;
+  wheelSpeedModes: string;
+  wheelSpeedModesTip: string;
+  speedSlow: string;
+  speedMedium: string;
+  speedFast: string;
+  ramp: string;
+  rampTip: string;
+  rampInstant: string;
+  boostDistance: string;
+  boostDistanceTip: string;
+  boostOff: string;
+  boostTime: string;
+  boostTimeTip: string;
 }
 
 export interface NeuronManager {
@@ -748,6 +764,12 @@ export interface LanguageMouse {
   movementDescription: string;
   wheelTitle: string;
   wheelDescription: string;
+  speedTitle: string;
+  speedDescription: string;
+  speedSlow: string;
+  speedMedium: string;
+  speedFast: string;
+  boost: string;
 }
 
 export interface Preferences {

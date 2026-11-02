@@ -134,8 +134,42 @@ const initialKBData = {
   mouseWheelSpeed: 1,
   mouseWheelDelay: 100,
   mouseSpeedLimit: 1,
+  mouseSpeedSlow: 150,
+  mouseSpeedMedium: 600,
+  mouseSpeedFast: 1800,
+  mouseWheelSlow: 3,
+  mouseWheelMedium: 10,
+  mouseWheelFast: 30,
+  mouseRamp: 80,
+  mouseBoostDistance: 400,
+  mouseBoostTime: 100,
   showDefaults: false,
 };
+
+/* The mouse keys rework replaced the step and acceleration settings with these (see
+ * capabilities.mousekeys in App.tsx). The firmware takes and replies with the same units. */
+type MouseKeysField =
+  | "mouseSpeedSlow"
+  | "mouseSpeedMedium"
+  | "mouseSpeedFast"
+  | "mouseWheelSlow"
+  | "mouseWheelMedium"
+  | "mouseWheelFast"
+  | "mouseRamp"
+  | "mouseBoostDistance"
+  | "mouseBoostTime";
+
+const MOUSE_KEYS_SETTINGS: Array<[string, MouseKeysField]> = [
+  ["mouse.speedSlow", "mouseSpeedSlow"],
+  ["mouse.speedMedium", "mouseSpeedMedium"],
+  ["mouse.speedFast", "mouseSpeedFast"],
+  ["mouse.wheelSlow", "mouseWheelSlow"],
+  ["mouse.wheelMedium", "mouseWheelMedium"],
+  ["mouse.wheelFast", "mouseWheelFast"],
+  ["mouse.ramp", "mouseRamp"],
+  ["mouse.boostDistance", "mouseBoostDistance"],
+  ["mouse.boostTime", "mouseBoostTime"],
+];
 
 const initialPreferences = {
   devTools: false,
@@ -325,25 +359,35 @@ const Preferences = (props: PreferencesProps) => {
       }
 
       // MOUSE variables commands
-      await state.currentDevice.command("mouse.speed").then((speed: string) => {
-        const speedParsed = speed ? parseInt(speed, 10) : 1;
-        newKbData.mouseSpeed = speedParsed;
-      });
+      if (store.get("capabilities.mousekeys")) {
+        for (const [command, field] of MOUSE_KEYS_SETTINGS) {
+          // eslint-disable-next-line no-await-in-loop
+          await state.currentDevice.command(command).then((value: string) => {
+            log.info(`[MouseKeys] focus ${command} ->`, JSON.stringify(value));
+            if (value) newKbData[field] = parseInt(value, 10);
+          });
+        }
+      } else {
+        await state.currentDevice.command("mouse.speed").then((speed: string) => {
+          const speedParsed = speed ? parseInt(speed, 10) : 1;
+          newKbData.mouseSpeed = speedParsed;
+        });
 
-      await state.currentDevice.command("mouse.accelSpeed").then((accelSpeed: string) => {
-        const accelSpeedParsed = accelSpeed ? parseInt(accelSpeed, 10) : 1;
-        newKbData.mouseAccelSpeed = accelSpeedParsed;
-      });
+        await state.currentDevice.command("mouse.accelSpeed").then((accelSpeed: string) => {
+          const accelSpeedParsed = accelSpeed ? parseInt(accelSpeed, 10) : 1;
+          newKbData.mouseAccelSpeed = accelSpeedParsed;
+        });
 
-      await state.currentDevice.command("mouse.wheelSpeed").then((wheelSpeed: string) => {
-        const wheelSpeedParsed = wheelSpeed ? parseInt(wheelSpeed, 10) : 1;
-        newKbData.mouseWheelSpeed = wheelSpeedParsed;
-      });
+        await state.currentDevice.command("mouse.wheelSpeed").then((wheelSpeed: string) => {
+          const wheelSpeedParsed = wheelSpeed ? parseInt(wheelSpeed, 10) : 1;
+          newKbData.mouseWheelSpeed = wheelSpeedParsed;
+        });
 
-      await state.currentDevice.command("mouse.speedLimit").then((speedLimit: string) => {
-        const speedLimitParsed = speedLimit ? parseInt(speedLimit, 10) : 127;
-        newKbData.mouseSpeedLimit = speedLimitParsed;
-      });
+        await state.currentDevice.command("mouse.speedLimit").then((speedLimit: string) => {
+          const speedLimitParsed = speedLimit ? parseInt(speedLimit, 10) : 127;
+          newKbData.mouseSpeedLimit = speedLimitParsed;
+        });
+      }
 
       setKbData(prevKbData => ({
         ...prevKbData,
@@ -488,13 +532,20 @@ const Preferences = (props: PreferencesProps) => {
         await state.currentDevice.command("combos.idleTime", kbData.combosIdleTime.toString());
       }
       // MOUSE KEYS
-      await state.currentDevice.command("mouse.speed", kbData.mouseSpeed.toString());
-      await state.currentDevice.command("mouse.speedDelay", kbData.mouseSpeedDelay.toString());
-      await state.currentDevice.command("mouse.accelSpeed", kbData.mouseAccelSpeed.toString());
-      await state.currentDevice.command("mouse.accelDelay", kbData.mouseAccelDelay.toString());
-      await state.currentDevice.command("mouse.wheelSpeed", kbData.mouseWheelSpeed.toString());
-      await state.currentDevice.command("mouse.wheelDelay", kbData.mouseWheelDelay.toString());
-      await state.currentDevice.command("mouse.speedLimit", kbData.mouseSpeedLimit.toString());
+      if (store.get("capabilities.mousekeys")) {
+        for (const [command, field] of MOUSE_KEYS_SETTINGS) {
+          // eslint-disable-next-line no-await-in-loop
+          await state.currentDevice.command(command, kbData[field].toString());
+        }
+      } else {
+        await state.currentDevice.command("mouse.speed", kbData.mouseSpeed.toString());
+        await state.currentDevice.command("mouse.speedDelay", kbData.mouseSpeedDelay.toString());
+        await state.currentDevice.command("mouse.accelSpeed", kbData.mouseAccelSpeed.toString());
+        await state.currentDevice.command("mouse.accelDelay", kbData.mouseAccelDelay.toString());
+        await state.currentDevice.command("mouse.wheelSpeed", kbData.mouseWheelSpeed.toString());
+        await state.currentDevice.command("mouse.wheelDelay", kbData.mouseWheelDelay.toString());
+        await state.currentDevice.command("mouse.speedLimit", kbData.mouseSpeedLimit.toString());
+      }
     }
   };
 

@@ -60,6 +60,14 @@ import HID from "../api/hid/hid";
 
 const store = Store.getStore();
 
+// Capabilities detected from a command the firmware lists in `help` instead of from its version,
+// stored as capabilities.<feature> too.
+// - mousekeys: the mouse keys rework (Slow/Medium/Fast speed keys and Boost). Older firmware reads
+//   those keycodes as mouse movement, so the keys and the new settings are only shown with it.
+const COMMAND_FEATURES = {
+  mousekeys: "mouse.speedSlow",
+};
+
 // Reads the FW version and stores, as capabilities.<feature>, every capability that depends on it
 // (SK 2.0, Layer Lens, Combos, Autoshift, CapsWord). Runs on connect and again after a firmware
 // update, since the keyboard stays connected through it.
@@ -74,9 +82,19 @@ const detectFirmwareCapabilities = async (currentDevice: Device) => {
       store.set(`capabilities.${feature}`, available);
       log.info(`[Capabilities] ${feature} -> product: ${product}, firmware: ${versionStr}, available: ${available}`);
     });
+
+    // Not from the cache: after a firmware update the cached list belongs to the replaced firmware
+    const help = await currentDevice.noCacheCommand("help");
+    const commands = typeof help === "string" ? help.split(/\r?\n/).map(c => c.trim()) : [];
+    Object.entries(COMMAND_FEATURES).forEach(([feature, command]) => {
+      const available = commands.includes(command);
+      store.set(`capabilities.${feature}`, available);
+      log.info(`[Capabilities] ${feature} -> command: ${command}, available: ${available}`);
+    });
   } catch (e) {
     log.warn("Error reading or parsing firmware version", e);
     VERSION_FEATURES.forEach(feature => store.set(`capabilities.${feature}`, false));
+    Object.keys(COMMAND_FEATURES).forEach(feature => store.set(`capabilities.${feature}`, false));
     log.info("[Capabilities] all disabled due to firmware version read/parse error");
   }
 };

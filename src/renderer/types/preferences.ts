@@ -64,6 +64,21 @@ export interface KBDataPref {
   mouseWheelSpeed: number;
   mouseWheelDelay: number;
   mouseSpeedLimit: number;
+  /* Mouse keys rework firmware (capabilities.mousekeys) */
+  /** Cursor speed of the Slow / Medium / Fast keys, in px/s. */
+  mouseSpeedSlow: number;
+  mouseSpeedMedium: number;
+  mouseSpeedFast: number;
+  /** Wheel speed of the Slow / Medium / Fast keys, in notches/s. */
+  mouseWheelSlow: number;
+  mouseWheelMedium: number;
+  mouseWheelFast: number;
+  /** Time the cursor takes to reach its speed, in ms. */
+  mouseRamp: number;
+  /** Distance of one boost, in px. 0 = off. */
+  mouseBoostDistance: number;
+  /** Duration of one boost, in ms. */
+  mouseBoostTime: number;
   showDefaults: boolean;
 }
 

@@ -169,4 +169,39 @@ const MouseWarpTable = {
   ],
 };
 
-export { MouseMovementTable, MouseWheelTable, MouseButtonTable, MouseWarpTable };
+/* Mouse keys rework firmware only: older firmware reads these codes as mouse movement. */
+const MouseSpeedTable = {
+  groupName: "Mouse speed",
+  keys: [
+    {
+      code: 20609,
+      labels: {
+        top: "M.Speed",
+        primary: "SLOW",
+      },
+    },
+    {
+      code: 20610,
+      labels: {
+        top: "M.Speed",
+        primary: "MEDIUM",
+      },
+    },
+    {
+      code: 20612,
+      labels: {
+        top: "M.Speed",
+        primary: "FAST",
+      },
+    },
+    {
+      code: 20616,
+      labels: {
+        top: "Mouse",
+        primary: "BOOST",
+      },
+    },
+  ],
+};
+
+export { MouseMovementTable, MouseWheelTable, MouseButtonTable, MouseWarpTable, MouseSpeedTable };

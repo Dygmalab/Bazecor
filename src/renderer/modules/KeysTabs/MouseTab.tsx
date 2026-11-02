@@ -22,6 +22,7 @@ import { i18n } from "@Renderer/i18n";
 import Heading from "@Renderer/components/atoms/Heading";
 import { Button } from "@Renderer/components/atoms/Button";
 import { ButtonMouse } from "@Renderer/component/Button";
+import Store from "@Renderer/utils/Store";
 
 const Styles = Styled.div`
 .keysButtonsList {
@@ -105,6 +106,15 @@ function MouseTab({ keyCode, onAddSpecial, actTab = "standard", disabled }: Mous
     }
     return undefined;
   }, [keyCode]);
+
+  // Older firmware reads the speed and boost keycodes as mouse movement (see capabilities.mousekeys in App.tsx)
+  const mouseKeys = Boolean(Store.getStore().get("capabilities.mousekeys"));
+  const speedKeys = [
+    { name: i18n.mouse.speedSlow, keynum: 20609 },
+    { name: i18n.mouse.speedMedium, keynum: 20610 },
+    { name: i18n.mouse.speedFast, keynum: 20612 },
+    { name: i18n.mouse.boost, keynum: 20616 },
+  ];
 
   return (
     <Styles className={`flex flex-wrap h-[inherit] tabsMouse ${disabled ? "opacity-50 pointer-events-none" : ""}`}>
@@ -218,6 +228,32 @@ function MouseTab({ keyCode, onAddSpecial, actTab = "standard", disabled }: Mous
                     </div>
                   </div>
                 </div>
+                {mouseKeys ? (
+                  <div className="speedButtons max-w-[240px]">
+                    <Heading headingLevel={4} renderAs="h4" className="m-0 text-base">
+                      {i18n.mouse.speedTitle}
+                    </Heading>
+                    <p className="description text-ssm font-medium text-gray-400 dark:text-gray-200">
+                      {i18n.mouse.speedDescription}
+                    </p>
+                    <div className="flex flex-col gap-1 mt-2">
+                      {speedKeys.map(item => (
+                        <Button
+                          key={`mouseSpeed-${item.keynum}`}
+                          onClick={() => handleClick(item.keynum)}
+                          selected={KC === item.keynum}
+                          variant="config"
+                          size="sm"
+                          className="w-[114px]"
+                        >
+                          {item.name}
+                        </Button>
+                      ))}
+                    </div>
+                  </div>
+                ) : (
+                  ""
+                )}
               </div>
             ) : (
               ""

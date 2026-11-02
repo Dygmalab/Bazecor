@@ -350,6 +350,7 @@ function KeyPickerKeyboard(props: Props) {
     if (keyCode >= 20481 && keyCode <= 20488) tab = "tabMouse";
     if (keyCode >= 20497 && keyCode <= 20504) tab = "tabMouse";
     if (keyCode >= 20545 && keyCode <= 20560) tab = "tabMouse";
+    if (keyCode >= 20609 && keyCode <= 20616) tab = "tabMouse";
     if (keyCode >= 53852 && keyCode <= 53979) tab = "tabMacro";
     if (keyCode >= 53980 && keyCode <= 54109) tab = "tabSuperKeys";
     if (keyCode >= 54108 && keyCode <= 54111) tab = "tabWireless";
