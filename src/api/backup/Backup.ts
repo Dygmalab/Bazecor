@@ -263,6 +263,9 @@ export default class Backup {
       firmware: parts[2],
     };
     backup.neuronID = neuronID;
+    // Read now, not when this Backup was built: the editors keep one instance
+    // for their whole life, and the names saved since then would be left out.
+    this.neurons = (store.get("neurons") as Neuron[]) ?? [];
     backup.neuron = this.neurons.find(n => n.id === neuronID);
     if (backup.neuron === undefined)
       backup.neuron = {
@@ -361,10 +364,13 @@ export default class Backup {
       data = backup as unknown as BackupCmd[];
     } else {
       data = (backup as BackupType).backup as unknown as BackupCmd[];
-      const localNeurons = [...neurons];
+      // The store, not the caller's copy: that one may predate names saved since.
+      const localNeurons = [...((store.get("neurons") as Neuron[]) ?? neurons ?? [])];
+      const restored = { ...backup.neuron, id: neuronID };
       const index = localNeurons.findIndex(n => n.id === neuronID);
-      localNeurons[index] = backup.neuron;
-      localNeurons[index].id = neuronID;
+      // A backup made on another computer is for a neuron this one may not know yet.
+      if (index >= 0) localNeurons[index] = restored;
+      else localNeurons.push(restored);
       store.set("neurons", localNeurons);
     }
     const targetProduct = device.device.info.product;
