@@ -21,7 +21,7 @@ import { num2hexstr } from "../num2hexstr";
 import { serialConnection, rawCommand, noWaitCommand } from "../serialConnection";
 import { PACKET_SIZE, TYPE_DAT, TYPE_ELA, TYPE_ESA } from "../flasherConstants";
 import { HexType } from "../types";
-import ihexDecode from "../ihexDecode";
+import { decodeHexLine } from "../decodeHexLine";
 import { delay } from "../../../main/utils/delay";
 
 let serialPort;
@@ -46,7 +46,7 @@ const NRf52833 = {
     const auxData = [];
 
     for (let i = 0; i < lines.length; i += 1) {
-      const hex = ihexDecode(lines[i]);
+      const hex = decodeHexLine(lines[i]);
 
       if (hex.type === TYPE_ESA) {
         segment = parseInt(hex.str.substring(8, 8 + hex.len * 2), 16) * 16;
