@@ -74,6 +74,9 @@ import frXXbepo from "@Renderer/modules/KeyPickerKeyboard/languages/fr/XX-bepo.j
 import frXXoptimot from "@Renderer/modules/KeyPickerKeyboard/languages/fr/XX-optimot.json";
 import frXXergol from "@Renderer/modules/KeyPickerKeyboard/languages/fr/XX-ergol.json";
 import esMX from "@Renderer/modules/KeyPickerKeyboard/languages/es/MX.json";
+import bgBG from "@Renderer/modules/KeyPickerKeyboard/languages/bg/BG.json";
+import bgBGphonetic from "@Renderer/modules/KeyPickerKeyboard/languages/bg/BG-phonetic.json";
+
 import { KeyProps } from "./Key";
 
 const languages: { [key in LangOptions]: Array<KeyProps> } = {
@@ -101,6 +104,8 @@ const languages: { [key in LangOptions]: Array<KeyProps> } = {
   "fr-XX-bepo": frXXbepo,
   "fr-XX-optimot": frXXoptimot,
   "fr-XX-ergol": frXXergol,
+  "bg-BG": bgBG,
+  "bg-BG-phonetic": bgBGphonetic,
 };
 
 export type LangOptions =
@@ -124,7 +129,9 @@ export type LangOptions =
   | "en-XX-eurkey"
   | "fr-XX-bepo"
   | "fr-XX-optimot"
-  | "fr-XX-ergol";
+  | "fr-XX-ergol"
+  | "bg-BG"
+  | "bg-BG-phonetic";
 
 /**
  * Is a JavaScript function that changes key picker layout

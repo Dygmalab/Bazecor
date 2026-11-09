@@ -208,6 +208,18 @@ const ksl: KslType = {
       letter: { dx: 42, dy: 19, ddx: 42, ddy: 19, fs: 16, fss: 14 },
     },
   },
+  "1U7": {
+    outb: { x: 92, y: keyCapRegularSize.height, dx: 0, dy: 0 },
+    out: { x: 90, y: 24, dx: 1, dy: 1 },
+    icon: { x: 31, y: -1, w: 30, h: 26 },
+    text: {
+      a: { dx: 6, dy: 19, fs: 20 },
+      b: { dx: 16, dy: 19, fs: 14 },
+      c: { dx: 28, dy: 19, fs: 14 },
+      d: { dx: 38, dy: 19, fs: 14 },
+      letter: { dx: 45, dy: 19, ddx: 45, ddy: 19, fs: 16, fss: 14 },
+    },
+  },
   "1U8": {
     outb: { x: 98, y: keyCapRegularSize.height, dx: 0, dy: 0 },
     out: { x: 92, y: 24, dx: 1, dy: 1 },
