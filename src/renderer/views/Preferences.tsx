@@ -134,7 +134,7 @@ const initialKBData = {
   mouseWheelSpeed: 1,
   mouseWheelDelay: 100,
   mouseSpeedLimit: 1,
-  mouseSpeedSlow: 150,
+  mouseSpeedSlow: 160,
   mouseSpeedMedium: 600,
   mouseSpeedFast: 1800,
   mouseWheelSlow: 3,

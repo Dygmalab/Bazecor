@@ -681,6 +681,10 @@ const Dark: DefaultTheme = {
       background: "#2B2B42",
       backgroundWheelCircle: Tokens.colors.gray600,
       mouseWheel: mouseWheelBackgroundDark,
+      clickBorder: Tokens.colors.gray500,
+      clickZone: Tokens.colors.gray600,
+      clickZoneHover: Tokens.colors.gray500,
+      clickZoneAccent: Tokens.colors.gray500,
     },
     navbar: {
       color: "#555",

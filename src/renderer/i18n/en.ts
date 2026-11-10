@@ -790,7 +790,8 @@ const English = {
       wheelDelaysub: " - From 0 to 65,534 milliseconds",
       cursorSpeed: "Cursor speed",
       cursorSpeedTip:
-        "How fast the cursor moves while a mouse arrow is held. Holding a speed key picks Slow or Fast; with none held the cursor moves at Medium. Pixels assume the default pointer speed of your OS.",
+        "How fast the cursor moves while a mouse arrow is held. Holding a speed key picks Slow or Fast; with none held the cursor moves at Medium. The mark shows a speed that already feels fast on Windows; macOS moves the cursor less, so it needs higher values.",
+      fastOnWindows: "Fast on Windows",
       wheelSpeedModes: "Wheel speed",
       wheelSpeedModesTip:
         "How fast the wheel scrolls while a wheel key is held, for each speed key. Every press scrolls one notch right away.",
@@ -1012,16 +1013,21 @@ const English = {
     clickBack: "Back Click",
     clickForward: "Forward Click",
     movementTitle: "Movement",
-    movementDescription: "Control move using keys.",
+    movementDescription: "Move the cursor using keys.",
     wheelTitle: "Wheel",
     wheelDescription: "Control the wheel using keys.",
     speedTitle: "Speed & Boost",
-    speedDescription:
-      "Hold a speed key to change how fast the cursor and the wheel move. Tap Boost with an arrow to throw the cursor far.",
+    speedDescription: "Hold to change the cursor and wheel speed.",
     speedSlow: "Slow",
     speedMedium: "Medium",
     speedFast: "Fast",
     boost: "Boost",
+    speedSlowTip: "Hold it while moving the cursor or the wheel for small, precise movements.",
+    speedMediumTip: "Hold it to move the cursor and the wheel at Medium speed, the same as with no speed key held.",
+    speedFastTip: "Hold it while moving the cursor or the wheel to cross the screen quickly.",
+    boostTip:
+      "Tap it while holding a mouse arrow to throw the cursor far in that direction. Taps add up, so a few of them cross the screen.",
+    speedSettingsHint: "You can adjust these speeds in Preferences.",
   },
   welcome: {
     bootloaderTitle: "Your device is currently on Bootloader Mode",

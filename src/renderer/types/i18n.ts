@@ -677,6 +677,7 @@ export interface KeyboardSettingsMouse {
   wheelDelaysub: string;
   cursorSpeed: string;
   cursorSpeedTip: string;
+  fastOnWindows: string;
   wheelSpeedModes: string;
   wheelSpeedModesTip: string;
   speedSlow: string;
@@ -770,6 +771,11 @@ export interface LanguageMouse {
   speedMedium: string;
   speedFast: string;
   boost: string;
+  speedSlowTip: string;
+  speedMediumTip: string;
+  speedFastTip: string;
+  boostTip: string;
+  speedSettingsHint: string;
 }
 
 export interface Preferences {

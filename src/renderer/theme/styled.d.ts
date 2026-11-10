@@ -630,6 +630,10 @@ declare module "styled-components" {
         background: string;
         backgroundWheelCircle: string;
         mouseWheel: string;
+        clickBorder: string;
+        clickZone: string;
+        clickZoneHover: string;
+        clickZoneAccent: string;
       };
       navbar: {
         color: string;

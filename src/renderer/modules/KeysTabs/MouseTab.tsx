@@ -21,8 +21,11 @@ import { i18n } from "@Renderer/i18n";
 
 import Heading from "@Renderer/components/atoms/Heading";
 import { Button } from "@Renderer/components/atoms/Button";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@Renderer/components/atoms/Tooltip";
+import { IconInformation, IconThunder } from "@Renderer/components/atoms/icons";
 import { ButtonMouse } from "@Renderer/component/Button";
 import Store from "@Renderer/utils/Store";
+import MouseClickDiagram from "./MouseClickDiagram";
 
 const Styles = Styled.div`
 .keysButtonsList {
@@ -33,25 +36,19 @@ const Styles = Styled.div`
     margin-right: -4px;
 }
 
+/* The four sections spread across the whole width, with at least 48px between them */
 .buttonsRow {
     flex: 0 0 100%;
-    display: grid;
-    grid-template-columns: auto auto auto;
-    grid-gap: 24px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 24px 48px;
     .button-config {
         margin: 4px;
         padding-top: 12px;
         padding-bottom: 12px;
     }
     padding-bottom: 12px;
-}
-.clickButtons .keysButtonsList {
-    max-width: 430px;
-    flex-wrap: wrap;
-    .button-config {
-        width: 134px;
-        text-align: center;
-    }
 }
 
 .mouseButtons {
@@ -83,8 +80,26 @@ const Styles = Styled.div`
         }
     }
 }
-
 `;
+
+// Chevrons that show the speed as a scale: the first `level` of the three are lit
+function SpeedChevrons({ level }: Readonly<{ level: number }>) {
+  return (
+    <svg width={20} height={12} viewBox="0 0 20 12" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      {[2, 8, 14].map((x, index) => (
+        <path
+          key={`chevron-${x}`}
+          d={`M${x} 2l4 4-4 4`}
+          stroke="currentColor"
+          strokeWidth={1.5}
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          opacity={index < level ? 1 : 0.2}
+        />
+      ))}
+    </svg>
+  );
+}
 
 interface MouseTabProps {
   keyCode: any;
@@ -93,11 +108,10 @@ interface MouseTabProps {
   disabled?: boolean;
 }
 
-function MouseTab({ keyCode, onAddSpecial, actTab = "standard", disabled }: MouseTabProps) {
+function MouseTab({ keyCode, onAddSpecial, actTab = "standard", disabled }: Readonly<MouseTabProps>) {
   // function to handle button click event and to send data to props.onAddSpecial
   const handleClick = (event: any) => {
     onAddSpecial(event, 5);
-    // setIsHovering(!isHovering);
   };
 
   const KC = useMemo(() => {
@@ -110,11 +124,36 @@ function MouseTab({ keyCode, onAddSpecial, actTab = "standard", disabled }: Mous
   // Older firmware reads the speed and boost keycodes as mouse movement (see capabilities.mousekeys in App.tsx)
   const mouseKeys = Boolean(Store.getStore().get("capabilities.mousekeys"));
   const speedKeys = [
-    { name: i18n.mouse.speedSlow, keynum: 20609 },
-    { name: i18n.mouse.speedMedium, keynum: 20610 },
-    { name: i18n.mouse.speedFast, keynum: 20612 },
-    { name: i18n.mouse.boost, keynum: 20616 },
+    { name: i18n.mouse.speedSlow, tip: i18n.mouse.speedSlowTip, keynum: 20609, level: 1 },
+    { name: i18n.mouse.speedMedium, tip: i18n.mouse.speedMediumTip, keynum: 20610, level: 2 },
+    { name: i18n.mouse.speedFast, tip: i18n.mouse.speedFastTip, keynum: 20612, level: 3 },
   ];
+  const boostKey = { name: i18n.mouse.boost, tip: i18n.mouse.boostTip, keynum: 20616 };
+
+  const renderSpeedButton = (name: string, tip: string, keynum: number, icon: React.ReactNode, hint?: string) => (
+    <div key={`mouseSpeed-${keynum}`} className="flex items-center gap-2">
+      <Button
+        onClick={() => handleClick(keynum)}
+        selected={KC === keynum}
+        variant="config"
+        size="sm"
+        icon={<span className="flex w-5 justify-center">{icon}</span>}
+        iconDirection="left"
+        className="w-[124px] gap-2 items-center justify-start"
+      >
+        {name}
+      </Button>
+      <Tooltip>
+        <TooltipTrigger className="[&_svg]:text-purple-100 [&_svg]:dark:text-purple-200" aria-label={tip}>
+          <IconInformation size="sm" />
+        </TooltipTrigger>
+        <TooltipContent className="max-w-xs" size="sm" side="right">
+          <p>{tip}</p>
+          {hint ? <p className="mt-1 text-gray-400 dark:text-gray-200">{hint}</p> : ""}
+        </TooltipContent>
+      </Tooltip>
+    </div>
+  );
 
   return (
     <Styles className={`flex flex-wrap h-[inherit] tabsMouse ${disabled ? "opacity-50 pointer-events-none" : ""}`}>
@@ -128,26 +167,12 @@ function MouseTab({ keyCode, onAddSpecial, actTab = "standard", disabled }: Mous
               <p className="description text-ssm font-medium text-gray-400 dark:text-gray-200">
                 {i18n.mouse.mouseClickDescription}
               </p>
-              <div className="flex flex-wrap gap-1 max-w-[460px] mt-2">
-                <Button onClick={() => handleClick(20545)} selected={false} variant="config" size="sm" className="w-[114px]">
-                  {i18n.mouse.clickLeft}
-                </Button>
-                <Button onClick={() => handleClick(20548)} selected={false} variant="config" size="sm" className="w-[114px]">
-                  {i18n.mouse.clickMiddle}
-                </Button>
-                <Button variant="config" onClick={() => handleClick(20546)} selected={false} size="sm" className="w-[114px]">
-                  {i18n.mouse.clickRight}
-                </Button>
-                <Button onClick={() => handleClick(20552)} selected={false} variant="config" size="sm" className="w-[114px]">
-                  {i18n.mouse.clickBack}
-                </Button>
-                <Button onClick={() => handleClick(20560)} selected={false} variant="config" size="sm" className="w-[114px]">
-                  {i18n.mouse.clickForward}
-                </Button>
+              <div className="mt-4">
+                <MouseClickDiagram selectedKeynum={KC} onSelect={handleClick} />
               </div>
             </div>
             {actTab === "editor" ? (
-              <div className="movementsAndWheels flex gap-4">
+              <>
                 <div className="movementButtons">
                   <Heading headingLevel={4} renderAs="h4" className="m-0 text-base">
                     {i18n.mouse.movementTitle}
@@ -236,25 +261,26 @@ function MouseTab({ keyCode, onAddSpecial, actTab = "standard", disabled }: Mous
                     <p className="description text-ssm font-medium text-gray-400 dark:text-gray-200">
                       {i18n.mouse.speedDescription}
                     </p>
-                    <div className="flex flex-col gap-1 mt-2">
-                      {speedKeys.map(item => (
-                        <Button
-                          key={`mouseSpeed-${item.keynum}`}
-                          onClick={() => handleClick(item.keynum)}
-                          selected={KC === item.keynum}
-                          variant="config"
-                          size="sm"
-                          className="w-[114px]"
-                        >
-                          {item.name}
-                        </Button>
-                      ))}
-                    </div>
+                    <TooltipProvider delayDuration={200}>
+                      <div className="flex flex-col gap-1 mt-2">
+                        {speedKeys.map(item =>
+                          renderSpeedButton(
+                            item.name,
+                            item.tip,
+                            item.keynum,
+                            <SpeedChevrons level={item.level} />,
+                            i18n.mouse.speedSettingsHint,
+                          ),
+                        )}
+                      </div>
+                      <div className="w-[124px] h-px my-3 bg-gray-100/60 dark:bg-gray-500/60" />
+                      {renderSpeedButton(boostKey.name, boostKey.tip, boostKey.keynum, <IconThunder size="sm" />)}
+                    </TooltipProvider>
                   </div>
                 ) : (
                   ""
                 )}
-              </div>
+              </>
             ) : (
               ""
             )}

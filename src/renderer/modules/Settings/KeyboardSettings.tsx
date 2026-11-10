@@ -155,9 +155,12 @@ const Styles = Styled.div`
 `;
 
 /* Slider bounds of the mouse keys rework settings. They mirror what the firmware stores
- * (MouseKeysDygma: speeds in steps of 10 px/s up to 2550, boost time in steps of 4 ms);
+ * (MouseKeysDygma: speeds in steps of 20 px/s up to 5100, boost time in steps of 4 ms);
  * the firmware clamps anything outside them anyway. */
-const MOUSE_SPEED = { min: 10, max: 2550, step: 10 };
+const MOUSE_SPEED = { min: 20, max: 5100, step: 20 };
+/* Windows moves the cursor one pixel per count, so this speed already feels fast there. macOS moves it
+ * much less per count, which is what the range above it is for. */
+const MOUSE_SPEED_FAST_ON_WINDOWS = 2000;
 const MOUSE_WHEEL = { min: 1, max: 60, step: 1 };
 const MOUSE_RAMP = { min: 0, max: 250, step: 5 };
 const MOUSE_BOOST_DISTANCE = { min: 0, max: 3000, step: 10 };
@@ -192,9 +195,17 @@ interface SettingSliderProps {
   minLabel: string;
   maxLabel: string;
   onValueChange: (value: number[]) => void;
+  /** A reference value drawn as a tick on the track. */
+  mark?: { value: number; label: string };
 }
 
-function SettingSlider({ label, display, value, bounds, minLabel, maxLabel, onValueChange }: SettingSliderProps) {
+/* Radix keeps the 16 px thumb inside the track, so the thumb center runs from 8 px to (width - 8 px) */
+const SLIDER_THUMB_SIZE = 16;
+
+function SettingSlider({ label, display, value, bounds, minLabel, maxLabel, onValueChange, mark }: SettingSliderProps) {
+  const markPercent = mark ? ((mark.value - bounds.min) / (bounds.max - bounds.min)) * 100 : 0;
+  const markLeft = `calc(${markPercent}% + ${(0.5 - markPercent / 100) * SLIDER_THUMB_SIZE}px)`;
+
   return (
     <div className="w-full">
       <div className="w-full flex gap-2">
@@ -214,7 +225,15 @@ function SettingSlider({ label, display, value, bounds, minLabel, maxLabel, onVa
         <div className="flex max-w-12 p-0 text-center items-center">
           <span className="tagsfix">{minLabel}</span>
         </div>
-        <div className="w-full flex items-center p-0">
+        <div className="relative w-full flex items-center p-0">
+          {mark && (
+            <div className="pointer-events-none absolute inset-y-0 flex flex-col items-center" style={{ left: markLeft }}>
+              <span className="absolute top-1/2 h-3 w-[2px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-gray-300 dark:bg-gray-200" />
+              <span className="absolute top-[calc(50%+8px)] -translate-x-1/2 whitespace-nowrap text-[10px] leading-none text-gray-400 dark:text-gray-200">
+                {mark.label}
+              </span>
+            </div>
+          )}
           <Slider min={bounds.min} max={bounds.max} step={bounds.step} value={[value]} onValueChange={onValueChange} />
         </div>
         <div className="flex max-w-12 p-0 text-center items-center">
@@ -245,6 +264,7 @@ function MouseKeysCard({ kbData, setSetting }: MouseKeysCardProps) {
     mouseBoostDistance,
     mouseBoostTime,
   } = kbData;
+  const speedMark = { value: MOUSE_SPEED_FAST_ON_WINDOWS, label: t.fastOnWindows };
 
   return (
     <Card className="mt-3 max-w-2xl mx-auto" variant="default">
@@ -264,6 +284,7 @@ function MouseKeysCard({ kbData, setSetting }: MouseKeysCardProps) {
             minLabel="Slower"
             maxLabel="Faster"
             onValueChange={setSetting("mouseSpeedSlow")}
+            mark={speedMark}
           />
           <SettingSlider
             label={t.speedMedium}
@@ -273,6 +294,7 @@ function MouseKeysCard({ kbData, setSetting }: MouseKeysCardProps) {
             minLabel="Slower"
             maxLabel="Faster"
             onValueChange={setSetting("mouseSpeedMedium")}
+            mark={speedMark}
           />
           <SettingSlider
             label={t.speedFast}
@@ -282,6 +304,7 @@ function MouseKeysCard({ kbData, setSetting }: MouseKeysCardProps) {
             minLabel="Slower"
             maxLabel="Faster"
             onValueChange={setSetting("mouseSpeedFast")}
+            mark={speedMark}
           />
           <SettingSlider
             label={<SettingTip label={t.ramp} tip={t.rampTip} />}
