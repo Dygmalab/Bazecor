@@ -92,7 +92,6 @@ const ColorEditor = ({
   applyColorMapChangeUG,
   onColorPick,
   onColorSelect,
-  onColorButtonSelect,
 }: ColorEditorProps) => {
   const [displayColorPicker, setDisplayColorPicker] = useState(false);
 
@@ -101,18 +100,6 @@ const ColorEditor = ({
       onColorPick(selected, color.rgb.r, color.rgb.g, color.rgb.b);
     },
     [selected, onColorPick],
-  );
-
-  const selectColor = useCallback(
-    (pick: number) => {
-      onColorSelect(pick);
-      if (pick === selected) {
-        onColorButtonSelect("one_button_click", pick);
-        return;
-      }
-      onColorButtonSelect("another_button_click", pick);
-    },
-    [selected, onColorSelect, onColorButtonSelect],
   );
 
   const showColorPicker = useCallback(() => {
@@ -141,7 +128,7 @@ const ColorEditor = ({
         </Heading>
       </div>
       <div className="panelTools">
-        <ColorPalette colors={colors} selected={selected} onColorSelect={selectColor} />
+        <ColorPalette colors={colors} selected={selected} onColorSelect={onColorSelect} />
         <div className="buttonsGroup">
           <div className="buttonEditColor">
             <ColorButton

@@ -113,7 +113,7 @@ function PageHeader(props: PageHeaderType) {
   return (
     <Style className={`${styles === "pageHeaderFlatBottom" ? "pageHeaderSticky" : ""}`}>
       <div
-        className={`pageHeader ${size !== undefined && size} ${styles !== undefined && styles} ${isColorActive ?? "extraPanelActive"}`}
+        className={`pageHeader ${size !== undefined && size} ${styles !== undefined && styles} ${isColorActive ? "extraPanelActive" : ""}`}
       >
         <div className="pageTitle">
           <Heading headingLevel={2} renderAs="h2">

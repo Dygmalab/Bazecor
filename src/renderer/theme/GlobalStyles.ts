@@ -1759,9 +1759,6 @@ div.card.card-preferences .card-body {
     .KeyVisualizer {
       display: none;
     }
-    .ModPicker {
-      width: 100%;
-    }
   }
 }
 @media screen and (max-width: 1360px) {

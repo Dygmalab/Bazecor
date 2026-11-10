@@ -28,8 +28,6 @@ import MouseTab from "@Renderer/modules/KeysTabs/MouseTab";
 import WirelessTab from "@Renderer/modules/KeysTabs/WirelessTab";
 import LayerLensTab from "@Renderer/modules/KeysTabs/LayerLensTab";
 import CustomKeyCodeModal from "@Renderer/components/molecules/CustomModal/ModalCustomKeycode";
-import { Separator } from "@Renderer/components/atoms/Separator";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@Renderer/components/atoms/Tooltip";
 import { SegmentedKeyType } from "@Renderer/types/layout";
 import { MacrosType } from "@Renderer/types/macros";
 import { SuperkeysType } from "@Renderer/types/superkeys";
@@ -37,7 +35,7 @@ import Store from "@Renderer/utils/Store";
 import { KeymapDB } from "../../../api/keymap";
 import { Picker } from ".";
 
-import ModPicker from "./ModPicker";
+import AutoshiftToggle from "./AutoshiftToggle";
 import { AutoshiftCodes } from "../../../hw/autoshift";
 import { CapsWordCodes } from "../../../hw/capsword";
 import ModifiersTab from "../KeysTabs/ModifiersTab";
@@ -168,9 +166,6 @@ width: -webkit-fill-available;
 
 .singleViewWrapper {
   .newKeyValue h4 span { display: none; }
-  .modPickerButtonsList .button-config{
-    font-size: 12px;
-  }
   .keyBoardPickerWrapper {
     box-shadow: ${({ theme }) => theme.styles.keyboardPicker.keyEnhanceWrapperBoxShadow};
 
@@ -183,64 +178,7 @@ width: -webkit-fill-available;
   flex-wrap: wrap;
   height: 100%;
 }
-.ModPicker {
-  flex: 0 0 100%;
-  &.ModPickerScroll {
-    overflow: auto;
-  }
-  &.ModPickerScrollHidden {
-    overflow: hidden;
-  }
-}
 
-// .superkeyHint {
-//   padding: 8px;
-// }
-// .superkeyItem {
-//   display: flex;
-//   flex-wrap: nowrap;
-//   align-items: center;
-//   border-radius: 3px;
-//   padding: 4px;
-//   justify-content: space-between;
-//   background-color: ${({ theme }) => theme.styles.standardView.superkeys.item.background};
-// }
-// .superkeyItem + .superkeyItem  {
-//   margin-top: 1px;
-// }
-// .superkeyTitle {
-//   flex: 0 0 62px;
-//   padding-right: 18px;
-// }
-// .superkeyTitle h5.actionTitle {
-//   font-size: 8px;
-//   text-transform: uppercase;
-//   font-weight: 700;
-//   letter-spacing: 0.04em;
-//   margin: 4px 0 1px 0;
-//   color: ${({ theme }) => theme.styles.standardView.superkeys.item.titleColor};
-// }
-// .superKey {
-//   position: relative;
-//   align-self: center;
-//   padding: 4px;
-//   flex: 0 0 calc(100% - 62px);
-//   text-align: center;
-//   font-size: 10px;
-//   font-weight: 700;
-//   border: 1px solid ${({ theme }) => theme.styles.standardView.superkeys.key.border};
-//   border-radius: 3px;
-//   background-color: ${({ theme }) => theme.styles.standardView.superkeys.key.background};
-//   .listModifiersTags .labelModifier {
-//     font-size: 8px;
-//     padding: 3px 8px;
-//   }
-// }
-// .superKey > div{
-//   position: absolute;
-//   bottom: -12px;
-//   left: 12px;
-// }
 
 `;
 
@@ -256,7 +194,7 @@ interface Props {
   actTab: string;
   selectedlanguage: string;
   isWireless: boolean;
-  /* Passed straight to ModPicker; see the note on its own prop. */
+  /* Combo and superkey actions cannot use Autoshift in the firmware. */
   allowAutoshift?: boolean;
   /* Show mouse movement and wheel keys, which the Mouse tab otherwise keeps to
    * the Layout Editor. */
@@ -312,28 +250,6 @@ function KeyPickerKeyboard(props: Props) {
 
   const { tabs, disable, currentTab, customModal } = state;
 
-  useEffect(() => {
-    const tabList = [];
-    tabList.push("tabKeys");
-    tabList.push("tabLayers");
-    tabList.push("tabMacro");
-    if (actTab !== "super") tabList.push("tabSuperKeys");
-    tabList.push("tabMedia");
-    tabList.push("tabMouse");
-    if (isWireless) tabList.push("tabWireless");
-    if (isLensAvailable) tabList.push("tabLayerLens");
-
-    const lstate = { ...state };
-    lstate.tabs = tabList;
-    // Enable editing by default in Superkeys context; otherwise depend on keyIndex
-    lstate.disable = actTab === "super" ? false : keyIndex === -1;
-    // Initialize current tab based on the initial key
-    const initialKeyNum = code != null ? code.modified + code.base : -1;
-    lstate.currentTab = detectTab(initialKeyNum);
-    setState(lstate);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
   const detectTab = (keyCode: number) => {
     let tab = "";
     if (keyCode < 256 || keyCode === 65535) tab = "tabKeys";
@@ -374,6 +290,28 @@ function KeyPickerKeyboard(props: Props) {
   };
 
   useEffect(() => {
+    const tabList = [];
+    tabList.push("tabKeys");
+    tabList.push("tabLayers");
+    tabList.push("tabMacro");
+    if (actTab !== "super") tabList.push("tabSuperKeys");
+    tabList.push("tabMedia");
+    tabList.push("tabMouse");
+    if (isWireless) tabList.push("tabWireless");
+    if (isLensAvailable) tabList.push("tabLayerLens");
+
+    const lstate = { ...state };
+    lstate.tabs = tabList;
+    // Enable editing by default in Superkeys context; otherwise depend on keyIndex
+    lstate.disable = actTab === "super" ? false : keyIndex === -1;
+    // Initialize current tab based on the initial key
+    const initialKeyNum = code != null ? code.modified + code.base : -1;
+    lstate.currentTab = detectTab(initialKeyNum);
+    setState(lstate);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
     const distinctKeyIndex = prevProps.current.keyIndex !== keyIndex;
     const keynum = code != null ? code.modified + code.base : -1;
     const keynumOld = prevProps.current.code != null ? prevProps.current.code.modified + prevProps.current.code.base : -1;
@@ -393,6 +331,10 @@ function KeyPickerKeyboard(props: Props) {
 
   useEffect(() => {
     const elem = overflowRef.current;
+    if (elem.closest("[hidden]")) {
+      if (mouseWheel !== 0) resetScroll();
+      return;
+    }
     const overflow = elem.scrollHeight > elem.offsetHeight;
     if (!disable && mouseWheel !== 0 && !overflow) {
       if (mouseWheel === 1) {
@@ -426,9 +368,6 @@ function KeyPickerKeyboard(props: Props) {
   };
 
   const KC = code.base + code.modified;
-  const superk = Array(superkeys.length)
-    .fill(0)
-    .map((_, i) => i + 53980);
 
   // Render variables
   const tabVariants = {
@@ -486,72 +425,49 @@ function KeyPickerKeyboard(props: Props) {
             </div>
           </div>
           <div
-            className="keyBoardPickerWrapper w-full rounded-regular py-4 px-8 bg-gray-25 dark:bg-[#25273B] shadow-lg h-[370px] overflow-auto"
+            className="keyBoardPickerWrapper min-w-0 flex-1 rounded-regular py-4 px-8 bg-gray-25 dark:bg-[#25273B] h-[370px] overflow-auto"
             ref={overflowRef}
           >
-            <TabsContent value="tabKeys">
-              <motion.div initial="hidden" animate="visible" key="tabKeys" variants={tabVariants}>
-                <>
-                  <Picker
-                    key={`${disable}`}
-                    disable={disable}
-                    disableMods={false}
-                    disableMove={false}
-                    baseCode={code.base}
-                    modCode={code.modified}
-                    onKeySelect={onKeySelect}
-                    selectedlanguage={selectedlanguage}
-                  />
-                  <div className="w-full flex flex-wrap items-center justify-between gap-6 mt-4">
-                    <div className={`flex ${macros[KC - 53852] ? "ModPickerScrollHidden" : ""} ${disable ? "disable" : ""}`}>
-                      {!superkeys[superk.indexOf(KC)] || !macros[KC - 53852] ? (
-                        <div className="flex gap-2 flex-col lg:flex-row lg:gap-4">
-                          <ModPicker
-                            keyCode={code}
-                            onKeySelect={onKeySelect}
-                            isStandardView={false}
-                            allowAutoshift={allowAutoshift && autoshiftAvailable}
-                          />
-                        </div>
-                      ) : (
-                        ""
-                      )}
-                    </div>
-                    {actTab !== "super" ? (
-                      <div className="flex flex-wrap gap-2 items-center">
-                        <NoKeyTransparentTab keyCode={code} onKeySelect={onKeySelect} disabled={disable} />
-                        <Separator orientation="vertical" className="mx-1 bg-gray-100 dark:bg-gray-600 block h-9" />
-                        <div className="flex gap-2">
-                          <TooltipProvider delayDuration={100}>
-                            <Tooltip>
-                              <TooltipTrigger asChild>
-                                <div className="basis-full">
-                                  <Button
-                                    variant="config"
-                                    disabled={false}
-                                    // selected={code.base + code.modified >= 20000}
-                                    onClick={() => {
-                                      toggleModal(true);
-                                    }}
-                                    size="icon"
-                                    className="w-9 h-9"
-                                  >
-                                    <IconWrench size="sm" />
-                                  </Button>
-                                </div>
-                              </TooltipTrigger>
-                              <TooltipContent size="sm" className="max-w-xs">
-                                {i18n.editor.superkeys.specialKeys.custom}
-                              </TooltipContent>
-                            </Tooltip>
-                          </TooltipProvider>
-                        </div>
-                      </div>
-                    ) : (
-                      ""
-                    )}
+            <TabsContent value="tabKeys" className="mt-0 h-full min-h-0">
+              <motion.div initial="hidden" animate="visible" key="tabKeys" variants={tabVariants} className="h-full min-h-0">
+                <div
+                  className={`grid h-full min-h-0 grid-rows-[minmax(0,1fr)_auto] gap-x-4 ${
+                    actTab !== "super" ? "grid-cols-[minmax(0,1fr)_10rem]" : "grid-cols-[minmax(0,1fr)]"
+                  }`}
+                >
+                  <div className="col-start-1 row-start-1 min-h-0 min-w-0">
+                    <Picker
+                      key={`${disable}`}
+                      disable={disable}
+                      disableMods={false}
+                      disableMove={false}
+                      toggleModifiers
+                      fitContainer
+                      baseCode={code.base}
+                      modCode={code.modified}
+                      onKeySelect={onKeySelect}
+                      selectedlanguage={selectedlanguage}
+                    />
                   </div>
-                </>
+                  {allowAutoshift && autoshiftAvailable && (
+                    <AutoshiftToggle keyCode={code} onKeySelect={onKeySelect} disabled={disable} />
+                  )}
+                  {actTab !== "super" && (
+                    <div className="col-start-2 row-start-1 flex flex-col gap-2 self-center">
+                      <NoKeyTransparentTab keyCode={code} onKeySelect={onKeySelect} disabled={disable} />
+                      <Button
+                        variant="config"
+                        disabled={disable}
+                        onClick={() => toggleModal(true)}
+                        size="sm"
+                        className="w-full h-9 gap-2 text-ssm"
+                      >
+                        <IconWrench size="sm" />
+                        {i18n.editor.superkeys.specialKeys.custom}
+                      </Button>
+                    </div>
+                  )}
+                </div>
               </motion.div>
             </TabsContent>
             <TabsContent value="tabLayers" key="tabLayers">
@@ -653,7 +569,7 @@ function KeyPickerKeyboard(props: Props) {
       </Tabs>
       <CustomKeyCodeModal
         show={customModal}
-        name={(code.base + code.modified).toString(16)}
+        name={code.base + code.modified < 0 ? "" : (code.base + code.modified).toString(16)}
         toggleShow={() => toggleModal(false)}
         handleSave={data => {
           log.info("CustomKey selected key", data);

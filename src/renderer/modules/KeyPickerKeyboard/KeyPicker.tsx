@@ -43,12 +43,24 @@ import OSKey from "@Renderer/components/molecules/KeyTags/OSKey";
 
 import { getKeyboardLayout } from "@Renderer/utils/getKeyboardLayout";
 import { SegmentedKeyType } from "@Renderer/types/layout";
+import { isModifierSelected, modifierFlag, selectShortcutKey } from "./shortcutSelection";
 
 const Style = Styled.div`
 width: 100%;
-@media screen and (min-width: 1980px) and (min-height: 980px) {
-  max-width: 1860px;
-  margin: 0 auto;
+min-width: 0;
+&.fitContainer {
+  height: 100%;
+  min-height: 0;
+  .KeysWrapper, .keysContainer, .keysOrdinaryKeyboard {
+    height: 100%;
+    min-height: 0;
+  }
+  .keysOrdinaryKeyboard {
+    padding: 2px;
+  }
+  .svgStyle {
+    height: 100%;
+  }
 }
 .keyboard {
   margin: 0;
@@ -72,9 +84,12 @@ width: 100%;
   }
 }
 .svgStyle {
+    display: block;
+    width: 100%;
+    height: auto;
     overflow: visible;
-    max-width: 1170px;
-    margin: 6px auto;
+    max-width: none;
+    margin: 0;
 }
 .KeysWrapperSpecialKeys {
   margin-top: 4px;
@@ -271,17 +286,29 @@ type Props = {
   disableMove?: boolean;
   disableAll: boolean;
   selectedlanguage: string;
+  toggleModifiers?: boolean;
+  fitContainer?: boolean;
 };
 
 const KeyPicker = (props: Props) => {
-  const { onKeySelect, code, disableMods, disableAll, selectedlanguage, disableMove } = props;
+  const {
+    onKeySelect,
+    code,
+    disableMods,
+    disableAll,
+    selectedlanguage,
+    disableMove,
+    toggleModifiers = false,
+    fitContainer = false,
+  } = props;
   if (disableMove) {
     //
   }
   const theme = useTheme();
 
   const onKeyPress = (keycode: number) => {
-    onKeySelect(keycode);
+    if (disableAll) return;
+    onKeySelect(toggleModifiers ? selectShortcutKey(code.base + code.modified, keycode) : keycode);
   };
 
   const Lang = getLanguage(selectedlanguage as LangOptions);
@@ -384,6 +411,9 @@ const KeyPicker = (props: Props) => {
   };
 
   const returnData = (key: any) => {
+    if (toggleModifiers && modifierFlag(key.id)) {
+      return isModifierSelected(code.base + code.modified, key.id);
+    }
     const KeyIsKey =
       code.base === key.id &&
       (code.base + code.modified < 53267 || code.base + code.modified > 60000) &&
@@ -433,10 +463,10 @@ const KeyPicker = (props: Props) => {
   ));
 
   return (
-    <Style>
+    <Style className={fitContainer ? "fitContainer" : undefined}>
       <div className="KeysWrapper">
         <div className="keysContainer">
-          <div className=" flex flex-wrap bg-white dark:bg-gray-700/60 keysOrdinaryKeyboard relative z-[4] p-3 rounded-t-regular [&_svg]:mx-auto [&_svg]:max-w-6xl">
+          <div className="keysOrdinaryKeyboard relative z-[4] w-full">
             {disableAll ? (
               <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-25 tracking-tight text-xl text-nowrap">
                 Select a key in the keyboard above to start
@@ -447,7 +477,7 @@ const KeyPicker = (props: Props) => {
             <svg
               className={`svgStyle ${process.platform} ${keyboardLayout}`}
               viewBox="0 0 1070 208"
-              preserveAspectRatio="xMidYMin slice"
+              preserveAspectRatio="xMidYMid meet"
             >
               {keyboard}
               <defs>

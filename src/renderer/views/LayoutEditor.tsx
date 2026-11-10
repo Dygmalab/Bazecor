@@ -49,12 +49,13 @@ import { KeyPickerKeyboard } from "@Renderer/modules/KeyPickerKeyboard";
 // Components
 import LayerSelector from "@Renderer/components/organisms/Select/LayerSelector";
 import { Button } from "@Renderer/components/atoms/Button";
-import { IconArrowDownWithLine, IconArrowUpWithLine, IconColorPalette } from "@Renderer/components/atoms/icons";
+import { IconArrowDownWithLine, IconArrowUpWithLine, IconChevronDown, IconColorPalette } from "@Renderer/components/atoms/icons";
 import LoaderLayout from "@Renderer/components/atoms/loader/loaderLayout";
 import { i18n } from "@Renderer/i18n";
 
 import Store from "@Renderer/utils/Store";
 import getLanguage from "@Renderer/utils/language";
+import { commonColorIndex, commonKeyCode, SelectedKey, selectKeys } from "@Renderer/utils/layoutKeySelection";
 import { ClearLayerDialog } from "@Renderer/components/molecules/CustomModal/ClearLayerDialog";
 import { ComboBreakDialog } from "@Renderer/components/molecules/CustomModal/ComboBreakDialog";
 import { DygmaDeviceInfoType } from "@Renderer/types/dygmaDefs";
@@ -79,11 +80,11 @@ import { ComboBreakReason, comboBreakReason, combosAtPosition, isLegacyCombosRep
 const store = Store.getStore();
 
 const Styles = Styled.div`
+height: 100dvh;
 .keyboard-editor {
-  // min-height: 100vh;
   height: inherit;
-  display: flex;
-  flex-flow: column;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
   .title-row {
     // margin-bottom: 40px;
   }
@@ -121,18 +122,15 @@ const Styles = Styled.div`
     margin-left: 4px;
   }
 }
-.layer-col {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  // height: 100%;
+.ordinary-keyboard-editor .singleViewWrapper {
+  margin-top: 0;
 }
 
 ${keyboardCanvasStyles}
 
 `;
 
-type ModeType = "keyboard" | "color";
+type ModeType = "keys" | "keyboard";
 
 const LayoutEditor = (props: LayoutEditorProps) => {
   const defaultLayerNames = useMemo(
@@ -188,15 +186,17 @@ const LayoutEditor = (props: LayoutEditorProps) => {
   const [previousLayer, setPreviousLayer] = useState(0);
   const [layerNames, setLayerNames] = useState([]);
   const [neuronID, setNeuronID] = useState("");
-  const [currentKeyIndex, setCurrentKeyIndex] = useState(-1);
-  const [currentLedIndex, setCurrentLedIndex] = useState(-1);
+  const [selectedKeys, setSelectedKeys] = useState<SelectedKey[]>([]);
+  const selectedKeyIndexes = selectedKeys.map(({ keyIndex }) => keyIndex);
+  const currentKeyIndex = selectedKeyIndexes[selectedKeyIndexes.length - 1] ?? -1;
+  const currentLedIndex = selectedKeys[selectedKeys.length - 1]?.ledIndex ?? -1;
   const [keymap, setKeymap] = useState<KeymapType>({
     custom: [],
     default: [],
     onlyCustom: false,
   });
   const [palette, setPalette] = useState([]);
-  const [colorMap, setColorMap] = useState([]);
+  const [colorMap, setColorMap] = useState<number[][]>([]);
   const [macros, setMacros] = useState<MacrosType[]>();
   const [superkeys, setSuperkeys] = useState<SuperkeysType[]>();
   const [combos, setCombos] = useState<ComboType[]>([]);
@@ -205,24 +205,24 @@ const LayoutEditor = (props: LayoutEditorProps) => {
     reason: ComboBreakReason;
     comboIndexes: number[];
     layer: number;
-    keyIndex: number;
-    previousKeyCode: number;
+    previousAssignments: { keyIndex: number; keyCode: number }[];
   } | null>(null);
 
   const [modified, setModified] = useState(false);
-  const [modeselect, setModeselect] = useState<ModeType>("keyboard");
+  const [modeselect, setModeselect] = useState<ModeType>("keys");
+  const [isPickerCollapsed, setIsPickerCollapsed] = useState(false);
   const [deviceName, setDeviceName] = useState("");
   const [clearConfirmationOpen, setClearConfirmationOpen] = useState(false);
   const [copyFromOpen, setCopyFromOpen] = useState(false);
-  const [isMultiSelected, setIsMultiSelected] = useState(false);
-  const [isColorButtonSelected, setIsColorButtonSelected] = useState(false);
   const [currentLanguageLayout, setCurrentLanguageLayout] = useState("english");
   const [showMacroModal, setShowMacroModal] = useState(false);
   const [showNeuronModal, setShowNeuronModal] = useState(false);
   const [leftSideModified, setLeftSideModified] = useState(false);
   const [isWireless, setIsWireless] = useState(false);
 
-  const [selectedPaletteColor, setSelectedPaletteColor] = useState(-1);
+  const [paletteColor, setPaletteColor] = useState(-1);
+  const selectedPaletteColor =
+    selectedKeys.length > 0 ? (commonColorIndex(colorMap[currentLayer], selectedKeys) ?? -1) : paletteColor;
 
   const scanned = useRef(false);
   const [isSaving, setIsSaving] = useState(false);
@@ -582,21 +582,21 @@ const LayoutEditor = (props: LayoutEditorProps) => {
     [state, setLoading, AnalizeChipID, restoredOk, getColormap, handleSetRestoredOk, keymapDB, onDisconnect],
   );
 
-  const assignKey = (layer: number, keyIndex: number, keyCode: number) => {
+  const assignKeys = (layer: number, assignments: { keyIndex: number; keyCode: number }[]) => {
     try {
       const kmap = keymap.custom.slice();
       const l = keymap.onlyCustom ? layer : layer - keymap.default.length;
-      const parsedKey = keymapDB.parse(keyCode);
-      log.info(
-        `[KeyAssign] layer=${layer} storedLayer=${l} keyIndex=${keyIndex} keyCode=${keyCode} onlyCustom=${keymap.onlyCustom} parsed=`,
-        parsedKey,
-      );
       if (l < 0 || !kmap[l]) {
         log.error(
           `[KeyAssign] target layer ${l} does not exist in the custom keymap (onlyCustom=${keymap.onlyCustom}); the key will NOT be stored`,
         );
+        return;
       }
-      kmap[l][keyIndex] = parsedKey;
+      kmap[l] = kmap[l].slice();
+      assignments.forEach(({ keyIndex, keyCode }) => {
+        kmap[l][keyIndex] = keymapDB.parse(keyCode);
+      });
+      log.info(`[KeyAssign] layer=${layer} storedLayer=${l} assignments=`, assignments);
       setModified(true);
       setKeymap({
         default: keymap.default,
@@ -612,74 +612,33 @@ const LayoutEditor = (props: LayoutEditorProps) => {
   const onKeyChange = (keyCode: number) => {
     // Keys can only change on the custom layers
     const layer = currentLayer;
-    const keyIndex = currentKeyIndex;
-
-    if (keyIndex === -1) {
-      return;
-    }
-
     const l = keymap.onlyCustom ? layer : layer - keymap.default.length;
-    const previousKeyCode = keymap.custom[l]?.[keyIndex]?.keyCode;
+    if (l < 0 || !keymap.custom[l]) return;
+    const previousAssignments = selectedKeyIndexes
+      .filter(keyIndex => keyIndex < ledIndexStart && keymap.custom[l][keyIndex] !== undefined)
+      .map(keyIndex => ({ keyIndex, keyCode: keymap.custom[l][keyIndex].keyCode }))
+      .filter(previous => previous.keyCode !== keyCode);
+    if (previousAssignments.length === 0) return;
 
-    assignKey(layer, keyIndex, keyCode);
+    assignKeys(
+      layer,
+      previousAssignments.map(({ keyIndex }) => ({ keyIndex, keyCode })),
+    );
 
     /* Warn when the new key stops a saved combo from firing. Only on an actual
      * change, so re-picking the same key does not nag again. */
-    if (previousKeyCode === undefined || previousKeyCode === keyCode) return;
     const reason = comboBreakReason(keyCode, superkeys);
     if (!reason) return;
     /* A key can be in several combos on this layer; every one of them breaks. */
-    const comboIndexes = combosAtPosition(combos, keyIndex, layer);
+    const comboIndexes = [...new Set(previousAssignments.flatMap(({ keyIndex }) => combosAtPosition(combos, keyIndex, layer)))];
     if (comboIndexes.length === 0) return;
 
-    setComboBreak({ reason, comboIndexes, layer, keyIndex, previousKeyCode });
+    setComboBreak({ reason, comboIndexes, layer, previousAssignments });
   };
 
   const undoComboBreak = () => {
-    if (comboBreak) assignKey(comboBreak.layer, comboBreak.keyIndex, comboBreak.previousKeyCode);
+    if (comboBreak) assignKeys(comboBreak.layer, comboBreak.previousAssignments);
     setComboBreak(null);
-  };
-
-  /**
-   * Verify that colors in keyboard button and in color palette is equal
-   * @param {number} colorIdx Number of palette index
-   * @param {number} cLayer Number of current layer
-   * @param {number} cLedIndex Number of current selected keyboard button
-   * @return {boolean}
-   */
-
-  const onVerificationColor = (colorIdx: number, cLayer: number, cLedIndex: number): boolean => {
-    const currentIndexKeyButton = colorMap[cLayer][cLedIndex];
-    return currentIndexKeyButton === colorIdx;
-  };
-
-  /**
-   * Change state if click control or shift button
-   * @param {number} layer Number of current layer
-   * @param {number} ledIndex Number of current selected keyboard button
-   */
-  const onCtrlShiftPress = (layer: number, ledIndex: number) => {
-    setSelectedPaletteColor(colorMap[layer][ledIndex]);
-    setIsMultiSelected(true);
-    setIsColorButtonSelected(true);
-  };
-
-  /**
-   * Change state if color buton selected
-   * @param {number} layer Number of layer in attribute of keyboard button
-   * @param {number} cLayer Number of current layer from state
-   * @param {number} ledIndex Number of current selected keyboard button
-   */
-  const onButtonKeyboardColorChange = (cLayer: number, layer: number, ledIndex: number) => {
-    const isEqualColor = onVerificationColor(selectedPaletteColor, cLayer, ledIndex);
-    if (!(!modified && isEqualColor)) {
-      const colormap = colorMap.slice();
-      colormap[cLayer][ledIndex] = selectedPaletteColor;
-      setSelectedPaletteColor(colorMap[layer][ledIndex]);
-      setColorMap(colormap);
-      setModified(true);
-    }
-    startContext();
   };
 
   const onKeySelect = (event: MouseEvent) => {
@@ -688,34 +647,18 @@ const LayoutEditor = (props: LayoutEditorProps) => {
     const keyIndex = parseInt(currentTarget.getAttribute("data-key-index"), 10);
     const ledIndex = parseInt(currentTarget.getAttribute("data-led-index"), 10);
 
-    if (keyIndex === currentKeyIndex) {
-      setCurrentKeyIndex(-1);
-      return;
-    }
+    if (event.button !== 0 || !Number.isInteger(keyIndex) || keyIndex < 0) return;
 
+    setSelectedKeys(selectKeys(currentLayer === layer ? selectedKeys : [], { keyIndex, ledIndex }, event.ctrlKey));
     setCurrentLayer(layer);
-    if (colorMap.length > 0 && layer >= 0 && layer < colorMap.length) {
-      setCurrentKeyIndex(keyIndex);
-      setCurrentLedIndex(ledIndex);
-      setModeselect(ledIndex >= ledIndexStart ? "color" : modeselect);
-    }
-    setCurrentKeyIndex(keyIndex);
-    if (event.ctrlKey || event.shiftKey) {
-      onCtrlShiftPress(layer, ledIndex);
-    } else {
-      if (selectedPaletteColor !== null && isMultiSelected && isColorButtonSelected) {
-        onButtonKeyboardColorChange(currentLayer, layer, ledIndex);
-      }
-      if (isColorButtonSelected && !isMultiSelected) {
-        setIsMultiSelected(true);
-        onButtonKeyboardColorChange(currentLayer, layer, ledIndex);
-      }
-    }
   };
 
   const selectLayer = (id: number) => {
     if (id === undefined) return;
     setPreviousLayer(currentLayer);
+    if (modeselect === "keys") {
+      setSelectedKeys([]);
+    }
     setCurrentLayer(id);
   };
 
@@ -731,13 +674,8 @@ const LayoutEditor = (props: LayoutEditorProps) => {
       await updateColormap(currentDevice, colorMap);
       await updatePalette(currentDevice, palette);
       setCurrentLayer(currentLayer);
-      setCurrentKeyIndex(currentKeyIndex);
-      setCurrentLedIndex(currentLedIndex);
       setModified(false);
       setLeftSideModified(false);
-      setIsMultiSelected(false);
-      setSelectedPaletteColor(null);
-      setIsColorButtonSelected(false);
       const commands = await Backup.Commands(currentDevice);
       const backup = await bkp.DoBackup(commands, neuronID, currentDevice);
       Backup.SaveBackup(backup, currentDevice);
@@ -936,49 +874,22 @@ const LayoutEditor = (props: LayoutEditorProps) => {
     setClearConfirmationOpen(false);
   };
 
-  const onColorButtonSelect = (action: string, colorIndex: number) => {
-    if (action === "one_button_click") {
-      setIsMultiSelected(false);
-      setIsColorButtonSelected(!isColorButtonSelected);
-      return;
-    }
-    if (action === "another_button_click") {
-      setSelectedPaletteColor(colorIndex);
-      setIsColorButtonSelected(true);
-    }
-  };
-
   const onColorSelect = (colorIndex: number) => {
-    const { currentDevice } = state;
-    const isEqualColor = onVerificationColor(colorIndex, currentLayer, currentLedIndex);
-    // log.info(
-    //   "data from onColorSelect",
-    //   isEqualColor,
-    //   currentLayer,
-    //   colorMap.length,
-    //   currentLedIndex,
-    //   colorIndex,
-    //   selectedPaletteColor,
-    //   currentKeyIndex,
-    // );
+    if (!palette[colorIndex]) return;
+    setPaletteColor(colorIndex);
+    const colors = colorMap[currentLayer];
+    if (!colors || selectedKeys.length === 0) return;
+    const selectedLeds = new Set(selectedKeys.map(({ ledIndex }) => ledIndex));
+    const updatedColors = colors.map((color, ledIndex) => (selectedLeds.has(ledIndex) ? colorIndex : color));
+    if (updatedColors.every((color, ledIndex) => color === colors[ledIndex])) return;
 
-    if (currentLayer < 0 || currentLayer >= colorMap.length) return;
-
-    if (!isEqualColor && currentKeyIndex >= 0) {
-      const colormap = colorMap.slice();
-      colormap[currentLayer][currentLedIndex] = colorIndex;
-      if (currentDevice.device.keyboard.ledsLeft.includes(currentLedIndex)) setLeftSideModified(true);
-      setIsMultiSelected(true);
-      setColorMap(colorMap);
-      setSelectedPaletteColor(colorIndex);
-      setModified(true);
-      startContext();
+    const { keyboard, keyboardUnderglow } = state.currentDevice.device;
+    if ([...keyboard.ledsLeft, ...keyboardUnderglow.ledsLeft].some(ledIndex => selectedLeds.has(ledIndex))) {
+      setLeftSideModified(true);
     }
-    if (colorIndex !== selectedPaletteColor) {
-      setSelectedPaletteColor(colorIndex);
-    } else {
-      setSelectedPaletteColor(-1);
-    }
+    setColorMap(colorMap.map((layer, index) => (index === currentLayer ? updatedColors : layer)));
+    setModified(true);
+    startContext();
   };
 
   const onColorPick = (colorIndex: number, r: number, g: number, b: number) => {
@@ -1266,11 +1177,11 @@ const LayoutEditor = (props: LayoutEditorProps) => {
     layerNames !== undefined && layerNames.length > index ? layerNames[index]?.name : defaultLayerNames[index]?.name;
 
   const modeSelectToggle = (data: ModeType) => {
-    setSelectedPaletteColor(null);
-    setIsColorButtonSelected(false);
-    setCurrentLedIndex(-1);
-    setCurrentKeyIndex(-1);
     setModeselect(data);
+    setIsPickerCollapsed(data === "keyboard");
+    if (data === "keys") {
+      setSelectedKeys(selectedKeys.filter(({ keyIndex }) => keyIndex < ledIndexStart));
+    }
   };
 
   const exportToPdf = () => {
@@ -1331,8 +1242,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
         setLoading(true);
         setCurrentLayer(previousLayer !== 0 ? previousLayer : 0);
         setPreviousLayer(0);
-        setCurrentKeyIndex(-1);
-        setCurrentLedIndex(-1);
+        setSelectedKeys([]);
         setKeymap({
           custom: [],
           default: [],
@@ -1454,15 +1364,10 @@ const LayoutEditor = (props: LayoutEditorProps) => {
         })
       : [];
 
-  let code: SegmentedKeyType = {
-    base: 0,
-    modified: 0,
-  };
-  if (currentKeyIndex !== -1 && currentKeyIndex < ledIndexStart) {
-    const tempkey = keymapDB.parse(layerData[currentKeyIndex].keyCode);
-    // log.info("Key to be used in render", tempkey);
-    code = keymapDB.keySegmentor(tempkey.keyCode);
-  }
+  const assignableKeyIndexes = selectedKeyIndexes.filter(index => index < ledIndexStart);
+  const commonCode = commonKeyCode(layerData, assignableKeyIndexes);
+  // -1 is a picker-only sentinel: unlike No key (0), it highlights no control.
+  const code: SegmentedKeyType = commonCode === undefined ? { base: -1, modified: 0 } : keymapDB.keySegmentor(commonCode);
 
   // log.info("execution that may not render");
   if (layerData === undefined || layerData.length < 1) return <LoaderLayout steps={scanningStep} />;
@@ -1477,12 +1382,13 @@ const LayoutEditor = (props: LayoutEditorProps) => {
         keymap={layerData}
         onKeySelect={onKeySelect}
         selectedKey={currentKeyIndex}
+        selectedKeys={selectedKeyIndexes}
         selectedLED={currentLedIndex}
         palette={palette}
         colormap={colorMap[currentLayer]}
         darkMode={darkMode}
         style={{ width: "65vw" }}
-        showUnderglow={modeselect !== "keyboard"}
+        showUnderglow={modeselect === "keyboard"}
         className={`svg-${deviceName.toLowerCase()} raiseKeyboard layer h-auto`}
         isStandardView={false}
       />
@@ -1491,17 +1397,12 @@ const LayoutEditor = (props: LayoutEditorProps) => {
   );
 
   return (
-    <Styles className="layoutEditor h-full">
+    <Styles className="layoutEditor">
       {/* One rule per key that belongs to a combo on the layer shown; see
        * comboBadges.ts for why this is a stylesheet rather than a prop on the
        * key component. */}
       <style>{comboBadgeStyles(combos, currentLayer)}</style>
-      <motion.div
-        className={`keyboard-editor h-[inherit] px-3 ${modeselect} ${modeselect === "color" ? "[&_.raiseKeyboard]:h-auto" : ""} singleViewMode ${
-          typeof selectedPaletteColor === "number" ? "colorSelected" : ""
-        }`}
-        ref={layoutEditorContainerRef}
-      >
+      <motion.div className={`keyboard-editor px-3 ${modeselect} singleViewMode`} ref={layoutEditorContainerRef}>
         <PageHeader
           text="Layout Editor"
           showSaving
@@ -1527,11 +1428,8 @@ const LayoutEditor = (props: LayoutEditorProps) => {
               colors={palette}
               disabled={isReadOnly || currentLayer > colorMap.length}
               onColorSelect={onColorSelect}
-              colorButtonIsSelected={isColorButtonSelected}
               onColorPick={onColorPick}
               selected={selectedPaletteColor}
-              isColorButtonSelected={isColorButtonSelected}
-              onColorButtonSelect={onColorButtonSelect}
               toChangeAllKeysColor={toChangeAllKeysColor}
               applyColorMapChangeBL={applyColorMapChangeBL}
               applyColorMapChangeUG={applyColorMapChangeUG}
@@ -1543,7 +1441,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
               }
             />
           }
-          isColorActive={modeselect !== "keyboard"}
+          isColorActive
           saveContext={onApply}
           destroyContext={() => {
             log.info("cancelling context: ", props);
@@ -1554,28 +1452,37 @@ const LayoutEditor = (props: LayoutEditorProps) => {
           saveButtonRef={saveButtonRef}
           discardChangesButtonRef={discardChangesButtonRef}
         />
-        <div className="w-full h-[inherit] keyboardsWrapper">
-          {/* <div className="raise-editor layer-col h-full"> // Set keyboard on bottom */}
-          <div className="raise-editor layer-col h-[inherit]">
-            <div className="dygma-keyboard-editor editor">{layer}</div>
-            {modeselect === "keyboard" ? (
-              <div className="ordinary-keyboard-editor m-0 pb-4">
-                <KeyPickerKeyboard
-                  mouseWheel={mouseWheel}
-                  resetScroll={resetScroll}
-                  onKeySelect={onKeyChange}
-                  code={code}
-                  macros={macros}
-                  superkeys={superkeys}
-                  keyIndex={currentKeyIndex}
-                  actTab="editor"
-                  selectedlanguage={currentLanguageLayout}
-                  isWireless={isWireless}
-                />
-              </div>
-            ) : (
-              ""
-            )}
+        <div className="keyboardsWrapper flex min-h-0 flex-col">
+          <div className="dygma-keyboard-editor editor min-h-0 flex-1 py-4">{layer}</div>
+          <div className="ordinary-keyboard-editor relative m-0 min-h-7 shrink-0 pb-4">
+            <Button
+              variant="config"
+              size="iconXS"
+              className="absolute left-1/2 top-0 z-10 h-6 w-12 -translate-x-1/2 -translate-y-1/2"
+              aria-label={isPickerCollapsed ? i18n.editor.expandKeyPicker : i18n.editor.collapseKeyPicker}
+              title={isPickerCollapsed ? i18n.editor.expandKeyPicker : i18n.editor.collapseKeyPicker}
+              aria-expanded={!isPickerCollapsed}
+              aria-controls="layout-key-picker"
+              onClick={() => setIsPickerCollapsed(collapsed => !collapsed)}
+            >
+              <span className={isPickerCollapsed ? "rotate-180" : ""}>
+                <IconChevronDown />
+              </span>
+            </Button>
+            <div id="layout-key-picker" hidden={isPickerCollapsed}>
+              <KeyPickerKeyboard
+                mouseWheel={mouseWheel}
+                resetScroll={resetScroll}
+                onKeySelect={onKeyChange}
+                code={code}
+                macros={macros}
+                superkeys={superkeys}
+                keyIndex={assignableKeyIndexes[assignableKeyIndexes.length - 1] ?? -1}
+                actTab="editor"
+                selectedlanguage={currentLanguageLayout}
+                isWireless={isWireless}
+              />
+            </div>
           </div>
         </div>
 

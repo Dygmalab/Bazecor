@@ -1,78 +1,46 @@
-import React, { useMemo } from "react";
+import React from "react";
 
 import { i18n } from "@Renderer/i18n";
 
-// import Callout from "@Renderer/components/molecules/Callout/Callout";
-import Heading from "@Renderer/components/atoms/Heading";
 import { Button } from "@Renderer/components/atoms/Button";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@Renderer/components/atoms/Tooltip";
-import { IconInformation } from "@Renderer/components/atoms/icons";
+import { SegmentedKeyType } from "@Renderer/types/layout";
 
 interface NoKeyTransparentTabProps {
-  keyCode: any;
+  keyCode: SegmentedKeyType;
 
   onKeySelect: (keycode: number) => void;
   disabled?: boolean;
 }
 const NoKeyTransparentTab = ({ keyCode, onKeySelect, disabled }: NoKeyTransparentTabProps) => {
-  const KC = useMemo(() => {
-    if (keyCode?.base !== undefined && keyCode?.modified !== undefined) {
-      return keyCode.base + keyCode.modified;
-    }
-    return undefined;
-  }, [keyCode]);
+  const KC = keyCode.base + keyCode.modified;
   return (
-    <div className={`tabsNoKeysTransparent ${disabled ? "opacity-50 pointer-events-none" : ""}`}>
-      <div className="tabContentWrapper">
-        <div className="buttonsRow">
-          <div className="flex flex-wrap gap-1 items-center">
-            <TooltipProvider delayDuration={200}>
-              <Tooltip>
-                <TooltipTrigger className="[&_svg]:text-purple-100 [&_svg]:dark:text-purple-200">
-                  <IconInformation />
-                </TooltipTrigger>
-                <TooltipContent className="max-w-xs">
-                  <Heading headingLevel={4} renderAs="h4" className="my-0 w-full text-base">
-                    {i18n.editor.standardView.noKey}
-                  </Heading>
-                  <p className="description text-ssm font-medium text-gray-400 dark:text-gray-200">
-                    {i18n.editor.standardView.noKeyDescription}
-                  </p>
-                  <Heading headingLevel={4} renderAs="h4" className="my-0 w-full text-base mt-3">
-                    {i18n.editor.standardView.transparent}
-                  </Heading>
-                  <p className="description text-ssm font-medium text-gray-400 dark:text-gray-200">
-                    {i18n.editor.standardView.transparentDescription}
-                  </p>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-            <Button
-              variant="config"
-              onClick={() => {
-                onKeySelect(0);
-              }}
-              size="sm"
-              className="max-w-[102px] w-[102px] h-9 text-ssm text-center"
-              selected={KC === 0}
-            >
-              {i18n.editor.standardView.noKey}
-            </Button>
-            <Button
-              variant="config"
-              onClick={() => {
-                onKeySelect(65535);
-              }}
-              selected={KC === 65535}
-              size="sm"
-              className="max-w-[102px] w-[102px] h-9 text-ssm text-center"
-            >
-              {i18n.editor.standardView.transparent}
-            </Button>
-          </div>
-        </div>
+    <TooltipProvider delayDuration={200} disableHoverableContent>
+      <div className="tabsNoKeysTransparent flex flex-col gap-2">
+        {[
+          { code: 0, label: i18n.editor.standardView.noKey, hint: i18n.editor.standardView.noKeyDescription },
+          { code: 65535, label: i18n.editor.standardView.transparent, hint: i18n.editor.standardView.transparentDescription },
+        ].map(item => (
+          <Tooltip key={item.code}>
+            <TooltipTrigger asChild>
+              <Button
+                variant="config"
+                onClick={() => onKeySelect(item.code)}
+                size="sm"
+                className="w-full h-9 text-ssm text-center"
+                selected={KC === item.code}
+                disabled={disabled}
+              >
+                {item.label}
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent side="left" size="sm" className="max-w-xs">
+              {item.hint}
+            </TooltipContent>
+          </Tooltip>
+        ))}
       </div>
-    </div>
+    </TooltipProvider>
   );
 };
 
