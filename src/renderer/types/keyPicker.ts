@@ -22,4 +22,6 @@ export interface PickerProps {
   disable: boolean;
   disableMods: boolean;
   disableMove: boolean;
+  toggleModifiers?: boolean;
+  fitContainer?: boolean;
 }

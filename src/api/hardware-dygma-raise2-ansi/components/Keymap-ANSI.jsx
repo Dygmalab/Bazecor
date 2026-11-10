@@ -175,6 +175,7 @@ class KeymapANSI extends React.Component {
 
     const isSelected = (row, col) => {
       const selectIndex = keyIndex(row, col);
+      if (this.props.selectedKeys !== undefined) return this.props.selectedKeys.includes(selectIndex);
       return underglowIndex ? underglowIndex === selectIndex : selectedKey === selectIndex;
     };
 

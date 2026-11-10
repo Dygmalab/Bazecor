@@ -24,11 +24,8 @@ export interface ColorEditorProps {
   deviceName: string;
   deviceSides?: number;
   hasUnderglow?: boolean;
-  colorButtonIsSelected: boolean;
-  isColorButtonSelected: boolean;
   onColorSelect: (colorIndex: number) => void;
   onColorPick: (colorIndex: number, r: number, g: number, b: number) => void;
-  onColorButtonSelect: (action: string, colorIndex: number) => void;
   toChangeAllKeysColor: (colorIndex: number, start: number, end: number) => void;
   clearLayer?: (fillKeyCode?: number, chooseYourKeyboardSide?: string) => void;
   changeUnderglowColor?: (colorIndex?: number, chooseYourKeyboardSide?: string) => void;
