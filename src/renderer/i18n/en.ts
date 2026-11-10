@@ -118,6 +118,9 @@ const English = {
     keySelectorTitle: "Select Key",
     keys: "Keys",
     keysEditor: "Keys Editor",
+    keyboardView: "Keyboard and underglow",
+    collapseKeyPicker: "Collapse key picker",
+    expandKeyPicker: "Expand key picker",
     layers: {
       importTitle: "Load single layer",
       exportTitle: "Share selected layer",
