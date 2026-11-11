@@ -385,14 +385,6 @@ function ComboEditor(props: ComboEditorProps) {
     updateCombo(selected, { ...combo, layer });
   };
 
-  const clearSlot = (slot: number) => {
-    const combo = combos[selected];
-    if (!combo) return;
-    const positions = combo.positions.slice();
-    positions[slot] = COMBO_POSITION_UNUSED;
-    updateCombo(selected, { ...combo, positions });
-  };
-
   /* A key may belong to any number of combos, so nothing is greyed out for
    * being used elsewhere. The firmware resolves overlaps itself: while a longer
    * combo can still complete it waits, so pressing every key of the longer one
@@ -460,11 +452,26 @@ function ComboEditor(props: ComboEditorProps) {
 
   const comboLayer = combos[selected]?.layer ?? customOffset;
 
+  /* Macro and superkey keys read as their names, as in the Layout Editor:
+   * the first five characters of the name in place of the bare number. */
+  const withName = useCallback(
+    (key: KeyType): KeyType => {
+      if (!key || typeof key.label !== "string" || /\p{L}/u.test(key.label)) return key;
+      let name: string | undefined;
+      if (key.extraLabel === "MACRO") name = macros[key.keyCode - 53852]?.name;
+      if (key.extraLabel === "SUPER") name = superkeys[key.keyCode - 53980]?.name;
+      return name ? { ...key, label: name.substring(0, 5) } : key;
+    },
+    [macros, superkeys],
+  );
+
   const layerData = useMemo((): KeyType[] => {
-    if (keymap.onlyCustom) return keymap.custom[comboLayer] ?? keymap.custom[0] ?? [];
-    if (comboLayer < keymap.default.length) return keymap.default[comboLayer] ?? [];
-    return keymap.custom[comboLayer - keymap.default.length] ?? keymap.custom[0] ?? keymap.default[0] ?? [];
-  }, [keymap, comboLayer]);
+    let layer: KeyType[];
+    if (keymap.onlyCustom) layer = keymap.custom[comboLayer] ?? keymap.custom[0] ?? [];
+    else if (comboLayer < keymap.default.length) layer = keymap.default[comboLayer] ?? [];
+    else layer = keymap.custom[comboLayer - keymap.default.length] ?? keymap.custom[0] ?? keymap.default[0] ?? [];
+    return layer.map(withName);
+  }, [keymap, comboLayer, withName]);
 
   const colormap = colormaps[comboLayer - customOffset] ?? colormaps[0] ?? [];
 
@@ -516,7 +523,7 @@ function ComboEditor(props: ComboEditorProps) {
 
   const actionLabel = (item: ComboType): string => {
     if (!item || !item.action) return "";
-    const key = keymapDB.parse(item.action);
+    const key = withName(keymapDB.parse(item.action));
     return String(key.label ?? "");
   };
 
@@ -689,10 +696,6 @@ function ComboEditor(props: ComboEditorProps) {
                       selected={pickTarget?.kind === "member" && pickTarget.slot === slot}
                       className="min-w-20 h-12 text-ssm"
                       onClick={() => setPickTarget({ kind: "member", slot })}
-                      onContextMenu={event => {
-                        event.preventDefault();
-                        clearSlot(slot);
-                      }}
                     >
                       {position === COMBO_POSITION_UNUSED ? <IconPlus size="xs" /> : labelForPosition(position)}
                     </Button>
