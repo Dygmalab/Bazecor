@@ -15,7 +15,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import Styled from "styled-components";
 
 // Custom components
@@ -253,6 +254,28 @@ interface MouseKeysCardProps {
  * Slow / Medium / Fast keys, and the Boost key. */
 function MouseKeysCard({ kbData, setSetting }: MouseKeysCardProps) {
   const t = i18n.keyboardSettings.mouse;
+  const cardRef = useRef<HTMLDivElement>(null);
+  const location = useLocation();
+  const navigate = useNavigate();
+  const [highlight, setHighlight] = useState(false);
+
+  // The "Set up Speeds" button in the Layout Editor mouse tab lands here with state.focus = "mouseKeys".
+  // Runs on mount only: clearing the state below changes `location`, and re-running would cancel the scroll.
+  useEffect(() => {
+    if ((location.state as { focus?: string } | null)?.focus !== "mouseKeys") return undefined;
+    // Drop the state so the card doesn't scroll again when Preferences reloads after a save
+    navigate(location.pathname, { replace: true, state: null });
+    const frame = requestAnimationFrame(() => {
+      cardRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+      setHighlight(true);
+    });
+    const timer = setTimeout(() => setHighlight(false), 2000);
+    return () => {
+      cancelAnimationFrame(frame);
+      clearTimeout(timer);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   const {
     mouseSpeedSlow,
     mouseSpeedMedium,
@@ -267,7 +290,13 @@ function MouseKeysCard({ kbData, setSetting }: MouseKeysCardProps) {
   const speedMark = { value: MOUSE_SPEED_FAST_ON_WINDOWS, label: t.fastOnWindows };
 
   return (
-    <Card className="mt-3 max-w-2xl mx-auto" variant="default">
+    <Card
+      ref={cardRef}
+      className={`mt-3 max-w-2xl mx-auto scroll-mt-24 transition-shadow duration-500 ${
+        highlight ? "ring-2 ring-purple-200 dark:ring-purple-300" : ""
+      }`}
+      variant="default"
+    >
       <CardHeader>
         <CardTitle>
           <IconMouse /> {t.title}

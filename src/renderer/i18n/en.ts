@@ -1019,15 +1019,13 @@ const English = {
     speedTitle: "Speed & Boost",
     speedDescription: "Hold to change the cursor and wheel speed.",
     speedSlow: "Slow",
-    speedMedium: "Medium",
     speedFast: "Fast",
     boost: "Boost",
     speedSlowTip: "Hold it while moving the cursor or the wheel for small, precise movements.",
-    speedMediumTip: "Hold it to move the cursor and the wheel at Medium speed, the same as with no speed key held.",
     speedFastTip: "Hold it while moving the cursor or the wheel to cross the screen quickly.",
     boostTip:
       "Tap it while holding a mouse arrow to throw the cursor far in that direction. Taps add up, so a few of them cross the screen.",
-    speedSettingsHint: "You can adjust these speeds in Preferences.",
+    setUpSpeeds: "Set up Speeds",
   },
   welcome: {
     bootloaderTitle: "Your device is currently on Bootloader Mode",

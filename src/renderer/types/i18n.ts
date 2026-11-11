@@ -768,14 +768,12 @@ export interface LanguageMouse {
   speedTitle: string;
   speedDescription: string;
   speedSlow: string;
-  speedMedium: string;
   speedFast: string;
   boost: string;
   speedSlowTip: string;
-  speedMediumTip: string;
   speedFastTip: string;
   boostTip: string;
-  speedSettingsHint: string;
+  setUpSpeeds: string;
 }
 
 export interface Preferences {

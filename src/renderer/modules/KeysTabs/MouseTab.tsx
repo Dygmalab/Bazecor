@@ -16,13 +16,14 @@
  */
 
 import React, { useMemo } from "react";
+import { useNavigate } from "react-router-dom";
 import Styled from "styled-components";
 import { i18n } from "@Renderer/i18n";
 
 import Heading from "@Renderer/components/atoms/Heading";
 import { Button } from "@Renderer/components/atoms/Button";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@Renderer/components/atoms/Tooltip";
-import { IconInformation, IconThunder } from "@Renderer/components/atoms/icons";
+import { IconInformation, IconPreferences, IconThunder } from "@Renderer/components/atoms/icons";
 import { ButtonMouse } from "@Renderer/component/Button";
 import Store from "@Renderer/utils/Store";
 import MouseClickDiagram from "./MouseClickDiagram";
@@ -109,6 +110,8 @@ interface MouseTabProps {
 }
 
 function MouseTab({ keyCode, onAddSpecial, actTab = "standard", disabled }: Readonly<MouseTabProps>) {
+  const navigate = useNavigate();
+
   // function to handle button click event and to send data to props.onAddSpecial
   const handleClick = (event: any) => {
     onAddSpecial(event, 5);
@@ -123,14 +126,17 @@ function MouseTab({ keyCode, onAddSpecial, actTab = "standard", disabled }: Read
 
   // Older firmware reads the speed and boost keycodes as mouse movement (see capabilities.mousekeys in App.tsx)
   const mouseKeys = Boolean(Store.getStore().get("capabilities.mousekeys"));
+  // Medium (20610) is left out: it is the speed used when no speed key is held, so a key for it does nothing
   const speedKeys = [
     { name: i18n.mouse.speedSlow, tip: i18n.mouse.speedSlowTip, keynum: 20609, level: 1 },
-    { name: i18n.mouse.speedMedium, tip: i18n.mouse.speedMediumTip, keynum: 20610, level: 2 },
     { name: i18n.mouse.speedFast, tip: i18n.mouse.speedFastTip, keynum: 20612, level: 3 },
   ];
   const boostKey = { name: i18n.mouse.boost, tip: i18n.mouse.boostTip, keynum: 20616 };
 
-  const renderSpeedButton = (name: string, tip: string, keynum: number, icon: React.ReactNode, hint?: string) => (
+  // Opens Preferences > Keys and Layers scrolled to the Mouse Keys card (see KeyboardSettings)
+  const goToSpeedSettings = () => navigate("/preferences", { state: { focus: "mouseKeys" } });
+
+  const renderSpeedButton = (name: string, tip: string, keynum: number, icon: React.ReactNode) => (
     <div key={`mouseSpeed-${keynum}`} className="flex items-center gap-2">
       <Button
         onClick={() => handleClick(keynum)}
@@ -149,7 +155,6 @@ function MouseTab({ keyCode, onAddSpecial, actTab = "standard", disabled }: Read
         </TooltipTrigger>
         <TooltipContent className="max-w-xs" size="sm" side="right">
           <p>{tip}</p>
-          {hint ? <p className="mt-1 text-gray-400 dark:text-gray-200">{hint}</p> : ""}
         </TooltipContent>
       </Tooltip>
     </div>
@@ -264,18 +269,22 @@ function MouseTab({ keyCode, onAddSpecial, actTab = "standard", disabled }: Read
                     <TooltipProvider delayDuration={200}>
                       <div className="flex flex-col gap-1 mt-2">
                         {speedKeys.map(item =>
-                          renderSpeedButton(
-                            item.name,
-                            item.tip,
-                            item.keynum,
-                            <SpeedChevrons level={item.level} />,
-                            i18n.mouse.speedSettingsHint,
-                          ),
+                          renderSpeedButton(item.name, item.tip, item.keynum, <SpeedChevrons level={item.level} />),
                         )}
                       </div>
                       <div className="w-[124px] h-px my-3 bg-gray-100/60 dark:bg-gray-500/60" />
                       {renderSpeedButton(boostKey.name, boostKey.tip, boostKey.keynum, <IconThunder size="sm" />)}
                     </TooltipProvider>
+                    <Button
+                      onClick={goToSpeedSettings}
+                      variant="short"
+                      size="sm"
+                      icon={<IconPreferences size="sm" />}
+                      iconDirection="left"
+                      className="mt-4 gap-2 text-ssm"
+                    >
+                      {i18n.mouse.setUpSpeeds}
+                    </Button>
                   </div>
                 ) : (
                   ""
