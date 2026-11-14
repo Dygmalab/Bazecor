@@ -81,6 +81,11 @@ describe("hasFirmwareFeature()", () => {
     { feature: "capsword", product: "Sonsei", fw: "1.1.0", expected: false },
     { feature: "capsword", product: "Sonsei", fw: "1.2.0", expected: true },
     { feature: "capsword", product: "Raise", fw: "9.9.9", expected: false },
+    { feature: "graveescape", product: "Raise2", fw: "1.6.0", expected: false },
+    { feature: "graveescape", product: "Raise2", fw: "1.7.0-beta1", expected: true },
+    { feature: "graveescape", product: "Defy", fw: "9.9.9", expected: false },
+    { feature: "graveescape", product: "Sonsei", fw: "9.9.9", expected: false },
+    { feature: "graveescape", product: "Raise", fw: "9.9.9", expected: false },
   ] as const)("$feature on $product $fw -> $expected", async ({ feature, product, fw, expected }) => {
     const { hasFirmwareFeature } = await loadWithBazecor("1.11.0");
     expect(hasFirmwareFeature(feature, product, fw)).toBe(expected);

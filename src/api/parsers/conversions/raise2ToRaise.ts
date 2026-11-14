@@ -65,13 +65,14 @@ export const convertPaletteR2toR = (color: PaletteType) => {
 
 // Keys the Raise 2 firmware has and the Raise 1 firmware does not: wireless
 // (battery, Bluetooth, energy, RF; 54108-54111), Layer Lens (54112-54114),
-// Autoshift (54115-54370) and CapsWord (54371). They sit in one contiguous block,
+// Autoshift (54115-54370), CapsWord (54371) and Grave Escape (54372). They sit in
+// one contiguous block,
 // see src/hw/. The Raise 1 can't run them, so a Raise 2 backup must not hand
 // them to it. The commands behind these features (combos.*, autoshift.*,
 // capsword.*, wireless.*) are skipped at restore time, as the Raise 1 doesn't
 // list them in `help`.
 const RAISE2_ONLY_FIRST = 54108;
-const RAISE2_ONLY_LAST = 54371;
+const RAISE2_ONLY_LAST = 54372;
 
 export const isRaise2OnlyKey = (keyCode: number) => keyCode >= RAISE2_ONLY_FIRST && keyCode <= RAISE2_ONLY_LAST;
 

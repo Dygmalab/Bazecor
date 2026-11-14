@@ -18,6 +18,7 @@ import { KeymapDB } from "../../../api/keymap";
 import { Picker } from "../KeyPickerKeyboard";
 import Store from "@Renderer/utils/Store";
 import { CapsWordCodes } from "../../../hw/capsword";
+import { GraveEscapeCodes } from "../../../hw/graveescape";
 
 interface ModifiersTabProps {
   keyCode: SegmentedKeyType;
@@ -51,6 +52,7 @@ const ModifiersTab = ({
   const store = Store.getStore();
   const sk20 = Boolean(store.get("capabilities.sk20"));
   const capsword = Boolean(store.get("capabilities.capsword"));
+  const graveescape = Boolean(store.get("capabilities.graveescape"));
 
   const KC = useMemo(() => {
     if (keyCode?.base !== undefined && keyCode?.modified !== undefined) {
@@ -284,6 +286,30 @@ const ModifiersTab = ({
                   </Button>
                   <p className="description text-ssm font-medium text-gray-400 dark:text-gray-300 max-w-md">
                     After you press this key, the next word will be capitalized. You can also deactivate it by pressing the key again.
+                  </p>
+                </div>
+              </div>
+            )}
+            {graveescape && (
+              <div className="basis-full flex flex-col gap-2">
+                <Heading renderAs="h4" headingLevel={3} className="text-base flex leading-6 gap-1">
+                  Grave Escape
+                </Heading>
+                <div className="flex flex-wrap gap-2 items-center">
+                  <Button
+                    variant="config"
+                    onClick={() => {
+                      log.info(`[GraveEscape] assigning key: ${GraveEscapeCodes.GRAVE_ESCAPE} (previous keycode ${KC})`);
+                      onKeySelect(GraveEscapeCodes.GRAVE_ESCAPE);
+                    }}
+                    selected={KC === GraveEscapeCodes.GRAVE_ESCAPE}
+                    size="sm"
+                    className="min-w-16 text-ssm h-9"
+                  >
+                    Grave Escape
+                  </Button>
+                  <p className="description text-ssm font-medium text-gray-400 dark:text-gray-300 max-w-md">
+                    Sends Escape. Hold Shift to type ~ or GUI (Cmd/Win) to send GUI+` instead.
                   </p>
                 </div>
               </div>
