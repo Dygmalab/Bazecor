@@ -789,7 +789,7 @@ export default class Backup {
     const palette = parsePaletteRaw(localBackup.backup[paletteIndex].data, true);
     const colormap = parseColormapRaw(localBackup.backup[colormapIndex].data, colorLayerSize);
 
-    // The Raise 1 firmware lacks Lens, Autoshift, CapsWord and the wireless keys.
+    // The Raise 1 firmware lacks Lens, Autoshift, CapsWord, Grave Escape and the wireless keys.
     const keymapFinal = custom.map((layer: number[]) =>
       stripRaise2OnlyKeys(convertKeymapR2toR(layer, dev.device.info.keyboardType)),
     );

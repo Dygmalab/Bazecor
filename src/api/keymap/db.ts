@@ -33,6 +33,7 @@ import SuperKeyTable from "./db/superkeys";
 import TapDanceTable from "./db/tapdance";
 import { Battery, Bluetooth, Energy, RF, Overlay } from "./db/wireless";
 import { CapsWord } from "./db/autoshift";
+import { GraveEscape } from "./db/graveescape";
 import NumpadTable, { ModifiedNumpadTables } from "./db/numpad";
 import FunctionKeyTable, { ModifiedFunctionKeyTables } from "./db/fxs";
 
@@ -94,6 +95,7 @@ const defaultBaseKeyCodeTable: BaseKeycodeTableType[] = [
   RF,
   Overlay,
   CapsWord,
+  GraveEscape,
   BlankTable,
 ];
 

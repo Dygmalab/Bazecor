@@ -60,6 +60,14 @@
         "Raise2": "1.6.0",
         "Sonsei": "1.2.0"
       }
+    },
+    "graveescape": {
+      "description": "Grave Escape: the Grave Escape key in Layers & modifiers. Hidden on older firmware. Minimum versions are placeholders until a release carries the firmware support.",
+      "minFirmware": {
+        "Defy": "2.5.0",
+        "Raise2": "1.7.0",
+        "Sonsei": "1.3.0"
+      }
     }
   }
 }

@@ -2,6 +2,7 @@ import { describe, expect, test } from "vitest";
 import { OverlayCodes } from "../../../hw/overlay";
 import { AutoshiftCodes } from "../../../hw/autoshift";
 import { CapsWordCodes } from "../../../hw/capsword";
+import { GraveEscapeCodes } from "../../../hw/graveescape";
 import { BatteryCodes } from "../../../hw/battery";
 import { isRaise2OnlyKey, stripRaise2OnlyKeys, stripRaise2OnlySuperkeyActions } from "./raise2ToRaise";
 
@@ -13,13 +14,14 @@ const RAISE2_ONLY = [
   AutoshiftCodes.AUTOSHIFT_FIRST,
   AutoshiftCodes.AUTOSHIFT_LAST,
   CapsWordCodes.CAPS_WORD,
+  GraveEscapeCodes.GRAVE_ESCAPE,
 ];
 
 describe("Raise 2 -> Raise 1", () => {
   test("flags the keys the Raise 1 firmware lacks", () => {
     RAISE2_ONLY.forEach(k => expect(isRaise2OnlyKey(k)).toBe(true));
     // Neighbours stay: the superkey block below, a plain key, transparent.
-    [53980, 54107, 54372, 4, 0, 65535].forEach(k => expect(isRaise2OnlyKey(k)).toBe(false));
+    [53980, 54107, 54373, 4, 0, 65535].forEach(k => expect(isRaise2OnlyKey(k)).toBe(false));
   });
 
   test("blanks them in a keymap layer and keeps everything else", () => {

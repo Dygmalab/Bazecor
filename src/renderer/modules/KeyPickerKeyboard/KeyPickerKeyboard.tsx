@@ -40,6 +40,7 @@ import { Picker } from ".";
 import ModPicker from "./ModPicker";
 import { AutoshiftCodes } from "../../../hw/autoshift";
 import { CapsWordCodes } from "../../../hw/capsword";
+import { GraveEscapeCodes } from "../../../hw/graveescape";
 import ModifiersTab from "../KeysTabs/ModifiersTab";
 
 // Icons
@@ -355,11 +356,12 @@ function KeyPickerKeyboard(props: Props) {
     if (keyCode >= 54108 && keyCode <= 54111) tab = "tabWireless";
     if (keyCode >= 54112 && keyCode <= 54114) tab = "tabLayerLens";
     /* Autoshift is an ordinary key with a property, so it belongs on the Keys
-     * tab; CapsWord is assigned from Layers & modifiers. Without these two the
+     * tab; CapsWord and Grave Escape are assigned from Layers & modifiers. Without these two the
      * lookup falls through with an empty string and the picker ends up with no
      * active tab at all, which looks like the panel closing. */
     if (keyCode >= AutoshiftCodes.AUTOSHIFT_FIRST && keyCode <= AutoshiftCodes.AUTOSHIFT_LAST) tab = "tabKeys";
     if (keyCode === CapsWordCodes.CAPS_WORD) tab = "tabLayers";
+    if (keyCode === GraveEscapeCodes.GRAVE_ESCAPE) tab = "tabLayers";
 
     log.info("detectedTab", keyCode, tab);
 
