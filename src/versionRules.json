@@ -62,11 +62,9 @@
       }
     },
     "graveescape": {
-      "description": "Grave Escape: the Grave Escape key in Layers & modifiers. Hidden on older firmware. Minimum versions are placeholders until a release carries the firmware support.",
+      "description": "Grave Escape: the Grave Escape key in Layers & modifiers. Hidden on older firmware. Only the Raise 2 firmware builds the plugin so far; add Defy and Sonsei once theirs do. The minimum version is a placeholder until a release carries the firmware support.",
       "minFirmware": {
-        "Defy": "2.5.0",
-        "Raise2": "1.7.0",
-        "Sonsei": "1.3.0"
+        "Raise2": "1.7.0"
       }
     }
   }
