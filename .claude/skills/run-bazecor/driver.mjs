@@ -131,6 +131,47 @@ const COMMANDS = {
     console.log("click-text", JSON.stringify(text), "->", r);
   },
 
+  // Real mouse input (pointerdown/mousedown/up/click), unlike click-text's DOM
+  // el.click(). Needed for Radix tabs, which switch on pointer/mouse down, and
+  // for the SVG keys of the keyboard drawing in the Layout Editor.
+  // click <x> <y>  (CSS pixels of the main window, as in an `ss main` screenshot)
+  async click(args) {
+    const [x, y] = args.split(/\s+/).map(Number);
+    await page("main").mouse.click(x, y);
+    console.log(`clicked ${x},${y}`);
+  },
+
+  // tab <accessible name>  e.g. tab Layers and Modifiers
+  async tab(name) {
+    await page("main").getByRole("tab", { name, exact: true }).click({ timeout: 5000 });
+    console.log("tab:", name);
+  },
+
+  // click-role <role> <accessible name>  e.g. click-role button Configure
+  async "click-role"(args) {
+    const [role, ...rest] = args.split(" ");
+    await page("main").getByRole(role, { name: rest.join(" ") }).first().click({ timeout: 5000 });
+    console.log(`clicked ${role}:`, rest.join(" "));
+  },
+
+  // viewport <w> <h>: resize the main window's page to test other window sizes.
+  async viewport(args) {
+    const [width, height] = args.split(/\s+/).map(Number);
+    await page("main").setViewportSize({ width, height });
+    console.log(`viewport ${width}x${height}`);
+  },
+
+  // overflow: every element in the main window whose content scrolls
+  // (scrollHeight > clientHeight with overflow-y auto|scroll).
+  async overflow() {
+    const rows = await page("main").evaluate(() =>
+      [...document.querySelectorAll("*")]
+        .filter(el => el.scrollHeight > el.clientHeight + 1 && /auto|scroll/.test(getComputedStyle(el).overflowY))
+        .map(el => `${el.clientHeight}/${el.scrollHeight}px  ${String(el.className).slice(0, 80)}`),
+    );
+    console.log(rows.length ? rows.join("\n") : "no scrolling elements");
+  },
+
   async text(which = "main") {
     console.log(await page(which || "main").evaluate(() => document.body.innerText));
   },

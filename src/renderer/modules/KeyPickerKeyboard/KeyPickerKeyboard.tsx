@@ -565,7 +565,7 @@ function KeyPickerKeyboard(props: Props) {
                   macro={macros[KC - 53852]}
                   action={action}
                 />
-                <div className="mt-6">
+                <div className="mt-4">
                   <ModifiersTab
                     disabled={disable}
                     baseCode={code.base}
