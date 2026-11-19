@@ -55,6 +55,7 @@ import { i18n } from "@Renderer/i18n";
 
 import Store from "@Renderer/utils/Store";
 import getLanguage from "@Renderer/utils/language";
+import boardKeyLabel from "@Renderer/utils/boardKeyLabel";
 import { ClearLayerDialog } from "@Renderer/components/molecules/CustomModal/ClearLayerDialog";
 import { ComboBreakDialog } from "@Renderer/components/molecules/CustomModal/ComboBreakDialog";
 import { DygmaDeviceInfoType } from "@Renderer/types/dygmaDefs";
@@ -1408,7 +1409,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
       });
     }
     // log.info("SAVING USEFFECT!!:", localLayerData, localIsReadOnly, localShowDefaults, cLayer);
-    setLayerData(localLayerData);
+    setLayerData(localLayerData?.map(boardKeyLabel));
     setIsReadOnly(localIsReadOnly);
     setShowDefaults(localShowDefaults);
     setCurrentLayer(cLayer);

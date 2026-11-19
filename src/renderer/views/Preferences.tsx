@@ -65,6 +65,7 @@ import { KBDataPref, PrefState, PreferencesProps } from "@Renderer/types/prefere
 import { WirelessInterface } from "@Renderer/types/wireless";
 import LogoLoader from "@Renderer/components/atoms/loader/LogoLoader";
 import { Neuron } from "@Renderer/types/neurons";
+import deviceDisplayName from "@Renderer/utils/deviceDisplayName";
 import Backup from "../../api/backup";
 import { delay } from "../../api/flash/delay";
 import { confirmBox } from "../utils/messageBox";
@@ -796,7 +797,7 @@ const Preferences = (props: PreferencesProps) => {
                 <>
                   <DeviceConnectedPreview
                     deviceName={neurons.find(x => x.id === neuronID) ? neurons.find(x => x.id === neuronID).name : ""}
-                    deviceDisplayName={state.currentDevice.device.info.displayName}
+                    deviceDisplayName={deviceDisplayName(state.currentDevice.device.info.displayName)}
                     nameChange={updateNeuronName}
                   />
                   <h4 className="uppercase text-xs dark:text-gray-300 pb-2 mb-1 mt-3 border-solid border-b border-gray-300/30 dark:border-gray-300/30">

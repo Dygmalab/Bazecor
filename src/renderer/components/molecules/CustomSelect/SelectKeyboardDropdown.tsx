@@ -20,6 +20,7 @@ import Styled from "styled-components";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@Renderer/components/atoms/Select";
 import iconKeyboard from "@Assets/base/icon-keyboard.svg";
 import iconConnected from "@Assets/base/icon-connected.svg";
+import deviceDisplayName from "@Renderer/utils/deviceDisplayName";
 
 const Style = Styled.div`
 .custom-dropdown {
@@ -106,7 +107,7 @@ function SelectKeyboardDropdown(props: SelectKeyboardDropdownProps) {
                 <div className="dropdownItem">
                   <h3>{item.userName}</h3>
                   <h4>
-                    {item.displayName} <small>{item.path}</small>
+                    {deviceDisplayName(item.displayName)} <small>{item.path}</small>
                   </h4>
                 </div>
               </div>

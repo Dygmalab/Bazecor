@@ -74,6 +74,14 @@ EOF
 | `lens-show` | put the Lens overlay on screen |
 | `lens-layout <lang>` | set the Lens layout (a Bazecor language tag such as `es-ES` or `fr-XX-bepo`) and wait for the repaint |
 | `lens-labels` | print every key label the overlay draws, in DOM order |
+| `vk <model> [combos]` | connect a fresh virtual keyboard built from `src/api/hardware-virtual` (`raise-ansi raise-iso raise2-ansi raise2-iso defy-wired defy-wireless sonsei`); `combos` seeds one combo per result type and raises the firmware to the combos minimum. See the `bazecor-testing` skill |
+| `go <route>` | click the navigation link for `/editor`, `/macros`, `/superkeys`, `/combos`, `/device-manager`, `/preferences` (the app uses a MemoryRouter, there is no URL) |
+| `click-key <index>` | real click on the board key with that `data-key-index`, on any model |
+| `hover <x> <y>` | move the real mouse there, e.g. to open a tooltip |
+| `key <name>` | press a key in the main window, e.g. `key Escape` |
+| `labels` | text of every board key, `index:text` |
+| `combo-sheet [name]` | in the Combo Editor, select every combo, print its result and flag broken ones, and save one contact sheet of all the rows |
+| `console-errors` | renderer console errors and page errors since the last call (collected from `launch`) |
 | `sleep <ms>` | wait |
 | `quit` | stop the app (`taskkill /T`) and restore the Lens settings the driver changed |
 
@@ -174,6 +182,13 @@ npx vitest run lens/
   back to Keyboard Manager and may show "No keyboards found!" because the
   serial port is still held. Restart the app (stop it, `taskkill` the
   `electron.exe` processes, launch again) and navigate back.
+- **A new chip id opens a native message box.** Connecting a keyboard Bazecor
+  hasn't seen asks whether to copy the first neuron's names. Nothing over CDP
+  can answer it, so the app waits. `vk` stubs that one prompt ("Start
+  empty"); anything else that calls `show-message-box` still blocks.
+- **Virtual keyboards report old firmware.** The templates' `version` is below
+  the combos/autoshift/capsword minimums in `src/versionRules.json`, so those
+  editors stay hidden unless `vk ... combos` raises it.
 - **Radix tabs ignore `click-text`.** They switch on pointer down, so a DOM
   `el.click()` does nothing. Use `tab <name>` or `click <x> <y>`.
 

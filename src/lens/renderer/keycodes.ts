@@ -349,7 +349,8 @@ export function decodeKey(
   macroNames: string[] = [],
   symbols: SymbolOverrides = {},
 ): DecodedKey {
-  if (code === 0) return { primary: "NO", subtitle: "KEY", hold: "" };
+  // NO KEY does nothing, so it is drawn as an empty key, as in Bazecor.
+  if (code === 0) return { primary: "", hold: "" };
   if (code === 1 || code === 65535) return { primary: "TRANS", hold: "" };
   const twoLine = TWO_LINE[code];
   if (layout[code]) {
