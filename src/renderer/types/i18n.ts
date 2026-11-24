@@ -113,7 +113,6 @@ export interface Editor {
   standardView: StandardView;
   superkeys: EditorSuperkeys;
   oldMacroModal: Modal;
-  oldNeuronModal: Modal;
   editMode: EditMode;
   clearLayerPrompt: string;
   pleaseSelectLayer: string;

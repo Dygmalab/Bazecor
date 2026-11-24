@@ -242,14 +242,8 @@ const COMMANDS = {
       const { ipcRenderer } = require("electron");
       if (!ipcRenderer.__origInvoke) ipcRenderer.__origInvoke = ipcRenderer.invoke.bind(ipcRenderer);
       window.__vkFile = f;
-      // Every new chip id also asks, in a native message box, whether to copy
-      // the first neuron's names: answer "Start empty" so nothing waits on a
-      // dialog nobody is watching. Other message boxes still show.
       ipcRenderer.invoke = (channel, ...args) => {
         if (channel === "open-dialog") return Promise.resolve({ canceled: false, filePaths: [window.__vkFile] });
-        if (channel === "show-message-box" && /new Neuron was detected/.test(args[0]?.message || "")) {
-          return Promise.resolve({ response: args[0].cancelId ?? 1 });
-        }
         return ipcRenderer.__origInvoke(channel, ...args);
       };
     }, file);

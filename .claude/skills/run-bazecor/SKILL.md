@@ -182,10 +182,8 @@ npx vitest run lens/
   back to Keyboard Manager and may show "No keyboards found!" because the
   serial port is still held. Restart the app (stop it, `taskkill` the
   `electron.exe` processes, launch again) and navigate back.
-- **A new chip id opens a native message box.** Connecting a keyboard Bazecor
-  hasn't seen asks whether to copy the first neuron's names. Nothing over CDP
-  can answer it, so the app waits. `vk` stubs that one prompt ("Start
-  empty"); anything else that calls `show-message-box` still blocks.
+- **Native message boxes block.** Nothing over CDP can answer anything that
+  calls `show-message-box`, so the app waits.
 - **Virtual keyboards report old firmware.** The templates' `version` is below
   the combos/autoshift/capsword minimums in `src/versionRules.json`, so those
   editors stay hidden unless `vk ... combos` raises it.

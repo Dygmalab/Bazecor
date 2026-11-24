@@ -7,6 +7,7 @@ import log from "electron-log/renderer";
 import { Button } from "@Renderer/components/atoms/Button";
 import Heading from "@Renderer/components/atoms/Heading";
 import findLayerType from "@Renderer/utils/findLayerType";
+import isSuperkeyHoldLimited, { SUPERKEY_HOLD_MAX_LAYER } from "@Renderer/utils/superkeyLayerLimit";
 import { IconWarning, IconPlus, IconPen } from "@Renderer/components/atoms/icons";
 import { Popover, PopoverContent, PopoverTrigger } from "@Renderer/components/atoms/Popover";
 import ToastMessage from "@Renderer/components/atoms/ToastMessage";
@@ -50,6 +51,7 @@ const LayersTab = ({
   const [KC, setKC] = useState<number>(0);
   const store = Store.getStore();
   const sk20 = Boolean(store.get("capabilities.sk20"));
+  const superkeyHoldLimited = isSuperkeyHoldLimited(activeTab, action);
 
   const layers = useMemo(
     () => [
@@ -225,7 +227,8 @@ const LayersTab = ({
                     selected={index + 1 === activeLayerNumber}
                     disabled={
                       (index > 7 && disableOneShotButtons && activeLayerTab === "layerShot") ||
-                      (activeLayerTab === "layerDual" && index > 7)
+                      (activeLayerTab === "layerDual" && index > 7) ||
+                      (superkeyHoldLimited && button.layer > SUPERKEY_HOLD_MAX_LAYER)
                     }
                     key={`buttonLayerID-${button.layer}`}
                     className="h-9 aspect-square"
@@ -234,6 +237,11 @@ const LayersTab = ({
                   </Button>
                 ))}
               </div>
+              {superkeyHoldLimited && (
+                <p className="description text-ssm font-medium text-gray-400 dark:text-gray-200">
+                  Superkey hold actions only work for layers 1 to {SUPERKEY_HOLD_MAX_LAYER}.
+                </p>
+              )}
             </div>
             <AnimatePresence>
               <motion.div className="flex flex-col gap-2">
@@ -326,7 +334,7 @@ const LayersTab = ({
                     </p>
                   </>
                 }
-                disabled={false}
+                disabled={superkeyHoldLimited && activeLayerNumber > SUPERKEY_HOLD_MAX_LAYER}
                 className=""
               />
               {activeTab === "editor" && (

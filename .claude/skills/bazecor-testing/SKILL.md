@@ -66,9 +66,8 @@ Layout Editor to draw the board.
   battery, transparent, F5; see `COMBO_FIXTURES`), and raises the reported
   firmware to the combos minimum from `src/versionRules.json` so the Combo
   Editor shows. Add fixtures there when a new key type appears.
-- The first load of a model can take a minute or two (new neuron). The driver
-  auto-answers the "A new Neuron was detected" box with "Start empty"; any other
-  native message box would block, so watch for long waits.
+- The first load of a model can take a minute or two (new neuron). A native
+  message box would block, so watch for long waits.
 - Virtual keyboards save to their JSON file only; saving is safe to test.
 - Each model also adds a neuron (`...-test-<model>`) to the user's
   `%APPDATA%\Bazecor\config.json`. When testing is finished, close the app and

@@ -523,13 +523,6 @@ const English = {
       cancelButton: "Cancel",
       applyButton: "Update Macros",
     },
-    oldNeuronModal: {
-      title: "New Neuron detected",
-      body: "A new Neuron was plugged in for the first time using this Bazecor installation",
-      body2: "Do you want to clone the names of your existing neuron or use empty names",
-      cancelButton: "Cancel",
-      applyButton: "Use existing names",
-    },
     editMode: {
       title: "Edit mode",
       standardView: "Standard View",
