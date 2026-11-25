@@ -8,8 +8,9 @@ import { Button } from "@Renderer/components/atoms/Button";
 import Heading from "@Renderer/components/atoms/Heading";
 import findLayerType from "@Renderer/utils/findLayerType";
 import isSuperkeyHoldLimited, { SUPERKEY_HOLD_MAX_LAYER } from "@Renderer/utils/superkeyLayerLimit";
-import { IconWarning, IconPlus, IconPen } from "@Renderer/components/atoms/icons";
+import { IconWarning, IconPlus, IconPen, IconInformation } from "@Renderer/components/atoms/icons";
 import { Popover, PopoverContent, PopoverTrigger } from "@Renderer/components/atoms/Popover";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@Renderer/components/atoms/Tooltip";
 import ToastMessage from "@Renderer/components/atoms/ToastMessage";
 import CustomRadioCheckBox from "@Renderer/components/molecules/Form/CustomRadioCheckBox";
 import { Separator } from "@Renderer/components/atoms/Separator";
@@ -216,7 +217,7 @@ const LayersTab = ({
                   </>
                 )}
               </Heading>
-              <div className="flex gap-1">
+              <div className="flex items-center gap-1">
                 {layers.map((button, index) => (
                   <Button
                     variant="config"
@@ -236,12 +237,21 @@ const LayersTab = ({
                     {index + 1}
                   </Button>
                 ))}
+                {superkeyHoldLimited && (
+                  <TooltipProvider delayDuration={200}>
+                    <Tooltip>
+                      <TooltipTrigger className="ml-1 [&_svg]:text-purple-100 [&_svg]:dark:text-purple-200">
+                        <IconInformation size="sm" />
+                      </TooltipTrigger>
+                      <TooltipContent className="max-w-sm">
+                        <p className="description text-ssm font-medium text-gray-400 dark:text-gray-200">
+                          Superkey hold actions only work for layers 1 to {SUPERKEY_HOLD_MAX_LAYER}.
+                        </p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                )}
               </div>
-              {superkeyHoldLimited && (
-                <p className="description text-ssm font-medium text-gray-400 dark:text-gray-200">
-                  Superkey hold actions only work for layers 1 to {SUPERKEY_HOLD_MAX_LAYER}.
-                </p>
-              )}
             </div>
             <AnimatePresence>
               <motion.div className="flex flex-col gap-2">
