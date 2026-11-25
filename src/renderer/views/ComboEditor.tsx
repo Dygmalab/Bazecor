@@ -813,6 +813,7 @@ function ComboEditor(props: ComboEditorProps) {
               resetScroll={() => {}}
               allowAutoshift={false}
               fullMouse
+              layerShift
             />
           </>
         ) : (

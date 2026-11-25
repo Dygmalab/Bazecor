@@ -261,6 +261,10 @@ interface Props {
   /* Show mouse movement and wheel keys, which the Mouse tab otherwise keeps to
    * the Layout Editor. */
   fullMouse?: boolean;
+  /* Let the Layers tab assign Layer Shift, which the Tap slots of a Superkey
+   * turn into Layer Lock because a tap cannot hold a layer. A combo can: it is
+   * held for as long as its keys are. */
+  layerShift?: boolean;
 }
 
 interface State {
@@ -285,6 +289,7 @@ function KeyPickerKeyboard(props: Props) {
     resetScroll,
     allowAutoshift = true,
     fullMouse = false,
+    layerShift = false,
   } = props;
   const prevProps = useRef(props);
   const overflowRef = React.createRef<HTMLElement>();
@@ -559,7 +564,7 @@ function KeyPickerKeyboard(props: Props) {
                 <LayersTab
                   disabled={disable}
                   onKeySelect={onKeySelect}
-                  activeTab={actTab}
+                  activeTab={layerShift ? "combo" : actTab}
                   selectedlanguage={selectedlanguage}
                   keyCode={code}
                   macro={macros[KC - 53852]}
