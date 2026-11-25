@@ -7,8 +7,10 @@ import log from "electron-log/renderer";
 import { Button } from "@Renderer/components/atoms/Button";
 import Heading from "@Renderer/components/atoms/Heading";
 import findLayerType from "@Renderer/utils/findLayerType";
-import { IconWarning, IconPlus, IconPen } from "@Renderer/components/atoms/icons";
+import isSuperkeyHoldLimited, { SUPERKEY_HOLD_MAX_LAYER } from "@Renderer/utils/superkeyLayerLimit";
+import { IconWarning, IconPlus, IconPen, IconInformation } from "@Renderer/components/atoms/icons";
 import { Popover, PopoverContent, PopoverTrigger } from "@Renderer/components/atoms/Popover";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@Renderer/components/atoms/Tooltip";
 import ToastMessage from "@Renderer/components/atoms/ToastMessage";
 import CustomRadioCheckBox from "@Renderer/components/molecules/Form/CustomRadioCheckBox";
 import { Separator } from "@Renderer/components/atoms/Separator";
@@ -50,6 +52,7 @@ const LayersTab = ({
   const [KC, setKC] = useState<number>(0);
   const store = Store.getStore();
   const sk20 = Boolean(store.get("capabilities.sk20"));
+  const superkeyHoldLimited = isSuperkeyHoldLimited(activeTab, action);
 
   const layers = useMemo(
     () => [
@@ -214,7 +217,7 @@ const LayersTab = ({
                   </>
                 )}
               </Heading>
-              <div className="flex gap-1">
+              <div className="flex items-center gap-1">
                 {layers.map((button, index) => (
                   <Button
                     variant="config"
@@ -225,7 +228,8 @@ const LayersTab = ({
                     selected={index + 1 === activeLayerNumber}
                     disabled={
                       (index > 7 && disableOneShotButtons && activeLayerTab === "layerShot") ||
-                      (activeLayerTab === "layerDual" && index > 7)
+                      (activeLayerTab === "layerDual" && index > 7) ||
+                      (superkeyHoldLimited && button.layer > SUPERKEY_HOLD_MAX_LAYER)
                     }
                     key={`buttonLayerID-${button.layer}`}
                     className="h-9 aspect-square"
@@ -233,6 +237,20 @@ const LayersTab = ({
                     {index + 1}
                   </Button>
                 ))}
+                {superkeyHoldLimited && (
+                  <TooltipProvider delayDuration={200}>
+                    <Tooltip>
+                      <TooltipTrigger className="ml-1 [&_svg]:text-purple-100 [&_svg]:dark:text-purple-200">
+                        <IconInformation size="sm" />
+                      </TooltipTrigger>
+                      <TooltipContent className="max-w-sm">
+                        <p className="description text-ssm font-medium text-gray-400 dark:text-gray-200">
+                          Superkey hold actions only work for layers 1 to {SUPERKEY_HOLD_MAX_LAYER}.
+                        </p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                )}
               </div>
             </div>
             <AnimatePresence>
@@ -326,7 +344,7 @@ const LayersTab = ({
                     </p>
                   </>
                 }
-                disabled={false}
+                disabled={superkeyHoldLimited && activeLayerNumber > SUPERKEY_HOLD_MAX_LAYER}
                 className=""
               />
               {activeTab === "editor" && (

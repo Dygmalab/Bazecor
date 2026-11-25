@@ -22,7 +22,6 @@ import Styled from "styled-components";
 import videoFirmwareUpdate from "@Assets/videos/update-firmware.mp4";
 import videoFirmwareUpdateReleaseKey from "@Assets/videos/release-key.mp4";
 import videoFirmwareUpdateDefySRC from "@Assets/videos/Defy_bazecor_2.mp4";
-import videoFirmwareUpdateDefyReleaseSRC from "@Assets/videos/release-key-defy.mp4";
 import videoRaise2EscapeSRC from "@Assets/videos/raise2-escape.mp4";
 import videoSonseiEscapeSRC from "@Assets/videos/sonsei-escape.mp4";
 import SonseiKeyboard from "../../../static/icons/Sonsei-Keyboard.svg";
@@ -193,7 +192,6 @@ const FirmwareImageHelp: React.FC<FirmwareImageHelpProps> = ({
         internalVideoRelease.pause();
       } else if (productName === "Defy") {
         internalVideoIntroDefy.addEventListener("ended", playVideo, false);
-        internalVideoReleaseDefy.pause();
       } else if (productName === "Sonsei" || productName === "Raise2") {
         internalVideoIntroDefy.addEventListener("ended", playVideo, false);
         internalVideoReleaseDefy.pause();
@@ -204,7 +202,7 @@ const FirmwareImageHelp: React.FC<FirmwareImageHelpProps> = ({
       if (productName === "Raise") {
         internalVideoIntro.classList.add("animOut");
         internalVideoRelease.classList.add("animPressDown");
-      } else if (productName === "Defy" || productName === "Sonsei" || productName === "Raise2") {
+      } else if (productName === "Sonsei" || productName === "Raise2") {
         internalVideoIntroDefy.classList.add("animOut");
         internalVideoReleaseDefy.classList.add("animIn");
         internalVideoReleaseDefy.play();
@@ -261,16 +259,19 @@ const FirmwareImageHelp: React.FC<FirmwareImageHelpProps> = ({
                   <video ref={videoIntroDefy} width={520} height={520} autoPlay className="img-center img-fluid animIn" style={{ width: "200px", height: "200px", maxWidth: "none", objectFit: "cover" }}>
                     <source src={deviceProduct === "Raise2" ? videoRaise2EscapeSRC : deviceProduct === "Sonsei" ? videoSonseiEscapeSRC : videoFirmwareUpdateDefySRC} type="video/mp4" />
                   </video>
-                  <video
-                    ref={videoReleaseDefy}
-                    width={520}
-                    height={520}
-                    autoPlay={false}
-                    className="img-center img-fluid animWaiting"
-                    style={{ width: "200px", height: "200px", maxWidth: "none", objectFit: "cover" }}
-                  >
-                    <source src={deviceProduct === "Raise2" ? videoRaise2EscapeSRC : deviceProduct === "Sonsei" ? videoSonseiEscapeSRC : videoFirmwareUpdateDefyReleaseSRC} type="video/mp4" />
-                  </video>
+                  {/* The Defy keeps its one video: it stops looping once ESC is detected, but is not swapped. */}
+                  {deviceProduct !== "Defy" && (
+                    <video
+                      ref={videoReleaseDefy}
+                      width={520}
+                      height={520}
+                      autoPlay={false}
+                      className="img-center img-fluid animWaiting"
+                      style={{ width: "200px", height: "200px", maxWidth: "none", objectFit: "cover" }}
+                    >
+                      <source src={deviceProduct === "Raise2" ? videoRaise2EscapeSRC : videoSonseiEscapeSRC} type="video/mp4" />
+                    </video>
+                  )}
                 </>
               )}
             </div>

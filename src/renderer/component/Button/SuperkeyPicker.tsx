@@ -19,6 +19,7 @@ import React, { useState } from "react";
 import Styled from "styled-components";
 
 import { SuperkeyPickerProps } from "@Renderer/types/superkeys";
+import boardKeyLabel from "@Renderer/utils/boardKeyLabel";
 import ListModifier from "@Renderer/components/molecules/ListModifiers/ListModifiers";
 import Heading from "@Renderer/components/atoms/Heading";
 import { IconClose, IconThunder } from "@Renderer/components/atoms/icons";
@@ -237,7 +238,7 @@ function SuperkeyPicker(props: SuperkeyPickerProps) {
   React.useEffect(() => {
     if (superkeys[selected] === undefined) {
       setControlDeleteButton(false);
-      setKeyContent(keymapDB.parse(0).label);
+      setKeyContent("");
       return;
     }
     let aux;
@@ -246,11 +247,18 @@ function SuperkeyPicker(props: SuperkeyPickerProps) {
     } else {
       aux = keymapDB.parse(superkeys[selected].actions[index]);
     }
+    // An action with no key is drawn as an empty key, as on the keyboard.
+    aux = boardKeyLabel(aux);
     // setKeyContent(aux.label);
     if (superkeys[selected].actions[index]) {
       setControlDeleteButton(true);
     } else {
       setControlDeleteButton(false);
+    }
+
+    if (aux.label === "" && !aux.extraLabel) {
+      setKeyContent("");
+      return;
     }
 
     if (aux.extraLabel === "MACRO") {

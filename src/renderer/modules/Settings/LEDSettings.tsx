@@ -31,6 +31,10 @@ import { IconFlashlight, IconIridescentWhiteBalance, IconThunder } from "@Render
 import Callout from "@Renderer/components/molecules/Callout/Callout";
 import { i18n } from "@Renderer/i18n";
 import Heading from "@Renderer/components/atoms/Heading";
+import secondsToMinutes from "@Renderer/utils/secondsToMinutes";
+
+const toPercent = (value: number) => Math.max(0, Math.round((value * 100) / 255));
+const timerLabel = (minutes: number) => (minutes > 0 ? `${minutes} min` : "Off");
 
 function LEDSettings(props: LEDSettingsPreferences) {
   const { kbData, wireless, setKbData, setWireless, connected, isWireless, hasUnderglow = true } = props;
@@ -104,6 +108,13 @@ function LEDSettings(props: LEDSettingsPreferences) {
   const { ledBrightness, ledBrightnessUG, ledIdleTimeLimit } = localKBData;
   const { idleleds, brightness, brightnessUG, fade } = localWireless;
 
+  const brightnessPercent = toPercent(ledBrightness);
+  const brightnessWirelessPercent = toPercent(brightness);
+  const brightnessUGPercent = toPercent(ledBrightnessUG);
+  const brightnessUGWirelessPercent = toPercent(brightnessUG);
+  const idleMinutes = secondsToMinutes(ledIdleTimeLimit);
+  const idleMinutesWireless = secondsToMinutes(idleleds);
+
   if (connected) {
     return (
       <>
@@ -129,31 +140,36 @@ function LEDSettings(props: LEDSettingsPreferences) {
           </CardHeader>
           <CardContent>
             <div className={`${isWireless ? "px-3 py-3 bg-gray-100/20 dark:bg-gray-900/15 rounded mt-3" : "mt-4"}`}>
-              <Heading headingLevel={2} renderAs="paragraph-sm" className={`tracking-normal ${isWireless && "mb-2"}`}>
-                {i18n.keyboardSettings.led.brightness}
-              </Heading>
+              <div className="flex items-center justify-between gap-2">
+                <Heading headingLevel={2} renderAs="paragraph-sm" className={`tracking-normal ${isWireless && "mb-2"}`}>
+                  {i18n.keyboardSettings.led.brightness}
+                </Heading>
+                {!isWireless && <span className="tagsfix">{`${brightnessPercent}%`}</span>}
+              </div>
               <div className="flex flex-col">
-                <div className="flex w-full gap-2 items-center">
-                  {isWireless && <div className="min-w-16 mb-0 text-sm text-gray-400 dark:text-gray-100">Wired</div>}
+                <div className="flex flex-col w-full">
+                  {isWireless && (
+                    <div className="flex items-center justify-between gap-2">
+                      <div className="text-sm text-gray-400 dark:text-gray-100">Wired</div>
+                      <span className="tagsfix">{`${brightnessPercent}%`}</span>
+                    </div>
+                  )}
                   <div className="block w-full relative">
-                    <Slider
-                      min={0}
-                      max={100}
-                      step={1}
-                      value={[Math.round((ledBrightness * 100) / 255)]}
-                      onValueChange={setBrightness}
-                    />
+                    <Slider min={0} max={100} step={1} value={[brightnessPercent]} onValueChange={setBrightness} />
                   </div>
                 </div>
                 {isWireless && (
-                  <div className="flex w-full gap-2 items-center">
-                    <div className="min-w-16 mb-0 text-sm text-gray-400 dark:text-gray-100">Wireless</div>
+                  <div className="flex flex-col w-full">
+                    <div className="flex items-center justify-between gap-2">
+                      <div className="text-sm text-gray-400 dark:text-gray-100">Wireless</div>
+                      <span className="tagsfix">{`${brightnessWirelessPercent}%`}</span>
+                    </div>
                     <div className="block w-full relative">
                       <Slider
                         min={0}
                         max={100}
                         step={1}
-                        value={[Math.round((brightness * 100) / 255)]}
+                        value={[brightnessWirelessPercent]}
                         onValueChange={setBrightnessWireless}
                         className="slider-danger"
                         variant="alert"
@@ -162,7 +178,7 @@ function LEDSettings(props: LEDSettingsPreferences) {
                     </div>
                   </div>
                 )}
-                <div className={`flex justify-between ${isWireless && "pl-[4.5rem]"}`}>
+                <div className="flex justify-between">
                   <span className="text-xs text-gray-300 dark:text-gray-200">0%</span>
                   <span className="text-xs text-gray-300 dark:text-gray-200">100%</span>
                 </div>
@@ -170,31 +186,36 @@ function LEDSettings(props: LEDSettingsPreferences) {
             </div>
             {hasUnderglow && (
               <div className={`${isWireless ? "px-3 py-3 bg-gray-100/20 dark:bg-gray-900/15 rounded mt-3" : "mt-4"}`}>
-                <Heading headingLevel={2} renderAs="paragraph-sm" className={`tracking-normal ${isWireless && "mb-2"}`}>
-                  {i18n.keyboardSettings.led.brightnessUG}
-                </Heading>
+                <div className="flex items-center justify-between gap-2">
+                  <Heading headingLevel={2} renderAs="paragraph-sm" className={`tracking-normal ${isWireless && "mb-2"}`}>
+                    {i18n.keyboardSettings.led.brightnessUG}
+                  </Heading>
+                  {!isWireless && <span className="tagsfix">{`${brightnessUGPercent}%`}</span>}
+                </div>
                 <div className="flex flex-col">
-                  <div className="flex w-full gap-2 items-center">
-                    {isWireless && <div className="min-w-16 mb-0 text-sm text-gray-400 dark:text-gray-100">Wired</div>}
+                  <div className="flex flex-col w-full">
+                    {isWireless && (
+                      <div className="flex items-center justify-between gap-2">
+                        <div className="text-sm text-gray-400 dark:text-gray-100">Wired</div>
+                        <span className="tagsfix">{`${brightnessUGPercent}%`}</span>
+                      </div>
+                    )}
                     <div className="block w-full relative">
-                      <Slider
-                        min={0}
-                        max={100}
-                        step={1}
-                        value={[Math.round((ledBrightnessUG * 100) / 255)]}
-                        onValueChange={setBrightnessUG}
-                      />
+                      <Slider min={0} max={100} step={1} value={[brightnessUGPercent]} onValueChange={setBrightnessUG} />
                     </div>
                   </div>
                   {isWireless && (
-                    <div className="flex w-full gap-2 items-center">
-                      <div className="min-w-16 mb-0 text-sm text-gray-400 dark:text-gray-100">Wireless</div>
+                    <div className="flex flex-col w-full">
+                      <div className="flex items-center justify-between gap-2">
+                        <div className="text-sm text-gray-400 dark:text-gray-100">Wireless</div>
+                        <span className="tagsfix">{`${brightnessUGWirelessPercent}%`}</span>
+                      </div>
                       <div className="block w-full relative">
                         <Slider
                           min={0}
                           max={100}
                           step={1}
-                          value={[Math.round((brightnessUG * 100) / 255)]}
+                          value={[brightnessUGWirelessPercent]}
                           onValueChange={setBrightnessUGWireless}
                           className="slider-danger"
                           variant="alert"
@@ -203,7 +224,7 @@ function LEDSettings(props: LEDSettingsPreferences) {
                       </div>
                     </div>
                   )}
-                  <div className={`flex justify-between ${isWireless && "pl-[4.5rem]"}`}>
+                  <div className="flex justify-between">
                     <span className="text-xs text-gray-300 dark:text-gray-200">0%</span>
                     <span className="text-xs text-gray-300 dark:text-gray-200">100%</span>
                   </div>
@@ -228,25 +249,36 @@ function LEDSettings(props: LEDSettingsPreferences) {
           <CardContent className="flex flex-row gap-3 justify-between items-center">
             {ledIdleTimeLimit >= 0 && (
               <div className={`${isWireless ? "px-3 py-3 bg-gray-100/20 dark:bg-gray-900/15 rounded w-full" : "w-full"}`}>
-                <Heading headingLevel={2} renderAs="paragraph-sm" className={`tracking-normal ${isWireless && "mb-2"}`}>
-                  {i18n.keyboardSettings.led.idleTimeLimit}
-                </Heading>
+                <div className="flex items-center justify-between gap-2">
+                  <Heading headingLevel={2} renderAs="paragraph-sm" className={`tracking-normal ${isWireless && "mb-2"}`}>
+                    {i18n.keyboardSettings.led.idleTimeLimit}
+                  </Heading>
+                  {!isWireless && <span className="tagsfix">{timerLabel(idleMinutes)}</span>}
+                </div>
                 <div className="flex flex-col w-full">
-                  <div className="flex w-full gap-2 items-center">
-                    {isWireless && <div className="min-w-16 mb-0 text-sm text-gray-400 dark:text-gray-100">Wired</div>}
+                  <div className="flex flex-col w-full">
+                    {isWireless && (
+                      <div className="flex items-center justify-between gap-2">
+                        <div className="text-sm text-gray-400 dark:text-gray-100">Wired</div>
+                        <span className="tagsfix">{timerLabel(idleMinutes)}</span>
+                      </div>
+                    )}
                     <div className="block w-full relative">
-                      <Slider min={0} max={60} step={1} value={[ledIdleTimeLimit / 60]} onValueChange={selectIdleLEDTime} />
+                      <Slider min={0} max={60} step={1} value={[idleMinutes]} onValueChange={selectIdleLEDTime} />
                     </div>
                   </div>
                   {isWireless && (
-                    <div className="flex w-full gap-2 items-center">
-                      <div className="min-w-16 mb-0 text-sm text-gray-400 dark:text-gray-100">Wireless</div>
+                    <div className="flex flex-col w-full">
+                      <div className="flex items-center justify-between gap-2">
+                        <div className="text-sm text-gray-400 dark:text-gray-100">Wireless</div>
+                        <span className="tagsfix">{timerLabel(idleMinutesWireless)}</span>
+                      </div>
                       <div className="block w-full relative">
                         <Slider
                           min={0}
                           max={60}
                           step={1}
-                          value={[idleleds / 60]}
+                          value={[idleMinutesWireless]}
                           onValueChange={selectIdleLEDTimeWireless}
                           className="slider-danger"
                           variant="alert"
@@ -255,7 +287,7 @@ function LEDSettings(props: LEDSettingsPreferences) {
                       </div>
                     </div>
                   )}
-                  <div className={`flex justify-between ${isWireless && "pl-[4.5rem]"}`}>
+                  <div className="flex justify-between">
                     <span className="text-xs text-gray-300 dark:text-gray-200">Off</span>
                     <span className="text-xs text-gray-300 dark:text-gray-200">60min</span>
                   </div>

@@ -767,7 +767,7 @@ function KeyboardSettings(props: KeyboardSettingsProps) {
                   </div>
                   <div className="w-full flex gap-2">
                     <div className="flex max-w-12 p-0 text-center items-center">
-                      <span className="tagsfix">Stricter</span>
+                      <span className="tagsfix">Faster</span>
                     </div>
                     <div className="w-full flex items-center p-0">
                       {/* Bounds mirror CombosDygma::MIN/MAX_MATCH_WINDOW_MS; the
@@ -781,7 +781,7 @@ function KeyboardSettings(props: KeyboardSettingsProps) {
                       />
                     </div>
                     <div className="flex max-w-12 p-0 text-center items-center">
-                      <span className="tagsfix">Looser</span>
+                      <span className="tagsfix">Slower</span>
                     </div>
                   </div>
                 </div>
@@ -822,7 +822,7 @@ function KeyboardSettings(props: KeyboardSettingsProps) {
                       />
                     </div>
                     <div className="flex max-w-12 p-0 text-center items-center">
-                      <span className="tagsfix">Faster</span>
+                      <span className="tagsfix">Slower</span>
                     </div>
                   </div>
                 </div>

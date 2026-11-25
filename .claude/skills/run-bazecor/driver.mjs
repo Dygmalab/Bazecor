@@ -9,6 +9,7 @@ import * as os from "node:os";
 import * as path from "node:path";
 import * as readline from "node:readline";
 import { createRequire } from "node:module";
+import { vkTemplate, seedCombos, COMBO_FIXTURES } from "./vk-templates.mjs";
 
 const APP_DIR = path.resolve(import.meta.dirname, "../../..");
 const { chromium } = createRequire(path.join(APP_DIR, "package.json"))("playwright-core");
@@ -71,6 +72,22 @@ async function attach() {
   browser = await chromium.connectOverCDP(`http://127.0.0.1:${PORT}`);
   // Renderer pages register a moment after the CDP port opens.
   for (let i = 0; i < 60 && !pages().some(p => p.url().includes("main_window")); i += 1) await sleep(500);
+  // Collect renderer errors for `console-errors`.
+  const main = pages().find(pg => pg.url().includes("main_window"));
+  if (main) {
+    main.on("console", m => {
+      if (m.type() === "error") main.evaluate(t => (window.__errs = (window.__errs || []).concat([t])), m.text().slice(0, 300)).catch(() => {});
+    });
+    main.on("pageerror", e => main.evaluate(t => (window.__errs = (window.__errs || []).concat([t])), `pageerror: ${e.message}`).catch(() => {}));
+  }
+}
+
+// The app uses a MemoryRouter, so there is no URL to set: click the
+// navigation menu's link for that route, as a user would.
+async function gotoRoute(route) {
+  const p = page("main");
+  await p.locator(`a[href="${route}"]`).first().click({ timeout: 10000 });
+  await sleep(1200);
 }
 
 const COMMANDS = {
@@ -131,6 +148,47 @@ const COMMANDS = {
     console.log("click-text", JSON.stringify(text), "->", r);
   },
 
+  // Real mouse input (pointerdown/mousedown/up/click), unlike click-text's DOM
+  // el.click(). Needed for Radix tabs, which switch on pointer/mouse down, and
+  // for the SVG keys of the keyboard drawing in the Layout Editor.
+  // click <x> <y>  (CSS pixels of the main window, as in an `ss main` screenshot)
+  async click(args) {
+    const [x, y] = args.split(/\s+/).map(Number);
+    await page("main").mouse.click(x, y);
+    console.log(`clicked ${x},${y}`);
+  },
+
+  // tab <accessible name>  e.g. tab Layers and Modifiers
+  async tab(name) {
+    await page("main").getByRole("tab", { name, exact: true }).click({ timeout: 5000 });
+    console.log("tab:", name);
+  },
+
+  // click-role <role> <accessible name>  e.g. click-role button Configure
+  async "click-role"(args) {
+    const [role, ...rest] = args.split(" ");
+    await page("main").getByRole(role, { name: rest.join(" ") }).first().click({ timeout: 5000 });
+    console.log(`clicked ${role}:`, rest.join(" "));
+  },
+
+  // viewport <w> <h>: resize the main window's page to test other window sizes.
+  async viewport(args) {
+    const [width, height] = args.split(/\s+/).map(Number);
+    await page("main").setViewportSize({ width, height });
+    console.log(`viewport ${width}x${height}`);
+  },
+
+  // overflow: every element in the main window whose content scrolls
+  // (scrollHeight > clientHeight with overflow-y auto|scroll).
+  async overflow() {
+    const rows = await page("main").evaluate(() =>
+      [...document.querySelectorAll("*")]
+        .filter(el => el.scrollHeight > el.clientHeight + 1 && /auto|scroll/.test(getComputedStyle(el).overflowY))
+        .map(el => `${el.clientHeight}/${el.scrollHeight}px  ${String(el.className).slice(0, 80)}`),
+    );
+    console.log(rows.length ? rows.join("\n") : "no scrolling elements");
+  },
+
   async text(which = "main") {
     console.log(await page(which || "main").evaluate(() => document.body.innerText));
   },
@@ -163,6 +221,158 @@ const COMMANDS = {
 
   async sleep(ms) {
     await sleep(Number(ms) || 1000);
+  },
+
+  // vk <model>: connect a fresh virtual keyboard built from the app's own
+  // template (api/hardware-virtual), through the Keyboard Manager's
+  // "Load file" path, with the native file dialog stubbed out.
+  // Models: raise-ansi raise-iso raise2-ansi raise2-iso defy-wired defy-wireless sonsei
+  // vk <model> [combos]: "combos" seeds one combo per kind of result (see
+  // COMBO_FIXTURES in vk-templates.mjs) on boards whose firmware has combos.
+  async vk(args) {
+    const [model, extra] = args.split(/\s+/);
+    const file = path.join(SHOT_DIR, `vk-${model}.json`);
+    const vk = vkTemplate(model);
+    if (extra === "combos") console.log(seedCombos(vk) ? `seeded ${COMBO_FIXTURES.length} combos` : "this model has no combos.map");
+    fs.writeFileSync(file, JSON.stringify(vk, null, 2));
+    const p = page("main");
+    await gotoRoute("/device-manager");
+    // The native open dialog can't be driven, so answer it with the file.
+    await p.evaluate(f => {
+      const { ipcRenderer } = require("electron");
+      if (!ipcRenderer.__origInvoke) ipcRenderer.__origInvoke = ipcRenderer.invoke.bind(ipcRenderer);
+      window.__vkFile = f;
+      ipcRenderer.invoke = (channel, ...args) => {
+        if (channel === "open-dialog") return Promise.resolve({ canceled: false, filePaths: [window.__vkFile] });
+        return ipcRenderer.__origInvoke(channel, ...args);
+      };
+    }, file);
+    await p.getByText("Use without keyboard", { exact: true }).first().click({ timeout: 10000 });
+    await sleep(600);
+    await p.getByRole("button", { name: "Load file" }).first().click({ timeout: 5000 });
+    // Connecting reads every command of the file and opens the Layout
+    // Editor, which shows a loader until the board is drawn.
+    await p.locator("[data-key-index]").first().waitFor({ timeout: 120000 });
+    await sleep(1500);
+    console.log(`virtual ${model} connected (${file})`);
+  },
+
+  // combo-sheet [name]: in the Combo Editor, select every combo in turn, crop
+  // its "keys = result" row, and save all the crops as one contact sheet
+  // <name>.png. Also prints each result's text and flags the broken ones
+  // ("[object Object]", or a result that renders nothing).
+  async "combo-sheet"(name = "combo-sheet") {
+    const p = page("main");
+    await p.keyboard.press("Escape"); // close any popup left open
+    await sleep(300);
+    const count = await (async () => {
+      await p.getByText("Combos", { exact: true }).first().click({ timeout: 5000 });
+      await sleep(400);
+      const n = await p.getByRole("option").count();
+      await p.keyboard.press("Escape");
+      await sleep(300);
+      return n;
+    })();
+    const shots = [];
+    let bad = 0;
+    for (let i = 0; i < count; i += 1) {
+      await p.getByText("Combos", { exact: true }).first().click({ timeout: 5000 });
+      await sleep(300);
+      await p.getByRole("option").nth(i).click({ timeout: 5000 });
+      await sleep(500);
+      const info = await p.evaluate(() => {
+        const eq = [...document.querySelectorAll(".comboEditor span")].find(s => s.textContent.trim() === "=");
+        const result = eq?.nextElementSibling;
+        const row = eq?.closest(".grid");
+        const r = row?.getBoundingClientRect();
+        return {
+          text: (result?.innerText || "").replace(/\s+/g, " ").trim(),
+          hasIcon: Boolean(result?.querySelector("svg, img")),
+          clip: r ? { x: r.x, y: r.y, width: r.width, height: r.height } : null,
+        };
+      });
+      const broken = info.text.includes("[object Object]") || (!info.text && !info.hasIcon);
+      if (broken) bad += 1;
+      console.log(`C${i + 1}: ${info.text || "(no text)"}${info.hasIcon ? " [icon]" : ""}${broken ? "  <-- BROKEN" : ""}`);
+      if (info.clip) shots.push({ label: `C${i + 1}`, png: (await p.screenshot({ clip: info.clip })).toString("base64") });
+    }
+    // Lay the crops out on top of the page, capture, then remove the overlay.
+    await p.evaluate(items => {
+      const o = document.createElement("div");
+      o.id = "__sheet";
+      o.style.cssText =
+        "position:fixed;inset:0;z-index:99999;background:#111;overflow:hidden;display:grid;grid-template-columns:1fr 1fr;gap:4px;padding:4px;align-content:start";
+      items.forEach(({ label, png }) => {
+        const c = document.createElement("div");
+        c.style.cssText = "position:relative";
+        c.innerHTML = `<img src="data:image/png;base64,${png}" style="width:100%;display:block"><span style="position:absolute;left:4px;top:2px;color:#ff0;font:bold 12px sans-serif">${label}</span>`;
+        o.appendChild(c);
+      });
+      document.body.appendChild(o);
+    }, shots);
+    await sleep(300);
+    const f = path.join(SHOT_DIR, `${name}.png`);
+    await p.screenshot({ path: f });
+    await p.evaluate(() => document.getElementById("__sheet")?.remove());
+    console.log(`${count} combos, ${bad} broken. sheet: ${f}`);
+  },
+
+  // vk-clean: drop the neurons that `vk` added to %APPDATA%\Bazecor\config.json
+  // (ids ending in -test-<model>). Run it with the app closed, or the app
+  // writes its own copy back over it.
+  "vk-clean"() {
+    const config = JSON.parse(fs.readFileSync(CONFIG_FILE, "utf8"));
+    const before = config.neurons?.length ?? 0;
+    config.neurons = (config.neurons ?? []).filter(n => !/-test-[a-z0-9-]+$/.test(n.id));
+    fs.writeFileSync(CONFIG_FILE, JSON.stringify(config, null, "\t"));
+    console.log(`removed ${before - config.neurons.length} test neurons`);
+  },
+
+  // hover <x> <y>: move the real mouse there (tooltips open on hover).
+  async hover(args) {
+    const [x, y] = args.split(/\s+/).map(Number);
+    await page("main").mouse.move(x, y);
+    console.log(`hover ${x},${y}`);
+  },
+
+  // click-key <index>: real click on the key with that data-key-index on the
+  // keyboard drawing, whatever the board and window size.
+  async "click-key"(index) {
+    await page("main").locator(`[data-key-index="${index}"]`).first().click({ timeout: 5000 });
+    console.log("clicked key", index);
+  },
+
+  // key <name>: press a key in the main window, e.g. key Escape
+  async key(name) {
+    await page("main").keyboard.press(name);
+    console.log("pressed", name);
+  },
+
+  // go <route>: client-side navigation, e.g. go /combos, go /macros, go /editor
+  async go(route) {
+    await gotoRoute(route);
+    console.log("at", route);
+  },
+
+  // labels: text of every key on the keyboard drawing in the main window,
+  // "index:text" in DOM order (empty keys show as "index:").
+  async labels() {
+    const rows = await page("main").evaluate(() =>
+      [...document.querySelectorAll("[data-key-index]")].map(
+        el => `${el.getAttribute("data-key-index")}:${(el.textContent || "").replace(/\s+/g, " ").trim()}`,
+      ),
+    );
+    console.log(`${rows.length} keys:`, rows.join(" | "));
+  },
+
+  // console-errors: renderer errors logged since the last call.
+  async "console-errors"() {
+    const errs = await page("main").evaluate(() => {
+      const out = window.__errs || [];
+      window.__errs = [];
+      return out;
+    });
+    console.log(errs.length ? errs.join("\n") : "no renderer errors");
   },
 
   async quit() {

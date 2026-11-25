@@ -55,6 +55,7 @@ import { i18n } from "@Renderer/i18n";
 
 import Store from "@Renderer/utils/Store";
 import getLanguage from "@Renderer/utils/language";
+import boardKeyLabel from "@Renderer/utils/boardKeyLabel";
 import { ClearLayerDialog } from "@Renderer/components/molecules/CustomModal/ClearLayerDialog";
 import { ComboBreakDialog } from "@Renderer/components/molecules/CustomModal/ComboBreakDialog";
 import { DygmaDeviceInfoType } from "@Renderer/types/dygmaDefs";
@@ -62,7 +63,6 @@ import BlankTable from "../../api/keymap/db/blanks";
 import Keymap, { KeymapDB } from "../../api/keymap";
 import { rgb2w } from "../../api/color";
 import Backup from "../../api/backup";
-import { confirmBox } from "../utils/messageBox";
 import {
   convertColormapRtoR2,
   convertKeymapRtoR2,
@@ -218,7 +218,6 @@ const LayoutEditor = (props: LayoutEditorProps) => {
   const [isColorButtonSelected, setIsColorButtonSelected] = useState(false);
   const [currentLanguageLayout, setCurrentLanguageLayout] = useState("english");
   const [showMacroModal, setShowMacroModal] = useState(false);
-  const [showNeuronModal, setShowNeuronModal] = useState(false);
   const [leftSideModified, setLeftSideModified] = useState(false);
   const [isWireless, setIsWireless] = useState(false);
 
@@ -365,66 +364,30 @@ const LayoutEditor = (props: LayoutEditorProps) => {
         store.set("neurons", neurons);
         finalNeuron = neuron;
       }
-      const existingDefy = neurons.some(n => n.id.length < 32);
-      const existingRaise = neurons.some(n => n.id.length === 32);
       if (!neurons.some(n => n.id === CID) && neurons.length > 0) {
+        // An additional Neuron always starts without names of its own.
         neuron.id = CID;
         neuron.name = currentDevice?.device.info.product;
         neuron.layers = defaultLayerNames;
         neuron.macros = [];
         neuron.superkeys = [];
-        const neuronCopy = JSON.parse(JSON.stringify(neuron));
-        neuronCopy.id = CID;
-        neuronCopy.name = neurons[0].name;
-        neuronCopy.layers = neurons[0].layers;
-        neuronCopy.macros = neurons[0].macros;
-        neuronCopy.superkeys = neurons[0].superkeys;
         log.info("Additional neuron", neuron);
-        let result;
-        if (
-          (currentDevice?.device.info.product === "Defy" && !existingDefy) ||
-          (currentDevice?.device.info.product === "Raise" && !existingRaise)
-        ) {
-          result = false;
-        } else {
-          // Not window.confirm: it leaves the window without keyboard focus on
-          // Windows, so the name fields of the editors stopped taking input.
-          // Every new virtual keyboard comes through here (a new chip id).
-          result = await confirmBox(
-            "A new Neuron was detected and new settings need to be created. The names of the layers, macros and Superkeys are empty. Do you want to copy the names of your default Neuron (first in the list), or start with all names empty?",
-            "Copy names",
-            "Start empty",
-          );
-        }
-        // var result = await userAction;
-        // log.info(result, neuron, neuronCopy);
-        if (result === false) {
-          neurons = neurons.concat(neuron);
-          store.set("neurons", neurons);
-          finalNeuron = neuron;
-        }
-        if (result === true) {
-          neurons = neurons.concat(neuronCopy);
-          store.set("neurons", neurons);
-          finalNeuron = neuronCopy;
-        }
+        neurons = neurons.concat(neuron);
+        store.set("neurons", neurons);
+        finalNeuron = neuron;
       }
       log.info("Final neuron", finalNeuron);
-      if (finalNeuron) {
-        const neuronData = {
-          neurons,
-          neuronID: neurons.findIndex(n => n.id === CID),
-          layerNames: finalNeuron.layers,
-          storedMacros: finalNeuron.macros,
-          storedSuper: finalNeuron.superkeys,
-          storedCombos: finalNeuron.combos ?? [],
-        };
-        log.info("connected to: ", neuronData.neuronID);
-        setLayerNames(finalNeuron.layers);
-        return neuronData;
-      }
+      const neuronData = {
+        neurons,
+        neuronID: neurons.findIndex(n => n.id === CID),
+        layerNames: finalNeuron.layers,
+        storedMacros: finalNeuron.macros,
+        storedSuper: finalNeuron.superkeys,
+        storedCombos: finalNeuron.combos ?? [],
+      };
+      log.info("connected to: ", neuronData.neuronID);
       setLayerNames(finalNeuron.layers);
-      return finalNeuron;
+      return neuronData;
     },
     [defaultLayerNames, state],
   );
@@ -1222,19 +1185,6 @@ const LayoutEditor = (props: LayoutEditorProps) => {
     }
   };
 
-  const toggleNeuronModal = () => {
-    if (showNeuronModal) {
-      // TODO: Find out why savedReject.reject("cancelled"); is not present anywhere else
-    }
-    setShowNeuronModal(!showNeuronModal);
-  };
-
-  const CloneExistingNeuron = () => {
-    // TODO: Find out why  savedResolve.resolve("resolved"); is not present anywhere else
-    toast.success("added additional neuron to this Bazecor installation");
-    setShowNeuronModal(false);
-  };
-
   const toggleMacroModal = () => {
     setShowMacroModal(!showMacroModal);
   };
@@ -1408,7 +1358,7 @@ const LayoutEditor = (props: LayoutEditorProps) => {
       });
     }
     // log.info("SAVING USEFFECT!!:", localLayerData, localIsReadOnly, localShowDefaults, cLayer);
-    setLayerData(localLayerData);
+    setLayerData(localLayerData?.map(boardKeyLabel));
     setIsReadOnly(localIsReadOnly);
     setShowDefaults(localShowDefaults);
     setCurrentLayer(cLayer);
@@ -1623,26 +1573,6 @@ const LayoutEditor = (props: LayoutEditorProps) => {
             </Button>
             <Button variant="secondary" size="sm" onClick={updateOldMacros}>
               {i18n.editor.oldMacroModal.cancelButton}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-
-      <Dialog open={showNeuronModal} onOpenChange={toggleNeuronModal}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>{i18n.editor.oldNeuronModal.title}</DialogTitle>
-          </DialogHeader>
-          <div className="px-6 pb-2 mt-2">
-            <p>{i18n.editor.oldNeuronModal.body}</p>
-            <p className="italic">{i18n.editor.oldNeuronModal.body2}</p>
-          </div>
-          <DialogFooter>
-            <Button variant="outline" size="sm" onClick={toggleNeuronModal}>
-              {i18n.editor.oldNeuronModal.cancelButton}
-            </Button>
-            <Button variant="secondary" size="sm" onClick={CloneExistingNeuron}>
-              {i18n.editor.oldNeuronModal.applyButton}
             </Button>
           </DialogFooter>
         </DialogContent>

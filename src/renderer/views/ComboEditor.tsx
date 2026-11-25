@@ -30,6 +30,7 @@ import ToastMessage from "@Renderer/components/atoms/ToastMessage";
 import { IconClose, IconPlus } from "@Renderer/components/atoms/icons";
 import Callout from "@Renderer/components/molecules/Callout/Callout";
 import ListModifier from "@Renderer/components/molecules/ListModifiers/ListModifiers";
+import KeyCapLabel from "@Renderer/components/molecules/KeyTags/KeyCapLabel";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@Renderer/components/atoms/Select";
 import { PageHeader } from "@Renderer/modules/PageHeader";
 import { KeyPickerKeyboard } from "@Renderer/modules/KeyPickerKeyboard";
@@ -39,6 +40,7 @@ import MacrosMemoryUsage from "@Renderer/modules/Macros/MacrosMemoryUsage";
 import { useDevice } from "@Renderer/DeviceContext";
 import Store from "@Renderer/utils/Store";
 import getLanguage from "@Renderer/utils/language";
+import boardKeyLabel from "@Renderer/utils/boardKeyLabel";
 import { KeymapType, KeyType, PaletteType, SegmentedKeyType } from "@Renderer/types/layout";
 import { Neuron } from "@Renderer/types/neurons";
 import { MacrosType } from "@Renderer/types/macros";
@@ -516,16 +518,21 @@ function ComboEditor(props: ComboEditorProps) {
     setPickTarget(nextSlot < visibleSlots ? { kind: "member", slot: nextSlot } : null);
   };
 
-  const labelForPosition = (position: number): string => {
-    if (position === COMBO_POSITION_UNUSED || !layerData[position]) return "";
-    return String(layerData[position].label ?? "");
+  /* The slots show keys the way the board does -- icons, layer tags and the
+   * tag over the label included -- through KeyCapLabel. */
+  const keyForPosition = (position: number): KeyType | undefined => {
+    if (position === COMBO_POSITION_UNUSED) return undefined;
+    return layerData[position];
   };
 
-  const actionLabel = (item: ComboType): string => {
-    if (!item || !item.action) return "";
-    const key = withName(keymapDB.parse(item.action));
-    return String(key.label ?? "");
+  const actionKey = (item: ComboType): KeyType | undefined => {
+    if (!item || !item.action) return undefined;
+    return withName(keymapDB.parse(item.action));
   };
+
+  /* The board draws a NO KEY as an empty key, as the Layout Editor does. The
+   * slots above keep the plain layerData, so a slot never reads as empty. */
+  const boardKeys = useMemo(() => layerData.map(boardKeyLabel), [layerData]);
 
   const combo = combos[selected];
   const memberCount = combo ? comboMembers(combo).length : 0;
@@ -697,7 +704,11 @@ function ComboEditor(props: ComboEditorProps) {
                       className="min-w-20 h-12 text-ssm"
                       onClick={() => setPickTarget({ kind: "member", slot })}
                     >
-                      {position === COMBO_POSITION_UNUSED ? <IconPlus size="xs" /> : labelForPosition(position)}
+                      {position === COMBO_POSITION_UNUSED ? (
+                        <IconPlus size="xs" />
+                      ) : (
+                        <KeyCapLabel keyData={keyForPosition(position)} />
+                      )}
                     </Button>
                     {/* The first two slots are the minimum a combo needs, so
                      * only the ones after them can be dropped. */}
@@ -743,7 +754,7 @@ function ComboEditor(props: ComboEditorProps) {
                   /* The modifiers ride along as the same badges the Layout
                    * Editor shows, as the label alone ("A") hides them. */
                   <span className="flex flex-col items-center gap-0.5">
-                    <span>{actionLabel(combo)}</span>
+                    <KeyCapLabel keyData={actionKey(combo)} />
                     <ListModifier keyCode={combo.action} size="xs" />
                   </span>
                 ) : (
@@ -821,7 +832,7 @@ function ComboEditor(props: ComboEditorProps) {
                 <KeyboardComponent
                   readOnly={false}
                   index={0}
-                  keymap={layerData}
+                  keymap={boardKeys}
                   onKeySelect={onKeyboardKeySelect}
                   selectedKey={-1}
                   selectedLED={-1}

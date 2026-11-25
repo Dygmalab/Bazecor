@@ -65,6 +65,11 @@ const Styles = Styled.div`
 }
 `;
 
+/* Random delays are hidden until the firmware runs them correctly. The code
+ * stays so turning this back on is a one-line change; macros that already hold
+ * a random delay still show and edit it in the timeline. */
+const RANDOM_DELAY_ENABLED = false;
+
 interface DelayTabProps {
   onAddDelay: (value: number, type: number) => void;
   onAddDelayRnd: (valueMin: number, valueMax: number, type: number) => void;
@@ -147,32 +152,34 @@ class DelayTab extends React.Component<DelayTabProps, DelayTabState> {
           <Heading renderAs="h4" headingLevel={4} className="flex w-full">
             {i18n.editor.macros.delayTabs.title}
           </Heading>
-          <div className="formWrapper mt-3">
-            <CustomRadioCheckBox
-              label="Fixed value"
-              checked={fixedSelected}
-              onClick={this.setFixedSelected}
-              type="radio"
-              name="addDelay"
-              id="addFixedDelay"
-              className=""
-              disabled={false}
-              tooltip={undefined}
-            />
-            <CustomRadioCheckBox
-              label="Random value"
-              checked={!fixedSelected}
-              onClick={this.setRandomSelected}
-              type="radio"
-              name="addDelay"
-              id="addRandomDelay"
-              tooltip="You can configure a maximum value and minimum value for each time the macro is executed Bazecor choose a delay between this range."
-              className=""
-              disabled={false}
-            />
-          </div>
+          {RANDOM_DELAY_ENABLED && (
+            <div className="formWrapper mt-3">
+              <CustomRadioCheckBox
+                label="Fixed value"
+                checked={fixedSelected}
+                onClick={this.setFixedSelected}
+                type="radio"
+                name="addDelay"
+                id="addFixedDelay"
+                className=""
+                disabled={false}
+                tooltip={undefined}
+              />
+              <CustomRadioCheckBox
+                label="Random value"
+                checked={!fixedSelected}
+                onClick={this.setRandomSelected}
+                type="radio"
+                name="addDelay"
+                id="addRandomDelay"
+                tooltip="You can configure a maximum value and minimum value for each time the macro is executed Bazecor choose a delay between this range."
+                className=""
+                disabled={false}
+              />
+            </div>
+          )}
           <div className="inputsWrapper mt-3">
-            {fixedSelected ? (
+            {fixedSelected || !RANDOM_DELAY_ENABLED ? (
               <div className="inputGroupFixed">
                 <div className="input-group max-w-full relative flex flex-wrap w-full items-stretch">
                   <input

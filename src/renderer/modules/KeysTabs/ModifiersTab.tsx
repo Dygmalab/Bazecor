@@ -226,7 +226,7 @@ const ModifiersTab = ({
         <div className="w-full flex flex-col gap-2">
           <div className="w-full flex flex-row flex-wrap gap-6">
             <div className="flex flex-col gap-2">
-              <Heading renderAs="h4" headingLevel={3} className="text-base flex leading-6 gap-1 pt-4">
+              <Heading renderAs="h4" headingLevel={3} className="text-base flex leading-6 gap-1">
                 {activeModifierTab === "None" && <>Select a Modifier</>}
                 {activeModifierTab === "dualModifier" && (
                   <>
@@ -264,30 +264,6 @@ const ModifiersTab = ({
                 ))}
               </div>
             </div>
-            {capsword && (
-              <div className="basis-full flex flex-col gap-2">
-                <Heading renderAs="h4" headingLevel={3} className="text-base flex leading-6 gap-1">
-                  CapsWord
-                </Heading>
-                <div className="flex flex-wrap gap-2 items-center">
-                  <Button
-                    variant="config"
-                    onClick={() => {
-                      log.info(`[CapsWord] assigning key: ${CapsWordCodes.CAPS_WORD} (previous keycode ${KC})`);
-                      onKeySelect(CapsWordCodes.CAPS_WORD);
-                    }}
-                    selected={KC === CapsWordCodes.CAPS_WORD}
-                    size="sm"
-                    className="min-w-16 text-ssm h-9"
-                  >
-                    CapsWord
-                  </Button>
-                  <p className="description text-ssm font-medium text-gray-400 dark:text-gray-300 max-w-md">
-                    After you press this key, the next word will be capitalized. You can also deactivate it by pressing the key again.
-                  </p>
-                </div>
-              </div>
-            )}
             <AnimatePresence>
               <motion.div className="flex flex-col gap-2">
                 {!sk20 && activeModifierTab === "dualModifier" && (
@@ -429,6 +405,30 @@ const ModifiersTab = ({
               )}
             </div>
           </div>
+          {capsword && (
+            <div className="flex flex-col gap-2 mt-2">
+              <Heading renderAs="h4" headingLevel={3} className="text-base flex leading-6 gap-1">
+                CapsWord
+              </Heading>
+              <div className="flex gap-2 items-center">
+                <Button
+                  variant="config"
+                  onClick={() => {
+                    log.info(`[CapsWord] assigning key: ${CapsWordCodes.CAPS_WORD} (previous keycode ${KC})`);
+                    onKeySelect(CapsWordCodes.CAPS_WORD);
+                  }}
+                  selected={KC === CapsWordCodes.CAPS_WORD}
+                  size="sm"
+                  className="min-w-16 text-ssm h-9"
+                >
+                  CapsWord
+                </Button>
+                <p className="description flex-1 max-w-md text-ssm font-medium text-gray-400 dark:text-gray-300">
+                  After you press this key, the next word will be capitalized. You can also deactivate it by pressing the key again.
+                </p>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>

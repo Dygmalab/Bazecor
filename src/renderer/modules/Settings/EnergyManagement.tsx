@@ -33,6 +33,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@Rende
 // Import Types for wireless
 import { EnergyManagementProps } from "@Renderer/types/wireless";
 import { supportsTrueSleep } from "@Renderer/utils/deviceCapabilities";
+import secondsToMinutes from "@Renderer/utils/secondsToMinutes";
 
 const Styles = Styled.div`
 .card {
@@ -68,6 +69,8 @@ function EnergyManagement(props: EnergyManagementProps) {
   // The Sonsei has no user-facing true sleep: the card is hidden and the setting
   // is pinned off on save (see Preferences/Wireless).
   const showTrueSleep = supportsTrueSleep(deviceType);
+  // The slider starts at 1 min, which is where a board with no time set is drawn.
+  const trueSleepMinutes = Math.max(1, secondsToMinutes(wireless.true_sleep_time));
 
   const setTrueSleep = async (checked: boolean) => {
     const newWireless = { ...wireless };
@@ -136,12 +139,18 @@ function EnergyManagement(props: EnergyManagementProps) {
                 />
               </div>
               <div className={`flex flex-col pt-3 ${!wireless.true_sleep ? "opacity-50 pointer-events-none" : "opacity-100"}`}>
+                <div className="flex items-center justify-between gap-2">
+                  <Heading headingLevel={2} renderAs="paragraph-sm">
+                    True sleep timer
+                  </Heading>
+                  <span className="tagsfix">{trueSleepMinutes} min</span>
+                </div>
                 <div className="block w-full relative">
                   <Slider
                     min={1}
                     max={60}
                     step={1}
-                    value={[Math.round(wireless.true_sleep_time / 60)]}
+                    value={[trueSleepMinutes]}
                     onValueChange={setTrueSleepTime}
                     className="slider-danger"
                     disabled={wireless.true_sleep === false}
@@ -160,7 +169,7 @@ function EnergyManagement(props: EnergyManagementProps) {
                   value="Application"
                   onClick={setApplicationTab}
                 >
-                  {wireless.idleleds > 0 ? `set to ${wireless.idleleds / 60}min` : "deactivated"}
+                  {wireless.idleleds > 0 ? `set to ${secondsToMinutes(wireless.idleleds)} min` : "deactivated"}
                 </button>
               </div>
             </div>

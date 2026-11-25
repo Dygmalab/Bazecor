@@ -14,7 +14,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import log from "electron-log/renderer";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@Renderer/components/atoms/Card";
@@ -113,6 +113,14 @@ const AdvancedSettings = ({
     return Boolean(item);
   };
 
+  /* Bazecor does not work properly with "Use only custom layers" off, so the
+   * switch is hidden to keep it from being turned off. It only shows on a
+   * keyboard that already has it off, which would otherwise have no way back;
+   * once seen it stays for this visit, so it doesn't vanish when turned on. */
+  const onlyCustom = normalizeOnlyCustomLayers(onlyCustomLayers);
+  const wasOff = useRef(false);
+  if (!onlyCustom) wasOff.current = true;
+
   return (
     <>
       <Card className="mt-3 max-w-2xl mx-auto" variant="default">
@@ -140,19 +148,21 @@ const AdvancedSettings = ({
             </Select>
           </form>
 
-          <div className="flex items-center w-full justify-between py-2 mt-3 border-t-[1px] border-gray-50 dark:border-gray-700">
-            <label htmlFor="customSwitch" className="m-0 text-sm font-semibold tracking-tight">
-              {i18n.preferences.onlyCustom}
-            </label>
-            <Switch
-              id="customSwitch"
-              defaultChecked={false}
-              checked={normalizeOnlyCustomLayers(onlyCustomLayers)}
-              onCheckedChange={onChangeOnlyCustomLayers}
-              variant="default"
-              size="sm"
-            />
-          </div>
+          {wasOff.current && (
+            <div className="flex items-center w-full justify-between py-2 mt-3 border-t-[1px] border-gray-50 dark:border-gray-700">
+              <label htmlFor="customSwitch" className="m-0 text-sm font-semibold tracking-tight">
+                {i18n.preferences.onlyCustom}
+              </label>
+              <Switch
+                id="customSwitch"
+                defaultChecked={false}
+                checked={onlyCustom}
+                onCheckedChange={onChangeOnlyCustomLayers}
+                variant="default"
+                size="sm"
+              />
+            </div>
+          )}
         </CardContent>
       </Card>
     </>

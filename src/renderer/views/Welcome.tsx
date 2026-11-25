@@ -30,6 +30,7 @@ import ToastMessage from "@Renderer/components/atoms/ToastMessage";
 import { Button } from "@Renderer/components/atoms/Button";
 import { IconKeyboard, IconFloppyDisk } from "@Renderer/components/atoms/icons";
 import { DygmaDeviceType } from "@Renderer/types/dygmaDefs";
+import deviceDisplayName from "@Renderer/utils/deviceDisplayName";
 
 interface WelcomeProps {
   onConnect: (currentDevice: unknown, file: null) => void;
@@ -61,7 +62,7 @@ function Welcome(props: WelcomeProps) {
   );
 
   const showDeviceName = () => {
-    const name = state.currentDevice?.device?.info?.displayName || device?.info?.displayName;
+    const name = deviceDisplayName(state.currentDevice?.device?.info?.displayName || device?.info?.displayName);
     return (
       <div className="content">
         <Heading headingLevel={4} renderAs="h4">

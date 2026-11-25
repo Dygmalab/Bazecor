@@ -16,6 +16,7 @@ import { i18n } from "@Renderer/i18n";
 import { VirtualType } from "@Renderer/types/virtual";
 import { BackupType } from "@Renderer/types/backups";
 
+import deviceDisplayName from "@Renderer/utils/deviceDisplayName";
 import Hardware from "../../../api/hardware";
 import {
   RaiseISO,
@@ -300,7 +301,8 @@ export default function VirtualSelector(props: VirtualSelectorProps) {
                     {enumerator.map((item, index) => (
                       <SelectItem value={index.toString()} key={`${item.device.info.displayName}-dropdown`}>
                         <div className="flex gap-2">
-                          <IconKeyboard /> <div className="dropdownItem">{item?.device?.info?.displayName}</div>
+                          <IconKeyboard />{" "}
+                          <div className="dropdownItem">{deviceDisplayName(item?.device?.info?.displayName)}</div>
                         </div>
                       </SelectItem>
                     ))}

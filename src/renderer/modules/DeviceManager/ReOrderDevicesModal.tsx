@@ -8,6 +8,7 @@ import { RegularButton } from "@Renderer/component/Button";
 import Heading from "@Renderer/components/atoms/Heading";
 
 import { i18n } from "@Renderer/i18n";
+import deviceDisplayName from "@Renderer/utils/deviceDisplayName";
 
 interface ReOrderDevicesModalProps {
   show: boolean;
@@ -63,7 +64,7 @@ const ReOrderDevicesModal = ({ show, toggleShow, handleSave, devices }: ReOrderD
                                 device.name ? "text-gray-400 dark:text-gray-50" : "text-gray-600 dark:text-gray-25"
                               }`}
                             >
-                              {device.device.info.displayName}
+                              {deviceDisplayName(device.device.info.displayName)}
                             </Heading>
                             <p className="text-xs mt-1 text-gray-300 dark:text-gray-100">{device.path}</p>
                           </div>

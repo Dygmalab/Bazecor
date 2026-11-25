@@ -56,7 +56,7 @@ const MediaControlTable = {
       labels: {
         top: "",
         primary: <IconMediaRewind size="sm" />,
-        verbose: "Prev. track",
+        verbose: "Last track",
       },
     },
     {

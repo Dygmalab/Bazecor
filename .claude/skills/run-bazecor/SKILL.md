@@ -64,16 +64,69 @@ EOF
 | `ss <main\|lens> [name]` | screenshot that window to `<name>.png` |
 | `eval <main\|lens> <js>` | evaluate an expression in that window and print the result as JSON |
 | `text [main\|lens]` | print `document.body.innerText` |
-| `click-text <text>` | DOM-click a button, link, or tab in the main window |
+| `click-text <text>` | DOM-click a button, link, or tab in the main window (`el.click()`; does **not** switch Radix tabs) |
+| `click <x> <y>` | real mouse click at CSS pixels of the main window (same coordinates as an `ss main` screenshot); use it for the SVG keys of the keyboard drawing |
+| `tab <name>` | real click on the `role="tab"` with that exact name, e.g. `tab Layers and Modifiers` |
+| `click-role <role> <name>` | real click on the first element with that role and accessible name, e.g. `click-role button Configure` |
+| `viewport <w> <h>` | resize the main window's page, to check layouts at other window sizes |
+| `overflow` | list every main-window element whose content scrolls (`clientHeight/scrollHeight`), or `no scrolling elements` |
 | `ipc <channel> [json ...]` | `ipcRenderer.invoke` from the main window, e.g. `ipc lens:set-layout "de-DE"` |
 | `lens-show` | put the Lens overlay on screen |
 | `lens-layout <lang>` | set the Lens layout (a Bazecor language tag such as `es-ES` or `fr-XX-bepo`) and wait for the repaint |
 | `lens-labels` | print every key label the overlay draws, in DOM order |
+| `vk <model> [combos]` | connect a fresh virtual keyboard built from `src/api/hardware-virtual` (`raise-ansi raise-iso raise2-ansi raise2-iso defy-wired defy-wireless sonsei`); `combos` seeds one combo per result type and raises the firmware to the combos minimum. See the `bazecor-testing` skill |
+| `go <route>` | click the navigation link for `/editor`, `/macros`, `/superkeys`, `/combos`, `/device-manager`, `/preferences` (the app uses a MemoryRouter, there is no URL) |
+| `click-key <index>` | real click on the board key with that `data-key-index`, on any model |
+| `hover <x> <y>` | move the real mouse there, e.g. to open a tooltip |
+| `key <name>` | press a key in the main window, e.g. `key Escape` |
+| `labels` | text of every board key, `index:text` |
+| `combo-sheet [name]` | in the Combo Editor, select every combo, print its result and flag broken ones, and save one contact sheet of all the rows |
+| `console-errors` | renderer console errors and page errors since the last call (collected from `launch`) |
 | `sleep <ms>` | wait |
 | `quit` | stop the app (`taskkill /T`) and restore the Lens settings the driver changed |
 
 Lines starting with `#` are ignored. A failed command prints `ERROR: ...` and
 the driver moves on to the next line.
+
+### Keep the app running between driver runs
+
+When the driver started the app itself, it kills it at the end of stdin. To
+iterate (edit code, re-check, edit again) without paying the launch time each
+time, start Forge yourself in the background and let the driver attach:
+
+```bash
+# background task; ends when you stop it
+npx cross-env NODE_ENV=development electron-forge start -- --remote-debugging-port=9223 > "$TEMP/bazecor-shots/app-bg.log" 2>&1
+# wait for CDP
+until curl -s http://127.0.0.1:9223/json/version >/dev/null; do sleep 1; done
+```
+
+Each later `launch` prints `CDP already listening ... attaching`, and `quit`
+leaves that app alone. To stop it, stop the background task and then
+`taskkill //IM electron.exe //F` (the grandchild survives the task).
+
+### Example: open a Layout Editor key tab and check for scrolling
+
+With a Defy connected (a virtual keyboard works too), from Keyboard Manager:
+
+```bash
+node .claude/skills/run-bazecor/driver.mjs <<'EOF'
+launch
+click-role button Configure
+# loading Neuron information takes ~20 s
+sleep 20
+# ESC key of a Defy at 1920x1009
+click 549 209
+sleep 800
+tab Layers and Modifiers
+sleep 1200
+overflow
+ss main layers-tab
+EOF
+```
+
+Take an `ss main` first and read the key's coordinates from it; they change
+with the window size and keyboard model.
 
 ## Run (human path)
 
@@ -123,6 +176,19 @@ npx vitest run lens/
   the renderer). On the next launch it did not appear and the UI loaded
   normally. Check `eval main document.querySelector("#root")?.innerText` before
   trusting a main-window screenshot.
+
+- **A full renderer reload can lose the keyboard.** After some edits webpack
+  reloads the whole main window instead of hot-swapping a module. The app goes
+  back to Keyboard Manager and may show "No keyboards found!" because the
+  serial port is still held. Restart the app (stop it, `taskkill` the
+  `electron.exe` processes, launch again) and navigate back.
+- **Native message boxes block.** Nothing over CDP can answer anything that
+  calls `show-message-box`, so the app waits.
+- **Virtual keyboards report old firmware.** The templates' `version` is below
+  the combos/autoshift/capsword minimums in `src/versionRules.json`, so those
+  editors stay hidden unless `vk ... combos` raises it.
+- **Radix tabs ignore `click-text`.** They switch on pointer down, so a DOM
+  `el.click()` does nothing. Use `tab <name>` or `click <x> <y>`.
 
 ## Troubleshooting
 

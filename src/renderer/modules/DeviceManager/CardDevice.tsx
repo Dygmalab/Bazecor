@@ -20,6 +20,7 @@ import {
   AlertDialogTitle,
 } from "@Renderer/components/atoms/AlertDialog";
 import { Switch } from "@Renderer/components/atoms/Switch";
+import deviceDisplayName from "@Renderer/utils/deviceDisplayName";
 
 interface CardDeviceProps {
   device: DeviceListType;
@@ -83,14 +84,14 @@ const CardDevice = forwardRef<HTMLDivElement, CardDeviceProps>((props, ref) => {
               {device.name}
             </Heading>
             <Heading headingLevel={4} renderAs="h4" className="text-base text-gray-400 dark:text-gray-50">
-              {device.device?.device?.info?.displayName}
+              {deviceDisplayName(device.device?.device?.info?.displayName)}
             </Heading>
           </>
         ) : (
           <Heading headingLevel={3} renderAs="h3" className="text-gray-600 dark:text-gray-50">
             {device.device?.device?.bootloader === true
               ? `${device.device?.device?.info?.vendor} ${device.device?.device?.info?.product} Bootloader`
-              : device.device?.device?.info?.displayName}
+              : deviceDisplayName(device.device?.device?.info?.displayName)}
           </Heading>
         )}
         {device.file ? (
