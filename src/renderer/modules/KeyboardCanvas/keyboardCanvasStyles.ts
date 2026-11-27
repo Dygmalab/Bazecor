@@ -16,7 +16,6 @@
 
 import { css } from "styled-components";
 
-import customCursor from "@Assets/base/cursorBucket.png";
 import { comboBadgeBaseStyles } from "./comboBadges";
 
 /**
@@ -67,27 +66,14 @@ export const keyboardCanvasStyles = css`
     margin-top: 24px;
     max-height: calc(100vh - 250px);
   }
-  .singleViewMode.color .raiseKeyboard {
+  .singleViewMode .raiseKeyboard {
     margin: 0 auto;
-    margin-top: 24px;
-    max-height: calc(100vh - 300px);
-  }
-  .singleViewMode.keyboard .raiseKeyboard {
-    margin: 0 auto;
-    // max-height: 44vh;
     height: 100%;
-    svg {
-      height: 100%;
-    }
+    max-height: 100%;
   }
-  .singleViewMode.keyboard .raiseKeyboard.svg-defy {
-    // max-height: 49vh;
-  }
-  .keyboard-editor.keyboard .dygma-keyboard-editor.editor {
-    height: calc(100vh - 370px - 124px);
-  }
-  .keyboard-editor.keyboard .dygma-keyboard-editor.editor .LayerHolder {
+  .keyboard-editor .dygma-keyboard-editor.editor .LayerHolder {
     height: 100%;
+    min-width: 0;
   }
 
   .NeuronLine {
@@ -271,13 +257,6 @@ export const keyboardCanvasStyles = css`
       }
     }
   }
-  .layoutEditor.color.colorSelected .keyItem:hover,
-  .layoutEditor.color.colorSelected .underGlowStrip:hover {
-    cursor:
-      url(${customCursor}) 12 12,
-      auto;
-  }
-
   .defy-t2 .keyContentLabelRotate {
     transform: rotate(3deg) translate(1px, -1px);
   }

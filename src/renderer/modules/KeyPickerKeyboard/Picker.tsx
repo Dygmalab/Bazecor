@@ -23,11 +23,12 @@ import { PickerProps } from "@Renderer/types/keyPicker";
 import { KeyPicker } from ".";
 
 function Picker(props: PickerProps) {
-  const { onKeySelect, selectedlanguage, baseCode, modCode, disable, disableMods, disableMove } = props;
+  const { onKeySelect, selectedlanguage, baseCode, modCode, disable, disableMods, disableMove, toggleModifiers, fitContainer } =
+    props;
 
   return (
     <KeyPicker
-      onKeySelect={(e: any) => onKeySelect(e)}
+      onKeySelect={onKeySelect}
       code={{
         base: baseCode,
         modified: modCode,
@@ -35,6 +36,8 @@ function Picker(props: PickerProps) {
       disableMods={disableMods}
       disableMove={disableMove}
       disableAll={disable}
+      toggleModifiers={toggleModifiers}
+      fitContainer={fitContainer}
       selectedlanguage={selectedlanguage}
     />
   );
